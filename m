@@ -2,80 +2,80 @@ Return-Path: <SRS0=7RkH=3E=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=DATE_IN_PAST_96_XX,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4BDC33CB1
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C456C33CB3
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEA082467A
-	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:00:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RnWCULGz"
+	by mail.kernel.org (Postfix) with ESMTP id 4DECB2467C
+	for <linux-kernel@archiver.kernel.org>; Wed, 15 Jan 2020 07:02:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgAOHAQ (ORCPT
+        id S1728882AbgAOHCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 15 Jan 2020 02:00:16 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:40006 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbgAOHAQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 15 Jan 2020 02:00:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=e/HwDJPULoIYF73mp6McqVlqD1raV4CY1J/pokd3Z88=; b=RnWCULGz0F8WwEcYsM4hO5v1K
-        +uB4kKjW6Ai37YFOoFp3+ik9b1pQQXl+VRmlQd5MW+129Ay98QE8ZMFX8HkX0s8djw5e0Phox9l3t
-        QjZk1IKDfoG25eNE+fgpvu9L1vnAkKhaz4ZJOcRC+8IIE6vMJHNbi08C8UziSO7G4aQ9S44qW6aIa
-        wWJ5mTMlAZSYQe9J4XE5RqOyBBeikZS8O3TlXHQaKh7rFnBkP3Po4p/6IpHwvkajrE4y0IdmPvrxU
-        2YZJrcjfpOd0ODa4CcUdGClpg6u7+bxgL3p3f/QSCbBvRuT3dg+JtKdD1/b52bcad3IBI+UfqkCKO
-        ZTQ6paXPw==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ircew-0002Af-G2; Wed, 15 Jan 2020 07:00:10 +0000
-Subject: Re: [PATCH v7 2/2] zonefs: Add documentation
-To:     Damien Le Moal <damien.lemoal@wdc.com>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Johannes Thumshirn <jth@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Hannes Reinecke <hare@suse.de>
-References: <20200115062859.1389827-1-damien.lemoal@wdc.com>
- <20200115062859.1389827-3-damien.lemoal@wdc.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <072a051e-4fbb-e662-c136-f9f27157169f@infradead.org>
-Date:   Tue, 14 Jan 2020 23:00:09 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 15 Jan 2020 02:02:35 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9176 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726018AbgAOHCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 15 Jan 2020 02:02:35 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2E0C26AAF424853E4FA2;
+        Wed, 15 Jan 2020 15:02:33 +0800 (CST)
+Received: from huawei.com (10.175.107.192) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 15 Jan 2020
+ 15:02:24 +0800
+From:   wanghongzhe <wanghongzhe@huawei.com>
+To:     <peterhuewe@gmx.de>
+CC:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <zhangchenfeng1@huawei.com>, <wanghongzhe@huawei.com>
+Subject: [PATCH] tpm:tpm_tis_spi: set cs_change = 0 when timesout
+Date:   Tue, 15 Jan 2019 15:02:29 +0800
+Message-ID: <1547535749-23221-1-git-send-email-wanghongzhe@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
 MIME-Version: 1.0
-In-Reply-To: <20200115062859.1389827-3-damien.lemoal@wdc.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.107.192]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/14/20 10:28 PM, Damien Le Moal wrote:
-> Add the new file Documentation/filesystems/zonefs.txt to document
-> zonefs principles and user-space tool usage.
-> 
-> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-> ---
->  Documentation/filesystems/zonefs.txt | 241 +++++++++++++++++++++++++++
->  MAINTAINERS                          |   1 +
->  2 files changed, 242 insertions(+)
->  create mode 100644 Documentation/filesystems/zonefs.txt
+From: Wang Hongzhe <wanghongzhe@huawei.com>
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+when i reach TPM_RETRY, the cs cannot  change back to 'high'.
+So the TPM chips thinks this communication is not over.
+And next times communication cannot be effective because the
+communications mixed up with the last time.
 
-thanks.
+Signed-off-by: Wang Hongzhe <wanghongzhe@huawei.com>
+---
+ drivers/char/tpm/tpm_tis_spi.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
+index d1754fd..27e57bf 100644
+--- a/drivers/char/tpm/tpm_tis_spi.c
++++ b/drivers/char/tpm/tpm_tis_spi.c
+@@ -66,8 +66,15 @@ static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
+ 				break;
+ 		}
+ 
+-		if (i == TPM_RETRY)
++		if (i == TPM_RETRY) {
++			spi_xfer->len = 1;
++			spi_xfer->cs_change = 0;
++			spi_message_init(&m);
++			spi_message_add_tail(spi_xfer, &m);
++			if (ret < 0)
++				return ret;
+ 			return -ETIMEDOUT;
++		}
+ 	}
+ 
+ 	return 0;
 -- 
-~Randy
+1.7.12.4
+
