@@ -2,97 +2,159 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD24C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:35:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47277C2D0EF
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2314A206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:35:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3FF2073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:43:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbgC1QfM (ORCPT
+        id S1727167AbgC1QnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 12:35:12 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:57334 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725807AbgC1QfL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 12:35:11 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02SGThAm019757;
-        Sat, 28 Mar 2020 12:34:58 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 3020e694mg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 28 Mar 2020 12:34:58 -0400
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02SGYvbV015127
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Sat, 28 Mar 2020 12:34:57 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Sat, 28 Mar
- 2020 12:34:56 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Sat, 28 Mar 2020 12:34:55 -0400
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02SGYqUV010131;
-        Sat, 28 Mar 2020 12:34:53 -0400
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: buffer: drop left-over 'stufftoread' field
-Date:   Sat, 28 Mar 2020 18:34:21 +0200
-Message-ID: <20200328163421.69784-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-28_06:2020-03-27,2020-03-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=962
- spamscore=0 impostorscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
- clxscore=1015 phishscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003280157
+        Sat, 28 Mar 2020 12:43:16 -0400
+Received: from mx.sdf.org ([205.166.94.20]:50248 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727121AbgC1QnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 12:43:15 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGhCw4016539
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
+        Sat, 28 Mar 2020 16:43:12 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id 02SGhC3b019313;
+        Sat, 28 Mar 2020 16:43:12 GMT
+Message-Id: <202003281643.02SGhC3b019313@sdf.org>
+From:   George Spelvin <lkml@sdf.org>
+Date:   Mon, 25 Mar 2019 14:24:48 -0400
+Subject: [RFC PATCH v1 15/50] drivers/block/drbd/drbd_main: fix
+ _drbd_fault_random()
+To:     linux-kernel@vger.kernel.org, lkml@sdf.org
+Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        drbd-dev@tron.linbit.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This seems like a left-over from a7348347ba8a4 ("staging:iio: Add polling
-of events on the ring access chrdev.").
+The internal PRNG had numerous problems:
 
-Then it was moved into the sca3000 driver around 9dd4694dafbd8 ("iio:
-staging: sca3000: hide stufftoread logic"), and that one seemed to be the
-only user of this.
+* Since the last operation in this function truncates the
+  return value to 32 bits, there's no point maintaining
+  a 64-bit state and doing 64-bit math.  (The msbits have
+  no effect on the return value.)
+* Use prandom_u32() rather than get_random_bytes().  If
+  we're using an even crappier PRNG, we don't need
+  crypto-quality seeds.
+* Since the function is reseeded from a non-deterministic
+  source periodically, the output isn't repeatable, so it's
+  okay to change the algorithm.
+* The multiplier used (39916801) is bad.  Multipliers must
+  be == 1 (mod 4) for maximum period, which this is, but
+  should also be == 5 (mod 8) which this is not.  Replace it
+  with a multiplier chosen from a published list as having
+  good lattice structure on the spectral test.
+* The additive constant is unnecessarily complex.  Any odd
+  number is as as good as another, so just use 1.
+* The "% 100" output transformation is unnecessarily
+  expensive.  Use multiplicative range reduction instead,
+  which is significantly faster.
+* Multiplicative range reduction also avoids the problems
+  with the low-order bits which modulo-2^n LCGs are subject
+  to.  Thus, the final "swahw32" may be omitted from
+  _drbd_fault_random().
 
-Then it eventually was no longer used after 152a6a884ae1
-("staging:iio:accel:sca3000 move to hybrid hard / soft buffer design.")
+* Also, use get_random_u64() in drbd_uuid_new_current().
+  That's still crypto-quality, but we don't need
+  get_random_bytes().
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: George Spelvin <lkml@sdf.org>
+Cc: Philipp Reisner <philipp.reisner@linbit.com>
+Cc: Lars Ellenberg <lars.ellenberg@linbit.com>
+Cc: drbd-dev@lists.linbit.com
 ---
- include/linux/iio/buffer_impl.h | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/block/drbd/drbd_main.c | 37 +++++++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/include/linux/iio/buffer_impl.h b/include/linux/iio/buffer_impl.h
-index a4d2d8061ef6..1e7edf6bed96 100644
---- a/include/linux/iio/buffer_impl.h
-+++ b/include/linux/iio/buffer_impl.h
-@@ -115,9 +115,6 @@ struct iio_buffer {
- 	 */
- 	struct attribute_group scan_el_group;
+diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+index a18155cdce416..2bd5e84a18dd6 100644
+--- a/drivers/block/drbd/drbd_main.c
++++ b/drivers/block/drbd/drbd_main.c
+@@ -3483,11 +3483,9 @@ void drbd_uuid_set(struct drbd_device *device, int idx, u64 val) __must_hold(loc
+  */
+ void drbd_uuid_new_current(struct drbd_device *device) __must_hold(local)
+ {
+-	u64 val;
++	u64 val = get_random_u64();
+ 	unsigned long long bm_uuid;
  
--	/* @stufftoread: Flag to indicate new data. */
--	bool stufftoread;
+-	get_random_bytes(&val, sizeof(u64));
 -
- 	/* @attrs: Standard attributes of the buffer. */
- 	const struct attribute **attrs;
+ 	spin_lock_irq(&device->ldev->md.uuid_lock);
+ 	bm_uuid = device->ldev->md.uuid[UI_BITMAP];
  
+@@ -3834,30 +3832,37 @@ void unlock_all_resources(void)
+ /* Fault insertion support including random number generator shamelessly
+  * stolen from kernel/rcutorture.c */
+ struct fault_random_state {
+-	unsigned long state;
+-	unsigned long count;
++	u32 state;
++	unsigned int count;
+ };
+ 
+-#define FAULT_RANDOM_MULT 39916801  /* prime */
+-#define FAULT_RANDOM_ADD	479001701 /* prime */
++/*
++ * From table 5 of L'Ecuyer (1999)
++ * "Tables Of Linear Congruential Generators Of Different Sizes And Good
++ * Lattice Structure"
++ * https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.34.1024
++ * https://www.iro.umontreal.ca/~lecuyer/myftp/papers/latrules99Errata.pdf
++ */
++#define FAULT_RANDOM_MULT 2891336453
++#define FAULT_RANDOM_ADD 1
+ #define FAULT_RANDOM_REFRESH 10000
+ 
+ /*
+  * Crude but fast random-number generator.  Uses a linear congruential
+- * generator, with occasional help from get_random_bytes().
++ * generator, with occasional help from prandom_u32().
++ *
++ * NOTE LCGs with a power-of-2 modulus, like this have a well-known
++ * problem that their low-order bits have short period.  It is used in
++ * a way that cares mostly about the high bits, avoiding the probem.
+  */
+-static unsigned long
++static u32
+ _drbd_fault_random(struct fault_random_state *rsp)
+ {
+-	long refresh;
+-
+ 	if (!rsp->count--) {
+-		get_random_bytes(&refresh, sizeof(refresh));
+-		rsp->state += refresh;
++		rsp->state += prandom_u32();
+ 		rsp->count = FAULT_RANDOM_REFRESH;
+ 	}
+-	rsp->state = rsp->state * FAULT_RANDOM_MULT + FAULT_RANDOM_ADD;
+-	return swahw32(rsp->state);
++	return rsp->state = rsp->state * FAULT_RANDOM_MULT + FAULT_RANDOM_ADD;
+ }
+ 
+ static char *
+@@ -3886,7 +3891,7 @@ _drbd_insert_fault(struct drbd_device *device, unsigned int type)
+ 	unsigned int ret = (
+ 		(drbd_fault_devs == 0 ||
+ 			((1 << device_to_minor(device)) & drbd_fault_devs) != 0) &&
+-		(((_drbd_fault_random(&rrs) % 100) + 1) <= drbd_fault_rate));
++		reciprocal_scale(_drbd_fault_random(&rrs), 100) < drbd_fault_rate);
+ 
+ 	if (ret) {
+ 		drbd_fault_count++;
 -- 
-2.17.1
+2.26.0
 
