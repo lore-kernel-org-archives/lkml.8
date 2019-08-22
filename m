@@ -2,161 +2,105 @@ Return-Path: <SRS0=NZ+o=5N=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C08F3C2D0EE
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D16C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C47207FF
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:04:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585415056;
-	bh=re7p6j0PGrxKSZZ6Le17eLNOy+JoAmbengRYQrLBe3E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=scPAyew+Z57nQjqWSu4CbXwZr1oGA8Uhaqn7xtN3+HfZpDXpRikftdyPig47Z2Asy
-	 tuZV/QnmHkNkc/FtEelDOl2eOMCx/r2JhzqFZ936ULhfW7tPcwnLCnWIOMnIQSIQQn
-	 Jk5xMW/Y+5XtdDZvA51vLB0YElZnNgCF3tkzX+90=
+	by mail.kernel.org (Postfix) with ESMTP id 47D8F20714
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 17:04:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726751AbgC1REP (ORCPT
+        id S1727137AbgC1REl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 13:04:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36088 "EHLO mail.kernel.org"
+        Sat, 28 Mar 2020 13:04:41 -0400
+Received: from mx.sdf.org ([205.166.94.20]:63281 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725807AbgC1REP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 13:04:15 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F16E20714;
-        Sat, 28 Mar 2020 17:04:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585415054;
-        bh=re7p6j0PGrxKSZZ6Le17eLNOy+JoAmbengRYQrLBe3E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=K3ktQwAG5vot+NVGaYyusk7AKtEnQPr029KatKl6b1HNTIflnBg5WVmhft5+k9vdQ
-         TsPGI+yB1TU6Mk7YqxTHOXXpIG1XFqmZq+TJQwtyvWYIjH5tTUN+GLeQ7lO8BAm9k1
-         sGbi7J1KvatH9dr1cljVM7zM03Xg/IRc9zjkJ3qc=
-Date:   Sat, 28 Mar 2020 17:04:07 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Jishnu Prakash <jprakash@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, linus.walleij@linaro.org, sboyd@codeaurora.org,
-        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
-        kgunda@codeaurora.org, aghayal@codeaurora.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH 3/3] iio: adc: Add support for PMIC7 ADC
-Message-ID: <20200328170407.41d8ed68@archlinux>
-In-Reply-To: <1585064650-16235-4-git-send-email-jprakash@codeaurora.org>
-References: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
-        <1585064650-16235-4-git-send-email-jprakash@codeaurora.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1725807AbgC1REk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 13:04:40 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SH47cb023288
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
+        Sat, 28 Mar 2020 17:04:08 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id 02SH4767016334;
+        Sat, 28 Mar 2020 17:04:07 GMT
+Message-Id: <202003281704.02SH4767016334@sdf.org>
+From:   George Spelvin <lkml@sdf.org>
+Date:   Wed, 21 Aug 2019 20:30:18 -0400
+Subject: [RFC PATCH v1 18/50] net/ipv6/addrconf.c: Use prandom_u32_max for
+ rfc3315 backoff time computation
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     linux-kernel@vger.kernel.org, lkml@sdf.org
+Cc:     Maciej Zenczykowski <maze@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020 21:14:10 +0530
-Jishnu Prakash <jprakash@codeaurora.org> wrote:
+There's no need for 64-bit intermediate values and do_div.
 
-> The ADC architecture on PMIC7 is changed as compared to PMIC5. The
-> major change from PMIC5 is that all SW communication to ADC goes through
-> PMK8350, which communicates with other PMICs through PBS when the ADC
-> on PMK8350 works in master mode. The SID register is used to identify the
-> PMICs with which the PBS needs to communicate. Add support for the same.
-> 
-> In addition, add definitions for ADC channels and virtual channel
-> definitions per PMIC, to be used by ADC clients for PMIC7.
-> 
-> Signed-off-by: Jishnu Prakash <jprakash@codeaurora.org>
+(Actually, the algorithm isn't changing much, except that the old
+code used a scaling factor of 1 million.  prandom_u32_max uses
+a factor of 2^32, making the final division more efficient.)
 
-A few additions from me.
+One thing that concerns me a bit is that the data types are all
+signed.  The old code cast the inputs to unsigned and produced
+strange overflowed results if they were negative, so presumably
+that never happens in practice.
 
-> ---
+The new code works the same for positive inputs, but produces
+different strange overflowed results if fed negative inputs.
 
-...
+Signed-off-by: George Spelvin <lkml@sdf.org>
+Cc: Maciej Żenczykowski <maze@google.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>
+Cc: Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Cc: netdev@vger.kernel.org
+---
+ net/ipv6/addrconf.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
->  
-> +static int adc5_exit(struct platform_device *pdev)
-> +{
-> +	struct adc5_chip *adc = platform_get_drvdata(pdev);
-> +
-> +	mutex_destroy(&adc->lock);
-
-Andy raised potential races.  You definitely have some as this
-will destroy the mutex before you've removed the userspace interfaces.
-
-> +	return 0;
-> +}
-> +
->  static struct platform_driver adc5_driver = {
->  	.driver = {
->  		.name = "qcom-spmi-adc5.c",
->  		.of_match_table = adc5_match_table,
->  	},
->  	.probe = adc5_probe,
-> +	.remove = adc5_exit,
->  };
->  module_platform_driver(adc5_driver);
->  
-
-...
-
->  
-> +static int qcom_vadc7_scale_hw_calib_die_temp(
-> +				const struct vadc_prescale_ratio *prescale,
-> +				const struct adc5_data *data,
-> +				u16 adc_code, int *result_mdec)
-> +{
-> +
-> +	int voltage, vtemp0, temp, i = 0;
-> +
-> +	voltage = qcom_vadc_scale_code_voltage_factor(adc_code,
-> +				prescale, data, 1);
-> +
-> +	while (i < ARRAY_SIZE(adcmap7_die_temp)) {
-> +		if (adcmap7_die_temp[i].x > voltage)
-> +			break;
-> +		i++;
-> +	}
-
-For loop (I think Andy also raised this one).
-
-> +
-> +	if (i == 0) {
-> +		*result_mdec = DIE_TEMP_ADC7_SCALE_1;
-> +	} else if (i == ARRAY_SIZE(adcmap7_die_temp)) {
-> +		*result_mdec = DIE_TEMP_ADC7_MAX;
-> +	} else {
-> +		vtemp0 = adcmap7_die_temp[i-1].x;
-
-Spaces around the - 
-Same elsewhere.
-
-> +		voltage = voltage - vtemp0;
-> +		temp = div64_s64(voltage * DIE_TEMP_ADC7_SCALE_FACTOR,
-> +			adcmap7_die_temp[i-1].y);
-> +		temp += DIE_TEMP_ADC7_SCALE_1 + (DIE_TEMP_ADC7_SCALE_2 * (i-1));
-> +		*result_mdec = temp;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int qcom_vadc_scale_hw_smb_temp(
->  				const struct vadc_prescale_ratio *prescale,
->  				const struct adc5_data *data,
-...
+diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+index ec3f472bc5a8f..5172f1f874363 100644
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -103,20 +103,19 @@ static inline u32 cstamp_delta(unsigned long cstamp)
+ static inline s32 rfc3315_s14_backoff_init(s32 irt)
+ {
+ 	/* multiply 'initial retransmission time' by 0.9 .. 1.1 */
+-	u64 tmp = (900000 + prandom_u32() % 200001) * (u64)irt;
+-	do_div(tmp, 1000000);
+-	return (s32)tmp;
++	s32 range = irt / 5;
++	return irt - (s32)(range/2) + (s32)prandom_u32_max(range);
+ }
+ 
+ static inline s32 rfc3315_s14_backoff_update(s32 rt, s32 mrt)
+ {
+ 	/* multiply 'retransmission timeout' by 1.9 .. 2.1 */
+-	u64 tmp = (1900000 + prandom_u32() % 200001) * (u64)rt;
+-	do_div(tmp, 1000000);
+-	if ((s32)tmp > mrt) {
++	s32 range = rt / 5;
++	s32 tmp = 2*rt - (s32)(range/2) + (s32)prandom_u32_max(range);
++	if (tmp > mrt) {
+ 		/* multiply 'maximum retransmission time' by 0.9 .. 1.1 */
+-		tmp = (900000 + prandom_u32() % 200001) * (u64)mrt;
+-		do_div(tmp, 1000000);
++		range = mrt / 5;
++		tmp = mrt - (s32)(range/2) + (s32)prandom_u32_max(range);
+ 	}
+ 	return (s32)tmp;
+ }
+-- 
+2.26.0
 
