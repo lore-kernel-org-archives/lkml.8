@@ -6,288 +6,179 @@ X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E55CC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C3EC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6297B20857
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C32B206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgC1Qnv (ORCPT
+        id S1727898AbgC1Qnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 12:43:51 -0400
-Received: from mx.sdf.org ([205.166.94.20]:50013 "EHLO mx.sdf.org"
+        Sat, 28 Mar 2020 12:43:53 -0400
+Received: from mx.sdf.org ([205.166.94.20]:49996 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbgC1Qnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 12:43:32 -0400
+        id S1727763AbgC1Qnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 12:43:35 -0400
 Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGhFgW020751
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGhNhF000428
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sat, 28 Mar 2020 16:43:15 GMT
+        Sat, 28 Mar 2020 16:43:23 GMT
 Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02SGhFHS018988;
-        Sat, 28 Mar 2020 16:43:15 GMT
-Message-Id: <202003281643.02SGhFHS018988@sdf.org>
+        by sdf.org (8.15.2/8.12.8/Submit) id 02SGhN9T020186;
+        Sat, 28 Mar 2020 16:43:23 GMT
+Message-Id: <202003281643.02SGhN9T020186@sdf.org>
 From:   George Spelvin <lkml@sdf.org>
-Date:   Mon, 25 Mar 2019 01:22:12 -0400
-Subject: [RFC PATCH v1 22/50] lib/random32: Use random_ready_callback for
- seeding.
+Date:   Wed, 21 Aug 2019 20:21:45 -0400
+Subject: [RFC PATCH v1 42/50] drivers/ininiband: Use get_random_u32()
 To:     linux-kernel@vger.kernel.org, lkml@sdf.org
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Hannes Frederic Sowa <hannes@stressinduktion.org>
+Cc:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>, linux-rdma@vger.kernel.org,
+        Faisal Latif <faisal.latif@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Bernard Metzler <bmt@zurich.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The whole seeding code was a mess, and triggered boot-time warnings
-about crng_init=0.  Clean it up to use the random_ready_callback
-exported from drivers/char/random.c.
+There's no need to get_random_bytes() into a temporary buffer.
 
-Particular changes:
-* prandom_reseed_late() was dead code
-* All the locking in __prandom_reseed is unnecessary and deleted
-* Moved __prandom_timer to a more logical place, in addition to
-  other changes.  Sorry for the larger diff.
-* Use round_jiffies on the reseed timer
-* Use mod_timer is simpler to use than add_timer
+This is not a no-brainer change; get_random_u32() has slightly weaker
+security guarantees, but code like this is the classic example of when
+it's appropriate: the random value is stored in the kernel for as long
+as it's valuable.
+
+TODO: Could any of the call sites be further weakened to prandom_u32()?
+If we're randomizing to avoid collisions with a *cooperating* (as opposed
+to malicious) partner, we don't need cryptographic strength.
 
 Signed-off-by: George Spelvin <lkml@sdf.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Stephen Hemminger <stephen@networkplumber.org>
-Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+Cc: Doug Ledford <dledford@redhat.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: linux-rdma@vger.kernel.org
+Cc: Faisal Latif <faisal.latif@intel.com>
+Cc: Shiraz Saleem <shiraz.saleem@intel.com>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Bernard Metzler <bmt@zurich.ibm.com>
 ---
- include/linux/random.h |   1 -
- lib/random32.c         | 157 +++++++++++++++++++----------------------
- 2 files changed, 71 insertions(+), 87 deletions(-)
+ drivers/infiniband/core/cm.c              | 2 +-
+ drivers/infiniband/core/cma.c             | 3 +--
+ drivers/infiniband/core/sa_query.c        | 2 +-
+ drivers/infiniband/hw/i40iw/i40iw_verbs.c | 2 +-
+ drivers/infiniband/sw/siw/siw_mem.c       | 9 ++-------
+ drivers/infiniband/sw/siw/siw_verbs.c     | 2 +-
+ drivers/infiniband/ulp/srp/ib_srp.c       | 3 +--
+ 7 files changed, 8 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/random.h b/include/linux/random.h
-index 9e30f0bb3e50b..4a325f5cf298f 100644
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -112,7 +112,6 @@ unsigned long randomize_page(unsigned long start, unsigned long range);
- u32 prandom_u32(void);
- void prandom_bytes(void *buf, size_t nbytes);
- void prandom_seed(u32 seed);
--void prandom_reseed_late(void);
+diff --git a/drivers/infiniband/core/cm.c b/drivers/infiniband/core/cm.c
+index 4decc1d4cc997..8af4368faf8ee 100644
+--- a/drivers/infiniband/core/cm.c
++++ b/drivers/infiniband/core/cm.c
+@@ -4449,7 +4449,7 @@ static int __init ib_cm_init(void)
+ 	cm.remote_qp_table = RB_ROOT;
+ 	cm.remote_sidr_table = RB_ROOT;
+ 	xa_init_flags(&cm.local_id_table, XA_FLAGS_ALLOC | XA_FLAGS_LOCK_IRQ);
+-	get_random_bytes(&cm.random_id_operand, sizeof cm.random_id_operand);
++	cm.random_id_operand = (__force __be32)get_random_u32();
+ 	INIT_LIST_HEAD(&cm.timewait_list);
  
- struct rnd_state {
- 	__u32 s[4];
-diff --git a/lib/random32.c b/lib/random32.c
-index 5d8483243c410..5191da383dd18 100644
---- a/lib/random32.c
-+++ b/lib/random32.c
-@@ -167,12 +167,17 @@ void prandom_bytes(void *buf, size_t bytes)
+ 	ret = class_register(&cm_class);
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index a5874d2fac54e..1fce71e625c15 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -873,9 +873,8 @@ struct rdma_cm_id *__rdma_create_id(struct net *net,
+ 	mutex_init(&id_priv->handler_mutex);
+ 	INIT_LIST_HEAD(&id_priv->listen_list);
+ 	INIT_LIST_HEAD(&id_priv->mc_list);
+-	get_random_bytes(&id_priv->seq_num, sizeof id_priv->seq_num);
++	id_priv->seq_num = get_random_u32() & 0x00ffffff;
+ 	id_priv->id.route.addr.dev_addr.net = get_net(net);
+-	id_priv->seq_num &= 0x00ffffff;
+ 
+ 	return &id_priv->id;
  }
- EXPORT_SYMBOL(prandom_bytes);
- 
-+/*
-+ * Prefer arch_get_random_int (x86 RDRAND instruction) over
-+ * arch_get_random_seed_int (x86 RDSEED) for this application,
-+ * as it's good enough, and cheaper.
-+ */
- static u32 __extract_hwseed(void)
+diff --git a/drivers/infiniband/core/sa_query.c b/drivers/infiniband/core/sa_query.c
+index 30d4c126a2db0..0db882e247234 100644
+--- a/drivers/infiniband/core/sa_query.c
++++ b/drivers/infiniband/core/sa_query.c
+@@ -2426,7 +2426,7 @@ int ib_sa_init(void)
  {
- 	unsigned int val = 0;
+ 	int ret;
  
--	(void)(arch_get_random_seed_int(&val) ||
--	       arch_get_random_int(&val));
-+	(void)(arch_get_random_int(&val) ||
-+	       arch_get_random_seed_int(&val));
+-	get_random_bytes(&tid, sizeof tid);
++	tid = get_random_u32();
  
- 	return val;
- }
-@@ -205,9 +210,7 @@ static u32 mix32(u32 x)
-  *	@seed: seed value
-  *	@mix_with_hwseed: flag enabling use of hardware entropy, if avaiable
-  *
-- *	This initializes the state without using the /dev/random pool
-- *	(which is assumed to not be ready yet).  If @mix_with_hwseed is
-- *	%false, the seeding is repeatable.
-+ *	This avoids using /dev/urandom, which is not ready yet.
-  *
-  *	The test for an all-zero state is arguably pointless.  It is
-  *	impossible if @mix_with_hwseed is %false, and has probability of
-@@ -215,7 +218,7 @@ static u32 mix32(u32 x)
-  */
- void prandom_seed_early(struct rnd_state *state, u32 seed, bool mix_with_hwseed)
+ 	atomic_set(&ib_nl_sa_request_seq, 0);
+ 
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_verbs.c b/drivers/infiniband/hw/i40iw/i40iw_verbs.c
+index dbd96d029d8bd..4c62b3a4f4233 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_verbs.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_verbs.c
+@@ -1262,7 +1262,7 @@ static u32 i40iw_create_stag(struct i40iw_device *iwdev)
+ 	u8 consumer_key;
+ 	int ret;
+ 
+-	get_random_bytes(&random, sizeof(random));
++	random = get_random_u32();
+ 	consumer_key = (u8)random;
+ 
+ 	driver_key = random & ~iwdev->mr_stagmask;
+diff --git a/drivers/infiniband/sw/siw/siw_mem.c b/drivers/infiniband/sw/siw/siw_mem.c
+index e99983f076631..50c84f6a98e51 100644
+--- a/drivers/infiniband/sw/siw/siw_mem.c
++++ b/drivers/infiniband/sw/siw/siw_mem.c
+@@ -21,10 +21,7 @@
+ int siw_mem_add(struct siw_device *sdev, struct siw_mem *m)
  {
--	uint32_t bits;
-+	u32 bits;
+ 	struct xa_limit limit = XA_LIMIT(1, 0x00ffffff);
+-	u32 id, next;
+-
+-	get_random_bytes(&next, 4);
+-	next &= 0x00ffffff;
++	u32 id, next = get_random_u32() & 0x00ffffff;
  
- 	do {
- 		int i;
-@@ -231,6 +234,31 @@ void prandom_seed_early(struct rnd_state *state, u32 seed, bool mix_with_hwseed)
- }
- EXPORT_SYMBOL(prandom_seed_early);
+ 	if (xa_alloc_cyclic(&sdev->mem_xa, &id, m, limit, &next,
+ 	    GFP_KERNEL) < 0)
+@@ -107,9 +104,7 @@ int siw_mr_add_mem(struct siw_mr *mr, struct ib_pd *pd, void *mem_obj,
+ 	kref_init(&mem->ref);
  
-+/**
-+ *	prandom_init - Initial weak seeding of the prandom_u32() engine
-+ */
-+static int __init prandom_init(void)
-+{
-+	int i;
-+
-+	prandom_state_selftest();
-+
-+	for_each_possible_cpu(i) {
-+		struct rnd_state *state = &per_cpu(net_rand_state, i);
-+		u32 weak_seed = mix32(i + jiffies) ^ random_get_entropy();
-+
-+		prandom_seed_early(state, weak_seed, true);
-+	}
-+
-+	return 0;
-+}
-+core_initcall(prandom_init);
-+
-+/*
-+ * When /dev/urandom is ready, we reseed the generator completely, then
-+ * do periodic minor reseeding.  The following code manages that.
-+ */
-+
- /**
-  *	prandom_seed - add entropy to pseudo random number generator
-  *	@entropy: entropy value
-@@ -280,52 +308,6 @@ void prandom_seed(u32 entropy)
- }
- EXPORT_SYMBOL(prandom_seed);
+ 	mr->mem = mem;
+-
+-	get_random_bytes(&next, 4);
+-	next &= 0x00ffffff;
++	next = get_random_u32() & 0x00ffffff;
  
--/*
-- *	Generate some initially weak seeding values to allow
-- *	to start the prandom_u32() engine.
-- */
--static int __init prandom_init(void)
--{
--	int i;
--
--	prandom_state_selftest();
--
--	for_each_possible_cpu(i) {
--		struct rnd_state *state = &per_cpu(net_rand_state, i);
--		u32 weak_seed = (i + jiffies) ^ random_get_entropy();
--
--		prandom_seed_early(state, weak_seed, true);
--	}
--
--	return 0;
--}
--core_initcall(prandom_init);
--
--static void __prandom_timer(struct timer_list *unused);
--
--static DEFINE_TIMER(seed_timer, __prandom_timer);
--
--static void __prandom_timer(struct timer_list *unused)
--{
--	u32 entropy;
--	unsigned long expires;
--
--	get_random_bytes(&entropy, sizeof(entropy));
--	prandom_seed(entropy);
--
--	/* reseed every ~60 seconds, in [40 .. 80) interval with slack */
--	expires = 40 * HZ + prandom_u32_max(40 * HZ);
--	seed_timer.expires = jiffies + expires;
--
--	add_timer(&seed_timer);
--}
--
--static void __init __prandom_start_seed_timer(void)
--{
--	seed_timer.expires = jiffies + 40 * HZ;
--	add_timer(&seed_timer);
--}
--
- /**
-  *	prandom_seed_full_state - Reseed PRNG with full entropy
-  *	@pcpu_state: Per-CPU state to update
-@@ -351,48 +333,51 @@ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state)
- }
- EXPORT_SYMBOL(prandom_seed_full_state);
+ 	if (xa_alloc_cyclic(&sdev->mem_xa, &id, mem, limit, &next,
+ 	    GFP_KERNEL) < 0) {
+diff --git a/drivers/infiniband/sw/siw/siw_verbs.c b/drivers/infiniband/sw/siw/siw_verbs.c
+index 5fd6d6499b3d7..42f3ced4ca7c7 100644
+--- a/drivers/infiniband/sw/siw/siw_verbs.c
++++ b/drivers/infiniband/sw/siw/siw_verbs.c
+@@ -1139,7 +1139,7 @@ int siw_create_cq(struct ib_cq *base_cq, const struct ib_cq_init_attr *attr,
+ 		rv = -ENOMEM;
+ 		goto err_out;
+ 	}
+-	get_random_bytes(&cq->id, 4);
++	cq->id = get_random_u32();
+ 	siw_dbg(base_cq->device, "new CQ [%u]\n", cq->id);
  
-+static void __prandom_timer(struct timer_list *unused);
-+
-+static DEFINE_TIMER(seed_timer, __prandom_timer);
-+
-+static void __prandom_timer(struct timer_list *unused)
-+{
-+	unsigned long expires;
-+	static bool seeded = false;
-+
-+	if (seeded) {
-+		prandom_seed(get_random_u32());
-+	} else if (rng_is_initialized()) {
-+		/* First time, do a full reseed */
-+		seeded = true;
-+		prandom_seed_full_state(&net_rand_state);
-+	}
-+
-+	/* reseed every ~60 seconds, in [40 .. 80) interval with slack */
-+	expires = round_jiffies(jiffies + 40 * HZ + prandom_u32_max(40 * HZ));
-+	mod_timer(&seed_timer, expires);
-+}
-+
- /*
-- *	Generate better values after random number generator
-- *	is fully initialized.
-+ * The random ready callback can be called from almost any interrupt.
-+ * To avoid worrying about whether it's safe to delay that interrupt
-+ * long enough to seed all CPUs, just schedule an immediate timer event.
-  */
--static void __prandom_reseed(bool late)
-+static void prandom_timer_start(struct random_ready_callback *unused)
- {
--	unsigned long flags;
--	static bool latch = false;
--	static DEFINE_SPINLOCK(lock);
--
--	/* Asking for random bytes might result in bytes getting
--	 * moved into the nonblocking pool and thus marking it
--	 * as initialized. In this case we would double back into
--	 * this function and attempt to do a late reseed.
--	 * Ignore the pointless attempt to reseed again if we're
--	 * already waiting for bytes when the nonblocking pool
--	 * got initialized.
--	 */
--
--	/* only allow initial seeding (late == false) once */
--	if (!spin_trylock_irqsave(&lock, flags))
--		return;
--
--	if (latch && !late)
--		goto out;
--
--	latch = true;
--	prandom_seed_full_state(&net_rand_state);
--out:
--	spin_unlock_irqrestore(&lock, flags);
-+	mod_timer(&seed_timer, jiffies);
- }
- 
--void prandom_reseed_late(void)
--{
--	__prandom_reseed(true);
--}
-+static struct random_ready_callback random_ready = {
-+        .func = prandom_timer_start
-+};
- 
- static int __init prandom_reseed(void)
- {
--	__prandom_reseed(false);
--	__prandom_start_seed_timer();
--	return 0;
-+	int ret = add_random_ready_callback(&random_ready);
-+
-+	if (ret == -EALREADY) {
-+		prandom_timer_start(&random_ready);
-+		ret = 0;
-+	}
-+	return ret;
- }
- late_initcall(prandom_reseed);
- 
+ 	spin_lock_init(&cq->lock);
+diff --git a/drivers/infiniband/ulp/srp/ib_srp.c b/drivers/infiniband/ulp/srp/ib_srp.c
+index cd1181c39ed29..2a954db0d6b55 100644
+--- a/drivers/infiniband/ulp/srp/ib_srp.c
++++ b/drivers/infiniband/ulp/srp/ib_srp.c
+@@ -903,8 +903,7 @@ static int srp_send_req(struct srp_rdma_ch *ch, uint32_t max_iu_len,
+ 		req->ib_param.primary_path = &ch->ib_cm.path;
+ 		req->ib_param.alternate_path = NULL;
+ 		req->ib_param.service_id = target->ib_cm.service_id;
+-		get_random_bytes(&req->ib_param.starting_psn, 4);
+-		req->ib_param.starting_psn &= 0xffffff;
++		req->ib_param.starting_psn = get_random_u32() & 0xffffff;
+ 		req->ib_param.qp_num = ch->qp->qp_num;
+ 		req->ib_param.qp_type = ch->qp->qp_type;
+ 		req->ib_param.local_cm_response_timeout = subnet_timeout + 2;
 -- 
 2.26.0
 
