@@ -6,189 +6,138 @@ X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF0AC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F54C43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 755FA206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03EC3206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:45:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgC1Qpn (ORCPT
+        id S1727933AbgC1Qpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 12:45:43 -0400
-Received: from mx.sdf.org ([205.166.94.20]:50074 "EHLO mx.sdf.org"
+        Sat, 28 Mar 2020 12:45:42 -0400
+Received: from mx.sdf.org ([205.166.94.20]:50006 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727750AbgC1Qnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727749AbgC1Qnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 28 Mar 2020 12:43:33 -0400
 Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGhJqQ014207
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGhGdv020471
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sat, 28 Mar 2020 16:43:20 GMT
+        Sat, 28 Mar 2020 16:43:16 GMT
 Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02SGhJ0C010012;
-        Sat, 28 Mar 2020 16:43:19 GMT
-Message-Id: <202003281643.02SGhJ0C010012@sdf.org>
+        by sdf.org (8.15.2/8.12.8/Submit) id 02SGhF9R022227;
+        Sat, 28 Mar 2020 16:43:15 GMT
+Message-Id: <202003281643.02SGhF9R022227@sdf.org>
 From:   George Spelvin <lkml@sdf.org>
-Date:   Sun, 8 Mar 2020 06:09:17 -0400
-Subject: [RFC PATCH v1 33/50] lib/test_vmalloc.c: Use pseudorandom numbers
+Date:   Thu, 3 Oct 2019 07:10:40 -0400
+Subject: [RFC PATCH v1 23/50] prandom_seed_state(): Change to 32-bit seed
+ type.
 To:     linux-kernel@vger.kernel.org, lkml@sdf.org
-Cc:     Uladzislau Rezki <urezki@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, linux-mm@kvack.org
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Hannes Frederic Sowa <hannes@stressinduktion.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Test code doesn't need crypto-grade randomness.
+It only uses 32 bits of the seed anyway, and the vast majority
+of callers pass in 32-bit values.  The only exceptions are:
+* Several self-tests used a fixed seed of 3141592653589793238ULL.
+  Changed to 3141592653.
+* arch/x86/mm/kaslr.c uses a seed from kaslr_get_random_long().
+  It's already well-mixed, so truncating it is no worse than
+  the previous xor-folding.
 
-Also:
-* Simplify shuffle_array using the initialize-while-shuffling
-  Fisher-Yates variant.
-* Shrink the data type to u8; it's currently shuffling 8 items and
-  exceeding 256 will not happen soon.
-* Implement the sequential_test_order flag inside shuffle_array
-  rather than testing it at each call site.  (This is implemented the
-  compact way using an invariant conditional branch inside the loop.
-  Modern branch predictors handle such things very efficiently.)
+(We could use the folded equivalent 32-bit seed for the self-tests,
+but we just changed the PRNG algorithm, so the self-tests will
+change across these commits anyway.)
 
 Signed-off-by: George Spelvin <lkml@sdf.org>
-Cc: Uladzislau Rezki (Sony) <urezki@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: linux-mm@kvack.org
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Stephen Hemminger <stephen@networkplumber.org>
+Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
 ---
- lib/test_vmalloc.c | 58 ++++++++++++++++++----------------------------
- 1 file changed, 23 insertions(+), 35 deletions(-)
+ include/linux/random.h   | 9 +++------
+ lib/interval_tree_test.c | 2 +-
+ lib/rbtree_test.c        | 2 +-
+ lib/test_bpf.c           | 2 +-
+ lib/test_parman.c        | 2 +-
+ 5 files changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
-index 8bbefcaddfe84..27b06c97a2a08 100644
---- a/lib/test_vmalloc.c
-+++ b/lib/test_vmalloc.c
-@@ -74,22 +74,20 @@ test_report_one_done(void)
- 
- static int random_size_align_alloc_test(void)
+diff --git a/include/linux/random.h b/include/linux/random.h
+index 4a325f5cf298f..7956063253261 100644
+--- a/include/linux/random.h
++++ b/include/linux/random.h
+@@ -210,14 +210,11 @@ void prandom_seed_early(struct rnd_state *state, u32 seed, bool);
+ /**
+  * prandom_seed_state - set seed for prandom_u32_state().
+  * @state: pointer to state structure to receive the seed.
+- * @seed: arbitrary 64-bit value to use as a seed.
+- *        (only 32 bits are actually used)
++ * @seed: arbitrary 32-bit value to use as a seed.
+  */
+-static inline void prandom_seed_state(struct rnd_state *state, u64 seed)
++static inline void prandom_seed_state(struct rnd_state *state, u32 seed)
  {
--	unsigned long size, align, rnd;
-+	unsigned long size, align;
- 	void *ptr;
- 	int i;
- 
- 	for (i = 0; i < test_loop_count; i++) {
--		get_random_bytes(&rnd, sizeof(rnd));
+-	u32 i = (seed >> 32) ^ (seed << 10) ^ seed;
 -
- 		/*
- 		 * Maximum 1024 pages, if PAGE_SIZE is 4096.
- 		 */
--		align = 1 << (rnd % 23);
-+		align = prandom_u32_max(23);
- 
- 		/*
- 		 * Maximum 10 pages.
- 		 */
--		size = ((rnd % 10) + 1) * PAGE_SIZE;
-+		size = (prandom_u32_max(10) + 1) * PAGE_SIZE;
- 
- 		ptr = __vmalloc_node_range(size, align,
- 		   VMALLOC_START, VMALLOC_END,
-@@ -157,20 +155,16 @@ static int fix_align_alloc_test(void)
- 
- static int random_size_alloc_test(void)
- {
--	unsigned int n;
- 	void *p;
- 	int i;
- 
- 	for (i = 0; i < test_loop_count; i++) {
--		get_random_bytes(&n, sizeof(i));
--		n = (n % 100) + 1;
--
--		p = vmalloc(n * PAGE_SIZE);
-+		p = vmalloc((prandom_u32_max(100) + 1) * PAGE_SIZE);
- 
- 		if (!p)
- 			return -1;
- 
--		*((__u8 *)p) = 1;
-+		*(__u8 *)p = 1;
- 		vfree(p);
- 	}
- 
-@@ -304,16 +298,12 @@ pcpu_alloc_test(void)
- 		return -1;
- 
- 	for (i = 0; i < 35000; i++) {
--		unsigned int r;
--
--		get_random_bytes(&r, sizeof(i));
--		size = (r % (PAGE_SIZE / 4)) + 1;
-+		size = prandom_u32_max(PAGE_SIZE / 4) + 1;
- 
- 		/*
- 		 * Maximum PAGE_SIZE
- 		 */
--		get_random_bytes(&r, sizeof(i));
--		align = 1 << ((i % 11) + 1);
-+		align = 1 << (prandom_u32_max(PAGE_SHIFT-1) + 1);
- 
- 		pcpu[i] = __alloc_percpu(size, align);
- 		if (!pcpu[i])
-@@ -362,28 +352,30 @@ static struct test_driver {
- 	int cpu;
- } per_cpu_test_driver[NR_CPUS];
- 
--static void shuffle_array(int *arr, int n)
-+/*
-+ * Generate a permutation array.  Shuffled by default, or
-+ * the identity mapping if sequential_test_order is set.
-+ */
-+static void shuffle_array(u8 *arr, int n)
- {
--	unsigned int rnd;
--	int i, j, x;
-+	int i;
- 
--	for (i = n - 1; i > 0; i--)  {
--		get_random_bytes(&rnd, sizeof(rnd));
-+	arr[0] = 0;
- 
--		/* Cut the range. */
--		j = rnd % i;
--
--		/* Swap indexes. */
--		x = arr[i];
--		arr[i] = arr[j];
--		arr[j] = x;
-+	for (i = 1; i < n; i++) {
-+		int j = i;
-+		if  (!sequential_test_order) {
-+			j = prandom_u32_max(i+1);
-+			arr[i] = arr[j];
-+		}
-+		arr[j] = i;
- 	}
+-	prandom_seed_early(state, i, false);
++	prandom_seed_early(state, seed, false);
  }
  
- static int test_func(void *private)
+ #ifdef CONFIG_ARCH_RANDOM
+diff --git a/lib/interval_tree_test.c b/lib/interval_tree_test.c
+index 8c129c8c638b9..149bca1edbf0d 100644
+--- a/lib/interval_tree_test.c
++++ b/lib/interval_tree_test.c
+@@ -79,7 +79,7 @@ static int interval_tree_test_init(void)
+ 
+ 	printk(KERN_ALERT "interval tree insert/remove");
+ 
+-	prandom_seed_state(&rnd, 3141592653589793238ULL);
++	prandom_seed_state(&rnd, 3141592653);
+ 	init();
+ 
+ 	time1 = get_cycles();
+diff --git a/lib/rbtree_test.c b/lib/rbtree_test.c
+index 41ae3c7570d39..129b653e6d702 100644
+--- a/lib/rbtree_test.c
++++ b/lib/rbtree_test.c
+@@ -251,7 +251,7 @@ static int __init rbtree_test_init(void)
+ 
+ 	printk(KERN_ALERT "rbtree testing");
+ 
+-	prandom_seed_state(&rnd, 3141592653589793238ULL);
++	prandom_seed_state(&rnd, 3141592653);
+ 	init();
+ 
+ 	time1 = get_cycles();
+diff --git a/lib/test_bpf.c b/lib/test_bpf.c
+index cecb230833bed..76697e24ee206 100644
+--- a/lib/test_bpf.c
++++ b/lib/test_bpf.c
+@@ -134,7 +134,7 @@ static int bpf_fill_maxinsns3(struct bpf_test *self)
+ 	if (!insn)
+ 		return -ENOMEM;
+ 
+-	prandom_seed_state(&rnd, 3141592653589793238ULL);
++	prandom_seed_state(&rnd, 3141592653);
+ 
+ 	for (i = 0; i < len - 1; i++) {
+ 		__u32 k = prandom_u32_state(&rnd);
+diff --git a/lib/test_parman.c b/lib/test_parman.c
+index 35e32243693c9..9db1fe1b45083 100644
+--- a/lib/test_parman.c
++++ b/lib/test_parman.c
+@@ -131,7 +131,7 @@ static const struct parman_ops test_parman_lsort_ops = {
+ 
+ static void test_parman_rnd_init(struct test_parman *test_parman)
  {
- 	struct test_driver *t = private;
--	int random_array[ARRAY_SIZE(test_case_array)];
-+	u8 random_array[ARRAY_SIZE(test_case_array)];
- 	int index, i, j;
- 	ktime_t kt;
- 	u64 delta;
-@@ -391,11 +383,7 @@ static int test_func(void *private)
- 	if (set_cpus_allowed_ptr(current, cpumask_of(t->cpu)) < 0)
- 		pr_err("Failed to set affinity to %d CPU\n", t->cpu);
+-	prandom_seed_state(&test_parman->rnd, 3141592653589793238ULL);
++	prandom_seed_state(&test_parman->rnd, 3141592653);
+ }
  
--	for (i = 0; i < ARRAY_SIZE(test_case_array); i++)
--		random_array[i] = i;
--
--	if (!sequential_test_order)
--		shuffle_array(random_array, ARRAY_SIZE(test_case_array));
-+	shuffle_array(random_array, ARRAY_SIZE(test_case_array));
- 
- 	/*
- 	 * Block until initialization is done.
+ static u32 test_parman_rnd_get(struct test_parman *test_parman)
 -- 
 2.26.0
 
