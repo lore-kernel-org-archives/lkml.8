@@ -6,77 +6,61 @@ X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90D2AC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A173DC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E53220748
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:46:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82E18206DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbgC1Qn1 (ORCPT
+        id S1728156AbgC1QqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 12:43:27 -0400
-Received: from mx.sdf.org ([205.166.94.20]:50208 "EHLO mx.sdf.org"
+        Sat, 28 Mar 2020 12:46:07 -0400
+Received: from mx.sdf.org ([205.166.94.20]:50095 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727401AbgC1QnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 12:43:20 -0400
+        id S1727635AbgC1Qn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 12:43:27 -0400
 Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGhC9q026662
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGhJns017800
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sat, 28 Mar 2020 16:43:12 GMT
+        Sat, 28 Mar 2020 16:43:19 GMT
 Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02SGhCt7025631;
-        Sat, 28 Mar 2020 16:43:12 GMT
-Message-Id: <202003281643.02SGhCt7025631@sdf.org>
+        by sdf.org (8.15.2/8.12.8/Submit) id 02SGhJ8Y024747;
+        Sat, 28 Mar 2020 16:43:19 GMT
+Message-Id: <202003281643.02SGhJ8Y024747@sdf.org>
 From:   George Spelvin <lkml@sdf.org>
-Date:   Fri, 29 Nov 2019 15:24:22 -0500
-Subject: [RFC PATCH v1 14/50] crypto/testmgr.c: use prandom_u32_max() &
- prandom_bytes()
+Date:   Fri, 29 Nov 2019 16:44:33 -0500
+Subject: [RFC PATCH v1 31/50] lib/nodemask.c: Use cheaper prandom_u32_max() in
+ node_random()
 To:     linux-kernel@vger.kernel.org, lkml@sdf.org
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org
+Cc:     Michal Hocko <mhocko@suse.com>, Mel Gorman <mgorman@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-...in a couple of places where they're appropriate.
-
-There are many other places where successive code blocks make calls
-like prandom_u32() % 2 followed immediately by prandom_u32() % 4.
-This could be easily written to use three bits of one call, but
-at some cost in clarity and obvious-correctness, which is more
-important that efficiency in self-test code.
+This function is to spread things around uniformly; cryptographic
+unguessability is not required.
 
 Signed-off-by: George Spelvin <lkml@sdf.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: linux-crypto@vger.kernel.org
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mel Gorman <mgorman@suse.de>
 ---
- crypto/testmgr.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ lib/nodemask.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-index e8f21f7348a48..bc9252768bdba 100644
---- a/crypto/testmgr.c
-+++ b/crypto/testmgr.c
-@@ -770,7 +770,7 @@ static void mutate_buffer(u8 *buf, size_t count)
- 	if (prandom_u32() % 4 == 0) {
- 		num_flips = min_t(size_t, 1 << (prandom_u32() % 8), count * 8);
- 		for (i = 0; i < num_flips; i++) {
--			pos = prandom_u32() % (count * 8);
-+			pos = prandom_u32_max(count * 8);
- 			buf[pos / 8] ^= 1 << (pos % 8);
- 		}
- 	}
-@@ -821,8 +821,7 @@ static void generate_random_bytes(u8 *buf, size_t count)
- 		break;
- 	default:
- 		/* Fully random bytes */
--		for (i = 0; i < count; i++)
--			buf[i] = (u8)prandom_u32();
-+		prandom_bytes(buf, count);
- 	}
+diff --git a/lib/nodemask.c b/lib/nodemask.c
+index 3aa454c54c0de..330f9c7d3da97 100644
+--- a/lib/nodemask.c
++++ b/lib/nodemask.c
+@@ -25,7 +25,7 @@ int node_random(const nodemask_t *maskp)
+ 	w = nodes_weight(*maskp);
+ 	if (w)
+ 		bit = bitmap_ord_to_pos(maskp->bits,
+-			get_random_int() % w, MAX_NUMNODES);
++			prandom_u32_max(w), MAX_NUMNODES);
+ 	return bit;
  }
- 
+ #endif
 -- 
 2.26.0
 
