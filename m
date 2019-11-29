@@ -6,138 +6,132 @@ X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28F54C43331
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A74BC43331
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:45:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03EC3206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552892073E
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:45:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgC1Qpm (ORCPT
+        id S1727994AbgC1Qpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 12:45:42 -0400
-Received: from mx.sdf.org ([205.166.94.20]:50006 "EHLO mx.sdf.org"
+        Sat, 28 Mar 2020 12:45:50 -0400
+Received: from mx.sdf.org ([205.166.94.20]:50018 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727749AbgC1Qnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 12:43:33 -0400
+        id S1727722AbgC1Qnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 12:43:32 -0400
 Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGhGdv020471
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGhJkQ015420
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sat, 28 Mar 2020 16:43:16 GMT
+        Sat, 28 Mar 2020 16:43:19 GMT
 Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02SGhF9R022227;
-        Sat, 28 Mar 2020 16:43:15 GMT
-Message-Id: <202003281643.02SGhF9R022227@sdf.org>
+        by sdf.org (8.15.2/8.12.8/Submit) id 02SGhJI8005124;
+        Sat, 28 Mar 2020 16:43:19 GMT
+Message-Id: <202003281643.02SGhJI8005124@sdf.org>
 From:   George Spelvin <lkml@sdf.org>
-Date:   Thu, 3 Oct 2019 07:10:40 -0400
-Subject: [RFC PATCH v1 23/50] prandom_seed_state(): Change to 32-bit seed
- type.
+Date:   Fri, 29 Nov 2019 17:12:18 -0500
+Subject: [RFC PATCH v1 32/50] lib/test*.c: Use prandom_u32_max()
 To:     linux-kernel@vger.kernel.org, lkml@sdf.org
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Hannes Frederic Sowa <hannes@stressinduktion.org>
+Cc:     Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It only uses 32 bits of the seed anyway, and the vast majority
-of callers pass in 32-bit values.  The only exceptions are:
-* Several self-tests used a fixed seed of 3141592653589793238ULL.
-  Changed to 3141592653.
-* arch/x86/mm/kaslr.c uses a seed from kaslr_get_random_long().
-  It's already well-mixed, so truncating it is no worse than
-  the previous xor-folding.
-
-(We could use the folded equivalent 32-bit seed for the self-tests,
-but we just changed the PRNG algorithm, so the self-tests will
-change across these commits anyway.)
+lib/reed_solomon/test_rslib.c alreasy uses prandom_u32();
+lib/test_hexdump.c and lib/test-string_helpers.c were using
+get_random_int() % range, which is needlessly expensive for
+test code.
 
 Signed-off-by: George Spelvin <lkml@sdf.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Stephen Hemminger <stephen@networkplumber.org>
-Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
+Cc: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
 ---
- include/linux/random.h   | 9 +++------
- lib/interval_tree_test.c | 2 +-
- lib/rbtree_test.c        | 2 +-
- lib/test_bpf.c           | 2 +-
- lib/test_parman.c        | 2 +-
- 5 files changed, 7 insertions(+), 10 deletions(-)
+ lib/reed_solomon/test_rslib.c |  4 ++--
+ lib/test-string_helpers.c     |  2 +-
+ lib/test_hexdump.c            | 10 +++++-----
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/random.h b/include/linux/random.h
-index 4a325f5cf298f..7956063253261 100644
---- a/include/linux/random.h
-+++ b/include/linux/random.h
-@@ -210,14 +210,11 @@ void prandom_seed_early(struct rnd_state *state, u32 seed, bool);
- /**
-  * prandom_seed_state - set seed for prandom_u32_state().
-  * @state: pointer to state structure to receive the seed.
-- * @seed: arbitrary 64-bit value to use as a seed.
-- *        (only 32 bits are actually used)
-+ * @seed: arbitrary 32-bit value to use as a seed.
-  */
--static inline void prandom_seed_state(struct rnd_state *state, u64 seed)
-+static inline void prandom_seed_state(struct rnd_state *state, u32 seed)
+diff --git a/lib/reed_solomon/test_rslib.c b/lib/reed_solomon/test_rslib.c
+index 4eb29f365ece0..58e767c142ef8 100644
+--- a/lib/reed_solomon/test_rslib.c
++++ b/lib/reed_solomon/test_rslib.c
+@@ -183,7 +183,7 @@ static int get_rcw_we(struct rs_control *rs, struct wspace *ws,
+ 
+ 		do {
+ 			/* Must not choose the same location twice */
+-			errloc = prandom_u32() % len;
++			errloc = prandom_u32_max(len);
+ 		} while (errlocs[errloc] != 0);
+ 
+ 		errlocs[errloc] = 1;
+@@ -194,7 +194,7 @@ static int get_rcw_we(struct rs_control *rs, struct wspace *ws,
+ 	for (i = 0; i < eras; i++) {
+ 		do {
+ 			/* Must not choose the same location twice */
+-			errloc = prandom_u32() % len;
++			errloc = prandom_u32_max(len);
+ 		} while (errlocs[errloc] != 0);
+ 
+ 		derrlocs[i] = errloc;
+diff --git a/lib/test-string_helpers.c b/lib/test-string_helpers.c
+index 25b5cbfb7615b..3349f3ddc528c 100644
+--- a/lib/test-string_helpers.c
++++ b/lib/test-string_helpers.c
+@@ -398,7 +398,7 @@ static int __init test_string_helpers_init(void)
+ 	for (i = 0; i < UNESCAPE_ANY + 1; i++)
+ 		test_string_unescape("unescape", i, false);
+ 	test_string_unescape("unescape inplace",
+-			     get_random_int() % (UNESCAPE_ANY + 1), true);
++			     prandom_u32_max(UNESCAPE_ANY + 1), true);
+ 
+ 	/* Without dictionary */
+ 	for (i = 0; i < (ESCAPE_ANY_NP | ESCAPE_HEX) + 1; i++)
+diff --git a/lib/test_hexdump.c b/lib/test_hexdump.c
+index 5144899d3c6b8..54e4efb28b974 100644
+--- a/lib/test_hexdump.c
++++ b/lib/test_hexdump.c
+@@ -149,7 +149,7 @@ static void __init test_hexdump(size_t len, int rowsize, int groupsize,
+ static void __init test_hexdump_set(int rowsize, bool ascii)
  {
--	u32 i = (seed >> 32) ^ (seed << 10) ^ seed;
--
--	prandom_seed_early(state, i, false);
-+	prandom_seed_early(state, seed, false);
- }
+ 	size_t d = min_t(size_t, sizeof(data_b), rowsize);
+-	size_t len = get_random_int() % d + 1;
++	size_t len = prandom_u32_max(d) + 1;
  
- #ifdef CONFIG_ARCH_RANDOM
-diff --git a/lib/interval_tree_test.c b/lib/interval_tree_test.c
-index 8c129c8c638b9..149bca1edbf0d 100644
---- a/lib/interval_tree_test.c
-+++ b/lib/interval_tree_test.c
-@@ -79,7 +79,7 @@ static int interval_tree_test_init(void)
- 
- 	printk(KERN_ALERT "interval tree insert/remove");
- 
--	prandom_seed_state(&rnd, 3141592653589793238ULL);
-+	prandom_seed_state(&rnd, 3141592653);
- 	init();
- 
- 	time1 = get_cycles();
-diff --git a/lib/rbtree_test.c b/lib/rbtree_test.c
-index 41ae3c7570d39..129b653e6d702 100644
---- a/lib/rbtree_test.c
-+++ b/lib/rbtree_test.c
-@@ -251,7 +251,7 @@ static int __init rbtree_test_init(void)
- 
- 	printk(KERN_ALERT "rbtree testing");
- 
--	prandom_seed_state(&rnd, 3141592653589793238ULL);
-+	prandom_seed_state(&rnd, 3141592653);
- 	init();
- 
- 	time1 = get_cycles();
-diff --git a/lib/test_bpf.c b/lib/test_bpf.c
-index cecb230833bed..76697e24ee206 100644
---- a/lib/test_bpf.c
-+++ b/lib/test_bpf.c
-@@ -134,7 +134,7 @@ static int bpf_fill_maxinsns3(struct bpf_test *self)
- 	if (!insn)
- 		return -ENOMEM;
- 
--	prandom_seed_state(&rnd, 3141592653589793238ULL);
-+	prandom_seed_state(&rnd, 3141592653);
- 
- 	for (i = 0; i < len - 1; i++) {
- 		__u32 k = prandom_u32_state(&rnd);
-diff --git a/lib/test_parman.c b/lib/test_parman.c
-index 35e32243693c9..9db1fe1b45083 100644
---- a/lib/test_parman.c
-+++ b/lib/test_parman.c
-@@ -131,7 +131,7 @@ static const struct parman_ops test_parman_lsort_ops = {
- 
- static void test_parman_rnd_init(struct test_parman *test_parman)
+ 	test_hexdump(len, rowsize, 4, ascii);
+ 	test_hexdump(len, rowsize, 2, ascii);
+@@ -208,11 +208,11 @@ static void __init test_hexdump_overflow(size_t buflen, size_t len,
+ static void __init test_hexdump_overflow_set(size_t buflen, bool ascii)
  {
--	prandom_seed_state(&test_parman->rnd, 3141592653589793238ULL);
-+	prandom_seed_state(&test_parman->rnd, 3141592653);
- }
+ 	unsigned int i = 0;
+-	int rs = (get_random_int() % 2 + 1) * 16;
++	int rs = (prandom_u32() % 2 + 1) * 16;
  
- static u32 test_parman_rnd_get(struct test_parman *test_parman)
+ 	do {
+ 		int gs = 1 << i;
+-		size_t len = get_random_int() % rs + gs;
++		size_t len = prandom_u32_max(rs) + gs;
+ 
+ 		test_hexdump_overflow(buflen, rounddown(len, gs), rs, gs, ascii);
+ 	} while (i++ < 3);
+@@ -223,11 +223,11 @@ static int __init test_hexdump_init(void)
+ 	unsigned int i;
+ 	int rowsize;
+ 
+-	rowsize = (get_random_int() % 2 + 1) * 16;
++	rowsize = (prandom_u32() % 2 + 1) * 16;
+ 	for (i = 0; i < 16; i++)
+ 		test_hexdump_set(rowsize, false);
+ 
+-	rowsize = (get_random_int() % 2 + 1) * 16;
++	rowsize = (prandom_u32() % 2 + 1) * 16;
+ 	for (i = 0; i < 16; i++)
+ 		test_hexdump_set(rowsize, true);
+ 
 -- 
 2.26.0
 
