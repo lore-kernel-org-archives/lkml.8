@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C390C2D0E5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F8DC2D0EE
 	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8411206F6
-	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:43:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F66206F6
+	for <linux-kernel@archiver.kernel.org>; Sat, 28 Mar 2020 16:43:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727115AbgC1QnP (ORCPT
+        id S1727247AbgC1QnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 28 Mar 2020 12:43:15 -0400
-Received: from mx.sdf.org ([205.166.94.20]:50265 "EHLO mx.sdf.org"
+        Sat, 28 Mar 2020 12:43:16 -0400
+Received: from mx.sdf.org ([205.166.94.20]:50251 "EHLO mx.sdf.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726382AbgC1QnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 28 Mar 2020 12:43:14 -0400
+        id S1726382AbgC1QnP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 28 Mar 2020 12:43:15 -0400
 Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGh9V0022720
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGhAHP029768
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
-        Sat, 28 Mar 2020 16:43:09 GMT
+        Sat, 28 Mar 2020 16:43:10 GMT
 Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 02SGh9n2025458;
-        Sat, 28 Mar 2020 16:43:09 GMT
-Message-Id: <202003281643.02SGh9n2025458@sdf.org>
+        by sdf.org (8.15.2/8.12.8/Submit) id 02SGhAEl008453;
+        Sat, 28 Mar 2020 16:43:10 GMT
+Message-Id: <202003281643.02SGhAEl008453@sdf.org>
 From:   George Spelvin <lkml@sdf.org>
-Date:   Sat, 16 Mar 2019 02:32:04 -0400
-Subject: [RFC PATCH v1 09/50] <linux/random.h> prandom_u32_max() for
- power-of-2 ranges
+Date:   Fri, 20 Dec 2019 22:30:32 -0500
+Subject: [RFC PATCH v1 10/50] <linux/random.h> Make prandom_u32_max() exact
+ for constant ranges
 To:     linux-kernel@vger.kernel.org, lkml@sdf.org
 Cc:     Stephen Hemminger <stephen@networkplumber.org>,
         Hannes Frederic Sowa <hannes@stressinduktion.org>
@@ -39,124 +39,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add special-case optimization for compile-time constant power-of-2
-ranges (as a simple shift) so it's *always* at least as efficient as
-"prandom_u32() % range".
+This is a cute hack I'm not sure should go into the kernel.
+Comments very much requested!
 
-This saves all callers from having to worry about the issue.  You
-may use "% range" or "& (range - 1)" if you know the range is a
-power of 2, but you don't have to.
+Getting rid of the last tiny bit of non-uniformity is quite cheap
+*if* the range is known at compile time: a compare with an immediate
+and a (rarely taken) conditional branch to retry.
 
-Rename the parameter from the un-mnemonic "ep_ro" to "range".
+So for hack value, implement this for compile-time constant ranges.
 
-Also expand comments, and add to prandom_32() documentation
-that "prandom_u32() % range" should ''not'' be used.
+For variable ranges, it involves a division, so just live with the
+slight non-uniformity.
+
+The style questions are:
+- Is a more accurate result *some* of the time actually worth anything?
+- Is the benefit enough to justify the ugly inconsistency?
 
 Signed-off-by: George Spelvin <lkml@sdf.org>
 Cc: Stephen Hemminger <stephen@networkplumber.org>
 Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
 ---
- include/linux/random.h | 56 ++++++++++++++++++++++++++++++++++--------
- lib/random32.c         |  9 ++++---
- 2 files changed, 52 insertions(+), 13 deletions(-)
+ include/linux/random.h | 63 ++++++++++++++++++++++++++++++------------
+ 1 file changed, 46 insertions(+), 17 deletions(-)
 
 diff --git a/include/linux/random.h b/include/linux/random.h
-index f189c927fdea5..109772175c833 100644
+index 109772175c833..82dd0d613e75c 100644
 --- a/include/linux/random.h
 +++ b/include/linux/random.h
-@@ -125,20 +125,56 @@ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
- 	DO_ONCE(prandom_seed_full_state, (pcpu_state))
+@@ -9,6 +9,7 @@
  
- /**
-- * prandom_u32_max - returns a pseudo-random number in interval [0, ep_ro)
-- * @ep_ro: right open interval endpoint
-+ * prandom_u32_max - returns a pseudo-random number in interval [0, @range)
-+ * @range: Upper bound on the return value; the first value never returned.
+ #include <linux/list.h>
+ #include <linux/once.h>
++#include <linux/math64.h>
+ 
+ #include <uapi/linux/random.h>
+ 
+@@ -147,9 +148,11 @@ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
+  * a property that is provided by prandom_u32().)
   *
-- * Returns a pseudo-random number that is in interval [0, ep_ro). Note
-- * that the result depends on PRNG being well distributed in [0, ~0U]
-- * u32 space. Here we use maximally equidistributed combined Tausworthe
-- * generator, that is, prandom_u32(). This is useful when requesting a
-- * random index of an array containing ep_ro elements, for example.
-+ * Returns a pseudo-random number 0 <= @x < @range.
-+ * This is useful when requesting a random index into an array containing
-+ * @range elements, for example.  This is similar to, but more efficient
-+ * than, "prandom_u32() % @range".
+  * It is possible to extend this to avoid all bias and return perfectly
+- * uniform pseudorandom numbers by discarding and regenerating sometimes,
+- * but if your needs are that stringent, you might want to use a stronger
+- * generator (like get_random_u32()).
++ * uniform pseudorandom numbers by discarding and regenerating sometimes.
++ * That's easy to do for constant ranges, so this code does it in that
++ * case, but settles for the approimation for variable ranges.  If you
++ * need exact uniformity, you might also want to use a stronger generator
++ * (like get_random_u32()).
   *
-- * Returns: pseudo-random number in interval [0, ep_ro)
-+ * It's also a tiny bit more uniform than the modulo algorithm.  If @range
-+ * does not divide 1<<32, then some results will occur ceil((1<<32)/@range)
-+ * times, while others will occur floor((1<<32)/range) times.  The modulo
-+ * algorithm makes the lowest (1<<32) % @range possible results occur
-+ * more often, and the higher values all occur slightly less often.
-+ *
-+ * A multiplicative algorithm spreads out the over- and underrepresented
-+ * outputs evenly across the range.  For example, if @range == 7, then
-+ * 2, 4 and 6 occur slighty less often than 0, 1, 3 or 5.
-+ *
-+ * (This all assumes the PRNG is well distributed in [0, ~0U] u32 space,
-+ * a property that is provided by prandom_u32().)
-+ *
-+ * It is possible to extend this to avoid all bias and return perfectly
-+ * uniform pseudorandom numbers by discarding and regenerating sometimes,
-+ * but if your needs are that stringent, you might want to use a stronger
-+ * generator (like get_random_u32()).
-+ *
-+ * Ref:
-+ * 	Fast Random Integer Generation in an Interval
-+ * 	Daniel Lemire
-+ * 	https://arxiv.org/abs/1805.10941
-+ *
-+ * Return: pseudo-random number in interval [0, @range)
+  * Ref:
+  * 	Fast Random Integer Generation in an Interval
+@@ -160,21 +163,47 @@ void prandom_seed_full_state(struct rnd_state __percpu *pcpu_state);
   */
--static inline u32 prandom_u32_max(u32 ep_ro)
-+static inline u32 prandom_u32_max(u32 range)
+ static inline u32 prandom_u32_max(u32 range)
  {
--	return (u32)(((u64) prandom_u32() * ep_ro) >> 32);
-+	/*
-+	 * If the range is a compile-time constant power of 2, then use
-+	 * a simple shift.  This is mathematically equivalent to the
-+	 * multiplication, but GCC 8.3 doesn't optimize that perfectly.
-+	 *
-+	 * We could do an AND with a mask, but
-+	 * 1) The shift is the same speed on a decent CPU,
-+	 * 2) It's generally smaller code (smaller immediate), and
-+	 * 3) Many PRNGs have trouble with their low-order bits;
-+	 *    using the msbits is generaly preferred.
-+	 */
-+	if (__builtin_constant_p(range) && (range & (range - 1)) == 0)
-+		return prandom_u32() / (u32)(0x100000000 / range);
-+	else
-+		return reciprocal_scale(prandom_u32(), range);
+-	/*
+-	 * If the range is a compile-time constant power of 2, then use
+-	 * a simple shift.  This is mathematically equivalent to the
+-	 * multiplication, but GCC 8.3 doesn't optimize that perfectly.
+-	 *
+-	 * We could do an AND with a mask, but
+-	 * 1) The shift is the same speed on a decent CPU,
+-	 * 2) It's generally smaller code (smaller immediate), and
+-	 * 3) Many PRNGs have trouble with their low-order bits;
+-	 *    using the msbits is generaly preferred.
+-	 */
+-	if (__builtin_constant_p(range) && (range & (range - 1)) == 0)
+-		return prandom_u32() / (u32)(0x100000000 / range);
+-	else
++	if (!__builtin_constant_p(range)) {
++		/*
++		 * If range is a variable, prioritize speed over
++		 * perfect uniformity.
++		 */
+ 		return reciprocal_scale(prandom_u32(), range);
++	} else if (range & (range - 1)) {
++		/*
++		 * If the range is a compile-time constant, then achieving
++		 * perfect uniformity is one compare with immediate and
++		 * one unlikely branch, so go ahead and do it.
++		 *
++		 * Some 32-bit processors require an additional
++		 * instruction to get the low half of a 64-bit product.
++		 * PowerPC and NIOS have separate "multiply high" and
++		 * "multiply low" instructions.  MIPS32 and ARC need to
++		 * move the result from a special-purpose register to
++		 * a GPR.
++		 */
++		u32 const lim = -range % range;
++		u64 prod;
++
++		do
++			prod = mul_u32_u32(prandom_u32(), range);
++		while (unlikely((u32)prod < lim));
++		return prod >> 32;
++	} else {
++		/*
++		 * If the range is a compile-time constant power of 2,
++		 * then use a simple shift.  This is mathematically
++		 * equivalent to the multiplication, but GCC 8.3 doesn't
++		 * optimize that perfectly.
++		 *
++		 * We could do an AND with a mask, but
++		 * 1) The shift is the same speed on a decent CPU,
++		 * 2) It's generally smaller code (smaller immediate), and
++		 * 3) Many PRNGs have trouble with their low-order bits;
++		 *    using the msbits is generaly preferred.
++		 */
++			return prandom_u32() / (u32)(0x100000000 / range);
++	}
  }
  
  /*
-diff --git a/lib/random32.c b/lib/random32.c
-index 763b920a6206c..fc369f4e550c2 100644
---- a/lib/random32.c
-+++ b/lib/random32.c
-@@ -75,15 +75,18 @@ EXPORT_SYMBOL(prandom_u32_state);
-  *	A 32 bit pseudo-random number is generated using a fast
-  *	algorithm suitable for simulation. This algorithm is NOT
-  *	considered safe for cryptographic use.
-+ *
-+ *	To generate a random number in a specified interval, use
-+ *	prandom_u32_max(), which uses reciprocal_scale().  Please do
-+ *	NOT use a modulo operation (prandom_u32() % range), which is
-+ *	more expensive.
-  */
- u32 prandom_u32(void)
- {
- 	struct rnd_state *state = &get_cpu_var(net_rand_state);
--	u32 res;
-+	u32 res = prandom_u32_state(state);
- 
--	res = prandom_u32_state(state);
- 	put_cpu_var(net_rand_state);
--
- 	return res;
- }
- EXPORT_SYMBOL(prandom_u32);
 -- 
 2.26.0
 
