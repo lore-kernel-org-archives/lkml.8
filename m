@@ -2,161 +2,123 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 401BEC33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE26C33C99
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2130220721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A51420721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:13:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dqJTwC9n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726217AbgAJFKg (ORCPT
+        id S1726623AbgAJFNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 00:10:36 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55026 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725799AbgAJFKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 00:10:35 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 4478DB566B8B45BDBD5B;
-        Fri, 10 Jan 2020 13:10:32 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.183) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 10 Jan 2020
- 13:10:21 +0800
-To:     Jens Axboe <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        <npiggin@suse.de>
-CC:     Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
-        zhangsaisai <zhangsaisai@huawei.com>,
-        "wubo (T)" <wubo40@huawei.com>, <behlendorf1@llnl.gov>,
-        <amwang@redhat.com>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Subject: [PATCH] brd: check parameter validation before register_blkdev func
-Message-ID: <342ee238-0e7c-c213-eecc-7062f24985cc@huawei.com>
-Date:   Fri, 10 Jan 2020 13:10:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 10 Jan 2020 00:13:02 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:51567 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbgAJFNC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 00:13:02 -0500
+Received: by mail-pj1-f67.google.com with SMTP id j11so467863pjs.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 21:13:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Tmf+Kxucvb62NiCjSTWMZBNjJ8UNF1K5QBIAcifMgQI=;
+        b=dqJTwC9nF+cQfR6H5U3TZiI9pnBoPZjL1vGQJveXhqrGGKv+0e0PiUtmGFRLEVIi9H
+         PSrgKfip+Q8V76oK2lCMuGJnruqiAcJBDkHaKQgBPMN7yNGnReo2sKZldcep+jgXgpm4
+         1X4p7ZaUv18Ed3P6kabJ4llMEdx8+fvGPmLjQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Tmf+Kxucvb62NiCjSTWMZBNjJ8UNF1K5QBIAcifMgQI=;
+        b=p5K58uqCdLVe2jLC35ddNJJNlyxao2okwystvQpWa33UQGhjx5gIzswoGZ/H5UAkvM
+         YfihcChp/TbY8oFcn4bDpIryY9V1SYjqYwoOlQ48Kk3ED52iaSBkZRONIOFG4TWwT4FY
+         QGISFa6Vfxw4HY3LVPA3EHTasny8T8uBSVxSucITYSkBSlbPK/+OTcp0HkiYQjg1/5pu
+         Je0feWk6uE02XTrQdj+3puY+eOY6nfktVQEy6pVwa0cfl6VstOGgiyQY2bLCzHyiVZ5A
+         Nb5iYaU/Jzk0LY7bN/9RPeR2Z6Bh+bRIq0COaOuma2KyEBL6CT0eZferugBpx89w1j2O
+         vIww==
+X-Gm-Message-State: APjAAAXIzor6OtCiZ8wfB9k7N1x05W/Bavs9d8aHpvLMTySP8z7+CMTX
+        J+1BW9AEOpTbLD1PMP9P0EEuXg==
+X-Google-Smtp-Source: APXvYqya22I94aB51t/b5586U5xsAVsE1JwObmcgOBjtPfTa0YzbMamXcKH1ztnT77pUjbQTqlTx0Q==
+X-Received: by 2002:a17:90b:8b:: with SMTP id bb11mr2367447pjb.27.1578633181385;
+        Thu, 09 Jan 2020 21:13:01 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g19sm847886pfh.134.2020.01.09.21.13.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 21:13:00 -0800 (PST)
+Date:   Thu, 9 Jan 2020 21:12:59 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH] init: fix misleading "This architecture does not have
+ kernel memory protection" message
+Message-ID: <202001092112.14F20C4DCE@keescook>
+References: <62477e446d9685459d4f27d193af6ff1bd69d55f.1578557581.git.christophe.leroy@c-s.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.183]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <62477e446d9685459d4f27d193af6ff1bd69d55f.1578557581.git.christophe.leroy@c-s.fr>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 09, 2020 at 08:15:01AM +0000, Christophe Leroy wrote:
+> This message leads to think that memory protection is not implemented
+> for the said architecture, whereas absence of CONFIG_STRICT_KERNEL_RWX
+> only means that memory protection has not been selected at
+> compile time.
+> 
+> Don't print this message when CONFIG_ARCH_HAS_STRICT_KERNEL_RWX is
+> selected by the architecture. Instead, print "Kernel memory protection
+> not selected by kernel config."
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-In brd_init func, rd_nr num of brd_device are firstly allocated
-and add in brd_devices, then brd_devices are traversed to add each
-brd_device by calling add_disk func. When allocating brd_device,
-the disk->first_minor is set to i * max_part, if rd_nr * max_part
-is larger than MINORMASK, two different brd_device may have the same
-devt, then only one of them can be successfully added.
-when rmmod brd.ko, it will cause oops when calling brd_exit.
+Oh, yes, I like this. Should the message include a hint to the config
+name?
 
-Follow those steps:
-  # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
-  # rmmod brd
-then, the oops will appear.
+Regardless:
 
-Oops log:
-[  726.613722] Call trace:
-[  726.614175]  kernfs_find_ns+0x24/0x130
-[  726.614852]  kernfs_find_and_get_ns+0x44/0x68
-[  726.615749]  sysfs_remove_group+0x38/0xb0
-[  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
-[  726.617320]  blk_unregister_queue+0x98/0x100
-[  726.618105]  del_gendisk+0x144/0x2b8
-[  726.618759]  brd_exit+0x68/0x560 [brd]
-[  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
-[  726.620384]  el0_svc_common+0x78/0x130
-[  726.621057]  el0_svc_handler+0x38/0x78
-[  726.621738]  el0_svc+0x8/0xc
-[  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
+Acked-by: Kees Cook <keescook@chromium.org>
 
-Here, we add brd_check_par_valid func to check parameter
-validation before register_blkdev func.
+-Kees
 
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
----
- drivers/block/brd.c | 33 ++++++++++++++++++++++++++-------
- 1 file changed, 26 insertions(+), 7 deletions(-)
+> ---
+>  init/main.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/init/main.c b/init/main.c
+> index 2cd736059416..fd31b15cc910 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -1090,6 +1090,11 @@ static void mark_readonly(void)
+>  	} else
+>  		pr_info("Kernel memory protection disabled.\n");
+>  }
+> +#elif defined(CONFIG_ARCH_HAS_STRICT_KERNEL_RWX)
+> +static inline void mark_readonly(void)
+> +{
+> +	pr_warn("Kernel memory protection not selected by kernel config.\n");
+> +}
+>  #else
+>  static inline void mark_readonly(void)
+>  {
+> -- 
+> 2.13.3
+> 
 
-diff --git a/drivers/block/brd.c b/drivers/block/brd.c
-index df8103dd40ac..3a4510b2c24f 100644
---- a/drivers/block/brd.c
-+++ b/drivers/block/brd.c
-@@ -330,16 +330,16 @@ static const struct block_device_operations brd_fops = {
- /*
-  * And now the modules code and kernel interface.
-  */
--static int rd_nr = CONFIG_BLK_DEV_RAM_COUNT;
--module_param(rd_nr, int, 0444);
-+static unsigned int rd_nr = CONFIG_BLK_DEV_RAM_COUNT;
-+module_param(rd_nr, uint, 0444);
- MODULE_PARM_DESC(rd_nr, "Maximum number of brd devices");
-
- unsigned long rd_size = CONFIG_BLK_DEV_RAM_SIZE;
- module_param(rd_size, ulong, 0444);
- MODULE_PARM_DESC(rd_size, "Size of each RAM disk in kbytes.");
-
--static int max_part = 1;
--module_param(max_part, int, 0444);
-+static unsigned int max_part = 1;
-+module_param(max_part, uint, 0444);
- MODULE_PARM_DESC(max_part, "Num Minors to reserve between devices");
-
- MODULE_LICENSE("GPL");
-@@ -468,10 +468,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
- 	return kobj;
- }
-
-+static inline int brd_check_par_valid(void)
-+{
-+	if (unlikely(!rd_nr))
-+		rd_nr = 1;
-+
-+	if (unlikely(!max_part))
-+		max_part = 1;
-+
-+	if (rd_nr * max_part > MINORMASK)
-+		return -EINVAL;
-+
-+	return 0;
-+
-+}
-+
- static int __init brd_init(void)
- {
- 	struct brd_device *brd, *next;
--	int i;
-+	int i, ret;
-
- 	/*
- 	 * brd module now has a feature to instantiate underlying device
-@@ -488,11 +503,15 @@ static int __init brd_init(void)
- 	 *	dynamically.
- 	 */
-
-+	ret = brd_check_par_valid();
-+	if (ret) {
-+		pr_info("brd: invalid parameter setting!!!\n");
-+		return ret;
-+	}
-+
- 	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
- 		return -EIO;
-
--	if (unlikely(!max_part))
--		max_part = 1;
-
- 	for (i = 0; i < rd_nr; i++) {
- 		brd = brd_alloc(i);
 -- 
-2.19.1
-
-
+Kees Cook
