@@ -2,53 +2,55 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3886C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E1AC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7551C2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82A3F2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:04:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mj5DUC60"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LB5tR4Kz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgAJPE0 (ORCPT
+        id S1728441AbgAJPEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:04:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46035 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728167AbgAJPEX (ORCPT
+        Fri, 10 Jan 2020 10:04:38 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:48214 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728174AbgAJPEi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:04:23 -0500
+        Fri, 10 Jan 2020 10:04:38 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578668662;
+        s=mimecast20190719; t=1578668677;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zpRs+t3MnBquJOXxU7DLw4h9hLZJR04RmfH2UeDCZ2w=;
-        b=Mj5DUC60G6wm7gMuAzjujeUPCS6yyssSlFzqlYPQ833QkECPIjhyi1LoM748DNTD5HQvrH
-        h8xKFb6d+u/+Y0z/XQTNUxoC7GwhcI0JXJt/KVqbGz7EPZRgW6/nXcuic6ITlKNVcx/gb8
-        lMBr5yZuxxb9DJrqnzNpQm5FsYrCsqs=
+        bh=Si2zczaQ4B24l4I/KMqrXoy/jC0DLGxbZKyOpiSxhFg=;
+        b=LB5tR4Kz+jt9N875hfjHKOjQhD28ys9l8Ts8wx/38ayJZicUZych/Z3fMMmxVLXROskZ4Z
+        HVPChqIZB0KCbQYa1YCyjBJAqIvygugRMmn+8yUhaT+flANa3eHeW7c7mPWvXMystLkfbI
+        ubBl6jXv3sd7ieJ/AixzXvUNhJXP0zo=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-375-fmVMeFvvMLOECcXhOOR0wA-1; Fri, 10 Jan 2020 10:04:19 -0500
-X-MC-Unique: fmVMeFvvMLOECcXhOOR0wA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-428-Yuk5rVSHP9W0m6CF3Wsnyg-1; Fri, 10 Jan 2020 10:04:33 -0500
+X-MC-Unique: Yuk5rVSHP9W0m6CF3Wsnyg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D8CC4107ACC5;
-        Fri, 10 Jan 2020 15:04:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44E1C107ACC5;
+        Fri, 10 Jan 2020 15:04:31 +0000 (UTC)
 Received: from krava (ovpn-205-164.brq.redhat.com [10.40.205.164])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9F628088C;
-        Fri, 10 Jan 2020 15:04:12 +0000 (UTC)
-Date:   Fri, 10 Jan 2020 16:04:10 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0A1535DA32;
+        Fri, 10 Jan 2020 15:04:24 +0000 (UTC)
+Date:   Fri, 10 Jan 2020 16:04:22 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
         Jiri Olsa <jolsa@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
         Suzuki K Poulose <suzuki.poulose@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
@@ -59,104 +61,45 @@ Cc:     Leo Yan <leo.yan@linaro.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Andi Kleen <ak@linux.intel.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Mike Leach <mike.leach@linaro.org>
 Subject: Re: [PATCH v4 1/2] perf parse: Refactor struct perf_evsel_config_term
-Message-ID: <20200110150410.GG82989@krava>
+Message-ID: <20200110150422.GH82989@krava>
 References: <20200108142010.11269-1-leo.yan@linaro.org>
- <CANLsYkzv2Di-qeU1Q3M4Ro21hQ09eE26FBjeP1A9uSsA_W2Uww@mail.gmail.com>
- <20200109050753.GA24741@leoy-ThinkPad-X240s>
- <20200109163424.GA5721@xps15>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200109163424.GA5721@xps15>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20200108142010.11269-1-leo.yan@linaro.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 09:34:24AM -0700, Mathieu Poirier wrote:
+On Wed, Jan 08, 2020 at 10:20:09PM +0800, Leo Yan wrote:
+> The struct perf_evsel_config_term::val is a union which contains
+> multiple variables for corresponding types.  This leads the union to
+> be complex and also causes complex code logic.
+>=20
+> This patch refactors the structure to use two general variables in the
+> 'val' union: one is 'num' for unsigned 64-bit integer and another is
+> 'str' for string variable.  This can simplify the data structure and
+> the related code, this also can benefit for possibly extension.
+>=20
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 
-SNIP
+there's some arch code that needs to be changed.. please
+change other archs as well
 
-> 
-> If we are to deal with all flields of the union, I think it should be as below:
-> 
->         union {
->                 bool            cfg_bool;
->                 int             cfg_int;
->                 unsigned long   cfg_ulong;
->                 u32             cfg_u32;
->                 char            *cfg_str;
->         } val;
-> 
-> But just dealing with the "char *" as below would also be fine with me:
-> 
->         union {
->                 u64           period;
->                 u64           freq;
->                 bool          time;
->                 u64           stack_user;
->                 int           max_stack;
->                 bool          inherit;
->                 bool          overwrite;
->                 unsigned long max_events;
->                 bool          percore;
->                 bool          aux_output;
->                 u32           aux_sample_size;
->                 u64           cfg_chg;
->                 u64           num;
->                 char          *str;
->         } val;
-> 
-> > 
-> > struct perf_evsel_config_term {
-> >         struct list_head      list;
-> >         enum evsel_term_type  type;
-> >         union {
-> >                 u64           period;
-> >                 u64           freq;
-> >                 bool          time;
-> >                 char          *callgraph;
-> >                 char          *drv_cfg;
-> >                 u64           stack_user;
-> >                 int           max_stack;
-> >                 bool          inherit;
-> >                 bool          overwrite;
-> >                 char          *branch;
-> >                 unsigned long max_events;
-> >                 bool          percore;
-> >                 bool          aux_output;
-> >                 u32           aux_sample_size;
-> >                 u64           cfg_chg;
-> > +               u64           num;
-> > +               char          *str;
-> >         } val;
-> >         bool weak;
-> > };
-> > 
-> > > I will let Jiri make the
-> > > final call but if we are to proceed this way I think we should have a
-> > > member per type to avoid casting issues.
-> > 
-> > Yeah, let's see what's Jiri thinking.
-> > 
-> > Just note, with this change, I don't see any casting warning or errors
-> > when built perf on arm64/arm32.
-> 
-> At this time you may not, but they will happen and it will be very hard to
-> debug.
 
-hi,
-sry for late reply..
+  CC       arch/x86/util/intel-pt.o
+arch/x86/util/intel-pt.c: In function =E2=80=98intel_pt_config_sample_mod=
+e=E2=80=99:
+arch/x86/util/intel-pt.c:563:24: error: =E2=80=98union <anonymous>=E2=80=99=
+ has no member named =E2=80=98cfg_chg=E2=80=99
+  563 |   user_bits =3D term->val.cfg_chg;
 
-I think ;-) we should either add all different types to the union
-or just add 'str' pointer to handle strings correctly.. which seems
-better, because it's less changes and there's no real issue that
-would need that other bigger change
-
+thanks,
 jirka
 
