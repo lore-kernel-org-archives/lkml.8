@@ -2,226 +2,222 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C4EC33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED14C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 551DF2072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:02:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mT8F6V8r"
+	by mail.kernel.org (Postfix) with ESMTP id 12A762077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727202AbgAJJCK (ORCPT
+        id S1727232AbgAJJCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 04:02:10 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:50375 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbgAJJCK (ORCPT
+        Fri, 10 Jan 2020 04:02:15 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:34504 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgAJJCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 04:02:10 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200110090207euoutp02912bd7fa3bae3a6f9cd5d27b0d3df9e6~oewRHLYoa0482404824euoutp02B
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 09:02:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200110090207euoutp02912bd7fa3bae3a6f9cd5d27b0d3df9e6~oewRHLYoa0482404824euoutp02B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578646927;
-        bh=dwV4Npw9r6qPc6ttr4WwQa903LZlPCh9eDq1TvJ49kI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=mT8F6V8rSiqVfvf6c2YlyO/ILxgqUeAzaJB7RWQ/dANxnr+r5wKD+GCui3jx96beg
-         9IFrm3ylmm/84LB/YiMAUvr/C98ghmn6t7hA8TUtl2FY9RD5TZVmyN5RWS//E7f+GI
-         HNkV4KTY+ekN5UOvN0vOMBpBX9FjBCNAFft65f1U=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200110090207eucas1p17dd6d50d9482c5e7243e681c1abf8bd3~oewQtJVVk1764817648eucas1p1z;
-        Fri, 10 Jan 2020 09:02:07 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id CD.67.60679.F8D381E5; Fri, 10
-        Jan 2020 09:02:07 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200110090206eucas1p2ae6ed03009d68fe9bc3f247af911f07d~oewQZSUq00534305343eucas1p27;
-        Fri, 10 Jan 2020 09:02:06 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200110090206eusmtrp2de6d0820bcfb4326677bc986e8185dae~oewQYnF140591305913eusmtrp2b;
-        Fri, 10 Jan 2020 09:02:06 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-b3-5e183d8f38df
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 73.45.08375.E8D381E5; Fri, 10
-        Jan 2020 09:02:06 +0000 (GMT)
-Received: from [106.120.51.15] (unknown [106.120.51.15]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200110090206eusmtip19212741310764cd95be15a7a05d5fbf4~oewPzck_S1722517225eusmtip1h;
-        Fri, 10 Jan 2020 09:02:06 +0000 (GMT)
-Subject: Re: Applied
- "ASoC: max98090: fix incorrect helper in max98090_dapm_put_enum_double()" to
- the asoc tree
-To:     Mark Brown <broonie@kernel.org>
-Cc:     alsa-devel@alsa-project.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Dylan Reid <dgreid@google.com>,
-        Jimmy Cheng-Yi Chiang <cychiang@google.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tzung-Bi Shih <tzungbi@google.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <77e524c5-f0a4-1996-2bf5-cbb7395f7c25@samsung.com>
-Date:   Fri, 10 Jan 2020 10:02:05 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.3.1
+        Fri, 10 Jan 2020 04:02:14 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: fLyOfaOivnZV6YnC2Hm4qrzSy3aJusqZOQ2BvdZayW0cBMFam8uBQpkrV6fIhVe+two1u0FQNP
+ V0xPBFc50RMnXp9xW9pKgg2rHrfEYvNFw8cTEwuc8AJFBYF23v18FdWw7N7bxZjDi2V0sgV8pS
+ UB3h+BLpY75VNTAJuzy/uqcz0TaVHPetFdOdswfmxQQCQFdn8fwr+zga1BwkAMw0HNI2ArIhdU
+ sQvKMtMyO577ZJVsTPY1T+Ca9dlgoOPaAtCCUgSGrA4Ug5AfSdyLseIbmI41jQsfZswWlbV3iB
+ 2z8=
+X-IronPort-AV: E=Sophos;i="5.69,415,1571727600"; 
+   d="scan'208";a="60369690"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jan 2020 02:02:09 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 10 Jan 2020 02:02:06 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Fri, 10 Jan 2020 02:02:06 -0700
+Date:   Fri, 10 Jan 2020 10:02:06 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Stephen Hemminger <stephen@networkplumber.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <davem@davemloft.net>,
+        <roopa@cumulusnetworks.com>, <nikolay@cumulusnetworks.com>,
+        <jakub.kicinski@netronome.com>, <vivien.didelot@gmail.com>,
+        <andrew@lunn.ch>, <jeffrey.t.kirsher@intel.com>,
+        <olteanv@gmail.com>, <anirudh.venkataramanan@intel.com>,
+        <dsahern@gmail.com>, <jiri@mellanox.com>,
+        <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next Patch 0/3] net: bridge: mrp: Add support for Media
+ Redundancy Protocol(MRP)
+Message-ID: <20200110090206.gihfd3coeilkyi23@soft-dev3.microsemi.net>
+References: <20200109150640.532-1-horatiu.vultur@microchip.com>
+ <20200109081907.06281c0f@hermes.lan>
 MIME-Version: 1.0
-In-Reply-To: <applied-20200108115007.31095-1-m.szyprowski@samsung.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTYRj13d3urqtrr1Pbk4nhLCkpzQy5VFqDkBFI0Z9K0lp6UfGzXWda
-        f9TEqX0YYbUtM7HwY1BOUdtMizQ/StNMJRETLKG0ltCkDy3N7Wr575zznMNzHngoQtos8qQS
-        UtJZdYoqSU5KhE2dv/p2FIdC9M5LBS7M0ECbgKnT1YqYGxOTJNPdnkMwWn0BYvr7TWJmsLmU
-        ZHT9TwRM+xetiGkZmBYfkChNtlxSWV6vUdYbC0nl1QYjUtrqvY+IIiX7YtmkhAxWHRh2WhL/
-        ccCE0rTyTOPwHMpGFq8i5EwB3g2PK7tREZJQUlyNYHxsVsSTWQR1Q+NintgQmEtaiJVI7c2y
-        ZVcVgivmRpInVgQjMzaHyw1zkFf+HdmxO/aF4R+tQruJwB8EYOleENoHJA6CImvRUpqiaBwG
-        T4cS7bIQbwFdT4nD4oGjYFHfKLBjGrvCC/2kQ3fG4TDRoHdgAm+CR9ZSgscyGJ28K7DvAtwp
-        htGXk4ivfRAsQ4ViHrvBdFfDMvaCRctK4CKCib4HYp5cRjCYq1tO74WxvjlHUwJvg9rmQF5W
-        QMnXV4RdBuwCI1ZXvoQLXG+6tSzTUJAv5d1+YOh6+G/ts9dviGtIblh1mmHVOYZV5xj+7y1H
-        QiOSsRouOY7ldqWw5wI4VTKnSYkLiElNrkdLH9Wz0DVrRs2/z7QhTCH5WjreTRYtFakyuKzk
-        NgQUIXenO0bWR0vpWFXWeVadekqtSWK5NrSREspldHDFVJQUx6nS2USWTWPVK1MB5eyZjbz+
-        OM0XH75XdbbKqh2u9XHui83qVQy2T8k+R9SsmVHEdEV0h64T3K/afvx2ZmlN2MxWD0tlmfed
-        E5KKXjTmPmPbExWysPmTBB81zJOt3971nHR6W3pIEelnznGj4f0Yk5/nG6fXmILJn1khx3w6
-        aHOo//jzDX77XfMDL4QrnKrlQi5eFeRPqDnVX1rD70BNAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNIsWRmVeSWpSXmKPExsVy+t/xu7p9thJxBvubjSyuXDzEZLFxxnpW
-        i6kPn7BZnDjcyGzRPrOD0eL8+Q3sFpd3zWGzmHF+H5PF4TftrBZ7Lr5id+Dy2PC5ic1jwaZS
-        j02rOtk8+rasYvT4vEkugDVKz6Yov7QkVSEjv7jEVina0MJIz9DSQs/IxFLP0Ng81srIVEnf
-        ziYlNSezLLVI3y5BL+P5xQ2MBe1KFauu/mJsYNwp08XIySEhYCKxfto8VhBbSGApo8S0A94Q
-        cRmJk9MaWCFsYYk/17rYuhi5gGpeM0psnXqCHSQhLFAo8WPuGmYQW0RAWeLq970sIEXMAs+Z
-        JB5tWsUC0TETqGPRKyaQKjYBQ4mutyCjODh4Bewk9l/JBgmzCKhKzDg9hQXEFhWIldi++SHY
-        UF4BQYmTM5+AxTkF3CQebpkJZjMLmEnMg6phFpCX2P52DpQtLnHryXymCYxCs5C0z0LSMgtJ
-        yywkLQsYWVYxiqSWFuem5xYb6hUn5haX5qXrJefnbmIERuS2Yz8372C8tDH4EKMAB6MSD+8B
-        UfE4IdbEsuLK3EOMEhzMSiK8R2+IxQnxpiRWVqUW5ccXleakFh9iNAV6biKzlGhyPjBZ5JXE
-        G5oamltYGpobmxubWSiJ83YIHIwREkhPLEnNTk0tSC2C6WPi4JRqYKwp5Pngx35pw73C/0UR
-        4gd/T933w+nhvfWb/+Sem74vqW6BN9DKH/M4dFxDZCxO7TTdWbpoosUs86iFqh53Vpg9qlg4
-        Nc32tEreGoNZbgEqhYzXkp5NTO1qz9tzr2+9ed3v4mWmxfKnjr8JEZUL7bjSP+Ppv7tRISt4
-        Mj9q2HDGsaf9ejTNXImlOCPRUIu5qDgRAFI/SNneAgAA
-X-CMS-MailID: 20200110090206eucas1p2ae6ed03009d68fe9bc3f247af911f07d
-X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200109212932eucas1p17a0066e1b426db3d4fdbd89632ea5130
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200109212932eucas1p17a0066e1b426db3d4fdbd89632ea5130
-References: <CGME20200109212932eucas1p17a0066e1b426db3d4fdbd89632ea5130@eucas1p1.samsung.com>
-        <applied-20200108115007.31095-1-m.szyprowski@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20200109081907.06281c0f@hermes.lan>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark
+The 01/09/2020 08:19, Stephen Hemminger wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> On Thu, 9 Jan 2020 16:06:37 +0100
+> Horatiu Vultur <horatiu.vultur@microchip.com> wrote:
+> 
+> > Media Redundancy Protocol is a data network protocol standardized by
+> > International Electrotechnical Commission as IEC 62439-2. It allows rings of
+> > Ethernet switches to overcome any single failure with recovery time faster than
+> > STP. It is primarily used in Industrial Ethernet applications.
+> >
+> > This is the first proposal of implementing a subset of the standard. It supports
+> > only 2 roles of an MRP node. It supports only Media Redundancy Manager(MRM) and
+> > Media Redundancy Client(MRC). In a MRP ring, each node needs to support MRP and
+> > in a ring can be only one MRM and multiple MRC. It is possible to have multiple
+> > instances of MRP on a single node. But a port can be part of only one MRP
+> > instance.
+> >
+> > The MRM is responsible for detecting when there is a loop in the ring. It is
+> > sending the frame MRP_Test to detect the loops. It would send MRP_Test on both
+> > ports in the ring and if the frame is received at the other end, then the ring
+> > is closed. Meaning that there is a loop. In this case it sets the port state to
+> > BLOCKED, not allowing traffic to pass through except MRP frames. In case it
+> > stops receiving MRP_Test frames from itself then the MRM will detect that the
+> > ring is open, therefor it would notify the other nodes of this change and will
+> > set the state of the port to be FORWARDING.
+> >
+> > The MRC is responsible for forwarding MRP_Test frames between the ring ports
+> > (and not to flood on other ports) and to listen when there is a change in the
+> > network to clear the FDB.
+> >
+> > Similar with STP, MRP is implemented on top of the bridge and they can't be
+> > enable at the same time. While STP runs on all ports of the bridge, MRP needs to
+> > run only on 2 ports.
+> >
+> > The bridge needs to:
+> > - notify when the link of one of the ports goes down or up, because MRP instance
+> >   needs to react to link changes by sending MRP_LinkChange frames.
+> > - notify when one of the ports are removed from the bridge or when the bridge
+> >   is destroyed, because if the port is part of the MRP ring then MRP state
+> >   machine should be stopped.
+> > - add a handler to allow MRP instance to process MRP frames, if MRP is enabled.
+> >   This is similar with STP design.
+> > - add logic for MRP frames inside the bridge. The bridge will just detect MRP
+> >   frames and it would forward them to the upper layer to allow to process it.
+> > - update the logic to update non-MRP frames. If MRP is enabled, then look also
+> >   at the state of the port to decide to forward or not.
+> >
+> > To create a MRP instance on the bridge:
+> > $ bridge mrp add dev br0 p_port eth0 s_port eth1 ring_role 2 ring_id 1
+> >
+> > Where:
+> > p_port, s_port: can be any port under the bridge
+> > ring_role: can have the value 1(MRC - Media Redundancy Client) or
+> >            2(MRM - Media Redundancy Manager). In a ring can be only one MRM.
+> > ring_id: unique id for each MRP instance.
+> >
+> > It is possible to create multiple instances. Each instance has to have it's own
+> > ring_id and a port can't be part of multiple instances:
+> > $ bridge mrp add dev br0 p_port eth2 s_port eth3 ring_role 1 ring_id 2
+> >
+> > To see current MRP instances and their status:
+> > $ bridge mrp show
+> > dev br0 p_port eth2 s_port eth3 ring_role 1 ring_id 2 ring_state 3
+> > dev br0 p_port eth0 s_port eth1 ring_role 2 ring_id 1 ring_state 4
+> >
+> > If this patch series is well received, the in the future it could be extended
+> > with the following:
+> > - add support for Media Redundancy Automanager. This role allows a node to
+> >   detect if needs to behave as a MRM or MRC. The advantage of this role is that
+> >   the user doesn't need to configure the nodes each time they are added/removed
+> >   from a ring and it adds redundancy to the manager.
+> > - add support for Interconnect rings. This allow to connect multiple rings.
+> > - add HW offloading. The standard defines 4 recovery times (500, 200, 30 and 10
+> >   ms). To be able to achieve 30 and 10 it is required by the HW to generate the
+> >   MRP_Test frames and detect when the ring is open/closed.
+> >
+> > Horatiu Vultur (3):
+> >   net: bridge: mrp: Add support for Media Redundancy Protocol
+> >   net: bridge: mrp: Integrate MRP into the bridge
+> >   net: bridge: mrp: Add netlink support to configure MRP
+> >
+> >  include/uapi/linux/if_bridge.h |   27 +
+> >  include/uapi/linux/if_ether.h  |    1 +
+> >  include/uapi/linux/rtnetlink.h |    7 +
+> >  net/bridge/Kconfig             |   12 +
+> >  net/bridge/Makefile            |    2 +
+> >  net/bridge/br.c                |   19 +
+> >  net/bridge/br_device.c         |    3 +
+> >  net/bridge/br_forward.c        |    1 +
+> >  net/bridge/br_if.c             |   10 +
+> >  net/bridge/br_input.c          |   22 +
+> >  net/bridge/br_mrp.c            | 1517 ++++++++++++++++++++++++++++++++
+> >  net/bridge/br_mrp_timer.c      |  227 +++++
+> >  net/bridge/br_netlink.c        |    9 +
+> >  net/bridge/br_private.h        |   30 +
+> >  net/bridge/br_private_mrp.h    |  208 +++++
+> >  security/selinux/nlmsgtab.c    |    5 +-
+> >  16 files changed, 2099 insertions(+), 1 deletion(-)
+> >  create mode 100644 net/bridge/br_mrp.c
+> >  create mode 100644 net/bridge/br_mrp_timer.c
+> >  create mode 100644 net/bridge/br_private_mrp.h
+> >
+> 
+> Can this be implemented in userspace?
 
-On 09.01.2020 22:29, Mark Brown wrote:
-> The patch
->
->     ASoC: max98090: fix incorrect helper in max98090_dapm_put_enum_double()
->
-> has been applied to the asoc tree at
->
->     https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
->
-> All being well this means that it will be integrated into the linux-next
-> tree (usually sometime in the next 24 hours) and sent to Linus during
-> the next merge window (or sooner if it is a bug fix), however if
-> problems are discovered then the patch may be dropped or reverted.
->
-> You may get further e-mails resulting from automated or manual testing
-> and review of the tree, please engage with people reporting problems and
-> send followup patches addressing any issues that are reported if needed.
->
-> If any updates are required or you are submitting further changes they
-> should be sent as incremental updates against current git, existing
-> patches will not be replaced.
->
-> Please add any relevant lists and maintainers to the CCs when replying
-> to this mail.
+The reason for putting this in kernal space is to HW offload this in
+switchdev/dsa driver. The switches which typically supports this are
+small and don't have a lot of CPU power and the bandwidth between the
+CPU and switch core is typically limited(at least this is the case with
+the switches that we are working). Therefor we need to use HW offload
+components which can inject the frames at the needed frequency and other
+components which can terminate the expected frames and just raise and
+interrupt if the test frames are not received as expected(and a few
+other HW features).
 
-Something went wrong :/.
+To put this in user-space we see two options:
+1. We need to define a netlink interface which allows a user-space
+control application to ask the kernel to ask the switchdev driver to
+setup the frame-injector or frame-terminator. In theory this would be
+possible, and we have considered it, but we think that this interface
+will be too specific for our HW and will need to be changed every time
+we want to add support for a new SoC. By focusing the user-space
+interfaces on the protocol requirement, we feel more confident that we
+have an interface which we can continue to be backwards compatible with,
+and also support future/other chips with what ever facilities (if any)
+they have to HW offload.
 
-This patch has been applied twice. First time for the 
-max98090_dapm_put_enum_double() function (as it has been designed), 
-second time for max98090_put_enum_double(), what is completely wrong 
-thing (it does exactly the opposite thing).
+2. Do a UIO driver and keep protocol and driver in user-space. We do not
+really like this approach for many reasons: it pretty much prevents us from
+collaborating with the community to solve this and it will be really hard
+to have the switchdev driver controlling part of the chip and a
+user-space driver controlling other parts.
 
-Mark, please revert/drop 4e93c1294f4b051d574d6bc59755d2863286990e commit.
+> 
+> Putting STP in the kernel was a mistake (even original author says so).
+> Adding more control protocols in kernel is a security and stability risk.
 
-
->
-> Thanks,
-> Mark
->
-> >From 4e93c1294f4b051d574d6bc59755d2863286990e Mon Sep 17 00:00:00 2001
-> From: Marek Szyprowski <m.szyprowski@samsung.com>
-> Date: Wed, 8 Jan 2020 12:50:06 +0100
-> Subject: [PATCH] ASoC: max98090: fix incorrect helper in
->   max98090_dapm_put_enum_double()
->
-> Commit 62d5ae4cafb7 ("ASoC: max98090: save and restore SHDN when changing
-> sensitive registers") extended the code for handling "LTENL Mux", "LTENR
-> Mux", "LBENL Mux" and "LBENR Mux" controls by adding a custom
-> max98090_dapm_put_enum_double() function to them. However that function
-> used incorrect helper to get its component object. Fix this by using the
-> proper snd_soc_dapm_* helper.
->
-> This fixes the following NULL pointer exception observed on
-> Exynos4412-based Odroid U3 board:
-> 8<--- cut here ---
-> Unable to handle kernel NULL pointer dereference at virtual address 000000b0
-> pgd = (ptrval)
-> [000000b0] *pgd=00000000
-> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
-> Modules linked in:
-> CPU: 0 PID: 1104 Comm: alsactl Not tainted 5.5.0-rc5-next-20200107 #166
-> Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-> PC is at __mutex_lock+0x54/0xb18
-> LR is at ___might_sleep+0x3c/0x2e0
-> ...
-> Process alsactl (pid: 1104, stack limit = 0x(ptrval))
-> ...
-> [<c0b49630>] (__mutex_lock) from [<c0b4a110>] (mutex_lock_nested+0x1c/0x24)
-> [<c0b4a110>] (mutex_lock_nested) from [<c0839b3c>] (max98090_shdn_save+0x1c/0x28)
-> [<c0839b3c>] (max98090_shdn_save) from [<c083a4f8>] (max98090_dapm_put_enum_double+0x20/0x40)
-> [<c083a4f8>] (max98090_dapm_put_enum_double) from [<c080d0e8>] (snd_ctl_ioctl+0x190/0xbb8)
-> [<c080d0e8>] (snd_ctl_ioctl) from [<c02cafec>] (ksys_ioctl+0x470/0xaf8)
-> [<c02cafec>] (ksys_ioctl) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-> ...
-> ---[ end trace 0e93f0580f4b9241 ]---
->
-> Fixes: 62d5ae4cafb7 ("ASoC: max98090: save and restore SHDN when changing sensitive registers")
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Reviewed-by: Tzung-Bi Shih <tzungbi@google.com>
-> Link: https://lore.kernel.org/r/20200108115007.31095-1-m.szyprowski@samsung.com
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
->   sound/soc/codecs/max98090.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-> index c01ce4a3f86d..ede03663cbed 100644
-> --- a/sound/soc/codecs/max98090.c
-> +++ b/sound/soc/codecs/max98090.c
-> @@ -98,7 +98,7 @@ static int max98090_put_enum_double(struct snd_kcontrol *kcontrol,
->   	struct snd_ctl_elem_value *ucontrol)
->   {
->   	struct snd_soc_component *component =
-> -		snd_soc_kcontrol_component(kcontrol);
-> +		snd_soc_dapm_kcontrol_component(kcontrol);
->   	struct max98090_priv *max98090 =
->   		snd_soc_component_get_drvdata(component);
->   	int ret;
-
-Best regards
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+/Horatiu
