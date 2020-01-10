@@ -2,124 +2,95 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAEE9C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B280BC33CA5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BE3B2072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 886AA20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:54:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgAJLyo (ORCPT
+        id S1728223AbgAJLyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:54:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:43198 "EHLO foss.arm.com"
+        Fri, 10 Jan 2020 06:54:52 -0500
+Received: from foss.arm.com ([217.140.110.172]:43242 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728153AbgAJLyj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:54:39 -0500
+        id S1728183AbgAJLyu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 06:54:50 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6BADF1435;
-        Fri, 10 Jan 2020 03:54:39 -0800 (PST)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.44])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52C513F534;
-        Fri, 10 Jan 2020 03:54:38 -0800 (PST)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 12/14] net: axienet: Autodetect 64-bit DMA capability
-Date:   Fri, 10 Jan 2020 11:54:13 +0000
-Message-Id: <20200110115415.75683-13-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200110115415.75683-1-andre.przywara@arm.com>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F6861063;
+        Fri, 10 Jan 2020 03:54:50 -0800 (PST)
+Received: from [192.168.1.123] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C60173F534;
+        Fri, 10 Jan 2020 03:54:48 -0800 (PST)
+Subject: Re: [PATCH v1] arch_topology: Adjust initial CPU capacities with
+ current freq
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Brian Norris <briannorris@chromium.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20200109075214.31943-1-jeffy.chen@rock-chips.com>
+ <20200110113711.GB39451@bogus>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <9edb57be-97bc-f0bd-3edd-854dfc8c780f@arm.com>
+Date:   Fri, 10 Jan 2020 11:54:48 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <20200110113711.GB39451@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When newer revisions of the Axienet IP are configured for a 64-bit bus,
-we *need* to write to the MSB part of the an address registers,
-otherwise the IP won't recognise this as a DMA start condition.
-This is even true when the actual DMA address comes from the lower 4 GB.
+On 2020-01-10 11:37 am, Sudeep Holla wrote:
+> On Thu, Jan 09, 2020 at 03:52:14PM +0800, Jeffy Chen wrote:
+>> The CPU freqs are not supposed to change before cpufreq policies
+>> properly registered, meaning that they should be used to calculate the
+>> initial CPU capacities.
+>>
+>> Doing this helps choosing the best CPU during early boot, especially
+>> for the initramfs decompressing.
+>>
+>> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> 
+> [...]
+> 
+>> @@ -146,10 +153,15 @@ bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
+>>   				return false;
+>>   			}
+>>   		}
+>> -		capacity_scale = max(cpu_capacity, capacity_scale);
+>>   		raw_capacity[cpu] = cpu_capacity;
+>>   		pr_debug("cpu_capacity: %pOF cpu_capacity=%u (raw)\n",
+>>   			cpu_node, raw_capacity[cpu]);
+>> +
+>> +		cpu_clk = of_clk_get(cpu_node, 0);
+>> +		if (!PTR_ERR_OR_ZERO(cpu_clk))
+>> +			per_cpu(max_freq, cpu) = clk_get_rate(cpu_clk) / 1000;
+>> +
+>> +		clk_put(cpu_clk);
+> 
+> I don't like to assume DVFS to be supplied only using 'clk'. So NACK!
+> We have other non-clk mechanism for CPU DVFS and this needs to simply
+> use cpufreq APIs to get frequency value if required.
 
-To autodetect this configuration, at probe time we write all 1's to such
-an MSB register, and see if any bits stick. If this is configured for a
-32-bit bus, those MSB registers are RES0, so reading back 0 indicates
-that no MSB writes are necessary.
-On the other hands reading anything other than 0 indicated the need to
-write the MSB registers, so we set the respective flag.
+...but in this case, as soon as cpufreq is ready the problem is gone 
+anyway, because it sees the big cluster's clock rate is way out-of-spec 
+and bumps it up to a sane OPP.
 
-For now this leaves the actual DMA mask at 32-bit, as we can't reliably
-detect the actually wired number of address lines beyond 32.
+It really is unfortunate that so many RK3399 images out there are using 
+the broken firmware combination that manages to miss out the boot-time 
+PLL setup altogether.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- drivers/net/ethernet/xilinx/xilinx_axienet.h  |  1 +
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 27 +++++++++++++++++++
- 2 files changed, 28 insertions(+)
-
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-index 4aea4c23d3bb..4feaaa02819c 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-@@ -161,6 +161,7 @@
- #define XAE_FCC_OFFSET		0x0000040C /* Flow Control Configuration */
- #define XAE_EMMC_OFFSET		0x00000410 /* EMAC mode configuration */
- #define XAE_PHYC_OFFSET		0x00000414 /* RGMII/SGMII configuration */
-+#define XAE_ID_OFFSET		0x000004F8 /* Identification register */
- #define XAE_MDIO_MC_OFFSET	0x00000500 /* MII Management Config */
- #define XAE_MDIO_MCR_OFFSET	0x00000504 /* MII Management Control */
- #define XAE_MDIO_MWD_OFFSET	0x00000508 /* MII Management Write Data */
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 133f088d797e..f7f593df0c11 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -151,6 +151,9 @@ static void axienet_dma_out_addr(struct axienet_local *lp, off_t reg,
- 				 dma_addr_t addr)
- {
- 	axienet_dma_out32(lp, reg, lower_32_bits(addr));
-+
-+	if (lp->features & XAE_FEATURE_DMA_64BIT)
-+		axienet_dma_out32(lp, reg + 4, upper_32_bits(addr));
- }
- 
- static void desc_set_phys_addr(struct axienet_local *lp, dma_addr_t addr,
-@@ -1934,6 +1937,30 @@ static int axienet_probe(struct platform_device *pdev)
- 		goto free_netdev;
- 	}
- 
-+	/*
-+	 * Autodetect the need for 64-bit DMA pointers.
-+	 * When the IP is configured for a bus width bigger than 32 bits,
-+	 * writing the MSB registers is mandatory, even if they are all 0.
-+	 * We can detect this case by writing all 1's to one such register
-+	 * and see if that sticks: when the IP is configured for 32 bits
-+	 * only, those registers are RES0.
-+	 * Those MSB registers were introduced in IP v7.1, which we check first.
-+	 */
-+	if ((axienet_ior(lp, XAE_ID_OFFSET) >> 24) >= 0x9) {
-+		void __iomem *desc = lp->dma_regs + XAXIDMA_TX_CDESC_OFFSET + 4;
-+
-+		iowrite32(0x0, desc);
-+		if (ioread32(desc) == 0) {	/* sanity check */
-+			iowrite32(0xffffffff, desc);
-+			if (ioread32(desc) > 0) {
-+				lp->features |= XAE_FEATURE_DMA_64BIT;
-+				dev_info(&pdev->dev,
-+					 "autodetected 64-bit DMA range\n");
-+			}
-+			iowrite32(0x0, desc);
-+		}
-+	}
-+
- 	/* Check for Ethernet core IRQ (optional) */
- 	if (lp->eth_irq <= 0)
- 		dev_info(&pdev->dev, "Ethernet core IRQ not defined\n");
--- 
-2.17.1
-
+Robin.
