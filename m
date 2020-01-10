@@ -2,160 +2,113 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B45FC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6ADC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25C102080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79A320838
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:30:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UPsxAOdU"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="1tZqDa5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730270AbgAJA2z (ORCPT
+        id S1730304AbgAJAax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 19:28:55 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39245 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730214AbgAJA2y (ORCPT
+        Thu, 9 Jan 2020 19:30:53 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51796 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730240AbgAJAaw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 19:28:54 -0500
-Received: by mail-ed1-f67.google.com with SMTP id t17so52261eds.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 16:28:53 -0800 (PST)
+        Thu, 9 Jan 2020 19:30:52 -0500
+Received: by mail-pj1-f65.google.com with SMTP id j11so215463pjs.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 16:30:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YK07dG9mS/i6t5DE8qmxV0Tg9yfN7MAs/hz7qzpudL4=;
-        b=UPsxAOdUQON+FR7w22H7DQOXhIuTtYc6PmzaFpKapcLEEDcu8VMwaxdTNV+Xq1yAOx
-         fA4KYSLvgUDS7iMJ66tdLniB4FfwqFrDa4vvjNbLauE3aycCDyJfvhIm07PTLVycCsnf
-         1g2VHo7KNWC4MunVPYa6VL0r7BtNiVpI567rgr0xL+GhDC3IN9S4ckIdqZAnO1oxCQTL
-         bWM3i5B9Bg8usNme7XWiwfLMoFYOmPR844+Rw1dKSLUtudJfzAW2IXLVzCMpCWQzhf1c
-         BCbG1myvcy3dzB23Zs0QZ+N7skreF52WJCOXbEQjOshrfrwRMnM7XtTLVPT0boqtyLKX
-         ld0Q==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=WU93w3AtbVDPqYWtjAM3MuAwVxoBZV4OjJfby5UWG0k=;
+        b=1tZqDa5G0PuPlzu1UjJOEgvTaHSV+roJwZ7hvUYGjH6N+5+UZ75ROicgm6XrVTC01k
+         OMn6l5Gm1UNk3V4jMxJBS3RxSWRzp4+OmamHgL56pd4uQMxR7dPLcH/PYEijw9pJXMpF
+         BylAvmBwoL9jvFw4t1L6iApg5dOlUoTP9Td6VkEZKd7Cb+qcBRTDCHT0XP/o+PGXeQ+M
+         aoVUsJMunUjg7ZjguTqJbaK+ZuZYUrkIlqiUcW4p/YIGQqAJKPejy+NqofKOApJrZIcV
+         V1peHznnppNnEpDN4/cbmUJzqIIVRCz1bfjQ9lTtQC1Sk1kurVw8HhffEOWTivtlRze7
+         eHVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YK07dG9mS/i6t5DE8qmxV0Tg9yfN7MAs/hz7qzpudL4=;
-        b=b/c4BU1Rjl7VE44gAa7zhFnaEH9rc+zoQpU8u0anTb9sZISu8HwXtkLvo1ABp0IM51
-         M06TieW+iJ8jeUNr0oEtbK6QSjgaWGECmsPe9PIOxBnXNMO6bVC3LphDbbWETWxID//r
-         gwr7vm4UtZ2x1Ndx26wnbnS773ylw3ZcU8NrdE5fVvoieb/pw4rx4TiumBpERq4QSKZT
-         vTgEklEFq5IM5v9Aq3i0iIYHXpuMADhOEkrKW006C+zaqDThrOcCETvpBWXA88fSGo5e
-         SnaUHl2/8ZcRJokns9wrGAv9seHz9M7HBMTNNfw+2znckhQ4FFVFdLOGuq5MYLzyeZj8
-         Mnkw==
-X-Gm-Message-State: APjAAAUxVp8Z6sbLrc/z9x8FJeEf0HsbFUCEpWGdIiEwGUuBtyV/z0s+
-        YdTAdKD7zn0bnshPrt3/uNm8fvy890uo8JZzDZA=
-X-Google-Smtp-Source: APXvYqyTpGDs94DxDuzM33I28G6l7opgYXI3yi8+fRZmsrI8GAn8omoeBcR4IHCIY9AgBow09tedzqJ55ScIUb2jXvs=
-X-Received: by 2002:aa7:c694:: with SMTP id n20mr501233edq.95.1578616133224;
- Thu, 09 Jan 2020 16:28:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20200109225646.22983-1-xiyou.wangcong@gmail.com>
-In-Reply-To: <20200109225646.22983-1-xiyou.wangcong@gmail.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Thu, 9 Jan 2020 16:28:40 -0800
-Message-ID: <CAHbLzkr=P38zJMpNVtw9oKMT65hwq6ie85h-fRi7rpZyf4A71g@mail.gmail.com>
-Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=WU93w3AtbVDPqYWtjAM3MuAwVxoBZV4OjJfby5UWG0k=;
+        b=uGeO5dfY5c1eAr3dnmtgaHD1NY+V6BWq0Ww6JXeeXfMk/7HW25NkSXloXVCXzc1OzJ
+         ncO+EwdegYY3lAbTDD7a4OWrSuNof2aELlpL/T83Q/aPG2sNNOEqi/6FvBoq79PKR7D4
+         4bNT26Brkoj/EW0Z1dwLSHmbkhewFXzOkoKMpw53e5/k1KuBV06R65K29Su+x64e4C1G
+         CTIt1DQmZH8XbhJeJe2ePlyf+JeIjFr6cE++PFnForOzv6VtGALxbPC9OuWAR+SVrPrv
+         gfQpwjehQ1pbTUwitl2JsfbOnFrQaQEuXsbJLP5OWBxuiZtmXLbd+lh8J0aoWlHSsN9c
+         Bjig==
+X-Gm-Message-State: APjAAAWUtJ0yDRkrRq6KEOUQDQH5QCfmFxb7xL4XAB63hwn8rZAwr+DC
+        ZHj6IDmLt4+XbQHtZFJ95RUkgA==
+X-Google-Smtp-Source: APXvYqyNkS0EsFX1UycczKNVnCf9IxzBAT68JzKuVVbY09Lf8pIIJ3g6/yVhwwDOQ77iPPekM2G+hw==
+X-Received: by 2002:a17:90a:778a:: with SMTP id v10mr1029789pjk.26.1578616251644;
+        Thu, 09 Jan 2020 16:30:51 -0800 (PST)
+Received: from [10.197.30.113] ([139.104.2.240])
+        by smtp.gmail.com with ESMTPSA id 83sm121404pgh.12.2020.01.09.16.30.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 16:30:50 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v3 0/8] Rework random blocking
+Date:   Thu, 9 Jan 2020 14:30:48 -1000
+Message-Id: <99CB981B-752C-449B-98BE-A4DF80D25A26@amacapital.net>
+References: <20200109220230.GA39185@roeckx.be>
+Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Stephan Mueller <smueller@chronox.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-man <linux-man@vger.kernel.org>
+In-Reply-To: <20200109220230.GA39185@roeckx.be>
+To:     Kurt Roeckx <kurt@roeckx.be>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 2:57 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
->
-> We observed kcompactd hung at __lock_page():
->
->  INFO: task kcompactd0:57 blocked for more than 120 seconds.
->        Not tainted 4.19.56.x86_64 #1
->  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->  kcompactd0      D    0    57      2 0x80000000
->  Call Trace:
->   ? __schedule+0x236/0x860
->   schedule+0x28/0x80
->   io_schedule+0x12/0x40
->   __lock_page+0xf9/0x120
->   ? page_cache_tree_insert+0xb0/0xb0
->   ? update_pageblock_skip+0xb0/0xb0
->   migrate_pages+0x88c/0xb90
->   ? isolate_freepages_block+0x3b0/0x3b0
->   compact_zone+0x5f1/0x870
->   kcompactd_do_work+0x130/0x2c0
->   ? __switch_to_asm+0x35/0x70
->   ? __switch_to_asm+0x41/0x70
->   ? kcompactd_do_work+0x2c0/0x2c0
->   ? kcompactd+0x73/0x180
->   kcompactd+0x73/0x180
->   ? finish_wait+0x80/0x80
->   kthread+0x113/0x130
->   ? kthread_create_worker_on_cpu+0x50/0x50
->   ret_from_fork+0x35/0x40
->
-> which faddr2line maps to:
->
->   migrate_pages+0x88c/0xb90:
->   lock_page at include/linux/pagemap.h:483
->   (inlined by) __unmap_and_move at mm/migrate.c:1024
->   (inlined by) unmap_and_move at mm/migrate.c:1189
->   (inlined by) migrate_pages at mm/migrate.c:1419
->
-> Sometimes kcompactd eventually got out of this situation, sometimes not.
->
-> I think for memory compaction, it is a best effort to migrate the pages,
-> so it doesn't have to wait for I/O to complete. It is fine to call
-> trylock_page() here, which is pretty much similar to
-> buffer_migrate_lock_buffers().
->
-> Given MIGRATE_SYNC_LIGHT is used on compaction path, just relax the
-> check for it.
 
-But this changed the semantics of MIGRATE_SYNC_LIGHT which means
-blocking on most operations but not ->writepage. When
-MIGRATE_SYNC_LIGHT is used it means compaction priority is increased
-(the initial priority is ASYNC) due to whatever reason (i.e. not
-enough clean, non-writeback and non-locked pages to migrate). So, it
-has to wait for some pages to try to not backoff pre-maturely.
 
-If I read the code correctly, buffer_migrate_lock_buffers() also
-blocks on page lock with non-ASYNC mode.
+> On Jan 9, 2020, at 12:02 PM, Kurt Roeckx <kurt@roeckx.be> wrote:
+>=20
 
-Since v5.1 Mel Gorman improved compaction a lot. So, I'm wondering if
-this happens on the latest upstream or not.
+>=20
+> If the kernel provides a good RNG, the only reason I can see why
+> you would like to have direct access to a hwrng is to verify that
+> it's working correctly. That might mean that you put it in some
+> special mode where it returns raw unprocessed values. If the device
+> is in such a mode, it's output will not provide the same entropy
+> per bit, and so I would expect the kernel to stop using it directly.
 
-And, did you figure out who is locking the page for such long time? Or
-there might be too many waiters on the list for this page?
+I disagree.
 
->
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: linux-mm@kvack.org
-> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-> ---
->  mm/migrate.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 86873b6f38a7..df60026779d2 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1010,7 +1010,8 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
->         bool is_lru = !__PageMovable(page);
->
->         if (!trylock_page(page)) {
-> -               if (!force || mode == MIGRATE_ASYNC)
-> +               if (!force || mode == MIGRATE_ASYNC
-> +                          || mode == MIGRATE_SYNC_LIGHT)
->                         goto out;
->
->                 /*
-> --
-> 2.21.1
->
->
+If I buy a ChaosKey or a fancy EAL4FIPSOMG key, I presumably have it for a r=
+eason and I want to actually use the thing for real. Maybe it=E2=80=99s for s=
+ome certification reason and maybe it=E2=80=99s just because it=E2=80=99s re=
+ally cool.
+
+As for =E2=80=9Cdirect=E2=80=9D access,  I think AMD provides an interface t=
+o read raw output from the on-die entropy source. Exposing this to user spac=
+e is potentially quite useful for anyone who wants to try to characterize it=
+.  I don=E2=80=99t really think people should use a raw sample interface as a=
+ source of production random numbers, though.
