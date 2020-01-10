@@ -2,202 +2,255 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DD9C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125DEC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3FD206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:40:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578674439;
-	bh=ghwT9udGzFrI759DFzCiR1cP5wbf5wcwUL/Ty1oAAt4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UqFuHk1zeFJ2DllN/9isZoC3QY/YqeeFmvp78ghjVzbkPMs0KkZygY/bOSaNQYvVA
-	 BMI7zrVoPFrWF68pp1WGKe1Iutj8lF2swCGJ2H4OYOWefNccm+eN/xAVctHlOh1wEu
-	 4WDaft2hHYL2fOhIXor3ekbQ/BORwE64I28liFgY=
+	by mail.kernel.org (Postfix) with ESMTP id D2C3620721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:43:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ZfnlIqum"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgAJQkj (ORCPT
+        id S1728601AbgAJQnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:40:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38396 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728492AbgAJQki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:40:38 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93009205F4;
-        Fri, 10 Jan 2020 16:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578674438;
-        bh=ghwT9udGzFrI759DFzCiR1cP5wbf5wcwUL/Ty1oAAt4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FcRjA3WCXsltMm/vW2YxcIFxXQ9LJ7UMhG+2itz701PCG1v3z3I8/3D8ROl81la8V
-         9p+q8NmV9m0PHSZF8+P0goioG1ox055bD67dhTIoYjdTQUxn3HBFduEuICthJPv1Yo
-         YCyBoH3EMvZkQmKiIcomfnwVpukeNyWEdVsrJ/OM=
-Date:   Fri, 10 Jan 2020 17:40:35 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-serial@vger.kernel.org, Iurii Zaikin <yzaikin@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH-next 2/3] sysctl/sysrq: Remove __sysrq_enabled copy
-Message-ID: <20200110164035.GA1822445@kroah.com>
-References: <20200109215444.95995-1-dima@arista.com>
- <20200109215444.95995-3-dima@arista.com>
+        Fri, 10 Jan 2020 11:43:11 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36209 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728500AbgAJQnK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 11:43:10 -0500
+Received: by mail-oi1-f193.google.com with SMTP id c16so2398633oic.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 08:43:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pR2iX18tjXNnoBPSNqNK9ys64+Jcpo7fZQg0i/s/+nw=;
+        b=ZfnlIqumLx11xnTlrzHHA/io9dAA9rY70kuYDBhctQ7IN74tUElswBp7CxnhQVSYx6
+         c7AliLu0EobfDfzf6WWjjjToJ/R+jDi4SkJGbj8HyR0wBR7pnweuEqQcLz7DEr3Jl+9h
+         3+O7+at2eVX3wuSxLv44jSrpksEKmtyO18ZuvCWs8CeZq2Jq+f/Z06CX1GskGiwhlrLT
+         qRxkFHFl9dvBJ98dRItwbnJ3XL2jDUasJ7Tp38uE7XOptpHR8CMay4k/RnSnvKgf81Wi
+         aQLYeBZh90Gp3X+tCJgVu5qbQgslw4VFrYDfHLzNgseHrm6sLsHCq3oKthnEN1Czpu/0
+         v7Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pR2iX18tjXNnoBPSNqNK9ys64+Jcpo7fZQg0i/s/+nw=;
+        b=sSsPUPu4T4fO9xTk8gU5GJYFOd6VfByqQRnf4+WoWQiqK4k55rZfSoaAReCGp5TUE+
+         Mx5BH7X0O05tdudfKZ/rFGnedejzT7VBIO8fFr1cpB1jCTYT7lyYkAW1wwOwNpGTR1ga
+         fSJKqaWx2/uM1OxKrh6kUVHqWesRtfBx+A5wi3QpMzb0kT5+C4vIfXrpQ4DS3uYvTkHQ
+         YmenpWkpZGMrVjv45JqCWCZ+uOvfvBz5TK8mhwqpGocm6+XKEBPv9GtiKVX0jokqDAKA
+         W8tDels2nay4uRGIHoZc8fuISLDgWeoE1d8rsJDHP5e8c/ArLGvNNJO8g09+ShtPwoFS
+         iLJg==
+X-Gm-Message-State: APjAAAWxRMCaql9U4sIX64umP+XFnqsmQBG4/KJxrYhjZEuyTDA1lQva
+        KXeue+TdkIL2LxskzkH9fpkOUQHVTRvWuUo4eEhYhQ==
+X-Google-Smtp-Source: APXvYqxK4i/HNBAk3rtkotV9R/sF7UURwsT3pfV5Edd4gerSvJPZ67eM19soRbqvumd2706szUR3iDfBazdnV/orM4s=
+X-Received: by 2002:aca:3f54:: with SMTP id m81mr2723806oia.73.1578674589422;
+ Fri, 10 Jan 2020 08:43:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109215444.95995-3-dima@arista.com>
+References: <157863061737.2230556.3959730620803366776.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <e60e64f9-894b-4121-d97b-fb61459cbbe5@redhat.com>
+In-Reply-To: <e60e64f9-894b-4121-d97b-fb61459cbbe5@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 10 Jan 2020 08:42:58 -0800
+Message-ID: <CAPcyv4jm=fmP=-5vbo2jxzMe2qXqZP=zDYF8G_rs3X6_Om0wPg@mail.gmail.com>
+Subject: Re: [PATCH] mm/memory_hotplug: Fix remove_memory() lockdep splat
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        stable <stable@vger.kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 09:54:43PM +0000, Dmitry Safonov wrote:
-> Many embedded boards have a disconnected TTL level serial which can
-> generate some garbage that can lead to spurious false sysrq detects.
-> 
-> Currently, sysrq can be either completely disabled for serial console
-> or always disabled (with CONFIG_MAGIC_SYSRQ_SERIAL), since
-> commit 732dbf3a6104 ("serial: do not accept sysrq characters via serial port")
-> 
-> At Arista, we have such boards that can generate BREAK and random
-> garbage. While disabling sysrq for serial console would solve
-> the problem with spurious false sysrq triggers, it's also desirable
-> to have a way to enable sysrq back.
-> 
-> Having the way to enable sysrq was beneficial to debug lockups with
-> a manual investigation in field and on the other side preventing false
-> sysrq detections.
-> 
-> As a preparation to add sysrq_toggle_support() call into uart,
-> remove a private copy of sysrq_enabled from sysctl - it should reflect
-> the actual status of sysrq.
-> 
-> Furthermore, the private copy isn't correct already in case
-> sysrq_always_enabled is true. So, remove __sysrq_enabled and use a
-> getter-helper for sysrq enabled status.
-> 
-> Cc: Iurii Zaikin <yzaikin@google.com>
-> Cc: Jiri Slaby <jslaby@suse.com>
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: linux-fsdevel@vger.kernel.org
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
-> ---
->  drivers/tty/sysrq.c   |  7 +++++++
->  include/linux/sysrq.h |  1 +
->  kernel/sysctl.c       | 41 ++++++++++++++++++++++-------------------
->  3 files changed, 30 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-> index f724962a5906..ef3e78967146 100644
-> --- a/drivers/tty/sysrq.c
-> +++ b/drivers/tty/sysrq.c
-> @@ -73,6 +73,13 @@ static bool sysrq_on_mask(int mask)
->  	       (sysrq_enabled & mask);
->  }
->  
-> +int sysrq_get_mask(void)
-> +{
-> +	if (sysrq_always_enabled)
-> +		return 1;
-> +	return sysrq_enabled;
-> +}
-> +
->  static int __init sysrq_always_enabled_setup(char *str)
->  {
->  	sysrq_always_enabled = true;
-> diff --git a/include/linux/sysrq.h b/include/linux/sysrq.h
-> index 8c71874e8485..4a0b351fa2d3 100644
-> --- a/include/linux/sysrq.h
-> +++ b/include/linux/sysrq.h
-> @@ -50,6 +50,7 @@ int unregister_sysrq_key(int key, struct sysrq_key_op *op);
->  struct sysrq_key_op *__sysrq_get_key_op(int key);
->  
->  int sysrq_toggle_support(int enable_mask);
-> +int sysrq_get_mask(void);
->  
->  #else
->  
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index d396aaaf19a3..6ddb4d7df0e1 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -229,25 +229,8 @@ static int proc_dopipe_max_size(struct ctl_table *table, int write,
->  		void __user *buffer, size_t *lenp, loff_t *ppos);
->  
->  #ifdef CONFIG_MAGIC_SYSRQ
-> -/* Note: sysrq code uses its own private copy */
-> -static int __sysrq_enabled = CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE;
-> -
->  static int sysrq_sysctl_handler(struct ctl_table *table, int write,
-> -				void __user *buffer, size_t *lenp,
-> -				loff_t *ppos)
-> -{
-> -	int error;
-> -
-> -	error = proc_dointvec(table, write, buffer, lenp, ppos);
-> -	if (error)
-> -		return error;
-> -
-> -	if (write)
-> -		sysrq_toggle_support(__sysrq_enabled);
-> -
-> -	return 0;
-> -}
-> -
-> +			void __user *buffer, size_t *lenp, loff_t *ppos);
->  #endif
->  
->  static struct ctl_table kern_table[];
-> @@ -747,7 +730,7 @@ static struct ctl_table kern_table[] = {
->  #ifdef CONFIG_MAGIC_SYSRQ
->  	{
->  		.procname	= "sysrq",
-> -		.data		= &__sysrq_enabled,
-> +		.data		= NULL,
->  		.maxlen		= sizeof (int),
->  		.mode		= 0644,
->  		.proc_handler	= sysrq_sysctl_handler,
-> @@ -2844,6 +2827,26 @@ static int proc_dostring_coredump(struct ctl_table *table, int write,
->  }
->  #endif
->  
-> +#ifdef CONFIG_MAGIC_SYSRQ
-> +static int sysrq_sysctl_handler(struct ctl_table *table, int write,
-> +				void __user *buffer, size_t *lenp, loff_t *ppos)
-> +{
-> +	int tmp, ret;
-> +
-> +	tmp = sysrq_get_mask();
-> +
-> +	ret = __do_proc_dointvec(&tmp, table, write, buffer,
-> +			       lenp, ppos, NULL, NULL);
-> +	if (ret || !write)
-> +		return ret;
-> +
-> +	if (write)
-> +		sysrq_toggle_support(tmp);
-> +
-> +	return 0;
-> +}
-> +#endif
+On Fri, Jan 10, 2020 at 1:10 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> On 10.01.20 05:30, Dan Williams wrote:
+> > The daxctl unit test for the dax_kmem driver currently triggers the
+> > lockdep splat below. It results from the fact that
+> > remove_memory_block_devices() is invoked under the mem_hotplug_lock()
+> > causing lockdep entanglements with cpu_hotplug_lock().
+> >
+> > The mem_hotplug_lock() is not needed to synchronize the memory block
+> > device sysfs interface vs the page online state, that is already handled
+> > by lock_device_hotplug(). Specifically lock_device_hotplug()
+> > is sufficient to allow try_remove_memory() to check the offline
+> > state of the memblocks and be assured that subsequent online attempts
+> > will be blocked. The device_online() path checks mem->section_count
+> > before allowing any state manipulations and mem->section_count is
+> > cleared in remove_memory_block_devices().
+> >
+> > The add_memory() path does create memblock devices under the lock, but
+> > there is no lockdep report on that path, so it is left alone for now.
+> >
+> > This change is only possible thanks to the recent change that refactored
+> > memory block device removal out of arch_remove_memory() (commit
+> > 4c4b7f9ba948 mm/memory_hotplug: remove memory block devices before
+> > arch_remove_memory()).
+> >
+> >     ======================================================
+> >     WARNING: possible circular locking dependency detected
+> >     5.5.0-rc3+ #230 Tainted: G           OE
+> >     ------------------------------------------------------
+> >     lt-daxctl/6459 is trying to acquire lock:
+> >     ffff99c7f0003510 (kn->count#241){++++}, at: kernfs_remove_by_name_ns+0x41/0x80
+> >
+> >     but task is already holding lock:
+> >     ffffffffa76a5450 (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x20/0xe0
+> >
+> >     which lock already depends on the new lock.
+> >
+> >
+> >     the existing dependency chain (in reverse order) is:
+> >
+> >     -> #2 (mem_hotplug_lock.rw_sem){++++}:
+> >            __lock_acquire+0x39c/0x790
+> >            lock_acquire+0xa2/0x1b0
+> >            get_online_mems+0x3e/0xb0
+> >            kmem_cache_create_usercopy+0x2e/0x260
+> >            kmem_cache_create+0x12/0x20
+> >            ptlock_cache_init+0x20/0x28
+> >            start_kernel+0x243/0x547
+> >            secondary_startup_64+0xb6/0xc0
+> >
+> >     -> #1 (cpu_hotplug_lock.rw_sem){++++}:
+> >            __lock_acquire+0x39c/0x790
+> >            lock_acquire+0xa2/0x1b0
+> >            cpus_read_lock+0x3e/0xb0
+> >            online_pages+0x37/0x300
+> >            memory_subsys_online+0x17d/0x1c0
+> >            device_online+0x60/0x80
+> >            state_store+0x65/0xd0
+> >            kernfs_fop_write+0xcf/0x1c0
+> >            vfs_write+0xdb/0x1d0
+> >            ksys_write+0x65/0xe0
+> >            do_syscall_64+0x5c/0xa0
+> >            entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> >     -> #0 (kn->count#241){++++}:
+> >            check_prev_add+0x98/0xa40
+> >            validate_chain+0x576/0x860
+> >            __lock_acquire+0x39c/0x790
+> >            lock_acquire+0xa2/0x1b0
+> >            __kernfs_remove+0x25f/0x2e0
+> >            kernfs_remove_by_name_ns+0x41/0x80
+> >            remove_files.isra.0+0x30/0x70
+> >            sysfs_remove_group+0x3d/0x80
+> >            sysfs_remove_groups+0x29/0x40
+> >            device_remove_attrs+0x39/0x70
+> >            device_del+0x16a/0x3f0
+> >            device_unregister+0x16/0x60
+> >            remove_memory_block_devices+0x82/0xb0
+> >            try_remove_memory+0xb5/0x130
+> >            remove_memory+0x26/0x40
+> >            dev_dax_kmem_remove+0x44/0x6a [kmem]
+> >            device_release_driver_internal+0xe4/0x1c0
+> >            unbind_store+0xef/0x120
+> >            kernfs_fop_write+0xcf/0x1c0
+> >            vfs_write+0xdb/0x1d0
+> >            ksys_write+0x65/0xe0
+> >            do_syscall_64+0x5c/0xa0
+> >            entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >
+> >     other info that might help us debug this:
+> >
+> >     Chain exists of:
+> >       kn->count#241 --> cpu_hotplug_lock.rw_sem --> mem_hotplug_lock.rw_sem
+> >
+> >      Possible unsafe locking scenario:
+> >
+> >            CPU0                    CPU1
+> >            ----                    ----
+> >       lock(mem_hotplug_lock.rw_sem);
+> >                                    lock(cpu_hotplug_lock.rw_sem);
+> >                                    lock(mem_hotplug_lock.rw_sem);
+> >       lock(kn->count#241);
+> >
+> >      *** DEADLOCK ***
+> >
+> > No fixes tag as this seems to have been a long standing issue that
+> > likely predated the addition of kernfs lockdep annotations.
+> >
+> > Cc: <stable@vger.kernel.org>
+> > Cc: Vishal Verma <vishal.l.verma@intel.com>
+> > Cc: David Hildenbrand <david@redhat.com>
+> > Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> > Cc: Michal Hocko <mhocko@suse.com>
+> > Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> > ---
+> >  mm/memory_hotplug.c |   12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> > index 55ac23ef11c1..a4e7dadded08 100644
+> > --- a/mm/memory_hotplug.c
+> > +++ b/mm/memory_hotplug.c
+> > @@ -1763,8 +1763,6 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+> >
+> >       BUG_ON(check_hotplug_memory_range(start, size));
+> >
+> > -     mem_hotplug_begin();
+> > -
+> >       /*
+> >        * All memory blocks must be offlined before removing memory.  Check
+> >        * whether all memory blocks in question are offline and return error
+> > @@ -1777,9 +1775,17 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+> >       /* remove memmap entry */
+> >       firmware_map_remove(start, start + size, "System RAM");
+> >
+> > -     /* remove memory block devices before removing memory */
+> > +     /*
+> > +      * Remove memory block devices before removing memory, and do
+> > +      * not hold the mem_hotplug_lock() over kobject removal
+> > +      * operations. lock_device_hotplug() keeps the
+> > +      * check_memblock_offlined_cb result valid until the entire
+> > +      * removal process is complete.
+> > +      */
+>
+> Maybe shorten that to
+>
+> /*
+>  * Remove memory block devices before removing memory. Protected
+>  * by the device_hotplug_lock only.
+>  */
 
-Why did you move this function down here?  Can't it stay where it is and
-you can just fix the logic there?  Now you have two different #ifdef
-blocks intead of just one :(
+Why make someone dig for the reasons this lock is sufficient?
 
-thanks,
+>
+> AFAIK, the device hotplug lock is sufficient here. The memory hotplug
+> lock / cpu hotplug lock is only needed when calling into arch code
+> (especially for PPC). We hold both locks when onlining/offlining memory.
+>
+> >       remove_memory_block_devices(start, size);
+> >
+> > +     mem_hotplug_begin();
+> > +
+> >       arch_remove_memory(nid, start, size, NULL);
+> >       memblock_free(start, size);
+> >       memblock_remove(start, size);
+> >
+>
+> I'd suggest to do the same in the adding part right away (if easily
+> possible) to make it clearer.
 
-greg k-h
+Let's let this fix percolate upstream for a bit to make sure there was
+no protection the mem_hotplug_begin() was inadvertently providing.
+
+> I properly documented the semantics of
+> add_memory_block_devices()/remove_memory_block_devices() already (that
+> they need the device hotplug lock).
+
+I see that, but I prefer lockdep_assert_held() in the code rather than
+comments. I'll send a patch to fix that up.
