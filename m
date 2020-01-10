@@ -2,115 +2,121 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2977C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5949DC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:48:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A803620842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:45:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="pzPqUCaJ"
+	by mail.kernel.org (Postfix) with ESMTP id 2A20A2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578664112;
+	bh=5bhzj8NTS9TUhhhvKLr89+vsvBVQ2b9Sjce2cyH8YRA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=aq5zB8MchHB4pT7sNa0iwdhxYIAlszb0fLqvUa4OIynNc2r7YD8ZBy4890/q1Fnq5
+	 VxeSLIXjYqQ1xlgbXHZvmpStyqaNpHn4UFdbrypQKcT2ArN+E7JQ5+zoe+bjo6LE/K
+	 RAl9dCbzhqpMAVKGK0Sl3DxitAQIGQQEQG/6QjSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgAJNpt (ORCPT
+        id S1727901AbgAJNsb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 08:45:49 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35110 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727445AbgAJNpt (ORCPT
+        Fri, 10 Jan 2020 08:48:31 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:36819 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727458AbgAJNsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 08:45:49 -0500
-Received: by mail-lj1-f195.google.com with SMTP id j1so2211696lja.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 05:45:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sMdYXYMVS7cRrddfmjCZFkKAH1VKFwTqwzh9JCAXz3M=;
-        b=pzPqUCaJLWaz/7wBdutwYJL0ZPJ655iIRXGBeBg0KwUzzokEOMPJ3KQL+uP4NRwhp4
-         t1EpK+CONNUtkFcnfQegpyQrffFuztUfxm8D45KcA5siHagGjRFE74tYh3V1MHszpfbo
-         EKndhwn6cHW7xPn5mIsBZLOXZoOhVzilJWsmnQhLE+XoJHL+jol55SAdC7UnrU9OhiyT
-         hSaoinZiRU/l6gFTPCO+wbMWkSMO/Iq5teLULZ0hqegzOyH5NDE33e+k3ETCAG669F2x
-         +xD6WvLhxyfrqboug0IzGKUyZ94PMq2lh3l73eICULfHX+rlnjwB8k/WfjFUKp89aFfi
-         WyHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sMdYXYMVS7cRrddfmjCZFkKAH1VKFwTqwzh9JCAXz3M=;
-        b=X+PEkLBJR5l4e9ZXqq2TyIaOHjoUbDTiW8FOnTf0/thirtEGikfPR8vo5/ZyPq3cMx
-         8Qvyi7EHc2mWrjFR7+SQ8CkYbasv+L1fzKkNBHF87XedNF2rG5GESe7YGPdm6pzyJGRJ
-         hdxE+f3PBJARnV1k83XOo763+qd2PIBCF7cj59p192+hHnI8B3AaQ134Hw0AKLPnEp1q
-         Dlx7VqieKrSw+n/3eUjWUuZ/pYkQArkEKJmXTgbymqfEGQ2Shenq1jIWi8jP/Yq0xvvB
-         EE3SVXuSUGPeO1Tqc+t6NLyw3VB+FbAjLcjUwdwsPU2u5/Hj4CNJsJH6rFmxjs5FkxDu
-         xl/w==
-X-Gm-Message-State: APjAAAV9D9LzjFNDehkWMetiwkYiW5enwFL3b9stI4JoNrlwo7rn9RzJ
-        9L4G15X+eFdTt5LlgrNyXrPp+w==
-X-Google-Smtp-Source: APXvYqyqXd+YM/fERFV0tcUWKo1oDvb7oiPTlSCZnH/zmqCgGxZz2UoXgHoX94/CGmanCodSgLYSHA==
-X-Received: by 2002:a2e:9c04:: with SMTP id s4mr2779471lji.147.1578663947404;
-        Fri, 10 Jan 2020 05:45:47 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id c189sm1062491lfg.75.2020.01.10.05.45.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 05:45:46 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 189891010D7; Fri, 10 Jan 2020 16:45:47 +0300 (+03)
-Date:   Fri, 10 Jan 2020 16:45:47 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@suse.de>,
-        "Jin, Zhi" <zhi.jin@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH] mm/page_alloc: Skip non present sections on zone
- initialization
-Message-ID: <20200110134547.v6ju5dxazknfjdj3@box>
-References: <20191230093828.24613-1-kirill.shutemov@linux.intel.com>
- <20200108144044.GB30379@dhcp22.suse.cz>
- <73437651-822f-fcec-3b96-281fb1064cf8@redhat.com>
+        Fri, 10 Jan 2020 08:48:31 -0500
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 00ADmDGK010546
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 22:48:14 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 00ADmDGK010546
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1578664094;
+        bh=YW6gHC2/TBjxwotOxX5lv+0ESK1IMSnDrePMsS8Y854=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=v8CCJuH8FvCsIv3IH6Axc4E20isn2xwbyKkmVAwDnVUUP7XTnqD3pjWapoBDw1lDK
+         50Kzuo/MtEXB6Hdwr/DwS4PqEiEcxxek9hC0xXLPGBXvk23RQcvKWJOdPrXh+dbFTm
+         hpmWbFoqq3663QSC/2QzPboUMx6ebwb3aacYQkNQCrA5Y+ZDRM5od9ZbSll/jAcAHt
+         tP1tLunrgFSOOGMTJQQt5oqhrSUz3D+a5yFCzM/uA1ViWLaKv4o+xwleENqDjAhw/d
+         k1iD3mjIpplBsfHoDvGo0Ec7ARWXd5VV2aA0C0JsGj//ZOe644CI/9zUvVUrt5f+JH
+         5+wStLmWTZdTg==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id s16so1248587vsc.10
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 05:48:14 -0800 (PST)
+X-Gm-Message-State: APjAAAVXAqS9AinZ/RVjPPakjdkpoqrF7xcJ4d9EWsBbZTOVWNHFHP4u
+        FPjIX5UOKi/bse+XUQaXX1zbkcVVK+23cVVjckg=
+X-Google-Smtp-Source: APXvYqyTXk/T86I7dlwE/veGRIdMLqTqb+cooe/0yqEITlDnMG/B+hHLqdaNi4yTMsk16cN+BBr421ehKsnP9BOOcVw=
+X-Received: by 2002:a67:f8ca:: with SMTP id c10mr1743990vsp.54.1578664092752;
+ Fri, 10 Jan 2020 05:48:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <73437651-822f-fcec-3b96-281fb1064cf8@redhat.com>
-User-Agent: NeoMutt/20180716
+References: <20200104162829.20400-1-masahiroy@kernel.org> <20200110121951.GA1047840@kroah.com>
+In-Reply-To: <20200110121951.GA1047840@kroah.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Fri, 10 Jan 2020 22:47:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATGZwPE9m=4L6n-OFPSmenQvoRvNR=c4Go65x1opjkpOQ@mail.gmail.com>
+Message-ID: <CAK7LNATGZwPE9m=4L6n-OFPSmenQvoRvNR=c4Go65x1opjkpOQ@mail.gmail.com>
+Subject: Re: [PATCH] staging: vc04_service: remove unused header include path
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Broadcom Kernel Feedback List 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 02:15:26PM +0100, David Hildenbrand wrote:
-> On 08.01.20 15:40, Michal Hocko wrote:
-> > On Mon 30-12-19 12:38:28, Kirill A. Shutemov wrote:
-> >> memmap_init_zone() can be called on the ranges with holes during the
-> >> boot. It will skip any non-valid PFNs one-by-one. It works fine as long
-> >> as holes are not too big.
-> >>
-> >> But huge holes in the memory map causes a problem. It takes over 20
-> >> seconds to walk 32TiB hole. x86-64 with 5-level paging allows for much
-> >> larger holes in the memory map which would practically hang the system.
-> >>
-> >> Deferred struct page init doesn't help here. It only works on the
-> >> present ranges.
-> >>
-> >> Skipping non-present sections would fix the issue.
-> > 
-> > Makes sense to me.
-> > 
-> >> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > 
-> > That pfn inc back and forth is quite ugly TBH but whatever.
-> 
-> Indeed, can we please rewrite the loop to fix that?
+On Fri, Jan 10, 2020 at 9:24 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Sun, Jan 05, 2020 at 01:28:29AM +0900, Masahiro Yamada wrote:
+> > I can build drivers/staging/vc04_services without this.
+> >
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> >  drivers/staging/vc04_services/Makefile | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/staging/vc04_services/Makefile b/drivers/staging/vc04_services/Makefile
+> > index afe43fa5a6d7..54d9e2f31916 100644
+> > --- a/drivers/staging/vc04_services/Makefile
+> > +++ b/drivers/staging/vc04_services/Makefile
+> > @@ -13,5 +13,5 @@ vchiq-objs := \
+> >  obj-$(CONFIG_SND_BCM2835)    += bcm2835-audio/
+> >  obj-$(CONFIG_VIDEO_BCM2835)  += bcm2835-camera/
+> >
+> > -ccflags-y += -Idrivers/staging/vc04_services -D__VCCOREVER__=0x04000000
+> > +ccflags-y += -D__VCCOREVER__=0x04000000
+> >
+> > --
+>
+> This patch breaks the build for me:
+> drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c:6:10: fatal error: interface/vchi/vchi.h: No such file or directory
+>     6 | #include "interface/vchi/vchi.h"
+>       |          ^~~~~~~~~~~~~~~~~~~~~~~
+> compilation terminated.
+>
+> So maybe you did't select all of the modules to build?
+>
+> Sorry, I can't take this as-is :(
+>
+> greg k-h
 
-Any suggestions?
 
-I don't see an obvious way to not break readablity in another place.
+Sorry, I compile-tested it with O= option.
+
+I should have tested it with/without O=
+for this kind of patch.
+
+
+I will fix up some relative paths.
+
 
 -- 
- Kirill A. Shutemov
+Best Regards
+Masahiro Yamada
