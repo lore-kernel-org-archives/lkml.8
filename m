@@ -2,130 +2,201 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD830C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E077DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 781F220673
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:27:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9jkHudz"
+	by mail.kernel.org (Postfix) with ESMTP id C19E52073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730838AbgAJC1P (ORCPT
+        id S1730898AbgAJCaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 21:27:15 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36072 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730806AbgAJC1P (ORCPT
+        Thu, 9 Jan 2020 21:30:05 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:60700 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730868AbgAJCaF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 21:27:15 -0500
-Received: by mail-lj1-f193.google.com with SMTP id r19so492192ljg.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 18:27:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IVAveBZjpIfJ4omwAA+IQvTDlq09Uc7HsY0eJNGnBoQ=;
-        b=Z9jkHudzgmru0+/sPDhBxRg2Dki429DfS/4CZPZ3UyWbscbfW8IKDcbzT1ZkLyq9cV
-         L7P7vZ50A7yU9cx7YdDueY39MpskcnaFKFUHvc4S6UFVVOA8MMhmkPnCNXSVppwmxF9P
-         AQJiaMW7+PwGzUYlX2AojdkQ6zgv2gUQ9j6BinFapxoEkmQYB+ruJZtUlOLitvzCbUPa
-         LU03L2WPsZUPZvTGym2GtvsEOZzC2ee7oDcoQKLwogTNbLTpDmdDTxzB29F28hW3dFMq
-         dhHWmopGuXs51FvFZ+z4iZjYG0/ccQInM7RGIpyF6lviRG+5Bn4v+C6LZ2ss2FGxoNhE
-         ZAIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IVAveBZjpIfJ4omwAA+IQvTDlq09Uc7HsY0eJNGnBoQ=;
-        b=siOEXqFNtV/fy+/HwRwdOKzD4iWvyY1ve27/aMBLCd/YUeNdk0blLKGDCXeF9VHpM+
-         8y/MBxInUY2vkACFlEcpYIKc7OTkyyCxFlPJKRwcRiQoJ8QnEnWZDrj4Rsnl6C82mxm4
-         FEvhWloeLLDBKALq75xE3O5HwnjPqbWGa3s7+IU07oqGF9Jc8fxJUXC05CpeA3JNkf/1
-         8rozdkbs0mDnObzGTopn5d/z8zkJOz5PjsIpov3Flxdt/H55+XTd4kDl+QwPm6u9fv5L
-         34KZfOzp0Oxe+33icUSlYo2Yw6dm3y5hAsDFXqOouRyF+YcjqdO66OP2ldDffAKzXsBn
-         u8CQ==
-X-Gm-Message-State: APjAAAVVkNnX4+s7tNPPrbI84ffzYfFKy2glBqVnCz9HLK95oDvGsvqV
-        hAer8ZjIRKmlYvslZ88BVkpe5DCi5uYjNgWLDPw=
-X-Google-Smtp-Source: APXvYqxqb4MffpgRoz4mqIfIwmosGfyuI4PgkVLo/LE14JBIHt4uHHTRi02T/AlYkC/9ZfEQSRHYxvJPFaB7pkwC5+8=
-X-Received: by 2002:a2e:9883:: with SMTP id b3mr787847ljj.80.1578623233860;
- Thu, 09 Jan 2020 18:27:13 -0800 (PST)
-MIME-Version: 1.0
-References: <20200103033929.4956-1-zhenzhong.duan@gmail.com>
- <20200109184055.GI5603@zn.tnic> <20200109204638.GA523773@rani.riverdale.lan>
-In-Reply-To: <20200109204638.GA523773@rani.riverdale.lan>
-From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Date:   Fri, 10 Jan 2020 10:27:02 +0800
-Message-ID: <CAFH1YnNA9qfM4tPzKKDaQD6DPxnE=tJsB7AUZQBohDTW3zm=Xg@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/boot/KASLR: Fix unused variable warning
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
-        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 9 Jan 2020 21:30:05 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 694911573640C;
+        Thu,  9 Jan 2020 18:30:04 -0800 (PST)
+Date:   Thu, 09 Jan 2020 18:30:01 -0800 (PST)
+Message-Id: <20200109.183001.2198948440388440605.davem@davemloft.net>
+To:     sfr@canb.auug.org.au
+Cc:     netdev@vger.kernel.org, linux-next@vger.kernel.org,
+        linux-kernel@vger.kernel.org, petrm@mellanox.com
+Subject: Re: linux-next: build failure after merge of the net-next tree
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200110105738.2b20cbad@canb.auug.org.au>
+References: <20200110105738.2b20cbad@canb.auug.org.au>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 09 Jan 2020 18:30:04 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 4:46 AM Arvind Sankar <nivedita@alum.mit.edu> wrote=
-:
->
-> On Thu, Jan 09, 2020 at 07:40:55PM +0100, Borislav Petkov wrote:
-> > On Fri, Jan 03, 2020 at 11:39:29AM +0800, Zhenzhong Duan wrote:
-> > > Local variable 'i' is referenced only when CONFIG_MEMORY_HOTREMOVE an=
-d
-> > > CONFIG_ACPI are defined, but definition of variable 'i' is out of gua=
-rd.
-> > > If any of the two macros is undefined, below warning triggers during
-> > > build, fix it by moving 'i' in the guard.
-> > >
-> > > arch/x86/boot/compressed/kaslr.c:698:6: warning: unused variable =E2=
-=80=98i=E2=80=99 [-Wunused-variable]
-> >
-> > How do you trigger this?
-> >
-> > I have:
-> >
-> > $  grep -E "(CONFIG_MEMORY_HOTREMOVE|CONFIG_ACPI)" .config
-> > # CONFIG_ACPI is not set
-> >
-> > but no warning. Neither with gcc 8 nor with gcc 9.
-> >
-> > --
-> > Regards/Gruss,
-> >     Boris.
-> >
-> > https://people.kernel.org/tglx/notes-about-netiquette
->
-> The boot/compressed Makefile resets KBUILD_CFLAGS.  Following hack and
-> building with W=3D1 shows it, or just add -Wunused in there.
->
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed=
-/Makefile
-> index 56aa5fa0a66b..791c0d5a952a 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -35,6 +35,9 @@ KBUILD_CFLAGS +=3D $(cflags-y)
->  KBUILD_CFLAGS +=3D -mno-mmx -mno-sse
->  KBUILD_CFLAGS +=3D $(call cc-option,-ffreestanding)
->  KBUILD_CFLAGS +=3D $(call cc-option,-fno-stack-protector)
-> +
-> +include scripts/Makefile.extrawarn
-> +
->  KBUILD_CFLAGS +=3D $(call cc-disable-warning, address-of-packed-member)
->  KBUILD_CFLAGS +=3D $(call cc-disable-warning, gnu)
->  KBUILD_CFLAGS +=3D -Wno-pointer-sign
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 10 Jan 2020 10:57:38 +1100
 
-Yes. Will you send this formally? Not clear if there is other reason making
-KBUILD_CFLAGS for arch/x86/boot/compressed different from other part.
+> After merging the net-next tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+> diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
+> index 17b29e2d19ed..54807b4930fe 100644
+> --- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
+> +++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
+> @@ -767,7 +767,7 @@ __mlxsw_sp_qdisc_ets_graft(struct mlxsw_sp_port *mlxsw_sp_port,
+>  	    mlxsw_sp_port->tclass_qdiscs[tclass_num].handle == child_handle)
+>  		return 0;
+>  
+> -	if (!p->child_handle) {
+> +	if (!child_handle) {
+>  		/* This is an invisible FIFO replacing the original Qdisc.
+>  		 * Ignore it--the original Qdisc's destroy will follow.
+>  		 */
+> -- 
+> 2.24.0
 
-Regards
-Zhenzhong
+Yep, this is the merge resolution you will find in net-next at commit:
+
+commit a2d6d7ae591c47ebc04926cb29a840adfdde49e6
+Merge: b1daa4d19473 e69ec487b2c7
+Author: David S. Miller <davem@davemloft.net>
+Date:   Thu Jan 9 12:10:26 2020 -0800
+
+    Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+    
+    The ungrafting from PRIO bug fixes in net, when merged into net-next,
+    merge cleanly but create a build failure.  The resolution used here is
+    from Petr Machata.
+    
+    Signed-off-by: David S. Miller <davem@davemloft.net>
+
+diff --cc drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
+index 81a2c087f534,46d43cfd04e9..54807b4930fe
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_qdisc.c
+@@@ -681,92 -631,33 +681,99 @@@ static struct mlxsw_sp_qdisc_ops mlxsw_
+  	.clean_stats = mlxsw_sp_setup_tc_qdisc_prio_clean_stats,
+  };
+  
+ -/* Grafting is not supported in mlxsw. It will result in un-offloading of the
+ - * grafted qdisc as well as the qdisc in the qdisc new location.
+ - * (However, if the graft is to the location where the qdisc is already at, it
+ - * will be ignored completely and won't cause un-offloading).
+ +static int
+ +mlxsw_sp_qdisc_ets_check_params(struct mlxsw_sp_port *mlxsw_sp_port,
+ +				struct mlxsw_sp_qdisc *mlxsw_sp_qdisc,
+ +				void *params)
+ +{
+ +	struct tc_ets_qopt_offload_replace_params *p = params;
+ +
+ +	return __mlxsw_sp_qdisc_ets_check_params(p->bands);
+ +}
+ +
+ +static int
+ +mlxsw_sp_qdisc_ets_replace(struct mlxsw_sp_port *mlxsw_sp_port,
+ +			   struct mlxsw_sp_qdisc *mlxsw_sp_qdisc,
+ +			   void *params)
+ +{
+ +	struct tc_ets_qopt_offload_replace_params *p = params;
+ +
+ +	return __mlxsw_sp_qdisc_ets_replace(mlxsw_sp_port, p->bands,
+ +					    p->quanta, p->weights, p->priomap);
+ +}
+ +
+ +static void
+ +mlxsw_sp_qdisc_ets_unoffload(struct mlxsw_sp_port *mlxsw_sp_port,
+ +			     struct mlxsw_sp_qdisc *mlxsw_sp_qdisc,
+ +			     void *params)
+ +{
+ +	struct tc_ets_qopt_offload_replace_params *p = params;
+ +
+ +	__mlxsw_sp_qdisc_ets_unoffload(mlxsw_sp_port, mlxsw_sp_qdisc,
+ +				       p->qstats);
+ +}
+ +
+ +static int
+ +mlxsw_sp_qdisc_ets_destroy(struct mlxsw_sp_port *mlxsw_sp_port,
+ +			   struct mlxsw_sp_qdisc *mlxsw_sp_qdisc)
+ +{
+ +	return __mlxsw_sp_qdisc_ets_destroy(mlxsw_sp_port);
+ +}
+ +
+ +static struct mlxsw_sp_qdisc_ops mlxsw_sp_qdisc_ops_ets = {
+ +	.type = MLXSW_SP_QDISC_ETS,
+ +	.check_params = mlxsw_sp_qdisc_ets_check_params,
+ +	.replace = mlxsw_sp_qdisc_ets_replace,
+ +	.unoffload = mlxsw_sp_qdisc_ets_unoffload,
+ +	.destroy = mlxsw_sp_qdisc_ets_destroy,
+ +	.get_stats = mlxsw_sp_qdisc_get_prio_stats,
+ +	.clean_stats = mlxsw_sp_setup_tc_qdisc_prio_clean_stats,
+ +};
+ +
+ +/* Linux allows linking of Qdiscs to arbitrary classes (so long as the resulting
+ + * graph is free of cycles). These operations do not change the parent handle
+ + * though, which means it can be incomplete (if there is more than one class
+ + * where the Qdisc in question is grafted) or outright wrong (if the Qdisc was
+ + * linked to a different class and then removed from the original class).
+ + *
+ + * E.g. consider this sequence of operations:
+ + *
+ + *  # tc qdisc add dev swp1 root handle 1: prio
+ + *  # tc qdisc add dev swp1 parent 1:3 handle 13: red limit 1000000 avpkt 10000
+ + *  RED: set bandwidth to 10Mbit
+ + *  # tc qdisc link dev swp1 handle 13: parent 1:2
+ + *
+ + * At this point, both 1:2 and 1:3 have the same RED Qdisc instance as their
+ + * child. But RED will still only claim that 1:3 is its parent. If it's removed
+ + * from that band, its only parent will be 1:2, but it will continue to claim
+ + * that it is in fact 1:3.
+ + *
+ + * The notification for child Qdisc replace (e.g. TC_RED_REPLACE) comes before
+ + * the notification for parent graft (e.g. TC_PRIO_GRAFT). We take the replace
+ + * notification to offload the child Qdisc, based on its parent handle, and use
+ + * the graft operation to validate that the class where the child is actually
+ + * grafted corresponds to the parent handle. If the two don't match, we
+ + * unoffload the child.
+   */
+  static int
+ -mlxsw_sp_qdisc_prio_graft(struct mlxsw_sp_port *mlxsw_sp_port,
+ -			  struct mlxsw_sp_qdisc *mlxsw_sp_qdisc,
+ -			  struct tc_prio_qopt_offload_graft_params *p)
+ +__mlxsw_sp_qdisc_ets_graft(struct mlxsw_sp_port *mlxsw_sp_port,
+ +			   struct mlxsw_sp_qdisc *mlxsw_sp_qdisc,
+ +			   u8 band, u32 child_handle)
+  {
+ -	int tclass_num = MLXSW_SP_PRIO_BAND_TO_TCLASS(p->band);
+ +	int tclass_num = MLXSW_SP_PRIO_BAND_TO_TCLASS(band);
+  	struct mlxsw_sp_qdisc *old_qdisc;
+  
+ -	/* Check if the grafted qdisc is already in its "new" location. If so -
+ -	 * nothing needs to be done.
+ -	 */
+ -	if (p->band < IEEE_8021QAZ_MAX_TCS &&
+ -	    mlxsw_sp_port->tclass_qdiscs[tclass_num].handle == p->child_handle)
+ +	if (band < IEEE_8021QAZ_MAX_TCS &&
+ +	    mlxsw_sp_port->tclass_qdiscs[tclass_num].handle == child_handle)
+  		return 0;
+  
+ -	if (!p->child_handle) {
+++	if (!child_handle) {
++ 		/* This is an invisible FIFO replacing the original Qdisc.
++ 		 * Ignore it--the original Qdisc's destroy will follow.
++ 		 */
++ 		return 0;
++ 	}
++ 
+  	/* See if the grafted qdisc is already offloaded on any tclass. If so,
+  	 * unoffload it.
+  	 */
