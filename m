@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E83C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C79C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1A22072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64D52072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:54:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgAJLy3 (ORCPT
+        id S1728107AbgAJLyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:54:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:43110 "EHLO foss.arm.com"
+        Fri, 10 Jan 2020 06:54:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:43132 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbgAJLy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:54:28 -0500
+        id S1728029AbgAJLya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 06:54:30 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62F3F13A1;
-        Fri, 10 Jan 2020 03:54:27 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F64E1063;
+        Fri, 10 Jan 2020 03:54:30 -0800 (PST)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.44])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A3493F534;
-        Fri, 10 Jan 2020 03:54:26 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E797B3F534;
+        Fri, 10 Jan 2020 03:54:28 -0800 (PST)
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     "David S . Miller" <davem@davemloft.net>,
         Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 Cc:     Michal Simek <michal.simek@xilinx.com>,
         Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup path
-Date:   Fri, 10 Jan 2020 11:54:04 +0000
-Message-Id: <20200110115415.75683-4-andre.przywara@arm.com>
+Subject: [PATCH 05/14] net: axienet: Factor out TX descriptor chain cleanup
+Date:   Fri, 10 Jan 2020 11:54:06 +0000
+Message-Id: <20200110115415.75683-6-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200110115415.75683-1-andre.przywara@arm.com>
 References: <20200110115415.75683-1-andre.przywara@arm.com>
@@ -42,91 +42,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When axienet_dma_bd_init() bails out during the initialisation process,
-it might do so with parts of the structure already allocated and
-initialised, while other parts have not been touched yet. Before
-returning in this case, we call axienet_dma_bd_release(), which does not
-take care of this corner case.
-This is most obvious by the first loop happily dereferencing
-lp->rx_bd_v, which we actually check to be non NULL *afterwards*.
-
-Make sure we only unmap or free already allocated structures, by:
-- directly returning with -ENOMEM if nothing has been allocated at all
-- checking for lp->rx_bd_v to be non-NULL *before* using it
-- only unmapping allocated DMA RX regions
-
-This avoids NULL pointer dereferences when initialisation fails.
+Factor out the code that cleans up a number of connected TX descriptors,
+as we will need it to properly roll back a failed _xmit() call.
+There are subtle differences between cleaning up a successfully sent
+chain (unknown number of involved descriptors, total data size needed)
+and a chain that was about to set up (number of descriptors known), so
+cater for those variations with some extra parameters.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 43 ++++++++++++-------
- 1 file changed, 28 insertions(+), 15 deletions(-)
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 75 ++++++++++++-------
+ 1 file changed, 50 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 97482cf093ce..7e90044cf2d9 100644
+index ec5d01adc1d5..82abe2b0f16a 100644
 --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
 +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -160,24 +160,37 @@ static void axienet_dma_bd_release(struct net_device *ndev)
- 	int i;
- 	struct axienet_local *lp = netdev_priv(ndev);
- 
-+	/* If we end up here, tx_bd_v must have been DMA allocated. */
-+	dma_free_coherent(ndev->dev.parent,
-+			  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
-+			  lp->tx_bd_v,
-+			  lp->tx_bd_p);
-+
-+	if (!lp->rx_bd_v)
-+		return;
-+
- 	for (i = 0; i < lp->rx_bd_num; i++) {
--		dma_unmap_single(ndev->dev.parent, lp->rx_bd_v[i].phys,
--				 lp->max_frm_size, DMA_FROM_DEVICE);
-+		/* A NULL skb means this descriptor has not been initialised
-+		 * at all.
-+		 */
-+		if (!lp->rx_bd_v[i].skb)
-+			break;
-+
- 		dev_kfree_skb(lp->rx_bd_v[i].skb);
--	}
- 
--	if (lp->rx_bd_v) {
--		dma_free_coherent(ndev->dev.parent,
--				  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
--				  lp->rx_bd_v,
--				  lp->rx_bd_p);
--	}
--	if (lp->tx_bd_v) {
--		dma_free_coherent(ndev->dev.parent,
--				  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
--				  lp->tx_bd_v,
--				  lp->tx_bd_p);
-+		/* For each descriptor, we programmed cntrl with the (non-zero)
-+		 * descriptor size, after it had been successfully allocated.
-+		 * So a non-zero value in there means we need to unmap it.
-+		 */
-+		if (lp->rx_bd_v[i].cntrl)
-+			dma_unmap_single(ndev->dev.parent, lp->rx_bd_v[i].phys,
-+					 lp->max_frm_size, DMA_FROM_DEVICE);
- 	}
-+
-+	dma_free_coherent(ndev->dev.parent,
-+			  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
-+			  lp->rx_bd_v,
-+			  lp->rx_bd_p);
+@@ -543,33 +543,37 @@ static int axienet_device_reset(struct net_device *ndev)
+ 	return 0;
  }
  
- /**
-@@ -207,7 +220,7 @@ static int axienet_dma_bd_init(struct net_device *ndev)
- 					 sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
- 					 &lp->tx_bd_p, GFP_KERNEL);
- 	if (!lp->tx_bd_v)
--		goto out;
-+		return -ENOMEM;
+-/**
+- * axienet_start_xmit_done - Invoked once a transmit is completed by the
+- * Axi DMA Tx channel.
+- * @ndev:	Pointer to the net_device structure
+- *
+- * This function is invoked from the Axi DMA Tx isr to notify the completion
+- * of transmit operation. It clears fields in the corresponding Tx BDs and
+- * unmaps the corresponding buffer so that CPU can regain ownership of the
+- * buffer. It finally invokes "netif_wake_queue" to restart transmission if
+- * required.
++/* Clean up a series of linked TX descriptors. Would either be called
++ * after a successful transmit operation, or after there was an error
++ * when setting up the chain.
++ * Returns the number of descriptors handled.
+  */
+-static void axienet_start_xmit_done(struct net_device *ndev)
++static int axienet_free_tx_chain(struct net_device *ndev, u32 first_bd,
++				 int nr_bds, u32 *sizep)
+ {
+-	u32 size = 0;
+-	u32 packets = 0;
+ 	struct axienet_local *lp = netdev_priv(ndev);
++	int max_bds = (nr_bds != -1) ? nr_bds : lp->tx_bd_num;
+ 	struct axidma_bd *cur_p;
+-	unsigned int status = 0;
++	unsigned int status;
++	int i;
++
++	for (i = 0; i < max_bds; i++) {
++		cur_p = &lp->tx_bd_v[(first_bd + i) % lp->tx_bd_num];
++		status = cur_p->status;
++
++		/* If no number is given, clean up *all* descriptors that have
++		 * been completed by the MAC.
++		 */
++		if (nr_bds == -1 && !(status & XAXIDMA_BD_STS_COMPLETE_MASK))
++			break;
  
- 	lp->rx_bd_v = dma_alloc_coherent(ndev->dev.parent,
- 					 sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
+-	cur_p = &lp->tx_bd_v[lp->tx_bd_ci];
+-	status = cur_p->status;
+-	while (status & XAXIDMA_BD_STS_COMPLETE_MASK) {
+ 		dma_unmap_single(ndev->dev.parent, cur_p->phys,
+ 				(cur_p->cntrl & XAXIDMA_BD_CTRL_LENGTH_MASK),
+ 				DMA_TO_DEVICE);
+-		if (cur_p->skb)
++
++		if (cur_p->skb && (status & XAXIDMA_BD_STS_COMPLETE_MASK))
+ 			dev_consume_skb_irq(cur_p->skb);
++
+ 		cur_p->cntrl = 0;
+ 		cur_p->app0 = 0;
+ 		cur_p->app1 = 0;
+@@ -578,15 +582,36 @@ static void axienet_start_xmit_done(struct net_device *ndev)
+ 		cur_p->status = 0;
+ 		cur_p->skb = NULL;
+ 
+-		size += status & XAXIDMA_BD_STS_ACTUAL_LEN_MASK;
+-		packets++;
+-
+-		if (++lp->tx_bd_ci >= lp->tx_bd_num)
+-			lp->tx_bd_ci = 0;
+-		cur_p = &lp->tx_bd_v[lp->tx_bd_ci];
+-		status = cur_p->status;
++		if (sizep)
++			*sizep += status & XAXIDMA_BD_STS_ACTUAL_LEN_MASK;
+ 	}
+ 
++	return i;
++}
++
++/**
++ * axienet_start_xmit_done - Invoked once a transmit is completed by the
++ * Axi DMA Tx channel.
++ * @ndev:	Pointer to the net_device structure
++ *
++ * This function is invoked from the Axi DMA Tx isr to notify the completion
++ * of transmit operation. It clears fields in the corresponding Tx BDs and
++ * unmaps the corresponding buffer so that CPU can regain ownership of the
++ * buffer. It finally invokes "netif_wake_queue" to restart transmission if
++ * required.
++ */
++static void axienet_start_xmit_done(struct net_device *ndev)
++{
++	u32 size = 0;
++	u32 packets = 0;
++	struct axienet_local *lp = netdev_priv(ndev);
++
++	packets = axienet_free_tx_chain(ndev, lp->tx_bd_ci, -1, &size);
++
++	lp->tx_bd_ci += packets;
++	if (lp->tx_bd_ci >= lp->tx_bd_num)
++		lp->tx_bd_ci -= lp->tx_bd_num;
++
+ 	ndev->stats.tx_packets += packets;
+ 	ndev->stats.tx_bytes += size;
+ 
 -- 
 2.17.1
 
