@@ -4,70 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3129C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD2BC33CA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD852087F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F158206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:31:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbgAJB3y (ORCPT
+        id S1730667AbgAJBbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:29:54 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9145 "EHLO huawei.com"
+        Thu, 9 Jan 2020 20:31:04 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:57308 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730567AbgAJB3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 20:29:54 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 555C6DF5A7A1F72B1F34;
-        Fri, 10 Jan 2020 09:29:52 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 10 Jan 2020 09:29:43 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jyri Sarha <jsarha@ti.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] phy: ti: j721e-wiz: Fix return value check in wiz_probe()
-Date:   Fri, 10 Jan 2020 01:25:33 +0000
-Message-ID: <20200110012533.33143-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        id S1730593AbgAJBbE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 20:31:04 -0500
+Received: from linux.localdomain (unknown [123.138.236.242])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx32vH0xde7cgCAA--.0S2;
+        Fri, 10 Jan 2020 09:30:48 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] MIPS: Loongson: Fix potential NULL dereference in loongson3_platform_init()
+Date:   Fri, 10 Jan 2020 09:30:42 +0800
+Message-Id: <1578619842-926-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf9Dx32vH0xde7cgCAA--.0S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtry3GFyfKFWfGF1kuFWxWFg_yoWfXFbEgF
+        WIyF4kGry8Jwn7X3yj9r13WrWfWa4DCF43CFnxW34Igas0qrn8JrW8Ar4UAF47XrWjyrW5
+        Z3ykCFyfCa1fGjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb28YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_KwCF04k2
+        0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+        AIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
+        87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j00PfUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of error, the function devm_ioremap() returns NULL pointer not
-ERR_PTR(). The IS_ERR() test in the return value check should be
-replaced with NULL test.
+If kzalloc fails, it should return -ENOMEM, otherwise may trigger a NULL
+pointer dereference.
 
-Fixes: b46f531313a4 ("phy: ti: j721e-wiz: Add support for WIZ module present in TI J721E SoC")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Fixes: 3adeb2566b9b ("MIPS: Loongson: Improve LEFI firmware interface")
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- drivers/phy/ti/phy-j721e-wiz.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/loongson64/platform.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
-index b86ebdd68302..b9654ec89662 100644
---- a/drivers/phy/ti/phy-j721e-wiz.c
-+++ b/drivers/phy/ti/phy-j721e-wiz.c
-@@ -762,7 +762,7 @@ static int wiz_probe(struct platform_device *pdev)
- 	}
+diff --git a/arch/mips/loongson64/platform.c b/arch/mips/loongson64/platform.c
+index 13f3404..9674ae1 100644
+--- a/arch/mips/loongson64/platform.c
++++ b/arch/mips/loongson64/platform.c
+@@ -27,6 +27,9 @@ static int __init loongson3_platform_init(void)
+ 			continue;
  
- 	base = devm_ioremap(dev, res.start, resource_size(&res));
--	if (IS_ERR(base))
-+	if (!base)
- 		goto err_addr_to_resource;
- 
- 	regmap = devm_regmap_init_mmio(dev, base, &wiz_regmap_config);
-
-
+ 		pdev = kzalloc(sizeof(struct platform_device), GFP_KERNEL);
++		if (!pdev)
++			return -ENOMEM;
++
+ 		pdev->name = loongson_sysconf.sensors[i].name;
+ 		pdev->id = loongson_sysconf.sensors[i].id;
+ 		pdev->dev.platform_data = &loongson_sysconf.sensors[i];
+-- 
+2.1.0
 
