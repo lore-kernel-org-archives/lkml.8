@@ -2,106 +2,224 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AA4C33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62226C33C99
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7071F20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:54:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oOJhofvz"
+	by mail.kernel.org (Postfix) with ESMTP id 4065720721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:03:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbgAJFyW (ORCPT
+        id S1726959AbgAJGD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 00:54:22 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:37840 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgAJFyW (ORCPT
+        Fri, 10 Jan 2020 01:03:57 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:56667 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbgAJGD5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 00:54:22 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00A5rUEL050818;
-        Fri, 10 Jan 2020 05:54:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=5JBntCtAE8aub1WbJjIcxc7ITMNSfHCdwR0Pl1xG8hY=;
- b=oOJhofvzKJzyBo8FnF3+GqppIDh3rSoXHI/Ik9U8XqQftXb7IJT1m61rdusR3EkRceIj
- QK8sFNbOMhrTrL8WfZfo/29zZZUTtUQvNnzBhk83laOHEeIOYMQeuSYeYcoKuVxmaCRp
- gc8xd7XGyJv4P6Hhv93qBNlEE+dOvFs3iNB80n15+zfJRsrP+LysY/qlvdVwL5kRzIE+
- rboPB5hI4GhXg4COPS+/xbxHoMOKCYX9eW1Do9Pom5JnlSBeRBYdHlBMr/w7r6pSiklM
- ePwPE5GQAFYb8WYTlcQDKZQUhI4XGdy1N2whD3GLVvmSPX+ZiCOmhVrgmdCuX2m3iG1+ cA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xajnqfsgw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 05:54:15 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00A5sAlI175765;
-        Fri, 10 Jan 2020 05:54:15 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2xdrxf6kg2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 05:54:11 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00A5r3Zh009111;
-        Fri, 10 Jan 2020 05:53:03 GMT
-Received: from kili.mountain (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 09 Jan 2020 21:53:02 -0800
-Date:   Fri, 10 Jan 2020 08:52:52 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] regulator: mp8859: tidy up white space in probe
-Message-ID: <20200110055252.rvelu4ysvoxsbmlg@kili.mountain>
+        Fri, 10 Jan 2020 01:03:57 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1ipnOZ-00064L-E6; Fri, 10 Jan 2020 07:03:43 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B24901C2D4F;
+        Fri, 10 Jan 2020 07:03:42 +0100 (CET)
+Date:   Fri, 10 Jan 2020 06:03:42 -0000
+From:   "tip-bot2 for Masami Hiramatsu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/kprobes] kprobes: Fix
+ optimize_kprobe()/unoptimize_kprobe() cancellation logic
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <157840814418.7181.13478003006386303481.stgit@devnote2>
+References: <157840814418.7181.13478003006386303481.stgit@devnote2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001100050
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001100050
+Message-ID: <157863622256.30329.5004888454070050302.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These two lines are indented an extra tab.
+The following commit has been merged into the core/kprobes branch of tip:
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Commit-ID:     e4add247789e4ba5e08ad8256183ce2e211877d4
+Gitweb:        https://git.kernel.org/tip/e4add247789e4ba5e08ad8256183ce2e211877d4
+Author:        Masami Hiramatsu <mhiramat@kernel.org>
+AuthorDate:    Tue, 07 Jan 2020 23:42:24 +09:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Thu, 09 Jan 2020 12:40:13 +01:00
+
+kprobes: Fix optimize_kprobe()/unoptimize_kprobe() cancellation logic
+
+optimize_kprobe() and unoptimize_kprobe() cancels if a given kprobe
+is on the optimizing_list or unoptimizing_list already. However, since
+the following commit:
+
+  f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
+
+modified the update timing of the KPROBE_FLAG_OPTIMIZED, it doesn't
+work as expected anymore.
+
+The optimized_kprobe could be in the following states:
+
+- [optimizing]: Before inserting jump instruction
+  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+  op->list is not empty.
+
+- [optimized]: jump inserted
+  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+  op->list is empty.
+
+- [unoptimizing]: Before removing jump instruction (including unused
+  optprobe)
+  op.kp->flags has KPROBE_FLAG_OPTIMIZED and
+  op->list is not empty.
+
+- [unoptimized]: jump removed
+  op.kp->flags doesn't have KPROBE_FLAG_OPTIMIZED and
+  op->list is empty.
+
+Current code mis-expects [unoptimizing] state doesn't have
+KPROBE_FLAG_OPTIMIZED, and that can cause incorrect results.
+
+To fix this, introduce optprobe_queued_unopt() to distinguish [optimizing]
+and [unoptimizing] states and fixes the logic in optimize_kprobe() and
+unoptimize_kprobe().
+
+[ mingo: Cleaned up the changelog and the code a bit. ]
+
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bristot@redhat.com
+Fixes: f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
+Link: https://lkml.kernel.org/r/157840814418.7181.13478003006386303481.stgit@devnote2
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- drivers/regulator/mp8859.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/kprobes.c | 67 ++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 43 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/regulator/mp8859.c b/drivers/regulator/mp8859.c
-index e804a5267301..1d26b506ee5b 100644
---- a/drivers/regulator/mp8859.c
-+++ b/drivers/regulator/mp8859.c
-@@ -123,8 +123,8 @@ static int mp8859_i2c_probe(struct i2c_client *i2c)
- 		ret = PTR_ERR(rdev);
- 		dev_err(&i2c->dev, "failed to register %s: %d\n",
- 			mp8859_regulators[0].name, ret);
--			return ret;
--		}
-+		return ret;
-+	}
- 	return 0;
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 34e28b2..2625c24 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -612,6 +612,18 @@ void wait_for_kprobe_optimizer(void)
+ 	mutex_unlock(&kprobe_mutex);
  }
  
--- 
-2.11.0
-
++static bool optprobe_queued_unopt(struct optimized_kprobe *op)
++{
++	struct optimized_kprobe *_op;
++
++	list_for_each_entry(_op, &unoptimizing_list, list) {
++		if (op == _op)
++			return true;
++	}
++
++	return false;
++}
++
+ /* Optimize kprobe if p is ready to be optimized */
+ static void optimize_kprobe(struct kprobe *p)
+ {
+@@ -633,17 +645,21 @@ static void optimize_kprobe(struct kprobe *p)
+ 		return;
+ 
+ 	/* Check if it is already optimized. */
+-	if (op->kp.flags & KPROBE_FLAG_OPTIMIZED)
++	if (op->kp.flags & KPROBE_FLAG_OPTIMIZED) {
++		if (optprobe_queued_unopt(op)) {
++			/* This is under unoptimizing. Just dequeue the probe */
++			list_del_init(&op->list);
++		}
+ 		return;
++	}
+ 	op->kp.flags |= KPROBE_FLAG_OPTIMIZED;
+ 
+-	if (!list_empty(&op->list))
+-		/* This is under unoptimizing. Just dequeue the probe */
+-		list_del_init(&op->list);
+-	else {
+-		list_add(&op->list, &optimizing_list);
+-		kick_kprobe_optimizer();
+-	}
++	/* On unoptimizing/optimizing_list, op must have OPTIMIZED flag */
++	if (WARN_ON_ONCE(!list_empty(&op->list)))
++		return;
++
++	list_add(&op->list, &optimizing_list);
++	kick_kprobe_optimizer();
+ }
+ 
+ /* Short cut to direct unoptimizing */
+@@ -665,30 +681,33 @@ static void unoptimize_kprobe(struct kprobe *p, bool force)
+ 		return; /* This is not an optprobe nor optimized */
+ 
+ 	op = container_of(p, struct optimized_kprobe, kp);
+-	if (!kprobe_optimized(p)) {
+-		/* Unoptimized or unoptimizing case */
+-		if (force && !list_empty(&op->list)) {
+-			/*
+-			 * Only if this is unoptimizing kprobe and forced,
+-			 * forcibly unoptimize it. (No need to unoptimize
+-			 * unoptimized kprobe again :)
+-			 */
+-			list_del_init(&op->list);
+-			force_unoptimize_kprobe(op);
+-		}
++	if (!kprobe_optimized(p))
+ 		return;
+-	}
+ 
+ 	if (!list_empty(&op->list)) {
+-		/* Dequeue from the optimization queue */
+-		list_del_init(&op->list);
++		if (optprobe_queued_unopt(op)) {
++			/* Queued in unoptimizing queue */
++			if (force) {
++				/*
++				 * Forcibly unoptimize the kprobe here, and queue it
++				 * in the freeing list for release afterwards.
++				 */
++				force_unoptimize_kprobe(op);
++				list_move(&op->list, &freeing_list);
++			}
++		} else {
++			/* Dequeue from the optimizing queue */
++			list_del_init(&op->list);
++			op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
++		}
+ 		return;
+ 	}
++
+ 	/* Optimized kprobe case */
+-	if (force)
++	if (force) {
+ 		/* Forcibly update the code: this is a special case */
+ 		force_unoptimize_kprobe(op);
+-	else {
++	} else {
+ 		list_add(&op->list, &unoptimizing_list);
+ 		kick_kprobe_optimizer();
+ 	}
