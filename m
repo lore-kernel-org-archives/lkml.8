@@ -2,79 +2,139 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD76FC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A31AC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B2F2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:29:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="n7+Weu6E"
+	by mail.kernel.org (Postfix) with ESMTP id 0425E2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbgAJT3Y (ORCPT
+        id S1728824AbgAJT36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:29:24 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:63760 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728566AbgAJT3Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:29:24 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578684563; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=sS7FH3trNghA2Yb1Deevx4nraRS9TX4A/qgUgmnpbHc=; b=n7+Weu6E/ePwcbs4F2GSPfndzubArITkI5fVwhtOMvLyGhJhV4MaSqc94XhQ+qlueNO/qYRE
- 9PR/v6WHuzM116IjNdneZ7njH8RyozZLdom2H4czFqeJ3mhFZVEj+73MPeG5F0HPFBz9hHjS
- B+UWa3euHhmvygQRqiWkViY3uUU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e18d08f.7f059437ae68-smtp-out-n03;
- Fri, 10 Jan 2020 19:29:19 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 41751C4479F; Fri, 10 Jan 2020 19:29:19 +0000 (UTC)
-Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: eberman)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 72544C433CB;
-        Fri, 10 Jan 2020 19:29:18 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 72544C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
-From:   Elliot Berman <eberman@codeaurora.org>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Elliot Berman <eberman@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        tsoni@codeaurora.org, psodagud@codeaurora.org,
-        linux-arm-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC] ARM PSCI: Add support for vendor-specific SYSTEM_RESET2
-Date:   Fri, 10 Jan 2020 11:29:11 -0800
-Message-Id: <1578684552-15953-1-git-send-email-eberman@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Fri, 10 Jan 2020 14:29:58 -0500
+Received: from mga03.intel.com ([134.134.136.65]:21738 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727709AbgAJT34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 14:29:56 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:29:55 -0800
+X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
+   d="scan'208";a="247130740"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:29:55 -0800
+From:   ira.weiny@intel.com
+To:     linux-kernel@vger.kernel.org
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [RFC PATCH V2 00/12] Enable per-file/directory DAX operations V2
+Date:   Fri, 10 Jan 2020 11:29:30 -0800
+Message-Id: <20200110192942.25021-1-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for vendor-specific SYSTEM_RESET2 to support
-Qualcomm target use cases of rebooting into a RAM dump download mode. I'm
-working on the client driver to use the proposed psci_system_reset2()
-function but wanted to get this RFC going for PSCI driver changes.
+From: Ira Weiny <ira.weiny@intel.com>
+
+At LSF/MM'19 [1] [2] we discussed applications that overestimate memory
+consumption due to their inability to detect whether the kernel will
+instantiate page cache for a file, and cases where a global dax enable via a
+mount option is too coarse.
+
+The following patch series enables selecting the use of DAX on individual files
+and/or directories on xfs, and lays some groundwork to do so in ext4.  In this
+scheme the dax mount option can be omitted to allow the per-file property to
+take effect.
+
+The insight at LSF/MM was to separate the per-mount or per-file "physical"
+capability switch from an "effective" attribute for the file.
+
+At LSF/MM we discussed the difficulties of switching the mode of a file with
+active mappings / page cache.  It was thought the races could be avoided by
+limiting mode flips to 0-length files.
+
+However, this turns out to not be true.[3] This is because address space
+operations (a_ops) may be in use at any time the inode is referenced and users
+have expressed a desire to be able to change the mode on a file with data in
+it.  For those reasons this patch set allows changing the mode flag on a file
+as long as it is not current mapped.
+
+Furthermore, DAX is a property of the inode and as such, many operations other
+than address space operations need to be protected during a mode change.
+
+Therefore callbacks are placed within the inode operations and used to lock the
+inode as appropriate.
+
+As in V1, Users are able to query the effective and physical flags separately
+at any time.  Specifically the addition of the statx attribute bit allows them
+to ensure the file is operating in the mode they intend.  This 'effective flag'
+and physical flags could differ when the filesystem is mounted with the dax
+flag for example.
+
+It should be noted that the physical DAX flag inheritance is not shown in this
+patch set as it was maintained from previous work on XFS.  The physical DAX flag
+and it's inheritance will need to be added to other file systems for user
+control. 
+
+Finally, extensive testing was performed which resulted in a couple of bug fix
+and clean up patches.  Specifically:
+
+	fs: remove unneeded IS_DAX() check
+	fs/xfs: Fix truncate up
+
+'Fix truncate up' deserves specific attention because I'm not 100% sure it is
+the correct fix.  Without that patch fsx testing failed within a few minutes
+with this error.
+
+	Mapped Write: non-zero data past EOF (0x3b0da) page offset 0xdb is 0x3711
+
+With 'Fix truncate up' running fsx while changing modes can run for hours but I
+have seen 2 other errors in the same genre after many hours of continuous
+testing.
+
+They are:
+
+	READ BAD DATA: offset = 0x22dc, size = 0xcc7e, fname = /mnt/pmem/dax-file
+
+	Mapped Read: non-zero data past EOF (0x3309e) page offset 0x9f is 0x6ab4
+
+After seeing the patches to fix stale data exposure problems[4] I'm more
+confident now that all 3 of these errors are a latent bug rather than a bug in
+this series itself.
+
+However, because of these failures I'm only submitting this set RFC.
 
 
-Elliot Berman (1):
-  drivers: firmware: psci: Add function to support SYSTEM_RESET2
+[1] https://lwn.net/Articles/787973/
+[2] https://lwn.net/Articles/787233/
+[3] https://lkml.org/lkml/2019/10/20/96
+[4] https://patchwork.kernel.org/patch/11310511/
 
- drivers/firmware/psci/psci.c | 16 +++++++++++++++-
- include/linux/psci.h         |  3 +++
- include/uapi/linux/psci.h    |  8 ++++++++
- 3 files changed, 26 insertions(+), 1 deletion(-)
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+To: linux-kernel@vger.kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc: Jan Kara <jack@suse.cz>
+Cc: linux-ext4@vger.kernel.org
+Cc: linux-xfs@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+
