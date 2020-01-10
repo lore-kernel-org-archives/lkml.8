@@ -2,134 +2,198 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F37C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258C3C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77B3920880
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:07:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tr+YU/ux"
+	by mail.kernel.org (Postfix) with ESMTP id ED3052082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:07:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578694061;
+	bh=qwg2+yq3V5WU/PJy8pKmuSnByN6XlrZSxoyxyU7+3Xk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tdlp56T8bIYvKPQpX1+UJtmMAt1u3moX4/uECwMQn+3PNuaIfrKQ43/qL8A+vy589
+	 gSKDqgB7a3HeqHDMCZMQLjGz06C6sK4+/FApv/eRiK/8fbNrVhA0IkS2h7IvUo5Jv/
+	 dCZ16ZisUSU/RDpnRrHFEi+9eWpKVV3/QVRYyAZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgAJWHf (ORCPT
+        id S1728427AbgAJWHj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:07:35 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41064 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbgAJWHd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:07:33 -0500
-Received: by mail-lj1-f195.google.com with SMTP id h23so3665324ljc.8;
-        Fri, 10 Jan 2020 14:07:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ueIAxuwE1NrUjrVJsYu2PJWCZzJduGj9FbSfPr3jwpk=;
-        b=Tr+YU/uxs+T+sEeXOIt2e5jvdiaiE0Nr4HuPRsUPSol46828WaEPO57aToaLRmoCvf
-         K8ik/Qp+6W7Wjj81DSS0ThiuOCuvlnbGuIa0QL1uQ6P0fkixm71v8tYukqH50QLrZvPN
-         5twT9iBxovm/eyjlo7xjLoWYvii0sar3tq6YhRGkxSk0p9zIrS36DQD8y5GJcXMfHOBe
-         xjIPKdqZUt2DtBkB5aLzIH9d+GWcQnPn5eMyZa6EJtAM5nA9ZNuKcfnNOdk2Pgd1oThL
-         bEHgA70Ty4110yQPcp4+YTVUW4ggQdN6xGhTI/uhXbBzMKIKc/s/R9znGTuGDSQDAPQ0
-         krRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ueIAxuwE1NrUjrVJsYu2PJWCZzJduGj9FbSfPr3jwpk=;
-        b=mr+TO0ZL4YESIf1Y2P4l/u+fIPSAhhEoQ3Q8tx1n2U+20bZLEDgIa02p+hAJcf8SLI
-         MJgMNDpSBfa9JxDHcmFFCLKDAtL/ItfhmSvs2eZFZagluPk2iFWYIigKJSF63sZbHKsR
-         /fmebpKjzJdMqp31s6QwRTHRvXB7LnnXAJGIiNuRS2I6zC/bJuMjeMjMNtKJ+UNJwxDN
-         f/ds2voub/8j3HlLedJwjZlvU9wuYI992bRpjme9S4FllDtr0J4aEfEIuf72H5uURxRN
-         2DAdhhTCy7QhGYekE3bqVZa52oARpcPt36QB9B/9AdkKIfTdbWVzqjlKDQFoASRCxphG
-         ZnvA==
-X-Gm-Message-State: APjAAAWgUxfosBXFlpIIkdyD1XHbmHZN2cSbCtN0KZntEtNEqyTazAle
-        c1nnbxtcHlFTNvI3xjUzLRfvQ0HQ
-X-Google-Smtp-Source: APXvYqzq2Z13eusUV9C8wDnsxgZ/nIaeOnaeHgNoLTcop/geJplygcZlA6iM48HOmLiOgbdu99+LuA==
-X-Received: by 2002:a2e:9a04:: with SMTP id o4mr4100501lji.214.1578694051389;
-        Fri, 10 Jan 2020 14:07:31 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id o69sm1701360lff.14.2020.01.10.14.07.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jan 2020 14:07:30 -0800 (PST)
-Subject: Re: [PATCH v3] regmap: add iopoll-like atomic polling macro
-To:     Sameer Pujar <spujar@nvidia.com>, broonie@kernel.org
-Cc:     jonathanh@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-References: <1578546590-24737-1-git-send-email-spujar@nvidia.com>
- <fa5198bf-0001-3a57-017f-1b40e0188606@gmail.com>
- <b9f5459f-007e-3139-a3cf-c7dfd3fc335a@nvidia.com>
- <e1ab2304-2ef8-c50d-d9c7-21569b397c23@gmail.com>
- <b14d6130-8a9e-28ac-3ce6-dc6b9e3a3886@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b13b2e54-f867-d35b-c294-bfa8fbc5a6b7@gmail.com>
-Date:   Sat, 11 Jan 2020 01:07:30 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Fri, 10 Jan 2020 17:07:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55410 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728379AbgAJWHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:07:32 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77B8620842;
+        Fri, 10 Jan 2020 22:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578694051;
+        bh=qwg2+yq3V5WU/PJy8pKmuSnByN6XlrZSxoyxyU7+3Xk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=V8xx1lbyldP1EG7yq9zyVckA8WSJ9R/u2H6gQ04tcTeHJY/OfwJLE2oxcz6mxlDE1
+         KSDrLFX6Lkoj2ziDE3pkgF8lqsnpjWKivrqf4LQNtjhZmSA8qsyeDz0hQ36YraXjtP
+         hyeendC8uaSaWPghLEAFy6OLhXSUmTedP0tPrOIA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kai Li <li.kai4@h3c.com>, Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Changwei Ge <gechangwei@live.cn>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
+Subject: [PATCH AUTOSEL 4.9 6/6] ocfs2: call journal flush to mark journal as empty after journal recovery when mount
+Date:   Fri, 10 Jan 2020 17:07:21 -0500
+Message-Id: <20200110220721.28780-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200110220721.28780-1-sashal@kernel.org>
+References: <20200110220721.28780-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <b14d6130-8a9e-28ac-3ce6-dc6b9e3a3886@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-10.01.2020 07:50, Sameer Pujar пишет:
-> 
-> On 1/9/2020 7:27 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 09.01.2020 10:24, Sameer Pujar пишет:
->>> On 1/9/2020 11:30 AM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 09.01.2020 08:09, Sameer Pujar пишет:
->>>>> This patch adds a macro 'regmap_read_poll_timeout_atomic' that works
->>>>> similar to 'readx_poll_timeout_atomic' defined in linux/iopoll.h; This
->>>>> is atomic version of already available 'regmap_read_poll_timeout'
->>>>> macro.
->>>>>
->>>>> It should be noted that above atomic macro cannot be used by all
->>>>> regmaps.
->>>>> If the regmap is set up for atomic use (flat or no cache and MMIO)
->>>>> then
->>>>> only it can use.
->>>>>
->>>>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->>>>> ---
->>>> Could you please explain what is the targeted use-case here?
->>> I was trying to use regmap_read_poll_timeout() to poll for status change
->>> of a register. This resulted in "BUG: scheduling while atomic". The
->>> callback function, in which I was trying to use the macro, runs in
->>> atomic context. Hence new atomic macro is added. I was checking ALSA
->>> playback/capture and trigger() callback had to monitor some register
->>> status.
->>>
->>> In general, the new macro can be used in atomic callbacks where regmap
->>> interface is used and polling is required.
->>>
->> You should send a full patchset because it may turn out that the patch
->> which makes use of the new feature isn't correct or maybe the new
->> feature isn't really needed.
->>
->> If there was a previous discussion about the need for this change, then
->> you should provide a link to that discussion.
->>
->> Please note that usually changes without a real use-case in kernel are
->> not getting picked up or they are getting removed later on if nobody
->> makes use of them, so I assume this is a kind of an RFC patch for now.
-> 
-> OK. I will send this as part of the complete series. Thank you.
-> 
+From: Kai Li <li.kai4@h3c.com>
 
-Thanks! Please feel free to add me to the CC list, I'll take a look at
-the patches.
+[ Upstream commit 397eac17f86f404f5ba31d8c3e39ec3124b39fd3 ]
+
+If journal is dirty when mount, it will be replayed but jbd2 sb log tail
+cannot be updated to mark a new start because journal->j_flag has
+already been set with JBD2_ABORT first in journal_init_common.
+
+When a new transaction is committed, it will be recored in block 1
+first(journal->j_tail is set to 1 in journal_reset).  If emergency
+restart happens again before journal super block is updated
+unfortunately, the new recorded trans will not be replayed in the next
+mount.
+
+The following steps describe this procedure in detail.
+1. mount and touch some files
+2. these transactions are committed to journal area but not checkpointed
+3. emergency restart
+4. mount again and its journals are replayed
+5. journal super block's first s_start is 1, but its s_seq is not updated
+6. touch a new file and its trans is committed but not checkpointed
+7. emergency restart again
+8. mount and journal is dirty, but trans committed in 6 will not be
+replayed.
+
+This exception happens easily when this lun is used by only one node.
+If it is used by multi-nodes, other node will replay its journal and its
+journal super block will be updated after recovery like what this patch
+does.
+
+ocfs2_recover_node->ocfs2_replay_journal.
+
+The following jbd2 journal can be generated by touching a new file after
+journal is replayed, and seq 15 is the first valid commit, but first seq
+is 13 in journal super block.
+
+logdump:
+  Block 0: Journal Superblock
+  Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
+  Blocksize: 4096   Total Blocks: 32768   First Block: 1
+  First Commit ID: 13   Start Log Blknum: 1
+  Error: 0
+  Feature Compat: 0
+  Feature Incompat: 2 block64
+  Feature RO compat: 0
+  Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
+  FS Share Cnt: 1   Dynamic Superblk Blknum: 0
+  Per Txn Block Limit    Journal: 0    Data: 0
+
+  Block 1: Journal Commit Block
+  Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
+
+  Block 2: Journal Descriptor
+  Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
+  No. Blocknum        Flags
+   0. 587             none
+  UUID: 00000000000000000000000000000000
+   1. 8257792         JBD2_FLAG_SAME_UUID
+   2. 619             JBD2_FLAG_SAME_UUID
+   3. 24772864        JBD2_FLAG_SAME_UUID
+   4. 8257802         JBD2_FLAG_SAME_UUID
+   5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
+  ...
+  Block 7: Inode
+  Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
+  FS Generation: 2839773110 (0xa9437fb6)
+  CRC32: 00000000   ECC: 0000
+  Type: Regular   Attr: 0x0   Flags: Valid
+  Dynamic Features: (0x1) InlineData
+  User: 0 (root)   Group: 0 (root)   Size: 7
+  Links: 1   Clusters: 0
+  ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+  atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
+  mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+  dtime: 0x0 -- Thu Jan  1 08:00:00 1970
+  ...
+  Block 9: Journal Commit Block
+  Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
+
+The following is journal recovery log when recovering the upper jbd2
+journal when mount again.
+
+syslog:
+  ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
+  fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
+  fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
+  fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
+  fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
+
+Due to first commit seq 13 recorded in journal super is not consistent
+with the value recorded in block 1(seq is 14), journal recovery will be
+terminated before seq 15 even though it is an unbroken commit, inode
+8257802 is a new file and it will be lost.
+
+Link: http://lkml.kernel.org/r/20191217020140.2197-1-li.kai4@h3c.com
+Signed-off-by: Kai Li <li.kai4@h3c.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Reviewed-by: Changwei Ge <gechangwei@live.cn>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/ocfs2/journal.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+index 13cf69aa4cae..733c05135305 100644
+--- a/fs/ocfs2/journal.c
++++ b/fs/ocfs2/journal.c
+@@ -1080,6 +1080,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
+ 
+ 	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
+ 
++	if (replayed) {
++		jbd2_journal_lock_updates(journal->j_journal);
++		status = jbd2_journal_flush(journal->j_journal);
++		jbd2_journal_unlock_updates(journal->j_journal);
++		if (status < 0)
++			mlog_errno(status);
++	}
++
+ 	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
+ 	if (status < 0) {
+ 		mlog_errno(status);
+-- 
+2.20.1
+
