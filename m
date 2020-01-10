@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A3DC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E03DC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39587205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 422A420848
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:05:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xar53uV/"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="akuQOJ4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728850AbgAJTFp (ORCPT
+        id S1728714AbgAJTFl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:05:45 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:47622 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728562AbgAJTFo (ORCPT
+        Fri, 10 Jan 2020 14:05:41 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:53252 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728556AbgAJTFl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:05:44 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00AJ3C56131553;
-        Fri, 10 Jan 2020 19:05:21 GMT
+        Fri, 10 Jan 2020 14:05:41 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00AJ4GGE101455;
+        Fri, 10 Jan 2020 19:05:10 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=IAxWsXZJeFUgO3RbSR4igugMzki4kDIyDXTs6F36IxU=;
- b=Xar53uV/V6ArJjBjrO2U/jRSqy+lBdT0sIOibNZPQJ0sSIRTE8E/vkVf/k3ISNfMnM03
- nzzlelBFvEF6mqCIDAy4qHKZvpKvvpUirI6tepOp9Z5VnjB570p2hLfGK6f0TGncDgAE
- vVps6a1rWKDMOLKafYwhtbYk4LBk/keEpMxkrfmUdnHsk1dnONEY1Pc5ZXBs+P+xkhGB
- RAzOnve4U8GM3iIInJXABFDYiDTVJfTd0zqbk7QkW0C5hTOSqP3zcJghsbOD1r/kV9P9
- TXBV56IioMWKsWEgf0TQA7/gzYhXcSG2tLmJ6dGIx3RJfy5ENgg0Gn9R7dy9UDt+6Z+j 9Q== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2xaj4um8hw-1
+ bh=MHgz05oZOaycJTUzvHe+/2r6D+V+CAPUNuF1+l0RUqk=;
+ b=akuQOJ4oyrHAWCsm1Qeez7Nv1vtW+9n8sxvrA44yFKWjM07BtIuB9c9UCV2ceeiIfhD5
+ fcXALB3yW5Ym7HofN0nVLwDzwkAhDMLQa2lH+WiYpMQxdXMIiPgKDgKF2nt8IwqmyXfn
+ jx6DbzVey39Sm9YdfSUM77U3azh8MRz7Ru89NkhyOw92HIKtlfX4s48NMcSAFrERCkJQ
+ BzbvVZuCAeFo6IuoNGxV20zPc7LJ5AIxAvRZRuIfyx+8gJASy4gPQ2BL8oaYunc1dQ8J
+ svR8Gbn6/CRGg3c5y0py2nYZycHMISPY5mlPhfDCDB/p3Sx0QvtaowAlxYgcZi9kUGDr mw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xajnqm1d0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 19:05:21 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00AJ482S069233;
-        Fri, 10 Jan 2020 19:05:20 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2xevfec03t-1
+        Fri, 10 Jan 2020 19:05:10 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00AJ3t1e183573;
+        Fri, 10 Jan 2020 19:05:09 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2xedhypum9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 19:05:20 +0000
+        Fri, 10 Jan 2020 19:05:09 +0000
 Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00AJ5JPx021552;
-        Fri, 10 Jan 2020 19:05:19 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00AJ59wD014700;
+        Fri, 10 Jan 2020 19:05:09 GMT
 Received: from paddy.uk.oracle.com (/10.175.192.165)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 10 Jan 2020 11:05:19 -0800
+        with ESMTP ; Fri, 10 Jan 2020 11:05:08 -0800
 From:   Joao Martins <joao.m.martins@oracle.com>
 To:     linux-nvdimm@lists.01.org
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -69,21 +69,21 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Matthew Wilcox <willy@infradead.org>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: [PATCH RFC 08/10] dax/pmem: Add device-dax support for PFN_MODE_NONE
-Date:   Fri, 10 Jan 2020 19:03:11 +0000
-Message-Id: <20200110190313.17144-9-joao.m.martins@oracle.com>
+Subject: [PATCH RFC 06/10] device-dax: Introduce pfn_flags helper
+Date:   Fri, 10 Jan 2020 19:03:09 +0000
+Message-Id: <20200110190313.17144-7-joao.m.martins@oracle.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200110190313.17144-1-joao.m.martins@oracle.com>
 References: <20200110190313.17144-1-joao.m.martins@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9496 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=800
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001100154
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9496 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=865 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001100154
 Sender: linux-kernel-owner@vger.kernel.org
@@ -91,92 +91,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allowing dax pmem driver to work without struct pages means
-that user will request to not create any PFN metadata by writing
-seed's device mode to PFN_MODE_NONE.
-
-When the underlying nd_pfn->mode is PFN_MODE_NONE, most dax_pmem
-initialization steps can be skipped because we won't have/need a
-pfn superblock for the pagemap/struct-pages. We only allocate
-an opaque zeroed object with the chosen align requested, and
-finally add PFN_SPECIAL to the region pfn_flags.
+Replace PFN_DEV|PFN_MAP check call sites with two helper functions
+dax_is_pfn_dev() and dax_is_pfn_map().
 
 Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
 ---
- drivers/dax/pmem/core.c | 36 ++++++++++++++++++++++++++++++------
- 1 file changed, 30 insertions(+), 6 deletions(-)
+ drivers/dax/device.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/dax/pmem/core.c b/drivers/dax/pmem/core.c
-index 2bedf8414fff..67f5604a8291 100644
---- a/drivers/dax/pmem/core.c
-+++ b/drivers/dax/pmem/core.c
-@@ -17,15 +17,38 @@ struct dev_dax *__dax_pmem_probe(struct device *dev, enum dev_dax_subsys subsys)
- 	struct nd_namespace_io *nsio;
- 	struct dax_region *dax_region;
- 	struct dev_pagemap pgmap = { };
-+	struct dev_pagemap *devmap = NULL;
- 	struct nd_namespace_common *ndns;
- 	struct nd_dax *nd_dax = to_nd_dax(dev);
- 	struct nd_pfn *nd_pfn = &nd_dax->nd_pfn;
- 	struct nd_region *nd_region = to_nd_region(dev->parent);
-+	unsigned long long pfn_flags = PFN_DEV;
+diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+index c6a7f5e12c54..113a554de3ee 100644
+--- a/drivers/dax/device.c
++++ b/drivers/dax/device.c
+@@ -14,6 +14,17 @@
+ #include "dax-private.h"
+ #include "bus.h"
  
- 	ndns = nvdimm_namespace_common_probe(dev);
- 	if (IS_ERR(ndns))
- 		return ERR_CAST(ndns);
++static int dax_is_pfn_dev(struct dev_dax *dev_dax)
++{
++	return (dev_dax->region->pfn_flags & (PFN_DEV|PFN_MAP)) == PFN_DEV;
++}
++
++static int dax_is_pfn_map(struct dev_dax *dev_dax)
++{
++	return (dev_dax->region->pfn_flags &
++		(PFN_DEV|PFN_MAP)) == (PFN_DEV|PFN_MAP);
++}
++
+ static int check_vma_mmap(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+ 		const char *func)
+ {
+@@ -60,8 +71,7 @@ static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
+ 	if (rc < 0)
+ 		return rc;
  
-+	rc = sscanf(dev_name(&ndns->dev), "namespace%d.%d", &region_id, &id);
-+	if (rc != 2)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (is_nd_dax(&nd_pfn->dev) && nd_pfn->mode == PFN_MODE_NONE) {
-+		/* allocate a dummy super block */
-+		pfn_sb = devm_kzalloc(&nd_pfn->dev, sizeof(*pfn_sb),
-+				      GFP_KERNEL);
-+		if (!pfn_sb)
-+			return ERR_PTR(-ENOMEM);
-+
-+		memset(pfn_sb, 0, sizeof(*pfn_sb));
-+		pfn_sb->align = nd_pfn->align;
-+		nd_pfn->pfn_sb = pfn_sb;
-+		pfn_flags |= PFN_SPECIAL;
-+
-+		nsio = to_nd_namespace_io(&ndns->dev);
-+		memcpy(&res, &nsio->res, sizeof(res));
-+		goto no_pfn_sb;
-+	}
-+
- 	/* parse the 'pfn' info block via ->rw_bytes */
- 	rc = devm_namespace_enable(dev, ndns, nd_info_block_reserve());
- 	if (rc)
-@@ -45,20 +68,21 @@ struct dev_dax *__dax_pmem_probe(struct device *dev, enum dev_dax_subsys subsys)
- 		return ERR_PTR(-EBUSY);
+-	if ((dev_dax->region->pfn_flags & (PFN_DEV|PFN_MAP)) == PFN_DEV
+-			&& (vma->vm_flags & VM_DONTCOPY) == 0) {
++	if (dax_is_pfn_dev(dev_dax) && (vma->vm_flags & VM_DONTCOPY) == 0) {
+ 		dev_info_ratelimited(&dev_dax->dev,
+ 				"%s: %s: fail, dax range requires MADV_DONTFORK\n",
+ 				current->comm, func);
+@@ -140,7 +150,7 @@ static vm_fault_t __dev_dax_pmd_fault(struct dev_dax *dev_dax,
  	}
  
--	rc = sscanf(dev_name(&ndns->dev), "namespace%d.%d", &region_id, &id);
--	if (rc != 2)
--		return ERR_PTR(-EINVAL);
--
- 	/* adjust the dax_region resource to the start of data */
- 	memcpy(&res, &pgmap.res, sizeof(res));
- 	res.start += offset;
-+	devmap = &pgmap;
-+	pfn_flags |= PFN_MAP;
-+
-+no_pfn_sb:
- 	dax_region = alloc_dax_region(dev, region_id, &res,
- 			nd_region->target_node, le32_to_cpu(pfn_sb->align),
--			PFN_DEV|PFN_MAP);
-+			pfn_flags);
- 	if (!dax_region)
- 		return ERR_PTR(-ENOMEM);
+ 	/* dax pmd mappings require pfn_t_devmap() */
+-	if ((dax_region->pfn_flags & (PFN_DEV|PFN_MAP)) != (PFN_DEV|PFN_MAP)) {
++	if (!dax_is_pfn_map(dev_dax)) {
+ 		dev_dbg(dev, "region lacks devmap flags\n");
+ 		return VM_FAULT_SIGBUS;
+ 	}
+@@ -190,7 +200,7 @@ static vm_fault_t __dev_dax_pud_fault(struct dev_dax *dev_dax,
+ 	}
  
--	dev_dax = __devm_create_dev_dax(dax_region, id, &pgmap, subsys);
-+
-+	dev_dax = __devm_create_dev_dax(dax_region, id, devmap, subsys);
- 
- 	/* child dev_dax instances now own the lifetime of the dax_region */
- 	dax_region_put(dax_region);
+ 	/* dax pud mappings require pfn_t_devmap() */
+-	if ((dax_region->pfn_flags & (PFN_DEV|PFN_MAP)) != (PFN_DEV|PFN_MAP)) {
++	if (!dax_is_pfn_map(dev_dax)) {
+ 		dev_dbg(dev, "region lacks devmap flags\n");
+ 		return VM_FAULT_SIGBUS;
+ 	}
 -- 
 2.17.1
 
