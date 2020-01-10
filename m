@@ -2,113 +2,315 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E25DC33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1241DC33C99
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F092072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:07:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AmGIEKHX"
+	by mail.kernel.org (Postfix) with ESMTP id D8BFD2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:07:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726808AbgAJHHW (ORCPT
+        id S1727139AbgAJHHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:07:22 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:50968 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbgAJHHV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:07:21 -0500
-Received: by mail-pj1-f68.google.com with SMTP id r67so582502pjb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 23:07:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=M/y3Ml3cM/VSoJud1Dw7FXrO1acMY+sKEerO9outbBk=;
-        b=AmGIEKHX7/ltZPW8KBppPh4dfNgAw9BawReONfu20SdOsEMncM7QmHQ/DgfwDnmv8T
-         21IGIPGILhSA7JnW3FoEIgT4DYGLgTZWZ1IgT0UNnkSecFHfuf+XkuOKLuTKXUIZpMSW
-         oZ/qPcKd9Hnl6huv7035dakRp5WDhXPAbrr8JERWj/eZFYO7UQslkIXRFmZpVlEJcFyg
-         lekKzu3LWCNQl4rxLeOawb8CmQTU0MELvaG1Nz7V9uX9L7UXTTXz/37cCAfTZ/CdjQV3
-         SoubjbvyPfUl5rmF5IblznHxKkK3UgeseKeDecNWC44R+Qu6A//67AV1VnVdSbZI1CrM
-         woAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=M/y3Ml3cM/VSoJud1Dw7FXrO1acMY+sKEerO9outbBk=;
-        b=UoivV9NT3ZaYK89ZTme7X3I9aO84Zx9JcePc0eBxBpJ2+JuEetHj1ea1yTC2SEfImJ
-         ih0sA/uWdKemUOHmYsTTAP2KT6wNUDtH7qMnLg/81nkoXl5oU2BXjiuyGl8VIQnjRsq7
-         TCQpVpaY4tYLmp8eAszt1NKYUpbWTLW+4ycX4hsE/fMX4X16ozC5vgC8fv7OeRlFmr07
-         kuxf0XrAqSXgqhqfFh0YGqTDZxNJxATd/CJX6rKVjGc5NicGlAKm37KueDDchKOVrRjm
-         udhnb+gN37BEkRn7rGf44rmYxyEUyXmwED6swDFpSBIdTAY8atx0K+UgU2ShY3Jh4L7t
-         nNfA==
-X-Gm-Message-State: APjAAAXaXf31ln33WZV/ArMgcFbPsqpREAu5AKvDI5rB0sDi1iCO9aY5
-        g+NzP9hBot44wVI7BnteCc//tg==
-X-Google-Smtp-Source: APXvYqyQSw6X8cyO2gBQIiXxpRCvLX2QZNn/mPymYICp5ZQha+ZzrZ0O7cBocngIOaOdKKOTZmMvxw==
-X-Received: by 2002:a17:902:8601:: with SMTP id f1mr2473221plo.289.1578640040800;
-        Thu, 09 Jan 2020 23:07:20 -0800 (PST)
-Received: from [10.151.2.174] ([45.135.186.75])
-        by smtp.gmail.com with ESMTPSA id l14sm1147746pgt.42.2020.01.09.23.07.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Jan 2020 23:07:20 -0800 (PST)
-Subject: Re: [PATCH v10 4/4] crypto: hisilicon - register zip engine to uacce
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>, grant.likely@arm.com,
-        jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-References: <1576465697-27946-1-git-send-email-zhangfei.gao@linaro.org>
- <1576465697-27946-5-git-send-email-zhangfei.gao@linaro.org>
- <20200109174859.00004b7b@Huawei.com>
-From:   zhangfei <zhangfei.gao@linaro.org>
-Message-ID: <8d35168e-ff68-1bb9-20e1-6bbac5afde00@linaro.org>
-Date:   Fri, 10 Jan 2020 15:07:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200109174859.00004b7b@Huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Fri, 10 Jan 2020 02:07:34 -0500
+Received: from mga01.intel.com ([192.55.52.88]:27348 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726281AbgAJHHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:07:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 23:07:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,415,1571727600"; 
+   d="scan'208";a="371524736"
+Received: from chenyu-office.sh.intel.com ([10.239.158.173])
+  by orsmga004.jf.intel.com with ESMTP; 09 Jan 2020 23:07:29 -0800
+From:   Chen Yu <yu.c.chen@intel.com>
+To:     x86@kernel.org
+Cc:     Bhupesh Sharma <bhsharma@redhat.com>,
+        Dave Young <dyoung@redhat.com>,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Chris Down <chris@chrisdown.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][v6] x86/resctrl: Add task resctrl information display
+Date:   Fri, 10 Jan 2020 15:06:08 +0800
+Message-Id: <20200110070608.18902-1-yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Monitoring tools that want to find out which resctrl control
+and monitor groups a task belongs to must currently read
+the "tasks" file in every group until they locate the process
+ID.
 
+Add an additional file /proc/{pid}/cpu_resctrl to provide this
+information.
 
-On 2020/1/10 上午1:48, Jonathan Cameron wrote:
-> On Mon, 16 Dec 2019 11:08:17 +0800
-> Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
->
->> Register qm to uacce framework for user crypto driver
->>
->> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-> Very nice to see how minimal the changes are.
->
-> Whilst uacce in general isn't crypto specific, as we are looking
-> at changes in a crypto driver, this will need a crypto Ack.
->
-> Herbert, this is about as non invasive as things can get and
-> provide a user space shared virtual addressing based interface.
-> What do you think?
->
->  From my side, for what it's worth...
->
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+The output is as followed, for example:
 
-Thanks Jonathan
+ 1)   ""
+      Resctrl is not available.
+
+ 2)   "/"
+      Task is part of the root group, task is not associated to
+      any monitor group.
+
+ 3)   "/mon_groups/mon0"
+      Task is part of the root group and monitor group mon0.
+
+ 4)   "/group0"
+      Task is part of resctrl control group group0, task is not
+      associated to any monitor group.
+
+ 5)   "/group0/mon_groups/mon1"
+      Task is part of resctrl control group group0 and monitor
+      group mon1.
+
+Tested-by: Jinshi Chen <jinshi.chen@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Chris Down <chris@chrisdown.name>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+---
+v1: Initial version reviewed by Reinette Chatre,
+    Fenghua Yu and Tony Luck.
+
+v2: According to Boris's suggestion,
+    reduce indentation level in proc_resctrl_show().
+    Create the include/linux/resctrl.h header and
+    declare proc_resctrl_show() in this file, so
+    that other architectures would probably use it
+    in the future. Different architectures should
+    implement architectural specific proc_resctrl_show()
+    accordingly.
+
+v3: According to Boris's suggestion,
+    Return empty string if the resctrl filesystem has
+    not been mounted.
+    Rename the config from CPU_RESCTRL to PROC_CPU_RESCTRL
+    to better represent its usage. Move PROC_CPU_RESCTRL
+    from arch/Kconfig to fs/proc/Kconfig.
+    And let PROC_CPU_RESCTRL to be depended on PROC_FS.
+
+v4: According to Thomas's suggestion, changed the output
+    from multiple lines to one single line.
+
+v5: According to Alexey's feedback, removed the header file
+    proc_fs.h in resctrl.h, and changed seq_puts() to
+    seq_putc() for simplicity.
+
+v6: According to Chris Down's suggestion,
+    1. rename:
+    /proc/{pid}/resctrl to /proc/{pid}/cpu_resctrl
+    to better reflect its meaning.
+    2. change the description in comments:
+    "control group" to "resctrl control group"
+    as the former is confusing for cgroup users.
+---
+ arch/x86/Kconfig                       |  1 +
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 79 ++++++++++++++++++++++++++
+ fs/proc/Kconfig                        |  4 ++
+ fs/proc/base.c                         |  7 +++
+ include/linux/resctrl.h                | 14 +++++
+ 5 files changed, 105 insertions(+)
+ create mode 100644 include/linux/resctrl.h
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 5e8949953660..6e17a68c7d77 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -456,6 +456,7 @@ config X86_CPU_RESCTRL
+ 	bool "x86 CPU resource control support"
+ 	depends on X86 && (CPU_SUP_INTEL || CPU_SUP_AMD)
+ 	select KERNFS
++	select PROC_CPU_RESCTRL		if PROC_FS
+ 	help
+ 	  Enable x86 CPU resource control support.
+ 
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 2e3b06d6bbc6..dcbf62d6b689 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -725,6 +725,85 @@ static int rdtgroup_tasks_show(struct kernfs_open_file *of,
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_PROC_CPU_RESCTRL
++
++/*
++ * A task can only be part of one resctrl
++ * control group and of one monitor
++ * group which is associated to that resctrl
++ * control group.
++ * So one line is simple and clear enough:
++ *
++ * 1)   ""
++ *    resctrl is not available.
++ *
++ * 2)   "/"
++ *    Task is part of the root group, and it is
++ *    not associated to any monitor group.
++ *
++ * 3)   "/mon_groups/mon0"
++ *    Task is part of the root group and monitor
++ *    group mon0.
++ *
++ * 4)   "/group0"
++ *    Task is part of resctrl control group group0,
++ *    and it is not associated to any monitor group.
++ *
++ * 5)   "/group0/mon_groups/mon1"
++ *    Task is part of resctrl control group group0 and monitor
++ *    group mon1.
++ */
++int proc_resctrl_show(struct seq_file *s, struct pid_namespace *ns,
++		      struct pid *pid, struct task_struct *tsk)
++{
++	struct rdtgroup *rdtg;
++	int ret = 0;
++
++	mutex_lock(&rdtgroup_mutex);
++
++	/* Return empty if resctrl has not been mounted. */
++	if (!static_branch_unlikely(&rdt_enable_key))
++		goto unlock;
++
++	list_for_each_entry(rdtg, &rdt_all_groups, rdtgroup_list) {
++		struct rdtgroup *crg;
++
++		/*
++		 * Task information is only relevant for shareable
++		 * and exclusive groups.
++		 */
++		if (rdtg->mode != RDT_MODE_SHAREABLE &&
++		    rdtg->mode != RDT_MODE_EXCLUSIVE)
++			continue;
++
++		if (rdtg->closid != tsk->closid)
++			continue;
++
++		seq_printf(s, "/%s", rdtg->kn->name);
++		list_for_each_entry(crg, &rdtg->mon.crdtgrp_list,
++				    mon.crdtgrp_list) {
++			if (tsk->rmid != crg->mon.rmid)
++				continue;
++			seq_printf(s, "%smon_groups/%s",
++				   rdtg == &rdtgroup_default ? "" : "/",
++				   crg->kn->name);
++			break;
++		}
++		seq_putc(s, '\n');
++		goto unlock;
++	}
++	/*
++	 * The above search should succeed. Otherwise return
++	 * with an error.
++	 */
++	ret = -ENOENT;
++unlock:
++	mutex_unlock(&rdtgroup_mutex);
++
++	return ret;
++}
++#endif
++
+ static int rdt_last_cmd_status_show(struct kernfs_open_file *of,
+ 				    struct seq_file *seq, void *v)
+ {
+diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
+index 733881a6387b..27ef84d99f59 100644
+--- a/fs/proc/Kconfig
++++ b/fs/proc/Kconfig
+@@ -103,3 +103,7 @@ config PROC_CHILDREN
+ config PROC_PID_ARCH_STATUS
+ 	def_bool n
+ 	depends on PROC_FS
++
++config PROC_CPU_RESCTRL
++	def_bool n
++	depends on PROC_FS
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index ebea9501afb8..32c9ff154667 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -94,6 +94,7 @@
+ #include <linux/sched/debug.h>
+ #include <linux/sched/stat.h>
+ #include <linux/posix-timers.h>
++#include <linux/resctrl.h>
+ #include <trace/events/oom.h>
+ #include "internal.h"
+ #include "fd.h"
+@@ -3060,6 +3061,9 @@ static const struct pid_entry tgid_base_stuff[] = {
+ #endif
+ #ifdef CONFIG_CGROUPS
+ 	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
++#endif
++#ifdef CONFIG_PROC_CPU_RESCTRL
++	ONE("cpu_resctrl", S_IRUGO, proc_resctrl_show),
+ #endif
+ 	ONE("oom_score",  S_IRUGO, proc_oom_score),
+ 	REG("oom_adj",    S_IRUGO|S_IWUSR, proc_oom_adj_operations),
+@@ -3460,6 +3464,9 @@ static const struct pid_entry tid_base_stuff[] = {
+ #endif
+ #ifdef CONFIG_CGROUPS
+ 	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
++#endif
++#ifdef CONFIG_PROC_CPU_RESCTRL
++	ONE("cpu_resctrl", S_IRUGO, proc_resctrl_show),
+ #endif
+ 	ONE("oom_score", S_IRUGO, proc_oom_score),
+ 	REG("oom_adj",   S_IRUGO|S_IWUSR, proc_oom_adj_operations),
+diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
+new file mode 100644
+index 000000000000..daf5cf64c6a6
+--- /dev/null
++++ b/include/linux/resctrl.h
+@@ -0,0 +1,14 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _RESCTRL_H
++#define _RESCTRL_H
++
++#ifdef CONFIG_PROC_CPU_RESCTRL
++
++int proc_resctrl_show(struct seq_file *m,
++		      struct pid_namespace *ns,
++		      struct pid *pid,
++		      struct task_struct *tsk);
++
++#endif
++
++#endif /* _RESCTRL_H */
+-- 
+2.17.1
+
