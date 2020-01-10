@@ -2,95 +2,98 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D55FC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6D9C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE5E62080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:41:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="RKyYJqPd"
+	by mail.kernel.org (Postfix) with ESMTP id 973BF206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:41:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgAJRlV (ORCPT
+        id S1728215AbgAJRl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:41:21 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42622 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbgAJRlU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:41:20 -0500
-Received: by mail-io1-f66.google.com with SMTP id n11so2931747iom.9
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 09:41:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZbQyo97E12JiQyYySbTSdZx19yjj8JSBt+Y0Mb9k/oE=;
-        b=RKyYJqPd9zuWTcr8+5KldE2tUJzeO2CN3ViQHERbo0EJnK2GKt99YpaYTAiJb4Ru7V
-         L8jtDu76+CEmTMv/62SLLtA8lhEBzxkCF73LFgIxoIsYtEdYhrLfX3WWUJvzkxnV+PlD
-         mY/KFBBHoV3tFwOisY9SqD34FzfRtJwFsIk+FQMKE8iZ0H8xlTySuNZDVTzQaGrcxTKk
-         hiz1QSdziqkh/JXGLpAlkHsD8uJvusD+mkaWRJmUG/BAV27rUpTMCCJRDD/eDgRq8ct9
-         Ht8ybkxZGyzWdDDy42ylwsuJy1Unws2UoLugSiKDK8AhAtZ+93BVEQKajyLwFEqBjKyE
-         +jlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZbQyo97E12JiQyYySbTSdZx19yjj8JSBt+Y0Mb9k/oE=;
-        b=RiI9y0XeLslbgRXEDL1SzooZrtYaIOBON1mnsuhticpwzZtoY+vKwC0d57+B3EViH/
-         aml60i/tGyUCxU3FdoIbrgc7bq98Du9iqHQddiQKdtRHHEDblP+KXOHNayecORdVXcaw
-         FvLjayc5WY7QHztDpXk9+UVNyMiyoYJaellaOskNZI54QI08s0bYo6IBtuCi44X+JgJl
-         gsJxjzAomJFM6RxVJt4+0qopzgeqD4YEr78hB4deDg01YNYPPTVFTVqr/sf5nmc7OBv2
-         Us5rivdT6thm8hoBOhIqYn6BA+bbPl6fLXyAW60W7Z3oXcjv7/fcSgZ5vLLDaJRqkzlM
-         C6Vw==
-X-Gm-Message-State: APjAAAVl5Mdae6NTknMoXLc731/fE/b76GJpYT+tvE7FL/5/2Q8XEN/m
-        qe0qmi3ULVwQbrbigtWDn2ZkQQjq3hxrVz6ZYzJ4HA==
-X-Google-Smtp-Source: APXvYqzxTQ4SoPYj84MBP2256b9N8PKJf0z7eKjlQ4rhKSqiQW9tWF5+C8Bg+6bi9ottTHxKKTZIFAGBUbF/pJe2gXs=
-X-Received: by 2002:a6b:3a8a:: with SMTP id h132mr3396308ioa.207.1578678080202;
- Fri, 10 Jan 2020 09:41:20 -0800 (PST)
+        Fri, 10 Jan 2020 12:41:58 -0500
+Received: from mail.softplc.com ([206.126.248.66]:39303 "EHLO mail.softplc.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727315AbgAJRl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 12:41:58 -0500
+X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Jan 2020 12:41:58 EST
+Received: from [192.100.100.3] ([::ffff:107.174.231.239])
+  (AUTH: PLAIN dick@softplc.com, TLS: TLSv1/SSLv3,128bits,AES128-SHA)
+  by mail.softplc.com with ESMTPSA; Fri, 10 Jan 2020 12:36:51 -0500
+  id 00000000001E0003.000000005E18B633.0000514F
+Subject: Re: [PATCH RT 0/2] serial: 8250: atomic console fixups
+To:     John Ogness <john.ogness@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+References: <20200110153932.14970-1-john.ogness@linutronix.de>
+From:   Dick Hollenbeck <dick@softplc.com>
+Message-ID: <ddecdfb7-907e-7198-1c82-efb044c080de@softplc.com>
+Date:   Fri, 10 Jan 2020 11:36:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200110063755.19804-1-zhang.lyra@gmail.com> <20200110063755.19804-3-zhang.lyra@gmail.com>
-In-Reply-To: <20200110063755.19804-3-zhang.lyra@gmail.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Fri, 10 Jan 2020 09:41:08 -0800
-Message-ID: <CAOesGMjNkVpTOhSrLUKjNZnKFk55DTgg29QzVBEFVh3Z=Ra+cQ@mail.gmail.com>
-Subject: Re: [PATCH v6 2/2] arm64: dts: Add Unisoc's SC9863A SoC support
-To:     Chunyan Zhang <zhang.lyra@gmail.com>
-Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200110153932.14970-1-john.ogness@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Thu, Jan 9, 2020 at 10:38 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+On 1/10/20 9:39 AM, John Ogness wrote:
+> Dick Hollenbeck pointed out[0] that serial usage for non-consoles
+> was dramatically affected due to the atomic console
+> implementation. Indeed, the implementation was taking the global
+> console_atomic_lock for _all_ 8250 ports, regardless if they were
+> consoles or not.
 >
-> From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> This series fixes that by only using the cpu-lock if the port is
+> a console. While making those changes, I realized that the clear
+> counter/ier-cache is not needed, so that is also removed.
 >
-> Add basic DT to support Unisoc's SC9863A, with this patch,
-> the board sp9863a-1h10 can run into console.
+> Dick also pointed out that the IER accessor functions were using
+> non-typical names. These are updated and moved to inline macros.
 >
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
-
-You reposting a patch that we have already applied, and there's also
-no changelog for it in the description.
-
-If you need to change the contents to fix something, you need to send
-a patch for the delta by now, with the usual expectations of
-explaining why the fix is needed, etc.
+> Finally, I noticed that the fsl, ingenic, and mtk variants were
+> directly accessing IER. These are now also appropriately wrapped.
+>
+> In his suggestion, Dick did optimizations regarding IER caching.
+> However, these are _not_ included because they may have some
+> unwanted side-effects. For example, 
 
 
-Thanks,
 
--Olof
+
+> I noticed a few places in
+> 8250 code where the value of uart_8250_port->ier is expected to
+> be different than the hardware register.
+
+Sure, its not a trivial change, but I still think it would be superior to try and get it
+right.  But I certainly have no more influence than the prior sentence.
+
+I see this as unfortunate, and a propagation of a weak original design which stems from a
+time when inline C functions were not even available.
+
+  If serial8250_set_IER() function returned the prior value, it could be saved on the stack and still be an indication of difference from the current hardware for the temporary situation at hand.
+
+Then, the compiler would have had a better chance of optimizing out the return value when it is not needed, because it would be a mere reading of the prior value from the struct.
+
+I know I expressed some concern about using *3* functions, set, clear, and restore before, when 2 might suffice.  However we've seen other situations where a clear and restore are used, such as interrupt flags.
+( "set" is a mere lower level common gateway to the hardware in our context.)  So down the road, a clear() and restore() may give you the option to do some locking and unlocking, which I know you don't currently think you need.  Pardon me for un-weighting my concern for 3 functions.
+
+It is certainly a major improvement.  To be honest, I will probably simply comment out the console support in the inline function when and if I ever upgrade my code. I like that its inline, and that its in a single function.
+
+Dick
+
+
+
+
+
+
+
