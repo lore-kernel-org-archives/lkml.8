@@ -2,100 +2,260 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F08C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:58:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B58C9C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D03B2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:58:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEC62080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:00:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GopHQxVh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgAJL6K (ORCPT
+        id S1727996AbgAJMAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:58:10 -0500
-Received: from dispatch1-us1.ppe-hosted.com ([148.163.129.52]:60990 "EHLO
-        dispatch1-us1.ppe-hosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727710AbgAJL6K (ORCPT
+        Fri, 10 Jan 2020 07:00:05 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56262 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727931AbgAJMAF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:58:10 -0500
-X-Virus-Scanned: Proofpoint Essentials engine
-Received: from webmail.solarflare.com (uk.solarflare.com [193.34.186.16])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx1-us1.ppe-hosted.com (PPE Hosted ESMTP Server) with ESMTPS id 4FB93940060;
-        Fri, 10 Jan 2020 11:58:08 +0000 (UTC)
-Received: from [10.17.20.203] (10.17.20.203) by ukex01.SolarFlarecom.com
- (10.17.10.4) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 10 Jan
- 2020 11:58:01 +0000
-Subject: Re: [PATCH net-next] sfc: remove duplicated include from ef10.c
-To:     YueHaibing <yuehaibing@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     <netdev@vger.kernel.org>, <bpf@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-References: <20200110013517.37685-1-yuehaibing@huawei.com>
-From:   Edward Cree <ecree@solarflare.com>
-Message-ID: <422eff3d-05ea-d967-ff1b-448b6dc9dcb5@solarflare.com>
-Date:   Fri, 10 Jan 2020 11:57:51 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 10 Jan 2020 07:00:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578657603;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+s42rGCNweegI3ua1aTVb4LJtn2yQPTTMH9TXAr+EXc=;
+        b=GopHQxVhBCXTXrCikfviJZ+uFXhALS+p5oZlLjXUgRclm3V26xNV01QwtgCdKIjtqt+7eW
+        2XEmblinhLnLIIiR52bgLV34w2Am0OygCSoplmtTl7xqw0TSXvVAkGRe+jfrJw5Ye1Uhgk
+        Wr2zqBP7wRlZEo48jKGf/QeOYIWmCh0=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-zRcpWU8TM7SEnHB-kMypyA-1; Fri, 10 Jan 2020 07:00:02 -0500
+X-MC-Unique: zRcpWU8TM7SEnHB-kMypyA-1
+Received: by mail-wr1-f71.google.com with SMTP id v17so779071wrm.17
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 04:00:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=+s42rGCNweegI3ua1aTVb4LJtn2yQPTTMH9TXAr+EXc=;
+        b=nQyMcpxm6LZkFA5dAHJsk88hpNAvjD3IskYbr7cxj9GxibOZ+He1qJolVmVomL8ahR
+         8q8v+DU7Wc+nZiP0lesG1mys4/w01Ur1tnmoQr1msVt1z6rWUix/qP8wIZdJJg5G7Hax
+         aLCYcTDnDRYyAXhj9p/b5Jo4apvdtZIywAlvIG31jpZd4D8iaHGPIAeg25g0u+txHsut
+         kwFyhdwnCqXb6woaCsRpQ9PQ6x3KmgZ1xxK0WUlZgdKzUqj9mcxL9qeQNd0ypAia+Rxe
+         n99W98AYvnTcSHYD00Dw4oTYeOjeY0ZRl8vs4sXHWRpteurfzdQ4SvmAJCCRulJwf9XU
+         RKFg==
+X-Gm-Message-State: APjAAAUTNhXgb3majNIiGdihIh3Y9xjdKAbGbHoSXcWMndhm4BygIWYK
+        3GCOizffA0k6PIehiCQeW1AuIrBQw1gC8ujIGuua3s/yJUvQRbhOwvIrfmK6if4cHkw3zKgbQnN
+        TsKUTaVUvAD3DxyQydegVLwOV
+X-Received: by 2002:adf:f3cc:: with SMTP id g12mr3210028wrp.236.1578657601320;
+        Fri, 10 Jan 2020 04:00:01 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy5+0kKs8+INAcy7JLlyzVUvfEzD/INVvB9zh9aSkzLQOAVTQcSdysqcYYLDz0BpOrluviy5g==
+X-Received: by 2002:adf:f3cc:: with SMTP id g12mr3209989wrp.236.1578657601000;
+        Fri, 10 Jan 2020 04:00:01 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id c5sm2094046wmb.9.2020.01.10.03.59.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 04:00:00 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Chen Zhou <chenzhou10@huawei.com>
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        chenzhou10@huawei.com, tglx@linutronix.de, mingo@redhat.com
+Subject: Re: [PATCH] x86/hyper-v: remove unnecessary conversions to bool
+In-Reply-To: <20200110072047.85398-1-chenzhou10@huawei.com>
+References: <20200110072047.85398-1-chenzhou10@huawei.com>
+Date:   Fri, 10 Jan 2020 12:59:59 +0100
+Message-ID: <875zhjr074.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200110013517.37685-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Originating-IP: [10.17.20.203]
-X-ClientProxiedBy: ocex03.SolarFlarecom.com (10.20.40.36) To
- ukex01.SolarFlarecom.com (10.17.10.4)
-X-TM-AS-Product-Ver: SMEX-12.5.0.1300-8.5.1010-25158.003
-X-TM-AS-Result: No-0.728100-8.000000-10
-X-TMASE-MatchedRID: 7ySqCuYCpfjmLzc6AOD8DfHkpkyUphL9MVx/3ZYby795t7W19HpOSInk
-        wRg6lRQ7YBSz+G5WOZ1NopDNndSAdcx079ojRyOiuwdUMMznEA/Uk/02d006RVjBUeMsjed6QBz
-        oPKhLashO9UxJ8vboSappUg2a/OM2XHEPHmpuRH2DGx/OQ1GV8l/EokdYvzRR+gtHj7OwNO2Ohz
-        Oa6g8KrXRn8zaQo/+Meh0Kazpb0bcoszuMlgVLjU3K33XCov4A6yBdeO88+nxyPOdEY4MyA4mZp
-        km845EgWff/h11Liu/RPW7LVvsuo+L59MzH0po2K2yzo9Rrj9wPoYC35RuihKPUI7hfQSp5eCBc
-        UCG1aJiUTGVAhB5EbQ==
-X-TM-AS-User-Approved-Sender: Yes
-X-TM-AS-User-Blocked-Sender: No
-X-TMASE-Result: 10--0.728100-8.000000
-X-TMASE-Version: SMEX-12.5.0.1300-8.5.1010-25158.003
-X-MDID: 1578657489-izF-tTf2gs7g
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/01/2020 01:35, YueHaibing wrote:
-> Remove duplicated include.
->
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Edward Cree <ecree@solarflare.com>
-but you seem to have come up with a strange CC list, full of bpf maintainers
- rather than sfc driver maintainers; check your submission scripts?  (AFAIK
- the MAINTAINERS file has the right things in.)
+Chen Zhou <chenzhou10@huawei.com> writes:
 
--Ed
+> The conversions to bool are not needed, remove these.
+>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 > ---
->  drivers/net/ethernet/sfc/ef10.c | 1 -
->  1 file changed, 1 deletion(-)
+>  arch/x86/hyperv/hv_apic.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/drivers/net/ethernet/sfc/ef10.c b/drivers/net/ethernet/sfc/ef10.c
-> index dc037dd927f8..fa460831af7d 100644
-> --- a/drivers/net/ethernet/sfc/ef10.c
-> +++ b/drivers/net/ethernet/sfc/ef10.c
-> @@ -16,7 +16,6 @@
->  #include "workarounds.h"
->  #include "selftest.h"
->  #include "ef10_sriov.h"
-> -#include "rx_common.h"
->  #include <linux/in.h>
->  #include <linux/jhash.h>
->  #include <linux/wait.h>
->
->
->
+> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+> index 40e0e32..3112cf6 100644
+> --- a/arch/x86/hyperv/hv_apic.c
+> +++ b/arch/x86/hyperv/hv_apic.c
+> @@ -133,7 +133,7 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
+>  
+>  ipi_mask_ex_done:
+>  	local_irq_restore(flags);
+> -	return ((ret == 0) ? true : false);
+> +	return ret == 0;
+>  }
+>  
+>  static bool __send_ipi_mask(const struct cpumask *mask, int vector)
+> @@ -186,7 +186,7 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
+>  
+>  	ret = hv_do_fast_hypercall16(HVCALL_SEND_IPI, ipi_arg.vector,
+>  				     ipi_arg.cpu_mask);
+> -	return ((ret == 0) ? true : false);
+> +	return ret == 0;
+>  
+>  do_ex_hypercall:
+>  	return __send_ipi_mask_ex(mask, vector);
+
+I'd suggest we get rid of bool functions completely instead, something
+like (untested):
+
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index 40e0e322161d..440bda338763 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -97,16 +97,16 @@ static void hv_apic_eoi_write(u32 reg, u32 val)
+ /*
+  * IPI implementation on Hyper-V.
+  */
+-static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
++static u16 __send_ipi_mask_ex(const struct cpumask *mask, int vector)
+ {
+ 	struct hv_send_ipi_ex **arg;
+ 	struct hv_send_ipi_ex *ipi_arg;
+ 	unsigned long flags;
+ 	int nr_bank = 0;
+-	int ret = 1;
++	u16 ret;
+ 
+ 	if (!(ms_hyperv.hints & HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED))
+-		return false;
++		return U16_MAX;
+ 
+ 	local_irq_save(flags);
+ 	arg = (struct hv_send_ipi_ex **)this_cpu_ptr(hyperv_pcpu_input_arg);
+@@ -129,29 +129,28 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
+ 		ipi_arg->vp_set.format = HV_GENERIC_SET_ALL;
+ 
+ 	ret = hv_do_rep_hypercall(HVCALL_SEND_IPI_EX, 0, nr_bank,
+-			      ipi_arg, NULL);
++				  ipi_arg, NULL);
+ 
+ ipi_mask_ex_done:
+ 	local_irq_restore(flags);
+-	return ((ret == 0) ? true : false);
++	return ret;
+ }
+ 
+-static bool __send_ipi_mask(const struct cpumask *mask, int vector)
++static u16 __send_ipi_mask(const struct cpumask *mask, int vector)
+ {
+ 	int cur_cpu, vcpu;
+ 	struct hv_send_ipi ipi_arg;
+-	int ret = 1;
+ 
+ 	trace_hyperv_send_ipi_mask(mask, vector);
+ 
+ 	if (cpumask_empty(mask))
+-		return true;
++		return 0;
+ 
+ 	if (!hv_hypercall_pg)
+-		return false;
++		return U16_MAX;
+ 
+ 	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
+-		return false;
++		return U16_MAX;
+ 
+ 	/*
+ 	 * From the supplied CPU set we need to figure out if we can get away
+@@ -172,7 +171,7 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
+ 	for_each_cpu(cur_cpu, mask) {
+ 		vcpu = hv_cpu_number_to_vp_number(cur_cpu);
+ 		if (vcpu == VP_INVAL)
+-			return false;
++			return U16_MAX;
+ 
+ 		/*
+ 		 * This particular version of the IPI hypercall can
+@@ -184,41 +183,40 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
+ 		__set_bit(vcpu, (unsigned long *)&ipi_arg.cpu_mask);
+ 	}
+ 
+-	ret = hv_do_fast_hypercall16(HVCALL_SEND_IPI, ipi_arg.vector,
+-				     ipi_arg.cpu_mask);
+-	return ((ret == 0) ? true : false);
++	return (u16)hv_do_fast_hypercall16(HVCALL_SEND_IPI, ipi_arg.vector,
++					   ipi_arg.cpu_mask);
+ 
+ do_ex_hypercall:
+ 	return __send_ipi_mask_ex(mask, vector);
+ }
+ 
+-static bool __send_ipi_one(int cpu, int vector)
++static u16 __send_ipi_one(int cpu, int vector)
+ {
+ 	int vp = hv_cpu_number_to_vp_number(cpu);
+ 
+ 	trace_hyperv_send_ipi_one(cpu, vector);
+ 
+ 	if (!hv_hypercall_pg || (vp == VP_INVAL))
+-		return false;
++		return U16_MAX;
+ 
+ 	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
+-		return false;
++		return U16_MAX;
+ 
+ 	if (vp >= 64)
+ 		return __send_ipi_mask_ex(cpumask_of(cpu), vector);
+ 
+-	return !hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector, BIT_ULL(vp));
++	return (u16)hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector, BIT_ULL(vp));
+ }
+ 
+ static void hv_send_ipi(int cpu, int vector)
+ {
+-	if (!__send_ipi_one(cpu, vector))
++	if (__send_ipi_one(cpu, vector))
+ 		orig_apic.send_IPI(cpu, vector);
+ }
+ 
+ static void hv_send_ipi_mask(const struct cpumask *mask, int vector)
+ {
+-	if (!__send_ipi_mask(mask, vector))
++	if (__send_ipi_mask(mask, vector))
+ 		orig_apic.send_IPI_mask(mask, vector);
+ }
+ 
+@@ -231,7 +229,7 @@ static void hv_send_ipi_mask_allbutself(const struct cpumask *mask, int vector)
+ 	cpumask_copy(&new_mask, mask);
+ 	cpumask_clear_cpu(this_cpu, &new_mask);
+ 	local_mask = &new_mask;
+-	if (!__send_ipi_mask(local_mask, vector))
++	if (__send_ipi_mask(local_mask, vector))
+ 		orig_apic.send_IPI_mask_allbutself(mask, vector);
+ }
+ 
+@@ -242,13 +240,13 @@ static void hv_send_ipi_allbutself(int vector)
+ 
+ static void hv_send_ipi_all(int vector)
+ {
+-	if (!__send_ipi_mask(cpu_online_mask, vector))
++	if (__send_ipi_mask(cpu_online_mask, vector))
+ 		orig_apic.send_IPI_all(vector);
+ }
+ 
+ static void hv_send_ipi_self(int vector)
+ {
+-	if (!__send_ipi_one(smp_processor_id(), vector))
++	if (__send_ipi_one(smp_processor_id(), vector))
+ 		orig_apic.send_IPI_self(vector);
+ }
+
+-- 
+Vitaly
 
