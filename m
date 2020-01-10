@@ -6,46 +6,46 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD40BC33CA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA666C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B98D2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F29220661
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578615096;
-	bh=HnztBjmskstand/RfAIgiAHl0q2mo/wn6eRKdeRgq3E=;
+	s=default; t=1578615101;
+	bh=GQ1rsUyL8Tp8YqroWPfW4PnceOHEcnwNATCAVnNLfvA=;
 	h=In-Reply-To:References:Cc:Subject:To:From:Date:List-ID:From;
-	b=hhatzSIz/013cPijbErjjcZPyHuHS9tsTkiV5pQOW5thk+IySwb7kZEswJGfvakpO
-	 HH8QdA357n59BdL5kU7gEQE1LHI5Q8TRdywIR/h1YiNhUJltmVFecDc23Z7Qs3oLPr
-	 5nWtFcPbxlCfHgXJBkoVgYCcFUeh5/NRTr0sASS0=
+	b=x3GVgjbtemsnXJ0+5T7TLz0bq/tqduFccbYEzH6YSha4B07Vvr3kDa245mttvYFuV
+	 ofuIs5WigdO2S8jMQHWXRtqzrbXjwNGTrowz2qDZW5+KvV9Vwr/WRXbZ5hqvpe8gEJ
+	 tFSmbda1Kyu2yPnznDuwHzqqBiumpW3wySSD8DMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbgAJALf (ORCPT
+        id S1730195AbgAJALk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 19:11:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33090 "EHLO mail.kernel.org"
+        Thu, 9 Jan 2020 19:11:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730001AbgAJALe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 19:11:34 -0500
+        id S1730095AbgAJALj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 19:11:39 -0500
 Received: from kernel.org (unknown [104.132.0.74])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34F7D2080D;
-        Fri, 10 Jan 2020 00:11:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEB1C20848;
+        Fri, 10 Jan 2020 00:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578615094;
-        bh=HnztBjmskstand/RfAIgiAHl0q2mo/wn6eRKdeRgq3E=;
+        s=default; t=1578615098;
+        bh=GQ1rsUyL8Tp8YqroWPfW4PnceOHEcnwNATCAVnNLfvA=;
         h=In-Reply-To:References:Cc:Subject:To:From:Date:From;
-        b=CfqgDIvcWpmD48zb7YuFygpJ1LbtVHkw8K0ytYoO1+DBGtO6HBpFFcJDwsgqsVKB1
-         zHnQQjwtNi/5+tHLvTR2WMH01eqFptb31zwKB86JTlO+HBViY8anCa+Jkaafia6CLV
-         ZnZBbrH9gdDh/kR+ndqdfR+gz807H4UYm+AFodKI=
+        b=Isc61OqAqq1tmQxZlF6/hpYjPaIN6PgQvbg/CPB/PBLg7jBxxTEn7ND69rFqjuX3K
+         NM80M7MTsTwYfClmRCKNa8j+KpqZK7kYz2kblFQQHpyBMOBQWUvlzY2bl5Qsjq702L
+         WWoQ/gGoCZHWuI268tDODH5qWbbfamrHMYHtSd8U=
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1578557121-423-2-git-send-email-sricharan@codeaurora.org>
-References: <1578557121-423-1-git-send-email-sricharan@codeaurora.org> <1578557121-423-2-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <1578557121-423-3-git-send-email-sricharan@codeaurora.org>
+References: <1578557121-423-1-git-send-email-sricharan@codeaurora.org> <1578557121-423-3-git-send-email-sricharan@codeaurora.org>
 Cc:     Anusha Canchi Ramachandra Rao <anusharao@codeaurora.org>,
         Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH V2 1/2] clk: qcom: Add DT bindings for ipq6018 gcc clock controller
+Subject: Re: [PATCH V2 2/2] clk: qcom: Add ipq6018 Global Clock Controller support
 To:     agross@kernel.org, devicetree@vger.kernel.org,
         linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
@@ -54,24 +54,25 @@ To:     agross@kernel.org, devicetree@vger.kernel.org,
         sivaprak@codeaurora.org, sricharan@codeaurora.org
 From:   Stephen Boyd <sboyd@kernel.org>
 User-Agent: alot/0.8.1
-Date:   Thu, 09 Jan 2020 16:11:33 -0800
-Message-Id: <20200110001134.34F7D2080D@mail.kernel.org>
+Date:   Thu, 09 Jan 2020 16:11:38 -0800
+Message-Id: <20200110001138.BEB1C20848@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sricharan R (2020-01-09 00:05:20)
-> Add the compatible strings and the include file for ipq6018
-> gcc clock controller.
+Quoting Sricharan R (2020-01-09 00:05:21)
+> This patch adds support for the global clock controller found on
+> the ipq6018 based devices.
 >=20
+> Also fixed the sparse warnings reported by,
+> Reported-by: kbuild test robot <lkp@intel.com>
 > Co-developed-by: Anusha Canchi Ramachandra Rao <anusharao@codeaurora.org>
 > Signed-off-by: Anusha Canchi Ramachandra Rao <anusharao@codeaurora.org>
 > Co-developed-by: Abhishek Sahu <absahu@codeaurora.org>
 > Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 > Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
 > Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
 > ---
 
