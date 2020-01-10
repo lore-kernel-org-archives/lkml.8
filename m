@@ -2,59 +2,48 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31BD0C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845B4C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:43:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0575820842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:43:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578671009;
-	bh=p7SZ6kULpIMIigeY/yhZS1vpu34onz1Ng7fdbX+9T2g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=sbb2bkQwgQfblXiX/7pVqcAtuQTd2oMQGi7+MbqJUrlnVW9UZRIJb2WFy+3CrJEKl
-	 Egkttp74Pokj0hTbkHb3dT7RQ6g+QITkRT2YsO4bcnRnBJpx37bumcsnLeyESuRtLv
-	 OlHN25gI3hAm4uuDMz8eQie34x96TrSlJChk78MI=
+	by mail.kernel.org (Postfix) with ESMTP id 618992077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:43:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgAJPn2 (ORCPT
+        id S1728481AbgAJPne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:43:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36258 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 10:43:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:47058 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728320AbgAJPn1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:43:27 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D0882077C;
-        Fri, 10 Jan 2020 15:43:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578671006;
-        bh=p7SZ6kULpIMIigeY/yhZS1vpu34onz1Ng7fdbX+9T2g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=XggWSjZFdXwLym8fwhUHJP+60Yll9NHk4bvqr+DP/9Ur8cAQut2L9UUpxPs20SQ6Z
-         9YfhXrjhRPsHWP4jxFoLr3qFkPJG9DSG9yFuXjPrvcnJwCRlAMC3gYODkL1xekC/e8
-         UIUXuU9J38kEhy7ZOjuRkWNbXbRZYueQb8SqcTj0=
-Date:   Sat, 11 Jan 2020 00:43:23 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
-Cc:     "arnaldo.melo@gmail.com" <arnaldo.melo@gmail.com>,
-        "namhyung@kernel.org" <namhyung@kernel.org>,
-        "jolsa@redhat.com" <jolsa@redhat.com>,
+        id S1728320AbgAJPnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 10:43:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D3F930E;
+        Fri, 10 Jan 2020 07:43:33 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 244C23F6C4;
+        Fri, 10 Jan 2020 07:43:32 -0800 (PST)
+Date:   Fri, 10 Jan 2020 15:43:28 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Radhey Shyam Pandey <radheys@xilinx.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Michal Simek <michals@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [BUGFIX PATCH 1/4] perf probe: Skip end-of-sequence and non
- statement lines
-Message-Id: <20200111004323.ebeebf40191d2e8956602513@kernel.org>
-In-Reply-To: <f2230bb1eb14e238b40429ebf051f31d9183f51f.camel@nokia.com>
-References: <157241935028.32002.10228194508152968737.stgit@devnote2>
-        <157241936090.32002.12156347518596111660.stgit@devnote2>
-        <20191106200401.GB13829@kernel.org>
-        <f2230bb1eb14e238b40429ebf051f31d9183f51f.camel@nokia.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+Subject: Re: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup path
+Message-ID: <20200110154328.6676215f@donnerap.cambridge.arm.com>
+In-Reply-To: <CH2PR02MB7000F64AB27D352E00DC77A7C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <20200110115415.75683-1-andre.przywara@arm.com>
+        <20200110115415.75683-4-andre.przywara@arm.com>
+        <CH2PR02MB7000F64AB27D352E00DC77A7C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,82 +51,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tommi,
+On Fri, 10 Jan 2020 15:14:46 +0000
+Radhey Shyam Pandey <radheys@xilinx.com> wrote:
 
-Thank you for reporting!
+Hi Radhey,
 
-On Fri, 10 Jan 2020 09:29:22 +0000
-"Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com> wrote:
+thanks for having a look!
 
+> > -----Original Message-----
+> > From: Andre Przywara <andre.przywara@arm.com>
+> > Sent: Friday, January 10, 2020 5:24 PM
+> > To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
+> > <radheys@xilinx.com>
+> > Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
+> > <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> > Subject: [PATCH 03/14] net: axienet: Fix DMA descriptor cleanup path
+> > 
+> > When axienet_dma_bd_init() bails out during the initialisation process,
+> > it might do so with parts of the structure already allocated and
+> > initialised, while other parts have not been touched yet. Before
+> > returning in this case, we call axienet_dma_bd_release(), which does not
+> > take care of this corner case.
+> > This is most obvious by the first loop happily dereferencing
+> > lp->rx_bd_v, which we actually check to be non NULL *afterwards*.
+> > 
+> > Make sure we only unmap or free already allocated structures, by:
+> > - directly returning with -ENOMEM if nothing has been allocated at all
+> > - checking for lp->rx_bd_v to be non-NULL *before* using it
+> > - only unmapping allocated DMA RX regions
+> > 
+> > This avoids NULL pointer dereferences when initialisation fails.
+> > 
+> > Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> > ---
+> >  .../net/ethernet/xilinx/xilinx_axienet_main.c | 43 ++++++++++++-------
+> >  1 file changed, 28 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > index 97482cf093ce..7e90044cf2d9 100644
+> > --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> > @@ -160,24 +160,37 @@ static void axienet_dma_bd_release(struct
+> > net_device *ndev)
+> >  	int i;
+> >  	struct axienet_local *lp = netdev_priv(ndev);
+> > 
+> > +	/* If we end up here, tx_bd_v must have been DMA allocated. */
+> > +	dma_free_coherent(ndev->dev.parent,
+> > +			  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
+> > +			  lp->tx_bd_v,
+> > +			  lp->tx_bd_p);
+> > +
+> > +	if (!lp->rx_bd_v)
+> > +		return;
+> > +
+> >  	for (i = 0; i < lp->rx_bd_num; i++) {
+> > -		dma_unmap_single(ndev->dev.parent, lp->rx_bd_v[i].phys,
+> > -				 lp->max_frm_size, DMA_FROM_DEVICE);
+> > +		/* A NULL skb means this descriptor has not been initialised
+> > +		 * at all.
+> > +		 */
+> > +		if (!lp->rx_bd_v[i].skb)
+> > +			break;
+> > +
+> >  		dev_kfree_skb(lp->rx_bd_v[i].skb);
+> > -	}
+> > 
+> > -	if (lp->rx_bd_v) {
+> > -		dma_free_coherent(ndev->dev.parent,
+> > -				  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
+> > -				  lp->rx_bd_v,
+> > -				  lp->rx_bd_p);
+> > -	}
+> > -	if (lp->tx_bd_v) {
+> > -		dma_free_coherent(ndev->dev.parent,
+> > -				  sizeof(*lp->tx_bd_v) * lp->tx_bd_num,
+> > -				  lp->tx_bd_v,
+> > -				  lp->tx_bd_p);
+> > +		/* For each descriptor, we programmed cntrl with the (non-
+> > zero)
+> > +		 * descriptor size, after it had been successfully allocated.
+> > +		 * So a non-zero value in there means we need to unmap it.
+> > +		 */  
 > 
-> Hello,
+> > +		if (lp->rx_bd_v[i].cntrl)  
 > 
-> I'm getting perf test failures after this patch hit mainline and LTS
-> kernels.
-> 
-> With v5.5-rc5 (x86_64 gcc-9.2.1) I get:
-> 
->  # perf test
->  ...
->  69: Add vfs_getname probe to get syscall args filenames   : FAILED!
->  71: Use vfs_getname probe to get syscall args filenames   : FAILED!
->  73: Check open filename arg using perf trace + vfs_getname: FAILED!
-> 
-> Reason is that it's no longer possible to add probe in getname_flags()
-> line "result->uptr = filename;", and this is causing the perf tests to
-> fail:
-> 
-> # perf probe -L getname_flags
-> <getname_flags@/root/linux-core2/fs/namei.c:0>
->       0  getname_flags(const char __user *filename, int flags, int *empty)
->          {
-> ...
->      61         result->refcnt = 1;
->                 /* The empty path is special. */
->      63         if (unlikely(!len)) {
->      64                 if (empty)
->      65                         *empty = 1;
->      66                 if (!(flags & LOOKUP_EMPTY)) {
->      67                         putname(result);
->      68                         return ERR_PTR(-ENOENT);
->                         }
->                 }
->          
->                 result->uptr = filename;
->      73         result->aname = NULL;
->                 audit_getname(result);
->                 return result;
->          }
-> 
-> 
-> I can reproduce it locally with a kernel config change (with attached KVM
-> guest config): when kernel is built with CONFIG_MCORE2=y the issue
-> reproduces. When switching to CONFIG_GENERIC_CPU=y it's again possible to
-> add the probe to the source line and the tests pass.
-> 
-> Diffing the disassembly of fs/namei.o between CONFIG_MCORE2=y and
-> CONFIG_GENERIC_CPU=y, all instructions in getname_flags() are the same,
-> but there are some changes in the instruction ordering.
-> 
-> Any ideas what's going wrong here...?
-> Something wrong in the dwarf data?
+> I think it should ok to unmap w/o any check?
 
-Hmm, I guess gcc's dwarf generator gets some effects from the optimizer.
-Maybe since the optimizer reordering the insturction, the dwarf generator
-might lose the line statement information. For example, if instructions
-from different lines are mixed, it is hard to say "this is the begining
-of a line".
+Do you mean because .phys would be 0 if not initialised? AFAIK 0 can be a valid DMA address, so there is no special check for that, and unmapping DMA address 0 will probably go wrong at some point. So it's unlike kfree(NULL).
 
+Cheers,
+Andre.
+
+
+> > +			dma_unmap_single(ndev->dev.parent, lp-  
+> > >rx_bd_v[i].phys,  
+> > +					 lp->max_frm_size,
+> > DMA_FROM_DEVICE);
+> >  	}
+> > +
+> > +	dma_free_coherent(ndev->dev.parent,
+> > +			  sizeof(*lp->rx_bd_v) * lp->rx_bd_num,
+> > +			  lp->rx_bd_v,
+> > +			  lp->rx_bd_p);
+> >  }
+> > 
+> >  /**
+> > @@ -207,7 +220,7 @@ static int axienet_dma_bd_init(struct net_device
+> > *ndev)
+> >  					 sizeof(*lp->tx_bd_v) * lp-  
+> > >tx_bd_num,  
+> >  					 &lp->tx_bd_p, GFP_KERNEL);
+> >  	if (!lp->tx_bd_v)
+> > -		goto out;
+> > +		return -ENOMEM;
+> > 
+> >  	lp->rx_bd_v = dma_alloc_coherent(ndev->dev.parent,
+> >  					 sizeof(*lp->rx_bd_v) * lp-  
+> > >rx_bd_num,  
+> > --
+> > 2.17.1  
 > 
-> In 4.19.y it's enough to revert this patch ("perf probe: Skip end-of-
-> sequence and non statement lines") to fix this (assuming it's bug...), but
-> in v5.5-rc5 it's not enough (switching to v5.4 perf fixed it).
 
-I think perf test should be fixed to use more stable lines.
-(But I'm not sure why it uses this line...)
-
-Thank you,
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
