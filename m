@@ -2,151 +2,107 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBEFC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A116C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D512082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:59:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nyfrNejk"
+	by mail.kernel.org (Postfix) with ESMTP id DCC1F20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:00:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgAJK76 (ORCPT
+        id S1727661AbgAJLAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:59:58 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52086 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbgAJK76 (ORCPT
+        Fri, 10 Jan 2020 06:00:36 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:48576 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727537AbgAJLAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:59:58 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00AAxZTe081793;
-        Fri, 10 Jan 2020 04:59:35 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578653975;
-        bh=9+Ck3PRaRVIdp1krLVpCgf4FURcXnlnWOb8T6coy79M=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=nyfrNejkNB1FiPAWgbDHVtQ3iiC2/Jp8H1uiZfT+cRUg1ai0DpE4z38L1wvYHw6Hq
-         8cWFwy/ozYcxI31BVErd34xjIXMOHvvUdkNWpstpTW72gan8oeLU1scsQrmutxpChP
-         jalicy0DTy0H6D+m2wH6BzDJ/S8XBZFmMsJS2to4=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00AAxZhE012420
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jan 2020 04:59:35 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
- Jan 2020 04:59:34 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 10 Jan 2020 04:59:35 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00AAxWRT044018;
-        Fri, 10 Jan 2020 04:59:32 -0600
-Subject: Re: [PATCH v2 00/14] Support more HDMI modes on RK3228/RK3328
-To:     Jonas Karlman <jonas@kwiboo.se>, Heiko Stuebner <heiko@sntech.de>,
-        Sandy Huang <hjc@rock-chips.com>
-CC:     Zheng Yang <zhengyang@rock-chips.com>,
-        <linux-rockchip@lists.infradead.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200108210740.28769-1-jonas@kwiboo.se>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <b159ee28-213e-35d2-6d09-516abc3358bb@ti.com>
-Date:   Fri, 10 Jan 2020 16:31:40 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 10 Jan 2020 06:00:35 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id EF8B91C25B1; Fri, 10 Jan 2020 12:00:33 +0100 (CET)
+Date:   Fri, 10 Jan 2020 12:00:33 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 118/219] rfkill: allocate static minor
+Message-ID: <20200110110033.GA11563@amd>
+References: <20191229162508.458551679@linuxfoundation.org>
+ <20191229162526.353368525@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200108210740.28769-1-jonas@kwiboo.se>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Content-Disposition: inline
+In-Reply-To: <20191229162526.353368525@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 09/01/20 2:37 AM, Jonas Karlman wrote:
-> This series make it possible to use more HDMI modes on RK3328,
-> and presumably also on RK3228. It also prepares for a future YUV420 and
-> 10-bit output series.
-> 
-> Part of this has been reworked from vendor BSP 4.4 kernel commits.
-> 
-> Patch 1-5 fixes issues and shortcomings in the inno hdmi phy driver.
-> 
-> Patch 6 prepares for use of high TMDS bit rates used with HDMI 2.0 and
-> 10-bit output modes.
-> 
-> Patch 7-13 changes rk3228/rk3328 to use mode_valid functions suited for
-> the inno hdmi phy instead of the dw-hdmi phy. These changes allows for
-> more CEA modes to be usable, e.g. some 4K and fractal modes.
-> 
-> Patch 14 adds support for more pixel clock rates in order to support
-> common DMT modes in addition to CEA modes.
+On Sun 2019-12-29 18:18:40, Greg Kroah-Hartman wrote:
+> From: Marcel Holtmann <marcel@holtmann.org>
+>=20
+> [ Upstream commit 8670b2b8b029a6650d133486be9d2ace146fd29a ]
+>=20
+> udev has a feature of creating /dev/<node> device-nodes if it finds
+> a devnode:<node> modalias. This allows for auto-loading of modules that
+> provide the node. This requires to use a statically allocated minor
+> number for misc character devices.
+>=20
+> However, rfkill uses dynamic minor numbers and prevents auto-loading
+> of the module. So allocate the next static misc minor number and use
+> it for rfkill.
 
-Is it possible to split the series targeted for different subsystems or
-is it required for all the patches to be merged together?
+Is this good idea for stable?
 
-Thanks
-Kishon
-> 
-> Note: I have only been able to build test RK322x related changes
-> as I do not have any RK322x device to test on.
-> 
-> All modes, including fractal modes, has been tested with modetest on
-> a RK3328 Rock64 device using e.g.
-> 
->   modetest -M rockchip -s 39:3840x2160-29.97
-> 
-> Changes in v2:
->   - collect acked-by tag
->   - drop the limit resolution width to 3840 patch
-> 
-> This series is also available at [1] and the early work on YUV420 and
-> 10-bit output is available at [2].
-> 
-> [1] https://github.com/Kwiboo/linux-rockchip/commits/next-20200108-inno-hdmi-phy
-> [2] https://github.com/Kwiboo/linux-rockchip/commits/next-20200108-bus-format
-> 
-> Regards,
-> Jonas
-> 
-> Algea Cao (1):
->   phy/rockchip: inno-hdmi: Support more pre-pll configuration
-> 
-> Huicong Xu (1):
->   phy/rockchip: inno-hdmi: force set_rate on power_on
-> 
-> Jonas Karlman (11):
->   phy/rockchip: inno-hdmi: use correct vco_div_5 macro on rk3328
->   phy/rockchip: inno-hdmi: remove unused no_c from rk3328 recalc_rate
->   phy/rockchip: inno-hdmi: do not power on rk3328 post pll on reg write
->   drm/rockchip: dw-hdmi: allow high tmds bit rates
->   drm/rockchip: dw-hdmi: require valid vpll clock rate on rk3228/rk3328
->   clk: rockchip: set parent rate for DCLK_VOP clock on rk3228
->   arm64: dts: rockchip: increase vop clock rate on rk3328
->   arm64: dts: rockchip: add vpll clock to hdmi node on rk3328
->   ARM: dts: rockchip: add vpll clock to hdmi node on rk3228
->   drm/rockchip: dw-hdmi: limit tmds to 340mhz on rk3228/rk3328
->   drm/rockchip: dw-hdmi: remove unused plat_data on rk3228/rk3328
-> 
-> Zheng Yang (1):
->   phy/rockchip: inno-hdmi: round fractal pixclock in rk3328 recalc_rate
-> 
->  arch/arm/boot/dts/rk322x.dtsi                 |   4 +-
->  arch/arm64/boot/dts/rockchip/rk3328.dtsi      |   6 +-
->  drivers/clk/rockchip/clk-rk3228.c             |   2 +-
->  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c   |  47 ++++++--
->  drivers/phy/rockchip/phy-rockchip-inno-hdmi.c | 110 ++++++++++++------
->  5 files changed, 120 insertions(+), 49 deletions(-)
-> 
+I don't see this major/minor allocated in devices.txt in
+mainline. Should something like this be added?
+
+Signed-off-by: Pavel Machek <pavel@denx.de>
+
+diff --git a/Documentation/admin-guide/devices.txt b/Documentation/admin-gu=
+ide/devices.txt
+index 1c5d2281efc9..aa888a350df8 100644
+--- a/Documentation/admin-guide/devices.txt
++++ b/Documentation/admin-guide/devices.txt
+@@ -375,8 +375,9 @@
+ 		239 =3D /dev/uhid		User-space I/O driver support for HID subsystem
+ 		240 =3D /dev/userio	Serio driver testing device
+ 		241 =3D /dev/vhost-vsock	Host kernel driver for virtio vsock
++		242 =3D /dev/rfkill	Turning off radio transmissions (rfkill)
+=20
+-		242-254			Reserved for local use
++		243-254			Reserved for local use
+ 		255			Reserved for MISC_DYNAMIC_MINOR
+=20
+   11 char	Raw keyboard device	(Linux/SPARC only)
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl4YWVEACgkQMOfwapXb+vKgbwCfaxl2Th8eHRr/0sPSWcX1vNAW
+BisAnRRhvoGsuElHI0g8boMeSvbzTo7F
+=66Dr
+-----END PGP SIGNATURE-----
+
+--tThc/1wpZn/ma/RB--
