@@ -2,121 +2,191 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 521A4C33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B94C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A83420842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:03:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NGSmQqRU"
+	by mail.kernel.org (Postfix) with ESMTP id 293962082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:03:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578639824;
+	bh=ZnMDBNhMvFkTRDhEtOEWNUKzKsBrxPyLSgZcAstK7P4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SWse2+q40eZpdXypZORdTNNXZUs1VqO8GGN6WSowZBgYtihNHf+WT+OBm31dkvIrT
+	 ed6Q5oB0ouBhsDED/nVgGsYBNq/iHSheKbukN33xXOIWthgX5N2jNnN5aeQt07jS+Q
+	 auTQiqLAd/d+eAseNognyQI+07usRH1nqHl04AdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727198AbgAJHDk (ORCPT
+        id S1727089AbgAJHDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:03:40 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39820 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726486AbgAJHDj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jan 2020 02:03:39 -0500
-Received: by mail-pf1-f195.google.com with SMTP id q10so671370pfs.6
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 23:03:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=524ZzQ+ni88Rws2LlNdcnlFyEqdyrbvKeKi49yA8YY4=;
-        b=NGSmQqRU5+ICclxQRqDent1NDnfEm2OIeeFdX0tw/ZmF5Ynj0sVDkrXYgo859Seh0M
-         J0l0h0MbScEDs2sJRmYMl/Q2HJ9vAiX6odyo6YxZy9mw/XioiCJwEKZ+I1Zo30NGV+ia
-         ziky5DZJR/qtVDQrwkd8pjID8fi+W+813nC/nUw8w3rYyGArUeP/iw1vslz/rh0whBTv
-         9YIXRZhMWidQzylg7ngeozNKcbUj3M0hEuYMICamx+mNMsw8N5QhTqrpS4gEVk8nz+xx
-         PfRK9qHUjXd+VzpCcn5R5QxZgBsCKm7vqH7aWgLY8rvlvHSfalm+nWpsY1TfA2IKaUXg
-         yYRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=524ZzQ+ni88Rws2LlNdcnlFyEqdyrbvKeKi49yA8YY4=;
-        b=KTpp03K+ZwZuK2+9+jvJd9IDIbQmfash30gkV2CaD4RMKu1JzMfzoyaqjWdGoCwG1N
-         odMil3V45Ei0ewCCSAvS/sM3Xfq2HZoBWEbrInQNtZZze0ZmBbVru777isQn8b9/JqZi
-         WKfZQr5MpjQCLiSqd5Gs4nPa71gbrs8QmcJWFVP0spNDsls9a5y3W69YyBjnnfV+gjfH
-         eAp/MerE8lr2+ft3K5He1XzF9jEjAfJTLbWjFRS4LVXgnFHUgumOZog1j8AKM+lQAN6g
-         dwefxK0yGDLYa116MNrxAwmboluznaTewjIVZJy87hwnxVaKnBysUY0ytZMTOIK6w3Ej
-         k1XQ==
-X-Gm-Message-State: APjAAAUO9NWWzRTnvuWrOP2sTmkRhnr1RIrgoPW/8RYvjjT36zKCG/Wz
-        ZS/FT80SG3LT0tYYN43/9XXcZA==
-X-Google-Smtp-Source: APXvYqxRXSHQMAAqNEXryi+da46roEIsUSSy9JeYNiaSYgUd7HGxHp5FztsZ6Vvs+qp/1RXmy6fNQg==
-X-Received: by 2002:a62:53c3:: with SMTP id h186mr2378854pfb.118.1578639818515;
-        Thu, 09 Jan 2020 23:03:38 -0800 (PST)
-Received: from [10.151.2.174] ([45.135.186.75])
-        by smtp.gmail.com with ESMTPSA id a26sm1382558pfo.27.2020.01.09.23.03.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Jan 2020 23:03:37 -0800 (PST)
-Subject: Re: [PATCH v10 0/4] Add uacce module for Accelerator
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>, grant.likely@arm.com,
-        jean-philippe <jean-philippe@linaro.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org, Dave Jiang <dave.jiang@intel.com>
-References: <1576465697-27946-1-git-send-email-zhangfei.gao@linaro.org>
- <20200109174952.000051e1@Huawei.com>
-From:   zhangfei <zhangfei.gao@linaro.org>
-Message-ID: <9b87edca-dd4e-3fe2-5acd-11f7381593ed@linaro.org>
-Date:   Fri, 10 Jan 2020 15:03:25 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Received: from mail.kernel.org ([198.145.29.99]:57064 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726295AbgAJHDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:03:39 -0500
+Received: from localhost (unknown [223.226.110.118])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7C1B2080D;
+        Fri, 10 Jan 2020 07:03:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578639818;
+        bh=ZnMDBNhMvFkTRDhEtOEWNUKzKsBrxPyLSgZcAstK7P4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UtQke1VRM29qVQhxQo8REzyXvGu+GTluOSWfZzT6k+VFPNrFMg3X2bzUHZuQL+X2k
+         BjsSJUg8qKqc5qHRh/w9VwVJaMpyPMRHtywDHfsH7NhD4/Kf4lSPJxdNp1Fho/7t+D
+         SL74Mz+fmESqn7mF2LFvoOLY42ehtLOHPB3qjw34=
+Date:   Fri, 10 Jan 2020 12:33:21 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Rander Wang <rander.wang@intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH 6/6] soundwire: stream: don't program ports for a stream
+ that has not been prepared
+Message-ID: <20200110070321.GA2818@vkoul-mobl>
+References: <20200108175438.13121-1-pierre-louis.bossart@linux.intel.com>
+ <20200108175438.13121-7-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200109174952.000051e1@Huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108175438.13121-7-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 08-01-20, 11:54, Pierre-Louis Bossart wrote:
+> From: Rander Wang <rander.wang@intel.com>
+> 
+> In the Intel QA multi-pipelines test case, there are two pipelines for
+> playback and capture on the same bus. The test fails with an error
+> when setting port params:
+> 
+> [  599.224812] rt711 sdw:0:25d:711:0: invalid dpn_prop direction 1 port_num 0
+> [  599.224815] sdw_program_slave_port_params failed -22
+> [  599.224819] intel-sdw sdw-master-0: Program transport params failed: -22
+> [  599.224822] intel-sdw sdw-master-0: Program params failed: -22
 
+side note, one of these above err logs should be removed :)
 
-On 2020/1/10 上午1:49, Jonathan Cameron wrote:
-> On Mon, 16 Dec 2019 11:08:13 +0800
-> Zhangfei Gao <zhangfei.gao@linaro.org> wrote:
->
->> Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
->> provide Shared Virtual Addressing (SVA) between accelerators and processes.
->> So accelerator can access any data structure of the main cpu.
->> This differs from the data sharing between cpu and io device, which share
->> data content rather than address.
->> Because of unified address, hardware and user space of process can share
->> the same virtual address in the communication.
->>
->> Uacce is intended to be used with Jean Philippe Brucker's SVA
->> patchset[1], which enables IO side page fault and PASID support.
->> We have keep verifying with Jean's sva patchset [2]
->> We also keep verifying with Eric's SMMUv3 Nested Stage patches [3]
-> Hi Zhangfei Gao,
->
-> Just to check my understanding...
->
-> This patch set is not dependent on either 2 or 3?
->
-> To use it on our hardware, we need 2, but the interfaces used are already
-> upstream, so this could move forwards in parallel.
->
->
-Yes,
-patch 1, 2 is for uacce.
-patch 3, 4 is an example using uacce, which happen to be crypto.
+> [  599.224828] sdw_enable_stream: SDW0 Pin2-Playback: done
+> 
+> This problem is root-caused to the programming of the capture stream
+> ports while it is not yet prepared, the calling sequence is:
+> 
+> (1) hw_params for playback. The playback stream provide the port
+>     information to Bus.
+> (2) stream_prepare for playback, Transport and port parameters
+>     are computed for playback.
+> (3) hw_params for capture. The capture stream provide the port
+>     information to Bus, but it has not been prepared so is not
+>     accounted for in the bandwidth allocation.
+> (4) stream_enable for playback. Program transport and port parameters
+>     for all masters and slaves. Since the transport and port parameters
+>     are not computed for capture stream, sdw_program_slave_port_params
+>     will generate a error when setting port params for capture.
+> 
+> in step (4), we should only program the ports for the stream that have
+> been prepared. A stream that is only in CONFIGURED state should be
+> ignored, its ports will be programmed when it becomes PREPARED.
+> 
+> Tested on Comet Lake.
+> 
+> GitHub issue: https://github.com/thesofproject/linux/issues/1637
 
-Thanks
+This is not relevant for kernel, pls remove
+
+> Signed-off-by: Rander Wang <rander.wang@intel.com>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/stream.c | 21 ++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+> index da10f38298c0..198372977187 100644
+> --- a/drivers/soundwire/stream.c
+> +++ b/drivers/soundwire/stream.c
+> @@ -604,12 +604,23 @@ static int sdw_notify_config(struct sdw_master_runtime *m_rt)
+>   *
+>   * @bus: SDW bus instance
+>   */
+> -static int sdw_program_params(struct sdw_bus *bus)
+> +static int sdw_program_params(struct sdw_bus *bus, bool prepare)
+>  {
+>  	struct sdw_master_runtime *m_rt;
+>  	int ret = 0;
+>  
+>  	list_for_each_entry(m_rt, &bus->m_rt_list, bus_node) {
+> +
+> +		/*
+> +		 * this loop walks through all master runtimes for a
+> +		 * bus, but the ports can only be configured while
+> +		 * explicitly preparing a stream or handling an
+> +		 * already-prepared stream otherwise.
+
+we can go upto 80 chars, make sure you align the above comment block as
+such
+
+> +		 */
+> +		if (!prepare &&
+> +		    m_rt->stream->state == SDW_STREAM_CONFIGURED)
+> +			continue;
+> +
+>  		ret = sdw_program_port_params(m_rt);
+>  		if (ret < 0) {
+>  			dev_err(bus->dev,
+> @@ -1502,7 +1513,7 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream,
+>  
+>  program_params:
+>  		/* Program params */
+> -		ret = sdw_program_params(bus);
+> +		ret = sdw_program_params(bus, true);
+>  		if (ret < 0) {
+>  			dev_err(bus->dev, "Program params failed: %d\n", ret);
+>  			goto restore_params;
+> @@ -1602,7 +1613,7 @@ static int _sdw_enable_stream(struct sdw_stream_runtime *stream)
+>  		bus = m_rt->bus;
+>  
+>  		/* Program params */
+> -		ret = sdw_program_params(bus);
+> +		ret = sdw_program_params(bus, false);
+>  		if (ret < 0) {
+>  			dev_err(bus->dev, "Program params failed: %d\n", ret);
+>  			return ret;
+> @@ -1687,7 +1698,7 @@ static int _sdw_disable_stream(struct sdw_stream_runtime *stream)
+>  		struct sdw_bus *bus = m_rt->bus;
+>  
+>  		/* Program params */
+> -		ret = sdw_program_params(bus);
+> +		ret = sdw_program_params(bus, false);
+
+Can you do a converse test as well, when the streams are running and
+concurrently two stream are stopped, it would be good to get it confirmed...
+
+>  		if (ret < 0) {
+>  			dev_err(bus->dev, "Program params failed: %d\n", ret);
+>  			return ret;
+> @@ -1769,7 +1780,7 @@ static int _sdw_deprepare_stream(struct sdw_stream_runtime *stream)
+>  			m_rt->ch_count * m_rt->stream->params.bps;
+>  
+>  		/* Program params */
+> -		ret = sdw_program_params(bus);
+> +		ret = sdw_program_params(bus, false);
+>  		if (ret < 0) {
+>  			dev_err(bus->dev, "Program params failed: %d\n", ret);
+>  			return ret;
+> -- 
+> 2.20.1
+
+-- 
+~Vinod
