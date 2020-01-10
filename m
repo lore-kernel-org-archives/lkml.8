@@ -2,110 +2,115 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E2D1C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE79C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D93922077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:31:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578670268;
-	bh=PmlZ0floUXtGGa7TOfgYeBKFANJKRe+aQitOtud+P8c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1nYOM6z4AqngBusNbMecYB2C/uSStgZzBQ5ZipsEmzkFPlwo2Y/0fmC3dgYDlriOb
-	 3LCdEs7EVsmxqWMnT87ofeBt9yFSSkX0e2oBYsoPRSCbxtOMXlSmOJ2F5ud/he/N7Q
-	 J3pOGqKj6FYMqTxmZSe9pdxqg7pC+js9zOzCykzk=
+	by mail.kernel.org (Postfix) with ESMTP id 7DE072077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:33:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbgAJPbI (ORCPT
+        id S1728305AbgAJPd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:31:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50182 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 10:33:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:46848 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728137AbgAJPbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:31:07 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F61020673;
-        Fri, 10 Jan 2020 15:31:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578670267;
-        bh=PmlZ0floUXtGGa7TOfgYeBKFANJKRe+aQitOtud+P8c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=X36GmWlHGvdXfYh5YuOf44/kmbaIMvVOj2MbahzvrCVQ+8puv/3KqDuhFCWJTuaRF
-         CtJbxKd7AtMrp6ePDdBWol5fdg87tr/PHW18OCfLJ+Cb3x0fxOC8Y4vAiROVldLZLz
-         deogJUz0nIuBkh+hPJgohYk79pa7bq7pvppTZc+M=
-Date:   Sat, 11 Jan 2020 00:30:59 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 00/22] tracing: bootconfig: Boot-time tracing and
- Extra boot config
-Message-Id: <20200111003059.5c24c0ee4a85df10ec9f17e6@kernel.org>
-In-Reply-To: <20200109181055.1999b344@gandalf.local.home>
-References: <157736902773.11126.2531161235817081873.stgit@devnote2>
-        <20200109181055.1999b344@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1728137AbgAJPd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 10:33:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8D7BC30E;
+        Fri, 10 Jan 2020 07:33:56 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 268623F6C4;
+        Fri, 10 Jan 2020 07:33:54 -0800 (PST)
+Date:   Fri, 10 Jan 2020 15:33:47 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     Olof Johansson <olof@lixom.net>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Message-ID: <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
-
-On Thu, 9 Jan 2020 18:10:55 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Thu, 26 Dec 2019 23:03:48 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+On Tue, Dec 17, 2019 at 02:50:15AM +0000, Z.q. Hou wrote:
+> Hi Lorenzo,
 > 
-> > Hello,
+> The v9 patches have addressed the comments from Andrew, and it has
+> been dried about 1 month, can you help to apply them?
+
+We shall have a look beginning of next week, sorry for the delay
+in getting back to you.
+
+Lorenzo
+
+> Thanks,
+> Zhiqiang
+> 
+> > -----Original Message-----
+> > From: Olof Johansson <olof@lixom.net>
+> > Sent: 2019年12月14日 2:37
+> > To: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com
+> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > robh+dt@kernel.org; arnd@arndb.de; mark.rutland@arm.com;
+> > l.subrahmanya@mobiveil.co.in; shawnguo@kernel.org;
+> > m.karthikeyan@mobiveil.co.in; Leo Li <leoyang.li@nxp.com>;
+> > lorenzo.pieralisi@arm.com; catalin.marinas@arm.com;
+> > will.deacon@arm.com; andrew.murray@arm.com; Mingkai Hu
+> > <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>; Xiaowei Bao
+> > <xiaowei.bao@nxp.com>
+> > Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+> > driver for NXP Layerscape SoCs
 > > 
-> > This is the 5th version of the series for the boot-time tracing.
+> > Hi!
 > > 
-> > Previous version is here.
+> > On Tue, Nov 19, 2019 at 7:45 PM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+> > >
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >
+> > > This patch set is to recode the Mobiveil driver and add PCIe support
+> > > for NXP Layerscape series SoCs integrated Mobiveil's PCIe Gen4
+> > > controller.
 > > 
-> > https://lkml.kernel.org/r/157528159833.22451.14878731055438721716.stgit@devnote2
-> 
-> Hi Masami,
-> 
-> I applied all your patches to a test branch and was playing with it a
-> little. This seems fine to me and works well (and very easy to use).
-> Probably could use some more examples, but that's just a nit.
-
-OK, I'll add some examples to Documentation/trace/boottime-trace.rst
-next time.
-
-> 
-> If nobody has any issues with this code, I'll wait for v6 with the
-> fixes to issues found in this series, and I'll happily apply them for
-> linux-next.
-
-Thanks! I'll send v6 soon, which is including fixes and testcases. :)
-
-Thank you!
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+> > Can we get a respin for this on top of the 5.5 merge window material?
+> > Given that it's a bunch of refactorings, many of them don't apply on top of
+> > the material that was merged.
+> > 
+> > I'd love to see these go in sooner rather than later so I can start getting -next
+> > running on ls2160a here.
+> > 
+> > 
+> > -Olof
