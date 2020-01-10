@@ -7,34 +7,33 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC48C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C0CC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B563A2253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6124E21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgAJRxb (ORCPT
+        id S1728850AbgAJRxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:53:31 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59154 "EHLO
+        Fri, 10 Jan 2020 12:53:34 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59161 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728215AbgAJRx0 (ORCPT
+        with ESMTP id S1728670AbgAJRx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jan 2020 12:53:26 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ipyTD-0001gJ-Dp; Fri, 10 Jan 2020 18:53:15 +0100
+        id 1ipyTH-0001gX-Fi; Fri, 10 Jan 2020 18:53:19 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 077B51C2D59;
-        Fri, 10 Jan 2020 18:53:15 +0100 (CET)
-Date:   Fri, 10 Jan 2020 17:53:14 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 06C6B1C2D52;
+        Fri, 10 Jan 2020 18:53:16 +0100 (CET)
+Date:   Fri, 10 Jan 2020 17:53:15 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf report/top: Allow pressing hotkeys in the
- options popup menu
+Subject: [tip: perf/core] perf hists browser: Generalize the do_zoom_dso() function
 Cc:     Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>,
@@ -44,10 +43,10 @@ Cc:     Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <tip-ujfq3fw44kf6qrtfajl5dcsp@git.kernel.org>
-References: <tip-ujfq3fw44kf6qrtfajl5dcsp@git.kernel.org>
+In-Reply-To: <tip-ae9cjel6v05wjnz9r6z77b6x@git.kernel.org>
+References: <tip-ae9cjel6v05wjnz9r6z77b6x@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157867879490.30329.7142461166858480110.tip-bot2@tip-bot2>
+Message-ID: <157867879588.30329.18089380547917073763.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,25 +62,17 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     4c8b9c0f4281c8517542c26425aade3a31988575
-Gitweb:        https://git.kernel.org/tip/4c8b9c0f4281c8517542c26425aade3a31988575
+Commit-ID:     632003f400d341592b6af8d96bd83b74a0329fe3
+Gitweb:        https://git.kernel.org/tip/632003f400d341592b6af8d96bd83b74a0329fe3
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Mon, 16 Dec 2019 13:27:47 -03:00
+AuthorDate:    Thu, 12 Dec 2019 11:55:54 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Mon, 06 Jan 2020 11:46:10 -03:00
 
-perf report/top: Allow pressing hotkeys in the options popup menu
+perf hists browser: Generalize the do_zoom_dso() function
 
-When the users presses ENTER in the main 'perf report/top' screen a
-popup menu is presented, in it some hotkeys are suggested as
-alternatives to using the menu, or for additional features.
-
-At that point the user may try those hotkeys, so allow for that by
-recording the key used and exiting, the caller then can check for that
-possibility and process the hotkey.
-
-I.e. try pressing ENTER, and then 'k' to exit and zoom into the kernel
-map, using ESC then zooms out, etc.
+We'll use it to provide a top level hotkey to zoom into the kernel dso
+directly.
 
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -90,47 +81,39 @@ Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-ujfq3fw44kf6qrtfajl5dcsp@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-ae9cjel6v05wjnz9r6z77b6x@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/hists.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ tools/perf/ui/browsers/hists.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index c44b508..8776b1c 100644
+index a4413d9..8aba1ae 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -2995,12 +2995,13 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 	while (1) {
- 		struct thread *thread = NULL;
- 		struct map *map = NULL;
--		int choice = 0;
-+		int choice;
- 		int socked_id = -1;
+@@ -2530,11 +2530,8 @@ add_thread_opt(struct hist_browser *browser, struct popup_action *act,
+ 	return 1;
+ }
  
--		nr_options = 0;
+-static int
+-do_zoom_dso(struct hist_browser *browser, struct popup_action *act)
++static int hists_browser__zoom_map(struct hist_browser *browser, struct map *map)
+ {
+-	struct map *map = act->ms.map;
 -
--		key = hist_browser__run(browser, helpline, warn_lost_event, 0);
-+		key = 0; // reset key
-+do_hotkey:		 // key came straight from options ui__popup_menu()
-+		choice = nr_options = 0;
-+		key = hist_browser__run(browser, helpline, warn_lost_event, key);
+ 	if (!hists__has(browser->hists, dso) || map == NULL)
+ 		return 0;
  
- 		if (browser->he_selection != NULL) {
- 			thread = hist_browser__selected_thread(browser);
-@@ -3279,10 +3280,13 @@ skip_scripting:
- 		do {
- 			struct popup_action *act;
+@@ -2557,6 +2554,12 @@ do_zoom_dso(struct hist_browser *browser, struct popup_action *act)
+ }
  
--			choice = ui__popup_menu(nr_options, options, NULL);
--			if (choice == -1 || choice >= nr_options)
-+			choice = ui__popup_menu(nr_options, options, &key);
-+			if (choice == -1)
- 				break;
- 
-+			if (choice == nr_options)
-+				goto do_hotkey;
+ static int
++do_zoom_dso(struct hist_browser *browser, struct popup_action *act)
++{
++	return hists_browser__zoom_map(browser, act->ms.map);
++}
 +
- 			act = &actions[choice];
- 			key = act->fn(browser, act);
- 		} while (key == 1);
++static int
+ add_dso_opt(struct hist_browser *browser, struct popup_action *act,
+ 	    char **optstr, struct map *map)
+ {
