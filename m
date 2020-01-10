@@ -2,103 +2,176 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C35AC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF89FC33CA5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B78A20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A451720848
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:50:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RqfxTTvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbgAJPtu (ORCPT
+        id S1728391AbgAJPut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:49:50 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:58682 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728245AbgAJPtu (ORCPT
+        Fri, 10 Jan 2020 10:50:49 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:33651 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728245AbgAJPus (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:49:50 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ipwXf-0007XA-7M; Fri, 10 Jan 2020 16:49:43 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C932D1C2D52;
-        Fri, 10 Jan 2020 16:49:42 +0100 (CET)
-Date:   Fri, 10 Jan 2020 15:49:42 -0000
-From:   "tip-bot2 for Jann Horn" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] x86/vdso: Enable sanitizers for vma.o
-Cc:     Jann Horn <jannh@google.com>, Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200106200204.94782-1-jannh@google.com>
-References: <20200106200204.94782-1-jannh@google.com>
+        Fri, 10 Jan 2020 10:50:48 -0500
+Received: by mail-pj1-f68.google.com with SMTP id u63so1974163pjb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 07:50:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FKmyaQb3K8/JWPnwt6kYl9qKMdt9SBc733vonAR7tFE=;
+        b=RqfxTTvwgqQF6Gky5lrnl9iAb1hGlF2lKuylrlrF1uBw0C0dh06KiHIaqm4fGIqrJx
+         tv94wN6fY4INBusRdXAPcXTYRdLHvWY7SmYjmrOCe45RdhjiOkutZFdtaxeGEoTw+hRP
+         5XBZFw71sYM4rKv4iIgbuW+vEpWjvqLlvElJkNvx9Bnq3E4R6QycOIZF0t3fSxEWPw6M
+         ShAKKXIP9QiIAOXRe29Wm8wcL0jB/Bhaip4BhFn2Z7/qxQyJ0IvvEGoeAeri1lDDhYUd
+         LNDaw2u61lhb2b6ka2S+v2hARM74+MXZTRHnTRXy0wZ959cUiTnPpYYY6vg6aQU57D3O
+         KwPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FKmyaQb3K8/JWPnwt6kYl9qKMdt9SBc733vonAR7tFE=;
+        b=RF66BOkE+SVD2yFM2s4edXwGruTvzLI1gkL3J1jBVSzvinRZy7RnkbLbK7qzeEGEXS
+         eXO/OZnhqm4CTul2brnfnDVRFpBrNDwdYeHwc0cRLtEtbpLPRgOk/J3Nkw/A7poXJnHy
+         Cpb9ZIcGmcIdNzr0J9pO4dbOjOCwopUCwtLCgYMJhh1Bor2wd+jWFz7CorNMcIS6OVkG
+         1IGUgeD5l3+hb2know1ymC5sSuuzREN50/R4xNWY0U+52O72eAiysjARFKlk21RhQi0r
+         GpRSxG/rbF8zQZsBZtr+NWo5IBgEdJRsr5TJpz6scCenlXLzxrIfIfRvJwee8iMZyyx6
+         Vt4Q==
+X-Gm-Message-State: APjAAAVmoPaQaOu5uofqscpU/5Ia+EvCk3xhLGq6e8cwpPq04zeVs+Ba
+        t4LHQ2Hcx5WeGO2w8o1cvbwil34RK1brXEZ1/2XNfA==
+X-Google-Smtp-Source: APXvYqwyPcmcag9iDNC7OxgRf3FSEsbxkjeru2bYQwCaOqz3htptTgv/Ap+iQ7/EjT4U3xyiUTvG08rEMhAyjd9ftac=
+X-Received: by 2002:a17:90a:300b:: with SMTP id g11mr5523754pjb.123.1578671447363;
+ Fri, 10 Jan 2020 07:50:47 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <157867138265.30329.9605534460877020678.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <000000000000617449059bcadbd1@google.com>
+In-Reply-To: <000000000000617449059bcadbd1@google.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Fri, 10 Jan 2020 16:50:36 +0100
+Message-ID: <CAAeHK+xFWszE3aTuXC7qq1t1JdN8EygnwgG8HrBB2wv5x=zQ7w@mail.gmail.com>
+Subject: Re: BUG: corrupted list in uvc_scan_chain_forward
+To:     syzbot <syzbot+636c17630dbe1250025a@syzkaller.appspotmail.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        LKML <linux-kernel@vger.kernel.org>, linux-media@vger.kernel.org,
+        USB list <linux-usb@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/kcsan branch of tip:
+On Fri, Jan 10, 2020 at 4:34 PM syzbot
+<syzbot+636c17630dbe1250025a@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    ae179410 usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=168765c6e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4b345df402514029
+> dashboard link: https://syzkaller.appspot.com/bug?extid=636c17630dbe1250025a
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12b316aee00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13332d49e00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+636c17630dbe1250025a@syzkaller.appspotmail.com
+>
+> usb 1-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+> usb 1-1: Product: syz
+> usb 1-1: Manufacturer: syz
+> usb 1-1: SerialNumber: syz
+> usb 1-1: config 0 descriptor??
+> uvcvideo: Found UVC 0.00 device syz (18cd:cafe)
+> list_add double add: new=ffff8881cdea0010, prev=ffff8881cdea0010,
+> next=ffff8881d718f218.
+> ------------[ cut here ]------------
+> kernel BUG at lib/list_debug.c:29!
+> invalid opcode: 0000 [#1] SMP KASAN
+> CPU: 0 PID: 95 Comm: kworker/0:2 Not tainted 5.5.0-rc3-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> Workqueue: usb_hub_wq hub_event
+> RIP: 0010:__list_add_valid.cold+0x26/0x3c lib/list_debug.c:29
+> Code: 57 ff ff ff 4c 89 e1 48 c7 c7 c0 fa fb 85 e8 4b 20 40 ff 0f 0b 48 89
+> f2 4c 89 e1 48 89 ee 48 c7 c7 00 fc fb 85 e8 34 20 40 ff <0f> 0b 48 89 f1
+> 48 c7 c7 80 fb fb 85 4c 89 e6 e8 20 20 40 ff 0f 0b
+> RSP: 0018:ffff8881d5d8f080 EFLAGS: 00010286
+> RAX: 0000000000000058 RBX: ffff8881cdea0010 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: ffffffff812959ad RDI: ffffed103abb1e02
+> RBP: ffff8881cdea0010 R08: 0000000000000058 R09: fffffbfff1269aae
+> R10: fffffbfff1269aad R11: ffffffff8934d56f R12: ffff8881d718f218
+> R13: ffff8881cdea0000 R14: dffffc0000000000 R15: ffff8881d718f218
+> FS:  0000000000000000(0000) GS:ffff8881db200000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f514c22d000 CR3: 00000001c6507000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   __list_add include/linux/list.h:60 [inline]
+>   list_add_tail include/linux/list.h:93 [inline]
+>   uvc_scan_chain_forward.isra.0+0x4df/0x637
+> drivers/media/usb/uvc/uvc_driver.c:1526
+>   uvc_scan_chain drivers/media/usb/uvc/uvc_driver.c:1640 [inline]
+>   uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1824 [inline]
+>   uvc_probe.cold+0x1aee/0x29de drivers/media/usb/uvc/uvc_driver.c:2197
+>   usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:361
+>   really_probe+0x290/0xad0 drivers/base/dd.c:548
+>   driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+>   __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+>   __device_attach+0x217/0x390 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+>   device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+>   usb_set_configuration+0xe47/0x17d0 drivers/usb/core/message.c:2023
+>   generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+>   usb_probe_device+0xaf/0x140 drivers/usb/core/driver.c:266
+>   really_probe+0x290/0xad0 drivers/base/dd.c:548
+>   driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+>   __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+>   bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+>   __device_attach+0x217/0x390 drivers/base/dd.c:894
+>   bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+>   device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+>   usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2537
+>   hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+>   hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+>   port_event drivers/usb/core/hub.c:5470 [inline]
+>   hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5552
+>   process_one_work+0x945/0x15c0 kernel/workqueue.c:2264
+>   worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+>   kthread+0x318/0x420 kernel/kthread.c:255
+>   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+> Modules linked in:
+> ---[ end trace 8c363b461f6a7f0a ]---
+> RIP: 0010:__list_add_valid.cold+0x26/0x3c lib/list_debug.c:29
+> Code: 57 ff ff ff 4c 89 e1 48 c7 c7 c0 fa fb 85 e8 4b 20 40 ff 0f 0b 48 89
+> f2 4c 89 e1 48 89 ee 48 c7 c7 00 fc fb 85 e8 34 20 40 ff <0f> 0b 48 89 f1
+> 48 c7 c7 80 fb fb 85 4c 89 e6 e8 20 20 40 ff 0f 0b
+> RSP: 0018:ffff8881d5d8f080 EFLAGS: 00010286
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
-Commit-ID:     c29a59e43829beabc4c26036ebcc6a32dd0b6a01
-Gitweb:        https://git.kernel.org/tip/c29a59e43829beabc4c26036ebcc6a32dd0b6a01
-Author:        Jann Horn <jannh@google.com>
-AuthorDate:    Mon, 06 Jan 2020 21:02:04 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Fri, 10 Jan 2020 16:47:32 +01:00
-
-x86/vdso: Enable sanitizers for vma.o
-
-The vDSO makefile opts out of all sanitizers (and objtool validation);
-however, vma.o is a normal kernel object file (and already has objtool
-validation selectively enabled), so turn the sanitizers back on for that
-file.
-
-Signed-off-by: Jann Horn <jannh@google.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marco Elver <elver@google.com>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Link: https://lkml.kernel.org/r/20200106200204.94782-1-jannh@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/entry/vdso/Makefile | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 0f46273..50a1c90 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -30,6 +30,9 @@ vobjs-y := vdso-note.o vclock_gettime.o vgetcpu.o
- 
- # files to link into kernel
- obj-y				+= vma.o
-+KASAN_SANITIZE_vma.o		:= y
-+UBSAN_SANITIZE_vma.o		:= y
-+KCSAN_SANITIZE_vma.o		:= y
- OBJECT_FILES_NON_STANDARD_vma.o	:= n
- 
- # vDSO images to build
+#syz dup: WARNING in uvc_scan_chain_forward
