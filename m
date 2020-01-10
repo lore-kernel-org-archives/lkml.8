@@ -2,139 +2,131 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83991C33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B4E9C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 558762077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:55:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578639333;
-	bh=mDdpGN6yAPTKX7BA5XVzBBicXNXPQHC6lQFxfVSspJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yNx+9Yvm55A6jIotWc/Jl1nOndoFKiPZSc3mNWx9J5yJ+MXZf7YE+/Kl75NVB+6j1
-	 IhHFqaE+7eJPI+aMi6NFaVpAT9TMpnqckciTQGH63qWzubUDH/TP3G/gS1S3rW5USj
-	 kGiqWH6wrfsgUXUe/xZpddWf2JpiSjD4d4ao8HcQ=
+	by mail.kernel.org (Postfix) with ESMTP id 001EF2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:57:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="i0ehVsrZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731624AbgAJGzc (ORCPT
+        id S1727696AbgAJG5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 01:55:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51716 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 01:57:38 -0500
+Received: from ozlabs.org ([203.11.71.1]:34193 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731544AbgAJGzc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 01:55:32 -0500
-Received: from localhost (unknown [223.226.110.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727074AbgAJG5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 01:57:38 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 555F520673;
-        Fri, 10 Jan 2020 06:55:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578639331;
-        bh=mDdpGN6yAPTKX7BA5XVzBBicXNXPQHC6lQFxfVSspJs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SHCdJvtNhXFB0/NU0dDmLeGd+X9JoYG8hffqvDNSwBrFJOVvdlF4H7rOfVytunauI
-         ziP7OwMBdmawlB6imnkyH8X4QKUmsz6ERAG7DadxbfdwC1H3sjsQtLS0qLzAgewNwW
-         Mcaargnu6SfRqseS2HwXtOgRCSAkmTttWdf8U1Ls=
-Date:   Fri, 10 Jan 2020 12:25:15 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH 4/6] soundwire: stream: do not update parameters during
- DISABLED-PREPARED transition
-Message-ID: <20200110065515.GZ2818@vkoul-mobl>
-References: <20200108175438.13121-1-pierre-louis.bossart@linux.intel.com>
- <20200108175438.13121-5-pierre-louis.bossart@linux.intel.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47vDM26v2Qz9s1x;
+        Fri, 10 Jan 2020 17:57:31 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578639455;
+        bh=Wr0+zDCRj35o/nYnhos8p4/tl7SsKzDapyyPzq0fia4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=i0ehVsrZcowWtGp1Gb+H2VdU982xs4xruWZH6HzGOTvien/M22vGPUWQm2rWuglj7
+         3MeykpMRaqhGXLHQo7nUa5bxflnHKKjLyGHmDhFSUlH8rXUEzlAYJYI3KmO3cO7LQU
+         6pRc3bm4/XHX5YA/AJr+hnTxj5cxAFaLpcu02ZCkqT8qwGDXsaIJ8gWDamPrQeB/kz
+         sKFRVOytmCloZJuD4NMadpUVTEl4uFXBBqkqMgQrzRemK+aoLg5eAyIDvyWE0Mh4+W
+         5gVceOd+MPsSB6tQN7h16B3rjw2TJk1bjbFVXUYB3W7K/Xf5PKSKYDoOJYe7HS0+Eo
+         O/7MJVx/ZbbPQ==
+Date:   Fri, 10 Jan 2020 17:57:29 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Al Viro <viro@ZenIV.linux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Carlos Maiolino <cmaiolino@redhat.com>
+Subject: linux-next: build failure after merge of the vfs tree
+Message-ID: <20200110175729.3b5d2338@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108175438.13121-5-pierre-louis.bossart@linux.intel.com>
+Content-Type: multipart/signed; boundary="Sig_/vv5f=h6dcSYkxoC+bwd_hB2";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-01-20, 11:54, Pierre-Louis Bossart wrote:
-> After a system suspend, the ALSA/ASoC core will invoke the .prepare()
-> callback and a TRIGGER_START when INFO_RESUME is not supported.
-> 
-> Likewise, when an underflow occurs, the .prepare callback will be invoked.
-> 
-> In both cases, the stream can be in DISABLED mode, and will transition
-> into the PREPARED mode. We however don't want the bus bandwidth to be
-> recomputed.
-> 
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/soundwire/stream.c | 19 +++++++++++++++++--
->  1 file changed, 17 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-> index bd0bddf73830..c28ce7f0d742 100644
-> --- a/drivers/soundwire/stream.c
-> +++ b/drivers/soundwire/stream.c
-> @@ -1460,7 +1460,8 @@ static void sdw_release_bus_lock(struct sdw_stream_runtime *stream)
->  	}
->  }
->  
-> -static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
-> +static int _sdw_prepare_stream(struct sdw_stream_runtime *stream,
-> +			       bool update_params)
->  {
->  	struct sdw_master_runtime *m_rt;
->  	struct sdw_bus *bus = NULL;
-> @@ -1480,6 +1481,9 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
->  			return -EINVAL;
->  		}
->  
-> +		if (!update_params)
-> +			goto program_params;
-> +
->  		/* Increment cumulative bus bandwidth */
->  		/* TODO: Update this during Device-Device support */
->  		bus->params.bandwidth += m_rt->stream->params.rate *
-> @@ -1495,6 +1499,7 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
->  			}
->  		}
->  
-> +program_params:
->  		/* Program params */
->  		ret = sdw_program_params(bus);
->  		if (ret < 0) {
-> @@ -1544,6 +1549,7 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
->   */
->  int sdw_prepare_stream(struct sdw_stream_runtime *stream)
->  {
-> +	bool update_params = true;
->  	int ret;
->  
->  	if (!stream) {
-> @@ -1567,7 +1573,16 @@ int sdw_prepare_stream(struct sdw_stream_runtime *stream)
->  		goto state_err;
->  	}
->  
-> -	ret = _sdw_prepare_stream(stream);
-> +	/*
-> +	 * when the stream is DISABLED, this means sdw_prepare_stream()
-> +	 * is called as a result of an underflow or a resume operation.
-> +	 * In this case, the bus parameters shall not be recomputed, but
-> +	 * still need to be re-applied
-> +	 */
-> +	if (stream->state == SDW_STREAM_DISABLED)
-> +		update_params = false;
+--Sig_/vv5f=h6dcSYkxoC+bwd_hB2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Should this not be handled by the caller..? I do not like to deduce this
-here as the info is already available in dai driver, so go ahead and
-propagate it and get it from caller when it is required..
+Hi all,
 
--- 
-~Vinod
+After merging the vfs tree, today's linux-next build (x86_64 allnoconfig)
+failed like this:
+
+fs/inode.c:1615:5: error: redefinition of 'bmap'
+ 1615 | int bmap(struct inode *inode, sector_t *block)
+      |     ^~~~
+In file included from fs/inode.c:7:
+include/linux/fs.h:2867:19: note: previous definition of 'bmap' was here
+ 2867 | static inline int bmap(struct inode *inode,  sector_t *block)
+      |                   ^~~~
+
+Caused by commit
+
+  65a805fdd75f ("fibmap: Use bmap instead of ->bmap method in ioctl_fibmap")
+
+I have added this patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Fri, 10 Jan 2020 17:53:19 +1100
+Subject: [PATCH] fs: fix up for !CONFIG_BLOCK and bmap
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ fs/inode.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/inode.c b/fs/inode.c
+index 9f894b25af2b..590f36daa006 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -1598,6 +1598,7 @@ void iput(struct inode *inode)
+ }
+ EXPORT_SYMBOL(iput);
+=20
++#ifdef CONFIG_BLOCK
+ /**
+  *	bmap	- find a block number in a file
+  *	@inode:  inode owning the block number being requested
+@@ -1621,6 +1622,7 @@ int bmap(struct inode *inode, sector_t *block)
+ 	return 0;
+ }
+ EXPORT_SYMBOL(bmap);
++#endif
+=20
+ /*
+  * With relative atime, only update atime if the previous atime is
+--=20
+2.24.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/vv5f=h6dcSYkxoC+bwd_hB2
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4YIFkACgkQAVBC80lX
+0GyxBQf/RzArvoj4CM7CXQ574qEmieNaTjvoXQpRPglLfjg93NCT0QUsdup0mYtU
+eQwptOAxum2K5EkGGdCqD2+yMxKzETG7Jh++Wlf0aa+G0wYpAYIY67r96QXnwCwy
+uxd99r4yxWFlPUQIXmrGsAZE/73K2DjJFngEjHfBwyQaodH8LRRszyCNMxLfXkwW
+iOAi0iApveyemMGGo7t+DCeASNbjWCE/L1qvDLMV4AHXwq/on2dzv5GQF9TPegl2
++xU/3B8YZsT9ZiOaqOiOdZsVd96vNrEmhM2HJYSPnukytVbwdfUQmj6WS0u5suxD
+8fC5xCLZc8gJcyhjwHGXdCjRI+safg==
+=Ph5h
+-----END PGP SIGNATURE-----
+
+--Sig_/vv5f=h6dcSYkxoC+bwd_hB2--
