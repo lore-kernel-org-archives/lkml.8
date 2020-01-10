@@ -2,92 +2,164 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B3B6C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7865BC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D092080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F6762072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:50:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qUUU0Wfg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727358AbgAJJtt (ORCPT
+        id S1727398AbgAJJuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 04:49:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:41510 "EHLO foss.arm.com"
+        Fri, 10 Jan 2020 04:50:14 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:33464 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727219AbgAJJtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 04:49:49 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66F851396;
-        Fri, 10 Jan 2020 01:49:48 -0800 (PST)
-Received: from [192.168.1.18] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B57803F703;
-        Fri, 10 Jan 2020 01:49:41 -0800 (PST)
-Subject: Re: [PATCHv8 00/34] kernel: Introduce Time Namespace
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Dmitry Safonov <dima@arista.com>, Andrei Vagin <avagin@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Jann Horn <jannh@google.com>,
-        Jeff Dike <jdike@addtoit.com>, Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        crml <criu@openvz.org>, Linux API <linux-api@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-References: <20191112012724.250792-1-dima@arista.com>
- <20191121180555.GA440967@gmail.com>
- <CAJwJo6ahGVHHgwFsPyjbY1PgmHs+D+A2Cma03ogvQGr+mPqYAw@mail.gmail.com>
- <87y2ug9w1h.fsf@nanos.tec.linutronix.de>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <1f81e2ef-93fb-926e-9953-c529675e6f4b@arm.com>
-Date:   Fri, 10 Jan 2020 09:52:37 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727219AbgAJJuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 04:50:14 -0500
+Received: from zn.tnic (p200300EC2F0ACA0024F85FB92EE88C9E.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:ca00:24f8:5fb9:2ee8:8c9e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B03FC1EC0CAD;
+        Fri, 10 Jan 2020 10:50:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578649811;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mIT8Yx3kSe9Z9owbe2rOIZDAMgeLxHz7eh5yqOrcB8c=;
+        b=qUUU0WfgA+wqfA4yZuR/kqZ2+GUNSzj06F1JaEfPdEfkhMx5cVJv/fsNKW9A2z1Z3/M+Vq
+        C8E/7L2aeciYr41PhPYN0Fq44RdRUcTs6ssmFdJd5i9LEI9azk3zLu2Jbe9y+iSIBgrgfk
+        Y4EL+MxBXyNBWYa++tVpZpdRuxFix90=
+Date:   Fri, 10 Jan 2020 10:50:04 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jan =?utf-8?Q?H=2E_Sch=C3=B6nherr?= <jschoenh@amazon.de>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Tony Luck <tony.luck@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: Re: [PATCH v2 1/6] x86/mce: Take action on UCNA/Deferred errors again
+Message-ID: <20200110095004.GD19453@zn.tnic>
+References: <20200103150722.20313-1-jschoenh@amazon.de>
+ <20200103150722.20313-2-jschoenh@amazon.de>
 MIME-Version: 1.0
-In-Reply-To: <87y2ug9w1h.fsf@nanos.tec.linutronix.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200103150722.20313-2-jschoenh@amazon.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+On Fri, Jan 03, 2020 at 04:07:17PM +0100, Jan H. Schönherr wrote:
+> Commit fa92c5869426 ("x86, mce: Support memory error recovery for both
+> UCNA and Deferred error in machine_check_poll") added handling of UCNA
+> and Deferred errors by adding them to the ring for SRAO errors.
+> 
+> Later, commit fd4cf79fcc4b ("x86/mce: Remove the MCE ring for Action
+> Optional errors") switched storage from the SRAO ring to the unified
+> pool that is still in use today. In order to only act on the intended
+> errors, a filter for MCE_AO_SEVERITY is used -- effectively removing
+> handling of UCNA/Deferred errors again.
+> 
+> Extend the severity filter to include UCNA/Deferred errors again.
+> Also, generalize the naming of the notifier from SRAO to UC to capture
+> the extended scope.
+> 
+> Note, that this change may cause a message like the following to appear,
+> as the same address may be reported as SRAO and as UCNA:
+> 
+>  Memory failure: 0x5fe3284: already hardware poisoned
+> 
+> Technically, this is a return to previous behavior.
+> 
+> Fixes: fd4cf79fcc4b ("x86/mce: Remove the MCE ring for Action Optional errors")
+> Signed-off-by: Jan H. Schönherr <jschoenh@amazon.de>
 
-On 1/9/20 9:09 PM, Thomas Gleixner wrote:
-> Dmitry Safonov <0x7f454c46@gmail.com> writes:
-> 
->> Gentle ping, in case you have time to look at this.
-> 
-> I'm looking at it and so far I'm quite happy.
-> 
-> Andy, Vincenco any opinions?
-> 
+Tony, ACK?
 
-I started looking at them after the holidays, in general I am happy with what I
-have seen till now.
+Also, do you want it in stable@ so that it gets backported?
 
-I would like to complete some testing especially on the platforms that are not
-touched by this patchset to make sure that there are no side effects on the
-unified vDSOs and then I think I am ok with the series.
+> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+> index 8994fe7751a4..16134ce587fd 100644
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -156,10 +156,8 @@ void mce_log(struct mce *m)
+>  }
+>  EXPORT_SYMBOL_GPL(mce_log);
+>  
+> -static struct notifier_block mce_srao_nb;
+> -
+>  /*
+> - * We run the default notifier if we have only the SRAO, the first and the
+> + * We run the default notifier if we have only the UC, the first and the
+>   * default notifier registered. I.e., the mandatory NUM_DEFAULT_NOTIFIERS
+>   * notifiers registered on the chain.
+>   */
+> @@ -580,26 +578,29 @@ static struct notifier_block first_nb = {
+>  	.priority	= MCE_PRIO_FIRST,
+>  };
+>  
+> -static int srao_decode_notifier(struct notifier_block *nb, unsigned long val,
+> -				void *data)
+> +static int uc_decode_notifier(struct notifier_block *nb, unsigned long val,
+> +			      void *data)
+>  {
+>  	struct mce *mce = (struct mce *)data;
+>  	unsigned long pfn;
+>  
+> -	if (!mce)
+> +	if (!mce || !mce_usable_address(mce))
+>  		return NOTIFY_DONE;
+>  
+> -	if (mce_usable_address(mce) && (mce->severity == MCE_AO_SEVERITY)) {
+> -		pfn = mce->addr >> PAGE_SHIFT;
+> -		if (!memory_failure(pfn, 0))
+> -			set_mce_nospec(pfn);
+> -	}
+> +	if (mce->severity != MCE_AO_SEVERITY &&
+> +	    mce->severity != MCE_DEFERRED_SEVERITY)
+> +		return NOTIFY_DONE;
+> +
+> +	pfn = mce->addr >> PAGE_SHIFT;
+> +	if (!memory_failure(pfn, 0))
+> +		set_mce_nospec(pfn);
 
-> Thanks,
-> 
->         tglx
-> 
+I'm wondering if in the memory_failure error() case, we should hand it
+down to the remaining notifiers.
+
+Which also begs the question in light of this clumsy notifier counting:
+
+How about we have the default notifier *unconditionally* print the MCE?
+I.e., if the error has reached it, it would print it. If not and some
+other notifier consumed it, it will get handled differently.
+
+This way we won't need any special counting of notifiers and special
+reg/unreg of notifiers etc.
+
+IOW, the logic would be:
+
+If something consumes the error, then it doesn't get printed. Notifier
+does NOTIFY_STOP.
+
+If nothing consumes it or something looks at it and decides that it
+should still get printed, then the last catch-all notifier callback does
+that.
+
+Thoughts?
 
 -- 
-Regards,
-Vincenzo
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
