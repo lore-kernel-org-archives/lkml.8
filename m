@@ -2,95 +2,137 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D962C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43E7C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B37A2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913D1206DA
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:36:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578681375;
+	bh=ZUQib7bnoTZU/304mmRL5Mwvrc5MIbAoLniN4Uk/qYw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gSeoAPKOxYzI9885Rm/J9uq4eJfARNDMt1vxH2nxjD8AiIlU2xQAPOkOvgDnslkt5
+	 /kjnPFKbIdXOXKXF6I42H9oFBt5JUE8QuktY3te8qw1/UH7871nYJVzo51KpY1Gi4m
+	 2O7gYjzNtKLhhzG9451mwJh/5sy7X3CT+7l0vda4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgAJSdY (ORCPT
+        id S1728520AbgAJSgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:33:24 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59379 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbgAJSdX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:33:23 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1ipz5z-0002hp-NY; Fri, 10 Jan 2020 19:33:19 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4DBDF1C2D77;
-        Fri, 10 Jan 2020 19:33:19 +0100 (CET)
-Date:   Fri, 10 Jan 2020 18:33:19 -0000
-From:   "tip-bot2 for Vincenzo Frascino" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] lib/vdso: Make __cvdso_clock_getres() static
-Cc:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191128111719.8282-1-vincenzo.frascino@arm.com>
-References: <20191128111719.8282-1-vincenzo.frascino@arm.com>
+        Fri, 10 Jan 2020 13:36:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728023AbgAJSgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 13:36:14 -0500
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AAD621744
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 18:36:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578681373;
+        bh=ZUQib7bnoTZU/304mmRL5Mwvrc5MIbAoLniN4Uk/qYw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=h+t8K1VgQO2sqGDI7eQ7fhLz4uqrI7kcD8o9E7GRSvSk41bGfpwcP9glUFoAvpEDO
+         vKIazUnxJip7Y+EjMYX0HhhIVOP6z+pIhksR/gsQBuQuSZmDtqtPngJW4t/hkoWZMQ
+         2xFlT4rI9w8G0PDoS9dgMdPkyWxgZOQAOXfipC44=
+Received: by mail-wr1-f44.google.com with SMTP id b6so2779398wrq.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 10:36:13 -0800 (PST)
+X-Gm-Message-State: APjAAAXK1Afu5/HZ8cjYRXQKGsHF3bXVBRyBiDxPqDTW6q24VZ/SAP+s
+        nWD2omaxUh6lm1T+j8UMK+L+mFl2CVwXQDmVhKQFjA==
+X-Google-Smtp-Source: APXvYqzCH1wGkq2uxYvjqfJcJaKKKqpsUBHA/6LICwgzdTRsCsItPO4rziFdbUkhHPuHyevVbw3EbFyp7cT5odZ4Uhs=
+X-Received: by 2002:adf:f20b:: with SMTP id p11mr4718822wro.195.1578681371413;
+ Fri, 10 Jan 2020 10:36:11 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <157868119905.30329.14304133573747134138.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <21bf6bb46544eab79e792980f82520f8fbdae9b5.camel@intel.com>
+ <DB882EE8-20B2-4631-A808-E5C968B24CEB@amacapital.net> <cdd157ef011efda92c9434f76141fc3aef174d85.camel@intel.com>
+ <CALCETrV_tGk=B3Hw0h9viW45wMqB_W+rwWzx6LnC3-vSATOUOA@mail.gmail.com>
+ <400be86aab208d0e50a237cdbd3195763396e3ed.camel@intel.com>
+ <CALCETrXXJhkNXmjTX_8VEO39+uE4XECtm=QNTDh1DpncXKhKhw@mail.gmail.com> <96dd98b3c4f73b205b6e669ca87fa64901c117d6.camel@intel.com>
+In-Reply-To: <96dd98b3c4f73b205b6e669ca87fa64901c117d6.camel@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Fri, 10 Jan 2020 10:35:59 -0800
+X-Gmail-Original-Message-ID: <CALCETrWjx-D2sdJZbnydPgunNKmxuhYm=+6iPoy0DHEKCMkMsw@mail.gmail.com>
+Message-ID: <CALCETrWjx-D2sdJZbnydPgunNKmxuhYm=+6iPoy0DHEKCMkMsw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: Make trampolines W^X
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "luto@kernel.org" <luto@kernel.org>,
+        "songliubraving@fb.com" <songliubraving@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "jeyu@kernel.org" <jeyu@kernel.org>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "mjg59@google.com" <mjg59@google.com>,
+        "nadav.amit@gmail.com" <nadav.amit@gmail.com>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "thgarnie@chromium.org" <thgarnie@chromium.org>,
+        "kpsingh@chromium.org" <kpsingh@chromium.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "revest@chromium.org" <revest@chromium.org>,
+        "jannh@google.com" <jannh@google.com>,
+        "namit@vmware.com" <namit@vmware.com>,
+        "jackmanb@chromium.org" <jackmanb@chromium.org>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "kafai@fb.com" <kafai@fb.com>, "yhs@fb.com" <yhs@fb.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "mhalcrow@google.com" <mhalcrow@google.com>,
+        "andriin@fb.com" <andriin@fb.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+> On Jan 9, 2020, at 3:01 PM, Edgecombe, Rick P <rick.p.edgecombe@intel.com=
+> wrote:
 
-Commit-ID:     ffd08731b2d632459428612431060cf902324a8d
-Gitweb:        https://git.kernel.org/tip/ffd08731b2d632459428612431060cf902324a8d
-Author:        Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate:    Thu, 28 Nov 2019 11:17:19 
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 10 Jan 2020 19:29:01 +01:00
+>> The vmap code immediately removes PTEs when unmaps occur (which it may
+>> very well do right now -- I haven't checked) but also tracks the
+>> kernel_tlb_gen associated with each record of an
+>> unmapped-but-not-zapped area.  Then we split vm_unmap_aliases() into a
+>> variant that unmaps all aliases and a variant that merely promises to
+>> unmap at least one alias.  The former does what the current code does
+>> except that it skips the IPI if all areas in question have tlb_gen <
+>> flushed_kernel_tlb_gen.  The latter clears all areas with tlb_gen <
+>> flushed_kernel_tlb_gen and, if there weren't any, does
+>> flush_tlb_kernel_range() and flushes everything.
+>>
+>> (Major caveat: this is wrong for the case where
+>> flush_tlb_kernel_range() only flushes some but not all of the kernel.
+>> So this needs considerable work if it's actually going to me useful.
+>> The plain old "take locks and clean up" approach might be a better
+>> bet.)
+>>
+>
+> Hmm. In normal usage (!DEBUG_PAGE_ALLOC), are kernel range tlb shootdowns=
+ common
+> outside of module space users and lazy vmap stuff? A tlb_gen solution mig=
+ht only
+> be worth it in cases where something other than vm_unmap_aliases() and he=
+lpers
+> was doing this frequently.
 
-lib/vdso: Make __cvdso_clock_getres() static
+I suspect that the two bug users aside from vunmap() will be eBPF and,
+eventually, XPFO / =E2=80=9Cexclusive pages=E2=80=9D / less crappy SEV-like
+implementations / actual high quality MKTME stuff / KVM
+side-channel-proof memory.  The latter doesn=E2=80=99t actually exist yet (=
+the
+SEV implementation sidesteps this with a horrible hack involving
+incoherent mappings that are left active with fingers crossed), but it
+really seems like it=E2=80=99s coming.
 
-Fix the following sparse warning in the generic vDSO library:
+In general, if we=E2=80=99re going to have a pool of non-RW-direct-mapped
+pages, we also want some moderately efficient way to produce such
+pages.
 
-  linux/lib/vdso/gettimeofday.c:224:5: warning: symbol
-  '__cvdso_clock_getres' was not declared. Should it be static?
-
-Make it static and also mark it __maybe_unsed.
-
-Fixes: 502a590a170b ("lib/vdso: Move fallback invocation to the callers")
-Reported-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191128111719.8282-1-vincenzo.frascino@arm.com
----
- lib/vdso/gettimeofday.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 9ecfd3b..42bd8ab 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -221,6 +221,7 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
- 	return 0;
- }
- 
-+static __maybe_unused
- int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
- {
- 	int ret = __cvdso_clock_getres_common(clock, res);
+Right now, creating and freeing eBPF programs in a loop is probably a
+performance disaster on large systems.
