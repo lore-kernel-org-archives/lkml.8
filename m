@@ -2,125 +2,80 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B07FDC33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:08:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8283CC33C99
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812F82082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:08:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AA6E2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:08:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="n72BZQ67"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ayGQqiUW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbgAJHIj (ORCPT
+        id S1727239AbgAJHIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:08:39 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:45218 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbgAJHIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:08:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:To:From:Date:Sender:
-        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=449GfKH7sH7qx3uVz7I+DZvudTQJS9ufr7oEB5vY7Bc=; b=n72BZQ67zmmXppM/xkdr0487Kv
-        veCzIUlqMEvfTPlQiEU+MY2d7q6mdgXHkJh42V45xkQ1in2Lg/wZMkoG5SEFnA4GA/VyhufBrk4cW
-        DK3rVmmk87TlII2wB9F/360lSMWaegs2aBeQKC6gzLzmZFywL4JzudH+wEEccF709Zt4=;
-Received: from [2a02:790:ff:1019:7ee9:d3ff:fe1f:a246] (helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1ipoPD-0003jT-04; Fri, 10 Jan 2020 08:08:27 +0100
-Received: from localhost.lan ([::1] helo=localhost)
-        by localhost with esmtp (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1ipoPA-0001VA-Rz; Fri, 10 Jan 2020 08:08:24 +0100
-Date:   Fri, 10 Jan 2020 08:08:24 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
-        phh@phh.me, letux-kernel@openphoenux.org
-Subject: Re: [PATCH v5 0/5] Add rtc support for rn5t618 mfd
-Message-ID: <20200110080824.727a612d@kemnade.info>
-In-Reply-To: <20191220122416.31881-1-andreas@kemnade.info>
-References: <20191220122416.31881-1-andreas@kemnade.info>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+        Fri, 10 Jan 2020 02:08:48 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:40974 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726186AbgAJHIs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:08:48 -0500
+X-UUID: 64689634770c4b26990c40d7a9859c1c-20200110
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ffhcrwjsBwsjrgzkid/yOQ1liD4E9HyfxuER96MEH2g=;
+        b=ayGQqiUWEf6Ot02/A+ME7PCtwFS9rvCN3bTRfL5Ubp5cZC6itfr/vewvWrWfJlv4TTranHZvzva+GLM8V2yVLUcmvNhKFD47gN6joQoTzR/sLn2stuPzhKyaHM//434KpARA/T3FXhHRMdIB4lY+HI0yL1LHn78gVvHkIIKVBm0=;
+X-UUID: 64689634770c4b26990c40d7a9859c1c-20200110
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 365668579; Fri, 10 Jan 2020 15:08:43 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 10 Jan 2020 15:07:43 +0800
+Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 10 Jan 2020 15:07:04 +0800
+Message-ID: <1578640121.17435.7.camel@mtkswgap22>
+Subject: Re: [PATCH v2 1/2] scsi: ufs: pass device information to
+ apply_dev_quirks
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+CC:     <linux-scsi@vger.kernel.org>, <andy.teng@mediatek.com>,
+        <jejb@linux.ibm.com>, <chun-hung.wu@mediatek.com>,
+        <kuohong.wang@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <avri.altman@wdc.com>, <cang@codeaurora.org>,
+        <linux-mediatek@lists.infradead.org>, <peter.wang@mediatek.com>,
+        <alim.akhtar@samsung.com>, <matthias.bgg@gmail.com>,
+        <asutoshd@codeaurora.org>, <bvanassche@acm.org>,
+        <linux-arm-kernel@lists.infradead.org>, <beanhuo@micron.com>
+Date:   Fri, 10 Jan 2020 15:08:41 +0800
+In-Reply-To: <yq136cnx1yo.fsf@oracle.com>
+References: <1578270431-9873-1-git-send-email-stanley.chu@mediatek.com>
+         <1578270431-9873-2-git-send-email-stanley.chu@mediatek.com>
+         <yq136cnx1yo.fsf@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+SGkgTWFydGluLA0KDQpPbiBGcmksIDIwMjAtMDEtMTAgYXQgMDE6MjUgLTA1MDAsIE1hcnRpbiBL
+LiBQZXRlcnNlbiB3cm90ZToNCj4gU3RhbmxleSwNCj4gDQo+ID4gUGFzcyBVRlMgZGV2aWNlIGlu
+Zm9ybWF0aW9uIHRvIHZlbmRvci1zcGVjaWZpYyB2YXJpYW50IGNhbGxiYWNrDQo+ID4gImFwcGx5
+X2Rldl9xdWlya3MiIGJlY2F1c2Ugc29tZSBwbGF0Zm9ybSB2ZW5kb3JzIG5lZWQgdG8ga25vdyBz
+dWNoDQo+ID4gaW5mb3JtYXRpb24gdG8gYXBwbHkgc3BlY2lhbCBoYW5kbGluZ3Mgb3IgcXVpcmtz
+IGluIHNwZWNpZmljIGRldmljZXMuDQo+IA0KPiBUaGlzIGRvZXNuJ3QgY29tcGlsZS4gWW91IG1p
+c3NlZCBhZGRpbmcgdGhlIGFkZGl0aW9uYWwgYXJndW1lbnQgdG8gb25lDQo+IGNhbGxlciBvZiB1
+ZnNoY2RfdHVuZV91bmlwcm9fcGFyYW1zKCkuDQo+IA0KDQpTb3JyeSBmb3IgdGhpcy4gSSdsbCBm
+aXggaXQgaW4gbmV4dCB2ZXJzaW9uIGFuZCB0cnkgdG8gc2VwYXJhdGUgdmVuZG9yJ3MNCmltcGxl
+bWVudGF0aW9uIGFuZCBjb21tb24gZHJpdmVyIHRvIGRpZmZlcmVudCBjb21taXRzIGlmIHRoaXMg
+aXMgdGhlDQpyb290IGNhdXNlIG9mIGNvbXBpbGUgaXNzdWUuDQoNClRoYW5rcy4NClN0YW5sZXkN
+Cg0K
 
-I hope everyone went well into new year, are there any open
-issues left here preveting applying these patches?
-
-On Fri, 20 Dec 2019 13:24:11 +0100
-Andreas Kemnade <andreas@kemnade.info> wrote:
-
-> In the variant RC5T619 the mfd has an RTC. This patchset adds
-> support for it. To do so it adds the missing register defines in 
-> rn5t618.h and general irq handling for that.
-> It seems that the irq definitions are the same except missing RTC
-missing words ... for the rn5t618 ...
-
-> but due to missing ability to test that I do not add them here.
-> 
-> The rtc driver itself is based on 
-> https://github.com/kobolabs/Kobo-Reader/blob/master/hw/imx6sll-clara/kernel.tar.bz2
-> but heavily reworked.
-> 
-> It was tested on the Kobo Clara HD.
-> 
-> For cleaning up there is a separate off-topic patch:
-> mfd: rn5t618: cleanup i2c_device_id
-> 
-> Changes in v5:
-> - static rn5t618_irq_init
-> - PLATFORM_DEVID_NONE
-> - added some Acked-Bys
-> 
-> Changes in v4:
-> - use macros for IRQ definitions
-> - merge rn5t618-core.c and rn5t618-irq.c
-> 
-> Changes in v3:
-> - alignment cleanup
-> - output cleanup, remove useless toggling of alarm flag in rtc probe
-> - updated bindings description, so patch 1/5 becomes 2/6 and so on
-> 
-> Changes in v2:
-> - no dead code in irq code
-> - various improvements and cleanups in rtc driver itself
-> 
-> Andreas Kemnade (5):
->   dt-bindings: mfd: rn5t618: Document optional property interrupts
->   mfd: rn5t618: add IRQ support
->   mfd: rn5t618: add RTC related registers
->   mfd: rn5t618: add more subdevices
->   rtc: rc5t619: add ricoh rc5t619 RTC driver
-> 
->  Documentation/devicetree/bindings/mfd/rn5t618.txt |   4 +
->  drivers/mfd/Kconfig                               |   1 +
->  drivers/mfd/rn5t618.c                             | 109 +++++-
->  drivers/rtc/Kconfig                               |  10 +
->  drivers/rtc/Makefile                              |   1 +
->  drivers/rtc/rtc-rc5t619.c                         | 444 ++++++++++++++++++++++
->  include/linux/mfd/rn5t618.h                       |  26 ++
->  7 files changed, 593 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/rtc/rtc-rc5t619.c
-> 
-> -- 
-> 2.11.0
-> 
-> 
