@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2E6C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42827C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB26520848
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F792072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:55:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgAJLz2 (ORCPT
+        id S1728044AbgAJLy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:55:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:43140 "EHLO foss.arm.com"
+        Fri, 10 Jan 2020 06:54:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:43096 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbgAJLyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:54:32 -0500
+        id S1728015AbgAJLy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 06:54:26 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 648261435;
-        Fri, 10 Jan 2020 03:54:31 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16A13139F;
+        Fri, 10 Jan 2020 03:54:26 -0800 (PST)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.44])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44ABC3F534;
-        Fri, 10 Jan 2020 03:54:30 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE2283F534;
+        Fri, 10 Jan 2020 03:54:24 -0800 (PST)
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     "David S . Miller" <davem@davemloft.net>,
         Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 Cc:     Michal Simek <michal.simek@xilinx.com>,
         Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 06/14] net: axienet: Check for DMA mapping errors
-Date:   Fri, 10 Jan 2020 11:54:07 +0000
-Message-Id: <20200110115415.75683-7-andre.przywara@arm.com>
+Subject: [PATCH 02/14] net: axienet: Propagate failure of DMA descriptor setup
+Date:   Fri, 10 Jan 2020 11:54:03 +0000
+Message-Id: <20200110115415.75683-3-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200110115415.75683-1-andre.przywara@arm.com>
 References: <20200110115415.75683-1-andre.przywara@arm.com>
@@ -42,79 +42,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Especially with the default 32-bit DMA mask, DMA buffers are a limited
-resource, so their allocation can fail.
-So as the DMA API documentation requires, add error checking code after
-dma_map_single() calls to catch the case where we run out of "low" memory.
+When we fail allocating the DMA buffers in axienet_dma_bd_init(), we
+report this error, but carry on with initialisation nevertheless.
+
+This leads to a kernel panic when the driver later wants to send a
+packet, as it uses uninitialised data structures.
+
+Make the axienet_device_reset() routine return an error value, as it
+contains the DMA buffer initialisation. Make sure we propagate the error
+up the chain and eventually fail the driver initialisation, to avoid
+relying on non-initialised buffers.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 22 ++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 25 +++++++++++++------
+ 1 file changed, 18 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 82abe2b0f16a..8d2b67cbecf9 100644
+index 20746b801959..97482cf093ce 100644
 --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
 +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -248,6 +248,11 @@ static int axienet_dma_bd_init(struct net_device *ndev)
- 						     skb->data,
- 						     lp->max_frm_size,
- 						     DMA_FROM_DEVICE);
-+		if (dma_mapping_error(ndev->dev.parent, lp->rx_bd_v[i].phys)) {
-+			dev_kfree_skb(skb);
-+			goto out;
-+		}
-+
- 		lp->rx_bd_v[i].cntrl = lp->max_frm_size;
- 	}
+@@ -437,9 +437,10 @@ static void axienet_setoptions(struct net_device *ndev, u32 options)
+ 	lp->options |= options;
+ }
  
-@@ -668,6 +673,7 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	dma_addr_t tail_p;
+-static void __axienet_device_reset(struct axienet_local *lp)
++static int __axienet_device_reset(struct axienet_local *lp)
+ {
+ 	u32 timeout;
++
+ 	/* Reset Axi DMA. This would reset Axi Ethernet core as well. The reset
+ 	 * process of Axi DMA takes a while to complete as all pending
+ 	 * commands/transfers will be flushed or completed during this
+@@ -455,9 +456,11 @@ static void __axienet_device_reset(struct axienet_local *lp)
+ 		if (--timeout == 0) {
+ 			netdev_err(lp->ndev, "%s: DMA reset timeout!\n",
+ 				   __func__);
+-			break;
++			return -ETIMEDOUT;
+ 		}
+ 	}
++
++	return 0;
+ }
+ 
+ /**
+@@ -471,12 +474,15 @@ static void __axienet_device_reset(struct axienet_local *lp)
+  * Ethernet core. No separate hardware reset is done for the Axi Ethernet
+  * core.
+  */
+-static void axienet_device_reset(struct net_device *ndev)
++static int axienet_device_reset(struct net_device *ndev)
+ {
+ 	u32 axienet_status;
  	struct axienet_local *lp = netdev_priv(ndev);
- 	struct axidma_bd *cur_p;
-+	u32 orig_tail_ptr = lp->tx_bd_tail;
++	int ret;
  
- 	num_frag = skb_shinfo(skb)->nr_frags;
- 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-@@ -703,9 +709,11 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 		cur_p->app0 |= 2; /* Tx Full Checksum Offload Enabled */
+-	__axienet_device_reset(lp);
++	ret = __axienet_device_reset(lp);
++	if (ret)
++		return ret;
+ 
+ 	lp->max_frm_size = XAE_MAX_VLAN_FRAME_SIZE;
+ 	lp->options |= XAE_OPTION_VLAN;
+@@ -491,9 +497,11 @@ static void axienet_device_reset(struct net_device *ndev)
+ 			lp->options |= XAE_OPTION_JUMBO;
  	}
  
--	cur_p->cntrl = skb_headlen(skb) | XAXIDMA_BD_CTRL_TXSOF_MASK;
- 	cur_p->phys = dma_map_single(ndev->dev.parent, skb->data,
- 				     skb_headlen(skb), DMA_TO_DEVICE);
-+	if (dma_mapping_error(ndev->dev.parent, cur_p->phys))
-+		return NETDEV_TX_BUSY;
-+	cur_p->cntrl = skb_headlen(skb) | XAXIDMA_BD_CTRL_TXSOF_MASK;
- 
- 	for (ii = 0; ii < num_frag; ii++) {
- 		if (++lp->tx_bd_tail >= lp->tx_bd_num)
-@@ -716,6 +724,13 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 					     skb_frag_address(frag),
- 					     skb_frag_size(frag),
- 					     DMA_TO_DEVICE);
-+		if (dma_mapping_error(ndev->dev.parent, cur_p->phys)) {
-+			axienet_free_tx_chain(ndev, orig_tail_ptr, ii + 1,
-+					      NULL);
-+			lp->tx_bd_tail = orig_tail_ptr;
-+
-+			return NETDEV_TX_BUSY;
-+		}
- 		cur_p->cntrl = skb_frag_size(frag);
+-	if (axienet_dma_bd_init(ndev)) {
++	ret = axienet_dma_bd_init(ndev);
++	if (ret) {
+ 		netdev_err(ndev, "%s: descriptor allocation failed\n",
+ 			   __func__);
++		return ret;
  	}
  
-@@ -796,6 +811,11 @@ static void axienet_recv(struct net_device *ndev)
- 		cur_p->phys = dma_map_single(ndev->dev.parent, new_skb->data,
- 					     lp->max_frm_size,
- 					     DMA_FROM_DEVICE);
-+		if (dma_mapping_error(ndev->dev.parent, cur_p->phys)) {
-+			dev_kfree_skb(new_skb);
-+			return;
-+		}
+ 	axienet_status = axienet_ior(lp, XAE_RCW1_OFFSET);
+@@ -518,6 +526,8 @@ static void axienet_device_reset(struct net_device *ndev)
+ 	axienet_setoptions(ndev, lp->options);
+ 
+ 	netif_trans_update(ndev);
 +
- 		cur_p->cntrl = lp->max_frm_size;
- 		cur_p->status = 0;
- 		cur_p->skb = new_skb;
++	return 0;
+ }
+ 
+ /**
+@@ -921,8 +931,9 @@ static int axienet_open(struct net_device *ndev)
+ 	 */
+ 	mutex_lock(&lp->mii_bus->mdio_lock);
+ 	axienet_mdio_disable(lp);
+-	axienet_device_reset(ndev);
+-	ret = axienet_mdio_enable(lp);
++	ret = axienet_device_reset(ndev);
++	if (ret == 0)
++		ret = axienet_mdio_enable(lp);
+ 	mutex_unlock(&lp->mii_bus->mdio_lock);
+ 	if (ret < 0)
+ 		return ret;
 -- 
 2.17.1
 
