@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5D9C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6419DC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D8F420838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3890920848
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578672420;
-	bh=jKmMpOy9enGmw++ycvlhCyFLkxvaeOxGWeTY1lvYWgw=;
+	s=default; t=1578672433;
+	bh=qv6KJiPLfpAE7GH8cSS0edxuald5O/rXHA6Jkgf1bpA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1Ki9X1Z7YfHQTyfPpPRWAW7vvyWAsrD/GeMwE7IsKs7bykaCz1CI1aRlrfq/vVoUH
-	 vnmtrB9G+QADSlov22/+AXQjc/pGnd6OUzsPg0I7c+61F9zzNJZLcUSO4y8uYEmnhT
-	 V6iLVJrO2+J1v8j5pWZsmneScjIWliDUbkuRU0Ww=
+	b=CZip+z3fp9quydY/4/EEkzD+0BV4AwQi4G1Ye5+2klGvblCKVY9TZ86EMYoAiod6u
+	 2jFadA/6uplJt6w0ysFc0QEb6S/Yk596T/9pUa3L3JWu+a8uordZWthsPka/qU3YBn
+	 QM0OflxBzCplkGP/SGlJdpyiADMmczyMtRtlYWMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgAJQHA (ORCPT
+        id S1728884AbgAJQHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:07:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55404 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 11:07:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728475AbgAJQG7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:06:59 -0500
+        id S1728504AbgAJQHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 11:07:12 -0500
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C547D20673;
-        Fri, 10 Jan 2020 16:06:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9163206ED;
+        Fri, 10 Jan 2020 16:07:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578672418;
-        bh=jKmMpOy9enGmw++ycvlhCyFLkxvaeOxGWeTY1lvYWgw=;
+        s=default; t=1578672430;
+        bh=qv6KJiPLfpAE7GH8cSS0edxuald5O/rXHA6Jkgf1bpA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pLZQ3fX4dLTapiF6Ft2nki6ebIivlHTmyY3oXnDFoySc/Q7VwP3wcTfi8TKyDMyqb
-         iDsSCkSolIeC8ewwoXXfF8+s17ktayuroX3oDyzQj6leBCWke5q64GYpjyMrbKJfeo
-         iq99Q3xwPSSAhDS+c2EUxpmvg+7cgxRykVG4UxrQ=
+        b=F+3qSqu4fztjGm1evsJu4Kk8q0yMzTw86fNuo82ycxBawcolZZlccHp0vnQ1p7K6g
+         U5U0hRVI3egRl4jCFNUmx18ba2DxXBpG37TybLKb/P2FSXMMkvOqBscArcE6d2sXgl
+         VHd7rKLS8bnEw55x1xQPeUxTgA37QeJdXQQYPk/U=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Ingo Molnar <mingo@redhat.com>,
@@ -57,9 +57,9 @@ Cc:     Ingo Molnar <mingo@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 18/22] tracing/boot: Add synthetic event support
-Date:   Sat, 11 Jan 2020 01:06:52 +0900
-Message-Id: <157867241236.17873.12411615143321557709.stgit@devnote2>
+Subject: [PATCH v6 19/22] tracing/boot: Add instance node support
+Date:   Sat, 11 Jan 2020 01:07:04 +0900
+Message-Id: <157867242413.17873.9814204526141500278.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <157867220019.17873.13377985653744804396.stgit@devnote2>
 References: <157867220019.17873.13377985653744804396.stgit@devnote2>
@@ -72,102 +72,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add synthetic event node support to boot time tracing.
-The synthetic event is a kind of event node, but the group
-name is "synthetic".
+Add instance node support to boot-time tracing. User can set
+some options and event nodes under instance node.
 
- - ftrace.event.synthetic.EVENT.fields = FIELD[, FIELD2...]
-   Defines new synthetic event with FIELDs. Each field should be
-   "type varname".
-
-The synthetic node requires "fields" string arraies, which defines
-the fields as same as tracing/synth_events interface.
+ - ftrace.instance.INSTANCE[...]
+   Add new INSTANCE instance. Some options and event nodes
+   are acceptable for instance node.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- kernel/trace/trace_boot.c        |   47 ++++++++++++++++++++++++++++++++++++++
- kernel/trace/trace_events_hist.c |    5 ++++
- 2 files changed, 52 insertions(+)
+  Changes in v4:
+   - Use trace_array_get_by_name() instead of trace_array_create().
+   - Remove global boot option setting.
+---
+ kernel/trace/trace_boot.c |   43 ++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 38 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index a11dc60299fb..3054921b0877 100644
+index 3054921b0877..f5db30d25b0b 100644
 --- a/kernel/trace/trace_boot.c
 +++ b/kernel/trace/trace_boot.c
-@@ -118,6 +118,50 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
- }
- #endif
+@@ -20,7 +20,7 @@ extern ssize_t tracing_resize_ring_buffer(struct trace_array *tr,
+ 					  unsigned long size, int cpu_id);
  
-+#ifdef CONFIG_HIST_TRIGGERS
-+extern int synth_event_run_command(const char *command);
-+
-+static int __init
-+trace_boot_add_synth_event(struct xbc_node *node, const char *event)
-+{
-+	struct xbc_node *anode;
-+	char buf[MAX_BUF_LEN], *q;
-+	const char *p;
-+	int len, delta, ret;
-+
-+	len = ARRAY_SIZE(buf);
-+	delta = snprintf(buf, len, "%s", event);
-+	if (delta >= len) {
-+		pr_err("Event name is too long: %s\n", event);
-+		return -E2BIG;
-+	}
-+	len -= delta; q = buf + delta;
-+
-+	xbc_node_for_each_array_value(node, "fields", anode, p) {
-+		delta = snprintf(q, len, " %s;", p);
-+		if (delta >= len) {
-+			pr_err("fields string is too long: %s\n", p);
-+			return -E2BIG;
-+		}
-+		len -= delta; q += delta;
-+	}
-+
-+	ret = synth_event_run_command(buf);
-+	if (ret < 0)
-+		pr_err("Failed to add synthetic event: %s\n", buf);
-+
-+
-+	return ret;
-+}
-+#else
-+static inline int __init
-+trace_boot_add_synth_event(struct xbc_node *node, const char *event)
-+{
-+	pr_err("Synthetic event is not supported.\n");
-+	return -ENOTSUPP;
-+}
-+#endif
-+
  static void __init
- trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
- 			  struct xbc_node *enode)
-@@ -133,6 +177,9 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
- 	if (!strcmp(group, "kprobes"))
- 		if (trace_boot_add_kprobe_event(enode, event) < 0)
- 			return;
-+	if (!strcmp(group, "synthetic"))
-+		if (trace_boot_add_synth_event(enode, event) < 0)
-+			return;
- 
- 	mutex_lock(&event_mutex);
- 	file = find_event_file(tr, group, event);
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 137fc50f2b35..3f26c4ed212a 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1384,6 +1384,11 @@ static int create_or_delete_synth_event(int argc, char **argv)
- 	return ret == -ECANCELED ? -EINVAL : ret;
+-trace_boot_set_ftrace_options(struct trace_array *tr, struct xbc_node *node)
++trace_boot_set_instance_options(struct trace_array *tr, struct xbc_node *node)
+ {
+ 	struct xbc_node *anode;
+ 	const char *p;
+@@ -242,6 +242,40 @@ trace_boot_enable_tracer(struct trace_array *tr, struct xbc_node *node)
+ 	}
  }
  
-+int synth_event_run_command(const char *command)
++static void __init
++trace_boot_init_one_instance(struct trace_array *tr, struct xbc_node *node)
 +{
-+	return trace_run_command(command, create_or_delete_synth_event);
++	trace_boot_set_instance_options(tr, node);
++	trace_boot_init_events(tr, node);
++	trace_boot_enable_events(tr, node);
++	trace_boot_enable_tracer(tr, node);
 +}
 +
- static int synth_event_create(int argc, const char **argv)
++static void __init
++trace_boot_init_instances(struct xbc_node *node)
++{
++	struct xbc_node *inode;
++	struct trace_array *tr;
++	const char *p;
++
++	node = xbc_node_find_child(node, "instance");
++	if (!node)
++		return;
++
++	xbc_node_for_each_child(node, inode) {
++		p = xbc_node_get_data(inode);
++		if (!p || *p == '\0')
++			continue;
++
++		tr = trace_array_get_by_name(p);
++		if (IS_ERR(tr)) {
++			pr_err("Failed to get trace instance %s\n", p);
++			continue;
++		}
++		trace_boot_init_one_instance(tr, inode);
++	}
++}
++
+ static int __init trace_boot_init(void)
  {
- 	const char *name = argv[0];
+ 	struct xbc_node *trace_node;
+@@ -255,10 +289,9 @@ static int __init trace_boot_init(void)
+ 	if (!tr)
+ 		return 0;
+ 
+-	trace_boot_set_ftrace_options(tr, trace_node);
+-	trace_boot_init_events(tr, trace_node);
+-	trace_boot_enable_events(tr, trace_node);
+-	trace_boot_enable_tracer(tr, trace_node);
++	/* Global trace array is also one instance */
++	trace_boot_init_one_instance(tr, trace_node);
++	trace_boot_init_instances(trace_node);
+ 
+ 	return 0;
+ }
 
