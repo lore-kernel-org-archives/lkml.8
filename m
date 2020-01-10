@@ -2,149 +2,90 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB93C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95B5C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901B3205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA4E205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:08:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgAJVHo (ORCPT
+        id S1727208AbgAJVIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 16:07:44 -0500
-Received: from mout-p-102.mailbox.org ([80.241.56.152]:23372 "EHLO
-        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbgAJVHm (ORCPT
+        Fri, 10 Jan 2020 16:08:02 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59790 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbgAJVIB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 16:07:42 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 47vbCv5hSczKmhn;
-        Fri, 10 Jan 2020 22:07:39 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id hIHoHiMQzTgm; Fri, 10 Jan 2020 22:07:33 +0100 (CET)
-Date:   Sat, 11 Jan 2020 08:07:19 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        stable <stable@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ian Kent <raven@themaw.net>
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Message-ID: <20200110210719.ktg3l2kwjrdutlh6@yavin>
-References: <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
- <20200101004324.GA11269@ZenIV.linux.org.uk>
- <20200101005446.GH4203@ZenIV.linux.org.uk>
- <20200101030815.GA17593@ZenIV.linux.org.uk>
- <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
- <20200101234009.GB8904@ZenIV.linux.org.uk>
- <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
- <20200103014901.GC8904@ZenIV.linux.org.uk>
- <20200108031314.GE8904@ZenIV.linux.org.uk>
- <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
+        Fri, 10 Jan 2020 16:08:01 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iq1VU-0004ld-Ub; Fri, 10 Jan 2020 22:07:49 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 6009B105BDB; Fri, 10 Jan 2020 22:07:48 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list\:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [RFC PATCH v2 05/10] lib: vdso: inline do_hres()
+In-Reply-To: <CAK8P3a36OgFuY72b_i6+0xBNGnaxS1SsRid+HrgQHPZtUJp3LQ@mail.gmail.com>
+References: <cover.1577111363.git.christophe.leroy@c-s.fr> <d0f8dfb26c025d3e3eee1b5f610161ca19b942df.1577111367.git.christophe.leroy@c-s.fr> <CAK8P3a36OgFuY72b_i6+0xBNGnaxS1SsRid+HrgQHPZtUJp3LQ@mail.gmail.com>
+Date:   Fri, 10 Jan 2020 22:07:48 +0100
+Message-ID: <87o8vbrpej.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ngr34thsixezvd7j"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Arnd Bergmann <arnd@arndb.de> writes:
+> On Mon, Dec 23, 2019 at 3:31 PM Christophe Leroy
+> <christophe.leroy@c-s.fr> wrote:
+>>
+>> do_hres() is called from several places, so GCC doesn't inline
+>> it at first.
+>>
+>> do_hres() takes a struct __kernel_timespec * parameter for
+>> passing the result. In the 32 bits case, this parameter corresponds
+>> to a local var in the caller. In order to provide a pointer
+>> to this structure, the caller has to put it in its stack and
+>> do_hres() has to write the result in the stack. This is suboptimal,
+>> especially on RISC processor like powerpc.
+>>
+>> By making GCC inline the function, the struct __kernel_timespec
+>> remains a local var using registers, avoiding the need to write and
+>> read stack.
+>>
+>> The improvement is significant on powerpc.
+>>
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>
+> Good idea, I can see how this ends up being an improvement
+> for most of the callers.
+>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
 
---ngr34thsixezvd7j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  https://lore.kernel.org/r/20191112012724.250792-3-dima@arista.com
 
-On 2020-01-07, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> On Tue, Jan 7, 2020 at 7:13 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > Another interesting question is whether we want O_PATH open
-> > to trigger automounts.
->=20
-> It does sound like they shouldn't, but as you say:
->=20
-> >     The thing is, we do *NOT* trigger them
-> > (or traverse mountpoints) at the starting point of lookups.
-> > I believe it's a mistake (and mine, at that), but I doubt that
-> > there's anything that can be done about it at that point.
-> > It's a user-visible behaviour [..]
->=20
-> Hmm. I wonder how set in stone that is. We may have two decades of
-> history of not doing it at start point of lookups, but we do *not*
-> have two decades of history of O_PATH.
->=20
-> So what I think we agree would be sane behavior would be for O_PATH
-> opens to not trigger automounts (unless there's a slash at the end,
-> whatever), but _do_ add the mount-point traversal to the beginning of
-> lookups.
->=20
-> But only do it for the actual O_PATH fd case, not the cwd/root/non-O_PATH=
- case.
->=20
-> That way we maintain original behavior: if somebody overmounts your
-> cwd, you still see the pre-mount directory on lookups, because your
-> cwd is "under" the mount.
->=20
-> But if you open a file with O_PATH, and somebody does a mount
-> _afterwards_, the openat() will see that later mount and/or do the
-> automount.
->=20
-> Don't you think that would be the more sane/obvious semantics of how
-> O_PATH should work?
+On the way to be applied.
 
-If I'm understanding this proposal correctly, this would be a problem
-for the libpathrs use-case -- if this is done then there's no way to
-avoid a TOCTOU with someone mounting and the userspace program checking
-whether something is a mountpoint (unless you have Linux >5.6 and
-RESOLVE_NO_XDEV). Today, you can (in theory) do it with MNT_EXPIRE:
+Thanks,
 
-  1. Open the candidate directory.
-  2. umount2(MNT_EXPIRE) the fd.
-    * -EINVAL means it wasn't a mountpoint when we got the fd, and the
-	  fd is a stable handle to the underlying directory.
-	* -EAGAIN or -EBUSY means that it was a mountpoint or became a
-	  mountpoint after the fd was opened (we don't care about that, but
-	  fail-safe is better here).
-  3. Use the fd from (1) for all operations.
-
-Don't get me wrong, I want to fix this issue *properly* by adding some
-new kernel features that allow us to avoid worrying about
-mounts-over-magiclinks -- but on old kernels (which libpathrs cares
-about) I would be worried about changes like this being backported
-resulting in it being not possible to implement the hardening I
-mentioned up-thread.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---ngr34thsixezvd7j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXhjnhAAKCRCdlLljIbnQ
-EhaiAP9e9kkZEWJCnBThFyXtSMRZyNVXHckugjlX6Ia4tELkfwD+KmuEPaDHPZsv
-ZqHH8TBxEFo6jF26WNsOXtxaBZwFsQ0=
-=uAob
------END PGP SIGNATURE-----
-
---ngr34thsixezvd7j--
+        tglx
