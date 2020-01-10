@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB082C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2209BC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3B82072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:08:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E84F62072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578694099;
-	bh=FaD2lQgwj++PgBdNqXW0xbro1IUzunfmBSm2JEWFPHk=;
+	s=default; t=1578694107;
+	bh=QZS60J2xT/w2jpWBVFmhMd2SZ58qSZaIYv9hCHexHCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hl8dCFI9rEW2+X3jqlUUnhi0lPKK21s1cEYVsgrGlHjD/JKz710iic/H3Y/LpVZcV
-	 JIrfusZIHR+1Jx8285Ac4alMGWflF1qutT7urYOpgvGQaEBcoBOqiJfdJAH6MinA4K
-	 Eoky8izNVdX4fCPHWVGgSynT/nuVetwHYgpEhUZc=
+	b=kKuBVhWoptFqOCZf5hXYyFRlT9VcRvA/ycnhiiR6A9z+91DmcY08wVXgHm+4gGK5U
+	 FHrTzVjlOISrO9KnJ0IQtTsT3Z4tcBDCe4HiuXNiTpJV8mLtllibHTuryYp1mWFS40
+	 e9PGuF9hh2PSskroFzXXowvJZBAtWVFdyTbmKuIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgAJWIS (ORCPT
+        id S1727732AbgAJWFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:08:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51526 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 17:05:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727787AbgAJWFk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:05:40 -0500
+        id S1727628AbgAJWFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:05:34 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC39E20838;
-        Fri, 10 Jan 2020 22:05:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F3E420721;
+        Fri, 10 Jan 2020 22:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693939;
-        bh=FaD2lQgwj++PgBdNqXW0xbro1IUzunfmBSm2JEWFPHk=;
+        s=default; t=1578693933;
+        bh=QZS60J2xT/w2jpWBVFmhMd2SZ58qSZaIYv9hCHexHCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BFvMtK7RSXnbA1hSsulyFrCou5k7vZ8BMwp906IKny9kltJC/VElfEvLzZkj6fclq
-         g4LkH8W8tQSe0PB3hYqPu10HKoFDjurNE4xyZdjaBmipXxvPpwtnSr5vsEJQqLLW0a
-         L45kE7EKw1vDwRS/sesLPNHw1MokOhkDxGJKi1BE=
+        b=EjwnWD551Ba1lRJRyl0WbVuzL58fAk5ID1kNY2FQVLS1sQr+WuVmTSinjmngmBd14
+         4e7Lzb0gXbWeeZHYrRHzAEyJNT5drfTtc3i5KCHllS7EOPGDc47JeCsZRNQoYCPY/8
+         ria6mOYbnv4nFWn4Q/Y6hABuL/4x55JVv5xMMgkM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Taehee Yoo <ap420073@gmail.com>,
-        syzbot+9328206518f08318a5fd@syzkaller.appspotmail.com,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 21/26] hsr: fix slab-out-of-bounds Read in hsr_debugfs_rename()
-Date:   Fri, 10 Jan 2020 17:05:14 -0500
-Message-Id: <20200110220519.28250-16-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 16/26] hsr: add hsr root debugfs directory
+Date:   Fri, 10 Jan 2020 17:05:09 -0500
+Message-Id: <20200110220519.28250-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200110220519.28250-1-sashal@kernel.org>
 References: <20200110220519.28250-1-sashal@kernel.org>
@@ -63,72 +61,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 04b69426d846cd04ca9acefff1ea39e1c64d2714 ]
+[ Upstream commit c6c4ccd7f96993e106dfea7ef18127f972f2db5e ]
 
-hsr slave interfaces don't have debugfs directory.
-So, hsr_debugfs_rename() shouldn't be called when hsr slave interface name
-is changed.
+In current hsr code, when hsr interface is created, it creates debugfs
+directory /sys/kernel/debug/<interface name>.
+If there is same directory or file name in there, it fails.
+In order to reduce possibility of failure of creation of debugfs,
+this patch adds root directory.
 
 Test commands:
     ip link add dummy0 type dummy
     ip link add dummy1 type dummy
     ip link add hsr0 type hsr slave1 dummy0 slave2 dummy1
-    ip link set dummy0 name ap
 
-Splat looks like:
-[21071.899367][T22666] ap: renamed from dummy0
-[21071.914005][T22666] ==================================================================
-[21071.919008][T22666] BUG: KASAN: slab-out-of-bounds in hsr_debugfs_rename+0xaa/0xb0 [hsr]
-[21071.923640][T22666] Read of size 8 at addr ffff88805febcd98 by task ip/22666
-[21071.926941][T22666]
-[21071.927750][T22666] CPU: 0 PID: 22666 Comm: ip Not tainted 5.5.0-rc2+ #240
-[21071.929919][T22666] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[21071.935094][T22666] Call Trace:
-[21071.935867][T22666]  dump_stack+0x96/0xdb
-[21071.936687][T22666]  ? hsr_debugfs_rename+0xaa/0xb0 [hsr]
-[21071.937774][T22666]  print_address_description.constprop.5+0x1be/0x360
-[21071.939019][T22666]  ? hsr_debugfs_rename+0xaa/0xb0 [hsr]
-[21071.940081][T22666]  ? hsr_debugfs_rename+0xaa/0xb0 [hsr]
-[21071.940949][T22666]  __kasan_report+0x12a/0x16f
-[21071.941758][T22666]  ? hsr_debugfs_rename+0xaa/0xb0 [hsr]
-[21071.942674][T22666]  kasan_report+0xe/0x20
-[21071.943325][T22666]  hsr_debugfs_rename+0xaa/0xb0 [hsr]
-[21071.944187][T22666]  hsr_netdev_notify+0x1fe/0x9b0 [hsr]
-[21071.945052][T22666]  ? __module_text_address+0x13/0x140
-[21071.945897][T22666]  notifier_call_chain+0x90/0x160
-[21071.946743][T22666]  dev_change_name+0x419/0x840
-[21071.947496][T22666]  ? __read_once_size_nocheck.constprop.6+0x10/0x10
-[21071.948600][T22666]  ? netdev_adjacent_rename_links+0x280/0x280
-[21071.949577][T22666]  ? __read_once_size_nocheck.constprop.6+0x10/0x10
-[21071.950672][T22666]  ? lock_downgrade+0x6e0/0x6e0
-[21071.951345][T22666]  ? do_setlink+0x811/0x2ef0
-[21071.951991][T22666]  do_setlink+0x811/0x2ef0
-[21071.952613][T22666]  ? is_bpf_text_address+0x81/0xe0
-[ ... ]
+Before this patch:
+    /sys/kernel/debug/hsr0/node_table
 
-Reported-by: syzbot+9328206518f08318a5fd@syzkaller.appspotmail.com
-Fixes: 4c2d5e33dcd3 ("hsr: rename debugfs file when interface name is changed")
+After this patch:
+    /sys/kernel/debug/hsr/hsr0/node_table
+
 Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/hsr/hsr_main.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/hsr/hsr_debugfs.c | 23 ++++++++++++++++++++---
+ net/hsr/hsr_main.c    |  1 +
+ net/hsr/hsr_main.h    |  6 ++++++
+ net/hsr/hsr_netlink.c |  1 +
+ 4 files changed, 28 insertions(+), 3 deletions(-)
 
+diff --git a/net/hsr/hsr_debugfs.c b/net/hsr/hsr_debugfs.c
+index 6618a9d8e58e..a7462a718e7b 100644
+--- a/net/hsr/hsr_debugfs.c
++++ b/net/hsr/hsr_debugfs.c
+@@ -20,6 +20,8 @@
+ #include "hsr_main.h"
+ #include "hsr_framereg.h"
+ 
++static struct dentry *hsr_debugfs_root_dir;
++
+ static void print_mac_address(struct seq_file *sfp, unsigned char *mac)
+ {
+ 	seq_printf(sfp, "%02x:%02x:%02x:%02x:%02x:%02x:",
+@@ -81,9 +83,9 @@ void hsr_debugfs_init(struct hsr_priv *priv, struct net_device *hsr_dev)
+ {
+ 	struct dentry *de = NULL;
+ 
+-	de = debugfs_create_dir(hsr_dev->name, NULL);
++	de = debugfs_create_dir(hsr_dev->name, hsr_debugfs_root_dir);
+ 	if (IS_ERR(de)) {
+-		pr_err("Cannot create hsr debugfs root\n");
++		pr_err("Cannot create hsr debugfs directory\n");
+ 		return;
+ 	}
+ 
+@@ -93,7 +95,7 @@ void hsr_debugfs_init(struct hsr_priv *priv, struct net_device *hsr_dev)
+ 				 priv->node_tbl_root, priv,
+ 				 &hsr_fops);
+ 	if (IS_ERR(de)) {
+-		pr_err("Cannot create hsr node_table directory\n");
++		pr_err("Cannot create hsr node_table file\n");
+ 		debugfs_remove(priv->node_tbl_root);
+ 		priv->node_tbl_root = NULL;
+ 		return;
+@@ -115,3 +117,18 @@ hsr_debugfs_term(struct hsr_priv *priv)
+ 	debugfs_remove(priv->node_tbl_root);
+ 	priv->node_tbl_root = NULL;
+ }
++
++void hsr_debugfs_create_root(void)
++{
++	hsr_debugfs_root_dir = debugfs_create_dir("hsr", NULL);
++	if (IS_ERR(hsr_debugfs_root_dir)) {
++		pr_err("Cannot create hsr debugfs root directory\n");
++		hsr_debugfs_root_dir = NULL;
++	}
++}
++
++void hsr_debugfs_remove_root(void)
++{
++	/* debugfs_remove() internally checks NULL and ERROR */
++	debugfs_remove(hsr_debugfs_root_dir);
++}
 diff --git a/net/hsr/hsr_main.c b/net/hsr/hsr_main.c
-index d2ee7125a7f1..9e389accbfc7 100644
+index 6deb8fa8d5c8..e28c975520ec 100644
 --- a/net/hsr/hsr_main.c
 +++ b/net/hsr/hsr_main.c
-@@ -46,7 +46,8 @@ static int hsr_netdev_notify(struct notifier_block *nb, unsigned long event,
- 		hsr_check_carrier_and_operstate(hsr);
- 		break;
- 	case NETDEV_CHANGENAME:
--		hsr_debugfs_rename(dev);
-+		if (is_hsr_master(dev))
-+			hsr_debugfs_rename(dev);
- 		break;
- 	case NETDEV_CHANGEADDR:
- 		if (port->type == HSR_PT_MASTER) {
+@@ -123,6 +123,7 @@ static void __exit hsr_exit(void)
+ {
+ 	unregister_netdevice_notifier(&hsr_nb);
+ 	hsr_netlink_exit();
++	hsr_debugfs_remove_root();
+ }
+ 
+ module_init(hsr_init);
+diff --git a/net/hsr/hsr_main.h b/net/hsr/hsr_main.h
+index 9ec38e33b8b1..6696923fd4bd 100644
+--- a/net/hsr/hsr_main.h
++++ b/net/hsr/hsr_main.h
+@@ -187,12 +187,18 @@ static inline u16 hsr_get_skb_sequence_nr(struct sk_buff *skb)
+ #if IS_ENABLED(CONFIG_DEBUG_FS)
+ void hsr_debugfs_init(struct hsr_priv *priv, struct net_device *hsr_dev);
+ void hsr_debugfs_term(struct hsr_priv *priv);
++void hsr_debugfs_create_root(void);
++void hsr_debugfs_remove_root(void);
+ #else
+ static inline void hsr_debugfs_init(struct hsr_priv *priv,
+ 				    struct net_device *hsr_dev)
+ {}
+ static inline void hsr_debugfs_term(struct hsr_priv *priv)
+ {}
++static inline void hsr_debugfs_create_root(void)
++{}
++static inline void hsr_debugfs_remove_root(void)
++{}
+ #endif
+ 
+ #endif /*  __HSR_PRIVATE_H */
+diff --git a/net/hsr/hsr_netlink.c b/net/hsr/hsr_netlink.c
+index 8f8337f893ba..8dc0547f01d0 100644
+--- a/net/hsr/hsr_netlink.c
++++ b/net/hsr/hsr_netlink.c
+@@ -476,6 +476,7 @@ int __init hsr_netlink_init(void)
+ 	if (rc)
+ 		goto fail_genl_register_family;
+ 
++	hsr_debugfs_create_root();
+ 	return 0;
+ 
+ fail_genl_register_family:
 -- 
 2.20.1
 
