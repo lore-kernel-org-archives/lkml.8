@@ -2,84 +2,102 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA70C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14415C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 789422072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6CDE2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgAJCCo (ORCPT
+        id S1730754AbgAJCFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 21:02:44 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:43352 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730359AbgAJCCo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 21:02:44 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TnHSHFe_1578621761;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnHSHFe_1578621761)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 10 Jan 2020 10:02:42 +0800
-Subject: Re: [PATCH v7 00/10] per lruvec lru_lock for memcg
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-To:     hannes@cmpxchg.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com
-References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
- <20191231150514.61c2b8c8354320f09b09f377@linux-foundation.org>
- <944f0f6a-466a-7ce3-524c-f6db86fd0891@linux.alibaba.com>
-Message-ID: <d2efad94-750b-3298-8859-84bccc6ecf06@linux.alibaba.com>
-Date:   Fri, 10 Jan 2020 10:01:27 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
-MIME-Version: 1.0
-In-Reply-To: <944f0f6a-466a-7ce3-524c-f6db86fd0891@linux.alibaba.com>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+        Thu, 9 Jan 2020 21:05:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730359AbgAJCFL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 21:05:11 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1817C20678;
+        Fri, 10 Jan 2020 02:05:11 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.92.3)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1ipjfh-000Yuq-Ua; Thu, 09 Jan 2020 21:05:09 -0500
+Message-Id: <20200110020308.977313200@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Thu, 09 Jan 2020 21:03:08 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>
+Subject: [PATCH 0/3] tracing: perf: Rename ring_buffer to perf_buffer and trace_buffer
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+As we discussed, to remove the generic structure "ring_buffer" from the kernel,
+and switch it to "perf_buffer" and "trace_buffer", this patch series does
+just that.
 
-在 2020/1/2 下午6:21, Alex Shi 写道:
-> 
-> 
-> 在 2020/1/1 上午7:05, Andrew Morton 写道:
->> On Wed, 25 Dec 2019 17:04:16 +0800 Alex Shi <alex.shi@linux.alibaba.com> wrote:
->>
->>> This patchset move lru_lock into lruvec, give a lru_lock for each of
->>> lruvec, thus bring a lru_lock for each of memcg per node.
->>
->> I see that there has been plenty of feedback on previous versions, but
->> no acked/reviewed tags as yet.
->>
->> I think I'll take a pass for now, see what the audience feedback looks
->> like ;)
->>
-> 
+Anyone have any issues of me carrying this in my tree? I'll rebase it to
+v5.5-rc6 when it comes out, as it depends on some commits in v5.5-rc5.
 
-Hi Johannes,
+-- Steve
 
-Any comments of this version? :)
+Steven Rostedt (VMware) (3):
+      perf: Make struct ring_buffer less ambiguous
+      tracing: Rename trace_buffer to array_buffer
+      tracing: Make struct ring_buffer less ambiguous
 
-Thanks
-Alex
-
-> 
-> Thanks a lot! Andrew.
-> 
-> Please drop the 10th patch since it's for debug only and cost performance drop.
-> 
-> Best regards & Happy new year! :)
-> Alex
-> 
+----
+ drivers/oprofile/cpu_buffer.c        |   2 +-
+ include/linux/perf_event.h           |   6 +-
+ include/linux/ring_buffer.h          | 110 ++++++-------
+ include/linux/trace_events.h         |   8 +-
+ include/trace/trace_events.h         |   2 +-
+ kernel/events/core.c                 |  42 ++---
+ kernel/events/internal.h             |  34 ++--
+ kernel/events/ring_buffer.c          |  54 +++----
+ kernel/trace/blktrace.c              |   8 +-
+ kernel/trace/ftrace.c                |   8 +-
+ kernel/trace/ring_buffer.c           | 124 +++++++--------
+ kernel/trace/ring_buffer_benchmark.c |   2 +-
+ kernel/trace/trace.c                 | 292 +++++++++++++++++------------------
+ kernel/trace/trace.h                 |  38 ++---
+ kernel/trace/trace_branch.c          |   6 +-
+ kernel/trace/trace_events.c          |  20 +--
+ kernel/trace/trace_events_hist.c     |   4 +-
+ kernel/trace/trace_functions.c       |   8 +-
+ kernel/trace/trace_functions_graph.c |  14 +-
+ kernel/trace/trace_hwlat.c           |   2 +-
+ kernel/trace/trace_irqsoff.c         |   8 +-
+ kernel/trace/trace_kdb.c             |   8 +-
+ kernel/trace/trace_kprobe.c          |   4 +-
+ kernel/trace/trace_mmiotrace.c       |  12 +-
+ kernel/trace/trace_output.c          |   2 +-
+ kernel/trace/trace_sched_wakeup.c    |  20 +--
+ kernel/trace/trace_selftest.c        |  26 ++--
+ kernel/trace/trace_syscalls.c        |   8 +-
+ kernel/trace/trace_uprobe.c          |   2 +-
+ 29 files changed, 437 insertions(+), 437 deletions(-)
