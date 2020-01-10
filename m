@@ -2,66 +2,98 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571A1C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BCEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 333C72051A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404982051A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:13:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728492AbgAJTNV (ORCPT
+        id S1728617AbgAJTNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:13:21 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:39732 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727658AbgAJTNU (ORCPT
+        Fri, 10 Jan 2020 14:13:49 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59519 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727831AbgAJTNt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:13:20 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 4B51B15741648;
-        Fri, 10 Jan 2020 11:13:19 -0800 (PST)
-Date:   Fri, 10 Jan 2020 11:13:16 -0800 (PST)
-Message-Id: <20200110.111316.1791698410658592877.davem@davemloft.net>
-To:     niu_xilei@163.com
-Cc:     tglx@linutronix.de, fw@strlen.de, peterz@infradead.org,
-        pabeni@redhat.com, anshuman.khandual@arm.com,
-        linyunsheng@huawei.com, bigeasy@linutronix.de,
-        jonathan.lemon@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pktgen: create packet use IPv6 source address between
- src6_min and src6_max.
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200110102842.13585-1-niu_xilei@163.com>
-References: <20200110102842.13585-1-niu_xilei@163.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 10 Jan 2020 11:13:19 -0800 (PST)
+        Fri, 10 Jan 2020 14:13:49 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1ipzif-0003It-LL; Fri, 10 Jan 2020 20:13:17 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 067A6105BDB; Fri, 10 Jan 2020 20:13:16 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Anchal Agarwal <anchalag@amazon.com>
+Cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
+        boris.ostrovsky@oracle.com, jgross@suse.com,
+        linux-pm@vger.kernel.org, linux-mm@kvack.org, kamatam@amazon.com,
+        sstabellini@kernel.org, konrad.wilk@oracle.co,
+        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
+        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
+        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
+        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dwmw@amazon.co.uk, fllinden@amazon.com, anchalag@amazon.com
+Subject: Re: [RFC PATCH V2 09/11] xen: Clear IRQD_IRQ_STARTED flag during shutdown PIRQs
+In-Reply-To: <20200109234050.GA26381@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+Date:   Fri, 10 Jan 2020 20:13:16 +0100
+Message-ID: <87zhevrupf.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niu Xilei <niu_xilei@163.com>
-Date: Fri, 10 Jan 2020 18:28:42 +0800
+Anchal,
 
-> --- a/net/core/pktgen.c
-> +++ b/net/core/pktgen.c
-> @@ -254,6 +254,111 @@ struct flow_state {
->  /* flow flag bits */
->  #define F_INIT   (1<<0)		/* flow has been initialized */
->  
-> +#ifdef CONFIG_ARCH_SUPPORTS_INT128
-> +
-> +__extension__ typedef  unsigned __int128 u128;
-> +
+Anchal Agarwal <anchalag@amazon.com> writes:
+> On Thu, Jan 09, 2020 at 01:07:27PM +0100, Thomas Gleixner wrote:
+>> Anchal Agarwal <anchalag@amazon.com> writes:
+>> So either you can handle it purely on the XEN side without touching any
+>> core state or you need to come up with some way of letting the core code
+>> know that it should invoke shutdown instead of disable.
+>> 
+>> Something like the completely untested patch below.
+>
+> Understandable. Really appreciate the patch suggestion below and i will test it
+> for sure and see if things can be fixed properly in irq core if thats the only
+> option. In the meanwhile, I tried to fix it on xen side unless it gives you the 
+> same feeling as above? MSI-x are just fine, just ioapic ones don't get any event
+> channel asssigned hence enable_dynirq does nothing. Those needs to be restarted.
+>
+> diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+> index 1bb0b522d004..2ed152f35816 100644
+> --- a/drivers/xen/events/events_base.c
+>     +++ b/drivers/xen/events/events_base.c
+> @@ -575,6 +575,11 @@ static void shutdown_pirq(struct irq_data *data)
+>
+> static void enable_pirq(struct irq_data *data)
+> {
+>     +/*ioapic interrupts don't get event channel assigned
+>        + * after being explicitly shutdown during guest
+>        + * hibernation. They need to be restarted*/
+>         +       if(!evtchn_from_irq(data->irq))
+>         +               startup_pirq(data);
+>     enable_dynirq(data);
+>  }
 
-This does not belong in pktgen.c but rather in a generic kernel header, and such
-facilities should be posted for general review on lkml.
+Interesting patch format :)
+
+Doing the shutdown from syscore_ops and the startup conditionally in a
+totaly unrelated function is not really intuitive.
+
+So either you do it symmetrically in XEN via syscore_ops callbacks or
+you let the irq core code help you out with the patch I provided
+
+Thanks,
+
+        tglx
