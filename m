@@ -2,104 +2,148 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 843CAC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D27DC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59EC62077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 002562080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:10:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1ZIaFRqc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728305AbgAJPIo (ORCPT
+        id S1728258AbgAJPK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:08:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:46356 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728152AbgAJPIo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:08:44 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15CEA30E;
-        Fri, 10 Jan 2020 07:08:43 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF6973F6C4;
-        Fri, 10 Jan 2020 07:08:41 -0800 (PST)
-Date:   Fri, 10 Jan 2020 15:08:36 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/14] net: axienet: Autodetect 64-bit DMA capability
-Message-ID: <20200110150836.1f92a0a8@donnerap.cambridge.arm.com>
-In-Reply-To: <20200110142250.GH19739@lunn.ch>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
-        <20200110115415.75683-13-andre.przywara@arm.com>
-        <20200110140852.GF19739@lunn.ch>
-        <20200110141303.2e5863ab@donnerap.cambridge.arm.com>
-        <20200110142250.GH19739@lunn.ch>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Fri, 10 Jan 2020 10:10:26 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:41414 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727855AbgAJPKZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 10:10:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EOly64n1bW9A8cciZ1GsSjqaul4aqxrKRoF/7rR8Npg=; b=1ZIaFRqcaOBqY3PTIc2myc4/T
+        2bqFse/mCvbU0ZywdFOYX8JeeV82iaW4dhncF9xgCXu7AF6hHsxC3iNEef+Uh3EtTE5sE9O9Skv9E
+        B4TAS69ZekjiuMOLRFlPh6NgjNLd3jMWouCAVNlTmBEZ+JAOa/8t8O4bPcMHUpHDcdmuFbrvOruBr
+        /ZGsCe8QyHqGsWNSHsR2dX8HE7SuPYXOJVwmpo3E2yk4aWtrZPP/PhLlJhgGbGcGt0A+PxQBk/tdM
+        c/Tdyh2c5e8DMidSd+HO9S2FjgqeFDBNfamwvg6UOsRt2O9AvRqnvpfdwaCFTSUBH3tZADHb8bVD9
+        ChUlgoC8g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ipvvF-0004gW-Jv; Fri, 10 Jan 2020 15:10:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3460C30018B;
+        Fri, 10 Jan 2020 16:08:24 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 202002B612601; Fri, 10 Jan 2020 16:09:58 +0100 (CET)
+Date:   Fri, 10 Jan 2020 16:09:58 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kim Phillips <kim.phillips@amd.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Stephane Eranian <eranian@google.com>,
+        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: Re: [PATCH 2/2] perf/x86/amd: Add support for Large Increment per
+ Cycle Events
+Message-ID: <20200110150958.GP2844@hirez.programming.kicks-ass.net>
+References: <20191114183720.19887-1-kim.phillips@amd.com>
+ <20191114183720.19887-3-kim.phillips@amd.com>
+ <20191220120945.GG2844@hirez.programming.kicks-ass.net>
+ <ca10060f-f78f-695f-4929-fe4bc30c6712@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ca10060f-f78f-695f-4929-fe4bc30c6712@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 15:22:50 +0100
-Andrew Lunn <andrew@lunn.ch> wrote:
+On Wed, Jan 08, 2020 at 04:26:47PM -0600, Kim Phillips wrote:
+> On 12/20/19 6:09 AM, Peter Zijlstra wrote:
+> > On Thu, Nov 14, 2019 at 12:37:20PM -0600, Kim Phillips wrote:
 
-Hi,
-
-> On Fri, Jan 10, 2020 at 02:13:03PM +0000, Andre Przywara wrote:
-> > On Fri, 10 Jan 2020 15:08:52 +0100
-> > Andrew Lunn <andrew@lunn.ch> wrote:
+> >> @@ -926,10 +944,14 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+> >>  			break;
+> >>  
+> >>  		/* not already used */
+> >> -		if (test_bit(hwc->idx, used_mask))
+> >> +		if (test_bit(hwc->idx, used_mask) || (is_large_inc(hwc) &&
+> >> +		    test_bit(hwc->idx + 1, used_mask)))
+> >>  			break;
+> >>  
+> >>  		__set_bit(hwc->idx, used_mask);
+> >> +		if (is_large_inc(hwc))
+> >> +			__set_bit(hwc->idx + 1, used_mask);
+> >> +
+> >>  		if (assign)
+> >>  			assign[i] = hwc->idx;
+> >>  	}
 > > 
-> > Hi Andrew,
-> > 
-> > thanks for having a look!
-> >   
-> > > > To autodetect this configuration, at probe time we write all 1's to such
-> > > > an MSB register, and see if any bits stick.    
-> > > 
-> > > So there is no register you can read containing the IP version?  
-> > 
-> > There is, and I actually read this before doing this check. But the 64-bit DMA capability is optional even in this revision. It depends on what you give it as the address width. If you say 32, the IP config tool disables the 64-bit capability completely, so it stays compatible with older revisions.
-> > Anything beyond 32 will enable the MSB register and will also require you to write to them.  
+> > This is just really sad.. fixed that too.
 > 
-> So you are saying there is no way to enumerate the synthesised
-> configuration of the IP. Great :-(
+> [*]
 
-Apparently not.
+> If I undo re-adding my perf_assign_events code, and re-add my "not
+> already used" code that you removed - see [*] above - the problem DOES
+> go away, and all the counts are all accurate.
+> 
+> One problem I see with your change in the "not already used" fastpath
+> area, is that the new mask variable gets updated with position 'i'
+> regardless of any previous Large Increment event assignments.
 
-> Do Xilinx at least document you can discover the DMA size by writing
-> into these upper bits? Does Xilinx own 'vendor crap' driver do this?
+Urgh, I completely messed that up. Find the below delta (I'll push out a
+new version to queue.git as well).
 
-So far I couldn't be bothered to put my asbestos trousers on and go into BSP land ;-)
-Now quickly browsing the linux-xlnx github repo suggests they make this MSB register access dependent on CONFIG_PHYS_ADDR_T_64BIT. Which would mean:
-- A 32-bit kernel on a device configured for >32 bit DMA would not work.
-- They always write to the MSB registers on 64-bit and (L)PAE kernels.
+> I.e., a
+> successfully scheduled large increment event assignment may have
+> already consumed that 'i' slot for its Merge event in a previous
+> iteration of the loop.  So if the fastpath scheduler fails to assign
+> that following event, the slow path is wrongly entered due to a wrong
+> 'i' comparison with 'n', for example.
 
-The DMA mask is set to the value of the xlnx,addrwidth, in a similar way I did it in the next patch. Minus the safety check for the 64-bit DMA capability.
+That should only be part of the story though; the fast-path is purely
+optional. False-negatives on the fast path should not affect
+functionality, only performance. False-positives on the fast path are a
+no-no of course.
 
-I got this idea of probing when I saw that those registers are marked as "Reserved" in earlier revisions of the documentation. I couldn't find an exact definition of "Reserved" in that manual, though.
-Then I confirmed that behaviour by testing this on an image configured for only a 32 bit wide address bus, where those registers are apparently hardwired to zero.
-
-So if you were hoping for an official blessing, I have to disappoint you ;-)
-
-We could rely completely on the addrwidth property, at the price of it not working when the IP is configured for >32 bits, but the addrwidth property is missing or erroneously set to 32. But I think their:
-struct xxx { ....
-	phys_addr_t next;	/* Physical address of next buffer descriptor */
-#ifndef CONFIG_PHYS_ADDR_T_64BIT
-	u32 reserved1;
-#endif
-
-construct is broken, and we should not copy this. Also they do writeq to this register, not sure that's the right thing to do.
-
-Cheers,
-Andre.
+---
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 222f172cbaf5..3bb738f5a472 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -937,7 +937,7 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ 	 * fastpath, try to reuse previous register
+ 	 */
+ 	for (i = 0; i < n; i++) {
+-		u64 mask = BIT_ULL(i);
++		u64 mask;
+ 
+ 		hwc = &cpuc->event_list[i]->hw;
+ 		c = cpuc->event_constraint[i];
+@@ -950,6 +950,7 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
+ 		if (!test_bit(hwc->idx, c->idxmsk))
+ 			break;
+ 
++		mask = BIT_ULL(hwc->idx);
+ 		if (is_counter_pair(hwc))
+ 			mask |= mask << 1;
+ 
