@@ -2,185 +2,826 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A31C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29992C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A09205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:21:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ea+osL09"
+	by mail.kernel.org (Postfix) with ESMTP id DCE8B206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgAJQVZ (ORCPT
+        id S1728855AbgAJQUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:21:25 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41532 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728685AbgAJQVX (ORCPT
+        Fri, 10 Jan 2020 11:20:42 -0500
+Received: from relay11.mail.gandi.net ([217.70.178.231]:49915 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729173AbgAJQUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:21:23 -0500
-Received: by mail-ed1-f65.google.com with SMTP id c26so2055635eds.8;
-        Fri, 10 Jan 2020 08:21:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KnI6ES0j9XY6jcwzTlsj131h+JWOvX8VRTZ1RCgJifQ=;
-        b=Ea+osL09dRoXu66ScO2+RVTAk8lusf/xYkFZena0Qk+fmzyioNXzK16eQ2TYeolOvy
-         wBs11xid6m+6Ec2LelV7nTveV20Oyv5prPjjiPlMpjyICYZGkMXcdWWCxeG+wVhfMmQ/
-         rtPql6Hz8/afPt5M5TYsYRvOqBlOrlXzF499xHDwoV5osvGKkPLXTCsCJuarTAhYe4os
-         XrwvYOLJx3XVt9PPTrJWtKCauiow9AZaUj/rMS1FLJNmzfjhoiD3O0G9afus28TsGIIv
-         abRYjqP4yI2GCSJwzmZsC3ohVjpyDoccKEJdZPR1+IzDk1sPQVR2tltGYJEOAXNjMwQu
-         5kgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KnI6ES0j9XY6jcwzTlsj131h+JWOvX8VRTZ1RCgJifQ=;
-        b=V3/XyZGRhTor7C5A21wPTQAdXakuiWvcrtyLsOd+q5vYEwqL9NeWn/McNoOGa4LoWU
-         CTWgQt5oxPumfdFGjZkOgpuKiqmCeiuljBmOElCicjHTOiy+es4TYPrLCdV6Lx9FCpb+
-         Uq1Rp0qv6vMCUrN2Ci10qJNQKDYy3EQLqK4HOMmgaHayVoxUwE9fEWDkY4l6p7IpygPQ
-         Nf3x1Qw5TJUSzj1RQ5XhUb1pIiUL2jp2JD89qNGzy698gaz6D+Y55ihmKNnneQSCJgnA
-         21A5RAj0hKG4PDmqPVC5m4gV+SXRJzYtq14MAoQb0U86iwt9GIVClc7F0jtl4K61aNnO
-         bBMQ==
-X-Gm-Message-State: APjAAAWeyNgJQxXwCbHnqiCqFoDgUgoYDuCHHA6tnG/07Dr/7Uk+IUCu
-        fcQiIjSi3VEibrKddLPp7r3SAiuLBxBPzAHGTFc=
-X-Google-Smtp-Source: APXvYqyCUL4vX+2L4tiQgtDWM1tcJ7+z5F0dGB38hN8LzgDtNvujtIgmaCbdsPuaYD7RdcN8r9x7fqjCPzRVUkTg+z0=
-X-Received: by 2002:a50:ef17:: with SMTP id m23mr4404621eds.106.1578673281844;
- Fri, 10 Jan 2020 08:21:21 -0800 (PST)
+        Fri, 10 Jan 2020 11:20:37 -0500
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 251C6100007;
+        Fri, 10 Jan 2020 16:20:33 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
+        allan.nielsen@microchip.com, camelia.groza@nxp.com,
+        Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
+        jakub.kicinski@netronome.com
+Subject: [PATCH net-next v5 09/15] net: phy: mscc: macsec support
+Date:   Fri, 10 Jan 2020 17:20:04 +0100
+Message-Id: <20200110162010.338611-10-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200110162010.338611-1-antoine.tenart@bootlin.com>
+References: <20200110162010.338611-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-References: <20200109150640.532-1-horatiu.vultur@microchip.com>
- <6f1936e9-97e5-9502-f062-f2925c9652c9@cumulusnetworks.com> <20200110160456.enzomhfsce7bptu3@soft-dev3.microsemi.net>
-In-Reply-To: <20200110160456.enzomhfsce7bptu3@soft-dev3.microsemi.net>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Fri, 10 Jan 2020 18:21:10 +0200
-Message-ID: <CA+h21hrq7U4EdqSgpYQRjK8rkcJdvD5jXCSOH_peA-R4xCocTg@mail.gmail.com>
-Subject: Re: [RFC net-next Patch 0/3] net: bridge: mrp: Add support for Media
- Redundancy Protocol(MRP)
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        bridge@lists.linux-foundation.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        anirudh.venkataramanan@intel.com, David Ahern <dsahern@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Horatiu,
+This patch adds MACsec offloading support to some Microsemi PHYs, to
+configure flows and transformations so that matched packets can be
+processed by the MACsec engine, either at egress, or at ingress.
 
-On Fri, 10 Jan 2020 at 18:04, Horatiu Vultur
-<horatiu.vultur@microchip.com> wrote:
->
-> Hi Nik,
->
-> > I agree with Stephen here, IMO you have to take note of how STP has progressed
-> > and that bringing it in the kernel was a mistake, these days mstpd has an active
-> > community and much better support which is being extended. This looks best implemented
-> > in user-space in my opinion with minimal kernel changes to support it. You could simply
-> > open a packet socket with a filter and work through that, you don't need new netlink
-> > sockets. I'm not familiar with the protocol so can't really be the judge of that, if
-> > you present a good argument for needing a new netlink socket for these packets - then
-> > sure, ok.
->
-> We are aware of the STP story, and in case of STP I do agree, it is much
-> better to have this in user-space. But while MRP has much in common with
-> STP, it also differs in some important areas.
->
-> Most importantly, MRP requires sending and receiving thousands of frames
-> per second. To achieve the 10ms recovery time, the tx period per
-> interface is 500us, on two interfaces, adding up to 4000 frames per
-> second to RX and 4000 to TX(if the ring is closed). And this is per
-> ring...
->
-> The CPU systems in the kind of switches we are working on can not handle
-> this load, and it was not meant to handle this. Instead the switch core
-> can do the periodic injection of frames and automatic terminate them.
->
-> In patch posted, we have not added this HW offload (we have this in our
-> internal repos, where we also have implemented the remaining part of the
-> protocol). The reason for this is that we wanted to do a proper SW
-> implementation and then HW offload it.
->
-> Looking back, I can see that what we have presented here could be done
-> equally good in user-space (roughly), but that is because the HW offload
-> is not part of this patch.
->
-> The problem in putting it in user-space is that we do not have a nice a
-> clean API where it is just putting a port in forwarding/blocking state
-> (like we have with STP). To do an abstraction that actually allow us to
-> utilize the HW to offload a protocol like MRP will very easy become too
-> specific for our SoC and rejected with that argument.
->
-> >
-> > If you do decide to continue with the kernel version (which I would again discourage)
-> > a few general points (from a quick scan):
-> >  - the single 1.6+k line patch is just hard to review, please break it into more digestable
-> >    and logical pieces
-> We will work in this.
->
-> >  - the locking is wrong, also there're a few use-after-free bugs
-> Oops, that is not good - happy that you caught it. A hint on where,
-> would be great.
->
-> >  - please re-work the bridge integration code, it can be simplified and tests can be eliminated
-> We will have a second look at that.
->
-> >  - your netlink helpers usage is generally wrong and needs more work
-> Ok - some hints on what we did wrong would be great.
->
-> >  - use the already existing port states instead of adding new ones and you can avoid some tests in fast-path
-> I assume you want us to re-use the STP concept of forwarding/blocking
-> and relay on the checks it already has.
->
-> >  - perhaps look into using br_afspec() for configuration/retrieval initially ? I don't think you need the new rtm messages yet.
-> Is that a good example on how to do the netlink interface, and you want
-> us to use that as a reference?
->
-> >  - I'm sure I can go on, but I really think all of this should be put in user-space -
-> >    in-kernel STP is a great example of how _not_ to do it. :) As a bonus you'll avoid 90% of the
-> >    problems above just by making your own abstractions and using them for it.
-> Please continue.
->
-> We do not see any good paths for getting user-space based solutions
-> which actually does use the HW offloading accepted upstream. If this
-> path exists then we would like to understand it and evaluate it
-> properly.
->
-> --
-> /Horatiu
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
+---
+ drivers/net/phy/Kconfig       |   2 +
+ drivers/net/phy/mscc.c        | 691 ++++++++++++++++++++++++++++++++++
+ drivers/net/phy/mscc_macsec.h |   4 +
+ 3 files changed, 697 insertions(+)
 
-I think it would help your case if you explained a bit more about the
-hw offload primitives you have implemented internally. I believe you
-are talking about the frame generation engine in the Ocelot switch
-which has 1024 frame slots that are periodically sent based on one of
-8 timers. For receive, I believe that the functionality is to offload
-the consumption of these periodic frames, and just raise an interrupt
-if frames were expected but not received.
-For your use case of MRP, it makes perfect sense to have this. I am
-just not sure (and not knowledgeable enough in Linux) what this engine
-is offloading from the operating system's perspective.
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 2e016271e126..4fbf35b9b396 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -437,6 +437,8 @@ config MICROCHIP_T1_PHY
+ 
+ config MICROSEMI_PHY
+ 	tristate "Microsemi PHYs"
++	select CRYPTO_AES
++	select CRYPTO_ECB
+ 	---help---
+ 	  Currently supports VSC8514, VSC8530, VSC8531, VSC8540 and VSC8541 PHYs
+ 
+diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+index 8579a59a1336..ccf17818570f 100644
+--- a/drivers/net/phy/mscc.c
++++ b/drivers/net/phy/mscc.c
+@@ -18,6 +18,13 @@
+ #include <linux/netdevice.h>
+ #include <dt-bindings/net/mscc-phy-vsc8531.h>
+ 
++#include <linux/scatterlist.h>
++#include <crypto/skcipher.h>
++
++#if IS_ENABLED(CONFIG_MACSEC)
++#include <net/macsec.h>
++#endif
++
+ #include "mscc_macsec.h"
+ #include "mscc_mac.h"
+ #include "mscc_fc_buffer.h"
+@@ -436,6 +443,44 @@ static const struct vsc85xx_hw_stat vsc8584_hw_stats[] = {
+ 	},
+ };
+ 
++#if IS_ENABLED(CONFIG_MACSEC)
++struct macsec_flow {
++	struct list_head list;
++	enum mscc_macsec_destination_ports port;
++	enum macsec_bank bank;
++	u32 index;
++	int assoc_num;
++	bool has_transformation;
++
++	/* Highest takes precedence [0..15] */
++	u8 priority;
++
++	u8 key[MACSEC_KEYID_LEN];
++
++	union {
++		struct macsec_rx_sa *rx_sa;
++		struct macsec_tx_sa *tx_sa;
++	};
++
++	/* Matching */
++	struct {
++		u8 sci:1;
++		u8 tagged:1;
++		u8 untagged:1;
++		u8 etype:1;
++	} match;
++
++	u16 etype;
++
++	/* Action */
++	struct {
++		u8 bypass:1;
++		u8 drop:1;
++	} action;
++
++};
++#endif
++
+ struct vsc8531_private {
+ 	int rate_magic;
+ 	u16 supp_led_modes;
+@@ -449,6 +494,19 @@ struct vsc8531_private {
+ 	 * package.
+ 	 */
+ 	unsigned int base_addr;
++
++#if IS_ENABLED(CONFIG_MACSEC)
++	/* MACsec fields:
++	 * - One SecY per device (enforced at the s/w implementation level)
++	 * - macsec_flows: list of h/w flows
++	 * - ingr_flows: bitmap of ingress flows
++	 * - egr_flows: bitmap of egress flows
++	 */
++	struct macsec_secy *secy;
++	struct list_head macsec_flows;
++	unsigned long ingr_flows;
++	unsigned long egr_flows;
++#endif
+ };
+ 
+ #ifdef CONFIG_OF_MDIO
+@@ -1951,6 +2009,634 @@ static int vsc8584_macsec_init(struct phy_device *phydev)
+ 
+ 	return 0;
+ }
++
++static void vsc8584_macsec_flow(struct phy_device *phydev,
++				struct macsec_flow *flow)
++{
++	struct vsc8531_private *priv = phydev->priv;
++	enum macsec_bank bank = flow->bank;
++	u32 val, match = 0, mask = 0, action = 0, idx = flow->index;
++
++	if (flow->match.tagged)
++		match |= MSCC_MS_SAM_MISC_MATCH_TAGGED;
++	if (flow->match.untagged)
++		match |= MSCC_MS_SAM_MISC_MATCH_UNTAGGED;
++
++	if (bank == MACSEC_INGR && flow->assoc_num >= 0) {
++		match |= MSCC_MS_SAM_MISC_MATCH_AN(flow->assoc_num);
++		mask |= MSCC_MS_SAM_MASK_AN_MASK(0x3);
++	}
++
++	if (bank == MACSEC_INGR && flow->match.sci && flow->rx_sa->sc->sci) {
++		match |= MSCC_MS_SAM_MISC_MATCH_TCI(BIT(3));
++		mask |= MSCC_MS_SAM_MASK_TCI_MASK(BIT(3)) |
++			MSCC_MS_SAM_MASK_SCI_MASK;
++
++		vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_SAM_MATCH_SCI_LO(idx),
++					 lower_32_bits(flow->rx_sa->sc->sci));
++		vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_SAM_MATCH_SCI_HI(idx),
++					 upper_32_bits(flow->rx_sa->sc->sci));
++	}
++
++	if (flow->match.etype) {
++		mask |= MSCC_MS_SAM_MASK_MAC_ETYPE_MASK;
++
++		vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_SAM_MAC_SA_MATCH_HI(idx),
++					 MSCC_MS_SAM_MAC_SA_MATCH_HI_ETYPE(htons(flow->etype)));
++	}
++
++	match |= MSCC_MS_SAM_MISC_MATCH_PRIORITY(flow->priority);
++
++	vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_SAM_MISC_MATCH(idx), match);
++	vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_SAM_MASK(idx), mask);
++
++	/* Action for matching packets */
++	if (flow->action.drop)
++		action = MSCC_MS_FLOW_DROP;
++	else if (flow->action.bypass || flow->port == MSCC_MS_PORT_UNCONTROLLED)
++		action = MSCC_MS_FLOW_BYPASS;
++	else
++		action = (bank == MACSEC_INGR) ?
++			 MSCC_MS_FLOW_INGRESS : MSCC_MS_FLOW_EGRESS;
++
++	val = MSCC_MS_SAM_FLOW_CTRL_FLOW_TYPE(action) |
++	      MSCC_MS_SAM_FLOW_CTRL_DROP_ACTION(MSCC_MS_ACTION_DROP) |
++	      MSCC_MS_SAM_FLOW_CTRL_DEST_PORT(flow->port);
++
++	if (action == MSCC_MS_FLOW_BYPASS)
++		goto write_ctrl;
++
++	if (bank == MACSEC_INGR) {
++		if (priv->secy->replay_protect)
++			val |= MSCC_MS_SAM_FLOW_CTRL_REPLAY_PROTECT;
++		if (priv->secy->validate_frames == MACSEC_VALIDATE_STRICT)
++			val |= MSCC_MS_SAM_FLOW_CTRL_VALIDATE_FRAMES(MSCC_MS_VALIDATE_STRICT);
++		else if (priv->secy->validate_frames == MACSEC_VALIDATE_CHECK)
++			val |= MSCC_MS_SAM_FLOW_CTRL_VALIDATE_FRAMES(MSCC_MS_VALIDATE_CHECK);
++	} else if (bank == MACSEC_EGR) {
++		if (priv->secy->protect_frames)
++			val |= MSCC_MS_SAM_FLOW_CTRL_PROTECT_FRAME;
++		if (priv->secy->tx_sc.encrypt)
++			val |= MSCC_MS_SAM_FLOW_CTRL_CONF_PROTECT;
++		if (priv->secy->tx_sc.send_sci)
++			val |= MSCC_MS_SAM_FLOW_CTRL_INCLUDE_SCI;
++	}
++
++write_ctrl:
++	vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_SAM_FLOW_CTRL(idx), val);
++}
++
++static struct macsec_flow *vsc8584_macsec_find_flow(struct macsec_context *ctx,
++						    enum macsec_bank bank)
++{
++	struct vsc8531_private *priv = ctx->phydev->priv;
++	struct macsec_flow *pos, *tmp;
++
++	list_for_each_entry_safe(pos, tmp, &priv->macsec_flows, list)
++		if (pos->assoc_num == ctx->sa.assoc_num && pos->bank == bank)
++			return pos;
++
++	return ERR_PTR(-ENOENT);
++}
++
++static void vsc8584_macsec_flow_enable(struct phy_device *phydev,
++				       struct macsec_flow *flow)
++{
++	enum macsec_bank bank = flow->bank;
++	u32 val, idx = flow->index;
++
++	if ((flow->bank == MACSEC_INGR && flow->rx_sa && !flow->rx_sa->active) ||
++	    (flow->bank == MACSEC_EGR && flow->tx_sa && !flow->tx_sa->active))
++		return;
++
++	/* Enable */
++	vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_SAM_ENTRY_SET1, BIT(idx));
++
++	/* Set in-use */
++	val = vsc8584_macsec_phy_read(phydev, bank, MSCC_MS_SAM_FLOW_CTRL(idx));
++	val |= MSCC_MS_SAM_FLOW_CTRL_SA_IN_USE;
++	vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_SAM_FLOW_CTRL(idx), val);
++}
++
++static void vsc8584_macsec_flow_disable(struct phy_device *phydev,
++					struct macsec_flow *flow)
++{
++	enum macsec_bank bank = flow->bank;
++	u32 val, idx = flow->index;
++
++	/* Disable */
++	vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_SAM_ENTRY_CLEAR1, BIT(idx));
++
++	/* Clear in-use */
++	val = vsc8584_macsec_phy_read(phydev, bank, MSCC_MS_SAM_FLOW_CTRL(idx));
++	val &= ~MSCC_MS_SAM_FLOW_CTRL_SA_IN_USE;
++	vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_SAM_FLOW_CTRL(idx), val);
++}
++
++static u32 vsc8584_macsec_flow_context_id(struct macsec_flow *flow)
++{
++	if (flow->bank == MACSEC_INGR)
++		return flow->index + MSCC_MS_MAX_FLOWS;
++
++	return flow->index;
++}
++
++/* Derive the AES key to get a key for the hash autentication */
++static int vsc8584_macsec_derive_key(const u8 key[MACSEC_KEYID_LEN],
++				     u16 key_len, u8 hkey[16])
++{
++	struct crypto_skcipher *tfm = crypto_alloc_skcipher("ecb(aes)", 0, 0);
++	struct skcipher_request *req = NULL;
++	struct scatterlist src, dst;
++	DECLARE_CRYPTO_WAIT(wait);
++	u32 input[4] = {0};
++	int ret;
++
++	if (IS_ERR(tfm))
++		return PTR_ERR(tfm);
++
++	req = skcipher_request_alloc(tfm, GFP_KERNEL);
++	if (!req) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	skcipher_request_set_callback(req, CRYPTO_TFM_REQ_MAY_BACKLOG |
++				      CRYPTO_TFM_REQ_MAY_SLEEP, crypto_req_done,
++				      &wait);
++	ret = crypto_skcipher_setkey(tfm, key, key_len);
++	if (ret < 0)
++		goto out;
++
++	sg_init_one(&src, input, 16);
++	sg_init_one(&dst, hkey, 16);
++	skcipher_request_set_crypt(req, &src, &dst, 16, NULL);
++
++	ret = crypto_wait_req(crypto_skcipher_encrypt(req), &wait);
++
++out:
++	skcipher_request_free(req);
++	crypto_free_skcipher(tfm);
++	return ret;
++}
++
++static int vsc8584_macsec_transformation(struct phy_device *phydev,
++					 struct macsec_flow *flow)
++{
++	struct vsc8531_private *priv = phydev->priv;
++	enum macsec_bank bank = flow->bank;
++	int i, ret, index = flow->index;
++	u32 rec = 0, control = 0;
++	u8 hkey[16];
++	sci_t sci;
++
++	ret = vsc8584_macsec_derive_key(flow->key, priv->secy->key_len, hkey);
++	if (ret)
++		return ret;
++
++	switch (priv->secy->key_len) {
++	case 16:
++		control |= CONTROL_CRYPTO_ALG(CTRYPTO_ALG_AES_CTR_128);
++		break;
++	case 32:
++		control |= CONTROL_CRYPTO_ALG(CTRYPTO_ALG_AES_CTR_256);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	control |= (bank == MACSEC_EGR) ?
++		   (CONTROL_TYPE_EGRESS | CONTROL_AN(priv->secy->tx_sc.encoding_sa)) :
++		   (CONTROL_TYPE_INGRESS | CONTROL_SEQ_MASK);
++
++	control |= CONTROL_UPDATE_SEQ | CONTROL_ENCRYPT_AUTH | CONTROL_KEY_IN_CTX |
++		   CONTROL_IV0 | CONTROL_IV1 | CONTROL_IV_IN_SEQ |
++		   CONTROL_DIGEST_TYPE(0x2) | CONTROL_SEQ_TYPE(0x1) |
++		   CONTROL_AUTH_ALG(AUTH_ALG_AES_GHAS) | CONTROL_CONTEXT_ID;
++
++	/* Set the control word */
++	vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_XFORM_REC(index, rec++),
++				 control);
++
++	/* Set the context ID. Must be unique. */
++	vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_XFORM_REC(index, rec++),
++				 vsc8584_macsec_flow_context_id(flow));
++
++	/* Set the encryption/decryption key */
++	for (i = 0; i < priv->secy->key_len / sizeof(u32); i++)
++		vsc8584_macsec_phy_write(phydev, bank,
++					 MSCC_MS_XFORM_REC(index, rec++),
++					 ((u32 *)flow->key)[i]);
++
++	/* Set the authentication key */
++	for (i = 0; i < 4; i++)
++		vsc8584_macsec_phy_write(phydev, bank,
++					 MSCC_MS_XFORM_REC(index, rec++),
++					 ((u32 *)hkey)[i]);
++
++	/* Initial sequence number */
++	vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_XFORM_REC(index, rec++),
++				 bank == MACSEC_INGR ?
++				 flow->rx_sa->next_pn : flow->tx_sa->next_pn);
++
++	if (bank == MACSEC_INGR)
++		/* Set the mask (replay window size) */
++		vsc8584_macsec_phy_write(phydev, bank,
++					 MSCC_MS_XFORM_REC(index, rec++),
++					 priv->secy->replay_window);
++
++	/* Set the input vectors */
++	sci = bank == MACSEC_INGR ? flow->rx_sa->sc->sci : priv->secy->sci;
++	vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_XFORM_REC(index, rec++),
++				 lower_32_bits(sci));
++	vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_XFORM_REC(index, rec++),
++				 upper_32_bits(sci));
++
++	while (rec < 20)
++		vsc8584_macsec_phy_write(phydev, bank, MSCC_MS_XFORM_REC(index, rec++),
++					 0);
++
++	flow->has_transformation = true;
++	return 0;
++}
++
++static struct macsec_flow *vsc8584_macsec_alloc_flow(struct vsc8531_private *priv,
++						     enum macsec_bank bank)
++{
++	unsigned long *bitmap = bank == MACSEC_INGR ?
++				&priv->ingr_flows : &priv->egr_flows;
++	struct macsec_flow *flow;
++	int index;
++
++	index = find_first_zero_bit(bitmap, MSCC_MS_MAX_FLOWS);
++
++	if (index == MSCC_MS_MAX_FLOWS)
++		return ERR_PTR(-ENOMEM);
++
++	flow = kzalloc(sizeof(*flow), GFP_KERNEL);
++	if (!flow)
++		return ERR_PTR(-ENOMEM);
++
++	set_bit(index, bitmap);
++	flow->index = index;
++	flow->bank = bank;
++	flow->priority = 8;
++	flow->assoc_num = -1;
++
++	list_add_tail(&flow->list, &priv->macsec_flows);
++	return flow;
++}
++
++static void vsc8584_macsec_free_flow(struct vsc8531_private *priv,
++				     struct macsec_flow *flow)
++{
++	unsigned long *bitmap = flow->bank == MACSEC_INGR ?
++				&priv->ingr_flows : &priv->egr_flows;
++
++	list_del(&flow->list);
++	clear_bit(flow->index, bitmap);
++	kfree(flow);
++}
++
++static int vsc8584_macsec_add_flow(struct phy_device *phydev,
++				   struct macsec_flow *flow, bool update)
++{
++	int ret;
++
++	flow->port = MSCC_MS_PORT_CONTROLLED;
++	vsc8584_macsec_flow(phydev, flow);
++
++	if (update)
++		return 0;
++
++	ret = vsc8584_macsec_transformation(phydev, flow);
++	if (ret) {
++		vsc8584_macsec_free_flow(phydev->priv, flow);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int vsc8584_macsec_default_flows(struct phy_device *phydev)
++{
++	struct macsec_flow *flow;
++
++	/* Add a rule to let the MKA traffic go through, ingress */
++	flow = vsc8584_macsec_alloc_flow(phydev->priv, MACSEC_INGR);
++	if (IS_ERR(flow))
++		return PTR_ERR(flow);
++
++	flow->priority = 15;
++	flow->port = MSCC_MS_PORT_UNCONTROLLED;
++	flow->match.tagged = 1;
++	flow->match.untagged = 1;
++	flow->match.etype = 1;
++	flow->etype = ETH_P_PAE;
++	flow->action.bypass = 1;
++
++	vsc8584_macsec_flow(phydev, flow);
++	vsc8584_macsec_flow_enable(phydev, flow);
++
++	/* Add a rule to let the MKA traffic go through, egress */
++	flow = vsc8584_macsec_alloc_flow(phydev->priv, MACSEC_EGR);
++	if (IS_ERR(flow))
++		return PTR_ERR(flow);
++
++	flow->priority = 15;
++	flow->port = MSCC_MS_PORT_COMMON;
++	flow->match.untagged = 1;
++	flow->match.etype = 1;
++	flow->etype = ETH_P_PAE;
++	flow->action.bypass = 1;
++
++	vsc8584_macsec_flow(phydev, flow);
++	vsc8584_macsec_flow_enable(phydev, flow);
++
++	return 0;
++}
++
++static void vsc8584_macsec_del_flow(struct phy_device *phydev,
++				    struct macsec_flow *flow)
++{
++	vsc8584_macsec_flow_disable(phydev, flow);
++	vsc8584_macsec_free_flow(phydev->priv, flow);
++}
++
++static int __vsc8584_macsec_add_rxsa(struct macsec_context *ctx,
++				     struct macsec_flow *flow, bool update)
++{
++	struct phy_device *phydev = ctx->phydev;
++	struct vsc8531_private *priv = phydev->priv;
++
++	if (!flow) {
++		flow = vsc8584_macsec_alloc_flow(priv, MACSEC_INGR);
++		if (IS_ERR(flow))
++			return PTR_ERR(flow);
++
++		memcpy(flow->key, ctx->sa.key, priv->secy->key_len);
++	}
++
++	flow->assoc_num = ctx->sa.assoc_num;
++	flow->rx_sa = ctx->sa.rx_sa;
++
++	/* Always match tagged packets on ingress */
++	flow->match.tagged = 1;
++	flow->match.sci = 1;
++
++	if (priv->secy->validate_frames != MACSEC_VALIDATE_DISABLED)
++		flow->match.untagged = 1;
++
++	return vsc8584_macsec_add_flow(phydev, flow, update);
++}
++
++static int __vsc8584_macsec_add_txsa(struct macsec_context *ctx,
++				     struct macsec_flow *flow, bool update)
++{
++	struct phy_device *phydev = ctx->phydev;
++	struct vsc8531_private *priv = phydev->priv;
++
++	if (!flow) {
++		flow = vsc8584_macsec_alloc_flow(priv, MACSEC_EGR);
++		if (IS_ERR(flow))
++			return PTR_ERR(flow);
++
++		memcpy(flow->key, ctx->sa.key, priv->secy->key_len);
++	}
++
++	flow->assoc_num = ctx->sa.assoc_num;
++	flow->tx_sa = ctx->sa.tx_sa;
++
++	/* Always match untagged packets on egress */
++	flow->match.untagged = 1;
++
++	return vsc8584_macsec_add_flow(phydev, flow, update);
++}
++
++static int vsc8584_macsec_dev_open(struct macsec_context *ctx)
++{
++	struct vsc8531_private *priv = ctx->phydev->priv;
++	struct macsec_flow *flow, *tmp;
++
++	/* No operation to perform before the commit step */
++	if (ctx->prepare)
++		return 0;
++
++	list_for_each_entry_safe(flow, tmp, &priv->macsec_flows, list)
++		vsc8584_macsec_flow_enable(ctx->phydev, flow);
++
++	return 0;
++}
++
++static int vsc8584_macsec_dev_stop(struct macsec_context *ctx)
++{
++	struct vsc8531_private *priv = ctx->phydev->priv;
++	struct macsec_flow *flow, *tmp;
++
++	/* No operation to perform before the commit step */
++	if (ctx->prepare)
++		return 0;
++
++	list_for_each_entry_safe(flow, tmp, &priv->macsec_flows, list)
++		vsc8584_macsec_flow_disable(ctx->phydev, flow);
++
++	return 0;
++}
++
++static int vsc8584_macsec_add_secy(struct macsec_context *ctx)
++{
++	struct vsc8531_private *priv = ctx->phydev->priv;
++	struct macsec_secy *secy = ctx->secy;
++
++	if (ctx->prepare) {
++		if (priv->secy)
++			return -EEXIST;
++
++		return 0;
++	}
++
++	priv->secy = secy;
++
++	vsc8584_macsec_flow_default_action(ctx->phydev, MACSEC_EGR,
++					   secy->validate_frames != MACSEC_VALIDATE_DISABLED);
++	vsc8584_macsec_flow_default_action(ctx->phydev, MACSEC_INGR,
++					   secy->validate_frames != MACSEC_VALIDATE_DISABLED);
++
++	return vsc8584_macsec_default_flows(ctx->phydev);
++}
++
++static int vsc8584_macsec_del_secy(struct macsec_context *ctx)
++{
++	struct vsc8531_private *priv = ctx->phydev->priv;
++	struct macsec_flow *flow, *tmp;
++
++	/* No operation to perform before the commit step */
++	if (ctx->prepare)
++		return 0;
++
++	list_for_each_entry_safe(flow, tmp, &priv->macsec_flows, list)
++		vsc8584_macsec_del_flow(ctx->phydev, flow);
++
++	vsc8584_macsec_flow_default_action(ctx->phydev, MACSEC_EGR, false);
++	vsc8584_macsec_flow_default_action(ctx->phydev, MACSEC_INGR, false);
++
++	priv->secy = NULL;
++	return 0;
++}
++
++static int vsc8584_macsec_upd_secy(struct macsec_context *ctx)
++{
++	/* No operation to perform before the commit step */
++	if (ctx->prepare)
++		return 0;
++
++	vsc8584_macsec_del_secy(ctx);
++	return vsc8584_macsec_add_secy(ctx);
++}
++
++static int vsc8584_macsec_add_rxsc(struct macsec_context *ctx)
++{
++	/* Nothing to do */
++	return 0;
++}
++
++static int vsc8584_macsec_upd_rxsc(struct macsec_context *ctx)
++{
++	return -EOPNOTSUPP;
++}
++
++static int vsc8584_macsec_del_rxsc(struct macsec_context *ctx)
++{
++	struct vsc8531_private *priv = ctx->phydev->priv;
++	struct macsec_flow *flow, *tmp;
++
++	/* No operation to perform before the commit step */
++	if (ctx->prepare)
++		return 0;
++
++	list_for_each_entry_safe(flow, tmp, &priv->macsec_flows, list) {
++		if (flow->bank == MACSEC_INGR && flow->rx_sa &&
++		    flow->rx_sa->sc->sci == ctx->rx_sc->sci)
++			vsc8584_macsec_del_flow(ctx->phydev, flow);
++	}
++
++	return 0;
++}
++
++static int vsc8584_macsec_add_rxsa(struct macsec_context *ctx)
++{
++	struct macsec_flow *flow = NULL;
++
++	if (ctx->prepare)
++		return __vsc8584_macsec_add_rxsa(ctx, flow, false);
++
++	flow = vsc8584_macsec_find_flow(ctx, MACSEC_INGR);
++	if (IS_ERR(flow))
++		return PTR_ERR(flow);
++
++	vsc8584_macsec_flow_enable(ctx->phydev, flow);
++	return 0;
++}
++
++static int vsc8584_macsec_upd_rxsa(struct macsec_context *ctx)
++{
++	struct macsec_flow *flow;
++
++	flow = vsc8584_macsec_find_flow(ctx, MACSEC_INGR);
++	if (IS_ERR(flow))
++		return PTR_ERR(flow);
++
++	if (ctx->prepare) {
++		/* Make sure the flow is disabled before updating it */
++		vsc8584_macsec_flow_disable(ctx->phydev, flow);
++
++		return __vsc8584_macsec_add_rxsa(ctx, flow, true);
++	}
++
++	vsc8584_macsec_flow_enable(ctx->phydev, flow);
++	return 0;
++}
++
++static int vsc8584_macsec_del_rxsa(struct macsec_context *ctx)
++{
++	struct macsec_flow *flow;
++
++	flow = vsc8584_macsec_find_flow(ctx, MACSEC_INGR);
++
++	if (IS_ERR(flow))
++		return PTR_ERR(flow);
++	if (ctx->prepare)
++		return 0;
++
++	vsc8584_macsec_del_flow(ctx->phydev, flow);
++	return 0;
++}
++
++static int vsc8584_macsec_add_txsa(struct macsec_context *ctx)
++{
++	struct macsec_flow *flow = NULL;
++
++	if (ctx->prepare)
++		return __vsc8584_macsec_add_txsa(ctx, flow, false);
++
++	flow = vsc8584_macsec_find_flow(ctx, MACSEC_EGR);
++	if (IS_ERR(flow))
++		return PTR_ERR(flow);
++
++	vsc8584_macsec_flow_enable(ctx->phydev, flow);
++	return 0;
++}
++
++static int vsc8584_macsec_upd_txsa(struct macsec_context *ctx)
++{
++	struct macsec_flow *flow;
++
++	flow = vsc8584_macsec_find_flow(ctx, MACSEC_EGR);
++	if (IS_ERR(flow))
++		return PTR_ERR(flow);
++
++	if (ctx->prepare) {
++		/* Make sure the flow is disabled before updating it */
++		vsc8584_macsec_flow_disable(ctx->phydev, flow);
++
++		return __vsc8584_macsec_add_txsa(ctx, flow, true);
++	}
++
++	vsc8584_macsec_flow_enable(ctx->phydev, flow);
++	return 0;
++}
++
++static int vsc8584_macsec_del_txsa(struct macsec_context *ctx)
++{
++	struct macsec_flow *flow;
++
++	flow = vsc8584_macsec_find_flow(ctx, MACSEC_EGR);
++
++	if (IS_ERR(flow))
++		return PTR_ERR(flow);
++	if (ctx->prepare)
++		return 0;
++
++	vsc8584_macsec_del_flow(ctx->phydev, flow);
++	return 0;
++}
++
++static struct macsec_ops vsc8584_macsec_ops = {
++	.mdo_dev_open = vsc8584_macsec_dev_open,
++	.mdo_dev_stop = vsc8584_macsec_dev_stop,
++	.mdo_add_secy = vsc8584_macsec_add_secy,
++	.mdo_upd_secy = vsc8584_macsec_upd_secy,
++	.mdo_del_secy = vsc8584_macsec_del_secy,
++	.mdo_add_rxsc = vsc8584_macsec_add_rxsc,
++	.mdo_upd_rxsc = vsc8584_macsec_upd_rxsc,
++	.mdo_del_rxsc = vsc8584_macsec_del_rxsc,
++	.mdo_add_rxsa = vsc8584_macsec_add_rxsa,
++	.mdo_upd_rxsa = vsc8584_macsec_upd_rxsa,
++	.mdo_del_rxsa = vsc8584_macsec_del_rxsa,
++	.mdo_add_txsa = vsc8584_macsec_add_txsa,
++	.mdo_upd_txsa = vsc8584_macsec_upd_txsa,
++	.mdo_del_txsa = vsc8584_macsec_del_txsa,
++};
+ #endif /* CONFIG_MACSEC */
+ 
+ /* Check if one PHY has already done the init of the parts common to all PHYs
+@@ -2109,6 +2795,11 @@ static int vsc8584_config_init(struct phy_device *phydev)
+ 	case PHY_ID_VSC8575:
+ 	case PHY_ID_VSC8582:
+ 	case PHY_ID_VSC8584:
++		INIT_LIST_HEAD(&vsc8531->macsec_flows);
++		vsc8531->secy = NULL;
++
++		phydev->macsec_ops = &vsc8584_macsec_ops;
++
+ 		ret = vsc8584_macsec_init(phydev);
+ 		if (ret)
+ 			goto err;
+diff --git a/drivers/net/phy/mscc_macsec.h b/drivers/net/phy/mscc_macsec.h
+index 0d108da28dad..9b5d0af91d20 100644
+--- a/drivers/net/phy/mscc_macsec.h
++++ b/drivers/net/phy/mscc_macsec.h
+@@ -8,6 +8,8 @@
+ #ifndef _MSCC_OCELOT_MACSEC_H_
+ #define _MSCC_OCELOT_MACSEC_H_
+ 
++#define MSCC_MS_MAX_FLOWS		16
++
+ #define CONTROL_TYPE_EGRESS		0x6
+ #define CONTROL_TYPE_INGRESS		0xf
+ #define CONTROL_IV0			BIT(5)
+@@ -59,6 +61,8 @@ enum mscc_macsec_validate_levels {
+ #define MSCC_MS_XFORM_REC(x, y)		(((x) << 5) + (y))
+ #define MSCC_MS_ENA_CFG			0x800
+ #define MSCC_MS_FC_CFG			0x804
++#define MSCC_MS_SAM_MAC_SA_MATCH_LO(x)	(0x1000 + ((x) << 4))
++#define MSCC_MS_SAM_MAC_SA_MATCH_HI(x)	(0x1001 + ((x) << 4))
+ #define MSCC_MS_SAM_MISC_MATCH(x)	(0x1004 + ((x) << 4))
+ #define MSCC_MS_SAM_MATCH_SCI_LO(x)	(0x1005 + ((x) << 4))
+ #define MSCC_MS_SAM_MATCH_SCI_HI(x)	(0x1006 + ((x) << 4))
+-- 
+2.24.1
 
-Your justification for implementing MRP in the kernel seems to be that
-it's better to make MRP part of the kernel uapi than a configuration
-interface for your periodic engine, which in principle I agree with.
-I'm just not sure if the offload that you propose will have a trivial
-path into the kernel either, so it would make sense for reviewers to
-see everything put together first.
-
-Thanks,
--Vladimir
