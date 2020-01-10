@@ -2,82 +2,248 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0D0C33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 04:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 033A3C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 04:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4F52077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 04:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82712077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 04:57:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uLOBwf7g"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Sx19ZKHf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731425AbgAJEwD (ORCPT
+        id S1731392AbgAJE5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 23:52:03 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:33976 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731405AbgAJEwC (ORCPT
+        Thu, 9 Jan 2020 23:57:36 -0500
+Received: from mailout2.samsung.com ([203.254.224.25]:50800 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731331AbgAJE5g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 23:52:02 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l136so862955oig.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 20:52:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vlinJQxreNW0LgSHPxKHqjPCjfftwQydPg4qaMBMqAY=;
-        b=uLOBwf7g0tzyDtdRmJRecwzNi4gLs3YTVmGXZmuRK9t1bycyxTxEcT03f4Jj1XQU1n
-         tU71/YmmsbvP2dVbyJlKdq/z8kBEcDa+MApxrUQcJe712ZFbqLL9NZqAB7khQLox+MwC
-         Dm7qxfPPx3STpsOgA2YA1SpXGETkF32KxpBM9JnSUO7V9RH2A8vlcSz+sRiJNcDPDXK4
-         b3jNsTFfT2yb0m+Hge1nb0q0Vxm9kEs9jjOePC9dklTQ9mxQFqn/1zaiMpK3x9y/9xrX
-         VDc7YjSoAkGAxcelOrtEajhYF2GpwhrFEpt3RzaZY6V05Xb2ACtMhSvpfWkIS5ahOwuc
-         2liA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vlinJQxreNW0LgSHPxKHqjPCjfftwQydPg4qaMBMqAY=;
-        b=I8x+BmsIfNUrUS1VbPqkO/XBsqxgVIK3+sDbHcYChXQ7YJ1s0XPTuUA39pXMUx5JuS
-         B+t5g24IRbJ3KEsSXFW3Tkx+I2hv4SwiByxCwgTFo3dgX4lLGMp45ZvShu1JgjehSV8Z
-         z3htKwYZKx6tzMCJ2nfYvDX5JbxphkoyUNcvyQc8Av9JGset0LC1DD6wXhFi+KhmI4ii
-         Ox+qvd0mNOLBLd613yWifXQDa6+dHKk8//rbJmJujoNdtouAwqUn7pIXD++p5esBC3ru
-         bcXwKSYdbO/aM0KoLQy5V5ZV/Ii8e4koNgLAjP3xvFS5fTQat27FWQe4Nqfd37gGTs7X
-         T7Bg==
-X-Gm-Message-State: APjAAAX+8yZoTYSnBrXQb7IZ+VupdsTWC7y9Y9Z44EVRITb0mcehO7tq
-        26ItTtlcmM2w9JIvHCr2Ljg5VWG/Yu1UZ2rGZPI=
-X-Google-Smtp-Source: APXvYqzMKoLVp5l6PZowKodtclvYtR6R33nF6mAg+foENgKXM9Ziv54vxfZlM/u1CC23hIWvj4i3c8R5GG8UoDeeSgk=
-X-Received: by 2002:aca:3cd7:: with SMTP id j206mr842019oia.142.1578631922395;
- Thu, 09 Jan 2020 20:52:02 -0800 (PST)
+        Thu, 9 Jan 2020 23:57:36 -0500
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200110045730epoutp029803efc46daf73472a67a05599eee196~obasWGChf2639026390epoutp02m
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 04:57:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200110045730epoutp029803efc46daf73472a67a05599eee196~obasWGChf2639026390epoutp02m
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578632251;
+        bh=jMYpXE86HdOpq4CxPs8s1bnusOdMOm2Ob9ZkmRz9gL8=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Sx19ZKHfLLDnlcOUHGYm2znJR74cIIk3WMbNp/P581sWbVoEAlSNYlNGPfuelxzcW
+         usrL/6KtQpjyRAb6b6waLTI3vtKTimTFAz0VvfA6IgCqkCwOByh5M9UOAnzpbQYYLs
+         RUt04FG/WF2Ct2cRjFhar/fYJmtZviT/SnB/mIOw=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20200110045730epcas1p4b24d670c0e64068221abe25f92023e20~obarxqan52829028290epcas1p4R;
+        Fri, 10 Jan 2020 04:57:30 +0000 (GMT)
+Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 47v9hS0GPvzMqYkk; Fri, 10 Jan
+        2020 04:57:28 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E2.B4.48019.634081E5; Fri, 10 Jan 2020 13:57:26 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200110045725epcas1p3f13f53e6358b80d2c21ef313bd427d28~obanfNbDc0444204442epcas1p3b;
+        Fri, 10 Jan 2020 04:57:25 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200110045725epsmtrp1a61474448d20e8dc06cd770ce0862f91~obaneYvuR0598905989epsmtrp1C;
+        Fri, 10 Jan 2020 04:57:25 +0000 (GMT)
+X-AuditID: b6c32a38-23fff7000001bb93-5f-5e180436c150
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        9F.FF.06569.534081E5; Fri, 10 Jan 2020 13:57:25 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200110045725epsmtip2eaeb8f196500df63583ad16f3268f2d7~obanMVwx43141431414epsmtip2B;
+        Fri, 10 Jan 2020 04:57:25 +0000 (GMT)
+Subject: Re: [PATCH 2/2] PM / devfreq: Add devfreq_transitions debugfs file
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, leonard.crestez@nxp.com,
+        lukasz.luba@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
+        hl@rock-chips.com, jcrouse@codeaurora.org, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <0120d269-8e93-3498-be91-ebc7de642040@samsung.com>
+Date:   Fri, 10 Jan 2020 14:04:38 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
+        Thunderbird/59.0
 MIME-Version: 1.0
-References: <20200109225646.22983-1-xiyou.wangcong@gmail.com>
- <CAHbLzkr=P38zJMpNVtw9oKMT65hwq6ie85h-fRi7rpZyf4A71g@mail.gmail.com> <CAM_iQpWvrR9cVA31tD7Mvx0yTN=NDXQ-NMYStH9UB3Rb6WzmeA@mail.gmail.com>
-In-Reply-To: <CAM_iQpWvrR9cVA31tD7Mvx0yTN=NDXQ-NMYStH9UB3Rb6WzmeA@mail.gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu, 9 Jan 2020 20:51:51 -0800
-Message-ID: <CAM_iQpWr2HLkW=ZSjZmiOpJyUG7T1QaWQOSW7vi34hqd2L4Bmg@mail.gmail.com>
-Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
-To:     Yang Shi <shy828301@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200109172157.GM738324@yoga>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrDJsWRmVeSWpSXmKPExsWy7bCmrq4Zi0Scwdm/2hb357UyWpze/47F
+        YuKNKywWqz8+ZrRYc/sQo8WPDaeYLTYuyLY42/SG3WLF3Y+sFpd3zWGz+Nx7hNFiYVMLu8Xa
+        I3fZLW43rmCz2NfxgMmB32PNvDWMHpf7epk8dtxdwuixc9Zddo+WfbfYPTat6mTzuHNtD5vH
+        xnc7mDz+ztrP4tG3ZRWjx+dNcgHcUdk2GamJKalFCql5yfkpmXnptkrewfHO8aZmBoa6hpYW
+        5koKeYm5qbZKLj4Bum6ZOUC/KCmUJeaUAoUCEouLlfTtbIryS0tSFTLyi0tslVILUnIKLAv0
+        ihNzi0vz0vWS83OtDA0MjEyBChOyM65tesNU8M2gYvXdPrYGxjkqXYycHBICJhJHT3xh7WLk
+        4hAS2MEocXPjDCYI5xOjxOSJk6Gcb4wSl17MY4Zp2X7yDjNEYi+jxIJrW9ghnPeMEk1XIaqE
+        Bbwl5nctYQGxRQQiJA60tzGCFDELXGOSWNr+gxEkwSagJbH/xQ02EJtfQFHi6o/HYHFeATuJ
+        P1NvgNksAqoSrye/ZAWxRQXCJE5ua4GqEZQ4OfMJ2AJOAW2JFz2HmUBsZgFxiVtP5kPZ8hLb
+        384BO1VC4By7xMzpH6B+cJG48OwuC4QtLPHqOMgLILaUxMv+Nii7WmLlySNsEM0djBJb9l9g
+        hUgYS+xfCgoZDqANmhLrd+lDhBUldv6eywixmE/i3dceVpASCQFeiY42IYgSZYnLD+4yQdiS
+        EovbO9kmMCrNQvLOLCQvzELywiyEZQsYWVYxiqUWFOempxYbFpggx/cmRnBK17LYwbjnnM8h
+        RgEORiUe3gxh8Tgh1sSy4srcQ4wSHMxKIrxHb4jFCfGmJFZWpRblxxeV5qQWH2I0BYb2RGYp
+        0eR8YL7JK4k3NDUyNja2MDE0MzU0VBLn5fhxMVZIID2xJDU7NbUgtQimj4mDU6qBUSU8bvHe
+        i0fqPWMXnd37+dcxvlD7JcmH9179fFvBcZu+hL7HKuHDmxT0454mJYVc770are3wxVZwM8Pk
+        6Wd7rPsLzK9t9zx7oK3j7vapUj7dHsU+Jwrf/X3iYqDUliG4gX0+4wyHp78uWBqcYmxvfKhf
+        2NH4cAaL/z9TkdMJx+Sz7gSc4jr/WImlOCPRUIu5qDgRAAI1fcz/AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrMIsWRmVeSWpSXmKPExsWy7bCSvK4pi0ScwYPfWhb357UyWpze/47F
+        YuKNKywWqz8+ZrRYc/sQo8WPDaeYLTYuyLY42/SG3WLF3Y+sFpd3zWGz+Nx7hNFiYVMLu8Xa
+        I3fZLW43rmCz2NfxgMmB32PNvDWMHpf7epk8dtxdwuixc9Zddo+WfbfYPTat6mTzuHNtD5vH
+        xnc7mDz+ztrP4tG3ZRWjx+dNcgHcUVw2Kak5mWWpRfp2CVwZ1za9YSr4ZlCx+m4fWwPjHJUu
+        Rk4OCQETie0n7zCD2EICuxkllm4MgYhLSky7eBQozgFkC0scPlwMUfKWUeJqpymILSzgLTG/
+        awkLiC0iECEx9cF3NhCbWeAak8T7LcJdjFxA9U+ZJJYv6wJLsAloSex/cQPM5hdQlLj64zEj
+        iM0rYCfxZ+oNMJtFQFXi9eSXrCC2qECYxM4lj5kgagQlTs58AraMU0Bb4kXPYSaIZeoSf+Zd
+        YoawxSVuPZkPFZeX2P52DvMERuFZSNpnIWmZhaRlFpKWBYwsqxglUwuKc9Nziw0LjPJSy/WK
+        E3OLS/PS9ZLzczcxgqNaS2sH44kT8YcYBTgYlXh4M4TF44RYE8uKK3MPMUpwMCuJ8B69IRYn
+        xJuSWFmVWpQfX1Sak1p8iFGag0VJnFc+/1ikkEB6YklqdmpqQWoRTJaJg1OqgTHgZo72loNT
+        +hqy3zv/Ts7Y/MtQtmIdy9fiV4tCjvaGb2MN9Inc0ijFt/ql2bzGW8u2Vsmx+qf1yIt73L5g
+        ULfDKmKry1UXCVbWH9NMDopwfZjBvID9QeUdJtYnD2V/lrusS+X5yquR37CgzIFR2UXO/pBV
+        4He9To++SzN3NpZrbzqXKcsxR4mlOCPRUIu5qDgRAEfTkvPmAgAA
+X-CMS-MailID: 20200110045725epcas1p3f13f53e6358b80d2c21ef313bd427d28
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea
+References: <20200107090519.3231-1-cw00.choi@samsung.com>
+        <CGME20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea@epcas1p4.samsung.com>
+        <20200107090519.3231-3-cw00.choi@samsung.com> <20200107214834.GB738324@yoga>
+        <c1e6f324-b0c2-41ff-a015-7ba0b29ad42c@gmail.com>
+        <9c3574e8-945b-56c4-3425-28e68cd3d2a9@samsung.com>
+        <20200109172157.GM738324@yoga>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 5:01 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
-> I tried to dump the process stacks after we saw the hung task
-> with /proc/X/stack (apparently sysrq is not an option for production),
-> but I didn't find anything useful. I didn't see any other process
-> hung in lock_page() either, all mm-related kernel threads were sleeping
-> (non-D) at the time I debugged. So, it is possible there was some place
-> missing a unlock_page() too, which is too late to debug after the hung
-> task was reported.
+On 1/10/20 2:21 AM, Bjorn Andersson wrote:
+> On Thu 09 Jan 00:07 PST 2020, Chanwoo Choi wrote:
+> 
+>> Hi Bjorn and Dmitry,
+>>
+>> I replied from Bjorn and Dmitry opinion.
+>>
+>> On 1/8/20 11:20 PM, Dmitry Osipenko wrote:
+>>> 08.01.2020 00:48, Bjorn Andersson ??????????:
+>>>> On Tue 07 Jan 01:05 PST 2020, Chanwoo Choi wrote:
+>>>>
+>>>>> Add new devfreq_transitions debugfs file to track the frequency transitions
+>>>>> of all devfreq devices for the simple profiling as following:
+>>>>> - /sys/kernel/debug/devfreq/devfreq_transitions
+>>>>>
+>>>>> And the user can decide the storage size (CONFIG_NR_DEVFREQ_TRANSITIONS)
+>>>>> in Kconfig in order to save the transition history.
+>>>>>
+>>>>> [Detailed description of each field of 'devfreq_transitions' debugfs file]
+>>>>> - time_ms	: Change time of frequency transition. (unit: millisecond)
+>>>>> - dev_name	: Device name of h/w.
+>>>>> - dev		: Device name made by devfreq core.
+>>>>> - parent_dev	: If devfreq device uses the passive governor,
+>>>>> 		  show parent devfreq device name.
+>>>>> - load_%	: If devfreq device uses the simple_ondemand governor,
+>>>>> 		  load is used by governor whene deciding the new frequency.
+>>>>> 		  (unit: percentage)
+>>>>> - old_freq_hz	: Frequency before changing. (unit: hz)
+>>>>> - new_freq_hz	: Frequency after changed. (unit: hz)
+>>>>>
+>>>>> [For example on Exynos5422-based Odroid-XU3 board]
+>>>>> $ cat /sys/kernel/debug/devfreq/devfreq_transitions
+>>>>> time_ms    dev_name                       dev        parent_dev load_% old_freq_hz  new_freq_hz
+>>>>> ---------- ------------------------------ ---------- ---------- ---------- ------------ ------------
+>>>>> 14600      soc:bus_noc                    devfreq2   devfreq1   0      100000000    67000000
+>>>>> 14600      soc:bus_fsys_apb               devfreq3   devfreq1   0      200000000    100000000
+>>>>> 14600      soc:bus_fsys                   devfreq4   devfreq1   0      200000000    100000000
+>>>>> 14600      soc:bus_fsys2                  devfreq5   devfreq1   0      150000000    75000000
+>>>>> 14602      soc:bus_mfc                    devfreq6   devfreq1   0      222000000    96000000
+>>>>> 14602      soc:bus_gen                    devfreq7   devfreq1   0      267000000    89000000
+>>>>> 14602      soc:bus_g2d                    devfreq9   devfreq1   0      300000000    84000000
+>>>>> 14602      soc:bus_g2d_acp                devfreq10  devfreq1   0      267000000    67000000
+>>>>> 14602      soc:bus_jpeg                   devfreq11  devfreq1   0      300000000    75000000
+>>>>> 14602      soc:bus_jpeg_apb               devfreq12  devfreq1   0      167000000    84000000
+>>>>> 14603      soc:bus_disp1_fimd             devfreq13  devfreq1   0      200000000    120000000
+>>>>> 14603      soc:bus_disp1                  devfreq14  devfreq1   0      300000000    120000000
+>>>>> 14606      soc:bus_gscl_scaler            devfreq15  devfreq1   0      300000000    150000000
+>>>>> 14606      soc:bus_mscl                   devfreq16  devfreq1   0      333000000    84000000
+>>>>> 14608      soc:bus_wcore                  devfreq1              9      333000000    84000000
+>>>>> 14783      10c20000.memory-controller     devfreq0              35     825000000    633000000
+>>>>> 15873      soc:bus_wcore                  devfreq1              41     84000000     400000000
+>>>>> 15873      soc:bus_noc                    devfreq2   devfreq1   0      67000000     100000000
+>>>>> [snip]
+>>>>>
+>>>>
+>>>> Wouldn't it make more sense to expose this through the tracing
+>>>> framework - like many other subsystems does?
+>>>
+>>> I think devfreq core already has some tracing support and indeed it
+>>> should be better to extend it rather than duplicate.
+>>>
+>>
+>> First of all, thanks for comments.
+>>
+>> Before developing it, I have considered what is better to
+>> support debugging features for devfreq device. As you commented,
+>> trace event is more general way to catch the detailed behavior.
+>>
+> 
+> It's more general, it has already dealt with the locking and life cycle
+> questions that was brought up by others and it allows getting traces
+> devfreq traces in the same timeline as other events (to give insight in
+> cross-framework behavior).
+> 
+>> But, I hope to provide the very easy simple profiling way
+>> for user if it is not harmful to the principle of linux kernel.
+>>
+> 
+> You would achieve the same simplicity by integrating with the trace
+> framework instead of rolling your own subset of the functionality.
+> 
+> I know that it's the principle of the Linux kernel that everyone should
+> have their own ring buffer implementation, but you should try to use the
+> existing ones when it makes sense. And in my view this is a prime
+> example - with many additional benefits of doing so.
 
-Never mind. I found the process locking the page, /proc/X/stack apparently
-fools me by hiding page fault stack. :-/
+When we are usually using the profiling tool, existing trace framework
+is the best. Actually, might need to read the frequency transitions
+on the user-space process which is related to monitoring, without
+the enabled trace configuration.
+
+> 
+>> In order to prevent the performance regression when DEBUG_FS is enabled,
+>> I will add the CONFIG_DEVFREQ_TRANSITIONS_DEBUG for 'devfreq_transitions'
+>> to make it selectable.
+>>
+> 
+> The tracing framework has both static and dynamic mechanisms for
+> avoiding performance penalties when tracing is disabled and does provide
+> better performance than your proposal when active.
+
+It provides the separate configuration to select them by user.
+It is optional. It means that if CONFIG_DEVFREQ_TRANSITIONS_DEBUG
+is enabled by user, the user has made a choice this situation with
+even if the some regression happen and instead get the frequency
+transition for monitoring on user-space process.
+
+> 
+> Relying on a Kconfig option means that with e.g. arm64 devices being
+> built from a single defconfig we will either all be missing this feature
+> or we will all always keep logging devfreq transitions to your buffer.
+
+The single defconfig doesn't contain the all configuration provided
+from linux kernel. Furthermore, the debug option is optional by user.
+I think that it doesn't matter.
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
