@@ -4,26 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB169C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA72C33CA5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A3B214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E625C2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbgAJQVk (ORCPT
+        id S1729141AbgAJQUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:21:40 -0500
-Received: from relay11.mail.gandi.net ([217.70.178.231]:58019 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729154AbgAJQUl (ORCPT
+        Fri, 10 Jan 2020 11:20:31 -0500
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:54017 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729087AbgAJQU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:20:41 -0500
+        Fri, 10 Jan 2020 11:20:27 -0500
+X-Originating-IP: 90.76.143.236
 Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 4DB5C100008;
-        Fri, 10 Jan 2020 16:20:38 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 8E1F14001B;
+        Fri, 10 Jan 2020 16:20:24 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
         f.fainelli@gmail.com, hkallweit1@gmail.com
@@ -33,9 +34,9 @@ Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
         allan.nielsen@microchip.com, camelia.groza@nxp.com,
         Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
         jakub.kicinski@netronome.com
-Subject: [PATCH net-next v5 11/15] net: phy: mscc: PN rollover support
-Date:   Fri, 10 Jan 2020 17:20:06 +0100
-Message-Id: <20200110162010.338611-12-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v5 04/15] net: phy: add MACsec ops in phy_device
+Date:   Fri, 10 Jan 2020 17:19:59 +0100
+Message-Id: <20200110162010.338611-5-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200110162010.338611-1-antoine.tenart@bootlin.com>
 References: <20200110162010.338611-1-antoine.tenart@bootlin.com>
@@ -46,157 +47,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for handling MACsec PN rollover in the mscc PHY
-driver. When a flow rolls over, an interrupt is fired. This patch adds
-the logic to check all flows and identify the one rolling over in the
-handle_interrupt PHY helper, then disables the flow and report the event
-to the MACsec core.
+This patch adds a reference to MACsec ops in the phy_device, to allow
+PHYs to support offloading MACsec operations. The phydev lock will be
+held while calling those helpers.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- drivers/net/phy/mscc.c        | 60 ++++++++++++++++++++++++++++++++++-
- drivers/net/phy/mscc_macsec.h |  2 ++
- 2 files changed, 61 insertions(+), 1 deletion(-)
+ include/linux/phy.h | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-index ccf17818570f..937ac7da2789 100644
---- a/drivers/net/phy/mscc.c
-+++ b/drivers/net/phy/mscc.c
-@@ -80,7 +80,7 @@ enum rgmii_rx_clock_delay {
- #define MSCC_PHY_EXT_PHY_CNTL_2		  24
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 0cc757ea2264..5179296b3eb5 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -333,6 +333,7 @@ struct phy_c45_device_ids {
+ };
  
- #define MII_VSC85XX_INT_MASK		  25
--#define MII_VSC85XX_INT_MASK_MASK	  0xa000
-+#define MII_VSC85XX_INT_MASK_MASK	  0xa020
- #define MII_VSC85XX_INT_MASK_WOL	  0x0040
- #define MII_VSC85XX_INT_STATUS		  26
+ struct macsec_context;
++struct macsec_ops;
  
-@@ -207,6 +207,9 @@ enum macsec_bank {
- #define SECURE_ON_ENABLE		  0x8000
- #define SECURE_ON_PASSWD_LEN_4		  0x4000
+ /* phy_device: An instance of a PHY
+  *
+@@ -356,6 +357,7 @@ struct macsec_context;
+  * attached_dev: The attached enet driver's device instance ptr
+  * adjust_link: Callback for the enet controller to respond to
+  * changes in the link state.
++ * macsec_ops: MACsec offloading ops.
+  *
+  * speed, duplex, pause, supported, advertising, lp_advertising,
+  * and autoneg are used like in mii_if_info
+@@ -455,6 +457,11 @@ struct phy_device {
  
-+#define MSCC_PHY_EXTENDED_INT		  28
-+#define MSCC_PHY_EXTENDED_INT_MS_EGR	  BIT(9)
+ 	void (*phy_link_change)(struct phy_device *, bool up, bool do_carrier);
+ 	void (*adjust_link)(struct net_device *dev);
 +
- /* Extended Page 3 Registers */
- #define MSCC_PHY_SERDES_TX_VALID_CNT	  21
- #define MSCC_PHY_SERDES_TX_CRC_ERR_CNT	  22
-@@ -2831,6 +2834,43 @@ static int vsc8584_config_init(struct phy_device *phydev)
- 	return ret;
- }
- 
-+static int vsc8584_handle_interrupt(struct phy_device *phydev)
-+{
 +#if IS_ENABLED(CONFIG_MACSEC)
-+	struct vsc8531_private *priv = phydev->priv;
-+	struct macsec_flow *flow, *tmp;
-+	u32 cause, rec;
-+
-+	/* Check MACsec PN rollover */
-+	cause = vsc8584_macsec_phy_read(phydev, MACSEC_EGR,
-+					MSCC_MS_INTR_CTRL_STATUS);
-+	cause &= MSCC_MS_INTR_CTRL_STATUS_INTR_CLR_STATUS_M;
-+	if (!(cause & MACSEC_INTR_CTRL_STATUS_ROLLOVER))
-+		goto skip_rollover;
-+
-+	rec = 6 + priv->secy->key_len / sizeof(u32);
-+	list_for_each_entry_safe(flow, tmp, &priv->macsec_flows, list) {
-+		u32 val;
-+
-+		if (flow->bank != MACSEC_EGR || !flow->has_transformation)
-+			continue;
-+
-+		val = vsc8584_macsec_phy_read(phydev, MACSEC_EGR,
-+					      MSCC_MS_XFORM_REC(flow->index, rec));
-+		if (val == 0xffffffff) {
-+			vsc8584_macsec_flow_disable(phydev, flow);
-+			macsec_pn_wrapped(priv->secy, flow->tx_sa);
-+			break;
-+		}
-+	}
-+
-+skip_rollover:
++	/* MACsec management functions */
++	const struct macsec_ops *macsec_ops;
 +#endif
-+
-+	phy_mac_interrupt(phydev);
-+	return 0;
-+}
-+
- static int vsc85xx_config_init(struct phy_device *phydev)
- {
- 	int rc, i, phy_id;
-@@ -3274,6 +3314,20 @@ static int vsc85xx_config_intr(struct phy_device *phydev)
- 	int rc;
- 
- 	if (phydev->interrupts == PHY_INTERRUPT_ENABLED) {
-+#if IS_ENABLED(CONFIG_MACSEC)
-+		phy_write(phydev, MSCC_EXT_PAGE_ACCESS,
-+			  MSCC_PHY_PAGE_EXTENDED_2);
-+		phy_write(phydev, MSCC_PHY_EXTENDED_INT,
-+			  MSCC_PHY_EXTENDED_INT_MS_EGR);
-+		phy_write(phydev, MSCC_EXT_PAGE_ACCESS,
-+			  MSCC_PHY_PAGE_STANDARD);
-+
-+		vsc8584_macsec_phy_write(phydev, MACSEC_EGR,
-+					 MSCC_MS_AIC_CTRL, 0xf);
-+		vsc8584_macsec_phy_write(phydev, MACSEC_EGR,
-+			MSCC_MS_INTR_CTRL_STATUS,
-+			MSCC_MS_INTR_CTRL_STATUS_INTR_ENABLE(MACSEC_INTR_CTRL_STATUS_ROLLOVER));
-+#endif
- 		rc = phy_write(phydev, MII_VSC85XX_INT_MASK,
- 			       MII_VSC85XX_INT_MASK_MASK);
- 	} else {
-@@ -3623,6 +3677,7 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.aneg_done	= &genphy_aneg_done,
- 	.read_status	= &vsc85xx_read_status,
-+	.handle_interrupt = &vsc8584_handle_interrupt,
- 	.ack_interrupt  = &vsc85xx_ack_interrupt,
- 	.config_intr    = &vsc85xx_config_intr,
- 	.did_interrupt  = &vsc8584_did_interrupt,
-@@ -3675,6 +3730,7 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.aneg_done	= &genphy_aneg_done,
- 	.read_status	= &vsc85xx_read_status,
-+	.handle_interrupt = &vsc8584_handle_interrupt,
- 	.ack_interrupt  = &vsc85xx_ack_interrupt,
- 	.config_intr    = &vsc85xx_config_intr,
- 	.did_interrupt  = &vsc8584_did_interrupt,
-@@ -3699,6 +3755,7 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.aneg_done	= &genphy_aneg_done,
- 	.read_status	= &vsc85xx_read_status,
-+	.handle_interrupt = &vsc8584_handle_interrupt,
- 	.ack_interrupt  = &vsc85xx_ack_interrupt,
- 	.config_intr    = &vsc85xx_config_intr,
- 	.did_interrupt  = &vsc8584_did_interrupt,
-@@ -3723,6 +3780,7 @@ static struct phy_driver vsc85xx_driver[] = {
- 	.config_aneg    = &vsc85xx_config_aneg,
- 	.aneg_done	= &genphy_aneg_done,
- 	.read_status	= &vsc85xx_read_status,
-+	.handle_interrupt = &vsc8584_handle_interrupt,
- 	.ack_interrupt  = &vsc85xx_ack_interrupt,
- 	.config_intr    = &vsc85xx_config_intr,
- 	.did_interrupt  = &vsc8584_did_interrupt,
-diff --git a/drivers/net/phy/mscc_macsec.h b/drivers/net/phy/mscc_macsec.h
-index 9b5d0af91d20..d9ab6aba7482 100644
---- a/drivers/net/phy/mscc_macsec.h
-+++ b/drivers/net/phy/mscc_macsec.h
-@@ -83,6 +83,7 @@ enum mscc_macsec_validate_levels {
- #define MSCC_MS_STATUS_CONTEXT_CTRL	0x3d02
- #define MSCC_MS_INTR_CTRL_STATUS	0x3d04
- #define MSCC_MS_BLOCK_CTX_UPDATE	0x3d0c
-+#define MSCC_MS_AIC_CTRL		0x3e02
- 
- /* MACSEC_ENA_CFG */
- #define MSCC_MS_ENA_CFG_CLK_ENA				BIT(0)
-@@ -260,5 +261,6 @@ enum mscc_macsec_validate_levels {
- #define MSCC_MS_INTR_CTRL_STATUS_INTR_CLR_STATUS_M	GENMASK(15, 0)
- #define MSCC_MS_INTR_CTRL_STATUS_INTR_ENABLE(x)		((x) << 16)
- #define MSCC_MS_INTR_CTRL_STATUS_INTR_ENABLE_M		GENMASK(31, 16)
-+#define MACSEC_INTR_CTRL_STATUS_ROLLOVER		BIT(5)
- 
- #endif
+ };
+ #define to_phy_device(d) container_of(to_mdio_device(d), \
+ 				      struct phy_device, mdio)
 -- 
 2.24.1
 
