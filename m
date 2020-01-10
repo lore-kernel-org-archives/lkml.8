@@ -2,167 +2,229 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886E7C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6B7C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5968A2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:45:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSGy+ABE"
+	by mail.kernel.org (Postfix) with ESMTP id 0CC672072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:54:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728275AbgAJMpW (ORCPT
+        id S1727316AbgAJMya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 07:45:22 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46642 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728254AbgAJMpW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 07:45:22 -0500
-Received: by mail-pf1-f195.google.com with SMTP id n9so1081001pff.13;
-        Fri, 10 Jan 2020 04:45:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=kIXyMxyHb52Dqb3xzKBUlHwhFwf+AsnzOx4pqWqWlWY=;
-        b=MSGy+ABEyjJHqfkpma0mmsRX+Uc9gPbqiEVJYZR0c24iUoUTjVte/QICQT5sU9I4w+
-         DGzNNWyxHTi2QSD86mJ2nW26ainZZG+8VCaCx4ZiHMaESa44V7ievBtxPfIwbfG25vbd
-         j9hUsK65W/rw4T3+4CmHr5BgpkmftWP91D/6S3Ce/cbwBO87Aq2oalpuPrPO8xw82aTw
-         5XzmUEf1IZfc8Rv3qgg1YsgfPCRPrUtLC4zB3zSvx2y55MgRKTE99hNgVGvkfejHi1JP
-         pCGJv5MFK2eN14Gh7he9aieLiX78y2uCsJSzbyeDHIA1GYGUj/ZqRSj1K9Ex5zbz+/f/
-         d9Wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=kIXyMxyHb52Dqb3xzKBUlHwhFwf+AsnzOx4pqWqWlWY=;
-        b=Uxv9TxX41udFQi2WDmsACq4nR1xNiO0XLP+3wYSykuj2FbktIkxClYiaPoWV/tsSaC
-         65nu4HCRb8uNhN4RtQwQbTVV3IZuJwVNX3IK3aM5+tobn3yct3foZAqgknzzZfU8cQCZ
-         Xs7b7+IgDGyEnHfwfVpeDfD+iSwGrasj4P7MJG1JdLir0X/mFA4e+xlZ3aFfKyJDBOHp
-         OlyTKCs/nmnxIQJY3YXNnfHZM2EMpuYyaKrqylgl9fnm0kbGgmVMwE1JTCktNE121lO1
-         lzOdIIViaiE5ObrrpWbDthfDShdp+cwhSaZAlWiABKJp0jxmWkG90hLDYBspK6jbHNs8
-         9m+w==
-X-Gm-Message-State: APjAAAXUW89kDUDKEfttUvsIT3WOGK3SWd947O47hTOCoOS1gtzGpmEz
-        b2ZsTARdU8YqVIByClS575A=
-X-Google-Smtp-Source: APXvYqxsIaCvT7AXhc5HwdvbwnGjpRwaKBcXZvcvLZoaWm6p426Edsi9yrJobhbKmJFqnsUmEQ66aw==
-X-Received: by 2002:a63:4d1b:: with SMTP id a27mr4092403pgb.352.1578660320827;
-        Fri, 10 Jan 2020 04:45:20 -0800 (PST)
-Received: from localhost.localdomain ([103.211.17.220])
-        by smtp.googlemail.com with ESMTPSA id d3sm2764724pfn.113.2020.01.10.04.45.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 04:45:20 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH 3/3] drivers: target: tcm_fc: tfc_sess: Pass lockdep expression to RCU lists
-Date:   Fri, 10 Jan 2020 18:14:06 +0530
-Message-Id: <20200110124403.27882-3-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200110124403.27882-1-frextrite@gmail.com>
-References: <20200110124403.27882-1-frextrite@gmail.com>
+        Fri, 10 Jan 2020 07:54:30 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2254 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727167AbgAJMy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 07:54:29 -0500
+Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 73FAA8783076078CEC20;
+        Fri, 10 Jan 2020 12:54:28 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 10 Jan 2020 12:54:27 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 10 Jan
+ 2020 12:54:27 +0000
+Subject: Re: Warnings in DRM code when removing/unbinding a driver
+To:     Thomas Zimmermann <tzimmermann@suse.de>,
+        "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        "airlied@linux.ie" <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
+ <381e28c2-f3e4-6f75-c632-96dd8a980c87@suse.de>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <38ce1d99-e803-3693-adff-106dc438c973@huawei.com>
+Date:   Fri, 10 Jan 2020 12:54:26 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
+In-Reply-To: <381e28c2-f3e4-6f75-c632-96dd8a980c87@suse.de>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-head is traversed with hlist_for_each_entry_rcu
-outside an RCU read-side critical section but under the
-protection of ft_lport_lock.
 
-Hence, add the corresponding lockdep expression to the list traversal
-primitive to silence false-positive lockdep warnings, and
-harden RCU lists.
 
-Add macro for the corresponding lockdep expression to make the code
-clean and concise.
+Hi Thomas,
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- drivers/target/tcm_fc/tfc_sess.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+> drm-tip now contains
 
-diff --git a/drivers/target/tcm_fc/tfc_sess.c b/drivers/target/tcm_fc/tfc_sess.c
-index 4fd6a1de947c..8e9598010fb9 100644
---- a/drivers/target/tcm_fc/tfc_sess.c
-+++ b/drivers/target/tcm_fc/tfc_sess.c
-@@ -32,6 +32,9 @@
- 		 (lport)->host->host_no,	   \
- 		 (lport)->port_id, ##args )
- 
-+#define ft_lport_lock_held() \
-+	lockdep_is_held(&ft_lport_lock)
-+
- static void ft_sess_delete_all(struct ft_tport *);
- 
- /*
-@@ -45,7 +48,7 @@ static struct ft_tport *ft_tport_get(struct fc_lport *lport)
- 	int i;
- 
- 	tport = rcu_dereference_protected(lport->prov[FC_TYPE_FCP],
--					  lockdep_is_held(&ft_lport_lock));
-+							ft_lport_lock_held());
- 	if (tport && tport->tpg)
- 		return tport;
- 
-@@ -170,7 +173,7 @@ static struct ft_sess *ft_sess_get(struct fc_lport *lport, u32 port_id)
- 	}
- 
- 	head = &tport->hash[ft_sess_hash(port_id)];
--	hlist_for_each_entry_rcu(sess, head, hash) {
-+	hlist_for_each_entry_rcu(sess, head, hash, ft_lport_lock_held()) {
- 		if (sess->port_id == port_id) {
- 			kref_get(&sess->kref);
- 			rcu_read_unlock();
-@@ -215,7 +218,7 @@ static struct ft_sess *ft_sess_create(struct ft_tport *tport, u32 port_id,
- 	ft_format_wwn(&initiatorname[0], TRANSPORT_IQN_LEN, rdata->ids.port_name);
- 
- 	head = &tport->hash[ft_sess_hash(port_id)];
--	hlist_for_each_entry_rcu(sess, head, hash)
-+	hlist_for_each_entry_rcu(sess, head, hash, ft_lport_lock_held())
- 		if (sess->port_id == port_id)
- 			return sess;
- 
-@@ -264,7 +267,7 @@ static struct ft_sess *ft_sess_delete(struct ft_tport *tport, u32 port_id)
- 	struct ft_sess *sess;
- 
- 	head = &tport->hash[ft_sess_hash(port_id)];
--	hlist_for_each_entry_rcu(sess, head, hash) {
-+	hlist_for_each_entry_rcu(sess, head, hash, ft_lport_lock_held()) {
- 		if (sess->port_id == port_id) {
- 			ft_sess_unhash(sess);
- 			return sess;
-@@ -291,7 +294,7 @@ static void ft_sess_delete_all(struct ft_tport *tport)
- 
- 	for (head = tport->hash;
- 	     head < &tport->hash[FT_SESS_HASH_SIZE]; head++) {
--		hlist_for_each_entry_rcu(sess, head, hash) {
-+		hlist_for_each_entry_rcu(sess, head, hash, ft_lport_lock_held()) {
- 			ft_sess_unhash(sess);
- 			ft_close_sess(sess);	/* release from table */
- 		}
-@@ -454,7 +457,7 @@ static void ft_prlo(struct fc_rport_priv *rdata)
- 
- 	mutex_lock(&ft_lport_lock);
- 	tport = rcu_dereference_protected(rdata->local_port->prov[FC_TYPE_FCP],
--					  lockdep_is_held(&ft_lport_lock));
-+							ft_lport_lock_held());
- 
- 	if (!tport) {
- 		mutex_unlock(&ft_lport_lock);
--- 
-2.24.1
+I have tested today's linux-next, which includes this:
+
+> 
+> commit a88248506a2bcfeaef6837a53cde19fe11970e6c
+> Author: Thomas Zimmermann <tzimmermann@suse.de>
+> Date:   Tue Dec 3 09:38:15 2019 +0100
+> 
+>      drm/hisilicon/hibmc: Switch to generic fbdev emulation
+> 
+> which removes this entire code and switches hibmc to generic fbdev
+> emulation. Does that fix the problem?
+> 
+
+And I see no warn, here's a dmesg snippet:
+
+[   20.672787] pci 0007:90:00.0: can't derive routing for PCI INT A
+[   20.678831] hibmc-drm 0007:91:00.0: PCI INT A: no GSI
+[   20.686536] pci_bus 0007:90: 2-byte config write to 0007:90:00.0 
+offset 0x4 may corrupt adjacent RW1C bits
+[   20.696888] [TTM] Zone  kernel: Available graphics memory: 57359458 KiB
+[   20.703545] [TTM] Zone   dma32: Available graphics memory: 2097152 KiB
+[   20.710108] [TTM] Initializing pool allocator
+[   20.714561] [TTM] Initializing DMA pool allocator
+[   20.720212] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[   20.726863] [drm] No driver support for vblank timestamp query.
+[   20.754777] Console: switching to colour frame buffer device 100x37
+[   20.778180] hibmc-drm 0007:91:00.0: fb0: hibmcdrmfb frame buffer device
+[   20.786447] [drm] Initialized hibmc 1.0.0 20160828 for 0007:91:00.0 
+on minor 0
+[   20.794346] Console: switching to colour dummy device 80x25
+[   20.801884] pci 0007:90:00.0: can't derive routing for PCI INT A
+[   20.807963] hibmc-drm 0007:91:00.0: PCI INT A: no GSI
+[   20.813656] [TTM] Finalizing pool allocator
+[   20.817905] [TTM] Finalizing DMA pool allocator
+[   20.822576] [TTM] Zone  kernel: Used memory at exit: 0 KiB
+[   20.828760] [TTM] Zone   dma32: Used memory at exit: 0 KiB
+[   20.834978] pci 0007:90:00.0: can't derive routing for PCI INT A
+[   20.841021] hibmc-drm 0007:91:00.0: PCI INT A: no GSI
+[   20.848858] [TTM] Zone  kernel: Available graphics memory: 57359458 KiB
+[   20.855516] [TTM] Zone   dma32: Available graphics memory: 2097152 KiB
+[   20.862079] [TTM] Initializing pool allocator
+[   20.866525] [TTM] Initializing DMA pool allocator
+[   20.872064] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+[   20.878716] [drm] No driver support for vblank timestamp query.
+[   20.905996] Console: switching to colour frame buffer device 100x37
+[   20.929385] hibmc-drm 0007:91:00.0: fb0: hibmcdrmfb frame buffer device
+[   20.937241] [drm] Initialized hibmc 1.0.0 20160828 for 0007:91:00.0 
+on minor 0
+[   21.171906] loop: module loaded
+
+Thanks,
+John
+
+> Best regards
+> Thomas
+> 
+>> [   27.965802]  hibmc_unload+0x2c/0xd0
+>> [   27.969281]  hibmc_pci_remove+0x2c/0x40
+>> [   27.973109]  pci_device_remove+0x6c/0x140
+>> [   27.977110]  really_probe+0x174/0x548
+>> [   27.980763]  driver_probe_device+0x7c/0x148
+>> [   27.984936]  device_driver_attach+0x94/0xa0
+>> [   27.989109]  __driver_attach+0xa8/0x110
+>> [   27.992935]  bus_for_each_dev+0xe8/0x158
+>> [   27.996849]  driver_attach+0x30/0x40
+>> [   28.000415]  bus_add_driver+0x234/0x2f0
+>> [   28.004241]  driver_register+0xbc/0x1d0
+>> [   28.008067]  __pci_register_driver+0xbc/0xd0
+>> [   28.012329]  hibmc_pci_driver_init+0x20/0x28
+>> [   28.016590]  do_one_initcall+0xb4/0x254
+>> [   28.020417]  kernel_init_freeable+0x27c/0x328
+>> [   28.024765]  kernel_init+0x10/0x118
+>> [   28.028245]  ret_from_fork+0x10/0x18
+>> [   28.031813] ---[ end trace 35a83b71b657878d ]---
+>> [   28.036503] ------------[ cut here ]------------
+>> [   28.041115] WARNING: CPU: 24 PID: 1 at
+>> drivers/gpu/drm/drm_gem_vram_helper.c:40
+>> ttm_buffer_object_destroy+0x4c/0x80
+>> [   28.051537] Modules linked in:
+>> [   28.054585] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G    B   W
+>>   5.5.0-rc1-dirty #565
+>> [   28.062924] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
+>> RC0 - V1.16.01 03/15/2019
+>>
+>> [snip]
+>>
+>> Indeed, simply unbinding the device from the driver causes the same sort
+>> of issue:
+>>
+>> root@(none)$ cd ./bus/pci/drivers/hibmc-drm/
+>> root@(none)$ ls
+>> 0000:05:00.0  bind          new_id        remove_id     uevent
+>> unbind
+>> root@(none)$ echo 0000\:05\:00.0 > unbind
+>> [  116.074352] ------------[ cut here ]------------
+>> [  116.078978] WARNING: CPU: 17 PID: 1178 at
+>> drivers/gpu/drm/drm_gem_vram_helper.c:40
+>> ttm_buffer_object_destroy+0x4c/0x80
+>> [  116.089661] Modules linked in:
+>> [  116.092711] CPU: 17 PID: 1178 Comm: sh Tainted: G    B   W
+>> 5.5.0-rc1-dirty #565
+>> [  116.100704] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
+>> RC0 - V1.16.01 03/15/2019
+>> [  116.109218] pstate: 20400009 (nzCv daif +PAN -UAO)
+>> [  116.114001] pc : ttm_buffer_object_destroy+0x4c/0x80
+>> [  116.118956] lr : ttm_buffer_object_destroy+0x18/0x80
+>> [  116.123910] sp : ffff0022e6cef8e0
+>> [  116.127215] x29: ffff0022e6cef8e0 x28: ffff00231b1fb000
+>> [  116.132519] x27: 0000000000000000 x26: ffff00231b1fb000
+>> [  116.137821] x25: ffff0022e6cefdc0 x24: 0000000000002480
+>> [  116.143124] x23: ffff0023682b6ab0 x22: ffff0023682b6800
+>> [  116.148427] x21: ffff0023682b6800 x20: 0000000000000000
+>> [  116.153730] x19: ffff0023682b6800 x18: 0000000000000000
+>> [  116.159032] x17: 000000000000000000000000001
+>> [  116.185545] x7 : ffff0023682b6b07 x6 : ffff80046d056d61
+>> [  116.190848] x5 : ffff80046d056d61 x4 : ffff0023682b6ba0
+>> [  116.196151] x3 : ffffa00010197338 x2 : dfffa00000000000
+>> [  116.201453] x1 : 0000000000000003 x0 : 0000000000000001
+>> [  116.206756] Call trace:
+>> [  116.209195]  ttm_buffer_object_destroy+0x4c/0x80
+>> [  116.213803]  ttm_bo_release_list+0x184/0x220
+>> [  116.218064]  ttm_bo_put+0x410/0x5d0
+>> [  116.221544]  drm_gem_vram_object_free+0xc/0x18
+>> [  116.225979]  drm_gem_object_free+0x34/0xd0
+>> [  116.230066]  drm_gem_object_put_unlocked+0xc8/0xf0
+>> [  116.234848]  hibmc_user_framebuffer_destroy+0x20/0x40
+>> [  116.239890]  drm_framebuffer_free+0x48/0x58
+>> [  116.244064]  drm_mode_object_put.part.1+0x90/0xe8
+>> [  116.248759]  drm_mode_object_put+0x28/0x38
+>> [  116.252846]  hibmc_fbdev_fini+0x54/0x78
+>> [  116.256672]  hibmc_unload+0x2c/0xd0
+>> [  116.260151]  hibmc_pci_remove+0x2c/0x40
+>> [  116.263979]  pci_device_remove+0x6c/0x140
+>> [  116.267980]  device_release_driver_internal+0x134/0x250
+>> [  116.273196]  device_driver_detach+0x28/0x38
+>> [  116.277369]  unbind_store+0xfc/0x150
+>> [  116.280934]  drv_attr_store+0x48/0x60
+>> [  116.284589]  sysfs_kf_write+0x80/0xb0
+>> [  116.288241]  kernfs_fop_write+0x1d4/0x320
+>> [  116.292243]  __vfs_write+0x54/0x98
+>> [  116.295635]  vfs_write+0xe8/0x270
+>> [  116.298940]  ksys_write+0xc8/0x180
+>> [  116.302333]  __arm64_sys_write+0x40/0x50
+>> [  116.306248]  el0_svc_common.constprop.0+0xa4/0x1f8
+>> [  116.311029]  el0_svc_handler+0x34/0xb0
+>> [  116.314770]  el0_sync_handler+0x10c/0x1c8
+>> [  116.318769]  el0_sync+0x140/0x180
+>> [  116.322074] ---[ end trace e60e43d0e316b5c8 ]---
+>> [  116.326868] ------------[ cut here ]------------
+>>
+>>
+>> dmesg and .config is here:
+>> https://pastebin.com/4P5yaZBS
+>>
+>> I'm not sure if this is a HIBMC driver issue or issue with the framework.
+>>
+>> john
+>>
+>>
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
 
