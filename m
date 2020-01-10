@@ -2,291 +2,148 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68113C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2764BC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 218932082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43BD2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:29:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ptrtSz7f"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="OGSVvCge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbgAJT2q (ORCPT
+        id S1728794AbgAJT3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:28:46 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39137 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728451AbgAJT2p (ORCPT
+        Fri, 10 Jan 2020 14:29:22 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:47077 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728202AbgAJT3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:28:45 -0500
-Received: by mail-qt1-f196.google.com with SMTP id e5so2933507qtm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 11:28:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cmeeR6sFr6oqqNVkXHK8c9y5ayWUIz10dfFpsgcsQj4=;
-        b=ptrtSz7foFY8FAz65+d1QyBOqa69MXwzFssgCSf6ATmws/lNJfiY2a9JFpGX2LhLca
-         gCmfPoVT4ezuJMGj3ig7EiO5zns79taKmDXzt+QHbwp2WuUTSgLORwGIUNCS1ERZJEZn
-         vr+VuphxycLfaJCYG5H1yD0qi36MQQbnFJf9M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cmeeR6sFr6oqqNVkXHK8c9y5ayWUIz10dfFpsgcsQj4=;
-        b=VzN8MZz+u1Hmlcph+507Lk+Fme2KvODz9H51xDnk7O3q57AE1FzdIpnFBnFG4qSVpk
-         ANsTt5ZrIOVlAXM7gCZWvhy36qz2SUfZJ48BqK0Rujz7QHfyjdjsaO/1XHFBSzpT28u1
-         5sGw/mOL7huwTT8brrmGJ2brRpg/kCOmroiWfmPTAIBOuhSRpfITmVKLFOaLi9w2yoaB
-         MGudC6BxlkgUcmvGIuy7RoIanZLTXULCj5LwXhDz/WCtJBcIeL1Rh4D2te2U3znGMXH2
-         cw1wEv4msrnG+Yrdlxs4SWig5MPiKi15DUHL4KWhvlFIQk+ZuR2Jw8Ytmsv0wtTz7YUc
-         Cmpw==
-X-Gm-Message-State: APjAAAXAl99nBF9ZAhkEGsvUrztz0lESiHWnSZYbS7/PmGYVQ0aFCVYx
-        RrvL/jhvFPQttL6Kwo4VhVuu9vFskLz4Nl4oC0eU7w==
-X-Google-Smtp-Source: APXvYqyTC49Q79RPdc2ffkUhh2mIAwLB5/v3qZ8/Fo1mNmgc9rpnVB+LkUZn58LutcZbBpomNDFsyoALppFootipY5s=
-X-Received: by 2002:ac8:187b:: with SMTP id n56mr22064qtk.173.1578684524187;
- Fri, 10 Jan 2020 11:28:44 -0800 (PST)
-MIME-Version: 1.0
-References: <CABWYdi25Y=zrfdnitT3sSgC3UqcFHfz6-N2YP7h2TJai=JH_zg@mail.gmail.com>
- <20200109161632.GB8547@cmpxchg.org>
-In-Reply-To: <20200109161632.GB8547@cmpxchg.org>
-From:   Ivan Babrou <ivan@cloudflare.com>
-Date:   Fri, 10 Jan 2020 11:28:32 -0800
-Message-ID: <CABWYdi1Hs3Jgn5Rq=4X9w2+kG4mfsbGuV=8UMS=6mr=SVjOfVw@mail.gmail.com>
-Subject: Re: Lower than expected CPU pressure in PSI
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 10 Jan 2020 14:29:21 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578684561; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=EHK7ZOIjToT9khxX7iSgvPJgRfkrf/0cdN7Y+Xvfzcw=; b=OGSVvCgevWNKsm5ez8hd5WkLZ9yhaUWrEkYQ3bXfbt6lE3LotgB6PzcUp230wNnGdOokJNjx
+ v2xTK6Duor+bRR7mDmr0eSBIe8M/0A+ri7CmkOJ+iLnIjcUSlUKrs4hGMzQZZMtFth2p6BKj
+ 5Yje41uo7XA/KzkU6xnkt9WxanE=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e18d090.7f1488644dc0-smtp-out-n03;
+ Fri, 10 Jan 2020 19:29:20 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1C700C4479F; Fri, 10 Jan 2020 19:29:20 +0000 (UTC)
+Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: eberman)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 12C10C43383;
+        Fri, 10 Jan 2020 19:29:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 12C10C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
+From:   Elliot Berman <eberman@codeaurora.org>
+To:     Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Elliot Berman <eberman@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        tsoni@codeaurora.org, psodagud@codeaurora.org,
+        linux-arm-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC] drivers: firmware: psci: Add function to support SYSTEM_RESET2
+Date:   Fri, 10 Jan 2020 11:29:12 -0800
+Message-Id: <1578684552-15953-2-git-send-email-eberman@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578684552-15953-1-git-send-email-eberman@codeaurora.org>
+References: <1578684552-15953-1-git-send-email-eberman@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I applied the patch on top of 5.5.0-rc3 and it's definitely better
-now, both competing cgroups report 500ms/s delay. Feel free to add
-Tested-by from me.
+Make SYSTEM_RESET2 command part of its own function which client drivers
+may also invoke to support vendor-specific reset types.
 
-I'm still seeing /unified/system.slice at 385ms/s and /unified.slice
-at 372ms/s, do you have an explanation for that part? Maybe it's
-totally reasonable, but warrants a patch for documentation.
+Signed-off-by: Elliot Berman <eberman@codeaurora.org>
+---
+ drivers/firmware/psci/psci.c | 16 +++++++++++++++-
+ include/linux/psci.h         |  3 +++
+ include/uapi/linux/psci.h    |  8 ++++++++
+ 3 files changed, 26 insertions(+), 1 deletion(-)
 
-On Thu, Jan 9, 2020 at 8:16 AM Johannes Weiner <hannes@cmpxchg.org> wrote:
->
-> On Wed, Jan 08, 2020 at 11:47:10AM -0800, Ivan Babrou wrote:
-> > We added reporting for PSI in cgroups and results are somewhat surprising.
-> >
-> > My test setup consists of 3 services:
-> >
-> > * stress-cpu1-no-contention.service : taskset -c 1 stress --cpu 1
-> > * stress-cpu2-first-half.service    : taskset -c 2 stress --cpu 1
-> > * stress-cpu2-second-half.service   : taskset -c 2 stress --cpu 1
-> >
-> > First service runs unconstrained, the other two compete for CPU.
-> >
-> > As expected, I can see 500ms/s sched delay for the latter two and
-> > aggregated 1000ms/s delay for /system.slice, no surprises here.
-> >
-> > However, CPU pressure reported by PSI says that none of my services
-> > have any pressure on them. I can see around 434ms/s pressure on
-> > /unified/system.slice and 425ms/s pressure on /unified cgroup, which
-> > is surprising for three reasons:
-> >
-> > * Pressure is absent for my services (I expect it to match scheed delay)
-> > * Pressure on /unified/system.slice is lower than both 500ms/s and 1000ms/s
-> > * Pressure on root cgroup is lower than on system.slice
->
-> CPU pressure is currently implemented based only on the number of
-> *runnable* tasks, not on who gets to actively use the CPU. This works
-> for contention within cgroups or at the global scope, but it doesn't
-> correctly reflect competition between cgroups. It also doesn't show
-> the effects of e.g. cpu cycle limiting through cpu.max where there
-> might *be* only one runnable task, but it's not getting the CPU.
->
-> I've been working on fixing this, but hadn't gotten around to sending
-> the patch upstream. Attaching it below. Would you mind testing it?
->
-> Peter, what would you think of the below?
->
-> ---
-> From 98c233aae05b7d43e465d4c382a3a20905235296 Mon Sep 17 00:00:00 2001
-> From: Johannes Weiner <hannes@cmpxchg.org>
-> Date: Thu, 14 Nov 2019 15:53:45 -0500
-> Subject: [PATCH] psi: fix cpu.pressure for cpu.max and competing cgroups
->
-> For simplicity, cpu pressure is defined as having more than one
-> runnable task on a given CPU. This works on the system-level, but it
-> has limitations in a cgrouped reality: When cpu.max is in use, it
-> doesn't capture the time in which a task is not executing on the CPU
-> due to throttling. Likewise, it doesn't capture the time in which a
-> competing cgroup is occupying the CPU - meaning it only reflects
-> cgroup-internal competitive pressure, not outside pressure.
->
-> Enable tracking of currently executing tasks, and then change the
-> definition of cpu pressure in a cgroup from
->
->         NR_RUNNING > 1
->
-> to
->
->         NR_RUNNING > ON_CPU
->
-> which will capture the effects of cpu.max as well as competition from
-> outside the cgroup.
->
-> After this patch, a cgroup running `stress -c 1` with a cpu.max
-> setting of 5000 10000 shows ~50% continuous CPU pressure.
->
-> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
-> ---
->  include/linux/psi_types.h | 10 +++++++++-
->  kernel/sched/core.c       |  2 ++
->  kernel/sched/psi.c        | 12 +++++++-----
->  kernel/sched/stats.h      | 28 ++++++++++++++++++++++++++++
->  4 files changed, 46 insertions(+), 6 deletions(-)
->
-> diff --git a/include/linux/psi_types.h b/include/linux/psi_types.h
-> index 07aaf9b82241..4b7258495a04 100644
-> --- a/include/linux/psi_types.h
-> +++ b/include/linux/psi_types.h
-> @@ -14,13 +14,21 @@ enum psi_task_count {
->         NR_IOWAIT,
->         NR_MEMSTALL,
->         NR_RUNNING,
-> -       NR_PSI_TASK_COUNTS = 3,
-> +       /*
-> +        * This can't have values other than 0 or 1 and could be
-> +        * implemented as a bit flag. But for now we still have room
-> +        * in the first cacheline of psi_group_cpu, and this way we
-> +        * don't have to special case any state tracking for it.
-> +        */
-> +       NR_ONCPU,
-> +       NR_PSI_TASK_COUNTS = 4,
->  };
->
->  /* Task state bitmasks */
->  #define TSK_IOWAIT     (1 << NR_IOWAIT)
->  #define TSK_MEMSTALL   (1 << NR_MEMSTALL)
->  #define TSK_RUNNING    (1 << NR_RUNNING)
-> +#define TSK_ONCPU      (1 << NR_ONCPU)
->
->  /* Resources that workloads could be stalled on */
->  enum psi_res {
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 44123b4d14e8..9296e0de7b72 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -4072,6 +4072,8 @@ static void __sched notrace __schedule(bool preempt)
->                  */
->                 ++*switch_count;
->
-> +               psi_sched_switch(prev, next, !task_on_rq_queued(prev));
-> +
->                 trace_sched_switch(preempt, prev, next);
->
->                 /* Also unlocks the rq: */
-> diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
-> index 517e3719027e..fad91da54aab 100644
-> --- a/kernel/sched/psi.c
-> +++ b/kernel/sched/psi.c
-> @@ -224,7 +224,7 @@ static bool test_state(unsigned int *tasks, enum psi_states state)
->         case PSI_MEM_FULL:
->                 return tasks[NR_MEMSTALL] && !tasks[NR_RUNNING];
->         case PSI_CPU_SOME:
-> -               return tasks[NR_RUNNING] > 1;
-> +               return tasks[NR_RUNNING] > tasks[NR_ONCPU];
->         case PSI_NONIDLE:
->                 return tasks[NR_IOWAIT] || tasks[NR_MEMSTALL] ||
->                         tasks[NR_RUNNING];
-> @@ -694,10 +694,10 @@ static u32 psi_group_change(struct psi_group *group, int cpu,
->                 if (!(m & (1 << t)))
->                         continue;
->                 if (groupc->tasks[t] == 0 && !psi_bug) {
-> -                       printk_deferred(KERN_ERR "psi: task underflow! cpu=%d t=%d tasks=[%u %u %u] clear=%x set=%x\n",
-> +                       printk_deferred(KERN_ERR "psi: task underflow! cpu=%d t=%d tasks=[%u %u %u %u] clear=%x set=%x\n",
->                                         cpu, t, groupc->tasks[0],
->                                         groupc->tasks[1], groupc->tasks[2],
-> -                                       clear, set);
-> +                                       groupc->tasks[3], clear, set);
->                         psi_bug = 1;
->                 }
->                 groupc->tasks[t]--;
-> @@ -915,9 +915,11 @@ void cgroup_move_task(struct task_struct *task, struct css_set *to)
->
->         rq = task_rq_lock(task, &rf);
->
-> -       if (task_on_rq_queued(task))
-> +       if (task_on_rq_queued(task)) {
->                 task_flags = TSK_RUNNING;
-> -       else if (task->in_iowait)
-> +               if (task_current(rq, task))
-> +                       task_flags |= TSK_ONCPU;
-> +       } else if (task->in_iowait)
->                 task_flags = TSK_IOWAIT;
->
->         if (task->flags & PF_MEMSTALL)
-> diff --git a/kernel/sched/stats.h b/kernel/sched/stats.h
-> index ba683fe81a6e..6ff0ac1a803f 100644
-> --- a/kernel/sched/stats.h
-> +++ b/kernel/sched/stats.h
-> @@ -93,6 +93,14 @@ static inline void psi_dequeue(struct task_struct *p, bool sleep)
->                 if (p->flags & PF_MEMSTALL)
->                         clear |= TSK_MEMSTALL;
->         } else {
-> +               /*
-> +                * When a task sleeps, schedule() dequeues it before
-> +                * switching to the next one. Merge the clearing of
-> +                * TSK_RUNNING and TSK_ONCPU to save an unnecessary
-> +                * psi_task_change() call in psi_sched_switch().
-> +                */
-> +               clear |= TSK_ONCPU;
-> +
->                 if (p->in_iowait)
->                         set |= TSK_IOWAIT;
->         }
-> @@ -126,6 +134,23 @@ static inline void psi_ttwu_dequeue(struct task_struct *p)
->         }
->  }
->
-> +static inline void psi_sched_switch(struct task_struct *prev,
-> +                                   struct task_struct *next,
-> +                                   bool sleep)
-> +{
-> +       if (static_branch_likely(&psi_disabled))
-> +               return;
-> +
-> +       /*
-> +        * Clear the TSK_ONCPU state if the task was preempted. If
-> +        * it's a voluntary sleep, dequeue will have taken care of it.
-> +        */
-> +       if (!sleep)
-> +               psi_task_change(prev, TSK_ONCPU, 0);
-> +
-> +       psi_task_change(next, 0, TSK_ONCPU);
-> +}
-> +
->  static inline void psi_task_tick(struct rq *rq)
->  {
->         if (static_branch_likely(&psi_disabled))
-> @@ -138,6 +163,9 @@ static inline void psi_task_tick(struct rq *rq)
->  static inline void psi_enqueue(struct task_struct *p, bool wakeup) {}
->  static inline void psi_dequeue(struct task_struct *p, bool sleep) {}
->  static inline void psi_ttwu_dequeue(struct task_struct *p) {}
-> +static inline void psi_sched_switch(struct task_struct *prev,
-> +                                   struct task_struct *next,
-> +                                   bool sleep) {}
->  static inline void psi_task_tick(struct rq *rq) {}
->  #endif /* CONFIG_PSI */
->
-> --
-> 2.24.1
+diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+index b3b6c15..338e4be 100644
+--- a/drivers/firmware/psci/psci.c
++++ b/drivers/firmware/psci/psci.c
+@@ -220,6 +220,15 @@ static unsigned long psci_migrate_info_up_cpu(void)
+ 			      0, 0, 0);
+ }
+ 
++int psci_system_reset2(const u32 reset_type, const unsigned long cookie)
++{
++	if (!psci_system_reset2_supported)
++		return -EOPNOTSUPP;
++	return invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2), reset_type,
++			      cookie, 0);
++}
++EXPORT_SYMBOL_GPL(psci_system_reset2);
++
+ static void set_conduit(enum arm_smccc_conduit conduit)
+ {
+ 	switch (conduit) {
+@@ -267,7 +276,12 @@ static void psci_sys_reset(enum reboot_mode reboot_mode, const char *cmd)
+ 		 * reset_type[30:0] = 0 (SYSTEM_WARM_RESET)
+ 		 * cookie = 0 (ignored by the implementation)
+ 		 */
+-		invoke_psci_fn(PSCI_FN_NATIVE(1_1, SYSTEM_RESET2), 0, 0, 0);
++		psci_system_reset2(
++			PSCI_1_1_SYSTEM_RESET2_SYSTEM_WARM_RESET |
++			(PSCI_1_1_SYSTEM_RESET2_TYPE_ARCHITECTURE <<
++			PSCI_1_1_SYSTEM_RESET2_SHIFT),
++			0
++		);
+ 	} else {
+ 		invoke_psci_fn(PSCI_0_2_FN_SYSTEM_RESET, 0, 0, 0);
+ 	}
+diff --git a/include/linux/psci.h b/include/linux/psci.h
+index ebe0a88..9479952 100644
+--- a/include/linux/psci.h
++++ b/include/linux/psci.h
+@@ -41,8 +41,11 @@ extern struct psci_operations psci_ops;
+ 
+ #if defined(CONFIG_ARM_PSCI_FW)
+ int __init psci_dt_init(void);
++int psci_system_reset2(const u32 reset_type, const unsigned long cookie);
+ #else
+ static inline int psci_dt_init(void) { return 0; }
++static inline int psci_system_reset2(const u32 reset_type,
++	const unsigned long cookie) { return -ENODEV; }
+ #endif
+ 
+ #if defined(CONFIG_ARM_PSCI_FW) && defined(CONFIG_ACPI)
+diff --git a/include/uapi/linux/psci.h b/include/uapi/linux/psci.h
+index 2fcad1d..42edbd7 100644
+--- a/include/uapi/linux/psci.h
++++ b/include/uapi/linux/psci.h
+@@ -72,6 +72,14 @@
+ #define PSCI_1_0_EXT_POWER_STATE_TYPE_MASK	\
+ 				(0x1 << PSCI_1_0_EXT_POWER_STATE_TYPE_SHIFT)
+ 
++/* PSCI SYSTEM_RESET2 reset_type argument */
++#define PSCI_1_1_SYSTEM_RESET2_SYSTEM_WARM_RESET	0x0
++#define PSCI_1_1_SYSTEM_RESET2_TYPE_VENDOR		1
++#define PSCI_1_1_SYSTEM_RESET2_TYPE_ARCHITECTURE	0
++#define PSCI_1_1_SYSTEM_RESET2_TYPE_SHIFT		30
++#define PSCI_1_1_SYSTEM_RESET2_TYPE_MASK		\
++				(0x1 << PSCI_1_1_SYSTEM_RESET2_TYPE_SHIFT)
++
+ /* PSCI v0.2 affinity level state returned by AFFINITY_INFO */
+ #define PSCI_0_2_AFFINITY_LEVEL_ON		0
+ #define PSCI_0_2_AFFINITY_LEVEL_OFF		1
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
