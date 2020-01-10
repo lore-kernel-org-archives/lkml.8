@@ -2,111 +2,138 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088EFC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00B7C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD45420721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A9A2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578693961;
+	bh=hNUI5rCXY/JGwB+H+BOV4HGykXp69tf62roWzp9ofdo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=dFNfaC6vTzP8ePWPQbV9EK7YW++aMg7AtKd3eBJ847WLL9S63jOgs2PkuwSfLBatz
+	 jxaS/4n413sadcutVkVuchXhuB5jfkBfaAIOG7SYxTVoNAUdt4Q1phA99V4tSIkAP0
+	 Yhy3aCrAzuFV9PjHQGgzckqRsS7CPhrf4bUyyO88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbgAJWF5 (ORCPT
+        id S1728040AbgAJWGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:05:57 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:48828 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727867AbgAJWFy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:05:54 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 10 Jan 2020 17:06:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52252 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727867AbgAJWF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:05:58 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id 833F62005F;
-        Fri, 10 Jan 2020 23:05:49 +0100 (CET)
-Date:   Fri, 10 Jan 2020 23:05:48 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Subject: Re: [PATCH 0/6] dt-bindings: display: Update few panel bindings with
- YAML
-Message-ID: <20200110220548.GB29600@ravnborg.org>
-References: <20200101112444.16250-1-jagan@amarulasolutions.com>
- <20200104151702.GC17768@ravnborg.org>
- <CAMty3ZDbDf6YovrEdG0pACQAwMQidjKr6BJvx-FPXqyT11G05w@mail.gmail.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 3548620678;
+        Fri, 10 Jan 2020 22:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578693958;
+        bh=hNUI5rCXY/JGwB+H+BOV4HGykXp69tf62roWzp9ofdo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BDR1/nKXPYPRJtI1tdfJgdh86fVC1BXVdn2707GXsp3DdfwMlOuScxtDEtaxntoPL
+         +3gcvDGLoib3qVROGEaiuzkC4559hc4/C2+D+Ai3tdeaW1ghQo0HYDxhdje8XpNxJx
+         Z5CQsP8HWs5FCN5AWzgrrBqioHnFtc6gm1NYnXpI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 01/11] mips: cacheinfo: report shared CPU map
+Date:   Fri, 10 Jan 2020 17:05:46 -0500
+Message-Id: <20200110220556.28505-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZDbDf6YovrEdG0pACQAwMQidjKr6BJvx-FPXqyT11G05w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
-        a=d2ZgxUcwpuBiIAahjgQA:9 a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jagan.
+From: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
 
-On Mon, Jan 06, 2020 at 03:41:40PM +0530, Jagan Teki wrote:
-> Hi Sam,
-> 
-> On Sat, Jan 4, 2020 at 8:47 PM Sam Ravnborg <sam@ravnborg.org> wrote:
-> >
-> > Hi Jagan.
-> > On Wed, Jan 01, 2020 at 04:54:38PM +0530, Jagan Teki wrote:
-> > > These panel bindings are owned by me, so updated all of them into
-> > > YAML DT schema.
-> > >
-> > > Any inputs?
-> > Thanks for doing the conversion.
-> >
-> > dt_binding_check was not happy:
-> > Documentation/devicetree/bindings/display/panel/rocktech,rk070er9427.example.dt.yaml: panel: 'backlight', 'port' do not match any of the regexes: 'pinctrl-[0-9]+'
-> >   DTC     Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.example.dt.yaml
-> >   CHECK   Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.example.dt.yaml
-> > Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.example.dt.yaml: panel: 'backlight', 'port' do not match any of the regexes: 'pinctrl-[0-9]+'
-> > Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.example.dt.yaml: panel: compatible: Additional items are not allowed ('simple-panel' was unexpected)
-> > Documentation/devicetree/bindings/display/panel/friendlyarm,hd702e.example.dt.yaml: panel: compatible: ['friendlyarm,hd702e', 'simple-panel'] is too long
-> >   DTC     Documentation/devicetree/bindings/display/panel/sitronix,st7701.example.dt.yaml
-> > Error: Documentation/devicetree/bindings/display/panel/sitronix,st7701.example.dts:22.42-43 syntax error
-> > FATAL ERROR: Unable to parse input tree
-> >
-> > Please fix and check the bindings using dt_binding_check before
-> > resubmit.
-> >
-> > I had to install libyaml-dev (as least I recall this was the name)
-> > before dt_binding_check worked OK for me.
-> 
-> I did check dt_binfing_check with this series. Here is the complete
-> build log and you can see the panels related to this series are
-> checked fine. Let me know if I miss anything here?
+[ Upstream commit 3b1313eb32c499d46dc4c3e896d19d9564c879c4 ]
 
-Due to other errors you never reached the poart that checks the example.
-I use the following to focus on a single binding:
+Report L1 caches as shared per core; L2 - per cluster.
 
-(from my script, but you get the idea)
+This fixes "perf" that went crazy if shared_cpu_map attribute not
+reported on sysfs, in form of
 
-domake ${arch} ${config} dt_binding_check DT_SCHEMA_FILES=${bindings}/display/panel/feixin,k101-im2ba02.yaml
+/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_list
+/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_map
 
-In this way I can ignore all the bindings that otherwise fails.
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/kernel/cacheinfo.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
-Note: I sometimes have to clean my ouput directory to force that the
-examples are tested.
+diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
+index 428ef2189203..3ea95568ece4 100644
+--- a/arch/mips/kernel/cacheinfo.c
++++ b/arch/mips/kernel/cacheinfo.c
+@@ -61,6 +61,25 @@ static int __init_cache_level(unsigned int cpu)
+ 	return 0;
+ }
+ 
++static void fill_cpumask_siblings(int cpu, cpumask_t *cpu_map)
++{
++	int cpu1;
++
++	for_each_possible_cpu(cpu1)
++		if (cpus_are_siblings(cpu, cpu1))
++			cpumask_set_cpu(cpu1, cpu_map);
++}
++
++static void fill_cpumask_cluster(int cpu, cpumask_t *cpu_map)
++{
++	int cpu1;
++	int cluster = cpu_cluster(&cpu_data[cpu]);
++
++	for_each_possible_cpu(cpu1)
++		if (cpu_cluster(&cpu_data[cpu1]) == cluster)
++			cpumask_set_cpu(cpu1, cpu_map);
++}
++
+ static int __populate_cache_leaves(unsigned int cpu)
+ {
+ 	struct cpuinfo_mips *c = &current_cpu_data;
+@@ -68,14 +87,20 @@ static int __populate_cache_leaves(unsigned int cpu)
+ 	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
+ 
+ 	if (c->icache.waysize) {
++		/* L1 caches are per core */
++		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_DATA);
++		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(icache, this_leaf, 1, CACHE_TYPE_INST);
+ 	} else {
+ 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_UNIFIED);
+ 	}
+ 
+-	if (c->scache.waysize)
++	if (c->scache.waysize) {
++		/* L2 cache is per cluster */
++		fill_cpumask_cluster(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(scache, this_leaf, 2, CACHE_TYPE_UNIFIED);
++	}
+ 
+ 	if (c->tcache.waysize)
+ 		populate_cache(tcache, this_leaf, 3, CACHE_TYPE_UNIFIED);
+-- 
+2.20.1
 
-It is also a good idea to introduce errors on purpose in the example, in
-this way you can check that they are tested.
-
-	Sam
