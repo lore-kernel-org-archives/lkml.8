@@ -2,143 +2,99 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42827C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B36C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F792072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EFEB2072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:55:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728044AbgAJLy2 (ORCPT
+        id S1728076AbgAJLzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:54:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:43096 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728015AbgAJLy0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:54:26 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16A13139F;
-        Fri, 10 Jan 2020 03:54:26 -0800 (PST)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.44])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE2283F534;
-        Fri, 10 Jan 2020 03:54:24 -0800 (PST)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 02/14] net: axienet: Propagate failure of DMA descriptor setup
-Date:   Fri, 10 Jan 2020 11:54:03 +0000
-Message-Id: <20200110115415.75683-3-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200110115415.75683-1-andre.przywara@arm.com>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
+        Fri, 10 Jan 2020 06:55:44 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2251 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727858AbgAJLzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 06:55:41 -0500
+Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id AFF0FA5C9FD9699058BD;
+        Fri, 10 Jan 2020 11:55:39 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 10 Jan 2020 11:55:39 +0000
+Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 10 Jan
+ 2020 11:55:39 +0000
+Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
+ driver
+To:     Mark Brown <broonie@kernel.org>
+CC:     <marek.vasut@gmail.com>, <tudor.ambarus@microchip.com>,
+        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+        <xuejiancheng@hisilicon.com>, <fengsheng5@huawei.com>,
+        <chenxiang66@hisilicon.com>
+References: <1575900490-74467-1-git-send-email-john.garry@huawei.com>
+ <1575900490-74467-3-git-send-email-john.garry@huawei.com>
+ <0dc5cb2e-b765-9e13-b05e-9e3c835c5985@huawei.com>
+ <20200109212842.GK3702@sirena.org.uk>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <df67b562-7d82-19f6-7581-680190a7772d@huawei.com>
+Date:   Fri, 10 Jan 2020 11:55:37 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <20200109212842.GK3702@sirena.org.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.43]
+X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we fail allocating the DMA buffers in axienet_dma_bd_init(), we
-report this error, but carry on with initialisation nevertheless.
+On 09/01/2020 21:28, Mark Brown wrote:
+> On Thu, Jan 09, 2020 at 03:54:00PM +0000, John Garry wrote:
+> 
+>>  From checking acpi_spi_add_resource() or anywhere else, I cannot see how
+>> SPI_RX_DUAL or the others are set for spi_device.mode. What am I missing?
+>> Are these just not supported yet for ACPI? Or should the spi-nor code not be
+>> relying on this since we should be able to get this info from the SPI NOR
+>> part?
+> 
 
-This leads to a kernel panic when the driver later wants to send a
-packet, as it uses uninitialised data structures.
+Hi Mark,
 
-Make the axienet_device_reset() routine return an error value, as it
-contains the DMA buffer initialisation. Make sure we propagate the error
-up the chain and eventually fail the driver initialisation, to avoid
-relying on non-initialised buffers.
+> I'm not aware of any work on integrating this sort of stuff into ACPI
+> platforms so I think it's just not yet supported in ACPI.  I'm not
+> really sure what would be idiomatic for ACPI, figuring it out from what
+> the part supports might well be idiomatic there though I don't know how
+> common it is for people not to wire up all the data lines even if both
+> controller and device support wider transfers. 
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
----
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 25 +++++++++++++------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+OK, so I guess that is why we require the width property from the FW and 
+can't blindly rely on SFDP.
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 20746b801959..97482cf093ce 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -437,9 +437,10 @@ static void axienet_setoptions(struct net_device *ndev, u32 options)
- 	lp->options |= options;
- }
- 
--static void __axienet_device_reset(struct axienet_local *lp)
-+static int __axienet_device_reset(struct axienet_local *lp)
- {
- 	u32 timeout;
-+
- 	/* Reset Axi DMA. This would reset Axi Ethernet core as well. The reset
- 	 * process of Axi DMA takes a while to complete as all pending
- 	 * commands/transfers will be flushed or completed during this
-@@ -455,9 +456,11 @@ static void __axienet_device_reset(struct axienet_local *lp)
- 		if (--timeout == 0) {
- 			netdev_err(lp->ndev, "%s: DMA reset timeout!\n",
- 				   __func__);
--			break;
-+			return -ETIMEDOUT;
- 		}
- 	}
-+
-+	return 0;
- }
- 
- /**
-@@ -471,12 +474,15 @@ static void __axienet_device_reset(struct axienet_local *lp)
-  * Ethernet core. No separate hardware reset is done for the Axi Ethernet
-  * core.
-  */
--static void axienet_device_reset(struct net_device *ndev)
-+static int axienet_device_reset(struct net_device *ndev)
- {
- 	u32 axienet_status;
- 	struct axienet_local *lp = netdev_priv(ndev);
-+	int ret;
- 
--	__axienet_device_reset(lp);
-+	ret = __axienet_device_reset(lp);
-+	if (ret)
-+		return ret;
- 
- 	lp->max_frm_size = XAE_MAX_VLAN_FRAME_SIZE;
- 	lp->options |= XAE_OPTION_VLAN;
-@@ -491,9 +497,11 @@ static void axienet_device_reset(struct net_device *ndev)
- 			lp->options |= XAE_OPTION_JUMBO;
- 	}
- 
--	if (axienet_dma_bd_init(ndev)) {
-+	ret = axienet_dma_bd_init(ndev);
-+	if (ret) {
- 		netdev_err(ndev, "%s: descriptor allocation failed\n",
- 			   __func__);
-+		return ret;
- 	}
- 
- 	axienet_status = axienet_ior(lp, XAE_RCW1_OFFSET);
-@@ -518,6 +526,8 @@ static void axienet_device_reset(struct net_device *ndev)
- 	axienet_setoptions(ndev, lp->options);
- 
- 	netif_trans_update(ndev);
-+
-+	return 0;
- }
- 
- /**
-@@ -921,8 +931,9 @@ static int axienet_open(struct net_device *ndev)
- 	 */
- 	mutex_lock(&lp->mii_bus->mdio_lock);
- 	axienet_mdio_disable(lp);
--	axienet_device_reset(ndev);
--	ret = axienet_mdio_enable(lp);
-+	ret = axienet_device_reset(ndev);
-+	if (ret == 0)
-+		ret = axienet_mdio_enable(lp);
- 	mutex_unlock(&lp->mii_bus->mdio_lock);
- 	if (ret < 0)
- 		return ret;
--- 
-2.17.1
+  I've got a horrible
+> feeling that the idiomatic thing is a combination of that and a bunch of
+> per-device quirks.  There may be a spec I'm not aware of though I'd be a
+> bit surprised.
+> 
 
+I'm not sure on that. I don't see anything in the ACPI spec.
+
+I will note that PRP0001+"jedec,spi-nor" compatible DSD seems to be the 
+defacto method to describe the SPI NOR-compat part for ACPI - that's 
+what I'm using. We could add properties there, but that seems improper.
+
+I'll continue to look....
+
+Thanks,
+John
