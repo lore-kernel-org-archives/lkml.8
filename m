@@ -2,137 +2,92 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43E7C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5C4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 913D1206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:36:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578681375;
-	bh=ZUQib7bnoTZU/304mmRL5Mwvrc5MIbAoLniN4Uk/qYw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gSeoAPKOxYzI9885Rm/J9uq4eJfARNDMt1vxH2nxjD8AiIlU2xQAPOkOvgDnslkt5
-	 /kjnPFKbIdXOXKXF6I42H9oFBt5JUE8QuktY3te8qw1/UH7871nYJVzo51KpY1Gi4m
-	 2O7gYjzNtKLhhzG9451mwJh/5sy7X3CT+7l0vda4=
+	by mail.kernel.org (Postfix) with ESMTP id 85A132082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:36:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVsPQ5Uj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgAJSgO (ORCPT
+        id S1728643AbgAJSgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:36:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728023AbgAJSgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:36:14 -0500
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AAD621744
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 18:36:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578681373;
-        bh=ZUQib7bnoTZU/304mmRL5Mwvrc5MIbAoLniN4Uk/qYw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=h+t8K1VgQO2sqGDI7eQ7fhLz4uqrI7kcD8o9E7GRSvSk41bGfpwcP9glUFoAvpEDO
-         vKIazUnxJip7Y+EjMYX0HhhIVOP6z+pIhksR/gsQBuQuSZmDtqtPngJW4t/hkoWZMQ
-         2xFlT4rI9w8G0PDoS9dgMdPkyWxgZOQAOXfipC44=
-Received: by mail-wr1-f44.google.com with SMTP id b6so2779398wrq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 10:36:13 -0800 (PST)
-X-Gm-Message-State: APjAAAXK1Afu5/HZ8cjYRXQKGsHF3bXVBRyBiDxPqDTW6q24VZ/SAP+s
-        nWD2omaxUh6lm1T+j8UMK+L+mFl2CVwXQDmVhKQFjA==
-X-Google-Smtp-Source: APXvYqzCH1wGkq2uxYvjqfJcJaKKKqpsUBHA/6LICwgzdTRsCsItPO4rziFdbUkhHPuHyevVbw3EbFyp7cT5odZ4Uhs=
-X-Received: by 2002:adf:f20b:: with SMTP id p11mr4718822wro.195.1578681371413;
- Fri, 10 Jan 2020 10:36:11 -0800 (PST)
-MIME-Version: 1.0
-References: <21bf6bb46544eab79e792980f82520f8fbdae9b5.camel@intel.com>
- <DB882EE8-20B2-4631-A808-E5C968B24CEB@amacapital.net> <cdd157ef011efda92c9434f76141fc3aef174d85.camel@intel.com>
- <CALCETrV_tGk=B3Hw0h9viW45wMqB_W+rwWzx6LnC3-vSATOUOA@mail.gmail.com>
- <400be86aab208d0e50a237cdbd3195763396e3ed.camel@intel.com>
- <CALCETrXXJhkNXmjTX_8VEO39+uE4XECtm=QNTDh1DpncXKhKhw@mail.gmail.com> <96dd98b3c4f73b205b6e669ca87fa64901c117d6.camel@intel.com>
-In-Reply-To: <96dd98b3c4f73b205b6e669ca87fa64901c117d6.camel@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Fri, 10 Jan 2020 10:35:59 -0800
-X-Gmail-Original-Message-ID: <CALCETrWjx-D2sdJZbnydPgunNKmxuhYm=+6iPoy0DHEKCMkMsw@mail.gmail.com>
-Message-ID: <CALCETrWjx-D2sdJZbnydPgunNKmxuhYm=+6iPoy0DHEKCMkMsw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next] bpf: Make trampolines W^X
-To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-Cc:     "luto@kernel.org" <luto@kernel.org>,
-        "songliubraving@fb.com" <songliubraving@fb.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "jeyu@kernel.org" <jeyu@kernel.org>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "mjg59@google.com" <mjg59@google.com>,
-        "nadav.amit@gmail.com" <nadav.amit@gmail.com>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "thgarnie@chromium.org" <thgarnie@chromium.org>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "revest@chromium.org" <revest@chromium.org>,
-        "jannh@google.com" <jannh@google.com>,
-        "namit@vmware.com" <namit@vmware.com>,
-        "jackmanb@chromium.org" <jackmanb@chromium.org>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "kafai@fb.com" <kafai@fb.com>, "yhs@fb.com" <yhs@fb.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "mhalcrow@google.com" <mhalcrow@google.com>,
-        "andriin@fb.com" <andriin@fb.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 10 Jan 2020 13:36:40 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39051 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728400AbgAJSgk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 13:36:40 -0500
+Received: by mail-wm1-f66.google.com with SMTP id 20so2998195wmj.4;
+        Fri, 10 Jan 2020 10:36:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2Yc37HGhbVglWg9H9TpyhPlGXyZBP+fZVz5l0vOH44g=;
+        b=SVsPQ5UjMsyR76PLPc/tBgMUJDvso/g/fjRT+1oSH4L4pgZ1yt03xJ/sqNyB/ksxKG
+         HlgKgswZHJWRqcwYP1hJGdI+waecOkAAayPF2BBkUlaR4yytijqlr/YPeV1q2zdgfR9n
+         0f/BzG0Mu9BpXl2f0fXBPy9Z88U+oTC6b8c2UkAijkVWZEsEKE/0i8sjg1lCgPD9O/Pp
+         PFt5vhTxPFUfGnuQEvOF8vLIyGZUkLsIyn+aCctFSxCqa9CjLbHYWaa36EBS9UYLqDiP
+         8GOtTmnw6ta1oCc6B83qYRKB8Nj/b+JH8YhXcbFuERYx+N++ww6sHOLsg2PP21HuqEBQ
+         G90w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2Yc37HGhbVglWg9H9TpyhPlGXyZBP+fZVz5l0vOH44g=;
+        b=j/eoUZlEy88gaCuHkEBYzcb4RD062ILqiAkQQHT/t/cy9ZtoI5LPPOqgVzuUo0O/Az
+         IS+UcgFRTj8L0MqI8mxUk3dmcqiZLXhJPCBKqEnpJ8mmjaANR4omhMp3rC0egXlXY7Ut
+         Bcuod84ZaJbd2KGfEy6YTGBojpTSTwi00+QJ+7fy5LSfvqENNP+QGJtQt0en48HQHvOv
+         bNdDSsCDAsmfvQhU5SYxHWuOjXAbV2oCvSKXKFlzrEd4FH2DnFhnO4eJAYWNmZDaYJsq
+         D0qwp+9WQdV0QcrBMnXYylikzosVkPM9/3kME3UJ3UsS6kTfpylkyxe5kJVYQU/bZxex
+         7dsQ==
+X-Gm-Message-State: APjAAAX3JuAnCQ0wPfm0S783jBk8p7jEKDz5q03CKb7Fp7jb4AW8QsVi
+        d929mjEdnX/aWGzKXXXWjAk=
+X-Google-Smtp-Source: APXvYqwq2dX4d91vOXSbVX8gmUC4UrZCcNWdt58mjN3ivM5n725gVZp5CFelg37U0cexfntafwYyHQ==
+X-Received: by 2002:a1c:407:: with SMTP id 7mr5618354wme.29.1578681398505;
+        Fri, 10 Jan 2020 10:36:38 -0800 (PST)
+Received: from localhost.localdomain (ip5f5bee3c.dynamic.kabel-deutschland.de. [95.91.238.60])
+        by smtp.gmail.com with ESMTPSA id x11sm3182825wre.68.2020.01.10.10.36.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 10:36:37 -0800 (PST)
+From:   Bean Huo <huobean@gmail.com>
+To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bean Huo <huobean@gmail.com>
+Subject: [PATCH v1 0/3] use UFS device indicated maximum LU number
+Date:   Fri, 10 Jan 2020 19:36:03 +0100
+Message-Id: <20200110183606.10102-1-huobean@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jan 9, 2020, at 3:01 PM, Edgecombe, Rick P <rick.p.edgecombe@intel.com=
-> wrote:
+According to Jedec standard UFS 3.0 and UFS 2.1 Spec, Maximum
+number of logical units supported by the UFS device is specified
+by parameter bMaxNumberLU in Geometry Descriptor. This series
+of patches is to delete macro definition UFS_UPIU_MAX_GENERAL_LUN,
+and switch to use indicated value in descriptor instead.
 
->> The vmap code immediately removes PTEs when unmaps occur (which it may
->> very well do right now -- I haven't checked) but also tracks the
->> kernel_tlb_gen associated with each record of an
->> unmapped-but-not-zapped area.  Then we split vm_unmap_aliases() into a
->> variant that unmaps all aliases and a variant that merely promises to
->> unmap at least one alias.  The former does what the current code does
->> except that it skips the IPI if all areas in question have tlb_gen <
->> flushed_kernel_tlb_gen.  The latter clears all areas with tlb_gen <
->> flushed_kernel_tlb_gen and, if there weren't any, does
->> flush_tlb_kernel_range() and flushes everything.
->>
->> (Major caveat: this is wrong for the case where
->> flush_tlb_kernel_range() only flushes some but not all of the kernel.
->> So this needs considerable work if it's actually going to me useful.
->> The plain old "take locks and clean up" approach might be a better
->> bet.)
->>
->
-> Hmm. In normal usage (!DEBUG_PAGE_ALLOC), are kernel range tlb shootdowns=
- common
-> outside of module space users and lazy vmap stuff? A tlb_gen solution mig=
-ht only
-> be worth it in cases where something other than vm_unmap_aliases() and he=
-lpers
-> was doing this frequently.
 
-I suspect that the two bug users aside from vunmap() will be eBPF and,
-eventually, XPFO / =E2=80=9Cexclusive pages=E2=80=9D / less crappy SEV-like
-implementations / actual high quality MKTME stuff / KVM
-side-channel-proof memory.  The latter doesn=E2=80=99t actually exist yet (=
-the
-SEV implementation sidesteps this with a horrible hack involving
-incoherent mappings that are left active with fingers crossed), but it
-really seems like it=E2=80=99s coming.
+Bean Huo (3):
+  scsi: ufs: add max_lu_supported in struct ufs_dev_info
+  scsi: ufs: initialize max_lu_supported while booting
+  scsi: ufs: use UFS device indicated maximum LU number
 
-In general, if we=E2=80=99re going to have a pool of non-RW-direct-mapped
-pages, we also want some moderately efficient way to produce such
-pages.
+ drivers/scsi/ufs/ufs-sysfs.c |  2 +-
+ drivers/scsi/ufs/ufs.h       | 14 +++++++---
+ drivers/scsi/ufs/ufshcd.c    | 51 +++++++++++++++++++++++++++++++++---
+ 3 files changed, 60 insertions(+), 7 deletions(-)
 
-Right now, creating and freeing eBPF programs in a loop is probably a
-performance disaster on large systems.
+-- 
+2.17.1
+
