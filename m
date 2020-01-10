@@ -2,203 +2,131 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBE0C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56781C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4467B205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:22:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26DA7205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:22:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="jG43aDRP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbgAJQUY (ORCPT
+        id S1729146AbgAJQWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:20:24 -0500
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:44091 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728636AbgAJQUX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:20:23 -0500
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id AEE711C001B;
-        Fri, 10 Jan 2020 16:20:19 +0000 (UTC)
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
-        allan.nielsen@microchip.com, camelia.groza@nxp.com,
-        Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
-        jakub.kicinski@netronome.com
-Subject: [PATCH net-next v5 00/15] net: macsec: initial support for hardware offloading
-Date:   Fri, 10 Jan 2020 17:19:55 +0100
-Message-Id: <20200110162010.338611-1-antoine.tenart@bootlin.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 10 Jan 2020 11:22:15 -0500
+Received: from mail-dm6nam10on2044.outbound.protection.outlook.com ([40.107.93.44]:8896
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728868AbgAJQWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 11:22:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BnSLgg6HDRNsnYNKQdkEg135NsL7aY0GuE/pO5rGrtDOpYCYLCJHTO/NPx8GRnHdewuWNSkpHIVOTyDz6g6h96oX1h2DorwMXpa6ojL0TG+NssTYh8YKtLrLmMuFXp741CxuUNqOf0S4PqY2Y2zHOI2RhGEAC+V4J4LA0uGeBwyLKnDoPOIN6/vM3/is2lTktdSJiZ2W1JPHhtW8NpIXXDkeCs62FitN3F18P3APCd1HGWKBcJCTDkR5uxC1xJwiUsSq3qAs1KjDtD1X6tTI9PyBLBPE3KwPkWmd+uF+yp99PmfdKiLzUx7v+2HDCePYF+bMdj3KwaStdRfAxdFFmQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ch82Av+QRoin+7mLJMN76QGbxBkMlYS/hN3SlM8XHh4=;
+ b=aMd5WM1bEMWmJwdBM5wmZKU97OF85M1lgdVev3JHavgIHC5gCzuLl8KJ3WGEL3TgdqSenCba5dI8+hUoBWe64DGfdVLAEQVbTT/oVpK6LjmMpBS2LGadGYrVmvVctzlGtthEi1QtsbV1I/jAlKBgAcODInTqj90jMY7jhDg8FCDa4hKwgO59ho161ez3u90tR4r7eImqv3jSH3IPX3jwT0HSKl4p/NRYoLl+1MHMmWuTiMak+U+5crrtDazYRif/WGjnXBbN8DPF6BhzzDL1GAQ9oPD1TwOA5cnMNKs629Fr9O1yKV5S/R1D7V/F4/GjHX6OkTEdOfFvfe/Z8YMYiw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ch82Av+QRoin+7mLJMN76QGbxBkMlYS/hN3SlM8XHh4=;
+ b=jG43aDRP4zrGhfu1HJU/CmlFR6mE/OK4vSpC/Ki0yu/+HZ5OosiXH9SjChg4jRT2fiFp/FfSWk6mInK8fum7FYw9Nxx9e51gNUadTZFaZbjm4FijMZ8ubXhYT0uEg6YjEiTRh08InAeFryGNBuCje3iCLpiHDluODkLCGG7gZiA=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (52.135.106.33) by
+ SN6PR12MB2733.namprd12.prod.outlook.com (52.135.107.24) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Fri, 10 Jan 2020 16:22:11 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::48af:8c71:edee:5bc]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::48af:8c71:edee:5bc%7]) with mapi id 15.20.2623.013; Fri, 10 Jan 2020
+ 16:22:11 +0000
+Subject: Re: [PATCH 2/2] perf/x86/amd: Add support for Large Increment per
+ Cycle Events
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Stephane Eranian <eranian@google.com>,
+        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+References: <20191114183720.19887-1-kim.phillips@amd.com>
+ <20191114183720.19887-3-kim.phillips@amd.com>
+ <20191220120945.GG2844@hirez.programming.kicks-ass.net>
+ <ca10060f-f78f-695f-4929-fe4bc30c6712@amd.com>
+ <20200110150958.GP2844@hirez.programming.kicks-ass.net>
+From:   Kim Phillips <kim.phillips@amd.com>
+Message-ID: <f83eacb7-6346-6823-6429-27ee1d44f2df@amd.com>
+Date:   Fri, 10 Jan 2020 10:22:10 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+In-Reply-To: <20200110150958.GP2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN4PR0201CA0041.namprd02.prod.outlook.com
+ (2603:10b6:803:2e::27) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from [10.236.136.247] (165.204.77.1) by SN4PR0201CA0041.namprd02.prod.outlook.com (2603:10b6:803:2e::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.13 via Frontend Transport; Fri, 10 Jan 2020 16:22:10 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 882f096a-451b-4c34-b64b-08d795e93f08
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2733:|SN6PR12MB2733:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB273388FAAF8081AB51CA949E87380@SN6PR12MB2733.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2657;
+X-Forefront-PRVS: 02788FF38E
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(39860400002)(376002)(136003)(199004)(189003)(2906002)(26005)(478600001)(4744005)(31696002)(53546011)(86362001)(6916009)(5660300002)(31686004)(54906003)(52116002)(6486002)(8936002)(186003)(16526019)(16576012)(66946007)(316002)(2616005)(4326008)(44832011)(36756003)(81166006)(8676002)(7416002)(81156014)(66476007)(956004)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2733;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: iBWVz+Xrxnw+IALu4jDtlcZlwIgF9qP5XQV286f/jTfGGml6DVuscAc0OL7MY2bPIfv2tdxCPLI3CiMJY1GPzVQ35fzUWUI87cvrL4HuHyiJZ90ZojjZXSbxcnWq0u8C/6wRoBJ42Utb6OsQVdP3dEeE1bs24OR8vMfZAkF6Z/0ZqPw0dF9rhtOFFBZgGxPvInz6kXdvQKyRgY2BEN3lp/WMTLpMK2uQaL+E3sjrVx9gwqjY0iTJkOqXOSpe1tni0ytvbuL/KZiKW3PRxF/BW1rdB7CT2W6sJRjCvZSbhMjpY1qcbAPb5IkL7jGGghK49tzbtoPe/wWslpsKw2S1MJ/dK05+gxQtD2FaMopgRcCWKrXMbZA8QG3aAqKBWyOOzki5qUpF+/zcnbSBfLUVAB9tn5RuAOdUcPeiMGJyoKDKjD/pQHOBPEyDs9fAps2J
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 882f096a-451b-4c34-b64b-08d795e93f08
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2020 16:22:11.5837
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6YfiqTP+eij7PsIFIEppgx6Nr3a8hQ8gkxF45KiarDwJfgC2rZNm/5c74S02xkzEP6eiiNNFEHPm01Z0samOHw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2733
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 1/10/20 9:09 AM, Peter Zijlstra wrote:
+> On Wed, Jan 08, 2020 at 04:26:47PM -0600, Kim Phillips wrote:
+>> On 12/20/19 6:09 AM, Peter Zijlstra wrote:
+>>> On Thu, Nov 14, 2019 at 12:37:20PM -0600, Kim Phillips wrote:
+>> One problem I see with your change in the "not already used" fastpath
+>> area, is that the new mask variable gets updated with position 'i'
+>> regardless of any previous Large Increment event assignments.
+> 
+> Urgh, I completely messed that up. Find the below delta (I'll push out a
+> new version to queue.git as well).
 
-td;dr: When applying this series, do not apply patches 12 to 14.
+OK, I tested what you pushed on your perf/amd branch, and it passes all my tests.
 
-This series intends to add support for offloading MACsec transformations
-to hardware enabled devices. The series adds the necessary
-infrastructure for offloading MACsec configurations to hardware drivers,
-in patches 1 to 6; then introduces MACsec offloading support in the
-Microsemi MSCC PHY driver, in patches 7 to 11.
+BTW, a large part of the commit message went missing, hopefully it'll be brought back before being pushed further upstream?
 
-The remaining 4 patches, 12 to 14, are *not* part of the series but
-provide the mandatory changes needed to support offloading MACsec
-operations to a MAC driver. Those patches are provided for anyone
-willing to add support for offloading MACsec operations to a MAC, and
-should be part of the first series adding a MAC as a MACsec offloading
-provider.
+Thank you,
 
-The series can also be found at:
-https://github.com/atenart/linux/tree/net-next/macsec
-
-IProute2 modifications can be found at:
-https://github.com/atenart/iproute2/tree/macsec
-
-MACsec hardware offloading infrastructure
------------------------------------------
-
-Linux has a software implementation of the MACsec standard. There are
-hardware engines supporting MACsec operations, such as the Intel ixgbe
-NIC and some Microsemi PHYs (the one we use in this series). This means
-the MACsec offloading infrastructure should support networking PHY and
-MAC drivers. Note that MAC driver preliminary support is part of this
-series, but should not be merged before we actually have a provider for
-this.
-
-We do intend in this series to re-use the logic, netlink API and data
-structures of the existing MACsec software implementation. This allows
-not to duplicate definitions and structure storing the same information;
-as well as using the same userspace tools to configure both software or
-hardware offloaded MACsec flows (with `ip macsec`).
-
-When adding a new MACsec virtual interface the existing logic is kept:
-offloading is disabled by default. A user driven configuration choice is
-needed to switch to offloading mode (a patch in iproute2 is needed for
-this). A single MACsec interface can be offloaded for now, and some
-limitations are there: no flow can be moved from one implementation to
-the other so the decision needs to be done before configuring the
-interface.
-
-MACsec offloading ops are called in 2 steps: a preparation one, and a
-commit one. The first step is allowed to fail and should be used to
-check if a provided configuration is compatible with a given MACsec
-capable hardware. The second step is not allowed to fail and should
-only be used to enable a given MACsec configuration.
-
-A limitation as of now is the counters and statistics are not reported
-back from the hardware to the software MACsec implementation. This
-isn't an issue when using offloaded MACsec transformations, but it
-should be added in the future so that the MACsec state can be reported
-to the user (which would also improve the debug).
-
-Microsemi PHY MACsec support
------------------------------------
-
-In order to add support for the MACsec offloading feature in the
-Microsemi MSCC PHY driver, the __phy_read_page and __phy_write_page
-helpers had to be exported. This is because the initialization of the
-PHY is done while holding the MDIO bus lock, and we need to change the
-page to configure the MACsec block.
-
-The support itself is then added in three patches. The first one adds
-support for configuring the MACsec block within the PHY, so that it is
-up, running and available for future configuration, but is not doing any
-modification on the traffic passing through the PHY. The second patch
-implements the phy_device MACsec ops in the Microsemi MSCC PHY driver,
-and introduce helpers to configure MACsec transformations and flows to
-match specific packets. The last one adds support for PN rollover.
-
-Thanks!
-Antoine
-
-Since v4:
-  - Reworked the MACsec read and write functions in the MSCC PHY driver
-    to remove the conditional locking.
-
-Since v3:
-  - Fixed a check when enabling offloading that was too restrictive.
-  - Fixed the propagation of the changelink event to the underlying
-    device drivers.
-
-Since v2:
-  - Allow selection the offloading from userspace, defaulting to the
-    software implementation when adding a new MACsec interface. The
-    offloading mode is now also reported through netlink.
-  - Added support for letting MKA packets in and out when using MACsec
-    (there are rules to let them bypass the MACsec h/w engine within the
-    PHY).
-  - Added support for PN rollover (following what's currently done in
-    the software implementation: the flow is disabled).
-  - Split patches to remove MAC offloading support for now, as there are
-    no current provider for this (patches are still included).
-  - Improved a few parts of the MACsec support within the MSCC PHY
-    driver (e.g. default rules now block non-MACsec traffic, depending
-    on the configuration).
-  - Many cosmetic fixes & small improvements.
-
-Since v1:
-  - Reworked the MACsec offloading API, moving from a single helper
-    called for all MACsec configuration operations, to a per-operation
-    function that is provided by the underlying hardware drivers.
-  - Those functions now contain a verb to describe the configuration
-    action they're offloading.
-  - Improved the error handling in the MACsec genl helpers to revert
-    the configuration to its previous state when the offloading call
-    failed.
-  - Reworked the file inclusions.
-
-Antoine Tenart (15):
-  net: macsec: move some definitions in a dedicated header
-  net: macsec: introduce the macsec_context structure
-  net: macsec: introduce MACsec ops
-  net: phy: add MACsec ops in phy_device
-  net: macsec: hardware offloading infrastructure
-  net: macsec: add nla support for changing the offloading selection
-  net: phy: export __phy_read_page/__phy_write_page
-  net: phy: mscc: macsec initialization
-  net: phy: mscc: macsec support
-  net: macsec: PN wrap callback
-  net: phy: mscc: PN rollover support
-  net: introduce the MACSEC netdev feature
-  net: add a reference to MACsec ops in net_device
-  net: macsec: allow to reference a netdev from a MACsec context
-  net: macsec: add support for offloading to the MAC
-
- drivers/net/macsec.c               |  794 ++++++++++++++-----
- drivers/net/phy/Kconfig            |    2 +
- drivers/net/phy/mscc.c             | 1133 +++++++++++++++++++++++++++-
- drivers/net/phy/mscc_fc_buffer.h   |   64 ++
- drivers/net/phy/mscc_mac.h         |  159 ++++
- drivers/net/phy/mscc_macsec.h      |  266 +++++++
- drivers/net/phy/phy-core.c         |    6 +-
- include/linux/netdev_features.h    |    3 +
- include/linux/netdevice.h          |    9 +
- include/linux/phy.h                |   12 +
- include/net/macsec.h               |  228 ++++++
- include/uapi/linux/if_link.h       |    8 +
- include/uapi/linux/if_macsec.h     |   14 +-
- net/ethtool/common.c               |    1 +
- tools/include/uapi/linux/if_link.h |    8 +
- 15 files changed, 2518 insertions(+), 189 deletions(-)
- create mode 100644 drivers/net/phy/mscc_fc_buffer.h
- create mode 100644 drivers/net/phy/mscc_mac.h
- create mode 100644 drivers/net/phy/mscc_macsec.h
- create mode 100644 include/net/macsec.h
-
--- 
-2.24.1
-
+Kim
