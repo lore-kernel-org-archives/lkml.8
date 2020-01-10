@@ -2,105 +2,120 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7BFC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D888DC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E2F62072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:36:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578620214;
-	bh=aH/Cb27AjGqGNq6jKzO83mg4/3u60GJatR1APEkeNY8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FeEsKV9/Qkpm7ffsICw+itaYxYKA8/FHc36+KcJJ5esva80ZHrfWxq/BHUdQEpen8
-	 TWXdlBLNyMHkuHk5zWIWiuZmlh+dfWyOQGv47YfWXHFAJ+N3/naXSlA86nhmMtPlXn
-	 GPZ1VAbdyva2oz2DEamFaVYH54atebi6ptRDJTg0=
+	by mail.kernel.org (Postfix) with ESMTP id AF8AA2075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:39:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jZ7LmOgJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbgAJBgx (ORCPT
+        id S1730663AbgAJBjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:36:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40224 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730594AbgAJBgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 20:36:53 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C83820673;
-        Fri, 10 Jan 2020 01:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578620212;
-        bh=aH/Cb27AjGqGNq6jKzO83mg4/3u60GJatR1APEkeNY8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zfgXAf7sSX6vasaDNLU9IBzgPUHuci0DCVo0eDaruqyLs0ZLCw6MZ9/dZMSd0P6i6
-         ohAQ06ZOnyRc7y3fVAj4J3aQgXqbcw463FHkdplqDU5tFSF5treeADcQb9ZMsj1Y+p
-         1ED3/D0NKSyRiARPFyrV59aQUb9QdDlBmeCYyceI=
-Date:   Fri, 10 Jan 2020 10:36:47 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdl?= =?ISO-2022-JP?B?bnNlbg==?= 
-        <thoiland@redhat.com>, Jean-Tsung Hsiao <jhsiao@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [BUG] list corruption while enabling multi call uprobes via
- perf
-Message-Id: <20200110103647.f2182be4584886b9a62d6161@kernel.org>
-In-Reply-To: <20200109133846.GA2158@kernel.org>
-References: <20200108171611.GA8472@kernel.org>
-        <20200109111056.484a181fc6acc20196344f9a@kernel.org>
-        <20200109183356.5a81ad2bfed6804f9934faee@kernel.org>
-        <20200109133846.GA2158@kernel.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 9 Jan 2020 20:39:16 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:3544 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730601AbgAJBjP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 20:39:15 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e17d5b00000>; Thu, 09 Jan 2020 17:38:56 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 09 Jan 2020 17:39:14 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 09 Jan 2020 17:39:14 -0800
+Received: from [10.110.103.92] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jan
+ 2020 01:39:14 +0000
+Subject: Re: [PATCH v7 00/21] Move PMC clocks into Tegra PMC driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
+        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <spujar@nvidia.com>, <josephl@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
+ <4e9fab30-14b5-bf1f-dc91-fd57ef614503@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <61a78ba8-4cc3-f6a6-513b-36daa9be32f0@nvidia.com>
+Date:   Thu, 9 Jan 2020 17:39:13 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <4e9fab30-14b5-bf1f-dc91-fd57ef614503@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578620336; bh=TEyph305SGFKLXuFDQSfRRNPpBb2Qcw+rzGH7+g9RCM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=jZ7LmOgJ3X9CqsuPrT4gbvHXep3nztWX+cwqZ29zspMGe6q3dn9fx4ZQUzcrOzAXI
+         G1zboO/l/IhLIq0oWM8juJqyZp30lJ1T6O7Ma0OfP/2C4bxwtIYgm7tu31Zb7mgEbL
+         DwTrUY3xLhSvopL3m4Sl+kurq00qd8lrzKCEry4ce5lte+kN+pqasukdT/vmM/I6Iy
+         GXTmEKyfKuCcYAxDjw8mj13McuN25q+ZYsLYPlPRkW8bwcQbk1RFUSQolIX54VjPId
+         ZzVGCX1DP/+jtgwzdDO8MWKMx9TMR80iJ2swRXP3bHFqjI8zz0Rr1Vb1NdI7q/y/IS
+         dFn/Yc9tZcGrA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jan 2020 10:38:46 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-> Em Thu, Jan 09, 2020 at 06:33:56PM +0900, Masami Hiramatsu escreveu:
-> > Hi,
-> > 
-> > On Thu, 9 Jan 2020 11:10:56 +0900
-> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > 
-> > > Hmm, this seems that the event->hw.tp_list is not initialized when removing
-> > > from the list in uprobe_perf_close().
-> > 
-> > Oops, that's wrong. Of course my patch can ease (avoid kernel panic) the
-> > issue, but not fixing the root cause.
-> > The root cause is that the uprobe event tries to open multiple probes with
-> > one perf_event. So the perf_event is reused on different probes.
-> > 
-> > In the reported case, if we remove the multiple probe event before perf-stat,
-> > no problem happens.
-> > 
-> > I'll try to fix it.
-> 
-> Ok!
-> 
-> For reference, I rebooted it with a fedora kernel, 5.3ish and it seems
-> to work:
-
-Yes, since it was my commit 60d53e2c3b75 ("tracing/probe: Split trace_event
-related data from trace_probe") broke list operation...
-I'll send a fix soon.
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+On 1/9/20 11:44 AM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 08.01.2020 07:24, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> This patch series moves Tegra PMC clocks from clock driver to pmc driver
+>> along with the device trees changes and audio driver which uses one of
+>> the pmc clock for audio mclk.
+>>
+>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
+>> are currently registered by Tegra clock driver using clk_regiser_mux and
+>> clk_register_gate which performs direct Tegra PMC register access.
+>>
+>> When Tegra PMC is in secure mode, any access from non-secure world will
+>> not go through.
+>>
+>> This patch series adds these Tegra PMC clocks and blink controls to Tegr=
+a
+>> PMC driver with PMC as clock provider and removes them from Tegra clock
+>> driver.
+>>
+>> PMC clock clk_out_1 is dedicated for audio mclk from Tegra30 thru Tegra2=
+10
+>> and clock driver does inital parent configuration for it and enables the=
+m.
+>> But this clock should be taken care by audio driver as there is no need
+>> to have this clock pre enabled.
+>>
+>> So, this series also includes patch that updates ASoC driver to take
+>> care of parent configuration for mclk if device tree don't specify
+>> initial parent configuration using assigned-clock-parents and controls
+>> audio mclk enable/disable during ASoC machine startup and shutdown.
+>>
+>> DTs are also updated to use clk_out_1 as audio mclk rather than extern1.
+>>
+>> This series also includes a patch for mclk fallback to extern1 when
+>> retrieving mclk fails to have this backward compatible of new DT with
+>> old kernels.
+> Suspend-resume doesn't work anymore, reverting this series helps. I
+> don't have any other information yet, please take a look.
+Thanks Dmitry. Will test suspend resume and check..
