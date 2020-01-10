@@ -2,155 +2,164 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF3F9C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8A7C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B10E2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:26:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ffgEfOeH"
+	by mail.kernel.org (Postfix) with ESMTP id 413D82072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:27:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgAJP0N (ORCPT
+        id S1728355AbgAJP1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:26:13 -0500
-Received: from mail-mw2nam10on2080.outbound.protection.outlook.com ([40.107.94.80]:20245
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728141AbgAJP0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:26:12 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CxVHubgsWjeOSoIkWP+f5d9AsY/mV59/0bPCoY4BzS/5FKh3wwMxY7oFrXFyq1NQ4G1vboUUksddRqW/CErCOUX6VSXEkB82XZ4b3Z2rG6P6xIbIUBlD/j9JyBCkybf75v8EYNwdMcd6DsMt4tEX/5C30L6uV52WivchxYII50wPAr/y0hWevztclgGMIiE1IlmOM/XIwP4OLtDYf/7//Gu/LzlkrxmzO0uIkP8ScqR37h0vuMK8yeVjjhLerUzcImdqhYpdxIF4kaCqsIHbF1/a086Mr92PJkTQXDtAG5mGaH69f+dnjH2NA+maJQ8TJlaIe8l25mnH5cKPxjNY4Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d5ZU/2wNnNvO5tCKBY6bDVys832k2AyReblQh/5hf9o=;
- b=HZ/U2lUig1vvm8yCe/p/lvIyh+GBx1yCrey1bHZ4LZ6TvlM1qFrk9EogmboZxEGLBcv2drUYIH3X2ek6KmQVM+7JDPjA5IOCzegDRXV+4wLFZyEMjtFUFxaHTcuef3PUlKnTqGQw7VPAzCRDiy0swz1T295Of5DKt1Q6VrcuWfKTzj5aC4mbhFjn2hg0BK77+todbu2iEdtyARivJ9o2fe9sHxtdsCwtzEWf7mAne1Q4EBkYhWGDRtbLjbfaolBcrlDVL5bUJhMQctMXCDatU6/uAbB07LAixZIOU9UKjvHmvsIANQxJZeWIZIDRhW0ku/4n2gE4zPfrLfKB90EsLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d5ZU/2wNnNvO5tCKBY6bDVys832k2AyReblQh/5hf9o=;
- b=ffgEfOeHutMlhUOZh6GzAmlhl4g6XFjedoASU0Fc9EplHMS+0z5dsy6zlbLJrtTzw11ylIBkHNNXVU98EtX4atpfsceAZsDyW62xBnItSklq9esiMbb7v4E9KVB7zngg5/W7fW9CQTFjAd05IoXzobYVvmglDxY66sTfpxCaGLg=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6279.namprd02.prod.outlook.com (52.132.230.26) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Fri, 10 Jan 2020 15:26:10 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2623.013; Fri, 10 Jan 2020
- 15:26:10 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Andre Przywara <andre.przywara@arm.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     Michal Simek <michals@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 04/14] net: axienet: Improve DMA error handling
-Thread-Topic: [PATCH 04/14] net: axienet: Improve DMA error handling
-Thread-Index: AQHVx6y35Khes/KcW0SEYqGJBhT9tafkBDWQ
-Date:   Fri, 10 Jan 2020 15:26:10 +0000
-Message-ID: <CH2PR02MB7000EDAE2A7D85D50A52EE81C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
- <20200110115415.75683-5-andre.przywara@arm.com>
-In-Reply-To: <20200110115415.75683-5-andre.przywara@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c7a45f9a-8fea-4b2d-fa69-08d795e16bc4
-x-ms-traffictypediagnostic: CH2PR02MB6279:|CH2PR02MB6279:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB6279620A1D61B3CD01C3C1E9C7380@CH2PR02MB6279.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 02788FF38E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(39840400004)(136003)(346002)(396003)(13464003)(199004)(189003)(5660300002)(110136005)(8936002)(54906003)(7696005)(26005)(186003)(33656002)(6506007)(478600001)(66446008)(8676002)(66476007)(64756008)(66556008)(2906002)(76116006)(66946007)(316002)(81156014)(81166006)(86362001)(4326008)(52536014)(55016002)(71200400001)(53546011)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6279;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: U7O3K3+EKD+Y7OtMrumMHxohZXAf1FUhxmPSKpK6wfinI7k3SS0mivphgUCMiZHcPitAA6CI55VzR7xJgCJpzHsGXj4rb12t2IzMyDIV+KDqaMnkDE2YAQqJ72eFonYfM9+IKwuRhJ3HdKSpngb7Z82rwK+GlRqN7THb9GhQ/FsErn+RM+BwJVWJpWQFAKBbCHJq8MxfVgXfSLQFKtUdrgUZihPcfBOcJjP617+8DaSOBHzTzv0UXZF9ckYAJuo6de/ZzofNJkz7RwBbgEBv8dihvB2rZxIOykAmBtKJZLGuP7jSfbIEwTNWnqQ5TV5VzHLkmbyfbXMusosF7ixjsUplq4yqxacHMqZlbNHVCo6YMUwzflgxfLQCXMKVEl38dOzcKY4jBIprHiEiGXVtkGepo52zK+RsvH67qkXwhLF6D/DK13PXLH5HoRThiacyXLtp4A5qY5MWpcWB0YpB7TNm1BH8AspcmHQrkSzDi18rcuAc/qrMBXyKfYMBkbkF
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 10 Jan 2020 10:27:22 -0500
+Received: from mga18.intel.com ([134.134.136.126]:15565 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727866AbgAJP1W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 10:27:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 07:27:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
+   d="scan'208";a="304201494"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga001.jf.intel.com with ESMTP; 10 Jan 2020 07:27:19 -0800
+Subject: Re: [PATCH 2/3] xhci: Wait until link state trainsits to U0 after
+ setting USB_SS_PORT_LS_U0
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+        stern@rowland.harvard.edu
+Cc:     acelan.kao@canonical.com, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200103084008.3579-1-kai.heng.feng@canonical.com>
+ <20200103084008.3579-2-kai.heng.feng@canonical.com>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Message-ID: <17701887-a249-eade-eecb-541df6c2c704@linux.intel.com>
+Date:   Fri, 10 Jan 2020 17:29:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7a45f9a-8fea-4b2d-fa69-08d795e16bc4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 15:26:10.3042
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KNZUMPr9ikTgkfwSVtMr9y1pZ7Y4SqNM1MJA9Idj2gMnKu43Y6uR1oBqRRvKfhRwmsUnDpQHMJcR0XNrSqvDEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6279
+In-Reply-To: <20200103084008.3579-2-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Andre Przywara <andre.przywara@arm.com>
-> Sent: Friday, January 10, 2020 5:24 PM
-> To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
-> <radheys@xilinx.com>
-> Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
-> <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH 04/14] net: axienet: Improve DMA error handling
->=20
-> Since 0 is a valid DMA address, we cannot use the physical address to
-> check whether a TX descriptor is valid and is holding a DMA mapping.
->=20
-> Use the "cntrl" member of the descriptor to make this decision, as it
-> contains at least the length of the buffer, so 0 points to an
-> uninitialised buffer.
->=20
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-
+On 3.1.2020 10.40, Kai-Heng Feng wrote:
+> Like U3 case, xHCI spec doesn't specify the upper bound of U0 transition
+> time. The 20ms is not enough for some devices.
+> 
+> Intead of polling PLS or PLC, we can facilitate the port change event to
+> know that the link transits to U0 is completed.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > ---
->  drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> index 7e90044cf2d9..ec5d01adc1d5 100644
-> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> @@ -570,7 +570,7 @@ static void axienet_start_xmit_done(struct
-> net_device *ndev)
->  				DMA_TO_DEVICE);
->  		if (cur_p->skb)
->  			dev_consume_skb_irq(cur_p->skb);
-> -		/*cur_p->phys =3D 0;*/
-> +		cur_p->cntrl =3D 0;
->  		cur_p->app0 =3D 0;
->  		cur_p->app1 =3D 0;
->  		cur_p->app2 =3D 0;
-> @@ -1557,7 +1557,7 @@ static void axienet_dma_err_handler(unsigned
-> long data)
->=20
->  	for (i =3D 0; i < lp->tx_bd_num; i++) {
->  		cur_p =3D &lp->tx_bd_v[i];
-> -		if (cur_p->phys)
-> +		if (cur_p->cntrl)
->  			dma_unmap_single(ndev->dev.parent, cur_p->phys,
->  					 (cur_p->cntrl &
->=20
-> XAXIDMA_BD_CTRL_LENGTH_MASK),
-> --
-> 2.17.1
+>   drivers/usb/host/xhci-hub.c  | 8 +++++++-
+>   drivers/usb/host/xhci-mem.c  | 1 +
+>   drivers/usb/host/xhci-ring.c | 1 +
+>   drivers/usb/host/xhci.h      | 1 +
+>   4 files changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+> index 2b2e9d004dbf..07886a1bce62 100644
+> --- a/drivers/usb/host/xhci-hub.c
+> +++ b/drivers/usb/host/xhci-hub.c
+> @@ -1310,11 +1310,17 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+>   					spin_lock_irqsave(&xhci->lock, flags);
+>   				}
+>   			}
+> +			if (link_state == USB_SS_PORT_LS_U0)
+> +				reinit_completion(&ports[wIndex]->link_state_changed);
 
+All the other suspend and resume related port flags/completions are
+in struct xhci_bus_state. See for example rexit_done[].
+Not sure that is a better place but at least it would be consistent.
+
+Could actually make sense to move more of them to the xhci_port structure,
+but perhaps in some later suspend/resume rework patch.
+>   
+>   			xhci_set_link_state(xhci, ports[wIndex], link_state);
+>   
+>   			spin_unlock_irqrestore(&xhci->lock, flags);
+> -			msleep(20); /* wait device to enter */
+> +			if (link_state == USB_SS_PORT_LS_U0) {
+> +				if (!wait_for_completion_timeout(&ports[wIndex]->link_state_changed, msecs_to_jiffies(100)))
+> +					xhci_dbg(xhci, "missing U0 port change event for port %d-%d\n", hcd->self.busnum, wIndex + 1);
+
+We might be waiting for completion here in unnecessary.
+No completion is called if port is already in U0, either set by
+xhci_bus_resume(), or we race with a device initiated resume.
+
+Maybe read the current port link state first, and don't do anything if it's
+already in U0, or fail if it's in a state where we can't resume to U0.
+
+> +			} else
+> +				msleep(20); /* wait device to enter */
+>   			spin_lock_irqsave(&xhci->lock, flags);
+
+Code might also be cleaner if we have separate if() statements for U0 and U3 link
+states, and skip the generic xhci_set_link_state()
+
+USB 3.2 specs only support PORT_LINK_STATE request feature selectors for
+U0, U1, U2, U3, SS.Disabled, Rx.Detect and Compliance mode.
+Out of these xhci driver already handles the SS.Disabled, Rx.detect and Compliance in
+separate if statements, and xHC hardware can't force a U1 or U2 state by writing
+the PLS field of the PORTSC register, so the xhci_set_link_state() here
+is only useful for U0 and U3.
+
+So maybe something like this:
+
+if (link_state == U0)
+   if (active_link_state == U0)
+     break
+   else if (active_link_state != a proper link state)
+     return error	
+   xhci_set_link_state(U0)
+   wait_for_completion_timeout()
+   break;
+
+if (link_state == U3)
+   xhci_stop_device(slot_id)
+   xhci_set_link_state(U3)
+   for (max 10 tries) {
+     msleep_range(~10ms)
+     if (readl(PORTSC(PLS) == U3)
+       break
+   }
+   break
+>   
+>   			if (link_state == USB_SS_PORT_LS_U3) {
+> diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+> index 3b1388fa2f36..c760a28e3556 100644
+> --- a/drivers/usb/host/xhci-mem.c
+> +++ b/drivers/usb/host/xhci-mem.c
+> @@ -2268,6 +2268,7 @@ static int xhci_setup_port_arrays(struct xhci_hcd *xhci, gfp_t flags)
+>   		xhci->hw_ports[i].addr = &xhci->op_regs->port_status_base +
+>   			NUM_PORT_REGS * i;
+>   		xhci->hw_ports[i].hw_portnum = i;
+> +		init_completion(&xhci->hw_ports[i].link_state_changed);
+>   	}
+>   
+>   	xhci->rh_bw = kcalloc_node(num_ports, sizeof(*xhci->rh_bw), flags,
+> diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+> index d23f7408c81f..44d91a53bf07 100644
+> --- a/drivers/usb/host/xhci-ring.c
+> +++ b/drivers/usb/host/xhci-ring.c
+> @@ -1677,6 +1677,7 @@ static void handle_port_status(struct xhci_hcd *xhci,
+>   	     (portsc & PORT_PLS_MASK) == XDEV_U1 ||
+>   	     (portsc & PORT_PLS_MASK) == XDEV_U2)) {
+>   		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
+> +		complete(&port->link_state_changed);
+
+Completion will only be called if there was a port link change (PLC bit set)
+and link is in U0/U1/U2. Completion will also be called for device
+initiated resume even when no one is waiting for it. (probably harmless)
+
+-Mathias
