@@ -6,117 +6,135 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3787C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F6BC33CA5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B085E2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7F520721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgAJM2u (ORCPT
+        id S1728115AbgAJMbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 07:28:50 -0500
-Received: from foss.arm.com ([217.140.110.172]:43930 "EHLO foss.arm.com"
+        Fri, 10 Jan 2020 07:31:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:43950 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728029AbgAJM2t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 07:28:49 -0500
+        id S1727924AbgAJMbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 07:31:07 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5DC71063;
-        Fri, 10 Jan 2020 04:28:48 -0800 (PST)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41AA83F534;
-        Fri, 10 Jan 2020 04:28:47 -0800 (PST)
-Subject: Re: [PATCH v1] arch_topology: Adjust initial CPU capacities with
- current freq
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Brian Norris <briannorris@chromium.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20200109075214.31943-1-jeffy.chen@rock-chips.com>
- <20200110113711.GB39451@bogus> <5475692c-e72b-74c1-bd6e-95278703249b@arm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <15ab46e5-a2b4-eb96-1217-2b2ef8827f64@arm.com>
-Date:   Fri, 10 Jan 2020 12:28:46 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84B151063;
+        Fri, 10 Jan 2020 04:31:06 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6AA483F534;
+        Fri, 10 Jan 2020 04:31:05 -0800 (PST)
+Date:   Fri, 10 Jan 2020 12:31:03 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, peng.fan@nxp.com,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] firmware: arm_scmi: Make scmi core independent of
+ transport type
+Message-ID: <20200110123103.GC45077@bogus>
+References: <5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org>
+ <CAK8P3a3=q2zX9xQo7eZKp7e70rAeNB8VoSjg2aE06QJuSw8y3Q@mail.gmail.com>
+ <20200109093442.4jt44eu2zlmjaq3f@vireshk-i7>
 MIME-Version: 1.0
-In-Reply-To: <5475692c-e72b-74c1-bd6e-95278703249b@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109093442.4jt44eu2zlmjaq3f@vireshk-i7>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-10 12:01 pm, Dietmar Eggemann wrote:
-> On 10/01/2020 12:37, Sudeep Holla wrote:
->> On Thu, Jan 09, 2020 at 03:52:14PM +0800, Jeffy Chen wrote:
->>> The CPU freqs are not supposed to change before cpufreq policies
->>> properly registered, meaning that they should be used to calculate the
->>> initial CPU capacities.
->>>
->>> Doing this helps choosing the best CPU during early boot, especially
->>> for the initramfs decompressing.
->>>
->>> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
->>
->> [...]
->>
->>> @@ -146,10 +153,15 @@ bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
->>>   				return false;
->>>   			}
->>>   		}
->>> -		capacity_scale = max(cpu_capacity, capacity_scale);
->>>   		raw_capacity[cpu] = cpu_capacity;
->>>   		pr_debug("cpu_capacity: %pOF cpu_capacity=%u (raw)\n",
->>>   			cpu_node, raw_capacity[cpu]);
->>> +
->>> +		cpu_clk = of_clk_get(cpu_node, 0);
->>> +		if (!PTR_ERR_OR_ZERO(cpu_clk))
->>> +			per_cpu(max_freq, cpu) = clk_get_rate(cpu_clk) / 1000;
->>> +
->>> +		clk_put(cpu_clk);
->>
->> I don't like to assume DVFS to be supplied only using 'clk'. So NACK!
->> We have other non-clk mechanism for CPU DVFS and this needs to simply
->> use cpufreq APIs to get frequency value if required.
-> 
-> To support this, it's failing on my Arm64 Juno board.
-> 
-> ...
-> [    0.084858] CPU1 cpu_clk=-517
-> [    0.087961] CPU2 cpu_clk=-517
-> [    0.091005] CPU0 cpu_clk=-517
-> [    0.094121] CPU3 cpu_clk=-517
-> [    0.097248] CPU4 cpu_clk=-517
-> [    0.100415] CPU5 cpu_clk=-517
-> ...
-> 
-> Since you're on a big.LITTLE platform, did you specify
-> 'capacity-dmips-mhz' for CPUs to be able to distinguish big and little
-> CPUs before CPUfreq kicks in?
+On Thu, Jan 09, 2020 at 03:04:42PM +0530, Viresh Kumar wrote:
+> On 09-01-20, 09:18, Arnd Bergmann wrote:
+> > On Fri, Nov 29, 2019 at 10:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > The SCMI specification is fairly independent of the transport protocol,
+> > > which can be a simple mailbox (already implemented) or anything else.
+> > > The current Linux implementation however is very much dependent of the
+> > > mailbox transport layer.
+> > >
+> > > This patch makes the SCMI core code (driver.c) independent of the
+> > > mailbox transport layer and moves all mailbox related code to a new
+> > > file: mailbox.c.
+> > >
+> > > We can now implement more transport protocols to transport SCMI
+> > > messages.
+> > >
+> > > The transport protocols just need to provide struct scmi_transport_ops,
+> > > with its version of the callbacks to enable exchange of SCMI messages.
+> > >
+> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> >
+> > Conceptually I think this is fine, but as others have said, it would be
+> > better to have another transport implementation posted along with this
+> > to see if the interfaces actually work out.
+>
+> @Sudeep/Vincent: Do you think we can add another transport
+> implementation something right away for it ?
+>
+> @Peng ?
+>
+> > > +/**
+> > > + * struct scmi_chan_info - Structure representing a SCMI channel information
+> > > + *
+> > > + * @payload: Transmit/Receive payload area
+> > > + * @dev: Reference to device in the SCMI hierarchy corresponding to this
+> > > + *      channel
+> > > + * @handle: Pointer to SCMI entity handle
+> > > + * @transport_info: Transport layer related information
+> > > + */
+> > > +struct scmi_chan_info {
+> > > +       void __iomem *payload;
+> > > +       struct device *dev;
+> > > +       struct scmi_handle *handle;
+> > > +       void *transport_info;
+> > > +};
+> >
+> > I would assume that with another transport, the 'payload' pointer would
+> > not be __iomem
+>
+> Hmm, okay. I just separated things based on the current transport and
+> didn't add much changes on top of it as I wasn't sure how things are
+> going to look with next transport and so left the changes for then.
+>
+> I can now drop it though.
+>
+> > > +static int scmi_set_transport_ops(struct scmi_info *info)
+> > > +{
+> > > +       struct scmi_transport_ops *ops;
+> > > +       struct device *dev = info->dev;
+> > > +
+> > > +       /* Only mailbox method supported for now */
+> > > +       ops = scmi_mailbox_get_ops(dev);
+> > > +       if (!ops) {
+> > > +               dev_err(dev, "Transport protocol not found in %pOF\n",
+> > > +                       dev->of_node);
+> > > +               return -EINVAL;
+> > > +       }
+> > > +
+> > > +       info->transport_ops = ops;
+> > > +       return 0;
+> > > +}
+> >
+> > This looks odd: rather than guessing the transport type based on
+> > random DT properties, I would prefer to have it determined by
+> > the device compatible string, and have different drivers bind
+> > to one of them each, with each driver linking against a common
+> > base implementation, either as separate modules or in one file.
+>
+> Since there are no platforms using the scmi binding in mainline kernel
+> for now, it won't be difficult to add new compatible strings.
 
-Indeed, and that's the "problem" - the capacities are there, but with 
-the broken firmware the kernel starts with the little (boot) cluster 
-clocked at either 400 or 200MHz, but the big cluster at just 12MHz. At 
-that speed, a full distro config can take about 3 minutes to get to the 
-point of loading cpufreq as a module, and I've seen at least one distro 
-reverting 97df3aa76b4a to 'fix' the symptom :(
+I am fine adding new compatible but since the binding is present in the
+mainline for several releases now, we may have to have fallback to mailbox
+as default if any of the new compatibles added is missing.
 
-Robin.
-
-> 
-> $ grep capacity-dmips-mhz ./arch/arm64/boot/dts/arm/juno.dts
-> 			capacity-dmips-mhz = <1024>;
-> 			capacity-dmips-mhz = <1024>;
-> 			capacity-dmips-mhz = <578>;
-> 			capacity-dmips-mhz = <578>;
-> 			capacity-dmips-mhz = <578>;
-> 			capacity-dmips-mhz = <578>;
-> 
+--
+Regards,
+Sudeep
