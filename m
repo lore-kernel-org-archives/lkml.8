@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABC9C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:57:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ACEC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9000020721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EFFB22314
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgAJV5w (ORCPT
+        id S1727399AbgAJV5q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 16:57:52 -0500
+        Fri, 10 Jan 2020 16:57:46 -0500
 Received: from mga17.intel.com ([192.55.52.151]:3026 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbgAJV5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 16:57:46 -0500
+        id S1727280AbgAJV5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 16:57:43 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 13:57:46 -0800
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 13:57:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
-   d="scan'208";a="218782809"
+   d="scan'208";a="218782795"
 Received: from unknown (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.183.94])
-  by fmsmga008.fm.intel.com with ESMTP; 10 Jan 2020 13:57:45 -0800
+  by fmsmga008.fm.intel.com with ESMTP; 10 Jan 2020 13:57:42 -0800
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -36,11 +36,12 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Bard liao <yung-chuan.liao@linux.intel.com>,
         Rander Wang <rander.wang@linux.intel.com>,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Rander Wang <rander.wang@intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH 6/6] soundwire: bus: check first if Slaves become UNATTACHED
-Date:   Fri, 10 Jan 2020 15:57:31 -0600
-Message-Id: <20200110215731.30747-7-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH 4/6] soundwire: cadence_master: remove config update for interrupt setting
+Date:   Fri, 10 Jan 2020 15:57:29 -0600
+Message-Id: <20200110215731.30747-5-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200110215731.30747-1-pierre-louis.bossart@linux.intel.com>
 References: <20200110215731.30747-1-pierre-louis.bossart@linux.intel.com>
@@ -51,43 +52,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Before checking for the presence of Device0, we first need to clean-up
-the internal state of Slaves that are no longer attached.
+From: Rander Wang <rander.wang@intel.com>
 
+Config only needs to be updated when setting MCP_Config, MCP_Control
+and MCP_CmdCtrl to make these register setting effective. When updating
+config in master, master will communicate with slave to update status.
+Communication will be failed when masters and slaves are in clock stop
+state, and this unnecessary config update makes interrupt setting failed.
+
+Tested on Comet Lake with soundwire enabled
+
+Signed-off-by: Rander Wang <rander.wang@intel.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/soundwire/bus.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/soundwire/cadence_master.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index be5d437058ed..66fd09e36b73 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -979,6 +979,24 @@ int sdw_handle_slave_status(struct sdw_bus *bus,
- 	struct sdw_slave *slave;
- 	int i, ret = 0;
+diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+index 6ef2f759310d..19b4862e8cce 100644
+--- a/drivers/soundwire/cadence_master.c
++++ b/drivers/soundwire/cadence_master.c
+@@ -820,7 +820,7 @@ int sdw_cdns_exit_reset(struct sdw_cdns *cdns)
+ EXPORT_SYMBOL(sdw_cdns_exit_reset);
  
-+	/* first check if any Slaves fell off the bus */
-+	for (i = 1; i <= SDW_MAX_DEVICES; i++) {
-+		mutex_lock(&bus->bus_lock);
-+		if (test_bit(i, bus->assigned) == false) {
-+			mutex_unlock(&bus->bus_lock);
-+			continue;
-+		}
-+		mutex_unlock(&bus->bus_lock);
-+
-+		slave = sdw_get_slave(bus, i);
-+		if (!slave)
-+			continue;
-+
-+		if (status[i] == SDW_SLAVE_UNATTACHED &&
-+		    slave->status != SDW_SLAVE_UNATTACHED)
-+			sdw_modify_slave_status(slave, SDW_SLAVE_UNATTACHED);
-+	}
-+
- 	if (status[0] == SDW_SLAVE_ATTACHED) {
- 		dev_dbg(bus->dev, "Slave attached, programming device number\n");
- 		ret = sdw_program_device_num(bus);
+ /**
+- * sdw_cdns_enable_interrupt() - Enable SDW interrupts and update config
++ * sdw_cdns_enable_interrupt() - Enable SDW interrupts
+  * @cdns: Cadence instance
+  */
+ int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns, bool state)
+@@ -871,8 +871,7 @@ int sdw_cdns_enable_interrupt(struct sdw_cdns *cdns, bool state)
+ 	cdns_writel(cdns, CDNS_MCP_SLAVE_INTMASK1, slave_intmask1);
+ 	cdns_writel(cdns, CDNS_MCP_INTMASK, mask);
+ 
+-	/* commit changes */
+-	return cdns_update_config(cdns);
++	return 0;
+ }
+ EXPORT_SYMBOL(sdw_cdns_enable_interrupt);
+ 
 -- 
 2.20.1
 
