@@ -2,744 +2,303 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D142C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5169BC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA922082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:46:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ULBRXlxg"
+	by mail.kernel.org (Postfix) with ESMTP id 155F42072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:49:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbgAJKqs (ORCPT
+        id S1727546AbgAJKtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:46:48 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43067 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727366AbgAJKqq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:46:46 -0500
-Received: by mail-pl1-f195.google.com with SMTP id p27so700694pli.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 02:46:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references:in-reply-to
-         :references;
-        bh=H7V/T7b38PpvhNXhKhCG6EvrqQqSTG/eeJDv0UCOur0=;
-        b=ULBRXlxgSag7rDCDJRTjB74Cpkjz47aLBQ3TLSnfBwlmkz6j4vF9QYPqbtiIFZbMcG
-         ImWHE3zOYkCZRf5VyIT5OhyFjqbzTmdkx6OPGVyIgFfAUwHRH9yVZxbvL2Tx1U7Ixwr3
-         h9vk6boc+WO6mp857Tyrbn/Y+oyG1/egvHTBTKgSkiXK6xKmMp6YjS5+tJVSF3qY/X22
-         dHcQb9l25ChKn8OklOcwc+mc0CFlN1oLzYd2CG9t+JkeULWqcCkUDKSNzideI39/IIS2
-         b3GmQo17vuBH9+Qk2oLGHdCscawaBRDTp1L30oSEifXxfGba8NY6jwboi9fLtLyk1CCA
-         w2zQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=H7V/T7b38PpvhNXhKhCG6EvrqQqSTG/eeJDv0UCOur0=;
-        b=XHuxpHcGMTOa7ewTk6WhqlS/mYAwkd3UpEnAo+lb3xBlGSlS6GiuIfiSrhkGFKa089
-         4IkMEbsREPZuBA0V/TUOqTPGvY3YmVjdY23GCDoRcMxst9QonJGL1Z4vGOZF5e1n8yjH
-         c8gA1T6V5cH4yYO29JkGrlPVye6vxgiIXssxsTkPvK7LC6ENmCT+IbsRisogdXQoaip+
-         kG4YYvwGo2oyx7uGH4/Qdmbk8SIv/wX5IvCj9g3UofvqEaQvfGhlX4rVNFIjPo6o/9Ao
-         u34Naye0Vwry4EONnkOwPzr5UTgmftfd2DSRNevklUvX66zuV0wbALiWu/cNlzK4ERxq
-         Jj8g==
-X-Gm-Message-State: APjAAAVBm5kWqGUxXTR0TMxcSqvgW6utryBfcf/em+dj99W9hG8iHiLM
-        6ehC25NxONyV4KRqkzF+GhNxYg==
-X-Google-Smtp-Source: APXvYqx117zMuXhLpfy6RZs2GEIxQJgOeCmFbEmnuM/EooFOsudlEpZzfFpnEUJ7ZDhN+j2YxBYHoQ==
-X-Received: by 2002:a17:902:8ec2:: with SMTP id x2mr3534418plo.102.1578653205819;
-        Fri, 10 Jan 2020 02:46:45 -0800 (PST)
-Received: from greentime-VirtualBox.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id e10sm2590901pfj.7.2020.01.10.02.46.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 02:46:45 -0800 (PST)
-From:   Greentime Hu <greentime.hu@sifive.com>
-To:     greentime.hu@sifive.com, greentime@kernel.org, anup@brainfault.org,
-        palmer@dabbelt.com, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, rppt@linux.ibm.com,
-        gkulkarni@marvell.com, will@kernel.org, catalin.marinas@arm.com,
-        mark.rutland@arm.com, paul.walmsley@sifive.com, hch@lst.de
-Subject: [RFC PATCH v2 4/4] riscv: Add numa support for riscv64 platform
-Date:   Fri, 10 Jan 2020 18:46:27 +0800
-Message-Id: <b6a808a563d4347d2c2e6e472482d7b5cb1050e9.1577694824.git.greentime.hu@sifive.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1577694824.git.greentime.hu@sifive.com>
-References: <cover.1577694824.git.greentime.hu@sifive.com>
-In-Reply-To: <cover.1577694824.git.greentime.hu@sifive.com>
-References: <cover.1577694824.git.greentime.hu@sifive.com>
+        Fri, 10 Jan 2020 05:49:25 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54608 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727435AbgAJKtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 05:49:24 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 73A3DAC22;
+        Fri, 10 Jan 2020 10:49:20 +0000 (UTC)
+Subject: Re: Warnings in DRM code when removing/unbinding a driver
+To:     John Garry <john.garry@huawei.com>,
+        "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>,
+        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+        "airlied@linux.ie" <airlied@linux.ie>, daniel@ffwll.ch
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <381e28c2-f3e4-6f75-c632-96dd8a980c87@suse.de>
+Date:   Fri, 10 Jan 2020 11:49:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="0cmZucVDvA0b0gJtWa2VOgpbnRRWbfcpC"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This implementation is based on arm64 porting. It is tested with
-qemu-system-riscv64, SiFive Unleashed board and OmniXtend FPGA platform.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--0cmZucVDvA0b0gJtWa2VOgpbnRRWbfcpC
+Content-Type: multipart/mixed; boundary="7XItkI25bju4lWJknfEffTATczuyetOii";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: John Garry <john.garry@huawei.com>,
+ "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>,
+ "Chenfeng (puck)" <puck.chen@hisilicon.com>,
+ "airlied@linux.ie" <airlied@linux.ie>, daniel@ffwll.ch
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Message-ID: <381e28c2-f3e4-6f75-c632-96dd8a980c87@suse.de>
+Subject: Re: Warnings in DRM code when removing/unbinding a driver
+References: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
+In-Reply-To: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
 
-There will be two nodes in /sys/devices/system/node if it is described in
-dts and CONFIG_NUMA is enabled. We can use numastat/numactl/numademo to see
-its status.
+--7XItkI25bju4lWJknfEffTATczuyetOii
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v2:
-- split this patch to more patches to be more readable
-- set cpu->hotplugable to 0 since it is not supported yet
-- add more explanation for moving unflatten_device_tree() to paging_init()
+Hi John
 
-Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
----
- arch/riscv/Kconfig              |  30 ++-
- arch/riscv/include/asm/mmzone.h |  13 ++
- arch/riscv/include/asm/numa.h   |  46 ++++
- arch/riscv/include/asm/pci.h    |  10 +
- arch/riscv/kernel/setup.c       |  25 +++
- arch/riscv/kernel/smpboot.c     |   8 +
- arch/riscv/mm/Makefile          |   1 +
- arch/riscv/mm/init.c            |   2 +
- arch/riscv/mm/numa.c            | 372 ++++++++++++++++++++++++++++++++
- 9 files changed, 506 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/include/asm/mmzone.h
- create mode 100644 arch/riscv/include/asm/numa.h
- create mode 100644 arch/riscv/mm/numa.c
+Am 16.12.19 um 18:23 schrieb John Garry:
+> Hi all,
+>=20
+> Enabling CONFIG_DEBUG_TEST_DRIVER_REMOVE causes many warns on a system
+> with the HIBMC hw:
+>=20
+> [=C2=A0=C2=A0 27.788806] WARNING: CPU: 24 PID: 1 at
+> drivers/gpu/drm/drm_gem_vram_helper.c:564 bo_driver_move_notify+0x8c/0x=
+98
+> [=C2=A0=C2=A0 27.798969] Modules linked in:
+> [=C2=A0=C2=A0 27.802018] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G=C2=A0=
+=C2=A0=C2=A0 B
+> =C2=A05.5.0-rc1-dirty #565
+> [=C2=A0=C2=A0 27.810358] Hardware name: Huawei D06 /D06, BIOS Hisilicon=
+ D06 UEFI
+> RC0 - V1.16.01 03/15/2019
+> [=C2=A0=C2=A0 27.818872] pstate: 20c00009 (nzCv daif +PAN +UAO)
+> [=C2=A0=C2=A0 27.823654] pc : bo_driver_move_notify+0x8c/0x98
+> [=C2=A0=C2=A0 27.828262] lr : bo_driver_move_notify+0x40/0x98
+> [=C2=A0=C2=A0 27.832868] sp : ffff00236f0677e0
+> [=C2=A0=C2=A0 27.836173] x29: ffff00236f0677e0 x28: ffffa0001454e5e0
+> [=C2=A0=C2=A0 27.841476] x27: ffff002366e52128 x26: ffffa000149e67b0
+> [=C2=A0=C2=A0 27.846779] x25: ffff002366e523e0 x24: ffff002336936120
+> [=C2=A0=C2=A0 27.852082] x23: ffff0023346f4010 x22: ffff002336936128
+> [=C2=A0=C2=A0 27.857385] x21: ffffa000149c15c0 x20: ffff0023369361f8
+> [=C2=A0=C2=A0 27.862687] x19: ffff002336936000 x18: 0000000000001258
+> [=C2=A0=C2=A0 27.867989] x17: 0000000000001190 x16: 00000000000011d0
+> [=C2=A0=C2=A0 27.873292] x15: 0000000000001348 x14: ffffa00012d68190
+> [=C2=A0=C2=A0 27.878595] x13: 0000000000000006 x12: 1ffff40003241f91
+> [=C2=A0=C2=A0 27.883897] x11: ffff940003241f91 x10: dfffa00000000000
+> [=C2=A0=C2=A0 27.889200] x9 : ffff940003241f92 x8 : 0000000000000001
+> [=C2=A0=C2=A0 27.894502] x7 : ffffa0001920fc88 x6 : ffff940003241f92
+> [=C2=A0=C2=A0 27.899804] x5 : ffff940003241f92 x4 : ffff0023369363a0
+> [=C2=A0=C2=A0 27.905107] x3 : ffffa00010c104b8 x2 : dfffa00000000000
+> [=C2=A0=C2=A0 27.910409] x1 : 0000000000000003 x0 : 0000000000000001
+> [=C2=A0=C2=A0 27.915712] Call trace:
+> [=C2=A0=C2=A0 27.918151]=C2=A0 bo_driver_move_notify+0x8c/0x98
+> [=C2=A0=C2=A0 27.922412]=C2=A0 ttm_bo_cleanup_memtype_use+0x54/0x100
+> [=C2=A0=C2=A0 27.927194]=C2=A0 ttm_bo_put+0x3a0/0x5d0
+> [=C2=A0=C2=A0 27.930673]=C2=A0 drm_gem_vram_object_free+0xc/0x18
+> [=C2=A0=C2=A0 27.935109]=C2=A0 drm_gem_object_free+0x34/0xd0
+> [=C2=A0=C2=A0 27.939196]=C2=A0 drm_gem_object_put_unlocked+0xc8/0xf0
+> [=C2=A0=C2=A0 27.943978]=C2=A0 hibmc_user_framebuffer_destroy+0x20/0x40=
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index d8efbaa78d67..5531913edab2 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -22,7 +22,6 @@ config RISCV
- 	select CLONE_BACKWARDS
- 	select COMMON_CLK
- 	select GENERIC_CLOCKEVENTS
--	select GENERIC_CPU_DEVICES
- 	select GENERIC_IRQ_SHOW
- 	select GENERIC_PCI_IOMAP
- 	select GENERIC_SCHED_CLOCK
-@@ -253,6 +252,35 @@ config TUNE_GENERIC
- 	bool "generic"
- 
- endchoice
-+# Common NUMA Features
-+config NUMA
-+	bool "Numa Memory Allocation and Scheduler Support"
-+	select OF_NUMA
-+	select ARCH_SUPPORTS_NUMA_BALANCING
-+	depends on SPARSEMEM
-+	help
-+	  Enable NUMA (Non-Uniform Memory Access) support.
-+
-+	  The kernel will try to allocate memory used by a CPU on the
-+	  local memory of the CPU and add some more
-+	  NUMA awareness to the kernel.
-+
-+config NODES_SHIFT
-+	int "Maximum NUMA Nodes (as a power of 2)"
-+	range 1 10
-+	default "2"
-+	depends on NEED_MULTIPLE_NODES
-+	help
-+	  Specify the maximum number of NUMA Nodes available on the target
-+	  system.  Increases memory reserved to accommodate various tables.
-+
-+config USE_PERCPU_NUMA_NODE_ID
-+	def_bool y
-+	depends on NUMA
-+
-+config NEED_PER_CPU_EMBED_FIRST_CHUNK
-+	def_bool y
-+	depends on NUMA
- 
- config RISCV_ISA_C
- 	bool "Emit compressed instructions when building Linux"
-diff --git a/arch/riscv/include/asm/mmzone.h b/arch/riscv/include/asm/mmzone.h
-new file mode 100644
-index 000000000000..fa17e01d9ab2
---- /dev/null
-+++ b/arch/riscv/include/asm/mmzone.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_MMZONE_H
-+#define __ASM_MMZONE_H
-+
-+#ifdef CONFIG_NUMA
-+
-+#include <asm/numa.h>
-+
-+extern struct pglist_data *node_data[];
-+#define NODE_DATA(nid)		(node_data[(nid)])
-+
-+#endif /* CONFIG_NUMA */
-+#endif /* __ASM_MMZONE_H */
-diff --git a/arch/riscv/include/asm/numa.h b/arch/riscv/include/asm/numa.h
-new file mode 100644
-index 000000000000..10a4513d078b
---- /dev/null
-+++ b/arch/riscv/include/asm/numa.h
-@@ -0,0 +1,46 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __ASM_NUMA_H
-+#define __ASM_NUMA_H
-+
-+#include <asm/topology.h>
-+
-+#ifdef CONFIG_NUMA
-+
-+extern nodemask_t numa_nodes_parsed __initdata;
-+
-+extern bool numa_off;
-+
-+/* Mappings between node number and cpus on that node. */
-+extern cpumask_var_t node_to_cpumask_map[MAX_NUMNODES];
-+void numa_clear_node(unsigned int cpu);
-+
-+#ifdef CONFIG_DEBUG_PER_CPU_MAPS
-+const struct cpumask *cpumask_of_node(int node);
-+#else
-+/* Returns a pointer to the cpumask of CPUs on Node 'node'. */
-+static inline const struct cpumask *cpumask_of_node(int node)
-+{
-+	return node_to_cpumask_map[node];
-+}
-+#endif
-+
-+void __init riscv_numa_init(void);
-+int __init numa_add_memblk(int nodeid, u64 start, u64 end);
-+void __init numa_set_distance(int from, int to, int distance);
-+void __init numa_free_distance(void);
-+void __init early_map_cpu_to_node(unsigned int cpu, int nid);
-+void numa_store_cpu_info(unsigned int cpu);
-+void numa_add_cpu(unsigned int cpu);
-+void numa_remove_cpu(unsigned int cpu);
-+
-+#else	/* CONFIG_NUMA */
-+
-+static inline void numa_store_cpu_info(unsigned int cpu) { }
-+static inline void numa_add_cpu(unsigned int cpu) { }
-+static inline void numa_remove_cpu(unsigned int cpu) { }
-+static inline void riscv_numa_init(void) { }
-+static inline void early_map_cpu_to_node(unsigned int cpu, int nid) { }
-+
-+#endif	/* CONFIG_NUMA */
-+
-+#endif	/* __ASM_NUMA_H */
-diff --git a/arch/riscv/include/asm/pci.h b/arch/riscv/include/asm/pci.h
-index 1c473a1bd986..d6a0e59638c0 100644
---- a/arch/riscv/include/asm/pci.h
-+++ b/arch/riscv/include/asm/pci.h
-@@ -32,6 +32,16 @@ static inline int pci_proc_domain(struct pci_bus *bus)
- 	/* always show the domain in /proc */
- 	return 1;
- }
-+
-+#ifdef	CONFIG_NUMA
-+int pcibus_to_node(struct pci_bus *bus);
-+#ifndef cpumask_of_pcibus
-+#define cpumask_of_pcibus(bus)	(pcibus_to_node(bus) == -1 ?		\
-+				 cpu_all_mask :				\
-+				 cpumask_of_node(pcibus_to_node(bus)))
-+#endif
-+#endif	/* CONFIG_NUMA */
-+
- #endif  /* CONFIG_PCI */
- 
- #endif  /* _ASM_RISCV_PCI_H */
-diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
-index bcd85f502fb2..fd44eaf2051d 100644
---- a/arch/riscv/kernel/setup.c
-+++ b/arch/riscv/kernel/setup.c
-@@ -54,6 +54,31 @@ void __init parse_dtb(void)
- #endif
- }
- 
-+static DEFINE_PER_CPU(struct cpu, cpu_devices);
-+
-+static int __init topology_init(void)
-+{
-+	int i, ret;
-+
-+#ifdef CONFIG_NEED_MULTIPLE_NODES
-+	for_each_online_node(i)
-+		register_one_node(i);
-+#endif
-+
-+	for_each_possible_cpu(i) {
-+		struct cpu *cpu = &per_cpu(cpu_devices, i);
-+
-+		cpu->hotpluggable = 0;
-+		ret = register_cpu(cpu, i);
-+		if (unlikely(ret))
-+			pr_warn("Warning: %s: register_cpu %d failed (%d)\n",
-+			       __func__, i, ret);
-+	}
-+
-+	return 0;
-+}
-+subsys_initcall(topology_init);
-+
- void __init setup_arch(char **cmdline_p)
- {
- 	init_mm.start_code = (unsigned long) _stext;
-diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-index ceef7c579aeb..9e911774f4b8 100644
---- a/arch/riscv/kernel/smpboot.c
-+++ b/arch/riscv/kernel/smpboot.c
-@@ -27,6 +27,7 @@
- #include <asm/clint.h>
- #include <asm/irq.h>
- #include <asm/mmu_context.h>
-+#include <asm/numa.h>
- #include <asm/tlbflush.h>
- #include <asm/sections.h>
- #include <asm/sbi.h>
-@@ -49,6 +50,8 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 	unsigned int this_cpu;
- 
- 	this_cpu = smp_processor_id();
-+	numa_store_cpu_info(this_cpu);
-+	numa_add_cpu(this_cpu);
- 
- 	/* This covers non-smp usecase mandated by "nosmp" option */
- 	if (max_cpus == 0)
-@@ -58,6 +61,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 		if (cpuid == smp_processor_id())
- 			continue;
- 		set_cpu_present(cpuid, true);
-+		numa_store_cpu_info(cpuid);
- 	}
- }
- 
-@@ -76,6 +80,7 @@ void __init setup_smp(void)
- 		if (hart == cpuid_to_hartid_map(0)) {
- 			BUG_ON(found_boot_cpu);
- 			found_boot_cpu = 1;
-+			early_map_cpu_to_node(0, of_node_to_nid(dn));
- 			continue;
- 		}
- 		if (cpuid >= NR_CPUS) {
-@@ -85,6 +90,7 @@ void __init setup_smp(void)
- 		}
- 
- 		cpuid_to_hartid_map(cpuid) = hart;
-+		early_map_cpu_to_node(cpuid, of_node_to_nid(dn));
- 		cpuid++;
- 	}
- 
-@@ -153,6 +159,8 @@ asmlinkage __visible void __init smp_callin(void)
- 
- 	trap_init();
- 	notify_cpu_starting(this_cpu);
-+	numa_store_cpu_info(this_cpu);
-+	numa_add_cpu(this_cpu);
- 	update_siblings_masks(this_cpu);
- 	set_cpu_online(this_cpu, true);
- 	/*
-diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
-index a1bd95c8047a..bada5c6d1a45 100644
---- a/arch/riscv/mm/Makefile
-+++ b/arch/riscv/mm/Makefile
-@@ -15,3 +15,4 @@ ifeq ($(CONFIG_MMU),y)
- obj-$(CONFIG_SMP) += tlbflush.o
- endif
- obj-$(CONFIG_HUGETLB_PAGE) += hugetlbpage.o
-+obj-$(CONFIG_NUMA)         += numa.o
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index fbe69fe47806..589f3ef505c7 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -18,6 +18,7 @@
- #include <asm/sections.h>
- #include <asm/pgtable.h>
- #include <asm/io.h>
-+#include <asm/numa.h>
- 
- #include "../kernel/head.h"
- 
-@@ -492,6 +493,7 @@ void __init paging_init(void)
- {
- 	setup_vm_final();
- 	unflatten_device_tree();
-+	riscv_numa_init();
- 	memblocks_present();
- 	sparse_init();
- 	setup_zero_page();
-diff --git a/arch/riscv/mm/numa.c b/arch/riscv/mm/numa.c
-new file mode 100644
-index 000000000000..b679b2831990
---- /dev/null
-+++ b/arch/riscv/mm/numa.c
-@@ -0,0 +1,372 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * NUMA support, based on the arm64 implementation.
-+ *
-+ * Copyright (C) 2015 Cavium Inc.
-+ * Author: Ganapatrao Kulkarni <gkulkarni@cavium.com>
-+ * Copyright (C) 2019 SiFive, Inc
-+ */
-+
-+#define pr_fmt(fmt) "NUMA: " fmt
-+
-+#include <linux/memblock.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/device.h>
-+#include <linux/pci.h>
-+
-+struct pglist_data *node_data[MAX_NUMNODES] __read_mostly;
-+EXPORT_SYMBOL(node_data);
-+nodemask_t numa_nodes_parsed __initdata;
-+static int cpu_to_node_map[NR_CPUS] = { [0 ... NR_CPUS-1] = NUMA_NO_NODE };
-+
-+static u8 *numa_distance;
-+static int numa_distance_cnt;
-+bool numa_off;
-+
-+static __init int numa_parse_early_param(char *opt)
-+{
-+	if (!opt)
-+		return -EINVAL;
-+	if (str_has_prefix(opt, "off"))
-+		numa_off = true;
-+
-+	return 0;
-+}
-+early_param("numa", numa_parse_early_param);
-+
-+cpumask_var_t node_to_cpumask_map[MAX_NUMNODES];
-+EXPORT_SYMBOL(node_to_cpumask_map);
-+
-+#ifdef CONFIG_DEBUG_PER_CPU_MAPS
-+
-+/*
-+ * Returns a pointer to the bitmask of CPUs on Node 'node'.
-+ */
-+const struct cpumask *cpumask_of_node(int node)
-+{
-+	if (WARN_ON(node >= nr_node_ids))
-+		return cpu_none_mask;
-+
-+	if (WARN_ON(node_to_cpumask_map[node] == NULL))
-+		return cpu_online_mask;
-+
-+	return node_to_cpumask_map[node];
-+}
-+EXPORT_SYMBOL(cpumask_of_node);
-+
-+#endif
-+
-+int pcibus_to_node(struct pci_bus *bus)
-+{
-+	return dev_to_node(&bus->dev);
-+}
-+EXPORT_SYMBOL(pcibus_to_node);
-+
-+static void numa_update_cpu(unsigned int cpu, bool remove)
-+{
-+	int nid = cpu_to_node(cpu);
-+
-+	if (nid == NUMA_NO_NODE)
-+		return;
-+
-+	if (remove)
-+		cpumask_clear_cpu(cpu, node_to_cpumask_map[nid]);
-+	else
-+		cpumask_set_cpu(cpu, node_to_cpumask_map[nid]);
-+}
-+
-+void numa_add_cpu(unsigned int cpu)
-+{
-+	numa_update_cpu(cpu, false);
-+}
-+
-+/*
-+ * Set the cpu to node and mem mapping
-+ */
-+void numa_store_cpu_info(unsigned int cpu)
-+{
-+	set_cpu_numa_node(cpu, cpu_to_node_map[cpu]);
-+}
-+
-+void __init early_map_cpu_to_node(unsigned int cpu, int nid)
-+{
-+	/* fallback to node 0 */
-+	if (nid < 0 || nid >= MAX_NUMNODES || numa_off)
-+		nid = 0;
-+
-+	cpu_to_node_map[cpu] = nid;
-+
-+	/*
-+	 * We should set the numa node of cpu0 as soon as possible, because it
-+	 * has already been set up online before. cpu_to_node(0) will soon be
-+	 * called.
-+	 */
-+	if (!cpu)
-+		set_cpu_numa_node(cpu, nid);
-+}
-+
-+static int __init numa_alloc_distance(void)
-+{
-+	size_t size;
-+	u64 phys;
-+	int i, j;
-+
-+	size = nr_node_ids * nr_node_ids * sizeof(numa_distance[0]);
-+	phys = memblock_find_in_range(0, PFN_PHYS(max_pfn),
-+				      size, PAGE_SIZE);
-+	if (WARN_ON(!phys))
-+		return -ENOMEM;
-+
-+	memblock_reserve(phys, size);
-+
-+	numa_distance = __va(phys);
-+	numa_distance_cnt = nr_node_ids;
-+
-+	/* fill with the default distances */
-+	for (i = 0; i < numa_distance_cnt; i++)
-+		for (j = 0; j < numa_distance_cnt; j++)
-+			numa_distance[i * numa_distance_cnt + j] = i == j ?
-+				LOCAL_DISTANCE : REMOTE_DISTANCE;
-+
-+	pr_debug("Initialized distance table, cnt=%d\n", numa_distance_cnt);
-+
-+	return 0;
-+}
-+
-+/**
-+ * numa_add_memblk() - Set node id to memblk
-+ * @nid: NUMA node ID of the new memblk
-+ * @start: Start address of the new memblk
-+ * @end:  End address of the new memblk
-+ *
-+ * RETURNS:
-+ * 0 on success, -errno on failure.
-+ */
-+int __init numa_add_memblk(int nid, u64 start, u64 end)
-+{
-+	int ret;
-+
-+	ret = memblock_set_node(start, (end - start), &memblock.memory, nid);
-+	if (ret < 0) {
-+		pr_err("memblock [0x%llx - 0x%llx] failed to add on node %d\n",
-+			start, (end - 1), nid);
-+		return ret;
-+	}
-+
-+	node_set(nid, numa_nodes_parsed);
-+	return ret;
-+}
-+
-+/*
-+ * Initialize NODE_DATA for a node on the local memory
-+ */
-+static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
-+{
-+	const size_t nd_size = roundup(sizeof(pg_data_t), SMP_CACHE_BYTES);
-+	u64 nd_pa;
-+	void *nd;
-+	int tnid;
-+
-+	if (start_pfn >= end_pfn)
-+		pr_info("Initmem setup node %d [<memory-less node>]\n", nid);
-+
-+	nd_pa = memblock_phys_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
-+	if (!nd_pa)
-+		panic("Cannot allocate %zu bytes for node %d data\n",
-+		      nd_size, nid);
-+
-+	nd = __va(nd_pa);
-+
-+	/* report and initialize */
-+	pr_info("NODE_DATA [mem %#010Lx-%#010Lx]\n",
-+		nd_pa, nd_pa + nd_size - 1);
-+	tnid = early_pfn_to_nid(nd_pa >> PAGE_SHIFT);
-+	if (tnid != nid)
-+		pr_info("NODE_DATA(%d) on node %d\n", nid, tnid);
-+
-+	node_data[nid] = nd;
-+	memset(NODE_DATA(nid), 0, sizeof(pg_data_t));
-+	NODE_DATA(nid)->node_id = nid;
-+	NODE_DATA(nid)->node_start_pfn = start_pfn;
-+	NODE_DATA(nid)->node_spanned_pages = end_pfn - start_pfn;
-+}
-+
-+void __init numa_set_distance(int from, int to, int distance)
-+{
-+	if (!numa_distance) {
-+		pr_warn_once("Warning: distance table not allocated yet\n");
-+		return;
-+	}
-+
-+	if (from >= numa_distance_cnt || to >= numa_distance_cnt ||
-+			from < 0 || to < 0) {
-+		pr_warn_once("Warning: node ids are out of bound, from=%d to=%d distance=%d\n",
-+			    from, to, distance);
-+		return;
-+	}
-+
-+	if ((u8)distance != distance ||
-+	    (from == to && distance != LOCAL_DISTANCE)) {
-+		pr_warn_once("Warning: invalid distance parameter, from=%d to=%d distance=%d\n",
-+			     from, to, distance);
-+		return;
-+	}
-+
-+	numa_distance[from * numa_distance_cnt + to] = distance;
-+}
-+
-+/*
-+ * Return NUMA distance @from to @to
-+ */
-+int __node_distance(int from, int to)
-+{
-+	if (from >= numa_distance_cnt || to >= numa_distance_cnt)
-+		return from == to ? LOCAL_DISTANCE : REMOTE_DISTANCE;
-+	return numa_distance[from * numa_distance_cnt + to];
-+}
-+EXPORT_SYMBOL(__node_distance);
-+
-+static int __init numa_register_nodes(void)
-+{
-+	int nid;
-+	struct memblock_region *mblk;
-+
-+	/* Check that valid nid is set to memblks */
-+	for_each_memblock(memory, mblk)
-+		if (mblk->nid == NUMA_NO_NODE || mblk->nid >= MAX_NUMNODES) {
-+			pr_warn("Warning: invalid memblk node %d [mem %#010Lx-%#010Lx]\n",
-+				mblk->nid, mblk->base,
-+				mblk->base + mblk->size - 1);
-+			return -EINVAL;
-+		}
-+
-+	/* Finally register nodes. */
-+	for_each_node_mask(nid, numa_nodes_parsed) {
-+		unsigned long start_pfn, end_pfn;
-+
-+		get_pfn_range_for_nid(nid, &start_pfn, &end_pfn);
-+		setup_node_data(nid, start_pfn, end_pfn);
-+		node_set_online(nid);
-+	}
-+
-+	/* Setup online nodes to actual nodes*/
-+	node_possible_map = numa_nodes_parsed;
-+
-+	return 0;
-+}
-+static void __init setup_node_to_cpumask_map(void)
-+{
-+	int node;
-+
-+	/* setup nr_node_ids if not done yet */
-+	if (nr_node_ids == MAX_NUMNODES)
-+		setup_nr_node_ids();
-+
-+	/* allocate and clear the mapping */
-+	for (node = 0; node < nr_node_ids; node++) {
-+		alloc_bootmem_cpumask_var(&node_to_cpumask_map[node]);
-+		cpumask_clear(node_to_cpumask_map[node]);
-+	}
-+
-+	/* cpumask_of_node() will now work */
-+	pr_debug("Node to cpumask map for %u nodes\n", nr_node_ids);
-+}
-+
-+void __init numa_free_distance(void)
-+{
-+	size_t size;
-+
-+	if (!numa_distance)
-+		return;
-+
-+	size = numa_distance_cnt * numa_distance_cnt *
-+		sizeof(numa_distance[0]);
-+
-+	memblock_free(__pa(numa_distance), size);
-+	numa_distance_cnt = 0;
-+	numa_distance = NULL;
-+}
-+static int __init numa_init(int (*init_func)(void))
-+{
-+	int ret;
-+
-+	nodes_clear(numa_nodes_parsed);
-+	nodes_clear(node_possible_map);
-+	nodes_clear(node_online_map);
-+
-+	ret = numa_alloc_distance();
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = init_func();
-+	if (ret < 0)
-+		goto out_free_distance;
-+
-+	if (nodes_empty(numa_nodes_parsed)) {
-+		pr_info("No NUMA configuration found\n");
-+		ret = -EINVAL;
-+		goto out_free_distance;
-+	}
-+
-+	ret = numa_register_nodes();
-+	if (ret < 0)
-+		goto out_free_distance;
-+
-+	setup_node_to_cpumask_map();
-+
-+	return 0;
-+out_free_distance:
-+	numa_free_distance();
-+	return ret;
-+}
-+
-+/**
-+ * dummy_numa_init() - Fallback dummy NUMA init
-+ *
-+ * Used if there's no underlying NUMA architecture, NUMA initialization
-+ * fails, or NUMA is disabled on the command line.
-+ *
-+ * Must online at least one node (node 0) and add memory blocks that cover all
-+ * allowed memory. It is unlikely that this function fails.
-+ *
-+ * Return: 0 on success, -errno on failure.
-+ */
-+static int __init dummy_numa_init(void)
-+{
-+	int ret;
-+	struct memblock_region *mblk;
-+
-+	if (numa_off)
-+		pr_info("NUMA disabled\n"); /* Forced off on command line. */
-+	pr_info("Faking a node at [mem %#018Lx-%#018Lx]\n",
-+		memblock_start_of_DRAM(), memblock_end_of_DRAM() - 1);
-+
-+	for_each_memblock(memory, mblk) {
-+		ret = numa_add_memblk(0, mblk->base, mblk->base + mblk->size);
-+		if (!ret)
-+			continue;
-+
-+		pr_err("NUMA init failed\n");
-+		return ret;
-+	}
-+
-+	numa_off = true;
-+	return 0;
-+}
-+
-+/**
-+ * riscv_numa_init() - Initialize NUMA
-+ *
-+ * Try each configured NUMA initialization method until one succeeds. The
-+ * last fallback is dummy single node config encomapssing whole memory.
-+ */
-+void __init riscv_numa_init(void)
-+{
-+	if (!numa_off) {
-+		if (!numa_init(of_numa_init))
-+			return;
-+	}
-+
-+	numa_init(dummy_numa_init);
-+}
--- 
-2.17.1
+> [=C2=A0=C2=A0 27.949020]=C2=A0 drm_framebuffer_free+0x48/0x58
+> [=C2=A0=C2=A0 27.953194]=C2=A0 drm_mode_object_put.part.1+0x90/0xe8
+> [=C2=A0=C2=A0 27.957889]=C2=A0 drm_mode_object_put+0x28/0x38
+> [=C2=A0=C2=A0 27.961976]=C2=A0 hibmc_fbdev_fini+0x54/0x78
 
+drm-tip now contains
+
+commit a88248506a2bcfeaef6837a53cde19fe11970e6c
+Author: Thomas Zimmermann <tzimmermann@suse.de>
+Date:   Tue Dec 3 09:38:15 2019 +0100
+
+    drm/hisilicon/hibmc: Switch to generic fbdev emulation
+
+which removes this entire code and switches hibmc to generic fbdev
+emulation. Does that fix the problem?
+
+Best regards
+Thomas
+
+> [=C2=A0=C2=A0 27.965802]=C2=A0 hibmc_unload+0x2c/0xd0
+> [=C2=A0=C2=A0 27.969281]=C2=A0 hibmc_pci_remove+0x2c/0x40
+> [=C2=A0=C2=A0 27.973109]=C2=A0 pci_device_remove+0x6c/0x140
+> [=C2=A0=C2=A0 27.977110]=C2=A0 really_probe+0x174/0x548
+> [=C2=A0=C2=A0 27.980763]=C2=A0 driver_probe_device+0x7c/0x148
+> [=C2=A0=C2=A0 27.984936]=C2=A0 device_driver_attach+0x94/0xa0
+> [=C2=A0=C2=A0 27.989109]=C2=A0 __driver_attach+0xa8/0x110
+> [=C2=A0=C2=A0 27.992935]=C2=A0 bus_for_each_dev+0xe8/0x158
+> [=C2=A0=C2=A0 27.996849]=C2=A0 driver_attach+0x30/0x40
+> [=C2=A0=C2=A0 28.000415]=C2=A0 bus_add_driver+0x234/0x2f0
+> [=C2=A0=C2=A0 28.004241]=C2=A0 driver_register+0xbc/0x1d0
+> [=C2=A0=C2=A0 28.008067]=C2=A0 __pci_register_driver+0xbc/0xd0
+> [=C2=A0=C2=A0 28.012329]=C2=A0 hibmc_pci_driver_init+0x20/0x28
+> [=C2=A0=C2=A0 28.016590]=C2=A0 do_one_initcall+0xb4/0x254
+> [=C2=A0=C2=A0 28.020417]=C2=A0 kernel_init_freeable+0x27c/0x328
+> [=C2=A0=C2=A0 28.024765]=C2=A0 kernel_init+0x10/0x118
+> [=C2=A0=C2=A0 28.028245]=C2=A0 ret_from_fork+0x10/0x18
+> [=C2=A0=C2=A0 28.031813] ---[ end trace 35a83b71b657878d ]---
+> [=C2=A0=C2=A0 28.036503] ------------[ cut here ]------------
+> [=C2=A0=C2=A0 28.041115] WARNING: CPU: 24 PID: 1 at
+> drivers/gpu/drm/drm_gem_vram_helper.c:40
+> ttm_buffer_object_destroy+0x4c/0x80
+> [=C2=A0=C2=A0 28.051537] Modules linked in:
+> [=C2=A0=C2=A0 28.054585] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G=C2=A0=
+=C2=A0=C2=A0 B=C2=A0=C2=A0 W
+> =C2=A05.5.0-rc1-dirty #565
+> [=C2=A0=C2=A0 28.062924] Hardware name: Huawei D06 /D06, BIOS Hisilicon=
+ D06 UEFI
+> RC0 - V1.16.01 03/15/2019
+>=20
+> [snip]
+>=20
+> Indeed, simply unbinding the device from the driver causes the same sor=
+t
+> of issue:
+>=20
+> root@(none)$ cd ./bus/pci/drivers/hibmc-drm/
+> root@(none)$ ls
+> 0000:05:00.0=C2=A0 bind=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 new_id=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 remove_id=C2=A0=C2=
+=A0=C2=A0=C2=A0 uevent=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0
+> unbind
+> root@(none)$ echo 0000\:05\:00.0 > unbind
+> [=C2=A0 116.074352] ------------[ cut here ]------------
+> [=C2=A0 116.078978] WARNING: CPU: 17 PID: 1178 at
+> drivers/gpu/drm/drm_gem_vram_helper.c:40
+> ttm_buffer_object_destroy+0x4c/0x80
+> [=C2=A0 116.089661] Modules linked in:
+> [=C2=A0 116.092711] CPU: 17 PID: 1178 Comm: sh Tainted: G=C2=A0=C2=A0=C2=
+=A0 B=C2=A0=C2=A0 W
+> 5.5.0-rc1-dirty #565
+> [=C2=A0 116.100704] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 =
+UEFI
+> RC0 - V1.16.01 03/15/2019
+> [=C2=A0 116.109218] pstate: 20400009 (nzCv daif +PAN -UAO)
+> [=C2=A0 116.114001] pc : ttm_buffer_object_destroy+0x4c/0x80
+> [=C2=A0 116.118956] lr : ttm_buffer_object_destroy+0x18/0x80
+> [=C2=A0 116.123910] sp : ffff0022e6cef8e0
+> [=C2=A0 116.127215] x29: ffff0022e6cef8e0 x28: ffff00231b1fb000
+> [=C2=A0 116.132519] x27: 0000000000000000 x26: ffff00231b1fb000
+> [=C2=A0 116.137821] x25: ffff0022e6cefdc0 x24: 0000000000002480
+> [=C2=A0 116.143124] x23: ffff0023682b6ab0 x22: ffff0023682b6800
+> [=C2=A0 116.148427] x21: ffff0023682b6800 x20: 0000000000000000
+> [=C2=A0 116.153730] x19: ffff0023682b6800 x18: 0000000000000000
+> [=C2=A0 116.159032] x17: 000000000000000000000000001
+> [=C2=A0 116.185545] x7 : ffff0023682b6b07 x6 : ffff80046d056d61
+> [=C2=A0 116.190848] x5 : ffff80046d056d61 x4 : ffff0023682b6ba0
+> [=C2=A0 116.196151] x3 : ffffa00010197338 x2 : dfffa00000000000
+> [=C2=A0 116.201453] x1 : 0000000000000003 x0 : 0000000000000001
+> [=C2=A0 116.206756] Call trace:
+> [=C2=A0 116.209195]=C2=A0 ttm_buffer_object_destroy+0x4c/0x80
+> [=C2=A0 116.213803]=C2=A0 ttm_bo_release_list+0x184/0x220
+> [=C2=A0 116.218064]=C2=A0 ttm_bo_put+0x410/0x5d0
+> [=C2=A0 116.221544]=C2=A0 drm_gem_vram_object_free+0xc/0x18
+> [=C2=A0 116.225979]=C2=A0 drm_gem_object_free+0x34/0xd0
+> [=C2=A0 116.230066]=C2=A0 drm_gem_object_put_unlocked+0xc8/0xf0
+> [=C2=A0 116.234848]=C2=A0 hibmc_user_framebuffer_destroy+0x20/0x40
+> [=C2=A0 116.239890]=C2=A0 drm_framebuffer_free+0x48/0x58
+> [=C2=A0 116.244064]=C2=A0 drm_mode_object_put.part.1+0x90/0xe8
+> [=C2=A0 116.248759]=C2=A0 drm_mode_object_put+0x28/0x38
+> [=C2=A0 116.252846]=C2=A0 hibmc_fbdev_fini+0x54/0x78
+> [=C2=A0 116.256672]=C2=A0 hibmc_unload+0x2c/0xd0
+> [=C2=A0 116.260151]=C2=A0 hibmc_pci_remove+0x2c/0x40
+> [=C2=A0 116.263979]=C2=A0 pci_device_remove+0x6c/0x140
+> [=C2=A0 116.267980]=C2=A0 device_release_driver_internal+0x134/0x250
+> [=C2=A0 116.273196]=C2=A0 device_driver_detach+0x28/0x38
+> [=C2=A0 116.277369]=C2=A0 unbind_store+0xfc/0x150
+> [=C2=A0 116.280934]=C2=A0 drv_attr_store+0x48/0x60
+> [=C2=A0 116.284589]=C2=A0 sysfs_kf_write+0x80/0xb0
+> [=C2=A0 116.288241]=C2=A0 kernfs_fop_write+0x1d4/0x320
+> [=C2=A0 116.292243]=C2=A0 __vfs_write+0x54/0x98
+> [=C2=A0 116.295635]=C2=A0 vfs_write+0xe8/0x270
+> [=C2=A0 116.298940]=C2=A0 ksys_write+0xc8/0x180
+> [=C2=A0 116.302333]=C2=A0 __arm64_sys_write+0x40/0x50
+> [=C2=A0 116.306248]=C2=A0 el0_svc_common.constprop.0+0xa4/0x1f8
+> [=C2=A0 116.311029]=C2=A0 el0_svc_handler+0x34/0xb0
+> [=C2=A0 116.314770]=C2=A0 el0_sync_handler+0x10c/0x1c8
+> [=C2=A0 116.318769]=C2=A0 el0_sync+0x140/0x180
+> [=C2=A0 116.322074] ---[ end trace e60e43d0e316b5c8 ]---
+> [=C2=A0 116.326868] ------------[ cut here ]------------
+>=20
+>=20
+> dmesg and .config is here:
+> https://pastebin.com/4P5yaZBS
+>=20
+> I'm not sure if this is a HIBMC driver issue or issue with the framewor=
+k.
+>=20
+> john
+>=20
+>=20
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--7XItkI25bju4lWJknfEffTATczuyetOii--
+
+--0cmZucVDvA0b0gJtWa2VOgpbnRRWbfcpC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl4YVqUACgkQaA3BHVML
+eiNM/Af/ULhfTuRC4Tis/U3PbfmysR1NpCe6NJbkA2vVQAwNMA+72DfdIlBG59bA
+DwJNC24KpW3kjS8ea27wru5rCbmTfYULa5Ek2vUV1DiKNeti7B5ECLYYtmBGC9r8
+b/p3G2KwWPz8ShhH+tZGFVifrTvRjy+kK1OzbLPH1MIYO3VIBoyZmKZR24t0y6g6
+9GXjI2sAGVzM5bs2EEe7n7X8lj+cgrqvasqBrjEenkFia/p3PNS2BMZF/VC3BOgY
+4vDo9k7M9WloLyrGdd/7BpwOXDmXsJbg37RkIzNPn6iWOch5IYIfRLr6g2vZ3Wi9
+vzCinR/QqgI6B7LIJNliMxx6k4XC2A==
+=FDOW
+-----END PGP SIGNATURE-----
+
+--0cmZucVDvA0b0gJtWa2VOgpbnRRWbfcpC--
