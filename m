@@ -2,91 +2,185 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFEE3C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:09:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31A0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA17D2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:09:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 736F12067D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:17:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CG765F8W"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="CsncPSl2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbgAJCJw (ORCPT
+        id S1730738AbgAJCRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 21:09:52 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45196 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730601AbgAJCJv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 21:09:51 -0500
-Received: by mail-lj1-f196.google.com with SMTP id j26so416648ljc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 18:09:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=R4EGY9E2x/SkAY5ypNNovap4WyyEX7OCvqo4o4ElTiI=;
-        b=CG765F8Wc69HfycniYIukc82Y/Lt+AnIHQ4oupzFv9Ay/kIZEqDWcuncuJ453mu4TG
-         mb9SuTTKH4Nsq7LC18frT+FHu2iQAqpsslZkH06uj/WSEmyDDqwKF1Bzb5akSTP3xrEr
-         KguU9wsqhKxAVv9X4ocQvQJHIC37EzBW6e4+My55/m4nZ65JtdXerh99zQegUTv/9JaB
-         AUJoaRYlZc2E8nyt4fIGtzhlo44b0bVrx3xkegLnfsY1rLlRTRkJyuQtrNDWK+VQrbfb
-         SlqhHnIlP/ZvYPyF/YHxiZrlWonn5EitlNbADiQnMSgdRM8XPi/MozfxpXaIP2d9mb3C
-         L4eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=R4EGY9E2x/SkAY5ypNNovap4WyyEX7OCvqo4o4ElTiI=;
-        b=DnaFhZqE19qq6RIpLfz7FbOhOHscyyuLtp3qJ1urkcf6e1jZ94v0vGVhW4GbLX6d7Q
-         lQj6yFSyC0m770qlZYU5fIbafvbGAvsQkJaZ6mOqe0tYqLOhr3UlwYR+q4/zyrJ8CX3x
-         RHuP8ATs8v2uc9M/Vz2aLMadSgOPuYYP6GBDACy3eHwGNuT1TVZZOqRzAwUqWbluhJCd
-         jAP68GHYBG13PErjHiTkW3aUqJgVfWU6uPsQaK66uadRyyCGsUGWcvNRV3G5K8102uRg
-         B2lI+0Pz6nHqIp8IFRX/9/dymeB3aczeZEJUN6tqpo3nmH9wEruliQjNq+qpYIjvOPnz
-         d2Tg==
-X-Gm-Message-State: APjAAAWThgxUtVIgWi8WfeHNWuZeQGyRdwi4/ghXb5mZ56uWJcCc49cI
-        VkKZOvuVhs13UFGJo6kCAQS8xe7GULZHVdCfp3M=
-X-Google-Smtp-Source: APXvYqzaR21ZRmjdArwdj62lKXqcCd/et0SbF+lqBPclZJIYeCEgY4LUONnwnhFOK2TgpOZm/8qVgA9F5xYSC3dby9o=
-X-Received: by 2002:a2e:7518:: with SMTP id q24mr706748ljc.119.1578622189693;
- Thu, 09 Jan 2020 18:09:49 -0800 (PST)
+        Thu, 9 Jan 2020 21:17:10 -0500
+Received: from mail-eopbgr60083.outbound.protection.outlook.com ([40.107.6.83]:38911
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730668AbgAJCRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 21:17:10 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WlSB9gw+LzMU7Z+ec1B31MrhbVgIBApLx1xgWxiV1J4AM7A0tyRGlu6NhpmTxMzNbg0mm19y9iO5tF6hH12lMvXLz3wP0svoRdyJlIGixlQ2GxH70vKlyxn/051SnE0oxjEL7eNk+psyN6BSGXNlWNZejNCsDSmzyhrQXy88rWU/EMXayTiwsi4vvkRRMU+mBTGPVtXgXCDwC143tufiK41z6jjUBuqF/WuxDtZHNfQSDlW+7rSr7HQmUc0zRGgxv7ECx4H7q3W6ggt43FF9PZr/gCGTUkeaVG1VUWC+J5dupsEn176vhuU7NC/El3jRmdls1WTuCjY4BVos5Jlt+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jr16rIJTCC1eefDNek4Lk468Le3w0iFIOgf5ynpTcwQ=;
+ b=dKILr5/Qm6EGc4xorPr4I/ZHzpdi2Vf9cShnJYQ69lg5y4Fk7dQ+9ZCHMb/GZDtwYPpzC9Xykdfh2VxfUtQilQHZxgcSvgOhvRyGEOUbo157BSS29f2kZx/Y5uF28NiAPgAYlZt6iwIyAj7eL8mnCuaLIteqbe51UtmOqkyA64n30sxrmm67S4S1u3LMmR/lWKsrmFcTVvWLPSK+TDam/WCltK8WTxd0DXxMGULgr4AaC5ao/MqAGDTkLNMtN1sa8witwF2+AAJWWjnKtQ8HkPXu6kNU8uiJPtSk9qx5UNaVjLUfjYPUToq1iwgAS/X8cVW9zLiVBTrZZU6fsDRaew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jr16rIJTCC1eefDNek4Lk468Le3w0iFIOgf5ynpTcwQ=;
+ b=CsncPSl2rdnxLM3ml/+C/v7w1pblq6FZ5vJLmWHnlnZXrcEfJ99RLAivj73mmRJwVT9CgnpFkWTr8psBsp46qhxFDU1cKyMPWQtBl1swF4BJUGoTDeyNnIeVH5nV3lzcrO7JhtWzvH1lj6e61F3f0kqCvJa6hbF+o5BAwP1xQOI=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB3437.eurprd05.prod.outlook.com (10.170.239.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.12; Fri, 10 Jan 2020 02:16:27 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2623.011; Fri, 10 Jan 2020
+ 02:16:27 +0000
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR06CA0026.namprd06.prod.outlook.com (2603:10b6:208:23d::31) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend Transport; Fri, 10 Jan 2020 02:16:26 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1ipjqZ-0001bH-Fo; Thu, 09 Jan 2020 22:16:23 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Doug Ledford <dledford@redhat.com>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull RDMA subsystem changes
+Thread-Topic: [GIT PULL] Please pull RDMA subsystem changes
+Thread-Index: AQHVx1v2bZiuTuTbz0W/q1nZ7yjcuQ==
+Date:   Fri, 10 Jan 2020 02:16:26 +0000
+Message-ID: <20200110021623.GA6057@ziepe.ca>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MN2PR06CA0026.namprd06.prod.outlook.com
+ (2603:10b6:208:23d::31) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [142.68.57.212]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f77d8665-46de-4b21-2084-08d7957318d5
+x-ms-traffictypediagnostic: VI1PR05MB3437:
+x-microsoft-antispam-prvs: <VI1PR05MB34378AEADEA3ED8E50D08C11CF380@VI1PR05MB3437.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:211;
+x-forefront-prvs: 02788FF38E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(396003)(346002)(136003)(39860400002)(189003)(199004)(9746002)(66556008)(110136005)(64756008)(54906003)(33656002)(5660300002)(66476007)(36756003)(66946007)(52116002)(186003)(1076003)(86362001)(2906002)(316002)(4001150100001)(81166006)(81156014)(66446008)(26005)(71200400001)(66616009)(9786002)(8936002)(8676002)(9686003)(4326008)(478600001)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB3437;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Vkn/0KwN4RsL+X2AXDeibdIBLIQUAuE7vCQbXY6w0GmWSDbTjv3zyMhGgVv0weBv2q97hd/q8VPz4Qwty8PICX3CbyUG31/Kyf+ZKO7+tss6SFTFL6GjOK4p8piqttfZksNcMuSpn3yLDPR9few0IbPJDB+hvyqhjV7buifN7QaHz0XgZmDY/MmulMkQ5LXdX34snKsPbQgqcqTaJUKYU9udSEOj0Eb8Tq5R7N0GYfMG6dHRrf3Gsk9TXYMJTOgVL+Xl7Bl73+14BTj+BNKllmQvatpa/FKxMiI56MY3vvq6yNu7lp9+7jAdDZ9Or5qSgKJgvSVF2dxR3uPwlrPmVEt508xD+xebKv/FW/k3hS3Su9vmV3yGB+ZnM21e6p1fn/eAaSoM0bvbKf4GeXk7XfefnDZKadNWru3BmRDtEd07KQZXwq9v9yTHiov//KTLnViMGTVDmgtHuVRgKE+zoQhygaTcjWs7yvsXZm4voJuP7+BepeEdRZoC98BvHjPM
+x-ms-exchange-transport-forked: True
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
 MIME-Version: 1.0
-References: <20200103033929.4956-1-zhenzhong.duan@gmail.com>
- <20200109184055.GI5603@zn.tnic> <20200109204638.GA523773@rani.riverdale.lan> <20200109205041.GJ5603@zn.tnic>
-In-Reply-To: <20200109205041.GJ5603@zn.tnic>
-From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Date:   Fri, 10 Jan 2020 10:09:38 +0800
-Message-ID: <CAFH1YnNdmHD9rnriTVx-se-Z5MHsgUZ0jYWMrg6OYVjr4Ap+JQ@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/boot/KASLR: Fix unused variable warning
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f77d8665-46de-4b21-2084-08d7957318d5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 02:16:26.8851
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: dGFyel1oehy7HexD/v7bTUteHdY62/hBAWOQ+doC2XZylsOxFJ8BRJ3sQt3vQ5HQ8yw1hcFgu02vZPBp23hvCQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB3437
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 4:50 AM Borislav Petkov <bp@alien8.de> wrote:
->
-> Drop fanc.fnst@cn.fujitsu.com from Cc because it bounces.
->
-> On Thu, Jan 09, 2020 at 03:46:41PM -0500, Arvind Sankar wrote:
-> > The boot/compressed Makefile resets KBUILD_CFLAGS.  Following hack and
-> > building with W=1 shows it, or just add -Wunused in there.
->
-> I'm interested in how he reproduced it on the stock tree, without
-> additional hacks or changes.
+--J2SCkAp4GZ/dPZZf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I indeed used additional parameters as below for daily build.
-# make O=/build/kernel/ -j4 EXTRA_CFLAGS=-Wall binrpm-pkg
+Hi Linus,
 
-Regards
-Zhenzhong
+First rc pull request
+
+A very small set of fixes, most people seem to still be recovering
+=66rom December!
+
+Thanks,
+Jason
+
+The following changes since commit fd6988496e79a6a4bdb514a4655d2920209eb85d:
+
+  Linux 5.5-rc4 (2019-12-29 15:29:16 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+
+for you to fetch changes up to 9554de394b7eee01606e64c3806cd43893f3037e:
+
+  i40iw: Remove setting of VMA private data and use rdma_user_mmap_io (2020=
+-01-07 15:07:37 -0400)
+
+----------------------------------------------------------------
+First RDMA subsystem updates for 5.5-rc
+
+Five small driver fixes:
+
+- Fix error flow with MR allocation in bnxt_re
+
+- An errata work around for bnxt_re
+
+- Misuse of the workqueue API in hfi1
+
+- Protocol error in hfi1
+
+- Regression in 5.5 related to the mmap rework with i40iw
+
+----------------------------------------------------------------
+Kaike Wan (2):
+      IB/hfi1: Don't cancel unused work item
+      IB/hfi1: Adjust flow PSN with the correct resync_psn
+
+Selvin Xavier (2):
+      RDMA/bnxt_re: Avoid freeing MR resources if dereg fails
+      RDMA/bnxt_re: Fix Send Work Entry state check while polling completio=
+ns
+
+Shiraz Saleem (1):
+      i40iw: Remove setting of VMA private data and use rdma_user_mmap_io
+
+ drivers/infiniband/hw/bnxt_re/ib_verbs.c  |  4 +++-
+ drivers/infiniband/hw/bnxt_re/qplib_fp.c  | 12 ++++++------
+ drivers/infiniband/hw/hfi1/iowait.c       |  4 +++-
+ drivers/infiniband/hw/hfi1/tid_rdma.c     |  9 +++++++++
+ drivers/infiniband/hw/i40iw/i40iw_verbs.c | 14 ++++++--------
+ 5 files changed, 27 insertions(+), 16 deletions(-)
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfB7FMLh+8QxL+6i3OG33FX4gmxoFAl4X3nUACgkQOG33FX4g
+mxptxw/9FYWDEChxYBddnesiRpJANSciNFu50rVHChLrAvkhUp/ThuZcj2p8eZGr
+kin6y6ntQuNw7r161KCuIVVqGcUezJXALJTg5/LM78RbNIhGPPA3OiY2+0Bh4BRH
+pLhIhjs6G9giMjYuqkxL1y+FcjgTfJ4fjaHK3F2m3RI+DREe7EsjxgRCpMNHZyQH
+8bSbPhnG7XLN2TKoxcZZfrXZOyzryTUUxr3TO/xPsd8g1NONO4grTYL2J0dgLQop
+zVgrIfw/hw7f/o8eYfQUzWHgfP4T7SE5gOVOTgXT4D5lEKCchgMYAxc0yVlCtMxU
+cDlEqd552i/EaFlM8DvRr3z7y1KQ2OzKh8YO8y9j7SIVt7HOIX66yzlI2XKEe+vx
+8QyJpjZh1AN/qc63iw3oPprR9qjfnwuXCe2k2eOD5CRfs73BWuBuzlKybvN1qETj
+lZ4jjZe0fBi+xlUM8CWHguYYOi3fbRG1NSymVl+y4nGSCuTBgUscZy/lFldYi1z4
+m+eWBH8aL4KygVjclPoLsvNc3hPoOx5h9qd6MzsL05bdyBJZmrxdYZL5Ubio+Ky/
+Ga1YdDOJ2XSIGMea6G2HknZ+3IaxJ78ktFXi4qp3oA7eSa1cyyexXXEsimOGi2Mm
+cpSbL/foqf4YeTzTWnySMs1TQkteomTSVg493q/5Ydvx0Ln7kQg=
+=FsV4
+-----END PGP SIGNATURE-----
+
+--J2SCkAp4GZ/dPZZf--
