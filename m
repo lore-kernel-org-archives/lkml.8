@@ -2,260 +2,109 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B58C9C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E690C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EEC62080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:00:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GopHQxVh"
+	by mail.kernel.org (Postfix) with ESMTP id F29502072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgAJMAF (ORCPT
+        id S1728011AbgAJMBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 07:00:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56262 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727931AbgAJMAF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 07:00:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578657603;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+s42rGCNweegI3ua1aTVb4LJtn2yQPTTMH9TXAr+EXc=;
-        b=GopHQxVhBCXTXrCikfviJZ+uFXhALS+p5oZlLjXUgRclm3V26xNV01QwtgCdKIjtqt+7eW
-        2XEmblinhLnLIIiR52bgLV34w2Am0OygCSoplmtTl7xqw0TSXvVAkGRe+jfrJw5Ye1Uhgk
-        Wr2zqBP7wRlZEo48jKGf/QeOYIWmCh0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-zRcpWU8TM7SEnHB-kMypyA-1; Fri, 10 Jan 2020 07:00:02 -0500
-X-MC-Unique: zRcpWU8TM7SEnHB-kMypyA-1
-Received: by mail-wr1-f71.google.com with SMTP id v17so779071wrm.17
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 04:00:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=+s42rGCNweegI3ua1aTVb4LJtn2yQPTTMH9TXAr+EXc=;
-        b=nQyMcpxm6LZkFA5dAHJsk88hpNAvjD3IskYbr7cxj9GxibOZ+He1qJolVmVomL8ahR
-         8q8v+DU7Wc+nZiP0lesG1mys4/w01Ur1tnmoQr1msVt1z6rWUix/qP8wIZdJJg5G7Hax
-         aLCYcTDnDRYyAXhj9p/b5Jo4apvdtZIywAlvIG31jpZd4D8iaHGPIAeg25g0u+txHsut
-         kwFyhdwnCqXb6woaCsRpQ9PQ6x3KmgZ1xxK0WUlZgdKzUqj9mcxL9qeQNd0ypAia+Rxe
-         n99W98AYvnTcSHYD00Dw4oTYeOjeY0ZRl8vs4sXHWRpteurfzdQ4SvmAJCCRulJwf9XU
-         RKFg==
-X-Gm-Message-State: APjAAAUTNhXgb3majNIiGdihIh3Y9xjdKAbGbHoSXcWMndhm4BygIWYK
-        3GCOizffA0k6PIehiCQeW1AuIrBQw1gC8ujIGuua3s/yJUvQRbhOwvIrfmK6if4cHkw3zKgbQnN
-        TsKUTaVUvAD3DxyQydegVLwOV
-X-Received: by 2002:adf:f3cc:: with SMTP id g12mr3210028wrp.236.1578657601320;
-        Fri, 10 Jan 2020 04:00:01 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy5+0kKs8+INAcy7JLlyzVUvfEzD/INVvB9zh9aSkzLQOAVTQcSdysqcYYLDz0BpOrluviy5g==
-X-Received: by 2002:adf:f3cc:: with SMTP id g12mr3209989wrp.236.1578657601000;
-        Fri, 10 Jan 2020 04:00:01 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id c5sm2094046wmb.9.2020.01.10.03.59.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 04:00:00 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Chen Zhou <chenzhou10@huawei.com>
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chenzhou10@huawei.com, tglx@linutronix.de, mingo@redhat.com
-Subject: Re: [PATCH] x86/hyper-v: remove unnecessary conversions to bool
-In-Reply-To: <20200110072047.85398-1-chenzhou10@huawei.com>
-References: <20200110072047.85398-1-chenzhou10@huawei.com>
-Date:   Fri, 10 Jan 2020 12:59:59 +0100
-Message-ID: <875zhjr074.fsf@vitty.brq.redhat.com>
+        Fri, 10 Jan 2020 07:01:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:43508 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727950AbgAJMBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 07:01:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF4B21063;
+        Fri, 10 Jan 2020 04:01:27 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F8AB3F534;
+        Fri, 10 Jan 2020 04:01:26 -0800 (PST)
+Subject: Re: [PATCH v1] arch_topology: Adjust initial CPU capacities with
+ current freq
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Brian Norris <briannorris@chromium.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+References: <20200109075214.31943-1-jeffy.chen@rock-chips.com>
+ <20200110113711.GB39451@bogus>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <5475692c-e72b-74c1-bd6e-95278703249b@arm.com>
+Date:   Fri, 10 Jan 2020 13:01:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200110113711.GB39451@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chen Zhou <chenzhou10@huawei.com> writes:
+On 10/01/2020 12:37, Sudeep Holla wrote:
+> On Thu, Jan 09, 2020 at 03:52:14PM +0800, Jeffy Chen wrote:
+>> The CPU freqs are not supposed to change before cpufreq policies
+>> properly registered, meaning that they should be used to calculate the
+>> initial CPU capacities.
+>>
+>> Doing this helps choosing the best CPU during early boot, especially
+>> for the initramfs decompressing.
+>>
+>> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> 
+> [...]
+> 
+>> @@ -146,10 +153,15 @@ bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
+>>  				return false;
+>>  			}
+>>  		}
+>> -		capacity_scale = max(cpu_capacity, capacity_scale);
+>>  		raw_capacity[cpu] = cpu_capacity;
+>>  		pr_debug("cpu_capacity: %pOF cpu_capacity=%u (raw)\n",
+>>  			cpu_node, raw_capacity[cpu]);
+>> +
+>> +		cpu_clk = of_clk_get(cpu_node, 0);
+>> +		if (!PTR_ERR_OR_ZERO(cpu_clk))
+>> +			per_cpu(max_freq, cpu) = clk_get_rate(cpu_clk) / 1000;
+>> +
+>> +		clk_put(cpu_clk);
+> 
+> I don't like to assume DVFS to be supplied only using 'clk'. So NACK!
+> We have other non-clk mechanism for CPU DVFS and this needs to simply
+> use cpufreq APIs to get frequency value if required.
 
-> The conversions to bool are not needed, remove these.
->
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> ---
->  arch/x86/hyperv/hv_apic.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-> index 40e0e32..3112cf6 100644
-> --- a/arch/x86/hyperv/hv_apic.c
-> +++ b/arch/x86/hyperv/hv_apic.c
-> @@ -133,7 +133,7 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
->  
->  ipi_mask_ex_done:
->  	local_irq_restore(flags);
-> -	return ((ret == 0) ? true : false);
-> +	return ret == 0;
->  }
->  
->  static bool __send_ipi_mask(const struct cpumask *mask, int vector)
-> @@ -186,7 +186,7 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
->  
->  	ret = hv_do_fast_hypercall16(HVCALL_SEND_IPI, ipi_arg.vector,
->  				     ipi_arg.cpu_mask);
-> -	return ((ret == 0) ? true : false);
-> +	return ret == 0;
->  
->  do_ex_hypercall:
->  	return __send_ipi_mask_ex(mask, vector);
+To support this, it's failing on my Arm64 Juno board.
 
-I'd suggest we get rid of bool functions completely instead, something
-like (untested):
+...
+[    0.084858] CPU1 cpu_clk=-517
+[    0.087961] CPU2 cpu_clk=-517
+[    0.091005] CPU0 cpu_clk=-517
+[    0.094121] CPU3 cpu_clk=-517
+[    0.097248] CPU4 cpu_clk=-517
+[    0.100415] CPU5 cpu_clk=-517
+...
 
-diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-index 40e0e322161d..440bda338763 100644
---- a/arch/x86/hyperv/hv_apic.c
-+++ b/arch/x86/hyperv/hv_apic.c
-@@ -97,16 +97,16 @@ static void hv_apic_eoi_write(u32 reg, u32 val)
- /*
-  * IPI implementation on Hyper-V.
-  */
--static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
-+static u16 __send_ipi_mask_ex(const struct cpumask *mask, int vector)
- {
- 	struct hv_send_ipi_ex **arg;
- 	struct hv_send_ipi_ex *ipi_arg;
- 	unsigned long flags;
- 	int nr_bank = 0;
--	int ret = 1;
-+	u16 ret;
- 
- 	if (!(ms_hyperv.hints & HV_X64_EX_PROCESSOR_MASKS_RECOMMENDED))
--		return false;
-+		return U16_MAX;
- 
- 	local_irq_save(flags);
- 	arg = (struct hv_send_ipi_ex **)this_cpu_ptr(hyperv_pcpu_input_arg);
-@@ -129,29 +129,28 @@ static bool __send_ipi_mask_ex(const struct cpumask *mask, int vector)
- 		ipi_arg->vp_set.format = HV_GENERIC_SET_ALL;
- 
- 	ret = hv_do_rep_hypercall(HVCALL_SEND_IPI_EX, 0, nr_bank,
--			      ipi_arg, NULL);
-+				  ipi_arg, NULL);
- 
- ipi_mask_ex_done:
- 	local_irq_restore(flags);
--	return ((ret == 0) ? true : false);
-+	return ret;
- }
- 
--static bool __send_ipi_mask(const struct cpumask *mask, int vector)
-+static u16 __send_ipi_mask(const struct cpumask *mask, int vector)
- {
- 	int cur_cpu, vcpu;
- 	struct hv_send_ipi ipi_arg;
--	int ret = 1;
- 
- 	trace_hyperv_send_ipi_mask(mask, vector);
- 
- 	if (cpumask_empty(mask))
--		return true;
-+		return 0;
- 
- 	if (!hv_hypercall_pg)
--		return false;
-+		return U16_MAX;
- 
- 	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
--		return false;
-+		return U16_MAX;
- 
- 	/*
- 	 * From the supplied CPU set we need to figure out if we can get away
-@@ -172,7 +171,7 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
- 	for_each_cpu(cur_cpu, mask) {
- 		vcpu = hv_cpu_number_to_vp_number(cur_cpu);
- 		if (vcpu == VP_INVAL)
--			return false;
-+			return U16_MAX;
- 
- 		/*
- 		 * This particular version of the IPI hypercall can
-@@ -184,41 +183,40 @@ static bool __send_ipi_mask(const struct cpumask *mask, int vector)
- 		__set_bit(vcpu, (unsigned long *)&ipi_arg.cpu_mask);
- 	}
- 
--	ret = hv_do_fast_hypercall16(HVCALL_SEND_IPI, ipi_arg.vector,
--				     ipi_arg.cpu_mask);
--	return ((ret == 0) ? true : false);
-+	return (u16)hv_do_fast_hypercall16(HVCALL_SEND_IPI, ipi_arg.vector,
-+					   ipi_arg.cpu_mask);
- 
- do_ex_hypercall:
- 	return __send_ipi_mask_ex(mask, vector);
- }
- 
--static bool __send_ipi_one(int cpu, int vector)
-+static u16 __send_ipi_one(int cpu, int vector)
- {
- 	int vp = hv_cpu_number_to_vp_number(cpu);
- 
- 	trace_hyperv_send_ipi_one(cpu, vector);
- 
- 	if (!hv_hypercall_pg || (vp == VP_INVAL))
--		return false;
-+		return U16_MAX;
- 
- 	if ((vector < HV_IPI_LOW_VECTOR) || (vector > HV_IPI_HIGH_VECTOR))
--		return false;
-+		return U16_MAX;
- 
- 	if (vp >= 64)
- 		return __send_ipi_mask_ex(cpumask_of(cpu), vector);
- 
--	return !hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector, BIT_ULL(vp));
-+	return (u16)hv_do_fast_hypercall16(HVCALL_SEND_IPI, vector, BIT_ULL(vp));
- }
- 
- static void hv_send_ipi(int cpu, int vector)
- {
--	if (!__send_ipi_one(cpu, vector))
-+	if (__send_ipi_one(cpu, vector))
- 		orig_apic.send_IPI(cpu, vector);
- }
- 
- static void hv_send_ipi_mask(const struct cpumask *mask, int vector)
- {
--	if (!__send_ipi_mask(mask, vector))
-+	if (__send_ipi_mask(mask, vector))
- 		orig_apic.send_IPI_mask(mask, vector);
- }
- 
-@@ -231,7 +229,7 @@ static void hv_send_ipi_mask_allbutself(const struct cpumask *mask, int vector)
- 	cpumask_copy(&new_mask, mask);
- 	cpumask_clear_cpu(this_cpu, &new_mask);
- 	local_mask = &new_mask;
--	if (!__send_ipi_mask(local_mask, vector))
-+	if (__send_ipi_mask(local_mask, vector))
- 		orig_apic.send_IPI_mask_allbutself(mask, vector);
- }
- 
-@@ -242,13 +240,13 @@ static void hv_send_ipi_allbutself(int vector)
- 
- static void hv_send_ipi_all(int vector)
- {
--	if (!__send_ipi_mask(cpu_online_mask, vector))
-+	if (__send_ipi_mask(cpu_online_mask, vector))
- 		orig_apic.send_IPI_all(vector);
- }
- 
- static void hv_send_ipi_self(int vector)
- {
--	if (!__send_ipi_one(smp_processor_id(), vector))
-+	if (__send_ipi_one(smp_processor_id(), vector))
- 		orig_apic.send_IPI_self(vector);
- }
+Since you're on a big.LITTLE platform, did you specify
+'capacity-dmips-mhz' for CPUs to be able to distinguish big and little
+CPUs before CPUfreq kicks in?
 
--- 
-Vitaly
-
+$ grep capacity-dmips-mhz ./arch/arm64/boot/dts/arm/juno.dts
+			capacity-dmips-mhz = <1024>;
+			capacity-dmips-mhz = <1024>;
+			capacity-dmips-mhz = <578>;
+			capacity-dmips-mhz = <578>;
+			capacity-dmips-mhz = <578>;
+			capacity-dmips-mhz = <578>;
