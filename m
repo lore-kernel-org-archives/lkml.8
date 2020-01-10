@@ -7,42 +7,43 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D52C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA21C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:54:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D862467A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BFC42080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbgAJRyk (ORCPT
+        id S1729050AbgAJRyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:54:40 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59163 "EHLO
+        Fri, 10 Jan 2020 12:54:39 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59172 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728673AbgAJRx0 (ORCPT
+        with ESMTP id S1728680AbgAJRx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jan 2020 12:53:26 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ipyTK-0001m8-8M; Fri, 10 Jan 2020 18:53:22 +0100
+        id 1ipyTK-0001jS-FW; Fri, 10 Jan 2020 18:53:22 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BBD291C2D5D;
-        Fri, 10 Jan 2020 18:53:17 +0100 (CET)
-Date:   Fri, 10 Jan 2020 17:53:17 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C9DE61C2D58;
+        Fri, 10 Jan 2020 18:53:16 +0100 (CET)
+Date:   Fri, 10 Jan 2020 17:53:16 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf tests bp_signal: Show expected versus obtained values
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
+Subject: [tip: perf/core] perf hists browser: Restore ESC as "Zoom out" of
+ DSO/thread/etc
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <tip-c951j3gvrgnrsyg7ki7pwkiz@git.kernel.org>
-References: <tip-c951j3gvrgnrsyg7ki7pwkiz@git.kernel.org>
+In-Reply-To: <tip-wp1ssoewy6zihwwexqpohv0j@git.kernel.org>
+References: <tip-wp1ssoewy6zihwwexqpohv0j@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157867879762.30329.2741458358842867256.tip-bot2@tip-bot2>
+Message-ID: <157867879671.30329.14010505683197561942.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -58,53 +59,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     6ae9c10b7cd50ac9080880204f8d9ff6381b2869
-Gitweb:        https://git.kernel.org/tip/6ae9c10b7cd50ac9080880204f8d9ff6381b2869
+Commit-ID:     3f7774033e6820d25beee5cf7aefa11d4968b951
+Gitweb:        https://git.kernel.org/tip/3f7774033e6820d25beee5cf7aefa11d4968b951
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Thu, 05 Dec 2019 16:09:59 -03:00
+AuthorDate:    Mon, 16 Dec 2019 13:22:33 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Mon, 06 Jan 2020 11:46:09 -03:00
 
-perf tests bp_signal: Show expected versus obtained values
+perf hists browser: Restore ESC as "Zoom out" of DSO/thread/etc
 
-To help understand failures.
+We need to set actions->ms.map since 599a2f38a989 ("perf hists browser:
+Check sort keys before hot key actions"), as in that patch we bail out
+if map is NULL.
 
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-c951j3gvrgnrsyg7ki7pwkiz@git.kernel.org
+Fixes: 599a2f38a989 ("perf hists browser: Check sort keys before hot key actions")
+Link: https://lkml.kernel.org/n/tip-wp1ssoewy6zihwwexqpohv0j@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/bp_signal.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/ui/browsers/hists.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
-index 415903b..da8ec1e 100644
---- a/tools/perf/tests/bp_signal.c
-+++ b/tools/perf/tests/bp_signal.c
-@@ -263,20 +263,20 @@ int test__bp_signal(struct test *test __maybe_unused, int subtest __maybe_unused
- 		if (count1 == 11)
- 			pr_debug("failed: RF EFLAG recursion issue detected\n");
- 		else
--			pr_debug("failed: wrong count for bp1%lld\n", count1);
-+			pr_debug("failed: wrong count for bp1: %lld, expected 1\n", count1);
- 	}
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index d4d3558..cfc6172 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -3062,6 +3062,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
  
- 	if (overflows != 3)
--		pr_debug("failed: wrong overflow hit\n");
-+		pr_debug("failed: wrong overflow (%d) hit, expected 3\n", overflows);
- 
- 	if (overflows_2 != 3)
--		pr_debug("failed: wrong overflow_2 hit\n");
-+		pr_debug("failed: wrong overflow_2 (%d) hit, expected 3\n", overflows_2);
- 
- 	if (count2 != 3)
--		pr_debug("failed: wrong count for bp2\n");
-+		pr_debug("failed: wrong count for bp2 (%lld), expected 3\n", count2);
- 
- 	if (count3 != 2)
--		pr_debug("failed: wrong count for bp3\n");
-+		pr_debug("failed: wrong count for bp3 (%lld), expected 2\n", count3);
- 
- 	return count1 == 1 && overflows == 3 && count2 == 3 && overflows_2 == 3 && count3 == 2 ?
- 		TEST_OK : TEST_FAIL;
+ 				continue;
+ 			}
++			actions->ms.map = map;
+ 			top = pstack__peek(browser->pstack);
+ 			if (top == &browser->hists->dso_filter) {
+ 				/*
