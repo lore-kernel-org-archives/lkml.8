@@ -2,129 +2,122 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A81FC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F009BC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E21832080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2A8B2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:54:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="jxqLBstj"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="aBV1vy75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbgAJPxz (ORCPT
+        id S1728492AbgAJPyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:53:55 -0500
-Received: from hermes.aosc.io ([199.195.250.187]:48756 "EHLO hermes.aosc.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728367AbgAJPxy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:53:54 -0500
-Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
-        by hermes.aosc.io (Postfix) with ESMTPSA id AD79446EFC;
-        Fri, 10 Jan 2020 15:53:46 +0000 (UTC)
-From:   Icenowy Zheng <icenowy@aosc.io>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 2/5] dt-bindings: panel: add Feixin K101 IM2BA02 MIPI-DSI panel
-Date:   Fri, 10 Jan 2020 23:52:22 +0800
-Message-Id: <20200110155225.1051749-3-icenowy@aosc.io>
-In-Reply-To: <20200110155225.1051749-1-icenowy@aosc.io>
-References: <20200110155225.1051749-1-icenowy@aosc.io>
+        Fri, 10 Jan 2020 10:54:12 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:39452 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728391AbgAJPyL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 10:54:11 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q10so1328606pfs.6
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 07:54:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SK9SfM0s44elgGzLaJeFK5jMx7NIcHCDZF3x9nv0Lxs=;
+        b=aBV1vy75sNaosplHJ4H3qazVSebNElcAVlUb+HrjOZPq1vvWoFf9dEImAwbKzRGAey
+         WXFZW3qa2v84cafmXiduuTXYX7tiAt38D7DQCWgB/pNRtn4obYWkC9IU5eWvee8iLkNT
+         whWf5etBpitExpwXzzboEVpBB0lB6AIMlr6bM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SK9SfM0s44elgGzLaJeFK5jMx7NIcHCDZF3x9nv0Lxs=;
+        b=pq5ZPSfbzpypuFFWisGOTTPNRJDEMtUThzMrjZLzMlNHazbFBmr2+a4nT9vH3ITuop
+         UN5ZQIQi14mo1Q0y5iTxz7rBq2J3CYwnIJytbPoj4d0AlQ9aNRkztrX6taXHRXrogs6y
+         zhicela/qtp6T1ovXMJCTgydJfxdSiCJrhRTA4zyR2aDiuy9tIYWVFGP4XdzO0OEOlAC
+         RuqQOJcG/2OueY0Mg1f8uAODCtZPNy5ZBbDakXthkEP9RE0B8Pg1B7qVOLmcZdKH/VFD
+         brAiApuZ/wjSrFeSejwRaftz/CinPIt8kIYxONULsvlDa1aKhoPJK7yXr4g2vH7nXj/L
+         hPmg==
+X-Gm-Message-State: APjAAAVoMSAnMOxWR50LcnvXRIuIma1wPOqcfiXZraDhynnNKjCQla46
+        lFZDjFTHsi9vcSBlx3nl2JOv4A==
+X-Google-Smtp-Source: APXvYqycGLOZaBaQu3Hqaeuta4YY/jPKmGOsSO3iqRpNJkIQ54WkKeTGxoc6scloX9pTQNenda0JAg==
+X-Received: by 2002:a63:541e:: with SMTP id i30mr5002051pgb.183.1578671649500;
+        Fri, 10 Jan 2020 07:54:09 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id w6sm3769223pfq.99.2020.01.10.07.54.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 07:54:08 -0800 (PST)
+Date:   Fri, 10 Jan 2020 10:54:07 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     jgg@ziepe.ca, dennis.dalessandro@intel.com,
+        mike.marciniszyn@intel.com, dledford@redhat.com,
+        paulmck@kernel.org, rcu@vger.kernel.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] infiniband: hw: hfi1: verbs.c: Use built-in RCU list
+ checking
+Message-ID: <20200110155407.GB128013@google.com>
+References: <20200107192912.22691-1-madhuparnabhowmik04@gmail.com>
+ <20200107203354.GD26174@ziepe.ca>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
-        t=1578671633;
-        h=from:subject:date:message-id:to:cc:mime-version:content-transfer-encoding:in-reply-to:references;
-        bh=z5doQufRXnQT5L4o4+thcACLlpA/uKfmmktXJZpePJk=;
-        b=jxqLBstjTsy4JyM4ofvrsBDqc9fIHbbUL4VKzx57QgeQIzto6Oc202p6dTD6GDeDdCOR2v
-        LELUX2m/wri/B4Rq3WorrVoophvrQNWUBf3qxDBarGlojSp8z1W+Gk/IUGlc7NHZ1v5zS4
-        xmqsYWDb/dlSm+8taLY0SNmEHtXSN0c=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200107203354.GD26174@ziepe.ca>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Feixin K101 IM2BA02 is a 10.1" 800x1280 4-lane MIPI-DSI panel.
+On Wed, Jan 08, 2020 at 01:35:07PM +0530, madhuparnabhowmik04@gmail.com wrote:
+> From: Jason Gunthorpe <jgg@ziepe.ca>
+> 
+> On Wed, Jan 08, 2020 at 12:59:12AM +0530, madhuparnabhowmik04@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > 
+> > list_for_each_entry_rcu has built-in RCU and lock checking.
+> > Pass cond argument to list_for_each_entry_rcu.
+> > 
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> >  drivers/infiniband/hw/hfi1/verbs.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
+> > index 089e201d7550..e6abdbcb4ffb 100644
+> > +++ b/drivers/infiniband/hw/hfi1/verbs.c
+> > @@ -515,7 +515,8 @@ static inline void hfi1_handle_packet(struct hfi1_packet *packet,
+> >  				       opa_get_lid(packet->dlid, 9B));
+> >  		if (!mcast)
+> >  			goto drop;
+> > -		list_for_each_entry_rcu(p, &mcast->qp_list, list) {
+> > +		list_for_each_entry_rcu(p, &mcast->qp_list, list,
+> > +					lock_is_held(&(ibp->rvp.lock).dep_map)) {
+> 
+> Why .dep_map? Does this compile?
 
-Add device tree binding for it.
+Yeah, have you really compiled this? Don't send patches without at least
+compile testing !!
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
----
- .../display/panel/feixin,k101-im2ba02.yaml    | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/feixin,k101-im2ba02.yaml
+> Alternatively, it can be lockdep_is_held(ibp->rvp.lock).
+> Please refer to the macro(link below) and let me know if the usage of lock_is_held()
+> in the patch is correct.
+> 
+> https://elixir.bootlin.com/linux/v5.5-rc2/source/include/linux/lockdep.h#L364
 
-diff --git a/Documentation/devicetree/bindings/display/panel/feixin,k101-im2ba02.yaml b/Documentation/devicetree/bindings/display/panel/feixin,k101-im2ba02.yaml
-new file mode 100644
-index 000000000000..7176d14893ff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/feixin,k101-im2ba02.yaml
-@@ -0,0 +1,54 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/panel/feixin,k101-im2ba02.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Feixin K101 IM2BA02 10.1" MIPI-DSI LCD panel
-+
-+maintainers:
-+  - Icenowy Zheng <icenowy@aosc.io>
-+
-+allOf:
-+  - $ref: panel-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: feixin,k101-im2ba02
-+  reg: true
-+  backlight: true
-+  reset-gpios: true
-+  avdd-supply:
-+     description: regulator that supplies the AVDD voltage
-+  dvdd-supply:
-+     description: regulator that supplies the DVDD voltage
-+  cvdd-supply:
-+     description: regulator that supplies the CVDD voltage
-+
-+required:
-+  - compatible
-+  - reg
-+  - backlight
-+  - avdd-supply
-+  - dvdd-supply
-+  - cvdd-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    &dsi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        panel@0 {
-+            compatible = "feixin,k101-im2ba02";
-+            reg = <0>;
-+            avdd-supply = <&reg_dc1sw>;
-+            dvdd-supply = <&reg_dc1sw>;
-+            cvdd-supply = <&reg_ldo_io1>;
-+            reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>;
-+            backlight = <&backlight>;
-+        };
-+    };
-+
-+...
--- 
-2.23.0
+Please use lockdep_is_held(). Thanks.
 
+thanks,
+
+ - Joel
+
+> 
+> Thanks,
+> Madhuparna
+> Jason
