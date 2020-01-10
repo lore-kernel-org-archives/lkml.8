@@ -2,108 +2,144 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A61C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6E6C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D335320721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2B22072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:36:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="KKOcZ+b0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727258AbgAJJc6 (ORCPT
+        id S1727209AbgAJJgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 04:32:58 -0500
-Received: from mga11.intel.com ([192.55.52.93]:48527 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726814AbgAJJc6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 04:32:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 01:32:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,415,1571727600"; 
-   d="scan'208";a="304118739"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga001.jf.intel.com with ESMTP; 10 Jan 2020 01:32:55 -0800
-Subject: Re: [PATCH 1/3] xhci: Ensure link state is U3 after setting
- USB_SS_PORT_LS_U3
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        mathias.nyman@intel.com, gregkh@linuxfoundation.org,
-        stern@rowland.harvard.edu
-Cc:     acelan.kao@canonical.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200103084008.3579-1-kai.heng.feng@canonical.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Message-ID: <607e395f-21ce-3c9f-eff7-2fa6aaa74595@linux.intel.com>
-Date:   Fri, 10 Jan 2020 11:34:59 +0200
+        Fri, 10 Jan 2020 04:36:37 -0500
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:36697 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726900AbgAJJgh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 04:36:37 -0500
+Received: from [IPv6:2001:420:44c1:2577:c8b4:9150:fb1b:52f6]
+ ([IPv6:2001:420:44c1:2577:c8b4:9150:fb1b:52f6])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id pqiUilZj6pLtbpqiYiPfdz; Fri, 10 Jan 2020 10:36:34 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578648994; bh=s4atuWRiXh9yWC2skxK0e8ALLvdYO1y0fvYdMvunco4=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=KKOcZ+b0+aVDOd2RWLPqG9fB54yBlpc1zMk38tPVbdOSj/S8wApt273E0JFknbCKF
+         BDaKAq1+mR42wYu/ScUaQEtsMJ5s0HrjOha7qzWna0SY9C2y6ULoDQwW1j6QhQ28zT
+         dfthllDdw3LEGUOuqXvLD6b3nf5ORijYKUR0mjVo3uc9IgRyTIpoP78tti44JiL8/e
+         bFpUj1DRWMSz9YG5LBFURwG/QrFq0c2QTHy/weDcCk9D0nTlWwddc1F2MDgpRoXRAm
+         LFOtxciT+mmRFkGrkYeJSaWl1QA6He8nlUFwmknCPDjoRoAjlcmI+A74IQOYcAJEk1
+         Ye2EXfyLBL8zQ==
+Subject: Re: [RFC][PATCH 03/15] videobuf2: add V4L2_FLAG_MEMORY_NON_CONSISTENT
+ flag
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-4-senozhatsky@chromium.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <750a0c62-0f0f-a5c9-1d7f-f0c5d6b620fa@xs4all.nl>
+Date:   Fri, 10 Jan 2020 10:36:30 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200103084008.3579-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191217032034.54897-4-senozhatsky@chromium.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCRR/1EIqmeph7/1UlWyTG1z9YK6OF5GcLxUApOJ8INmx3TFMP3S3Wyj0d/J61AuoRObAaj+WxgTLKnEb8//dmqfCL3l8CTwx+XlzzJDnffTAl0oyW+U
+ OcHw2dWWQjc3a8KIVAR/l1uwk3whyZdrIaa0oVUeaWBr5Je5ss9mvfyNKfU9lwUXcyZQLerNN0M0JFw/8EK24e9TkEKyhWvLyn5uY39vrmUcsv677jAwBFOc
+ 05OT8VMpZ0JKcOFFfag0/1kytiKwfTqTXBYu9DL4HfbfpFn38/GZA53LrTFLMZQG7br6481LmultFNoizyEXDK5yHFMVjAaeR4QNDjfLHew+lr6ptCvEIg5G
+ DXizYAvQ8DYMZFbNvxTt9OfxhP38xdkHnYV756+Kod3eHjmOxm9qWNQ1bezGbFpb970H5jDJBS7bZ9kYOdCFQwPI0LPoM9IYGEkCh++uq/2GW3KkmHK00ZFB
+ 4wgQdf91J61sFe7H7IpVsOKtYz2qP/JF3ePm9nKfoty5kq8Yupm//zr8MOJQlR8bHDPvQ8A3r5nOWcFru/RfkaDBLXPvKart3NOVuZEqFAgmXwQhAWiyfEwg
+ ChAyHlRmnrbKv9oRhQzULwVBLMdfx4FoH13OmKMN4TFIdE6Xek5BAL5u3Fs8k+6Njdw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3.1.2020 10.40, Kai-Heng Feng wrote:
-> The xHCI spec doesn't specify the upper bound of U3 transition time. For
-> some devices 20ms is not enough, so we need to make sure the link state
-> is in U3 before further actions.
-
-Looking at the USB 3.2 spec (7.2.4.2 Link Power management and Flow) it seems
-most timers related to U3 entry are a lot less than a millisecond (4-16us)
-If port is in U1/U2,  Ux_EXIT_TIMER is 6ms which seems to be the longest timeout.
-
-If we anyway are polling for the U3 state we could shorten the initial 20ms sleep
-down to 10ms. I think many devices, especially if they are already in U0
-could manage this.
-
-are >
-> I've tried to use U3 Entry Capability by setting U3 Entry Enable in
-> config register, however the port change event for U3 transition
-> interrupts the system suspend process.
+On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
+> By setting or clearing V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+> user-space should be able to set or clear queue's NON_CONSISTENT
+> ->dma_attrs. Queue's ->dma_attrs are passed to the underlying
+> allocator in __vb2_buf_mem_alloc(), so user-space will be able
+> to request consistent or non-consistent memory allocations.
 > 
-> For now let's use the less ideal method by polling PLS.
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 > ---
->   drivers/usb/host/xhci-hub.c | 13 +++++++++++--
->   1 file changed, 11 insertions(+), 2 deletions(-)
+>  Documentation/media/uapi/v4l/buffer.rst | 19 +++++++++++++++++++
+>  include/uapi/linux/videodev2.h          |  2 ++
+>  2 files changed, 21 insertions(+)
 > 
-> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-> index 7a3a29e5e9d2..2b2e9d004dbf 100644
-> --- a/drivers/usb/host/xhci-hub.c
-> +++ b/drivers/usb/host/xhci-hub.c
-> @@ -1228,6 +1228,7 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
->   			break;
->   		case USB_PORT_FEAT_LINK_STATE:
->   			temp = readl(ports[wIndex]->addr);
-> +			xhci_dbg(xhci, "before setting link state, actual port %d-%d status = 0x%0x\n", hcd->self.busnum, wIndex + 1, temp);
+> diff --git a/Documentation/media/uapi/v4l/buffer.rst b/Documentation/media/uapi/v4l/buffer.rst
+> index 9149b57728e5..b08b5609f5f3 100644
+> --- a/Documentation/media/uapi/v4l/buffer.rst
+> +++ b/Documentation/media/uapi/v4l/buffer.rst
+> @@ -705,6 +705,25 @@ Buffer Flags
+>  
+>  .. c:type:: v4l2_memory
+>  
+> +Memory Consistency Flags
+> +========================
+> +
+> +.. tabularcolumns:: |p{7.0cm}|p{2.2cm}|p{8.3cm}|
+> +
+> +.. cssclass:: longtable
+> +
+> +.. flat-table::
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       3 1 4
+> +
+> +    * .. _`V4L2_FLAG_MEMORY_NON_CONSISTENT`:
+> +
+> +      - ``V4L2_FLAG_MEMORY_NON_CONSISTENT``
+> +      - 0x00000001
+> +      - Set DMA_ATTR_NON_CONSISTENT queue memory consistency bit,
+> +	so all queue buffers may be allocated in non-consistent memory.
 
-xhci_set_link_state() already shows similar debugging,
+This needs much more extensive documentation. This is a userspace API,
+and it shouldn't refer to a kernelspace API. Instead, explain what it
+means from a user perspective. Also, how does this relate to the cache
+buffer flags?
 
->   			/* Disable port */
->   			if (link_state == USB_SS_PORT_LS_SS_DISABLED) {
->   				xhci_dbg(xhci, "Disable port %d\n", wIndex);
-> @@ -1316,9 +1317,17 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
->   			msleep(20); /* wait device to enter */
->   			spin_lock_irqsave(&xhci->lock, flags);
->   
-> -			temp = readl(ports[wIndex]->addr);
-> -			if (link_state == USB_SS_PORT_LS_U3)
-> +			if (link_state == USB_SS_PORT_LS_U3) {
-> +				retval = xhci_handshake(ports[wIndex]->addr, PORT_PLS_MASK, XDEV_U3, 80 * 1000);
-> +				if (retval)
-> +					xhci_dbg(xhci, "polling XDEV_U3 on port %d-%d timeout\n", hcd->self.busnum, wIndex + 1);
+These things are tricky, so it is worth spending some time on writing
+good documentation.
 
-In worst case we are busylooping for 80ms here, keeping the cpu busy.
-It should be ok to sleep here, so how about just reading the register
-every 10ms max 10 times, sleeping in between.
+Regards,
 
--Mathias
+	Hans
+
+> +
+>  enum v4l2_memory
+>  ================
+>  
+> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+> index 04481c717fee..d352997f2b62 100644
+> --- a/include/uapi/linux/videodev2.h
+> +++ b/include/uapi/linux/videodev2.h
+> @@ -189,6 +189,8 @@ enum v4l2_memory {
+>  	V4L2_MEMORY_DMABUF           = 4,
+>  };
+>  
+> +#define V4L2_FLAG_MEMORY_NON_CONSISTENT		(1 << 0)
+> +
+>  /* see also http://vektor.theorem.ca/graphics/ycbcr/ */
+>  enum v4l2_colorspace {
+>  	/*
+> 
+
