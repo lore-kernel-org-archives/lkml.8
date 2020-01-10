@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9412C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A36CDC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C032B2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823CD2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbgAJRxg (ORCPT
+        id S1728955AbgAJRxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:53:36 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59192 "EHLO
+        Fri, 10 Jan 2020 12:53:55 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59214 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728752AbgAJRx3 (ORCPT
+        with ESMTP id S1728852AbgAJRxf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:53:29 -0500
+        Fri, 10 Jan 2020 12:53:35 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ipyTJ-0001h2-KJ; Fri, 10 Jan 2020 18:53:21 +0100
+        id 1ipyTM-0001nK-RA; Fri, 10 Jan 2020 18:53:25 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3E90F1C2D57;
-        Fri, 10 Jan 2020 18:53:16 +0100 (CET)
-Date:   Fri, 10 Jan 2020 17:53:16 -0000
-From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 891321C2D60;
+        Fri, 10 Jan 2020 18:53:18 +0100 (CET)
+Date:   Fri, 10 Jan 2020 17:53:18 -0000
+From:   "tip-bot2 for Alexey Budankov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf report/top: Improve toggle callchain menu option
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
+Subject: [tip: perf/core] tools bitmap: Implement bitmap_equal() operation at
+ bitmap API
+Cc:     Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
         Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <tip-03arm6poo8463k5tfcfp7gkk@git.kernel.org>
-References: <tip-03arm6poo8463k5tfcfp7gkk@git.kernel.org>
+In-Reply-To: <43757993-0b28-d8af-a6c7-ede12e3a6877@linux.intel.com>
+References: <43757993-0b28-d8af-a6c7-ede12e3a6877@linux.intel.com>
 MIME-Version: 1.0
-Message-ID: <157867879612.30329.13780211306910583295.tip-bot2@tip-bot2>
+Message-ID: <157867879843.30329.11026919173397316723.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -62,135 +62,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     bdc633fec50be7e6856b9dee89af9bb7c5e9a04f
-Gitweb:        https://git.kernel.org/tip/bdc633fec50be7e6856b9dee89af9bb7c5e9a04f
-Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Thu, 12 Dec 2019 11:48:23 -03:00
+Commit-ID:     8812ad412f851216d6c39488a7e563ccc5c604cc
+Gitweb:        https://git.kernel.org/tip/8812ad412f851216d6c39488a7e563ccc5c604cc
+Author:        Alexey Budankov <alexey.budankov@linux.intel.com>
+AuthorDate:    Tue, 03 Dec 2019 14:43:33 +03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Mon, 06 Jan 2020 11:46:10 -03:00
+CommitterDate: Mon, 06 Jan 2020 11:46:04 -03:00
 
-perf report/top: Improve toggle callchain menu option
+tools bitmap: Implement bitmap_equal() operation at bitmap API
 
-Taking into account the current status of the callchain, i.e. if folded,
-show "Expand", otherwise "Collapse", also show the name of the entry
-that will be affected and mention the hotkeys for expanding/collapsing
-all callchains below the main entry, the one that appears with/without
-callchains.
+Extend tools bitmap API with bitmap_equal() implementation.
 
-Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
+The implementation has been derived from the kernel.
+
+Extend tools bitmap API with bitmap_free() implementation for symmetry
+with bitmap_alloc() function.
+
+Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-03arm6poo8463k5tfcfp7gkk@git.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/43757993-0b28-d8af-a6c7-ede12e3a6877@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/hists.c | 54 +++++++++++++++++++++++++++++++--
- tools/perf/util/sort.c         |  3 +--
- tools/perf/util/sort.h         |  2 +-
- 3 files changed, 54 insertions(+), 5 deletions(-)
+ tools/include/linux/bitmap.h | 30 ++++++++++++++++++++++++++++++
+ tools/lib/bitmap.c           | 15 +++++++++++++++
+ 2 files changed, 45 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 1b5a599..a4413d9 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -391,6 +391,52 @@ static void hist_entry__init_have_children(struct hist_entry *he)
- 	he->init_have_children = true;
+diff --git a/tools/include/linux/bitmap.h b/tools/include/linux/bitmap.h
+index 05dca5c..477a1ca 100644
+--- a/tools/include/linux/bitmap.h
++++ b/tools/include/linux/bitmap.h
+@@ -15,6 +15,8 @@ void __bitmap_or(unsigned long *dst, const unsigned long *bitmap1,
+ 		 const unsigned long *bitmap2, int bits);
+ int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
+ 		 const unsigned long *bitmap2, unsigned int bits);
++int __bitmap_equal(const unsigned long *bitmap1,
++		   const unsigned long *bitmap2, unsigned int bits);
+ void bitmap_clear(unsigned long *map, unsigned int start, int len);
+ 
+ #define BITMAP_FIRST_WORD_MASK(start) (~0UL << ((start) & (BITS_PER_LONG - 1)))
+@@ -124,6 +126,15 @@ static inline unsigned long *bitmap_alloc(int nbits)
  }
  
-+static bool hist_browser__selection_has_children(struct hist_browser *browser)
+ /*
++ * bitmap_free - Free bitmap
++ * @bitmap: pointer to bitmap
++ */
++static inline void bitmap_free(unsigned long *bitmap)
 +{
-+	struct hist_entry *he = browser->he_selection;
-+	struct map_symbol *ms = browser->selection;
-+
-+	if (!he || !ms)
-+		return false;
-+
-+	if (ms == &he->ms)
-+	       return he->has_children;
-+
-+	return container_of(ms, struct callchain_list, ms)->has_children;
++	free(bitmap);
 +}
 +
-+static bool hist_browser__selection_unfolded(struct hist_browser *browser)
-+{
-+	struct hist_entry *he = browser->he_selection;
-+	struct map_symbol *ms = browser->selection;
-+
-+	if (!he || !ms)
-+		return false;
-+
-+	if (ms == &he->ms)
-+	       return he->unfolded;
-+
-+	return container_of(ms, struct callchain_list, ms)->unfolded;
-+}
-+
-+static char *hist_browser__selection_sym_name(struct hist_browser *browser, char *bf, size_t size)
-+{
-+	struct hist_entry *he = browser->he_selection;
-+	struct map_symbol *ms = browser->selection;
-+	struct callchain_list *callchain_entry;
-+
-+	if (!he || !ms)
-+		return NULL;
-+
-+	if (ms == &he->ms) {
-+	       hist_entry__sym_snprintf(he, bf, size, 0);
-+	       return bf + 4; // skip the level, e.g. '[k] '
-+	}
-+
-+	callchain_entry = container_of(ms, struct callchain_list, ms);
-+	return callchain_list__sym_name(callchain_entry, bf, size, browser->show_dso);
-+}
-+
- static bool hist_browser__toggle_fold(struct hist_browser *browser)
- {
- 	struct hist_entry *he = browser->he_selection;
-@@ -2535,12 +2581,14 @@ static int do_toggle_callchain(struct hist_browser *browser, struct popup_action
- 
- static int add_callchain_toggle_opt(struct hist_browser *browser, struct popup_action *act, char **optstr)
- {
--	struct hist_entry *he = browser->he_selection;
-+	char sym_name[512];
- 
--        if (!he->has_children)
-+        if (!hist_browser__selection_has_children(browser))
-                 return 0;
- 
--	if (asprintf(optstr, "Expand/Collapse callchain") < 0)
-+	if (asprintf(optstr, "%s [%s] callchain (one level, same as '+' hotkey, use 'e'/'c' for the whole main level entry)",
-+		     hist_browser__selection_unfolded(browser) ? "Collapse" : "Expand",
-+		     hist_browser__selection_sym_name(browser, sym_name, sizeof(sym_name))) < 0)
- 		return 0;
- 
- 	act->fn = do_toggle_callchain;
-diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-index 9fcba28..ab0cfd7 100644
---- a/tools/perf/util/sort.c
-+++ b/tools/perf/util/sort.c
-@@ -324,8 +324,7 @@ static int _hist_entry__sym_snprintf(struct map_symbol *ms,
- 	return ret;
++/*
+  * bitmap_scnprintf - print bitmap list into buffer
+  * @bitmap: bitmap
+  * @nbits: size of bitmap
+@@ -148,4 +159,23 @@ static inline int bitmap_and(unsigned long *dst, const unsigned long *src1,
+ 	return __bitmap_and(dst, src1, src2, nbits);
  }
  
--static int hist_entry__sym_snprintf(struct hist_entry *he, char *bf,
--				    size_t size, unsigned int width)
-+int hist_entry__sym_snprintf(struct hist_entry *he, char *bf, size_t size, unsigned int width)
- {
- 	return _hist_entry__sym_snprintf(&he->ms, he->ip,
- 					 he->level, bf, size, width);
-diff --git a/tools/perf/util/sort.h b/tools/perf/util/sort.h
-index 5aff954..6c862d6 100644
---- a/tools/perf/util/sort.h
-+++ b/tools/perf/util/sort.h
-@@ -164,6 +164,8 @@ static __pure inline bool hist_entry__has_callchains(struct hist_entry *he)
- 	return he->callchain_size != 0;
- }
- 
-+int hist_entry__sym_snprintf(struct hist_entry *he, char *bf, size_t size, unsigned int width);
++#ifdef __LITTLE_ENDIAN
++#define BITMAP_MEM_ALIGNMENT 8
++#else
++#define BITMAP_MEM_ALIGNMENT (8 * sizeof(unsigned long))
++#endif
++#define BITMAP_MEM_MASK (BITMAP_MEM_ALIGNMENT - 1)
++#define IS_ALIGNED(x, a) (((x) & ((typeof(x))(a) - 1)) == 0)
 +
- static inline bool hist_entry__has_pairs(struct hist_entry *he)
- {
- 	return !list_empty(&he->pairs.node);
++static inline int bitmap_equal(const unsigned long *src1,
++			const unsigned long *src2, unsigned int nbits)
++{
++	if (small_const_nbits(nbits))
++		return !((*src1 ^ *src2) & BITMAP_LAST_WORD_MASK(nbits));
++	if (__builtin_constant_p(nbits & BITMAP_MEM_MASK) &&
++	    IS_ALIGNED(nbits, BITMAP_MEM_ALIGNMENT))
++		return !memcmp(src1, src2, nbits / 8);
++	return __bitmap_equal(src1, src2, nbits);
++}
++
+ #endif /* _PERF_BITOPS_H */
+diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
+index 3849478..5043747 100644
+--- a/tools/lib/bitmap.c
++++ b/tools/lib/bitmap.c
+@@ -71,3 +71,18 @@ int __bitmap_and(unsigned long *dst, const unsigned long *bitmap1,
+ 			   BITMAP_LAST_WORD_MASK(bits));
+ 	return result != 0;
+ }
++
++int __bitmap_equal(const unsigned long *bitmap1,
++		const unsigned long *bitmap2, unsigned int bits)
++{
++	unsigned int k, lim = bits/BITS_PER_LONG;
++	for (k = 0; k < lim; ++k)
++		if (bitmap1[k] != bitmap2[k])
++			return 0;
++
++	if (bits % BITS_PER_LONG)
++		if ((bitmap1[k] ^ bitmap2[k]) & BITMAP_LAST_WORD_MASK(bits))
++			return 0;
++
++	return 1;
++}
