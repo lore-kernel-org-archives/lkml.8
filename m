@@ -2,333 +2,94 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0118DC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABA4C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C126620842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:18:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CLh5YwP6"
+	by mail.kernel.org (Postfix) with ESMTP id 248452087F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:19:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727183AbgAJVSv (ORCPT
+        id S1727191AbgAJVTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 16:18:51 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:51591 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726788AbgAJVSu (ORCPT
+        Fri, 10 Jan 2020 16:19:22 -0500
+Received: from mout.kundenserver.de ([217.72.192.73]:36615 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgAJVTV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 16:18:50 -0500
-Received: by mail-pj1-f67.google.com with SMTP id d15so105182pjw.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 13:18:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OsFwSWP/xRcH1cmWjjdOujlzZsNfP9UNbHn7pdTBcQ8=;
-        b=CLh5YwP6LHsUQIyC9mN3P/Pg6C/S9QYnJlr15b9bT9RP+Kp9FIHfpxVng5kKNRMvc9
-         ml078eP3iGkhrrYHUX2IcROXMuWrGDGyJ/JrEcvvSKnVM11SbdFl6qYyKjzWCWvgtS3r
-         XHA4I0+/qe5Ne71x/ra9yKEZGpWsd5/I7Pce8eyEf3xTxL7T4bI81leeuE+8upkMJAbX
-         N6myHqYe5mi7ZJNtkU8u33N6Ad1k567Qat7fIACFtxTbpD/vgrgRjZEDoJL40QbdGyLk
-         WLg4Gnel81hnCp/7QyA5V8lKrvRSN0+GyZun5sY14gkkBo/ARul8hzRbtD8i7im6NpJU
-         qSNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OsFwSWP/xRcH1cmWjjdOujlzZsNfP9UNbHn7pdTBcQ8=;
-        b=ufI0hqlFX+dKNfcrmLqww7PwYTLw7+oMJrLyY0rQ8cLSCAPrUNLViwTdJn8MZ1fCUY
-         WZM/De30O7No8bP94ZnYx/NYkSsQoMCpLsjKrCf5lHyCoqqW/pgTSE/dsKS2tSF9N7O5
-         2YpFfsgUBbqCy7gylbsb1Cjtch6DIuOCs1Jv08fpR5DbxfIAmPoXuG3IKM8QMtCbnUKT
-         lKwV/mXMiyQdBqY8HrQMm7b1JRCB7Ws2GSWI/y39zvzjrO/aiYYq9XhVVeWUQ0sL57XA
-         9jE0syPyEO/sx4LoMmD8azdkJIB2ZXvJmEmR9d3/pSSNWb+zMzv6tmBLDFrJsYynaUts
-         Z+og==
-X-Gm-Message-State: APjAAAVEOqOepAYPPgpjxkVBhlaVs7tWghMKVdm3UsPH6eIiXuHs6B8/
-        BOROXXBIHEBS9FfyiR4DJMPHjQ==
-X-Google-Smtp-Source: APXvYqx5QmlYIay+9x5p3d39RnJ0qBXKwVRiBcjtJHV6SP2kiIY+6PRsneuynDu/VlVsrI00LhHKPw==
-X-Received: by 2002:a17:90a:9d8a:: with SMTP id k10mr7230861pjp.91.1578691128908;
-        Fri, 10 Jan 2020 13:18:48 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id b8sm4148927pfr.64.2020.01.10.13.18.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 13:18:47 -0800 (PST)
-Date:   Fri, 10 Jan 2020 14:18:46 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Rishabh Bhatnagar <rishabhb@codeaurora.org>
-Subject: Re: [PATCH v2 2/8] remoteproc: qcom: Introduce driver to store pil
- info in IMEM
-Message-ID: <20200110211846.GA11555@xps15>
-References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
- <20191227053215.423811-3-bjorn.andersson@linaro.org>
+        Fri, 10 Jan 2020 16:19:21 -0500
+Received: from mail-qv1-f54.google.com ([209.85.219.54]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MplsZ-1jSdpa14qT-00qE03; Fri, 10 Jan 2020 22:19:19 +0100
+Received: by mail-qv1-f54.google.com with SMTP id f16so1449510qvi.4;
+        Fri, 10 Jan 2020 13:19:18 -0800 (PST)
+X-Gm-Message-State: APjAAAUsiOC3zMk2r9ujyEeH7EJWUFQTL0WU0yjWHHv4gBBQLKqi7zah
+        j8rwVa9NubjxDLQnas1jidLsejCmdkFbLG3Xo4o=
+X-Google-Smtp-Source: APXvYqy5wK+vC56zRznB04eTpDqAV2gRHUPdTKAUyVibf04636DjVPhWfvPInsakKLRo+OHcoYq8S5W/7bReST6sQSI=
+X-Received: by 2002:a0c:ead1:: with SMTP id y17mr659084qvp.210.1578691158090;
+ Fri, 10 Jan 2020 13:19:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191227053215.423811-3-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200110204903.3495832-1-arnd@arndb.de> <20200110210512.GB30412@brightrain.aerifal.cx>
+In-Reply-To: <20200110210512.GB30412@brightrain.aerifal.cx>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 10 Jan 2020 22:19:01 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2VONV2Z6rs=xpntJyzfX4W7YijqCFr-f-PNMm3g4zRyA@mail.gmail.com>
+Message-ID: <CAK8P3a2VONV2Z6rs=xpntJyzfX4W7YijqCFr-f-PNMm3g4zRyA@mail.gmail.com>
+Subject: Re: [PATCH] hcidump: add support for time64 based libc
+To:     Rich Felker <dalias@libc.org>
+Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Guy Harris <guy@alum.mit.edu>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:rtxui59CJ5xuEVT6IirkewdYJ7AP5pwb7Pe29/I0bQq1eMa0zXj
+ TOVEzomIhUv5IEoFBkKp5JjUKFDxXFYICB5piVOwZehCvgCpa7Szd8+Mk5/ev4V4Cl6eevx
+ Ux8HVlO/ZQtB71ovIuaD+wafZ3FbY/G1GMPfeyRq0kH4eYxV25z31E6rmcYJ/sVPD2oVhdX
+ cqSYnhpqClVhkiaB7GZWg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:IF74hMw5nu8=:96J0uBuMxqSGP4jmpKoAst
+ dduSvTRltq/MIg0WBHdgXJhwalbHP2bnKgiezFiokMhi6mDs+Snw67js2ZJEbh9VjVInAUP7q
+ N+sDPYPUkPBYdfRgTdX3UXnw181Ev2xNtVodHGrqPZ5uDlVWPNFcJL0sZh7PuPjepgonw5HDZ
+ R2w7k1j5Zu9YR4YZtVElfBmrV6okQkfm73v4GtEzfwgomNeJZ9cQOIiacnQUvIJiILE3EmORm
+ LDtDlS61EAqDt0+vT67l/ssb+MOZlK0i1WlChd+QKM6Z+5nbiUhWosdcK9G9EjGH1az6cTZ5m
+ K8nWoZrqU/1QVHrMkFDzkPS5IfNTU8k8surZpc2ceodwT9zHFgXgj1wnxq2XOf5xQteJuNn2V
+ b152sj3Og4SWiOa18A727gMJfi2ZD1N2KcRmhLKUJCAAj2W5ckZzSmng9UD8bFKSjIMrKCEfy
+ QeNRaPfQ4u1D1Riic1GGGQPzyfzoqhrOdLPpQqJO/9xCiHfSlNMrg+jaDE0FzeeUcVgxWkRYJ
+ HYzajBWGW5B9ZhzRxvMjrUXXmK6aolTlAZJIY5jplPV31YABb+b1FBT7Q+vwwWwSDrfBJmiUf
+ O5SfbNUyqiLb2EfDToEXbD6EJp8Ryc65Qq+Gx3UQXEgyj/52+eLGk/Ek4VCQ0Xt/6gKQmPbg/
+ 84CHjS/HuBRbMfEfoXQvcJk+LS8/o1gGOKEyKF+ZH/CNEOpgl4GIi2R2cOSWzEGbwah2A0nWS
+ LRtqN7COPGWAKq2oNEMNl0KB2CIZWlfcNhkppXQrh+qsfVS9wghG6CgIhTW7xCw/BRKhFAHvW
+ iHZhexlJXHrrjFhUK0lu6OaVp84xl/OQ2/It/jekItGB1YCw1hk4SoCfqASo6GoiZS0B9ZI7F
+ PO2c90vv4PkHHOv72eug==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+On Fri, Jan 10, 2020 at 10:05 PM Rich Felker <dalias@libc.org> wrote:
+>
+> On Fri, Jan 10, 2020 at 09:49:03PM +0100, Arnd Bergmann wrote:
+> > musl is moving to a default of 64-bit time_t on all architectures,
+> > glibc will follow later. This breaks reading timestamps through cmsg
+> > data with the HCI_TIME_STAMP socket option.
+> >
+> > Change both copies of hcidump to work on all architectures.  This also
+> > fixes x32, which has never worked, and carefully avoids breaking sparc64,
+> > which is another special case.
+>
+> Won't it be broken on rv32 though? Based on my (albeit perhaps
+> incomplete) reading of the thread, I think use of HCI_TIME_STAMP
+> should just be dropped entirely in favor of using SO_TIMESTAMPNS -- my
+> understanding was that it works with bluetooth sockets too.
 
-On Thu, Dec 26, 2019 at 09:32:09PM -0800, Bjorn Andersson wrote:
-> A region in IMEM is used to communicate load addresses of remoteproc to
-> post mortem debug tools. Implement a driver that can be used to store
-> this information in order to enable these tools to process collected
-> ramdumps.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v1:
-> - Added helper to probe defer clients
-> - Fixed logical bug in slot scan
-> - Added SPDX header in header file
-> 
->  drivers/remoteproc/Kconfig         |   3 +
->  drivers/remoteproc/Makefile        |   1 +
->  drivers/remoteproc/qcom_pil_info.c | 150 +++++++++++++++++++++++++++++
->  drivers/remoteproc/qcom_pil_info.h |   8 ++
->  4 files changed, 162 insertions(+)
->  create mode 100644 drivers/remoteproc/qcom_pil_info.c
->  create mode 100644 drivers/remoteproc/qcom_pil_info.h
-> 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index 94afdde4bc9f..0798602e355a 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -85,6 +85,9 @@ config KEYSTONE_REMOTEPROC
->  	  It's safe to say N here if you're not interested in the Keystone
->  	  DSPs or just want to use a bare minimum kernel.
->  
-> +config QCOM_PIL_INFO
-> +	tristate
-> +
->  config QCOM_RPROC_COMMON
->  	tristate
->  
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index 00f09e658cb3..c1b46e9033cb 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -14,6 +14,7 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
->  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
->  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
->  obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
-> +obj-$(CONFIG_QCOM_PIL_INFO)		+= qcom_pil_info.o
->  obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
->  obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
->  obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
-> diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom_pil_info.c
-> new file mode 100644
-> index 000000000000..b0897ae9eae5
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_pil_info.c
-> @@ -0,0 +1,150 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2019 Linaro Ltd.
-> + */
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mutex.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/slab.h>
+All 32-bit architectures use old_timeval32 timestamps in the kernel
+here, even rv32 and x32. As a rule, we keep the types bug-for-bug
+compatible between architectures and fix them all at the same time.
 
-These should be in alphabetical order if there is no depencencies
-between them, something checkpatch complains about.
+Changing hcidump to SO_TIMESTAMPNS would work as well, but
+that is a much bigger change and I don't know how to test that.
 
-> +
-> +struct pil_reloc_entry {
-> +	char name[8];
-
-Please add a #define for the name length and reuse it in qcom_pil_info_store()
-
-> +	__le64 base;
-> +	__le32 size;
-> +} __packed;
-> +
-> +#define PIL_INFO_SIZE	200
-> +#define PIL_INFO_ENTRIES (PIL_INFO_SIZE / sizeof(struct pil_reloc_entry))
-> +
-> +struct pil_reloc {
-> +	struct device *dev;
-> +	struct regmap *map;
-> +	u32 offset;
-> +	int val_bytes;
-> +
-> +	struct pil_reloc_entry entries[PIL_INFO_ENTRIES];
-> +};
-> +
-> +static struct pil_reloc *_reloc;
-> +static DEFINE_MUTEX(reloc_mutex);
-> +
-> +/**
-> + * qcom_pil_info_store() - store PIL information of image in IMEM
-> + * @image:	name of the image
-> + * @base:	base address of the loaded image
-> + * @size:	size of the loaded image
-> + */
-> +void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
-> +{
-> +	struct pil_reloc_entry *entry;
-> +	int idx = -1;
-> +	int i;
-> +
-> +	mutex_lock(&reloc_mutex);
-> +	if (!_reloc)
-
-Since it is available, I would use function qcom_pil_info_available().  Also
-checkpatch complains about indentation problems related to the 'if' condition
-but I can't see what makes it angry.
-
-> +		goto unlock;
-> +
-> +	for (i = 0; i < PIL_INFO_ENTRIES; i++) {
-> +		if (!_reloc->entries[i].name[0]) {
-> +			if (idx == -1)
-> +				idx = i;
-> +			continue;
-> +		}
-> +
-> +		if (!strncmp(_reloc->entries[i].name, image, 8)) {
-> +			idx = i;
-> +			goto found;
-> +		}
-> +	}
-> +
-> +	if (idx == -1) {
-> +		dev_warn(_reloc->dev, "insufficient PIL info slots\n");
-> +		goto unlock;
-
-Given how this function is used in the next patch I think an error should be
-reported to the caller.
-
-> +	}
-> +
-> +found:
-> +	entry = &_reloc->entries[idx];
-> +	stracpy(entry->name, image);
-
-Function stracpy() isn't around in mainline.
-
-> +	entry->base = base;
-> +	entry->size = size;
-> +
-> +	regmap_bulk_write(_reloc->map, _reloc->offset + idx * sizeof(*entry),
-> +			  entry, sizeof(*entry) / _reloc->val_bytes);
-
-Same here - the error code should be handled and reported to the caller.  
-
-> +
-> +unlock:
-> +	mutex_unlock(&reloc_mutex);
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_pil_info_store);
-> +
-> +/**
-> + * qcom_pil_info_available() - query if the pil info is probed
-> + *
-> + * Return: boolean indicating if the pil info device is probed
-> + */
-> +bool qcom_pil_info_available(void)
-> +{
-> +	return !!_reloc;
-> +}
-> +EXPORT_SYMBOL_GPL(qcom_pil_info_available);
-> +
-> +static int pil_reloc_probe(struct platform_device *pdev)
-> +{
-> +	struct pil_reloc *reloc;
-> +
-> +	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
-> +	if (!reloc)
-> +		return -ENOMEM;
-> +
-> +	reloc->dev = &pdev->dev;
-> +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
-> +	if (IS_ERR(reloc->map))
-> +		return PTR_ERR(reloc->map);
-> +
-> +	if (of_property_read_u32(pdev->dev.of_node, "offset", &reloc->offset))
-> +		return -EINVAL;
-> +
-> +	reloc->val_bytes = regmap_get_val_bytes(reloc->map);
-> +	if (reloc->val_bytes < 0)
-> +		return -EINVAL;
-> +
-> +	regmap_bulk_write(reloc->map, reloc->offset, reloc->entries,
-> +			  sizeof(reloc->entries) / reloc->val_bytes);
-
-Error code handling.
-
-Thanks,
-Mathieu
-
-> +
-> +	mutex_lock(&reloc_mutex);
-> +	_reloc = reloc;
-> +	mutex_unlock(&reloc_mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pil_reloc_remove(struct platform_device *pdev)
-> +{
-> +	mutex_lock(&reloc_mutex);
-> +	_reloc = NULL;
-> +	mutex_unlock(&reloc_mutex);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id pil_reloc_of_match[] = {
-> +	{ .compatible = "qcom,pil-reloc-info" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, pil_reloc_of_match);
-> +
-> +static struct platform_driver pil_reloc_driver = {
-> +	.probe = pil_reloc_probe,
-> +	.remove = pil_reloc_remove,
-> +	.driver = {
-> +		.name = "qcom-pil-reloc-info",
-> +		.of_match_table = pil_reloc_of_match,
-> +	},
-> +};
-> +module_platform_driver(pil_reloc_driver);
-> +
-> +MODULE_DESCRIPTION("Qualcomm PIL relocation info");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/remoteproc/qcom_pil_info.h b/drivers/remoteproc/qcom_pil_info.h
-> new file mode 100644
-> index 000000000000..0372602fae1d
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_pil_info.h
-> @@ -0,0 +1,8 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __QCOM_PIL_INFO_H__
-> +#define __QCOM_PIL_INFO_H__
-> +
-> +void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size);
-> +bool qcom_pil_info_available(void);
-> +
-> +#endif
-> -- 
-> 2.24.0
-> 
+     Arnd
