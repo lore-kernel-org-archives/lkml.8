@@ -2,158 +2,171 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AC2C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:04:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 022C9C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 481162084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:04:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB7520842
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:05:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578672303;
+	bh=nJeju4Tk+OsPhG56SdDEOENLWLwKqszJfvAVxMqqJIU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SW8yTXaHW5uIqVATbaT9VrIu+ome8GFy4SqDwBj+2lKoRDBhWgm8YqJCBQc5vaJcA
+	 SS6osGJn5SWo5pav3+TesLpQp2trdP7vrST2R7UWuo9tCnYTwxnuwDSKaex9QaYZec
+	 05usJyUjFfwJtAFSRrLfAnOQm4MtaTr7B360ZtWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbgAJQE6 (ORCPT
+        id S1728750AbgAJQFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:04:58 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:15024 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728480AbgAJQE6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:04:58 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: /B5vpOr4VmrQ5c6NrR9K6byPUAx1VdG+MT3+qUKbO/Q8ItJw6ez83kRfEeaL2kB0tWH8Y+c8dm
- 5eB2+ZDtK1E7dheYGRR66X6rZMWora3pb1ojD3o8jJF2oYCabUomMUXzNGc+pRNL8N41NxPM8w
- LQ+jpfeGXYlsn9Isy4YlfwFryAgtSoFvYoHU9ROV496ak+1DsiEK6sLTz9e9HTbY1fxSXkhSaL
- F2OWoEbiaep/RUVwP4a8FX0x6nXy0FO0WwUzvkh385abd8fdHJMWFvC4Ysz81KUKveb89cqz/d
- aLc=
-X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
-   d="scan'208";a="62887775"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jan 2020 09:04:57 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 10 Jan 2020 09:04:55 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Fri, 10 Jan 2020 09:04:55 -0700
-Date:   Fri, 10 Jan 2020 17:04:56 +0100
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <davem@davemloft.net>,
-        <roopa@cumulusnetworks.com>, <jakub.kicinski@netronome.com>,
-        <vivien.didelot@gmail.com>, <andrew@lunn.ch>,
-        <jeffrey.t.kirsher@intel.com>, <olteanv@gmail.com>,
-        <anirudh.venkataramanan@intel.com>, <dsahern@gmail.com>,
-        <jiri@mellanox.com>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [RFC net-next Patch 0/3] net: bridge: mrp: Add support for Media
- Redundancy Protocol(MRP)
-Message-ID: <20200110160456.enzomhfsce7bptu3@soft-dev3.microsemi.net>
-References: <20200109150640.532-1-horatiu.vultur@microchip.com>
- <6f1936e9-97e5-9502-f062-f2925c9652c9@cumulusnetworks.com>
+        Fri, 10 Jan 2020 11:05:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53350 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728480AbgAJQFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 11:05:02 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A197921744;
+        Fri, 10 Jan 2020 16:04:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578672301;
+        bh=nJeju4Tk+OsPhG56SdDEOENLWLwKqszJfvAVxMqqJIU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Tm4YirPpLf6vykani18lUfMmshBZVUnvYc1BthQjXk98pFH+9QPxfr2q7RRbphUV5
+         R/vBdFgvoBnbeLaXutdWcVv2ml0ur/8UW9D+PlwX6B5Ojf17cEMTJ/aFzNNTjjRMk5
+         wP+pgtqjTalhN1LdhogCIeHNj8vCy6qh1BSD7EH0=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 08/22] bootconfig: init: Allow admin to use bootconfig for init command line
+Date:   Sat, 11 Jan 2020 01:04:55 +0900
+Message-Id: <157867229521.17873.654222294326542349.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <157867220019.17873.13377985653744804396.stgit@devnote2>
+References: <157867220019.17873.13377985653744804396.stgit@devnote2>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <6f1936e9-97e5-9502-f062-f2925c9652c9@cumulusnetworks.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nik,
+Since the current kernel command line is too short to describe
+long and many options for init (e.g. systemd command line options),
+this allows admin to use boot config for init command line.
 
-> I agree with Stephen here, IMO you have to take note of how STP has progressed
-> and that bringing it in the kernel was a mistake, these days mstpd has an active
-> community and much better support which is being extended. This looks best implemented
-> in user-space in my opinion with minimal kernel changes to support it. You could simply
-> open a packet socket with a filter and work through that, you don't need new netlink
-> sockets. I'm not familiar with the protocol so can't really be the judge of that, if
-> you present a good argument for needing a new netlink socket for these packets - then
-> sure, ok.
+All init command line under "init." keywords will be passed to
+init.
 
-We are aware of the STP story, and in case of STP I do agree, it is much
-better to have this in user-space. But while MRP has much in common with
-STP, it also differs in some important areas.
+For example,
 
-Most importantly, MRP requires sending and receiving thousands of frames
-per second. To achieve the 10ms recovery time, the tx period per
-interface is 500us, on two interfaces, adding up to 4000 frames per
-second to RX and 4000 to TX(if the ring is closed). And this is per
-ring...
+init.systemd {
+	unified_cgroup_hierarchy = 1
+	debug_shell
+	default_timeout_start_sec = 60
+}
 
-The CPU systems in the kind of switches we are working on can not handle
-this load, and it was not meant to handle this. Instead the switch core
-can do the periodic injection of frames and automatic terminate them.
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ init/main.c |   31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
 
-In patch posted, we have not added this HW offload (we have this in our
-internal repos, where we also have implemented the remaining part of the
-protocol). The reason for this is that we wanted to do a proper SW
-implementation and then HW offload it.
+diff --git a/init/main.c b/init/main.c
+index c0017d9d16e7..dd7da62d99a5 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -139,6 +139,8 @@ char *saved_command_line;
+ static char *static_command_line;
+ /* Untouched extra command line */
+ static char *extra_command_line;
++/* Extra init arguments */
++static char *extra_init_args;
+ 
+ static char *execute_command;
+ static char *ramdisk_execute_command;
+@@ -372,6 +374,8 @@ static void __init setup_boot_config(void)
+ 		pr_info("Load boot config: %d bytes\n", size);
+ 		/* keys starting with "kernel." are passed via cmdline */
+ 		extra_command_line = xbc_make_cmdline("kernel");
++		/* Also, "init." keys are init arguments */
++		extra_init_args = xbc_make_cmdline("init");
+ 	}
+ }
+ #else
+@@ -507,16 +511,18 @@ static inline void smp_prepare_cpus(unsigned int maxcpus) { }
+  */
+ static void __init setup_command_line(char *command_line)
+ {
+-	size_t len, xlen = 0;
++	size_t len, xlen = 0, ilen = 0;
+ 
+ 	if (extra_command_line)
+ 		xlen = strlen(extra_command_line);
++	if (extra_init_args)
++		ilen = strlen(extra_init_args) + 4; /* for " -- " */
+ 
+ 	len = xlen + strlen(boot_command_line) + 1;
+ 
+-	saved_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
++	saved_command_line = memblock_alloc(len + ilen, SMP_CACHE_BYTES);
+ 	if (!saved_command_line)
+-		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
++		panic("%s: Failed to allocate %zu bytes\n", __func__, len + ilen);
+ 
+ 	static_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
+ 	if (!static_command_line)
+@@ -533,6 +539,22 @@ static void __init setup_command_line(char *command_line)
+ 	}
+ 	strcpy(saved_command_line + xlen, boot_command_line);
+ 	strcpy(static_command_line + xlen, command_line);
++
++	if (ilen) {
++		/*
++		 * Append supplemental init boot args to saved_command_line
++		 * so that user can check what command line options passed
++		 * to init.
++		 */
++		len = strlen(saved_command_line);
++		if (!strstr(boot_command_line, " -- ")) {
++			strcpy(saved_command_line + len, " -- ");
++			len += 4;
++		} else
++			saved_command_line[len++] = ' ';
++
++		strcpy(saved_command_line + len, extra_init_args);
++	}
+ }
+ 
+ /*
+@@ -759,6 +781,9 @@ asmlinkage __visible void __init start_kernel(void)
+ 	if (!IS_ERR_OR_NULL(after_dashes))
+ 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
+ 			   NULL, set_init_arg);
++	if (extra_init_args)
++		parse_args("Setting extra init args", extra_init_args,
++			   NULL, 0, -1, -1, NULL, set_init_arg);
+ 
+ 	/*
+ 	 * These use large bootmem allocations and must precede
 
-Looking back, I can see that what we have presented here could be done
-equally good in user-space (roughly), but that is because the HW offload
-is not part of this patch.
-
-The problem in putting it in user-space is that we do not have a nice a
-clean API where it is just putting a port in forwarding/blocking state
-(like we have with STP). To do an abstraction that actually allow us to
-utilize the HW to offload a protocol like MRP will very easy become too
-specific for our SoC and rejected with that argument.
-
-> 
-> If you do decide to continue with the kernel version (which I would again discourage)
-> a few general points (from a quick scan):
->  - the single 1.6+k line patch is just hard to review, please break it into more digestable
->    and logical pieces
-We will work in this.
-
->  - the locking is wrong, also there're a few use-after-free bugs
-Oops, that is not good - happy that you caught it. A hint on where,
-would be great.
-
->  - please re-work the bridge integration code, it can be simplified and tests can be eliminated
-We will have a second look at that.
-
->  - your netlink helpers usage is generally wrong and needs more work
-Ok - some hints on what we did wrong would be great.
-
->  - use the already existing port states instead of adding new ones and you can avoid some tests in fast-path
-I assume you want us to re-use the STP concept of forwarding/blocking
-and relay on the checks it already has.
-
->  - perhaps look into using br_afspec() for configuration/retrieval initially ? I don't think you need the new rtm messages yet.
-Is that a good example on how to do the netlink interface, and you want
-us to use that as a reference?
-
->  - I'm sure I can go on, but I really think all of this should be put in user-space -
->    in-kernel STP is a great example of how _not_ to do it. :) As a bonus you'll avoid 90% of the
->    problems above just by making your own abstractions and using them for it.
-Please continue.
-
-We do not see any good paths for getting user-space based solutions
-which actually does use the HW offloading accepted upstream. If this
-path exists then we would like to understand it and evaluate it
-properly.
-
--- 
-/Horatiu
