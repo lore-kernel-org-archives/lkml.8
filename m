@@ -2,321 +2,438 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4384FC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04458C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F41512077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:56:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B24992253D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:56:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IaWXr6Df"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="IxloGf2Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726641AbgAJI4O (ORCPT
+        id S1727209AbgAJI4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 03:56:14 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:25146 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726801AbgAJI4N (ORCPT
+        Fri, 10 Jan 2020 03:56:36 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:54932 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726877AbgAJI4f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 03:56:13 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578646573; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: References: Cc: To: From:
- Subject: Sender; bh=FmEMMMyiraqEJ+40hleNjIGpxBBbvnOEMyk9GHrCy7k=; b=IaWXr6DfdV/6W4kHXtsnCumrWuSxVbWpslJkQ5F1oCr6nW/gWDazD+1+bpHN5kRDQiFMXYrj
- TA8TYjH2C8K83OIMO8f9IPxXuFbjdR01cBzbr/deDzJ1XQee/XpSsuTxvyXwKnACaAT3TbMU
- 3k61TOx28YLK4dJdLhNIxvtdfBU=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e183c2a.7f82c5f1b928-smtp-out-n02;
- Fri, 10 Jan 2020 08:56:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 92E2EC433CB; Fri, 10 Jan 2020 08:56:10 +0000 (UTC)
-Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 34073C43383;
-        Fri, 10 Jan 2020 08:56:05 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 34073C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V1] mmc: sdhci-msm: Add CQHCI support for sdhci-msm
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>, ulf.hansson@linaro.org,
-        agross@kernel.org
-Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, cang@codeaurora.org,
-        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Ritesh Harjani <riteshh@codeaurora.org>
-References: <1576586233-28443-1-git-send-email-vbadigan@codeaurora.org>
- <1c6a6749-68c3-ee16-2c1b-e7534dee4791@intel.com>
- <9720d5fe-1bb0-8a88-1373-935a9abdb9e0@codeaurora.org>
-Message-ID: <162d9ee1-2acf-f9ca-15e6-e8ab00c5c19e@codeaurora.org>
-Date:   Fri, 10 Jan 2020 14:26:03 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 10 Jan 2020 03:56:35 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200110085632euoutp01385d824bbfa8fcd05dd707fc365d268f~oerY2LJ_E1390813908euoutp01M
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 08:56:32 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200110085632euoutp01385d824bbfa8fcd05dd707fc365d268f~oerY2LJ_E1390813908euoutp01M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578646592;
+        bh=gjYrnibyVonHjD0K8flrXfXLZ6vyR+EocTb65Lq+ARk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=IxloGf2Za8rDtz3E8dbHQMCFMWBudBUEaahlvThKSy6JcN3tLnhpZmy5EQEzWF4rg
+         TWmPOAnTw0F/whsRLZZM9jP9CSpBtdpC4IucU6OGxUAN0q4hFqwaHU40zsNbNUX/6X
+         CENFZe9btyKiCwg78O3wydAhF5wH6rSPD5sFUtrU=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200110085632eucas1p1e5c13bf04532c7df0c10c9296903d13e~oerYj0LCs1164811648eucas1p1M;
+        Fri, 10 Jan 2020 08:56:32 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id A7.F0.61286.04C381E5; Fri, 10
+        Jan 2020 08:56:32 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200110085631eucas1p28523b3a56f6f9431c822871aba68f617~oerX-CsiE1007610076eucas1p24;
+        Fri, 10 Jan 2020 08:56:31 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200110085631eusmtrp20b02490cb95e1a9076d5aafb06681986~oerX_E0010176101761eusmtrp2h;
+        Fri, 10 Jan 2020 08:56:31 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-79-5e183c40d100
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id B6.74.08375.F3C381E5; Fri, 10
+        Jan 2020 08:56:31 +0000 (GMT)
+Received: from [106.120.51.18] (unknown [106.120.51.18]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200110085630eusmtip139a887c89a328d5e10753829e49a18f6~oerXLXub31728917289eusmtip1J;
+        Fri, 10 Jan 2020 08:56:30 +0000 (GMT)
+Subject: Re: [PATCH 2/2] PM / devfreq: Add devfreq_transitions debugfs file
+To:     Chanwoo Choi <cw00.choi@samsung.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
+        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
+        hl@rock-chips.com, digetx@gmail.com, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, chanwoo@kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
+From:   Kamil Konieczny <k.konieczny@samsung.com>
+Message-ID: <5e7db176-48c4-09a1-f9f4-6d92df636753@samsung.com>
+Date:   Fri, 10 Jan 2020 09:56:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <9720d5fe-1bb0-8a88-1373-935a9abdb9e0@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200107090519.3231-3-cw00.choi@samsung.com>
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+3bOtuNw9jkve9FuzCxK1MQuJ1MpqDgRUfZXdDGPelqiTttc
+        WQSpeKlhkhaVM5y3zNRSh5mKYg7LzNTK0DW1xDIrsjAVspu1HSX/+/E878vzPh8fRcjGhG5U
+        lCqBU6vYGIVIQtY9mun23hoIoeuS8kj6TX4aojtbvpB0tvklSfdPjQnpiom3iK4cMCH6e/UT
+        gq4piKa7Uj6L6bKhCSHd23hDRE9ebEN0YUqqmL7TNiSmB5LLRFsXM5X5lYjpzbooYOqHShDT
+        oB8SM8byCyJmsK9JxNR8qRcwv/UtJJNVW46YSeOyfZKDksBILibqJKf2DQ6THB+1aOMnDyfO
+        pNWJk9DITh2yowCvh9d3csU6JKFkuAzB49o8wmrI8BSCtpKNvDGJ4HpHFTG/kVNUIeCNWwiu
+        DPSL+I1xBDM9blZ2wrvBoCshreyMwyGv/p5tgcClAuh4b7YZIuwLrV0dNpbiYLiaPYusTGJP
+        SKst/scU5YIPQOc0y484QkfuO9u4HQ6AwvRxWy6B5WB5ZxDwvBzuj9+YOzSbgu7qAzxvhw+t
+        lwU8O8Gn9loxz0tgtsEwp5+C0cIs21MATkUwnDFB8sYWGOz+IbLeQ+A1UNXoy8vboMpYLLDK
+        gB3APO7In+AAOXXXCF6Wwvl0GT/tCWNPMueS3EE3e1d4CSn0C4rpF5TRLyij/59bgMhyJOe0
+        mlglp/FTcad8NGysRqtS+kTExRrRv+/X+af9Wz2afhFuQphCCnvpAxd5qEzIntScjjUhoAiF
+        s/Sh2TVUJo1kT5/h1HFH1doYTmNC7hSpkEv9iz4ekWElm8BFc1w8p553BZSdWxJSSuQGr/uH
+        QqKdSqubI0POOWZYilX+5u6I8B1HP4wmeUb17O3bNLghNTkg2CNnRXS+erj59maPsNGgTtfV
+        gd5PV7i8Io5FHClKf77LUBFQMNLUssn+hMfZ8ETLhpVBpr3sro9LRr4GlC5a9WuNq/bms58h
+        lsY9XmWZiSG6UHNrzdL9swpSc5z1W0uoNexfgDPBrXoDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLIsWRmVeSWpSXmKPExsVy+t/xu7r2NhJxBm++S1jcn9fKaHF6/zsW
+        i4k3rrBYXP/ynNVi9cfHjBZrbh9itPix4RSzxcYF2RZnm96wW6y4+5HV4vKuOWwWn3uPMFos
+        bGpht1h75C67xe3GFWwO/B5r5q1h9Ljc18vksePuEkaPnbPusntsWtXJ5nHn2h42j43vdjB5
+        /J21n8Wjb8sqRo/Pm+QCuKL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTt
+        bFJSczLLUov07RL0Mp7eKi34HFPxs3UbewPjI7cuRk4OCQETiUmLVjN1MXJxCAksZZQ4eqmD
+        CSIhLdF4ejWULSzx51oXG4gtJPCaUeLtlkgQW1jAW2J+1xIWEFtEIElix5QmZpBBzALLmCRO
+        PGljhpi6l1FiwdK7YN1sAvoSB8+eBOvgFbCTmDbxPyOIzSKgKtG6ZTGYLSoQIfF8+w1GiBpB
+        iZMzn4DVcwpYSSxsews2h1lAXeLPvEvMELa4xK0n85kgbHmJ7W/nME9gFJqFpH0WkpZZSFpm
+        IWlZwMiyilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzDqtx37uXkH46WNwYcYBTgYlXh4D4iK
+        xwmxJpYVV+YeYpTgYFYS4T16QyxOiDclsbIqtSg/vqg0J7X4EKMp0HMTmaVEk/OBCSmvJN7Q
+        1NDcwtLQ3Njc2MxCSZy3Q+BgjJBAemJJanZqakFqEUwfEwenVAPjhF7f9TxbF086yiKxYdfu
+        HOP/jT+unH/vWMtlukL6wLecr4GsN2u6VfqN771VeHsk//NatmD2wMlPFE+F9p/eGbfsW6vS
+        Px2bzsl3tod2+ejuFy32yedIOC1SuXbK1nBev6lWJ8tO7JrGxtMyoerfwQ+995Q/rZ149sV/
+        1ga5Mt3SrGcOjaV/lViKMxINtZiLihMBEU4KyhADAAA=
+X-CMS-MailID: 20200110085631eucas1p28523b3a56f6f9431c822871aba68f617
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea
+References: <20200107090519.3231-1-cw00.choi@samsung.com>
+        <CGME20200107085812epcas1p4670ae2265573d887aa75cab36c04b1ea@epcas1p4.samsung.com>
+        <20200107090519.3231-3-cw00.choi@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Chanwoo,
 
-On 1/2/2020 5:00 PM, Veerabhadrarao Badiganti wrote:
->
-> On 12/20/2019 7:29 PM, Adrian Hunter wrote:
->> On 17/12/19 2:37 pm, Veerabhadrarao Badiganti wrote:
->>> From: Ritesh Harjani<riteshh@codeaurora.org>
->>>
->>> This adds CQHCI support for sdhci-msm platforms.
->>>
->>> Signed-off-by: Ritesh Harjani<riteshh@codeaurora.org>
->>> Signed-off-by: Veerabhadrarao Badiganti<vbadigan@codeaurora.org>
->>>
->>> ---
->>> This patch is based on RFC patch
->>> https://lkml.org/lkml/2017/8/30/313
->>>
->>> Changes since RFC:
->>>     - Updated settings so that TDLBA won't get reset when
->>>       CQE is enabled.
->>>     - Removed new compatible string and moved to supports-cqe
->>>       dt flag to identify CQE support.
->>>     - Incorporated review comments.
->>>
->>> Tested on: qcs404, sc7180
->>> ---
->>>   drivers/mmc/host/sdhci-msm.c | 115 
->>> ++++++++++++++++++++++++++++++++++++++++++-
->>>   1 file changed, 114 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci-msm.c 
->>> b/drivers/mmc/host/sdhci-msm.c
->>> index 3d0bb5e..a4e3507 100644
->>> --- a/drivers/mmc/host/sdhci-msm.c
->>> +++ b/drivers/mmc/host/sdhci-msm.c
->>> @@ -15,6 +15,7 @@
->>>   #include <linux/regulator/consumer.h>
->>>     #include "sdhci-pltfm.h"
->>> +#include "cqhci.h"
->>>     #define CORE_MCI_VERSION        0x50
->>>   #define CORE_VERSION_MAJOR_SHIFT    28
->>> @@ -122,6 +123,10 @@
->>>   #define msm_host_writel(msm_host, val, host, offset) \
->>>       msm_host->var_ops->msm_writel_relaxed(val, host, offset)
->>>   +/* CQHCI vendor specific registers */
->>> +#define CQHCI_VENDOR_CFG1    0xA00
->>> +#define DISABLE_RST_ON_CMDQ_EN    (0x3 << 13)
->>> +
->>>   struct sdhci_msm_offset {
->>>       u32 core_hc_mode;
->>>       u32 core_mci_data_cnt;
->>> @@ -1567,6 +1572,109 @@ static void sdhci_msm_set_clock(struct 
->>> sdhci_host *host, unsigned int clock)
->>>       __sdhci_msm_set_clock(host, clock);
->>>   }
->>> +/*****************************************************************************\
->>> + * *
->>> + * MSM Command Queue Engine 
->>> (CQE)                                            *
->>> + * *
->>> +\*****************************************************************************/ 
->>>
->>> +
->>> +static u32 sdhci_msm_cqe_irq(struct sdhci_host *host, u32 intmask)
->>> +{
->>> +    int cmd_error = 0;
->>> +    int data_error = 0;
->>> +
->>> +    if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
->>> +        return intmask;
->>> +
->>> +    cqhci_irq(host->mmc, intmask, cmd_error, data_error);
->>> +    return 0;
->>> +}
->>> +
->>> +void sdhci_msm_cqe_disable(struct mmc_host *mmc, bool recovery)
->>> +{
->>> +    struct sdhci_host *host = mmc_priv(mmc);
->>> +    unsigned long flags;
->>> +    u32 ctrl;
->>> +
->>> +    /*
->>> +     * When CQE is halted, the legacy SDHCI path operates only
->>> +     * on 128bit descriptors in 64bit mode.
->>> +     */
->>> +    if (host->flags & SDHCI_USE_64_BIT_DMA)
->>> +        host->desc_sz = 16;
->> The adma_table_sz depends on desc_sz, so it cannot be changed here.
->> If you do something like below, then you can set desc_sz before calling
->> sdhci_setup_host()
->>
->> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->> index f4540f9892ce..f1d3b70ff769 100644
->> --- a/drivers/mmc/host/sdhci.c
->> +++ b/drivers/mmc/host/sdhci.c
->> @@ -3825,9 +3825,10 @@ int sdhci_setup_host(struct sdhci_host *host)
->>           void *buf;
->>             if (host->flags & SDHCI_USE_64_BIT_DMA) {
->> +            if (!host->desc_sz)
->> +                host->desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
->>               host->adma_table_sz = host->adma_table_cnt *
->> -                          SDHCI_ADMA2_64_DESC_SZ(host);
->> -            host->desc_sz = SDHCI_ADMA2_64_DESC_SZ(host);
->> +                          host->desc_sz;
->>           } else {
->>               host->adma_table_sz = host->adma_table_cnt *
->>                             SDHCI_ADMA2_32_DESC_SZ;
->
-> Thanks Adrian for the suggestion. I will add this change.
->
-> But even with this change, still i will have to override 
-> 'host->desc_sz' variable since qcom sdhci controller expects/operates-on
->
-> 12-byte descriptor as long was CQE is not enabled. When CQE is 
-> enabled, it operates only on 16-bype descriptors (even when CQE is 
-> halted).
->
-> If i fix "host->desc_sz" to 16 then all the data transfer commands 
-> during card initialization (till CQE is enabled) would fail.
->
-> I may have to update as below:
->
->     host->desc_sz = 16;
->
->     sdhci_add_host()  ;
->
->    host->desc_sz = 12;
->
-> And then cqhci_host_ops->enable() -> host->desc_sz = 16;
->
-> Please let me know if this is fine or if you have any other suggestion 
-> to support this limitation of qcom controller w.r.t ADMA descriptors 
-> with CQE.
->
-Hi Adrian,
+On 07.01.2020 10:05, Chanwoo Choi wrote:
+> Add new devfreq_transitions debugfs file to track the frequency transitions
+> of all devfreq devices for the simple profiling as following:
+> - /sys/kernel/debug/devfreq/devfreq_transitions
+> 
+> And the user can decide the storage size (CONFIG_NR_DEVFREQ_TRANSITIONS)
+> in Kconfig in order to save the transition history.
+> 
+> [Detailed description of each field of 'devfreq_transitions' debugfs file]
+> - time_ms	: Change time of frequency transition. (unit: millisecond)
+> - dev_name	: Device name of h/w.
+> - dev		: Device name made by devfreq core.
+> - parent_dev	: If devfreq device uses the passive governor,
+> 		  show parent devfreq device name.
+> - load_%	: If devfreq device uses the simple_ondemand governor,
+> 		  load is used by governor whene deciding the new frequency.
+> 		  (unit: percentage)
+> - old_freq_hz	: Frequency before changing. (unit: hz)
 
-Do you have any suggestions on the way to support both the descriptor sizes?
+s/hz/Hz/
 
->>> +
->>> +    spin_lock_irqsave(&host->lock, flags);
->>> +
->>> +    /*
->>> +     * During CQE operation command complete bit gets latched.
->>> +     * So s/w should clear command complete interrupt status when 
->>> CQE is
->>> +     * halted. Otherwise unexpected SDCHI legacy interrupt gets
->>> +     * triggered when CQE is halted.
->>> +     */
->>> +    ctrl = sdhci_readl(host, SDHCI_INT_ENABLE);
->>> +    ctrl |= SDHCI_INT_RESPONSE;
->>> +    sdhci_writel(host,  ctrl, SDHCI_INT_ENABLE);
->>> +    sdhci_writel(host, SDHCI_INT_RESPONSE, SDHCI_INT_STATUS);
->>> +
->>> +    spin_unlock_irqrestore(&host->lock, flags);
->>> +
->>> +    sdhci_cqe_disable(mmc, recovery);
->>> +}
->>> +
->>> +static const struct cqhci_host_ops sdhci_msm_cqhci_ops = {
->>> +    .enable        = sdhci_cqe_enable,
->>> +    .disable    = sdhci_msm_cqe_disable,
->>> +};
->>> +
->>> +static int sdhci_msm_cqe_add_host(struct sdhci_host *host,
->>> +                struct platform_device *pdev)
->>> +{
->>> +    struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->>> +    struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->>> +    struct cqhci_host *cq_host;
->>> +    bool dma64;
->>> +    int ret;
->>> +
->>> +    ret = sdhci_setup_host(host);
->>> +    if (ret)
->>> +        return ret;
->>> +
->>> +    cq_host = cqhci_pltfm_init(pdev);
->>> +    if (IS_ERR(cq_host)) {
->>> +        ret = PTR_ERR(cq_host);
->>> +        dev_err(&pdev->dev, "cqhci-pltfm init: failed: %d\n", ret);
->>> +        goto cleanup;
->>> +    }
->>> +
->>> +    msm_host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
->>> +    cq_host->ops = &sdhci_msm_cqhci_ops;
->>> +
->>> +    dma64 = host->flags & SDHCI_USE_64_BIT_DMA;
->>> +
->>> +    ret = cqhci_init(cq_host, host->mmc, dma64);
->>> +    if (ret) {
->>> +        dev_err(&pdev->dev, "%s: CQE init: failed (%d)\n",
->>> +                mmc_hostname(host->mmc), ret);
->>> +        goto cleanup;
->>> +    }
->>> +
->>> +    /* Disable cqe reset due to cqe enable signal */
->>> +    cqhci_writel(cq_host, cqhci_readl(cq_host, CQHCI_VENDOR_CFG1) |
->>> +               DISABLE_RST_ON_CMDQ_EN, CQHCI_VENDOR_CFG1);
->>> +
->>> +    ret = __sdhci_add_host(host);
->>> +    if (ret)
->>> +        goto cleanup;
->>> +
->>> +    dev_info(&pdev->dev, "%s: CQE init: success\n",
->>> +            mmc_hostname(host->mmc));
->>> +    return ret;
->>> +
->>> +cleanup:
->>> +    sdhci_cleanup_host(host);
->>> +    return ret;
->>> +}
->>> +
->>>   /*
->>>    * Platform specific register write functions. This is so that, if 
->>> any
->>>    * register write needs to be followed up by platform specific 
->>> actions,
->>> @@ -1731,6 +1839,7 @@ static void 
->>> sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->>>       .set_uhs_signaling = sdhci_msm_set_uhs_signaling,
->>>       .write_w = sdhci_msm_writew,
->>>       .write_b = sdhci_msm_writeb,
->>> +    .irq    = sdhci_msm_cqe_irq,
->>>   };
->>>     static const struct sdhci_pltfm_data sdhci_msm_pdata = {
->>> @@ -1754,6 +1863,7 @@ static int sdhci_msm_probe(struct 
->>> platform_device *pdev)
->>>       u8 core_major;
->>>       const struct sdhci_msm_offset *msm_offset;
->>>       const struct sdhci_msm_variant_info *var_info;
->>> +    struct device_node *node = pdev->dev.of_node;
->>>         host = sdhci_pltfm_init(pdev, &sdhci_msm_pdata, 
->>> sizeof(*msm_host));
->>>       if (IS_ERR(host))
->>> @@ -1952,7 +2062,10 @@ static int sdhci_msm_probe(struct 
->>> platform_device *pdev)
->>>       pm_runtime_use_autosuspend(&pdev->dev);
->>>         host->mmc_host_ops.execute_tuning = sdhci_msm_execute_tuning;
->>> -    ret = sdhci_add_host(host);
->>> +    if (of_property_read_bool(node, "supports-cqe"))
->>> +        ret = sdhci_msm_cqe_add_host(host, pdev);
->>> +    else
->>> +        ret = sdhci_add_host(host);
->>>       if (ret)
->>>           goto pm_runtime_disable;
->>>       sdhci_msm_set_regulator_caps(msm_host);
->>>
-Thanks
+> - new_freq_hz	: Frequency after changed. (unit: hz)
 
-Veera
+s/hz/Hz/
+
+> 
+> [For example on Exynos5422-based Odroid-XU3 board]
+> $ cat /sys/kernel/debug/devfreq/devfreq_transitions
+> time_ms    dev_name                       dev        parent_dev load_% old_freq_hz  new_freq_hz
+
+s/hz/Hz/
+
+> ---------- ------------------------------ ---------- ---------- ---------- ------------ ------------
+> 14600      soc:bus_noc                    devfreq2   devfreq1   0      100000000    67000000
+> 14600      soc:bus_fsys_apb               devfreq3   devfreq1   0      200000000    100000000
+
+Imho it is better to align freq numbers to right, for example:
+
+14600      soc:bus_noc                    devfreq2   devfreq1   0      100000000     67000000
+14600      soc:bus_fsys_apb               devfreq3   devfreq1   0      200000000    100000000
+
+> 14600      soc:bus_fsys                   devfreq4   devfreq1   0      200000000    100000000
+> 14600      soc:bus_fsys2                  devfreq5   devfreq1   0      150000000    75000000
+> 14602      soc:bus_mfc                    devfreq6   devfreq1   0      222000000    96000000
+> 14602      soc:bus_gen                    devfreq7   devfreq1   0      267000000    89000000
+> 14602      soc:bus_g2d                    devfreq9   devfreq1   0      300000000    84000000
+> 14602      soc:bus_g2d_acp                devfreq10  devfreq1   0      267000000    67000000
+> 14602      soc:bus_jpeg                   devfreq11  devfreq1   0      300000000    75000000
+> 14602      soc:bus_jpeg_apb               devfreq12  devfreq1   0      167000000    84000000
+> 14603      soc:bus_disp1_fimd             devfreq13  devfreq1   0      200000000    120000000
+> 14603      soc:bus_disp1                  devfreq14  devfreq1   0      300000000    120000000
+> 14606      soc:bus_gscl_scaler            devfreq15  devfreq1   0      300000000    150000000
+> 14606      soc:bus_mscl                   devfreq16  devfreq1   0      333000000    84000000
+> 14608      soc:bus_wcore                  devfreq1              9      333000000    84000000
+> 14783      10c20000.memory-controller     devfreq0              35     825000000    633000000
+> 15873      soc:bus_wcore                  devfreq1              41     84000000     400000000
+> 15873      soc:bus_noc                    devfreq2   devfreq1   0      67000000     100000000
+> [snip]
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> ---
+>  drivers/devfreq/Kconfig            |  13 +++
+>  drivers/devfreq/devfreq.c          | 126 +++++++++++++++++++++++++++++
+>  drivers/devfreq/governor.h         |   3 +
+>  drivers/devfreq/governor_passive.c |   2 +
+>  include/linux/devfreq.h            |   1 +
+>  5 files changed, 145 insertions(+)
+> 
+> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> index 0b1df12e0f21..84936eec0ef9 100644
+> --- a/drivers/devfreq/Kconfig
+> +++ b/drivers/devfreq/Kconfig
+> @@ -74,6 +74,19 @@ config DEVFREQ_GOV_PASSIVE
+>  	  through sysfs entries. The passive governor recommends that
+>  	  devfreq device uses the OPP table to get the frequency/voltage.
+>  
+> +comment "DEVFREQ Debugging"
+> +
+> +config NR_DEVFREQ_TRANSITIONS
+> +	int "Maximum storage size to save DEVFREQ Transitions (10-1000)"
+> +	depends on DEBUG_FS
+> +	range 10 1000
+> +	default "100"
+> +	help
+> +	  Show the frequency transitions of all devfreq devices via
+> +	  '/sys/kernel/debug/devfreq/devfreq_transitions' for the simple
+> +	  profiling. It needs to decide the storage size to save transition
+> +	  history of all devfreq devices.
+> +
+>  comment "DEVFREQ Drivers"
+>  
+>  config ARM_EXYNOS_BUS_DEVFREQ
+> diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+> index c7f5e4e06420..7abaae06fa65 100644
+> --- a/drivers/devfreq/devfreq.c
+> +++ b/drivers/devfreq/devfreq.c
+> @@ -268,6 +268,57 @@ int devfreq_update_status(struct devfreq *devfreq, unsigned long freq)
+>  }
+>  EXPORT_SYMBOL(devfreq_update_status);
+>  
+> +/**
+> + * devfreq_update_transitions() - Update frequency transitions for debugfs file
+> + * @devfreq:	the devfreq instance
+> + * @old_freq:	the previous frequency before changing the frequency
+> + * @new_freq:	the new frequency after frequency is changed
+> + */
+> +struct devfreq_transitions {
+> +	struct devfreq *devfreq;
+> +	struct devfreq_freqs freqs;
+> +	unsigned long load;
+> +} debugfs_transitions[CONFIG_NR_DEVFREQ_TRANSITIONS];
+> +
+> +static spinlock_t devfreq_debugfs_lock;
+> +static int debugfs_transitions_index;
+> +
+> +void devfreq_update_transitions(struct devfreq *devfreq,
+> +			unsigned long old_freq, unsigned long new_freq,
+> +			unsigned long busy_time, unsigned long total_time)
+> +{
+> +	unsigned long load;
+> +	int i;
+> +
+> +	if (!devfreq_debugfs || !devfreq || (old_freq == new_freq))
+> +		return;
+> +
+> +	spin_lock_nested(&devfreq_debugfs_lock, SINGLE_DEPTH_NESTING);
+> +
+> +	i = debugfs_transitions_index;
+> +
+> +	/*
+> +	 * Calculate the load and if load is larger than 100,
+> +	 * initialize to 100 because the unit of load is percentage.
+> +	 */
+
+Remove this comment, it is better to print numbers as they are so one can
+find a problem.
+
+> +	load = (total_time == 0 ? 0 : (100 * busy_time) / total_time);
+> +	if (load > 100)
+> +		load = 100;
+
+Imho it should always be busy_time <= total_time, so
+
+	if (load > 100) {
+		WARN_ONCE(busy_time > total_time, "devfreq: busy_time > total_time");
+		load = 100;
+	}
+
+Or drop this "if (load > 100) load=100;" and print load as is in logs.
+
+> +
+> +	debugfs_transitions[i].devfreq = devfreq;
+> +	debugfs_transitions[i].freqs.time = ktime_to_ms(ktime_get());
+> +	debugfs_transitions[i].freqs.old = old_freq;
+> +	debugfs_transitions[i].freqs.new = new_freq;
+> +	debugfs_transitions[i].load = load;
+> +
+> +	if (++i == CONFIG_NR_DEVFREQ_TRANSITIONS)
+> +		i = 0;
+> +	debugfs_transitions_index = i;
+> +
+> +	spin_unlock(&devfreq_debugfs_lock);
+> +}
+> +EXPORT_SYMBOL(devfreq_update_transitions);
+> +
+>  /**
+>   * find_devfreq_governor() - Find devfreq governor from name
+>   * @name:	name of the governor
+> @@ -401,6 +452,10 @@ static int set_target(struct devfreq *devfreq,
+>  		return err;
+>  	}
+>  
+> +	devfreq_update_transitions(devfreq, cur_freq, new_freq,
+> +					devfreq->last_status.busy_time,
+> +					devfreq->last_status.total_time);
+> +
+>  	freqs.new = new_freq;
+>  	notify_transition(devfreq, &freqs, DEVFREQ_POSTCHANGE);
+>  
+> @@ -1787,6 +1842,72 @@ static int devfreq_summary_show(struct seq_file *s, void *data)
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
+>  
+> +/**
+> + * devfreq_transitions_show() - Show the frequency transitions of the registered
+> + *			devfreq devices via 'devfreq_transitions' debugfs file.
+> + */
+> +static int devfreq_transitions_show(struct seq_file *s, void *data)
+> +{
+> +	struct devfreq *devfreq = NULL;
+> +	struct devfreq *p_devfreq = NULL;
+> +	struct devfreq_freqs *freqs = NULL;
+> +	unsigned long load;
+> +	int i = debugfs_transitions_index;
+> +	int count;
+> +
+> +	seq_printf(s, "%-10s %-30s %-10s %-10s %-6s %-12s %-12s\n",
+> +			"time_ms",
+> +			"dev_name",
+> +			"dev",
+> +			"parent_dev",
+> +			"load_%",
+> +			"old_freq_hz",
+> +			"new_freq_hz");
+> +	seq_printf(s, "%-10s %-30s %-10s %-10s %-6s %-12s %-12s\n",
+> +			"----------",
+> +			"------------------------------",
+> +			"----------",
+> +			"----------",
+> +			"----------",
+> +			"------------",
+> +			"------------");
+> +
+> +	spin_lock(&devfreq_debugfs_lock);
+> +	for (count = 0; count < CONFIG_NR_DEVFREQ_TRANSITIONS; count++) {
+> +		devfreq = debugfs_transitions[i].devfreq;
+> +		freqs = &debugfs_transitions[i].freqs;
+> +		load = debugfs_transitions[i].load;
+> +
+> +		i = (CONFIG_NR_DEVFREQ_TRANSITIONS == ++i) ? 0 : i;
+> +		if (!devfreq)
+> +			continue;
+> +
+> +#if IS_ENABLED(CONFIG_DEVFREQ_GOV_PASSIVE)
+> +		if (!strncmp(devfreq->governor_name,
+> +				DEVFREQ_GOV_PASSIVE, DEVFREQ_NAME_LEN)) {
+> +			struct devfreq_passive_data *data = devfreq->data;
+> +
+> +			if (data)
+> +				p_devfreq = data->parent;
+> +		} else {
+> +			p_devfreq = NULL;
+> +		}
+> +#endif
+> +		seq_printf(s, "%-10lld %-30s %-10s %-10s %-6ld %-12ld %-12ld\n",
+> +			freqs->time,
+> +			dev_name(devfreq->dev.parent),
+> +			dev_name(&devfreq->dev),
+> +			p_devfreq ? dev_name(&p_devfreq->dev) : "",
+> +			load,
+> +			freqs->old,
+> +			freqs->new);
+> +	}
+> +	spin_unlock(&devfreq_debugfs_lock);
+> +
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(devfreq_transitions);
+> +
+>  static int __init devfreq_init(void)
+>  {
+>  	devfreq_class = class_create(THIS_MODULE, "devfreq");
+> @@ -1808,9 +1929,14 @@ static int __init devfreq_init(void)
+>  		devfreq_debugfs = NULL;
+>  		pr_warn("%s: couldn't create debugfs dir\n", __FILE__);
+>  	} else {
+> +		spin_lock_init(&devfreq_debugfs_lock);
+> +
+>  		debugfs_create_file("devfreq_summary", 0444,
+>  				devfreq_debugfs, NULL,
+>  				&devfreq_summary_fops);
+> +		debugfs_create_file("devfreq_transitions", 0444,
+> +				devfreq_debugfs, NULL,
+> +				&devfreq_transitions_fops);
+>  	}
+>  
+>  	return 0;
+> diff --git a/drivers/devfreq/governor.h b/drivers/devfreq/governor.h
+> index dc7533ccc3db..01eecfdaf2d6 100644
+> --- a/drivers/devfreq/governor.h
+> +++ b/drivers/devfreq/governor.h
+> @@ -68,6 +68,9 @@ extern int devfreq_add_governor(struct devfreq_governor *governor);
+>  extern int devfreq_remove_governor(struct devfreq_governor *governor);
+>  
+>  extern int devfreq_update_status(struct devfreq *devfreq, unsigned long freq);
+> +extern void devfreq_update_transitions(struct devfreq *devfreq,
+> +			unsigned long old_freq, unsigned long new_freq,
+> +			unsigned long busy_time, unsigned long total_time);
+>  
+>  static inline int devfreq_update_stats(struct devfreq *df)
+>  {
+> diff --git a/drivers/devfreq/governor_passive.c b/drivers/devfreq/governor_passive.c
+> index be6eeab9c814..05fa654239f5 100644
+> --- a/drivers/devfreq/governor_passive.c
+> +++ b/drivers/devfreq/governor_passive.c
+> @@ -109,6 +109,8 @@ static int update_devfreq_passive(struct devfreq *devfreq, unsigned long freq)
+>  	if (ret < 0)
+>  		goto out;
+>  
+> +	devfreq_update_transitions(devfreq, devfreq->previous_freq, freq, 0, 0);
+> +
+>  	if (devfreq->profile->freq_table
+>  		&& (devfreq_update_status(devfreq, freq)))
+>  		dev_err(&devfreq->dev,
+> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+> index 49cdb2378030..933692e5d867 100644
+> --- a/include/linux/devfreq.h
+> +++ b/include/linux/devfreq.h
+> @@ -196,6 +196,7 @@ struct devfreq {
+>  };
+>  
+>  struct devfreq_freqs {
+> +	s64 time;
+
+Imho is should be moved to struct devfreq_transitions.
+Or do you plan to change load calculations based on time ?
+
+>  	unsigned long old;
+>  	unsigned long new;
+>  };
+> 
+
+-- 
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
+
