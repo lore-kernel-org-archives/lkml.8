@@ -2,189 +2,103 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EDBC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E1AC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A86282082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89A012082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:50:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mvi+VRY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726766AbgAJUtS (ORCPT
+        id S1726805AbgAJUuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 15:49:18 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:42631 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726716AbgAJUtR (ORCPT
+        Fri, 10 Jan 2020 15:50:32 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38480 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726723AbgAJUuc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 15:49:17 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MDQNq-1j0R5F1Bvq-00AYsu; Fri, 10 Jan 2020 21:49:11 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Bluez mailing list <linux-bluetooth@vger.kernel.org>
-Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Rich Felker <dalias@libc.org>, Guy Harris <guy@alum.mit.edu>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] hcidump: add support for time64 based libc
-Date:   Fri, 10 Jan 2020 21:49:03 +0100
-Message-Id: <20200110204903.3495832-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Fri, 10 Jan 2020 15:50:32 -0500
+Received: by mail-qt1-f195.google.com with SMTP id n15so3181384qtp.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 12:50:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g27tUcZAM0m6OZxjmAB5/89iWSwTrYsxjjfNa7EsAIw=;
+        b=Mvi+VRY02DgdYL7P2WspKpHxV2ow+FLMGmUO3lyIPBdZ6kcdG6O4HVFlGhiG+9nKjt
+         InGoNRuwiCuSQd5Ve3eiX2lfKUyZ87lrH9ALeiXGOnxgfGdiTLaU5zwdubcqXTvcsLB0
+         DaO/pmhX8VxVvIadinKoWa7kOkB9Y64ByED2qL3Trpztbdo8u8X1ZMDq09q8IOvJth8y
+         JUo+juVQDjNuS4t09NlmvyPVYzae8sKRlSErb7153ubjzUQblJgGvPUjil5E1HJc4/pq
+         jW9fCiAhtgCiQ6Tyz4WmdQy+Ys1/hKYm3kCXGXfKxq3N7A12MUCJoUIZzD0CCKSH0wj8
+         WOPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g27tUcZAM0m6OZxjmAB5/89iWSwTrYsxjjfNa7EsAIw=;
+        b=JQM9gtW8PkhWS1ojwVNODiOWHTZ1cwciLBuiC4Q0fs2HP6KucemgC50C37jTi9DhI/
+         XlGk5nZd2unOmJw1cUKgEq9XfUJ7/yjTfX0wfRoaozhYSVjIWUq814YMrKHrivFiEK1w
+         JJdjGxy/Vf2SLrrE+Svix2VKCb9msRi52fNvU1oKi6yft7mw/T+Zy61Jp0fnvntk1GZS
+         Owf98Qm6D+u3b2ueTMUpMJJDIUmbdJmEFMIg3zDbuEF06m60rZ22utMqY0clZK++d22D
+         0f1ZzOETsI2bjJxsYe4Y8yOQxv5zGBDGgEZjRvLMuTFqAATEIw+8czk76VEiJhRPMHYD
+         at+g==
+X-Gm-Message-State: APjAAAVYS0wcTNHnP8uAACgSI/j1kH579tY8q8+7D2Bi0KxVrk8drqZQ
+        MgN1ZEzo2mTnY+eXwbZWaa8=
+X-Google-Smtp-Source: APXvYqzqSVRxTWDacmijuX+jppZlqkfEqfdliItay6BDT/Jhn2/DhYxV9Ui3FPnIC+BA+I79v6S/YQ==
+X-Received: by 2002:ac8:3853:: with SMTP id r19mr351185qtb.69.1578689431302;
+        Fri, 10 Jan 2020 12:50:31 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id e3sm1586608qtb.65.2020.01.10.12.50.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 12:50:30 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 10 Jan 2020 15:50:29 -0500
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH] x86/tools/relocs: Add _etext and __end_of_kernel_reserve
+ to S_REL
+Message-ID: <20200110205028.GA2012059@rani.riverdale.lan>
+References: <20200110202349.1881840-1-nivedita@alum.mit.edu>
+ <20200110203828.GK19453@zn.tnic>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:/h9Dsyrfgqwfb1d0gBYxKrEQQCWg4bujxtrnwT3k69wgG/HcyJx
- SCNlCHyOmNHVBHKg3xWZ25yYNx47e894CdRU18dUGtPrjXLD4Q15+vteQxInyyvWPyBJgyN
- aCQ0eJaA+ntnx4e1Fh7xNMXCsW8qaznzZhRo/UXItsEjj6nAxiv9mQlMSb+yFSuLSO+w8Xg
- TX8IW9yAyj3AYQs0Cv/jQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:lO4Yb3kycvY=:4X6ve/YIqvpcDzfPVG9/XO
- odIxjDHkkryW+alKWrotg7ttLTtLADIupSTIcdzSKnWZsKOxFYPy9g3u26znY8/YsGhuDPxc5
- Rubfx00oBVuQqsg37S4CnpzjN4ChtJJynBFCJYSm9W5WU0DWLG/Uvj+b5Hzt+LIlBr3FO3ATi
- Cc1jX81Y5XO2jmCjAyunnQQ+/GlEgSSJEvwvyklwqEuC2FPq9SajuY627V49H3lNO2x5h1+ed
- A0Lpp7IxH4WpS/x7bikIMDHx02O4HUvKm4IcZqlCjAdwa1slh1heFK6tMEEiqdpBnsHu/fYzU
- lpdOIUpKelNLszvYsEh0BPfQ4FnPZY2qmgbeUOWHiyJu8qT7ibEYzfdi/ldRVCjYmabACFxkO
- qS81I0W2cMiLLkCEFaa6+KWCKge9CklEDsqxdsEpXQPLl5gGuT6H6A2uffhqIXM/YyLN6vwcG
- iMHiVjyefaOycd1QzyIdWpp+fFLohSd1KlyQWr0rIk81A1GVOGYcRYZgAlRfI/DyATZGbLS6w
- soS/5V7VtOA07bKwpfbTXSuiQxAT+ldprDUcWijMRcfkZJriaxYGUwF2f6MO+LjUcnoDXGjfm
- FrcRhtpKZ3WEgLQsxeJUf1vSbSAsGSgOyavYo6m69UlNesq5uo0AwWPaAQsJmhIdG/UqZwskn
- utKPO+TLE/dUuOLvcxT5y5Nah8JNWSK39MObmSO+T+9mkf6/qB9Xo3YuqUYKVBhOHjbAO0XGd
- 3WyoeftTCtXysaW+UMim6/tZy0v+In+NUp4MrKTVcY9Ll7GtS6aTsNvVVTR5SV7zpJhjdzulF
- ucDpG4lje9l3vYB6Tgpvh7IZJLrT593zv+Q2Fg0bVwyuccBmV8mBkkHUSb7LJwDloYlPb1TnT
- 7VwYHlKqKuPlVorb5QyA==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200110203828.GK19453@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-musl is moving to a default of 64-bit time_t on all architectures,
-glibc will follow later. This breaks reading timestamps through cmsg
-data with the HCI_TIME_STAMP socket option.
+On Fri, Jan 10, 2020 at 09:38:28PM +0100, Borislav Petkov wrote:
+> On Fri, Jan 10, 2020 at 03:23:49PM -0500, Arvind Sankar wrote:
+> > Pre-2.23 binutils makes symbols defined outside sections absolute, so
+> > these two symbols break the build on old linkers.
+> 
+> -ENOTENOUGHINFO
+> 
+> Which old linkers, how exactly do they break the build, etc etc?
+> 
+> Please give exact reproduction steps.
+> 
+> Thx.
+> 
 
-Change both copies of hcidump to work on all architectures.  This also
-fixes x32, which has never worked, and carefully avoids breaking sparc64,
-which is another special case.
+binutils-2.21 and -2.22. An x86-64 defconfig will fail with
+	Invalid absolute R_X86_64_32S relocation: _etext
+and after fixing that one, with
+	Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
 
-I have only compiled this on one architecture, please at least test
-it to ensure there are no regressions. The toolchain binaries from
-http://musl.cc/ should allow testing with a 64-bit time_t, but it may
-be hard to build all the dependencies first.
+Similar errors with 32-bit defconfig.
 
-libpcap has the same bug and needs a similar fix to work on future
-32-bit Linux systems. Everything else apparently uses the generic
-SO_TIMESTAMP timestamps, which work correctly when using new enough
-kernels with a time64 libc.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- monitor/hcidump.c | 32 +++++++++++++++++++++++++++++++-
- tools/hcidump.c   | 33 +++++++++++++++++++++++++++++++--
- 2 files changed, 62 insertions(+), 3 deletions(-)
-
-diff --git a/monitor/hcidump.c b/monitor/hcidump.c
-index 8b6f846d3..6d2330287 100644
---- a/monitor/hcidump.c
-+++ b/monitor/hcidump.c
-@@ -107,6 +107,36 @@ static int open_hci_dev(uint16_t index)
- 	return fd;
- }
- 
-+static struct timeval hci_tstamp_read(void *data)
-+{
-+	struct timeval tv;
-+
-+	/*
-+	 * On 64-bit architectures, the data matches the timeval
-+	 * format. Note that on sparc64 this is different from
-+	 * all others.
-+	 */
-+	if (sizeof(long) == 8) {
-+		memcpy(&tv, data, sizeof(tv));
-+	}
-+
-+	/*
-+	 * On 32-bit architectures, the timeval definition may
-+	 * use 32-bit or 64-bit members depending on the C
-+	 * library and architecture.
-+	 * The cmsg data however always contains a pair of
-+	 * 32-bit values. Interpret as unsigned to make it work
-+	 * past y2038.
-+	 */
-+	if (sizeof(long) == 4) {
-+		unsigned int *stamp = data;
-+		tv.tv_sec = stamp[0];
-+		tv.tv_usec = stamp[1];
-+	}
-+
-+	return tv;
-+}
-+
- static void device_callback(int fd, uint32_t events, void *user_data)
- {
- 	struct hcidump_data *data = user_data;
-@@ -150,7 +180,7 @@ static void device_callback(int fd, uint32_t events, void *user_data)
- 				memcpy(&dir, CMSG_DATA(cmsg), sizeof(dir));
- 				break;
- 			case HCI_CMSG_TSTAMP:
--				memcpy(&ctv, CMSG_DATA(cmsg), sizeof(ctv));
-+				ctv = hci_tstamp_read(CMSG_DATA(cmsg));
- 				tv = &ctv;
- 				break;
- 			}
-diff --git a/tools/hcidump.c b/tools/hcidump.c
-index 33d429b6c..be14d0930 100644
---- a/tools/hcidump.c
-+++ b/tools/hcidump.c
-@@ -136,6 +136,36 @@ static inline int write_n(int fd, char *buf, int len)
- 	return t;
- }
- 
-+static struct timeval hci_tstamp_read(void *data)
-+{
-+	struct timeval tv;
-+
-+	/*
-+	 * On 64-bit architectures, the data matches the timeval
-+	 * format. Note that on sparc64 this is different from
-+	 * all others.
-+	 */
-+	if (sizeof(long) == 8) {
-+		memcpy(&tv, data, sizeof(tv));
-+	}
-+
-+	/*
-+	 * On 32-bit architectures, the timeval definition may
-+	 * use 32-bit or 64-bit members depending on the C
-+	 * library and architecture.
-+	 * The cmsg data however always contains a pair of
-+	 * 32-bit values. Interpret as unsigned to make it work
-+	 * past y2038.
-+	 */
-+	if (sizeof(long) == 4) {
-+		unsigned int *stamp = data;
-+		tv.tv_sec = stamp[0];
-+		tv.tv_usec = stamp[1];
-+	}
-+
-+	return tv;
-+}
-+
- static int process_frames(int dev, int sock, int fd, unsigned long flags)
- {
- 	struct cmsghdr *cmsg;
-@@ -230,8 +260,7 @@ static int process_frames(int dev, int sock, int fd, unsigned long flags)
- 				frm.in = (uint8_t) dir;
- 				break;
- 			case HCI_CMSG_TSTAMP:
--				memcpy(&frm.ts, CMSG_DATA(cmsg),
--						sizeof(struct timeval));
-+				frm.ts = hci_tstamp_read(CMSG_DATA(cmsg));
- 				break;
- 			}
- 			cmsg = CMSG_NXTHDR(&msg, cmsg);
--- 
-2.20.0
-
+Should I resend with that added to the commit message?
