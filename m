@@ -7,34 +7,33 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D57C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC36C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89D612253D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F65121744
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgAJRx3 (ORCPT
+        id S1728811AbgAJRxb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:53:29 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59143 "EHLO
+        Fri, 10 Jan 2020 12:53:31 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59144 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728248AbgAJRxZ (ORCPT
+        with ESMTP id S1728528AbgAJRxZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jan 2020 12:53:25 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ipyTE-0001gU-70; Fri, 10 Jan 2020 18:53:16 +0100
+        id 1ipyTD-0001gO-MO; Fri, 10 Jan 2020 18:53:15 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C43971C2D58;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3CDB61C2D52;
         Fri, 10 Jan 2020 18:53:15 +0100 (CET)
 Date:   Fri, 10 Jan 2020 17:53:15 -0000
 From:   "tip-bot2 for Arnaldo Carvalho de Melo" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf report/top: Add 'k' hotkey to zoom directly
- into the kernel map
+Subject: [tip: perf/core] tools ui popup: Allow returning hotkeys
 Cc:     Jiri Olsa <jolsa@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>,
@@ -44,10 +43,10 @@ Cc:     Jiri Olsa <jolsa@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <tip-vbnlnrpyfvz9deqoobtc3dz7@git.kernel.org>
-References: <tip-vbnlnrpyfvz9deqoobtc3dz7@git.kernel.org>
+In-Reply-To: <tip-6ojn19mqzgmrdm8kdoigic0m@git.kernel.org>
+References: <tip-6ojn19mqzgmrdm8kdoigic0m@git.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157867879561.30329.14214296817809871639.tip-bot2@tip-bot2>
+Message-ID: <157867879510.30329.12325169876954155934.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -63,17 +62,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     209f4e70a2f10bc6819eb20c5bc3988be31972c6
-Gitweb:        https://git.kernel.org/tip/209f4e70a2f10bc6819eb20c5bc3988be31972c6
+Commit-ID:     d07126560cab572539621702137eeeeb2a4edf30
+Gitweb:        https://git.kernel.org/tip/d07126560cab572539621702137eeeeb2a4edf30
 Author:        Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate:    Thu, 12 Dec 2019 13:06:36 -03:00
+AuthorDate:    Mon, 16 Dec 2019 12:23:34 -03:00
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Mon, 06 Jan 2020 11:46:10 -03:00
 
-perf report/top: Add 'k' hotkey to zoom directly into the kernel map
+tools ui popup: Allow returning hotkeys
 
-As a convenience, equivalent to pressing Enter in a line with a kernel
-symbol and then selecting "Zoom" into the kernel DSO.
+With this patch if an optional pointer is passed to ui__popup_menu()
+then when any key that is not being handled (ENTER, ESC, etc) is typed,
+it'll record that key in the pointer and return, allowing for hotkey
+processing on the caller.
+
+If NULL is passed, no change in logic, unhandled keys continue to be
+ignored.
 
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -82,51 +86,118 @@ Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Kan Liang <kan.liang@intel.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-vbnlnrpyfvz9deqoobtc3dz7@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-6ojn19mqzgmrdm8kdoigic0m@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/ui/browsers/hists.c |  9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ tools/perf/ui/browsers/hists.c      |  4 ++--
+ tools/perf/ui/browsers/res_sample.c |  2 +-
+ tools/perf/ui/browsers/scripts.c    |  2 +-
+ tools/perf/ui/tui/util.c            | 12 ++++++++----
+ tools/perf/ui/util.h                |  2 +-
+ 5 files changed, 13 insertions(+), 9 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 8aba1ae..6dfdd8d 100644
+index ac118ae..c44b508 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -18,7 +18,9 @@
- #include "../../util/evlist.h"
- #include "../../util/header.h"
- #include "../../util/hist.h"
-+#include "../../util/machine.h"
- #include "../../util/map.h"
-+#include "../../util/maps.h"
- #include "../../util/symbol.h"
- #include "../../util/map_symbol.h"
- #include "../../util/branch.h"
-@@ -2566,7 +2568,7 @@ add_dso_opt(struct hist_browser *browser, struct popup_action *act,
- 	if (!hists__has(browser->hists, dso) || map == NULL)
- 		return 0;
+@@ -2393,7 +2393,7 @@ close_file_and_continue:
+ 	closedir(pwd_dir);
  
--	if (asprintf(optstr, "Zoom %s %s DSO",
-+	if (asprintf(optstr, "Zoom %s %s DSO (use the 'k' hotkey to zoom directly into the kernel)",
- 		     browser->hists->dso_filter ? "out of" : "into",
- 		     __map__is_kernel(map) ? "the Kernel" : map->dso->short_name) < 0)
- 		return 0;
-@@ -2936,6 +2938,7 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 	"E             Expand all callchains\n"				\
- 	"F             Toggle percentage of filtered entries\n"		\
- 	"H             Display column headers\n"			\
-+	"k             Zoom into the kernel map\n"			\
- 	"L             Change percent limit\n"				\
- 	"m             Display context menu\n"				\
- 	"S             Zoom into current Processor Socket\n"		\
-@@ -3033,6 +3036,10 @@ static int perf_evsel__hists_browse(struct evsel *evsel, int nr_events,
- 			actions->ms.map = map;
- 			do_zoom_dso(browser, actions);
+ 	if (nr_options) {
+-		choice = ui__popup_menu(nr_options, options);
++		choice = ui__popup_menu(nr_options, options, NULL);
+ 		if (choice < nr_options && choice >= 0) {
+ 			tmp = strdup(abs_path[choice]);
+ 			if (tmp) {
+@@ -3279,7 +3279,7 @@ skip_scripting:
+ 		do {
+ 			struct popup_action *act;
+ 
+-			choice = ui__popup_menu(nr_options, options);
++			choice = ui__popup_menu(nr_options, options, NULL);
+ 			if (choice == -1 || choice >= nr_options)
+ 				break;
+ 
+diff --git a/tools/perf/ui/browsers/res_sample.c b/tools/perf/ui/browsers/res_sample.c
+index 76d356a..7cb2d66 100644
+--- a/tools/perf/ui/browsers/res_sample.c
++++ b/tools/perf/ui/browsers/res_sample.c
+@@ -56,7 +56,7 @@ int res_sample_browse(struct res_sample *res_samples, int num_res,
+ 			return -1;
+ 		}
+ 	}
+-	choice = ui__popup_menu(num_res, names);
++	choice = ui__popup_menu(num_res, names, NULL);
+ 	for (i = 0; i < num_res; i++)
+ 		zfree(&names[i]);
+ 	free(names);
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index fc733a6..47d2c7a 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -126,7 +126,7 @@ static int list_scripts(char *script_name, bool *custom,
+ 			SCRIPT_FULLPATH_LEN);
+ 	if (num < 0)
+ 		num = 0;
+-	choice = ui__popup_menu(num + max_std, (char * const *)names);
++	choice = ui__popup_menu(num + max_std, (char * const *)names, NULL);
+ 	if (choice < 0) {
+ 		ret = -1;
+ 		goto out;
+diff --git a/tools/perf/ui/tui/util.c b/tools/perf/ui/tui/util.c
+index b98dd0e..0f562e2 100644
+--- a/tools/perf/ui/tui/util.c
++++ b/tools/perf/ui/tui/util.c
+@@ -23,7 +23,7 @@ static void ui_browser__argv_write(struct ui_browser *browser,
+ 	ui_browser__write_nstring(browser, *arg, browser->width);
+ }
+ 
+-static int popup_menu__run(struct ui_browser *menu)
++static int popup_menu__run(struct ui_browser *menu, int *keyp)
+ {
+ 	int key;
+ 
+@@ -45,6 +45,11 @@ static int popup_menu__run(struct ui_browser *menu)
+ 			key = -1;
+ 			break;
+ 		default:
++			if (keyp) {
++				*keyp = key;
++				key = menu->nr_entries;
++				break;
++			}
  			continue;
-+		case 'k':
-+			if (browser->selection != NULL)
-+				hists_browser__zoom_map(browser, browser->selection->maps->machine->vmlinux_map);
-+			continue;
- 		case 'V':
- 			verbose = (verbose + 1) % 4;
- 			browser->show_dso = verbose > 0;
+ 		}
+ 
+@@ -55,7 +60,7 @@ static int popup_menu__run(struct ui_browser *menu)
+ 	return key;
+ }
+ 
+-int ui__popup_menu(int argc, char * const argv[])
++int ui__popup_menu(int argc, char * const argv[], int *keyp)
+ {
+ 	struct ui_browser menu = {
+ 		.entries    = (void *)argv,
+@@ -64,8 +69,7 @@ int ui__popup_menu(int argc, char * const argv[])
+ 		.write	    = ui_browser__argv_write,
+ 		.nr_entries = argc,
+ 	};
+-
+-	return popup_menu__run(&menu);
++	return popup_menu__run(&menu, keyp);
+ }
+ 
+ int ui_browser__input_window(const char *title, const char *text, char *input,
+diff --git a/tools/perf/ui/util.h b/tools/perf/ui/util.h
+index 4089194..e30cea8 100644
+--- a/tools/perf/ui/util.h
++++ b/tools/perf/ui/util.h
+@@ -5,7 +5,7 @@
+ #include <stdarg.h>
+ 
+ int ui__getch(int delay_secs);
+-int ui__popup_menu(int argc, char * const argv[]);
++int ui__popup_menu(int argc, char * const argv[], int *keyp);
+ int ui__help_window(const char *text);
+ int ui__dialog_yesno(const char *msg);
+ void __ui__info_window(const char *title, const char *text, const char *exit_msg);
