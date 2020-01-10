@@ -2,113 +2,91 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B5DC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A22C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBD372084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:34:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N73cnUbp"
+	by mail.kernel.org (Postfix) with ESMTP id B507F2087F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgAJRez (ORCPT
+        id S1728400AbgAJRfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:34:55 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33204 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbgAJRez (ORCPT
+        Fri, 10 Jan 2020 12:35:22 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:36223 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728232AbgAJRfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:34:55 -0500
-Received: by mail-pf1-f195.google.com with SMTP id z16so1470473pfk.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 09:34:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=frDYfmzQTI0EMaWE6658ab2eLSTin+SBIqqIVrOqR4c=;
-        b=N73cnUbpACZcVh+U2+tEavSUeCYg72+NvztLRhjD8PxdDhZBO/toTy+sZo06+xyJWT
-         7X/kNLiFI5luWCkKFZ5rmG4lPcnD75vhs2kMHvEiLpqKyn6RattR7B56K6GmcRJ/8DTu
-         0Sblq4/Xn/kRHQBW084fRDko7CEQdEmgfPeDKUXPemAZeGJEZGkiV9d5tVVFvgbII7/2
-         y2nvfLCT5ZdokAh9Rn4Gttz28Bn9HF/2skA2nxcTcGvlRDMnxsgguLtl1Ce9kjmqYai6
-         Mf2s/afNRqy8V3wU5vomeyDxcyeYG3ZLCbewwRCYCcUWeiRbNV1rEM0Fw8sLGTCI0sAo
-         KWqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=frDYfmzQTI0EMaWE6658ab2eLSTin+SBIqqIVrOqR4c=;
-        b=iOZL9z9NYPM9MApK4G0XvYM42c0Ek7IfLp6l1ou5PhzULualPUH/VtZUf050wdIlMM
-         CdU93mysw/W2H4gyYgKqqNR9MARHJj465M0Ai84BEjPrrZgDAqibVCfLZTUXvHKwLfdS
-         PFaQTOqDLlNnW8dn9WN2MwPzZulwNO84I1x/1Mn84cteZEZ57RFpVKYu4n+f9M1GtPCX
-         fysGao0i1CnpnJxX0234bZNrjq97YqrebAMilzEWU+4HoFhXhWXJdgj2rW0QmMi5yP3m
-         ZY45PRYCodpsBgMheHuKlQyXYNn5azcDfGZwk8398eLWBoSf4iDSArTE/pzhrR/82knR
-         eKgA==
-X-Gm-Message-State: APjAAAX02hF4EVdvdS2xNXJSPOa/rP9uqP68kO8D/Gyc8A3lcuBfETnt
-        AyvN5BwqwnW5qlXUyunI2crKKyfKAag=
-X-Google-Smtp-Source: APXvYqw81aeV66mF8/NqHoOKMbgSJ/YTCR4ry9Wa7zzCUY9UbAII9IooyVAXrOzkufOCfgUyGRUang==
-X-Received: by 2002:a62:1746:: with SMTP id 67mr5365085pfx.45.1578677694456;
-        Fri, 10 Jan 2020 09:34:54 -0800 (PST)
-Received: from mail.google.com ([139.180.133.10])
-        by smtp.gmail.com with ESMTPSA id 133sm3686685pfy.14.2020.01.10.09.34.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 10 Jan 2020 09:34:53 -0800 (PST)
-Date:   Fri, 10 Jan 2020 17:34:50 +0000
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com, x86@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/nmi: remove the irqwork from long duration nmi
- handler
-Message-ID: <20200110173449.rhr5p4lal3aul43g@mail.google.com>
-References: <20200101072017.82990-1-changbin.du@gmail.com>
- <877e20bb8o.fsf@nanos.tec.linutronix.de>
- <20200109210225.GK5603@zn.tnic>
- <20200110140549.xqjhrdpxllkvqbuk@mail.google.com>
- <20200110151329.GF19453@zn.tnic>
+        Fri, 10 Jan 2020 12:35:21 -0500
+Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MpUEO-1jSHYK0bsK-00pwv1; Fri, 10 Jan 2020 18:35:20 +0100
+Received: by mail-qv1-f49.google.com with SMTP id o18so1098049qvf.1;
+        Fri, 10 Jan 2020 09:35:19 -0800 (PST)
+X-Gm-Message-State: APjAAAVMI5Ojdl+ku5tFrFPiY2uMT0tHB6T3uORVdrK9aLnO332pifmV
+        CkjnUF8ZbjDuBgmpMRa35fsDLswLyNaLa4qBnBU=
+X-Google-Smtp-Source: APXvYqwWYC8X5W9oF1BgBx7VL/oeohJqrxVJjUso79ib5qHjpCfx0eXAy0BECqjDUxdnwEFL4yYFEX7TreByyDcsQXQ=
+X-Received: by 2002:a0c:d788:: with SMTP id z8mr3587885qvi.211.1578677718911;
+ Fri, 10 Jan 2020 09:35:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110151329.GF19453@zn.tnic>
-User-Agent: NeoMutt/20180716-508-7c9a6d
+References: <20200110165636.28035-1-will@kernel.org> <20200110165636.28035-2-will@kernel.org>
+In-Reply-To: <20200110165636.28035-2-will@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 10 Jan 2020 18:35:02 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a3ueJ_rQc-1JTg=3N0JSuY9BduJ6FrrPFG1K2FWVzJdfA@mail.gmail.com>
+Message-ID: <CAK8P3a3ueJ_rQc-1JTg=3N0JSuY9BduJ6FrrPFG1K2FWVzJdfA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/8] compiler/gcc: Emit build-time warning for GCC
+ prior to version 4.8
+To:     Will Deacon <will@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:qNB50QxgYN6IoCxuOP5OUw+kvbtvU6FPj70Xpb3YkQHBzhScfGA
+ LOMjhVZaQYk/fRyYSVS9s1D/Kmeo6MrkW8Aq1WdR4Wfdv9Scag4ZUTOzAOR1vgrr9AUlt83
+ NY4NgdMcX19Mmlx3uTymSbSJgoJIzd52ABKIauuObzBFHnc5hXJUD1D5eN7fpgO4dTRkwG6
+ XEdZii3mwfxOLHxIhyo1w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CNzi4tqatmQ=:jzKjyLV2MH9toF091jMUH1
+ fYjwg7S1fuz8OVlWZbAZGM4es6TRvOgGYR7sHf4rWV5n+hIEuZi91Vaq6jGL9kagYQ9NLmEq9
+ FBjgN6spbsBkj4MZDF5+YKGqHJRPRwK6UTJqfdpEuozHAwLB0M8jcInrPgjaPAw3G3HPX/QEo
+ k73XO1lVNh5Ng0SBLzEpG0B5dRVsaJnRUxs10AARwrlV/E+gpP+J2CrfQknVHfivI94p45ySY
+ PNPlSJkLLjss/0dsWg8naPU1qM99iqw7Ag/75m4d+K0ABtHaszeDX3kky0xjPx/YDt/V9Eh2F
+ ea2w2R7po3V6RglU295cXIZdMYmJ96wobdGePg5TyRsQE7lc6d0gab5QmW/Mjy2PGxsxvm96s
+ Hp+71pBDybruMVKadfhIiqTxdKBB+Vfuh7XanlbBR7ZQT2aeoGGWtjuAW0M3Ppsnc6BfrkRr2
+ mnLQj1DIqq+DmKV5VDOs+fiZjoKGpAOzcWSJOwzMV0fhnPZiO8cayZEbFQ8XH1AELO1hTN1LV
+ 8EJADa6DdyTKUZJycTto7i8nOK8Vdf6DuDUirOsN+1ZM1EMc+5JqL52QsaN2OkYqIXLcmLhKh
+ GZRIa44knC7tG+KYwI8Huu2DYVRg+aEiPRURxcfeD+mpb3MKB74mRvJqZDIpOwFJ8IplSiHBk
+ dPE3lQ+6FcquEI627fFEoIJsABZeujtF8isG8r1fobh3K5TtOwzzM3pGiwmy9h6Kpm0mF2OMj
+ kGaQSWFh3pU8IVPF1lckMoRCfNSLlmXU+tsE0JzmE95FpU80oL9i4gnV/6W7Mh0xrq85wAWLX
+ 58z6fxPmwgsziqqRxrXDEK8tdPzbXWMsaLPRLhPrcUaMcsmaaUzIo090Id5gpTMU9jTdEhV2+
+ tEMC4WG5Yqp66hDTda7w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 04:13:29PM +0100, Borislav Petkov wrote:
-> On Fri, Jan 10, 2020 at 10:05:49PM +0800, Changbin Du wrote:
-> > I added a new function nmi_check_duration(), so shoudn't this check be
-> > done in that function?
-> 
-> Why should it be done in that function? Your patch is removing irq_work
-> - why is it doing additional changes?
-> 
-Just to move all the check code together and be a standalone function.
-yes, this somewhat does code refining after the irqwork is removed but
-I think it is normal.
+On Fri, Jan 10, 2020 at 5:56 PM Will Deacon <will@kernel.org> wrote:
+>
+> Prior to version 4.8, GCC may miscompile READ_ONCE() by erroneously
+> discarding the 'volatile' qualifier:
+>
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
+>
+> We've been working around this using some nasty hacks which make
+> READ_ONCE() both horribly complicated and also prevent us from enforcing
+> that it is only used on scalar types. Since GCC 4.8 is pretty old for
+> kernel builds now, emit a warning if we detect it during the build.
 
-> > Don't worry about performance, this function will be inlined by
-> > compiler.
-> 
-> I'm not worried about that at all.
-> 
-> Btw, why are you sending private mail and not keeping the discussion on
-> the mailing list?
-> 
-oops, typed wrong key. Just added back.
+No objection to recommending gcc-4.8, but I think this should either
+just warn once during the kernel build instead of for every file, or
+it should become a hard requirement.
 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-
--- 
-Cheers,
-Changbin Du
+       Arnd
