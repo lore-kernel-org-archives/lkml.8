@@ -2,131 +2,147 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D901C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38221C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E817C20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 098A920721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:25:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+Sa4LDO"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="TTtT0/u+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbgAJNZM (ORCPT
+        id S1727797AbgAJNZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 08:25:12 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36541 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgAJNZM (ORCPT
+        Fri, 10 Jan 2020 08:25:26 -0500
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:41139 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727358AbgAJNZZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 08:25:12 -0500
-Received: by mail-pf1-f195.google.com with SMTP id x184so1156979pfb.3
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 05:25:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UFiZIlIgmkNA3t4b+dQtP70neZja23u9OLrKEBFh9OQ=;
-        b=T+Sa4LDOSdvRALNgrgFkTf5iZDS1Jm4fYUVw8rWYiU0HP3HgNchXKGwUMyMzyjboUb
-         xI0eAOoHSzDzeUaUeDSWW2VfwfDtEhTaU9+LIqME2jGXd03LCV8OYqv8IrycYHUb0NJf
-         1A/B6xh5eYTegzoDUGz+gLlRI/92rrcURlROO9A5519cupAKeCxMGeAH+NvUhVti2t3k
-         JEWeBOQ4LJNQSMSlqwpmBeeYVELpLiEWkQREpLJ42bGkdKGQ7e+NnI+OetbpT11nOIuL
-         ciYlfS+NXKleg6I/8eE3BmEJmX7LSVF5TfWdzBy4UGgET28TdOYaI6si2cBbDJb/EyVT
-         M2Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UFiZIlIgmkNA3t4b+dQtP70neZja23u9OLrKEBFh9OQ=;
-        b=ZCCFO5f/WJsm4rsCngoWr1UGpN34AfQ644YKLTRMhE3HZhjKWFLZJK/kRz06z69Tj5
-         0QtsBdhSZOAHZRuw1JWuiWcZkmi3Oq7n6LvgyPyZpokevuQHlmj52/kuzqb6nC+cD5uS
-         5kCMxez7lIIwpNXyfvApym/Yry+CMynDIXqeCuT1TLU2MOZxRVPEJ/f9+vy9PdtMpS/V
-         X/3J3TqRqMfVRikPGpaRR9wGpnS6b9XaEBkSkpqPDknzJORdb8p2jOmikwaVyGEpkD3E
-         HFsfehV/60TSZP/G/Y5BltAgcPj9SM+kp26de/1XhmizxQBaa7DY6nga/d/vvThyx+VJ
-         FnYg==
-X-Gm-Message-State: APjAAAWGa3w5rO78e41j1Ip5RpKVDtfuaS1Kom4uo+iP7YyNSnDDM/YT
-        3vYe1pcbhMCnc1cDjTJ1Jk0=
-X-Google-Smtp-Source: APXvYqxhW94ndLVj5iXTpBpWRfqrS0M7EiNqDD0W2XvB0sPK6eEAA8r1f0ydpuMft0C1J2vg65kx+g==
-X-Received: by 2002:a62:e30f:: with SMTP id g15mr4044199pfh.124.1578662711271;
-        Fri, 10 Jan 2020 05:25:11 -0800 (PST)
-Received: from localhost.localdomain ([103.211.17.220])
-        by smtp.googlemail.com with ESMTPSA id l2sm2907749pjt.31.2020.01.10.05.25.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 05:25:10 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] drivers: nvme: target: core: Pass lockdep expression to RCU lists
-Date:   Fri, 10 Jan 2020 18:53:58 +0530
-Message-Id: <20200110132356.27110-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 10 Jan 2020 08:25:25 -0500
+Received: from [IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef]
+ ([IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id puHrin9xDpLtbpuHuiQmSe; Fri, 10 Jan 2020 14:25:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578662723; bh=I0b7s/xDqtbd60FacQFIRFFagV1Bh2XVzbaw6GJ8UFk=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=TTtT0/u+HRhWOQa06QDndrU0bUEOOnpgZ7+dEC97BkRPFIGB6+mexFpX5KgD0Ycg7
+         yhQzvpBQhpk2DygTF4OkK7SbCzkIEdbt1VBG6UrD+kwFD6l10FwZudPsgW7v4eMGeL
+         aYwHyNPBtNy6/lyBAFseDupjlwYKHL69gvkN/Cq4uYQTv02WDFPYe6/H3/nZ+1y+tA
+         BALkMj/5GvNS1nAx0I4g/1Vkw1rgqgcm08uw2jwao9fUsMlB844kKhFq4HAFqE21zy
+         nTRdmkh4N365san1LzaN8h2TVUGaY8Hytm1MaugFO+7c4Ri1RfYmfqNAU0fotrD5oM
+         l7dFQzn+02NNg==
+Subject: Re: [PATCH] staging/vc04_services/bcm2835-camera: distinct numeration
+ and names for devices
+To:     Michael Kupfer <michael.kupfer@fau.de>, eric@anholt.net,
+        wahrenst@gmx.net, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, mchehab+samsung@kernel.org,
+        linux-media@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, f.fainelli@gmail.com,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        dave.stevenson@raspberrypi.org, daniela.mormocea@gmail.com,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-kernel@i4.cs.fau.de, Kay Friedrich <kay.friedrich@fau.de>
+References: <20191206085432.19962-1-michael.kupfer@fau.de>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <3db2350b-0a6d-0693-258c-9d47f71c0627@xs4all.nl>
+Date:   Fri, 10 Jan 2020 14:25:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191206085432.19962-1-michael.kupfer@fau.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBd3XXTXHJXsWfyVxCd2xYnZO0N8s/BDiJigBt9fBzOuvI1qg7Ov9vJHlQwwroeHfDptOn2x6LGe/NF17tiYIHe6IKGtbMu6lyUonjXvZHlMv8StSdIC
+ KjYmD4yv2S6PG8353r9KVWVoWKnWpExFpS00SMNPq5IJsX0GyIHHf370xIlWiBo1uFBPJrF+j9ZsO01XP4FQMp1f6UC1jRrs61fg77hJ1wy4Zgliil7O9MiI
+ pvMz1R6SFwWlhjOzw9WPqyNWo8SWxUYcyyfl2v53V+CvWgwJ5DZG7hUbdZP/qv+bKOk5xyhfl26PIEeuFIG6UMCgRYfGFOYgyV991fAuAVn2Dl9s1kexO+eh
+ tpS7DuSgD76w957xPtmjizhbEK3EmsdZ+k/6hrHyjkRb3KLCufZaCXa92/oMKYXPD3EmQEqcCJAZFxvg1thOoX7sSWbv5i9/KTtAn+VIMvFR58Zn88QVT/xo
+ D8/JfnqE8C4zdH9i2TrB90rHJKxmGPFc91KhbCbQaPjrg38xmbFqJcOEL/n/XHiROQtHdEhKeUmzL+4YZJ3WDWuvUhprcNE6aPBSeDmnpTKkpbqgiCwjsfFx
+ d4HTR0D5GW2x8wmWayKH432z9lI6vqffHTdck7Vrvb7hTmdesfRvgriuI8o4dt6SQuT9nJC9rt7gedvyKw7nsxUw4ODfbr24oLSb/ZkIO0o5i9yK2ZpiaWaF
+ 8xfVbVb8KZVaxBQ4srQRGIc3bE4uizhm3PTr00SnN0xw9EXC01pJoNmd2cDfozvoMO3xwPWME7KAsoFn8WDu/XKTRBI2lN7SShrCVzRTZ7f9CEOO/08TtnON
+ N1dWwwey5LGcCnce6F7Dp2Lmnl+Y2/FYR1WiEk3Ad5N+IsvZOD2DORmv4Xwh12IK0kVRpntnSOLvX7ZLyWK1VfnbCoGLBHMQA04SKM8L6IDC+76awJcUkbxl
+ L/eY2w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ctrl->subsys->namespaces and subsys->namespaces are traversed with
-hlist_for_each_entry_rcu outside an RCU read-side critical section
-but under the protection of subsys->lock.
+Hi Michael, Kay,
 
-Hence, add the corresponding lockdep expression to the list traversal
-primitive to silence false-positive lockdep warnings, and
-harden RCU lists.
+On 12/6/19 9:54 AM, Michael Kupfer wrote:
+> Create a static atomic counter for numerating cameras.
+> Use the Media Subsystem Kernel Internal API to create distinct
+> device-names, so that the camera-number (given by the counter)
+> matches the camera-name.
+> 
+> Co-developed-by: Kay Friedrich <kay.friedrich@fau.de>
+> Signed-off-by: Kay Friedrich <kay.friedrich@fau.de>
+> Signed-off-by: Michael Kupfer <michael.kupfer@fau.de>
+> ---
+>  .../vc04_services/bcm2835-camera/bcm2835-camera.c        | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+> index beb6a0063bb8..be5f90a8b49d 100644
+> --- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+> +++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
+> @@ -60,6 +60,9 @@ MODULE_PARM_DESC(max_video_width, "Threshold for video mode");
+>  module_param(max_video_height, int, 0644);
+>  MODULE_PARM_DESC(max_video_height, "Threshold for video mode");
+>  
+> +/* camera instance counter */
+> +static atomic_t camera_instance = ATOMIC_INIT(0);
+> +
+>  /* global device data array */
+>  static struct bm2835_mmal_dev *gdev[MAX_BCM2835_CAMERAS];
+>  
+> @@ -1870,7 +1873,6 @@ static int bcm2835_mmal_probe(struct platform_device *pdev)
+>  
+>  		/* v4l2 core mutex used to protect all fops and v4l2 ioctls. */
+>  		mutex_init(&dev->mutex);
+> -		dev->camera_num = camera;
+>  		dev->max_width = resolutions[camera][0];
+>  		dev->max_height = resolutions[camera][1];
+>  
+> @@ -1886,8 +1888,9 @@ static int bcm2835_mmal_probe(struct platform_device *pdev)
+>  		dev->capture.fmt = &formats[3]; /* JPEG */
+>  
+>  		/* v4l device registration */
+> -		snprintf(dev->v4l2_dev.name, sizeof(dev->v4l2_dev.name),
+> -			 "%s", BM2835_MMAL_MODULE_NAME);
+> +		dev->camera_num = v4l2_device_set_name(&dev->v4l2_dev,
+> +						       BM2835_MMAL_MODULE_NAME,
+> +						       &camera_instance);
+>  		ret = v4l2_device_register(NULL, &dev->v4l2_dev);
+>  		if (ret) {
+>  			dev_err(&pdev->dev, "%s: could not register V4L2 device: %d\n",
+> 
 
-Add macro for the corresponding lockdep expression to make the code
-clean and concise.
+Actually, in this specific case I would not use v4l2_device_set_name().
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
- drivers/nvme/target/core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Instead just use:
 
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 28438b833c1b..7caab4ba6a04 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -15,6 +15,9 @@
- 
- #include "nvmet.h"
- 
-+#define subsys_lock_held() \
-+	lockdep_is_held(&subsys->lock)
-+
- struct workqueue_struct *buffered_io_wq;
- static const struct nvmet_fabrics_ops *nvmet_transports[NVMF_TRTYPE_MAX];
- static DEFINE_IDA(cntlid_ida);
-@@ -555,7 +558,8 @@ int nvmet_ns_enable(struct nvmet_ns *ns)
- 	} else {
- 		struct nvmet_ns *old;
- 
--		list_for_each_entry_rcu(old, &subsys->namespaces, dev_link) {
-+		list_for_each_entry_rcu(old, &subsys->namespaces, dev_link,
-+							subsys_lock_held()) {
- 			BUG_ON(ns->nsid == old->nsid);
- 			if (ns->nsid < old->nsid)
- 				break;
-@@ -1172,7 +1176,8 @@ static void nvmet_setup_p2p_ns_map(struct nvmet_ctrl *ctrl,
- 
- 	ctrl->p2p_client = get_device(req->p2p_client);
- 
--	list_for_each_entry_rcu(ns, &ctrl->subsys->namespaces, dev_link)
-+	list_for_each_entry_rcu(ns, &ctrl->subsys->namespaces, dev_link,
-+							subsys_lock_held())
- 		nvmet_p2pmem_ns_add_p2p(ctrl, ns);
- }
- 
--- 
-2.24.1
+		snprintf(dev->v4l2_dev.name, sizeof(dev->v4l2_dev.name),
+			 "%s-%u", BM2835_MMAL_MODULE_NAME, camera);
 
+It would be even better if there would be just one top-level v4l2_device used
+for all the camera instances. After all, there really is just one platform
+device for all of the cameras, and I would expect to see just a single
+v4l2_device as well.
+
+It doesn't hurt to have multiple v4l2_device structs, but it introduces a
+slight memory overhead since one would have been sufficient.
+
+v4l2_device_set_name() is meant for pci-like devices. And it really
+is a bit overkill to have it as a helper function.
+
+Regards,
+
+	Hans
