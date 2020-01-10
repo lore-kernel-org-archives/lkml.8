@@ -2,126 +2,145 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A59C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3657BC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 245572080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:45:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ocd2XjHL"
+	by mail.kernel.org (Postfix) with ESMTP id 141F2206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgAJRpA (ORCPT
+        id S1728540AbgAJRpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:45:00 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36246 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727742AbgAJRo7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:44:59 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z3so2632581wru.3
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 09:44:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=5hI1Z6zc0isNIwOCpgK9mbSp+WfDRjfAoj1TrQlEpEk=;
-        b=ocd2XjHL/6q7Bv/03GFAnmNwBPQIoL9bJ5BkRsKBNXMqvd8Uvwjxfo9N0CltqGK4D9
-         m6WC8vwBiEcX3wu3eGMFNb9s9JE5ssWh1ubdTMtX2neDKxdmN8y0MdX9llmGxdVV5lGs
-         3gIhVrGO3MV5UOrO6jzR3kPtPxQfHl1qEdTRSp91kXAxaWWTp9RD7jhUvsAOoiEsU9ct
-         nJNZ0yLcdvlOBT37oT5m7bgVdT0RWO7rA1ntLhmdpnghc3srvwMQ/4BZ5HMOOwSyd7yV
-         USMWVFuK6BQn4GknPaflrM+p4Dcpadd6N1Hxtm07GZt4017QGXtJasMEiwZ16KRqxOsH
-         7Evw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=5hI1Z6zc0isNIwOCpgK9mbSp+WfDRjfAoj1TrQlEpEk=;
-        b=WoNhLw/o672c0AkGNU6+S61FfzPMD8u+k2ADKdDj74FhUSUf8AzC/jNZNL1KCDJWnY
-         ccqsyQLaDPVoV/V9cYn45V4394nm9TlhDfkpLytEDj/050XzRSBq+4TTDEw777VWo7OB
-         l/HPQ5YmiAbBH5q1Ck8mU2hNBaJsaFTZglPkn3q5GGw+OFCUMKiT65ENfOH3pOpEFTnr
-         hDYG5dSH6gN4U28khihfq4q112yz5xKpMLe4ORPJrZ19R6TrqeaJHZ5gsHZHxoOnI7QI
-         Xwy6qZL6j0pOjluv/4K0OLyslX/TcLFbTPS3bLFN6YPV/x/ELPL/0Q2qG+4s4fw+75ld
-         Zu7w==
-X-Gm-Message-State: APjAAAWcA8erFon4Ut0quThlyXIhqjrvvnzxpWiLLNAasjjJjdpvotVS
-        SfYyrOFGSrd8Q5llqiXwt7o=
-X-Google-Smtp-Source: APXvYqzt7Qr8UDP3Dv38WgfWk/xkS6KCAOtCWgJWi+dWf98rcqNzc/uJiB+XqpYBSc+PgqaRuSXu8w==
-X-Received: by 2002:adf:d846:: with SMTP id k6mr4500598wrl.337.1578678298144;
-        Fri, 10 Jan 2020 09:44:58 -0800 (PST)
-Received: from wambui.local ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id i8sm3140572wro.47.2020.01.10.09.44.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 09:44:57 -0800 (PST)
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-X-Google-Original-From: Wambui Karuga <wambui@wambui>
-Date:   Fri, 10 Jan 2020 20:44:48 +0300 (EAT)
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-cc:     Wambui Karuga <wambui.karugax@gmail.com>,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, seanpaul@chromium.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] drm/i915: conversion to new drm logging macros.
-In-Reply-To: <8736cno0ow.fsf@intel.com>
-Message-ID: <alpine.LNX.2.21.99999.375.2001102044220.23860@wambui>
-References: <cover.1578409433.git.wambui.karugax@gmail.com> <8736cno0ow.fsf@intel.com>
-User-Agent: Alpine 2.21.99999 (LNX 375 2019-10-29)
+        Fri, 10 Jan 2020 12:45:11 -0500
+Received: from foss.arm.com ([217.140.110.172]:49260 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727742AbgAJRpL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 12:45:11 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8806C30E;
+        Fri, 10 Jan 2020 09:45:10 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 19AB03F6C4;
+        Fri, 10 Jan 2020 09:45:08 -0800 (PST)
+Date:   Fri, 10 Jan 2020 17:45:07 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@android.com, Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 8/8] arm64: barrier: Use '__unqual_scalar_typeof' for
+ acquire/release macros
+Message-ID: <20200110174506.GK33536@lakrids.cambridge.arm.com>
+References: <20200110165636.28035-1-will@kernel.org>
+ <20200110165636.28035-9-will@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110165636.28035-9-will@kernel.org>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 10, 2020 at 04:56:36PM +0000, Will Deacon wrote:
+> Passing volatile-qualified pointers to the arm64 implementations of the
+> load-acquire/store-release macros results in a re-load from the stack
+> and a bunch of associated stack-protector churn due to the temporary
+> result variable inheriting the volatile semantics thanks to the use of
+> 'typeof()'.
+> 
+> Define these temporary variables using 'unqual_scalar_typeof' to drop
+> the volatile qualifier in the case that they are scalar types.
+> 
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Will Deacon <will@kernel.org>
 
+Based on my understanding of __unqual_scalar_typeof(), these changes
+look sound to me:
 
-On Fri, 10 Jan 2020, Jani Nikula wrote:
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-> On Tue, 07 Jan 2020, Wambui Karuga <wambui.karugax@gmail.com> wrote:
->> This series begins the conversion to using the new struct drm_device
->> based logging macros in drm/i915.
->>
->> Wambui Karuga (5):
->>   drm/i915: convert to using the drm_dbg_kms() macro.
->>   drm/i915: use new struct drm_device logging macros.
->>   drm/i915: use new struct drm_device based logging macros.
->>   drm/i915: convert to using new struct drm_device logging macros
->>   drm/i915: use new struct drm_device based macros.
->
-> Thanks for the patches, pushed to drm-intel-next-queued.
->
-> As it's impossible to distinguish the commits from each other by the
-> subject line alone, I've amended the prefix while pushing as follows:
->
-> drm/i915/pch: convert to using the drm_dbg_kms() macro.
-> drm/i915/pm: use new struct drm_device logging macros.
-> drm/i915/lmem: use new struct drm_device based logging macros.
-> drm/i915/sideband: convert to using new struct drm_device logging macros
-> drm/i915/uncore: use new struct drm_device based macros.
->
-> Please pay attention to this in future work. It's not always obvious
-> what the prefix should be, but 'git log -- path/to/file.c' will go a
-> long way.
->
-Sure, I'll do that from now on.
-Thanks.
-> BR,
-> Jani.
->
->
->>
->>  drivers/gpu/drm/i915/intel_pch.c         |  46 +--
->>  drivers/gpu/drm/i915/intel_pm.c          | 351 +++++++++++++----------
->>  drivers/gpu/drm/i915/intel_region_lmem.c |  10 +-
->>  drivers/gpu/drm/i915/intel_sideband.c    |  29 +-
->>  drivers/gpu/drm/i915/intel_uncore.c      |  25 +-
->>  5 files changed, 254 insertions(+), 207 deletions(-)
->
+Mark.
+
+> ---
+>  arch/arm64/include/asm/barrier.h | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
+> index 7d9cc5ec4971..fb4c27506ef4 100644
+> --- a/arch/arm64/include/asm/barrier.h
+> +++ b/arch/arm64/include/asm/barrier.h
+> @@ -76,8 +76,8 @@ static inline unsigned long array_index_mask_nospec(unsigned long idx,
+>  #define __smp_store_release(p, v)					\
+>  do {									\
+>  	typeof(p) __p = (p);						\
+> -	union { typeof(*p) __val; char __c[1]; } __u =			\
+> -		{ .__val = (__force typeof(*p)) (v) };			\
+> +	union { __unqual_scalar_typeof(*p) __val; char __c[1]; } __u =	\
+> +		{ .__val = (__force __unqual_scalar_typeof(*p)) (v) };	\
+>  	compiletime_assert_atomic_type(*p);				\
+>  	kasan_check_write(__p, sizeof(*p));				\
+>  	switch (sizeof(*p)) {						\
+> @@ -110,7 +110,7 @@ do {									\
+>  
+>  #define __smp_load_acquire(p)						\
+>  ({									\
+> -	union { typeof(*p) __val; char __c[1]; } __u;			\
+> +	union { __unqual_scalar_typeof(*p) __val; char __c[1]; } __u;	\
+>  	typeof(p) __p = (p);						\
+>  	compiletime_assert_atomic_type(*p);				\
+>  	kasan_check_read(__p, sizeof(*p));				\
+> @@ -136,33 +136,33 @@ do {									\
+>  			: "Q" (*__p) : "memory");			\
+>  		break;							\
+>  	}								\
+> -	__u.__val;							\
+> +	(typeof(*p))__u.__val;						\
+>  })
+>  
+>  #define smp_cond_load_relaxed(ptr, cond_expr)				\
+>  ({									\
+>  	typeof(ptr) __PTR = (ptr);					\
+> -	typeof(*ptr) VAL;						\
+> +	__unqual_scalar_typeof(*ptr) VAL;				\
+>  	for (;;) {							\
+>  		VAL = READ_ONCE(*__PTR);				\
+>  		if (cond_expr)						\
+>  			break;						\
+>  		__cmpwait_relaxed(__PTR, VAL);				\
+>  	}								\
+> -	VAL;								\
+> +	(typeof(*ptr))VAL;						\
+>  })
+>  
+>  #define smp_cond_load_acquire(ptr, cond_expr)				\
+>  ({									\
+>  	typeof(ptr) __PTR = (ptr);					\
+> -	typeof(*ptr) VAL;						\
+> +	__unqual_scalar_typeof(*ptr) VAL;				\
+>  	for (;;) {							\
+>  		VAL = smp_load_acquire(__PTR);				\
+>  		if (cond_expr)						\
+>  			break;						\
+>  		__cmpwait_relaxed(__PTR, VAL);				\
+>  	}								\
+> -	VAL;								\
+> +	(typeof(*ptr))VAL;						\
+>  })
+>  
+>  #include <asm-generic/barrier.h>
 > -- 
-> Jani Nikula, Intel Open Source Graphics Center
->
+> 2.25.0.rc1.283.g88dfdc4193-goog
+> 
