@@ -2,98 +2,106 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C184CC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 100FDC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92580205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578688331;
-	bh=J4ecf0B5BBN2ruI5W7iS3VZsiaPF9SUoqJrAvFN38rw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ONTx8MfxrhBlg2T2OS5I1Zko/YtQXlRmiG1siiLfhN/tCSub0gsxuHHzirETqxo4f
-	 SQLVBYeUg/swQ4cxW09Lk3kuiyXCKeU4ijHEsPUtLFcY7DyhQUI1Bo6OzhOizsaYH+
-	 gJyBtLWwe1ysVJi7/CL9DiRKpies87lNismTW7ac=
+	by mail.kernel.org (Postfix) with ESMTP id D3132205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:33:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="YHFcu8cc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbgAJUcJ (ORCPT
+        id S1726712AbgAJUds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 15:32:09 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:37480 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726520AbgAJUcJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 15:32:09 -0500
-Received: by mail-lj1-f195.google.com with SMTP id o13so3447402ljg.4
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 12:32:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sJY/k139t+jKR9coVO4oz8lqyEAClB7/i7kGMDvcB1E=;
-        b=U8Kl+MGD1543lW5ezWJsO8oq463sERmIzSWDKAZ0apd6rJM0caY/D1COvpgRRh4ogt
-         f0LM83WBDcyAgnUvGHNZKwxdRv2C3u5xmjLuY4iFlL+tm7t3iSVOg0qnmO68SsJpMHRG
-         cmTIA35ClvhnccnTJ/L6rXx1hGLazRA7WgJpU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sJY/k139t+jKR9coVO4oz8lqyEAClB7/i7kGMDvcB1E=;
-        b=q2ETfVPpM3yzf2vKIkfriByotUWTEQkqJSOWFyR9XXRktRLL8NwvXZ0YyRbncFvj4k
-         rT7Ep/XQxrFCipvi7IIZuWMhSvG3zT24WO7BxnuKjIsEn5AeMO97m13RRyiKqQ5coj33
-         UqFezU8tLG6IcLgDbDI3gn9GFZ/cJKa1ZSKAEBsuAc+X9U3WTJ5JrRbKklmKnqnzKoL7
-         IgXTL/fOrU2cExsbWlRam/NDWhwQMbPTzSSLIDmnj39NJRhavjxkMSV/dgOv9H4ElDH8
-         ULiFd82/43ris2n23wZrbxPrEz+ClMMeD7hrqzSQRo4NSbs25zuXrf1d/1n6IDQs7JSZ
-         7kUw==
-X-Gm-Message-State: APjAAAV2vFgNmzqt5T/gNpcLMY1HN3jtZuXl7pc4OmXtavLLnA6WWxnj
-        JSYLKhRDfnnzvuALqU4zDJ2IQWvtSrc=
-X-Google-Smtp-Source: APXvYqxxWhn/4JPTkUyrueypxrj3GrzrNC8nsDBHX2SoOrwacjxkhH+8oD/dXefr4eYdOnDfQa8grg==
-X-Received: by 2002:a2e:9a01:: with SMTP id o1mr3720082lji.247.1578688326994;
-        Fri, 10 Jan 2020 12:32:06 -0800 (PST)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
-        by smtp.gmail.com with ESMTPSA id d24sm1596088lfb.94.2020.01.10.12.32.06
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jan 2020 12:32:06 -0800 (PST)
-Received: by mail-lf1-f47.google.com with SMTP id m30so2442076lfp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 12:32:06 -0800 (PST)
-X-Received: by 2002:ac2:58ea:: with SMTP id v10mr1444385lfo.202.1578688325770;
- Fri, 10 Jan 2020 12:32:05 -0800 (PST)
+        Fri, 10 Jan 2020 15:33:48 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:60662 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726623AbgAJUds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 15:33:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=u3jxCHUDd5Pm/Y2q0b/qKxrWWseDBaS/hK6okC7Pk38=; b=YHFcu8ccMp5yFy9YS4lh6wzLz/
+        8fCAAtavMf+JJh9EqEP0ZkXV6mLtbmco+6Jx7JSgW3DgH0KSS+gmK9gMPsupNwqNRy56wsbsSNszi
+        uYcm8f/wSwIdznLSiE+eT8ROc96UUbliZxKnHfakYQO2WZo+4U4euwJOt0NPElAigykE=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iq0yT-0004fK-5C; Fri, 10 Jan 2020 21:33:41 +0100
+Date:   Fri, 10 Jan 2020 21:33:41 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        bridge@lists.linux-foundation.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        anirudh.venkataramanan@intel.com, David Ahern <dsahern@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next Patch 0/3] net: bridge: mrp: Add support for Media
+ Redundancy Protocol(MRP)
+Message-ID: <20200110203341.GU19739@lunn.ch>
+References: <20200109150640.532-1-horatiu.vultur@microchip.com>
+ <6f1936e9-97e5-9502-f062-f2925c9652c9@cumulusnetworks.com>
+ <20200110160456.enzomhfsce7bptu3@soft-dev3.microsemi.net>
+ <CA+h21hrq7U4EdqSgpYQRjK8rkcJdvD5jXCSOH_peA-R4xCocTg@mail.gmail.com>
+ <20200110172536.42rdfwdc6eiwsw7m@soft-dev3.microsemi.net>
+ <20200110175608.GK19739@lunn.ch>
+ <20200110201248.tletol7glyr4soqz@soft-dev3.microsemi.net>
 MIME-Version: 1.0
-References: <20200110154218.0b28309f@xps13>
-In-Reply-To: <20200110154218.0b28309f@xps13>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 10 Jan 2020 12:31:49 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wg=8=nTeOYGoAbJ=VjS47Nh4-_OFK9zKsK3mK4nAi2dNA@mail.gmail.com>
-Message-ID: <CAHk-=wg=8=nTeOYGoAbJ=VjS47Nh4-_OFK9zKsK3mK4nAi2dNA@mail.gmail.com>
-Subject: Re: [GIT PULL] mtd: Fixes for v5.5-rc6
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc:     linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110201248.tletol7glyr4soqz@soft-dev3.microsemi.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 6:42 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->
-> This is the MTD fixes PR for v5.5-rc6.
+On Fri, Jan 10, 2020 at 09:12:48PM +0100, Horatiu Vultur wrote:
+> The 01/10/2020 18:56, Andrew Lunn wrote:
+> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> > 
+> > > > Horatiu, could you also give some references to the frames that need
+> > > > to be sent. I've no idea what information they need to contain, if the
+> > > > contents is dynamic, or static, etc.
+> > > It is dynamic - but trivial...
+> > 
+> > If it is trivial, i don't see why you are so worried about abstracting
+> > it?
+> Maybe we misunderstood each other. When you asked if it is dynamic or
+> static, I thought you meant if it is the same frame being send repeated
+> or if it needs to be changed. It needs to be changed but the changes are
+> trivial, but it means that a non-MRP aware frame generator can't
+> properly offload this.
 
-Hmm. I've pulled this, I've pushed it out, and I see it on the public
-gitweb and I see the email on lore.kernel.org.
+The only frame generator i've ever seen are for generating test
+packets. They generally have random content, random length, maybe the
+option to send invalid CRC etc. These are never going to work for MRP.
+So we should limit our thinking to hardware specifically designed for
+MRP offload.
 
-But I don't see a pr-tracker-bot reply.
+What we need to think about is an abstract model for MRP offload. What
+must such a bit of hardware do? What parameters do we need to pass to
+it? When should it interrupt us because some event has happened?
 
-I _did_ get one for Jens' block pull, so pr-tracker-bot is alive. I
-can't see why this pull request didn't trigger it, though.
+Once we have an abstract model, we can define netlink messages, or
+devlink messages. And you can implement driver code which takes this
+abstract model and implements it for your real hardware. And if you
+have the abstract model correct, other vendors should also be able to
+implement drivers as well.
 
-Konstantin, can you see what's wrong?
+Since this is a closed standard, there is not much the rest of us can
+do. You need to define this abstract model. We can then review it.
 
-            Linus
+    Andrew
