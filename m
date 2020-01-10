@@ -2,146 +2,411 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B486C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0562C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FFB52082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:03:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IBFbzPy+"
+	by mail.kernel.org (Postfix) with ESMTP id B44B920838
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:03:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578672209;
+	bh=u+utqt1PS3n7DiWo0lF4vb+WXHJZ5CfWuAQoGEkt59A=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=bOaPjQfcrCCJ9+H/+NbvJjViVvxMEPrpasO5RHnQF6mU769q7M/lvpQa69osy1ga2
+	 dgpG+/Zh8/auztvbCHl0/sL/CHh9jr8GtjOFkO5h2EVmAXz/vl/t5GLk5GHPr4kGIs
+	 kSO2l6WUrL6hhQltG7oqzrzGhDrnqIASzG35OTY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728549AbgAJQDL (ORCPT
+        id S1728578AbgAJQD3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:03:11 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55136 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728485AbgAJQDL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:03:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578672190;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iYO3IdV4XjqPTQ/KIF6IAurxizcacvK4nlGDeJn6JL4=;
-        b=IBFbzPy+WYjcyvjdWwnOVQjRcXlkRG24hqnmiMURtEf88S+AJV+R6sVeCJuduZqGrSlmtO
-        sHWCPr3kbEHfGw6hVXxUyCkaZsp/9b4KiLoy3oPXmzW+2UF1LjsUYP5vJsAusoRCh3hxkE
-        hN0ErPL7NP2lGs+CbyBgRQFOX3lKRY8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-355-w25tIFdOOsqY_JmDpotDGQ-1; Fri, 10 Jan 2020 11:03:07 -0500
-X-MC-Unique: w25tIFdOOsqY_JmDpotDGQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 10 Jan 2020 11:03:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728440AbgAJQD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 11:03:28 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C390A1800D71;
-        Fri, 10 Jan 2020 16:03:05 +0000 (UTC)
-Received: from x1.home (ovpn-116-128.phx2.redhat.com [10.3.116.128])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7171E19C4F;
-        Fri, 10 Jan 2020 16:03:02 +0000 (UTC)
-Date:   Fri, 10 Jan 2020 09:02:59 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-Cc:     Eric Auger <eric.auger@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Allison Randal <allison@lohutok.net>, kvm@vger.kernel.org,
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C6492082E;
+        Fri, 10 Jan 2020 16:03:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578672207;
+        bh=u+utqt1PS3n7DiWo0lF4vb+WXHJZ5CfWuAQoGEkt59A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=2lQiJxppWEztdtcyzfp0rWgTQfXG93lbkPhC4MI90UOON4vyAI3J0FIOjD80/FdTB
+         cZsNSIEMLfevBQioPtUs491T2b2HV0/TdV83O4DZLUe+nePIDpImtCAN5Cynd9+oAO
+         VxmPSGBfzqlOXTo5B/t02oNQjwzsyZHOTE6keCw0=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] vfio: platform: fix __iomem in vfio_platform_amdxgbe.c
-Message-ID: <20200110090259.3ab06f7c@x1.home>
-In-Reply-To: <20191218133525.2608583-1-ben.dooks@codethink.co.uk>
-References: <20191218133525.2608583-1-ben.dooks@codethink.co.uk>
-Organization: Red Hat
+Subject: [PATCH v6 00/22] tracing: bootconfig: Boot-time tracing and Extra boot config
+Date:   Sat, 11 Jan 2020 01:03:20 +0900
+Message-Id: <157867220019.17873.13377985653744804396.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 18 Dec 2019 13:35:25 +0000
-"Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk> wrote:
+Hello,
 
-> The ioaddr should have __iomem marker on it, so add that to fix
-> the following sparse warnings:
-> 
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:33:44: warning: incorrect type in argument 2 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:33:44:    expected void volatile [noderef] <asn:2> *addr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:33:44:    got void *
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:34:33: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:34:33:    expected void const volatile [noderef] <asn:2> *addr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:34:33:    got void *
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:44:44: warning: incorrect type in argument 2 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:44:44:    expected void volatile [noderef] <asn:2> *addr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:44:44:    got void *
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:45:33: warning: incorrect type in argument 2 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:45:33:    expected void volatile [noderef] <asn:2> *addr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:45:33:    got void *
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:69:41: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:69:41:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:69:41:    got void [noderef] <asn:2> *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:71:30: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:71:30:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:71:30:    got void [noderef] <asn:2> *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:76:49: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:76:49:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:76:49:    got void [noderef] <asn:2> *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:85:37: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:85:37:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:85:37:    got void [noderef] <asn:2> *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:87:30: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:87:30:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:87:30:    got void [noderef] <asn:2> *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:90:30: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:90:30:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:90:30:    got void [noderef] <asn:2> *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:93:30: warning: incorrect type in argument 1 (different address spaces)
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:93:30:    expected void *ioaddr
-> drivers/vfio/platform/reset/vfio_platform_amdxgbe.c:93:30:    got void [noderef] <asn:2> *ioaddr
-> 
-> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-> ---
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Cornelia Huck <cohuck@redhat.com>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: kvm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/vfio/platform/reset/vfio_platform_amdxgbe.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> index 2d2babe21b2f..ecfc908de30f 100644
-> --- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> +++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> @@ -24,7 +24,7 @@
->  #define MDIO_AN_INT		0x8002
->  #define MDIO_AN_INTMASK		0x8001
->  
-> -static unsigned int xmdio_read(void *ioaddr, unsigned int mmd,
-> +static unsigned int xmdio_read(void __iomem *ioaddr, unsigned int mmd,
->  			       unsigned int reg)
->  {
->  	unsigned int mmd_address, value;
-> @@ -35,7 +35,7 @@ static unsigned int xmdio_read(void *ioaddr, unsigned int mmd,
->  	return value;
->  }
->  
-> -static void xmdio_write(void *ioaddr, unsigned int mmd,
-> +static void xmdio_write(void __iomem *ioaddr, unsigned int mmd,
->  			unsigned int reg, unsigned int value)
->  {
->  	unsigned int mmd_address;
+This is the 6th version of the series for the boot-time tracing.
 
-Applied to vfio next branch for v5.6 with Eric's Ack.  Thanks,
+Previous version is here.
 
-Alex
+https://lkml.kernel.org/r/157736902773.11126.2531161235817081873.stgit@devnote2
 
+Thanks Steve for reivew. I fixed issues in this version.
+
+ - [1/22] Remove "!!" from xbc_node_is_value().
+	  Redefine xbc_node_is_key() as "!xbc_node_is_value()".
+	  Fix a memory leak and a bug in __xbc_parse_value().
+	  Add xbc_destroy_all() to clean up the parsed data.
+	  Fix to treat comment right after value as a newline.
+
+ - [3/22] Fix memory leaks.
+	  Fix to cleanup old bootconfig on memory before load new one.
+	  Show applying message.
+	  Suppress parse error with wrong data in initrd for delete_xbc().
+
+ - [4/22] Add some testcases for value parser
+          Add a test case for checking delete old bootconfig
+
+ - [9/22] Add a note about comment after value.
+
+ - [21/22] Fix to depend on CONFIG_DYNAMIC_FTRACE instead
+	  of CONFIG_FUNCTION_TRACER.
+
+This series can be applied on v5.5-rc5 or directly available at;
+
+https://github.com/mhiramat/linux.git ftrace-boottrace-v6
+
+
+Extra Boot Config
+=================
+
+Extra boot config allows admin to pass a tree-structured key-value
+list when booting up the kernel. This expands the kernel command
+line in an efficient way.
+
+Each key is described as a dot-jointed-words. And user can write
+the key-words in tree stlye. (In this version, the tailing ';'
+becomes optional. See Documentation/admin-guide/bootconfig.rst)
+
+For example,
+
+ feature.option.foo = 1
+ feature.option.bar = 2
+
+can be also written in
+
+ feature.option {
+    foo = 1
+    bar = 2
+ }
+
+or more compact,
+
+ feature.option{foo=1;bar=2}
+
+(Note that in both style, the same words are merged automatically
+ and make a single tree)
+All values are treated as a string, or array of strings, e.g.
+
+ feature.options = "foo", "bar"
+
+User can see the loaded key-value list via /proc/bootconfig.
+The size is limited upto 32KB and 1024 key-words and values
+in total.
+
+Boot with a Boot Config
+=======================
+
+This version doesn't require to modify boot loaders anymore.
+The boot config is loaded with initrd, and there is new "bootconfig"
+command under tools/bootconfig.
+To add (append) a bootconfig file to an initrd, you can use the
+bootconfig command like:
+
+ # tools/bootconfig/bootconfig -a your-config /boot/initrd.img-X.Y.Z
+
+This verifies the configuration file too. 
+
+
+Boot-time Tracing
+=================
+
+Boot-time tracing supports following boot configs. Please read
+Documentation/trace/boottime-trace.rst for details.
+
+     - kernel.dump_on_oops [= MODE]
+     - kernel.traceoff_on_warning
+     - kernel.tp_printk
+     - kernel.fgraph_filters = FILTER[, FILTER2...]
+     - kernel.fgraph_notraces = FILTER[, FILTER2...]
+     - kernel.fgraph_max_depth = MAX_DEPTH
+     - ftrace.[instance.INSTANCE.]options = OPT1[,OPT2...]
+     - ftrace.[instance.INSTANCE.]trace_clock = CLOCK
+     - ftrace.[instance.INSTANCE.]buffer_size = SIZE
+     - ftrace.[instance.INSTANCE.]alloc_snapshot
+     - ftrace.[instance.INSTANCE.]cpumask = CPUMASK
+     - ftrace.[instance.INSTANCE.]events = EVENT[, EVENT2...]
+     - ftrace.[instance.INSTANCE.]tracer = TRACER
+     - ftrace.[instance.INSTANCE.]ftrace.filters
+     - ftrace.[instance.INSTANCE.]ftrace.notraces
+     - ftrace.[instance.INSTANCE.]event.GROUP.EVENT.filter = FILTER
+     - ftrace.[instance.INSTANCE.]event.GROUP.EVENT.actions = ACTION[, ACTION2...]
+     - ftrace.[instance.INSTANCE.]event.GROUP.EVENT.enable
+     - ftrace.[instance.INSTANCE.]event.kprobes.EVENT.probes = PROBE[, PROBE2...]
+     - ftrace.[instance.INSTANCE.]event.synthetic.EVENT.fields = FIELD[, FIELD2...]
+
+Kernel and Init Command Line
+============================
+
+Boot config also supports kernel and init command line parameters
+except for early kernel parameters.
+
+In boot config, all key-values start with "kernel." are automatically
+merged into user passed boot command line, and key-values which
+start with "init." are also passed to init. These options are visible
+on /proc/cmdline.
+
+For example,
+
+kernel {
+  audit = on
+  audit_backlog_limit = 256
+}
+init.systemd.unified_cgroup_hierarchy = 1
+
+
+Usage
+=====
+
+With this series, we can setup new kprobe and synthetic events, more
+complicated event filters and trigger actions including histogram
+via supplemental kernel cmdline.
+
+We can add filter and actions for each event, define kprobe events,
+and synthetic events with histogram like below.
+
+ftrace.event {
+	task.task_newtask {
+		filter = "pid < 128"
+		enable
+	}
+	kprobes.vfs_read {
+		probes = "vfs_read $arg1 $arg2"
+		filter = "common_pid < 200"
+		enable
+	}
+	synthetic.initcall_latency {
+		fields = "unsigned long func", "u64 lat"
+		actions = "hist:keys=func.sym,lat:vals=lat:sort=lat"
+	}
+	initcall.initcall_start {
+		actions = "hist:keys=func:ts0=common_timestamp.usecs"
+	}
+	initcall.initcall_finish {
+		actions = "hist:keys=func:lat=common_timestamp.usecs-$ts0:onmatch(initcall.initcall_start).initcall_latency(func,$lat)"
+	}
+}
+
+Also, this supports "instance" node, which allows us to run several
+tracers for different purpose at once. For example, one tracer is for
+tracing functions start with "user_", and others tracing "kernel_",
+you can write boot config as:
+
+ftrace.instance {
+	foo {
+		tracer = "function"
+		ftrace-filters = "user_*"
+	}
+	bar {
+		tracer = "function"
+		ftrace-filters = "function_*"
+	}
+}
+
+The instance node also accepts event nodes so that each instance
+can customize its event tracing.
+
+This boot-time trace also supports ftrace kernel parameters.
+For example, following kernel parameters
+
+trace_options=sym-addr trace_event=initcall:* tp_printk trace_buf_size=1M ftrace=function ftrace_filter="vfs*"
+
+it can be written in boot config like below.
+
+ftrace {
+	options = sym-addr
+	events = "initcall:*"
+	tp-printk
+	buffer-size = 1MB
+	ftrace-filters = "vfs*"
+}
+
+However, since the initialization timing is different, if you need
+to trace very early boot, please use normal kernel parameters.
+
+Some Notes
+==========
+
+- To align the legacy command line rule, I made the quotes (double
+  quotes or single quotes) not able to be escaped.
+  Also, this rejects non-printable chars (except for space). Actually
+  legacy cmdline accepts any of them, but it might confuse users if
+  they put a control code by mistake. Imagine that they put a "\b"
+  on it...
+
+- Since it is not easy to write boot-time tracing without any bug
+  in bootconfig, a user-helper command will be needed.
+  That command will generate a boot config file from current ftrace
+  settings, or try to apply given boot config setting to the ftrace.
+
+Thank you,
+
+---
+
+Masami Hiramatsu (22):
+      bootconfig: Add Extra Boot Config support
+      bootconfig: Load boot config from the tail of initrd
+      tools: bootconfig: Add bootconfig command
+      tools: bootconfig: Add bootconfig test script
+      proc: bootconfig: Add /proc/bootconfig to show boot config list
+      init/main.c: Alloc initcall_command_line in do_initcall() and free it
+      bootconfig: init: Allow admin to use bootconfig for kernel command line
+      bootconfig: init: Allow admin to use bootconfig for init command line
+      Documentation: bootconfig: Add a doc for extended boot config
+      tracing: Apply soft-disabled and filter to tracepoints printk
+      tracing: kprobes: Output kprobe event to printk buffer
+      tracing: kprobes: Register to dynevent earlier stage
+      tracing: Accept different type for synthetic event fields
+      tracing: Add NULL trace-array check in print_synth_event()
+      tracing/boot: Add boot-time tracing
+      tracing/boot: Add per-event settings
+      tracing/boot Add kprobe event support
+      tracing/boot: Add synthetic event support
+      tracing/boot: Add instance node support
+      tracing/boot: Add cpu_mask option support
+      tracing/boot: Add function tracer filter options
+      Documentation: tracing: Add boot-time tracing document
+
+
+ Documentation/admin-guide/bootconfig.rst           |  186 +++++
+ Documentation/admin-guide/index.rst                |    1 
+ Documentation/trace/boottime-trace.rst             |  184 +++++
+ Documentation/trace/index.rst                      |    1 
+ MAINTAINERS                                        |    9 
+ fs/proc/Makefile                                   |    1 
+ fs/proc/bootconfig.c                               |   89 ++
+ include/linux/bootconfig.h                         |  224 ++++++
+ include/linux/trace_events.h                       |    1 
+ init/Kconfig                                       |   12 
+ init/main.c                                        |  213 +++++
+ kernel/trace/Kconfig                               |    9 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |   63 +-
+ kernel/trace/trace_boot.c                          |  353 +++++++++
+ kernel/trace/trace_events.c                        |    1 
+ kernel/trace/trace_events_hist.c                   |   14 
+ kernel/trace/trace_events_trigger.c                |    2 
+ kernel/trace/trace_kprobe.c                        |   81 +-
+ lib/Kconfig                                        |    3 
+ lib/Makefile                                       |    2 
+ lib/bootconfig.c                                   |  803 ++++++++++++++++++++
+ tools/Makefile                                     |   11 
+ tools/bootconfig/.gitignore                        |    1 
+ tools/bootconfig/Makefile                          |   23 +
+ tools/bootconfig/include/linux/bootconfig.h        |    7 
+ tools/bootconfig/include/linux/bug.h               |   12 
+ tools/bootconfig/include/linux/ctype.h             |    7 
+ tools/bootconfig/include/linux/errno.h             |    7 
+ tools/bootconfig/include/linux/kernel.h            |   18 
+ tools/bootconfig/include/linux/printk.h            |   17 
+ tools/bootconfig/include/linux/string.h            |   32 +
+ tools/bootconfig/main.c                            |  354 +++++++++
+ .../samples/bad-array-space-comment.bconf          |    5 
+ tools/bootconfig/samples/bad-array.bconf           |    2 
+ tools/bootconfig/samples/bad-dotword.bconf         |    4 
+ tools/bootconfig/samples/bad-empty.bconf           |    1 
+ tools/bootconfig/samples/bad-keyerror.bconf        |    2 
+ tools/bootconfig/samples/bad-longkey.bconf         |    1 
+ tools/bootconfig/samples/bad-manywords.bconf       |    1 
+ tools/bootconfig/samples/bad-no-keyword.bconf      |    2 
+ tools/bootconfig/samples/bad-nonprintable.bconf    |    2 
+ tools/bootconfig/samples/bad-spaceword.bconf       |    2 
+ tools/bootconfig/samples/bad-tree.bconf            |    5 
+ tools/bootconfig/samples/bad-value.bconf           |    3 
+ tools/bootconfig/samples/escaped.bconf             |    3 
+ .../samples/good-array-space-comment.bconf         |    4 
+ .../samples/good-comment-after-value.bconf         |    1 
+ tools/bootconfig/samples/good-printables.bconf     |    2 
+ tools/bootconfig/samples/good-simple.bconf         |   11 
+ tools/bootconfig/samples/good-single.bconf         |    4 
+ .../samples/good-space-after-value.bconf           |    1 
+ tools/bootconfig/samples/good-tree.bconf           |   12 
+ tools/bootconfig/test-bootconfig.sh                |  105 +++
+ 54 files changed, 2836 insertions(+), 79 deletions(-)
+ create mode 100644 Documentation/admin-guide/bootconfig.rst
+ create mode 100644 Documentation/trace/boottime-trace.rst
+ create mode 100644 fs/proc/bootconfig.c
+ create mode 100644 include/linux/bootconfig.h
+ create mode 100644 kernel/trace/trace_boot.c
+ create mode 100644 lib/bootconfig.c
+ create mode 100644 tools/bootconfig/.gitignore
+ create mode 100644 tools/bootconfig/Makefile
+ create mode 100644 tools/bootconfig/include/linux/bootconfig.h
+ create mode 100644 tools/bootconfig/include/linux/bug.h
+ create mode 100644 tools/bootconfig/include/linux/ctype.h
+ create mode 100644 tools/bootconfig/include/linux/errno.h
+ create mode 100644 tools/bootconfig/include/linux/kernel.h
+ create mode 100644 tools/bootconfig/include/linux/printk.h
+ create mode 100644 tools/bootconfig/include/linux/string.h
+ create mode 100644 tools/bootconfig/main.c
+ create mode 100644 tools/bootconfig/samples/bad-array-space-comment.bconf
+ create mode 100644 tools/bootconfig/samples/bad-array.bconf
+ create mode 100644 tools/bootconfig/samples/bad-dotword.bconf
+ create mode 100644 tools/bootconfig/samples/bad-empty.bconf
+ create mode 100644 tools/bootconfig/samples/bad-keyerror.bconf
+ create mode 100644 tools/bootconfig/samples/bad-longkey.bconf
+ create mode 100644 tools/bootconfig/samples/bad-manywords.bconf
+ create mode 100644 tools/bootconfig/samples/bad-no-keyword.bconf
+ create mode 100644 tools/bootconfig/samples/bad-nonprintable.bconf
+ create mode 100644 tools/bootconfig/samples/bad-spaceword.bconf
+ create mode 100644 tools/bootconfig/samples/bad-tree.bconf
+ create mode 100644 tools/bootconfig/samples/bad-value.bconf
+ create mode 100644 tools/bootconfig/samples/escaped.bconf
+ create mode 100644 tools/bootconfig/samples/good-array-space-comment.bconf
+ create mode 100644 tools/bootconfig/samples/good-comment-after-value.bconf
+ create mode 100644 tools/bootconfig/samples/good-printables.bconf
+ create mode 100644 tools/bootconfig/samples/good-simple.bconf
+ create mode 100644 tools/bootconfig/samples/good-single.bconf
+ create mode 100644 tools/bootconfig/samples/good-space-after-value.bconf
+ create mode 100644 tools/bootconfig/samples/good-tree.bconf
+ create mode 100755 tools/bootconfig/test-bootconfig.sh
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
