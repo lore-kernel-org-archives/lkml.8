@@ -2,97 +2,94 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDB0C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E42AC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:16:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4CF20661
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:15:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ulAy98SC"
+	by mail.kernel.org (Postfix) with ESMTP id 4AA0C2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578644208;
+	bh=vbOyzbvruv5chHSCn6AlK9BNbMsKVgBT5UGr2DJ7XGI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TMrxfmdaf4rlG3cHGbEL40ziVJf/zjhH5UI7oWm/olmW+mRLFUNYuh/hk345rTMU9
+	 Z/WCwqfUjWR1tZH6TgbtYaB2rP4E2DmMyaKat/HnrU2QGTgIc8XQaV30OEPkM+TR59
+	 XAIs41PTH5KvTh6AtaBEPQead26+P+fpzXwg95s0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726770AbgAJIP5 (ORCPT
+        id S1726837AbgAJIQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 03:15:57 -0500
-Received: from ozlabs.org ([203.11.71.1]:58839 "EHLO ozlabs.org"
+        Fri, 10 Jan 2020 03:16:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726383AbgAJIP4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 03:15:56 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726383AbgAJIQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 03:16:46 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47vG5P3y58z9sRV;
-        Fri, 10 Jan 2020 19:15:52 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578644154;
-        bh=L78XeBokIql9jpsHUpVD/DbiFKAMEXYZFmR+XrULacU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ulAy98SCMDO0FEG8f0mdBAKFFCv0N/PZVG8qdORNmYRAp5aNEsH1NUR5ga1wjMW96
-         zezF03ahMoxSJYGk9Pmry0yV2uH7O3z5q6mpl21JolaVd5T9/IYnIG4d2JLfag16st
-         dAgBtOSfbGv6Fye96oxiHsIh4nvcQyljvSouZOHLd4L3sjj2ILdIBPsBBb1F94joRn
-         /+DBZITOj5TYvgV/+Q8Dm9wp7XvNLEtYTnn6kHCeAIOssFxatPA6kf8QDQ8c1uLPzK
-         1zKdj03Id8A3NrGFBT7dMKgnW6aYV7IfgZWhnsikOMYyjYXeuZr9fa1LPrttvMOpuy
-         OpAjtpO7s8tvg==
-Date:   Fri, 10 Jan 2020 19:15:49 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Radoslaw Tyl <radoslawx.tyl@intel.com>
-Subject: linux-next: Fixes tag needs some work in the net tree
-Message-ID: <20200110191549.5d0a66e6@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 92B502072A;
+        Fri, 10 Jan 2020 08:16:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578644206;
+        bh=vbOyzbvruv5chHSCn6AlK9BNbMsKVgBT5UGr2DJ7XGI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JtX2cyZx85/NGjVLtkZ45ZsN0N5bMDyptPmYIErMh9hyy/ERhiGSRXWRTBh0a03e1
+         aURSMBO5l5PrnygAnwiI5bI8A523R2DXlpLATa9QmFRx8iGZ+I9vxPduwP/As70Tiv
+         D9xGaajzw1GxSnasUsRA1I0lCwEYL2IOH0ULWhgI=
+Date:   Fri, 10 Jan 2020 09:16:43 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/2] regulator: ab8500: Remove AB8505 USB regulator
+Message-ID: <20200110081643.GA363320@kroah.com>
+References: <20191106173125.14496-1-stephan@gerhold.net>
+ <CACRpkdaH8ahbVKTrBHh7NKVZVg-PZvyKDKNityEyv5rL8=Qdag@mail.gmail.com>
+ <CA+G9fYvSQJ0BVAAMyTk0mViqCdNjtsZCrhhorRnrmcPg98yQVA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/ibss0P6tDW9Y0q=rfHgHp41";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvSQJ0BVAAMyTk0mViqCdNjtsZCrhhorRnrmcPg98yQVA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/ibss0P6tDW9Y0q=rfHgHp41
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jan 10, 2020 at 01:32:57PM +0530, Naresh Kamboju wrote:
+> On Thu, 7 Nov 2019 at 13:32, Linus Walleij <linus.walleij@linaro.org> wrote:
+> >
+> > On Wed, Nov 6, 2019 at 6:33 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+> >
+> > > The USB regulator was removed for AB8500 in
+> > > commit 41a06aa738ad ("regulator: ab8500: Remove USB regulator").
+> > > It was then added for AB8505 in
+> > > commit 547f384f33db ("regulator: ab8500: add support for ab8505").
+> > >
+> 
+> Stable-rc 4.4 branch arm build failed due to this error.
+> 
+> arch/arm/mach-ux500/board-mop500-regulators.c:957:3: error:
+> 'AB8505_LDO_USB' undeclared here (not in a function); did you mean
+> 'AB9540_LDO_USB'?
+>   [AB8505_LDO_USB] = {
+>    ^~~~~~~~~~~~~~
+>    AB9540_LDO_USB
+> arch/arm/mach-ux500/board-mop500-regulators.c:957:3: error: array
+> index in initializer not of integer type
+> arch/arm/mach-ux500/board-mop500-regulators.c:957:3: note: (near
+> initialization for 'ab8505_regulators')
+> 
+> Full build log,
+> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-stable-rc-4.4/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/703/consoleText
+> 
 
-Hi all,
+Good catch, I'll go drop this patch from the 4.4.y queue now, thanks.
 
-In commit
-
-  aa604651d523 ("ixgbevf: Remove limit of 10 entries for unicast filter lis=
-t")
-
-Fixes tag
-
-  Fixes: 46ec20ff7d ("ixgbevf: Add macvlan support in the set rx mode op")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/ibss0P6tDW9Y0q=rfHgHp41
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4YMrUACgkQAVBC80lX
-0Gy++Af/c9IKMnyHGxyL/2jJAB75pFrjuyExYS2U+vWV5Ft4skPOOs4BxZXIV3Q1
-OGPRpO5ShcK1I9ajvXrIeNUGsbo7pj2hSAJ1ZEinN58ceFrWjmYDoiE8ROYlHnjP
-jIwJCL+fN2wXrYzHeCDk1Knhh1QJF7bObT7zUo0a69/SE2s5nuK1JzUwzfzaTGhg
-Thnx0eSYbrCRQ8d8SE6SAbLkk7pOWpMWqBNdwzWVz0Hxa5KGg/uSMv1j0uZwvxzY
-LYsb5CuniESpXWQDS0oHFOqYrINL1Xq6WXct2yigMJAChsdecJm9SmFd6zXHBuoL
-s5CZqvju4JpJUogDrWoQUKrJTXnMpQ==
-=B/YE
------END PGP SIGNATURE-----
-
---Sig_/ibss0P6tDW9Y0q=rfHgHp41--
+greg k-h
