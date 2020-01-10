@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0505C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCEFC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F9E720838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57AAC20842
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578693929;
-	bh=Lr6ccyq9r++RHavAZxJatXl+CulmdR3K9ktH+EoAu+M=;
+	s=default; t=1578693933;
+	bh=k0j77J0+Hj7BvtVZoT38fVZd1GFh/VHHvV/yUuG86AY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MZY/Vi3pe/26XUefCg6T4tM09npbzuL7maDiJ5q7izkUG9XupZCsfzpkzhHaI+sgN
-	 lDTwl3L5G4FwzLtw4UFtzrrIaxn/7o4QO6JRU8g01ZaR2OYp0WI/S7EujT3Tr5njC/
-	 dPIDYbA71XLa0bzO48bo1oggT6vu6Bc0Xp111j7g=
+	b=ahi/6qho2FFYQAVf+AHHnky7lrqzPDZqCde7lY94LPuwloaRI70aSZpA5Mqy3IKzV
+	 yZGGEW+qxb6L0s12bEdMNBOlBJUXX9As3apGECZSQRyHJFpGkhNK2xYJC+jrpger5a
+	 NXaSn+QmtffM/53a2eeIbsKAfi/o/Qhneq3ymxu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbgAJWF3 (ORCPT
+        id S1727614AbgAJWFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:05:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51000 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 17:05:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727380AbgAJWFZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:05:25 -0500
+        id S1727526AbgAJWF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:05:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B2A442082E;
-        Fri, 10 Jan 2020 22:05:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7990520842;
+        Fri, 10 Jan 2020 22:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693924;
-        bh=Lr6ccyq9r++RHavAZxJatXl+CulmdR3K9ktH+EoAu+M=;
+        s=default; t=1578693929;
+        bh=k0j77J0+Hj7BvtVZoT38fVZd1GFh/VHHvV/yUuG86AY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ti0MdYNwu2VwJYrCMIV1dtCFN/mZHZnkr4SATrc6XccJgO7fhptdjhrGYW5KTwKWk
-         BTNcK8RoLMv1fhymsfm6jCqRN9yfNoaKmY+oUk6AjWjZ2QKSsCfXBGY1SFtjjzWqHG
-         Q4rHPPPmcbd9rBlF/PvZPRlkzhda618pg6hvNwQA=
+        b=CcK1Pb1YVzsAPiuwN+SLPM6x1NkXrzqUxNG+p7a6m57Rk4IsGmhFAOHufOdOOBYvx
+         ByUzNpZgn5nRHS/KwoEW6UCL3DeBzUAxmEokd3D2E+ITB84/u5yBbHFJrqHNZ6bGfv
+         ptwnxY8pz2G1Mfy5EOeAyNJcdNFPMlRXQiXjeBWY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 08/26] rxrpc: Fix missing security check on incoming calls
-Date:   Fri, 10 Jan 2020 17:05:01 -0500
-Message-Id: <20200110220519.28250-3-sashal@kernel.org>
+Cc:     Alexandra Winter <wintera@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 12/26] s390/qeth: fix false reporting of VNIC CHAR config failure
+Date:   Fri, 10 Jan 2020 17:05:05 -0500
+Message-Id: <20200110220519.28250-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200110220519.28250-1-sashal@kernel.org>
 References: <20200110220519.28250-1-sashal@kernel.org>
@@ -60,291 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Alexandra Winter <wintera@linux.ibm.com>
 
-[ Upstream commit 063c60d39180cec7c9317f5acfc3071f8fecd705 ]
+[ Upstream commit 68c57bfd52836e31bff33e5e1fc64029749d2c35 ]
 
-Fix rxrpc_new_incoming_call() to check that we have a suitable service key
-available for the combination of service ID and security class of a new
-incoming call - and to reject calls for which we don't.
+Symptom: Error message "Configuring the VNIC characteristics failed"
+in dmesg whenever an OSA interface on z15 is set online.
 
-This causes an assertion like the following to appear:
+The VNIC characteristics get re-programmed when setting a L2 device
+online. This follows the selected 'wanted' characteristics - with the
+exception that the INVISIBLE characteristic unconditionally gets
+switched off.
 
-	rxrpc: Assertion failed - 6(0x6) == 12(0xc) is false
-	kernel BUG at net/rxrpc/call_object.c:456!
+For devices that don't support INVISIBLE (ie. OSA), the resulting
+IO failure raises a noisy error message
+("Configuring the VNIC characteristics failed").
+For IQD, INVISIBLE is off by default anyways.
 
-Where call->state is RXRPC_CALL_SERVER_SECURING (6) rather than
-RXRPC_CALL_COMPLETE (12).
+So don't unnecessarily special-case the INVISIBLE characteristic, and
+thereby suppress the misleading error message on OSA devices.
 
-Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
-Reported-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
+Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
+Reviewed-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/ar-internal.h  | 10 ++++--
- net/rxrpc/call_accept.c  | 14 ++++++--
- net/rxrpc/conn_event.c   | 16 +--------
- net/rxrpc/conn_service.c |  4 +++
- net/rxrpc/rxkad.c        |  5 +--
- net/rxrpc/security.c     | 70 +++++++++++++++++++---------------------
- 6 files changed, 59 insertions(+), 60 deletions(-)
+ drivers/s390/net/qeth_l2_main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/net/rxrpc/ar-internal.h b/net/rxrpc/ar-internal.h
-index 7c7d10f2e0c1..5e99df80e80a 100644
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -209,6 +209,7 @@ struct rxrpc_skb_priv {
- struct rxrpc_security {
- 	const char		*name;		/* name of this service */
- 	u8			security_index;	/* security type provided */
-+	u32			no_key_abort;	/* Abort code indicating no key */
- 
- 	/* Initialise a security service */
- 	int (*init)(void);
-@@ -977,8 +978,9 @@ static inline void rxrpc_reduce_conn_timer(struct rxrpc_connection *conn,
- struct rxrpc_connection *rxrpc_find_service_conn_rcu(struct rxrpc_peer *,
- 						     struct sk_buff *);
- struct rxrpc_connection *rxrpc_prealloc_service_connection(struct rxrpc_net *, gfp_t);
--void rxrpc_new_incoming_connection(struct rxrpc_sock *,
--				   struct rxrpc_connection *, struct sk_buff *);
-+void rxrpc_new_incoming_connection(struct rxrpc_sock *, struct rxrpc_connection *,
-+				   const struct rxrpc_security *, struct key *,
-+				   struct sk_buff *);
- void rxrpc_unpublish_service_conn(struct rxrpc_connection *);
- 
- /*
-@@ -1103,7 +1105,9 @@ extern const struct rxrpc_security rxkad;
- int __init rxrpc_init_security(void);
- void rxrpc_exit_security(void);
- int rxrpc_init_client_conn_security(struct rxrpc_connection *);
--int rxrpc_init_server_conn_security(struct rxrpc_connection *);
-+bool rxrpc_look_up_server_security(struct rxrpc_local *, struct rxrpc_sock *,
-+				   const struct rxrpc_security **, struct key **,
-+				   struct sk_buff *);
- 
- /*
-  * sendmsg.c
-diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
-index 44fa22b020ef..70e44abf106c 100644
---- a/net/rxrpc/call_accept.c
-+++ b/net/rxrpc/call_accept.c
-@@ -263,6 +263,8 @@ static struct rxrpc_call *rxrpc_alloc_incoming_call(struct rxrpc_sock *rx,
- 						    struct rxrpc_local *local,
- 						    struct rxrpc_peer *peer,
- 						    struct rxrpc_connection *conn,
-+						    const struct rxrpc_security *sec,
-+						    struct key *key,
- 						    struct sk_buff *skb)
- {
- 	struct rxrpc_backlog *b = rx->backlog;
-@@ -310,7 +312,7 @@ static struct rxrpc_call *rxrpc_alloc_incoming_call(struct rxrpc_sock *rx,
- 		conn->params.local = rxrpc_get_local(local);
- 		conn->params.peer = peer;
- 		rxrpc_see_connection(conn);
--		rxrpc_new_incoming_connection(rx, conn, skb);
-+		rxrpc_new_incoming_connection(rx, conn, sec, key, skb);
- 	} else {
- 		rxrpc_get_connection(conn);
- 	}
-@@ -349,9 +351,11 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 					   struct sk_buff *skb)
- {
- 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
-+	const struct rxrpc_security *sec = NULL;
- 	struct rxrpc_connection *conn;
- 	struct rxrpc_peer *peer = NULL;
--	struct rxrpc_call *call;
-+	struct rxrpc_call *call = NULL;
-+	struct key *key = NULL;
- 
- 	_enter("");
- 
-@@ -372,7 +376,11 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 	 */
- 	conn = rxrpc_find_connection_rcu(local, skb, &peer);
- 
--	call = rxrpc_alloc_incoming_call(rx, local, peer, conn, skb);
-+	if (!conn && !rxrpc_look_up_server_security(local, rx, &sec, &key, skb))
-+		goto no_call;
-+
-+	call = rxrpc_alloc_incoming_call(rx, local, peer, conn, sec, key, skb);
-+	key_put(key);
- 	if (!call) {
- 		skb->mark = RXRPC_SKB_MARK_REJECT_BUSY;
- 		goto no_call;
-diff --git a/net/rxrpc/conn_event.c b/net/rxrpc/conn_event.c
-index a1ceef4f5cd0..808a4723f868 100644
---- a/net/rxrpc/conn_event.c
-+++ b/net/rxrpc/conn_event.c
-@@ -376,21 +376,7 @@ static void rxrpc_secure_connection(struct rxrpc_connection *conn)
- 	_enter("{%d}", conn->debug_id);
- 
- 	ASSERT(conn->security_ix != 0);
--
--	if (!conn->params.key) {
--		_debug("set up security");
--		ret = rxrpc_init_server_conn_security(conn);
--		switch (ret) {
--		case 0:
--			break;
--		case -ENOENT:
--			abort_code = RX_CALL_DEAD;
--			goto abort;
--		default:
--			abort_code = RXKADNOAUTH;
--			goto abort;
--		}
--	}
-+	ASSERT(conn->server_key);
- 
- 	if (conn->security->issue_challenge(conn) < 0) {
- 		abort_code = RX_CALL_DEAD;
-diff --git a/net/rxrpc/conn_service.c b/net/rxrpc/conn_service.c
-index 123d6ceab15c..21da48e3d2e5 100644
---- a/net/rxrpc/conn_service.c
-+++ b/net/rxrpc/conn_service.c
-@@ -148,6 +148,8 @@ struct rxrpc_connection *rxrpc_prealloc_service_connection(struct rxrpc_net *rxn
-  */
- void rxrpc_new_incoming_connection(struct rxrpc_sock *rx,
- 				   struct rxrpc_connection *conn,
-+				   const struct rxrpc_security *sec,
-+				   struct key *key,
- 				   struct sk_buff *skb)
- {
- 	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
-@@ -160,6 +162,8 @@ void rxrpc_new_incoming_connection(struct rxrpc_sock *rx,
- 	conn->service_id	= sp->hdr.serviceId;
- 	conn->security_ix	= sp->hdr.securityIndex;
- 	conn->out_clientflag	= 0;
-+	conn->security		= sec;
-+	conn->server_key	= key_get(key);
- 	if (conn->security_ix)
- 		conn->state	= RXRPC_CONN_SERVICE_UNSECURED;
- 	else
-diff --git a/net/rxrpc/rxkad.c b/net/rxrpc/rxkad.c
-index 8d8aa3c230b5..098f1f9ec53b 100644
---- a/net/rxrpc/rxkad.c
-+++ b/net/rxrpc/rxkad.c
-@@ -648,9 +648,9 @@ static int rxkad_issue_challenge(struct rxrpc_connection *conn)
- 	u32 serial;
- 	int ret;
- 
--	_enter("{%d,%x}", conn->debug_id, key_serial(conn->params.key));
-+	_enter("{%d,%x}", conn->debug_id, key_serial(conn->server_key));
- 
--	ret = key_validate(conn->params.key);
-+	ret = key_validate(conn->server_key);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -1293,6 +1293,7 @@ static void rxkad_exit(void)
- const struct rxrpc_security rxkad = {
- 	.name				= "rxkad",
- 	.security_index			= RXRPC_SECURITY_RXKAD,
-+	.no_key_abort			= RXKADUNKNOWNKEY,
- 	.init				= rxkad_init,
- 	.exit				= rxkad_exit,
- 	.init_connection_security	= rxkad_init_connection_security,
-diff --git a/net/rxrpc/security.c b/net/rxrpc/security.c
-index a4c47d2b7054..9b1fb9ed0717 100644
---- a/net/rxrpc/security.c
-+++ b/net/rxrpc/security.c
-@@ -101,62 +101,58 @@ int rxrpc_init_client_conn_security(struct rxrpc_connection *conn)
- }
- 
- /*
-- * initialise the security on a server connection
-+ * Find the security key for a server connection.
-  */
--int rxrpc_init_server_conn_security(struct rxrpc_connection *conn)
-+bool rxrpc_look_up_server_security(struct rxrpc_local *local, struct rxrpc_sock *rx,
-+				   const struct rxrpc_security **_sec,
-+				   struct key **_key,
-+				   struct sk_buff *skb)
- {
- 	const struct rxrpc_security *sec;
--	struct rxrpc_local *local = conn->params.local;
--	struct rxrpc_sock *rx;
--	struct key *key;
--	key_ref_t kref;
-+	struct rxrpc_skb_priv *sp = rxrpc_skb(skb);
-+	key_ref_t kref = NULL;
- 	char kdesc[5 + 1 + 3 + 1];
- 
- 	_enter("");
- 
--	sprintf(kdesc, "%u:%u", conn->service_id, conn->security_ix);
-+	sprintf(kdesc, "%u:%u", sp->hdr.serviceId, sp->hdr.securityIndex);
- 
--	sec = rxrpc_security_lookup(conn->security_ix);
-+	sec = rxrpc_security_lookup(sp->hdr.securityIndex);
- 	if (!sec) {
--		_leave(" = -ENOKEY [lookup]");
--		return -ENOKEY;
-+		trace_rxrpc_abort(0, "SVS",
-+				  sp->hdr.cid, sp->hdr.callNumber, sp->hdr.seq,
-+				  RX_INVALID_OPERATION, EKEYREJECTED);
-+		skb->mark = RXRPC_SKB_MARK_REJECT_ABORT;
-+		skb->priority = RX_INVALID_OPERATION;
-+		return false;
- 	}
- 
--	/* find the service */
--	read_lock(&local->services_lock);
--	rx = rcu_dereference_protected(local->service,
--				       lockdep_is_held(&local->services_lock));
--	if (rx && (rx->srx.srx_service == conn->service_id ||
--		   rx->second_service == conn->service_id))
--		goto found_service;
-+	if (sp->hdr.securityIndex == RXRPC_SECURITY_NONE)
-+		goto out;
- 
--	/* the service appears to have died */
--	read_unlock(&local->services_lock);
--	_leave(" = -ENOENT");
--	return -ENOENT;
--
--found_service:
- 	if (!rx->securities) {
--		read_unlock(&local->services_lock);
--		_leave(" = -ENOKEY");
--		return -ENOKEY;
-+		trace_rxrpc_abort(0, "SVR",
-+				  sp->hdr.cid, sp->hdr.callNumber, sp->hdr.seq,
-+				  RX_INVALID_OPERATION, EKEYREJECTED);
-+		skb->mark = RXRPC_SKB_MARK_REJECT_ABORT;
-+		skb->priority = RX_INVALID_OPERATION;
-+		return false;
- 	}
- 
- 	/* look through the service's keyring */
- 	kref = keyring_search(make_key_ref(rx->securities, 1UL),
- 			      &key_type_rxrpc_s, kdesc, true);
- 	if (IS_ERR(kref)) {
--		read_unlock(&local->services_lock);
--		_leave(" = %ld [search]", PTR_ERR(kref));
--		return PTR_ERR(kref);
-+		trace_rxrpc_abort(0, "SVK",
-+				  sp->hdr.cid, sp->hdr.callNumber, sp->hdr.seq,
-+				  sec->no_key_abort, EKEYREJECTED);
-+		skb->mark = RXRPC_SKB_MARK_REJECT_ABORT;
-+		skb->priority = sec->no_key_abort;
-+		return false;
- 	}
- 
--	key = key_ref_to_ptr(kref);
--	read_unlock(&local->services_lock);
--
--	conn->server_key = key;
--	conn->security = sec;
--
--	_leave(" = 0");
--	return 0;
-+out:
-+	*_sec = sec;
-+	*_key = key_ref_to_ptr(kref);
-+	return true;
- }
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index 4224a3b7cd07..5272a4c36db8 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -2071,7 +2071,6 @@ static void qeth_l2_vnicc_init(struct qeth_card *card)
+ 	error |= qeth_l2_vnicc_recover_timeout(card, QETH_VNICC_LEARNING,
+ 					       timeout);
+ 	chars_tmp = card->options.vnicc.wanted_chars ^ QETH_VNICC_DEFAULT;
+-	chars_tmp |= QETH_VNICC_BRIDGE_INVISIBLE;
+ 	chars_len = sizeof(card->options.vnicc.wanted_chars) * BITS_PER_BYTE;
+ 	for_each_set_bit(i, &chars_tmp, chars_len) {
+ 		vnicc = BIT(i);
 -- 
 2.20.1
 
