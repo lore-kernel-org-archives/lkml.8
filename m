@@ -2,60 +2,52 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5161C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0726C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 983A020721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C8B206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578694007;
-	bh=2+xHZKLnRdyQ7b/LhL/vxI6E5dI58k/5zYjcwRCq0xA=;
+	s=default; t=1578694018;
+	bh=IeJ6EBQprC0bGfzJZS49TcDe89b6mYMbG0kfwUyY/q4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LViMLQOs4cSRDqGxyX9TfI8yPr2wWOeHuKH1RN2DdXUhbn5qG++BCQD4QV7qLXL5Q
-	 rXqL4EETcuTwOrPdH8ReFdaSd7Hc4z0nshS8+pJzHE1Jg3oky9UWP+F9uQS5NPFYs7
-	 jbURPteXNonrNxa+rmq18HKg414cyL+0uDR5NSKw=
+	b=BxJrLbCK3qZYNjYMfKgqa57/gLhUkO02ygfvGQomlPcz0iMMashnO8A3Grq9jV46V
+	 g4ipsPWTVUHNUnONGuhG6B/a3sH3SIcKBZCTIIPagFbIKxTgtkgzVYYPhUhILYVoOG
+	 S5OgPCJIiSXH49AQjb7zAxFFRSNt/jjFx5m+HwOY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgAJWGq (ORCPT
+        id S1728329AbgAJWG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:06:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 17:06:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728300AbgAJWGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:06:32 -0500
+        id S1727460AbgAJWGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:06:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D471A20880;
-        Fri, 10 Jan 2020 22:06:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BA9720842;
+        Fri, 10 Jan 2020 22:06:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693992;
-        bh=2+xHZKLnRdyQ7b/LhL/vxI6E5dI58k/5zYjcwRCq0xA=;
+        s=default; t=1578693984;
+        bh=IeJ6EBQprC0bGfzJZS49TcDe89b6mYMbG0kfwUyY/q4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LYUHHlR/S7vZB/rMUyddbL9imaVWqlIEaqFyKhqNFoxfAaCDgygHeBzE1VThqTIw2
-         4lXMUM+dDeUJ4Kv/VYtpSR0sh1R7w7qmOvTxE6+UCqIJgASG4TrPvHlNSNE1tZUiGt
-         UdCivBN/acxmzhFs0EGF4o8p8Sr83bytZSF4n4Ww=
+        b=FGbr9i9YmSbglq/BfsbBD5U2Bs9aZOjoIBS+Om/Nuqrv+HitITmIWN/WHGXZWADyj
+         eGj28Y08WaJgflGIe+DEOcnxsbDYsgOtpK1A6FrOO70m7vO+6/FK38SE47es1D4jlp
+         MZZm4g6PzFxjk7XDdqpcyKQkbVy6sB/+dmjEyERs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Sid Manning <sidneym@quicinc.com>,
-        Brian Cain <bcain@codeaurora.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-hexagon@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.14 7/8] hexagon: work around compiler crash
-Date:   Fri, 10 Jan 2020 17:06:20 -0500
-Message-Id: <20200110220621.28651-7-sashal@kernel.org>
+Cc:     Jouni Hogander <jouni.hogander@unikie.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 2/8] MIPS: Prevent link failure with kcov instrumentation
+Date:   Fri, 10 Jan 2020 17:06:15 -0500
+Message-Id: <20200110220621.28651-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200110220621.28651-1-sashal@kernel.org>
 References: <20200110220621.28651-1-sashal@kernel.org>
@@ -68,50 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-[ Upstream commit 63e80314ab7cf4783526d2e44ee57a90514911c9 ]
+[ Upstream commit a4a3893114a41e365274d5fab5d9ff5acc235ff0 ]
 
-Clang cannot translate the string "r30" into a valid register yet.
+__sanitizer_cov_trace_pc() is not linked in and causing link
+failure if KCOV_INSTRUMENT is enabled. Fix this by disabling
+instrumentation for compressed image.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/755
-Link: http://lkml.kernel.org/r/20191028155722.23419-1-ndesaulniers@google.com
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Suggested-by: Sid Manning <sidneym@quicinc.com>
-Reviewed-by: Brian Cain <bcain@codeaurora.org>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Richard Fontana <rfontana@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: linux-mips@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/hexagon/kernel/stacktrace.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/mips/boot/compressed/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/hexagon/kernel/stacktrace.c b/arch/hexagon/kernel/stacktrace.c
-index 41866a06adf7..ec4ef682923d 100644
---- a/arch/hexagon/kernel/stacktrace.c
-+++ b/arch/hexagon/kernel/stacktrace.c
-@@ -24,8 +24,6 @@
- #include <linux/thread_info.h>
- #include <linux/module.h>
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index 331b9e0a8072..baa34e4deb78 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -29,6 +29,9 @@ KBUILD_AFLAGS := $(KBUILD_AFLAGS) -D__ASSEMBLY__ \
+ 	-DBOOT_HEAP_SIZE=$(BOOT_HEAP_SIZE) \
+ 	-DKERNEL_ENTRY=$(VMLINUX_ENTRY_ADDRESS)
  
--register unsigned long current_frame_pointer asm("r30");
--
- struct stackframe {
- 	unsigned long fp;
- 	unsigned long rets;
-@@ -43,7 +41,7 @@ void save_stack_trace(struct stack_trace *trace)
++# Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
++KCOV_INSTRUMENT		:= n
++
+ # decompressor objects (linked with vmlinuz)
+ vmlinuzobjs-y := $(obj)/head.o $(obj)/decompress.o $(obj)/string.o
  
- 	low = (unsigned long)task_stack_page(current);
- 	high = low + THREAD_SIZE;
--	fp = current_frame_pointer;
-+	fp = (unsigned long)__builtin_frame_address(0);
- 
- 	while (fp >= low && fp <= (high - sizeof(*frame))) {
- 		frame = (struct stackframe *)fp;
 -- 
 2.20.1
 
