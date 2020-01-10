@@ -2,86 +2,118 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8F6C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C3BC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C752B2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:56:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AV133+fO"
+	by mail.kernel.org (Postfix) with ESMTP id F1C482072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578664654;
+	bh=g72j9tTq2u6/XnTAoZ5jJdjryhj0EJvdohY3UpgLLG4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=iVD1Ptk1IVis/Y/VAJWxUjHDtnq8aT/ZOOK53cN957K950k3EQYBvSQY16yETip/7
+	 PnPUYrp6Aofnqm86mGKcd5yxtBb8yVhXmjBPqi0olycVys98o+m0Rv9Jldk0DQsb8G
+	 boQJPI6M2WyoctnEex6/utK9zwWaeuEJXohd+i0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgAJN4S (ORCPT
+        id S1727952AbgAJN5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 08:56:18 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:40456 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727784AbgAJN4S (ORCPT
+        Fri, 10 Jan 2020 08:57:33 -0500
+Received: from conuserg-11.nifty.com ([210.131.2.78]:25572 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727503AbgAJN5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 08:56:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=XDFh81v50T65CqGR12jZtTBrz00AMNxO6f5LHG6APQY=; b=AV133+fOtlsjPiO6C9hIJ9hDD
-        EUyWULs+/urgMHe3Wi3caTqSGZhPV2RHcdmrh2MXTplQlTtaZcLAFni3OGU7AiTZLFGOFP+yYUTkE
-        t39L/UdAD0TGkxrt2xJHPHWhQCqjC0gflRaTpE66ttWZh/Cc2SePUemOLMCYWB/07+UNcT1jfuFhv
-        kbR9U3EFdfgah0oTX4eeXISyusibuK98vKEZd8S/PWZHPXtOh/aRMkKNoWhBT51PJYQXjajFI972S
-        0LVIyqbukpjq1zf5y1KOaKJO8VDQhsXCOYHbqvATltnld2yOsR4NILpu5zP8H2zvfdAlYo1AhKB+h
-        ldkrLGFHQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipulR-0003mo-Qz; Fri, 10 Jan 2020 13:55:50 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5C76130018B;
-        Fri, 10 Jan 2020 14:54:13 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 530AF2B612603; Fri, 10 Jan 2020 14:55:47 +0100 (CET)
-Date:   Fri, 10 Jan 2020 14:55:47 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Wang Long <w@laoqinren.net>, mingo@redhat.com,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
-        mgorman@suse.de, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] sched/psi: create /proc/pressure and
- /proc/pressure/{io|memory|cpu} only when psi enabled
-Message-ID: <20200110135547.GN2844@hirez.programming.kicks-ass.net>
-References: <1576672698-32504-1-git-send-email-w@laoqinren.net>
- <20200108135526.GH2844@hirez.programming.kicks-ass.net>
- <20200109153002.GA8547@cmpxchg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109153002.GA8547@cmpxchg.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 10 Jan 2020 08:57:32 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-11.nifty.com with ESMTP id 00ADuLH8021001;
+        Fri, 10 Jan 2020 22:56:22 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 00ADuLH8021001
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1578664582;
+        bh=zVyX+jnC81yFPW4LBhJZnImuwwlFDcqtIGqjvmZlyqg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vwOmdHD4C4wa/uGHgTN9FkESn/XEWK+Uevv4ZerrGKBY1PZMEDPK7/IWY78IuB2Mg
+         4sGcQi7DeKxMh93gH9tb9e5OTYcmRtDlOlgj2FJP7o/S+vnzRE0FEhO29I2LlM9G70
+         pLjgpTZ5+v9HHS7E9f+5BUTWn//cnwGU5oXYOi8NfAzmB6X/5vFUzsugJ9Za6S2Hqr
+         DzuvkJaDVrha+uERl+0LNUmJC9ys9+d1BUA1BQEg6t3YC6vRiQfWmuFBtSSZZcALJz
+         NbDpOLMUsOlv7cxWnKuD1Dln0Rvk0GIuNl1zSysPA3whmpr9SBm+7ufHhfEAZAHV5J
+         ga5SnnQ6h6Uaw==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org
+Subject: [PATCH v2] staging: vc04_services: remove header include path to vc04_services
+Date:   Fri, 10 Jan 2020 22:56:15 +0900
+Message-Id: <20200110135615.11617-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 10:30:02AM -0500, Johannes Weiner wrote:
-> On Wed, Jan 08, 2020 at 02:55:26PM +0100, Peter Zijlstra wrote:
-> > On Wed, Dec 18, 2019 at 08:38:18PM +0800, Wang Long wrote:
-> > > when CONFIG_PSI_DEFAULT_DISABLED set to N or the command line set psi=0,
-> > > I think we should not create /proc/pressure and
-> > > /proc/pressure/{io|memory|cpu}.
-> > > 
-> > > In the future, user maybe determine whether the psi feature is enabled by
-> > > checking the existence of the /proc/pressure dir or
-> > > /proc/pressure/{io|memory|cpu} files.
-> > 
-> > Works for me; Johannes?
-> 
-> Seems reasonable, and the patch looks good to me.
-> 
-> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Fix up some relative paths in #include "..." directives, and remove
+the include path to drivers/staging/vc04_services.
 
-Thanks!
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+Changes in v2:
+  - fix up some relative paths.
+    I tested with/without O= option this time.
+
+ drivers/staging/vc04_services/Makefile                        | 2 +-
+ drivers/staging/vc04_services/interface/vchi/vchi.h           | 4 ++--
+ .../staging/vc04_services/interface/vchiq_arm/vchiq_shim.c    | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/vc04_services/Makefile b/drivers/staging/vc04_services/Makefile
+index afe43fa5a6d7..54d9e2f31916 100644
+--- a/drivers/staging/vc04_services/Makefile
++++ b/drivers/staging/vc04_services/Makefile
+@@ -13,5 +13,5 @@ vchiq-objs := \
+ obj-$(CONFIG_SND_BCM2835)	+= bcm2835-audio/
+ obj-$(CONFIG_VIDEO_BCM2835)	+= bcm2835-camera/
+ 
+-ccflags-y += -Idrivers/staging/vc04_services -D__VCCOREVER__=0x04000000
++ccflags-y += -D__VCCOREVER__=0x04000000
+ 
+diff --git a/drivers/staging/vc04_services/interface/vchi/vchi.h b/drivers/staging/vc04_services/interface/vchi/vchi.h
+index 56b1037d8e25..ff2b960d8cac 100644
+--- a/drivers/staging/vc04_services/interface/vchi/vchi.h
++++ b/drivers/staging/vc04_services/interface/vchi/vchi.h
+@@ -4,8 +4,8 @@
+ #ifndef VCHI_H_
+ #define VCHI_H_
+ 
+-#include "interface/vchi/vchi_cfg.h"
+-#include "interface/vchi/vchi_common.h"
++#include "vchi_cfg.h"
++#include "vchi_common.h"
+ 
+ /******************************************************************************
+  * Global defs
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
+index 0ce3b08b3441..efdd3b1c7d85 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
+@@ -3,7 +3,7 @@
+ #include <linux/module.h>
+ #include <linux/types.h>
+ 
+-#include "interface/vchi/vchi.h"
++#include "../vchi/vchi.h"
+ #include "vchiq.h"
+ #include "vchiq_core.h"
+ 
+-- 
+2.17.1
+
