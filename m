@@ -2,113 +2,100 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C51C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E067C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C4C2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:57:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XOKkedUq"
+	by mail.kernel.org (Postfix) with ESMTP id 4EB0C2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:57:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbgAJK5k (ORCPT
+        id S1727690AbgAJK5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:57:40 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:54330 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727570AbgAJK5k (ORCPT
+        Fri, 10 Jan 2020 05:57:55 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:51129 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbgAJK5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:57:40 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00AAvakJ052718;
-        Fri, 10 Jan 2020 04:57:36 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578653856;
-        bh=jcTyAyRtrcD73f6Tyow/ueJfOVG81D6QLodR2fJHMvY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=XOKkedUqoHp+t5964azmwZU2yCe3gILekp4p0iTLAd4a/WJXJIBwDKO7FDexkamil
-         GeiX0BABqH8ae/tlXlmIjamwYYnlSvoWo0gfBQlC38Gm5kwfkqRD9eYT28t5VGhD2R
-         GgSLxInwyMSt1P8DtX9bAmzHqfSBCrkIlCNlZeQ0=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00AAvaCo010013
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jan 2020 04:57:36 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
- Jan 2020 04:57:36 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 10 Jan 2020 04:57:36 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00AAvXYQ048117;
-        Fri, 10 Jan 2020 04:57:34 -0600
-Subject: Re: [PATCH v2 1/2] dt-bindings: phy: Add PHY_TYPE_DP definition
-To:     Jyri Sarha <jsarha@ti.com>, <linux-kernel@vger.kernel.org>
-CC:     <tomi.valkeinen@ti.com>, <praneeth@ti.com>, <yamonkar@cadence.com>,
-        <sjakhade@cadence.com>, <robh+dt@kernel.org>, <rogerq@ti.com>
-References: <cover.1578471433.git.jsarha@ti.com>
- <e38387d6bfc38c76e2335b549da409291366e9ac.1578471433.git.jsarha@ti.com>
- <1bccf7b6-3cc0-e39f-f7b9-3ec0b0553804@ti.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <c42d061d-2fd4-5a79-8555-147f53409b32@ti.com>
-Date:   Fri, 10 Jan 2020 16:29:41 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 10 Jan 2020 05:57:55 -0500
+Received: from 79.184.255.90.ipv4.supernova.orange.pl (79.184.255.90) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id 06a198698930fd50; Fri, 10 Jan 2020 11:57:52 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Subject: [PATCH 8/8] intel_idle: Clean up irtl_2_usec()
+Date:   Fri, 10 Jan 2020 11:53:49 +0100
+Message-ID: <43884200.5FZKizBWDr@kreacher>
+In-Reply-To: <14127826.m9lEolTOYu@kreacher>
+References: <14127826.m9lEolTOYu@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <1bccf7b6-3cc0-e39f-f7b9-3ec0b0553804@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+Move the irtl_ns_units[] definition into irtl_2_usec() which is the
+only user of it, drop the ns local variable from irtl_2_usec() as it
+is not really necessary in there, use div_u64() for the division in
+there as the divisor is small enough and use the NSEC_PER_USEC symbol
+for the divisor.
+
+No intentional functional impact.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/idle/intel_idle.c |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
+Index: linux-pm/drivers/idle/intel_idle.c
+===================================================================
+--- linux-pm.orig/drivers/idle/intel_idle.c
++++ linux-pm/drivers/idle/intel_idle.c
+@@ -1292,25 +1292,24 @@ static void __init ivt_idle_state_table_
+ 	/* else, 1 and 2 socket systems use default ivt_cstates */
+ }
+ 
+-/*
+- * Translate IRTL (Interrupt Response Time Limit) MSR to usec
++/**
++ * irtl_2_usec - IRTL to microseconds conversion.
++ *
++ * Translate the IRTL (Interrupt Response Time Limit) MSR value to microseconds.
+  */
+-
+-static const unsigned int irtl_ns_units[] __initconst = {
+-	1, 32, 1024, 32768, 1048576, 33554432, 0, 0
+-};
+-
+ static unsigned long long __init irtl_2_usec(unsigned long long irtl)
+ {
+-	unsigned long long ns;
++	static const unsigned int irtl_ns_units[] __initconst = {
++		1, 32, 1024, 32768, 1048576, 33554432, 0, 0
++	};
+ 
+ 	if (!irtl)
+ 		return 0;
+ 
+-	ns = irtl_ns_units[(irtl >> 10) & 0x7];
+-
+-	return div64_u64((irtl & 0x3FF) * ns, 1000);
++	return div_u64((irtl & 0x3FF) * irtl_ns_units[(irtl >> 10) & 0x7],
++		       NSEC_PER_USEC);
+ }
++
+ /*
+  * bxt_idle_state_table_update(void)
+  *
 
 
-On 09/01/20 4:57 PM, Jyri Sarha wrote:
-> On 08/01/2020 10:30, Jyri Sarha wrote:
->> Add definition for DisplayPort phy type.
->>
->> Signed-off-by: Jyri Sarha <jsarha@ti.com>
->> Reviewed-by: Roger Quadros <rogerq@ti.com>
->> Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> Kishon, maybe you could pick only this patch phy-next, so that we avoid
-> nasty cross dependencies if I get to push DisplayPort dts patches to
-> mainline early.
 
-Sure. Picked them now.
-
-Thanks
-Kishon
-
-> 
-> Best regards,
-> Jyri
-> 
->> ---
->>  include/dt-bindings/phy/phy.h | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
->> index b6a1eaf1b339..1f3f866fae7b 100644
->> --- a/include/dt-bindings/phy/phy.h
->> +++ b/include/dt-bindings/phy/phy.h
->> @@ -16,5 +16,6 @@
->>  #define PHY_TYPE_USB2		3
->>  #define PHY_TYPE_USB3		4
->>  #define PHY_TYPE_UFS		5
->> +#define PHY_TYPE_DP		6
->>  
->>  #endif /* _DT_BINDINGS_PHY */
->>
-> 
-> 
