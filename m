@@ -2,132 +2,81 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC53C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B40E5C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D2492080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947A82080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:43:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgAJLmM (ORCPT
+        id S1727961AbgAJLnA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:42:12 -0500
-Received: from relay.sw.ru ([185.231.240.75]:54746 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727457AbgAJLmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:42:12 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1ipsfy-0006Gw-Sg; Fri, 10 Jan 2020 14:42:03 +0300
-Subject: Re: [PATCH RESEND] mm: fix tick_sched timer blocked by
- pgdat_resize_lock
-To:     Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200110082510.172517-2-shile.zhang@linux.alibaba.com>
- <20200110093053.34777-1-shile.zhang@linux.alibaba.com>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <1ee6088c-9e72-8824-3a9a-fc099d196faf@virtuozzo.com>
-Date:   Fri, 10 Jan 2020 14:42:02 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 10 Jan 2020 06:43:00 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:57728 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727717AbgAJLm7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 06:42:59 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1ipsgg-0003Mf-5N; Fri, 10 Jan 2020 12:42:46 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id BC66A105BE5; Fri, 10 Jan 2020 12:42:45 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv8 02/34] lib/vdso: make do_hres and do_coarse as __always_inline
+In-Reply-To: <ed2e65ae-75b0-ed79-0a95-90be6b82e6be@arm.com>
+References: <20191112012724.250792-1-dima@arista.com> <20191112012724.250792-3-dima@arista.com> <ed2e65ae-75b0-ed79-0a95-90be6b82e6be@arm.com>
+Date:   Fri, 10 Jan 2020 12:42:45 +0100
+Message-ID: <878smfa66i.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200110093053.34777-1-shile.zhang@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.01.2020 12:30, Shile Zhang wrote:
-> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdat_resize_lock'
-> will be called inside 'pgdatinit' kthread to initialise the deferred
-> pages with local interrupts disabled. Which is introduced by
-> commit 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred
-> pages").
-> 
-> But 'pgdatinit' kthread is possible be pined on the boot CPU (CPU#0 by
-> default), especially in small system with NRCPUS <= 2. In this case, the
-> interrupts are disabled on boot CPU during memory initialising, which
-> caused the tick_sched timer be blocked, leading to wall clock stuck.
-> 
-> Fixes: commit 3a2d7fa8a3d5 ("mm: disable interrupts while initializing
-> deferred pages")
-> 
-> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-> ---
->  include/linux/memory_hotplug.h | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index ba0dca6aac6e..be69a6dc4fee 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -6,6 +6,8 @@
->  #include <linux/spinlock.h>
->  #include <linux/notifier.h>
->  #include <linux/bug.h>
-> +#include <linux/sched.h>
-> +#include <linux/smp.h>
->  
->  struct page;
->  struct zone;
-> @@ -282,12 +284,22 @@ static inline bool movable_node_is_enabled(void)
->  static inline
->  void pgdat_resize_lock(struct pglist_data *pgdat, unsigned long *flags)
->  {
-> -	spin_lock_irqsave(&pgdat->node_size_lock, *flags);
-> +	/*
-> +	 * Disable local interrupts on boot CPU will stop the tick_sched
-> +	 * timer, which will block jiffies(wall clock) update.
-> +	 */
-> +	if (current->cpu != get_boot_cpu_id())
-> +		spin_lock_irqsave(&pgdat->node_size_lock, *flags);
-> +	else
-> +		spin_lock(&pgdat->node_size_lock);
->  }
->  static inline
->  void pgdat_resize_unlock(struct pglist_data *pgdat, unsigned long *flags)
->  {
-> -	spin_unlock_irqrestore(&pgdat->node_size_lock, *flags);
-> +	if (current->cpu != get_boot_cpu_id())
-> +		spin_unlock_irqrestore(&pgdat->node_size_lock, *flags);
-> +	else
-> +		spin_unlock(&pgdat->node_size_lock);
->  }
->  static inline
->  void pgdat_resize_init(struct pglist_data *pgdat)
+Vincenzo Frascino <vincenzo.frascino@arm.com> writes:
+> On 11/12/19 1:26 AM, Dmitry Safonov wrote:
+>> +» » vd·=·&vd[CS_HRES_COARSE];
+>> +out_hres:
+>> +» » return·do_hres(vd,·clock,·ts);
+>> » }·else·if·(msk·&·VDSO_COARSE)·{
+>> » » do_coarse(&vd[CS_HRES_COARSE],·clock,·ts);
+>> » » return·0;
+>> » }·else·if·(msk·&·VDSO_RAW)·{
+>> -» » return·do_hres(&vd[CS_RAW],·clock,·ts);
+>> +» » vd·=·&vd[CS_RAW];
+>> +» » /*·goto·allows·to·avoid·extra·inlining·of·do_hres.·*/
+>> +» » goto·out_hres;
+>
+> What is the performance impact of "goto out_hres"?
 
-1)Linux kernel is *preemptible*. Kernel with CONFIG_PREEMPT_RT option even may preempt
-*kernel* code in the middle of function. When you are executing a code containing
-pgdat_resize_lock() and pgdat_resize_unlock(), the process may migrate to another cpu
-between them.
+On x86 it's invisible at least in my limited testing.
 
-bool cpu               another cpu
-----------------------------------
-pgdat_resize_lock()
-  spin_lock()
-  --> migrate to another cpu
-                      pgdat_resize_unlock()
-                      spin_unlock_irqrestore(<uninitialized flags>)
+Thanks,
 
-(Yes, in case of CONFIG_PREEMPT_RT, process is preemptible even after spin_lock() call).
-
-This looks like a bad helpers, and we should not introduce such the design.
-
-2)I think there is no the problem this patch solves. Do we really this statistics?
-Can't we simple remove print message from deferred_init_memmap() and solve this?
-
-Also, you may try to check that sched_clock() gives better results with interrupts
-disabled (on x86 it uses rdtsc, when it's possible. But it also may fallback to
-jiffies-based clock in some hardware cases, and they also won't go with interrupts
-disabled).
-
-Kirill
+        tglx
