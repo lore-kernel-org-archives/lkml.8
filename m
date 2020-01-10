@@ -2,26 +2,26 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC2FC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8352EC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:12:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5C02072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 636F02072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:12:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgAJOMD (ORCPT
+        id S1728051AbgAJOMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:12:03 -0500
-Received: from olimex.com ([184.105.72.32]:33323 "EHLO olimex.com"
+        Fri, 10 Jan 2020 09:12:13 -0500
+Received: from olimex.com ([184.105.72.32]:34055 "EHLO olimex.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727795AbgAJOMC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:12:02 -0500
+        id S1727956AbgAJOMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 09:12:13 -0500
 Received: from localhost.localdomain ([94.155.250.134])
         by olimex.com with ESMTPSA (ECDHE-RSA-AES128-GCM-SHA256:TLSv1.2:Kx=ECDH:Au=RSA:Enc=AESGCM(128):Mac=AEAD) (SMTP-AUTH username stefan@olimex.com, mechanism PLAIN)
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 06:11:56 -0800
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 06:12:01 -0800
 From:   Stefan Mavrodiev <stefan@olimex.com>
 To:     Dan Williams <dan.j.williams@intel.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -36,36 +36,111 @@ To:     Dan Williams <dan.j.williams@intel.com>,
         dri-devel@lists.freedesktop.org (open list:DRM DRIVERS FOR ALLWINNER
         A10)
 Cc:     linux-sunxi@googlegroups.com, Stefan Mavrodiev <stefan@olimex.com>
-Subject: [PATCH 0/2] Add support for sun4i HDMI audio
-Date:   Fri, 10 Jan 2020 16:11:38 +0200
-Message-Id: <20200110141140.28527-1-stefan@olimex.com>
+Subject: [PATCH 1/2] dmaengine: sun4i: Add support for cyclic requests with dedicated DMA
+Date:   Fri, 10 Jan 2020 16:11:39 +0200
+Message-Id: <20200110141140.28527-2-stefan@olimex.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200110141140.28527-1-stefan@olimex.com>
+References: <20200110141140.28527-1-stefan@olimex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series add support for HDMI audio for sun4i HDMI encored.
-The code uses some parts from the Allwinners's BSP kernel.
+Currently the cyclic transfers can be used only with normal DMAs. They
+can be used by pcm_dmaengine module, which is required for implementing
+sound with sun4i-hdmi encoder. This is so because the controller can
+accept audio only from a dedicated DMA.
 
-Currently cyclic DMA transfers are disabled. The first patch permits them
-as they are required for the audio.
+This patch enables them, following the existing style for the
+scatter/gather type transfers.
 
-The patch is tested on A20 chip. For the other chips, only the addresses
-of the registers are checked.
+Signed-off-by: Stefan Mavrodiev <stefan@olimex.com>
+---
+ drivers/dma/sun4i-dma.c | 45 ++++++++++++++++++++++-------------------
+ 1 file changed, 24 insertions(+), 21 deletions(-)
 
-Stefan Mavrodiev (2):
-  dmaengine: sun4i: Add support for cyclic requests with dedicated DMA
-  drm: sun4i: hdmi: Add support for sun4i HDMI encoder audio
-
- drivers/dma/sun4i-dma.c                  |  45 +--
- drivers/gpu/drm/sun4i/Kconfig            |   1 +
- drivers/gpu/drm/sun4i/Makefile           |   1 +
- drivers/gpu/drm/sun4i/sun4i_hdmi.h       |  30 ++
- drivers/gpu/drm/sun4i/sun4i_hdmi_audio.c | 375 +++++++++++++++++++++++
- drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c   |   4 +
- 6 files changed, 435 insertions(+), 21 deletions(-)
- create mode 100644 drivers/gpu/drm/sun4i/sun4i_hdmi_audio.c
-
+diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
+index e397a50058c8..7b41815d86fb 100644
+--- a/drivers/dma/sun4i-dma.c
++++ b/drivers/dma/sun4i-dma.c
+@@ -669,43 +669,41 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
+ 	dma_addr_t src, dest;
+ 	u32 endpoints;
+ 	int nr_periods, offset, plength, i;
++	u8 ram_type, io_mode, linear_mode;
+ 
+ 	if (!is_slave_direction(dir)) {
+ 		dev_err(chan2dev(chan), "Invalid DMA direction\n");
+ 		return NULL;
+ 	}
+ 
+-	if (vchan->is_dedicated) {
+-		/*
+-		 * As we are using this just for audio data, we need to use
+-		 * normal DMA. There is nothing stopping us from supporting
+-		 * dedicated DMA here as well, so if a client comes up and
+-		 * requires it, it will be simple to implement it.
+-		 */
+-		dev_err(chan2dev(chan),
+-			"Cyclic transfers are only supported on Normal DMA\n");
+-		return NULL;
+-	}
+-
+ 	contract = generate_dma_contract();
+ 	if (!contract)
+ 		return NULL;
+ 
+ 	contract->is_cyclic = 1;
+ 
+-	/* Figure out the endpoints and the address we need */
++	if (vchan->is_dedicated) {
++		io_mode = SUN4I_DDMA_ADDR_MODE_IO;
++		linear_mode = SUN4I_DDMA_ADDR_MODE_LINEAR;
++		ram_type = SUN4I_DDMA_DRQ_TYPE_SDRAM;
++	} else {
++		io_mode = SUN4I_NDMA_ADDR_MODE_IO;
++		linear_mode = SUN4I_NDMA_ADDR_MODE_LINEAR;
++		ram_type = SUN4I_NDMA_DRQ_TYPE_SDRAM;
++	}
++
+ 	if (dir == DMA_MEM_TO_DEV) {
+ 		src = buf;
+ 		dest = sconfig->dst_addr;
+-		endpoints = SUN4I_DMA_CFG_SRC_DRQ_TYPE(SUN4I_NDMA_DRQ_TYPE_SDRAM) |
+-			    SUN4I_DMA_CFG_DST_DRQ_TYPE(vchan->endpoint) |
+-			    SUN4I_DMA_CFG_DST_ADDR_MODE(SUN4I_NDMA_ADDR_MODE_IO);
++		endpoints = SUN4I_DMA_CFG_DST_DRQ_TYPE(vchan->endpoint) |
++			    SUN4I_DMA_CFG_DST_ADDR_MODE(io_mode) |
++			    SUN4I_DMA_CFG_SRC_DRQ_TYPE(ram_type);
+ 	} else {
+ 		src = sconfig->src_addr;
+ 		dest = buf;
+-		endpoints = SUN4I_DMA_CFG_SRC_DRQ_TYPE(vchan->endpoint) |
+-			    SUN4I_DMA_CFG_SRC_ADDR_MODE(SUN4I_NDMA_ADDR_MODE_IO) |
+-			    SUN4I_DMA_CFG_DST_DRQ_TYPE(SUN4I_NDMA_DRQ_TYPE_SDRAM);
++		endpoints = SUN4I_DMA_CFG_DST_DRQ_TYPE(ram_type) |
++			    SUN4I_DMA_CFG_SRC_DRQ_TYPE(vchan->endpoint) |
++			    SUN4I_DMA_CFG_SRC_ADDR_MODE(io_mode);
+ 	}
+ 
+ 	/*
+@@ -747,8 +745,13 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
+ 			dest = buf + offset;
+ 
+ 		/* Make the promise */
+-		promise = generate_ndma_promise(chan, src, dest,
+-						plength, sconfig, dir);
++		if (vchan->is_dedicated)
++			promise = generate_ddma_promise(chan, src, dest,
++							plength, sconfig);
++		else
++			promise = generate_ndma_promise(chan, src, dest,
++							plength, sconfig, dir);
++
+ 		if (!promise) {
+ 			/* TODO: should we free everything? */
+ 			return NULL;
 -- 
 2.17.1
+
