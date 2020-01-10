@@ -2,101 +2,193 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F21C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECBF9C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE63E2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBDD920721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:58:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578693486;
+	bh=SQdZq/p+dzGMDqi7hSyWDXx9xlXOCLYPTg0nUfBK3L8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Lj1ZFoBlk2TbGqmGCLDrAuCUCiaDvXdtHbmUNoqEn/6T42z4s+qUK0qSDCglVn6ys
+	 R83PCDEg3PHjcVqMiPGLr1rQWZsksDRxWHnE1D68KibgjNyXaHIig8/koDJeNInpmx
+	 tpmFnovJ4cIytAmh4Qhlbq1gcpwh6UouS2aQH5XU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgAJV5m (ORCPT
+        id S1727482AbgAJV6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 16:57:42 -0500
-Received: from mga17.intel.com ([192.55.52.151]:3026 "EHLO mga17.intel.com"
+        Fri, 10 Jan 2020 16:58:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbgAJV5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 16:57:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 13:57:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
-   d="scan'208";a="218782780"
-Received: from unknown (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.183.94])
-  by fmsmga008.fm.intel.com with ESMTP; 10 Jan 2020 13:57:38 -0800
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH 1/6] soundwire: cadence_master: filter out bad interrupts
-Date:   Fri, 10 Jan 2020 15:57:26 -0600
-Message-Id: <20200110215731.30747-2-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200110215731.30747-1-pierre-louis.bossart@linux.intel.com>
-References: <20200110215731.30747-1-pierre-louis.bossart@linux.intel.com>
+        id S1727006AbgAJV6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 16:58:01 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8620F20721;
+        Fri, 10 Jan 2020 21:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578693479;
+        bh=SQdZq/p+dzGMDqi7hSyWDXx9xlXOCLYPTg0nUfBK3L8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=TuNDvWyDqmxhbw7f2e8GPUwsXFjAaNLs3mRSDlxPNfQjvoDf7hKuwVDTTWsa7bsZ5
+         H7P7PKcfRcTxeZFNbi5RKs/NKoMearXMegPBzLfT6REHWSLKskoEZul7qPrXVJZZRd
+         sCr3joS+Y/zavcTu8oS2Mve21wzOv//Gy2iGLIe8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 32D5E352274B; Fri, 10 Jan 2020 13:57:59 -0800 (PST)
+Date:   Fri, 10 Jan 2020 13:57:59 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build warning after merge of the rcu tree
+Message-ID: <20200110215759.GA2216@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191212160622.021517d3@canb.auug.org.au>
+ <20191212060200.GW2889@paulmck-ThinkPad-P72>
+ <CANn89iKJhsMLUBNbkXSr1+t+38POFU8jWrP+tU3JWLjs__HuPw@mail.gmail.com>
+ <CANn89i+xomdo4HFqewrfNf_Z4Q5ayXuW6A4SjSkE46JXP9KuFw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANn89i+xomdo4HFqewrfNf_Z4Q5ayXuW6A4SjSkE46JXP9KuFw@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If somehow we read the interrupt status while the IP is not powered
-the result is probably undefined or 0xffffffff. We do know that some
-of the bits are reserved and read as zero, so use as a filter to
-discard invalid configurations.
+Please accept my apologies for losing track of this one, and for
+top-posting to any of you who might be sticklers for that sort of thing.
+I must pull this commit out of my set for the next merge window, apply
+it to the group for the next merge window, and try out Eric's suggested
+changes.  Might still make the next merge window, but clearly not in
+its current condition.
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- drivers/soundwire/cadence_master.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+If it has taken some other path in the meantime, please do let me know!
 
-diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
-index fed21e2b2277..a0ec21b64d42 100644
---- a/drivers/soundwire/cadence_master.c
-+++ b/drivers/soundwire/cadence_master.c
-@@ -74,6 +74,7 @@ MODULE_PARM_DESC(cdns_mcp_int_mask, "Cadence MCP IntMask");
- #define CDNS_MCP_INTMASK			0x48
- 
- #define CDNS_MCP_INT_IRQ			BIT(31)
-+#define CDNS_MCP_INT_RESERVED1			GENMASK(30, 17)
- #define CDNS_MCP_INT_WAKEUP			BIT(16)
- #define CDNS_MCP_INT_SLAVE_RSVD			BIT(15)
- #define CDNS_MCP_INT_SLAVE_ALERT		BIT(14)
-@@ -85,10 +86,12 @@ MODULE_PARM_DESC(cdns_mcp_int_mask, "Cadence MCP IntMask");
- #define CDNS_MCP_INT_DATA_CLASH			BIT(9)
- #define CDNS_MCP_INT_PARITY			BIT(8)
- #define CDNS_MCP_INT_CMD_ERR			BIT(7)
-+#define CDNS_MCP_INT_RESERVED2			GENMASK(6, 4)
- #define CDNS_MCP_INT_RX_NE			BIT(3)
- #define CDNS_MCP_INT_RX_WL			BIT(2)
- #define CDNS_MCP_INT_TXE			BIT(1)
- #define CDNS_MCP_INT_TXF			BIT(0)
-+#define CDNS_MCP_INT_RESERVED (CDNS_MCP_INT_RESERVED1 | CDNS_MCP_INT_RESERVED2)
- 
- #define CDNS_MCP_INTSET				0x4C
- 
-@@ -705,6 +708,10 @@ irqreturn_t sdw_cdns_irq(int irq, void *dev_id)
- 
- 	int_status = cdns_readl(cdns, CDNS_MCP_INTSTAT);
- 
-+	/* check for reserved values read as zero */
-+	if (int_status & CDNS_MCP_INT_RESERVED)
-+		return IRQ_NONE;
-+
- 	if (!(int_status & CDNS_MCP_INT_IRQ))
- 		return IRQ_NONE;
- 
--- 
-2.20.1
+							Thanx, Paul
 
+On Wed, Dec 11, 2019 at 10:57:24PM -0800, Eric Dumazet wrote:
+> On Wed, Dec 11, 2019 at 10:38 PM Eric Dumazet <edumazet@google.com> wrote:
+> >
+> > On Wed, Dec 11, 2019 at 10:02 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> > >
+> > > On Thu, Dec 12, 2019 at 04:06:22PM +1100, Stephen Rothwell wrote:
+> > > > Hi all,
+> > > >
+> > > > After merging the rcu (I think) tree, today's linux-next build (x86_64
+> > > > allnoconfig) produced this warning:
+> > > >
+> > > > kernel/time/timer.c: In function 'schedule_timeout':
+> > > > kernel/time/timer.c:969:20: warning: 'timer.expires' may be used uninitialized in this function [-Wmaybe-uninitialized]
+> > > >   969 |   long diff = timer->expires - expires;
+> > > >       |               ~~~~~^~~~~~~~~
+> > > >
+> > > > Introduced by (bisected to) commit
+> > > >
+> > > >   c4127fce1d02 ("timer: Use hlist_unhashed_lockless() in timer_pending()")
+> > > >
+> > > > x86_64-linux-gnu-gcc (Debian 9.2.1-21) 9.2.1 20191130
+> > >
+> > > Well, if the timer is pending, then ->expires has to have been
+> > > initialized, but off where the compiler cannot see it, such as during a
+> > > previous call to __mod_timer().  And the change may have made it harder
+> > > for the compiler to see all of these relationships, but...
+> > >
+> > > I don't see this warning with gcc version 7.4.0.  Just out of curiosity,
+> > > what are you running, Stephen?
+> > >
+> > > Eric, any thoughts for properly educating the compiler on this one?
+> >
+> > Ah... the READ_ONCE() apparently turns off the compiler ability to
+> > infer that this branch should not be taken.
+> >
+> > Since __mod_timer() is inlined we could perhaps add a new option
+> >
+> > diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+> > index 4820823515e9..8bbce552568b 100644
+> > --- a/kernel/time/timer.c
+> > +++ b/kernel/time/timer.c
+> > @@ -944,6 +944,7 @@ static struct timer_base *lock_timer_base(struct
+> > timer_list *timer,
+> >
+> >  #define MOD_TIMER_PENDING_ONLY         0x01
+> >  #define MOD_TIMER_REDUCE               0x02
+> > +#define MOD_TIMER_NOTPENDING           0x04
+> >
+> >  static inline int
+> >  __mod_timer(struct timer_list *timer, unsigned long expires, unsigned
+> > int options)
+> > @@ -960,7 +961,7 @@ __mod_timer(struct timer_list *timer, unsigned
+> > long expires, unsigned int option
+> >          * the timer is re-modified to have the same timeout or ends up in the
+> >          * same array bucket then just return:
+> >          */
+> > -       if (timer_pending(timer)) {
+> > +       if (!(options & MOD_TIMER_NOTPENDING) && timer_pending(timer)) {
+> >                 /*
+> >                  * The downside of this optimization is that it can result in
+> >                  * larger granularity than you would get from adding a new
+> > @@ -1891,7 +1892,7 @@ signed long __sched schedule_timeout(signed long timeout)
+> >
+> >         timer.task = current;
+> >         timer_setup_on_stack(&timer.timer, process_timeout, 0);
+> > -       __mod_timer(&timer.timer, expire, 0);
+> > +       __mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);
+> >         schedule();
+> >         del_singleshot_timer_sync(&timer.timer);
+> 
+> 
+> Also add_timer() can benefit from the same hint, since it seems inlined as well.
+> 
+> (untested patch)
+> 
+> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+> index 4820823515e9..568564ae3597 100644
+> --- a/kernel/time/timer.c
+> +++ b/kernel/time/timer.c
+> @@ -944,6 +944,7 @@ static struct timer_base *lock_timer_base(struct
+> timer_list *timer,
+> 
+>  #define MOD_TIMER_PENDING_ONLY         0x01
+>  #define MOD_TIMER_REDUCE               0x02
+> +#define MOD_TIMER_NOTPENDING           0x04
+> 
+>  static inline int
+>  __mod_timer(struct timer_list *timer, unsigned long expires, unsigned
+> int options)
+> @@ -960,7 +961,7 @@ __mod_timer(struct timer_list *timer, unsigned
+> long expires, unsigned int option
+>          * the timer is re-modified to have the same timeout or ends up in the
+>          * same array bucket then just return:
+>          */
+> -       if (timer_pending(timer)) {
+> +       if (!(options & MOD_TIMER_NOTPENDING) && timer_pending(timer)) {
+>                 /*
+>                  * The downside of this optimization is that it can result in
+>                  * larger granularity than you would get from adding a new
+> @@ -1133,7 +1134,7 @@ EXPORT_SYMBOL(timer_reduce);
+>  void add_timer(struct timer_list *timer)
+>  {
+>         BUG_ON(timer_pending(timer));
+> -       mod_timer(timer, timer->expires);
+> +       __mod_timer(timer, timer->expires, MOD_TIMER_NOTPENDING);
+>  }
+>  EXPORT_SYMBOL(add_timer);
+> 
+> @@ -1891,7 +1892,7 @@ signed long __sched schedule_timeout(signed long timeout)
+> 
+>         timer.task = current;
+>         timer_setup_on_stack(&timer.timer, process_timeout, 0);
+> -       __mod_timer(&timer.timer, expire, 0);
+> +       __mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);
+>         schedule();
+>         del_singleshot_timer_sync(&timer.timer);
