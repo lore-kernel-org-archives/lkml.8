@@ -2,96 +2,136 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D102DC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1256C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92416206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MROnmtSq"
+	by mail.kernel.org (Postfix) with ESMTP id 7F28D206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgAJTbI (ORCPT
+        id S1729158AbgAJTbE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:31:08 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60862 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729147AbgAJTbD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:31:03 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00AJUwJn094609;
-        Fri, 10 Jan 2020 13:30:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578684658;
-        bh=FmFre3D1v2uvSgCmb16gwmygh7BGUpqD8FGcahDNICk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=MROnmtSqB4RRTP9M+GBGNbauhj0DJAbOv94nr7ZAyy7R+HJlpelRMEGCq1ZzAgt/1
-         uhgIU2tES5yv2ZPKRPbTk/pQzlTh8XJ68j69paH+DkmPKb7QCYG/gFnw/dw1JYa25E
-         zjgAtgb9k+T6kePR2ShgTrSR/iYOW3jP7ska3BwE=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00AJUvVS120153
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jan 2020 13:30:58 -0600
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
- Jan 2020 13:30:57 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 10 Jan 2020 13:30:57 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00AJUvSo065048;
-        Fri, 10 Jan 2020 13:30:57 -0600
-Subject: Re: [PATCH 0/4] TI DP8382x Phy support update
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200110184702.14330-1-dmurphy@ti.com>
- <20200110192524.GO19739@lunn.ch>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <2e9333e1-1ee7-80ce-fab4-a98a9f4b345f@ti.com>
-Date:   Fri, 10 Jan 2020 13:28:04 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 10 Jan 2020 14:31:04 -0500
+Received: from mga01.intel.com ([192.55.52.88]:21831 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728860AbgAJTaA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 14:30:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:30:00 -0800
+X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
+   d="scan'208";a="216772415"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:29:59 -0800
+From:   ira.weiny@intel.com
+To:     linux-kernel@vger.kernel.org
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [RFC PATCH V2 03/12] fs/xfs: Separate functionality of xfs_inode_supports_dax()
+Date:   Fri, 10 Jan 2020 11:29:33 -0800
+Message-Id: <20200110192942.25021-4-ira.weiny@intel.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200110192942.25021-1-ira.weiny@intel.com>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200110192524.GO19739@lunn.ch>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew
+From: Ira Weiny <ira.weiny@intel.com>
 
-On 1/10/20 1:25 PM, Andrew Lunn wrote:
-> On Fri, Jan 10, 2020 at 12:46:58PM -0600, Dan Murphy wrote:
->> Hello
->>
->> These patches update and fix some issue found in the TI ethernet PHY drivers.
-> Hi Dan
->
-> Please could you separate fixes from new functionality. Have the fixes
-> based on net, and new functionality on net-next.
+xfs_inode_supports_dax() should reflect if the inode can support DAX not
+that it is enabled for DAX.  Leave that to other helper functions.
 
-You mean separate series between fixes and functionality?
+Change the caller of xfs_inode_supports_dax() to call
+xfs_inode_use_dax() which reflects new logic to override the effective
+DAX flag with either the mount option or the physical DAX flag.
 
-Sure I can separate them but they are dependent on each other.
+To make the logic clear create 2 helper functions for the mount and
+physical flag.
 
-3 and 4 will not apply cleanly if patch 1 and 2 are not merged first.
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ fs/xfs/xfs_iops.c | 32 ++++++++++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 6 deletions(-)
 
-Did you want patch 1 and patch 2 sent separately or together as part of 
-their own series?
-
-Dan
-
+diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+index 8afe69ca188b..0a0ea90259e9 100644
+--- a/fs/xfs/xfs_iops.c
++++ b/fs/xfs/xfs_iops.c
+@@ -1234,6 +1234,15 @@ static const struct inode_operations xfs_inline_symlink_inode_operations = {
+ 	.update_time		= xfs_vn_update_time,
+ };
+ 
++static bool
++xfs_inode_mount_is_dax(
++	struct xfs_inode *ip)
++{
++	struct xfs_mount	*mp = ip->i_mount;
++
++	return (mp->m_flags & XFS_MOUNT_DAX) == XFS_MOUNT_DAX;
++}
++
+ /* Figure out if this file actually supports DAX. */
+ static bool
+ xfs_inode_supports_dax(
+@@ -1245,11 +1254,6 @@ xfs_inode_supports_dax(
+ 	if (!S_ISREG(VFS_I(ip)->i_mode) || xfs_is_reflink_inode(ip))
+ 		return false;
+ 
+-	/* DAX mount option or DAX iflag must be set. */
+-	if (!(mp->m_flags & XFS_MOUNT_DAX) &&
+-	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
+-		return false;
+-
+ 	/* Block size must match page size */
+ 	if (mp->m_sb.sb_blocksize != PAGE_SIZE)
+ 		return false;
+@@ -1258,6 +1262,22 @@ xfs_inode_supports_dax(
+ 	return xfs_inode_buftarg(ip)->bt_daxdev != NULL;
+ }
+ 
++static bool
++xfs_inode_is_dax(
++	struct xfs_inode *ip)
++{
++	return (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX) == XFS_DIFLAG2_DAX;
++}
++
++static bool
++xfs_inode_use_dax(
++	struct xfs_inode *ip)
++{
++	return xfs_inode_supports_dax(ip) &&
++		(xfs_inode_mount_is_dax(ip) ||
++		 xfs_inode_is_dax(ip));
++}
++
+ STATIC void
+ xfs_diflags_to_iflags(
+ 	struct inode		*inode,
+@@ -1276,7 +1296,7 @@ xfs_diflags_to_iflags(
+ 		inode->i_flags |= S_SYNC;
+ 	if (flags & XFS_DIFLAG_NOATIME)
+ 		inode->i_flags |= S_NOATIME;
+-	if (xfs_inode_supports_dax(ip))
++	if (xfs_inode_use_dax(ip))
+ 		inode->i_flags |= S_DAX;
+ }
+ 
+-- 
+2.21.0
 
