@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6D5C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:16:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09612C33CA6
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 240FD20842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:16:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE6D820842
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:16:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="eJF+mvZK"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="v/+fcVi+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgAJNQN (ORCPT
+        id S1727785AbgAJNQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 08:16:13 -0500
+        Fri, 10 Jan 2020 08:16:18 -0500
 Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:46508 "EHLO
         smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727347AbgAJNQL (ORCPT
+        with ESMTP id S1727408AbgAJNQQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 08:16:11 -0500
+        Fri, 10 Jan 2020 08:16:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1578662168; x=1610198168;
+  t=1578662175; x=1610198175;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=zkU+qHX/Xc5CSUysouaRqybitlWsaWQ/AqF6hTBcveY=;
-  b=eJF+mvZKkR8SSW4PCao1sWXSqFt+UBjeUxW/tesB/xdFgtOV4sbmfdV6
-   nkJJQkT5xRuwJd5A0aP9Uv9RZcriKhDPNL2spcomjR7yKHxB6Lk1yW4DT
-   cFDRmbuaOW8HtKF512ClrDjSPB/2qHOE8XR1/P4bEiPu2AjqNUjisGcN2
-   0=;
-IronPort-SDR: cXLRyCP4lvu1Tmj51KbAYqo8EKZV5in2j9Jq+q/6E+8PvZGEOVq87HuOx7ixWJ2vDF6VlKGDEi
- NJ/2x7/VjaMg==
+  bh=WerMUO/qpSqjTgSXC4CARN0MxavhaBRm9YNNK0ZfhrM=;
+  b=v/+fcVi+Ke8kU9jc7Ev/ZqKpKbusQ9btH1EXrT5dpwwPraLvL+ESItuc
+   bzR81hN7BXBaiqtB2MhadK8JL3URjioDv6//9XdI6dV/prQm124wMUebt
+   FCnHfzJb7feT7rzyATshQcqjsCg4+qHIkxujbO43abMDBMN2CPKSiYEmN
+   E=;
+IronPort-SDR: 3RVzEwdQvjmq7wiM5YWZTP89FsDgphbyHOKX/HZgyySmxvue4fF4tk7eqap/VYYW4sSxkwb7/O
+ 6vr7iY/aTaMw==
 X-IronPort-AV: E=Sophos;i="5.69,417,1571702400"; 
-   d="scan'208";a="17962725"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-c5104f52.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 10 Jan 2020 13:15:59 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-c5104f52.us-west-2.amazon.com (Postfix) with ESMTPS id 14015A1E9D;
-        Fri, 10 Jan 2020 13:15:58 +0000 (UTC)
+   d="scan'208";a="17962751"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-f273de60.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 10 Jan 2020 13:16:14 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-f273de60.us-east-1.amazon.com (Postfix) with ESMTPS id 122FDA230F;
+        Fri, 10 Jan 2020 13:16:09 +0000 (UTC)
 Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 10 Jan 2020 13:15:57 +0000
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Fri, 10 Jan 2020 13:16:09 +0000
 Received: from u886c93fd17d25d.ant.amazon.com (10.43.161.115) by
  EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 10 Jan 2020 13:15:52 +0000
+ id 15.0.1367.3; Fri, 10 Jan 2020 13:16:05 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
         <corbet@lwn.net>, <linux-doc@vger.kernel.org>, <mgorman@suse.de>,
         <brendanhiggins@google.com>, <sj38.park@gmail.com>,
         SeongJae Park <sjpark@amazon.de>
-Subject: [RFC PATCH 1/5] mm: Introduce Data Access MONitor (DAMON)
-Date:   Fri, 10 Jan 2020 14:15:18 +0100
-Message-ID: <20200110131522.29964-2-sjpark@amazon.com>
+Subject: [RFC PATCH 4/5] Documentation/admin-guide/mm: Add a document for DAMON
+Date:   Fri, 10 Jan 2020 14:15:21 +0100
+Message-ID: <20200110131522.29964-5-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200110131522.29964-1-sjpark@amazon.com>
 References: <20200110131522.29964-1-sjpark@amazon.com>
@@ -72,1212 +72,269 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit introduces the main logic of DAMON.  Because this commit is
-for the core logic only, it lacks an external interface to run DAMON.
-Following commit will add the interface.
-
-----
-
-DAMON is a kernel module that allows users to monitor the actual memory
-access pattern of specific user-space processes.  It aims to be 1)
-accurate enough to be useful for performance-centric domains, and 2)
-sufficiently light-weight so that it can be applied online.
-
-For the goals, DAMON utilizes its two core mechanisms, called
-region-based sampling and adaptive regions adjustment.  The region-based
-sampling allows users to make their own trade-off between the quality
-and the overhead of the monitoring and set the upperbound of the
-monitoring overhead.  Further, the adaptive regions adjustment mechanism
-makes DAMON to maximize the quality and minimize the overhead with its
-best efforts while preserving the users configured trade-off.
-
-Expected Use-cases
-==================
-
-A straightforward usecase of DAMON would be the program behavior
-analysis.  With the DAMON output, users can confirm whether the program
-is running as intended or not.  This will be useful for debuggings and
-tests of design points.
-
-The monitored results can also be useful for counting the dynamic
-working set size of workloads.  For the administration of memory
-overcommitted systems or selection of the environments (e.g., containers
-providing different amount of memory) for your workloads, this will be
-useful.
-
-If you are a programmer, you can optimize your program by managing the
-memory based on the actual data access pattern.  For example, you can
-identify the dynamic hotness of your data using DAMON and call
-``mlock()`` to keep your hot data in DRAM, or call ``madvise()`` with
-``MADV_PAGEOUT`` to proactively reclaim cold data.  Even though your
-program is guaranteed to not encounter memory pressure, you can still
-improve the performance by applying the DAMON outputs for call of
-``MADV_HUGEPAGE`` and ``MADV_NOHUGEPAGE``.  More creative optimizations
-would be possible.  Our evaluations of DAMON includes a straightforward
-optimization using the ``mlock()``.  Please refer to the below
-Evaluation section for more detail.
-
-As DAMON incurs very low overhead, such optimizations can be applied not
-only offline, but also online.  Also, there is no reason to limit such
-optimizations to the user space.  Several parts of the kernel's memory
-management mechanisms could be also optimized using DAMON. The
-reclamation, the THP (de)promotion decisions, and the compaction would
-be such a candidates.  Nevertheless, current version of DAMON is not
-highly optimized for the online/in-kernel uses.
-
-Mechanisms of DAMON
-===================
-
-Basic Access Check
-------------------
-
-DAMON basically reports what pages are how frequently accessed.  The
-report is passed to users in binary format via a ``result file`` which
-users can set it's path.  Note that the frequency is not an absolute
-number of accesses, but a relative frequency among the pages of the
-target workloads.
-
-Users can also control the resolution of the reports by setting two time
-intervals, ``sampling interval`` and ``aggregation interval``.  In
-detail, DAMON checks access to each page per ``sampling interval``,
-aggregates the results (counts the number of the accesses to each page),
-and reports the aggregated results per ``aggregation interval``.  For
-the access check of each page, DAMON uses the Accessed bits of PTEs.
-
-This is thus similar to the previously mentioned periodic access checks
-based mechanisms, which overhead is increasing as the size of the target
-process grows.
-
-Region Based Sampling
----------------------
-
-To avoid the unbounded increase of the overhead, DAMON groups a number
-of adjacent pages that assumed to have same access frequencies into a
-region.  As long as the assumption (pages in a region have same access
-frequencies) is kept, only one page in the region is required to be
-checked.  Thus, for each ``sampling interval``, DAMON randomly picks one
-page in each region and clears its Accessed bit.  After one more
-``sampling interval``, DAMON reads the Accessed bit of the page and
-increases the access frequency of the region if the bit has set
-meanwhile.  Therefore, the monitoring overhead is controllable by
-setting the number of regions.  DAMON allows users to set the minimal
-and maximum number of regions for the trade-off.
-
-Except the assumption, this is almost same with the above-mentioned
-miniature-like static region based sampling.  In other words, this
-scheme cannot preserve the quality of the output if the assumption is
-not guaranteed.
-
-Adaptive Regions Adjustment
----------------------------
-
-At the beginning of the monitoring, DAMON constructs the initial regions
-by evenly splitting the memory mapped address space of the process into
-the user-specified minimal number of regions.  In this initial state,
-the assumption is normally not kept and thus the quality could be low.
-To keep the assumption as much as possible, DAMON adaptively merges and
-splits each region.  For each ``aggregation interval``, it compares the
-access frequencies of adjacent regions and merges those if the frequency
-difference is small.  Then, after it reports and clears the aggregated
-access frequency of each region, it splits each region into two regions
-if the total number of regions is smaller than the half of the
-user-specified maximum number of regions.
-
-In this way, DAMON provides its best-effort quality and minimal overhead
-while keeping the bounds users set for their trade-off.
-
-Applying Dynamic Memory Mappings
---------------------------------
-
-Only a number of small parts in the super-huge virtual address space of
-the processes is mapped to physical memory and accessed.  Thus, tracking
-the unmapped address regions is just wasteful.  However, tracking every
-memory mapping change might incur an overhead.  For the reason, DAMON
-applies the dynamic memory mapping changes to the tracking regions only
-for each of a user-specified time interval (``regions update
-interval``).
+This commit adds a simple document for DAMON under
+'Documentation/admin-guide/mm/'.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- mm/Kconfig  |   12 +
- mm/Makefile |    1 +
- mm/damon.c  | 1037 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 1050 insertions(+)
- create mode 100644 mm/damon.c
+ .../admin-guide/mm/data_access_monitor.rst    | 235 ++++++++++++++++++
+ Documentation/admin-guide/mm/index.rst        |   1 +
+ 2 files changed, 236 insertions(+)
+ create mode 100644 Documentation/admin-guide/mm/data_access_monitor.rst
 
-diff --git a/mm/Kconfig b/mm/Kconfig
-index a5dae9a7eb51..b7af8a1b5cb5 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -736,4 +736,16 @@ config ARCH_HAS_PTE_SPECIAL
- config ARCH_HAS_HUGEPD
- 	bool
- 
-+config DAMON
-+	bool "Data Access Monitor"
-+	depends on MMU
-+	default y
-+	help
-+	  Provides data access monitoring.
-+
-+	  DAMON is a kernel module that allows users to monitor the actual
-+	  memory access pattern of specific user-space processes.  It aims to
-+	  be 1) accurate enough to be useful for performance-centric domains,
-+	  and 2) sufficiently light-weight so that it can be applied online.
-+
- endmenu
-diff --git a/mm/Makefile b/mm/Makefile
-index d996846697ef..6c3c7c364015 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -107,3 +107,4 @@ obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
- obj-$(CONFIG_ZONE_DEVICE) += memremap.o
- obj-$(CONFIG_HMM_MIRROR) += hmm.o
- obj-$(CONFIG_MEMFD_CREATE) += memfd.o
-+obj-$(CONFIG_DAMON) += damon.o
-diff --git a/mm/damon.c b/mm/damon.c
+diff --git a/Documentation/admin-guide/mm/data_access_monitor.rst b/Documentation/admin-guide/mm/data_access_monitor.rst
 new file mode 100644
-index 000000000000..9a603c3f966a
+index 000000000000..907a7af75f35
 --- /dev/null
-+++ b/mm/damon.c
-@@ -0,0 +1,1037 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Data Access Monitor
-+ *
-+ * Copyright 2019 Amazon.com, Inc. or its affiliates.  All rights reserved.
-+ *
-+ * Author: SeongJae Park <sjpark@amazon.de>
-+ */
-+
-+#define pr_fmt(fmt) "damon: " fmt
-+
-+#include <linux/delay.h>
-+#include <linux/kthread.h>
-+#include <linux/mm.h>
-+#include <linux/module.h>
-+#include <linux/page_idle.h>
-+#include <linux/random.h>
-+#include <linux/sched/mm.h>
-+#include <linux/sched/task.h>
-+#include <linux/slab.h>
-+
-+#define damon_get_task_struct(t) \
-+	(get_pid_task(find_vpid(t->pid), PIDTYPE_PID))
-+
-+#define damon_next_region(r) \
-+	(container_of(r->list.next, struct damon_region, list))
-+
-+#define damon_prev_region(r) \
-+	(container_of(r->list.prev, struct damon_region, list))
-+
-+#define damon_for_each_region(r, t) \
-+	list_for_each_entry(r, &t->regions_list, list)
-+
-+#define damon_for_each_region_safe(r, next, t) \
-+	list_for_each_entry_safe(r, next, &t->regions_list, list)
-+
-+#define damon_for_each_task(t) \
-+	list_for_each_entry(t, &damon_tasks_list, list)
-+
-+#define damon_for_each_task_safe(t, next) \
-+	list_for_each_entry_safe(t, next, &damon_tasks_list, list)
-+
-+/* Represents a monitoring target region on the virtual address space */
-+struct damon_region {
-+	unsigned long vm_start;
-+	unsigned long vm_end;
-+	unsigned long sampling_addr;
-+	unsigned int nr_accesses;
-+	struct list_head list;
-+};
-+
-+/* Represents a monitoring target task */
-+struct damon_task {
-+	unsigned long pid;
-+	struct list_head regions_list;
-+	struct list_head list;
-+};
-+
-+/* List of damon_task objects */
-+static LIST_HEAD(damon_tasks_list);
-+
-+/*
-+ * For each 'sample_interval', DAMON checks whether each region is accessed or
-+ * not.  It aggregates and keeps the access information (number of accesses to
-+ * each region) for 'aggr_interval' and then flushes it to the result buffer if
-+ * an 'aggr_interval' surpassed.  And for each 'regions_update_interval', damon
-+ * checks whether the memory mapping of the target tasks has changed (e.g., by
-+ * mmap() calls from the applications) and applies the changes.
-+ *
-+ * All time intervals are in micro-seconds.
-+ */
-+static unsigned long sample_interval = 5 * 1000;
-+static unsigned long aggr_interval = 100 * 1000;
-+static unsigned long regions_update_interval = 1000 * 1000;
-+
-+static struct timespec64 last_aggregate_time;
-+static struct timespec64 last_regions_update_time;
-+
-+static unsigned long min_nr_regions = 10;
-+static unsigned long max_nr_regions = 1000;
-+
-+/* result buffer */
-+#define DAMON_LEN_RBUF	(1024 * 1024 * 4)
-+static char damon_rbuf[DAMON_LEN_RBUF];
-+static unsigned int damon_rbuf_offset;
-+
-+/* result file */
-+#define LEN_RES_FILE_PATH	256
-+static char rfile_path[LEN_RES_FILE_PATH] = "/damon.data";
-+
-+static struct task_struct *kdamond;
-+static bool kdamond_stop;
-+
-+/* Protects read/write of kdamond and kdamond_stop */
-+static DEFINE_SPINLOCK(kdamond_lock);
-+
-+static struct rnd_state rndseed;
-+/* Get a random number in [l, r) */
-+#define damon_rand(l, r) (l + prandom_u32_state(&rndseed) % (r - l))
-+
-+/*
-+ * Construct a damon_region struct
-+ *
-+ * Returns the pointer to the new struct if success, or NULL otherwise
-+ */
-+static struct damon_region *damon_new_region(unsigned long vm_start,
-+					unsigned long vm_end)
-+{
-+	struct damon_region *ret;
-+
-+	ret = kmalloc(sizeof(struct damon_region), GFP_KERNEL);
-+	if (!ret)
-+		return NULL;
-+	ret->vm_start = vm_start;
-+	ret->vm_end = vm_end;
-+	ret->nr_accesses = 0;
-+	ret->sampling_addr = damon_rand(vm_start, vm_end);
-+	INIT_LIST_HEAD(&ret->list);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Add a region between two other regions
-+ */
-+static inline void damon_add_region(struct damon_region *r,
-+		struct damon_region *prev, struct damon_region *next)
-+{
-+	__list_add(&r->list, &prev->list, &next->list);
-+}
-+
-+/*
-+ * Append a region to a task's list of regions
-+ */
-+static void damon_add_region_tail(struct damon_region *r, struct damon_task *t)
-+{
-+	list_add_tail(&r->list, &t->regions_list);
-+}
-+
-+/*
-+ * Delete a region from its list
-+ */
-+static void damon_del_region(struct damon_region *r)
-+{
-+	list_del(&r->list);
-+}
-+
-+/*
-+ * De-allocate a region
-+ */
-+static void damon_free_region(struct damon_region *r)
-+{
-+	kfree(r);
-+}
-+
-+static void damon_destroy_region(struct damon_region *r)
-+{
-+	damon_del_region(r);
-+	damon_free_region(r);
-+}
-+
-+/*
-+ * Construct a damon_task struct
-+ *
-+ * Returns the pointer to the new struct if success, or NULL otherwise
-+ */
-+static struct damon_task *damon_new_task(unsigned long pid)
-+{
-+	struct damon_task *t;
-+
-+	t = kmalloc(sizeof(struct damon_task), GFP_KERNEL);
-+	if (!t)
-+		return NULL;
-+	t->pid = pid;
-+	INIT_LIST_HEAD(&t->regions_list);
-+
-+	return t;
-+}
-+
-+/* Returns n-th damon_region of the given task */
-+struct damon_region *damon_nth_region_of(struct damon_task *t, unsigned int n)
-+{
-+	struct damon_region *r;
-+	unsigned int i;
-+
-+	i = 0;
-+	damon_for_each_region(r, t) {
-+		if (i++ == n)
-+			return r;
-+	}
-+	return NULL;
-+}
-+
-+static void damon_add_task_tail(struct damon_task *t)
-+{
-+	list_add_tail(&t->list, &damon_tasks_list);
-+}
-+
-+static void damon_del_task(struct damon_task *t)
-+{
-+	list_del(&t->list);
-+}
-+
-+static void damon_free_task(struct damon_task *t)
-+{
-+	struct damon_region *r, *next;
-+
-+	damon_for_each_region_safe(r, next, t)
-+		damon_free_region(r);
-+	kfree(t);
-+}
-+
-+static void damon_destroy_task(struct damon_task *t)
-+{
-+	damon_del_task(t);
-+	damon_free_task(t);
-+}
-+
-+/*
-+ * Returns number of monitoring target tasks
-+ */
-+static unsigned int nr_damon_tasks(void)
-+{
-+	struct damon_task *t;
-+	unsigned int ret = 0;
-+
-+	damon_for_each_task(t)
-+		ret++;
-+	return ret;
-+}
-+
-+/*
-+ * Returns the number of target regions for a given target task
-+ */
-+static unsigned int nr_damon_regions(struct damon_task *t)
-+{
-+	struct damon_region *r;
-+	unsigned int ret = 0;
-+
-+	damon_for_each_region(r, t)
-+		ret++;
-+	return ret;
-+}
-+
-+/*
-+ * Get the mm_struct of the given task
-+ *
-+ * Callser should put the mm_struct after use, unless it is NULL.
-+ *
-+ * Returns the mm_struct of the task on success, NULL on failure
-+ */
-+static struct mm_struct *damon_get_mm(struct damon_task *t)
-+{
-+	struct task_struct *task;
-+	struct mm_struct *mm;
-+
-+	task = damon_get_task_struct(t);
-+	if (!task)
-+		return NULL;
-+
-+	mm = get_task_mm(task);
-+	put_task_struct(task);
-+	return mm;
-+}
-+
-+/*
-+ * Size-evenly split a region into 'nr_pieces' small regions
-+ *
-+ * Returns 0 on success, or negative error code otherwise.
-+ */
-+static int damon_split_region_evenly(struct damon_region *r,
-+				unsigned int nr_pieces)
-+{
-+	unsigned long sz_orig, sz_piece, orig_end;
-+	struct damon_region *piece = NULL, *next;
-+	unsigned long start;
-+
-+	if (!r || !nr_pieces)
-+		return -EINVAL;
-+
-+	orig_end = r->vm_end;
-+	sz_orig = r->vm_end - r->vm_start;
-+	sz_piece = sz_orig / nr_pieces;
-+
-+	if (!sz_piece)
-+		return -EINVAL;
-+
-+	r->vm_end = r->vm_start + sz_piece;
-+	next = damon_next_region(r);
-+	for (start = r->vm_end; start + sz_piece <= orig_end;
-+			start += sz_piece) {
-+		piece = damon_new_region(start, start + sz_piece);
-+		damon_add_region(piece, r, next);
-+		r = piece;
-+	}
-+	if (piece)
-+		piece->vm_end = orig_end;
-+	return 0;
-+}
-+
-+struct region {
-+	unsigned long start;
-+	unsigned long end;
-+};
-+
-+static unsigned long sz_region(struct region *r)
-+{
-+	return r->end - r->start;
-+}
-+
-+static void swap_regions(struct region *r1, struct region *r2)
-+{
-+	struct region tmp;
-+
-+	tmp = *r1;
-+	*r1 = *r2;
-+	*r2 = tmp;
-+}
-+
-+/*
-+ * Find the three regions in an address space
-+ *
-+ * vma		the head vma of the target address space
-+ * regions	an array of three 'struct region's that results will be saved
-+ *
-+ * This function receives an address space and finds three regions in it which
-+ * separated by the two biggest unmapped regions in the space.
-+ *
-+ * Returns 0 if success, or negative error code otherwise.
-+ */
-+static int damon_three_regions_in_vmas(struct vm_area_struct *vma,
-+		struct region regions[3])
-+{
-+	struct region gap = {0,}, first_gap = {0,}, second_gap = {0,};
-+	struct vm_area_struct *last_vma = NULL;
-+	unsigned long start = 0;
-+
-+	/* Find two biggest gaps so that first_gap > second_gap > others */
-+	for (; vma; vma = vma->vm_next) {
-+		if (!last_vma) {
-+			start = vma->vm_start;
-+			last_vma = vma;
-+			continue;
-+		}
-+		gap.start = last_vma->vm_end;
-+		gap.end = vma->vm_start;
-+		if (sz_region(&gap) > sz_region(&second_gap)) {
-+			swap_regions(&gap, &second_gap);
-+			if (sz_region(&second_gap) > sz_region(&first_gap))
-+				swap_regions(&second_gap, &first_gap);
-+		}
-+		last_vma = vma;
-+	}
-+
-+	if (!sz_region(&second_gap) || !sz_region(&first_gap))
-+		return -EINVAL;
-+
-+	/* Sort the two biggest gaps by address */
-+	if (first_gap.start > second_gap.start)
-+		swap_regions(&first_gap, &second_gap);
-+
-+	/* Store the result */
-+	regions[0].start = start;
-+	regions[0].end = first_gap.start;
-+	regions[1].start = first_gap.end;
-+	regions[1].end = second_gap.start;
-+	regions[2].start = second_gap.end;
-+	regions[2].end = last_vma->vm_end;
-+
-+	return 0;
-+}
-+
-+/*
-+ * Get the three regions in the given task
-+ *
-+ * Returns 0 on success, negative error code otherwise.
-+ */
-+static int damon_three_regions_of(struct damon_task *t,
-+				struct region regions[3])
-+{
-+	struct mm_struct *mm;
-+	int ret;
-+
-+	mm = damon_get_mm(t);
-+	if (!mm)
-+		return -EINVAL;
-+
-+	down_read(&mm->mmap_sem);
-+	ret = damon_three_regions_in_vmas(mm->mmap, regions);
-+	up_read(&mm->mmap_sem);
-+
-+	mmput(mm);
-+	return ret;
-+}
-+
-+/*
-+ * Initialize the monitoring target regions for the given task
-+ *
-+ * t	the given target task
-+ *
-+ * Because only a number of small portions of the entire address space
-+ * is acutally mapped to the memory and accessed, monitoring the unmapped
-+ * regions is wasteful.  That said, because we can deal with small noises,
-+ * tracking every mapping is not strictly required but could even incur a high
-+ * overhead if the mapping frequently changes or the number of mappings is
-+ * high.
-+ *
-+ * As usual memory map of processes is as below, the gap between the heap and
-+ * the uppermost mmap()-ed region, and the gap between the lowermost mmap()-ed
-+ * region and the stack will be two biggest unmapped regions.  Because these
-+ * gaps are outliers between the mapped and unmapped regions in the address
-+ * space in terms of the size, excluding these two biggest unmapped regions
-+ * will be sufficient to make a trade-off.
-+ *
-+ *   <heap>
-+ *   <BIG UNMAPPED REGION 1>
-+ *   <uppermost mmap()-ed region>
-+ *   (other mmap()-ed regions and small unmapped regions)
-+ *   <lowermost mmap()-ed region>
-+ *   <BIG UNMAPPED REGION 2>
-+ *   <stack>
-+ *
-+ * For the reason, this function converts the original address space of the
-+ * given task to a simplified address space, that is constructed with three
-+ * regions separated by the two biggest unmapped regions and stores those in
-+ * the given task.
-+ */
-+static void damon_init_regions_of(struct damon_task *t)
-+{
-+	struct damon_region *r;
-+	struct region regions[3];
-+	int i;
-+
-+	if (damon_three_regions_of(t, regions)) {
-+		pr_err("Failed to get three regions of task %lu\n", t->pid);
-+		return;
-+	}
-+
-+	/* Set the initial three regions of the task */
-+	for (i = 0; i < 3; i++) {
-+		r = damon_new_region(regions[i].start, regions[i].end);
-+		damon_add_region_tail(r, t);
-+	}
-+
-+	/* Split the middle region into 'min_nr_regions - 2' regions */
-+	r = damon_nth_region_of(t, 1);
-+	if (damon_split_region_evenly(r, min_nr_regions - 2))
-+		pr_warn("Init middle region failed to be split\n");
-+}
-+
-+/* Initialize '->regions_list' of every task */
-+static void kdamond_init_regions(void)
-+{
-+	struct damon_task *t;
-+
-+	damon_for_each_task(t)
-+		damon_init_regions_of(t);
-+}
-+
-+/*
-+ * Check whether the given region has accessed since the last check
-+ *
-+ * mm	'mm_struct' for the given virtual address space
-+ * r	the region to be checked
-+ */
-+static void kdamond_check_access(struct mm_struct *mm, struct damon_region *r)
-+{
-+	pte_t *pte = NULL;
-+	pmd_t *pmd = NULL;
-+	spinlock_t *ptl;
-+
-+	if (follow_pte_pmd(mm, r->sampling_addr, NULL, &pte, &pmd, &ptl))
-+		goto mkold;
-+
-+	/* Read the page table access bit of the page */
-+	if (pte && pte_young(*pte))
-+		r->nr_accesses++;
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	else if (pmd && pmd_young(*pmd))
-+		r->nr_accesses++;
-+#endif	/* CONFIG_TRANSPARENT_HUGEPAGE */
-+
-+	spin_unlock(ptl);
-+
-+mkold:
-+	/* mkold next target */
-+	r->sampling_addr = damon_rand(r->vm_start, r->vm_end);
-+
-+	if (follow_pte_pmd(mm, r->sampling_addr, NULL, &pte, &pmd, &ptl))
-+		return;
-+
-+	if (pte) {
-+		if (pte_young(*pte))
-+			clear_page_idle(pte_page(*pte));
-+		*pte = pte_mkold(*pte);
-+	}
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+	else if (pmd) {
-+		if (pmd_young(*pmd))
-+			clear_page_idle(pmd_page(*pmd));
-+		*pmd = pmd_mkold(*pmd);
-+	}
-+#endif
-+
-+	spin_unlock(ptl);
-+}
-+
-+/*
-+ * Check whether a time interval is elapsed
-+ *
-+ * baseline	the time to check whether the interval has elapsed since
-+ * interval	the time interval (microseconds)
-+ *
-+ * See whether the given time interval has passed since the given baseline
-+ * time.  If so, it also updates the baseline to current time for next check.
-+ *
-+ * Returns true if the time interval has passed, or false otherwise.
-+ */
-+static bool damon_check_reset_time_interval(struct timespec64 *baseline,
-+		unsigned long interval)
-+{
-+	struct timespec64 now;
-+
-+	ktime_get_coarse_ts64(&now);
-+	if ((timespec64_to_ns(&now) - timespec64_to_ns(baseline)) / 1000 <
-+			interval)
-+		return false;
-+	*baseline = now;
-+	return true;
-+}
-+
-+/*
-+ * Check whether it is time to flush the aggregated information
-+ */
-+static bool kdamond_aggregate_interval_passed(void)
-+{
-+	return damon_check_reset_time_interval(&last_aggregate_time,
-+			aggr_interval);
-+}
-+
-+/*
-+ * Flush the content in the result buffer to the result file
-+ */
-+static void damon_flush_rbuffer(void)
-+{
-+	ssize_t sz;
-+	loff_t pos;
-+	struct file *rfile;
-+
-+	while (damon_rbuf_offset) {
-+		pos = 0;
-+		rfile = filp_open(rfile_path, O_CREAT | O_RDWR | O_APPEND,
-+				0644);
-+		if (IS_ERR(rfile)) {
-+			pr_err("Cannot open the result file %s\n", rfile_path);
-+			return;
-+		}
-+
-+		sz = kernel_write(rfile, damon_rbuf, damon_rbuf_offset, &pos);
-+		filp_close(rfile, NULL);
-+
-+		damon_rbuf_offset -= sz;
-+	}
-+}
-+
-+/*
-+ * Write a data into the result buffer
-+ */
-+static void damon_write_rbuf(void *data, ssize_t size)
-+{
-+	if (damon_rbuf_offset + size > DAMON_LEN_RBUF)
-+		damon_flush_rbuffer();
-+
-+	memcpy(&damon_rbuf[damon_rbuf_offset], data, size);
-+	damon_rbuf_offset += size;
-+}
-+
-+/*
-+ * Flush the aggregated monitoring results to the result buffer
-+ *
-+ * Stores current tracking results to the result buffer and reset 'nr_accesses'
-+ * of each regions.  The format for the result buffer is as below:
-+ *
-+ *   <time> <number of tasks> <array of task infos>
-+ *
-+ *   task info: <pid> <number of regions> <array of region infos>
-+ *   region info: <start address> <end address> <nr_accesses>
-+ */
-+static void kdamond_flush_aggregated(void)
-+{
-+	struct damon_task *t;
-+	struct timespec64 now;
-+	unsigned int nr;
-+
-+	ktime_get_coarse_ts64(&now);
-+
-+	damon_write_rbuf(&now, sizeof(struct timespec64));
-+	nr = nr_damon_tasks();
-+	damon_write_rbuf(&nr, sizeof(nr));
-+
-+	damon_for_each_task(t) {
-+		struct damon_region *r;
-+
-+		damon_write_rbuf(&t->pid, sizeof(t->pid));
-+		nr = nr_damon_regions(t);
-+		damon_write_rbuf(&nr, sizeof(nr));
-+		damon_for_each_region(r, t) {
-+			damon_write_rbuf(&r->vm_start, sizeof(r->vm_start));
-+			damon_write_rbuf(&r->vm_end, sizeof(r->vm_end));
-+			damon_write_rbuf(&r->nr_accesses,
-+					sizeof(r->nr_accesses));
-+			r->nr_accesses = 0;
-+		}
-+	}
-+}
-+
-+#define sz_damon_region(r) (r->vm_end - r->vm_start)
-+
-+/*
-+ * Merge two adjacent regions into one region
-+ */
-+static void damon_merge_two_regions(struct damon_region *l,
-+				struct damon_region *r)
-+{
-+	l->nr_accesses = (l->nr_accesses * sz_damon_region(l) +
-+			r->nr_accesses * sz_damon_region(r)) /
-+			(sz_damon_region(l) + sz_damon_region(r));
-+	l->vm_end = r->vm_end;
-+	damon_destroy_region(r);
-+}
-+
-+#define diff_of(a, b) (a > b ? a - b : b - a)
-+
-+/*
-+ * Merge adjacent regions having similar access frequencies
-+ *
-+ * t		task that merge operation will make change
-+ * thres	merge regions having '->nr_accesses' diff smaller than this
-+ */
-+static void damon_merge_regions_of(struct damon_task *t, unsigned int thres)
-+{
-+	struct damon_region *r, *prev = NULL, *next;
-+
-+	damon_for_each_region_safe(r, next, t) {
-+		if (!prev || prev->vm_end != r->vm_start)
-+			goto next;
-+		if (diff_of(prev->nr_accesses, r->nr_accesses) > thres)
-+			goto next;
-+		damon_merge_two_regions(prev, r);
-+		continue;
-+next:
-+		prev = r;
-+	}
-+}
-+
-+/*
-+ * Merge adjacent regions having similar access frequencies
-+ *
-+ * threshold	merge regions havind nr_accesses diff larger than this
-+ *
-+ * This function merges monitoring target regions which are adjacent and their
-+ * access frequencies are similar.  This is for minimizing the monitoring
-+ * overhead under the dynamically changeable access pattern.  If a merge was
-+ * unnecessarily made, later 'kdamond_split_regions()' will revert it.
-+ */
-+static void kdamond_merge_regions(unsigned int threshold)
-+{
-+	struct damon_task *t;
-+
-+	damon_for_each_task(t)
-+		damon_merge_regions_of(t, threshold);
-+}
-+
-+/*
-+ * Split a region into two small regions
-+ *
-+ * r		the region to be split
-+ * sz_r		size of the first sub-region that will be made
-+ */
-+static void damon_split_region_at(struct damon_region *r, unsigned long sz_r)
-+{
-+	struct damon_region *new;
-+
-+	new = damon_new_region(r->vm_start + sz_r, r->vm_end);
-+	r->vm_end = new->vm_start;
-+
-+	damon_add_region(new, r, damon_next_region(r));
-+}
-+
-+static void damon_split_regions_of(struct damon_task *t)
-+{
-+	struct damon_region *r, *next;
-+	unsigned long sz_left_region;
-+
-+	damon_for_each_region_safe(r, next, t) {
-+		/*
-+		 * Randomly select size of left sub-region to be at least
-+		 * 10 percent and at most 90% of original region
-+		 */
-+		sz_left_region = (prandom_u32_state(&rndseed) % 9 + 1) *
-+			(r->vm_end - r->vm_start) / 10;
-+		/* Do not allow blank region */
-+		if (sz_left_region == 0)
-+			continue;
-+		damon_split_region_at(r, sz_left_region);
-+	}
-+}
-+
-+/*
-+ * splits every target regions into two randomly-sized regions
-+ *
-+ * This function splits every target regions into two random-sized regions if
-+ * current total number of the regions is smaller than the half of the
-+ * user-specified maximum number of regions.  This is for maximizing the
-+ * monitoring accuracy under the dynamically changeable access patterns.  If a
-+ * split was unnecessarily made, later 'kdamond_merge_regions()' will revert
-+ * it.
-+ */
-+static void kdamond_split_regions(void)
-+{
-+	struct damon_task *t;
-+	unsigned int nr_regions = 0;
-+
-+	damon_for_each_task(t)
-+		nr_regions += nr_damon_regions(t);
-+	if (nr_regions > max_nr_regions / 2)
-+		return;
-+
-+	damon_for_each_task(t)
-+		damon_split_regions_of(t);
-+}
-+
-+/*
-+ * Check whether it is time to check and apply the dynamic mmap changes
-+ *
-+ * Returns true if it is.
-+ */
-+static bool kdamond_need_update_regions(void)
-+{
-+	return damon_check_reset_time_interval(&last_regions_update_time,
-+			regions_update_interval);
-+}
-+
-+static bool damon_intersect(struct damon_region *r, struct region *re)
-+{
-+	return !(r->vm_end <= re->start || re->end <= r->vm_start);
-+}
-+
-+/*
-+ * Update damon regions for the three big regions of the given task
-+ *
-+ * t		the given task
-+ * bregions	the three big regions of the task
-+ */
-+static void damon_apply_three_regions(struct damon_task *t,
-+				struct region bregions[3])
-+{
-+	struct damon_region *r, *next;
-+	unsigned int i = 0;
-+
-+	/* Remove regions which isn't in the three big regions now */
-+	damon_for_each_region_safe(r, next, t) {
-+		for (i = 0; i < 3; i++) {
-+			if (damon_intersect(r, &bregions[i]))
-+				break;
-+		}
-+		if (i == 3)
-+			damon_destroy_region(r);
-+	}
-+
-+	/* Adjust intersecting regions to fit with the threee big regions */
-+	for (i = 0; i < 3; i++) {
-+		struct damon_region *first = NULL, *last;
-+		struct damon_region *newr;
-+		struct region *br;
-+
-+		br = &bregions[i];
-+		/* Get the first and last regions which intersects with br */
-+		damon_for_each_region(r, t) {
-+			if (damon_intersect(r, br)) {
-+				if (!first)
-+					first = r;
-+				last = r;
-+			}
-+			if (r->vm_start >= br->end)
-+				break;
-+		}
-+		if (!first) {
-+			/* no damon_region intersects with this big region */
-+			newr = damon_new_region(br->start, br->end);
-+			damon_add_region(newr, damon_prev_region(r), r);
-+		} else {
-+			first->vm_start = br->start;
-+			last->vm_end = br->end;
-+		}
-+	}
-+}
-+
-+/*
-+ * Update regions for current memory mappings
-+ */
-+static void kdamond_update_regions(void)
-+{
-+	struct region three_regions[3];
-+	struct damon_task *t;
-+
-+	damon_for_each_task(t) {
-+		if (damon_three_regions_of(t, three_regions))
-+			continue;
-+		damon_apply_three_regions(t, three_regions);
-+	}
-+}
-+
-+/*
-+ * Check whether current monitoring should be stopped
-+ *
-+ * If users asked to stop, need stop.  Even though no user has asked to stop,
-+ * need stop if every target task has dead.
-+ *
-+ * Returns true if need to stop current monitoring.
-+ */
-+static bool kdamond_need_stop(void)
-+{
-+	struct damon_task *t;
-+	struct task_struct *task;
-+	bool stop;
-+
-+	spin_lock(&kdamond_lock);
-+	stop = kdamond_stop;
-+	spin_unlock(&kdamond_lock);
-+	if (stop)
-+		return true;
-+
-+	damon_for_each_task(t) {
-+		task = damon_get_task_struct(t);
-+		if (task) {
-+			put_task_struct(task);
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
-+
-+/*
-+ * The monitoring daemon that runs as a kernel thread
-+ */
-+static int kdamond_fn(void *data)
-+{
-+	struct damon_task *t;
-+	struct damon_region *r, *next;
-+	struct mm_struct *mm;
-+	unsigned long max_nr_accesses;
-+
-+	pr_info("kdamond (%d) starts\n", kdamond->pid);
-+	kdamond_init_regions();
-+	while (!kdamond_need_stop()) {
-+		max_nr_accesses = 0;
-+		damon_for_each_task(t) {
-+			mm = damon_get_mm(t);
-+			if (!mm)
-+				continue;
-+			damon_for_each_region(r, t) {
-+				kdamond_check_access(mm, r);
-+				if (r->nr_accesses > max_nr_accesses)
-+					max_nr_accesses = r->nr_accesses;
-+			}
-+			mmput(mm);
-+		}
-+
-+		if (kdamond_aggregate_interval_passed()) {
-+			kdamond_merge_regions(max_nr_accesses / 10);
-+			kdamond_flush_aggregated();
-+			kdamond_split_regions();
-+		}
-+
-+		if (kdamond_need_update_regions())
-+			kdamond_update_regions();
-+
-+		usleep_range(sample_interval, sample_interval + 1);
-+	}
-+	damon_flush_rbuffer();
-+	damon_for_each_task(t) {
-+		damon_for_each_region_safe(r, next, t)
-+			damon_destroy_region(r);
-+	}
-+	pr_info("kdamond (%d) finishes\n", kdamond->pid);
-+	spin_lock(&kdamond_lock);
-+	kdamond = NULL;
-+	spin_unlock(&kdamond_lock);
-+	return 0;
-+}
-+
-+/*
-+ * Controller functions
-+ */
-+
-+/*
-+ * Start or stop the kdamond
-+ *
-+ * Returns 0 if success, negative error code otherwise.
-+ */
-+static int damon_turn_kdamond(bool on)
-+{
-+	spin_lock(&kdamond_lock);
-+	kdamond_stop = !on;
-+	if (!kdamond && on) {
-+		kdamond = kthread_run(kdamond_fn, NULL, "kdamond");
-+		if (!kdamond)
-+			goto fail;
-+		goto success;
-+	}
-+	if (kdamond && !on) {
-+		spin_unlock(&kdamond_lock);
-+		while (true) {
-+			spin_lock(&kdamond_lock);
-+			if (!kdamond)
-+				goto success;
-+			spin_unlock(&kdamond_lock);
-+
-+			usleep_range(sample_interval, sample_interval * 2);
-+		}
-+	}
-+
-+	/* tried to turn on while turned on, or turn off while turned off */
-+
-+fail:
-+	spin_unlock(&kdamond_lock);
-+	return -EINVAL;
-+
-+success:
-+	spin_unlock(&kdamond_lock);
-+	return 0;
-+}
-+
-+static inline bool damon_is_target_pid(unsigned long pid)
-+{
-+	struct damon_task *t;
-+
-+	damon_for_each_task(t) {
-+		if (t->pid == pid)
-+			return true;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * This function should not be called while the kdamond is running.
-+ */
-+static long damon_set_pids(unsigned long *pids, ssize_t nr_pids)
-+{
-+	ssize_t i;
-+	struct damon_task *t, *next;
-+
-+	/* Remove unselected tasks */
-+	damon_for_each_task_safe(t, next) {
-+		for (i = 0; i < nr_pids; i++) {
-+			if (pids[i] == t->pid)
-+				break;
-+		}
-+		if (i != nr_pids)
-+			continue;
-+		damon_destroy_task(t);
-+	}
-+
-+	/* Add new tasks */
-+	for (i = 0; i < nr_pids; i++) {
-+		if (damon_is_target_pid(pids[i]))
-+			continue;
-+		t = damon_new_task(pids[i]);
-+		if (!t) {
-+			pr_err("Failed to alloc damon_task\n");
-+			return -ENOMEM;
-+		}
-+		damon_add_task_tail(t);
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * Set attributes for the monitoring
-+ *
-+ * sample_int		time interval between samplings
-+ * aggr_int		time interval between aggregations
-+ * regions_update_int	time interval between vma update checks
-+ * min_nr_reg		minimal number of regions
-+ * max_nr_reg		maximum number of regions
-+ * path_to_rfile	path to the monitor result files
-+ *
-+ * This function should not be called while the kdamond is running.
-+ * Every time interval is in micro-seconds.
-+ *
-+ * Returns 0 on success, negative error code otherwise.
-+ */
-+static long damon_set_attrs(unsigned long sample_int,
-+		unsigned long aggr_int, unsigned long regions_update_int,
-+		unsigned long min_nr_reg, unsigned long max_nr_reg,
-+		char *path_to_rfile)
-+{
-+	if (strnlen(path_to_rfile, LEN_RES_FILE_PATH) >= LEN_RES_FILE_PATH) {
-+		pr_err("too long (>%d) result file path %s\n",
-+				LEN_RES_FILE_PATH, path_to_rfile);
-+		return -EINVAL;
-+	}
-+	if (min_nr_reg < 3) {
-+		pr_err("min_nr_regions (%lu) should be bigger than 2\n",
-+				min_nr_reg);
-+		return -EINVAL;
-+	}
-+	if (min_nr_reg >= max_nr_regions) {
-+		pr_err("invalid nr_regions.  min (%lu) >= max (%lu)\n",
-+				min_nr_reg, max_nr_reg);
-+		return -EINVAL;
-+	}
-+
-+	sample_interval = sample_int;
-+	aggr_interval = aggr_int;
-+	regions_update_interval = regions_update_int;
-+	min_nr_regions = min_nr_reg;
-+	max_nr_regions = max_nr_reg;
-+	strncpy(rfile_path, path_to_rfile, LEN_RES_FILE_PATH);
-+	return 0;
-+}
-+
-+static int __init damon_init(void)
-+{
-+	pr_info("init\n");
-+
-+	prandom_seed_state(&rndseed, 42);
-+	ktime_get_coarse_ts64(&last_aggregate_time);
-+	last_regions_update_time = last_aggregate_time;
-+
-+	return 0;
-+}
-+
-+module_init(damon_init);
++++ b/Documentation/admin-guide/mm/data_access_monitor.rst
+@@ -0,0 +1,235 @@
++.. _data_access_monitor:
++
++==========================
++DAMON: Data Access MONitor
++==========================
++
++
++Too Long; Don't Read
++====================
++
++DAMON is a kernel module that allows users to monitor the actual memory access
++pattern of specific user-space processes.  It aims to be 1) accurate enough to
++be useful for performance-centric domains, and 2) sufficiently light-weight so
++that it can be applied online.
++
++For the goals, DAMON utilizes its two core mechanisms, called region-based
++sampling and adaptive regions adjustment.  The region-based sampling allows
++users to make their own trade-off between the quality and the overhead of the
++monitoring and set the upperbound of the monitoring overhead.  Further, the
++adaptive regions adjustment mechanism makes DAMON to maximize the quality and
++minimize the overhead with its best efforts while preserving the users
++configured trade-off.
++
++
++Background
++==========
++
++For performance-centric analysis and optimizations of memory management schemes
++(either that of kernel space or user space), the actual data access pattern of
++the workloads is highly useful.  The information need to be only reasonable
++rather than strictly correct, because some level of incorrectness can be
++handled in many performance-centric domains.  It also need to be taken within
++reasonably short time with only light-weight overhead.
++
++Manually extracting such data is not easy and time consuming if the target
++workload is huge and complex, even for the developers of the programs.  There
++are a range of tools and techniques developed for general memory access
++investigations, and some of those could be partially used for this purpose.
++However, most of those are not practical or unscalable, mainly because those
++are designed with no consideration about the trade-off between the accuracy of
++the output and the overhead.
++
++The memory access instrumentation techniques which is applied to many tools
++such as Intel PIN is essential for correctness required cases such as invalid
++memory access bug detections.  However, those usually incur high overhead which
++is unacceptable for many of the performance-centric domains.  Periodic access
++checks based on H/W or S/W access counting features (e.g., the Accessed bits of
++PTEs or the PG_Idle flags of pages) can dramatically decrease the overhead by
++forgiving some of the quality, compared to the instrumentation based
++techniques.  The reduced quality is still reasonable for many of the domains,
++but the overhead can arbitrarily increase as the size of the target workload
++grows.  Miniature-like static region based sampling can set the upperbound of
++the overhead, but it will now decrease the quality of the output as the size of
++the workload grows.
++
++
++Expected Use-cases
++==================
++
++A straightforward usecase of DAMON would be the program behavior analysis.
++With the DAMON output, users can confirm whether the program is running as
++intended or not.  This will be useful for debuggings and tests of design
++points.
++
++The monitored results can also be useful for counting the dynamic working set
++size of workloads.  For the administration of memory overcommitted systems or
++selection of the environments (e.g., containers providing different amount of
++memory) for your workloads, this will be useful.
++
++If you are a programmer, you can optimize your program by managing the memory
++based on the actual data access pattern.  For example, you can identify the
++dynamic hotness of your data using DAMON and call ``mlock()`` to keep your hot
++data in DRAM, or call ``madvise()`` with ``MADV_PAGEOUT`` to proactively
++reclaim cold data.  Even though your program is guaranteed to not encounter
++memory pressure, you can still improve the performance by applying the DAMON
++outputs for call of ``MADV_HUGEPAGE`` and ``MADV_NOHUGEPAGE``.  More creative
++optimizations would be possible.  Our evaluations of DAMON includes a
++straightforward optimization using the ``mlock()``.  Please refer to the below
++Evaluation section for more detail.
++
++As DAMON incurs very low overhead, such optimizations can be applied not only
++offline, but also online.  Also, there is no reason to limit such optimizations
++to the user space.  Several parts of the kernel's memory management mechanisms
++could be also optimized using DAMON. The reclamation, the THP (de)promotion
++decisions, and the compaction would be such a candidates.
++
++
++Mechanisms of DAMON
++===================
++
++
++Basic Access Check
++------------------
++
++DAMON basically reports what pages are how frequently accessed.  The report is
++passed to users in binary format via a ``result file`` which users can set it's
++path.  Note that the frequency is not an absolute number of accesses, but a
++relative frequency among the pages of the target workloads.
++
++Users can also control the resolution of the reports by setting two time
++intervals, ``sampling interval`` and ``aggregation interval``.  In detail,
++DAMON checks access to each page per ``sampling interval``, aggregates the
++results (counts the number of the accesses to each page), and reports the
++aggregated results per ``aggregation interval``.  For the access check of each
++page, DAMON uses the Accessed bits of PTEs.
++
++This is thus similar to the previously mentioned periodic access checks based
++mechanisms, which overhead is increasing as the size of the target process
++grows.
++
++
++Region Based Sampling
++---------------------
++
++To avoid the unbounded increase of the overhead, DAMON groups a number of
++adjacent pages that assumed to have same access frequencies into a region.  As
++long as the assumption (pages in a region have same access frequencies) is
++kept, only one page in the region is required to be checked.  Thus, for each
++``sampling interval``, DAMON randomly picks one page in each region and clears
++its Accessed bit.  After one more ``sampling interval``, DAMON reads the
++Accessed bit of the page and increases the access frequency of the region if
++the bit has set meanwhile.  Therefore, the monitoring overhead is controllable
++by setting the number of regions.  DAMON allows users to set the minimal and
++maximum number of regions for the trade-off.
++
++Except the assumption, this is almost same with the above-mentioned
++miniature-like static region based sampling.  In other words, this scheme
++cannot preserve the quality of the output if the assumption is not guaranteed.
++
++
++Adaptive Regions Adjustment
++---------------------------
++
++At the beginning of the monitoring, DAMON constructs the initial regions by
++evenly splitting the memory mapped address space of the process into the
++user-specified minimal number of regions.  In this initial state, the
++assumption is normally not kept and thus the quality could be low.  To keep the
++assumption as much as possible, DAMON adaptively merges and splits each region.
++For each ``aggregation interval``, it compares the access frequencies of
++adjacent regions and merges those if the frequency difference is small.  Then,
++after it reports and clears the aggregated access frequency of each region, it
++splits each region into two regions if the total number of regions is smaller
++than the half of the user-specified maximum number of regions.
++
++In this way, DAMON provides its best-effort quality and minimal overhead while
++keeping the bounds users set for their trade-off.
++
++
++Applying Dynamic Memory Mappings
++--------------------------------
++
++Only a number of small parts in the super-huge virtual address space of the
++processes is mapped to physical memory and accessed.  Thus, tracking the
++unmapped address regions is just wasteful.  However, tracking every memory
++mapping change might incur an overhead.  For the reason, DAMON applies the
++dynamic memory mapping changes to the tracking regions only for each of an
++user-specified time interval (``regions update interval``).
++
++
++User Interface
++==============
++
++DAMON exports three files, ``attrs``, ``pids``, and ``monitor_on`` under its
++debugfs directory, ``<debugfs>/damon/``.
++
++
++Attributes
++----------
++
++Users can read and write the ``sampling interval``, ``aggregation interval``,
++``regions update interval``, min/max number of regions, and the path to
++``result file`` by reading from and writing to the ``attrs`` file.  For
++example, below commands set those values to 5 ms, 100 ms, 1,000 ms, 10, 1000,
++and ``/damon.data`` and check it again::
++
++    # cd <debugfs>/damon
++    # echo 5000 100000 1000000 10 1000 /damon.data > attrs
++    # cat attrs
++    5000 100000 1000000 10 1000 /damon.data
++
++
++Target PIDs
++-----------
++
++Users can read and write the pids of current monitoring target processes by
++reading from and writing to the `pids` file.  For example, below commands set
++processes having pids 42 and 4242 as the processes to be monitored and check
++it again::
++
++    # cd <debugfs>/damon
++    # echo 42 4242 > pids
++    # cat pids
++    42 4242
++
++Note that setting the pids doesn't starts the monitoring.
++
++
++Turning On/Off
++--------------
++
++You can check current status, start and stop the monitoring by reading from and
++writing to the ``monitor_on`` file.  Writing ``on`` to the file starts DAMON to
++monitor the target processes with the attributes.  Writing ``off`` to the file
++stops DAMON.  DAMON also stops if every target processes is be terminated.
++Below example commands turn on, off, and check status of DAMON::
++
++    # cd <debugfs>/damon
++    # echo on > monitor_on
++    # echo off > monitor_on
++    # cat monitor_on
++    off
++
++Please note that you cannot write to the ``attrs`` and ``pids`` files while the
++monitoring is turned on.  If you write to the files while DAMON is running,
++``-EINVAL`` will be returned.
++
++
++User Space Wrapper
++------------------
++
++DAMON has a shallow wrapper python script, ``/tools/damon/damn`` that provides
++more convenient interface.  Note that it is only aimed to be used for minimal
++reference of the DAMON's raw interfaces and for debugging of the DAMON itself.
++Based on the debugfs interface, you can create another cool and more convenient
++user space tools.
++
++
++Quick Tutorial
++--------------
++
++To test DAMON on your system,
++
++1. Ensure your kernel is built with CONFIG_DAMON turned on, and debugfs is
++   mounted at ``/sys/kernel/debug/``.
++2. ``<your kernel source tree>/tools/damon/damn -h``
+diff --git a/Documentation/admin-guide/mm/index.rst b/Documentation/admin-guide/mm/index.rst
+index 11db46448354..d3d0ba373eb6 100644
+--- a/Documentation/admin-guide/mm/index.rst
++++ b/Documentation/admin-guide/mm/index.rst
+@@ -27,6 +27,7 @@ the Linux memory management.
+ 
+    concepts
+    cma_debugfs
++   data_access_monitor
+    hugetlbpage
+    idle_page_tracking
+    ksm
 -- 
 2.17.1
 
