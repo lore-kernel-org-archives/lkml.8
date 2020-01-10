@@ -2,111 +2,78 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBBCC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:26:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04DA5C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FD4A2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:26:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFE762080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:27:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="FmZBjhTY"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KuxjUeQz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727001AbgAJI0X (ORCPT
+        id S1727024AbgAJI1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 03:26:23 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45659 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbgAJI0X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 03:26:23 -0500
-Received: by mail-il1-f196.google.com with SMTP id p8so1108230iln.12
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 00:26:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1Mpto8STXUyff3SuN++CYO1ReCNV8kLrYeZBrybALQQ=;
-        b=FmZBjhTY7sbuVMCk14C7YB05gIcPfuYjlNIumlGDZGFcvL9gObsjtxhanIt0aREDY1
-         yUeIS8tRAPx+xK3UGSEaWYkiRO6HMJDB1w5gMx3egYwW8iw+taMQqD6wf+Fz3B1IguUZ
-         gXmgP459EmWBqG/zTFJFLAf9Ld7XBOOGKvG25VSlDIggvxvbJB+c0l8G9jWUCN2bAPp9
-         2/rlDZbRvbUUVKzTKnJTFHfi1mQ48le2Uh00ABoAjSYICDDKPXgw1LGelTw8lXqf2h9J
-         2ryN5q5rA/42FuIsp+SglWAZtS0a4JdZvTqF1APhypxIZ0KQE9tEi1LRKXhfYLYe9ay1
-         B7Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1Mpto8STXUyff3SuN++CYO1ReCNV8kLrYeZBrybALQQ=;
-        b=Kyq6RmR+zoKYmlyNhv/sgrAhgQYe1kfbD69n64reM1W+zPKxmLiNnNh0XruJlXarzM
-         /SOLvtJMcafguRZXRLnKfIWBZ6sg1kFGmZrq/X+VLVQHHNkcCFdjHYmO7XTtP1flhEX4
-         f5mCWNy7iAZ5Q25HV+a5e+XpKdI6rDQSygAREJszqign5ourNjZbWhGikK4x3wmuBpAj
-         aLrbjxpqe452KQBs0FGww0u/EN28U2mJKqYMlJ6OvSjUPrKOApeHup5+sdbvzD0bNBV4
-         VcfwpS8QCpvQzlqw/O8Bugh13TmLmz+obpzWeTqGTFHFNbMyvqFAVOhCRfV9p4eGMB03
-         LgUg==
-X-Gm-Message-State: APjAAAVXrlVEL0/1+Zap0bdpEthTtyZV5hBtTZTE8UzuIxpIIEdQfI/a
-        9ehgWbHnnDtE3tOYC2ZhwMsEMNJy50XYPeU4w8n2Fw==
-X-Google-Smtp-Source: APXvYqxiZuxf4E+HAmZNdw51irHN6iQPilLO58L76uP/dDwDEuhp/LNJuvWEwYVatV95J0cqnRCHu9XWuHzEaePBa74=
-X-Received: by 2002:a92:8712:: with SMTP id m18mr1633334ild.40.1578644782463;
- Fri, 10 Jan 2020 00:26:22 -0800 (PST)
+        Fri, 10 Jan 2020 03:27:09 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:49806 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726583AbgAJI1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 03:27:08 -0500
+Received: from zn.tnic (p200300EC2F0ACA007185EBC54541D9EE.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:ca00:7185:ebc5:4541:d9ee])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5BE811EC0CAD;
+        Fri, 10 Jan 2020 09:27:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578644827;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=thsT2Ib6pOGGPEREvb10XVWQL+6ZSHA8kOKKSpRzIdI=;
+        b=KuxjUeQznR8vzHnCFnVG3CD/Jql+AIpM3j5xn6KAFZDAYmAOWJdOareO++O69UyILt4Pz8
+        y2pRyPSqlXCwCEImnaPUe35x/aS5NVon/MriwGz0nUS1v1riAeckjgwvKSQ4vopyCrloga
+        N9b1rwAx8BsEfWyeGp3jCxowNdl/WnU=
+Date:   Fri, 10 Jan 2020 09:27:00 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH v2] x86/boot/KASLR: Fix unused variable warning
+Message-ID: <20200110082700.GA19453@zn.tnic>
+References: <20200103033929.4956-1-zhenzhong.duan@gmail.com>
+ <20200109184055.GI5603@zn.tnic>
+ <20200109204638.GA523773@rani.riverdale.lan>
+ <20200109205041.GJ5603@zn.tnic>
+ <CAFH1YnNdmHD9rnriTVx-se-Z5MHsgUZ0jYWMrg6OYVjr4Ap+JQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200110082441.8300-1-brgl@bgdev.pl>
-In-Reply-To: <20200110082441.8300-1-brgl@bgdev.pl>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Fri, 10 Jan 2020 09:26:11 +0100
-Message-ID: <CAMRc=Mc3hkzJ+Xk_nD3m3uv4_pTUnNaW-0s6Vh3osXCzYBH7fA@mail.gmail.com>
-Subject: Re: [PATCH -next] nvmem: fix a 'makes pointer from integer without a
- cast' build warning
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Khouloud Touil <ktouil@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        kbuild test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAFH1YnNdmHD9rnriTVx-se-Z5MHsgUZ0jYWMrg6OYVjr4Ap+JQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 10 sty 2020 o 09:24 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a=
-):
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> nvmem_register() returns a pointer, not a long int. Use ERR_CAST() to
-> cast the struct gpio_desc pointer to struct nvmem_device.
->
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  drivers/nvmem/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 3e1c94c4eee8..408ce702347e 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -351,7 +351,7 @@ struct nvmem_device *nvmem_register(const struct nvme=
-m_config *config)
->                 nvmem->wp_gpio =3D gpiod_get_optional(config->dev, "wp",
->                                                     GPIOD_OUT_HIGH);
->         if (IS_ERR(nvmem->wp_gpio))
-> -               return PTR_ERR(nvmem->wp_gpio);
-> +               return ERR_CAST(nvmem->wp_gpio);
->
->
->         kref_init(&nvmem->refcnt);
-> --
-> 2.23.0
->
+On Fri, Jan 10, 2020 at 10:09:38AM +0800, Zhenzhong Duan wrote:
+> I indeed used additional parameters as below for daily build.
+> # make O=/build/kernel/ -j4 EXTRA_CFLAGS=-Wall binrpm-pkg
 
-Srinivas: this fixes a bug introduced in a patch I took through the
-at24 tree. With your ack I'll apply it as a follow-up.
+And in no point in time it did occur to you that you should mention this
+important piece of information in your commit message so that a person
+looking at the patch knows how you triggered it?!?
 
-Bart
+Geez.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
