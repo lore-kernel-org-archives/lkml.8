@@ -2,88 +2,90 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E25AC33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BC1C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E5D320842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453142072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:17:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CiTatVn+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="swL03vpB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgAJNQ1 (ORCPT
+        id S1727505AbgAJNR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 08:16:27 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:51131 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727398AbgAJNQ0 (ORCPT
+        Fri, 10 Jan 2020 08:17:58 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:54622 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727347AbgAJNR6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 08:16:26 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578662185; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: From: Sender;
- bh=i+FSacw/oKHPosASdYmNACUkHU9zjbv90HutOF8oZS0=; b=CiTatVn+nwJ3IpFyd/mbdSAYYTe5IyAv5zAOs2LFg0n6IuQc/ms7WAO/QTKvxcPX+LxM7jaU
- BPgqCHUDPAps1Ot+VwmD+yYWd/PEyhCaLanPf57GpgmjPlH1UHqjrrW3Dupk2Pvg0xmbgLtw
- EACm9PbahxBUTslCzmVwuxW6hRA=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e187928.7f556634fa08-smtp-out-n03;
- Fri, 10 Jan 2020 13:16:24 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 49E1EC447A5; Fri, 10 Jan 2020 13:16:24 +0000 (UTC)
-Received: from x230.qca.qualcomm.com (unknown [83.145.195.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8EFE4C447A4;
-        Fri, 10 Jan 2020 13:16:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8EFE4C447A4
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        linux-next@vger.kernel.org, sfr@canb.auug.org.au,
-        Stanislaw Gruszka <stf_xl@wp.pl>,
-        linux-wireless@vger.kernel.org
-Subject: Re: [PATCH] iwlwifi: fix build warnings with format string
-References: <20200106171452.201c3b4c@canb.auug.org.au>
-        <1578322389-13716-1-git-send-email-akinobu.mita@gmail.com>
-nTo:    Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Fri, 10 Jan 2020 15:16:18 +0200
-In-Reply-To: <1578322389-13716-1-git-send-email-akinobu.mita@gmail.com>
-        (Akinobu Mita's message of "Mon, 6 Jan 2020 23:53:09 +0900")
-Message-ID: <87muavsb8d.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Fri, 10 Jan 2020 08:17:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=GoJ/f0Fq70LSZhFTT9Pl1YpUrxt52JUe7bDNzMBe450=; b=swL03vpBvw32P5Ma7x9MAisgA
+        GZu9+2dX89NBDP8YjBDeD02MuHzYpeT1wSu8oESkWnSul0LV7Y0+DPNKZtgfIl7LFZrIohzG6OCzU
+        jqZ2GXPo13e2lOIhr7q1mQhiUAl8b6RdC3Nr+qN3gv820wCKMCPCYkIKqNLulllfwleBhGzww4gSz
+        +BQD6OjjwKLkC6gb3v29ke2qFyDNNfkeSwx3yxu2KZcRDDPu9L3m6iK5YyACEp3L1zQGUhEqBtl46
+        UedbXNOqEkenXIzh95VnKFADOgesTHCveRWDcfiiy3Z2lPBbmKY+8vz+ypxU4McIKxYhulZTsLyjl
+        c0UMIIFOA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ipuAi-0005rn-HY; Fri, 10 Jan 2020 13:17:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 115D630018B;
+        Fri, 10 Jan 2020 14:16:16 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EE9852B612611; Fri, 10 Jan 2020 14:17:49 +0100 (CET)
+Date:   Fri, 10 Jan 2020 14:17:49 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     acme@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
+        tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
+        alexander.shishkin@linux.intel.com, ak@linux.intel.com
+Subject: Re: [PATCH V5 RESEND 00/14] TopDown metrics support for Icelake
+Message-ID: <20200110131749.GD2827@hirez.programming.kicks-ass.net>
+References: <20200106202919.2943-1-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106202919.2943-1-kan.liang@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(please cc linux-wireless on all wireless patches)
+On Mon, Jan 06, 2020 at 12:29:05PM -0800, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Icelake has support for measuring the level 1 TopDown metrics
+> directly in hardware. This is implemented by an additional METRICS
+> register, and a new Fixed Counter 3 that measures pipeline SLOTS.
+> 
+> New in Icelake
+> - Do not require generic counters. This allows to collect TopDown always
+>   in addition to other events.
+> - Measuring TopDown per thread/process instead of only per core
+> 
+> For the Ice Lake implementation of performance metrics, the values in
+> PERF_METRICS MSR are derived from fixed counter 3. Software should start
+> both registers, PERF_METRICS and fixed counter 3, from zero.
+> Additionally, software is recommended to periodically clear both
+> registers in order to maintain accurate measurements. The latter is
+> required for certain scenarios that involve sampling metrics at high
+> rates. Software should always write fixed counter 3 before write to
+> PERF_METRICS.
 
-Akinobu Mita <akinobu.mita@gmail.com> writes:
+Do we really have to support this trainwreck? This is such ill designed
+hardware, I'm loath to support it, it might encourage more such
+'creative' things and we really don't need that.
 
-> This fixes build warnings introduced by commit "iwlegacy: use
-> <linux/units.h> helpers" (iwlegacy-use-linux-unitsh-helpers.patch in -mm)
->
-> The format '%d' has to be changed to '%ld' because the return type of
-> kelvin_to_celsius() is 'long'.
->
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Link: https://lore.kernel.org/r/20200106171452.201c3b4c@canb.auug.org.au
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: Stanislaw Gruszka <stf_xl@wp.pl>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 
-I don't know what's Andrew's workflow, but shouldn't the original patch
-be fixed instead?
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
