@@ -2,258 +2,147 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 171CDC33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E9FC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3CE22072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:15:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC2F72072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:15:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ReAhOauY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CQSVId1k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbgAJNP0 (ORCPT
+        id S1727576AbgAJNPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 08:15:26 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:37050 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727390AbgAJNPZ (ORCPT
+        Fri, 10 Jan 2020 08:15:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20288 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727428AbgAJNPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 08:15:25 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00ADFGFC000541;
-        Fri, 10 Jan 2020 07:15:16 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578662116;
-        bh=bc9/W7gwldHtN0LmN5RfpX4A5PrFRuNLHbUFLB2NFVQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ReAhOauYp4dad564kb5Kq0M53EIOkXO8BJ04ecVToP3M0VDCgVpzayHL2PhyaNH91
-         n5PYrz1FLG/h4PGwYeeogGvyI6lDXC6O2lyoMDKx32tJhmyXdCHXb/IxoSiGPbNzm6
-         OHPXRbAg2ZEfBcJ+E5s2Xt486TVA9rN0gWDzb9v8=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00ADFGm9080191
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jan 2020 07:15:16 -0600
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
- Jan 2020 07:15:15 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 10 Jan 2020 07:15:15 -0600
-Received: from [172.24.190.4] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00ADFBFL036726;
-        Fri, 10 Jan 2020 07:15:12 -0600
-Subject: Re: [PATCH v4 03/11] mmc: sdhci: add support for using external DMA
- devices
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Baolin Wang <baolin.wang7@gmail.com>
-CC:     <linux-omap@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>, <kishon@ti.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, <tony@atomide.com>
-References: <20200106110133.13791-1-faiz_abbas@ti.com>
- <20200106110133.13791-4-faiz_abbas@ti.com>
- <CADBw62onwxPmn=HmdL05hz+FOUe9crRPDO+CB5hDmaVeYMSTsQ@mail.gmail.com>
- <48c10fdf-f2c7-a719-2f64-0f87895f3704@ti.com>
- <CADBw62rK1a9K7cxf5ti7YkFsJJ5tJ+8yjuF2aYR3PnZnoK-r2g@mail.gmail.com>
- <f599735e-83f7-5afc-ebe6-168f0157d2c3@ti.com>
-From:   Faiz Abbas <faiz_abbas@ti.com>
-Message-ID: <e80a051c-0095-dac0-2e2c-d994ffbf536c@ti.com>
-Date:   Fri, 10 Jan 2020 18:46:43 +0530
+        Fri, 10 Jan 2020 08:15:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578662133;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=g4fPaSDj/1bNL9UHRvFNzyVlWaMB2zznB/rsNHVZDvM=;
+        b=CQSVId1kbMd3fY0p1urK4ZN8gJVSeNg2LXMrVFyQGOx5AHAabg2i2flGel/uQ7JMu22AVS
+        Biag8sL5ARqz1oEwR9D9p6giYwkDnRmfnI9lYPgpntrHhhh8NOLpOV8nH/0pWz+hGkn58A
+        JgZMK+EX08EBoQICp48uEuIiexHWFrk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-102-f2l8RfQYMoqaVwwA1FIDHA-1; Fri, 10 Jan 2020 08:15:31 -0500
+X-MC-Unique: f2l8RfQYMoqaVwwA1FIDHA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7F5D107ACC5;
+        Fri, 10 Jan 2020 13:15:29 +0000 (UTC)
+Received: from [10.36.118.66] (unknown [10.36.118.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 565F860BE3;
+        Fri, 10 Jan 2020 13:15:27 +0000 (UTC)
+Subject: Re: [PATCH] mm/page_alloc: Skip non present sections on zone
+ initialization
+To:     Michal Hocko <mhocko@kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@suse.de>,
+        "Jin, Zhi" <zhi.jin@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20191230093828.24613-1-kirill.shutemov@linux.intel.com>
+ <20200108144044.GB30379@dhcp22.suse.cz>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
+ 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
+ zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
+ Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
+ jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
+ II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
+ Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
+ RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
+ ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
+ Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
+ ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
+ 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
+ GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
+ GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
+ H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
+ 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
+ ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
+ GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
+ CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
+ njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
+ FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
+Organization: Red Hat GmbH
+Message-ID: <73437651-822f-fcec-3b96-281fb1064cf8@redhat.com>
+Date:   Fri, 10 Jan 2020 14:15:26 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <f599735e-83f7-5afc-ebe6-168f0157d2c3@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200108144044.GB30379@dhcp22.suse.cz>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
-
-On 08/01/20 7:05 pm, Peter Ujfalusi wrote:
-> Hi,
-> 
-> On 08/01/2020 11.29, Baolin Wang wrote:
->> Hi Faiz,
+On 08.01.20 15:40, Michal Hocko wrote:
+> On Mon 30-12-19 12:38:28, Kirill A. Shutemov wrote:
+>> memmap_init_zone() can be called on the ranges with holes during the
+>> boot. It will skip any non-valid PFNs one-by-one. It works fine as long
+>> as holes are not too big.
 >>
->> On Wed, Jan 8, 2020 at 5:19 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
->>>
->>> Hi Baolin,
->>>
->>> On 08/01/20 6:58 am, Baolin Wang wrote:
->>>> Hi Faiz,
->>>>
->>>> On Mon, Jan 6, 2020 at 7:01 PM Faiz Abbas <faiz_abbas@ti.com> wrote:
->>>>>
->>>>> From: Chunyan Zhang <zhang.chunyan@linaro.org>
->>>>>
->>>>> Some standard SD host controllers can support both external dma
->>>>> controllers as well as ADMA/SDMA in which the SD host controller
->>>>> acts as DMA master. TI's omap controller is the case as an example.
->>>>>
->>>>> Currently the generic SDHCI code supports ADMA/SDMA integrated in
->>>>> the host controller but does not have any support for external DMA
->>>>> controllers implemented using dmaengine, meaning that custom code is
->>>>> needed for any systems that use an external DMA controller with SDHCI.
->>>>>
->>>>> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
->>>>> 1. Map scatterlists before dmaengine_prep_slave_sg()
->>>>> 2. Use dma_async() functions inside of the send_command() path and call
->>>>> terminate_sync() in non-atomic context in case of an error.
->>>>>
->>>>> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
->>>>> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
->>>>> ---
->>>>>  drivers/mmc/host/Kconfig |   3 +
->>>>>  drivers/mmc/host/sdhci.c | 228 ++++++++++++++++++++++++++++++++++++++-
->>>>>  drivers/mmc/host/sdhci.h |   8 ++
->>>>>  3 files changed, 237 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
->>>>> index d06b2dfe3c95..adef971582a1 100644
->>>>> --- a/drivers/mmc/host/Kconfig
->>>>> +++ b/drivers/mmc/host/Kconfig
->>>>> @@ -1040,3 +1040,6 @@ config MMC_OWL
->>>>>         help
->>>>>           This selects support for the SD/MMC Host Controller on
->>>>>           Actions Semi Owl SoCs.
->>>>> +
->>>>> +config MMC_SDHCI_EXTERNAL_DMA
->>>>> +       bool
->>>>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->>>>> index f6999054abcf..8cc78c76bc3d 100644
->>>>> --- a/drivers/mmc/host/sdhci.c
->>>>> +++ b/drivers/mmc/host/sdhci.c
->>>>> @@ -10,6 +10,7 @@
->>>>>   */
->>>>>
->>>>>  #include <linux/delay.h>
->>>>> +#include <linux/dmaengine.h>
->>>>>  #include <linux/ktime.h>
->>>>>  #include <linux/highmem.h>
->>>>>  #include <linux/io.h>
->>>>> @@ -1157,6 +1158,188 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
->>>>>         sdhci_set_block_info(host, data);
->>>>>  }
->>>>>
->>>>> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
->>>>> +
->>>>> +static int sdhci_external_dma_init(struct sdhci_host *host)
->>>>> +{
->>>>> +       int ret = 0;
->>>>> +       struct mmc_host *mmc = host->mmc;
->>>>> +
->>>>> +       host->tx_chan = dma_request_chan(mmc->parent, "tx");
->>>>> +       if (IS_ERR(host->tx_chan)) {
->>>>> +               ret = PTR_ERR(host->tx_chan);
->>>>> +               if (ret != -EPROBE_DEFER)
->>>>> +                       pr_warn("Failed to request TX DMA channel.\n");
->>>>> +               host->tx_chan = NULL;
->>>>> +               return ret;
->>>>> +       }
->>>>> +
->>>>> +       host->rx_chan = dma_request_chan(mmc->parent, "rx");
->>>>> +       if (IS_ERR(host->rx_chan)) {
->>>>> +               if (host->tx_chan) {
->>>>> +                       dma_release_channel(host->tx_chan);
->>>>> +                       host->tx_chan = NULL;
->>>>> +               }
->>>>> +
->>>>> +               ret = PTR_ERR(host->rx_chan);
->>>>> +               if (ret != -EPROBE_DEFER)
->>>>> +                       pr_warn("Failed to request RX DMA channel.\n");
->>>>> +               host->rx_chan = NULL;
->>>>> +       }
->>>>> +
->>>>> +       return ret;
->>>>> +}
->>>>> +
->>>>> +static struct dma_chan *sdhci_external_dma_channel(struct sdhci_host *host,
->>>>> +                                                  struct mmc_data *data)
->>>>> +{
->>>>> +       return data->flags & MMC_DATA_WRITE ? host->tx_chan : host->rx_chan;
->>>>> +}
->>>>> +
->>>>> +static int sdhci_external_dma_setup(struct sdhci_host *host,
->>>>> +                                   struct mmc_command *cmd)
->>>>> +{
->>>>> +       int ret, i;
->>>>> +       struct dma_async_tx_descriptor *desc;
->>>>> +       struct mmc_data *data = cmd->data;
->>>>> +       struct dma_chan *chan;
->>>>> +       struct dma_slave_config cfg;
->>>>> +       dma_cookie_t cookie;
->>>>> +       int sg_cnt;
->>>>> +
->>>>> +       if (!host->mapbase)
->>>>> +               return -EINVAL;
->>>>> +
->>>>> +       cfg.src_addr = host->mapbase + SDHCI_BUFFER;
->>>>> +       cfg.dst_addr = host->mapbase + SDHCI_BUFFER;
->>>>> +       cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->>>>> +       cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
->>>>> +       cfg.src_maxburst = data->blksz / 4;
->>>>> +       cfg.dst_maxburst = data->blksz / 4;
->>>>> +
->>>>> +       /* Sanity check: all the SG entries must be aligned by block size. */
->>>>> +       for (i = 0; i < data->sg_len; i++) {
->>>>> +               if ((data->sg + i)->length % data->blksz)
->>>>> +                       return -EINVAL;
->>>>> +       }
->>>>> +
->>>>> +       chan = sdhci_external_dma_channel(host, data);
->>>>> +
->>>>> +       ret = dmaengine_slave_config(chan, &cfg);
->>>>> +       if (ret)
->>>>> +               return ret;
->>>>> +
->>>>> +       sg_cnt = sdhci_pre_dma_transfer(host, data, COOKIE_MAPPED);
->>>>> +       if (sg_cnt <= 0)
->>>>> +               return -EINVAL;
->>>>> +
->>>>> +       desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
->>>>> +                                      mmc_get_dma_dir(data),
->>>>> +                                      DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
->>>>> +       if (!desc)
->>>>> +               return -EINVAL;
->>>>> +
->>>>> +       desc->callback = NULL;
->>>>> +       desc->callback_param = NULL;
->>>>> +
->>>>> +       cookie = dmaengine_submit(desc);
->>>>> +       if (cookie < 0)
->>>>
->>>> We usually use the DMA engine standard API: dma_submit_error() to
->>>> validate the cookie.
->>>>
->>>
->>> The if condition is doing the same thing as the API. Do we really
->>> require it?
+>> But huge holes in the memory map causes a problem. It takes over 20
+>> seconds to walk 32TiB hole. x86-64 with 5-level paging allows for much
+>> larger holes in the memory map which would practically hang the system.
 >>
->> Yes, now it did the same thing. But in future if the DMA engine expand
->> the cookie indication, which may break your current condition, but use
->> dma_submit_error() is more safe, that will help to cover the internal
->> cookie things. So I recommend to use the standard API as far as
->> possible.
+>> Deferred struct page init doesn't help here. It only works on the
+>> present ranges.
+>>
+>> Skipping non-present sections would fix the issue.
 > 
-> dma_cookie_t is typedefed to s32 currently, but it could change. The
-> cookie is for DMA engine internal tracking.
-> Clients should not use it directly for doing arithmetic on it.
+> Makes sense to me.
 > 
+>> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> 
+> That pfn inc back and forth is quite ugly TBH but whatever.
 
-In that case, I'll fix it with correct API.
+Indeed, can we please rewrite the loop to fix that?
 
+
+-- 
 Thanks,
-Faiz
+
+David / dhildenb
+
