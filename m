@@ -2,152 +2,181 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1BDC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F36C33CA5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4787F206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90591206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:44:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="cIcbuRID";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="aLKMI/g3"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="dU204d41"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgAJQnx (ORCPT
+        id S1728889AbgAJQod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:43:53 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:31048 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728500AbgAJQnw (ORCPT
+        Fri, 10 Jan 2020 11:44:33 -0500
+Received: from sonic305-8.consmr.mail.bf2.yahoo.com ([74.6.133.47]:38703 "EHLO
+        sonic305-8.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728564AbgAJQob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:43:52 -0500
-Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
-        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 00AGcMCC006241;
-        Fri, 10 Jan 2020 08:43:37 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=o1xYxfd0dG0e83Rgq36t0TKv8/MPPtFj6WE0qHORQgY=;
- b=cIcbuRIDLNrDWeIdDwr+6Hi7pEy5A/T4g7y6eCE9wsIqCa/9oqRTqGa3WfXBJT8vcAtj
- pkxyMsd8V2GHjuh8fmxBRXd9Mp8lbmBxNA/dsLWQB/knr7oc/VgxJ8jZpdqovmA5WqP5
- iTCa2Qv9p+pYfTi7GP/gDBuyS5y5nPfLdkU= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by m0001303.ppops.net with ESMTP id 2xenyt28bb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 10 Jan 2020 08:43:36 -0800
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.228) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Fri, 10 Jan 2020 08:43:35 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TcVxZVLNN5DF5q4bujOaMu4JvC9veqb5tuxHAKRwytJAAbSvfXWCvx3OAfl7t9asulWfNq82DfVZhViYrCfuxJKXm0XTGBKGYyO/81VqXiM/kFjHgazh0RrVL3D1nFU3o/kzP8wqDPcDu9Ad0RuR83/nOGzN2G8nSwni64D9XaBFKvpKiRdOrDJ6hItbYiKDJ87sVxWieUkh40WnbIpsRYnX6gVkY0XVZ2pv/4pFsdrzhNhos45CzaMY3/J0A3LDs0jm1rUm8hLhQfhssJ62oquFngEvWPfhHdvooluuQzLDqIInppUpkre7PeiCnZtir6kWKNp5Fbnsp1aZ0ayNKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o1xYxfd0dG0e83Rgq36t0TKv8/MPPtFj6WE0qHORQgY=;
- b=nxXx7XidlcSmJD9nOTKb+iSe6/2Nxa86b6f5eV8122dc3J+ZJOZj5V08/mR1NAbeDArZQSd5aGFcRAnlk23s3BjdA49J3rCHb98wRl/oAeuMls5g1PkLzOE9fWcK+Uz3u2fi4vfol261NH3eH4d9jd0D0f3dPO4/Zy0Jow3pLB0bIs09coJP+icAUj1kc3gIrCjp+n1UIMvot2oI8A1EC32D6lxBF0UqYPy9cLl1BijtvxFUju+dtX8ngtvaWDi3d84VjGBE4QuKCIMpnIst9s89YgrAA7pPfc5n7J52anB7rq7M9nbR7ivHEKoREfwCS4ugN43Hv0nlf6Vr3ZmawA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o1xYxfd0dG0e83Rgq36t0TKv8/MPPtFj6WE0qHORQgY=;
- b=aLKMI/g3jzXE25vSQJJ1cJssxVyiQqs6dag91tUhOHr1qpUktImM7jqbFJ6WcRyBaOZixrnkXKHXf/MfNAXBzxRZzxJPfwEJPM8oVVNcIDiyBMbhhhE/xK6ELDvIKEeL6v9BO5dq80jlveqzvS60V8drr4dU+m/ASJRhsLpcy9E=
-Received: from MN2PR15MB3213.namprd15.prod.outlook.com (20.179.21.76) by
- MN2PR15MB2525.namprd15.prod.outlook.com (20.179.146.88) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Fri, 10 Jan 2020 16:43:34 +0000
-Received: from MN2PR15MB3213.namprd15.prod.outlook.com
- ([fe80::6d1e:f2f7:d36:a42f]) by MN2PR15MB3213.namprd15.prod.outlook.com
- ([fe80::6d1e:f2f7:d36:a42f%4]) with mapi id 15.20.2623.011; Fri, 10 Jan 2020
- 16:43:34 +0000
-Received: from kafai-mbp.dhcp.thefacebook.com (2620:10d:c090:200::3:1c91) by CO2PR04CA0002.namprd04.prod.outlook.com (2603:10b6:102:1::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend Transport; Fri, 10 Jan 2020 16:43:31 +0000
-From:   Martin Lau <kafai@fb.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>
-CC:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Joe Stringer <joe@isovalent.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel-team@cloudflare.com" <kernel-team@cloudflare.com>
-Subject: Re: [PATCH bpf v2] net: bpf: don't leak time wait and request sockets
-Thread-Topic: [PATCH bpf v2] net: bpf: don't leak time wait and request
- sockets
-Thread-Index: AQHVx7l9Y1n5XH7dBkG8DtIR/ncd4KfkGrgA
-Date:   Fri, 10 Jan 2020 16:43:32 +0000
-Message-ID: <20200110164328.aosamgjk5hfw7r7d@kafai-mbp.dhcp.thefacebook.com>
-References: <20200109115749.12283-1-lmb@cloudflare.com>
- <20200110132336.26099-1-lmb@cloudflare.com>
-In-Reply-To: <20200110132336.26099-1-lmb@cloudflare.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: CO2PR04CA0002.namprd04.prod.outlook.com
- (2603:10b6:102:1::12) To MN2PR15MB3213.namprd15.prod.outlook.com
- (2603:10b6:208:3d::12)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3:1c91]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8e6952c5-1bf8-4f0e-7a11-08d795ec3a97
-x-ms-traffictypediagnostic: MN2PR15MB2525:
-x-microsoft-antispam-prvs: <MN2PR15MB2525D8E553A2DD517D061830D5380@MN2PR15MB2525.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 02788FF38E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(366004)(39860400002)(346002)(376002)(199004)(189003)(186003)(86362001)(52116002)(16526019)(4744005)(2906002)(7696005)(5660300002)(8936002)(316002)(55016002)(1076003)(478600001)(66946007)(8676002)(66476007)(66446008)(54906003)(71200400001)(9686003)(4326008)(6916009)(81166006)(6506007)(66556008)(81156014)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR15MB2525;H:MN2PR15MB3213.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XqHvqAZpsr6LcgmehUmu6sFRIrLwAw7lJNHtT7jRBshQaRe/rOwtNTxIFPEl1gaVDISxtY0sEyMIFYqT3YPGB7df0TqlqwBvxLJoo8VtdXVA8yHa17jhR2S6cpB/taROUIXLJhx5GqsDanZ3iTzgvyl1jmPsrXtpm/CbAOjGuT4vadqxU/MS2IKChW7Gd5V3nAulI0I/wG2UxfPsLf7FMnkytXoL7lWArOZ4hTLygsCLAsDPkNw4vX/vURsQFcnfw2wVFARf9srBkVFbslmTgmNWdbrqxTqRS8tCxMIUjONR7k3PMuHiug7ecYMpyJtETEZ5hQR6PTvZcBfWdCrICNFSDFjM+F3+p1xp15h+Yrhm/gOLcU4anALnVcEui5lrGog/acpJ7uTc/RUMprTtC1kdjCDNHup10vnnXcfeUD2plPlvQJOZmKagV/EZk/PF
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-ID: <14142DC13E473641B35938A3DD763512@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Fri, 10 Jan 2020 11:44:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1578674669; bh=Z0yAe2gY+3u+oE07I9zx18MKpLJ8oAZm58GdLltCZbU=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=dU204d418tuy5YC9SukmB4WpIhZTc09hVijV2EToUSHvFQNrJzERBuzQ991JxWe2tuiXFvpOKA9CJqPMVffg7kcZsNSQpO/+cPdt97oACeuSQ7bs3RaMStbekGeU+gh2dTj9f634Nb+nrDPJ4jY/CRmPDx461KNC6koGuO1rEVcb3O2Cdz26DQElxvdhy7OYsNqSUCQBkjxkgYVhfkljmdTH8trIaAVJXbcnlrbcmDi4Bw4VEaxXOIWkZsEBIHIzDQ3qHbaAkCGk/VnwOrTmbDK9g8kKW3zb1PLCCGeB0I59odURtkXy3Zgo0D+cyqoK0YDpOqEBLzCnawhU6Ukq4w==
+X-YMail-OSG: eYJYnTsVM1nJy_nknd8jH_mItjhx1K6SWm73ZLdtdAuKOcMesbzqrDwM9jicR9y
+ azkI0xpLtlaUNYDeM0n4BDl7lyMCEzK50jWo5oecv97FPMhFBGmU7DNI4h7nS6Vdf3UJUHjyfSf3
+ WIZHmvWP3gRKqM_qbjm7CzicQKjs4NBUMpW29vNYkAa2uLJ67l8W8D6Q8xdWKkHzaYr0u6tzoEAu
+ PHuzif.0DYGlYWRZvqooT1DG0Q.LfzK.SqqZNEJe.odzy8Xiu0LC9NzFT76Gvrk.t3yvFEZ2j6D2
+ y.bZzc.hXh3DFKoLOajK0brzJTLBv8FNeVNHVSxBpeBZtAbdKxRA.vW1EDTDKwJK4hRDUwhGRJMu
+ g8h6jjv4G5QHC4IP3rGE3Pa.gMa2Wab_23ATHzXdVAujvkCKaq49vIcap6Q_oeGaq.sy56TGCnrc
+ ZNA.UB4eqliPSBQSpmwLIw_TDdY05x6NYYgFirjUJGqp9NwLMjy1i9QSAvgkzSu5azFpGdsf3RBG
+ Ayl_Rbn6Hbl_Sj8egEDv7C9cwj82AixwnE10wzzpdYB97bWU7F7kU2jDC7AS2NBH37ez_ewNb96h
+ wP69EE06w2NDcm7Hc7TO3I1sAPo20VH6ttYlyMZi8EkdyMgy9SkLWk.7xaADV9CySlB7x6rHRGZB
+ sByOEq3FEWDicJVB6A6.M.aF6cF7P7PNo87qwFzxeXy32OobHdIqLdyrmc8u53z8R8as4A_jIyxt
+ cc_6yEqtkVVBYXBF3UW2UZX13GjawCwGDdUSI_MVHG5kq_c0JlYb0cr1PV7f4rrCTdC3i8XFqoqW
+ iXlKULZGEEcG8HAb7c0sI2w7rOA8J765GhpSxtLvwkDjNbzDVy.eLN_4pNLyzG96EDMb7QeIgHPE
+ VS90rm_iRw8jWMZioAOgmbdW47zVWB4nhUhRAUAuhEHwuDn5fr.wdVi4TpnoMsYAAtBw3qvCdw4L
+ WFxl_tuoXEa1kRwyvYFRB8t2Xt5ynTHScMuT_QchzUd6k1OGxY2TDmcWx8srAtCOzjrHsLA_n50I
+ 53vbbHAfQ6R3IUdAJVW7mQpj5oAYyc.uCaIXPMYZ1HpQI0wwjM2YFOPZusBISTvr2CBBJ4TamQjN
+ 3t3C2RZHvFHg4PK76an0Y_azin4g4AzU1MU16z4dA_EQyiRctODxFsczgqnlgBE71VSadWbhd37R
+ 2im95d3wxf5ljDdvrUZ0Gk.L8zoAyyAWd3D0HdWtOAFRBr55LVrc_UtrEWGCTedmxmDXyZD8QUXL
+ S2gUV26dOSItYCbpk.AsumNmf8_SnC_UnoBJPhRK.Ast6CUliX570tekXA8x9cX2m12kYayPJUvq
+ TRU5Ga8URHUpyUcCZvMUQlI3Pi4fJiRMrcbwRhkUCWLZ0aoYYYmigDTjqAPRZ3SUj5VZ1mUORvYp
+ 8rhJmESc6vD6_Gy0VIgsMt0LKmSw_wi9mjkBZR5hm
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.bf2.yahoo.com with HTTP; Fri, 10 Jan 2020 16:44:29 +0000
+Received: by smtp402.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 8fd6bc7821c9c5592201a3e5de6585b4;
+          Fri, 10 Jan 2020 16:44:26 +0000 (UTC)
+Subject: Re: [PATCH] selinux: remove redundant msg_msg_alloc_security
+To:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Huaisheng Ye <yehs2007@zoho.com>, paul@paul-moore.com,
+        eparis@parisplace.org, jmorris@namei.org, serge@hallyn.com
+Cc:     tyu1@lenovo.com, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Huaisheng Ye <yehs1@lenovo.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <20200110095856.76612-1-yehs2007@zoho.com>
+ <e71932ce-0687-02e5-5f34-980c0cad4ae9@tycho.nsa.gov>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=casey@schaufler-ca.com; keydata=
+ mQINBFzV9HABEAC/mmv3jeJyF7lR7QhILYg1+PeBLIMZv7KCzBSc/4ZZipoWdmr77Lel/RxQ
+ 1PrNx0UaM5r6Hj9lJmJ9eg4s/TUBSP67mTx+tsZ1RhG78/WFf9aBe8MSXxY5cu7IUwo0J/CG
+ vdSqACKyYPV5eoTJmnMxalu8/oVUHyPnKF3eMGgE0mKOFBUMsb2pLS/enE4QyxhcZ26jeeS6
+ 3BaqDl1aTXGowM5BHyn7s9LEU38x/y2ffdqBjd3au2YOlvZ+XUkzoclSVfSR29bomZVVyhMB
+ h1jTmX4Ac9QjpwsxihT8KNGvOM5CeCjQyWcW/g8LfWTzOVF9lzbx6IfEZDDoDem4+ZiPsAXC
+ SWKBKil3npdbgb8MARPes2DpuhVm8yfkJEQQmuLYv8GPiJbwHQVLZGQAPBZSAc7IidD2zbf9
+ XAw1/SJGe1poxOMfuSBsfKxv9ba2i8hUR+PH7gWwkMQaQ97B1yXYxVEkpG8Y4MfE5Vd3bjJU
+ kvQ/tOBUCw5zwyIRC9+7zr1zYi/3hk+OG8OryZ5kpILBNCo+aePeAJ44znrySarUqS69tuXd
+ a3lMPHUJJpUpIwSKQ5UuYYkWlWwENEWSefpakFAIwY4YIBkzoJ/t+XJHE1HTaJnRk6SWpeDf
+ CreF3+LouP4njyeLEjVIMzaEpwROsw++BX5i5vTXJB+4UApTAQARAQABtChDYXNleSBTY2hh
+ dWZsZXIgPGNhc2V5QHNjaGF1Zmxlci1jYS5jb20+iQJUBBMBCAA+FiEEC+9tH1YyUwIQzUIe
+ OKUVfIxDyBEFAlzV9HACGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQOKUV
+ fIxDyBG6ag/6AiRl8yof47YOEVHlrmewbpnlBTaYNfJ5cZflNRKRX6t4bp1B2YV1whlDTpiL
+ vNOwFkh+ZE0eI5M4x8Gw2Oiok+4Q5liA9PHTozQYF+Ia+qdL5EehfbLGoEBqklpGvG3h8JsO
+ 7SvONJuFDgvab/U/UriDYycJwzwKZuhVtK9EMpnTtUDyP3DY+Q8h7MWsniNBLVXnh4yBIEJg
+ SSgDn3COpZoFTPGKE+rIzioo/GJe8CTa2g+ZggJiY/myWTS3quG0FMvwvNYvZ4I2g6uxSl7n
+ bZVqAZgqwoTAv1HSXIAn9muwZUJL03qo25PFi2gQmX15BgJKQcV5RL0GHFHRThDS3IyadOgK
+ P2j78P8SddTN73EmsG5OoyzwZAxXfck9A512BfVESqapHurRu2qvMoUkQaW/2yCeRQwGTsFj
+ /rr0lnOBkyC6wCmPSKXe3dT2mnD5KnCkjn7KxLqexKt4itGjJz4/ynD/qh+gL7IPbifrQtVH
+ JI7cr0fI6Tl8V6efurk5RjtELsAlSR6fKV7hClfeDEgLpigHXGyVOsynXLr59uE+g/+InVic
+ jKueTq7LzFd0BiduXGO5HbGyRKw4MG5DNQvC//85EWmFUnDlD3WHz7Hicg95D+2IjD2ZVXJy
+ x3LTfKWdC8bU8am1fi+d6tVEFAe/KbUfe+stXkgmfB7pxqW5Ag0EXNX0cAEQAPIEYtPebJzT
+ wHpKLu1/j4jQcke06Kmu5RNuj1pEje7kX5IKzQSs+CPH0NbSNGvrA4dNGcuDUTNHgb5Be9hF
+ zVqRCEvF2j7BFbrGe9jqMBWHuWheQM8RRoa2UMwQ704mRvKr4sNPh01nKT52ASbWpBPYG3/t
+ WbYaqfgtRmCxBnqdOx5mBJIBh9Q38i63DjQgdNcsTx2qS7HFuFyNef5LCf3jogcbmZGxG/b7
+ yF4OwmGsVc8ufvlKo5A9Wm+tnRjLr/9Mn9vl5Xa/tQDoPxz26+aWz7j1in7UFzAarcvqzsdM
+ Em6S7uT+qy5jcqyuipuenDKYF/yNOVSNnsiFyQTFqCPCpFihOnuaWqfmdeUOQHCSo8fD4aRF
+ emsuxqcsq0Jp2ODq73DOTsdFxX2ESXYoFt3Oy7QmIxeEgiHBzdKU2bruIB5OVaZ4zWF+jusM
+ Uh+jh+44w9DZkDNjxRAA5CxPlmBIn1OOYt1tsphrHg1cH1fDLK/pDjsJZkiH8EIjhckOtGSb
+ aoUUMMJ85nVhN1EbU/A3DkWCVFEA//Vu1+BckbSbJKE7Hl6WdW19BXOZ7v3jo1q6lWwcFYth
+ esJfk3ZPPJXuBokrFH8kqnEQ9W2QgrjDX3et2WwZFLOoOCItWxT0/1QO4ikcef/E7HXQf/ij
+ Dxf9HG2o5hOlMIAkJq/uLNMvABEBAAGJAjwEGAEIACYWIQQL720fVjJTAhDNQh44pRV8jEPI
+ EQUCXNX0cAIbDAUJEswDAAAKCRA4pRV8jEPIEWkzEACKFUnpp+wIVHpckMfBqN8BE5dUbWJc
+ GyQ7wXWajLtlPdw1nNw0Wrv+ob2RCT7qQlUo6GRLcvj9Fn5tR4hBvR6D3m8aR0AGHbcC62cq
+ I7LjaSDP5j/em4oVL2SMgNTrXgE2w33JMGjAx9oBzkxmKUqprhJomPwmfDHMJ0t7y39Da724
+ oLPTkQDpJL1kuraM9TC5NyLe1+MyIxqM/8NujoJbWeQUgGjn9uxQAil7o/xSCjrWCP3kZDID
+ vd5ZaHpdl8e1mTExQoKr4EWgaMjmD/a3hZ/j3KfTVNpM2cLfD/QwTMaC2fkK8ExMsz+rUl1H
+ icmcmpptCwOSgwSpPY1Zfio6HvEJp7gmDwMgozMfwQuT9oxyFTxn1X3rn1IoYQF3P8gsziY5
+ qtTxy2RrgqQFm/hr8gM78RhP54UPltIE96VywviFzDZehMvuwzW//fxysIoK97Y/KBZZOQs+
+ /T+Bw80Pwk/dqQ8UmIt2ffHEgwCTbkSm711BejapWCfklxkMZDp16mkxSt2qZovboVjXnfuq
+ wQ1QL4o4t1hviM7LyoflsCLnQFJh6RSBhBpKQinMJl/z0A6NYDkQi6vEGMDBWX/M2vk9Jvwa
+ v0cEBfY3Z5oFgkh7BUORsu1V+Hn0fR/Lqq/Pyq+nTR26WzGDkolLsDr3IH0TiAVH5ZuPxyz6
+ abzjfg==
+Message-ID: <e556e93a-9e2c-8045-b191-629f78dbb7fd@schaufler-ca.com>
+Date:   Fri, 10 Jan 2020 08:44:25 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e6952c5-1bf8-4f0e-7a11-08d795ec3a97
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 16:43:32.6029
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CBeNMzfr0YFSaGt8AleV5q4/i8K86wv/aNf2IIn1u0DECH567GnfbuuqSK4LaGqh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR15MB2525
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-10_01:2020-01-10,2020-01-09 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
- lowpriorityscore=0 mlxscore=0 adultscore=0 clxscore=1015 bulkscore=0
- impostorscore=0 priorityscore=1501 mlxlogscore=480 spamscore=0
- phishscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001100138
-X-FB-Internal: deliver
+In-Reply-To: <e71932ce-0687-02e5-5f34-980c0cad4ae9@tycho.nsa.gov>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Mailer: WebService/1.1.14873 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 01:23:36PM +0000, Lorenz Bauer wrote:
-> It's possible to leak time wait and request sockets via the following
-> BPF pseudo code:
-> =A0
->   sk =3D bpf_skc_lookup_tcp(...)
->   if (sk)
->     bpf_sk_release(sk)
->=20
-> If sk->sk_state is TCP_NEW_SYN_RECV or TCP_TIME_WAIT the refcount taken
-> by bpf_skc_lookup_tcp is not undone by bpf_sk_release. This is because
-> sk_flags is re-used for other data in both kinds of sockets. The check
->=20
->   !sock_flag(sk, SOCK_RCU_FREE)
->=20
-> therefore returns a bogus result. Check that sk_flags is valid by calling
-> sk_fullsock. Skip checking SOCK_RCU_FREE if we already know that sk is
-> not a full socket.
-Acked-by: Martin KaFai Lau <kafai@fb.com>
+On 1/10/2020 7:13 AM, Stephen Smalley wrote:
+> On 1/10/20 4:58 AM, Huaisheng Ye wrote:
+>> From: Huaisheng Ye <yehs1@lenovo.com>
+>>
+>> selinux_msg_msg_alloc_security only calls msg_msg_alloc_security but
+>> do nothing else. And also msg_msg_alloc_security is just used by the
+>> former.
+>>
+>> Remove the redundant function to simplify the code.
+>
+> This seems to also be true of other _alloc_security functions, probably due to historical reasons.  Further, at least some of these functions no longer perform any allocation; they are just initialization functions now that allocation has been taken to the LSM framework, so possibly could be renamed and made to return void at some point.
+
+That's something I've been eyeing. I'm not 100% sure that no module will
+ever fail doing the new style initialization. The int to void and name
+change will probably happen after the next round of modules come in and
+we can see that failure of initialization isn't a rational situation.
+
+>
+>>
+>> Signed-off-by: Huaisheng Ye <yehs1@lenovo.com>
+>
+> Acked-by: Stephen Smalley <sds@tycho.nsa.gov>
+>
+>> ---
+>>   security/selinux/hooks.c | 17 ++++++-----------
+>>   1 file changed, 6 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+>> index 9625b99..fb1b9da 100644
+>> --- a/security/selinux/hooks.c
+>> +++ b/security/selinux/hooks.c
+>> @@ -5882,16 +5882,6 @@ static void ipc_init_security(struct ipc_security_struct *isec, u16 sclass)
+>>       isec->sid = current_sid();
+>>   }
+>>   -static int msg_msg_alloc_security(struct msg_msg *msg)
+>> -{
+>> -    struct msg_security_struct *msec;
+>> -
+>> -    msec = selinux_msg_msg(msg);
+>> -    msec->sid = SECINITSID_UNLABELED;
+>> -
+>> -    return 0;
+>> -}
+>> -
+>>   static int ipc_has_perm(struct kern_ipc_perm *ipc_perms,
+>>               u32 perms)
+>>   {
+>> @@ -5910,7 +5900,12 @@ static int ipc_has_perm(struct kern_ipc_perm *ipc_perms,
+>>     static int selinux_msg_msg_alloc_security(struct msg_msg *msg)
+>>   {
+>> -    return msg_msg_alloc_security(msg);
+>> +    struct msg_security_struct *msec;
+>> +
+>> +    msec = selinux_msg_msg(msg);
+>> +    msec->sid = SECINITSID_UNLABELED;
+>> +
+>> +    return 0;
+>>   }
+>>     /* message queue security operations */
+>>
+>
+>
