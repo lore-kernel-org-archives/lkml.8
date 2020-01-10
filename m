@@ -2,104 +2,88 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15873C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C749BC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D70D120848
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C9920848
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:45:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uX2M8G04"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgAJTnS (ORCPT
+        id S1728722AbgAJTpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:43:18 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59586 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727812AbgAJTnR (ORCPT
+        Fri, 10 Jan 2020 14:45:01 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:56152 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727812AbgAJTpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:43:17 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iq0Be-0003nc-R0; Fri, 10 Jan 2020 20:43:14 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 2C984105BDB; Fri, 10 Jan 2020 20:43:14 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-        Ming Lei <minlei@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org
-Subject: Re: Kernel-managed IRQ affinity (cont)
-In-Reply-To: <20200110012802.GA4501@ming.t460p>
-References: <20191216195712.GA161272@xz-x1> <20191219082819.GB15731@ming.t460p> <20191219143214.GA50561@xz-x1> <20191219161115.GA18672@ming.t460p> <87eew8l7oz.fsf@nanos.tec.linutronix.de> <20200110012802.GA4501@ming.t460p>
-Date:   Fri, 10 Jan 2020 20:43:14 +0100
-Message-ID: <87v9pjrtbh.fsf@nanos.tec.linutronix.de>
+        Fri, 10 Jan 2020 14:45:01 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00AJiu1X120699;
+        Fri, 10 Jan 2020 13:44:56 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578685496;
+        bh=ItNnnZAM/+Sva9AL51uIL1NROcOms3i8jcra1pSdNkA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=uX2M8G04XNe8eGTXh514QVte952OuEmEty4cXZ99l815FLWYhnq/l4/iCAZlE+bg8
+         vEY3pCrb/LR/3bR4LNZTtrrehG41oI2FllOifSK1Q4iVRbxXNPlwG5IzG9ToGPWwbd
+         Ad6ri8umwx6XuS5CoGVtqJ0vG/7gGcQkqkHYyc1Q=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00AJiuE5128687;
+        Fri, 10 Jan 2020 13:44:56 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
+ Jan 2020 13:44:56 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 10 Jan 2020 13:44:56 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00AJiti6059704;
+        Fri, 10 Jan 2020 13:44:55 -0600
+Subject: Re: [PATCH 0/4] TI DP8382x Phy support update
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200110184702.14330-1-dmurphy@ti.com>
+ <20200110192524.GO19739@lunn.ch>
+ <2e9333e1-1ee7-80ce-fab4-a98a9f4b345f@ti.com>
+ <20200110194011.GT19739@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <f4cbc8c1-ba4b-fc57-b60c-e10ff8286bd3@ti.com>
+Date:   Fri, 10 Jan 2020 13:42:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200110194011.GT19739@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ming,
+Andrew
 
-Ming Lei <ming.lei@redhat.com> writes:
-> On Thu, Jan 09, 2020 at 09:02:20PM +0100, Thomas Gleixner wrote:
->> Ming Lei <ming.lei@redhat.com> writes:
+On 1/10/20 1:40 PM, Andrew Lunn wrote:
+>> You mean separate series between fixes and functionality?
 >>
->> This is duct tape engineering with absolutely no semantics. I can't even
->> figure out the intent of this 'managed_irq' parameter.
->
-> The intent is to isolate the specified CPUs from handling managed
-> interrupt.
+>> Sure I can separate them but they are dependent on each other.
+> Send 1 and 2 first. After about a week, David will merge net into
+> net-next, and then you can submit 3 and 4.
 
-That's what I figured, but it still does not provide semantics and works
-just for specific cases.
+Thanks.  Got it
 
-> We can do that. The big problem is that the RT case can't guarantee that
-> IO won't be submitted from isolated CPU always. blk-mq's queue mapping
-> relies on the setup affinity, so un-known behavior(kernel crash, or io
-> hang, or other) may be caused if we exclude isolated CPUs from interrupt
-> affinity.
->
-> That is why I try to exclude isolated CPUs from interrupt effective affinity,
-> turns out the approach is simple and doable.
+Dan
 
-Yes, it's doable. But it still is inconsistent behaviour. Assume the
-following configuration:
 
-  8 CPUs CPU0,1 assigned for housekeeping
-
-With 8 queues the proposed change does nothing because each queue is
-mapped to exactly one CPU.
-
-With 4 queues you get the following:
-
- CPU0,1       queue 0
- CPU2,3       queue 1
- CPU4,5       queue 2
- CPU6,7       queue 3
-
-No effect on the isolated CPUs either.
-
-With 2 queues you get the following:
-
- CPU0,1,2,3   queue 0
- CPU4,5,6,7   queue 1
-
-So here the isolated CPUs 2 and 3 get the isolation, but 4-7
-not. That's perhaps intended, but definitely not documented.
-
-So you really need to make your mind up and describe what the intended
-effect of this is and why you think that the result is correct.
-
-Thanks,
-
-       tglx
+> 	  Andrew
