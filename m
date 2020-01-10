@@ -2,193 +2,232 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36163C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08896C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2E572072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:28:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1E852072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:30:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F33T91L+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iWH/LU+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgAJP2D (ORCPT
+        id S1728351AbgAJPaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:28:03 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:37436 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728137AbgAJP2C (ORCPT
+        Fri, 10 Jan 2020 10:30:05 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29658 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728284AbgAJPaE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:28:02 -0500
-Received: by mail-wm1-f65.google.com with SMTP id f129so2401646wmf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 07:28:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aXkYk1wr3xOcC4kmVHKlnMGgZqSHONG6or7V3cMRBfw=;
-        b=F33T91L+0exJkm4W6ymnTYAWlH6C8rI++wYC55+vSK+32TVCw3utrIIHPL9gWWuR4z
-         Ooq0VqOPl3V1PZOQCVH3wmxk0C3bUiD8MhUezkehT3gFsnucpt/tuSILyO27GZyOpdZV
-         xb0Y2RP5w4A8Lh7Rvv8nzlGJNO4J12Pj6NZ+Y=
+        Fri, 10 Jan 2020 10:30:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578670203;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=sJNh1uxufS6tY4jbZR6tw4iBKLWQowKRssWFLqff6nw=;
+        b=iWH/LU+uviv5/Vi3kOpd3lEK1prQINFuBIOIA4ifqCJHJ9UiiUAXMZFkX0ep+wwTN7eyHa
+        CJnqlbryINORHXGYNaXF83Nta+rh6mVSGOzh8UsRjF+warwRFuQTgBwGvoisik9X+f/FpG
+        0f/CsBO4pjNhGp5s1HILrFmpF8QdvAw=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-257-UNQ6AYbvMZilViTs4UH8QA-1; Fri, 10 Jan 2020 10:30:02 -0500
+X-MC-Unique: UNQ6AYbvMZilViTs4UH8QA-1
+Received: by mail-qt1-f199.google.com with SMTP id o24so1478168qtr.17
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 07:30:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aXkYk1wr3xOcC4kmVHKlnMGgZqSHONG6or7V3cMRBfw=;
-        b=XZJiE5xrbKfHk/kBFoZJZqzn+33fJsKlup9Iy63xfx1TgkbF5Z/+iKCyyP9isOeZjx
-         NQTjHGcF5gng7EY6XmkekKRA76c+bkkM3kDkZe5OnVu7JQ1NEaYm7sPbhS0RWuXnSaWS
-         4kBQ+c7zK/9zu3WWkpK+BTRGqVNq7KjTC8tHc+RdmW7XB7ovCtpUIsCBLxc87vwvG5IX
-         oTZ5AXtyy3897p0Hbv9q7oUrJ87dP91Sn5dbTEsUmnJuLP4sKfWTbTRXbatiNCo4W18U
-         4VNs2CwUIUI702SCzFEOCQtDMvw0INxkco/4HTJZI8NRYPISG1I9Xg6SlLGRsbG2adKf
-         VHgg==
-X-Gm-Message-State: APjAAAVeR/N1BOjTbTCfpEGl50iUVUoEs8n7i2/LCLBJtKHRT9yB7CpA
-        agX83ke/Tq6lt1jjjQXqkaEJlQ==
-X-Google-Smtp-Source: APXvYqw0ag02q22hPKuOzI3/vkzH86GFjij0AS1uLwSH4KQPjjBom3rLw/8TFnXp5EIU2M4mQ97Qxw==
-X-Received: by 2002:a1c:541b:: with SMTP id i27mr5205966wmb.137.1578670081018;
-        Fri, 10 Jan 2020 07:28:01 -0800 (PST)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id f1sm2560213wro.85.2020.01.10.07.27.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=sJNh1uxufS6tY4jbZR6tw4iBKLWQowKRssWFLqff6nw=;
+        b=s6sVgKCXlpb4H8/bLuqnoZ27KXy5xsqeasj6MhNB3XxY57mNMNErVe8doBXoC4SDIo
+         HpjK5hiHqwW76hyjZmAAaLgyHprp+ih9ZzHhUc6I5pYCBu6fh/IEQN51cS6f/mdbgkO2
+         Za831+xWIx+MZ3AM2wfBY4yk7O2ykEtJ2uuRwuE+yuD1c7evSseSIZzcBeQzi4CDvMOG
+         ofx6vx10Gk8GlXuKSydyHM3nBGhPqQ+HvyEfz7jclYK/A31FwpGHTUmV2Gip0iMdukwU
+         oaZbVjwPTX+kiHwpcV4WOba3D+5PqGeXyvtfw5zWpp8yDQ1qEeyaj5gKW/FcGfF8tVyc
+         EyJA==
+X-Gm-Message-State: APjAAAUwPx7muVfnBjmyFi1D5WFJJo3d/fuu/kJ8o9hF5PxC4OuN6AWe
+        7owMr40k5VUozd9xvq1QZFqab4oOdoDXZzl9b1oY+adxxFmS3cnDX5NM0RbkRa/97Cb+tdKS+OP
+        0Bn2+jTX00P+6kvLou3ATWUVn
+X-Received: by 2002:ad4:42d1:: with SMTP id f17mr3295947qvr.30.1578670201761;
+        Fri, 10 Jan 2020 07:30:01 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwsahFonjsn/5z2F5PRDVZsqweHmMmz01elwFM2HzO6ZKViN40cOIybfOcq66RGqf/heP1lxQ==
+X-Received: by 2002:ad4:42d1:: with SMTP id f17mr3295923qvr.30.1578670201389;
+        Fri, 10 Jan 2020 07:30:01 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id z3sm1164257qtm.5.2020.01.10.07.30.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 07:28:00 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Fri, 10 Jan 2020 16:27:58 +0100
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     KP Singh <kpsingh@chromium.org>, James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Michael Halcrow <mhalcrow@google.com>,
-        Paul Turner <pjt@google.com>,
-        Brendan Gregg <brendan.d.gregg@gmail.com>,
-        Jann Horn <jannh@google.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Christian Brauner <christian@brauner.io>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
-        Paul Moore <paul@paul-moore.com>
-Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
-Message-ID: <20200110152758.GA260168@google.com>
-References: <CACYkzJ5nYh7eGuru4vQ=2ZWumGPszBRbgqxmhd4WQRXktAUKkQ@mail.gmail.com>
- <201912301112.A1A63A4@keescook>
- <c4e6cdf2-1233-fc82-ca01-ba84d218f5aa@tycho.nsa.gov>
- <alpine.LRH.2.21.2001090551000.27794@namei.org>
- <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
- <alpine.LRH.2.21.2001100437550.21515@namei.org>
- <e90e03e3-b92f-6e1a-132f-1b648d9d2139@tycho.nsa.gov>
- <alpine.LRH.2.21.2001100558550.31925@namei.org>
- <20200109194302.GA85350@google.com>
- <8e035f4d-5120-de6a-7ac8-a35841a92b8a@tycho.nsa.gov>
+        Fri, 10 Jan 2020 07:30:00 -0800 (PST)
+Date:   Fri, 10 Jan 2020 10:29:59 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Kevin <kevin.tian@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
+        Lei Cao <lei.cao@stratus.com>
+Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
+ tracking
+Message-ID: <20200110152959.GC53397@xz-x1>
+References: <20200109145729.32898-1-peterx@redhat.com>
+ <20200109145729.32898-13-peterx@redhat.com>
+ <20200109110110-mutt-send-email-mst@kernel.org>
+ <20200109191514.GD36997@xz-x1>
+ <20200109141634-mutt-send-email-mst@kernel.org>
+ <20200109201916.GH36997@xz-x1>
+ <20200109171154-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <8e035f4d-5120-de6a-7ac8-a35841a92b8a@tycho.nsa.gov>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200109171154-mutt-send-email-mst@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-Jan 14:47, Stephen Smalley wrote:
-> On 1/9/20 2:43 PM, KP Singh wrote:
-> > On 10-Jan 06:07, James Morris wrote:
-> > > On Thu, 9 Jan 2020, Stephen Smalley wrote:
+On Thu, Jan 09, 2020 at 05:18:24PM -0500, Michael S. Tsirkin wrote:
+> On Thu, Jan 09, 2020 at 03:19:16PM -0500, Peter Xu wrote:
+> > > > while for virtio, both sides (hypervisor,
+> > > > and the guest driver) are trusted.
 > > > 
-> > > > On 1/9/20 1:11 PM, James Morris wrote:
-> > > > > On Wed, 8 Jan 2020, Stephen Smalley wrote:
-> > > > > 
-> > > > > > The cover letter subject line and the Kconfig help text refer to it as a
-> > > > > > BPF-based "MAC and Audit policy".  It has an enforce config option that
-> > > > > > enables the bpf programs to deny access, providing access control. IIRC,
-> > > > > > in
-> > > > > > the earlier discussion threads, the BPF maintainers suggested that Smack
-> > > > > > and
-> > > > > > other LSMs could be entirely re-implemented via it in the future, and that
-> > > > > > such an implementation would be more optimal.
-> > > > > 
-> > > > > In this case, the eBPF code is similar to a kernel module, rather than a
-> > > > > loadable policy file.  It's a loadable mechanism, rather than a policy, in
-> > > > > my view.
+> > > What gave you the impression guest is trusted in virtio?
+> > 
+> > Hmm... maybe when I know virtio can bypass vIOMMU as long as it
+> > doesn't provide IOMMU_PLATFORM flag? :)
+> 
+> If guest driver does not provide IOMMU_PLATFORM, and device does,
+> then negotiation fails.
+
+I mean it's still possible to specify "!IOMMU_PLATFORM" for the virtio
+device even if vIOMMU is enabled in the guest (rather than the
+negociation procedures).  Again I think it's fair, just the same
+reason as why we tend to even make "iommu=pt" by default for all the
+kernel drivers, because we should trust all the drivers as kernel
+itself.  The only thing we want to protect using vIOMMU is the
+userspace driver because we do have a line between the userspace and
+the kernel, and IMHO it's the same thing here for the new kvm
+interface.
+
+> 
+> > I think it's logical to trust a virtio guest kernel driver, could you
+> > guide me on what I've missed?
+> 
+> 
+> guest driver is assumed to be part of guest kernel. It can't
+> do anything kernel can't do anyway.
+
+Right, I think all things belongs to the kernel will have the same
+level of trust.  However again, userspace should be differently
+treated, and that's why I tend to prefer the index solution that we
+expose less to userspace to write (read is far safer comparing to
+writes from userspace).
+
+> 
+> > > 
+> > > 
+> > > >  Above means we need to do these to
+> > > > change to the new design:
 > > > > 
-> > > > I thought you frowned on dynamically loadable LSMs for both security and
-> > > > correctness reasons?
-> > 
-> > Based on the feedback from the lists we've updated the design for v2.
-> > 
-> > In v2, LSM hook callbacks are allocated dynamically using BPF
-> > trampolines, appended to a separate security_hook_heads and run
-> > only after the statically allocated hooks.
-> > 
-> > The security_hook_heads for all the other LSMs (SELinux, AppArmor etc)
-> > still remains __lsm_ro_after_init and cannot be modified. We are still
-> > working on v2 (not ready for review yet) but the general idea can be
-> > seen here:
-> > 
-> >    https://github.com/sinkap/linux-krsi/blob/patch/v1/trampoline_prototype/security/bpf/lsm.c
-> > 
+> > > >   - Allow the GFN array to be mapped as writable by userspace (so that
+> > > >     userspace can publish bit 2),
+> > > > 
+> > > >   - The userspace must be trusted to follow the design (just imagine
+> > > >     what if the userspace overwrites a GFN when it publishes bit 2
+> > > >     over a valid dirty gfn entry?  KVM could wrongly unprotect a page
+> > > >     for the guest...).
 > > > 
-> > > Evaluating the security impact of this is the next step. My understanding
-> > > is that eBPF via BTF is constrained to read only access to hook
-> > > parameters, and that its behavior would be entirely restrictive.
-> > > 
-> > > I'd like to understand the security impact more fully, though.  Can the
-> > > eBPF code make arbitrary writes to the kernel, or read anything other than
-> > > the correctly bounded LSM hook parameters?
-> > > 
+> > > You mean protect, right?  So what?
 > > 
-> > As mentioned, the BPF verifier does not allow writes to BTF types.
-> > 
-> > > > And a traditional security module would necessarily fall
-> > > > under GPL; is the eBPF code required to be likewise?  If not, KRSI is a
-> > > > gateway for proprietary LSMs...
-> > > 
-> > > Right, we do not want this to be a GPL bypass.
-> > 
-> > This is not intended to be a GPL bypass and the BPF verifier checks
-> > for license compatibility of the loaded program with GPL.
+> > Yes, I mean with that, more things are uncertain from userspace.  It
+> > seems easier to me that we restrict the userspace with one index.
 > 
-> IIUC, it checks that the program is GPL compatible if it uses a function
-> marked GPL-only.  But what specifically is marked GPL-only that is required
-> for eBPF programs using KRSI?
+> Donnu how to treat vague statements like this.  You need to be specific
+> with threat models. Otherwise there's no way to tell whether code is
+> secure.
+> 
+> > > 
+> > > > While if we use the indices, we restrict the userspace to only be able
+> > > > to write to one index only (which is the reset_index).  That's all it
+> > > > can do to mess things up (and it could never as long as we properly
+> > > > validate the reset_index when read, which only happens during
+> > > > KVM_RESET_DIRTY_RINGS and is very rare).  From that pov, it seems the
+> > > > indices solution still has its benefits.
+> > > 
+> > > So if you mess up index how is this different?
+> > 
+> > We can't mess up much with that.  We simply check fetch_index (sorry I
+> > meant this when I said reset_index, anyway it's the only index that we
+> > expose to userspace) to make sure:
+> > 
+> >   reset_index <= fetch_index <= dirty_index
+> > 
+> > Otherwise we fail the ioctl.  With that, we're 100% safe.
+> 
+> safe from what? userspace can mess up guest memory trivially.
+> for example skip sending some memory or send junk.
 
-Good point! If no-one objects, I can add it to the BPF_PROG_TYPE_LSM
-specific verification for the v2 of the patch-set which would require
-all BPF-LSM programs to be GPL.
-
-- KP
+Yes, QEMU can mess the guest up, but it should never mess the host up,
+am I right?  Regarding to QEMU as an userspace, KVM should see it as
+untrusted as well from host-wise.  However guest security is another
+thing, imho.
 
 > 
+> > > 
+> > > I agree RO page kind of feels safer generally though.
+> > > 
+> > > I will have to re-read how does the ring works though,
+> > > my comments were based on the old assumption of mmaped
+> > > page with indices.
 > > 
-> > - KP
+> > Yes, sorry again for a bad cover letter.
 > > 
-> > > 
-> > > If these issues can be resolved, this may be a "safe" way to support
-> > > loadable LSM applications.
-> > > 
-> > > Again, I'd be interested in knowing how this is is handled in the
-> > > networking stack (keeping in mind that LSM is a much more invasive API,
-> > > and may not be directly comparable).
-> > > 
-> > > -- 
-> > > James Morris
-> > > <jmorris@namei.org>
-> > > 
+> > It's basically the same as before, just that we only have per-vcpu
+> > ring now, and the indices are exposed from kvm_run so we don't need
+> > the extra page, but we still expose that via mmap.
 > 
+> So that's why changelogs are useful.
+> Can you please write a changelog for this version so I don't
+> need to re-read all of it? Thanks!
+
+Sure, actually I've got a changelog in the cover letter for this
+version [1]... it's:
+
+V3 changelog:
+
+- fail userspace writable maps on dirty ring ranges [Jason]
+- commit message fixups [Paolo]
+- change __x86_set_memory_region to return hva [Paolo]
+- cacheline align for indices [Paolo, Jason]
+- drop waitqueue, global lock, etc., include kvmgt rework patchset
+- take lock for __x86_set_memory_region() (otherwise it triggers a
+  lockdep in latest kvm/queue) [Paolo]
+- check KVM_DIRTY_LOG_PAGE_OFFSET in kvm_vm_ioctl_enable_dirty_log_ring
+- one more patch to drop x86_set_memory_region [Paolo]
+- one more patch to remove extra srcu usage in init_rmode_identity_map()
+- add some r-bs for Paolo
+
+I didn't have detailed changelog for v2 because it could be a long
+list with trivial details which can hide the major things, but I've
+got a small write-up in the cover letter trying to mention the major
+changes [2].
+
+Again, I'm very sorry for either missing a complete changelog in v2,
+or the high-level overview of v3 in the cover letter.  I'll make it
+better in v4.
+
+Thanks,
+
+[1] https://lore.kernel.org/kvm/20200109145729.32898-1-peterx@redhat.com/
+[2] https://lore.kernel.org/kvm/20191220211634.51231-1-peterx@redhat.com/
+
+-- 
+Peter Xu
+
