@@ -2,184 +2,149 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FEEC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB93C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29F7F2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:05:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DBJoDtW6"
+	by mail.kernel.org (Postfix) with ESMTP id 901B3205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:07:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbgAJVFa (ORCPT
+        id S1727159AbgAJVHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 16:05:30 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34354 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbgAJVF2 (ORCPT
+        Fri, 10 Jan 2020 16:07:44 -0500
+Received: from mout-p-102.mailbox.org ([80.241.56.152]:23372 "EHLO
+        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbgAJVHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 16:05:28 -0500
-Received: by mail-wr1-f68.google.com with SMTP id t2so3116593wrr.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 13:05:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KLTcmynENrIjf+Qvsvjan+Ya9hbU54HJX9wVwfakaXU=;
-        b=DBJoDtW6YuAcbD/Z0pabS32JUMCsaWFrPQ5uzRENE2cIgTfV7B6udReVC9TbPNiHUI
-         9y7CdTptGr08ICO/QM/2t/5hiVqJA2kq4/TbPiIXhVSrsD15XC1gibl0LRhz+2Z0IgpZ
-         gMypPvFdHdb+w1Yi5EBlv+zaU7gQnMgZ3oEtN/tFjeMxj2u/4p5mcJGCZOsd0Bq+Ot6H
-         GOnHVC8ZkPUI18Gw8dEHoQCygeOFvRsOLK4AI0ije69rhyoYA8vMDNCU2QEARhHhgQ5m
-         olKxP8/4JcLlk1eMPhf4geempJRivjUTENl1qqsDByu/lsScLYR0WsXQR5Te1qKpFxPj
-         ItgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KLTcmynENrIjf+Qvsvjan+Ya9hbU54HJX9wVwfakaXU=;
-        b=U66y6CUSDRAwPjwx7CFB4dGDrg/RKj6BtERejM94lXsJHuoSs3DXz5iu0V/UURYHbF
-         Hv46C9GOj9REz3yaFbYIhBsCUIcng6kUUEfwDnK6kEm4pCLNPskfgrg7P63DdCeeH5fE
-         V1OdL1XE/QYm+jfsklQVgoCtTc+MqqS6fja3D7UaazopvqKUgFomUUy9Gg8nzHC80vsA
-         zei6dpil2JjQTe/jbsIJbje/kOw//OS2xxFnGuR3u2wGxqjoa+ankZfEH3QY0vcARCAq
-         oqbJ7uq2OvwMrMRfbudINcCZWh9c3kdemeIHIq8cKwaPMluB7Hj1ZAkc8ZoAfel0ccTp
-         DNow==
-X-Gm-Message-State: APjAAAW202jx6Z7BJiDWmodcmZLGrbxfPvibQiLyDYgd5Kr/evr75gtk
-        n/aQVpV0Tfk/YltQ2xYzs6A=
-X-Google-Smtp-Source: APXvYqzpscMcaksvbCJL3xrRPgDYJ68071VBRJNyS3I2TIL4ZIGd3d4ZhnRP35mktyDpoNtF4ofprg==
-X-Received: by 2002:adf:f5cf:: with SMTP id k15mr5465352wrp.182.1578690326891;
-        Fri, 10 Jan 2020 13:05:26 -0800 (PST)
-Received: from localhost.localdomain (dslb-178-006-252-151.178.006.pools.vodafone-ip.de. [178.6.252.151])
-        by smtp.gmail.com with ESMTPSA id n8sm3609958wrx.42.2020.01.10.13.05.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 13:05:26 -0800 (PST)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     hdegoede@redhat.com, Larry.Finger@lwfinger.net,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8723bs: remove ODM_GetRightChnlPlaceforIQK()
-Date:   Fri, 10 Jan 2020 22:04:56 +0100
-Message-Id: <20200110210456.13178-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 10 Jan 2020 16:07:42 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 47vbCv5hSczKmhn;
+        Fri, 10 Jan 2020 22:07:39 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
+        with ESMTP id hIHoHiMQzTgm; Fri, 10 Jan 2020 22:07:33 +0100 (CET)
+Date:   Sat, 11 Jan 2020 08:07:19 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        stable <stable@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
+ symlinks
+Message-ID: <20200110210719.ktg3l2kwjrdutlh6@yavin>
+References: <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
+ <20200101004324.GA11269@ZenIV.linux.org.uk>
+ <20200101005446.GH4203@ZenIV.linux.org.uk>
+ <20200101030815.GA17593@ZenIV.linux.org.uk>
+ <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
+ <20200101234009.GB8904@ZenIV.linux.org.uk>
+ <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
+ <20200103014901.GC8904@ZenIV.linux.org.uk>
+ <20200108031314.GE8904@ZenIV.linux.org.uk>
+ <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ngr34thsixezvd7j"
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function ODM_GetRightChnlPlaceforIQK() returns non-zero values only
-for channels > 14. According to the TODO code valid only for 5 GHz
-should be removed.
 
-- find and remove remaining code valid only for 5 GHz. Most of the
-  obvious ones have been removed, but things like channel > 14 still
-  exist.
+--ngr34thsixezvd7j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Remove ODM_GetRightChnlPlaceforIQK() and replace the uses of the
-return value with zero.
+On 2020-01-07, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> On Tue, Jan 7, 2020 at 7:13 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > Another interesting question is whether we want O_PATH open
+> > to trigger automounts.
+>=20
+> It does sound like they shouldn't, but as you say:
+>=20
+> >     The thing is, we do *NOT* trigger them
+> > (or traverse mountpoints) at the starting point of lookups.
+> > I believe it's a mistake (and mine, at that), but I doubt that
+> > there's anything that can be done about it at that point.
+> > It's a user-visible behaviour [..]
+>=20
+> Hmm. I wonder how set in stone that is. We may have two decades of
+> history of not doing it at start point of lookups, but we do *not*
+> have two decades of history of O_PATH.
+>=20
+> So what I think we agree would be sane behavior would be for O_PATH
+> opens to not trigger automounts (unless there's a slash at the end,
+> whatever), but _do_ add the mount-point traversal to the beginning of
+> lookups.
+>=20
+> But only do it for the actual O_PATH fd case, not the cwd/root/non-O_PATH=
+ case.
+>=20
+> That way we maintain original behavior: if somebody overmounts your
+> cwd, you still see the pre-mount directory on lookups, because your
+> cwd is "under" the mount.
+>=20
+> But if you open a file with O_PATH, and somebody does a mount
+> _afterwards_, the openat() will see that later mount and/or do the
+> automount.
+>=20
+> Don't you think that would be the more sane/obvious semantics of how
+> O_PATH should work?
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8723bs/hal/HalPhyRf.c      | 30 -------------------
- drivers/staging/rtl8723bs/hal/HalPhyRf.h      |  8 -----
- .../staging/rtl8723bs/hal/HalPhyRf_8723B.c    | 11 +++----
- 3 files changed, 4 insertions(+), 45 deletions(-)
+If I'm understanding this proposal correctly, this would be a problem
+for the libpathrs use-case -- if this is done then there's no way to
+avoid a TOCTOU with someone mounting and the userspace program checking
+whether something is a mountpoint (unless you have Linux >5.6 and
+RESOLVE_NO_XDEV). Today, you can (in theory) do it with MNT_EXPIRE:
 
-diff --git a/drivers/staging/rtl8723bs/hal/HalPhyRf.c b/drivers/staging/rtl8723bs/hal/HalPhyRf.c
-index beb4002a40e1..357802db9aed 100644
---- a/drivers/staging/rtl8723bs/hal/HalPhyRf.c
-+++ b/drivers/staging/rtl8723bs/hal/HalPhyRf.c
-@@ -622,33 +622,3 @@ void ODM_TXPowerTrackingCallback_ThermalMeter(struct adapter *Adapter)
- 
- 	pDM_Odm->RFCalibrateInfo.TXPowercount = 0;
- }
--
--
--
--
--/* 3 ============================================================ */
--/* 3 IQ Calibration */
--/* 3 ============================================================ */
--
--u8 ODM_GetRightChnlPlaceforIQK(u8 chnl)
--{
--	u8 channel_all[ODM_TARGET_CHNL_NUM_2G_5G] = {
--		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
--		36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58,
--		60, 62, 64, 100, 102, 104, 106, 108, 110, 112,
--		114, 116, 118, 120, 122, 124, 126, 128, 130, 132,
--		134, 136, 138, 140, 149, 151, 153, 155, 157, 159,
--		161, 163, 165
--	};
--	u8 place = chnl;
--
--
--	if (chnl > 14) {
--		for (place = 14; place < sizeof(channel_all); place++) {
--			if (channel_all[place] == chnl)
--				return place-13;
--		}
--	}
--	return 0;
--
--}
-diff --git a/drivers/staging/rtl8723bs/hal/HalPhyRf.h b/drivers/staging/rtl8723bs/hal/HalPhyRf.h
-index 3d6f68bc61d7..643fcf37c9ad 100644
---- a/drivers/staging/rtl8723bs/hal/HalPhyRf.h
-+++ b/drivers/staging/rtl8723bs/hal/HalPhyRf.h
-@@ -44,12 +44,4 @@ void ODM_ClearTxPowerTrackingState(PDM_ODM_T pDM_Odm);
- 
- void ODM_TXPowerTrackingCallback_ThermalMeter(struct adapter *Adapter);
- 
--
--
--#define ODM_TARGET_CHNL_NUM_2G_5G 59
--
--
--u8 ODM_GetRightChnlPlaceforIQK(u8 chnl);
--
--
- #endif	/*  #ifndef __HAL_PHY_RF_H__ */
-diff --git a/drivers/staging/rtl8723bs/hal/HalPhyRf_8723B.c b/drivers/staging/rtl8723bs/hal/HalPhyRf_8723B.c
-index 338dd0b7a6eb..85ea535dd6e9 100644
---- a/drivers/staging/rtl8723bs/hal/HalPhyRf_8723B.c
-+++ b/drivers/staging/rtl8723bs/hal/HalPhyRf_8723B.c
-@@ -1792,7 +1792,7 @@ void PHY_IQCalibrate_8723B(
- 	PDM_ODM_T pDM_Odm = &pHalData->odmpriv;
- 
- 	s32 result[4][8];	/* last is final result */
--	u8 i, final_candidate, Indexforchannel;
-+	u8 i, final_candidate;
- 	bool bPathAOK, bPathBOK;
- 	s32 RegE94, RegE9C, RegEA4, RegEAC, RegEB4, RegEBC, RegEC4, RegECC, RegTmp = 0;
- 	bool is12simular, is13simular, is23simular;
-@@ -1997,17 +1997,14 @@ void PHY_IQCalibrate_8723B(
- 			_PHY_PathBFillIQKMatrix8723B(padapter, bPathBOK, result, final_candidate, (RegEC4 == 0));
- 	}
- 
--	Indexforchannel = ODM_GetRightChnlPlaceforIQK(pHalData->CurrentChannel);
--
- /* To Fix BSOD when final_candidate is 0xff */
- /* by sherry 20120321 */
- 	if (final_candidate < 4) {
- 		for (i = 0; i < IQK_Matrix_REG_NUM; i++)
--			pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[Indexforchannel].Value[0][i] = result[final_candidate][i];
--		pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[Indexforchannel].bIQKDone = true;
-+			pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[0].Value[0][i] = result[final_candidate][i];
-+		pDM_Odm->RFCalibrateInfo.IQKMatrixRegSetting[0].bIQKDone = true;
- 	}
--	/* RT_DISP(FINIT, INIT_IQK, ("\nIQK OK Indexforchannel %d.\n", Indexforchannel)); */
--	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD,  ("\nIQK OK Indexforchannel %d.\n", Indexforchannel));
-+	ODM_RT_TRACE(pDM_Odm, ODM_COMP_CALIBRATION, ODM_DBG_LOUD,  ("\nIQK OK Indexforchannel %d.\n", 0));
- 
- 	_PHY_SaveADDARegisters8723B(padapter, IQK_BB_REG_92C, pDM_Odm->RFCalibrateInfo.IQK_BB_backup_recover, 9);
- 
--- 
-2.24.1
+  1. Open the candidate directory.
+  2. umount2(MNT_EXPIRE) the fd.
+    * -EINVAL means it wasn't a mountpoint when we got the fd, and the
+	  fd is a stable handle to the underlying directory.
+	* -EAGAIN or -EBUSY means that it was a mountpoint or became a
+	  mountpoint after the fd was opened (we don't care about that, but
+	  fail-safe is better here).
+  3. Use the fd from (1) for all operations.
 
+Don't get me wrong, I want to fix this issue *properly* by adding some
+new kernel features that allow us to avoid worrying about
+mounts-over-magiclinks -- but on old kernels (which libpathrs cares
+about) I would be worried about changes like this being backported
+resulting in it being not possible to implement the hardening I
+mentioned up-thread.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--ngr34thsixezvd7j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXhjnhAAKCRCdlLljIbnQ
+EhaiAP9e9kkZEWJCnBThFyXtSMRZyNVXHckugjlX6Ia4tELkfwD+KmuEPaDHPZsv
+ZqHH8TBxEFo6jF26WNsOXtxaBZwFsQ0=
+=uAob
+-----END PGP SIGNATURE-----
+
+--ngr34thsixezvd7j--
