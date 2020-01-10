@@ -2,153 +2,157 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D98C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868F7C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8947D2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6BF20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:39:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faNHqQwG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbgAJXhE (ORCPT
+        id S1727593AbgAJXjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 18:37:04 -0500
-Received: from mx0b-002e3701.pphosted.com ([148.163.143.35]:28182 "EHLO
-        mx0b-002e3701.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727527AbgAJXhE (ORCPT
+        Fri, 10 Jan 2020 18:39:49 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40065 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727541AbgAJXjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 18:37:04 -0500
-Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
-        by mx0b-002e3701.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00ANYbsS010254;
-        Fri, 10 Jan 2020 23:36:57 GMT
-Received: from g4t3425.houston.hpe.com (g4t3425.houston.hpe.com [15.241.140.78])
-        by mx0b-002e3701.pphosted.com with ESMTP id 2xenc0pf20-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jan 2020 23:36:57 +0000
-Received: from g4t3433.houston.hpecorp.net (g4t3433.houston.hpecorp.net [16.208.49.245])
-        by g4t3425.houston.hpe.com (Postfix) with ESMTP id A879892;
-        Fri, 10 Jan 2020 23:36:56 +0000 (UTC)
-Received: from anatevka.americas.hpqcorp.net (anatevka.americas.hpqcorp.net [10.34.81.30])
-        by g4t3433.houston.hpecorp.net (Postfix) with ESMTP id 4533E47;
-        Fri, 10 Jan 2020 23:36:56 +0000 (UTC)
-Date:   Fri, 10 Jan 2020 16:36:56 -0700
-From:   Jerry Hoemann <jerry.hoemann@hpe.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Kairui Song <kasong@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, kexec@lists.infradead.org,
-        Baoquan He <bhe@redhat.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Randy Wright <rwright@hpe.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-Message-ID: <20200110233656.GC1875851@anatevka.americas.hpqcorp.net>
-Reply-To: Jerry.Hoemann@hpe.com
-References: <20191225192118.283637-1-kasong@redhat.com>
- <20200110214217.GA88274@google.com>
+        Fri, 10 Jan 2020 18:39:49 -0500
+Received: by mail-pf1-f194.google.com with SMTP id q8so1869470pfh.7;
+        Fri, 10 Jan 2020 15:39:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=44y917WLdq58ocmQ2Lws4t8TAPMUMEf06qKa/NEI0S4=;
+        b=faNHqQwGwynn/dgmKt3WYHFpm6uiw2H5QNzf8Mf78NiN4X6Erwrt44chrkNW3PTr/M
+         69ZgnGTonbH/87YLyazDRFzosRf7QL84cJ+RhP7ZQBXOmEJRqmtV0M3yOjyiNrrusd9d
+         J1YF8xOrAr4dqlG02RNErpMVBB+xLlRwWhtOtvICMFuE4+gtrUK07iiUEE3RsuHhke57
+         SbLRnFzYUpTA7BJ+U7StG3VRzJb9Z6i/6NpQTwlnXHIprlv6EENxuHDT9Dw+sOYr6i+4
+         uH0ej6nMkyWQ1oCkoWSXHktPENXAGQ1BZyMhoUPXLfImH2c+4PJAS4i+a5rplD3U84D3
+         mtWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=44y917WLdq58ocmQ2Lws4t8TAPMUMEf06qKa/NEI0S4=;
+        b=PqR2ExDOMTnWqT7E0y0IYIOeJp5gHUAPnQAkBP0MG2dHUqVhnPCmIa+fY1jwQAsQWA
+         mGN2V3mbpt1Aa/krbGjRCzKTM29QlQhu/9cjy3BFOPnfYY+Q+ujtEGm/UoP+i6n4PDTX
+         g3sJPamky9FlNP72woxxQFdIYbvUe34cbFiQxgv6pimF1CdPuAsz60HUurpaxN/bk7nQ
+         /2P6qhEdHfdYG6F+cuS0/cmReZMnQdw3pwI+WISvoNTJIQaPzrPuQ2ZLQmw8rzmZyMkw
+         H43GfYBVWzSg/Skox2HXPtJoFepP+iHTuTtGXwE1xgOgsxvI8dA1JPfjHFJu6vqI/rMP
+         aV5Q==
+X-Gm-Message-State: APjAAAUz7Bkx2m4gvLz3WG9nc6k90TkQMNcWy0aIL19wqxYqBHkCC/y6
+        TGQsl3VOVhguoHBdCvz1S4s=
+X-Google-Smtp-Source: APXvYqzUqPssZI88/RttkJE4mzGnBEeajQSjv67oTTh/hplvPmWaIJqnu7TNCsoM6c7MDq0JSy69AQ==
+X-Received: by 2002:a62:cdcb:: with SMTP id o194mr6850034pfg.117.1578699587626;
+        Fri, 10 Jan 2020 15:39:47 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id v13sm4349910pgc.54.2020.01.10.15.39.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 15:39:46 -0800 (PST)
+Date:   Fri, 10 Jan 2020 15:39:44 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        info@metux.net, tglx@linutronix.de, m.felsch@pengutronix.de
+Subject: Re: [PATCH] Input: ads7846: use new `delay` structure for SPI
+ transfer delays
+Message-ID: <20200110233944.GW8314@dtor-ws>
+References: <20191210141103.15910-1-alexandru.ardelean@analog.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200110214217.GA88274@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
-MIME-Version: 1.0
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-10_04:2020-01-10,2020-01-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
- priorityscore=1501 impostorscore=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 malwarescore=0 spamscore=0 phishscore=0 mlxlogscore=999
- suspectscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001100193
+In-Reply-To: <20191210141103.15910-1-alexandru.ardelean@analog.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 03:42:17PM -0600, Bjorn Helgaas wrote:
-> [+cc Deepa (also working in this area)]
+On Tue, Dec 10, 2019 at 04:11:03PM +0200, Alexandru Ardelean wrote:
+> In a recent change to the SPI subsystem [1], a new `delay` struct was added
+> to replace the `delay_usecs`. This change replaces the current `delay_usecs`
+> with `delay` for this driver.
 > 
-> On Thu, Dec 26, 2019 at 03:21:18AM +0800, Kairui Song wrote:
-> > There are reports about kdump hang upon reboot on some HPE machines,
-> > kernel hanged when trying to shutdown a PCIe port, an uncorrectable
-> > error occurred and crashed the system.
+> The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+> that both `delay_usecs` & `delay` are used (in this order to preserve
+> backwards compatibility).
 > 
-> Details?  Do you have URLs for bug reports, dmesg logs, etc?
-
-Hi, Bjorn,
-
-Not sure if you have access to Red Hat Bugzilla, but I filed:
-
-	https://bugzilla.redhat.com/show_bug.cgi?id=1774802
-
-When I hit this issue.
-
-
-
+> [1] commit bebcfd272df6485 ("spi: introduce `delay` field for
+> `spi_transfer` + spi_transfer_delay_exec()")
 > 
-> > On the machine I can reproduce this issue, part of the topology
-> > looks like this:
-> > 
-> > [0000:00]-+-00.0  Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2
-> >           +-01.0-[02]--
-> >           +-01.1-[05]--
-> >           +-02.0-[06]--+-00.0  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.1  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.2  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.3  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.4  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.5  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            +-00.6  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           |            \-00.7  Emulex Corporation OneConnect NIC (Skyhawk)
-> >           +-02.1-[0f]--
-> >           +-02.2-[07]----00.0  Hewlett-Packard Company Smart Array Gen9 Controllers
-> > 
-> > When shutting down PCIe port 0000:00:02.2 or 0000:00:02.0, the machine
-> > will hang, depend on which device is reinitialized in kdump kernel.
-> > 
-> > If force remove unused device then trigger kdump, the problem will never
-> > happen:
-> > 
-> >     echo 1 > /sys/bus/pci/devices/0000\:00\:02.2/0000\:07\:00.0/remove
-> >     echo c > /proc/sysrq-trigger
-> > 
-> >     ... Kdump save vmcore through network, the NIC get reinitialized and
-> >     hpsa is untouched. Then reboot with no problem. (If hpsa is used
-> >     instead, shutdown the NIC in first kernel will help)
-> > 
-> > The cause is that some devices are enabled by the first kernel, but it
-> > don't have the chance to shutdown the device, and kdump kernel is not
-> > aware of it, unless it reinitialize the device.
-> > 
-> > Upon reboot, kdump kernel will skip downstream device shutdown and
-> > clears its bridge's master bit directly. The downstream device could
-> > error out as it can still send requests but upstream refuses it.
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+
+Applied, thank you.
+
+> ---
+>  drivers/input/touchscreen/ads7846.c | 15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
 > 
-> Can you help me understand the sequence of events?  If I understand
-> correctly, the desired sequence is:
+> diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
+> index 51ddb204ca1b..8fd7fc39c4fd 100644
+> --- a/drivers/input/touchscreen/ads7846.c
+> +++ b/drivers/input/touchscreen/ads7846.c
+> @@ -333,7 +333,8 @@ static int ads7846_read12_ser(struct device *dev, unsigned command)
+>  		req->xfer[1].len = 2;
+>  
+>  		/* for 1uF, settle for 800 usec; no cap, 100 usec.  */
+> -		req->xfer[1].delay_usecs = ts->vref_delay_usecs;
+> +		req->xfer[1].delay.value = ts->vref_delay_usecs;
+> +		req->xfer[1].delay.unit = SPI_DELAY_UNIT_USECS;
+>  		spi_message_add_tail(&req->xfer[1], &req->msg);
+>  
+>  		/* Enable reference voltage */
+> @@ -1018,7 +1019,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
+>  	 * have had enough time to stabilize.
+>  	 */
+>  	if (pdata->settle_delay_usecs) {
+> -		x->delay_usecs = pdata->settle_delay_usecs;
+> +		x->delay.value = pdata->settle_delay_usecs;
+> +		x->delay.unit = SPI_DELAY_UNIT_USECS;
+>  
+>  		x++;
+>  		x->tx_buf = &packet->read_y;
+> @@ -1061,7 +1063,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
+>  
+>  	/* ... maybe discard first sample ... */
+>  	if (pdata->settle_delay_usecs) {
+> -		x->delay_usecs = pdata->settle_delay_usecs;
+> +		x->delay.value = pdata->settle_delay_usecs;
+> +		x->delay.unit = SPI_DELAY_UNIT_USECS;
+>  
+>  		x++;
+>  		x->tx_buf = &packet->read_x;
+> @@ -1094,7 +1097,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
+>  
+>  		/* ... maybe discard first sample ... */
+>  		if (pdata->settle_delay_usecs) {
+> -			x->delay_usecs = pdata->settle_delay_usecs;
+> +			x->delay.value = pdata->settle_delay_usecs;
+> +			x->delay.unit = SPI_DELAY_UNIT_USECS;
+>  
+>  			x++;
+>  			x->tx_buf = &packet->read_z1;
+> @@ -1125,7 +1129,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
+>  
+>  		/* ... maybe discard first sample ... */
+>  		if (pdata->settle_delay_usecs) {
+> -			x->delay_usecs = pdata->settle_delay_usecs;
+> +			x->delay.value = pdata->settle_delay_usecs;
+> +			x->delay.unit = SPI_DELAY_UNIT_USECS;
+>  
+>  			x++;
+>  			x->tx_buf = &packet->read_z2;
+> -- 
+> 2.20.1
 > 
->   - user kernel boots
->   - user kernel panics and kexecs to kdump kernel
->   - kdump kernel writes vmcore to network or disk
-
-Some context:
-
-The problem for me hits itermittently during shutdown of the kdump kernel.
-During this time, the SUT sometimes gets a PCI error that raises an NMI.
-
-The reaction to the NMI that the kdump kernel takes is problematic.
-Sometimes the system prints the tombstones and resets through firmware
-without problems.  Other times it takes a second NMI and hangs.
-
-I'll note that the kdump initrd doesn't contain the NIC drivers.  When
-these are added, we don't see the issue.
-
-
-Jerry
 
 -- 
-
------------------------------------------------------------------------------
-Jerry Hoemann                  Software Engineer   Hewlett Packard Enterprise
------------------------------------------------------------------------------
+Dmitry
