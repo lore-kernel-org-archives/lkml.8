@@ -2,134 +2,99 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B8EC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16805C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C24F92072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF61520838
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:46:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L5of4Laa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgAJSpf (ORCPT
+        id S1728741AbgAJSqH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:45:35 -0500
-Received: from mga17.intel.com ([192.55.52.151]:52956 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728023AbgAJSpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:45:35 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 10:45:35 -0800
-X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
-   d="scan'208";a="218148092"
-Received: from agluck-desk2.amr.corp.intel.com ([10.3.52.68])
-  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 10:45:34 -0800
-Date:   Fri, 10 Jan 2020 10:45:33 -0800
-From:   "Luck, Tony" <tony.luck@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Jan =?iso-8859-1?Q?H=2E_Sch=F6nherr?= <jschoenh@amazon.de>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: Re: [PATCH v2 1/6] x86/mce: Take action on UCNA/Deferred errors again
-Message-ID: <20200110184533.GB20511@agluck-desk2.amr.corp.intel.com>
-References: <20200103150722.20313-1-jschoenh@amazon.de>
- <20200103150722.20313-2-jschoenh@amazon.de>
- <20200110095004.GD19453@zn.tnic>
+        Fri, 10 Jan 2020 13:46:07 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:34375 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728023AbgAJSqH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 13:46:07 -0500
+Received: by mail-lj1-f193.google.com with SMTP id z22so3183060ljg.1;
+        Fri, 10 Jan 2020 10:46:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pd/iAF0AV9/4gg2SZG7bs3ivDHHCsN5CHjs199AFcsc=;
+        b=L5of4Laa/yIOI7ON4xWOoR67Jtq0IvWH1ljWi4h5TxifsJdHyPR6wEGhfzYF4jwgqL
+         ogam1Q0EGbfUfIyjsUNLVgvUXQLyYgkUFcGXwKeOthN4bitP0jevT1QX8e1kPFVYcN/n
+         w9zVfp6CIsS06S/UndGMBxG08kIn/dAs22bk/HJXomi2lvrxZ79v872BwVE78BeDyIFv
+         FF81HWoDUk2X0ERYojuAsFSlxQe7EVjxXWkj5T3/+1Jg2akmT3uJ82cuJzOGG/AG9FBV
+         dXV7V5Wg5zZt27x9p63KE/ZHaBVwQvkWTYPyZrh4w41mBLcnvNP4dplx0nblypUp3IzG
+         LPPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pd/iAF0AV9/4gg2SZG7bs3ivDHHCsN5CHjs199AFcsc=;
+        b=XqqvVu+jZ0VNawfcCCRRNVrMFKIKBoPdyK0ZdxS7TvFOKbSpRpmoCrJkLk+izDcxnJ
+         010O+YcvHnMk5iZqwaAK3r+wF+zKQv01l/QilhgkL5cOdezOc9jeDu6IgBkczV3Pn67y
+         uLNY3f8OzGB8uPoTeYjfCzar2ioP48yG/3xTzbDUsYqyqngO0CPjj0WAMbCDG+fDHZ+P
+         4rBT/LV52N4R/pgBATB5f5L3Wm4d23l5MY4yIlZ9XqH1uUo5RaY7sKjom2a6Y2Oe6MvC
+         djMApVB/TuT9owZR6x/i1VVkrU9223sf90mGVQ55nzuGIHtteNhjOptuObuQHGbaVVgJ
+         gJCg==
+X-Gm-Message-State: APjAAAUqyYn8lfOK96NDTgXKXAJM8s5h2WZSgJvZG6ONag2OP5i7rcxM
+        YcvaYGg3wCoHnFt/xkbCMYSvsWmuvzJpj/JjCww=
+X-Google-Smtp-Source: APXvYqxQKkHJH+BvtDAWm2UalBtTeK1JvursvyMIzoD61WSEnmFlGgSKwKs+6pxBN1DP55ZP9fXTFg0xoUNR67LdepE=
+X-Received: by 2002:a05:651c:8f:: with SMTP id 15mr3541230ljq.109.1578681964526;
+ Fri, 10 Jan 2020 10:46:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200110095004.GD19453@zn.tnic>
+References: <20200109115749.12283-1-lmb@cloudflare.com> <20200110132336.26099-1-lmb@cloudflare.com>
+ <20200110164328.aosamgjk5hfw7r7d@kafai-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20200110164328.aosamgjk5hfw7r7d@kafai-mbp.dhcp.thefacebook.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 10 Jan 2020 10:45:53 -0800
+Message-ID: <CAADnVQ+QhS-qCNQt7Gs2tQo=mxj7cKOk-zwzdTyBLHwy6u7aiw@mail.gmail.com>
+Subject: Re: [PATCH bpf v2] net: bpf: don't leak time wait and request sockets
+To:     Martin Lau <kafai@fb.com>
+Cc:     Lorenz Bauer <lmb@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Joe Stringer <joe@isovalent.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel-team@cloudflare.com" <kernel-team@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 10:50:04AM +0100, Borislav Petkov wrote:
-> On Fri, Jan 03, 2020 at 04:07:17PM +0100, Jan H. Schönherr wrote:
-> > Commit fa92c5869426 ("x86, mce: Support memory error recovery for both
-> > UCNA and Deferred error in machine_check_poll") added handling of UCNA
-> > and Deferred errors by adding them to the ring for SRAO errors.
-> > 
-> > Later, commit fd4cf79fcc4b ("x86/mce: Remove the MCE ring for Action
-> > Optional errors") switched storage from the SRAO ring to the unified
-> > pool that is still in use today. In order to only act on the intended
-> > errors, a filter for MCE_AO_SEVERITY is used -- effectively removing
-> > handling of UCNA/Deferred errors again.
-> > 
-> > Extend the severity filter to include UCNA/Deferred errors again.
-> > Also, generalize the naming of the notifier from SRAO to UC to capture
-> > the extended scope.
-> > 
-> > Note, that this change may cause a message like the following to appear,
-> > as the same address may be reported as SRAO and as UCNA:
-> > 
-> >  Memory failure: 0x5fe3284: already hardware poisoned
-> > 
-> > Technically, this is a return to previous behavior.
-> > 
-> > Fixes: fd4cf79fcc4b ("x86/mce: Remove the MCE ring for Action Optional errors")
-> > Signed-off-by: Jan H. Schönherr <jschoenh@amazon.de>
-> 
-> Tony, ACK?
+On Fri, Jan 10, 2020 at 8:43 AM Martin Lau <kafai@fb.com> wrote:
+>
+> On Fri, Jan 10, 2020 at 01:23:36PM +0000, Lorenz Bauer wrote:
+> > It's possible to leak time wait and request sockets via the following
+> > BPF pseudo code:
+> >
+> >   sk = bpf_skc_lookup_tcp(...)
+> >   if (sk)
+> >     bpf_sk_release(sk)
+> >
+> > If sk->sk_state is TCP_NEW_SYN_RECV or TCP_TIME_WAIT the refcount taken
+> > by bpf_skc_lookup_tcp is not undone by bpf_sk_release. This is because
+> > sk_flags is re-used for other data in both kinds of sockets. The check
+> >
+> >   !sock_flag(sk, SOCK_RCU_FREE)
+> >
+> > therefore returns a bogus result. Check that sk_flags is valid by calling
+> > sk_fullsock. Skip checking SOCK_RCU_FREE if we already know that sk is
+> > not a full socket.
+> Acked-by: Martin KaFai Lau <kafai@fb.com>
 
-Acked-by: Tony Luck <tony.luck@intel.com>
-
-> Also, do you want it in stable@ so that it gets backported?
-
-That's a tricky question. We have changing behavior (UCNA pages offlined,
-then a few kernel versions stopped doing this, now we are going to start
-doing it again. But is it really a _BUG_ that needs backporting to stable?
-I'm leaning towards "no it isn't". But could perhaps be convinced to change
-my mind if somebody has a good reason for wanting it there.
-
-Is there something to put in the tags to stop this being autoselected
-for backport because it has a Fixes: tag?
-
-> I'm wondering if in the memory_failure error() case, we should hand it
-> down to the remaining notifiers.
-> 
-> Which also begs the question in light of this clumsy notifier counting:
-> 
-> How about we have the default notifier *unconditionally* print the MCE?
-> I.e., if the error has reached it, it would print it. If not and some
-> other notifier consumed it, it will get handled differently.
-> 
-> This way we won't need any special counting of notifiers and special
-> reg/unreg of notifiers etc.
-> 
-> IOW, the logic would be:
-> 
-> If something consumes the error, then it doesn't get printed. Notifier
-> does NOTIFY_STOP.
-> 
-> If nothing consumes it or something looks at it and decides that it
-> should still get printed, then the last catch-all notifier callback does
-> that.
-
-I totally agree that counting notifiers is clumsy. Also less than
-ideal is the concept that any notifier on the chain can declare:
-  "I fixed it"
-and prevent any other notifiers from even seeing it. Well the concept
-is good, but it is overused.
-
-I think we may do better with a field in the "struct mce" that is being
-passed to each where notifiers can wiggle some bits (semantics to be
-defined later) which can tell subsequent notifiers what sort of actions
-have been taken.
-E.g. the SRAO/UCNA notifier can say "I took this page offline"
-the dev_mcelog one can say "I think I handed to a process that has /dev/mcelog open"
-EDAC drivers can say "I decoded the address and printed something"
-CEC can say: "I silently counted this corrected error", or "error exceeded
-threshold and I took the page offline".
-
-The default notifier can print to console if nobody set a bit to say
-that the error had been somehow logged.
-
--Tony
+Applied. Thanks
