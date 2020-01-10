@@ -2,87 +2,123 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 775ECC33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:45:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B1DC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43F3B2072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:45:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 671E22080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:46:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZJGLF1Q1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ORb+fnTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbgAJJpr (ORCPT
+        id S1727354AbgAJJqK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 04:45:47 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43045 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727273AbgAJJpr (ORCPT
+        Fri, 10 Jan 2020 04:46:10 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:33043 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727310AbgAJJqK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 04:45:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578649545;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=3Bjxye7nXEN8DZWgb9uCaUhoYDYYa6n7XP6x/kFHIr4=;
-        b=ZJGLF1Q1Wzpa0s97PSKK48wVARPbs2hCwDM1RT823RqQQPDJHdGDl9rm2lUm57VXCISJut
-        UhtuUS1tLh8fCNXIuOk9sLwGxE4toIQTODhauAK/UA9D/LSmmghsUwbPszBe+7NAyFLqao
-        d+wnstN8jhBPVPo6DHQ0OxyRD609ANs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-412-meg9DrUpPZmOGRGq3eT1tA-1; Fri, 10 Jan 2020 04:45:41 -0500
-X-MC-Unique: meg9DrUpPZmOGRGq3eT1tA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4FA36800D41;
-        Fri, 10 Jan 2020 09:45:39 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-98.ams2.redhat.com [10.36.116.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A9715C1B5;
-        Fri, 10 Jan 2020 09:45:36 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 773F048E0; Fri, 10 Jan 2020 10:45:35 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     gurchetansingh@chromium.org, olvaffe@gmail.com, jannh@google.com,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] drm/virtio: add missing virtio_gpu_array_lock_resv call
-Date:   Fri, 10 Jan 2020 10:45:35 +0100
-Message-Id: <20200110094535.23472-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Fri, 10 Jan 2020 04:46:10 -0500
+Received: by mail-pj1-f65.google.com with SMTP id u63so1755713pjb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 01:46:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kVXjETvA9K8/lP9ZBnbh1cVxAMGV1mSFPntHWPphT5k=;
+        b=ORb+fnTIv6NoPl8sJCI+ZXc5y2kRw21j1E60VarEzwIjLsD3zEzDM192gZFBtTCzqK
+         IdZZLjTJ85iEnkB+4D+TOJrapLFlSrRYTTZcO6L7/AhuRkhMUSdIyluFU0Z3EbAFnQ9i
+         UrmTHtVePJjVBoQCXvdjEiyTlg7PpL4JbelIs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kVXjETvA9K8/lP9ZBnbh1cVxAMGV1mSFPntHWPphT5k=;
+        b=BjmSN/Va8+zGcF1MSHvqFZ+eVtyzOiWAtRm1+Kh5ue31fJAhmSuLSBdmA709v2zYXZ
+         1nWqj5vSYIfBwhKSaXK7sEXRpeFh+w8QILGZUdw4VN82mA1RsH/L21LHLp4zFhq6uXAL
+         n7vQbWnxNTLoBSagrYiBC0RqgqXywWVFZrLWqGC210poHz57M0oUtgSdK8fvz7FSuXcv
+         HcmlRCoYwKEIlHGGxIRTpiUz1EPI+25zbf7ZQBVfPklF9GE7MLBqg0rpBy30Jr+znBP4
+         UrhKObc4++N9bQODcGE41QLSb7gWr+ypnjmI+qH3tYxENDKh6UvPawtcKT7XEy59fGjd
+         u4dQ==
+X-Gm-Message-State: APjAAAX/bMfZvpVPX9EXoZYQcLQ1bBYPwnGVo8YNPbMQjIA2qK25iJLf
+        igoYS+EAEUd9WDDcXhsgQcRFUA==
+X-Google-Smtp-Source: APXvYqzjIJ8v2NA2EXA8o0hEnespVu1na2a2y1A+8wSnIYd+HWQ7dqrnrEH4SIcmpRMCF3yimeILyw==
+X-Received: by 2002:a17:90b:f06:: with SMTP id br6mr3525192pjb.125.1578649569314;
+        Fri, 10 Jan 2020 01:46:09 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
+        by smtp.gmail.com with ESMTPSA id g2sm2059453pgn.59.2020.01.10.01.46.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 01:46:08 -0800 (PST)
+Date:   Fri, 10 Jan 2020 18:46:07 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH 03/15] videobuf2: add
+ V4L2_FLAG_MEMORY_NON_CONSISTENT flag
+Message-ID: <20200110094607.GB202391@google.com>
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-4-senozhatsky@chromium.org>
+ <750a0c62-0f0f-a5c9-1d7f-f0c5d6b620fa@xs4all.nl>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <750a0c62-0f0f-a5c9-1d7f-f0c5d6b620fa@xs4all.nl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When submitting a fenced command we must lock the object reservations
-because virtio_gpu_queue_fenced_ctrl_buffer() unlocks after adding the
-fence.
+On (20/01/10 10:36), Hans Verkuil wrote:
+[..]
+> > diff --git a/Documentation/media/uapi/v4l/buffer.rst b/Documentation/media/uapi/v4l/buffer.rst
+> > index 9149b57728e5..b08b5609f5f3 100644
+> > --- a/Documentation/media/uapi/v4l/buffer.rst
+> > +++ b/Documentation/media/uapi/v4l/buffer.rst
+> > @@ -705,6 +705,25 @@ Buffer Flags
+> >  
+> >  .. c:type:: v4l2_memory
+> >  
+> > +Memory Consistency Flags
+> > +========================
+> > +
+> > +.. tabularcolumns:: |p{7.0cm}|p{2.2cm}|p{8.3cm}|
+> > +
+> > +.. cssclass:: longtable
+> > +
+> > +.. flat-table::
+> > +    :header-rows:  0
+> > +    :stub-columns: 0
+> > +    :widths:       3 1 4
+> > +
+> > +    * .. _`V4L2_FLAG_MEMORY_NON_CONSISTENT`:
+> > +
+> > +      - ``V4L2_FLAG_MEMORY_NON_CONSISTENT``
+> > +      - 0x00000001
+> > +      - Set DMA_ATTR_NON_CONSISTENT queue memory consistency bit,
+> > +	so all queue buffers may be allocated in non-consistent memory.
+> 
+> This needs much more extensive documentation. This is a userspace API,
+> and it shouldn't refer to a kernelspace API. Instead, explain what it
+> means from a user perspective. Also, how does this relate to the cache
+> buffer flags?
+> 
+> These things are tricky, so it is worth spending some time on writing
+> good documentation.
 
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_plane.c | 1 +
- 1 file changed, 1 insertion(+)
+Agreed. I'll give it a shot, will try to improve it.
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
-index 390524143139..1635a9ff4794 100644
---- a/drivers/gpu/drm/virtio/virtgpu_plane.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
-@@ -232,6 +232,7 @@ static void virtio_gpu_cursor_plane_update(struct drm_plane *plane,
- 		if (!objs)
- 			return;
- 		virtio_gpu_array_add_obj(objs, vgfb->base.obj[0]);
-+		virtio_gpu_array_lock_resv(objs);
- 		virtio_gpu_cmd_transfer_to_host_2d
- 			(vgdev, 0,
- 			 plane->state->crtc_w,
--- 
-2.18.1
-
+	-ss
