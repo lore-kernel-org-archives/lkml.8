@@ -2,116 +2,112 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D88C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 260FEC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA112072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:07:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vCX/I+Z3"
+	by mail.kernel.org (Postfix) with ESMTP id F1BC42072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578650890;
+	bh=WrH36AHMdMHvdW2ynfc0mnXcxX5VgvyDqqCnPFOwIEw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=P498pm/13+PCCRDLjFknZgPMHO2gbv+u8S1IlZNlooCYi7TD2pAfSqyTh6+OhJG4P
+	 6HswbDngpVzhuc8gveESqYo8mRecHEjDcAzMJF5ljh2QtmTCfkrxWIjI/KGAxQTiQ5
+	 i24ahiR+tJkCceS8hPZp7WIsYpa/Tudrz7oWt2W0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbgAJKH5 (ORCPT
+        id S1727492AbgAJKIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:07:57 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:34265 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727168AbgAJKH5 (ORCPT
+        Fri, 10 Jan 2020 05:08:09 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:32919 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727315AbgAJKII (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:07:57 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578650876; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=uwwNlxbaPVAft3MSELUaVehozNoXoPWIw5uWz2i3i8Y=; b=vCX/I+Z3KuNCe+p21AK1SmLc2qJDb6Bs36SG/TpDPstywhug+F6u+FLqHALi9vXTDEsHqTF2
- 6TD+U3gQxWsmkoAMApn+uiVXfKPTMSTmIuAm3KW/Dh75fokVWar/8OeDrKpVs5Wra5sFxNA1
- JNaB+zuWye19tQBtGGUSooH5C5g=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e184cfb.7f2adb4d4110-smtp-out-n03;
- Fri, 10 Jan 2020 10:07:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id A8F97C4479F; Fri, 10 Jan 2020 10:07:55 +0000 (UTC)
-Received: from aneelaka-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: aneela)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 27096C433CB;
-        Fri, 10 Jan 2020 10:07:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 27096C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=aneela@codeaurora.org
-From:   Arun Kumar Neelakantam <aneela@codeaurora.org>
-To:     bjorn.andersson@linaro.org, clew@codeaurora.org
-Cc:     Arun Kumar Neelakantam <aneela@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] soc: qcom: aoss: Reduce the AOP ACK wait time
-Date:   Fri, 10 Jan 2020 15:37:40 +0530
-Message-Id: <1578650861-2450-1-git-send-email-aneela@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Fri, 10 Jan 2020 05:08:08 -0500
+Received: by mail-lj1-f194.google.com with SMTP id y6so1564041lji.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 02:08:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iMR/A6pyW5FEM1U8xEMbCP0uXb0dwX5dOOik560rwKg=;
+        b=hIDNU0U5lNHwU1VDijBYChUpgM+utV22QeKOhOGZlZeQninmHqQbOBm+QOCs7y85yg
+         fm0Z4CycybadAXd9JKahHumJg40haf2AiRGggtMXujeT01ZmJzelg+FyALuIPEQDwe7y
+         k4dLTBjCInVvXtl3cWxqGFb9IvtbfLT1PRIlSbRUUC+dDKLCjVpvFqzRPqUimhkZqSnZ
+         AYmp9Na7BWbDfv7o2FxyA8t1trfbj2D0i7jkpPzq3NxV3jIyztuesc7jOpr8l9lECa6k
+         5uVJqGZFqLdcrhEtb3DJJDVKQOc5SKBUGNT8AK+u3maDSPymGj0RZi8A/LqiKrmkrybF
+         Yj/Q==
+X-Gm-Message-State: APjAAAWnRAtuQ6/7ezymZeEUIqnnzDhWgicXpjbS5+aJqVSuSrVq/Lea
+        4Fx4uJQXcxmX8rtmzommK20=
+X-Google-Smtp-Source: APXvYqy000juSVZcoTyphGtn73Qy4cYgLf6XMRyhINGK1akoIC3h68aujIzLffVRiBxEdJeNikHUpA==
+X-Received: by 2002:a2e:86c8:: with SMTP id n8mr2005170ljj.205.1578650886991;
+        Fri, 10 Jan 2020 02:08:06 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id l21sm741503lfh.74.2020.01.10.02.08.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 02:08:06 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1iprDF-0001Ao-AP; Fri, 10 Jan 2020 11:08:17 +0100
+Date:   Fri, 10 Jan 2020 11:08:17 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tty: always relink the port
+Message-ID: <20200110100817.GA4273@localhost>
+References: <20191227174434.12057-1-sudipm.mukherjee@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191227174434.12057-1-sudipm.mukherjee@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AOP send ACK immediately before wait thread can start waiting.
-In this case the probe call is blocked for default time 1sec and
-causing bootup delay.
+On Fri, Dec 27, 2019 at 05:44:34PM +0000, Sudip Mukherjee wrote:
+> If the serial device is disconnected and reconnected, it re-enumerates
+> properly but does not link it. fwiw, linking means just saving the port
+> index, so allow it always as there is no harm in saving the same value
+> again even if it tries to relink with the same port.
 
-Reduce the default wait time to 20ms to avoid delay in IRQ miss case.
+This is a pretty vague description. Commit fb2b90014d78 ("tty: link tty
+and port before configuring it as console") completely broke usb-serial
+(and anything else hotpluggable) which obviously depends on being able
+to reuse a minor number when a new device is later plugged in after a
+disconnect.
 
-Signed-off-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
----
- drivers/soc/qcom/qcom_aoss.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+Things are crashing left and right due to that stale port-pointer, and I
+just had to debug this only to find that this one is sitting in the
+tty-linus branch. I know, I know, Christmas and all, but would be nice
+to get it into -rc6. :)
 
-diff --git a/drivers/soc/qcom/qcom_aoss.c b/drivers/soc/qcom/qcom_aoss.c
-index 006ac40..2cf2393 100644
---- a/drivers/soc/qcom/qcom_aoss.c
-+++ b/drivers/soc/qcom/qcom_aoss.c
-@@ -44,6 +44,8 @@
- 
- #define QMP_NUM_COOLING_RESOURCES	2
- 
-+#define QMP_ACK_TIMEOUT			msecs_to_jiffies(10)
-+
- static bool qmp_cdev_max_state = 1;
- 
- struct qmp_cooling_device {
-@@ -150,7 +152,8 @@ static int qmp_open(struct qmp *qmp)
- 
- 	qmp_kick(qmp);
- 
--	ret = wait_event_timeout(qmp->event, qmp_link_acked(qmp), HZ);
-+	ret = wait_event_timeout(qmp->event, qmp_link_acked(qmp),
-+				 QMP_ACK_TIMEOUT);
- 	if (!ret) {
- 		dev_err(qmp->dev, "ucore didn't ack link\n");
- 		goto timeout_close_link;
-@@ -160,7 +163,8 @@ static int qmp_open(struct qmp *qmp)
- 
- 	qmp_kick(qmp);
- 
--	ret = wait_event_timeout(qmp->event, qmp_ucore_channel_up(qmp), HZ);
-+	ret = wait_event_timeout(qmp->event, qmp_ucore_channel_up(qmp),
-+				 QMP_ACK_TIMEOUT);
- 	if (!ret) {
- 		dev_err(qmp->dev, "ucore didn't open channel\n");
- 		goto timeout_close_channel;
-@@ -171,7 +175,8 @@ static int qmp_open(struct qmp *qmp)
- 
- 	qmp_kick(qmp);
- 
--	ret = wait_event_timeout(qmp->event, qmp_mcore_channel_acked(qmp), HZ);
-+	ret = wait_event_timeout(qmp->event, qmp_mcore_channel_acked(qmp),
-+				 QMP_ACK_TIMEOUT);
- 	if (!ret) {
- 		dev_err(qmp->dev, "ucore didn't ack channel\n");
- 		goto timeout_close_channel;
--- 
-1.9.1
+> Fixes: fb2b90014d78 ("tty: link tty and port before configuring it as console")
+
+Also note that the offending commit had a stable tag unlike this one.
+
+> Reported-by: Kenneth R. Crudup <kenny@panix.com>
+> Signed-off-by: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+> ---
+>  drivers/tty/tty_port.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
+> index 5023c85ebc6e..044c3cbdcfa4 100644
+> --- a/drivers/tty/tty_port.c
+> +++ b/drivers/tty/tty_port.c
+> @@ -89,8 +89,7 @@ void tty_port_link_device(struct tty_port *port,
+>  {
+>  	if (WARN_ON(index >= driver->num))
+>  		return;
+> -	if (!driver->ports[index])
+> -		driver->ports[index] = port;
+> +	driver->ports[index] = port;
+>  }
+>  EXPORT_SYMBOL_GPL(tty_port_link_device);
+
+Johan
