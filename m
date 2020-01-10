@@ -2,322 +2,133 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC43C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34F2C33C99
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 671D920678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:02:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PbbOOP0/"
+	by mail.kernel.org (Postfix) with ESMTP id A5FE420678
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:02:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578632574;
+	bh=+jjmac1V9FdX+jcDJLTS9cwaq7WDOSaNjjX6s05KjDs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HphQlk0yOha+pFlsx1IAncmNU4X/adDD2+dx/y32hGbz5EyyVPEQMs2KzLnZGt2Dp
+	 ofJiaPRkoerY6JX9QJB3Ps8Lb67PzOwEOYDlsPjZlh1CjTaD7j8iGiidUAHvywPsiV
+	 JPMoGMcvPv8Cq+ICEbkADJsiHX0hgStWhtZCWZIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbgAJFCK (ORCPT
+        id S1726027AbgAJFCx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 00:02:10 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42815 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgAJFCK (ORCPT
+        Fri, 10 Jan 2020 00:02:53 -0500
+Received: from conuserg-07.nifty.com ([210.131.2.74]:23170 "EHLO
+        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgAJFCx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 00:02:10 -0500
-Received: by mail-pl1-f194.google.com with SMTP id p9so371705plk.9
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 21:02:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=rd+0+Zm+q9A9ESd0lBNZwBDHc4wcusJINeUIhcAJFUE=;
-        b=PbbOOP0/ZcnS2+icXTbmR1ZJ1/MZiGFvLNK5Ver/RNN0QuO+iw9FOuwDynBOzUp4i/
-         EPht7oTxx5chT2UbLJBj+PFXOsgoxxpkpS0ZZcd0FiB758l4cvJZ3LL6/Ipf34asvqcX
-         MQozEc74voxEZU/FimutsFM/sCqDX8n8pYn+g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=rd+0+Zm+q9A9ESd0lBNZwBDHc4wcusJINeUIhcAJFUE=;
-        b=f0SCbH0N5uoS1Z8+Vt4MRYAaf2JK9LWZ6enzD+lCmxK92TWn1J9qlDsXs26liRz+di
-         dAqXuZnQ6ApewnRpSsIcn/j5lmUgZHtU0kvUkC4nHdmvICZKQiCLCJE/KimMCK0miD9h
-         pIeItxaQ8P+G91ZMCrQLJaBrEQqKKfVh+Zmd2iIdBFCjYlVWkG2cPQLqBwPnVEBi2rMY
-         RH++na6wWia2TB4C0EFIbSIsTMGP4PpcRmWRCZo7YfdxlbTJjw0h/MnOyzftTb8j/tJv
-         +cFxB+NIZ/CPvOOPAp2x7KYz5mTGPJSxWbAnvzNugqFOoMfsbAeqNf6b4Wy5mYIZBG08
-         LxYA==
-X-Gm-Message-State: APjAAAWtesCvnmkAxPXoQSfh3pW85zdIyqrVCt4kg9C96ZV6j1cdy+6f
-        3U0MrsgYMyHsfb1f83iF11uJEQ==
-X-Google-Smtp-Source: APXvYqzkpSEcrnAJn7TMnPKTgw5T/Qd/NW+HjpiAH/6yx3mjPxTKJzVDjQDQ9IlNFRUIfgbJHYgoRA==
-X-Received: by 2002:a17:90a:868b:: with SMTP id p11mr2285721pjn.60.1578632529011;
-        Thu, 09 Jan 2020 21:02:09 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id h7sm896077pfq.36.2020.01.09.21.02.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 21:02:07 -0800 (PST)
-Date:   Thu, 9 Jan 2020 21:02:06 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Shuah Khan <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Popov <alex.popov@linux.com>,
-        linux-kselftest@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v3] selftests/lkdtm: Add tests for LKDTM targets
-Message-ID: <202001092059.4857C4F@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Fri, 10 Jan 2020 00:02:53 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-07.nifty.com with ESMTP id 00A52T4x008935;
+        Fri, 10 Jan 2020 14:02:30 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 00A52T4x008935
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1578632550;
+        bh=0/cY8IsswU5niZbLqmUKfFA8G6a7ndo5JrsR3tH+n64=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XZU4uwLv6i3L64c695M6jpmZ+tHOACfvVO45aoT1HUv8+yyUIO9PNyaZEgGRwrYXo
+         xido2cjER3/JPgjK/ifBtXw7UBs1kHT6qtkXoLd7Ovfjr7kwmu2XVrHg7sUNwSk2Sx
+         M1gTbZwcyD9AXlPJ1MF6UUEbIuPW+n8JjDKeecGa2euEQNyIn5YrPdgu/2WAE9Y5tK
+         bM68BIi9OnzNuyfPoi0O0Xy0hR86YfFjqlCkqgM8no1p3E/7d6kG27Yd7XZgKNlXZj
+         BNBnCV3lCbW9TMD/YhA2f8by3gfioPApgk7YFrddsmbQ1uixUv1BIt88hxeMWFAk0D
+         Lyq+acKPK5q4A==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: remove .tmp file when filechk fails
+Date:   Fri, 10 Jan 2020 14:02:24 +0900
+Message-Id: <20200110050224.1004-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds a basic framework for running all the "safe" LKDTM tests. This
-will allow easy introspection into any selftest logs to examine the
-results of most LKDTM tests.
+Bartosz Golaszewski reports that when "make {menu,n,g,x}config" fails
+due to missing packages, a temporary file is left over, which is not
+ignored by git.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-v3: replace open-coded "4" with $KSELFTEST_SKIP_TEXT (shuah), add DOUBLE_FAULT
-v2: https://lore.kernel.org/lkml/201912301453.19D686EE6@keescook
-v1: https://lore.kernel.org/lkml/201905091013.E228F0F0BE@keescook
----
- MAINTAINERS                             |  1 +
- tools/testing/selftests/Makefile        |  1 +
- tools/testing/selftests/lkdtm/Makefile  | 12 ++++
- tools/testing/selftests/lkdtm/config    |  1 +
- tools/testing/selftests/lkdtm/run.sh    | 92 +++++++++++++++++++++++++
- tools/testing/selftests/lkdtm/tests.txt | 71 +++++++++++++++++++
- 6 files changed, 178 insertions(+)
- create mode 100644 tools/testing/selftests/lkdtm/Makefile
- create mode 100644 tools/testing/selftests/lkdtm/config
- create mode 100755 tools/testing/selftests/lkdtm/run.sh
- create mode 100644 tools/testing/selftests/lkdtm/tests.txt
+For example, if GTK+ is not installed:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cc0a4a8ae06a..eacc00c6cfd5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9578,6 +9578,7 @@ LINUX KERNEL DUMP TEST MODULE (LKDTM)
- M:	Kees Cook <keescook@chromium.org>
- S:	Maintained
- F:	drivers/misc/lkdtm/*
-+F:	tools/testing/selftests/lkdtm/*
+  $ make gconfig
+  *
+  * Unable to find the GTK+ installation. Please make sure that
+  * the GTK+ 2.0 development package is correctly installed.
+  * You need gtk+-2.0 gmodule-2.0 libglade-2.0
+  *
+  scripts/kconfig/Makefile:208: recipe for target 'scripts/kconfig/gconf-cfg' failed
+  make[1]: *** [scripts/kconfig/gconf-cfg] Error 1
+  Makefile:567: recipe for target 'gconfig' failed
+  make: *** [gconfig] Error 2
+  $ git status
+  HEAD detached at v5.4
+  Untracked files:
+    (use "git add <file>..." to include in what will be committed)
+
+          scripts/kconfig/gconf-cfg.tmp
+
+  nothing added to commit but untracked files present (use "git add" to track)
+
+This is because the check scripts are run with filechk, which misses
+to clean up the temporary file on failure.
+
+When the line
+
+  { $(filechk_$(1)); } > $@.tmp;
+
+... fails, it exits immediately due to the 'set -e'. Use trap to make
+sure to delete the temporary file on exit.
+
+For extra safety, I replaced $@.tmp with $(dot-target).tmp to make it
+a hidden file.
+
+Reported-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ scripts/Kbuild.include | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index 3da8321efb74..6cabf20ce66a 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -59,14 +59,13 @@ kecho := $($(quiet)kecho)
+ # - stdin is piped in from the first prerequisite ($<) so one has
+ #   to specify a valid file as first prerequisite (often the kbuild file)
+ define filechk
+-	$(Q)set -e;				\
+-	mkdir -p $(dir $@);			\
+-	{ $(filechk_$(1)); } > $@.tmp;		\
+-	if [ -r $@ ] && cmp -s $@ $@.tmp; then	\
+-		rm -f $@.tmp;			\
+-	else					\
+-		$(kecho) '  UPD     $@';	\
+-		mv -f $@.tmp $@;		\
++	$(Q)set -e;						\
++	mkdir -p $(dir $@);					\
++	trap "rm -f $(dot-target).tmp" EXIT;			\
++	{ $(filechk_$(1)); } > $(dot-target).tmp;		\
++	if [ ! -r $@ ] || ! cmp -s $@ $(dot-target).tmp; then	\
++		$(kecho) '  UPD     $@';			\
++		mv -f $(dot-target).tmp $@;			\
+ 	fi
+ endef
  
- LINUX KERNEL MEMORY CONSISTENCY MODEL (LKMM)
- M:	Alan Stern <stern@rowland.harvard.edu>
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index b001c602414b..f0b02a12ba39 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -26,6 +26,7 @@ TARGETS += kexec
- TARGETS += kvm
- TARGETS += lib
- TARGETS += livepatch
-+TARGETS += lkdtm
- TARGETS += membarrier
- TARGETS += memfd
- TARGETS += memory-hotplug
-diff --git a/tools/testing/selftests/lkdtm/Makefile b/tools/testing/selftests/lkdtm/Makefile
-new file mode 100644
-index 000000000000..1bcc9ee990eb
---- /dev/null
-+++ b/tools/testing/selftests/lkdtm/Makefile
-@@ -0,0 +1,12 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Makefile for LKDTM regression tests
-+
-+include ../lib.mk
-+
-+# NOTE: $(OUTPUT) won't get default value if used before lib.mk
-+TEST_FILES := tests.txt
-+TEST_GEN_PROGS = $(patsubst %,$(OUTPUT)/%.sh,$(shell awk '{print $$1}' tests.txt | sed -e 's/\#//'))
-+all: $(TEST_GEN_PROGS)
-+
-+$(OUTPUT)/%: run.sh tests.txt
-+	install -m 0744 run.sh $@
-diff --git a/tools/testing/selftests/lkdtm/config b/tools/testing/selftests/lkdtm/config
-new file mode 100644
-index 000000000000..d874990e442b
---- /dev/null
-+++ b/tools/testing/selftests/lkdtm/config
-@@ -0,0 +1 @@
-+CONFIG_LKDTM=y
-diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
-new file mode 100755
-index 000000000000..dadf819148a4
---- /dev/null
-+++ b/tools/testing/selftests/lkdtm/run.sh
-@@ -0,0 +1,92 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# This reads tests.txt for the list of LKDTM tests to invoke. Any marked
-+# with a leading "#" are skipped. The rest of the line after the
-+# test name is either the text to look for in dmesg for a "success",
-+# or the rationale for why a test is marked to be skipped.
-+#
-+set -e
-+TRIGGER=/sys/kernel/debug/provoke-crash/DIRECT
-+KSELFTEST_SKIP_TEST=4
-+
-+# Verify we have LKDTM available in the kernel.
-+if [ ! -r $TRIGGER ] ; then
-+	/sbin/modprobe -q lkdtm || true
-+	if [ ! -r $TRIGGER ] ; then
-+		echo "Cannot find $TRIGGER (missing CONFIG_LKDTM?)"
-+	else
-+		echo "Cannot write $TRIGGER (need to run as root?)"
-+	fi
-+	# Skip this test
-+	exit $KSELFTEST_SKIP_TEST
-+fi
-+
-+# Figure out which test to run from our script name.
-+test=$(basename $0 .sh)
-+# Look up details about the test from master list of LKDTM tests.
-+line=$(egrep '^#?'"$test"'\b' tests.txt)
-+if [ -z "$line" ]; then
-+	echo "Skipped: missing test '$test' in tests.txt"
-+	exit $KSELFTEST_SKIP_TEST
-+fi
-+# Check that the test is known to LKDTM.
-+if ! egrep -q '^'"$test"'$' "$TRIGGER" ; then
-+	echo "Skipped: test '$test' missing in $TRIGGER!"
-+	exit $KSELFTEST_SKIP_TEST
-+fi
-+
-+# Extract notes/expected output from test list.
-+test=$(echo "$line" | cut -d" " -f1)
-+if echo "$line" | grep -q ' ' ; then
-+	expect=$(echo "$line" | cut -d" " -f2-)
-+else
-+	expect=""
-+fi
-+
-+# If the test is commented out, report a skip
-+if echo "$test" | grep -q '^#' ; then
-+	test=$(echo "$test" | cut -c2-)
-+	if [ -z "$expect" ]; then
-+		expect="crashes entire system"
-+	fi
-+	echo "Skipping $test: $expect"
-+	exit $KSELFTEST_SKIP_TEST
-+fi
-+
-+# If no expected output given, assume an Oops with back trace is success.
-+if [ -z "$expect" ]; then
-+	expect="call trace:"
-+fi
-+
-+# Clear out dmesg for output reporting
-+dmesg -c >/dev/null
-+
-+# Prepare log for report checking
-+LOG=$(mktemp --tmpdir -t lkdtm-XXXXXX)
-+cleanup() {
-+	rm -f "$LOG"
-+}
-+trap cleanup EXIT
-+
-+# Most shells yell about signals and we're expecting the "cat" process
-+# to usually be killed by the kernel. So we have to run it in a sub-shell
-+# and silence errors.
-+($SHELL -c 'cat <(echo '"$test"') >'"$TRIGGER" 2>/dev/null) || true
-+
-+# Record and dump the results
-+dmesg -c >"$LOG"
-+cat "$LOG"
-+# Check for expected output
-+if egrep -qi "$expect" "$LOG" ; then
-+	echo "$test: saw '$expect': ok"
-+	exit 0
-+else
-+	if egrep -qi XFAIL: "$LOG" ; then
-+		echo "$test: saw 'XFAIL': [SKIP]"
-+		exit $KSELFTEST_SKIP_TEST
-+	else
-+		echo "$test: missing '$expect': [FAIL]"
-+		exit 1
-+	fi
-+fi
-diff --git a/tools/testing/selftests/lkdtm/tests.txt b/tools/testing/selftests/lkdtm/tests.txt
-new file mode 100644
-index 000000000000..92ca32143ae5
---- /dev/null
-+++ b/tools/testing/selftests/lkdtm/tests.txt
-@@ -0,0 +1,71 @@
-+#PANIC
-+BUG kernel BUG at
-+WARNING WARNING:
-+WARNING_MESSAGE message trigger
-+EXCEPTION
-+#LOOP Hangs the system
-+#EXHAUST_STACK Corrupts memory on failure
-+#CORRUPT_STACK Crashes entire system on success
-+#CORRUPT_STACK_STRONG Crashes entire system on success
-+CORRUPT_LIST_ADD list_add corruption
-+CORRUPT_LIST_DEL list_del corruption
-+CORRUPT_USER_DS Invalid address limit on user-mode return
-+STACK_GUARD_PAGE_LEADING
-+STACK_GUARD_PAGE_TRAILING
-+UNSET_SMEP CR4 bits went missing
-+DOUBLE_FAULT
-+UNALIGNED_LOAD_STORE_WRITE
-+#OVERWRITE_ALLOCATION Corrupts memory on failure
-+#WRITE_AFTER_FREE Corrupts memory on failure
-+READ_AFTER_FREE
-+#WRITE_BUDDY_AFTER_FREE Corrupts memory on failure
-+READ_BUDDY_AFTER_FREE
-+SLAB_FREE_DOUBLE
-+SLAB_FREE_CROSS
-+SLAB_FREE_PAGE
-+#SOFTLOCKUP Hangs the system
-+#HARDLOCKUP Hangs the system
-+#SPINLOCKUP Hangs the system
-+#HUNG_TASK Hangs the system
-+EXEC_DATA
-+EXEC_STACK
-+EXEC_KMALLOC
-+EXEC_VMALLOC
-+EXEC_RODATA
-+EXEC_USERSPACE
-+EXEC_NULL
-+ACCESS_USERSPACE
-+ACCESS_NULL
-+WRITE_RO
-+WRITE_RO_AFTER_INIT
-+WRITE_KERN
-+REFCOUNT_INC_OVERFLOW
-+REFCOUNT_ADD_OVERFLOW
-+REFCOUNT_INC_NOT_ZERO_OVERFLOW
-+REFCOUNT_ADD_NOT_ZERO_OVERFLOW
-+REFCOUNT_DEC_ZERO
-+REFCOUNT_DEC_NEGATIVE Negative detected: saturated
-+REFCOUNT_DEC_AND_TEST_NEGATIVE Negative detected: saturated
-+REFCOUNT_SUB_AND_TEST_NEGATIVE Negative detected: saturated
-+REFCOUNT_INC_ZERO
-+REFCOUNT_ADD_ZERO
-+REFCOUNT_INC_SATURATED Saturation detected: still saturated
-+REFCOUNT_DEC_SATURATED Saturation detected: still saturated
-+REFCOUNT_ADD_SATURATED Saturation detected: still saturated
-+REFCOUNT_INC_NOT_ZERO_SATURATED
-+REFCOUNT_ADD_NOT_ZERO_SATURATED
-+REFCOUNT_DEC_AND_TEST_SATURATED Saturation detected: still saturated
-+REFCOUNT_SUB_AND_TEST_SATURATED Saturation detected: still saturated
-+#REFCOUNT_TIMING timing only
-+#ATOMIC_TIMING timing only
-+USERCOPY_HEAP_SIZE_TO
-+USERCOPY_HEAP_SIZE_FROM
-+USERCOPY_HEAP_WHITELIST_TO
-+USERCOPY_HEAP_WHITELIST_FROM
-+USERCOPY_STACK_FRAME_TO
-+USERCOPY_STACK_FRAME_FROM
-+USERCOPY_STACK_BEYOND
-+USERCOPY_KERNEL
-+USERCOPY_KERNEL_DS
-+STACKLEAK_ERASING OK: the rest of the thread stack is properly erased
-+CFI_FORWARD_PROTO
 -- 
-2.20.1
+2.17.1
 
-
--- 
-Kees Cook
