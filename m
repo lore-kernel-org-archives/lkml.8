@@ -2,91 +2,161 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A22C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D22C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B507F2087F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEB120678
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:36:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E0XIh1g0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbgAJRfW (ORCPT
+        id S1727927AbgAJRge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:35:22 -0500
-Received: from mout.kundenserver.de ([212.227.126.131]:36223 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728232AbgAJRfV (ORCPT
+        Fri, 10 Jan 2020 12:36:34 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28508 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727197AbgAJRge (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:35:21 -0500
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MpUEO-1jSHYK0bsK-00pwv1; Fri, 10 Jan 2020 18:35:20 +0100
-Received: by mail-qv1-f49.google.com with SMTP id o18so1098049qvf.1;
-        Fri, 10 Jan 2020 09:35:19 -0800 (PST)
-X-Gm-Message-State: APjAAAVMI5Ojdl+ku5tFrFPiY2uMT0tHB6T3uORVdrK9aLnO332pifmV
-        CkjnUF8ZbjDuBgmpMRa35fsDLswLyNaLa4qBnBU=
-X-Google-Smtp-Source: APXvYqwWYC8X5W9oF1BgBx7VL/oeohJqrxVJjUso79ib5qHjpCfx0eXAy0BECqjDUxdnwEFL4yYFEX7TreByyDcsQXQ=
-X-Received: by 2002:a0c:d788:: with SMTP id z8mr3587885qvi.211.1578677718911;
- Fri, 10 Jan 2020 09:35:18 -0800 (PST)
+        Fri, 10 Jan 2020 12:36:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578677792;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=0NlyiZfwoZAjsy88P9J/wm+VghLvXVY6pErT0BkkWPM=;
+        b=E0XIh1g0P019zndbyD/5URe2lmSnXUnyezgffCIQI+blkpQeQV1Tw4Hzf92KlLtfzmRsG/
+        HFakphaiu44pW1HiX+wbILlfUeLqvgsw/BLJk67m0jJLOkSVv8in6YNrpkAax2v94ebgZo
+        y1gbglm1zMzj0JsXIsjLzlpnIsIvh4w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-220-eVBaqti5Pd2PRq5LFM3sFw-1; Fri, 10 Jan 2020 12:36:29 -0500
+X-MC-Unique: eVBaqti5Pd2PRq5LFM3sFw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A9B3593A2;
+        Fri, 10 Jan 2020 17:36:27 +0000 (UTC)
+Received: from [10.36.118.66] (unknown [10.36.118.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E1365C28F;
+        Fri, 10 Jan 2020 17:36:25 +0000 (UTC)
+Subject: Re: [PATCH] mm/memory_hotplug: Fix remove_memory() lockdep splat
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        stable <stable@vger.kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <157863061737.2230556.3959730620803366776.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <e60e64f9-894b-4121-d97b-fb61459cbbe5@redhat.com>
+ <CAPcyv4jm=fmP=-5vbo2jxzMe2qXqZP=zDYF8G_rs3X6_Om0wPg@mail.gmail.com>
+ <4d0334e2-c4e7-6d3f-99ba-2ca0495e1549@redhat.com>
+ <CAPcyv4jixmv8fJ5FiYE=97Jud3Mc+6QzRX1txceSYU+WY_0rQA@mail.gmail.com>
+ <fc0cfb97-5a60-7e73-4f85-d8e6947c5e28@redhat.com>
+ <CAPcyv4jVpN26RGQLRn4BewYtzHDoQfvh37DEdEBq1dd4-BP0kw@mail.gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
+ 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
+ zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
+ Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
+ jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
+ II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
+ Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
+ RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
+ ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
+ Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
+ ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
+ 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
+ GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
+ GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
+ H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
+ 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
+ ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
+ GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
+ CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
+ njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
+ FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
+Organization: Red Hat GmbH
+Message-ID: <64902066-51dd-9693-53fc-4a5975c58409@redhat.com>
+Date:   Fri, 10 Jan 2020 18:36:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20200110165636.28035-1-will@kernel.org> <20200110165636.28035-2-will@kernel.org>
-In-Reply-To: <20200110165636.28035-2-will@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 10 Jan 2020 18:35:02 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3ueJ_rQc-1JTg=3N0JSuY9BduJ6FrrPFG1K2FWVzJdfA@mail.gmail.com>
-Message-ID: <CAK8P3a3ueJ_rQc-1JTg=3N0JSuY9BduJ6FrrPFG1K2FWVzJdfA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/8] compiler/gcc: Emit build-time warning for GCC
- prior to version 4.8
-To:     Will Deacon <will@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:qNB50QxgYN6IoCxuOP5OUw+kvbtvU6FPj70Xpb3YkQHBzhScfGA
- LOMjhVZaQYk/fRyYSVS9s1D/Kmeo6MrkW8Aq1WdR4Wfdv9Scag4ZUTOzAOR1vgrr9AUlt83
- NY4NgdMcX19Mmlx3uTymSbSJgoJIzd52ABKIauuObzBFHnc5hXJUD1D5eN7fpgO4dTRkwG6
- XEdZii3mwfxOLHxIhyo1w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CNzi4tqatmQ=:jzKjyLV2MH9toF091jMUH1
- fYjwg7S1fuz8OVlWZbAZGM4es6TRvOgGYR7sHf4rWV5n+hIEuZi91Vaq6jGL9kagYQ9NLmEq9
- FBjgN6spbsBkj4MZDF5+YKGqHJRPRwK6UTJqfdpEuozHAwLB0M8jcInrPgjaPAw3G3HPX/QEo
- k73XO1lVNh5Ng0SBLzEpG0B5dRVsaJnRUxs10AARwrlV/E+gpP+J2CrfQknVHfivI94p45ySY
- PNPlSJkLLjss/0dsWg8naPU1qM99iqw7Ag/75m4d+K0ABtHaszeDX3kky0xjPx/YDt/V9Eh2F
- ea2w2R7po3V6RglU295cXIZdMYmJ96wobdGePg5TyRsQE7lc6d0gab5QmW/Mjy2PGxsxvm96s
- Hp+71pBDybruMVKadfhIiqTxdKBB+Vfuh7XanlbBR7ZQT2aeoGGWtjuAW0M3Ppsnc6BfrkRr2
- mnLQj1DIqq+DmKV5VDOs+fiZjoKGpAOzcWSJOwzMV0fhnPZiO8cayZEbFQ8XH1AELO1hTN1LV
- 8EJADa6DdyTKUZJycTto7i8nOK8Vdf6DuDUirOsN+1ZM1EMc+5JqL52QsaN2OkYqIXLcmLhKh
- GZRIa44knC7tG+KYwI8Huu2DYVRg+aEiPRURxcfeD+mpb3MKB74mRvJqZDIpOwFJ8IplSiHBk
- dPE3lQ+6FcquEI627fFEoIJsABZeujtF8isG8r1fobh3K5TtOwzzM3pGiwmy9h6Kpm0mF2OMj
- kGaQSWFh3pU8IVPF1lckMoRCfNSLlmXU+tsE0JzmE95FpU80oL9i4gnV/6W7Mh0xrq85wAWLX
- 58z6fxPmwgsziqqRxrXDEK8tdPzbXWMsaLPRLhPrcUaMcsmaaUzIo090Id5gpTMU9jTdEhV2+
- tEMC4WG5Yqp66hDTda7w==
+In-Reply-To: <CAPcyv4jVpN26RGQLRn4BewYtzHDoQfvh37DEdEBq1dd4-BP0kw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 5:56 PM Will Deacon <will@kernel.org> wrote:
->
-> Prior to version 4.8, GCC may miscompile READ_ONCE() by erroneously
-> discarding the 'volatile' qualifier:
->
-> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
->
-> We've been working around this using some nasty hacks which make
-> READ_ONCE() both horribly complicated and also prevent us from enforcing
-> that it is only used on scalar types. Since GCC 4.8 is pretty old for
-> kernel builds now, emit a warning if we detect it during the build.
+On 10.01.20 18:33, Dan Williams wrote:
+> On Fri, Jan 10, 2020 at 9:29 AM David Hildenbrand <david@redhat.com> wrote:
+> [..]
+>>> So then the comment is actively misleading for that case. I would
+>>> expect an explicit _unlocked path for that case with a comment about
+>>> why it's special. Is there already a comment to that effect somewhere?
+>>>
+>>
+>> __add_memory() - the locked variant - is called from the same ACPI location
+>> either locked or unlocked. I added a comment back then after a longe
+>> discussion with Michal:
+>>
+>> drivers/acpi/scan.c:
+>>         /*
+>>          * Although we call __add_memory() that is documented to require the
+>>          * device_hotplug_lock, it is not necessary here because this is an
+>>          * early code when userspace or any other code path cannot trigger
+>>          * hotplug/hotunplug operations.
+>>          */
+>>
+>>
+>> It really is a special case, though.
+> 
+> That's a large comment block when we could have just taken the lock.
+> There's probably many other code paths in the kernel where some locks
+> are not necessary before userspace is up, but the code takes the lock
+> anyway to minimize the code maintenance burden. Is there really a
+> compelling reason to be clever here?
 
-No objection to recommending gcc-4.8, but I think this should either
-just warn once during the kernel build instead of for every file, or
-it should become a hard requirement.
+It was a lengthy discussion back then and I was sharing your opinion. I
+even had a patch ready to enforce that we are holding the lock (that's
+how I identified that specific case in the first place).
 
-       Arnd
+-- 
+Thanks,
+
+David / dhildenb
+
