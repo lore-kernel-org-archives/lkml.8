@@ -2,124 +2,225 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784B4C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03F4C33CA5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AB652072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C9A42084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:54:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="embQBqkF"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Acd26+9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbgAJOwV (ORCPT
+        id S1728368AbgAJOyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:52:21 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53167 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728056AbgAJOwU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:52:20 -0500
-Received: by mail-wm1-f66.google.com with SMTP id p9so2311391wmc.2;
-        Fri, 10 Jan 2020 06:52:18 -0800 (PST)
+        Fri, 10 Jan 2020 09:54:41 -0500
+Received: from mail-bn8nam12on2052.outbound.protection.outlook.com ([40.107.237.52]:8034
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728308AbgAJOyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 09:54:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=e8hE0Ok0STMoWusQ9TGi4Ta08BkovEV5HX3jrkQUFTWGs7Gw3HAaFCgq4zLGBJ1a5D7XMDEua/QUvtXkZs7/aBaS7T2bxOq3thueHX4/gYYrbvSP+izsYfiXgluDglIXGYy+0Jx+hrdjn/PizoFF2Q5KEyriqI8TS+S1L0BpbLQL4CtLFiPQPsApOwnlfjzDvyHghCmbUzmzvHP8eKA6WZ/YJsHJMXGXbhKqLWEEoyc1nSfhMdhOWbnxMbTBH2J4N5bRmqHyDalf9nDetvhrwx9lPiUXIAjujHPJC0OU5NPRfLb0WeoxwV6MXcf7Sf9DyKNJ4kJCkeWSFc0hqRPbZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RWp09n2CH7TcP/N2KbkGHdfSNjz6T/re9GHkqptVCW8=;
+ b=hcMvsSIWV8fC1oUi/SPFvv6ZH2JZ/UVQbAR6Sr4Tz1aB8u3qz51vewykKNLuVWeRvn5Kn/ighLhBEjpDvtAQQrOZ45bbefSlQ9u/1VpFfMNTvCcPLKu3kOSfQDYXqpGO468W8y9OXk9amf0R8k9dDadIXv/5VcJOnUe9DijUGwPc+uV3f/w5CHCVzHUw5oTjcCnqdxjtzcgfnfvwQdz4G1N/u9P2vHp4nEh7cvV3Sifuxk7+edXs44L/3Ym/lqHUdQhsvkx8jlIHk9ozxapNrvq747c6lrs+6yk1Ayr8Ba0o600Cwh6kj6+aqZfb4Ff8mpttv1aMaHA2zKVg7GaGXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=oVYLl9LN72M2SWc5/npLC+GHfXW32Z75PJHHgZON1Jw=;
-        b=embQBqkFQJiui3MEMODdwpfRFie5ETZTYIzBikIvHCeJhVjwtfGYt44rI2jFsSRoMs
-         0MXr25v2rb9rV2KaiVGdV3y3LU/qbnAPddh02Z6rNYAMofyRQkdlGti+a3IjJKGOHbqn
-         J2K6iF6n45lLeZxUzbNmLfvwRZhbWLBrVKmurs4VHKW8PuDkLb/9vNn4AO/hkpWz1b9z
-         7o49spp5mx2CObSUaBLIun/9yGpdxWHIzghCA0+yCKcjZn02NqjzNYmf0HxNmgckF153
-         pCPZ0ftzB5+P2L6V/6PN0VI+h+5n7psdi1CDrAYTkc/O5CFfTtE5tBjS119Oss6WvFky
-         4iMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oVYLl9LN72M2SWc5/npLC+GHfXW32Z75PJHHgZON1Jw=;
-        b=DdXTPBU35x2YQI5iVzSyy9iY4EWENqM4SotvfenculY93w1a+NCDF9yWqCkV8IC4WG
-         hsPXrSP0bioG3Czl2yZqk8rZodXzpGhygjOf8xPXGt1oPJyOxENBtJj9cN5XgGy7kI65
-         XPmQMqbley7QmcV7wGm6eL6kyrkZtLNMNsHhxVbb5grc7vCEAZKnAG6QUSM0HVtmUmjv
-         /Fq2g+IemiVO34v26gAE/6k0Xd/LWvqYN7M2cTBwzUca5p5B81YDNjNnDn+mCApMo/Xx
-         WFkPriOuGcY0+GtzG6madmWAjnriUILxFmlycNCQFw4h1wczt8V8eOaL+VyePgriPkxN
-         YOxA==
-X-Gm-Message-State: APjAAAVGmftK0xFlBqYgZutFHA1hjkS9qdUiuAoaF8tvYqxupe0/86cP
-        +ecWHd7cRRMyIKikeGkcOwE=
-X-Google-Smtp-Source: APXvYqwz+zKGoUL7Z/9WVoYbEbih305CPkdr5KQ12oBQgA3aj34A5GHgHcD06644tvAl04QLcM8nDg==
-X-Received: by 2002:a7b:c775:: with SMTP id x21mr4889708wmk.59.1578667938288;
-        Fri, 10 Jan 2020 06:52:18 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id m21sm2505984wmi.27.2020.01.10.06.52.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 06:52:17 -0800 (PST)
-Date:   Fri, 10 Jan 2020 15:52:16 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-tegra@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND for 5.6 v1 1/3] clk: tegra: divider: Check UART's
- divider enable-bit state on rate's recalculation
-Message-ID: <20200110145216.GI2233456@ulmo>
-References: <20191218184407.25790-1-digetx@gmail.com>
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RWp09n2CH7TcP/N2KbkGHdfSNjz6T/re9GHkqptVCW8=;
+ b=Acd26+9aGknuNXlMEA8tS1BErB+CGwUC4yti6J0cjU71PThh00b77Mkof6DlzGuOSZbTRcjc8G38EVm5AlbOGViFgpsDpcFq3uydbCnu8Voe9kro3EubGpACebn+dPom8rSRgruxeITMH6MvtDi9dY6VuIbiQaZ0xaGXGX+rFlk=
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
+ CH2PR02MB6760.namprd02.prod.outlook.com (10.141.156.73) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Fri, 10 Jan 2020 14:54:35 +0000
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2623.013; Fri, 10 Jan 2020
+ 14:54:35 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Andre Przywara <andre.przywara@arm.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     Michal Simek <michals@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 02/14] net: axienet: Propagate failure of DMA descriptor
+ setup
+Thread-Topic: [PATCH 02/14] net: axienet: Propagate failure of DMA descriptor
+ setup
+Thread-Index: AQHVx6y29d9jke+J9UGemOnmCbRblqfj+/xw
+Date:   Fri, 10 Jan 2020 14:54:35 +0000
+Message-ID: <CH2PR02MB7000063BD3CFC30D18B06FDFC7380@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <20200110115415.75683-1-andre.przywara@arm.com>
+ <20200110115415.75683-3-andre.przywara@arm.com>
+In-Reply-To: <20200110115415.75683-3-andre.przywara@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=radheys@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a987f790-008e-4875-9333-08d795dd0286
+x-ms-traffictypediagnostic: CH2PR02MB6760:|CH2PR02MB6760:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB67603C40A482241CBCA9BF76C7380@CH2PR02MB6760.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 02788FF38E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(136003)(346002)(39860400002)(376002)(199004)(189003)(13464003)(54906003)(110136005)(8676002)(81156014)(86362001)(81166006)(7696005)(26005)(186003)(478600001)(71200400001)(2906002)(6506007)(316002)(8936002)(53546011)(66446008)(64756008)(66556008)(4326008)(52536014)(33656002)(66476007)(55016002)(5660300002)(76116006)(66946007)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6760;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PWQiwu3otGzYSLtuYcCPGH4ZqYBkgD1P7S0kBdyECWGOcFBvuZXjS6XxyjnKg9tICTY3mvcBSOjRMstCZDmObooQnTOrFGzdvAF+YY/9xEE7TazvYeD9N/FzFVX1rmbDWBcbCfVCbz3k3yk7JxeF+MbvC5Pb2UZBNA6dxr5OfoY58YgtKB6nLA9jX0/amKL+L968cWsL25nt+Sc15LWebcR+ZFTpPNHnw+gQFCwjbs/akXkILiNfJD0Hw4kRsJ0xCgbJI96Xg2R9Sus6Angxae2FEi3zbnrGYTyKjcpoMlYmN6dJva9G/HEV8LoVbCKSC7ZA3MJ2prnjx0GhvV4mWI4XBhqKipl/gxCO5rb9GQW0KWZdFqcBd423kl4NjKOA84+1gAN3JFrJ9pVVnBsOO8XCYLY1tK5AGIxL4tlKc1fMqo+mFPw+HQRz12zUZekjpV2PIHQKqBeKYgMSgJjKCUU9UWjwCQCd5atCecrPnRUcxYLuRVzBXHUssvv4P0j8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6lCXDTVICvIQMz0h"
-Content-Disposition: inline
-In-Reply-To: <20191218184407.25790-1-digetx@gmail.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a987f790-008e-4875-9333-08d795dd0286
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 14:54:35.7674
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NKGSwuX3gG8GxXp+RBX5/80Nie0VQy1xapCxTY+CMzP3yZqE2uM2YCgkP+XGkqeewDnJN8E4dejNEhQL/KOCjw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6760
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---6lCXDTVICvIQMz0h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Dec 18, 2019 at 09:44:05PM +0300, Dmitry Osipenko wrote:
-> UART clock is divided using divisor values from DLM/DLL registers when
-> enable-bit is unset in clk register and clk's divider configuration isn't
-> taken onto account in this case. This doesn't cause any problems, but
-> let's add a check for the divider's enable-bit state, for consistency.
+> -----Original Message-----
+> From: Andre Przywara <andre.przywara@arm.com>
+> Sent: Friday, January 10, 2020 5:24 PM
+> To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
+> <radheys@xilinx.com>
+> Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
+> <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH 02/14] net: axienet: Propagate failure of DMA descriptor
+> setup
 >=20
-> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> When we fail allocating the DMA buffers in axienet_dma_bd_init(), we
+> report this error, but carry on with initialisation nevertheless.
+>=20
+> This leads to a kernel panic when the driver later wants to send a
+> packet, as it uses uninitialised data structures.
+>=20
+> Make the axienet_device_reset() routine return an error value, as it
+> contains the DMA buffer initialisation. Make sure we propagate the error
+> up the chain and eventually fail the driver initialisation, to avoid
+> relying on non-initialised buffers.
+>=20
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+
 > ---
->  drivers/clk/tegra/clk-divider.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+>  .../net/ethernet/xilinx/xilinx_axienet_main.c | 25 +++++++++++++------
+>  1 file changed, 18 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> index 20746b801959..97482cf093ce 100644
+> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> @@ -437,9 +437,10 @@ static void axienet_setoptions(struct net_device
+> *ndev, u32 options)
+>  	lp->options |=3D options;
+>  }
+>=20
+> -static void __axienet_device_reset(struct axienet_local *lp)
+> +static int __axienet_device_reset(struct axienet_local *lp)
+>  {
+>  	u32 timeout;
+> +
+>  	/* Reset Axi DMA. This would reset Axi Ethernet core as well. The
+> reset
+>  	 * process of Axi DMA takes a while to complete as all pending
+>  	 * commands/transfers will be flushed or completed during this
+> @@ -455,9 +456,11 @@ static void __axienet_device_reset(struct
+> axienet_local *lp)
+>  		if (--timeout =3D=3D 0) {
+>  			netdev_err(lp->ndev, "%s: DMA reset timeout!\n",
+>  				   __func__);
+> -			break;
+> +			return -ETIMEDOUT;
+>  		}
+>  	}
+> +
+> +	return 0;
+>  }
+>=20
+>  /**
+> @@ -471,12 +474,15 @@ static void __axienet_device_reset(struct
+> axienet_local *lp)
+>   * Ethernet core. No separate hardware reset is done for the Axi Etherne=
+t
+>   * core.
+>   */
+> -static void axienet_device_reset(struct net_device *ndev)
+> +static int axienet_device_reset(struct net_device *ndev)
+>  {
+>  	u32 axienet_status;
+>  	struct axienet_local *lp =3D netdev_priv(ndev);
+> +	int ret;
+>=20
+> -	__axienet_device_reset(lp);
+> +	ret =3D __axienet_device_reset(lp);
+> +	if (ret)
+> +		return ret;
+>=20
+>  	lp->max_frm_size =3D XAE_MAX_VLAN_FRAME_SIZE;
+>  	lp->options |=3D XAE_OPTION_VLAN;
+> @@ -491,9 +497,11 @@ static void axienet_device_reset(struct net_device
+> *ndev)
+>  			lp->options |=3D XAE_OPTION_JUMBO;
+>  	}
+>=20
+> -	if (axienet_dma_bd_init(ndev)) {
+> +	ret =3D axienet_dma_bd_init(ndev);
+> +	if (ret) {
+>  		netdev_err(ndev, "%s: descriptor allocation failed\n",
+>  			   __func__);
+> +		return ret;
+>  	}
+>=20
+>  	axienet_status =3D axienet_ior(lp, XAE_RCW1_OFFSET);
+> @@ -518,6 +526,8 @@ static void axienet_device_reset(struct net_device
+> *ndev)
+>  	axienet_setoptions(ndev, lp->options);
+>=20
+>  	netif_trans_update(ndev);
+> +
+> +	return 0;
+>  }
+>=20
+>  /**
+> @@ -921,8 +931,9 @@ static int axienet_open(struct net_device *ndev)
+>  	 */
+>  	mutex_lock(&lp->mii_bus->mdio_lock);
+>  	axienet_mdio_disable(lp);
+> -	axienet_device_reset(ndev);
+> -	ret =3D axienet_mdio_enable(lp);
+> +	ret =3D axienet_device_reset(ndev);
+> +	if (ret =3D=3D 0)
+> +		ret =3D axienet_mdio_enable(lp);
+>  	mutex_unlock(&lp->mii_bus->mdio_lock);
+>  	if (ret < 0)
+>  		return ret;
+> --
+> 2.17.1
 
-All three patches applied to for-5.6/clk, thanks.
-
-Thierry
-
---6lCXDTVICvIQMz0h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4Yj6AACgkQ3SOs138+
-s6GxRRAAkhh+jeJ2znxH5p0u5lU7TnqfCZkhhIf9AuHOtxu8TBDgvsruRrJRS86P
-hAc4z201mWg29UpR0R9fOvuQhGNGvuYAGU/m46Utq9XLQLlG5ZLNsettLgBmg/Ju
-u4yX3YIrDvBde7/xgWB5GjBUhzTkDrcdn9nz12DHbE2weHao8xK5zeEosZw/LdYs
-IDkKdGeuzYlFM3yo/Kro63RgHsG6srdoXid4elJt/RdcwrNY13hROSyGTuE5LXx6
-6iZHUaMh/E947uCPe3/H3S+Sy2ZWR/6bu44kp3h6B6vh0ybyOUG4cfeJT2bqNXOb
-YB6sqcXSwJapIpPy2jmQzx2LMUJPpsFglHF2E27IV2D1z7DEDSNdR8cGm0wy8CBR
-xhKujgI0hs5y84GuJSFlqM1bTndC2/3GvAAqTW5BH0IekzmffvJt2a2NCwoi6jB4
-HKji0Dxw4XzHkiWj+RE1tXfZu7IKOsz0W029+LX9G4EhiYAMJ7+KkJp3lHJ1f487
-a3p2uRoBneOYSLMALSZ0OqNu9GWXqqUVd+nf+VH5WpLGCHpGqzXnfJyqIWyhpUey
-XXkZfqhzFEjyawT4EAPVnkfOtwYuWjSV/Iz4v9qbGj/6GMy/yN6jZ6Y3LlV/kQ6y
-pJq9/0eNDwcTjAsiD1z2+/eHLFhy3Pzks3GRi+Y8gdkjkxl+ppg=
-=oKAe
------END PGP SIGNATURE-----
-
---6lCXDTVICvIQMz0h--
