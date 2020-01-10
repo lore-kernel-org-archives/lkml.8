@@ -2,438 +2,303 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDF2C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6801CC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D61E420842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:34:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578692097;
-	bh=RRoBPi3y+99cfsk1YmK9cv+ALGFQMyVtcHwfZkis/2w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kwqt1gqstFO0vcVktep9VXLUAVYGcMWIMcV68Hv0NbTzh6yxNXDUEz+i0O9/VFSOZ
-	 1PFSrhyueHA4U5ajBRwTUx0EP4Vi8B0TrorayyzNjgO9nCU40RNC7uwqJ/je4G+dEj
-	 M8tO7Q/pUtt785W+8Ha4Xfu3dcSEpjGCENF9WY9A=
+	by mail.kernel.org (Postfix) with ESMTP id 3DADD2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:38:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbgAJVer (ORCPT
+        id S1727119AbgAJVij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 16:34:47 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35031 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbgAJVem (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 16:34:42 -0500
-Received: by mail-pl1-f193.google.com with SMTP id g6so1333464plt.2;
-        Fri, 10 Jan 2020 13:34:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=e0lHFx8zWJn+kPM7OJk7RcsH+lxYKKMI160RNN2hXrQ=;
-        b=QnFE7RYZ0qyDYUkyj3lxUwZFFAn5Jm6pcZDsVpUh5PKo++JYoX2JzcjFjxzmzQN5gM
-         lvDHUFBD4dmQSKa9hL5GIxZ7FDL5J3kPDc7+C/X+tSlSlGKDXDHLh0Qs6kmISmIpAhwY
-         PIIL0A5ECUqoAAQzxjMUU4xetxbv1xiCgmGcL+26JrwJ9qWdGnU7ArznHIYJ7JA9j7oN
-         UWPr67+tEYYLmPK02AmlvMcPQ6dWhXWyPXyBDoXr9b8697xbN+FK8n2p8PPHA5jtG8k+
-         2eptSPXJHkui7siRUEUdGMzCUnLxB1JOkT+HxJBMay2+w2XSRm4MepImkEIiQV09W6Wf
-         PpmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=e0lHFx8zWJn+kPM7OJk7RcsH+lxYKKMI160RNN2hXrQ=;
-        b=G2Ntu56E5tF0pVw6rjaxXxvkCeiZhsUY25CiQCvKUhaScHkvb9GhZ3N+7LjiOUcjie
-         RszDNbcufPey8hXbWxiF1+R7gpAohgcC3QXsAd7sjg2kVP/8EQIF+5s5ZlvFasUmzOuV
-         RATT0ODbWujEvzsUUeWX/2L/Wvnca9sh9vKGDtVwI9J2yAxZnpB4mg5WsHioXF+dRwQZ
-         RiIB4boFbxN6Atxl/SA0uY7BXZMi+PBMDgAQcliewsf8n4+4xAoEDmnV7ZlemVhKZeYn
-         4HpdaCwSNRFhtHqAaekcawmPe90ni2vMW3LD4ymbVu/ssVhvGQNvXdlhyY6lG1W5QqMY
-         D5BQ==
-X-Gm-Message-State: APjAAAVZ0sOiqZrq6uG27i0c6JkrWdqdFePOnMpQQrEOcuN4OJESZp1N
-        MeRzcu8UQBT4KVugKtg5m7s=
-X-Google-Smtp-Source: APXvYqzipHBf4URCkKl733rg+Sb9tXspYq6Qeq/piyuLBQqsMhISl+ZfPQiksqIlSywZgjOFmE6iZw==
-X-Received: by 2002:a17:902:694b:: with SMTP id k11mr6707123plt.334.1578692081508;
-        Fri, 10 Jan 2020 13:34:41 -0800 (PST)
-Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id t137sm3692307pgb.40.2020.01.10.13.34.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 13:34:40 -0800 (PST)
-From:   Minchan Kim <minchan@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-api@vger.kernel.org, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
+        Fri, 10 Jan 2020 16:38:39 -0500
+Received: from mga09.intel.com ([134.134.136.24]:35513 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726945AbgAJVii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 16:38:38 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 13:38:37 -0800
+X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
+   d="scan'208";a="223932598"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 13:38:37 -0800
+Subject: [PATCH v4] mm/memory_hotplug: Fix remove_memory() lockdep splat
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     akpm@linux-foundation.org
+Cc:     stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
         Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Minchan Kim <minchan@kernel.org>
-Subject: [PATCH 2/4] mm: introduce external memory hinting API
-Date:   Fri, 10 Jan 2020 13:34:31 -0800
-Message-Id: <20200110213433.94739-3-minchan@kernel.org>
-X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
-In-Reply-To: <20200110213433.94739-1-minchan@kernel.org>
-References: <20200110213433.94739-1-minchan@kernel.org>
+        Dave Hansen <dave.hansen@linux.intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 10 Jan 2020 13:22:35 -0800
+Message-ID: <157869128062.2451572.4093315441083744888.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are usecases that System Management Software(SMS) want to give
-a memory hint to other processes because it's not known to the
-application. In the case of Android, ActivityManagerService daemon
-manges app's life cycle and that daemon must be able to initiate
-reclaim on its own without any app involvement.
+The daxctl unit test for the dax_kmem driver currently triggers the
+lockdep splat below. It results from the fact that
+remove_memory_block_devices() is invoked under the mem_hotplug_lock()
+causing lockdep entanglements with cpu_hotplug_lock().
 
-To solve the issue, this patch introduces new syscall process_madvise(2).
-It uses pidfd of an external processs to give the hint.
+The mem_hotplug_lock() is not needed to synchronize the memory block
+device sysfs interface vs the page online state, that is already handled
+by lock_device_hotplug(). Specifically lock_device_hotplug()
+is sufficient to allow try_remove_memory() to check the offline
+state of the memblocks and be assured that subsequent online attempts
+will be blocked. The device_online() path checks mem->section_count
+before allowing any state manipulations and mem->section_count is
+cleared in remove_memory_block_devices().
 
- int process_madvise(int pidfd, void *addr, size_t length, int advise,
-			unsigned long flag);
+The add_memory() path does create memblock devices under the lock, but
+there is no lockdep report on that path, and it wants to unwind the
+hot-add (via arch_remove_memory()) if the memblock device creation
+fails, so it is left alone for now.
 
-Since it could affect other process's address range, only privileged
-process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
-gives it the right to ptrace the process could use it successfully.
-The flag argument is reserved for future use if we need to extend the
-API.
+This change is only possible thanks to the recent change that refactored
+memory block device removal out of arch_remove_memory() (commit
+4c4b7f9ba948 mm/memory_hotplug: remove memory block devices before
+arch_remove_memory()).
 
-Supporting all hints madvise has/will supported/support to process_madvise
-is rather risky. Because we are not sure all hints make sense from external
-process and implementation for the hint may rely on the caller being
-in the current context so it could be error-prone. Thus, I just limited
-hints as MADV_[COLD|PAGEOUT] in this patch.
+    ======================================================
+    WARNING: possible circular locking dependency detected
+    5.5.0-rc3+ #230 Tainted: G           OE
+    ------------------------------------------------------
+    lt-daxctl/6459 is trying to acquire lock:
+    ffff99c7f0003510 (kn->count#241){++++}, at: kernfs_remove_by_name_ns+0x41/0x80
 
-If someone want to add other hints, we could hear hear the usecase and
-review it for each hint. It's more safe for maintainace rather than
-introducing a buggy syscall but hard to fix it later.
+    but task is already holding lock:
+    ffffffffa76a5450 (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x20/0xe0
 
-Signed-off-by: Minchan Kim <minchan@kernel.org>
+    which lock already depends on the new lock.
+
+
+    the existing dependency chain (in reverse order) is:
+
+    -> #2 (mem_hotplug_lock.rw_sem){++++}:
+           __lock_acquire+0x39c/0x790
+           lock_acquire+0xa2/0x1b0
+           get_online_mems+0x3e/0xb0
+           kmem_cache_create_usercopy+0x2e/0x260
+           kmem_cache_create+0x12/0x20
+           ptlock_cache_init+0x20/0x28
+           start_kernel+0x243/0x547
+           secondary_startup_64+0xb6/0xc0
+
+    -> #1 (cpu_hotplug_lock.rw_sem){++++}:
+           __lock_acquire+0x39c/0x790
+           lock_acquire+0xa2/0x1b0
+           cpus_read_lock+0x3e/0xb0
+           online_pages+0x37/0x300
+           memory_subsys_online+0x17d/0x1c0
+           device_online+0x60/0x80
+           state_store+0x65/0xd0
+           kernfs_fop_write+0xcf/0x1c0
+           vfs_write+0xdb/0x1d0
+           ksys_write+0x65/0xe0
+           do_syscall_64+0x5c/0xa0
+           entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+    -> #0 (kn->count#241){++++}:
+           check_prev_add+0x98/0xa40
+           validate_chain+0x576/0x860
+           __lock_acquire+0x39c/0x790
+           lock_acquire+0xa2/0x1b0
+           __kernfs_remove+0x25f/0x2e0
+           kernfs_remove_by_name_ns+0x41/0x80
+           remove_files.isra.0+0x30/0x70
+           sysfs_remove_group+0x3d/0x80
+           sysfs_remove_groups+0x29/0x40
+           device_remove_attrs+0x39/0x70
+           device_del+0x16a/0x3f0
+           device_unregister+0x16/0x60
+           remove_memory_block_devices+0x82/0xb0
+           try_remove_memory+0xb5/0x130
+           remove_memory+0x26/0x40
+           dev_dax_kmem_remove+0x44/0x6a [kmem]
+           device_release_driver_internal+0xe4/0x1c0
+           unbind_store+0xef/0x120
+           kernfs_fop_write+0xcf/0x1c0
+           vfs_write+0xdb/0x1d0
+           ksys_write+0x65/0xe0
+           do_syscall_64+0x5c/0xa0
+           entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+    other info that might help us debug this:
+
+    Chain exists of:
+      kn->count#241 --> cpu_hotplug_lock.rw_sem --> mem_hotplug_lock.rw_sem
+
+     Possible unsafe locking scenario:
+
+           CPU0                    CPU1
+           ----                    ----
+      lock(mem_hotplug_lock.rw_sem);
+                                   lock(cpu_hotplug_lock.rw_sem);
+                                   lock(mem_hotplug_lock.rw_sem);
+      lock(kn->count#241);
+
+     *** DEADLOCK ***
+
+No fixes tag as this seems to have been a long standing issue that
+likely predated the addition of kernfs lockdep annotations.
+
+Cc: <stable@vger.kernel.org>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
- arch/arm/tools/syscall.tbl                  |  1 +
- arch/arm64/include/asm/unistd.h             |  2 +-
- arch/arm64/include/asm/unistd32.h           |  2 +
- arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
- arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
- arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
- arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
- arch/s390/kernel/syscalls/syscall.tbl       |  1 +
- arch/sh/kernel/syscalls/syscall.tbl         |  1 +
- arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
- arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
- arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
- include/linux/syscalls.h                    |  2 +
- include/uapi/asm-generic/unistd.h           |  5 +-
- kernel/sys_ni.c                             |  1 +
- mm/madvise.c                                | 64 +++++++++++++++++++++
- 21 files changed, 89 insertions(+), 2 deletions(-)
+Changes since v3 [1]:
+- Actually fix the compile error that v3 was meant to do.
 
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index e56950f23b49..776c61803315 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -477,3 +477,4 @@
- # 545 reserved for clone3
- 546	common	watch_devices			sys_watch_devices
- 547	common	openat2				sys_openat2
-+548	common	process_madvise			sys_process_madvise
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 7fb2f4d59210..a43381542276 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -451,3 +451,4 @@
- 435	common	clone3				sys_clone3
- 436	common	watch_devices			sys_watch_devices
- 437	common	openat2				sys_openat2
-+438	common	process_madvise			sys_process_madvise
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index 8aa00ccb0b96..b722e47377a5 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -38,7 +38,7 @@
- #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
+[1]: http://lore.kernel.org/r/157868988882.2387473.11703138480034171351.stgit@dwillia2-desk3.amr.corp.intel.com
+
+ Documentation/core-api/memory-hotplug.rst |   15 +++++++++++----
+ drivers/base/core.c                       |    5 +++++
+ drivers/base/memory.c                     |    8 ++++++--
+ include/linux/device.h                    |    1 +
+ mm/memory_hotplug.c                       |   10 +++++++---
+ 5 files changed, 30 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/core-api/memory-hotplug.rst b/Documentation/core-api/memory-hotplug.rst
+index de7467e48067..637b467378b7 100644
+--- a/Documentation/core-api/memory-hotplug.rst
++++ b/Documentation/core-api/memory-hotplug.rst
+@@ -90,12 +90,13 @@ Locking Internals
+ =================
  
--#define __NR_compat_syscalls		438
-+#define __NR_compat_syscalls		439
- #endif
+ When adding/removing memory that uses memory block devices (i.e. ordinary RAM),
+-the device_hotplug_lock should be held to:
++the device_hotplug_lock is held to:
  
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index 31f0ce25719e..5c82557d408f 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -883,6 +883,8 @@ __SYSCALL(__NR_clone3, sys_clone3)
- __SYSCALL(__NR_watch_devices, sys_watch_devices)
- #define __NR_openat2 437
- __SYSCALL(__NR_openat2, sys_openat2)
-+#define __NR_openat2 438
-+__SYSCALL(__NR_process_madvise, process_madvise)
+ - synchronize against online/offline requests (e.g. via sysfs). This way, memory
+   block devices can only be accessed (.online/.state attributes) by user
+-  space once memory has been fully added. And when removing memory, we
+-  know nobody is in critical sections.
++  space once memory has been fully added. And when removing memory, the
++  memory block device is invalidated (mem->section count set to 0) under the
++  lock to abort any in-flight online requests.
+ - synchronize against CPU hotplug and similar (e.g. relevant for ACPI and PPC)
  
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-index b9aa59931905..c156abc9a298 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -358,3 +358,4 @@
- # 435 reserved for clone3
- 436	common	watch_devices			sys_watch_devices
- 437	common	openat2				sys_openat2
-+438	common	process_madvise			sys_process_madvise
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index 868c1ef89d35..5b6034b6650f 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -437,3 +437,4 @@
- # 435 reserved for clone3
- 436	common	watch_devices			sys_watch_devices
- 437	common	openat2				sys_openat2
-+438	common	process_madvise			sys_process_madvise
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 544b4cef18b3..4bef584af09c 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -443,3 +443,4 @@
- 435	common	clone3				sys_clone3
- 436	common	watch_devices			sys_watch_devices
- 437	common	openat2				sys_openat2
-+438	common	process_madvise			sys_process_madvise
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 05e8aee5dae7..94fbd0fcccce 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -376,3 +376,4 @@
- 435	n32	clone3				__sys_clone3
- 436	n32	watch_devices			sys_watch_devices
- 437	n32	openat2				sys_openat2
-+437	n32	process_madivse			sys_process_madvise
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index 24d6c01328fb..4e6982c429d5 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -352,3 +352,4 @@
- 435	n64	clone3				__sys_clone3
- 436	n64	watch_devices			sys_watch_devices
- 437	n64	openat2				sys_openat2
-+437	n64	process_madvise			sys_process_madvise
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index 4b5f77a4e1a2..3aa990caf9dc 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -435,3 +435,4 @@
- 435	common	clone3				sys_clone3_wrapper
- 436	common	watch_devices			sys_watch_devices
- 437	common	openat2				sys_openat2
-+437	common	process_madvise			sys_process_madvise
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 9716dc85a517..30e727a23f33 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -519,3 +519,4 @@
- 435	nospu	clone3				ppc_clone3
- 436	common	watch_devices			sys_watch_devices
- 437	common	openat2				sys_openat2
-+437	common	process_madvise			sys_process_madvise
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index 7da330f8b03e..75722e5ff496 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -440,3 +440,4 @@
- 435  common	clone3			sys_clone3			sys_clone3
- 436  common	watch_devices		sys_watch_devices		sys_watch_devices
- 437  common	openat2			sys_openat2			sys_openat2
-+437  common	process_madvise		sys_process_madvise		sys_process_madvise
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index bb7e68e25337..7d7bc7befad3 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -440,3 +440,4 @@
- # 435 reserved for clone3
- 436	common	watch_devices			sys_watch_devices
- 437	common	openat2				sys_openat2
-+437	common	process_madvise			sys_process_madvise
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index 646a1fad7218..581d331ff62f 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -483,3 +483,4 @@
- # 435 reserved for clone3
- 436	common	watch_devices			sys_watch_devices
- 437	common	openat2			sys_openat2
-+437	common	process_madvise		sys_process_madvise
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 57c53acee290..76a2c266fe7e 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -442,3 +442,4 @@
- 435	i386	clone3			sys_clone3			__ia32_sys_clone3
- 436	i386	watch_devices		sys_watch_devices		__ia32_sys_watch_devices
- 437	i386	openat2			sys_openat2			__ia32_sys_openat2
-+438	i386	process_madvise		sys_process_madvise		__ia32_sys_process_madvise
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 1dd8d21f6500..b697cd8620cb 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -359,6 +359,7 @@
- 435	common	clone3			__x64_sys_clone3/ptregs
- 436	common	watch_devices		__x64_sys_watch_devices
- 437	common	openat2			__x64_sys_openat2
-+438	common	process_madvise		__x64_sys_process_madvise
+ Especially, there is a possible lock inversion that is avoided using
+@@ -112,7 +113,13 @@ can result in a lock inversion.
  
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 0f48ab7bd75b..2e9813ecfd7d 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -408,3 +408,4 @@
- 435	common	clone3				sys_clone3
- 436	common	watch_devices			sys_watch_devices
- 437	common	openat2				sys_openat2
-+438	common	process_madvise			sys_process_madvise
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 433c8c85636e..1b58a11ff49f 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -877,6 +877,8 @@ asmlinkage long sys_munlockall(void);
- asmlinkage long sys_mincore(unsigned long start, size_t len,
- 				unsigned char __user * vec);
- asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
-+asmlinkage long sys_process_madvise(int pidfd, unsigned long start,
-+			size_t len, int behavior, unsigned long flags);
- asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
- 			unsigned long prot, unsigned long pgoff,
- 			unsigned long flags);
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 33f3856a9c3c..4bcd8d366f38 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -856,8 +856,11 @@ __SYSCALL(__NR_watch_devices, sys_watch_devices)
- #define __NR_openat2 437
- __SYSCALL(__NR_openat2, sys_openat2)
+ onlining/offlining of memory should be done via device_online()/
+ device_offline() - to make sure it is properly synchronized to actions
+-via sysfs. Holding device_hotplug_lock is advised (to e.g. protect online_type)
++via sysfs. Holding device_hotplug_lock is required to prevent online racing
++removal. The device_hotplug_lock and memblock invalidation allows
++remove_memory_block_devices() to run outside of mem_hotplug_lock to avoid lock
++dependency conflicts with memblock-sysfs teardown. The add_memory() path
++performs create_memory_block_devices() under mem_hotplug_lock so that if it
++fails it can perform an arch_remove_memory() cleanup. There are no known lock
++dependency problems with memblock-sysfs setup.
  
-+#define __NR_openat2 438
-+__SYSCALL(__NR_process_madvise, sys_process_madvise)
-+
- #undef __NR_syscalls
--#define __NR_syscalls 438
-+#define __NR_syscalls 439
- 
- /*
-  * 32 bit systems traditionally used different
-diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-index 0e9b275260f8..10ce5eac8b4b 100644
---- a/kernel/sys_ni.c
-+++ b/kernel/sys_ni.c
-@@ -281,6 +281,7 @@ COND_SYSCALL(mlockall);
- COND_SYSCALL(munlockall);
- COND_SYSCALL(mincore);
- COND_SYSCALL(madvise);
-+COND_SYSCALL(process_madvise);
- COND_SYSCALL(remap_file_pages);
- COND_SYSCALL(mbind);
- COND_SYSCALL_COMPAT(mbind);
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 0c901de531e4..e15dfb4df7bf 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -17,6 +17,7 @@
- #include <linux/falloc.h>
- #include <linux/fadvise.h>
- #include <linux/sched.h>
-+#include <linux/sched/mm.h>
- #include <linux/ksm.h>
- #include <linux/fs.h>
- #include <linux/file.h>
-@@ -993,6 +994,18 @@ madvise_behavior_valid(int behavior)
- 	}
+ When adding/removing/onlining/offlining memory or adding/removing
+ heterogeneous/device memory, we should always hold the mem_hotplug_lock in
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 42a672456432..5d5036370c92 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -1146,6 +1146,11 @@ void unlock_device_hotplug(void)
+ 	mutex_unlock(&device_hotplug_lock);
  }
  
-+static bool
-+process_madvise_behavior_valid(int behavior)
++void assert_held_device_hotplug(void)
 +{
-+	switch (behavior) {
-+	case MADV_COLD:
-+	case MADV_PAGEOUT:
-+		return true;
-+	default:
-+		return false;
-+	}
++	lockdep_assert_held(&device_hotplug_lock);
 +}
 +
- /*
-  * madvise_common - request behavior hint to address range of the target process
-  *
-@@ -1169,3 +1182,54 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+ int lock_device_hotplug_sysfs(void)
  {
- 	return madvise_common(current, current->mm, start, len_in, behavior);
- }
+ 	if (mutex_trylock(&device_hotplug_lock))
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 799b43191dea..91c6fbd2383e 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -280,6 +280,10 @@ static int memory_subsys_online(struct device *dev)
+ 	if (mem->state == MEM_ONLINE)
+ 		return 0;
+ 
++	/* online lost the race with hot-unplug, abort */
++	if (!mem->section_count)
++		return -ENXIO;
 +
-+SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
-+		size_t, len_in, int, behavior, unsigned long, flags)
-+{
-+	int ret;
-+	struct fd f;
-+	struct pid *pid;
-+	struct task_struct *task;
-+	struct mm_struct *mm;
+ 	/*
+ 	 * If we are called from state_store(), online_type will be
+ 	 * set >= 0 Otherwise we were called from the device online
+@@ -736,8 +740,6 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
+  * Remove memory block devices for the given memory area. Start and size
+  * have to be aligned to memory block granularity. Memory block devices
+  * have to be offline.
+- *
+- * Called under device_hotplug_lock.
+  */
+ void remove_memory_block_devices(unsigned long start, unsigned long size)
+ {
+@@ -746,6 +748,8 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
+ 	struct memory_block *mem;
+ 	unsigned long block_id;
+ 
++	assert_held_device_hotplug();
 +
-+	if (flags != 0)
-+		return -EINVAL;
+ 	if (WARN_ON_ONCE(!IS_ALIGNED(start, memory_block_size_bytes()) ||
+ 			 !IS_ALIGNED(size, memory_block_size_bytes())))
+ 		return;
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 96ff76731e93..a84654489c51 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -1553,6 +1553,7 @@ static inline bool device_supports_offline(struct device *dev)
+ extern void lock_device_hotplug(void);
+ extern void unlock_device_hotplug(void);
+ extern int lock_device_hotplug_sysfs(void);
++extern void assert_held_device_hotplug(void);
+ extern int device_offline(struct device *dev);
+ extern int device_online(struct device *dev);
+ extern void set_primary_fwnode(struct device *dev, struct fwnode_handle *fwnode);
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 55ac23ef11c1..0158cd4cca48 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1763,8 +1763,6 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+ 
+ 	BUG_ON(check_hotplug_memory_range(start, size));
+ 
+-	mem_hotplug_begin();
+-
+ 	/*
+ 	 * All memory blocks must be offlined before removing memory.  Check
+ 	 * whether all memory blocks in question are offline and return error
+@@ -1777,9 +1775,15 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+ 	/* remove memmap entry */
+ 	firmware_map_remove(start, start + size, "System RAM");
+ 
+-	/* remove memory block devices before removing memory */
++	/*
++	 * Remove memory block devices before removing memory and before
++	 * mem_hotplug_begin() (see Documentation/core-api/memory-hotplug.rst
++	 * "Locking Internals").
++	 */
+ 	remove_memory_block_devices(start, size);
+ 
++	mem_hotplug_begin();
 +
-+	if (!process_madvise_behavior_valid(behavior))
-+		return -EINVAL;
-+
-+	f = fdget(pidfd);
-+	if (!f.file)
-+		return -EBADF;
-+
-+	pid = pidfd_pid(f.file);
-+	if (IS_ERR(pid)) {
-+		ret = PTR_ERR(pid);
-+		goto err;
-+	}
-+
-+	rcu_read_lock();
-+	task = pid_task(pid, PIDTYPE_PID);
-+	if (!task) {
-+		rcu_read_unlock();
-+		ret = -ESRCH;
-+		goto err;
-+	}
-+
-+	get_task_struct(task);
-+	rcu_read_unlock();
-+
-+	mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
-+	if (IS_ERR_OR_NULL(mm)) {
-+		ret = IS_ERR(mm) ? PTR_ERR(mm) : -ESRCH;
-+		goto release_task;
-+	}
-+
-+	ret = madvise_common(task, mm, start, len_in, behavior);
-+	mmput(mm);
-+release_task:
-+	put_task_struct(task);
-+err:
-+	fdput(f);
-+	return ret;
-+}
--- 
-2.25.0.rc1.283.g88dfdc4193-goog
+ 	arch_remove_memory(nid, start, size, NULL);
+ 	memblock_free(start, size);
+ 	memblock_remove(start, size);
 
