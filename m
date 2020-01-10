@@ -2,60 +2,62 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 899D9C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74C0DC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4465B2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B9332082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:50:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QReFX7tZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yo+kSL82"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgAJSuD (ORCPT
+        id S1728412AbgAJSuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:50:03 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44552 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgAJSuD (ORCPT
+        Fri, 10 Jan 2020 13:50:09 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56390 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728668AbgAJSuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:50:03 -0500
+        Fri, 10 Jan 2020 13:50:05 -0500
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00AInvol001020;
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00AInvYM079455;
         Fri, 10 Jan 2020 12:49:57 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
         s=ti-com-17Q1; t=1578682197;
-        bh=QiEc6ArfHTptUPBAOFU+sNACtfbr+yuOmaOUK9D+QHU=;
-        h=From:To:CC:Subject:Date;
-        b=QReFX7tZTkU+LO6egnmoHiCM4kOa/mQastNOShU+FwqpuzuBEzgLQAVPEkSaVqweJ
-         MlPKKDownzOLkZ4urudUjZ5Z0Y5aqa0fSpluyJAdhGQnRNpJ8tEwV/4nLx87tFZEPC
-         GgwGEEvUt4NF6w4MBFEYOqdSIY/fPNDLBN8s1uX0=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00AInvFb082403
+        bh=+ia6TERcPXinkZXd+gzuCsh1q+nImZu2BXPpq4xXPUU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=yo+kSL82o9/C6VS6h9GgH7qimdovCZ6KxB0dP/u3XHCW74wmgcHHbBOAlHZAZcnwQ
+         ADFZLaPVNw36oTZVewLo/GO9z+DVwCN6V5VaOml7DJVBFmrJREhOpufEoT/eg7+1/v
+         P/syrvTYBewnHfQVrppz48CyPFx4xJ82WIpSfSQ8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00AInv1i082407
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
         Fri, 10 Jan 2020 12:49:57 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
- Jan 2020 12:49:56 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ Jan 2020 12:49:57 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 10 Jan 2020 12:49:56 -0600
+ Frontend Transport; Fri, 10 Jan 2020 12:49:57 -0600
 Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00AInuFc088619;
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00AInu7X121098;
         Fri, 10 Jan 2020 12:49:56 -0600
 From:   Dan Murphy <dmurphy@ti.com>
 To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
         <davem@davemloft.net>, <netdev@vger.kernel.org>
 CC:     <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 0/4] TI DP8382x Phy support update
-Date:   Fri, 10 Jan 2020 12:46:58 -0600
-Message-ID: <20200110184702.14330-1-dmurphy@ti.com>
+Subject: [PATCH 1/4] net: phy: DP83TC811: Fix typo in Kconfig
+Date:   Fri, 10 Jan 2020 12:46:59 -0600
+Message-ID: <20200110184702.14330-2-dmurphy@ti.com>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200110184702.14330-1-dmurphy@ti.com>
+References: <20200110184702.14330-1-dmurphy@ti.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
@@ -65,27 +67,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+Fix typo in the Kconfig for the DP83TC811 as it indicates support for
+the DP83TC822 which is incorrect.
 
-These patches update and fix some issue found in the TI ethernet PHY drivers.
-In adding new support for newer PHYs I found missing items and typos that are
-now addressed in this series.
+Fixes: 6d749428788b {"net: phy: DP83TC811: Introduce support for the DP83TC811 phy")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+---
+ drivers/net/phy/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Additional support for the following
-DP83825CM, DP83825CS, DP83825S, DP83826C and DP83826NC.
-
-Dan
-
-Dan Murphy (4):
-  net: phy: DP83TC811: Fix typo in Kconfig
-  net: phy: DP83822: Update Kconfig with DP83825I support
-  phy: dp83826: Add phy IDs for DP83826N and 826NC
-  net: phy: DP83822: Add support for additional DP83825 devices
-
- drivers/net/phy/Kconfig   |  9 +++++----
- drivers/net/phy/dp83822.c | 18 ++++++++++++++++--
- 2 files changed, 21 insertions(+), 6 deletions(-)
-
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 5848219005d7..ed606194dbd0 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -345,9 +345,9 @@ config DP83822_PHY
+ 	  Supports the DP83822 PHY.
+ 
+ config DP83TC811_PHY
+-	tristate "Texas Instruments DP83TC822 PHY"
++	tristate "Texas Instruments DP83TC811 PHY"
+ 	---help---
+-	  Supports the DP83TC822 PHY.
++	  Supports the DP83TC811 PHY.
+ 
+ config DP83848_PHY
+ 	tristate "Texas Instruments DP83848 PHY"
 -- 
 2.23.0
 
