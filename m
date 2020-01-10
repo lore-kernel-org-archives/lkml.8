@@ -2,900 +2,206 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EFEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C42EC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E063206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356952072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:03:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ubkzjegv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbgAJXBG (ORCPT
+        id S1727526AbgAJXDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 18:01:06 -0500
-Received: from [167.172.186.51] ([167.172.186.51]:41714 "EHLO shell.v3.sk"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727387AbgAJXBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 18:01:06 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 60B4FDFB44;
-        Fri, 10 Jan 2020 23:01:07 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id GwvD1Q1cS-6V; Fri, 10 Jan 2020 23:01:05 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 3A55EDFDCA;
-        Fri, 10 Jan 2020 23:01:05 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id JG8-VVd1DMI9; Fri, 10 Jan 2020 23:01:05 +0000 (UTC)
-Received: from nedofet.lan (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 67377DFB44;
-        Fri, 10 Jan 2020 23:01:04 +0000 (UTC)
-Message-ID: <b3a08fc36f19347e50b9fe0943287503d7f39cf7.camel@v3.sk>
-Subject: Re: [PATCH 3/3] drm/bridge: chrontel-ch7033: Add a new driver
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Andrzej Hajda <a.hajda@samsung.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Fri, 10 Jan 2020 18:03:01 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:40887 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727387AbgAJXDA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 18:03:00 -0500
+Received: by mail-lf1-f67.google.com with SMTP id i23so2681588lfo.7;
+        Fri, 10 Jan 2020 15:02:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LIfOt2/H9o4TTylsMEhxFyK9SgreyZMevB6yzbjwKbI=;
+        b=ubkzjegvG3dqELIcb4AmPudiOofr2lyNnfFetYJTit+CMRY5udjJEH9gCUVYn5TwUY
+         P9hQtzYmaI32BlAFvZaOT3bwB3C1OoAOw3sHoe99bTVqjkZaefxbjZGrWAJDtGWSqi3e
+         4PXZvty9sfIsF+vQUkR2/yy9oa27sg+fIPWfiVflnqmlCs8l7XTHWFY0++PQyG1iNXAW
+         JhOG8FaPfyCM9JXXRkSLTS0bfo797Z2prIfrTRnYh7QE6K48fvF3pSrCguc0mTJWGw3j
+         Jk75tIXrUTVkvQ4QhH72Ac/G0lGOI//WAyTRPLMVUqBjA3H2eQbseKhEu6NsSlL5r7VM
+         Exyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LIfOt2/H9o4TTylsMEhxFyK9SgreyZMevB6yzbjwKbI=;
+        b=bTowMViNmTIxkJm9KUTf6I91lgq8rz3xi/qkYSk4P4na1yBqjfrxEfUnl2UX2YS//Y
+         qKNiMFV2lLfEm4qVStOHCSlNNwHD5JxestHd/70L+50o19rPg66dVZnIl2CHgwop9Z0K
+         q/NHO7ogZgIlMRoNUgDCtbd9fr5AyqRliUXgxZhf4FbZjuZMV1kPLRw9zs2k26n1MVrm
+         n4RPfk6yQLxH3OLBEVLjyvGnoj4oaavd6FzwtO/enUPcc5JINEBrxpXBkTCgTAeq9s3W
+         A1N+9F2vhGpFYpOcOuDM7ISOQHIFJyR3GR7yjwnwf5p8X2iUx61fTBRZaECdU/9H3dn8
+         d7SA==
+X-Gm-Message-State: APjAAAVn2+6jY/8zVJeAUDb9HYFDEs/7TZyVZoBCfyu8yGL/ulSIa54x
+        xm30zJtSt26algTp39ahVVFwsyLe
+X-Google-Smtp-Source: APXvYqwt12uR3kPf6mwgmKJNqx+Sr3i+nO5lvG+ZnOGBJVMTp5uTXSl23AnwSoLoxhGxT6gApz9g3Q==
+X-Received: by 2002:ac2:5605:: with SMTP id v5mr3760197lfd.136.1578697376884;
+        Fri, 10 Jan 2020 15:02:56 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id t13sm1602788ljk.78.2020.01.10.15.02.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2020 15:02:55 -0800 (PST)
+Subject: Re: [PATCH v7 15/21] ASoC: tegra: Add fallback implementation for
+ audio mclk
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Sameer Pujar <spujar@nvidia.com>, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, broonie@kernel.org, lgirdwood@gmail.com,
+        perex@perex.cz, tiwai@suse.com, mperttunen@nvidia.com,
+        gregkh@linuxfoundation.org, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, josephl@nvidia.com,
+        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
+        markz@nvidia.com, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Sat, 11 Jan 2020 00:00:55 +0100
-In-Reply-To: <20200108152036.GF4884@pendragon.ideasonboard.com>
-References: <20191220074914.249281-1-lkundrak@v3.sk>
-         <20191220074914.249281-4-lkundrak@v3.sk>
-         <20200108152036.GF4884@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
+ <1578457515-3477-16-git-send-email-skomatineni@nvidia.com>
+ <f3f550a2-c6e0-7a78-5c83-da3e54dab309@nvidia.com>
+ <d7ac6135-73b0-1087-dafa-4df558a06ef4@nvidia.com>
+ <a3c5293b-9ed4-3266-f792-38b980e54b1e@nvidia.com>
+ <745b8c7b-4fe3-c9ea-284e-b89546e8ad87@nvidia.com>
+ <705edf9b-d1bc-8090-017e-fa4ad445f9fb@nvidia.com>
+ <135f0c0b-86d1-9b1a-af02-c14c4b5308c4@gmail.com>
+ <575aa30e-1b5a-2a2d-5893-3f6832f416f1@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <9bca6c3e-bfe0-7130-b233-3f25c436f76e@gmail.com>
+Date:   Sat, 11 Jan 2020 02:02:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <575aa30e-1b5a-2a2d-5893-3f6832f416f1@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Laurent,
+11.01.2020 01:13, Sowjanya Komatineni пишет:
+> 
+> On 1/10/20 2:05 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 10.01.2020 20:04, Sowjanya Komatineni пишет:
+>>> On 1/9/20 10:52 AM, Sowjanya Komatineni wrote:
+>>>>
+>>>> On 1/7/20 10:28 PM, Sameer Pujar wrote:
+>>>>> On 1/8/2020 11:18 AM, Sowjanya Komatineni wrote:
+>>>>>> On 1/7/20 9:34 PM, Sameer Pujar wrote:
+>>>>>>> On 1/8/2020 9:55 AM, Sowjanya Komatineni wrote:
+>>>>>>>> mclk is from clk_out_1 which is part of Tegra PMC block and pmc
+>>>>>>>> clocks
+>>>>>>>> are moved to Tegra PMC driver with pmc as clock provider and using
+>>>>>>>> pmc
+>>>>>>>> clock ids.
+>>>>>>>>
+>>>>>>>> New device tree uses clk_out_1 from pmc clock provider.
+>>>>>>>>
+>>>>>>>> So, this patch adds implementation for mclk fallback to extern1
+>>>>>>>> when
+>>>>>>>> retrieving mclk returns -ENOENT to be backward compatible of new
+>>>>>>>> device
+>>>>>>>> tree with older kernels.
+>>>>>>>>
+>>>>>>>> Tested-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>>>>> ---
+>>>>>>>>    sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
+>>>>>>>>    1 file changed, 10 insertions(+), 1 deletion(-)
+>>>>>>>>
+>>>>>>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>>>> b/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>>>> index 9cfebef74870..9a5f81039491 100644
+>>>>>>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
+>>>>>>>> @@ -183,7 +183,16 @@ int tegra_asoc_utils_init(struct
+>>>>>>>> tegra_asoc_utils_data *data,
+>>>>>>>>        data->clk_cdev1 = devm_clk_get(dev, "mclk");
+>>>>>>>>        if (IS_ERR(data->clk_cdev1)) {
+>>>>>>>>            dev_err(data->dev, "Can't retrieve clk cdev1\n");
+>>>>>>> This error print can be moved inside below if, when this actually
+>>>>>>> meant to be an error condition.
+>>>>>>>
+>>>>>> Want to show error even if mclk retrieval returns ENOENT to clearly
+>>>>>> indicate mclk does not exist along with message of falling back to
+>>>>>> extern1.
+>>>>> Yes, but falling back essentially means 'mclk' is not available and
+>>>>> fallback print is not an error.
+>>>>> Not a major issue though, you can consider updating. Otherwise LGTM.
+>>>>>
+>>>> Will update
+>>>>>>>> -        return PTR_ERR(data->clk_cdev1);
+>>>>>>>> +        if (PTR_ERR(data->clk_cdev1) != -ENOENT)
+>>>>>>>> +            return PTR_ERR(data->clk_cdev1);
+>>>>>>>> +        /* Fall back to extern1 */
+>>>>>>>> +        data->clk_cdev1 = devm_clk_get(dev, "extern1");
+>>>>>>>> +        if (IS_ERR(data->clk_cdev1)) {
+>>>>>>>> +            dev_err(data->dev, "Can't retrieve clk extern1\n");
+>>>>>>>> +            return PTR_ERR(data->clk_cdev1);
+>>>>>>>> +        }
+>>>>>>>> +
+>>>>>>>> +        dev_err(data->dev, "Falling back to extern1\n");
+>>>>>>> This can be a info print?
+>>>> Will use dev_info
+>>>>>>>>        }
+>>>>>>>>          /*
+>>>> Dmitry/Rob, there was discussion in v3 regarding backporting mclk
+>>>> fallback.
+>>>>
+>>>> Dmitry wanted Rob to confirm on this
+>>>>
+>>>> I think openSUSE Leap could be one of those distros that use LTS kernel
+>>>> with newer device-trees, but that's not 100%. Maybe Rob could help
+>>>> clarifying that.
+>>>>
+>>>> Dmitry/Rob, Can you please confirm if mclk fallback patch need
+>>>> backport to have new device tree work with old kernels?
+>>>>
+>>> Dmitry,
+>>>
+>>> Can you please confirm if we need to backport this mclk fallback patch?
+>>>
+>> Seems only T210 was making use of the CaR's TEGRA*_CLK_CLK_OUT_*, thus
+>> the backporting isn't needed.
+> Thanks Dmitry
+>>
+>> Also, please use 'git rebase --exec make ...' to make sure that all
+>> patches are compiling without problems. The removal of the legacy clock
+>> IDs should be done after the device-trees changes, otherwise it looks
+>> like DTBs compilation will fail. It's possible that the order of the
+>> patches could be changed if Thierry will chose to split this series into
+>> several pull requests, nevertheless all patches should compile and work
+>> in the original order.
+> OK, Will move patches of device tree updates to use new DT ID prior to
+> removal of old ID.
 
-On Wed, 2020-01-08 at 17:20 +0200, Laurent Pinchart wrote:
-> Hi Lubomir,
-> 
-> Thank you for the patch.
-> 
-> On Fri, Dec 20, 2019 at 08:49:14AM +0100, Lubomir Rintel wrote:
-> > This is a driver for video encoder with VGA and DVI/HDMI outputs.
-> > 
-> > There is no documentation for the chip -- the operation was guessed from
-> > what was sniffed on a Dell Wyse 3020 ThinOS terminal, the register names
-> > come from the ch7035 driver in Mediatek's GPL code dump.
-> > 
-> > Only bare minimum is implemented -- no fancy stuff, such as scaling. That
-> > would only worsen our misery. We don't load the firmware and we don't need
-> > to even bother enabling the MCU.  There are probably no distributable
-> > firmware images anyway.
-> > 
-> > Just like the tda998x driver, this one uses the component framework and
-> > adds an encoder on component bind, so that it works with the Armada DRM
-> > driver.
-> 
-> Any chance the Armada DRM driver could use of_drm_find_bridge() to avoid
-> having to use the component framework everywhere ?
+Oh, wait. But then the newer device-trees won't work with the stable
+kernels, so it actually won't hurt to backport this change.
 
-Thanks for the response.
+Secondly, please move the "Use device managed resource APIs to get the
+clock" after the ASoC patches with the stable tags, such that the stable
+patches could be applied cleanly.
 
-I've brought this up previously and the Armada DRM maintainer pointed
-out that drm_bridge_remove() is essentialy a surprise removal [1].
-Unlike the component unbind, it doesn't let the crtc driver know that
-the bridge is gone. Understandably, he wasn't too fond of the idea of
-losing the ability to unload the bridge driver and not much has changed
-since.
-
-[1] https://www.spinics.net/lists/dri-devel/msg201927.html
-
-This shouldn't be too much of a problem (other than extra LOC in the
-driver), because the bridge is registered outside the component bind
-path, therefore the drivers that choose not to use the component
-framework can use just the bridge alone just fine.
-
-Thank you
-Lubo
-
-> > Tested with a handful of monitors ranging from 1024x768@75 to 1400x1050@60,
-> > with VGA as well as DVI.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > ---
-> >  drivers/gpu/drm/bridge/Kconfig           |  10 +
-> >  drivers/gpu/drm/bridge/Makefile          |   1 +
-> >  drivers/gpu/drm/bridge/chrontel-ch7033.c | 722 +++++++++++++++++++++++
-> >  3 files changed, 733 insertions(+)
-> >  create mode 100644 drivers/gpu/drm/bridge/chrontel-ch7033.c
-> > 
-> > diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> > index 34362976cd6fd..9456ea968c5b7 100644
-> > --- a/drivers/gpu/drm/bridge/Kconfig
-> > +++ b/drivers/gpu/drm/bridge/Kconfig
-> > @@ -37,6 +37,16 @@ config DRM_CDNS_DSI
-> >  	  Support Cadence DPI to DSI bridge. This is an internal
-> >  	  bridge and is meant to be directly embedded in a SoC.
-> >  
-> > +config DRM_CHRONTEL_CH7033
-> > +	tristate "Chrontel CH7033 Video Encoder"
-> > +	depends on OF
-> > +	select DRM_KMS_HELPER
-> > +	help
-> > +	  Enable support for the Chrontel CH7033 VGA/DVI/HDMI Encoder, as
-> > +	  found in the Dell Wyse 3020 thin client.
-> > +
-> > +	  If in doubt, say "N".
-> > +
-> >  config DRM_DUMB_VGA_DAC
-> >  	tristate "Dumb VGA DAC Bridge support"
-> >  	depends on OF
-> > diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
-> > index 4934fcf5a6f82..74a9ab2f17468 100644
-> > --- a/drivers/gpu/drm/bridge/Makefile
-> > +++ b/drivers/gpu/drm/bridge/Makefile
-> > @@ -1,6 +1,7 @@
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  obj-$(CONFIG_DRM_ANALOGIX_ANX78XX) += analogix-anx78xx.o
-> >  obj-$(CONFIG_DRM_CDNS_DSI) += cdns-dsi.o
-> > +obj-$(CONFIG_DRM_CHRONTEL_CH7033) += chrontel-ch7033.o
-> >  obj-$(CONFIG_DRM_DUMB_VGA_DAC) += dumb-vga-dac.o
-> >  obj-$(CONFIG_DRM_LVDS_ENCODER) += lvds-encoder.o
-> >  obj-$(CONFIG_DRM_MEGACHIPS_STDPXXXX_GE_B850V3_FW) += megachips-stdpxxxx-ge-b850v3-fw.o
-> > diff --git a/drivers/gpu/drm/bridge/chrontel-ch7033.c b/drivers/gpu/drm/bridge/chrontel-ch7033.c
-> > new file mode 100644
-> > index 0000000000000..a3b63984226a4
-> > --- /dev/null
-> > +++ b/drivers/gpu/drm/bridge/chrontel-ch7033.c
-> > @@ -0,0 +1,722 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Chrontel CH7033 Video Encoder Driver
-> > + *
-> > + * Copyright (C) 2019 Lubomir Rintel
-> > + */
-> > +
-> > +#include <linux/component.h>
-> > +#include <linux/module.h>
-> > +#include <linux/gpio/consumer.h>
-> 
-> Could you please sort these alphabetically ?
-> 
-> > +
-> > +#include <drm/drm_atomic_helper.h>
-> > +#include <drm/drm_bridge.h>
-> > +#include <drm/drm_edid.h>
-> > +#include <drm/drm_of.h>
-> > +#include <drm/drm_print.h>
-> > +#include <drm/drm_probe_helper.h>
-> > +
-> > +/* Page 0, Register 0x07 */
-> > +enum {
-> > +	DRI_PD		= BIT(3),
-> > +	IO_PD		= BIT(5),
-> > +};
-> > +
-> > +/* Page 0, Register 0x08 */
-> > +enum {
-> > +	DRI_PDDRI	= GENMASK(7, 4),
-> > +	PDDAC		= GENMASK(3, 1),
-> > +	PANEN		= BIT(0),
-> > +};
-> > +
-> > +/* Page 0, Register 0x09 */
-> > +enum {
-> > +	DPD		= BIT(7),
-> > +	GCKOFF		= BIT(6),
-> > +	TV_BP		= BIT(5),
-> > +	SCLPD		= BIT(4),
-> > +	SDPD		= BIT(3),
-> > +	VGA_PD		= BIT(2),
-> > +	HDBKPD		= BIT(1),
-> > +	HDMI_PD		= BIT(0),
-> > +};
-> > +
-> > +/* Page 0, Register 0x0a */
-> > +enum {
-> > +	MEMINIT		= BIT(7),
-> > +	MEMIDLE		= BIT(6),
-> > +	MEMPD		= BIT(5),
-> > +	STOP		= BIT(4),
-> > +	LVDS_PD		= BIT(3),
-> > +	HD_DVIB		= BIT(2),
-> > +	HDCP_PD		= BIT(1),
-> > +	MCU_PD		= BIT(0),
-> > +};
-> > +
-> > +/* Page 0, Register 0x18 */
-> > +enum {
-> > +	IDF		= GENMASK(7, 4),
-> > +	INTEN		= BIT(3),
-> > +	SWAP		= GENMASK(2, 0),
-> > +};
-> > +
-> > +enum {
-> > +	BYTE_SWAP_RGB	= 0,
-> > +	BYTE_SWAP_RBG	= 1,
-> > +	BYTE_SWAP_GRB	= 2,
-> > +	BYTE_SWAP_GBR	= 3,
-> > +	BYTE_SWAP_BRG	= 4,
-> > +	BYTE_SWAP_BGR	= 5,
-> > +};
-> > +
-> > +/* Page 0, Register 0x19 */
-> > +enum {
-> > +	HPO_I		= BIT(5),
-> > +	VPO_I		= BIT(4),
-> > +	DEPO_I		= BIT(3),
-> > +	CRYS_EN		= BIT(2),
-> > +	GCLKFREQ	= GENMASK(2, 0),
-> > +};
-> > +
-> > +/* Page 0, Register 0x2e */
-> > +enum {
-> > +	HFLIP		= BIT(7),
-> > +	VFLIP		= BIT(6),
-> > +	DEPO_O		= BIT(5),
-> > +	HPO_O		= BIT(4),
-> > +	VPO_O		= BIT(3),
-> > +	TE		= GENMASK(2, 0),
-> > +};
-> > +
-> > +/* Page 0, Register 0x2b */
-> > +enum {
-> > +	SWAPS		= GENMASK(7, 4),
-> > +	VFMT		= GENMASK(3, 0),
-> > +};
-> > +
-> > +/* Page 0, Register 0x54 */
-> > +enum {
-> > +	COMP_BP		= BIT(7),
-> > +	DAC_EN_T	= BIT(6),
-> > +	HWO_HDMI_HI	= GENMASK(5, 3),
-> > +	HOO_HDMI_HI	= GENMASK(2, 0),
-> > +};
-> > +
-> > +/* Page 0, Register 0x57 */
-> > +enum {
-> > +	FLDSEN		= BIT(7),
-> > +	VWO_HDMI_HI	= GENMASK(5, 3),
-> > +	VOO_HDMI_HI	= GENMASK(2, 0),
-> > +};
-> > +
-> > +/* Page 0, Register 0x7e */
-> > +enum {
-> > +	HDMI_LVDS_SEL	= BIT(7),
-> > +	DE_GEN		= BIT(6),
-> > +	PWM_INDEX_HI	= BIT(5),
-> > +	USE_DE		= BIT(4),
-> > +	R_INT		= GENMASK(3, 0),
-> > +};
-> > +
-> > +/* Page 1, Register 0x07 */
-> > +enum {
-> > +	BPCKSEL		= BIT(7),
-> > +	DRI_CMFB_EN	= BIT(6),
-> > +	CEC_PUEN	= BIT(5),
-> > +	CEC_T		= BIT(3),
-> > +	CKINV		= BIT(2),
-> > +	CK_TVINV	= BIT(1),
-> > +	DRI_CKS2	= BIT(0),
-> > +};
-> > +
-> > +/* Page 1, Register 0x08 */
-> > +enum {
-> > +	DACG		= BIT(6),
-> > +	DACKTST		= BIT(5),
-> > +	DEDGEB		= BIT(4),
-> > +	SYO		= BIT(3),
-> > +	DRI_IT_LVDS	= GENMASK(2, 1),
-> > +	DISPON		= BIT(0),
-> > +};
-> > +
-> > +/* Page 1, Register 0x0c */
-> > +enum {
-> > +	DRI_PLL_CP	= GENMASK(7, 6),
-> > +	DRI_PLL_DIVSEL	= BIT(5),
-> > +	DRI_PLL_N1_1	= BIT(4),
-> > +	DRI_PLL_N1_0	= BIT(3),
-> > +	DRI_PLL_N3_1	= BIT(2),
-> > +	DRI_PLL_N3_0	= BIT(1),
-> > +	DRI_PLL_CKTSTEN = BIT(0),
-> > +};
-> > +
-> > +/* Page 1, Register 0x6b */
-> > +enum {
-> > +	VCO3CS		= GENMASK(7, 6),
-> > +	ICPGBK2_0	= GENMASK(5, 3),
-> > +	DRI_VCO357SC	= BIT(2),
-> > +	PDPLL2		= BIT(1),
-> > +	DRI_PD_SER	= BIT(0),
-> > +};
-> > +
-> > +/* Page 1, Register 0x6c */
-> > +enum {
-> > +	PLL2N11		= GENMASK(7, 4),
-> > +	PLL2N5_4	= BIT(3),
-> > +	PLL2N5_TOP	= BIT(2),
-> > +	DRI_PLL_PD	= BIT(1),
-> > +	PD_I2CM		= BIT(0),
-> > +};
-> > +
-> > +/* Page 3, Register 0x28 */
-> > +enum {
-> > +	DIFF_EN		= GENMASK(7, 6),
-> > +	CORREC_EN	= GENMASK(5, 4),
-> > +	VGACLK_BP	= BIT(3),
-> > +	HM_LV_SEL	= BIT(2),
-> > +	HD_VGA_SEL	= BIT(1),
-> > +};
-> > +
-> > +/* Page 3, Register 0x2a */
-> > +enum {
-> > +	LVDSCLK_BP	= BIT(7),
-> > +	HDTVCLK_BP	= BIT(6),
-> > +	HDMICLK_BP	= BIT(5),
-> > +	HDTV_BP		= BIT(4),
-> > +	HDMI_BP		= BIT(3),
-> > +	THRWL		= GENMASK(2, 0),
-> > +};
-> > +
-> > +/* Page 4, Register 0x52 */
-> > +enum {
-> > +	PGM_ARSTB	= BIT(7),
-> > +	MCU_ARSTB	= BIT(6),
-> > +	MCU_RETB	= BIT(2),
-> > +	RESETIB		= BIT(1),
-> > +	RESETDB		= BIT(0),
-> > +};
-> > +
-> > +struct ch7033_priv {
-> > +	struct i2c_client *client;
-> > +	struct i2c_adapter *ddc;
-> > +	struct gpio_desc *hpd;
-> > +	struct drm_encoder encoder;
-> > +	struct drm_bridge bridge;
-> > +	struct drm_connector connector;
-> > +};
-> > +
-> > +#define conn_to_ch7033_priv(x) \
-> > +	container_of(x, struct ch7033_priv, connector)
-> > +#define bridge_to_ch7033_priv(x) \
-> > +	container_of(x, struct ch7033_priv, bridge)
-> > +
-> > +
-> > +static int32_t ch7033_update_reg(struct i2c_client *client,
-> > +				 u8 command, u8 value, u8 mask)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = i2c_smbus_read_byte_data(client, command);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	ret &= ~mask;
-> > +	ret |= value;
-> > +	return i2c_smbus_write_byte_data(client, command, ret);
-> 
-> How about using regmap ?
-> 
-> > +}
-> > +
-> > +static enum drm_connector_status ch7033_connector_detect(
-> > +	struct drm_connector *connector, bool force)
-> > +{
-> > +	struct ch7033_priv *priv = conn_to_ch7033_priv(connector);
-> > +
-> > +	if (priv->hpd) {
-> > +		if (gpiod_get_value_cansleep(priv->hpd))
-> > +			return connector_status_connected;
-> > +	} else if (priv->ddc) {
-> > +		if (drm_probe_ddc(priv->ddc))
-> > +			return connector_status_connected;
-> > +	}
-> > +
-> > +	return connector_status_unknown;
-> > +}
-> > +
-> > +static void ch7033_connector_destroy(struct drm_connector *connector)
-> > +{
-> > +	drm_connector_cleanup(connector);
-> > +}
-> > +
-> > +static const struct drm_connector_funcs ch7033_connector_funcs = {
-> > +	.reset = drm_atomic_helper_connector_reset,
-> > +	.fill_modes = drm_helper_probe_single_connector_modes,
-> > +	.detect = ch7033_connector_detect,
-> > +	.destroy = ch7033_connector_destroy,
-> > +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-> > +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-> > +};
-> > +
-> > +static int ch7033_connector_get_modes(struct drm_connector *connector)
-> > +{
-> > +	struct ch7033_priv *priv = conn_to_ch7033_priv(connector);
-> > +	struct edid *edid;
-> > +	int ret;
-> > +
-> > +	edid = drm_get_edid(connector, priv->ddc);
-> > +	drm_connector_update_edid_property(connector, edid);
-> > +	if (edid) {
-> > +		ret = drm_add_edid_modes(connector, edid);
-> > +		kfree(edid);
-> > +	} else {
-> > +		ret = drm_add_modes_noedid(connector, 1920, 1080);
-> > +		drm_set_preferred_mode(connector, 1024, 768);
-> > +	}
-> > +	return ret;
-> > +}
-> > +
-> > +static struct drm_encoder *ch7033_connector_best_encoder(
-> > +			struct drm_connector *connector)
-> > +{
-> > +	struct ch7033_priv *priv = conn_to_ch7033_priv(connector);
-> > +
-> > +	return priv->bridge.encoder;
-> > +}
-> > +
-> > +static const struct drm_connector_helper_funcs ch7033_connector_helper_funcs = {
-> > +	.get_modes = ch7033_connector_get_modes,
-> > +	.best_encoder = ch7033_connector_best_encoder,
-> > +};
-> > +
-> > +static irqreturn_t ch7033_hpd_irq(int irq, void *data)
-> > +{
-> > +	struct ch7033_priv *priv = data;
-> > +
-> > +	if (priv->connector.dev)
-> > +		drm_helper_hpd_irq_event(priv->connector.dev);
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int ch7033_bridge_attach(struct drm_bridge *bridge)
-> > +{
-> > +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
-> > +	struct drm_connector *connector = &priv->connector;
-> > +	int ret;
-> > +
-> > +	if (priv->hpd) {
-> > +		connector->polled = DRM_CONNECTOR_POLL_HPD;
-> > +	} else if (priv->ddc) {
-> > +		connector->polled = DRM_CONNECTOR_POLL_CONNECT |
-> > +				    DRM_CONNECTOR_POLL_DISCONNECT;
-> > +	}
-> > +
-> > +	drm_connector_helper_add(connector,
-> > +				 &ch7033_connector_helper_funcs);
-> > +	ret = drm_connector_init_with_ddc(bridge->dev, connector,
-> > +					  &ch7033_connector_funcs,
-> > +					  DRM_MODE_CONNECTOR_DVII,
-> > +					  priv->ddc);
-> > +	if (ret) {
-> > +		DRM_ERROR("Failed to initialize connector\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	drm_connector_attach_encoder(&priv->connector,
-> > +				     priv->bridge.encoder);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void ch7033_bridge_detach(struct drm_bridge *bridge)
-> > +{
-> > +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
-> > +
-> > +	drm_connector_cleanup(&priv->connector);
-> > +}
-> > +
-> > +static enum drm_mode_status ch7033_bridge_mode_valid(struct drm_bridge *bridge,
-> > +				     const struct drm_display_mode *mode)
-> > +{
-> > +	if (mode->clock > 165000)
-> > +		return MODE_CLOCK_HIGH;
-> > +	if (mode->hdisplay >= 1920)
-> > +		return MODE_BAD_HVALUE;
-> > +	if (mode->vdisplay >= 1080)
-> > +		return MODE_BAD_VVALUE;
-> > +	return MODE_OK;
-> > +}
-> > +
-> > +static void ch7033_bridge_disable(struct drm_bridge *bridge)
-> > +{
-> > +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
-> > +
-> > +	i2c_smbus_write_byte_data(priv->client, 0x03, 0x04);
-> > +	ch7033_update_reg(priv->client, 0x52, 0x00, RESETDB);
-> > +}
-> > +
-> > +static void ch7033_bridge_enable(struct drm_bridge *bridge)
-> > +{
-> > +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
-> > +
-> > +	i2c_smbus_write_byte_data(priv->client, 0x03, 0x04);
-> > +	ch7033_update_reg(priv->client, 0x52, RESETDB, RESETDB);
-> > +}
-> > +
-> > +static void ch7033_bridge_mode_set(struct drm_bridge *bridge,
-> > +				   const struct drm_display_mode *mode,
-> > +				   const struct drm_display_mode *adjusted_mode)
-> > +{
-> > +	struct ch7033_priv *priv = bridge_to_ch7033_priv(bridge);
-> > +	int hbporch = mode->hsync_start - mode->hdisplay;
-> > +	int hsynclen = mode->hsync_end - mode->hsync_start;
-> > +	int vbporch = mode->vsync_start - mode->vdisplay;
-> > +	int vsynclen = mode->vsync_end - mode->vsync_start;
-> > +
-> > +	/*
-> > +	 * Page 4
-> > +	 */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x03, 0x04);
-> > +
-> > +	/* Turn everything off to set all the registers to their defaults. */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x52, 0x00);
-> > +	/* Bring I/O block up. */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x52, RESETIB);
-> > +
-> > +	/*
-> > +	 * Page 0
-> > +	 */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x03, 0x00);
-> > +
-> > +	/* Bring up parts we need from the power down. */
-> > +	ch7033_update_reg(priv->client, 0x07, 0, DRI_PD | IO_PD);
-> > +	ch7033_update_reg(priv->client, 0x08, 0, DRI_PDDRI | PDDAC | PANEN);
-> > +	ch7033_update_reg(priv->client, 0x09, 0, HDMI_PD | VGA_PD |
-> > +						 DPD | GCKOFF);
-> > +	ch7033_update_reg(priv->client, 0x0a, 0, HD_DVIB);
-> > +
-> > +	/* Horizontal input timing. */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x0b, (mode->htotal >> 8) << 3 |
-> > +						      (mode->hdisplay >> 8));
-> > +	i2c_smbus_write_byte_data(priv->client, 0x0c, mode->hdisplay);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x0d, mode->htotal);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x0e, (hsynclen >> 8) << 3 |
-> > +						      (hbporch >> 8));
-> > +	i2c_smbus_write_byte_data(priv->client, 0x0f, hbporch);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x10, hsynclen);
-> > +
-> > +	/* Vertical input timing. */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x11, (mode->vtotal >> 8) << 3 |
-> > +						      (mode->vdisplay >> 8));
-> > +	i2c_smbus_write_byte_data(priv->client, 0x12, mode->vdisplay);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x13, mode->vtotal);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x14, ((vsynclen >> 8) << 3) |
-> > +						      (vbporch >> 8));
-> > +	i2c_smbus_write_byte_data(priv->client, 0x15, vbporch);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x16, vsynclen);
-> > +
-> > +	/* Input color swap. */
-> > +	ch7033_update_reg(priv->client, 0x18, BYTE_SWAP_BGR, SWAP);
-> > +
-> > +	/* Input clock and sync polarity. */
-> > +	ch7033_update_reg(priv->client, 0x19, mode->clock >> 16, 0x1);
-> > +	ch7033_update_reg(priv->client, 0x19,
-> > +			  (mode->flags & DRM_MODE_FLAG_PHSYNC) ? HPO_I : 0 |
-> > +			  (mode->flags & DRM_MODE_FLAG_PVSYNC) ? VPO_I : 0 |
-> > +			  mode->clock >> 16,
-> > +			  HPO_I | VPO_I | GCLKFREQ);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x1a, mode->clock >> 8);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x1b, mode->clock);
-> > +
-> > +	/* Horizontal output timing. */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x1f, (mode->htotal >> 8) << 3 |
-> > +						      (mode->hdisplay >> 8));
-> > +	i2c_smbus_write_byte_data(priv->client, 0x20, mode->hdisplay);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x21, mode->htotal);
-> > +
-> > +	/* Vertical output timing. */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x25, (mode->vtotal >> 8) << 3 |
-> > +						      (mode->vdisplay >> 8));
-> > +	i2c_smbus_write_byte_data(priv->client, 0x26, mode->vdisplay);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x27, mode->vtotal);
-> > +
-> > +	/* VGA channel bypass */
-> > +	ch7033_update_reg(priv->client, 0x2b, 9, VFMT);
-> > +
-> > +	/* Output sync polarity. */
-> > +	ch7033_update_reg(priv->client, 0x2e,
-> > +			  (mode->flags & DRM_MODE_FLAG_PHSYNC) ? HPO_O : 0 |
-> > +			  (mode->flags & DRM_MODE_FLAG_PVSYNC) ? VPO_O : 0,
-> > +			  HPO_O | VPO_O);
-> > +
-> > +	/* HDMI horizontal output timing. */
-> > +	ch7033_update_reg(priv->client, 0x54, (hsynclen >> 8) << 3 |
-> > +					      (hbporch >> 8),
-> > +					      HWO_HDMI_HI | HOO_HDMI_HI);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x55, hbporch);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x56, hsynclen);
-> > +
-> > +	/* HDMI vertical output timing. */
-> > +	ch7033_update_reg(priv->client, 0x57, (vsynclen >> 8) << 3 |
-> > +					      (vbporch >> 8),
-> > +					      VWO_HDMI_HI | VOO_HDMI_HI);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x58, vbporch);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x59, vsynclen);
-> > +
-> > +	/* Pick HDMI, not LVDS. */
-> > +	ch7033_update_reg(priv->client, 0x7e, HDMI_LVDS_SEL, HDMI_LVDS_SEL);
-> > +
-> > +	/*
-> > +	 * Page 1
-> > +	 */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x03, 0x01);
-> > +
-> > +	/* No idea what these do, but VGA is wobbly and blinky without them. */
-> > +	ch7033_update_reg(priv->client, 0x07, CKINV, CKINV);
-> > +	ch7033_update_reg(priv->client, 0x08, DISPON, DISPON);
-> > +
-> > +	/* DRI PLL */
-> > +	ch7033_update_reg(priv->client, 0x0c, DRI_PLL_DIVSEL, DRI_PLL_DIVSEL);
-> > +	if (mode->clock <= 40000) {
-> > +		ch7033_update_reg(priv->client, 0x0c, 0,
-> > +						      DRI_PLL_N1_1 |
-> > +						      DRI_PLL_N1_0 |
-> > +						      DRI_PLL_N3_1 |
-> > +						      DRI_PLL_N3_0);
-> > +	} else if (mode->clock < 80000) {
-> > +		ch7033_update_reg(priv->client, 0x0c, DRI_PLL_N3_0 |
-> > +						      DRI_PLL_N1_0,
-> > +						      DRI_PLL_N1_1 |
-> > +						      DRI_PLL_N1_0 |
-> > +						      DRI_PLL_N3_1 |
-> > +						      DRI_PLL_N3_0);
-> > +	} else {
-> > +		ch7033_update_reg(priv->client, 0x0c, DRI_PLL_N3_1 |
-> > +						      DRI_PLL_N1_1,
-> > +						      DRI_PLL_N1_1 |
-> > +						      DRI_PLL_N1_0 |
-> > +						      DRI_PLL_N3_1 |
-> > +						      DRI_PLL_N3_0);
-> > +	}
-> > +
-> > +	/* This seems to be color calibration for VGA. */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x64, 0x29); /* LSB Blue */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x65, 0x29); /* LSB Green */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x66, 0x29); /* LSB Red */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x67, 0x00); /* MSB Blue */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x68, 0x00); /* MSB Green */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x69, 0x00); /* MSB Red */
-> > +
-> > +	ch7033_update_reg(priv->client, 0x6b, 0x00, DRI_PD_SER);
-> > +	ch7033_update_reg(priv->client, 0x6c, 0x00, DRI_PLL_PD);
-> > +
-> > +	/*
-> > +	 * Page 3
-> > +	 */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x03, 0x03);
-> > +
-> > +	/* More bypasses and apparently another HDMI/LVDS selector. */
-> > +	ch7033_update_reg(priv->client, 0x28, VGACLK_BP | HM_LV_SEL,
-> > +					      VGACLK_BP | HM_LV_SEL);
-> > +	ch7033_update_reg(priv->client, 0x2a, HDMICLK_BP | HDMI_BP,
-> > +					      HDMICLK_BP | HDMI_BP);
-> > +
-> > +	/*
-> > +	 * Page 4
-> > +	 */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x03, 0x04);
-> > +
-> > +	/* Output clock. */
-> > +	i2c_smbus_write_byte_data(priv->client, 0x10, mode->clock >> 16);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x11, mode->clock >> 8);
-> > +	i2c_smbus_write_byte_data(priv->client, 0x12, mode->clock);
-> > +}
-> > +
-> > +static const struct drm_bridge_funcs ch7033_bridge_funcs = {
-> > +	.attach = ch7033_bridge_attach,
-> > +	.detach = ch7033_bridge_detach,
-> > +	.mode_valid = ch7033_bridge_mode_valid,
-> > +	.disable = ch7033_bridge_disable,
-> > +	.enable = ch7033_bridge_enable,
-> > +	.mode_set = ch7033_bridge_mode_set,
-> > +};
-> > +
-> > +static void ch7033_encoder_destroy(struct drm_encoder *encoder)
-> > +{
-> > +	drm_encoder_cleanup(encoder);
-> > +}
-> > +
-> > +static const struct drm_encoder_funcs ch7033_encoder_funcs = {
-> > +	.destroy = ch7033_encoder_destroy,
-> > +};
-> > +
-> > +static int ch7033_bind(struct device *dev, struct device *master,
-> > +		       void *data)
-> > +{
-> > +	struct drm_device *drm = data;
-> > +	struct ch7033_priv *priv = dev_get_drvdata(dev);
-> > +	uint32_t crtcs;
-> > +	int ret;
-> > +
-> > +	crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
-> > +	priv->encoder.possible_crtcs = crtcs;
-> > +
-> > +	ret = drm_encoder_init(drm, &priv->encoder, &ch7033_encoder_funcs,
-> > +			       DRM_MODE_ENCODER_TMDS, NULL);
-> 
-> Bridge drivers must not create encoders, this is the responsibility of
-> the display controller driver.
-> 
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = drm_bridge_attach(&priv->encoder, &priv->bridge, NULL);
-> > +	if (ret)
-> > +		drm_encoder_cleanup(&priv->encoder);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static void ch7033_unbind(struct device *dev, struct device *master,
-> > +			  void *data)
-> > +{
-> > +	struct ch7033_priv *priv = dev_get_drvdata(dev);
-> > +
-> > +	drm_encoder_cleanup(&priv->encoder);
-> > +}
-> > +
-> > +static const struct component_ops ch7033_ops = {
-> > +	.bind = ch7033_bind,
-> > +	.unbind = ch7033_unbind,
-> > +};
-> > +
-> > +static int ch7033_probe(struct i2c_client *client,
-> > +			const struct i2c_device_id *id)
-> > +{
-> > +	struct device_node *ddc_node, *conn_node;
-> > +	struct device *dev = &client->dev;
-> > +	struct ch7033_priv *priv;
-> > +	struct i2c_adapter *ddc;
-> > +	int ret;
-> > +
-> > +	conn_node = of_graph_get_remote_node(dev->of_node, 1, -1);
-> > +	if (!conn_node) {
-> > +		dev_err(&client->dev, "unable to get the connector node\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	ddc_node = of_parse_phandle(conn_node, "ddc-i2c-bus", 0);
-> > +	if (ddc_node) {
-> > +		ddc = of_get_i2c_adapter_by_node(ddc_node);
-> > +		if (!ddc) {
-> > +			ret = -EPROBE_DEFER;
-> > +			goto out;
-> > +		}
-> > +	} else {
-> > +		dev_info(&client->dev, "no DDC bus for connector\n");
-> > +		ddc = NULL;
-> > +	}
-> > +
-> > +	ret = i2c_smbus_read_byte_data(client, 0x00);
-> 
-> Any idea what this is for ?
-> 
-> > +	if ((i2c_smbus_read_byte_data(client, 0x00) & 0xf7) != 0x56) {
-> > +		dev_err(&client->dev, "the device is not a ch7033\n");
-> > +		ret = -ENODEV;
-> > +		goto out;
-> > +	}
-> > +
-> > +	i2c_smbus_write_byte_data(client, 0x03, 0x04);
-> > +	ret = i2c_smbus_read_byte_data(client, 0x51) & 0x0f;
-> > +	if (ret != 3) {
-> > +		dev_err(&client->dev, "unknown revision %d\n", ret);
-> > +		ret = -ENODEV;
-> > +		goto out;
-> > +	}
-> > +
-> > +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv) {
-> > +		ret = -ENODEV;
-> > +		goto out;
-> > +	}
-> > +
-> > +	dev_set_drvdata(dev, priv);
-> > +
-> > +	INIT_LIST_HEAD(&priv->bridge.list);
-> > +
-> > +	priv->client = client;
-> > +	priv->ddc = ddc;
-> > +
-> > +	priv->hpd = devm_gpiod_get_from_of_node(dev, conn_node, "hpd-gpios",
-> > +						0, GPIOD_IN, "HPD");
-> > +	if (IS_ERR(priv->hpd)) {
-> > +		if (PTR_ERR(priv->hpd) == -ENOENT) {
-> > +			dev_info(&client->dev, "no HPD pin\n");
-> > +			priv->hpd = NULL;
-> > +		} else {
-> > +			ret = PTR_ERR(priv->hpd);
-> > +			goto out;
-> > +		}
-> > +	}
-> > +
-> > +	if (priv->hpd) {
-> > +		ret = devm_request_threaded_irq(&client->dev,
-> > +						gpiod_to_irq(priv->hpd),
-> > +						NULL, ch7033_hpd_irq,
-> > +						IRQF_TRIGGER_RISING |
-> > +						IRQF_TRIGGER_FALLING |
-> > +						IRQF_ONESHOT,
-> > +						"HPD", priv);
-> > +		if (ret) {
-> > +			dev_err(&client->dev, "failed to request irq\n");
-> > +			goto out;
-> > +		}
-> > +	}
-> 
-> Instead of manually handling the connector DT node, how about using
-> https://patchwork.freedesktop.org/patch/346013/ ? We're about to merge
-> it.
-> 
-> > +
-> > +	priv->bridge.funcs = &ch7033_bridge_funcs;
-> > +	priv->bridge.of_node = dev->of_node;
-> > +
-> > +	drm_bridge_add(&priv->bridge);
-> > +
-> > +	ret = component_add(dev, &ch7033_ops);
-> > +	if (ret) {
-> > +		drm_bridge_remove(&priv->bridge);
-> > +		goto out;
-> > +	}
-> > +
-> > +	dev_info(dev, "Chrontel CH7033 Video Encoder\n");
-> > +out:
-> > +	of_node_put(conn_node);
-> > +	return ret;
-> > +}
-> > +
-> > +static int ch7033_remove(struct i2c_client *client)
-> > +{
-> > +	struct device *dev = &client->dev;
-> > +	struct ch7033_priv *priv = dev_get_drvdata(dev);
-> > +
-> > +	component_del(dev, &ch7033_ops);
-> > +	drm_bridge_remove(&priv->bridge);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id ch7033_dt_ids[] = {
-> > +	{ .compatible = "chrontel,ch7033", },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, ch7033_dt_ids);
-> > +
-> > +static const struct i2c_device_id ch7033_ids[] = {
-> > +	{ "ch7033", 0 },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(i2c, ch7033_ids);
-> > +
-> > +static struct i2c_driver ch7033_driver = {
-> > +	.probe = ch7033_probe,
-> > +	.remove = ch7033_remove,
-> > +	.driver = {
-> > +		.name = "ch7033",
-> > +		.of_match_table = of_match_ptr(ch7033_dt_ids),
-> > +	},
-> > +	.id_table = ch7033_ids,
-> > +};
-> > +
-> > +module_i2c_driver(ch7033_driver);
-> > +
-> > +MODULE_AUTHOR("Lubomir Rintel <lkundrak@v3.sk>");
-> > +MODULE_DESCRIPTION("Chrontel CH7033 Video Encoder Driver");
-> > +MODULE_LICENSE("GPL v2");
-
+Lastly, please separate the assigned-clocks change from the the audio
+mclk enable/disable into a standalone patch. These changes are not
+interdependent, unless I'm missing something.
