@@ -2,122 +2,88 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 714B4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C752C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D84620838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:50:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="b+v985lP"
+	by mail.kernel.org (Postfix) with ESMTP id F3ADF2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:51:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578657069;
+	bh=5VnBWlpMBpMuScJ4e9HWCpCMFraJwy9/+ewY+OyPWzM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RUqni0v1NXqJ5EqGCZKv5HiPPhE6p4I5IYedLvfBqgyoho/U9TtsIgxJ0r+bFskmc
+	 RjH2SCoSbK3bYYhCORCGd0V7fFi8yEo+hOeWFQAEittg/G5Pz8obpiOi1j113FjU5m
+	 JRR8OG9WOFHYZdQ9856HWHtCOR4y1/iiRe7Cv76c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727864AbgAJLuR (ORCPT
+        id S1727904AbgAJLvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:50:17 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:59924 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727710AbgAJLuR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:50:17 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00ABmBed144146;
-        Fri, 10 Jan 2020 11:49:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2019-08-05;
- bh=JJW3trWejl6ezxgJ10nAdxvNTgv9rAAla3xEGRMdP/E=;
- b=b+v985lPgbUpnmfYLSAPubgGWtiRnldTf21hB3pSq9Qbeu9oQnG1ZYcEbanBpuwa1qK8
- XCvzQ9JFHAHC33/FF0YupPXg5/yNA1mdAUL/9b37kJ3CD9Pnp967WAza78LPOyd7xxYc
- nWZv9qrnuKJ0BkYnsxUZxqQjHtkgcqTAwUq75KMX84OU+lryMLegyaqRYd63GdUT27Sx
- UP0x6QUNwWrq6fC1DCj5nkqpJFqBeReAR7ryeJwAZqLkwSrPES9bgGdV9WdyWGD+aQOG
- 1lXA2DvG0mlTexMwz+hSjWK1VoWwKtUl1d692rFOSBpD174U1iUaUZy7um6b1ZXrdTle ig== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2xakbr9hue-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 11:49:50 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00ABmuCB051763;
-        Fri, 10 Jan 2020 11:49:50 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2xeh90k0kn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 11:49:49 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00ABnk8O019563;
-        Fri, 10 Jan 2020 11:49:48 GMT
-Received: from dhcp-10-175-222-124.vpn.oracle.com (/10.175.222.124)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 10 Jan 2020 03:49:46 -0800
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     skhan@linuxfoundation.org, brendanhiggins@google.com,
-        gregkh@linuxfoundation.org
-Cc:     rafael@kernel.org, jmorris@namei.org, serge@hallyn.com,
-        knut.omang@oracle.com, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kselftest@vger.kernel.org, sfr@canb.auug.org.au,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH kunit] kunit: building kunit as a module breaks allmodconfig
-Date:   Fri, 10 Jan 2020 11:49:25 +0000
-Message-Id: <1578656965-2993-1-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=799
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001100101
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=860 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001100101
+        Fri, 10 Jan 2020 06:51:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36728 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727689AbgAJLvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 06:51:08 -0500
+Received: from localhost (83-84-126-242.cable.dynamic.v4.ziggo.nl [83.84.126.242])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 087252077C;
+        Fri, 10 Jan 2020 11:51:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578657067;
+        bh=5VnBWlpMBpMuScJ4e9HWCpCMFraJwy9/+ewY+OyPWzM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nl6Sc3yLv2vL4XrBvEbVsSXjsVvNvudmPJV1LaDWG6qnrY1+6nbV9lFMBQY3n0Lza
+         5YdVaVlWFfbvvzIIRGpYfZaVNp/2vmCUGkTg/TiuvwjAQADB3BqXbETWg8arikFn/j
+         lZdu+4QaOrzOeInDOnQiHOCULlvhz+nfCW4Ty9uU=
+Date:   Fri, 10 Jan 2020 12:51:04 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 118/219] rfkill: allocate static minor
+Message-ID: <20200110115104.GA899301@kroah.com>
+References: <20191229162508.458551679@linuxfoundation.org>
+ <20191229162526.353368525@linuxfoundation.org>
+ <20200110110033.GA11563@amd>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110110033.GA11563@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kunit tests that do not support module build should depend
-on KUNIT=y rather than just KUNIT in Kconfig, otherwise
-they will trigger compilation errors for "make allmodconfig"
-builds.
+On Fri, Jan 10, 2020 at 12:00:33PM +0100, Pavel Machek wrote:
+> On Sun 2019-12-29 18:18:40, Greg Kroah-Hartman wrote:
+> > From: Marcel Holtmann <marcel@holtmann.org>
+> > 
+> > [ Upstream commit 8670b2b8b029a6650d133486be9d2ace146fd29a ]
+> > 
+> > udev has a feature of creating /dev/<node> device-nodes if it finds
+> > a devnode:<node> modalias. This allows for auto-loading of modules that
+> > provide the node. This requires to use a statically allocated minor
+> > number for misc character devices.
+> > 
+> > However, rfkill uses dynamic minor numbers and prevents auto-loading
+> > of the module. So allocate the next static misc minor number and use
+> > it for rfkill.
+> 
+> Is this good idea for stable?
 
-Fixes: 9fe124bf1b77 ("kunit: allow kunit to be loaded as a module")
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/base/Kconfig      | 2 +-
- security/apparmor/Kconfig | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Yes.
 
-diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-index c3b3b5c..5f0bc74 100644
---- a/drivers/base/Kconfig
-+++ b/drivers/base/Kconfig
-@@ -150,7 +150,7 @@ config DEBUG_TEST_DRIVER_REMOVE
- 
- config PM_QOS_KUNIT_TEST
- 	bool "KUnit Test for PM QoS features"
--	depends on KUNIT
-+	depends on KUNIT=y
- 
- config HMEM_REPORTING
- 	bool
-diff --git a/security/apparmor/Kconfig b/security/apparmor/Kconfig
-index d547930..0fe3368 100644
---- a/security/apparmor/Kconfig
-+++ b/security/apparmor/Kconfig
-@@ -71,7 +71,7 @@ config SECURITY_APPARMOR_DEBUG_MESSAGES
- 
- config SECURITY_APPARMOR_KUNIT_TEST
- 	bool "Build KUnit tests for policy_unpack.c"
--	depends on KUNIT && SECURITY_APPARMOR
-+	depends on KUNIT=y && SECURITY_APPARMOR
- 	help
- 	  This builds the AppArmor KUnit tests.
- 
--- 
-1.8.3.1
+> I don't see this major/minor allocated in devices.txt in
+> mainline. Should something like this be added?
+> 
+> Signed-off-by: Pavel Machek <pavel@denx.de>
 
+Good idea, can you resend this as a "real" patch so that I can apply it?
+
+thanks,
+
+greg k-h
