@@ -7,186 +7,119 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DA2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A44C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3CC420721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:31:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1CB2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:32:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="hmyz8mic"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="u+wL2c4v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbgAJKbl (ORCPT
+        id S1727557AbgAJKcs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:31:41 -0500
-Received: from mail1.perex.cz ([77.48.224.245]:49136 "EHLO mail1.perex.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727352AbgAJKbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:31:40 -0500
-Received: from mail1.perex.cz (localhost [127.0.0.1])
-        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 8B395A0040;
-        Fri, 10 Jan 2020 11:31:37 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 8B395A0040
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
-        t=1578652297; bh=kkS6k4Vqe/aQIiu/vUx6V9ei2NTfrbuVLe3Tuvjr6vI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hmyz8mickaawShu6LcZDu4uooUnwjF8xUTS3FdRG+BF/PTARZS4HEfvgK71N/aqnq
-         w6/2b5g/YF3brAr8j2PbROeg23wv0S5axP70l0Wv9itbTpnnnqHir58MJIELKYnUbC
-         nrERdz4TYFY0gXW6ye5rCISF4hHwAh1X6bSWa2X0=
-Received: from p50.perex-int.cz (unknown [192.168.100.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: perex)
-        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
-        Fri, 10 Jan 2020 11:31:29 +0100 (CET)
-Subject: Re: [alsa-devel] [PATCH v6 2/2] ALSA: hda: Allow HDA to be runtime
- suspended when dGPU is not bound to a driver
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com,
-        tiwai@suse.com, linux-pci@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-References: <20191018073848.14590-1-kai.heng.feng@canonical.com>
- <20191018073848.14590-2-kai.heng.feng@canonical.com>
- <10e35320-b7a8-0bcf-92d1-61aa5c057f58@perex.cz>
- <s5ha76vmy8c.wl-tiwai@suse.de>
-From:   Jaroslav Kysela <perex@perex.cz>
-Message-ID: <fd9d174e-febe-27ef-cc4c-f19007e21a1a@perex.cz>
-Date:   Fri, 10 Jan 2020 11:31:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 10 Jan 2020 05:32:48 -0500
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:57803 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726697AbgAJKcs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 05:32:48 -0500
+Received: from [IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef]
+ ([IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id pratilzq7pLtbprawiPzAM; Fri, 10 Jan 2020 11:32:46 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578652366; bh=gjJVby9uVquUwr750rfbXHaGifI2jr0RhPUkWoJN5rI=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=u+wL2c4vbqWi5AWOgN5v7opLIfDSy6K+t9Ks+U9dfmqJvKfx8Goi2WrdWA9yCiICt
+         AgBPalUNujx9TC3rWES3ceJa8HuYTEfW5ePKzpTux1kKj7tn/sfq4frVC8NatiaJEP
+         SwwP8fiEeyS3zhL6sowCSk8kQBxVbUBZLaiBL3JdAROAdMSWeYbTJ2y6Ix1+cn6fv3
+         jKLhPmMJ1we8PcDXDXeO/nrmUSIyqBXaPgehvWwfJzeUsB2BvcSnUTflqamg8HCJk+
+         0n5/Yw2z4k0sTeJHOQzEYecDGCERAqnBa1QYzQKB3Sp247xvp14mO3wEpNKlmiIaxx
+         2PFdFUBomYeQA==
+Subject: Re: [RFC][PATCH 14/15] videobuf2: don't test db_attach in dma-contig
+ prepare and finish
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-15-senozhatsky@chromium.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <8d79287c-d868-37cc-85f1-89cf5d8b92a9@xs4all.nl>
+Date:   Fri, 10 Jan 2020 11:32:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <s5ha76vmy8c.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191217032034.54897-15-senozhatsky@chromium.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfML14yM9Vzax8I0cQcPmUXvKvshoBz8Gw1Qr7AxI7CtZHh1vmU53s4jSWcc/BddjGM6DrKO9JngNMat9pCW8W7uql/YZpVjrSr46gTMSbTICyZFkY2W8
+ PEmS+nwickgcfpGYZU1ij2A+EkBvQPlRhZOIV4T+zxsynR7ra5Hdz8PLXhB7YLy9xw53xX3G7IxYEM55AkfM1N+WBJ2fJzuvN6ixgbDzDAJSPqrKcblWh7NK
+ XDpGdgjvQWdBojQeFDCGN5K0Mi6hVlvM4c3T5hUoMIwR7DvyE5KWLWOpOzvrNl7pBowSGlOZhwH0ZzX/BSpQQXaVNOr6vsE/vY1ObnzTwW6q/GyhPmTA0J90
+ SW68nfMKmioxRG+wJ60Wj2fuX8nbxBsGlogkT7d4oSeUF55jLsO/YdCD4+ieZthlIX8vNf4kxm6swLiGPgn6n4ToIPYmozOtcUvK5jhL/Un3ouGO85h6CZi1
+ VStaWnlLZW3VkOeBxk8Fvu93D1daoee8d0YU67X9sBsz2JSxpfw6TfhNzonLVF72QBK09XFUsY5Baa9fhr1YCd5XJ6QTm728R4nqGifKt+ZP4zl0Kkuv4PHS
+ IcLl3Ins2LnGamUfL70LxpKI1tMm4RyYg3gag7k0/YimLV3C76octX+ziwqMKic5jjg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne 10. 01. 20 v 10:56 Takashi Iwai napsal(a):
-> On Fri, 10 Jan 2020 10:43:26 +0100,
-> Jaroslav Kysela wrote:
->>
->> Dne 18. 10. 19 v 9:38 Kai-Heng Feng napsal(a):
->>> Nvidia proprietary driver doesn't support runtime power management, so
->>> when a user only wants to use the integrated GPU, it's a common practice
->>> to let dGPU not to bind any driver, and let its upstream port to be
->>> runtime suspended. At the end of runtime suspension the port uses
->>> platform power management to disable power through _OFF method of power
->>> resource, which is listed by _PR3.
->>>
->>> After commit b516ea586d71 ("PCI: Enable NVIDIA HDA controllers"), when
->>> the dGPU comes with an HDA function, the HDA won't be suspended if the
->>> dGPU is unbound, so the power resource can't be turned off by its
->>> upstream port driver.
->>>
->>> Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
->>> discrete GPU") only allows HDA to be runtime suspended once GPU is
->>> bound, to keep APU's HDA working.
->>>
->>> However, HDA on dGPU isn't that useful if dGPU is not bound to any
->>> driver.  So let's relax the runtime suspend requirement for dGPU's HDA
->>> function, to disable the power source to save lots of power.
->>
->> This patch breaks the HDMI audio detection at least on some platforms
->> (Lenovo P50 for example) with nouveau and the proprietary nvidia
->> driver. Those laptops have the external HDMI/DP ports connected to
->> dGPU instead the iGPU. The ACPI PR3 is set.
->>
->> The runtime PM off fixes this problem:
->>
->> echo on > /sys/bus/pci/devices/0000\:01\:00.1/power/control
+On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
+> We moved cache management decision making to the upper layer and
+> rely on buffer's need_cache_sync flags and videobuf2 core. If the
+> upper layer (core) has decided to invoke ->prepare() or ->finish()
+> then we must sync.
 > 
-> But this will keep the power of the graphics chip on, and that's what
-> the patch was supposed to "fix".
+> For DMABUF ->need_cache_sync_on_prepare and ->need_cache_sync_on_flush
+> are always false so videobuf core does not call ->prepare() and
+> ->finish() on such buffers.
 > 
->> But I don't think that it's the best solution. My proposal is to
->> create a pr3 check blacklist to keep power for the HDMI audio for
->> those machines. Also we may add a new module parameter for
->> snd-hda-intel to control this. Other ideas?
-> 
-> For nouveau, the best fix is to merge the audio component patch.
-> This will make things working without fiddling with the power
-> up/down.  The patch has been pending over months under review in DRM
-> side, unfortunately...  Please pinging them for driving ahead.
+> Additionally, scratch the DMABUF comment.
 
-Adding Cc: to dri-devel. You probably mean this thread:
+Just combine this and the next patch into a single patch. No need to
+split this up.
 
-https://lists.freedesktop.org/archives/dri-devel/2019-July/thread.html#227423
+Regards,
 
-> For Nvidia, though, it's no path a binary-only stuff can go with, due
-> to the GPL symbol of the component framework.  Those guys know of it
-> well, and they seem adding the temporary power up/down procedure by
-> poking the proc file from the user-space side at the HDMI connection.
-
-Wow.
-
-> About a module option: I don't think it's much better than the sysfs
-> toggle.  You can set up a simple udev rule if needed, too.
-
-Ok, it's a bit nightmare to maintain those extra settings in the distribution.
-
-					Jaroslav
+	Hans
 
 > 
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+>  drivers/media/common/videobuf2/videobuf2-dma-contig.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> thanks,
+> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> index a387260fb321..6ea0961149d7 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> @@ -100,8 +100,7 @@ static void vb2_dc_prepare(void *buf_priv)
+>  	struct vb2_dc_buf *buf = buf_priv;
+>  	struct sg_table *sgt = buf->dma_sgt;
+>  
+> -	/* DMABUF exporter will flush the cache for us */
+> -	if (!sgt || buf->db_attach)
+> +	if (!sgt)
+>  		return;
+>  
+>  	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
+> @@ -113,8 +112,7 @@ static void vb2_dc_finish(void *buf_priv)
+>  	struct vb2_dc_buf *buf = buf_priv;
+>  	struct sg_table *sgt = buf->dma_sgt;
+>  
+> -	/* DMABUF exporter will flush the cache for us */
+> -	if (!sgt || buf->db_attach)
+> +	if (!sgt)
+>  		return;
+>  
+>  	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir);
 > 
-> Takashi
-> 
->>
->> 					Jaroslav
->>
->>
->>> BugLink: https://bugs.launchpad.net/bugs/1840835
->>> Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
->>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>> ---
->>> v5, v6:
->>> - No change.
->>> v4:
->>> - Find upstream port, it's callee's responsibility now.
->>> v3:
->>> - Make changelog more clear.
->>> v2:
->>> - Change wording.
->>> - Rebase to Tiwai's branch.
->>>    sound/pci/hda/hda_intel.c | 8 +++++++-
->>>    1 file changed, 7 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
->>> index 240f4ca76391..e63b871343e5 100644
->>> --- a/sound/pci/hda/hda_intel.c
->>> +++ b/sound/pci/hda/hda_intel.c
->>> @@ -1280,11 +1280,17 @@ static void init_vga_switcheroo(struct azx *chip)
->>>    {
->>>    	struct hda_intel *hda = container_of(chip, struct hda_intel, chip);
->>>    	struct pci_dev *p = get_bound_vga(chip->pci);
->>> +	struct pci_dev *parent;
->>>    	if (p) {
->>>    		dev_info(chip->card->dev,
->>>    			 "Handle vga_switcheroo audio client\n");
->>>    		hda->use_vga_switcheroo = 1;
->>> -		chip->bus.keep_power = 1; /* cleared in either gpu_bound op or codec probe */
->>> +
->>> +		/* cleared in either gpu_bound op or codec probe, or when its
->>> +		 * upstream port has _PR3 (i.e. dGPU).
->>> +		 */
->>> +		parent = pci_upstream_bridge(p);
->>> +		chip->bus.keep_power = parent ? !pci_pr3_present(parent) : 1;
->>>    		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
->>>    		pci_dev_put(p);
->>>    	}
->>>
->>
->>
->> -- 
->> Jaroslav Kysela <perex@perex.cz>
->> Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
->>
 
-
--- 
-Jaroslav Kysela <perex@perex.cz>
-Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
