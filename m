@@ -2,108 +2,61 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13740C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9B8C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA90020842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B1D920661
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgAJTb0 (ORCPT
+        id S1728778AbgAJTcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:31:26 -0500
-Received: from mga11.intel.com ([192.55.52.93]:47059 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729182AbgAJTbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:31:22 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:31:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
-   d="scan'208";a="422217933"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Jan 2020 11:31:18 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1iq007-0003bl-4D; Fri, 10 Jan 2020 21:31:19 +0200
-Date:   Fri, 10 Jan 2020 21:31:19 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Mark Brown <broonie@kernel.org>, tudor.ambarus@microchip.com,
-        linux-kernel@vger.kernel.org, chenxiang66@hisilicon.com,
-        linuxarm@huawei.com, linux-spi@vger.kernel.org,
-        marek.vasut@gmail.com, linux-mtd@lists.infradead.org,
-        xuejiancheng@hisilicon.com, fengsheng5@huawei.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        wanghuiqiang <wanghuiqiang@huawei.com>, liusimin4@huawei.com
-Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
- driver
-Message-ID: <20200110193119.GI32742@smile.fi.intel.com>
-References: <1575900490-74467-1-git-send-email-john.garry@huawei.com>
- <1575900490-74467-3-git-send-email-john.garry@huawei.com>
- <0dc5cb2e-b765-9e13-b05e-9e3c835c5985@huawei.com>
- <20200109212842.GK3702@sirena.org.uk>
- <df67b562-7d82-19f6-7581-680190a7772d@huawei.com>
- <20200110140726.GB5889@sirena.org.uk>
- <6db83881-927c-d11c-9c77-23a45892ddab@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6db83881-927c-d11c-9c77-23a45892ddab@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 10 Jan 2020 14:32:25 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:39992 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbgAJTcZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 14:32:25 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 7E9CA1577F52F;
+        Fri, 10 Jan 2020 11:32:24 -0800 (PST)
+Date:   Fri, 10 Jan 2020 11:32:23 -0800 (PST)
+Message-Id: <20200110.113223.993180749814320634.davem@davemloft.net>
+To:     Jose.Abreu@synopsys.com
+Cc:     netdev@vger.kernel.org, Joao.Pinto@synopsys.com,
+        peppe.cavallaro@st.com, alexandre.torgue@st.com,
+        mcoquelin.stm32@gmail.com,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 0/2] net: stmmac: Filtering fixes
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <cover.1578669661.git.Jose.Abreu@synopsys.com>
+References: <cover.1578669661.git.Jose.Abreu@synopsys.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 10 Jan 2020 11:32:24 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 02:58:54PM +0000, John Garry wrote:
-> On 10/01/2020 14:07, Mark Brown wrote:
-> > On Fri, Jan 10, 2020 at 11:55:37AM +0000, John Garry wrote: >
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Date: Fri, 10 Jan 2020 16:23:51 +0100
 
-...
-
-> > > I will note that PRP0001+"jedec,spi-nor" compatible DSD seems to be the
-> > > defacto method to describe the SPI NOR-compat part for ACPI - that's what
-> > > I'm using. We could add properties there, but that seems improper.
-> > 
-> > OK, so that's just reusing the DT binding in which case everything
-> > that's valid for the DT binding should also be valid for ACPI - I
-> > thought that actually worked automatically without you having to do
-> > anything in the code but ICBW.
+> Two single fixes for the L3 and L4 filtering in stmmac.
 > 
-> I thought that it would be improper as we could be mixing ACPI methods to
-> describe the serial bus (SPI Serial Bus Connection Resource Descriptor) and
-> also DT properties which could conflict, like CS active high.
+> 1) Updates the internal status of RSS when disabling it in order to keep
+> internal driver status consistent.
 > 
-> However I do see extra properties than "compatible" being added in DSD for
-> PRP0001:
-> https://patchwork.ozlabs.org/patch/662813/ (see EEPROM part)
+> 2) Do not lets user add a filter if RSS is enabled because the filter will
+> not work correctly as RSS bypasses this mechanism.
 
-PRP method is only for vendors to *test* the hardware in ACPI environment.
-The proper method is to allocate correct ACPI ID.
-
-Properties (_DSD in ACPI) may be used in the same way as for DT if we have no
-other means in ACPI specification for them.
-
-> And if we were to do this, I think that we would need to add some
-> device_property_read_u32("spi-rx-bus-width", ...), etc calls in the SPI FW
-> parsing for ACPI path - I couldn't see that.
-
-It's okay as long as you have ACPI ID.
-
-P.S. Most of the sensor drivers were updated in order to support ACPI PRP
-method due to DIY hobbyist on IoT sector and embedded devices. This should not
-be an official way how we support hardware on ACPI-based platforms.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Series applied and queued up for v5.4 -stable, thanks.
