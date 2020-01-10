@@ -2,83 +2,72 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31627C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E207DC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2CFD2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:52:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvvJDCan"
+	by mail.kernel.org (Postfix) with ESMTP id BC3F520678
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:56:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbgAJVwh (ORCPT
+        id S1727185AbgAJV4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 16:52:37 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43080 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgAJVwg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 16:52:36 -0500
-Received: by mail-qt1-f195.google.com with SMTP id d18so3321888qtj.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 13:52:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cCm21HgtSk/IixhjEJUXB/t3b7AfTMGFi5/CTPzapCE=;
-        b=JvvJDCanmRwq86qoJL1uI9SnVwSmLH76cLHJMoJ2njCPMjMm3UCDC5EabaIAgbxK8c
-         6i1to0zg44D0LE8pUv7cy0p2rYyrGSRA6Tn+bbJF0rKirCo3b7G7DPtvQAL0e1QKAEsk
-         CxIBO0Pt3ouQM8lNg2OHbUpeUDTzNMVv3e33p/jwTWagClNQvb6m98yKJkEbGxW7btP+
-         nPI/y4mm19BXdWAq0/AFQw4it/qUhGZFO6tVXrMZKtVAmMQOw9v4YtaR7wNmoAzZAbEd
-         +OvylFI2v0kwvGOI4ORr4ewMmusEAnviTBuTROs0lpsxplmybgEoKCks+hgXjTUtbRtG
-         JL5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cCm21HgtSk/IixhjEJUXB/t3b7AfTMGFi5/CTPzapCE=;
-        b=JSRf4W+lalAFH98ARdtDRu7p+pz8Vd36K+pdNb1UJNGkkZ67YXag2gqpFESOVgcDi0
-         thnZXzP+8qi/CElwWDgIaLPbq4dmEavxvOF56Wbea3enTHxcxfXjcBuJtMQqbk4lgA3L
-         XhwQtRv4ZemdLQF5lDtZ9irlSWVguNGYKyvQcHsgl63l1hlDnHl8ipCSwru+SuqxTb0Q
-         DGMKyDEuHfjlJAIkBvkvD1zRRLNy/gcyS1+qZARo7lwb25XkL4ASfXoNRqKI5q5SqGpU
-         dULdMqh2FkKm8biUI3IG4unDI4hsbJerII+myXOxUOoD+8lfc+DnaZsPZCE58z10nSt7
-         4jsA==
-X-Gm-Message-State: APjAAAVIlxqmldR8OXT+Yjhi/rgllKyf/kMtFgD+SWf3DXfjJy/FSqQd
-        xSr4ajNfN9DSYFlTW+JBBXs=
-X-Google-Smtp-Source: APXvYqy82Fc9nw2RyHFilGXBhexfTlKrz6N+JQKA6fL5pXouZtM21LsjcSqQdiLLSIDP/NJNG8R4Ig==
-X-Received: by 2002:ac8:7097:: with SMTP id y23mr4563007qto.114.1578693155543;
-        Fri, 10 Jan 2020 13:52:35 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id c6sm1431901qka.111.2020.01.10.13.52.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 13:52:35 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 10 Jan 2020 16:52:33 -0500
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>
-Subject: Re: [PATCH v2] x86/tools/relocs: Add _etext and
- __end_of_kernel_reserve to S_REL
-Message-ID: <20200110215233.GA2164804@rani.riverdale.lan>
-References: <20200110205028.GA2012059@rani.riverdale.lan>
- <20200110215005.2164353-1-nivedita@alum.mit.edu>
+        Fri, 10 Jan 2020 16:56:49 -0500
+Received: from mga05.intel.com ([192.55.52.43]:5242 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727152AbgAJV4t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 16:56:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 13:56:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
+   d="scan'208";a="238900624"
+Received: from jderrick-mobl.amr.corp.intel.com ([10.255.4.181])
+  by orsmga002.jf.intel.com with ESMTP; 10 Jan 2020 13:56:47 -0800
+From:   Jon Derrick <jonathan.derrick@intel.com>
+To:     Jens Axboe <axboe@fb.com>, <linux-kernel@vger.kernel.org>
+Cc:     Jon Derrick <jonathan.derrick@intel.com>,
+        Scott Bauer <sbauer@plzdonthack.me>,
+        Revanth Rajashekar <revanth.rajashekar@intel.com>
+Subject: [PATCH] MAINTAINERS: Add Revanth Rajashekar as a SED-Opal maintainer
+Date:   Fri, 10 Jan 2020 14:56:46 -0700
+Message-Id: <20200110215646.15930-1-jonathan.derrick@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200110215005.2164353-1-nivedita@alum.mit.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 04:50:05PM -0500, Arvind Sankar wrote:
-> Prior to binutiles-2.23, ld treats the location counter as absolute if
-                  ^ Please fix this typo before merging (thanks)
+Scott hasn't worked for Intel for some time and has already given us his
+blessing.
+
+CC: Scott Bauer <sbauer@plzdonthack.me>
+Signed-off-by: Revanth Rajashekar <revanth.rajashekar@intel.com>
+Signed-off-by: Jon Derrick <jonathan.derrick@intel.com>
+---
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8982c6e013b3..e1312439f027 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14785,8 +14785,8 @@ S:	Maintained
+ F:	drivers/mmc/host/sdhci-omap.c
+ 
+ SECURE ENCRYPTING DEVICE (SED) OPAL DRIVER
+-M:	Scott Bauer <scott.bauer@intel.com>
+ M:	Jonathan Derrick <jonathan.derrick@intel.com>
++M:	Revanth Rajashekar <revanth.rajashekar@intel.com>
+ L:	linux-block@vger.kernel.org
+ S:	Supported
+ F:	block/sed*
+-- 
+2.20.1
+
