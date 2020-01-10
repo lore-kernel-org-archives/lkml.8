@@ -2,68 +2,99 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3EAC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:54:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC450C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC1E2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:54:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8954D2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbgAJLyU (ORCPT
+        id S1728000AbgAJLyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:54:20 -0500
-Received: from foss.arm.com ([217.140.110.172]:43054 "EHLO foss.arm.com"
+        Fri, 10 Jan 2020 06:54:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:43072 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727717AbgAJLyT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:54:19 -0500
+        id S1727717AbgAJLyX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 06:54:23 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF7481063;
-        Fri, 10 Jan 2020 03:54:18 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 360BF3F534;
-        Fri, 10 Jan 2020 03:54:17 -0800 (PST)
-Date:   Fri, 10 Jan 2020 11:54:15 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Jolly Shah <jolly.shah@xilinx.com>
-Cc:     ard.biesheuvel@linaro.org, mingo@kernel.org,
-        gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
-        hkallweit1@gmail.com, keescook@chromium.org,
-        dmitry.torokhov@gmail.com, michal.simek@xilinx.com,
-        rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
-        Tejas Patel <tejas.patel@xilinx.com>
-Subject: Re: [PATCH 0/2] arch: arm64: xilinx: Make zynqmp_firmware driver
- optional
-Message-ID: <20200110115415.GC39451@bogus>
-References: <1578596764-29351-1-git-send-email-jolly.shah@xilinx.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578596764-29351-1-git-send-email-jolly.shah@xilinx.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D45A1396;
+        Fri, 10 Jan 2020 03:54:23 -0800 (PST)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.44])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5382B3F534;
+        Fri, 10 Jan 2020 03:54:22 -0800 (PST)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 00/14] net: axienet: Error handling, SGMII and 64-bit DMA fixes
+Date:   Fri, 10 Jan 2020 11:54:01 +0000
+Message-Id: <20200110115415.75683-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 11:06:02AM -0800, Jolly Shah wrote:
-> From: Tejas Patel <tejas.patel@xilinx.com>
->
-> Zynqmp firmware driver requires firmware to be present in system.
-> Zynqmp firmware driver will crash if firmware is not present in system.
-> For example single arch QEMU, may not have firmware, with such setup
-> Linux booting fails.
->
-> So make zynqmp_firmware driver as optional to disable it if user don't
-> have firmware in system.
->
+Hi,
 
-Why can't it be detected runtime ? How do you handle single binary if you
-make this compile time option ?
+this series updates the Xilinx Axienet driver to work on our board
+here. One big issue was broken SGMII support, which patch 7 fixes.
+While debugging and understanding the driver, I found several problems
+in the error handling and cleanup paths, which patches 2-6 address.
+Patch 8 paves the way for newer revisions of the IP, the following patch
+adds mii-tool support, just for good measure.
 
---
-Regards,
-Sudeep
+The next four patches add support for 64-bit DMA. This is an integration
+option on newer IP revisions (>= v7.1), and expects MSB bits in formerly
+reserved registers. Without writing to those MSB registers, the state
+machine won't trigger, so it's mandatory to access them, even if they
+are zero. Patches 10 and 11 prepare the code by adding accessors, to
+wrap this properly and keep it working on older IP revisions.
+Patch 12 enables access to the MSB registers, by trying to write a
+non-zero value to them and checking if that sticks. Older IP revisions
+always read those registers as zero.
+
+Patch 13 then adjusts the DMA mask, if it finds a "xlnx,addrwidth"
+property in the DMA DT node. I did not manage to autodetect this actual
+implemented DMA width, so we need to rely on a DT property. If this is
+missing, it will fall back to the current default of 32 bit.
+The final patch updates the DT binding documentation in this respect.
+
+The Xilinx PG138 and PG021 documents (in versions 7.1 in both cases)
+were used for this series.
+
+Please have a look and comment!
+
+Cheers,
+Andre
+
+Andre Przywara (14):
+  net: xilinx: temac: Relax Kconfig dependencies
+  net: axienet: Propagate failure of DMA descriptor setup
+  net: axienet: Fix DMA descriptor cleanup path
+  net: axienet: Improve DMA error handling
+  net: axienet: Factor out TX descriptor chain cleanup
+  net: axienet: Check for DMA mapping errors
+  net: axienet: Fix SGMII support
+  net: axienet: Drop MDIO interrupt registers from ethtools dump
+  net: axienet: Add mii-tool support
+  net: axienet: Wrap DMA pointer writes to prepare for 64 bit
+  net: axienet: Upgrade descriptors to hold 64-bit addresses
+  net: axienet: Autodetect 64-bit DMA capability
+  net: axienet: Allow DMA to beyond 4GB
+  net: axienet: Update devicetree binding documentation
+
+ .../bindings/net/xilinx_axienet.txt           |  57 ++-
+ drivers/net/ethernet/xilinx/Kconfig           |   1 -
+ drivers/net/ethernet/xilinx/xilinx_axienet.h  |  10 +-
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 366 +++++++++++++-----
+ 4 files changed, 328 insertions(+), 106 deletions(-)
+
+-- 
+2.17.1
+
