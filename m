@@ -2,225 +2,172 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03F4C33CA5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B971C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C9A42084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:54:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3D8A20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:54:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Acd26+9a"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="D2sz53Fv";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="j2oxGcBV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728368AbgAJOyl (ORCPT
+        id S1728380AbgAJOyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:54:41 -0500
-Received: from mail-bn8nam12on2052.outbound.protection.outlook.com ([40.107.237.52]:8034
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728308AbgAJOyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:54:38 -0500
+        Fri, 10 Jan 2020 09:54:43 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:54926 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728359AbgAJOym (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 09:54:42 -0500
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0646140600;
+        Fri, 10 Jan 2020 14:54:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1578668081; bh=Df8PkuFAzWMaYAJuSpSUc79b5Fm4t/LEGhAGQyGeXTo=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=D2sz53FvPsKXPIEmjTdcWTl+3JCpk+x+bw9+hMfKgF6SftEH9PnZmhhKdgbMvc7If
+         PLCGxmJMdzb2WEEM7HLRpEcOZLIpMhsv/SEwRgNQ8SAY5+ZKzORdYVeH05qokicFSl
+         VxgNKlVf4SmOux5w3LmHz4o+qOq4ciTFpJ13+88DZVEVewh/Yd//0/GlQsoSxfFV+b
+         Hm80mnxyCTvJiUt6C6isP9zstSTz4K8BAu48rSWolsgs1e4rSF5XO3sGlnLsdLyxFp
+         miE259hv0e6HRd23fk3tkjG3sVW8eE18e8Y8/aXJ5lpr0cmv55hqcdlWPKcWBIPxX9
+         SsNB1MHT0pVFA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id C9B87A00B2;
+        Fri, 10 Jan 2020 14:54:39 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 10 Jan 2020 06:54:39 -0800
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 10 Jan 2020 06:54:39 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e8hE0Ok0STMoWusQ9TGi4Ta08BkovEV5HX3jrkQUFTWGs7Gw3HAaFCgq4zLGBJ1a5D7XMDEua/QUvtXkZs7/aBaS7T2bxOq3thueHX4/gYYrbvSP+izsYfiXgluDglIXGYy+0Jx+hrdjn/PizoFF2Q5KEyriqI8TS+S1L0BpbLQL4CtLFiPQPsApOwnlfjzDvyHghCmbUzmzvHP8eKA6WZ/YJsHJMXGXbhKqLWEEoyc1nSfhMdhOWbnxMbTBH2J4N5bRmqHyDalf9nDetvhrwx9lPiUXIAjujHPJC0OU5NPRfLb0WeoxwV6MXcf7Sf9DyKNJ4kJCkeWSFc0hqRPbZA==
+ b=STI3umO3zb5Mx2D7b/Mqv38DxZfO7zRbTWD1LrABAT6E58uJpuZIgRKHxnTtSpifpyl38kDVA6IdtTuU+rPAHtuW4a6I4yApE2F+7nn9lBYTzTiS1RzofhlXqh8Y8laQVp+mR33wpDE/sf36GVeDfTqgJ33Fhs0evsDNrE9Pm/PKttry0/kdXVFIbmnGkFZ0QP9eI7IXhz46DGqS1BlwZMipnyOkjsvKlwYE2XzFMLcogS/ORZyj3vLbyjzU+jUbcjryLwFxXAWOZNFRT+nksAzdEvJUWq29JvAvX8fcEg+HTiflL0KYpGcAtPAJV+5cI+If7iJ+CkQ8/r0lCU6g5w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RWp09n2CH7TcP/N2KbkGHdfSNjz6T/re9GHkqptVCW8=;
- b=hcMvsSIWV8fC1oUi/SPFvv6ZH2JZ/UVQbAR6Sr4Tz1aB8u3qz51vewykKNLuVWeRvn5Kn/ighLhBEjpDvtAQQrOZ45bbefSlQ9u/1VpFfMNTvCcPLKu3kOSfQDYXqpGO468W8y9OXk9amf0R8k9dDadIXv/5VcJOnUe9DijUGwPc+uV3f/w5CHCVzHUw5oTjcCnqdxjtzcgfnfvwQdz4G1N/u9P2vHp4nEh7cvV3Sifuxk7+edXs44L/3Ym/lqHUdQhsvkx8jlIHk9ozxapNrvq747c6lrs+6yk1Ayr8Ba0o600Cwh6kj6+aqZfb4Ff8mpttv1aMaHA2zKVg7GaGXA==
+ bh=nOmPZ4X5D74ikfkUPi93zppuuU1mGY7KSybBxS87670=;
+ b=XSxMYcqXRF8SqBXqc65V8YWNG9euGttJWL5ab1zUCKqO2R/1J64rvRt1x0oIKBee1nN7wUwiXJUMML8IBsjasW8G68b9UBKpU/+l++zqBMKgic4Py/ZrhsiAYIB5hWyMsGsDBDa504hWOKEDswGtJoV/XFOdptwADDDaOQPKrpxqUImpCBQu8BSHBiCcRij7rWqdLGvQ8+gtjUNblanGzFjr2YxNNp2wN/+ZXhQUUhGrw1ST8X4NQjFBD2EqEvZG4cyF3qqJkvZc2ths4OJC8orxKZ2Il1ExLWdXxMgIcRzoHiWvcB3jaqt8CdyRmZOlt+cT4magJC9Wiq1VXSby6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RWp09n2CH7TcP/N2KbkGHdfSNjz6T/re9GHkqptVCW8=;
- b=Acd26+9aGknuNXlMEA8tS1BErB+CGwUC4yti6J0cjU71PThh00b77Mkof6DlzGuOSZbTRcjc8G38EVm5AlbOGViFgpsDpcFq3uydbCnu8Voe9kro3EubGpACebn+dPom8rSRgruxeITMH6MvtDi9dY6VuIbiQaZ0xaGXGX+rFlk=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6760.namprd02.prod.outlook.com (10.141.156.73) with Microsoft SMTP
+ bh=nOmPZ4X5D74ikfkUPi93zppuuU1mGY7KSybBxS87670=;
+ b=j2oxGcBV9aaJdE8RZeYrtLvk/LP9SoUse13mLpCpzPbv2yTsnjp3qRkGlO68gb8g3QEUhL0CUKSMSKqjzmW76DOMGeuxw+OVxn1Wk9tX5o02ghAQc7Ke9RDv9ONaJSNJazGjbf074odxBCoQsHTG0KX/ZSUzzJpVvMSpnB+jSZI=
+Received: from BY5PR12MB4034.namprd12.prod.outlook.com (52.135.53.73) by
+ BY5PR12MB3924.namprd12.prod.outlook.com (10.255.139.17) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Fri, 10 Jan 2020 14:54:35 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2623.013; Fri, 10 Jan 2020
- 14:54:35 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Andre Przywara <andre.przywara@arm.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     Michal Simek <michals@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 02/14] net: axienet: Propagate failure of DMA descriptor
- setup
-Thread-Topic: [PATCH 02/14] net: axienet: Propagate failure of DMA descriptor
- setup
-Thread-Index: AQHVx6y29d9jke+J9UGemOnmCbRblqfj+/xw
-Date:   Fri, 10 Jan 2020 14:54:35 +0000
-Message-ID: <CH2PR02MB7000063BD3CFC30D18B06FDFC7380@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
- <20200110115415.75683-3-andre.przywara@arm.com>
-In-Reply-To: <20200110115415.75683-3-andre.przywara@arm.com>
+ 15.20.2623.8; Fri, 10 Jan 2020 14:54:38 +0000
+Received: from BY5PR12MB4034.namprd12.prod.outlook.com
+ ([fe80::21e8:207a:f5a0:e090]) by BY5PR12MB4034.namprd12.prod.outlook.com
+ ([fe80::21e8:207a:f5a0:e090%4]) with mapi id 15.20.2623.013; Fri, 10 Jan 2020
+ 14:54:37 +0000
+From:   Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 3/5] ARC: handle DSP presence in HW
+Thread-Topic: [PATCH 3/5] ARC: handle DSP presence in HW
+Thread-Index: AQHVvOAPYx4rnqnFdEKpMFBzanlxBKfecrQAgAWYjls=
+Date:   Fri, 10 Jan 2020 14:54:37 +0000
+Message-ID: <BY5PR12MB403418CCC56FE9E2EA3232D2DE380@BY5PR12MB4034.namprd12.prod.outlook.com>
+References: <20191227180347.3579-1-Eugeniy.Paltsev@synopsys.com>
+ <20191227180347.3579-4-Eugeniy.Paltsev@synopsys.com>,<6b80df9d-d0f2-d1e1-8e4b-b65531b938d9@synopsys.com>
+In-Reply-To: <6b80df9d-d0f2-d1e1-8e4b-b65531b938d9@synopsys.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
 X-MS-TNEF-Correlator: 
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [149.199.50.133]
+ smtp.mailfrom=paltsev@synopsys.com; 
+x-originating-ip: [84.204.78.101]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a987f790-008e-4875-9333-08d795dd0286
-x-ms-traffictypediagnostic: CH2PR02MB6760:|CH2PR02MB6760:
+x-ms-office365-filtering-correlation-id: 8458fbcd-7033-4629-937e-08d795dd03aa
+x-ms-traffictypediagnostic: BY5PR12MB3924:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB67603C40A482241CBCA9BF76C7380@CH2PR02MB6760.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-microsoft-antispam-prvs: <BY5PR12MB39246C0D225A73B639B9BBD9DE380@BY5PR12MB3924.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-forefront-prvs: 02788FF38E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(136003)(346002)(39860400002)(376002)(199004)(189003)(13464003)(54906003)(110136005)(8676002)(81156014)(86362001)(81166006)(7696005)(26005)(186003)(478600001)(71200400001)(2906002)(6506007)(316002)(8936002)(53546011)(66446008)(64756008)(66556008)(4326008)(52536014)(33656002)(66476007)(55016002)(5660300002)(76116006)(66946007)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6760;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(136003)(39860400002)(346002)(396003)(199004)(189003)(52536014)(5660300002)(76116006)(91956017)(4326008)(66446008)(9686003)(66946007)(66476007)(107886003)(66556008)(55016002)(64756008)(71200400001)(33656002)(6506007)(2906002)(316002)(8936002)(26005)(86362001)(7696005)(8676002)(54906003)(478600001)(110136005)(81166006)(186003)(81156014)(309714004);DIR:OUT;SFP:1102;SCL:1;SRVR:BY5PR12MB3924;H:BY5PR12MB4034.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: PWQiwu3otGzYSLtuYcCPGH4ZqYBkgD1P7S0kBdyECWGOcFBvuZXjS6XxyjnKg9tICTY3mvcBSOjRMstCZDmObooQnTOrFGzdvAF+YY/9xEE7TazvYeD9N/FzFVX1rmbDWBcbCfVCbz3k3yk7JxeF+MbvC5Pb2UZBNA6dxr5OfoY58YgtKB6nLA9jX0/amKL+L968cWsL25nt+Sc15LWebcR+ZFTpPNHnw+gQFCwjbs/akXkILiNfJD0Hw4kRsJ0xCgbJI96Xg2R9Sus6Angxae2FEi3zbnrGYTyKjcpoMlYmN6dJva9G/HEV8LoVbCKSC7ZA3MJ2prnjx0GhvV4mWI4XBhqKipl/gxCO5rb9GQW0KWZdFqcBd423kl4NjKOA84+1gAN3JFrJ9pVVnBsOO8XCYLY1tK5AGIxL4tlKc1fMqo+mFPw+HQRz12zUZekjpV2PIHQKqBeKYgMSgJjKCUU9UWjwCQCd5atCecrPnRUcxYLuRVzBXHUssvv4P0j8
-Content-Type: text/plain; charset="us-ascii"
+x-microsoft-antispam-message-info: Z2CCDJ2Bk7MwbZtDTRQ/BxTjJJQct/yFZN0dVWinJiCpM8cwXenrQ3uF2Sp4TuWBKFtHlhlu4lxf4lgEe60qrx3mwxMN9XVQwAT8E4rucR/xQx3RB3xTDSeI0kDtFvF7jCkM52wRPT+e3OA0ny4/1Bv/IW31lgm/Hkg6lqE0nSj42MY67fWlxwWolHGfCN405CadBmoMpfcMvxnezr52+P5UjhLoNxJadr5fL46BOMLIhmj2pAdXSLYnYfOfALGDl2r8rYKAg2ceXWsrCdk3p4MX/vI3wO+65ZkrZjnTR9J1v5JuYGO46s/CqVX97sBmPdmzonfjGzHnwebysMQ6ki9jDSRAd9CBsscpYP1ZdB+bY5+TakWsoEyWFURDrjoHfrfP/hYQK0H2dvGoWHthlGAURQj6Pfjx2aJ+9Dpyldrr1jt49T16PJxD97wx0xpWbdaEe+Aa3LpbFCELJh+kpCKuggl68vzIPAAH1DtrKV9TNLovmJZb7IjKcWCYt5mT
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a987f790-008e-4875-9333-08d795dd0286
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 14:54:35.7674
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8458fbcd-7033-4629-937e-08d795dd03aa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 14:54:37.6811
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NKGSwuX3gG8GxXp+RBX5/80Nie0VQy1xapCxTY+CMzP3yZqE2uM2YCgkP+XGkqeewDnJN8E4dejNEhQL/KOCjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6760
+X-MS-Exchange-CrossTenant-userprincipalname: 1SalSqSMhdVr0KQ9TH7YV2WBkbN29cY5yXg9vwVwra4x80xDcO8JnE813JMvFjEsZUp+1FclQreQ5MiFHxBfKw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3924
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Andre Przywara <andre.przywara@arm.com>
-> Sent: Friday, January 10, 2020 5:24 PM
-> To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
-> <radheys@xilinx.com>
-> Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
-> <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH 02/14] net: axienet: Propagate failure of DMA descriptor
-> setup
->=20
-> When we fail allocating the DMA buffers in axienet_dma_bd_init(), we
-> report this error, but carry on with initialisation nevertheless.
->=20
-> This leads to a kernel panic when the driver later wants to send a
-> packet, as it uses uninitialised data structures.
->=20
-> Make the axienet_device_reset() routine return an error value, as it
-> contains the DMA buffer initialisation. Make sure we propagate the error
-> up the chain and eventually fail the driver initialisation, to avoid
-> relying on non-initialised buffers.
->=20
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-
-> ---
->  .../net/ethernet/xilinx/xilinx_axienet_main.c | 25 +++++++++++++------
->  1 file changed, 18 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> index 20746b801959..97482cf093ce 100644
-> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> @@ -437,9 +437,10 @@ static void axienet_setoptions(struct net_device
-> *ndev, u32 options)
->  	lp->options |=3D options;
->  }
->=20
-> -static void __axienet_device_reset(struct axienet_local *lp)
-> +static int __axienet_device_reset(struct axienet_local *lp)
->  {
->  	u32 timeout;
-> +
->  	/* Reset Axi DMA. This would reset Axi Ethernet core as well. The
-> reset
->  	 * process of Axi DMA takes a while to complete as all pending
->  	 * commands/transfers will be flushed or completed during this
-> @@ -455,9 +456,11 @@ static void __axienet_device_reset(struct
-> axienet_local *lp)
->  		if (--timeout =3D=3D 0) {
->  			netdev_err(lp->ndev, "%s: DMA reset timeout!\n",
->  				   __func__);
-> -			break;
-> +			return -ETIMEDOUT;
->  		}
->  	}
-> +
-> +	return 0;
->  }
->=20
->  /**
-> @@ -471,12 +474,15 @@ static void __axienet_device_reset(struct
-> axienet_local *lp)
->   * Ethernet core. No separate hardware reset is done for the Axi Etherne=
-t
->   * core.
->   */
-> -static void axienet_device_reset(struct net_device *ndev)
-> +static int axienet_device_reset(struct net_device *ndev)
->  {
->  	u32 axienet_status;
->  	struct axienet_local *lp =3D netdev_priv(ndev);
-> +	int ret;
->=20
-> -	__axienet_device_reset(lp);
-> +	ret =3D __axienet_device_reset(lp);
-> +	if (ret)
-> +		return ret;
->=20
->  	lp->max_frm_size =3D XAE_MAX_VLAN_FRAME_SIZE;
->  	lp->options |=3D XAE_OPTION_VLAN;
-> @@ -491,9 +497,11 @@ static void axienet_device_reset(struct net_device
-> *ndev)
->  			lp->options |=3D XAE_OPTION_JUMBO;
->  	}
->=20
-> -	if (axienet_dma_bd_init(ndev)) {
-> +	ret =3D axienet_dma_bd_init(ndev);
-> +	if (ret) {
->  		netdev_err(ndev, "%s: descriptor allocation failed\n",
->  			   __func__);
-> +		return ret;
->  	}
->=20
->  	axienet_status =3D axienet_ior(lp, XAE_RCW1_OFFSET);
-> @@ -518,6 +526,8 @@ static void axienet_device_reset(struct net_device
-> *ndev)
->  	axienet_setoptions(ndev, lp->options);
->=20
->  	netif_trans_update(ndev);
-> +
-> +	return 0;
->  }
->=20
->  /**
-> @@ -921,8 +931,9 @@ static int axienet_open(struct net_device *ndev)
->  	 */
->  	mutex_lock(&lp->mii_bus->mdio_lock);
->  	axienet_mdio_disable(lp);
-> -	axienet_device_reset(ndev);
-> -	ret =3D axienet_mdio_enable(lp);
-> +	ret =3D axienet_device_reset(ndev);
-> +	if (ret =3D=3D 0)
-> +		ret =3D axienet_mdio_enable(lp);
->  	mutex_unlock(&lp->mii_bus->mdio_lock);
->  	if (ret < 0)
->  		return ret;
-> --
-> 2.17.1
-
+Hi Vineet,=0A=
+=0A=
+>From: Vineet Gupta <vgupta@synopsys.com>=0A=
+>Sent: Tuesday, January 7, 2020 04:03=0A=
+>To: Eugeniy Paltsev; linux-snps-arc@lists.infradead.org=0A=
+>Cc: linux-kernel@vger.kernel.org; Alexey Brodkin=0A=
+>Subject: Re: [PATCH 3/5] ARC: handle DSP presence in HW=0A=
+>[snip]=0A=
+>> +static inline bool dsp_exist(void)=0A=
+>> +{=0A=
+>> +     struct bcr_generic bcr;=0A=
+>> +=0A=
+>> +     READ_BCR(ARC_AUX_DSP_BUILD, bcr);=0A=
+>> +     return !!bcr.ver;=0A=
+>=0A=
+>open code these use once / one liners in the call site itself.=0A=
+>=0A=
+>>=0A=
+>> @@ -444,6 +445,9 @@ static void arc_chk_core_config(void)=0A=
+>>               /* Accumulator Low:High pair (r58:59) present if DSP MPY o=
+r FPU */=0A=
+>>               present =3D cpu->extn_mpy.dsp | cpu->extn.fpu_sp | cpu->ex=
+tn.fpu_dp;=0A=
+>>               CHK_OPT_STRICT(CONFIG_ARC_HAS_ACCL_REGS, present);=0A=
+>> +=0A=
+>> +             present =3D dsp_exist();=0A=
+>=0A=
+>Open code as suggested above.=0A=
+>=0A=
+>> +             CHK_OPT_STRICT(CONFIG_ARC_DSP_KERNEL, present);=0A=
+>>       }=0A=
+=0A=
+My idea here is to encapsulate implementation of everything dsp-related in =
+the=0A=
+file with dsp code. So I'm even thinking about moving the config check itse=
+lf=0A=
+to some function like=0A=
+'arc_chk_dsp_config' which will be located in dsp.x file=0A=
+and call it from arc_chk_core_config in setup.c=0A=
+=0A=
+This requires to move config check helpers to separate file/header from the=
+ setup.c=0A=
+However this allows encapsulate all DSP code (and some new subsystems code =
+later on) in its files instead of spread it across the arc code.=0A=
+=0A=
+What do you think about it? If you really dislike this idea I can drop it.=
+=0A=
+---=0A=
+ Eugeniy Paltsev=0A=
