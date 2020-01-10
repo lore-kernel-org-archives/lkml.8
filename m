@@ -2,96 +2,92 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77611C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCFEAC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FEDE20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:50:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D672082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:50:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TCwPwP/N"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VACd/K5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728769AbgAJSuG (ORCPT
+        id S1728972AbgAJSuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:50:06 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50402 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgAJSuE (ORCPT
+        Fri, 10 Jan 2020 13:50:21 -0500
+Received: from mail-wr1-f74.google.com ([209.85.221.74]:37576 "EHLO
+        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728959AbgAJSuU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:50:04 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00AInvRs100349;
-        Fri, 10 Jan 2020 12:49:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578682197;
-        bh=uCvT9GIGwccegdRNf5Cu+QBTIlbT4QV6FT4F1pMIKLI=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=TCwPwP/NSlg50tIj9r1Dq0FFgr/3STysewfMgfbnXri4nJ7W0tvC9ezOYClxsDFo1
-         bFjhEp3PVwoeO4UA0VkRiA7mXG/tmx8PpOF9TTx9C7s7r9rzgQLjpGFNSqDMklwjrq
-         5EdJ1dGIdCQ9xC0/NPp85CSB3OMibOMhm2mFDwFY=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00AInvgF100901
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jan 2020 12:49:57 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
- Jan 2020 12:49:57 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 10 Jan 2020 12:49:57 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00AInvCl022740;
-        Fri, 10 Jan 2020 12:49:57 -0600
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH 2/4] net: phy: DP83822: Update Kconfig with DP83825I support
-Date:   Fri, 10 Jan 2020 12:47:00 -0600
-Message-ID: <20200110184702.14330-3-dmurphy@ti.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200110184702.14330-1-dmurphy@ti.com>
-References: <20200110184702.14330-1-dmurphy@ti.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Fri, 10 Jan 2020 13:50:20 -0500
+Received: by mail-wr1-f74.google.com with SMTP id z14so1335497wrs.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 10:50:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=FKzriefzB+sFj+yanYF71dYfNewJn715ajVrF6hXaPc=;
+        b=VACd/K5Nu5cG+wiPgp8G70D3txgJ6as16XJETV4f1dp1Hy5yjg0kQ9ngLhhHIUwhoM
+         pzh8p508zag5fBT411FlwlZaRTYsuf/SeVRAE+2TViEpyFLBEuBtNu5JKzZoLR6vi3MB
+         LMpa/o7hRjUSZeVBcirPG90njevurjfBQ3s3FzGIp+70nW2/H4h09CSRqMjN1UDM7QGT
+         XZNzuZn3chMruJozrEMKIZPOBMHW1gttI8uRlN2Z34AIx06SDyzZwwZU5D5nMtDiWBV+
+         aQwoPVv2jcQxiVSIf2VkM9tuF0D5u1rwusHwmEqmMVD1Cjdf+aVfQSm2OQP2iMAVNh/X
+         dMKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=FKzriefzB+sFj+yanYF71dYfNewJn715ajVrF6hXaPc=;
+        b=PRzOgFH4Rlejhc+/mtX6+IENhKMvpKg270ZoC8EMCBtegOpSnQZWIi4xq0qw6vwzeW
+         tJUXYdnQc30pmL2kWCOonPVHQlK3xsQO1XfBjANHWRU4luLamlwcGpVh5KB/yt0V52PJ
+         QIg6pUHrQWn8DOVsI4scGzuL539rImPPGQ1ta1KZ0nPg59qIZKd+PEFUOWhnPd8D1i0N
+         CVAq0TGSxToC/AQaEGmc/IUXa2cUrEIAKByNg1t79TKbUYUnQ3CK7PZtIJMX/laGA3lC
+         MeSl0gIhI7Yjs1JCChZzkQGp52JGy/cdcE10AdKlgPKDBuDu0Ovw3qFd/avKx+8hOIl2
+         2xsg==
+X-Gm-Message-State: APjAAAUbXpJ1/EiZo2E8lYk1HE6VQ4HgF7Kg42npkTZMCWBLHZ/sM40H
+        TlZZh3U2gabmagYh57k2zq3Mc0WLwA==
+X-Google-Smtp-Source: APXvYqwz4O4dhhOP5mop94mtiXO0Vg+27x4HvHv3Tqj5pjl29jIbA+lNW0/EVfbmZi1p/ZOzim78Xpc1UA==
+X-Received: by 2002:a5d:534b:: with SMTP id t11mr5061885wrv.120.1578682218808;
+ Fri, 10 Jan 2020 10:50:18 -0800 (PST)
+Date:   Fri, 10 Jan 2020 19:48:32 +0100
+Message-Id: <20200110184834.192636-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
+Subject: [PATCH -rcu v2 0/2] kcsan: Improvements to reporting
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
+        dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the Kconfig description to indicate support for the DP83825I
-device as well.
+Improvements to KCSAN data race reporting:
+1. Show if access is marked (*_ONCE, atomic, etc.).
+2. Rate limit reporting to avoid spamming console.
 
-Fixes: 32b12dc8fde1  ("net: phy: Add DP83825I to the DP83822 driver")
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
- drivers/net/phy/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v2:
+* Paul E. McKenney: commit message reword.
+* Use jiffies instead of ktime -- we want to avoid calling into any
+  further complex libraries, since KCSAN may also detect data races in
+  them, and as a result potentially leading to observing corrupt state
+  (e.g. here, observing corrupt ktime_t value).
 
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index ed606194dbd0..8dc461f7574b 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -340,9 +340,9 @@ config DAVICOM_PHY
- 	  Currently supports dm9161e and dm9131
- 
- config DP83822_PHY
--	tristate "Texas Instruments DP83822 PHY"
-+	tristate "Texas Instruments DP83822/825 PHYs"
- 	---help---
--	  Supports the DP83822 PHY.
-+	  Supports the DP83822 and DP83825I PHYs.
- 
- config DP83TC811_PHY
- 	tristate "Texas Instruments DP83TC811 PHY"
+
+Marco Elver (2):
+  kcsan: Show full access type in report
+  kcsan: Rate-limit reporting per data races
+
+ kernel/kcsan/core.c   |  15 +++--
+ kernel/kcsan/kcsan.h  |   2 +-
+ kernel/kcsan/report.c | 151 +++++++++++++++++++++++++++++++++++-------
+ lib/Kconfig.kcsan     |  10 +++
+ 4 files changed, 146 insertions(+), 32 deletions(-)
+
 -- 
-2.23.0
+2.25.0.rc1.283.g88dfdc4193-goog
 
