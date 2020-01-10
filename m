@@ -2,208 +2,155 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B46C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0608C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA7CF20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:56:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="wTFTE5+D"
+	by mail.kernel.org (Postfix) with ESMTP id A0BDD20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbgAJJ4A (ORCPT
+        id S1727421AbgAJJ4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 04:56:00 -0500
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:55021 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727274AbgAJJz7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 04:55:59 -0500
-Received: from [IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef]
- ([IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id pr1Filiw4pLtbpr1IiPmiA; Fri, 10 Jan 2020 10:55:57 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1578650157; bh=BwacujmROvU6llGx0HTWoJb8ykjGIXGBs8a7e368hXE=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=wTFTE5+DiOJnzN+QAgXlzB7b8xWmdpWjJFRHwEXMayIIAFnmOqr2kX1d6kFVofMIE
-         n16bmbEXy0m792lJrH6keJq4I3ibPJComti6pGU/hWSEPhXAYhEJT+xnwaVPRmQ+qI
-         xiaRkiKsRDR1Z7r6LGn3j396s6prqqN9658vGeLMgGeGunhwSIj7bSF5NMELuo89dV
-         Tz6r0rGmohIQOsdaPDLJ7F0HL/gnfhfrHb/XLR2h6HkQeU8BJEOFpn9SiTOIClnQ4t
-         RvS4NU3yYDPiGW1TAceaWolvTuzRRlS5PDcWDFORD9mfIrGDruSeq4IHAl/TLy5XMR
-         XwXs+V5ly1l1g==
-Subject: Re: [RFC][PATCH 05/15] videobuf2: handle
- V4L2_FLAG_MEMORY_NON_CONSISTENT in REQBUFS
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191217032034.54897-1-senozhatsky@chromium.org>
- <20191217032034.54897-6-senozhatsky@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <8d0c95c3-64a2-ec14-0ac2-204b0430b2b4@xs4all.nl>
-Date:   Fri, 10 Jan 2020 10:55:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191217032034.54897-6-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfCfq+5onDbtpArYan3kYQIhvL/k2PgbaOWvKGHUXgRZZMPAIVvS76/2xObvmreR6fWDyFVYb3hJqsHWGZ+/Hl3xysoBOb1Pynce2WIfEK9ib24wjdWfj
- a64PDx4ydLshJOyO0+X+VLYclDPKnEHY6FmCqIM5ftyeEYIdJXtzsW9YOoxj82eLOGB+Et55MpVvKQeTsYND9N3sFye1B8MDW+041jm0vSRjjPQcTyOE0vKs
- tfxcdDH0kz0QaG0lIIrbeKkLYsmKkq4nvHfRuIX+XTcgBwYA2ETnGm8HUWTxKdMf0NxOARz/LewaPQtCxUqULmVcoMVa9QDY3OpgR3KUxT20VehkrE6tWcZE
- SP6xvvQgLRnqb8/EFcyCbbedfKOZezFnO9dn8gJCaJu9YYAtxaihmNbpIH3KqMhaXjdc0wM5s0mnWh2hxVHVR2QG32ZeAeI/T5/RWdWoK6aTXp9FHGSv7C1j
- aBiveqv8ryuZKshiBvyFHKJZdhdQvwGtHcoSjwqxNikoO3JrA38c15zc+1GBfUpf4kHdUVUOm0kpac1nZLdnPOCMp6HFeR+dwdzihXbYtiyJbOluQ7EFRDn+
- /S7fQU2BT6pHrhHHTvW+B26wg6FxBBc0xkGESpKPeQFd+bc0YnALgC4+yjoWWKWUZjo=
+        Fri, 10 Jan 2020 04:56:07 -0500
+Received: from mx2.suse.de ([195.135.220.15]:37434 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727274AbgAJJ4H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 04:56:07 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 4E966AE87;
+        Fri, 10 Jan 2020 09:56:04 +0000 (UTC)
+Date:   Fri, 10 Jan 2020 10:56:03 +0100
+Message-ID: <s5ha76vmy8c.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Jaroslav Kysela <perex@perex.cz>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com,
+        tiwai@suse.com, linux-pci@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [alsa-devel] [PATCH v6 2/2] ALSA: hda: Allow HDA to be runtime suspended when dGPU is not bound to a driver
+In-Reply-To: <10e35320-b7a8-0bcf-92d1-61aa5c057f58@perex.cz>
+References: <20191018073848.14590-1-kai.heng.feng@canonical.com>
+        <20191018073848.14590-2-kai.heng.feng@canonical.com>
+        <10e35320-b7a8-0bcf-92d1-61aa5c057f58@perex.cz>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
-> This patch lets user-space to request a non-consistent memory
-> allocation during REQBUFS ioctl call. We use one bit of a
-> ->reserved[1] member of struct v4l2_requestbuffers, which is
-> now renamed to ->flags.
+On Fri, 10 Jan 2020 10:43:26 +0100,
+Jaroslav Kysela wrote:
 > 
-> There is just 1 four-byte reserved area in v4l2_requestbuffers
-> struct, therefore for backward compatibility ->reserved and
-> ->flags were put into anonymous union.
+> Dne 18. 10. 19 v 9:38 Kai-Heng Feng napsal(a):
+> > Nvidia proprietary driver doesn't support runtime power management, so
+> > when a user only wants to use the integrated GPU, it's a common practice
+> > to let dGPU not to bind any driver, and let its upstream port to be
+> > runtime suspended. At the end of runtime suspension the port uses
+> > platform power management to disable power through _OFF method of power
+> > resource, which is listed by _PR3.
+> >
+> > After commit b516ea586d71 ("PCI: Enable NVIDIA HDA controllers"), when
+> > the dGPU comes with an HDA function, the HDA won't be suspended if the
+> > dGPU is unbound, so the power resource can't be turned off by its
+> > upstream port driver.
+> >
+> > Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
+> > discrete GPU") only allows HDA to be runtime suspended once GPU is
+> > bound, to keep APU's HDA working.
+> >
+> > However, HDA on dGPU isn't that useful if dGPU is not bound to any
+> > driver.  So let's relax the runtime suspend requirement for dGPU's HDA
+> > function, to disable the power source to save lots of power.
 > 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  Documentation/media/uapi/v4l/vidioc-reqbufs.rst | 14 ++++++++++++--
->  drivers/media/common/videobuf2/videobuf2-v4l2.c | 14 ++++++++++++--
->  drivers/media/v4l2-core/v4l2-ioctl.c            |  3 ---
->  include/uapi/linux/videodev2.h                  |  5 ++++-
->  4 files changed, 28 insertions(+), 8 deletions(-)
+> This patch breaks the HDMI audio detection at least on some platforms
+> (Lenovo P50 for example) with nouveau and the proprietary nvidia
+> driver. Those laptops have the external HDMI/DP ports connected to
+> dGPU instead the iGPU. The ACPI PR3 is set.
 > 
-> diff --git a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-> index d0c643db477a..9b69a61d9fd4 100644
-> --- a/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-> +++ b/Documentation/media/uapi/v4l/vidioc-reqbufs.rst
-> @@ -112,10 +112,20 @@ aborting or finishing any DMA in progress, an implicit
->  	``V4L2_MEMORY_MMAP`` and ``type`` set to the buffer type. This will
->  	free any previously allocated buffers, so this is typically something
->  	that will be done at the start of the application.
-> -    * - __u32
-> +    * - union
-> +      - (anonymous)
-> +    * -
-> +      - __u32
-> +      - ``flags``\ [1]
-> +      - Specifies additional buffer management attributes. E.g. when
-> +        ``V4L2_FLAG_MEMORY_NON_CONSISTENT`` set vb2 backends may be allocated
-> +        in non-consistent memory.
-
-This should link to the table with these memory flags, rather than
-effectively documenting V4L2_FLAG_MEMORY_NON_CONSISTENT again.
-
-You also probably meant "vb2 buffers" rather than "vb2 backends".
-
-> +    * -
-> +      - __u32
->        - ``reserved``\ [1]
->        - A place holder for future extensions. Drivers and applications
-> -	must set the array to zero.
-> +	must set the array to zero, unless application wants to specify
-> +        buffer management ``flags``.
-
-I think support for this flag should be signaled as a V4L2_BUF_CAP capability.
-If the capability is not set, then vb2 should set 'flags' to 0 to preserve the
-old 'Drivers and applications must set the array to zero' behavior.
-
-The documentation for 'reserved[1]' should be changed to something like:
-
-	Kept for backwards compatibility. Use ``flags`` instead.
-
-Regards,
-
-	Hans
->  
->  .. tabularcolumns:: |p{6.1cm}|p{2.2cm}|p{8.7cm}|
->  
-> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> index f1e88c9398c7..0eabb589684f 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
-> @@ -693,9 +693,15 @@ static void fill_buf_caps(struct vb2_queue *q, u32 *caps)
->  int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
->  {
->  	int ret = vb2_verify_memory_type(q, req->memory, req->type);
-> +	bool consistent = true;
-> +
-> +	if (req->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
-> +		consistent = false;
->  
->  	fill_buf_caps(q, &req->capabilities);
-> -	return ret ? ret : vb2_core_reqbufs(q, req->memory, true, &req->count);
-> +	if (ret)
-> +		return ret;
-> +	return vb2_core_reqbufs(q, req->memory, consistent, &req->count);
->  }
->  EXPORT_SYMBOL_GPL(vb2_reqbufs);
->  
-> @@ -939,13 +945,17 @@ int vb2_ioctl_reqbufs(struct file *file, void *priv,
->  {
->  	struct video_device *vdev = video_devdata(file);
->  	int res = vb2_verify_memory_type(vdev->queue, p->memory, p->type);
-> +	bool consistent = true;
->  
->  	fill_buf_caps(vdev->queue, &p->capabilities);
->  	if (res)
->  		return res;
->  	if (vb2_queue_is_busy(vdev, file))
->  		return -EBUSY;
-> -	res = vb2_core_reqbufs(vdev->queue, p->memory, true, &p->count);
-> +	if (p->flags & V4L2_FLAG_MEMORY_NON_CONSISTENT)
-> +		consistent = false;
-> +
-> +	res = vb2_core_reqbufs(vdev->queue, p->memory, consistent, &p->count);
->  	/* If count == 0, then the owner has released all buffers and he
->  	   is no longer owner of the queue. Otherwise we have a new owner. */
->  	if (res == 0)
-> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-> index 003b7422aeef..225d06819bce 100644
-> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
-> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-> @@ -1973,9 +1973,6 @@ static int v4l_reqbufs(const struct v4l2_ioctl_ops *ops,
->  
->  	if (ret)
->  		return ret;
-> -
-> -	CLEAR_AFTER_FIELD(p, capabilities);
-> -
->  	return ops->vidioc_reqbufs(file, fh, p);
->  }
->  
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index d352997f2b62..73a4854f71bd 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -919,7 +919,10 @@ struct v4l2_requestbuffers {
->  	__u32			type;		/* enum v4l2_buf_type */
->  	__u32			memory;		/* enum v4l2_memory */
->  	__u32			capabilities;
-> -	__u32			reserved[1];
-> +	union {
-> +		__u32		flags;
-> +		__u32		reserved[1];
-> +	};
->  };
->  
->  /* capabilities for struct v4l2_requestbuffers and v4l2_create_buffers */
+> The runtime PM off fixes this problem:
 > 
+> echo on > /sys/bus/pci/devices/0000\:01\:00.1/power/control
 
+But this will keep the power of the graphics chip on, and that's what
+the patch was supposed to "fix".
+
+> But I don't think that it's the best solution. My proposal is to
+> create a pr3 check blacklist to keep power for the HDMI audio for
+> those machines. Also we may add a new module parameter for
+> snd-hda-intel to control this. Other ideas?
+
+For nouveau, the best fix is to merge the audio component patch.
+This will make things working without fiddling with the power
+up/down.  The patch has been pending over months under review in DRM
+side, unfortunately...  Please pinging them for driving ahead.
+
+For Nvidia, though, it's no path a binary-only stuff can go with, due
+to the GPL symbol of the component framework.  Those guys know of it
+well, and they seem adding the temporary power up/down procedure by
+poking the proc file from the user-space side at the HDMI connection.
+
+About a module option: I don't think it's much better than the sysfs
+toggle.  You can set up a simple udev rule if needed, too.
+
+
+thanks,
+
+Takashi
+
+> 
+> 					Jaroslav
+> 
+> 
+> > BugLink: https://bugs.launchpad.net/bugs/1840835
+> > Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+> > v5, v6:
+> > - No change.
+> > v4:
+> > - Find upstream port, it's callee's responsibility now.
+> > v3:
+> > - Make changelog more clear.
+> > v2:
+> > - Change wording.
+> > - Rebase to Tiwai's branch.
+> >   sound/pci/hda/hda_intel.c | 8 +++++++-
+> >   1 file changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+> > index 240f4ca76391..e63b871343e5 100644
+> > --- a/sound/pci/hda/hda_intel.c
+> > +++ b/sound/pci/hda/hda_intel.c
+> > @@ -1280,11 +1280,17 @@ static void init_vga_switcheroo(struct azx *chip)
+> >   {
+> >   	struct hda_intel *hda = container_of(chip, struct hda_intel, chip);
+> >   	struct pci_dev *p = get_bound_vga(chip->pci);
+> > +	struct pci_dev *parent;
+> >   	if (p) {
+> >   		dev_info(chip->card->dev,
+> >   			 "Handle vga_switcheroo audio client\n");
+> >   		hda->use_vga_switcheroo = 1;
+> > -		chip->bus.keep_power = 1; /* cleared in either gpu_bound op or codec probe */
+> > +
+> > +		/* cleared in either gpu_bound op or codec probe, or when its
+> > +		 * upstream port has _PR3 (i.e. dGPU).
+> > +		 */
+> > +		parent = pci_upstream_bridge(p);
+> > +		chip->bus.keep_power = parent ? !pci_pr3_present(parent) : 1;
+> >   		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
+> >   		pci_dev_put(p);
+> >   	}
+> >
+> 
+> 
+> -- 
+> Jaroslav Kysela <perex@perex.cz>
+> Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
+> 
