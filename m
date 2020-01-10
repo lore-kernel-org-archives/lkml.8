@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC811C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05647C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A453D2467E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:46:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAAAA2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:46:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JcJvFnOk"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MLzAPeFP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbgAJKqk (ORCPT
+        id S1727639AbgAJKqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:46:40 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37030 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727366AbgAJKqi (ORCPT
+        Fri, 10 Jan 2020 05:46:42 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:36006 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727366AbgAJKql (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:46:38 -0500
-Received: by mail-pl1-f193.google.com with SMTP id c23so711826plz.4
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 02:46:38 -0800 (PST)
+        Fri, 10 Jan 2020 05:46:41 -0500
+Received: by mail-pj1-f67.google.com with SMTP id n59so833065pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 02:46:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=from:to:subject:date:message-id:in-reply-to:references:in-reply-to
          :references;
-        bh=LhPJp+PAwva7bPHMH862TV/8J9fNaEOj4YyHAq59Kg8=;
-        b=JcJvFnOkAVeVV9XrhUVdhbhf5yYoi7T7LuWmU1eyQuEIS8cjao55ztp8J2hmKsZERu
-         7ySGrS8OoHgH0Aw5tYKzVadcXyLU2DVpBAMKYuF0TTn1BFOSbg8vdTs9/3iqdDc65XQs
-         c6IjGBNIzk8C7jGJoIKOKNqfpuNH2po2onG67zoY2sT7UhFn3elCxWo0HZBvadCoTFju
-         c8Sc12UpEskHnz74klkv9hrvvPkl2rDeatvyWYcMC5p1ySBjVa3DKhA/1ieYK0RZZ3O2
-         jP2RjSE9Ib8CJCB9rgZxE8OfMsetjRgBjGzorTj6U7vi4i8D2ucgJd/K7Ec9B0L5fA86
-         8T+Q==
+        bh=grRObLxQC1dul6+pRDryDJ7iJ01KOBHN6lMhZ8cccKs=;
+        b=MLzAPeFP7beVrC6x+pwPY1qQC2rVVqzuSTfjc8+bRTihlVcEg7ZwA3MfAslldQG9Cv
+         ZyvVEsJl0cgjboyrzSLRjEvV25cTv82M+8Peu2lfgGfk88pKjVnLLx7b3fMJ+RUflfG5
+         /YlKW84oVlryTB3jUcIXJaLF56I3ImJ8pkkIQZRjwpljmVY57b6+IHKaT1POBjTkCzjj
+         hGBSSqt8We/IlAzqHbJtNpHnCatzdJayrLuLaLHyPz2ELD5jotdxWY3FvMXsN9rbre9h
+         i5sj0ECT3wckyK6vKKOiGc8pdUYszh+TOmRBzg2AUEsojNI9t7flYq81e8yUFChvuoMN
+         hSDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=LhPJp+PAwva7bPHMH862TV/8J9fNaEOj4YyHAq59Kg8=;
-        b=eQI7UfhiBdafNwexozl+X4AWJ6MYzUNQmEbgL+wFDMmA8lfCLr7DKYmuiXWbbU8W2w
-         GWs0wd5mR1QGQKohT7k46QeNsILnzoK/7p3fVhdnbxBJWLTelbKPj1j7pZW8r1Ope0pc
-         pj7nVvzM9wH4gG2m8BGsse6xuFsmRWxDlKjfo7FisbU6nnSxK7nO7VuOLlVjPEIwdY93
-         Sdw+MLTzcRJArLbjRQRYBTpw1fU4nLjGAfMtV5prnydva18qZdsMvOo6WeoWzjQWtUmX
-         gUbZxMiSDkfj78LlNTdxYz3/2g5NRZXvzcTKS+iJesnnq+rtUDpi1yNJ6UgqKpKO9LYA
-         YG7w==
-X-Gm-Message-State: APjAAAXmQ7ZSoaLz7c3cQd9EwVfAgo/FjpfCU2QRb7A2lO1pG82MhLkF
-        IxB4O6OhcZmk+C0Z0hUK8yJ+2w==
-X-Google-Smtp-Source: APXvYqxvFezduVV4IwfVnEBIdXpJcuKRSwEUMeh6oea69WBD3hgikon+ZODyeGzzks3V+W+ht/b4MQ==
-X-Received: by 2002:a17:90a:ac0f:: with SMTP id o15mr3859733pjq.133.1578653198083;
-        Fri, 10 Jan 2020 02:46:38 -0800 (PST)
+        bh=grRObLxQC1dul6+pRDryDJ7iJ01KOBHN6lMhZ8cccKs=;
+        b=jtgXM9QDTXcJQ5BB2r51jEH7GJc0IPYyVpM77AhA2HesZsQwM4KxwzeFkoGUDAan3f
+         9yVKIznHWnrfAEIN2+qoRXGbvQtm46aVRLFSMbyIm9j+/Nz9M70lTREq9ZY/LNkEBQP3
+         6NDAi46InoDkYQ/J3k7HGXhCMDEEJwZKAc7Aq/w28miwZvIeSLZTKe9CUOrkv2tbr/x7
+         qe34A0kaZ8dZ7dj5bXtyHVfE1aj43g2L75tT9AL1HakiOngVEVA39o/Fkc12ZpNvCAz/
+         SDUspr75MSWzHerCcC3akdeyaQ2DAsWd6Al5r9GIiDy7uHd6H9tt02/awPMUGsqq+Gwn
+         ellA==
+X-Gm-Message-State: APjAAAVElHlZxDVN9mtmX55vx6L/yT+GeRiqzoakF7qM7Pf7S5wqc0vo
+        G/aTO/gZfwQa5YZ5qPprGHVQ0A==
+X-Google-Smtp-Source: APXvYqw7cMaRzsdl58xecnTXyAQj6Du4Yfz9N/+tRgW6t5lhCN16jA9FuUWa+krZ2rl01UgmPMmWqw==
+X-Received: by 2002:a17:90a:cc02:: with SMTP id b2mr3771167pju.137.1578653200591;
+        Fri, 10 Jan 2020 02:46:40 -0800 (PST)
 Received: from greentime-VirtualBox.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id e10sm2590901pfj.7.2020.01.10.02.46.35
+        by smtp.gmail.com with ESMTPSA id e10sm2590901pfj.7.2020.01.10.02.46.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 02:46:37 -0800 (PST)
+        Fri, 10 Jan 2020 02:46:40 -0800 (PST)
 From:   Greentime Hu <greentime.hu@sifive.com>
 To:     greentime.hu@sifive.com, greentime@kernel.org, anup@brainfault.org,
         palmer@dabbelt.com, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org, rppt@linux.ibm.com,
         gkulkarni@marvell.com, will@kernel.org, catalin.marinas@arm.com,
         mark.rutland@arm.com, paul.walmsley@sifive.com, hch@lst.de
-Subject: [RFC PATCH v2 1/4] riscv: Add support pte_protnone and pmd_protnone if CONFIG_NUMA_BALANCING
-Date:   Fri, 10 Jan 2020 18:46:24 +0800
-Message-Id: <1ff7e57f16cb43c8816b90716a872b8f0f101c42.1577694824.git.greentime.hu@sifive.com>
+Subject: [RFC PATCH v2 2/4] riscv: Move unflatten_device_tree() to paging_init() because riscv_numa_init() needs the dt information.
+Date:   Fri, 10 Jan 2020 18:46:25 +0800
+Message-Id: <57f7439888a99002285da8114d4a99baa676e865.1577694824.git.greentime.hu@sifive.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1577694824.git.greentime.hu@sifive.com>
 References: <cover.1577694824.git.greentime.hu@sifive.com>
@@ -75,52 +75,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These two functions are used to distinguish between PROT_NONENUMA
-protections and hinting fault protections.
+It is moved to paging_init() is because that of_numa_init() will use
+of_numa_parse_cpu_nodes() and of_numa_parse_memory_nodes(). We have to
+unflatten_device_tree() first then we can call riscv_numa_init(), but
+riscv_numa_init() shall be called before memblocks_present() because the
+node information will be used in memblocks_present().
+
+So the calling order will be looked like this.
+unflatten_device_tree(); //To get dt information for memory and nodes
+riscv_numa_init(); //It can use of_numa_parse_* and set the nodes information
+memblocks_present(); //The node information can be used now
 
 Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
 ---
- arch/riscv/include/asm/pgtable.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/riscv/kernel/setup.c | 1 -
+ arch/riscv/mm/init.c      | 1 +
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 36ae01761352..9650a4ce073e 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -166,6 +166,11 @@ static inline unsigned long pmd_page_vaddr(pmd_t pmd)
- 	return (unsigned long)pfn_to_virt(pmd_val(pmd) >> _PAGE_PFN_SHIFT);
- }
+diff --git a/arch/riscv/kernel/setup.c b/arch/riscv/kernel/setup.c
+index 365ff8420bfe..bcd85f502fb2 100644
+--- a/arch/riscv/kernel/setup.c
++++ b/arch/riscv/kernel/setup.c
+@@ -67,7 +67,6 @@ void __init setup_arch(char **cmdline_p)
  
-+static inline pte_t pmd_pte(pmd_t pmd)
-+{
-+	return __pte(pmd_val(pmd));
-+}
-+
- /* Yields the page frame number (PFN) of a page table entry */
- static inline unsigned long pte_pfn(pte_t pte)
- {
-@@ -279,6 +284,21 @@ static inline pte_t pte_mkhuge(pte_t pte)
- 	return pte;
- }
+ 	setup_bootmem();
+ 	paging_init();
+-	unflatten_device_tree();
+ 	clint_init_boot_cpu();
  
-+#ifdef CONFIG_NUMA_BALANCING
-+/*
-+ * See the comment in include/asm-generic/pgtable.h
-+ */
-+static inline int pte_protnone(pte_t pte)
-+{
-+	return (pte_val(pte) & (_PAGE_PRESENT | _PAGE_PROT_NONE)) == _PAGE_PROT_NONE;
-+}
-+
-+static inline int pmd_protnone(pmd_t pmd)
-+{
-+	return pte_protnone(pmd_pte(pmd));
-+}
-+#endif
-+
- /* Modify page protection bits */
- static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ #ifdef CONFIG_SWIOTLB
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 69f6678db7f3..fbe69fe47806 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -491,6 +491,7 @@ static inline void setup_vm_final(void)
+ void __init paging_init(void)
  {
+ 	setup_vm_final();
++	unflatten_device_tree();
+ 	memblocks_present();
+ 	sparse_init();
+ 	setup_zero_page();
 -- 
 2.17.1
 
