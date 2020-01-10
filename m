@@ -2,59 +2,60 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AF5C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77280C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C4120838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B4AE20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:17:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="FtvT0qd7"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="cXqWOztT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726652AbgAJRRE (ORCPT
+        id S1727315AbgAJRRH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:17:04 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51669 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726131AbgAJRRE (ORCPT
+        Fri, 10 Jan 2020 12:17:07 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40058 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726131AbgAJRRG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:17:04 -0500
-Received: by mail-wm1-f66.google.com with SMTP id d73so2826217wmd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 09:17:02 -0800 (PST)
+        Fri, 10 Jan 2020 12:17:06 -0500
+Received: by mail-wm1-f65.google.com with SMTP id t14so2759866wmi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 09:17:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ikg7/D3RIJnL4WW31mJDXYflyJd4Gt4lq8m0Udaafsk=;
-        b=FtvT0qd7GMFZH4XVs6mjUKmTAu8KEsSy14OMsKrjBYPRnR1KyKHvOKT4rC2gdjxSzB
-         1WqFP/dRmkXI3I3QSorfAY//jFnZS5GbuiO4k6JmGPIXW/tcFdGKR7AwE2JYCzFEL6fv
-         Ewk9bwPnMjj4thU85YPw5QxFtacZmoe1nCff/fvLIm0VCfCGuha2rJWhn5mjoDg5OZ46
-         HGKmr+MXfs/sFyaqhsXY13BRZtuGADBEMsDHp6GACykKSnCAdZBYiazK8yvPYIx73KRV
-         GbwUpOsICU11mwFdl77RNBbjATp76jI/gFR9eEyitiseUYbqN3znVKpw9v9QQSsDo7JU
-         aZ4g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=eMvYdN33I4+9ymWnbNhZacsLszkk7sr06Cm5LeypaiE=;
+        b=cXqWOztTfUwDyWcSOmq5q8KkhLQbdC1xKjmCSstZ/Hn6Z+4u0++FOr7D5KQew6gdXv
+         5s46S3ILloL2xrwfboySqYcQtXsVFP27YDhENrWgXVl3clNZMkLz021SGYO0l/cttBdZ
+         3KAQOd0IP+mlfZC+Q/ysje6uZrAiDyromn4DR1MW/87HxHO3v9AkWSYYiTzHxNKi+9Uq
+         ZIJkZNhsELC3vGl1MlXIL+HPo30okZ07MFpnMtTULx4E4egxelSAfUkJRslnFyPczYDA
+         WEBICS4JV3NfsVj55Gn5xNG3n1jtJumfAxqO2R7HxQ5SjT0jl33Qw7qgrABFoyADjik+
+         Sz0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ikg7/D3RIJnL4WW31mJDXYflyJd4Gt4lq8m0Udaafsk=;
-        b=WOe5R1WxSS5BrjF9mEO9g5ASozkzedRGSK9B+BsKPUJdW+vKxEYKAvWgcl1qoabi7/
-         PiA5pYt1zPzHACsIsA2Ai91G1Q/RmQin/kMGUwyLTFPPpjj6IjE3go+ivefrqmoBdhw4
-         cmwgMutTFflzG3HqPYq6grOw+hPpidpFUJKEJfpzH2JXa/Q+ybDji8jN8jJWc9Ogg9oG
-         tw+E95pjQxVLZ1gXjzURd0Ft31QxtFWjmcWAzdmzYV+/ihXyK4pv2RS8sXHrmow/8Z/y
-         8axGwFn+5gWjZZCZmJF24x4VVs8uBzcjwvGnI+E6EfKJQkFdVkoIgF56MEg2bOdZcwld
-         qDzg==
-X-Gm-Message-State: APjAAAWbw2R0rCBzBw67TUkW8mVPRsBw/UGGgyKOX6hI1/6a+yzmmROj
-        fAAbuR7C1CdGw4oXMzRqO0XDkA==
-X-Google-Smtp-Source: APXvYqzQJsMgqTHq6X0mWLemADZwjQXVEd3suMxwkP0Wa9td3m4/HufEJ1evDQKl2F9VK7FYC4Aygg==
-X-Received: by 2002:a1c:4884:: with SMTP id v126mr5123132wma.64.1578676622292;
-        Fri, 10 Jan 2020 09:17:02 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=eMvYdN33I4+9ymWnbNhZacsLszkk7sr06Cm5LeypaiE=;
+        b=MxCvCBm1VH10jNJrWE/+8lChgxUVW06goTNhWrWE//vzY3Bi2QV7/uqda2hHD6s/Bb
+         TRG4iqJBKu50fmmW1N3dRunVraZnk6/Y5zHCitakBbttaUmhG1C3iSur4kMxR4n8ZI3S
+         lF11aDBg2CQ02m6i37wJBUgnGZgxF8VyKHw2Ny0CvaFq4lfNFqSZ0Q+kL6xt/a+YOov1
+         ARrnbd6tjqgrROHI6+1gZNO5coaLppRBBmKIvNblf1wuRfR+Xw+Yid1UBxuvVp5KJfDi
+         KPkf0z8lxjAaBc/ebgtSF+Mq7JZ/qWgMtxlBUtNzYHtU4/h7m35ikMbaOqhcSDto6iK5
+         nFAQ==
+X-Gm-Message-State: APjAAAUnaARgwBk0SvmHFv9IzhccBE51j71z60IMqhiqha6rD0640Kxd
+        TNdosn8PxAjfRTADTt3965/xxA==
+X-Google-Smtp-Source: APXvYqxka4QzXLEAcNp6/SHuWVKMR5GdHU980ugJZUTkhmLyhAbEB0PPB0uoiBUnQlyurAJ7pE2V7A==
+X-Received: by 2002:a1c:9c4c:: with SMTP id f73mr5685494wme.125.1578676624588;
+        Fri, 10 Jan 2020 09:17:04 -0800 (PST)
 Received: from debian-brgl.home ([2a01:cb1d:af:5b00:b0ec:c83d:aa26:b93])
-        by smtp.gmail.com with ESMTPSA id z123sm3072725wme.18.2020.01.10.09.16.56
+        by smtp.gmail.com with ESMTPSA id z123sm3072725wme.18.2020.01.10.09.17.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 09:17:01 -0800 (PST)
+        Fri, 10 Jan 2020 09:17:04 -0800 (PST)
 From:   Bartosz Golaszewski <brgl@bgdev.pl>
 To:     Sekhar Nori <nsekhar@ti.com>,
         Daniel Lezcano <daniel.lezcano@linaro.org>,
@@ -63,10 +64,12 @@ To:     Sekhar Nori <nsekhar@ti.com>,
         Kevin Hilman <khilman@kernel.org>
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 0/3] ARM: davinci: convert dm365 to using the new clocksource driver
-Date:   Fri, 10 Jan 2020 18:16:40 +0100
-Message-Id: <20200110171643.18578-1-brgl@bgdev.pl>
+Subject: [PATCH v3 2/3] ARM: davinci: dm365: switch to using the clocksource driver
+Date:   Fri, 10 Jan 2020 18:16:42 +0100
+Message-Id: <20200110171643.18578-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200110171643.18578-1-brgl@bgdev.pl>
+References: <20200110171643.18578-1-brgl@bgdev.pl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,40 +79,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-This is a follow-up to the big series converting DaVinci to using
-a proper clocksource driver. Last time we couldn't merge the entire
-series because of a bug that only appears on dm365 Soc when using
-ancient u-boot.
+We now have a proper clocksource driver for davinci. Switch the dm365
+platform to using it.
 
-This series contains a workaround for this problem, a patch finally
-converting the platform as well as a removal of all obsolete code.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Reviewed-by: David Lechner <david@lechnology.com>
+---
+ arch/arm/mach-davinci/dm365.c | 22 +++++++++++++++-------
+ 1 file changed, 15 insertions(+), 7 deletions(-)
 
-v1 -> v2:
-- simplify patch 1/3 by using a boolean flag instead of caching the
-  value bits for TIM34
-
-v2 -> v3:
-- simplify patch 1/3 even more as advised by Daniel Lezcano: simply
-  register clockevents only after tim34 is initialized
-
-Bartosz Golaszewski (3):
-  clocksource: davinci: only enable clockevents once tim34 is
-    initialized
-  ARM: davinci: dm365: switch to using the clocksource driver
-  ARM: davinci: remove legacy timer support
-
- arch/arm/mach-davinci/Makefile              |   3 +-
- arch/arm/mach-davinci/devices-da8xx.c       |   1 -
- arch/arm/mach-davinci/devices.c             |  19 -
- arch/arm/mach-davinci/dm365.c               |  22 +-
- arch/arm/mach-davinci/include/mach/common.h |  17 -
- arch/arm/mach-davinci/include/mach/time.h   |  33 --
- arch/arm/mach-davinci/time.c                | 400 --------------------
- drivers/clocksource/timer-davinci.c         |   8 +-
- 8 files changed, 20 insertions(+), 483 deletions(-)
- delete mode 100644 arch/arm/mach-davinci/include/mach/time.h
- delete mode 100644 arch/arm/mach-davinci/time.c
-
+diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
+index 9fc5c73cc0be..c1e0d46996e4 100644
+--- a/arch/arm/mach-davinci/dm365.c
++++ b/arch/arm/mach-davinci/dm365.c
+@@ -35,7 +35,8 @@
+ #include <mach/cputype.h>
+ #include <mach/mux.h>
+ #include <mach/serial.h>
+-#include <mach/time.h>
++
++#include <clocksource/timer-davinci.h>
+ 
+ #include "asp.h"
+ #include "davinci.h"
+@@ -660,10 +661,16 @@ static struct davinci_id dm365_ids[] = {
+ 	},
+ };
+ 
+-static struct davinci_timer_info dm365_timer_info = {
+-	.timers		= davinci_timer_instance,
+-	.clockevent_id	= T0_BOT,
+-	.clocksource_id	= T0_TOP,
++/*
++ * Bottom half of timer0 is used for clockevent, top half is used for
++ * clocksource.
++ */
++static const struct davinci_timer_cfg dm365_timer_cfg = {
++	.reg = DEFINE_RES_IO(DAVINCI_TIMER0_BASE, SZ_128),
++	.irq = {
++		DEFINE_RES_IRQ(DAVINCI_INTC_IRQ(IRQ_TINT0_TINT12)),
++		DEFINE_RES_IRQ(DAVINCI_INTC_IRQ(IRQ_TINT0_TINT34)),
++	},
+ };
+ 
+ #define DM365_UART1_BASE	(IO_PHYS + 0x106000)
+@@ -723,7 +730,6 @@ static const struct davinci_soc_info davinci_soc_info_dm365 = {
+ 	.pinmux_base		= DAVINCI_SYSTEM_MODULE_BASE,
+ 	.pinmux_pins		= dm365_pins,
+ 	.pinmux_pins_num	= ARRAY_SIZE(dm365_pins),
+-	.timer_info		= &dm365_timer_info,
+ 	.emac_pdata		= &dm365_emac_pdata,
+ 	.sram_dma		= 0x00010000,
+ 	.sram_len		= SZ_32K,
+@@ -771,6 +777,7 @@ void __init dm365_init_time(void)
+ {
+ 	void __iomem *pll1, *pll2, *psc;
+ 	struct clk *clk;
++	int rv;
+ 
+ 	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DM365_REF_FREQ);
+ 
+@@ -789,7 +796,8 @@ void __init dm365_init_time(void)
+ 		return;
+ 	}
+ 
+-	davinci_timer_init(clk);
++	rv = davinci_timer_register(clk, &dm365_timer_cfg);
++	WARN(rv, "Unable to register the timer: %d\n", rv);
+ }
+ 
+ void __init dm365_register_clocks(void)
 -- 
 2.23.0
 
