@@ -2,167 +2,227 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B0DC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A47FC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D32482080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 128E72082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="WLKbq/8n";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="AxEtURSc"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="W8ygOzUr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbgAJJq2 (ORCPT
+        id S1727374AbgAJJrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 04:46:28 -0500
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:23578 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727310AbgAJJq1 (ORCPT
+        Fri, 10 Jan 2020 04:47:12 -0500
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:41465 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727169AbgAJJrL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 04:46:27 -0500
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00A9h26a003745;
-        Fri, 10 Jan 2020 01:45:57 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=date : from : to :
- cc : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=proofpoint;
- bh=dnhh0blQRHTvfNCUjaAoV2H6e3IlXLK1HA+6hxMEDEE=;
- b=WLKbq/8n1Czt6qu2vp8ZILJdL5fUiLYId3J1mQnag6v1VXSOwNidiLmYnVXs69cU2H3R
- MaQpDGQJ8qj/1xI6XYgStSh/dPwevS1YAvVpwr7JyRFRfyKFxPsus+pdy1yK+Qlya0IL
- hOK1IsvW1o2srWdEmtVV66nqhn3WNOyhOeNYAAH79mT6SPZRRJUXX27zKKLeIgq/oNuw
- PM7nGd2AoVph3nKnvfiejWorSU1IYHk6VJfjUMuj3fartUyqKmqwWXBayRE8MLUQXIib
- Sxz7LtF+PcDbKmE52IktUKC3Sg3bMk0Kl3fypppDAs9d4JdgHiMpoI5Sr9SF7cGG/UTI IA== 
-Received: from nam04-bn3-obe.outbound.protection.outlook.com (mail-bn3nam04lp2052.outbound.protection.outlook.com [104.47.46.52])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2xar524vvk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jan 2020 01:45:56 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JeH7SGbhI9YJ2Uvb/UtPjvMfnPVbOM5Dj4VRyrnH33uVMB4lJmew548B0W8MI53c1OCUG9EV4VilYllIDtYRMMdVp2pkDNyY3/kYDoCS7YvuVctfQ81t5mPkZazdmH9UfPzrEoOuwkwuNR53eb3S7hu5gc+oaDnRNDDAGtfa2zSuLY7DY2JTc4D0lR5XWCpkUx2Kem8DaP0d5zvv45H+t5rL5geuMBY9z/at1mWyFJOCkJgVV0/RUEzV1ix2A+g9rVv3cK3EPSH3iquNmKyHixmd+ZjsoSjPNFZ/bKhOT5UTfya4cKJzKG8iFIoBCS/wUF70ePegKbqstdOtwE9WdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dnhh0blQRHTvfNCUjaAoV2H6e3IlXLK1HA+6hxMEDEE=;
- b=XGnVKv+5ecfu6E96v1nfpZ26AQELDKitJnxPaDp6AguFyxO3v00VvNFc67y+lIYbLBpDxM0Xl0ubgKMgiLg6kYTt2isOmfNu2vF+P5/buH/BkkEz2Ab6iE4v4A3/SHS8jyw69s9Ur5l6p6qQRI2UiIPtDv96xthsMQItsjzkplcnmT8MSj2eqX56WcJSH2TCa3MoQw4UVHSYhn9daG9m6Ya+CeozywaWDlH4FtQi0JT90UnQXaFQoUtKfd8EAeGSeGT7roIQWhEbzckra1G+N/UMEd9TqyGwaVTMCg3qgF9tOGo1oWlLH30+bESjahH/EaBVkj/4/MFGIz+dHKqAtA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 64.207.220.243) smtp.rcpttodomain=infradead.org smtp.mailfrom=cadence.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dnhh0blQRHTvfNCUjaAoV2H6e3IlXLK1HA+6hxMEDEE=;
- b=AxEtURScr8BGxQL/YV00U9jIeZea6fQirafQJu9O9PE827PTM8OmCEiRkUo9McHo/AXxmT5sBa+LBGjJ8LhoXDu//PM4shrdDiuv4yrzLwEJOFEqh+jFwl1tl7p7/TOyFLRgv2pzi7GiPQxxbSW5cC+vqvVhv1gLpRJBsSbB+9Y=
-Received: from CH2PR07CA0014.namprd07.prod.outlook.com (2603:10b6:610:20::27)
- by BL0PR07MB4947.namprd07.prod.outlook.com (2603:10b6:208:43::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.8; Fri, 10 Jan
- 2020 09:45:53 +0000
-Received: from DM6NAM12FT003.eop-nam12.prod.protection.outlook.com
- (2a01:111:f400:fe59::203) by CH2PR07CA0014.outlook.office365.com
- (2603:10b6:610:20::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.10 via Frontend
- Transport; Fri, 10 Jan 2020 09:45:53 +0000
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 64.207.220.243 as permitted sender) receiver=protection.outlook.com;
- client-ip=64.207.220.243; helo=wcmailrelayl01.cadence.com;
-Received: from wcmailrelayl01.cadence.com (64.207.220.243) by
- DM6NAM12FT003.mail.protection.outlook.com (10.13.179.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.6 via Frontend Transport; Fri, 10 Jan 2020 09:45:53 +0000
-Received: from mailsj6.global.cadence.com (mailsj6.cadence.com [158.140.32.112])
-        by wcmailrelayl01.cadence.com (8.14.7/8.14.4) with ESMTP id 00A9jnMG167399
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 01:45:50 -0800
-X-CrossPremisesHeadersFilteredBySendConnector: mailsj6.global.cadence.com
-Received: from global.cadence.com (158.140.32.37) by
- mailsj6.global.cadence.com (158.140.32.112) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 10 Jan 2020 01:45:48 -0800
-Date:   Fri, 10 Jan 2020 10:45:20 +0100
-From:   Piotr Sroka <piotrs@cadence.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-CC:     Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] mtd: rawnand: cadence: Change types of function
- parameters keeping DMA address
-Message-ID: <20200110094519.GA23024@global.cadence.com>
-References: <1575546963-436-1-git-send-email-piotrs@cadence.com>
- <20200109202003.44ec5102@xps13>
+        Fri, 10 Jan 2020 04:47:11 -0500
+Received: from [IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef]
+ ([IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id pqsjildy2pLtbpqsmiPiOz; Fri, 10 Jan 2020 10:47:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578649629; bh=SWljMJ5OlZ99yjeAtgtMgDXrvThp5klPre+IS+vRzDg=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=W8ygOzUrCv5yF1fyPEG7p0kPS8KfKKenMTXA7iaQ35a2twu7QYd/lQ5bTHuEEq5xA
+         Jl3IGqC1G5oJ4v4J1KM4xSzwPiouSXLzrrYZrOwDd23iHZr3L2cjOb3TY5o1s5nw57
+         NyUTlZ4x/wekDifmeS7eYdlWKTLhhcZm40UOH31T89WTkoOPLFVyB5pbq3b//QxwTA
+         /7QsK8uYGU3F5ppM7R2CBigri0cd06mB7ZzNlw4yJ/iD1MANLVP9NOKGj7H4TUq6Aj
+         +CvKJjenKxy0RVecpOhrW4gfDDkIacPr2Zy8bGzNlrCrvZ4WpPn8pinLCG3oBjZyF5
+         S4rXOxtyh2WXQ==
+Subject: Re: [RFC][PATCH 04/15] videobuf2: add queue memory consistency
+ parameter
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-5-senozhatsky@chromium.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <77ddd5cd-affc-ad0f-829d-d624f9798055@xs4all.nl>
+Date:   Fri, 10 Jan 2020 10:47:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200109202003.44ec5102@xps13>
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Originating-IP: [158.140.32.37]
-X-ClientProxiedBy: mailsj7.global.cadence.com (158.140.32.114) To
- mailsj6.global.cadence.com (158.140.32.112)
-X-OrganizationHeadersPreserved: mailsj6.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:64.207.220.243;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(346002)(199004)(36092001)(189003)(8676002)(5660300002)(6916009)(81166006)(81156014)(316002)(86362001)(356004)(8936002)(4326008)(33656002)(4744005)(55016002)(16526019)(6666004)(70206006)(2906002)(54906003)(478600001)(1076003)(36906005)(336012)(426003)(70586007)(26005)(6286002)(186003)(956004)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:BL0PR07MB4947;H:wcmailrelayl01.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:unused.mynethost.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8f5bd7ad-ea6b-4e4a-8ed7-08d795b1e231
-X-MS-TrafficTypeDiagnostic: BL0PR07MB4947:
-X-Microsoft-Antispam-PRVS: <BL0PR07MB4947A456901D7D2210B1CFE2DD380@BL0PR07MB4947.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 02788FF38E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GAdGWnjQeURudW4uQ/3KxokMwbSJL4wIezNkJQGQlVlVd6uiXmyJkw0dYvt8tUJ0oh/GdOIqvJFp4URySimdTdeXQ185wOODmRTU4xX59lMnOi4g7By2nSP5Y8GmFimx4QybvhhEIKqcKYAJor5TTEBug0Cv1NVql7JsQrRA7vgv34fHrUsHnRp6WY6BZXNvwpE7lUbQVPQh06+G++lvVBwL7Y4fyW/Yxu9yM0FW2vbxHwFgHqovumYRoD0XMxPDKn+y0wllvMm1MkNRUqGJqJZ2WLuFm/Nf28dt3cWe6uuT6DNeYMHQPiVZlpQz+9rWuJcPIBHfWRQGG4elT+EKsZPAG3/MrQpQnlMCh4Kdn+DiDsQImlf2yTubGMwUcW+tP+u8FCOyKrbDMPnOVgiOa69kaO+Mc6k+D5tlRn/gjQwODxkQYRxRzAjnRLUYEEvGPziolhr2zq20DC79SrJ44leblCU7LL7A7/0FUTeFt3+Drve/bsMIc0RSoG+bNkPm
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2020 09:45:53.1768
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8f5bd7ad-ea6b-4e4a-8ed7-08d795b1e231
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[64.207.220.243];Helo=[wcmailrelayl01.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB4947
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-10_01:2020-01-10,2020-01-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 impostorscore=0
- suspectscore=0 malwarescore=0 spamscore=0 bulkscore=0 adultscore=0
- clxscore=1015 phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001100083
+In-Reply-To: <20191217032034.54897-5-senozhatsky@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfCdek/Tw0vkKddoukM76+ooSHzCMSWkuVz6pvut6mx3s2x5TmDvdNgkrY5rZ9zKU5NFstcuQsRNgjiIyC68gscUFFGn+qKdsTop8QGTS/TNigk6muoAz
+ xqD98nafh0id/3t5KkAHPcLBUlJB0DMg+x5hEGdujxpWAb5Msbg1J1adNCxvrk4ZZPQpeRwEIcO2dqvhu89mmZz4ipmQ6a3RyZqqmBMYO2rBtXjdLb6ALE4C
+ qFgKuKMNhO6TY2QhB95Va9HGUnW7X5FsgOscufpKefxJ66Tv/KC3G7oYGAZ24RzNrmwHQRJn9qKLra+ME6hDh3oVfkV/7+LDrOlYbPCui83X+M9mkMAFecyT
+ DNFIsJRWXUc4HI1hTOcjlFIhXEHmObbu/zV9mXDbtNsDbPTyzsqcptPvSXQYWmuAVV9V9RcUxeeUU/6BIAoeZt2rJuGpNASuAxwlOyJSgXSR0Ye+5kO54rd8
+ HfpClaD44TY2i4nofky+kpU9mkVeN9DQYkQTJgoe5r5WLs82GcS53maYTpTXD6mrXGuFXWwtTRCF7cDBBwjD2uzfE2j2qFI86pQ7VR99592PXNX5tv3odsqc
+ JFKpERYxCz/UuxOxxOx53qwaCSa3GSykTDwwoU1dLv2l8J8ZEQYb1mKTQ4PYEBkB8Dw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 01/09/2020 20:20, Miquel Raynal wrote:
+On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
+> Preparations for future V4L2_FLAG_MEMORY_NON_CONSISTENT support.
+> 
+> Extend vb2_core_reqbufs() with queue memory consistency flag.
+> API permits queue's consistency attribute adjustment only if
+> the queue has no allocated buffers, not busy, and does not have
+> buffers waiting to be de-queued.
 
-Hi Miquel
+Actually, you can call vb2_core_reqbufs() when buffers are allocated:
+it will free the old buffers, then allocate the new ones. So drop the
+'has no allocated buffers' bit.
 
->
->Hi Piotr,
->
->Piotr Sroka <piotrs@cadence.com> wrote on Thu, 5 Dec 2019 12:55:58
->+0100:
->
->> It was changed to avoid compilation warnings during type casting.
->>
->> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
->> Reported-by: kbuild test robot <lkp@intel.com>
->> ---
->
->I just realized that I received three patches for the same issue about
->a month ago, yours was totally valid but I choose to apply the one from
->someone not contributing a lot to encourage him, hope you don't mind :)
->
->Cheers,
->Miquèl
->
+> 
+> If user-space attempts to allocate a buffer with consistency
+> requirements which don't match queue's consistency model such
+> allocation requests will be failed.
 
-I don't mind :), most importantly it's fixed.
+Is this last paragraph right? I don't see any code for that.
 
-Thanks
-Piotr
+BTW, a general comment about patches 4-6: I prefer if you changes
+this to two patches: one that adds videobuf2-core.c support for
+this for reqbufs and create_bufs, then another that wires up the
+new V4L2 flag in videobuf2-v4l2.c.
 
+It's easier to review that way.
+
+Regards,
+
+	Hans
+
+> 
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+>  drivers/media/common/videobuf2/videobuf2-core.c | 17 +++++++++++++----
+>  drivers/media/common/videobuf2/videobuf2-v4l2.c |  4 ++--
+>  drivers/media/dvb-core/dvb_vb2.c                |  2 +-
+>  include/media/videobuf2-core.h                  |  3 ++-
+>  4 files changed, 18 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/media/common/videobuf2/videobuf2-core.c b/drivers/media/common/videobuf2/videobuf2-core.c
+> index 4489744fbbd9..668c56df13f6 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-core.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-core.c
+> @@ -664,8 +664,16 @@ int vb2_verify_memory_type(struct vb2_queue *q,
+>  }
+>  EXPORT_SYMBOL(vb2_verify_memory_type);
+>  
+> +static void __set_queue_consistency(struct vb2_queue *q, bool consistent_mem)
+> +{
+> +	if (consistent_mem)
+> +		q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
+> +	else
+> +		q->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
+> +}
+> +
+>  int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+> -		unsigned int *count)
+> +		bool consistent_mem, unsigned int *count)
+>  {
+>  	unsigned int num_buffers, allocated_buffers, num_planes = 0;
+>  	unsigned plane_sizes[VB2_MAX_PLANES] = { };
+> @@ -720,6 +728,7 @@ int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+>  	num_buffers = min_t(unsigned int, num_buffers, VB2_MAX_FRAME);
+>  	memset(q->alloc_devs, 0, sizeof(q->alloc_devs));
+>  	q->memory = memory;
+> +	__set_queue_consistency(q, consistent_mem);
+>  
+>  	/*
+>  	 * Ask the driver how many buffers and planes per buffer it requires.
+> @@ -2498,7 +2507,7 @@ static int __vb2_init_fileio(struct vb2_queue *q, int read)
+>  	fileio->memory = VB2_MEMORY_MMAP;
+>  	fileio->type = q->type;
+>  	q->fileio = fileio;
+> -	ret = vb2_core_reqbufs(q, fileio->memory, &fileio->count);
+> +	ret = vb2_core_reqbufs(q, fileio->memory, true, &fileio->count);
+>  	if (ret)
+>  		goto err_kfree;
+>  
+> @@ -2555,7 +2564,7 @@ static int __vb2_init_fileio(struct vb2_queue *q, int read)
+>  
+>  err_reqbufs:
+>  	fileio->count = 0;
+> -	vb2_core_reqbufs(q, fileio->memory, &fileio->count);
+> +	vb2_core_reqbufs(q, fileio->memory, true, &fileio->count);
+>  
+>  err_kfree:
+>  	q->fileio = NULL;
+> @@ -2575,7 +2584,7 @@ static int __vb2_cleanup_fileio(struct vb2_queue *q)
+>  		vb2_core_streamoff(q, q->type);
+>  		q->fileio = NULL;
+>  		fileio->count = 0;
+> -		vb2_core_reqbufs(q, fileio->memory, &fileio->count);
+> +		vb2_core_reqbufs(q, fileio->memory, true, &fileio->count);
+>  		kfree(fileio);
+>  		dprintk(3, "file io emulator closed\n");
+>  	}
+> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> index 2fccfe2a57f8..f1e88c9398c7 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> @@ -695,7 +695,7 @@ int vb2_reqbufs(struct vb2_queue *q, struct v4l2_requestbuffers *req)
+>  	int ret = vb2_verify_memory_type(q, req->memory, req->type);
+>  
+>  	fill_buf_caps(q, &req->capabilities);
+> -	return ret ? ret : vb2_core_reqbufs(q, req->memory, &req->count);
+> +	return ret ? ret : vb2_core_reqbufs(q, req->memory, true, &req->count);
+>  }
+>  EXPORT_SYMBOL_GPL(vb2_reqbufs);
+>  
+> @@ -945,7 +945,7 @@ int vb2_ioctl_reqbufs(struct file *file, void *priv,
+>  		return res;
+>  	if (vb2_queue_is_busy(vdev, file))
+>  		return -EBUSY;
+> -	res = vb2_core_reqbufs(vdev->queue, p->memory, &p->count);
+> +	res = vb2_core_reqbufs(vdev->queue, p->memory, true, &p->count);
+>  	/* If count == 0, then the owner has released all buffers and he
+>  	   is no longer owner of the queue. Otherwise we have a new owner. */
+>  	if (res == 0)
+> diff --git a/drivers/media/dvb-core/dvb_vb2.c b/drivers/media/dvb-core/dvb_vb2.c
+> index 6974f1731529..e60063652164 100644
+> --- a/drivers/media/dvb-core/dvb_vb2.c
+> +++ b/drivers/media/dvb-core/dvb_vb2.c
+> @@ -342,7 +342,7 @@ int dvb_vb2_reqbufs(struct dvb_vb2_ctx *ctx, struct dmx_requestbuffers *req)
+>  
+>  	ctx->buf_siz = req->size;
+>  	ctx->buf_cnt = req->count;
+> -	ret = vb2_core_reqbufs(&ctx->vb_q, VB2_MEMORY_MMAP, &req->count);
+> +	ret = vb2_core_reqbufs(&ctx->vb_q, VB2_MEMORY_MMAP, true, &req->count);
+>  	if (ret) {
+>  		ctx->state = DVB_VB2_STATE_NONE;
+>  		dprintk(1, "[%s] count=%d size=%d errno=%d\n", ctx->name,
+> diff --git a/include/media/videobuf2-core.h b/include/media/videobuf2-core.h
+> index 026004180440..810af5cf5742 100644
+> --- a/include/media/videobuf2-core.h
+> +++ b/include/media/videobuf2-core.h
+> @@ -726,6 +726,7 @@ void vb2_core_querybuf(struct vb2_queue *q, unsigned int index, void *pb);
+>   * vb2_core_reqbufs() - Initiate streaming.
+>   * @q:		pointer to &struct vb2_queue with videobuf2 queue.
+>   * @memory:	memory type, as defined by &enum vb2_memory.
+> + * @consistent_mem:	memory consistency model.
+>   * @count:	requested buffer count.
+>   *
+>   * Videobuf2 core helper to implement VIDIOC_REQBUF() operation. It is called
+> @@ -750,7 +751,7 @@ void vb2_core_querybuf(struct vb2_queue *q, unsigned int index, void *pb);
+>   * Return: returns zero on success; an error code otherwise.
+>   */
+>  int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+> -		unsigned int *count);
+> +		bool consistent_mem, unsigned int *count);
+>  
+>  /**
+>   * vb2_core_create_bufs() - Allocate buffers and any required auxiliary structs
+> 
 
