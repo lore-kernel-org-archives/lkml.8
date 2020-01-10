@@ -2,103 +2,117 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860D8C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5C9C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6103C2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D157A2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:34:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEi0dKiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728224AbgAJOcp (ORCPT
+        id S1728015AbgAJOel (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:32:45 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:35641 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727368AbgAJOco (ORCPT
+        Fri, 10 Jan 2020 09:34:41 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34889 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727368AbgAJOel (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:32:44 -0500
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id EFC75240002;
-        Fri, 10 Jan 2020 14:32:38 +0000 (UTC)
-Date:   Fri, 10 Jan 2020 15:32:38 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Claudiu.Beznea@microchip.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com,
-        vkoul@kernel.org, Eugen.Hristev@microchip.com, jic23@kernel.org,
-        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
-        mchehab@kernel.org, lee.jones@linaro.org, richard.genoud@gmail.com,
-        radu_nicolae.pirea@upb.ro, Tudor.Ambarus@microchip.com,
-        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
-        wg@grandegger.com, mkl@pengutronix.de, a.zummo@towertech.it,
-        broonie@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [PATCH 03/16] dt-bindings: atmel-tcb: add microchip,<chip>-tcb
-Message-ID: <20200110143238.GG1027187@piout.net>
-References: <1578488123-26127-1-git-send-email-claudiu.beznea@microchip.com>
- <1578488123-26127-4-git-send-email-claudiu.beznea@microchip.com>
- <20200110134001.GD1027187@piout.net>
- <da99fbce-8341-19d2-12c9-144564d70726@microchip.com>
+        Fri, 10 Jan 2020 09:34:41 -0500
+Received: by mail-wr1-f65.google.com with SMTP id g17so2040267wro.2;
+        Fri, 10 Jan 2020 06:34:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZMNQJdAFaOKSoBirJdfDDp1ez5wjioL8ZApZUPhDZGA=;
+        b=PEi0dKiUVGpgkbyvtn6TmoyBcrbk7DV/nGOvh2MXlE4dpi790wSCeUvat1J1ODbDVa
+         1T1pfyL5N1i/0ADA7w0TEzdb/vZ0GeJhKwbCmc1xPphzWSnZvlc5yyFz+33d0z8EnHDl
+         q0+1cx3xc4lsoVJY34OsuhrlPguKYeAs+UOvlvsg4YS2fp0nZhfE5hlYfSePQ5wHxups
+         VgSul/x6p2+AqLu/UgnBf5Sp7oyHbebfFu3pFN+seZyMhxcWfYP0VoTKfdlotqFZY0kQ
+         mMhh7s1so0SXdEcDGDRQ7zic3DEJc/K/shgxmvY22HPRfZxey2mGmt/TL4fFV6mQH3sl
+         S+VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZMNQJdAFaOKSoBirJdfDDp1ez5wjioL8ZApZUPhDZGA=;
+        b=Trd74vrNae0xJ1hJnx1KwvjNygovQLwcs7uV9x82+XEeCJIi1luFrYHESMx2wpMNF7
+         +NWOr+DoLuOV7LzjukunuBD2NG0wQDIQLbGZ2SNGGnJYc04/QsV25jlWWLvWMb5qcPn8
+         yrS1AvW0N3ANvwmscot5NbjoAKcQOd2J1l91o37CnFzfYDALNvmpOZyitvDSCGbmggiZ
+         SxGbB+AqIdry7qHWmzALJ7m4m/O2m6mG+Qnvv4A2d8ClBS3k9ULDs2Hj5oqcy/u9cwHV
+         tFmbiNANpQ5tvsd6HgU6/nSEcxZkMopeZNbcWbU1zXYbSG1BE5GVAAiZIu2ZKlU8YL2M
+         +2yQ==
+X-Gm-Message-State: APjAAAXyVd1ZDNE1rwKk/UDKML/k3CNPXd9YdAe84p2yv/TXCVZdb1BM
+        Orq3fmE7/cxE0w94zube9pI=
+X-Google-Smtp-Source: APXvYqydmYwjuRWpEnJW7zDkNndZMMKDmmNZQ/qF/g6CupwAPvWiwlhDNfoY0qM9c/h1uUKnpFpfEA==
+X-Received: by 2002:adf:dfc2:: with SMTP id q2mr3821479wrn.251.1578666879258;
+        Fri, 10 Jan 2020 06:34:39 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id h66sm2536850wme.41.2020.01.10.06.34.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 06:34:38 -0800 (PST)
+Date:   Fri, 10 Jan 2020 15:34:37 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     joro@8bytes.org, jonathanh@nvidia.com, linux-tegra@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] memory: tegra: Correct reset value of xusb_hostr
+Message-ID: <20200110143437.GE2233456@ulmo>
+References: <20191220002914.19043-1-nicoleotsuka@gmail.com>
+ <20191220002914.19043-2-nicoleotsuka@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="KuLpqunXa7jZSBt+"
 Content-Disposition: inline
-In-Reply-To: <da99fbce-8341-19d2-12c9-144564d70726@microchip.com>
+In-Reply-To: <20191220002914.19043-2-nicoleotsuka@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/01/2020 14:29:27+0000, Claudiu.Beznea@microchip.com wrote:
-> 
-> 
-> On 10.01.2020 15:40, Alexandre Belloni wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> > 
-> > On 08/01/2020 14:55:10+0200, Claudiu Beznea wrote:
-> >> Add microchip,<chip>-tcb to DT bindings documentation. This is for
-> >> microchip,sam9x60-tcb.
-> >>
-> >> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> >> ---
-> >>  Documentation/devicetree/bindings/mfd/atmel-tcb.txt | 5 +++--
-> >>  1 file changed, 3 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-> >> index c4a83e364cb6..e1713e41f6e0 100644
-> >> --- a/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-> >> +++ b/Documentation/devicetree/bindings/mfd/atmel-tcb.txt
-> >> @@ -1,6 +1,7 @@
-> >>  * Device tree bindings for Atmel Timer Counter Blocks
-> >> -- compatible: Should be "atmel,<chip>-tcb", "simple-mfd", "syscon".
-> >> -  <chip> can be "at91rm9200" or "at91sam9x5"
-> >> +- compatible: Should be "atmel,<chip>-tcb", "microchip,<chip>-tcb",
-> >> +  "simple-mfd", "syscon".
-> >> +  <chip> can be "at91rm9200", "at91sam9x5" or "sam9x60"
-> > 
-> > atmel,sam9x60-tcb, microchip,at91rm9200-tcb and microchip,at91sam9x5-tcb
-> > are not allowed and the documentation should reflect that.
-> 
-> OK! I'll double check it.
-> 
-> > 
-> > It would probably be easier to do that on top of the yaml conversion
-> > here:
-> > https://lore.kernel.org/lkml/20191009224006.5021-2-alexandre.belloni@bootlin.com/
-> 
-> I don't see this integrated in next-20200110. Am I looking at the wrong branch?
-> 
 
-I had a few comments and I need to resend.
+--KuLpqunXa7jZSBt+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+On Thu, Dec 19, 2019 at 04:29:11PM -0800, Nicolin Chen wrote:
+> According to Tegra X1 (Tegra210) TRM, the reset value of xusb_hostr
+> field (bit [7:0]) should be 0x7a. So this patch simply corrects it.
+>=20
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> ---
+>  drivers/memory/tegra/tegra210.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+
+Applied to for-5.6/memory, thanks.
+
+Thierry
+
+--KuLpqunXa7jZSBt+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4Yi30ACgkQ3SOs138+
+s6HnChAAlH9Yv1ffvGQBL7EGN1kk3CBGC5ioxvxbPHjtk7tQhpESolBHMLLsAGIO
+a8MT248f+xIhyJ1KIcr2KBatN7OHkpDzwbUjqEY/YkpVtaFv+OtZiTLGFOHXF/IV
+r+NdozdY0wYbcNr84AGJoIjGzUP4yxreQ5k+MeZhZiUlSAwuSqGBaXgNJO3ILwP9
+MkvWIWF0qdIJaFr9TnekBxusLdjkk+5+S8wWkgBT8t3VQidLDJwcrbvFeey6+zSm
+G6cfuLKRPUxnh0mjrhptz+ykE0ew4mDoN1KcmYRu0pdz3Em9SAfg0bFUiuZXhz+w
+gsEsc/DWhsTzG2zbSuO82oTes1u66rwSz6LzUNWX+isAbUazd3MpN8Ff4xwuSDHk
+7wQYbG9514z60MXQQ8DFvoKaRikQXF2TcTESvOZRcaUxOcEqDrhIYSif+cFHiYfU
+hWVv1YU6RIH6oQO4gtVbJbNPMYrNxwbifLm46fHkiylkc5VOFelXRd4roXdhNZBX
+uqmSY0sa/7xUNmXaCvS7N1tOrfmVSXKWBzRB1waCZyhEkFnkreWfa1KCQh0KMxLT
+GsLAw6ICzF7cgR0WWMd4hc04bEU8wG+eWgDZkysK2hVRl3sG7hyCnhahT6OugCpv
+4jDTUd2qR7tScl63x4t0yM8WiWgeRia7K8S4L7GIwXpvjWjYVUU=
+=PM99
+-----END PGP SIGNATURE-----
+
+--KuLpqunXa7jZSBt+--
