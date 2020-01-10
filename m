@@ -2,169 +2,105 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4888BC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07495C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6232082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D62B8206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbgAJWiL (ORCPT
+        id S1727470AbgAJWmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:38:11 -0500
-Received: from krieglstein.org ([188.68.35.71]:51270 "EHLO krieglstein.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727369AbgAJWiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:38:11 -0500
-Received: from hydra.localnet (p57B137CD.dip0.t-ipconnect.de [87.177.55.205])
-        by krieglstein.org (Postfix) with ESMTPSA id 3E0B14021A;
-        Fri, 10 Jan 2020 23:38:08 +0100 (CET)
-From:   Tim Sander <tim@krieglstein.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: mtd raw nand denali.c broken for Intel/Altera Cyclone V
-Date:   Fri, 10 Jan 2020 23:38:07 +0100
-Message-ID: <2585494.6OhLyxUeiZ@hydra>
-In-Reply-To: <CAK7LNAQOCoJC0RzOhTEofHdR+zU5sQTxV-t4nERBExW1ddW5hw@mail.gmail.com>
-References: <5143724.5TqzkYX0oI@dabox> <2827587.laNcgWlGab@dabox> <CAK7LNAQOCoJC0RzOhTEofHdR+zU5sQTxV-t4nERBExW1ddW5hw@mail.gmail.com>
+        Fri, 10 Jan 2020 17:42:17 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:60029 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727299AbgAJWmQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:42:16 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iq2yj-0006Fk-RI; Fri, 10 Jan 2020 23:42:05 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 3A41A105BDB; Fri, 10 Jan 2020 23:42:05 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        vincenzo.frascino@arm.com, luto@kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [RFC PATCH] powerpc/32: Switch VDSO to C implementation.
+In-Reply-To: <09d07ad3-47a2-db2f-2f14-e002b22d8d9e@c-s.fr>
+References: <8ce3582f7f7da9ff0286ced857e5aa2e5ae6746e.1571662378.git.christophe.leroy@c-s.fr> <alpine.DEB.2.21.1910212312520.2078@nanos.tec.linutronix.de> <f4486e86-3c0c-0eec-1639-0e5956cdb8f1@c-s.fr> <95bd2367-8edc-29db-faa3-7729661e05f2@c-s.fr> <alpine.DEB.2.21.1910261751140.10190@nanos.tec.linutronix.de> <439bce37-9c2c-2afe-9c9e-2f500472f9f8@c-s.fr> <alpine.DEB.2.21.1910262026340.10190@nanos.tec.linutronix.de> <207cef10-3da8-6a52-139c-0620b21b64af@c-s.fr> <87d0bslo7b.fsf@nanos.tec.linutronix.de> <09d07ad3-47a2-db2f-2f14-e002b22d8d9e@c-s.fr>
+Date:   Fri, 10 Jan 2020 23:42:05 +0100
+Message-ID: <87h813rl1e.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
-Am Freitag, 10. Januar 2020, 20:05:20 CET schrieb Masahiro Yamada:
-> On Sat, Jan 11, 2020 at 1:47 AM Tim Sander <tim@krieglstein.org> wrote:
-> > Hi Masahiro Yamada
-> > 
-> > Sorry for the large delay. I have seen the patches at
-> > https://lists.infradead.org/pipermail/linux-mtd/2019-December/092852.html
-> > Seem to resolve the question about the spare_area_skip_bytes register.
-> > 
-> > I have now set the register to 2 which seems to be the right choice on an
-> > Intel SocFPGA. But still i am out of luck trying to boot 5.4.5-rt3 or
-> > 5.5-rc5. I get the following messages during bootup booting:
-> > [    1.825590] denali-nand-dt ff900000.nand: timeout while waiting for irq
-> > 0x1000 [    1.832936] denali-nand-dt: probe of ff900000.nand failed with
-> > error -5
-> > 
-> > But the commit c19e31d0a32dd 2017-06-13 22:45:38 predates the 4.19 kernel
-> > release (Mon Oct 22 07:37:37 2018). So it seems there is not an obvious
-> > commit which is causing the problem. Looking at the changes it might be
-> > that the timing calculations in the driver changed which might also lead
-> > to a similar error.
-> > 
-> > I am booting via NFS the bootloader is placed in NOR flash.  The
-> > corresponding> 
-> > nand dts entry is updated to the new format and looks like this:
-> >                 nand@ff900000 {
-> >                 
-> >                         #address-cells = <0x1>;
-> >                         #size-cells = <0x0>;
-> >                         compatible = "altr,socfpga-denali-nand";
-> >                         reg = <0xff900000 0x100000 0xffb80000 0x10000>;
-> >                         reg-names = "nand_data", "denali_reg";
-> >                         interrupts = <0x0 0x90 0x4>;
-> >                         clocks = <0x2d 0x1e 0x2e>;
-> >                         clock-names = "nand", "nand_x", "ecc";
-> >                         resets = <0x6 0x24>;
-> >                         status = "okay";
-> >                         nand@0 {
-> >                         
-> >                                 reg = <0x0>;
-> >                                 #address-cells = <0x1>;
-> >                                 #size-cells = <0x1>;
-> >                                 partition@0 {
-> >                                 
-> >                                         label = "work";
-> >                                         reg = <0x0 0x10000000>;
-> >                                 
-> >                                 };
-> >                         
-> >                         };
-> >                 
-> >                 };
-> > 
-> > The last kernel i am able to boot is 4.19.10. I have tried booting:
-> > 5.1.21, 5.2.9, 5.3-rc8, 5.4.5-rt3 and 5.5-rc5. They all failed.
-> > Unfortunately the range is quite large for bisecting the problem. It also
-> > occurred to me that all the platforms with Intel Cyclone V in mainline
-> > are development boards which boot from SD-card not exhibiting this
-> > problem on their default boot path.
-> What will happen if you apply all of these:
-> 
-> http://patchwork.ozlabs.org/project/linux-mtd/list/?series=149821
-I have applied this patch set but it does not help completely. The timings are 
-wrong. I don't have access to the hardware now but one thing i tested before i
-left (the HW) was to write the NAND timings from the bootloader into the 
-denali controller after the driver configured the timings in denali_init. 
-After that the driver worked again for me. 
+Christophe,
 
-> on top of the mainline kernel,
-> and then, hack denali->clk_rate and denali->clk_x_rate as follows?
-> 
-> 
-> -       denali->clk_rate = clk_get_rate(dt->clk);
-> -       denali->clk_x_rate = clk_get_rate(dt->clk_x);
-> +       denali->clk_rate = 50000000;
-> +       denali->clk_x_rate = 200000000;
-> 
-> If it still fails, what about this?
-> 
->        denali->clk_rate = 0;
->        denali->clk_x_rate = 0;
-Will try the above next week. Skimming over the socfpga.dtsi it seems as if 
-on the Intel SocFPGA the OSC1 has a value of 25000000 set in 
-socfpga_cyclone5.dtsi (I am currently not sure about the clock tree with all 
-the plls and i am missing the value of osc2?). Also right now it seems i am to 
-tired to parse denali_setup_data_interface...
- 
-> > PS: Here is some snippet from an older mail i didn't sent to the list yet
-> > which might be superseded by now:
-> > To get into this matter i started reading the "Intel Cyclone V HPS TRM"
-> > Section 13-20 Preserving Bad Block Markers:
-> > "You can configure the NAND flash controller to skip over a specified
-> > number of bytes when it writes the last sector in a page to the spare
-> > area. This option write the desired offset to the spare_area_skip_bytes
-> > register in the config group. For example, if the device page size is 2
-> > KB, and the device area, set the spare_area_skip_bytes register to 2.
-> > When the flash controller writes the last sector of the page that
-> > overlaps with the spare area, it spare_area_skip_bytes must be an even
-> > number. For example, if the bad block marker is a single byte, set
-> > spare_area_skip_bytes to 2."
-> 
-> I did not know this documentation.
-> 
-> It says "For example" (twice),
-> it sounds uncertain to me, though.
-> 
-> Anyway, an intel engineer checked the boot ROM code.
-> SPARE_AREA_SKIP_BYTES=2 is correct, he said.
-As far as i understand the documentation it must be a multiple of 2. The most 
-nand flashes i know need one byte for bad block marking so 2 seems to be a 
-pretty sane value. The explanation why default value of 
-spare_area_skip_bytes=0 of the boot rom is a little unfortunate is also in the 
-documentation: The fact that the ECC values might spill into the spare area 
-where the bad block marker of the nand is located.
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> On 01/09/2020 02:05 PM, Thomas Gleixner wrote:
+>> The reason why this is implemented in this way is that
+>> __arch_get_hw_counter() needs a way to express that the clocksource of
+>> the moment is not suitable for VDSO so that the syscall fallback gets
+>> invoked.
+>> 
+>> Sure we could have used a pointer for the value and a return value
+>> indicating the validity, but given the required uptime the resulting
+>> code overhead seemed to be not worth it. At least not for me as I'm not
+>> planning to be around 58 years from now :)
+>> 
+>
+> I managed to get better code and better performance by splitting out the 
+> validity check as follows. Would it be suitable for all arches ?
 
-Best regards
-Tim
+A quick test on x86 shows only a minimal impact, but it's in the
+noise. So from my side that's fine, but I can't talk for ARM[64]/MIPS
 
+> diff --git a/arch/powerpc/include/asm/vdso/gettimeofday.h 
+> b/arch/powerpc/include/asm/vdso/gettimeofday.h
+> index 689f51b0d8c9..11cdd6faa4ad 100644
+> --- a/arch/powerpc/include/asm/vdso/gettimeofday.h
+> +++ b/arch/powerpc/include/asm/vdso/gettimeofday.h
+> @@ -114,15 +114,17 @@ int clock_getres32_fallback(clockid_t _clkid, 
+> struct old_timespec32 *_ts)
+>   	return ret;
+>   }
+>
+> -static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
+> +static __always_inline bool __arch_is_hw_counter_valid(s32 clock_mode)
+>   {
+>   	/*
+>   	 * clock_mode == 0 implies that vDSO are enabled otherwise
+>   	 * fallback on syscall.
+>   	 */
+> -	if (clock_mode)
+> -		return ULLONG_MAX;
+> +	return clock_mode ? false : true;
 
+I don't think we need an arch specific function here. I rather convert
+the boolean of ARM[64] to the x86/MIPS way of VCLOCK_* modes and let the
+generic code check for clock_mode == VCLOCK_NONE.
 
+There is some magic in ARM and MIPS which wants to be able to disable
+the whole thing at compile time, but that can be handled in the generic
+code with just an extra config switch.
 
+I'll have a stab at that tomorrow.
 
+Thanks,
+
+        tglx
