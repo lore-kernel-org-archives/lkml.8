@@ -2,89 +2,99 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 432B1C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC81C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AEC72072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578668406;
-	bh=uEFWL8Sp0xQJUtMRMWMVwcDeHzR9cLPTg7JzfnCCzmc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HFxVqyzkPnSvxW0UPSX6OUTfbbkh39CuGvROzCu7ILNTQS94tFiSZKokTztZxltYc
-	 8F57p3hKubmkOLF3sTeYsxd4yqkTUd60hWAiPrUDYDR7KW1tVnw8a01UNbm8gwPo5p
-	 gCP6NiOLwY5kqH4M6bKdFRkaIOmPZHTi9ILOTnAk=
+	by mail.kernel.org (Postfix) with ESMTP id E85302080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:01:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728373AbgAJPAF (ORCPT
+        id S1728320AbgAJPBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:00:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53230 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 10:01:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727892AbgAJPAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:00:04 -0500
-Received: from ziggy.de (unknown [95.169.227.92])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728152AbgAJPBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 10:01:54 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66F8620721;
-        Fri, 10 Jan 2020 15:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578668404;
-        bh=uEFWL8Sp0xQJUtMRMWMVwcDeHzR9cLPTg7JzfnCCzmc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lyIoNDR04h6TwzT8PpJpApOSLC6PKjoSIeo/vkcNB0+YtRsOnbLqZiVEwDAclxzJO
-         DSQnte96xky5o4rWq10SZZohQx3tFDPBM2LV2QSlZcTaWMKabCkMEM6PLRWqIcEWPI
-         dUu5Zl1X6molO3iwqX6F97nF1GlQguu1zdwbnpts=
-From:   matthias.bgg@kernel.org
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH] dt-bindings: mfd: mediatek: Add MT6397 Pin Controller
-Date:   Fri, 10 Jan 2020 15:59:51 +0100
-Message-Id: <20200110145952.9720-1-matthias.bgg@kernel.org>
-X-Mailer: git-send-email 2.24.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DDC02072E;
+        Fri, 10 Jan 2020 15:01:51 +0000 (UTC)
+Date:   Fri, 10 Jan 2020 10:01:49 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     syzbot <syzbot+704bfe2c7d156640ad7a@syzkaller.appspotmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        arvid.brodin@alten.se, Alexei Starovoitov <ast@kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        Josef Bacik <jbacik@fb.com>, jolsa@redhat.com,
+        Martin KaFai Lau <kafai@fb.com>, kernel-team@fb.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Yonghong Song <yhs@fb.com>
+Subject: Re: WARNING in add_event_to_ctx
+Message-ID: <20200110100149.58ef4893@gandalf.local.home>
+In-Reply-To: <CACT4Y+Z2M3p+26KROAAnGH-HuuWZdu8Cx1TrN7YhWTh9Exj+rQ@mail.gmail.com>
+References: <000000000000946842058bc1291d@google.com>
+        <000000000000ddae64059bc388dc@google.com>
+        <20200110094502.2d6015ab@gandalf.local.home>
+        <CACT4Y+Z2M3p+26KROAAnGH-HuuWZdu8Cx1TrN7YhWTh9Exj+rQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthias Brugger <matthias.bgg@gmail.com>
+On Fri, 10 Jan 2020 15:48:34 +0100
+Dmitry Vyukov <dvyukov@google.com> wrote:
 
-The MT6397 mfd includes a pin controller. Add binding
-a description for it.
+> On Fri, Jan 10, 2020 at 3:45 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > On Thu, 09 Jan 2020 22:50:00 -0800
+> > syzbot <syzbot+704bfe2c7d156640ad7a@syzkaller.appspotmail.com> wrote:
+> >  
+> > > syzbot suspects this bug was fixed by commit:  
+> >
+> > I think these reports need some more information. Like the sample crash
+> > report, so we don't need to be clicking through links to find it.
+> > Because I have no idea what bug was fixed.  
+> 
+> Hi Steve,
+> 
+> Isn't it threaded to the original report in your client? The message
+> has both matching subject and In-Reply-To header. At least that was
+> the idea.
+> 
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Ah, if I go to lore.kernel.org, I see the original report. But that's
+from back in June. I only keep up to two months of emails before I
+archive them.
 
----
+Perhaps add something like:
 
- Documentation/devicetree/bindings/mfd/mt6397.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ Original report: https://lore.kernel.org/bpf/000000000000946842058bc1291d@google.com/
 
-diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
-index a9b105ac00a8..ce22fca9d48b 100644
---- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-+++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-@@ -54,6 +54,11 @@ Optional subnodes:
- 		- compatible: "mediatek,mt6323-pwrc"
- 	For details, see ../power/reset/mt6323-poweroff.txt
- 
-+- pin-controller
-+	Required properties:
-+		- compatible: "mediatek,mt6397-pinctrl"
-+	For details, see ../pinctrl/pinctrl-mt65xx.txt
-+
- Example:
- 	pwrap: pwrap@1000f000 {
- 		compatible = "mediatek,mt8135-pwrap";
--- 
-2.24.0
+?
 
+Thanks!
+
+-- Steve
