@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 857E3C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B89AC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E16A2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 306A32082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729014AbgAJTaP (ORCPT
+        id S1729051AbgAJTaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:30:15 -0500
-Received: from mga17.intel.com ([192.55.52.151]:56599 "EHLO mga17.intel.com"
+        Fri, 10 Jan 2020 14:30:20 -0500
+Received: from mga07.intel.com ([134.134.136.100]:43951 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728977AbgAJTaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:30:11 -0500
+        id S1729004AbgAJTaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 14:30:14 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:30:10 -0800
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:30:14 -0800
 X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
-   d="scan'208";a="238521007"
+   d="scan'208";a="218748606"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:30:10 -0800
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:30:13 -0800
 From:   ira.weiny@intel.com
 To:     linux-kernel@vger.kernel.org
 Cc:     Ira Weiny <ira.weiny@intel.com>,
@@ -38,9 +38,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>,
         "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
         linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH V2 09/12] fs: Prevent mode change if file is mmap'ed
-Date:   Fri, 10 Jan 2020 11:29:39 -0800
-Message-Id: <20200110192942.25021-10-ira.weiny@intel.com>
+Subject: [RFC PATCH V2 11/12] fs/xfs: Clean up locking in dax invalidate
+Date:   Fri, 10 Jan 2020 11:29:41 -0800
+Message-Id: <20200110192942.25021-12-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200110192942.25021-1-ira.weiny@intel.com>
 References: <20200110192942.25021-1-ira.weiny@intel.com>
@@ -53,108 +53,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-Page faults need to ensure the inode mode is correct and consistent with
-the vmf information at the time of the fault.  There is no easy way to
-ensure the vmf information is correct if a mode change is in progress.
-Furthermore, there is no good use case to require a mode change while
-the file is mmap'ed.
-
-Track mmap's of the file and fail the mode change if the file is
-mmap'ed.
+Define a variable to hold the lock flags to ensure that the correct
+locks are returned or released on error.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- fs/inode.c         |  2 ++
- fs/xfs/xfs_ioctl.c |  8 ++++++++
- include/linux/fs.h |  1 +
- mm/mmap.c          | 19 +++++++++++++++++--
- 4 files changed, 28 insertions(+), 2 deletions(-)
+ fs/xfs/xfs_ioctl.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/fs/inode.c b/fs/inode.c
-index 2b0f51161918..944711aed6f8 100644
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -245,6 +245,8 @@ static struct inode *alloc_inode(struct super_block *sb)
- 		return NULL;
- 	}
- 
-+	atomic64_set(&inode->i_mapped, 0);
-+
- 	return inode;
- }
- 
 diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index bc3654fe3b5d..1ab0906c6c7f 100644
+index 1ab0906c6c7f..9a35bf83eaa1 100644
 --- a/fs/xfs/xfs_ioctl.c
 +++ b/fs/xfs/xfs_ioctl.c
-@@ -1200,6 +1200,14 @@ xfs_ioctl_setattr_dax_invalidate(
- 		goto out_unlock;
- 	}
+@@ -1176,7 +1176,7 @@ xfs_ioctl_setattr_dax_invalidate(
+ 	int			*join_flags)
+ {
+ 	struct inode		*inode = VFS_I(ip);
+-	int			error;
++	int			error, flags;
  
-+	/*
-+	 * If there is a mapping in place we must remain in our current mode.
-+	 */
-+	if (atomic64_read(&inode->i_mapped)) {
-+		error = -EBUSY;
-+		goto out_unlock;
-+	}
+ 	*join_flags = 0;
+ 
+@@ -1191,8 +1191,10 @@ xfs_ioctl_setattr_dax_invalidate(
+ 	if (S_ISDIR(inode->i_mode))
+ 		return 0;
+ 
++	flags = XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL;
 +
- 	error = filemap_write_and_wait(inode->i_mapping);
+ 	/* lock, flush and invalidate mapping in preparation for flag change */
+-	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
++	xfs_ilock(ip, flags);
+ 
+ 	if ((fa->fsx_xflags & FS_XFLAG_DAX) == FS_XFLAG_DAX &&
+ 	    !xfs_inode_supports_dax(ip)) {
+@@ -1215,11 +1217,11 @@ xfs_ioctl_setattr_dax_invalidate(
  	if (error)
  		goto out_unlock;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 631f11d6246e..6e7dc626b657 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -740,6 +740,7 @@ struct inode {
- #endif
  
- 	void			*i_private; /* fs or device private pointer */
-+	atomic64_t               i_mapped;
- } __randomize_layout;
+-	*join_flags = XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL;
++	*join_flags = flags;
+ 	return 0;
  
- struct timespec64 timestamp_truncate(struct timespec64 t, struct inode *inode);
-diff --git a/mm/mmap.c b/mm/mmap.c
-index dfaf1130e706..e6b68924b7ca 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -171,12 +171,17 @@ void unlink_file_vma(struct vm_area_struct *vma)
- static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
- {
- 	struct vm_area_struct *next = vma->vm_next;
-+	struct file *f = vma->vm_file;
+ out_unlock:
+-	xfs_iunlock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
++	xfs_iunlock(ip, flags);
+ 	return error;
  
- 	might_sleep();
- 	if (vma->vm_ops && vma->vm_ops->close)
- 		vma->vm_ops->close(vma);
--	if (vma->vm_file)
--		fput(vma->vm_file);
-+	if (f) {
-+		struct inode *inode = file_inode(f);
-+		if (inode)
-+			atomic64_dec(&inode->i_mapped);
-+		fput(f);
-+	}
- 	mpol_put(vma_policy(vma));
- 	vm_area_free(vma);
- 	return next;
-@@ -1837,6 +1842,16 @@ unsigned long mmap_region(struct file *file, unsigned long addr,
- 
- 	vma_set_page_prot(vma);
- 
-+	/*
-+	 * Track if there is mapping in place such that a mode change
-+	 * does not occur on a file which is mapped
-+	 */
-+	if (file) {
-+		struct inode		*inode = file_inode(file);
-+
-+		atomic64_inc(&inode->i_mapped);
-+	}
-+
- 	return addr;
- 
- unmap_and_free_vma:
+ }
 -- 
 2.21.0
 
