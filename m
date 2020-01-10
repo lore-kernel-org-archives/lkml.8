@@ -2,124 +2,139 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A44C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60408C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F1CB2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:32:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="u+wL2c4v"
+	by mail.kernel.org (Postfix) with ESMTP id 313F02077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578652506;
+	bh=O6NFD8wrjXHYKqN+wmpbS8vPepwh3hMeCNx2Yl2KWXE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=RiIlM6KxLFdpnw0V22wG/eyg5h/OE4RLAYslmBPHEwdeoBejE9eMnU0Jr9qp3BeQP
+	 l/Y84gKXo99qTsDP3y/nRW+8NbgDEe8oOsg0QOvboGFw/GvQb0KBCm++DNuLzmubzl
+	 7FWJB5oFQsz14920h3KGfPjA7cW8k5tLc/a4MTvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbgAJKcs (ORCPT
+        id S1727547AbgAJKfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:32:48 -0500
-Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:57803 "EHLO
-        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726697AbgAJKcs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:32:48 -0500
-Received: from [IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef]
- ([IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id pratilzq7pLtbprawiPzAM; Fri, 10 Jan 2020 11:32:46 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1578652366; bh=gjJVby9uVquUwr750rfbXHaGifI2jr0RhPUkWoJN5rI=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=u+wL2c4vbqWi5AWOgN5v7opLIfDSy6K+t9Ks+U9dfmqJvKfx8Goi2WrdWA9yCiICt
-         AgBPalUNujx9TC3rWES3ceJa8HuYTEfW5ePKzpTux1kKj7tn/sfq4frVC8NatiaJEP
-         SwwP8fiEeyS3zhL6sowCSk8kQBxVbUBZLaiBL3JdAROAdMSWeYbTJ2y6Ix1+cn6fv3
-         jKLhPmMJ1we8PcDXDXeO/nrmUSIyqBXaPgehvWwfJzeUsB2BvcSnUTflqamg8HCJk+
-         0n5/Yw2z4k0sTeJHOQzEYecDGCERAqnBa1QYzQKB3Sp247xvp14mO3wEpNKlmiIaxx
-         2PFdFUBomYeQA==
-Subject: Re: [RFC][PATCH 14/15] videobuf2: don't test db_attach in dma-contig
- prepare and finish
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191217032034.54897-1-senozhatsky@chromium.org>
- <20191217032034.54897-15-senozhatsky@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <8d79287c-d868-37cc-85f1-89cf5d8b92a9@xs4all.nl>
-Date:   Fri, 10 Jan 2020 11:32:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 10 Jan 2020 05:35:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33502 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726697AbgAJKfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 05:35:04 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 388AD20721;
+        Fri, 10 Jan 2020 10:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578652504;
+        bh=O6NFD8wrjXHYKqN+wmpbS8vPepwh3hMeCNx2Yl2KWXE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=xr/aOlKnna+8ImgwYVYrX/FO51itRz4WR2ANaPtBOe7Ev2SwQbYcJxsSK3Hu4vyNj
+         ZEJTTwb/4LBdTHTkmxMi/DH30avrAgkjBuFWaYkiuUl4AnKAcRt0Xqlv3UBKxr+8+T
+         UvesEDS8NdT707Y/g6A9bWM7gZwjffQyYxVKKfBU=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1iprd8-0007Js-6n; Fri, 10 Jan 2020 10:35:02 +0000
 MIME-Version: 1.0
-In-Reply-To: <20191217032034.54897-15-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfML14yM9Vzax8I0cQcPmUXvKvshoBz8Gw1Qr7AxI7CtZHh1vmU53s4jSWcc/BddjGM6DrKO9JngNMat9pCW8W7uql/YZpVjrSr46gTMSbTICyZFkY2W8
- PEmS+nwickgcfpGYZU1ij2A+EkBvQPlRhZOIV4T+zxsynR7ra5Hdz8PLXhB7YLy9xw53xX3G7IxYEM55AkfM1N+WBJ2fJzuvN6ixgbDzDAJSPqrKcblWh7NK
- XDpGdgjvQWdBojQeFDCGN5K0Mi6hVlvM4c3T5hUoMIwR7DvyE5KWLWOpOzvrNl7pBowSGlOZhwH0ZzX/BSpQQXaVNOr6vsE/vY1ObnzTwW6q/GyhPmTA0J90
- SW68nfMKmioxRG+wJ60Wj2fuX8nbxBsGlogkT7d4oSeUF55jLsO/YdCD4+ieZthlIX8vNf4kxm6swLiGPgn6n4ToIPYmozOtcUvK5jhL/Un3ouGO85h6CZi1
- VStaWnlLZW3VkOeBxk8Fvu93D1daoee8d0YU67X9sBsz2JSxpfw6TfhNzonLVF72QBK09XFUsY5Baa9fhr1YCd5XJ6QTm728R4nqGifKt+ZP4zl0Kkuv4PHS
- IcLl3Ins2LnGamUfL70LxpKI1tMm4RyYg3gag7k0/YimLV3C76octX+ziwqMKic5jjg=
+Date:   Fri, 10 Jan 2020 10:35:02 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jianyong Wu <Jianyong.Wu@arm.com>
+Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
+        tglx@linutronix.de, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, richardcochran@gmail.com,
+        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
+        Steve Capper <Steve.Capper@arm.com>,
+        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
+        nd <nd@arm.com>
+Subject: Re: [RFC PATCH v9 7/8] ptp: arm64: Enable ptp_kvm for arm64
+In-Reply-To: <HE1PR0801MB16765B52E5DCD8EA480EDABFF4380@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+References: <20191210034026.45229-1-jianyong.wu@arm.com>
+ <20191210034026.45229-8-jianyong.wu@arm.com>
+ <ca162efb3a0de530e119f5237c006515@kernel.org>
+ <HE1PR0801MB1676EE12CF0DB7C5BB8CC62DF4390@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+ <ee801dacbf4143e8d41807d5bfad1409@kernel.org>
+ <HE1PR0801MB16765B52E5DCD8EA480EDABFF4380@HE1PR0801MB1676.eurprd08.prod.outlook.com>
+Message-ID: <a85deebc23c1fa77e6f70b6eaef22a34@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.8
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com, Justin.He@arm.com, nd@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
-> We moved cache management decision making to the upper layer and
-> rely on buffer's need_cache_sync flags and videobuf2 core. If the
-> upper layer (core) has decided to invoke ->prepare() or ->finish()
-> then we must sync.
-> 
-> For DMABUF ->need_cache_sync_on_prepare and ->need_cache_sync_on_flush
-> are always false so videobuf core does not call ->prepare() and
-> ->finish() on such buffers.
-> 
-> Additionally, scratch the DMABUF comment.
+Hi Jianyong,
 
-Just combine this and the next patch into a single patch. No need to
-split this up.
+On 2020-01-10 10:15, Jianyong Wu wrote:
+> Hi Marc,
 
-Regards,
+[...]
 
-	Hans
-
+>> >> > +	ktime_overall = hvc_res.a0 << 32 | hvc_res.a1;
+>> >> > +	*ts = ktime_to_timespec64(ktime_overall);
+>> >> > +	*cycle = hvc_res.a2 << 32 | hvc_res.a3;
+>> >>
+>> >> So why isn't that just a read of the virtual counter, given that what
+>> >> you do in the hypervisor seems to be "cntpct - cntvoff"?
+>> >>
+>> >> What am I missing here?
+>> >>
+>> > We need get clock time and counter cycle at the same time, so we can't
+>> > just read virtual counter at guest and must get it from host.
+>> 
+>> See my comment in my reply to patch #6: *Must* seems like a very 
+>> strong
+>> word, and you don't explain *why* that's better than just computing 
+>> the
+>> total hypercall cost. Hint: given the frequency of the counter (in the 
+>> few MHz
+>> range) vs the frequency of a CPU (in the multiple GHz range, and with 
+>> an IPC
+>> close enough to 1), I doubt that you'll see the counter making much 
+>> progress
+>> across a hypercall.
+>> 
+> Sorry, I will avoid to use those strong words.
 > 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  drivers/media/common/videobuf2/videobuf2-dma-contig.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> index a387260fb321..6ea0961149d7 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
-> @@ -100,8 +100,7 @@ static void vb2_dc_prepare(void *buf_priv)
->  	struct vb2_dc_buf *buf = buf_priv;
->  	struct sg_table *sgt = buf->dma_sgt;
->  
-> -	/* DMABUF exporter will flush the cache for us */
-> -	if (!sgt || buf->db_attach)
-> +	if (!sgt)
->  		return;
->  
->  	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->orig_nents,
-> @@ -113,8 +112,7 @@ static void vb2_dc_finish(void *buf_priv)
->  	struct vb2_dc_buf *buf = buf_priv;
->  	struct sg_table *sgt = buf->dma_sgt;
->  
-> -	/* DMABUF exporter will flush the cache for us */
-> -	if (!sgt || buf->db_attach)
-> +	if (!sgt)
->  		return;
->  
->  	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->orig_nents, buf->dma_dir);
-> 
+> It's really the case that the hypercall won't across cycle in general.
+> But sometimes, kernel preempt
+> may happen in the middle of the hypercall which we can't assume how
+> long before schedule back. so it's better capture them
+> together at the same time.
 
+Fair enough. Please document the rational, as I guess others will ask
+the same questions.
+
+Then the problem to solve is that of the reference counter, as you so 
+far
+assume the virtual counter. I guess you need to be able to let the guest
+select the reference counter when calling the PTP service.
+
+[...]
+
+> By the way, does nested virtualization diff between arm64 and arm32?
+
+There is no nested virt for 32bit (it is explicitly forbidden by the
+architecture).
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
