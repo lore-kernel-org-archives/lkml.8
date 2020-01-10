@@ -2,411 +2,394 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFA9C33CA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7C5C33CA1
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDFC22072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578620839;
-	bh=59qjofW2Er4mFRUMxxcg/RB15ThwjjQHDie0JP1PM9Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=fhpo+DOLG1DZ4lKWL3tTamawM1nkMhotn44+narOsyL8Bu28rLibO6sjakuuFfTEy
-	 DkVzufnh7Bzj5xMRECHWvoWGDTLm6F5XUk9zLx/nIz0mAN2+1fV7MqZc5duYeOIyIV
-	 JdrZP4+Eoogk+zMqbtBmtFPm4lRQXKOd+fSRrSRE=
+	by mail.kernel.org (Postfix) with ESMTP id 6297E20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:49:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G+uSs+0r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbgAJBrT (ORCPT
+        id S1730652AbgAJBtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:47:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45246 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730359AbgAJBrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 20:47:18 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0646320673;
-        Fri, 10 Jan 2020 01:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578620837;
-        bh=59qjofW2Er4mFRUMxxcg/RB15ThwjjQHDie0JP1PM9Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jUN6YJIeC4v4KCWj86pruOi3ZZB3R2l+YxSF6lMhdIaMvaXB10qmubLAoP//ty0Wj
-         Xx7QjwobgatRd2Q08sDILEGHzpT6lwx1Oe9s99bZdxTMeNVceMkD1FqZmExL3LGjt9
-         lysxMJVlq3XZ2cmrbdeDvpKvtERHtVEJ4Wp6Y4oA=
-Date:   Fri, 10 Jan 2020 10:47:11 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Toke =?UTF-8?B?SMO4aWxhbmQtSsO4cmdl?= =?ISO-2022-JP?B?bnNlbg==?= 
-        <thoiland@redhat.com>, Jean-Tsung Hsiao <jhsiao@redhat.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing/uprobe: Fix double perf_event linking on
- multiprobe uprobe
-Message-Id: <20200110104711.103de10bbafbf48bd825dcf1@kernel.org>
-In-Reply-To: <157862073931.1800.3800576241181489174.stgit@devnote2>
-References: <157862073931.1800.3800576241181489174.stgit@devnote2>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 9 Jan 2020 20:49:40 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51046 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730359AbgAJBtk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 20:49:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=p4QP4PbFBViC/IrJOD8s6DAAUObkiprHZ4ezrP5rzQc=; b=G+uSs+0rSmyXt63Zqlr3fcYDw
+        yzCUKp3ycDsskmVEvt9m+o2W843J405vbd5g24KOcd1jZ2nBEBH8PqbF9t75hWbtaqU/hxzffPrGY
+        H7ygacZixNl8ytRjocJALHiEX+rtUPCJv6hAkeH38mfqnVb7ZOzitL0wbXuDA3ZG4pRaz9gtjzepX
+        d5l9gRUcH/uYakCTvWRYsg0nCJCT7EZVaRPipibIoxKkDGqjJxqLA1Ehc8Sk4CV9UwlPNZj31TUz5
+        s5RYBUyiEJ47WfZZHbQfz+OX9uXfrk2OtVChH/ztxCs3YPYHcjEdDoWCqrGcfTI4/ltquDidDZDG8
+        SBm917RrQ==;
+Received: from [2601:1c0:6280:3f0::ed68]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ipjQg-0003AO-Qp; Fri, 10 Jan 2020 01:49:38 +0000
+Subject: Re: [PATCH] Documentation: admin-guide: PM: Add intel_idle document
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Len Brown <len.brown@intel.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux Documentation <linux-doc@vger.kernel.org>
+References: <2011307.aCGEDdB8HR@kreacher>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <d89dd544-77c9-4b80-d91f-c44fc2f83144@infradead.org>
+Date:   Thu, 9 Jan 2020 17:49:37 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <2011307.aCGEDdB8HR@kreacher>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 10:45:39 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+Hi Rafael,
 
-> Fix double perf_event linking to trace_uprobe_filter on
-> multiple uprobe event by moving trace_uprobe_filter under
-> trace_probe_event.
+On 1/9/20 4:13 PM, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> In uprobe perf event, trace_uprobe_filter data structure is
-> managing target mm filters (in perf_event) related to each
-> uprobe event.
+> Add an admin-guide document for the intel_idle driver to describe
+> how it works: how it enumerates idle states, what happens during the
+> initialization of it, how it can be controlled via the kernel command
+> line and so on.
 > 
-> Since commit 60d53e2c3b75 ("tracing/probe: Split trace_event
-> related data from trace_probe") left the trace_uprobe_filter
-> data structure in trace_uprobe, if a trace_probe_event has
-> multiple trace_uprobe (multi-probe event), a perf_event is
-> added to different trace_uprobe_filter on each trace_uprobe.
-> This leads a linked list corruption.
-> 
-> To fix this issue, move trace_uprobe_filter to trace_probe_event
-> and link it once on each event instead of each probe.
-> 
-> Fixes: 60d53e2c3b75 ("tracing/probe: Split trace_event related data from trace_probe")
-> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> URL: https://lkml.kernel.org/r/20200108171611.GA8472@kernel.org
-
-Oops, s/URL/Link/ 
-
-Thanks,
-
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
->  kernel/trace/trace_kprobe.c |    2 -
->  kernel/trace/trace_probe.c  |    5 +-
->  kernel/trace/trace_probe.h  |    3 +
->  kernel/trace/trace_uprobe.c |  124 ++++++++++++++++++++++++++++---------------
->  4 files changed, 86 insertions(+), 48 deletions(-)
 > 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 7f890262c8a3..3e5f9c7d939c 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -290,7 +290,7 @@ static struct trace_kprobe *alloc_trace_kprobe(const char *group,
->  	INIT_HLIST_NODE(&tk->rp.kp.hlist);
->  	INIT_LIST_HEAD(&tk->rp.kp.list);
->  
-> -	ret = trace_probe_init(&tk->tp, event, group);
-> +	ret = trace_probe_init(&tk->tp, event, group, 0);
->  	if (ret < 0)
->  		goto error;
->  
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 905b10af5d5c..bba18cf44a30 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -984,7 +984,7 @@ void trace_probe_cleanup(struct trace_probe *tp)
->  }
->  
->  int trace_probe_init(struct trace_probe *tp, const char *event,
-> -		     const char *group)
-> +		     const char *group, size_t event_data_size)
->  {
->  	struct trace_event_call *call;
->  	int ret = 0;
-> @@ -992,7 +992,8 @@ int trace_probe_init(struct trace_probe *tp, const char *event,
->  	if (!event || !group)
->  		return -EINVAL;
->  
-> -	tp->event = kzalloc(sizeof(struct trace_probe_event), GFP_KERNEL);
-> +	tp->event = kzalloc(sizeof(struct trace_probe_event) + event_data_size,
-> +			    GFP_KERNEL);
->  	if (!tp->event)
->  		return -ENOMEM;
->  
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 4ee703728aec..03e4e180058d 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -230,6 +230,7 @@ struct trace_probe_event {
->  	struct trace_event_call		call;
->  	struct list_head 		files;
->  	struct list_head		probes;
-> +	char				data[0];
->  };
->  
->  struct trace_probe {
-> @@ -322,7 +323,7 @@ static inline bool trace_probe_has_single_file(struct trace_probe *tp)
->  }
->  
->  int trace_probe_init(struct trace_probe *tp, const char *event,
-> -		     const char *group);
-> +		     const char *group, size_t event_data_size);
->  void trace_probe_cleanup(struct trace_probe *tp);
->  int trace_probe_append(struct trace_probe *tp, struct trace_probe *to);
->  void trace_probe_unlink(struct trace_probe *tp);
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index 352073d36585..f66e202fec13 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -60,7 +60,6 @@ static struct dyn_event_operations trace_uprobe_ops = {
->   */
->  struct trace_uprobe {
->  	struct dyn_event		devent;
-> -	struct trace_uprobe_filter	filter;
->  	struct uprobe_consumer		consumer;
->  	struct path			path;
->  	struct inode			*inode;
-> @@ -264,6 +263,14 @@ process_fetch_insn(struct fetch_insn *code, struct pt_regs *regs, void *dest,
->  }
->  NOKPROBE_SYMBOL(process_fetch_insn)
->  
-> +static struct trace_uprobe_filter *
-> +trace_uprobe_get_filter(struct trace_uprobe *tu)
-> +{
-> +	struct trace_probe_event *event = tu->tp.event;
-> +
-> +	return (struct trace_uprobe_filter *)&event->data[0];
-> +}
-> +
->  static inline void init_trace_uprobe_filter(struct trace_uprobe_filter *filter)
->  {
->  	rwlock_init(&filter->rwlock);
-> @@ -351,7 +358,8 @@ alloc_trace_uprobe(const char *group, const char *event, int nargs, bool is_ret)
->  	if (!tu)
->  		return ERR_PTR(-ENOMEM);
->  
-> -	ret = trace_probe_init(&tu->tp, event, group);
-> +	ret = trace_probe_init(&tu->tp, event, group,
-> +				sizeof(struct trace_uprobe_filter));
->  	if (ret < 0)
->  		goto error;
->  
-> @@ -359,7 +367,7 @@ alloc_trace_uprobe(const char *group, const char *event, int nargs, bool is_ret)
->  	tu->consumer.handler = uprobe_dispatcher;
->  	if (is_ret)
->  		tu->consumer.ret_handler = uretprobe_dispatcher;
-> -	init_trace_uprobe_filter(&tu->filter);
-> +	init_trace_uprobe_filter(trace_uprobe_get_filter(tu));
->  	return tu;
->  
->  error:
-> @@ -1067,13 +1075,14 @@ static void __probe_event_disable(struct trace_probe *tp)
->  	struct trace_probe *pos;
->  	struct trace_uprobe *tu;
->  
-> +	tu = container_of(tp, struct trace_uprobe, tp);
-> +	WARN_ON(!uprobe_filter_is_empty(trace_uprobe_get_filter(tu)));
-> +
->  	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
->  		tu = container_of(pos, struct trace_uprobe, tp);
->  		if (!tu->inode)
->  			continue;
->  
-> -		WARN_ON(!uprobe_filter_is_empty(&tu->filter));
-> -
->  		uprobe_unregister(tu->inode, tu->offset, &tu->consumer);
->  		tu->inode = NULL;
->  	}
-> @@ -1108,7 +1117,7 @@ static int probe_event_enable(struct trace_event_call *call,
->  	}
->  
->  	tu = container_of(tp, struct trace_uprobe, tp);
-> -	WARN_ON(!uprobe_filter_is_empty(&tu->filter));
-> +	WARN_ON(!uprobe_filter_is_empty(trace_uprobe_get_filter(tu)));
->  
->  	if (enabled)
->  		return 0;
-> @@ -1205,39 +1214,39 @@ __uprobe_perf_filter(struct trace_uprobe_filter *filter, struct mm_struct *mm)
->  }
->  
->  static inline bool
-> -uprobe_filter_event(struct trace_uprobe *tu, struct perf_event *event)
-> +trace_uprobe_filter_event(struct trace_uprobe_filter *filter,
-> +			  struct perf_event *event)
->  {
-> -	return __uprobe_perf_filter(&tu->filter, event->hw.target->mm);
-> +	return __uprobe_perf_filter(filter, event->hw.target->mm);
->  }
->  
-> -static int uprobe_perf_close(struct trace_uprobe *tu, struct perf_event *event)
-> +static bool trace_uprobe_filter_remove(struct trace_uprobe_filter *filter,
-> +				       struct perf_event *event)
->  {
->  	bool done;
->  
-> -	write_lock(&tu->filter.rwlock);
-> +	write_lock(&filter->rwlock);
->  	if (event->hw.target) {
->  		list_del(&event->hw.tp_list);
-> -		done = tu->filter.nr_systemwide ||
-> +		done = filter->nr_systemwide ||
->  			(event->hw.target->flags & PF_EXITING) ||
-> -			uprobe_filter_event(tu, event);
-> +			trace_uprobe_filter_event(filter, event);
->  	} else {
-> -		tu->filter.nr_systemwide--;
-> -		done = tu->filter.nr_systemwide;
-> +		filter->nr_systemwide--;
-> +		done = filter->nr_systemwide;
->  	}
-> -	write_unlock(&tu->filter.rwlock);
-> -
-> -	if (!done)
-> -		return uprobe_apply(tu->inode, tu->offset, &tu->consumer, false);
-> +	write_unlock(&filter->rwlock);
->  
-> -	return 0;
-> +	return done;
->  }
->  
-> -static int uprobe_perf_open(struct trace_uprobe *tu, struct perf_event *event)
-> +/* This returns true if the filter always covers target mm */
-> +static bool trace_uprobe_filter_add(struct trace_uprobe_filter *filter,
-> +				    struct perf_event *event)
->  {
->  	bool done;
-> -	int err;
->  
-> -	write_lock(&tu->filter.rwlock);
-> +	write_lock(&filter->rwlock);
->  	if (event->hw.target) {
->  		/*
->  		 * event->parent != NULL means copy_process(), we can avoid
-> @@ -1247,28 +1256,21 @@ static int uprobe_perf_open(struct trace_uprobe *tu, struct perf_event *event)
->  		 * attr.enable_on_exec means that exec/mmap will install the
->  		 * breakpoints we need.
->  		 */
-> -		done = tu->filter.nr_systemwide ||
-> +		done = filter->nr_systemwide ||
->  			event->parent || event->attr.enable_on_exec ||
-> -			uprobe_filter_event(tu, event);
-> -		list_add(&event->hw.tp_list, &tu->filter.perf_events);
-> +			trace_uprobe_filter_event(filter, event);
-> +		list_add(&event->hw.tp_list, &filter->perf_events);
->  	} else {
-> -		done = tu->filter.nr_systemwide;
-> -		tu->filter.nr_systemwide++;
-> +		done = filter->nr_systemwide;
-> +		filter->nr_systemwide++;
->  	}
-> -	write_unlock(&tu->filter.rwlock);
-> +	write_unlock(&filter->rwlock);
->  
-> -	err = 0;
-> -	if (!done) {
-> -		err = uprobe_apply(tu->inode, tu->offset, &tu->consumer, true);
-> -		if (err)
-> -			uprobe_perf_close(tu, event);
-> -	}
-> -	return err;
-> +	return done;
->  }
->  
-> -static int uprobe_perf_multi_call(struct trace_event_call *call,
-> -				  struct perf_event *event,
-> -		int (*op)(struct trace_uprobe *tu, struct perf_event *event))
-> +static int uprobe_perf_close(struct trace_event_call *call,
-> +			     struct perf_event *event)
->  {
->  	struct trace_probe *pos, *tp;
->  	struct trace_uprobe *tu;
-> @@ -1278,25 +1280,59 @@ static int uprobe_perf_multi_call(struct trace_event_call *call,
->  	if (WARN_ON_ONCE(!tp))
->  		return -ENODEV;
->  
-> +	tu = container_of(tp, struct trace_uprobe, tp);
-> +	if (trace_uprobe_filter_remove(trace_uprobe_get_filter(tu), event))
-> +		return 0;
-> +
->  	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
->  		tu = container_of(pos, struct trace_uprobe, tp);
-> -		ret = op(tu, event);
-> +		ret = uprobe_apply(tu->inode, tu->offset, &tu->consumer, false);
->  		if (ret)
->  			break;
->  	}
->  
->  	return ret;
->  }
-> +
-> +static int uprobe_perf_open(struct trace_event_call *call,
-> +			    struct perf_event *event)
-> +{
-> +	struct trace_probe *pos, *tp;
-> +	struct trace_uprobe *tu;
-> +	int err = 0;
-> +
-> +	tp = trace_probe_primary_from_call(call);
-> +	if (WARN_ON_ONCE(!tp))
-> +		return -ENODEV;
-> +
-> +	tu = container_of(tp, struct trace_uprobe, tp);
-> +	if (trace_uprobe_filter_add(trace_uprobe_get_filter(tu), event))
-> +		return 0;
-> +
-> +	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
-> +		err = uprobe_apply(tu->inode, tu->offset, &tu->consumer, true);
-> +		if (err) {
-> +			uprobe_perf_close(call, event);
-> +			break;
-> +		}
-> +	}
-> +
-> +	return err;
-> +}
-> +
->  static bool uprobe_perf_filter(struct uprobe_consumer *uc,
->  				enum uprobe_filter_ctx ctx, struct mm_struct *mm)
->  {
-> +	struct trace_uprobe_filter *filter;
->  	struct trace_uprobe *tu;
->  	int ret;
->  
->  	tu = container_of(uc, struct trace_uprobe, consumer);
-> -	read_lock(&tu->filter.rwlock);
-> -	ret = __uprobe_perf_filter(&tu->filter, mm);
-> -	read_unlock(&tu->filter.rwlock);
-> +	filter = trace_uprobe_get_filter(tu);
-> +
-> +	read_lock(&filter->rwlock);
-> +	ret = __uprobe_perf_filter(filter, mm);
-> +	read_unlock(&filter->rwlock);
->  
->  	return ret;
->  }
-> @@ -1419,10 +1455,10 @@ trace_uprobe_register(struct trace_event_call *event, enum trace_reg type,
->  		return 0;
->  
->  	case TRACE_REG_PERF_OPEN:
-> -		return uprobe_perf_multi_call(event, data, uprobe_perf_open);
-> +		return uprobe_perf_open(event, data);
->  
->  	case TRACE_REG_PERF_CLOSE:
-> -		return uprobe_perf_multi_call(event, data, uprobe_perf_close);
-> +		return uprobe_perf_close(event, data);
->  
->  #endif
->  	default:
+> The document introduced by this patch matches the driver code behavior
+> after the changes recently added to linux-next.
 > 
+> ---
+>  Documentation/admin-guide/pm/intel_idle.rst    |  268 +++++++++++++++++++++++++
+>  Documentation/admin-guide/pm/working-state.rst |    1 
+>  2 files changed, 269 insertions(+)
+> 
+> Index: linux-pm/Documentation/admin-guide/pm/working-state.rst
+> ===================================================================
+> --- linux-pm.orig/Documentation/admin-guide/pm/working-state.rst
+> +++ linux-pm/Documentation/admin-guide/pm/working-state.rst
+> @@ -8,6 +8,7 @@ Working-State Power Management
+>     :maxdepth: 2
+>  
+>     cpuidle
+> +   intel_idle
+>     cpufreq
+>     intel_pstate
+>     intel_epb
+> Index: linux-pm/Documentation/admin-guide/pm/intel_idle.rst
+> ===================================================================
+> --- /dev/null
+> +++ linux-pm/Documentation/admin-guide/pm/intel_idle.rst
+> @@ -0,0 +1,268 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +.. include:: <isonum.txt>
+> +
+> +==============================================
+> +``intel_idle`` CPU Idle Time Management Driver
+> +==============================================
+> +
+> +:Copyright: |copy| 2020 Intel Corporation
+> +
+> +:Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> +
+> +
+> +General Information
+> +===================
+> +
+> +``intel_idle`` is a part of the
+> +:doc:`CPU idle time management subsystem <cpuidle>` in the Linux kernel
+> +(``CPUIdle``).  It is the default CPU idle time management driver for the
+> +Nehalem and later generations of Intel processors, but the level of support for
+> +a particular processor model in it depends on whether or not it recognizes that
+> +processor model and may also depend on information coming from the platform
+> +firmware.  [To understand ``intel_idle`` it is necessary to know how ``CPUIdle``
+> +works in general, so this is the time to get familiar with :doc:`cpuidle` if you
+> +have not done that yet.]
+> +
+> +``intel_idle`` uses the ``MWAIT`` instruction to inform the processor that the
+> +logical CPU executing it is idle and so it may be possible to put some of the
+> +processor's functional blocks into low-power states.  That instruction takes two
+> +arguments (passed in the ``EAX`` and ``ECX`` registers of the target CPU), the
+> +first of which, referred to as a *hint*, can be used by the processor to
+> +determine what can be done (for details refer to Intel Software Developer’s
+> +Manual [1]_).  Accordingly, ``intel_idle`` refuses to work with processors in
+> +which the support for the ``MWAIT`` instruction has been disabled (for example,
+> +via the platform firmware configuration menu) or which do not support that
+> +instruction at all.
+> +
+> +``intel_idle`` is not modular, so it cannot be unloaded, which means that the
+> +only way to pass early-configuration-time parameters to it is via the kernel
+> +command line.
+> +
+> +
+> +.. _intel-idle-enumeration-of-states:
+> +
+> +Enumeration of Idle States
+> +==========================
+> +
+> +Each ``MWAIT`` hint value is interpreted by the processor as a license to
+> +reconfigure itself in a certain way in order to save energy.  The processor
+> +configurations (with reduced power draw) resulting from that are referred to
+> +as C-states (in the ACPI terminology) or idle states.  The list of meaningful
+> +``MWAIT`` hint values and idle states (i.e. low-power configurations of the
+> +processor) corresponding to them depends on the processor model and it may also
+> +depend on the configuration of the platform.
+> +
+> +In order to create a list of available idle states required by the ``CPUIdle``
+> +subsystem (see :ref:`idle-states-representation` in :doc:`cpuidle`),
+> +``intel_idle`` can use two sources of information: static tables of idle states
+> +for different processor models included in the driver itself and the ACPI tables
+> +of the system.  The former are always used if the processor model at hand is
+> +recognized by ``intel_idle`` and the latter are used if that is required for
+> +the given processor model (which is the case for all server processor models
+> +recognized by ``intel_idle``) or if the processor model is not recognized.
+> +
+> +If the ACPI tables are going to be used for building the list of available idle
+> +states, ``intel_idle`` first looks for a ``_CST`` object under one of the ACPI
+> +objects corresponding to the CPUs in the system (refer to the ACPI specification
+> +[2]_ for the description of ``_CST`` and its output package).  Because the
+> +``CPUIdle`` subsystem expects that the list of idle states supplied by the
+> +driver will be suitable for all of the CPUs handled by it and ``intel_idle`` is
+> +registered as the ``CPUIdle`` driver for all of the CPUs in the system, the
+> +driver looks for the first ``_CST`` object returning at least one valid idle
+> +state description and such that all of the idle states included in its return
+> +package are of the FFH (Functional Fixed Hardware) type, which means that the
+> +``MWAIT`` instruction is expected to be used to tell the processor that it can
+> +enter one of them.  The return package of that ``_CST`` is then assumed to be
+> +applicable to all of the other CPUs in the system and the idle state
+> +descriptions extracted from it are stored in a preliminary list of idle states
+> +coming from the ACPI tables.  [This step is skipped if ``intel_idle`` is
+> +configured to ignore the ACPI tables; see `below <intel-idle-parameters_>`_.]
+> +
+> +Next, the first (index 0) entry in the list of available idle states is
+> +initialized to represent a "polling idle state", which means that its
+> +``->enter()`` routine executes a special "pause" sequence of instructions in a
+> +tight loop (it is a pseudo-idle state in which the target CPU continuously
+> +fetches and executes instructions), and the subsequent (real) idle state entries
+> +are populated as follows.
+> +
+> +If the processor model at hand is recognized by ``intel_idle``, there is a
+> +(static) table of idle state descriptions for it in the driver.  In that case,
+> +the "internal" table is the primary source of information on idle states and all
+> +of the entries from it (that are not marked as "unusable" after applying quirks
+> +and the number of ``MWAIT`` substates for them is not zero; see
+> +`below <intel-idle-initialization-and-quirks_>`_) are copied to the final list
+> +of available idle states.  If using the ACPI tables for the enumeration of idle
+> +states is not required (depending on the processor model), all of them are
+> +enabled by default (so all of them will be taken into consideration by
+> +``CPUIdle`` governors during CPU idle state selection).  Otherwise, the idle
+> +states specifically marked as the ones that should be always enabled by default
+> +are enabled by default and for each of the other idle states the ``MWAIT`` hint
+> +included in its description is compared with the ``MWAIT`` hints in the
+> +preliminary list of idle states coming from the ACPI tables.  If there is a
+> +match (i.e. one of the ``MWAIT`` hint values exposed by the platform firmware is
+> +equal to the given idle state's ``MWAIT`` hint), the given idle state will be
+> +enabled by default.  If that is not the case, it will be disabled initially, but
+> +user space will be able to enable it later (on a per-CPU basis) with the help of
+> +the ``disable`` idle state attribute in ``sysfs`` (see
+> +:ref:`idle-states-representation` in :doc:`cpuidle`).  This basically means that
+> +the idle states "known" to the driver are enabled by default if they have
+> +also been exposed by the platform firmware (through the ACPI tables) or if they
+> +are specifically marked to be always enabled by default.
+> +
+> +If the given processor model is not recognized by ``intel_idle``, but it
+> +supports ``MWAIT``, the preliminary list of idle states coming from the ACPI
+> +tables is used for building the final list that will be supplied to the
+> +``CPUIdle`` core during driver registration.  For each idle state in that list,
+> +the description, ``MWAIT`` hint and exit latency are copied to the corresponding
+> +entry in the final list of idle states.  The name of the idle state represented
+> +by it (to be returned by the ``name`` idle state attribute in ``sysfs``) is
+> +"CX_ACPI", where X is the index of that idle state in the final list (note that
+> +the minimum value of X is 1, because 0 is reserved for the "polling" state), and
+> +its target residency is based on the exit latency value.  Specifically, for
+> +C1-type idle states the exit latency value is also used as the target residency
+> +(for compatibility with the majority of the "internal" tables of idle states for
+> +various processor models recognized by ``intel_idle``) and for the other idle
+> +state types (C2 and C3) the target residency value is 3 times the exit latency
+> +(again, that is because it reflects the target residency to exit latency ratio
+> +in the majority of cases for the processor models recognized by ``intel_idle``).
+> +All of the idle states in the final list are enabled by default in this case.
+> +
+> +
+> +.. _intel-idle-initialization-and-quirks:
+> +
+> +Initialization
+> +==============
+> +
+> +The initialization of ``intel_idle`` starts with checking if the kernel command
+> +line options forbid the use of the ``MWAIT`` instruction.  If that is the case,
+> +an error code is returned right away.
+> +
+> +The next step is to check whether or not the processor model is known to the
+> +driver, which determines the idle states enumeration method (see
+> +`above <intel-idle-enumeration-of-states_>`_), and whether or not the processor
+> +supports ``MWAIT`` (the initialization fails if that is not the case).  Then,
+> +the ``MWAIT`` support in the processor is enumerated through ``CPUID`` and the
+> +driver initialization fails if the level of support is not as expected (for
+> +example, if the total number of ``MWAIT`` substates returned is 0).
+> +
+> +Next, if the driver is not configured to ignore the ACPI tables (see
+> +`below <intel-idle-parameters_>`_), the idle states information provided by the
+> +platform firmware is extracted from them.
+> +
+> +Then, ``CPUIdle`` device objects are allocated for all CPUs, quirks are applied
+> +to the "internal" idle states table matching the given processor model (if it is
+> +recognized by the driver) and the list of idle states is created (see
+> +`above <intel-idle-enumeration-of-states_>`_).
+> +
+> +The quirks are needed in the cases when the same "internal" table of idle states
+> +is used for multiple processor models and some of those idle states may not be
+> +supported in some processor configurations (in which case, if the affected
+> +processor configuration is detected, the idle states in question are marked
+> +as "unusable") or the list of idle states to use depends on the number of
+> +processor sockets in the system.  There is also a special way to obtain the
+> +exit latency value for some idle states of Broxton processors that can be used
+> +for updating the "internal" idle states table before using it for the
+> +enumeration of idle states.
+> +
+> +Next, ``intel_idle`` is registered with the help of cpuidle_register_driver() as
+> +the ``CPUIdle`` driver for all CPUs in the system and a CPU online callback for
+> +configuring individual CPUs is registered via cpuhp_setup_state(), which (among
+> +other things) causes the callback routine to be invoked for all of the CPUs
+> +present in the system at that time (each CPU executes its own instance of the
+> +callback routine).  That routine registers a ``CPUIdle`` device for the CPU
+> +running it and if the processor model is recognized by ``intel_idle``, it
+> +modifies the model-specific registers (MSRs) of that CPU in order to disable
+> +auto-demotion of idle states or auto-promotion to the ``C1E`` idle state (or
+> +both) if that needs to be done for the processor model at hand.
+> +
+> +
+> +.. _intel-idle-parameters:
+> +
+> +Kernel Command Line Options and Module Parameters
+> +=================================================
+> +
+> +The *x86* architecture support code recognizes three kernel command line
+> +options related to CPU idle time management: ``idle=poll``, ``idle=halt``,
+> +and ``idle=nomwait``.  If any of them is present in the kernel command line, the
+> +``MWAIT`` instruction is not allowed to be used, so the initialization of
+> +``intel_idle`` will fail.
+> +
+> +Apart from that there are two module parameters recognized by ``intel_idle``
+> +itself that can be set via the kernel command line (they cannot be updated via
+> +sysfs, so that is the only way to set them).
+> +
+> +The ``max_cstate`` parameter value is the maximum idle state index in the list
+> +of idle states supplied to the ``CPUIdle`` core during the registration of the
+> +driver.  It is also the maximum number of regular (non-polling) idle states that
+> +can be used by ``intel_idle``, so the enumeration of idle states is terminated
+> +after finding that number of usable idle states (the other idle states that
+> +potentially might have been used if ``max_cstate`` had been greater are not
+> +taken into consideration at all).  Setting ``max_cstate`` can prevent
+> +``intel_idle`` from exposing idle states that are regarded as "too deep" for
+> +some reason to the ``CPUIdle`` core, but it does so by making them effectively
+> +invisible until the system is shut down and started again which may not always
+> +be desirable.  In practice, it is only really necessary to do that if the idle
+> +states in question cannot be enabled during system startup, because in the
+> +working state of the system the CPU power management quality of service (PM
+> +QoS) feature can be used to prevent ``CPUIdle`` from touching those idle states
+> +even if they have been enumerated (see :ref:`cpu-pm-qos` in :doc:`cpuidle`).
+> +Setting ``max_cstate`` to 0 causes the ``intel_idle`` initialization to fail.
+> +
+> +The ``noacpi`` parameter (which is recognized if the kernel has been configured
+> +with ACPI support) can be used to make ``intel_idle`` ignore the system's ACPI
+> +tables (which is the case if that parameter is equal to 1).
+
+Where is this "noacpi" parameter?  Is this an intel_idel param?  I see
+libata.noacpi and pci=noacpi but nothing like this for intel_idle.
+
+Also, the wording is a little confusing.  What does it mean "if that parameter is equal
+to 1"?  It's basically a word that is entered without a value AFAICT.
 
 
+> +
+> +
+> +.. _intel-idle-core-and-package-idle-states:
+> +
+> +Core and Package Levels of Idle States
+> +======================================
+> +
+> +Typically, in a processor supporting the ``MWAIT`` instruction there are (at
+> +least) two levels of idle states (or C-states).  One level, referred to as
+> +"core C-states", covers individual cores in the processor, whereas the other
+> +level, referred to as "package C-states", covers the entire processor package
+> +and it may also involve other components of the system (GPUs, memory
+> +controllers, I/O hubs etc.).
+> +
+> +Some of the ``MWAIT`` hint values allow the processor to use core C-states only
+> +(most importantly, that is the case for the ``MWAIT`` hint value corresponding
+> +to the ``C1`` idle state), but the majority of them give it a license to put
+> +the target core (i.e. the core containing the logical CPU executing ``MWAIT``
+> +with the given hint value) into a specific core C-state and then (if possible)
+> +to enter a specific package C-state at the deeper level.  For example, the
+> +``MWAIT`` hint value representing the ``C3`` idle state allows the processor to
+> +put the target core into the low-power state referred to as "core ``C3``" (or
+> +``CC3``), which happens if all of the logical CPUs (SMT siblings) in that core
+> +have executed ``MWAIT`` with the ``C3`` hint value (or with a hint value
+> +representing a deeper idle state), and in addition to that (in the majority of
+> +cases) it gives the processor a license to put the entire package (possibly
+> +including some non-CPU components such as a GPU or a memory controller) into the
+> +low-power state referred to as "package ``C3``" (or ``PC3``), which happens if
+> +all of the cores have gone into the ``CC3`` state and (possibly) some additional
+> +conditions are satisfied (for instance, if the GPU is covered by ``PC3``, it may
+> +be required to be in a certain GPU-specific low-power state for ``PC3`` to be
+> +reachable).
+> +
+> +As a rule, there is no simple way to make the processor use core-level C-states
+> +only if the conditions for entering the corresponding package C-states are met,
+> +so the logical CPU executing ``MWAIT`` with a hint value that is not core-level
+> +only (like for ``C1``) must always assume that this may cause the processor to
+> +enter a package C-state.  That is why the exit latency and target residency
+> +values corresponding to the majority of ``MWAIT`` hint values in the "internal"
+> +tables of idle states in ``intel_idle`` reflect the properties of package
+> +C-states.  If using package C-states is not desirable at all, either
+> +:ref:`PM QoS <cpu-pm-qos>` or the ``max_cstate`` module parameter of
+> +``intel_idle`` described `above <intel-idle-parameters_>`_ must be used to
+> +restrict the range of permissible idle states to the ones with core-level only
+> +``MWAIT`` hint values (like ``C1``).
+> +
+> +
+> +References
+> +==========
+> +
+> +.. [1] *Intel® 64 and IA-32 Architectures Software Developer’s Manual Volume 2B*,
+> +       https://www.intel.com/content/www/us/en/architecture-and-technology/64-ia-32-architectures-software-developer-vol-2b-manual.html
+> +
+> +.. [2] *Advanced Configuration and Power Interface (ACPI) Specification*,
+> +       https://uefi.org/specifications
+> 
+> 
+> 
+
+drop ending blank lines....
+
+This contains lots of good info, but I don't see all of it as admin-guide/ material.
+Lots of it is driver-development info, not admin info.  IMHO.
+
+Anyway:
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+
+
+thanks.
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+~Randy
+
