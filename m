@@ -6,65 +6,73 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A3EC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B12AC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8417D20678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:58:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 251C820678
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbgAJC4k (ORCPT
+        id S1730997AbgAJC6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 21:56:40 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:56794 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730936AbgAJC4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 21:56:40 -0500
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 64759B2F520DC42A384D;
-        Fri, 10 Jan 2020 10:56:37 +0800 (CST)
-Received: from huawei.com (10.175.104.225) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Fri, 10 Jan 2020
- 10:56:31 +0800
-From:   Hewenliang <hewenliang4@huawei.com>
-To:     <rostedt@goodmis.org>, <mingo@redhat.com>, <peterz@infradead.org>,
-        <juri.lelli@redhat.com>, <vincent.guittot@linaro.org>,
-        <bsegall@google.com>, <mgorman@suse.de>,
-        <linux-kernel@vger.kernel.org>
-CC:     <hewenliang4@huawei.com>
-Subject: [PATCH] idle: fix spelling mistake "iterrupts" -> "interrupts"
-Date:   Thu, 9 Jan 2020 21:56:04 -0500
-Message-ID: <20200110025604.34373-1-hewenliang4@huawei.com>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.225]
-X-CFilter-Loop: Reflected
+        Thu, 9 Jan 2020 21:58:30 -0500
+Received: from mga06.intel.com ([134.134.136.31]:30219 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730952AbgAJC63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 21:58:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 18:58:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
+   d="scan'208";a="236722161"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga002.jf.intel.com with ESMTP; 09 Jan 2020 18:58:28 -0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kirill.shutemov@linux.intel.com,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [PATCH] mm/huge_memory.c: reduce critical section protected by split_queue_lock
+Date:   Fri, 10 Jan 2020 10:55:16 +0800
+Message-Id: <20200110025516.23996-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a spelling misake in comments of cpuidle_idle_call. Fix it.
+split_queue_lock protects data in struct deferred_split. We can release
+the lock after delete the page from deferred_split_queue.
 
-Signed-off-by: Hewenliang <hewenliang4@huawei.com>
+This patch moves the THP accounting out of the lock protection, which is
+introduced in commit 65c453778aea ("mm, rmap: account shmem thp pages").
+
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
 ---
- kernel/sched/idle.c | 2 +-
+ mm/huge_memory.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-index f65ef1e2f204..d29ebe8c63dd 100644
---- a/kernel/sched/idle.c
-+++ b/kernel/sched/idle.c
-@@ -158,7 +158,7 @@ static void cpuidle_idle_call(void)
- 	/*
- 	 * Suspend-to-idle ("s2idle") is a system state in which all user space
- 	 * has been frozen, all I/O devices have been suspended and the only
--	 * activity happens here and in iterrupts (if any).  In that case bypass
-+	 * activity happens here and in interrupts (if any). In that case bypass
- 	 * the cpuidle governor and go stratight for the deepest idle state
- 	 * available.  Possibly also suspend the local tick and the entire
- 	 * timekeeping to prevent timer interrupts from kicking us out of idle
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index 3c745d298a27..88c541bf44c7 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2810,6 +2810,7 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 			ds_queue->split_queue_len--;
+ 			list_del(page_deferred_list(head));
+ 		}
++		spin_unlock(&ds_queue->split_queue_lock);
+ 		if (mapping) {
+ 			if (PageSwapBacked(head))
+ 				__dec_node_page_state(head, NR_SHMEM_THPS);
+@@ -2817,7 +2818,6 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
+ 				__dec_node_page_state(head, NR_FILE_THPS);
+ 		}
+ 
+-		spin_unlock(&ds_queue->split_queue_lock);
+ 		__split_huge_page(page, list, end, flags);
+ 		if (PageSwapCache(head)) {
+ 			swp_entry_t entry = { .val = page_private(head) };
 -- 
-2.19.1
+2.17.1
 
