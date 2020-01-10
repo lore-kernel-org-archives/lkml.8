@@ -2,182 +2,110 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A10D5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B498DC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDA320848
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75DB8206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:03:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="E38DqpbV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbgAJUAt (ORCPT
+        id S1728636AbgAJUDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 15:00:49 -0500
-Received: from [167.172.186.51] ([167.172.186.51]:40708 "EHLO shell.v3.sk"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727650AbgAJUAt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 15:00:49 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 80194DFB44;
-        Fri, 10 Jan 2020 20:00:53 +0000 (UTC)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id R-LYu2JMYi6f; Fri, 10 Jan 2020 20:00:52 +0000 (UTC)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id B47D2DFDCA;
-        Fri, 10 Jan 2020 20:00:52 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id C0kBNO04okiY; Fri, 10 Jan 2020 20:00:52 +0000 (UTC)
-Received: from nedofet.lan (unknown [109.183.109.54])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 28E4DDFB44;
-        Fri, 10 Jan 2020 20:00:52 +0000 (UTC)
-Message-ID: <1bbf1ea76949f6ef4e856ed799f75d03bf20f293.camel@v3.sk>
-Subject: Re: [PATCH] power: supply: olpc_battery: fix the power supply name
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Date:   Fri, 10 Jan 2020 21:00:43 +0100
-In-Reply-To: <CAHp75VcYoWqvgLv-PmgxqhrHmYOH5=Nru6Msj3rryT=jL+y9xw@mail.gmail.com>
-References: <20191221071751.269025-1-lkundrak@v3.sk>
-         <CAHp75VcYoWqvgLv-PmgxqhrHmYOH5=Nru6Msj3rryT=jL+y9xw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Fri, 10 Jan 2020 15:03:43 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38786 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbgAJUDn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 15:03:43 -0500
+Received: by mail-lj1-f195.google.com with SMTP id w1so3371222ljh.5
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 12:03:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=date:in-reply-to:references:mime-version:content-transfer-encoding
+         :subject:to:cc:from:message-id;
+        bh=1Ym1ky3QD6f3IfF+EM/zO4+gog3cH55P6RTJDsna7IQ=;
+        b=E38DqpbV3vggOQto0Gi9BjS2Txq4gAHx7whMemoyjXJNP75s1nKgPat2YZRL432Tao
+         qYWsDoTkFfl/v8ouvUvcpfEsKsNgoqvLwPPUpzcCUvr1wip+DAocvEVOjgTLKrFRxZHk
+         SoGgYf71/qtcoy41LLSYnM/sNCy++UXCF9L6o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:references:mime-version
+         :content-transfer-encoding:subject:to:cc:from:message-id;
+        bh=1Ym1ky3QD6f3IfF+EM/zO4+gog3cH55P6RTJDsna7IQ=;
+        b=HCU3jL50jEtyYJHYjxwXQXx8PqQC+bMxJiMd7Y4/U7M3mu2TRMpB1+bmpfWHCQLCWR
+         WKXDkrph8u+3PkAu70QKwat5bUnjjlIRvrD7HiY2OQrDT98wuvpn78TVyVBGoiGDzoJW
+         87o3Pp4+ANkME33kTfnsRYQ74GVjR6RGj4VXwPwbw4iqws3N3eVSplN12lNvAI/aimLS
+         +U+uj+HUO2rwXdaYHuMghZc3cUlRWv9vPicyQFcwX8XYwpxiqD8j5vOJJLscVUs8nMQP
+         +wGa6rPZCZcgIrCWikDuUM+nhWJLIkX+LkDLooeFiq8QnChG2YCZagm0N0Fy0t+cCUrX
+         TKzw==
+X-Gm-Message-State: APjAAAVCrREWxg4hwJ8L67JkPUZqdjmXwEqRJZUNjMEtbMhQpNHP6TnE
+        52lQp0ns44BHts3gCaCOmXpJkA==
+X-Google-Smtp-Source: APXvYqx/ej5J4uGDUdnnFlnCCL4JCUBhgAYSWrgCWagdQjKwJQuQLD7tWziH1FplrsmwiLVLAanJcg==
+X-Received: by 2002:a05:651c:30a:: with SMTP id a10mr3722167ljp.101.1578686620688;
+        Fri, 10 Jan 2020 12:03:40 -0800 (PST)
+Received: from localhost ([149.62.204.86])
+        by smtp.gmail.com with ESMTPSA id h10sm1438834ljc.39.2020.01.10.12.03.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 Jan 2020 12:03:40 -0800 (PST)
+Date:   Fri, 10 Jan 2020 22:03:37 +0200
+In-Reply-To: <20200110.112736.1849382588448237535.davem@davemloft.net>
+References: <20200109150640.532-1-horatiu.vultur@microchip.com> <6f1936e9-97e5-9502-f062-f2925c9652c9@cumulusnetworks.com> <20200110.112736.1849382588448237535.davem@davemloft.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [RFC net-next Patch 0/3] net: bridge: mrp: Add support for Media Redundancy Protocol(MRP)
+To:     David Miller <davem@davemloft.net>
+CC:     horatiu.vultur@microchip.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bridge@lists.linux-foundation.org,
+        roopa@cumulusnetworks.com, jakub.kicinski@netronome.com,
+        vivien.didelot@gmail.com, andrew@lunn.ch,
+        jeffrey.t.kirsher@intel.com, olteanv@gmail.com,
+        anirudh.venkataramanan@intel.com, dsahern@gmail.com,
+        jiri@mellanox.com, UNGLinuxDriver@microchip.com
+From:   nikolay@cumulusnetworks.com
+Message-ID: <3CD4F75F-C462-4CF2-B31A-C2E023D3F065@cumulusnetworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-01-09 at 17:09 +0200, Andy Shevchenko wrote:
-> On Sat, Dec 21, 2019 at 9:18 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
-> > The framework is unhappy about them, because it uses the names in sysfs
-> > attributes:
-> > 
-> >   power_supply olpc-ac: hwmon: 'olpc-ac' is not a valid name attribute, please fix
-> >   power_supply olpc-battery: hwmon: 'olpc-battery' is not a valid name attribute, please fix
-> 
-> I'm wondering if it's an ABI change and how user space is supposed to
-> cope with it.
+On 10 January 2020 21:27:36 EET, David Miller <davem@davemloft=2Enet> wrote=
+:
+>From: Nikolay Aleksandrov <nikolay@cumulusnetworks=2Ecom>
+>Date: Fri, 10 Jan 2020 16:13:36 +0200
+>
+>> I agree with Stephen here, IMO you have to take note of how STP has
+>progressed
+>> and that bringing it in the kernel was a mistake, these days mstpd
+>has an active
+>> community and much better support which is being extended=2E This looks
+>best implemented
+>> in user-space in my opinion with minimal kernel changes to support
+>it=2E You could simply
+>> open a packet socket with a filter and work through that, you don't
+>need new netlink
+>> sockets=2E I'm not familiar with the protocol so can't really be the
+>judge of that, if
+>> you present a good argument for needing a new netlink socket for
+>these packets - then
+>> sure, ok=2E
+>
+>With a userland implementation, what approach do you suggest for
+>DSA/switchdev offload
+>of this stuff?
 
-It changes the sysfs path. It is rather unlikely that udisks or
-anything else userspace cares.
+Good question, there was no mention of that initially, or I missed it at l=
+east=2E=20
+There aren't many details about what/how will be offloaded right now=2E
+We need more information about what will be offloaded and how it will fit=
+=2E=20
 
-If it does, then I guess the warning that suggests that it's a bug that
-should be fixed should be removed instead.
-> 
-> > See also commit 648cd48c9e56 ("hwmon: Do not accept invalid name
-> > attributes") and commit 74d3b6419772 ("hwmon: Relax name attribute
-> > validation for new APIs").
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > ---
-> >  arch/x86/platform/olpc/olpc-xo1-sci.c  | 4 ++--
-> >  arch/x86/platform/olpc/olpc-xo15-sci.c | 4 ++--
-> >  drivers/platform/olpc/olpc-xo175-ec.c  | 4 ++--
-> >  drivers/power/supply/olpc_battery.c    | 4 ++--
-> >  4 files changed, 8 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/arch/x86/platform/olpc/olpc-xo1-sci.c b/arch/x86/platform/olpc/olpc-xo1-sci.c
-> > index 99a28ce2244c7..09bd195cc9012 100644
-> > --- a/arch/x86/platform/olpc/olpc-xo1-sci.c
-> > +++ b/arch/x86/platform/olpc/olpc-xo1-sci.c
-> > @@ -53,7 +53,7 @@ static const char * const lid_wake_mode_names[] = {
-> > 
-> >  static void battery_status_changed(void)
-> >  {
-> > -       struct power_supply *psy = power_supply_get_by_name("olpc-battery");
-> > +       struct power_supply *psy = power_supply_get_by_name("olpc_battery");
-> > 
-> >         if (psy) {
-> >                 power_supply_changed(psy);
-> > @@ -63,7 +63,7 @@ static void battery_status_changed(void)
-> > 
-> >  static void ac_status_changed(void)
-> >  {
-> > -       struct power_supply *psy = power_supply_get_by_name("olpc-ac");
-> > +       struct power_supply *psy = power_supply_get_by_name("olpc_ac");
-> > 
-> >         if (psy) {
-> >                 power_supply_changed(psy);
-> > diff --git a/arch/x86/platform/olpc/olpc-xo15-sci.c b/arch/x86/platform/olpc/olpc-xo15-sci.c
-> > index 6d193bb36021b..7bc1ea6a47974 100644
-> > --- a/arch/x86/platform/olpc/olpc-xo15-sci.c
-> > +++ b/arch/x86/platform/olpc/olpc-xo15-sci.c
-> > @@ -75,7 +75,7 @@ static struct kobj_attribute lid_wake_on_close_attr =
-> > 
-> >  static void battery_status_changed(void)
-> >  {
-> > -       struct power_supply *psy = power_supply_get_by_name("olpc-battery");
-> > +       struct power_supply *psy = power_supply_get_by_name("olpc_battery");
-> > 
-> >         if (psy) {
-> >                 power_supply_changed(psy);
-> > @@ -85,7 +85,7 @@ static void battery_status_changed(void)
-> > 
-> >  static void ac_status_changed(void)
-> >  {
-> > -       struct power_supply *psy = power_supply_get_by_name("olpc-ac");
-> > +       struct power_supply *psy = power_supply_get_by_name("olpc_ac");
-> > 
-> >         if (psy) {
-> >                 power_supply_changed(psy);
-> > diff --git a/drivers/platform/olpc/olpc-xo175-ec.c b/drivers/platform/olpc/olpc-xo175-ec.c
-> > index 83ed1fbf73cfd..5e1d14e35f20b 100644
-> > --- a/drivers/platform/olpc/olpc-xo175-ec.c
-> > +++ b/drivers/platform/olpc/olpc-xo175-ec.c
-> > @@ -410,7 +410,7 @@ static void olpc_xo175_ec_complete(void *arg)
-> >                 dev_dbg(dev, "got event %.2x\n", byte);
-> >                 switch (byte) {
-> >                 case EVENT_AC_CHANGE:
-> > -                       psy = power_supply_get_by_name("olpc-ac");
-> > +                       psy = power_supply_get_by_name("olpc_ac");
-> >                         if (psy) {
-> >                                 power_supply_changed(psy);
-> >                                 power_supply_put(psy);
-> > @@ -420,7 +420,7 @@ static void olpc_xo175_ec_complete(void *arg)
-> >                 case EVENT_BATTERY_CRITICAL:
-> >                 case EVENT_BATTERY_SOC_CHANGE:
-> >                 case EVENT_BATTERY_ERROR:
-> > -                       psy = power_supply_get_by_name("olpc-battery");
-> > +                       psy = power_supply_get_by_name("olpc_battery");
-> >                         if (psy) {
-> >                                 power_supply_changed(psy);
-> >                                 power_supply_put(psy);
-> > diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/olpc_battery.c
-> > index ad0e9e0edb3f8..e0476ec06601d 100644
-> > --- a/drivers/power/supply/olpc_battery.c
-> > +++ b/drivers/power/supply/olpc_battery.c
-> > @@ -88,7 +88,7 @@ static enum power_supply_property olpc_ac_props[] = {
-> >  };
-> > 
-> >  static const struct power_supply_desc olpc_ac_desc = {
-> > -       .name = "olpc-ac",
-> > +       .name = "olpc_ac",
-> >         .type = POWER_SUPPLY_TYPE_MAINS,
-> >         .properties = olpc_ac_props,
-> >         .num_properties = ARRAY_SIZE(olpc_ac_props),
-> > @@ -605,7 +605,7 @@ static const struct attribute_group *olpc_bat_sysfs_groups[] = {
-> >   *********************************************************************/
-> > 
-> >  static struct power_supply_desc olpc_bat_desc = {
-> > -       .name = "olpc-battery",
-> > +       .name = "olpc_battery",
-> >         .get_property = olpc_bat_get_property,
-> >         .use_for_apm = 1,
-> >  };
-> > --
-> > 2.24.1
-> > 
-> 
-> 
 
+
+l
