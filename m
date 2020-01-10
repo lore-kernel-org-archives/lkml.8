@@ -2,87 +2,99 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3779EC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D56CC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0807E205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE3B205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:25:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgAJUXx (ORCPT
+        id S1726620AbgAJUZG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 15:23:53 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:44778 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgAJUXw (ORCPT
+        Fri, 10 Jan 2020 15:25:06 -0500
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:55555 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgAJUZF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 15:23:52 -0500
-Received: by mail-qv1-f67.google.com with SMTP id n8so1345642qvg.11
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 12:23:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Al+dBZuEeOwUodYRlK1LAwsBq5Yu4UdaZv+8ZEmtXWk=;
-        b=ratLs9Z6ZHZFb0CwyYkkXp8+X+PuU03iibwscmBxQgnWBedjVCsLwz7yBGKgPODoCf
-         7mNVi1A4AceRI3u1dt5+fzkgeQhonLWHx36lhoBI+NOLW2gND+1Sr8F/zCFTi8GIqn2A
-         uQqkfurn9OHwvSxN7dsBwTuYor3htKfRtg+LjxxahynlkylnsEWwRLiHk1QvP+B57vWH
-         P4OZ84ogCHtr08ui7llGOOc2iqiCd/Db15w845RltvehO1XihJfu7ULzqYzjIjDw3xSh
-         faY7bsYfrsnISw1bRVT+n/6xvnDAOjIEyeSvmnxRwxA4lJOe3v+hunBFfDGeMyqmIbVh
-         QaHA==
-X-Gm-Message-State: APjAAAV8yRVkNB0ml7IpJnHEdKDv1Kv9d9UWiVX/OkEWB6zzt6XQXQAt
-        ej+GqxA6LCGIVpSTi5wpY9s=
-X-Google-Smtp-Source: APXvYqyklzeQxVpmw8qD2hNmrWwflye/hysF9ez8/JpAtQjHjygM+355pp+pnfgPZ3gKpybqy0chqA==
-X-Received: by 2002:ad4:55ec:: with SMTP id bu12mr4592163qvb.107.1578687830913;
-        Fri, 10 Jan 2020 12:23:50 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id q2sm1383814qkm.5.2020.01.10.12.23.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 12:23:50 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>
-Subject: [PATCH] x86/tools/relocs: Add _etext and __end_of_kernel_reserve to S_REL
-Date:   Fri, 10 Jan 2020 15:23:49 -0500
-Message-Id: <20200110202349.1881840-1-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.24.1
+        Fri, 10 Jan 2020 15:25:05 -0500
+Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa2.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: rsu/XetFyvWK7mxD9x59OkwZl1lD/XF7oQMUNOHCU5uG9Bx4QJ5mRDNRhUIkxMSD8AeTk55ifw
+ T7sB/kqBQ576Lnxg0ilNvndgT9R3hXSyxzQlOPQPiq7cPnJ4O01NZgY8BU2jWOO7It2RwzkmD6
+ m51OL9I4ZroytPvlRILbTE8272a2Z11ncBR26JDerz1ZYXCviop3x5vIXODSKrncrS2rRww+yz
+ woSq5eQ/pVS0kG+wITBoSuxd1k5ntZN36aJkF0OvGejv+bEk58VurCRNWiSQDtdC8YmqvT1pcr
+ 35g=
+X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
+   d="scan'208";a="62274303"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jan 2020 13:25:01 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 10 Jan 2020 13:24:56 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Fri, 10 Jan 2020 13:24:56 -0700
+Date:   Fri, 10 Jan 2020 21:24:55 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     <nikolay@cumulusnetworks.com>
+CC:     David Miller <davem@davemloft.net>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>,
+        <roopa@cumulusnetworks.com>, <jakub.kicinski@netronome.com>,
+        <vivien.didelot@gmail.com>, <andrew@lunn.ch>,
+        <jeffrey.t.kirsher@intel.com>, <olteanv@gmail.com>,
+        <anirudh.venkataramanan@intel.com>, <dsahern@gmail.com>,
+        <jiri@mellanox.com>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next Patch 0/3] net: bridge: mrp: Add support for Media
+ Redundancy Protocol(MRP)
+Message-ID: <20200110202455.vku455ioa7vaj4dn@soft-dev3.microsemi.net>
+References: <20200109150640.532-1-horatiu.vultur@microchip.com>
+ <6f1936e9-97e5-9502-f062-f2925c9652c9@cumulusnetworks.com>
+ <20200110.112736.1849382588448237535.davem@davemloft.net>
+ <3CD4F75F-C462-4CF2-B31A-C2E023D3F065@cumulusnetworks.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <3CD4F75F-C462-4CF2-B31A-C2E023D3F065@cumulusnetworks.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pre-2.23 binutils makes symbols defined outside sections absolute, so
-these two symbols break the build on old linkers.
+> >With a userland implementation, what approach do you suggest for
+> >DSA/switchdev offload
+> >of this stuff?
+> 
+> Good question, there was no mention of that initially, or I missed it at least.
+> There aren't many details about what/how will be offloaded right now.
+> We need more information about what will be offloaded and how it will fit.
+I think we should do a new version of the RFC-Patch with the hooks to
+offload included. Just the signatures and the invocations should give
+the context we are missing in the discussion.
 
-Fixes: b907693883fd ("x86/vmlinux: Actually use _etext for the end of the text segment")
-Fixes: c603a309cc75 ("x86/mm: Identify the end of the kernel area to be reserved")
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- arch/x86/tools/relocs.c | 2 ++
- 1 file changed, 2 insertions(+)
+Depending on how the discussion goes from there, we can then either work
+on putting this in user-space or fix the issues pointed out in the
+original attempt.
 
-diff --git a/arch/x86/tools/relocs.c b/arch/x86/tools/relocs.c
-index ce7188cbdae5..0a6146d6414f 100644
---- a/arch/x86/tools/relocs.c
-+++ b/arch/x86/tools/relocs.c
-@@ -78,6 +78,8 @@ static const char * const sym_regex_kernel[S_NSYMTYPES] = {
- 	"__end_rodata_hpage_align|"
- #endif
- 	"__vvar_page|"
-+	"_etext|"
-+	"__end_of_kernel_reserve|"
- 	"_end)$"
- };
- 
--- 
-2.24.1
-
+/Horatiu
