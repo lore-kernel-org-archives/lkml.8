@@ -2,161 +2,212 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D22C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A531CC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:37:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCEB120678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E3F220842
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:37:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E0XIh1g0"
+	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="SKsdT2gG";
+	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="eudbFuiF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgAJRge (ORCPT
+        id S1728365AbgAJRhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:36:34 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28508 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727197AbgAJRge (ORCPT
+        Fri, 10 Jan 2020 12:37:31 -0500
+Received: from mx08-00252a01.pphosted.com ([91.207.212.211]:34506 "EHLO
+        mx08-00252a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727358AbgAJRhb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:36:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578677792;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=0NlyiZfwoZAjsy88P9J/wm+VghLvXVY6pErT0BkkWPM=;
-        b=E0XIh1g0P019zndbyD/5URe2lmSnXUnyezgffCIQI+blkpQeQV1Tw4Hzf92KlLtfzmRsG/
-        HFakphaiu44pW1HiX+wbILlfUeLqvgsw/BLJk67m0jJLOkSVv8in6YNrpkAax2v94ebgZo
-        y1gbglm1zMzj0JsXIsjLzlpnIsIvh4w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-220-eVBaqti5Pd2PRq5LFM3sFw-1; Fri, 10 Jan 2020 12:36:29 -0500
-X-MC-Unique: eVBaqti5Pd2PRq5LFM3sFw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A9B3593A2;
-        Fri, 10 Jan 2020 17:36:27 +0000 (UTC)
-Received: from [10.36.118.66] (unknown [10.36.118.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7E1365C28F;
-        Fri, 10 Jan 2020 17:36:25 +0000 (UTC)
-Subject: Re: [PATCH] mm/memory_hotplug: Fix remove_memory() lockdep splat
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        stable <stable@vger.kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <157863061737.2230556.3959730620803366776.stgit@dwillia2-desk3.amr.corp.intel.com>
- <e60e64f9-894b-4121-d97b-fb61459cbbe5@redhat.com>
- <CAPcyv4jm=fmP=-5vbo2jxzMe2qXqZP=zDYF8G_rs3X6_Om0wPg@mail.gmail.com>
- <4d0334e2-c4e7-6d3f-99ba-2ca0495e1549@redhat.com>
- <CAPcyv4jixmv8fJ5FiYE=97Jud3Mc+6QzRX1txceSYU+WY_0rQA@mail.gmail.com>
- <fc0cfb97-5a60-7e73-4f85-d8e6947c5e28@redhat.com>
- <CAPcyv4jVpN26RGQLRn4BewYtzHDoQfvh37DEdEBq1dd4-BP0kw@mail.gmail.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <64902066-51dd-9693-53fc-4a5975c58409@redhat.com>
-Date:   Fri, 10 Jan 2020 18:36:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Fri, 10 Jan 2020 12:37:31 -0500
+Received: from pps.filterd (m0102629.ppops.net [127.0.0.1])
+        by mx08-00252a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00AHaW0v003446
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 17:37:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=raspberrypi.org; h=subject : to :
+ cc : references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp;
+ bh=xzWn1OMg/kRBdPGY5cSYHXjxrtR25cVLedpzVE8XDTg=;
+ b=SKsdT2gGEEFjWm1OQs24C9xp18p7AQ8nXeW7wBy0MdVcQvkx8mmsnwOjQadzeLaFc5oZ
+ 6Bkt0NhzFQeQt3p2NR2JFyrE50JZVeKz5et+SDg1d7gyIoxGObSzdgfQisqexzVMb2Pl
+ KmS51h4bTAbDO/P7rGw8d+wHaBsyqw/bd4i8MMqurPVC0ehdo8Wnjyiz0+NPesa0l77S
+ +NF9ntLnzu081++BYRsnWcxI0xh5x6vat0n9rb/oMAS7388FCuXU7a+Y9hy89SsVkHGh
+ DtXDQFqCgDGakfVSGXZjlE/DpbSZZ856j5r9Qpsr6x1QCdAGsaR2M1rUz3EtsoRIBfOQ aw== 
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        by mx08-00252a01.pphosted.com with ESMTP id 2xag2su2hy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK)
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 17:37:29 +0000
+Received: by mail-wm1-f71.google.com with SMTP id h130so1120330wme.7
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 09:37:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=raspberrypi.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xzWn1OMg/kRBdPGY5cSYHXjxrtR25cVLedpzVE8XDTg=;
+        b=eudbFuiFpxiYBXsumIrZk5v2K0RcDambijz9CR6j4vfIhiv09EPkoC4Iap4aOXhjY+
+         e+apgz4raC1u6K55M2t+JqSWdpUTU/zP/n9j7vF7ORpWW6Zlu5RnTlpFfvNX+U4ji1lw
+         dKpMDCFcBBdGskvbgur3sLBTJFj7Sa2nq4DTeo56U2IhqUIvRnxA0otUH4DD9ExXC9hh
+         COAU07dXao/SesrTu7gpROWkTTOKgKv+F9qYoA3m5/gCd9YGfmN0+ktaUGgeZAg6C6uo
+         iMEHthpBZop+6pORS/khftnO2rEEOlIYRx+oCuEjF1fI24AeJA+DHXQAitgdsCaGXuzZ
+         VuQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xzWn1OMg/kRBdPGY5cSYHXjxrtR25cVLedpzVE8XDTg=;
+        b=c6uNZf+D+nUfODFx0Q5jghPuaSVHKFURDt74pK/xiySZXaXwILfBp1MoA3A+kK3l7M
+         KJ/33bM8LBHU5ETD148Kck0g6TCVYfx9RhzoZsJo3gfCuM+7gzrVFq4Vt3kLpaT6cYV9
+         Jxxrlr28YItt4o8KoTrVLJGG2WweOW2VXbvSwLuXVATJvfvcU6NjRqKn0fpAiGP/g4qX
+         spw39TeGFz8mPIK3sNRZParlmlbS+6SO4ChV+f5gelN7bzX1QjpA5bVH/n2KN51SwqFY
+         bcAqCf0XzehTGAFB+e8yqnVE+OS6SoLIaz92YP1rrZVqOYoSPsjlZg7jfyI93isf+v0f
+         NZLw==
+X-Gm-Message-State: APjAAAXwmbUB1ch28RYncnD2JyViPQTXoUYNxDN+OO/nuGHm6JDMD/YX
+        UpXyyzFXaP+MhDn/8Q+7UMb5Cc1bypJX/8BzC9lj60iBeo8e4w2k7fFMCrti9yI069epfBWrvwm
+        1bu/VV2YTHxsIknMuA528N6gK
+X-Received: by 2002:a5d:5091:: with SMTP id a17mr4687590wrt.362.1578677848173;
+        Fri, 10 Jan 2020 09:37:28 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx44UlbuVmiPyz5iGzy41EJVez9kdBqhJkQVvHkfelCDcd0A4HMd0i0npDRAlfsoN/TmkGfzg==
+X-Received: by 2002:a5d:5091:: with SMTP id a17mr4687563wrt.362.1578677847921;
+        Fri, 10 Jan 2020 09:37:27 -0800 (PST)
+Received: from ?IPv6:2a00:1098:3142:14:910a:522a:cf5c:edd0? ([2a00:1098:3142:14:910a:522a:cf5c:edd0])
+        by smtp.gmail.com with ESMTPSA id d14sm3100880wru.9.2020.01.10.09.37.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2020 09:37:27 -0800 (PST)
+Subject: Re: [PATCH] ARM: dts: bcm283x: Unify CMA configuration
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Stefan Wahren <wahrenst@gmx.net>
+Cc:     devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200110172935.19709-1-nsaenzjulienne@suse.de>
+From:   Phil Elwell <phil@raspberrypi.org>
+Message-ID: <c5bb42a8-e1c2-3e21-dc1d-d36a069bf97f@raspberrypi.org>
+Date:   Fri, 10 Jan 2020 17:37:25 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4jVpN26RGQLRn4BewYtzHDoQfvh37DEdEBq1dd4-BP0kw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200110172935.19709-1-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-10_01:2020-01-10,2020-01-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10.01.20 18:33, Dan Williams wrote:
-> On Fri, Jan 10, 2020 at 9:29 AM David Hildenbrand <david@redhat.com> wrote:
-> [..]
->>> So then the comment is actively misleading for that case. I would
->>> expect an explicit _unlocked path for that case with a comment about
->>> why it's special. Is there already a comment to that effect somewhere?
->>>
->>
->> __add_memory() - the locked variant - is called from the same ACPI location
->> either locked or unlocked. I added a comment back then after a longe
->> discussion with Michal:
->>
->> drivers/acpi/scan.c:
->>         /*
->>          * Although we call __add_memory() that is documented to require the
->>          * device_hotplug_lock, it is not necessary here because this is an
->>          * early code when userspace or any other code path cannot trigger
->>          * hotplug/hotunplug operations.
->>          */
->>
->>
->> It really is a special case, though.
+Hi Nicolas,
+
+On 10/01/2020 17:29, Nicolas Saenz Julienne wrote:
+> With the introduction of the Raspberry Pi 4 we were forced to explicitly
+> configure CMA's location, since arm64 defaults it into the ZONE_DMA32
+> memory area, which is not good enough to perform DMA operations on that
+> device. To bypass this limitation a dedicated CMA DT node was created,
+> explicitly indicating the acceptable memory range and size.
 > 
-> That's a large comment block when we could have just taken the lock.
-> There's probably many other code paths in the kernel where some locks
-> are not necessary before userspace is up, but the code takes the lock
-> anyway to minimize the code maintenance burden. Is there really a
-> compelling reason to be clever here?
+> That said, compatibility between boards is a must on the Raspberry Pi
+> ecosystem so this creates a common CMA DT node so as for DT overlays to
+> be able to update CMA's properties regardless of the board being used.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+> 
+> If this doesn't make it into v5.5 I'd be tempted to add:
+> Fixes: d98a8dbdaec6 ("ARM: dts: bcm2711: force CMA into first GB of memory")
+> 
+>   arch/arm/boot/dts/bcm2711.dtsi | 33 +++++++++++++--------------------
+>   arch/arm/boot/dts/bcm283x.dtsi | 13 +++++++++++++
+>   2 files changed, 26 insertions(+), 20 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
+> index 8687534d4528..c8e4041308e0 100644
+> --- a/arch/arm/boot/dts/bcm2711.dtsi
+> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> @@ -12,26 +12,6 @@ / {
+>   
+>   	interrupt-parent = <&gicv2>;
+>   
+> -	reserved-memory {
+> -		#address-cells = <2>;
+> -		#size-cells = <1>;
+> -		ranges;
+> -
+> -		/*
+> -		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
+> -		 * that's not good enough for the BCM2711 as some devices can
+> -		 * only address the lower 1G of memory (ZONE_DMA).
+> -		 */
+> -		linux,cma {
+> -			compatible = "shared-dma-pool";
+> -			size = <0x2000000>; /* 32MB */
+> -			alloc-ranges = <0x0 0x00000000 0x40000000>;
+> -			reusable;
+> -			linux,cma-default;
+> -		};
+> -	};
+> -
+> -
+>   	soc {
+>   		/*
+>   		 * Defined ranges:
+> @@ -869,6 +849,19 @@ pin-rts {
+>   	};
+>   };
+>   
+> +&rmem {
+> +	#address-cells = <2>;
+> +};
+> +
+> +&cma {
+> +	/*
+> +	 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
+> +	 * that's not good enough for the BCM2711 as some devices can
+> +	 * only address the lower 1G of memory (ZONE_DMA).
+> +	 */
+> +	alloc-ranges = <0x0 0x00000000 0x40000000>;
+> +};
+> +
+>   &i2c0 {
+>   	compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
+>   	interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
+> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+> index 839491628e87..6128baed83c2 100644
+> --- a/arch/arm/boot/dts/bcm283x.dtsi
+> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> @@ -30,6 +30,19 @@ chosen {
+>   		stdout-path = "serial0:115200n8";
+>   	};
+>   
+> +	rmem: reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		cma: linux,cma {
+> +			compatible = "shared-dma-pool";
+> +			size = <0x4000000>; /* 64MB */
+> +			reusable;
+> +			linux,cma-default;
+> +		};
+> +	};
+> +
+>   	thermal-zones {
+>   		cpu_thermal: cpu-thermal {
+>   			polling-delay-passive = <0>;
+> 
 
-It was a lengthy discussion back then and I was sharing your opinion. I
-even had a patch ready to enforce that we are holding the lock (that's
-how I identified that specific case in the first place).
+For what it's worth,
 
--- 
-Thanks,
+Reviewed-by: Phil Elwell <phil@raspberrypi.org>
 
-David / dhildenb
-
+Phil
