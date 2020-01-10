@@ -2,100 +2,131 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB93C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D31C5C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:48:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A707A2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69512080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:48:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sNSet1Oy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHeg3zcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbgAJJr4 (ORCPT
+        id S1727359AbgAJJsV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 04:47:56 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:55722 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727169AbgAJJr4 (ORCPT
+        Fri, 10 Jan 2020 04:48:21 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37005 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727169AbgAJJsV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 04:47:56 -0500
-Received: by mail-pj1-f66.google.com with SMTP id d5so742436pjz.5;
-        Fri, 10 Jan 2020 01:47:56 -0800 (PST)
+        Fri, 10 Jan 2020 04:48:21 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b15so988295lfc.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 01:48:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xUtkm5SWvjOCUNG6Kj/w4f8xU5kM2qIughxa5r9D+Os=;
-        b=sNSet1OyIgkNI/qrjyjttp8QqIx7ruS/NKlIzHceThM8Am7XRdCBtTurRKD3rC6q8P
-         XM3WJnJ1m156rFIyxkd8p9h+aUT30OS1ZLrFA0P+9vHWOSu4z3NUNIWRYOT8z8Mp8lfG
-         b2pzd16xZKYgaiDAUzaNaJWmjQ+tzyur80Kcy+oGLFyIF61Of2FN/3Dnf2Q3OYVcfwCj
-         RM9+3GMVLqZZVNZ+9WaNZqH7QCtLtY9XVFTIeYv7PZJaFBkR1oi5R1+ufj4d29Cs8hgP
-         whB/eKI8ci+07blppD7iI9nM7wsiIQ06FwVUYq39nDIFYblGhWzUZuV1z0ElL4P4elti
-         D1eg==
+         :cc:content-transfer-encoding;
+        bh=FFFiRJG2Dmj1usFksXLqBJzjpKKPyDXbH4wvjVOZ1fI=;
+        b=fHeg3zcYAN6IsU2PBo8d8qUA5VIjV7aP5xIopvN9+GYaWvabxKQdPZmjlp0elLlMF0
+         cAlgVxJbtY1aUQfL7gecLka+OXevllMONO5rb7KjGKZoCSHI648HqWeHXbCLSdWJzs5H
+         /fyMLojFbJXZpABWDfDKoEN29rnyISYwIOiYbKWR4vL5sqv9d6yjuVxRMeCkyeO3RJZS
+         7KC011LldD+8Im5wFPSTICt06key7gj77rLCu0CaWsC/0FA0nf5343ga0Nch1ywFcdcC
+         m6FC1b8wWbTMh3/ZqMcWG+MtfFnwR7sxuNNLxLLAs8FMXzet/DWsZVg2QUXjaLIsKXLa
+         gaqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xUtkm5SWvjOCUNG6Kj/w4f8xU5kM2qIughxa5r9D+Os=;
-        b=jdm5xMRLs0s0bMViNGYORtL4j8/4jixLip6MqFjNK1Nz9oL1KmcytJOJXNBwwDaVbY
-         Ouj0kaGbx4jzQVzIkMpTHxE6iTm1q8+xpoB8MG+WatcwetNCzN43V3O5q53bkH1lJol4
-         IEpTiGasCCXz8UdxTWYPtP7XI8NfgWLqvdrY9IeL9jWIcJi4hF0HiOxnUAZFVe/4NhJD
-         xAN9SIcwj/YLEToZ/aVJedyYlsPJo5hAmxQsT03T3SFEYoO2OC0cab7MxVuZE3L+cube
-         AnmyH8/f5o5PdVyKc/ew8qUixIZ8uWoLOvk4OStI/bHExt6IDIDylO/VEfZv/UBQ5H8V
-         gxkg==
-X-Gm-Message-State: APjAAAW5Fs8W4BuFkB2K9DaI7jHU6lIWbO9SC8EZX+WYJV+e0MLuA6c+
-        frFUqC8YJAFPO+rZR5WyOLN7Uloy1utAZVf+mMlLJDtPRQA=
-X-Google-Smtp-Source: APXvYqzBTEsZHHyoP+5JDstC17gTyvy/NWE5s+I6Q5L8nTnSSDPE7n9TFNJfCtTir67r5G/twUYiCflm4nyWE+70UwU=
-X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr3647243pjb.30.1578649675696;
- Fri, 10 Jan 2020 01:47:55 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FFFiRJG2Dmj1usFksXLqBJzjpKKPyDXbH4wvjVOZ1fI=;
+        b=mpo/fY/XzbNai9HXjkGV8ErbCncbUCQVxUtxiPCkawTrmkcqq9Ihmbvx4tUYCAXuXx
+         pcLu0OnK4+3Msej9zZAQcZ1RFUCHgq55Dzqfe/9j0DPrdXCergbAnYze8n/vANk6O3yW
+         J+w6NwnPVOOpEnmTu7MaLaJaSIhNtlbqipB/z7yR8O4mS8tJeNYs4wVQ6ziSkJDpoKAh
+         Xk7+TVtAOWFRHc46YT5vKviIZagKOElUUxRl9AOUeth1ydh3RQJDp6NeGoYyLBXNP3hx
+         eEUOkpd5V9jUHZmjUEmq2jHGrrAoT3x6IXBaE5Tm7U2pVuEIWyb7TWwql4kTtTcGGqTR
+         3s/Q==
+X-Gm-Message-State: APjAAAUji1X69V7siTr62u6TGvevCbwT0LQRZhklKWPIlmpScffyFspD
+        t7qjP94Mbmm/NSAE6ZMcg4ToJEU80rXLW04+CQjwOA==
+X-Google-Smtp-Source: APXvYqy1hKppXBuZzaJ8wvQHVvxsOwK2OC2jrtZeqo2fPHlYKSjgOOm97Jf6kySEAch4zMkOG4k8gTAMgGlr7szdTvI=
+X-Received: by 2002:ac2:599c:: with SMTP id w28mr1784527lfn.78.1578649699221;
+ Fri, 10 Jan 2020 01:48:19 -0800 (PST)
 MIME-Version: 1.0
-References: <20200110145703.59a89bac@canb.auug.org.au>
-In-Reply-To: <20200110145703.59a89bac@canb.auug.org.au>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 10 Jan 2020 11:47:47 +0200
-Message-ID: <CAHp75VeYU6WbRXdWoFttD8FCKniTc36riX_rN4XV=tANXtysjA@mail.gmail.com>
-Subject: Re: linux-next: build warning after merge of the drivers-x86 tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        kbuild test robot <lkp@intel.com>
-Cc:     Darren Hart <dvhart@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200110094304.446-1-zhenzhong.duan@gmail.com>
+In-Reply-To: <20200110094304.446-1-zhenzhong.duan@gmail.com>
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Date:   Fri, 10 Jan 2020 17:48:07 +0800
+Message-ID: <CAFH1YnOuRgbOu6Dz-hgowAxN41+04pjQHW25QCnT5ZRsR=E9DA@mail.gmail.com>
+Subject: Re: [PATCH v3] x86/boot/KASLR: Fix unused variable warning
+To:     linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 5:57 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> After merging the drivers-x86 tree, today's linux-next build (x86_64
-> allmodconfig) produced this warning:
->
-> drivers/platform/x86/intel_telemetry_pltdrv.c: In function 'telemetry_pltdrv_probe':
-> drivers/platform/x86/intel_telemetry_pltdrv.c:1121:6: warning: unused variable 'size' [-Wunused-variable]
->  1121 |  int size, ret = -ENOMEM;
->       |      ^~~~
->
-> Introduced by commit
->
->   ebc28a8e59ca ("platform/x86: intel_telemetry_pltdrv: use devm_platform_ioremap_resource()")
+I mean [PATCH v3]
 
-Thanks for a report. I'll fix soon.
-I'm wondering why I didn't get any report from LKP.
-
+On Fri, Jan 10, 2020 at 5:43 PM Zhenzhong Duan <zhenzhong.duan@gmail.com> w=
+rote:
 >
+> Local variable 'i' is referenced only when CONFIG_MEMORY_HOTREMOVE and
+> CONFIG_ACPI are defined, but definition of variable 'i' is out of guard.
+> If any of the two macros is undefined, below warning triggers during
+> build with 'make EXTRA_CFLAGS=3D-Wall binrpm-pkg', fix it by moving 'i'
+> in the guard.
+>
+> arch/x86/boot/compressed/kaslr.c:698:6: warning: unused variable =E2=80=
+=98i=E2=80=99 [-Wunused-variable]
+>
+> Fixes: 690eaa532057 ("x86/boot/KASLR: Limit KASLR to extract the kernel i=
+n immovable memory only")
+> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@suse.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> ---
+> v3: remove changes from 0/1 to false/true per Tglx
+>     add the command details about triggering build warning per Boris
+>
+> v2: update description per Boris.
+>
+>  arch/x86/boot/compressed/kaslr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/=
+kaslr.c
+> index d7408af55738..62bc46684581 100644
+> --- a/arch/x86/boot/compressed/kaslr.c
+> +++ b/arch/x86/boot/compressed/kaslr.c
+> @@ -695,7 +695,6 @@ static bool process_mem_region(struct mem_vector *reg=
+ion,
+>                                unsigned long long minimum,
+>                                unsigned long long image_size)
+>  {
+> -       int i;
+>         /*
+>          * If no immovable memory found, or MEMORY_HOTREMOVE disabled,
+>          * use @region directly.
+> @@ -711,6 +710,7 @@ static bool process_mem_region(struct mem_vector *reg=
+ion,
+>         }
+>
+>  #if defined(CONFIG_MEMORY_HOTREMOVE) && defined(CONFIG_ACPI)
+> +       int i;
+>         /*
+>          * If immovable memory found, filter the intersection between
+>          * immovable memory and @region.
 > --
-> Cheers,
-> Stephen Rothwell
-
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> 2.17.1
+>
