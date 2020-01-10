@@ -2,94 +2,96 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 839A9C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B44B2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A242072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:52:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578700337;
-	bh=NvOUcUspxFLI01lV4A8uaAMX4Ow8pA4DdoGx2zMfWBU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ed5619N+yPKyds29FcrLlZiBXis3bUnvq47z4ZvuA/D44EwTe2HfVQ/XwOrym6fQo
-	 IvZ5TrFRBbUZdwpAZIknP+EqCF/kjLtsyPFVHro1s6iqzaog4BE8FU12kiEQ0KyxfJ
-	 7XV8AolTn1dD6aMcmfezHvuwhvA+oJJARansmVBA=
+	by mail.kernel.org (Postfix) with ESMTP id 868C72077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:56:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="ZJEDO0YS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgAJXwQ (ORCPT
+        id S1727761AbgAJX4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 18:52:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38132 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727706AbgAJXwQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 18:52:16 -0500
-Received: from localhost (unknown [104.132.0.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91F062072A;
-        Fri, 10 Jan 2020 23:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578700335;
-        bh=NvOUcUspxFLI01lV4A8uaAMX4Ow8pA4DdoGx2zMfWBU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K5rsvDPnEAR5f21xmUvg1WTxOoWEYMaz3T4nOp8ln4/PnRUK4/QvBccKSxw5gx6F5
-         KSbS8D2qzcW2V8HhqcHE4E4fU2V4WST4iFRc15NeOJdUxDkmGbzhsYrvkRgYg0zg5s
-         4Pnn73nYDbl8cxLB9pOYFoZPsR8NX3+HrjDDKgns=
-Date:   Fri, 10 Jan 2020 15:52:14 -0800
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [RFC PATCH v5] f2fs: support data compression
-Message-ID: <20200110235214.GA25700@jaegeuk-macbookpro.roam.corp.google.com>
-References: <20191216062806.112361-1-yuchao0@huawei.com>
- <20191218214619.GA20072@jaegeuk-macbookpro.roam.corp.google.com>
- <c7035795-73b3-d832-948f-deb36213ba07@huawei.com>
- <20191231004633.GA85441@jaegeuk-macbookpro.roam.corp.google.com>
- <7a579223-39d4-7e51-c361-4aa592b2500d@huawei.com>
- <20200102181832.GA1953@jaegeuk-macbookpro.roam.corp.google.com>
- <20200102190003.GA7597@jaegeuk-macbookpro.roam.corp.google.com>
- <d51f0325-6879-9aa6-f549-133b96e3eef5@huawei.com>
- <94786408-219d-c343-70f2-70a2cc68dd38@huawei.com>
- <20200106181620.GB50058@jaegeuk-macbookpro.roam.corp.google.com>
+        Fri, 10 Jan 2020 18:56:39 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42293 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727706AbgAJX4j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 18:56:39 -0500
+Received: by mail-lj1-f195.google.com with SMTP id y4so3856261ljj.9
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 15:56:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=IAXX3JDfW91L1oFBIls8QdCooR7SfK5C1si/SVwg03w=;
+        b=ZJEDO0YSgA77ITGYIDctyb0EOae3X0E9DZsrCSD/137Q3wBqPH6xelTolj5I+N71/m
+         5okd9DsJlWyaN1rsC3T919/aHllzar6Pnp4CeoJCFftfC/HxvuIYfoOCgqcRVjx+4g1/
+         bQuCMoS5FuERQc0oHq+lqFBEPrMGhXsiZEb9NZl/XRJlIVzJKMYMZMa89dSO0w/8e5fp
+         aJz4V0v9uMWruuU74+yNtL2YiDQ9r72yMWVR/x42Fu1X1yKuo+6ChgY0YVt9IdI8Qx72
+         rnZjO15pE/BaQphl6RgkxTalDUEhDYoyEKHlIOBfN4f2NlhTBpYsPzwBWvRguNWa8/ZP
+         SLEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IAXX3JDfW91L1oFBIls8QdCooR7SfK5C1si/SVwg03w=;
+        b=mP+vTwIa0tjHjGIdERctetO3fPKKmDa+Q93P99nnPKfELuCB2LRJ8JhDfRGgVKDlyS
+         b5sasf470HCgKfEBCkkBGzGLC4AJ+iCn6uHY8oR76801vsEhOPtM1IvnajlciEzn8MYT
+         P/t3KX1oQhxql2InIyDEltdbLviQkFYJrikaxY/7QP9pE1DYVtrssr/tLUydlTZwqMVZ
+         fbtQC/hRmGt/LuLEjMtyGipmdP4biBpjv1zeFVKtKQPm264lwsCSljXK+azwKCFR8vjZ
+         qvqqjprFtSx2fdIRtG/8QKpiTBwF0j6ygpGAeSuCGZ1cpzopike4H9q91V/C6cfbE0Hc
+         /h3Q==
+X-Gm-Message-State: APjAAAXg6ly3TOarHO7cY2Wnno3KEohiljOwvW3rSnZnjg9A/nxb1MB9
+        j0FUFOAyRYrtsOf56aFiH+hLB+MchrM=
+X-Google-Smtp-Source: APXvYqyYnIVVGBQ0KU6ZYtLcMk4lwa3fxOsd1TpsJHLhRA96yRkEYjF9cTgjcd/1b4ELB7gGiTiejw==
+X-Received: by 2002:a2e:86c4:: with SMTP id n4mr4142551ljj.97.1578700597199;
+        Fri, 10 Jan 2020 15:56:37 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id z5sm1673807lji.40.2020.01.10.15.56.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 15:56:36 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 74CCF10144E; Sat, 11 Jan 2020 02:56:37 +0300 (+03)
+Date:   Sat, 11 Jan 2020 02:56:37 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com
+Subject: Re: [PATCH 2/2] mm/huge_memory.c: use head to emphasize the purpose
+ of page
+Message-ID: <20200110235637.ppkb6iecd4ayiqr5@box>
+References: <20200110032610.26499-1-richardw.yang@linux.intel.com>
+ <20200110032610.26499-2-richardw.yang@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200106181620.GB50058@jaegeuk-macbookpro.roam.corp.google.com>
-User-Agent: Mutt/1.8.2 (2017-04-18)
+In-Reply-To: <20200110032610.26499-2-richardw.yang@linux.intel.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/06, Jaegeuk Kim wrote:
-> On 01/06, Chao Yu wrote:
-> > On 2020/1/3 14:50, Chao Yu wrote:
-> > > This works to me. Could you run fsstress tests on compressed root directory?
-> > > It seems still there are some bugs.
-> > 
-> > Jaegeuk,
-> > 
-> > Did you mean running por_fsstress testcase?
-> > 
-> > Now, at least I didn't hit any problem for normal fsstress case.
+On Fri, Jan 10, 2020 at 11:26:10AM +0800, Wei Yang wrote:
+> During split huge page, it checks the property of the page. Currently we
+> do the check on page and head without emphasizing the check is on the
+> compound page. In case the page passed to split_huge_page_to_list is a
+> tail page, audience would take some time to think about whether the
+> check is on compound page or tail page itself.
 > 
-> Yup. por_fsstress
-
-Please check https://github.com/jaegeuk/f2fs/commits/g-dev-test.
-I've fixed
-- truncation offset
-- i_compressed_blocks and its lock coverage
-- error handling
-- etc
-
-One another fix in f2fs-tools as well.
-https://github.com/jaegeuk/f2fs-tools
-
+> To make it explicit, use head instead of page for those checks. After
+> this, audience would be more clear about the checks are on compound page
+> and the page is used to do the split and dump error message if failed.
 > 
-> > 
-> > Thanks,
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+
+-- 
+ Kirill A. Shutemov
