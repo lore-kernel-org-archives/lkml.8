@@ -2,108 +2,105 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85687C33CA5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:40:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FC1C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56FA020838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:40:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D91A2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:40:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FmFQpjHO"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="O//lvPbN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728271AbgAJNkZ (ORCPT
+        id S1728295AbgAJNk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 08:40:25 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:40236 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728192AbgAJNkX (ORCPT
+        Fri, 10 Jan 2020 08:40:29 -0500
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:55451 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728192AbgAJNk1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 08:40:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=eg00gB5MIhosfgx54pb6m/6BTbun0f1ISZugspfmb0Y=; b=FmFQpjHOHVqGjrXsr25KBEkQY
-        ZZWqukYHz+36aJ9r8c/zVY5l+S6Pj+cjcgn2j+tFg5tSMoVNvAyuCHX7YfU282PakvlTT7G+gpLuv
-        A865RDnXjV+NasjD38XTI4f8jhAr4uNVZYhTgy6/zf+JTpCcXgUzk5hOjVv5L0lNyUu3WEwu5eJPC
-        CcBU6coeZW+1sHmoXcQ0NS7wMSys7IG0Ho+my/nmbDXUve77AUaKNITc/WunW4LZ6JkAh0J8Evjl5
-        Hc82u4te9BuKQLb7Rj/DcrXp4C7RgtwnzfgeeqK9JP6oRh1gDY1RIevO4aikYeE312Oon1thbOHu8
-        jyvV8Gefw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipuW6-0003f2-M1; Fri, 10 Jan 2020 13:39:58 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0AE123043C9;
-        Fri, 10 Jan 2020 14:38:22 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C32142B612615; Fri, 10 Jan 2020 14:39:56 +0100 (CET)
-Date:   Fri, 10 Jan 2020 14:39:56 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        valentin.schneider@arm.com, qperret@google.com,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
-Message-ID: <20200110133956.GL2844@hirez.programming.kicks-ass.net>
-References: <20191220164838.31619-1-qais.yousef@arm.com>
- <20200108134448.GG2844@hirez.programming.kicks-ass.net>
- <20200109130052.feebuwuuvwvm324w@e107158-lin.cambridge.arm.com>
+        Fri, 10 Jan 2020 08:40:27 -0500
+Received: from [IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef]
+ ([IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id puWTinFt8pLtbpuWXiQqCI; Fri, 10 Jan 2020 14:40:25 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578663625; bh=MHkmQDKT0r4fQcBBc2IMAMBUeWf7ULY+mdGIXIE99eE=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=O//lvPbN29U0TCDl8YaGRGESV2JX23l8A0Y20wPkKhQ1ks/tuf+x5unexaa6kdXTR
+         FxMWw3eNi7id6vuDo7U48E1X6LmgJLBKrPoQPWPfsU/PWNJY4bvtYyTZRGasAk0q0P
+         STzuC6gf+2lBnFZFBemXD/K6XacpXE6XYveEnTRvJ2QTa+a6kffkPUx8obna9vc9lO
+         BJ0zBVsVzvXvW5MPItBtkSopbqfIgn10T5fUPwg5Qz9Y1BmoSICXRVWr4gdremE3zb
+         qadwjJkbh51NxAENND7Y50fQ2yM7oVYubS3SJNpp+ARUcviojJLb+TKnLttAlW420C
+         QcEGKYTwEG3OA==
+Subject: Re: [PATCH v2 RFT] media: exynos4-is: add missed
+ clk_disable_unprepare in remove
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191219074824.15047-1-hslester96@gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <f253eb6e-5e21-fd9b-8c2f-371beea66afa@xs4all.nl>
+Date:   Fri, 10 Jan 2020 14:40:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109130052.feebuwuuvwvm324w@e107158-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191219074824.15047-1-hslester96@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJQy4Gzf1IEMxWqhmwovv3bnMJlsGgGc6jsSNp9UlIaXbaOBGCM0fOyz5BB9dlhYab0a2NZJ0/noauOBJA9ZdcBv5EwI55HwlTGDB1ynYVVBZd1h/03T
+ O4hsaRHDYftag8lWWDgwg2HpVXRJhpL0ByqssqOfSMG60XEEof9G1kt9azOy0ZSPZ1lT5/O5D0cQV0zCMgR18p4XLKXVhsMurGXOmIUElYQL9sMt+3lOh/gy
+ jOlDIECumrBQcgjW3o26Y/pWEB8nNRiD9pussXQNgPn0i1MPDERpuPiMuXkE7iNHDV3fykh/PXJfTdoc+86o0WxqlS2T97gne+u6LPaCMLyXZ2pZMcpoStfa
+ vMYM8qzbUzlq0Jpv0evU2P9HgaPtlnkZe9rLpIbtE6PhroHQNgM8R4OxQRQd+pppfk+7G8FlWfBhZZwq2pg0CJ3GZahhjzMO+A9ZABOwepNQp9dwgraqkZAy
+ jjO4/GgJIshj4mQuXHa36d+rkfhKky1U+f4Q1hkns0MAP8Ze2NZXAtWAe6ZBJheqQ60g8ZHgB19XDbOBm0v6ciHUr4sCCbZUMERG+M+o9AE8fWt8oaVS1ofT
+ oS5ReaE/M81QCgIbqU7TVF4GBtAFAtZmMQ1Fn1RYo36CdQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 01:00:58PM +0000, Qais Yousef wrote:
-> On 01/08/20 14:44, Peter Zijlstra wrote:
-> > On Fri, Dec 20, 2019 at 04:48:38PM +0000, Qais Yousef wrote:
-> > > RT tasks by default try to run at the highest capacity/performance
-> > > level. When uclamp is selected this default behavior is retained by
-> > > enforcing the uclamp_util_min of the RT tasks to be
-> > > uclamp_none(UCLAMP_MAX), which is SCHED_CAPACITY_SCALE; the maximum
-> > > value.
-> > > 
-> > > See commit 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks").
-> > > 
-> > > On battery powered devices, this default behavior could consume more
-> > > power, and it is desired to be able to tune it down. While uclamp allows
-> > > tuning this by changing the uclamp_util_min of the individual tasks, but
-> > > this is cumbersome and error prone.
-> > > 
-> > > To control the default behavior globally by system admins and device
-> > > integrators, introduce the new sysctl_sched_rt_uclamp_util_min to
-> > > change the default uclamp_util_min value of the RT tasks.
-> > > 
-> > > Whenever the new default changes, it'd be applied on the next wakeup of
-> > > the RT task, assuming that it still uses the system default value and
-> > > not a user applied one.
-> > 
-> > This is because these RT tasks are not in a cgroup or not affected by
-> > cgroup settings? I feel the justification is a little thin here.
-> 
-> The uclamp_min for RT tasks is always hardcoded to 1024 at the moment. So even
-> if they belong to a cgroup->uclamp_min = 0, they'll still run at max frequency,
-> no?
+Anyone able/willing to test this patch?
 
-Argh, this is that counter intuitive max aggregate nonsense biting me.
+Regards,
+
+	Hans
+
+On 12/19/19 8:48 AM, Chuhong Yuan wrote:
+> This driver forgets to disable and unprepare clock when remove.
+> Add a call to clk_disable_unprepare() to fix it.
+> 
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+> Changes in v2:
+>   - Add a check of pm_runtime_enable() to match enable in probe.
+>   - Add RFT tag.
+> 
+>  drivers/media/platform/exynos4-is/fimc-lite.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/media/platform/exynos4-is/fimc-lite.c b/drivers/media/platform/exynos4-is/fimc-lite.c
+> index e87c6a09205b..17de14fbba31 100644
+> --- a/drivers/media/platform/exynos4-is/fimc-lite.c
+> +++ b/drivers/media/platform/exynos4-is/fimc-lite.c
+> @@ -1614,6 +1614,9 @@ static int fimc_lite_remove(struct platform_device *pdev)
+>  	struct fimc_lite *fimc = platform_get_drvdata(pdev);
+>  	struct device *dev = &pdev->dev;
+>  
+> +	if (!pm_runtime_enabled(dev))
+> +		clk_disable_unprepare(fimc->clock);
+> +
+>  	pm_runtime_disable(dev);
+>  	pm_runtime_set_suspended(dev);
+>  	fimc_lite_unregister_capture_subdev(fimc);
+> 
 
