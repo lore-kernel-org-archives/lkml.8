@@ -2,89 +2,96 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645F8C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D102DC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4C120661
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92416206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MROnmtSq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgAJTaC (ORCPT
+        id S1729173AbgAJTbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:30:02 -0500
-Received: from mga05.intel.com ([192.55.52.43]:59396 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727709AbgAJT36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:29:58 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:29:58 -0800
-X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
-   d="scan'208";a="255125193"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:29:58 -0800
-From:   ira.weiny@intel.com
-To:     linux-kernel@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH V2 02/12] fs/xfs: Isolate the physical DAX flag from effective
-Date:   Fri, 10 Jan 2020 11:29:32 -0800
-Message-Id: <20200110192942.25021-3-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200110192942.25021-1-ira.weiny@intel.com>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
+        Fri, 10 Jan 2020 14:31:08 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60862 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729147AbgAJTbD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 14:31:03 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00AJUwJn094609;
+        Fri, 10 Jan 2020 13:30:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578684658;
+        bh=FmFre3D1v2uvSgCmb16gwmygh7BGUpqD8FGcahDNICk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=MROnmtSqB4RRTP9M+GBGNbauhj0DJAbOv94nr7ZAyy7R+HJlpelRMEGCq1ZzAgt/1
+         uhgIU2tES5yv2ZPKRPbTk/pQzlTh8XJ68j69paH+DkmPKb7QCYG/gFnw/dw1JYa25E
+         zjgAtgb9k+T6kePR2ShgTrSR/iYOW3jP7ska3BwE=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00AJUvVS120153
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 10 Jan 2020 13:30:58 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
+ Jan 2020 13:30:57 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 10 Jan 2020 13:30:57 -0600
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00AJUvSo065048;
+        Fri, 10 Jan 2020 13:30:57 -0600
+Subject: Re: [PATCH 0/4] TI DP8382x Phy support update
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200110184702.14330-1-dmurphy@ti.com>
+ <20200110192524.GO19739@lunn.ch>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <2e9333e1-1ee7-80ce-fab4-a98a9f4b345f@ti.com>
+Date:   Fri, 10 Jan 2020 13:28:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200110192524.GO19739@lunn.ch>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+Andrew
 
-xfs_ioctl_setattr_dax_invalidate() currently checks if the DAX flag is
-changing as a quick check.
+On 1/10/20 1:25 PM, Andrew Lunn wrote:
+> On Fri, Jan 10, 2020 at 12:46:58PM -0600, Dan Murphy wrote:
+>> Hello
+>>
+>> These patches update and fix some issue found in the TI ethernet PHY drivers.
+> Hi Dan
+>
+> Please could you separate fixes from new functionality. Have the fixes
+> based on net, and new functionality on net-next.
 
-But the implementation mixes the physical (XFS_DIFLAG2_DAX) and
-effective (S_DAX) DAX flags.
+You mean separate series between fixes and functionality?
 
-Remove the use of the effective flag when determining if a change of the
-physical flag is required.
+Sure I can separate them but they are dependent on each other.
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- fs/xfs/xfs_ioctl.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+3 and 4 will not apply cleanly if patch 1 and 2 are not merged first.
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 7b35d62ede9f..fe37708cea8f 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1195,9 +1195,11 @@ xfs_ioctl_setattr_dax_invalidate(
- 	}
- 
- 	/* If the DAX state is not changing, we have nothing to do here. */
--	if ((fa->fsx_xflags & FS_XFLAG_DAX) && IS_DAX(inode))
-+	if ((fa->fsx_xflags & FS_XFLAG_DAX) &&
-+	    (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
- 		return 0;
--	if (!(fa->fsx_xflags & FS_XFLAG_DAX) && !IS_DAX(inode))
-+	if (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
-+	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
- 		return 0;
- 
- 	if (S_ISDIR(inode->i_mode))
--- 
-2.21.0
+Did you want patch 1 and patch 2 sent separately or together as part of 
+their own series?
+
+Dan
+
 
