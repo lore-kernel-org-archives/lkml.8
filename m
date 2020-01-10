@@ -2,90 +2,97 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BC3C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDECC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D93E2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578666676;
-	bh=HgPahpXdshZgo/Yb5Xs234RcEyVF4p1fdHTEKPXXC+A=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=avfsxbEcu2F8nH+eEH+R1i7XExFI4pIiqN0Np97AdHcu++p/uzCvoUvyilX0gbh21
-	 aUbzOk8AhP/66Y3/2X37GDI10tOS9BvMrnKxI2P8pAHf+qPK6OxmRtM/FhrkbQAYKa
-	 iswqV9/exJB2+UgmifVL58NQLarIsewVl7X7XPmA=
+	by mail.kernel.org (Postfix) with ESMTP id 9E2AB2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:31:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbgAJObP (ORCPT
+        id S1728185AbgAJObg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:31:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgAJObP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:31:15 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7ED0C2077C;
-        Fri, 10 Jan 2020 14:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578666674;
-        bh=HgPahpXdshZgo/Yb5Xs234RcEyVF4p1fdHTEKPXXC+A=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=lS8xc2Q2D11wQrtJIm28CF2qqKfz4e3KiC3sYg0ZJ+ljp2QwIZt9Q/sOzi4ezn5Oh
-         MQbOkgJWEWhw0NBLi9D/nERGeL6GkhdZn2RpJAjNclZVoG7XAFnY8EhVdQuqGIvVJU
-         9+Upe3RLWUbSE/EDzsxYU8KNb0HiCTvUwwf0tt9c=
-Date:   Fri, 10 Jan 2020 15:31:10 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [GIT PULL] HID fixes
-In-Reply-To: <CAHk-=wji9frEf=nkfBmekhZs7QofyhDuT7_Lqt=kkjEZVAktzA@mail.gmail.com>
-Message-ID: <nycvar.YFH.7.76.2001101530050.31058@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.2001091519080.31058@cbobk.fhfr.pm> <CAHk-=wj+zyWsZGhiCiopkrnu1_bkNE1Ax+82sP4Donsv9pUZuw@mail.gmail.com> <nycvar.YFH.7.76.2001092032430.31058@cbobk.fhfr.pm> <nycvar.YFH.7.76.2001092137460.31058@cbobk.fhfr.pm>
- <CAHk-=wh_-q=MPtYmcb4gUHtQ2M96BVrzoDo3pauU-Ps9Q5uPtg@mail.gmail.com> <CAHk-=wji9frEf=nkfBmekhZs7QofyhDuT7_Lqt=kkjEZVAktzA@mail.gmail.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Fri, 10 Jan 2020 09:31:36 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:43419 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727848AbgAJObg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 09:31:36 -0500
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 774B624000A;
+        Fri, 10 Jan 2020 14:31:30 +0000 (UTC)
+Date:   Fri, 10 Jan 2020 15:31:30 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        vkoul@kernel.org, eugen.hristev@microchip.com, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        mchehab@kernel.org, lee.jones@linaro.org, richard.genoud@gmail.com,
+        radu_nicolae.pirea@upb.ro, tudor.ambarus@microchip.com,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        wg@grandegger.com, mkl@pengutronix.de, a.zummo@towertech.it,
+        broonie@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH 13/16] dt-bindings: atmel-usart: add
+ microchip,<chip>-usart
+Message-ID: <20200110143130.GF1027187@piout.net>
+References: <1578488123-26127-1-git-send-email-claudiu.beznea@microchip.com>
+ <1578488123-26127-14-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578488123-26127-14-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jan 2020, Linus Torvalds wrote:
+On 08/01/2020 14:55:20+0200, Claudiu Beznea wrote:
+> Add microchip,<chip>-usart to DT bindings documentation. This is for
+> microchip,sam9x60-usart.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/atmel-usart.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-usart.txt b/Documentation/devicetree/bindings/mfd/atmel-usart.txt
+> index 699fd3c9ace8..e5c7331abe09 100644
+> --- a/Documentation/devicetree/bindings/mfd/atmel-usart.txt
+> +++ b/Documentation/devicetree/bindings/mfd/atmel-usart.txt
+> @@ -1,10 +1,12 @@
+>  * Atmel Universal Synchronous Asynchronous Receiver/Transmitter (USART)
+>  
+>  Required properties for USART:
+> -- compatible: Should be "atmel,<chip>-usart" or "atmel,<chip>-dbgu"
+> +- compatible: Should be "atmel,<chip>-usart", "microchip,<chip>-usart" or
+> +  "atmel,<chip>-dbgu".
+>    The compatible <chip> indicated will be the first SoC to support an
+>    additional mode or an USART new feature.
+> -  For the dbgu UART, use "atmel,<chip>-dbgu", "atmel,<chip>-usart"
+> +  For the dbgu UART, use "atmel,<chip>-dbgu", "atmel,<chip>-usart",
+> +  "microchip,<chip>-usart".
 
-> > Now, good source code presumably notices EPOLLERR and handles it. So
-> > it _shouldn't_ matter what the kernel does if an error occurs. I
-> > haven't checked what people _actually_ do, tnough. I worry sometimes
-> > that user space just looks at EPOLLIN sees it not being set, and gets
-> > stuck in a busy loop polling in case of errors.
-> 
-> Googling around for it, I find this, for example:
-> 
->     https://github.com/scylladb/seastar/issues/309
-> 
-> and yes, I think that's technically a user space bug, but it's very
-> much an example of this: they expect to get errors through read() or
-> write() calls, and get confused when poll() does not say that the fd
-> is readable or writable.
-> 
-> I don't know how common this is, but it didn't take a _lot_ of
-> googling for me to find that one..
+The wildcard here should be eliminated because all the combinations are
+not allowed. This would also make it clearer that this change is to
+introduce a new IP instead of renamed atmel to microchip.
 
-Right, I think it's quite a convicing argument, and the issue is rather 
-easy to avoid. I'll fix that up in the patch and send a fixup pull request 
-to you later today.
-
-Marcel, please speak up if you have other plans.
+>  - reg: Should contain registers location and length
+>  - interrupts: Should contain interrupt
+>  - clock-names: tuple listing input clock names.
+> -- 
+> 2.7.4
+> 
 
 -- 
-Jiri Kosina
-SUSE Labs
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
