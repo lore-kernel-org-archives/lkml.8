@@ -2,514 +2,310 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E9BC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67055C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:38:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D8720842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DB0120842
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:38:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="U3krlYXg";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="J/8fvjxG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbgAJRiH (ORCPT
+        id S1728496AbgAJRiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:38:07 -0500
-Received: from mga06.intel.com ([134.134.136.31]:44468 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbgAJRiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:38:07 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 09:38:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
-   d="scan'208";a="216737182"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga008.jf.intel.com with ESMTP; 10 Jan 2020 09:38:04 -0800
-Date:   Fri, 10 Jan 2020 09:38:04 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
-        edwin.zhai@intel.com
-Subject: Re: [RESEND PATCH v10 04/10] mmu: spp: Add functions to operate SPP
- access bitmap
-Message-ID: <20200110173804.GD21485@linux.intel.com>
-References: <20200102061319.10077-1-weijiang.yang@intel.com>
- <20200102061319.10077-5-weijiang.yang@intel.com>
+        Fri, 10 Jan 2020 12:38:16 -0500
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:22584 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726739AbgAJRiP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 12:38:15 -0500
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 00AHZxbp019688;
+        Fri, 10 Jan 2020 09:38:02 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=nqNHdy0VWYSPh1L6FftU8dPjjrat8LaCduSxXPteZzE=;
+ b=U3krlYXgjjtDwgB92Z77h0sBSRp1cPxcT0t9gCrdP0/rbGXupKPjXNlawTQa/3SDnhA3
+ GUrJFgxWhYAm3txsv66xoRt0ROwc65zNCASpG+W8TlROEZQX/mz8oEn3QgHiiYlJVoYo
+ JeAKBYTDMYuwRmhJOiJYD6F9CiYpnFzLAmU= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0089730.ppops.net with ESMTP id 2xekk1uahj-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 10 Jan 2020 09:38:02 -0800
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.36.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 10 Jan 2020 09:38:01 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TAwOW2H7hkjsKDKBf107WimZhSvxyY64c2hOHnQm5OGH6+/wxMzlSAbNgiyVgSFY/X4lSV6htfQuXdRkiv57HJ3p0xjRZI7DRJoSXZXaD3ggT5HRaOpsawC8N++5k61tUMJMwWJPyy0udsehL5wbUh6Gn98rKJCzwMYH0xJXkWuCS4Ksvk6sxVj9QaHDvtiuRd0DMpG+z48etEowxe+IgzF52v/5opL+eZDw193enbta2oYDwch43x6IVszXJZxMRSsmnLbIxMn2PvOkJeOfvkJ6/VEJVoTEHdIwenyKBWkTxQQlQpLIrqcHxmcBr53bqroq/4er0QP6VzUb0yPvig==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nqNHdy0VWYSPh1L6FftU8dPjjrat8LaCduSxXPteZzE=;
+ b=ixH2nfK2lmP4WXLo2RXpwXPKh7TzU3QWZNK51PNL60pnqC7t99KMuD9ExAFKodqtrdyS6tPCBE9rk/QI9TnwtnJWU0MB9Caio6XfpPU7jhtH18G8/zQ2ni3lra4l1EyGBlolq2YWG0eZjjEySk6gk9MiTJ0v6WZ5l8l+Wflurb83bQ1PhC2BuT2ODJFvV+S9GDKmhCNxZ9A9IpdA7lAnsfA+SIHRKKmAypRLoYXgTRHPNcHEz0nshpqRZgUv+tQHsh1ngBf6OOeiipYxX0W/tQNBRUbGjDGvwCsUQCMGIDoKcP73khMm37dFtAgBosOfKGb46oEf0BDgO/1owMbW1g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nqNHdy0VWYSPh1L6FftU8dPjjrat8LaCduSxXPteZzE=;
+ b=J/8fvjxG0cyH+aV0J/HKnc+fYg50rfHDQidLuu9T5xO1lB/ItJgG1MsBxTKEDYfy3/+mLkzf0gdJe7tBt4cgpOtTecIf+Pj5GpghcZdcgRG4jxWdKdRnNW6fKvUB/b7/Z+/kKA9CpwZSq4mI511+B949YCqr14GD2fCsu81ekIM=
+Received: from BYAPR15MB3029.namprd15.prod.outlook.com (20.178.238.208) by
+ BYAPR15MB3125.namprd15.prod.outlook.com (20.178.238.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.13; Fri, 10 Jan 2020 17:37:45 +0000
+Received: from BYAPR15MB3029.namprd15.prod.outlook.com
+ ([fe80::3541:85d8:c4c8:760d]) by BYAPR15MB3029.namprd15.prod.outlook.com
+ ([fe80::3541:85d8:c4c8:760d%3]) with mapi id 15.20.2623.013; Fri, 10 Jan 2020
+ 17:37:45 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     open list <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v9] perf: Sharing PMU counters across compatible events
+Thread-Topic: [PATCH v9] perf: Sharing PMU counters across compatible events
+Thread-Index: AQHVtQPKZjAIrpT67EGLkBjlWidLzafkAaAAgABNrAA=
+Date:   Fri, 10 Jan 2020 17:37:45 +0000
+Message-ID: <CF654118-59C1-46AA-B9DB-CA14D9FFACF7@fb.com>
+References: <20191217175948.3298747-1-songliubraving@fb.com>
+ <20200110125944.GJ2844@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200110125944.GJ2844@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3608.40.2.2.4)
+x-originating-ip: [2620:10d:c090:200::2:5f0e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: daabbf4d-f86b-415a-5e5b-08d795f3cd77
+x-ms-traffictypediagnostic: BYAPR15MB3125:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR15MB3125E5587E8B5000766CE12EB3380@BYAPR15MB3125.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 02788FF38E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(39860400002)(346002)(376002)(366004)(189003)(199004)(91956017)(6916009)(478600001)(4326008)(66946007)(2616005)(36756003)(316002)(81166006)(8676002)(8936002)(54906003)(81156014)(71200400001)(5660300002)(186003)(76116006)(6486002)(6506007)(2906002)(64756008)(66556008)(86362001)(66476007)(53546011)(66446008)(6512007)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3125;H:BYAPR15MB3029.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: m0XdtB1d5IhQSemn+9JdSbGmUhgSArn+s0CXCT4pQR2IfAYqSf3AAOhbmAYBPwXNKOf6KAiHhICOoKuZamPCRULG6xlC3EiLrOt1+VKGl+T1zVSm6PzEB30VdjWPYsNO9Svt1N/xFNHW+fJ1mogj11OLOETUMIPPYc20nJQxyVnK0ct9pyWnidw3M0eXuGt33Q+srlnovgr7fPpHlP1lu1KwKsMe8riMMem7f4wljv+XbuLAz2bJba289QECXqWMXk66QK0Q8LfxN49HU3gkZYllhMPCuZmngJ7Kl1dPsIJPt329GXBdM4JOaLMdPwtCqyhZZlF8R4JR/DZwPBJgQGtSxkEMqUkFd6Yh1ez4/7EAbCPvVC3jFovvsyj15uN4VLX1UOPWGf/+n4Zm+7Yfn9SCcmthz35Yuo5cNK6QS0Y8ey2fHOsw0thd10Z47XEE
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <52FB5CC0256C2748B12EDE77512D5B3A@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200102061319.10077-5-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-MS-Exchange-CrossTenant-Network-Message-Id: daabbf4d-f86b-415a-5e5b-08d795f3cd77
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 17:37:45.0849
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GIhir0y+zzpeakVteSqvdmrei2UgCXxeW7rPG8ZSXdzQDA2pGwsQO6fFSf5cpbczLQ1IZaRLCuM3GOfCjCRwLw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3125
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-10_01:2020-01-10,2020-01-09 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 spamscore=0
+ suspectscore=0 phishscore=0 clxscore=1015 priorityscore=1501
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001100142
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 02:13:13PM +0800, Yang Weijiang wrote:
-> Create access bitmap for SPP subpages, the bitmap can
-> be accessed with a gfn. The initial access bitmap for each
-> physical page is 0xFFFFFFFF, meaning SPP is not enabled for the
-> subpages.
+Hi Peter,
 
-Wrap changelogs at ~75 chars.
+Thanks for your review!
 
-Create access bitmap for SPP subpages, the bitmap can be accessed with a
-gfn.  The initial access bitmap for each physical page is 0xFFFFFFFF,
-meaning SPP is not enabled for the subpages.
+> On Jan 10, 2020, at 4:59 AM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+> On Tue, Dec 17, 2019 at 09:59:48AM -0800, Song Liu wrote:
+>=20
+> This is starting to look good, find a few comments below.
+>=20
+>> include/linux/perf_event.h |  13 +-
+>> kernel/events/core.c       | 363 ++++++++++++++++++++++++++++++++-----
+>> 2 files changed, 332 insertions(+), 44 deletions(-)
+>>=20
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index 6d4c22aee384..45a346ee33d2 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -547,7 +547,9 @@ enum perf_event_state {
+>> 	PERF_EVENT_STATE_ERROR		=3D -2,
+>> 	PERF_EVENT_STATE_OFF		=3D -1,
+>> 	PERF_EVENT_STATE_INACTIVE	=3D  0,
+>> -	PERF_EVENT_STATE_ACTIVE		=3D  1,
+>> +	/* the hw PMC is enabled, but this event is not counting */
+>> +	PERF_EVENT_STATE_ENABLED	=3D  1,
+>> +	PERF_EVENT_STATE_ACTIVE		=3D  2,
+>> };
+>=20
+> It's probably best to extend the comment above instead of adding a
+> comment for one of the states.
 
-There needs to be a *lot* more information provided in all of the changelogs
-for this series.  I understand the basic concepts of SPP, but nothing in the
-documentation or changelogs explains how KVM generates the SPP tables based
-on userspace input.  Essentially, explain the design in decent detail, with
-a focus on *why* KVM does what it does.
+Will update.=20
 
-> Co-developed-by: He Chen <he.chen@linux.intel.com>
-> Signed-off-by: He Chen <he.chen@linux.intel.com>
-> Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |   2 +
->  arch/x86/kvm/mmu/spp.c          | 332 ++++++++++++++++++++++++++++++++
->  arch/x86/kvm/mmu/spp.h          |  12 ++
->  include/uapi/linux/kvm.h        |   8 +
->  4 files changed, 354 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 9506c9d40895..f5145b86d620 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -812,6 +812,7 @@ struct kvm_lpage_info {
->  
->  struct kvm_arch_memory_slot {
->  	struct kvm_rmap_head *rmap[KVM_NR_PAGE_SIZES];
-> +	u32 *subpage_wp_info;
->  	struct kvm_lpage_info *lpage_info[KVM_NR_PAGE_SIZES - 1];
->  	unsigned short *gfn_track[KVM_PAGE_TRACK_MAX];
->  };
-> @@ -959,6 +960,7 @@ struct kvm_arch {
->  	struct task_struct *nx_lpage_recovery_thread;
->  
->  	hpa_t sppt_root;
-> +	bool spp_active;
->  };
->  
->  struct kvm_vm_stat {
-> diff --git a/arch/x86/kvm/mmu/spp.c b/arch/x86/kvm/mmu/spp.c
-> index 5fca08af705c..edab5ec83ef3 100644
-> --- a/arch/x86/kvm/mmu/spp.c
-> +++ b/arch/x86/kvm/mmu/spp.c
-> @@ -17,6 +17,21 @@ static void shadow_spp_walk_init(struct kvm_shadow_walk_iterator *iterator,
->  	iterator->level = PT64_ROOT_4LEVEL;
->  }
->  
-> +u32 *gfn_to_subpage_wp_info(struct kvm_memory_slot *slot, gfn_t gfn)
-> +{
-> +	unsigned long idx;
-> +
-> +	if (!slot->arch.subpage_wp_info)
-> +		return NULL;
-> +
-> +	idx = gfn_to_index(gfn, slot->base_gfn, PT_PAGE_TABLE_LEVEL);
-> +	if (idx > slot->npages - 1)
-> +		return NULL;
-> +
-> +	return &slot->arch.subpage_wp_info[idx];
-> +}
-> +EXPORT_SYMBOL_GPL(gfn_to_subpage_wp_info);
-> +
->  static bool __rmap_open_subpage_bit(struct kvm *kvm,
->  				    struct kvm_rmap_head *rmap_head)
->  {
-> @@ -172,6 +187,20 @@ bool is_spp_spte(struct kvm_mmu_page *sp)
->  	return sp->role.spp;
->  }
->  
-> +static int kvm_spp_level_pages(gfn_t gfn_lower, gfn_t gfn_upper, int level)
-> +{
-> +	int page_num = KVM_PAGES_PER_HPAGE(level);
-> +	gfn_t gfn_max = (gfn_lower & ~(page_num - 1)) + page_num - 1;
-> +	int ret;
-> +
-> +	if (gfn_upper <= gfn_max)
-> +		ret = gfn_upper - gfn_lower + 1;
-> +	else
-> +		ret = gfn_max - gfn_lower + 1;
-> +
-> +	return ret;
-> +}
-> +
->  #define SPPT_ENTRY_PHA_MASK (0xFFFFFFFFFF << 12)
+>=20
+>>=20
+>> struct file;
+>=20
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index 4ff86d57f9e5..7d4b6ac46de5 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -1657,6 +1657,181 @@ perf_event_groups_next(struct perf_event *event)
+>> 		event =3D rb_entry_safe(rb_next(&event->group_node),	\
+>> 				typeof(*event), group_node))
+>>=20
+>> +static inline bool perf_event_can_share(struct perf_event *event)
+>> +{
+>> +	/* only share hardware counting events */
+>> +	return !is_sampling_event(event);
+>> +	return !is_software_event(event) && !is_sampling_event(event);
+>=20
+> One of those return statements is too many; I'm thinking you meant to
+> only have the second.
 
-There's almost certainly an existing macro for this.
+Exactly! The first line is for vm tests. Sorry for the confusion.=20
 
->  
->  int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
-> @@ -220,6 +249,309 @@ int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
->  }
->  EXPORT_SYMBOL_GPL(kvm_spp_setup_structure);
->  
-> +int vmx_spp_flush_sppt(struct kvm *kvm, u64 gfn_base, u32 npages)
-> +{
-> +	struct kvm_shadow_walk_iterator iter;
-> +	struct kvm_vcpu *vcpu;
-> +	gfn_t gfn = gfn_base;
-> +	gfn_t gfn_max = gfn_base + npages - 1;
+>=20
+>> +}
+>> +
+[...]
+>> +	active_count =3D event->dup_active_count;
+>> +	perf_event_exit_dup_master(event);
+>> +
+>> +	if (!count)
+>> +		return;
+>> +
+>> +	if (count =3D=3D 1) {
+>> +		/* no more sharing */
+>> +		new_master->dup_master =3D NULL;
+>> +	} else {
+>> +		perf_event_init_dup_master(new_master);
+>> +		new_master->dup_active_count =3D active_count;
+>> +	}
+>> +
+>> +	if (active_count) {
+>=20
+> Would it make sense to do something like:
+>=20
+> 		new_master->hw.idx =3D event->hw.idx;
+>=20
+> That should ensure x86_schedule_events() can do with the fast path;
+> after all, we're adding back the 'same' event. If we do this; this wants
+> a comment though.
 
-s/gfn_max/gfn_end.  "max" makes me think this is literally walking every
-possible gfn.
+I think this make sense for x86, but maybe not as much for other architectu=
+res.
+For example, it is most likely a no-op for RISC-V. Maybe we can add a new A=
+PI
+to struct pmu, like "void copy_hw_config(struct perf_event *, struct perf_e=
+vent *)".=20
+For x86, it will be like=20
 
-> +	u64 spde;
-> +	int count;
-> +	bool flush = false;
-> +
-> +	vcpu = kvm_get_vcpu(kvm, 0);
-> +	if (!VALID_PAGE(vcpu->kvm->arch.sppt_root))
-> +		return -EFAULT;
-> +
-> +	for (; gfn <= gfn_max; gfn++) {
-> +		for_each_shadow_spp_entry(vcpu, (u64)gfn << PAGE_SHIFT, iter) {
-> +			if (!is_shadow_present_pte(*iter.sptep))
-> +				break;
-> +
-> +			if (iter.level == PT_DIRECTORY_LEVEL) {
-> +				spde = *iter.sptep;
-> +				spde &= ~PT_PRESENT_MASK;
-> +				spp_spte_set(iter.sptep, spde);
-> +				count = kvm_spp_level_pages(gfn,
-> +							    gfn_max,
-> +							    PT_DIRECTORY_LEVEL);
-> +				flush = true;
-> +				if (count >= npages)
-> +					goto out;
-> +				gfn += count;
-> +				break;
-> +			}
-> +		}
-> +	}
-> +out:
-> +	if (flush)
-> +		kvm_flush_remote_tlbs(kvm);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(vmx_spp_flush_sppt);
-> +
-> +static int kvm_spp_create_bitmaps(struct kvm *kvm)
-> +{
-> +	struct kvm_memslots *slots;
-> +	struct kvm_memory_slot *memslot;
-> +	int i, j, ret;
-> +	u32 *buff;
-> +
-> +	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
-> +		slots = __kvm_memslots(kvm, i);
-> +		kvm_for_each_memslot(memslot, slots) {
-> +			buff = kvzalloc(memslot->npages *
-> +				sizeof(*memslot->arch.subpage_wp_info),
-> +				GFP_KERNEL);
-> +
-> +			if (!buff) {
-> +				ret = -ENOMEM;
-> +				goto out_free;
-> +			}
-> +			memslot->arch.subpage_wp_info = buff;
-> +
-> +			for (j = 0; j < memslot->npages; j++)
-> +				buff[j] = FULL_SPP_ACCESS;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +out_free:
-> +	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
-> +		slots = __kvm_memslots(kvm, i);
-> +		kvm_for_each_memslot(memslot, slots) {
-> +			if (memslot->arch.subpage_wp_info) {
-> +				kvfree(memslot->arch.subpage_wp_info);
-> +				memslot->arch.subpage_wp_info = NULL;
-> +			}
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +int vmx_spp_init(struct kvm *kvm)
-> +{
-> +	int i, ret;
-> +	struct kvm_vcpu *vcpu;
-> +	int root_level;
-> +	struct kvm_mmu_page *ssp_sp;
-> +	bool first_root = true;
-> +
-> +	/* SPP feature is exclusive with nested VM.*/
-> +	if (kvm_x86_ops->get_nested_state)
-> +		return -EPERM;
-> +
-> +	if (kvm->arch.spp_active)
-> +		return 0;
-> +
-> +	ret = kvm_spp_create_bitmaps(kvm);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	kvm_for_each_vcpu(i, vcpu, kvm) {
-> +		if (first_root) {
-> +			/* prepare caches for SPP setup.*/
-> +			mmu_topup_memory_caches(vcpu);
-> +			root_level = vcpu->arch.mmu->shadow_root_level;
-> +			ssp_sp = kvm_spp_get_page(vcpu, 0, root_level);
-> +			first_root = false;
-> +			vcpu->kvm->arch.sppt_root = __pa(ssp_sp->spt);
-> +		}
-> +		++ssp_sp->root_count;
-> +		kvm_make_request(KVM_REQ_LOAD_CR3, vcpu);
-> +	}
-> +
-> +	kvm->arch.spp_active = true;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(vmx_spp_init);
-> +
-> +int kvm_spp_get_permission(struct kvm *kvm, u64 gfn, u32 npages,
-> +			   u32 *access_map)
-> +{
-> +	u32 *access;
-> +	struct kvm_memory_slot *slot;
-> +	int i;
-> +
-> +	if (!kvm->arch.spp_active)
-> +		return -ENODEV;
-> +
-> +	for (i = 0; i < npages; i++, gfn++) {
-> +		slot = gfn_to_memslot(kvm, gfn);
-> +		if (!slot)
-> +			return -EFAULT;
-> +		access = gfn_to_subpage_wp_info(slot, gfn);
-> +		if (!access)
-> +			return -EFAULT;
-> +		access_map[i] = *access;
-> +	}
-> +
-> +	return i;
-> +}
-> +EXPORT_SYMBOL_GPL(kvm_spp_get_permission);
-> +
-> +static void kvm_spp_zap_pte(struct kvm *kvm, u64 *spte, int level)
-> +{
-> +	u64 pte;
-> +
-> +	pte = *spte;
-> +	if (is_shadow_present_pte(pte) && is_last_spte(pte, level)) {
-> +		drop_spte(kvm, spte);
-> +		if (is_large_pte(pte))
-> +			--kvm->stat.lpages;
-> +	}
-> +}
-> +
-> +static bool kvm_spp_flush_rmap(struct kvm *kvm, u64 gfn_min, u64 gfn_max)
-> +{
-> +	u64 *sptep;
-> +	struct rmap_iterator iter;
-> +	struct kvm_rmap_head *rmap_head;
-> +	int level;
-> +	struct kvm_memory_slot *slot;
-> +	bool flush = false;
-> +
-> +	slot = gfn_to_memslot(kvm, gfn_min);
-> +	if (!slot)
-> +		return false;
-> +
-> +	for (; gfn_min <= gfn_max; gfn_min++) {
-> +		for (level = PT_PAGE_TABLE_LEVEL;
-> +		     level <= PT_DIRECTORY_LEVEL; level++) {
-> +			rmap_head = __gfn_to_rmap(gfn_min, level, slot);
-> +			for_each_rmap_spte(rmap_head, &iter, sptep) {
-> +				pte_list_remove(rmap_head, sptep);
-> +				flush = true;
-> +			}
-> +		}
-> +	}
-> +
-> +	return flush;
-> +}
-> +
-> +int kvm_spp_set_permission(struct kvm *kvm, u64 gfn, u32 npages,
-> +			   u32 *access_map)
-> +{
-> +	gfn_t old_gfn = gfn;
-> +	u32 *access;
-> +	struct kvm_memory_slot *slot;
-> +	struct kvm_shadow_walk_iterator iterator;
-> +	struct kvm_vcpu *vcpu;
-> +	gfn_t gfn_max;
-> +	int i, count, level;
-> +	bool flush = false;
-> +
-> +	if (!kvm->arch.spp_active)
-> +		return -ENODEV;
-> +
-> +	vcpu = kvm_get_vcpu(kvm, 0);
-> +	if (!VALID_PAGE(vcpu->kvm->arch.sppt_root))
-> +		return -EFAULT;
-> +
-> +	for (i = 0; i < npages; i++, gfn++) {
-> +		slot = gfn_to_memslot(kvm, gfn);
-> +		if (!slot)
-> +			return -EFAULT;
-> +
-> +		access = gfn_to_subpage_wp_info(slot, gfn);
-> +		if (!access)
-> +			return -EFAULT;
-> +		*access = access_map[i];
-> +	}
-> +
-> +	gfn = old_gfn;
-> +	gfn_max = gfn + npages - 1;
-> +	vcpu = kvm_get_vcpu(kvm, 0);
-> +
-> +	if (!vcpu || (vcpu && !VALID_PAGE(vcpu->arch.mmu->root_hpa)))
-> +		goto out;
-> +
-> +	flush = kvm_spp_flush_rmap(kvm, gfn, gfn_max);
-> +
-> +	for (i = 0; gfn <= gfn_max; i++, gfn++) {
-> +		for_each_shadow_entry(vcpu, (u64)gfn << PAGE_SHIFT, iterator) {
-> +			if (!is_shadow_present_pte(*iterator.sptep))
-> +				break;
-> +
-> +			if (iterator.level == PT_PAGE_TABLE_LEVEL) {
-> +				if (kvm_spp_mark_protection(kvm,
-> +							    gfn,
-> +							    access_map[i]) < 0)
-> +					return -EFAULT;
-> +				break;
-> +			} else if (is_large_pte(*iterator.sptep)) {
-> +				level = iterator.level;
-> +				if (access_map[i] == FULL_SPP_ACCESS)
-> +					break;
-> +				count = kvm_spp_level_pages(gfn,
-> +							    gfn_max,
-> +							    level);
-> +				kvm_spp_zap_pte(kvm, iterator.sptep, level);
-> +				flush = true;
-> +				if (count >= npages)
-> +					goto out;
-> +				gfn += count - 1;
-> +			}
-> +		}
-> +	}
-> +out:
-> +	if (flush)
-> +		kvm_flush_remote_tlbs(kvm);
-> +	return npages;
-> +}
-> +
-> +int kvm_spp_mark_protection(struct kvm *kvm, u64 gfn, u32 access)
-> +{
-> +	struct kvm_memory_slot *slot;
-> +	struct kvm_rmap_head *rmap_head;
-> +	int ret;
-> +
-> +	if (!kvm->arch.spp_active)
-> +		return -ENODEV;
-> +
-> +	slot = gfn_to_memslot(kvm, gfn);
-> +	if (!slot)
-> +		return -EFAULT;
-> +
-> +	/*
-> +	 * check whether the target 4KB page exists in EPT leaf
-> +	 * entry.If it's there, just flag SPP bit of the entry,
-> +	 * defer the setup to SPPT miss induced vm-exit  handler.
-> +	 */
-> +	rmap_head = __gfn_to_rmap(gfn, PT_PAGE_TABLE_LEVEL, slot);
-> +
-> +	if (rmap_head->val) {
-> +		/*
-> +		 * if all subpages are not writable, open SPP bit in
-> +		 * EPT leaf entry to enable SPP protection for
-> +		 * corresponding page.
-> +		 */
-> +		if (access != FULL_SPP_ACCESS) {
-> +			ret = kvm_spp_open_write_protect(kvm, slot, gfn);
-> +			if (ret)
-> +				return ret;
-> +		} else {
-> +			ret = kvm_spp_clear_write_protect(kvm, slot, gfn);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +void kvm_spp_free_memslot(struct kvm_memory_slot *free,
-> +			  struct kvm_memory_slot *dont)
-> +{
-> +	if (!dont || free->arch.subpage_wp_info !=
-> +	    dont->arch.subpage_wp_info) {
-> +		kvfree(free->arch.subpage_wp_info);
-> +		free->arch.subpage_wp_info = NULL;
-> +	}
-> +}
-> +
->  inline u64 construct_spptp(unsigned long root_hpa)
->  {
->  	return root_hpa & PAGE_MASK;
-> diff --git a/arch/x86/kvm/mmu/spp.h b/arch/x86/kvm/mmu/spp.h
-> index 8ef94b7a2057..99d93fdc74b5 100644
-> --- a/arch/x86/kvm/mmu/spp.h
-> +++ b/arch/x86/kvm/mmu/spp.h
-> @@ -2,9 +2,21 @@
->  #ifndef __KVM_X86_VMX_SPP_H
->  #define __KVM_X86_VMX_SPP_H
->  
-> +#define FULL_SPP_ACCESS		((u32)((1ULL << 32) - 1))
-> +
-> +int kvm_spp_get_permission(struct kvm *kvm, u64 gfn, u32 npages,
-> +			   u32 *access_map);
-> +int kvm_spp_set_permission(struct kvm *kvm, u64 gfn, u32 npages,
-> +			   u32 *access_map);
-> +int kvm_spp_mark_protection(struct kvm *kvm, u64 gfn, u32 access);
->  bool is_spp_spte(struct kvm_mmu_page *sp);
->  u64 construct_spptp(unsigned long root_hpa);
->  int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
->  			    u32 access_map, gfn_t gfn);
-> +int vmx_spp_flush_sppt(struct kvm *kvm, u64 gfn_base, u32 npages);
-> +void kvm_spp_free_memslot(struct kvm_memory_slot *free,
-> +			  struct kvm_memory_slot *dont);
-> +int vmx_spp_init(struct kvm *kvm);
-> +u32 *gfn_to_subpage_wp_info(struct kvm_memory_slot *slot, gfn_t gfn);
->  
->  #endif /* __KVM_X86_VMX_SPP_H */
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index f0a16b4adbbd..eabd55ec5af7 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -102,6 +102,14 @@ struct kvm_userspace_memory_region {
->  	__u64 userspace_addr; /* start of the userspace allocated memory */
->  };
->  
-> +/* for KVM_SUBPAGES_GET_ACCESS and KVM_SUBPAGES_SET_ACCESS */
-> +struct kvm_subpage {
-> +	__u64 gfn_base; /* the first page gfn of the contiguous pages */
-> +	__u32 npages;   /* number of 4K pages */
-> +	__u32 flags;    /* reserved to 0 now */
-> +	__u32 access_map[0]; /* start place of bitmap array */
-> +};
-> +
->  /*
->   * The bit 0 ~ bit 15 of kvm_memory_region::flags are visible for userspace,
->   * other bits are reserved for kvm internal use which are defined in
-> -- 
-> 2.17.2
-> 
+	void x86_copy_hw_config(from, to) {
+		to->hw.idx =3D from->hw.idx;
+	}
+
+>=20
+>> +		WARN_ON_ONCE(event->pmu->add(new_master, PERF_EF_START));
+>=20
+> For consistency that probably ought to be:
+>=20
+> 		new_master->pmu->add(new_master, PERF_EF_START);
+
+Will fix.=20
+
+>=20
+>> +		if (new_master->state =3D=3D PERF_EVENT_STATE_INACTIVE)
+>> +			new_master->state =3D PERF_EVENT_STATE_ENABLED;
+>=20
+> If this really should not be perf_event_set_state() we need a comment
+> explaining why -- I think I see, but it's still early and I've not had
+> nearly enough tea to wake me up.
+
+Will add comment.=20
+
+[...]
+
+>>=20
+>> @@ -2242,9 +2494,9 @@ static void __perf_event_disable(struct perf_event=
+ *event,
+>> 	}
+>>=20
+>> 	if (event =3D=3D event->group_leader)
+>> -		group_sched_out(event, cpuctx, ctx);
+>> +		group_sched_out(event, cpuctx, ctx, true);
+>> 	else
+>> -		event_sched_out(event, cpuctx, ctx);
+>> +		event_sched_out(event, cpuctx, ctx, true);
+>>=20
+>> 	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
+>> }
+>=20
+> So the above event_sched_out(.remove_dup) is very inconsistent with the
+> below ctx_resched(.event_add_dup).
+
+[...]
+
+>> @@ -2810,7 +3069,7 @@ static void __perf_event_enable(struct perf_event =
+*event,
+>> 	if (ctx->task)
+>> 		WARN_ON_ONCE(task_ctx !=3D ctx);
+>>=20
+>> -	ctx_resched(cpuctx, task_ctx, get_event_type(event));
+>> +	ctx_resched(cpuctx, task_ctx, get_event_type(event), event);
+>> }
+>>=20
+>> /*
+>=20
+> We basically need:
+>=20
+> * perf_event_setup_dup() after add_event_to_ctx(), but before *sched_in()
+>   - perf_install_in_context()
+>   - perf_event_enable()
+>   - inherit_event()
+>=20
+> * perf_event_remove_dup() after *sched_out(), but before list_del_event()
+>   - perf_remove_from_context()
+>   - perf_event_disable()
+>=20
+> AFAICT we can do that without changing *sched_out() and ctx_resched(),
+> with probably less lines changed over all.
+
+We currently need these changes to sched_out() and ctx_resched() because we
+only do setup_dup() and remove_dup() when the whole ctx is scheduled out.=20
+Maybe this is not really necessary? I am not sure whether simpler code need=
+=20
+more reschedules. Let me take a closer look...
+
+>=20
+>> @@ -4051,6 +4310,9 @@ static void __perf_event_read(void *info)
+>>=20
+>> static inline u64 perf_event_count(struct perf_event *event)
+>> {
+>> +	if (event->dup_master =3D=3D event)
+>> +		return local64_read(&event->master_count) +
+>> +			atomic64_read(&event->master_child_count);
+>=20
+> Wants {}
+
+Will fix.=20
+
+Thanks again,
+Song=
