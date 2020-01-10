@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FBAC33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDD5C47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0A820678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81232072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:08:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578694079;
-	bh=V3GbiHcfk6BfHbV+lS0V0Esc5dLq3FYLB6Xqf/5iltk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YlE1zLg4riTN5o78QVOr/rqVgCyfG8byRPx6ntFd6oyoDlrHvHjNhSjIb0CsC2PqZ
-	 Y0gcYWcTfD4ri/dbZuu9U6m+XRI/X28ZNSYo1/NInTasceHz71W4dIiNwAU7Sivpgc
-	 BOiImOzeesH3rFUL8XIxq9JRo6r/Huk6IKd+wWfI=
+	s=default; t=1578694081;
+	bh=Q5653fpa3ijpZTYcOhg1IEB8ey1XF1cto6FMBRl6nvo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=NxW+Nzpcl93yGP62mGpjo3bygMvBRgFlBNjdj7lS3eU9rxj0Gt7kmTnTjymGIPcEJ
+	 itUMH3amwCffCKeYpKublNqCESoSM+/UENO0TCUgk87/euRxGqwzNtpk/bWE6TaQh+
+	 UunO7md8e0wd/oYODstb5ZYYC5GjsExp2AawEpB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbgAJWHa (ORCPT
+        id S1728352AbgAJWH1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:07:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55190 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 17:07:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728063AbgAJWH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:07:26 -0500
+        id S1728344AbgAJWHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:07:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B756F21569;
-        Fri, 10 Jan 2020 22:07:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AC692072E;
+        Fri, 10 Jan 2020 22:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578694045;
-        bh=V3GbiHcfk6BfHbV+lS0V0Esc5dLq3FYLB6Xqf/5iltk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=10aczAVCN5InKBNkPy8RNtszHE/ArUo6nnwejsmxE3Rs9sIxqJay/AH+TZp+EyboE
-         XXjgDc/82A19wJGCbSzGnNBqXYKBIvtAd0M2mF0CZmkHC0lxCkHCrCi/gQuaql8jVB
-         lezaN31s24oB8pzbmISkMMzXfm5YRX9J3f0k8Utg=
+        s=default; t=1578694043;
+        bh=Q5653fpa3ijpZTYcOhg1IEB8ey1XF1cto6FMBRl6nvo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=DfXFcVeBJkbjTcTUUwvB51i1rCeHrHF4gCyMfTT5M1eLh8jl6kHnXcR+o5jP0qog8
+         FTBxPnLZ4fRVNKg8kR5UUAFotQbuEgbK8lF9MRxAkEltaHMVfTxgaeDGsVPLlBv27Y
+         Xy4HHlebEG92f1rqpIUk0BM/3frtSZ8qm9GprTLs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        Alexander Barabash <alexander.barabash@dell.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 3/6] ioat: ioat_alloc_ring() failure handling.
-Date:   Fri, 10 Jan 2020 17:07:18 -0500
-Message-Id: <20200110220721.28780-3-sashal@kernel.org>
+Cc:     Jouni Hogander <jouni.hogander@unikie.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        linux-mips@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 1/6] MIPS: Prevent link failure with kcov instrumentation
+Date:   Fri, 10 Jan 2020 17:07:16 -0500
+Message-Id: <20200110220721.28780-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200110220721.28780-1-sashal@kernel.org>
-References: <20200110220721.28780-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,43 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>
+From: Jouni Hogander <jouni.hogander@unikie.com>
 
-[ Upstream commit b0b5ce1010ffc50015eaec72b0028aaae3f526bb ]
+[ Upstream commit a4a3893114a41e365274d5fab5d9ff5acc235ff0 ]
 
-If dma_alloc_coherent() returns NULL in ioat_alloc_ring(), ring
-allocation must not proceed.
+__sanitizer_cov_trace_pc() is not linked in and causing link
+failure if KCOV_INSTRUMENT is enabled. Fix this by disabling
+instrumentation for compressed image.
 
-Until now, if the first call to dma_alloc_coherent() in
-ioat_alloc_ring() returned NULL, the processing could proceed, failing
-with NULL-pointer dereferencing further down the line.
-
-Signed-off-by: Alexander Barabash <alexander.barabash@dell.com>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/75e9c0e84c3345d693c606c64f8b9ab5@x13pwhopdag1307.AMER.DELL.COM
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Jouni Hogander <jouni.hogander@unikie.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: linux-mips@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/dma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/mips/boot/compressed/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 49386ce04bf5..1389f0582e29 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -394,10 +394,11 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
+diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
+index ad31c76c7a29..2f77e250b91d 100644
+--- a/arch/mips/boot/compressed/Makefile
++++ b/arch/mips/boot/compressed/Makefile
+@@ -29,6 +29,9 @@ KBUILD_AFLAGS := $(LINUXINCLUDE) $(KBUILD_AFLAGS) -D__ASSEMBLY__ \
+ 	-DBOOT_HEAP_SIZE=$(BOOT_HEAP_SIZE) \
+ 	-DKERNEL_ENTRY=$(VMLINUX_ENTRY_ADDRESS)
  
- 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
- 						 SZ_2M, &descs->hw, flags);
--		if (!descs->virt && (i > 0)) {
-+		if (!descs->virt) {
- 			int idx;
++# Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
++KCOV_INSTRUMENT		:= n
++
+ # decompressor objects (linked with vmlinuz)
+ vmlinuzobjs-y := $(obj)/head.o $(obj)/decompress.o $(obj)/string.o
  
- 			for (idx = 0; idx < i; idx++) {
-+				descs = &ioat_chan->descs[idx];
- 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
- 						  descs->virt, descs->hw);
- 				descs->virt = NULL;
 -- 
 2.20.1
 
