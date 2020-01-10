@@ -2,88 +2,69 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C752C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BB0C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3ADF2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578657069;
-	bh=5VnBWlpMBpMuScJ4e9HWCpCMFraJwy9/+ewY+OyPWzM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RUqni0v1NXqJ5EqGCZKv5HiPPhE6p4I5IYedLvfBqgyoho/U9TtsIgxJ0r+bFskmc
-	 RjH2SCoSbK3bYYhCORCGd0V7fFi8yEo+hOeWFQAEittg/G5Pz8obpiOi1j113FjU5m
-	 JRR8OG9WOFHYZdQ9856HWHtCOR4y1/iiRe7Cv76c=
+	by mail.kernel.org (Postfix) with ESMTP id 14B472072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:51:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgAJLvI (ORCPT
+        id S1727919AbgAJLvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:51:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36728 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 06:51:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:42992 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727689AbgAJLvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:51:08 -0500
-Received: from localhost (83-84-126-242.cable.dynamic.v4.ziggo.nl [83.84.126.242])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 087252077C;
-        Fri, 10 Jan 2020 11:51:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578657067;
-        bh=5VnBWlpMBpMuScJ4e9HWCpCMFraJwy9/+ewY+OyPWzM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nl6Sc3yLv2vL4XrBvEbVsSXjsVvNvudmPJV1LaDWG6qnrY1+6nbV9lFMBQY3n0Lza
-         5YdVaVlWFfbvvzIIRGpYfZaVNp/2vmCUGkTg/TiuvwjAQADB3BqXbETWg8arikFn/j
-         lZdu+4QaOrzOeInDOnQiHOCULlvhz+nfCW4Ty9uU=
-Date:   Fri, 10 Jan 2020 12:51:04 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Marcel Holtmann <marcel@holtmann.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 118/219] rfkill: allocate static minor
-Message-ID: <20200110115104.GA899301@kroah.com>
-References: <20191229162508.458551679@linuxfoundation.org>
- <20191229162526.353368525@linuxfoundation.org>
- <20200110110033.GA11563@amd>
+        id S1727689AbgAJLvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 06:51:36 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F0301063;
+        Fri, 10 Jan 2020 03:51:36 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F4573F534;
+        Fri, 10 Jan 2020 03:51:34 -0800 (PST)
+Date:   Fri, 10 Jan 2020 11:51:32 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, maz@kernel.org, mark.rutland@arm.com,
+        dave.martin@arm.com, ard.biesheuvel@linaro.org,
+        christoffer.dall@arm.com, Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v2 2/7] arm64: fpsimd: Make sure SVE setup is complete
+ before SIMD is used
+Message-ID: <20200110115132.GA8786@arrakis.emea.arm.com>
+References: <20191217183402.2259904-1-suzuki.poulose@arm.com>
+ <20191217183402.2259904-3-suzuki.poulose@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200110110033.GA11563@amd>
+In-Reply-To: <20191217183402.2259904-3-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 12:00:33PM +0100, Pavel Machek wrote:
-> On Sun 2019-12-29 18:18:40, Greg Kroah-Hartman wrote:
-> > From: Marcel Holtmann <marcel@holtmann.org>
-> > 
-> > [ Upstream commit 8670b2b8b029a6650d133486be9d2ace146fd29a ]
-> > 
-> > udev has a feature of creating /dev/<node> device-nodes if it finds
-> > a devnode:<node> modalias. This allows for auto-loading of modules that
-> > provide the node. This requires to use a statically allocated minor
-> > number for misc character devices.
-> > 
-> > However, rfkill uses dynamic minor numbers and prevents auto-loading
-> > of the module. So allocate the next static misc minor number and use
-> > it for rfkill.
+On Tue, Dec 17, 2019 at 06:33:57PM +0000, Suzuki K Poulose wrote:
+> In-kernel users of NEON rely on may_use_simd() to check if the SIMD
+> can be used. However, we must initialize the SVE before SIMD can
+> be used. Add a sanity check to make sure that we have completed the
+> SVE setup before anyone uses the SIMD.
 > 
-> Is this good idea for stable?
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+> Discussion here : https://lkml.kernel.org/r/20191014145204.GS27757@arm.com
 
-Yes.
+Re-reading this thread, I think the conclusion was more towards having a
+WARN_ON in system_supports_fpsimd() (or may_use_simd()). We don't expect
+code to start using neon before the SMP is initialised (other than
+early_initcall(), the rest run after the secondary CPUs are brought up).
 
-> I don't see this major/minor allocated in devices.txt in
-> mainline. Should something like this be added?
-> 
-> Signed-off-by: Pavel Machek <pavel@denx.de>
-
-Good idea, can you resend this as a "real" patch so that I can apply it?
-
-thanks,
-
-greg k-h
+-- 
+Catalin
