@@ -2,147 +2,108 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EE8FC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 718E9C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:07:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0155520838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C362206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578672457;
-	bh=mKcScjigF5A1xr+byPY30DfGycrvCOAMZ7zyMac2J1M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s8VgZzNaoCzbBERDOXtN/TcgAUHP3LWuUPeqHuXJnLwLh9lnMSAMzXzrHmOH8Osq8
-	 LMTnoxKk7g/IPOtcPfn5eJl1MKJKS/wC8h/V+OrYE0/rmFkCQS8lPuV6SJfCSye8PJ
-	 cf02vXpn9l9augykmsfo+BZWaLZpaDlIsad70KZw=
+	s=default; t=1578672461;
+	bh=NT+C3rfa0dgCpqIe7AgVcCYVZuZOmuBB7mp9Rl6qMH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u7cqfyQzjLOIQa+epjnFcKH0v3TKvurgDJTitx3S033FAIeTsgivd+2LN7datzULe
+	 f6BJdQgYSLY/CNT6cSO7zp45j4YipcnDfTOr4mK4dMFKD5RQUx0KFPgRXSMRO9VpSK
+	 y6DkJo4+Bmwr3yhFUd2TWNyHhGRC9JfoK00N9raA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgAJQHg (ORCPT
+        id S1728915AbgAJQHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:07:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56162 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 11:07:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728568AbgAJQHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:07:35 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728568AbgAJQHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 11:07:39 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E071A20848;
-        Fri, 10 Jan 2020 16:07:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE3352087F;
+        Fri, 10 Jan 2020 16:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578672454;
-        bh=mKcScjigF5A1xr+byPY30DfGycrvCOAMZ7zyMac2J1M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D3tI58/0KbG+UWmPIHJi1EbKrXj18Me/KWeawFVEV6wwcxFRSlLWO9hYdbZ8blh1k
-         p/mDOKvIqwklRFuSgQmrfBHoewa+evrDTBEt0uJRJgOmleTYOBsovhTpCChR2WAjAT
-         Qy3TCeCDeDqm4HfgVtIyGZjP6jTsJpzMg5xrKvWo=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v6 21/22] tracing/boot: Add function tracer filter options
-Date:   Sat, 11 Jan 2020 01:07:28 +0900
-Message-Id: <157867244841.17873.10933616628243103561.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157867220019.17873.13377985653744804396.stgit@devnote2>
-References: <157867220019.17873.13377985653744804396.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        s=default; t=1578672459;
+        bh=NT+C3rfa0dgCpqIe7AgVcCYVZuZOmuBB7mp9Rl6qMH0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dahUTwJ30pZ1S5w3UEki1z3pxuLb35tZGM1zPZZIkphU2wXhzS6Lsbs09//bQTeRj
+         CHwPppKCvWhmzZtu+qLyMu33nUYWb8/QHMewGS+Lq9Pfb0Kwpax18TcdbH8KUgrKEX
+         6OhasiYhZDvWbZVokhuaha18qHthxUyEWnavFXrQ=
+Date:   Fri, 10 Jan 2020 16:07:34 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Steven Price <steven.price@arm.com>
+Cc:     Qian Cai <cai@lca.pw>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>
+Subject: Re: [PATCH -next] arm64/mm/dump: fix a compilation error
+Message-ID: <20200110160734.GA25891@willie-the-truck>
+References: <20200110145112.7959-1-cai@lca.pw>
+ <20200110153447.GA30104@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110153447.GA30104@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add below function-tracer filter options to boot-time tracing.
+On Fri, Jan 10, 2020 at 03:34:48PM +0000, Steven Price wrote:
+> On Fri, Jan 10, 2020 at 02:51:12PM +0000, Qian Cai wrote:
+> > The linux-next commit "x86: mm: avoid allocating struct mm_struct on the
+> > stack" [1] introduced a compilation error with "arm64: mm: convert
+> > mm/dump.c to use walk_page_range()" [2]. Fixed it by using the new API.
+> > 
+> > arch/arm64/mm/dump.c:326:38: error: too few arguments to function call,
+> > expected 3, have 2
+> >         ptdump_walk_pgd(&st.ptdump, info->mm);
+> >         ~~~~~~~~~~~~~~~                     ^
+> > ./include/linux/ptdump.h:20:1: note: 'ptdump_walk_pgd' declared here
+> > void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm,
+> > pgd_t *pgd);
+> > ^
+> > arch/arm64/mm/dump.c:364:38: error: too few arguments to function call,
+> > expected 3, have 2
+> >         ptdump_walk_pgd(&st.ptdump, &init_mm);
+> >         ~~~~~~~~~~~~~~~                     ^
+> > ./include/linux/ptdump.h:20:1: note: 'ptdump_walk_pgd' declared here
+> > void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm,
+> > pgd_t *pgd);
+> > ^
+> > 2 errors generated.
+> > 
+> > [1] http://lkml.kernel.org/r/20200108145710.34314-1-steven.price@arm.com
+> 
+> Actually this was in the patch I originally posted - somehow it got
+> lost when Andrew picked it up.
+> 
+> > [2] http://lkml.kernel.org/r/20191218162402.45610-22-steven.price@arm.com
+> > 
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> 
+> Since this matches what I originally wrote... ;)
+> 
+> Reviewed-by: Steven Price <steven.price@arm.com>
 
- - ftrace.[instance.INSTANCE.]ftrace.filters
-   This will take an array of tracing function filter rules
+Acked-by: Will Deacon <will@kernel.org>
 
- - ftrace.[instance.INSTANCE.]ftrace.notraces
-   This will take an array of NON-tracing function filter rules
+I'm assuming Andrew will queue this alongside the others.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- Changes in v6:
-  - Fix to depend on CONFIG_DYNAMIC_FTRACE instead of
-    CONFIG_FUNCTION_TRACER.
----
- kernel/trace/trace_boot.c |   40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+Thanks,
 
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 81d923c16a4d..fa9603dc6469 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -244,11 +244,51 @@ trace_boot_init_events(struct trace_array *tr, struct xbc_node *node)
- #define trace_boot_init_events(tr, node) do {} while (0)
- #endif
- 
-+#ifdef CONFIG_DYNAMIC_FTRACE
-+extern bool ftrace_filter_param __initdata;
-+extern int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
-+			     int len, int reset);
-+extern int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
-+			      int len, int reset);
-+static void __init
-+trace_boot_set_ftrace_filter(struct trace_array *tr, struct xbc_node *node)
-+{
-+	struct xbc_node *anode;
-+	const char *p;
-+	char *q;
-+
-+	xbc_node_for_each_array_value(node, "ftrace.filters", anode, p) {
-+		q = kstrdup(p, GFP_KERNEL);
-+		if (!q)
-+			return;
-+		if (ftrace_set_filter(tr->ops, q, strlen(q), 0) < 0)
-+			pr_err("Failed to add %s to ftrace filter\n", p);
-+		else
-+			ftrace_filter_param = true;
-+		kfree(q);
-+	}
-+	xbc_node_for_each_array_value(node, "ftrace.notraces", anode, p) {
-+		q = kstrdup(p, GFP_KERNEL);
-+		if (!q)
-+			return;
-+		if (ftrace_set_notrace(tr->ops, q, strlen(q), 0) < 0)
-+			pr_err("Failed to add %s to ftrace filter\n", p);
-+		else
-+			ftrace_filter_param = true;
-+		kfree(q);
-+	}
-+}
-+#else
-+#define trace_boot_set_ftrace_filter(tr, node) do {} while (0)
-+#endif
-+
- static void __init
- trace_boot_enable_tracer(struct trace_array *tr, struct xbc_node *node)
- {
- 	const char *p;
- 
-+	trace_boot_set_ftrace_filter(tr, node);
-+
- 	p = xbc_node_find_value(node, "tracer", NULL);
- 	if (p && *p != '\0') {
- 		if (tracing_set_tracer(tr, p) < 0)
-
+Will
