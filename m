@@ -2,116 +2,108 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C82C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13740C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5F80206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA90020842
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgAJTbS (ORCPT
+        id S1729187AbgAJTb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:31:18 -0500
-Received: from mga14.intel.com ([192.55.52.115]:10924 "EHLO mga14.intel.com"
+        Fri, 10 Jan 2020 14:31:26 -0500
+Received: from mga11.intel.com ([192.55.52.93]:47059 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728566AbgAJT35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:29:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1729182AbgAJTbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 14:31:22 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:29:56 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:31:21 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
-   d="scan'208";a="272503818"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:29:56 -0800
-From:   ira.weiny@intel.com
-To:     linux-kernel@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH V2 01/12] fs/stat: Define DAX statx attribute
-Date:   Fri, 10 Jan 2020 11:29:31 -0800
-Message-Id: <20200110192942.25021-2-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200110192942.25021-1-ira.weiny@intel.com>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
+   d="scan'208";a="422217933"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Jan 2020 11:31:18 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1iq007-0003bl-4D; Fri, 10 Jan 2020 21:31:19 +0200
+Date:   Fri, 10 Jan 2020 21:31:19 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Mark Brown <broonie@kernel.org>, tudor.ambarus@microchip.com,
+        linux-kernel@vger.kernel.org, chenxiang66@hisilicon.com,
+        linuxarm@huawei.com, linux-spi@vger.kernel.org,
+        marek.vasut@gmail.com, linux-mtd@lists.infradead.org,
+        xuejiancheng@hisilicon.com, fengsheng5@huawei.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>, liusimin4@huawei.com
+Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
+ driver
+Message-ID: <20200110193119.GI32742@smile.fi.intel.com>
+References: <1575900490-74467-1-git-send-email-john.garry@huawei.com>
+ <1575900490-74467-3-git-send-email-john.garry@huawei.com>
+ <0dc5cb2e-b765-9e13-b05e-9e3c835c5985@huawei.com>
+ <20200109212842.GK3702@sirena.org.uk>
+ <df67b562-7d82-19f6-7581-680190a7772d@huawei.com>
+ <20200110140726.GB5889@sirena.org.uk>
+ <6db83881-927c-d11c-9c77-23a45892ddab@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6db83881-927c-d11c-9c77-23a45892ddab@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Fri, Jan 10, 2020 at 02:58:54PM +0000, John Garry wrote:
+> On 10/01/2020 14:07, Mark Brown wrote:
+> > On Fri, Jan 10, 2020 at 11:55:37AM +0000, John Garry wrote: >
 
-In order for users to determine if a file is currently operating in DAX
-mode (effective DAX).  Define a statx attribute value and set that
-attribute if the effective DAX flag is set.
+...
 
-To go along with this we propose the following addition to the statx man
-page:
+> > > I will note that PRP0001+"jedec,spi-nor" compatible DSD seems to be the
+> > > defacto method to describe the SPI NOR-compat part for ACPI - that's what
+> > > I'm using. We could add properties there, but that seems improper.
+> > 
+> > OK, so that's just reusing the DT binding in which case everything
+> > that's valid for the DT binding should also be valid for ACPI - I
+> > thought that actually worked automatically without you having to do
+> > anything in the code but ICBW.
+> 
+> I thought that it would be improper as we could be mixing ACPI methods to
+> describe the serial bus (SPI Serial Bus Connection Resource Descriptor) and
+> also DT properties which could conflict, like CS active high.
+> 
+> However I do see extra properties than "compatible" being added in DSD for
+> PRP0001:
+> https://patchwork.ozlabs.org/patch/662813/ (see EEPROM part)
 
-STATX_ATTR_DAX
+PRP method is only for vendors to *test* the hardware in ACPI environment.
+The proper method is to allocate correct ACPI ID.
 
-	DAX (cpu direct access) is a file mode that attempts to minimize
-	software cache effects for both I/O and memory mappings of this
-	file.  It requires a capable device, a compatible filesystem
-	block size, and filesystem opt-in. It generally assumes all
-	accesses are via cpu load / store instructions which can
-	minimize overhead for small accesses, but adversely affect cpu
-	utilization for large transfers. File I/O is done directly
-	to/from user-space buffers. While the DAX property tends to
-	result in data being transferred synchronously it does not give
-	the guarantees of synchronous I/O that data and necessary
-	metadata are transferred. Memory mapped I/O may be performed
-	with direct mappings that bypass system memory buffering. Again
-	while memory-mapped I/O tends to result in data being
-	transferred synchronously it does not guarantee synchronous
-	metadata updates. A dax file may optionally support being mapped
-	with the MAP_SYNC flag which does allow cpu store operations to
-	be considered synchronous modulo cpu cache effects.
+Properties (_DSD in ACPI) may be used in the same way as for DT if we have no
+other means in ACPI specification for them.
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- fs/stat.c                 | 3 +++
- include/uapi/linux/stat.h | 1 +
- 2 files changed, 4 insertions(+)
+> And if we were to do this, I think that we would need to add some
+> device_property_read_u32("spi-rx-bus-width", ...), etc calls in the SPI FW
+> parsing for ACPI path - I couldn't see that.
 
-diff --git a/fs/stat.c b/fs/stat.c
-index 030008796479..894699c74dde 100644
---- a/fs/stat.c
-+++ b/fs/stat.c
-@@ -79,6 +79,9 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
- 	if (IS_AUTOMOUNT(inode))
- 		stat->attributes |= STATX_ATTR_AUTOMOUNT;
- 
-+	if (IS_DAX(inode))
-+		stat->attributes |= STATX_ATTR_DAX;
-+
- 	if (inode->i_op->getattr)
- 		return inode->i_op->getattr(path, stat, request_mask,
- 					    query_flags);
-diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-index ad80a5c885d5..e5f9d5517f6b 100644
---- a/include/uapi/linux/stat.h
-+++ b/include/uapi/linux/stat.h
-@@ -169,6 +169,7 @@ struct statx {
- #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
- #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
- #define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
-+#define STATX_ATTR_DAX			0x00002000 /* [I] File is DAX */
- 
- 
- #endif /* _UAPI_LINUX_STAT_H */
+It's okay as long as you have ACPI ID.
+
+P.S. Most of the sensor drivers were updated in order to support ACPI PRP
+method due to DIY hobbyist on IoT sector and embedded devices. This should not
+be an official way how we support hardware on ACPI-based platforms.
+
 -- 
-2.21.0
+With Best Regards,
+Andy Shevchenko
+
 
