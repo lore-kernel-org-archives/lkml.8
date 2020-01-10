@@ -2,85 +2,92 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA0DC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F26C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1272077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E19322080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:24:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578659079;
+	bh=HCvJP+UdwCX6Q2crGVwKn7N7yPIf75Fk5SPzBBin100=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZqCCQ57s1k1CNlvbba9fz1WTGE6qrljXIgIb20L2d2m7Iah4bHc4O+r6apAk+xp/9
+	 VgVWZnKOXQftmti6LaFFPWTzQGcF4XWr47G/HUtuj6UVOxh4T8cfemRGPSh4Z/+IDP
+	 VGstgXDVwLJD3mGYZeCxpeosFx/cqC4v/+75iook=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728079AbgAJMWe (ORCPT
+        id S1728129AbgAJMYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 07:22:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:43746 "EHLO foss.arm.com"
+        Fri, 10 Jan 2020 07:24:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727937AbgAJMWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 07:22:34 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8A951063;
-        Fri, 10 Jan 2020 04:22:33 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5AB23F534;
-        Fri, 10 Jan 2020 04:22:32 -0800 (PST)
-Date:   Fri, 10 Jan 2020 12:22:26 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] firmware: arm_scmi: Make scmi core independent of
- transport type
-Message-ID: <20200110122226.GA45077@bogus>
-References: <5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org>
- <CAK8P3a3=q2zX9xQo7eZKp7e70rAeNB8VoSjg2aE06QJuSw8y3Q@mail.gmail.com>
- <20200109091613.fx2ggmmjvgjempks@vireshk-i7>
+        id S1727912AbgAJMYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 07:24:37 -0500
+Received: from localhost (83-84-126-242.cable.dynamic.v4.ziggo.nl [83.84.126.242])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F1C52077C;
+        Fri, 10 Jan 2020 12:24:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578659077;
+        bh=HCvJP+UdwCX6Q2crGVwKn7N7yPIf75Fk5SPzBBin100=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kk0BBdWnW5aZ1JZ6Bcv8/vIsAgIMssATKbTDPONtWkM/Cgi7cxGtGWEXBOoieyrvg
+         Zj1aE3c6SqAmUSHHkXwNZOhcnMGRVV0iBdWd/cnqUR4lKSjCL5Ko79R7x32ydPB4U7
+         Ee8QKutkNtOIosejv/SM5hQu39TB3vjjFxTzbWxw=
+Date:   Fri, 10 Jan 2020 13:19:51 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rpi-kernel@lists.infradead.org
+Subject: Re: [PATCH] staging: vc04_service: remove unused header include path
+Message-ID: <20200110121951.GA1047840@kroah.com>
+References: <20200104162829.20400-1-masahiroy@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200109091613.fx2ggmmjvgjempks@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200104162829.20400-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 02:46:13PM +0530, Viresh Kumar wrote:
-> On 09-01-20, 09:18, Arnd Bergmann wrote:
-> > > +static int mailbox_chan_free(int id, void *p, void *data)
-> > > +{
-> > > +       struct scmi_chan_info *cinfo = p;
-> > > +       struct scmi_mailbox *smbox = cinfo->transport_info;
-> > > +
-> > > +       if (!IS_ERR_OR_NULL(smbox->chan)) {
-> > > +               mbox_free_channel(smbox->chan);
-> > > +               cinfo->transport_info = NULL;
-> > > +               smbox->chan = NULL;
-> > > +               smbox->cinfo = NULL;
-> > > +       }
-> >
-> > There is something wrong if smbox->chan can be be one of
-> > three things (a valid pointer, a NULL pointer, or an error value).
-> >
-> > I see this is a preexisting problem, but please add a patch to
-> > make it consistently use either NULL pointers or error codes
-> > and remove all instances of IS_ERR_OR_NULL() from this
-> > subsystem.
->
-> This isn't a subsystem problem actually. mbox_request_channel() never
-> returns NULL on error.
->
-> @Sudeep, do we really need the IS_ERR_OR_NULL() check in
-> scmi_mbox_free_channel() helper ? Or can it just be IS_ERR() ?
->
+On Sun, Jan 05, 2020 at 01:28:29AM +0900, Masahiro Yamada wrote:
+> I can build drivers/staging/vc04_services without this.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  drivers/staging/vc04_services/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/vc04_services/Makefile b/drivers/staging/vc04_services/Makefile
+> index afe43fa5a6d7..54d9e2f31916 100644
+> --- a/drivers/staging/vc04_services/Makefile
+> +++ b/drivers/staging/vc04_services/Makefile
+> @@ -13,5 +13,5 @@ vchiq-objs := \
+>  obj-$(CONFIG_SND_BCM2835)	+= bcm2835-audio/
+>  obj-$(CONFIG_VIDEO_BCM2835)	+= bcm2835-camera/
+>  
+> -ccflags-y += -Idrivers/staging/vc04_services -D__VCCOREVER__=0x04000000
+> +ccflags-y += -D__VCCOREVER__=0x04000000
+>  
+> -- 
 
-It can be just IS_ERR, just not noticed it so far I believe.
+This patch breaks the build for me:
+drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c:6:10: fatal error: interface/vchi/vchi.h: No such file or directory
+    6 | #include "interface/vchi/vchi.h"
+      |          ^~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
 
---
-Regards,
-Sudeep
+So maybe you did't select all of the modules to build?
+
+Sorry, I can't take this as-is :(
+
+greg k-h
