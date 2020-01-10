@@ -2,81 +2,144 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C432FC33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC35C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B0622073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:11:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="AjSgPXDb"
+	by mail.kernel.org (Postfix) with ESMTP id E7D5D2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:13:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578640412;
+	bh=u3nc95r1jFTqR3hP2067iUtba3cgdved2A2t1XDWrfE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ci0EC/49yrfYUO7UOr9z1dH5dewnTrFDTIAMpo5IaGmU0dTCOEfWy80Q0XWNSFwST
+	 NBj+t6fNAMocY9lREbdl/Vrhz60++cApw7whtgAyFDKU7A9AMtPTNcj9bSgXpB+8YZ
+	 4trer36Yn0Z4ZzGWR0iOiERsAaQIjY0a0u5eQzus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726199AbgAJHLc (ORCPT
+        id S1726264AbgAJHNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:11:32 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:13191 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgAJHLc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:11:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578640288;
-        s=strato-dkim-0002; d=xenosoft.de;
-        h=To:In-Reply-To:Cc:References:Message-Id:Date:Subject:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=TC+tjX/Lt65GMWtVyL5Xhep5tinocrAB9X7xhvNdnXY=;
-        b=AjSgPXDbCA/9jYWXNXFgLUjOFtmDTQOa7YI7vLzVZQdt9HmmRq+uzQx2rQqnt7jZCv
-        VMSs79dsWoA8Rx1iIF/BTz/e1XbqClVxJ0ZCGNITdBh141AeNeap/+XnYku0f6WdgZQI
-        l0zKfcjFyLwPmdpVMWKkNWGARGXKT3pk5SlWGe2Ypg5/Af1qrAYkmYt4616dwAibubso
-        NuXucFAgEBAgUgCFKyMNPO7HMFBUd1DHWWEBSDOk54yNKWAyEqu+JXuMOjwIcAGiFxXB
-        xuerO7B8he/Mjz9Om9MHJQSynx1SO2Eg5ND2FamP1E7/5/f2+yX5lSAFGWoQrczjy618
-        nPPA==
-X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGN0rBVhd9dFr6KxrfO5Oh7R7NWd5jbpkxCcXi3g8qXe4kYOYilnn348Kw8dzMjA="
-X-RZG-CLASS-ID: mo00
-Received: from [IPv6:2a01:598:8086:10a9:904f:8bb2:ac2:590a]
-        by smtp.strato.de (RZmta 46.1.4 AUTH)
-        with ESMTPSA id c05c1aw0A7AT8Ab
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 10 Jan 2020 08:10:29 +0100 (CET)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Christian Zigotzky <chzigotzky@xenosoft.de>
-Mime-Version: 1.0 (1.0)
-Subject: Re: Bug 205201 - Booting halts if Dawicontrol DC-2976 UW SCSI board installed, unless RAM size limited to 3500M
-Date:   Fri, 10 Jan 2020 08:10:28 +0100
-Message-Id: <533E86ED-00F4-4FB2-9D91-D4705088817D@xenosoft.de>
-References: <20191204085634.GA25929@lst.de>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arch@vger.kernel.org, darren@stevens-zone.net,
-        mad skateman <madskateman@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>,
-        paulus@samba.org, rtd2@xtra.co.nz,
-        "contact@a-eon.com" <contact@a-eon.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        nsaenzjulienne@suse.de
-In-Reply-To: <20191204085634.GA25929@lst.de>
-To:     Christoph Hellwig <hch@lst.de>
-X-Mailer: iPhone Mail (17B111)
+        Fri, 10 Jan 2020 02:13:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725835AbgAJHNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:13:31 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B58732073A;
+        Fri, 10 Jan 2020 07:13:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578640410;
+        bh=u3nc95r1jFTqR3hP2067iUtba3cgdved2A2t1XDWrfE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AkJi4eIokl+gNJwTiX5L2s1jG52dPvA6Jgftv8vlJJE5IuPr77FpapwCggwQGjNBo
+         Lc0xGT2B6tpVICrV2wlunZa2Te4JDR3hhMlVY2bVtYkAn52knN+iraay07u7eZGKjt
+         FQGPESEPyb1w3Ih9YAIsyu1MxcWPmabID1Su8r4E=
+Date:   Fri, 10 Jan 2020 08:13:28 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     =?iso-8859-1?Q?S=E9bastien?= Szymanski 
+        <sebastien.szymanski@armadeus.com>
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH AUTOSEL 4.19 102/177] nvmem: imx-ocotp: reset error
+ status on probe
+Message-ID: <20200110071328.GA100095@kroah.com>
+References: <20191210213221.11921-1-sashal@kernel.org>
+ <20191210213221.11921-102-sashal@kernel.org>
+ <dd048e02-81f7-8aed-34a7-f95a70859391@armadeus.com>
+ <2dc7001f362358dfdcbef080118b23cabaa03a40.camel@pengutronix.de>
+ <CF40B493-27C8-4DF4-BB43-624CC797B12C@armadeus.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CF40B493-27C8-4DF4-BB43-624CC797B12C@armadeus.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+On Tue, Jan 07, 2020 at 08:29:12PM +0100, Sébastien Szymanski wrote:
+> Hi Lucas,
+> 
+> > On 7 Jan 2020, at 18:53, Lucas Stach <l.stach@pengutronix.de> wrote:
+> > 
+> > Hi Sébastien,
+> > 
+> > On Di, 2020-01-07 at 15:50 +0100, Sébastien Szymanski wrote:
+> >> On 12/10/19 10:31 PM, Sasha Levin wrote:
+> >>> From: Lucas Stach <l.stach@pengutronix.de>
+> >>> 
+> >>> [ Upstream commit c33c585f1b3a99d53920bdac614aca461d8db06f ]
+> >>> 
+> >>> If software running before the OCOTP driver is loaded left the
+> >>> controller with the error status pending, the driver will never
+> >>> be able to complete the read timing setup. Reset the error status
+> >>> on probe to make sure the controller is in usable state.
+> >>> 
+> >>> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> >>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> >>> Link: https://lore.kernel.org/r/20191029114240.14905-6-srinivas.kandagatla@linaro.org
+> >>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> >>> ---
+> >>> drivers/nvmem/imx-ocotp.c | 4 ++++
+> >>> 1 file changed, 4 insertions(+)
+> >>> 
+> >>> diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
+> >>> index afb429a417fe0..926d9cc080cf4 100644
+> >>> --- a/drivers/nvmem/imx-ocotp.c
+> >>> +++ b/drivers/nvmem/imx-ocotp.c
+> >>> @@ -466,6 +466,10 @@ static int imx_ocotp_probe(struct platform_device *pdev)
+> >>> 	if (IS_ERR(priv->clk))
+> >>> 		return PTR_ERR(priv->clk);
+> >>> 
+> >>> +	clk_prepare_enable(priv->clk);
+> >>> +	imx_ocotp_clr_err_if_set(priv->base);
+> >>> +	clk_disable_unprepare(priv->clk);
+> >>> +
+> >>> 	priv->params = of_device_get_match_data(&pdev->dev);
+> >>> 	imx_ocotp_nvmem_config.size = 4 * priv->params->nregs;
+> >>> 	imx_ocotp_nvmem_config.dev = dev;
+> >>> 
+> >> 
+> >> Hi,
+> >> 
+> >> This patch makes kernel 4.19.{92,93} hang at boot on my i.MX6ULL based
+> >> board. It hanks at
+> >> 
+> >> [    3.730078] cpu cpu0: Linked as a consumer to regulator.2
+> >> [    3.737760] cpu cpu0: Linked as a consumer to regulator.3
+> >> 
+> >> Full boot log is here: https://pastebin.com/TS8EFxkr
+> >> 
+> >> The config is imx_v6_v7_defconfig.
+> >> 
+> >> Reverting it makes the kernels boot again.
+> > 
+> > Can you check if it actually hangs in imx_ocotp_clr_err_if_set(), or if
+> > the clk_disable_unprepare() is the culprit?
+> > 
+> > If the clock disable hangs the system there is a missing clock
+> > reference somewhere else that we need to track down.
+> 
+> Yes, the system hangs in the imx6q-cpufreq driver, here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/cpufreq/imx6q-cpufreq.c?h=v4.19.93#n322
+> 
+> Kernel 5.4.8 works thanks to commits:
+> 
+> 2733fb0d0699 (“cpufreq: imx6q: read OCOTP through nvmem for imx6ul/imx6ull”)
+> 92f0eb08c66a ("ARM: dts: imx6ul: use nvmem-cells for cpu speed grading”)
 
-The SCSI cards work again. [1, 2]
+I've now queued both of these up for 4.19, hopefully that should resolve
+this issue, thanks!
 
-Sorry for bothering you.
-
-Thanks,
-Christian
-
-[1] http://forum.hyperion-entertainment.com/viewtopic.php?f=3D58&p=3D49603&s=
-id=3D1adf9e6d558c136c1ad4ff15c44212ba#p49599
-[2] https://bugzilla.kernel.org/show_bug.cgi?id=3D205201=
+greg k-h
