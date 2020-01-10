@@ -2,191 +2,103 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B94C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E451EC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 293962082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578639824;
-	bh=ZnMDBNhMvFkTRDhEtOEWNUKzKsBrxPyLSgZcAstK7P4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SWse2+q40eZpdXypZORdTNNXZUs1VqO8GGN6WSowZBgYtihNHf+WT+OBm31dkvIrT
-	 ed6Q5oB0ouBhsDED/nVgGsYBNq/iHSheKbukN33xXOIWthgX5N2jNnN5aeQt07jS+Q
-	 auTQiqLAd/d+eAseNognyQI+07usRH1nqHl04AdM=
+	by mail.kernel.org (Postfix) with ESMTP id BAAAC2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:04:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="NKCRyL+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbgAJHDj (ORCPT
+        id S1727319AbgAJHEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:03:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726295AbgAJHDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:03:39 -0500
-Received: from localhost (unknown [223.226.110.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7C1B2080D;
-        Fri, 10 Jan 2020 07:03:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578639818;
-        bh=ZnMDBNhMvFkTRDhEtOEWNUKzKsBrxPyLSgZcAstK7P4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UtQke1VRM29qVQhxQo8REzyXvGu+GTluOSWfZzT6k+VFPNrFMg3X2bzUHZuQL+X2k
-         BjsSJUg8qKqc5qHRh/w9VwVJaMpyPMRHtywDHfsH7NhD4/Kf4lSPJxdNp1Fho/7t+D
-         SL74Mz+fmESqn7mF2LFvoOLY42ehtLOHPB3qjw34=
-Date:   Fri, 10 Jan 2020 12:33:21 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Rander Wang <rander.wang@intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: Re: [PATCH 6/6] soundwire: stream: don't program ports for a stream
- that has not been prepared
-Message-ID: <20200110070321.GA2818@vkoul-mobl>
-References: <20200108175438.13121-1-pierre-louis.bossart@linux.intel.com>
- <20200108175438.13121-7-pierre-louis.bossart@linux.intel.com>
+        Fri, 10 Jan 2020 02:04:35 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:32701 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726598AbgAJHEf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:04:35 -0500
+X-UUID: 1d66aa46506b476ca302409391d1c1e9-20200110
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=P3n5D3Gnhy1NP5hvBdfMtlX5qxR8Gfe2dv5Rnak/iM4=;
+        b=NKCRyL+IQH4InU6kj0lC7MK1MX+8njEDuQyH1yChSocxJYcsPMfGDXXRHWNaN3fXlURrsBPuPe340RSrTKvqNvsaplaYSPAl7IkJ9F152yhbauweGnAhcYCMoOdVSKnehFJHer0VR/3ekkBc4AR05GKpK6KFHW1zcq1jCzIWJmU=;
+X-UUID: 1d66aa46506b476ca302409391d1c1e9-20200110
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <jiaxin.yu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 896783736; Fri, 10 Jan 2020 15:04:28 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 10 Jan 2020 15:03:55 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 10 Jan 2020 15:03:55 +0800
+From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
+To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
+        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
+        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <chang-an.chen@mediatek.com>, <freddy.hsin@mediatek.com>
+CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>,
+        Jiaxin Yu <jiaxin.yu@mediatek.com>
+Subject: [PATCH v11 0/3] ASoC: mt8183: fix audio playback slowly after playback
+Date:   Fri, 10 Jan 2020 15:04:19 +0800
+Message-ID: <1578639862-14480-1-git-send-email-jiaxin.yu@mediatek.com>
+X-Mailer: git-send-email 1.8.1.1.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108175438.13121-7-pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08-01-20, 11:54, Pierre-Louis Bossart wrote:
-> From: Rander Wang <rander.wang@intel.com>
-> 
-> In the Intel QA multi-pipelines test case, there are two pipelines for
-> playback and capture on the same bus. The test fails with an error
-> when setting port params:
-> 
-> [  599.224812] rt711 sdw:0:25d:711:0: invalid dpn_prop direction 1 port_num 0
-> [  599.224815] sdw_program_slave_port_params failed -22
-> [  599.224819] intel-sdw sdw-master-0: Program transport params failed: -22
-> [  599.224822] intel-sdw sdw-master-0: Program params failed: -22
+VGhpcyBzZXJpZXMgcGF0Y2hlcyBhZGQgcmVzZXQgY29udHJvbGxlciBmb3IgTVQ4MTgzIGFuZCBN
+VDI3MTIsIGFuZCBhdWRpbyB3aWxsIHVzZSBpdCBpbiANCm1hY2hpbmUgZHJpdmVyIGR1cmluZyBi
+b290dXAsIHRoZXkgZGVwZW5kIG9uIHRoZSBmb3ItbmV4dC4NCg0KdjExIGNoYW5nZXM6DQoJMS4g
+Q3JlYXRlIGEgbmV3IHBhdGNoIGZvciBNVDI3MTIuDQoNCnYxMCBjaGFuZ2VzOg0KCTEuIE1vZGlm
+eSBtdGstd2R0LnR4dCBkdC1iaW5kaW5ncy4NCg0KdjkgY2hhbmdlczoNCgkxLiBSZW1vdmUgQ2hh
+bmdlLUlkLg0KDQp2OCBjaGFuZ2VzOg0KCTEuIERlbGV0ZSBjYXN0OiAoc3RydWN0IG10a193ZHRf
+ZGF0YSAqKQ0KDQp2NyBjaGFuZ2VzOg0KCTEuIERlbGV0ZSBubyB1c2UgY29kZS4NCg0KdjYgY2hh
+bmdlczoNCgkxLiBTaW1wbGlmeSB0b3BydWdfcmVzZXRfYXNzZXJ0KCkgJiB0b3BydWdfcmVzZXRf
+ZGVhc3NlcnQoKS4NCgkyLiBBZGQgbWVtYmVycyBmb3IgbXQyNzEyX2RhdGEgJiBtdDgxODNfZGF0
+YS4NCg0KdjUgY2hhbmdlczoNCgkxLiBBZGQgU2lnbmVkLW9mZi1ieSB0YWcgYW5kIFJldmlld2Vk
+LWJ5IHRhZy4NCg0KdjQgY2hhbmdlczoNCgkxLiBGaXhlZCB3cm9uZyBzaWduZWQtb2ZmIGFzIGNv
+cnJlY3QgbWFpbCBzdWZmaXguDQoJMi4gRml4ZWQgcGF0Y2ggc3ViamVjdCB0aGF0IGFkZCBwYXRj
+aCB2ZXJzaW9uLg0KDQp2MyBjaGFuZ2VzOg0KCTEuIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
+cmcvcGF0Y2gvMTExNjQyODMvIGFuZCANCgkgICBodHRwczovL3BhdGNod29yay5rZXJuZWwub3Jn
+L3BhdGNoLzExMTY0MzA1LyBoYXMgYmVlbiBtZXJnZWQuDQoJMi4gQ2hhbmdlIHRoZSBuYW1lIG9m
+IG10a193ZHRfY29tcGF0aWJsZSB0byBtdGtfd2R0X2RhdGEuDQoJMy4gUmVtb3ZlIHRvcHJndV9y
+ZXNldCBzdHJ1Y3QgYW5kIHVzZSBtdGtfd2R0X2RldiBpbnN0ZWFkLg0KCTQuIEdldCB0aGUgdmFs
+dWUgb2Ygc3dfcnN0X251bSBmcm9tIC5oIGZpbGUuDQoJNS4gQWRkZGQgbXQyNzEyLXJlc2V0cy5o
+IGZvciBtdDI3MTIuDQoJNi4gSW1wcm92ZSBjb21taXQgbWVzc2FnZS4NCg0KdjIgY2hhbmdlczoN
+CgkxLiByZW1vdmUgIldJUCIgdGhhdCBpbiB0aGUgdGl0bGUgb2YgcGF0Y2hlcw0KCTIuIGFkZCBo
+eXBlciBsaW5rIGZvciB0aGUgcGF0Y2ggdGhhdCBkZXBlbmRzIG9uDQoJMy4gcGF0Y2h3b3JrIGxp
+c3Q6DQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTExNjQyODUvDQoJCWh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQyOTUvDQoJCWh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQyOTkvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvMTExNjQyODMvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
+cGF0Y2gvMTExNjQzMDUvDQoNCnYxIGNoYW5nZXM6DQoJMS4gcGF0Y2h3b3JrIGxpc3Q6DQoJCWh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTExNjQxNzMvDQoJCWh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTExNjQxODEvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvMTExNjQxODUvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcv
+cGF0Y2gvMTExNjQxODcvDQoJCWh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTEx
+NjQxNzUvDQoNCkppYXhpbiBZdSAoMyk6DQogIGR0LWJpbmRpbmdzOiBtZWRpYXRlazogbXQ4MTgz
+OiBBZGQgI3Jlc2V0LWNlbGxzDQogIHdhdGNoZG9nOiBtdGtfd2R0OiBtdDgxODM6IEFkZCByZXNl
+dCBjb250cm9sbGVyDQogIHdhdGNoZG9nOiBtdGtfd2R0OiBtdDI3MTI6IEFkZCByZXNldCBjb250
+cm9sbGVyDQoNCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9tdGstd2R0LnR4dCAg
+fCAgMTAgKy0NCiBkcml2ZXJzL3dhdGNoZG9nL210a193ZHQuYyAgICAgICAgICAgICAgICAgICAg
+fCAxMDUgKysrKysrKysrKysrKysrKystDQogLi4uL3Jlc2V0LWNvbnRyb2xsZXIvbXQyNzEyLXJl
+c2V0cy5oICAgICAgICAgIHwgIDIyICsrKysNCiAuLi4vcmVzZXQtY29udHJvbGxlci9tdDgxODMt
+cmVzZXRzLmggICAgICAgICAgfCAgMTcgKysrDQogNCBmaWxlcyBjaGFuZ2VkLCAxNTAgaW5zZXJ0
+aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCiBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1i
+aW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaA0KDQotLSANCjIuMTguMA0K
 
-side note, one of these above err logs should be removed :)
-
-> [  599.224828] sdw_enable_stream: SDW0 Pin2-Playback: done
-> 
-> This problem is root-caused to the programming of the capture stream
-> ports while it is not yet prepared, the calling sequence is:
-> 
-> (1) hw_params for playback. The playback stream provide the port
->     information to Bus.
-> (2) stream_prepare for playback, Transport and port parameters
->     are computed for playback.
-> (3) hw_params for capture. The capture stream provide the port
->     information to Bus, but it has not been prepared so is not
->     accounted for in the bandwidth allocation.
-> (4) stream_enable for playback. Program transport and port parameters
->     for all masters and slaves. Since the transport and port parameters
->     are not computed for capture stream, sdw_program_slave_port_params
->     will generate a error when setting port params for capture.
-> 
-> in step (4), we should only program the ports for the stream that have
-> been prepared. A stream that is only in CONFIGURED state should be
-> ignored, its ports will be programmed when it becomes PREPARED.
-> 
-> Tested on Comet Lake.
-> 
-> GitHub issue: https://github.com/thesofproject/linux/issues/1637
-
-This is not relevant for kernel, pls remove
-
-> Signed-off-by: Rander Wang <rander.wang@intel.com>
-> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-> ---
->  drivers/soundwire/stream.c | 21 ++++++++++++++++-----
->  1 file changed, 16 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-> index da10f38298c0..198372977187 100644
-> --- a/drivers/soundwire/stream.c
-> +++ b/drivers/soundwire/stream.c
-> @@ -604,12 +604,23 @@ static int sdw_notify_config(struct sdw_master_runtime *m_rt)
->   *
->   * @bus: SDW bus instance
->   */
-> -static int sdw_program_params(struct sdw_bus *bus)
-> +static int sdw_program_params(struct sdw_bus *bus, bool prepare)
->  {
->  	struct sdw_master_runtime *m_rt;
->  	int ret = 0;
->  
->  	list_for_each_entry(m_rt, &bus->m_rt_list, bus_node) {
-> +
-> +		/*
-> +		 * this loop walks through all master runtimes for a
-> +		 * bus, but the ports can only be configured while
-> +		 * explicitly preparing a stream or handling an
-> +		 * already-prepared stream otherwise.
-
-we can go upto 80 chars, make sure you align the above comment block as
-such
-
-> +		 */
-> +		if (!prepare &&
-> +		    m_rt->stream->state == SDW_STREAM_CONFIGURED)
-> +			continue;
-> +
->  		ret = sdw_program_port_params(m_rt);
->  		if (ret < 0) {
->  			dev_err(bus->dev,
-> @@ -1502,7 +1513,7 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream,
->  
->  program_params:
->  		/* Program params */
-> -		ret = sdw_program_params(bus);
-> +		ret = sdw_program_params(bus, true);
->  		if (ret < 0) {
->  			dev_err(bus->dev, "Program params failed: %d\n", ret);
->  			goto restore_params;
-> @@ -1602,7 +1613,7 @@ static int _sdw_enable_stream(struct sdw_stream_runtime *stream)
->  		bus = m_rt->bus;
->  
->  		/* Program params */
-> -		ret = sdw_program_params(bus);
-> +		ret = sdw_program_params(bus, false);
->  		if (ret < 0) {
->  			dev_err(bus->dev, "Program params failed: %d\n", ret);
->  			return ret;
-> @@ -1687,7 +1698,7 @@ static int _sdw_disable_stream(struct sdw_stream_runtime *stream)
->  		struct sdw_bus *bus = m_rt->bus;
->  
->  		/* Program params */
-> -		ret = sdw_program_params(bus);
-> +		ret = sdw_program_params(bus, false);
-
-Can you do a converse test as well, when the streams are running and
-concurrently two stream are stopped, it would be good to get it confirmed...
-
->  		if (ret < 0) {
->  			dev_err(bus->dev, "Program params failed: %d\n", ret);
->  			return ret;
-> @@ -1769,7 +1780,7 @@ static int _sdw_deprepare_stream(struct sdw_stream_runtime *stream)
->  			m_rt->ch_count * m_rt->stream->params.bps;
->  
->  		/* Program params */
-> -		ret = sdw_program_params(bus);
-> +		ret = sdw_program_params(bus, false);
->  		if (ret < 0) {
->  			dev_err(bus->dev, "Program params failed: %d\n", ret);
->  			return ret;
-> -- 
-> 2.20.1
-
--- 
-~Vinod
