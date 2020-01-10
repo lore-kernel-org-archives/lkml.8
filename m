@@ -2,187 +2,157 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA4AC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C64E1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EC0720661
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:10:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C2132080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqv1bN75"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730430AbgAJBKP (ORCPT
+        id S1730478AbgAJBQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:10:15 -0500
-Received: from mga07.intel.com ([134.134.136.100]:46439 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730363AbgAJBKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 20:10:15 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 17:10:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="371465194"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga004.jf.intel.com with ESMTP; 09 Jan 2020 17:10:13 -0800
-Received: from [10.54.74.33] (skuppusw-desk.jf.intel.com [10.54.74.33])
-        by linux.intel.com (Postfix) with ESMTP id BF065580342;
-        Thu,  9 Jan 2020 17:10:13 -0800 (PST)
-Reply-To: sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: Re: [PATCH v11 1/8] PCI/ERR: Update error status after reset_link()
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, keith.busch@intel.com
-References: <20200109232639.GA42480@google.com>
-From:   Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Organization: Intel
-Message-ID: <f6f0dc14-7cb0-bb51-b075-404cf3981368@linux.intel.com>
-Date:   Thu, 9 Jan 2020 17:08:15 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 9 Jan 2020 20:16:19 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39004 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730456AbgAJBQS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 20:16:18 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b137so167355pga.6;
+        Thu, 09 Jan 2020 17:16:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=K1fUKQoqVrc2gBuC0Xa6OebKj/ndQDIk9auPZlDrjlA=;
+        b=dqv1bN75FVMKWG07B++J/QTdSBppwKw1hY4c/cZXVVN2OtLW/PC9af9AeSVMm3VPef
+         mM91Si/Lmkq0jktGdfJwxcHbWKeDMWzMKZls1fBayxZfmywr0UZlTcd08+zUpWqdrY56
+         MiBmHEhP0Ey7mksJEN3Jgj3oJ1VkG8KAt+4hjo8up1H2USH3a/YY5+lQ1HvBqsN6YLVn
+         6M0Y2oSeqHlcX33+oemISnHJ2u7C5lbYrvd1NwYQwdghvjmMKskTnd7Cm83fMBRSk6m6
+         BthPBiYmAqsAtBWRICNir1naG6QJSKI1k0DKGjoNXDytIi9Hdd82XuIj8fiR1w6yBcM/
+         bgPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=K1fUKQoqVrc2gBuC0Xa6OebKj/ndQDIk9auPZlDrjlA=;
+        b=n12iZwXr2rafw1aSHt+KjRZqSk3MYFw01xuylnhEz5IoT3DY6D4KuNFA4b3+4dyrfK
+         E8Ms0tCT9L/3AxZhcrKhfLSZL8AHXNQ80EEkTtPGn2f1fB20GWtLAG625+tpvbZEvrJi
+         Qylr5LzSRPZf+flzJFr9VJthTr04gCGnLOKBrfg+UUdDoTT15wsFe9xycYACxhvMjB1m
+         URDXFgnnr/3cs79LEBtnw3s1Rb4hRWPwPJ7tAqgIVu5Zs2RMEstOwk/Jn/EwpG5U4cQi
+         n+ck2CpNHpphKsOR4WMzDLY8IzY3GgPI0GqnlrpF7/9wYQoA0a/K3VE7P8aDdZy2TWlb
+         fBVQ==
+X-Gm-Message-State: APjAAAXcVQvOsPqvgCU62ACPmUzsd24li9w0/F0wGX+HR28i0+ubWUSr
+        zF/MOX76vsjOVKC95FUBVeU=
+X-Google-Smtp-Source: APXvYqwrzlEFCd8aEl+MX707ABW9/oKXaAfQb9y3qVddfy9HcwNI8V2Uy6mC5DRt0o/+z+5hD8uriw==
+X-Received: by 2002:a63:f5c:: with SMTP id 28mr1085276pgp.348.1578618977355;
+        Thu, 09 Jan 2020 17:16:17 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id y21sm271676pfm.136.2020.01.09.17.16.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Jan 2020 17:16:16 -0800 (PST)
+Date:   Thu, 9 Jan 2020 17:16:14 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     fengping yu <fengping.yu@mediatek.com>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stefan Agner <stefan@agner.cn>, Jacky Bai <ping.bai@nxp.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
+Subject: Re: [PATCH V2 1/2] Documentation: devicetree: bindings: input
+Message-ID: <20200110011614.GQ8314@dtor-ws>
+References: <20200108062923.14684-1-fengping.yu@mediatek.com>
+ <20200108062923.14684-2-fengping.yu@mediatek.com>
 MIME-Version: 1.0
-In-Reply-To: <20200109232639.GA42480@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108062923.14684-2-fengping.yu@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Fengping,
 
-On 1/9/20 3:26 PM, Bjorn Helgaas wrote:
-> On Wed, Jan 08, 2020 at 04:14:09PM -0800, Kuppuswamy Sathyanarayanan wrote:
->> On 1/3/20 6:54 PM, Bjorn Helgaas wrote:
->>> On Fri, Jan 03, 2020 at 05:03:03PM -0800, Kuppuswamy Sathyanarayanan wrote:
->>>> On 1/3/20 4:34 PM, Bjorn Helgaas wrote:
->>>>> On Thu, Dec 26, 2019 at 04:39:07PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
->>>>>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>>>
->>>>>> Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
->>>>>> reset_link() to recover from fatal errors. But, if the reset is
->>>>>> successful there is no need to continue the rest of the error recovery
->>>>>> checks. Also, during fatal error recovery, if the initial value of error
->>>>>> status is PCI_ERS_RESULT_DISCONNECT or PCI_ERS_RESULT_NO_AER_DRIVER then
->>>>>> even after successful recovery (using reset_link()) pcie_do_recovery()
->>>>>> will report the recovery result as failure. So update the status of
->>>>>> error after reset_link().
->>>>> I like the part about updating "status" with the result of
->>>>> reset_link(), and I split that into its own patch because it
->>>>> seems like a fix that *can* be separated.
->>>>>
->>>>> But I'm not convinced that we should skip the ->slot_reset()
->>>>> callbacks if the reset_link() was successful.
->>>> If reset_link() call is successful then the result value will be
->>>> "PCI_ERS_RESULT_RECOVERED". So even if you proceed with
->>>> rest of the code, slot_reset() will never get called right ?
->>> The current code:
->>>
->>>           if (state == pci_channel_io_frozen &&
->>>               reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
->>>                   goto failed;
->>>           ...
->>>           if (status == PCI_ERS_RESULT_NEED_RESET) {
->>>                   status = PCI_ERS_RESULT_RECOVERED;
->>>                   pci_walk_bus(bus, report_slot_reset, &status);
->>>
->>> doesn't save the result of reset_link(), so if status was
->>> PCI_ERS_RESULT_NEED_RESET and the reset succeeds, we will call
->>> ->slot_reset().
->>>
->>> After your patch, if "state == pci_channel_io_frozen", we *never* call
->>> ->slot_reset().
->>>
->>> Do you think that matches pci-error-recovery.rst?  It doesn't seem
->>> like it to me, but perhaps I haven't read it closely enough.
->> Documentation does not have clear details on what to do with return
->> value of reset_link() (step 3). But IMO, if step 3 recovers the device and
->> returns PCI_ERS_RESULT_RECOVERED then there is no need to proceed
->> to slot reset (step 4). May be we should update the Documentation?
-> Are you suggesting we don't need to call a driver callback after
-> resetting the device?  Note that the ->slot_reset() doesn't *perform*
-> a reset; it is called *after* completion of a reset.
->
-> The doc says:
->
->    ... Upon completion of slot reset, the platform will call the device
->    slot_reset() callback.
->    ...
->    This call gives drivers the chance to re-initialize the hardware
->    (re-download firmware, etc.).  At this point, the driver may assume
->    that the card is in a fresh state and is fully functional. The slot
->    is unfrozen and the driver has full access to PCI config space,
->    memory mapped I/O space and DMA. Interrupts (Legacy, MSI, or MSI-X)
->    will also be available.
-Got it. Let me fix it in next version.
-But, will this sequence apply for fatal error recovery (triggered from 
-DPC code path) ? I think the device is removed and re-added in hotplug 
-path (DLLSC transition).
->
-> After we reset a device, the driver certainly needs a chance to
-> reinitialize it.
->
->>>>> According to
->>>>> Documentation/PCI/pci-error-recovery.rst, we should call
->>>>> ->slot_reset() after completion of the reset.
->>>>>
->>>>> For example, rsxx_err_handler implements ->slot_reset(), but
->>>>> not ->resume().  If we reset the device, we'll claim success and
->>>>> return, but we won't call rsxx_slot_reset(), which does a bunch
->>>>> of important-looking recovery stuff.
->>>>>
->>>>> If pci-error-recovery.rst is wrong, we should fix that (after
->>>>> auditing all the drivers to make sure they match).
->>>>>
->>>>>> Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
->>>>>> Cc: Ashok Raj <ashok.raj@intel.com>
->>>>>> Cc: Keith Busch <keith.busch@intel.com>
->>>>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
->>>>>> Acked-by: Keith Busch <keith.busch@intel.com>
->>>>>> ---
->>>>>>     drivers/pci/pcie/err.c | 10 +++++++---
->>>>>>     1 file changed, 7 insertions(+), 3 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
->>>>>> index b0e6048a9208..53cd9200ec2c 100644
->>>>>> --- a/drivers/pci/pcie/err.c
->>>>>> +++ b/drivers/pci/pcie/err.c
->>>>>> @@ -204,9 +204,12 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->>>>>>     	else
->>>>>>     		pci_walk_bus(bus, report_normal_detected, &status);
->>>>>> -	if (state == pci_channel_io_frozen &&
->>>>>> -	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
->>>>>> -		goto failed;
->>>>>> +	if (state == pci_channel_io_frozen) {
->>>>>> +		status = reset_link(dev, service);
->>>>>> +		if (status != PCI_ERS_RESULT_RECOVERED)
->>>>>> +			goto failed;
->>>>>> +		goto done;
->>>>>> +	}
->>>>>>     	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
->>>>>>     		status = PCI_ERS_RESULT_RECOVERED;
->>>>>> @@ -228,6 +231,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->>>>>>     	if (status != PCI_ERS_RESULT_RECOVERED)
->>>>>>     		goto failed;
->>>>>> +done:
->>>>>>     	pci_dbg(dev, "broadcast resume message\n");
->>>>>>     	pci_walk_bus(bus, report_resume, &status);
->>>>>> -- 
->>>>>> 2.21.0
->>>>>>
->>>> -- 
->>>> Sathyanarayanan Kuppuswamy
->>>> Linux kernel developer
->>>>
->> -- 
->> Sathyanarayanan Kuppuswamy
->> Linux kernel developer
->>
+On Wed, Jan 08, 2020 at 02:29:22PM +0800, fengping yu wrote:
+> From: "fengping.yu" <fengping.yu@mediatek.com>
+> 
+> Add mtk keypad device tree documentation.
+> 
+> Change-Id: I415b76ee980784992763c768829b2dda76699dea
+> Signed-off-by: fengping.yu <fengping.yu@mediatek.com>
+> ---
+>  .../devicetree/bindings/input/mtk-kpd.txt     | 45 +++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/mtk-kpd.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/mtk-kpd.txt b/Documentation/devicetree/bindings/input/mtk-kpd.txt
+> new file mode 100644
+> index 000000000000..2af81e696159
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/mtk-kpd.txt
+> @@ -0,0 +1,45 @@
+> +* Mediatek's Keypad Controller device tree binding
+> +
+> +Mediatek's Keypad controller is used to interface a SoC with a matrix-type
+> +keypad device. The keypad controller supports multiple row and column lines.
+> +A key can be placed at each intersection of a unique row and a unique column.
+> +The keypad controller can sense a key-press and key-release and report the
+> +event using a interrupt to the cpu.
+> +
+> +Required properties:
+> +- compatible should contain:
+> +	* "mediatek,mt6779-keypad" for MT6779 keypad
+> +	* "mediatek,kp" for common keypad
+> +
+> +- reg: The base address of the Keypad register bank.
+> +
+> +- interrupts: A single interrupt specifier.
+> +
+> +- mediatek,key-debounce-ms: Debounce interval in milliseconds, maximum value
+> +  is 256ms
+> +
+> +- mediatek,hw-map-num: Number of entries of keycode in mediatek,hw-init-map
+> +
+> +- mediatek,hw-init-map: An array of packed 1-cell entries containing the
+> +  equivalent of hw-map-num linux key-code. Each cell is Linux keymap of
+> +  corresponding row/col, arrange like this:
+> +
+> +  row0col0, row0col1, row0col2,...row0col8,
+> +  row1col0, row1col1, row1col2,...row1col8,
+> +  ...
+> +  row7col0, row7col1, row7col2,...row7col8.
+
+Please use standard "linux,keymap" property as defined in
+Documentation/devicetree/bindings/input/matrix-keymap.txt. You can use
+API from drivers/input/matrix-keymap.c to handle the property.
+
+Thanks.
+
 -- 
-Sathyanarayanan Kuppuswamy
-Linux kernel developer
-
+Dmitry
