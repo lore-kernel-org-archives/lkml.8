@@ -2,89 +2,227 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD89C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B9DC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6DD206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:47:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1029320842
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:49:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RFMuDnbJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgAJTrD (ORCPT
+        id S1728719AbgAJTtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:47:03 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:47301 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727812AbgAJTrD (ORCPT
+        Fri, 10 Jan 2020 14:49:05 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29742 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727812AbgAJTtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:47:03 -0500
-Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1M8hR1-1ilrVc3GzZ-004g7W; Fri, 10 Jan 2020 20:47:01 +0100
-Received: by mail-qk1-f180.google.com with SMTP id z76so3023559qka.2;
-        Fri, 10 Jan 2020 11:47:01 -0800 (PST)
-X-Gm-Message-State: APjAAAXG//wpkJtsFh4QP7PLodBqQa5sfi2frBVdk6Ref9tO8HWED6ps
-        MiFIIvrczXPl0x1D2sgSh7IoJB+S7dGjB2Oks5s=
-X-Google-Smtp-Source: APXvYqw8EWa2FqtD3Swts+79Z/eWjkZogk6+1sZAnfKifOXUinM5+cnBupHXlwll6qOddsOCv97h3S3eeL+XRYPQP/c=
-X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr4888379qka.286.1578685620608;
- Fri, 10 Jan 2020 11:47:00 -0800 (PST)
+        Fri, 10 Jan 2020 14:49:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578685741;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=riUDIprs0OHwhmObTROTPPNxIryJYavnWepv59WA+CA=;
+        b=RFMuDnbJ21dYlO1mPNPlJFH+K+56Yj/OB63fUQwcOk9YYQkwGPw87uQu9OhkU05RwM4sGl
+        vQv0HIEZnLRnnOpeVyB5d+4qYuD0GZ6Mg2fCJxF8fDvjjFs6f3gCYZTb8+U/MYGsTlL6rN
+        1Ddn6oFl/bQgwXt/gC52knD76BmsxOM=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-392-IrE1pMGOP1aBuPoIr4u5gg-1; Fri, 10 Jan 2020 14:48:57 -0500
+X-MC-Unique: IrE1pMGOP1aBuPoIr4u5gg-1
+Received: by mail-wm1-f71.google.com with SMTP id f25so1240593wmb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 11:48:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=riUDIprs0OHwhmObTROTPPNxIryJYavnWepv59WA+CA=;
+        b=RBxtIJ55dWEDqknO3z/6B35FQOt3YT+nNGEVZUw4iTfSLbwyhZNEmPbTkNLTelip2R
+         d0zLYZr+9xxSwQvWqHg6/n2C+N1A6z8HTNZSOyCioqjRfogNVNK8zmkFu1fYeqH0Ojxt
+         cCzvjwIlLUL2L1vt3rUVT83Bv4NUA8mUs+8WLw5l+6fiKAzw+GL2iI6hWI6Ou5xEJPUV
+         BDCRkoBTkT5ych1F0EEZqrxBMeSJi2Oyp7k/MksgbFnYei8NRiIyzA7JGJ7dltJozZO+
+         ncJYgQHscnknntgIzX/9XtUDrxz7K/FGqp69ebK6oNppzgvcgRqOxrwIsSovcj10Y6oC
+         JdNg==
+X-Gm-Message-State: APjAAAUeluTYNjLsvC/lGKf8xUvZ1ZJqH3W4XM9qnQUxjfvTrlGoj2V4
+        Lf3GhzIOXE06RZ5KDy1HGb2/hL3eQJ0xSr2+d/vuDXnYKgAk7Unb7KSQonsmrwAGYfAAebvqBVn
+        en7fWzjuA3RiHYVFMxbRIwngb
+X-Received: by 2002:a5d:6a02:: with SMTP id m2mr4963210wru.52.1578685736122;
+        Fri, 10 Jan 2020 11:48:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxnkUfoP+uLL1SY4zC1FGF5vm1kFUOUl7yLkO6Ifz3AOpkkYChb29i69nRMpO6ILyWjfQK53w==
+X-Received: by 2002:a5d:6a02:: with SMTP id m2mr4963192wru.52.1578685735822;
+        Fri, 10 Jan 2020 11:48:55 -0800 (PST)
+Received: from dhcp-44-196.space.revspace.nl ([2a0e:5700:4:11:6eb:1143:b8be:2b8])
+        by smtp.gmail.com with ESMTPSA id f17sm3450764wmc.8.2020.01.10.11.48.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2020 11:48:55 -0800 (PST)
+Subject: Re: [PATCH v10 05/10] test_firmware: add support for
+ firmware_request_platform
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <20191210115117.303935-1-hdegoede@redhat.com>
+ <20191210115117.303935-6-hdegoede@redhat.com>
+ <20200106213343.GV11244@42.do-not-panic.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <071db8c5-4be1-c6d1-0ccb-a2268cd5b347@redhat.com>
+Date:   Fri, 10 Jan 2020 20:48:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20200110165636.28035-1-will@kernel.org>
-In-Reply-To: <20200110165636.28035-1-will@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 10 Jan 2020 20:46:44 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1UzSOHdihbzOn5CZZfo1kvCdj7BAzdQE=PgYS9GBF4Hw@mail.gmail.com>
-Message-ID: <CAK8P3a1UzSOHdihbzOn5CZZfo1kvCdj7BAzdQE=PgYS9GBF4Hw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/8] Rework READ_ONCE() to improve codegen
-To:     Will Deacon <will@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:YPR8qgKCjRSZ5m5lyfH/hvPI9BfiP01HjLaLV8PZ/2XxXaWy9KT
- 3Ydj3n/uCCW4qQAlzfve9ny2aK2Q0wzHI3vyaWJmr1ivVvMpC4+1HpsnAJsRb4PTNlNExFp
- 7NBUCGjIkDh5z9N6E7heU1PzkA5d26GqPuWuyHNv7cKeHI5WAmmCXOC7WfNbekCLgTyc4oQ
- QPzOoqukoqj0bvfY2YtLw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:PHMWjEJ2xxM=:vc7F7R/abmCfVnE9K9kbVD
- jd673uufKCU4zam2w5lmhogN1Cj2cT7VJV7rc9DZhJPCXuDhBciNwCyPwZZ9ewgGqhM4ZxAz/
- N/XeAJESGdQ4eXiJSX9ie2ljApsuPfRHADQZnzOiz0+mxJm+2MswJyRKYzXzJgOVl28RQwpRN
- l1BfePH0Jt/kiuW5Vi1OTXSscppgFy4aEbrZ1WsFuTEqEXpQbdL8SO9YKiESM2+Zg+e5yr9p9
- VOtbup4/HU79ddB+m4luir35zvgjW0WmYkEPwVZQ7qYGLNDzi+g9GMGWqYCDbulcnC7krsklR
- 1YUPWlqZtG36c6Uz/uWwL93Xr70sCRWuKI5IW9kOTqVurZBCjdkfFoIfytZywdkV9YYlL3uSM
- IvlgpNIRBirfVMkpt72+PYEMPiz9HPk5FzDjR6929IoVgvwCQT8oLQejtVO+fmBoNJW+JKOo3
- psaq6lYkzI20i5fKMi5NS6jIDW2ZosH7sZ9D7MczCQDeQOLNQqvS2xA9mUuPXjYRrdXH7UgIk
- B64dceqxder/U6W/XpPwIYQCxVWakcZd5eih4CqKimg3BtQsSFxeyKEKIjJQE/QaeVtXTYPYK
- kULZxnaqpcbB4840jhN0NrAVgVQ6IpjmOnhlAPvU7iVvY1RI+hBMOc/bLDMoZnVgfYopDTXk6
- Y2MqYJi4osWS1m+EaQ76em6AOGFAt9H1kWQSu9K5oc+ddmFDLVLU0ZPEWNsht+zz3qKRh2tON
- xAgSyMRQ5iFXbhVaknc/IeHUNvQEc+phCNpgKAzE9FHk1WdYx2yNAPZW/XxAI3J5Yxs4tdB06
- Jz11pOrEcZVq2lGWc1m6F6guQEh0vn7xQraZ+eXhhqCOLpCxXw3CNf5l2xReiT1i656AN0Iso
- dsL+UuKRxJIGePz5W0Sw==
+In-Reply-To: <20200106213343.GV11244@42.do-not-panic.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 5:56 PM Will Deacon <will@kernel.org> wrote:
->
-> I have more patches in this area because I'm trying to move all the
-> read_barrier_depends() magic into arch/alpha/, but I'm holding off until
-> we agree on this part first.
+Hi,
 
-Isn't the read_barrier_depends() the only reason for actually needing
-the temporary local variable that must not be volatile?
+On 1/6/20 10:33 PM, Luis Chamberlain wrote:
+> On Tue, Dec 10, 2019 at 12:51:12PM +0100, Hans de Goede wrote:
+>> Add support for testing firmware_request_platform through a new
+>> trigger_request_platform trigger.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>   lib/test_firmware.c | 68 +++++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 68 insertions(+)
+>>
+>> diff --git a/lib/test_firmware.c b/lib/test_firmware.c
+>> index 251213c872b5..9af00cfc8979 100644
+>> --- a/lib/test_firmware.c
+>> +++ b/lib/test_firmware.c
+>> @@ -24,6 +24,7 @@
+>>   #include <linux/delay.h>
+>>   #include <linux/kthread.h>
+>>   #include <linux/vmalloc.h>
+>> +#include <linux/efi_embedded_fw.h>
+>>   
+>>   #define TEST_FIRMWARE_NAME	"test-firmware.bin"
+>>   #define TEST_FIRMWARE_NUM_REQS	4
+>> @@ -507,12 +508,76 @@ static ssize_t trigger_request_store(struct device *dev,
+>>   }
+>>   static DEVICE_ATTR_WO(trigger_request);
+>>   
+>> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+>> +static ssize_t trigger_request_platform_store(struct device *dev,
+>> +					      struct device_attribute *attr,
+>> +					      const char *buf, size_t count)
+>> +{
+>> +	static const u8 test_data[] = {
+>> +		0x55, 0xaa, 0x55, 0xaa, 0x01, 0x02, 0x03, 0x04,
+>> +		0x55, 0xaa, 0x55, 0xaa, 0x05, 0x06, 0x07, 0x08,
+>> +		0x55, 0xaa, 0x55, 0xaa, 0x10, 0x20, 0x30, 0x40,
+>> +		0x55, 0xaa, 0x55, 0xaa, 0x50, 0x60, 0x70, 0x80
+>> +	};
+>> +	struct efi_embedded_fw fw;
+>> +	int rc;
+>> +	char *name;
+>> +
+>> +	name = kstrndup(buf, count, GFP_KERNEL);
+>> +	if (!name)
+>> +		return -ENOSPC;
+>> +
+>> +	pr_info("inserting test platform fw '%s'\n", name);
+>> +	fw.name = name;
+>> +	fw.data = (void *)test_data;
+>> +	fw.length = sizeof(test_data);
+>> +	list_add(&fw.list, &efi_embedded_fw_list);
+>> +
+>> +	pr_info("loading '%s'\n", name);
+>> +
+>> +	mutex_lock(&test_fw_mutex);
+>> +	release_firmware(test_firmware);
+>> +	test_firmware = NULL;
+> 
+> Seems odd to have the above two lines here before the request, why not
+> after as noted below.
 
-If you make alpha provide its own READ_ONCE() as the first
-step, it would seem that the rest of the series gets much easier
-as the others can go back to the simple statement from your
+I modelled this after trigger_request_store which keeps the
+test_firmware around after it has been called so that its contents can be
+read back from the char misc device which the test_firmware module registers.
 
-#define __READ_ONCE(x)  (*(volatile __unqual_scalar_typeof(x) *)&(x))
+Since e.g. trigger_request_store which keeps the test_firmware around
+we must check and free it before assigning a new firmware to it using
+firmware_request_platform, which is why this is done before and not
+after the request.
 
-      Arnd
+> 
+>> +	rc = firmware_request_platform(&test_firmware, name, dev);
+>> +	if (rc) {
+>> +		pr_info("load of '%s' failed: %d\n", name, rc);
+>> +		goto out;
+>> +	}
+>> +	if (test_firmware->size != sizeof(test_data) ||
+>> +	    memcmp(test_firmware->data, test_data, sizeof(test_data)) != 0) {
+>> +		pr_info("firmware contents mismatch for '%s'\n", name);
+>> +		rc = -EINVAL;
+>> +		goto out;
+>> +	}
+>> +	pr_info("loaded: %zu\n", test_firmware->size);
+>> +	rc = count;
+> 
+> Here.
+> 
+>> +
+>> +out:
+>> +	mutex_unlock(&test_fw_mutex);
+>> +
+>> +	list_del(&fw.list);
+>> +	kfree(name);
+>> +
+>> +	return rc;
+>> +}
+>> +static DEVICE_ATTR_WO(trigger_request_platform);
+>> +#endif
+>> +
+>>   static DECLARE_COMPLETION(async_fw_done);
+>>   
+>>   static void trigger_async_request_cb(const struct firmware *fw, void *context)
+>>   {
+>>   	test_firmware = fw;
+>>   	complete(&async_fw_done);
+>> +
+>> +
+>> +
+>> +
+>> +
+>> +
+>> +
+>> +
+>> +
+>>   }
+> 
+> Ummm, new empty lines without any code added... did you forget
+> something?  Please address this.
+
+This is a left over from an earlier version of the patch, my bad, I will remove
+this and send out a new version.
+
+Regards,
+
+Hans
+
