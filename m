@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AB4C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03F6C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38030205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:36:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 769DD205F4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578688573;
-	bh=mqMuLstO9IN15kdVeatC4X9CqY4cuP2Br2vC0GqNusY=;
+	s=default; t=1578688577;
+	bh=YhBMJIvMTYGFSuOdcqnzo+uNNjCw+xoOLW1GRlj10UM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
 	 References:List-ID:From;
-	b=wKGPlgLxIR2YccbF5oSWV5sUzt1849/MQcYb5KVBYeBgKDjhI90Z9NqVqkgfFsmzJ
-	 EgUz3oN7ieB5p47g3XrkYLCN+iG5bc++EtwtFEVydIRdeX0abKEEhD5DFcPyWTJIfK
-	 SSipm2WnMh8B+BbOH1SuVQKAnUrKTZSnPcOoxWQY=
+	b=tnZMkvA6mg00PC3aZP4OKPx980CKUJ7F1yRHB8sg45Bpn/8mlFB/EM4o6BWLGaqIT
+	 nZbWUgitmi0MKD1P9j09rPvHxMUk+965DVSSDZxXYKcYQzSukFGQnWiOypihN7HVDm
+	 zv1slM0mltRx0TPAqWnbF+5Ub3vD0Ph8Bgbv1psM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbgAJUfe (ORCPT
+        id S1726779AbgAJUfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 15:35:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58278 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 15:35:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726834AbgAJUfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 15:35:33 -0500
+        id S1726643AbgAJUf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 15:35:28 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C76682084D;
-        Fri, 10 Jan 2020 20:35:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7704220838;
+        Fri, 10 Jan 2020 20:35:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578688533;
-        bh=mqMuLstO9IN15kdVeatC4X9CqY4cuP2Br2vC0GqNusY=;
+        s=default; t=1578688528;
+        bh=YhBMJIvMTYGFSuOdcqnzo+uNNjCw+xoOLW1GRlj10UM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=CAzFhu/0N84idg6tdkOH71CGTBVal3Vwfwn1DXAD4EPlY5OMovjXFD/RHaQ5uoZ0o
-         MHm7HBhxflCUGm6ITOZSgopOJyuNMoNrkZnHDxiZnXcIVln5Zzt8tV8dtc2WqJQWA3
-         RWu9QfzeN8BEQ5VPC5G4MbSlTEZ1+BUwxnQQJfBU=
+        b=wSAeCmOuQGLSGyI5diKsWO2qdI0YSsfUVrbSZXVrVLSBSyL6imA7wOkGUcwNI2l1t
+         J7BeUmX9kzXE0+KDgyngR40HH7UGJ54DzeiYWepmdBJJIDgpbeneUpKGEEKA5HJlSv
+         WmN2q9JscdvJTuD/bToPABb5OAz9+G1C/UGkyNZQ=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH v2 05/12] tracing: Add synth_event_run_command()
-Date:   Fri, 10 Jan 2020 14:35:11 -0600
-Message-Id: <646c7f37227e20f3084695aca341892a5ee95fa8.1578688120.git.zanussi@kernel.org>
+Subject: [PATCH v2 01/12] tracing: Add trace_array_find() to find instance trace arrays
+Date:   Fri, 10 Jan 2020 14:35:07 -0600
+Message-Id: <24b84188ea96d0ffddfd803b567a536f3fb9577e.1578688120.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
 In-Reply-To: <cover.1578688120.git.zanussi@kernel.org>
 References: <cover.1578688120.git.zanussi@kernel.org>
@@ -58,40 +58,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+Add a new trace_array_find() function that can be used to find a trace
+array given the instance name, and replace existing code that does the
+same thing with it.
 
-This snippet was taken from v4 of Masami's 'tracing/boot: Add
-synthetic event support' patch.
+Also make it available for use outside of trace.c.
 
-From the original: 'The synthetic node requires "fields" string
-arraies, which defines the fields as same as tracing/synth_events
-interface.'
-
-synth_event_run_command() provides the means to execute the synthetic
-event create command using the synthetic event command string.
-
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 ---
- kernel/trace/trace_events_hist.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/trace/trace.c | 30 ++++++++++++++++++++----------
+ kernel/trace/trace.h |  1 +
+ 2 files changed, 21 insertions(+), 10 deletions(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 8c9894681100..0886ca6da255 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1390,6 +1390,11 @@ static int create_or_delete_synth_event(int argc, char **argv)
- 	return ret == -ECANCELED ? -EINVAL : ret;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 23459d53d576..3da836ef23ee 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8455,6 +8455,21 @@ static void update_tracer_options(struct trace_array *tr)
+ 	mutex_unlock(&trace_types_lock);
  }
  
-+int synth_event_run_command(const char *command)
++/* Must have trace_types_lock held */
++struct trace_array *trace_array_find(const char *name)
 +{
-+	return trace_run_command(command, create_or_delete_synth_event);
++	struct trace_array *tr, *found = NULL;
++
++	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
++		if (tr->name && strcmp(tr->name, name) == 0) {
++			found = tr;
++			break;
++		}
++	}
++
++	return found;
 +}
 +
- static int synth_event_create(int argc, const char **argv)
+ static struct trace_array *trace_array_create(const char *name)
  {
- 	const char *name = argv[0];
+ 	struct trace_array *tr;
+@@ -8531,10 +8546,8 @@ static int instance_mkdir(const char *name)
+ 	mutex_lock(&trace_types_lock);
+ 
+ 	ret = -EEXIST;
+-	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+-		if (tr->name && strcmp(tr->name, name) == 0)
+-			goto out_unlock;
+-	}
++	if (trace_array_find(name))
++		goto out_unlock;
+ 
+ 	tr = trace_array_create(name);
+ 
+@@ -8658,12 +8671,9 @@ static int instance_rmdir(const char *name)
+ 	mutex_lock(&trace_types_lock);
+ 
+ 	ret = -ENODEV;
+-	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+-		if (tr->name && strcmp(tr->name, name) == 0) {
+-			ret = __remove_instance(tr);
+-			break;
+-		}
+-	}
++	tr = trace_array_find(name);
++	if (tr)
++		ret = __remove_instance(tr);
+ 
+ 	mutex_unlock(&trace_types_lock);
+ 	mutex_unlock(&event_mutex);
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 63bf60f79398..f37ef6524821 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -346,6 +346,7 @@ extern struct mutex trace_types_lock;
+ 
+ extern int trace_array_get(struct trace_array *tr);
+ extern int tracing_check_open_get_tr(struct trace_array *tr);
++extern struct trace_array *trace_array_find(const char *name);
+ 
+ extern int tracing_set_time_stamp_abs(struct trace_array *tr, bool abs);
+ extern int tracing_set_clock(struct trace_array *tr, const char *clockstr);
 -- 
 2.14.1
 
