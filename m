@@ -2,109 +2,103 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E690C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5142C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:02:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29502072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F5762072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:02:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728011AbgAJMBb (ORCPT
+        id S1728069AbgAJMCi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 07:01:31 -0500
-Received: from foss.arm.com ([217.140.110.172]:43508 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727950AbgAJMBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 07:01:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF4B21063;
-        Fri, 10 Jan 2020 04:01:27 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F8AB3F534;
-        Fri, 10 Jan 2020 04:01:26 -0800 (PST)
-Subject: Re: [PATCH v1] arch_topology: Adjust initial CPU capacities with
- current freq
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Brian Norris <briannorris@chromium.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-References: <20200109075214.31943-1-jeffy.chen@rock-chips.com>
- <20200110113711.GB39451@bogus>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <5475692c-e72b-74c1-bd6e-95278703249b@arm.com>
-Date:   Fri, 10 Jan 2020 13:01:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 10 Jan 2020 07:02:38 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:57804 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728034AbgAJMCi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 07:02:38 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1ipszh-0003mg-RE; Fri, 10 Jan 2020 13:02:25 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 7BD8C105BE5; Fri, 10 Jan 2020 13:02:25 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv8 02/34] lib/vdso: make do_hres and do_coarse as __always_inline
+In-Reply-To: <e74a63cb-5248-4473-81a7-d1b2f959ec7a@arm.com>
+References: <20191112012724.250792-1-dima@arista.com> <20191112012724.250792-3-dima@arista.com> <ed2e65ae-75b0-ed79-0a95-90be6b82e6be@arm.com> <878smfa66i.fsf@nanos.tec.linutronix.de> <e74a63cb-5248-4473-81a7-d1b2f959ec7a@arm.com>
+Date:   Fri, 10 Jan 2020 13:02:25 +0100
+Message-ID: <875zhja59q.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200110113711.GB39451@bogus>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/01/2020 12:37, Sudeep Holla wrote:
-> On Thu, Jan 09, 2020 at 03:52:14PM +0800, Jeffy Chen wrote:
->> The CPU freqs are not supposed to change before cpufreq policies
->> properly registered, meaning that they should be used to calculate the
->> initial CPU capacities.
->>
->> Doing this helps choosing the best CPU during early boot, especially
->> for the initramfs decompressing.
->>
->> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> 
-> [...]
-> 
->> @@ -146,10 +153,15 @@ bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
->>  				return false;
->>  			}
->>  		}
->> -		capacity_scale = max(cpu_capacity, capacity_scale);
->>  		raw_capacity[cpu] = cpu_capacity;
->>  		pr_debug("cpu_capacity: %pOF cpu_capacity=%u (raw)\n",
->>  			cpu_node, raw_capacity[cpu]);
->> +
->> +		cpu_clk = of_clk_get(cpu_node, 0);
->> +		if (!PTR_ERR_OR_ZERO(cpu_clk))
->> +			per_cpu(max_freq, cpu) = clk_get_rate(cpu_clk) / 1000;
->> +
->> +		clk_put(cpu_clk);
-> 
-> I don't like to assume DVFS to be supplied only using 'clk'. So NACK!
-> We have other non-clk mechanism for CPU DVFS and this needs to simply
-> use cpufreq APIs to get frequency value if required.
+Vincenzo Frascino <vincenzo.frascino@arm.com> writes:
+> On 1/10/20 11:42 AM, Thomas Gleixner wrote:
+>>>> +» » /*·goto·allows·to·avoid·extra·inlining·of·do_hres.·*/
+>>>> +» » goto·out_hres;
+>>>
+>>> What is the performance impact of "goto out_hres"?
+>> 
+>> On x86 it's invisible at least in my limited testing.
+>
+> On arm64 as well based on mine as well. Shall we keep the code more readable
+> here (without goto)?
 
-To support this, it's failing on my Arm64 Juno board.
+The delta patch below makes it readable again and also avoids the double
+inlining. Quick testing shows no difference.
 
-...
-[    0.084858] CPU1 cpu_clk=-517
-[    0.087961] CPU2 cpu_clk=-517
-[    0.091005] CPU0 cpu_clk=-517
-[    0.094121] CPU3 cpu_clk=-517
-[    0.097248] CPU4 cpu_clk=-517
-[    0.100415] CPU5 cpu_clk=-517
-...
+Thanks,
 
-Since you're on a big.LITTLE platform, did you specify
-'capacity-dmips-mhz' for CPUs to be able to distinguish big and little
-CPUs before CPUfreq kicks in?
+        tglx
 
-$ grep capacity-dmips-mhz ./arch/arm64/boot/dts/arm/juno.dts
-			capacity-dmips-mhz = <1024>;
-			capacity-dmips-mhz = <1024>;
-			capacity-dmips-mhz = <578>;
-			capacity-dmips-mhz = <578>;
-			capacity-dmips-mhz = <578>;
-			capacity-dmips-mhz = <578>;
+8<---------------
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -98,17 +98,15 @@ static __maybe_unused int
+ 	msk = 1U << clock;
+ 	if (likely(msk & VDSO_HRES)) {
+ 		vd = &vd[CS_HRES_COARSE];
+-out_hres:
+-		return do_hres(vd, clock, ts);
+ 	} else if (msk & VDSO_COARSE) {
+ 		do_coarse(&vd[CS_HRES_COARSE], clock, ts);
+ 		return 0;
+ 	} else if (msk & VDSO_RAW) {
+ 		vd = &vd[CS_RAW];
+-		/* This goto avoids extra inlining of do_hres. */
+-		goto out_hres;
++	} else {
++		return -1;
+ 	}
+-	return -1;
++	return do_hres(vd, clock, ts);
+ }
+ 
+ static __maybe_unused int
