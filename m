@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50301C33CA4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E64EC282DD
 	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:59:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD8924677
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E5682469A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbgAJR7a (ORCPT
+        id S1728799AbgAJR7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:59:30 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59280 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728698AbgAJR7Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jan 2020 12:59:25 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59254 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728273AbgAJR7X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 12:59:23 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ipyZ8-0002BL-Hm; Fri, 10 Jan 2020 18:59:22 +0100
+        id 1ipyZ4-00028o-QA; Fri, 10 Jan 2020 18:59:18 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 1CDFF1C2D6A;
-        Fri, 10 Jan 2020 18:59:21 +0100 (CET)
-Date:   Fri, 10 Jan 2020 17:59:20 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 61B7D1C2D6B;
+        Fri, 10 Jan 2020 18:59:18 +0100 (CET)
+Date:   Fri, 10 Jan 2020 17:59:18 -0000
 From:   "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/mm] x86/mm/pat: Create fixed width output in
- /sys/kernel/debug/x86/pat_memtype_list, similar to the E820 debug printouts
+Subject: [tip: x86/mm] mm/vmalloc: Add empty <asm/vmalloc.h> headers and use
+ them from <linux/vmalloc.h>
 Cc:     Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <157867916094.30329.2512076581126082469.tip-bot2@tip-bot2>
+Message-ID: <157867915825.30329.14197641774716750430.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,89 +54,335 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/mm branch of tip:
 
-Commit-ID:     ef35b0fcee23d7636daa4bed62bceeaba4eed918
-Gitweb:        https://git.kernel.org/tip/ef35b0fcee23d7636daa4bed62bceeaba4eed918
+Commit-ID:     1f059dfdf5d170dccbac92193be2fee3c1763384
+Gitweb:        https://git.kernel.org/tip/1f059dfdf5d170dccbac92193be2fee3c1763384
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Tue, 19 Nov 2019 09:38:26 +01:00
+AuthorDate:    Thu, 28 Nov 2019 08:19:36 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Tue, 10 Dec 2019 10:12:55 +01:00
 
-x86/mm/pat: Create fixed width output in /sys/kernel/debug/x86/pat_memtype_list, similar to the E820 debug printouts
+mm/vmalloc: Add empty <asm/vmalloc.h> headers and use them from <linux/vmalloc.h>
 
-Before:
-
-  write-back @ 0xbdfa9000-0xbdfaa000
-  write-back @ 0xbdfaa000-0xbdfab000
-  write-back @ 0xbdfab000-0xbdfac000
-  uncached-minus @ 0xc0000000-0xd0000000
-  uncached-minus @ 0xd0900000-0xd0920000
-  uncached-minus @ 0xd0920000-0xd0940000
-  uncached-minus @ 0xd0940000-0xd0960000
-  uncached-minus @ 0xd0960000-0xd0980000
-  uncached-minus @ 0xd0980000-0xd0981000
-  uncached-minus @ 0xd0990000-0xd0991000
-  uncached-minus @ 0xd09a0000-0xd09a1000
-  uncached-minus @ 0xd09b0000-0xd09b1000
-  uncached-minus @ 0xd0d00000-0xd0d01000
-  uncached-minus @ 0xd0d10000-0xd0d11000
-  uncached-minus @ 0xd0d20000-0xd0d21000
-  uncached-minus @ 0xd0d40000-0xd0d41000
-  uncached-minus @ 0xfed00000-0xfed01000
-  uncached-minus @ 0xfed1f000-0xfed20000
-  uncached-minus @ 0xfed40000-0xfed41000
-
-After:
-
-  PAT: [mem 0x00000000bdf8e000-0x00000000bdfa8000] write-back
-  PAT: [mem 0x00000000bdfa9000-0x00000000bdfaa000] write-back
-  PAT: [mem 0x00000000bdfaa000-0x00000000bdfab000] write-back
-  PAT: [mem 0x00000000bdfab000-0x00000000bdfac000] write-back
-  PAT: [mem 0x00000000c0000000-0x00000000d0000000] uncached-minus
-  PAT: [mem 0x00000000d0900000-0x00000000d0920000] uncached-minus
-  PAT: [mem 0x00000000d0920000-0x00000000d0940000] uncached-minus
-  PAT: [mem 0x00000000d0940000-0x00000000d0960000] uncached-minus
-  PAT: [mem 0x00000000d0960000-0x00000000d0980000] uncached-minus
-  PAT: [mem 0x00000000d0980000-0x00000000d0981000] uncached-minus
-  PAT: [mem 0x00000000d0990000-0x00000000d0991000] uncached-minus
-  PAT: [mem 0x00000000d09a0000-0x00000000d09a1000] uncached-minus
-  PAT: [mem 0x00000000d09b0000-0x00000000d09b1000] uncached-minus
-  PAT: [mem 0x00000000fed1f000-0x00000000fed20000] uncached-minus
-  PAT: [mem 0x00000000fed40000-0x00000000fed41000] uncached-minus
-
-The advantage is that it's easier to parse at a glance - and the tree is ordered
-by start address, which is now reflected in putting the start address in the first
-column.
-
-This is also now similar to how we print e820 entries:
-
-  BIOS-e820: [mem 0x00000000bafda000-0x00000000bb3d3fff] usable
-  BIOS-e820: [mem 0x00000000bb3d4000-0x00000000bdd2efff] reserved
-  BIOS-e820: [mem 0x00000000bdd2f000-0x00000000bddccfff] ACPI NVS
-  BIOS-e820: [mem 0x00000000bddcd000-0x00000000bdea0fff] ACPI data
-  BIOS-e820: [mem 0x00000000bdea1000-0x00000000bdf2efff] ACPI NVS
-
-Since this is a debugfs file not used by tools there's no known ABI dependencies.
+In the x86 MM code we'd like to untangle various types of historic
+header dependency spaghetti, but for this we'd need to pass to
+the generic vmalloc code various vmalloc related defines that
+customarily come via the <asm/page.h> low level arch header.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/mm/pat.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/alpha/include/asm/vmalloc.h      | 4 ++++
+ arch/arc/include/asm/vmalloc.h        | 4 ++++
+ arch/arm/include/asm/vmalloc.h        | 4 ++++
+ arch/arm64/include/asm/vmalloc.h      | 4 ++++
+ arch/c6x/include/asm/vmalloc.h        | 4 ++++
+ arch/csky/include/asm/vmalloc.h       | 4 ++++
+ arch/h8300/include/asm/vmalloc.h      | 4 ++++
+ arch/hexagon/include/asm/vmalloc.h    | 4 ++++
+ arch/ia64/include/asm/vmalloc.h       | 4 ++++
+ arch/m68k/include/asm/vmalloc.h       | 4 ++++
+ arch/microblaze/include/asm/vmalloc.h | 4 ++++
+ arch/mips/include/asm/vmalloc.h       | 4 ++++
+ arch/nds32/include/asm/vmalloc.h      | 4 ++++
+ arch/nios2/include/asm/vmalloc.h      | 4 ++++
+ arch/openrisc/include/asm/vmalloc.h   | 4 ++++
+ arch/parisc/include/asm/vmalloc.h     | 4 ++++
+ arch/powerpc/include/asm/vmalloc.h    | 4 ++++
+ arch/riscv/include/asm/vmalloc.h      | 4 ++++
+ arch/s390/include/asm/vmalloc.h       | 4 ++++
+ arch/sh/include/asm/vmalloc.h         | 4 ++++
+ arch/sparc/include/asm/vmalloc.h      | 4 ++++
+ arch/um/include/asm/vmalloc.h         | 4 ++++
+ arch/unicore32/include/asm/vmalloc.h  | 4 ++++
+ arch/x86/include/asm/vmalloc.h        | 4 ++++
+ arch/xtensa/include/asm/vmalloc.h     | 4 ++++
+ include/linux/vmalloc.h               | 2 ++
+ 26 files changed, 102 insertions(+)
+ create mode 100644 arch/alpha/include/asm/vmalloc.h
+ create mode 100644 arch/arc/include/asm/vmalloc.h
+ create mode 100644 arch/arm/include/asm/vmalloc.h
+ create mode 100644 arch/arm64/include/asm/vmalloc.h
+ create mode 100644 arch/c6x/include/asm/vmalloc.h
+ create mode 100644 arch/csky/include/asm/vmalloc.h
+ create mode 100644 arch/h8300/include/asm/vmalloc.h
+ create mode 100644 arch/hexagon/include/asm/vmalloc.h
+ create mode 100644 arch/ia64/include/asm/vmalloc.h
+ create mode 100644 arch/m68k/include/asm/vmalloc.h
+ create mode 100644 arch/microblaze/include/asm/vmalloc.h
+ create mode 100644 arch/mips/include/asm/vmalloc.h
+ create mode 100644 arch/nds32/include/asm/vmalloc.h
+ create mode 100644 arch/nios2/include/asm/vmalloc.h
+ create mode 100644 arch/openrisc/include/asm/vmalloc.h
+ create mode 100644 arch/parisc/include/asm/vmalloc.h
+ create mode 100644 arch/powerpc/include/asm/vmalloc.h
+ create mode 100644 arch/riscv/include/asm/vmalloc.h
+ create mode 100644 arch/s390/include/asm/vmalloc.h
+ create mode 100644 arch/sh/include/asm/vmalloc.h
+ create mode 100644 arch/sparc/include/asm/vmalloc.h
+ create mode 100644 arch/um/include/asm/vmalloc.h
+ create mode 100644 arch/unicore32/include/asm/vmalloc.h
+ create mode 100644 arch/x86/include/asm/vmalloc.h
+ create mode 100644 arch/xtensa/include/asm/vmalloc.h
 
-diff --git a/arch/x86/mm/pat.c b/arch/x86/mm/pat.c
-index e26b81c..ea7da7e 100644
---- a/arch/x86/mm/pat.c
-+++ b/arch/x86/mm/pat.c
-@@ -1179,10 +1179,10 @@ static int memtype_seq_show(struct seq_file *seq, void *v)
- {
- 	struct memtype *print_entry = (struct memtype *)v;
+diff --git a/arch/alpha/include/asm/vmalloc.h b/arch/alpha/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..0a9a366
+--- /dev/null
++++ b/arch/alpha/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_ALPHA_VMALLOC_H
++#define _ASM_ALPHA_VMALLOC_H
++
++#endif /* _ASM_ALPHA_VMALLOC_H */
+diff --git a/arch/arc/include/asm/vmalloc.h b/arch/arc/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..973095a
+--- /dev/null
++++ b/arch/arc/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_ARC_VMALLOC_H
++#define _ASM_ARC_VMALLOC_H
++
++#endif /* _ASM_ARC_VMALLOC_H */
+diff --git a/arch/arm/include/asm/vmalloc.h b/arch/arm/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..a9b3718
+--- /dev/null
++++ b/arch/arm/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_ARM_VMALLOC_H
++#define _ASM_ARM_VMALLOC_H
++
++#endif /* _ASM_ARM_VMALLOC_H */
+diff --git a/arch/arm64/include/asm/vmalloc.h b/arch/arm64/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..2ca708a
+--- /dev/null
++++ b/arch/arm64/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_ARM64_VMALLOC_H
++#define _ASM_ARM64_VMALLOC_H
++
++#endif /* _ASM_ARM64_VMALLOC_H */
+diff --git a/arch/c6x/include/asm/vmalloc.h b/arch/c6x/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..26c6c66
+--- /dev/null
++++ b/arch/c6x/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_C6X_VMALLOC_H
++#define _ASM_C6X_VMALLOC_H
++
++#endif /* _ASM_C6X_VMALLOC_H */
+diff --git a/arch/csky/include/asm/vmalloc.h b/arch/csky/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..43dca63
+--- /dev/null
++++ b/arch/csky/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_CSKY_VMALLOC_H
++#define _ASM_CSKY_VMALLOC_H
++
++#endif /* _ASM_CSKY_VMALLOC_H */
+diff --git a/arch/h8300/include/asm/vmalloc.h b/arch/h8300/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..08a55c1
+--- /dev/null
++++ b/arch/h8300/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_H8300_VMALLOC_H
++#define _ASM_H8300_VMALLOC_H
++
++#endif /* _ASM_H8300_VMALLOC_H */
+diff --git a/arch/hexagon/include/asm/vmalloc.h b/arch/hexagon/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..7b04609
+--- /dev/null
++++ b/arch/hexagon/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_HEXAGON_VMALLOC_H
++#define _ASM_HEXAGON_VMALLOC_H
++
++#endif /* _ASM_HEXAGON_VMALLOC_H */
+diff --git a/arch/ia64/include/asm/vmalloc.h b/arch/ia64/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..a2b5114
+--- /dev/null
++++ b/arch/ia64/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_IA64_VMALLOC_H
++#define _ASM_IA64_VMALLOC_H
++
++#endif /* _ASM_IA64_VMALLOC_H */
+diff --git a/arch/m68k/include/asm/vmalloc.h b/arch/m68k/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..bc1dca6
+--- /dev/null
++++ b/arch/m68k/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_M68K_VMALLOC_H
++#define _ASM_M68K_VMALLOC_H
++
++#endif /* _ASM_M68K_VMALLOC_H */
+diff --git a/arch/microblaze/include/asm/vmalloc.h b/arch/microblaze/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..04013a4
+--- /dev/null
++++ b/arch/microblaze/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_MICROBLAZE_VMALLOC_H
++#define _ASM_MICROBLAZE_VMALLOC_H
++
++#endif /* _ASM_MICROBLAZE_VMALLOC_H */
+diff --git a/arch/mips/include/asm/vmalloc.h b/arch/mips/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..25dc09b
+--- /dev/null
++++ b/arch/mips/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_MIPS_VMALLOC_H
++#define _ASM_MIPS_VMALLOC_H
++
++#endif /* _ASM_MIPS_VMALLOC_H */
+diff --git a/arch/nds32/include/asm/vmalloc.h b/arch/nds32/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..caeed38
+--- /dev/null
++++ b/arch/nds32/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_NDS32_VMALLOC_H
++#define _ASM_NDS32_VMALLOC_H
++
++#endif /* _ASM_NDS32_VMALLOC_H */
+diff --git a/arch/nios2/include/asm/vmalloc.h b/arch/nios2/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..ec7a926
+--- /dev/null
++++ b/arch/nios2/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_NIOS2_VMALLOC_H
++#define _ASM_NIOS2_VMALLOC_H
++
++#endif /* _ASM_NIOS2_VMALLOC_H */
+diff --git a/arch/openrisc/include/asm/vmalloc.h b/arch/openrisc/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..75435ec
+--- /dev/null
++++ b/arch/openrisc/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_OPENRISC_VMALLOC_H
++#define _ASM_OPENRISC_VMALLOC_H
++
++#endif /* _ASM_OPENRISC_VMALLOC_H */
+diff --git a/arch/parisc/include/asm/vmalloc.h b/arch/parisc/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..1088ae4
+--- /dev/null
++++ b/arch/parisc/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_PARISC_VMALLOC_H
++#define _ASM_PARISC_VMALLOC_H
++
++#endif /* _ASM_PARISC_VMALLOC_H */
+diff --git a/arch/powerpc/include/asm/vmalloc.h b/arch/powerpc/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..b992dfa
+--- /dev/null
++++ b/arch/powerpc/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_POWERPC_VMALLOC_H
++#define _ASM_POWERPC_VMALLOC_H
++
++#endif /* _ASM_POWERPC_VMALLOC_H */
+diff --git a/arch/riscv/include/asm/vmalloc.h b/arch/riscv/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..ff9abc0
+--- /dev/null
++++ b/arch/riscv/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_RISCV_VMALLOC_H
++#define _ASM_RISCV_VMALLOC_H
++
++#endif /* _ASM_RISCV_VMALLOC_H */
+diff --git a/arch/s390/include/asm/vmalloc.h b/arch/s390/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..3ba3a6b
+--- /dev/null
++++ b/arch/s390/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_S390_VMALLOC_H
++#define _ASM_S390_VMALLOC_H
++
++#endif /* _ASM_S390_VMALLOC_H */
+diff --git a/arch/sh/include/asm/vmalloc.h b/arch/sh/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..716b774
+--- /dev/null
++++ b/arch/sh/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_SH_VMALLOC_H
++#define _ASM_SH_VMALLOC_H
++
++#endif /* _ASM_SH_VMALLOC_H */
+diff --git a/arch/sparc/include/asm/vmalloc.h b/arch/sparc/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..04b8ab9
+--- /dev/null
++++ b/arch/sparc/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_SPARC_VMALLOC_H
++#define _ASM_SPARC_VMALLOC_H
++
++#endif /* _ASM_SPARC_VMALLOC_H */
+diff --git a/arch/um/include/asm/vmalloc.h b/arch/um/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..9a7b9ed
+--- /dev/null
++++ b/arch/um/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_UM_VMALLOC_H
++#define _ASM_UM_VMALLOC_H
++
++#endif /* _ASM_UM_VMALLOC_H */
+diff --git a/arch/unicore32/include/asm/vmalloc.h b/arch/unicore32/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..0544358
+--- /dev/null
++++ b/arch/unicore32/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_UNICORE32_VMALLOC_H
++#define _ASM_UNICORE32_VMALLOC_H
++
++#endif /* _ASM_UNICORE32_VMALLOC_H */
+diff --git a/arch/x86/include/asm/vmalloc.h b/arch/x86/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..ba6295f
+--- /dev/null
++++ b/arch/x86/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_X86_VMALLOC_H
++#define _ASM_X86_VMALLOC_H
++
++#endif /* _ASM_X86_VMALLOC_H */
+diff --git a/arch/xtensa/include/asm/vmalloc.h b/arch/xtensa/include/asm/vmalloc.h
+new file mode 100644
+index 0000000..0eb94b7
+--- /dev/null
++++ b/arch/xtensa/include/asm/vmalloc.h
+@@ -0,0 +1,4 @@
++#ifndef _ASM_XTENSA_VMALLOC_H
++#define _ASM_XTENSA_VMALLOC_H
++
++#endif /* _ASM_XTENSA_VMALLOC_H */
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index a4b2411..ec38132 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -10,6 +10,8 @@
+ #include <linux/rbtree.h>
+ #include <linux/overflow.h>
  
--	seq_printf(seq, "%s @ 0x%Lx-0x%Lx\n",
--			cattr_name(print_entry->type),
-+	seq_printf(seq, "PAT: [mem 0x%016Lx-0x%016Lx] %s\n",
- 			print_entry->start,
--			print_entry->end);
-+			print_entry->end,
-+			cattr_name(print_entry->type));
- 
- 	kfree(print_entry);
++#include <asm/vmalloc.h>
++
+ struct vm_area_struct;		/* vma defining user mapping in mm_types.h */
+ struct notifier_block;		/* in notifier.h */
  
