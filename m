@@ -6,82 +6,80 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 427BFC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C17C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1230D20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E45B62082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:50:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="1ORe7du7"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="S8msUfuL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbgAJXuX (ORCPT
+        id S1727768AbgAJXuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 18:50:23 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34778 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727591AbgAJXuX (ORCPT
+        Fri, 10 Jan 2020 18:50:50 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36651 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbgAJXuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 18:50:23 -0500
-Received: by mail-lj1-f196.google.com with SMTP id z22so3886040ljg.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 15:50:21 -0800 (PST)
+        Fri, 10 Jan 2020 18:50:50 -0500
+Received: by mail-lf1-f68.google.com with SMTP id n12so2757660lfe.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 15:50:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=shutemov-name.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=a/4ylgjmQcCigB0GN3R+FfVLnwKZ03GU29naJ9AmFWY=;
-        b=1ORe7du75y8bIGNFjeY5a8rsfx+pb2eT02NBOiCQ+sQCalsd0kgByjIvpBTPm0Zwdd
-         9NSr24B2MGPrf8Kcj3AFKnMiehNpl5PyO3gSwl3X2jkQLAHOcUgRvwwVzfJHbjCyvVdK
-         /6d8LQhgcFemRoLWckzwU95kdAQQ1NtNILzKOJoZJLCZjlajxxut32SNKnNGWIwQsipf
-         MZm8pF/tQO2nthFpNzEjvZRaEG4jqmwCU+vtHLFZ/3NDi2DE55756f/DFMo5g9Y75U+X
-         GeGFQ4m45H3wzpjzDVbxwvlflSqRehe/a5Sp+3TJWU7YVLiUhITcY6E9elwO3ikeeHBA
-         dLXg==
+        bh=Up/bORiVZCe+ht9daj4eKUM5Ea1UCapj6K9HW34R5ns=;
+        b=S8msUfuLnxCHM8bT1qJiytka17qVyY8ZVrWgxMyflSfHUuBij6STEkbxfermPfL//+
+         KtGfqQG87GiX2DcSRsaXoTWWzuXOCzOcviF1bjh+KZNEo2KJEl6UbQRpQlOEAN4aTdOO
+         9uB6zwuq5WETS6YN8IQs41xzn3cXA68pp6ziVrH9amHmxk0w+18NMpJzyZSGRThntIb5
+         nMzW7a7PoyU1hLUViTeMhRFkxjIuhpltULvEbquK97BB0Jb8/asISY0Zy9ZH2Ufpi7hW
+         bAOfeTBm/G60sQxK4vTgBgyzWA1QInLlOptAdelRKnosGPeIDPVm7LALVXA7bBfJzxaf
+         wjDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a/4ylgjmQcCigB0GN3R+FfVLnwKZ03GU29naJ9AmFWY=;
-        b=P3mk/AU+2WcglasUIBgeo6nL/Mtu0ECY+NK3IYlH1oTTPnUuhWJZSsptKDQ3goJ8HW
-         cgypscWiwdF8atbdBnpLs49dqQGt1QEnh9k/fcsdMi5jA1uLtWZ+OVI/wQobRGSykau5
-         SIeSnTfFR3XTA4GFKxyJjKQteh3JNMz5CGql0K82HGPBIvPlmLpsbcbEWaMF1VCGtM87
-         moksw4nyi/IZZqAUVomIJ1EagVSLcaDo0R7g23XykCa9LvgtJ4qUEfNUovrFMNX9aEyq
-         CeSkd/MhjlruNLlFlrcZ69WOb9R9PqBsYRX6tPbsYHTkbqx74s/44YCi+MfOcvg2B0ws
-         1Ozw==
-X-Gm-Message-State: APjAAAXfs70BQI70oM9Tv8JtAUUjDzsV+aUpznXfid+p8zsNOicdWia6
-        qzdS6YNfsSOeZqupGSBGqNoUKQ==
-X-Google-Smtp-Source: APXvYqyCpKNXyIkh7rO2vraxEPK4HnOnHP9jjy2oQJp1dVT9gpTGCAIVV4YmgfYQXt0Ui1vndv3adQ==
-X-Received: by 2002:a2e:8512:: with SMTP id j18mr1908588lji.269.1578700220996;
-        Fri, 10 Jan 2020 15:50:20 -0800 (PST)
+        bh=Up/bORiVZCe+ht9daj4eKUM5Ea1UCapj6K9HW34R5ns=;
+        b=fiKpiB0dqEpm+b9+8Xx0j+BNBOmwp720q3+xrD1k69mMOG2qGNHhKDto/gbc/Z/cuv
+         nSzm75ozaj5Tj1iR+g5iDbEybacH4H9UpRPfZ9soKD+ufhR4+UoJoqAw8vy96PVGtsyc
+         XKRSJUXmD64U8hlj6spUMnlvlgWmMAls0sR6ktoxR0PKSBCOAI7cNJcpzj9FdDVlzvYG
+         Dx3IE241Pok1fVHmGYjn240cqkzSlFDgxdOw2xN1OVfb/6JaLbeisjd3XpBxHoJDtyxA
+         8ct+ZtBIpS5tupjV6pQbSZDPDn/ELBGJNQ6NXCXUh54D1cqjJoADDGgJ6nBU0d/4MIJ/
+         I8/Q==
+X-Gm-Message-State: APjAAAWmrjNjBbzCgN+zArKpKcx841If7sZtDAv3/kNgNGMgFHfy1Edt
+        mAFlPpjS5hrG3YtjJePbWxn8gA==
+X-Google-Smtp-Source: APXvYqws4IPaym9XaoOdclFEODCMjxAzsLLkrqIrxCIiTw1AkyjTotz1ggJalhM7dmrxCBCmHHeYKQ==
+X-Received: by 2002:ac2:5e78:: with SMTP id a24mr3889435lfr.5.1578700248713;
+        Fri, 10 Jan 2020 15:50:48 -0800 (PST)
 Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id p15sm1718217lfo.88.2020.01.10.15.50.20
+        by smtp.gmail.com with ESMTPSA id b20sm1642796ljp.20.2020.01.10.15.50.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 15:50:20 -0800 (PST)
+        Fri, 10 Jan 2020 15:50:48 -0800 (PST)
 Received: by box.localdomain (Postfix, from userid 1000)
-        id 018AD10144E; Sat, 11 Jan 2020 02:50:20 +0300 (+03)
-Date:   Sat, 11 Jan 2020 02:50:20 +0300
+        id 1E47A10144E; Sat, 11 Jan 2020 02:50:49 +0300 (+03)
+Date:   Sat, 11 Jan 2020 02:50:49 +0300
 From:   "Kirill A. Shutemov" <kirill@shutemov.name>
 To:     Wei Yang <richardw.yang@linux.intel.com>
 Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, kirill.shutemov@linux.intel.com
-Subject: Re: [PATCH] mm/huge_memory.c: reduce critical section protected by
- split_queue_lock
-Message-ID: <20200110235020.5cfrudvsenzfotmi@box>
-References: <20200110025516.23996-1-richardw.yang@linux.intel.com>
+Subject: Re: [PATCH 1/2] mm/huge_memory.c: use head to check huge zero page
+Message-ID: <20200110235049.kzvcm46t6e2mw4uf@box>
+References: <20200110032610.26499-1-richardw.yang@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200110025516.23996-1-richardw.yang@linux.intel.com>
+In-Reply-To: <20200110032610.26499-1-richardw.yang@linux.intel.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 10:55:16AM +0800, Wei Yang wrote:
-> split_queue_lock protects data in struct deferred_split. We can release
-> the lock after delete the page from deferred_split_queue.
+On Fri, Jan 10, 2020 at 11:26:09AM +0800, Wei Yang wrote:
+> The page could be a tail page, if this is the case, this BUG_ON will
+> never be triggered.
 > 
-> This patch moves the THP accounting out of the lock protection, which is
-> introduced in commit 65c453778aea ("mm, rmap: account shmem thp pages").
+> Fixes: e9b61f19858a ("thp: reintroduce split_huge_page()")
 > 
 > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
 
