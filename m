@@ -2,92 +2,202 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E31C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF0BC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D712B20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C032082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578684310;
+	bh=IG2Jz+Qiwc8Kl9UcxSCn4uuxFGDTCI8FsQ8G768p8F8=;
+	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=b1FBJ5KxCTzdQVsxWau1rycVXHlYIpXs2XW/EJ2E7R5Q0JwShuDrQ9BHeU5ypBZww
+	 rPNngKgqaIE9+HEGwS3TTkCTyYP6B1Ip9F0X1n4//0/Y3gikabtYBg/DGMZOjsmXVl
+	 MjC7z1YI008+VAzU2ysnYx28Uif1oq6Ubyr8/yg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728412AbgAJTYU (ORCPT
+        id S1728665AbgAJTZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:24:20 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:35603 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728106AbgAJTYT (ORCPT
+        Fri, 10 Jan 2020 14:25:09 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45643 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728191AbgAJTZI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:24:19 -0500
-Received: from mail-qv1-f41.google.com ([209.85.219.41]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1Ml6du-1jWmM93TQ4-00lUgy; Fri, 10 Jan 2020 20:24:18 +0100
-Received: by mail-qv1-f41.google.com with SMTP id o18so1273662qvf.1;
-        Fri, 10 Jan 2020 11:24:17 -0800 (PST)
-X-Gm-Message-State: APjAAAXfCtqtVZa3zweztH807mcxq5nVQsUoitn16oXtfVsKebOMzTrf
-        szWHIc2WM5zytaE3TI9HaOfEazifq1jEusyoX7w=
-X-Google-Smtp-Source: APXvYqzd2hmstZ9l10zTYEs+f7uDdN5MQZM9KWvb/cNLE8AYGII20Ive9ghFbtq0MLUH74D2qPmefmOPczx/DA0uGUI=
-X-Received: by 2002:a0c:d788:: with SMTP id z8mr152872qvi.211.1578684256605;
- Fri, 10 Jan 2020 11:24:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20200110165636.28035-1-will@kernel.org> <20200110165636.28035-6-will@kernel.org>
-In-Reply-To: <20200110165636.28035-6-will@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 10 Jan 2020 20:24:00 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1pDW7cABLeotZBNTTxLxkQ299wO0OG3AWGyDqJWmQA+A@mail.gmail.com>
-Message-ID: <CAK8P3a1pDW7cABLeotZBNTTxLxkQ299wO0OG3AWGyDqJWmQA+A@mail.gmail.com>
-Subject: Re: [RFC PATCH 5/8] READ_ONCE: Enforce atomicity for
- {READ,WRITE}_ONCE() memory accesses
-To:     Will Deacon <will@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ev8K4YMvcdYPml3GY3aO/4/vuWKU7cZbfJmipe8dfz3JyngSvju
- Wv4NNUmZTSTTyU0E16+aJt3syYAiNy3NWp4ERPkdTDo0mcHbhhZZv7mzbn+HbP40vcFYe1Y
- KyQDlk1l2GqNLVtLXUi6HllsgidHr0AqBMLVu3JZuM6p9cQHJ/ZWPq0VndUsN5NcUld4iox
- S0AHYQQR99ROxBuMmdKMA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:wpkyqc6zofw=:ToNUCGqkTCirKuUdME33UK
- IhZ/Fkyf/Ux8dK5ivs4y0WMR76cYYUvMGSzo0GAV8rLea90c05nx/SWquKF3LtZ2glH2xfhLI
- kAPTK7CR1X6RoQQMU59O45BGJwyFnTR/BKF5sKjfoopx/hnTLeQYQGRvn13Wza3ikm0vtxHKJ
- fps6FiEoW45Vf3LGu5B00LiwN/k2pzFCMY0O5X++CXTaVA5lrCEtyzvM0m/7YgaszGwvtJphO
- jrlGo2YNinYzumLXEYjAHxavFHLZoSp/1/X++lEcGUsJqOpbPbEvkBMjo9gcnVzhePTv3NqBF
- uV3l/C6odOTgdyWJ8ThVJLd02EVEWLCNTV2TpFzZnEE77yCxjlO9UoQ0GBII1zLtKa3Ah2zlm
- 9XdyEJ5x2C1vz07TsIdTBC05j8kgm4plJsw4Q1bgVNh0UuiI+Tdhxtxyg9jhc9CZprmgdBzKM
- zy+EzZaoEV9U7aSkRQXr+tepXgNU7ZaMIDz+X6dpTrPVT8Tl44q7meUf+Flv1BMSjzoi4gTGd
- jlc6G/RJB+CDa1XNux+SN1VTYnB+vqNMFfnb5xGkFNLIiS1YvzTroupdI7AaBHz/PlOsbC8Ss
- VrBwj1Y+rV5ra7k0cYfT/0Y2cCZiJ4xlXi17jk0CA4ooH8YRCagawtftvS5jFoKeI/iwbd/Yr
- hX07tjd+pRUtWpNF/OJM/7taBcDcvdwjKE+ruyQvdbctR1F2oH51k4U6zLSx/yqWEAkJiB3Zd
- VZDHwBswTCCzW+D/PTdQcsPUP/1wbXi0h1Xn4dU4x5GjnqKW3dl7iTpZi6fRiD/02LosMgiev
- ZdqNQV4UlnOUA31tU/tGLzXuuHGlIyRA0D3Q6KN+1K8MT+sGke4itjh/JndDYKlHhb5BjnZpb
- MYZvSJlBKUu2g6XzrbCg==
+        Fri, 10 Jan 2020 14:25:08 -0500
+Received: by mail-pl1-f193.google.com with SMTP id b22so1193282pls.12;
+        Fri, 10 Jan 2020 11:25:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
+         :references:in-reply-to;
+        bh=rVjFJSZgYfwxd0ySOgaQC60qQaj+Ws9nxhRykM3F1Ag=;
+        b=CCJV2pmFHDJ1SToYG+HxexvYfdL2OFuF1mT2WjnepvsKA2G/hktpR6Nm+DskVeiF4l
+         bW0ilTai+tnwrU+Z/8dREkJgy1iagtGqtqDTu9aHQqTH3eTzy0biiObvCvs0AcqQBtfX
+         GvQzGhtijQYIYGr4Bt+T0wmowRR8zjy9SGc8bQsGSIHPvHqwobjXrI2GTyrWmNYH8AUF
+         p2zIpKtJK9uuw6tdhD/Q6UePCdpUWj3z7E8hMTBa8/au1Tzq8hirQhDtDVq5wvvZSd+A
+         /lFWMcRohbdWtHhcNOFnjQ9x8Sq5SHXxk4mKtRGaBtZmP0jlfxfpQmiIrnqkdTOqmuzl
+         0FkA==
+X-Gm-Message-State: APjAAAVrNYhQosjRBSzR1pdqx4NqN8i/OZ9Z3izG0yhqnP/4AiJ7yFF8
+        4eTG69/ra7L9uH915CGrdkA=
+X-Google-Smtp-Source: APXvYqwDhPleO43/H97xRN8wtcII2V3+c4x5AL6mOOFE0V3NrpWQ4LVohdn2juS6VtXW6TOJgjqXgg==
+X-Received: by 2002:a17:90a:330f:: with SMTP id m15mr6651319pjb.24.1578684307426;
+        Fri, 10 Jan 2020 11:25:07 -0800 (PST)
+Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
+        by smtp.gmail.com with ESMTPSA id p18sm9543200pjo.3.2020.01.10.11.25.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 11:25:06 -0800 (PST)
+Message-ID: <5e18cf92.1c69fb81.8a8f4.d024@mx.google.com>
+Date:   Fri, 10 Jan 2020 11:25:06 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Thomas Bogendoerfer <tbogendoerfer@suse.de>
+CC:     Paul Burton <paulburton@kernel.org>
+CC:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH v12 0/3] Use MFD framework for SGI IOC3 drivers
+References:  <20200109103430.12057-1-tbogendoerfer@suse.de>
+In-Reply-To:  <20200109103430.12057-1-tbogendoerfer@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 5:56 PM Will Deacon <will@kernel.org> wrote:
+Hello,
 
-> +/*
-> + * Use __READ_ONCE() instead of READ_ONCE() if you do not require any
-> + * atomicity or dependency ordering guarantees. Note that this may result
-> + * in tears!
-> + */
-> +#define __READ_ONCE(x) (*(volatile typeof(x) *)&(x))
-> +
+Thomas Bogendoerfer wrote:
+> SGI IOC3 ASIC includes support for ethernet, PS2 keyboard/mouse,
+> NIC (number in a can), GPIO and a byte  bus. By attaching a
+> SuperIO chip to it, it also supports serial lines and a parallel
+> port. The chip is used on a variety of SGI systems with different
+> configurations. This patchset moves code out of the network driver,
+> which doesn't belong there, into its new place a MFD driver and
+> specific platform drivers for the different subfunctions.
+> 
+> Changes in v12:
+>  - added support for mapping all PCI interrupts as ioc3 uses INTB,
+>    if both ethernet and superio is used
+> 
+> Changes in v11:
+>  - dropped accepted patches out of the series
+>  - moved byte swapping patch first in series
+>  - added ip30 system board support
+> 
+> Changes in v10:
+>  - generation of fake subdevice ID had vendor and device ID swapped
+> 
+> Changes in v9:
+>  - remove generated MFD devices, when driver is removed or in case
+>    of a mfd device setup error
+>  - remove irq domain, if setup of mfd devices failed
+>  - pci_iounmap on exit/error cases
+>  - added irq domain unmap function
+> 
+> Changes in v8:
+>  - Re-worked comments in drivers/mfd/ioc3.c
+>  - Added select CRC16 to ioc3-eth.c
+>  - Patches 1 and 2 are already taken to mips-next, but
+>    for completeness of the series they are still included.
+>    What's missing to get the remaining 3 patches via the MIPS
+>    tree is an ack from a network maintainer
+> 
+> Changes in v7:
+>  - added patch to enable ethernet phy for Origin 200 systems
+>  - depend on 64bit for ioc3 mfd driver
+> 
+> Changes in v6:
+>  - dropped patches accepted for v5.4-rc1
+>  - moved serio patch to ip30 patch series
+>  - adapted nvmem patch
+> 
+> Changes in v5:
+>  - requested by Jakub I've splited ioc3 ethernet driver changes into
+>    more steps to make the transition more visible; on the way there 
+>    I've "checkpatched" the driver and reduced code reorderings
+>  - dropped all uint16_t and uint32_t
+>  - added nvmem API extension to the documenation file
+>  - changed to use request_irq/free_irq in serio driver
+>  - removed wrong kfree() in serio error path
+> 
+> Changes in v4:
+>  - added w1 drivers to the series after merge in 5.3 failed because
+>    of no response from maintainer and other parts of this series
+>    won't work without that drivers
+>  - moved ip30 systemboard support to the ip30 series, which will
+>    deal with rtc oddity Lee found
+>  - converted to use devm_platform_ioremap_resource
+>  - use PLATFORM_DEVID_AUTO for serial, ethernet and serio in mfd driver
+>  - fixed reverse christmas order in ioc3-eth.c
+>  - formating issue found by Lee
+>  - re-worked irq request/free in serio driver to avoid crashes during
+>    probe/remove
+> 
+> Changes in v3:
+>  - use 1-wire subsystem for handling proms
+>  - pci-xtalk driver uses prom information to create PCI subsystem
+>    ids for use in MFD driver
+>  - changed MFD driver to only use static declared mfd_cells
+>  - added IP30 system board setup to MFD driver
+>  - mac address is now read from ioc3-eth driver with nvmem framework
+> 
+> Changes in v2:
+>  - fixed issue in ioc3kbd.c reported by Dmitry Torokhov
+>  - merged IP27 RTC removal and 8250 serial driver addition into
+>    main MFD patch to keep patches bisectable
+> 
+> Thomas Bogendoerfer (3):
+>   MIPS: PCI: Support mapping of INTB/C/D for pci-xtalk-bridge
+>   MIPS: SGI-IP27: fix readb/writeb addressing
+>   mfd: ioc3: Add driver for SGI IOC3 chip
+> 
+>  arch/mips/include/asm/mach-ip27/mangle-port.h |   4 +-
+>  arch/mips/include/asm/pci/bridge.h            |   3 +-
+>  arch/mips/include/asm/sn/ioc3.h               |  38 +-
+>  arch/mips/pci/pci-xtalk-bridge.c              |  28 +-
+>  arch/mips/sgi-ip27/ip27-timer.c               |  20 -
+>  drivers/mfd/Kconfig                           |  13 +
+>  drivers/mfd/Makefile                          |   1 +
+>  drivers/mfd/ioc3.c                            | 669 ++++++++++++++++++
+>  drivers/net/ethernet/sgi/Kconfig              |   5 +-
 
-This probably allows writing
+Series applied to mips-next.
 
-       extern int i;
-       __READ_ONCE(i) = 1;
+> MIPS: PCI: Support mapping of INTB/C/D for pci-xtalk-bridge
+>   commit 2634e5a651e7
+>   https://git.kernel.org/mips/c/2634e5a651e7
+>   
+>   Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> MIPS: SGI-IP27: fix readb/writeb addressing
+>   commit 10cf8300ecad
+>   https://git.kernel.org/mips/c/10cf8300ecad
+>   
+>   Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+>   Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
+> 
+> mfd: ioc3: Add driver for SGI IOC3 chip
+>   commit 0ce5ebd24d25
+>   https://git.kernel.org/mips/c/0ce5ebd24d25
+>   
+>   Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+>   Signed-off-by: Paul Burton <paulburton@kernel.org>
 
-and not get a warning for it. How about also casting to 'const'?
+Thanks,
+    Paul
 
-        Arnd
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paulburton@kernel.org to report it. ]
