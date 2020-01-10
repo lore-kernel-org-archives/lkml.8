@@ -2,313 +2,361 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEBCC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C0E7C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52B922072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:26:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGzYOnRH"
+	by mail.kernel.org (Postfix) with ESMTP id D2B0A2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:28:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgAJL04 (ORCPT
+        id S1727789AbgAJL2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:26:56 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42015 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727704AbgAJL04 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:26:56 -0500
-Received: by mail-wr1-f67.google.com with SMTP id q6so1439875wro.9;
-        Fri, 10 Jan 2020 03:26:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7lM5EykiimtNQTD/KeOIq/kmlySHaycP9krZGDQj34k=;
-        b=iGzYOnRHF8qfJE+2CKjjnemWNCfW7MyrWra/6FzdtbtueYzzDybIsAv14CDBaGzkGG
-         cIEx+aJSw71lkIJT3ELVtbjM3VEBoI562qwWsKkoe0AJLGuTjqnTRikw+9yGPWs4mkhH
-         K0UDoi+s3pF3np7igHTs31MfHyQ6Audje8BGb4xKOPaNHzvIkD6D5DFestWhxUHzEPGO
-         glp9A5ntoKEWhfPSOJT06r++lhcXTorsr2qGWBAxPLTe/fIA8e3CoJcyLusYqnhXnqxL
-         V/3fblVDIhkPIrff4g0KX0HP0hCm4KQg0DuvGEZIwlh2omaVV2q0uLxD1MAMARrcuYne
-         nrTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7lM5EykiimtNQTD/KeOIq/kmlySHaycP9krZGDQj34k=;
-        b=P43CIQgqsQng0XoX1vyoRCsGVp2vC8RsJZYNBellaKSQmjQt+8cwFSnMIzSnMVGfXH
-         dFhXlQ3/X9F5CmAwfUBtB6m1gk9B+QvmKARRLp7tWV8wtO3W/mrVCt6D9zyCSKptRnU/
-         Dh3jb0B0dvvcYIf1PNk0RemqvQ7jwXpx3DmKEzUAH9HXqPVCXG74SnuJTl4+9Gy1LTyW
-         cxlS+WaBFrIBUwdp3kTb8COmz+NUg8AyK6MHxF9X/YqCEHtWadwER05K0Ufzu4NqK8he
-         yEtxsxVWgvCABRkGs22w3U5WzfPuMyzCeNI43wwHlQt+Ld+y5B0a0yFRj6vHmjzDm+r8
-         wGVQ==
-X-Gm-Message-State: APjAAAVSsKET43SjD478bsAk/Qxn53j82Zxm/yxnvtKQw+WRnnD4edeJ
-        R/GrfhRApfWCuxA+xKVJCiO1NeHn
-X-Google-Smtp-Source: APXvYqxbH08xte7p/ODV3ZKqaFgBmEEdfTUofihVlEjgah++iyPw71yh8uOedNov2pQFaladGCt0Lw==
-X-Received: by 2002:a5d:6346:: with SMTP id b6mr3024170wrw.354.1578655612703;
-        Fri, 10 Jan 2020 03:26:52 -0800 (PST)
-Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
-        by smtp.gmail.com with ESMTPSA id u22sm1902080wru.30.2020.01.10.03.26.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 03:26:51 -0800 (PST)
-Date:   Fri, 10 Jan 2020 12:26:50 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     JC Kuo <jckuo@nvidia.com>
-Cc:     Rob Herring <robh@kernel.org>, gregkh@linuxfoundation.org,
-        jonathanh@nvidia.com, kishon@ti.com, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, nkristam@nvidia.com
-Subject: Re: [PATCH v5 3/5] dt-bindings: phy: tegra: Add Tegra194 support
-Message-ID: <20200110112650.GB2233456@ulmo>
-References: <20200103081814.9848-1-jckuo@nvidia.com>
- <20200103081814.9848-4-jckuo@nvidia.com>
- <20200103223940.GA9205@bogus>
- <baa9b5f4-74be-0ab4-0b24-bf926cf3207c@nvidia.com>
- <4c3f3776-65e2-aafd-7bb9-fa69df301cb6@nvidia.com>
+        Fri, 10 Jan 2020 06:28:33 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9152 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727685AbgAJL2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 06:28:32 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 22CB5E1CF0C553E95238;
+        Fri, 10 Jan 2020 19:28:29 +0800 (CST)
+Received: from [127.0.0.1] (10.133.217.236) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 10 Jan 2020
+ 19:28:18 +0800
+Subject: Re: [RFC PATCH] arm64/ftrace: support dynamically allocated
+ trampolines
+To:     Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <xiexiuqi@huawei.com>,
+        <huawei.libin@huawei.com>, <bobo.shaobowang@huawei.com>,
+        <catalin.marinas@arm.com>, <duwe@lst.de>,
+        "chengjian (D)" <cj.chengjian@huawei.com>
+References: <20200109142736.1122-1-cj.chengjian@huawei.com>
+ <20200109164858.GH3112@lakrids.cambridge.arm.com>
+From:   "chengjian (D)" <cj.chengjian@huawei.com>
+Message-ID: <b0457ef0-f1b2-e258-b59d-aa9af8e48c5d@huawei.com>
+Date:   Fri, 10 Jan 2020 19:28:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DBIVS5p969aUjpLe"
-Content-Disposition: inline
-In-Reply-To: <4c3f3776-65e2-aafd-7bb9-fa69df301cb6@nvidia.com>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+In-Reply-To: <20200109164858.GH3112@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.133.217.236]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi, Mark
 
---DBIVS5p969aUjpLe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+     Thanks for your reply.
 
-On Thu, Jan 09, 2020 at 09:31:27AM +0800, JC Kuo wrote:
-> Hi Rob,
-> For now we have two options.
-> 1. reusing the existing "maximum-speed" which is documented in usb/generi=
-c.txt
-> Pro: no need to add new property
-> Con: only "super-speed" and "super-speed-plus" are valid for Tegra XUSB P=
-ADCTL,
-> therefore extra code/document change is required.
->=20
-> +	if (device_property_present(&port->dev, "maximum-speed")) {
-> +		maximum_speed =3D  usb_get_maximum_speed(&port->dev);
-> +		if (maximum_speed =3D=3D USB_SPEED_SUPER)
-> +			usb3->disable_gen2 =3D true;
-> +		else if (maximum_speed =3D=3D USB_SPEED_SUPER_PLUS)
-> +			usb3->disable_gen2 =3D false;
-> +		else
-> +			return -EINVAL;
-> +	}
->=20
-> 2. introducing a new proprietary "nvidia,disable-gen2" property
-> Pro: its logic perfectly matches the need, and code change is minimum
->=20
-> +        usb3->disable_gen2 =3D of_property_read_bool(np, "nvidia,disable=
--gen2");
->=20
-> Con: it's a new and proprietary property.
->=20
-> Please let me know which one do you prefer or there is something else
-> works better.
+On 2020/1/10 0:48, Mark Rutland wrote:
+> On Thu, Jan 09, 2020 at 02:27:36PM +0000, Cheng Jian wrote:
+>
+> Just how bad is this, and when/where does it matter?
+>
+> How much does this patch improve matters?
 
-I think the first version is much clearer. maximum-speed =3D "super-speed"
-is very clear and explicit. nvidia,disable-gen2 is less so. While it may
-be true in this case what "disable-gen2" does, using the generic
-bindings has the advantage that it'll be more familiar to people already
-familiar with other USB device tree bindings.
+I will have a test about this.
 
-Also, the nvidia,disable-gen2 property only perfectly matches the need
-because it reflects the name of the variable. If you rewrote the code to
-do something like this:
+>> Known issues :
+>> If kaslr is enabled, the address of tramp and ftrace call
+>> may be far away. Therefore, long jump support is required.
+>> Here I intend to use the same solution as module relocating,
+>> Reserve enough space for PLT at the end when allocating, can
+>> use PLT to complete these long jumps.
+> This can happen both ways; the callsite can also be too far from the
+> trampoline to be able to branch to it.
 
-	if (port->maximum_speed <=3D USB_SPEED_SUPER) {
-		/* disable gen2 */
-		...
-	}
 
-Then all of a sudden the "maximum-speed" property is a perfect match. In
-general, bindings should be natural to the domain of the bus or device
-that they describe rather than a reflection of how the driver programs
-the device's registers.
+Yes, that can happen both ways.
 
-On a side-note: we should also update the usb/generic.txt binding to
-describe the "super-speed-plus" value for the maximum-speed property.
+> I've had issues with that for other reasons, and I think that we might
+> be able to use -fpatchable-function-entry=N,M to place a PLT immediately
+> before each function for that. However, I'm wary of doing so because it
+> makes it much harder to modify the patch site itself.
 
-Thierry
 
+This sounds good. I have no better idea than this now.
+
+At least try it first.
+
+
+>
+>>   
+>> +GLOBAL(ftrace_common_end)
+>>   	ret	x9
+> This doesn't look right. Surely you want the RET, too?
+
+
+I will fix this error, thanks.
+
+> +/*
+> + * ftrace_caller() or ftrace_regs_caller() trampoline
+> + *				+-----------------------+
+> + * ftrace_(regs_)caller =>	|	......		|
+> + * ftrace_(regs_)caller_end =>	| b ftrace_common	| => nop
+> + *				+-----------------------+
+> + * ftrace_common =>		|	......		|
+> + * function_trace_op_ptr =>	| adrp x2, sym		| => nop
+> + *				| ldr  x2,[x2,:lo12:sym]| => ldr x2 <ftrace_op>
+> + *				|	......		|
+> + * ftrace_common_end  =>	|	retq		|
+> Copy-paste from x86? arm64 doesn't have a retq instruction.
+>
+>> + *				+-----------------------+
+>> + * ftrace_opt =>		|	ftrace_opt	|
+>> + *				+-----------------------+
+> Typo: s/opt/ops/ ?
+
+Sorry for these scenes.
+
+
+>> + */
+>> +static unsigned long create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+>> +{
+>> +	unsigned long start_offset_caller, end_offset_caller, caller_size;
+>> +	unsigned long start_offset_common, end_offset_common, common_size;
+>> +	unsigned long op_offset, offset, size, ip, npages;
+>> +	void *trampoline;
+>> +	unsigned long *ptr;
+>> +	/* ldr x2, <label> */
+>> +	u32 pc_ldr = 0x58000002;
+>> +	u32 mask = BIT(19) - 1;
+> Instead of open-coding this, please teach the insn framework how to
+> encode LDR (immediate).
+
+
+I will, Thank you.
+
+>
+>> +	int shift = 5;
+>> +	int ret;
+>> +	u32 nop;
+>> +
+>> +	if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
+>> +		start_offset_caller = (unsigned long)ftrace_regs_caller;
+>> +		end_offset_caller = (unsigned long)ftrace_regs_caller_end;
+>> +	} else {
+>> +		start_offset_caller = (unsigned long)ftrace_caller;
+>> +		end_offset_caller = (unsigned long)ftrace_caller_end;
+>> +	}
+>> +	start_offset_common = (unsigned long)ftrace_common;
+>> +	end_offset_common = (unsigned long)ftrace_common_end;
+>> +
+>> +	op_offset = (unsigned long)function_trace_op_ptr;
+>> +
+>> +	/*
+>> +	 * Merge ftrace_caller/ftrace_regs_caller and ftrace_common
+>> +	 * to one function in ftrace trampoline.
+>> +	 */
+>> +	caller_size = end_offset_caller - start_offset_caller + AARCH64_INSN_SIZE;
+>> +	common_size = end_offset_common - start_offset_common + AARCH64_INSN_SIZE;
+>> +	size = caller_size + common_size;
+>> +
+>> +	trampoline = alloc_tramp(caller_size + common_size + sizeof(void *));
+>> +	if (!trampoline)
+>> +		return 0;
+>> +
+>> +	*tramp_size = caller_size + common_size + sizeof(void *);
+>> +	npages = DIV_ROUND_UP(*tramp_size, PAGE_SIZE);
+>> +
+>> +	/* Copy ftrace_caller/ftrace_regs_caller onto the trampoline memory */
+>> +	ret = probe_kernel_read(trampoline, (void *)start_offset_caller, caller_size);
+>> +	if (WARN_ON(ret < 0))
+>> +		goto free;
+>> +
+>> +	/*
+>> +	 * Copy ftrace_common to the trampoline memory
+>> +	 * below ftrace_caller/ftrace_regs_caller. so
+>> +	 * we can merge the two function to one function.
+>> +	 */
+>> +	ret = probe_kernel_read(trampoline + caller_size, (void *)start_offset_common, common_size);
+>> +	if (WARN_ON(ret < 0))
+>> +		goto free;
+>> +
+>> +	/*
+>> +	 * We merge the two functions to one function, so these is
+>> +	 * no need to use jump instructions to ftrace_common, modify
+>> +	 * it to NOP.
+>> +	 */
+>> +	ip = (unsigned long)trampoline + caller_size - AARCH64_INSN_SIZE;
+>> +	nop = aarch64_insn_gen_nop();
+>> +	memcpy((void *)ip, &nop, AARCH64_INSN_SIZE);
+>> +
+>> +	/*
+>> +	 * Stored ftrace_ops at the end of the trampoline.
+>> +	 * This will be used to load the third parameter for the callback.
+>> +	 * Basically, that location at the end of the trampoline takes the
+>> +	 * place of the global function_trace_op variable.
+>> +	 */
+>> +	ptr = (unsigned long *)(trampoline + size);
+>> +	*ptr = (unsigned long)ops;
+>> +
+>> +	/*
+>> +	 * Update the trampoline ops REF
+>> +	 *
+>> +	 * OLD INSNS : ldr_l x2, function_trace_op
+>> +	 *	adrp	x2, sym
+>> +	 *	ldr	x2, [x2, :lo12:\sym]
+>> +	 *
+>> +	 * NEW INSNS:
+>> +	 *	nop
+>> +	 *	ldr x2, <ftrace_ops>
+>> +	 */
+>> +	op_offset -= start_offset_common;
+>> +	ip = (unsigned long)trampoline + caller_size + op_offset;
+>> +	nop = aarch64_insn_gen_nop();
+>> +	memcpy((void *)ip, &nop, AARCH64_INSN_SIZE);
+>> +
+>> +	op_offset += AARCH64_INSN_SIZE;
+>> +	ip = (unsigned long)trampoline + caller_size + op_offset;
+>> +	offset = (unsigned long)ptr - ip;
+>> +	if (WARN_ON(offset % AARCH64_INSN_SIZE != 0))
+>> +		goto free;
+>> +	offset = offset / AARCH64_INSN_SIZE;
+>> +	pc_ldr |= (offset & mask) << shift;
+>> +	memcpy((void *)ip, &pc_ldr, AARCH64_INSN_SIZE);
+> I think it would be much better to have a separate template for the
+> trampoline which we don't have to patch in this way. It can even be
+> placed into a non-executable RO section, since the template shouldn't be
+> executed directly.
+
+
+A separate template !
+
+This may be a good way, and I think the patching here is very HACK 
+too(Not very friendly).
+
+I had thought of other ways before, similar to the method on X86_64, remove
+the ftrace_common(), directly modifying ftrace_caller/ftrace_reg_caller, 
+We will
+
+only need to copy the code once in this way, and these is no need to modify
+
+call ftrace_common to NOP.
+
+
+Using a trampoline template sounds great. but this also means that we 
+need to
+
+maintain a template(or maybe two templates: one for caller, another for 
+regs_caller).
+
+Hi, Mark, what do you think about it ?
+
+
+>> +
+>> +	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
+>> +
+>> +	set_vm_flush_reset_perms(trampoline);
+>> +
+>> +	/*
+>> +	 * Module allocation needs to be completed by making the page
+>> +	 * executable. The page is still writable, which is a security hazard,
+>> +	 * but anyhow ftrace breaks W^X completely.
+>> +	 */
+>> +	set_memory_x((unsigned long)trampoline, npages);
+> Why is the page still writeable? Surely you can make it RO first?
+>
+> Please do not break W^X restrictions; we've tried to ensure that arm64
+> does the right thing by default here.
+>
+> Note that arm64's ftrace_modify_code() will use a writeable alias, so it
+> can be used after the memory has been marked RO.
+
+YEAH, I will. arm64's ftrace_modify_code can work after the trampoline has
+been marked RO.
+
+>> +
+>> +	return (unsigned long)trampoline;
+>> +
+>> +free:
+>> +	tramp_free(trampoline);
+>> +	return 0;
+>> +}
+>> +
+>> +static unsigned long calc_trampoline_call_offset(struct ftrace_ops *ops)
+>> +{
+>> +	unsigned call_offset, end_offset, offset;
+>> +
+>> +	call_offset = (unsigned long)&ftrace_call;
+>> +	end_offset = (unsigned long)ftrace_common_end;
+>> +	offset = end_offset - call_offset;
+>> +
+>> +	return ops->trampoline_size - AARCH64_INSN_SIZE - sizeof(void *) - offset;
+>> +}
+>> +
+>> +static int ftrace_trampoline_modify_call(struct ftrace_ops *ops)
+>> +{
+>> +	unsigned long offset;
+>> +	unsigned long pc;
+>> +	ftrace_func_t func;
+>> +	u32 new;
+>> +
+>> +	offset = calc_trampoline_call_offset(ops);
+>> +	pc = ops->trampoline + offset;
+>> +
+>> +	func = ftrace_ops_get_func(ops);
+>> +	new = aarch64_insn_gen_branch_imm(pc, (unsigned long)func, AARCH64_INSN_BRANCH_LINK);
+>> +
+>> +	return ftrace_modify_code(pc, 0, new, false);
+>> +}
+>> +
+>> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>> +
+>> +static unsigned long calc_trampoline_graph_call_offset(struct ftrace_ops *ops)
+>> +{
+>> +	unsigned end_offset, call_offset, offset;
+>> +
+>> +	call_offset = (unsigned long)&ftrace_graph_call;
+>> +	end_offset = (unsigned long)ftrace_common_end;
+>> +	offset = end_offset - call_offset;
+>> +
+>> +	return ops->trampoline_size - AARCH64_INSN_SIZE - sizeof(void *) - offset;
+>> +}
+>> +
+>> +extern int ftrace_graph_active;
+>> +static int ftrace_trampoline_modify_graph_call(struct ftrace_ops *ops)
+>> +{
+>> +	unsigned long offset;
+>> +	unsigned long pc;
+>> +	u32 branch, nop;
+>> +
+>> +	offset = calc_trampoline_graph_call_offset(ops);
+>> +	pc = ops->trampoline + offset;
+>> +
+>> +	branch = aarch64_insn_gen_branch_imm(pc,
+>> +					     (unsigned long)ftrace_graph_caller,
+>> +					     AARCH64_INSN_BRANCH_NOLINK);
+>> +	nop = aarch64_insn_gen_nop();
+>> +
+>> +	if (ftrace_graph_active)
+>> +		return ftrace_modify_code(pc, 0, branch, false);
+>> +	else
+>> +		return ftrace_modify_code(pc, 0, nop, false);
+>> +}
+> It should be posbile to share the bulk of this code with the non-graph
+> versions.
+
+It seems that, I will cleanup my code.
+
+
+>
 > Thanks,
-> JC
->=20
->=20
-> On 1/6/20 3:10 PM, JC Kuo wrote:
-> > On 1/4/20 6:39 AM, Rob Herring wrote:
-> >> On Fri, Jan 03, 2020 at 04:18:12PM +0800, JC Kuo wrote:
-> >>> Extend the bindings to cover the set of features found in Tegra194.
-> >>> Note that, technically, there are four more supplies connected to the
-> >>> XUSB pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PL=
-L)
-> >>> , but the power sequencing requirements of Tegra194 require these to =
-be
-> >>> under the control of the PMIC.
-> >>>
-> >>> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it
-> >>> is possible for some platforms have long signal trace that could not
-> >>> provide sufficient electrical environment for Gen 2 speed. This patch
-> >>> adds a "maximum-speed" property to usb3 ports which can be used to
-> >>> specify the maximum supported speed for any particular USB 3.1 port.
-> >>> For a port that is not capable of SuperSpeedPlus, "maximum-speed"
-> >>> property should carry "super-speed".
-> >>>
-> >>> Signed-off-by: JC Kuo <jckuo@nvidia.com>
-> >>> ---
-> >>> Changes in v5:
-> >>> - re-use "maximum-speed" instead of adding "nvidia,disable-gen2"
-> >>> Changes in v4: none
-> >>> Changes in v3: none
-> >>> Changes in v2:
-> >>> - fix a typo
-> >>>
-> >>>  .../phy/nvidia,tegra124-xusb-padctl.txt        | 18 ++++++++++++++++=
-++
-> >>>  1 file changed, 18 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xu=
-sb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-=
-padctl.txt
-> >>> index 9fb682e47c29..7d0089006e67 100644
-> >>> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padc=
-tl.txt
-> >>> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padc=
-tl.txt
-> >>> @@ -37,6 +37,7 @@ Required properties:
-> >>>    - Tegra132: "nvidia,tegra132-xusb-padctl", "nvidia,tegra124-xusb-p=
-adctl"
-> >>>    - Tegra210: "nvidia,tegra210-xusb-padctl"
-> >>>    - Tegra186: "nvidia,tegra186-xusb-padctl"
-> >>> +  - Tegra194: "nvidia,tegra194-xusb-padctl"
-> >>>  - reg: Physical base address and length of the controller's register=
-s.
-> >>>  - resets: Must contain an entry for each entry in reset-names.
-> >>>  - reset-names: Must include the following entries:
-> >>> @@ -62,6 +63,10 @@ For Tegra186:
-> >>>  - vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
-> >>>  - vddio-hsic-supply: HSIC PHY power supply. Must supply 1.2 V.
-> >>> =20
-> >>> +For Tegra194:
-> >>> +- avdd-usb-supply: USB I/Os, VBUS, ID, REXT, D+/D- power supply. Mus=
-t supply
-> >>> +  3.3 V.
-> >>> +- vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
-> >>> =20
-> >>>  Pad nodes:
-> >>>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>> @@ -154,6 +159,11 @@ For Tegra210, the list of valid PHY nodes is giv=
-en below:
-> >>>  - sata: sata-0
-> >>>    - functions: "usb3-ss", "sata"
-> >>> =20
-> >>> +For Tegra194, the list of valid PHY nodes is given below:
-> >>> +- usb2: usb2-0, usb2-1, usb2-2, usb2-3
-> >>> +  - functions: "xusb"
-> >>> +- usb3: usb3-0, usb3-1, usb3-2, usb3-3
-> >>> +  - functions: "xusb"
-> >>> =20
-> >>>  Port nodes:
-> >>>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>> @@ -221,6 +231,11 @@ Optional properties:
-> >>>    is internal. In the absence of this property the port is considere=
-d to be
-> >>>    external.
-> >>> =20
-> >>> +- maximum-speed: Only for Tegra194. A string property that specifies=
- maximum
-> >>> +  supported speed of a usb3 port. Valid values are:
-> >>> +  - "super-speed-plus": default, the usb3 port supports USB 3.1 Gen =
-2 speed.
-> >>
-> >> Not defined as a valid value in usb/generic.txt. '-gen2' instead of=20
-> >> '-plus' would be clearer IMO. However, is there any need to define the=
-=20
-> >> maximum speed possible? The purpose of this property is to limit the=
-=20
-> >> speed below the max.
-> >>
-> > usb_get_maximum_speed(), which parses "maximum-speed" property, indeed =
-handles
-> > string "super-speed-plus". Should "super-speed-plus" be documented in
-> > usb/generic.txt"?
-> >=20
-> > static const char *const speed_names[] =3D {
-> > 	[USB_SPEED_UNKNOWN] =3D "UNKNOWN",
-> > 	[USB_SPEED_LOW] =3D "low-speed",
-> > 	[USB_SPEED_FULL] =3D "full-speed",
-> > 	[USB_SPEED_HIGH] =3D "high-speed",
-> > 	[USB_SPEED_WIRELESS] =3D "wireless",
-> > 	[USB_SPEED_SUPER] =3D "super-speed",
-> > 	[USB_SPEED_SUPER_PLUS] =3D "super-speed-plus",
-> > };
-> >=20
-> > A proprietary "nvidia,disable-gen2" property was proposed in earlier re=
-vision to
-> > "limit the speed below the max". I like it because it fit our needs bet=
-ter and
-> > requires only one line of code change.
-> >=20
-> >    usb3->disable_gen2 =3D of_property_read_bool(np, "nvidia,disable-gen=
-2");
-> >=20
-> > Should I fallback to that approach?
-> >=20
-> > Thanks,
-> > JC
-> >=20
-> >>> +  - "super-speed": the usb3 port supports USB 3.1 Gen 1 speed only.
-> >>> +
-> >>>  For Tegra124 and Tegra132, the XUSB pad controller exposes the follo=
-wing
-> >>>  ports:
-> >>>  - 3x USB2: usb2-0, usb2-1, usb2-2
-> >>> @@ -233,6 +248,9 @@ For Tegra210, the XUSB pad controller exposes the=
- following ports:
-> >>>  - 2x HSIC: hsic-0, hsic-1
-> >>>  - 4x super-speed USB: usb3-0, usb3-1, usb3-2, usb3-3
-> >>> =20
-> >>> +For Tegra194, the XUSB pad controller exposes the following ports:
-> >>> +- 4x USB2: usb2-0, usb2-1, usb2-2, usb2-3
-> >>> +- 4x super-speed USB: usb3-0, usb3-1, usb3-2, usb3-3
-> >>> =20
-> >>>  Examples:
-> >>>  =3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>> --=20
-> >>> 2.17.1
-> >>>
+> Mark.
+>
+> .
 
---DBIVS5p969aUjpLe
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+Thank you very much.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4YX3cACgkQ3SOs138+
-s6FCxg//arY/AcuyLR3BTqpXwVbyi6/GMzL/P1M6/9Lv1Em51mQ0la0M6rj+rCVo
-88caAAiTbOx7MWCjtoQYO3DJUSNEloTzVd0RLLQfia6o6Im+LbKvaUoES+ivcGAk
-/x/IydkBw4UXq4AOiuRemmp4Su1jDaE8mr/lBNXw2w/xQ2whAOEQSUY2I57N47ll
-rFbG1Zl/biyexIO9WWdbdG7SbytehczuOMVZNkObM995/KxkCV/59vsbyeo6citr
-0hNKR1kWC5MT5NGLO0xNmz/hMadz6tg2jH4HwEzKT9n24MUtNln99FoX0z0xe98q
-SpVwOCGlpEc93bu6ynuW4ego4YzJbdWBwL9QIG8hp2gb6LuUNrlrI3ZAvw8/tfbG
-anDexKUpl9tKUlf/yfQ0/yeDc2oogzasy7/J0aG1OYuyZ/ttMqUNoJY990QDU0iC
-eORngBWk7LjdBJUcfNo9QfQ9EpXQct1qose8xoV6gYiTttSDTEAa813R+c2BlsXf
-qe48w75g2uTNcQU4q9vtKNzI4b/AccJG7fGl5oG1ykNi1x4tPd6QWTHI7MVnIDCT
-k3UJbFEwfMMqs6qz3msUMp7yn56ExwCT10WnRPiXW7TK2HKk+vIu94ZoX7QhI8pW
-k8RuQ/u9oofeZqs+yueUlxnxX4BUEauewTefaVYod+i+pSalZDw=
-=fxbc
------END PGP SIGNATURE-----
+-- Cheng Jian.
 
---DBIVS5p969aUjpLe--
+
