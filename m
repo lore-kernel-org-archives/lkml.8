@@ -2,179 +2,130 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B30A0C33CA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD830C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:27:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F20820678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 781F220673
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:27:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9jkHudz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbgAJCRQ (ORCPT
+        id S1730838AbgAJC1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 21:17:16 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:51534 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730668AbgAJCRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 21:17:15 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 0CC0620005C;
-        Fri, 10 Jan 2020 03:17:13 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id F15372016AF;
-        Fri, 10 Jan 2020 03:17:05 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 81285402D7;
-        Fri, 10 Jan 2020 10:16:57 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     aisheng.dong@nxp.com, festevam@gmail.com, shawnguo@kernel.org,
-        stefan@agner.ch, kernel@pengutronix.de, linus.walleij@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/3] dt-bindings: pinctrl: Convert i.MX8MN to json-schema
-Date:   Fri, 10 Jan 2020 10:13:08 +0800
-Message-Id: <1578622388-23370-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578622388-23370-1-git-send-email-Anson.Huang@nxp.com>
-References: <1578622388-23370-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Thu, 9 Jan 2020 21:27:15 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36072 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730806AbgAJC1P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 21:27:15 -0500
+Received: by mail-lj1-f193.google.com with SMTP id r19so492192ljg.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 18:27:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IVAveBZjpIfJ4omwAA+IQvTDlq09Uc7HsY0eJNGnBoQ=;
+        b=Z9jkHudzgmru0+/sPDhBxRg2Dki429DfS/4CZPZ3UyWbscbfW8IKDcbzT1ZkLyq9cV
+         L7P7vZ50A7yU9cx7YdDueY39MpskcnaFKFUHvc4S6UFVVOA8MMhmkPnCNXSVppwmxF9P
+         AQJiaMW7+PwGzUYlX2AojdkQ6zgv2gUQ9j6BinFapxoEkmQYB+ruJZtUlOLitvzCbUPa
+         LU03L2WPsZUPZvTGym2GtvsEOZzC2ee7oDcoQKLwogTNbLTpDmdDTxzB29F28hW3dFMq
+         dhHWmopGuXs51FvFZ+z4iZjYG0/ccQInM7RGIpyF6lviRG+5Bn4v+C6LZ2ss2FGxoNhE
+         ZAIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IVAveBZjpIfJ4omwAA+IQvTDlq09Uc7HsY0eJNGnBoQ=;
+        b=siOEXqFNtV/fy+/HwRwdOKzD4iWvyY1ve27/aMBLCd/YUeNdk0blLKGDCXeF9VHpM+
+         8y/MBxInUY2vkACFlEcpYIKc7OTkyyCxFlPJKRwcRiQoJ8QnEnWZDrj4Rsnl6C82mxm4
+         FEvhWloeLLDBKALq75xE3O5HwnjPqbWGa3s7+IU07oqGF9Jc8fxJUXC05CpeA3JNkf/1
+         8rozdkbs0mDnObzGTopn5d/z8zkJOz5PjsIpov3Flxdt/H55+XTd4kDl+QwPm6u9fv5L
+         34KZfOzp0Oxe+33icUSlYo2Yw6dm3y5hAsDFXqOouRyF+YcjqdO66OP2ldDffAKzXsBn
+         u8CQ==
+X-Gm-Message-State: APjAAAVVkNnX4+s7tNPPrbI84ffzYfFKy2glBqVnCz9HLK95oDvGsvqV
+        hAer8ZjIRKmlYvslZ88BVkpe5DCi5uYjNgWLDPw=
+X-Google-Smtp-Source: APXvYqxqb4MffpgRoz4mqIfIwmosGfyuI4PgkVLo/LE14JBIHt4uHHTRi02T/AlYkC/9ZfEQSRHYxvJPFaB7pkwC5+8=
+X-Received: by 2002:a2e:9883:: with SMTP id b3mr787847ljj.80.1578623233860;
+ Thu, 09 Jan 2020 18:27:13 -0800 (PST)
+MIME-Version: 1.0
+References: <20200103033929.4956-1-zhenzhong.duan@gmail.com>
+ <20200109184055.GI5603@zn.tnic> <20200109204638.GA523773@rani.riverdale.lan>
+In-Reply-To: <20200109204638.GA523773@rani.riverdale.lan>
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Date:   Fri, 10 Jan 2020 10:27:02 +0800
+Message-ID: <CAFH1YnNA9qfM4tPzKKDaQD6DPxnE=tJsB7AUZQBohDTW3zm=Xg@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/boot/KASLR: Fix unused variable warning
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the i.MX8MN pinctrl binding to DT schema format using json-schema
+On Fri, Jan 10, 2020 at 4:46 AM Arvind Sankar <nivedita@alum.mit.edu> wrote=
+:
+>
+> On Thu, Jan 09, 2020 at 07:40:55PM +0100, Borislav Petkov wrote:
+> > On Fri, Jan 03, 2020 at 11:39:29AM +0800, Zhenzhong Duan wrote:
+> > > Local variable 'i' is referenced only when CONFIG_MEMORY_HOTREMOVE an=
+d
+> > > CONFIG_ACPI are defined, but definition of variable 'i' is out of gua=
+rd.
+> > > If any of the two macros is undefined, below warning triggers during
+> > > build, fix it by moving 'i' in the guard.
+> > >
+> > > arch/x86/boot/compressed/kaslr.c:698:6: warning: unused variable =E2=
+=80=98i=E2=80=99 [-Wunused-variable]
+> >
+> > How do you trigger this?
+> >
+> > I have:
+> >
+> > $  grep -E "(CONFIG_MEMORY_HOTREMOVE|CONFIG_ACPI)" .config
+> > # CONFIG_ACPI is not set
+> >
+> > but no warning. Neither with gcc 8 nor with gcc 9.
+> >
+> > --
+> > Regards/Gruss,
+> >     Boris.
+> >
+> > https://people.kernel.org/tglx/notes-about-netiquette
+>
+> The boot/compressed Makefile resets KBUILD_CFLAGS.  Following hack and
+> building with W=3D1 shows it, or just add -Wunused in there.
+>
+> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed=
+/Makefile
+> index 56aa5fa0a66b..791c0d5a952a 100644
+> --- a/arch/x86/boot/compressed/Makefile
+> +++ b/arch/x86/boot/compressed/Makefile
+> @@ -35,6 +35,9 @@ KBUILD_CFLAGS +=3D $(cflags-y)
+>  KBUILD_CFLAGS +=3D -mno-mmx -mno-sse
+>  KBUILD_CFLAGS +=3D $(call cc-option,-ffreestanding)
+>  KBUILD_CFLAGS +=3D $(call cc-option,-fno-stack-protector)
+> +
+> +include scripts/Makefile.extrawarn
+> +
+>  KBUILD_CFLAGS +=3D $(call cc-disable-warning, address-of-packed-member)
+>  KBUILD_CFLAGS +=3D $(call cc-disable-warning, gnu)
+>  KBUILD_CFLAGS +=3D -Wno-pointer-sign
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- .../bindings/pinctrl/fsl,imx8mn-pinctrl.txt        | 39 -------------
- .../bindings/pinctrl/fsl,imx8mn-pinctrl.yaml       | 67 ++++++++++++++++++++++
- 2 files changed, 67 insertions(+), 39 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
+Yes. Will you send this formally? Not clear if there is other reason making
+KBUILD_CFLAGS for arch/x86/boot/compressed different from other part.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
-deleted file mode 100644
-index 330716c..0000000
---- a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.txt
-+++ /dev/null
-@@ -1,39 +0,0 @@
--* Freescale IMX8MN IOMUX Controller
--
--Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
--for common binding part and usage.
--
--Required properties:
--- compatible: "fsl,imx8mn-iomuxc"
--- reg: should contain the base physical address and size of the iomuxc
--  registers.
--
--Required properties in sub-nodes:
--- fsl,pins: each entry consists of 6 integers and represents the mux and config
--  setting for one pin.  The first 5 integers <mux_reg conf_reg input_reg mux_val
--  input_val> are specified using a PIN_FUNC_ID macro, which can be found in
--  <arch/arm64/boot/dts/freescale/imx8mn-pinfunc.h>. The last integer CONFIG is
--  the pad setting value like pull-up on this pin. Please refer to i.MX8M Nano
--  Reference Manual for detailed CONFIG settings.
--
--Examples:
--
--&uart1 {
--       pinctrl-names = "default";
--       pinctrl-0 = <&pinctrl_uart1>;
--};
--
--iomuxc: pinctrl@30330000 {
--        compatible = "fsl,imx8mn-iomuxc";
--        reg = <0x0 0x30330000 0x0 0x10000>;
--
--        pinctrl_uart1: uart1grp {
--                fsl,pins = <
--			MX8MN_IOMUXC_UART1_RXD_UART1_DCE_RX	0x140
--			MX8MN_IOMUXC_UART1_TXD_UART1_DCE_TX	0x140
--			MX8MN_IOMUXC_UART3_RXD_UART1_DCE_CTS_B	0x140
--			MX8MN_IOMUXC_UART3_TXD_UART1_DCE_RTS_B	0x140
--			MX8MN_IOMUXC_SD1_DATA4_GPIO2_IO6	0x19
--                >;
--        };
--};
-diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
-new file mode 100644
-index 0000000..44bf4e0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx8mn-pinctrl.yaml
-@@ -0,0 +1,67 @@
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/fsl,imx8mn-pinctrl.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Freescale IMX8MN IOMUX Controller
-+
-+maintainers:
-+  - Anson Huang <Anson.Huang@nxp.com>
-+
-+description:
-+  Please refer to fsl,imx-pinctrl.txt and pinctrl-bindings.txt in this directory
-+  for common binding part and usage.
-+
-+properties:
-+  compatible:
-+    const: fsl,imx8mn-iomuxc
-+
-+# Client device subnode's properties
-+patternProperties:
-+  '-grp$':
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+
-+    properties:
-+      fsl,pins:
-+        allOf:
-+	  - $ref: /schemas/types.yaml#/definitions/uint32-array
-+        maxItems: 6
-+        description:
-+          each entry consists of 6 integers and represents the mux and config
-+          setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
-+          mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
-+          be found in <arch/arm64/boot/dts/freescale/imx8mn-pinfunc.h>. The last
-+          integer CONFIG is the pad setting value like pull-up on this pin. Please
-+          refer to i.MX8M Nano Reference Manual for detailed CONFIG settings.
-+
-+    required:
-+      - fsl,pins
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+
-+additionalProperties: false
-+
-+examples:
-+  # Pinmux controller node
-+  - |
-+    iomuxc: pinctrl@30330000 {
-+        compatible = "fsl,imx8mn-iomuxc";
-+        reg = <0x30330000 0x10000>;
-+
-+        pinctrl_uart2: uart2grp {
-+            fsl,pins = <
-+                0x23C 0x4A4 0x4FC 0x0 0x0	0x140
-+                0x240 0x4A8 0x000 0x0 0x0	0x140
-+            >;
-+        };
-+    };
-+
-+...
--- 
-2.7.4
-
+Regards
+Zhenzhong
