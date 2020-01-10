@@ -2,140 +2,155 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22D0C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD46C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87ED32082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:00:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B39E2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HtMROQ3j"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SbgeDq5p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbgAJLAk (ORCPT
+        id S1727708AbgAJLEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:00:40 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:33880 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727670AbgAJLAj (ORCPT
+        Fri, 10 Jan 2020 06:04:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47752 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727670AbgAJLEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:00:39 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00AB0WIu035463;
-        Fri, 10 Jan 2020 05:00:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578654032;
-        bh=jxtcpp4wv+hTwwi1lQ91nMik4CFwpDAD22wxC64xvi0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=HtMROQ3jnHJqUDiQzlcPXO7ZOvxczkxJu3rEL/gvGaPNSUlbeUW5VIZ3T8wcBZOTF
-         9Bok2C3oOuWT5N/Y/iCoPjgRgbfvA4PzkF/nv+uf4KNN0xZjvx14QtpYWad6LS7y3l
-         NvmIbhUxP3f+u2KcoB6yLmfjOw+jcpCc0kHBKW08=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00AB0V5n126818
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 10 Jan 2020 05:00:32 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
- Jan 2020 05:00:31 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 10 Jan 2020 05:00:31 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00AB0SY0046697;
-        Fri, 10 Jan 2020 05:00:29 -0600
-Subject: Re: [PATCH] phy: core: Fix error path in devm_of_phy_get()
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        <linux-samsung-soc@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-References: <CGME20200108132350eucas1p1476f4aa038dbf5ea199b84c5c82a25a5@eucas1p1.samsung.com>
- <20200108132342.14635-1-m.szyprowski@samsung.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <4c612381-55c1-635a-d40d-e1bb3aa60998@ti.com>
-Date:   Fri, 10 Jan 2020 16:32:36 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 10 Jan 2020 06:04:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578654238;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ULOVTMVDqAaA1RLSX77fffpqFQaKmKj4WAvS8G6y3qE=;
+        b=SbgeDq5p1kxnNkz297l8HUKfFyHonh4szDRrabaJXbcFb5rmJtH28FbcqFXDm3bEK/z7wx
+        1iDmzSl1CDpbp9AKIO+S0iMD2FIXR694FMA5aflMfzsudQSSsjGn5zEyZImwUoF0JTcuXy
+        BuMDdM3VA9SSmqBY70thpCtYF0PslOU=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-330-bOjpQP33O0y0JAu7lB_wGA-1; Fri, 10 Jan 2020 06:03:57 -0500
+X-MC-Unique: bOjpQP33O0y0JAu7lB_wGA-1
+Received: by mail-wr1-f72.google.com with SMTP id f15so752133wrr.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 03:03:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=ULOVTMVDqAaA1RLSX77fffpqFQaKmKj4WAvS8G6y3qE=;
+        b=GVLZHykUAlmohB+EdM6cG+wXNjtaWtiWxumuUomSX3nZxw44M/doP1A1qbuDiVCME/
+         bYwAAjPorsncO9+h0+6pMAfOn2QUei5JJtHWX3fLLegtu90f0Lx4jbGwD/aN8s0lLsba
+         8QQgJ/FpqWTh2blBx6g/OKzL/JhlAseCxo3wIRLQe2GBaxbSabrDRVmfUH8ujbRG8oqZ
+         //qabIghFHUoiYny6mQPg9xXUUV8J4txhqioY2wraaOMQojXJYUXs37b8C5ijnO3iniK
+         oopBJAnIVdkwFPkHepIHCbtedOYABrQqxbogZ+56AXYS1wxLf+3BjGvxaJzm5d3Wenl7
+         HxUg==
+X-Gm-Message-State: APjAAAW7UyVZNLbe1wOANtbTx8BLrDnduJWVQJpEHw0CMtRBKvKeMkwL
+        t9RAGZrKHD4OG0HHaE7lF5Ty1d6q/60GjPjbXsL+N0vTrEVrbpV0xEf8zCUDVpWzrgYrgrjBruG
+        HEicR1pu5J67JrdiTB5f+5MBP
+X-Received: by 2002:a05:600c:20f:: with SMTP id 15mr3632341wmi.128.1578654236390;
+        Fri, 10 Jan 2020 03:03:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwxiKRM13Xd1Qan5MRjTjamzFk3V0rFLzaLiX22VRyLN1pQimrtTB1j7dEj52V7YMsGG8cFTA==
+X-Received: by 2002:a05:600c:20f:: with SMTP id 15mr3632307wmi.128.1578654236076;
+        Fri, 10 Jan 2020 03:03:56 -0800 (PST)
+Received: from orion ([213.175.37.12])
+        by smtp.gmail.com with ESMTPSA id v3sm1755346wru.32.2020.01.10.03.03.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 03:03:55 -0800 (PST)
+Date:   Fri, 10 Jan 2020 12:03:53 +0100
+From:   Carlos Maiolino <cmaiolino@redhat.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the vfs tree
+Message-ID: <20200110110353.klnooeqv4b6ipxid@orion>
+Mail-Followup-To: Carlos Maiolino <cmaiolino@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200110175729.3b5d2338@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200108132342.14635-1-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110175729.3b5d2338@canb.auug.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 08/01/20 6:53 PM, Marek Szyprowski wrote:
-> Commit 5253fe05bb47 ("phy: core: Add consumer device link support") added
-> support for consumer device links, but it missed proper update for error
-> handling in devm_of_phy_get(). Fix this by adding proper return statement.
+On Fri, Jan 10, 2020 at 05:57:29PM +1100, Stephen Rothwell wrote:
+> Hi all,
 > 
-> This patch fixes the following invalid pointer dereference on
-> Exynos5250-based Arndale board with multi_v7_defconfig:
+> After merging the vfs tree, today's linux-next build (x86_64 allnoconfig)
+> failed like this:
 > 
-> 8<--- cut here ---
-> Unable to handle kernel paging request at virtual address fffffe7f
-> pgd = (ptrval)
-> [fffffe7f] *pgd=6ffff841, *pte=00000000, *ppte=00000000
-> Internal error: Oops: 27 [#1] SMP ARM
-> Modules linked in:
-> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.5.0-rc5-next-20200108 #167
-> Hardware name: Samsung Exynos (Flattened Device Tree)
-> PC is at device_link_add+0x68/0x4c4
-> LR is at device_link_add+0x68/0x4c4
-> ...
-> Process swapper/0 (pid: 1, stack limit = 0x(ptrval))
-> ...
-> [<c0984d70>] (device_link_add) from [<c0707e8c>] (devm_of_phy_get+0x6c/0xb0)
-> [<c0707e8c>] (devm_of_phy_get) from [<c0a0deb8>] (ahci_platform_get_phy+0x28/0xe0)
-> [<c0a0deb8>] (ahci_platform_get_phy) from [<c0a0e64c>] (ahci_platform_get_resources+0x398/0x48c)
-> [<c0a0e64c>] (ahci_platform_get_resources) from [<c0a0daec>] (ahci_probe+0x14/0xb4)
-> [<c0a0daec>] (ahci_probe) from [<c098a1ec>] (platform_drv_probe+0x48/0x9c)
-> [<c098a1ec>] (platform_drv_probe) from [<c0988214>] (really_probe+0x1dc/0x33c)
-> [<c0988214>] (really_probe) from [<c09884f4>] (driver_probe_device+0x60/0x164)
-> [<c09884f4>] (driver_probe_device) from [<c09887a0>] (device_driver_attach+0x58/0x60)
-> [<c09887a0>] (device_driver_attach) from [<c0988828>] (__driver_attach+0x80/0xbc)
-> [<c0988828>] (__driver_attach) from [<c09865b4>] (bus_for_each_dev+0x68/0xb4)
-> [<c09865b4>] (bus_for_each_dev) from [<c0987594>] (bus_add_driver+0x160/0x1e4)
-> [<c0987594>] (bus_add_driver) from [<c09892c0>] (driver_register+0x78/0x10c)
-> [<c09892c0>] (driver_register) from [<c0302f14>] (do_one_initcall+0x54/0x220)
-> [<c0302f14>] (do_one_initcall) from [<c1500f4c>] (kernel_init_freeable+0x150/0x1b4)
-> [<c1500f4c>] (kernel_init_freeable) from [<c0ef6b34>] (kernel_init+0x8/0x10c)
-> [<c0ef6b34>] (kernel_init) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
-
-I've already merged a patch fixing this.
-
-Thanks
-Kishon
-
-> ...
+> fs/inode.c:1615:5: error: redefinition of 'bmap'
+>  1615 | int bmap(struct inode *inode, sector_t *block)
+>       |     ^~~~
+> In file included from fs/inode.c:7:
+> include/linux/fs.h:2867:19: note: previous definition of 'bmap' was here
+>  2867 | static inline int bmap(struct inode *inode,  sector_t *block)
+>       |                   ^~~~
 > 
-> Fixes: 5253fe05bb47 ("phy: core: Add consumer device link support")
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+Oh, no, that's not the same issue I thought, and the patch applied does have the
+dummy function.
+
+/me grabs more coffee...
+
+
 > ---
->  drivers/phy/phy-core.c | 1 +
->  1 file changed, 1 insertion(+)
+>  fs/inode.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index 8dfb4868c8c3..2eb28cc2d2dc 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -799,6 +799,7 @@ struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
->  		devres_add(dev, ptr);
->  	} else {
->  		devres_free(ptr);
-> +		return phy;
->  	}
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 9f894b25af2b..590f36daa006 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -1598,6 +1598,7 @@ void iput(struct inode *inode)
+>  }
+>  EXPORT_SYMBOL(iput);
 >  
->  	link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
+> +#ifdef CONFIG_BLOCK
+>  /**
+>   *	bmap	- find a block number in a file
+>   *	@inode:  inode owning the block number being requested
+> @@ -1621,6 +1622,7 @@ int bmap(struct inode *inode, sector_t *block)
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(bmap);
+> +#endif
+
+Eitherway, I am not 100% sure this is the right fix for this case, I remember
+some bmap() users who didn't need CONFIG_BLOCK, so we may still need to export
+it without CONFIG_BLOCK.
+Can you please send me your configuration?
+
+Thanks.
+
+
+
+
+
+>  
+>  /*
+>   * With relative atime, only update atime if the previous atime is
+> -- 
+> 2.24.0
 > 
+> -- 
+> Cheers,
+> Stephen Rothwell
+
+
+
+-- 
+Carlos
+
