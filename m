@@ -7,48 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4655DC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C76FC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E65206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E475D206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578693995;
-	bh=FxsYeHbvVHhXDBAITpUyBvM4jofjFoqztnTRndX9JTI=;
+	s=default; t=1578694000;
+	bh=k5w4ijoqBtT842ZCsyR/uIyxAWRCCY6bAI24oq1ApEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RVNqayBz3DZKG+VAN51w/FMz3iiSXZ+oCxc85sbYCKIW/9ggPZyxS/UF5w0mxDbmq
-	 dXv47fxYKkTw7YRfsj3Ix6/+VJab1QqWyw9sjyDQFZbA86Ggxxrg5453A45GzahgxR
-	 u9hgVgdkXT+AWtWNdELHPwgaRb7RQfBrnuD3PSOM=
+	b=DjSp0f0LkCcLdFttKYI2gwYycreSVBxaAXfILCAxU+Z7WKSN9Eqv4QWzGVl8hLThb
+	 wcbW3zsE0yw5+OK8gy4q+XgnFtoORTkaO07+tjqF2rl+yB3KXapK2PEssRJkRLUnAh
+	 u0B1yBxUGWcPwufcxE5WKlYI/ifvLsfGSyr7F5L0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgAJWGe (ORCPT
+        id S1728324AbgAJWGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:06:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53322 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 17:06:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728271AbgAJWG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:06:28 -0500
+        id S1728308AbgAJWGf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:06:35 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7E1A2082E;
-        Fri, 10 Jan 2020 22:06:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 997F72467C;
+        Fri, 10 Jan 2020 22:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693987;
-        bh=FxsYeHbvVHhXDBAITpUyBvM4jofjFoqztnTRndX9JTI=;
+        s=default; t=1578693994;
+        bh=k5w4ijoqBtT842ZCsyR/uIyxAWRCCY6bAI24oq1ApEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRmxuvBnfrOadYxhmTa0iTFRlAHu48yRvHJooD53r4P91mociaYgwheC0mZerm6yb
-         wf1yRMNIP4r1nKxNHG9x1ugxVczAM3a1mA9evReUkg0x4Q+n0I5JMRhLhfO5OPNvWl
-         s6SHLuDfL9uWlcKBKiGAyrw7foZYNEEI9zdYCEPY=
+        b=uBsDKW5+ytFRon+UVgDDigS66mxsGTSuyYANp7Ag5jlDeYCeZRmc/EeHgNsA7ZECz
+         RHyAiUuDi/ZnL5dXIpkhjPgxlHxlXOfNEzY3pKDYDhU8j9VeWMJoaMrx580M9BPQQ/
+         e070vyGLHVoUkxBrCcJXzTDp2Bggvc01Tc+GnSVI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        Alexander Barabash <alexander.barabash@dell.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 5/8] ioat: ioat_alloc_ring() failure handling.
-Date:   Fri, 10 Jan 2020 17:06:18 -0500
-Message-Id: <20200110220621.28651-5-sashal@kernel.org>
+Cc:     Kai Li <li.kai4@h3c.com>, Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Changwei Ge <gechangwei@live.cn>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, ocfs2-devel@oss.oracle.com
+Subject: [PATCH AUTOSEL 4.14 8/8] ocfs2: call journal flush to mark journal as empty after journal recovery when mount
+Date:   Fri, 10 Jan 2020 17:06:21 -0500
+Message-Id: <20200110220621.28651-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200110220621.28651-1-sashal@kernel.org>
 References: <20200110220621.28651-1-sashal@kernel.org>
@@ -61,43 +65,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>
+From: Kai Li <li.kai4@h3c.com>
 
-[ Upstream commit b0b5ce1010ffc50015eaec72b0028aaae3f526bb ]
+[ Upstream commit 397eac17f86f404f5ba31d8c3e39ec3124b39fd3 ]
 
-If dma_alloc_coherent() returns NULL in ioat_alloc_ring(), ring
-allocation must not proceed.
+If journal is dirty when mount, it will be replayed but jbd2 sb log tail
+cannot be updated to mark a new start because journal->j_flag has
+already been set with JBD2_ABORT first in journal_init_common.
 
-Until now, if the first call to dma_alloc_coherent() in
-ioat_alloc_ring() returned NULL, the processing could proceed, failing
-with NULL-pointer dereferencing further down the line.
+When a new transaction is committed, it will be recored in block 1
+first(journal->j_tail is set to 1 in journal_reset).  If emergency
+restart happens again before journal super block is updated
+unfortunately, the new recorded trans will not be replayed in the next
+mount.
 
-Signed-off-by: Alexander Barabash <alexander.barabash@dell.com>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/75e9c0e84c3345d693c606c64f8b9ab5@x13pwhopdag1307.AMER.DELL.COM
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The following steps describe this procedure in detail.
+1. mount and touch some files
+2. these transactions are committed to journal area but not checkpointed
+3. emergency restart
+4. mount again and its journals are replayed
+5. journal super block's first s_start is 1, but its s_seq is not updated
+6. touch a new file and its trans is committed but not checkpointed
+7. emergency restart again
+8. mount and journal is dirty, but trans committed in 6 will not be
+replayed.
+
+This exception happens easily when this lun is used by only one node.
+If it is used by multi-nodes, other node will replay its journal and its
+journal super block will be updated after recovery like what this patch
+does.
+
+ocfs2_recover_node->ocfs2_replay_journal.
+
+The following jbd2 journal can be generated by touching a new file after
+journal is replayed, and seq 15 is the first valid commit, but first seq
+is 13 in journal super block.
+
+logdump:
+  Block 0: Journal Superblock
+  Seq: 0   Type: 4 (JBD2_SUPERBLOCK_V2)
+  Blocksize: 4096   Total Blocks: 32768   First Block: 1
+  First Commit ID: 13   Start Log Blknum: 1
+  Error: 0
+  Feature Compat: 0
+  Feature Incompat: 2 block64
+  Feature RO compat: 0
+  Journal UUID: 4ED3822C54294467A4F8E87D2BA4BC36
+  FS Share Cnt: 1   Dynamic Superblk Blknum: 0
+  Per Txn Block Limit    Journal: 0    Data: 0
+
+  Block 1: Journal Commit Block
+  Seq: 14   Type: 2 (JBD2_COMMIT_BLOCK)
+
+  Block 2: Journal Descriptor
+  Seq: 15   Type: 1 (JBD2_DESCRIPTOR_BLOCK)
+  No. Blocknum        Flags
+   0. 587             none
+  UUID: 00000000000000000000000000000000
+   1. 8257792         JBD2_FLAG_SAME_UUID
+   2. 619             JBD2_FLAG_SAME_UUID
+   3. 24772864        JBD2_FLAG_SAME_UUID
+   4. 8257802         JBD2_FLAG_SAME_UUID
+   5. 513             JBD2_FLAG_SAME_UUID JBD2_FLAG_LAST_TAG
+  ...
+  Block 7: Inode
+  Inode: 8257802   Mode: 0640   Generation: 57157641 (0x3682809)
+  FS Generation: 2839773110 (0xa9437fb6)
+  CRC32: 00000000   ECC: 0000
+  Type: Regular   Attr: 0x0   Flags: Valid
+  Dynamic Features: (0x1) InlineData
+  User: 0 (root)   Group: 0 (root)   Size: 7
+  Links: 1   Clusters: 0
+  ctime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+  atime: 0x5de5d870 0x113181a1 -- Tue Dec  3 11:37:20.288457121 2019
+  mtime: 0x5de5d870 0x11104c61 -- Tue Dec  3 11:37:20.286280801 2019
+  dtime: 0x0 -- Thu Jan  1 08:00:00 1970
+  ...
+  Block 9: Journal Commit Block
+  Seq: 15   Type: 2 (JBD2_COMMIT_BLOCK)
+
+The following is journal recovery log when recovering the upper jbd2
+journal when mount again.
+
+syslog:
+  ocfs2: File system on device (252,1) was not unmounted cleanly, recovering it.
+  fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 0
+  fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 1
+  fs/jbd2/recovery.c:(do_one_pass, 449): Starting recovery pass 2
+  fs/jbd2/recovery.c:(jbd2_journal_recover, 278): JBD2: recovery, exit status 0, recovered transactions 13 to 13
+
+Due to first commit seq 13 recorded in journal super is not consistent
+with the value recorded in block 1(seq is 14), journal recovery will be
+terminated before seq 15 even though it is an unbroken commit, inode
+8257802 is a new file and it will be lost.
+
+Link: http://lkml.kernel.org/r/20191217020140.2197-1-li.kai4@h3c.com
+Signed-off-by: Kai Li <li.kai4@h3c.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Reviewed-by: Changwei Ge <gechangwei@live.cn>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/dma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ocfs2/journal.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index f70cc74032ea..e3899ae429e0 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -388,10 +388,11 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
+diff --git a/fs/ocfs2/journal.c b/fs/ocfs2/journal.c
+index 2459ae9d2234..39bb80fb2934 100644
+--- a/fs/ocfs2/journal.c
++++ b/fs/ocfs2/journal.c
+@@ -1080,6 +1080,14 @@ int ocfs2_journal_load(struct ocfs2_journal *journal, int local, int replayed)
  
- 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
- 						 SZ_2M, &descs->hw, flags);
--		if (!descs->virt && (i > 0)) {
-+		if (!descs->virt) {
- 			int idx;
+ 	ocfs2_clear_journal_error(osb->sb, journal->j_journal, osb->slot_num);
  
- 			for (idx = 0; idx < i; idx++) {
-+				descs = &ioat_chan->descs[idx];
- 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
- 						  descs->virt, descs->hw);
- 				descs->virt = NULL;
++	if (replayed) {
++		jbd2_journal_lock_updates(journal->j_journal);
++		status = jbd2_journal_flush(journal->j_journal);
++		jbd2_journal_unlock_updates(journal->j_journal);
++		if (status < 0)
++			mlog_errno(status);
++	}
++
+ 	status = ocfs2_journal_toggle_dirty(osb, 1, replayed);
+ 	if (status < 0) {
+ 		mlog_errno(status);
 -- 
 2.20.1
 
