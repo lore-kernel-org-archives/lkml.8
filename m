@@ -2,309 +2,254 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF502C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5D6C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A349F2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F8C020842
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:05:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="UFCJfzYr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgAJSFA (ORCPT
+        id S1728741AbgAJSFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 10 Jan 2020 13:05:02 -0500
+Received: from mail-eopbgr700066.outbound.protection.outlook.com ([40.107.70.66]:42785
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727856AbgAJSFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jan 2020 13:05:00 -0500
-Received: from mga11.intel.com ([192.55.52.93]:40298 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728557AbgAJSFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:05:00 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 10:04:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
-   d="scan'208";a="231632187"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 10 Jan 2020 10:04:59 -0800
-Date:   Fri, 10 Jan 2020 10:04:59 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
-        edwin.zhai@intel.com
-Subject: Re: [RESEND PATCH v10 06/10] vmx: spp: Set up SPP paging table at
- vmentry/vmexit
-Message-ID: <20200110180458.GG21485@linux.intel.com>
-References: <20200102061319.10077-1-weijiang.yang@intel.com>
- <20200102061319.10077-7-weijiang.yang@intel.com>
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dsnpDjrUkxAqlYyYsOz1BoqTfgNOc9V2OsVpuTqcEhcBaK+syAmErDBesOe7pfsi5Zz1L6q6ADuve/yhdeoBmfKPxaI7p6Umcq9lIXuI/IGoctKvOnzyhU6eLFdDaTPhhBw2oz+WHJAkHOgR+Y5g8Az3Z5UEJbmMk4vEDsVNyuOAma6SgkM7Bebi+8aWKaoZgq3Kth1fEPQl0hGs9cgIxM/ViBs4HcpBZ7InyFWTS7jM7Q3RWkSDSFqMJyxdC/jvPF6nL0WhgAD2pdnbVCn8zY4eBwGCaR9OexhWAWx8u1mWV1M6z+FYO5tgHWnbuZp4sLbCdBofRyR8b8Sm9Bv3Og==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7yPPa3JLLa4I/H4Qu9wp7czG/Kk1JExm4W1OpBFiIxE=;
+ b=Z2QOyfMJb4LwdtPDjDhRZtTyQKDTLLTJ/F+uYnDG3xkE3Io4uG/87PMXGl6vecs6xGFhgLMF4xOlx7WJqeWAGk5c8hdaws+yf7oJ2fImWNSAFpzUaqy+6T3qmL9S0rldpMjSS8DUzwSrsVv94Ze8nxAv2UnS+RmqzBBBHF2ayomfKIc23DZujp/Rqkbacm3BiBJNs1JqI+3sh6KqCVt9cwajd3+UGiYn9QHC5lg+ychyEgkS+PZRRPi7Z0tpyrTrgSnvxuQgKmkMoWHbEOggotjQKAtFOF7gc3pS2ORff2iNraB4n0Ylao3F7MlxPwNwODDHG2D0STn9lr/pGw3TqA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7yPPa3JLLa4I/H4Qu9wp7czG/Kk1JExm4W1OpBFiIxE=;
+ b=UFCJfzYrVHKXX1yvYlHRqVh3ccVYk9HrCmhMGYIHHPCaG/hFZPFnkxNUOkUj+DEQD8OKvVW3wIzYWZa4IhHY3ELmnn3UIKQnAiO0vVii43eynTwjyxsBpkWaaO9T04mcth7CB5qweJlZ0fV/ah7T7kmw5ecsgxjImTG34HkEJMk=
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
+ CH2PR02MB6760.namprd02.prod.outlook.com (10.141.156.73) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Fri, 10 Jan 2020 18:04:57 +0000
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2623.013; Fri, 10 Jan 2020
+ 18:04:57 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Andre Przywara <andre.przywara@arm.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     Michal Simek <michals@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 05/14] net: axienet: Factor out TX descriptor chain
+ cleanup
+Thread-Topic: [PATCH 05/14] net: axienet: Factor out TX descriptor chain
+ cleanup
+Thread-Index: AQHVx6y4/M+QpndI/06Wqu2OHMXL/6fkL3TQ
+Date:   Fri, 10 Jan 2020 18:04:57 +0000
+Message-ID: <CH2PR02MB70003A0D500B9A78697FC311C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <20200110115415.75683-1-andre.przywara@arm.com>
+ <20200110115415.75683-6-andre.przywara@arm.com>
+In-Reply-To: <20200110115415.75683-6-andre.przywara@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=radheys@xilinx.com; 
+x-originating-ip: [183.83.136.244]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c607d19e-82b1-44ec-d02f-08d795f79a35
+x-ms-traffictypediagnostic: CH2PR02MB6760:|CH2PR02MB6760:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB6760AED6AC77B252D5C2A215C7380@CH2PR02MB6760.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02788FF38E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(136003)(346002)(39860400002)(376002)(199004)(189003)(13464003)(54906003)(110136005)(26005)(8676002)(86362001)(81166006)(81156014)(186003)(66446008)(478600001)(7696005)(6506007)(2906002)(316002)(8936002)(53546011)(71200400001)(64756008)(66556008)(4326008)(52536014)(33656002)(55016002)(66476007)(5660300002)(76116006)(66946007)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6760;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: t2enkk7V2Z05goohCRPryr2KrDs/VydFR8BmlxXpEKXVpVQp5qz8cxB+nKJTnd78KUIWGgIY8xyZfgvZKp/xG7kKA4r6GjIw+QvlkJ3vC4utNlhtr2WJ5QXePdYYLfGSGMgqSygYWPeYduqf/6DGJ+5Aq4LGWm1T7v2eoVzoJLSlhMC/ymwkCXGgRrgnRFqGZ1Y1JsWZNyJME95Zu3yPbH0QU/5rJvSnn+JxPlL7rjKTp2K66HpyzNjyMMO1uG2WuJFnF/tflYxjW3/VMBu7Jf5i0B1P5fWo7lexnBf9EctySbdbHj/6Ygl6peVzT2HfrdRaQ5TLPWawdA4oZDWSRWSB8fdpj6IiM9R0EJMLBCUB4Sk+SMDnWri1uU6i3+Wx3VKs4AqmaaZZTRcwcLEhn2whbnOVHRynAxRjW1FY3lGqLp/yK82EnxjfvjKivk1BZz13N+JeZnGZ7FvxC227fM8Zd7a6iUR85JFkINtjeQpr5JI4sOi3nqMnCJ46o7hm
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200102061319.10077-7-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c607d19e-82b1-44ec-d02f-08d795f79a35
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 18:04:57.2056
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bYjkePUNeHIOFPlPuefjyac8pU+MWZcuPsz2hZHd7TA6JLH0ufwjpiLtOHcroi1XkEvnRvTjYoGnQwItyV6qCQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6760
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 02:13:15PM +0800, Yang Weijiang wrote:
-> @@ -3585,7 +3602,30 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gva_t gva, int level,
->  		if ((error_code & PFERR_WRITE_MASK) &&
->  		    spte_can_locklessly_be_made_writable(spte))
->  		{
-> -			new_spte |= PT_WRITABLE_MASK;
-> +			/*
-> +			 * Record write protect fault caused by
-> +			 * Sub-page Protection, let VMI decide
-> +			 * the next step.
-> +			 */
-> +			if (spte & PT_SPP_MASK) {
-> +				int len = kvm_x86_ops->get_inst_len(vcpu);
+> -----Original Message-----
+> From: Andre Przywara <andre.przywara@arm.com>
+> Sent: Friday, January 10, 2020 5:24 PM
+> To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
+> <radheys@xilinx.com>
+> Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
+> <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH 05/14] net: axienet: Factor out TX descriptor chain clean=
+up
+>=20
+> Factor out the code that cleans up a number of connected TX descriptors,
+> as we will need it to properly roll back a failed _xmit() call.
+> There are subtle differences between cleaning up a successfully sent
+> chain (unknown number of involved descriptors, total data size needed)
+> and a chain that was about to set up (number of descriptors known), so
+> cater for those variations with some extra parameters.
+>=20
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
+>  .../net/ethernet/xilinx/xilinx_axienet_main.c | 75 ++++++++++++-------
+>  1 file changed, 50 insertions(+), 25 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> index ec5d01adc1d5..82abe2b0f16a 100644
+> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+> @@ -543,33 +543,37 @@ static int axienet_device_reset(struct net_device
+> *ndev)
+>  	return 0;
+>  }
+>=20
+> -/**
+> - * axienet_start_xmit_done - Invoked once a transmit is completed by the
+> - * Axi DMA Tx channel.
+> - * @ndev:	Pointer to the net_device structure
+> - *
+> - * This function is invoked from the Axi DMA Tx isr to notify the comple=
+tion
+> - * of transmit operation. It clears fields in the corresponding Tx BDs a=
+nd
+> - * unmaps the corresponding buffer so that CPU can regain ownership of
+> the
+> - * buffer. It finally invokes "netif_wake_queue" to restart transmission=
+ if
+> - * required.
+> +/* Clean up a series of linked TX descriptors. Would either be called
+> + * after a successful transmit operation, or after there was an error
+> + * when setting up the chain.
+> + * Returns the number of descriptors handled.
+>   */
+> -static void axienet_start_xmit_done(struct net_device *ndev)
 
-There's got to be a better way to handle SPP exits than adding a helper
-to retrieve the instruction length.
+To be consistent we can add the doxygen function description.
+The rest looks good. Feel free to add:
+Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 
+> +static int axienet_free_tx_chain(struct net_device *ndev, u32 first_bd,
+> +				 int nr_bds, u32 *sizep)
+>  {
+> -	u32 size =3D 0;
+> -	u32 packets =3D 0;
+>  	struct axienet_local *lp =3D netdev_priv(ndev);
+> +	int max_bds =3D (nr_bds !=3D -1) ? nr_bds : lp->tx_bd_num;
+>  	struct axidma_bd *cur_p;
+> -	unsigned int status =3D 0;
+> +	unsigned int status;
+> +	int i;
 > +
-> +				fault_handled = true;
-> +				vcpu->run->exit_reason = KVM_EXIT_SPP;
-> +				vcpu->run->spp.addr = gva;
-> +				vcpu->run->spp.ins_len = len;
-
-s/ins_len/insn_len to be consistent with other KVM nomenclature.
-
-> +				trace_kvm_spp_induced_page_fault(vcpu,
-> +								 gva,
-> +								 len);
-> +				break;
-> +			}
+> +	for (i =3D 0; i < max_bds; i++) {
+> +		cur_p =3D &lp->tx_bd_v[(first_bd + i) % lp->tx_bd_num];
+> +		status =3D cur_p->status;
 > +
-> +			if (was_spp_armed(new_spte)) {
-> +				restore_spp_bit(&new_spte);
-> +				spp_protected = true;
-> +			} else {
-> +				new_spte |= PT_WRITABLE_MASK;
-> +			}
->  
->  			/*
->  			 * Do not fix write-permission on the large spte.  Since
-
-...
-
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 24e4e1c47f42..97d862c79124 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -200,7 +200,6 @@ static const struct {
->  	[VMENTER_L1D_FLUSH_EPT_DISABLED] = {"EPT disabled", false},
->  	[VMENTER_L1D_FLUSH_NOT_REQUIRED] = {"not required", false},
->  };
+> +		/* If no number is given, clean up *all* descriptors that have
+> +		 * been completed by the MAC.
+> +		 */
+> +		if (nr_bds =3D=3D -1 && !(status &
+> XAXIDMA_BD_STS_COMPLETE_MASK))
+> +			break;
+>=20
+> -	cur_p =3D &lp->tx_bd_v[lp->tx_bd_ci];
+> -	status =3D cur_p->status;
+> -	while (status & XAXIDMA_BD_STS_COMPLETE_MASK) {
+>  		dma_unmap_single(ndev->dev.parent, cur_p->phys,
+>  				(cur_p->cntrl &
+> XAXIDMA_BD_CTRL_LENGTH_MASK),
+>  				DMA_TO_DEVICE);
+> -		if (cur_p->skb)
+> +
+> +		if (cur_p->skb && (status &
+> XAXIDMA_BD_STS_COMPLETE_MASK))
+>  			dev_consume_skb_irq(cur_p->skb);
+> +
+>  		cur_p->cntrl =3D 0;
+>  		cur_p->app0 =3D 0;
+>  		cur_p->app1 =3D 0;
+> @@ -578,15 +582,36 @@ static void axienet_start_xmit_done(struct
+> net_device *ndev)
+>  		cur_p->status =3D 0;
+>  		cur_p->skb =3D NULL;
+>=20
+> -		size +=3D status & XAXIDMA_BD_STS_ACTUAL_LEN_MASK;
+> -		packets++;
 > -
-
-Spurious whitepsace.
-
->  #define L1D_CACHE_ORDER 4
->  static void *vmx_l1d_flush_pages;
->  
-> @@ -2999,6 +2998,7 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
->  	bool update_guest_cr3 = true;
->  	unsigned long guest_cr3;
->  	u64 eptp;
-> +	u64 spptp;
->  
->  	guest_cr3 = cr3;
->  	if (enable_ept) {
-> @@ -3027,6 +3027,12 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
->  
->  	if (update_guest_cr3)
->  		vmcs_writel(GUEST_CR3, guest_cr3);
-> +
-> +	if (kvm->arch.spp_active && VALID_PAGE(vcpu->kvm->arch.sppt_root)) {
-> +		spptp = construct_spptp(vcpu->kvm->arch.sppt_root);
-> +		vmcs_write64(SPPT_POINTER, spptp);
-> +		vmx_flush_tlb(vcpu, true);
-
-Why is SPP so special that it gets to force TLB flushes?
-
-> +	}
->  }
->  
->  int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-> @@ -5361,6 +5367,74 @@ static int handle_monitor_trap(struct kvm_vcpu *vcpu)
->  	return 1;
->  }
->  
-> +int handle_spp(struct kvm_vcpu *vcpu)
-
-Can be static.
-
-> +{
-> +	unsigned long exit_qualification;
-> +	struct kvm_memory_slot *slot;
-> +	gpa_t gpa;
-> +	gfn_t gfn;
-> +
-> +	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
-> +
-> +	/*
-> +	 * SPP VM exit happened while executing iret from NMI,
-> +	 * "blocked by NMI" bit has to be set before next VM entry.
-> +	 * There are errata that may cause this bit to not be set:
-> +	 * AAK134, BY25.
-> +	 */
-> +	if (!(to_vmx(vcpu)->idt_vectoring_info & VECTORING_INFO_VALID_MASK) &&
-> +	    (exit_qualification & SPPT_INTR_INFO_UNBLOCK_NMI))
-> +		vmcs_set_bits(GUEST_INTERRUPTIBILITY_INFO,
-> +			      GUEST_INTR_STATE_NMI);
-> +
-> +	vcpu->arch.exit_qualification = exit_qualification;
-
-	if (WARN_ON(!(exit_qualification & SPPT_INDUCED_EXIT_TYPE)))
-		goto out_err;
-
-	<handle spp exit>
-
-	return 1;
-
-out_err:
-	vcpu->run->exit_reason = KVM_EXIT_UNKNOWN;
-	vcpu->run->hw.hardware_exit_reason = EXIT_REASON_SPP;
-	return 0;
-
-> +	if (exit_qualification & SPPT_INDUCED_EXIT_TYPE) {
-> +		int page_num = KVM_PAGES_PER_HPAGE(PT_DIRECTORY_LEVEL);
-
-The compiler is probably clever enough to make these constants, but if
-this logic is a fundamental property of SPP then it should be defined as
-a macro somewhere.
-
-> +		u32 *access;
-> +		gfn_t gfn_max;
-> +
-> +		/*
-> +		 * SPPT missing
-> +		 * We don't set SPP write access for the corresponding
-> +		 * GPA, if we haven't setup, we need to construct
-> +		 * SPP table here.
-> +		 */
-> +		gpa = vmcs_read64(GUEST_PHYSICAL_ADDRESS);
-> +		gfn = gpa >> PAGE_SHIFT;
-
-gpa_to_gfn()
-
-> +		trace_kvm_spp_induced_exit(vcpu, gpa, exit_qualification);
-> +		/*
-> +		 * In level 1 of SPPT, there's no PRESENT bit, all data is
-> +		 * regarded as permission vector, so need to check from
-> +		 * level 2 to set up the vector if target page is protected.
-> +		 */
-> +		spin_lock(&vcpu->kvm->mmu_lock);
-> +		gfn &= ~(page_num - 1);
-
-
-
-> +		gfn_max = gfn + page_num - 1;
-
-s/gfn_max/gfn_end
-
-> +		for (; gfn <= gfn_max; gfn++) {
-
-My preference would be to do:
-		gfn_end = gfn + page_num;
-
-		for ( ; gfn < gfn_end; gfn++)
-
-> +			slot = gfn_to_memslot(vcpu->kvm, gfn);
-> +			if (!slot)
-> +				continue;
-> +			access = gfn_to_subpage_wp_info(slot, gfn);
-> +			if (access && *access != FULL_SPP_ACCESS)
-> +				kvm_spp_setup_structure(vcpu,
-> +							*access,
-> +							gfn);
-> +		}
-> +		spin_unlock(&vcpu->kvm->mmu_lock);
-> +		return 1;
-> +	}
-> +	/*
-> +	 * SPPT Misconfig
-> +	 * This is probably caused by some mis-configuration in SPPT
-> +	 * entries, cannot handle it here, escalate the fault to
-> +	 * emulator.
-> +	 */
-> +	WARN_ON(1);
-> +	vcpu->run->exit_reason = KVM_EXIT_UNKNOWN;
-> +	vcpu->run->hw.hardware_exit_reason = EXIT_REASON_SPP;
-> +	return 0;
+> -		if (++lp->tx_bd_ci >=3D lp->tx_bd_num)
+> -			lp->tx_bd_ci =3D 0;
+> -		cur_p =3D &lp->tx_bd_v[lp->tx_bd_ci];
+> -		status =3D cur_p->status;
+> +		if (sizep)
+> +			*sizep +=3D status &
+> XAXIDMA_BD_STS_ACTUAL_LEN_MASK;
+>  	}
+>=20
+> +	return i;
 > +}
 > +
->  static int handle_monitor(struct kvm_vcpu *vcpu)
->  {
->  	printk_once(KERN_WARNING "kvm: MONITOR instruction emulated as NOP!\n");
-> @@ -5575,6 +5649,7 @@ static int (*kvm_vmx_exit_handlers[])(struct kvm_vcpu *vcpu) = {
->  	[EXIT_REASON_INVVPID]                 = handle_vmx_instruction,
->  	[EXIT_REASON_RDRAND]                  = handle_invalid_op,
->  	[EXIT_REASON_RDSEED]                  = handle_invalid_op,
-> +	[EXIT_REASON_SPP]                     = handle_spp,
->  	[EXIT_REASON_PML_FULL]		      = handle_pml_full,
->  	[EXIT_REASON_INVPCID]                 = handle_invpcid,
->  	[EXIT_REASON_VMFUNC]		      = handle_vmx_instruction,
-> @@ -5807,6 +5882,9 @@ void dump_vmcs(void)
->  		pr_err("PostedIntrVec = 0x%02x\n", vmcs_read16(POSTED_INTR_NV));
->  	if ((secondary_exec_control & SECONDARY_EXEC_ENABLE_EPT))
->  		pr_err("EPT pointer = 0x%016llx\n", vmcs_read64(EPT_POINTER));
-> +	if ((secondary_exec_control & SECONDARY_EXEC_ENABLE_SPP))
-> +		pr_err("SPPT pointer = 0x%016llx\n", vmcs_read64(SPPT_POINTER));
+> +/**
+> + * axienet_start_xmit_done - Invoked once a transmit is completed by the
+> + * Axi DMA Tx channel.
+> + * @ndev:	Pointer to the net_device structure
+> + *
+> + * This function is invoked from the Axi DMA Tx isr to notify the comple=
+tion
+> + * of transmit operation. It clears fields in the corresponding Tx BDs a=
+nd
+> + * unmaps the corresponding buffer so that CPU can regain ownership of
+> the
+> + * buffer. It finally invokes "netif_wake_queue" to restart transmission=
+ if
+> + * required.
+> + */
+> +static void axienet_start_xmit_done(struct net_device *ndev)
+> +{
+> +	u32 size =3D 0;
+> +	u32 packets =3D 0;
+> +	struct axienet_local *lp =3D netdev_priv(ndev);
 > +
->  	n = vmcs_read32(CR3_TARGET_COUNT);
->  	for (i = 0; i + 1 < n; i += 4)
->  		pr_err("CR3 target%u=%016lx target%u=%016lx\n",
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index fb7da000ceaf..a9d7fc21dad6 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9782,6 +9782,7 @@ void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free,
->  	}
->  
->  	kvm_page_track_free_memslot(free, dont);
-> +	kvm_spp_free_memslot(free, dont);
->  }
->  
->  int kvm_arch_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
-> @@ -10406,3 +10407,6 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_pml_full);
->  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_pi_irte_update);
->  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_unaccelerated_access);
->  EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_avic_incomplete_ipi);
-> +EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_spp_set_subpages);
-> +EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_spp_induced_exit);
-> +EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_spp_induced_page_fault);
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 09e5e8e6e6dd..c0f3162ee46a 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -244,6 +244,7 @@ struct kvm_hyperv_exit {
->  #define KVM_EXIT_IOAPIC_EOI       26
->  #define KVM_EXIT_HYPERV           27
->  #define KVM_EXIT_ARM_NISV         28
-> +#define KVM_EXIT_SPP              29
->  
->  /* For KVM_EXIT_INTERNAL_ERROR */
->  /* Emulate instruction failed. */
-> @@ -401,6 +402,11 @@ struct kvm_run {
->  		struct {
->  			__u8 vector;
->  		} eoi;
-> +		/* KVM_EXIT_SPP */
-> +		struct {
-> +			__u64 addr;
-> +			__u8 ins_len;
-> +		} spp;
->  		/* KVM_EXIT_HYPERV */
->  		struct kvm_hyperv_exit hyperv;
->  		/* KVM_EXIT_ARM_NISV */
-> -- 
-> 2.17.2
-> 
+> +	packets =3D axienet_free_tx_chain(ndev, lp->tx_bd_ci, -1, &size);
+> +
+> +	lp->tx_bd_ci +=3D packets;
+> +	if (lp->tx_bd_ci >=3D lp->tx_bd_num)
+> +		lp->tx_bd_ci -=3D lp->tx_bd_num;
+> +
+>  	ndev->stats.tx_packets +=3D packets;
+>  	ndev->stats.tx_bytes +=3D size;
+>=20
+> --
+> 2.17.1
+
