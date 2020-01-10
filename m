@@ -2,114 +2,140 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEABC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E941C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466CE206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401B1206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:13:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GI4Ah5R0"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="VzsVlz7/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbgAJKLy (ORCPT
+        id S1727456AbgAJKNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:11:54 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45127 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727491AbgAJKLy (ORCPT
+        Fri, 10 Jan 2020 05:13:24 -0500
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:45247 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727345AbgAJKNY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:11:54 -0500
-Received: by mail-lj1-f193.google.com with SMTP id j26so1510967ljc.12
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 02:11:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+kVo9m3T9mXJ+KVWmxD4yvdS2GfEORKMJ7mfZ/mCu7E=;
-        b=GI4Ah5R0OE9BSnRu6GAON+I0o+ix+lL7QCUz+48FV4+6I614uptv180dULDjV7dayO
-         34S6t/ioNfvOzsfKin88I0EJdOqrrV085cytsJ4ZgRsop+nwCpsOf1b35IJmRCmppt1V
-         3PxiIr97jQU/udMvz4CxbkFYC+H86QsrY/JtqYOfC50wF08Lg1OroCaxbUzZeatCwrD1
-         bns4xZVKNgM7QHlHGf1LMkHl6JvLnd3IZqf/rkBWysf3HiNDIoPxvM4JJd/yRWNRuHnv
-         dPIvH9x+ytwPL6+Wr1suRAJJBLqA6Irh13vLU9lYq+uAx5zDI4dkriqn0PYwf23FQUKz
-         zQOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+kVo9m3T9mXJ+KVWmxD4yvdS2GfEORKMJ7mfZ/mCu7E=;
-        b=XMmfJx0Xjk9L3AlpY2tgW/xRR3+wRJcqbf8DR3YjFo3DiyKif0vdWyXxFNYvOqjLZ1
-         UgX9rKWJyaQDFoG7TwoTIi75jkkOLqtuuf/0/TVCMllJDgvtsIHEFdqWcpaOHtsZoIhN
-         spwvAwSeHjkGOiCJKGvtJEnm5loVpzyEF5iyqbOgqDumM4z1mu724g2iYtbm7s4tkBUE
-         C/yZa7faWLz3+GtlnKpT6hvrPonp1QYyGGNNDjgZB5wY5G8bZ1yA5lWTqa5KaFZyAdhS
-         ll8gdiTtuQNzEy0MUaQuduXrYmQ7q6+TMuIVMY5lJfg/PE8y/Le/RnauduV3qhwboJMN
-         DVOQ==
-X-Gm-Message-State: APjAAAVUAcry5vxmUuDrkORcdbuD+ut0pczslO2WAGtTwFw9rQnpe1Hw
-        4ms2OycExMLIfXIwKujUbuK0OBzzfs1psAo9g2U8+A==
-X-Google-Smtp-Source: APXvYqyb+KFd2lJgB0lcMgagsp0Sp/O1fZ6UyLCUWIFIJSguS0YQvEQcOyABzka9yzuU8WWDOny5+4SVDGwh88k7rkw=
-X-Received: by 2002:a2e:8758:: with SMTP id q24mr2137333ljj.157.1578651112476;
- Fri, 10 Jan 2020 02:11:52 -0800 (PST)
+        Fri, 10 Jan 2020 05:13:24 -0500
+Received: from [IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef]
+ ([IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id prI6ilr7DpLtbprI9iPsoU; Fri, 10 Jan 2020 11:13:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578651201; bh=EQZFmUatpkRfJncF22R0svOZHakbIpsmtV+r92AM4vk=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=VzsVlz7/+IH14gT9YyVjGXny7iEK0AGDl1qeGBkP+l6zrFylT5RDJnwnppnekoQLd
+         IEgK3LjIgGReAqiRNLEyRZN8Lsq0wcEkEUXEvogRwtMmMg6g4bqchUSFVUTbUhXe0N
+         GH6q1lxdVDS+bHvdBaf2xGur0c8KQ0Y3aBE6MeQ+2mzdBDPtmjUNL8JMW+UXGKtPXr
+         4DQJd9+N4j9pFepTXSvrgxbhZ4VqkG2raDrwQBD9c2ZGe7/i9+6EspMkLyKor6vxXU
+         g8Cx5Obu12CYuJ0+G6YVf6nJrQe5BUq+c5UrL+v5VjZOBvoJ0OgoeCKCx/yk+E+yHm
+         W1rVCVpXY21SA==
+Subject: Re: [RFC][PATCH 12/15] videobuf2: add begin/end cpu_access callbacks
+ to dma-sg
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-13-senozhatsky@chromium.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <1c5198dc-db4e-47d6-0d8b-259fbbb6372f@xs4all.nl>
+Date:   Fri, 10 Jan 2020 11:13:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200110190737.65d8881b@canb.auug.org.au>
-In-Reply-To: <20200110190737.65d8881b@canb.auug.org.au>
-From:   Anders Roxell <anders.roxell@linaro.org>
-Date:   Fri, 10 Jan 2020 11:11:41 +0100
-Message-ID: <CADYN=9+VoYekNzsdrL+bnb3oB9Y4guE3o2okwiBD4J-c_=kAyg@mail.gmail.com>
-Subject: Re: linux-next: Tree for Jan 10
-To:     Stephen Rothwell <sfr@canb.auug.org.au>, steven.price@arm.com
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191217032034.54897-13-senozhatsky@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfGxGp+oRQLeyV11iepfB4M188Y4d+5L/IiEs4v+l8amuiJUq/JK1KFy8sgNFIhsx3LL1hRNfTDF+klzKxCl2+00YMFtDjCRKA7BJXwHyv//jRc1MFh6N
+ yq/nAx+BecxHK6ISawEgibcibO4N54nVduPnlU+66MeqCpwVUespAULDB8Nb/gT7TDcRkbz4+/sxS2fSU5lJElulNDzvjeT7q4yjpZ9kyi9MOkVhJO+6E7at
+ HosI1etPR+IiR4DXAcBKrN3Xfc3lcdIqclZP51Senp48mYmDsqjihvSvzTQgiByIptC06NkYQk2fSSPtkARK51LqGiNh+RjEX8MCySN7rt/cNZcopsheDcrx
+ 0Mo5qv9N5zJ1Q41zLJeSmbY5Mui+yA3sUilJWoxnub8FFy467hx9Hg52YLIMAFtzMFKHf3qxrWwWQMW2sZnzAnm4dqT4OXuptuRwqcpqiu9P1hWbt9PRj4qY
+ zI4tBf6BN+jPPRKY+bHUUtNjkjbwGQSn05F9YKO0ATQwZXGM11B0kjrDMakAeMbwQ4r6SQnxHtmFNw+IoGCLUuC1Nvu50WVNnsBF0HwBnx/S191tvMhojlxq
+ +qItelRz5vHr/81qTVQNoOllGrRU8GsQiGYgxkfpDU0ZHrfT0QS9KO6xyFZ1xGNpapY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 at 09:07, Stephen Rothwell <sfr@canb.auug.org.au> wrote=
-:
->
-> Hi all,
->
-> Changes since 20200109:
+On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
+> Provide begin_cpu_access() and end_cpu_access() dma_buf_ops
+> callbacks for cache synchronisation on exported buffers.
+> 
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+>  .../media/common/videobuf2/videobuf2-dma-sg.c | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+> index 6db60e9d5183..bfc99a0cb7b9 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+> @@ -470,6 +470,26 @@ static void vb2_dma_sg_dmabuf_ops_release(struct dma_buf *dbuf)
+>  	vb2_dma_sg_put(dbuf->priv);
+>  }
+>  
 
-I see the following build error on arm64:
+There is no corresponding vb2_sg_buffer_consistent function here.
 
-../arch/arm64/mm/dump.c: In function =E2=80=98ptdump_walk=E2=80=99:
-../arch/arm64/mm/dump.c:326:2: error: too few arguments to function
-=E2=80=98ptdump_walk_pgd=E2=80=99
-  ptdump_walk_pgd(&st.ptdump, info->mm);
-  ^~~~~~~~~~~~~~~
-In file included from ../arch/arm64/mm/dump.c:18:
-../include/linux/ptdump.h:20:6: note: declared here
- void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm,
-pgd_t *pgd);
-      ^~~~~~~~~~~~~~~
-../arch/arm64/mm/dump.c: In function =E2=80=98ptdump_check_wx=E2=80=99:
-../arch/arm64/mm/dump.c:364:2: error: too few arguments to function
-=E2=80=98ptdump_walk_pgd=E2=80=99
-  ptdump_walk_pgd(&st.ptdump, &init_mm);
-  ^~~~~~~~~~~~~~~
-In file included from ../arch/arm64/mm/dump.c:18:
-../include/linux/ptdump.h:20:6: note: declared here
- void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm,
-pgd_t *pgd);
-      ^~~~~~~~~~~~~~~
-make[3]: *** [../scripts/Makefile.build:266: arch/arm64/mm/dump.o] Error 1
-make[3]: Target '__build' not remade because of errors.
-make[2]: *** [../scripts/Makefile.build:503: arch/arm64/mm] Error 2
-make[2]: Target '__build' not remade because of errors.
-make[1]: *** [/srv/jenkins/kernel/randconfig/Makefile:1683: arch/arm64] Err=
-or 2
+Looking more closely I see that vb2_dma_sg_alloc doesn't pass the dma_attrs
+argument to dma_map_sg_attrs, thus V4L2_FLAG_MEMORY_NON_CONSISTENT has no
+effect on dma-sg buffers.
 
-I think something happened when applying patch [1], the changes in
-arch/arm64/mm/dump.c
-got dropped somehow. What that intended ?
+Is there a reason why dma_attrs isn't passed on to dma_map_sg_attrs()?
 
+I suspect it was just laziness in the past, and that it should be wired
+up, just as for dma-contig.
 
-Cheers,
-Anders
-[1] https://lore.kernel.org/lkml/20200108145710.34314-1-steven.price@arm.co=
-m/
+Regards,
+
+	Hans
+
+> +static int vb2_dma_sg_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
+> +					enum dma_data_direction direction)
+> +{
+> +	struct vb2_dma_sg_buf *buf = dbuf->priv;
+> +	struct sg_table *sgt = buf->dma_sgt;
+> +
+> +	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
+> +	return 0;
+> +}
+> +
+> +static int vb2_dma_sg_dmabuf_ops_end_cpu_access(struct dma_buf *dbuf,
+> +					enum dma_data_direction direction)
+> +{
+> +	struct vb2_dma_sg_buf *buf = dbuf->priv;
+> +	struct sg_table *sgt = buf->dma_sgt;
+> +
+> +	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
+> +	return 0;
+> +}
+> +
+>  static void *vb2_dma_sg_dmabuf_ops_vmap(struct dma_buf *dbuf)
+>  {
+>  	struct vb2_dma_sg_buf *buf = dbuf->priv;
+> @@ -488,6 +508,8 @@ static const struct dma_buf_ops vb2_dma_sg_dmabuf_ops = {
+>  	.detach = vb2_dma_sg_dmabuf_ops_detach,
+>  	.map_dma_buf = vb2_dma_sg_dmabuf_ops_map,
+>  	.unmap_dma_buf = vb2_dma_sg_dmabuf_ops_unmap,
+> +	.begin_cpu_access = vb2_dma_sg_dmabuf_ops_begin_cpu_access,
+> +	.end_cpu_access = vb2_dma_sg_dmabuf_ops_end_cpu_access,
+>  	.vmap = vb2_dma_sg_dmabuf_ops_vmap,
+>  	.mmap = vb2_dma_sg_dmabuf_ops_mmap,
+>  	.release = vb2_dma_sg_dmabuf_ops_release,
+> 
+
