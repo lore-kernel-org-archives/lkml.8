@@ -2,181 +2,124 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B463DC33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB654C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830412082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:43:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578638601;
-	bh=Kl4yzwUKkHksUtldOAHDuwyfWatHloZS7w+En3d4hKw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZA1KCtv+0bL5Qj6dKMO6y2W8A7kX7CW6fBTX7dxD0YPJ84FHIB1f5WT6fZwu/xfl9
-	 3ZOS+M+/erlLi0ULbqwPfcAZnfxd3TflPCCcBNe54S3xRcWbWS109EqoMnpzHl8ZPa
-	 VNKrcInRCW3ZaAuq8RTr0b4TafmLhBn+BhV7Xq+E=
+	by mail.kernel.org (Postfix) with ESMTP id 827B22051A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:45:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ueN7Vpxn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbgAJGnU (ORCPT
+        id S1731584AbgAJGpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 01:43:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36526 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 01:45:50 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:39753 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731547AbgAJGnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 01:43:20 -0500
-Received: from localhost (unknown [223.226.110.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2351B2077B;
-        Fri, 10 Jan 2020 06:43:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578638599;
-        bh=Kl4yzwUKkHksUtldOAHDuwyfWatHloZS7w+En3d4hKw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=w48hFQyIYf2RgmNKB+xCORX3izC2oXJkQkbLEBLESQOXRU87+dlGPcKhUTT8qsU6H
-         kez5cjxZ1A+Gwv3lvQnfppUH+Gz65mFDlXfSM2Iad6/jRUsBWURhpTkKUJm3/fIyBe
-         Uutoswn8DjMYfY/RG24okYe/CRrpAscTvtqopyTw=
-Date:   Fri, 10 Jan 2020 12:13:03 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-Subject: Re: [alsa-devel] [PATCH v5 09/17] soundwire: intel: remove platform
- devices and use 'Master Devices' instead
-Message-ID: <20200110064303.GX2818@vkoul-mobl>
-References: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
- <20191217210314.20410-10-pierre-louis.bossart@linux.intel.com>
- <20191227090826.GM3006@vkoul-mobl>
- <5be4d9df-0f46-d36f-471c-aae9e1f55cc0@linux.intel.com>
- <20200106054221.GN2818@vkoul-mobl>
- <32ae46a7-59ee-4815-270a-a519ff462345@linux.intel.com>
+        id S1731530AbgAJGpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 01:45:50 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47vD5S13wRz9v3tv;
+        Fri, 10 Jan 2020 07:45:48 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=ueN7Vpxn; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id Av3l7EVHXBCa; Fri, 10 Jan 2020 07:45:48 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47vD5R6Z0Hz9v3tj;
+        Fri, 10 Jan 2020 07:45:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1578638747; bh=5TApiD5N/34vXaM+pQ7UUlq0/+wq9o7jjNc+pK8cRCg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ueN7VpxnzBcnWuZoF/iIk0abFzI/Og6E2TcMJ9xPs+8bq1JLbuwjMI10oN+xH1GW4
+         DzTR5wk+czh2b56nyJo+0UKVXRL7LBJYds2dWPvb77f70oXNepmKK0hmzElSjKYQPC
+         5TkwvFKiglrjZkvvPDDUdnzAbqHeggFMFpJlVGmE=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C0BAF8B77D;
+        Fri, 10 Jan 2020 07:45:48 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 7nJRtiLkHgXr; Fri, 10 Jan 2020 07:45:48 +0100 (CET)
+Received: from [172.25.230.102] (po15451.idsi0.si.c-s.fr [172.25.230.102])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4C2CD8B755;
+        Fri, 10 Jan 2020 07:45:45 +0100 (CET)
+Subject: Re: Surprising code generated for vdso_read_begin()
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, arnd@arndb.de,
+        tglx@linutronix.de, vincenzo.frascino@arm.com, luto@kernel.org,
+        x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org
+References: <cover.1577111363.git.christophe.leroy@c-s.fr>
+ <bd4557a7-9715-59aa-5d8e-488c5e516a98@c-s.fr>
+ <20200109200733.GS3191@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <77a8bf25-6615-6c0a-56d4-eae7aa8a8f09@c-s.fr>
+Date:   Fri, 10 Jan 2020 07:45:44 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <32ae46a7-59ee-4815-270a-a519ff462345@linux.intel.com>
+In-Reply-To: <20200109200733.GS3191@gate.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-01-20, 08:51, Pierre-Louis Bossart wrote:
-> 
-> > > > > +		/* let the SoundWire master driver to its probe */
-> > > > > +		md->driver->probe(md, link);
-> > > > 
-> > > > So you are invoking driver probe here.. That is typically role of driver
-> > > > core to do that.. If we need that, make driver core do that for you!
-> > > > 
-> > > > That reminds me I am missing match code for master driver...
-> > > 
-> > > There is no match for the master because it doesn't have an existence in
-> > > ACPI. There are no _ADR or HID that can be used, the only thing that exists
-> > > is the Controller which has 4 sublinks. Each master must be added  by hand.
-> > > 
-> > > Also the SoundWire master cannot be enumerated or matched against a
-> > > SoundWire bus, since it controls the bus itself (that would be a chicken and
-> > > egg problem). The SoundWire master would need to be matched on a parent bus
-> > > (which does not exist for Intel) since the hardware is embedded in a larger
-> > > audio cluster that's visible on PCI only.
-> > > 
-> > > Currently for Intel platforms, the SoundWire master device is created by the
-> > > SOF driver (via the abstraction in intel_init.c).
-> > 
-> > That is okay for me, the thing that is bit confusing is having a probe
-> > etc and no match.. (more below)..
-> > 
-> > > > So we seem to be somewhere is middle wrt driver probing here! IIUC this
-> > > > is not a full master driver, thats okay, but then it is not
-> > > > completely transparent either...
-> > > > 
-> > > > I was somehow thinking that the driver will continue to be
-> > > > 'platform/acpi/of' driver and master device abstraction will be
-> > > > handled in the core (for example see how the busses like i2c handle
-> > > > this). The master device is created and used to represent but driver
-> > > > probing etc is not done
-> > > 
-> > > I2C controllers are typically PCI devices or have some sort of ACPI
-> > > description. This is not the case for SoundWire masters on Intel platforms,
-> > 
-> > Well the world is not PCI/ACPI... We have controllers which are DT
-> > described and work in same manner as a PCI device.
-> Both DT and PCI would use a DIFFERENT matching on the parent bus, not a
-> matching provided by the SoundWire subsystem itself.
-> 
-> > 
-> > > so even if I wanted to I would have no ability to implement any matching or
-> > > parent bus registration.
-> > > 
-> > > Also the notion of 'probe' does not necessarily mean that the device is
-> > > attached to a bus, we use DAI 'drivers' in ASoC and still have probe/remove
-> > > callbacks.
-> > 
-> > The "big" difference is that probe is called by core (asoc) and not by
-> > driver onto themselves.. IMO that needs to go away.
-> 
-> What I did is not different from what existed already with platform devices.
-> They were manually created, weren't they?
 
-Manual creation of device based on a requirement is different, did I ask
-you why you are creating device :)
 
-I am simple asking you not to call probe in the driver. If you need
-that, move it to core! We do not want these kind of things in the
-drivers...
-
-> > > And if you look at the definitions, we added additional callbacks since
-> > > probe/remove are not enough to deal with hardware restrictions:
-> > > 
-> > > For Intel platforms, we have a startup() callback which is only invoked once
-> > > the DSP is powered and the rails stable. Likewise we added an
-> > > 'autonomous_clock_stop()' callback which will be needed when the Linux
-> > > driver hands-over control of the hardware to the DSP firmware, e.g. to deal
-> > > with in-band wakes in D0i3.
-> > > 
-> > > FWIW, the implementation here follows what was suggested for Greybus 'Host
-> > > Devices' [1] [2], so it's not like I am creating any sort of dangerous
-> > > precedent.
-> > > 
-> > > [1]
-> > > https://elixir.bootlin.com/linux/latest/source/drivers/greybus/es2.c#L1275
-> > > [2] https://elixir.bootlin.com/linux/latest/source/drivers/greybus/hd.c#L124
-> > 
-> > And if you look closely all this work is done by core not by drivers!
-> > Drivers _should_ never do all this, it is the job of core to do that for
-> > you.
+Le 09/01/2020 à 21:07, Segher Boessenkool a écrit :
+> On Thu, Jan 09, 2020 at 05:52:34PM +0000, Christophe Leroy wrote:
+>> Wondering why we get something so complicated/redundant for
+>> vdso_read_begin() <include/vdso/helpers.h>
+>>
+>> static __always_inline u32 vdso_read_begin(const struct vdso_data *vd)
+>> {
+>> 	u32 seq;
+>>
+>> 	while ((seq = READ_ONCE(vd->seq)) & 1)
+>> 		cpu_relax();
+>>
+>> 	smp_rmb();
+>> 	return seq;
+>> }
+>>
+>>
+>>   6e0:   81 05 00 f0     lwz     r8,240(r5)
+>>   6e4:   71 09 00 01     andi.   r9,r8,1
+>>   6e8:   41 82 00 10     beq     6f8 <__c_kernel_clock_gettime+0x158>
+>>   6ec:   81 05 00 f0     lwz     r8,240(r5)
+>>   6f0:   71 0a 00 01     andi.   r10,r8,1
+>>   6f4:   40 82 ff f8     bne     6ec <__c_kernel_clock_gettime+0x14c>
+>>   6f8:
+>>
+>> r5 being vd pointer
+>>
+>> Why the first triplet, not only the second triplet ? Something wrong
+>> with using READ_ONCE() for that ?
 > 
-> Please look at the code again, you have a USB probe that will manually call
-> the GreyBus device creation.
+> It looks like the compiler did loop peeling.  What GCC version is this?
+> Please try current trunk (to become GCC 10), or at least GCC 9?
 > 
-> static int ap_probe(struct usb_interface *interface,
-> 		    const struct usb_device_id *id)
-> {
-> 	hd = gb_hd_create(&es2_driver, &udev->dev, 	
-> 
-> 
-> static struct usb_driver es2_ap_driver = {
-> 	.name =		"es2_ap_driver",
-> 	.probe =	ap_probe, <<< code above
-> 	.disconnect =	ap_disconnect,
-> 	.id_table =	id_table,
-> 	.soft_unbind =	1,
-> };
 
-Look closely the driver es2 calls into greybus core hd.c and gets the
-work done, subtle but a big differances in the approaches..
+It is with GCC 5.5
 
-> The master device probe suggested here is also called as part of the parent
-> SOF PCI device probe, same as this USB example. I really don't see what your
-> objection is, given that there is no way to deal with the SoundWire
-> controller as a independent entity for Intel platforms.
+https://mirrors.edge.kernel.org/pub/tools/crosstool/ doesn't have more 
+recent than 8.1
 
--- 
-~Vinod
+With 8.1, the problem doesn't show up.
+
+Thanks
+Christophe
