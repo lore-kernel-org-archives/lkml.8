@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0A3C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22258C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C20872082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E926F20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578693964;
-	bh=ok15enOupA5W/wMO7U7KSrXVmeBc2HMpZ4pSkfou/bw=;
+	s=default; t=1578693967;
+	bh=p2aVcVq+lWXHhHyOnOENqv5xkx6dICfLlaczEXRy+w8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0jaF9G2njnHMLbe9mTUpa81OoWp4r8p+na0aP9qlRBHH27ONwVB9L2TkTJEMz8r/C
-	 8a8o+T5zd23DgONDH+WpI0oHx61vq8l/55cdBO+zFwiIkBj92yPe2skfj7kNex2lBz
-	 0vn9aU78BjMX/1vMa+r33oe8mxZ+ViuYrb98HwyA=
+	b=pVDoM5/N3eBbtdDYZWwWO0MiRRyl+58+mVURQlpGkOPd7ofXV7doT0S9X8aWV8S7K
+	 2HYl+Jve8fnnIswOZSO3omN+JMi4tO4HlnE1KYMHGQZ3i7Jx2psYLxL/sBCxbZcuiF
+	 aBpLWb71Fy45DxLbM6rQkoswfI5ekpdd/SsLyLUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgAJWGD (ORCPT
+        id S1728150AbgAJWGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:06:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52334 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 17:06:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728036AbgAJWGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:06:00 -0500
+        id S1728104AbgAJWGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:06:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E8CC20838;
-        Fri, 10 Jan 2020 22:05:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08D3320721;
+        Fri, 10 Jan 2020 22:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693960;
-        bh=ok15enOupA5W/wMO7U7KSrXVmeBc2HMpZ4pSkfou/bw=;
+        s=default; t=1578693963;
+        bh=p2aVcVq+lWXHhHyOnOENqv5xkx6dICfLlaczEXRy+w8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eWHliHLv3aiGkx43/6SDnEY4UstoanJ4twy/Mg+qtlN5OQfxRNggQrnswgP+Ut+1w
-         d7Yxz0czpKG4HMiP6Tk3Mkk4hUOokFDL7cojKNwh5rOS+kIWffF//bz4FqP/NSPYLs
-         poluyx3k4SPl5uycli6g+zK+iGL9srvPHHipEFnM=
+        b=hWRvsKlED73jWSi/P04K+l/sFy3LLPCY3Y2F5IQo7rHvzh7YQkir6l5e4xztLUN+C
+         Lp+yG0VgfVteVfI+hQjN+YytE/m7tRlNHU7e+ne2szDMvl2dW4IHynj4DR5y/bOgCg
+         O2Tocy+aWwpq2Rzp0r2p3XOHZIrlokVax1SSblJs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 04/11] dmaengine: k3dma: Avoid null pointer traversal
-Date:   Fri, 10 Jan 2020 17:05:48 -0500
-Message-Id: <20200110220556.28505-3-sashal@kernel.org>
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 07/11] hsr: reset network header when supervision frame is created
+Date:   Fri, 10 Jan 2020 17:05:51 -0500
+Message-Id: <20200110220556.28505-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200110220556.28505-1-sashal@kernel.org>
 References: <20200110220556.28505-1-sashal@kernel.org>
@@ -59,64 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Stultz <john.stultz@linaro.org>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 2f42e05b942fe2fbfb9bbc6e34e1dd8c3ce4f3a4 ]
+[ Upstream commit 3ed0a1d563903bdb4b4c36c58c4d9c1bcb23a6e6 ]
 
-In some cases we seem to submit two transactions in a row, which
-causes us to lose track of the first. If we then cancel the
-request, we may still get an interrupt, which traverses a null
-ds_run value.
+The supervision frame is L2 frame.
+When supervision frame is created, hsr module doesn't set network header.
+If tap routine is enabled, dev_queue_xmit_nit() is called and it checks
+network_header. If network_header pointer wasn't set(or invalid),
+it resets network_header and warns.
+In order to avoid unnecessary warning message, resetting network_header
+is needed.
 
-So try to avoid starting a new transaction if the ds_run value
-is set.
+Test commands:
+    ip netns add nst
+    ip link add veth0 type veth peer name veth1
+    ip link add veth2 type veth peer name veth3
+    ip link set veth1 netns nst
+    ip link set veth3 netns nst
+    ip link set veth0 up
+    ip link set veth2 up
+    ip link add hsr0 type hsr slave1 veth0 slave2 veth2
+    ip a a 192.168.100.1/24 dev hsr0
+    ip link set hsr0 up
+    ip netns exec nst ip link set veth1 up
+    ip netns exec nst ip link set veth3 up
+    ip netns exec nst ip link add hsr1 type hsr slave1 veth1 slave2 veth3
+    ip netns exec nst ip a a 192.168.100.2/24 dev hsr1
+    ip netns exec nst ip link set hsr1 up
+    tcpdump -nei veth0
 
-While this patch avoids the null pointer crash, I've had some
-reports of the k3dma driver still getting confused, which
-suggests the ds_run/ds_done value handling still isn't quite
-right. However, I've not run into an issue recently with it
-so I think this patch is worth pushing upstream to avoid the
-crash.
+Splat looks like:
+[  175.852292][    C3] protocol 88fb is buggy, dev veth0
 
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-[add ss tag]
-Link: https://lore.kernel.org/r/20191218190906.6641-1-john.stultz@linaro.org
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/k3dma.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ net/hsr/hsr_device.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
-index 6bfa217ed6d0..ba3c3791f9dc 100644
---- a/drivers/dma/k3dma.c
-+++ b/drivers/dma/k3dma.c
-@@ -222,9 +222,11 @@ static irqreturn_t k3_dma_int_handler(int irq, void *dev_id)
- 			c = p->vchan;
- 			if (c && (tc1 & BIT(i))) {
- 				spin_lock_irqsave(&c->vc.lock, flags);
--				vchan_cookie_complete(&p->ds_run->vd);
--				p->ds_done = p->ds_run;
--				p->ds_run = NULL;
-+				if (p->ds_run != NULL) {
-+					vchan_cookie_complete(&p->ds_run->vd);
-+					p->ds_done = p->ds_run;
-+					p->ds_run = NULL;
-+				}
- 				spin_unlock_irqrestore(&c->vc.lock, flags);
- 			}
- 			if (c && (tc2 & BIT(i))) {
-@@ -264,6 +266,10 @@ static int k3_dma_start_txd(struct k3_dma_chan *c)
- 	if (BIT(c->phy->idx) & k3_dma_get_chan_stat(d))
- 		return -EAGAIN;
+diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+index a97bf326b231..c27577af32e3 100644
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -281,6 +281,8 @@ static void send_hsr_supervision_frame(struct hsr_port *master,
+ 			    skb->dev->dev_addr, skb->len) <= 0)
+ 		goto out;
+ 	skb_reset_mac_header(skb);
++	skb_reset_network_header(skb);
++	skb_reset_transport_header(skb);
  
-+	/* Avoid losing track of  ds_run if a transaction is in flight */
-+	if (c->phy->ds_run)
-+		return -EAGAIN;
-+
- 	if (vd) {
- 		struct k3_dma_desc_sw *ds =
- 			container_of(vd, struct k3_dma_desc_sw, vd);
+ 	if (hsrVer > 0) {
+ 		hsr_tag = skb_put(skb, sizeof(struct hsr_tag));
 -- 
 2.20.1
 
