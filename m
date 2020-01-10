@@ -2,132 +2,126 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1569BC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A57A6C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5DE820678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7127F2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:57:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="f4oqjhGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730675AbgAJBzw (ORCPT
+        id S1730709AbgAJB5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:55:52 -0500
-Received: from mga07.intel.com ([134.134.136.100]:49142 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730359AbgAJBzv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 20:55:51 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 17:55:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="246855115"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga004.fm.intel.com with ESMTP; 09 Jan 2020 17:55:49 -0800
-Date:   Fri, 10 Jan 2020 09:55:48 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, kirill.shutemov@linux.intel.com,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        richard.weiyang@gmail.com
-Subject: Re: [RFC PATCH] mm/rmap.c: finer hwpoison granularity for PTE-mapped
- THP
-Message-ID: <20200110015548.GA16823@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200102030421.30799-1-richardw.yang@linux.intel.com>
- <20200109123233.ye2h4dxaubu4ad22@box>
+        Thu, 9 Jan 2020 20:57:08 -0500
+Received: from mail-dm6nam12on2062.outbound.protection.outlook.com ([40.107.243.62]:6198
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730359AbgAJB5I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 20:57:08 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZB8yS6EHltY5vnBeeNBevupwT7Ua+YbB6Awixd5M0PLp/iQ+ETZIrxr5ODCCyWIJy58sFnAV0ojAnnaRR2JtJ1V6+cwbFB0btpZscJ6c9MwUOL0VPLyi6kbixJrglb4kz2N4WaTFT+lz2MDJwdFzFrXiols1/gcDWkzD6ns5b2Bz4LD17xUeYHGY6tVd/ezJsOtCFP0rZnaxaW0/Sc6DQTxrvNcp6YkpyMfLtr85AJjue1jIHY+KiMFkXJ24TDhPWoqiA+Xi9OUP8m69YYGnPnL7rX4BNeHzaIxOBCEP5Uoj/kV2iRYFYqjjGh9a5yNBO/sFVkrpgR3Nt1nlm2MqbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3JoyyOPOsBt0j/rd5e7H3IOxaxDVqpJTNcCr+QI8M5I=;
+ b=G6slXRU/6Rxh7xnzQu4+A2zR4exASJIqdyLf8dQ9iwzwWJGGGwffx8su4SUem3duT793STjwsaCdshrE0Zw6AuGtYY5LwuCXYvKTr5Y/wC8B68pgMLq/UhBDR1LTFHL5dnCx25T6FtAtOyk2sdnINGI/GBd8AVtmwkXESL7rCCQOVng/F9v3o7UrBZC7N0/qC8ApXaKarMBOhPgo3UwtYIPorBBD5D70yiN8DtaXVktCn8U7n8tzr4+ZfP72dwerY12Kq2vMx5V0MuY3ZQFpZf8eGy6T31lno6WLBPhZzYIPWNcme1JtwkhPyKoxbJYT7wu0lb8m0eWytf9l/dptWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3JoyyOPOsBt0j/rd5e7H3IOxaxDVqpJTNcCr+QI8M5I=;
+ b=f4oqjhGsHvFGaauLFAkTLmwpSalyEqMH78iQUEqOiU7coUAOvjSkbr6PkGafCqAI71aJjofcOsSRcwUcEshGQdBpt4G1zaZ4BGuTvwDfCqH83HiE5n+rdnSBJP3mp3r/Br8gI+7S0meTpqvcy/GCmNK7XjvS/2YXJNCjQlb3zuc=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+Received: from BN6PR12MB1667.namprd12.prod.outlook.com (10.172.18.18) by
+ BN6PR12MB1378.namprd12.prod.outlook.com (10.168.228.9) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2602.11; Fri, 10 Jan 2020 01:57:04 +0000
+Received: from BN6PR12MB1667.namprd12.prod.outlook.com
+ ([fe80::d536:f1cd:c8d1:fe]) by BN6PR12MB1667.namprd12.prod.outlook.com
+ ([fe80::d536:f1cd:c8d1:fe%12]) with mapi id 15.20.2602.017; Fri, 10 Jan 2020
+ 01:57:04 +0000
+From:   Yazen Ghannam <Yazen.Ghannam@amd.com>
+To:     linux-edac@vger.kernel.org
+Cc:     Yazen Ghannam <Yazen.Ghannam@amd.com>,
+        linux-kernel@vger.kernel.org, bp@suse.de, tony.luck@intel.com,
+        x86@kernel.org
+Subject: [PATCH 0/5] MCA and EDAC updates for AMD Family 19h
+Date:   Fri, 10 Jan 2020 01:56:46 +0000
+Message-Id: <20200110015651.14887-1-Yazen.Ghannam@amd.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SN6PR08CA0036.namprd08.prod.outlook.com
+ (2603:10b6:805:66::49) To BN6PR12MB1667.namprd12.prod.outlook.com
+ (2603:10b6:405:4::18)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109123233.ye2h4dxaubu4ad22@box>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Received: from ethanolx80b6host.amd.com (165.204.78.1) by SN6PR08CA0036.namprd08.prod.outlook.com (2603:10b6:805:66::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.12 via Frontend Transport; Fri, 10 Jan 2020 01:57:03 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [165.204.78.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 12c55ac2-5578-4aa5-b5bb-08d7957063ce
+X-MS-TrafficTypeDiagnostic: BN6PR12MB1378:|BN6PR12MB1378:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BN6PR12MB1378489021FCE355DC28F070F8380@BN6PR12MB1378.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 02788FF38E
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(39860400002)(396003)(136003)(366004)(189003)(199004)(66556008)(2616005)(6916009)(5660300002)(8676002)(15650500001)(86362001)(66946007)(956004)(36756003)(4326008)(1076003)(81166006)(478600001)(26005)(316002)(4744005)(186003)(8936002)(66476007)(52116002)(16526019)(2906002)(7696005)(6486002)(81156014)(6666004);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR12MB1378;H:BN6PR12MB1667.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: NCM6fTT5qm6CFKl1tZuitQYyyIrxlVw8mOD5pS6X4giQjM+OLRfNqQf6KBrkVc1PX6+c5YaHRLBd/YNHYN1wvLk4b3UGAPk6oSYCHiKX0Sd5HEMa6WTgcRMHKLesnquIwLrWSFB+L49F1g0ywrsPZEvF7lz6WwNAUTBfLrVOKpSCDKzGIuYl6TusEFHCide3y/q1S9yWAjzvaINyQ4Br3ZtYxdVi+PqRMsbf+P3rF4mNXY8zjcMlBUbJtU1PW6TQ488xouLz/1goOlyCLuqyUidMNTTJsSpZlcXjg6xpC5OjlrNGiGDqH1g6eBOmwOgpUourR4tIzPtZP3KC3TESfjTicva417hGWNKzB/5Y7GwZYc7GSekWTKq23RgYpP8EaoXAqKg0gQMYoocLgLqaoxNqeoAxtp0ihvNXYDCfGX/g063b0BJbu1ULBlwoOZPQ
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 12c55ac2-5578-4aa5-b5bb-08d7957063ce
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2020 01:57:04.2000
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uQ5f4wKzUWgVc+iIiQC7eAMNft7YpFsgLUnU1a6Zo0FxHZQsqx9wCZyePDPHYtZd8sEY7MtXIn5+jf/u9H52Rg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR12MB1378
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 03:32:33PM +0300, Kirill A. Shutemov wrote:
->On Thu, Jan 02, 2020 at 11:04:21AM +0800, Wei Yang wrote:
->> Currently we behave differently between PMD-mapped THP and PTE-mapped
->> THP on memory_failure.
->> 
->> User detected difference:
->> 
->>     For PTE-mapped THP, the whole 2M range will trigger MCE after
->>     memory_failure(), while only 4K range for PMD-mapped THP will.
->> 
->> Direct reason:
->> 
->>     All the 512 PTE entry will be marked as hwpoison entry for a PTE-mapped
->>     THP while only one PTE will be marked for a PMD-mapped THP.
->> 
->> Root reason:
->> 
->>     The root cause is PTE-mapped page doesn't need to split pmd which skip
->>     the SPLIT_FREEZE process.
->
->I don't follow how SPLIT_FREEZE is related to pisoning. Cold you
->laraborate?
->
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-Sure. Let me try to explain this a little.
+Hi Boris,
 
-    split_huge_page_to_list
-        unmap_page
-	    try_to_unmap_one
-                ...
-                __split_huge_pmd_locked
-        __split_huge_page
-            remap_page
+This patchset adds MCA and EDAC support for AMD Family 19h.
 
-There are two dimensions:
+There aren't any functional changes. Mostly we just need to add new PCI
+IDs and a new MCA bank type. I've also included a couple of patches that
+do away with family checks where appropriate.
 
-   * PMD mapped THP and PTE mapped THP
-   * HWPOISON-ed page and non-HWPOISON-ed page
+Thanks,
+Yazen
 
-So there are total 4 cases.
+Yazen Ghannam (5):
+  x86/MCE/AMD, EDAC/mce_amd: Add new Load Store unit McaType
+  EDAC/mce_amd: Always load on SMCA systems
+  x86/amd_nb: Add Family 19h PCI IDs
+  EDAC/amd64: Add family ops for Family 19h Models 00h-0Fh
+  EDAC/amd64: Drop some family checks for newer systems
 
-1. First let's take a look at the normal case, when HWPOISON is not set.
-
-If the page is PMD-mapped, SPLIT_FREEZE is passed down in flags. And finally
-passed to __split_huge_pmd_locked. In this function, when freeze is true, PTE
-will be set to migration entry. And because __split_huge_pmd_locked save
-migration entry to PTE, try_to_unmap_one will not do real unmap. Then
-remap_page restore those migration entry back. 
-
-If the page is PTE-mapped, __split_huge_pmd_locked will be skipped since this
-is already done. This means try_to_unmap_one will do the real unmap. Because
-SPLIT_FREEZE is passed, PTE will be set to migration entry, which is the same
-behavior as PMD-mapped page. Then remap_page restore those migration entry
-back.
-
-This shows PMD-mapped and PTE-mapped page share the same result on split.
-
-While difference is who sets PTE as migration entry
-
-  * __split_huge_pmd_locked does this job for PMD-mapped page
-  * try_to_unmap_one does this job for PTE-mapped page
-
-2. Now let's take a look at the HWPOISON case.
-
-There are two critical differences 
-
-  * __split_huge_pmd_locked is skipped for PTE-mapped page
-  * HWPOISON effects the behavior of try_to_unmap_one
-
-Then for PMD-mapped page, HWPOISON has no effect on split. But for PTE-mapped
-page, all PTE will be set to hwpoison entry.
-
-Then in memory_failure, the page split will have two different PTE result.
-
-Not sure I explain it clearly.
+ arch/x86/include/asm/mce.h    |  1 +
+ arch/x86/kernel/amd_nb.c      |  3 ++
+ arch/x86/kernel/cpu/mce/amd.c |  2 ++
+ drivers/edac/amd64_edac.c     | 62 ++++++++++++++++++++---------------
+ drivers/edac/amd64_edac.h     |  3 ++
+ drivers/edac/mce_amd.c        | 41 ++++++++++++++++++++---
+ include/linux/pci_ids.h       |  1 +
+ 7 files changed, 82 insertions(+), 31 deletions(-)
 
 -- 
-Wei Yang
-Help you, Help me
+2.17.1
+
