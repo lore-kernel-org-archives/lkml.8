@@ -2,76 +2,127 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF7BC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBB7C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE232072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39FDA2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbgAJSml (ORCPT
+        id S1728738AbgAJSoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:42:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:49930 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728023AbgAJSml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:42:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 934AC30E;
-        Fri, 10 Jan 2020 10:42:40 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D6EA3F6C4;
-        Fri, 10 Jan 2020 10:42:39 -0800 (PST)
-Subject: Re: [PATCH v2 5/7] arm64: ptrace: nofpsimd: Fail FP/SIMD regset
- operations
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        will@kernel.org, maz@kernel.org, mark.rutland@arm.com,
-        dave.martin@arm.com, ard.biesheuvel@linaro.org,
-        christoffer.dall@arm.com, Will Deacon <will.deacon@arm.com>
-References: <20191217183402.2259904-1-suzuki.poulose@arm.com>
- <20191217183402.2259904-6-suzuki.poulose@arm.com>
- <20200110151231.GG8786@arrakis.emea.arm.com>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <2078734b-fba5-8207-a73a-3eee4b899256@arm.com>
-Date:   Fri, 10 Jan 2020 18:42:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 10 Jan 2020 13:44:13 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:53063 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbgAJSoM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 13:44:12 -0500
+Received: by mail-il1-f197.google.com with SMTP id n9so2149176ilm.19
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 10:44:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+         :content-transfer-encoding;
+        bh=TRXVUW5VdRfR8tbpVKkySd5KgoB+rtYOEj2qlqOy3d8=;
+        b=Lj7ITd01fhdhJ6TkN2k7Rkg5vLeLjJNmkl+/fovXnPdYoEtXqXsw/xAn2eYe0falTg
+         sirMBCfMVv9v9J3K8dHsbC6NS7vhxZEgXL7UW07DVBsSM0EgLbSmIgNWTqvpFDM2efaj
+         WmZMxsZOzT7jl/SfTls7pzg+fu9qA72V2BYN/95SNlWYUhhqqAjumPw7LFkrfoofQxYb
+         7HEcMZzF6k/3m6lWUvIqD1Ktc5aGobXDoJTFlR97YFtpco7Dbl/46yyCWXr0L8TEEqkh
+         1Q46XsR6n6aVv51/8Uz9Os+BsP+8ilsAcWTUn7Tvas5g1Nyua/U0Pmaoa2KB5c1gJvz/
+         S8zg==
+X-Gm-Message-State: APjAAAV8ALZVx1QHnilazArGyv4pxX7lC70C7pvkiXqiFeEaDEUou032
+        sZbZYzTbTrusc+6k001F/AlpI10efg/KfZKq2py56mXhLUT6
+X-Google-Smtp-Source: APXvYqztOglm25N3WF3mJHQF32KEiLuqz1sb1hpDTNozKqaL/axJkCoX9YYR3F10NTnBdFwXcfiQqcfzMl/AEDKxGEkoV3QsTkAn
 MIME-Version: 1.0
-In-Reply-To: <20200110151231.GG8786@arrakis.emea.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:730d:: with SMTP id o13mr3882562ilc.174.1578681851134;
+ Fri, 10 Jan 2020 10:44:11 -0800 (PST)
+Date:   Fri, 10 Jan 2020 10:44:11 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f349be059bcd827a@google.com>
+Subject: WARNING in __xlate_proc_name (2)
+From:   syzbot <syzbot+016c7186c1d55575bab8@syzkaller.appspotmail.com>
+To:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/01/2020 15:12, Catalin Marinas wrote:
-> On Tue, Dec 17, 2019 at 06:34:00PM +0000, Suzuki K Poulose wrote:
->> diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
->> index 6771c399d40c..0135b944b8db 100644
->> --- a/arch/arm64/kernel/ptrace.c
->> +++ b/arch/arm64/kernel/ptrace.c
->> @@ -637,6 +637,9 @@ static int fpr_get(struct task_struct *target, const struct user_regset *regset,
->>   		   unsigned int pos, unsigned int count,
->>   		   void *kbuf, void __user *ubuf)
->>   {
->> +	if (!system_supports_fpsimd())
->> +		return -EINVAL;
->> +
->>   	if (target == current)
->>   		fpsimd_preserve_current_state();
-> 
-> I checked the coredump code (fill_thread_core_info) and works correctly
-> if we return -EINVAL here. But for completeness, we could add an
-> fpr_active() callback to aarch{32,64}_regsets (x86 does the same).
-> 
-
-Sure, makes sense. I have now added fpr_active() hook for the FP
-regsets.
-
-Suzuki
+SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
+bW1pdDogICAgYjA3ZjYzNmYgTWVyZ2UgdGFnICd0cG1kZC1uZXh0LTIwMjAwMTA4JyBvZiBnaXQ6
+Ly9naXQuaW5mci4uDQpnaXQgdHJlZTogICAgICAgdXBzdHJlYW0NCmNvbnNvbGUgb3V0cHV0OiBo
+dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L2xvZy50eHQ/eD0xMjkzZjU0OWUwMDAwMA0K
+a2VybmVsIGNvbmZpZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvLmNvbmZpZz94
+PTE4Njk4YzBjMjQwYmE2MTYNCmRhc2hib2FyZCBsaW5rOiBodHRwczovL3N5emthbGxlci5hcHBz
+cG90LmNvbS9idWc/ZXh0aWQ9MDE2YzcxODZjMWQ1NTU3NWJhYjgNCmNvbXBpbGVyOiAgICAgICBn
+Y2MgKEdDQykgOS4wLjAgMjAxODEyMzEgKGV4cGVyaW1lbnRhbCkNCnN5eiByZXBybzogICAgICBo
+dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L3JlcHJvLnN5ej94PTEzYmFiYzg1ZTAwMDAw
+DQpDIHJlcHJvZHVjZXI6ICAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9yZXByby5j
+P3g9MTRiMTRkMTVlMDAwMDANCg0KVGhlIGJ1ZyB3YXMgYmlzZWN0ZWQgdG86DQoNCmNvbW1pdCA5
+ODk3ODJkY2RjOTFhNWU2ZDU5OTljN2E1MmE4NGE2MGEwODExZTU2DQpBdXRob3I6IERhdmlkIEhv
+d2VsbHMgPGRob3dlbGxzQHJlZGhhdC5jb20+DQpEYXRlOiAgIFRodSBOb3YgMiAxNToyNzo1MCAy
+MDE3ICswMDAwDQoNCiAgICAgYWZzOiBPdmVyaGF1bCBjZWxsIGRhdGFiYXNlIG1hbmFnZW1lbnQN
+Cg0KYmlzZWN0aW9uIGxvZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvYmlzZWN0
+LnR4dD94PTEyMDUyMTU2ZTAwMDAwDQpmaW5hbCBjcmFzaDogICAgaHR0cHM6Ly9zeXprYWxsZXIu
+YXBwc3BvdC5jb20veC9yZXBvcnQudHh0P3g9MTEwNTIxNTZlMDAwMDANCmNvbnNvbGUgb3V0cHV0
+OiBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L2xvZy50eHQ/eD0xNjA1MjE1NmUwMDAw
+MA0KDQpJTVBPUlRBTlQ6IGlmIHlvdSBmaXggdGhlIGJ1ZywgcGxlYXNlIGFkZCB0aGUgZm9sbG93
+aW5nIHRhZyB0byB0aGUgY29tbWl0Og0KUmVwb3J0ZWQtYnk6IHN5emJvdCswMTZjNzE4NmMxZDU1
+NTc1YmFiOEBzeXprYWxsZXIuYXBwc3BvdG1haWwuY29tDQpGaXhlczogOTg5NzgyZGNkYzkxICgi
+YWZzOiBPdmVyaGF1bCBjZWxsIGRhdGFiYXNlIG1hbmFnZW1lbnQiKQ0KDQotLS0tLS0tLS0tLS1b
+IGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0NCm5hbWUgJ++/veWTojA977+977+977+9FiPvv716Bg0K
+77+9L++/vWcS77+9IyF3EWph77+9KzInDQpXQVJOSU5HOiBDUFU6IDEgUElEOiAyNjY5IGF0IGZz
+L3Byb2MvZ2VuZXJpYy5jOjE3OCBfX3hsYXRlX3Byb2NfbmFtZSAgDQpmcy9wcm9jL2dlbmVyaWMu
+YzoxNzggW2lubGluZV0NCldBUk5JTkc6IENQVTogMSBQSUQ6IDI2NjkgYXQgZnMvcHJvYy9nZW5l
+cmljLmM6MTc4ICANCl9feGxhdGVfcHJvY19uYW1lKzB4ZTcvMHgxMTAgZnMvcHJvYy9nZW5lcmlj
+LmM6MTYxDQpLZXJuZWwgcGFuaWMgLSBub3Qgc3luY2luZzogcGFuaWNfb25fd2FybiBzZXQgLi4u
+DQpDUFU6IDEgUElEOiAyNjY5IENvbW06IGt3b3JrZXIvMToyIE5vdCB0YWludGVkIDUuNS4wLXJj
+NS1zeXprYWxsZXIgIzANCkhhcmR3YXJlIG5hbWU6IEdvb2dsZSBHb29nbGUgQ29tcHV0ZSBFbmdp
+bmUvR29vZ2xlIENvbXB1dGUgRW5naW5lLCBCSU9TICANCkdvb2dsZSAwMS8wMS8yMDExDQpXb3Jr
+cXVldWU6IGFmcyBhZnNfbWFuYWdlX2NlbGwNCkNhbGwgVHJhY2U6DQogIF9fZHVtcF9zdGFjayBs
+aWIvZHVtcF9zdGFjay5jOjc3IFtpbmxpbmVdDQogIGR1bXBfc3RhY2srMHgxOTcvMHgyMTAgbGli
+L2R1bXBfc3RhY2suYzoxMTgNCiAgcGFuaWMrMHgyZTMvMHg3NWMga2VybmVsL3BhbmljLmM6MjIx
+DQogIF9fd2Fybi5jb2xkKzB4MmYvMHgzZSBrZXJuZWwvcGFuaWMuYzo1ODINCiAgcmVwb3J0X2J1
+ZysweDI4OS8weDMwMCBsaWIvYnVnLmM6MTk1DQogIGZpeHVwX2J1ZyBhcmNoL3g4Ni9rZXJuZWwv
+dHJhcHMuYzoxNzQgW2lubGluZV0NCiAgZml4dXBfYnVnIGFyY2gveDg2L2tlcm5lbC90cmFwcy5j
+OjE2OSBbaW5saW5lXQ0KICBkb19lcnJvcl90cmFwKzB4MTFiLzB4MjAwIGFyY2gveDg2L2tlcm5l
+bC90cmFwcy5jOjI2Nw0KICBkb19pbnZhbGlkX29wKzB4MzcvMHg1MCBhcmNoL3g4Ni9rZXJuZWwv
+dHJhcHMuYzoyODYNCiAgaW52YWxpZF9vcCsweDIzLzB4MzAgYXJjaC94ODYvZW50cnkvZW50cnlf
+NjQuUzoxMDI3DQpSSVA6IDAwMTA6X194bGF0ZV9wcm9jX25hbWUgZnMvcHJvYy9nZW5lcmljLmM6
+MTc4IFtpbmxpbmVdDQpSSVA6IDAwMTA6X194bGF0ZV9wcm9jX25hbWUrMHhlNy8weDExMCBmcy9w
+cm9jL2dlbmVyaWMuYzoxNjENCkNvZGU6IDNmIGViIDkwIGZmIDQ0IDg5IGUwIDQ4IDgzIGM0IDA4
+IDViIDQxIDVjIDQxIDVkIDQxIDVlIDQxIDVmIDVkIGMzIGU4ICANCjI4IGViIDkwIGZmIDRjIDg5
+IGZlIDQ4IGM3IGM3IDQwIDE4IDM5IDg4IGU4IDg4IDk5IDYxIGZmIDwwZj4gMGIgNDEgYmMgZmUg
+IA0KZmYgZmYgZmYgZWIgY2IgNGMgODkgZjcgZTggMzcgYTQgY2UgZmYgZTkgM2QgZmYgZmYNClJT
+UDogMDAxODpmZmZmYzkwMDA3OWJmOWQwIEVGTEFHUzogMDAwMTAyODINClJBWDogMDAwMDAwMDAw
+MDAwMDAwMCBSQlg6IGZmZmY4ODgwOTRlYTNkNDkgUkNYOiAwMDAwMDAwMDAwMDAwMDAwDQpSRFg6
+IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiBmZmZmZmZmZjgxNWU4NTA2IFJESTogZmZmZmY1MjAwMGYz
+N2YyYw0KUkJQOiBmZmZmYzkwMDA3OWJmYTAwIFIwODogZmZmZjg4ODBhMGFhNjQ4MCBSMDk6IGZm
+ZmZmYmZmZjE2NWViYTYNClIxMDogZmZmZmZiZmZmMTY1ZWJhNSBSMTE6IGZmZmZmZmZmOGIyZjVk
+MmYgUjEyOiAwMDAwMDAwMDAwMDAwMDAwDQpSMTM6IGZmZmY4ODgwOTRlYTNkMzkgUjE0OiBmZmZm
+YzkwMDA3OWJmYjA4IFIxNTogZmZmZjg4ODA5NGVhM2QzOQ0KICB4bGF0ZV9wcm9jX25hbWUgZnMv
+cHJvYy9nZW5lcmljLmM6MTk0IFtpbmxpbmVdDQogIF9fcHJvY19jcmVhdGUrMHhhYy8weDg2MCBm
+cy9wcm9jL2dlbmVyaWMuYzozODcNCiAgcHJvY19ta2Rpcl9kYXRhKzB4YmMvMHgxYjAgZnMvcHJv
+Yy9nZW5lcmljLmM6NDczDQogIHByb2NfbmV0X21rZGlyIGluY2x1ZGUvbGludXgvcHJvY19mcy5o
+OjEzOSBbaW5saW5lXQ0KICBhZnNfcHJvY19jZWxsX3NldHVwKzB4OTUvMHgxOTAgZnMvYWZzL3By
+b2MuYzo2MTANCiAgYWZzX2FjdGl2YXRlX2NlbGwgZnMvYWZzL2NlbGwuYzo1OTEgW2lubGluZV0N
+CiAgYWZzX21hbmFnZV9jZWxsKzB4NTRiLzB4MTQxMCBmcy9hZnMvY2VsbC5jOjY3Mw0KICBwcm9j
+ZXNzX29uZV93b3JrKzB4OWFmLzB4MTc0MCBrZXJuZWwvd29ya3F1ZXVlLmM6MjI2NA0KICB3b3Jr
+ZXJfdGhyZWFkKzB4OTgvMHhlNDAga2VybmVsL3dvcmtxdWV1ZS5jOjI0MTANCiAga3RocmVhZCsw
+eDM2MS8weDQzMCBrZXJuZWwva3RocmVhZC5jOjI1NQ0KICByZXRfZnJvbV9mb3JrKzB4MjQvMHgz
+MCBhcmNoL3g4Ni9lbnRyeS9lbnRyeV82NC5TOjM1Mg0KS2VybmVsIE9mZnNldDogZGlzYWJsZWQN
+ClJlYm9vdGluZyBpbiA4NjQwMCBzZWNvbmRzLi4NCg0KDQotLS0NClRoaXMgYnVnIGlzIGdlbmVy
+YXRlZCBieSBhIGJvdC4gSXQgbWF5IGNvbnRhaW4gZXJyb3JzLg0KU2VlIGh0dHBzOi8vZ29vLmds
+L3Rwc21FSiBmb3IgbW9yZSBpbmZvcm1hdGlvbiBhYm91dCBzeXpib3QuDQpzeXpib3QgZW5naW5l
+ZXJzIGNhbiBiZSByZWFjaGVkIGF0IHN5emthbGxlckBnb29nbGVncm91cHMuY29tLg0KDQpzeXpi
+b3Qgd2lsbCBrZWVwIHRyYWNrIG9mIHRoaXMgYnVnIHJlcG9ydC4gU2VlOg0KaHR0cHM6Ly9nb28u
+Z2wvdHBzbUVKI3N0YXR1cyBmb3IgaG93IHRvIGNvbW11bmljYXRlIHdpdGggc3l6Ym90Lg0KRm9y
+IGluZm9ybWF0aW9uIGFib3V0IGJpc2VjdGlvbiBwcm9jZXNzIHNlZTogaHR0cHM6Ly9nb28uZ2wv
+dHBzbUVKI2Jpc2VjdGlvbg0Kc3l6Ym90IGNhbiB0ZXN0IHBhdGNoZXMgZm9yIHRoaXMgYnVnLCBm
+b3IgZGV0YWlscyBzZWU6DQpodHRwczovL2dvby5nbC90cHNtRUojdGVzdGluZy1wYXRjaGVzDQo=
