@@ -2,92 +2,102 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5C4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C14BC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A132082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637E72072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:36:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SVsPQ5Uj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fhEaXCE9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbgAJSgk (ORCPT
+        id S1728681AbgAJSgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:36:40 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39051 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728400AbgAJSgk (ORCPT
+        Fri, 10 Jan 2020 13:36:43 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34440 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728496AbgAJSgl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:36:40 -0500
-Received: by mail-wm1-f66.google.com with SMTP id 20so2998195wmj.4;
-        Fri, 10 Jan 2020 10:36:39 -0800 (PST)
+        Fri, 10 Jan 2020 13:36:41 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t2so2777865wrr.1;
+        Fri, 10 Jan 2020 10:36:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=2Yc37HGhbVglWg9H9TpyhPlGXyZBP+fZVz5l0vOH44g=;
-        b=SVsPQ5UjMsyR76PLPc/tBgMUJDvso/g/fjRT+1oSH4L4pgZ1yt03xJ/sqNyB/ksxKG
-         HlgKgswZHJWRqcwYP1hJGdI+waecOkAAayPF2BBkUlaR4yytijqlr/YPeV1q2zdgfR9n
-         0f/BzG0Mu9BpXl2f0fXBPy9Z88U+oTC6b8c2UkAijkVWZEsEKE/0i8sjg1lCgPD9O/Pp
-         PFt5vhTxPFUfGnuQEvOF8vLIyGZUkLsIyn+aCctFSxCqa9CjLbHYWaa36EBS9UYLqDiP
-         8GOtTmnw6ta1oCc6B83qYRKB8Nj/b+JH8YhXcbFuERYx+N++ww6sHOLsg2PP21HuqEBQ
-         G90w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=pdOwgb77hw5W7/fMrT3rXjdCdL0Strxze8eiojAXtTg=;
+        b=fhEaXCE9ZImAaW0znUttr7EmxkKXyMJ8aAa6ctKxbgzIrBIi+Y/o8N8+RbXam6/HXZ
+         Cw0KxpCHBgvU49O8HPlteulKyy6AXoibYu+wXLtuJEIncQmX7622CLdZtAw0UCl/3iHS
+         9nilkbMvefeUlkb7ZhZLIgIKBhzhDnG+7SqFYrEMxDbtg5csU7XuV2mofg2JHyT+0cFI
+         X/d4kDaExpQEst2ZdmG0kxpEYJ/x7AS5ZLGxnsoE1uK4jNIlEDqZBAVh443uZCisRIEG
+         TLqw0M07L5rQ6T6XGO4JRpjJ8ZwTwtIBEVm6ag8ENdg2A7HaY7nO/h16JLSjmaLyESjw
+         ffHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=2Yc37HGhbVglWg9H9TpyhPlGXyZBP+fZVz5l0vOH44g=;
-        b=j/eoUZlEy88gaCuHkEBYzcb4RD062ILqiAkQQHT/t/cy9ZtoI5LPPOqgVzuUo0O/Az
-         IS+UcgFRTj8L0MqI8mxUk3dmcqiZLXhJPCBKqEnpJ8mmjaANR4omhMp3rC0egXlXY7Ut
-         Bcuod84ZaJbd2KGfEy6YTGBojpTSTwi00+QJ+7fy5LSfvqENNP+QGJtQt0en48HQHvOv
-         bNdDSsCDAsmfvQhU5SYxHWuOjXAbV2oCvSKXKFlzrEd4FH2DnFhnO4eJAYWNmZDaYJsq
-         D0qwp+9WQdV0QcrBMnXYylikzosVkPM9/3kME3UJ3UsS6kTfpylkyxe5kJVYQU/bZxex
-         7dsQ==
-X-Gm-Message-State: APjAAAX3JuAnCQ0wPfm0S783jBk8p7jEKDz5q03CKb7Fp7jb4AW8QsVi
-        d929mjEdnX/aWGzKXXXWjAk=
-X-Google-Smtp-Source: APXvYqwq2dX4d91vOXSbVX8gmUC4UrZCcNWdt58mjN3ivM5n725gVZp5CFelg37U0cexfntafwYyHQ==
-X-Received: by 2002:a1c:407:: with SMTP id 7mr5618354wme.29.1578681398505;
-        Fri, 10 Jan 2020 10:36:38 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=pdOwgb77hw5W7/fMrT3rXjdCdL0Strxze8eiojAXtTg=;
+        b=bNaKr+T74I5fYzaXIDS7GuyGkUqM3CVHA1I1C/Gd9GtlLVUrAX4gV2yolvwiAREEkp
+         cuvm5PUxSHFNVGR7j1+55c1nIMCAl1fHuEny4yxYprkkS//K19zdl88duePR7vOhD94q
+         +Kmu+i4TVbcW6me0rwjY2U5m6iZ+M+9sJK6R+g8xgE3wt3b9URUjzM2Cq8pTZ4YnEqhM
+         BIoNj3KuMe/lZMniTmiVxZnWJpjxv92hkJle/ckaK9U0rIyobKXuc0FaTWb5Z5/fmbDz
+         Gu2ecsGgU/vEc08BOkpzt7eZSBu8ggPqXcA6LN9wMikVajmgnjfVawx/Q97W+HifoSLb
+         TVOw==
+X-Gm-Message-State: APjAAAUJlXgfHFvlwZiSpo8j+fa9F/SiurNA2O5SQ5mhodZ3kacD6s3V
+        b6WlgIEzTeWaR34mckwMcIY=
+X-Google-Smtp-Source: APXvYqxWzBzeoDTdUcPLmULJgQcWtmntniN4ym0sK8nVJke7SzAcOlGgtPAr86X0MnLklB4d4Bu7fA==
+X-Received: by 2002:a5d:494f:: with SMTP id r15mr5038525wrs.143.1578681399816;
+        Fri, 10 Jan 2020 10:36:39 -0800 (PST)
 Received: from localhost.localdomain (ip5f5bee3c.dynamic.kabel-deutschland.de. [95.91.238.60])
-        by smtp.gmail.com with ESMTPSA id x11sm3182825wre.68.2020.01.10.10.36.36
+        by smtp.gmail.com with ESMTPSA id x11sm3182825wre.68.2020.01.10.10.36.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 10:36:37 -0800 (PST)
+        Fri, 10 Jan 2020 10:36:39 -0800 (PST)
 From:   Bean Huo <huobean@gmail.com>
 To:     alim.akhtar@samsung.com, avri.altman@wdc.com,
         pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
         martin.petersen@oracle.com, stanley.chu@mediatek.com,
         beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
         cang@codeaurora.org
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bean Huo <huobean@gmail.com>
-Subject: [PATCH v1 0/3] use UFS device indicated maximum LU number
-Date:   Fri, 10 Jan 2020 19:36:03 +0100
-Message-Id: <20200110183606.10102-1-huobean@gmail.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] scsi: ufs: add max_lu_supported in struct ufs_dev_info
+Date:   Fri, 10 Jan 2020 19:36:04 +0100
+Message-Id: <20200110183606.10102-2-huobean@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200110183606.10102-1-huobean@gmail.com>
+References: <20200110183606.10102-1-huobean@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to Jedec standard UFS 3.0 and UFS 2.1 Spec, Maximum
-number of logical units supported by the UFS device is specified
-by parameter bMaxNumberLU in Geometry Descriptor. This series
-of patches is to delete macro definition UFS_UPIU_MAX_GENERAL_LUN,
-and switch to use indicated value in descriptor instead.
+From: Bean Huo <beanhuo@micron.com>
 
+Add one new parameter max_lu_supported in struct ufs_dev_info,
+which will be used to express exactly how many general LUs being
+supported by UFS device.
 
-Bean Huo (3):
-  scsi: ufs: add max_lu_supported in struct ufs_dev_info
-  scsi: ufs: initialize max_lu_supported while booting
-  scsi: ufs: use UFS device indicated maximum LU number
+Signed-off-by: Bean Huo <beanhuo@micron.com>
+---
+ drivers/scsi/ufs/ufs.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
- drivers/scsi/ufs/ufs-sysfs.c |  2 +-
- drivers/scsi/ufs/ufs.h       | 14 +++++++---
- drivers/scsi/ufs/ufshcd.c    | 51 +++++++++++++++++++++++++++++++++---
- 3 files changed, 60 insertions(+), 7 deletions(-)
-
+diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
+index c89f21698629..5ca7ea4f223e 100644
+--- a/drivers/scsi/ufs/ufs.h
++++ b/drivers/scsi/ufs/ufs.h
+@@ -530,6 +530,8 @@ struct ufs_dev_info {
+ 	bool f_power_on_wp_en;
+ 	/* Keeps information if any of the LU is power on write protected */
+ 	bool is_lu_power_on_wp;
++	/* Maximum number of general LU supported by the UFS device */
++	u8 max_lu_supported;
+ };
+ 
+ #define MAX_MODEL_LEN 16
 -- 
 2.17.1
 
