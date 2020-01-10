@@ -2,141 +2,75 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03F6C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69849C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769DD205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578688577;
-	bh=YhBMJIvMTYGFSuOdcqnzo+uNNjCw+xoOLW1GRlj10UM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=tnZMkvA6mg00PC3aZP4OKPx980CKUJ7F1yRHB8sg45Bpn/8mlFB/EM4o6BWLGaqIT
-	 nZbWUgitmi0MKD1P9j09rPvHxMUk+965DVSSDZxXYKcYQzSukFGQnWiOypihN7HVDm
-	 zv1slM0mltRx0TPAqWnbF+5Ub3vD0Ph8Bgbv1psM=
+	by mail.kernel.org (Postfix) with ESMTP id 31E15206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:38:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="SU703pXx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726779AbgAJUfa (ORCPT
+        id S1726764AbgAJUig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 15:35:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58012 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 15:38:36 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:40108 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726643AbgAJUf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 15:35:28 -0500
-Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726707AbgAJUif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 15:38:35 -0500
+Received: from zn.tnic (p200300EC2F0ACA00F8C15324EBC48DF9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:ca00:f8c1:5324:ebc4:8df9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7704220838;
-        Fri, 10 Jan 2020 20:35:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578688528;
-        bh=YhBMJIvMTYGFSuOdcqnzo+uNNjCw+xoOLW1GRlj10UM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=wSAeCmOuQGLSGyI5diKsWO2qdI0YSsfUVrbSZXVrVLSBSyL6imA7wOkGUcwNI2l1t
-         J7BeUmX9kzXE0+KDgyngR40HH7UGJ54DzeiYWepmdBJJIDgpbeneUpKGEEKA5HJlSv
-         WmN2q9JscdvJTuD/bToPABb5OAz9+G1C/UGkyNZQ=
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     rostedt@goodmis.org
-Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH v2 01/12] tracing: Add trace_array_find() to find instance trace arrays
-Date:   Fri, 10 Jan 2020 14:35:07 -0600
-Message-Id: <24b84188ea96d0ffddfd803b567a536f3fb9577e.1578688120.git.zanussi@kernel.org>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1578688120.git.zanussi@kernel.org>
-References: <cover.1578688120.git.zanussi@kernel.org>
-In-Reply-To: <cover.1578688120.git.zanussi@kernel.org>
-References: <cover.1578688120.git.zanussi@kernel.org>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6E7D41EC0AED;
+        Fri, 10 Jan 2020 21:38:34 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578688714;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=OVyKPs0BpfFvqdbrTSlRzuDRyyQLqNTc6ApJbIXLrcg=;
+        b=SU703pXxDdiZDx7W6KuDHtSULp/o2rtKz2j9n6IGHI2GPtODYFWA7USrupnxYe03fmprpP
+        zOEAYmwEWEIa5bLozjrDDIFNlNKLA5SxVec9Olf7bneIhfLHv5XV0u3ShVV2055JNH2kSy
+        9QV/jwUZsmfiFI2S2GhlAcVibMEljPI=
+Date:   Fri, 10 Jan 2020 21:38:28 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH] x86/tools/relocs: Add _etext and __end_of_kernel_reserve
+ to S_REL
+Message-ID: <20200110203828.GK19453@zn.tnic>
+References: <20200110202349.1881840-1-nivedita@alum.mit.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200110202349.1881840-1-nivedita@alum.mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a new trace_array_find() function that can be used to find a trace
-array given the instance name, and replace existing code that does the
-same thing with it.
+On Fri, Jan 10, 2020 at 03:23:49PM -0500, Arvind Sankar wrote:
+> Pre-2.23 binutils makes symbols defined outside sections absolute, so
+> these two symbols break the build on old linkers.
 
-Also make it available for use outside of trace.c.
+-ENOTENOUGHINFO
 
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- kernel/trace/trace.c | 30 ++++++++++++++++++++----------
- kernel/trace/trace.h |  1 +
- 2 files changed, 21 insertions(+), 10 deletions(-)
+Which old linkers, how exactly do they break the build, etc etc?
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 23459d53d576..3da836ef23ee 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8455,6 +8455,21 @@ static void update_tracer_options(struct trace_array *tr)
- 	mutex_unlock(&trace_types_lock);
- }
- 
-+/* Must have trace_types_lock held */
-+struct trace_array *trace_array_find(const char *name)
-+{
-+	struct trace_array *tr, *found = NULL;
-+
-+	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-+		if (tr->name && strcmp(tr->name, name) == 0) {
-+			found = tr;
-+			break;
-+		}
-+	}
-+
-+	return found;
-+}
-+
- static struct trace_array *trace_array_create(const char *name)
- {
- 	struct trace_array *tr;
-@@ -8531,10 +8546,8 @@ static int instance_mkdir(const char *name)
- 	mutex_lock(&trace_types_lock);
- 
- 	ret = -EEXIST;
--	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
--		if (tr->name && strcmp(tr->name, name) == 0)
--			goto out_unlock;
--	}
-+	if (trace_array_find(name))
-+		goto out_unlock;
- 
- 	tr = trace_array_create(name);
- 
-@@ -8658,12 +8671,9 @@ static int instance_rmdir(const char *name)
- 	mutex_lock(&trace_types_lock);
- 
- 	ret = -ENODEV;
--	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
--		if (tr->name && strcmp(tr->name, name) == 0) {
--			ret = __remove_instance(tr);
--			break;
--		}
--	}
-+	tr = trace_array_find(name);
-+	if (tr)
-+		ret = __remove_instance(tr);
- 
- 	mutex_unlock(&trace_types_lock);
- 	mutex_unlock(&event_mutex);
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 63bf60f79398..f37ef6524821 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -346,6 +346,7 @@ extern struct mutex trace_types_lock;
- 
- extern int trace_array_get(struct trace_array *tr);
- extern int tracing_check_open_get_tr(struct trace_array *tr);
-+extern struct trace_array *trace_array_find(const char *name);
- 
- extern int tracing_set_time_stamp_abs(struct trace_array *tr, bool abs);
- extern int tracing_set_clock(struct trace_array *tr, const char *clockstr);
+Please give exact reproduction steps.
+
+Thx.
+
 -- 
-2.14.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
