@@ -2,229 +2,406 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6B7C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BFDC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CC672072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBE1D2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:59:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FXG42iVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbgAJMya (ORCPT
+        id S1727354AbgAJM74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 07:54:30 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2254 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727167AbgAJMy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 07:54:29 -0500
-Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 73FAA8783076078CEC20;
-        Fri, 10 Jan 2020 12:54:28 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 10 Jan 2020 12:54:27 +0000
-Received: from [127.0.0.1] (10.202.226.43) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Fri, 10 Jan
- 2020 12:54:27 +0000
-Subject: Re: Warnings in DRM code when removing/unbinding a driver
-To:     Thomas Zimmermann <tzimmermann@suse.de>,
-        "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        "airlied@linux.ie" <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
- <381e28c2-f3e4-6f75-c632-96dd8a980c87@suse.de>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <38ce1d99-e803-3693-adff-106dc438c973@huawei.com>
-Date:   Fri, 10 Jan 2020 12:54:26 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Fri, 10 Jan 2020 07:59:56 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:39724 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727174AbgAJM74 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 07:59:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gMEIn5cfU0kguddr2CfamNQ6FPFiWCJ2CFUWs8P896A=; b=FXG42iVgUmLsG6XR7cph0kjt2
+        2TwwaBftKcDNwkLe1nZ4amPWmRBENVNdWbVcr0qQFrbKMQowfXiR4V0BtNq9LS+jRNrryNSoEtg4r
+        82lrjYDtSM71/394QOCrHX4bn8/V6+2LeLMcvPUfDXsX9q/jVeAAWFlG85ySQJYestdBApdU5iDRQ
+        gSCglaru5ft5sQU5oWcaYlrng2/BuUM2Q0+dUtm2bEVo4JHGvHjmUSObxEBdTiLuz3yO1lactCH8N
+        F4HHabCPB2wOZXV3Ojs0LQETzPxOE6LyzcJ49HOn/THD2Hq6Xr2l94vB0lxTQ0P7TPHNNFcY5D7jr
+        ZgHMmb9/A==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ipttF-0003MO-6N; Fri, 10 Jan 2020 12:59:49 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9C96F30025A;
+        Fri, 10 Jan 2020 13:58:10 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8A4942B5FCA6A; Fri, 10 Jan 2020 13:59:44 +0100 (CET)
+Date:   Fri, 10 Jan 2020 13:59:44 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v9] perf: Sharing PMU counters across compatible events
+Message-ID: <20200110125944.GJ2844@hirez.programming.kicks-ass.net>
+References: <20191217175948.3298747-1-songliubraving@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <381e28c2-f3e4-6f75-c632-96dd8a980c87@suse.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.43]
-X-ClientProxiedBy: lhreml729-chm.china.huawei.com (10.201.108.80) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191217175948.3298747-1-songliubraving@fb.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Dec 17, 2019 at 09:59:48AM -0800, Song Liu wrote:
 
+This is starting to look good, find a few comments below.
 
-Hi Thomas,
-
-> drm-tip now contains
-
-I have tested today's linux-next, which includes this:
-
+>  include/linux/perf_event.h |  13 +-
+>  kernel/events/core.c       | 363 ++++++++++++++++++++++++++++++++-----
+>  2 files changed, 332 insertions(+), 44 deletions(-)
 > 
-> commit a88248506a2bcfeaef6837a53cde19fe11970e6c
-> Author: Thomas Zimmermann <tzimmermann@suse.de>
-> Date:   Tue Dec 3 09:38:15 2019 +0100
-> 
->      drm/hisilicon/hibmc: Switch to generic fbdev emulation
-> 
-> which removes this entire code and switches hibmc to generic fbdev
-> emulation. Does that fix the problem?
-> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 6d4c22aee384..45a346ee33d2 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -547,7 +547,9 @@ enum perf_event_state {
+>  	PERF_EVENT_STATE_ERROR		= -2,
+>  	PERF_EVENT_STATE_OFF		= -1,
+>  	PERF_EVENT_STATE_INACTIVE	=  0,
+> -	PERF_EVENT_STATE_ACTIVE		=  1,
+> +	/* the hw PMC is enabled, but this event is not counting */
+> +	PERF_EVENT_STATE_ENABLED	=  1,
+> +	PERF_EVENT_STATE_ACTIVE		=  2,
+>  };
 
-And I see no warn, here's a dmesg snippet:
+It's probably best to extend the comment above instead of adding a
+comment for one of the states.
 
-[   20.672787] pci 0007:90:00.0: can't derive routing for PCI INT A
-[   20.678831] hibmc-drm 0007:91:00.0: PCI INT A: no GSI
-[   20.686536] pci_bus 0007:90: 2-byte config write to 0007:90:00.0 
-offset 0x4 may corrupt adjacent RW1C bits
-[   20.696888] [TTM] Zone  kernel: Available graphics memory: 57359458 KiB
-[   20.703545] [TTM] Zone   dma32: Available graphics memory: 2097152 KiB
-[   20.710108] [TTM] Initializing pool allocator
-[   20.714561] [TTM] Initializing DMA pool allocator
-[   20.720212] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[   20.726863] [drm] No driver support for vblank timestamp query.
-[   20.754777] Console: switching to colour frame buffer device 100x37
-[   20.778180] hibmc-drm 0007:91:00.0: fb0: hibmcdrmfb frame buffer device
-[   20.786447] [drm] Initialized hibmc 1.0.0 20160828 for 0007:91:00.0 
-on minor 0
-[   20.794346] Console: switching to colour dummy device 80x25
-[   20.801884] pci 0007:90:00.0: can't derive routing for PCI INT A
-[   20.807963] hibmc-drm 0007:91:00.0: PCI INT A: no GSI
-[   20.813656] [TTM] Finalizing pool allocator
-[   20.817905] [TTM] Finalizing DMA pool allocator
-[   20.822576] [TTM] Zone  kernel: Used memory at exit: 0 KiB
-[   20.828760] [TTM] Zone   dma32: Used memory at exit: 0 KiB
-[   20.834978] pci 0007:90:00.0: can't derive routing for PCI INT A
-[   20.841021] hibmc-drm 0007:91:00.0: PCI INT A: no GSI
-[   20.848858] [TTM] Zone  kernel: Available graphics memory: 57359458 KiB
-[   20.855516] [TTM] Zone   dma32: Available graphics memory: 2097152 KiB
-[   20.862079] [TTM] Initializing pool allocator
-[   20.866525] [TTM] Initializing DMA pool allocator
-[   20.872064] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[   20.878716] [drm] No driver support for vblank timestamp query.
-[   20.905996] Console: switching to colour frame buffer device 100x37
-[   20.929385] hibmc-drm 0007:91:00.0: fb0: hibmcdrmfb frame buffer device
-[   20.937241] [drm] Initialized hibmc 1.0.0 20160828 for 0007:91:00.0 
-on minor 0
-[   21.171906] loop: module loaded
+>  
+>  struct file;
 
-Thanks,
-John
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4ff86d57f9e5..7d4b6ac46de5 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -1657,6 +1657,181 @@ perf_event_groups_next(struct perf_event *event)
+>  		event = rb_entry_safe(rb_next(&event->group_node),	\
+>  				typeof(*event), group_node))
+>  
+> +static inline bool perf_event_can_share(struct perf_event *event)
+> +{
+> +	/* only share hardware counting events */
+> +	return !is_sampling_event(event);
+> +	return !is_software_event(event) && !is_sampling_event(event);
 
-> Best regards
-> Thomas
-> 
->> [   27.965802]  hibmc_unload+0x2c/0xd0
->> [   27.969281]  hibmc_pci_remove+0x2c/0x40
->> [   27.973109]  pci_device_remove+0x6c/0x140
->> [   27.977110]  really_probe+0x174/0x548
->> [   27.980763]  driver_probe_device+0x7c/0x148
->> [   27.984936]  device_driver_attach+0x94/0xa0
->> [   27.989109]  __driver_attach+0xa8/0x110
->> [   27.992935]  bus_for_each_dev+0xe8/0x158
->> [   27.996849]  driver_attach+0x30/0x40
->> [   28.000415]  bus_add_driver+0x234/0x2f0
->> [   28.004241]  driver_register+0xbc/0x1d0
->> [   28.008067]  __pci_register_driver+0xbc/0xd0
->> [   28.012329]  hibmc_pci_driver_init+0x20/0x28
->> [   28.016590]  do_one_initcall+0xb4/0x254
->> [   28.020417]  kernel_init_freeable+0x27c/0x328
->> [   28.024765]  kernel_init+0x10/0x118
->> [   28.028245]  ret_from_fork+0x10/0x18
->> [   28.031813] ---[ end trace 35a83b71b657878d ]---
->> [   28.036503] ------------[ cut here ]------------
->> [   28.041115] WARNING: CPU: 24 PID: 1 at
->> drivers/gpu/drm/drm_gem_vram_helper.c:40
->> ttm_buffer_object_destroy+0x4c/0x80
->> [   28.051537] Modules linked in:
->> [   28.054585] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G    B   W
->>   5.5.0-rc1-dirty #565
->> [   28.062924] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
->> RC0 - V1.16.01 03/15/2019
->>
->> [snip]
->>
->> Indeed, simply unbinding the device from the driver causes the same sort
->> of issue:
->>
->> root@(none)$ cd ./bus/pci/drivers/hibmc-drm/
->> root@(none)$ ls
->> 0000:05:00.0  bind          new_id        remove_id     uevent
->> unbind
->> root@(none)$ echo 0000\:05\:00.0 > unbind
->> [  116.074352] ------------[ cut here ]------------
->> [  116.078978] WARNING: CPU: 17 PID: 1178 at
->> drivers/gpu/drm/drm_gem_vram_helper.c:40
->> ttm_buffer_object_destroy+0x4c/0x80
->> [  116.089661] Modules linked in:
->> [  116.092711] CPU: 17 PID: 1178 Comm: sh Tainted: G    B   W
->> 5.5.0-rc1-dirty #565
->> [  116.100704] Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI
->> RC0 - V1.16.01 03/15/2019
->> [  116.109218] pstate: 20400009 (nzCv daif +PAN -UAO)
->> [  116.114001] pc : ttm_buffer_object_destroy+0x4c/0x80
->> [  116.118956] lr : ttm_buffer_object_destroy+0x18/0x80
->> [  116.123910] sp : ffff0022e6cef8e0
->> [  116.127215] x29: ffff0022e6cef8e0 x28: ffff00231b1fb000
->> [  116.132519] x27: 0000000000000000 x26: ffff00231b1fb000
->> [  116.137821] x25: ffff0022e6cefdc0 x24: 0000000000002480
->> [  116.143124] x23: ffff0023682b6ab0 x22: ffff0023682b6800
->> [  116.148427] x21: ffff0023682b6800 x20: 0000000000000000
->> [  116.153730] x19: ffff0023682b6800 x18: 0000000000000000
->> [  116.159032] x17: 000000000000000000000000001
->> [  116.185545] x7 : ffff0023682b6b07 x6 : ffff80046d056d61
->> [  116.190848] x5 : ffff80046d056d61 x4 : ffff0023682b6ba0
->> [  116.196151] x3 : ffffa00010197338 x2 : dfffa00000000000
->> [  116.201453] x1 : 0000000000000003 x0 : 0000000000000001
->> [  116.206756] Call trace:
->> [  116.209195]  ttm_buffer_object_destroy+0x4c/0x80
->> [  116.213803]  ttm_bo_release_list+0x184/0x220
->> [  116.218064]  ttm_bo_put+0x410/0x5d0
->> [  116.221544]  drm_gem_vram_object_free+0xc/0x18
->> [  116.225979]  drm_gem_object_free+0x34/0xd0
->> [  116.230066]  drm_gem_object_put_unlocked+0xc8/0xf0
->> [  116.234848]  hibmc_user_framebuffer_destroy+0x20/0x40
->> [  116.239890]  drm_framebuffer_free+0x48/0x58
->> [  116.244064]  drm_mode_object_put.part.1+0x90/0xe8
->> [  116.248759]  drm_mode_object_put+0x28/0x38
->> [  116.252846]  hibmc_fbdev_fini+0x54/0x78
->> [  116.256672]  hibmc_unload+0x2c/0xd0
->> [  116.260151]  hibmc_pci_remove+0x2c/0x40
->> [  116.263979]  pci_device_remove+0x6c/0x140
->> [  116.267980]  device_release_driver_internal+0x134/0x250
->> [  116.273196]  device_driver_detach+0x28/0x38
->> [  116.277369]  unbind_store+0xfc/0x150
->> [  116.280934]  drv_attr_store+0x48/0x60
->> [  116.284589]  sysfs_kf_write+0x80/0xb0
->> [  116.288241]  kernfs_fop_write+0x1d4/0x320
->> [  116.292243]  __vfs_write+0x54/0x98
->> [  116.295635]  vfs_write+0xe8/0x270
->> [  116.298940]  ksys_write+0xc8/0x180
->> [  116.302333]  __arm64_sys_write+0x40/0x50
->> [  116.306248]  el0_svc_common.constprop.0+0xa4/0x1f8
->> [  116.311029]  el0_svc_handler+0x34/0xb0
->> [  116.314770]  el0_sync_handler+0x10c/0x1c8
->> [  116.318769]  el0_sync+0x140/0x180
->> [  116.322074] ---[ end trace e60e43d0e316b5c8 ]---
->> [  116.326868] ------------[ cut here ]------------
->>
->>
->> dmesg and .config is here:
->> https://pastebin.com/4P5yaZBS
->>
->> I'm not sure if this is a HIBMC driver issue or issue with the framework.
->>
->> john
->>
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
+One of those return statements is too many; I'm thinking you meant to
+only have the second.
 
+> +}
+> +
+
+> +/* After adding a event to the ctx, try find compatible event(s). */
+> +static void perf_event_setup_dup(struct perf_event *event,
+> +				 struct perf_event_context *ctx)
+> +
+> +{
+> +	struct perf_event *tmp;
+> +
+> +	if (event->dup_master ||
+> +	    event->state != PERF_EVENT_STATE_INACTIVE ||
+> +	    !perf_event_can_share(event))
+> +		return;
+> +
+> +	/* look for dup with other events */
+> +	list_for_each_entry(tmp, &ctx->event_list, event_entry) {
+> +		WARN_ON_ONCE(tmp->state > PERF_EVENT_STATE_INACTIVE);
+> +
+> +		if (tmp == event ||
+> +		    tmp->state != PERF_EVENT_STATE_INACTIVE ||
+> +		    !perf_event_can_share(tmp) ||
+> +		    !perf_event_compatible(event, tmp))
+> +			continue;
+> +
+> +		/* first dup, pick tmp as the master */
+> +		if (!tmp->dup_master)
+> +			perf_event_init_dup_master(tmp);
+> +
+> +		event->dup_master = tmp->dup_master;
+> +		break;
+> +	}
+> +}
+> +
+> +static int event_pmu_add(struct perf_event *event,
+> +			 struct perf_event_context *ctx);
+> +
+> +/* Remove dup_master for the event */
+> +static void perf_event_remove_dup(struct perf_event *event,
+> +				  struct perf_cpu_context *cpuctx,
+> +				  struct perf_event_context *ctx)
+> +
+> +{
+> +	struct perf_event *tmp, *new_master;
+> +	int count, active_count;
+> +
+> +	/* no sharing */
+> +	if (!event->dup_master)
+> +		return;
+> +
+> +	WARN_ON_ONCE(event->state < PERF_EVENT_STATE_OFF ||
+> +		     event->state > PERF_EVENT_STATE_ENABLED);
+> +
+> +	/* this event is not the master */
+> +	if (event->dup_master != event) {
+> +		event_sync_dup_count(event, event->dup_master);
+> +		event->dup_master = NULL;
+> +		return;
+> +	}
+> +
+> +	/* this event is the master */
+> +	count = 0;
+> +	new_master = NULL;
+> +	list_for_each_entry(tmp, &ctx->event_list, event_entry) {
+> +		if (tmp->dup_master != event || tmp == event)
+> +			continue;
+> +		if (!new_master)
+> +			new_master = tmp;
+> +		if (tmp->state == PERF_EVENT_STATE_ACTIVE) {
+> +			event_sync_dup_count(tmp, event);
+> +			tmp->dup_base_count = local64_read(&new_master->count);
+> +			tmp->dup_base_child_count =
+> +				atomic64_read(&new_master->child_count);
+> +		}
+> +		tmp->dup_master = new_master;
+> +		count++;
+> +	}
+> +
+> +	active_count = event->dup_active_count;
+> +	perf_event_exit_dup_master(event);
+> +
+> +	if (!count)
+> +		return;
+> +
+> +	if (count == 1) {
+> +		/* no more sharing */
+> +		new_master->dup_master = NULL;
+> +	} else {
+> +		perf_event_init_dup_master(new_master);
+> +		new_master->dup_active_count = active_count;
+> +	}
+> +
+> +	if (active_count) {
+
+Would it make sense to do something like:
+
+		new_master->hw.idx = event->hw.idx;
+
+That should ensure x86_schedule_events() can do with the fast path;
+after all, we're adding back the 'same' event. If we do this; this wants
+a comment though.
+
+> +		WARN_ON_ONCE(event->pmu->add(new_master, PERF_EF_START));
+
+For consistency that probably ought to be:
+
+		new_master->pmu->add(new_master, PERF_EF_START);
+
+> +		if (new_master->state == PERF_EVENT_STATE_INACTIVE)
+> +			new_master->state = PERF_EVENT_STATE_ENABLED;
+
+If this really should not be perf_event_set_state() we need a comment
+explaining why -- I think I see, but it's still early and I've not had
+nearly enough tea to wake me up.
+
+> +	}
+> +}
+> +
+>  /*
+>   * Add an event from the lists for its context.
+>   * Must be called with ctx->mutex and ctx->lock held.
+> @@ -1902,7 +2077,8 @@ perf_aux_output_match(struct perf_event *event, struct perf_event *aux_event)
+>  static void put_event(struct perf_event *event);
+>  static void event_sched_out(struct perf_event *event,
+>  			    struct perf_cpu_context *cpuctx,
+> -			    struct perf_event_context *ctx);
+> +			    struct perf_event_context *ctx,
+> +			    bool remove_dup);
+>  
+>  static void perf_put_aux_event(struct perf_event *event)
+>  {
+
+>  static void
+>  event_sched_out(struct perf_event *event,
+>  		  struct perf_cpu_context *cpuctx,
+> -		  struct perf_event_context *ctx)
+> +		struct perf_event_context *ctx,
+> +		bool remove_dup)
+>  {
+>  	enum perf_event_state state = PERF_EVENT_STATE_INACTIVE;
+>  
+>  	WARN_ON_ONCE(event->ctx != ctx);
+>  	lockdep_assert_held(&ctx->lock);
+>  
+> -	if (event->state != PERF_EVENT_STATE_ACTIVE)
+> +	if (event->state < PERF_EVENT_STATE_ENABLED) {
+> +		if (remove_dup)
+> +			perf_event_remove_dup(event, cpuctx, ctx);
+>  		return;
+> +	}
+>  
+>  	/*
+>  	 * Asymmetry; we only schedule events _IN_ through ctx_sched_in(), but
+> @@ -2106,15 +2343,20 @@ event_sched_out(struct perf_event *event,
+>  
+>  	perf_pmu_disable(event->pmu);
+>  
+> -	event->pmu->del(event, 0);
+> +	event_pmu_del(event, ctx, remove_dup);
+>  	event->oncpu = -1;
+>  
+>  	if (READ_ONCE(event->pending_disable) >= 0) {
+>  		WRITE_ONCE(event->pending_disable, -1);
+>  		state = PERF_EVENT_STATE_OFF;
+> -	}
+> +	} else if (event->dup_master == event &&
+> +		   event->dup_active_count)
+> +		state = PERF_EVENT_STATE_ENABLED;
+>  	perf_event_set_state(event, state);
+>  
+> +	if (remove_dup)
+> +		perf_event_remove_dup(event, cpuctx, ctx);
+> +
+>  	if (!is_software_event(event))
+>  		cpuctx->active_oncpu--;
+>  	if (!--ctx->nr_active)
+
+> @@ -2174,7 +2426,7 @@ __perf_remove_from_context(struct perf_event *event,
+>  		update_cgrp_time_from_cpuctx(cpuctx);
+>  	}
+>  
+> -	event_sched_out(event, cpuctx, ctx);
+> +	event_sched_out(event, cpuctx, ctx, true);
+>  	if (flags & DETACH_GROUP)
+>  		perf_group_detach(event);
+>  	list_del_event(event, ctx);
+> @@ -2242,9 +2494,9 @@ static void __perf_event_disable(struct perf_event *event,
+>  	}
+>  
+>  	if (event == event->group_leader)
+> -		group_sched_out(event, cpuctx, ctx);
+> +		group_sched_out(event, cpuctx, ctx, true);
+>  	else
+> -		event_sched_out(event, cpuctx, ctx);
+> +		event_sched_out(event, cpuctx, ctx, true);
+>  
+>  	perf_event_set_state(event, PERF_EVENT_STATE_OFF);
+>  }
+
+So the above event_sched_out(.remove_dup) is very inconsistent with the
+below ctx_resched(.event_add_dup).
+
+> @@ -2544,7 +2793,8 @@ static void perf_event_sched_in(struct perf_cpu_context *cpuctx,
+>   */
+>  static void ctx_resched(struct perf_cpu_context *cpuctx,
+>  			struct perf_event_context *task_ctx,
+> -			enum event_type_t event_type)
+> +			enum event_type_t event_type,
+> +			struct perf_event *event_add_dup)
+>  {
+>  	enum event_type_t ctx_event_type;
+>  	bool cpu_event = !!(event_type & EVENT_CPU);
+> @@ -2574,6 +2824,12 @@ static void ctx_resched(struct perf_cpu_context *cpuctx,
+>  	else if (ctx_event_type & EVENT_PINNED)
+>  		cpu_ctx_sched_out(cpuctx, EVENT_FLEXIBLE);
+>  
+> +	if (event_add_dup) {
+> +		if (event_add_dup->ctx->is_active)
+> +			ctx_sched_out(event_add_dup->ctx, cpuctx, EVENT_ALL);
+> +		perf_event_setup_dup(event_add_dup, event_add_dup->ctx);
+> +	}
+> +
+>  	perf_event_sched_in(cpuctx, task_ctx, current);
+>  	perf_pmu_enable(cpuctx->ctx.pmu);
+>  }
+
+> @@ -2642,9 +2898,10 @@ static int  __perf_install_in_context(void *info)
+>  	if (reprogram) {
+>  		ctx_sched_out(ctx, cpuctx, EVENT_TIME);
+>  		add_event_to_ctx(event, ctx);
+> -		ctx_resched(cpuctx, task_ctx, get_event_type(event));
+> +		ctx_resched(cpuctx, task_ctx, get_event_type(event), event);
+>  	} else {
+>  		add_event_to_ctx(event, ctx);
+> +		perf_event_setup_dup(event, ctx);
+>  	}
+>  
+>  unlock:
+> @@ -2789,8 +3046,10 @@ static void __perf_event_enable(struct perf_event *event,
+>  
+>  	perf_event_set_state(event, PERF_EVENT_STATE_INACTIVE);
+>  
+> -	if (!ctx->is_active)
+> +	if (!ctx->is_active) {
+> +		perf_event_setup_dup(event, ctx);
+>  		return;
+> +	}
+>  
+>  	if (!event_filter_match(event)) {
+>  		ctx_sched_in(ctx, cpuctx, EVENT_TIME, current);
+> @@ -2801,7 +3060,7 @@ static void __perf_event_enable(struct perf_event *event,
+>  	 * If the event is in a group and isn't the group leader,
+>  	 * then don't put it on unless the group is on.
+>  	 */
+> -	if (leader != event && leader->state != PERF_EVENT_STATE_ACTIVE) {
+> +	if (leader != event && leader->state <= PERF_EVENT_STATE_INACTIVE) {
+>  		ctx_sched_in(ctx, cpuctx, EVENT_TIME, current);
+>  		return;
+>  	}
+> @@ -2810,7 +3069,7 @@ static void __perf_event_enable(struct perf_event *event,
+>  	if (ctx->task)
+>  		WARN_ON_ONCE(task_ctx != ctx);
+>  
+> -	ctx_resched(cpuctx, task_ctx, get_event_type(event));
+> +	ctx_resched(cpuctx, task_ctx, get_event_type(event), event);
+>  }
+>  
+>  /*
+
+We basically need:
+
+ * perf_event_setup_dup() after add_event_to_ctx(), but before *sched_in()
+   - perf_install_in_context()
+   - perf_event_enable()
+   - inherit_event()
+
+ * perf_event_remove_dup() after *sched_out(), but before list_del_event()
+   - perf_remove_from_context()
+   - perf_event_disable()
+
+AFAICT we can do that without changing *sched_out() and ctx_resched(),
+with probably less lines changed over all.
+
+> @@ -4051,6 +4310,9 @@ static void __perf_event_read(void *info)
+>  
+>  static inline u64 perf_event_count(struct perf_event *event)
+>  {
+> +	if (event->dup_master == event)
+> +		return local64_read(&event->master_count) +
+> +			atomic64_read(&event->master_child_count);
+
+Wants {}
+
+>  	return local64_read(&event->count) + atomic64_read(&event->child_count);
+>  }
