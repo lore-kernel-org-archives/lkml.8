@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D648C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498B4C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:20:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F192F2072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 286DA2072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgAJMTW (ORCPT
+        id S1728206AbgAJMUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 07:19:22 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:23806 "EHLO
+        Fri, 10 Jan 2020 07:20:04 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:5304 "EHLO
         alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726718AbgAJMTN (ORCPT
+        by vger.kernel.org with ESMTP id S1727999AbgAJMUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 07:19:13 -0500
+        Fri, 10 Jan 2020 07:20:03 -0500
 Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
   by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 10 Jan 2020 17:49:07 +0530
 Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 10 Jan 2020 17:48:52 +0530
+  by ironmsg02-blr.qualcomm.com with ESMTP; 10 Jan 2020 17:48:57 +0530
 Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
-        id 1845822B4; Fri, 10 Jan 2020 17:48:51 +0530 (IST)
+        id 2D48522B4; Fri, 10 Jan 2020 17:48:56 +0530 (IST)
 From:   Sandeep Maheswaram <sanm@codeaurora.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -37,9 +37,9 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
         Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: [PATCH v3 1/5] phy: qcom-qusb2: Add QUSB2 PHY support for SC7180
-Date:   Fri, 10 Jan 2020 17:48:15 +0530
-Message-Id: <1578658699-30458-2-git-send-email-sanm@codeaurora.org>
+Subject: [PATCH v3 3/5] dt-bindings: phy: qcom-qusb2: Add support for overriding Phy tuning parameters
+Date:   Fri, 10 Jan 2020 17:48:17 +0530
+Message-Id: <1578658699-30458-4-git-send-email-sanm@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578658699-30458-1-git-send-email-sanm@codeaurora.org>
 References: <1578658699-30458-1-git-send-email-sanm@codeaurora.org>
@@ -48,75 +48,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using generic cfg table for QUSB2 V2 PHY.
-Add QUSB2 PHY config data and compatible for SC7180.
+Add support for overriding QUSB2 V2 phy tuning parameters
+in device tree bindings.
 
 Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qusb2.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-index bf94a52..db4ae26 100644
---- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
-@@ -1,6 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- * Copyright (c) 2017, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2017, 2019, The Linux Foundation. All rights reserved.
-  */
+diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+index 83cd01d..df4e000 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+@@ -84,6 +84,28 @@ properties:
+         maximum: 63
+         default: 0
  
- #include <linux/clk.h>
-@@ -177,7 +177,7 @@ static const struct qusb2_phy_init_tbl msm8998_init_tbl[] = {
- 	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_DIGITAL_TIMERS_TWO, 0x19),
- };
++  qcom,bias-ctrl-value:
++    description:
++        It is a 6 bit value that specifies bias-ctrl-value. It is a PHY
++        tuning parameter that may vary for different boards of same SOC.
++        This property is applicable to only QUSB2 v2 PHY.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++        maximum: 63
++        default: 0
++
++  qcom,charge-ctrl-value:
++    description:
++        It is a 2 bit value that specifies charge-ctrl-value. It is a PHY
++        tuning parameter that may vary for different boards of same SOC.
++        This property is applicable to only QUSB2 v2 PHY.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++        maximum: 3
++        default: 0
++
+   qcom,hstx-trim-value:
+     description:
+         It is a 4 bit value that specifies tuning for HSTX
+@@ -122,6 +144,17 @@ properties:
+         maximum: 1
+         default: 0
  
--static const unsigned int sdm845_regs_layout[] = {
-+static const unsigned int qusb2_v2_regs_layout[] = {
- 	[QUSB2PHY_PLL_CORE_INPUT_OVERRIDE] = 0xa8,
- 	[QUSB2PHY_PLL_STATUS]		= 0x1a0,
- 	[QUSB2PHY_PORT_TUNE1]		= 0x240,
-@@ -191,7 +191,7 @@ static const unsigned int sdm845_regs_layout[] = {
- 	[QUSB2PHY_INTR_CTRL]		= 0x230,
- };
- 
--static const struct qusb2_phy_init_tbl sdm845_init_tbl[] = {
-+static const struct qusb2_phy_init_tbl qusb2_v2_init_tbl[] = {
- 	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_ANALOG_CONTROLS_TWO, 0x03),
- 	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_CLOCK_INVERTERS, 0x7c),
- 	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_CMODE, 0x80),
-@@ -258,10 +258,10 @@ static const struct qusb2_phy_cfg msm8998_phy_cfg = {
- 	.update_tune1_with_efuse = true,
- };
- 
--static const struct qusb2_phy_cfg sdm845_phy_cfg = {
--	.tbl		= sdm845_init_tbl,
--	.tbl_num	= ARRAY_SIZE(sdm845_init_tbl),
--	.regs		= sdm845_regs_layout,
-+static const struct qusb2_phy_cfg qusb2_v2_phy_cfg = {
-+	.tbl		= qusb2_v2_init_tbl,
-+	.tbl_num	= ARRAY_SIZE(qusb2_v2_init_tbl),
-+	.regs		= qusb2_v2_regs_layout,
- 
- 	.disable_ctrl	= (PWR_CTRL1_VREF_SUPPLY_TRIM | PWR_CTRL1_CLAMP_N_EN |
- 			   POWER_DOWN),
-@@ -774,8 +774,14 @@ static const struct of_device_id qusb2_phy_of_match_table[] = {
- 		.compatible	= "qcom,msm8998-qusb2-phy",
- 		.data		= &msm8998_phy_cfg,
- 	}, {
-+		.compatible	= "qcom,sc7180-qusb2-phy",
-+		.data		= &qusb2_v2_phy_cfg,
-+	}, {
- 		.compatible	= "qcom,sdm845-qusb2-phy",
--		.data		= &sdm845_phy_cfg,
-+		.data		= &qusb2_v2_phy_cfg,
-+	}, {
-+		.compatible	= "qcom,qusb2-v2-phy",
-+		.data		= &qusb2_v2_phy_cfg,
- 	},
- 	{ },
- };
++  qcom,hsdisc-trim-value:
++    description:
++        It is a 2 bit value tuning parameter that control disconnect
++	threshold and may vary for different boards of same SOC.
++        This property is applicable to only QUSB2 v2 PHY.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++        maximum: 3
++        default: 0
++
+ required:
+   - compatible
+   - reg
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
