@@ -2,124 +2,89 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC52C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD89C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 611AC205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6DD206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgAJTqi (ORCPT
+        id S1728798AbgAJTrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:46:38 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49252 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727812AbgAJTqi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:46:38 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E6526AAC2;
-        Fri, 10 Jan 2020 19:46:35 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 10A02DA78B; Fri, 10 Jan 2020 20:46:22 +0100 (CET)
-Date:   Fri, 10 Jan 2020 20:46:22 +0100
-From:   David Sterba <dsterba@suse.cz>
-To:     dsterba@suse.cz, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Dec 6 (objtool, lots in btrfs)
-Message-ID: <20200110194622.GS3929@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, Josh Poimboeuf <jpoimboe@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Btrfs <linux-btrfs@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <cd4091e4-1c04-a880-f239-00bc053f46a2@infradead.org>
- <20191211134929.GL3929@twin.jikos.cz>
- <c751bc1a-505c-5050-3c4c-c83be81b4e48@infradead.org>
- <20191212184725.db3ost7rcopotr5u@treble>
- <b9b0c81b-0ca8-dfb7-958f-cd58a449b6fb@infradead.org>
- <ba2a7a9b-933b-d4e4-8970-85b6c1291fca@infradead.org>
- <20191213235054.6k2lcnwa63r26zwi@treble>
- <c6a33c21-3e71-ac98-cc95-db008764917c@infradead.org>
- <20191214054515.ougsr5ykhl3vvy57@treble>
- <20191217152954.GH3929@suse.cz>
+        Fri, 10 Jan 2020 14:47:03 -0500
+Received: from mout.kundenserver.de ([217.72.192.75]:47301 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727812AbgAJTrD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 14:47:03 -0500
+Received: from mail-qk1-f180.google.com ([209.85.222.180]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M8hR1-1ilrVc3GzZ-004g7W; Fri, 10 Jan 2020 20:47:01 +0100
+Received: by mail-qk1-f180.google.com with SMTP id z76so3023559qka.2;
+        Fri, 10 Jan 2020 11:47:01 -0800 (PST)
+X-Gm-Message-State: APjAAAXG//wpkJtsFh4QP7PLodBqQa5sfi2frBVdk6Ref9tO8HWED6ps
+        MiFIIvrczXPl0x1D2sgSh7IoJB+S7dGjB2Oks5s=
+X-Google-Smtp-Source: APXvYqw8EWa2FqtD3Swts+79Z/eWjkZogk6+1sZAnfKifOXUinM5+cnBupHXlwll6qOddsOCv97h3S3eeL+XRYPQP/c=
+X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr4888379qka.286.1578685620608;
+ Fri, 10 Jan 2020 11:47:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191217152954.GH3929@suse.cz>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+References: <20200110165636.28035-1-will@kernel.org>
+In-Reply-To: <20200110165636.28035-1-will@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 10 Jan 2020 20:46:44 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1UzSOHdihbzOn5CZZfo1kvCdj7BAzdQE=PgYS9GBF4Hw@mail.gmail.com>
+Message-ID: <CAK8P3a1UzSOHdihbzOn5CZZfo1kvCdj7BAzdQE=PgYS9GBF4Hw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/8] Rework READ_ONCE() to improve codegen
+To:     Will Deacon <will@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:YPR8qgKCjRSZ5m5lyfH/hvPI9BfiP01HjLaLV8PZ/2XxXaWy9KT
+ 3Ydj3n/uCCW4qQAlzfve9ny2aK2Q0wzHI3vyaWJmr1ivVvMpC4+1HpsnAJsRb4PTNlNExFp
+ 7NBUCGjIkDh5z9N6E7heU1PzkA5d26GqPuWuyHNv7cKeHI5WAmmCXOC7WfNbekCLgTyc4oQ
+ QPzOoqukoqj0bvfY2YtLw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:PHMWjEJ2xxM=:vc7F7R/abmCfVnE9K9kbVD
+ jd673uufKCU4zam2w5lmhogN1Cj2cT7VJV7rc9DZhJPCXuDhBciNwCyPwZZ9ewgGqhM4ZxAz/
+ N/XeAJESGdQ4eXiJSX9ie2ljApsuPfRHADQZnzOiz0+mxJm+2MswJyRKYzXzJgOVl28RQwpRN
+ l1BfePH0Jt/kiuW5Vi1OTXSscppgFy4aEbrZ1WsFuTEqEXpQbdL8SO9YKiESM2+Zg+e5yr9p9
+ VOtbup4/HU79ddB+m4luir35zvgjW0WmYkEPwVZQ7qYGLNDzi+g9GMGWqYCDbulcnC7krsklR
+ 1YUPWlqZtG36c6Uz/uWwL93Xr70sCRWuKI5IW9kOTqVurZBCjdkfFoIfytZywdkV9YYlL3uSM
+ IvlgpNIRBirfVMkpt72+PYEMPiz9HPk5FzDjR6929IoVgvwCQT8oLQejtVO+fmBoNJW+JKOo3
+ psaq6lYkzI20i5fKMi5NS6jIDW2ZosH7sZ9D7MczCQDeQOLNQqvS2xA9mUuPXjYRrdXH7UgIk
+ B64dceqxder/U6W/XpPwIYQCxVWakcZd5eih4CqKimg3BtQsSFxeyKEKIjJQE/QaeVtXTYPYK
+ kULZxnaqpcbB4840jhN0NrAVgVQ6IpjmOnhlAPvU7iVvY1RI+hBMOc/bLDMoZnVgfYopDTXk6
+ Y2MqYJi4osWS1m+EaQ76em6AOGFAt9H1kWQSu9K5oc+ddmFDLVLU0ZPEWNsht+zz3qKRh2tON
+ xAgSyMRQ5iFXbhVaknc/IeHUNvQEc+phCNpgKAzE9FHk1WdYx2yNAPZW/XxAI3J5Yxs4tdB06
+ Jz11pOrEcZVq2lGWc1m6F6guQEh0vn7xQraZ+eXhhqCOLpCxXw3CNf5l2xReiT1i656AN0Iso
+ dsL+UuKRxJIGePz5W0Sw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 17, 2019 at 04:29:54PM +0100, David Sterba wrote:
-> Separating the definitions by #ifdef looks ok, I'd rather do separate
-> definitions of ASSERT too, to avoid the ternary operator. I'll send the
-> patch.
+On Fri, Jan 10, 2020 at 5:56 PM Will Deacon <will@kernel.org> wrote:
+>
+> I have more patches in this area because I'm trying to move all the
+> read_barrier_depends() magic into arch/alpha/, but I'm holding off until
+> we agree on this part first.
 
-Subject: [PATCH] btrfs: separate definition of assertion failure handlers
+Isn't the read_barrier_depends() the only reason for actually needing
+the temporary local variable that must not be volatile?
 
-There's a report where objtool detects unreachable instructions, eg.:
+If you make alpha provide its own READ_ONCE() as the first
+step, it would seem that the rest of the series gets much easier
+as the others can go back to the simple statement from your
 
-  fs/btrfs/ctree.o: warning: objtool: btrfs_search_slot()+0x2d4: unreachable instruction
+#define __READ_ONCE(x)  (*(volatile __unqual_scalar_typeof(x) *)&(x))
 
-This seems to be a false positive due to compiler version. The cause is
-in the ASSERT macro implementation that does the conditional check as
-IS_DEFINED(CONFIG_BTRFS_ASSERT) and not an #ifdef.
-
-To avoid that, use the ifdefs directly.
-
-CC: Josh Poimboeuf <jpoimboe@redhat.com>
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: David Sterba <dsterba@suse.com>
----
- fs/btrfs/ctree.h | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index 569931dd0ce5..f90b82050d2d 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -3157,17 +3157,21 @@ do {								\
- 	rcu_read_unlock();					\
- } while (0)
- 
--__cold
--static inline void assfail(const char *expr, const char *file, int line)
-+#ifdef CONFIG_BTRFS_ASSERT
-+__cold __noreturn
-+static inline void assertfail(const char *expr, const char *file, int line)
- {
--	if (IS_ENABLED(CONFIG_BTRFS_ASSERT)) {
--		pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
--		BUG();
--	}
-+	pr_err("assertion failed: %s, in %s:%d\n", expr, file, line);
-+	BUG();
- }
- 
--#define ASSERT(expr)	\
--	(likely(expr) ? (void)0 : assfail(#expr, __FILE__, __LINE__))
-+#define ASSERT(expr)						\
-+	(likely(expr) ? (void)0 : assertfail(#expr, __FILE__, __LINE__))
-+
-+#else
-+static inline void assertfail(const char *expr, const char* file, int line) { }
-+#define ASSERT(expr)	(void)(expr)
-+#endif
- 
- /*
-  * Use that for functions that are conditionally exported for sanity tests but
--- 
+      Arnd
