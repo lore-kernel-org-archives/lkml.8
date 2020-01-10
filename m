@@ -2,154 +2,147 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93487C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D79C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DDEE206DA
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:09:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uTvla9/R"
+	by mail.kernel.org (Postfix) with ESMTP id B2DBD2051A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgAJTJ2 (ORCPT
+        id S1728381AbgAJTKL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:09:28 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42288 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727448AbgAJTJ2 (ORCPT
+        Fri, 10 Jan 2020 14:10:11 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:46798 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727658AbgAJTKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:09:28 -0500
-Received: by mail-oi1-f195.google.com with SMTP id 18so2781974oin.9;
-        Fri, 10 Jan 2020 11:09:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kcu1M9u0fKXhYde93cLWMfS1bu+/Sqpq3Xxjg8yPfgE=;
-        b=uTvla9/RwAC4Gb1XeGvMf1m8nX3xtJMrNX2pzSpoHpiPGrTkPvyiO0DlRqI8OoeiU3
-         e/yyUpsRaz/3i9KGgA4vqZyc/YeB0spWAiXa8n6BluiGRkHkjo9oWkNGz+OgC512X7nU
-         sEVcsS6tyctLAY4EgetnFy4VzY0vMot7qSPD17Mv5G4f11XIiEthXlEizIErEomXL8BA
-         lctYm9S+SwMptnfiD9BK9QP8wjSO+nKTeG4afHLpc1//TA9SmdC804IGalwd2l5Q2MC4
-         IXmPqMrxoi04u/w3E7UObSi8clvspX/u+tyw84nhbVIBFQXCfzBFjSuQIX9mYMyGzZBE
-         BZPg==
+        Fri, 10 Jan 2020 14:10:10 -0500
+Received: by mail-il1-f200.google.com with SMTP id a2so2201969ill.13
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 11:10:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kcu1M9u0fKXhYde93cLWMfS1bu+/Sqpq3Xxjg8yPfgE=;
-        b=nD9XM/dYjjsiWoHvnWx4krqxuKBoqDLcniFdPdTq6a4ynpFktWKPcqeCjvhvdBmkcG
-         7UYQQO0l38QkwM+VIMlRKMX0A9I9NtqoCR8DE9aSzKkhmxJHxMo4EG4ya+1OMfeYYyDD
-         v+Yya1HFeCrWgQSrA/E8edODPOgtHNWvPDeCMmbG3odPxaGq/d0PPtDTMOCZ4DUQdNAF
-         LgiUE2zlE+N24UgLOfZdt/+CUip82iDqwNDwpysBHE4AfJBgP7IneHqmjWsZ+mssFKzO
-         jA0Umw5t6f0ICgBHltcRZeKsh9U4xYUwFvCnLgV+ATa9hSFCJAcl4uY/j0eXFAG3YWaB
-         pGig==
-X-Gm-Message-State: APjAAAUsLOLXixmIH2lLMAA2tJ/hlJi2qe3p1wr4qrH9PM3A1Zzb4pWn
-        AtPiCdhpNf5KLQEq6OUJPM/VnKlYvkT+GG78jaA=
-X-Google-Smtp-Source: APXvYqxi8sngqdAXFRdFWKg2sxSXcJ6veTc5AVMdcmdmeaQ4N96FkwDtjYoHoLdMhLBDZCprUD4l012VFOREU/wXIkU=
-X-Received: by 2002:aca:1011:: with SMTP id 17mr3502147oiq.72.1578683367302;
- Fri, 10 Jan 2020 11:09:27 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=GwElu9VPC3v9CabfBpOGNXC+NQY/jymdyYqtxzzX1tg=;
+        b=Mcwm4cEwlg/Debo8r8v0XxiOpiR9gxsksg0KyibdnNfBlt6AaPpGZeub++V8SF/EmB
+         BPzQwyMG53OZrD813dBsmzXtS4a2pb+6OZM+PU9kBXTLoT0Rq20QFvMiZyQvYUOyoSZb
+         365iNQkLk36ibC0Cm4XK31ZAYJirD3QQx5VGQPAykIddCFOv3jTXt18LW8AGqY8FLMy2
+         z3rhqLthTz5Nj3sXzXpsoSCbcFsu1k9MULO2EBUNlDPtLDmfJ/yNZENbUnOS8zyfoA5c
+         pPT7Ow28TVTSrmOLMkgqYDSQ8/Ahcr7qVQw1okmCKNTrSPANBHiSlL1wt9Zb3uk6+TNQ
+         mu0g==
+X-Gm-Message-State: APjAAAUVH9F4tQjN4fuwlO8RGJRnk8mVwX602OYNrl4vLpF/oA2acvNE
+        B0KPjbOsGBIxTBAkJLzeZziyFov94MMfNwmH4ZxQQIe6IQSr
+X-Google-Smtp-Source: APXvYqyu0RfcKwx6oxYQxavpVWEH/dO0qlxIWkIWookTc+goBv2/sx86ZREvcg3mcTgz094IO6BzKnmUOGJglhFBCj61oxxGFB4I
 MIME-Version: 1.0
-References: <000000000000f744e0059bcd8216@google.com>
-In-Reply-To: <000000000000f744e0059bcd8216@google.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Fri, 10 Jan 2020 11:09:16 -0800
-Message-ID: <CAM_iQpWz+ivP2vS50rY94DiR6qSh1W0WKjqgBNKYpUH_VFPgGw@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in bitmap_port_ext_cleanup
-To:     syzbot <syzbot+4c3cc6dbe7259dbf9054@syzkaller.appspotmail.com>
-Cc:     Arvid Brodin <arvid.brodin@alten.se>, coreteam@netfilter.org,
-        David Miller <davem@davemloft.net>, florent.fourcot@wifirst.fr,
-        Florian Westphal <fw@strlen.de>, jeremy@azazel.net,
-        Johannes Berg <johannes.berg@intel.com>, kadlec@netfilter.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a05:6602:2501:: with SMTP id i1mr3829030ioe.231.1578683409693;
+ Fri, 10 Jan 2020 11:10:09 -0800 (PST)
+Date:   Fri, 10 Jan 2020 11:10:09 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d9034c059bcddf3c@google.com>
+Subject: general protection fault in simple_recursive_removal
+From:   syzbot <syzbot+1edeee8da2474fe17a53@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 10:44 AM syzbot
-<syzbot+4c3cc6dbe7259dbf9054@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    b07f636f Merge tag 'tpmdd-next-20200108' of git://git.infr..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16c03259e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=18698c0c240ba616
-> dashboard link: https://syzkaller.appspot.com/bug?extid=4c3cc6dbe7259dbf9054
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> userspace arch: i386
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10c365c6e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=117df9e1e00000
->
-> The bug was bisected to:
->
-> commit b9a1e627405d68d475a3c1f35e685ccfb5bbe668
-> Author: Cong Wang <xiyou.wangcong@gmail.com>
-> Date:   Thu Jul 4 00:21:13 2019 +0000
->
->      hsr: implement dellink to clean up resources
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=118759e1e00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=138759e1e00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=158759e1e00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+4c3cc6dbe7259dbf9054@syzkaller.appspotmail.com
-> Fixes: b9a1e627405d ("hsr: implement dellink to clean up resources")
->
-> ==================================================================
-> BUG: KASAN: use-after-free in test_bit
-> include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
-> BUG: KASAN: use-after-free in bitmap_port_ext_cleanup+0xe6/0x2a0
-> net/netfilter/ipset/ip_set_bitmap_gen.h:51
-> Read of size 8 at addr ffff8880a87a47c0 by task syz-executor559/9563
->
-> CPU: 0 PID: 9563 Comm: syz-executor559 Not tainted 5.5.0-rc5-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> Call Trace:
->   __dump_stack lib/dump_stack.c:77 [inline]
->   dump_stack+0x197/0x210 lib/dump_stack.c:118
->   print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
->   __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
->   kasan_report+0x12/0x20 mm/kasan/common.c:639
->   check_memory_region_inline mm/kasan/generic.c:185 [inline]
->   check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
->   __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
->   test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
->   bitmap_port_ext_cleanup+0xe6/0x2a0
+Hello,
 
-map->members is freed by ip_set_free() right before using it in
-mtype_ext_cleanup() again. So I think probably we just have to
-move it down:
+syzbot found the following crash on:
 
-diff --git a/net/netfilter/ipset/ip_set_bitmap_gen.h
-b/net/netfilter/ipset/ip_set_bitmap_gen.h
-index 1abd6f0dc227..077a2cb65fcb 100644
---- a/net/netfilter/ipset/ip_set_bitmap_gen.h
-+++ b/net/netfilter/ipset/ip_set_bitmap_gen.h
-@@ -60,9 +60,9 @@ mtype_destroy(struct ip_set *set)
-        if (SET_WITH_TIMEOUT(set))
-                del_timer_sync(&map->gc);
+HEAD commit:    6c09d7db Add linux-next specific files for 20200110
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=157b65c6e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=246a085809cfc9f7
+dashboard link: https://syzkaller.appspot.com/bug?extid=1edeee8da2474fe17a53
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
--       ip_set_free(map->members);
-        if (set->dsize && set->extensions & IPSET_EXT_DESTROY)
-                mtype_ext_cleanup(set);
-+       ip_set_free(map->members);
-        ip_set_free(map);
+Unfortunately, I don't have any reproducer for this crash yet.
 
-        set->data = NULL;
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+1edeee8da2474fe17a53@syzkaller.appspotmail.com
 
-Thanks.
+general protection fault, probably for non-canonical address  
+0xdffffc0000000028: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000140-0x0000000000000147]
+CPU: 1 PID: 29862 Comm: syz-executor.4 Not tainted  
+5.5.0-rc5-next-20200110-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:__lock_acquire+0x1254/0x4a00 kernel/locking/lockdep.c:3827
+Code: 00 0f 85 96 24 00 00 48 81 c4 f0 00 00 00 5b 41 5c 41 5d 41 5e 41 5f  
+5d c3 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f  
+85 0b 28 00 00 49 81 3e 20 f9 df 8a 0f 84 5f ee ff
+RSP: 0018:ffffc90007ac78d0 EFLAGS: 00010006
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000028 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffffc90007ac79e8 R08: 0000000000000001 R09: 0000000000000001
+R10: fffffbfff1549320 R11: ffff8880375be640 R12: 0000000000000140
+R13: 0000000000000000 R14: 0000000000000140 R15: 0000000000000000
+FS:  00007f6dc39ee700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2e625000 CR3: 00000000a8998000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+Call Trace:
+  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
+  down_write+0x93/0x150 kernel/locking/rwsem.c:1534
+  inode_lock include/linux/fs.h:791 [inline]
+  simple_recursive_removal+0x185/0x720 fs/libfs.c:273
+  debugfs_remove fs/debugfs/inode.c:713 [inline]
+  debugfs_remove+0x5e/0x80 fs/debugfs/inode.c:707
+  blk_trace_free+0x38/0x140 kernel/trace/blktrace.c:311
+  do_blk_trace_setup+0x735/0xb50 kernel/trace/blktrace.c:556
+  __blk_trace_setup+0xe3/0x190 kernel/trace/blktrace.c:570
+  blk_trace_ioctl+0x170/0x300 kernel/trace/blktrace.c:709
+  blkdev_ioctl+0xc3/0x670 block/ioctl.c:710
+  block_ioctl+0xee/0x130 fs/block_dev.c:1983
+  vfs_ioctl fs/ioctl.c:47 [inline]
+  ksys_ioctl+0x123/0x180 fs/ioctl.c:760
+  __do_sys_ioctl fs/ioctl.c:769 [inline]
+  __se_sys_ioctl fs/ioctl.c:767 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:767
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45af49
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f6dc39edc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045af49
+RDX: 0000000020000080 RSI: 00000000c0481273 RDI: 000000000000000b
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6dc39ee6d4
+R13: 00000000004c2acf R14: 00000000004d8f28 R15: 00000000ffffffff
+Modules linked in:
+---[ end trace 69c29488e75b4707 ]---
+RIP: 0010:__lock_acquire+0x1254/0x4a00 kernel/locking/lockdep.c:3827
+Code: 00 0f 85 96 24 00 00 48 81 c4 f0 00 00 00 5b 41 5c 41 5d 41 5e 41 5f  
+5d c3 48 b8 00 00 00 00 00 fc ff df 4c 89 f2 48 c1 ea 03 <80> 3c 02 00 0f  
+85 0b 28 00 00 49 81 3e 20 f9 df 8a 0f 84 5f ee ff
+RSP: 0018:ffffc90007ac78d0 EFLAGS: 00010006
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000028 RSI: 0000000000000000 RDI: 0000000000000001
+RBP: ffffc90007ac79e8 R08: 0000000000000001 R09: 0000000000000001
+R10: fffffbfff1549320 R11: ffff8880375be640 R12: 0000000000000140
+R13: 0000000000000000 R14: 0000000000000140 R15: 0000000000000000
+FS:  00007f6dc39ee700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2e625000 CR3: 00000000a8998000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000600
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
