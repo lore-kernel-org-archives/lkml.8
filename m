@@ -2,128 +2,106 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70BAC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5660CC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 870BB2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:54:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="s9RRt/QZ"
+	by mail.kernel.org (Postfix) with ESMTP id 2CA102072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:57:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578643040;
+	bh=KzQGNzbnWuzjj/D+MsdmvVNOXudlw3w+y6Grnw01pBM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DZwUQfXaRdexHo0fkf1fFBZKWQmhgTk5qDimtYJjUtGxD2w6P5Ym8Sg+Fs983ODFi
+	 a0om4lTuhOajHsYcmowqBSmP+SwG2nFTk7oCAXhIs0Aea3uUbVyn91339JZvqju8fM
+	 6QbEnn8Fc7sZRJJgx/xHj68cbLlX8WL0CnP9mEUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726734AbgAJHym (ORCPT
+        id S1726759AbgAJH5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:54:42 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:27725 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbgAJHym (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:54:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578642879;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=d9JrHFY1UkMhvfJGn6qk0SYl17Rv3ChmBENr96iZE38=;
-        b=s9RRt/QZ/SAqsApT14JzWW4LDTgUp7gO6hsP90nUJcsJTP8I749xpwNPiRgFy0UUuG
-        2JBtYnj0VI9HFivCjLrMDSKkTS2TVkR7T3u6hhet3layTN5l6p8HD2pm0mdoAnjBxYjY
-        NB4GgYzxscd1hInCzBX9ED0hUPANPo/yLbU/4OVTL+I8lAT83MRlOovM8ltgtK4fBlxc
-        x5yITH3PONY9MKuBZoXUOmTAbUR1sBPh0JQxPu0AFQ8cYTAN9g4+tfAOc47XvI0t+g+0
-        t1MjLD5dz0hCaDb0lqCpQVwptGgSWSfgj1uI3eRYY35htK/3NTTYLNPr4L1EZFcy5Ea1
-        BoiA==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
-        with ESMTPSA id u04585w0A7rs7kX
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 10 Jan 2020 08:53:54 +0100 (CET)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Kurt Roeckx <kurt@roeckx.be>
-Cc:     "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Andy Lutomirski <luto@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Ext4 Developers List <linux-ext4@vger.kernel.org>,
-        linux-man <linux-man@vger.kernel.org>
-Subject: Re: [PATCH v3 0/8] Rework random blocking
-Date:   Fri, 10 Jan 2020 08:53:54 +0100
-Message-ID: <7629501.YrHEAiJyVJ@tauon.chronox.de>
-In-Reply-To: <20200109230237.GA2992@roeckx.be>
-References: <20191226140423.GB3158@mit.edu> <20200109224011.GD41242@mit.edu> <20200109230237.GA2992@roeckx.be>
+        Fri, 10 Jan 2020 02:57:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726508AbgAJH5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:57:19 -0500
+Received: from localhost (unknown [223.226.110.118])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41A8220678;
+        Fri, 10 Jan 2020 07:57:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578643038;
+        bh=KzQGNzbnWuzjj/D+MsdmvVNOXudlw3w+y6Grnw01pBM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XblV76ARZIAOQwMc8aSkMpy2HXQgJYCspGWq7zyedcFPSJxCF6vbaRtw0ox4y5dVu
+         8L1v/zuLLcuwGkKy3eEI+aq4911KEr5Nwq22oikjOvzzMVEUP5KBwJ4wR6fKeQ2w7+
+         YE2wVW6/ZXhuuL7vWPSenWPpSjCzhG+9GJRNwsek=
+Date:   Fri, 10 Jan 2020 13:27:07 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Gary R Hook <gary.hook@amd.com>,
+        Sanjay R Mehta <Sanju.Mehta@amd.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        kbuild test robot <lkp@intel.com>, dan.j.williams@intel.com,
+        Nehal-bakulchandra.Shah@amd.com, Shyam-sundar.S-k@amd.com,
+        davem@davemloft.net, mchehab+samsung@kernel.org, robh@kernel.org,
+        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] dmaengine: ptdma: Initial driver for the AMD
+ PassThru DMA engine
+Message-ID: <20200110075707.GE2818@vkoul-mobl>
+References: <1577458047-109654-1-git-send-email-Sanju.Mehta@amd.com>
+ <201912280738.zotyIgEi%lkp@intel.com>
+ <20200103062630.GD2818@vkoul-mobl>
+ <de0bf6de-5c44-bb81-f3ac-2db1c1c4595d@amd.com>
+ <20200103155256.GC1064304@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200103155256.GC1064304@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 10. Januar 2020, 00:02:37 CET schrieb Kurt Roeckx:
-
-Hi Kurt,
-
-> On Thu, Jan 09, 2020 at 05:40:11PM -0500, Theodore Y. Ts'o wrote:
-> > On Thu, Jan 09, 2020 at 11:02:30PM +0100, Kurt Roeckx wrote:
-> > > One thing the NIST DRBGs have is prediction resistance, which is
-> > > done by reseeding. If you chain DRBGs, you tell your parent DRBG
-> > > that you want prediction resistance, so your parent will also
-> > > reseed. There currently is no way to tell the kernel to reseed.
+On 03-01-20, 16:52, Greg KH wrote:
+> On Fri, Jan 03, 2020 at 09:12:18AM -0600, Gary R Hook wrote:
+> > On 1/3/20 12:26 AM, Vinod Koul wrote:
+> > > On 28-12-19, 07:56, kbuild test robot wrote:
+> > > > Hi Sanjay,
+> > > > 
+> > > > I love your patch! Perhaps something to improve:
+> > > 
+> > > Please fix the issues reported and also make sure the patches sent are
+> > > threaded, right now they are not and the series is all over my inbox :(
+> > > 
 > > 
-> > It would be simple enough to add a new flag, perhaps GRND_RESEED, to
-> > getrandom() which requests that the kernel reseed first.  This would
-> > require sufficient amounts of entropy in the input pool to do the
-> > reseed; if there is not enough, the getrandom() call would block until
-> > there was enough.  If GRND_NONBLOCK is supplied, then getrandom()
-> > would return EAGAIN if there wasn't sufficient entropy.
+> > What does this mean? The patches showed up in my inbox as a set of 3,
+> > properly indexed, just like they should when sent with "git send-email".
 > > 
-> > Is this what you want?
-> 
-> I think some people might want to see it, but I think you
-> shouldn't add it.
-
-Just for your information: I played with that already as seen in [1] which 
-does not require any kernel change.
-
-The only issue that is currently there are the two races noted in [1]. These 
-races seem to be only addressable when the reseeding and the gathering of 
-random numbers are atomic. I was toying with the idea that the RNDRESEEDCRNG 
-allows the user to specify an output buffer which would be filled in an atomic 
-operation when the reseed is invoked. That buffer should only be at most in 
-size of the security strength of the DRNG.
-
-[1] https://github.com/smuellerDD/lrng/blob/master/test/syscall_test.c#L101
-> 
-> > > I don't think we want that. As far as I know, the only reason for
-> > > using /dev/random is that /dev/urandom returns data before it
-> > > has sufficient entropy.
+> > We've not had any reports from other lists/maintainers of similar problems.
+> > So you'll understand how we might be a bit confused.
 > > 
-> > Is there any objections to just using getrandom(2)?
+> > Would you please elaborate on the problem you are seeing?
 > 
-> It provides the interface we want, so no. But there are still
-> people who don't have it for various reasons. OpenSSL actually
-> does the system call itself if libc doesn't provider a wrapper for
-> it.
-> 
-> 
-> Kurt
+> There was no email threading of the patches, they all looked like
+> individual emails.  In other words, the "In-Reply-To:" value was not
+> set.
 
+And git send-email does that for you if you give it all the patches to
+send to... If you give it each patch individually, they will come as
+individual units
 
+FWIW, my workflow is 
 
-Ciao
-Stephan
+$ git format-patch .... -o <some_dir>
+<check the patches, add cover letter details etc>
+$ git send-email <some_dir>
 
+That ensures the In-Reply-To is set for subsequent patches and the log
+will also tell you that
 
+HTH
+-- 
+~Vinod
