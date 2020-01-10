@@ -6,131 +6,133 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C35C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C9AC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E89032077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 181612077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:43:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgAJPm5 (ORCPT
+        id S1728427AbgAJPm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:42:57 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:50523 "EHLO
+        Fri, 10 Jan 2020 10:42:59 -0500
+Received: from mout.kundenserver.de ([212.227.126.131]:57877 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728151AbgAJPmz (ORCPT
+        with ESMTP id S1728151AbgAJPm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:42:55 -0500
+        Fri, 10 Jan 2020 10:42:58 -0500
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MJEIl-1j6Dpk2HXP-00Kkub; Fri, 10 Jan 2020 16:42:47 +0100
+ 1Mgebs-1jJTt90naW-00h55e; Fri, 10 Jan 2020 16:42:51 +0100
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Arnd Bergmann <arnd@arndb.de>, y2038@lists.linaro.org,
         linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         Deepa Dinamani <deepa.kernel@gmail.com>
-Subject: [PATCH 1/3] y2038: remove ktime to/from timespec/timeval conversion
-Date:   Fri, 10 Jan 2020 16:42:30 +0100
-Message-Id: <20200110154232.4104492-2-arnd@arndb.de>
+Subject: [PATCH 3/3] y2038: hide timeval/timespec/itimerval/itimerspec types
+Date:   Fri, 10 Jan 2020 16:42:32 +0100
+Message-Id: <20200110154232.4104492-4-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20200110154232.4104492-1-arnd@arndb.de>
 References: <20200110154232.4104492-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:WN5sgzBqrE9ZO3S/x1vHkpv54XqSJpRSR0UqsmHRSbnIZeDknv4
- IV9C2H6FlMPqSoYXRnO0CuTSehUYs1ipdSplQ9aGqlrg5KVCBCFky0v+3Sv3P6Uq7hLKRFi
- CnBV6FSwhnyEeli+ghN5kD63b88CiGY6wjNEt5d1e5qo0L/+FZHVwmCNPCIvmissRMIuag3
- 1DrQLSeViky4DZBhhEKuA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:D19hN1bQ+NM=:UHKNsPYYhaiF+2cp+6tzTt
- yMKtliSynXcYwWqDt5G1vdyEePf9TaF1s5Vec/Pparj6T3EzFdQ6QC5I3xwcr0pTzPnIRd9+b
- qDULY1vyaaMF26f+H25YQAEh4pu6ylYLRAV0X23h5SQ43PbQQKXrWwCSeYiPwbGH6Zp1JAioG
- eAFC0VuvfZtuBketm3vdAnFgzsbOsFkQ4cmvCTm9p1T/HqO1NFZEahB2mTYiXnlvLq945Vw/G
- 52rhkkI1c1n+FCIRXdhoene6Bq0du0x0c/vKG7KBm4AJ4HBq9qT0UG3ABf8GyE5Ydu06zhJIw
- SdownPwI+1KNkmrqZab7Y5kv8W9KgUVmq7uPUgBT0Dwvmlxf+Fd4pUE39qbqsfJ/ZL+ThWNjq
- i4eiq2UJsnrUHnueS0emTGwsmQzvIkhnsL2g8tGoKgvxrHroJ82gaqwNShZeP4JCIM/illoqC
- mhojxrb0iSEEzTaLcAyd4dS7EKPhtH/S6dLRii393uK/h7uw1/XePiRyYjt2LFFmvLJgGiYYN
- fqmCzY9nSRXMr5XNabS1Egw15CFTn+Ts6r67z7hfyvoT4a8lKxorr9S22ESraawejzQDAG4qi
- 3ttR2yGQiMflJ1c7VF55Wo0D2F09w18g4jrZ4MeoeIXZjmHPxaM5HFT9Lb1jiZs3nxgTRrO58
- taUM7OAR90GGhICwU+Fzpq61Pr4bInrt93a9H2XUN4E/maCKHsMqYDuygCxyA25sA76wRZgmT
- /L3tl4CRRqMndJjZuOQk9Lv92pEYrcZID2RXETay9jKeV5uDJb/3TSsD5XwQIBabfYNUqNJD0
- liIkEGN5WAF978lZWiHyybap4ox8+8Bpgs/mwredpWP9CVe+6rXfSryrAAYier3+6WjI5IBS6
- mZ1YwnqVQ+4BnJnfq1HQ==
+X-Provags-ID: V03:K1:WPEkrl/rLXk5wiQOlO54RwlcVS+s99NxMLu3KiL/xHh/Q8xzHdF
+ vV4Su45Jt4OySWJpOdnN+TpFkQtdRIOZtyRe4BMlaP2D9Gi2lHEoSoplRIRBfmi6wx5byLU
+ PLcecWFEvjT8ygPs0GagjLiywAS2DjmCr07XMUOtFr7gyVsavk2s7M2ewkPLvc8tMLCFcLj
+ A7PiEFCF7GLmm6J2dGnFg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QHwVseXxjkw=:NHOqWfOqZ+bBetDJTrOjyE
+ 3iyLNHHuUJW5gifyc1bwdd+TfvtfVV52UN73H/9dsRCbr0JH8iNN+pJTpW7GIFnFEPXpH1p4J
+ DXpDvdJONdnYLdNa3Yc2xDDWVM2UPUNenZaPtyOgG/CeVoUGwGyNOaz8FdL91Onbp1Olt5ky/
+ REJRdpkHUYVZ9EjCBd64cFZfyCn5ZTvqIkBND22XPFsQZpnY/xX6PuU8M2nw2B2ruMutcTAN0
+ VY79uLxOj3Dzf/EoDsAhHGCTpmJMC24SAYWFOx+thUt3fOn1dwnqlQZSNAgWsXk79V8Oz7n6T
+ DdQsTHoMONd2hBYPLzyHcVnQNcG7qno6icHRqZ2zJu3q0avb0XeYKg6tLFbGIGVx8d18lF2MA
+ dXPoaNO/+6FqJ/GPYuGEFzkmD+8HyE7cL+1Za9cWPLKUNq19a1PH7mpfC8jQbRHxHfFQ3DsDf
+ p1FPXeE7tQf+N4DSj+LzkuDNyOqakIT1407zMzAwTCszl8k7Qt8juLndanHuTRNkk6S8rBi1S
+ dUeC1EaSOasBEKfLXi0R6RS50AFmbpnbNCGKNHHFT9r2Ni84Jy8JocPtfhYEN9txs/1G5HbxI
+ /d6DsKCDrQxUjLenIy0BZvPIWIYCzW1AP4pUsVxJ3VHURvX9NBvqNuLfcf0x1ziDp3tIhrdyF
+ Skh6CIF8H9g6Sg/0mYnRzYFWstlfgTGs6jYYpLgC1cbVvzMtgvZSQPiDXtQiPbYNweV1503oK
+ YYZPhoNTe5IzpIrU972k45THOZDOI/ibBD1aW4JtjjCWIS4MyxvHPw7PRczZu4eyhnkBE7euJ
+ vSTaHrCHKc/hX59CZxYy0qhfJj5HWhZA1uE7S+iJ21U6G6EYFXya9ONOV/7kAHHaskN52iE08
+ eKaSIhmFmxnJ4XvSaKGQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A couple of helpers are now obsolete and can be removed, so drivers can
-no longer start using them and instead use y2038-safe interfaces.
+There are no in-kernel users remaining, but there may still
+be users that include linux/time.h instead of sys/time.h
+from user space, so leave the types available to user space
+while hiding them from kernel space.
+
+Only the __kernel_old_* versions of these types remain now.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/linux/ktime.h | 37 -------------------------------------
- 1 file changed, 37 deletions(-)
+ include/uapi/asm-generic/posix_types.h |  2 ++
+ include/uapi/linux/time.h              | 22 ++++++++++++----------
+ 2 files changed, 14 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/ktime.h b/include/linux/ktime.h
-index b2bb44f87f5a..d1fb05135665 100644
---- a/include/linux/ktime.h
-+++ b/include/linux/ktime.h
-@@ -66,33 +66,15 @@ static inline ktime_t ktime_set(const s64 secs, const unsigned long nsecs)
+diff --git a/include/uapi/asm-generic/posix_types.h b/include/uapi/asm-generic/posix_types.h
+index 2f9c80595ba7..b5f7594eee7a 100644
+--- a/include/uapi/asm-generic/posix_types.h
++++ b/include/uapi/asm-generic/posix_types.h
+@@ -87,7 +87,9 @@ typedef struct {
+ typedef __kernel_long_t	__kernel_off_t;
+ typedef long long	__kernel_loff_t;
+ typedef __kernel_long_t	__kernel_old_time_t;
++#ifndef __KERNEL__
+ typedef __kernel_long_t	__kernel_time_t;
++#endif
+ typedef long long __kernel_time64_t;
+ typedef __kernel_long_t	__kernel_clock_t;
+ typedef int		__kernel_timer_t;
+diff --git a/include/uapi/linux/time.h b/include/uapi/linux/time.h
+index a655aa28dc6e..4f4b6e48e01c 100644
+--- a/include/uapi/linux/time.h
++++ b/include/uapi/linux/time.h
+@@ -5,6 +5,7 @@
+ #include <linux/types.h>
+ #include <linux/time_types.h>
+ 
++#ifndef __KERNEL__
+ #ifndef _STRUCT_TIMESPEC
+ #define _STRUCT_TIMESPEC
+ struct timespec {
+@@ -18,6 +19,17 @@ struct timeval {
+ 	__kernel_suseconds_t	tv_usec;	/* microseconds */
+ };
+ 
++struct itimerspec {
++	struct timespec it_interval;/* timer period */
++	struct timespec it_value;	/* timer expiration */
++};
++
++struct itimerval {
++	struct timeval it_interval;/* timer interval */
++	struct timeval it_value;	/* current value */
++};
++#endif
++
+ struct timezone {
+ 	int	tz_minuteswest;	/* minutes west of Greenwich */
+ 	int	tz_dsttime;	/* type of dst correction */
+@@ -31,16 +43,6 @@ struct timezone {
+ #define	ITIMER_VIRTUAL		1
+ #define	ITIMER_PROF		2
+ 
+-struct itimerspec {
+-	struct timespec it_interval;	/* timer period */
+-	struct timespec it_value;	/* timer expiration */
+-};
+-
+-struct itimerval {
+-	struct timeval it_interval;	/* timer interval */
+-	struct timeval it_value;	/* current value */
+-};
+-
+ /*
+  * The IDs of the various system clocks (for POSIX.1b interval timers):
   */
- #define ktime_sub_ns(kt, nsval)		((kt) - (nsval))
- 
--/* convert a timespec to ktime_t format: */
--static inline ktime_t timespec_to_ktime(struct timespec ts)
--{
--	return ktime_set(ts.tv_sec, ts.tv_nsec);
--}
--
- /* convert a timespec64 to ktime_t format: */
- static inline ktime_t timespec64_to_ktime(struct timespec64 ts)
- {
- 	return ktime_set(ts.tv_sec, ts.tv_nsec);
- }
- 
--/* convert a timeval to ktime_t format: */
--static inline ktime_t timeval_to_ktime(struct timeval tv)
--{
--	return ktime_set(tv.tv_sec, tv.tv_usec * NSEC_PER_USEC);
--}
--
--/* Map the ktime_t to timespec conversion to ns_to_timespec function */
--#define ktime_to_timespec(kt)		ns_to_timespec((kt))
--
- /* Map the ktime_t to timespec conversion to ns_to_timespec function */
- #define ktime_to_timespec64(kt)		ns_to_timespec64((kt))
- 
--/* Map the ktime_t to timeval conversion to ns_to_timeval function */
--#define ktime_to_timeval(kt)		ns_to_timeval((kt))
--
- /* Convert ktime_t to nanoseconds */
- static inline s64 ktime_to_ns(const ktime_t kt)
- {
-@@ -215,25 +197,6 @@ static inline ktime_t ktime_sub_ms(const ktime_t kt, const u64 msec)
- 
- extern ktime_t ktime_add_safe(const ktime_t lhs, const ktime_t rhs);
- 
--/**
-- * ktime_to_timespec_cond - convert a ktime_t variable to timespec
-- *			    format only if the variable contains data
-- * @kt:		the ktime_t variable to convert
-- * @ts:		the timespec variable to store the result in
-- *
-- * Return: %true if there was a successful conversion, %false if kt was 0.
-- */
--static inline __must_check bool ktime_to_timespec_cond(const ktime_t kt,
--						       struct timespec *ts)
--{
--	if (kt) {
--		*ts = ktime_to_timespec(kt);
--		return true;
--	} else {
--		return false;
--	}
--}
--
- /**
-  * ktime_to_timespec64_cond - convert a ktime_t variable to timespec64
-  *			    format only if the variable contains data
 -- 
 2.20.0
 
