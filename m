@@ -2,93 +2,76 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F30A3C33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4DAC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E3C20842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:04:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="itHAVCt2"
+	by mail.kernel.org (Postfix) with ESMTP id 7A1AA20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:04:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578639890;
+	bh=WVTczZ0WXkHm+kstImFaKjkXem85hCPaurp4wD8rzL8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S0RbWspElT4QorU9+UTRA1/pX/G5F9lElUQvXwVKlWEXhXTfQCj5JlPiNIcNS+T2u
+	 bdV+u7civYaieZK6MK2ZyI0FYiSiDL7iYt+1GRb+7OiWChpGonyVcjYHEyi+5rG1K9
+	 NPV53HClttqLpEg3QctL6VhgvCCEBQE4YHHiB+ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbgAJHEl (ORCPT
+        id S1727753AbgAJHEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:04:41 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:53418 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726598AbgAJHEk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:04:40 -0500
-X-UUID: 7c4966ef6ebd4e4bb66b3e1c999bb38a-20200110
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=qWyPZmajFzIdhHdy5cLGELWLgjaEXWjuyCtLLW6rxa4=;
-        b=itHAVCt2gfFerWNzUurt7DbuAfPEZCQFmSIigMdvlgfZt3c1Jwx0Zs5OPUJTC8gHgfwFeh1zc20GJUA/beRW1rdtqWn72Hgi4hJ8VSaQcOsQS/3yifiyYayzkJuEsEY8YtIdyolSiMvREe+RLBCTq1XHAucnwjcuPir/TTeKUmA=;
-X-UUID: 7c4966ef6ebd4e4bb66b3e1c999bb38a-20200110
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
-        (envelope-from <jiaxin.yu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1116906545; Fri, 10 Jan 2020 15:04:34 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 10 Jan 2020 15:04:04 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 10 Jan 2020 15:03:58 +0800
-From:   Jiaxin Yu <jiaxin.yu@mediatek.com>
-To:     <yong.liang@mediatek.com>, <wim@linux-watchdog.org>,
-        <linux@roeck-us.net>, <p.zabel@pengutronix.de>,
-        <matthias.bgg@gmail.com>, <linux-watchdog@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <chang-an.chen@mediatek.com>, <freddy.hsin@mediatek.com>
-CC:     <yingjoe.chen@mediatek.com>, <sboyd@kernel.org>,
-        Jiaxin Yu <jiaxin.yu@mediatek.com>
-Subject: [PATCH v11 3/3] watchdog: mtk_wdt: mt2712: Add reset controller
-Date:   Fri, 10 Jan 2020 15:04:22 +0800
-Message-ID: <1578639862-14480-4-git-send-email-jiaxin.yu@mediatek.com>
-X-Mailer: git-send-email 1.8.1.1.dirty
-In-Reply-To: <1578639862-14480-1-git-send-email-jiaxin.yu@mediatek.com>
-References: <1578639862-14480-1-git-send-email-jiaxin.yu@mediatek.com>
+        Fri, 10 Jan 2020 02:04:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57990 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726486AbgAJHEs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:04:48 -0500
+Received: from localhost (unknown [223.226.110.118])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61F7A2080D;
+        Fri, 10 Jan 2020 07:04:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578639888;
+        bh=WVTczZ0WXkHm+kstImFaKjkXem85hCPaurp4wD8rzL8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yk9As+Q4EWsjIV3fwBZy23RxCJEzSDyXHOnc4SyBL6dNAP4CSzgZvHMPUojKbRLL8
+         PI+HkndB5PqxCnP0bgHKB6e/67jKrGUpF2FVKipFuBY7jn6zFizRCgaXv5bPIXE68P
+         lxmcOJPvFovw8MLO2F9m1UZCUP+9x4LS/vOGNQXQ=
+Date:   Fri, 10 Jan 2020 12:34:34 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH 1/6] soundwire: stream: remove redundant pr_err traces
+Message-ID: <20200110070434.GB2818@vkoul-mobl>
+References: <20200108175438.13121-1-pierre-louis.bossart@linux.intel.com>
+ <20200108175438.13121-2-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108175438.13121-2-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QWRkIHJlc2V0IGNvbnRyb2xsZXIgZm9yIDI3MTIuDQpCZXNpZGVzIHdhdGNoZG9nLCBNVEsgdG9w
-cmd1IG1vZHVsZSBhbHNhIHByb3ZpZGUgc3ViLXN5c3RlbSAoZWcsIGF1ZGlvLA0KY2FtZXJhLCBj
-b2RlYyBhbmQgY29ubmVjdGl2aXR5KSBzb2Z0d2FyZSByZXNldCBmdW5jdGlvbmFsaXR5Lg0KDQpT
-aWduZWQtb2ZmLWJ5OiB5b25nLmxpYW5nIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NClNpZ25l
-ZC1vZmYtYnk6IEppYXhpbiBZdSA8amlheGluLnl1QG1lZGlhdGVrLmNvbT4NClJldmlld2VkLWJ5
-OiBZaW5nam9lIENoZW4gPHlpbmdqb2UuY2hlbkBtZWRpYXRlay5jb20+DQpSZXZpZXdlZC1ieTog
-UGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4NClJldmlld2VkLWJ5OiBSb2Ig
-SGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KUmV2aWV3ZWQtYnk6IEd1ZW50ZXIgUm9lY2sgPGdy
-b2VjazdAZ21haWwuY29tPg0KLS0tDQogZHJpdmVycy93YXRjaGRvZy9tdGtfd2R0LmMgfCA2ICsr
-KysrKw0KIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5jIGIvZHJpdmVycy93YXRjaGRvZy9tdGtfd2R0LmMNCmlu
-ZGV4IGU4OGFhY2IwNDA0ZC4uZDZhNjM5M2Y2MDlkIDEwMDY0NA0KLS0tIGEvZHJpdmVycy93YXRj
-aGRvZy9tdGtfd2R0LmMNCisrKyBiL2RyaXZlcnMvd2F0Y2hkb2cvbXRrX3dkdC5jDQpAQCAtOSw2
-ICs5LDcgQEANCiAgKiBCYXNlZCBvbiBzdW54aV93ZHQuYw0KICAqLw0KIA0KKyNpbmNsdWRlIDxk
-dC1iaW5kaW5ncy9yZXNldC1jb250cm9sbGVyL210MjcxMi1yZXNldHMuaD4NCiAjaW5jbHVkZSA8
-ZHQtYmluZGluZ3MvcmVzZXQtY29udHJvbGxlci9tdDgxODMtcmVzZXRzLmg+DQogI2luY2x1ZGUg
-PGxpbnV4L2RlbGF5Lmg+DQogI2luY2x1ZGUgPGxpbnV4L2Vyci5oPg0KQEAgLTY3LDYgKzY4LDEw
-IEBAIHN0cnVjdCBtdGtfd2R0X2RhdGEgew0KIAlpbnQgdG9wcmd1X3N3X3JzdF9udW07DQogfTsN
-CiANCitzdGF0aWMgY29uc3Qgc3RydWN0IG10a193ZHRfZGF0YSBtdDI3MTJfZGF0YSA9IHsNCisJ
-LnRvcHJndV9zd19yc3RfbnVtID0gTVQyNzEyX1RPUFJHVV9TV19SU1RfTlVNLA0KK307DQorDQog
-c3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfd2R0X2RhdGEgbXQ4MTgzX2RhdGEgPSB7DQogCS50b3By
-Z3Vfc3dfcnN0X251bSA9IE1UODE4M19UT1BSR1VfU1dfUlNUX05VTSwNCiB9Ow0KQEAgLTMxNCw2
-ICszMTksNyBAQCBzdGF0aWMgaW50IG10a193ZHRfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikN
-CiAjZW5kaWYNCiANCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtdGtfd2R0X2R0
-X2lkc1tdID0gew0KKwl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10MjcxMi13ZHQiLCAuZGF0
-YSA9ICZtdDI3MTJfZGF0YSB9LA0KIAl7IC5jb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NjU4OS13
-ZHQiIH0sDQogCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTgzLXdkdCIsIC5kYXRhID0g
-Jm10ODE4M19kYXRhIH0sDQogCXsgLyogc2VudGluZWwgKi8gfQ0KLS0gDQoyLjE4LjANCg==
+On 08-01-20, 11:54, Pierre-Louis Bossart wrote:
+> Only keep pr_err to flag critical configuration errors that will
+> typically only happen during system integration.
+> 
+> For errors on prepare/deprepare/enable/disable, the caller can do a
+> much better job with more information on the DAI and device that
+> caused the issue.
 
+Applied, thanks
+
+-- 
+~Vinod
