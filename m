@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E03DC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA91C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 422A420848
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3EAD2146E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:05:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="akuQOJ4o"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dxO0KB0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgAJTFl (ORCPT
+        id S1728892AbgAJTFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:05:41 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:53252 "EHLO
+        Fri, 10 Jan 2020 14:05:54 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:53436 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728556AbgAJTFl (ORCPT
+        with ESMTP id S1728853AbgAJTFw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:05:41 -0500
+        Fri, 10 Jan 2020 14:05:52 -0500
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00AJ4GGE101455;
-        Fri, 10 Jan 2020 19:05:10 GMT
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00AJ3rr5101264;
+        Fri, 10 Jan 2020 19:05:27 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
- bh=MHgz05oZOaycJTUzvHe+/2r6D+V+CAPUNuF1+l0RUqk=;
- b=akuQOJ4oyrHAWCsm1Qeez7Nv1vtW+9n8sxvrA44yFKWjM07BtIuB9c9UCV2ceeiIfhD5
- fcXALB3yW5Ym7HofN0nVLwDzwkAhDMLQa2lH+WiYpMQxdXMIiPgKDgKF2nt8IwqmyXfn
- jx6DbzVey39Sm9YdfSUM77U3azh8MRz7Ru89NkhyOw92HIKtlfX4s48NMcSAFrERCkJQ
- BzbvVZuCAeFo6IuoNGxV20zPc7LJ5AIxAvRZRuIfyx+8gJASy4gPQ2BL8oaYunc1dQ8J
- svR8Gbn6/CRGg3c5y0py2nYZycHMISPY5mlPhfDCDB/p3Sx0QvtaowAlxYgcZi9kUGDr mw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xajnqm1d0-1
+ bh=wn9KcLolGATFIJ85MhQjHSQWXqsU1jEhASuaJIiaAfM=;
+ b=dxO0KB0SDg6HkWerdmIGSxGHOlTPRZSiNToovSwdX2j1Wns32wgYGJopODhJFOD5rSBn
+ puqZvYSK0bJOyTs3l2hiJo4Cva72swDScgam4nCkBGfEH0npV1q3Dz0CNk7uyqRfY7FP
+ mzMT06ji8VS9wWPwZ9YuLo7iB61f1WJv+tqv3QCkYbLlHsUm4czNCS/d5x3gXk+Ehzjk
+ Gbplaa1hJCHQYOg153zpccEUoxTfPctfoAqwCj46FWlQXVm8Wa/LIxvGEx8DRAo4VMtj
+ SfzhCbDg63K6GPa+zzAbmswgAJ2e68gj1Cz2gpVJRcYBA9/KUzhr7D6WXqkJyPLgsgKt Fg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xajnqm1e5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 19:05:10 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00AJ3t1e183573;
-        Fri, 10 Jan 2020 19:05:09 GMT
+        Fri, 10 Jan 2020 19:05:27 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00AJ4QTA038469;
+        Fri, 10 Jan 2020 19:05:26 GMT
 Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2xedhypum9-1
+        by userp3020.oracle.com with ESMTP id 2xekkvjmhk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Jan 2020 19:05:09 +0000
+        Fri, 10 Jan 2020 19:05:26 +0000
 Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00AJ59wD014700;
-        Fri, 10 Jan 2020 19:05:09 GMT
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00AJ5PCf014949;
+        Fri, 10 Jan 2020 19:05:25 GMT
 Received: from paddy.uk.oracle.com (/10.175.192.165)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 10 Jan 2020 11:05:08 -0800
+        with ESMTP ; Fri, 10 Jan 2020 11:05:24 -0800
 From:   Joao Martins <joao.m.martins@oracle.com>
 To:     linux-nvdimm@lists.01.org
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -69,21 +69,21 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Matthew Wilcox <willy@infradead.org>,
         Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: [PATCH RFC 06/10] device-dax: Introduce pfn_flags helper
-Date:   Fri, 10 Jan 2020 19:03:09 +0000
-Message-Id: <20200110190313.17144-7-joao.m.martins@oracle.com>
+Subject: [PATCH RFC 09/10] vfio/type1: Use follow_pfn for VM_FPNMAP VMAs
+Date:   Fri, 10 Jan 2020 19:03:12 +0000
+Message-Id: <20200110190313.17144-10-joao.m.martins@oracle.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200110190313.17144-1-joao.m.martins@oracle.com>
 References: <20200110190313.17144-1-joao.m.martins@oracle.com>
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9496 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=800
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=848
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001100154
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9496 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
  suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=865 adultscore=0
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=904 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001100154
 Sender: linux-kernel-owner@vger.kernel.org
@@ -91,64 +91,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace PFN_DEV|PFN_MAP check call sites with two helper functions
-dax_is_pfn_dev() and dax_is_pfn_map().
+From: Nikita Leshenko <nikita.leshchenko@oracle.com>
 
-Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+Unconditionally interpreting vm_pgoff as a PFN is incorrect.
+
+VMAs created by /dev/mem do this, but in general VM_PFNMAP just means
+that the VMA doesn't have an associated struct page and is being managed
+directly by something other than the core mmu.
+
+Use follow_pfn like KVM does to find the PFN.
+
+Signed-off-by: Nikita Leshenko <nikita.leshchenko@oracle.com>
 ---
- drivers/dax/device.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+ drivers/vfio/vfio_iommu_type1.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-index c6a7f5e12c54..113a554de3ee 100644
---- a/drivers/dax/device.c
-+++ b/drivers/dax/device.c
-@@ -14,6 +14,17 @@
- #include "dax-private.h"
- #include "bus.h"
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 2ada8e6cdb88..1e43581f95ea 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -362,9 +362,9 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+ 	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
  
-+static int dax_is_pfn_dev(struct dev_dax *dev_dax)
-+{
-+	return (dev_dax->region->pfn_flags & (PFN_DEV|PFN_MAP)) == PFN_DEV;
-+}
-+
-+static int dax_is_pfn_map(struct dev_dax *dev_dax)
-+{
-+	return (dev_dax->region->pfn_flags &
-+		(PFN_DEV|PFN_MAP)) == (PFN_DEV|PFN_MAP);
-+}
-+
- static int check_vma_mmap(struct dev_dax *dev_dax, struct vm_area_struct *vma,
- 		const char *func)
- {
-@@ -60,8 +71,7 @@ static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
- 	if (rc < 0)
- 		return rc;
- 
--	if ((dev_dax->region->pfn_flags & (PFN_DEV|PFN_MAP)) == PFN_DEV
--			&& (vma->vm_flags & VM_DONTCOPY) == 0) {
-+	if (dax_is_pfn_dev(dev_dax) && (vma->vm_flags & VM_DONTCOPY) == 0) {
- 		dev_info_ratelimited(&dev_dax->dev,
- 				"%s: %s: fail, dax range requires MADV_DONTFORK\n",
- 				current->comm, func);
-@@ -140,7 +150,7 @@ static vm_fault_t __dev_dax_pmd_fault(struct dev_dax *dev_dax,
+ 	if (vma && vma->vm_flags & VM_PFNMAP) {
+-		*pfn = ((vaddr - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+-		if (is_invalid_reserved_pfn(*pfn))
+-			ret = 0;
++		ret = follow_pfn(vma, vaddr, pfn);
++		if (!ret && !is_invalid_reserved_pfn(*pfn))
++			ret = -EOPNOTSUPP;
  	}
  
- 	/* dax pmd mappings require pfn_t_devmap() */
--	if ((dax_region->pfn_flags & (PFN_DEV|PFN_MAP)) != (PFN_DEV|PFN_MAP)) {
-+	if (!dax_is_pfn_map(dev_dax)) {
- 		dev_dbg(dev, "region lacks devmap flags\n");
- 		return VM_FAULT_SIGBUS;
- 	}
-@@ -190,7 +200,7 @@ static vm_fault_t __dev_dax_pud_fault(struct dev_dax *dev_dax,
- 	}
- 
- 	/* dax pud mappings require pfn_t_devmap() */
--	if ((dax_region->pfn_flags & (PFN_DEV|PFN_MAP)) != (PFN_DEV|PFN_MAP)) {
-+	if (!dax_is_pfn_map(dev_dax)) {
- 		dev_dbg(dev, "region lacks devmap flags\n");
- 		return VM_FAULT_SIGBUS;
- 	}
+ 	up_read(&mm->mmap_sem);
 -- 
 2.17.1
 
