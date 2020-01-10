@@ -2,86 +2,89 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4FAC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 432B1C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C0CE20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:59:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="VSQn0Ttt"
+	by mail.kernel.org (Postfix) with ESMTP id 1AEC72072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:00:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578668406;
+	bh=uEFWL8Sp0xQJUtMRMWMVwcDeHzR9cLPTg7JzfnCCzmc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=HFxVqyzkPnSvxW0UPSX6OUTfbbkh39CuGvROzCu7ILNTQS94tFiSZKokTztZxltYc
+	 8F57p3hKubmkOLF3sTeYsxd4yqkTUd60hWAiPrUDYDR7KW1tVnw8a01UNbm8gwPo5p
+	 gCP6NiOLwY5kqH4M6bKdFRkaIOmPZHTi9ILOTnAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgAJO7I (ORCPT
+        id S1728373AbgAJPAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:59:08 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:42890 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbgAJO7I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:59:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KcB+0FZvEwMSZ71K+kCoZ9X5u6DRQpvD2AQdpGnKqKU=; b=VSQn0TttzYKM/CdTWxnCb9SAK
-        98MKbpP1VXCI0Wb/ur9FQV6efmKh98+5V8KPBvOrOfxB7IrgR05Ta3vlsVkBS618/wkR/PkF8y4f3
-        9rX0rXKOOIac1MIFCacPThgaz4YTylyoGIYqIOzwsN7VjtDB57lpecTA+jJoaRUPUpmBVqjLnuepN
-        yP+TmIC7pPvUW5xAl5K7439M3ROyOI9TB3VDgrofXb84No5s41VboEGKCVgNbHnOSADnNtsrbQ4TV
-        CHjv74Fj6rjhDsWFYY47kXdsbHAN3nkCSjgGVFDIUhyo8I+KhX8UEtmC0LtaI/D1YDzXTd8TXOgSC
-        tbRk2znsQ==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:53122)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ipvkU-0003i1-OE; Fri, 10 Jan 2020 14:58:54 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ipvkP-0001aZ-ER; Fri, 10 Jan 2020 14:58:49 +0000
-Date:   Fri, 10 Jan 2020 14:58:49 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/14] net: axienet: Fix SGMII support
-Message-ID: <20200110145849.GC25745@shell.armlinux.org.uk>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
- <20200110115415.75683-8-andre.przywara@arm.com>
+        Fri, 10 Jan 2020 10:00:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53230 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727892AbgAJPAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 10:00:04 -0500
+Received: from ziggy.de (unknown [95.169.227.92])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66F8620721;
+        Fri, 10 Jan 2020 15:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578668404;
+        bh=uEFWL8Sp0xQJUtMRMWMVwcDeHzR9cLPTg7JzfnCCzmc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=lyIoNDR04h6TwzT8PpJpApOSLC6PKjoSIeo/vkcNB0+YtRsOnbLqZiVEwDAclxzJO
+         DSQnte96xky5o4rWq10SZZohQx3tFDPBM2LV2QSlZcTaWMKabCkMEM6PLRWqIcEWPI
+         dUu5Zl1X6molO3iwqX6F97nF1GlQguu1zdwbnpts=
+From:   matthias.bgg@kernel.org
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH] dt-bindings: mfd: mediatek: Add MT6397 Pin Controller
+Date:   Fri, 10 Jan 2020 15:59:51 +0100
+Message-Id: <20200110145952.9720-1-matthias.bgg@kernel.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110115415.75683-8-andre.przywara@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 11:54:08AM +0000, Andre Przywara wrote:
-> With SGMII, the MAC and the PHY can negotiate the link speed between
-> themselves, without the host needing to mediate between them.
-> Linux recognises this, and will call phylink's mac_config with the speed
-> member set to SPEED_UNKNOWN (-1).
+From: Matthias Brugger <matthias.bgg@gmail.com>
 
-I wonder whether you have read the documentation for the phylink
-mac_config() method (if not, please read it, it contains some very
-important information about what mac_config() should do.)  When
-operating in SGMII in-band mode, state->speed and state->duplex are
-not actually valid.
+The MT6397 mfd includes a pin controller. Add binding
+a description for it.
 
-You'll probably want to submit a better patch after reading the
-documentation.
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-Thanks.
+---
 
+ Documentation/devicetree/bindings/mfd/mt6397.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
+index a9b105ac00a8..ce22fca9d48b 100644
+--- a/Documentation/devicetree/bindings/mfd/mt6397.txt
++++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
+@@ -54,6 +54,11 @@ Optional subnodes:
+ 		- compatible: "mediatek,mt6323-pwrc"
+ 	For details, see ../power/reset/mt6323-poweroff.txt
+ 
++- pin-controller
++	Required properties:
++		- compatible: "mediatek,mt6397-pinctrl"
++	For details, see ../pinctrl/pinctrl-mt65xx.txt
++
+ Example:
+ 	pwrap: pwrap@1000f000 {
+ 		compatible = "mediatek,mt8135-pwrap";
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.24.0
+
