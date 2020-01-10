@@ -2,178 +2,197 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E990C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 04:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A2CC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 04:46:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 533C22077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 04:43:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="peLnkNZB"
+	by mail.kernel.org (Postfix) with ESMTP id B78362082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 04:46:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731287AbgAJEni (ORCPT
+        id S1731307AbgAJEqV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 23:43:38 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19569 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731223AbgAJEnh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 23:43:37 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1800c60000>; Thu, 09 Jan 2020 20:42:46 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 09 Jan 2020 20:43:37 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 09 Jan 2020 20:43:37 -0800
-Received: from [10.24.44.157] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jan
- 2020 04:43:28 +0000
-Subject: Re: [PATCH v7 00/21] Move PMC clocks into Tegra PMC driver
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <broonie@kernel.org>,
-        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
-        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <josephl@nvidia.com>, <daniel.lezcano@linaro.org>,
-        <mmaddireddy@nvidia.com>, <markz@nvidia.com>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
- <4e9fab30-14b5-bf1f-dc91-fd57ef614503@gmail.com>
- <61a78ba8-4cc3-f6a6-513b-36daa9be32f0@nvidia.com>
- <37a9676b-e0e5-7e80-5ee4-abfca361dcf7@nvidia.com>
- <62751d2d-2b7d-509b-e236-363d2bb29b02@nvidia.com>
- <880b2e8a-aa55-40f3-7502-24392b88e53f@nvidia.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <738f42e2-7135-b111-5863-1cb15aa96c18@nvidia.com>
-Date:   Fri, 10 Jan 2020 10:13:25 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 9 Jan 2020 23:46:21 -0500
+Received: from mga06.intel.com ([134.134.136.31]:54917 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731223AbgAJEqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 23:46:20 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 20:46:19 -0800
+X-IronPort-AV: E=Sophos;i="5.69,415,1571727600"; 
+   d="scan'208";a="236767082"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 20:46:19 -0800
+Subject: [PATCH] mm/memory_hotplug: Fix remove_memory() lockdep splat
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     akpm@linux-foundation.org
+Cc:     stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 09 Jan 2020 20:30:17 -0800
+Message-ID: <157863061737.2230556.3959730620803366776.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-3-g996c
 MIME-Version: 1.0
-In-Reply-To: <880b2e8a-aa55-40f3-7502-24392b88e53f@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578631367; bh=FR7aXBzeIEzO5BzxtIVFGLi8GTqSmDW/ccqcZwHELVs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=peLnkNZBv0uEBhHnfA3ljEyUwDKhavPj62NYKudE4Dbzy57Q5I9G9hewIeOd+k2yT
-         cDXJ9R8jjNzZzgXTfrVKtU08Jtk7Wjh2zgcUOFwxu30T2UkDqnbVHdsK0jG5UtegM7
-         jk9RHSZ869T6rQ2avt3tmW3F3XkToTf1jrhiGl7KQ6gunCMckGnS7qcqnhjoaoxUiq
-         zXlAxQZ4m3zgt6sqeGpIwWS5Kjd/kdQ33sTYNRcyUbx8cjVRnbly7GiJ4lMDTu6yjW
-         YCXvt5EXmcRnZ/njn4TBHsPAGcMWzN4mBNbeAWzNKKQlteL85pz9kenAR9YNmeyPzT
-         yBG5q7fKTcSkQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The daxctl unit test for the dax_kmem driver currently triggers the
+lockdep splat below. It results from the fact that
+remove_memory_block_devices() is invoked under the mem_hotplug_lock()
+causing lockdep entanglements with cpu_hotplug_lock().
 
-On 1/10/2020 10:06 AM, Sowjanya Komatineni wrote:
->
-> On 1/9/20 7:32 PM, Sowjanya Komatineni wrote:
->>
->> On 1/9/20 7:24 PM, Sowjanya Komatineni wrote:
->>>
->>> On 1/9/20 5:39 PM, Sowjanya Komatineni wrote:
->>>>
->>>> On 1/9/20 11:44 AM, Dmitry Osipenko wrote:
->>>>> External email: Use caution opening links or attachments
->>>>>
->>>>>
->>>>> 08.01.2020 07:24, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> This patch series moves Tegra PMC clocks from clock driver to pmc=20
->>>>>> driver
->>>>>> along with the device trees changes and audio driver which uses=20
->>>>>> one of
->>>>>> the pmc clock for audio mclk.
->>>>>>
->>>>>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls=20
->>>>>> which
->>>>>> are currently registered by Tegra clock driver using=20
->>>>>> clk_regiser_mux and
->>>>>> clk_register_gate which performs direct Tegra PMC register access.
->>>>>>
->>>>>> When Tegra PMC is in secure mode, any access from non-secure=20
->>>>>> world will
->>>>>> not go through.
->>>>>>
->>>>>> This patch series adds these Tegra PMC clocks and blink controls=20
->>>>>> to Tegra
->>>>>> PMC driver with PMC as clock provider and removes them from Tegra=20
->>>>>> clock
->>>>>> driver.
->>>>>>
->>>>>> PMC clock clk_out_1 is dedicated for audio mclk from Tegra30 thru=20
->>>>>> Tegra210
->>>>>> and clock driver does inital parent configuration for it and=20
->>>>>> enables them.
->>>>>> But this clock should be taken care by audio driver as there is=20
->>>>>> no need
->>>>>> to have this clock pre enabled.
->>>>>>
->>>>>> So, this series also includes patch that updates ASoC driver to take
->>>>>> care of parent configuration for mclk if device tree don't specify
->>>>>> initial parent configuration using assigned-clock-parents and=20
->>>>>> controls
->>>>>> audio mclk enable/disable during ASoC machine startup and shutdown.
->>>>>>
->>>>>> DTs are also updated to use clk_out_1 as audio mclk rather than=20
->>>>>> extern1.
->>>>>>
->>>>>> This series also includes a patch for mclk fallback to extern1 when
->>>>>> retrieving mclk fails to have this backward compatible of new DT=20
->>>>>> with
->>>>>> old kernels.
->>>>> Suspend-resume doesn't work anymore, reverting this series helps. I
->>>>> don't have any other information yet, please take a look.
->>>> Thanks Dmitry. Will test suspend resume and check..
->>>
->>> I see if we leave audio mclk (cdev1) enabled during=20
->>> tegra_asoc_utils_init, suspend resume works.
->>>
->>> Without audio mclk enabled during tegra_asoc_utils_init, somehow it=20
->>> prevents entry to suspend on Tegra30 platform.
->>>
->>> Will look in detail..
->>>
->> audio mclk is only needed for audio and werid that having it not=20
->> enabled all the time like in current clock driver prevents suspend=20
->> entry on Tegra30
->>
->> Looks like this issue is masked earlier with having mclk enabled all=20
->> the time by clock driver.
->>
-> On linux-next without this patch series, I just disabled mclk to be=20
-> enabled all the time (removed set_rate from utils_init) and also=20
-> disabled default enable from clock driver.
->
-> So somehow disabling mclk is preventing suspend entry.
+The mem_hotplug_lock() is not needed to synchronize the memory block
+device sysfs interface vs the page online state, that is already handled
+by lock_device_hotplug(). Specifically lock_device_hotplug()
+is sufficient to allow try_remove_memory() to check the offline
+state of the memblocks and be assured that subsequent online attempts
+will be blocked. The device_online() path checks mem->section_count
+before allowing any state manipulations and mem->section_count is
+cleared in remove_memory_block_devices().
 
-This is strange.
+The add_memory() path does create memblock devices under the lock, but
+there is no lockdep report on that path, so it is left alone for now.
 
->
-> Probably debugging suspend issue on Tegra30 when audio mclk is=20
-> disabled can be done separately and will keep audio mclk enabled in=20
-> asoc_utils_init with comment mentioning this issue and fix as TBD to=20
-> move on with PMC clock fixes.
+This change is only possible thanks to the recent change that refactored
+memory block device removal out of arch_remove_memory() (commit
+4c4b7f9ba948 mm/memory_hotplug: remove memory block devices before
+arch_remove_memory()).
 
-Sounds fine with me as the suspend/resume issue is not introduced in the=20
-current series. It can be addressed separately.
+    ======================================================
+    WARNING: possible circular locking dependency detected
+    5.5.0-rc3+ #230 Tainted: G           OE
+    ------------------------------------------------------
+    lt-daxctl/6459 is trying to acquire lock:
+    ffff99c7f0003510 (kn->count#241){++++}, at: kernfs_remove_by_name_ns+0x41/0x80
 
->
->
->
+    but task is already holding lock:
+    ffffffffa76a5450 (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x20/0xe0
+
+    which lock already depends on the new lock.
+
+
+    the existing dependency chain (in reverse order) is:
+
+    -> #2 (mem_hotplug_lock.rw_sem){++++}:
+           __lock_acquire+0x39c/0x790
+           lock_acquire+0xa2/0x1b0
+           get_online_mems+0x3e/0xb0
+           kmem_cache_create_usercopy+0x2e/0x260
+           kmem_cache_create+0x12/0x20
+           ptlock_cache_init+0x20/0x28
+           start_kernel+0x243/0x547
+           secondary_startup_64+0xb6/0xc0
+
+    -> #1 (cpu_hotplug_lock.rw_sem){++++}:
+           __lock_acquire+0x39c/0x790
+           lock_acquire+0xa2/0x1b0
+           cpus_read_lock+0x3e/0xb0
+           online_pages+0x37/0x300
+           memory_subsys_online+0x17d/0x1c0
+           device_online+0x60/0x80
+           state_store+0x65/0xd0
+           kernfs_fop_write+0xcf/0x1c0
+           vfs_write+0xdb/0x1d0
+           ksys_write+0x65/0xe0
+           do_syscall_64+0x5c/0xa0
+           entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+    -> #0 (kn->count#241){++++}:
+           check_prev_add+0x98/0xa40
+           validate_chain+0x576/0x860
+           __lock_acquire+0x39c/0x790
+           lock_acquire+0xa2/0x1b0
+           __kernfs_remove+0x25f/0x2e0
+           kernfs_remove_by_name_ns+0x41/0x80
+           remove_files.isra.0+0x30/0x70
+           sysfs_remove_group+0x3d/0x80
+           sysfs_remove_groups+0x29/0x40
+           device_remove_attrs+0x39/0x70
+           device_del+0x16a/0x3f0
+           device_unregister+0x16/0x60
+           remove_memory_block_devices+0x82/0xb0
+           try_remove_memory+0xb5/0x130
+           remove_memory+0x26/0x40
+           dev_dax_kmem_remove+0x44/0x6a [kmem]
+           device_release_driver_internal+0xe4/0x1c0
+           unbind_store+0xef/0x120
+           kernfs_fop_write+0xcf/0x1c0
+           vfs_write+0xdb/0x1d0
+           ksys_write+0x65/0xe0
+           do_syscall_64+0x5c/0xa0
+           entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+    other info that might help us debug this:
+
+    Chain exists of:
+      kn->count#241 --> cpu_hotplug_lock.rw_sem --> mem_hotplug_lock.rw_sem
+
+     Possible unsafe locking scenario:
+
+           CPU0                    CPU1
+           ----                    ----
+      lock(mem_hotplug_lock.rw_sem);
+                                   lock(cpu_hotplug_lock.rw_sem);
+                                   lock(mem_hotplug_lock.rw_sem);
+      lock(kn->count#241);
+
+     *** DEADLOCK ***
+
+No fixes tag as this seems to have been a long standing issue that
+likely predated the addition of kernfs lockdep annotations.
+
+Cc: <stable@vger.kernel.org>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ mm/memory_hotplug.c |   12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 55ac23ef11c1..a4e7dadded08 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1763,8 +1763,6 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+ 
+ 	BUG_ON(check_hotplug_memory_range(start, size));
+ 
+-	mem_hotplug_begin();
+-
+ 	/*
+ 	 * All memory blocks must be offlined before removing memory.  Check
+ 	 * whether all memory blocks in question are offline and return error
+@@ -1777,9 +1775,17 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+ 	/* remove memmap entry */
+ 	firmware_map_remove(start, start + size, "System RAM");
+ 
+-	/* remove memory block devices before removing memory */
++	/*
++	 * Remove memory block devices before removing memory, and do
++	 * not hold the mem_hotplug_lock() over kobject removal
++	 * operations. lock_device_hotplug() keeps the
++	 * check_memblock_offlined_cb result valid until the entire
++	 * removal process is complete.
++	 */
+ 	remove_memory_block_devices(start, size);
+ 
++	mem_hotplug_begin();
++
+ 	arch_remove_memory(nid, start, size, NULL);
+ 	memblock_free(start, size);
+ 	memblock_remove(start, size);
+
