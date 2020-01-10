@@ -4,135 +4,267 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31EFC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2361C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:52:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B650A20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:49:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 750A72072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:52:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="Fyx7qH8P"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kXx2Ru1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgAJItO (ORCPT
+        id S1727192AbgAJIwU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 03:49:14 -0500
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:60930 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727152AbgAJItN (ORCPT
+        Fri, 10 Jan 2020 03:52:20 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:29105 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727152AbgAJIwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 03:49:13 -0500
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 22BFB2E037C;
-        Fri, 10 Jan 2020 11:49:10 +0300 (MSK)
-Received: from sas1-9998cec34266.qloud-c.yandex.net (sas1-9998cec34266.qloud-c.yandex.net [2a02:6b8:c14:3a0e:0:640:9998:cec3])
-        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id mOJVkqvLMH-n8dmwGcB;
-        Fri, 10 Jan 2020 11:49:10 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1578646150; bh=qNR3NRByyHlpXQ4p8X/hlo3hrAKhN7Qz3lDeB34a2SE=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=Fyx7qH8P/x1bFQnJzbtV/n/oKwipgrSOqyHGMcwJ8hs8laBFTQJQCrEKnzAvegvLj
-         7DmxhCtvD5dSvHww2xkvK8WCrFCn8nLyOIVAc8fp2ddXKmixviBV9JqSrBpVvJZ0O9
-         vop6n5umIXK5jlres1B9ZHfNtHWTnSNRpRfoE+fw=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8448:fbcc:1dac:c863])
-        by sas1-9998cec34266.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id yoMDYH1TTx-n8V0jXth;
-        Fri, 10 Jan 2020 11:49:08 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH v7 02/10] mm/memcg: fold lru_lock in lock_page_lru
-To:     Alex Shi <alex.shi@linux.alibaba.com>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, hannes@cmpxchg.org
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
- <1577264666-246071-3-git-send-email-alex.shi@linux.alibaba.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <36d7e390-a3d1-908c-d181-4a9e9c8d3d98@yandex-team.ru>
-Date:   Fri, 10 Jan 2020 11:49:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 10 Jan 2020 03:52:20 -0500
+X-UUID: 2f30e0e562fc4971bcd1880f80d19531-20200110
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=y/OSJpRfsXPqxj4MvMlH1zRHUOGo+E0kY4E8nZfJ6qo=;
+        b=kXx2Ru1YN0sUN/YySq3X+kpat7OrFYzLllQH+6wgzmzH0V7MKjL6r8WgOU75o/0gr2U6AXIFoAtqNG4YjWajT/LFq1puMIwenDGytSMk4stioH7UINIit8LlvwUalVjR855XK7NzmTa4kNEx338mft4i07CWbRBzyKSPtNK3DpM=;
+X-UUID: 2f30e0e562fc4971bcd1880f80d19531-20200110
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <yingjoe.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1158715086; Fri, 10 Jan 2020 16:52:12 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkexhb02.mediatek.inc
+ (172.21.101.103) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 10 Jan
+ 2020 16:52:25 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 10 Jan 2020 16:50:50 +0800
+Message-ID: <1578646330.18795.4.camel@mtksdaap41>
+Subject: Re: [PATCH v2 2/2] arm64: dts: mediatek: add mt8173 elm and hana
+ board
+From:   Yingjoe Chen <yingjoe.chen@mediatek.com>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <devicetree@vger.kernel.org>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        <linux-kernel@vger.kernel.org>,
+        "Enric Balletbo i Serra" <enric.balletbo@collabora.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Date:   Fri, 10 Jan 2020 16:52:10 +0800
+In-Reply-To: <20200110073730.213789-3-hsinyi@chromium.org>
+References: <20200110073730.213789-1-hsinyi@chromium.org>
+         <20200110073730.213789-3-hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <1577264666-246071-3-git-send-email-alex.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/12/2019 12.04, Alex Shi wrote:
->  From the commit_charge's explanations and mem_cgroup_commit_charge
-> comments, as well as call path when lrucare is ture, The lru_lock is
-> just to guard the task migration(which would be lead to move_account)
-> So it isn't needed when !PageLRU, and better be fold into PageLRU to
-> reduce lock contentions.
-> 
-> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: cgroups@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->   mm/memcontrol.c | 9 ++++-----
->   1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index c5b5f74cfd4d..0ad10caabc3d 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -2572,12 +2572,11 @@ static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_pages)
->   
->   static void lock_page_lru(struct page *page, int *isolated)
->   {
-> -	pg_data_t *pgdat = page_pgdat(page);
-> -
-> -	spin_lock_irq(&pgdat->lru_lock);
->   	if (PageLRU(page)) {
-> +		pg_data_t *pgdat = page_pgdat(page);
->   		struct lruvec *lruvec;
->   
-> +		spin_lock_irq(&pgdat->lru_lock);
+T24gRnJpLCAyMDIwLTAxLTEwIGF0IDE1OjM3ICswODAwLCBIc2luLVlpIFdhbmcgd3JvdGU6DQo+
+IEVsbSBpcyBBY2VyIENocm9tZWJvb2sgUjEzLiBIYW5hIGlzIExlbm92byBDaHJvbWVib29rLiBC
+b3RoIHVzZXMgbXQ4MTczDQo+IFNvQy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEhzaW4tWWkgV2Fu
+ZyA8aHNpbnlpQGNocm9taXVtLm9yZz4NCj4gLS0tDQo+IENoYW5nZXMgaW4gdjI6DQo+IC0gcmVt
+b3ZlIGRvd25zdHJlYW0gbm9kZXMgYW5kIHVudXNlZCBub2Rlcw0KPiAtIHVzZSBHUElPX0FDVElW
+RV9MT1cgZm9yIHBzODY0MCBncGlvcw0KPiAtIG1vdmUgdHJhY2twYWQgdG8gaGFuYQ0KPiAtLS0N
+Cj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvTWFrZWZpbGUgICAgICAgICB8ICAgIDMg
+Kw0KPiAgLi4uL2R0cy9tZWRpYXRlay9tdDgxNzMtZWxtLWhhbmEtcmV2Ny5kdHMgICAgIHwgICAy
+NyArDQo+ICAuLi4vYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTczLWVsbS1oYW5hLmR0cyAgICAgfCAg
+IDE2ICsNCj4gIC4uLi9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMtZWxtLWhhbmEuZHRzaSAgICB8
+ICAgNjAgKw0KPiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMtZWxtLmR0cyAg
+IHwgICAxNSArDQo+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My1lbG0uZHRz
+aSAgfCAxMDQwICsrKysrKysrKysrKysrKysrDQo+ICA2IGZpbGVzIGNoYW5nZWQsIDExNjEgaW5z
+ZXJ0aW9ucygrKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
+aWF0ZWsvbXQ4MTczLWVsbS1oYW5hLXJldjcuZHRzDQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJj
+aC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMtZWxtLWhhbmEuZHRzDQo+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDgxNzMtZWxtLWhhbmEu
+ZHRzaQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsv
+bXQ4MTczLWVsbS5kdHMNCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybTY0L2Jvb3QvZHRz
+L21lZGlhdGVrL210ODE3My1lbG0uZHRzaQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQv
+Ym9vdC9kdHMvbWVkaWF0ZWsvTWFrZWZpbGUgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
+L01ha2VmaWxlDQo+IGluZGV4IDQ1OGJiYzQyMmE5NC4uYjQ1YTQ1YTU2NWExIDEwMDY0NA0KPiAt
+LS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL01ha2VmaWxlDQo+ICsrKyBiL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvTWFrZWZpbGUNCj4gQEAgLTYsNSArNiw4IEBAIGR0Yi0k
+KENPTkZJR19BUkNIX01FRElBVEVLKSArPSBtdDY3OTctZXZiLmR0Yg0KPiAgZHRiLSQoQ09ORklH
+X0FSQ0hfTUVESUFURUspICs9IG10Njc5Ny14MjAtZGV2LmR0Yg0KPiAgZHRiLSQoQ09ORklHX0FS
+Q0hfTUVESUFURUspICs9IG10NzYyMi1yZmIxLmR0Yg0KPiAgZHRiLSQoQ09ORklHX0FSQ0hfTUVE
+SUFURUspICs9IG10NzYyMi1iYW5hbmFwaS1icGktcjY0LmR0Yg0KPiArZHRiLSQoQ09ORklHX0FS
+Q0hfTUVESUFURUspICs9IG10ODE3My1lbG0uZHRiDQo+ICtkdGItJChDT05GSUdfQVJDSF9NRURJ
+QVRFSykgKz0gbXQ4MTczLWVsbS1oYW5hLmR0Yg0KPiArZHRiLSQoQ09ORklHX0FSQ0hfTUVESUFU
+RUspICs9IG10ODE3My1lbG0taGFuYS1yZXY3LmR0Yg0KPiAgZHRiLSQoQ09ORklHX0FSQ0hfTUVE
+SUFURUspICs9IG10ODE3My1ldmIuZHRiDQo+ICBkdGItJChDT05GSUdfQVJDSF9NRURJQVRFSykg
+Kz0gbXQ4MTgzLWV2Yi5kdGINCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVk
+aWF0ZWsvbXQ4MTczLWVsbS1oYW5hLXJldjcuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9tZWRp
+YXRlay9tdDgxNzMtZWxtLWhhbmEtcmV2Ny5kdHMNCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4g
+aW5kZXggMDAwMDAwMDAwMDAwLi5hMzYxNmJjM2Q4NTkNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysg
+Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My1lbG0taGFuYS1yZXY3LmR0cw0K
+PiBAQCAtMCwwICsxLDI3IEBADQo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
+MC1vbmx5DQo+ICsvKg0KPiArICogQ29weXJpZ2h0IDIwMTkgTWVkaWFUZWsgSW5jLg0KPiArICov
+DQo+ICsNCj4gKy9kdHMtdjEvOw0KPiArI2luY2x1ZGUgIm10ODE3My1lbG0taGFuYS5kdHNpIg0K
+PiArDQo+ICsvIHsNCj4gKwltb2RlbCA9ICJNZWRpYXRlayBIYW5hIHJldjcgYm9hcmQiOw0KPiAr
+CWNvbXBhdGlibGUgPSAiZ29vZ2xlLGhhbmEtcmV2NyIsICJtZWRpYXRlayxtdDgxNzMiOw0KPiAr
+fTsNCj4gKw0KPiArJmNwdV90aGVybWFsIHsNCj4gKwl0cmlwcyB7DQo+ICsJCWNwdV9jcml0OiBj
+cHVfY3JpdEAwIHsNCj4gKwkJCXRlbXBlcmF0dXJlID0gPDEwMDAwMD47DQo+ICsJCQl0eXBlID0g
+ImNyaXRpY2FsIjsNCj4gKwkJfTsNCj4gKwl9Ow0KPiArfTsNCj4gKw0KPiArJmdwaW9fa2V5cyB7
+DQo+ICsJL2RlbGV0ZS1ub2RlL3RhYmxldF9tb2RlOw0KPiArCS9kZWxldGUtbm9kZS92b2x1bWVf
+ZG93bjsNCj4gKwkvZGVsZXRlLW5vZGUvdm9sdW1lX3VwOw0KPiArfTsNCj4gXCBObyBuZXdsaW5l
+IGF0IGVuZCBvZiBmaWxlDQoNCm5pdDogUGxlYXNlIGFkZCBhIG5ld2xpbmUgYXQgZW5kIG9mIGZp
+bGUgZm9yIGFsbCBmaWxlcyBpbiB0aGlzIHBhdGNoLg0KDQo+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
+bTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My1lbG0taGFuYS5kdHMgYi9hcmNoL2FybTY0L2Jv
+b3QvZHRzL21lZGlhdGVrL210ODE3My1lbG0taGFuYS5kdHMNCj4gbmV3IGZpbGUgbW9kZSAxMDA2
+NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi44Y2JjYzc1MTkyZTMNCj4gLS0tIC9kZXYvbnVsbA0K
+PiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210ODE3My1lbG0taGFuYS5kdHMN
+Cj4gQEAgLTAsMCArMSwxNiBAQA0KPiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0y
+LjAtb25seQ0KPiArLyoNCj4gKyAqIENvcHlyaWdodCAyMDE2IE1lZGlhVGVrIEluYy4NCj4gKyAq
+Lw0KPiArDQo+ICsvZHRzLXYxLzsNCj4gKyNpbmNsdWRlICJtdDgxNzMtZWxtLWhhbmEuZHRzaSIN
+Cj4gKw0KPiArLyB7DQo+ICsJbW9kZWwgPSAiTWVkaWF0ZWsgSGFuYSByZXYwIGJvYXJkIjsNCj4g
+Kwljb21wYXRpYmxlID0gImdvb2dsZSxoYW5hLXJldjYiLA0KPiArCQkJImdvb2dsZSxoYW5hLXJl
+djUiLCAiZ29vZ2xlLGhhbmEtcmV2NCIsDQo+ICsJCQkiZ29vZ2xlLGhhbmEtcmV2MyIsICJnb29n
+bGUsaGFuYS1yZXYyIiwNCj4gKwkJCSJnb29nbGUsaGFuYS1yZXYxIiwgImdvb2dsZSxoYW5hLXJl
+djAiLA0KPiArCQkJImdvb2dsZSxoYW5hIiwgIm1lZGlhdGVrLG10ODE3MyI7DQo+ICt9Ow0KPiBc
+IE5vIG5ld2xpbmUgYXQgZW5kIG9mIGZpbGUNCg0KPC4uLj4NCg0KPiArDQo+ICsmcHdyYXAgew0K
+PiArCXBtaWM6IG10NjM5NyB7DQo+ICsJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2Mzk3IjsN
+Cj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ICsJCSNzaXplLWNlbGxzID0gPDE+Ow0KPiAr
+CQlpbnRlcnJ1cHQtcGFyZW50ID0gPCZwaW8+Ow0KPiArCQlpbnRlcnJ1cHRzID0gPDExIElSUV9U
+WVBFX0xFVkVMX0hJR0g+Ow0KPiArCQlpbnRlcnJ1cHQtY29udHJvbGxlcjsNCj4gKwkJI2ludGVy
+cnVwdC1jZWxscyA9IDwyPjsNCj4gKw0KPiArCQltdDYzOTdydGM6IG10NjM5N3J0YyB7DQo+ICsJ
+CQljb21wYXRpYmxlID0gIm1lZGlhdGVrLG10NjM5Ny1ydGMiOw0KPiArCQl9Ow0KPiArDQo+ICsJ
+CXN5c2NmZ19wY3RsX3BtaWM6IHN5c2NmZ19wY3RsX3BtaWNAYzAwMCB7DQo+ICsJCQljb21wYXRp
+YmxlID0gIm1lZGlhdGVrLG10NjM5Ny1wY3RsLXBtaWMtc3lzY2ZnIiwNCj4gKwkJCQkgICAgICJz
+eXNjb24iOw0KPiArCQkJcmVnID0gPDAgMHgwMDAwYzAwMCAwIDB4MDEwOD47DQo+ICsJCX07DQo+
+ICsNCj4gKwkJcGlvNjM5NzogcGluY3RybEBjMDAwIHsNCj4gKwkJCWNvbXBhdGlibGUgPSAibWVk
+aWF0ZWssbXQ2Mzk3LXBpbmN0cmwiOw0KPiArCQkJcGlucy1hcmUtbnVtYmVyZWQ7DQo+ICsJCQln
+cGlvLWNvbnRyb2xsZXI7DQo+ICsJCQkjZ3Bpby1jZWxscyA9IDwyPjsNCj4gKwkJfTsNCj4gKw0K
+PiArCQltdDYzOTdjbG9jazogbXQ2Mzk3Y2xvY2sgew0KPiArCQkJY29tcGF0aWJsZSA9ICJtZWRp
+YXRlayxtdDYzOTctY2xrIjsNCj4gKwkJCSNjbG9jay1jZWxscyA9IDwxPjsNCj4gKwkJfTsNCj4g
+Kw0KPiArCQltdDYzOTdyZWd1bGF0b3I6IG10NjM5N3JlZ3VsYXRvciB7DQo+ICsJCQljb21wYXRp
+YmxlID0gIm1lZGlhdGVrLG10NjM5Ny1yZWd1bGF0b3IiOw0KPiArDQo+ICsJCQltdDYzOTdfdnBj
+YTE1X3JlZzogYnVja192cGNhMTUgew0KPiArCQkJCXJlZ3VsYXRvci1jb21wYXRpYmxlID0gImJ1
+Y2tfdnBjYTE1IjsNCj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2cGNhMTUiOw0KPiArCQkJCXJl
+Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPCA3MDAwMDA+Ow0KPiArCQkJCXJlZ3VsYXRvci1tYXgt
+bWljcm92b2x0ID0gPDEzNTAwMDA+Ow0KPiArCQkJCXJlZ3VsYXRvci1yYW1wLWRlbGF5ID0gPDEy
+NTAwPjsNCj4gKwkJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiArCQkJCXJlZ3VsYXRvci1hbGxv
+d2VkLW1vZGVzID0gPDAgMT47DQo+ICsJCQl9Ow0KPiArDQo+ICsJCQltdDYzOTdfdnBjYTdfcmVn
+OiBidWNrX3ZwY2E3IHsNCj4gKwkJCQlyZWd1bGF0b3ItY29tcGF0aWJsZSA9ICJidWNrX3ZwY2E3
+IjsNCj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2cGNhNyI7DQo+ICsJCQkJcmVndWxhdG9yLW1p
+bi1taWNyb3ZvbHQgPSA8IDcwMDAwMD47DQo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQg
+PSA8MTM1MDAwMD47DQo+ICsJCQkJcmVndWxhdG9yLXJhbXAtZGVsYXkgPSA8MTI1MDA+Ow0KPiAr
+CQkJCXJlZ3VsYXRvci1lbmFibGUtcmFtcC1kZWxheSA9IDwxMTU+Ow0KPiArCQkJCXJlZ3VsYXRv
+ci1hbHdheXMtb247DQo+ICsJCQl9Ow0KPiArDQo+ICsJCQltdDYzOTdfdnNyYW1jYTE1X3JlZzog
+YnVja192c3JhbWNhMTUgew0KPiArCQkJCXJlZ3VsYXRvci1jb21wYXRpYmxlID0gImJ1Y2tfdnNy
+YW1jYTE1IjsNCj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2c3JhbWNhMTUiOw0KPiArCQkJCXJl
+Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPCA3MDAwMDA+Ow0KPiArCQkJCXJlZ3VsYXRvci1tYXgt
+bWljcm92b2x0ID0gPDEzNTAwMDA+Ow0KPiArCQkJCXJlZ3VsYXRvci1yYW1wLWRlbGF5ID0gPDEy
+NTAwPjsNCj4gKwkJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiArCQkJfTsNCj4gKw0KPiArCQkJ
+bXQ2Mzk3X3ZzcmFtY2E3X3JlZzogYnVja192c3JhbWNhNyB7DQo+ICsJCQkJcmVndWxhdG9yLWNv
+bXBhdGlibGUgPSAiYnVja192c3JhbWNhNyI7DQo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidnNy
+YW1jYTciOw0KPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPCA3MDAwMDA+Ow0KPiAr
+CQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDEzNTAwMDA+Ow0KPiArCQkJCXJlZ3VsYXRv
+ci1yYW1wLWRlbGF5ID0gPDEyNTAwPjsNCj4gKwkJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiAr
+CQkJfTsNCj4gKw0KPiArCQkJbXQ2Mzk3X3Zjb3JlX3JlZzogYnVja192Y29yZSB7DQo+ICsJCQkJ
+cmVndWxhdG9yLWNvbXBhdGlibGUgPSAiYnVja192Y29yZSI7DQo+ICsJCQkJcmVndWxhdG9yLW5h
+bWUgPSAidmNvcmUiOw0KPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPCA3MDAwMDA+
+Ow0KPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDEzNTAwMDA+Ow0KPiArCQkJCXJl
+Z3VsYXRvci1yYW1wLWRlbGF5ID0gPDEyNTAwPjsNCj4gKwkJCQlyZWd1bGF0b3ItYWx3YXlzLW9u
+Ow0KPiArCQkJfTsNCj4gKw0KPiArCQkJbXQ2Mzk3X3ZncHVfcmVnOiBidWNrX3ZncHUgew0KPiAr
+CQkJCXJlZ3VsYXRvci1jb21wYXRpYmxlID0gImJ1Y2tfdmdwdSI7DQo+ICsJCQkJcmVndWxhdG9y
+LW5hbWUgPSAidmdwdSI7DQo+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8IDcwMDAw
+MD47DQo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTM1MDAwMD47DQo+ICsJCQkJ
+cmVndWxhdG9yLXJhbXAtZGVsYXkgPSA8MTI1MDA+Ow0KPiArCQkJCXJlZ3VsYXRvci1lbmFibGUt
+cmFtcC1kZWxheSA9IDwxMTU+Ow0KPiArCQkJfTsNCj4gKw0KPiArCQkJbXQ2Mzk3X3Zkcm1fcmVn
+OiBidWNrX3Zkcm0gew0KPiArCQkJCXJlZ3VsYXRvci1jb21wYXRpYmxlID0gImJ1Y2tfdmRybSI7
+DQo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmRybSI7DQo+ICsJCQkJcmVndWxhdG9yLW1pbi1t
+aWNyb3ZvbHQgPSA8MTIwMDAwMD47DQo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8
+MTQwMDAwMD47DQo+ICsJCQkJcmVndWxhdG9yLXJhbXAtZGVsYXkgPSA8MTI1MDA+Ow0KPiArCQkJ
+CXJlZ3VsYXRvci1hbHdheXMtb247DQo+ICsJCQl9Ow0KPiArDQo+ICsJCQltdDYzOTdfdmlvMThf
+cmVnOiBidWNrX3ZpbzE4IHsNCj4gKwkJCQlyZWd1bGF0b3ItY29tcGF0aWJsZSA9ICJidWNrX3Zp
+bzE4IjsNCj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2aW8xOCI7DQo+ICsJCQkJcmVndWxhdG9y
+LW1pbi1taWNyb3ZvbHQgPSA8MTYyMDAwMD47DQo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3Zv
+bHQgPSA8MTk4MDAwMD47DQo+ICsJCQkJcmVndWxhdG9yLXJhbXAtZGVsYXkgPSA8MTI1MDA+Ow0K
+PiArCQkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ICsJCQl9Ow0KPiArDQo+ICsJCQltdDYzOTdf
+dnRjeG9fcmVnOiBsZG9fdnRjeG8gew0KPiArCQkJCXJlZ3VsYXRvci1jb21wYXRpYmxlID0gImxk
+b192dGN4byI7DQo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidnRjeG8iOw0KPiArCQkJCXJlZ3Vs
+YXRvci1hbHdheXMtb247DQo+ICsJCQl9Ow0KPiArDQo+ICsJCQltdDYzOTdfdmEyOF9yZWc6IGxk
+b192YTI4IHsNCj4gKwkJCQlyZWd1bGF0b3ItY29tcGF0aWJsZSA9ICJsZG9fdmEyOCI7DQo+ICsJ
+CQkJcmVndWxhdG9yLW5hbWUgPSAidmEyOCI7DQo+ICsJCQl9Ow0KPiArDQo+ICsJCQltdDYzOTdf
+dmNhbWFfcmVnOiBsZG9fdmNhbWEgew0KPiArCQkJCXJlZ3VsYXRvci1jb21wYXRpYmxlID0gImxk
+b192Y2FtYSI7DQo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNhbWEiOw0KPiArCQkJCXJlZ3Vs
+YXRvci1taW4tbWljcm92b2x0ID0gPDE4MDAwMDA+Ow0KPiArCQkJCXJlZ3VsYXRvci1tYXgtbWlj
+cm92b2x0ID0gPDE4MDAwMDA+Ow0KPiArCQkJCXJlZ3VsYXRvci1lbmFibGUtcmFtcC1kZWxheSA9
+IDwyMTg+Ow0KPiArCQkJfTsNCj4gKw0KPiArCQkJbXQ2Mzk3X3ZpbzI4X3JlZzogbGRvX3ZpbzI4
+IHsNCj4gKwkJCQlyZWd1bGF0b3ItY29tcGF0aWJsZSA9ICJsZG9fdmlvMjgiOw0KPiArCQkJCXJl
+Z3VsYXRvci1uYW1lID0gInZpbzI4IjsNCj4gKwkJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiAr
+CQkJfTsNCj4gKw0KPiArCQkJbXQ2Mzk3X3Z1c2JfcmVnOiBsZG9fdnVzYiB7DQo+ICsJCQkJcmVn
+dWxhdG9yLWNvbXBhdGlibGUgPSAibGRvX3Z1c2IiOw0KPiArCQkJCXJlZ3VsYXRvci1uYW1lID0g
+InZ1c2IiOw0KPiArCQkJfTsNCj4gKw0KPiArCQkJbXQ2Mzk3X3ZtY19yZWc6IGxkb192bWMgew0K
+PiArCQkJCXJlZ3VsYXRvci1jb21wYXRpYmxlID0gImxkb192bWMiOw0KPiArCQkJCXJlZ3VsYXRv
+ci1uYW1lID0gInZtYyI7DQo+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTgwMDAw
+MD47DQo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICsJCQkJ
+cmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDIxOD47DQo+ICsJCQl9Ow0KPiArDQo+ICsJ
+CQltdDYzOTdfdm1jaF9yZWc6IGxkb192bWNoIHsNCj4gKwkJCQlyZWd1bGF0b3ItY29tcGF0aWJs
+ZSA9ICJsZG9fdm1jaCI7DQo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidm1jaCI7DQo+ICsJCQkJ
+cmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MzAwMDAwMD47DQo+ICsJCQkJcmVndWxhdG9yLW1h
+eC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICsJCQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRl
+bGF5ID0gPDIxOD47DQo+ICsJCQl9Ow0KPiArDQo+ICsJCQltdDYzOTdfdmVtY18zdjNfcmVnOiBs
+ZG9fdmVtYzN2MyB7DQo+ICsJCQkJcmVndWxhdG9yLWNvbXBhdGlibGUgPSAibGRvX3ZlbWMzdjMi
+Ow0KPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gInZlbWNfM3YzIjsNCj4gKwkJCQlyZWd1bGF0b3It
+bWluLW1pY3Jvdm9sdCA9IDwzMDAwMDAwPjsNCj4gKwkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9s
+dCA9IDwzMzAwMDAwPjsNCj4gKwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAtZGVsYXkgPSA8MjE4
+PjsNCj4gKwkJCX07DQo+ICsNCj4gKwkJCW10NjM5N192Z3AxX3JlZzogbGRvX3ZncDEgew0KPiAr
+CQkJCXJlZ3VsYXRvci1jb21wYXRpYmxlID0gImxkb192Z3AxIjsNCj4gKwkJCQlyZWd1bGF0b3It
+bmFtZSA9ICJ2Y2FtZCI7DQo+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTgwMDAw
+MD47DQo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTgwMDAwMD47DQo+ICsJCQkJ
+cmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDI0MD47DQo+ICsJCQl9Ow0KPiArDQo+ICsJ
+CQltdDYzOTdfdmdwMl9yZWc6IGxkb192Z3AyIHsNCj4gKwkJCQlyZWd1bGF0b3ItY29tcGF0aWJs
+ZSA9ICJsZG9fdmdwMiI7DQo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAidmNhbWlvIjsNCj4gKwkJ
+CQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsNCj4gKwkJCQlyZWd1bGF0b3It
+bWF4LW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsNCj4gKwkJCQlyZWd1bGF0b3ItZW5hYmxlLXJhbXAt
+ZGVsYXkgPSA8MjE4PjsNCj4gKwkJCX07DQo+ICsNCj4gKwkJCW10NjM5N192Z3AzX3JlZzogbGRv
+X3ZncDMgew0KPiArCQkJCXJlZ3VsYXRvci1jb21wYXRpYmxlID0gImxkb192Z3AzIjsNCj4gKwkJ
+CQlyZWd1bGF0b3ItbmFtZSA9ICJ2Y2FtYWYiOw0KPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92
+b2x0ID0gPDE4MDAwMDA+Ow0KPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE4MDAw
+MDA+Ow0KPiArCQkJCXJlZ3VsYXRvci1lbmFibGUtcmFtcC1kZWxheSA9IDwyMTg+Ow0KPiArCQkJ
+fTsNCj4gKw0KPiArCQkJbXQ2Mzk3X3ZncDRfcmVnOiBsZG9fdmdwNCB7DQo+ICsJCQkJcmVndWxh
+dG9yLWNvbXBhdGlibGUgPSAibGRvX3ZncDQiOw0KPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gInZn
+cDQiOw0KPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDEyMDAwMDA+Ow0KPiArCQkJ
+CXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+Ow0KPiArCQkJCXJlZ3VsYXRvci1l
+bmFibGUtcmFtcC1kZWxheSA9IDwyMTg+Ow0KPiArCQkJfTsNCj4gKw0KPiArCQkJbXQ2Mzk3X3Zn
+cDVfcmVnOiBsZG9fdmdwNSB7DQo+ICsJCQkJcmVndWxhdG9yLWNvbXBhdGlibGUgPSAibGRvX3Zn
+cDUiOw0KPiArCQkJCXJlZ3VsYXRvci1uYW1lID0gInZncDUiOw0KPiArCQkJCXJlZ3VsYXRvci1t
+aW4tbWljcm92b2x0ID0gPDEyMDAwMDA+Ow0KPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0
+ID0gPDMwMDAwMDA+Ow0KPiArCQkJCXJlZ3VsYXRvci1lbmFibGUtcmFtcC1kZWxheSA9IDwyMTg+
+Ow0KPiArCQkJfTsNCj4gKw0KPiArCQkJbXQ2Mzk3X3ZncDZfcmVnOiBsZG9fdmdwNiB7DQo+ICsJ
+CQkJcmVndWxhdG9yLWNvbXBhdGlibGUgPSAibGRvX3ZncDYiOw0KPiArCQkJCXJlZ3VsYXRvci1u
+YW1lID0gInZncDYiOw0KPiArCQkJCXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+
+Ow0KPiArCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAwMDA+Ow0KPiArCQkJCXJl
+Z3VsYXRvci1lbmFibGUtcmFtcC1kZWxheSA9IDwyMTg+Ow0KPiArCQkJCXJlZ3VsYXRvci1hbHdh
+eXMtb247DQo+ICsJCQl9Ow0KPiArDQo+ICsJCQltdDYzOTdfdmlicl9yZWc6IGxkb192aWJyIHsN
+Cj4gKwkJCQlyZWd1bGF0b3ItY29tcGF0aWJsZSA9ICJsZG9fdmliciI7DQo+ICsJCQkJcmVndWxh
+dG9yLW5hbWUgPSAidmliciI7DQo+ICsJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTMw
+MDAwMD47DQo+ICsJCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICsJ
+CQkJcmVndWxhdG9yLWVuYWJsZS1yYW1wLWRlbGF5ID0gPDIxOD47DQo+ICsJCQl9Ow0KPiArCQl9
+Ow0KPiArCX07DQo+ICt9Ow0KPiArDQo+ICsmc3BpIHsNCj4gKwlwaW5jdHJsLW5hbWVzID0gImRl
+ZmF1bHQiOw0KPiArCXBpbmN0cmwtMCA9IDwmc3BpX3BpbnNfYT47DQo+ICsJbWVkaWF0ZWsscGFk
+LXNlbGVjdCA9IDwxPjsNCj4gKwlzdGF0dXMgPSAib2theSI7DQo+ICsJLyogY2xpZW50cyAqLw0K
+PiArCWNyb3NfZWM6IGVjQDAgew0KPiArCQljb21wYXRpYmxlID0gImdvb2dsZSxjcm9zLWVjLXNw
+aSI7DQo+ICsJCXJlZyA9IDwweDA+Ow0KPiArCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDwxMjAwMDAw
+MD47DQo+ICsJCWludGVycnVwdC1wYXJlbnQgPSA8JnBpbz47DQo+ICsJCWludGVycnVwdHMgPSA8
+MCBJUlFfVFlQRV9MRVZFTF9MT1c+Ow0KPiArCQlnb29nbGUsY3Jvcy1lYy1zcGktbXNnLWRlbGF5
+ID0gPDUwMD47DQo+ICsNCj4gKwkJaTJjX3R1bm5lbDogaTJjLXR1bm5lbEAwIHsNCj4gKwkJCWNv
+bXBhdGlibGUgPSAiZ29vZ2xlLGNyb3MtZWMtaTJjLXR1bm5lbCI7DQo+ICsJCQlnb29nbGUscmVt
+b3RlLWJ1cyA9IDwwPjsNCj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArCQkJI3NpemUt
+Y2VsbHMgPSA8MD47DQo+ICsNCj4gKwkJCWJhdHRlcnk6IHNicy1iYXR0ZXJ5QGIgew0KPiArCQkJ
+CWNvbXBhdGlibGUgPSAic2JzLHNicy1iYXR0ZXJ5IjsNCj4gKwkJCQlyZWcgPSA8MHhiPjsNCj4g
+KwkJCQlzYnMsaTJjLXJldHJ5LWNvdW50ID0gPDI+Ow0KPiArCQkJCXNicyxwb2xsLXJldHJ5LWNv
+dW50ID0gPDE+Ow0KPiArCQkJfTsNCj4gKwkJfTsNCj4gKwl9Ow0KPiArfTsNCj4gKw0KPiArJnRo
+ZXJtYWwgew0KPiArCWJhbmswLXN1cHBseSA9IDwmbXQ2Mzk3X3ZwY2ExNV9yZWc+Ow0KPiArCWJh
+bmsxLXN1cHBseSA9IDwmZGE5MjExX3ZjcHVfcmVnPjsNCj4gK307DQo+ICsNCj4gKyZ1YXJ0MCB7
+DQo+ICsJc3RhdHVzID0gIm9rYXkiOw0KPiArfTsNCj4gKw0KPiArJnNzdXNiIHsNCg0Kc29ydGlu
+ZyBhY2NvcmRpbmcgdG8gbmFtZSwgcGxlYXNlIHB1dCB0aGlzIGJlZm9yZSB0aGVybWFsLg0KDQpK
+b2UuQw0KDQo=
 
-That's wrong. Here PageLRU must be checked again under lru_lock.
-
-
-Also I don't like these functions:
-- called lock/unlock but actually also isolates
-- used just once
-- pgdat evaluated twice
-
->   		lruvec = mem_cgroup_page_lruvec(page, pgdat);
->   		ClearPageLRU(page);
->   		del_page_from_lru_list(page, lruvec, page_lru(page));
-> @@ -2588,17 +2587,17 @@ static void lock_page_lru(struct page *page, int *isolated)
->   
->   static void unlock_page_lru(struct page *page, int isolated)
->   {
-> -	pg_data_t *pgdat = page_pgdat(page);
->   
->   	if (isolated) {
-> +		pg_data_t *pgdat = page_pgdat(page);
->   		struct lruvec *lruvec;
->   
->   		lruvec = mem_cgroup_page_lruvec(page, pgdat);
->   		VM_BUG_ON_PAGE(PageLRU(page), page);
->   		SetPageLRU(page);
->   		add_page_to_lru_list(page, lruvec, page_lru(page));
-> +		spin_unlock_irq(&pgdat->lru_lock);
->   	}
-> -	spin_unlock_irq(&pgdat->lru_lock);
->   }
->   
->   static void commit_charge(struct page *page, struct mem_cgroup *memcg,
-> 
