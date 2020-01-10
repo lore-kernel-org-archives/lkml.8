@@ -2,115 +2,138 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 050CFC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:01:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C77C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63C220838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73B0D2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578693702;
-	bh=y78F7EkDKzvyrK1oupSN61NtpNTuyNmqqSBPHBi1g3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KkfD/oT+CShR7dh0+l7NqzqlnEc1rrJPyy0H9/QeNNYzENXJ22EAom42Qu/G5HtKq
-	 Bn4r+uAVeeMNl39cS5Iobmr9hQGGBc+4UPXisdEsG5wmVyVP3h9a0zbKek/1R894TZ
-	 EXmw0rNw5FDye1LwFm0qUvs0fdcNjbtxMy2BdJhg=
+	s=default; t=1578693792;
+	bh=Jas9M4NC9WttapCSqzQTQUihydt2rWA4eNC4cFlbr/U=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Q0NE8PbXHZeKI6jFks2EkZl/FTMb2tIlfy0Vs/ByoIFCCElRN7I6IZZJ0TqNgf9yd
+	 nD8464wzXIaZrm8koG8LAS17WO4SeP0nj0p6DH8bdQSl7Du8R3uQFSk4SLEbFfM1OG
+	 RR4VZ4ZGaoU3ue16E9X27uYE6S4pdhU/RhucJ4gE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbgAJWBl (ORCPT
+        id S1727280AbgAJWDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:01:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46962 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 17:03:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48628 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727227AbgAJWBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:01:41 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727183AbgAJWDL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:03:11 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19B632082E;
-        Fri, 10 Jan 2020 22:01:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 864E420838;
+        Fri, 10 Jan 2020 22:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693700;
-        bh=y78F7EkDKzvyrK1oupSN61NtpNTuyNmqqSBPHBi1g3w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZPNE2zb4PFZ3Oz35DFjfUZHw66krtBSRqkiXSrtRCySb4LNDj7j1hCiI1xArS2IAh
-         WPzWViMtDrZTMRInb2MLD9dROprtUUmI1YyOwkT5npDNQZ+xv+r54p95aHDozjPpg7
-         j5fVEpiM88yQKvc5Drcc19e80+XtryFrjqV+mCFg=
-Date:   Fri, 10 Jan 2020 23:01:37 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-serial@vger.kernel.org, Iurii Zaikin <yzaikin@google.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH-next 2/3] sysctl/sysrq: Remove __sysrq_enabled copy
-Message-ID: <20200110220137.GA9387@kroah.com>
-References: <20200109215444.95995-1-dima@arista.com>
- <20200109215444.95995-3-dima@arista.com>
- <20200110164035.GA1822445@kroah.com>
- <04436968-5e89-0286-81e5-61acbe583f73@arista.com>
+        s=default; t=1578693790;
+        bh=Jas9M4NC9WttapCSqzQTQUihydt2rWA4eNC4cFlbr/U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=D+UzHqREC2Yb9M5TSjWruMTkJCA1rrSmNm7VYiSal9KDEXdE5pxCYIGXpjxAN77dE
+         /KnVZuEQtIv3yF1OMYL5WtFuM7KJgBekYxUin9Pjjr/zJOqZJnb04EWTbHIGXk3ng3
+         G95bE0PljPnW9eebM9U6ps90cwr8AZSnEW/PluS8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 01/26] mips: cacheinfo: report shared CPU map
+Date:   Fri, 10 Jan 2020 17:02:43 -0500
+Message-Id: <20200110220308.27784-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <04436968-5e89-0286-81e5-61acbe583f73@arista.com>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 09:45:30PM +0000, Dmitry Safonov wrote:
-> Hi Greg,
-> 
-> On 1/10/20 4:40 PM, Greg Kroah-Hartman wrote:
-> > On Thu, Jan 09, 2020 at 09:54:43PM +0000, Dmitry Safonov wrote:
-> [..]
-> >> @@ -2844,6 +2827,26 @@ static int proc_dostring_coredump(struct ctl_table *table, int write,
-> >>  }
-> >>  #endif
-> >>  
-> >> +#ifdef CONFIG_MAGIC_SYSRQ
-> >> +static int sysrq_sysctl_handler(struct ctl_table *table, int write,
-> >> +				void __user *buffer, size_t *lenp, loff_t *ppos)
-> >> +{
-> >> +	int tmp, ret;
-> >> +
-> >> +	tmp = sysrq_get_mask();
-> >> +
-> >> +	ret = __do_proc_dointvec(&tmp, table, write, buffer,
-> >> +			       lenp, ppos, NULL, NULL);
-> >> +	if (ret || !write)
-> >> +		return ret;
-> >> +
-> >> +	if (write)
-> >> +		sysrq_toggle_support(tmp);
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +#endif
-> > 
-> > Why did you move this function down here?  Can't it stay where it is and
-> > you can just fix the logic there?  Now you have two different #ifdef
-> > blocks intead of just one :(
-> 
-> Yeah, well __do_proc_dointvec() made me do it.
-> 
-> sysrq_sysctl_handler() declaration should be before ctl_table array of
-> sysctls, so I couldn't remove the forward-declaration.
-> 
-> So, I could forward-declare __do_proc_dointvec() instead, but looking at
-> the neighborhood, I decided to follow the file-style (there is a couple
-> of forward-declarations before the sysctl array, some under ifdefs).
-> 
-> I admit that the result is imperfect and can put __do_proc_dointvec()
-> definition before instead, no hard feelings.
+From: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
 
-Ah, no, nevermind, I missed that reason, sorry about that.  Moving it is
-fine.
+[ Upstream commit 3b1313eb32c499d46dc4c3e896d19d9564c879c4 ]
 
-greg k-h
+Report L1 caches as shared per core; L2 - per cluster.
+
+This fixes "perf" that went crazy if shared_cpu_map attribute not
+reported on sysfs, in form of
+
+/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_list
+/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_map
+
+Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/mips/kernel/cacheinfo.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
+index f777e44653d5..47312c529410 100644
+--- a/arch/mips/kernel/cacheinfo.c
++++ b/arch/mips/kernel/cacheinfo.c
+@@ -50,6 +50,25 @@ static int __init_cache_level(unsigned int cpu)
+ 	return 0;
+ }
+ 
++static void fill_cpumask_siblings(int cpu, cpumask_t *cpu_map)
++{
++	int cpu1;
++
++	for_each_possible_cpu(cpu1)
++		if (cpus_are_siblings(cpu, cpu1))
++			cpumask_set_cpu(cpu1, cpu_map);
++}
++
++static void fill_cpumask_cluster(int cpu, cpumask_t *cpu_map)
++{
++	int cpu1;
++	int cluster = cpu_cluster(&cpu_data[cpu]);
++
++	for_each_possible_cpu(cpu1)
++		if (cpu_cluster(&cpu_data[cpu1]) == cluster)
++			cpumask_set_cpu(cpu1, cpu_map);
++}
++
+ static int __populate_cache_leaves(unsigned int cpu)
+ {
+ 	struct cpuinfo_mips *c = &current_cpu_data;
+@@ -57,14 +76,20 @@ static int __populate_cache_leaves(unsigned int cpu)
+ 	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
+ 
+ 	if (c->icache.waysize) {
++		/* L1 caches are per core */
++		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_DATA);
++		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(icache, this_leaf, 1, CACHE_TYPE_INST);
+ 	} else {
+ 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_UNIFIED);
+ 	}
+ 
+-	if (c->scache.waysize)
++	if (c->scache.waysize) {
++		/* L2 cache is per cluster */
++		fill_cpumask_cluster(cpu, &this_leaf->shared_cpu_map);
+ 		populate_cache(scache, this_leaf, 2, CACHE_TYPE_UNIFIED);
++	}
+ 
+ 	if (c->tcache.waysize)
+ 		populate_cache(tcache, this_leaf, 3, CACHE_TYPE_UNIFIED);
+-- 
+2.20.1
+
