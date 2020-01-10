@@ -2,69 +2,82 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA87C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68358C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 424B120721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mj1/cHpy"
+	by mail.kernel.org (Postfix) with ESMTP id 3C28220721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgAJMbd (ORCPT
+        id S1727926AbgAJMbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 07:31:33 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41896 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727753AbgAJMbc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 07:31:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=B/rKaa819gyayiC8Xe2hoNfVxDFo4LjZMb+oCIBCt4A=; b=Mj1/cHpyNqAgv/lVJOV/TP+Zj
-        egd1NiWTg95WnXdO8GzEGGiVWXwRU3H+E29g0uVUBnxj9ZG7x0fcYtVBTI//wNlkf+KsAOmx7axTf
-        Gc8pv2zZYaPxRunSGtLY4RuN7jj+dSV2b5+aIhFylnGPxBelgs3smecSXa7E34ZnQngJ7W/2xA+1a
-        NUzhU4twKo0iuaHP3wTcsVoqDE18tS5u72bzSdI5+qJSI+AHD+3TO72VAqUy9Zy0Y5FPdZH5P/N9h
-        2KFuCwQdTla2L7GluHlni2Ux9OYIM+JCNP3jqnY6GtykRDI9mopYWyIA8zDezasfGBpIUQ8Ce3CYo
-        VZkuzcBug==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iptRn-0003UC-1r; Fri, 10 Jan 2020 12:31:27 +0000
-Date:   Fri, 10 Jan 2020 04:31:27 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-nvdimm@lists.01.org, dan.j.williams@intel.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: dax: Get rid of fs_dax_get_by_host() helper
-Message-ID: <20200110123127.GA6558@infradead.org>
-References: <20200106181117.GA16248@redhat.com>
+        Fri, 10 Jan 2020 07:31:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:43984 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727753AbgAJMbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 07:31:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B11601063;
+        Fri, 10 Jan 2020 04:31:44 -0800 (PST)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E0943F534;
+        Fri, 10 Jan 2020 04:31:43 -0800 (PST)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux@armlinux.org.uk
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        vincenzo.frascino@arm.com
+Subject: [PATCH] arm: Fix Kexec compilation issue.
+Date:   Fri, 10 Jan 2020 12:31:25 +0000
+Message-Id: <20200110123125.51092-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106181117.GA16248@redhat.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 06, 2020 at 01:11:17PM -0500, Vivek Goyal wrote:
-> Looks like nobody is using fs_dax_get_by_host() except fs_dax_get_by_bdev()
-> and it can easily use dax_get_by_host() instead.
-> 
-> IIUC, fs_dax_get_by_host() was only introduced so that one could compile
-> with CONFIG_FS_DAX=n and CONFIG_DAX=m. fs_dax_get_by_bdev() achieves
-> the same purpose and hence it looks like fs_dax_get_by_host() is not
-> needed anymore.
->  
-> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+To perform the reserve_crashkernel() operation kexec uses SECTION_SIZE to
+find a memblock in a range.
+SECTION_SIZE is not defined for nommu systems. Trying to compile kexec in
+these conditions results in a build error:
 
-Looks good,
+  linux/arch/arm/kernel/setup.c: In function ‘reserve_crashkernel’:
+  linux/arch/arm/kernel/setup.c:1016:25: error: ‘SECTION_SIZE’ undeclared
+     (first use in this function); did you mean ‘SECTIONS_WIDTH’?
+             crash_size, SECTION_SIZE);
+                         ^~~~~~~~~~~~
+                         SECTIONS_WIDTH
+  linux/arch/arm/kernel/setup.c:1016:25: note: each undeclared identifier
+     is reported only once for each function it appears in
+  linux/scripts/Makefile.build:265: recipe for target 'arch/arm/kernel/setup.o'
+     failed
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Make KEXEC depend on MMU to fix the compilation issue.
+
+Cc: Russell King <linux@armlinux.org.uk>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+---
+ arch/arm/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index ba75e3661a41..bc99582bdc85 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -1904,7 +1904,7 @@ config XIP_DEFLATED_DATA
+ config KEXEC
+ 	bool "Kexec system call (EXPERIMENTAL)"
+ 	depends on (!SMP || PM_SLEEP_SMP)
+-	depends on !CPU_V7M
++	depends on MMU
+ 	select KEXEC_CORE
+ 	help
+ 	  kexec is a system call that implements the ability to shutdown your
+-- 
+2.24.1
+
