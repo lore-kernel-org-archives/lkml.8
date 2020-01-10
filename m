@@ -2,129 +2,124 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD77C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:51:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 784B4C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 344162080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:51:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AB652072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XvXJIL50"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="embQBqkF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgAJOvU (ORCPT
+        id S1728297AbgAJOwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:51:20 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38215 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbgAJOvT (ORCPT
+        Fri, 10 Jan 2020 09:52:21 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53167 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728056AbgAJOwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:51:19 -0500
-Received: by mail-qt1-f195.google.com with SMTP id n15so2108899qtp.5
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 06:51:18 -0800 (PST)
+        Fri, 10 Jan 2020 09:52:20 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p9so2311391wmc.2;
+        Fri, 10 Jan 2020 06:52:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dP+yKJgC1PvcZ6U9Dq2dx4CeTIqnBT2BpMb+Wm9xBlI=;
-        b=XvXJIL509aqMK2SYSrcuBHs3ubP49aSVcCcSnaLIVODThTeP9V7pW0nppWBOxcYAFa
-         bjB4oOI3tAwc/h00HrwKTxD9G0UO1Lph0w6EKUqapEElolCyhF4Hf6oZ9FjVSetVEUdm
-         O3JiR6QqZ8scDs44UW6b1b7U9cb13OfMwy/gFmwtV9CEegOsqB6RKUc0a72mfBUhejf4
-         UigXKGLEtJigBM89KHaZovH43iToYo0COVkWVSQ9RFLznGLPm90tlcoKptpf0ur0fUlL
-         DkJf8j4lx18+xVYkPyPNcnU2D3iwCSIoMQdS8fnzDRxhmmNsOI967yfdLiXyWadXNgUa
-         KCGw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oVYLl9LN72M2SWc5/npLC+GHfXW32Z75PJHHgZON1Jw=;
+        b=embQBqkFQJiui3MEMODdwpfRFie5ETZTYIzBikIvHCeJhVjwtfGYt44rI2jFsSRoMs
+         0MXr25v2rb9rV2KaiVGdV3y3LU/qbnAPddh02Z6rNYAMofyRQkdlGti+a3IjJKGOHbqn
+         J2K6iF6n45lLeZxUzbNmLfvwRZhbWLBrVKmurs4VHKW8PuDkLb/9vNn4AO/hkpWz1b9z
+         7o49spp5mx2CObSUaBLIun/9yGpdxWHIzghCA0+yCKcjZn02NqjzNYmf0HxNmgckF153
+         pCPZ0ftzB5+P2L6V/6PN0VI+h+5n7psdi1CDrAYTkc/O5CFfTtE5tBjS119Oss6WvFky
+         4iMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dP+yKJgC1PvcZ6U9Dq2dx4CeTIqnBT2BpMb+Wm9xBlI=;
-        b=hCCabo4V+qykNFMzXaxKZaGjIyITWmHi4L5yqEaAPk9OWv7f46FHY2ShniWlbUDRCJ
-         SBqR741oME+qPvrkDSiEeUpgaQ7UzgenakCNwYuznwdziKbQYacKj0Op3TxvQpSFPZaG
-         rQ8PVpv2z5/hfwB6GWFFm3YoFpMkF+Ju0dRdmRh/dUuR68TotGl15VvrNaY2krHG4lXD
-         UrlnGYXBMnvvp6byxRxTtPKdoOCcLSKx4wXWB1D5binfuUbGgXVJygyYvkQBReoCSsIc
-         ln5QsvleAXpA9YgUhj8w1Ud55M55sH/BdNQHFJRebnsMlVqgOQDGJSvI04nafiInv7Wt
-         bXZg==
-X-Gm-Message-State: APjAAAX3ehPqy1/4GeBSBlxwu0mTDuzZyUoOZhA7AtymmWWpkgl31Wnz
-        M6fVzEXdtQgjmk294paYwrVZew==
-X-Google-Smtp-Source: APXvYqx9tJ3xrVEVF5uE1eywbilOUQ3Qf7BtHeKw64SIwazRSBjH4hEsmA1DxrDcg6Xwsp77x30DnQ==
-X-Received: by 2002:aed:3ee5:: with SMTP id o34mr2772503qtf.164.1578667877943;
-        Fri, 10 Jan 2020 06:51:17 -0800 (PST)
-Received: from ovpn-123-250.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id z4sm1093288qta.73.2020.01.10.06.51.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 10 Jan 2020 06:51:17 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     steven.price@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, sfr@canb.auug.org.au,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] arm64/mm/dump: fix a compilation error
-Date:   Fri, 10 Jan 2020 09:51:12 -0500
-Message-Id: <20200110145112.7959-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oVYLl9LN72M2SWc5/npLC+GHfXW32Z75PJHHgZON1Jw=;
+        b=DdXTPBU35x2YQI5iVzSyy9iY4EWENqM4SotvfenculY93w1a+NCDF9yWqCkV8IC4WG
+         hsPXrSP0bioG3Czl2yZqk8rZodXzpGhygjOf8xPXGt1oPJyOxENBtJj9cN5XgGy7kI65
+         XPmQMqbley7QmcV7wGm6eL6kyrkZtLNMNsHhxVbb5grc7vCEAZKnAG6QUSM0HVtmUmjv
+         /Fq2g+IemiVO34v26gAE/6k0Xd/LWvqYN7M2cTBwzUca5p5B81YDNjNnDn+mCApMo/Xx
+         WFkPriOuGcY0+GtzG6madmWAjnriUILxFmlycNCQFw4h1wczt8V8eOaL+VyePgriPkxN
+         YOxA==
+X-Gm-Message-State: APjAAAVGmftK0xFlBqYgZutFHA1hjkS9qdUiuAoaF8tvYqxupe0/86cP
+        +ecWHd7cRRMyIKikeGkcOwE=
+X-Google-Smtp-Source: APXvYqwz+zKGoUL7Z/9WVoYbEbih305CPkdr5KQ12oBQgA3aj34A5GHgHcD06644tvAl04QLcM8nDg==
+X-Received: by 2002:a7b:c775:: with SMTP id x21mr4889708wmk.59.1578667938288;
+        Fri, 10 Jan 2020 06:52:18 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id m21sm2505984wmi.27.2020.01.10.06.52.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 06:52:17 -0800 (PST)
+Date:   Fri, 10 Jan 2020 15:52:16 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>, linux-tegra@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND for 5.6 v1 1/3] clk: tegra: divider: Check UART's
+ divider enable-bit state on rate's recalculation
+Message-ID: <20200110145216.GI2233456@ulmo>
+References: <20191218184407.25790-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6lCXDTVICvIQMz0h"
+Content-Disposition: inline
+In-Reply-To: <20191218184407.25790-1-digetx@gmail.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-next commit "x86: mm: avoid allocating struct mm_struct on the
-stack" [1] introduced a compilation error with "arm64: mm: convert
-mm/dump.c to use walk_page_range()" [2]. Fixed it by using the new API.
 
-arch/arm64/mm/dump.c:326:38: error: too few arguments to function call,
-expected 3, have 2
-        ptdump_walk_pgd(&st.ptdump, info->mm);
-        ~~~~~~~~~~~~~~~                     ^
-./include/linux/ptdump.h:20:1: note: 'ptdump_walk_pgd' declared here
-void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm,
-pgd_t *pgd);
-^
-arch/arm64/mm/dump.c:364:38: error: too few arguments to function call,
-expected 3, have 2
-        ptdump_walk_pgd(&st.ptdump, &init_mm);
-        ~~~~~~~~~~~~~~~                     ^
-./include/linux/ptdump.h:20:1: note: 'ptdump_walk_pgd' declared here
-void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm,
-pgd_t *pgd);
-^
-2 errors generated.
+--6lCXDTVICvIQMz0h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1] http://lkml.kernel.org/r/20200108145710.34314-1-steven.price@arm.com
-[2] http://lkml.kernel.org/r/20191218162402.45610-22-steven.price@arm.com
+On Wed, Dec 18, 2019 at 09:44:05PM +0300, Dmitry Osipenko wrote:
+> UART clock is divided using divisor values from DLM/DLL registers when
+> enable-bit is unset in clk register and clk's divider configuration isn't
+> taken onto account in this case. This doesn't cause any problems, but
+> let's add a check for the divider's enable-bit state, for consistency.
+>=20
+> Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/clk/tegra/clk-divider.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- arch/arm64/mm/dump.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+All three patches applied to for-5.6/clk, thanks.
 
-diff --git a/arch/arm64/mm/dump.c b/arch/arm64/mm/dump.c
-index ef4b3ca1e058..860c00ec8bd3 100644
---- a/arch/arm64/mm/dump.c
-+++ b/arch/arm64/mm/dump.c
-@@ -323,7 +323,7 @@ void ptdump_walk(struct seq_file *s, struct ptdump_info *info)
- 		}
- 	};
- 
--	ptdump_walk_pgd(&st.ptdump, info->mm);
-+	ptdump_walk_pgd(&st.ptdump, info->mm, NULL);
- }
- 
- static void ptdump_initialize(void)
-@@ -361,7 +361,7 @@ void ptdump_check_wx(void)
- 		}
- 	};
- 
--	ptdump_walk_pgd(&st.ptdump, &init_mm);
-+	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
- 
- 	if (st.wx_pages || st.uxn_pages)
- 		pr_warn("Checked W+X mappings: FAILED, %lu W+X pages found, %lu non-UXN pages found\n",
--- 
-2.21.0 (Apple Git-122.2)
+Thierry
 
+--6lCXDTVICvIQMz0h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4Yj6AACgkQ3SOs138+
+s6GxRRAAkhh+jeJ2znxH5p0u5lU7TnqfCZkhhIf9AuHOtxu8TBDgvsruRrJRS86P
+hAc4z201mWg29UpR0R9fOvuQhGNGvuYAGU/m46Utq9XLQLlG5ZLNsettLgBmg/Ju
+u4yX3YIrDvBde7/xgWB5GjBUhzTkDrcdn9nz12DHbE2weHao8xK5zeEosZw/LdYs
+IDkKdGeuzYlFM3yo/Kro63RgHsG6srdoXid4elJt/RdcwrNY13hROSyGTuE5LXx6
+6iZHUaMh/E947uCPe3/H3S+Sy2ZWR/6bu44kp3h6B6vh0ybyOUG4cfeJT2bqNXOb
+YB6sqcXSwJapIpPy2jmQzx2LMUJPpsFglHF2E27IV2D1z7DEDSNdR8cGm0wy8CBR
+xhKujgI0hs5y84GuJSFlqM1bTndC2/3GvAAqTW5BH0IekzmffvJt2a2NCwoi6jB4
+HKji0Dxw4XzHkiWj+RE1tXfZu7IKOsz0W029+LX9G4EhiYAMJ7+KkJp3lHJ1f487
+a3p2uRoBneOYSLMALSZ0OqNu9GWXqqUVd+nf+VH5WpLGCHpGqzXnfJyqIWyhpUey
+XXkZfqhzFEjyawT4EAPVnkfOtwYuWjSV/Iz4v9qbGj/6GMy/yN6jZ6Y3LlV/kQ6y
+pJq9/0eNDwcTjAsiD1z2+/eHLFhy3Pzks3GRi+Y8gdkjkxl+ppg=
+=oKAe
+-----END PGP SIGNATURE-----
+
+--6lCXDTVICvIQMz0h--
