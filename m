@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B2DEC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7149C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52C58206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E7B62080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578677042;
-	bh=WbF1AEdeIfupUSzrl+6OSHyHQZVRtMKt2d/fK42OGXM=;
+	s=default; t=1578677045;
+	bh=Zrp/bYduXHUDshMwetSqyu6k+WIom7m5BMG2ujk6Q/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h2vMT9LpCfoR9NQs9aGQrukgzuz6lmy2Jb9WkMBaGLrpHt4E7pXY3NXNviC/MeoL3
-	 +UTtxa737+zGg8ddJd6s6t7QZ5V9BEGFzjZ3nrkth7b8aeyaSrRU/+l+JAygek+efj
-	 h4HTRiziYpmgUhtaF2Swbo8IZ7LVTT2502+ZQnMw=
+	b=SFAEYIBfeKUp2HMSaa0FBeDquqH5hg+gdwyw5j47I2DDZEj9+qelFKOMmMRs/x2QZ
+	 t6zo4z5xg9Pv8NKJp+gElWvQ/gV7Dh4N7BY0+jfzvMbpuL2/sMy5AQSh5aMSGQpTxM
+	 +l687rZ7n35gHKDrAzejraaj9cME+3NTO3aqEWaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgAJRYB (ORCPT
+        id S1728103AbgAJRYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:24:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38814 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 12:24:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726477AbgAJRYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:24:00 -0500
+        id S1726477AbgAJRYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 12:24:03 -0500
 Received: from localhost.localdomain (unknown [83.218.167.187])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F05B2206ED;
-        Fri, 10 Jan 2020 17:23:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D0B520838;
+        Fri, 10 Jan 2020 17:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578677040;
-        bh=WbF1AEdeIfupUSzrl+6OSHyHQZVRtMKt2d/fK42OGXM=;
+        s=default; t=1578677042;
+        bh=Zrp/bYduXHUDshMwetSqyu6k+WIom7m5BMG2ujk6Q/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ZcL9cBX5k3yEjeklZ2idTBQF3CNRiH/eqb65dih0hS2PjXHmrnJoyETHi1HwUaSy
-         ERaE2D36LvbN/MLeyggbk0V5p7AV7SNJAbz/zlguidesHdUxdnSR9HIJXzuIPGoaye
-         FSVZKNNQbYFOezyQVNokvVyVZ6rpTD43meaqQSdc=
+        b=KgWWNNi1eNoiCSVsH/ZYHgci6DzQxPXTOSL0f5FKKpUHCrrQAODGuWexQIQbCpXl5
+         tlsG/WXgS+47Mg+pud2l/0zJfoGH4cUyhD7QnxfUNtwGP/UsdLSo6lR2Y/e4tfMKGH
+         FRoI1zTCYmXJWWnHe7ymw34K1LKu/koOGw31mZPg=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
         arm@kernel.org, soc@kernel.org
@@ -46,9 +46,9 @@ Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
         Kukjin Kim <kgene@kernel.org>,
         linux-arm-kernel@lists.infradead.org,
         linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL 1/3] soc: samsung: Pull for v5.6
-Date:   Fri, 10 Jan 2020 18:23:30 +0100
-Message-Id: <20200110172334.4767-2-krzk@kernel.org>
+Subject: [GIT PULL 2/3] ARM: dts: Pull for v5.6
+Date:   Fri, 10 Jan 2020 18:23:31 +0100
+Message-Id: <20200110172334.4767-3-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200110172334.4767-1-krzk@kernel.org>
 References: <20200110172334.4767-1-krzk@kernel.org>
@@ -63,38 +63,66 @@ The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
 are available in the Git repository at:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-5.6
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-dt-5.6
 
-for you to fetch changes up to 0536309373e3e0e4c558f45dad272fcfb8b48fa9:
+for you to fetch changes up to dc48a3a795ca5998a053060456a9bf807f619a42:
 
-  memory: samsung: Rename Exynos to lowercase (2020-01-07 20:46:32 +0100)
-
-----------------------------------------------------------------
-Samsung soc drivers changes for v5.6
-
-1. Convert to managed (devm_x()) versions,
-2. Cleanups (Samsung and Exynos names).
+  ARM: dts: exynos: Enable FIMD node and add proper panel node to Tiny4412 (2020-01-08 21:17:38 +0100)
 
 ----------------------------------------------------------------
-Krzysztof Kozlowski (2):
-      soc: samsung: Rename Samsung and Exynos to lowercase
-      memory: samsung: Rename Exynos to lowercase
+Samsung DTS ARM changes for v5.6
 
-Yangtao Li (2):
-      soc: samsung: exynos-pmu: Convert to devm_platform_ioremap_resource
-      memory: samsung: exynos5422-dmc: Convert to devm_platform_ioremap_resource
+1. Couple ARM and wcore bus regulators on Exynos542x so higher
+   frequencies could be used with dynamic voltage and frequency scaling.
+   Enable this higher frequencies.
+2. Correct the polarity of USB3503 hub GPIOs.
+3. Adjust the bus frequencies (scaled with devfreq framework) on
+   Exynos5422 Odroid boards to match values possible to obtain from root
+   PLLs.
+4. Add display to Tiny4412 board.
+5. Cleanups and minor improvements.
 
- drivers/memory/samsung/Kconfig              |  2 +-
- drivers/memory/samsung/exynos-srom.c        |  2 +-
- drivers/memory/samsung/exynos5422-dmc.c     |  7 ++-----
- drivers/soc/samsung/Kconfig                 |  2 +-
- drivers/soc/samsung/exynos-chipid.c         |  2 +-
- drivers/soc/samsung/exynos-pmu.c            |  6 ++----
- drivers/soc/samsung/exynos-pmu.h            |  2 +-
- drivers/soc/samsung/exynos3250-pmu.c        |  2 +-
- drivers/soc/samsung/exynos4-pmu.c           |  2 +-
- drivers/soc/samsung/exynos5250-pmu.c        |  2 +-
- drivers/soc/samsung/exynos5420-pmu.c        |  2 +-
- include/linux/soc/samsung/exynos-pmu.h      |  2 +-
- include/linux/soc/samsung/exynos-regs-pmu.h | 16 ++++++++--------
- 13 files changed, 22 insertions(+), 27 deletions(-)
+----------------------------------------------------------------
+Bartlomiej Zolnierkiewicz (1):
+      ARM: dts: exynos: Add missing CPU frequencies for Exynos5422/5800
+
+Krzysztof Kozlowski (1):
+      ARM: dts: samsung: Rename Samsung and Exynos to lowercase
+
+Marek Szyprowski (4):
+      ARM: dts: exynos: Add initial data for coupled regulators for Exynos5422/5800
+      ARM: dts: exynos: Correct USB3503 GPIOs polarity
+      ARM: dts: exynos: Move Exynos5420 bus related OPPs to the Odroid boards DTS
+      ARM: dts: exynos: Adjust bus related OPPs to the values correct for Exynos5422 Odroids
+
+Sylwester Nawrocki (1):
+      ARM: dts: exynos: Remove syscon compatible from chipid node on Exynos5
+
+Yangtao Li (1):
+      ARM: dts: exynos: Enable FIMD node and add proper panel node to Tiny4412
+
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi    |   2 +-
+ arch/arm/boot/dts/exynos4412-tiny4412.dts          |  25 ++
+ arch/arm/boot/dts/exynos5.dtsi                     |   2 +-
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   4 +-
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   4 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |   8 +-
+ arch/arm/boot/dts/exynos5260-xyref5260.dts         |   4 +-
+ arch/arm/boot/dts/exynos5260.dtsi                  |   2 +-
+ arch/arm/boot/dts/exynos5410-odroidxu.dts          |   2 +-
+ arch/arm/boot/dts/exynos5410-smdk5410.dts          |   4 +-
+ arch/arm/boot/dts/exynos5410.dtsi                  |   6 +-
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   2 +-
+ arch/arm/boot/dts/exynos5420-cpus.dtsi             |   2 +-
+ arch/arm/boot/dts/exynos5420-smdk5420.dts          |   4 +-
+ arch/arm/boot/dts/exynos5420.dtsi                  | 289 ++-------------------
+ arch/arm/boot/dts/exynos5422-cpus.dtsi             |   2 +-
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi      | 279 +++++++++++++++++++-
+ arch/arm/boot/dts/exynos5422-odroidhc1.dts         |  64 ++---
+ arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  78 +++---
+ arch/arm/boot/dts/exynos5422-odroidxu3-lite.dts    |  58 +++++
+ arch/arm/boot/dts/exynos5800-peach-pi.dts          |  13 +
+ arch/arm/boot/dts/exynos5800.dtsi                  |  58 +++--
+ arch/arm/boot/dts/s3c2416-smdk2416.dts             |   2 +-
+ arch/arm/boot/dts/s3c6410-smdk6410.dts             |   4 +-
+ 24 files changed, 526 insertions(+), 392 deletions(-)
