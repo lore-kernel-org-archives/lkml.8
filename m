@@ -2,298 +2,126 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C7E2C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEDBC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:50:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF2162082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 257292082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:50:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WHxhhjXo"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rzOQewp0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbgAJSu0 (ORCPT
+        id S1728949AbgAJSu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:50:26 -0500
-Received: from mail-wr1-f74.google.com ([209.85.221.74]:41245 "EHLO
-        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728850AbgAJSuY (ORCPT
+        Fri, 10 Jan 2020 13:50:28 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:56392 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728242AbgAJSuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:50:24 -0500
-Received: by mail-wr1-f74.google.com with SMTP id o6so1309503wrp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 10:50:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=/Lh/zF2uA+n8XDLeCYrzLNAj4+xfQxSFBEMLGQviSxg=;
-        b=WHxhhjXojOu3lRRK6VtlStmK+xt5N5WTWO1d5fsNtslDmeHe3bYzXYPB1fFN8ubyVW
-         l63AXWyKL/U9KwnaI6lkez5bMCcWVbYootb2Ac7QpKdNhxTEgm6eCe+9gYGlQ8KzHqzH
-         AgBhxIVfryvybEt6Ac9HkJB1lfsfBsI4RT5Y35EoKMRwS/IE/stQC9D74S3e5L+CF8Av
-         8p6uIJNoTtkNRPn4uvTeGyxFEXTsuS/Y7vBO+JAzvlypln2OyeYk8cr8Q3idpUZYeQYs
-         16J675bNnH38iLaag/c9MM9qurOnWnxBSXI9IW/3SvyvQbcdiC2ECcl21bgQzaVWzpkU
-         /ajA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=/Lh/zF2uA+n8XDLeCYrzLNAj4+xfQxSFBEMLGQviSxg=;
-        b=l68CVo+EV48RDQaATRISvrzj51kuoR2ml0omoMHght4I0p51ZD0cfkYJLvoG6l+QCU
-         8J29oWqzASzp2GCD9KxvLexgj8bi88jhkI0rv9M4hceKxbV/FgigOt53jJYUcwNcj7aO
-         I6p7Y+AxfSs+gBmb2f+H/VRlFqaogvOrBX9BmcglX/S+kvXm/Q0S5wpbuQWp9sXuM1FO
-         qDfx7iSYuQoiWP42m4igbOS9T5hDrfa5xllHpuGgDfx+5adZgWJcUwvhwrBtUcHoNHkF
-         sFWdcimSNnQ+2Cpfq2byk3tw6fdyjbia2VkisR+KWIah5KkBhjmZeYXDv0Lb42XBsbsS
-         XP0Q==
-X-Gm-Message-State: APjAAAWmpl8jLld5gufQIMV/Yisi8gAeBbcDX/L5oQsPTVF/J5g4H5v4
-        2Z6oCTanyMPJuGeIFCGARCWIxVx67A==
-X-Google-Smtp-Source: APXvYqzXxAmIpIykzJWQnPiMNMUrtz5YiYUM1qXW6tbUxm495f5sGAqYQ649YqhvtYR9Cxcl5bLitzZXlQ==
-X-Received: by 2002:a5d:49c7:: with SMTP id t7mr4770998wrs.369.1578682221829;
- Fri, 10 Jan 2020 10:50:21 -0800 (PST)
-Date:   Fri, 10 Jan 2020 19:48:33 +0100
-In-Reply-To: <20200110184834.192636-1-elver@google.com>
-Message-Id: <20200110184834.192636-2-elver@google.com>
-Mime-Version: 1.0
-References: <20200110184834.192636-1-elver@google.com>
-X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
-Subject: [PATCH -rcu v2 1/2] kcsan: Show full access type in report
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 10 Jan 2020 13:50:03 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00AInvXS079460;
+        Fri, 10 Jan 2020 12:49:57 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1578682197;
+        bh=xyBkbLSjFv5+FCftdlNPlstRVGPWsjSvGtcajIt7PLU=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=rzOQewp0xdVGprzxSlWJNAZZhvlsMNF7u6BgGPUWeQLtMSPbwubJzK3qO5TqB+jCq
+         TJa4krZ9VRBhbF3uyB81NnP59CR35Wi9OOUA+xDDyasSzBs8sfq+D0E4XQI8FI+3vS
+         4eeezwGQMQ/U8f5CSilpf808dvAZ+piK2Lzqs4ao=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00AInvtu049477;
+        Fri, 10 Jan 2020 12:49:57 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 10
+ Jan 2020 12:49:57 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 10 Jan 2020 12:49:57 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00AInvXK126371;
+        Fri, 10 Jan 2020 12:49:57 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>, <netdev@vger.kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 3/4] phy: dp83826: Add phy IDs for DP83826N and 826NC
+Date:   Fri, 10 Jan 2020 12:47:01 -0600
+Message-ID: <20200110184702.14330-4-dmurphy@ti.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200110184702.14330-1-dmurphy@ti.com>
+References: <20200110184702.14330-1-dmurphy@ti.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit adds access-type information to KCSAN's reports as follows:
-"read", "read (marked)", "write", and "write (marked)".
+Add phy IDs to the DP83822 phy driver for the DP83826N
+and the DP83826NC devices.  The register map and features
+are the same for basic enablement.
 
-Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Marco Elver <elver@google.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
- kernel/kcsan/core.c   | 15 ++++++++-------
- kernel/kcsan/kcsan.h  |  2 +-
- kernel/kcsan/report.c | 43 ++++++++++++++++++++++++++++---------------
- 3 files changed, 37 insertions(+), 23 deletions(-)
+ drivers/net/phy/Kconfig   | 4 ++--
+ drivers/net/phy/dp83822.c | 6 ++++++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 4d4ab5c5dc53..87bf857c8893 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -255,7 +255,7 @@ static inline unsigned int get_delay(void)
+diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+index 8dc461f7574b..90c9297280d2 100644
+--- a/drivers/net/phy/Kconfig
++++ b/drivers/net/phy/Kconfig
+@@ -340,9 +340,9 @@ config DAVICOM_PHY
+ 	  Currently supports dm9161e and dm9131
  
- static noinline void kcsan_found_watchpoint(const volatile void *ptr,
- 					    size_t size,
--					    bool is_write,
-+					    int type,
- 					    atomic_long_t *watchpoint,
- 					    long encoded_watchpoint)
- {
-@@ -276,7 +276,7 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
- 	flags = user_access_save();
+ config DP83822_PHY
+-	tristate "Texas Instruments DP83822/825 PHYs"
++	tristate "Texas Instruments DP83822/825/826 PHYs"
+ 	---help---
+-	  Supports the DP83822 and DP83825I PHYs.
++	  Supports the DP83822, DP83825I, DP83826C and DP83826NC PHYs.
  
- 	if (consumed) {
--		kcsan_report(ptr, size, is_write, true, raw_smp_processor_id(),
-+		kcsan_report(ptr, size, type, true, raw_smp_processor_id(),
- 			     KCSAN_REPORT_CONSUMED_WATCHPOINT);
- 	} else {
- 		/*
-@@ -292,8 +292,9 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
- }
+ config DP83TC811_PHY
+ 	tristate "Texas Instruments DP83TC811 PHY"
+diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
+index 8a4b1d167ce2..5159b28baa0f 100644
+--- a/drivers/net/phy/dp83822.c
++++ b/drivers/net/phy/dp83822.c
+@@ -16,6 +16,8 @@
  
- static noinline void
--kcsan_setup_watchpoint(const volatile void *ptr, size_t size, bool is_write)
-+kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- {
-+	const bool is_write = (type & KCSAN_ACCESS_WRITE) != 0;
- 	atomic_long_t *watchpoint;
- 	union {
- 		u8 _1;
-@@ -415,13 +416,13 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, bool is_write)
- 		 * No need to increment 'data_races' counter, as the racing
- 		 * thread already did.
- 		 */
--		kcsan_report(ptr, size, is_write, size > 8 || value_change,
-+		kcsan_report(ptr, size, type, size > 8 || value_change,
- 			     smp_processor_id(), KCSAN_REPORT_RACE_SIGNAL);
- 	} else if (value_change) {
- 		/* Inferring a race, since the value should not have changed. */
- 		kcsan_counter_inc(KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN);
- 		if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN))
--			kcsan_report(ptr, size, is_write, true,
-+			kcsan_report(ptr, size, type, true,
- 				     smp_processor_id(),
- 				     KCSAN_REPORT_RACE_UNKNOWN_ORIGIN);
- 	}
-@@ -455,10 +456,10 @@ static __always_inline void check_access(const volatile void *ptr, size_t size,
- 	 */
+ #define DP83822_PHY_ID	        0x2000a240
+ #define DP83825I_PHY_ID		0x2000a150
++#define DP83826C_PHY_ID		0x2000a130
++#define DP83826NC_PHY_ID	0x2000a110
  
- 	if (unlikely(watchpoint != NULL))
--		kcsan_found_watchpoint(ptr, size, is_write, watchpoint,
-+		kcsan_found_watchpoint(ptr, size, type, watchpoint,
- 				       encoded_watchpoint);
- 	else if (unlikely(should_watch(ptr, type)))
--		kcsan_setup_watchpoint(ptr, size, is_write);
-+		kcsan_setup_watchpoint(ptr, size, type);
- }
+ #define DP83822_DEVADDR		0x1f
  
- /* === Public interface ===================================================== */
-diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
-index d3b9a96ac8a4..8492da45494b 100644
---- a/kernel/kcsan/kcsan.h
-+++ b/kernel/kcsan/kcsan.h
-@@ -103,7 +103,7 @@ enum kcsan_report_type {
- /*
-  * Print a race report from thread that encountered the race.
-  */
--extern void kcsan_report(const volatile void *ptr, size_t size, bool is_write,
-+extern void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 			 bool value_change, int cpu_id, enum kcsan_report_type type);
+@@ -319,12 +321,16 @@ static int dp83822_resume(struct phy_device *phydev)
+ static struct phy_driver dp83822_driver[] = {
+ 	DP83822_PHY_DRIVER(DP83822_PHY_ID, "TI DP83822"),
+ 	DP83822_PHY_DRIVER(DP83825I_PHY_ID, "TI DP83825I"),
++	DP83822_PHY_DRIVER(DP83826C_PHY_ID, "TI DP83826C"),
++	DP83822_PHY_DRIVER(DP83826NC_PHY_ID, "TI DP83826NC"),
+ };
+ module_phy_driver(dp83822_driver);
  
- #endif /* _KERNEL_KCSAN_KCSAN_H */
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index 0eea05a3135b..9f503ca2ff7a 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -24,7 +24,7 @@
- static struct {
- 	const volatile void	*ptr;
- 	size_t			size;
--	bool			is_write;
-+	int			access_type;
- 	int			task_pid;
- 	int			cpu_id;
- 	unsigned long		stack_entries[NUM_STACK_ENTRIES];
-@@ -41,8 +41,10 @@ static DEFINE_SPINLOCK(report_lock);
-  * Special rules to skip reporting.
-  */
- static bool
--skip_report(bool is_write, bool value_change, unsigned long top_frame)
-+skip_report(int access_type, bool value_change, unsigned long top_frame)
- {
-+	const bool is_write = (access_type & KCSAN_ACCESS_WRITE) != 0;
-+
- 	if (IS_ENABLED(CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY) && is_write &&
- 	    !value_change) {
- 		/*
-@@ -63,9 +65,20 @@ skip_report(bool is_write, bool value_change, unsigned long top_frame)
- 	return kcsan_skip_report_debugfs(top_frame);
- }
- 
--static inline const char *get_access_type(bool is_write)
-+static const char *get_access_type(int type)
- {
--	return is_write ? "write" : "read";
-+	switch (type) {
-+	case 0:
-+		return "read";
-+	case KCSAN_ACCESS_ATOMIC:
-+		return "read (marked)";
-+	case KCSAN_ACCESS_WRITE:
-+		return "write";
-+	case KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ATOMIC:
-+		return "write (marked)";
-+	default:
-+		BUG();
-+	}
- }
- 
- /* Return thread description: in task or interrupt. */
-@@ -112,7 +125,7 @@ static int sym_strcmp(void *addr1, void *addr2)
- /*
-  * Returns true if a report was generated, false otherwise.
-  */
--static bool print_report(const volatile void *ptr, size_t size, bool is_write,
-+static bool print_report(const volatile void *ptr, size_t size, int access_type,
- 			 bool value_change, int cpu_id,
- 			 enum kcsan_report_type type)
- {
-@@ -124,7 +137,7 @@ static bool print_report(const volatile void *ptr, size_t size, bool is_write,
- 	/*
- 	 * Must check report filter rules before starting to print.
- 	 */
--	if (skip_report(is_write, true, stack_entries[skipnr]))
-+	if (skip_report(access_type, true, stack_entries[skipnr]))
- 		return false;
- 
- 	if (type == KCSAN_REPORT_RACE_SIGNAL) {
-@@ -132,7 +145,7 @@ static bool print_report(const volatile void *ptr, size_t size, bool is_write,
- 						other_info.num_stack_entries);
- 
- 		/* @value_change is only known for the other thread */
--		if (skip_report(other_info.is_write, value_change,
-+		if (skip_report(other_info.access_type, value_change,
- 				other_info.stack_entries[other_skipnr]))
- 			return false;
- 	}
-@@ -170,7 +183,7 @@ static bool print_report(const volatile void *ptr, size_t size, bool is_write,
- 	switch (type) {
- 	case KCSAN_REPORT_RACE_SIGNAL:
- 		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
--		       get_access_type(other_info.is_write), other_info.ptr,
-+		       get_access_type(other_info.access_type), other_info.ptr,
- 		       other_info.size, get_thread_desc(other_info.task_pid),
- 		       other_info.cpu_id);
- 
-@@ -181,14 +194,14 @@ static bool print_report(const volatile void *ptr, size_t size, bool is_write,
- 
- 		pr_err("\n");
- 		pr_err("%s to 0x%px of %zu bytes by %s on cpu %i:\n",
--		       get_access_type(is_write), ptr, size,
-+		       get_access_type(access_type), ptr, size,
- 		       get_thread_desc(in_task() ? task_pid_nr(current) : -1),
- 		       cpu_id);
- 		break;
- 
- 	case KCSAN_REPORT_RACE_UNKNOWN_ORIGIN:
- 		pr_err("race at unknown origin, with %s to 0x%px of %zu bytes by %s on cpu %i:\n",
--		       get_access_type(is_write), ptr, size,
-+		       get_access_type(access_type), ptr, size,
- 		       get_thread_desc(in_task() ? task_pid_nr(current) : -1),
- 		       cpu_id);
- 		break;
-@@ -223,7 +236,7 @@ static void release_report(unsigned long *flags, enum kcsan_report_type type)
-  * required for the report type, simply acquires report_lock and returns true.
-  */
- static bool prepare_report(unsigned long *flags, const volatile void *ptr,
--			   size_t size, bool is_write, int cpu_id,
-+			   size_t size, int access_type, int cpu_id,
- 			   enum kcsan_report_type type)
- {
- 	if (type != KCSAN_REPORT_CONSUMED_WATCHPOINT &&
-@@ -243,7 +256,7 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
- 
- 		other_info.ptr			= ptr;
- 		other_info.size			= size;
--		other_info.is_write		= is_write;
-+		other_info.access_type		= access_type;
- 		other_info.task_pid		= in_task() ? task_pid_nr(current) : -1;
- 		other_info.cpu_id		= cpu_id;
- 		other_info.num_stack_entries	= stack_trace_save(other_info.stack_entries, NUM_STACK_ENTRIES, 1);
-@@ -302,14 +315,14 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
- 	goto retry;
- }
- 
--void kcsan_report(const volatile void *ptr, size_t size, bool is_write,
-+void kcsan_report(const volatile void *ptr, size_t size, int access_type,
- 		  bool value_change, int cpu_id, enum kcsan_report_type type)
- {
- 	unsigned long flags = 0;
- 
- 	kcsan_disable_current();
--	if (prepare_report(&flags, ptr, size, is_write, cpu_id, type)) {
--		if (print_report(ptr, size, is_write, value_change, cpu_id, type) && panic_on_warn)
-+	if (prepare_report(&flags, ptr, size, access_type, cpu_id, type)) {
-+		if (print_report(ptr, size, access_type, value_change, cpu_id, type) && panic_on_warn)
- 			panic("panic_on_warn set ...\n");
- 
- 		release_report(&flags, type);
+ static struct mdio_device_id __maybe_unused dp83822_tbl[] = {
+ 	{ DP83822_PHY_ID, 0xfffffff0 },
+ 	{ DP83825I_PHY_ID, 0xfffffff0 },
++	{ DP83826C_PHY_ID, 0xfffffff0 },
++	{ DP83826NC_PHY_ID, 0xfffffff0 },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(mdio, dp83822_tbl);
 -- 
-2.25.0.rc1.283.g88dfdc4193-goog
+2.23.0
 
