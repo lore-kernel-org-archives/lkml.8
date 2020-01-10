@@ -2,91 +2,161 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9259AC33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401BEC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65BF320678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:03:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z0IE3wfg"
+	by mail.kernel.org (Postfix) with ESMTP id 2130220721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:10:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbgAJFDu (ORCPT
+        id S1726217AbgAJFKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 00:03:50 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:39160 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725822AbgAJFDu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 00:03:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=yem7mNV6de7IX0DO/36hylIc+6dUlrfXgqqGPK5W0k4=; b=Z0IE3wfgrmq+qtQwy1TI67pGE
-        E/pcYuE9l9EM9UdFVEsfN9t8ybwEr/jd6xeOo6ClBUIIwKwgeoq75YchaemoDUQ+YiwHsJ/lXMm6G
-        yVfo4kI8uYGx0z1YcUUBdXcPS131fUdR8eLL6CCI+ob75O7a9rXJ8KW1KSkyfSzf+SofQ7APDGQTr
-        z2gj1WJbRMXT0sKnQUQA/1wVccjke37aCVJaHe1etZ6SzglPz1u+MChU1WrKFkiZB7x7g4NxE9Wb8
-        R7CS2kpvypJPNVfoJC7dB42DQMRoBulD5D+MDgg0xO9iR9hsps68yWioSYZVEPBcaMKpjAruBxl4d
-        50QDTOqCg==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipmSX-00054i-0S; Fri, 10 Jan 2020 05:03:46 +0000
-Subject: Re: mmotm 2020-01-09-17-33 uploaded (PHY_EXYNOS5250_SATA)
-To:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Kishon Vijay Abraham I <kishon@ti.com>
-References: <20200110013413.NNeLcxiMi%akpm@linux-foundation.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <19fac75f-ad09-dbf5-1d11-6e91c759aa02@infradead.org>
-Date:   Thu, 9 Jan 2020 21:03:30 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Fri, 10 Jan 2020 00:10:36 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55026 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725799AbgAJFKf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 00:10:35 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 4478DB566B8B45BDBD5B;
+        Fri, 10 Jan 2020 13:10:32 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.183) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 10 Jan 2020
+ 13:10:21 +0800
+To:     Jens Axboe <axboe@kernel.dk>, <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <npiggin@suse.de>
+CC:     Mingfangsen <mingfangsen@huawei.com>, Guiyao <guiyao@huawei.com>,
+        zhangsaisai <zhangsaisai@huawei.com>,
+        "wubo (T)" <wubo40@huawei.com>, <behlendorf1@llnl.gov>,
+        <amwang@redhat.com>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH] brd: check parameter validation before register_blkdev func
+Message-ID: <342ee238-0e7c-c213-eecc-7062f24985cc@huawei.com>
+Date:   Fri, 10 Jan 2020 13:10:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200110013413.NNeLcxiMi%akpm@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.183]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/9/20 5:34 PM, akpm@linux-foundation.org wrote:
-> The mm-of-the-moment snapshot 2020-01-09-17-33 has been uploaded to
-> 
->    http://www.ozlabs.org/~akpm/mmotm/
-> 
-> mmotm-readme.txt says
-> 
-> README for mm-of-the-moment:
-> 
-> http://www.ozlabs.org/~akpm/mmotm/
-> 
-> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> more than once a week.
-> 
 
-on i386:
+In brd_init func, rd_nr num of brd_device are firstly allocated
+and add in brd_devices, then brd_devices are traversed to add each
+brd_device by calling add_disk func. When allocating brd_device,
+the disk->first_minor is set to i * max_part, if rd_nr * max_part
+is larger than MINORMASK, two different brd_device may have the same
+devt, then only one of them can be successfully added.
+when rmmod brd.ko, it will cause oops when calling brd_exit.
 
+Follow those steps:
+  # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
+  # rmmod brd
+then, the oops will appear.
 
-WARNING: unmet direct dependencies detected for I2C_S3C2410
-  Depends on [n]: I2C [=y] && HAS_IOMEM [=y] && HAVE_S3C2410_I2C [=n]
-  Selected by [m]:
-  - PHY_EXYNOS5250_SATA [=m] && (SOC_EXYNOS5250 || COMPILE_TEST [=y]) && HAS_IOMEM [=y] && OF [=y]
+Oops log:
+[  726.613722] Call trace:
+[  726.614175]  kernfs_find_ns+0x24/0x130
+[  726.614852]  kernfs_find_and_get_ns+0x44/0x68
+[  726.615749]  sysfs_remove_group+0x38/0xb0
+[  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
+[  726.617320]  blk_unregister_queue+0x98/0x100
+[  726.618105]  del_gendisk+0x144/0x2b8
+[  726.618759]  brd_exit+0x68/0x560 [brd]
+[  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
+[  726.620384]  el0_svc_common+0x78/0x130
+[  726.621057]  el0_svc_handler+0x38/0x78
+[  726.621738]  el0_svc+0x8/0xc
+[  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
 
+Here, we add brd_check_par_valid func to check parameter
+validation before register_blkdev func.
 
-I also notice that PHY_EXYNOS5250_SATA also selects I2C.
-It is preferable not to select an entire subsystem.  If a user wants a subsystem
-enabled, then the user should enable it.  This driver should instead depend on I2C.
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+---
+ drivers/block/brd.c | 33 ++++++++++++++++++++++++++-------
+ 1 file changed, 26 insertions(+), 7 deletions(-)
 
+diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+index df8103dd40ac..3a4510b2c24f 100644
+--- a/drivers/block/brd.c
++++ b/drivers/block/brd.c
+@@ -330,16 +330,16 @@ static const struct block_device_operations brd_fops = {
+ /*
+  * And now the modules code and kernel interface.
+  */
+-static int rd_nr = CONFIG_BLK_DEV_RAM_COUNT;
+-module_param(rd_nr, int, 0444);
++static unsigned int rd_nr = CONFIG_BLK_DEV_RAM_COUNT;
++module_param(rd_nr, uint, 0444);
+ MODULE_PARM_DESC(rd_nr, "Maximum number of brd devices");
+
+ unsigned long rd_size = CONFIG_BLK_DEV_RAM_SIZE;
+ module_param(rd_size, ulong, 0444);
+ MODULE_PARM_DESC(rd_size, "Size of each RAM disk in kbytes.");
+
+-static int max_part = 1;
+-module_param(max_part, int, 0444);
++static unsigned int max_part = 1;
++module_param(max_part, uint, 0444);
+ MODULE_PARM_DESC(max_part, "Num Minors to reserve between devices");
+
+ MODULE_LICENSE("GPL");
+@@ -468,10 +468,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+ 	return kobj;
+ }
+
++static inline int brd_check_par_valid(void)
++{
++	if (unlikely(!rd_nr))
++		rd_nr = 1;
++
++	if (unlikely(!max_part))
++		max_part = 1;
++
++	if (rd_nr * max_part > MINORMASK)
++		return -EINVAL;
++
++	return 0;
++
++}
++
+ static int __init brd_init(void)
+ {
+ 	struct brd_device *brd, *next;
+-	int i;
++	int i, ret;
+
+ 	/*
+ 	 * brd module now has a feature to instantiate underlying device
+@@ -488,11 +503,15 @@ static int __init brd_init(void)
+ 	 *	dynamically.
+ 	 */
+
++	ret = brd_check_par_valid();
++	if (ret) {
++		pr_info("brd: invalid parameter setting!!!\n");
++		return ret;
++	}
++
+ 	if (register_blkdev(RAMDISK_MAJOR, "ramdisk"))
+ 		return -EIO;
+
+-	if (unlikely(!max_part))
+-		max_part = 1;
+
+ 	for (i = 0; i < rd_nr; i++) {
+ 		brd = brd_alloc(i);
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+2.19.1
+
+
