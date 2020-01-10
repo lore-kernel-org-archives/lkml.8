@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC1B7C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 03:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5877BC47409
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 03:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B680320673
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 03:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 344512077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 03:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731069AbgAJDIt (ORCPT
+        id S1731087AbgAJDI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 22:08:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:38976 "EHLO foss.arm.com"
+        Thu, 9 Jan 2020 22:08:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:39012 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730952AbgAJDIt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 22:08:49 -0500
+        id S1730952AbgAJDI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 22:08:57 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8D211007;
-        Thu,  9 Jan 2020 19:08:48 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFC6E113E;
+        Thu,  9 Jan 2020 19:08:56 -0800 (PST)
 Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.42.128])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 064CB3F703;
-        Thu,  9 Jan 2020 19:08:40 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 670D23F703;
+        Thu,  9 Jan 2020 19:08:49 -0800 (PST)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
 To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
@@ -35,10 +35,11 @@ Cc:     mark.rutland@arm.com, david@redhat.com, cai@lca.pw,
         osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
         broonie@kernel.org, valentin.schneider@arm.com,
         Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com,
-        ira.weiny@intel.com, Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: [PATCH V11 1/5] mm/hotplug: Introduce arch callback validating the hot remove range
-Date:   Fri, 10 Jan 2020 08:39:11 +0530
-Message-Id: <1578625755-11792-2-git-send-email-anshuman.khandual@arm.com>
+        ira.weiny@intel.com, Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH V11 2/5] mm/memblock: Introduce MEMBLOCK_BOOT flag
+Date:   Fri, 10 Jan 2020 08:39:12 +0530
+Message-Id: <1578625755-11792-3-git-send-email-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578625755-11792-1-git-send-email-anshuman.khandual@arm.com>
 References: <1578625755-11792-1-git-send-email-anshuman.khandual@arm.com>
@@ -47,93 +48,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there are two interfaces to initiate memory range hot removal i.e
-remove_memory() and __remove_memory() which then calls try_remove_memory().
-Platform gets called with arch_remove_memory() to tear down required kernel
-page tables and other arch specific procedures. But there are platforms
-like arm64 which might want to prevent removal of certain specific memory
-ranges irrespective of their present usage or movability properties.
+On arm64 platform boot memory should never be hot removed due to certain
+platform specific constraints. Hence the platform would like to override
+earlier added arch call back arch_memory_removable() for this purpose. In
+order to reject boot memory hot removal request, it needs to first track
+them at runtime. In the future, there might be other platforms requiring
+runtime boot memory enumeration. Hence lets expand the existing generic
+memblock framework for this purpose rather then creating one just for
+arm64 platforms.
 
-Current arch call back arch_remove_memory() is too late in the process to
-abort memory hot removal as memory block devices and firmware memory map
-entries would have already been removed. Platforms should be able to abort
-the process before taking the mem_hotplug_lock with mem_hotplug_begin().
-This essentially requires a new arch callback for memory range validation.
+This introduces a new memblock flag MEMBLOCK_BOOT along with helpers which
+can be marked by given platform on all memory regions discovered during
+boot.
 
-This differentiates memory range validation between memory hot add and hot
-remove paths before carving out a new helper check_hotremove_memory_range()
-which incorporates a new arch callback. This call back provides platforms
-an opportunity to refuse memory removal at the very onset. In future the
-same principle can be extended for memory hot add path if required.
-
-Platforms can choose to override this callback in order to reject specific
-memory ranges from removal or can just fallback to a default implementation
-which allows removal of all memory ranges.
-
+Cc: Mike Rapoport <rppt@linux.ibm.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ---
- include/linux/memory_hotplug.h |  7 +++++++
- mm/memory_hotplug.c            | 21 ++++++++++++++++++++-
- 2 files changed, 27 insertions(+), 1 deletion(-)
+ include/linux/memblock.h | 10 ++++++++++
+ mm/memblock.c            | 37 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
 
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index ba0dca6..f661bd5 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -305,6 +305,13 @@ static inline void pgdat_resize_init(struct pglist_data *pgdat) {}
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index b38bbef..fb04c87 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -31,12 +31,14 @@ extern unsigned long long max_possible_pfn;
+  * @MEMBLOCK_HOTPLUG: hotpluggable region
+  * @MEMBLOCK_MIRROR: mirrored region
+  * @MEMBLOCK_NOMAP: don't add to kernel direct mapping
++ * @MEMBLOCK_BOOT: memory received from firmware during boot
+  */
+ enum memblock_flags {
+ 	MEMBLOCK_NONE		= 0x0,	/* No special request */
+ 	MEMBLOCK_HOTPLUG	= 0x1,	/* hotpluggable region */
+ 	MEMBLOCK_MIRROR		= 0x2,	/* mirrored region */
+ 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
++	MEMBLOCK_BOOT		= 0x8,	/* memory received from firmware during boot */
+ };
  
- #ifdef CONFIG_MEMORY_HOTREMOVE
- 
-+#ifndef arch_memory_removable
-+static inline bool arch_memory_removable(u64 base, u64 size)
-+{
-+	return true;
-+}
-+#endif
-+
- extern bool is_mem_section_removable(unsigned long pfn, unsigned long nr_pages);
- extern void try_offline_node(int nid);
- extern int offline_pages(unsigned long start_pfn, unsigned long nr_pages);
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index a91a072..7cdf800 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1014,6 +1014,23 @@ static int check_hotplug_memory_range(u64 start, u64 size)
- 	return 0;
+ /**
+@@ -116,6 +118,8 @@ int memblock_reserve(phys_addr_t base, phys_addr_t size);
+ void memblock_trim_memory(phys_addr_t align);
+ bool memblock_overlaps_region(struct memblock_type *type,
+ 			      phys_addr_t base, phys_addr_t size);
++int memblock_mark_boot(phys_addr_t base, phys_addr_t size);
++int memblock_clear_boot(phys_addr_t base, phys_addr_t size);
+ int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
+ int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
+ int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
+@@ -216,6 +220,11 @@ static inline bool memblock_is_nomap(struct memblock_region *m)
+ 	return m->flags & MEMBLOCK_NOMAP;
  }
  
-+static int check_hotremove_memory_range(u64 start, u64 size)
++static inline bool memblock_is_boot(struct memblock_region *m)
 +{
-+	int rc;
-+
-+	BUG_ON(check_hotplug_memory_range(start, size));
-+
-+	/*
-+	 * First check if the platform is willing to have this
-+	 * memory range removed else just abort.
-+	 */
-+	rc = arch_memory_removable(start, size);
-+	if (!rc)
-+		return -EINVAL;
-+
-+	return 0;
++	return m->flags & MEMBLOCK_BOOT;
 +}
 +
- static int online_memory_block(struct memory_block *mem, void *arg)
- {
- 	return device_online(&mem->dev);
-@@ -1762,7 +1779,9 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
- {
- 	int rc = 0;
+ #ifdef CONFIG_HAVE_MEMBLOCK_NODE_MAP
+ int memblock_search_pfn_nid(unsigned long pfn, unsigned long *start_pfn,
+ 			    unsigned long  *end_pfn);
+@@ -449,6 +458,7 @@ void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
+ void memblock_mem_limit_remove_map(phys_addr_t limit);
+ bool memblock_is_memory(phys_addr_t addr);
+ bool memblock_is_map_memory(phys_addr_t addr);
++bool memblock_is_boot_memory(phys_addr_t addr);
+ bool memblock_is_region_memory(phys_addr_t base, phys_addr_t size);
+ bool memblock_is_reserved(phys_addr_t addr);
+ bool memblock_is_region_reserved(phys_addr_t base, phys_addr_t size);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 4bc2c7d..e10207f 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -865,6 +865,30 @@ static int __init_memblock memblock_setclr_flag(phys_addr_t base,
+ }
  
--	BUG_ON(check_hotplug_memory_range(start, size));
-+	rc = check_hotremove_memory_range(start, size);
-+	if (rc)
-+		return rc;
+ /**
++ * memblock_mark_bootmem - Mark boot memory with flag MEMBLOCK_BOOT.
++ * @base: the base phys addr of the region
++ * @size: the size of the region
++ *
++ * Return: 0 on success, -errno on failure.
++ */
++int __init_memblock memblock_mark_boot(phys_addr_t base, phys_addr_t size)
++{
++	return memblock_setclr_flag(base, size, 1, MEMBLOCK_BOOT);
++}
++
++/**
++ * memblock_clear_bootmem - Clear flag MEMBLOCK_BOOT for a specified region.
++ * @base: the base phys addr of the region
++ * @size: the size of the region
++ *
++ * Return: 0 on success, -errno on failure.
++ */
++int __init_memblock memblock_clear_boot(phys_addr_t base, phys_addr_t size)
++{
++	return memblock_setclr_flag(base, size, 0, MEMBLOCK_BOOT);
++}
++
++/**
+  * memblock_mark_hotplug - Mark hotpluggable memory with flag MEMBLOCK_HOTPLUG.
+  * @base: the base phys addr of the region
+  * @size: the size of the region
+@@ -974,6 +998,10 @@ static bool should_skip_region(struct memblock_region *m, int nid, int flags)
+ 	if ((flags & MEMBLOCK_MIRROR) && !memblock_is_mirror(m))
+ 		return true;
  
- 	mem_hotplug_begin();
++	/* if we want boot memory skip non-boot memory regions */
++	if ((flags & MEMBLOCK_BOOT) && !memblock_is_boot(m))
++		return true;
++
+ 	/* skip nomap memory unless we were asked for it explicitly */
+ 	if (!(flags & MEMBLOCK_NOMAP) && memblock_is_nomap(m))
+ 		return true;
+@@ -1785,6 +1813,15 @@ bool __init_memblock memblock_is_map_memory(phys_addr_t addr)
+ 	return !memblock_is_nomap(&memblock.memory.regions[i]);
+ }
  
++bool __init_memblock memblock_is_boot_memory(phys_addr_t addr)
++{
++	int i = memblock_search(&memblock.memory, addr);
++
++	if (i == -1)
++		return false;
++	return memblock_is_boot(&memblock.memory.regions[i]);
++}
++
+ #ifdef CONFIG_HAVE_MEMBLOCK_NODE_MAP
+ int __init_memblock memblock_search_pfn_nid(unsigned long pfn,
+ 			 unsigned long *start_pfn, unsigned long *end_pfn)
 -- 
 2.7.4
 
