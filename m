@@ -2,169 +2,69 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 982F8C33CA5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA87C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 696EB20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424B120721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="wVy1VAbU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Mj1/cHpy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgAJMbP (ORCPT
+        id S1728202AbgAJMbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 07:31:15 -0500
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:46383 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727924AbgAJMbP (ORCPT
+        Fri, 10 Jan 2020 07:31:33 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41896 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727753AbgAJMbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 07:31:15 -0500
-Received: from [IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef]
- ([IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id ptRUimnGnpLtbptRXiQX2R; Fri, 10 Jan 2020 13:31:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1578659472; bh=Q4tGujyc0qMIli9sFFN1Y2SjsV4ntbfAJ95PuThwHNo=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=wVy1VAbUe9iHSsSMlQRYcvuUGVHHOkYaXBCi0ulHQzsBqeDXnTlWE3dPY3Cd9N1T5
-         ym08+Bx6xkVDafW0WyHGEryJhllacfjUsyH2wbDdc4aYGfP52TKIG5qS//HO3YTP7A
-         6x2hJWc0vaXoRvlK3yxgd201kjp7KNhTnyxZ51jj55d0rRQT8Mg87BhZ+4OwOu36vR
-         uYm8fLnZJEVjmizDcRvj0FL9KLrJxugUppzrEZk6/hTBZPiELHW7Hx0oEA/Agi15xX
-         ongBXCUp69XYdiBOzglUD+FCZy02wl/UhCkWbnhLBTI5Yq99nq/pteqEEZSv7WI9Gu
-         XFHhMzM3GOvDg==
-Subject: Re: [PATCH] media: hantro: Support H264 profile control
-To:     Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc:     Hirokazu Honda <hiroh@chromium.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191122051608.128717-1-hiroh@chromium.org>
- <767528be59275265072896e5c679e97575615fdd.camel@ndufresne.ca>
- <CAAFQd5D3OpAAtX7_0ktz4-aAgWN_G4YBQMR=Vwp7JPopjvRkRA@mail.gmail.com>
- <f5341ed837529bd38d466d4b655e261d64065912.camel@ndufresne.ca>
- <CAAFQd5Cpk8qG+VgE6+aznBmXu11YG0gNQyCRanZghds-TPKvyg@mail.gmail.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <c88b2822-0dd2-8ea3-eb0b-262df5a30830@xs4all.nl>
-Date:   Fri, 10 Jan 2020 13:31:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 10 Jan 2020 07:31:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=B/rKaa819gyayiC8Xe2hoNfVxDFo4LjZMb+oCIBCt4A=; b=Mj1/cHpyNqAgv/lVJOV/TP+Zj
+        egd1NiWTg95WnXdO8GzEGGiVWXwRU3H+E29g0uVUBnxj9ZG7x0fcYtVBTI//wNlkf+KsAOmx7axTf
+        Gc8pv2zZYaPxRunSGtLY4RuN7jj+dSV2b5+aIhFylnGPxBelgs3smecSXa7E34ZnQngJ7W/2xA+1a
+        NUzhU4twKo0iuaHP3wTcsVoqDE18tS5u72bzSdI5+qJSI+AHD+3TO72VAqUy9Zy0Y5FPdZH5P/N9h
+        2KFuCwQdTla2L7GluHlni2Ux9OYIM+JCNP3jqnY6GtykRDI9mopYWyIA8zDezasfGBpIUQ8Ce3CYo
+        VZkuzcBug==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iptRn-0003UC-1r; Fri, 10 Jan 2020 12:31:27 +0000
+Date:   Fri, 10 Jan 2020 04:31:27 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     linux-nvdimm@lists.01.org, dan.j.williams@intel.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: dax: Get rid of fs_dax_get_by_host() helper
+Message-ID: <20200110123127.GA6558@infradead.org>
+References: <20200106181117.GA16248@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAFQd5Cpk8qG+VgE6+aznBmXu11YG0gNQyCRanZghds-TPKvyg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfCFM+zo00wI7D/Z3xha1mTiaLvB2X7xakAJsEjudm/mMCDqgPaS0ALMhUjD7FGbvE9gaHbDCUeW6n1mMAlU7QRFfJKjoy/BBOSUPUQFvcX/o45cNq4c6
- 5eZpmXxjvHYyiGX9RlfZvSEvEfdVejRHqa8EPYDEpLHNZxIrFZdBP3+M8/B2npPNo2Jt1GKe4CiPY6HdBF4Zd5tKqTjkcWTCB+Mxo45kl1Lgr/yHvk5OXcas
- zoKjDuUji2iCldwA4CtG5rwyJROW8e9Ow+nP4xAZKA1smJnTD3I/HL4APkxK4ZAe91FOwEfm7Aft6utF2gb40RLhIxZe4c+egotdX28vGAjX+zy8cOj5TPvW
- +F31IZeiVZzkbHd6PZ/fwkHt3Q01X919mz3KU9GjzXjLQGHLwSdpmI/+h/CjDNDZHfsq5lO2+dXYP61cEroyLFU5pDOudC66+OuldyAgD10cCKoig7L6P8VZ
- wvHGZLe4PZGqBMqu404KcZzZiv80OtiP8smSOkHJQp6pubqkkve9gU1cPactlH2ZTufUXax+8bQWNoNO61wqk8N06yA7vkxzkkABaA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200106181117.GA16248@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/29/19 1:16 AM, Tomasz Figa wrote:
-> On Sat, Nov 23, 2019 at 1:52 AM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
->>
->> Le samedi 23 novembre 2019 à 01:00 +0900, Tomasz Figa a écrit :
->>> On Sat, Nov 23, 2019 at 12:09 AM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
->>>> Le vendredi 22 novembre 2019 à 14:16 +0900, Hirokazu Honda a écrit :
->>>>> The Hantro G1 decoder supports H.264 profiles from Baseline to High, with
->>>>> the exception of the Extended profile.
->>>>>
->>>>> Expose the V4L2_CID_MPEG_VIDEO_H264_PROFILE control, so that the
->>>>> applications can query the driver for the list of supported profiles.
->>>>
->>>> Thanks for this patch. Do you think we could also add the LEVEL control
->>>> so the profile/level enumeration becomes complete ?
->>>>
->>>> I'm thinking it would be nice if the v4l2 compliance test make sure
->>>> that codecs do implement these controls (both stateful and stateless),
->>>> it's essential for stack with software fallback, or multiple capable
->>>> codec hardware but with different capabilities.
->>>>
->>>
->>> Level is a difficult story, because it also specifies the number of
->>> macroblocks per second, but for decoders like this the number of
->>> macroblocks per second it can handle depends on things the driver
->>> might be not aware of - clock frequencies, DDR throughput, system
->>> load, etc.
->>>
->>> My take on this is that the decoder driver should advertise the
->>> highest resolution the decoder can handle due to hardware constraints.
->>> Performance related things depend on the integration details and
->>> should be managed elsewhere. For example Android and Chrome OS manage
->>> expected decoding performance in per-board configuration files.
->>
->> When you read datasheet, the HW is always rated to maximum level (and
->> it's a range) with the assumption of a single stream. It seems much
->> easier to expose this as-is, statically then to start doing some math
->> with data that isn't fully exposed to the user. This is about filtering
->> of multiple CODEC instances, it does not need to be rocket science,
->> specially that the amount of missing data is important (e.g. usage of
->> tiles, compression, IPP all have an impact on the final performance).
->> All we want to know in userspace is if this HW is even possibly capable
->> of LEVEL X, and if not, we'll look for another one.
->>
+On Mon, Jan 06, 2020 at 01:11:17PM -0500, Vivek Goyal wrote:
+> Looks like nobody is using fs_dax_get_by_host() except fs_dax_get_by_bdev()
+> and it can easily use dax_get_by_host() instead.
 > 
-> Agreed, one could potentially define it this way, but would it be
-> really useful for the userspace and the users? I guess it could enable
-> slightly faster fallback to software decoding in the extreme case of
-> the hardware not supporting the level at all, but I suspect that the
-> majority of cases would be the hardware just being unusably slow.
-> 
-> Also, as I mentioned before, we already return the range of supported
-> resolutions, which in practice should map to the part of the level
-> that may depend on hardware capabilities rather than performance, so
-> exposing levels as well would add redundancy to the information
-> exposed.
+> IIUC, fs_dax_get_by_host() was only introduced so that one could compile
+> with CONFIG_FS_DAX=n and CONFIG_DAX=m. fs_dax_get_by_bdev() achieves
+> the same purpose and hence it looks like fs_dax_get_by_host() is not
+> needed anymore.
+>  
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 
-There is a lot of discussion here, but it all revolves around a potential
-LEVEL control.
+Looks good,
 
-So I gather everyone is OK with merging this patch?
-
-If not, let me know asap.
-
-Regards,
-
-	Hans
-
-> 
->>>
->>>>> Signed-off-by: Hirokazu Honda <hiroh@chromium.org>
->>>>> ---
->>>>>  drivers/staging/media/hantro/hantro_drv.c | 10 ++++++++++
->>>>>  1 file changed, 10 insertions(+)
->>>>>
->>>>> diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
->>>>> index 6d9d41170832..9387619235d8 100644
->>>>> --- a/drivers/staging/media/hantro/hantro_drv.c
->>>>> +++ b/drivers/staging/media/hantro/hantro_drv.c
->>>>> @@ -355,6 +355,16 @@ static const struct hantro_ctrl controls[] = {
->>>>>                       .def = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
->>>>>                       .max = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
->>>>>               },
->>>>> +     }, {
->>>>> +             .codec = HANTRO_H264_DECODER,
->>>>> +             .cfg = {
->>>>> +                     .id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
->>>>> +                     .min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
->>>>> +                     .max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
->>>>> +                     .menu_skip_mask =
->>>>> +                     BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
->>>>> +                     .def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
->>>>> +             }
->>>>>       }, {
->>>>>       },
->>>>>  };
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
