@@ -2,116 +2,125 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8149EC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F44C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FECC20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C57320673
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:54:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="PoLpodry";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KBbxS7pW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbgAJQxK (ORCPT
+        id S1728893AbgAJQyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:53:10 -0500
-Received: from krieglstein.org ([188.68.35.71]:49986 "EHLO krieglstein.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728492AbgAJQxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:53:10 -0500
-X-Greylist: delayed 389 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Jan 2020 11:53:08 EST
-Received: from dabox.localnet (gateway.hbm.com [213.157.30.2])
-        by krieglstein.org (Postfix) with ESMTPSA id E68BD4009B;
-        Fri, 10 Jan 2020 17:46:37 +0100 (CET)
-From:   Tim Sander <tim@krieglstein.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Dinh Nguyen <dinguyen@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: mtd raw nand denali.c broken for Intel/Altera Cyclone V
-Date:   Fri, 10 Jan 2020 17:46:37 +0100
-Message-ID: <2827587.laNcgWlGab@dabox>
-Organization: Sander and Lightning
-In-Reply-To: <CAK7LNASG+b03NDhrenB9yfvgYDVpYSnb2vSCu_-DB8dh70boMg@mail.gmail.com>
-References: <5143724.5TqzkYX0oI@dabox> <23083624.r2bJSIadJk@dabox> <CAK7LNASG+b03NDhrenB9yfvgYDVpYSnb2vSCu_-DB8dh70boMg@mail.gmail.com>
+        Fri, 10 Jan 2020 11:54:13 -0500
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:34133 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728543AbgAJQyN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 11:54:13 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id C90E67C6;
+        Fri, 10 Jan 2020 11:54:11 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Fri, 10 Jan 2020 11:54:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=W9nzw/ak+edqRjjbpLyEa2XPoHR
+        h/BnHaFu9YMjV5hw=; b=PoLpodryUFMte9qwWE/CFN2JX3KYh9HQgzQtai+rbZu
+        iI+IArz4lbiV2uGay/Vx8zi9Cd1iRRkE9u/v75bQOK2takZlzFL7gfu7wV201Z34
+        NRWo3K2DVq4DSEDKTWIywFwqWALs3Rq1huX/2CIt4LPB76QLvzyp8BKq7t4miMTm
+        +6uRd5msXdA7r0aZwTr5gtP2Fbf9R9oHz3u3l3YNiVtKcHbkj8HXKPBPo6z+UYP8
+        Xe3d5zmNUxx3kY4ZMo1d9SSTBpVFHiVhD/idSLvjlxBDuBZ9b0ugsAfZpzXBlWli
+        XIbpYqOEUJF6y1N3jdlyz+bj6j/CB/l5nZB5akxdqyg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=W9nzw/
+        ak+edqRjjbpLyEa2XPoHRh/BnHaFu9YMjV5hw=; b=KBbxS7pWMNDqHu/OICxpIE
+        GTGtc/1LyPlaptCR514wRDj8z9g8YrHHubhztUDW7sFOWi9YFMFnneQ+/+VPBIfg
+        oxAgp+PhJRGRguWWGedk5AW4OoMNYU1wJrZ00ewYoWlyrwZePEKIJdab/XEe3+TD
+        WqM1A/J50Iv0BYKrr0xQUM1//ifhPqGBvw8ZlXO0SK3X+MAA6cEtMtHIMnd/sPrc
+        XlP9dPgTJ0TfQGMORl4SPJsGj+1TnxTyy5HpZPQ/smN3K/Lrv8Dh2/a31XQgZ22k
+        qG/n9B26OOWS8b84+ULFGbp5WRNjbH5ntFr90/VQyimrReW4kme4US7uS9Lxv2+w
+        ==
+X-ME-Sender: <xms:MqwYXhFjGERM79w0i9b3cSZQqJa2Gtnrv6saiI3B6ylbWUFJMkvGlw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeifedgledtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:M6wYXqa3w1FhJh0yaW12lRwWKubATg2Gilh1ygg11ImMjGxzjFBmwQ>
+    <xmx:M6wYXkQ7pV6-tZL6cER1rV4QP28pwsM-DsAkrDE5Kpx9JcK2bJF8cQ>
+    <xmx:M6wYXgeyMXsQT_dYUy0T-gDNvzia8Yx4Rg9TcQsEK5WzOUn4JONLdg>
+    <xmx:M6wYXrzdLVfHNQ9p7LF8ZfOhOpWOn0DdUXqYbznKBGBNoRO4dm5Vug>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id ADC5E30600A8;
+        Fri, 10 Jan 2020 11:54:10 -0500 (EST)
+Date:   Fri, 10 Jan 2020 17:54:04 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Garrett <mjg59@google.com>, bugzilla@colorremedies.com
+Subject: Re: [PATCH 3/3] tracing: Do not create directories if lockdown is in
+ affect
+Message-ID: <20200110165404.GA1837739@kroah.com>
+References: <20191205020459.023316620@goodmis.org>
+ <20191205020548.446051018@goodmis.org>
+ <20200110163105.GA17434@home.goodmis.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110163105.GA17434@home.goodmis.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masahiro Yamada
+On Fri, Jan 10, 2020 at 11:31:05AM -0500, Steven Rostedt wrote:
+> I should have marked this for stable. The commit it fixes (see Fixes tag) is
+> in 5.4, and it appears this has yet to make it to 5.4 yet.
+> 
+> -- Steve
+> 
+> 
+> On Wed, Dec 04, 2019 at 09:05:02PM -0500, Steven Rostedt wrote:
+> > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+> > 
+> > If lockdown is disabling tracing on boot up, it prevents the tracing files
+> > from even bering created. But when that happens, there's several places that
+> > will give a warning that the files were not created as that is usually a
+> > sign of a bug.
+> > 
+> > Add in strategic locations where a check is made to see if tracing is
+> > disabled by lockdown, and if it is, do not go further, and fail silently
+> > (but print that tracing is disabled by lockdown, without doing a WARN_ON()).
+> > 
+> > Cc: Matthew Garrett <mjg59@google.com>
+> > Fixes: 17911ff38aa5 ("tracing: Add locked_down checks to the open calls of files created for tracefs")
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Sorry for the large delay. I have seen the patches at 
-https://lists.infradead.org/pipermail/linux-mtd/2019-December/092852.html
-Seem to resolve the question about the spare_area_skip_bytes register.
+Relying only on the Fixes: tag to get things picked up by stable is a
+sure way to get it on the "slow, and maybe eventually, hopefully, it
+might make it into stable" path :)
 
-I have now set the register to 2 which seems to be the right choice on an Intel  
-SocFPGA. But still i am out of luck trying to boot 5.4.5-rt3 or 5.5-rc5. I get the 
-following messages during bootup booting:
-[    1.825590] denali-nand-dt ff900000.nand: timeout while waiting for irq 0x1000
-[    1.832936] denali-nand-dt: probe of ff900000.nand failed with error -5
+I have over 1000 patches right now in that "bucket" that need to be
+checked to see if they are relevant for stable backporting, just since
+5.4 was released.  I have automated a lot of it, but still, they require
+manual review.
 
-But the commit c19e31d0a32dd 2017-06-13 22:45:38 predates the 4.19 kernel
-release (Mon Oct 22 07:37:37 2018). So it seems there is not an obvious commit
-which is causing the problem. Looking at the changes it might be that the timing
-calculations in the driver changed which might also lead to a similar error.
+I'll go queue this up now, as it's simplest just to ask us to take it
+after it hits Linus's tree :)
 
-I am booting via NFS the bootloader is placed in NOR flash.  The corresponding 
-nand dts entry is updated to the new format and looks like this:
-                nand@ff900000 {
-                        #address-cells = <0x1>;
-                        #size-cells = <0x0>;
-                        compatible = "altr,socfpga-denali-nand";
-                        reg = <0xff900000 0x100000 0xffb80000 0x10000>;
-                        reg-names = "nand_data", "denali_reg";
-                        interrupts = <0x0 0x90 0x4>;
-                        clocks = <0x2d 0x1e 0x2e>;
-                        clock-names = "nand", "nand_x", "ecc";
-                        resets = <0x6 0x24>;
-                        status = "okay";
-                        nand@0 {
-                                reg = <0x0>;
-                                #address-cells = <0x1>;
-                                #size-cells = <0x1>;
-                                partition@0 {
-                                        label = "work";
-                                        reg = <0x0 0x10000000>;
-                                };
-                        };
-                };
+thanks,
 
-The last kernel i am able to boot is 4.19.10. I have tried booting:
-5.1.21, 5.2.9, 5.3-rc8, 5.4.5-rt3 and 5.5-rc5. They all failed. Unfortunately the 
-range is quite large for bisecting the problem. It also occurred to me that
-all the platforms with Intel Cyclone V in mainline are development boards
-which boot from SD-card not exhibiting this problem on their default boot path.
-
-Best regards
-Tim
-
-PS: Here is some snippet from an older mail i didn't sent to the list yet which
-might be superseded by now:
-To get into this matter i started reading the "Intel Cyclone V HPS TRM" 
-Section 13-20 Preserving Bad Block Markers:
-"You can configure the NAND flash controller to skip over a specified number of 
-bytes when it writes the last sector in a page to the spare area. This option 
-write the desired offset to the spare_area_skip_bytes register in the config 
-group. For example, if the device page size is 2 KB, and the device 
-area, set the spare_area_skip_bytes register to 2. When the flash controller 
-writes the last sector of the page that overlaps with the spare area, it 
-spare_area_skip_bytes must be an even number. For example, if the bad block 
-marker is a single byte, set spare_area_skip_bytes to 2."
-
-
-
-
-
+greg k-h
