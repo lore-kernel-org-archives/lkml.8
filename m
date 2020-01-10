@@ -2,93 +2,93 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 658D8C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C11D1C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4166120842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A5320838
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:02:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZNIJtWD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbgAJU72 convert rfc822-to-8bit (ORCPT
+        id S1726962AbgAJVCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 15:59:28 -0500
-Received: from mga07.intel.com ([134.134.136.100]:49938 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726842AbgAJU72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 15:59:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 12:59:27 -0800
-X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
-   d="scan'208";a="216793425"
-Received: from aguedesl-mac01.jf.intel.com (HELO localhost) ([10.24.13.29])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 12:59:26 -0800
-Content-Type: text/plain; charset="utf-8"
+        Fri, 10 Jan 2020 16:02:30 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41345 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726836AbgAJVC3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 16:02:29 -0500
+Received: by mail-io1-f68.google.com with SMTP id c16so3542081ioo.8
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 13:02:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DscpuWHCpmPvr4rJjWCNU0C+wW4iWR7q6WdgIPGNWp8=;
+        b=DZNIJtWDxi/IFi9rezbRRGdt2PNteEKMx12hwXSahx8QOiYfv5QyoZqEUO/h6dY2nG
+         HtYbN0XKSDT8rKy8m4E9XUoK3k8d4QEoCk51sSf7ZKTPnsGDS8Mif3kgP9ZNFg1K+qXk
+         LcEY3UPe1tYogE1FsCAoO5Iz+UIzPdbrwyXfEXyetei5BsL/kj6kUWYl5fVf78wUEPDh
+         4mJsUUuDU2lH5qsgNRd1M2hov480V52g3r3NyOi1eRaf3yeQ6XpzBmDLzBJ7v9pT5Idt
+         PxQfxFN8fEkEWRabStaLVCog4wNnxT8rHfjnwqaWisU+oY0x0ulS0d4iVIad737zTc4U
+         mMbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DscpuWHCpmPvr4rJjWCNU0C+wW4iWR7q6WdgIPGNWp8=;
+        b=c+7vm8ZWu0z5LOhh9bCMFMVIkw6L34yw1OHLFbRlVRqe+flGjXjZrKxjWstXsXEpUg
+         gWM3WPCGZAvq6e/flRvJccDmub/fLM42YM8u3dvXlbXb/FmdtO56RWF1FUjLpz5KWTFN
+         1hfOuz9Ev58Fys3FP3fFE+vMZIe9vakTIP+JGisxUG+GuX8Sgw1tCD77W/6zLNN6bXCx
+         +A9dPUSmT43qOXb5A/qbA694l4spi8MlgQzBPr9A2MBRyFkG0x2fMB5tldyimCYiEblN
+         3MH42+923lAF2L3f2GJRjnbv1DmwXOOA6QY3Yoyucxtjil4+IUzydW5eFqlAL2HCKs+I
+         TDgg==
+X-Gm-Message-State: APjAAAXsnswSAAi0quuNPXysRjxlhKIzyhBa2owj7xT4F2hCWgLEY9J8
+        al04SWmxTD6LAWxaROmj2TCrzWTSkq+QXhxRqqo=
+X-Google-Smtp-Source: APXvYqwLh4K1IfrVM9/WMlQhAf6HvRXmjNuB6U8BcycbyeLI32u6bBID/d1x4io+NNaZ/oLcomb7JELbKTP/2iO8c2Y=
+X-Received: by 2002:a5d:8b96:: with SMTP id p22mr4006771iol.93.1578690149027;
+ Fri, 10 Jan 2020 13:02:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <CA+h21hr9ApvPSYigcS0WkFVg0+Od=G+ZVxkV7GvdaNbDmCmiCA@mail.gmail.com>
-References: <20191127094517.6255-1-Po.Liu@nxp.com> <157603276975.18462.4638422874481955289@pipeline> <VE1PR04MB6496CEA449E9B844094E580492510@VE1PR04MB6496.eurprd04.prod.outlook.com> <87eex43pzm.fsf@linux.intel.com> <20191219004322.GA20146@khorivan> <87lfr9axm8.fsf@linux.intel.com> <b7e1cb8b-b6b1-c0fa-3864-4036750f3164@ti.com> <157853205713.36295.17877768211004089754@aguedesl-mac01.jf.intel.com> <CA+h21hr9ApvPSYigcS0WkFVg0+Od=G+ZVxkV7GvdaNbDmCmiCA@mail.gmail.com>
-Subject: Re: [EXT] Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of traffic classes
-From:   Andre Guedes <andre.guedes@linux.intel.com>
-Cc:     Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Po Liu <po.liu@nxp.com>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "ayal@mellanox.com" <ayal@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Message-ID: <157868996635.61655.11306531040262384025@aguedesl-mac01.jf.intel.com>
-User-Agent: alot/0.8.1
-Date:   Fri, 10 Jan 2020 12:59:26 -0800
+References: <20200110094535.23472-1-kraxel@redhat.com> <CAG48ez0wfLkTqdBtDBV4b1uUQMGeeAr09GPPi9WT++Fn8ph4rA@mail.gmail.com>
+In-Reply-To: <CAG48ez0wfLkTqdBtDBV4b1uUQMGeeAr09GPPi9WT++Fn8ph4rA@mail.gmail.com>
+From:   Chia-I Wu <olvaffe@gmail.com>
+Date:   Fri, 10 Jan 2020 13:02:17 -0800
+Message-ID: <CAPaKu7TQCXOmj1zthBXq4XtNpK8WT4Rv5CwUmLrRBNwm4f0uRw@mail.gmail.com>
+Subject: Re: [PATCH] drm/virtio: add missing virtio_gpu_array_lock_resv call
+To:     Jann Horn <jannh@google.com>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        Gurchetan Singh <gurchetansingh@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vladimir,
-
-Quoting Vladimir Oltean (2020-01-10 08:02:45)
-> > I'm not sure about the knob 'timers (hold/release)' described in the quotes
-> > above. I couldn't find a match in the specs. If it refers to 'holdAdvance' and
-> > 'releaseAdvance' parameters described in 802.1Q-2018, I believe they are not
-> > configurable. Do we know any hardware where they are configurable?
-> >
-> 
-> On NXP LS1028A, HOLD_ADVANCE is configurable on both ENETC and the
-> Felix switch (its default value is 127 bytes). Same as Synopsys, it is
-> a global setting and not per queue or per GCL entry.
-> RELEASE_ADVANCE is not configurable.
-> Regardless, I am not sure if there is any value in configuring this
-> knob. Remember that the minimum guard band size still needs to be
-> twice as large as the minimum Ethernet frame size.
-
-Not adding this knob now sounds reasonable to me too, but let's consider it in
-the design so we can easily add it later, in case we need it.
-
-Regards,
-
-Andre
+On Fri, Jan 10, 2020 at 6:27 AM Jann Horn <jannh@google.com> wrote:
+>
+> On Fri, Jan 10, 2020 at 10:45 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+> > When submitting a fenced command we must lock the object reservations
+> > because virtio_gpu_queue_fenced_ctrl_buffer() unlocks after adding the
+> > fence.
+>
+> Thanks a lot! With this patch applied, my VM doesn't throw lockdep
+> warnings anymore. If you want, you can add:
+>
+> Tested-by: Jann Horn <jannh@google.com>
+>
+> > Reported-by: Jann Horn <jannh@google.com>
+> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Reviewed-by: Chia-I Wu <olvaffe@gmail.com>
+> > ---
+> >  drivers/gpu/drm/virtio/virtgpu_plane.c | 1 +
+> >  1 file changed, 1 insertion(+)
