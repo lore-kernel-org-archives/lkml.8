@@ -2,196 +2,130 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF61C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A690C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEDB22082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:47:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D48AF2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:48:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="lm8HeRtO"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o9Mih6qI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgAJOrV (ORCPT
+        id S1728255AbgAJOsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:47:21 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46947 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728012AbgAJOrV (ORCPT
+        Fri, 10 Jan 2020 09:48:47 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:46050 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728115AbgAJOsr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:47:21 -0500
-Received: by mail-lj1-f195.google.com with SMTP id m26so2374925ljc.13
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 06:47:19 -0800 (PST)
+        Fri, 10 Jan 2020 09:48:47 -0500
+Received: by mail-qk1-f196.google.com with SMTP id x1so1994490qkl.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 06:48:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1rwufjQnA4g2FcEE+Hw9tHrpM49MduEVKVJ7Jw8thHc=;
-        b=lm8HeRtO2UBly/vIgHQCWyFZx6yJ42674vP0/RRSdTeooHSRPGFtwJ4h+kfcxeoGJa
-         lC0YKZS3mrRJglwt/Y33G1HvGLwTvOcQaLeyGE2yuohDnO1QqQa/Wopj8WbXBLkEB9u2
-         BFWFVCSu2vsnd772rIns7oiZD7XW2DmE/Y6WvG0rruCR3UG7ghUAYhg8xuqBzsn5KT0K
-         14+AnfSiQti/aw+klrKO5fiaNzo6c44l2O4YQ48EmpHMAOvR4AFMQG+MEyWYLZ6c3umH
-         klJ1P52IDzrRpS7aU2iojRwQn1eOstpCkIzd5MLj56fUoG66LBc0hii/EI21YpQA9AlW
-         YEyg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sFl1naCgTqbK89uRYkRmWghDEhCYtKJccfK1ql3J+3U=;
+        b=o9Mih6qISmR7g2GlHhPw7YWjv06+eFio3Vn6JhH5CwHuiF7pkoEvkKexop9L6W9vH1
+         kwsrn29ojVftlzIxIxGE0+qxLuUtZ2NoToPuaMhqIQRP+Ai4QVZTzvHer0aqm5kwhe7r
+         s8vMw7gMPf/FoDa9sffnsJ6W0kHdGm9SSDiwJGH1sIisgo9zU9JC1K0sJT4zCvcEM4mW
+         8f6yRRbBQvlxlXVPSzTDmlFasnhgcziev7QxMsz/u//GZNZkNTUed7F4PeZXqw+/5hi8
+         9PQsTdu3beHvMK3aPbAS5Wfo06fkTUT/wSoBuJw9OkM5o7xp5OxsqehySfvkD+W8mHiO
+         KVLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1rwufjQnA4g2FcEE+Hw9tHrpM49MduEVKVJ7Jw8thHc=;
-        b=aJjHew0gfjsvkHm1mgCubTwnxciMEeWbbNkY2eJ2Kn9lNnKCrY5UGIOqqMdBoettyM
-         zhq5MTjboWr3st797FliQR9bFAeK2gLwu6hVTnyUQD58d9LZUK++evL8ZP2JvmDXd4TO
-         bwgdk2nDlv1U0plQBoxkoZX8WqhbJC9DfLGTnLTVpAnl9/Cp2sSo7nsi6FmuTdTqmObI
-         3G5HrEpO37f7m91G86zTcOB26qgsIUVhitYxfoJ6mlO6Omjgp/dGIwo8M0sH9Ph4r4tg
-         4ipq7TtveoAOvKZAEnOmJX+jP5pFjso4ohF2EdAeJ5V/s8tohhXg5rv4G2UrmA8CTdvY
-         od6w==
-X-Gm-Message-State: APjAAAUfMZj9Iy73DtzWJKxLQn9yrocixsC3hDvzjdoh1FKA238XyD6B
-        814B0UvGDoTMeqzjJw8v1oFrYLVKfV8=
-X-Google-Smtp-Source: APXvYqxz/vQGL11CyyNJM2Flh4SD0MmSYzBSxvp2JudE9NgZa+eXRt15IFtOs5rB5M3MWL4XmGFpcA==
-X-Received: by 2002:a2e:9850:: with SMTP id e16mr665958ljj.268.1578667638712;
-        Fri, 10 Jan 2020 06:47:18 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id n11sm1104599ljg.15.2020.01.10.06.47.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 06:47:18 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id AB8CE100C65; Fri, 10 Jan 2020 17:47:17 +0300 (+03)
-Date:   Fri, 10 Jan 2020 17:47:17 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@suse.de>,
-        "Jin, Zhi" <zhi.jin@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH] mm/page_alloc: Skip non present sections on zone
- initialization
-Message-ID: <20200110144717.xufpf4yjkjlngymy@box>
-References: <20191230093828.24613-1-kirill.shutemov@linux.intel.com>
- <20200108144044.GB30379@dhcp22.suse.cz>
- <73437651-822f-fcec-3b96-281fb1064cf8@redhat.com>
- <20200110134547.v6ju5dxazknfjdj3@box>
- <de70ec09-492d-292b-0738-db1ce1f05673@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sFl1naCgTqbK89uRYkRmWghDEhCYtKJccfK1ql3J+3U=;
+        b=lYAay167IqQY6fBVhlugBfmP+sEfgHKzYskjM3sTkRA7yNKPlTMdzhyGWRXuzy5vIX
+         E0BwopP4GNxnA4pL4G4Lu+ji+ZYeOJhqc4WzQgirxxpVOUfZudXju18SwKrqXLAnne41
+         Q6pa+Z9uI3bK3f/XDLQ7ZAxC51adu2zNaBBQb5wMwK3Z3LqWvztdY69E5q/htH6tYJNQ
+         o0BvBF7KGH2HvyqpyeZOsU2AVsJdjuO+SaK0hUvPCs7Rko1ecYKmO89n9Y/18OBO2N1T
+         1vrbSyxhrSBMJpT8lwCRG/zuP/STs8/JqssTqZgKYOzt7TVh1HiefN4if6mGbpxjJpAx
+         zrAw==
+X-Gm-Message-State: APjAAAWadBor8MkNNwPcW5RkeTR/dxNMuuVHTXr808zXNwEx6QmcwN45
+        v0hxtXcYAp6aRRAjPzfJVrqAX8kFpRbJle5CgDs16g==
+X-Google-Smtp-Source: APXvYqwtpnXgeB9AZDLqrlnF7ub1PKzUna6i6N6Bg2B6L8dfxHLyudhjTrmXsO6gJRpXwtaU5kXa9OsGe/pj9YvNmrI=
+X-Received: by 2002:a05:620a:1136:: with SMTP id p22mr3581899qkk.8.1578667725837;
+ Fri, 10 Jan 2020 06:48:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <de70ec09-492d-292b-0738-db1ce1f05673@redhat.com>
-User-Agent: NeoMutt/20180716
+References: <000000000000946842058bc1291d@google.com> <000000000000ddae64059bc388dc@google.com>
+ <20200110094502.2d6015ab@gandalf.local.home>
+In-Reply-To: <20200110094502.2d6015ab@gandalf.local.home>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Fri, 10 Jan 2020 15:48:34 +0100
+Message-ID: <CACT4Y+Z2M3p+26KROAAnGH-HuuWZdu8Cx1TrN7YhWTh9Exj+rQ@mail.gmail.com>
+Subject: Re: WARNING in add_event_to_ctx
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     syzbot <syzbot+704bfe2c7d156640ad7a@syzkaller.appspotmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        arvid.brodin@alten.se, Alexei Starovoitov <ast@kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        Josef Bacik <jbacik@fb.com>, jolsa@redhat.com,
+        Martin KaFai Lau <kafai@fb.com>, kernel-team@fb.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 03:34:49PM +0100, David Hildenbrand wrote:
-> On 10.01.20 14:45, Kirill A. Shutemov wrote:
-> > On Fri, Jan 10, 2020 at 02:15:26PM +0100, David Hildenbrand wrote:
-> >> On 08.01.20 15:40, Michal Hocko wrote:
-> >>> On Mon 30-12-19 12:38:28, Kirill A. Shutemov wrote:
-> >>>> memmap_init_zone() can be called on the ranges with holes during the
-> >>>> boot. It will skip any non-valid PFNs one-by-one. It works fine as long
-> >>>> as holes are not too big.
-> >>>>
-> >>>> But huge holes in the memory map causes a problem. It takes over 20
-> >>>> seconds to walk 32TiB hole. x86-64 with 5-level paging allows for much
-> >>>> larger holes in the memory map which would practically hang the system.
-> >>>>
-> >>>> Deferred struct page init doesn't help here. It only works on the
-> >>>> present ranges.
-> >>>>
-> >>>> Skipping non-present sections would fix the issue.
-> >>>
-> >>> Makes sense to me.
-> >>>
-> >>>> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> >>>
-> >>> That pfn inc back and forth is quite ugly TBH but whatever.
-> >>
-> >> Indeed, can we please rewrite the loop to fix that?
-> > 
-> > Any suggestions?
-> > 
-> > I don't see an obvious way to not break readablity in another place.
-> > 
-> 
-> I'd probably do it like this (applied some other tweaks, untested)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index cb766aac6772..a96b1ad1d74b 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5859,6 +5859,22 @@ overlap_memmap_init(unsigned long zone, unsigned long *pfn)
->         return false;
->  }
->  
-> +static inline __meminit unsigned long next_present_pfn(unsigned long pfn)
-> +{
-> +#ifdef CONFIG_SPARSEMEM
+On Fri, Jan 10, 2020 at 3:45 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Thu, 09 Jan 2020 22:50:00 -0800
+> syzbot <syzbot+704bfe2c7d156640ad7a@syzkaller.appspotmail.com> wrote:
+>
+> > syzbot suspects this bug was fixed by commit:
+>
+> I think these reports need some more information. Like the sample crash
+> report, so we don't need to be clicking through links to find it.
+> Because I have no idea what bug was fixed.
 
-I would rather keep it around function, but it's matter of taste.
+Hi Steve,
 
-> +       unsigned long section_nr = pfn_to_section_nr(pfn + 1);
-> +
-> +       /*
-> +        * Note: We don't check the subsection bitmap, so this can produce
-> +        * false positives when only subsections are present/valid. The
-> +        * caller should recheck if the returned pfn is valid.
-> +        */
-> +       if (!present_section_nr(section_nr))
-> +               return section_nr_to_pfn(next_present_section_nr(section_nr));
+Isn't it threaded to the original report in your client? The message
+has both matching subject and In-Reply-To header. At least that was
+the idea.
 
-This won't compile. next_present_section_nr() is static to mm/sparse.c.
-
-> +#endif
-> +       return pfn++;
-> +}
-> +
->  /*
->   * Initially all pages are reserved - free ones are freed
->   * up by memblock_free_all() once the early boot process is
-> @@ -5892,18 +5908,22 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
->         }
->  #endif
->  
-> -       for (pfn = start_pfn; pfn < end_pfn; pfn++) {
-> +       pfn = start_pfn;
-> +       while (pfn < end_pfn) {
->                 /*
->                  * There can be holes in boot-time mem_map[]s handed to this
->                  * function.  They do not exist on hotplugged memory.
->                  */
->                 if (context == MEMMAP_EARLY) {
-> -                       if (!early_pfn_valid(pfn))
-> +                       if (!early_pfn_valid(pfn)) {
-> +                               pfn = next_present_pfn(pfn, end_pfn);
->                                 continue;
-> -                       if (!early_pfn_in_nid(pfn, nid))
-> -                               continue;
-> -                       if (overlap_memmap_init(zone, &pfn))
-> +                       }
-> +                       if (!early_pfn_in_nid(pfn, nid) ||
-> +                           overlap_memmap_init(zone, &pfn)) {
-> +                               pfn++;
->                                 continue;
-> +                       }
->                         if (defer_init(nid, pfn, end_pfn))
->                                 break;
->                 }
-> @@ -5929,6 +5949,7 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
->                         set_pageblock_migratetype(page, MIGRATE_MOVABLE);
->                         cond_resched();
->                 }
-> +               pfn++;
->         }
-> 
-> 
-> I played with using a "pfn = next_init_pfn()" in the for loop instead, moving all
-> the checks in there, but didn't turn out too well.
-
-Well, it's better than I thought, but... I'm fine either way.
-
--- 
- Kirill A. Shutemov
+> > commit 311633b604063a8a5d3fbc74d0565b42df721f68
+> > Author: Cong Wang <xiyou.wangcong@gmail.com>
+> > Date:   Wed Jul 10 06:24:54 2019 +0000
+> >
+> >      hsr: switch ->dellink() to ->ndo_uninit()
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1005033ee00000
+> > start commit:   6fbc7275 Linux 5.2-rc7
+> > git tree:       upstream
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=bff6583efcfaed3f
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=704bfe2c7d156640ad7a
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1016165da00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b27be5a00000
+> >
+> > If the result looks correct, please mark the bug fixed by replying with:
+> >
+> > #syz fix: hsr: switch ->dellink() to ->ndo_uninit()
+> >
+> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20200110094502.2d6015ab%40gandalf.local.home.
