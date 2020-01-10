@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7C2C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F6CC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0DC20678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF87720678
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:08:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578694134;
-	bh=V9Pvsg3kJvQ6CcsuGArezxaMyrjVXaeOk3QDZVn6TeM=;
+	s=default; t=1578694138;
+	bh=glpq+x/zJdkKmj8HYLHatQTZkXN+xIdD5FaHpHa3FU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=um6xBmpRsZGJD3FULvxlaQAy2zvwmWkHsWng0kLY7PBkSC8CJCnnoASntIJnBsw+x
-	 qrU/bwlXddBfNiiMmDupYnirLRWrMy52nE78rnW3qAiNgSgEPXmIHvWQZZE3T8m9Kk
-	 woUTe6er2JT4+OiN0zc848OFGczoPZiwJ3r10OCo=
+	b=aOuWdrz7H9PE8/+WvvKas2WVPSkPXdbTZtSNQk23+gKMiw2mQO0nGy7pRFflZZxKQ
+	 YikXiYZBWDyz4ewvWtor/dWh59Grjql2aCFAkc5eHqTCGlHUi9ZloVKg58/2c/krtD
+	 Yt0oPusnsQym1XFbdVBXwY7oxKOXwWDeWY3oMuuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgAJWIw (ORCPT
+        id S1727466AbgAJWF0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:08:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51086 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 17:05:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727198AbgAJWF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:05:29 -0500
+        id S1727185AbgAJWFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:05:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DCC920721;
-        Fri, 10 Jan 2020 22:05:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14FB120842;
+        Fri, 10 Jan 2020 22:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693928;
-        bh=V9Pvsg3kJvQ6CcsuGArezxaMyrjVXaeOk3QDZVn6TeM=;
+        s=default; t=1578693923;
+        bh=glpq+x/zJdkKmj8HYLHatQTZkXN+xIdD5FaHpHa3FU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fw0uX575wYtJonVXR5y/CxyP9DUwc1nXbbg34loE05AK7pHMOXjuHe/YuUYxnZBd6
-         GhkiKLJuj3+XfEMiiD/xf3Bk9fQIcQ+0n9LHaVamxplCtj/9wwUbrjYXNQTD67QjEr
-         j8IVojzELcQaGNEpsToh4Y6CTHOMaj1odGePB3Ho=
+        b=OSgT0PHNOsKWNfDqcWLadFe3Ohxv84HrX77iTfJh7mAO8WgtZro7HhSgG71WnWvu+
+         34S3NxrjePsMJk9bn8zHWudHrPHiJ/U5fUCXwDGDoQr6hQshQraRi2wDxoml1EdSn7
+         tRniC2IMeEd9HAXbnOwx6BpaEMLFdSXzLv8SL0aI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 11/26] s390/qeth: lock the card while changing its hsuid
-Date:   Fri, 10 Jan 2020 17:05:04 -0500
-Message-Id: <20200110220519.28250-6-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 07/26] rxrpc: Don't take call->user_mutex in rxrpc_new_incoming_call()
+Date:   Fri, 10 Jan 2020 17:05:00 -0500
+Message-Id: <20200110220519.28250-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200110220519.28250-1-sashal@kernel.org>
 References: <20200110220519.28250-1-sashal@kernel.org>
@@ -59,117 +62,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 5b6c7b55cfe26224b0f41b1c226d3534c542787f ]
+[ Upstream commit 13b7955a0252e15265386b229b814152f109b234 ]
 
-qeth_l3_dev_hsuid_store() initially checks the card state, but doesn't
-take the conf_mutex to ensure that the card stays in this state while
-being reconfigured.
+Standard kernel mutexes cannot be used in any way from interrupt or softirq
+context, so the user_mutex which manages access to a call cannot be a mutex
+since on a new call the mutex must start off locked and be unlocked within
+the softirq handler to prevent userspace interfering with a call we're
+setting up.
 
-Rework the code to take this lock, and drop a redundant state check in a
-helper function.
+Commit a0855d24fc22d49cdc25664fb224caee16998683 ("locking/mutex: Complain
+upon mutex API misuse in IRQ contexts") causes big warnings to be splashed
+in dmesg for each a new call that comes in from the server.  Whilst it
+*seems* like it should be okay, since the accept path uses trylock, there
+are issues with PI boosting and marking the wrong task as the owner.
 
-Fixes: b333293058aa ("qeth: add support for af_iucv HiperSockets transport")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fix this by not taking the mutex in the softirq path at all.  It's not
+obvious that there should be any need for it as the state is set before the
+first notification is generated for the new call.
+
+There's also no particular reason why the link-assessing ping should be
+triggered inside the mutex.  It's not actually transmitted there anyway,
+but rather it has to be deferred to a workqueue.
+
+Further, I don't think that there's any particular reason that the socket
+notification needs to be done from within rx->incoming_lock, so the amount
+of time that lock is held can be shortened too and the ping prepared before
+the new call notification is sent.
+
+Fixes: 540b1c48c37a ("rxrpc: Fix deadlock between call creation and sendmsg/recvmsg")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+cc: Ingo Molnar <mingo@redhat.com>
+cc: Will Deacon <will@kernel.org>
+cc: Davidlohr Bueso <dave@stgolabs.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c |  5 ----
- drivers/s390/net/qeth_l3_sys.c    | 40 +++++++++++++++++++++----------
- 2 files changed, 28 insertions(+), 17 deletions(-)
+ net/rxrpc/call_accept.c | 20 +++-----------------
+ 1 file changed, 3 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index c444210d563b..7320a187d66a 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -3378,11 +3378,6 @@ int qeth_configure_cq(struct qeth_card *card, enum qeth_cq cq)
- 			goto out;
- 		}
+diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
+index 3685b1732f65..44fa22b020ef 100644
+--- a/net/rxrpc/call_accept.c
++++ b/net/rxrpc/call_accept.c
+@@ -381,18 +381,6 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
+ 	trace_rxrpc_receive(call, rxrpc_receive_incoming,
+ 			    sp->hdr.serial, sp->hdr.seq);
  
--		if (card->state != CARD_STATE_DOWN) {
--			rc = -1;
--			goto out;
--		}
+-	/* Lock the call to prevent rxrpc_kernel_send/recv_data() and
+-	 * sendmsg()/recvmsg() inconveniently stealing the mutex once the
+-	 * notification is generated.
+-	 *
+-	 * The BUG should never happen because the kernel should be well
+-	 * behaved enough not to access the call before the first notification
+-	 * event and userspace is prevented from doing so until the state is
+-	 * appropriate.
+-	 */
+-	if (!mutex_trylock(&call->user_mutex))
+-		BUG();
 -
- 		qeth_free_qdio_queues(card);
- 		card->options.cq = cq;
- 		rc = 0;
-diff --git a/drivers/s390/net/qeth_l3_sys.c b/drivers/s390/net/qeth_l3_sys.c
-index 2f73b33c9347..333fd4619dc6 100644
---- a/drivers/s390/net/qeth_l3_sys.c
-+++ b/drivers/s390/net/qeth_l3_sys.c
-@@ -270,24 +270,36 @@ static ssize_t qeth_l3_dev_hsuid_store(struct device *dev,
- 		struct device_attribute *attr, const char *buf, size_t count)
- {
- 	struct qeth_card *card = dev_get_drvdata(dev);
-+	int rc = 0;
- 	char *tmp;
--	int rc;
- 
- 	if (!card)
- 		return -EINVAL;
- 
- 	if (!IS_IQD(card))
- 		return -EPERM;
--	if (card->state != CARD_STATE_DOWN)
--		return -EPERM;
--	if (card->options.sniffer)
--		return -EPERM;
--	if (card->options.cq == QETH_CQ_NOTAVAILABLE)
--		return -EPERM;
-+
-+	mutex_lock(&card->conf_mutex);
-+	if (card->state != CARD_STATE_DOWN) {
-+		rc = -EPERM;
-+		goto out;
-+	}
-+
-+	if (card->options.sniffer) {
-+		rc = -EPERM;
-+		goto out;
-+	}
-+
-+	if (card->options.cq == QETH_CQ_NOTAVAILABLE) {
-+		rc = -EPERM;
-+		goto out;
-+	}
- 
- 	tmp = strsep((char **)&buf, "\n");
--	if (strlen(tmp) > 8)
--		return -EINVAL;
-+	if (strlen(tmp) > 8) {
-+		rc = -EINVAL;
-+		goto out;
-+	}
- 
- 	if (card->options.hsuid[0])
- 		/* delete old ip address */
-@@ -298,11 +310,13 @@ static ssize_t qeth_l3_dev_hsuid_store(struct device *dev,
- 		card->options.hsuid[0] = '\0';
- 		memcpy(card->dev->perm_addr, card->options.hsuid, 9);
- 		qeth_configure_cq(card, QETH_CQ_DISABLED);
--		return count;
-+		goto out;
+ 	/* Make the call live. */
+ 	rxrpc_incoming_call(rx, call, skb);
+ 	conn = call->conn;
+@@ -433,6 +421,9 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
+ 		BUG();
  	}
+ 	spin_unlock(&conn->state_lock);
++	spin_unlock(&rx->incoming_lock);
++
++	rxrpc_send_ping(call, skb);
  
--	if (qeth_configure_cq(card, QETH_CQ_ENABLED))
--		return -EPERM;
-+	if (qeth_configure_cq(card, QETH_CQ_ENABLED)) {
-+		rc = -EPERM;
-+		goto out;
-+	}
+ 	if (call->state == RXRPC_CALL_SERVER_ACCEPTING)
+ 		rxrpc_notify_socket(call);
+@@ -444,11 +435,6 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
+ 	 */
+ 	rxrpc_put_call(call, rxrpc_call_put);
  
- 	snprintf(card->options.hsuid, sizeof(card->options.hsuid),
- 		 "%-8s", tmp);
-@@ -311,6 +325,8 @@ static ssize_t qeth_l3_dev_hsuid_store(struct device *dev,
- 
- 	rc = qeth_l3_modify_hsuid(card, true);
- 
-+out:
-+	mutex_unlock(&card->conf_mutex);
- 	return rc ? rc : count;
- }
+-	spin_unlock(&rx->incoming_lock);
+-
+-	rxrpc_send_ping(call, skb);
+-	mutex_unlock(&call->user_mutex);
+-
+ 	_leave(" = %p{%d}", call, call->debug_id);
+ 	return call;
  
 -- 
 2.20.1
