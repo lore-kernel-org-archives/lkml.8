@@ -2,90 +2,92 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95B5C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EA6C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA4E205F4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B913020838
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:08:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578690519;
+	bh=7k/3WJi+NYzL/NKLuCvvykW0NIV1US+apZoWCLsOrVk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=NVMDKGdC0eyPFWzFUNiWAs5AnItArXBDTHvOfM/HhldP41x/yznnbBNMjc7+fyYDN
+	 7NhIpHeUY3fhszVAbWMv0T3qsAz2tQEkguNgQ7HlzAz1DQPrHU8kMFaamj5vbFbMSp
+	 WClotylWJm1g0NY68gx0L4lLC7VXEDS1snd778qU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbgAJVIC (ORCPT
+        id S1727210AbgAJVIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 16:08:02 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59790 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726842AbgAJVIB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 16:08:01 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iq1VU-0004ld-Ub; Fri, 10 Jan 2020 22:07:49 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 6009B105BDB; Fri, 10 Jan 2020 22:07:48 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list\:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [RFC PATCH v2 05/10] lib: vdso: inline do_hres()
-In-Reply-To: <CAK8P3a36OgFuY72b_i6+0xBNGnaxS1SsRid+HrgQHPZtUJp3LQ@mail.gmail.com>
-References: <cover.1577111363.git.christophe.leroy@c-s.fr> <d0f8dfb26c025d3e3eee1b5f610161ca19b942df.1577111367.git.christophe.leroy@c-s.fr> <CAK8P3a36OgFuY72b_i6+0xBNGnaxS1SsRid+HrgQHPZtUJp3LQ@mail.gmail.com>
-Date:   Fri, 10 Jan 2020 22:07:48 +0100
-Message-ID: <87o8vbrpej.fsf@nanos.tec.linutronix.de>
+        Fri, 10 Jan 2020 16:08:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726836AbgAJVIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 16:08:37 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3B9C205F4;
+        Fri, 10 Jan 2020 21:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578690517;
+        bh=7k/3WJi+NYzL/NKLuCvvykW0NIV1US+apZoWCLsOrVk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OOHUodEHEzp9BAGomUZgt3So4I0FWHJhHYYFBaZdz+40MoqlfiCPt5RdAHWDPd+Du
+         PqjEGb6hwz27qzccdy7HyX8NGoX5k/W7J4DBXByiUdps361EaWgCkuzDv3uZKl3JiX
+         yB0wxKBFW47hpSnzjT+j2nzhrNy9mp622Pmfb/zs=
+Date:   Fri, 10 Jan 2020 22:08:35 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jiri Slaby <jslaby@suse.cz>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: [GIT PULL] TTY/Serial driver fixes for 5.5-rc6
+Message-ID: <20200110210835.GA1871048@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd Bergmann <arnd@arndb.de> writes:
-> On Mon, Dec 23, 2019 at 3:31 PM Christophe Leroy
-> <christophe.leroy@c-s.fr> wrote:
->>
->> do_hres() is called from several places, so GCC doesn't inline
->> it at first.
->>
->> do_hres() takes a struct __kernel_timespec * parameter for
->> passing the result. In the 32 bits case, this parameter corresponds
->> to a local var in the caller. In order to provide a pointer
->> to this structure, the caller has to put it in its stack and
->> do_hres() has to write the result in the stack. This is suboptimal,
->> especially on RISC processor like powerpc.
->>
->> By making GCC inline the function, the struct __kernel_timespec
->> remains a local var using registers, avoiding the need to write and
->> read stack.
->>
->> The improvement is significant on powerpc.
->>
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->
-> Good idea, I can see how this ends up being an improvement
-> for most of the callers.
->
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+The following changes since commit 46cf053efec6a3a5f343fead837777efe8252a46:
 
-  https://lore.kernel.org/r/20191112012724.250792-3-dima@arista.com
+  Linux 5.5-rc3 (2019-12-22 17:02:23 -0800)
 
-On the way to be applied.
+are available in the Git repository at:
 
-Thanks,
+  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tags/tty-5.5-rc6
 
-        tglx
+for you to fetch changes up to c5ee0b3104e0b292d353e63fd31cb8c692645d8c:
+
+  serdev: Don't claim unsupported ACPI serial devices (2020-01-06 20:00:44 +0100)
+
+----------------------------------------------------------------
+TTY/Serial fixes for 5.5-rc6
+
+Here are two tty/serial driver fixes for 5.5-rc6.
+
+The first fixes a much much reported issue with a previous tty port link
+patch that is in your tree, and the second fixes a problem where the
+serdev driver would claim ACPI devices that it shouldn't be claiming.
+
+Both have been in linux-next for a while with no reported issues.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+----------------------------------------------------------------
+Punit Agrawal (1):
+      serdev: Don't claim unsupported ACPI serial devices
+
+Sudip Mukherjee (1):
+      tty: always relink the port
+
+ drivers/tty/serdev/core.c | 10 ++++++++++
+ drivers/tty/tty_port.c    |  3 +--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
