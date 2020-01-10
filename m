@@ -2,101 +2,142 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA52FC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02536C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5A22080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA9A92084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:49:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="EdWDeVOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbgAJHr5 (ORCPT
+        id S1726697AbgAJHtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:47:57 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60672 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726549AbgAJHr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:47:57 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 40D871CBDB19189F9994;
-        Fri, 10 Jan 2020 15:47:52 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.31) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 10 Jan 2020
- 15:47:43 +0800
-To:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <anshuman.khandual@arm.com>, <akpm@linux-foundation.org>,
-        <willy@infradead.org>, <yeyunfeng@huawei.com>,
-        <ard.biesheuvel@arm.com>, <tglx@linutronix.de>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <hushiyuan@huawei.com>, <linfeilong@huawei.com>
-From:   yeyunfeng <yeyunfeng@huawei.com>
-Subject: [PATCH] arm64: mm: support setting page attributes for debug
- situation
-Message-ID: <5a3ab728-b895-0930-9540-5e9c586e8858@huawei.com>
-Date:   Fri, 10 Jan 2020 15:47:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 10 Jan 2020 02:49:32 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.82]:12443 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726383AbgAJHtb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:49:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578642569;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=pcvtRMbzQeKjX8VK6T3YxfN1eTZUyf6gjoO45RlPAAM=;
+        b=EdWDeVOX03zzqym/0sFGoCil9l2pndZrWbjVoeH7qBAuM6kxu5sY7MZ8Y56saZ8asP
+        dBCcFjSKd5n0xTGx9XF6y0eudjkDUk+4jpPh+exGVUAW/KdKTR+2hu3avK3BfvjPrMxP
+        YBGVxKsQjhn2asqgm0JDQ27R9F9CcZDy6v7HRSZ+Hf3ZCnDWqKPMd5AgCUvkWJDY7O0i
+        RjiSQoGLam+9a83iIFu/9bYfcWeTXIJLCh8pqt3dHk0bj7Ft9zbucLG9F/3SFQ5nzmYU
+        lhTKPYDCgl2aWdS5NeqIBE+Y4hQSaXwsOzRhllZMTnIblHtGR25a6ZhEQ2uZgiEKDSXR
+        fSkQ==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
+        with ESMTPSA id u04585w0A7mN7ic
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 10 Jan 2020 08:48:23 +0100 (CET)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Julia Lawall <julia.lawall@inria.fr>
+Subject: Re: [PATCH v27 12/12] LRNG - add power-on and runtime self-tests
+Date:   Fri, 10 Jan 2020 08:48:22 +0100
+Message-ID: <4114256.cnP6sY5xnJ@tauon.chronox.de>
+In-Reply-To: <2f225250-c1e1-c6e1-026c-9c63853ab7d1@infradead.org>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <2355906.JbblJTOqSk@positron.chronox.de> <2f225250-c1e1-c6e1-026c-9c63853ab7d1@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.221.31]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When rodata_full is set or pagealloc debug is enabled, block mappings or
-contiguou hints are no longer used for linear address area. Therefore,
-support setting page attributes in this case is useful for debugging
-memory corruption problems.
+Am Freitag, 10. Januar 2020, 01:22:51 CET schrieb Randy Dunlap:
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
----
- arch/arm64/mm/pageattr.c | 18 ++++++++++++++----
- 1 file changed, 14 insertions(+), 4 deletions(-)
+Hi Randy,
 
-diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
-index 9ce7bd9d4d9c..823143534a93 100644
---- a/arch/arm64/mm/pageattr.c
-+++ b/arch/arm64/mm/pageattr.c
-@@ -65,6 +65,9 @@ static int change_memory_common(unsigned long addr, int numpages,
- 		WARN_ON_ONCE(1);
- 	}
+> Hi,
+>=20
+> On 1/9/20 12:35 AM, Stephan M=FCller wrote:
+> > ---
+> >=20
+> >  drivers/char/lrng/Kconfig         |  25 ++
+> >  drivers/char/lrng/Makefile        |   1 +
+> >  drivers/char/lrng/lrng_selftest.c | 418 ++++++++++++++++++++++++++++++
+> >  3 files changed, 444 insertions(+)
+> >  create mode 100644 drivers/char/lrng/lrng_selftest.c
+> >=20
+> > diff --git a/drivers/char/lrng/Kconfig b/drivers/char/lrng/Kconfig
+> > index 394066aa5a86..e9827e7df715 100644
+> > --- a/drivers/char/lrng/Kconfig
+> > +++ b/drivers/char/lrng/Kconfig
+> > @@ -175,4 +175,29 @@ config LRNG_TESTING
+> >=20
+> >  	  If unsure, say N.
+> >=20
+> > +config LRNG_SELFTEST
+> > +	bool "Enable power-on and on-demand self-tests"
+> > +	help
+> > +	  The power-on self tests are executed during boot time
+>=20
+> 	               self-tests
 
-+	if (!numpages)
-+		return 0;
-+
- 	/*
- 	 * Kernel VA mappings are always live, and splitting live section
- 	 * mappings into page mappings may cause TLB conflicts. This means
-@@ -81,11 +84,18 @@ static int change_memory_common(unsigned long addr, int numpages,
- 	area = find_vm_area((void *)addr);
- 	if (!area ||
- 	    end > (unsigned long)area->addr + area->size ||
--	    !(area->flags & VM_ALLOC))
-+	    !(area->flags & VM_ALLOC)) {
-+
-+		/*
-+		 * When rodata_full is set, or pagealloc debug is enabled,
-+		 * the linear address is mapped with NO_BLOCK_MAPPINGS or
-+		 * NO_CONT_MAPPINGS flags, so splitting is never needed.
-+		 */
-+		if (rodata_full || debug_pagealloc_enabled())
-+			return __change_memory_common(start, size, set_mask,
-+							clear_mask);
- 		return -EINVAL;
--
--	if (!numpages)
--		return 0;
-+	}
+=46ixed in all occurrences. Thank you.
+>=20
+> > +	  covering the ChaCha20 DRNG, the LFSR processing and the
+> > +	  time stamp management of the LRNG.
+> > +
+> > +	  The on-demand self-tests are triggered by writing any
+> > +	  value into the SysFS file selftest_status. At the same
+> > +	  time, when reading this file, the test status is
+> > +	  returned. A zero indicates that all tests were executed
+> > +	  successfully.
+> > +
+> > +	  If unsure, say Y.
+> > +
+> > +if LRNG_SELFTEST
+> > +
+> > +config LRNG_SELFTEST_PANIC
+> > +	bool "Panic the kernel upon self-test failure"
+> > +	help
+> > +	  If the option is enabled, the kernel is terminated if an
+> > +	  LRNG power-on self-test failure is detected.
+> > +
+> > +endif # LRNG_SELFTEST
+> > +
+> >=20
+> >  endif # LRNG
 
- 	/*
- 	 * If we are manipulating read-only permissions, apply the same
--- 
-2.7.4
+
+
+Ciao
+Stephan
+
 
