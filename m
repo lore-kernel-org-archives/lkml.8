@@ -2,97 +2,143 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9FAC33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:23:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9BB5C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE1E020721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:23:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578651822;
-	bh=tdMN/tJOAa9UpC1JBkHVFxNqh5Ppy7K4tbhwbRhLBnI=;
-	h=From:Date:Subject:To:Cc:List-ID:From;
-	b=zJ8Lv0IgXgC9DHxxDVZ1Ejktsvr/HM1l6hB5SnTLyN6xUjcsrSIIr4rIW/vvTUDbS
-	 DDTnc6PyF99onHRD+6c5s4hiIrLbS3aWTBz+0Noay1Ipij/BUC0508Pus/d9SsTfpM
-	 PRWmx9PiDRSoMwyBqj6mxh+dVrsgt+QBt6+xIOl8=
+	by mail.kernel.org (Postfix) with ESMTP id ABDDC20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:24:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="VZhVtot9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgAJKXl (ORCPT
+        id S1727529AbgAJKYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:23:41 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:34985 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727240AbgAJKXk (ORCPT
+        Fri, 10 Jan 2020 05:24:33 -0500
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:49467 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727168AbgAJKYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:23:40 -0500
-Received: by mail-ot1-f66.google.com with SMTP id i15so1467583oto.2;
-        Fri, 10 Jan 2020 02:23:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=rU/nzWaAkvUKYiZR6iZ7M9rKwj74Is/miQ7jfGzneiY=;
-        b=l8DQFgL/Kwe5QJCs5SBn68Xy1T/Cy4FjMdmDOpeVvwogevKP8Getm75hQ8oRTACFA/
-         zKa3enGTVeI9iTmkqvp6seV7XnyYu8JYYsDI1pGE4hWY152sQ4eeYSW92QIWn4l2fpD1
-         ZZDQdmoEWADxlScRCTEn+PA2G3f13xfijonL+4ZMGftuegG8kz+YFsBOOj50rGvM9C+Q
-         81fJL5RL1dhKZ6WOloqW6pZeBbF0H7yFdKM+EpRr1LJ39iyeW7QBWw192E2qKTfRKCq3
-         3tF78zlnyMctd3UpzSpzH7E10/2YqjNFDatVnWjs3ykdpM/7r/YdWjLEaJGwAKHna8aw
-         J0tQ==
-X-Gm-Message-State: APjAAAWL/3oQL3HQLiLDtxxoNtvJdV1coqJHydkWK9nLOjJUTDaVL8G/
-        qpWiBpO5XpCzaL9/vvqEEK4Ap4UxKvOiXaRlcKuaQqQ/
-X-Google-Smtp-Source: APXvYqwFQ1xvUY+GiJkE0vgl4fCLQfKuMnYxU9W2I8OYUiqIeuHcOwLzNlxLs+1ijGdLu70UoWShKm1JfUzJw+7GRxU=
-X-Received: by 2002:a9d:62c7:: with SMTP id z7mr1885562otk.189.1578651820305;
- Fri, 10 Jan 2020 02:23:40 -0800 (PST)
+        Fri, 10 Jan 2020 05:24:32 -0500
+Received: from [IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef]
+ ([IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id prSsilw4kpLtbprSviPwG2; Fri, 10 Jan 2020 11:24:30 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578651870; bh=oJOruGOI/Y+hFDMsJUJEz5BVUPQc/eBntsATfXiA7PE=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=VZhVtot9C3ctHD3oxwDihsjcC5QhQ/xbXvsqgatFT4cCUe6Z6Mh834QE3pSz0ZyVP
+         3r80VIXXOOhuVUgcS3DUyqedx+MrUHXdH/bqKSeRaha+xjoeUhxkt/rRpX/ElfqtiY
+         r6PhKgvIXA/L5NFTxayLlYvLjBAs8d4xlaO10nS2wECzWo4EiUDpK3EMFgjBFeut0p
+         UjMtuZiVykKinlknbITrDX4kZSwFWR12et/hyJHwJEDGq/hhrKRaquZoMVlNx57rCF
+         WcMgDMaqV118cV8drmlQcwZnyqNUADkSSyCzwkeAiWmN6E38gIB2UhmFrjULIvxrzC
+         eOD/ieKx2r2AA==
+Subject: Re: [RFC][PATCH 02/15] videobuf2: handle V4L2 buffer cache flags
+To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191217032034.54897-1-senozhatsky@chromium.org>
+ <20191217032034.54897-3-senozhatsky@chromium.org>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <ada2381c-2c1c-17c3-c190-48439ae1657a@xs4all.nl>
+Date:   Fri, 10 Jan 2020 11:24:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 10 Jan 2020 11:23:29 +0100
-Message-ID: <CAJZ5v0g27E7+wsrMXw1KhUQV6PZJhWcSQ5VG_HTZ5JgYejh15w@mail.gmail.com>
-Subject: [GIT PULL] Power management fixes for v5.5-rc6
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191217032034.54897-3-senozhatsky@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJ0SRNrWZnnf7QXyvMOEx3ymNUl2gdlEC5cFu0Qh9z7JR2EsnbXtT4MJnmLPsM93U135VuGtYRqy04ueiqADgivPuL5CH1GqcOObxBhnN5RcVSm4YQEB
+ LnO5iXLq4lrLjOJUubyxLJBaYlSeLc5YJ/3PVVsK41Owz2qkj6jlfka0ocCaL8btdzMZ4TigWRDdnKal2EW8hfGJybgME8bm09fycf2txJNxTgdz7DURVS+4
+ /0rmXQXmLm1NSRSjINM9PwX3btxpE5V9D46s0mlRpTbzVtvrXOglspB4VeHyGwb90RF0Kmc5c7Kyuh90Rpa0n3dd9BtO17vYqgfGtfq8tU08gTggyhK4xDCj
+ jKoucD4jsLYAs01uISET79ouSsJ0K0m1sDSR/xsUOXajld09NJf2O5X07WBIUrkFvqA7iBMBdC5uGIiiRKJigKS88ciPbRozp6pJhNDSgN20LhtDEL6JXQo9
+ eTSrVqkBZYGPLxm/3nNOFvFE1IM0GFXD7T1QDTWiVqQR7wPxMZi9Bw6XpJ+nfxlTKXFaSF9Xtk7H0wPOPCBeLVkg3tWn18ClCxyDdKbRICij/zrW7Np5jHZE
+ hh9gfNGBlpgiwDIrVeFqiO+rM48ZWb1GgCG2V+pw4AtpNdhcCcmB/WImtMSBp6JQnfM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
+> Set video buffer cache management flags corresponding to V4L2 cache
+> flags.
+> 
+> Both ->prepare() and ->finish() cache management hints should be
+> passed during this stage (buffer preparation), because there is no
+> other way for user-space to skip ->finish() cache flush.
+> 
+> There are two possible alternative approaches:
+> - The first one is to move cache sync from ->finish() to dqbuf().
+>   But this breaks some drivers, that need to fix-up buffers before
+>   dequeueing them.
+> 
+> - The second one is to move ->finish() call from ->done() to dqbuf.
 
-Please pull from the tag
+Please combine this patch with patch 13/15!
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-5.5-rc6
+> 
+> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> ---
+>  .../media/common/videobuf2/videobuf2-v4l2.c   | 22 +++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/media/common/videobuf2/videobuf2-v4l2.c b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> index e652f4318284..2fccfe2a57f8 100644
+> --- a/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> +++ b/drivers/media/common/videobuf2/videobuf2-v4l2.c
+> @@ -337,6 +337,27 @@ static int vb2_fill_vb2_v4l2_buffer(struct vb2_buffer *vb, struct v4l2_buffer *b
+>  	return 0;
+>  }
+>  
+> +static void set_buffer_cache_hints(struct vb2_queue *q,
+> +				   struct vb2_buffer *vb,
+> +				   struct v4l2_buffer *b)
+> +{
+> +	vb->need_cache_sync_on_prepare = 1;
+> +
+> +	if (q->dma_dir != DMA_TO_DEVICE)
 
-with top-most commit 10674d97c4e266e8c50ce794d1c470c26228d52b
+What should be done when dma_dir == DMA_BIDIRECTIONAL?
 
- Merge branch 'powercap'
+> +		vb->need_cache_sync_on_finish = 1;
+> +	else
+> +		vb->need_cache_sync_on_finish = 0;
+> +
+> +	if (!q->allow_cache_hints)
+> +		return;
+> +
+> +	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_INVALIDATE)
+> +		vb->need_cache_sync_on_finish = 0;
+> +
+> +	if (b->flags & V4L2_BUF_FLAG_NO_CACHE_CLEAN)
+> +		vb->need_cache_sync_on_prepare = 0;
+> +}
+> +
+>  static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *mdev,
+>  				    struct v4l2_buffer *b, bool is_prepare,
+>  				    struct media_request **p_req)
+> @@ -381,6 +402,7 @@ static int vb2_queue_or_prepare_buf(struct vb2_queue *q, struct media_device *md
+>  	}
+>  
+>  	if (!vb->prepared) {
+> +		set_buffer_cache_hints(q, vb, b);
+>  		/* Copy relevant information provided by the userspace */
+>  		memset(vbuf->planes, 0,
+>  		       sizeof(vbuf->planes[0]) * vb->num_planes);
+> 
 
-on top of commit c79f46a282390e0f5b306007bf7b11a46d529538
+Regards,
 
- Linux 5.5-rc5
-
-to receive power management fixes for 5.5-rc6.
-
-These prevent the cpufreq-dt driver from probing Tegra20/30 (Dmitry
-Osipenko) and prevent the Intel RAPL power capping driver from
-crashing during CPU initialization due to a NULL pointer dereference
-if the processor model in use is not known to it (Harry Pan).
-
-Thanks!
-
-
----------------
-
-Dmitry Osipenko (1):
-      cpufreq: dt-platdev: Blacklist NVIDIA Tegra20 and Tegra30 SoCs
-
-Harry Pan (1):
-      powercap: intel_rapl: add NULL pointer check to rapl_mmio_cpu_online()
-
----------------
-
- drivers/cpufreq/cpufreq-dt-platdev.c | 2 ++
- drivers/powercap/intel_rapl_common.c | 3 +++
- 2 files changed, 5 insertions(+)
+	Hans
