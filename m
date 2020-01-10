@@ -2,53 +2,60 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADAFC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BB9C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF86820842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2FAE20678
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578693973;
-	bh=C9LryPPI8PsxaJh91bW40PmXS34SlvRrDvM0ud5fJqA=;
+	s=default; t=1578693975;
+	bh=2+xHZKLnRdyQ7b/LhL/vxI6E5dI58k/5zYjcwRCq0xA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bUkpupF24MIjvOMKF7JYn81vGrX2L9Kxxc6SJB0IKdQD0awb/J6PMzwJZ0alOd5OQ
-	 dcwTikTCASvHDhNEG6Bu0j/PWJTgKQ6RF2/Bcex0c6eT4GL1F9vdrDwDEXB34xWBiL
-	 EJq7JLZ+lbY81irI1EtRlM8zQD2QIvj7uu4pRps0=
+	b=0jAWYUsItyxFwQy1P2nUen7H95ylz3J5GxwLj3uLKvJKTus6poGVBRiZvfsukcITe
+	 d4j84Mb1xTBp6NfPOoxq4aYbLa7VrxpdWY7rXTFz3ex+ZUNBxQRA2WnkZBMfH5vLjm
+	 DEcOiTZoVBJIjTeZJqZEf3nyGfk8+YzIroff2tMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbgAJWGN (ORCPT
+        id S1728219AbgAJWGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:06:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52528 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 17:06:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbgAJWGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:06:05 -0500
+        id S1728104AbgAJWGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:06:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A1192072E;
-        Fri, 10 Jan 2020 22:06:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DDF62082E;
+        Fri, 10 Jan 2020 22:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693964;
-        bh=C9LryPPI8PsxaJh91bW40PmXS34SlvRrDvM0ud5fJqA=;
+        s=default; t=1578693969;
+        bh=2+xHZKLnRdyQ7b/LhL/vxI6E5dI58k/5zYjcwRCq0xA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZTPpOg+z8ylhfNPthp7K7G8VEmLrZOn9Tzu1zOPyCwAGfVXkGu9/ePT1ofmIHm/f
-         WhyxvsmiMKPvn4zR1If8SsOKswbUQSjKZlJUS3HSxjTlcYAU0ZV6dYtDlX++sUma7N
-         8TbIX/xHRF4AAJAwCNagguolrYTQMKpAD3dXwVUU=
+        b=Sjq0swP5H2RUxmYVYOT0N7GxaZ/CvZ3fU0v5EeBak0VQy7mSBalFwyOhvzioAQe0I
+         /Vq4ASsXgcjw4TcIbNPJbqJInFzdsnmKf9DHdYlJ58m3Ge2JQLKGYCaKvB/KTB9ysC
+         EMgvmZC7JmpSQwQdIXak4lMouAdJPxTY6xbB2MeI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        Alexander Barabash <alexander.barabash@dell.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 08/11] ioat: ioat_alloc_ring() failure handling.
-Date:   Fri, 10 Jan 2020 17:05:52 -0500
-Message-Id: <20200110220556.28505-7-sashal@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Sid Manning <sidneym@quicinc.com>,
+        Brian Cain <bcain@codeaurora.org>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-hexagon@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: [PATCH AUTOSEL 4.19 10/11] hexagon: work around compiler crash
+Date:   Fri, 10 Jan 2020 17:05:54 -0500
+Message-Id: <20200110220556.28505-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200110220556.28505-1-sashal@kernel.org>
 References: <20200110220556.28505-1-sashal@kernel.org>
@@ -61,43 +68,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-[ Upstream commit b0b5ce1010ffc50015eaec72b0028aaae3f526bb ]
+[ Upstream commit 63e80314ab7cf4783526d2e44ee57a90514911c9 ]
 
-If dma_alloc_coherent() returns NULL in ioat_alloc_ring(), ring
-allocation must not proceed.
+Clang cannot translate the string "r30" into a valid register yet.
 
-Until now, if the first call to dma_alloc_coherent() in
-ioat_alloc_ring() returned NULL, the processing could proceed, failing
-with NULL-pointer dereferencing further down the line.
-
-Signed-off-by: Alexander Barabash <alexander.barabash@dell.com>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/75e9c0e84c3345d693c606c64f8b9ab5@x13pwhopdag1307.AMER.DELL.COM
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/755
+Link: http://lkml.kernel.org/r/20191028155722.23419-1-ndesaulniers@google.com
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Suggested-by: Sid Manning <sidneym@quicinc.com>
+Reviewed-by: Brian Cain <bcain@codeaurora.org>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Richard Fontana <rfontana@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/dma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/hexagon/kernel/stacktrace.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 23fb2fa04000..b94cece58b98 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -388,10 +388,11 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
+diff --git a/arch/hexagon/kernel/stacktrace.c b/arch/hexagon/kernel/stacktrace.c
+index 41866a06adf7..ec4ef682923d 100644
+--- a/arch/hexagon/kernel/stacktrace.c
++++ b/arch/hexagon/kernel/stacktrace.c
+@@ -24,8 +24,6 @@
+ #include <linux/thread_info.h>
+ #include <linux/module.h>
  
- 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
- 						 SZ_2M, &descs->hw, flags);
--		if (!descs->virt && (i > 0)) {
-+		if (!descs->virt) {
- 			int idx;
+-register unsigned long current_frame_pointer asm("r30");
+-
+ struct stackframe {
+ 	unsigned long fp;
+ 	unsigned long rets;
+@@ -43,7 +41,7 @@ void save_stack_trace(struct stack_trace *trace)
  
- 			for (idx = 0; idx < i; idx++) {
-+				descs = &ioat_chan->descs[idx];
- 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
- 						  descs->virt, descs->hw);
- 				descs->virt = NULL;
+ 	low = (unsigned long)task_stack_page(current);
+ 	high = low + THREAD_SIZE;
+-	fp = current_frame_pointer;
++	fp = (unsigned long)__builtin_frame_address(0);
+ 
+ 	while (fp >= low && fp <= (high - sizeof(*frame))) {
+ 		frame = (struct stackframe *)fp;
 -- 
 2.20.1
 
