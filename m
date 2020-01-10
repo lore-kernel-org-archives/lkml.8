@@ -2,305 +2,75 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E543BC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:30:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2080EC32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEC382077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:30:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED3E22073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 02:33:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730913AbgAJCae (ORCPT
+        id S1730884AbgAJCdk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 21:30:34 -0500
-Received: from mga09.intel.com ([134.134.136.24]:11441 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730828AbgAJCae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 21:30:34 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 18:30:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="371478724"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga004.jf.intel.com with ESMTP; 09 Jan 2020 18:30:30 -0800
-Date:   Fri, 10 Jan 2020 10:30:29 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Rik van Riel <riel@redhat.com>,
-        Li Xinhai <lixinhai.lxh@gmail.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v2 1/2] mm/rmap: fix and simplify reusing mergeable
- anon_vma as parent when fork
-Message-ID: <20200110023029.GB16823@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <157839239609.694.10268055713935919822.stgit@buzz>
- <20200108023211.GC13943@richard>
- <b019b294-61fa-85fc-cf43-c6d3e9fddc71@yandex-team.ru>
- <20200109025240.GA2000@richard>
- <b8269278-85b5-9fd2-9bce-6defffcad6e8@yandex-team.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b8269278-85b5-9fd2-9bce-6defffcad6e8@yandex-team.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Thu, 9 Jan 2020 21:33:40 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:60712 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730823AbgAJCdk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 21:33:40 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id ADA6615736417;
+        Thu,  9 Jan 2020 18:33:39 -0800 (PST)
+Date:   Thu, 09 Jan 2020 18:33:39 -0800 (PST)
+Message-Id: <20200109.183339.173768060466817001.davem@davemloft.net>
+To:     mst@redhat.com
+Cc:     linux-kernel@vger.kernel.org, adelva@google.com,
+        willemdebruijn.kernel@gmail.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2] virtio_net: CTRL_GUEST_OFFLOADS depends on CTRL_VQ
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200105132120.92370-1-mst@redhat.com>
+References: <20200105132120.92370-1-mst@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 09 Jan 2020 18:33:40 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 11:54:21AM +0300, Konstantin Khlebnikov wrote:
->
->
->On 09/01/2020 05.52, Wei Yang wrote:
->> On Wed, Jan 08, 2020 at 01:40:44PM +0300, Konstantin Khlebnikov wrote:
->> > On 08/01/2020 05.32, Wei Yang wrote:
->> > > On Tue, Jan 07, 2020 at 01:19:56PM +0300, Konstantin Khlebnikov wrote:
->> > > > This fixes some misconceptions in commit 4e4a9eb92133 ("mm/rmap.c: reuse
->> > > > mergeable anon_vma as parent when fork"). It merges anon-vma in unexpected
->> > > > way but fortunately still produces valid anon-vma tree, so nothing crashes.
->> > > > 
->> > > > If in parent VMAs: SRC1 SRC2 .. SRCn share anon-vma ANON0, then after fork
->> > > > before all patches in child process related VMAs: DST1 DST2 .. DSTn will
->> > > > fork indepndent anon-vmas: ANON1 ANON2 .. ANONn (each is child of ANON0).
->> > > > Before this patch only DST1 will fork new ANON1 and following DST2 .. DSTn
->> > > > will share parent's ANON0 (i.e. anon-vma tree is valid but isn't optimal).
->> > > > With this patch DST1 will create new ANON1 and DST2 .. DSTn will share it.
->> > > > 
->> > > > Root problem caused by initialization order in dup_mmap(): vma->vm_prev
->> > > > is set after calling anon_vma_fork(). Thus in anon_vma_fork() it points to
->> > > > previous VMA in parent mm.
->> > > > 
->> > > > Second problem is hidden behind first one: assumption "Parent has vm_prev,
->> > > > which implies we have vm_prev" is wrong if first VMA in parent mm has set
->> > > > flag VM_DONTCOPY. Luckily prev->anon_vma doesn't dereference NULL pointer
->> > > > because in current code 'prev' actually is same as 'pprev'.
->> > > > 
->> > > > Third hidden problem is linking between VMA and anon-vmas whose pages it
->> > > > could contain. Loop in anon_vma_clone() attaches only parent's anon-vmas,
->> > > > shared anon-vma isn't attached. But every mapped page stays reachable in
->> > > > rmap because we erroneously share anon-vma from parent's previous VMA.
->> > > > 
->> > > > This patch moves sharing logic out of anon_vma_clone() into more specific
->> > > > anon_vma_fork() because this supposed to work only at fork() and simply
->> > > > reuses anon_vma from previous VMA if it is forked from the same anon-vma.
->> > > > 
->> > > > Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
->> > > > Reported-by: Li Xinhai <lixinhai.lxh@gmail.com>
->> > > > Fixes: 4e4a9eb92133 ("mm/rmap.c: reuse mergeable anon_vma as parent when fork")
->> > > > Link: https://lore.kernel.org/linux-mm/CALYGNiNzz+dxHX0g5-gNypUQc3B=8_Scp53-NTOh=zWsdUuHAw@mail.gmail.com/T/#t
->> > > > ---
->> > > > include/linux/rmap.h |    3 ++-
->> > > > kernel/fork.c        |    2 +-
->> > > > mm/rmap.c            |   23 +++++++++--------------
->> > > > 3 files changed, 12 insertions(+), 16 deletions(-)
->> > > > 
->> > > > diff --git a/include/linux/rmap.h b/include/linux/rmap.h
->> > > > index 988d176472df..560e4480dcd0 100644
->> > > > --- a/include/linux/rmap.h
->> > > > +++ b/include/linux/rmap.h
->> > > > @@ -143,7 +143,8 @@ void anon_vma_init(void);	/* create anon_vma_cachep */
->> > > > int  __anon_vma_prepare(struct vm_area_struct *);
->> > > > void unlink_anon_vmas(struct vm_area_struct *);
->> > > > int anon_vma_clone(struct vm_area_struct *, struct vm_area_struct *);
->> > > > -int anon_vma_fork(struct vm_area_struct *, struct vm_area_struct *);
->> > > > +int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma,
->> > > > +		  struct vm_area_struct *prev);
->> > > > 
->> > > > static inline int anon_vma_prepare(struct vm_area_struct *vma)
->> > > > {
->> > > > diff --git a/kernel/fork.c b/kernel/fork.c
->> > > > index 2508a4f238a3..c33626993831 100644
->> > > > --- a/kernel/fork.c
->> > > > +++ b/kernel/fork.c
->> > > > @@ -556,7 +556,7 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
->> > > > 			tmp->anon_vma = NULL;
->> > > > 			if (anon_vma_prepare(tmp))
->> > > > 				goto fail_nomem_anon_vma_fork;
->> > > > -		} else if (anon_vma_fork(tmp, mpnt))
->> > > > +		} else if (anon_vma_fork(tmp, mpnt, prev))
->> > > > 			goto fail_nomem_anon_vma_fork;
->> > > > 		tmp->vm_flags &= ~(VM_LOCKED | VM_LOCKONFAULT);
->> > > > 		tmp->vm_next = tmp->vm_prev = NULL;
->> > > > diff --git a/mm/rmap.c b/mm/rmap.c
->> > > > index b3e381919835..3c1e04389291 100644
->> > > > --- a/mm/rmap.c
->> > > > +++ b/mm/rmap.c
->> > > > @@ -269,19 +269,6 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->> > > > {
->> > > > 	struct anon_vma_chain *avc, *pavc;
->> > > > 	struct anon_vma *root = NULL;
->> > > > -	struct vm_area_struct *prev = dst->vm_prev, *pprev = src->vm_prev;
->> > > > -
->> > > > -	/*
->> > > > -	 * If parent share anon_vma with its vm_prev, keep this sharing in in
->> > > > -	 * child.
->> > > > -	 *
->> > > > -	 * 1. Parent has vm_prev, which implies we have vm_prev.
->> > > > -	 * 2. Parent and its vm_prev have the same anon_vma.
->> > > > -	 */
->> > > > -	if (!dst->anon_vma && src->anon_vma &&
->> > > > -	    pprev && pprev->anon_vma == src->anon_vma)
->> > > > -		dst->anon_vma = prev->anon_vma;
->> > > > -
->> > > > 
->> > > > 	list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
->> > > > 		struct anon_vma *anon_vma;
->> > > > @@ -332,7 +319,8 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->> > > >    * the corresponding VMA in the parent process is attached to.
->> > > >    * Returns 0 on success, non-zero on failure.
->> > > >    */
->> > > > -int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
->> > > > +int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma,
->> > > > +		  struct vm_area_struct *prev)
->> > > > {
->> > > > 	struct anon_vma_chain *avc;
->> > > > 	struct anon_vma *anon_vma;
->> > > > @@ -342,6 +330,13 @@ int anon_vma_fork(struct vm_area_struct *vma, struct vm_area_struct *pvma)
->> > > > 	if (!pvma->anon_vma)
->> > > > 		return 0;
->> > > > 
->> > > > +	/* Share anon_vma with previous VMA if it has the same parent. */
->> > > > +	if (prev && prev->anon_vma &&
->> > > > +	    prev->anon_vma->parent == pvma->anon_vma) {
->> > > > +		vma->anon_vma = prev->anon_vma;
->> > > > +		return anon_vma_clone(vma, prev);
->> > > > +	}
->> > > > +
->> > > 
->> > > I am afraid this one change the intended behavior. Let's put a chart to
->> > > describe.
->> > > 
->> > > Commit 4e4a9eb92133 ("mm/rmap.c: reusemergeable anon_vma as parent when
->> > > fork") tries to improve the following situation.
->> > > 
->> > > Before the commit, the behavior is like this:
->> > > 
->> > > Parent process:
->> > > 
->> > >         +-----+
->> > >         | pav |<-----------------+----------------------+
->> > >         +-----+                  |                      |
->> > >                                  |                      |
->> > >                      +-----------+          +-----------+
->> > >                      |pprev      |          |pvma       |
->> > >                      +-----------+          +-----------+
->> > > 
->> > > Child Process
->> > > 
->> > > 
->> > >         +-----+                     +-----+
->> > >         | av1 |<-----------------+  | av2 |<------------+
->> > >         +-----+                  |  +-----+             |
->> > >                                  |                      |
->> > >                      +-----------+          +-----------+
->> > >                      |prev       |          |vma        |
->> > >                      +-----------+          +-----------+
->> > > 
->> > > 
->> > > Parent pprev and pvma share the same anon_vma due to
->> > > find_mergeable_anon_vma(). While the anon_vma_clone() would pick up different
->> > > anon_vma for child process's vma.
->> > > 
->> > > The purpose of my commit is to give child process the following shape.
->> > > 
->> > >         +-----+
->> > >         | av  |<-----------------+----------------------+
->> > >         +-----+                  |                      |
->> > >                                  |                      |
->> > >                      +-----------+          +-----------+
->> > >                      |prev       |          |vma        |
->> > >                      +-----------+          +-----------+
->> > > 
->> > > After this, we reduce the extra "av2" for child process. But yes, because of
->> > > the two reasons you found, it didn't do the exact thing.
->> > > 
->> > > While if my understanding is correct, the anon_vma_clone() would pick up any
->> > > anon_vma in its process tree, except parent's. If this fails to get a reusable
->> > > one, anon_vma_fork() would allocate one, whose parent is pvma->anon_vma.
->> > > 
->> > > Let me summarise original behavior:
->> > > 
->> > >     * if anon_vma_clone succeed, it find one anon_vma in the process tree, but
->> > >       it could not be pvma->anon_vma
->> > >     * if anon_vma_clone fail, it will allocate a new anon_vma and its parent is
->> > >       pvma->anon_vam
->> > > 
->> > > Then take a look into your code here.
->> > > 
->> > > "prev->anon_vma->parent == pvma->anon_vma" means prev->anon_vma parent is
->> > > pvma's anon_vma. If my understanding is correct, this just match the second
->> > > case. For "prev", we didn't find a reusable anon_vma and allocate a new one.
->> > > 
->> > > But how about the first case? prev reuse an anon_vma in the process tree which
->> > > is not parent's?
->> > 
->> > If anon_vma_clone() pick old anon-vma for first vma in sharing chain (prev)
->> > then second vma (vma) will fork new anon-vma (unless pick another old anon-vma),
->> > then third vma will share it. And so on.
->> 
->> No, I am afraid you are not correct here. Or I don't understand your sentence.
->> 
->> This is my understanding about the behavior before my commit. Suppose av1 and
->> av2 are both reused from old anon_vma. And if my understanding is correct,
->> they are different from pvma->anon_vma. Then how your code match this
->> situatioin?
->> 
->>          +-----+                     +-----+
->>          | av1 |<-----------------+  | av2 |<------------+
->>          +-----+                  |  +-----+             |
->>                                   |                      |
->>                       +-----------+          +-----------+
->>                       |prev       |          |vma        |
->>                       +-----------+          +-----------+
->> 
->> Would you explain your understanding the second and third vma in your
->> sentence? Which case you are trying to illustrate?
->
->series of vma in parent with shared AV:
->
->SRC1 - AV0
->SRC2 - AV0
->SRC3 - AV0
->...
->SRCn - AV0
->
->in child after fork
->
->DST1 - AV_OLD_1 (some old vma, picked by anon_vma_clone) plus DST1 is attached to same AVs as SRC1
->DST2 - AV_OLD_2 (other old vma) plus DST1 is attached to same AVs as SRC2
->DST2 - AV1 prev AV parent does not match AV0, no old vma found for reusing -> allocate new one (child of AV0)
->DST3 - AV1 - DST2->AV->parent == SRC3->AV (AV0) -> share AV with prev
->DST4 - AV1 - same thing
->...
->DSTn - AV1
->
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Date: Sun, 5 Jan 2020 08:22:07 -0500
 
-Yes, your code works for DST3..DSTn. They will pick up AV1 since
-(DST2->AV->parent == SRC3->AV).
+> The only way for guest to control offloads (as enabled by
+> VIRTIO_NET_F_CTRL_GUEST_OFFLOADS) is by sending commands
+> through CTRL_VQ. So it does not make sense to
+> acknowledge VIRTIO_NET_F_CTRL_GUEST_OFFLOADS without
+> VIRTIO_NET_F_CTRL_VQ.
+> 
+> The spec does not outlaw devices with such a configuration, so we have
+> to support it. Simply clear VIRTIO_NET_F_CTRL_GUEST_OFFLOADS.
+> Note that Linux is still crashing if it tries to
+> change the offloads when there's no control vq.
+> That needs to be fixed by another patch.
+> 
+> Reported-by: Alistair Delva <adelva@google.com>
+> Reported-by: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+> Fixes: 3f93522ffab2 ("virtio-net: switch off offloads on demand if possible on XDP set")
+> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> ---
+> 
+> Same patch as v1 but update documentation so it's clear it's not
+> enough to fix the crash.
 
-My question is why DST1 and DST2 has different AV? The purpose of my patch
-tries to make child has the same topology and parent. So the ideal look of
-child is:
+Where are we with this patch?  There seems to still be some unresolved
+discussion about how we should actually handle this case.
 
-DST1 - AV1
-DST2 - AV1
-DST2 - AV1
-DST3 - AV1
-DST4 - AV1
-
-Would you mind putting more words on DST1 and DST2? I didn't fully understand
-the logic here.
-
-Thanks
-
--- 
-Wei Yang
-Help you, Help me
+Thanks.
