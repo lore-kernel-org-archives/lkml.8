@@ -6,77 +6,65 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B69ABC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA59C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:26:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A8D2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FC912077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:26:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Gp+lCFbh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cvmCthiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgAJOW6 (ORCPT
+        id S1727984AbgAJO0n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:22:58 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:59604 "EHLO vps0.lunn.ch"
+        Fri, 10 Jan 2020 09:26:43 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:59620 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgAJOW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:22:58 -0500
+        id S1727795AbgAJO0n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 09:26:43 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
         s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
         Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
         Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
         :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
         List-Post:List-Owner:List-Archive;
-        bh=/LqUWTGBt5gIEmNEJ7QzFyPyiWRNbMxwiltxq0x8igc=; b=Gp+lCFbhq8KoEC210hcrrMI+wF
-        0JmIiELjl9bsPWXOe+seRjm5/SPB27amgsTcYWk3K7slz6nTL7Ap4HOtQKZQxxSen6qMer/4I6JEo
-        yAvQ+UulpPXYSX6w61WiKyIYOL/UICkN8rDzumQnp6aSzIjQp9ojDzMowUF4uRGZOLNk=;
+        bh=cWGwCc62opavZnegbiqCMtfyBG1T7+ozcmU/luokREM=; b=cvmCthiCJhkSj4eL7Otj+ZmXlu
+        Kd7YxwWKApotRkPUWC4Z2aDxzr1GfvUwJ6VIGbZjH2N6HZhIu9MRo8g5sRf7S3FtzgP8g5hVNdte/
+        GavVqoBmtcdYHEhYruYVoxNaNFqYvlZ2EoaVGt7aWyuHjG9yd52D7vya027Tg0En60i8=;
 Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
         (envelope-from <andrew@lunn.ch>)
-        id 1ipvBa-0007bd-5w; Fri, 10 Jan 2020 15:22:50 +0100
-Date:   Fri, 10 Jan 2020 15:22:50 +0100
+        id 1ipvFE-0007eu-Kp; Fri, 10 Jan 2020 15:26:36 +0100
+Date:   Fri, 10 Jan 2020 15:26:36 +0100
 From:   Andrew Lunn <andrew@lunn.ch>
 To:     Andre Przywara <andre.przywara@arm.com>
 Cc:     "David S . Miller" <davem@davemloft.net>,
         Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
         Michal Simek <michal.simek@xilinx.com>,
         Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/14] net: axienet: Autodetect 64-bit DMA capability
-Message-ID: <20200110142250.GH19739@lunn.ch>
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: Re: [PATCH 07/14] net: axienet: Fix SGMII support
+Message-ID: <20200110142636.GI19739@lunn.ch>
 References: <20200110115415.75683-1-andre.przywara@arm.com>
- <20200110115415.75683-13-andre.przywara@arm.com>
- <20200110140852.GF19739@lunn.ch>
- <20200110141303.2e5863ab@donnerap.cambridge.arm.com>
+ <20200110115415.75683-8-andre.przywara@arm.com>
+ <20200110140415.GE19739@lunn.ch>
+ <20200110142038.2ed094ba@donnerap.cambridge.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200110141303.2e5863ab@donnerap.cambridge.arm.com>
+In-Reply-To: <20200110142038.2ed094ba@donnerap.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 02:13:03PM +0000, Andre Przywara wrote:
-> On Fri, 10 Jan 2020 15:08:52 +0100
-> Andrew Lunn <andrew@lunn.ch> wrote:
-> 
-> Hi Andrew,
-> 
-> thanks for having a look!
-> 
-> > > To autodetect this configuration, at probe time we write all 1's to such
-> > > an MSB register, and see if any bits stick.  
-> > 
-> > So there is no register you can read containing the IP version?
-> 
-> There is, and I actually read this before doing this check. But the 64-bit DMA capability is optional even in this revision. It depends on what you give it as the address width. If you say 32, the IP config tool disables the 64-bit capability completely, so it stays compatible with older revisions.
-> Anything beyond 32 will enable the MSB register and will also require you to write to them.
+> But I have no clue whether that would trigger on a link status
+> *change*.
 
-So you are saying there is no way to enumerate the synthesised
-configuration of the IP. Great :-(
+It should do, but without testing...
 
-Do Xilinx at least document you can discover the DMA size by writing
-into these upper bits? Does Xilinx own 'vendor crap' driver do this?
+> Is there a way to test this without pulling the cable? My board sits
+> in a data centre, so is not easily accessible to me.
 
-Thanks
-	Andrew
+Down and up the other end?
+
+     Andrew
