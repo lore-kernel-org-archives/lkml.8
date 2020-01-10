@@ -2,99 +2,91 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54553C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6F6C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 287AA206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901BE2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:10:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728683AbgAJSJ0 (ORCPT
+        id S1728668AbgAJSKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:09:26 -0500
-Received: from ms.lwn.net ([45.79.88.28]:52276 "EHLO ms.lwn.net"
+        Fri, 10 Jan 2020 13:10:54 -0500
+Received: from mga02.intel.com ([134.134.136.20]:2311 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbgAJSJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:09:26 -0500
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 1C4A577D;
-        Fri, 10 Jan 2020 18:09:25 +0000 (UTC)
-Date:   Fri, 10 Jan 2020 11:09:23 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Cc:     miklos@szeredi.hu, markus.heiser@darmarit.de,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH v4] Documentation: filesystems: convert fuse to RST
-Message-ID: <20200110110923.31fc56e5@lwn.net>
-In-Reply-To: <20191231185110.809467-1-dwlsalmeida@gmail.com>
-References: <20191231185110.809467-1-dwlsalmeida@gmail.com>
-Organization: LWN.net
+        id S1726346AbgAJSKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 13:10:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 10:10:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
+   d="scan'208";a="423676880"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 10 Jan 2020 10:10:52 -0800
+Date:   Fri, 10 Jan 2020 10:10:53 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
+        edwin.zhai@intel.com
+Subject: Re: [RESEND PATCH v10 05/10] x86: spp: Introduce user-space SPP
+ IOCTLs
+Message-ID: <20200110181053.GH21485@linux.intel.com>
+References: <20200102061319.10077-1-weijiang.yang@intel.com>
+ <20200102061319.10077-6-weijiang.yang@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102061319.10077-6-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 31 Dec 2019 15:51:10 -0300
-"Daniel W. S. Almeida" <dwlsalmeida@gmail.com> wrote:
-
-> From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+On Thu, Jan 02, 2020 at 02:13:14PM +0800, Yang Weijiang wrote:
+> User application, e.g., QEMU or VMI, must initialize SPP
+> before gets/sets SPP subpages, the dynamic initialization is to
+> reduce the extra storage cost if the SPP feature is not not used.
 > 
-> Converts fuse.txt to reStructuredText format, improving the presentation
-> without changing much of the underlying content.
+> Co-developed-by: He Chen <he.chen@linux.intel.com>
+> Signed-off-by: He Chen <he.chen@linux.intel.com>
+> Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
+>  arch/x86/include/asm/kvm_host.h |  4 ++
+>  arch/x86/kvm/mmu/spp.c          | 44 +++++++++++++++
+>  arch/x86/kvm/mmu/spp.h          |  9 ++++
+>  arch/x86/kvm/vmx/vmx.c          | 15 ++++++
+>  arch/x86/kvm/x86.c              | 95 ++++++++++++++++++++++++++++++++-
+>  include/uapi/linux/kvm.h        |  3 ++
+>  6 files changed, 169 insertions(+), 1 deletion(-)
 > 
-> Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-
-So I note that the last non-typo-fix change to this document happened in
-2006, which leads me to suspect that it might be just a wee bit out of
-date.  Miklos, what's the story here?  Should we put a warning at the top?
-
-Otherwise I really only have one other comment on the conversion...
-
-
->  .../filesystems/{fuse.txt => fuse.rst}        | 174 ++++++++----------
->  Documentation/filesystems/index.rst           |   1 +
->  MAINTAINERS                                   |   2 +-
->  3 files changed, 80 insertions(+), 97 deletions(-)
->  rename Documentation/filesystems/{fuse.txt => fuse.rst} (79%)
-> 
-> diff --git a/Documentation/filesystems/fuse.txt b/Documentation/filesystems/fuse.rst
-> similarity index 79%
-> rename from Documentation/filesystems/fuse.txt
-> rename to Documentation/filesystems/fuse.rst
-> index 13af4a49e7db..aa7d6f506b8d 100644
-> --- a/Documentation/filesystems/fuse.txt
-> +++ b/Documentation/filesystems/fuse.rst
-> @@ -1,41 +1,39 @@
-> -Definitions
-> -~~~~~~~~~~~
-> +==============
-> +FUSE
-> +==============
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index f5145b86d620..c7a9f03f39a7 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1238,6 +1238,10 @@ struct kvm_x86_ops {
 >  
-> -Userspace filesystem:
-> +Definitions
-> +===========
->  
-> +``Userspace filesystem:``
->    A filesystem in which data and metadata are provided by an ordinary
->    userspace process.  The filesystem can be accessed normally through
->    the kernel interface.
+>  	bool (*apic_init_signal_blocked)(struct kvm_vcpu *vcpu);
+>  	int (*enable_direct_tlbflush)(struct kvm_vcpu *vcpu);
+> +
+> +	int (*init_spp)(struct kvm *kvm);
+> +	int (*flush_subpages)(struct kvm *kvm, u64 gfn, u32 npages);
+> +	int (*get_inst_len)(struct kvm_vcpu *vcpu);
 
-I think that ``literal text`` should really only be used for literal text -
-something that the user types, function names, etc.  Here you're defining a
-term, which is different.  You could use **emphasis** as you have in other
-places, but I also honestly think it doesn't need special markup at all.
+If this is necessary, which hopefully it isn't, then get_insn_len() to be
+consistent with other KVM nomenclature.
 
-Thanks,
-
-jon
+A comment for the series overall, it needs a lot of work to properly order
+code between patches.  E.g. this patch introduces get_inst_len() without
+any justification in the changelog and without a user.  At best it's
+confusing, at worst this series will be impossible to bisect.
