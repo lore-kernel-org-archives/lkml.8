@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A24E1C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA0BC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FB620848
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:30:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A9920848
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgAJTah (ORCPT
+        id S1728983AbgAJTaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:30:37 -0500
-Received: from mga11.intel.com ([192.55.52.93]:46986 "EHLO mga11.intel.com"
+        Fri, 10 Jan 2020 14:30:11 -0500
+Received: from mga18.intel.com ([134.134.136.126]:33892 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728924AbgAJTaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:30:12 -0500
+        id S1728924AbgAJTaG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 14:30:06 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:30:12 -0800
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:30:05 -0800
 X-IronPort-AV: E=Sophos;i="5.69,418,1571727600"; 
-   d="scan'208";a="304262908"
+   d="scan'208";a="396531775"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:30:11 -0800
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 11:30:04 -0800
 From:   ira.weiny@intel.com
 To:     linux-kernel@vger.kernel.org
 Cc:     Ira Weiny <ira.weiny@intel.com>,
@@ -38,9 +38,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>,
         "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
         linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH V2 10/12] fs/xfs: Fix truncate up
-Date:   Fri, 10 Jan 2020 11:29:40 -0800
-Message-Id: <20200110192942.25021-11-ira.weiny@intel.com>
+Subject: [RFC PATCH V2 06/12] fs/xfs: Check if the inode supports DAX under lock
+Date:   Fri, 10 Jan 2020 11:29:36 -0800
+Message-Id: <20200110192942.25021-7-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200110192942.25021-1-ira.weiny@intel.com>
 References: <20200110192942.25021-1-ira.weiny@intel.com>
@@ -53,30 +53,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-When zeroing the end of a file we must account for bytes contained in
-the final page which are past EOF.
+One of the checks for an inode supporting DAX is if the inode is
+reflinked.  During a non-DAX to DAX mode change we could race with
+the file being reflinked and end up with a reflinked file being in DAX
+mode.
 
-Extend the range passed to iomap_zero_range() to reach LLONG_MAX which
-will include all bytes of the final page.
+Prevent this race by checking for DAX support under the MMAP_LOCK.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- fs/xfs/xfs_iops.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/xfs/xfs_ioctl.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index a2f2604c3187..a34b04e8ac9c 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -910,7 +910,7 @@ xfs_setattr_size(
- 	 */
- 	if (newsize > oldsize) {
- 		trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
--		error = iomap_zero_range(inode, oldsize, newsize - oldsize,
-+		error = iomap_zero_range(inode, oldsize, LLONG_MAX - oldsize,
- 				&did_zeroing, &xfs_buffered_write_iomap_ops);
- 	} else {
- 		error = iomap_truncate_page(inode, newsize, &did_zeroing,
+diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+index b5e00b67c297..bc3654fe3b5d 100644
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -1180,10 +1180,6 @@ xfs_ioctl_setattr_dax_invalidate(
+ 
+ 	*join_flags = 0;
+ 
+-	if ((fa->fsx_xflags & FS_XFLAG_DAX) == FS_XFLAG_DAX &&
+-	    !xfs_inode_supports_dax(ip))
+-		return -EINVAL;
+-
+ 	/* If the DAX state is not changing, we have nothing to do here. */
+ 	if ((fa->fsx_xflags & FS_XFLAG_DAX) &&
+ 	    (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
+@@ -1197,6 +1193,13 @@ xfs_ioctl_setattr_dax_invalidate(
+ 
+ 	/* lock, flush and invalidate mapping in preparation for flag change */
+ 	xfs_ilock(ip, XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL);
++
++	if ((fa->fsx_xflags & FS_XFLAG_DAX) == FS_XFLAG_DAX &&
++	    !xfs_inode_supports_dax(ip)) {
++		error = -EINVAL;
++		goto out_unlock;
++	}
++
+ 	error = filemap_write_and_wait(inode->i_mapping);
+ 	if (error)
+ 		goto out_unlock;
 -- 
 2.21.0
 
