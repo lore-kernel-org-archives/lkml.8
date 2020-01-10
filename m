@@ -2,315 +2,125 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1241DC33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:07:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07FDC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8BFD2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812F82082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="n72BZQ67"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727139AbgAJHHe (ORCPT
+        id S1727156AbgAJHIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:07:34 -0500
-Received: from mga01.intel.com ([192.55.52.88]:27348 "EHLO mga01.intel.com"
+        Fri, 10 Jan 2020 02:08:39 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:45218 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726281AbgAJHHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:07:33 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 23:07:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,415,1571727600"; 
-   d="scan'208";a="371524736"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by orsmga004.jf.intel.com with ESMTP; 09 Jan 2020 23:07:29 -0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     x86@kernel.org
-Cc:     Bhupesh Sharma <bhsharma@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Chris Down <chris@chrisdown.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][v6] x86/resctrl: Add task resctrl information display
-Date:   Fri, 10 Jan 2020 15:06:08 +0800
-Message-Id: <20200110070608.18902-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
+        id S1726186AbgAJHIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:08:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:To:From:Date:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=449GfKH7sH7qx3uVz7I+DZvudTQJS9ufr7oEB5vY7Bc=; b=n72BZQ67zmmXppM/xkdr0487Kv
+        veCzIUlqMEvfTPlQiEU+MY2d7q6mdgXHkJh42V45xkQ1in2Lg/wZMkoG5SEFnA4GA/VyhufBrk4cW
+        DK3rVmmk87TlII2wB9F/360lSMWaegs2aBeQKC6gzLzmZFywL4JzudH+wEEccF709Zt4=;
+Received: from [2a02:790:ff:1019:7ee9:d3ff:fe1f:a246] (helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1ipoPD-0003jT-04; Fri, 10 Jan 2020 08:08:27 +0100
+Received: from localhost.lan ([::1] helo=localhost)
+        by localhost with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1ipoPA-0001VA-Rz; Fri, 10 Jan 2020 08:08:24 +0100
+Date:   Fri, 10 Jan 2020 08:08:24 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        a.zummo@towertech.it, alexandre.belloni@bootlin.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, stefan@agner.ch, b.galvani@gmail.com,
+        phh@phh.me, letux-kernel@openphoenux.org
+Subject: Re: [PATCH v5 0/5] Add rtc support for rn5t618 mfd
+Message-ID: <20200110080824.727a612d@kemnade.info>
+In-Reply-To: <20191220122416.31881-1-andreas@kemnade.info>
+References: <20191220122416.31881-1-andreas@kemnade.info>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Monitoring tools that want to find out which resctrl control
-and monitor groups a task belongs to must currently read
-the "tasks" file in every group until they locate the process
-ID.
+Hi,
 
-Add an additional file /proc/{pid}/cpu_resctrl to provide this
-information.
+I hope everyone went well into new year, are there any open
+issues left here preveting applying these patches?
 
-The output is as followed, for example:
+On Fri, 20 Dec 2019 13:24:11 +0100
+Andreas Kemnade <andreas@kemnade.info> wrote:
 
- 1)   ""
-      Resctrl is not available.
+> In the variant RC5T619 the mfd has an RTC. This patchset adds
+> support for it. To do so it adds the missing register defines in 
+> rn5t618.h and general irq handling for that.
+> It seems that the irq definitions are the same except missing RTC
+missing words ... for the rn5t618 ...
 
- 2)   "/"
-      Task is part of the root group, task is not associated to
-      any monitor group.
-
- 3)   "/mon_groups/mon0"
-      Task is part of the root group and monitor group mon0.
-
- 4)   "/group0"
-      Task is part of resctrl control group group0, task is not
-      associated to any monitor group.
-
- 5)   "/group0/mon_groups/mon1"
-      Task is part of resctrl control group group0 and monitor
-      group mon1.
-
-Tested-by: Jinshi Chen <jinshi.chen@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Chris Down <chris@chrisdown.name>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
-v1: Initial version reviewed by Reinette Chatre,
-    Fenghua Yu and Tony Luck.
-
-v2: According to Boris's suggestion,
-    reduce indentation level in proc_resctrl_show().
-    Create the include/linux/resctrl.h header and
-    declare proc_resctrl_show() in this file, so
-    that other architectures would probably use it
-    in the future. Different architectures should
-    implement architectural specific proc_resctrl_show()
-    accordingly.
-
-v3: According to Boris's suggestion,
-    Return empty string if the resctrl filesystem has
-    not been mounted.
-    Rename the config from CPU_RESCTRL to PROC_CPU_RESCTRL
-    to better represent its usage. Move PROC_CPU_RESCTRL
-    from arch/Kconfig to fs/proc/Kconfig.
-    And let PROC_CPU_RESCTRL to be depended on PROC_FS.
-
-v4: According to Thomas's suggestion, changed the output
-    from multiple lines to one single line.
-
-v5: According to Alexey's feedback, removed the header file
-    proc_fs.h in resctrl.h, and changed seq_puts() to
-    seq_putc() for simplicity.
-
-v6: According to Chris Down's suggestion,
-    1. rename:
-    /proc/{pid}/resctrl to /proc/{pid}/cpu_resctrl
-    to better reflect its meaning.
-    2. change the description in comments:
-    "control group" to "resctrl control group"
-    as the former is confusing for cgroup users.
----
- arch/x86/Kconfig                       |  1 +
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 79 ++++++++++++++++++++++++++
- fs/proc/Kconfig                        |  4 ++
- fs/proc/base.c                         |  7 +++
- include/linux/resctrl.h                | 14 +++++
- 5 files changed, 105 insertions(+)
- create mode 100644 include/linux/resctrl.h
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 5e8949953660..6e17a68c7d77 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -456,6 +456,7 @@ config X86_CPU_RESCTRL
- 	bool "x86 CPU resource control support"
- 	depends on X86 && (CPU_SUP_INTEL || CPU_SUP_AMD)
- 	select KERNFS
-+	select PROC_CPU_RESCTRL		if PROC_FS
- 	help
- 	  Enable x86 CPU resource control support.
- 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 2e3b06d6bbc6..dcbf62d6b689 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -725,6 +725,85 @@ static int rdtgroup_tasks_show(struct kernfs_open_file *of,
- 	return ret;
- }
- 
-+#ifdef CONFIG_PROC_CPU_RESCTRL
-+
-+/*
-+ * A task can only be part of one resctrl
-+ * control group and of one monitor
-+ * group which is associated to that resctrl
-+ * control group.
-+ * So one line is simple and clear enough:
-+ *
-+ * 1)   ""
-+ *    resctrl is not available.
-+ *
-+ * 2)   "/"
-+ *    Task is part of the root group, and it is
-+ *    not associated to any monitor group.
-+ *
-+ * 3)   "/mon_groups/mon0"
-+ *    Task is part of the root group and monitor
-+ *    group mon0.
-+ *
-+ * 4)   "/group0"
-+ *    Task is part of resctrl control group group0,
-+ *    and it is not associated to any monitor group.
-+ *
-+ * 5)   "/group0/mon_groups/mon1"
-+ *    Task is part of resctrl control group group0 and monitor
-+ *    group mon1.
-+ */
-+int proc_resctrl_show(struct seq_file *s, struct pid_namespace *ns,
-+		      struct pid *pid, struct task_struct *tsk)
-+{
-+	struct rdtgroup *rdtg;
-+	int ret = 0;
-+
-+	mutex_lock(&rdtgroup_mutex);
-+
-+	/* Return empty if resctrl has not been mounted. */
-+	if (!static_branch_unlikely(&rdt_enable_key))
-+		goto unlock;
-+
-+	list_for_each_entry(rdtg, &rdt_all_groups, rdtgroup_list) {
-+		struct rdtgroup *crg;
-+
-+		/*
-+		 * Task information is only relevant for shareable
-+		 * and exclusive groups.
-+		 */
-+		if (rdtg->mode != RDT_MODE_SHAREABLE &&
-+		    rdtg->mode != RDT_MODE_EXCLUSIVE)
-+			continue;
-+
-+		if (rdtg->closid != tsk->closid)
-+			continue;
-+
-+		seq_printf(s, "/%s", rdtg->kn->name);
-+		list_for_each_entry(crg, &rdtg->mon.crdtgrp_list,
-+				    mon.crdtgrp_list) {
-+			if (tsk->rmid != crg->mon.rmid)
-+				continue;
-+			seq_printf(s, "%smon_groups/%s",
-+				   rdtg == &rdtgroup_default ? "" : "/",
-+				   crg->kn->name);
-+			break;
-+		}
-+		seq_putc(s, '\n');
-+		goto unlock;
-+	}
-+	/*
-+	 * The above search should succeed. Otherwise return
-+	 * with an error.
-+	 */
-+	ret = -ENOENT;
-+unlock:
-+	mutex_unlock(&rdtgroup_mutex);
-+
-+	return ret;
-+}
-+#endif
-+
- static int rdt_last_cmd_status_show(struct kernfs_open_file *of,
- 				    struct seq_file *seq, void *v)
- {
-diff --git a/fs/proc/Kconfig b/fs/proc/Kconfig
-index 733881a6387b..27ef84d99f59 100644
---- a/fs/proc/Kconfig
-+++ b/fs/proc/Kconfig
-@@ -103,3 +103,7 @@ config PROC_CHILDREN
- config PROC_PID_ARCH_STATUS
- 	def_bool n
- 	depends on PROC_FS
-+
-+config PROC_CPU_RESCTRL
-+	def_bool n
-+	depends on PROC_FS
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index ebea9501afb8..32c9ff154667 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -94,6 +94,7 @@
- #include <linux/sched/debug.h>
- #include <linux/sched/stat.h>
- #include <linux/posix-timers.h>
-+#include <linux/resctrl.h>
- #include <trace/events/oom.h>
- #include "internal.h"
- #include "fd.h"
-@@ -3060,6 +3061,9 @@ static const struct pid_entry tgid_base_stuff[] = {
- #endif
- #ifdef CONFIG_CGROUPS
- 	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
-+#endif
-+#ifdef CONFIG_PROC_CPU_RESCTRL
-+	ONE("cpu_resctrl", S_IRUGO, proc_resctrl_show),
- #endif
- 	ONE("oom_score",  S_IRUGO, proc_oom_score),
- 	REG("oom_adj",    S_IRUGO|S_IWUSR, proc_oom_adj_operations),
-@@ -3460,6 +3464,9 @@ static const struct pid_entry tid_base_stuff[] = {
- #endif
- #ifdef CONFIG_CGROUPS
- 	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
-+#endif
-+#ifdef CONFIG_PROC_CPU_RESCTRL
-+	ONE("cpu_resctrl", S_IRUGO, proc_resctrl_show),
- #endif
- 	ONE("oom_score", S_IRUGO, proc_oom_score),
- 	REG("oom_adj",   S_IRUGO|S_IWUSR, proc_oom_adj_operations),
-diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
-new file mode 100644
-index 000000000000..daf5cf64c6a6
---- /dev/null
-+++ b/include/linux/resctrl.h
-@@ -0,0 +1,14 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _RESCTRL_H
-+#define _RESCTRL_H
-+
-+#ifdef CONFIG_PROC_CPU_RESCTRL
-+
-+int proc_resctrl_show(struct seq_file *m,
-+		      struct pid_namespace *ns,
-+		      struct pid *pid,
-+		      struct task_struct *tsk);
-+
-+#endif
-+
-+#endif /* _RESCTRL_H */
--- 
-2.17.1
-
+> but due to missing ability to test that I do not add them here.
+> 
+> The rtc driver itself is based on 
+> https://github.com/kobolabs/Kobo-Reader/blob/master/hw/imx6sll-clara/kernel.tar.bz2
+> but heavily reworked.
+> 
+> It was tested on the Kobo Clara HD.
+> 
+> For cleaning up there is a separate off-topic patch:
+> mfd: rn5t618: cleanup i2c_device_id
+> 
+> Changes in v5:
+> - static rn5t618_irq_init
+> - PLATFORM_DEVID_NONE
+> - added some Acked-Bys
+> 
+> Changes in v4:
+> - use macros for IRQ definitions
+> - merge rn5t618-core.c and rn5t618-irq.c
+> 
+> Changes in v3:
+> - alignment cleanup
+> - output cleanup, remove useless toggling of alarm flag in rtc probe
+> - updated bindings description, so patch 1/5 becomes 2/6 and so on
+> 
+> Changes in v2:
+> - no dead code in irq code
+> - various improvements and cleanups in rtc driver itself
+> 
+> Andreas Kemnade (5):
+>   dt-bindings: mfd: rn5t618: Document optional property interrupts
+>   mfd: rn5t618: add IRQ support
+>   mfd: rn5t618: add RTC related registers
+>   mfd: rn5t618: add more subdevices
+>   rtc: rc5t619: add ricoh rc5t619 RTC driver
+> 
+>  Documentation/devicetree/bindings/mfd/rn5t618.txt |   4 +
+>  drivers/mfd/Kconfig                               |   1 +
+>  drivers/mfd/rn5t618.c                             | 109 +++++-
+>  drivers/rtc/Kconfig                               |  10 +
+>  drivers/rtc/Makefile                              |   1 +
+>  drivers/rtc/rtc-rc5t619.c                         | 444 ++++++++++++++++++++++
+>  include/linux/mfd/rn5t618.h                       |  26 ++
+>  7 files changed, 593 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/rtc/rtc-rc5t619.c
+> 
+> -- 
+> 2.11.0
+> 
+> 
