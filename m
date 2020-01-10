@@ -2,187 +2,138 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1410C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA5D2C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:54:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 654912072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:54:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W/6dxF5y"
+	by mail.kernel.org (Postfix) with ESMTP id AB31920838
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:54:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578682490;
+	bh=mzOA+R7C05TiE08jezsPzeo1ODXOUT/JCh3YkETUgvw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=k976T2g4Y9a9HOjzlGykG7Pq8O4pWPvRKDrvF+IVF4MIY+6eKH8yxXfQEt8pSPHYh
+	 09aLRIYGVJRSB4Wr3qYOJqtaYoYQDx+g8SC6x4gyq6z3RZbkmHDOWDeliVxOeOdcwE
+	 itGjYA2mmKEQhXpcViP3ON3rDNoiSXqhLo/euWjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgAJSyX (ORCPT
+        id S1728681AbgAJSyt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:54:23 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:36379 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728023AbgAJSyX (ORCPT
+        Fri, 10 Jan 2020 13:54:49 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36896 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728617AbgAJSyt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:54:23 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 19so2958951otz.3
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 10:54:22 -0800 (PST)
+        Fri, 10 Jan 2020 13:54:49 -0500
+Received: by mail-lf1-f68.google.com with SMTP id b15so2253564lfc.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 10:54:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linux-foundation.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QcMlx17bbe46RkMKi52DH8y3hZ3BUHEjTIS1UBwAyfk=;
-        b=W/6dxF5yzDKMg1oEiW8ebWaLBsRbxzEdgsV2Zy4D7aiiuLbnsNCpxMjeRNNweJjqND
-         2COiWm9jLpXFcdcgHqNInyC1u6Br+NVPEiVpSr0YUSGcZDC++HCWEKn70filZ7FDCz31
-         qu9cxXaDVKOGON4heIdIXEJQDP785nqs0jiYl1UJkVqSpVlKEQ+pX/85ldwhDj5gsPlw
-         QGZ51Hbm3Zn690xrrUCBSg8AMC47Wf1Q/esQ+n4G1y5SzrUItrLdyDF0yBAWyw3UMbng
-         0gc9GvcqHfRWikE6FyRhlG8tmZyq2rX57IBPx4uujELRcWFq0QdNk8yh1euxx50b8Rvh
-         yAog==
+        bh=j1vUATzUBpIGtELb+vItTo1wkE0Sy8cpDXXVV9tUxg4=;
+        b=Asi+Td2STF/mUZRXQIv70X1R92yzc9QNkF0hyVHvxy/vDF3BWUUgKG+s5bhHF8lXm1
+         pmZ9SkxNAja2H57ghybZjnyXwh47Lcye5VyMq5jcdrYG12Nfwt5EvKEWCQIqZHBmZpkZ
+         bLFLUI7/QsOh+k0bjEkN1VWI8BcVEG5fhLMlc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QcMlx17bbe46RkMKi52DH8y3hZ3BUHEjTIS1UBwAyfk=;
-        b=VncW3vKLQ60kWrscdZy/K7pQE8e/U7CxAPDWY9pwUKrEx+JE7DY5hmxTgCymhrb10A
-         cyvmY3OmLO7fP4bHho9n3B1Ng6FCaP6/zt+R2f17SL+ot6K4BrNsKpoBWA0CrFn3TomA
-         +4RZk4a3zXQRuJAqdUVzFT8mruyJn9W7h+wHpdzF7D/3P+Z61V5GyEhf+eVb75j55YQU
-         0cbkUYrycTvpJmTeQNqv1lZkeam7GTqjT7fJYYabvoRHAmmzXcaaqE9kF8UaLhN2T7jL
-         di97bp1HHzPKtJvCulk2BrEpdj8RpR37JOyYIxSMzpb3Q9CLMmhzTTTu3/cuH4a80+DF
-         sZDw==
-X-Gm-Message-State: APjAAAUDG+hHCK9DOjGc/kKj7RLcxOPLsLJTZaD2d0t4txcz/qlw1S6L
-        7X6ZDcZVcpq2FsDXy9UbXxTaynoCo+9x8fVFjW+hMA==
-X-Google-Smtp-Source: APXvYqzxnM25OTQL9khgX9z2PpEuWAEd0iwoxZnbgrx6i0URvTdLuIrl4QoYE3+xP7i2PfOPBVsDIMtSnPAANyB8A1k=
-X-Received: by 2002:a9d:7f12:: with SMTP id j18mr3925122otq.17.1578682461403;
- Fri, 10 Jan 2020 10:54:21 -0800 (PST)
+        bh=j1vUATzUBpIGtELb+vItTo1wkE0Sy8cpDXXVV9tUxg4=;
+        b=UufJ/E7GO/57OF/XbGKILxBykOR1u1ECE0wx88GkbeqvZQ7UPtn71wRv6nKDocsdKw
+         18slpLj2LoAnJUqH3IP+tiLV41+hv4rJn0G/nuLyOTVp3HZ+EXm2G3nv6l5hpScQwY6B
+         nTO/ocTCEdJzngSbQ26shl7x8fDuiSDv3kx1HyrBxf0WPv6BkErvi/8X4sCoGfEulcVW
+         i/Lpq3eo+aKTV/GfYN26lxY5xfgtR2TDMoZqvOhtcvqulg67IR+8XZdWCoCEny3agflM
+         Kf42tFlBmsdCMd44jcMzQEXOga0waw/hHMHPI21uxdU52xtyjqldm+FYJVYcDo8l4ptY
+         qAZQ==
+X-Gm-Message-State: APjAAAXvPZT4780J+6Ps6mUuKbZ+M+So//KLI+yHDid36CsYPVlaJgKA
+        W3gJ96yPdn0X+tjRngF4cZaaZJd1fFo=
+X-Google-Smtp-Source: APXvYqwq5YuYRTbF/i//odQ6g238v4URTdY0vFVnB5AU5KB8tSQi0TwsD8igL6bnpELpN+VcahBh8w==
+X-Received: by 2002:a19:84d:: with SMTP id 74mr3200730lfi.122.1578682486144;
+        Fri, 10 Jan 2020 10:54:46 -0800 (PST)
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com. [209.85.208.169])
+        by smtp.gmail.com with ESMTPSA id s13sm1441633lje.35.2020.01.10.10.54.43
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2020 10:54:44 -0800 (PST)
+Received: by mail-lj1-f169.google.com with SMTP id o13so3184157ljg.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 10:54:43 -0800 (PST)
+X-Received: by 2002:a05:651c:282:: with SMTP id b2mr3531333ljo.41.1578682483466;
+ Fri, 10 Jan 2020 10:54:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20200109152322.104466-1-elver@google.com> <20200109152322.104466-3-elver@google.com>
- <CANpmjNNt_+EQHLFZyV5_Wq1frU3A=Rh8y5P7Zjp-0cAU2X7N6w@mail.gmail.com>
-In-Reply-To: <CANpmjNNt_+EQHLFZyV5_Wq1frU3A=Rh8y5P7Zjp-0cAU2X7N6w@mail.gmail.com>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 10 Jan 2020 19:54:09 +0100
-Message-ID: <CANpmjNOcjdr6HNaSP4Q7GTR72vx4bSMa_2O=_9oQwcz3xFk=Wg@mail.gmail.com>
-Subject: Re: [PATCH -rcu 2/2] kcsan: Rate-limit reporting per data races
-To:     Marco Elver <elver@google.com>
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>, Qian Cai <cai@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
+References: <20200110165636.28035-1-will@kernel.org> <20200110165636.28035-7-will@kernel.org>
+In-Reply-To: <20200110165636.28035-7-will@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 10 Jan 2020 10:54:27 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wia5ppBsfHLMx648utCjO01JAZiME0K0eSHmhWuRyL+6w@mail.gmail.com>
+Message-ID: <CAHk-=wia5ppBsfHLMx648utCjO01JAZiME0K0eSHmhWuRyL+6w@mail.gmail.com>
+Subject: Re: [RFC PATCH 6/8] READ_ONCE: Drop pointer qualifiers when reading
+ from scalar types
+To:     Will Deacon <will@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: multipart/mixed; boundary="000000000000a42d9d059bcda82d"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 at 19:20, Marco Elver <elver@google.com> wrote:
+--000000000000a42d9d059bcda82d
+Content-Type: text/plain; charset="UTF-8"
+
+On Fri, Jan 10, 2020 at 8:56 AM Will Deacon <will@kernel.org> wrote:
 >
-> On Thu, 9 Jan 2020 at 16:23, Marco Elver <elver@google.com> wrote:
-> >
-> > Adds support for rate limiting reports. This uses a time based rate
-> > limit, that limits any given data race report to no more than one in a
-> > fixed time window (default is 3 sec). This should prevent the console
-> > from being spammed with data race reports, that would render the system
-> > unusable.
-> >
-> > The implementation assumes that unique data races and the rate at which
-> > they occur is bounded, since we cannot store arbitrarily many past data
-> > race report information: we use a fixed-size array to store the required
-> > information. We cannot use kmalloc/krealloc and resize the list when
-> > needed, as reporting is triggered by the instrumentation calls; to
-> > permit using KCSAN on the allocators, we cannot (re-)allocate any memory
-> > during report generation (data races in the allocators lead to
-> > deadlock).
-> >
-> > Reported-by: Qian Cai <cai@lca.pw>
-> > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> > Signed-off-by: Marco Elver <elver@google.com>
-> > ---
-> >  kernel/kcsan/report.c | 112 ++++++++++++++++++++++++++++++++++++++----
-> >  lib/Kconfig.kcsan     |  10 ++++
-> >  2 files changed, 112 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-> > index 9f503ca2ff7a..e324af7d14c9 100644
-> > --- a/kernel/kcsan/report.c
-> > +++ b/kernel/kcsan/report.c
-> > @@ -1,6 +1,7 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> >
-> >  #include <linux/kernel.h>
-> > +#include <linux/ktime.h>
-> >  #include <linux/preempt.h>
-> >  #include <linux/printk.h>
-> >  #include <linux/sched.h>
-> > @@ -31,12 +32,101 @@ static struct {
-> >         int                     num_stack_entries;
-> >  } other_info = { .ptr = NULL };
-> >
-> > +/*
-> > + * Information about reported data races; used to rate limit reporting.
-> > + */
-> > +struct report_time {
-> > +       /*
-> > +        * The last time the data race was reported.
-> > +        */
-> > +       ktime_t time;
-> > +
-> > +       /*
-> > +        * The frames of the 2 threads; if only 1 thread is known, one frame
-> > +        * will be 0.
-> > +        */
-> > +       unsigned long frame1;
-> > +       unsigned long frame2;
-> > +};
-> > +
-> > +/*
-> > + * Since we also want to be able to debug allocators with KCSAN, to avoid
-> > + * deadlock, report_times cannot be dynamically resized with krealloc in
-> > + * rate_limit_report.
-> > + *
-> > + * Therefore, we use a fixed-size array, which at most will occupy a page. This
-> > + * still adequately rate limits reports, assuming that a) number of unique data
-> > + * races is not excessive, and b) occurrence of unique data races within the
-> > + * same time window is limited.
-> > + */
-> > +#define REPORT_TIMES_MAX (PAGE_SIZE / sizeof(struct report_time))
-> > +#define REPORT_TIMES_SIZE                                                      \
-> > +       (CONFIG_KCSAN_REPORT_ONCE_IN_MS > REPORT_TIMES_MAX ?                   \
-> > +                REPORT_TIMES_MAX :                                            \
-> > +                CONFIG_KCSAN_REPORT_ONCE_IN_MS)
-> > +static struct report_time report_times[REPORT_TIMES_SIZE];
-> > +
-> >  /*
-> >   * This spinlock protects reporting and other_info, since other_info is usually
-> >   * required when reporting.
-> >   */
-> >  static DEFINE_SPINLOCK(report_lock);
-> >
-> > +/*
-> > + * Checks if the data race identified by thread frames frame1 and frame2 has
-> > + * been reported since (now - KCSAN_REPORT_ONCE_IN_MS).
-> > + */
-> > +static bool rate_limit_report(unsigned long frame1, unsigned long frame2)
-> > +{
-> > +       struct report_time *use_entry = &report_times[0];
-> > +       ktime_t now;
-> > +       ktime_t invalid_before;
-> > +       int i;
-> > +
-> > +       BUILD_BUG_ON(CONFIG_KCSAN_REPORT_ONCE_IN_MS != 0 && REPORT_TIMES_SIZE == 0);
-> > +
-> > +       if (CONFIG_KCSAN_REPORT_ONCE_IN_MS == 0)
-> > +               return false;
-> > +
-> > +       now = ktime_get();
-> > +       invalid_before = ktime_sub_ms(now, CONFIG_KCSAN_REPORT_ONCE_IN_MS);
->
-> Been thinking about this a bit more, and wondering if we should just
-> use jiffies here?  Don't think we need the precision.
+> +/* Declare an unqualified scalar type. Leaves non-scalar types unchanged. */
+> +#define __unqual_scalar_typeof(x) typeof(                                      \
 
-Sent v2: http://lkml.kernel.org/r/20200110184834.192636-1-elver@google.com
-I think it's also safer to use jiffies, as noted in the v2 patch.
+Ugh. My eyes. That's horrendous.
 
-Paul: sorry for sending v2, seeing you already had these in your tree.
-Hope this is ok.
+I can't see any better alternatives, but it does make me go "Eww".
 
-Thanks,
--- Marco
+Well, I do see one possible alternative: just re-write the bitop
+implementations in terms of "atomic_long_t", and just avoid the issue
+entirely.
+
+IOW, do something like the attached (but fleshed out and tested - this
+patch has not seen a compiler, much less any thought at all).
+
+                   Linus
+
+--000000000000a42d9d059bcda82d
+Content-Type: text/x-patch; charset="US-ASCII"; name="patch.diff"
+Content-Disposition: attachment; filename="patch.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k58is1210>
+X-Attachment-Id: f_k58is1210
+
+IGluY2x1ZGUvYXNtLWdlbmVyaWMvYml0b3BzL2xvY2suaCB8IDEyICsrKysrKysrKy0tLQogMSBm
+aWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQg
+YS9pbmNsdWRlL2FzbS1nZW5lcmljL2JpdG9wcy9sb2NrLmggYi9pbmNsdWRlL2FzbS1nZW5lcmlj
+L2JpdG9wcy9sb2NrLmgKaW5kZXggM2FlMDIxMzY4ZjQ4Li4wNzFkOGJmZDg2ZTUgMTAwNjQ0Ci0t
+LSBhL2luY2x1ZGUvYXNtLWdlbmVyaWMvYml0b3BzL2xvY2suaAorKysgYi9pbmNsdWRlL2FzbS1n
+ZW5lcmljL2JpdG9wcy9sb2NrLmgKQEAgLTYsNiArNiwxMiBAQAogI2luY2x1ZGUgPGxpbnV4L2Nv
+bXBpbGVyLmg+CiAjaW5jbHVkZSA8YXNtL2JhcnJpZXIuaD4KIAorLyogRHJvcCB0aGUgdm9sYXRp
+bGUsIHdlIHdpbGwgYmUgZG9pbmcgUkVBRF9PTkNFIGJ5IGhhbmQgKi8KK3N0YXRpYyBpbmxpbmUg
+YXRvbWljX2xvbmdfdCAqYXRvbWljX2xvbmdfYml0X3dvcmQodW5zaWduZWQgaW50IG5yLCB2b2xh
+dGlsZSB1bnNpZ25lZCBsb25nICpwKQoreworCXJldHVybiBCSVRfV09SRChucikgKyAoYXRvbWlj
+X2xvbmdfdCAqKXA7Cit9CisKIC8qKgogICogdGVzdF9hbmRfc2V0X2JpdF9sb2NrIC0gU2V0IGEg
+Yml0IGFuZCByZXR1cm4gaXRzIG9sZCB2YWx1ZSwgZm9yIGxvY2sKICAqIEBucjogQml0IHRvIHNl
+dApAQCAtMjAsMTIgKzI2LDEyIEBAIHN0YXRpYyBpbmxpbmUgaW50IHRlc3RfYW5kX3NldF9iaXRf
+bG9jayh1bnNpZ25lZCBpbnQgbnIsCiB7CiAJbG9uZyBvbGQ7CiAJdW5zaWduZWQgbG9uZyBtYXNr
+ID0gQklUX01BU0sobnIpOworCWF0b21pY19sb25nX3QgKmxvYyA9IGF0b21pY19sb25nX2JpdF93
+b3JkKG5yLCBwKTsKIAotCXAgKz0gQklUX1dPUkQobnIpOwotCWlmIChSRUFEX09OQ0UoKnApICYg
+bWFzaykKKwlpZiAoYXRvbWljX3JlYWQobG9jKSAmIG1hc2spCiAJCXJldHVybiAxOwogCi0Jb2xk
+ID0gYXRvbWljX2xvbmdfZmV0Y2hfb3JfYWNxdWlyZShtYXNrLCAoYXRvbWljX2xvbmdfdCAqKXAp
+OworCW9sZCA9IGF0b21pY19sb25nX2ZldGNoX29yX2FjcXVpcmUobWFzaywgbG9jKTsKIAlyZXR1
+cm4gISEob2xkICYgbWFzayk7CiB9CiAK
+--000000000000a42d9d059bcda82d--
