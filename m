@@ -2,98 +2,397 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D6FC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CAAC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065682080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:42:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iQ+UspVX"
+	by mail.kernel.org (Postfix) with ESMTP id CB1C62080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgAJNm6 (ORCPT
+        id S1727885AbgAJNoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 08:42:58 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:40296 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728226AbgAJNm5 (ORCPT
+        Fri, 10 Jan 2020 08:44:03 -0500
+Received: from mout.kundenserver.de ([212.227.17.13]:36583 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727427AbgAJNoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 08:42:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=GYGF/a4qRWroP/Y/H4KPJyAQgKptGfA1ZmohXqWNKSA=; b=iQ+UspVXX1HEG+w2HZ5QjJauD
-        MOgh04LefdeXka9JjPakR5ZwXGMxxwoMqVtzLmS+0IlQ+rxmVjXgituwUKia9I4yyLztfQa7I5JOi
-        lOljcymFY6l8mT9sBFx5yocFX5VQRisY2pU7VmXAYjgabjBCHphK4LJU0p4pmDybipvCArejlAPYz
-        O8IR7/chn/iknXFupNZzt0qtbVmdUMxc11plVOLGeTb6KperE2MryVCihcyFxtZDwGIpxwqpY+iDQ
-        60wfxwfalJkdp4R80n8/ZaKISh99WqpkW5Oq/D0JeUG/XkPzeTUU/e+9wP5uW6s7QnK1gLW7moqWG
-        aL8Jd+aUw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipuYg-0003gY-P0; Fri, 10 Jan 2020 13:42:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0D71E30025A;
-        Fri, 10 Jan 2020 14:41:03 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id F027C2B612615; Fri, 10 Jan 2020 14:42:36 +0100 (CET)
-Date:   Fri, 10 Jan 2020 14:42:36 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        valentin.schneider@arm.com, qperret@google.com,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
-Message-ID: <20200110134236.GM2844@hirez.programming.kicks-ass.net>
-References: <20191220164838.31619-1-qais.yousef@arm.com>
- <20200108134448.GG2844@hirez.programming.kicks-ass.net>
- <20200109130052.feebuwuuvwvm324w@e107158-lin.cambridge.arm.com>
+        Fri, 10 Jan 2020 08:44:02 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MGQf5-1itQ9q2QKD-00Gosa; Fri, 10 Jan 2020 14:43:43 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [RFC] kunit: move binary assertion out of line
+Date:   Fri, 10 Jan 2020 14:43:12 +0100
+Message-Id: <20200110134337.1752000-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109130052.feebuwuuvwvm324w@e107158-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:HcATK1ifbGpJ7hVrQRVqUF1GGCPpwH+Qs6NYk7NUoE6K6NUlYXY
+ KI2KpnEmRJyDoOOY6+Stoi19S7wP14CzpY7ELeYXS8fDtU7eUjpBL8rX91K2W17HfLWaRtg
+ 7NJ2AKPomKLERhmIjef6tYAmV+gB6diN7dTpkBVIusux5xzj6vzGdrfX6cFj/717npRo9dp
+ vPZSxjSVBOI/X5UnN1bYw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:JpeaIPdukI0=:ojZzAxIQDeHJB1zkZdySlW
+ 0cZQ4J5ewrnHDab4HGCjsQ28kNXhs87bFYetzx0PSEUiQDNO0U7z2EhOMyEMwwOXGEBpAhlDt
+ dSzWPzOHY7QMGG0Qsd8q2m++039+nIr97jJnJR9VK6ipu1uAajelYxBVlUCUdrAKmEshbLtEz
+ 2Z4A5VgRZvGcL3X7aU0S/cXDmanBXOtpZxTQU8xRi3Dtw7K08e/Io9H8DYii0vD7/dE3MpB7/
+ XEOf49mPbZZxXxPBmFBu2VLJsQ4tGWBB0EKdtXoJZRPOBTiNg13ll2RO9pfBCncPqMxfWlTM6
+ 3HwjslaAKQoeltUoioPV1Ac8mi8VOVgrBlUY7ug1hg/s40+IvSw0npO0vyqlZv0RYIBs/puQq
+ mKstwY4ooDTAQe9m9b5ph2MsUaELcfDsnISwZl2zc8MtHcdOEWQXDpr4zfEbwa2FhvNFZ33W1
+ sHv6JWld9gVTA0qkVi3u9EO+CTexIlt2CQWt/kGd6pgAOuiDO7ou3kgLwYrwq24VtQBRuigbF
+ yT1BbJ0TJlOdCO4P5YI6RXroKAOFSSQVJ65jznKON5nNHs0EL3XldxhmdxLnPzXYpWUJQgOM3
+ Pr2gACegaNTzQBC/J7z4yrsDwnIgHZT5lpGll/xsDz7FUxj6gfnEDKam7eLHodBDvsJMWHb4E
+ Cg0g7bTft83Qzjo9CxIp83z4BL6aIm6iu1hatUiGt0DTqKlbgIjnM5BCI3/Wimk7yp8deS7zo
+ NWh7diOifsweaZu2ai/3zKU5IeipXQDqmU6LNfpvXssUg09Wm1uROi5aGbHNmd5kkdXTGD31d
+ 4L9Rukle2zix6Ri5/yl1MS7MUlX0PNyTu2jnnb4NW/LhtOV/72JT8bwnW02T4qaij/7LCERFy
+ WoFvS35rqw6u8BFxy8Ug==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 01:00:58PM +0000, Qais Yousef wrote:
-> On 01/08/20 14:44, Peter Zijlstra wrote:
+In combination with the structleak gcc plugin, kunit can lead to excessive
+stack usage when each assertion adds another structure to the stack from
+of the calling function:
 
-> > Did cpu_uclamp_write() forget to check for input<0 ?
-> 
-> Hmm just tried that and it seems so
-> 
-> # echo -1 > cpu.uclamp.min
-> # cat cpu.uclamp.min
-> 42949671.96
-> 
-> capacity_from_percent(); we check for
-> 
-> 7301                 if (req.percent > UCLAMP_PERCENT_SCALE) {
-> 7302                         req.ret = -ERANGE;
-> 7303                         return req;
-> 7304                 }
-> 
-> But req.percent is s64, maybe it should be u64?
+base/test/property-entry-test.c:99:1: error: the frame size of 3032 bytes is larger than 2048 bytes [-Werror=frame-larger-than=]
 
-		if ((u64)req.percent > UCLAMP_PERCENT_SCALE)
+As most assertions are binary, change those over to a direct function
+call that does not have this problem.  This can probably be improved
+further, I just went for a straightforward conversion, but a function
+call with 12 fixed arguments plus varargs it not great either.
 
-should do, I think.
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Brendan Higgins <brendanhiggins@google.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-kselftest@vger.kernel.org
+Cc: kunit-dev@googlegroups.com
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+I think improving the compiler or the plugin to not force the
+allocation of these structs would be better, as it avoids the
+whack-a-mole game of fixing up each time it hits us, but this
+may not be possible using the current plugin infrastructure.
+---
+ include/kunit/test.h | 155 ++++++++++++-------------------------------
+ lib/kunit/assert.c   |   8 +--
+ lib/kunit/test.c     |  42 ++++++++++++
+ 3 files changed, 90 insertions(+), 115 deletions(-)
+
+diff --git a/include/kunit/test.h b/include/kunit/test.h
+index dba48304b3bd..76eadd4a8b77 100644
+--- a/include/kunit/test.h
++++ b/include/kunit/test.h
+@@ -391,6 +391,16 @@ void kunit_do_assertion(struct kunit *test,
+ 			bool pass,
+ 			const char *fmt, ...);
+ 
++void kunit_do_binary_assertion(struct kunit *test, bool pass,
++			       enum kunit_assert_type type,
++			       int line, const char *file,
++			       const char *operation,
++			       const char *left_text, long long left_value,
++			       const char *right_text, long long right_value,
++			       void (*format)(const struct kunit_assert *assert,
++					       struct string_stream *stream),
++			       const char *fmt, ...);
++
+ #define KUNIT_ASSERTION(test, pass, assert_class, INITIALIZER, fmt, ...) do {  \
+ 	struct assert_class __assertion = INITIALIZER;			       \
+ 	kunit_do_assertion(test,					       \
+@@ -491,19 +501,32 @@ do {									       \
+ 	typeof(left) __left = (left);					       \
+ 	typeof(right) __right = (right);				       \
+ 	((void)__typecheck(__left, __right));				       \
+-									       \
+-	KUNIT_ASSERTION(test,						       \
+-			__left op __right,				       \
+-			assert_class,					       \
+-			ASSERT_CLASS_INIT(test,				       \
+-					  assert_type,			       \
+-					  #op,				       \
+-					  #left,			       \
+-					  __left,			       \
+-					  #right,			       \
+-					  __right),			       \
+-			fmt,						       \
+-			##__VA_ARGS__);					       \
++	kunit_do_binary_assertion(test, left op right, assert_type, 	       \
++				  __LINE__, __FILE__,  #op, #left, __left,     \
++				  #right, __right,			       \
++				  kunit_binary_assert_format,		       \
++				  fmt, ##__VA_ARGS__);			       \
++} while (0)
++
++#define KUNIT_BASE_POINTER_ASSERTION(test,				       \
++				     assert_class,			       \
++				     ASSERT_CLASS_INIT,			       \
++				     assert_type,			       \
++				     left,				       \
++				     op,				       \
++				     right,				       \
++				     fmt,				       \
++				     ...)				       \
++do {									       \
++	typeof(left) __left = (left);					       \
++	typeof(right) __right = (right);				       \
++	((void)__typecheck(__left, __right));				       \
++	kunit_do_binary_assertion(test, left op right, assert_type, 	       \
++				  __LINE__, __FILE__,  #op,		       \
++				  #left, (uintptr_t)__left,     	       \
++				  #right, (uintptr_t)__right,		       \
++				  kunit_binary_ptr_assert_format,	       \
++				  fmt, ##__VA_ARGS__);			       \
+ } while (0)
+ 
+ #define KUNIT_BASE_EQ_MSG_ASSERTION(test,				       \
+@@ -625,12 +648,11 @@ do {									       \
+ 					  right,			       \
+ 					  fmt,				       \
+ 					  ...)				       \
+-	KUNIT_BASE_EQ_MSG_ASSERTION(test,				       \
+-				    kunit_binary_ptr_assert,		       \
+-				    KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT,       \
++	KUNIT_BASE_POINTER_ASSERTION(test,				       \
++				    assert_class,			       \
++				    ASSERT_CLASS_INIT,			       \
+ 				    assert_type,			       \
+-				    left,				       \
+-				    right,				       \
++				    left, ==, right,			       \
+ 				    fmt,				       \
+ 				    ##__VA_ARGS__)
+ 
+@@ -664,12 +686,11 @@ do {									       \
+ 					  right,			       \
+ 					  fmt,				       \
+ 					  ...)				       \
+-	KUNIT_BASE_NE_MSG_ASSERTION(test,				       \
+-				    kunit_binary_ptr_assert,		       \
+-				    KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT,       \
++	KUNIT_BASE_POINTER_ASSERTION(test,				       \
++				    assert_class,			       \
++				    ASSERT_CLASS_INIT,			       \
+ 				    assert_type,			       \
+-				    left,				       \
+-				    right,				       \
++				    left, !=, right,			       \
+ 				    fmt,				       \
+ 				    ##__VA_ARGS__)
+ 
+@@ -697,28 +718,6 @@ do {									       \
+ 				      right,				       \
+ 				      NULL)
+ 
+-#define KUNIT_BINARY_PTR_LT_MSG_ASSERTION(test,				       \
+-					  assert_type,			       \
+-					  left,				       \
+-					  right,			       \
+-					  fmt,				       \
+-					  ...)				       \
+-	KUNIT_BASE_LT_MSG_ASSERTION(test,				       \
+-				    kunit_binary_ptr_assert,		       \
+-				    KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT,       \
+-				    assert_type,			       \
+-				    left,				       \
+-				    right,				       \
+-				    fmt,				       \
+-				    ##__VA_ARGS__)
+-
+-#define KUNIT_BINARY_PTR_LT_ASSERTION(test, assert_type, left, right)	       \
+-	KUNIT_BINARY_PTR_LT_MSG_ASSERTION(test,				       \
+-					  assert_type,			       \
+-					  left,				       \
+-					  right,			       \
+-					  NULL)
+-
+ #define KUNIT_BINARY_LE_MSG_ASSERTION(test, assert_type, left, right, fmt, ...)\
+ 	KUNIT_BASE_LE_MSG_ASSERTION(test,				       \
+ 				    kunit_binary_assert,		       \
+@@ -736,28 +735,6 @@ do {									       \
+ 				      right,				       \
+ 				      NULL)
+ 
+-#define KUNIT_BINARY_PTR_LE_MSG_ASSERTION(test,				       \
+-					  assert_type,			       \
+-					  left,				       \
+-					  right,			       \
+-					  fmt,				       \
+-					  ...)				       \
+-	KUNIT_BASE_LE_MSG_ASSERTION(test,				       \
+-				    kunit_binary_ptr_assert,		       \
+-				    KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT,       \
+-				    assert_type,			       \
+-				    left,				       \
+-				    right,				       \
+-				    fmt,				       \
+-				    ##__VA_ARGS__)
+-
+-#define KUNIT_BINARY_PTR_LE_ASSERTION(test, assert_type, left, right)	       \
+-	KUNIT_BINARY_PTR_LE_MSG_ASSERTION(test,				       \
+-					  assert_type,			       \
+-					  left,				       \
+-					  right,			       \
+-					  NULL)
+-
+ #define KUNIT_BINARY_GT_MSG_ASSERTION(test, assert_type, left, right, fmt, ...)\
+ 	KUNIT_BASE_GT_MSG_ASSERTION(test,				       \
+ 				    kunit_binary_assert,		       \
+@@ -775,28 +752,6 @@ do {									       \
+ 				      right,				       \
+ 				      NULL)
+ 
+-#define KUNIT_BINARY_PTR_GT_MSG_ASSERTION(test,				       \
+-					  assert_type,			       \
+-					  left,				       \
+-					  right,			       \
+-					  fmt,				       \
+-					  ...)				       \
+-	KUNIT_BASE_GT_MSG_ASSERTION(test,				       \
+-				    kunit_binary_ptr_assert,		       \
+-				    KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT,       \
+-				    assert_type,			       \
+-				    left,				       \
+-				    right,				       \
+-				    fmt,				       \
+-				    ##__VA_ARGS__)
+-
+-#define KUNIT_BINARY_PTR_GT_ASSERTION(test, assert_type, left, right)	       \
+-	KUNIT_BINARY_PTR_GT_MSG_ASSERTION(test,				       \
+-					  assert_type,			       \
+-					  left,				       \
+-					  right,			       \
+-					  NULL)
+-
+ #define KUNIT_BINARY_GE_MSG_ASSERTION(test, assert_type, left, right, fmt, ...)\
+ 	KUNIT_BASE_GE_MSG_ASSERTION(test,				       \
+ 				    kunit_binary_assert,		       \
+@@ -814,28 +769,6 @@ do {									       \
+ 				      right,				       \
+ 				      NULL)
+ 
+-#define KUNIT_BINARY_PTR_GE_MSG_ASSERTION(test,				       \
+-					  assert_type,			       \
+-					  left,				       \
+-					  right,			       \
+-					  fmt,				       \
+-					  ...)				       \
+-	KUNIT_BASE_GE_MSG_ASSERTION(test,				       \
+-				    kunit_binary_ptr_assert,		       \
+-				    KUNIT_INIT_BINARY_PTR_ASSERT_STRUCT,       \
+-				    assert_type,			       \
+-				    left,				       \
+-				    right,				       \
+-				    fmt,				       \
+-				    ##__VA_ARGS__)
+-
+-#define KUNIT_BINARY_PTR_GE_ASSERTION(test, assert_type, left, right)	       \
+-	KUNIT_BINARY_PTR_GE_MSG_ASSERTION(test,				       \
+-					  assert_type,			       \
+-					  left,				       \
+-					  right,			       \
+-					  NULL)
+-
+ #define KUNIT_BINARY_STR_ASSERTION(test,				       \
+ 				   assert_type,				       \
+ 				   left,				       \
+diff --git a/lib/kunit/assert.c b/lib/kunit/assert.c
+index 86013d4cf891..abb6c70de925 100644
+--- a/lib/kunit/assert.c
++++ b/lib/kunit/assert.c
+@@ -101,8 +101,8 @@ void kunit_binary_assert_format(const struct kunit_assert *assert,
+ void kunit_binary_ptr_assert_format(const struct kunit_assert *assert,
+ 				    struct string_stream *stream)
+ {
+-	struct kunit_binary_ptr_assert *binary_assert = container_of(
+-			assert, struct kunit_binary_ptr_assert, assert);
++	struct kunit_binary_assert *binary_assert = container_of(
++			assert, struct kunit_binary_assert, assert);
+ 
+ 	kunit_base_assert_format(assert, stream);
+ 	string_stream_add(stream,
+@@ -112,10 +112,10 @@ void kunit_binary_ptr_assert_format(const struct kunit_assert *assert,
+ 			 binary_assert->right_text);
+ 	string_stream_add(stream, "\t\t%s == %pK\n",
+ 			 binary_assert->left_text,
+-			 binary_assert->left_value);
++			 (void *)(uintptr_t)binary_assert->left_value);
+ 	string_stream_add(stream, "\t\t%s == %pK",
+ 			 binary_assert->right_text,
+-			 binary_assert->right_value);
++			 (void *)(uintptr_t)binary_assert->right_value);
+ 	kunit_assert_print_msg(assert, stream);
+ }
+ 
+diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+index c83c0fa59cbd..937f3fbe5ecc 100644
+--- a/lib/kunit/test.c
++++ b/lib/kunit/test.c
+@@ -172,6 +172,48 @@ void kunit_do_assertion(struct kunit *test,
+ 		kunit_abort(test);
+ }
+ 
++void kunit_do_binary_assertion(struct kunit *test, bool pass,
++				enum kunit_assert_type type,
++				int line, const char *file,
++				const char *operation,
++				const char *left_text, long long left_value,
++				const char *right_text, long long right_value,
++				void (*format)(const struct kunit_assert *assert,
++						struct string_stream *stream),
++				const char *fmt, ...)
++{
++	va_list args;
++	struct kunit_binary_assert assert = {
++		.assert = {
++			.test = test,
++			.type = type,
++			.file = file,
++			.line = line,
++			.message.fmt = fmt,
++			.format = format,
++		},
++		.operation = operation,
++		.left_text = left_text,
++		.left_value = left_value,
++		.right_text = right_text,
++		.right_value = right_value,
++	};
++
++	if (pass)
++		return;
++
++	va_start(args, fmt);
++
++	assert.assert.message.va = &args;
++
++	kunit_fail(test, &assert.assert);
++
++	va_end(args);
++
++	if (type == KUNIT_ASSERTION)
++		kunit_abort(test);
++}
++
+ void kunit_init_test(struct kunit *test, const char *name)
+ {
+ 	spin_lock_init(&test->lock);
+-- 
+2.20.0
+
