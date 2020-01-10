@@ -2,394 +2,313 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97904C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3391AC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5264820721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD1B20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 09:52:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="8FQ7PeEm";
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="8FQ7PeEm"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="axm+SZ6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbgAJJvS (ORCPT
+        id S1727408AbgAJJwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 04:51:18 -0500
-Received: from mail-eopbgr60046.outbound.protection.outlook.com ([40.107.6.46]:10662
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727206AbgAJJvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 04:51:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RpOxh8Ck9WWCfMNgHMOLPoOZgn4b+fCTsO88KvX3vfQ=;
- b=8FQ7PeEm7yBB4SBI4hGg24Yd+x5kvAHSrcrlWSQU6JpLUb4n3wAtxPMJ1j5aYS/n9wXjq3cNeJ0irPy88A9ju19x5821y6eWkhwsNwGMLlWK365a5/Ghs8xoMkLynugC2V4LJYqdfilrN7jcYT8HniPhIJ7ox/OqUZO3AJwevTY=
-Received: from AM4PR08CA0067.eurprd08.prod.outlook.com (2603:10a6:205:2::38)
- by DBBPR08MB4824.eurprd08.prod.outlook.com (2603:10a6:10:d9::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.12; Fri, 10 Jan
- 2020 09:51:10 +0000
-Received: from AM5EUR03FT008.eop-EUR03.prod.protection.outlook.com
- (2a01:111:f400:7e08::202) by AM4PR08CA0067.outlook.office365.com
- (2603:10a6:205:2::38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.10 via Frontend
- Transport; Fri, 10 Jan 2020 09:51:10 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT008.mail.protection.outlook.com (10.152.16.123) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.11 via Frontend Transport; Fri, 10 Jan 2020 09:51:10 +0000
-Received: ("Tessian outbound 28955e0c1ca8:v40"); Fri, 10 Jan 2020 09:51:10 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from ef822ac32c86.2
-        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 7423F90E-C564-4349-B2A7-0CD8414F21D6.1;
-        Fri, 10 Jan 2020 09:51:05 +0000
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id ef822ac32c86.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 10 Jan 2020 09:51:05 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XqaNw3gGyUGsLAV6nwkgaY6w+Hs7SxgkC2FKckmAh/+K7fgOuVhfZo9rcXxH9Aj33kUEQByuFbKOIAzlHP2t4Xutyxqg5tiRj7gSBQrzUtwoHVB57cUmoNGZlpRFgq2XaeNrIXuh34LNe5JBEPVz49N6hkteivifsR0c7Z1Q/mGeqc5VpBNjNv0RqJhjn1hXZcozQN5eb2q3Otpc404B2yZfu6aZaZlmjGYxKFQLrdyo3jwq0HNzyckrAr43QnkIxZn4tSJMmIrm1mpO/n1KnpqD0c5UYVYji9sM6Kgx5ztOw6dlNQ9gqkiGQ61/TbL5iD/k6mnYwgvgPkq8c8IUNA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RpOxh8Ck9WWCfMNgHMOLPoOZgn4b+fCTsO88KvX3vfQ=;
- b=mx0BWR002S7DA9ed95LDbyEvWtxVXY8PCAyiGE3rNNHPXwMvUC9MmRF34pQyzjsTOUVlH0EUtQrxA4YsedUOdejrfTXbOXnHWmuDcpcjACFztXFryZT0UmlLUrOPEmvHb23fZiknldSQ36+bbO+tUFmt/S3/cqm6dAM0s4fVDhoNELxs7WxfYCQ7s9nffGWA/4BzRPfF6Pq8weaefAZFjBpv1hmQ9Syc7+qX9hSW5MYxa+HTrb4ShZnR0S3Q4DTJMPUuz/xywdKp2aDmPqT3nZP7xPdUfEAu2osyovTEiK1memsBRUIA2jsagNEaV91JZw36rp9WZjzJ/x0Omqy4Pw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RpOxh8Ck9WWCfMNgHMOLPoOZgn4b+fCTsO88KvX3vfQ=;
- b=8FQ7PeEm7yBB4SBI4hGg24Yd+x5kvAHSrcrlWSQU6JpLUb4n3wAtxPMJ1j5aYS/n9wXjq3cNeJ0irPy88A9ju19x5821y6eWkhwsNwGMLlWK365a5/Ghs8xoMkLynugC2V4LJYqdfilrN7jcYT8HniPhIJ7ox/OqUZO3AJwevTY=
-Received: from HE1PR0801MB1676.eurprd08.prod.outlook.com (10.168.146.150) by
- HE1PR0801MB1978.eurprd08.prod.outlook.com (10.168.96.8) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Fri, 10 Jan 2020 09:51:01 +0000
-Received: from HE1PR0801MB1676.eurprd08.prod.outlook.com
- ([fe80::49c0:e8df:b9be:724f]) by HE1PR0801MB1676.eurprd08.prod.outlook.com
- ([fe80::49c0:e8df:b9be:724f%8]) with mapi id 15.20.2623.013; Fri, 10 Jan 2020
- 09:51:01 +0000
-From:   Jianyong Wu <Jianyong.Wu@arm.com>
-To:     Marc Zyngier <maz@kernel.org>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "yangbo.lu@nxp.com" <yangbo.lu@nxp.com>,
-        "john.stultz@linaro.org" <john.stultz@linaro.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "richardcochran@gmail.com" <richardcochran@gmail.com>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        nd <nd@arm.com>
-Subject: RE: [RFC PATCH v9 6/8] psci: Add hvc call service for ptp_kvm.
-Thread-Topic: [RFC PATCH v9 6/8] psci: Add hvc call service for ptp_kvm.
-Thread-Index: AQHVrwuxR+1ZEaCriEa+CGCL3lP4K6ffGBkAgALhg9CAAEMegIABkMMA
-Date:   Fri, 10 Jan 2020 09:51:01 +0000
-Message-ID: <HE1PR0801MB16765B507D9B5A1A7827078BF4380@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-References: <20191210034026.45229-1-jianyong.wu@arm.com>
- <20191210034026.45229-7-jianyong.wu@arm.com>
- <7383dc06897bba253f174cd21a19b5c0@kernel.org>
- <HE1PR0801MB1676AB738138AB24E2158AD4F4390@HE1PR0801MB1676.eurprd08.prod.outlook.com>
- <099a26ffef5d554b88a5e33d7f2a6e3a@kernel.org>
-In-Reply-To: <099a26ffef5d554b88a5e33d7f2a6e3a@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: 7d87b698-0ad5-49aa-adcb-f8ae0f578508.1
-x-checkrecipientchecked: true
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Jianyong.Wu@arm.com; 
-x-originating-ip: [113.29.88.7]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a4db4bc2-a6ee-4716-26ba-08d795b29f50
-X-MS-TrafficTypeDiagnostic: HE1PR0801MB1978:|HE1PR0801MB1978:|DBBPR08MB4824:
-x-ms-exchange-transport-forked: True
-X-Microsoft-Antispam-PRVS: <DBBPR08MB4824134B078D773CB15C4121F4380@DBBPR08MB4824.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: True
-x-ms-oob-tlc-oobclassifiers: OLM:1850;OLM:1850;
-x-forefront-prvs: 02788FF38E
-X-Forefront-Antispam-Report-Untrusted: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(39860400002)(376002)(136003)(346002)(13464003)(199004)(189003)(7696005)(53546011)(55016002)(86362001)(6506007)(7416002)(6916009)(52536014)(9686003)(316002)(71200400001)(55236004)(8936002)(66446008)(966005)(4001150100001)(33656002)(81156014)(76116006)(54906003)(66556008)(186003)(2906002)(4326008)(26005)(81166006)(66946007)(64756008)(8676002)(5660300002)(478600001)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0801MB1978;H:HE1PR0801MB1676.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: oRkGsVNMjxE5Gdp7ZfbaWvlBB14kjc0n/fYhBVzWLvJ0Mfm1F9QVPgMmS026Hzu6tpeyo+v7lOFdl9QhTU3pc46wLRgYv2SahhF2+1nhyQDG/pS/s8Pv+uuIls2gd5LPVm7u7RDpncWbNkmhSQcd5WgUykRiGS8WAILuQdbfugnVQrIM9TX0k2rRpOHB1Zuclx3sn76b5WB7mNPmRXNGz4Kj6JmK51g6kqbZdXxDNlWVaXimUHx6eTVqT/AgaSGSSYP5PP7FbQQ4xMKn422f6+b6uXiOY9p2ZSH8OVti4R6EQtkFqxXT4f0HThpc2lttLf5TqP1NYsEZFilenMSLhSCEm4oLkIYzokoAB1X1yQNOWbgk7n8A9L7xHb9xACa346iaIscRPykkQFCb8NPl0OAqrSFNrOwj7FGfCnFHkS2d66K66XNklosr8ZIopXJHdaG76/EJutpZgppODt+qStriVpOGEEeFkdsSv5wlQssYOqeSB2MoCKhy+0cLOHzvs4M8czfV8jdZsptk83spcPPqBfbuBkthViDF7x4Mx3s=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 10 Jan 2020 04:52:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29109 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727281AbgAJJwj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 04:52:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578649958;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=T9OBjJjtAJRIezJx3Zj+ASC4bWFGhwZpN4WumVttPls=;
+        b=axm+SZ6M2yq7J2jU5yUskgCGaNQzEZA3mLPsMT2e5TrJo3ST8S62JTd1FBJ4k2UOx5Sj5L
+        Fka4DC5ssLN8Eoof5C6CLkiCA671qCcds4L/ohVzfez09xy4Qu10nD2sAAy6KRt6WgnIcY
+        wq8UID76pbpvNg/njmYwFWOVzyR4C0A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-83-Y6hD424wN-WIart8DjvMnA-1; Fri, 10 Jan 2020 04:52:24 -0500
+X-MC-Unique: Y6hD424wN-WIart8DjvMnA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E0987801E7A;
+        Fri, 10 Jan 2020 09:52:22 +0000 (UTC)
+Received: from localhost (ovpn-116-201.ams2.redhat.com [10.36.116.201])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0D42F7D979;
+        Fri, 10 Jan 2020 09:52:18 +0000 (UTC)
+Date:   Fri, 10 Jan 2020 09:52:17 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     "Liu, Jing2" <jing2.liu@linux.intel.com>
+Cc:     virtio-dev@lists.oasis-open.org, slp@redhat.com,
+        linux-kernel@vger.kernel.org,
+        Chao Peng <chao.p.peng@linux.intel.com>,
+        Zha Bin <zhabin@linux.alibaba.com>,
+        Liu Jiang <gerry@linux.alibaba.com>
+Subject: Re: [virtio-dev][PATCH v1 1/2] virtio-mmio: Add MSI and different
+ notification address support
+Message-ID: <20200110095217.GB573283@stefanha-x1.localdomain>
+References: <1576855504-34947-1-git-send-email-jing2.liu@linux.intel.com>
+ <20200106161836.GB350142@stefanha-x1.localdomain>
+ <f691fb60-8f59-e827-6a5f-569db29e0a39@linux.intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB1978
-Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Jianyong.Wu@arm.com; 
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT008.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(199004)(189003)(13464003)(8936002)(450100002)(4326008)(6506007)(54906003)(26826003)(186003)(81166006)(2906002)(81156014)(6862004)(5660300002)(26005)(7696005)(478600001)(336012)(53546011)(52536014)(70206006)(70586007)(356004)(36906005)(55016002)(33656002)(9686003)(316002)(966005)(8676002)(86362001)(4001150100001);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR08MB4824;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: c104dbeb-b2ac-474d-5662-08d795b299d0
-X-Forefront-PRVS: 02788FF38E
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qMQCIYuaTd9n4/gySpch17YtvSFmAqyvm/Ylc5YqsVgVOE8c3A4opQYJeQkHjeAf1YA6hck3GGdJQhd+DaUE3Da8yZNoZZM3PsnNRRrFoKjF59PVbmjqKTWb6WJ9tNXzBCSU+1wn7tcG1sfEV77F7ulYklpXq1LUDvSMJK9oqmtItZ7nIAlZSf6uLGycMKgndxvr7P0qqnedT3t+zTj86AxeB4S9QeGTEqG+cDMtvsLUVIGa0PnNo8obmdtXCffcpdN4FZzmYRGdDJsngNig2cMZtOukrRYCt6c1+jTSq3LQPYhy0/ocZz2lI8GlPvJApNkfp30G8bYzbBOG5uu5o+kBSkKMDo5f5SzvDaIWCNq9r49c1ItZP4FMKrt/ykjSKqlEmm+gjDX3anN6FQTgF0DKx+3iaJWlaJfyWOhgc1+xOuO7d2oIDBUyIk+MVBI0y3vtPOMASyRnIihRNtorSnBil0Z7VGI1vK3mg+FVnnlxLCisgZx9sU5BeGyakKOz6vN7AQz9fzbI0p4m5Vy7e1C+Qwnc2eYq7+Dv6Ajm3CQ=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2020 09:51:10.4160
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a4db4bc2-a6ee-4716-26ba-08d795b29f50
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4824
+In-Reply-To: <f691fb60-8f59-e827-6a5f-569db29e0a39@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="A6N2fC+uXW/VQSAv"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+--A6N2fC+uXW/VQSAv
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: Marc Zyngier <maz@kernel.org>
-> Sent: Thursday, January 9, 2020 5:16 PM
-> To: Jianyong Wu <Jianyong.Wu@arm.com>
-> Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
-> tglx@linutronix.de; pbonzini@redhat.com; sean.j.christopherson@intel.com;
-> richardcochran@gmail.com; Mark Rutland <Mark.Rutland@arm.com>;
-> will@kernel.org; Suzuki Poulose <Suzuki.Poulose@arm.com>; Steven Price
-> <Steven.Price@arm.com>; linux-kernel@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; kvmarm@lists.cs.columbia.edu;
-> kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; Kaly Xin
-> <Kaly.Xin@arm.com>; Justin He <Justin.He@arm.com>; nd <nd@arm.com>
-> Subject: Re: [RFC PATCH v9 6/8] psci: Add hvc call service for ptp_kvm.
+On Thu, Jan 09, 2020 at 01:13:09PM +0800, Liu, Jing2 wrote:
 >=20
-> On 2020-01-09 05:45, Jianyong Wu wrote:
-> > Hi Marc,
-> >
-> >> -----Original Message-----
-> >> From: Marc Zyngier <maz@kernel.org>
-> >> Sent: Tuesday, January 7, 2020 5:16 PM
-> >> To: Jianyong Wu <Jianyong.Wu@arm.com>
-> >> Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com;
-> >> john.stultz@linaro.org; tglx@linutronix.de; pbonzini@redhat.com;
-> >> sean.j.christopherson@intel.com; richardcochran@gmail.com; Mark
-> >> Rutland <Mark.Rutland@arm.com>; will@kernel.org; Suzuki Poulose
-> >> <Suzuki.Poulose@arm.com>; Steven Price <Steven.Price@arm.com>;
-> >> linux-kernel@vger.kernel.org; linux-arm- kernel@lists.infradead.org;
-> >> kvmarm@lists.cs.columbia.edu; kvm@vger.kernel.org; Steve Capper
-> >> <Steve.Capper@arm.com>; Kaly Xin <Kaly.Xin@arm.com>; Justin He
-> >> <Justin.He@arm.com>; nd <nd@arm.com>
-> >> Subject: Re: [RFC PATCH v9 6/8] psci: Add hvc call service for
-> >> ptp_kvm.
-> >>
-> >> On 2019-12-10 03:40, Jianyong Wu wrote:
-> >> > ptp_kvm modules will call hvc to get this service.
-> >> > The service offers real time and counter cycle of host for guest.
-> >> >
-> >> > Signed-off-by: Jianyong Wu <jianyong.wu@arm.com>
-> >> > ---
-> >> >  include/linux/arm-smccc.h | 12 ++++++++++++
-> >> >  virt/kvm/arm/psci.c       | 22 ++++++++++++++++++++++
-> >> >  2 files changed, 34 insertions(+)
-> >> >
-> >> > diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
-> >> > index 6f82c87308ed..aafb6bac167d 100644
-> >> > --- a/include/linux/arm-smccc.h
-> >> > +++ b/include/linux/arm-smccc.h
-> >> > @@ -94,6 +94,7 @@
-> >> >
-> >> >  /* KVM "vendor specific" services */
-> >> >  #define ARM_SMCCC_KVM_FUNC_FEATURES		0
-> >> > +#define ARM_SMCCC_KVM_PTP			1
-> >> >  #define ARM_SMCCC_KVM_FUNC_FEATURES_2		127
-> >> >  #define ARM_SMCCC_KVM_NUM_FUNCS			128
-> >> >
-> >> > @@ -103,6 +104,17 @@
-> >> >  			   ARM_SMCCC_OWNER_VENDOR_HYP,
-> >> 		\
-> >> >  			   ARM_SMCCC_KVM_FUNC_FEATURES)
-> >> >
-> >> > +/*
-> >> > + * This ID used for virtual ptp kvm clock and it will pass second
-> >> > value
-> >> > + * and nanosecond value of host real time and system counter by
-> >> > +vcpu
-> >> > + * register to guest.
-> >> > + */
-> >> > +#define ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID
-> >> 		\
-> >> > +	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL,
-> >> 		\
-> >> > +			   ARM_SMCCC_SMC_32,
-> >> 	\
-> >> > +			   ARM_SMCCC_OWNER_VENDOR_HYP,
-> >> 		\
-> >> > +			   ARM_SMCCC_KVM_PTP)
-> >> > +
-> >>
-> >> All of this depends on patches that have never need posted to any ML,
-> >> and just linger in Will's tree. You need to pick them up and post
-> >> them as part of this series so that they can at least be reviewed.
-> >>
-> > Ok, I will add them next version.
-> >
-> >> >  #ifndef __ASSEMBLY__
-> >> >
-> >> >  #include <linux/linkage.h>
-> >> > diff --git a/virt/kvm/arm/psci.c b/virt/kvm/arm/psci.c index
-> >> > 0debf49bf259..682d892d6717 100644
-> >> > --- a/virt/kvm/arm/psci.c
-> >> > +++ b/virt/kvm/arm/psci.c
-> >> > @@ -9,6 +9,7 @@
-> >> >  #include <linux/kvm_host.h>
-> >> >  #include <linux/uaccess.h>
-> >> >  #include <linux/wait.h>
-> >> > +#include <linux/clocksource_ids.h>
-> >> >
-> >> >  #include <asm/cputype.h>
-> >> >  #include <asm/kvm_emulate.h>
-> >> > @@ -389,6 +390,8 @@ static int kvm_psci_call(struct kvm_vcpu *vcpu)
-> >> >
-> >> >  int kvm_hvc_call_handler(struct kvm_vcpu *vcpu)  {
-> >> > +	struct system_time_snapshot systime_snapshot;
-> >> > +	u64 cycles;
-> >> >  	u32 func_id =3D smccc_get_function(vcpu);
-> >> >  	u32 val[4] =3D {};
-> >> >  	u32 option;
-> >> > @@ -431,6 +434,25 @@ int kvm_hvc_call_handler(struct kvm_vcpu
-> *vcpu)
-> >> >  	case ARM_SMCCC_VENDOR_HYP_KVM_FEATURES_FUNC_ID:
-> >> >  		val[0] =3D BIT(ARM_SMCCC_KVM_FUNC_FEATURES);
-> >> >  		break;
-> >> > +	/*
-> >> > +	 * This will used for virtual ptp kvm clock. three
-> >> > +	 * values will be passed back.
-> >> > +	 * reg0 stores high 32-bit host ktime;
-> >> > +	 * reg1 stores low 32-bit host ktime;
-> >> > +	 * reg2 stores high 32-bit difference of host cycles and cntvoff;
-> >> > +	 * reg3 stores low 32-bit difference of host cycles and cntvoff.
-> >>
-> >> That's either two or four values, and not three as you claim above.
-> >>
-> > Sorry, I'm not sure what do you mean "three", the registers here is 4
-> > from reg0 to reg3.
+> On 1/7/2020 12:18 AM, Stefan Hajnoczi wrote:
+> > On Fri, Dec 20, 2019 at 11:25:03PM +0800, Jing Liu wrote:
+> > > Upgrade virtio-mmio to version 3, with the abilities to support
+> > > MSI interrupt and notification features.
+> > >=20
+> > > The details of version 2 will be appended as part of legacy interface
+> > > in next patch.
+> > Cool, MSI is useful.  Not a full review, but some comments below...
 >=20
-> Please read the comment you have written above...
-
-oh, I see it.
-
+> Hi Stefan,
 >=20
-> >> Also, I fail to understand the meaning of the host cycle vs cntvoff
-> >> comparison.
-> >> This is something that guest can perform on its own (it has access to
-> >> both physical and virtual timers, and can compute cntvoff without
-> >> intervention of the hypervisor).
-> >>
-> > To keep consistency and precision, clock time and counter cycle must
-> > captured at the same time. It will perform at ktime_get_snapshot.
+> Thanks for reviewing patches! Glad to see that MSI is welcome.
 >=20
-> Fair enough. It would vertainly help if you documented it. It would also =
-help if
-> you explained why it is so much worse to read the counter in the guest
-> before *and* after the call, and assume that the clock time read happened
-> right in the middle?
+> > > Signed-off-by: Jing Liu<jing2.liu@linux.intel.com>
+> > > Signed-off-by: Chao Peng<chao.p.peng@linux.intel.com>
+> > > Signed-off-by: Zha Bin<zhabin@linux.alibaba.com>
+> > > Signed-off-by: Liu Jiang<gerry@linux.alibaba.com>
+> > > ---
+> > >   content.tex  | 191 ++++++++++++++++++++++++++++++++++++++++++++++++=
+-----------
+> > >   msi-status.c |   5 ++
+> > >   2 files changed, 163 insertions(+), 33 deletions(-)
+> > >   create mode 100644 msi-status.c
+> > >=20
+> > > diff --git a/content.tex b/content.tex
+> > > index d68cfaf..eaaffec 100644
+> > > --- a/content.tex
+> > > +++ b/content.tex
+> > > @@ -1597,9 +1597,9 @@ \subsection{MMIO Device Register Layout}\label{=
+sec:Virtio Transport Options / Vi
+> > >     }
+> > >     \hline
+> > >     \mmioreg{Version}{Device version number}{0x004}{R}{%
+> > > -    0x2.
+> > > +    0x3.
+> > >       \begin{note}
+> > > -      Legacy devices (see \ref{sec:Virtio Transport Options / Virtio=
+ Over MMIO / Legacy interface}~\nameref{sec:Virtio Transport Options / Virt=
+io Over MMIO / Legacy interface}) used 0x1.
+> > > +      Legacy devices (see \ref{sec:Virtio Transport Options / Virtio=
+ Over MMIO / Legacy interface}~\nameref{sec:Virtio Transport Options / Virt=
+io Over MMIO / Legacy interface}) used 0x1 or 0x2.
+> > "Legacy devices" refers to pre-VIRTIO 1.0 devices.  0x2 is VIRTIO 1.0
+> > and therefore not "Legacy".  I suggest the following wording:
+> >=20
+> >        Legacy devices (see \ref{sec:Virtio Transport Options / Virtio O=
+ver MMIO / Legacy interface}~\nameref{sec:Virtio Transport Options / Virtio=
+ Over MMIO / Legacy interface}) used 0x1.
+> > +     VIRTIO 1.0 and 1.1 used 0x2.
+> Thanks for the guide.
+> > Did you consider using a transport feature bit instead of changing the
+> > device version number?  Feature bits allow more graceful compatibility:
+> > old drivers will continue to work with new devices and new drivers will
+> > continue to work with old devices.
 >=20
-ok, I will give explain in comments.
-
-> That aside, what you are returning is something that *looks* like the vir=
-tual
-> counter. What if the guest is using the physical counter, which is likely=
- to be
-> the case with nested virt? Do you expect the guest to always use the virt=
-ual
-> counter? This isn't going to fly.
-
-To be honest, I have little knowledge of nested virtualization for arm and =
-I'm confused with that
-guest'guest will use physical counter.
-
-IMO, ptp_kvm will call hvc to trap to its hypervisor adjacent to it. So gue=
-st'guest will trap to hypervisor in guest and will
-get guest's counter cycle then calculate guest'guest's counter cycle by som=
-ething like offset to sync time with it. So only if the
-guest's hypervisor can calculate the guest'guest's counter value, can ptp_k=
-vm works.
-
-the implementation of calculating the return value of counter cycle vary wi=
-th the way deriving counter cycle from hypervisor to guest.
-
-If considering nested virt here, we need the basic knowledge of how guest'g=
-uest's counter cycle is calculated from its hypervisor and how to determine=
-=20
-we are in guest's hypervisor or guest'guest's hypervisor.
-If it is the case, can you give me some knowledge, something like a documen=
-t, about that?
-
+> Yes, we considered using a feature bit from 24~37 or above, while a conce=
+rn
+> is that,
 >=20
-> >> Finally, how does it work with nested virt, where cntvoff is for the
-> >> the vEL2 guest?
-> >>
-> > For now, I have not considered ptp_kvm in nested virtualization. Also
-> > I'm not sure about if nested virtualization is ready on arm64 , as I
-> > need test ptp_kvm on it. If so, I can consider it.
+> the device which uses such bit only represents the behavior of mmio
+> transport layer but not common behavior
 >=20
-> It is not about testing. It is about taking the architecture into account=
-.
-> And ready or not doesn't come into play here. What you're defining here i=
-s
-> an ABI, and it better be totally future proof.
->=20
-Yeah, should included it in design.
+> of virtio device. Or am I missing some "transport" feature bit range?
 
-> But if you want to test, help yourself to [1] and have fun!
-> >
-Thanks
+https://docs.oasis-open.org/virtio/virtio/v1.1/cs01/virtio-v1.1-cs01.html#x=
+1-4100006
 
-> >> > +	 */
-> >> > +	case ARM_SMCCC_VENDOR_HYP_KVM_PTP_FUNC_ID:
-> >> > +		ktime_get_snapshot(&systime_snapshot);
-> >> > +		if (systime_snapshot.cs_id !=3D CSID_ARM_ARCH_COUNTER)
-> >> > +			return kvm_psci_call(vcpu);
-> >>
-> >> What does this mean? Calling PSCI because you've failed to identify
-> >> the clock source? What result do you expect from this? Hint: this
-> >> isn't a PSCI call.
-> >>
-> > Sorry, what I want to do here is that return to guest with the error
-> > info.
-> > Maybe I should set val[0] to -1 and break to let the guest know that
-> > error comes, as the guest will check if val[0] is positive to
-> > determine the next step.
->=20
-> What you should do is handle it like a normal SMCCC failure.
->=20
-Yeah, I will fix it.
+Feature bit 39 is reserved and can be used.
 
-Thanks
-Jianyong=20
+This is similar to when the SR_IOV (37) feature bit was added for
+virtio-pci.
 
->          M.
+> > >       \end{note}
+> > >     }
+> > >     \hline
+> > > @@ -1671,25 +1671,23 @@ \subsection{MMIO Device Register Layout}\labe=
+l{sec:Virtio Transport Options / Vi
+> > >       accesses apply to the queue selected by writing to \field{Queue=
+Sel}.
+> > >     }
+> > >     \hline
+> > > -  \mmioreg{QueueNotify}{Queue notifier}{0x050}{W}{%
+> > > -    Writing a value to this register notifies the device that
+> > > -    there are new buffers to process in a queue.
+> > > +  \mmioreg{QueueNotify}{Queue notifier}{0x050}{RW}{%
+> > > +    Reading from the register returns the virtqueue notification con=
+figuration.
+> > > -    When VIRTIO_F_NOTIFICATION_DATA has not been negotiated,
+> > > -    the value written is the queue index.
+> > > +    See \ref{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-=
+specific Initialization And Device Operation / Notification Address}
+> > > +    for the configuration format.
+> > > -    When VIRTIO_F_NOTIFICATION_DATA has been negotiated,
+> > > -    the \field{Notification data} value has the following format:
+> > > +    Writing when the notification address calculated by the notifica=
+tion configuration
+> > > +    is just located at this register.
+> > I don't understand this sentence.  What happens when the driver writes
+> > to this register?
 >=20
-> [1]
-> https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-
-> platforms.git/log/?h=3Dkvm-arm64/nv-5.5-rc4-WIP
-> --
-> Jazz is not dead. It just smells funny...
+> We're trying to define the notification mechanism that, driver MUST read
+> 0x50 to get the notification configuration
+>=20
+> and calculate the notify address. The writing case here is that, the noti=
+fy
+> address is just located here e.g. notify_base=3D0x50, notify_mul=3D0.
+
+I still don't understand what this means.  It's just an English issue
+and it will become clear if you can rephrase what you're saying.
+
+> > > -    \lstinputlisting{notifications-le.c}
+> > > -
+> > > -    See \ref{sec:Virtqueues / Driver notifications}~\nameref{sec:Vir=
+tqueues / Driver notifications}
+> > > -    for the definition of the components.
+> > > +    See \ref{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-=
+specific Initialization And Device Operation / Available Buffer Notificatio=
+ns}
+> > > +    to see the notification data format.
+> > >     }
+> > >     \hline
+> > >     \mmioreg{InterruptStatus}{Interrupt status}{0x60}{R}{%
+> > >       Reading from this register returns a bit mask of events that
+> > > -    caused the device interrupt to be asserted.
+> > > +    caused the device interrupt to be asserted. This is only used
+> > > +    when MSI is not enabled.
+> > >       The following events are possible:
+> > >       \begin{description}
+> > >         \item[Used Buffer Notification] - bit 0 - the interrupt was a=
+sserted
+> > > @@ -1703,7 +1701,7 @@ \subsection{MMIO Device Register Layout}\label{=
+sec:Virtio Transport Options / Vi
+> > >     \mmioreg{InterruptACK}{Interrupt acknowledge}{0x064}{W}{%
+> > >       Writing a value with bits set as defined in \field{InterruptSta=
+tus}
+> > >       to this register notifies the device that events causing
+> > > -    the interrupt have been handled.
+> > > +    the interrupt have been handled. This is only used when MSI is n=
+ot enabled.
+> > >     }
+> > >     \hline
+> > >     \mmioreg{Status}{Device status}{0x070}{RW}{%
+> > > @@ -1762,6 +1760,31 @@ \subsection{MMIO Device Register Layout}\label=
+{sec:Virtio Transport Options / Vi
+> > >       \field{SHMSel} is unused) results in a base address of
+> > >       0xffffffffffffffff.
+> > >     }
+> > > +  \hline
+> > > +  \mmioreg{MsiStatus}{MSI status}{0x0c0}{R}{%
+> > > +    Reading from this register returns the global MSI enable/disable=
+ status and maximum
+> > > +    number of virtqueues that device supports.
+> > > +    \lstinputlisting{msi-status.c}
+> > > +  }
+> > Why is it necessary to combine the number of virtqueues and global
+> > MSI enable/disable into a single 16-bit field?
+>=20
+> Originally, we want this 16-bit Read-Only, so we put some RO things toget=
+her
+> and separate
+>=20
+> enable setting command to next register.
+>=20
+> > virtio-mmio uses 32-bit registers.  It doesn't try hard to save registe=
+r
+> > space so it's strange to do it here (11-bit number of virtqueue field
+> > but 32-bit QueueSel field).
+>=20
+> In order to improve performance/save register space,=A0 we combine some d=
+ata
+> together.
+>=20
+> For example, combine MSI cmd operator (e.g. enable/disable, vector setup)
+> with argument (e.g. 1/0,=A0 queue index).
+>=20
+> But it seems we miss the consistency with QueueSel.=A0 So do you think if=
+ the
+> max queue number should be 32-bit,
+>=20
+> which means it must be the same with QueueSel? If so, I guess we need som=
+e
+> re-organization. :)
+
+I suggest following the 32-bit register size convention unless there is
+a specific reason why using other register sizes is absolutely necessary.
+
+> >=20
+> > > +  \hline
+> > > +  \mmioreg{MsiCmd}{MSI command}{0x0c2}{W}{%
+> > > +    The driver writes to this register with appropriate operators an=
+d arguments to
+> > > +    execute MSI command to device.
+> > > +    Operators supported is setting global MSI enable/disable status
+> > > +    and updating MSI configuration to device.
+> > If the global MSI enable/disable state is written in this register,
+> > consider making this register readable too so the global MSI
+> > enable/disable state can be read from it.
+>=20
+> Read enable/disable state is in 0x0c0.
+
+The read-only 0xc0 register combines two pieces of information:
+1. Global MSI enable/disable state
+2. Number of virtqueues (or is "number of MSI vectors" a more accurate
+   term?)
+
+A simpler way of organizing the registers is:
+MsiMaxVectors R
+MsiState RW
+
+This is simpler because drivers can read the MsiMaxVectors field and
+treat the value as an integer (no masking required).  And a person
+reading the specification instantly knows how to fetch the MSI
+enable/disable state when they read the MsiState register description.
+They don't need to look through all the other registers to find the one
+that allows them to read the state.
+
+Stefan
+
+--A6N2fC+uXW/VQSAv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl4YSVEACgkQnKSrs4Gr
+c8ibRgf+LwtNAlgM9K18CstvDCtydI06SsjgNsTo8QdHEER0Jr0777rde+RCf3I8
+niTrs7LYiU2f/6RK5jYJNLdDujfjU3bnJhj9paJnCmgPFRvlgRjoQ7lmbui+XroL
+vkLf3M0oBV19VzoceqymfhZpNBsbJZqsOd9+XP9P6LiCukWDTo+eGmhUUjUX1UTH
+W1gARScMLXmkJjbLE55dFksLS20+r9c78hbiY/EO1ecU6A0i84rtOB0VHBcMv7zi
+53gHBDXzWECJZsp6AJJA7/Vb2j9OBOJpY2ELQDwx7Fz5wQ6/cN4QJM4m62zY/HXm
+NwtIAPOhSAPeNp0AZXhqV4LJI6ZMYA==
+=umeK
+-----END PGP SIGNATURE-----
+
+--A6N2fC+uXW/VQSAv--
+
