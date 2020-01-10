@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBCFC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EE6C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE4F2467A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 946B12080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728924AbgAJRxn (ORCPT
+        id S1728514AbgAJRxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:53:43 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59215 "EHLO
+        Fri, 10 Jan 2020 12:53:46 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:59225 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728860AbgAJRxh (ORCPT
+        with ESMTP id S1728926AbgAJRxo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:53:37 -0500
+        Fri, 10 Jan 2020 12:53:44 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ipyTP-0001mG-Uv; Fri, 10 Jan 2020 18:53:28 +0100
+        id 1ipyTJ-0001k0-Jb; Fri, 10 Jan 2020 18:53:21 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2B3ED1C2D5F;
-        Fri, 10 Jan 2020 18:53:18 +0100 (CET)
-Date:   Fri, 10 Jan 2020 17:53:18 -0000
-From:   "tip-bot2 for Alexey Budankov" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 051B31C2D5B;
+        Fri, 10 Jan 2020 18:53:17 +0100 (CET)
+Date:   Fri, 10 Jan 2020 17:53:16 -0000
+From:   "tip-bot2 for Andrey Zhizhikin" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/core] perf record: Adapt affinity to machines with #CPUs > 1K
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+Subject: [tip: perf/core] tools lib api fs: Fix gcc9 stringop-truncation
+ compilation error
+Cc:     Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>,
+        Petr Mladek <pmladek@suse.com>, Jiri Olsa <jolsa@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <96d7e2ff-ce8b-c1e0-d52c-aa59ea96f0ea@linux.intel.com>
-References: <96d7e2ff-ce8b-c1e0-d52c-aa59ea96f0ea@linux.intel.com>
+In-Reply-To: <20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com>
+References: <20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com>
 MIME-Version: 1.0
-Message-ID: <157867879803.30329.14199943602079781895.tip-bot2@tip-bot2>
+Message-ID: <157867879690.30329.5750963934087709252.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -61,197 +66,66 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     8384a2600c7ddfc875f64e160d8b423aca4e203a
-Gitweb:        https://git.kernel.org/tip/8384a2600c7ddfc875f64e160d8b423aca4e203a
-Author:        Alexey Budankov <alexey.budankov@linux.intel.com>
-AuthorDate:    Tue, 03 Dec 2019 14:45:27 +03:00
+Commit-ID:     6794200fa3c9c3e6759dae099145f23e4310f4f7
+Gitweb:        https://git.kernel.org/tip/6794200fa3c9c3e6759dae099145f23e4310f4f7
+Author:        Andrey Zhizhikin <andrey.z@gmail.com>
+AuthorDate:    Wed, 11 Dec 2019 08:01:09 
 Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitterDate: Mon, 06 Jan 2020 11:46:09 -03:00
 
-perf record: Adapt affinity to machines with #CPUs > 1K
+tools lib api fs: Fix gcc9 stringop-truncation compilation error
 
-Use struct mmap_cpu_mask type for the tool's thread and mmap data
-buffers to overcome current 1024 CPUs mask size limitation of cpu_set_t
-type.
+GCC9 introduced string hardening mechanisms, which exhibits the error
+during fs api compilation:
 
-Currently glibc's cpu_set_t type has an internal mask size limit of 1024
-CPUs.
+error: '__builtin_strncpy' specified bound 4096 equals destination size
+[-Werror=stringop-truncation]
 
-Moving to the 'struct mmap_cpu_mask' type allows overcoming that limit.
+This comes when the length of copy passed to strncpy is is equal to
+destination size, which could potentially lead to buffer overflow.
 
-The tools bitmap API is used to manipulate objects of 'struct mmap_cpu_mask'
-type.
+There is a need to mitigate this potential issue by limiting the size of
+destination by 1 and explicitly terminate the destination with NULL.
 
-Committer notes:
-
-To print the 'nbits' struct member we must use %zd, since it is a
-size_t, this fixes the build in some toolchains/arches.
-
-Reported-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/96d7e2ff-ce8b-c1e0-d52c-aa59ea96f0ea@linux.intel.com
+Signed-off-by: Andrey Zhizhikin <andrey.zhizhikin@leica-geosystems.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andrii Nakryiko <andriin@fb.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Yonghong Song <yhs@fb.com>
+Cc: bpf@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Link: http://lore.kernel.org/lkml/20191211080109.18765-1-andrey.zhizhikin@leica-geosystems.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-record.c | 28 ++++++++++++++++++++++------
- tools/perf/util/mmap.c      | 28 ++++++++++++++++++++++------
- tools/perf/util/mmap.h      |  2 +-
- 3 files changed, 45 insertions(+), 13 deletions(-)
+ tools/lib/api/fs/fs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index fb19ef6..4c30146 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -62,6 +62,7 @@
- #include <linux/string.h>
- #include <linux/time64.h>
- #include <linux/zalloc.h>
-+#include <linux/bitmap.h>
+diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
+index 11b3885..027b18f 100644
+--- a/tools/lib/api/fs/fs.c
++++ b/tools/lib/api/fs/fs.c
+@@ -210,6 +210,7 @@ static bool fs__env_override(struct fs *fs)
+ 	size_t name_len = strlen(fs->name);
+ 	/* name + "_PATH" + '\0' */
+ 	char upper_name[name_len + 5 + 1];
++
+ 	memcpy(upper_name, fs->name, name_len);
+ 	mem_toupper(upper_name, name_len);
+ 	strcpy(&upper_name[name_len], "_PATH");
+@@ -219,7 +220,8 @@ static bool fs__env_override(struct fs *fs)
+ 		return false;
  
- struct switch_output {
- 	bool		 enabled;
-@@ -93,7 +94,7 @@ struct record {
- 	bool			timestamp_boundary;
- 	struct switch_output	switch_output;
- 	unsigned long long	samples;
--	cpu_set_t		affinity_mask;
-+	struct mmap_cpu_mask	affinity_mask;
- 	unsigned long		output_max_size;	/* = 0: unlimited */
- };
- 
-@@ -961,10 +962,15 @@ static struct perf_event_header finished_round_event = {
- static void record__adjust_affinity(struct record *rec, struct mmap *map)
- {
- 	if (rec->opts.affinity != PERF_AFFINITY_SYS &&
--	    !CPU_EQUAL(&rec->affinity_mask, &map->affinity_mask)) {
--		CPU_ZERO(&rec->affinity_mask);
--		CPU_OR(&rec->affinity_mask, &rec->affinity_mask, &map->affinity_mask);
--		sched_setaffinity(0, sizeof(rec->affinity_mask), &rec->affinity_mask);
-+	    !bitmap_equal(rec->affinity_mask.bits, map->affinity_mask.bits,
-+			  rec->affinity_mask.nbits)) {
-+		bitmap_zero(rec->affinity_mask.bits, rec->affinity_mask.nbits);
-+		bitmap_or(rec->affinity_mask.bits, rec->affinity_mask.bits,
-+			  map->affinity_mask.bits, rec->affinity_mask.nbits);
-+		sched_setaffinity(0, MMAP_CPU_MASK_BYTES(&rec->affinity_mask),
-+				  (cpu_set_t *)rec->affinity_mask.bits);
-+		if (verbose == 2)
-+			mmap_cpu_mask__scnprintf(&rec->affinity_mask, "thread");
- 	}
+ 	fs->found = true;
+-	strncpy(fs->path, override_path, sizeof(fs->path));
++	strncpy(fs->path, override_path, sizeof(fs->path) - 1);
++	fs->path[sizeof(fs->path) - 1] = '\0';
+ 	return true;
  }
  
-@@ -2433,7 +2439,6 @@ int cmd_record(int argc, const char **argv)
- # undef REASON
- #endif
- 
--	CPU_ZERO(&rec->affinity_mask);
- 	rec->opts.affinity = PERF_AFFINITY_SYS;
- 
- 	rec->evlist = evlist__new();
-@@ -2499,6 +2504,16 @@ int cmd_record(int argc, const char **argv)
- 
- 	symbol__init(NULL);
- 
-+	if (rec->opts.affinity != PERF_AFFINITY_SYS) {
-+		rec->affinity_mask.nbits = cpu__max_cpu();
-+		rec->affinity_mask.bits = bitmap_alloc(rec->affinity_mask.nbits);
-+		if (!rec->affinity_mask.bits) {
-+			pr_err("Failed to allocate thread mask for %zd cpus\n", rec->affinity_mask.nbits);
-+			return -ENOMEM;
-+		}
-+		pr_debug2("thread mask[%zd]: empty\n", rec->affinity_mask.nbits);
-+	}
-+
- 	err = record__auxtrace_init(rec);
- 	if (err)
- 		goto out;
-@@ -2613,6 +2628,7 @@ int cmd_record(int argc, const char **argv)
- 
- 	err = __cmd_record(&record, argc, argv);
- out:
-+	bitmap_free(rec->affinity_mask.bits);
- 	evlist__delete(rec->evlist);
- 	symbol__exit();
- 	auxtrace_record__free(rec->itr);
-diff --git a/tools/perf/util/mmap.c b/tools/perf/util/mmap.c
-index 2ee4faa..3b664fa 100644
---- a/tools/perf/util/mmap.c
-+++ b/tools/perf/util/mmap.c
-@@ -219,6 +219,8 @@ static void perf_mmap__aio_munmap(struct mmap *map __maybe_unused)
- 
- void mmap__munmap(struct mmap *map)
- {
-+	bitmap_free(map->affinity_mask.bits);
-+
- 	perf_mmap__aio_munmap(map);
- 	if (map->data != NULL) {
- 		munmap(map->data, mmap__mmap_len(map));
-@@ -227,7 +229,7 @@ void mmap__munmap(struct mmap *map)
- 	auxtrace_mmap__munmap(&map->auxtrace_mmap);
- }
- 
--static void build_node_mask(int node, cpu_set_t *mask)
-+static void build_node_mask(int node, struct mmap_cpu_mask *mask)
- {
- 	int c, cpu, nr_cpus;
- 	const struct perf_cpu_map *cpu_map = NULL;
-@@ -240,17 +242,23 @@ static void build_node_mask(int node, cpu_set_t *mask)
- 	for (c = 0; c < nr_cpus; c++) {
- 		cpu = cpu_map->map[c]; /* map c index to online cpu index */
- 		if (cpu__get_node(cpu) == node)
--			CPU_SET(cpu, mask);
-+			set_bit(cpu, mask->bits);
- 	}
- }
- 
--static void perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
-+static int perf_mmap__setup_affinity_mask(struct mmap *map, struct mmap_params *mp)
- {
--	CPU_ZERO(&map->affinity_mask);
-+	map->affinity_mask.nbits = cpu__max_cpu();
-+	map->affinity_mask.bits = bitmap_alloc(map->affinity_mask.nbits);
-+	if (!map->affinity_mask.bits)
-+		return -1;
-+
- 	if (mp->affinity == PERF_AFFINITY_NODE && cpu__max_node() > 1)
- 		build_node_mask(cpu__get_node(map->core.cpu), &map->affinity_mask);
- 	else if (mp->affinity == PERF_AFFINITY_CPU)
--		CPU_SET(map->core.cpu, &map->affinity_mask);
-+		set_bit(map->core.cpu, map->affinity_mask.bits);
-+
-+	return 0;
- }
- 
- int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
-@@ -261,7 +269,15 @@ int mmap__mmap(struct mmap *map, struct mmap_params *mp, int fd, int cpu)
- 		return -1;
- 	}
- 
--	perf_mmap__setup_affinity_mask(map, mp);
-+	if (mp->affinity != PERF_AFFINITY_SYS &&
-+		perf_mmap__setup_affinity_mask(map, mp)) {
-+		pr_debug2("failed to alloc mmap affinity mask, error %d\n",
-+			  errno);
-+		return -1;
-+	}
-+
-+	if (verbose == 2)
-+		mmap_cpu_mask__scnprintf(&map->affinity_mask, "mmap");
- 
- 	map->core.flush = mp->flush;
- 
-diff --git a/tools/perf/util/mmap.h b/tools/perf/util/mmap.h
-index ef51667..9d5f589 100644
---- a/tools/perf/util/mmap.h
-+++ b/tools/perf/util/mmap.h
-@@ -40,7 +40,7 @@ struct mmap {
- 		int		 nr_cblocks;
- 	} aio;
- #endif
--	cpu_set_t	affinity_mask;
-+	struct mmap_cpu_mask	affinity_mask;
- 	void		*data;
- 	int		comp_level;
- };
