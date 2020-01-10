@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26321C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D5D4C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0421620673
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:20:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8E9206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:20:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgAJQUs (ORCPT
+        id S1729368AbgAJQUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:20:48 -0500
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:52859 "EHLO
+        Fri, 10 Jan 2020 11:20:52 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:48035 "EHLO
         relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729228AbgAJQUp (ORCPT
+        with ESMTP id S1729332AbgAJQUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:20:45 -0500
+        Fri, 10 Jan 2020 11:20:50 -0500
 X-Originating-IP: 90.76.143.236
 Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
         (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id D9905FF809;
-        Fri, 10 Jan 2020 16:20:42 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 72305FF810;
+        Fri, 10 Jan 2020 16:20:47 +0000 (UTC)
 From:   Antoine Tenart <antoine.tenart@bootlin.com>
 To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
         f.fainelli@gmail.com, hkallweit1@gmail.com
@@ -34,9 +34,9 @@ Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
         allan.nielsen@microchip.com, camelia.groza@nxp.com,
         Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
         jakub.kicinski@netronome.com
-Subject: [PATCH net-next v5 14/15] net: macsec: allow to reference a netdev from a MACsec context
-Date:   Fri, 10 Jan 2020 17:20:09 +0100
-Message-Id: <20200110162010.338611-15-antoine.tenart@bootlin.com>
+Subject: [PATCH net-next v5 13/15] net: add a reference to MACsec ops in net_device
+Date:   Fri, 10 Jan 2020 17:20:08 +0100
+Message-Id: <20200110162010.338611-14-antoine.tenart@bootlin.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200110162010.338611-1-antoine.tenart@bootlin.com>
 References: <20200110162010.338611-1-antoine.tenart@bootlin.com>
@@ -47,30 +47,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows to reference a net_device from a MACsec context. This
-is needed to allow implementing MACsec operations in net device drivers.
+This patch adds a reference to MACsec ops to the net_device structure,
+allowing net device drivers to implement offloading operations for
+MACsec.
 
 Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- include/net/macsec.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ include/linux/netdevice.h | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/include/net/macsec.h b/include/net/macsec.h
-index a08f19099c7a..1b4de64d7fef 100644
---- a/include/net/macsec.h
-+++ b/include/net/macsec.h
-@@ -179,7 +179,10 @@ struct macsec_secy {
-  * struct macsec_context - MACsec context for hardware offloading
-  */
- struct macsec_context {
--	struct phy_device *phydev;
-+	union {
-+		struct net_device *netdev;
-+		struct phy_device *phydev;
-+	};
- 	enum macsec_offload offload;
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 2741aa35bec6..9104e011f94d 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -53,6 +53,8 @@ struct netpoll_info;
+ struct device;
+ struct phy_device;
+ struct dsa_port;
++struct macsec_context;
++struct macsec_ops;
  
- 	struct macsec_secy *secy;
+ struct sfp_bus;
+ /* 802.11 specific */
+@@ -1791,6 +1793,8 @@ enum netdev_priv_flags {
+  *
+  *	@wol_enabled:	Wake-on-LAN is enabled
+  *
++ *	@macsec_ops:    MACsec offloading ops
++ *
+  *	FIXME: cleanup struct net_device such that network protocol info
+  *	moves out.
+  */
+@@ -2081,6 +2085,11 @@ struct net_device {
+ 	struct lock_class_key	addr_list_lock_key;
+ 	bool			proto_down;
+ 	unsigned		wol_enabled:1;
++
++#if IS_ENABLED(CONFIG_MACSEC)
++	/* MACsec management functions */
++	const struct macsec_ops *macsec_ops;
++#endif
+ };
+ #define to_net_dev(d) container_of(d, struct net_device, dev)
+ 
 -- 
 2.24.1
 
