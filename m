@@ -2,98 +2,104 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BCEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D59CC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404982051A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727292051A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:15:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="a9XjmD7v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728617AbgAJTNt (ORCPT
+        id S1728130AbgAJTPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:13:49 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:59519 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727831AbgAJTNt (ORCPT
+        Fri, 10 Jan 2020 14:15:09 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:1659 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727612AbgAJTPJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:13:49 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1ipzif-0003It-LL; Fri, 10 Jan 2020 20:13:17 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 067A6105BDB; Fri, 10 Jan 2020 20:13:16 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Anchal Agarwal <anchalag@amazon.com>
-Cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        linux-pm@vger.kernel.org, linux-mm@kvack.org, kamatam@amazon.com,
-        sstabellini@kernel.org, konrad.wilk@oracle.co,
-        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
-        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        peterz@infradead.org, eduval@amazon.com, sblbir@amazon.com,
-        xen-devel@lists.xenproject.org, vkuznets@redhat.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dwmw@amazon.co.uk, fllinden@amazon.com, anchalag@amazon.com
-Subject: Re: [RFC PATCH V2 09/11] xen: Clear IRQD_IRQ_STARTED flag during shutdown PIRQs
-In-Reply-To: <20200109234050.GA26381@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-Date:   Fri, 10 Jan 2020 20:13:16 +0100
-Message-ID: <87zhevrupf.fsf@nanos.tec.linutronix.de>
+        Fri, 10 Jan 2020 14:15:09 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e18cd2a0000>; Fri, 10 Jan 2020 11:14:50 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 10 Jan 2020 11:15:08 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 10 Jan 2020 11:15:08 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jan
+ 2020 19:15:08 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 10 Jan 2020 19:15:08 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.48]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e18cd380000>; Fri, 10 Jan 2020 11:15:07 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <bhelgaas@google.com>, <lorenzo.pieralisi@arm.com>,
+        <rjw@rjwysocki.net>, <lenb@kernel.org>, <andrew.murray@arm.com>,
+        <treding@nvidia.com>, <jonathanh@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>,
+        <sagar.tv@gmail.com>
+Subject: [PATCH V3 0/2] PCI: Add MCFG quirks for Tegra194 host controllers
+Date:   Sat, 11 Jan 2020 00:44:58 +0530
+Message-ID: <20200110191500.9538-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200106082709.14370-1-vidyas@nvidia.com>
+References: <20200106082709.14370-1-vidyas@nvidia.com>
+X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578683690; bh=ijKK/DiU1QbdSZI//ZXmG99ZEoUzM/+Rr+0S/t1xBHU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
+         Content-Type;
+        b=a9XjmD7vpFdKxUPscAV1tPEV+9JDgitMBH9OKMH3NETpDRHbK+JlZwqHKIIF0xJbU
+         fnabinmenQjQjf3Ys7EUXue4hATK3hFof/wbfZLzOANr1C1tgFL+/koGp5KN/R2tsL
+         tVjga8Jup/uU+FKx2yDW8LDrEaok3SzUrvNJwrrG7+I9XPio4uCLDJxtO0DsggFXgB
+         Duwa7xXH35P0ijXtfSmM5zXbSUZnsk6G9wdpXEGBVE01ERa2jJfEzslXr5hm8/SphO
+         NNQCkL2IJ5jaCzoae1BPlC7y1S9eg1hhyJOGwlhXzvLsr1WLFd/baB0oqx+uU7QiE/
+         eUZf3Bk+HSeVg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anchal,
+The PCIe controller in Tegra194 SoC is not completely ECAM-compliant.
+With the current hardware design limitations in place, ECAM can be enabled
+only for one controller (C5 controller to be precise) with bus numbers
+starting from 160 instead of 0. A different approach is taken to avoid this
+abnormal way of enabling ECAM for just one controller but to enable
+configuration space access for all the other controllers. In this approach,
+ops are added through MCFG quirk mechanism which access the configuration
+spaces by dynamically programming iATU (internal AddressTranslation Unit)
+to generate respective configuration accesses just like the way it is
+done in DesignWare core sub-system.
+To increase the size of ECAM, a device-tree change is pushed in this series
+to move the IO window from 32-bit PCIe aperture to 64-bit PCIe aperture leaving
+the entire 32MB of 32-bit aperture for configuration space access.
 
-Anchal Agarwal <anchalag@amazon.com> writes:
-> On Thu, Jan 09, 2020 at 01:07:27PM +0100, Thomas Gleixner wrote:
->> Anchal Agarwal <anchalag@amazon.com> writes:
->> So either you can handle it purely on the XEN side without touching any
->> core state or you need to come up with some way of letting the core code
->> know that it should invoke shutdown instead of disable.
->> 
->> Something like the completely untested patch below.
->
-> Understandable. Really appreciate the patch suggestion below and i will test it
-> for sure and see if things can be fixed properly in irq core if thats the only
-> option. In the meanwhile, I tried to fix it on xen side unless it gives you the 
-> same feeling as above? MSI-x are just fine, just ioapic ones don't get any event
-> channel asssigned hence enable_dynirq does nothing. Those needs to be restarted.
->
-> diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
-> index 1bb0b522d004..2ed152f35816 100644
-> --- a/drivers/xen/events/events_base.c
->     +++ b/drivers/xen/events/events_base.c
-> @@ -575,6 +575,11 @@ static void shutdown_pirq(struct irq_data *data)
->
-> static void enable_pirq(struct irq_data *data)
-> {
->     +/*ioapic interrupts don't get event channel assigned
->        + * after being explicitly shutdown during guest
->        + * hibernation. They need to be restarted*/
->         +       if(!evtchn_from_irq(data->irq))
->         +               startup_pirq(data);
->     enable_dynirq(data);
->  }
+V3:
+* Pushed a device-tree change in the series to enable more space for ECAM
 
-Interesting patch format :)
+Vidya Sagar (2):
+  arm64: tegra: Re-order PCIe aperture mappings to support ACPI boot
+  PCI: Add MCFG quirks for Tegra194 host controllers
 
-Doing the shutdown from syscore_ops and the startup conditionally in a
-totaly unrelated function is not really intuitive.
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi   |  36 ++++----
+ drivers/acpi/pci_mcfg.c                    |   7 ++
+ drivers/pci/controller/dwc/Kconfig         |   3 +-
+ drivers/pci/controller/dwc/Makefile        |   2 +-
+ drivers/pci/controller/dwc/pcie-tegra194.c | 102 +++++++++++++++++++++
+ include/linux/pci-ecam.h                   |   1 +
+ 6 files changed, 131 insertions(+), 20 deletions(-)
 
-So either you do it symmetrically in XEN via syscore_ops callbacks or
-you let the irq core code help you out with the patch I provided
+-- 
+2.17.1
 
-Thanks,
-
-        tglx
