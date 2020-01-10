@@ -2,163 +2,197 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DFFC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B85EC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD41206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3715A206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:26:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgAJRZj (ORCPT
+        id S1727515AbgAJR0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:25:39 -0500
-Received: from esa1.microchip.iphmx.com ([68.232.147.91]:59833 "EHLO
-        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726463AbgAJRZi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:25:38 -0500
-Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
-  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="Horatiu.Vultur@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa1.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
-  envelope-from="Horatiu.Vultur@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: pvcClhOlqaI0EMVWXM/DKN4Vp1ybNbncbeoZfVLwSYsn1My5lvN0gAOR/D86Vk2jFrj9WCFGuM
- GTO6IvJnVUjfLy7MoAS/NhTdYwhRWs+Z18d1kFE+NxEKZxWenKULWNmLrKnUSbEhN17ERiFPQk
- KyRxZIcNFrv0/b7gkMD+slgicuZ3ucW+bV6BTkT+XYwAnO54gZy/bfFIolJk5w//yhCCu75JKS
- swpEkV8EnOasrSxeO1FTTZetjdQ5bBxBn2nbwHdf+dmzH8bdgPeFL76fCfXyYtfiDSwFn9Ebh2
- XXs=
+        Fri, 10 Jan 2020 12:26:13 -0500
+Received: from mga11.intel.com ([192.55.52.93]:37049 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726463AbgAJR0N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 12:26:13 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 09:26:12 -0800
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
-   d="scan'208";a="64340904"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jan 2020 10:25:37 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 10 Jan 2020 10:25:36 -0700
-Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
- Transport; Fri, 10 Jan 2020 10:25:35 -0700
-Date:   Fri, 10 Jan 2020 18:25:36 +0100
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        <anirudh.venkataramanan@intel.com>,
-        David Ahern <dsahern@gmail.com>,
-        "Jiri Pirko" <jiri@mellanox.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: Re: [RFC net-next Patch 0/3] net: bridge: mrp: Add support for Media
- Redundancy Protocol(MRP)
-Message-ID: <20200110172536.42rdfwdc6eiwsw7m@soft-dev3.microsemi.net>
-References: <20200109150640.532-1-horatiu.vultur@microchip.com>
- <6f1936e9-97e5-9502-f062-f2925c9652c9@cumulusnetworks.com>
- <20200110160456.enzomhfsce7bptu3@soft-dev3.microsemi.net>
- <CA+h21hrq7U4EdqSgpYQRjK8rkcJdvD5jXCSOH_peA-R4xCocTg@mail.gmail.com>
+   d="scan'208";a="216733954"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga008.jf.intel.com with ESMTP; 10 Jan 2020 09:26:11 -0800
+Date:   Fri, 10 Jan 2020 09:26:11 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
+        edwin.zhai@intel.com
+Subject: Re: [RESEND PATCH v10 03/10] mmu: spp: Add SPP Table setup functions
+Message-ID: <20200110172611.GC21485@linux.intel.com>
+References: <20200102061319.10077-1-weijiang.yang@intel.com>
+ <20200102061319.10077-4-weijiang.yang@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+h21hrq7U4EdqSgpYQRjK8rkcJdvD5jXCSOH_peA-R4xCocTg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200102061319.10077-4-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 02, 2020 at 02:13:12PM +0800, Yang Weijiang wrote:
+> SPPT is a 4-level paging structure similar to EPT, when SPP is
 
-Hi Valdimir and Andrew
+How does SPP interact with 5-level EPT?
 
-The 01/10/2020 18:21, Vladimir Oltean wrote:
-> I think it would help your case if you explained a bit more about the
-> hw offload primitives you have implemented internally. I believe you
-> are talking about the frame generation engine in the Ocelot switch
-> which has 1024 frame slots that are periodically sent based on one of
-> 8 timers. For receive, I believe that the functionality is to offload
-> the consumption of these periodic frames, and just raise an interrupt
-> if frames were expected but not received.
-Yes something like this. But it is worth mention that it is not just about
-injecting frames, sequence number needs to be incremented (by HW) etc.
+> armed for target physical page, bit 61 of the corresponding
+> EPT entry is flaged, then SPPT is traversed with the gfn,
+> the leaf entry of SPPT contains the access bitmap of subpages
+> inside the target 4KB physical page, one bit per 128-byte subpage.
+> 
+> Co-developed-by: He Chen <he.chen@linux.intel.com>
+> Signed-off-by: He Chen <he.chen@linux.intel.com>
+> Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> ---
 
-> For your use case of MRP, it makes perfect sense to have this. I am
-> just not sure (and not knowledgeable enough in Linux) what this engine
-> is offloading from the operating system's perspective.
-We will try to make that more clear.
+...
 
-> Your justification for implementing MRP in the kernel seems to be that
-> it's better to make MRP part of the kernel uapi than a configuration
-> interface for your periodic engine, which in principle I agree with.
-> I'm just not sure if the offload that you propose will have a trivial
-> path into the kernel either, so it would make sense for reviewers to
-> see everything put together first.
-You are right. The decision of start by publishing a pure SW implementation with
-no HW offload was not the best.
+> +static u64 format_spp_spte(u32 spp_wp_bitmap)
+> +{
+> +	u64 new_spte = 0;
+> +	int i = 0;
+> +
+> +	/*
+> +	 * One 4K page contains 32 sub-pages, in SPP table L4E, old bits
 
-I can do a new RFC that does including the HW offload hooks, and
-describe what configurations we do when these hooks are called. The
-actual HW which implements these hooks is still not released (and the
-SwitchDev driver for this device is still not submitted).
+Is this
 
-> Horatiu, could you also give some references to the frames that need
-> to be sent. I've no idea what information they need to contain, if the
-> contents is dynamic, or static, etc.
-It is dynamic - but trivial... Here is a dump from WireShark with
-annotation on what our HW can update:
+	One 4k page constains 32 sub-pages in SPP table L4E.  Old bits are...
 
-Ethernet II, Src: 7a:8b:b1:35:96:e1 (7a:8b:b1:35:96:e1), Dst: Iec_00:00:01 (01:15:4e:00:00:01)
-    Destination: Iec_00:00:01 (01:15:4e:00:00:01)
-    Source: 7a:8b:b1:35:96:e1 (7a:8b:b1:35:96:e1)
-    Type: MRP (0x88e3)
-PROFINET MRP MRP_Test, MRP_Common, MRP_End
-    MRP_Version: 1
-    MRP_TLVHeader.Type: MRP_Test (0x02)
-        MRP_TLVHeader.Type: MRP_Test (0x02)
-        MRP_TLVHeader.Length: 18
-        MRP_Prio: 0x1f40 High priorities
-        MRP_SA: 7a:8b:b1:35:96:e1 (7a:8b:b1:35:96:e1)
-        MRP_PortRole: Primary ring port (0x0000)
-        MRP_RingState: Ring closed (0x0001)
-        MRP_Transition: 0x0001
-        MRP_TimeStamp [ms]: 0x000cf574             <---------- Updated automatic
-    MRP_TLVHeader.Type: MRP_Common (0x01)
-        MRP_TLVHeader.Type: MRP_Common (0x01)
-        MRP_TLVHeader.Length: 18
-        MRP_SequenceID: 0x00e9                     <---------- Updated automatic
-        MRP_DomainUUID: ffffffff-ffff-ffff-ffff-ffffffffffff
-    MRP_TLVHeader.Type: MRP_End (0x00)
-        MRP_TLVHeader.Type: MRP_End (0x00)
-        MRP_TLVHeader.Length: 0
+or
+	One 4k page contains 32 sub-pages.  In SPP table L4E, old bits are...
 
-But all the fields can change, but to change the other fields we need to
-interact with the HW. Other SoC may have other capabilities in their
-offload. As an example, if the ring becomes open then the fields
-MRP_RingState and MRP_Transition need to change and in our case this
-requires SW interference.
+or
+	???
 
-Would you like a PCAP file as an example? Or do you want a better
-description of the frame format.
+> +	 * are reserved, so we need to transfer u32 subpage write
 
-/Horatiu
+Wrap comments at 80 columns to save lines.
+
+> +	 * protect bitmap to u64 SPP L4E format.
+
+What is a "page" in "one 4k page"?  What old bits?  Why not just track a
+64-bit value?  I understand *what* the code below does, but I have no clue
+why or whether it's correct.
+
+> +	 */
+> +	while (i < 32) {
+> +		if (spp_wp_bitmap & (1ULL << i))
+> +			new_spte |= 1ULL << (i * 2);
+> +		i++;
+> +	}
+
+	for (i = 0; i < 32; i++)
+		new_spte |= (spp_wp_bitmap & BIT_ULL(i)) << i;
+
+At the very least, use a for loop.
+
+> +
+> +	return new_spte;
+> +}
+> +
+> +static void spp_spte_set(u64 *sptep, u64 new_spte)
+> +{
+> +	__set_spte(sptep, new_spte);
+> +}
+> +
+> +bool is_spp_spte(struct kvm_mmu_page *sp)
+> +{
+> +	return sp->role.spp;
+> +}
+> +
+> +#define SPPT_ENTRY_PHA_MASK (0xFFFFFFFFFF << 12)
+> +
+> +int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
+> +			    u32 access_map, gfn_t gfn)
+> +{
+> +	struct kvm_shadow_walk_iterator iter;
+> +	struct kvm_mmu_page *sp;
+> +	gfn_t pseudo_gfn;
+> +	u64 old_spte, spp_spte;
+> +	int ret = -EFAULT;
+> +
+> +	/* direct_map spp start */
+> +	if (!VALID_PAGE(vcpu->kvm->arch.sppt_root))
+> +		return -EFAULT;
+> +
+> +	for_each_shadow_spp_entry(vcpu, (u64)gfn << PAGE_SHIFT, iter) {
+> +		if (iter.level == PT_PAGE_TABLE_LEVEL) {
+> +			spp_spte = format_spp_spte(access_map);
+> +			old_spte = mmu_spte_get_lockless(iter.sptep);
+> +			if (old_spte != spp_spte)
+> +				spp_spte_set(iter.sptep, spp_spte);
+> +			ret = 0;
+> +			break;
+> +		}
+> +
+> +		if (!is_shadow_present_pte(*iter.sptep)) {
+> +			u64 base_addr = iter.addr;
+> +
+> +			base_addr &= PT64_LVL_ADDR_MASK(iter.level);
+> +			pseudo_gfn = base_addr >> PAGE_SHIFT;
+> +			spp_spte = *iter.sptep;
+> +			sp = kvm_spp_get_page(vcpu, pseudo_gfn,
+> +					      iter.level - 1);
+> +			link_spp_shadow_page(vcpu, iter.sptep, sp);
+> +		} else if (iter.level == PT_DIRECTORY_LEVEL  &&
+> +			   !(spp_spte & PT_PRESENT_MASK) &&
+> +			   (spp_spte & SPPT_ENTRY_PHA_MASK)) {
+> +			spp_spte = *iter.sptep;
+> +			spp_spte |= PT_PRESENT_MASK;
+> +			spp_spte_set(iter.sptep, spp_spte);
+> +		}
+> +	}
+> +
+> +	kvm_flush_remote_tlbs(vcpu->kvm);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_spp_setup_structure);
+> +
+> +inline u64 construct_spptp(unsigned long root_hpa)
+> +{
+> +	return root_hpa & PAGE_MASK;
+> +}
+> +EXPORT_SYMBOL_GPL(construct_spptp);
+> +
+> diff --git a/arch/x86/kvm/mmu/spp.h b/arch/x86/kvm/mmu/spp.h
+> new file mode 100644
+> index 000000000000..8ef94b7a2057
+> --- /dev/null
+> +++ b/arch/x86/kvm/mmu/spp.h
+> @@ -0,0 +1,10 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __KVM_X86_VMX_SPP_H
+> +#define __KVM_X86_VMX_SPP_H
+> +
+> +bool is_spp_spte(struct kvm_mmu_page *sp);
+> +u64 construct_spptp(unsigned long root_hpa);
+> +int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
+> +			    u32 access_map, gfn_t gfn);
+> +
+> +#endif /* __KVM_X86_VMX_SPP_H */
+> -- 
+> 2.17.2
+> 
