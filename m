@@ -2,184 +2,175 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C1CC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53498C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D5B92077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16EF92077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:29:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="ADhUD7pM"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="GasbKkqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgAJO1g (ORCPT
+        id S1728174AbgAJO3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:27:36 -0500
-Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:4197 "EHLO
-        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727362AbgAJO1f (ORCPT
+        Fri, 10 Jan 2020 09:29:33 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:4381 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727823AbgAJO3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:27:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1578666455;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=xgqt8XWWGi2ncNcYWvt2YE34ig7SWuJftG7//Auw5T0=;
-  b=ADhUD7pMSXp8xwBCBMElQ/PY27VAlwsVWaHQydBQvRFAyOwdaQ6gl9v6
-   ZeQWXJ9jXwTn+bqa6FA2XpA9tRf+I4qn4slaVMRGZOUPm53H154T+Up2Y
-   JVgEEXG2ooKxFH00CUMSzYdyp6e1l8E2it8qmp978whuqDfynJQUiuEUz
-   w=;
-Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=sergey.dyasli@citrix.com; spf=Pass smtp.mailfrom=sergey.dyasli@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  sergey.dyasli@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="sergey.dyasli@citrix.com";
-  x-sender="sergey.dyasli@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
-  sergey.dyasli@citrix.com designates 162.221.158.21 as
+        Fri, 10 Jan 2020 09:29:32 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
   permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="sergey.dyasli@citrix.com";
-  x-sender="sergey.dyasli@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="Claudiu.Beznea@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
   authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
-  envelope-from="sergey.dyasli@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: n2x5OQV5+wxwJ/OY1mimcnkZJ4ZpHwMNQu/14G8v3Nz7/CTkOmZneD7S6JZIy2Fs9J6dXNq4hs
- yPzA2Zm7H+pQoylj4XyFgwnW0TfrJI+k2UCJ3WS4k4sw1IZTSJUOcnMZTLbw9+E6lJGTpVE7xk
- WuKkpUnrUHoYqEJz0JCDjkfaqbjXpIGD2I0Jhf+2Lb/MNn+sFXjQ8rxlAMLzd8JUR1uGo6cckd
- GYXX7QJ/w44r6HuQ5nrtWeUqy7pC7kQM5eKBp2NL2W6ER5LlkqHw+xm7tuw1gQTNwfZEicNGmm
- b28=
-X-SBRS: 2.7
-X-MesageID: 10727982
-X-Ironport-Server: esa3.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.69,417,1571716800"; 
-   d="scan'208";a="10727982"
-Subject: Re: [PATCH v1 4/4] xen/netback: Fix grant copy across page boundary
- with KASAN
-To:     Paul Durrant <pdurrant@gmail.com>
-CC:     <xen-devel@lists.xen.org>, <kasan-dev@googlegroups.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        "Dmitry Vyukov" <dvyukov@google.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        George Dunlap <george.dunlap@citrix.com>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Wei Liu" <wei.liu@kernel.org>,
-        "sergey.dyasli@citrix.com >> Sergey Dyasli" 
-        <sergey.dyasli@citrix.com>
-References: <20200108152100.7630-1-sergey.dyasli@citrix.com>
- <20200108152100.7630-5-sergey.dyasli@citrix.com>
- <CACCGGhCGcdEq7CC3J0201ETvAd+PZ2fTDNUS3mo599Tuf-61yA@mail.gmail.com>
-From:   Sergey Dyasli <sergey.dyasli@citrix.com>
-Autocrypt: addr=sergey.dyasli@citrix.com; keydata=
- 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
-Message-ID: <dc322a8f-d0ae-dea6-4fe0-cc4d5d14f4d4@citrix.com>
-Date:   Fri, 10 Jan 2020 14:27:30 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <CACCGGhCGcdEq7CC3J0201ETvAd+PZ2fTDNUS3mo599Tuf-61yA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Claudiu.Beznea@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: q5AiC3XkiauEHUQFQG17xILgSYBRgXKCrPTN1w/P5eSDbuM0CAQarGXVZ6eJN8ct5nAPWg7tza
+ 3ygMbof4X/nO89x/Eh43KeQh/Rrd8M+CpxFf8R3hBh2AxjhYJkahF5hgcGayTaoZnLo9lwNEmX
+ MpjR/h93Xwa/gmoAwVfIhAhet6w6kSLnMop48QdZ1CCudHvii+urqRdBKdAFFwIQxoe89rokho
+ j3K4B9eLZzMjTE9rKL9MSdPrjfnQTFHITdty0Uhx0hRGXHzw3eMc1uakez6+QRZeqnfx+9nk3B
+ f/I=
+X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
+   d="scan'208";a="62877025"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jan 2020 07:29:30 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 10 Jan 2020 07:29:30 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5 via Frontend
+ Transport; Fri, 10 Jan 2020 07:29:29 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JSqMLRReve8BV3ZaCM3KyNfU0/JusiiBOdUct00Em+P/DFuJAKeoNk6cvbLgO9d1fP46LiAw45ZKiq06qfO0JVJm2Tui8B29IXubQ5ffOS2VYG2+Cu93fwxw0dAqyuP+ANWuhVypzxMwzzdDd4wKd89kKUjgH+f0zmsW0ny9xTs8vxOffnyo3BXGsPDUKwaY9OZwJCSJHOQQgdOgOeCRkcO3TClA1XeHE58aksiodKKxTzpiz3fs80RHYAydeAmLLq+CxRh1jKzM9SzitVWRy7jPI8DdJ7BV7fITKx/btKNpAvhriV2pzV3w+WA8/YFKmEAFH7+TEJZ7tjIuJW6Dwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xxloPh4/jxlmr4sbf54DV4SK9CqW6sDObohYQUYoWZU=;
+ b=EKsLa5ltL2feIg37GfyMr7OdwS2HU2E45kCNITiRONVlJTSngEIVijhw+qJPDemsRcsetWF/yym0Vi6m+ZPF19qU/vQ3mPH8a2w6mSzExMvsJJlCAW0ZI1WJ6aGSQSwcIMjNMBwwcDBDL7Fy7oAIHzOev0FgImoSCGSJv9aQokThCFLKBg+0bBPra4PgE8FdVOSh8HCvnJKq+m3wtR8OzFwmThQluiDMCaYrDbRT2/Rzo/+NOnl//n5fOhKbz/xbji1CMYSU2ffF1i/Qrcb2v0ALLli0UncYOW3ddaJnJ3VuSdvmFl/sWh4h//PZLJMYhZCESZx3khLZPJsKykZT0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xxloPh4/jxlmr4sbf54DV4SK9CqW6sDObohYQUYoWZU=;
+ b=GasbKkqfqruBwca4atFPr/9Mq6DQxST94rMtnhNgOhG/2R3DFuuYreTDjjS8qwWSiISMBuQ3Sc2Lzy/WE4TmZqBcpWnOnNpw7XUuQajLeZGjgidnO2QbE9Winkqwtr+Jw8jAIj/+lu3UCMQUVM6gQMjYVahKmXmvBEIPgaA12Yk=
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com (20.176.120.224) by
+ DM6PR11MB2619.namprd11.prod.outlook.com (20.176.99.25) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.11; Fri, 10 Jan 2020 14:29:27 +0000
+Received: from DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::106f:424f:ac54:1dbb]) by DM6PR11MB3225.namprd11.prod.outlook.com
+ ([fe80::106f:424f:ac54:1dbb%7]) with mapi id 15.20.2623.008; Fri, 10 Jan 2020
+ 14:29:27 +0000
+From:   <Claudiu.Beznea@microchip.com>
+To:     <alexandre.belloni@bootlin.com>
+CC:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <Nicolas.Ferre@microchip.com>, <Ludovic.Desroches@microchip.com>,
+        <vkoul@kernel.org>, <Eugen.Hristev@microchip.com>,
+        <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
+        <pmeerw@pmeerw.net>, <mchehab@kernel.org>, <lee.jones@linaro.org>,
+        <richard.genoud@gmail.com>, <radu_nicolae.pirea@upb.ro>,
+        <Tudor.Ambarus@microchip.com>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <vigneshr@ti.com>, <wg@grandegger.com>,
+        <mkl@pengutronix.de>, <a.zummo@towertech.it>, <broonie@kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
+        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-rtc@vger.kernel.org>
+Subject: Re: [PATCH 03/16] dt-bindings: atmel-tcb: add microchip,<chip>-tcb
+Thread-Topic: [PATCH 03/16] dt-bindings: atmel-tcb: add microchip,<chip>-tcb
+Thread-Index: AQHVx8JdxpRYsxUulk+Au4WCpSrtFg==
+Date:   Fri, 10 Jan 2020 14:29:27 +0000
+Message-ID: <da99fbce-8341-19d2-12c9-144564d70726@microchip.com>
+References: <1578488123-26127-1-git-send-email-claudiu.beznea@microchip.com>
+ <1578488123-26127-4-git-send-email-claudiu.beznea@microchip.com>
+ <20200110134001.GD1027187@piout.net>
+In-Reply-To: <20200110134001.GD1027187@piout.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f2b8e2ee-3f51-4d33-5aaf-08d795d97fae
+x-ms-traffictypediagnostic: DM6PR11MB2619:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB261914089414C7B81ADA900387380@DM6PR11MB2619.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02788FF38E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(396003)(346002)(39860400002)(366004)(199004)(189003)(966005)(6486002)(71200400001)(26005)(6506007)(53546011)(6916009)(31696002)(478600001)(2616005)(8676002)(81166006)(186003)(81156014)(86362001)(64756008)(66446008)(7406005)(66556008)(66476007)(36756003)(2906002)(54906003)(31686004)(5660300002)(6512007)(66946007)(91956017)(76116006)(4326008)(8936002)(316002)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR11MB2619;H:DM6PR11MB3225.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: A30B1H1ZE17H9I1fgVDH+S8ZJ4VzWdgVlD/1s+7fYFSAW6V/IGfnMPOb+Hf4BGGxU8Yt5KMuuQ5+PcRy4449kUgZal5vhyireB9TFxUzxTlnaHFZUecYNPrj+rGiGTlr9VjHwuOOqhOGN7w56k4vROS0O1MWHVOtQUcE9mtKdrxnO/BRWHbx5rX8BTvh+o+DMp9fWaAhkLPTAcBaE1erSh2cKFheVd4Ve+Fg3/GhrLICcJcsbRcmdjUhfKXSW70UrQWJnunn5mYMHvIK4jbs4Cojh2/39O1BIv1lrEgUQ+bRILYl9+LmrRPMUGuzqcuK1j8LH7Ffl23YMG1HcwI1OLxernXxIfHLhv6xF3zu0EO8P65K6XVf/3Wl7b2ShXH8iZhJpICOzlvAlbgyVvYiN3EFJDzqIuroIyAgi6lkqscQlSpA4lvoRIZo69FJXg8GP/B66m4hIXpi300Htiju5JOoxyNnB5Yxr/I06kg2dXc=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <88CA889BDD9DA749BF1403CE9B9231D5@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: f2b8e2ee-3f51-4d33-5aaf-08d795d97fae
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 14:29:27.8009
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YeoEhpAe0UmE9ZEWjX/ksEr3eX2Yr5486S2WyfyiCLJXASfPHqr13AslEXQcfiqn6/FquOLYZD7dm87Z26xXBDeZdfiSupFXW/z11lsvwUw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2619
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/01/2020 13:36, Paul Durrant wrote:
-> On Wed, 8 Jan 2020 at 15:21, Sergey Dyasli <sergey.dyasli@citrix.com> wrote:
->>
->> From: Ross Lagerwall <ross.lagerwall@citrix.com>
->>
->> When KASAN (or SLUB_DEBUG) is turned on, the normal expectation that
->> allocations are aligned to the next power of 2 of the size does not
->> hold. Therefore, handle grant copies that cross page boundaries.
->>
->> Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
->> Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
->> ---
->> RFC --> v1:
->> - Added BUILD_BUG_ON to the netback patch
->> - xenvif_idx_release() now located outside the loop
->>
->> CC: Wei Liu <wei.liu@kernel.org>
->> CC: Paul Durrant <paul@xen.org>
-> [snip]
->>
->> +static void __init __maybe_unused build_assertions(void)
->> +{
->> +       BUILD_BUG_ON(sizeof(struct xenvif_tx_cb) > 48);
->
-> FIELD_SIZEOF(struct sk_buff, cb) rather than a magic '48' I think.
-
-The macro got renamed recently, so now it should be:
-
-    sizeof_field(struct sk_buff, cb))
-
-Thanks for the suggestion.
-
---
-Sergey
+DQoNCk9uIDEwLjAxLjIwMjAgMTU6NDAsIEFsZXhhbmRyZSBCZWxsb25pIHdyb3RlOg0KPiBFWFRF
+Uk5BTCBFTUFJTDogRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5sZXNz
+IHlvdSBrbm93IHRoZSBjb250ZW50IGlzIHNhZmUNCj4gDQo+IE9uIDA4LzAxLzIwMjAgMTQ6NTU6
+MTArMDIwMCwgQ2xhdWRpdSBCZXpuZWEgd3JvdGU6DQo+PiBBZGQgbWljcm9jaGlwLDxjaGlwPi10
+Y2IgdG8gRFQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbi4gVGhpcyBpcyBmb3INCj4+IG1pY3JvY2hp
+cCxzYW05eDYwLXRjYi4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBDbGF1ZGl1IEJlem5lYSA8Y2xh
+dWRpdS5iZXpuZWFAbWljcm9jaGlwLmNvbT4NCj4+IC0tLQ0KPj4gIERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tZmQvYXRtZWwtdGNiLnR4dCB8IDUgKysrLS0NCj4+ICAxIGZpbGUg
+Y2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2F0bWVsLXRjYi50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2F0bWVsLXRjYi50eHQNCj4+
+IGluZGV4IGM0YTgzZTM2NGNiNi4uZTE3MTNlNDFmNmUwIDEwMDY0NA0KPj4gLS0tIGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9hdG1lbC10Y2IudHh0DQo+PiArKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL2F0bWVsLXRjYi50eHQNCj4+IEBA
+IC0xLDYgKzEsNyBAQA0KPj4gICogRGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIEF0bWVsIFRpbWVy
+IENvdW50ZXIgQmxvY2tzDQo+PiAtLSBjb21wYXRpYmxlOiBTaG91bGQgYmUgImF0bWVsLDxjaGlw
+Pi10Y2IiLCAic2ltcGxlLW1mZCIsICJzeXNjb24iLg0KPj4gLSAgPGNoaXA+IGNhbiBiZSAiYXQ5
+MXJtOTIwMCIgb3IgImF0OTFzYW05eDUiDQo+PiArLSBjb21wYXRpYmxlOiBTaG91bGQgYmUgImF0
+bWVsLDxjaGlwPi10Y2IiLCAibWljcm9jaGlwLDxjaGlwPi10Y2IiLA0KPj4gKyAgInNpbXBsZS1t
+ZmQiLCAic3lzY29uIi4NCj4+ICsgIDxjaGlwPiBjYW4gYmUgImF0OTFybTkyMDAiLCAiYXQ5MXNh
+bTl4NSIgb3IgInNhbTl4NjAiDQo+IA0KPiBhdG1lbCxzYW05eDYwLXRjYiwgbWljcm9jaGlwLGF0
+OTFybTkyMDAtdGNiIGFuZCBtaWNyb2NoaXAsYXQ5MXNhbTl4NS10Y2INCj4gYXJlIG5vdCBhbGxv
+d2VkIGFuZCB0aGUgZG9jdW1lbnRhdGlvbiBzaG91bGQgcmVmbGVjdCB0aGF0Lg0KDQpPSyEgSSds
+bCBkb3VibGUgY2hlY2sgaXQuDQoNCj4gDQo+IEl0IHdvdWxkIHByb2JhYmx5IGJlIGVhc2llciB0
+byBkbyB0aGF0IG9uIHRvcCBvZiB0aGUgeWFtbCBjb252ZXJzaW9uDQo+IGhlcmU6DQo+IGh0dHBz
+Oi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAxOTEwMDkyMjQwMDYuNTAyMS0yLWFsZXhhbmRyZS5i
+ZWxsb25pQGJvb3RsaW4uY29tLw0KDQpJIGRvbid0IHNlZSB0aGlzIGludGVncmF0ZWQgaW4gbmV4
+dC0yMDIwMDExMC4gQW0gSSBsb29raW5nIGF0IHRoZSB3cm9uZyBicmFuY2g/DQoNCj4gDQo+IC0t
+DQo+IEFsZXhhbmRyZSBCZWxsb25pLCBCb290bGluDQo+IEVtYmVkZGVkIExpbnV4IGFuZCBLZXJu
+ZWwgZW5naW5lZXJpbmcNCj4gaHR0cHM6Ly9ib290bGluLmNvbQ0KPiA=
