@@ -2,105 +2,91 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AA8EC3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 078ECC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EAEF2073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5EFF2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:10:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbgAJIKG (ORCPT
+        id S1726801AbgAJIK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 03:10:06 -0500
-Received: from lgeamrelo13.lge.com ([156.147.23.53]:36311 "EHLO
-        lgeamrelo11.lge.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726401AbgAJIKF (ORCPT
+        Fri, 10 Jan 2020 03:10:27 -0500
+Received: from relay11.mail.gandi.net ([217.70.178.231]:45263 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgAJIK1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 03:10:05 -0500
-Received: from unknown (HELO lgemrelse6q.lge.com) (156.147.1.121)
-        by 156.147.23.53 with ESMTP; 10 Jan 2020 16:40:03 +0900
-X-Original-SENDERIP: 156.147.1.121
-X-Original-MAILFROM: taejoon.song@lge.com
-Received: from unknown (HELO ubuntu0.156.147.1.1) (10.177.220.34)
-        by 156.147.1.121 with ESMTP; 10 Jan 2020 16:40:03 +0900
-X-Original-SENDERIP: 10.177.220.34
-X-Original-MAILFROM: taejoon.song@lge.com
-From:   Taejoon Song <taejoon.song@lge.com>
-To:     minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com, axboe@kernel.dk
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        yjay.kim@lge.com, Taejoon Song <taejoon.song@lge.com>
-Subject: [PATCH] zram: try to avoid worst-case scenario on same element pages
-Date:   Fri, 10 Jan 2020 16:40:01 +0900
-Message-Id: <1578642001-11765-1-git-send-email-taejoon.song@lge.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 10 Jan 2020 03:10:27 -0500
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 2998810000D;
+        Fri, 10 Jan 2020 08:10:25 +0000 (UTC)
+Date:   Fri, 10 Jan 2020 09:10:24 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Chuanhong Guo <gch981213@gmail.com>, linux-mtd@lists.infradead.org,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] mtd: nand: spi: rework detect procedure for
+ different read id op
+Message-ID: <20200110091024.56918193@xps13>
+In-Reply-To: <20200110090422.75988c49@collabora.com>
+References: <20200110025218.1257809-1-gch981213@gmail.com>
+        <20200110075859.3edfae3a@collabora.com>
+        <CAJsYDVK4RtX92O3M+EOsZa5qS4TxE0OVaEq=KOnAuP6DEHvw2Q@mail.gmail.com>
+        <20200110090422.75988c49@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The worst-case scenario on finding same element pages is that almost
-all elements are same at the first glance but only last few elements
-are different.
+Hi Boris,
 
-Since the same element tends to be grouped from the beginning of the
-pages, if we check the first element with the last element before
-looping through all elements, we might have some chances to quickly
-detect non-same element pages.
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Fri, 10 Jan
+2020 09:04:22 +0100:
 
-1. Test is done under LG webOS TV (64-bit arch)
-2. Dump the swap-out pages (~819200 pages)
-3. Analyze the pages with simple test script which counts the iteration
-   number and measures the speed at off-line
+> On Fri, 10 Jan 2020 15:34:28 +0800
+> Chuanhong Guo <gch981213@gmail.com> wrote:
+> 
+> > Hi!
+> > 
+> > On Fri, Jan 10, 2020 at 2:59 PM Boris Brezillon
+> > <boris.brezillon@collabora.com> wrote:  
+> > > [...]    
+> > > > +     ret = spinand_read_id_op(spinand, 1, 0, id);
+> > > > +     if (ret)
+> > > > +             return ret;
+> > > > +     ret = spinand_manufacturer_match(spinand,
+> > > > +                                      SPINAND_READID_METHOD_OPCODE_ADDR);
+> > > > +     if (!ret)
+> > > > +             return 0;
+> > > > +
+> > > > +     ret = spinand_read_id_op(spinand, 0, 1, id);    
+> > >
+> > > Hm, we should probably do only one of each read_id and iterate over all
+> > > manufacturers/chips each time instead of doing 3 read_ids per
+> > > manufacturer.    
+> > 
+> > This actually do the former instead of the latter. Maybe the function
+> > names are a bit
+> > misleading. spinand_manufacturer_match iterates over all manufacturers
+> > in one call,
+> > and spinand_manufacturer_detect is called once in spinand_detect.
+> > Do you have suggestions on function naming?  
+> 
+> Maybe you can just inline the content of this function in
+> spinand_detect().
 
-Under 64-bit arch, the worst iteration count is PAGE_SIZE / 8 bytes = 512.
-The speed is based on the time to consume page_same_filled() function only.
-The result, on average, is listed as below:
-
-                                   Num of Iter    Speed(MB/s)
-Looping-Forward (Orig)                 38            99265
-Looping-Backward                       36           102725
-Last-element-check (This Patch)        33           125072
-
-The result shows that the average iteration count decreases by 13% and
-the speed increases by 25% with this patch. This patch does not increase
-the overall time complexity, though.
-
-I also ran simpler version which uses backward loop. Just looping backward
-also makes some improvement, but less than this patch.
-
-Signed-off-by: Taejoon Song <taejoon.song@lge.com>
----
- drivers/block/zram/zram_drv.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 4285e75..71d5946 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -207,14 +207,17 @@ static inline void zram_fill_page(void *ptr, unsigned long len,
- 
- static bool page_same_filled(void *ptr, unsigned long *element)
- {
--	unsigned int pos;
- 	unsigned long *page;
- 	unsigned long val;
-+	unsigned int pos, last_pos = PAGE_SIZE / sizeof(*page) - 1;
- 
- 	page = (unsigned long *)ptr;
- 	val = page[0];
- 
--	for (pos = 1; pos < PAGE_SIZE / sizeof(*page); pos++) {
-+	if (val != page[last_pos])
-+		return false;
-+
-+	for (pos = 1; pos < last_pos; pos++) {
- 		if (val != page[pos])
- 			return false;
- 	}
--- 
-2.7.4
-
+Actually I found that part clear enough, I would keep it as is, out of
+the spinand_detect() function as long as there is no actual reason to
+merge them?
