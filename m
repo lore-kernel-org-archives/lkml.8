@@ -2,148 +2,144 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D27DC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180C7C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 002562080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E25322077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:11:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1ZIaFRqc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BFvzH70p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgAJPK0 (ORCPT
+        id S1728311AbgAJPLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:10:26 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:41414 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727855AbgAJPKZ (ORCPT
+        Fri, 10 Jan 2020 10:11:02 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:58951 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727855AbgAJPLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:10:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=EOly64n1bW9A8cciZ1GsSjqaul4aqxrKRoF/7rR8Npg=; b=1ZIaFRqcaOBqY3PTIc2myc4/T
-        2bqFse/mCvbU0ZywdFOYX8JeeV82iaW4dhncF9xgCXu7AF6hHsxC3iNEef+Uh3EtTE5sE9O9Skv9E
-        B4TAS69ZekjiuMOLRFlPh6NgjNLd3jMWouCAVNlTmBEZ+JAOa/8t8O4bPcMHUpHDcdmuFbrvOruBr
-        /ZGsCe8QyHqGsWNSHsR2dX8HE7SuPYXOJVwmpo3E2yk4aWtrZPP/PhLlJhgGbGcGt0A+PxQBk/tdM
-        c/Tdyh2c5e8DMidSd+HO9S2FjgqeFDBNfamwvg6UOsRt2O9AvRqnvpfdwaCFTSUBH3tZADHb8bVD9
-        ChUlgoC8g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipvvF-0004gW-Jv; Fri, 10 Jan 2020 15:10:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3460C30018B;
-        Fri, 10 Jan 2020 16:08:24 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 202002B612601; Fri, 10 Jan 2020 16:09:58 +0100 (CET)
-Date:   Fri, 10 Jan 2020 16:09:58 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kim Phillips <kim.phillips@amd.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Stephane Eranian <eranian@google.com>,
-        Martin =?utf-8?B?TGnFoWth?= <mliska@suse.cz>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Subject: Re: [PATCH 2/2] perf/x86/amd: Add support for Large Increment per
- Cycle Events
-Message-ID: <20200110150958.GP2844@hirez.programming.kicks-ass.net>
-References: <20191114183720.19887-1-kim.phillips@amd.com>
- <20191114183720.19887-3-kim.phillips@amd.com>
- <20191220120945.GG2844@hirez.programming.kicks-ass.net>
- <ca10060f-f78f-695f-4929-fe4bc30c6712@amd.com>
+        Fri, 10 Jan 2020 10:11:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578669059;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ltOkanThXPeot2TPJmTHUMaFNfpDV2RzAlhTkMJQWGk=;
+        b=BFvzH70pbEpA50xLW5ch8uq89Mwtj4n4ui14k2sVdUEkQobnWHScUcpUwhQ5qiwysOd1Kr
+        l7BNMo1qlcFCvuvxoAHVfafEnDhGV6TWnpahPksCFAe9OoRk6hWCCiHlrr5SzGimwkHDIc
+        HUAi0ru15HDv7VcwBZbP24yxuyxA8ws=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-196-rPdgxf6eMdWnnARiK5k7cQ-1; Fri, 10 Jan 2020 10:10:56 -0500
+X-MC-Unique: rPdgxf6eMdWnnARiK5k7cQ-1
+Received: by mail-qv1-f69.google.com with SMTP id j10so1347719qvi.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 07:10:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ltOkanThXPeot2TPJmTHUMaFNfpDV2RzAlhTkMJQWGk=;
+        b=sQn/fKXYxCzxWxvlVdi3FeLQz3bzhlYeDd+N0/0a8T7wn+G7Jb5Lcx0VhdQYp1iklD
+         92dWYLd6lH8OTX5bSWBiHrjnuCWK3zqxqHD1zM7floZ5RSJ/L2Svg/e2c7jC/8vKUjjU
+         eh2mXg/KTUToTnz0IVqkLVhdh77MMrcv89Jw53KclAsJ3YYuzkPcRL5yj+mqFJ3B/gZX
+         4kW3U2mSjclFqpvbGWkb9EbEZcfR8hVchpOxcO4sGYmeueyww6xaML4XxShyFtRWwyVB
+         /uSMGkPgtjvD+mvLepHmdifZSueEs626PmNti5zewcjmVXh7v6M9PZR13JLWZ/1ppSaG
+         +H8Q==
+X-Gm-Message-State: APjAAAVkZDl+EKPEZhSH2OCOndrED/2kx5RHDns2DrRvI2uh7FNia7Lt
+        P2zYChPhfMJyLnwm4obCM/6PzKd0YIaHhgLQrXqRrsLy0BpiyiLtDOvzLyvvGrrSIBhtL9TGuvI
+        AJ3GNx+1xZYbEnbMWxuP0e9KJ
+X-Received: by 2002:aed:2bc2:: with SMTP id e60mr2811132qtd.115.1578669056117;
+        Fri, 10 Jan 2020 07:10:56 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwz1r1ONGXTup5Yq+eOHuTwVk4LBOmjj/SDXS4nm/iC9Ca6WSmY4fOOxfZebKAczT+NKktz5g==
+X-Received: by 2002:aed:2bc2:: with SMTP id e60mr2811109qtd.115.1578669055902;
+        Fri, 10 Jan 2020 07:10:55 -0800 (PST)
+Received: from xz-x1 ([104.156.64.74])
+        by smtp.gmail.com with ESMTPSA id m5sm1118351qtq.6.2020.01.10.07.10.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 07:10:55 -0800 (PST)
+Date:   Fri, 10 Jan 2020 10:10:53 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe de Dinechin <dinechin@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Yan Zhao <yan.y.zhao@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Kevin Kevin <kevin.tian@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: Re: [PATCH v3 00/21] KVM: Dirty ring interface
+Message-ID: <20200110151053.GB53397@xz-x1>
+References: <20200109145729.32898-1-peterx@redhat.com>
+ <20200109105443-mutt-send-email-mst@kernel.org>
+ <20200109161742.GC15671@xz-x1>
+ <20200109113001-mutt-send-email-mst@kernel.org>
+ <20200109170849.GB36997@xz-x1>
+ <20200109133434-mutt-send-email-mst@kernel.org>
+ <20200109193949.GG36997@xz-x1>
+ <20200109172718-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ca10060f-f78f-695f-4929-fe4bc30c6712@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200109172718-mutt-send-email-mst@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 04:26:47PM -0600, Kim Phillips wrote:
-> On 12/20/19 6:09 AM, Peter Zijlstra wrote:
-> > On Thu, Nov 14, 2019 at 12:37:20PM -0600, Kim Phillips wrote:
-
-> >> @@ -926,10 +944,14 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
-> >>  			break;
-> >>  
-> >>  		/* not already used */
-> >> -		if (test_bit(hwc->idx, used_mask))
-> >> +		if (test_bit(hwc->idx, used_mask) || (is_large_inc(hwc) &&
-> >> +		    test_bit(hwc->idx + 1, used_mask)))
-> >>  			break;
-> >>  
-> >>  		__set_bit(hwc->idx, used_mask);
-> >> +		if (is_large_inc(hwc))
-> >> +			__set_bit(hwc->idx + 1, used_mask);
-> >> +
-> >>  		if (assign)
-> >>  			assign[i] = hwc->idx;
-> >>  	}
+On Thu, Jan 09, 2020 at 05:28:36PM -0500, Michael S. Tsirkin wrote:
+> On Thu, Jan 09, 2020 at 02:39:49PM -0500, Peter Xu wrote:
+> > On Thu, Jan 09, 2020 at 02:08:52PM -0500, Michael S. Tsirkin wrote:
+> > > On Thu, Jan 09, 2020 at 12:08:49PM -0500, Peter Xu wrote:
+> > > > On Thu, Jan 09, 2020 at 11:40:23AM -0500, Michael S. Tsirkin wrote:
+> > > > 
+> > > > [...]
+> > > > 
+> > > > > > > I know it's mostly relevant for huge VMs, but OTOH these
+> > > > > > > probably use huge pages.
+> > > > > > 
+> > > > > > Yes huge VMs could benefit more, especially if the dirty rate is not
+> > > > > > that high, I believe.  Though, could you elaborate on why huge pages
+> > > > > > are special here?
+> > > > > > 
+> > > > > > Thanks,
+> > > > > 
+> > > > > With hugetlbfs there are less bits to test: e.g. with 2M pages a single
+> > > > > bit set marks 512 pages as dirty.  We do not take advantage of this
+> > > > > but it looks like a rather obvious optimization.
+> > > > 
+> > > > Right, but isn't that the trade-off between granularity of dirty
+> > > > tracking and how easy it is to collect the dirty bits?  Say, it'll be
+> > > > merely impossible to migrate 1G-huge-page-backed guests if we track
+> > > > dirty bits using huge page granularity, since each touch of guest
+> > > > memory will cause another 1G memory to be transferred even if most of
+> > > > the content is the same.  2M can be somewhere in the middle, but still
+> > > > the same write amplify issue exists.
+> > > >
+> > > 
+> > > OK I see I'm unclear.
+> > > 
+> > > IIUC at the moment KVM never uses huge pages if any part of the huge page is
+> > > tracked.
 > > 
-> > This is just really sad.. fixed that too.
+> > To be more precise - I think it's per-memslot.  Say, if the memslot is
+> > dirty tracked, then no huge page on the host on that memslot (even if
+> > guest used huge page over that).
 > 
-> [*]
+> Yea ... so does it make sense to make this implementation detail
+> leak through UAPI?
 
-> If I undo re-adding my perf_assign_events code, and re-add my "not
-> already used" code that you removed - see [*] above - the problem DOES
-> go away, and all the counts are all accurate.
-> 
-> One problem I see with your change in the "not already used" fastpath
-> area, is that the new mask variable gets updated with position 'i'
-> regardless of any previous Large Increment event assignments.
+I think that's not a leak of internal implementation detail, we just
+define the interface as that the address for each kvm_dirty_gfn is
+always host page aligned (by default it means no huge page) and point
+to a single host page, that's all.  Host page size is always there for
+userspace after all so imho it's fine.  Thanks,
 
-Urgh, I completely messed that up. Find the below delta (I'll push out a
-new version to queue.git as well).
+-- 
+Peter Xu
 
-> I.e., a
-> successfully scheduled large increment event assignment may have
-> already consumed that 'i' slot for its Merge event in a previous
-> iteration of the loop.  So if the fastpath scheduler fails to assign
-> that following event, the slow path is wrongly entered due to a wrong
-> 'i' comparison with 'n', for example.
-
-That should only be part of the story though; the fast-path is purely
-optional. False-negatives on the fast path should not affect
-functionality, only performance. False-positives on the fast path are a
-no-no of course.
-
----
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 222f172cbaf5..3bb738f5a472 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -937,7 +937,7 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
- 	 * fastpath, try to reuse previous register
- 	 */
- 	for (i = 0; i < n; i++) {
--		u64 mask = BIT_ULL(i);
-+		u64 mask;
- 
- 		hwc = &cpuc->event_list[i]->hw;
- 		c = cpuc->event_constraint[i];
-@@ -950,6 +950,7 @@ int x86_schedule_events(struct cpu_hw_events *cpuc, int n, int *assign)
- 		if (!test_bit(hwc->idx, c->idxmsk))
- 			break;
- 
-+		mask = BIT_ULL(hwc->idx);
- 		if (is_counter_pair(hwc))
- 			mask |= mask << 1;
- 
