@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2C0FC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6125C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FCC206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78FF7206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578693987;
-	bh=hNUI5rCXY/JGwB+H+BOV4HGykXp69tf62roWzp9ofdo=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=o+K9ovtxQCQqghWSYgSm4aD3NqY0aklFqPggB7TA0d9KrUKAxEC2042jJsHknxjv1
-	 pNwyby36/8cOwSknNDx6K/byC9BiqEww2l6tDkzKKmjDYSrKrb1sBLYAVqtTZ/pOAe
-	 7/fudJ7UOWMKRK6VfWPr/Ti8Kl58vPyKQA5iiwP8=
+	s=default; t=1578693989;
+	bh=k7jLbKDGZ4iRjIZ4qzQ6bAEV+npIVuYrJOHBHWLt2XU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zStU3yZeV06QRu0Uqf+Elcu/9MJ1eqATl2mx5TZMNRKOXQJ648/nlMzb5Gj6nYWzA
+	 SgRgfduKQZ/2xaYmIonemHudZhiVpGrReIEZdm0ct7mqKUz8o81iv10K0y5/sHOzU/
+	 RMOqnqbbXWSxPmjJ+xleSj4q/FsA32CB4Ug/SMdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgAJWG0 (ORCPT
+        id S1728280AbgAJWG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:06:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53164 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 17:06:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbgAJWGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:06:24 -0500
+        id S1728237AbgAJWG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:06:26 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 577462072E;
-        Fri, 10 Jan 2020 22:06:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFD9A2082E;
+        Fri, 10 Jan 2020 22:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693983;
-        bh=hNUI5rCXY/JGwB+H+BOV4HGykXp69tf62roWzp9ofdo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=0D55fHs739aBxnAceubbQXjALPjZdq3CQe7Q5uXPG4tNbL4tE1sK7KDIXCUu3NoeU
-         3Pklj5FcZNGGT4vcBC3mWJy2Jx6VvhMFZMsSw8x4tA/2oJzBE5/zIwY0ce8DrS9/fN
-         vc8a9f3W1SU5tHGZPS0WebARIWc6Iha4Fa8Oaca4=
+        s=default; t=1578693985;
+        bh=k7jLbKDGZ4iRjIZ4qzQ6bAEV+npIVuYrJOHBHWLt2XU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dDxvqv82HGG0VULv4csV8SjFaO4yEe9M7CWSxEcss9TYmKszO5VrMk0NHOVgzVf4b
+         9i/iR9IOjo2JeDLEBaxOX/aIYuZBNieruab9k47Ne8Jj8sG4X4LLKSGF8Hfm97DyB4
+         u7lkI5ONIN1MW0rDLFHtZn0wuH83yFndMEilFbXM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vladimir Kondratiev <vladimir.kondratiev@intel.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 1/8] mips: cacheinfo: report shared CPU map
-Date:   Fri, 10 Jan 2020 17:06:14 -0500
-Message-Id: <20200110220621.28651-1-sashal@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 3/8] dmaengine: k3dma: Avoid null pointer traversal
+Date:   Fri, 10 Jan 2020 17:06:16 -0500
+Message-Id: <20200110220621.28651-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200110220621.28651-1-sashal@kernel.org>
+References: <20200110220621.28651-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,81 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
+From: John Stultz <john.stultz@linaro.org>
 
-[ Upstream commit 3b1313eb32c499d46dc4c3e896d19d9564c879c4 ]
+[ Upstream commit 2f42e05b942fe2fbfb9bbc6e34e1dd8c3ce4f3a4 ]
 
-Report L1 caches as shared per core; L2 - per cluster.
+In some cases we seem to submit two transactions in a row, which
+causes us to lose track of the first. If we then cancel the
+request, we may still get an interrupt, which traverses a null
+ds_run value.
 
-This fixes "perf" that went crazy if shared_cpu_map attribute not
-reported on sysfs, in form of
+So try to avoid starting a new transaction if the ds_run value
+is set.
 
-/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_list
-/sys/devices/system/cpu/cpu*/cache/index*/shared_cpu_map
+While this patch avoids the null pointer crash, I've had some
+reports of the k3dma driver still getting confused, which
+suggests the ds_run/ds_done value handling still isn't quite
+right. However, I've not run into an issue recently with it
+so I think this patch is worth pushing upstream to avoid the
+crash.
 
-Signed-off-by: Vladimir Kondratiev <vladimir.kondratiev@intel.com>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+[add ss tag]
+Link: https://lore.kernel.org/r/20191218190906.6641-1-john.stultz@linaro.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/cacheinfo.c | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+ drivers/dma/k3dma.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/mips/kernel/cacheinfo.c b/arch/mips/kernel/cacheinfo.c
-index 428ef2189203..3ea95568ece4 100644
---- a/arch/mips/kernel/cacheinfo.c
-+++ b/arch/mips/kernel/cacheinfo.c
-@@ -61,6 +61,25 @@ static int __init_cache_level(unsigned int cpu)
- 	return 0;
- }
+diff --git a/drivers/dma/k3dma.c b/drivers/dma/k3dma.c
+index 219ae3b545db..803045c92f3b 100644
+--- a/drivers/dma/k3dma.c
++++ b/drivers/dma/k3dma.c
+@@ -222,9 +222,11 @@ static irqreturn_t k3_dma_int_handler(int irq, void *dev_id)
+ 			c = p->vchan;
+ 			if (c && (tc1 & BIT(i))) {
+ 				spin_lock_irqsave(&c->vc.lock, flags);
+-				vchan_cookie_complete(&p->ds_run->vd);
+-				p->ds_done = p->ds_run;
+-				p->ds_run = NULL;
++				if (p->ds_run != NULL) {
++					vchan_cookie_complete(&p->ds_run->vd);
++					p->ds_done = p->ds_run;
++					p->ds_run = NULL;
++				}
+ 				spin_unlock_irqrestore(&c->vc.lock, flags);
+ 			}
+ 			if (c && (tc2 & BIT(i))) {
+@@ -264,6 +266,10 @@ static int k3_dma_start_txd(struct k3_dma_chan *c)
+ 	if (BIT(c->phy->idx) & k3_dma_get_chan_stat(d))
+ 		return -EAGAIN;
  
-+static void fill_cpumask_siblings(int cpu, cpumask_t *cpu_map)
-+{
-+	int cpu1;
++	/* Avoid losing track of  ds_run if a transaction is in flight */
++	if (c->phy->ds_run)
++		return -EAGAIN;
 +
-+	for_each_possible_cpu(cpu1)
-+		if (cpus_are_siblings(cpu, cpu1))
-+			cpumask_set_cpu(cpu1, cpu_map);
-+}
-+
-+static void fill_cpumask_cluster(int cpu, cpumask_t *cpu_map)
-+{
-+	int cpu1;
-+	int cluster = cpu_cluster(&cpu_data[cpu]);
-+
-+	for_each_possible_cpu(cpu1)
-+		if (cpu_cluster(&cpu_data[cpu1]) == cluster)
-+			cpumask_set_cpu(cpu1, cpu_map);
-+}
-+
- static int __populate_cache_leaves(unsigned int cpu)
- {
- 	struct cpuinfo_mips *c = &current_cpu_data;
-@@ -68,14 +87,20 @@ static int __populate_cache_leaves(unsigned int cpu)
- 	struct cacheinfo *this_leaf = this_cpu_ci->info_list;
- 
- 	if (c->icache.waysize) {
-+		/* L1 caches are per core */
-+		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
- 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_DATA);
-+		fill_cpumask_siblings(cpu, &this_leaf->shared_cpu_map);
- 		populate_cache(icache, this_leaf, 1, CACHE_TYPE_INST);
- 	} else {
- 		populate_cache(dcache, this_leaf, 1, CACHE_TYPE_UNIFIED);
- 	}
- 
--	if (c->scache.waysize)
-+	if (c->scache.waysize) {
-+		/* L2 cache is per cluster */
-+		fill_cpumask_cluster(cpu, &this_leaf->shared_cpu_map);
- 		populate_cache(scache, this_leaf, 2, CACHE_TYPE_UNIFIED);
-+	}
- 
- 	if (c->tcache.waysize)
- 		populate_cache(tcache, this_leaf, 3, CACHE_TYPE_UNIFIED);
+ 	if (vd) {
+ 		struct k3_dma_desc_sw *ds =
+ 			container_of(vd, struct k3_dma_desc_sw, vd);
 -- 
 2.20.1
 
