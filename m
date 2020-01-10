@@ -2,140 +2,87 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E941C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:13:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F42EC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 401B1206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:13:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="VzsVlz7/"
+	by mail.kernel.org (Postfix) with ESMTP id 65F402077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:14:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578651290;
+	bh=m3v2hiPkxyW8CXgNiJweXbctYxcfQ6knkoXa1CcVk7w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I9J2Bvx2czrE1ChKp4j+ZS2jL0WO5NBT1Z06G/VMlC/QEoBLGQtwcJFotTHOy/DYt
+	 QkDracF85NyCck490hKIKNxKbTX1DF8gk9ViQVqdXyZ4zIhZ3N+hEJOjkwZC3C7JYa
+	 82sF7vf2llYTJtgsZNwUOIcIFyeRinVmVmJU8XKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgAJKNY (ORCPT
+        id S1727434AbgAJKOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:13:24 -0500
-Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:45247 "EHLO
-        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727345AbgAJKNY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:13:24 -0500
-Received: from [IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef]
- ([IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id prI6ilr7DpLtbprI9iPsoU; Fri, 10 Jan 2020 11:13:21 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1578651201; bh=EQZFmUatpkRfJncF22R0svOZHakbIpsmtV+r92AM4vk=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=VzsVlz7/+IH14gT9YyVjGXny7iEK0AGDl1qeGBkP+l6zrFylT5RDJnwnppnekoQLd
-         IEgK3LjIgGReAqiRNLEyRZN8Lsq0wcEkEUXEvogRwtMmMg6g4bqchUSFVUTbUhXe0N
-         GH6q1lxdVDS+bHvdBaf2xGur0c8KQ0Y3aBE6MeQ+2mzdBDPtmjUNL8JMW+UXGKtPXr
-         4DQJd9+N4j9pFepTXSvrgxbhZ4VqkG2raDrwQBD9c2ZGe7/i9+6EspMkLyKor6vxXU
-         g8Cx5Obu12CYuJ0+G6YVf6nJrQe5BUq+c5UrL+v5VjZOBvoJ0OgoeCKCx/yk+E+yHm
-         W1rVCVpXY21SA==
-Subject: Re: [RFC][PATCH 12/15] videobuf2: add begin/end cpu_access callbacks
- to dma-sg
-To:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191217032034.54897-1-senozhatsky@chromium.org>
- <20191217032034.54897-13-senozhatsky@chromium.org>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <1c5198dc-db4e-47d6-0d8b-259fbbb6372f@xs4all.nl>
-Date:   Fri, 10 Jan 2020 11:13:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 10 Jan 2020 05:14:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35088 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727168AbgAJKOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 05:14:49 -0500
+Received: from localhost (83-84-126-242.cable.dynamic.v4.ziggo.nl [83.84.126.242])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF968206ED;
+        Fri, 10 Jan 2020 10:14:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578651288;
+        bh=m3v2hiPkxyW8CXgNiJweXbctYxcfQ6knkoXa1CcVk7w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=P2g697haUvgnnoNyU6+vBUNtB5ojLxHexJl3a1rYROGBzbSuEmG10g89+DMRnWwzf
+         SmBDp5QEccClRXkOcJbm2W1bl/nDluLcEVVhol1LfiLB+jz2cuAJrtE7Lr1jDAWB+/
+         DIa+xX7DWrXPRxZJSAg/1J35A/3JM+4Wvl4VYdUM=
+Date:   Fri, 10 Jan 2020 11:14:46 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tty: always relink the port
+Message-ID: <20200110101446.GA537059@kroah.com>
+References: <20191227174434.12057-1-sudipm.mukherjee@gmail.com>
+ <20200110100817.GA4273@localhost>
 MIME-Version: 1.0
-In-Reply-To: <20191217032034.54897-13-senozhatsky@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGxGp+oRQLeyV11iepfB4M188Y4d+5L/IiEs4v+l8amuiJUq/JK1KFy8sgNFIhsx3LL1hRNfTDF+klzKxCl2+00YMFtDjCRKA7BJXwHyv//jRc1MFh6N
- yq/nAx+BecxHK6ISawEgibcibO4N54nVduPnlU+66MeqCpwVUespAULDB8Nb/gT7TDcRkbz4+/sxS2fSU5lJElulNDzvjeT7q4yjpZ9kyi9MOkVhJO+6E7at
- HosI1etPR+IiR4DXAcBKrN3Xfc3lcdIqclZP51Senp48mYmDsqjihvSvzTQgiByIptC06NkYQk2fSSPtkARK51LqGiNh+RjEX8MCySN7rt/cNZcopsheDcrx
- 0Mo5qv9N5zJ1Q41zLJeSmbY5Mui+yA3sUilJWoxnub8FFy467hx9Hg52YLIMAFtzMFKHf3qxrWwWQMW2sZnzAnm4dqT4OXuptuRwqcpqiu9P1hWbt9PRj4qY
- zI4tBf6BN+jPPRKY+bHUUtNjkjbwGQSn05F9YKO0ATQwZXGM11B0kjrDMakAeMbwQ4r6SQnxHtmFNw+IoGCLUuC1Nvu50WVNnsBF0HwBnx/S191tvMhojlxq
- +qItelRz5vHr/81qTVQNoOllGrRU8GsQiGYgxkfpDU0ZHrfT0QS9KO6xyFZ1xGNpapY=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110100817.GA4273@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/17/19 4:20 AM, Sergey Senozhatsky wrote:
-> Provide begin_cpu_access() and end_cpu_access() dma_buf_ops
-> callbacks for cache synchronisation on exported buffers.
+On Fri, Jan 10, 2020 at 11:08:17AM +0100, Johan Hovold wrote:
+> On Fri, Dec 27, 2019 at 05:44:34PM +0000, Sudip Mukherjee wrote:
+> > If the serial device is disconnected and reconnected, it re-enumerates
+> > properly but does not link it. fwiw, linking means just saving the port
+> > index, so allow it always as there is no harm in saving the same value
+> > again even if it tries to relink with the same port.
 > 
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
-> ---
->  .../media/common/videobuf2/videobuf2-dma-sg.c | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
+> This is a pretty vague description. Commit fb2b90014d78 ("tty: link tty
+> and port before configuring it as console") completely broke usb-serial
+> (and anything else hotpluggable) which obviously depends on being able
+> to reuse a minor number when a new device is later plugged in after a
+> disconnect.
 > 
-> diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> index 6db60e9d5183..bfc99a0cb7b9 100644
-> --- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> +++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
-> @@ -470,6 +470,26 @@ static void vb2_dma_sg_dmabuf_ops_release(struct dma_buf *dbuf)
->  	vb2_dma_sg_put(dbuf->priv);
->  }
->  
+> Things are crashing left and right due to that stale port-pointer, and I
+> just had to debug this only to find that this one is sitting in the
+> tty-linus branch. I know, I know, Christmas and all, but would be nice
+> to get it into -rc6. :)
 
-There is no corresponding vb2_sg_buffer_consistent function here.
+Sorry, yes, my fault, will get to Linus either today or tomorrow.
 
-Looking more closely I see that vb2_dma_sg_alloc doesn't pass the dma_attrs
-argument to dma_map_sg_attrs, thus V4L2_FLAG_MEMORY_NON_CONSISTENT has no
-effect on dma-sg buffers.
-
-Is there a reason why dma_attrs isn't passed on to dma_map_sg_attrs()?
-
-I suspect it was just laziness in the past, and that it should be wired
-up, just as for dma-contig.
-
-Regards,
-
-	Hans
-
-> +static int vb2_dma_sg_dmabuf_ops_begin_cpu_access(struct dma_buf *dbuf,
-> +					enum dma_data_direction direction)
-> +{
-> +	struct vb2_dma_sg_buf *buf = dbuf->priv;
-> +	struct sg_table *sgt = buf->dma_sgt;
-> +
-> +	dma_sync_sg_for_cpu(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
-> +	return 0;
-> +}
-> +
-> +static int vb2_dma_sg_dmabuf_ops_end_cpu_access(struct dma_buf *dbuf,
-> +					enum dma_data_direction direction)
-> +{
-> +	struct vb2_dma_sg_buf *buf = dbuf->priv;
-> +	struct sg_table *sgt = buf->dma_sgt;
-> +
-> +	dma_sync_sg_for_device(buf->dev, sgt->sgl, sgt->nents, buf->dma_dir);
-> +	return 0;
-> +}
-> +
->  static void *vb2_dma_sg_dmabuf_ops_vmap(struct dma_buf *dbuf)
->  {
->  	struct vb2_dma_sg_buf *buf = dbuf->priv;
-> @@ -488,6 +508,8 @@ static const struct dma_buf_ops vb2_dma_sg_dmabuf_ops = {
->  	.detach = vb2_dma_sg_dmabuf_ops_detach,
->  	.map_dma_buf = vb2_dma_sg_dmabuf_ops_map,
->  	.unmap_dma_buf = vb2_dma_sg_dmabuf_ops_unmap,
-> +	.begin_cpu_access = vb2_dma_sg_dmabuf_ops_begin_cpu_access,
-> +	.end_cpu_access = vb2_dma_sg_dmabuf_ops_end_cpu_access,
->  	.vmap = vb2_dma_sg_dmabuf_ops_vmap,
->  	.mmap = vb2_dma_sg_dmabuf_ops_mmap,
->  	.release = vb2_dma_sg_dmabuf_ops_release,
+> > Fixes: fb2b90014d78 ("tty: link tty and port before configuring it as console")
 > 
+> Also note that the offending commit had a stable tag unlike this one.
 
+I'll pick it up properly, I have held off on adding the original to the
+stable trees yet.
+
+thanks,
+
+greg k-h
