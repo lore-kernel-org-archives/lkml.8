@@ -2,110 +2,86 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D186C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF44CC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DD3A20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D50420838
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:53:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="IQf56fS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbgAJPwO (ORCPT
+        id S1728405AbgAJPxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:52:14 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:52914 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728151AbgAJPwO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:52:14 -0500
-Received: from mail-ot1-f69.google.com ([209.85.210.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1ipwa3-0005uL-EB
-        for linux-kernel@vger.kernel.org; Fri, 10 Jan 2020 15:52:11 +0000
-Received: by mail-ot1-f69.google.com with SMTP id e22so1237765ote.5
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 07:52:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=h8/Y2cObCbtCE26judrO9UsDxGUStHvjaWi0HH63cZM=;
-        b=PCdGkb01BXJHTjcW9EGy+iWhBf/3cC7W1iXQlht31V1I1+eRY9b+M1fOgSwVa3C7qs
-         CwtwJZRNftTavOIfIl5tzpL2LKRLmMXbJ8JG63eSGaxYGcKagUlLF3PGCl+GzbWLSR1D
-         FQFAGiD367mM6kw0yf1cGh6xLW7v7cGuqasUMog0pztoBw6+SLXMZdSdBQdxIcPXsm3Q
-         Kl2el2tYb+AnYO8gNss0ZkNGVQiAeIyTxn/Oc3uAv3hlRueiHwROJq/Qfbyv/LdvKYUI
-         0a0P1ReCKK8kjI6cIjpqnuJS15JMWisgCnIHtEjTXmoO+ycABLRxRpICg9W7EPozcvpf
-         h1+Q==
-X-Gm-Message-State: APjAAAUqHx1+dlKqoUdmAhlc636uaGm2P7iQp8KaSscPNx2IpG+AibZn
-        QwLGUGMy+j2YcEXHqSiS5rtHkmYRmGudRXkFbIr3tRy7Zz35INoZ4D3z5bX0Sna64trXycZm1sU
-        Uyr0UA4thoLSwp/wmb54rbKdgUwX3wnT81EUSMS54tC7s2VBTb9Xojuhcjg==
-X-Received: by 2002:a05:6808:aba:: with SMTP id r26mr2610247oij.4.1578671529981;
-        Fri, 10 Jan 2020 07:52:09 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw4U5/Eei+IKj5uy59q12wc0wosUa0qQS+sc9rlFDM3l2mJyPy8NllwB2mPtnNVYhYREH4/IfvIF7a3u3WJDxw=
-X-Received: by 2002:a05:6808:aba:: with SMTP id r26mr2610231oij.4.1578671529690;
- Fri, 10 Jan 2020 07:52:09 -0800 (PST)
+        Fri, 10 Jan 2020 10:53:34 -0500
+Received: from hermes.aosc.io ([199.195.250.187]:48712 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728137AbgAJPxe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 10:53:34 -0500
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 89D1E46EF0;
+        Fri, 10 Jan 2020 15:53:22 +0000 (UTC)
+From:   Icenowy Zheng <icenowy@aosc.io>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH 0/5] Add support for Pine64 PineTab
+Date:   Fri, 10 Jan 2020 23:52:20 +0800
+Message-Id: <20200110155225.1051749-1-icenowy@aosc.io>
 MIME-Version: 1.0
-References: <20200110080211.22626-1-kai.heng.feng@canonical.com> <Pine.LNX.4.44L0.2001101038390.1467-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.2001101038390.1467-100000@iolanthe.rowland.org>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Fri, 10 Jan 2020 23:51:58 +0800
-Message-ID: <CAAd53p56QynOLJPi3kKiQB1iScrDxj3X1FiycuVF7tP75yPD8A@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] USB: Disable LPM on WD19's Realtek Hub
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
+        t=1578671613;
+        h=from:subject:date:message-id:to:cc:mime-version:content-transfer-encoding;
+        bh=arqgargl3bY9HACPJC+50BrUGIBgfwYWhQpbFvgf9g8=;
+        b=IQf56fS/L+J88wDn5NITVutxMKkOSUkKA6VObrxd0nceXBTehZ53tj/U1e4PgIkZkj1bjf
+        4iQVIUnkzeFOm/209cHapWzv7Yz0uEmmP3Nt0UPwdShfzRIfpjhuw3glbKy7Cf4/6bPgrU
+        kC/XnMd4+vPsplC+ya6/xeUFS8zfnHA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 11:40 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Fri, 10 Jan 2020, Kai-Heng Feng wrote:
->
-> > Realtek Hub (0bda:0x0487) used in Dell Dock WD19 sometimes drops off the
-> > bus when bringing underlying ports from U3 to U0.
-> >
-> > Disabling LPM on the hub during setting link state is not enough, so
-> > let's disable LPM completely for this hub.
-> >
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> >  drivers/usb/core/quirks.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
-> > index 6b6413073584..2fb7c1602280 100644
-> > --- a/drivers/usb/core/quirks.c
-> > +++ b/drivers/usb/core/quirks.c
-> > @@ -371,6 +371,9 @@ static const struct usb_device_id usb_quirk_list[] = {
-> >       { USB_DEVICE(0x0b05, 0x17e0), .driver_info =
-> >                       USB_QUIRK_IGNORE_REMOTE_WAKEUP },
-> >
-> > +     /* Realtek hub in Dell WD19 (Type-C) */
-> > +     { USB_DEVICE(0x0bda, 0x0487), .driver_info = USB_QUIRK_NO_LPM },
-> > +
-> >       /* Action Semiconductor flash disk */
-> >       { USB_DEVICE(0x10d6, 0x2200), .driver_info =
-> >                       USB_QUIRK_STRING_FETCH_255 },
-> >
->
-> This is a very partial patch.  There were four hunks in the original
-> version but there's only one hunk in V2.
+This patchset tries to add support for the PineTab tablet from Pine64.
 
-Because the original approach is insufficient, it significantly
-reduced the fail rate but the issue is still there.
-USB_QUIRK_NO_LPM is used instead so no other parts are needed.
+As it uses a specific MIPI-DSI panel, the support of the panel should be
+introduced first, with its DT binding.
 
-Kai-Heng
+Then a device tree is added. Thanks to the community's contributions
+these years, we now have most of the functionalities of the tablet
+available in this device tree.
 
->
-> Alan Stern
->
+Icenowy Zheng (5):
+  dt-bindings: vendor-prefix: add Shenzhen Feixin Photoelectics Co., Ltd
+  dt-bindings: panel: add Feixin K101 IM2BA02 MIPI-DSI panel
+  drm/panel: Add Feixin K101 IM2BA02 panel
+  dt-bindings: arm: sunxi: add binding for PineTab tablet
+  arm64: dts: allwinner: a64: add support for PineTab
+
+ .../devicetree/bindings/arm/sunxi.yaml        |   5 +
+ .../display/panel/feixin,k101-im2ba02.yaml    |  54 ++
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ MAINTAINERS                                   |   6 +
+ arch/arm64/boot/dts/allwinner/Makefile        |   1 +
+ .../boot/dts/allwinner/sun50i-a64-pinetab.dts | 461 +++++++++++++++
+ drivers/gpu/drm/panel/Kconfig                 |   9 +
+ drivers/gpu/drm/panel/Makefile                |   1 +
+ .../gpu/drm/panel/panel-feixin-k101-im2ba02.c | 548 ++++++++++++++++++
+ 9 files changed, 1087 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/feixin,k101-im2ba02.yaml
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-pinetab.dts
+ create mode 100644 drivers/gpu/drm/panel/panel-feixin-k101-im2ba02.c
+
+-- 
+2.23.0
+
