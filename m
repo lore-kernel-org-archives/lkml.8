@@ -2,198 +2,86 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5744C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE982C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2E82077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:25:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PoXKKEJJ"
+	by mail.kernel.org (Postfix) with ESMTP id 88DD72080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:27:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578616036;
+	bh=iF6cKHHvaCJrFLsk2NPAolbXAhY80xnKk1DXl9W6AmU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=s34vLVyQnZGfg4Rit1wa5c1bXvI5nDrJZ5NPGmyzb4YKrx2ImS6WPuXX8HjQ2Idz3
+	 1MxbXshwnHmpW3fEEWyG6UQgxAQM7sjLVN55zfbs20S8TKHQIomInFF5AGLcr7VJ4A
+	 qGjfSS8qr+43RqHATgEr8CwTbTqF7590FrEb2Fh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730219AbgAJAZV (ORCPT
+        id S1730258AbgAJA1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 19:25:21 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34700 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730169AbgAJAZV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 19:25:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=/f2runeNBw6RnPGtAhc9+ZVQ9RgfOZH+rYsz78EvOG8=; b=PoXKKEJJei3qRhn4QaYaTkEfx
-        rYg+orz4hpYeb15+KTic/aiDGubbxAuzN6jjkltLsHmaXtQNxOUyLzf17Eeg5jJQIvgExe4IJfMFu
-        y61G6O4Upe3zvP/KH+35vVTPBFjfSuaUEAdtjpb/my9/bfDjTs+FloAB7fBUGhN7MCSucmLpndFND
-        4+9gfZJ4gtbw9kwkZ/R0or5HRFfta9TtcZi03VD31opqR7aY9DKWdIRsxiUUkz1BZmozLu48j2EFt
-        qhMqOa8wS6Jab0+GxuJAkr2cRzgxfLfXZ8VDlxSmQBTtAIRunNPNARC0OLRfYhlBASnYOH6sO5lOQ
-        64nXFY7YA==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipi6b-0004L4-8i; Fri, 10 Jan 2020 00:24:49 +0000
-Subject: Re: [PATCH v27 09/12] LRNG - add Jitter RNG fast noise source
-To:     =?UTF-8?Q?Stephan_M=c3=bcller?= <smueller@chronox.de>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Julia Lawall <julia.lawall@inria.fr>
-References: <6157374.ptSnyUpaCn@positron.chronox.de>
- <2722222.P16TYeLAVu@positron.chronox.de>
- <2641155.iNH938UiKq@positron.chronox.de>
- <6341883.UacF4FzDma@positron.chronox.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <0ba976fa-fed1-4720-c039-043160dbce9e@infradead.org>
-Date:   Thu, 9 Jan 2020 16:24:47 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
-MIME-Version: 1.0
-In-Reply-To: <6341883.UacF4FzDma@positron.chronox.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 9 Jan 2020 19:27:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44786 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730208AbgAJA1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 19:27:15 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 995BD2077C;
+        Fri, 10 Jan 2020 00:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578616034;
+        bh=iF6cKHHvaCJrFLsk2NPAolbXAhY80xnKk1DXl9W6AmU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=By+3RcHJTihzsabdwfhzt0fSfb6Zc5q4XX+ALV4qrU/ArVluUUaaJ6ZgH6FLBzhLi
+         EiwqW7TKtN3WXmpNsjw9dCQ4411eNiHMeLoCi07d16P8GIGg0ko74EGQ68EOj8kxtz
+         2wEgi63R57CeeyEcYWDTLhlpNtP5tudfJlcMyA6s=
+Date:   Thu, 9 Jan 2020 16:27:13 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        ocfs2-devel@oss.oracle.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ocfs2: remove unneeded header include path in
+ fs/ocfs2/Makefile
+Message-Id: <20200109162713.2054e05ff4545c30b0fa168f@linux-foundation.org>
+In-Reply-To: <20200105070023.27806-1-masahiroy@kernel.org>
+References: <20200105070023.27806-1-masahiroy@kernel.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sun,  5 Jan 2020 16:00:23 +0900 Masahiro Yamada <masahiroy@kernel.org> wrote:
 
-On 1/9/20 12:34 AM, Stephan Müller wrote:
-
+> You can build fs/ocfs2 without this.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
->  drivers/char/lrng/Kconfig     | 11 +++++
->  drivers/char/lrng/Makefile    |  1 +
->  drivers/char/lrng/lrng_jent.c | 87 +++++++++++++++++++++++++++++++++++
->  3 files changed, 99 insertions(+)
->  create mode 100644 drivers/char/lrng/lrng_jent.c
 > 
-
-> diff --git a/drivers/char/lrng/lrng_jent.c b/drivers/char/lrng/lrng_jent.c
-> new file mode 100644
-> index 000000000000..97c0d192e9c8
-> --- /dev/null
-> +++ b/drivers/char/lrng/lrng_jent.c
-> @@ -0,0 +1,87 @@
-> +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> +/*
-> + * LRNG Fast Noise Source: Jitter RNG
-> + *
-> + * Copyright (C) 2016 - 2020, Stephan Mueller <smueller@chronox.de>
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/types.h>
-> +#include <crypto/internal/jitterentropy.h>
-> +
-> +#include "lrng_internal.h"
-> +
-> +/*
-> + * Estimated entropy of data is a 16th of LRNG_DRNG_SECURITY_STRENGTH_BITS.
-> + * Albeit a full entropy assessment is provided for the noise source indicating
-> + * that it provides high entropy rates and considering that it deactivates
-> + * when it detects insufficient hardware, the chosen under estimation of
-> + * entropy is considered to be acceptable to all reviewers.
-> + */
-> +static u32 jitterrng = LRNG_DRNG_SECURITY_STRENGTH_BITS>>4;
-> +module_param(jitterrng, uint, 0644);
-> +MODULE_PARM_DESC(jitterrng, "Entropy in bits of 256 data bits from Jitter "
-> +			    "RNG noise source");
-> +
-> +/**
-> + * Get Jitter RNG entropy
-> + *
-> + * @outbuf buffer to store entropy
-> + * @outbuflen length of buffer
-> + * @return > 0 on success where value provides the added entropy in bits
-> + *	   0 if no fast source was available
-> + */
-
-Don't begin the comment block with /**
-or convert it to Linux kernel-doc notation format.
-
-> +static struct rand_data *lrng_jent_state;
-> +
-> +u32 lrng_get_jent(u8 *outbuf, unsigned int outbuflen)
-> +{
-> +	int ret;
-> +	u32 ent_bits = jitterrng;
-> +	unsigned long flags;
-> +	static DEFINE_SPINLOCK(lrng_jent_lock);
-> +	static int lrng_jent_initialized = 0;
-> +
-> +	spin_lock_irqsave(&lrng_jent_lock, flags);
-> +
-> +	if (!ent_bits || (lrng_jent_initialized == -1)) {
-> +		spin_unlock_irqrestore(&lrng_jent_lock, flags);
-> +		return 0;
-> +	}
-> +
-> +	if (!lrng_jent_initialized) {
-> +		lrng_jent_state = jent_lrng_entropy_collector();
-> +		if (!lrng_jent_state) {
-> +			jitterrng = 0;
-> +			lrng_jent_initialized = -1;
-> +			spin_unlock_irqrestore(&lrng_jent_lock, flags);
-> +			pr_info("Jitter RNG unusable on current system\n");
-> +			return 0;
-> +		}
-> +		lrng_jent_initialized = 1;
-> +		pr_debug("Jitter RNG working on current system\n");
-> +	}
-> +	ret = jent_read_entropy(lrng_jent_state, outbuf, outbuflen);
-> +	spin_unlock_irqrestore(&lrng_jent_lock, flags);
-> +
-> +	if (ret) {
-> +		pr_debug("Jitter RNG failed with %d\n", ret);
-> +		return 0;
-> +	}
-> +
-> +	/* Obtain entropy statement */
-> +	if (outbuflen != LRNG_DRNG_SECURITY_STRENGTH_BYTES)
-> +		ent_bits = (ent_bits * outbuflen<<3) /
-> +			   LRNG_DRNG_SECURITY_STRENGTH_BITS;
-> +	/* Cap entropy to buffer size in bits */
-> +	ent_bits = min_t(u32, ent_bits, outbuflen<<3);
-> +	pr_debug("obtained %u bits of entropy from Jitter RNG noise source\n",
-> +		 ent_bits);
-> +
-> +	return ent_bits;
-> +}
-> +
-> +u32 lrng_jent_entropylevel(void)
-> +{
-> +	return min_t(u32, jitterrng, LRNG_DRNG_SECURITY_STRENGTH_BITS);
-> +}
+>  fs/ocfs2/Makefile | 1 -
+>  1 file changed, 1 deletion(-)
 > 
+> diff --git a/fs/ocfs2/Makefile b/fs/ocfs2/Makefile
+> index cc9b32b9db7c..46381d9dd890 100644
+> --- a/fs/ocfs2/Makefile
+> +++ b/fs/ocfs2/Makefile
+> @@ -1,5 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -ccflags-y := -I$(src)
+>  
+>  obj-$(CONFIG_OCFS2_FS) += 	\
+>  	ocfs2.o			\
 
-thanks.
--- 
-~Randy
+I get
+
+fs/ocfs2/alloc.c:21:10: fatal error: cluster/masklog.h: No such file or directory
+ #include <cluster/masklog.h>
 
