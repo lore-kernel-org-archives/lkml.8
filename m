@@ -2,153 +2,153 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FUZZY_XPILL,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C568C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4725CC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5058120673
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:38:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578641910;
-	bh=rtOHPb5VBELvsqUwFnzqmBRxgpxFX3NiQM661iA+jMw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ddjuTb45jjm0CR1VWYKtRxPMhIRb9UREN8a84Plori6VGcJU6qYKMHvcvSOqQfHb3
-	 4O0hWnGGT7mLOaHifj4++kDQRssyWqtrYuwyrCVao5pPjaWYhpKyssywULMhcE0AtH
-	 7RBhf1eOLDX2kYcM28Fxt0hSPAC64Zznen76XQcg=
+	by mail.kernel.org (Postfix) with ESMTP id 1ADC820673
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:38:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H19G2bGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726716AbgAJHi3 (ORCPT
+        id S1726813AbgAJHih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:38:29 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:39380 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbgAJHi2 (ORCPT
+        Fri, 10 Jan 2020 02:38:37 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43722 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726551AbgAJHih (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:38:28 -0500
-Received: by mail-wm1-f68.google.com with SMTP id 20so853968wmj.4
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 23:38:27 -0800 (PST)
+        Fri, 10 Jan 2020 02:38:37 -0500
+Received: by mail-qk1-f196.google.com with SMTP id t129so1005740qke.10;
+        Thu, 09 Jan 2020 23:38:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=frOmwgpbYCqHF+EYUPe13bnygy2tqNJcGXBXPNFxpL4=;
+        b=H19G2bGbuiDimXZSWVXQfRFQhdPBnJ9jrafNYbpdI/2xS6HUtXFqgBm9U56PpTpq6x
+         4PLlmNMHn8G9SgNwMvW627xgmR60VzCNdrhKNjrIdIgil/Hr5P95RBhiMKGAPkGsnu5E
+         bM/YlUr4T/jifTdWudVpQiiclLrMh1HUL7tS4J2jbtTp3PVfzd2PJgfrH63w2rfZI2XO
+         gbyOTAnWa82V7wcX8cr+nEpfpEfRF2q+9lOxx7ICRkrjs4yqetjyGMBlVJ+1o/oGccLa
+         rImES/t2DgdekgdaJ18U043vYskSW3XJZlaiYe/RnK2g3Cxeuz0qhB6mlH0e+9+8fI+j
+         tumA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZjWwBZ88Q84uyiPwE+9hZtJZXGqPOEuXwHPuM2hDV6M=;
-        b=kvkgThAS+lgsmfQvEd8irKxvG0HKux2yPp6IGqBXm3bEFBtwjTJ54Y2EtQPvGAjdJx
-         1UJfyNoPpmhb2DqxqD7zfC8JAArX7WRUZUdbAVwM17Ze8etGDaTXRfWqabNLmVBS5xy+
-         r/G7iOjBCb2/d3UjkXI8sjrRPvLXoY221nRnPSDJRV65Ksy885sLUX9FqNjuHTtq1ZS+
-         YqkmXvBKiDhfDmufmdQ7DOLAP8MohNCDgb5mPdvbti/I2FviDVF3Ws/JhJI2ifpMR2Is
-         9hUf9jhCa9BZaDQsL9sM9Bush5TayxJLH2edLK8bWnc/OwufNd4wgqiyIbMZ4FI5zgmi
-         bdbw==
-X-Gm-Message-State: APjAAAVlOYJXHxO8Y2zVX2qK31VYlCINLzoST2xLHDjIxX7sq53ybZYu
-        LNOOQ/pUkdKN3Z9qeu4lu/U=
-X-Google-Smtp-Source: APXvYqxp1oB3tJAXijtVgqdDR+/kcuIcgwR9w6Y7iWy6vogK8Ly5w8bDeGZ3IGRlq4G6f6TF+Eu93Q==
-X-Received: by 2002:a05:600c:2c08:: with SMTP id q8mr2409649wmg.45.1578641906642;
-        Thu, 09 Jan 2020 23:38:26 -0800 (PST)
-Received: from localhost (ip-37-188-146-105.eurotel.cz. [37.188.146.105])
-        by smtp.gmail.com with ESMTPSA id u24sm1247888wml.10.2020.01.09.23.38.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 23:38:25 -0800 (PST)
-Date:   Fri, 10 Jan 2020 08:38:22 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
-Message-ID: <20200110073822.GC29802@dhcp22.suse.cz>
-References: <20200109225646.22983-1-xiyou.wangcong@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=frOmwgpbYCqHF+EYUPe13bnygy2tqNJcGXBXPNFxpL4=;
+        b=OO2PuC1DqgdiWo9+Oqb01sr3+EQj7EDYq5dlaauic0SJeCV/UFi1NZo5riJhvwMvIl
+         dOLb10LnQdirdzyUFlxc4A83Za0hxCirfU/iI8E9HM+axLakIayHYU8udMkPnmFXZ/ut
+         +2NJGBUDkG2kChyeY/id7GwJEA9Ohu6D8dD6LW5E4RmriC21/9FX+447osd/kCBAduyN
+         BaPVs8CE1NpT2KRz/KgnKz16ngX2piS1oQhwhfZQj3ysb+Ov5kK1+AygTbsd0qW+vcVe
+         1syjJHB774K8vt84mXbh+1Ewa+UTrI4WL2k+ltT7b8Fl0eVT1JIbmqlW5WcFBqkco5G4
+         KXyQ==
+X-Gm-Message-State: APjAAAWDKfBaLd586l8r8AucW+XMxX6FDPg8EIRGxorAp2Voh2rzUYNs
+        NUi5vlp1ludmYrq8EqKeZtDBKSllyCxgXHB6CQE=
+X-Google-Smtp-Source: APXvYqxXfahdH0VQLDgp0/VIH69zZ21fhMxDJg0BMmv28OiNiMaFwdgU50jaF5FZqrKNM8GYWfoPbgRZqD+BZHufRXo=
+X-Received: by 2002:ae9:c316:: with SMTP id n22mr1821462qkg.72.1578641916111;
+ Thu, 09 Jan 2020 23:38:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109225646.22983-1-xiyou.wangcong@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <cover.1578235515.git.gupt21@gmail.com> <9fcb02fafd5fc9b31f3fe358b8e62b8a40ae132a.1578235515.git.gupt21@gmail.com>
+ <20200106193500.GC754821@kroah.com> <CALUj-gsaecfZ9HN_JVAnvJijYCHK-A5qeztDLbDOSOAjTVfTeg@mail.gmail.com>
+ <20200110072051.GA124387@kroah.com>
+In-Reply-To: <20200110072051.GA124387@kroah.com>
+From:   rishi gupta <gupt21@gmail.com>
+Date:   Fri, 10 Jan 2020 13:08:25 +0530
+Message-ID: <CALUj-gvroB_N34i-QkqT6Qn1ccvif+phN+Kszf-NO6v=Q8syqg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] tty/serial: ttvys: add null modem driver emulating
+ serial port
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     robh+dt@kernel.org, jslaby@suse.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[CC Mel and Vlastimil]
+One problem (: about configfs. Desktop distros like Ubuntu doesn't
+enable configFS by default in kernel config. So users will have to
+build their own version of kernel. For my own purpose, as developer I
+have control over this but for others building kernel suggested ?
 
-On Thu 09-01-20 14:56:46, Cong Wang wrote:
-> We observed kcompactd hung at __lock_page():
-> 
->  INFO: task kcompactd0:57 blocked for more than 120 seconds.
->        Not tainted 4.19.56.x86_64 #1
->  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->  kcompactd0      D    0    57      2 0x80000000
->  Call Trace:
->   ? __schedule+0x236/0x860
->   schedule+0x28/0x80
->   io_schedule+0x12/0x40
->   __lock_page+0xf9/0x120
->   ? page_cache_tree_insert+0xb0/0xb0
->   ? update_pageblock_skip+0xb0/0xb0
->   migrate_pages+0x88c/0xb90
->   ? isolate_freepages_block+0x3b0/0x3b0
->   compact_zone+0x5f1/0x870
->   kcompactd_do_work+0x130/0x2c0
->   ? __switch_to_asm+0x35/0x70
->   ? __switch_to_asm+0x41/0x70
->   ? kcompactd_do_work+0x2c0/0x2c0
->   ? kcompactd+0x73/0x180
->   kcompactd+0x73/0x180
->   ? finish_wait+0x80/0x80
->   kthread+0x113/0x130
->   ? kthread_create_worker_on_cpu+0x50/0x50
->   ret_from_fork+0x35/0x40
-> 
-> which faddr2line maps to:
-> 
->   migrate_pages+0x88c/0xb90:
->   lock_page at include/linux/pagemap.h:483
->   (inlined by) __unmap_and_move at mm/migrate.c:1024
->   (inlined by) unmap_and_move at mm/migrate.c:1189
->   (inlined by) migrate_pages at mm/migrate.c:1419
-> 
-> Sometimes kcompactd eventually got out of this situation, sometimes not.
-
-What does this mean exactly? Who is holding the page lock?
-
-> I think for memory compaction, it is a best effort to migrate the pages,
-> so it doesn't have to wait for I/O to complete. It is fine to call
-> trylock_page() here, which is pretty much similar to
-> buffer_migrate_lock_buffers().
-> 
-> Given MIGRATE_SYNC_LIGHT is used on compaction path, just relax the
-> check for it.
-
-The exact definition of MIGRATE_SYNC_LIGHT is a bit fuzzy but bailing
-out on the page lock sounds too early to me. So far we have tried to
-block on everything but the writeback which can take a lot of time.
-
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: linux-mm@kvack.org
-> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-> ---
->  mm/migrate.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index 86873b6f38a7..df60026779d2 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1010,7 +1010,8 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
->  	bool is_lru = !__PageMovable(page);
->  
->  	if (!trylock_page(page)) {
-> -		if (!force || mode == MIGRATE_ASYNC)
-> +		if (!force || mode == MIGRATE_ASYNC
-> +			   || mode == MIGRATE_SYNC_LIGHT)
->  			goto out;
->  
->  		/*
-> -- 
-> 2.21.1
-> 
-
--- 
-Michal Hocko
-SUSE Labs
+On Fri, Jan 10, 2020 at 12:50 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Jan 09, 2020 at 02:59:59PM +0530, rishi gupta wrote:
+> > > > +/* UART frame structure definitions */
+> > > > +#define VS_CRTSCTS       0x0001
+> > > > +#define VS_XON           0x0002
+> > > > +#define VS_NONE          0X0004
+> > > > +#define VS_DATA_5        0X0008
+> > > > +#define VS_DATA_6        0X0010
+> > > > +#define VS_DATA_7        0X0020
+> > > > +#define VS_DATA_8        0X0040
+> > >
+> > > Why the "X"?
+> > Sorry I did not understand, do you mean why VS_XON.
+>
+> No, I mean why the "0X0040" instead of "0x0040" like all other hex
+> digits in your list of defines.
+Okay understood.
+>
+> > > > +static int vs_alloc_reg_one_dev(int oidx, int pidx, int rtsmap,
+> > > > +                     int dtrmap, int dtropn)
+> > > > +{
+> > > > +     int ret;
+> > > > +     struct vs_dev *vsdev;
+> > > > +     struct device *dev;
+> > > > +
+> > > > +     /* Allocate and init virtual tty device private data */
+> > > > +     vsdev = kcalloc(1, sizeof(struct vs_dev), GFP_KERNEL);
+> > > > +     if (!vsdev)
+> > > > +             return -ENOMEM;
+> > > > +
+> > > > +     vsdev->own_tty = NULL;
+> > > > +     vsdev->peer_tty = NULL;
+> > > > +     vsdev->own_index = oidx;
+> > > > +     vsdev->peer_index =  pidx;
+> > > > +     vsdev->rts_mappings = rtsmap;
+> > > > +     vsdev->dtr_mappings = dtrmap;
+> > > > +     vsdev->set_odtr_at_open = dtropn;
+> > > > +     vsdev->msr_reg = 0;
+> > > > +     vsdev->mcr_reg = 0;
+> > > > +     vsdev->waiting_msr_chg = 0;
+> > > > +     vsdev->tx_paused = 0;
+> > > > +     vsdev->faulty_cable = 0;
+> > > > +     mutex_init(&vsdev->lock);
+> > > > +
+> > > > +     /* Register with tty core with specific minor number */
+> > > > +     dev = tty_register_device(ttyvs_driver, oidx, NULL);
+> > > > +     if (!dev) {
+> > > > +             ret = -ENOMEM;
+> > > > +             goto fail;
+> > > > +     }
+> > > > +
+> > > > +     vsdev->device = dev;
+> > > > +     dev_set_drvdata(dev, vsdev);
+> > > > +
+> > > > +     /* Create custom sysfs files for this device for events */
+> > > > +     ret = sysfs_create_group(&dev->kobj, &vs_info_attr_grp);
+> > >
+> > > Please no.  You just raced with userspace and lost (i.e. userspace has
+> > > no idea these files are present.)
+> > >
+> > > Please use the correct apis for this, if you _REALLY_ want special sysfs
+> > > files for a tty device.
+> > Any specific API would you like to suggest. I am unable to progress on
+> > how to address this one.
+>
+> Now that you have moved things to configfs, maybe you do not need the
+> sysfs files anymore?
+>
+> Ah your "control" sysfs files, ok, you need to set the driver's
+> dev_groups variable to point to your sysfs attributes, and then the
+> driver core will properly set up these files.
+>
+> hope this helps,
+>
+> greg k-h
