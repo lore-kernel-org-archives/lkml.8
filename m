@@ -2,135 +2,151 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1725CC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDF7C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF18A2077B
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3B12072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kIH2qv/O"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="jy6oBnQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730564AbgAJBYO (ORCPT
+        id S1730585AbgAJBZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:24:14 -0500
-Received: from mail-ot1-f45.google.com ([209.85.210.45]:36306 "EHLO
-        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730531AbgAJBYO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 20:24:14 -0500
-Received: by mail-ot1-f45.google.com with SMTP id 19so431043otz.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 17:24:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5p5CvVBITV/7iIb1FweihqnfezWv+H3UpbGbYpDE3BQ=;
-        b=kIH2qv/O3jWeNzXQU8RaVvJM5gVeYQvPhTEDy3ZPyjeqIvkwJFbK7elYCnfjpBiHNw
-         /TQCPU4EGepXMiOFIG/lDifQmo7iunKLhI2rD/8Vh8HWBra5JsFOYqGbgHVqPcwuOiED
-         5LtHhAIclYGfc31yYSa8Ie0pWPB+MTusy3r5gt34nZ9nEFweueFxH0KH1cp6vPIdgTqQ
-         C3eiQYj6wMqtLgIVAUFCQkyaS/bpEHst5ZUHA2JpqGYbQ0YYZ/BCK2nJEwFb3cslol68
-         Lp6cOWkCsXehxKjAdX1daiIpjOXC1nT4HYvtF4ljq1CCGxg/VxBBHmco0c4G1Mhysn8s
-         lxyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5p5CvVBITV/7iIb1FweihqnfezWv+H3UpbGbYpDE3BQ=;
-        b=P+VDoguJdzYcSuzQdcJd5baPbfVNHndVbzSWXdana94LIhVUL5T8+naP/YhSX26xvq
-         1f5mXnCHSKracCCh/vvH+a/ddiqS/f8Qovv2g96KGSNtowylN5O2O5xizE0qjI9O99tI
-         YnvE4IqmqmOifEqCq7AdHRLbaYEKQNSwtb06lCy9CCPph77BAiiK4LNmq59BQsIe8Ot+
-         EMIqMYrqovFHr4WKXC/FHVcQJRwWlD8Ntv/PstszmlRdNJffm0CV9FdTp8Iecj5Oyrn5
-         RS/czm7Fb7DZLAyUq7/hDHE0XhJXXqNRD5RJ7odkiQXlRXf6QS5jDnGR7EbZPWDHOEBg
-         Vnkw==
-X-Gm-Message-State: APjAAAV6hkajF3+bsihaksJu/YL1JYlyhjaNiZaQWYzWrU0Ihk5JE5HM
-        Nv29JxKtkHlmCkt+Cwb20acjFrFwozKXSy2+ibaG1w==
-X-Google-Smtp-Source: APXvYqxc0snYfiF+IX/G27NrB4pKpPlSuIDaut4DKW6QITSOu0SuBFzdwYbgTJADgKbPtMgnZzhY2smDsV+8GcxufNo=
-X-Received: by 2002:a9d:7c90:: with SMTP id q16mr597097otn.191.1578619452866;
- Thu, 09 Jan 2020 17:24:12 -0800 (PST)
+        Thu, 9 Jan 2020 20:25:44 -0500
+Received: from mail-dm6nam12on2098.outbound.protection.outlook.com ([40.107.243.98]:10849
+        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730539AbgAJBZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 20:25:44 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UrD4XSZGQn2J+wvtEqrszvkJal9JRJck51ajSGk7KPObF/KrupVMzG9k6Xcvzfd4y5AERf0mTefx07hdJcQzS9VpODo/4WwuOpVPmsoyMhDu4fHef68bC+zeNu5g86KoDOEGJ891VmQvUcp5fgcNAoyp+rem8E1c8wT3RgEB8VennipWfl+0q9ZzCbsPuMGcaB/lKGQmiC/HMK2ieMgz/Wq3L5opUgeYAJMgBEqNKMut+KoA+2arYo2XiCkEAdoNYvm/FbG1J5dAawnD6+vYy5L4lCMkymwwi/iZnreKuP1VCjaWHHk/co4hznhR0HkweD8Ybg6Jp2KIROId4+mdhQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EWTF0UuXY5vntRu2Ca5bOl2YVc2MwejTZ78rX9V3iSk=;
+ b=AwUDQkVflhVLBzKEEzHP+i0+OeaV2kbX4IbRvy2/fOuX3CgeulOLIupUQ0A1n7wnNmo9mcpeMNx8NUN6p+puFcYKgbCe3CpqQX3dWa0BnGVhBzRCKepP36ATUAYAcOd2VC/oi01G7984PS3g+ib2DahxArkU4XKm8mqO90R4JucT6NmOHPs9uEkz7C3sSiW/+IcgbPY/DKO2KPDC4N0wgLUWryO/XnGk9O19vcZBM1rXW1qe4dt3mstoO4UeSI6O85TInDv8JS11Q88RICN+fyg+u+PwOUGhL6V1zWYarUPnU1zJt9bwhwddorpgEYom67JTb6AZrdGJ+Yj17qocfg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EWTF0UuXY5vntRu2Ca5bOl2YVc2MwejTZ78rX9V3iSk=;
+ b=jy6oBnQ1kpo8KOXuya8h2TDIb36uZXkECaf4Iy1dVssPUpkGGCBRcweNzFlHAMk6QC3HxMq8g8g6naDnELZVKsVBo/AWtsouij7ZukYv84IwwI8VrNjxW+8ZCxKYCgQwdh732bIT3uomekD97pF/Tp6kuIAvQvcogKOHYannD7o=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+Received: from DM5PR21MB0779.namprd21.prod.outlook.com (10.173.172.149) by
+ DM5PR21MB0858.namprd21.prod.outlook.com (10.173.172.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.3; Fri, 10 Jan 2020 01:25:42 +0000
+Received: from DM5PR21MB0779.namprd21.prod.outlook.com
+ ([fe80::4dbb:1abc:e1c1:decb]) by DM5PR21MB0779.namprd21.prod.outlook.com
+ ([fe80::4dbb:1abc:e1c1:decb%12]) with mapi id 15.20.2644.010; Fri, 10 Jan
+ 2020 01:25:41 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        Alexander.Levin@microsoft.com
+Cc:     sunilmut@microsoft.com, Andrea.Parri@microsoft.com,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] Drivers: hv: vmbus: Ignore CHANNELMSG_TL_CONNECT_RESULT(23)
+Date:   Thu,  9 Jan 2020 17:25:15 -0800
+Message-Id: <1578619515-115811-1-git-send-email-decui@microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+Reply-To: decui@microsoft.com
+Content-Type: text/plain
+X-ClientProxiedBy: MWHPR22CA0071.namprd22.prod.outlook.com
+ (2603:10b6:300:12a::33) To DM5PR21MB0779.namprd21.prod.outlook.com
+ (2603:10b6:3:a4::21)
 MIME-Version: 1.0
-References: <20200107204412.GA29562@amd> <20200109115633.GR4951@dhcp22.suse.cz>
- <20200109210307.GA1553@duo.ucw.cz> <20200109212516.GA23620@dhcp22.suse.cz> <20200109224845.GA1220@amd>
-In-Reply-To: <20200109224845.GA1220@amd>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 9 Jan 2020 17:24:01 -0800
-Message-ID: <CALvZod6v==Fq4=W5_71msn4rE+6m49B4ShoJaMSs0iaihuc3UA@mail.gmail.com>
-Subject: Re: OOM killer not nearly agressive enough?
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@osdl.org>, Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR22CA0071.namprd22.prod.outlook.com (2603:10b6:300:12a::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.11 via Frontend Transport; Fri, 10 Jan 2020 01:25:40 +0000
+X-Mailer: git-send-email 1.8.3.1
+X-Originating-IP: [13.77.154.182]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: a0a26289-b1d6-4845-587c-08d7956c01c2
+X-MS-TrafficTypeDiagnostic: DM5PR21MB0858:|DM5PR21MB0858:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR21MB0858621B85824228092476AABF380@DM5PR21MB0858.namprd21.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 02788FF38E
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(376002)(39860400002)(136003)(366004)(396003)(199004)(189003)(2616005)(956004)(36756003)(186003)(66476007)(4326008)(16526019)(6506007)(26005)(52116002)(66556008)(81156014)(81166006)(8936002)(8676002)(3450700001)(66946007)(5660300002)(2906002)(86362001)(6512007)(107886003)(6486002)(6636002)(316002)(6666004)(478600001)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0858;H:DM5PR21MB0779.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: hTZwHh1aGO8ZZHKJBAxN92UtYpJMv6xQcCCConnOuceW3xGk967F1wzkyPGQk8PFzxoCVOQNXCRofVMPiEbOsxVTBgIFBdf2mdwiRpbPbVS3+MTbAfZxLETG1QuDzT4YPtNw+6XM11rez6Muiei9wq2P++m6zlbpIc+0o1FinvoJLNQs2HpOZB0nmYNqhOsWpAvc2iK6DpN0fM7C3Wwn9xh35tARzt/kTwSqYM3Gm2aTq0lrX8GlmmGxxUdcrsuP6YaSWd2lk2H74yAxWGnELHcKUvql4gRiAT8PKloeTWJsqBbBRez5q2HLBnsiMOLg2iCDfOPmbyOheQVbZmLCdwBCXPA1ciAUA7BvUSKMP5alsQ+5KOsaxxoX3InmUG1XR9jVjHw8Ks1RcZ+xyPuug+6D1MLoO+8at9ksGuTr9ar4X2y7ITlFC6ek00z+0oCs
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0a26289-b1d6-4845-587c-08d7956c01c2
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2020 01:25:41.9103
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7EQ8BpjH4wIW936CWUYqUfXB8NIhwSGXKam3a+TCBxH8oL8vKoLAmBvVfyn0XBVUSvTGDZrEkZHBPivWz5KlIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0858
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 2:49 PM Pavel Machek <pavel@ucw.cz> wrote:
->
-> Hi!
->
-> > > > > Do we agree that OOM killer should have reacted way sooner?
-> > > >
-> > > > This is impossible to answer without knowing what was going on at the
-> > > > time. Was the system threshing over page cache/swap? In other words, is
-> > > > the system completely out of memory or refaulting the working set all
-> > > > the time because it doesn't fit into memory?
-> > >
-> > > Swap was full, so "completely out of memory", I guess. Chromium does
-> > > that fairly often :-(.
-> >
-> > The oom heuristic is based on the reclaim failure. If the reclaim makes
-> > some progress then the oom killer is not hit. Have a look at
-> > should_reclaim_retry for more details.
->
-> Thanks for pointer.
->
-> I guess setting MAX_RECLAIM_RETRIES to 1 is not something you'd
-> recommend? :-).
->
-> > > PSI is completely different system, but I guess
-> > > I should attempt to tweak the existing one first...
-> >
-> > PSI is measuring the cost of the allocation (among other things) and
-> > that can give you some idea on how much time is spent to get memory.
-> > Userspace can implement a policy based on that and act. The kernel oom
-> > killer is the last resort when there is really no memory to
-> > allocate.
->
-> So what I'm seeing is system that is unresponsive, easily for an hour.
->
-> Sometimes, I'm able to log in. When I could do that, system was
-> absurdly slow, like ps printing at more than 10 seconds per line.
-> ps on my system takes 300msec, estimate in the slow case would be 2000
-> seconds, that is slowdown by factor of 6000x. That would be X terminal
-> opening in like two hours... that's not really usable.
->
-> DRAM is in 100nsec range, disk is in 10msec range; so worst case
-> slowdown is somewhere in 100000x range. (Actually, in the worst case
-> userland will do no progress at all, since you can need at 4+ pages in
-> single CPU instruction, right?)
->
-> But kernel is happy; system is unusable and will stay unusable for
-> hour or more, and there's not much user can do. (Besides sysrq, thanks
-> for the hint).
->
-> Can we do better? This is equivalent of system crash, and it is _way_
-> too easy to trigger. Should we do better by default?
->
-> Dunno. If user moved the mouse, and cursor did not move for 10
-> seconds, perhaps it is time for oom kill?
->
-> Or should I add more swap? Is it terrible to place swap on SSD?
->
+When a Linux hv_sock app tries to connect to a Service GUID on which no
+host app is listening, a recent host (RS3+) sends a
+CHANNELMSG_TL_CONNECT_RESULT (23) message to Linux and this triggers such
+a warning:
 
-What's the kernel version? How much memory is anon and file pages?
-What's your swap to DRAM ratio? Are you using in-memory compression
-based swap? Have you tried to disable swap completely?
+unknown msgtype=23
+WARNING: CPU: 2 PID: 0 at drivers/hv/vmbus_drv.c:1031 vmbus_on_msg_dpc
 
-Shakeel
+Actually Linux can safely ignore the message because the Linux app's
+connect() will time out in 2 seconds: see VSOCK_DEFAULT_CONNECT_TIMEOUT
+and vsock_stream_connect(). We don't bother to make use of the message
+because: 1) it's only supported on recent hosts; 2) a non-trivial effort
+is required to use the message in Linux, but the benefit is small.
+
+So, let's not see the warning by silently ignoring the message.
+
+Signed-off-by: Dexuan Cui <decui@microsoft.com>
+---
+ drivers/hv/vmbus_drv.c | 5 +++++
+ include/linux/hyperv.h | 2 ++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 4ef5a66df680..c838b6f5f726 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -1033,6 +1033,11 @@ void vmbus_on_msg_dpc(unsigned long data)
+ 	}
+ 
+ 	entry = &channel_message_table[hdr->msgtype];
++
++	/* Linux ignores some messages, e.g. CHANNELMSG_TL_CONNECT_RESULT. */
++	if (!entry->message_handler)
++		goto msg_handled;
++
+ 	if (entry->handler_type	== VMHT_BLOCKING) {
+ 		ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
+ 		if (ctx == NULL)
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 26f3aeeae1ca..41c58011431e 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -425,6 +425,8 @@ enum vmbus_channel_message_type {
+ 	CHANNELMSG_19				= 19,
+ 	CHANNELMSG_20				= 20,
+ 	CHANNELMSG_TL_CONNECT_REQUEST		= 21,
++	CHANNELMSG_22				= 22,
++	CHANNELMSG_TL_CONNECT_RESULT		= 23,
+ 	CHANNELMSG_COUNT
+ };
+ 
+-- 
+2.19.1
+
