@@ -2,139 +2,169 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F6BC33CA5
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 982F8C33CA5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7F520721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 696EB20848
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 12:31:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="wVy1VAbU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgAJMbH (ORCPT
+        id S1728183AbgAJMbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 07:31:07 -0500
-Received: from foss.arm.com ([217.140.110.172]:43950 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727924AbgAJMbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 07:31:07 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84B151063;
-        Fri, 10 Jan 2020 04:31:06 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6AA483F534;
-        Fri, 10 Jan 2020 04:31:05 -0800 (PST)
-Date:   Fri, 10 Jan 2020 12:31:03 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, peng.fan@nxp.com,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] firmware: arm_scmi: Make scmi core independent of
- transport type
-Message-ID: <20200110123103.GC45077@bogus>
-References: <5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org>
- <CAK8P3a3=q2zX9xQo7eZKp7e70rAeNB8VoSjg2aE06QJuSw8y3Q@mail.gmail.com>
- <20200109093442.4jt44eu2zlmjaq3f@vireshk-i7>
+        Fri, 10 Jan 2020 07:31:15 -0500
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:46383 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727924AbgAJMbP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 07:31:15 -0500
+Received: from [IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef]
+ ([IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id ptRUimnGnpLtbptRXiQX2R; Fri, 10 Jan 2020 13:31:12 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1578659472; bh=Q4tGujyc0qMIli9sFFN1Y2SjsV4ntbfAJ95PuThwHNo=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=wVy1VAbUe9iHSsSMlQRYcvuUGVHHOkYaXBCi0ulHQzsBqeDXnTlWE3dPY3Cd9N1T5
+         ym08+Bx6xkVDafW0WyHGEryJhllacfjUsyH2wbDdc4aYGfP52TKIG5qS//HO3YTP7A
+         6x2hJWc0vaXoRvlK3yxgd201kjp7KNhTnyxZ51jj55d0rRQT8Mg87BhZ+4OwOu36vR
+         uYm8fLnZJEVjmizDcRvj0FL9KLrJxugUppzrEZk6/hTBZPiELHW7Hx0oEA/Agi15xX
+         ongBXCUp69XYdiBOzglUD+FCZy02wl/UhCkWbnhLBTI5Yq99nq/pteqEEZSv7WI9Gu
+         XFHhMzM3GOvDg==
+Subject: Re: [PATCH] media: hantro: Support H264 profile control
+To:     Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc:     Hirokazu Honda <hiroh@chromium.org>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        devel@driverdev.osuosl.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20191122051608.128717-1-hiroh@chromium.org>
+ <767528be59275265072896e5c679e97575615fdd.camel@ndufresne.ca>
+ <CAAFQd5D3OpAAtX7_0ktz4-aAgWN_G4YBQMR=Vwp7JPopjvRkRA@mail.gmail.com>
+ <f5341ed837529bd38d466d4b655e261d64065912.camel@ndufresne.ca>
+ <CAAFQd5Cpk8qG+VgE6+aznBmXu11YG0gNQyCRanZghds-TPKvyg@mail.gmail.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <c88b2822-0dd2-8ea3-eb0b-262df5a30830@xs4all.nl>
+Date:   Fri, 10 Jan 2020 13:31:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109093442.4jt44eu2zlmjaq3f@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAAFQd5Cpk8qG+VgE6+aznBmXu11YG0gNQyCRanZghds-TPKvyg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfCFM+zo00wI7D/Z3xha1mTiaLvB2X7xakAJsEjudm/mMCDqgPaS0ALMhUjD7FGbvE9gaHbDCUeW6n1mMAlU7QRFfJKjoy/BBOSUPUQFvcX/o45cNq4c6
+ 5eZpmXxjvHYyiGX9RlfZvSEvEfdVejRHqa8EPYDEpLHNZxIrFZdBP3+M8/B2npPNo2Jt1GKe4CiPY6HdBF4Zd5tKqTjkcWTCB+Mxo45kl1Lgr/yHvk5OXcas
+ zoKjDuUji2iCldwA4CtG5rwyJROW8e9Ow+nP4xAZKA1smJnTD3I/HL4APkxK4ZAe91FOwEfm7Aft6utF2gb40RLhIxZe4c+egotdX28vGAjX+zy8cOj5TPvW
+ +F31IZeiVZzkbHd6PZ/fwkHt3Q01X919mz3KU9GjzXjLQGHLwSdpmI/+h/CjDNDZHfsq5lO2+dXYP61cEroyLFU5pDOudC66+OuldyAgD10cCKoig7L6P8VZ
+ wvHGZLe4PZGqBMqu404KcZzZiv80OtiP8smSOkHJQp6pubqkkve9gU1cPactlH2ZTufUXax+8bQWNoNO61wqk8N06yA7vkxzkkABaA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 03:04:42PM +0530, Viresh Kumar wrote:
-> On 09-01-20, 09:18, Arnd Bergmann wrote:
-> > On Fri, Nov 29, 2019 at 10:32 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > >
-> > > The SCMI specification is fairly independent of the transport protocol,
-> > > which can be a simple mailbox (already implemented) or anything else.
-> > > The current Linux implementation however is very much dependent of the
-> > > mailbox transport layer.
-> > >
-> > > This patch makes the SCMI core code (driver.c) independent of the
-> > > mailbox transport layer and moves all mailbox related code to a new
-> > > file: mailbox.c.
-> > >
-> > > We can now implement more transport protocols to transport SCMI
-> > > messages.
-> > >
-> > > The transport protocols just need to provide struct scmi_transport_ops,
-> > > with its version of the callbacks to enable exchange of SCMI messages.
-> > >
-> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> >
-> > Conceptually I think this is fine, but as others have said, it would be
-> > better to have another transport implementation posted along with this
-> > to see if the interfaces actually work out.
->
-> @Sudeep/Vincent: Do you think we can add another transport
-> implementation something right away for it ?
->
-> @Peng ?
->
-> > > +/**
-> > > + * struct scmi_chan_info - Structure representing a SCMI channel information
-> > > + *
-> > > + * @payload: Transmit/Receive payload area
-> > > + * @dev: Reference to device in the SCMI hierarchy corresponding to this
-> > > + *      channel
-> > > + * @handle: Pointer to SCMI entity handle
-> > > + * @transport_info: Transport layer related information
-> > > + */
-> > > +struct scmi_chan_info {
-> > > +       void __iomem *payload;
-> > > +       struct device *dev;
-> > > +       struct scmi_handle *handle;
-> > > +       void *transport_info;
-> > > +};
-> >
-> > I would assume that with another transport, the 'payload' pointer would
-> > not be __iomem
->
-> Hmm, okay. I just separated things based on the current transport and
-> didn't add much changes on top of it as I wasn't sure how things are
-> going to look with next transport and so left the changes for then.
->
-> I can now drop it though.
->
-> > > +static int scmi_set_transport_ops(struct scmi_info *info)
-> > > +{
-> > > +       struct scmi_transport_ops *ops;
-> > > +       struct device *dev = info->dev;
-> > > +
-> > > +       /* Only mailbox method supported for now */
-> > > +       ops = scmi_mailbox_get_ops(dev);
-> > > +       if (!ops) {
-> > > +               dev_err(dev, "Transport protocol not found in %pOF\n",
-> > > +                       dev->of_node);
-> > > +               return -EINVAL;
-> > > +       }
-> > > +
-> > > +       info->transport_ops = ops;
-> > > +       return 0;
-> > > +}
-> >
-> > This looks odd: rather than guessing the transport type based on
-> > random DT properties, I would prefer to have it determined by
-> > the device compatible string, and have different drivers bind
-> > to one of them each, with each driver linking against a common
-> > base implementation, either as separate modules or in one file.
->
-> Since there are no platforms using the scmi binding in mainline kernel
-> for now, it won't be difficult to add new compatible strings.
+On 11/29/19 1:16 AM, Tomasz Figa wrote:
+> On Sat, Nov 23, 2019 at 1:52 AM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
+>>
+>> Le samedi 23 novembre 2019 à 01:00 +0900, Tomasz Figa a écrit :
+>>> On Sat, Nov 23, 2019 at 12:09 AM Nicolas Dufresne <nicolas@ndufresne.ca> wrote:
+>>>> Le vendredi 22 novembre 2019 à 14:16 +0900, Hirokazu Honda a écrit :
+>>>>> The Hantro G1 decoder supports H.264 profiles from Baseline to High, with
+>>>>> the exception of the Extended profile.
+>>>>>
+>>>>> Expose the V4L2_CID_MPEG_VIDEO_H264_PROFILE control, so that the
+>>>>> applications can query the driver for the list of supported profiles.
+>>>>
+>>>> Thanks for this patch. Do you think we could also add the LEVEL control
+>>>> so the profile/level enumeration becomes complete ?
+>>>>
+>>>> I'm thinking it would be nice if the v4l2 compliance test make sure
+>>>> that codecs do implement these controls (both stateful and stateless),
+>>>> it's essential for stack with software fallback, or multiple capable
+>>>> codec hardware but with different capabilities.
+>>>>
+>>>
+>>> Level is a difficult story, because it also specifies the number of
+>>> macroblocks per second, but for decoders like this the number of
+>>> macroblocks per second it can handle depends on things the driver
+>>> might be not aware of - clock frequencies, DDR throughput, system
+>>> load, etc.
+>>>
+>>> My take on this is that the decoder driver should advertise the
+>>> highest resolution the decoder can handle due to hardware constraints.
+>>> Performance related things depend on the integration details and
+>>> should be managed elsewhere. For example Android and Chrome OS manage
+>>> expected decoding performance in per-board configuration files.
+>>
+>> When you read datasheet, the HW is always rated to maximum level (and
+>> it's a range) with the assumption of a single stream. It seems much
+>> easier to expose this as-is, statically then to start doing some math
+>> with data that isn't fully exposed to the user. This is about filtering
+>> of multiple CODEC instances, it does not need to be rocket science,
+>> specially that the amount of missing data is important (e.g. usage of
+>> tiles, compression, IPP all have an impact on the final performance).
+>> All we want to know in userspace is if this HW is even possibly capable
+>> of LEVEL X, and if not, we'll look for another one.
+>>
+> 
+> Agreed, one could potentially define it this way, but would it be
+> really useful for the userspace and the users? I guess it could enable
+> slightly faster fallback to software decoding in the extreme case of
+> the hardware not supporting the level at all, but I suspect that the
+> majority of cases would be the hardware just being unusably slow.
+> 
+> Also, as I mentioned before, we already return the range of supported
+> resolutions, which in practice should map to the part of the level
+> that may depend on hardware capabilities rather than performance, so
+> exposing levels as well would add redundancy to the information
+> exposed.
 
-I am fine adding new compatible but since the binding is present in the
-mainline for several releases now, we may have to have fallback to mailbox
-as default if any of the new compatibles added is missing.
+There is a lot of discussion here, but it all revolves around a potential
+LEVEL control.
 
---
+So I gather everyone is OK with merging this patch?
+
+If not, let me know asap.
+
 Regards,
-Sudeep
+
+	Hans
+
+> 
+>>>
+>>>>> Signed-off-by: Hirokazu Honda <hiroh@chromium.org>
+>>>>> ---
+>>>>>  drivers/staging/media/hantro/hantro_drv.c | 10 ++++++++++
+>>>>>  1 file changed, 10 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+>>>>> index 6d9d41170832..9387619235d8 100644
+>>>>> --- a/drivers/staging/media/hantro/hantro_drv.c
+>>>>> +++ b/drivers/staging/media/hantro/hantro_drv.c
+>>>>> @@ -355,6 +355,16 @@ static const struct hantro_ctrl controls[] = {
+>>>>>                       .def = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+>>>>>                       .max = V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
+>>>>>               },
+>>>>> +     }, {
+>>>>> +             .codec = HANTRO_H264_DECODER,
+>>>>> +             .cfg = {
+>>>>> +                     .id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+>>>>> +                     .min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
+>>>>> +                     .max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
+>>>>> +                     .menu_skip_mask =
+>>>>> +                     BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
+>>>>> +                     .def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
+>>>>> +             }
+>>>>>       }, {
+>>>>>       },
+>>>>>  };
+
