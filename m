@@ -2,127 +2,75 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A863CC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED46AC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3E820842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4E6F2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgAJQ7A (ORCPT
+        id S1728496AbgAJRCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:59:00 -0500
-Received: from mga11.intel.com ([192.55.52.93]:34768 "EHLO mga11.intel.com"
+        Fri, 10 Jan 2020 12:02:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725937AbgAJQ7A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:59:00 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 08:58:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
-   d="scan'208";a="255077476"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 10 Jan 2020 08:58:59 -0800
-Date:   Fri, 10 Jan 2020 08:58:59 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
-        edwin.zhai@intel.com
-Subject: Re: [RESEND PATCH v10 02/10] vmx: spp: Add control flags for
- Sub-Page Protection(SPP)
-Message-ID: <20200110165859.GB21485@linux.intel.com>
-References: <20200102061319.10077-1-weijiang.yang@intel.com>
- <20200102061319.10077-3-weijiang.yang@intel.com>
+        id S1728209AbgAJRCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 12:02:49 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EFCF2072E;
+        Fri, 10 Jan 2020 17:02:48 +0000 (UTC)
+Date:   Fri, 10 Jan 2020 12:02:46 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Greg KH <greg@kroah.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Garrett <mjg59@google.com>, bugzilla@colorremedies.com
+Subject: Re: [PATCH 3/3] tracing: Do not create directories if lockdown is
+ in affect
+Message-ID: <20200110120246.0f2bafe0@gandalf.local.home>
+In-Reply-To: <20200110165404.GA1837739@kroah.com>
+References: <20191205020459.023316620@goodmis.org>
+        <20191205020548.446051018@goodmis.org>
+        <20200110163105.GA17434@home.goodmis.org>
+        <20200110165404.GA1837739@kroah.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200102061319.10077-3-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 02:13:11PM +0800, Yang Weijiang wrote:
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index e3394c839dea..5713e8a6224c 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -60,6 +60,7 @@
->  #include "vmcs12.h"
->  #include "vmx.h"
->  #include "x86.h"
-> +#include "../mmu/spp.h"
+On Fri, 10 Jan 2020 17:54:04 +0100
+Greg KH <greg@kroah.com> wrote:
 
-The ".." should be unnecessary, e.g. x86.h is obviously a level up.
+> Relying only on the Fixes: tag to get things picked up by stable is a
+> sure way to get it on the "slow, and maybe eventually, hopefully, it
+> might make it into stable" path :)
 
->  MODULE_AUTHOR("Qumranet");
->  MODULE_LICENSE("GPL");
-> @@ -111,6 +112,7 @@ module_param_named(pml, enable_pml, bool, S_IRUGO);
->  
->  static bool __read_mostly dump_invalid_vmcs = 0;
->  module_param(dump_invalid_vmcs, bool, 0644);
-> +static bool __read_mostly spp_supported = 0;
+I've been numbed by all the AUTOSEL patches, where I tend to think
+Fixes is becoming enough. That said, this particular patch, I thought
+was going in the same release as what it fixed, which is why I never
+added stable to it. :-/
 
-s/spp_supported/enable_spp to be consistent with all the other booleans.
-
-Is there a reason this isn't exposed as a module param?
-
-And if this is to be on by default, then the flag itself should be
-initialized to '1' so that it's clear to readers that the feature is
-enabled by default (if it's supported).  Looking at only this code, I would
-think that SPP is forced off and can't be enabled.
-
-That being said, turning on the enable_spp control flag should be the last
-patch in the series, i.e. it shouldn't be turned on until all the
-underlying support code is in place.  So, I would keep this as is, but
-invert the code in hardware_setup() below.  That way the flag exists and
-is checked, but can't be turned on without modifying the code.  Then when
-all is said and done, you can add a patch to introduce the module param
-and turn on the flag by default (if that's indeed what we want).
-
->  #define MSR_BITMAP_MODE_X2APIC		1
->  #define MSR_BITMAP_MODE_X2APIC_APICV	2
-> @@ -2391,6 +2393,7 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->  			SECONDARY_EXEC_RDSEED_EXITING |
->  			SECONDARY_EXEC_RDRAND_EXITING |
->  			SECONDARY_EXEC_ENABLE_PML |
-> +			SECONDARY_EXEC_ENABLE_SPP |
->  			SECONDARY_EXEC_TSC_SCALING |
->  			SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE |
->  			SECONDARY_EXEC_PT_USE_GPA |
-> @@ -4039,6 +4042,9 @@ static void vmx_compute_secondary_exec_control(struct vcpu_vmx *vmx)
->  	if (!enable_pml)
->  		exec_control &= ~SECONDARY_EXEC_ENABLE_PML;
->  
-> +	if (!spp_supported)
-> +		exec_control &= ~SECONDARY_EXEC_ENABLE_SPP;
-> +
->  	if (vmx_xsaves_supported()) {
->  		/* Exposing XSAVES only when XSAVE is exposed */
->  		bool xsaves_enabled =
-> @@ -7630,6 +7636,9 @@ static __init int hardware_setup(void)
->  	if (!cpu_has_vmx_flexpriority())
->  		flexpriority_enabled = 0;
->  
-> +	if (cpu_has_vmx_ept_spp() && enable_ept)
-> +		spp_supported = 1;
-
-As above, invert this to disable spp when it's not supported, or when EPT
-is disabled (or not supported).
-
-> +
->  	if (!cpu_has_virtual_nmis())
->  		enable_vnmi = 0;
->  
-> -- 
-> 2.17.2
 > 
+> I have over 1000 patches right now in that "bucket" that need to be
+> checked to see if they are relevant for stable backporting, just since
+> 5.4 was released.  I have automated a lot of it, but still, they require
+> manual review.
+> 
+> I'll go queue this up now, as it's simplest just to ask us to take it
+> after it hits Linus's tree :)
+
+Again, I thought the AUTOSEL would pick it up, as it seems to pick
+other patches I don't intend on going to stable quickly ;-)
+
+-- Steve
