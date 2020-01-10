@@ -2,121 +2,113 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594DEC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C33C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2911220678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:22:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="XzwJrBkx"
+	by mail.kernel.org (Postfix) with ESMTP id 718CE2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgAJSW3 (ORCPT
+        id S1728242AbgAJS2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:22:29 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41743 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbgAJSW3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:22:29 -0500
-Received: by mail-lf1-f66.google.com with SMTP id m30so2175674lfp.8
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 10:22:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zRzWHHWUjd8GGli20zAKpRHocJhLO6+h0fMpMMJ1Kdg=;
-        b=XzwJrBkxl3yW13eTy/hl5tjp9vze6F192dwkrS1OPoiXlgcelkgVD+rXULocIf+rz/
-         cKGmxzyIHKxZtqfV5RqH1TATbiAyhbN+bFm2xsu8b24Mpf+iYizu8kgSPn0NA9gjYkNn
-         h9sj/TpGMbzgPR9lNV0jzUexa6lsUiRIXR+OmzRuKzj/EszyzXULGRU/y8Sp/tw+MBzB
-         6w/adFC9cokbgjFh7jbLjVqGRVWm3/ea1IPxMpMiEQvvHwI+VHh75YO3nXafuP80lHVO
-         OBRtoCEaFvo4EjUSUcxI1DN2YAPIsWxkGbI0xOgg2NphvzPbceqZojORaSXRccvuqtM+
-         8EEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zRzWHHWUjd8GGli20zAKpRHocJhLO6+h0fMpMMJ1Kdg=;
-        b=iktC6ZKVMv1qblMCC+59kJpD4HjYYFo60Yn5PxSdeRomzoVe8hS+DkxYIzMG0xynju
-         IZ3+7n3QGwiV2Z7YZtRpZ6g4Zfl0Zjn08Rd7Ayg/fvXAs0QW7YyKJVSTE+vbnDefa9ef
-         Ve+J5gGnRdPRWQi94Qix/qCf8HiL5t2G0aD7b3v/fCDAZtnGqFNcboz2nLYbDPZhzUdJ
-         uNbxqjQ9fglK49PsHE0g1+Pri7usi63ebCEl1e3/mk8GKjM9j5HfhFny5wbDjTMxpVA9
-         P67SPWskFm5CJgsvnKZOZXS7Ns72nt1v6/tuzVywSrsieRwJgFXmCFU7ayub1sMXjVWo
-         SRhA==
-X-Gm-Message-State: APjAAAWSULn3BQ0jaxjwrIX4OzRQG4TputCKR7i3UZA9M4iGz9umHQIe
-        0SNVoHbzL+6/iYQ3E2sDWKqJRA==
-X-Google-Smtp-Source: APXvYqxgLj386+NhihEkXDIpdXUve8mncnv4kKCJPtW//8AJeMuDL7yNLQ3rvwuzU8jzbvijFE8+Ww==
-X-Received: by 2002:ac2:5f59:: with SMTP id 25mr1185447lfz.195.1578680547459;
-        Fri, 10 Jan 2020 10:22:27 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id w19sm1409068lfl.55.2020.01.10.10.22.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 10:22:26 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 2A7A410144E; Fri, 10 Jan 2020 21:22:27 +0300 (+03)
-Date:   Fri, 10 Jan 2020 21:22:27 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@suse.de>,
-        "Jin, Zhi" <zhi.jin@intel.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH] mm/page_alloc: Skip non present sections on zone
- initialization
-Message-ID: <20200110182227.3gp7zgyd3fu7jzw6@box>
-References: <20200108144044.GB30379@dhcp22.suse.cz>
- <73437651-822f-fcec-3b96-281fb1064cf8@redhat.com>
- <20200110134547.v6ju5dxazknfjdj3@box>
- <de70ec09-492d-292b-0738-db1ce1f05673@redhat.com>
- <20200110144717.xufpf4yjkjlngymy@box>
- <6cf49e65-ee02-7cbd-596f-ebbc057717c2@redhat.com>
- <20200110145454.mmgmtcy2zsrr63vh@box>
- <2f075639-c378-4bba-abe1-60d3c2420800@redhat.com>
- <20200110175519.myahx3tnxajt4eam@box>
- <1dfd6a03-c444-720a-17c4-049f5953acb9@redhat.com>
+        Fri, 10 Jan 2020 13:28:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:49744 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726346AbgAJS2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 13:28:06 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7653730E;
+        Fri, 10 Jan 2020 10:28:05 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 996263F6C4;
+        Fri, 10 Jan 2020 10:28:02 -0800 (PST)
+Date:   Fri, 10 Jan 2020 18:28:00 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Paul Elliott <paul.elliott@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Amit Kachhap <amit.kachhap@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Sudakshina Das <sudi.das@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>
+Subject: Re: [PATCH v4 04/12] arm64: Basic Branch Target Identification
+ support
+Message-ID: <20200110182800.GI8786@arrakis.emea.arm.com>
+References: <20191211154206.46260-1-broonie@kernel.org>
+ <20191211154206.46260-5-broonie@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1dfd6a03-c444-720a-17c4-049f5953acb9@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20191211154206.46260-5-broonie@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 07:05:19PM +0100, David Hildenbrand wrote:
-> On 10.01.20 18:55, Kirill A. Shutemov wrote:
-> > On Fri, Jan 10, 2020 at 03:56:14PM +0100, David Hildenbrand wrote:
-> >> On 10.01.20 15:54, Kirill A. Shutemov wrote:
-> >>> On Fri, Jan 10, 2020 at 03:48:39PM +0100, David Hildenbrand wrote:
-> >>>>>> +       if (!present_section_nr(section_nr))
-> >>>>>> +               return section_nr_to_pfn(next_present_section_nr(section_nr));
-> >>>>>
-> >>>>> This won't compile. next_present_section_nr() is static to mm/sparse.c.
-> >>>>
-> >>>> We should then move that to the header IMHO.
-> >>>
-> >>> It looks like too much for a trivial cleanup.
-> >>>
-> >>
-> >> Cleanup? This is a performance improvement ("fix the issue."). We should
-> >> avoid duplicating code where it can be avoided.
-> > 
-> > My original patch is in -mm tree and fixes the issue. The thread is about
-> > tiding it up.
-> 
-> Just send a v2? This thread is review of this patch.
-> 
-> If you don't want to clean it up, I can send patches ...
+On Wed, Dec 11, 2019 at 03:41:58PM +0000, Mark Brown wrote:
+> diff --git a/arch/arm64/include/asm/ptrace.h b/arch/arm64/include/asm/ptrace.h
+> index fbebb411ae20..212bba1f8d84 100644
+> --- a/arch/arm64/include/asm/ptrace.h
+> +++ b/arch/arm64/include/asm/ptrace.h
+> @@ -35,8 +35,16 @@
+>  #define GIC_PRIO_PSR_I_SET		(1 << 4)
+>  
+>  /* Additional SPSR bits not exposed in the UABI */
+> +#define PSR_BTYPE_SHIFT		10
+> +
+>  #define PSR_IL_BIT		(1 << 20)
+>  
+> +/* Convenience names for the values of PSTATE.BTYPE */
+> +#define PSR_BTYPE_NONE		(0b00 << PSR_BTYPE_SHIFT)
+> +#define PSR_BTYPE_JC		(0b01 << PSR_BTYPE_SHIFT)
+> +#define PSR_BTYPE_C		(0b10 << PSR_BTYPE_SHIFT)
+> +#define PSR_BTYPE_J		(0b11 << PSR_BTYPE_SHIFT)
 
-Please send cleanups on top. My patch is less intrusive and easier to
-backport if needed.
+Would these be better placed in the uapi/ptrace.h?
 
--- 
- Kirill A. Shutemov
+> diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
+> index 9a9d98a443fc..ef80ecbd6eaf 100644
+> --- a/arch/arm64/kernel/syscall.c
+> +++ b/arch/arm64/kernel/syscall.c
+> @@ -98,6 +98,24 @@ static void el0_svc_common(struct pt_regs *regs, int scno, int sc_nr,
+>  	regs->orig_x0 = regs->regs[0];
+>  	regs->syscallno = scno;
+>  
+> +	/*
+> +	 * BTI note:
+> +	 * The architecture does not guarantee that SPSR.BTYPE is zero
+> +	 * on taking an SVC, so we could return to userspace with a
+> +	 * non-zero BTYPE after the syscall.
+
+On page 2580 of the ARM ARM there is a statement that "any instruction
+other than BR, ..." sets BTYPE to 0. Wouldn't SVC fall into the same
+category?
+
+> +	 *
+> +	 * This shouldn't matter except when userspace is explicitly
+> +	 * doing something stupid, such as setting PROT_BTI on a page
+> +	 * that lacks conforming BTI/PACIxSP instructions, falling
+> +	 * through from one executable page to another with differing
+> +	 * PROT_BTI, or messing with BYTPE via ptrace: in such cases,
+
+s/BYTPE/BTYPE/
+
+Apart from the nitpicks above, the patch looks good to me:
+
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
