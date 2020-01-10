@@ -2,121 +2,116 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5949DC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B12C33CA5
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A20A2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:48:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578664112;
-	bh=5bhzj8NTS9TUhhhvKLr89+vsvBVQ2b9Sjce2cyH8YRA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aq5zB8MchHB4pT7sNa0iwdhxYIAlszb0fLqvUa4OIynNc2r7YD8ZBy4890/q1Fnq5
-	 VxeSLIXjYqQ1xlgbXHZvmpStyqaNpHn4UFdbrypQKcT2ArN+E7JQ5+zoe+bjo6LE/K
-	 RAl9dCbzhqpMAVKGK0Sl3DxitAQIGQQEQG/6QjSM=
+	by mail.kernel.org (Postfix) with ESMTP id 08F0B20838
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:49:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CGTpbbf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgAJNsb (ORCPT
+        id S1728012AbgAJNtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 08:48:31 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:36819 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727458AbgAJNsb (ORCPT
+        Fri, 10 Jan 2020 08:49:10 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:24874 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727656AbgAJNtJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 08:48:31 -0500
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id 00ADmDGK010546
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 22:48:14 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 00ADmDGK010546
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578664094;
-        bh=YW6gHC2/TBjxwotOxX5lv+0ESK1IMSnDrePMsS8Y854=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=v8CCJuH8FvCsIv3IH6Axc4E20isn2xwbyKkmVAwDnVUUP7XTnqD3pjWapoBDw1lDK
-         50Kzuo/MtEXB6Hdwr/DwS4PqEiEcxxek9hC0xXLPGBXvk23RQcvKWJOdPrXh+dbFTm
-         hpmWbFoqq3663QSC/2QzPboUMx6ebwb3aacYQkNQCrA5Y+ZDRM5od9ZbSll/jAcAHt
-         tP1tLunrgFSOOGMTJQQt5oqhrSUz3D+a5yFCzM/uA1ViWLaKv4o+xwleENqDjAhw/d
-         k1iD3mjIpplBsfHoDvGo0Ec7ARWXd5VV2aA0C0JsGj//ZOe644CI/9zUvVUrt5f+JH
-         5+wStLmWTZdTg==
-X-Nifty-SrcIP: [209.85.217.47]
-Received: by mail-vs1-f47.google.com with SMTP id s16so1248587vsc.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 05:48:14 -0800 (PST)
-X-Gm-Message-State: APjAAAVXAqS9AinZ/RVjPPakjdkpoqrF7xcJ4d9EWsBbZTOVWNHFHP4u
-        FPjIX5UOKi/bse+XUQaXX1zbkcVVK+23cVVjckg=
-X-Google-Smtp-Source: APXvYqyTXk/T86I7dlwE/veGRIdMLqTqb+cooe/0yqEITlDnMG/B+hHLqdaNi4yTMsk16cN+BBr421ehKsnP9BOOcVw=
-X-Received: by 2002:a67:f8ca:: with SMTP id c10mr1743990vsp.54.1578664092752;
- Fri, 10 Jan 2020 05:48:12 -0800 (PST)
+        Fri, 10 Jan 2020 08:49:09 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00ADlv1B031938;
+        Fri, 10 Jan 2020 14:49:00 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=e3/+5F1+4ZDcoT1rkTHB66TYtSZtt3BJjlXvbjrPdfs=;
+ b=CGTpbbf8kz7sRr9aPHV01zn091LlVWN/aSeu3HV4zreUezecGO27cx61JzEQ1cujWj5F
+ WG2apU3Jgw05rCyfTPSkL95LovNkVeemJSyeQuv98/dTs3snrglPIaqu+y3BiC7EJZQs
+ aPxwDmf6VdqTD9yVxASLN0jqOnvHAMXx8mB75FppH7dMHOLcP4GK7+lq1vlJ1TriaYPq
+ ZuMNW7Z3WCwPN1X1+69X2F4xgcBZKxb+lqRvZl7BEyUnlW2WNVesHcv2dpO2GwpmJkyC
+ H/3i/D1JKU+zQD/5F8uc3fa6SSw+nJ0mFE3myYKwUpctx3Y78TbqEc3Ev0Inf0/m6We5 /g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xakur7dtd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jan 2020 14:49:00 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3099410002A;
+        Fri, 10 Jan 2020 14:49:00 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 229E62BC7D1;
+        Fri, 10 Jan 2020 14:49:00 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jan 2020 14:48:59
+ +0100
+From:   Ludovic Barre <ludovic.barre@st.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Ludovic Barre <ludovic.barre@st.com>
+Subject: [PATCH 3/9] mmc: mmci: add a reference at mmc_host_ops in mmci struct
+Date:   Fri, 10 Jan 2020 14:48:17 +0100
+Message-ID: <20200110134823.14882-4-ludovic.barre@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200110134823.14882-1-ludovic.barre@st.com>
+References: <20200110134823.14882-1-ludovic.barre@st.com>
 MIME-Version: 1.0
-References: <20200104162829.20400-1-masahiroy@kernel.org> <20200110121951.GA1047840@kroah.com>
-In-Reply-To: <20200110121951.GA1047840@kroah.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Fri, 10 Jan 2020 22:47:37 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATGZwPE9m=4L6n-OFPSmenQvoRvNR=c4Go65x1opjkpOQ@mail.gmail.com>
-Message-ID: <CAK7LNATGZwPE9m=4L6n-OFPSmenQvoRvNR=c4Go65x1opjkpOQ@mail.gmail.com>
-Subject: Re: [PATCH] staging: vc04_service: remove unused header include path
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     devel@driverdev.osuosl.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Broadcom Kernel Feedback List 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-10_01:2020-01-10,2020-01-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 9:24 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Sun, Jan 05, 2020 at 01:28:29AM +0900, Masahiro Yamada wrote:
-> > I can build drivers/staging/vc04_services without this.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
-> >
-> >  drivers/staging/vc04_services/Makefile | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/staging/vc04_services/Makefile b/drivers/staging/vc04_services/Makefile
-> > index afe43fa5a6d7..54d9e2f31916 100644
-> > --- a/drivers/staging/vc04_services/Makefile
-> > +++ b/drivers/staging/vc04_services/Makefile
-> > @@ -13,5 +13,5 @@ vchiq-objs := \
-> >  obj-$(CONFIG_SND_BCM2835)    += bcm2835-audio/
-> >  obj-$(CONFIG_VIDEO_BCM2835)  += bcm2835-camera/
-> >
-> > -ccflags-y += -Idrivers/staging/vc04_services -D__VCCOREVER__=0x04000000
-> > +ccflags-y += -D__VCCOREVER__=0x04000000
-> >
-> > --
->
-> This patch breaks the build for me:
-> drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c:6:10: fatal error: interface/vchi/vchi.h: No such file or directory
->     6 | #include "interface/vchi/vchi.h"
->       |          ^~~~~~~~~~~~~~~~~~~~~~~
-> compilation terminated.
->
-> So maybe you did't select all of the modules to build?
->
-> Sorry, I can't take this as-is :(
->
-> greg k-h
+This patch adds mmc_host_ops pointer in mmci struct.
+The variant init function may need to add a mmc_host_ops,
+for example to add the execute_tuning support if this feature
+is available.
 
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ drivers/mmc/host/mmci.c | 1 +
+ drivers/mmc/host/mmci.h | 1 +
+ 2 files changed, 2 insertions(+)
 
-Sorry, I compile-tested it with O= option.
-
-I should have tested it with/without O=
-for this kind of patch.
-
-
-I will fix up some relative paths.
-
-
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index 7b13d66cbb21..00b473f57047 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -1923,6 +1923,7 @@ static int mmci_probe(struct amba_device *dev,
+ 
+ 	host = mmc_priv(mmc);
+ 	host->mmc = mmc;
++	host->mmc_ops = &mmci_ops;
+ 
+ 	/*
+ 	 * Some variant (STM32) doesn't have opendrain bit, nevertheless
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index ea6a0b5779d4..55acc0971a44 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -407,6 +407,7 @@ struct mmci_host {
+ 	u32			mask1_reg;
+ 	u8			vqmmc_enabled:1;
+ 	struct mmci_platform_data *plat;
++	struct mmc_host_ops	*mmc_ops;
+ 	struct mmci_host_ops	*ops;
+ 	struct variant_data	*variant;
+ 	struct pinctrl		*pinctrl;
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
