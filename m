@@ -4,110 +4,143 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79ABEC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73709C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5905B206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A4BC206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgAJQUS (ORCPT
+        id S1729070AbgAJQUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:20:18 -0500
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:32637 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728636AbgAJQUQ (ORCPT
+        Fri, 10 Jan 2020 11:20:25 -0500
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:34509 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728736AbgAJQUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:20:16 -0500
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Claudiu.Beznea@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="Claudiu.Beznea@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Claudiu.Beznea@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Claudiu.Beznea@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: GX1tjz08G8nh4/WTK4Cx7xmFV4ZM75L/Gny7pjHc+fOAmkU6/E1IGtQd+5mxdkUNyumn0ARDgJ
- /j/tOuXuaOm1mddNskMynCAbcRBsqS8GaKFGKiIJ/VmFq+hx+xUGR5YXZykLI2KnoWltwr3fzM
- dqkV0/YueoQXKRb6cvFCDsDgH4sDzCCewbGlr55tOsCHV2g4I/mDA2/ubgexirLK0neKJJyXfR
- /XsudlrrxAOXA7p73jS3k7zNfjilSg1Iz8rcizOik2CJ6Fiu11r8bjXwvbtjBQB/YH9X5eW4Jv
- znE=
-X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
-   d="scan'208";a="62249156"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jan 2020 09:20:15 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 10 Jan 2020 09:20:15 -0700
-Received: from m18063-ThinkPad-T460p.mchp-main.com (10.10.85.251) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Fri, 10 Jan 2020 09:20:05 -0700
-From:   Claudiu Beznea <claudiu.beznea@microchip.com>
-To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <vkoul@kernel.org>,
-        <eugen.hristev@microchip.com>, <jic23@kernel.org>,
-        <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <mchehab@kernel.org>, <lee.jones@linaro.org>,
-        <radu_nicolae.pirea@upb.ro>, <richard.genoud@gmail.com>,
-        <tudor.ambarus@microchip.com>, <miquel.raynal@bootlin.com>,
-        <richard@nod.at>, <vigneshr@ti.com>, <wg@grandegger.com>,
-        <mkl@pengutronix.de>, <a.zummo@towertech.it>
-CC:     <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <linux-can@vger.kernel.org>, <linux-rtc@vger.kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v2 11/17] dt-bindings: atmel-gpbr: add microchip,sam9x60-gpbr
-Date:   Fri, 10 Jan 2020 18:18:03 +0200
-Message-ID: <1578673089-3484-12-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
-References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
+        Fri, 10 Jan 2020 11:20:23 -0500
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 426731C0005;
+        Fri, 10 Jan 2020 16:20:21 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
+        allan.nielsen@microchip.com, camelia.groza@nxp.com,
+        Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
+        jakub.kicinski@netronome.com
+Subject: [PATCH net-next v5 02/15] net: macsec: introduce the macsec_context structure
+Date:   Fri, 10 Jan 2020 17:19:57 +0100
+Message-Id: <20200110162010.338611-3-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200110162010.338611-1-antoine.tenart@bootlin.com>
+References: <20200110162010.338611-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add microchip,sam9x60-gpbr to DT bindings documentation.
+This patch introduces the macsec_context structure. It will be used
+in the kernel to exchange information between the common MACsec
+implementation (macsec.c) and the MACsec hardware offloading
+implementations. This structure contains pointers to MACsec specific
+structures which contain the actual MACsec configuration, and to the
+underlying device (phydev for now).
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 ---
- Documentation/devicetree/bindings/mfd/atmel-gpbr.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/linux/phy.h                |  2 ++
+ include/net/macsec.h               | 21 +++++++++++++++++++++
+ include/uapi/linux/if_link.h       |  7 +++++++
+ tools/include/uapi/linux/if_link.h |  7 +++++++
+ 4 files changed, 37 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/atmel-gpbr.txt b/Documentation/devicetree/bindings/mfd/atmel-gpbr.txt
-index a28569540683..e8c525569f10 100644
---- a/Documentation/devicetree/bindings/mfd/atmel-gpbr.txt
-+++ b/Documentation/devicetree/bindings/mfd/atmel-gpbr.txt
-@@ -3,7 +3,9 @@
- The GPBR are a set of battery-backed registers.
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 5932bb8e9c35..0cc757ea2264 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -332,6 +332,8 @@ struct phy_c45_device_ids {
+ 	u32 device_ids[8];
+ };
  
- Required properties:
--- compatible:		"atmel,at91sam9260-gpbr", "syscon"
-+- compatible:		Should be one of the following:
-+			"atmel,at91sam9260-gpbr", "syscon"
-+			"microchip,sam9x60-gpbr", "syscon"
- - reg:			contains offset/length value of the GPBR memory
- 			region.
++struct macsec_context;
++
+ /* phy_device: An instance of a PHY
+  *
+  * drv: Pointer to the driver for this PHY instance
+diff --git a/include/net/macsec.h b/include/net/macsec.h
+index d18100ff2f57..8882379d68ac 100644
+--- a/include/net/macsec.h
++++ b/include/net/macsec.h
+@@ -175,4 +175,25 @@ struct macsec_secy {
+ 	struct macsec_rx_sc __rcu *rx_sc;
+ };
  
++/**
++ * struct macsec_context - MACsec context for hardware offloading
++ */
++struct macsec_context {
++	struct phy_device *phydev;
++	enum macsec_offload offload;
++
++	struct macsec_secy *secy;
++	struct macsec_rx_sc *rx_sc;
++	struct {
++		unsigned char assoc_num;
++		u8 key[MACSEC_KEYID_LEN];
++		union {
++			struct macsec_rx_sa *rx_sa;
++			struct macsec_tx_sa *tx_sa;
++		};
++	} sa;
++
++	u8 prepare:1;
++};
++
+ #endif /* _NET_MACSEC_H_ */
+diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
+index 1d69f637c5d6..024af2d1d0af 100644
+--- a/include/uapi/linux/if_link.h
++++ b/include/uapi/linux/if_link.h
+@@ -486,6 +486,13 @@ enum macsec_validation_type {
+ 	MACSEC_VALIDATE_MAX = __MACSEC_VALIDATE_END - 1,
+ };
+ 
++enum macsec_offload {
++	MACSEC_OFFLOAD_OFF = 0,
++	MACSEC_OFFLOAD_PHY = 1,
++	__MACSEC_OFFLOAD_END,
++	MACSEC_OFFLOAD_MAX = __MACSEC_OFFLOAD_END - 1,
++};
++
+ /* IPVLAN section */
+ enum {
+ 	IFLA_IPVLAN_UNSPEC,
+diff --git a/tools/include/uapi/linux/if_link.h b/tools/include/uapi/linux/if_link.h
+index 8aec8769d944..42efdb84d189 100644
+--- a/tools/include/uapi/linux/if_link.h
++++ b/tools/include/uapi/linux/if_link.h
+@@ -485,6 +485,13 @@ enum macsec_validation_type {
+ 	MACSEC_VALIDATE_MAX = __MACSEC_VALIDATE_END - 1,
+ };
+ 
++enum macsec_offload {
++	MACSEC_OFFLOAD_OFF = 0,
++	MACSEC_OFFLOAD_PHY = 1,
++	__MACSEC_OFFLOAD_END,
++	MACSEC_OFFLOAD_MAX = __MACSEC_OFFLOAD_END - 1,
++};
++
+ /* IPVLAN section */
+ enum {
+ 	IFLA_IPVLAN_UNSPEC,
 -- 
-2.7.4
+2.24.1
 
