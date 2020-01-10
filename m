@@ -2,173 +2,97 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DDD9C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FC3C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77DB42072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E3B32072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:28:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="jzDF/Nb2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbgAJI2Q (ORCPT
+        id S1727097AbgAJI2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 03:28:16 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44946 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbgAJI2Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 03:28:16 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 337F7AFA7;
-        Fri, 10 Jan 2020 08:28:12 +0000 (UTC)
-Subject: Re: [PATCH -next] drm/mgag200: Fix typo in parameter description
-To:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20200110012523.33053-1-weiyongjun1@huawei.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <ce1a17c8-2af9-a449-16d5-36ddfd7a976e@suse.de>
-Date:   Fri, 10 Jan 2020 09:28:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 10 Jan 2020 03:28:30 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.172]:30152 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726735AbgAJI2a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 03:28:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578644908;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=WeU7GSmu1EkFlO5QCvOiHrGIGIjXm22hmyaIrxBKF4s=;
+        b=jzDF/Nb2WII27MmnSpakkGXAfR0wdYBNLoI2jHKtJM/rI1k5yDSDi5o5SRxH0ejjG2
+        awaivvFrOJbfM37Mx0J3a0YQSwo2HQ7dgdjYjFwa2WXAA+jUuntye+DjSOfgU9f2cyDz
+        i53xKgkEZYwW7zfq6pxYlLNrO6saAOhmgDiEXSKPYl2R739snLNWDKCoc8zOJlzo/Gtv
+        0Y9SVHHofrsnvjKfrx7mW96+2wum9ZWCzYY/Tkbe0wR+C28owVTMGFxEw7bkaH0jqugA
+        Ld32DVadIETPSugRv7bzBqMKqoznZi4BETzvjAXHgEv8wXLvJlCQllh1wAfsPXTC+4an
+        sOJg==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
+        with ESMTPSA id u04585w0A8RL7xf
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 10 Jan 2020 09:27:21 +0100 (CET)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Julia Lawall <julia.lawall@inria.fr>
+Subject: Re: [PATCH v27 10/12] LRNG - add SP800-90B compliant health tests
+Date:   Fri, 10 Jan 2020 09:27:20 +0100
+Message-ID: <1988924.7r6H7Qibty@tauon.chronox.de>
+In-Reply-To: <cd9e893a-ce63-4e9a-fc19-553b1c5f1cff@infradead.org>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <2325404.ZKTBb4nKji@positron.chronox.de> <cd9e893a-ce63-4e9a-fc19-553b1c5f1cff@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200110012523.33053-1-weiyongjun1@huawei.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="iiEN0Yah1UoVVqZjMQ0y6D7O9EtL3DPmr"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---iiEN0Yah1UoVVqZjMQ0y6D7O9EtL3DPmr
-Content-Type: multipart/mixed; boundary="pTTiHLHFEWOhHClrPak37aP8iw00UOEbU";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Wei Yongjun <weiyongjun1@huawei.com>, Dave Airlie <airlied@redhat.com>,
- David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
- Thomas Gleixner <tglx@linutronix.de>, Gerd Hoffmann <kraxel@redhat.com>,
- Sam Ravnborg <sam@ravnborg.org>, Kate Stewart <kstewart@linuxfoundation.org>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Message-ID: <ce1a17c8-2af9-a449-16d5-36ddfd7a976e@suse.de>
-Subject: Re: [PATCH -next] drm/mgag200: Fix typo in parameter description
-References: <20200110012523.33053-1-weiyongjun1@huawei.com>
-In-Reply-To: <20200110012523.33053-1-weiyongjun1@huawei.com>
+Am Freitag, 10. Januar 2020, 01:20:44 CET schrieb Randy Dunlap:
 
---pTTiHLHFEWOhHClrPak37aP8iw00UOEbU
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Hi Randy,
 
-Hi
+I have removed the two stars in front of each comment.
 
-Am 10.01.20 um 02:25 schrieb Wei Yongjun:
-> Fix typo in parameter description.
+I have also fixed the respective comments in lrng_interfaces.c, 
+lrng_archrandom.c, lrng_chacha20.c, lrng_drng.c, lrng_pool.c, lrng_switch.c, 
+lrng_sw_noise.c. In all other files there were no changes needed.
 
-As Dan said, please mention that it's about a module parameter. The
-current commit message appears to refer to a function's parameter.
-
-With the commit message fixed, you can add
-
-Reviewed-by: Thomas Zimemrmann <tzimmermann@suse.de>
-
-Thanks for fixing this bug.
-
-Best regards
-Thomas
-
->=20
-> Fixes: 3cacb2086e41 ("drm/mgag200: Add module parameter to pin all buff=
-ers at offset 0")
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-> ---
->  drivers/gpu/drm/mgag200/mgag200_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpu/drm/mgag200/mgag200_drv.c b/drivers/gpu/drm/mg=
-ag200/mgag200_drv.c
-> index 7a5bad2f57d7..2236f8ef20a4 100644
-> --- a/drivers/gpu/drm/mgag200/mgag200_drv.c
-> +++ b/drivers/gpu/drm/mgag200/mgag200_drv.c
-> @@ -28,7 +28,7 @@ MODULE_PARM_DESC(modeset, "Disable/Enable modesetting=
-");
->  module_param_named(modeset, mgag200_modeset, int, 0400);
-> =20
->  int mgag200_hw_bug_no_startadd =3D -1;
-> -MODULE_PARM_DESC(modeset, "HW does not interpret scanout-buffer start =
-address correctly");
-> +MODULE_PARM_DESC(hw_bug_no_startadd, "HW does not interpret scanout-bu=
-ffer start address correctly");
->  module_param_named(hw_bug_no_startadd, mgag200_hw_bug_no_startadd, int=
-, 0400);
-> =20
->  static struct drm_driver driver;
->=20
->=20
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+Thank you.
 
 
---pTTiHLHFEWOhHClrPak37aP8iw00UOEbU--
+Ciao
+Stephan
 
---iiEN0Yah1UoVVqZjMQ0y6D7O9EtL3DPmr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl4YNZsACgkQaA3BHVML
-eiM+UQf+J92/hICo707Qje0Q7uVRT1riV5XCPhxBuOUCzDNPRDH15zvvJdL9HbJ0
-KG4QGNjuVTGJbndQiglQZXl2pNPOA+zoG7JZAq5x1E7ICGmussuxx3UtLIYY6dak
-kyosKHWwu5rzgT2iCPvxbuk1+RNrTrAhj3w+ZfGzD1AX08dJr8Ks2jVgPf55lGzc
-u7Of3a6qfJ5OGjYRf4CCMKG8yEKTa/oXQGdSCECmZhlBw1KJQppFt9ME0oj5v7r3
-eS3SFcK7TRrD3dAOBizkSZMGpVlmlJscSRmlqy1j3uwfkaPcAEBczStm6ajqSNBO
-XMhUrIhoiDfRiKgtaZufX598XDFXIA==
-=Gnga
------END PGP SIGNATURE-----
-
---iiEN0Yah1UoVVqZjMQ0y6D7O9EtL3DPmr--
