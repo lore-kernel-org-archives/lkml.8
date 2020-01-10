@@ -2,160 +2,333 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 834BDC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0118DC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5055A20842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:18:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578691084;
-	bh=FNVSCUnW06HgAkUyxcEdLPUSR02Pqf5qLuXtJBW+LhI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=tIwsb6dWdTuD7ufAcHLyJtFVy78ldDnAVWWjvWIva9rtnP9JlIhJFQy/Z7uCA7biu
-	 +sDu8jQlTGnsiaTJtf2GUboSPcerCrQOLgMt7FZGJKLCsovOrpaaPmheZH5G843rw7
-	 YmLWiaO5rYmxtkLyvNAZH6dhneJ5gbCNxriPwdiQ=
+	by mail.kernel.org (Postfix) with ESMTP id C126620842
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:18:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CLh5YwP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbgAJVSD (ORCPT
+        id S1727183AbgAJVSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 16:18:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726788AbgAJVSC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 16:18:02 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB29F20842;
-        Fri, 10 Jan 2020 21:18:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578691081;
-        bh=FNVSCUnW06HgAkUyxcEdLPUSR02Pqf5qLuXtJBW+LhI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=2GLzSYzkBF4XieyHnlzoZDMwTSqFiKNKW7gYwAZ3jirBd4KeUKvyazYs0F0A/Th/Z
-         kAS4+pBpvTl6wL3YHlEG7HZ2ZH24JaW2IfQYBhc6HZbQFQKXcf2F7avpames4v54Ri
-         g2XrEOe9DgVT5/PW3zkScJbxoILEJb94UgMwqd7k=
-Date:   Fri, 10 Jan 2020 22:17:58 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [GIT PULL] USB fixes for 5.5-rc6
-Message-ID: <20200110211758.GA1872534@kroah.com>
+        Fri, 10 Jan 2020 16:18:51 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:51591 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726788AbgAJVSu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 16:18:50 -0500
+Received: by mail-pj1-f67.google.com with SMTP id d15so105182pjw.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 13:18:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OsFwSWP/xRcH1cmWjjdOujlzZsNfP9UNbHn7pdTBcQ8=;
+        b=CLh5YwP6LHsUQIyC9mN3P/Pg6C/S9QYnJlr15b9bT9RP+Kp9FIHfpxVng5kKNRMvc9
+         ml078eP3iGkhrrYHUX2IcROXMuWrGDGyJ/JrEcvvSKnVM11SbdFl6qYyKjzWCWvgtS3r
+         XHA4I0+/qe5Ne71x/ra9yKEZGpWsd5/I7Pce8eyEf3xTxL7T4bI81leeuE+8upkMJAbX
+         N6myHqYe5mi7ZJNtkU8u33N6Ad1k567Qat7fIACFtxTbpD/vgrgRjZEDoJL40QbdGyLk
+         WLg4Gnel81hnCp/7QyA5V8lKrvRSN0+GyZun5sY14gkkBo/ARul8hzRbtD8i7im6NpJU
+         qSNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OsFwSWP/xRcH1cmWjjdOujlzZsNfP9UNbHn7pdTBcQ8=;
+        b=ufI0hqlFX+dKNfcrmLqww7PwYTLw7+oMJrLyY0rQ8cLSCAPrUNLViwTdJn8MZ1fCUY
+         WZM/De30O7No8bP94ZnYx/NYkSsQoMCpLsjKrCf5lHyCoqqW/pgTSE/dsKS2tSF9N7O5
+         2YpFfsgUBbqCy7gylbsb1Cjtch6DIuOCs1Jv08fpR5DbxfIAmPoXuG3IKM8QMtCbnUKT
+         lKwV/mXMiyQdBqY8HrQMm7b1JRCB7Ws2GSWI/y39zvzjrO/aiYYq9XhVVeWUQ0sL57XA
+         9jE0syPyEO/sx4LoMmD8azdkJIB2ZXvJmEmR9d3/pSSNWb+zMzv6tmBLDFrJsYynaUts
+         Z+og==
+X-Gm-Message-State: APjAAAVEOqOepAYPPgpjxkVBhlaVs7tWghMKVdm3UsPH6eIiXuHs6B8/
+        BOROXXBIHEBS9FfyiR4DJMPHjQ==
+X-Google-Smtp-Source: APXvYqx5QmlYIay+9x5p3d39RnJ0qBXKwVRiBcjtJHV6SP2kiIY+6PRsneuynDu/VlVsrI00LhHKPw==
+X-Received: by 2002:a17:90a:9d8a:: with SMTP id k10mr7230861pjp.91.1578691128908;
+        Fri, 10 Jan 2020 13:18:48 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id b8sm4148927pfr.64.2020.01.10.13.18.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 13:18:47 -0800 (PST)
+Date:   Fri, 10 Jan 2020 14:18:46 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Subject: Re: [PATCH v2 2/8] remoteproc: qcom: Introduce driver to store pil
+ info in IMEM
+Message-ID: <20200110211846.GA11555@xps15>
+References: <20191227053215.423811-1-bjorn.andersson@linaro.org>
+ <20191227053215.423811-3-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191227053215.423811-3-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 46cf053efec6a3a5f343fead837777efe8252a46:
+Hi Bjorn,
 
-  Linux 5.5-rc3 (2019-12-22 17:02:23 -0800)
+On Thu, Dec 26, 2019 at 09:32:09PM -0800, Bjorn Andersson wrote:
+> A region in IMEM is used to communicate load addresses of remoteproc to
+> post mortem debug tools. Implement a driver that can be used to store
+> this information in order to enable these tools to process collected
+> ramdumps.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v1:
+> - Added helper to probe defer clients
+> - Fixed logical bug in slot scan
+> - Added SPDX header in header file
+> 
+>  drivers/remoteproc/Kconfig         |   3 +
+>  drivers/remoteproc/Makefile        |   1 +
+>  drivers/remoteproc/qcom_pil_info.c | 150 +++++++++++++++++++++++++++++
+>  drivers/remoteproc/qcom_pil_info.h |   8 ++
+>  4 files changed, 162 insertions(+)
+>  create mode 100644 drivers/remoteproc/qcom_pil_info.c
+>  create mode 100644 drivers/remoteproc/qcom_pil_info.h
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index 94afdde4bc9f..0798602e355a 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -85,6 +85,9 @@ config KEYSTONE_REMOTEPROC
+>  	  It's safe to say N here if you're not interested in the Keystone
+>  	  DSPs or just want to use a bare minimum kernel.
+>  
+> +config QCOM_PIL_INFO
+> +	tristate
+> +
+>  config QCOM_RPROC_COMMON
+>  	tristate
+>  
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index 00f09e658cb3..c1b46e9033cb 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+>  obj-$(CONFIG_WKUP_M3_RPROC)		+= wkup_m3_rproc.o
+>  obj-$(CONFIG_DA8XX_REMOTEPROC)		+= da8xx_remoteproc.o
+>  obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
+> +obj-$(CONFIG_QCOM_PIL_INFO)		+= qcom_pil_info.o
+>  obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
+>  obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
+>  obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
+> diff --git a/drivers/remoteproc/qcom_pil_info.c b/drivers/remoteproc/qcom_pil_info.c
+> new file mode 100644
+> index 000000000000..b0897ae9eae5
+> --- /dev/null
+> +++ b/drivers/remoteproc/qcom_pil_info.c
+> @@ -0,0 +1,150 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019 Linaro Ltd.
+> + */
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/mutex.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/slab.h>
 
-are available in the Git repository at:
+These should be in alphabetical order if there is no depencencies
+between them, something checkpatch complains about.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.5-rc6
+> +
+> +struct pil_reloc_entry {
+> +	char name[8];
 
-for you to fetch changes up to 1530f6f5f5806b2abbf2a9276c0db313ae9a0e09:
+Please add a #define for the name length and reuse it in qcom_pil_info_store()
 
-  usb: missing parentheses in USE_NEW_SCHEME (2020-01-08 17:44:11 +0100)
+> +	__le64 base;
+> +	__le32 size;
+> +} __packed;
+> +
+> +#define PIL_INFO_SIZE	200
+> +#define PIL_INFO_ENTRIES (PIL_INFO_SIZE / sizeof(struct pil_reloc_entry))
+> +
+> +struct pil_reloc {
+> +	struct device *dev;
+> +	struct regmap *map;
+> +	u32 offset;
+> +	int val_bytes;
+> +
+> +	struct pil_reloc_entry entries[PIL_INFO_ENTRIES];
+> +};
+> +
+> +static struct pil_reloc *_reloc;
+> +static DEFINE_MUTEX(reloc_mutex);
+> +
+> +/**
+> + * qcom_pil_info_store() - store PIL information of image in IMEM
+> + * @image:	name of the image
+> + * @base:	base address of the loaded image
+> + * @size:	size of the loaded image
+> + */
+> +void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size)
+> +{
+> +	struct pil_reloc_entry *entry;
+> +	int idx = -1;
+> +	int i;
+> +
+> +	mutex_lock(&reloc_mutex);
+> +	if (!_reloc)
 
-----------------------------------------------------------------
-USB/PHY fixes for 5.5-rc6
+Since it is available, I would use function qcom_pil_info_available().  Also
+checkpatch complains about indentation problems related to the 'if' condition
+but I can't see what makes it angry.
 
-Here are a number of USB and PHY driver fixes for 5.5-rc6
+> +		goto unlock;
+> +
+> +	for (i = 0; i < PIL_INFO_ENTRIES; i++) {
+> +		if (!_reloc->entries[i].name[0]) {
+> +			if (idx == -1)
+> +				idx = i;
+> +			continue;
+> +		}
+> +
+> +		if (!strncmp(_reloc->entries[i].name, image, 8)) {
+> +			idx = i;
+> +			goto found;
+> +		}
+> +	}
+> +
+> +	if (idx == -1) {
+> +		dev_warn(_reloc->dev, "insufficient PIL info slots\n");
+> +		goto unlock;
 
-Nothing all that unusual, just the a bunch of small fixes for a lot of
-different reported issues.  The PHY driver fixes are in here as they
-interacted with the usb drivers.
+Given how this function is used in the next patch I think an error should be
+reported to the caller.
 
-Full details of the patches are in the shortlog, and all of these have
-been in linux-next with no reported issues.
+> +	}
+> +
+> +found:
+> +	entry = &_reloc->entries[idx];
+> +	stracpy(entry->name, image);
 
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Function stracpy() isn't around in mainline.
 
-----------------------------------------------------------------
-Alan Stern (1):
-      USB: Fix: Don't skip endpoint descriptors with maxpacket=0
+> +	entry->base = base;
+> +	entry->size = size;
+> +
+> +	regmap_bulk_write(_reloc->map, _reloc->offset + idx * sizeof(*entry),
+> +			  entry, sizeof(*entry) / _reloc->val_bytes);
 
-Arnd Bergmann (1):
-      usb: udc: tegra: select USB_ROLE_SWITCH
+Same here - the error code should be handled and reported to the caller.  
 
-Bjorn Andersson (1):
-      phy: qcom-qmp: Increase PHY ready timeout
+> +
+> +unlock:
+> +	mutex_unlock(&reloc_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pil_info_store);
+> +
+> +/**
+> + * qcom_pil_info_available() - query if the pil info is probed
+> + *
+> + * Return: boolean indicating if the pil info device is probed
+> + */
+> +bool qcom_pil_info_available(void)
+> +{
+> +	return !!_reloc;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_pil_info_available);
+> +
+> +static int pil_reloc_probe(struct platform_device *pdev)
+> +{
+> +	struct pil_reloc *reloc;
+> +
+> +	reloc = devm_kzalloc(&pdev->dev, sizeof(*reloc), GFP_KERNEL);
+> +	if (!reloc)
+> +		return -ENOMEM;
+> +
+> +	reloc->dev = &pdev->dev;
+> +	reloc->map = syscon_node_to_regmap(pdev->dev.parent->of_node);
+> +	if (IS_ERR(reloc->map))
+> +		return PTR_ERR(reloc->map);
+> +
+> +	if (of_property_read_u32(pdev->dev.of_node, "offset", &reloc->offset))
+> +		return -EINVAL;
+> +
+> +	reloc->val_bytes = regmap_get_val_bytes(reloc->map);
+> +	if (reloc->val_bytes < 0)
+> +		return -EINVAL;
+> +
+> +	regmap_bulk_write(reloc->map, reloc->offset, reloc->entries,
+> +			  sizeof(reloc->entries) / reloc->val_bytes);
 
-Colin Ian King (1):
-      usb: ohci-da8xx: ensure error return on variable error is set
+Error code handling.
 
-Daniele Palmas (2):
-      USB: serial: option: add Telit ME910G1 0x110a composition
-      USB: serial: option: add ZLP support for 0x1bc7/0x9010
+Thanks,
+Mathieu
 
-Douglas Gilbert (1):
-      USB-PD tcpm: bad warning+size, PPS adapters
-
-Greg Kroah-Hartman (2):
-      Merge tag 'phy-for-5.5-rc' of git://git.kernel.org/.../kishon/linux-phy into usb-linus
-      Merge tag 'usb-serial-5.5-rc5' of https://git.kernel.org/.../johan/usb-serial into usb-linus
-
-Guenter Roeck (1):
-      usb: chipidea: host: Disable port power only if previously enabled
-
-Heikki Krogerus (1):
-      usb: typec: ucsi: Fix the notification bit offsets
-
-Johan Hovold (1):
-      USB: core: fix check for duplicate endpoints
-
-Jonas Karlman (1):
-      phy/rockchip: inno-hdmi: round clock rate down to closest 1000 Hz
-
-Paul Cercueil (3):
-      usb: musb: jz4740: Silence error if code is -EPROBE_DEFER
-      usb: musb: dma: Correct parameter passed to IRQ handler
-      usb: musb: Disable pullup at init
-
-Peter Chen (1):
-      usb: cdns3: should not use the same dev_id for shared interrupt handler
-
-Qi Zhou (1):
-      usb: missing parentheses in USE_NEW_SCHEME
-
-Thinh Nguyen (1):
-      usb: dwc3: gadget: Fix request complete check
-
-Tony Lindgren (7):
-      phy: cpcap-usb: Fix error path when no host driver is loaded
-      phy: cpcap-usb: Fix flakey host idling and enumerating of devices
-      phy: mapphone-mdm6600: Fix uninitialized status value regression
-      phy: cpcap-usb: Prevent USB line glitches from waking up modem
-      phy: cpcap-usb: Improve host vs docked mode detection
-      phy: cpcap-usb: Drop extra write to usb2 register
-      usb: musb: fix idling for suspend after disconnect interrupt
-
- drivers/phy/motorola/phy-cpcap-usb.c          | 128 ++++++++++++++++++--------
- drivers/phy/motorola/phy-mapphone-mdm6600.c   |  11 +--
- drivers/phy/qualcomm/phy-qcom-qmp.c           |   2 +-
- drivers/phy/rockchip/phy-rockchip-inno-hdmi.c |   4 +
- drivers/usb/cdns3/gadget.c                    |  14 +--
- drivers/usb/chipidea/host.c                   |   4 +-
- drivers/usb/core/config.c                     |  82 +++++++++++++----
- drivers/usb/core/hub.c                        |   2 +-
- drivers/usb/dwc3/gadget.c                     |   7 ++
- drivers/usb/gadget/udc/Kconfig                |   1 +
- drivers/usb/host/ohci-da8xx.c                 |   8 +-
- drivers/usb/musb/jz4740.c                     |   7 +-
- drivers/usb/musb/musb_core.c                  |  11 +++
- drivers/usb/musb/musbhsdma.c                  |   2 +-
- drivers/usb/serial/option.c                   |  10 ++
- drivers/usb/serial/usb-wwan.h                 |   1 +
- drivers/usb/serial/usb_wwan.c                 |   4 +
- drivers/usb/typec/tcpm/tcpci.c                |  20 +++-
- drivers/usb/typec/ucsi/ucsi.h                 |  18 ++--
- 19 files changed, 243 insertions(+), 93 deletions(-)
+> +
+> +	mutex_lock(&reloc_mutex);
+> +	_reloc = reloc;
+> +	mutex_unlock(&reloc_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pil_reloc_remove(struct platform_device *pdev)
+> +{
+> +	mutex_lock(&reloc_mutex);
+> +	_reloc = NULL;
+> +	mutex_unlock(&reloc_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id pil_reloc_of_match[] = {
+> +	{ .compatible = "qcom,pil-reloc-info" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, pil_reloc_of_match);
+> +
+> +static struct platform_driver pil_reloc_driver = {
+> +	.probe = pil_reloc_probe,
+> +	.remove = pil_reloc_remove,
+> +	.driver = {
+> +		.name = "qcom-pil-reloc-info",
+> +		.of_match_table = pil_reloc_of_match,
+> +	},
+> +};
+> +module_platform_driver(pil_reloc_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm PIL relocation info");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/remoteproc/qcom_pil_info.h b/drivers/remoteproc/qcom_pil_info.h
+> new file mode 100644
+> index 000000000000..0372602fae1d
+> --- /dev/null
+> +++ b/drivers/remoteproc/qcom_pil_info.h
+> @@ -0,0 +1,8 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __QCOM_PIL_INFO_H__
+> +#define __QCOM_PIL_INFO_H__
+> +
+> +void qcom_pil_info_store(const char *image, phys_addr_t base, size_t size);
+> +bool qcom_pil_info_available(void);
+> +
+> +#endif
+> -- 
+> 2.24.0
+> 
