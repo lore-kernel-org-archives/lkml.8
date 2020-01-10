@@ -2,73 +2,135 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31490C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1725CC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE0D20678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF18A2077B
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:24:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kIH2qv/O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730558AbgAJBVE (ORCPT
+        id S1730564AbgAJBYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:21:04 -0500
-Received: from mga05.intel.com ([192.55.52.43]:18225 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730504AbgAJBVD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 20:21:03 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 17:21:03 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
-   d="scan'208";a="246847587"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
-  by fmsmga004.fm.intel.com with ESMTP; 09 Jan 2020 17:21:01 -0800
-Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
-        Eric Auger <eric.auger@redhat.com>
-Subject: Re: [PATCH v8 08/10] iommu/vt-d: Add custom allocator for IOASID
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-References: <1576524252-79116-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1576524252-79116-9-git-send-email-jacob.jun.pan@linux.intel.com>
- <9c9c818c-ccb1-544d-2041-cf7017c4d898@linux.intel.com>
- <20200109140629.0e15c3f3@jacob-builder>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <239924d4-c0c8-54c4-c6a8-bc458bcaea00@linux.intel.com>
-Date:   Fri, 10 Jan 2020 09:19:44 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 9 Jan 2020 20:24:14 -0500
+Received: from mail-ot1-f45.google.com ([209.85.210.45]:36306 "EHLO
+        mail-ot1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730531AbgAJBYO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 20:24:14 -0500
+Received: by mail-ot1-f45.google.com with SMTP id 19so431043otz.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 17:24:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5p5CvVBITV/7iIb1FweihqnfezWv+H3UpbGbYpDE3BQ=;
+        b=kIH2qv/O3jWeNzXQU8RaVvJM5gVeYQvPhTEDy3ZPyjeqIvkwJFbK7elYCnfjpBiHNw
+         /TQCPU4EGepXMiOFIG/lDifQmo7iunKLhI2rD/8Vh8HWBra5JsFOYqGbgHVqPcwuOiED
+         5LtHhAIclYGfc31yYSa8Ie0pWPB+MTusy3r5gt34nZ9nEFweueFxH0KH1cp6vPIdgTqQ
+         C3eiQYj6wMqtLgIVAUFCQkyaS/bpEHst5ZUHA2JpqGYbQ0YYZ/BCK2nJEwFb3cslol68
+         Lp6cOWkCsXehxKjAdX1daiIpjOXC1nT4HYvtF4ljq1CCGxg/VxBBHmco0c4G1Mhysn8s
+         lxyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5p5CvVBITV/7iIb1FweihqnfezWv+H3UpbGbYpDE3BQ=;
+        b=P+VDoguJdzYcSuzQdcJd5baPbfVNHndVbzSWXdana94LIhVUL5T8+naP/YhSX26xvq
+         1f5mXnCHSKracCCh/vvH+a/ddiqS/f8Qovv2g96KGSNtowylN5O2O5xizE0qjI9O99tI
+         YnvE4IqmqmOifEqCq7AdHRLbaYEKQNSwtb06lCy9CCPph77BAiiK4LNmq59BQsIe8Ot+
+         EMIqMYrqovFHr4WKXC/FHVcQJRwWlD8Ntv/PstszmlRdNJffm0CV9FdTp8Iecj5Oyrn5
+         RS/czm7Fb7DZLAyUq7/hDHE0XhJXXqNRD5RJ7odkiQXlRXf6QS5jDnGR7EbZPWDHOEBg
+         Vnkw==
+X-Gm-Message-State: APjAAAV6hkajF3+bsihaksJu/YL1JYlyhjaNiZaQWYzWrU0Ihk5JE5HM
+        Nv29JxKtkHlmCkt+Cwb20acjFrFwozKXSy2+ibaG1w==
+X-Google-Smtp-Source: APXvYqxc0snYfiF+IX/G27NrB4pKpPlSuIDaut4DKW6QITSOu0SuBFzdwYbgTJADgKbPtMgnZzhY2smDsV+8GcxufNo=
+X-Received: by 2002:a9d:7c90:: with SMTP id q16mr597097otn.191.1578619452866;
+ Thu, 09 Jan 2020 17:24:12 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200109140629.0e15c3f3@jacob-builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200107204412.GA29562@amd> <20200109115633.GR4951@dhcp22.suse.cz>
+ <20200109210307.GA1553@duo.ucw.cz> <20200109212516.GA23620@dhcp22.suse.cz> <20200109224845.GA1220@amd>
+In-Reply-To: <20200109224845.GA1220@amd>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Thu, 9 Jan 2020 17:24:01 -0800
+Message-ID: <CALvZod6v==Fq4=W5_71msn4rE+6m49B4ShoJaMSs0iaihuc3UA@mail.gmail.com>
+Subject: Re: OOM killer not nearly agressive enough?
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, Jan 9, 2020 at 2:49 PM Pavel Machek <pavel@ucw.cz> wrote:
+>
+> Hi!
+>
+> > > > > Do we agree that OOM killer should have reacted way sooner?
+> > > >
+> > > > This is impossible to answer without knowing what was going on at the
+> > > > time. Was the system threshing over page cache/swap? In other words, is
+> > > > the system completely out of memory or refaulting the working set all
+> > > > the time because it doesn't fit into memory?
+> > >
+> > > Swap was full, so "completely out of memory", I guess. Chromium does
+> > > that fairly often :-(.
+> >
+> > The oom heuristic is based on the reclaim failure. If the reclaim makes
+> > some progress then the oom killer is not hit. Have a look at
+> > should_reclaim_retry for more details.
+>
+> Thanks for pointer.
+>
+> I guess setting MAX_RECLAIM_RETRIES to 1 is not something you'd
+> recommend? :-).
+>
+> > > PSI is completely different system, but I guess
+> > > I should attempt to tweak the existing one first...
+> >
+> > PSI is measuring the cost of the allocation (among other things) and
+> > that can give you some idea on how much time is spent to get memory.
+> > Userspace can implement a policy based on that and act. The kernel oom
+> > killer is the last resort when there is really no memory to
+> > allocate.
+>
+> So what I'm seeing is system that is unresponsive, easily for an hour.
+>
+> Sometimes, I'm able to log in. When I could do that, system was
+> absurdly slow, like ps printing at more than 10 seconds per line.
+> ps on my system takes 300msec, estimate in the slow case would be 2000
+> seconds, that is slowdown by factor of 6000x. That would be X terminal
+> opening in like two hours... that's not really usable.
+>
+> DRAM is in 100nsec range, disk is in 10msec range; so worst case
+> slowdown is somewhere in 100000x range. (Actually, in the worst case
+> userland will do no progress at all, since you can need at 4+ pages in
+> single CPU instruction, right?)
+>
+> But kernel is happy; system is unusable and will stay unusable for
+> hour or more, and there's not much user can do. (Besides sysrq, thanks
+> for the hint).
+>
+> Can we do better? This is equivalent of system crash, and it is _way_
+> too easy to trigger. Should we do better by default?
+>
+> Dunno. If user moved the mouse, and cursor did not move for 10
+> seconds, perhaps it is time for oom kill?
+>
+> Or should I add more swap? Is it terrible to place swap on SSD?
+>
 
-On 1/10/20 6:06 AM, Jacob Pan wrote:
->>> +static void register_pasid_allocator(struct intel_iommu *iommu)
->>> +{
->>> +	if (!intel_iommu_sm) {
->> Use sm_supported(iommu) instead.
->>
-> sounds good, seems we could separate the sm code more cleanly in the
-> future to avoid all these checks.
-> 
+What's the kernel version? How much memory is anon and file pages?
+What's your swap to DRAM ratio? Are you using in-memory compression
+based swap? Have you tried to disable swap completely?
 
-Agreed.
-
-Best regards,
-baolu
+Shakeel
