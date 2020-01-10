@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699D3C47409
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:05:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B30C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A42C20848
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:05:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DF6E2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578693945;
-	bh=Fiz5fCpuoIFHozhj8KdiO82jhr2DQ5w1R7fvcwlPtaM=;
+	s=default; t=1578693947;
+	bh=aIDscSX1q6XnLqh4cZ+1qy/9MlmC1EoFUjEMn3Uu06k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JGfl9Jxnwy05Mo5ebJJq0XMlPAPXkUrbR3M2qk8Ra+6uPl2U9AdJ28raUwSgQA7HW
-	 gETe9WSIfL40LaymZrC6LKO9Io9M/cQ8ZL0QaApnaWhhAvbusAsRfdaZklaOChP4Z6
-	 nUXUNAMUwxMZOGSOZzFpe33Fqg6FvlwrKh1tZ1xA=
+	b=VkZuawhd0WxE2tZmHxCTVEB4JClQXPuYHMKWGOQD9nFuHn917hooWzYYZS9r8S9WT
+	 tsxaEtHgvUmJtHIcnzKRCRK3e5za2LsJxSRq8/e3USV6qp7Gogd851SP+69iDp/HmR
+	 gf+U5lbJwBSp/xxIjI/kstDHgoJD+ptqOiiIvfHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgAJWFo (ORCPT
+        id S1727875AbgAJWFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:05:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51386 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 17:05:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727764AbgAJWFh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:05:37 -0500
+        id S1727744AbgAJWFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:05:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 640CA20842;
-        Fri, 10 Jan 2020 22:05:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AF0E20721;
+        Fri, 10 Jan 2020 22:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693937;
-        bh=Fiz5fCpuoIFHozhj8KdiO82jhr2DQ5w1R7fvcwlPtaM=;
+        s=default; t=1578693936;
+        bh=aIDscSX1q6XnLqh4cZ+1qy/9MlmC1EoFUjEMn3Uu06k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mWDsyXXSD2+UeTqru04J497SKhwBWKKsMgrz5WCOdsxFVFYE0BTT51YXi1Ed7MzCy
-         w4sOyI5wUMOQqH4hHxY1xRDeeshamOf50e/ceZ3WXerjBxUYPZo7gZ+GRZzdgWlDqf
-         lTYBSCsAekk1ReqwB636h/0iArYE9LU22meDs3mo=
+        b=x3smnVasrIK6eL9mWaG1/eQoFnCRTw70gyiT6fnx7Oam0Hd5YXG9S+YEOIBWzJoeH
+         GJH7XbM29HcrfvwO9zWMdadsmoX0kcvT/EIqWdG6Ypr443cBE0f7SWoL/aIGNm9g3Y
+         lijn7+pnKL5JdgjF5U2risePEtEffbuhKJTG1GJM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>,
-        Alexander Barabash <alexander.barabash@dell.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 19/26] ioat: ioat_alloc_ring() failure handling.
-Date:   Fri, 10 Jan 2020 17:05:12 -0500
-Message-Id: <20200110220519.28250-14-sashal@kernel.org>
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 18/26] hsr: reset network header when supervision frame is created
+Date:   Fri, 10 Jan 2020 17:05:11 -0500
+Message-Id: <20200110220519.28250-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200110220519.28250-1-sashal@kernel.org>
 References: <20200110220519.28250-1-sashal@kernel.org>
@@ -61,43 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Alexander.Barabash@dell.com" <Alexander.Barabash@dell.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit b0b5ce1010ffc50015eaec72b0028aaae3f526bb ]
+[ Upstream commit 3ed0a1d563903bdb4b4c36c58c4d9c1bcb23a6e6 ]
 
-If dma_alloc_coherent() returns NULL in ioat_alloc_ring(), ring
-allocation must not proceed.
+The supervision frame is L2 frame.
+When supervision frame is created, hsr module doesn't set network header.
+If tap routine is enabled, dev_queue_xmit_nit() is called and it checks
+network_header. If network_header pointer wasn't set(or invalid),
+it resets network_header and warns.
+In order to avoid unnecessary warning message, resetting network_header
+is needed.
 
-Until now, if the first call to dma_alloc_coherent() in
-ioat_alloc_ring() returned NULL, the processing could proceed, failing
-with NULL-pointer dereferencing further down the line.
+Test commands:
+    ip netns add nst
+    ip link add veth0 type veth peer name veth1
+    ip link add veth2 type veth peer name veth3
+    ip link set veth1 netns nst
+    ip link set veth3 netns nst
+    ip link set veth0 up
+    ip link set veth2 up
+    ip link add hsr0 type hsr slave1 veth0 slave2 veth2
+    ip a a 192.168.100.1/24 dev hsr0
+    ip link set hsr0 up
+    ip netns exec nst ip link set veth1 up
+    ip netns exec nst ip link set veth3 up
+    ip netns exec nst ip link add hsr1 type hsr slave1 veth1 slave2 veth3
+    ip netns exec nst ip a a 192.168.100.2/24 dev hsr1
+    ip netns exec nst ip link set hsr1 up
+    tcpdump -nei veth0
 
-Signed-off-by: Alexander Barabash <alexander.barabash@dell.com>
-Acked-by: Dave Jiang <dave.jiang@intel.com>
-Link: https://lore.kernel.org/r/75e9c0e84c3345d693c606c64f8b9ab5@x13pwhopdag1307.AMER.DELL.COM
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Splat looks like:
+[  175.852292][    C3] protocol 88fb is buggy, dev veth0
+
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/ioat/dma.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/hsr/hsr_device.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/dma/ioat/dma.c b/drivers/dma/ioat/dma.c
-index 1a422a8b43cf..18c011e57592 100644
---- a/drivers/dma/ioat/dma.c
-+++ b/drivers/dma/ioat/dma.c
-@@ -377,10 +377,11 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
+diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+index 62c03f0d0079..c7bd6c49fadf 100644
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -272,6 +272,8 @@ static void send_hsr_supervision_frame(struct hsr_port *master,
+ 			    skb->dev->dev_addr, skb->len) <= 0)
+ 		goto out;
+ 	skb_reset_mac_header(skb);
++	skb_reset_network_header(skb);
++	skb_reset_transport_header(skb);
  
- 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
- 						 SZ_2M, &descs->hw, flags);
--		if (!descs->virt && (i > 0)) {
-+		if (!descs->virt) {
- 			int idx;
- 
- 			for (idx = 0; idx < i; idx++) {
-+				descs = &ioat_chan->descs[idx];
- 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
- 						  descs->virt, descs->hw);
- 				descs->virt = NULL;
+ 	if (hsr_ver > 0) {
+ 		hsr_tag = skb_put(skb, sizeof(struct hsr_tag));
 -- 
 2.20.1
 
