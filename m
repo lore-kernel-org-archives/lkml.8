@@ -2,72 +2,158 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A0AFC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605CEC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32D842077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279592072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:24:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="YNCJV+sU"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KY5gMXxQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728351AbgAJPWu (ORCPT
+        id S1728425AbgAJPX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:22:50 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:59802 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727866AbgAJPWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:22:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=OID1dlSTSaamVryi8LpcNEnO4aY2wUMBFndKhtzt064=; b=YNCJV+sUCXt2W5mSotj16fSaar
-        fokY4RYQbPWvs3Euir9u1Io2CTIPDHwYmXK9h1y4agZS/mgaPE5lEhKboyRl8hcP7s36UhulvgVcH
-        uW9K0VV/5rV0rvXxBxdlYoRVCTi4/7I+bZ0uFbWlZ+85jxbZ8tZpbUgHs0gRMhKrDGQM=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ipw7V-000085-Uk; Fri, 10 Jan 2020 16:22:41 +0100
-Date:   Fri, 10 Jan 2020 16:22:41 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
+        Fri, 10 Jan 2020 10:23:59 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:56110 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728184AbgAJPX6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 10:23:58 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 746F140614;
+        Fri, 10 Jan 2020 15:23:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1578669837; bh=J4+ntHbWrqFDN3ykef1qvG1EDza6rRkVc0EblLQVWPE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=KY5gMXxQulNzPxL5YMgmY4Ty5ZaSYheKGArANQX/m7+c9/OGiOCumvYhJQRJohMz8
+         J8F08kGd5NqX5HPACSH++pbwo0VQrcSWPdIENRIQa7NS37Z6DznunJ3e+UZ857aU+e
+         z5dKfRc5HEXkwndRe7GyEDMj7ZyQKlr9b1QgfkKZiN9PjpCSSG/3M9nyz1qAeVMTwH
+         QgdFVuJjiI18hGnDaAXRZuTacIUB7ujkAfMD4O9r+873d9Nbmu5IShyWxkYRaymEO7
+         Dx2yJT96ymwNWZ3M9MQwHLrMJNkOUMs93UEGiEdJngiGaueNPMkDZwXKfIKf2NH06g
+         JGr10rTdRqZrw==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 450BFA0066;
+        Fri, 10 Jan 2020 15:23:56 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/14] net: axienet: Autodetect 64-bit DMA capability
-Message-ID: <20200110152241.GB10802@lunn.ch>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
- <20200110115415.75683-13-andre.przywara@arm.com>
- <20200110140852.GF19739@lunn.ch>
- <20200110141303.2e5863ab@donnerap.cambridge.arm.com>
- <20200110142250.GH19739@lunn.ch>
- <20200110150836.1f92a0a8@donnerap.cambridge.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110150836.1f92a0a8@donnerap.cambridge.arm.com>
+Subject: [PATCH net 1/2] net: stmmac: selftests: Update status when disabling RSS
+Date:   Fri, 10 Jan 2020 16:23:52 +0100
+Message-Id: <42050d75f00900b715a277bbc1d9abf437f6ea68.1578669661.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1578669661.git.Jose.Abreu@synopsys.com>
+References: <cover.1578669661.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1578669661.git.Jose.Abreu@synopsys.com>
+References: <cover.1578669661.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> So far I couldn't be bothered to put my asbestos trousers on and go
-> into BSP land ;-)
+We are disabling RSS on HW but not updating the internal private status
+to the 'disabled' state. This is needed for next tc commit that will
+check if RSS is disabled before trying to apply filters.
 
-Are you in Cambridge? 7 degrees, so you can pop outside to cool off a
-bit :-)
+Fixes: 4647e021193d ("net: stmmac: selftests: Add selftest for L3/L4 Filters")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
-> So if you were hoping for an official blessing, I have to disappoint you ;-)
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c   | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-Well, everything you have done is at least sensible. The patches have
-also drawn the interest of Radhey. Let see if he says this is safe for
-IP version 0.0 through to 7.1.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index 13227909287c..36a4c43a799a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -1323,16 +1323,19 @@ static int __stmmac_test_l3filt(struct stmmac_priv *priv, u32 dst, u32 src,
+ 	struct stmmac_packet_attrs attr = { };
+ 	struct flow_dissector *dissector;
+ 	struct flow_cls_offload *cls;
++	int ret, old_enable = 0;
+ 	struct flow_rule *rule;
+-	int ret;
+ 
+ 	if (!tc_can_offload(priv->dev))
+ 		return -EOPNOTSUPP;
+ 	if (!priv->dma_cap.l3l4fnum)
+ 		return -EOPNOTSUPP;
+-	if (priv->rss.enable)
++	if (priv->rss.enable) {
++		old_enable = priv->rss.enable;
++		priv->rss.enable = false;
+ 		stmmac_rss_configure(priv, priv->hw, NULL,
+ 				     priv->plat->rx_queues_to_use);
++	}
+ 
+ 	dissector = kzalloc(sizeof(*dissector), GFP_KERNEL);
+ 	if (!dissector) {
+@@ -1399,7 +1402,8 @@ static int __stmmac_test_l3filt(struct stmmac_priv *priv, u32 dst, u32 src,
+ cleanup_dissector:
+ 	kfree(dissector);
+ cleanup_rss:
+-	if (priv->rss.enable) {
++	if (old_enable) {
++		priv->rss.enable = old_enable;
+ 		stmmac_rss_configure(priv, priv->hw, &priv->rss,
+ 				     priv->plat->rx_queues_to_use);
+ 	}
+@@ -1444,16 +1448,19 @@ static int __stmmac_test_l4filt(struct stmmac_priv *priv, u32 dst, u32 src,
+ 	struct stmmac_packet_attrs attr = { };
+ 	struct flow_dissector *dissector;
+ 	struct flow_cls_offload *cls;
++	int ret, old_enable = 0;
+ 	struct flow_rule *rule;
+-	int ret;
+ 
+ 	if (!tc_can_offload(priv->dev))
+ 		return -EOPNOTSUPP;
+ 	if (!priv->dma_cap.l3l4fnum)
+ 		return -EOPNOTSUPP;
+-	if (priv->rss.enable)
++	if (priv->rss.enable) {
++		old_enable = priv->rss.enable;
++		priv->rss.enable = false;
+ 		stmmac_rss_configure(priv, priv->hw, NULL,
+ 				     priv->plat->rx_queues_to_use);
++	}
+ 
+ 	dissector = kzalloc(sizeof(*dissector), GFP_KERNEL);
+ 	if (!dissector) {
+@@ -1525,7 +1532,8 @@ static int __stmmac_test_l4filt(struct stmmac_priv *priv, u32 dst, u32 src,
+ cleanup_dissector:
+ 	kfree(dissector);
+ cleanup_rss:
+-	if (priv->rss.enable) {
++	if (old_enable) {
++		priv->rss.enable = old_enable;
+ 		stmmac_rss_configure(priv, priv->hw, &priv->rss,
+ 				     priv->plat->rx_queues_to_use);
+ 	}
+-- 
+2.7.4
 
-   Andrew
