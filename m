@@ -2,98 +2,189 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC9A0C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EDBC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4F520838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578688738;
-	bh=8Hnf4WFZdFRdcDaOEb0WO/34pdUFLVSRBvx/iAwo7qA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qVTdrScYiCJd7Vu7wz1ryt7yhkJwh4jd40iPB41OVYRFw7mD9PPPExs1vQz9OZUkn
-	 UbeG0HH8tG61OdHdRyoKJ14Qt1A48SgxC9ZtuuJYa/mjz8tg9+Mz7B0NP5cX14AFEw
-	 OhrqEwZIMX/BX/Y+hEEwIo64e/qM0WdIovm2uL/w=
+	by mail.kernel.org (Postfix) with ESMTP id A86282082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbgAJUi5 (ORCPT
+        id S1726766AbgAJUtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 15:38:57 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40950 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726643AbgAJUi5 (ORCPT
+        Fri, 10 Jan 2020 15:49:18 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:42631 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbgAJUtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 15:38:57 -0500
-Received: by mail-lj1-f193.google.com with SMTP id u1so3458016ljk.7
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 12:38:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nwolBsIgDGCVUkuSZAXRmkjdEmEEA4cQUilISYO+J6g=;
-        b=KMWtE7+YPwle9SL0j+y71fRurG4RTvYhGihBiblvXCB/Ffgesfl67Jf9uO2iN6Zowv
-         V+httb+uJNwFOpVTmASjdnvw4XkNlnc15na/eSuYdTWfmU/csZGjKyNqoozQGm/sOVkq
-         DI9KVcBBLukvUyMHO9zoVyU0CY//JZepI+q/4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nwolBsIgDGCVUkuSZAXRmkjdEmEEA4cQUilISYO+J6g=;
-        b=S7TOCYg2Jh7Knf27AOC4rKckT4NneGs+X1iYUE/v71y3tenL3eHSONyF/DC5kQjqQY
-         jDMltOAO8Cz2TRrF68vcBiz4Z7rW6DcmM95mTD2UGFNAAnuZnjpcA1A3+PJbr06C9x1S
-         1fmUKMLD4isoDAUzYi/l5tXSWGmiqG0IkuaUpnmP1ER0kGQ2A5mk8k+C2Wb0P8nj9jLM
-         oXodn4pHZupopUttGC1dhLW79zbdsQY3eEUOZMo6PpX7UZ4c2ouIv3Ua2XE5p/0jS7sU
-         XWE10YZWPHn9hV/dmG84fgDodULAdfG6zBWb5v6tJHw0OqrBuOk1m1KzBCZOc8vSyC+P
-         05JA==
-X-Gm-Message-State: APjAAAUUcaIZ16jILQ0AWVwBYKA6ncOefI9lbqqhVyx8lNFuGrxo1tbk
-        mD/tM2ikF+71XB++2xVWWYFOfIRhTuA=
-X-Google-Smtp-Source: APXvYqzFfuskcsOfCzprAM7daevrNG9cvw1OFSknES31PSNMHxCwJJ3WImode4XaKxK0szUnrve8vw==
-X-Received: by 2002:a2e:2c04:: with SMTP id s4mr3924378ljs.35.1578688734745;
-        Fri, 10 Jan 2020 12:38:54 -0800 (PST)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id d20sm1573185lfm.32.2020.01.10.12.38.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jan 2020 12:38:53 -0800 (PST)
-Received: by mail-lj1-f175.google.com with SMTP id a13so3437389ljm.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 12:38:53 -0800 (PST)
-X-Received: by 2002:a2e:93d5:: with SMTP id p21mr3902573ljh.50.1578688733508;
- Fri, 10 Jan 2020 12:38:53 -0800 (PST)
+        Fri, 10 Jan 2020 15:49:17 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MDQNq-1j0R5F1Bvq-00AYsu; Fri, 10 Jan 2020 21:49:11 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Bluez mailing list <linux-bluetooth@vger.kernel.org>
+Cc:     y2038 Mailman List <y2038@lists.linaro.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Rich Felker <dalias@libc.org>, Guy Harris <guy@alum.mit.edu>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] hcidump: add support for time64 based libc
+Date:   Fri, 10 Jan 2020 21:49:03 +0100
+Message-Id: <20200110204903.3495832-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <20200110154218.0b28309f@xps13> <CAHk-=wg=8=nTeOYGoAbJ=VjS47Nh4-_OFK9zKsK3mK4nAi2dNA@mail.gmail.com>
-In-Reply-To: <CAHk-=wg=8=nTeOYGoAbJ=VjS47Nh4-_OFK9zKsK3mK4nAi2dNA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 10 Jan 2020 12:38:37 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whdsFSX0gTOiNkTANONgHHVY+8jUd1DmY2SJpdNOq5xJw@mail.gmail.com>
-Message-ID: <CAHk-=whdsFSX0gTOiNkTANONgHHVY+8jUd1DmY2SJpdNOq5xJw@mail.gmail.com>
-Subject: Re: [GIT PULL] mtd: Fixes for v5.5-rc6
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Cc:     linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:/h9Dsyrfgqwfb1d0gBYxKrEQQCWg4bujxtrnwT3k69wgG/HcyJx
+ SCNlCHyOmNHVBHKg3xWZ25yYNx47e894CdRU18dUGtPrjXLD4Q15+vteQxInyyvWPyBJgyN
+ aCQ0eJaA+ntnx4e1Fh7xNMXCsW8qaznzZhRo/UXItsEjj6nAxiv9mQlMSb+yFSuLSO+w8Xg
+ TX8IW9yAyj3AYQs0Cv/jQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:lO4Yb3kycvY=:4X6ve/YIqvpcDzfPVG9/XO
+ odIxjDHkkryW+alKWrotg7ttLTtLADIupSTIcdzSKnWZsKOxFYPy9g3u26znY8/YsGhuDPxc5
+ Rubfx00oBVuQqsg37S4CnpzjN4ChtJJynBFCJYSm9W5WU0DWLG/Uvj+b5Hzt+LIlBr3FO3ATi
+ Cc1jX81Y5XO2jmCjAyunnQQ+/GlEgSSJEvwvyklwqEuC2FPq9SajuY627V49H3lNO2x5h1+ed
+ A0Lpp7IxH4WpS/x7bikIMDHx02O4HUvKm4IcZqlCjAdwa1slh1heFK6tMEEiqdpBnsHu/fYzU
+ lpdOIUpKelNLszvYsEh0BPfQ4FnPZY2qmgbeUOWHiyJu8qT7ibEYzfdi/ldRVCjYmabACFxkO
+ qS81I0W2cMiLLkCEFaa6+KWCKge9CklEDsqxdsEpXQPLl5gGuT6H6A2uffhqIXM/YyLN6vwcG
+ iMHiVjyefaOycd1QzyIdWpp+fFLohSd1KlyQWr0rIk81A1GVOGYcRYZgAlRfI/DyATZGbLS6w
+ soS/5V7VtOA07bKwpfbTXSuiQxAT+ldprDUcWijMRcfkZJriaxYGUwF2f6MO+LjUcnoDXGjfm
+ FrcRhtpKZ3WEgLQsxeJUf1vSbSAsGSgOyavYo6m69UlNesq5uo0AwWPaAQsJmhIdG/UqZwskn
+ utKPO+TLE/dUuOLvcxT5y5Nah8JNWSK39MObmSO+T+9mkf6/qB9Xo3YuqUYKVBhOHjbAO0XGd
+ 3WyoeftTCtXysaW+UMim6/tZy0v+In+NUp4MrKTVcY9Ll7GtS6aTsNvVVTR5SV7zpJhjdzulF
+ ucDpG4lje9l3vYB6Tgpvh7IZJLrT593zv+Q2Fg0bVwyuccBmV8mBkkHUSb7LJwDloYlPb1TnT
+ 7VwYHlKqKuPlVorb5QyA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 12:31 PM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> Konstantin, can you see what's wrong?
+musl is moving to a default of 64-bit time_t on all architectures,
+glibc will follow later. This breaks reading timestamps through cmsg
+data with the HCI_TIME_STAMP socket option.
 
-It's not just Miquel's. The sound, thermal, and power management fixes
-pulls seem to also be lacking pr-tracker-bot responses.
+Change both copies of hcidump to work on all architectures.  This also
+fixes x32, which has never worked, and carefully avoids breaking sparc64,
+which is another special case.
 
-But Jens got one for block - but that went to the block mailing list,
-not lkml. So maybe it's specific to lkml itself.
+I have only compiled this on one architecture, please at least test
+it to ensure there are no regressions. The toolchain binaries from
+http://musl.cc/ should allow testing with a 64-bit time_t, but it may
+be hard to build all the dependencies first.
 
-Maybe things are just slow, and I have gotten used to the
-almost-instant responses when I do a "git push" to publish my pulls.
+libpcap has the same bug and needs a similar fix to work on future
+32-bit Linux systems. Everything else apparently uses the generic
+SO_TIMESTAMP timestamps, which work correctly when using new enough
+kernels with a time64 libc.
 
-               Linus
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ monitor/hcidump.c | 32 +++++++++++++++++++++++++++++++-
+ tools/hcidump.c   | 33 +++++++++++++++++++++++++++++++--
+ 2 files changed, 62 insertions(+), 3 deletions(-)
+
+diff --git a/monitor/hcidump.c b/monitor/hcidump.c
+index 8b6f846d3..6d2330287 100644
+--- a/monitor/hcidump.c
++++ b/monitor/hcidump.c
+@@ -107,6 +107,36 @@ static int open_hci_dev(uint16_t index)
+ 	return fd;
+ }
+ 
++static struct timeval hci_tstamp_read(void *data)
++{
++	struct timeval tv;
++
++	/*
++	 * On 64-bit architectures, the data matches the timeval
++	 * format. Note that on sparc64 this is different from
++	 * all others.
++	 */
++	if (sizeof(long) == 8) {
++		memcpy(&tv, data, sizeof(tv));
++	}
++
++	/*
++	 * On 32-bit architectures, the timeval definition may
++	 * use 32-bit or 64-bit members depending on the C
++	 * library and architecture.
++	 * The cmsg data however always contains a pair of
++	 * 32-bit values. Interpret as unsigned to make it work
++	 * past y2038.
++	 */
++	if (sizeof(long) == 4) {
++		unsigned int *stamp = data;
++		tv.tv_sec = stamp[0];
++		tv.tv_usec = stamp[1];
++	}
++
++	return tv;
++}
++
+ static void device_callback(int fd, uint32_t events, void *user_data)
+ {
+ 	struct hcidump_data *data = user_data;
+@@ -150,7 +180,7 @@ static void device_callback(int fd, uint32_t events, void *user_data)
+ 				memcpy(&dir, CMSG_DATA(cmsg), sizeof(dir));
+ 				break;
+ 			case HCI_CMSG_TSTAMP:
+-				memcpy(&ctv, CMSG_DATA(cmsg), sizeof(ctv));
++				ctv = hci_tstamp_read(CMSG_DATA(cmsg));
+ 				tv = &ctv;
+ 				break;
+ 			}
+diff --git a/tools/hcidump.c b/tools/hcidump.c
+index 33d429b6c..be14d0930 100644
+--- a/tools/hcidump.c
++++ b/tools/hcidump.c
+@@ -136,6 +136,36 @@ static inline int write_n(int fd, char *buf, int len)
+ 	return t;
+ }
+ 
++static struct timeval hci_tstamp_read(void *data)
++{
++	struct timeval tv;
++
++	/*
++	 * On 64-bit architectures, the data matches the timeval
++	 * format. Note that on sparc64 this is different from
++	 * all others.
++	 */
++	if (sizeof(long) == 8) {
++		memcpy(&tv, data, sizeof(tv));
++	}
++
++	/*
++	 * On 32-bit architectures, the timeval definition may
++	 * use 32-bit or 64-bit members depending on the C
++	 * library and architecture.
++	 * The cmsg data however always contains a pair of
++	 * 32-bit values. Interpret as unsigned to make it work
++	 * past y2038.
++	 */
++	if (sizeof(long) == 4) {
++		unsigned int *stamp = data;
++		tv.tv_sec = stamp[0];
++		tv.tv_usec = stamp[1];
++	}
++
++	return tv;
++}
++
+ static int process_frames(int dev, int sock, int fd, unsigned long flags)
+ {
+ 	struct cmsghdr *cmsg;
+@@ -230,8 +260,7 @@ static int process_frames(int dev, int sock, int fd, unsigned long flags)
+ 				frm.in = (uint8_t) dir;
+ 				break;
+ 			case HCI_CMSG_TSTAMP:
+-				memcpy(&frm.ts, CMSG_DATA(cmsg),
+-						sizeof(struct timeval));
++				frm.ts = hci_tstamp_read(CMSG_DATA(cmsg));
+ 				break;
+ 			}
+ 			cmsg = CMSG_NXTHDR(&msg, cmsg);
+-- 
+2.20.0
+
