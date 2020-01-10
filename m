@@ -2,118 +2,129 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6C6C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69ACBC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC1320838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373122082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 21:27:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zveaai5/"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="vdr15sBS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgAJVYU (ORCPT
+        id S1726962AbgAJV1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 16:24:20 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39962 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726762AbgAJVYT (ORCPT
+        Fri, 10 Jan 2020 16:27:37 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39538 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726762AbgAJV1f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 16:24:19 -0500
-Received: by mail-pl1-f193.google.com with SMTP id s21so1315365plr.7
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 13:24:19 -0800 (PST)
+        Fri, 10 Jan 2020 16:27:35 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a67so3152453oib.6
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 13:27:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:subject:cc:to:in-reply-to:references:message-id
-         :mime-version:content-transfer-encoding;
-        bh=maSb7NbKA8RvJCKXTu3J6eAjmLjqK2UyEvGtUUh/Ctc=;
-        b=Zveaai5/9cXZtqeck7OmqZP52tAyNc8qpNe54bieASVVuCSGAWQvdNywubCKZt6Hyc
-         jNnNCwCwd8Ee41gYguC2uRH18nHbhLeMhwYhhsiL95t4hwBNtLU0YFFnT4+9zP3cQmOp
-         QbfFuDHwqi2dIKCvd+JrRHK0iDIop4xNQKogoZ0Rlm3mJvNvhoqTJPR0fwaE97Pk9x7x
-         JJgmYjp65pdZ3cKWseBYTBJGdpV+bnjAuALSoB+xk0vxiEGCjq74PzUx/TGaLTpUx7e4
-         8B00vnCl0dPDfKT0akhxe1KhVh0zLsSzg6+NkRRtO8eO8Ytm5KMBep5wEYePm8LDTrm1
-         MCBA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Dc7C9t8nS5kMbHGnuaUU5Fa2JKAfraVFXFnxYmWF9bM=;
+        b=vdr15sBSjoi3j4oUEH5jIDurHcvUNEyEW57q0WyAtFekwNzRnrjVwYvA8hPQQXbIqE
+         DIxI19JZ1HDadWeoreEH4fXrqQS6trIV7O3FllR4i+G+aEL6ola42rSNyRj+JKzuBQJg
+         poxz2gLWMzx9yD4J50Q4EZbvfDmuFpTP+6TJMWgk5k1kAmgqgjVnyCzbihiEAa/YyXWD
+         w+GHu+xvWtvJrZ8/PaY4qmaoEuBqjMoLpFt9DmoSAuQDTXmo/T46CPcZDt8AtupbXqvd
+         1VA3Obwi7t67dWTJ2rJsjPNBNgBk9Bn+dFa6CMsRBhLfEOYfgzH8j9iz/ydo0XmyN5RN
+         7vhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
-         :message-id:mime-version:content-transfer-encoding;
-        bh=maSb7NbKA8RvJCKXTu3J6eAjmLjqK2UyEvGtUUh/Ctc=;
-        b=Ij+k6skjZdIhGxAleVi0B9h5E6+2R3qJ1V5cWBUeKh0BfSmCGh/VEh2crYaIdO45Jc
-         v4DgGyz4t2lzszubpXWzCJ+mYxeSCtIWPnQPHzm4iWQQUQbjEwIKpO6kbBuoPqzcwvDS
-         H1eZsLjnnaWUsEKzFtztyw/sVGbMqCHLYMt+CAhIJ1afRCm1/5A/fU1af91uiRXFKLpP
-         cEeG3CaXUYAvsoFCxc7BLaklhS1qZ1gWy5Qk3C8ci1H2kBlVWIg6+wkZk5l2ZCMlg0aP
-         KW+/l8ZVcfEonOD5KW72PFe80qAC7UM3afMKclrlTJ8PqmOVNHQcCEEYVFE47JbFN0uJ
-         r6dA==
-X-Gm-Message-State: APjAAAWXBYxT9BJwIsZ42gCcd/YyKkRMuygrG2TKCNAtG5ft8xhoTWxf
-        0+EeRtMtr1VGLnGCMJSd8HawGA==
-X-Google-Smtp-Source: APXvYqz0xN3YzQi+V8Q6l0p+gowP+/bS/MOw7GEhPN3cUQ2tDIyWmEtQw9cQ4CP20+JsQGY+xUpETA==
-X-Received: by 2002:a17:902:b609:: with SMTP id b9mr669024pls.70.1578691458706;
-        Fri, 10 Jan 2020 13:24:18 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
-        by smtp.gmail.com with ESMTPSA id d2sm3914889pjv.18.2020.01.10.13.24.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 13:24:18 -0800 (PST)
-Date:   Fri, 10 Jan 2020 13:24:18 -0800 (PST)
-X-Google-Original-Date: Fri, 10 Jan 2020 13:24:08 PST (-0800)
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject:     Re: [PATCH v2] riscv: keep 32-bit kernel to 32-bit phys_addr_t
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Olof Johansson <olof@lixom.net>
-To:     Olof Johansson <olof@lixom.net>
-In-Reply-To: <20200106232024.97137-1-olof@lixom.net>
-References: <20200106232024.97137-1-olof@lixom.net> <20200106231611.10169-1-olof@lixom.net>
-Message-ID: <mhng-d39bd2da-7e27-484a-b8f8-a96edf1336c0@palmerdabbelt-glaptop>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Dc7C9t8nS5kMbHGnuaUU5Fa2JKAfraVFXFnxYmWF9bM=;
+        b=WjBfNBhGhUdDW1HDjogTsYb0ocOJ2gToudbR/DxuXN61Ma4EMDwauAcCHPWeZBf764
+         BnBsLAfqK4L75TYHYg2Ho+jZ8Ll83/K89efAWPQJAOOu+w+8IdcGM41lOIHL1Nlp0Qk3
+         WFtJiCpJUqfOe5kYpj1mA4f2AWw6pVF1F7pP0oW48J12VlAOjDPGKCFpl012kpDrAChJ
+         EXNWJ5au5DMjho3NWOpg91TvCuhS0J9ewuxOr8HLIeE3EbsKHJNNXknHpAoWeIVCccZ/
+         F0rmpThGYWeoJdgN2bYWjtg+eFKYTcPgS/icUJMdPkx1WXTNfsvBoy2rCCN7kXK5fzJf
+         DIfw==
+X-Gm-Message-State: APjAAAX1+9b8nVGibDLmvJoJfNMMFqZu1nlNnOO5XmFXIMcXiskJoe2w
+        fD4/GrzaOAr0l43qIYi2+Bx9RdCjrksCq4zypS+yCA==
+X-Google-Smtp-Source: APXvYqxNQu1g9Swlj4ItY7HDQzDpLpZJ3izCmtZ6N6CCpd39vuCJadEa4YSBiWIqE+WMu6DZXNyq9S4tBDEBiKXq8Uo=
+X-Received: by 2002:aca:4c9:: with SMTP id 192mr4108696oie.105.1578691654771;
+ Fri, 10 Jan 2020 13:27:34 -0800 (PST)
+MIME-Version: 1.0
+References: <157863061737.2230556.3959730620803366776.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <e60e64f9-894b-4121-d97b-fb61459cbbe5@redhat.com> <CAPcyv4jm=fmP=-5vbo2jxzMe2qXqZP=zDYF8G_rs3X6_Om0wPg@mail.gmail.com>
+ <4d0334e2-c4e7-6d3f-99ba-2ca0495e1549@redhat.com> <CAPcyv4jixmv8fJ5FiYE=97Jud3Mc+6QzRX1txceSYU+WY_0rQA@mail.gmail.com>
+ <fc0cfb97-5a60-7e73-4f85-d8e6947c5e28@redhat.com> <CAPcyv4jVpN26RGQLRn4BewYtzHDoQfvh37DEdEBq1dd4-BP0kw@mail.gmail.com>
+ <64902066-51dd-9693-53fc-4a5975c58409@redhat.com> <CAPcyv4hcDNeQO3CfnqTRou+6R5gZwyi4pVUMxp1DadAOp7kJGQ@mail.gmail.com>
+ <516aa930-9b64-b377-557c-5413ed9fe336@redhat.com>
+In-Reply-To: <516aa930-9b64-b377-557c-5413ed9fe336@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 10 Jan 2020 13:27:24 -0800
+Message-ID: <CAPcyv4iiYtN6iGt=rVuNR=O=H9YcY1b1yWp+5TuDhu0QoVqT_A@mail.gmail.com>
+Subject: Re: [PATCH] mm/memory_hotplug: Fix remove_memory() lockdep splat
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        stable <stable@vger.kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 06 Jan 2020 15:20:24 PST (-0800), Olof Johansson wrote:
-> While rv32 technically has 34-bit physical addresses, no current platforms
-> use it and it's likely to shake out driver bugs.
+On Fri, Jan 10, 2020 at 9:42 AM David Hildenbrand <david@redhat.com> wrote:
 >
-> Let's keep 64-bit phys_addr_t off on 32-bit builds until one shows up,
-> since other work will be needed to make such a system useful anyway.
+> On 10.01.20 18:39, Dan Williams wrote:
+> > On Fri, Jan 10, 2020 at 9:36 AM David Hildenbrand <david@redhat.com> wrote:
+> >>
+> >> On 10.01.20 18:33, Dan Williams wrote:
+> >>> On Fri, Jan 10, 2020 at 9:29 AM David Hildenbrand <david@redhat.com> wrote:
+> >>> [..]
+> >>>>> So then the comment is actively misleading for that case. I would
+> >>>>> expect an explicit _unlocked path for that case with a comment about
+> >>>>> why it's special. Is there already a comment to that effect somewhere?
+> >>>>>
+> >>>>
+> >>>> __add_memory() - the locked variant - is called from the same ACPI location
+> >>>> either locked or unlocked. I added a comment back then after a longe
+> >>>> discussion with Michal:
+> >>>>
+> >>>> drivers/acpi/scan.c:
+> >>>>         /*
+> >>>>          * Although we call __add_memory() that is documented to require the
+> >>>>          * device_hotplug_lock, it is not necessary here because this is an
+> >>>>          * early code when userspace or any other code path cannot trigger
+> >>>>          * hotplug/hotunplug operations.
+> >>>>          */
+> >>>>
+> >>>>
+> >>>> It really is a special case, though.
+> >>>
+> >>> That's a large comment block when we could have just taken the lock.
+> >>> There's probably many other code paths in the kernel where some locks
+> >>> are not necessary before userspace is up, but the code takes the lock
+> >>> anyway to minimize the code maintenance burden. Is there really a
+> >>> compelling reason to be clever here?
+> >>
+> >> It was a lengthy discussion back then and I was sharing your opinion. I
+> >> even had a patch ready to enforce that we are holding the lock (that's
+> >> how I identified that specific case in the first place).
+> >
+> > Ok, apologies I missed that opportunity to back you up. Michal, is
+> > this still worth it?
+> >
 >
-> PHYS_ADDR_T_64BIT is def_bool 64BIT, so just remove the select.
+> For your reference (roughly 5 months ago, so not that old)
 >
-> Signed-off-by: Olof Johansson <olof@lixom.net>
-> ---
->
-> v2: Just remove the select, since it's set by default if CONFIG_64BIT
->
->  arch/riscv/Kconfig | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index a31169b02ec06..569fc6deb94d6 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -12,8 +12,6 @@ config 32BIT
->
->  config RISCV
->  	def_bool y
-> -	# even on 32-bit, physical (and DMA) addresses are > 32-bits
-> -	select PHYS_ADDR_T_64BIT
->  	select OF
->  	select OF_EARLY_FLATTREE
->  	select OF_IRQ
+> https://lkml.kernel.org/r/20190724143017.12841-1-david@redhat.com
 
-I gave 5.5-rc5 a quick test on a 32-bit QEMU with 8GiB of RAM and the system
-wouldn't boot, so we've got at least some bugs floating around somewhere.
-Given that this doesn't work I don't see any reason to keep it around as an
-option, as if someone wants to make it work there's a lot more to do than make
-things compile.
-
-I've put this on for-next.  If anyone cares about 34-bit physical addresses on
-rv32 then now is the right time to speak up... ideally by fixing it :)
-
-Thanks!
+Oh, now I see the problem. You need to add that lock so far away from
+the __add_memory() to avoid lock inversion problems with the
+acpi_scan_lock. The organization I was envisioning would not work
+without deeper refactoring.
