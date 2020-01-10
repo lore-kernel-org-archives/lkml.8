@@ -7,75 +7,76 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD624C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CEFC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B2192073A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:18:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E88662073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:20:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pLPGE0wJ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rzxuKWom"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgAJHSu (ORCPT
+        id S1726636AbgAJHUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:18:50 -0500
-Received: from mail-eopbgr60045.outbound.protection.outlook.com ([40.107.6.45]:5440
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        Fri, 10 Jan 2020 02:20:35 -0500
+Received: from mail-db8eur05on2084.outbound.protection.outlook.com ([40.107.20.84]:53825
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726307AbgAJHSu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:18:50 -0500
+        id S1726558AbgAJHUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:20:34 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b//p3eDkDNKte/kxq82pRcyPyb3HNxVo7rHZ0QmrTOTD2QM+fYB9e7kufwaAWEmnMCXdTefdl5w94JwexNGwZlUBLZzwsN7vJJnWNiPjTRjVxZ0zbT3bg+cFwjT9IUTZvwOYtR6a0B49yPfBAAqMxjoebZJy9kKU1WMeDccRAYbVhUOyTmSdFNMXR6PCW9hWRk+g3RuDo4jeXY2i3uq1HhAtS/IJ8FJnv6ptIs+5QyLW3nPcv6fD26PEpYrctQWAhh1Ie2wosj2TH7vZzEv0vp3YY3ZJUYvM6sPQbYfCoMKwRZVuVcYq073Vqv1ZMSyJ7UnnxWpaIqY2ZieUC3bmgw==
+ b=heTh3GYlVD0II8yZCg2yZwNbLeG27C2WS+Kie+7b34u/V+ucdEd/JDsnUPFFquJIe54/cOUa2V8CboOO6OjF8QuYJpj0647k6Tu+BxuGOkiaqiOIxdnOgttjKqOm5tVt/x4VslgCZCcZLCcK2/xXmQe71WXqyBcNz89K/s4tjCPDgkeRszFAYtgQ6opEqtHriWEPN5RK/qInmymbCYuUwDxQm+GPONBEyOKasbVyvYS/9XOUk4dVA3zcSriBwCjGGNNFi5G1UPMXUIp6SEqHkxti3lmyn9UyMHfpSfD5Z0ep7+O5xX7YsZeom5ImtiU0hxMRHnd+dSLMazh6yPBqgw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V9hHpYc1QTxFufeaor7kzXYM5HTjA4lTlgvKy/9O2tQ=;
- b=LHb2U6/o00Feb+MR/7/ZSUkznRixhYfgEozJo/8pkiBJM1tX6hvuynpXWoQ4ooR4+u2XnTbloF+X6MtmadIeFcYJIRJhsg+6NnYPu2ZZJnogARHEehaPy2TSUgWFbmevHKYRnI6ZfbN6wg6M8X0XuzwhGHjcyLDEU9tiZvwZFLEQkepLB64nUgXvQfyJDYlEna9AKQ90vwSaeFMAzsu6RlUL2im7cKL8OxfioU4BWeaNHtfRY9nI/JQVRoLl4yIkVU/p0QGkAeEILgo0VFnfnE8SHkMYFQThICQvXjao/bQTlSlI67hZ1j3kHgqHpU304QzLWrt8oHxoZ01qIvL5cg==
+ bh=CnkKQt3vdgpBM/xHrsBcM+Zufm/rvMErBTTEyXTldHI=;
+ b=Wbwymge6HaWR5pxhSCj12DRFMY8ZvuEm0x3zDAoxkcBPXM9V6zDJGaQuyaeaMpPowDu0u6y1HHMRx9I4jAkiozDSPnBPuSLGOt5sfVYLSKVqyKi/tV7w0F/ch3arWJxyq7x/dXuPHh3K+/Ld6kzRFSPN7UQ787LXxuw2S97AxNDJxMnKLil4yz+d9o14irW238no7WnQRva3WN+LXlD5Glf6g5ayBQ0pLKjIiPCqcTmMgIdobWjF/jMyuwE+glNE2/I1zQljJCsVR/hIG8crPx8OZ+nepip2Z/90tpa0RYCxhcnzhFjdgvvzmsbsVcOXv3zblu0jC2bDXa8qPJNFHw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V9hHpYc1QTxFufeaor7kzXYM5HTjA4lTlgvKy/9O2tQ=;
- b=pLPGE0wJn0ygewUBqCWcH/N+Hv9BrPnWnNKBiKAiyjwom77P0sGW8G/nhpqCkXt7XyPNqFXAj8pEq7KmlRhQpI6q8mkk56mXfzCN0qRmVg3QqAngF+E6flIWmKzR6bn1opYNFToL9jV4IJom7DoD3Y30PwPqKCoCoy5aBsYctXk=
+ bh=CnkKQt3vdgpBM/xHrsBcM+Zufm/rvMErBTTEyXTldHI=;
+ b=rzxuKWomOlFsnpliH254E41/J+rspvGKzFzo91RTNdrARoYe5aQgM2yGQfS5CVfWyMkR5xN0+6mskEIbYnF/61wSh73zMkd08yh2cIWSss3gGGwXMBPHhkhxPtlZYUFUsdG4SOR62PsGU4FpDWEYFo6u9X0zSRAm91qZwVXc7Z8=
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB7172.eurprd04.prod.outlook.com (10.186.128.80) with Microsoft SMTP
+ AM0PR04MB4162.eurprd04.prod.outlook.com (52.134.95.21) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Fri, 10 Jan 2020 07:18:06 +0000
+ 15.20.2623.9; Fri, 10 Jan 2020 07:20:31 +0000
 Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
  ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2623.013; Fri, 10 Jan 2020
- 07:18:06 +0000
-Received: from localhost.localdomain (119.31.174.66) by HK2PR06CA0006.apcprd06.prod.outlook.com (2603:1096:202:2e::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2623.10 via Frontend Transport; Fri, 10 Jan 2020 07:18:01 +0000
+ 07:20:31 +0000
+Received: from localhost.localdomain (119.31.174.66) by HK2PR06CA0009.apcprd06.prod.outlook.com (2603:1096:202:2e::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2623.10 via Frontend Transport; Fri, 10 Jan 2020 07:20:26 +0000
 From:   Peng Fan <peng.fan@nxp.com>
-To:     "sboyd@kernel.org" <sboyd@kernel.org>,
+To:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
         "festevam@gmail.com" <festevam@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>
-CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        Abel Vesa <abel.vesa@nxp.com>
+CC:     dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>, Jun Li <jun.li@nxp.com>,
+        "angus@akkea.ca" <angus@akkea.ca>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Jacky Bai <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2 4/4] clk: imx: imx8mn: use imx8m_clk_hw_composite_core
-Thread-Topic: [PATCH V2 4/4] clk: imx: imx8mn: use imx8m_clk_hw_composite_core
-Thread-Index: AQHVx4Ya8OWileJWAE67lA7ZmiZ6RQ==
-Date:   Fri, 10 Jan 2020 07:18:06 +0000
-Message-ID: <1578640411-16991-5-git-send-email-peng.fan@nxp.com>
-References: <1578640411-16991-1-git-send-email-peng.fan@nxp.com>
-In-Reply-To: <1578640411-16991-1-git-send-email-peng.fan@nxp.com>
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] arm64: dts: imx8mn: Init rates and parents configs for clocks
+Thread-Topic: [PATCH] arm64: dts: imx8mn: Init rates and parents configs for
+ clocks
+Thread-Index: AQHVx4ZxYo+CJ71kh0mLSYhdPwN+wA==
+Date:   Fri, 10 Jan 2020 07:20:31 +0000
+Message-ID: <1578640589-17210-1-git-send-email-peng.fan@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: git-send-email 2.7.4
-x-clientproxiedby: HK2PR06CA0006.apcprd06.prod.outlook.com
- (2603:1096:202:2e::18) To AM0PR04MB4481.eurprd04.prod.outlook.com
+x-clientproxiedby: HK2PR06CA0009.apcprd06.prod.outlook.com
+ (2603:1096:202:2e::21) To AM0PR04MB4481.eurprd04.prod.outlook.com
  (2603:10a6:208:70::15)
 authentication-results: spf=none (sender IP is )
  smtp.mailfrom=peng.fan@nxp.com; 
@@ -83,30 +84,30 @@ x-ms-exchange-messagesentrepresentingtype: 1
 x-originating-ip: [119.31.174.66]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 141446b4-9e09-4175-eb41-08d7959d3cb2
-x-ms-traffictypediagnostic: AM0PR04MB7172:|AM0PR04MB7172:
+x-ms-office365-filtering-correlation-id: 1ec1f691-7f5f-4517-62fc-08d7959d9350
+x-ms-traffictypediagnostic: AM0PR04MB4162:|AM0PR04MB4162:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB7172FBA7D07DB672596A6C4688380@AM0PR04MB7172.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:361;
+x-microsoft-antispam-prvs: <AM0PR04MB416296A93527717E46DCCDB288380@AM0PR04MB4162.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
 x-forefront-prvs: 02788FF38E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(346002)(136003)(396003)(189003)(199004)(2906002)(478600001)(81156014)(81166006)(69590400006)(956004)(8936002)(4326008)(2616005)(44832011)(71200400001)(8676002)(86362001)(6512007)(5660300002)(6486002)(186003)(16526019)(66476007)(66446008)(36756003)(66556008)(64756008)(66946007)(26005)(6506007)(6636002)(54906003)(316002)(52116002)(110136005)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB7172;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(136003)(39860400002)(376002)(199004)(189003)(86362001)(4326008)(81156014)(81166006)(66946007)(316002)(36756003)(69590400006)(6512007)(71200400001)(6666004)(16526019)(52116002)(6486002)(8936002)(54906003)(186003)(26005)(956004)(2616005)(5660300002)(6636002)(6506007)(110136005)(8676002)(478600001)(66446008)(66556008)(66476007)(64756008)(44832011)(2906002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4162;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
 received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /J9t1emmdVKJ8VqbwwkULn5sHnpfFgMV1guZuTEp9joFOiEHv3hjrPnRWKQLbK054WtEWhFsNsTVe2lYwUh8NLhcbPehXvph3F77g8FFsHv2BAqXOUnGgygZEvy5gV4dw2jNAosWhn8mP4916Y7aAiaclCUb9Yl7r2QmtleZ+uY34t++nfMzQu1UHQm83UswpI7bWZpyPDDLQ3WdSKjVfzarkbyt35LYRy7yH5rLnisQV5wM3snZ9GgzZhIFQkmxxVtZLeipmd7Hjgmu5LXdUM6zfNcfaA6KRaofA0F9v3LdP3DgjPVe/I0K15Fs42z76WXnJP+qZjdKw6J/RPhJQvzjy8TRNOjkHtVpmWpcK4ae5TeSvgiKBqm7SKleQtGcCaKFiUS/Hxq8Z6V0Wd2xJf94dilIB81ESARlwdPo5QPbPeKSkEApKvk+rywavZbXIL6FdVa9hbcNcQZbMEJVXDHXIVPgyf3xeCXWvC0jb5NO7c7jyOimlwnY3JbX/ciNOhx/rns/2Er/YimTuykPaw==
+x-microsoft-antispam-message-info: wEUjmdBdUi99hUfggAd4bDZ3S7Y/j/qkH6RVnjyUhFz8O8jhrX0W53hjdUtVtdMwCKHaxODELDT8AgRVFqLxcuJB/QUnqYhA9OMYl/yEbryOJJZOPwe8ojP+3VUCX4qVUYO7S+jKWQHbXQ8a10ZH54mxlwkp6qQzkfBdQTtnY1g/pBlZvpTrLLsNK196HFbSRk5YovTISm/oAwWFhQWl5RoZRExSwIztatk7Ovq+yjn6UJGVo6gJxJXtgFfBgMQ/mfV6lJBvoqis7OPD9X9MkO393m2tQhKLpj9xzMEuxiLLgyyyUFnlJSaIyLq9MvzcN+mJWre29DB8WKqA7S7rWk0elOjr+ry7P12hjEU+HUvJvOnsVy0iDDyIXV9p7LHJv5AAHm+29Ao881+X2aruYnXHxHnt20g39d5j3i3Lbu25/uAAGMsYyqh2Es+UTK+t238TGEX/lKfvvdC5dciNg7DOahY7F/m7xVGRjNuWG1Ns9fduBIXAMCATak1V5/svp1rU0tRQ/hnVVqxMLJFoMw==
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 141446b4-9e09-4175-eb41-08d7959d3cb2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 07:18:06.0984
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ec1f691-7f5f-4517-62fc-08d7959d9350
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 07:20:31.4055
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uIUw0aZxbssPcfHH2c577+Vs9mrVri/x2YosPU4TnVXlb/sbqnyd7glIEF6N+/h3BuU6xXD3teRrRX78WyRsBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB7172
+X-MS-Exchange-CrossTenant-userprincipalname: pMphcJAmHp5fXruGEso2qSK0W32bmiNnZzjiKYnj4g4q2h8In8tCzCWWK+PZrfnDcYZYIgQ3jYTMn+vu2BL5Og==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4162
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -114,51 +115,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peng Fan <peng.fan@nxp.com>
 
-Use imx8m_clk_hw_composite_core to simplify code.
+Add the initial configuration for clocks that need default parent and rate
+setting.
 
-Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
+NoC sources from SYS PLL3, running at 600MHz. Audio AHB/IPG clks needs
+to run at 400MHz for better performance.
+
 Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
- drivers/clk/imx/clk-imx8mn.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mn.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
-index c5e7316b4c66..ce2ba3dce483 100644
---- a/drivers/clk/imx/clk-imx8mn.c
-+++ b/drivers/clk/imx/clk-imx8mn.c
-@@ -413,15 +413,11 @@ static int imx8mn_clocks_probe(struct platform_device=
- *pdev)
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn.dtsi b/arch/arm64/boot/dt=
+s/freescale/imx8mn.dtsi
+index a44b5438e842..0a62a478a930 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mn.dtsi
+@@ -379,6 +379,16 @@
+ 					 <&clk_ext3>, <&clk_ext4>;
+ 				clock-names =3D "osc_32k", "osc_24m", "clk_ext1", "clk_ext2",
+ 					      "clk_ext3", "clk_ext4";
++				assigned-clocks =3D <&clk IMX8MN_CLK_NOC>,
++						<&clk IMX8MN_CLK_AUDIO_AHB>,
++						<&clk IMX8MN_CLK_IPG_AUDIO_ROOT>,
++						<&clk IMX8MN_SYS_PLL3>;
++				assigned-clock-parents =3D <&clk IMX8MN_SYS_PLL3_OUT>,
++							 <&clk IMX8MN_SYS_PLL1_800M>;
++				assigned-clock-rates =3D <0>,
++							<400000000>,
++							<400000000>,
++							<600000000>;
+ 			};
 =20
- 	/* CORE */
- 	hws[IMX8MN_CLK_A53_SRC] =3D imx_clk_hw_mux2("arm_a53_src", base + 0x8000,=
- 24, 3, imx8mn_a53_sels, ARRAY_SIZE(imx8mn_a53_sels));
--	hws[IMX8MN_CLK_GPU_CORE_SRC] =3D imx_clk_hw_mux2("gpu_core_src", base + 0=
-x8180, 24, 3,  imx8mn_gpu_core_sels, ARRAY_SIZE(imx8mn_gpu_core_sels));
--	hws[IMX8MN_CLK_GPU_SHADER_SRC] =3D imx_clk_hw_mux2("gpu_shader_src", base=
- + 0x8200, 24, 3, imx8mn_gpu_shader_sels,  ARRAY_SIZE(imx8mn_gpu_shader_sel=
-s));
- 	hws[IMX8MN_CLK_A53_CG] =3D imx_clk_hw_gate3("arm_a53_cg", "arm_a53_src", =
-base + 0x8000, 28);
--	hws[IMX8MN_CLK_GPU_CORE_CG] =3D imx_clk_hw_gate3("gpu_core_cg", "gpu_core=
-_src", base + 0x8180, 28);
--	hws[IMX8MN_CLK_GPU_SHADER_CG] =3D imx_clk_hw_gate3("gpu_shader_cg", "gpu_=
-shader_src", base + 0x8200, 28);
--
- 	hws[IMX8MN_CLK_A53_DIV] =3D imx_clk_hw_divider2("arm_a53_div", "arm_a53_c=
-g", base + 0x8000, 0, 3);
--	hws[IMX8MN_CLK_GPU_CORE_DIV] =3D imx_clk_hw_divider2("gpu_core_div", "gpu=
-_core_cg", base + 0x8180, 0, 3);
--	hws[IMX8MN_CLK_GPU_SHADER_DIV] =3D imx_clk_hw_divider2("gpu_shader_div", =
-"gpu_shader_cg", base + 0x8200, 0, 3);
-+
-+	hws[IMX8MN_CLK_GPU_CORE_DIV] =3D imx8m_clk_hw_composite_core("gpu_core_di=
-v", imx8mn_gpu_core_sels, base + 0x8180);
-+	hws[IMX8MN_CLK_GPU_SHADER_DIV] =3D imx8m_clk_hw_composite_core("gpu_shade=
-r_div", imx8mn_gpu_shader_sels, base + 0x8200);
-=20
- 	/* BUS */
- 	hws[IMX8MN_CLK_MAIN_AXI] =3D imx8m_clk_hw_composite_critical("main_axi", =
-imx8mn_main_axi_sels, base + 0x8800);
+ 			src: reset-controller@30390000 {
 --=20
 2.16.4
 
