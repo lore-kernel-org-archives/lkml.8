@@ -2,89 +2,71 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E432DC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99D3C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE60D2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:02:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578643333;
-	bh=EGGrFg82AwWBngiHY+ftg7F0R1HyNOaQp8gvY2ISO+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QsmCe9PCPt12Sg44pxtWxn7TscYWCsWt2sulni2bTuvBnJp8Ig/2wY1n+NNTMT3vw
-	 cQgxUoLANSi4o8lpiR2n/ITnH36fgr21SwZ+TQipnDk4sgx6i3lxu0Sk3tnbxCaxgK
-	 EL7paox5fazwXf5UcNHYlhe90gj4A+wGQzL97UMA=
+	by mail.kernel.org (Postfix) with ESMTP id C137C20678
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:02:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbgAJICN (ORCPT
+        id S1726963AbgAJICY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 03:02:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726401AbgAJICM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 03:02:12 -0500
-Received: from localhost (unknown [223.226.110.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21B1320678;
-        Fri, 10 Jan 2020 08:02:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578643332;
-        bh=EGGrFg82AwWBngiHY+ftg7F0R1HyNOaQp8gvY2ISO+Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u0L3uzcmQqZZM6x9wv0Y7nfmO3uZwSBsIuGcuVnBO/opMAojueHHAOkK03CZ7Faaj
-         Iov7lqHgklf9rtbq3N+HLmG94IvqUgy/rF/MQH6WWFiPKoWfD+I6nEKKtrfEl2Rqo1
-         iEmuf/kkc7kUlQpjJOMY7r1rkSL3mBwBxpEGxywA=
-Date:   Fri, 10 Jan 2020 13:31:56 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Fri, 10 Jan 2020 03:02:24 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:42382 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgAJICX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 03:02:23 -0500
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1ippFL-0003l1-Md; Fri, 10 Jan 2020 08:02:20 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     mathias.nyman@intel.com, gregkh@linuxfoundation.org,
+        stern@rowland.harvard.edu
+Cc:     acelan.kao@canonical.com, linux-usb@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>
-Subject: Re: [PATCH 2/2] dmaengine: uniphier-xdmac: Add UniPhier external DMA
- controller driver
-Message-ID: <20200110080156.GG2818@vkoul-mobl>
-References: <1576630620-1977-3-git-send-email-hayashi.kunihiko@socionext.com>
- <20191227063411.GG3006@vkoul-mobl>
- <20200109211219.57FC.4A936039@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109211219.57FC.4A936039@socionext.com>
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v2 3/3] USB: Disable LPM on WD19's Realtek Hub
+Date:   Fri, 10 Jan 2020 16:02:11 +0800
+Message-Id: <20200110080211.22626-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200103084008.3579-3-kai.heng.feng@canonical.com>
+References: <20200103084008.3579-3-kai.heng.feng@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-01-20, 21:12, Kunihiko Hayashi wrote:
-> Hi Vinod,
-> 
-> Thank you for your comment.
-> 
-> On Fri, 27 Dec 2019 12:04:11 +0530 <vkoul@kernel.org> wrote:
-> 
-> > On 18-12-19, 09:57, Kunihiko Hayashi wrote:
-> > > This adds external DMA controller driver implemented in Socionext
-> > > UniPhier SoCs. This driver supports DMA_MEMCPY and DMA_SLAVE modes.
-> > > 
-> > > Since this driver does not support the the way to transfer size
-> > > unaligned to burst width, 'src_maxburst' or 'dst_maxburst' of
-> > 
-> > You mean driver does not support any unaligned bursts?
-> 
-> Yes. If transfer size is unaligned to burst size, the final transfer
-> will be overrun.
+Realtek Hub (0bda:0x0487) used in Dell Dock WD19 sometimes drops off the
+bus when bringing underlying ports from U3 to U0.
 
-That is fine, you shoudl return error for bursts which are not aligned
-when preparing the descriptors
+Disabling LPM on the hub during setting link state is not enough, so
+let's disable LPM completely for this hub.
 
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+ drivers/usb/core/quirks.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+index 6b6413073584..2fb7c1602280 100644
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -371,6 +371,9 @@ static const struct usb_device_id usb_quirk_list[] = {
+ 	{ USB_DEVICE(0x0b05, 0x17e0), .driver_info =
+ 			USB_QUIRK_IGNORE_REMOTE_WAKEUP },
+ 
++	/* Realtek hub in Dell WD19 (Type-C) */
++	{ USB_DEVICE(0x0bda, 0x0487), .driver_info = USB_QUIRK_NO_LPM },
++
+ 	/* Action Semiconductor flash disk */
+ 	{ USB_DEVICE(0x10d6, 0x2200), .driver_info =
+ 			USB_QUIRK_STRING_FETCH_255 },
 -- 
-~Vinod
+2.17.1
+
