@@ -2,154 +2,105 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D27BC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FC1C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B9B2075D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE3720673
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:06:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mp/B0PBj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q/SpiVFs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbgAJBBr (ORCPT
+        id S1730417AbgAJBGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:01:47 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:43398 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730301AbgAJBBq (ORCPT
+        Thu, 9 Jan 2020 20:06:11 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40847 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730362AbgAJBGL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 20:01:46 -0500
-Received: by mail-ot1-f68.google.com with SMTP id p8so354639oth.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 17:01:46 -0800 (PST)
+        Thu, 9 Jan 2020 20:06:11 -0500
+Received: by mail-io1-f65.google.com with SMTP id x1so227503iop.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 17:06:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aWgqW0TgD4TOVFlB5rMaOLZ+hTh/cuW3Reu5skzL6P8=;
-        b=Mp/B0PBjeTl4dixKIdkVGVSWPy5op+1f2GYYte8HGNwE6u2sbKhyIm4ByMjqUaWnvh
-         WSRH7fFF2ChtoDmmScfg4cqp+QNA1wpXIenolwjA31u0xO/nfncH1PtD/37KeP7L4n6J
-         Vo/U/jB/o//GdPl3myOmSgP9MoEf6O6VpsyzDPoxqLwABTMCskv6WJjccHYoPfOvg8V8
-         zzOl5sPtWz81IYrY7iGaBJlXkrxcOGyApfdp5//qy54Ch/GMdUzzsKJY1yY3AcyXyJL8
-         TrwW4CJxRF4D4yF6j6caaUpZCYEC/kKMqatBWxxTomw4Gilp1s0X+ZUdMACn48iOMGaA
-         vlWA==
+        bh=0AaGdesSrwy9CQvlbcsq69wkQKgx9ks9Un7URg79eFs=;
+        b=Q/SpiVFs4/CEUFt4OJSbX9xPIsfLj3jSr20AiDtXP9XvZICvdGeSQk0lhVHg5Qd5ZS
+         8VjrJNEgPxcXYOwEWkcs4vOmFRVOLcc8qYl7fD090QaaMrmq5H+H5eVVXXZjUIO6RwaS
+         coZEj5xntuTb9jKxuehVxmW5QEaU9gi9tM0Sd9ENZdBR1/dXMyjy6yw0raRCe/i0RLxy
+         SBed63A6k1u1GI0RmSCoxlYb8u+D7oW+/5KqjBw+xq6Dwx2vL77j0U9iaIkH5NOoYrsS
+         tQzyxjlVTJE1fnAPu9bhvkp1lCm49fC8vZlK8HTeqq84e6+FresN1q5780lOqNG8NjId
+         wgGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aWgqW0TgD4TOVFlB5rMaOLZ+hTh/cuW3Reu5skzL6P8=;
-        b=jsNlTMxS/TClzXPYwQck5nSFG+53zWIANF8EBPMhedq/h+fqeYm8b0AwzwhOmcN/Ew
-         GUuTSHSv56CkLw32jmZKfAn6NnLIyQjcEbMZqkDiYKMSu1AeiMUavGOkKJD4E1bkgIdC
-         +kPgwNRnwkjm3iqzPLg4F33cXlQFB4mpUX2SUuhLN4tHgawAz7Ac0V2nKUO4mjlWE6T5
-         0Y69fFHv+jcxTa7ORKq1ZxQ3A4axYxzqIu5hYB6QoR0JebpKLmaSN4e9nji+eaJvHFrH
-         a2k4WeqSPSIi6EBBJ6ABOGp12tbYPIEseUN3X90C5zU43wJi5totwEwR2kLularZ5d2r
-         n8mA==
-X-Gm-Message-State: APjAAAU8qfp+jJX8BKUdykcn1g7C00B4IklT1K8rsH4XIMU+dEjMkXQF
-        1IcyqY2kpuFAJVcmF1OLciEENVX6YnXvu7+esPQ=
-X-Google-Smtp-Source: APXvYqwrVYiE61iO9OfkncCVq1VkUlyIDIYLVX+WzDh7DP04+T1fqp7ocgTh5cvIyWbxxq2aM1NUxBqym/gayJRdplg=
-X-Received: by 2002:a05:6830:18f1:: with SMTP id d17mr500030otf.298.1578618105919;
- Thu, 09 Jan 2020 17:01:45 -0800 (PST)
+        bh=0AaGdesSrwy9CQvlbcsq69wkQKgx9ks9Un7URg79eFs=;
+        b=f8cRrM4txXZ8zDwrsCfHfbQRztcmRy3YXi3FlYxTDU87MfVbIVCXVXo4w4Ng/8ybtE
+         wHIiNQBsUAMhoo4SsLsNlzcYluXkvEI8pgCrFeWem2dh+CHv0G1GdkwWx72678CM+2X9
+         bN9p33UHGmusQ4YTgb0J2GhgSLOX/CxKoX1pNjLc9kLxwZMPLPsWZQJHbqF7w8/GXoIZ
+         ugVmRpYxdGgJoP1o45XkUvsGUq9hH6MiHKIT+VR5CfWP3P57wkrsqHgZOZANbv91HaUK
+         LrlG/sjc1gaHkyDOofiui6WfBMHYWbwDQTDnoOvWWPMxIp/0NbEP14R7jwyluk2zj+5s
+         Y76A==
+X-Gm-Message-State: APjAAAWPScTUwWjDF8TKG1kjI8V6hEVZuQS1csJe0c0ebRWa0Aiz3b+D
+        p/juDnKTSf+3xvh3El9tZuh9dVlEN0upPHAiQrmf/w==
+X-Google-Smtp-Source: APXvYqy7FKLikZyPAOHw9u0R+JZtbYnesh6NErB95a1HKW/PFprxIo+ALAFJPqjDzEla5n9WWRiJb0HU6Pa+sn+1gKQ=
+X-Received: by 2002:a6b:8f41:: with SMTP id r62mr300820iod.140.1578618370473;
+ Thu, 09 Jan 2020 17:06:10 -0800 (PST)
 MIME-Version: 1.0
-References: <20200109225646.22983-1-xiyou.wangcong@gmail.com> <CAHbLzkr=P38zJMpNVtw9oKMT65hwq6ie85h-fRi7rpZyf4A71g@mail.gmail.com>
-In-Reply-To: <CAHbLzkr=P38zJMpNVtw9oKMT65hwq6ie85h-fRi7rpZyf4A71g@mail.gmail.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Thu, 9 Jan 2020 17:01:34 -0800
-Message-ID: <CAM_iQpWvrR9cVA31tD7Mvx0yTN=NDXQ-NMYStH9UB3Rb6WzmeA@mail.gmail.com>
-Subject: Re: [PATCH] mm: avoid blocking lock_page() in kcompactd
-To:     Yang Shi <shy828301@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Linux MM <linux-mm@kvack.org>
+References: <CGME20200108115027eucas1p1d3645ba53703780679c662921efbca78@eucas1p1.samsung.com>
+ <20200108115007.31095-1-m.szyprowski@samsung.com> <20200108115007.31095-2-m.szyprowski@samsung.com>
+ <CA+Px+wXkFE5b_8bLz7-c95TvEdqHGD5s-XKRYMVr40xQkqTWxQ@mail.gmail.com> <83169752-ac05-d1b1-ece9-fbe1109287cf@samsung.com>
+In-Reply-To: <83169752-ac05-d1b1-ece9-fbe1109287cf@samsung.com>
+From:   Tzung-Bi Shih <tzungbi@google.com>
+Date:   Fri, 10 Jan 2020 09:05:59 +0800
+Message-ID: <CA+Px+wWiZ9MWwi-moXo9rJrbgLFVEbOqjQMhOZmm5mRL7EeMbQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ASoC: max98090: fix lockdep warning
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     ALSA development <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Dylan Reid <dgreid@google.com>,
+        Jimmy Cheng-Yi Chiang <cychiang@google.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 4:28 PM Yang Shi <shy828301@gmail.com> wrote:
->
-> On Thu, Jan 9, 2020 at 2:57 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
-> >
-> > We observed kcompactd hung at __lock_page():
-> >
-> >  INFO: task kcompactd0:57 blocked for more than 120 seconds.
-> >        Not tainted 4.19.56.x86_64 #1
-> >  "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> >  kcompactd0      D    0    57      2 0x80000000
-> >  Call Trace:
-> >   ? __schedule+0x236/0x860
-> >   schedule+0x28/0x80
-> >   io_schedule+0x12/0x40
-> >   __lock_page+0xf9/0x120
-> >   ? page_cache_tree_insert+0xb0/0xb0
-> >   ? update_pageblock_skip+0xb0/0xb0
-> >   migrate_pages+0x88c/0xb90
-> >   ? isolate_freepages_block+0x3b0/0x3b0
-> >   compact_zone+0x5f1/0x870
-> >   kcompactd_do_work+0x130/0x2c0
-> >   ? __switch_to_asm+0x35/0x70
-> >   ? __switch_to_asm+0x41/0x70
-> >   ? kcompactd_do_work+0x2c0/0x2c0
-> >   ? kcompactd+0x73/0x180
-> >   kcompactd+0x73/0x180
-> >   ? finish_wait+0x80/0x80
-> >   kthread+0x113/0x130
-> >   ? kthread_create_worker_on_cpu+0x50/0x50
-> >   ret_from_fork+0x35/0x40
-> >
-> > which faddr2line maps to:
-> >
-> >   migrate_pages+0x88c/0xb90:
-> >   lock_page at include/linux/pagemap.h:483
-> >   (inlined by) __unmap_and_move at mm/migrate.c:1024
-> >   (inlined by) unmap_and_move at mm/migrate.c:1189
-> >   (inlined by) migrate_pages at mm/migrate.c:1419
-> >
-> > Sometimes kcompactd eventually got out of this situation, sometimes not.
-> >
-> > I think for memory compaction, it is a best effort to migrate the pages,
-> > so it doesn't have to wait for I/O to complete. It is fine to call
-> > trylock_page() here, which is pretty much similar to
-> > buffer_migrate_lock_buffers().
-> >
-> > Given MIGRATE_SYNC_LIGHT is used on compaction path, just relax the
-> > check for it.
->
-> But this changed the semantics of MIGRATE_SYNC_LIGHT which means
-> blocking on most operations but not ->writepage. When
-> MIGRATE_SYNC_LIGHT is used it means compaction priority is increased
-> (the initial priority is ASYNC) due to whatever reason (i.e. not
-> enough clean, non-writeback and non-locked pages to migrate). So, it
-> has to wait for some pages to try to not backoff pre-maturely.
+On Thu, Jan 9, 2020 at 7:09 PM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+> On 09.01.2020 06:36, Tzung-Bi Shih wrote:
+> > On Wed, Jan 8, 2020 at 7:50 PM Marek Szyprowski
+> > <m.szyprowski@samsung.com> wrote:
+> >> Fix this by introducing a separate mutex only for serializing the SHDN
+> >> hardware register related operations.
+> > This fix makes less sense to me.  We used dapm_mutex intentionally
+> > because: both DAPM and userspace mixer control would change SHDN bit
+> > at the same time.
 
-Thanks for explaining MIGRATE_SYNC_LIGHT. I didn't dig the history
-of MIGRATE_SYNC_LIGHT.
+We should not use a separate lock.  Either mixer control or DAPM would
+change the SHDN bit.  The patch overlooks the calling path from DAPM.
+As a result, DAPM can change the bit in the middle of mixer control.
 
->
-> If I read the code correctly, buffer_migrate_lock_buffers() also
-> blocks on page lock with non-ASYNC mode.
->
-> Since v5.1 Mel Gorman improved compaction a lot. So, I'm wondering if
-> this happens on the latest upstream or not.
+> Nope. This is just a lockdep warning about possible hypothetical
+> situation on the test system during the normal boot. It doesn't mean
+> that the circular dependency actually happens (if so, it would end in
+> deadlock). It also doesn't mean that such circular dependency can be
+> really triggered, because some other dependencies that not known to
+> lockdep engine might protect against it. However the easiest way to fix
+> it is to use fine-grained locking instead of reusing some framework
+> locks for other purposes. Such approach is also usually a good practice.
 
-Unfortunately we can't test upstream kernel because:
-1) We don't know how to reproduce it.
-2) It is not easy to deploy upstream kernel in our environment.
-
-
->
-> And, did you figure out who is locking the page for such long time? Or
-> there might be too many waiters on the list for this page?
-
-I tried to dump the process stacks after we saw the hung task
-with /proc/X/stack (apparently sysrq is not an option for production),
-but I didn't find anything useful. I didn't see any other process
-hung in lock_page() either, all mm-related kernel threads were sleeping
-(non-D) at the time I debugged. So, it is possible there was some place
-missing a unlock_page() too, which is too late to debug after the hung
-task was reported.
-
-Thanks.
+If the possible circular locking is a hypothetical situation, shall we
+ignore it since we are very sure userspace cannot see the control
+devices when building the sound card?
