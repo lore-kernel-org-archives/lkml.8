@@ -2,212 +2,514 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A531CC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:37:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E9BC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3F220842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:37:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="SKsdT2gG";
-	dkim=pass (2048-bit key) header.d=raspberrypi.org header.i=@raspberrypi.org header.b="eudbFuiF"
+	by mail.kernel.org (Postfix) with ESMTP id 94D8720842
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:38:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbgAJRhb (ORCPT
+        id S1728429AbgAJRiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:37:31 -0500
-Received: from mx08-00252a01.pphosted.com ([91.207.212.211]:34506 "EHLO
-        mx08-00252a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727358AbgAJRhb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:37:31 -0500
-Received: from pps.filterd (m0102629.ppops.net [127.0.0.1])
-        by mx08-00252a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00AHaW0v003446
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 17:37:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=raspberrypi.org; h=subject : to :
- cc : references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp;
- bh=xzWn1OMg/kRBdPGY5cSYHXjxrtR25cVLedpzVE8XDTg=;
- b=SKsdT2gGEEFjWm1OQs24C9xp18p7AQ8nXeW7wBy0MdVcQvkx8mmsnwOjQadzeLaFc5oZ
- 6Bkt0NhzFQeQt3p2NR2JFyrE50JZVeKz5et+SDg1d7gyIoxGObSzdgfQisqexzVMb2Pl
- KmS51h4bTAbDO/P7rGw8d+wHaBsyqw/bd4i8MMqurPVC0ehdo8Wnjyiz0+NPesa0l77S
- +NF9ntLnzu081++BYRsnWcxI0xh5x6vat0n9rb/oMAS7388FCuXU7a+Y9hy89SsVkHGh
- DtXDQFqCgDGakfVSGXZjlE/DpbSZZ856j5r9Qpsr6x1QCdAGsaR2M1rUz3EtsoRIBfOQ aw== 
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        by mx08-00252a01.pphosted.com with ESMTP id 2xag2su2hy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=OK)
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 17:37:29 +0000
-Received: by mail-wm1-f71.google.com with SMTP id h130so1120330wme.7
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 09:37:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=raspberrypi.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=xzWn1OMg/kRBdPGY5cSYHXjxrtR25cVLedpzVE8XDTg=;
-        b=eudbFuiFpxiYBXsumIrZk5v2K0RcDambijz9CR6j4vfIhiv09EPkoC4Iap4aOXhjY+
-         e+apgz4raC1u6K55M2t+JqSWdpUTU/zP/n9j7vF7ORpWW6Zlu5RnTlpFfvNX+U4ji1lw
-         dKpMDCFcBBdGskvbgur3sLBTJFj7Sa2nq4DTeo56U2IhqUIvRnxA0otUH4DD9ExXC9hh
-         COAU07dXao/SesrTu7gpROWkTTOKgKv+F9qYoA3m5/gCd9YGfmN0+ktaUGgeZAg6C6uo
-         iMEHthpBZop+6pORS/khftnO2rEEOlIYRx+oCuEjF1fI24AeJA+DHXQAitgdsCaGXuzZ
-         VuQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=xzWn1OMg/kRBdPGY5cSYHXjxrtR25cVLedpzVE8XDTg=;
-        b=c6uNZf+D+nUfODFx0Q5jghPuaSVHKFURDt74pK/xiySZXaXwILfBp1MoA3A+kK3l7M
-         KJ/33bM8LBHU5ETD148Kck0g6TCVYfx9RhzoZsJo3gfCuM+7gzrVFq4Vt3kLpaT6cYV9
-         Jxxrlr28YItt4o8KoTrVLJGG2WweOW2VXbvSwLuXVATJvfvcU6NjRqKn0fpAiGP/g4qX
-         spw39TeGFz8mPIK3sNRZParlmlbS+6SO4ChV+f5gelN7bzX1QjpA5bVH/n2KN51SwqFY
-         bcAqCf0XzehTGAFB+e8yqnVE+OS6SoLIaz92YP1rrZVqOYoSPsjlZg7jfyI93isf+v0f
-         NZLw==
-X-Gm-Message-State: APjAAAXwmbUB1ch28RYncnD2JyViPQTXoUYNxDN+OO/nuGHm6JDMD/YX
-        UpXyyzFXaP+MhDn/8Q+7UMb5Cc1bypJX/8BzC9lj60iBeo8e4w2k7fFMCrti9yI069epfBWrvwm
-        1bu/VV2YTHxsIknMuA528N6gK
-X-Received: by 2002:a5d:5091:: with SMTP id a17mr4687590wrt.362.1578677848173;
-        Fri, 10 Jan 2020 09:37:28 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx44UlbuVmiPyz5iGzy41EJVez9kdBqhJkQVvHkfelCDcd0A4HMd0i0npDRAlfsoN/TmkGfzg==
-X-Received: by 2002:a5d:5091:: with SMTP id a17mr4687563wrt.362.1578677847921;
-        Fri, 10 Jan 2020 09:37:27 -0800 (PST)
-Received: from ?IPv6:2a00:1098:3142:14:910a:522a:cf5c:edd0? ([2a00:1098:3142:14:910a:522a:cf5c:edd0])
-        by smtp.gmail.com with ESMTPSA id d14sm3100880wru.9.2020.01.10.09.37.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jan 2020 09:37:27 -0800 (PST)
-Subject: Re: [PATCH] ARM: dts: bcm283x: Unify CMA configuration
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Stefan Wahren <wahrenst@gmx.net>
-Cc:     devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200110172935.19709-1-nsaenzjulienne@suse.de>
-From:   Phil Elwell <phil@raspberrypi.org>
-Message-ID: <c5bb42a8-e1c2-3e21-dc1d-d36a069bf97f@raspberrypi.org>
-Date:   Fri, 10 Jan 2020 17:37:25 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Fri, 10 Jan 2020 12:38:07 -0500
+Received: from mga06.intel.com ([134.134.136.31]:44468 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726739AbgAJRiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 12:38:07 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 09:38:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
+   d="scan'208";a="216737182"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga008.jf.intel.com with ESMTP; 10 Jan 2020 09:38:04 -0800
+Date:   Fri, 10 Jan 2020 09:38:04 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
+        edwin.zhai@intel.com
+Subject: Re: [RESEND PATCH v10 04/10] mmu: spp: Add functions to operate SPP
+ access bitmap
+Message-ID: <20200110173804.GD21485@linux.intel.com>
+References: <20200102061319.10077-1-weijiang.yang@intel.com>
+ <20200102061319.10077-5-weijiang.yang@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200110172935.19709-1-nsaenzjulienne@suse.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-10_01:2020-01-10,2020-01-09 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200102061319.10077-5-weijiang.yang@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+On Thu, Jan 02, 2020 at 02:13:13PM +0800, Yang Weijiang wrote:
+> Create access bitmap for SPP subpages, the bitmap can
+> be accessed with a gfn. The initial access bitmap for each
+> physical page is 0xFFFFFFFF, meaning SPP is not enabled for the
+> subpages.
 
-On 10/01/2020 17:29, Nicolas Saenz Julienne wrote:
-> With the introduction of the Raspberry Pi 4 we were forced to explicitly
-> configure CMA's location, since arm64 defaults it into the ZONE_DMA32
-> memory area, which is not good enough to perform DMA operations on that
-> device. To bypass this limitation a dedicated CMA DT node was created,
-> explicitly indicating the acceptable memory range and size.
-> 
-> That said, compatibility between boards is a must on the Raspberry Pi
-> ecosystem so this creates a common CMA DT node so as for DT overlays to
-> be able to update CMA's properties regardless of the board being used.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Wrap changelogs at ~75 chars.
+
+Create access bitmap for SPP subpages, the bitmap can be accessed with a
+gfn.  The initial access bitmap for each physical page is 0xFFFFFFFF,
+meaning SPP is not enabled for the subpages.
+
+There needs to be a *lot* more information provided in all of the changelogs
+for this series.  I understand the basic concepts of SPP, but nothing in the
+documentation or changelogs explains how KVM generates the SPP tables based
+on userspace input.  Essentially, explain the design in decent detail, with
+a focus on *why* KVM does what it does.
+
+> Co-developed-by: He Chen <he.chen@linux.intel.com>
+> Signed-off-by: He Chen <he.chen@linux.intel.com>
+> Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 > ---
+>  arch/x86/include/asm/kvm_host.h |   2 +
+>  arch/x86/kvm/mmu/spp.c          | 332 ++++++++++++++++++++++++++++++++
+>  arch/x86/kvm/mmu/spp.h          |  12 ++
+>  include/uapi/linux/kvm.h        |   8 +
+>  4 files changed, 354 insertions(+)
 > 
-> If this doesn't make it into v5.5 I'd be tempted to add:
-> Fixes: d98a8dbdaec6 ("ARM: dts: bcm2711: force CMA into first GB of memory")
-> 
->   arch/arm/boot/dts/bcm2711.dtsi | 33 +++++++++++++--------------------
->   arch/arm/boot/dts/bcm283x.dtsi | 13 +++++++++++++
->   2 files changed, 26 insertions(+), 20 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-> index 8687534d4528..c8e4041308e0 100644
-> --- a/arch/arm/boot/dts/bcm2711.dtsi
-> +++ b/arch/arm/boot/dts/bcm2711.dtsi
-> @@ -12,26 +12,6 @@ / {
->   
->   	interrupt-parent = <&gicv2>;
->   
-> -	reserved-memory {
-> -		#address-cells = <2>;
-> -		#size-cells = <1>;
-> -		ranges;
-> -
-> -		/*
-> -		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
-> -		 * that's not good enough for the BCM2711 as some devices can
-> -		 * only address the lower 1G of memory (ZONE_DMA).
-> -		 */
-> -		linux,cma {
-> -			compatible = "shared-dma-pool";
-> -			size = <0x2000000>; /* 32MB */
-> -			alloc-ranges = <0x0 0x00000000 0x40000000>;
-> -			reusable;
-> -			linux,cma-default;
-> -		};
-> -	};
-> -
-> -
->   	soc {
->   		/*
->   		 * Defined ranges:
-> @@ -869,6 +849,19 @@ pin-rts {
->   	};
->   };
->   
-> +&rmem {
-> +	#address-cells = <2>;
-> +};
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index 9506c9d40895..f5145b86d620 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -812,6 +812,7 @@ struct kvm_lpage_info {
+>  
+>  struct kvm_arch_memory_slot {
+>  	struct kvm_rmap_head *rmap[KVM_NR_PAGE_SIZES];
+> +	u32 *subpage_wp_info;
+>  	struct kvm_lpage_info *lpage_info[KVM_NR_PAGE_SIZES - 1];
+>  	unsigned short *gfn_track[KVM_PAGE_TRACK_MAX];
+>  };
+> @@ -959,6 +960,7 @@ struct kvm_arch {
+>  	struct task_struct *nx_lpage_recovery_thread;
+>  
+>  	hpa_t sppt_root;
+> +	bool spp_active;
+>  };
+>  
+>  struct kvm_vm_stat {
+> diff --git a/arch/x86/kvm/mmu/spp.c b/arch/x86/kvm/mmu/spp.c
+> index 5fca08af705c..edab5ec83ef3 100644
+> --- a/arch/x86/kvm/mmu/spp.c
+> +++ b/arch/x86/kvm/mmu/spp.c
+> @@ -17,6 +17,21 @@ static void shadow_spp_walk_init(struct kvm_shadow_walk_iterator *iterator,
+>  	iterator->level = PT64_ROOT_4LEVEL;
+>  }
+>  
+> +u32 *gfn_to_subpage_wp_info(struct kvm_memory_slot *slot, gfn_t gfn)
+> +{
+> +	unsigned long idx;
 > +
-> +&cma {
+> +	if (!slot->arch.subpage_wp_info)
+> +		return NULL;
+> +
+> +	idx = gfn_to_index(gfn, slot->base_gfn, PT_PAGE_TABLE_LEVEL);
+> +	if (idx > slot->npages - 1)
+> +		return NULL;
+> +
+> +	return &slot->arch.subpage_wp_info[idx];
+> +}
+> +EXPORT_SYMBOL_GPL(gfn_to_subpage_wp_info);
+> +
+>  static bool __rmap_open_subpage_bit(struct kvm *kvm,
+>  				    struct kvm_rmap_head *rmap_head)
+>  {
+> @@ -172,6 +187,20 @@ bool is_spp_spte(struct kvm_mmu_page *sp)
+>  	return sp->role.spp;
+>  }
+>  
+> +static int kvm_spp_level_pages(gfn_t gfn_lower, gfn_t gfn_upper, int level)
+> +{
+> +	int page_num = KVM_PAGES_PER_HPAGE(level);
+> +	gfn_t gfn_max = (gfn_lower & ~(page_num - 1)) + page_num - 1;
+> +	int ret;
+> +
+> +	if (gfn_upper <= gfn_max)
+> +		ret = gfn_upper - gfn_lower + 1;
+> +	else
+> +		ret = gfn_max - gfn_lower + 1;
+> +
+> +	return ret;
+> +}
+> +
+>  #define SPPT_ENTRY_PHA_MASK (0xFFFFFFFFFF << 12)
+
+There's almost certainly an existing macro for this.
+
+>  
+>  int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
+> @@ -220,6 +249,309 @@ int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_spp_setup_structure);
+>  
+> +int vmx_spp_flush_sppt(struct kvm *kvm, u64 gfn_base, u32 npages)
+> +{
+> +	struct kvm_shadow_walk_iterator iter;
+> +	struct kvm_vcpu *vcpu;
+> +	gfn_t gfn = gfn_base;
+> +	gfn_t gfn_max = gfn_base + npages - 1;
+
+s/gfn_max/gfn_end.  "max" makes me think this is literally walking every
+possible gfn.
+
+> +	u64 spde;
+> +	int count;
+> +	bool flush = false;
+> +
+> +	vcpu = kvm_get_vcpu(kvm, 0);
+> +	if (!VALID_PAGE(vcpu->kvm->arch.sppt_root))
+> +		return -EFAULT;
+> +
+> +	for (; gfn <= gfn_max; gfn++) {
+> +		for_each_shadow_spp_entry(vcpu, (u64)gfn << PAGE_SHIFT, iter) {
+> +			if (!is_shadow_present_pte(*iter.sptep))
+> +				break;
+> +
+> +			if (iter.level == PT_DIRECTORY_LEVEL) {
+> +				spde = *iter.sptep;
+> +				spde &= ~PT_PRESENT_MASK;
+> +				spp_spte_set(iter.sptep, spde);
+> +				count = kvm_spp_level_pages(gfn,
+> +							    gfn_max,
+> +							    PT_DIRECTORY_LEVEL);
+> +				flush = true;
+> +				if (count >= npages)
+> +					goto out;
+> +				gfn += count;
+> +				break;
+> +			}
+> +		}
+> +	}
+> +out:
+> +	if (flush)
+> +		kvm_flush_remote_tlbs(kvm);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(vmx_spp_flush_sppt);
+> +
+> +static int kvm_spp_create_bitmaps(struct kvm *kvm)
+> +{
+> +	struct kvm_memslots *slots;
+> +	struct kvm_memory_slot *memslot;
+> +	int i, j, ret;
+> +	u32 *buff;
+> +
+> +	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
+> +		slots = __kvm_memslots(kvm, i);
+> +		kvm_for_each_memslot(memslot, slots) {
+> +			buff = kvzalloc(memslot->npages *
+> +				sizeof(*memslot->arch.subpage_wp_info),
+> +				GFP_KERNEL);
+> +
+> +			if (!buff) {
+> +				ret = -ENOMEM;
+> +				goto out_free;
+> +			}
+> +			memslot->arch.subpage_wp_info = buff;
+> +
+> +			for (j = 0; j < memslot->npages; j++)
+> +				buff[j] = FULL_SPP_ACCESS;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +out_free:
+> +	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
+> +		slots = __kvm_memslots(kvm, i);
+> +		kvm_for_each_memslot(memslot, slots) {
+> +			if (memslot->arch.subpage_wp_info) {
+> +				kvfree(memslot->arch.subpage_wp_info);
+> +				memslot->arch.subpage_wp_info = NULL;
+> +			}
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +int vmx_spp_init(struct kvm *kvm)
+> +{
+> +	int i, ret;
+> +	struct kvm_vcpu *vcpu;
+> +	int root_level;
+> +	struct kvm_mmu_page *ssp_sp;
+> +	bool first_root = true;
+> +
+> +	/* SPP feature is exclusive with nested VM.*/
+> +	if (kvm_x86_ops->get_nested_state)
+> +		return -EPERM;
+> +
+> +	if (kvm->arch.spp_active)
+> +		return 0;
+> +
+> +	ret = kvm_spp_create_bitmaps(kvm);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	kvm_for_each_vcpu(i, vcpu, kvm) {
+> +		if (first_root) {
+> +			/* prepare caches for SPP setup.*/
+> +			mmu_topup_memory_caches(vcpu);
+> +			root_level = vcpu->arch.mmu->shadow_root_level;
+> +			ssp_sp = kvm_spp_get_page(vcpu, 0, root_level);
+> +			first_root = false;
+> +			vcpu->kvm->arch.sppt_root = __pa(ssp_sp->spt);
+> +		}
+> +		++ssp_sp->root_count;
+> +		kvm_make_request(KVM_REQ_LOAD_CR3, vcpu);
+> +	}
+> +
+> +	kvm->arch.spp_active = true;
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(vmx_spp_init);
+> +
+> +int kvm_spp_get_permission(struct kvm *kvm, u64 gfn, u32 npages,
+> +			   u32 *access_map)
+> +{
+> +	u32 *access;
+> +	struct kvm_memory_slot *slot;
+> +	int i;
+> +
+> +	if (!kvm->arch.spp_active)
+> +		return -ENODEV;
+> +
+> +	for (i = 0; i < npages; i++, gfn++) {
+> +		slot = gfn_to_memslot(kvm, gfn);
+> +		if (!slot)
+> +			return -EFAULT;
+> +		access = gfn_to_subpage_wp_info(slot, gfn);
+> +		if (!access)
+> +			return -EFAULT;
+> +		access_map[i] = *access;
+> +	}
+> +
+> +	return i;
+> +}
+> +EXPORT_SYMBOL_GPL(kvm_spp_get_permission);
+> +
+> +static void kvm_spp_zap_pte(struct kvm *kvm, u64 *spte, int level)
+> +{
+> +	u64 pte;
+> +
+> +	pte = *spte;
+> +	if (is_shadow_present_pte(pte) && is_last_spte(pte, level)) {
+> +		drop_spte(kvm, spte);
+> +		if (is_large_pte(pte))
+> +			--kvm->stat.lpages;
+> +	}
+> +}
+> +
+> +static bool kvm_spp_flush_rmap(struct kvm *kvm, u64 gfn_min, u64 gfn_max)
+> +{
+> +	u64 *sptep;
+> +	struct rmap_iterator iter;
+> +	struct kvm_rmap_head *rmap_head;
+> +	int level;
+> +	struct kvm_memory_slot *slot;
+> +	bool flush = false;
+> +
+> +	slot = gfn_to_memslot(kvm, gfn_min);
+> +	if (!slot)
+> +		return false;
+> +
+> +	for (; gfn_min <= gfn_max; gfn_min++) {
+> +		for (level = PT_PAGE_TABLE_LEVEL;
+> +		     level <= PT_DIRECTORY_LEVEL; level++) {
+> +			rmap_head = __gfn_to_rmap(gfn_min, level, slot);
+> +			for_each_rmap_spte(rmap_head, &iter, sptep) {
+> +				pte_list_remove(rmap_head, sptep);
+> +				flush = true;
+> +			}
+> +		}
+> +	}
+> +
+> +	return flush;
+> +}
+> +
+> +int kvm_spp_set_permission(struct kvm *kvm, u64 gfn, u32 npages,
+> +			   u32 *access_map)
+> +{
+> +	gfn_t old_gfn = gfn;
+> +	u32 *access;
+> +	struct kvm_memory_slot *slot;
+> +	struct kvm_shadow_walk_iterator iterator;
+> +	struct kvm_vcpu *vcpu;
+> +	gfn_t gfn_max;
+> +	int i, count, level;
+> +	bool flush = false;
+> +
+> +	if (!kvm->arch.spp_active)
+> +		return -ENODEV;
+> +
+> +	vcpu = kvm_get_vcpu(kvm, 0);
+> +	if (!VALID_PAGE(vcpu->kvm->arch.sppt_root))
+> +		return -EFAULT;
+> +
+> +	for (i = 0; i < npages; i++, gfn++) {
+> +		slot = gfn_to_memslot(kvm, gfn);
+> +		if (!slot)
+> +			return -EFAULT;
+> +
+> +		access = gfn_to_subpage_wp_info(slot, gfn);
+> +		if (!access)
+> +			return -EFAULT;
+> +		*access = access_map[i];
+> +	}
+> +
+> +	gfn = old_gfn;
+> +	gfn_max = gfn + npages - 1;
+> +	vcpu = kvm_get_vcpu(kvm, 0);
+> +
+> +	if (!vcpu || (vcpu && !VALID_PAGE(vcpu->arch.mmu->root_hpa)))
+> +		goto out;
+> +
+> +	flush = kvm_spp_flush_rmap(kvm, gfn, gfn_max);
+> +
+> +	for (i = 0; gfn <= gfn_max; i++, gfn++) {
+> +		for_each_shadow_entry(vcpu, (u64)gfn << PAGE_SHIFT, iterator) {
+> +			if (!is_shadow_present_pte(*iterator.sptep))
+> +				break;
+> +
+> +			if (iterator.level == PT_PAGE_TABLE_LEVEL) {
+> +				if (kvm_spp_mark_protection(kvm,
+> +							    gfn,
+> +							    access_map[i]) < 0)
+> +					return -EFAULT;
+> +				break;
+> +			} else if (is_large_pte(*iterator.sptep)) {
+> +				level = iterator.level;
+> +				if (access_map[i] == FULL_SPP_ACCESS)
+> +					break;
+> +				count = kvm_spp_level_pages(gfn,
+> +							    gfn_max,
+> +							    level);
+> +				kvm_spp_zap_pte(kvm, iterator.sptep, level);
+> +				flush = true;
+> +				if (count >= npages)
+> +					goto out;
+> +				gfn += count - 1;
+> +			}
+> +		}
+> +	}
+> +out:
+> +	if (flush)
+> +		kvm_flush_remote_tlbs(kvm);
+> +	return npages;
+> +}
+> +
+> +int kvm_spp_mark_protection(struct kvm *kvm, u64 gfn, u32 access)
+> +{
+> +	struct kvm_memory_slot *slot;
+> +	struct kvm_rmap_head *rmap_head;
+> +	int ret;
+> +
+> +	if (!kvm->arch.spp_active)
+> +		return -ENODEV;
+> +
+> +	slot = gfn_to_memslot(kvm, gfn);
+> +	if (!slot)
+> +		return -EFAULT;
+> +
 > +	/*
-> +	 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
-> +	 * that's not good enough for the BCM2711 as some devices can
-> +	 * only address the lower 1G of memory (ZONE_DMA).
+> +	 * check whether the target 4KB page exists in EPT leaf
+> +	 * entry.If it's there, just flag SPP bit of the entry,
+> +	 * defer the setup to SPPT miss induced vm-exit  handler.
 > +	 */
-> +	alloc-ranges = <0x0 0x00000000 0x40000000>;
+> +	rmap_head = __gfn_to_rmap(gfn, PT_PAGE_TABLE_LEVEL, slot);
+> +
+> +	if (rmap_head->val) {
+> +		/*
+> +		 * if all subpages are not writable, open SPP bit in
+> +		 * EPT leaf entry to enable SPP protection for
+> +		 * corresponding page.
+> +		 */
+> +		if (access != FULL_SPP_ACCESS) {
+> +			ret = kvm_spp_open_write_protect(kvm, slot, gfn);
+> +			if (ret)
+> +				return ret;
+> +		} else {
+> +			ret = kvm_spp_clear_write_protect(kvm, slot, gfn);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +void kvm_spp_free_memslot(struct kvm_memory_slot *free,
+> +			  struct kvm_memory_slot *dont)
+> +{
+> +	if (!dont || free->arch.subpage_wp_info !=
+> +	    dont->arch.subpage_wp_info) {
+> +		kvfree(free->arch.subpage_wp_info);
+> +		free->arch.subpage_wp_info = NULL;
+> +	}
+> +}
+> +
+>  inline u64 construct_spptp(unsigned long root_hpa)
+>  {
+>  	return root_hpa & PAGE_MASK;
+> diff --git a/arch/x86/kvm/mmu/spp.h b/arch/x86/kvm/mmu/spp.h
+> index 8ef94b7a2057..99d93fdc74b5 100644
+> --- a/arch/x86/kvm/mmu/spp.h
+> +++ b/arch/x86/kvm/mmu/spp.h
+> @@ -2,9 +2,21 @@
+>  #ifndef __KVM_X86_VMX_SPP_H
+>  #define __KVM_X86_VMX_SPP_H
+>  
+> +#define FULL_SPP_ACCESS		((u32)((1ULL << 32) - 1))
+> +
+> +int kvm_spp_get_permission(struct kvm *kvm, u64 gfn, u32 npages,
+> +			   u32 *access_map);
+> +int kvm_spp_set_permission(struct kvm *kvm, u64 gfn, u32 npages,
+> +			   u32 *access_map);
+> +int kvm_spp_mark_protection(struct kvm *kvm, u64 gfn, u32 access);
+>  bool is_spp_spte(struct kvm_mmu_page *sp);
+>  u64 construct_spptp(unsigned long root_hpa);
+>  int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
+>  			    u32 access_map, gfn_t gfn);
+> +int vmx_spp_flush_sppt(struct kvm *kvm, u64 gfn_base, u32 npages);
+> +void kvm_spp_free_memslot(struct kvm_memory_slot *free,
+> +			  struct kvm_memory_slot *dont);
+> +int vmx_spp_init(struct kvm *kvm);
+> +u32 *gfn_to_subpage_wp_info(struct kvm_memory_slot *slot, gfn_t gfn);
+>  
+>  #endif /* __KVM_X86_VMX_SPP_H */
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index f0a16b4adbbd..eabd55ec5af7 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -102,6 +102,14 @@ struct kvm_userspace_memory_region {
+>  	__u64 userspace_addr; /* start of the userspace allocated memory */
+>  };
+>  
+> +/* for KVM_SUBPAGES_GET_ACCESS and KVM_SUBPAGES_SET_ACCESS */
+> +struct kvm_subpage {
+> +	__u64 gfn_base; /* the first page gfn of the contiguous pages */
+> +	__u32 npages;   /* number of 4K pages */
+> +	__u32 flags;    /* reserved to 0 now */
+> +	__u32 access_map[0]; /* start place of bitmap array */
 > +};
 > +
->   &i2c0 {
->   	compatible = "brcm,bcm2711-i2c", "brcm,bcm2835-i2c";
->   	interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-> index 839491628e87..6128baed83c2 100644
-> --- a/arch/arm/boot/dts/bcm283x.dtsi
-> +++ b/arch/arm/boot/dts/bcm283x.dtsi
-> @@ -30,6 +30,19 @@ chosen {
->   		stdout-path = "serial0:115200n8";
->   	};
->   
-> +	rmem: reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		cma: linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			size = <0x4000000>; /* 64MB */
-> +			reusable;
-> +			linux,cma-default;
-> +		};
-> +	};
-> +
->   	thermal-zones {
->   		cpu_thermal: cpu-thermal {
->   			polling-delay-passive = <0>;
+>  /*
+>   * The bit 0 ~ bit 15 of kvm_memory_region::flags are visible for userspace,
+>   * other bits are reserved for kvm internal use which are defined in
+> -- 
+> 2.17.2
 > 
-
-For what it's worth,
-
-Reviewed-by: Phil Elwell <phil@raspberrypi.org>
-
-Phil
