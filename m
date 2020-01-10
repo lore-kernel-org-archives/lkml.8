@@ -2,187 +2,138 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCC8C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99F6C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5CE72082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:06:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D9602072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:06:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qBCfB4Ku"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="OskxaP71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgAJKGY (ORCPT
+        id S1727485AbgAJKGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:06:24 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53664 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbgAJKGW (ORCPT
+        Fri, 10 Jan 2020 05:06:39 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:44732 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727451AbgAJKGi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:06:22 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200110100621euoutp011e0c29ee272fd01d6352fb6e297ab7bf~ofoV0_VTa0935709357euoutp01M
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 10:06:21 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200110100621euoutp011e0c29ee272fd01d6352fb6e297ab7bf~ofoV0_VTa0935709357euoutp01M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578650781;
-        bh=p4sNZBD2GdpPljSI2a6b2CmX3yAWPhs1wFoE2/fvN2A=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=qBCfB4KuJp5n3ycJU6AcGbCfsW4VAWSqesUK2NseczmvBH1t6+DtXfUwWyBq79ytI
-         09cynpagFs7u5elWOup7WOoyRd/ZGrHnqK1bM4kfr/Jnkk7SFx+IaTuu3hsHJ1KMmH
-         ShMJ/pyamswZ3x/JmkJqqFBIvZmlsTLCK9lFuzN4=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200110100620eucas1p1695d36f9a458f68a39a95f1c3c264963~ofoVgDQWd2865128651eucas1p1X;
-        Fri, 10 Jan 2020 10:06:20 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 3D.6B.61286.C9C481E5; Fri, 10
-        Jan 2020 10:06:20 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200110100620eucas1p12fff62b485570e93b283e23c7a9e5b57~ofoVCrNq70796707967eucas1p1z;
-        Fri, 10 Jan 2020 10:06:20 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200110100620eusmtrp24f34024f9e843db99ed9e1725e1c0a02~ofoVB_xdL1290112901eusmtrp2g;
-        Fri, 10 Jan 2020 10:06:20 +0000 (GMT)
-X-AuditID: cbfec7f2-ef1ff7000001ef66-d4-5e184c9c6034
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 99.6D.07950.C9C481E5; Fri, 10
-        Jan 2020 10:06:20 +0000 (GMT)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200110100619eusmtip2203efaed9efa87e527be7ecd0c229ad0~ofoUkheud2870828708eusmtip27;
-        Fri, 10 Jan 2020 10:06:19 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Matheus Castello <matheus@castello.eng.br>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH] power: supply: max17040: Correct IRQ wake handling
-Date:   Fri, 10 Jan 2020 11:05:40 +0100
-Message-Id: <20200110100540.27371-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCIsWRmVeSWpSXmKPExsWy7djP87pzfCTiDDa8V7bYOGM9q8X58xvY
-        LS7vmsNm8bn3CKPFjPP7mCzWHrkLFDu/jsni7ms/Bw6PJ3cus3nsuLuE0WPTqk42j74tqxg9
-        Pm+SC2CN4rJJSc3JLEst0rdL4MqYOmc3a8Eq6Yoj26+yNDD+Fe9i5OSQEDCR2HR3IXMXIxeH
-        kMAKRon5DzYzQThfGCUWPXgGlfnMKPFu2UtGmJbrWw6yQiSWM0p0rG5ghmuZcvgWWBWbgKFE
-        19suNhBbRMBeYu62yWBzmQUmM0nM+rcOLCEs4CzxuO04C4jNIqAq8XHFaiYQm1fAVuJI9z52
-        iHXyEqs3HADbICFwm02if+FmqISLROvUIywQtrDEq+NboOIyEv93zmeCaGhmlHh4bi07hNPD
-        KHG5aQbUF9YSd879AjqDA+gmTYn1u/Qhwo4SOye3s4KEJQT4JG68FQQJMwOZk7ZNZ4YI80p0
-        tAlBVKtJzDq+Dm7twQuXmCFsD4mnXY1g5UICsRLrrhVMYJSbhbBqASPjKkbx1NLi3PTUYsO8
-        1HK94sTc4tK8dL3k/NxNjMC0cPrf8U87GL9eSjrEKMDBqMTDe0BUPE6INbGsuDL3EKMEB7OS
-        CO/RG2JxQrwpiZVVqUX58UWlOanFhxilOViUxHmNF72MFRJITyxJzU5NLUgtgskycXBKNTBm
-        3SmwNk57U3dIJJnJw6/9QolUjVbQ8lk7xFoOlqYsD5SZ8EIyY17B/oKc17v5961OaVe+kBOv
-        o/RaWJX1xLflb7M/sTv+M9vzber61hVPSk7uWnm9IdDolCTTsgtl+ya5KU/Yuynv1ONZ958/
-        8HH48vLkbMaSYxMn+KjyqAjr3u4NkEjh2BGrxFKckWioxVxUnAgAhmxxOAcDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsVy+t/xe7pzfCTiDP7M4LTYOGM9q8X58xvY
-        LS7vmsNm8bn3CKPFjPP7mCzWHrkLFDu/jsni7ms/Bw6PJ3cus3nsuLuE0WPTqk42j74tqxg9
-        Pm+SC2CN0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL
-        0MuYOmc3a8Eq6Yoj26+yNDD+Fe9i5OSQEDCRuL7lIGsXIxeHkMBSRomDn9awQyRkJE5Oa2CF
-        sIUl/lzrYoMo+sQoMXfOOSaQBJuAoUTXW5AEJ4eIgKNE257/zCBFzAJTmSQOrzwF1i0s4Czx
-        uO04C4jNIqAq8XHFarBmXgFbiSPd+6C2yUus3nCAeQIjzwJGhlWMIqmlxbnpucVGesWJucWl
-        eel6yfm5mxiB4bjt2M8tOxi73gUfYhTgYFTi4c0QFo8TYk0sK67MPcQowcGsJMJ79IZYnBBv
-        SmJlVWpRfnxRaU5q8SFGU6DlE5mlRJPzgbGSVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2x
-        JDU7NbUgtQimj4mDU6qB0SYoovVQvbwT02M2mc5Fi3duu6eXtfrTjmsz2o3nKp2I+BRUOOXy
-        iekBooZ3dXQY1oox+BZ85912jouX25VDuPpyT3tqr+qhKQfzL/xZ63HmolRy189bNntf/I8u
-        MLrxy+FgWumuoMfpor9+y9/X+nkhctnRE9Os6ybdjvqU55Dgttv7++fpM5RYijMSDbWYi4oT
-        AQopWoVdAgAA
-X-CMS-MailID: 20200110100620eucas1p12fff62b485570e93b283e23c7a9e5b57
-X-Msg-Generator: CA
+        Fri, 10 Jan 2020 05:06:38 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00AA3GGC022000;
+        Fri, 10 Jan 2020 11:06:20 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
+ date : message-id : references : in-reply-to : content-type : content-id :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=X/IKNq/8pJeoSL1pB8WIriwvGpAf8+royPr4JdN4o5o=;
+ b=OskxaP71K4BlIRa4w8IX7yvBVUjgYvCXCPe6onm4asE5Z2uFKOyXq6A9UVk6RbpffuYO
+ SpEXuRkdYlY6uZ28Ng//3Z/U2GYITL8TmyjXzM1sd7H1OcGHAh3UWkwMMRsN1gVU9AIl
+ 6Ddhpa/wP/vVZUkSd49BN0Bcr72Abq7e4a7HdpBzf7eUGjQSTmcejs8BInztc+NwPn8t
+ EC6bcfBjOlHjDMSwg+w21utR4+Wu162jkNU/Q/g97m/m6n6R5IizQlylL2sr+tXK/BZ7
+ rwnwMTvh9rLq65E98OIroTteb34sflFTLgTO0RyVQcubEJCZ1MAdqdkqchw+WZb+Kn33 Ig== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xdw8b7jex-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 10 Jan 2020 11:06:20 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 42754100042;
+        Fri, 10 Jan 2020 11:06:14 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 348E72A6199;
+        Fri, 10 Jan 2020 11:06:14 +0100 (CET)
+Received: from SFHDAG6NODE2.st.com (10.75.127.17) by SFHDAG5NODE1.st.com
+ (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jan
+ 2020 11:06:13 +0100
+Received: from SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6]) by
+ SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6%20]) with mapi id
+ 15.00.1347.000; Fri, 10 Jan 2020 11:06:13 +0100
+From:   Olivier MOYSAN <olivier.moysan@st.com>
+To:     "jic23@kernel.org" <jic23@kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v2] iio: adc: stm32-dfsdm: adapt sampling rate to
+ oversampling ratio
+Thread-Topic: [PATCH v2] iio: adc: stm32-dfsdm: adapt sampling rate to
+ oversampling ratio
+Thread-Index: AQHVpSQGsx9/ld0UD0mL7CjGbR/bFqfj4CGA
+Date:   Fri, 10 Jan 2020 10:06:13 +0000
+Message-ID: <9b7e2161-1a31-8d69-52f9-ae9dedc902e3@st.com>
+References: <20191127131008.18896-1-olivier.moysan@st.com>
+In-Reply-To: <20191127131008.18896-1-olivier.moysan@st.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200110100620eucas1p12fff62b485570e93b283e23c7a9e5b57
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200110100620eucas1p12fff62b485570e93b283e23c7a9e5b57
-References: <CGME20200110100620eucas1p12fff62b485570e93b283e23c7a9e5b57@eucas1p1.samsung.com>
+Content-ID: <1C2AA4C736BB8E4387DC1A086E9FE594@st.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-10_01:2020-01-10,2020-01-09 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't disable IRQ wake feature without prior enabling it.
-
-This fixes following warning observed on Exynos3250-based Rinato board:
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1288 at kernel/irq/manage.c:724 irq_set_irq_wake+0xfc/0x134
-Unbalanced IRQ 83 wake disable
-Modules linked in:
-CPU: 0 PID: 1288 Comm: rtcwake Not tainted 5.5.0-rc5-next-20200110-00031-g6289fffbb3f5 #7266
-Hardware name: Samsung Exynos (Flattened Device Tree)
-[<c0112e48>] (unwind_backtrace) from [<c010e090>] (show_stack+0x10/0x14)
-[<c010e090>] (show_stack) from [<c0b25b28>] (dump_stack+0xa4/0xd0)
-[<c0b25b28>] (dump_stack) from [<c0128088>] (__warn+0xf4/0x10c)
-[<c0128088>] (__warn) from [<c0128114>] (warn_slowpath_fmt+0x74/0xb8)
-[<c0128114>] (warn_slowpath_fmt) from [<c019e9a0>] (irq_set_irq_wake+0xfc/0x134)
-[<c019e9a0>] (irq_set_irq_wake) from [<c0772708>] (max17040_suspend+0x50/0x58)
-[<c0772708>] (max17040_suspend) from [<c05f55ac>] (dpm_run_callback+0xb4/0x400)
-[<c05f55ac>] (dpm_run_callback) from [<c05f5e38>] (__device_suspend+0x140/0x814)
-[<c05f5e38>] (__device_suspend) from [<c05f9548>] (dpm_suspend+0x16c/0x564)
-[<c05f9548>] (dpm_suspend) from [<c05fa2e4>] (dpm_suspend_start+0x90/0x98)
-[<c05fa2e4>] (dpm_suspend_start) from [<c01977f4>] (suspend_devices_and_enter+0xec/0xc0c)
-[<c01977f4>] (suspend_devices_and_enter) from [<c019862c>] (pm_suspend+0x318/0x3e8)
-[<c019862c>] (pm_suspend) from [<c01963cc>] (state_store+0x68/0xc8)
-[<c01963cc>] (state_store) from [<c03531a4>] (kernfs_fop_write+0x10c/0x220)
-[<c03531a4>] (kernfs_fop_write) from [<c02b44c4>] (__vfs_write+0x2c/0x1c4)
-[<c02b44c4>] (__vfs_write) from [<c02b7288>] (vfs_write+0xa4/0x180)
-[<c02b7288>] (vfs_write) from [<c02b74d0>] (ksys_write+0x58/0xcc)
-[<c02b74d0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
-Exception stack(0xd6e83fa8 to 0xd6e83ff0)
-...
-irq event stamp: 18028
-hardirqs last  enabled at (18027): [<c014b99c>] cancel_delayed_work+0x84/0xf8
-hardirqs last disabled at (18028): [<c0b49b1c>] _raw_spin_lock_irqsave+0x1c/0x58
-softirqs last  enabled at (17876): [<c01026d8>] __do_softirq+0x4f0/0x5e4
-softirqs last disabled at (17869): [<c0130d34>] irq_exit+0x16c/0x170
----[ end trace 0728005730004e60 ]---
-
-Fixes: 2e17ed94de68 ("power: supply: max17040: Add IRQ handler for low SOC alert")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/power/supply/max17040_battery.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index c1188e94cf54..8a1f0ee493aa 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -351,12 +351,8 @@ static int max17040_suspend(struct device *dev)
- 
- 	cancel_delayed_work(&chip->work);
- 
--	if (client->irq) {
--		if (device_may_wakeup(dev))
--			enable_irq_wake(client->irq);
--		else
--			disable_irq_wake(client->irq);
--	}
-+	if (client->irq && device_may_wakeup(dev))
-+		enable_irq_wake(client->irq);
- 
- 	return 0;
- }
-@@ -369,12 +365,8 @@ static int max17040_resume(struct device *dev)
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
- 
--	if (client->irq) {
--		if (device_may_wakeup(dev))
--			disable_irq_wake(client->irq);
--		else
--			enable_irq_wake(client->irq);
--	}
-+	if (client->irq && device_may_wakeup(dev))
-+		disable_irq_wake(client->irq);
- 
- 	return 0;
- }
--- 
-2.17.1
-
+SGkgSm9uYXRoYW4sIGFsbCwNCg0KS2luZCByZW1pbmRlciBvbiB0aGlzIHBhdGNoLg0KUmVnYXJk
+cw0KT2xpdmllcg0KDQpPbiAxMS8yNy8xOSAyOjEwIFBNLCBPbGl2aWVyIE1veXNhbiB3cm90ZToN
+Cj4gVXBkYXRlIHNhbXBsaW5nIHJhdGUgd2hlbiBvdmVyc2FtcGxpbmcgcmF0aW8gaXMgY2hhbmdl
+ZA0KPiB0aHJvdWdoIHRoZSBJSU8gQUJJLg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBPbGl2aWVyIE1v
+eXNhbiA8b2xpdmllci5tb3lzYW5Ac3QuY29tPg0KPiAtLS0NCj4gY2hhbmdlcyBpbiB2ZXJzaW9u
+IDI6DQo+IC0gY29ycmVjdCB0aXRsZQ0KPiAtLS0NCj4gICBkcml2ZXJzL2lpby9hZGMvc3RtMzIt
+ZGZzZG0tYWRjLmMgfCAzMiArKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tDQo+ICAgMSBm
+aWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9paW8vYWRjL3N0bTMyLWRmc2RtLWFkYy5jIGIvZHJpdmVycy9paW8v
+YWRjL3N0bTMyLWRmc2RtLWFkYy5jDQo+IGluZGV4IDAzMzllY2RkMDZiZC4uODdhODQyNTA3NTA5
+IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lpby9hZGMvc3RtMzItZGZzZG0tYWRjLmMNCj4gKysr
+IGIvZHJpdmVycy9paW8vYWRjL3N0bTMyLWRmc2RtLWFkYy5jDQo+IEBAIC0xMjIxLDE0ICsxMjIx
+LDMyIEBAIHN0YXRpYyBpbnQgc3RtMzJfZGZzZG1fd3JpdGVfcmF3KHN0cnVjdCBpaW9fZGV2ICpp
+bmRpb19kZXYsDQo+ICAgCXVuc2lnbmVkIGludCBzcGlfZnJlcTsNCj4gICAJaW50IHJldCA9IC1F
+SU5WQUw7DQo+ICAgDQo+ICsJc3dpdGNoIChjaC0+c3JjKSB7DQo+ICsJY2FzZSBERlNETV9DSEFO
+TkVMX1NQSV9DTE9DS19JTlRFUk5BTDoNCj4gKwkJc3BpX2ZyZXEgPSBhZGMtPmRmc2RtLT5zcGlf
+bWFzdGVyX2ZyZXE7DQo+ICsJCWJyZWFrOw0KPiArCWNhc2UgREZTRE1fQ0hBTk5FTF9TUElfQ0xP
+Q0tfSU5URVJOQUxfRElWMl9GQUxMSU5HOg0KPiArCWNhc2UgREZTRE1fQ0hBTk5FTF9TUElfQ0xP
+Q0tfSU5URVJOQUxfRElWMl9SSVNJTkc6DQo+ICsJCXNwaV9mcmVxID0gYWRjLT5kZnNkbS0+c3Bp
+X21hc3Rlcl9mcmVxIC8gMjsNCj4gKwkJYnJlYWs7DQo+ICsJZGVmYXVsdDoNCj4gKwkJc3BpX2Zy
+ZXEgPSBhZGMtPnNwaV9mcmVxOw0KPiArCX0NCj4gKw0KPiAgIAlzd2l0Y2ggKG1hc2spIHsNCj4g
+ICAJY2FzZSBJSU9fQ0hBTl9JTkZPX09WRVJTQU1QTElOR19SQVRJTzoNCj4gICAJCXJldCA9IGlp
+b19kZXZpY2VfY2xhaW1fZGlyZWN0X21vZGUoaW5kaW9fZGV2KTsNCj4gICAJCWlmIChyZXQpDQo+
+ICAgCQkJcmV0dXJuIHJldDsNCj4gKw0KPiAgIAkJcmV0ID0gc3RtMzJfZGZzZG1fY29tcHV0ZV9h
+bGxfb3NycyhpbmRpb19kZXYsIHZhbCk7DQo+IC0JCWlmICghcmV0KQ0KPiArCQlpZiAoIXJldCkg
+ew0KPiArCQkJZGV2X2RiZygmaW5kaW9fZGV2LT5kZXYsDQo+ICsJCQkJIlNhbXBsaW5nIHJhdGUg
+Y2hhbmdlZCBmcm9tICgldSkgdG8gKCV1KVxuIiwNCj4gKwkJCQlhZGMtPnNhbXBsZV9mcmVxLCBz
+cGlfZnJlcSAvIHZhbCk7DQo+ICAgCQkJYWRjLT5vdmVyc2FtcCA9IHZhbDsNCj4gKwkJCWFkYy0+
+c2FtcGxlX2ZyZXEgPSBzcGlfZnJlcSAvIHZhbDsNCj4gKwkJfQ0KPiAgIAkJaWlvX2RldmljZV9y
+ZWxlYXNlX2RpcmVjdF9tb2RlKGluZGlvX2Rldik7DQo+ICAgCQlyZXR1cm4gcmV0Ow0KPiAgIA0K
+PiBAQCAtMTI0MCwxOCArMTI1OCw2IEBAIHN0YXRpYyBpbnQgc3RtMzJfZGZzZG1fd3JpdGVfcmF3
+KHN0cnVjdCBpaW9fZGV2ICppbmRpb19kZXYsDQo+ICAgCQlpZiAocmV0KQ0KPiAgIAkJCXJldHVy
+biByZXQ7DQo+ICAgDQo+IC0JCXN3aXRjaCAoY2gtPnNyYykgew0KPiAtCQljYXNlIERGU0RNX0NI
+QU5ORUxfU1BJX0NMT0NLX0lOVEVSTkFMOg0KPiAtCQkJc3BpX2ZyZXEgPSBhZGMtPmRmc2RtLT5z
+cGlfbWFzdGVyX2ZyZXE7DQo+IC0JCQlicmVhazsNCj4gLQkJY2FzZSBERlNETV9DSEFOTkVMX1NQ
+SV9DTE9DS19JTlRFUk5BTF9ESVYyX0ZBTExJTkc6DQo+IC0JCWNhc2UgREZTRE1fQ0hBTk5FTF9T
+UElfQ0xPQ0tfSU5URVJOQUxfRElWMl9SSVNJTkc6DQo+IC0JCQlzcGlfZnJlcSA9IGFkYy0+ZGZz
+ZG0tPnNwaV9tYXN0ZXJfZnJlcSAvIDI7DQo+IC0JCQlicmVhazsNCj4gLQkJZGVmYXVsdDoNCj4g
+LQkJCXNwaV9mcmVxID0gYWRjLT5zcGlfZnJlcTsNCj4gLQkJfQ0KPiAtDQo+ICAgCQlyZXQgPSBk
+ZnNkbV9hZGNfc2V0X3NhbXBfZnJlcShpbmRpb19kZXYsIHZhbCwgc3BpX2ZyZXEpOw0KPiAgIAkJ
+aWlvX2RldmljZV9yZWxlYXNlX2RpcmVjdF9tb2RlKGluZGlvX2Rldik7DQo+ICAgCQlyZXR1cm4g
+cmV0Ow0K
