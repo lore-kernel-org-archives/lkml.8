@@ -2,155 +2,518 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD46C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBA5C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B39E2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:04:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SbgeDq5p"
+	by mail.kernel.org (Postfix) with ESMTP id BA8CC206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727708AbgAJLEA (ORCPT
+        id S1727718AbgAJLEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:04:00 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47752 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727670AbgAJLEA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:04:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578654238;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ULOVTMVDqAaA1RLSX77fffpqFQaKmKj4WAvS8G6y3qE=;
-        b=SbgeDq5p1kxnNkz297l8HUKfFyHonh4szDRrabaJXbcFb5rmJtH28FbcqFXDm3bEK/z7wx
-        1iDmzSl1CDpbp9AKIO+S0iMD2FIXR694FMA5aflMfzsudQSSsjGn5zEyZImwUoF0JTcuXy
-        BuMDdM3VA9SSmqBY70thpCtYF0PslOU=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-bOjpQP33O0y0JAu7lB_wGA-1; Fri, 10 Jan 2020 06:03:57 -0500
-X-MC-Unique: bOjpQP33O0y0JAu7lB_wGA-1
-Received: by mail-wr1-f72.google.com with SMTP id f15so752133wrr.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 03:03:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=ULOVTMVDqAaA1RLSX77fffpqFQaKmKj4WAvS8G6y3qE=;
-        b=GVLZHykUAlmohB+EdM6cG+wXNjtaWtiWxumuUomSX3nZxw44M/doP1A1qbuDiVCME/
-         bYwAAjPorsncO9+h0+6pMAfOn2QUei5JJtHWX3fLLegtu90f0Lx4jbGwD/aN8s0lLsba
-         8QQgJ/FpqWTh2blBx6g/OKzL/JhlAseCxo3wIRLQe2GBaxbSabrDRVmfUH8ujbRG8oqZ
-         //qabIghFHUoiYny6mQPg9xXUUV8J4txhqioY2wraaOMQojXJYUXs37b8C5ijnO3iniK
-         oopBJAnIVdkwFPkHepIHCbtedOYABrQqxbogZ+56AXYS1wxLf+3BjGvxaJzm5d3Wenl7
-         HxUg==
-X-Gm-Message-State: APjAAAW7UyVZNLbe1wOANtbTx8BLrDnduJWVQJpEHw0CMtRBKvKeMkwL
-        t9RAGZrKHD4OG0HHaE7lF5Ty1d6q/60GjPjbXsL+N0vTrEVrbpV0xEf8zCUDVpWzrgYrgrjBruG
-        HEicR1pu5J67JrdiTB5f+5MBP
-X-Received: by 2002:a05:600c:20f:: with SMTP id 15mr3632341wmi.128.1578654236390;
-        Fri, 10 Jan 2020 03:03:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwxiKRM13Xd1Qan5MRjTjamzFk3V0rFLzaLiX22VRyLN1pQimrtTB1j7dEj52V7YMsGG8cFTA==
-X-Received: by 2002:a05:600c:20f:: with SMTP id 15mr3632307wmi.128.1578654236076;
-        Fri, 10 Jan 2020 03:03:56 -0800 (PST)
-Received: from orion ([213.175.37.12])
-        by smtp.gmail.com with ESMTPSA id v3sm1755346wru.32.2020.01.10.03.03.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 03:03:55 -0800 (PST)
-Date:   Fri, 10 Jan 2020 12:03:53 +0100
-From:   Carlos Maiolino <cmaiolino@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Fri, 10 Jan 2020 06:04:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:32982 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727571AbgAJLEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 06:04:07 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id EED66AB3D;
+        Fri, 10 Jan 2020 11:04:03 +0000 (UTC)
+Date:   Fri, 10 Jan 2020 12:04:03 +0100
+Message-ID: <s5hy2uflgik.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the vfs tree
-Message-ID: <20200110110353.klnooeqv4b6ipxid@orion>
-Mail-Followup-To: Carlos Maiolino <cmaiolino@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200110175729.3b5d2338@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110175729.3b5d2338@canb.auug.org.au>
+Subject: [GIT PULL] sound fixes for 5.5-rc6
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 05:57:29PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the vfs tree, today's linux-next build (x86_64 allnoconfig)
-> failed like this:
-> 
-> fs/inode.c:1615:5: error: redefinition of 'bmap'
->  1615 | int bmap(struct inode *inode, sector_t *block)
->       |     ^~~~
-> In file included from fs/inode.c:7:
-> include/linux/fs.h:2867:19: note: previous definition of 'bmap' was here
->  2867 | static inline int bmap(struct inode *inode,  sector_t *block)
->       |                   ^~~~
-> 
+Linus,
 
-Oh, no, that's not the same issue I thought, and the patch applied does have the
-dummy function.
+please pull sound fixes for v5.5-rc6 from:
 
-/me grabs more coffee...
+  git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git tags/sound-5.5-rc6
 
+The topmost commit is 8e85def5723eccea30ebf22645673692ab8cb3e2
 
-> ---
->  fs/inode.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 9f894b25af2b..590f36daa006 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -1598,6 +1598,7 @@ void iput(struct inode *inode)
->  }
->  EXPORT_SYMBOL(iput);
->  
-> +#ifdef CONFIG_BLOCK
->  /**
->   *	bmap	- find a block number in a file
->   *	@inode:  inode owning the block number being requested
-> @@ -1621,6 +1622,7 @@ int bmap(struct inode *inode, sector_t *block)
->  	return 0;
->  }
->  EXPORT_SYMBOL(bmap);
-> +#endif
+----------------------------------------------------------------
 
-Eitherway, I am not 100% sure this is the right fix for this case, I remember
-some bmap() users who didn't need CONFIG_BLOCK, so we may still need to export
-it without CONFIG_BLOCK.
-Can you please send me your configuration?
+sound fixes for 5.5-rc6
 
-Thanks.
+A few piled ASoC fixes and usual HD-audio and USB-audio fixups.
+Some of them are for ASoC core, but rather about error-handling.
 
+----------------------------------------------------------------
 
+Arnd Bergmann (1):
+      ASoC: Intel: boards: Fix compile-testing RT1011/RT5682
 
+Chuhong Yuan (1):
+      ASoC: fsl_audmix: add missed pm_runtime_disable
 
+Colin Ian King (1):
+      ASoC: SOF: imx8: fix memory allocation failure check on priv->pd_dev
 
->  
->  /*
->   * With relative atime, only update atime if the previous atime is
-> -- 
-> 2.24.0
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
+Daniel Baluta (2):
+      ASoC: soc-core: Set dpcm_playback / dpcm_capture
+      ASoC: SOF: imx8: Fix dsp_box offset
 
+Dragos Tarcatu (1):
+      ASoC: topology: Prevent use-after-free in snd_soc_get_pcm_runtime()
 
+Kai Vehmanen (2):
+      ASoC: SOF: fix fault at driver unload after failed probe
+      ALSA: hda: enable regmap internal locking
 
--- 
-Carlos
+Kailang Yang (3):
+      ALSA: hda/realtek - Add new codec supported for ALCS1200A
+      ALSA: hda/realtek - Set EAPD control to default for ALC222
+      ALSA: hda/realtek - Add quirk for the bass speaker on Lenovo Yoga X1 7th gen
 
+Olivier Moysan (3):
+      ASoC: stm32: spdifrx: fix inconsistent lock state
+      ASoC: stm32: spdifrx: fix race condition in irq handler
+      ASoC: stm32: spdifrx: fix input pin state management
+
+Pierre-Louis Bossart (1):
+      ASoC: SOF: Intel: hda: hda-dai: fix oops on hda_link .hw_free
+
+Takashi Iwai (2):
+      ASoC: core: Fix access to uninitialized list heads
+      ALSA: usb-audio: Apply the sample rate quirk for Bose Companion 5
+
+---
+ sound/hda/hdac_regmap.c                    |  1 -
+ sound/pci/hda/patch_realtek.c              |  5 ++++
+ sound/soc/fsl/fsl_audmix.c                 |  9 ++++++-
+ sound/soc/intel/boards/cml_rt1011_rt5682.c |  1 -
+ sound/soc/soc-core.c                       | 14 ++++++-----
+ sound/soc/soc-topology.c                   |  6 ++---
+ sound/soc/sof/imx/imx8.c                   |  5 +++-
+ sound/soc/sof/intel/hda-dai.c              | 11 ++++++--
+ sound/soc/sof/ipc.c                        |  3 +++
+ sound/soc/stm/stm32_spdifrx.c              | 40 +++++++++++++++++++-----------
+ sound/usb/quirks.c                         |  1 +
+ 11 files changed, 67 insertions(+), 29 deletions(-)
+
+diff --git a/sound/hda/hdac_regmap.c b/sound/hda/hdac_regmap.c
+index 906b1e20bae0..286361ecd640 100644
+--- a/sound/hda/hdac_regmap.c
++++ b/sound/hda/hdac_regmap.c
+@@ -363,7 +363,6 @@ static const struct regmap_config hda_regmap_cfg = {
+ 	.reg_write = hda_reg_write,
+ 	.use_single_read = true,
+ 	.use_single_write = true,
+-	.disable_locking = true,
+ };
+ 
+ /**
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 1cd4906a67e1..f2ea3528bfb1 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -412,6 +412,7 @@ static void alc_fill_eapd_coef(struct hda_codec *codec)
+ 	case 0x10ec0672:
+ 		alc_update_coef_idx(codec, 0xd, 0, 1<<14); /* EAPD Ctrl */
+ 		break;
++	case 0x10ec0222:
+ 	case 0x10ec0623:
+ 		alc_update_coef_idx(codec, 0x19, 1<<13, 0);
+ 		break;
+@@ -430,6 +431,7 @@ static void alc_fill_eapd_coef(struct hda_codec *codec)
+ 		break;
+ 	case 0x10ec0899:
+ 	case 0x10ec0900:
++	case 0x10ec0b00:
+ 	case 0x10ec1168:
+ 	case 0x10ec1220:
+ 		alc_update_coef_idx(codec, 0x7, 1<<1, 0);
+@@ -2526,6 +2528,7 @@ static int patch_alc882(struct hda_codec *codec)
+ 	case 0x10ec0882:
+ 	case 0x10ec0885:
+ 	case 0x10ec0900:
++	case 0x10ec0b00:
+ 	case 0x10ec1220:
+ 		break;
+ 	default:
+@@ -7257,6 +7260,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x17aa, 0x224c, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x224d, "Thinkpad", ALC298_FIXUP_TPT470_DOCK),
+ 	SND_PCI_QUIRK(0x17aa, 0x225d, "Thinkpad T480", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
++	SND_PCI_QUIRK(0x17aa, 0x2292, "Thinkpad X1 Yoga 7th", ALC285_FIXUP_SPEAKER2_TO_DAC1),
+ 	SND_PCI_QUIRK(0x17aa, 0x2293, "Thinkpad X1 Carbon 7th", ALC285_FIXUP_SPEAKER2_TO_DAC1),
+ 	SND_PCI_QUIRK(0x17aa, 0x30bb, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+ 	SND_PCI_QUIRK(0x17aa, 0x30e2, "ThinkCentre AIO", ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY),
+@@ -9255,6 +9259,7 @@ static const struct hda_device_id snd_hda_id_realtek[] = {
+ 	HDA_CODEC_ENTRY(0x10ec0892, "ALC892", patch_alc662),
+ 	HDA_CODEC_ENTRY(0x10ec0899, "ALC898", patch_alc882),
+ 	HDA_CODEC_ENTRY(0x10ec0900, "ALC1150", patch_alc882),
++	HDA_CODEC_ENTRY(0x10ec0b00, "ALCS1200A", patch_alc882),
+ 	HDA_CODEC_ENTRY(0x10ec1168, "ALC1220", patch_alc882),
+ 	HDA_CODEC_ENTRY(0x10ec1220, "ALC1220", patch_alc882),
+ 	{} /* terminator */
+diff --git a/sound/soc/fsl/fsl_audmix.c b/sound/soc/fsl/fsl_audmix.c
+index a1db1bce330f..5faecbeb5497 100644
+--- a/sound/soc/fsl/fsl_audmix.c
++++ b/sound/soc/fsl/fsl_audmix.c
+@@ -505,15 +505,20 @@ static int fsl_audmix_probe(struct platform_device *pdev)
+ 					      ARRAY_SIZE(fsl_audmix_dai));
+ 	if (ret) {
+ 		dev_err(dev, "failed to register ASoC DAI\n");
+-		return ret;
++		goto err_disable_pm;
+ 	}
+ 
+ 	priv->pdev = platform_device_register_data(dev, mdrv, 0, NULL, 0);
+ 	if (IS_ERR(priv->pdev)) {
+ 		ret = PTR_ERR(priv->pdev);
+ 		dev_err(dev, "failed to register platform %s: %d\n", mdrv, ret);
++		goto err_disable_pm;
+ 	}
+ 
++	return 0;
++
++err_disable_pm:
++	pm_runtime_disable(dev);
+ 	return ret;
+ }
+ 
+@@ -521,6 +526,8 @@ static int fsl_audmix_remove(struct platform_device *pdev)
+ {
+ 	struct fsl_audmix *priv = dev_get_drvdata(&pdev->dev);
+ 
++	pm_runtime_disable(&pdev->dev);
++
+ 	if (priv->pdev)
+ 		platform_device_unregister(priv->pdev);
+ 
+diff --git a/sound/soc/intel/boards/cml_rt1011_rt5682.c b/sound/soc/intel/boards/cml_rt1011_rt5682.c
+index a22f97234201..5f1bf6d3800c 100644
+--- a/sound/soc/intel/boards/cml_rt1011_rt5682.c
++++ b/sound/soc/intel/boards/cml_rt1011_rt5682.c
+@@ -11,7 +11,6 @@
+ #include <linux/clk.h>
+ #include <linux/dmi.h>
+ #include <linux/slab.h>
+-#include <asm/cpu_device_id.h>
+ #include <linux/acpi.h>
+ #include <sound/core.h>
+ #include <sound/jack.h>
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 1c84ff1a5bf9..8ef0efeed0a7 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -479,6 +479,12 @@ static struct snd_soc_pcm_runtime *soc_new_pcm_runtime(
+ 		goto free_rtd;
+ 
+ 	rtd->dev = dev;
++	INIT_LIST_HEAD(&rtd->list);
++	INIT_LIST_HEAD(&rtd->component_list);
++	INIT_LIST_HEAD(&rtd->dpcm[SNDRV_PCM_STREAM_PLAYBACK].be_clients);
++	INIT_LIST_HEAD(&rtd->dpcm[SNDRV_PCM_STREAM_CAPTURE].be_clients);
++	INIT_LIST_HEAD(&rtd->dpcm[SNDRV_PCM_STREAM_PLAYBACK].fe_clients);
++	INIT_LIST_HEAD(&rtd->dpcm[SNDRV_PCM_STREAM_CAPTURE].fe_clients);
+ 	dev_set_drvdata(dev, rtd);
+ 	INIT_DELAYED_WORK(&rtd->delayed_work, close_delayed_work);
+ 
+@@ -494,12 +500,6 @@ static struct snd_soc_pcm_runtime *soc_new_pcm_runtime(
+ 	/*
+ 	 * rtd remaining settings
+ 	 */
+-	INIT_LIST_HEAD(&rtd->component_list);
+-	INIT_LIST_HEAD(&rtd->dpcm[SNDRV_PCM_STREAM_PLAYBACK].be_clients);
+-	INIT_LIST_HEAD(&rtd->dpcm[SNDRV_PCM_STREAM_CAPTURE].be_clients);
+-	INIT_LIST_HEAD(&rtd->dpcm[SNDRV_PCM_STREAM_PLAYBACK].fe_clients);
+-	INIT_LIST_HEAD(&rtd->dpcm[SNDRV_PCM_STREAM_CAPTURE].fe_clients);
+-
+ 	rtd->card = card;
+ 	rtd->dai_link = dai_link;
+ 	if (!rtd->dai_link->ops)
+@@ -1871,6 +1871,8 @@ static void soc_check_tplg_fes(struct snd_soc_card *card)
+ 
+ 			/* convert non BE into BE */
+ 			dai_link->no_pcm = 1;
++			dai_link->dpcm_playback = 1;
++			dai_link->dpcm_capture = 1;
+ 
+ 			/* override any BE fixups */
+ 			dai_link->be_hw_params_fixup =
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index b28613149b0c..92e4f4d08bfa 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -548,12 +548,12 @@ static void remove_link(struct snd_soc_component *comp,
+ 	if (dobj->ops && dobj->ops->link_unload)
+ 		dobj->ops->link_unload(comp, dobj);
+ 
++	list_del(&dobj->list);
++	snd_soc_remove_dai_link(comp->card, link);
++
+ 	kfree(link->name);
+ 	kfree(link->stream_name);
+ 	kfree(link->cpus->dai_name);
+-
+-	list_del(&dobj->list);
+-	snd_soc_remove_dai_link(comp->card, link);
+ 	kfree(link);
+ }
+ 
+diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
+index cfefcfd92798..aef6ca167b9c 100644
+--- a/sound/soc/sof/imx/imx8.c
++++ b/sound/soc/sof/imx/imx8.c
+@@ -209,7 +209,7 @@ static int imx8_probe(struct snd_sof_dev *sdev)
+ 
+ 	priv->pd_dev = devm_kmalloc_array(&pdev->dev, priv->num_domains,
+ 					  sizeof(*priv->pd_dev), GFP_KERNEL);
+-	if (!priv)
++	if (!priv->pd_dev)
+ 		return -ENOMEM;
+ 
+ 	priv->link = devm_kmalloc_array(&pdev->dev, priv->num_domains,
+@@ -304,6 +304,9 @@ static int imx8_probe(struct snd_sof_dev *sdev)
+ 	}
+ 	sdev->mailbox_bar = SOF_FW_BLK_TYPE_SRAM;
+ 
++	/* set default mailbox offset for FW ready message */
++	sdev->dsp_box.offset = MBOX_OFFSET;
++
+ 	return 0;
+ 
+ exit_pdev_unregister:
+diff --git a/sound/soc/sof/intel/hda-dai.c b/sound/soc/sof/intel/hda-dai.c
+index 8796f385be76..896d21984b73 100644
+--- a/sound/soc/sof/intel/hda-dai.c
++++ b/sound/soc/sof/intel/hda-dai.c
+@@ -216,6 +216,8 @@ static int hda_link_hw_params(struct snd_pcm_substream *substream,
+ 		link_dev = hda_link_stream_assign(bus, substream);
+ 		if (!link_dev)
+ 			return -EBUSY;
++
++		snd_soc_dai_set_dma_data(dai, substream, (void *)link_dev);
+ 	}
+ 
+ 	stream_tag = hdac_stream(link_dev)->stream_tag;
+@@ -228,8 +230,6 @@ static int hda_link_hw_params(struct snd_pcm_substream *substream,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	snd_soc_dai_set_dma_data(dai, substream, (void *)link_dev);
+-
+ 	link = snd_hdac_ext_bus_get_link(bus, codec_dai->component->name);
+ 	if (!link)
+ 		return -EINVAL;
+@@ -361,6 +361,13 @@ static int hda_link_hw_free(struct snd_pcm_substream *substream,
+ 	bus = hstream->bus;
+ 	rtd = snd_pcm_substream_chip(substream);
+ 	link_dev = snd_soc_dai_get_dma_data(dai, substream);
++
++	if (!link_dev) {
++		dev_dbg(dai->dev,
++			"%s: link_dev is not assigned\n", __func__);
++		return -EINVAL;
++	}
++
+ 	hda_stream = hstream_to_sof_hda_stream(link_dev);
+ 
+ 	/* free the link DMA channel in the FW */
+diff --git a/sound/soc/sof/ipc.c b/sound/soc/sof/ipc.c
+index 5994e1073364..5fdfbaa8c4ed 100644
+--- a/sound/soc/sof/ipc.c
++++ b/sound/soc/sof/ipc.c
+@@ -826,6 +826,9 @@ void snd_sof_ipc_free(struct snd_sof_dev *sdev)
+ {
+ 	struct snd_sof_ipc *ipc = sdev->ipc;
+ 
++	if (!ipc)
++		return;
++
+ 	/* disable sending of ipc's */
+ 	mutex_lock(&ipc->tx_mutex);
+ 	ipc->disable_ipc_tx = true;
+diff --git a/sound/soc/stm/stm32_spdifrx.c b/sound/soc/stm/stm32_spdifrx.c
+index 3fd28ee01675..3769d9ce5dbe 100644
+--- a/sound/soc/stm/stm32_spdifrx.c
++++ b/sound/soc/stm/stm32_spdifrx.c
+@@ -12,7 +12,6 @@
+ #include <linux/delay.h>
+ #include <linux/module.h>
+ #include <linux/of_platform.h>
+-#include <linux/pinctrl/consumer.h>
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
+ 
+@@ -220,6 +219,7 @@
+  * @slave_config: dma slave channel runtime config pointer
+  * @phys_addr: SPDIFRX registers physical base address
+  * @lock: synchronization enabling lock
++ * @irq_lock: prevent race condition with IRQ on stream state
+  * @cs: channel status buffer
+  * @ub: user data buffer
+  * @irq: SPDIFRX interrupt line
+@@ -240,6 +240,7 @@ struct stm32_spdifrx_data {
+ 	struct dma_slave_config slave_config;
+ 	dma_addr_t phys_addr;
+ 	spinlock_t lock;  /* Sync enabling lock */
++	spinlock_t irq_lock; /* Prevent race condition on stream state */
+ 	unsigned char cs[SPDIFRX_CS_BYTES_NB];
+ 	unsigned char ub[SPDIFRX_UB_BYTES_NB];
+ 	int irq;
+@@ -320,6 +321,7 @@ static void stm32_spdifrx_dma_ctrl_stop(struct stm32_spdifrx_data *spdifrx)
+ static int stm32_spdifrx_start_sync(struct stm32_spdifrx_data *spdifrx)
+ {
+ 	int cr, cr_mask, imr, ret;
++	unsigned long flags;
+ 
+ 	/* Enable IRQs */
+ 	imr = SPDIFRX_IMR_IFEIE | SPDIFRX_IMR_SYNCDIE | SPDIFRX_IMR_PERRIE;
+@@ -327,7 +329,7 @@ static int stm32_spdifrx_start_sync(struct stm32_spdifrx_data *spdifrx)
+ 	if (ret)
+ 		return ret;
+ 
+-	spin_lock(&spdifrx->lock);
++	spin_lock_irqsave(&spdifrx->lock, flags);
+ 
+ 	spdifrx->refcount++;
+ 
+@@ -362,7 +364,7 @@ static int stm32_spdifrx_start_sync(struct stm32_spdifrx_data *spdifrx)
+ 				"Failed to start synchronization\n");
+ 	}
+ 
+-	spin_unlock(&spdifrx->lock);
++	spin_unlock_irqrestore(&spdifrx->lock, flags);
+ 
+ 	return ret;
+ }
+@@ -370,11 +372,12 @@ static int stm32_spdifrx_start_sync(struct stm32_spdifrx_data *spdifrx)
+ static void stm32_spdifrx_stop(struct stm32_spdifrx_data *spdifrx)
+ {
+ 	int cr, cr_mask, reg;
++	unsigned long flags;
+ 
+-	spin_lock(&spdifrx->lock);
++	spin_lock_irqsave(&spdifrx->lock, flags);
+ 
+ 	if (--spdifrx->refcount) {
+-		spin_unlock(&spdifrx->lock);
++		spin_unlock_irqrestore(&spdifrx->lock, flags);
+ 		return;
+ 	}
+ 
+@@ -393,7 +396,7 @@ static void stm32_spdifrx_stop(struct stm32_spdifrx_data *spdifrx)
+ 	regmap_read(spdifrx->regmap, STM32_SPDIFRX_DR, &reg);
+ 	regmap_read(spdifrx->regmap, STM32_SPDIFRX_CSR, &reg);
+ 
+-	spin_unlock(&spdifrx->lock);
++	spin_unlock_irqrestore(&spdifrx->lock, flags);
+ }
+ 
+ static int stm32_spdifrx_dma_ctrl_register(struct device *dev,
+@@ -480,8 +483,6 @@ static int stm32_spdifrx_get_ctrl_data(struct stm32_spdifrx_data *spdifrx)
+ 	memset(spdifrx->cs, 0, SPDIFRX_CS_BYTES_NB);
+ 	memset(spdifrx->ub, 0, SPDIFRX_UB_BYTES_NB);
+ 
+-	pinctrl_pm_select_default_state(&spdifrx->pdev->dev);
+-
+ 	ret = stm32_spdifrx_dma_ctrl_start(spdifrx);
+ 	if (ret < 0)
+ 		return ret;
+@@ -513,7 +514,6 @@ static int stm32_spdifrx_get_ctrl_data(struct stm32_spdifrx_data *spdifrx)
+ 
+ end:
+ 	clk_disable_unprepare(spdifrx->kclk);
+-	pinctrl_pm_select_sleep_state(&spdifrx->pdev->dev);
+ 
+ 	return ret;
+ }
+@@ -665,7 +665,6 @@ static const struct regmap_config stm32_h7_spdifrx_regmap_conf = {
+ static irqreturn_t stm32_spdifrx_isr(int irq, void *devid)
+ {
+ 	struct stm32_spdifrx_data *spdifrx = (struct stm32_spdifrx_data *)devid;
+-	struct snd_pcm_substream *substream = spdifrx->substream;
+ 	struct platform_device *pdev = spdifrx->pdev;
+ 	unsigned int cr, mask, sr, imr;
+ 	unsigned int flags, sync_state;
+@@ -745,14 +744,19 @@ static irqreturn_t stm32_spdifrx_isr(int irq, void *devid)
+ 			return IRQ_HANDLED;
+ 		}
+ 
+-		if (substream)
+-			snd_pcm_stop(substream, SNDRV_PCM_STATE_DISCONNECTED);
++		spin_lock(&spdifrx->irq_lock);
++		if (spdifrx->substream)
++			snd_pcm_stop(spdifrx->substream,
++				     SNDRV_PCM_STATE_DISCONNECTED);
++		spin_unlock(&spdifrx->irq_lock);
+ 
+ 		return IRQ_HANDLED;
+ 	}
+ 
+-	if (err_xrun && substream)
+-		snd_pcm_stop_xrun(substream);
++	spin_lock(&spdifrx->irq_lock);
++	if (err_xrun && spdifrx->substream)
++		snd_pcm_stop_xrun(spdifrx->substream);
++	spin_unlock(&spdifrx->irq_lock);
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -761,9 +765,12 @@ static int stm32_spdifrx_startup(struct snd_pcm_substream *substream,
+ 				 struct snd_soc_dai *cpu_dai)
+ {
+ 	struct stm32_spdifrx_data *spdifrx = snd_soc_dai_get_drvdata(cpu_dai);
++	unsigned long flags;
+ 	int ret;
+ 
++	spin_lock_irqsave(&spdifrx->irq_lock, flags);
+ 	spdifrx->substream = substream;
++	spin_unlock_irqrestore(&spdifrx->irq_lock, flags);
+ 
+ 	ret = clk_prepare_enable(spdifrx->kclk);
+ 	if (ret)
+@@ -839,8 +846,12 @@ static void stm32_spdifrx_shutdown(struct snd_pcm_substream *substream,
+ 				   struct snd_soc_dai *cpu_dai)
+ {
+ 	struct stm32_spdifrx_data *spdifrx = snd_soc_dai_get_drvdata(cpu_dai);
++	unsigned long flags;
+ 
++	spin_lock_irqsave(&spdifrx->irq_lock, flags);
+ 	spdifrx->substream = NULL;
++	spin_unlock_irqrestore(&spdifrx->irq_lock, flags);
++
+ 	clk_disable_unprepare(spdifrx->kclk);
+ }
+ 
+@@ -944,6 +955,7 @@ static int stm32_spdifrx_probe(struct platform_device *pdev)
+ 	spdifrx->pdev = pdev;
+ 	init_completion(&spdifrx->cs_completion);
+ 	spin_lock_init(&spdifrx->lock);
++	spin_lock_init(&spdifrx->irq_lock);
+ 
+ 	platform_set_drvdata(pdev, spdifrx);
+ 
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index a81c2066499f..82184036437b 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1397,6 +1397,7 @@ bool snd_usb_get_sample_rate_quirk(struct snd_usb_audio *chip)
+ 	case USB_ID(0x04D8, 0xFEEA): /* Benchmark DAC1 Pre */
+ 	case USB_ID(0x0556, 0x0014): /* Phoenix Audio TMX320VC */
+ 	case USB_ID(0x05A3, 0x9420): /* ELP HD USB Camera */
++	case USB_ID(0x05a7, 0x1020): /* Bose Companion 5 */
+ 	case USB_ID(0x074D, 0x3553): /* Outlaw RR2150 (Micronas UAC3553B) */
+ 	case USB_ID(0x1395, 0x740a): /* Sennheiser DECT */
+ 	case USB_ID(0x1901, 0x0191): /* GE B850V3 CP2114 audio interface */
