@@ -2,109 +2,161 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 781C1C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3886C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F0020721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7551C2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:04:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="WOejmtiV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mj5DUC60"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728375AbgAJPEX (ORCPT
+        id S1728423AbgAJPE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:04:23 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:42988 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728141AbgAJPEX (ORCPT
+        Fri, 10 Jan 2020 10:04:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46035 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728167AbgAJPEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jan 2020 10:04:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=jjERH6EF+vGNb/gBcK7mgafQz0TotdzBsMTiLW052cc=; b=WOejmtiVTJSE0HzYiMZKn6F2A
-        1Z2BcNreFtSqsXMn81s223CZY9avMYgTg1pzfei97VbNSU6Ucy/xbO4mDphST6jbBaPotiYgVuLV4
-        18wBxI13+L3AjbbWCh5nBT9RAZh+TPma7SuQ62t6UKvJIiIB/DiL1OL9wsN803fzhX1hfdyRdvCU6
-        92T6KM52/xaJ68LHluVjgTnR+xD+CxLBoRnZjERIneUbQdy4AsTvTw/OXn+TcbqcIv8mo3H6LqWiX
-        G2rJzKdBXUlTUnqyEX2kJ7u58iBN9caOPi+dXrMJ7N8EfwTHJOajc7vX0zeSpGbOVLt33D00TltnL
-        Mrz1zHgYg==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:53132)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ipvpb-0003kp-Iz; Fri, 10 Jan 2020 15:04:11 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ipvpZ-0001ap-9c; Fri, 10 Jan 2020 15:04:09 +0000
-Date:   Fri, 10 Jan 2020 15:04:09 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Andre Przywara <andre.przywara@arm.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/14] net: axienet: Fix SGMII support
-Message-ID: <20200110150409.GD25745@shell.armlinux.org.uk>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
- <20200110115415.75683-8-andre.przywara@arm.com>
- <20200110140415.GE19739@lunn.ch>
- <20200110142038.2ed094ba@donnerap.cambridge.arm.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578668662;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zpRs+t3MnBquJOXxU7DLw4h9hLZJR04RmfH2UeDCZ2w=;
+        b=Mj5DUC60G6wm7gMuAzjujeUPCS6yyssSlFzqlYPQ833QkECPIjhyi1LoM748DNTD5HQvrH
+        h8xKFb6d+u/+Y0z/XQTNUxoC7GwhcI0JXJt/KVqbGz7EPZRgW6/nXcuic6ITlKNVcx/gb8
+        lMBr5yZuxxb9DJrqnzNpQm5FsYrCsqs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-375-fmVMeFvvMLOECcXhOOR0wA-1; Fri, 10 Jan 2020 10:04:19 -0500
+X-MC-Unique: fmVMeFvvMLOECcXhOOR0wA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D8CC4107ACC5;
+        Fri, 10 Jan 2020 15:04:16 +0000 (UTC)
+Received: from krava (ovpn-205-164.brq.redhat.com [10.40.205.164])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9F628088C;
+        Fri, 10 Jan 2020 15:04:12 +0000 (UTC)
+Date:   Fri, 10 Jan 2020 16:04:10 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH v4 1/2] perf parse: Refactor struct perf_evsel_config_term
+Message-ID: <20200110150410.GG82989@krava>
+References: <20200108142010.11269-1-leo.yan@linaro.org>
+ <CANLsYkzv2Di-qeU1Q3M4Ro21hQ09eE26FBjeP1A9uSsA_W2Uww@mail.gmail.com>
+ <20200109050753.GA24741@leoy-ThinkPad-X240s>
+ <20200109163424.GA5721@xps15>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200110142038.2ed094ba@donnerap.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200109163424.GA5721@xps15>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 02:20:38PM +0000, Andre Przywara wrote:
-> On Fri, 10 Jan 2020 15:04:15 +0100
-> Andrew Lunn <andrew@lunn.ch> wrote:
+On Thu, Jan 09, 2020 at 09:34:24AM -0700, Mathieu Poirier wrote:
+
+SNIP
+
 > 
-> Hi Andrew,
+> If we are to deal with all flields of the union, I think it should be as below:
 > 
-> > On Fri, Jan 10, 2020 at 11:54:08AM +0000, Andre Przywara wrote:
-> > > With SGMII, the MAC and the PHY can negotiate the link speed between
-> > > themselves, without the host needing to mediate between them.
-> > > Linux recognises this, and will call phylink's mac_config with the speed
-> > > member set to SPEED_UNKNOWN (-1).
-> > > Currently the axienet driver will bail out and complain about an
-> > > unsupported link speed.
-> > > 
-> > > Teach axienet's mac_config callback to leave the MAC's speed setting
-> > > alone if the requested speed is SPEED_UNKNOWN.  
+>         union {
+>                 bool            cfg_bool;
+>                 int             cfg_int;
+>                 unsigned long   cfg_ulong;
+>                 u32             cfg_u32;
+>                 char            *cfg_str;
+>         } val;
+> 
+> But just dealing with the "char *" as below would also be fine with me:
+> 
+>         union {
+>                 u64           period;
+>                 u64           freq;
+>                 bool          time;
+>                 u64           stack_user;
+>                 int           max_stack;
+>                 bool          inherit;
+>                 bool          overwrite;
+>                 unsigned long max_events;
+>                 bool          percore;
+>                 bool          aux_output;
+>                 u32           aux_sample_size;
+>                 u64           cfg_chg;
+>                 u64           num;
+>                 char          *str;
+>         } val;
+> 
 > > 
-> > Hi Andre
+> > struct perf_evsel_config_term {
+> >         struct list_head      list;
+> >         enum evsel_term_type  type;
+> >         union {
+> >                 u64           period;
+> >                 u64           freq;
+> >                 bool          time;
+> >                 char          *callgraph;
+> >                 char          *drv_cfg;
+> >                 u64           stack_user;
+> >                 int           max_stack;
+> >                 bool          inherit;
+> >                 bool          overwrite;
+> >                 char          *branch;
+> >                 unsigned long max_events;
+> >                 bool          percore;
+> >                 bool          aux_output;
+> >                 u32           aux_sample_size;
+> >                 u64           cfg_chg;
+> > +               u64           num;
+> > +               char          *str;
+> >         } val;
+> >         bool weak;
+> > };
 > > 
-> > Is there an interrupt when SGMII signals a change in link state? If
-> > so, you should call phylink_mac_change().
+> > > I will let Jiri make the
+> > > final call but if we are to proceed this way I think we should have a
+> > > member per type to avoid casting issues.
+> > 
+> > Yeah, let's see what's Jiri thinking.
+> > 
+> > Just note, with this change, I don't see any casting warning or errors
+> > when built perf on arm64/arm32.
 > 
-> Good point. The doc describes a "Auto-Negotiation Complete" interrupt
-> status bit, which signal that " ... auto-negotiation of the SGMII or
-> 1000BASE-X interface has completed."
+> At this time you may not, but they will happen and it will be very hard to
+> debug.
 
-It depends what they mean by "Auto-negotiation complete" in SGMII.
-SGMII can complete the handshake, yet the config_reg word indicate
-link down.  If such an update causes an "Auto-negotiation complete"
-interrupt, then that's sufficient.
+hi,
+sry for late reply..
 
-However, looking at axienet_mac_pcs_get_state(), that is just reading
-back what the MAC was set to in axienet_mac_config(), which is not
-how this is supposed to work.  axienet_mac_pcs_get_state() is
-supposed to get the results of the SGMII/1000BASE-X "negotiation".
-That also needs to be fixed.
+I think ;-) we should either add all different types to the union
+or just add 'str' pointer to handle strings correctly.. which seems
+better, because it's less changes and there's no real issue that
+would need that other bigger change
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+jirka
+
