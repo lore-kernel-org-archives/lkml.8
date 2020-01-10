@@ -2,97 +2,103 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A3FC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3281C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0DE20842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:53:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mtrq2OkC"
+	by mail.kernel.org (Postfix) with ESMTP id 97E0C2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:53:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578689593;
+	bh=7SiAOhovaD5TlXfvzjNrOwbLeS4dCmjMTTO2TlmR0UY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Wmjg4vKKEfCnKIJIqxHuJhRC1QRTKI0IqIuMbIJS7+ZCmC0AnyVVY0ljcRlgvILzB
+	 kYt4AW/abZT+Xmx7LiYGW7VJLWc7JCKa4Qml8Ac9MKnW2OqV7q60M0SzuF4AlT9hzZ
+	 oeYAJpYdxx+EjXxEVOjzkqioKfmB/cuIrqmO35DU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgAJUw7 (ORCPT
+        id S1726962AbgAJUxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 15:52:59 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33417 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726774AbgAJUw6 (ORCPT
+        Fri, 10 Jan 2020 15:53:12 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51587 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726841AbgAJUxL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 15:52:58 -0500
-Received: by mail-pf1-f195.google.com with SMTP id z16so1701868pfk.0;
-        Fri, 10 Jan 2020 12:52:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EvcCFZkysQidKiJvm9PwvRevHJn0ApmIpMkmiKizlUY=;
-        b=Mtrq2OkCsKTaspK+alSIkuQfbXjNcMm1TZ2Qr7u1s/AjyHWAer1J81ZquiA6lgk7tD
-         KCBXVwetULrQwOCqNpmQ+XEjh9OqLZqGWD+vSgobDcwvJWPNjbTf1J0ZkWpRrh45ViSA
-         1Gjadie9ofniPiqhApHw9HIETBCbgPkJ50+m8PGaMdx26HraErOu4LHYhTyiGLd/pj2D
-         rUTJUOYvUCOt1s6xTgYHQhSI00FSoXKAjkIbRPErukdzedqCngJCJC0hnHImCDWF1ftq
-         caL6DG6jL4MQysw78Id20Pv7DmmqknEroPEJ1EkJRaEE0XlcD7UB2FccAa1fkCrMfAXw
-         Disw==
+        Fri, 10 Jan 2020 15:53:11 -0500
+Received: by mail-pj1-f65.google.com with SMTP id d15so78237pjw.1;
+        Fri, 10 Jan 2020 12:53:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EvcCFZkysQidKiJvm9PwvRevHJn0ApmIpMkmiKizlUY=;
-        b=UNOsSlvjx+TSzVd980o6ZEe+NBQUTIcoFYS7gt4RWRifaG7SakTcLDU9BDNxfJP1wN
-         YgycRdXtBrlTTBQmMxwCOEoSreDMFYZMZm6AYvoObyrrSknLkOGHlw8zCeaiV6CmMa43
-         XIDzYopAyG6MYPade384JnRBRfZVqq0BeoZDvwaQQHk3LT9wffLofOg51MLk8qHIZQAG
-         XAOnNosbdeiZNUXIjhJV758CLoaRkhZGAe1rcI9XuInv6jYVkKRdq9xv8jwNtHujei48
-         5X7muwmSWR3l2q2+1YEQHp0KaSNQ+Sv/ThcPyf0G8AxN1Ey5oLtFrTdJoet8b9/jCpR+
-         QjiA==
-X-Gm-Message-State: APjAAAVdcYqAWXxGvjOrg0J52pQSEjqyAUnd/dpWC8f0nIh+kk8ZKLfB
-        h23Q+yqiCJ1buxJqC40GN1WFBY7a1rRBnB3UyZY=
-X-Google-Smtp-Source: APXvYqw6Xu9loDn0pgNinRErW4FVDRVgmk/roF5+2Q6H9QnhbbczXJh7CQxD0aoDSiws8vGwt/HxpcK2qu+sZSc/O8o=
-X-Received: by 2002:aa7:9474:: with SMTP id t20mr6083380pfq.241.1578689577857;
- Fri, 10 Jan 2020 12:52:57 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LUH5GtfLSwD9hjB8rTrKF9ZhPwi3kWslMdByd0hgO/c=;
+        b=RAFT9bUGe/jmzsqNgqcsJWATa8o6duSX/ipETONxJHOe44NfuFN3b5ZKb+zLc/D/vz
+         VgTsaA+616qD3pRs1RJyXMbuKGp8gEZ3D1GPxDCBW+KW/o4L76ggodj1zpZz3xSCoaHz
+         jgYw6wSaR8jcp1VF7RdleEyo8EoP8rv2AHYPYGRzCcr0vN4UjijyDEm4m3LB3sqoeeYs
+         YiQOSWubHxlzZX6s3YXNe39FrqMIvw5mSqmtrzW67ZCPIPT0dRnpeq+Pon5m7L4OTJLZ
+         gI8BZsvFj41hFWxpD2zwmiKCurOqZf44dF0K90HHALHubOga35ETievrPrwl/vTO6A+K
+         YdJg==
+X-Gm-Message-State: APjAAAUTIPecL9sg46zSzelI8JhBYfnKnLlIV5FBGHH9fq6Vhqm8ZG8Z
+        oAMbj2eABpz6BF6guNr7w3Q=
+X-Google-Smtp-Source: APXvYqxvUdDAFKBiG1LrEXVkw2L2jENZuvWk3o25dgUNS9tFZF2dVQ9KT+MIQkOVBGaU/px9Yd8LaQ==
+X-Received: by 2002:a17:90a:c385:: with SMTP id h5mr7108179pjt.122.1578689590807;
+        Fri, 10 Jan 2020 12:53:10 -0800 (PST)
+Received: from localhost ([2601:647:5b00:710:ffa7:88dc:9c39:76d9])
+        by smtp.gmail.com with ESMTPSA id h7sm4395387pfq.36.2020.01.10.12.53.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 12:53:09 -0800 (PST)
+Date:   Fri, 10 Jan 2020 12:53:07 -0800
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Nava kishore Manne <nava.manne@xilinx.com>
+Cc:     mdf@kernel.org, michal.simek@xilinx.com,
+        linux-fpga@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: Re: [PATCH] fpga: xilinx-pr-decoupler: Remove clk_get error message
+ for probe defer
+Message-ID: <20200110205307.GA3246@epycbox.lan>
+References: <20200110063113.3064-1-nava.manne@xilinx.com>
 MIME-Version: 1.0
-References: <20191221071751.269025-1-lkundrak@v3.sk> <CAHp75VcYoWqvgLv-PmgxqhrHmYOH5=Nru6Msj3rryT=jL+y9xw@mail.gmail.com>
- <1bbf1ea76949f6ef4e856ed799f75d03bf20f293.camel@v3.sk>
-In-Reply-To: <1bbf1ea76949f6ef4e856ed799f75d03bf20f293.camel@v3.sk>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 10 Jan 2020 22:52:49 +0200
-Message-ID: <CAHp75VezK9xc4ZC3j_Ayaeyi16kntC_CE3K0-Qx-nAVbdY=dKg@mail.gmail.com>
-Subject: Re: [PATCH] power: supply: olpc_battery: fix the power supply name
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110063113.3064-1-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 10:00 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
-> On Thu, 2020-01-09 at 17:09 +0200, Andy Shevchenko wrote:
-> > On Sat, Dec 21, 2019 at 9:18 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
-> > > The framework is unhappy about them, because it uses the names in sysfs
-> > > attributes:
-> > >
-> > >   power_supply olpc-ac: hwmon: 'olpc-ac' is not a valid name attribute, please fix
-> > >   power_supply olpc-battery: hwmon: 'olpc-battery' is not a valid name attribute, please fix
-> >
-> > I'm wondering if it's an ABI change and how user space is supposed to
-> > cope with it.
->
-> It changes the sysfs path. It is rather unlikely that udisks or
-> anything else userspace cares.
->
-> If it does, then I guess the warning that suggests that it's a bug that
-> should be fixed should be removed instead.
+On Fri, Jan 10, 2020 at 12:01:13PM +0530, Nava kishore Manne wrote:
+> From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> 
+> In probe, the driver checks for devm_clk_get return and print error
+> message in the failing case. However for -EPROBE_DEFER this message
+> is confusing so avoid it.
+> 
+> Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>  drivers/fpga/xilinx-pr-decoupler.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/fpga/xilinx-pr-decoupler.c b/drivers/fpga/xilinx-pr-decoupler.c
+> index af9b387c56d3..7d69af230567 100644
+> --- a/drivers/fpga/xilinx-pr-decoupler.c
+> +++ b/drivers/fpga/xilinx-pr-decoupler.c
+> @@ -101,7 +101,8 @@ static int xlnx_pr_decoupler_probe(struct platform_device *pdev)
+>  
+>  	priv->clk = devm_clk_get(&pdev->dev, "aclk");
+>  	if (IS_ERR(priv->clk)) {
+> -		dev_err(&pdev->dev, "input clock not found\n");
+> +		if (PTR_ERR(priv->clk) != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "input clock not found\n");
+>  		return PTR_ERR(priv->clk);
+>  	}
+>  
+> -- 
+> 2.18.0
+> 
+Applied to for-next,
 
-That said, I'm fine with this as long as power_supply subsystem maintainer does.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks
