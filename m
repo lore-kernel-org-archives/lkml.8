@@ -2,112 +2,130 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DCFC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD11C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:06:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF3FC20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 634582072A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:06:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="a7Pfwu94"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VcVywV//"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgAJKGR (ORCPT
+        id S1727438AbgAJKGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:06:17 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:17702 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727168AbgAJKGQ (ORCPT
+        Fri, 10 Jan 2020 05:06:21 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41302 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727168AbgAJKGT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:06:16 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00AA4MaJ018437;
-        Fri, 10 Jan 2020 11:05:53 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : references : in-reply-to : content-type : content-id :
- content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=Orqb4Kzs44B6SU4aLxj7f+Qu6NMAODCMej4io7GGS5M=;
- b=a7Pfwu94Dfr68ihKVpEQrnWKRtNIAvpCngKjgBGsIOqfhCV8u4TrvXXghrIa0GCrde8I
- fOT8I5ktcFhccr3JMzL9SdKR/f4XLkX/mY87BtGSgCANhN+mnPlhfK9kwaUEiNMRm0lg
- twI2wXR8z5W6brbdDoXVwLh5mmeq0V8XiZ4f5zHNnpeovIAmBTdwaXA1bnRETvO1kOE9
- kfq7Cc/xaFVpDr/E4pmZBgiC9WfHS/8U0QfUMKVbtmzHBJPdXpXhEpae10DayKWQFQeB
- V31tDJ8CqKQrPZMatfh08ZsIpxJQtPUjNTa/1kbP/yguAo/gy6PLEorIyiqpAI3NGDaw DA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xakkb72ge-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jan 2020 11:05:53 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4EA5B10003A;
-        Fri, 10 Jan 2020 11:05:48 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 39C942A6196;
-        Fri, 10 Jan 2020 11:05:48 +0100 (CET)
-Received: from SFHDAG6NODE2.st.com (10.75.127.17) by SFHDAG5NODE2.st.com
- (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jan
- 2020 11:05:47 +0100
-Received: from SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6]) by
- SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6%20]) with mapi id
- 15.00.1347.000; Fri, 10 Jan 2020 11:05:47 +0100
-From:   Olivier MOYSAN <olivier.moysan@st.com>
-To:     "jic23@kernel.org" <jic23@kernel.org>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v2] iio: adc: stm32-dfsdm: fix single conversion
-Thread-Topic: [PATCH v2] iio: adc: stm32-dfsdm: fix single conversion
-Thread-Index: AQHVpSPpcOskt6+D7kOuxZv5WfyEPKfj4AOA
-Date:   Fri, 10 Jan 2020 10:05:47 +0000
-Message-ID: <1a4261a5-1835-a248-9094-c4e7236e7254@st.com>
-References: <20191127130729.18511-1-olivier.moysan@st.com>
-In-Reply-To: <20191127130729.18511-1-olivier.moysan@st.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.50]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <216D40C44CFE484AB49CAC1B044E7CC9@st.com>
-Content-Transfer-Encoding: base64
+        Fri, 10 Jan 2020 05:06:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=W+8o31v5SZYC8i8sg35zrJwWXEuILI8LPiA6P2pCM1o=; b=VcVywV//8iXSRdFbjuO6fx0ne
+        2BsVLzpVmvmt/pK4bmbDn20yOno2JKEKh12YS+kr9Enu+vsGhZB2EJ0JzGxI4OREeTml4bKg85XQ1
+        2sLOq9LDX4ai2CH9N/bRuxiXUVLnxzHxCItgmF9JZ49lIIQi6o85Y1hRaMJOYS8M2fbmo4WTjmxiJ
+        Xe7gsCBT79FnWe2Gzzk8C1TLn9tHwmGc4ln1kW3UrZL30Rh3yGwtUEfS7yI22JIjgYOfewQTyW084
+        wT21mZZBlK1/3gVIt3VdIFlJJUPgYltTj2jCmTA9JZNeaVLG2ocy1nRWXuWJkFDoJidDDiO++mj4g
+        9gQ/c7Bxg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iprBH-0004PE-WC; Fri, 10 Jan 2020 10:06:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1234C30018B;
+        Fri, 10 Jan 2020 11:04:38 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C15EF20D3D41E; Fri, 10 Jan 2020 11:06:12 +0100 (CET)
+Date:   Fri, 10 Jan 2020 11:06:12 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] locking/osq: Use more optimized spinning for arm64
+Message-ID: <20200110100612.GC2827@hirez.programming.kicks-ass.net>
+References: <20200109153831.29993-1-longman@redhat.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-10_01:2020-01-10,2020-01-09 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109153831.29993-1-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSm9uYXRoYW4sIGFsbCwNCg0KS2luZCByZW1pbmRlciBvbiB0aGlzIHBhdGNoLg0KUmVnYXJk
-cw0KT2xpdmllcg0KDQpPbiAxMS8yNy8xOSAyOjA3IFBNLCBPbGl2aWVyIE1veXNhbiB3cm90ZToN
-Cj4gQXBwbHkgZGF0YSBmb3JtYXR0aW5nIHRvIHNpbmdsZSBjb252ZXJzaW9uLA0KPiBhcyB0aGlz
-IGlzIGFscmVhZHkgZG9uZSBpbiBjb250aW51b3VzIGFuZCB0cmlnZ2VyIG1vZGVzLg0KPg0KPiBG
-aXhlczogMTAyYWZkZTYyOTM3ICgiaWlvOiBhZGM6IHN0bTMyLWRmc2RtOiBtYW5hZ2UgZGF0YSBy
-ZXNvbHV0aW9uIGluIHRyaWdnZXIgbW9kZSIpDQo+DQo+IFNpZ25lZC1vZmYtYnk6IE9saXZpZXIg
-TW95c2FuIDxvbGl2aWVyLm1veXNhbkBzdC5jb20+DQo+IC0tLQ0KPiBjaGFuZ2VzIGluIHZlcnNp
-b24gMjoNCj4gLSBjb3JyZWN0IHRpdGxlDQo+IC0tLQ0KPiAgIGRyaXZlcnMvaWlvL2FkYy9zdG0z
-Mi1kZnNkbS1hZGMuYyB8IDIgKysNCj4gICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCsp
-DQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lpby9hZGMvc3RtMzItZGZzZG0tYWRjLmMgYi9k
-cml2ZXJzL2lpby9hZGMvc3RtMzItZGZzZG0tYWRjLmMNCj4gaW5kZXggZTQ5MzI0MmMyNjZlLi4w
-MzM5ZWNkZDA2YmQgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvaWlvL2FkYy9zdG0zMi1kZnNkbS1h
-ZGMuYw0KPiArKysgYi9kcml2ZXJzL2lpby9hZGMvc3RtMzItZGZzZG0tYWRjLmMNCj4gQEAgLTEy
-MDQsNiArMTIwNCw4IEBAIHN0YXRpYyBpbnQgc3RtMzJfZGZzZG1fc2luZ2xlX2NvbnYoc3RydWN0
-IGlpb19kZXYgKmluZGlvX2RldiwNCj4gICANCj4gICAJc3RtMzJfZGZzZG1fc3RvcF9jb252KGFk
-Yyk7DQo+ICAgDQo+ICsJc3RtMzJfZGZzZG1fcHJvY2Vzc19kYXRhKGFkYywgcmVzKTsNCj4gKw0K
-PiAgIHN0b3BfZGZzZG06DQo+ICAgCXN0bTMyX2Rmc2RtX3N0b3BfZGZzZG0oYWRjLT5kZnNkbSk7
-DQo+ICAgDQo=
+On Thu, Jan 09, 2020 at 10:38:31AM -0500, Waiman Long wrote:
+
+> --- a/kernel/locking/osq_lock.c
+> +++ b/kernel/locking/osq_lock.c
+> @@ -134,6 +134,27 @@ bool osq_lock(struct optimistic_spin_queue *lock)
+>  	 * cmpxchg in an attempt to undo our queueing.
+>  	 */
+>  
+> +	/*
+> +	 * If vcpu_is_preempted is not defined, we can skip the check
+> +	 * and use smp_cond_load_relaxed() instead. For arm64, this
+> +	 * could lead to the use of the more optimized wfe instruction.
+> +	 * As need_sched() is set by interrupt handler, it will break
+> +	 * out and do the unqueue in a timely manner.
+> +	 *
+> +	 * TODO: We may need to add a static_key like vcpu_is_preemptible
+> +	 *	 as vcpu_is_preempted() will always return false with
+> +	 *	 bare metal even if it is defined.
+> +	 */
+> +#ifndef vcpu_is_preempted
+> +	{
+> +		int locked = smp_cond_load_relaxed(&node->locked,
+> +						   VAL || need_resched());
+> +		if (!locked)
+> +			goto unqueue;
+> +		return true;
+> +	}
+> +#endif
+
+Much yuck :-/
+
+With ARM64 being the only arch that currently makes use of this; another
+approach is doing something like:
+
+That is also rather yuck, and definitely needs a few comments sprinked
+on it, but it should just work for everyone.
+
+It basically relies on an arch having a spinning *cond_load*()
+implementation if it has vcpu_is_preempted(), which is true today.
+
+---
+diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
+index 6ef600aa0f47..6e00d7c077ba 100644
+--- a/kernel/locking/osq_lock.c
++++ b/kernel/locking/osq_lock.c
+@@ -133,18 +133,10 @@ bool osq_lock(struct optimistic_spin_queue *lock)
+ 	 * guaranteed their existence -- this allows us to apply
+ 	 * cmpxchg in an attempt to undo our queueing.
+ 	 */
++	if (!smp_cond_load_relaxed(&node->locked, VAL || need_resched() ||
++						  vcpu_is_preempetd(node_cpu(node->prev))))
++		goto unqueue;
+ 
+-	while (!READ_ONCE(node->locked)) {
+-		/*
+-		 * If we need to reschedule bail... so we can block.
+-		 * Use vcpu_is_preempted() to avoid waiting for a preempted
+-		 * lock holder:
+-		 */
+-		if (need_resched() || vcpu_is_preempted(node_cpu(node->prev)))
+-			goto unqueue;
+-
+-		cpu_relax();
+-	}
+ 	return true;
+ 
+ unqueue:
