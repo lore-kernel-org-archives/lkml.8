@@ -2,164 +2,191 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03585C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DA2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C387720721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3CC420721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:31:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZgUgSAXt"
+	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="hmyz8mic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbgAJKb0 (ORCPT
+        id S1727554AbgAJKbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:31:26 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44095 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727486AbgAJKbZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:31:25 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q10so1261802wrm.11
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 02:31:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=to:cc:from:subject:autocrypt:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=/Y2utiUMnfVSvbEiROhsF2K80JwlmfplQDOQoYF7tu8=;
-        b=ZgUgSAXtECzideI4ox3iVdIiSimDDmQjC1i09NUIexGXYUI8aMda/NacKp1bibF1+2
-         clczJ+SQ/ynkBSXCPa1NdUoDxqH0+gVUdiXTd0JpANCMHNttrOgc5VLLbPxLFY0IPN4B
-         ehzvJM0bm2b5PIx0gUfqiPMe8625J3TaOxttBQ0E6Hot2SKhLpBiJC/IxntZUIPy0UPh
-         ZcPnqC9N7UtDUVLHE050GkT9A+XcgOPQyhgQolO3lC+2lUxm1FIJIu8yJgSl5uu7It2e
-         E/Wf+PMi0HmAfx4Z66OQyi+XU0cr1FWm0Sugft9STk4T+/FnpenxwpNxVipKh/l/PrXb
-         9ipw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:cc:from:subject:autocrypt:message-id:date
-         :user-agent:mime-version:content-language:content-transfer-encoding;
-        bh=/Y2utiUMnfVSvbEiROhsF2K80JwlmfplQDOQoYF7tu8=;
-        b=VYyS6IpL7KQysCQY06nYVto+oz3/xoyFi7fnEEhLwR2KsCuyo654aXbLUB03+dDe2m
-         11Wbii66rYDpyGfF11Q24+X/bcgLkhvozXPai1QcVbViodab2WFkxYNjKWO2fXLc/c5P
-         ++zZz/pOUjDiUEEXGKgQwU3gqKbfR2nz+glMzNkVAU54p5sc2eB98AYzdJ0L7HBbDNGy
-         v2R79CdjmnISsUmrIwYlfxN2RIcY6qgaBQJuwqldOE022vKOzw5DeAEEKH6jcB2lTfdj
-         xaBQp20sRmC/4Lq+Zl1c2J5mTpAHMttjfRGPOhXegziWEbBVmSVHXrNLCgo9GxJGMtu8
-         9Lrw==
-X-Gm-Message-State: APjAAAW2kxaEopUc5vAYr3yA6fxxLi890JLu8REfaEMUKdZppEuY8DTr
-        L/Tt1eg4mfjX7GUWgcv1OlO75A==
-X-Google-Smtp-Source: APXvYqzhvfPj5ExAiKGD0pXKsy+voDC3CvPzXUFWZYdZeJxAmzGQg6k9HI8PPUX3roHdoEzl7IDamg==
-X-Received: by 2002:adf:ea05:: with SMTP id q5mr2767352wrm.48.1578652282376;
-        Fri, 10 Jan 2020 02:31:22 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:a10f:f166:3981:1da4? ([2a01:e34:ed2f:f020:a10f:f166:3981:1da4])
-        by smtp.googlemail.com with ESMTPSA id z4sm1731937wma.2.2020.01.10.02.31.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jan 2020 02:31:21 -0800 (PST)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM mailing list <linux-pm@vger.kernel.org>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [GIT PULL] thermal fixes for v5.5-rc6
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <dae56d94-114b-18b3-92dd-0c390b0cbe86@linaro.org>
-Date:   Fri, 10 Jan 2020 11:31:20 +0100
+        Fri, 10 Jan 2020 05:31:41 -0500
+Received: from mail1.perex.cz ([77.48.224.245]:49136 "EHLO mail1.perex.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727352AbgAJKbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 05:31:40 -0500
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 8B395A0040;
+        Fri, 10 Jan 2020 11:31:37 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 8B395A0040
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+        t=1578652297; bh=kkS6k4Vqe/aQIiu/vUx6V9ei2NTfrbuVLe3Tuvjr6vI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=hmyz8mickaawShu6LcZDu4uooUnwjF8xUTS3FdRG+BF/PTARZS4HEfvgK71N/aqnq
+         w6/2b5g/YF3brAr8j2PbROeg23wv0S5axP70l0Wv9itbTpnnnqHir58MJIELKYnUbC
+         nrERdz4TYFY0gXW6ye5rCISF4hHwAh1X6bSWa2X0=
+Received: from p50.perex-int.cz (unknown [192.168.100.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: perex)
+        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+        Fri, 10 Jan 2020 11:31:29 +0100 (CET)
+Subject: Re: [alsa-devel] [PATCH v6 2/2] ALSA: hda: Allow HDA to be runtime
+ suspended when dGPU is not bound to a driver
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com,
+        tiwai@suse.com, linux-pci@vger.kernel.org,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <20191018073848.14590-1-kai.heng.feng@canonical.com>
+ <20191018073848.14590-2-kai.heng.feng@canonical.com>
+ <10e35320-b7a8-0bcf-92d1-61aa5c057f58@perex.cz>
+ <s5ha76vmy8c.wl-tiwai@suse.de>
+From:   Jaroslav Kysela <perex@perex.cz>
+Message-ID: <fd9d174e-febe-27ef-cc4c-f19007e21a1a@perex.cz>
+Date:   Fri, 10 Jan 2020 11:31:29 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <s5ha76vmy8c.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Dne 10. 01. 20 v 10:56 Takashi Iwai napsal(a):
+> On Fri, 10 Jan 2020 10:43:26 +0100,
+> Jaroslav Kysela wrote:
+>>
+>> Dne 18. 10. 19 v 9:38 Kai-Heng Feng napsal(a):
+>>> Nvidia proprietary driver doesn't support runtime power management, so
+>>> when a user only wants to use the integrated GPU, it's a common practice
+>>> to let dGPU not to bind any driver, and let its upstream port to be
+>>> runtime suspended. At the end of runtime suspension the port uses
+>>> platform power management to disable power through _OFF method of power
+>>> resource, which is listed by _PR3.
+>>>
+>>> After commit b516ea586d71 ("PCI: Enable NVIDIA HDA controllers"), when
+>>> the dGPU comes with an HDA function, the HDA won't be suspended if the
+>>> dGPU is unbound, so the power resource can't be turned off by its
+>>> upstream port driver.
+>>>
+>>> Commit 37a3a98ef601 ("ALSA: hda - Enable runtime PM only for
+>>> discrete GPU") only allows HDA to be runtime suspended once GPU is
+>>> bound, to keep APU's HDA working.
+>>>
+>>> However, HDA on dGPU isn't that useful if dGPU is not bound to any
+>>> driver.  So let's relax the runtime suspend requirement for dGPU's HDA
+>>> function, to disable the power source to save lots of power.
+>>
+>> This patch breaks the HDMI audio detection at least on some platforms
+>> (Lenovo P50 for example) with nouveau and the proprietary nvidia
+>> driver. Those laptops have the external HDMI/DP ports connected to
+>> dGPU instead the iGPU. The ACPI PR3 is set.
+>>
+>> The runtime PM off fixes this problem:
+>>
+>> echo on > /sys/bus/pci/devices/0000\:01\:00.1/power/control
+> 
+> But this will keep the power of the graphics chip on, and that's what
+> the patch was supposed to "fix".
+> 
+>> But I don't think that it's the best solution. My proposal is to
+>> create a pr3 check blacklist to keep power for the HDMI audio for
+>> those machines. Also we may add a new module parameter for
+>> snd-hda-intel to control this. Other ideas?
+> 
+> For nouveau, the best fix is to merge the audio component patch.
+> This will make things working without fiddling with the power
+> up/down.  The patch has been pending over months under review in DRM
+> side, unfortunately...  Please pinging them for driving ahead.
 
-The following changes since commit c79f46a282390e0f5b306007bf7b11a46d529538:
+Adding Cc: to dri-devel. You probably mean this thread:
 
-  Linux 5.5-rc5 (2020-01-05 14:23:27 -0800)
+https://lists.freedesktop.org/archives/dri-devel/2019-July/thread.html#227423
 
-are available in the Git repository at:
+> For Nvidia, though, it's no path a binary-only stuff can go with, due
+> to the GPL symbol of the component framework.  Those guys know of it
+> well, and they seem adding the temporary power up/down procedure by
+> poking the proc file from the user-space side at the HDMI connection.
 
+Wow.
 
-ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
-tags/thermal-v5.5-rc5
+> About a module option: I don't think it's much better than the sysfs
+> toggle.  You can set up a simple udev rule if needed, too.
 
-for you to fetch changes up to 344fa0bad6932204146d305607790340f2324a90:
+Ok, it's a bit nightmare to maintain those extra settings in the distribution.
 
-  drivers: thermal: tsens: Work with old DTBs (2020-01-07 08:22:35 +0100)
+					Jaroslav
 
-----------------------------------------------------------------
+> 
+> 
+> thanks,
+> 
+> Takashi
+> 
+>>
+>> 					Jaroslav
+>>
+>>
+>>> BugLink: https://bugs.launchpad.net/bugs/1840835
+>>> Fixes: b516ea586d71 ("PCI: Enable NVIDIA HDA controllers")
+>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>>> ---
+>>> v5, v6:
+>>> - No change.
+>>> v4:
+>>> - Find upstream port, it's callee's responsibility now.
+>>> v3:
+>>> - Make changelog more clear.
+>>> v2:
+>>> - Change wording.
+>>> - Rebase to Tiwai's branch.
+>>>    sound/pci/hda/hda_intel.c | 8 +++++++-
+>>>    1 file changed, 7 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+>>> index 240f4ca76391..e63b871343e5 100644
+>>> --- a/sound/pci/hda/hda_intel.c
+>>> +++ b/sound/pci/hda/hda_intel.c
+>>> @@ -1280,11 +1280,17 @@ static void init_vga_switcheroo(struct azx *chip)
+>>>    {
+>>>    	struct hda_intel *hda = container_of(chip, struct hda_intel, chip);
+>>>    	struct pci_dev *p = get_bound_vga(chip->pci);
+>>> +	struct pci_dev *parent;
+>>>    	if (p) {
+>>>    		dev_info(chip->card->dev,
+>>>    			 "Handle vga_switcheroo audio client\n");
+>>>    		hda->use_vga_switcheroo = 1;
+>>> -		chip->bus.keep_power = 1; /* cleared in either gpu_bound op or codec probe */
+>>> +
+>>> +		/* cleared in either gpu_bound op or codec probe, or when its
+>>> +		 * upstream port has _PR3 (i.e. dGPU).
+>>> +		 */
+>>> +		parent = pci_upstream_bridge(p);
+>>> +		chip->bus.keep_power = parent ? !pci_pr3_present(parent) : 1;
+>>>    		chip->driver_caps |= AZX_DCAPS_PM_RUNTIME;
+>>>    		pci_dev_put(p);
+>>>    	}
+>>>
+>>
+>>
+>> -- 
+>> Jaroslav Kysela <perex@perex.cz>
+>> Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
+>>
 
-- Fix backward compatibility with old DTBs on QCOM tsens (Amit Kucheria)
-
-----------------------------------------------------------------
-Amit Kucheria (1):
-      drivers: thermal: tsens: Work with old DTBs
-
- drivers/thermal/qcom/tsens.c | 3 +++
- 1 file changed, 3 insertions(+)
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
