@@ -2,43 +2,40 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0
+X-Spam-Status: No, score=-3.0 required=3.0
 	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C7BC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D85C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D92820721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23ADB20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbgAJPjw (ORCPT
+        id S1728451AbgAJPjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:39:52 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:58629 "EHLO
+        Fri, 10 Jan 2020 10:39:55 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:58631 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728151AbgAJPjw (ORCPT
+        with ESMTP id S1728258AbgAJPjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:39:52 -0500
+        Fri, 10 Jan 2020 10:39:53 -0500
 Received: from [5.158.153.53] (helo=g2noscherz.lab.linutronix.de.)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
         (Exim 4.80)
         (envelope-from <john.ogness@linutronix.de>)
-        id 1ipwO5-0007H0-6B; Fri, 10 Jan 2020 16:39:49 +0100
+        id 1ipwO4-0007H0-FW; Fri, 10 Jan 2020 16:39:48 +0100
 From:   John Ogness <john.ogness@linutronix.de>
 To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 Cc:     Petr Mladek <pmladek@suse.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Dick Hollenbeck <dick@softplc.com>,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH RT 2/2] serial: 8250: fsl/ingenic/mtk: fix atomic console
-Date:   Fri, 10 Jan 2020 16:45:32 +0106
-Message-Id: <20200110153932.14970-3-john.ogness@linutronix.de>
+Subject: [PATCH RT 0/2] serial: 8250: atomic console fixups
+Date:   Fri, 10 Jan 2020 16:45:30 +0106
+Message-Id: <20200110153932.14970-1-john.ogness@linutronix.de>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200110153932.14970-1-john.ogness@linutronix.de>
-References: <20200110153932.14970-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Linutronix-Spam-Score: -1.0
@@ -49,109 +46,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A few 8250 implementations have their own IER access. If the port
-is a console, wrap the accesses with console_atomic_lock.
+Dick Hollenbeck pointed out[0] that serial usage for non-consoles
+was dramatically affected due to the atomic console
+implementation. Indeed, the implementation was taking the global
+console_atomic_lock for _all_ 8250 ports, regardless if they were
+consoles or not.
 
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
----
- drivers/tty/serial/8250/8250_fsl.c     |  9 ++++++++
- drivers/tty/serial/8250/8250_ingenic.c |  7 +++++++
- drivers/tty/serial/8250/8250_mtk.c     | 29 ++++++++++++++++++++++++--
- 3 files changed, 43 insertions(+), 2 deletions(-)
+This series fixes that by only using the cpu-lock if the port is
+a console. While making those changes, I realized that the clear
+counter/ier-cache is not needed, so that is also removed.
 
-diff --git a/drivers/tty/serial/8250/8250_fsl.c b/drivers/tty/serial/8250/8250_fsl.c
-index aa0e216d5ead..8f711afadd4b 100644
---- a/drivers/tty/serial/8250/8250_fsl.c
-+++ b/drivers/tty/serial/8250/8250_fsl.c
-@@ -57,9 +57,18 @@ int fsl8250_handle_irq(struct uart_port *port)
- 
- 	/* Stop processing interrupts on input overrun */
- 	if ((orig_lsr & UART_LSR_OE) && (up->overrun_backoff_time_ms > 0)) {
-+		unsigned int ca_flags;
- 		unsigned long delay;
-+		bool is_console;
- 
-+		is_console = uart_console(port);
-+
-+		if (is_console)
-+			console_atomic_lock(&ca_flags);
- 		up->ier = port->serial_in(port, UART_IER);
-+		if (is_console)
-+			console_atomic_unlock(ca_flags);
-+
- 		if (up->ier & (UART_IER_RLSI | UART_IER_RDI)) {
- 			port->ops->stop_rx(port);
- 		} else {
-diff --git a/drivers/tty/serial/8250/8250_ingenic.c b/drivers/tty/serial/8250/8250_ingenic.c
-index 424c07c5f629..47f1482bd818 100644
---- a/drivers/tty/serial/8250/8250_ingenic.c
-+++ b/drivers/tty/serial/8250/8250_ingenic.c
-@@ -146,6 +146,8 @@ OF_EARLYCON_DECLARE(x1000_uart, "ingenic,x1000-uart",
- 
- static void ingenic_uart_serial_out(struct uart_port *p, int offset, int value)
- {
-+	unsigned int flags;
-+	bool is_console;
- 	int ier;
- 
- 	switch (offset) {
-@@ -167,7 +169,12 @@ static void ingenic_uart_serial_out(struct uart_port *p, int offset, int value)
- 		 * If we have enabled modem status IRQs we should enable
- 		 * modem mode.
- 		 */
-+		is_console = uart_console(p);
-+		if (is_console)
-+			console_atomic_lock(&flags);
- 		ier = p->serial_in(p, UART_IER);
-+		if (is_console)
-+			console_atomic_unlock(flags);
- 
- 		if (ier & UART_IER_MSI)
- 			value |= UART_MCR_MDCE | UART_MCR_FCM;
-diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
-index 4d067f515f74..b509c3de0301 100644
---- a/drivers/tty/serial/8250/8250_mtk.c
-+++ b/drivers/tty/serial/8250/8250_mtk.c
-@@ -212,12 +212,37 @@ static void mtk8250_shutdown(struct uart_port *port)
- 
- static void mtk8250_disable_intrs(struct uart_8250_port *up, int mask)
- {
--	serial_out(up, UART_IER, serial_in(up, UART_IER) & (~mask));
-+	struct uart_port *port = &up->port;
-+	unsigned int flags;
-+	unsigned int ier;
-+	bool is_console;
-+
-+	is_console = uart_console(port);
-+
-+	if (is_console)
-+		console_atomic_lock(&flags);
-+
-+	ier = serial_in(up, UART_IER);
-+	serial_out(up, UART_IER, ier & (~mask));
-+
-+	if (is_console)
-+		console_atomic_unlock(flags);
- }
- 
- static void mtk8250_enable_intrs(struct uart_8250_port *up, int mask)
- {
--	serial_out(up, UART_IER, serial_in(up, UART_IER) | mask);
-+	struct uart_port *port = &up->port;
-+	unsigned int flags;
-+	unsigned int ier;
-+
-+	if (uart_console(port))
-+		console_atomic_lock(&flags);
-+
-+	ier = serial_in(up, UART_IER);
-+	serial_out(up, UART_IER, ier | mask);
-+
-+	if (uart_console(port))
-+		console_atomic_unlock(flags);
- }
- 
- static void mtk8250_set_flow_ctrl(struct uart_8250_port *up, int mode)
+Dick also pointed out that the IER accessor functions were using
+non-typical names. These are updated and moved to inline macros.
+
+Finally, I noticed that the fsl, ingenic, and mtk variants were
+directly accessing IER. These are now also appropriately wrapped.
+
+In his suggestion, Dick did optimizations regarding IER caching.
+However, these are _not_ included because they may have some
+unwanted side-effects. For example, I noticed a few places in
+8250 code where the value of uart_8250_port->ier is expected to
+be different than the hardware register.
+
+John Ogness
+
+[0] https://www.spinics.net/lists/linux-rt-users/msg21480.html
+
+John Ogness (2):
+  serial: 8250: only atomic lock for console
+  serial: 8250: fsl/ingenic/mtk: fix atomic console
+
+ drivers/tty/serial/8250/8250.h         | 65 ++++++++++++++-------
+ drivers/tty/serial/8250/8250_core.c    |  6 +-
+ drivers/tty/serial/8250/8250_dma.c     |  4 +-
+ drivers/tty/serial/8250/8250_fsl.c     |  9 +++
+ drivers/tty/serial/8250/8250_ingenic.c |  7 +++
+ drivers/tty/serial/8250/8250_mtk.c     | 29 ++++++++-
+ drivers/tty/serial/8250/8250_port.c    | 81 ++++++--------------------
+ 7 files changed, 109 insertions(+), 92 deletions(-)
+
 -- 
 2.20.1
 
