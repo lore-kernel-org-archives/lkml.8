@@ -2,89 +2,104 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2E6C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47EF1C33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1591220838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B1220838
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:33:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="pDxzWr7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgAJRcy (ORCPT
+        id S1728274AbgAJRdr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:32:54 -0500
-Received: from foss.arm.com ([217.140.110.172]:49104 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726659AbgAJRcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:32:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2653E30E;
-        Fri, 10 Jan 2020 09:32:53 -0800 (PST)
-Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BE693F6C4;
-        Fri, 10 Jan 2020 09:32:51 -0800 (PST)
-Date:   Fri, 10 Jan 2020 17:32:49 +0000
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/14] net: axienet: Fix SGMII support
-Message-ID: <20200110173249.0b086a76@donnerap.cambridge.arm.com>
-In-Reply-To: <20200110145849.GC25745@shell.armlinux.org.uk>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
-        <20200110115415.75683-8-andre.przywara@arm.com>
-        <20200110145849.GC25745@shell.armlinux.org.uk>
-Organization: ARM
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
+        Fri, 10 Jan 2020 12:33:47 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46834 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728115AbgAJRdq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 12:33:46 -0500
+Received: by mail-oi1-f196.google.com with SMTP id 13so2487542oij.13
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 09:33:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ksl+vJ81uwWzx8tmYMkSddxoxlD6SBF31Vqw/Cm4F+4=;
+        b=pDxzWr7JwNvVuHmgOkjXvIPc55f0Lxat/iHEV3kBknVGkWuYT//7MLvF/rGm1UEw13
+         xgDXvajUgFSkVn/Mowb0vgHH2bwIAwKnEETTxzK1eXw7e84VJbxaQcyW4S5wirg+EJxh
+         H6xgxHjXMbk/cX6gJ0jpb3sUmn3n47ozfND3hrv3kd4iGvakcCkAdAC4c8X2NAxPcxWM
+         vu+CPR26ON3H+Y2xutoAt1P1ZqvPtWYDDXfH3/sJMxDa0JrFdbXujOl0sL3cFN/9T3wS
+         u0YArVRLEqfFQG7ig9QV4Bp1mClj87MvFdBC14326lSfQKSOZJERsfaU5JA3e3JgzIOA
+         j8cA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ksl+vJ81uwWzx8tmYMkSddxoxlD6SBF31Vqw/Cm4F+4=;
+        b=WRsc+0MoEd8uujYaF0bB5Sti7MH3BzFhdAPlB2soSXnvjFxU+ZkUvTz1h4ETd2CHoA
+         ddLci9xXODdjcahe7gWp0tCShoK53HDuPLOpo5ARphbtXy2twtyeuXE8MrmSypE7+We2
+         yeXueNfRGu9L5HRUnOAk9jG7UnqxDTygawz1SKDoZy2bbQRAbADlpEbWyh1DdgrckiOn
+         4o6lY6casA8fgrf+K5zicPAF3qavD5YYNTthZ8jvDO+vYr8dd8L9Yvkf6nD1sHt9CdRW
+         wOokdB0ZPfUg2uUPMkSC4Egu83BTdqjHV51sqekkV9APEGVQEOgSeYSryot1Dfs3xUbs
+         b2vA==
+X-Gm-Message-State: APjAAAViMWZWkb4WiOrY2Ym2S7G5oiACKXYJuURckNCFoxtexCCBtc1b
+        AhcrTCOHzlGi+an5APTKVeiOSrhqmwTeATEQsPCv7Q==
+X-Google-Smtp-Source: APXvYqzhq0ZmPdm2FvbVqqhxRBWJSuPUXMhdMbWwgHAHxrtLp0P4UgLsD45jDwlWNkJLZu30q0SN2uRTJVQPKboYUDo=
+X-Received: by 2002:aca:4c9:: with SMTP id 192mr3272786oie.105.1578677626092;
+ Fri, 10 Jan 2020 09:33:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <157863061737.2230556.3959730620803366776.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <e60e64f9-894b-4121-d97b-fb61459cbbe5@redhat.com> <CAPcyv4jm=fmP=-5vbo2jxzMe2qXqZP=zDYF8G_rs3X6_Om0wPg@mail.gmail.com>
+ <4d0334e2-c4e7-6d3f-99ba-2ca0495e1549@redhat.com> <CAPcyv4jixmv8fJ5FiYE=97Jud3Mc+6QzRX1txceSYU+WY_0rQA@mail.gmail.com>
+ <fc0cfb97-5a60-7e73-4f85-d8e6947c5e28@redhat.com>
+In-Reply-To: <fc0cfb97-5a60-7e73-4f85-d8e6947c5e28@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 10 Jan 2020 09:33:35 -0800
+Message-ID: <CAPcyv4jVpN26RGQLRn4BewYtzHDoQfvh37DEdEBq1dd4-BP0kw@mail.gmail.com>
+Subject: Re: [PATCH] mm/memory_hotplug: Fix remove_memory() lockdep splat
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        stable <stable@vger.kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 14:58:49 +0000
-Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
+On Fri, Jan 10, 2020 at 9:29 AM David Hildenbrand <david@redhat.com> wrote:
+[..]
+> > So then the comment is actively misleading for that case. I would
+> > expect an explicit _unlocked path for that case with a comment about
+> > why it's special. Is there already a comment to that effect somewhere?
+> >
+>
+> __add_memory() - the locked variant - is called from the same ACPI location
+> either locked or unlocked. I added a comment back then after a longe
+> discussion with Michal:
+>
+> drivers/acpi/scan.c:
+>         /*
+>          * Although we call __add_memory() that is documented to require the
+>          * device_hotplug_lock, it is not necessary here because this is an
+>          * early code when userspace or any other code path cannot trigger
+>          * hotplug/hotunplug operations.
+>          */
+>
+>
+> It really is a special case, though.
 
-> On Fri, Jan 10, 2020 at 11:54:08AM +0000, Andre Przywara wrote:
-> > With SGMII, the MAC and the PHY can negotiate the link speed between
-> > themselves, without the host needing to mediate between them.
-> > Linux recognises this, and will call phylink's mac_config with the speed
-> > member set to SPEED_UNKNOWN (-1).  
-> 
-> I wonder whether you have read the documentation for the phylink
-> mac_config() method (if not, please read it, it contains some very
-> important information about what mac_config() should do.)  When
-> operating in SGMII in-band mode, state->speed and state->duplex are
-> not actually valid.
-> 
-> You'll probably want to submit a better patch after reading the
-> documentation.
-
-Sure, I am admittedly quite clueless about phylink in particular, and found the available information quite daunting.
-So I tried my best in looking at what other drivers do. From what I got there is that you speed=-1 should be ignored, but the other fields still handled.
-Also I was somewhat puzzled, as I was expecting "mode" being MLO_AN_INBAND. But in fact it's called twice with MLO_AN_PHY, and mac_pcs_get_state() never gets called:
-
-[  166.516583] xilinx_axienet 7fe00000.ethernet eth0: PHY [axienet-7fe00000:01] driver [Generic PHY]
-[  166.547309] xilinx_axienet 7fe00000.ethernet eth0: configuring for phy/sgmii link mode
-[  166.572343] axienet_mac_config(mode=0, speed=-1, duplex=255, pause=16, link=0, an_en=1)
-udhcpc: sending discover
-[  168.652152] axienet_mac_config(mode=0, speed=-1, duplex=255, pause=0, link=1, an_en=0)
-[  168.683538] xilinx_axienet 7fe00000.ethernet eth0: Link is Up - Unknown/Unknown - flow control off
-[  168.712560] IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
-udhcpc: sending discover
-udhcpc: sending select for 10.1.x.y
-udhcpc: lease of 10.1.x.y obtained, lease time 691200
-
-I was just wondering if the DT description is giving Linux a wrong impression, but I have phy-mode set to sgmii, also just tried phy-connection-type on top of that. The DT snippet is the same as the example in patch 14. The PHY is a Marvell 88E1111, connected via SGMII.
- 
-I would be grateful for any advice!
-
-Cheers,
-Andre.
+That's a large comment block when we could have just taken the lock.
+There's probably many other code paths in the kernel where some locks
+are not necessary before userspace is up, but the code takes the lock
+anyway to minimize the code maintenance burden. Is there really a
+compelling reason to be clever here?
