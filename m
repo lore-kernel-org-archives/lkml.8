@@ -2,126 +2,101 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9107C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C41C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A014E2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BDBA2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 00:57:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="U7GKw8Jh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N4oaA16x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730413AbgAJAyY (ORCPT
+        id S1730436AbgAJA5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 19:54:24 -0500
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:18038 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730385AbgAJAyX (ORCPT
+        Thu, 9 Jan 2020 19:57:10 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35465 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730301AbgAJA5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 19:54:23 -0500
+        Thu, 9 Jan 2020 19:57:10 -0500
+Received: by mail-pg1-f194.google.com with SMTP id l24so154664pgk.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 16:57:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1578617663; x=1610153663;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=gFWTLYKX2wEcgFfZMvELsMKmvJakxFojhlZCDgHoKHg=;
-  b=U7GKw8Jhmg28KGS2rH3tbfnmhFi2Shc9gGMHZFzICGLHJdE/Eobu19B8
-   lWijGG8pNWbEeGxLBXOIzUbDtDsVwP38ccgEHdFUzwQStmC4Hd8JypjE1
-   7GQJ0KAxFnDu+V7xj0tBhBe5x+OOHMjYOtpGOmscWaNWtzkqCcAXuSvOH
-   M=;
-IronPort-SDR: vrQ2rPHO9WRjY8NbeMG8xCyVhFjs61ZAlZ1Xu5GgYue07j+xSBWWpbZpefhBRW+H/Yq4LaxKAh
- CmVfjKPeYQZQ==
-X-IronPort-AV: E=Sophos;i="5.69,414,1571702400"; 
-   d="scan'208";a="12337450"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-397e131e.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 10 Jan 2020 00:54:20 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-397e131e.us-west-2.amazon.com (Postfix) with ESMTPS id 61930A01F7;
-        Fri, 10 Jan 2020 00:54:18 +0000 (UTC)
-Received: from EX13D01UWB001.ant.amazon.com (10.43.161.75) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 10 Jan 2020 00:54:12 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13d01UWB001.ant.amazon.com (10.43.161.75) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Fri, 10 Jan 2020 00:54:12 +0000
-Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
- (172.22.96.68) by mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP
- Server id 15.0.1367.3 via Frontend Transport; Fri, 10 Jan 2020 00:54:12 +0000
-Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
-        id A7D9340E78; Fri, 10 Jan 2020 00:54:12 +0000 (UTC)
-Date:   Fri, 10 Jan 2020 00:54:12 +0000
-From:   Anchal Agarwal <anchalag@amazon.com>
-To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <hpa@zytor.com>, <x86@kernel.org>, <jgross@suse.com>,
-        <linux-pm@vger.kernel.org>, <linux-mm@kvack.org>,
-        <kamatam@amazon.com>, <sstabellini@kernel.org>,
-        <konrad.wilk@oracle.co>, <roger.pau@citrix.com>, <axboe@kernel.dk>,
-        <davem@davemloft.net>, <rjw@rjwysocki.net>, <len.brown@intel.com>,
-        <pavel@ucw.cz>, <peterz@infradead.org>, <eduval@amazon.com>,
-        <sblbir@amazon.com>, <xen-devel@lists.xenproject.org>,
-        <vkuznets@redhat.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>,
-        <dwmw@amazon.co.uk>, <fllinden@amaozn.com>, <anchalag@amazon.com>
-Subject: Re: [RFC PATCH V2 01/11] xen/manage: keep track of the on-going
- suspend mode
-Message-ID: <20200110005412.GA2095@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-References: <20200107233720.GA17906@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <88721569-d425-8df3-2ab2-3aa9155b326c@oracle.com>
- <b0392e02-c783-8aaa-ab5e-8e29385fa281@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b0392e02-c783-8aaa-ab5e-8e29385fa281@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=rM/owZAET4GCwQC0PC5PAHgpb0nHipQ20y8Z5JkX9es=;
+        b=N4oaA16xRTKxdqEsXtr8WMVdmBz5oJi7V9/LjrnCfb29T/rGwDCeku9PY+iyy6oRGV
+         f/IuwML/ffpUJ4706EUPAUORBI4vgaTE2ARCodD1oZCifXfovuhusOxdUmMXkJLEMfBs
+         fHqWiq1FBuuxA97i6R8pAE9YvV7wzmoszfLAiPQb6sz5Cc3EqUp3zZtu4oYHT+Fcxgqg
+         rNKC8akIEnv1AzWLEkS7LNwI3LDvudWvMp4hbobE56aqrRHJblLUMxf1+Y2mPwcw658K
+         /0GMErnmi1D6/R/VTxw7CktiTIMSjW808dR2ZoGoUN/wPaz0vz8/qU4RSg8m+JrFM/+8
+         USJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=rM/owZAET4GCwQC0PC5PAHgpb0nHipQ20y8Z5JkX9es=;
+        b=sDTuCY+y3dml12+PQwG0JSWwA2tkTOmdMSnW457PUzj+gRUz/Eu2nlpbKGmta4hLaE
+         SBA2fjL/wjmmCxDFi0F3o51s1USwZCS3/MoM7uKoQWgVyPRL21oauFs9jWrFXB8EEUFf
+         4AiDr+so70+B4DHEazvj1Oh1Khdnj9DyxBtrfs6Ag50R2/ZtHt6gSAYHVBqA/0hSwusT
+         7A8a5TTE8oUE7G7JMAYEUKsAYV4ukPQ9TVXLZaFDnIkOJXunDfk/gMgq2vt6PaaBX8aD
+         peNQaMlhJD/EDaH9MU1g59FwaKkle1XW/UxTJSUtUjSBJXPpO3ixmAEFFaMsTBGK+WY/
+         0MfQ==
+X-Gm-Message-State: APjAAAXkus1g3xkxA7E+h+FjUyIcxHyc3M5VBMwhlaTbu0mr58n5Ml2a
+        RebQuSkqf036W3yG+HC+o1I=
+X-Google-Smtp-Source: APXvYqyY0apVwayvUbKnFd3MSvOKpV+e1O+xO5OmaienrSj82+28Znc+zcN8JqnJDNItLsjBh01iOA==
+X-Received: by 2002:a63:d14:: with SMTP id c20mr928870pgl.77.1578617829732;
+        Thu, 09 Jan 2020 16:57:09 -0800 (PST)
+Received: from localhost ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id c1sm259017pfo.44.2020.01.09.16.57.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 09 Jan 2020 16:57:09 -0800 (PST)
+From:   liuyang34 <yangliuxm34@gmail.com>
+X-Google-Original-From: liuyang34 <liuyang34@xiaomi.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     liuyang34 <liuyang34@xiaomi.com>
+Subject: [RESEND PATCH] trace: code optimization
+Date:   Fri, 10 Jan 2020 08:57:04 +0800
+Message-Id:
+ <27225bf0ec9b4e2f3d313456aee75e294361d550.1578561009.git.liuyang34@xiaomi.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1578561009.git.liuyang34@xiaomi.com>
+References: <cover.1578561009.git.liuyang34@xiaomi.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200110005704.uBMnxTvuVyW2xGC38tgnSxFophSupLbsUGYG1nSPEQk@z>
 
-On Thu, Jan 09, 2020 at 06:49:07PM -0500, Boris Ostrovsky wrote:
-> 
-> 
-> On 1/9/20 6:46 PM, Boris Ostrovsky wrote:
-> >
-> >
-> >On 1/7/20 6:37 PM, Anchal Agarwal wrote:
-> >>+
-> >>+static int xen_setup_pm_notifier(void)
-> >>+{
-> >>+    if (!xen_hvm_domain())
-> >>+        return -ENODEV;
-> >
-> >ARM guests are also HVM domains. Is it OK for them to register the
-> >notifier? The diffstat suggests that you are supporting ARM.
-> 
-> I obviously meant *not* supporting ARM, sorry.
-> 
-> -boris
-> 
-> >
-> >-boris
-> >
+use scnprintf instead of snprintf and no need to check
+the return size again
 
-TBH, I have not yet experimented with these patches on
-ARM guest yet but that will be the next step. The same 
-code with changes as needed should be made to work for ARM.
-Currently I am focussed on getting a sane set of 
-patches into mainline for x86 guests.
+Signed-off-by: liuyang <liuyang34@xiaomi.com>
+---
+ kernel/trace/trace_stack.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-Thanks,
+diff --git a/kernel/trace/trace_stack.c b/kernel/trace/trace_stack.c
+index c557f42..7b15e9a 100644
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -329,9 +329,7 @@ stack_max_size_read(struct file *filp, char __user *ubuf,
+ 	char buf[64];
+ 	int r;
+ 
+-	r = snprintf(buf, sizeof(buf), "%ld\n", *ptr);
+-	if (r > sizeof(buf))
+-		r = sizeof(buf);
++	r = scnprintf(buf, sizeof(buf), "%ld\n", *ptr);
+ 	return simple_read_from_buffer(ubuf, count, ppos, buf, r);
+ }
+ 
+-- 
+2.7.4
 
-Anchal
-
-> >>+
-> >>+    return register_pm_notifier(&xen_pm_notifier_block);
-> >>+}
-> >>
-> >
-> 
