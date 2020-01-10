@@ -2,157 +2,128 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64E1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDC3C32771
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:17:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2132080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:16:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqv1bN75"
+	by mail.kernel.org (Postfix) with ESMTP id 3AA2920678
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730478AbgAJBQT (ORCPT
+        id S1730508AbgAJBRF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:16:19 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39004 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730456AbgAJBQS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 20:16:18 -0500
-Received: by mail-pg1-f196.google.com with SMTP id b137so167355pga.6;
-        Thu, 09 Jan 2020 17:16:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=K1fUKQoqVrc2gBuC0Xa6OebKj/ndQDIk9auPZlDrjlA=;
-        b=dqv1bN75FVMKWG07B++J/QTdSBppwKw1hY4c/cZXVVN2OtLW/PC9af9AeSVMm3VPef
-         mM91Si/Lmkq0jktGdfJwxcHbWKeDMWzMKZls1fBayxZfmywr0UZlTcd08+zUpWqdrY56
-         MiBmHEhP0Ey7mksJEN3Jgj3oJ1VkG8KAt+4hjo8up1H2USH3a/YY5+lQ1HvBqsN6YLVn
-         6M0Y2oSeqHlcX33+oemISnHJ2u7C5lbYrvd1NwYQwdghvjmMKskTnd7Cm83fMBRSk6m6
-         BthPBiYmAqsAtBWRICNir1naG6QJSKI1k0DKGjoNXDytIi9Hdd82XuIj8fiR1w6yBcM/
-         bgPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K1fUKQoqVrc2gBuC0Xa6OebKj/ndQDIk9auPZlDrjlA=;
-        b=n12iZwXr2rafw1aSHt+KjRZqSk3MYFw01xuylnhEz5IoT3DY6D4KuNFA4b3+4dyrfK
-         E8Ms0tCT9L/3AxZhcrKhfLSZL8AHXNQ80EEkTtPGn2f1fB20GWtLAG625+tpvbZEvrJi
-         Qylr5LzSRPZf+flzJFr9VJthTr04gCGnLOKBrfg+UUdDoTT15wsFe9xycYACxhvMjB1m
-         URDXFgnnr/3cs79LEBtnw3s1Rb4hRWPwPJ7tAqgIVu5Zs2RMEstOwk/Jn/EwpG5U4cQi
-         n+ck2CpNHpphKsOR4WMzDLY8IzY3GgPI0GqnlrpF7/9wYQoA0a/K3VE7P8aDdZy2TWlb
-         fBVQ==
-X-Gm-Message-State: APjAAAXcVQvOsPqvgCU62ACPmUzsd24li9w0/F0wGX+HR28i0+ubWUSr
-        zF/MOX76vsjOVKC95FUBVeU=
-X-Google-Smtp-Source: APXvYqwrzlEFCd8aEl+MX707ABW9/oKXaAfQb9y3qVddfy9HcwNI8V2Uy6mC5DRt0o/+z+5hD8uriw==
-X-Received: by 2002:a63:f5c:: with SMTP id 28mr1085276pgp.348.1578618977355;
-        Thu, 09 Jan 2020 17:16:17 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id y21sm271676pfm.136.2020.01.09.17.16.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 17:16:16 -0800 (PST)
-Date:   Thu, 9 Jan 2020 17:16:14 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     fengping yu <fengping.yu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stefan Agner <stefan@agner.cn>, Jacky Bai <ping.bai@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH V2 1/2] Documentation: devicetree: bindings: input
-Message-ID: <20200110011614.GQ8314@dtor-ws>
-References: <20200108062923.14684-1-fengping.yu@mediatek.com>
- <20200108062923.14684-2-fengping.yu@mediatek.com>
+        Thu, 9 Jan 2020 20:17:05 -0500
+Received: from mga17.intel.com ([192.55.52.151]:32154 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730484AbgAJBRF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 20:17:05 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 17:17:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,414,1571727600"; 
+   d="scan'208";a="246846711"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by fmsmga004.fm.intel.com with ESMTP; 09 Jan 2020 17:17:02 -0800
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Yi Liu <yi.l.liu@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Yi L <yi.l.liu@linux.intel.com>
+Subject: Re: [PATCH v8 02/10] iommu/vt-d: Add nested translation helper
+ function
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+References: <1576524252-79116-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1576524252-79116-3-git-send-email-jacob.jun.pan@linux.intel.com>
+ <6192b57c-12ab-ec6c-ab95-d9b9bff3efad@linux.intel.com>
+ <20200109103908.4c306b06@jacob-builder>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <89cc7a91-f645-e331-8f02-62c281c0ea3d@linux.intel.com>
+Date:   Fri, 10 Jan 2020 09:15:45 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108062923.14684-2-fengping.yu@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200109103908.4c306b06@jacob-builder>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fengping,
+Hi Jacob,
 
-On Wed, Jan 08, 2020 at 02:29:22PM +0800, fengping yu wrote:
-> From: "fengping.yu" <fengping.yu@mediatek.com>
+On 1/10/20 2:39 AM, Jacob Pan wrote:
+> On Wed, 18 Dec 2019 10:41:53 +0800
+> Lu Baolu <baolu.lu@linux.intel.com> wrote:
 > 
-> Add mtk keypad device tree documentation.
+>> Hi again,
+>>
+>> On 12/17/19 3:24 AM, Jacob Pan wrote:
+>>> +/**
+>>> + * intel_pasid_setup_nested() - Set up PASID entry for nested
+>>> translation
+>>> + * which is used for vSVA. The first level page tables are used for
+>>> + * GVA-GPA or GIOVA-GPA translation in the guest, second level
+>>> page tables
+>>> + *  are used for GPA-HPA translation.
+>>> + *
+>>> + * @iommu:      Iommu which the device belong to
+>>> + * @dev:        Device to be set up for translation
+>>> + * @gpgd:       FLPTPTR: First Level Page translation pointer in
+>>> GPA
+>>> + * @pasid:      PASID to be programmed in the device PASID table
+>>> + * @pasid_data: Additional PASID info from the guest bind request
+>>> + * @domain:     Domain info for setting up second level page tables
+>>> + * @addr_width: Address width of the first level (guest)
+>>> + */
+>>> +int intel_pasid_setup_nested(struct intel_iommu *iommu,
+>>> +			struct device *dev, pgd_t *gpgd,
+>>> +			int pasid, struct
+>>> iommu_gpasid_bind_data_vtd *pasid_data,
+>>> +			struct dmar_domain *domain,
+>>> +			int addr_width)
+>>> +{
+>>> +	struct pasid_entry *pte;
+>>> +	struct dma_pte *pgd;
+>>> +	u64 pgd_val;
+>>> +	int agaw;
+>>> +	u16 did;
+>>> +
+>>> +	if (!ecap_nest(iommu->ecap)) {
+>>> +		pr_err("IOMMU: %s: No nested translation
+>>> support\n",
+>>> +		       iommu->name);
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	pte = intel_pasid_get_entry(dev, pasid);
+>>> +	if (WARN_ON(!pte))
+>>> +		return -EINVAL;
+>>> +
+>>> +	pasid_clear_entry(pte);
+>>
+>> In some cases, e.g. nested mode for GIOVA-HPA, the PASID entry might
+>> have already been setup for second level translation. (This could be
+>> checked with the Present bit.) Hence, it's safe to flush caches here.
+>>
+>> Or, maybe intel_pasid_tear_down_entry() is more suitable?
+>>
+> We don't allow binding the same device-PASID twice, so if the PASID
+> entry was used for GIOVA/RID2PASID, it should unbind first, and
+> teardown flush included, right?
 > 
-> Change-Id: I415b76ee980784992763c768829b2dda76699dea
-> Signed-off-by: fengping.yu <fengping.yu@mediatek.com>
-> ---
->  .../devicetree/bindings/input/mtk-kpd.txt     | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/mtk-kpd.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/mtk-kpd.txt b/Documentation/devicetree/bindings/input/mtk-kpd.txt
-> new file mode 100644
-> index 000000000000..2af81e696159
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/mtk-kpd.txt
-> @@ -0,0 +1,45 @@
-> +* Mediatek's Keypad Controller device tree binding
-> +
-> +Mediatek's Keypad controller is used to interface a SoC with a matrix-type
-> +keypad device. The keypad controller supports multiple row and column lines.
-> +A key can be placed at each intersection of a unique row and a unique column.
-> +The keypad controller can sense a key-press and key-release and report the
-> +event using a interrupt to the cpu.
-> +
-> +Required properties:
-> +- compatible should contain:
-> +	* "mediatek,mt6779-keypad" for MT6779 keypad
-> +	* "mediatek,kp" for common keypad
-> +
-> +- reg: The base address of the Keypad register bank.
-> +
-> +- interrupts: A single interrupt specifier.
-> +
-> +- mediatek,key-debounce-ms: Debounce interval in milliseconds, maximum value
-> +  is 256ms
-> +
-> +- mediatek,hw-map-num: Number of entries of keycode in mediatek,hw-init-map
-> +
-> +- mediatek,hw-init-map: An array of packed 1-cell entries containing the
-> +  equivalent of hw-map-num linux key-code. Each cell is Linux keymap of
-> +  corresponding row/col, arrange like this:
-> +
-> +  row0col0, row0col1, row0col2,...row0col8,
-> +  row1col0, row1col1, row1col2,...row1col8,
-> +  ...
-> +  row7col0, row7col1, row7col2,...row7col8.
 
-Please use standard "linux,keymap" property as defined in
-Documentation/devicetree/bindings/input/matrix-keymap.txt. You can use
-API from drivers/input/matrix-keymap.c to handle the property.
+Fair enough. Can you please add this as a comment to this function? So
+that the caller of this interface can know this. Or add a check in this
+function which returns error if the pasid entry has already been bond.
 
-Thanks.
-
--- 
-Dmitry
+Best regards,
+baolu
