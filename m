@@ -2,208 +2,159 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE04C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:26:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B1C7C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F41320721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:26:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="jigIi9Hg";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="3MDfc9wQ"
+	by mail.kernel.org (Postfix) with ESMTP id 2895E20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:26:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728029AbgAJN0J (ORCPT
+        id S1728094AbgAJN0a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 08:26:09 -0500
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:47456 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727553AbgAJN0I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 08:26:08 -0500
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00AD6eEK019160;
-        Fri, 10 Jan 2020 05:25:46 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=proofpoint;
- bh=kJKBnH5ilFPBKkf1kjtm5U8yVUmzHj5VuGhVGOYyVVI=;
- b=jigIi9HggT7zrDTwcjGotkp/cFPVxkqqzIaVj+Lf6ZBHaS481CIuIf/svUaQPBjA97u8
- nAp3IduOyp3i8+RdyZe2M+kg3SY1ujwG/TlefeR8w0LY0xCQ86WughMsFPZNtv84fYJf
- WtOi6iXrJ4wj+06ZjFn/kCS5U097Kt4QiSFGjvBlKQj7NOSRij2Zp6kE30/EEGkWBGrc
- K5x2/fh77ORoExH8tQW3/hcQbIeqPv7jOLCZWDM44asBOCMqFCnukoKq8YyUGEcD4zz+
- XXbneyxotvHW7OB+pq92cWRY9767mfODbnvTozs95b45pywHl1/iCtGRRmglDydkEos+ Zw== 
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2104.outbound.protection.outlook.com [104.47.58.104])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2xar525f8q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jan 2020 05:25:45 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CTK75NKhvFmASUYsKKrFeSnwIApQ0kHIndy5IRWP9k5kJB2uVSVewnhSnnmmPzU4fUlkzSt8zyr/7r0QQVcnjPm9OD5U22qDb9vAU2QbfQvMs2y8mJxTn5XoCv7W2Zy9MM9z4ym66TgN00njesaoR8zsX7cCTlzZiP/q5PBwMf3vkoLP0zm//tOC1Ff53shJkldIPlZlZXKxz+MiTvIUb4wTxjgtrLO4T65rg6Kot8eeyhmfj6v8x1wT13tsVp9PPZMoS22h46QqndbidoeYmFNGDgL8ERnd0fGaPFV6BYPegFoKWighXTPtPRqpnbE/MoDzOThHZ5c+gbJi8kfoAQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kJKBnH5ilFPBKkf1kjtm5U8yVUmzHj5VuGhVGOYyVVI=;
- b=V9ItBnddO1UJSOr5G/9FfpyvuxnlXhVE9uRntrgWeqYtOEYGhqBxXI5kxjoLumLo6Bc4pidBc16DXJcYqiGhiU2SM+XZmgQ99ruy2eG+V9khv9FzBXOQmBm5cM132aRsv0VET+b0pC/pg2fK/SzUfnpxndh03gSFL7aKOQ7eZhiABBSC9AEGljJgQfyk0Zjn4IWCsoo6YM0aWFW8uFOfqpiBPr5ON8eBSl1TUb65b9E1FoJuMQdoZGoBlqoALXncyxohWKc+1Sz/Zow6xaPIuuz6xvewWJgmQNLmIC3WOd1je717NEC0/cajZTt8/vyGvkqUyUtdwOutCR+xggpKkQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 158.140.1.28) smtp.rcpttodomain=gmail.com smtp.mailfrom=cadence.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=cadence.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kJKBnH5ilFPBKkf1kjtm5U8yVUmzHj5VuGhVGOYyVVI=;
- b=3MDfc9wQiYiLD1LydIYx/Ezo+cvj5ZzrBjCRrFfzfhOBqkw0z8QUn9+wLieDOOi7Us8rHz7Ztjepog+yoCasSMg8F7wm9AozfaLkkbMWnbyXh11yj1rXXSJC0qZgJz3jgY4pn6f3N03GZxGq06pdr/Xpno5zqoehzph0qwEtMWU=
-Received: from CY1PR07CA0013.namprd07.prod.outlook.com
- (2a01:111:e400:c60a::23) by DM6PR07MB6313.namprd07.prod.outlook.com
- (2603:10b6:5:152::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.11; Fri, 10 Jan
- 2020 13:25:43 +0000
-Received: from MW2NAM12FT067.eop-nam12.prod.protection.outlook.com
- (2a01:111:f400:fe5a::200) by CY1PR07CA0013.outlook.office365.com
- (2a01:111:e400:c60a::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend
- Transport; Fri, 10 Jan 2020 13:25:43 +0000
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 158.140.1.28 as permitted sender) receiver=protection.outlook.com;
- client-ip=158.140.1.28; helo=sjmaillnx2.cadence.com;
-Received: from sjmaillnx2.cadence.com (158.140.1.28) by
- MW2NAM12FT067.mail.protection.outlook.com (10.13.181.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.6 via Frontend Transport; Fri, 10 Jan 2020 13:25:43 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id 00ADPbKe021781
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Fri, 10 Jan 2020 05:25:39 -0800
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Fri, 10 Jan 2020 14:25:37 +0100
-Received: from lvlabc.cadence.com (10.165.128.101) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Fri, 10 Jan 2020 14:25:36 +0100
-Received: from lvlabc.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlabc.cadence.com (8.14.4/8.14.4) with ESMTP id 00ADPVXY041466;
-        Fri, 10 Jan 2020 13:25:31 GMT
-From:   Milind Parab <mparab@cadence.com>
-To:     <nicolas.ferre@microchip.com>, <jakub.kicinski@netronome.com>,
-        <andrew@lunn.ch>, <antoine.tenart@bootlin.com>,
-        <rmk+kernel@armlinux.org.uk>
-CC:     <Claudiu.Beznea@microchip.com>, <f.fainelli@gmail.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <hkallweit1@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <dkangude@cadence.com>, <a.fatoum@pengutronix.de>,
-        <brad.mouring@ni.com>, <pthombar@cadence.com>,
-        Milind Parab <mparab@cadence.com>
-Subject: [PATCH v2 net] net: macb: fix for fixed-link mode
-Date:   Fri, 10 Jan 2020 13:25:27 +0000
-Message-ID: <1578662727-41429-1-git-send-email-mparab@cadence.com>
-X-Mailer: git-send-email 2.2.2
+        Fri, 10 Jan 2020 08:26:30 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34126 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727500AbgAJN03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 08:26:29 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id F36DA6668A1498060F1D;
+        Fri, 10 Jan 2020 21:26:26 +0800 (CST)
+Received: from huawei.com (10.90.53.225) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Fri, 10 Jan 2020
+ 21:26:19 +0800
+From:   Zhihao Cheng <chengzhihao1@huawei.com>
+To:     <richard@nod.at>, <s.hauer@pengutronix.de>,
+        <ext-adrian.hunter@nokia.com>, <yi.zhang@huawei.com>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ubifs: Fix deadlock in concurrent bulk-read and writepage
+Date:   Fri, 10 Jan 2020 21:33:35 +0800
+Message-ID: <1578663215-146583-1-git-send-email-chengzhihao1@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(376002)(346002)(136003)(189003)(199004)(36092001)(6666004)(356004)(8676002)(26826003)(246002)(2616005)(70206006)(186003)(7696005)(7126003)(26005)(5660300002)(478600001)(7636002)(86362001)(70586007)(36756003)(316002)(7416002)(426003)(336012)(2906002)(54906003)(107886003)(4326008)(8936002)(110136005)(2101003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR07MB6313;H:sjmaillnx2.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:corp.Cadence.COM;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 718644d1-c45e-47d2-d32a-08d795d097f5
-X-MS-TrafficTypeDiagnostic: DM6PR07MB6313:
-X-Microsoft-Antispam-PRVS: <DM6PR07MB6313E61E9108110C69F64CE7D3380@DM6PR07MB6313.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-Forefront-PRVS: 02788FF38E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iEaUuZfDZc/kNpyWpDEQDqLADUkZ5ekuwq9bsBw9g/7pjD9bxHD62OYUjNkFNly6k0oFchMb3S5PT+JrykK4ARlcyni8h3WKjkVXxOm05SVQSvQ1drft03OdXSmdjJGbb7U2paz4ENq2u7L6C9+lT6i8+ca/yeztHtW/JqSON/XP5GMfcf6PAP2opF3wBh4GHuIS/6DDh3WB23ym/opQnxFqHfDCv2Phe2Q3d7Zn9sB6NmeJrJHkFy2WkMON7ZepYLYWvMAuRHySRxBDzFIij5aW9fxURJ0zVuRz20xKU+oHJ+xVLFM4jbABffnUwO29lWDB3QJlwfKo8HHraU7ptOJ3YRJ/HtvGXh4iHcGYNdH3Q3tbi/d5RPFSwtxC81ObAFas9Aouz2iNB3ibMadz0rc9Zi4udWlyTopJDqRCQt9O6U6bqeykWZjCSFHZ4OSSxrfMs76og3RncBD6wYfqohjaEC+rCTILJxf6YfRYMkCpA8/yWRiP82BHS0jfDKfDrK6lMkSw7wc0JZUGB6yPIw==
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2020 13:25:43.0820
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 718644d1-c45e-47d2-d32a-08d795d097f5
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx2.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB6313
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-10_01:2020-01-10,2020-01-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- lowpriorityscore=0 mlxlogscore=945 priorityscore=1501 impostorscore=0
- suspectscore=0 malwarescore=0 spamscore=0 bulkscore=0 adultscore=0
- clxscore=1015 phishscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001100114
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fix the issue with fixed link. With fixed-link
-device opening fails due to macb_phylink_connect not
-handling fixed-link mode, in which case no MAC-PHY connection
-is needed and phylink_connect return success (0), however
-in current driver attempt is made to search and connect to
-PHY even for fixed-link.
+In ubifs, concurrent execution of writepage and bulk read on the same file
+may cause ABBA deadlock, for example (Reproduce method see Link):
 
-Fixes: 7897b071ac3b ("net: macb: convert to phylink")
-Signed-off-by: Milind Parab <mparab@cadence.com>
----
-Changes in v2:
-1. Code refactoring to remove extra if condition
----
- drivers/net/ethernet/cadence/macb_main.c | 30 ++++++++++++++----------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+Process A(Bulk-read starts from page4)         Process B(write page4 back)
+  vfs_read                                       wb_workfn or fsync
+  ...                                            ...
+  generic_file_buffered_read                     write_cache_pages
+    ubifs_readpage                                 LOCK(page4)
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index c5ee363ca5dc..f8fd45d69e9a 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -611,21 +611,24 @@ static const struct phylink_mac_ops macb_phylink_ops = {
- 	.mac_link_up = macb_mac_link_up,
+      ubifs_bulk_read                              ubifs_writepage
+        LOCK(ui->ui_mutex)                           ubifs_write_inode
+
+	  ubifs_do_bulk_read                           LOCK(ui->ui_mutex)
+	    find_or_create_page(alloc page4)                  ↑
+	      LOCK(page4)                   <--     ABBA deadlock occurs!
+
+In order to ensure the serialization execution of bulk read, we can't
+remove the big lock 'ui->ui_mutex' in ubifs_bulk_read(). Instead, we add
+a new mutex lock for bulk read in ubifs_inode. ubifs_bulk_read() will be
+protected by the new mutex lock which replaces ui_mutex.
+It is confirmed that bulk-read (bulk read data member and process) and
+other members (which are protected by the ui_mutex in ubifs_inode) are
+independent of each other, including attr, dirty ("clean <-> dirty"
+transitions), ui_size (truncate process), etc.
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Cc: <Stable@vger.kernel.org>
+Fixes: 4793e7c5e1c ("UBIFS: add bulk-read facility")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206153
+---
+ fs/ubifs/file.c  | 21 +++++++++++++++++----
+ fs/ubifs/super.c |  1 +
+ fs/ubifs/ubifs.h |  7 +++++--
+ 3 files changed, 23 insertions(+), 6 deletions(-)
+
+diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+index cd52585..3e15c27 100644
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -836,10 +836,23 @@ static int ubifs_bulk_read(struct page *page)
+ 		return 0;
+ 
+ 	/*
+-	 * Bulk-read is protected by @ui->ui_mutex, but it is an optimization,
+-	 * so don't bother if we cannot lock the mutex.
++	 * Bulk-read is protected by @ui->ui_bulk_read_mutex, ubifs_readpage()
++	 * will all come here. If there are other concurrent read tasks during
++	 * bulk-read, deadlock may occur, such as:
++	 * Process A(Bulk-read starts from page4)   Process B(Read page4)
++	 *   vfs_read                                 vfs_read
++	 *     ...                                      ...
++	 *     ubifs_readpage                           find_get_page(alloc page4)
++	 *                                                add_to_page_cache_lru
++	 *       ubifs_bulk_read                            LOCK(page4)
++	 *         LOCK(ui->ui_bulk_read_mutex)         ubifs_readpage
++	 *           ubifs_do_bulk_read                   ubifs_bulk_read
++	 *                                                  LOCK(ui->ui_bulk_read_mutex)
++	 *             find_or_create_page                         ↑
++	 *               LOCK(page4)		       <-- ABBA deadlock occurs!
++	 * So don't bother if we cannot lock the mutex.
+ 	 */
+-	if (!mutex_trylock(&ui->ui_mutex))
++	if (!mutex_trylock(&ui->ui_bulk_read_mutex))
+ 		return 0;
+ 
+ 	if (index != last_page_read + 1) {
+@@ -884,7 +897,7 @@ static int ubifs_bulk_read(struct page *page)
+ 		kfree(bu);
+ 
+ out_unlock:
+-	mutex_unlock(&ui->ui_mutex);
++	mutex_unlock(&ui->ui_bulk_read_mutex);
+ 	return err;
+ }
+ 
+diff --git a/fs/ubifs/super.c b/fs/ubifs/super.c
+index 5e1e8ec..c4415b3 100644
+--- a/fs/ubifs/super.c
++++ b/fs/ubifs/super.c
+@@ -257,6 +257,7 @@ static struct inode *ubifs_alloc_inode(struct super_block *sb)
+ 	memset((void *)ui + sizeof(struct inode), 0,
+ 	       sizeof(struct ubifs_inode) - sizeof(struct inode));
+ 	mutex_init(&ui->ui_mutex);
++	mutex_init(&ui->ui_bulk_read_mutex);
+ 	spin_lock_init(&ui->ui_lock);
+ 	return &ui->vfs_inode;
  };
- 
-+static bool macb_phy_handle_exists(struct device_node *dn)
-+{
-+	dn = of_parse_phandle(dn, "phy-handle", 0);
-+	of_node_put(dn);
-+	return dn != NULL;
-+}
-+
- static int macb_phylink_connect(struct macb *bp)
- {
- 	struct net_device *dev = bp->dev;
- 	struct phy_device *phydev;
-+	struct device_node *dn = bp->pdev->dev.of_node;
- 	int ret;
- 
--	if (bp->pdev->dev.of_node &&
--	    of_parse_phandle(bp->pdev->dev.of_node, "phy-handle", 0)) {
--		ret = phylink_of_phy_connect(bp->phylink, bp->pdev->dev.of_node,
--					     0);
--		if (ret) {
--			netdev_err(dev, "Could not attach PHY (%d)\n", ret);
--			return ret;
--		}
--	} else {
-+	if (dn)
-+		ret = phylink_of_phy_connect(bp->phylink, dn, 0);
-+
-+	if (!dn || (ret && !macb_phy_handle_exists(dn))) {
- 		phydev = phy_find_first(bp->mii_bus);
- 		if (!phydev) {
- 			netdev_err(dev, "no PHY found\n");
-@@ -634,10 +637,11 @@ static int macb_phylink_connect(struct macb *bp)
- 
- 		/* attach the mac to the phy */
- 		ret = phylink_connect_phy(bp->phylink, phydev);
--		if (ret) {
--			netdev_err(dev, "Could not attach to PHY (%d)\n", ret);
--			return ret;
--		}
-+	}
-+
-+	if (ret) {
-+		netdev_err(dev, "Could not attach PHY (%d)\n", ret);
-+		return ret;
- 	}
- 
- 	phylink_start(bp->phylink);
+diff --git a/fs/ubifs/ubifs.h b/fs/ubifs/ubifs.h
+index c55f212..2ad596e 100644
+--- a/fs/ubifs/ubifs.h
++++ b/fs/ubifs/ubifs.h
+@@ -354,8 +354,10 @@ struct ubifs_gced_idx_leb {
+  * @xattr: non-zero if this is an extended attribute inode
+  * @bulk_read: non-zero if bulk-read should be used
+  * @ui_mutex: serializes inode write-back with the rest of VFS operations,
+- *            serializes "clean <-> dirty" state changes, serializes bulk-read,
+- *            protects @dirty, @bulk_read, @ui_size, and @xattr_size
++ *            serializes "clean <-> dirty" state changes,
++ *            protects @dirty, @ui_size, and @xattr_size
++ * @ui_bulk_read_mutex: serializes bulk-read, protects @bulk_read,
++ *                      @last_page_read and @read_in_a_row
+  * @ui_lock: protects @synced_i_size
+  * @synced_i_size: synchronized size of inode, i.e. the value of inode size
+  *                 currently stored on the flash; used only for regular file
+@@ -409,6 +411,7 @@ struct ubifs_inode {
+ 	unsigned int bulk_read:1;
+ 	unsigned int compr_type:2;
+ 	struct mutex ui_mutex;
++	struct mutex ui_bulk_read_mutex;
+ 	spinlock_t ui_lock;
+ 	loff_t synced_i_size;
+ 	loff_t ui_size;
 -- 
-2.17.1
+2.7.4
 
