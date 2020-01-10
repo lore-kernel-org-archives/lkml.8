@@ -2,74 +2,212 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9614C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FECCC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:46:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9920520838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578642375;
-	bh=8ADsNC4aByvOIz1Pl29Go90LRKxU6fl1luPK7QjlgWo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nCkeK2SSI2KI9VZaF+UUBXOHvmqo4Icaz3s4hV4hp+IkFYxkGcMqYpzYz7d0Z7pdg
-	 jOoxx0LDxgBYsQ7SHIUl4L3fwU3YMgfkYP/bG2WecxqBAnW0wUea29YYaEkjCpX5VQ
-	 TpAK4mzUzIg5BfLZ1ZxtnXtTmUWsReLN0sGNmsR4=
+	by mail.kernel.org (Postfix) with ESMTP id 337A42080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:46:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="IEuAW6+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726648AbgAJHqO (ORCPT
+        id S1726722AbgAJHqs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:46:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34158 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgAJHqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:46:14 -0500
-Received: from localhost (unknown [223.226.110.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A90E42080D;
-        Fri, 10 Jan 2020 07:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578642373;
-        bh=8ADsNC4aByvOIz1Pl29Go90LRKxU6fl1luPK7QjlgWo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=szWnKRft82X+GbunxqZ3pu0hXwcVAwCZLFfKRZY8Mke2USKX8z12JHL8OM04UP8l5
-         YA0KCp8m78f1vFwR3rqz7fdSW3q3FPj0/Q1Ho/RskDr2UQF7lw/bUHH01L380L582g
-         m1uhyeN0AwP2HJWXyDuigxX3uTQobOINIUkw70Hs=
-Date:   Fri, 10 Jan 2020 13:16:05 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Tony Lindgren <tony@atomide.com>, dmaengine@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next][V2] dmaengine: ti: omap-dma: don't allow a null
- od->plat pointer to be dereferenced
-Message-ID: <20200110074605.GD2818@vkoul-mobl>
-References: <20200109131953.157154-1-colin.king@canonical.com>
+        Fri, 10 Jan 2020 02:46:48 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:27982 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgAJHqs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:46:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578642405;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=iGK7Pgzw6tKu2VK9x2Icryn9l1IuJ/TgQW4Aouj2aqc=;
+        b=IEuAW6+2Q10mR3Gb6lYgkCOqpINUw9glVT/0aBTgxrOCWB4hMX4gzmOhDO19ebXC8+
+        MKP8kVd/0aKIVjbwtM6grPp965sIxpVl5DHrmWQHGc0jON531pupkupZ7waVw289Yq9N
+        5+lAddOiN1mhfmv6PVH5CniZHgTn5pve4LoYn+Q6rc2/Tp5xQRpt5BaGp9qqYL/hjL5e
+        9boJ4BspX6MURO8P21C2GRVAqsKys8CBzWQImYgCx0EN3Ke4SfB0CdpUYJ7JVu1Y5NvC
+        pHisfoXHoyl6Krtm6nRN5Yj2gsxE3MsLy7iTosB5a0OhU3OnhTeRM6GjDDvAOczN1mc2
+        uQlA==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
+        with ESMTPSA id u04585w0A7jN7hj
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 10 Jan 2020 08:45:23 +0100 (CET)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Julia Lawall <julia.lawall@inria.fr>
+Subject: Re: [PATCH v27 09/12] LRNG - add Jitter RNG fast noise source
+Date:   Fri, 10 Jan 2020 08:45:22 +0100
+Message-ID: <3881936.EWlHz54Di6@tauon.chronox.de>
+In-Reply-To: <0ba976fa-fed1-4720-c039-043160dbce9e@infradead.org>
+References: <6157374.ptSnyUpaCn@positron.chronox.de> <6341883.UacF4FzDma@positron.chronox.de> <0ba976fa-fed1-4720-c039-043160dbce9e@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109131953.157154-1-colin.king@canonical.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09-01-20, 13:19, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently when the call to dev_get_platdata returns null the driver issues
-> a warning and then later dereferences the null pointer.  Avoid this issue
-> by returning -ENODEV errror rather when the platform data is null and
+Am Freitag, 10. Januar 2020, 01:24:47 CET schrieb Randy Dunlap:
 
-s/errror/error :) never thought would correct Colin on spelling :)
+Hi Randy,
 
-With the typo fixes:
+> Hi,
+>=20
+> On 1/9/20 12:34 AM, Stephan M=FCller wrote:
+> > ---
+> >=20
+> >  drivers/char/lrng/Kconfig     | 11 +++++
+> >  drivers/char/lrng/Makefile    |  1 +
+> >  drivers/char/lrng/lrng_jent.c | 87 +++++++++++++++++++++++++++++++++++
+> >  3 files changed, 99 insertions(+)
+> >  create mode 100644 drivers/char/lrng/lrng_jent.c
+> >=20
+> > diff --git a/drivers/char/lrng/lrng_jent.c b/drivers/char/lrng/lrng_jen=
+t.c
+> > new file mode 100644
+> > index 000000000000..97c0d192e9c8
+> > --- /dev/null
+> > +++ b/drivers/char/lrng/lrng_jent.c
+> > @@ -0,0 +1,87 @@
+> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
+> > +/*
+> > + * LRNG Fast Noise Source: Jitter RNG
+> > + *
+> > + * Copyright (C) 2016 - 2020, Stephan Mueller <smueller@chronox.de>
+> > + */
+> > +
+> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> > +
+> > +#include <linux/types.h>
+> > +#include <crypto/internal/jitterentropy.h>
+> > +
+> > +#include "lrng_internal.h"
+> > +
+> > +/*
+> > + * Estimated entropy of data is a 16th of
+> > LRNG_DRNG_SECURITY_STRENGTH_BITS. + * Albeit a full entropy assessment =
+is
+> > provided for the noise source indicating + * that it provides high
+> > entropy rates and considering that it deactivates + * when it detects
+> > insufficient hardware, the chosen under estimation of + * entropy is
+> > considered to be acceptable to all reviewers.
+> > + */
+> > +static u32 jitterrng =3D LRNG_DRNG_SECURITY_STRENGTH_BITS>>4;
+> > +module_param(jitterrng, uint, 0644);
+> > +MODULE_PARM_DESC(jitterrng, "Entropy in bits of 256 data bits from Jit=
+ter
+> > " +			    "RNG noise source");
+> > +
+> > +/**
+> > + * Get Jitter RNG entropy
+> > + *
+> > + * @outbuf buffer to store entropy
+> > + * @outbuflen length of buffer
+> > + * @return > 0 on success where value provides the added entropy in bi=
+ts
+> > + *	   0 if no fast source was available
+> > + */
+>=20
+> Don't begin the comment block with /**
+> or convert it to Linux kernel-doc notation format.
 
-Acked-by: Vinod Koul <vkoul@kernel.org>
+Yes, the colons are missing and there is no @return. It will be fixed with =
+the=20
+next patch set.
 
--- 
-~Vinod
+Thank you.
+>=20
+> > +static struct rand_data *lrng_jent_state;
+> > +
+> > +u32 lrng_get_jent(u8 *outbuf, unsigned int outbuflen)
+> > +{
+> > +	int ret;
+> > +	u32 ent_bits =3D jitterrng;
+> > +	unsigned long flags;
+> > +	static DEFINE_SPINLOCK(lrng_jent_lock);
+> > +	static int lrng_jent_initialized =3D 0;
+> > +
+> > +	spin_lock_irqsave(&lrng_jent_lock, flags);
+> > +
+> > +	if (!ent_bits || (lrng_jent_initialized =3D=3D -1)) {
+> > +		spin_unlock_irqrestore(&lrng_jent_lock, flags);
+> > +		return 0;
+> > +	}
+> > +
+> > +	if (!lrng_jent_initialized) {
+> > +		lrng_jent_state =3D jent_lrng_entropy_collector();
+> > +		if (!lrng_jent_state) {
+> > +			jitterrng =3D 0;
+> > +			lrng_jent_initialized =3D -1;
+> > +			spin_unlock_irqrestore(&lrng_jent_lock, flags);
+> > +			pr_info("Jitter RNG unusable on current system\n");
+> > +			return 0;
+> > +		}
+> > +		lrng_jent_initialized =3D 1;
+> > +		pr_debug("Jitter RNG working on current system\n");
+> > +	}
+> > +	ret =3D jent_read_entropy(lrng_jent_state, outbuf, outbuflen);
+> > +	spin_unlock_irqrestore(&lrng_jent_lock, flags);
+> > +
+> > +	if (ret) {
+> > +		pr_debug("Jitter RNG failed with %d\n", ret);
+> > +		return 0;
+> > +	}
+> > +
+> > +	/* Obtain entropy statement */
+> > +	if (outbuflen !=3D LRNG_DRNG_SECURITY_STRENGTH_BYTES)
+> > +		ent_bits =3D (ent_bits * outbuflen<<3) /
+> > +			   LRNG_DRNG_SECURITY_STRENGTH_BITS;
+> > +	/* Cap entropy to buffer size in bits */
+> > +	ent_bits =3D min_t(u32, ent_bits, outbuflen<<3);
+> > +	pr_debug("obtained %u bits of entropy from Jitter RNG noise source\n",
+> > +		 ent_bits);
+> > +
+> > +	return ent_bits;
+> > +}
+> > +
+> > +u32 lrng_jent_entropylevel(void)
+> > +{
+> > +	return min_t(u32, jitterrng, LRNG_DRNG_SECURITY_STRENGTH_BITS);
+> > +}
+>=20
+> thanks.
+
+
+
+Ciao
+Stephan
+
+
