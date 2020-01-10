@@ -2,147 +2,137 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38221C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443ACC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 098A920721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3A920721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 13:25:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="TTtT0/u+"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Vh0GCGNe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgAJNZ0 (ORCPT
+        id S1727889AbgAJNZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 08:25:26 -0500
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:41139 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727358AbgAJNZZ (ORCPT
+        Fri, 10 Jan 2020 08:25:53 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50511 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727553AbgAJNZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 08:25:25 -0500
-Received: from [IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef]
- ([IPv6:2001:420:44c1:2577:c967:e1d3:183a:b8ef])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id puHrin9xDpLtbpuHuiQmSe; Fri, 10 Jan 2020 14:25:23 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1578662723; bh=I0b7s/xDqtbd60FacQFIRFFagV1Bh2XVzbaw6GJ8UFk=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=TTtT0/u+HRhWOQa06QDndrU0bUEOOnpgZ7+dEC97BkRPFIGB6+mexFpX5KgD0Ycg7
-         yhQzvpBQhpk2DygTF4OkK7SbCzkIEdbt1VBG6UrD+kwFD6l10FwZudPsgW7v4eMGeL
-         aYwHyNPBtNy6/lyBAFseDupjlwYKHL69gvkN/Cq4uYQTv02WDFPYe6/H3/nZ+1y+tA
-         BALkMj/5GvNS1nAx0I4g/1Vkw1rgqgcm08uw2jwao9fUsMlB844kKhFq4HAFqE21zy
-         nTRdmkh4N365san1LzaN8h2TVUGaY8Hytm1MaugFO+7c4Ri1RfYmfqNAU0fotrD5oM
-         l7dFQzn+02NNg==
-Subject: Re: [PATCH] staging/vc04_services/bcm2835-camera: distinct numeration
- and names for devices
-To:     Michael Kupfer <michael.kupfer@fau.de>, eric@anholt.net,
-        wahrenst@gmx.net, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, mchehab+samsung@kernel.org,
-        linux-media@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, f.fainelli@gmail.com,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        dave.stevenson@raspberrypi.org, daniela.mormocea@gmail.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-kernel@i4.cs.fau.de, Kay Friedrich <kay.friedrich@fau.de>
-References: <20191206085432.19962-1-michael.kupfer@fau.de>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <3db2350b-0a6d-0693-258c-9d47f71c0627@xs4all.nl>
-Date:   Fri, 10 Jan 2020 14:25:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 10 Jan 2020 08:25:51 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so2009665wmb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 05:25:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pPkkayMqoY404hwMIWti3s+tl9smeoH8DKQs1LSa8V4=;
+        b=Vh0GCGNeW4bRhhYlzpky0Y1SiaDf4HTWvITnqtsIimZNbZd61XZNuTT7JdXyszOYFY
+         nlJMifjThgw+w7+kHxFAGI9rsKGHFZiapxKPIT9UgVfmIY7Z1W4SfmRcJ0f949TUTHjY
+         kJ7J6GTkKlxSiM3vvdzlv8EjThPKbQMKMYMzo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pPkkayMqoY404hwMIWti3s+tl9smeoH8DKQs1LSa8V4=;
+        b=bFNp9pSC0i1xhKXRaQUg26pTCC6zQoEMC0xLNpYOACRs8FZHIyoVqOFygx5tzwTFG4
+         qabSp2vhpSYKyQx9gb0AGjV8oFOkDw2CR1N7vB9rD1CjG00vG0mcuCidZqm/M4+OJUpq
+         jSlRIFsokpa83TpUes41PNKa0K6XbyDHh6MNsqz0GZmU5UbQ2iqyXRgc8RzWWTGCQvER
+         Z/c9Xz0YsufZMKG6Tiz/0wWo1Fk+33TMljB0RpeXbaYNWSnrOH3K2rDOkGBgV1ghuEJG
+         eo0gPjP3o+YYctScjgn6uIZdiY+OI1HBM1R5UwTOLmtBGfW5OBnWyXrqeGqAfeTGdFQA
+         iBYA==
+X-Gm-Message-State: APjAAAX+4BOdobtuWbpd3POQeRpPShkX2g6EoGUWHlZI1QrB4sHciXED
+        0IWiby9Ww5cCbz+0bTJKr5XA5g==
+X-Google-Smtp-Source: APXvYqx8F4gmAh17IOiAHcyqfmcB4I8c278zpNEdGxnNwMArdEe2yyt01GfDbRva8CjnkY0S1x2NkA==
+X-Received: by 2002:a7b:c93a:: with SMTP id h26mr4290073wml.83.1578662749896;
+        Fri, 10 Jan 2020 05:25:49 -0800 (PST)
+Received: from localhost.localdomain ([2a06:98c0:1000:8250:51ce:3bcb:24c3:4be9])
+        by smtp.gmail.com with ESMTPSA id m10sm2204033wrx.19.2020.01.10.05.25.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 05:25:49 -0800 (PST)
+From:   Lorenz Bauer <lmb@cloudflare.com>
+To:     kafai@fb.com, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Joe Stringer <joe@isovalent.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     kernel-team@cloudflare.com
+Subject: [PATCH bpf v2] net: bpf: don't leak time wait and request sockets
+Date:   Fri, 10 Jan 2020 13:23:36 +0000
+Message-Id: <20200110132336.26099-1-lmb@cloudflare.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200109115749.12283-1-lmb@cloudflare.com>
+References: <20200109115749.12283-1-lmb@cloudflare.com>
 MIME-Version: 1.0
-In-Reply-To: <20191206085432.19962-1-michael.kupfer@fau.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBd3XXTXHJXsWfyVxCd2xYnZO0N8s/BDiJigBt9fBzOuvI1qg7Ov9vJHlQwwroeHfDptOn2x6LGe/NF17tiYIHe6IKGtbMu6lyUonjXvZHlMv8StSdIC
- KjYmD4yv2S6PG8353r9KVWVoWKnWpExFpS00SMNPq5IJsX0GyIHHf370xIlWiBo1uFBPJrF+j9ZsO01XP4FQMp1f6UC1jRrs61fg77hJ1wy4Zgliil7O9MiI
- pvMz1R6SFwWlhjOzw9WPqyNWo8SWxUYcyyfl2v53V+CvWgwJ5DZG7hUbdZP/qv+bKOk5xyhfl26PIEeuFIG6UMCgRYfGFOYgyV991fAuAVn2Dl9s1kexO+eh
- tpS7DuSgD76w957xPtmjizhbEK3EmsdZ+k/6hrHyjkRb3KLCufZaCXa92/oMKYXPD3EmQEqcCJAZFxvg1thOoX7sSWbv5i9/KTtAn+VIMvFR58Zn88QVT/xo
- D8/JfnqE8C4zdH9i2TrB90rHJKxmGPFc91KhbCbQaPjrg38xmbFqJcOEL/n/XHiROQtHdEhKeUmzL+4YZJ3WDWuvUhprcNE6aPBSeDmnpTKkpbqgiCwjsfFx
- d4HTR0D5GW2x8wmWayKH432z9lI6vqffHTdck7Vrvb7hTmdesfRvgriuI8o4dt6SQuT9nJC9rt7gedvyKw7nsxUw4ODfbr24oLSb/ZkIO0o5i9yK2ZpiaWaF
- 8xfVbVb8KZVaxBQ4srQRGIc3bE4uizhm3PTr00SnN0xw9EXC01pJoNmd2cDfozvoMO3xwPWME7KAsoFn8WDu/XKTRBI2lN7SShrCVzRTZ7f9CEOO/08TtnON
- N1dWwwey5LGcCnce6F7Dp2Lmnl+Y2/FYR1WiEk3Ad5N+IsvZOD2DORmv4Xwh12IK0kVRpntnSOLvX7ZLyWK1VfnbCoGLBHMQA04SKM8L6IDC+76awJcUkbxl
- L/eY2w==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael, Kay,
+It's possible to leak time wait and request sockets via the following
+BPF pseudo code:
+ 
+  sk = bpf_skc_lookup_tcp(...)
+  if (sk)
+    bpf_sk_release(sk)
 
-On 12/6/19 9:54 AM, Michael Kupfer wrote:
-> Create a static atomic counter for numerating cameras.
-> Use the Media Subsystem Kernel Internal API to create distinct
-> device-names, so that the camera-number (given by the counter)
-> matches the camera-name.
-> 
-> Co-developed-by: Kay Friedrich <kay.friedrich@fau.de>
-> Signed-off-by: Kay Friedrich <kay.friedrich@fau.de>
-> Signed-off-by: Michael Kupfer <michael.kupfer@fau.de>
-> ---
->  .../vc04_services/bcm2835-camera/bcm2835-camera.c        | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-> index beb6a0063bb8..be5f90a8b49d 100644
-> --- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-> +++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-> @@ -60,6 +60,9 @@ MODULE_PARM_DESC(max_video_width, "Threshold for video mode");
->  module_param(max_video_height, int, 0644);
->  MODULE_PARM_DESC(max_video_height, "Threshold for video mode");
->  
-> +/* camera instance counter */
-> +static atomic_t camera_instance = ATOMIC_INIT(0);
-> +
->  /* global device data array */
->  static struct bm2835_mmal_dev *gdev[MAX_BCM2835_CAMERAS];
->  
-> @@ -1870,7 +1873,6 @@ static int bcm2835_mmal_probe(struct platform_device *pdev)
->  
->  		/* v4l2 core mutex used to protect all fops and v4l2 ioctls. */
->  		mutex_init(&dev->mutex);
-> -		dev->camera_num = camera;
->  		dev->max_width = resolutions[camera][0];
->  		dev->max_height = resolutions[camera][1];
->  
-> @@ -1886,8 +1888,9 @@ static int bcm2835_mmal_probe(struct platform_device *pdev)
->  		dev->capture.fmt = &formats[3]; /* JPEG */
->  
->  		/* v4l device registration */
-> -		snprintf(dev->v4l2_dev.name, sizeof(dev->v4l2_dev.name),
-> -			 "%s", BM2835_MMAL_MODULE_NAME);
-> +		dev->camera_num = v4l2_device_set_name(&dev->v4l2_dev,
-> +						       BM2835_MMAL_MODULE_NAME,
-> +						       &camera_instance);
->  		ret = v4l2_device_register(NULL, &dev->v4l2_dev);
->  		if (ret) {
->  			dev_err(&pdev->dev, "%s: could not register V4L2 device: %d\n",
-> 
+If sk->sk_state is TCP_NEW_SYN_RECV or TCP_TIME_WAIT the refcount taken
+by bpf_skc_lookup_tcp is not undone by bpf_sk_release. This is because
+sk_flags is re-used for other data in both kinds of sockets. The check
 
-Actually, in this specific case I would not use v4l2_device_set_name().
+  !sock_flag(sk, SOCK_RCU_FREE)
 
-Instead just use:
+therefore returns a bogus result. Check that sk_flags is valid by calling
+sk_fullsock. Skip checking SOCK_RCU_FREE if we already know that sk is
+not a full socket.
 
-		snprintf(dev->v4l2_dev.name, sizeof(dev->v4l2_dev.name),
-			 "%s-%u", BM2835_MMAL_MODULE_NAME, camera);
+Fixes: edbf8c01de5a ("bpf: add skc_lookup_tcp helper")
+Fixes: f7355a6c0497 ("bpf: Check sk_fullsock() before returning from bpf_sk_lookup()")
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+---
+ net/core/filter.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-It would be even better if there would be just one top-level v4l2_device used
-for all the camera instances. After all, there really is just one platform
-device for all of the cameras, and I would expect to see just a single
-v4l2_device as well.
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 42fd17c48c5f..41820ba0774c 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -5277,8 +5277,7 @@ __bpf_sk_lookup(struct sk_buff *skb, struct bpf_sock_tuple *tuple, u32 len,
+ 	if (sk) {
+ 		sk = sk_to_full_sk(sk);
+ 		if (!sk_fullsock(sk)) {
+-			if (!sock_flag(sk, SOCK_RCU_FREE))
+-				sock_gen_put(sk);
++			sock_gen_put(sk);
+ 			return NULL;
+ 		}
+ 	}
+@@ -5315,8 +5314,7 @@ bpf_sk_lookup(struct sk_buff *skb, struct bpf_sock_tuple *tuple, u32 len,
+ 	if (sk) {
+ 		sk = sk_to_full_sk(sk);
+ 		if (!sk_fullsock(sk)) {
+-			if (!sock_flag(sk, SOCK_RCU_FREE))
+-				sock_gen_put(sk);
++			sock_gen_put(sk);
+ 			return NULL;
+ 		}
+ 	}
+@@ -5383,7 +5381,8 @@ static const struct bpf_func_proto bpf_sk_lookup_udp_proto = {
+ 
+ BPF_CALL_1(bpf_sk_release, struct sock *, sk)
+ {
+-	if (!sock_flag(sk, SOCK_RCU_FREE))
++	/* Only full sockets have sk->sk_flags. */
++	if (!sk_fullsock(sk) || !sock_flag(sk, SOCK_RCU_FREE))
+ 		sock_gen_put(sk);
+ 	return 0;
+ }
+-- 
+2.20.1
 
-It doesn't hurt to have multiple v4l2_device structs, but it introduces a
-slight memory overhead since one would have been sufficient.
-
-v4l2_device_set_name() is meant for pci-like devices. And it really
-is a bit overkill to have it as a helper function.
-
-Regards,
-
-	Hans
