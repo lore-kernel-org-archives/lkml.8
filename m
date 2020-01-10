@@ -2,151 +2,131 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F6CC33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B311C33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF87720678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:08:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578694138;
-	bh=glpq+x/zJdkKmj8HYLHatQTZkXN+xIdD5FaHpHa3FU4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aOuWdrz7H9PE8/+WvvKas2WVPSkPXdbTZtSNQk23+gKMiw2mQO0nGy7pRFflZZxKQ
-	 YikXiYZBWDyz4ewvWtor/dWh59Grjql2aCFAkc5eHqTCGlHUi9ZloVKg58/2c/krtD
-	 Yt0oPusnsQym1XFbdVBXwY7oxKOXwWDeWY3oMuuI=
+	by mail.kernel.org (Postfix) with ESMTP id E269E20678
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:10:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="NOpOBQRE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgAJWF0 (ORCPT
+        id S1727370AbgAJWKg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:05:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727185AbgAJWFX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:05:23 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14FB120842;
-        Fri, 10 Jan 2020 22:05:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693923;
-        bh=glpq+x/zJdkKmj8HYLHatQTZkXN+xIdD5FaHpHa3FU4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OSgT0PHNOsKWNfDqcWLadFe3Ohxv84HrX77iTfJh7mAO8WgtZro7HhSgG71WnWvu+
-         34S3NxrjePsMJk9bn8zHWudHrPHiJ/U5fUCXwDGDoQr6hQshQraRi2wDxoml1EdSn7
-         tRniC2IMeEd9HAXbnOwx6BpaEMLFdSXzLv8SL0aI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Sasha Levin <sashal@kernel.org>, linux-afs@lists.infradead.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 07/26] rxrpc: Don't take call->user_mutex in rxrpc_new_incoming_call()
-Date:   Fri, 10 Jan 2020 17:05:00 -0500
-Message-Id: <20200110220519.28250-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200110220519.28250-1-sashal@kernel.org>
-References: <20200110220519.28250-1-sashal@kernel.org>
+        Fri, 10 Jan 2020 17:10:36 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42493 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbgAJWKf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:10:35 -0500
+Received: by mail-pg1-f196.google.com with SMTP id s64so1611361pgb.9
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 14:10:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FflZTkcc1ts8SyPh1Tv6O3mO6woDMPvlWHZ4MJqJNrs=;
+        b=NOpOBQRE66u6KQN87/vkmAkItKOSF4ij4xbS9VnxPrl+sbpTcbCd6GfbYid59Uimc9
+         ARE5i9QvhqmIGUARO+5nRQQ3fMm1FExit60q2VXJKjSkTlSCDuVpxR8Kz68/5leDKeG+
+         lsIyS6w0ShaK/JeNAXkGbemqcBQYtv73CmfldBMfiGT4W+f0qBuMR3SGl1xczxNbGvs9
+         WVe0swkgvPGojIyB/1YfgZfGPx2z5aIpZICIyCTl1DTU2SSpEVyir+OfPhSJ7WncC5qV
+         ujd8osY5v3oblUdBcBZ2N/2wyEu4ysqlXpgxe4xKvogWmjNUF9q1c6yFzzTE+FL2Fej6
+         ZinA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FflZTkcc1ts8SyPh1Tv6O3mO6woDMPvlWHZ4MJqJNrs=;
+        b=i8Ylg1sgKA+OZNA3f0lPH3FhlKpbPlGnlqoGry0mgpKfk+6WK0oaVo58rQhQayyKLm
+         YAxdjD3iRca1fgDjhlBFpxKnnTiMSVQoE74XP6gIXsvYqoJOfpvbElCqk7WCs68V9ThG
+         1P+lFIuFDPGBB9v5ZJhz131Tf6SCRS5qX85X6c0/HSL2eKV11MmTfFUkGbJXwKa+ZhYI
+         qv3gGrHya0UbZJou6bsAXmo8fZam4Lg+r+wYjX0R3tq4510F9sAN/MLdz0FrgCAx3hUv
+         tDVQXmD8Dota/ezPgtQo+TmpXCaBCDFJzLcpBfPMEgB/ASzzP71zGImQgrBnSSYE/Jmf
+         I52w==
+X-Gm-Message-State: APjAAAWssTI7mS2H25G3kwoaWmPuKQCvUM5yBoTx4IixhgbtWpQkFwyQ
+        cfFmjMIj+tYbVdBcdJSLlOP0eQ==
+X-Google-Smtp-Source: APXvYqwPVEhjrJvHFlfWZvKdXjGSTwzhF4/7AP0pRc7ulrfBKq+w05WIwBr+6YtpkcxiucBcZA+ZbQ==
+X-Received: by 2002:a63:7045:: with SMTP id a5mr7179821pgn.49.1578694234777;
+        Fri, 10 Jan 2020 14:10:34 -0800 (PST)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id g24sm4238709pfk.92.2020.01.10.14.10.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2020 14:10:33 -0800 (PST)
+Subject: Re: [PATCH-next 3/3] serial/sysrq: Add MAGIC_SYSRQ_SERIAL_SEQUENCE
+To:     Joe Perches <joe@perches.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org
+References: <20200109215444.95995-1-dima@arista.com>
+ <20200109215444.95995-4-dima@arista.com>
+ <5293a7cb1ccb16275ddb36c7f26fb9e83f4fac9b.camel@perches.com>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <056bff50-f67e-f00f-c98f-ccb427344691@arista.com>
+Date:   Fri, 10 Jan 2020 22:10:15 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <5293a7cb1ccb16275ddb36c7f26fb9e83f4fac9b.camel@perches.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+Hi Joe,
 
-[ Upstream commit 13b7955a0252e15265386b229b814152f109b234 ]
+On 1/10/20 4:50 PM, Joe Perches wrote:
+> On Thu, 2020-01-09 at 21:54 +0000, Dmitry Safonov wrote:
+>> Many embedded boards have a disconnected TTL level serial which can
+>> generate some garbage that can lead to spurious false sysrq detects.
+> 
+> trivia:
+> 
+>> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> []
+>> @@ -3081,6 +3081,38 @@ void uart_insert_char(struct uart_port *port, unsigned int status,
+> []
+>> +const char sysrq_toggle_seq[] = CONFIG_MAGIC_SYSRQ_SERIAL_SEQUENCE;
+> 
+> static const?
 
-Standard kernel mutexes cannot be used in any way from interrupt or softirq
-context, so the user_mutex which manages access to a call cannot be a mutex
-since on a new call the mutex must start off locked and be unlocked within
-the softirq handler to prevent userspace interfering with a call we're
-setting up.
+Will do, thanks!
 
-Commit a0855d24fc22d49cdc25664fb224caee16998683 ("locking/mutex: Complain
-upon mutex API misuse in IRQ contexts") causes big warnings to be splashed
-in dmesg for each a new call that comes in from the server.  Whilst it
-*seems* like it should be okay, since the accept path uses trylock, there
-are issues with PI boosting and marking the wrong task as the owner.
+> 
+>> +static int uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch)
+> 
+> This function return might read better as bool not int
 
-Fix this by not taking the mutex in the softirq path at all.  It's not
-obvious that there should be any need for it as the state is set before the
-first notification is generated for the new call.
+Yeah, no hard feelings, will convert.
 
-There's also no particular reason why the link-assessing ping should be
-triggered inside the mutex.  It's not actually transmitted there anyway,
-but rather it has to be deferred to a workqueue.
+[..]
+>> @@ -243,10 +243,10 @@ struct uart_port {
+>>  	unsigned long		sysrq;			/* sysrq timeout */
+>>  	unsigned int		sysrq_ch;		/* char for sysrq */
+>>  	unsigned char		has_sysrq;
+>> +	unsigned char		sysrq_seq;		/* index in sysrq_toggle_seq */
+> 
+> unsigned int?
+> 
+> Or maybe set a maximum length of MAGIC_SYSRQ_SERIAL_SEQUENCE.
 
-Further, I don't think that there's any particular reason that the socket
-notification needs to be done from within rx->incoming_lock, so the amount
-of time that lock is held can be shortened too and the ping prepared before
-the new call notification is sent.
+I think, 256 chars should be enough to send on serial (c)
 
-Fixes: 540b1c48c37a ("rxrpc: Fix deadlock between call creation and sendmsg/recvmsg")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-cc: Ingo Molnar <mingo@redhat.com>
-cc: Will Deacon <will@kernel.org>
-cc: Davidlohr Bueso <dave@stgolabs.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/rxrpc/call_accept.c | 20 +++-----------------
- 1 file changed, 3 insertions(+), 17 deletions(-)
+I'm not aware of a way to put the max string length in Kconfig, so I did
+in the patch:
+BUILD_BUG_ON(ARRAY_SIZE(sysrq_toggle_seq) >=
+sizeof(port->sysrq_seq)*U8_MAX);
 
-diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
-index 3685b1732f65..44fa22b020ef 100644
---- a/net/rxrpc/call_accept.c
-+++ b/net/rxrpc/call_accept.c
-@@ -381,18 +381,6 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 	trace_rxrpc_receive(call, rxrpc_receive_incoming,
- 			    sp->hdr.serial, sp->hdr.seq);
- 
--	/* Lock the call to prevent rxrpc_kernel_send/recv_data() and
--	 * sendmsg()/recvmsg() inconveniently stealing the mutex once the
--	 * notification is generated.
--	 *
--	 * The BUG should never happen because the kernel should be well
--	 * behaved enough not to access the call before the first notification
--	 * event and userspace is prevented from doing so until the state is
--	 * appropriate.
--	 */
--	if (!mutex_trylock(&call->user_mutex))
--		BUG();
--
- 	/* Make the call live. */
- 	rxrpc_incoming_call(rx, call, skb);
- 	conn = call->conn;
-@@ -433,6 +421,9 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 		BUG();
- 	}
- 	spin_unlock(&conn->state_lock);
-+	spin_unlock(&rx->incoming_lock);
-+
-+	rxrpc_send_ping(call, skb);
- 
- 	if (call->state == RXRPC_CALL_SERVER_ACCEPTING)
- 		rxrpc_notify_socket(call);
-@@ -444,11 +435,6 @@ struct rxrpc_call *rxrpc_new_incoming_call(struct rxrpc_local *local,
- 	 */
- 	rxrpc_put_call(call, rxrpc_call_put);
- 
--	spin_unlock(&rx->incoming_lock);
--
--	rxrpc_send_ping(call, skb);
--	mutex_unlock(&call->user_mutex);
--
- 	_leave(" = %p{%d}", call, call->debug_id);
- 	return call;
- 
--- 
-2.20.1
+Do you have something more elegant in your mind?
 
+Thanks,
+          Dmitry
