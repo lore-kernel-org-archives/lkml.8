@@ -2,151 +2,177 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDF7C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DC6C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:28:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D3B12072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008F72075D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:28:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="jy6oBnQ1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WXhgzDhd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbgAJBZo (ORCPT
+        id S1730605AbgAJB2W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:25:44 -0500
-Received: from mail-dm6nam12on2098.outbound.protection.outlook.com ([40.107.243.98]:10849
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730539AbgAJBZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 20:25:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UrD4XSZGQn2J+wvtEqrszvkJal9JRJck51ajSGk7KPObF/KrupVMzG9k6Xcvzfd4y5AERf0mTefx07hdJcQzS9VpODo/4WwuOpVPmsoyMhDu4fHef68bC+zeNu5g86KoDOEGJ891VmQvUcp5fgcNAoyp+rem8E1c8wT3RgEB8VennipWfl+0q9ZzCbsPuMGcaB/lKGQmiC/HMK2ieMgz/Wq3L5opUgeYAJMgBEqNKMut+KoA+2arYo2XiCkEAdoNYvm/FbG1J5dAawnD6+vYy5L4lCMkymwwi/iZnreKuP1VCjaWHHk/co4hznhR0HkweD8Ybg6Jp2KIROId4+mdhQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EWTF0UuXY5vntRu2Ca5bOl2YVc2MwejTZ78rX9V3iSk=;
- b=AwUDQkVflhVLBzKEEzHP+i0+OeaV2kbX4IbRvy2/fOuX3CgeulOLIupUQ0A1n7wnNmo9mcpeMNx8NUN6p+puFcYKgbCe3CpqQX3dWa0BnGVhBzRCKepP36ATUAYAcOd2VC/oi01G7984PS3g+ib2DahxArkU4XKm8mqO90R4JucT6NmOHPs9uEkz7C3sSiW/+IcgbPY/DKO2KPDC4N0wgLUWryO/XnGk9O19vcZBM1rXW1qe4dt3mstoO4UeSI6O85TInDv8JS11Q88RICN+fyg+u+PwOUGhL6V1zWYarUPnU1zJt9bwhwddorpgEYom67JTb6AZrdGJ+Yj17qocfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EWTF0UuXY5vntRu2Ca5bOl2YVc2MwejTZ78rX9V3iSk=;
- b=jy6oBnQ1kpo8KOXuya8h2TDIb36uZXkECaf4Iy1dVssPUpkGGCBRcweNzFlHAMk6QC3HxMq8g8g6naDnELZVKsVBo/AWtsouij7ZukYv84IwwI8VrNjxW+8ZCxKYCgQwdh732bIT3uomekD97pF/Tp6kuIAvQvcogKOHYannD7o=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-Received: from DM5PR21MB0779.namprd21.prod.outlook.com (10.173.172.149) by
- DM5PR21MB0858.namprd21.prod.outlook.com (10.173.172.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.3; Fri, 10 Jan 2020 01:25:42 +0000
-Received: from DM5PR21MB0779.namprd21.prod.outlook.com
- ([fe80::4dbb:1abc:e1c1:decb]) by DM5PR21MB0779.namprd21.prod.outlook.com
- ([fe80::4dbb:1abc:e1c1:decb%12]) with mapi id 15.20.2644.010; Fri, 10 Jan
- 2020 01:25:41 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        sashal@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        Alexander.Levin@microsoft.com
-Cc:     sunilmut@microsoft.com, Andrea.Parri@microsoft.com,
-        Dexuan Cui <decui@microsoft.com>
-Subject: [PATCH] Drivers: hv: vmbus: Ignore CHANNELMSG_TL_CONNECT_RESULT(23)
-Date:   Thu,  9 Jan 2020 17:25:15 -0800
-Message-Id: <1578619515-115811-1-git-send-email-decui@microsoft.com>
-X-Mailer: git-send-email 1.8.3.1
-Reply-To: decui@microsoft.com
-Content-Type: text/plain
-X-ClientProxiedBy: MWHPR22CA0071.namprd22.prod.outlook.com
- (2603:10b6:300:12a::33) To DM5PR21MB0779.namprd21.prod.outlook.com
- (2603:10b6:3:a4::21)
+        Thu, 9 Jan 2020 20:28:22 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:26008 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730570AbgAJB2V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 20:28:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578619700;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LSyKA3j/3j2EtToo9WAdYh474h7JYo+Na8uCUw7EHS4=;
+        b=WXhgzDhdBAJX0QNA6pwIY/I9/XdWZA+JQq05zBkjs5Ahuq1/vLkUsX2SLTc6fLVCEXFQVM
+        Tj6kpnKcBsDvEdsm5R4zF0qbH0AVi2S9sRyiGUZWsoWIYlOQQc79vK0nJhVQVf4+vCIGIF
+        pBuVaRHiDuduuImrP0NTa916LsZQ7rE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-432-ecGkSfZ6Pzy1gJ8MEkslLw-1; Thu, 09 Jan 2020 20:28:19 -0500
+X-MC-Unique: ecGkSfZ6Pzy1gJ8MEkslLw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DFDF9800EBF;
+        Fri, 10 Jan 2020 01:28:17 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-24.pek2.redhat.com [10.72.8.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E613D86CA7;
+        Fri, 10 Jan 2020 01:28:06 +0000 (UTC)
+Date:   Fri, 10 Jan 2020 09:28:02 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Xu <peterx@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Ming Lei <minlei@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org
+Subject: Re: Kernel-managed IRQ affinity (cont)
+Message-ID: <20200110012802.GA4501@ming.t460p>
+References: <20191216195712.GA161272@xz-x1>
+ <20191219082819.GB15731@ming.t460p>
+ <20191219143214.GA50561@xz-x1>
+ <20191219161115.GA18672@ming.t460p>
+ <87eew8l7oz.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Received: from linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net (13.77.154.182) by MWHPR22CA0071.namprd22.prod.outlook.com (2603:10b6:300:12a::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.11 via Frontend Transport; Fri, 10 Jan 2020 01:25:40 +0000
-X-Mailer: git-send-email 1.8.3.1
-X-Originating-IP: [13.77.154.182]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a0a26289-b1d6-4845-587c-08d7956c01c2
-X-MS-TrafficTypeDiagnostic: DM5PR21MB0858:|DM5PR21MB0858:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR21MB0858621B85824228092476AABF380@DM5PR21MB0858.namprd21.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 02788FF38E
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(376002)(39860400002)(136003)(366004)(396003)(199004)(189003)(2616005)(956004)(36756003)(186003)(66476007)(4326008)(16526019)(6506007)(26005)(52116002)(66556008)(81156014)(81166006)(8936002)(8676002)(3450700001)(66946007)(5660300002)(2906002)(86362001)(6512007)(107886003)(6486002)(6636002)(316002)(6666004)(478600001)(10290500003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR21MB0858;H:DM5PR21MB0779.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hTZwHh1aGO8ZZHKJBAxN92UtYpJMv6xQcCCConnOuceW3xGk967F1wzkyPGQk8PFzxoCVOQNXCRofVMPiEbOsxVTBgIFBdf2mdwiRpbPbVS3+MTbAfZxLETG1QuDzT4YPtNw+6XM11rez6Muiei9wq2P++m6zlbpIc+0o1FinvoJLNQs2HpOZB0nmYNqhOsWpAvc2iK6DpN0fM7C3Wwn9xh35tARzt/kTwSqYM3Gm2aTq0lrX8GlmmGxxUdcrsuP6YaSWd2lk2H74yAxWGnELHcKUvql4gRiAT8PKloeTWJsqBbBRez5q2HLBnsiMOLg2iCDfOPmbyOheQVbZmLCdwBCXPA1ciAUA7BvUSKMP5alsQ+5KOsaxxoX3InmUG1XR9jVjHw8Ks1RcZ+xyPuug+6D1MLoO+8at9ksGuTr9ar4X2y7ITlFC6ek00z+0oCs
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0a26289-b1d6-4845-587c-08d7956c01c2
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jan 2020 01:25:41.9103
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7EQ8BpjH4wIW936CWUYqUfXB8NIhwSGXKam3a+TCBxH8oL8vKoLAmBvVfyn0XBVUSvTGDZrEkZHBPivWz5KlIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR21MB0858
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87eew8l7oz.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a Linux hv_sock app tries to connect to a Service GUID on which no
-host app is listening, a recent host (RS3+) sends a
-CHANNELMSG_TL_CONNECT_RESULT (23) message to Linux and this triggers such
-a warning:
+Hello Thomas,
 
-unknown msgtype=23
-WARNING: CPU: 2 PID: 0 at drivers/hv/vmbus_drv.c:1031 vmbus_on_msg_dpc
+On Thu, Jan 09, 2020 at 09:02:20PM +0100, Thomas Gleixner wrote:
+> Ming,
+> 
+> Ming Lei <ming.lei@redhat.com> writes:
+> 
+> > On Thu, Dec 19, 2019 at 09:32:14AM -0500, Peter Xu wrote:
+> >> ... this one seems to be more appealing at least to me.
+> >
+> > OK, please try the following patch:
+> >
+> >
+> > diff --git a/include/linux/sched/isolation.h b/include/linux/sched/isolation.h
+> > index 6c8512d3be88..0fbcbacd1b29 100644
+> > --- a/include/linux/sched/isolation.h
+> > +++ b/include/linux/sched/isolation.h
+> > @@ -13,6 +13,7 @@ enum hk_flags {
+> >  	HK_FLAG_TICK		= (1 << 4),
+> >  	HK_FLAG_DOMAIN		= (1 << 5),
+> >  	HK_FLAG_WQ		= (1 << 6),
+> > +	HK_FLAG_MANAGED_IRQ	= (1 << 7),
+> >  };
+> >  
+> >  #ifdef CONFIG_CPU_ISOLATION
+> > diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+> > index 1753486b440c..0a75a09cc4e8 100644
+> > --- a/kernel/irq/manage.c
+> > +++ b/kernel/irq/manage.c
+> > @@ -20,6 +20,7 @@
+> >  #include <linux/sched/task.h>
+> >  #include <uapi/linux/sched/types.h>
+> >  #include <linux/task_work.h>
+> > +#include <linux/sched/isolation.h>
+> >  
+> >  #include "internals.h"
+> >  
+> > @@ -212,12 +213,33 @@ int irq_do_set_affinity(struct irq_data *data, const struct cpumask *mask,
+> >  {
+> >  	struct irq_desc *desc = irq_data_to_desc(data);
+> >  	struct irq_chip *chip = irq_data_get_irq_chip(data);
+> > +	const struct cpumask *housekeeping_mask =
+> > +		housekeeping_cpumask(HK_FLAG_MANAGED_IRQ);
+> >  	int ret;
+> > +	cpumask_var_t tmp_mask;
+> >  
+> >  	if (!chip || !chip->irq_set_affinity)
+> >  		return -EINVAL;
+> >  
+> > -	ret = chip->irq_set_affinity(data, mask, force);
+> > +	if (!zalloc_cpumask_var(&tmp_mask, GFP_KERNEL))
+> > +		return -EINVAL;
+> 
+> That's wrong. This code is called with interrupts disabled, so
+> GFP_KERNEL is wrong. And NO, we won't do a GFP_ATOMIC allocation here.
 
-Actually Linux can safely ignore the message because the Linux app's
-connect() will time out in 2 seconds: see VSOCK_DEFAULT_CONNECT_TIMEOUT
-and vsock_stream_connect(). We don't bother to make use of the message
-because: 1) it's only supported on recent hosts; 2) a non-trivial effort
-is required to use the message in Linux, but the benefit is small.
+OK, looks desc->lock is held.
 
-So, let's not see the warning by silently ignoring the message.
+> 
+> > +	/*
+> > +	 * Userspace can't change managed irq's affinity, make sure
+> > +	 * that isolated CPU won't be selected as the effective CPU
+> > +	 * if this irq's affinity includes both isolated CPU and
+> > +	 * housekeeping CPU.
+> > +	 *
+> > +	 * This way guarantees that isolated CPU won't be interrupted
+> > +	 * by IO submitted from housekeeping CPU.
+> > +	 */
+> > +	if (irqd_affinity_is_managed(data) &&
+> > +			cpumask_intersects(mask, housekeeping_mask))
+> > +		cpumask_and(tmp_mask, mask, housekeeping_mask);
+> 
+> This is duct tape engineering with absolutely no semantics. I can't even
+> figure out the intent of this 'managed_irq' parameter.
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
----
- drivers/hv/vmbus_drv.c | 5 +++++
- include/linux/hyperv.h | 2 ++
- 2 files changed, 7 insertions(+)
+The intent is to isolate the specified CPUs from handling managed interrupt.
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 4ef5a66df680..c838b6f5f726 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1033,6 +1033,11 @@ void vmbus_on_msg_dpc(unsigned long data)
- 	}
- 
- 	entry = &channel_message_table[hdr->msgtype];
-+
-+	/* Linux ignores some messages, e.g. CHANNELMSG_TL_CONNECT_RESULT. */
-+	if (!entry->message_handler)
-+		goto msg_handled;
-+
- 	if (entry->handler_type	== VMHT_BLOCKING) {
- 		ctx = kmalloc(sizeof(*ctx), GFP_ATOMIC);
- 		if (ctx == NULL)
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index 26f3aeeae1ca..41c58011431e 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -425,6 +425,8 @@ enum vmbus_channel_message_type {
- 	CHANNELMSG_19				= 19,
- 	CHANNELMSG_20				= 20,
- 	CHANNELMSG_TL_CONNECT_REQUEST		= 21,
-+	CHANNELMSG_22				= 22,
-+	CHANNELMSG_TL_CONNECT_RESULT		= 23,
- 	CHANNELMSG_COUNT
- };
- 
--- 
-2.19.1
+For non-managed interrupt, the isolation is done via userspace because
+userspace is allowed to change non-manage interrupt's affinity.
+
+> 
+> If the intent is to keep managed device interrupts away from isolated
+> cores then you really want to do that when the interrupts are spread and
+> not in the middle of the affinity setter code.
+> 
+> But first you need to define how that mask should work:
+> 
+>  1) Exclude CPUs from managed interrupt spreading completely
+> 
+>  2) Exclude CPUs only when the resulting spreading contains
+>     housekeeping CPUs
+> 
+>  3) Whatever ...
+
+We can do that. The big problem is that the RT case can't guarantee that
+IO won't be submitted from isolated CPU always. blk-mq's queue mapping
+relies on the setup affinity, so un-known behavior(kernel crash, or io
+hang, or other) may be caused if we exclude isolated CPUs from interrupt
+affinity.
+
+That is why I try to exclude isolated CPUs from interrupt effective affinity,
+turns out the approach is simple and doable.
+
+
+Thanks,
+Ming
 
