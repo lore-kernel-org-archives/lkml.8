@@ -2,132 +2,120 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E09AC33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4221FC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0931C2077C
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:35:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B552077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:37:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U9S1u6MU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726712AbgAJHfy (ORCPT
+        id S1726723AbgAJHhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:35:54 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:41897 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726401AbgAJHfx (ORCPT
+        Fri, 10 Jan 2020 02:37:00 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40995 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgAJHhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:35:53 -0500
-Received: from mail-ot1-f69.google.com ([209.85.210.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1ipopj-0001Jw-R5
-        for linux-kernel@vger.kernel.org; Fri, 10 Jan 2020 07:35:52 +0000
-Received: by mail-ot1-f69.google.com with SMTP id 73so538732otj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 23:35:51 -0800 (PST)
+        Fri, 10 Jan 2020 02:37:00 -0500
+Received: by mail-pl1-f195.google.com with SMTP id bd4so519238plb.8;
+        Thu, 09 Jan 2020 23:36:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yTj4OJccQHZ2BrF4urivSeZlUB6G0DA2jB2WOE566iw=;
+        b=U9S1u6MURdSbih/awgcGfOrKcqm8Vkw7+33OoYTsoFVsWAOcNOyxVoIwr5xxwkDjfg
+         GgNxv/WnxbAdFR1H68bnX2vI2cla0dT6WbZJb02XejnWHpKcOSOZRJ6OEau3nz4Fiz2+
+         QTj/EpWng6qg/kdSWBMWoO3WUnb4/0a93XE0phpqok+ZuZDsw75BTlsjGbRE8D0X8get
+         oC8r2haOMhnRRNIKOzbgGVehuNzhnpTDQlYXxwgez08WJNAQMhw7WgIe9L0TKOcYDdnN
+         UfJn1M1CneOkhninJNPdVb40dtFJu1a7G5A51AUfaWE784PDwnPkIQQgpiFKFUxJOR43
+         sIww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=VkFahSTywvqn5j5X/7juimxnMuGVeAK18BGmio6HoZw=;
-        b=Nd8TfAOT6qvIoIhpODSKxl17t+p9YOubCFyjR67fNE0G6r/DpV6DqykWlQiuf3KOQT
-         C2e/PGYoXw0MFpeHZm6LcrQyOqQMHCN7lKk7GfhW/a9SV1S5EPqRNpofufTAk1QNOS5K
-         IuNvLjC/mU++8KlMEX4WWZCFlo3E2MprTm1iUJhM2DE2S4Jderry3ck77mqdhXyMZjNI
-         qzJrIXH1L8brKcED5a2YWfUa50aTZLEhzjaXs9FGfvUUbBwVjdXgghOi2g8vk3GJ+7l/
-         dgtn5Mq3GTbAaLjAYYgzXaJjsLR9GpcI4jUlvWjBxBt6770Ovi9frBfK4jX9zafuRNUN
-         3BLQ==
-X-Gm-Message-State: APjAAAWvKMMSJuA+RfVsPhL3HXXf83rOeuh0+Ipi8ly3nBNUAUmirerv
-        SF6u5e2v6Zus/OKYzhad9ZPtTYPrWT9ARQK5yD2XfpavIUDdt5Pm9vsjrfI8/1VBOkgqX6Ae3eR
-        GXXOv5zSLQ5cEiy522Cm4nP+C5athiLW0H3uRpAuhP5dKy4l44XuD3lmOPg==
-X-Received: by 2002:aca:2419:: with SMTP id n25mr1229246oic.13.1578641750557;
-        Thu, 09 Jan 2020 23:35:50 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxuBy33kewJNyY+KyNet6/qLs+DSuqtwhqq5q4SMD4TyxqUukaZwkF34vIpgcwDcgi7iTsY1+4vIVHFbRMI5sk=
-X-Received: by 2002:aca:2419:: with SMTP id n25mr1229235oic.13.1578641750299;
- Thu, 09 Jan 2020 23:35:50 -0800 (PST)
+        bh=yTj4OJccQHZ2BrF4urivSeZlUB6G0DA2jB2WOE566iw=;
+        b=LA1+lR7AVCJ4iKW27+miDC3veDo7Ozq3Kk+2mIGkvKlrqngvBHdWnnX20saxLS14tr
+         1005I/mnRGU7TNXVLfvo1MV9sMkjoDr5AHZaVqbGPL44HYTBMdQs6HUhcZl1Ctk85c22
+         +vbC178kSp7tUt8i7GAQosBNUI1aSBpCBbNEzKJa2zYNfhBqmojf7dIUR9pI3k8x7XJM
+         2VSPnM3X3fcN1ap4OIRuCHrRxobc/DLIT4EcI/HQazTaiXyRMpKuq9W3Z2rbJwb663cQ
+         lEK0FMOJGeZBIVK66CEuuqmxfoKANla0hQxtxNuFQgV8JaGjodS6rL1Sn0+xOd8VCUvU
+         iK7g==
+X-Gm-Message-State: APjAAAUqK1NsddZvNkmf3t+ljD3jkK9ix6fzWY9JviV9rEVzsRTIvJWt
+        fejlzlgAZRSovS9TABJjeypfghArSNoZJ5k1zEU=
+X-Google-Smtp-Source: APXvYqzPmV7BK59xh7j+/AotZwJxnKvCKvDFyUX9AG5hXPOx5Bk8qmVEtPzgimgz8T9tDl1dzgD1mOB1nffV/fd5Xgo=
+X-Received: by 2002:a17:902:8d96:: with SMTP id v22mr2634726plo.262.1578641819147;
+ Thu, 09 Jan 2020 23:36:59 -0800 (PST)
 MIME-Version: 1.0
-References: <90B37743-30D1-41BB-8272-D5FBDC89C88F@canonical.com> <Pine.LNX.4.44L0.2001061007070.1514-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.2001061007070.1514-100000@iolanthe.rowland.org>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Fri, 10 Jan 2020 15:35:39 +0800
-Message-ID: <CAAd53p7NhhQL=5teoaLQ4r5Y-QDGysGoXS-wwGc1fh59rfYu2g@mail.gmail.com>
-Subject: Re: [PATCH 3/3] USB: Disable LPM on WD19's Realtek Hub during setting
- its ports to U0
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20200108062923.14684-1-fengping.yu@mediatek.com>
+ <20200108062923.14684-3-fengping.yu@mediatek.com> <20200110013230.GS8314@dtor-ws>
+In-Reply-To: <20200110013230.GS8314@dtor-ws>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Fri, 10 Jan 2020 09:35:30 +0200
+Message-ID: <CAHp75VcELo3f5VYqGbgjgBzOZOj360+EPmRF5Oh3VqBAF8TeHw@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] drivers: input: keyboard
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     fengping yu <fengping.yu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stefan Agner <stefan@agner.cn>, Jacky Bai <ping.bai@nxp.com>,
+        Marco Felsch <m.felsch@pengutronix.de>,
+        linux-input <linux-input@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        wsd_upstream@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 6, 2020 at 11:08 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Mon, 6 Jan 2020, Kai-Heng Feng wrote:
->
-> > > On Jan 5, 2020, at 00:20, Alan Stern <stern@rowland.harvard.edu> wrote:
-> > >
-> > > On Sat, 4 Jan 2020, Kai-Heng Feng wrote:
-> > >
-> > >>>>>> @@ -3533,9 +3533,17 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
-> > >>>>>>        }
-> > >>>>>>
-> > >>>>>>        /* see 7.1.7.7; affects power usage, but not budgeting */
-> > >>>>>> -      if (hub_is_superspeed(hub->hdev))
-> > >>>>>> +      if (hub_is_superspeed(hub->hdev)) {
-> > >>>>>> +              if (hub->hdev->quirks & USB_QUIRK_DISABLE_LPM_ON_U0) {
-> > >>>>>> +                      usb_lock_device(hub->hdev);
-> > >>>>>> +                      usb_unlocked_disable_lpm(hub->hdev);
-> > >>>>>> +              }
-> > >>>>>>                status = hub_set_port_link_state(hub, port1, USB_SS_PORT_LS_U0);
-> > >>>>>> -      else
-> > >>>>>> +              if (hub->hdev->quirks & USB_QUIRK_DISABLE_LPM_ON_U0) {
-> > >>>>>> +                      usb_unlocked_enable_lpm(hub->hdev);
-> > >>>>>> +                      usb_unlock_device(hub->hdev);
-> > >>>>>
-> > >>>>> The locking here seems questionable.  Doesn't this code sometimes get
-> > >>>>> called with the hub already locked?  Or with the child device locked
-> > >>>>> (in which case locking the hub would violate the normal locking order:
-> > >>>>> parent first, child second)?
-> > >>>
-> > >>> I did a little checking.  In many cases the child device _will_ be
-> > >>> locked at this point.
-> > >>>
-> > >>>> Maybe introduce a new lock? The lock however will only be used by this specific hub.
-> > >>>> But I still want the LPM can be enabled for this hub.
-> > >>>
-> > >>> Do you really need to lock the hub at all?  What would the lock protect
-> > >>> against?
-> > >>
-> > >> There can be multiple usb_port_resume() run at the same time for different ports, so this is to prevent LPM enable/disable race.
-> > >
-> > > But there can't really be an LPM enable/disable race, can there?  The
-> > > individual function calls are protected by the bandwidth mutex taken by
-> > > the usb_unlocked_{en|dis}able_lpm routines, and the overall LPM setting
-> > > is controlled by the hub device's lpm_disable_counter.
-> >
-> > For enable/disable LPM itself, there's no race.
-> > But the lock here is to protect hub_set_port_link_state().
-> > If we don't lock the hub, other instances of usb_port_resume()
-> > routine can enable LPM and we want the LPM stays disabled until
-> > hub_set_port_link_state() is done.
->
-> That's what I was trying to explain above.  Other instances of
-> usb_port_resume() _can't_ enable LPM while this instance is running,
-> because the lpm_disable_counter value will be > 0.
+On Fri, Jan 10, 2020 at 3:34 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Wed, Jan 08, 2020 at 02:29:23PM +0800, fengping yu wrote:
+> > From: "fengping.yu" <fengping.yu@mediatek.com>
 
-Yes you are right, there's actually no race.
-The hub is still a bit flaky with this approach, so I'll resend a v2
-to simply disable LPM for this hub.
+...
 
-Kai-Heng
+> > +static void kpd_get_keymap_state(void __iomem *kp_base, u16 state[])
+> > +{
+> > +     state[0] = readw(kp_base + KP_MEM1);
+> > +     state[1] = readw(kp_base + KP_MEM2);
+> > +     state[2] = readw(kp_base + KP_MEM3);
+> > +     state[3] = readw(kp_base + KP_MEM4);
+> > +     state[4] = readw(kp_base + KP_MEM5);
+>
+> Please use memcpy_formio() here.
 
->
-> Alan Stern
->
+Actually it's not an equivalent and may have side effects.
+I already told somewhere that we lack of
+mem*_*io{32,16,8}() implementation.
+
+-- 
+With Best Regards,
+Andy Shevchenko
