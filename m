@@ -2,149 +2,205 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4BC3C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15267C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:13:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A37D120721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C185E20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:13:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QGnPG3vB"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="GLb1H5iS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgAJONh (ORCPT
+        id S1728222AbgAJONm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:13:37 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50694 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727181AbgAJONh (ORCPT
+        Fri, 10 Jan 2020 09:13:42 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41674 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728185AbgAJONl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:13:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578665615;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=aRsoIfqjhyi1wmmmFGcOZTpjMordIYLuyu6LbigTBdM=;
-        b=QGnPG3vBlMer7/Q83ehrVXbZYUffoerkmM2Y1cqDr7s3AqH+T83IZtpsJwnjgrxCA0mzto
-        BrKfjFqosIsAJM688K1BTQANUxMx1MRpkz3IvWN4UH8ApvfP/mfMlDMsC/GapRtUOs/u7Z
-        YPFpnbTDCm682nvBgE4fBQ0uzXe/jv4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-242-_gMP_xHfP_-q-q9nqsShmA-1; Fri, 10 Jan 2020 09:13:32 -0500
-X-MC-Unique: _gMP_xHfP_-q-q9nqsShmA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 22A0EA89A3F;
-        Fri, 10 Jan 2020 14:13:31 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F24DB28D02;
-        Fri, 10 Jan 2020 14:13:26 +0000 (UTC)
-Subject: Re: [PATCH] locking/osq: Use more optimized spinning for arm64
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <20200109153831.29993-1-longman@redhat.com>
- <20200110100612.GC2827@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <c85eff71-2fcd-48e2-851f-96b4cd5a3f24@redhat.com>
-Date:   Fri, 10 Jan 2020 09:13:26 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Fri, 10 Jan 2020 09:13:41 -0500
+Received: by mail-lj1-f196.google.com with SMTP id h23so2281330ljc.8
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 06:13:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=62+CfXBGYnwiZM22zmiE2zm6pbxySFnKVNobrzhboi8=;
+        b=GLb1H5iSXmetqj3TqcU0tDpWhaXB07rcHMqTBRYs/2LhEOstrb4WuXN5Z2cQPZauPA
+         9pIIGxwgS+7uWOKIMH4qZ2YQXJb1bQURsuJ/J7D+VzoU2WZRqPpx3tCgno2d5iCFtIkR
+         +xg8vUb+G9XreKSpGc2bUKpv+ou2KxAyZ7VZU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=62+CfXBGYnwiZM22zmiE2zm6pbxySFnKVNobrzhboi8=;
+        b=FcRFswYFExzsdcdYlUjqM9R/SGoxKn4PDWQKzUQKPIQCnLAHIgXiskwD451Jif1p8R
+         Yip7YJJ96ddiWb2B7Pr9ju0zbovpACaZOTi/jMR3kmyxaxmAew1pb6KM6aMSS7I+kazg
+         iaj7XpJas6RErXauu/2OfaOxx3jqzqaB3fyd1eXlMMy9MtUYA2nxaNPaRGSfOTyM1v+Q
+         DgoMP9x1agjHX9WMpPjeapbkhYjKIcqQnIBPysT7XFK9Lct1q/3GWFzNItuMi4HGIwV8
+         a59dsF5lJyqf/dQXYtCOucZ40neBc3G6scVG4/GYcG3AiEBaFdkKQUlPdN7Z6iU/XioF
+         nN/g==
+X-Gm-Message-State: APjAAAWzWeQejZbFEvrhtHP1D8SiI0nUxOKlu4TkafhQxEvZWabH64XB
+        mnAPX1qjPQ0z4ajsbRmO9qQiMA==
+X-Google-Smtp-Source: APXvYqxxj8jHIfNpIEpllmVd/xo6FHKz2GAnQ72qflsbXbHHD2Q1UOQV6oImQKdCNOMWSdm7bWBVVQ==
+X-Received: by 2002:a05:651c:1077:: with SMTP id y23mr2854562ljm.79.1578665618902;
+        Fri, 10 Jan 2020 06:13:38 -0800 (PST)
+Received: from [192.168.51.243] ([78.128.78.220])
+        by smtp.gmail.com with ESMTPSA id h14sm1098758lfc.2.2020.01.10.06.13.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2020 06:13:38 -0800 (PST)
+Subject: Re: [RFC net-next Patch 0/3] net: bridge: mrp: Add support for Media
+ Redundancy Protocol(MRP)
+To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bridge@lists.linux-foundation.org
+Cc:     davem@davemloft.net, roopa@cumulusnetworks.com,
+        jakub.kicinski@netronome.com, vivien.didelot@gmail.com,
+        andrew@lunn.ch, jeffrey.t.kirsher@intel.com, olteanv@gmail.com,
+        anirudh.venkataramanan@intel.com, dsahern@gmail.com,
+        jiri@mellanox.com, UNGLinuxDriver@microchip.com
+References: <20200109150640.532-1-horatiu.vultur@microchip.com>
+From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Message-ID: <6f1936e9-97e5-9502-f062-f2925c9652c9@cumulusnetworks.com>
+Date:   Fri, 10 Jan 2020 16:13:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200110100612.GC2827@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200109150640.532-1-horatiu.vultur@microchip.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/10/20 5:06 AM, Peter Zijlstra wrote:
-> On Thu, Jan 09, 2020 at 10:38:31AM -0500, Waiman Long wrote:
->
->> --- a/kernel/locking/osq_lock.c
->> +++ b/kernel/locking/osq_lock.c
->> @@ -134,6 +134,27 @@ bool osq_lock(struct optimistic_spin_queue *lock)
->>  	 * cmpxchg in an attempt to undo our queueing.
->>  	 */
->>  
->> +	/*
->> +	 * If vcpu_is_preempted is not defined, we can skip the check
->> +	 * and use smp_cond_load_relaxed() instead. For arm64, this
->> +	 * could lead to the use of the more optimized wfe instruction.
->> +	 * As need_sched() is set by interrupt handler, it will break
->> +	 * out and do the unqueue in a timely manner.
->> +	 *
->> +	 * TODO: We may need to add a static_key like vcpu_is_preemptible
->> +	 *	 as vcpu_is_preempted() will always return false with
->> +	 *	 bare metal even if it is defined.
->> +	 */
->> +#ifndef vcpu_is_preempted
->> +	{
->> +		int locked = smp_cond_load_relaxed(&node->locked,
->> +						   VAL || need_resched());
->> +		if (!locked)
->> +			goto unqueue;
->> +		return true;
->> +	}
->> +#endif
-> Much yuck :-/
->
-> With ARM64 being the only arch that currently makes use of this; another
-> approach is doing something like:
->
-> That is also rather yuck, and definitely needs a few comments sprinked
-> on it, but it should just work for everyone.
->
-> It basically relies on an arch having a spinning *cond_load*()
-> implementation if it has vcpu_is_preempted(), which is true today.
->
-> ---
-> diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
-> index 6ef600aa0f47..6e00d7c077ba 100644
-> --- a/kernel/locking/osq_lock.c
-> +++ b/kernel/locking/osq_lock.c
-> @@ -133,18 +133,10 @@ bool osq_lock(struct optimistic_spin_queue *lock)
->  	 * guaranteed their existence -- this allows us to apply
->  	 * cmpxchg in an attempt to undo our queueing.
->  	 */
-> +	if (!smp_cond_load_relaxed(&node->locked, VAL || need_resched() ||
-> +						  vcpu_is_preempetd(node_cpu(node->prev))))
-> +		goto unqueue;
->  
-> -	while (!READ_ONCE(node->locked)) {
-> -		/*
-> -		 * If we need to reschedule bail... so we can block.
-> -		 * Use vcpu_is_preempted() to avoid waiting for a preempted
-> -		 * lock holder:
-> -		 */
-> -		if (need_resched() || vcpu_is_preempted(node_cpu(node->prev)))
-> -			goto unqueue;
-> -
-> -		cpu_relax();
-> -	}
->  	return true;
->  
->  unqueue:
->
-Yes, that will work for now. We do need to document that in where
-smp_cond_load_relaxed() is defined.
+On 09/01/2020 17:06, Horatiu Vultur wrote:
+> Media Redundancy Protocol is a data network protocol standardized by
+> International Electrotechnical Commission as IEC 62439-2. It allows rings of
+> Ethernet switches to overcome any single failure with recovery time faster than
+> STP. It is primarily used in Industrial Ethernet applications.
+> 
+> This is the first proposal of implementing a subset of the standard. It supports
+> only 2 roles of an MRP node. It supports only Media Redundancy Manager(MRM) and
+> Media Redundancy Client(MRC). In a MRP ring, each node needs to support MRP and
+> in a ring can be only one MRM and multiple MRC. It is possible to have multiple
+> instances of MRP on a single node. But a port can be part of only one MRP
+> instance.
+> 
+> The MRM is responsible for detecting when there is a loop in the ring. It is
+> sending the frame MRP_Test to detect the loops. It would send MRP_Test on both
+> ports in the ring and if the frame is received at the other end, then the ring
+> is closed. Meaning that there is a loop. In this case it sets the port state to
+> BLOCKED, not allowing traffic to pass through except MRP frames. In case it
+> stops receiving MRP_Test frames from itself then the MRM will detect that the
+> ring is open, therefor it would notify the other nodes of this change and will
+> set the state of the port to be FORWARDING.
+> 
+> The MRC is responsible for forwarding MRP_Test frames between the ring ports
+> (and not to flood on other ports) and to listen when there is a change in the
+> network to clear the FDB.
+> 
+> Similar with STP, MRP is implemented on top of the bridge and they can't be
+> enable at the same time. While STP runs on all ports of the bridge, MRP needs to
+> run only on 2 ports.
+> 
+> The bridge needs to:
+> - notify when the link of one of the ports goes down or up, because MRP instance
+>   needs to react to link changes by sending MRP_LinkChange frames.
+> - notify when one of the ports are removed from the bridge or when the bridge
+>   is destroyed, because if the port is part of the MRP ring then MRP state
+>   machine should be stopped.
+> - add a handler to allow MRP instance to process MRP frames, if MRP is enabled.
+>   This is similar with STP design.
+> - add logic for MRP frames inside the bridge. The bridge will just detect MRP
+>   frames and it would forward them to the upper layer to allow to process it.
+> - update the logic to update non-MRP frames. If MRP is enabled, then look also
+>   at the state of the port to decide to forward or not.
+> 
+> To create a MRP instance on the bridge:
+> $ bridge mrp add dev br0 p_port eth0 s_port eth1 ring_role 2 ring_id 1
+> 
+> Where:
+> p_port, s_port: can be any port under the bridge
+> ring_role: can have the value 1(MRC - Media Redundancy Client) or
+>            2(MRM - Media Redundancy Manager). In a ring can be only one MRM.
+> ring_id: unique id for each MRP instance.
+> 
+> It is possible to create multiple instances. Each instance has to have it's own
+> ring_id and a port can't be part of multiple instances:
+> $ bridge mrp add dev br0 p_port eth2 s_port eth3 ring_role 1 ring_id 2
+> 
+> To see current MRP instances and their status:
+> $ bridge mrp show
+> dev br0 p_port eth2 s_port eth3 ring_role 1 ring_id 2 ring_state 3
+> dev br0 p_port eth0 s_port eth1 ring_role 2 ring_id 1 ring_state 4
+> 
+> If this patch series is well received, the in the future it could be extended
+> with the following:
+> - add support for Media Redundancy Automanager. This role allows a node to
+>   detect if needs to behave as a MRM or MRC. The advantage of this role is that
+>   the user doesn't need to configure the nodes each time they are added/removed
+>   from a ring and it adds redundancy to the manager.
+> - add support for Interconnect rings. This allow to connect multiple rings.
+> - add HW offloading. The standard defines 4 recovery times (500, 200, 30 and 10
+>   ms). To be able to achieve 30 and 10 it is required by the HW to generate the
+>   MRP_Test frames and detect when the ring is open/closed.
+> 
+> Horatiu Vultur (3):
+>   net: bridge: mrp: Add support for Media Redundancy Protocol
+>   net: bridge: mrp: Integrate MRP into the bridge
+>   net: bridge: mrp: Add netlink support to configure MRP
+> 
+>  include/uapi/linux/if_bridge.h |   27 +
+>  include/uapi/linux/if_ether.h  |    1 +
+>  include/uapi/linux/rtnetlink.h |    7 +
+>  net/bridge/Kconfig             |   12 +
+>  net/bridge/Makefile            |    2 +
+>  net/bridge/br.c                |   19 +
+>  net/bridge/br_device.c         |    3 +
+>  net/bridge/br_forward.c        |    1 +
+>  net/bridge/br_if.c             |   10 +
+>  net/bridge/br_input.c          |   22 +
+>  net/bridge/br_mrp.c            | 1517 ++++++++++++++++++++++++++++++++
+>  net/bridge/br_mrp_timer.c      |  227 +++++
+>  net/bridge/br_netlink.c        |    9 +
+>  net/bridge/br_private.h        |   30 +
+>  net/bridge/br_private_mrp.h    |  208 +++++
+>  security/selinux/nlmsgtab.c    |    5 +-
+>  16 files changed, 2099 insertions(+), 1 deletion(-)
+>  create mode 100644 net/bridge/br_mrp.c
+>  create mode 100644 net/bridge/br_mrp_timer.c
+>  create mode 100644 net/bridge/br_private_mrp.h
+> 
 
-In the future, if vcpu_is_preempted() is defined for ARM64, it will
-break. How about defining a variant like smp_cond_load_vcpu_relaxed(p,
-cond, vcpu)? With that, we can make sure that the code will be properly
-updated when vcpu_is_preempted() is defined for ARM64. I know it is
-still kind of ugly, but it is a safer approach.
+Hi all,
+I agree with Stephen here, IMO you have to take note of how STP has progressed
+and that bringing it in the kernel was a mistake, these days mstpd has an active
+community and much better support which is being extended. This looks best implemented
+in user-space in my opinion with minimal kernel changes to support it. You could simply
+open a packet socket with a filter and work through that, you don't need new netlink
+sockets. I'm not familiar with the protocol so can't really be the judge of that, if
+you present a good argument for needing a new netlink socket for these packets - then
+sure, ok.
 
-Cheers,
-Longman
+If you do decide to continue with the kernel version (which I would again discourage)
+a few general points (from a quick scan):
+ - the single 1.6+k line patch is just hard to review, please break it into more digestable
+   and logical pieces
+ - the locking is wrong, also there're a few use-after-free bugs 
+ - please re-work the bridge integration code, it can be simplified and tests can be eliminated
+ - your netlink helpers usage is generally wrong and needs more work
+ - use the already existing port states instead of adding new ones and you can avoid some tests in fast-path
+ - perhaps look into using br_afspec() for configuration/retrieval initially ? I don't think you need the new rtm messages yet.
+ - I'm sure I can go on, but I really think all of this should be put in user-space -
+   in-kernel STP is a great example of how _not_ to do it. :) As a bonus you'll avoid 90% of the
+   problems above just by making your own abstractions and using them for it.
 
+
+Thanks,
+ Nik
