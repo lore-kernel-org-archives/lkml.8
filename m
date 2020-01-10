@@ -2,229 +2,132 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 275D2C33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E09AC33C99
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA93E214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0931C2077C
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:35:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726680AbgAJHfE convert rfc822-to-8bit (ORCPT
+        id S1726712AbgAJHfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:35:04 -0500
-Received: from mga01.intel.com ([192.55.52.88]:29651 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726186AbgAJHfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:35:03 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Jan 2020 23:35:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,415,1571727600"; 
-   d="scan'208";a="212165388"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga007.jf.intel.com with ESMTP; 09 Jan 2020 23:35:02 -0800
-Received: from shsmsx101.ccr.corp.intel.com (10.239.4.153) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Thu, 9 Jan 2020 23:35:02 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.197]) by
- SHSMSX101.ccr.corp.intel.com ([169.254.1.30]) with mapi id 14.03.0439.000;
- Fri, 10 Jan 2020 15:35:00 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-CC:     "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
-Subject: RE: [PATCH v4 03/12] vfio_pci: refine vfio_pci_driver reference in
- vfio_pci.c
-Thread-Topic: [PATCH v4 03/12] vfio_pci: refine vfio_pci_driver reference in
- vfio_pci.c
-Thread-Index: AQHVxVT0YU6i0iA5BEKaqiieIB/qd6fibQCAgAEY9HA=
-Date:   Fri, 10 Jan 2020 07:35:00 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A179AB4@SHSMSX104.ccr.corp.intel.com>
-References: <1578398509-26453-1-git-send-email-yi.l.liu@intel.com>
-        <1578398509-26453-4-git-send-email-yi.l.liu@intel.com>
- <20200109154819.455f11d3@w520.home>
-In-Reply-To: <20200109154819.455f11d3@w520.home>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNGQyMWRlYzEtYjE2Yi00YzkwLWI4ZjctOTc2ZjU0MDJjNDVkIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMDRnVndcL0E3dHA1SytTYzRSajYxYlByN1pzQ1IxQ2pDTTJVWWNDNTFTUDFZY29KTEU5ZExlWm9SZ1l0RGFTbVQifQ==
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 10 Jan 2020 02:35:54 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:41897 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726401AbgAJHfx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:35:53 -0500
+Received: from mail-ot1-f69.google.com ([209.85.210.69])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1ipopj-0001Jw-R5
+        for linux-kernel@vger.kernel.org; Fri, 10 Jan 2020 07:35:52 +0000
+Received: by mail-ot1-f69.google.com with SMTP id 73so538732otj.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 23:35:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VkFahSTywvqn5j5X/7juimxnMuGVeAK18BGmio6HoZw=;
+        b=Nd8TfAOT6qvIoIhpODSKxl17t+p9YOubCFyjR67fNE0G6r/DpV6DqykWlQiuf3KOQT
+         C2e/PGYoXw0MFpeHZm6LcrQyOqQMHCN7lKk7GfhW/a9SV1S5EPqRNpofufTAk1QNOS5K
+         IuNvLjC/mU++8KlMEX4WWZCFlo3E2MprTm1iUJhM2DE2S4Jderry3ck77mqdhXyMZjNI
+         qzJrIXH1L8brKcED5a2YWfUa50aTZLEhzjaXs9FGfvUUbBwVjdXgghOi2g8vk3GJ+7l/
+         dgtn5Mq3GTbAaLjAYYgzXaJjsLR9GpcI4jUlvWjBxBt6770Ovi9frBfK4jX9zafuRNUN
+         3BLQ==
+X-Gm-Message-State: APjAAAWvKMMSJuA+RfVsPhL3HXXf83rOeuh0+Ipi8ly3nBNUAUmirerv
+        SF6u5e2v6Zus/OKYzhad9ZPtTYPrWT9ARQK5yD2XfpavIUDdt5Pm9vsjrfI8/1VBOkgqX6Ae3eR
+        GXXOv5zSLQ5cEiy522Cm4nP+C5athiLW0H3uRpAuhP5dKy4l44XuD3lmOPg==
+X-Received: by 2002:aca:2419:: with SMTP id n25mr1229246oic.13.1578641750557;
+        Thu, 09 Jan 2020 23:35:50 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxuBy33kewJNyY+KyNet6/qLs+DSuqtwhqq5q4SMD4TyxqUukaZwkF34vIpgcwDcgi7iTsY1+4vIVHFbRMI5sk=
+X-Received: by 2002:aca:2419:: with SMTP id n25mr1229235oic.13.1578641750299;
+ Thu, 09 Jan 2020 23:35:50 -0800 (PST)
 MIME-Version: 1.0
+References: <90B37743-30D1-41BB-8272-D5FBDC89C88F@canonical.com> <Pine.LNX.4.44L0.2001061007070.1514-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.2001061007070.1514-100000@iolanthe.rowland.org>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Fri, 10 Jan 2020 15:35:39 +0800
+Message-ID: <CAAd53p7NhhQL=5teoaLQ4r5Y-QDGysGoXS-wwGc1fh59rfYu2g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] USB: Disable LPM on WD19's Realtek Hub during setting
+ its ports to U0
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Alex Williamson [mailto:alex.williamson@redhat.com]
-> Sent: Friday, January 10, 2020 6:48 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [PATCH v4 03/12] vfio_pci: refine vfio_pci_driver reference in vfio_pci.c
-> 
-> On Tue,  7 Jan 2020 20:01:40 +0800
-> Liu Yi L <yi.l.liu@intel.com> wrote:
-> 
-> > This patch replaces the vfio_pci_driver reference in vfio_pci.c with
-> > pci_dev_driver(vdev->pdev) which is more helpful to make the functions
-> > be generic to module types.
+On Mon, Jan 6, 2020 at 11:08 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Mon, 6 Jan 2020, Kai-Heng Feng wrote:
+>
+> > > On Jan 5, 2020, at 00:20, Alan Stern <stern@rowland.harvard.edu> wrote:
+> > >
+> > > On Sat, 4 Jan 2020, Kai-Heng Feng wrote:
+> > >
+> > >>>>>> @@ -3533,9 +3533,17 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
+> > >>>>>>        }
+> > >>>>>>
+> > >>>>>>        /* see 7.1.7.7; affects power usage, but not budgeting */
+> > >>>>>> -      if (hub_is_superspeed(hub->hdev))
+> > >>>>>> +      if (hub_is_superspeed(hub->hdev)) {
+> > >>>>>> +              if (hub->hdev->quirks & USB_QUIRK_DISABLE_LPM_ON_U0) {
+> > >>>>>> +                      usb_lock_device(hub->hdev);
+> > >>>>>> +                      usb_unlocked_disable_lpm(hub->hdev);
+> > >>>>>> +              }
+> > >>>>>>                status = hub_set_port_link_state(hub, port1, USB_SS_PORT_LS_U0);
+> > >>>>>> -      else
+> > >>>>>> +              if (hub->hdev->quirks & USB_QUIRK_DISABLE_LPM_ON_U0) {
+> > >>>>>> +                      usb_unlocked_enable_lpm(hub->hdev);
+> > >>>>>> +                      usb_unlock_device(hub->hdev);
+> > >>>>>
+> > >>>>> The locking here seems questionable.  Doesn't this code sometimes get
+> > >>>>> called with the hub already locked?  Or with the child device locked
+> > >>>>> (in which case locking the hub would violate the normal locking order:
+> > >>>>> parent first, child second)?
+> > >>>
+> > >>> I did a little checking.  In many cases the child device _will_ be
+> > >>> locked at this point.
+> > >>>
+> > >>>> Maybe introduce a new lock? The lock however will only be used by this specific hub.
+> > >>>> But I still want the LPM can be enabled for this hub.
+> > >>>
+> > >>> Do you really need to lock the hub at all?  What would the lock protect
+> > >>> against?
+> > >>
+> > >> There can be multiple usb_port_resume() run at the same time for different ports, so this is to prevent LPM enable/disable race.
+> > >
+> > > But there can't really be an LPM enable/disable race, can there?  The
+> > > individual function calls are protected by the bandwidth mutex taken by
+> > > the usb_unlocked_{en|dis}able_lpm routines, and the overall LPM setting
+> > > is controlled by the hub device's lpm_disable_counter.
 > >
-> > Cc: Kevin Tian <kevin.tian@intel.com>
-> > Cc: Lu Baolu <baolu.lu@linux.intel.com>
-> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> > ---
-> >  drivers/vfio/pci/vfio_pci.c | 34 ++++++++++++++++++----------------
-> >  1 file changed, 18 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> > index 009d2df..9140f5e5 100644
-> > --- a/drivers/vfio/pci/vfio_pci.c
-> > +++ b/drivers/vfio/pci/vfio_pci.c
-> > @@ -1463,24 +1463,25 @@ static void vfio_pci_reflck_get(struct vfio_pci_reflck
-> *reflck)
-> >
-> >  static int vfio_pci_reflck_find(struct pci_dev *pdev, void *data)
-> >  {
-> > -	struct vfio_pci_reflck **preflck = data;
-> > +	struct vfio_pci_device *vdev = data;
-> > +	struct vfio_pci_reflck **preflck = &vdev->reflck;
-> >  	struct vfio_device *device;
-> > -	struct vfio_pci_device *vdev;
-> > +	struct vfio_pci_device *tmp;
-> >
-> >  	device = vfio_device_get_from_dev(&pdev->dev);
-> >  	if (!device)
-> >  		return 0;
-> >
-> > -	if (pci_dev_driver(pdev) != &vfio_pci_driver) {
-> > +	if (pci_dev_driver(pdev) != pci_dev_driver(vdev->pdev)) {
-> >  		vfio_device_put(device);
-> >  		return 0;
-> >  	}
-> >
-> > -	vdev = vfio_device_data(device);
-> > +	tmp = vfio_device_data(device);
-> >
-> > -	if (vdev->reflck) {
-> > -		vfio_pci_reflck_get(vdev->reflck);
-> > -		*preflck = vdev->reflck;
-> > +	if (tmp->reflck) {
-> > +		vfio_pci_reflck_get(tmp->reflck);
-> > +		*preflck = tmp->reflck;
-> 
-> Seems we can do away with preflck entirely with this refactor, this
-> simply becomes vdev->reflck = tmp->reflck.  Thanks,
+> > For enable/disable LPM itself, there's no race.
+> > But the lock here is to protect hub_set_port_link_state().
+> > If we don't lock the hub, other instances of usb_port_resume()
+> > routine can enable LPM and we want the LPM stays disabled until
+> > hub_set_port_link_state() is done.
+>
+> That's what I was trying to explain above.  Other instances of
+> usb_port_resume() _can't_ enable LPM while this instance is running,
+> because the lpm_disable_counter value will be > 0.
 
-yes, it is. Will modify it.
+Yes you are right, there's actually no race.
+The hub is still a bit flaky with this approach, so I'll resend a v2
+to simply disable LPM for this hub.
 
-> Alex
+Kai-Heng
 
-Thanks,
-Yi Liu
-
-> >  		vfio_device_put(device);
-> >  		return 1;
-> >  	}
-> > @@ -1497,7 +1498,7 @@ static int vfio_pci_reflck_attach(struct vfio_pci_device
-> *vdev)
-> >
-> >  	if (pci_is_root_bus(vdev->pdev->bus) ||
-> >  	    vfio_pci_for_each_slot_or_bus(vdev->pdev, vfio_pci_reflck_find,
-> > -					  &vdev->reflck, slot) <= 0)
-> > +					  vdev, slot) <= 0)
-> >  		vdev->reflck = vfio_pci_reflck_alloc();
-> >
-> >  	mutex_unlock(&reflck_lock);
-> > @@ -1522,6 +1523,7 @@ static void vfio_pci_reflck_put(struct vfio_pci_reflck
-> *reflck)
-> >
-> >  struct vfio_devices {
-> >  	struct vfio_device **devices;
-> > +	struct vfio_pci_device *vdev;
-> >  	int cur_index;
-> >  	int max_index;
-> >  };
-> > @@ -1530,7 +1532,7 @@ static int vfio_pci_get_unused_devs(struct pci_dev
-> *pdev, void *data)
-> >  {
-> >  	struct vfio_devices *devs = data;
-> >  	struct vfio_device *device;
-> > -	struct vfio_pci_device *vdev;
-> > +	struct vfio_pci_device *tmp;
-> >
-> >  	if (devs->cur_index == devs->max_index)
-> >  		return -ENOSPC;
-> > @@ -1539,15 +1541,15 @@ static int vfio_pci_get_unused_devs(struct pci_dev
-> *pdev, void *data)
-> >  	if (!device)
-> >  		return -EINVAL;
-> >
-> > -	if (pci_dev_driver(pdev) != &vfio_pci_driver) {
-> > +	if (pci_dev_driver(pdev) != pci_dev_driver(devs->vdev->pdev)) {
-> >  		vfio_device_put(device);
-> >  		return -EBUSY;
-> >  	}
-> >
-> > -	vdev = vfio_device_data(device);
-> > +	tmp = vfio_device_data(device);
-> >
-> >  	/* Fault if the device is not unused */
-> > -	if (vdev->refcnt) {
-> > +	if (tmp->refcnt) {
-> >  		vfio_device_put(device);
-> >  		return -EBUSY;
-> >  	}
-> > @@ -1574,7 +1576,7 @@ static int vfio_pci_get_unused_devs(struct pci_dev
-> *pdev, void *data)
-> >   */
-> >  static void vfio_pci_try_bus_reset(struct vfio_pci_device *vdev)
-> >  {
-> > -	struct vfio_devices devs = { .cur_index = 0 };
-> > +	struct vfio_devices devs = { .vdev = vdev, .cur_index = 0 };
-> >  	int i = 0, ret = -EINVAL;
-> >  	bool slot = false;
-> >  	struct vfio_pci_device *tmp;
-> > @@ -1637,7 +1639,7 @@ static void __exit vfio_pci_cleanup(void)
-> >  	vfio_pci_uninit_perm_bits();
-> >  }
-> >
-> > -static void __init vfio_pci_fill_ids(char *ids)
-> > +static void __init vfio_pci_fill_ids(char *ids, struct pci_driver *driver)
-> >  {
-> >  	char *p, *id;
-> >  	int rc;
-> > @@ -1665,7 +1667,7 @@ static void __init vfio_pci_fill_ids(char *ids)
-> >  			continue;
-> >  		}
-> >
-> > -		rc = pci_add_dynid(&vfio_pci_driver, vendor, device,
-> > +		rc = pci_add_dynid(driver, vendor, device,
-> >  				   subvendor, subdevice, class, class_mask, 0);
-> >  		if (rc)
-> >  			pr_warn("failed to add dynamic id [%04x:%04x[%04x:%04x]]
-> class %#08x/%08x (%d)\n",
-> > @@ -1692,7 +1694,7 @@ static int __init vfio_pci_init(void)
-> >  	if (ret)
-> >  		goto out_driver;
-> >
-> > -	vfio_pci_fill_ids(ids);
-> > +	vfio_pci_fill_ids(ids, &vfio_pci_driver);
-> >
-> >  	return 0;
-> >
-
+>
+> Alan Stern
+>
