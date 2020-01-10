@@ -2,135 +2,79 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D0CC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90412C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80A72080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:50:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bRm1mG7s"
+	by mail.kernel.org (Postfix) with ESMTP id 6B2322080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgAJOuJ (ORCPT
+        id S1728328AbgAJOuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:50:09 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55518 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728295AbgAJOuG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:50:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578667805;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=7mPPMOgg1rdT11VKLhfqGPbIrYZLHOhMvTiS0wn3BR8=;
-        b=bRm1mG7siBP7cKe2Y9s3ZMyvcFOkJpfBw5B5l77k8JV2nknXf1vl+ma4EwHnHEQagu43vU
-        ntWX5X3EfGckQLoxEBUZ2rTcqgKQbpqsJGAfbDSI1FrEIHrg6erbxjhInQktIrbaj+33DY
-        YbbjWj/ezs+0q8vY1vVvjNWfxrHTsFw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-210-9Uet1PL0OC2VrKRfkBNolQ-1; Fri, 10 Jan 2020 09:50:01 -0500
-X-MC-Unique: 9Uet1PL0OC2VrKRfkBNolQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE0C980557E;
-        Fri, 10 Jan 2020 14:49:57 +0000 (UTC)
-Received: from krava (ovpn-205-164.brq.redhat.com [10.40.205.164])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EAEEF610D7;
-        Fri, 10 Jan 2020 14:49:38 +0000 (UTC)
-Date:   Fri, 10 Jan 2020 15:49:36 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-Subject: Re: [PATCH 0/3] tracing: perf: Rename ring_buffer to perf_buffer and
- trace_buffer
-Message-ID: <20200110144936.GF82989@krava>
-References: <20200110020308.977313200@goodmis.org>
+        Fri, 10 Jan 2020 09:50:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:45656 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727627AbgAJOuX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 09:50:23 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 383B6328;
+        Fri, 10 Jan 2020 06:50:23 -0800 (PST)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE2443F6C4;
+        Fri, 10 Jan 2020 06:50:21 -0800 (PST)
+Date:   Fri, 10 Jan 2020 14:50:19 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, maz@kernel.org, mark.rutland@arm.com,
+        dave.martin@arm.com, ard.biesheuvel@linaro.org,
+        christoffer.dall@arm.com, Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v2 1/7] arm64: Introduce system_capabilities_finalized()
+ marker
+Message-ID: <20200110145019.GD8786@arrakis.emea.arm.com>
+References: <20191217183402.2259904-1-suzuki.poulose@arm.com>
+ <20191217183402.2259904-2-suzuki.poulose@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200110020308.977313200@goodmis.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20191217183402.2259904-2-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 09:03:08PM -0500, Steven Rostedt wrote:
+On Tue, Dec 17, 2019 at 06:33:56PM +0000, Suzuki K Poulose wrote:
+> We finalize the system wide capabilities after the SMP CPUs
+> are booted by the kernel. This is used as a marker for deciding
+> various checks in the kernel. e.g, sanity check the hotplugged
+> CPUs for missing mandatory features.
 > 
-> As we discussed, to remove the generic structure "ring_buffer" from the kernel,
-> and switch it to "perf_buffer" and "trace_buffer", this patch series does
-> just that.
+> However there is no explicit helper available for this in the
+> kernel. There is sys_caps_initialised, which is not exposed.
+> The other closest one we have is the jump_label arm64_const_caps_ready
+> which denotes that the capabilities are set and the capability checks
+> could use the individual jump_labels for fast path. This is
+> performed before setting the ELF Hwcaps, which must be checked
+> against the new CPUs. We also perform some of the other initialization
+> e.g, SVE setup, which is important for the use of FP/SIMD
+> where SVE is supported. Normally userspace doesn't get to run
+> before we finish this. However the in-kernel users may
+> potentially start using the neon mode. So, we need to
+> reject uses of neon mode before we are set. Instead of defining
+> a new marker for the completion of SVE setup, we could simply
+> reuse the arm64_const_caps_ready and enable it once we have
+> finished all the setup. Also we could expose this to the
+> various users as "system_capabilities_finalized()" to make
+> it more meaningful than "const_caps_ready".
 > 
-> Anyone have any issues of me carrying this in my tree? I'll rebase it to
-> v5.5-rc6 when it comes out, as it depends on some commits in v5.5-rc5.
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-ack ;-) and
-
-Tested-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
-jirka
-
-> 
-> -- Steve
-> 
-> Steven Rostedt (VMware) (3):
->       perf: Make struct ring_buffer less ambiguous
->       tracing: Rename trace_buffer to array_buffer
->       tracing: Make struct ring_buffer less ambiguous
-> 
-> ----
->  drivers/oprofile/cpu_buffer.c        |   2 +-
->  include/linux/perf_event.h           |   6 +-
->  include/linux/ring_buffer.h          | 110 ++++++-------
->  include/linux/trace_events.h         |   8 +-
->  include/trace/trace_events.h         |   2 +-
->  kernel/events/core.c                 |  42 ++---
->  kernel/events/internal.h             |  34 ++--
->  kernel/events/ring_buffer.c          |  54 +++----
->  kernel/trace/blktrace.c              |   8 +-
->  kernel/trace/ftrace.c                |   8 +-
->  kernel/trace/ring_buffer.c           | 124 +++++++--------
->  kernel/trace/ring_buffer_benchmark.c |   2 +-
->  kernel/trace/trace.c                 | 292 +++++++++++++++++------------------
->  kernel/trace/trace.h                 |  38 ++---
->  kernel/trace/trace_branch.c          |   6 +-
->  kernel/trace/trace_events.c          |  20 +--
->  kernel/trace/trace_events_hist.c     |   4 +-
->  kernel/trace/trace_functions.c       |   8 +-
->  kernel/trace/trace_functions_graph.c |  14 +-
->  kernel/trace/trace_hwlat.c           |   2 +-
->  kernel/trace/trace_irqsoff.c         |   8 +-
->  kernel/trace/trace_kdb.c             |   8 +-
->  kernel/trace/trace_kprobe.c          |   4 +-
->  kernel/trace/trace_mmiotrace.c       |  12 +-
->  kernel/trace/trace_output.c          |   2 +-
->  kernel/trace/trace_sched_wakeup.c    |  20 +--
->  kernel/trace/trace_selftest.c        |  26 ++--
->  kernel/trace/trace_syscalls.c        |   8 +-
->  kernel/trace/trace_uprobe.c          |   2 +-
->  29 files changed, 437 insertions(+), 437 deletions(-)
-> 
-
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
