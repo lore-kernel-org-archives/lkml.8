@@ -2,586 +2,278 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15788C32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB02C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:34:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA3C206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:32:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLT2CMcu"
+	by mail.kernel.org (Postfix) with ESMTP id 8B3CE2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:34:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578620059;
+	bh=NTyPyLJyooH1sEVo1CzHFs8IcgvCnYnQcuZ30/nwD24=;
+	h=Date:From:To:Subject:List-ID:From;
+	b=urGzAzIrNHeM69SW45SeF6mCNCaokLTqUpkPQlvJaKav4LxeRZOOqruamKtHltHBz
+	 5nbXUHD77gR8CbRk+rd950IZzVACyBuvycTuUKIBg3gwbiPccrFiRBlwV+E6oRVIkY
+	 vWsAGiS458JqwT4bTBoubek8VJyOcRmZ7UZcUuD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730645AbgAJBcf (ORCPT
+        id S1730653AbgAJBeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:32:35 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42206 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730579AbgAJBce (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 20:32:34 -0500
-Received: by mail-pl1-f193.google.com with SMTP id p9so185185plk.9;
-        Thu, 09 Jan 2020 17:32:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=em9XvEHG8LAuhXah1UkCCYwssdieCIzVBtJdr1R8gcE=;
-        b=FLT2CMcuR6Sr+TQDXJPdfawFW665+k3sXx8k4o+u/nfJUUX1Sbdv82fbXWmz/hT89G
-         nCjfI5jWLhaaBeBAg3XjyHk66LSDU3z+vnkR3rmn75tf6d9Hz3rNTg5n+kfCL6V46N5c
-         GSfJcrRDGoacuXNFD8EzMyvm6lbo5uCP9YXyPms/RfAqdhq20529T+5MnxMsJOhZX5Nn
-         sglepuNb4hIAubmKRP36ri/mFwSWHKnKMb/oM3pN8TSpdhsui/wXEfs2ykqnORnPLW3A
-         LzL71NMCJLkeap7axaHbPiOjIVyaMK4xoB8bQ50Gk/J8m35Qg+8ZlaOGgnUG6rTU7Xn8
-         UJAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=em9XvEHG8LAuhXah1UkCCYwssdieCIzVBtJdr1R8gcE=;
-        b=rtlMQpMoKtnh3wXXEScW0FMO52c4xhf/fnw9QXOstDilGyOHws3r0Kly1wACEbJCtE
-         X5eQWGc6LycA1eHVCluYOHi2zrGXAzKszTBjgzAX8DgBwk70qG++H+ssftiJ8PCRlHED
-         /YF8OZ/IWDaJlA0tU74PqGwseooZ3YTIUoTFqMOnkkOArdsT0WRFscYh/3KpBm0Ytrqp
-         Bke/8Vw1Kb9aagpvyzqnF2qB6Qdawp0UeNFt9Kb5G4eBmU8nZeES1RT38HAGGx8O4EDa
-         0paDlI9PbPUP47hlKB0C/gh8hUZIhZZG78Fczc6g0bxeW1ci9FuB8j+KVr4p1Uq3CQv7
-         C1Qg==
-X-Gm-Message-State: APjAAAV/ZMkq3m6jv05b1mn10y9S3+nUaede7nrYt0wOvcvzaqB0AH5P
-        q6HZN0QgOsTh6ypIKMN9qKE=
-X-Google-Smtp-Source: APXvYqwvwPDTgtXU5BHB+cP1T2BI/7y6xNIaGcCCLp6zsjFwh13hWQoHmdoDTLVxFuzoPYV6Da5ppA==
-X-Received: by 2002:a17:902:6ac3:: with SMTP id i3mr1074035plt.111.1578619953247;
-        Thu, 09 Jan 2020 17:32:33 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id y128sm318004pfg.17.2020.01.09.17.32.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jan 2020 17:32:32 -0800 (PST)
-Date:   Thu, 9 Jan 2020 17:32:30 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     fengping yu <fengping.yu@mediatek.com>
-Cc:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <Anson.Huang@nxp.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stefan Agner <stefan@agner.cn>, Jacky Bai <ping.bai@nxp.com>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        devicetree@vger.kernel.org, wsd_upstream@mediatek.com
-Subject: Re: [PATCH V2 2/2] drivers: input: keyboard
-Message-ID: <20200110013230.GS8314@dtor-ws>
-References: <20200108062923.14684-1-fengping.yu@mediatek.com>
- <20200108062923.14684-3-fengping.yu@mediatek.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108062923.14684-3-fengping.yu@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 9 Jan 2020 20:34:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730579AbgAJBeS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 9 Jan 2020 20:34:18 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E3E9206ED;
+        Fri, 10 Jan 2020 01:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578620056;
+        bh=NTyPyLJyooH1sEVo1CzHFs8IcgvCnYnQcuZ30/nwD24=;
+        h=Date:From:To:Subject:From;
+        b=Muz22P264kl3qC+1A5enz15SKQYVRLX07pgy4eX9Pq4hozVm15o0nq0YQ0Xzhom0y
+         FQhRbHMGK6C9fZJPFMY7Jp8PCDSSElcTjK3F2rap4TK4O/0QfZzAxXdpWfkM0WFHRT
+         FiwFGlJ0jHWUX2TZo1B8mLlbQWhsCQ9Y3z/hdTfA=
+Date:   Thu, 09 Jan 2020 17:34:13 -0800
+From:   akpm@linux-foundation.org
+To:     broonie@kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au
+Subject:  mmotm 2020-01-09-17-33 uploaded
+Message-ID: <20200110013413.NNeLcxiMi%akpm@linux-foundation.org>
+User-Agent: s-nail v14.8.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 02:29:23PM +0800, fengping yu wrote:
-> From: "fengping.yu" <fengping.yu@mediatek.com>
-> 
-> add mtk keypad driver
-> 
-> Change-Id: I20bb26ee4112f51f60476b7ff7d6e42b43f729dc
-> Signed-off-by: fengping.yu <fengping.yu@mediatek.com>
-> ---
->  .../devicetree/bindings/input/mtk-kpd.txt     |  13 +-
->  arch/arm64/configs/defconfig                  |   1 +
->  drivers/input/keyboard/Kconfig                |   8 +
->  drivers/input/keyboard/Makefile               |   1 +
->  drivers/input/keyboard/mtk-kpd.c              | 357 ++++++++++++++++++
->  5 files changed, 377 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/input/keyboard/mtk-kpd.c
-> 
-> diff --git a/Documentation/devicetree/bindings/input/mtk-kpd.txt b/Documentation/devicetree/bindings/input/mtk-kpd.txt
-> index 2af81e696159..e3c17513c02c 100644
-> --- a/Documentation/devicetree/bindings/input/mtk-kpd.txt
-> +++ b/Documentation/devicetree/bindings/input/mtk-kpd.txt
-> @@ -38,8 +38,15 @@ Example:
->  	};
->  
->  	&keypad {
-> -		mediatek,key-debounce-ms = <1024>;
-> +		mediatek,key-debounce-ms = <32>;
->  		/*HW Keycode [0~71] -> Linux Keycode*/
-> -		mediatek,khw-map-num = <72>;
-> -		mediatek,hw-init-map = <114 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 >;
-> +		mediatek,hw-map-num = <72>;
-> +		mediatek,hw-init-map = <114 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0
-> +															0 0 0 0 0 0 0 0 0 >;
->  	};
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 8e05c39eab08..62bed77ec127 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -315,6 +315,7 @@ CONFIG_KEYBOARD_ADC=m
->  CONFIG_KEYBOARD_GPIO=y
->  CONFIG_KEYBOARD_SNVS_PWRKEY=m
->  CONFIG_KEYBOARD_CROS_EC=y
-> +CONFIG_KEYBOARD_MTK=y
->  CONFIG_INPUT_TOUCHSCREEN=y
->  CONFIG_TOUCHSCREEN_ATMEL_MXT=m
->  CONFIG_INPUT_MISC=y
-> diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-> index 8911bc2ec42a..01747a97536b 100644
-> --- a/drivers/input/keyboard/Kconfig
-> +++ b/drivers/input/keyboard/Kconfig
-> @@ -775,4 +775,12 @@ config KEYBOARD_MTK_PMIC
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called pmic-keys.
->  
-> +config KEYBOARD_MTK
-> +	tristate "MediaTek Keypad Support"
-> +	help
-> +	  Say Y here if you want to use the keypad.
-> +	  If unuse, say N.
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called mtk-kpd.
-> +
->  endif
-> diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-> index 9510325c0c5d..daa654bcce6e 100644
-> --- a/drivers/input/keyboard/Makefile
-> +++ b/drivers/input/keyboard/Makefile
-> @@ -41,6 +41,7 @@ obj-$(CONFIG_KEYBOARD_MATRIX)		+= matrix_keypad.o
->  obj-$(CONFIG_KEYBOARD_MAX7359)		+= max7359_keypad.o
->  obj-$(CONFIG_KEYBOARD_MCS)		+= mcs_touchkey.o
->  obj-$(CONFIG_KEYBOARD_MPR121)		+= mpr121_touchkey.o
-> +obj-$(CONFIG_KEYBOARD_MTK) 		+= mtk-kpd.o
->  obj-$(CONFIG_KEYBOARD_MTK_PMIC) 	+= mtk-pmic-keys.o
->  obj-$(CONFIG_KEYBOARD_NEWTON)		+= newtonkbd.o
->  obj-$(CONFIG_KEYBOARD_NOMADIK)		+= nomadik-ske-keypad.o
-> diff --git a/drivers/input/keyboard/mtk-kpd.c b/drivers/input/keyboard/mtk-kpd.c
-> new file mode 100644
-> index 000000000000..740a58b44dac
-> --- /dev/null
-> +++ b/drivers/input/keyboard/mtk-kpd.c
-> @@ -0,0 +1,357 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 MediaTek Inc.
-> + * Author Terry Chang <terry.chang@mediatek.com>
-> + */
-> +#include <linux/atomic.h>
-> +#include <linux/clk.h>
-> +#include <linux/debugfs.h>
-> +#include <linux/delay.h>
-> +#include <linux/fs.h>
-> +#include <linux/gpio.h>
-> +#include <linux/init.h>
-> +#include <linux/input.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/ioctl.h>
-> +#include <linux/kernel.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/pinctrl/consumer.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_wakeup.h>
-> +#include <linux/regmap.h>
-> +#include <linux/timer.h>
-> +#include <linux/workqueue.h>
-> +
-> +#define KPD_NAME	"mtk-kpd"
-> +
-> +#define KP_STA			(0x0000)
-> +#define KP_MEM1			(0x0004)
-> +#define KP_MEM2			(0x0008)
-> +#define KP_MEM3			(0x000c)
-> +#define KP_MEM4			(0x0010)
-> +#define KP_MEM5			(0x0014)
-> +#define KP_DEBOUNCE		(0x0018)
-> +#define KP_SEL			(0x0020)
-> +#define KP_EN			(0x0024)
-> +
-> +#define KP_COL0_SEL		(1 << 10)
-> +#define KP_COL1_SEL		(1 << 11)
-> +#define KP_COL2_SEL		(1 << 12)
-> +
-> +#define KPD_DEBOUNCE_MASK	((1U << 14) - 1)
-> +#define KPD_DOUBLE_KEY_MASK	(1U << 0)
-> +
-> +#define KPD_NUM_MEMS	5
-> +#define KPD_MEM5_BITS	8
-> +#define KPD_NUM_KEYS	72	/* 4 * 16 + KPD_MEM5_BITS */
-> +
-> +struct mtk_keypad {
-> +	struct input_dev *input_dev;
-> +	struct wakeup_source *suspend_lock;
-> +	struct tasklet_struct tasklet;
-> +	struct clk *clk;
-> +	void __iomem *base;
-> +	unsigned int irqnr;
-> +	u32 key_debounce;
-> +	u32 hw_map_num;
-> +	u32 hw_init_map[KPD_NUM_KEYS];
-> +	u16 keymap_state[KPD_NUM_MEMS];
-> +};
-> +
-> +/* for keymap handling */
-> +static void kpd_keymap_handler(unsigned long data);
-> +
-> +static int kpd_pdrv_probe(struct platform_device *pdev);
-> +
-> +static void kpd_get_keymap_state(void __iomem *kp_base, u16 state[])
-> +{
-> +	state[0] = readw(kp_base + KP_MEM1);
-> +	state[1] = readw(kp_base + KP_MEM2);
-> +	state[2] = readw(kp_base + KP_MEM3);
-> +	state[3] = readw(kp_base + KP_MEM4);
-> +	state[4] = readw(kp_base + KP_MEM5);
+The mm-of-the-moment snapshot 2020-01-09-17-33 has been uploaded to
 
-Please use memcpy_formio() here.
+   http://www.ozlabs.org/~akpm/mmotm/
 
-> +	pr_debug("kpd register = %x %x %x %x %x\n",
-> +		 state[0], state[1], state[2], state[3], state[4]);
-> +}
-> +
-> +static void kpd_keymap_handler(unsigned long data)
-> +{
-> +	int i, j;
-> +	int pressed;
-> +	u16 new_state[KPD_NUM_MEMS], change, mask;
-> +	u16 hw_keycode, keycode;
-> +	void *dest;
-> +	struct mtk_keypad *keypad = (struct mtk_keypad *)data;
-> +
-> +	kpd_get_keymap_state(keypad->base, new_state);
-> +
-> +	__pm_wakeup_event(keypad->suspend_lock, 500);
-> +
-> +	for (i = 0; i < KPD_NUM_MEMS; i++) {
-> +		change = new_state[i] ^ keypad->keymap_state[i];
-> +		if (!change)
-> +			continue;
-> +
-> +		for (j = 0; j < 16U; j++) {
-> +			mask = (u16)1 << j;
-> +			if (!(change & mask))
-> +				continue;
+mmotm-readme.txt says
 
-If you define state as N longs instead of M u16s, you can do
+README for mm-of-the-moment:
 
-	for_each_set_bit()
+http://www.ozlabs.org/~akpm/mmotm/
 
-as the single loop, figure row/col from offset, and get the state and
-fetch the code from keymap.
+This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+more than once a week.
 
-> +
-> +			hw_keycode = (i << 4) + j;
-> +
-> +			if (hw_keycode >= KPD_NUM_KEYS)
-> +				continue;
-> +
-> +			/* bit is 1: not pressed, 0: pressed */
-> +			pressed = (new_state[i] & mask) == 0U;
-> +			pr_debug("(%s) HW keycode = %d\n",
-> +				 (pressed) ? "pressed" : "released",
-> +				 hw_keycode);
-> +
-> +			keycode = keypad->hw_init_map[hw_keycode];
-> +			if (!keycode)
-> +				continue;
-> +			input_report_key(keypad->input_dev, keycode, pressed);
-> +			input_sync(keypad->input_dev);
-> +			pr_debug("report Linux keycode = %d\n", keycode);
-> +		}
-> +	}
-> +
-> +	dest = memcpy(keypad->keymap_state, new_state, sizeof(new_state));
-> +	enable_irq(keypad->irqnr);
-> +}
-> +
-> +static irqreturn_t kpd_irq_handler(int irq, void *dev_id)
-> +{
-> +	/* use _nosync to avoid deadlock */
-> +	struct mtk_keypad *keypad = dev_id;
-> +
-> +	disable_irq_nosync(keypad->irqnr);
-> +	tasklet_schedule(&keypad->tasklet);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int kpd_get_dts_info(struct mtk_keypad *keypad,
-> +			    struct device_node *node)
-> +{
-> +	int ret;
-> +
-> +	ret = of_property_read_u32(node, "mediatek,key-debounce-ms",
-> +				   &keypad->key_debounce);
-> +	if (ret) {
-> +		pr_debug("read mediatek,key-debounce-ms error.\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = of_property_read_u32(node, "mediatek,hw-map-num",
-> +				   &keypad->hw_map_num);
-> +	if (ret) {
-> +		pr_debug("read mediatek,hw-map-num error.\n");
-> +		return ret;
-> +	}
-> +
-> +	if (keypad->hw_map_num > KPD_NUM_KEYS) {
-> +		pr_debug("hw-map-num error, it cannot bigger than %d.\n",
-> +			 KPD_NUM_KEYS);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = of_property_read_u32_array(node, "mediatek,hw-init-map",
-> +					 keypad->hw_init_map,
-> +					 keypad->hw_map_num);
+You will need quilt to apply these patches to the latest Linus release (5.x
+or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+http://ozlabs.org/~akpm/mmotm/series
 
-As I mentioned, please use matrix keymap API and linux,keymap property.
+The file broken-out.tar.gz contains two datestamp files: .DATE and
+.DATE-yyyy-mm-dd-hh-mm-ss.  Both contain the string yyyy-mm-dd-hh-mm-ss,
+followed by the base kernel version against which this patch series is to
+be applied.
+
+This tree is partially included in linux-next.  To see which patches are
+included in linux-next, consult the `series' file.  Only the patches
+within the #NEXT_PATCHES_START/#NEXT_PATCHES_END markers are included in
+linux-next.
 
 
-> +
-> +	if (ret) {
-> +		pr_debug("hw-init-map was not defined in dts.\n");
-> +		return ret;
-> +	}
-> +
-> +	pr_debug("deb= %d\n", keypad->key_debounce);
-> +
-> +	return 0;
-> +}
-> +
-> +static int kpd_gpio_init(struct device *dev)
-> +{
-> +	struct pinctrl *keypad_pinctrl;
-> +	struct pinctrl_state *kpd_default;
-> +
-> +	keypad_pinctrl = devm_pinctrl_get(dev);
-> +	if (IS_ERR(keypad_pinctrl)) {
-> +		pr_debug("Cannot find keypad_pinctrl!\n");
-> +
-> +		return (int)PTR_ERR(keypad_pinctrl);
-> +	}
-> +
-> +	kpd_default = pinctrl_lookup_state(keypad_pinctrl, "default");
-> +	if (IS_ERR(kpd_default)) {
-> +		pr_debug("Cannot find ecall_state!\n");
-> +
-> +		return (int)PTR_ERR(kpd_default);
-> +	}
-> +
-> +	return pinctrl_select_state(keypad_pinctrl,
-> +				kpd_default);
-> +}
-> +
-> +static int kpd_pdrv_probe(struct platform_device *pdev)
-> +{
-> +	struct mtk_keypad *keypad;
-> +	struct resource *res;
-> +	int i;
-> +	int err;
-> +
-> +	keypad = devm_kzalloc(&pdev->dev, sizeof(*keypad), GFP_KERNEL);
-> +	if (!keypad)
-> +		return -ENOMEM;
-> +
-> +	keypad->clk = devm_clk_get(&pdev->dev, "kpd");
-> +	if (IS_ERR(keypad->clk)) {
-> +		pr_notice("get kpd-clk fail: %d\n", (int)PTR_ERR(keypad->clk));
-> +		return (int)PTR_ERR(keypad->clk);
-> +	}
-> +
-> +	err = clk_prepare_enable(keypad->clk);
+A full copy of the full kernel tree with the linux-next and mmotm patches
+already applied is available through git within an hour of the mmotm
+release.  Individual mmotm releases are tagged.  The master branch always
+points to the latest release, so it's constantly rebasing.
 
-Do not mix devm and non-devm APIs. Use devm_add_action_or_reset() for
-disabling clock in proper order.
+	https://github.com/hnaz/linux-mm
 
-> +	if (err) {
-> +		pr_notice("kpd-clk prepare enable failed.\n");
-> +		return err;
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		err = -ENODEV;
-> +		goto err_unprepare_clk;
-> +	}
-> +
-> +	keypad->base = devm_ioremap(&pdev->dev, res->start,
-> +				    resource_size(res));
-> +	if (!keypad->base) {
-> +		pr_notice("KP iomap failed\n");
-> +		err = -EBUSY;
-> +		goto err_unprepare_clk;
-> +	}
-> +
-> +	keypad->irqnr = irq_of_parse_and_map(pdev->dev.of_node, 0);
+The directory http://www.ozlabs.org/~akpm/mmots/ (mm-of-the-second)
+contains daily snapshots of the -mm tree.  It is updated more frequently
+than mmotm, and is untested.
 
-Why is this done in the driver? Use platform_get_irq() instead.
+A git copy of this tree is also available at
 
-> +	if (!keypad->irqnr) {
-> +		pr_notice("KP get irqnr failed\n");
-> +		err = -ENODEV;
-> +		goto err_unprepare_clk;
-> +	}
-> +
-> +	pr_info("kp base: 0x%p, addr:0x%p,  kp irq: %d\n",
-> +		keypad->base, &keypad->base, keypad->irqnr);
-> +	err = kpd_gpio_init(&pdev->dev);
-> +	if (err) {
-> +		pr_debug("gpio init failed\n");
-> +		goto err_unprepare_clk;
-> +	}
-> +
-> +	err = kpd_get_dts_info(keypad, pdev->dev.of_node);
-> +	if (err) {
-> +		pr_debug("get dts info failed.\n");
-> +		goto err_unprepare_clk;
-> +	}
-> +
-> +	memset(keypad->keymap_state, 0xff, sizeof(keypad->keymap_state));
-> +
-> +	keypad->input_dev = devm_input_allocate_device(&pdev->dev);
-> +	if (!keypad->input_dev) {
-> +		pr_notice("input allocate device fail.\n");
-> +		err = -ENOMEM;
-> +		goto err_unprepare_clk;
-> +	}
-> +
-> +	keypad->input_dev->name = KPD_NAME;
-> +	keypad->input_dev->id.bustype = BUS_HOST;
-> +	keypad->input_dev->dev.parent = &pdev->dev;
+	https://github.com/hnaz/linux-mm
 
-No need to set this since you are using devm_input_allocate_device().
 
-> +
-> +	__set_bit(EV_KEY, keypad->input_dev->evbit);
-> +
-> +	for (i = 0; i < KPD_NUM_KEYS; i++) {
-> +		if (keypad->hw_init_map[i])
-> +			__set_bit(keypad->hw_init_map[i],
-> +				  keypad->input_dev->keybit);
-> +	}
-> +
-> +	err = input_register_device(keypad->input_dev);
-> +	if (err) {
-> +		pr_notice("register input device failed (%d)\n", err);
-> +		goto err_unprepare_clk;
-> +	}
-> +
-> +	input_set_drvdata(keypad->input_dev, keypad);
-> +
-> +	keypad->suspend_lock = wakeup_source_register(NULL, "kpd wakelock");
-> +	if (!keypad->suspend_lock) {
-> +		pr_notice("wakeup source init failed.\n");
-> +		err = -ENOMEM;
-> +		goto err_unregister_device;
-> +	}
 
-Why are we doing it in this fashion instead of checking "wakeup-source"
-property and doing device_init_wakeup() when this flag is set?
+This mmotm tree contains the following patches against 5.5-rc5:
+(patches marked "*" will be included in linux-next)
 
-> +
-> +	tasklet_init(&keypad->tasklet, kpd_keymap_handler,
-> +		     (unsigned long)keypad);
-
-No need to use tasklet, you are not doing anything heavy in the ISR.
-
-> +
-> +	writew((u16)(keypad->key_debounce & KPD_DEBOUNCE_MASK),
-> +		     keypad->base + KP_DEBOUNCE);
-> +
-> +	/* register IRQ */
-> +	err = request_irq(keypad->irqnr, kpd_irq_handler, IRQF_TRIGGER_NONE,
-> +			  KPD_NAME, keypad);
-> +	if (err) {
-> +		pr_notice("register IRQ failed (%d)\n", err);
-> +		goto err_irq;
-> +	}
-> +
-> +	pr_info("kpd_probe OK.\n");
-> +
-> +	return 0;
-> +
-> +err_irq:
-> +	tasklet_kill(&keypad->tasklet);
-> +	wakeup_source_unregister(keypad->suspend_lock);
-> +
-> +err_unregister_device:
-> +	input_unregister_device(keypad->input_dev);
-> +
-> +err_unprepare_clk:
-> +	clk_disable_unprepare(keypad->clk);
-> +
-> +	return err;
-> +}
-> +
-> +static int kpd_pdrv_remove(struct platform_device *pdev)
-> +{
-> +	struct mtk_keypad *keypad = platform_get_drvdata(pdev);
-> +
-> +	tasklet_kill(&keypad->tasklet);
-> +	wakeup_source_unregister(keypad->suspend_lock);
-> +	input_unregister_device(keypad->input_dev);
-> +	clk_disable_unprepare(keypad->clk);
-
-Please remove this all and rely on devm for cleanup.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id kpd_of_match[] = {
-> +	{.compatible = "mediatek,mt6779-keypad"},
-> +	{.compatible = "mediatek,kp"},
-
-Do we need both compatibles? Why?
-
-> +	{},
-> +};
-> +
-> +static struct platform_driver kpd_pdrv = {
-> +	.probe = kpd_pdrv_probe,
-> +	.remove = kpd_pdrv_remove,
-> +	.driver = {
-> +		   .name = KPD_NAME,
-> +		   .of_match_table = kpd_of_match,
-> +		   },
-> +};
-> +
-> +module_platform_driver(kpd_pdrv);
-> +
-> +MODULE_AUTHOR("Mediatek Corporation");
-> +MODULE_DESCRIPTION("MTK Keypad (KPD) Driver");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.18.0
-
-Thanks.
-
--- 
-Dmitry
+  origin.patch
+* proc-kpageflags-prevent-an-integer-overflow-in-stable_page_flags.patch
+* proc-kpageflags-do-not-use-uninitialized-struct-pages.patch
+* mm-thp-tweak-reclaim-compaction-effort-of-local-only-and-all-node-allocations.patch
+* x86-mm-split-vmalloc_sync_all.patch
+* revert-ipcsem-remove-uneeded-sem_undo_list-lock-usage-in-exit_sem.patch
+* mm-fix-uninitialized-memmaps-on-a-partially-populated-last-section.patch
+* fs-proc-pagec-allow-inspection-of-last-section-and-fix-end-detection.patch
+* mm-initialize-memmap-of-unavailable-memory-directly.patch
+* mm-memory_hotplug-dont-free-usage-map-when-removing-a-re-added-early-section.patch
+* thp-fix-conflict-of-above-47bit-hint-address-and-pmd-alignment.patch
+* thp-shmem-fix-conflict-of-above-47bit-hint-address-and-pmd-alignment.patch
+* thp-shmem-fix-conflict-of-above-47bit-hint-address-and-pmd-alignment-fix.patch
+* mm-memcg-slab-fix-percpu-slab-vmstats-flushing.patch
+* mm-debug_pagealloc-dont-rely-on-static-keys-too-early.patch
+* mm-debug_pagealloc-dont-rely-on-static-keys-too-early-fix.patch
+* mm-page-writebackc-avoid-potential-division-by-zero-in-wb_min_max_ratio.patch
+* mm-page-writebackc-use-div64_ul-for-u64-by-unsigned-long-divide.patch
+* mm-page-writebackc-improve-arithmetic-divisions.patch
+* mm-memcg-slab-call-flush_memcg_workqueue-only-if-memcg-workqueue-is-valid.patch
+* mm-khugepaged-add-trace-status-description-for-scan_page_has_private.patch
+* mm-thp-grab-the-lock-before-manipulation-defer-list.patch
+* lib-test_bitmap-correct-test-data-offsets-for-32-bit.patch
+* watchdog-fix-uaf-in-reboot-notifier-handling-in-watchdog-core-code.patch
+* memcg-fix-a-crash-in-wb_workfn-when-a-device-disappears.patch
+* scripts-spellingtxt-add-more-spellings-to-spellingtxt.patch
+* scripts-spellingtxt-add-issus-typo.patch
+* fs-ocfs-remove-unnecessary-assertion-in-dlm_migrate_lockres.patch
+* ocfs2-remove-unneeded-semicolon.patch
+* ocfs2-make-local-header-paths-relative-to-c-files.patch
+* ocfs2-dlm-remove-redundant-assignment-to-ret.patch
+* ocfs2-dlm-move-bits_to_bytes-to-bitopsh-for-wider-use.patch
+* ramfs-support-o_tmpfile.patch
+* watchdog-fix-possible-soft-lockup-warning-at-bootup.patch
+* watchdog-fix-possible-soft-lockup-warning-at-bootup-v2.patch
+  mm.patch
+* mm-avoid-slub-allocation-while-holding-list_lock.patch
+* kmemleak-turn-kmemleak_lock-and-object-lock-to-raw_spinlock_t.patch
+* mm-clean-up-filemap_write_and_wait.patch
+* mm-fix-gup_pud_range.patch
+* mm-cleanup-some-useless-code.patch
+* mm-vmscan-expose-cgroup_ino-for-memcg-reclaim-tracepoints.patch
+* mm-pgmap-use-correct-alignment-when-looking-at-first-pfn-from-a-region.patch
+* mm-mmap-fix-the-adjusted-length-error.patch
+* drivers-base-memoryc-cache-blocks-in-radix-tree-to-accelerate-lookup.patch
+* drivers-base-memoryc-cache-blocks-in-radix-tree-to-accelerate-lookup-fix.patch
+* mm-memmap_init-update-variable-name-in-memmap_init_zone.patch
+* mm-memory_hotplug-poison-memmap-in-remove_pfn_range_from_zone.patch
+* mm-memory_hotplug-we-always-have-a-zone-in-find_smallestbiggest_section_pfn.patch
+* mm-memory_hotplug-dont-check-for-all-holes-in-shrink_zone_span.patch
+* mm-memory_hotplug-drop-local-variables-in-shrink_zone_span.patch
+* mm-memory_hotplug-cleanup-__remove_pages.patch
+* mm-tracing-print-symbol-name-for-kmem_alloc_node-call_site-events.patch
+* mm-early_remap-use-%pa-to-print-resource_size_t-variables.patch
+* mm-page_alloc-skip-non-present-sections-on-zone-initialization.patch
+* mm-vmscanc-remove-unused-return-value-of-shrink_node.patch
+* mm-memblock-define-memblock_physmem_add.patch
+* memblock-use-__func__-in-remaining-memblock_dbg-call-sites.patch
+* mm-oom-avoid-printk-iteration-under-rcu.patch
+* mm-oom-avoid-printk-iteration-under-rcu-fix.patch
+* mm-hugetlb-controller-for-cgroups-v2.patch
+* mm-migrate-remove-useless-mask-of-start-address.patch
+* mm-migrate-clean-up-some-minor-coding-style.patch
+* mm-migrate-add-stable-check-in-migrate_vma_insert_page.patch
+* mm-get-rid-of-odd-jump-labels-in-find_mergeable_anon_vma.patch
+* zswap-add-allocation-hysteresis-if-pool-limit-is-hit.patch
+* mm-clean-up-obsolete-check-on-space-in-page-flags.patch
+* mm-remove-dead-code-totalram_pages_set.patch
+* mm-drop-elements-hw-and-phys_callback-from-struct-memory_block.patch
+* mm-fix-comments-related-to-node-reclaim.patch
+* zram-try-to-avoid-worst-case-scenario-on-same-element-pages.patch
+* zram-fix-error-return-codes-not-being-returned-in-writeback_store.patch
+* info-task-hung-in-generic_file_write_iter.patch
+* info-task-hung-in-generic_file_write-fix.patch
+* kernel-hung_taskc-monitor-killed-tasks.patch
+* add-helpers-for-kelvin-to-from-celsius-conversion.patch
+* acpi-thermal-switch-to-use-linux-unitsh-helpers.patch
+* platform-x86-asus-wmi-switch-to-use-linux-unitsh-helpers.patch
+* platform-x86-intel_menlow-switch-to-use-linux-unitsh-helpers.patch
+* thermal-int340x-switch-to-use-linux-unitsh-helpers.patch
+* thermal-intel_pch-switch-to-use-linux-unitsh-helpers.patch
+* nvme-hwmon-switch-to-use-linux-unitsh-helpers.patch
+* thermal-remove-kelvin-to-from-celsius-conversion-helpers-from-linux-thermalh.patch
+* iwlegacy-use-linux-unitsh-helpers.patch
+* iwlwifi-use-linux-unitsh-helpers.patch
+* thermal-armada-remove-unused-to_mcelsius-macro.patch
+* iio-adc-qcom-vadc-common-use-linux-unitsh-helpers.patch
+* lib-zlib-add-s390-hardware-support-for-kernel-zlib_deflate.patch
+* s390-boot-rename-heap_size-due-to-name-collision.patch
+* lib-zlib-add-s390-hardware-support-for-kernel-zlib_inflate.patch
+* s390-boot-add-dfltcc=-kernel-command-line-parameter.patch
+* lib-zlib-add-zlib_deflate_dfltcc_enabled-function.patch
+* btrfs-use-larger-zlib-buffer-for-s390-hardware-compression.patch
+* lib-scatterlist-adjust-indentation-in-__sg_alloc_table.patch
+* uapi-rename-ext2_swab-to-swab-and-share-globally-in-swabh.patch
+* lib-find_bitc-join-_find_next_bit_le.patch
+* lib-find_bitc-uninline-helper-_find_next_bit.patch
+* string-add-stracpy-and-stracpy_pad-mechanisms.patch
+* documentation-checkpatch-prefer-stracpy-strscpy-over-strcpy-strlcpy-strncpy.patch
+* elf-smaller-code-generation-around-auxv-vector-fill.patch
+* elf-fix-start_code-calculation.patch
+* elf-dont-copy-elf-header-around.patch
+* elf-better-codegen-around-current-mm.patch
+* elf-make-bad_addr-unlikely.patch
+* elf-coredump-allocate-core-elf-header-on-stack.patch
+* elf-coredump-delete-duplicated-overflow-check.patch
+* elf-coredump-allow-process-with-empty-address-space-to-coredump.patch
+* init-mainc-log-arguments-and-environment-passed-to-init.patch
+* init-mainc-remove-unnecessary-repair_env_string-in-do_initcall_level.patch
+* init-mainc-fix-quoted-value-handling-in-unknown_bootoption.patch
+* init-fix-misleading-this-architecture-does-not-have-kernel-memory-protection-message.patch
+* reiserfs-prevent-null-pointer-dereference-in-reiserfs_insert_item.patch
+* execve-warn-if-process-starts-with-executable-stack.patch
+* io-mapping-use-phys_pfn-macro-in-io_mapping_map_atomic_wc.patch
+* aio-simplify-read_events.patch
+* smp_mb__beforeafter_atomic-update-documentation.patch
+* ipc-mqueuec-remove-duplicated-code.patch
+* ipc-mqueuec-update-document-memory-barriers.patch
+* ipc-msgc-update-and-document-memory-barriers.patch
+* ipc-semc-document-and-update-memory-barriers.patch
+* ipc-consolidate-all-xxxctl_down-functions.patch
+* ipc-consolidate-all-xxxctl_down-functions-fix.patch
+  linux-next.patch
+  linux-next-rejects.patch
+  linux-next-fix.patch
+  linux-next-fix-2.patch
+* drivers-block-null_blk_mainc-fix-layout.patch
+* drivers-block-null_blk_mainc-fix-uninitialized-var-warnings.patch
+* pinctrl-fix-pxa2xxc-build-warnings.patch
+* mm-remove-__krealloc.patch
+* mm-add-generic-pd_leaf-macros.patch
+* arc-mm-add-pd_leaf-definitions.patch
+* arm-mm-add-pd_leaf-definitions.patch
+* arm64-mm-add-pd_leaf-definitions.patch
+* mips-mm-add-pd_leaf-definitions.patch
+* powerpc-mm-add-pd_leaf-definitions.patch
+* riscv-mm-add-pd_leaf-definitions.patch
+* s390-mm-add-pd_leaf-definitions.patch
+* sparc-mm-add-pd_leaf-definitions.patch
+* x86-mm-add-pd_leaf-definitions.patch
+* mm-pagewalk-add-p4d_entry-and-pgd_entry.patch
+* mm-pagewalk-add-p4d_entry-and-pgd_entry-fix.patch
+* mm-pagewalk-allow-walking-without-vma.patch
+* mm-pagewalk-dont-lock-ptes-for-walk_page_range_novma.patch
+* mm-pagewalk-fix-termination-condition-in-walk_pte_range.patch
+* mm-pagewalk-add-depth-parameter-to-pte_hole.patch
+* x86-mm-point-to-struct-seq_file-from-struct-pg_state.patch
+* x86-mmefi-convert-ptdump_walk_pgd_level-to-take-a-mm_struct.patch
+* x86-mm-convert-ptdump_walk_pgd_level_debugfs-to-take-an-mm_struct.patch
+* mm-add-generic-ptdump.patch
+* x86-mm-convert-dump_pagetables-to-use-walk_page_range.patch
+* arm64-mm-convert-mm-dumpc-to-use-walk_page_range.patch
+* arm64-mm-display-non-present-entries-in-ptdump.patch
+* mm-ptdump-reduce-level-numbers-by-1-in-note_page.patch
+* x86-mm-avoid-allocating-struct-mm_struct-on-the-stack.patch
+* proc-decouple-proc-from-vfs-with-struct-proc_ops.patch
+* proc-convert-everything-to-struct-proc_ops.patch
+* proc-convert-everything-to-struct-proc_ops-fix.patch
+* lib-string-add-strnchrnul.patch
+* bitops-more-bits_to_-macros.patch
+* lib-add-test-for-bitmap_parse.patch
+* lib-add-test-for-bitmap_parse-fix.patch
+* lib-add-test-for-bitmap_parse-fix-2.patch
+* lib-make-bitmap_parse_user-a-wrapper-on-bitmap_parse.patch
+* lib-rework-bitmap_parse.patch
+* lib-new-testcases-for-bitmap_parse_user.patch
+* cpumask-dont-calculate-length-of-the-input-string.patch
+* treewide-remove-redundent-is_err-before-error-code-check.patch
+* arm-dma-api-fix-max_pfn-off-by-one-error-in-__dma_supported.patch
+* drivers-tty-serial-sh-scic-suppress-warning.patch
+* fix-read-buffer-overflow-in-delta-ipc.patch
+  make-sure-nobodys-leaking-resources.patch
+  releasing-resources-with-children.patch
+  mutex-subsystem-synchro-test-module.patch
+  kernel-forkc-export-kernel_thread-to-modules.patch
+  workaround-for-a-pci-restoring-bug.patch
