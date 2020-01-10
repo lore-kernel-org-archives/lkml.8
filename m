@@ -2,254 +2,155 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5D6C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB51AC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F8C020842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3352072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:05:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="UFCJfzYr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZGRgmF58"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbgAJSFC (ORCPT
+        id S1728813AbgAJSFa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:05:02 -0500
-Received: from mail-eopbgr700066.outbound.protection.outlook.com ([40.107.70.66]:42785
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727856AbgAJSFA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 13:05:00 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dsnpDjrUkxAqlYyYsOz1BoqTfgNOc9V2OsVpuTqcEhcBaK+syAmErDBesOe7pfsi5Zz1L6q6ADuve/yhdeoBmfKPxaI7p6Umcq9lIXuI/IGoctKvOnzyhU6eLFdDaTPhhBw2oz+WHJAkHOgR+Y5g8Az3Z5UEJbmMk4vEDsVNyuOAma6SgkM7Bebi+8aWKaoZgq3Kth1fEPQl0hGs9cgIxM/ViBs4HcpBZ7InyFWTS7jM7Q3RWkSDSFqMJyxdC/jvPF6nL0WhgAD2pdnbVCn8zY4eBwGCaR9OexhWAWx8u1mWV1M6z+FYO5tgHWnbuZp4sLbCdBofRyR8b8Sm9Bv3Og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7yPPa3JLLa4I/H4Qu9wp7czG/Kk1JExm4W1OpBFiIxE=;
- b=Z2QOyfMJb4LwdtPDjDhRZtTyQKDTLLTJ/F+uYnDG3xkE3Io4uG/87PMXGl6vecs6xGFhgLMF4xOlx7WJqeWAGk5c8hdaws+yf7oJ2fImWNSAFpzUaqy+6T3qmL9S0rldpMjSS8DUzwSrsVv94Ze8nxAv2UnS+RmqzBBBHF2ayomfKIc23DZujp/Rqkbacm3BiBJNs1JqI+3sh6KqCVt9cwajd3+UGiYn9QHC5lg+ychyEgkS+PZRRPi7Z0tpyrTrgSnvxuQgKmkMoWHbEOggotjQKAtFOF7gc3pS2ORff2iNraB4n0Ylao3F7MlxPwNwODDHG2D0STn9lr/pGw3TqA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7yPPa3JLLa4I/H4Qu9wp7czG/Kk1JExm4W1OpBFiIxE=;
- b=UFCJfzYrVHKXX1yvYlHRqVh3ccVYk9HrCmhMGYIHHPCaG/hFZPFnkxNUOkUj+DEQD8OKvVW3wIzYWZa4IhHY3ELmnn3UIKQnAiO0vVii43eynTwjyxsBpkWaaO9T04mcth7CB5qweJlZ0fV/ah7T7kmw5ecsgxjImTG34HkEJMk=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6760.namprd02.prod.outlook.com (10.141.156.73) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Fri, 10 Jan 2020 18:04:57 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2623.013; Fri, 10 Jan 2020
- 18:04:57 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Andre Przywara <andre.przywara@arm.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     Michal Simek <michals@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 05/14] net: axienet: Factor out TX descriptor chain
- cleanup
-Thread-Topic: [PATCH 05/14] net: axienet: Factor out TX descriptor chain
- cleanup
-Thread-Index: AQHVx6y4/M+QpndI/06Wqu2OHMXL/6fkL3TQ
-Date:   Fri, 10 Jan 2020 18:04:57 +0000
-Message-ID: <CH2PR02MB70003A0D500B9A78697FC311C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
- <20200110115415.75683-6-andre.przywara@arm.com>
-In-Reply-To: <20200110115415.75683-6-andre.przywara@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [183.83.136.244]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c607d19e-82b1-44ec-d02f-08d795f79a35
-x-ms-traffictypediagnostic: CH2PR02MB6760:|CH2PR02MB6760:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB6760AED6AC77B252D5C2A215C7380@CH2PR02MB6760.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 02788FF38E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(136003)(346002)(39860400002)(376002)(199004)(189003)(13464003)(54906003)(110136005)(26005)(8676002)(86362001)(81166006)(81156014)(186003)(66446008)(478600001)(7696005)(6506007)(2906002)(316002)(8936002)(53546011)(71200400001)(64756008)(66556008)(4326008)(52536014)(33656002)(55016002)(66476007)(5660300002)(76116006)(66946007)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6760;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: t2enkk7V2Z05goohCRPryr2KrDs/VydFR8BmlxXpEKXVpVQp5qz8cxB+nKJTnd78KUIWGgIY8xyZfgvZKp/xG7kKA4r6GjIw+QvlkJ3vC4utNlhtr2WJ5QXePdYYLfGSGMgqSygYWPeYduqf/6DGJ+5Aq4LGWm1T7v2eoVzoJLSlhMC/ymwkCXGgRrgnRFqGZ1Y1JsWZNyJME95Zu3yPbH0QU/5rJvSnn+JxPlL7rjKTp2K66HpyzNjyMMO1uG2WuJFnF/tflYxjW3/VMBu7Jf5i0B1P5fWo7lexnBf9EctySbdbHj/6Ygl6peVzT2HfrdRaQ5TLPWawdA4oZDWSRWSB8fdpj6IiM9R0EJMLBCUB4Sk+SMDnWri1uU6i3+Wx3VKs4AqmaaZZTRcwcLEhn2whbnOVHRynAxRjW1FY3lGqLp/yK82EnxjfvjKivk1BZz13N+JeZnGZ7FvxC227fM8Zd7a6iUR85JFkINtjeQpr5JI4sOi3nqMnCJ46o7hm
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 10 Jan 2020 13:05:30 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25559 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728754AbgAJSF3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 13:05:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578679528;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=v31Eaztz+3OF3ASbHAMLjbmtl3ed8M6IvqFbNTtZGVc=;
+        b=ZGRgmF58otKIJyozfQ4t4nkG0undiFPe4unrsC1ZmocOFHKyyjYkjfzf6AjPKa1jZU3lIC
+        lhcutsCQqg3Wrko081c8Cq7ziFhtbeZrpC6qjUG9DWFEj+o4vQ8gIY5UwQVSw7BVaPpNcg
+        DYLSzJkBn13Y7Ogk29c4kdBM1F07dv0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-414-vYuEvSi9NW2lMK5pm1b4yQ-1; Fri, 10 Jan 2020 13:05:24 -0500
+X-MC-Unique: vYuEvSi9NW2lMK5pm1b4yQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DAAFE800A02;
+        Fri, 10 Jan 2020 18:05:22 +0000 (UTC)
+Received: from [10.36.118.66] (unknown [10.36.118.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A2C32A4B60;
+        Fri, 10 Jan 2020 18:05:20 +0000 (UTC)
+Subject: Re: [PATCH] mm/page_alloc: Skip non present sections on zone
+ initialization
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@suse.de>,
+        "Jin, Zhi" <zhi.jin@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20191230093828.24613-1-kirill.shutemov@linux.intel.com>
+ <20200108144044.GB30379@dhcp22.suse.cz>
+ <73437651-822f-fcec-3b96-281fb1064cf8@redhat.com>
+ <20200110134547.v6ju5dxazknfjdj3@box>
+ <de70ec09-492d-292b-0738-db1ce1f05673@redhat.com>
+ <20200110144717.xufpf4yjkjlngymy@box>
+ <6cf49e65-ee02-7cbd-596f-ebbc057717c2@redhat.com>
+ <20200110145454.mmgmtcy2zsrr63vh@box>
+ <2f075639-c378-4bba-abe1-60d3c2420800@redhat.com>
+ <20200110175519.myahx3tnxajt4eam@box>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <1dfd6a03-c444-720a-17c4-049f5953acb9@redhat.com>
+Date:   Fri, 10 Jan 2020 19:05:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c607d19e-82b1-44ec-d02f-08d795f79a35
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 18:04:57.2056
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bYjkePUNeHIOFPlPuefjyac8pU+MWZcuPsz2hZHd7TA6JLH0ufwjpiLtOHcroi1XkEvnRvTjYoGnQwItyV6qCQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6760
+In-Reply-To: <20200110175519.myahx3tnxajt4eam@box>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Andre Przywara <andre.przywara@arm.com>
-> Sent: Friday, January 10, 2020 5:24 PM
-> To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
-> <radheys@xilinx.com>
-> Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
-> <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH 05/14] net: axienet: Factor out TX descriptor chain clean=
-up
->=20
-> Factor out the code that cleans up a number of connected TX descriptors,
-> as we will need it to properly roll back a failed _xmit() call.
-> There are subtle differences between cleaning up a successfully sent
-> chain (unknown number of involved descriptors, total data size needed)
-> and a chain that was about to set up (number of descriptors known), so
-> cater for those variations with some extra parameters.
->=20
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  .../net/ethernet/xilinx/xilinx_axienet_main.c | 75 ++++++++++++-------
->  1 file changed, 50 insertions(+), 25 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> index ec5d01adc1d5..82abe2b0f16a 100644
-> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> @@ -543,33 +543,37 @@ static int axienet_device_reset(struct net_device
-> *ndev)
->  	return 0;
->  }
->=20
-> -/**
-> - * axienet_start_xmit_done - Invoked once a transmit is completed by the
-> - * Axi DMA Tx channel.
-> - * @ndev:	Pointer to the net_device structure
-> - *
-> - * This function is invoked from the Axi DMA Tx isr to notify the comple=
-tion
-> - * of transmit operation. It clears fields in the corresponding Tx BDs a=
-nd
-> - * unmaps the corresponding buffer so that CPU can regain ownership of
-> the
-> - * buffer. It finally invokes "netif_wake_queue" to restart transmission=
- if
-> - * required.
-> +/* Clean up a series of linked TX descriptors. Would either be called
-> + * after a successful transmit operation, or after there was an error
-> + * when setting up the chain.
-> + * Returns the number of descriptors handled.
->   */
-> -static void axienet_start_xmit_done(struct net_device *ndev)
+On 10.01.20 18:55, Kirill A. Shutemov wrote:
+> On Fri, Jan 10, 2020 at 03:56:14PM +0100, David Hildenbrand wrote:
+>> On 10.01.20 15:54, Kirill A. Shutemov wrote:
+>>> On Fri, Jan 10, 2020 at 03:48:39PM +0100, David Hildenbrand wrote:
+>>>>>> +       if (!present_section_nr(section_nr))
+>>>>>> +               return section_nr_to_pfn(next_present_section_nr(section_nr));
+>>>>>
+>>>>> This won't compile. next_present_section_nr() is static to mm/sparse.c.
+>>>>
+>>>> We should then move that to the header IMHO.
+>>>
+>>> It looks like too much for a trivial cleanup.
+>>>
+>>
+>> Cleanup? This is a performance improvement ("fix the issue."). We should
+>> avoid duplicating code where it can be avoided.
+> 
+> My original patch is in -mm tree and fixes the issue. The thread is about
+> tiding it up.
 
-To be consistent we can add the doxygen function description.
-The rest looks good. Feel free to add:
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Just send a v2? This thread is review of this patch.
 
-> +static int axienet_free_tx_chain(struct net_device *ndev, u32 first_bd,
-> +				 int nr_bds, u32 *sizep)
->  {
-> -	u32 size =3D 0;
-> -	u32 packets =3D 0;
->  	struct axienet_local *lp =3D netdev_priv(ndev);
-> +	int max_bds =3D (nr_bds !=3D -1) ? nr_bds : lp->tx_bd_num;
->  	struct axidma_bd *cur_p;
-> -	unsigned int status =3D 0;
-> +	unsigned int status;
-> +	int i;
-> +
-> +	for (i =3D 0; i < max_bds; i++) {
-> +		cur_p =3D &lp->tx_bd_v[(first_bd + i) % lp->tx_bd_num];
-> +		status =3D cur_p->status;
-> +
-> +		/* If no number is given, clean up *all* descriptors that have
-> +		 * been completed by the MAC.
-> +		 */
-> +		if (nr_bds =3D=3D -1 && !(status &
-> XAXIDMA_BD_STS_COMPLETE_MASK))
-> +			break;
->=20
-> -	cur_p =3D &lp->tx_bd_v[lp->tx_bd_ci];
-> -	status =3D cur_p->status;
-> -	while (status & XAXIDMA_BD_STS_COMPLETE_MASK) {
->  		dma_unmap_single(ndev->dev.parent, cur_p->phys,
->  				(cur_p->cntrl &
-> XAXIDMA_BD_CTRL_LENGTH_MASK),
->  				DMA_TO_DEVICE);
-> -		if (cur_p->skb)
-> +
-> +		if (cur_p->skb && (status &
-> XAXIDMA_BD_STS_COMPLETE_MASK))
->  			dev_consume_skb_irq(cur_p->skb);
-> +
->  		cur_p->cntrl =3D 0;
->  		cur_p->app0 =3D 0;
->  		cur_p->app1 =3D 0;
-> @@ -578,15 +582,36 @@ static void axienet_start_xmit_done(struct
-> net_device *ndev)
->  		cur_p->status =3D 0;
->  		cur_p->skb =3D NULL;
->=20
-> -		size +=3D status & XAXIDMA_BD_STS_ACTUAL_LEN_MASK;
-> -		packets++;
-> -
-> -		if (++lp->tx_bd_ci >=3D lp->tx_bd_num)
-> -			lp->tx_bd_ci =3D 0;
-> -		cur_p =3D &lp->tx_bd_v[lp->tx_bd_ci];
-> -		status =3D cur_p->status;
-> +		if (sizep)
-> +			*sizep +=3D status &
-> XAXIDMA_BD_STS_ACTUAL_LEN_MASK;
->  	}
->=20
-> +	return i;
-> +}
-> +
-> +/**
-> + * axienet_start_xmit_done - Invoked once a transmit is completed by the
-> + * Axi DMA Tx channel.
-> + * @ndev:	Pointer to the net_device structure
-> + *
-> + * This function is invoked from the Axi DMA Tx isr to notify the comple=
-tion
-> + * of transmit operation. It clears fields in the corresponding Tx BDs a=
-nd
-> + * unmaps the corresponding buffer so that CPU can regain ownership of
-> the
-> + * buffer. It finally invokes "netif_wake_queue" to restart transmission=
- if
-> + * required.
-> + */
-> +static void axienet_start_xmit_done(struct net_device *ndev)
-> +{
-> +	u32 size =3D 0;
-> +	u32 packets =3D 0;
-> +	struct axienet_local *lp =3D netdev_priv(ndev);
-> +
-> +	packets =3D axienet_free_tx_chain(ndev, lp->tx_bd_ci, -1, &size);
-> +
-> +	lp->tx_bd_ci +=3D packets;
-> +	if (lp->tx_bd_ci >=3D lp->tx_bd_num)
-> +		lp->tx_bd_ci -=3D lp->tx_bd_num;
-> +
->  	ndev->stats.tx_packets +=3D packets;
->  	ndev->stats.tx_bytes +=3D size;
->=20
-> --
-> 2.17.1
+If you don't want to clean it up, I can send patches ...
+
+-- 
+Thanks,
+
+David / dhildenb
 
