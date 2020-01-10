@@ -2,106 +2,163 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5660CC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 274DAC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA102072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578643040;
-	bh=KzQGNzbnWuzjj/D+MsdmvVNOXudlw3w+y6Grnw01pBM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DZwUQfXaRdexHo0fkf1fFBZKWQmhgTk5qDimtYJjUtGxD2w6P5Ym8Sg+Fs983ODFi
-	 a0om4lTuhOajHsYcmowqBSmP+SwG2nFTk7oCAXhIs0Aea3uUbVyn91339JZvqju8fM
-	 6QbEnn8Fc7sZRJJgx/xHj68cbLlX8WL0CnP9mEUc=
+	by mail.kernel.org (Postfix) with ESMTP id 0680C2073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:59:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgAJH5T (ORCPT
+        id S1726773AbgAJH7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:57:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48210 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 02:59:18 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:40478 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726508AbgAJH5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:57:19 -0500
-Received: from localhost (unknown [223.226.110.118])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41A8220678;
-        Fri, 10 Jan 2020 07:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578643038;
-        bh=KzQGNzbnWuzjj/D+MsdmvVNOXudlw3w+y6Grnw01pBM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XblV76ARZIAOQwMc8aSkMpy2HXQgJYCspGWq7zyedcFPSJxCF6vbaRtw0ox4y5dVu
-         8L1v/zuLLcuwGkKy3eEI+aq4911KEr5Nwq22oikjOvzzMVEUP5KBwJ4wR6fKeQ2w7+
-         YE2wVW6/ZXhuuL7vWPSenWPpSjCzhG+9GJRNwsek=
-Date:   Fri, 10 Jan 2020 13:27:07 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Gary R Hook <gary.hook@amd.com>,
-        Sanjay R Mehta <Sanju.Mehta@amd.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        kbuild test robot <lkp@intel.com>, dan.j.williams@intel.com,
-        Nehal-bakulchandra.Shah@amd.com, Shyam-sundar.S-k@amd.com,
-        davem@davemloft.net, mchehab+samsung@kernel.org, robh@kernel.org,
-        Jonathan.Cameron@huawei.com, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dmaengine: ptdma: Initial driver for the AMD
- PassThru DMA engine
-Message-ID: <20200110075707.GE2818@vkoul-mobl>
-References: <1577458047-109654-1-git-send-email-Sanju.Mehta@amd.com>
- <201912280738.zotyIgEi%lkp@intel.com>
- <20200103062630.GD2818@vkoul-mobl>
- <de0bf6de-5c44-bb81-f3ac-2db1c1c4595d@amd.com>
- <20200103155256.GC1064304@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200103155256.GC1064304@kroah.com>
+        id S1726401AbgAJH7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:59:17 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D3F8B1A0BCA;
+        Fri, 10 Jan 2020 08:59:14 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id C05561A0BD8;
+        Fri, 10 Jan 2020 08:59:08 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4FDEC402C1;
+        Fri, 10 Jan 2020 15:59:01 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH 1/3] dt-bindings: clock: Convert i.MX8MQ to json-schema
+Date:   Fri, 10 Jan 2020 15:55:12 +0800
+Message-Id: <1578642914-838-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-01-20, 16:52, Greg KH wrote:
-> On Fri, Jan 03, 2020 at 09:12:18AM -0600, Gary R Hook wrote:
-> > On 1/3/20 12:26 AM, Vinod Koul wrote:
-> > > On 28-12-19, 07:56, kbuild test robot wrote:
-> > > > Hi Sanjay,
-> > > > 
-> > > > I love your patch! Perhaps something to improve:
-> > > 
-> > > Please fix the issues reported and also make sure the patches sent are
-> > > threaded, right now they are not and the series is all over my inbox :(
-> > > 
-> > 
-> > What does this mean? The patches showed up in my inbox as a set of 3,
-> > properly indexed, just like they should when sent with "git send-email".
-> > 
-> > We've not had any reports from other lists/maintainers of similar problems.
-> > So you'll understand how we might be a bit confused.
-> > 
-> > Would you please elaborate on the problem you are seeing?
-> 
-> There was no email threading of the patches, they all looked like
-> individual emails.  In other words, the "In-Reply-To:" value was not
-> set.
+Convert the i.MX8MQ clock binding to DT schema format using json-schema
 
-And git send-email does that for you if you give it all the patches to
-send to... If you give it each patch individually, they will come as
-individual units
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/clock/imx8mq-clock.txt     | 20 ------
+ .../devicetree/bindings/clock/imx8mq-clock.yaml    | 72 ++++++++++++++++++++++
+ 2 files changed, 72 insertions(+), 20 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.yaml
 
-FWIW, my workflow is 
-
-$ git format-patch .... -o <some_dir>
-<check the patches, add cover letter details etc>
-$ git send-email <some_dir>
-
-That ensures the In-Reply-To is set for subsequent patches and the log
-will also tell you that
-
-HTH
+diff --git a/Documentation/devicetree/bindings/clock/imx8mq-clock.txt b/Documentation/devicetree/bindings/clock/imx8mq-clock.txt
+deleted file mode 100644
+index 52de826..0000000
+--- a/Documentation/devicetree/bindings/clock/imx8mq-clock.txt
++++ /dev/null
+@@ -1,20 +0,0 @@
+-* Clock bindings for NXP i.MX8M Quad
+-
+-Required properties:
+-- compatible: Should be "fsl,imx8mq-ccm"
+-- reg: Address and length of the register set
+-- #clock-cells: Should be <1>
+-- clocks: list of clock specifiers, must contain an entry for each required
+-          entry in clock-names
+-- clock-names: should include the following entries:
+-    - "ckil"
+-    - "osc_25m"
+-    - "osc_27m"
+-    - "clk_ext1"
+-    - "clk_ext2"
+-    - "clk_ext3"
+-    - "clk_ext4"
+-
+-The clock consumer should specify the desired clock by having the clock
+-ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx8mq-clock.h
+-for the full list of i.MX8M Quad clock IDs.
+diff --git a/Documentation/devicetree/bindings/clock/imx8mq-clock.yaml b/Documentation/devicetree/bindings/clock/imx8mq-clock.yaml
+new file mode 100644
+index 0000000..881c01c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx8mq-clock.yaml
+@@ -0,0 +1,72 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/bindings/clock/imx8mq-clock.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: NXP i.MX8M Quad Clock Control Module Binding
++
++maintainers:
++  - Anson Huang <Anson.Huang@nxp.com>
++
++description: |
++  NXP i.MX8M Quad clock control module is an integrated clock controller, which
++  generates and supplies to all modules.
++
++properties:
++  compatible:
++    const: fsl,imx8mn-ccm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    items:
++      - description: 32k osc
++      - description: 25m osc
++      - description: 27m osc
++      - description: ext1 clock input
++      - description: ext2 clock input
++      - description: ext3 clock input
++      - description: ext4 clock input
++
++  clock-names:
++    items:
++      - const: ckil
++      - const: osc_25m
++      - const: osc_27m
++      - const: clk_ext1
++      - const: clk_ext2
++      - const: clk_ext3
++      - const: clk_ext4
++
++  '#clock-cells':
++    const: 1
++    description:
++      The clock consumer should specify the desired clock by having the clock
++      ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx8mq-clock.h
++      for the full list of i.MX8M Quad clock IDs.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - clock-names
++  - '#clock-cells'
++
++examples:
++  # Clock Control Module node:
++  - |
++    clk: clock-controller@30380000 {
++        compatible = "fsl,imx8mq-ccm";
++        reg = <0x30380000 0x10000>;
++        #clock-cells = <1>;
++        clocks = <&ckil>, <&osc_25m>, <&osc_27m>,
++                 <&clk_ext1>, <&clk_ext2>,
++                 <&clk_ext3>, <&clk_ext4>;
++        clock-names = "ckil", "osc_25m", "osc_27m",
++                      "clk_ext1", "clk_ext2",
++                      "clk_ext3", "clk_ext4";
++    };
++
++...
 -- 
-~Vinod
+2.7.4
+
