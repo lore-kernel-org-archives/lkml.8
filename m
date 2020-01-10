@@ -2,99 +2,184 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 250BBC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B21FC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01AC82072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:52:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28C052072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="huBJfB29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728542AbgAJRwo convert rfc822-to-8bit (ORCPT
+        id S1728593AbgAJRxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:52:44 -0500
-Received: from coyote.holtmann.net ([212.227.132.17]:38095 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728345AbgAJRwn (ORCPT
+        Fri, 10 Jan 2020 12:53:10 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34800 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728248AbgAJRxJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:52:43 -0500
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id ED1D0CED18;
-        Fri, 10 Jan 2020 19:01:58 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [RFC] y2038: HCI_TIME_STAMP with time64
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <CAK8P3a1K79zGvi3hc4aw4vcsni1cx4u121OBHgWiaFSPxpA6ZQ@mail.gmail.com>
-Date:   Fri, 10 Jan 2020 18:52:41 +0100
-Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Rich Felker <dalias@libc.org>, Guy Harris <guy@alum.mit.edu>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <14C7747D-E987-4A0A-AAA8-73B317B11656@holtmann.org>
-References: <CAK8P3a1mOzsaD+ZnN+ZKvmcan=K=KbnTjUOe1y8fS8WOMXT+Dw@mail.gmail.com>
- <5E8DACB3-3B53-4E22-A834-4CEDFC6A1757@holtmann.org>
- <CAK8P3a1K79zGvi3hc4aw4vcsni1cx4u121OBHgWiaFSPxpA6ZQ@mail.gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        Fri, 10 Jan 2020 12:53:09 -0500
+Received: by mail-pl1-f194.google.com with SMTP id x17so1130056pln.1;
+        Fri, 10 Jan 2020 09:53:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7CDQhFdn9jkHo+6/IKHK0dztZerzShVqNerNdFNibYI=;
+        b=huBJfB29GhBFOE6ibGq9rZro83Y9Ry5BVWo7VwnsQnYFJ4BgczzUmF8H9eGx6jMZ2S
+         E7AfCJD4D2kIMp2dTi3SBsXGrju8f7kZHinSSNyqCbc/2hQOefdlR8X+fCeAHtGB6P4N
+         zPf64RFjC82FB2fAeTw6K61/viGwGsDCShGaVxiZSIfuFVzH4rm0YSwHdm/9zG3Km+ZX
+         0LFaoJDiYy6uRdUiUSi6RyUCn7tB9R9BoY+qvuwa3v1pgAfeaMdAOuRbC/rXJTdSEBBo
+         Z0K7m3OF6X0T3n+T5vYsQen7lAih4jZSeI3+6CdNEPvNXEEB+tNg7lm8KUf42GW16loT
+         VDkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7CDQhFdn9jkHo+6/IKHK0dztZerzShVqNerNdFNibYI=;
+        b=sDJnwVhzgcJ1idgb9GoTPjwPdZ5LI2ZmtWUMbgnL9rajxW0jjAfoDEyy0GZCcIFLTZ
+         zoJGGyYpd0u1CLYNM4pbG9gaPWd4MI8NSUERueZd2MK+ZIs5Ga0a3q04+iiEEuuAzn4E
+         sKEEUaZj+IHWH+5peMBIt+EFBT7pnxLQWNp8hx6RMEIQObw2bKTdUNL+moG2fhfj5J+H
+         bzzLte1FHutOhfOaK9JBA+pcWuUQsMLdOCOZWhzTF50h5MNFvAArp5zQY4qe5D8RyKRY
+         5qFR0W6uCcQRjE5/rIC5z+slbWJlUFqJYNS2OjN449+vdH5SOPucomQHeexFuWG4ysVs
+         w1RQ==
+X-Gm-Message-State: APjAAAXomNmfpnLjJ+ijZMUuq3KWmH3EXprA2DII+8YU55qL283DSiWW
+        9uj850cSw2IEf/jeLKI7xX4=
+X-Google-Smtp-Source: APXvYqxSppu3yeNvSqY0JqfiaAqCaesNlytAiUS9HnsE+dbJvdkreE5lle13ppca3R6I/dd3W3n5rA==
+X-Received: by 2002:a17:902:343:: with SMTP id 61mr5753565pld.332.1578678788962;
+        Fri, 10 Jan 2020 09:53:08 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::2:ba5e])
+        by smtp.gmail.com with ESMTPSA id w3sm1423944pgj.48.2020.01.10.09.53.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 Jan 2020 09:53:08 -0800 (PST)
+Date:   Fri, 10 Jan 2020 09:53:05 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Michael Halcrow <mhalcrow@google.com>,
+        Paul Turner <pjt@google.com>,
+        Brendan Gregg <brendan.d.gregg@gmail.com>,
+        Jann Horn <jannh@google.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Stanislav Fomichev <sdf@google.com>,
+        Quentin Monnet <quentin.monnet@netronome.com>,
+        Andrey Ignatov <rdna@fb.com>, Joe Stringer <joe@wand.net.nz>,
+        Paul Moore <paul@paul-moore.com>
+Subject: Re: [PATCH bpf-next v1 00/13] MAC and Audit policy using eBPF (KRSI)
+Message-ID: <20200110175304.f3j4mtach4mccqtg@ast-mbp.dhcp.thefacebook.com>
+References: <201912301112.A1A63A4@keescook>
+ <c4e6cdf2-1233-fc82-ca01-ba84d218f5aa@tycho.nsa.gov>
+ <alpine.LRH.2.21.2001090551000.27794@namei.org>
+ <e59607cc-1a84-cbdd-5117-7efec86b11ff@tycho.nsa.gov>
+ <alpine.LRH.2.21.2001100437550.21515@namei.org>
+ <e90e03e3-b92f-6e1a-132f-1b648d9d2139@tycho.nsa.gov>
+ <alpine.LRH.2.21.2001100558550.31925@namei.org>
+ <20200109194302.GA85350@google.com>
+ <8e035f4d-5120-de6a-7ac8-a35841a92b8a@tycho.nsa.gov>
+ <20200110152758.GA260168@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110152758.GA260168@google.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
-
->>> I noticed earlier this week that the HCI_CMSG_TSTAMP/HCI_TIME_STAMP
->>> interface has no time64 equivalent, as we apparently missed that when
->>> converting the normal socket timestamps to support both time32 and time64
->>> variants of the sockopt and cmsg data.
-> ...
->>> When using HCI_TIME_STAMP on a 32-bit system with a time64
->>> libc, users will interpret the { s32 tv_sec; s32 tv_usec } layout of
->>> the kernel as { s64 tv_sec; ... }, which puts complete garbage
->>> into the timestamp regardless of whether this code runs before or
->>> after y2038. From looking at codesearch.debian.org, I found two
->>> users of this: libpcap and hcidump. There are probably others that
->>> are not part of Debian.
-> ...
->>> 3. Add support for the normal SO_TIMESTAMPNS_NEW sockopt in
->>>  HCI, providing timestamps in the unambiguous { long long tv_sec;
->>>  long long tv_nsec; } format to user space, and change applications
->>>  to use that if supported by the kernel.
->> 
->> I have added SO_TIMESTAMP* to every Bluetooth socket a while back. And that should be used by the majority of the tools. One exception might by hcidump which has been replaced by btmon already anyway.
->> 
->> So I would not bother with HCI_TIME_STAMP fixing. We can do 2) if someone really still wants to use that socket option. However I am under the impression that 3) should be already possible.
+On Fri, Jan 10, 2020 at 04:27:58PM +0100, KP Singh wrote:
+> On 09-Jan 14:47, Stephen Smalley wrote:
+> > On 1/9/20 2:43 PM, KP Singh wrote:
+> > > On 10-Jan 06:07, James Morris wrote:
+> > > > On Thu, 9 Jan 2020, Stephen Smalley wrote:
+> > > > 
+> > > > > On 1/9/20 1:11 PM, James Morris wrote:
+> > > > > > On Wed, 8 Jan 2020, Stephen Smalley wrote:
+> > > > > > 
+> > > > > > > The cover letter subject line and the Kconfig help text refer to it as a
+> > > > > > > BPF-based "MAC and Audit policy".  It has an enforce config option that
+> > > > > > > enables the bpf programs to deny access, providing access control. IIRC,
+> > > > > > > in
+> > > > > > > the earlier discussion threads, the BPF maintainers suggested that Smack
+> > > > > > > and
+> > > > > > > other LSMs could be entirely re-implemented via it in the future, and that
+> > > > > > > such an implementation would be more optimal.
+> > > > > > 
+> > > > > > In this case, the eBPF code is similar to a kernel module, rather than a
+> > > > > > loadable policy file.  It's a loadable mechanism, rather than a policy, in
+> > > > > > my view.
+> > > > > 
+> > > > > I thought you frowned on dynamically loadable LSMs for both security and
+> > > > > correctness reasons?
+> > > 
+> > > Based on the feedback from the lists we've updated the design for v2.
+> > > 
+> > > In v2, LSM hook callbacks are allocated dynamically using BPF
+> > > trampolines, appended to a separate security_hook_heads and run
+> > > only after the statically allocated hooks.
+> > > 
+> > > The security_hook_heads for all the other LSMs (SELinux, AppArmor etc)
+> > > still remains __lsm_ro_after_init and cannot be modified. We are still
+> > > working on v2 (not ready for review yet) but the general idea can be
+> > > seen here:
+> > > 
+> > >    https://github.com/sinkap/linux-krsi/blob/patch/v1/trampoline_prototype/security/bpf/lsm.c
+> > > 
+> > > > 
+> > > > Evaluating the security impact of this is the next step. My understanding
+> > > > is that eBPF via BTF is constrained to read only access to hook
+> > > > parameters, and that its behavior would be entirely restrictive.
+> > > > 
+> > > > I'd like to understand the security impact more fully, though.  Can the
+> > > > eBPF code make arbitrary writes to the kernel, or read anything other than
+> > > > the correctly bounded LSM hook parameters?
+> > > > 
+> > > 
+> > > As mentioned, the BPF verifier does not allow writes to BTF types.
+> > > 
+> > > > > And a traditional security module would necessarily fall
+> > > > > under GPL; is the eBPF code required to be likewise?  If not, KRSI is a
+> > > > > gateway for proprietary LSMs...
+> > > > 
+> > > > Right, we do not want this to be a GPL bypass.
+> > > 
+> > > This is not intended to be a GPL bypass and the BPF verifier checks
+> > > for license compatibility of the loaded program with GPL.
+> > 
+> > IIUC, it checks that the program is GPL compatible if it uses a function
+> > marked GPL-only.  But what specifically is marked GPL-only that is required
+> > for eBPF programs using KRSI?
 > 
-> Ok, excellent, I had not realized this works already.
-> 
-> I have now also checked
-> https://github.com/the-tcpdump-group/libpcap/blob/master/pcap-bt-monitor-linux.c
-> which uses SO_TIMESTAMP and then should work. I guess this is similar
-> to what btmon does.
-> 
-> For libpcap that leaves
-> https://github.com/the-tcpdump-group/libpcap/blob/master/pcap-bt-linux.c#L358
-> 
-> which needs a fairly simply fix on 32-bit architectures to copy the
-> two 32-bit fields
-> into the longer pkth.ts fields individually rather than using a memcpy.
-> I've added Guy Harris to Cc, he seems to be the maintainer for this file
-> according to the git history.
-> 
-> The same change is needed for
-> https://git.kernel.org/pub/scm/bluetooth/bluez.git/tree/tools/hcidump.c#n233
-> if there are any remaining users. I can send you a patch if you want.
+> Good point! If no-one objects, I can add it to the BPF_PROG_TYPE_LSM
+> specific verification for the v2 of the patch-set which would require
+> all BPF-LSM programs to be GPL.
 
-please send a patch for hcidump if you have the time.
-
-Regards
-
-Marcel
-
+I don't think it's a good idea to enforce license on the program.
+The kernel doesn't do it for modules.
+For years all of BPF tracing progs were GPL because they have to use
+GPL-ed helpers to do anything meaningful.
+So for KRSI just make sure that all helpers are GPL-ed as well.
