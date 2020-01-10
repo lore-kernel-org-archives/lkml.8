@@ -2,101 +2,298 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF41EC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09571C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAA622072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A932072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:45:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="bREENsED"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbgAJKjM (ORCPT
+        id S1727564AbgAJKp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:39:12 -0500
-Received: from mout.kundenserver.de ([217.72.192.75]:52245 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727339AbgAJKjL (ORCPT
+        Fri, 10 Jan 2020 05:45:58 -0500
+Received: from mail-m975.mail.163.com ([123.126.97.5]:39766 "EHLO
+        mail-m975.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727345AbgAJKp6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:39:11 -0500
-Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
- mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MCKJw-1izFd60Fak-009PCq for <linux-kernel@vger.kernel.org>; Fri, 10 Jan
- 2020 11:39:10 +0100
-Received: by mail-qk1-f175.google.com with SMTP id z14so1344987qkg.9
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 02:39:09 -0800 (PST)
-X-Gm-Message-State: APjAAAUwcezGeZjYn5sVcxFp1taYKToqyRUyP65IFejkNRtcuVEZwLVn
-        6NtL6ZhD47P9jKS3OJWZpID9ImAmzyRZb0fAmYQ=
-X-Google-Smtp-Source: APXvYqyMjVVSmapAqsj//2kM/mVvl/4A/mbE9YNiMhmY9VW+W5aDIjEJsqICoh8t6bHpRs35xTIAnKoMz+ijna0GhT4=
-X-Received: by 2002:a05:620a:cef:: with SMTP id c15mr2494811qkj.352.1578652748961;
- Fri, 10 Jan 2020 02:39:08 -0800 (PST)
+        Fri, 10 Jan 2020 05:45:58 -0500
+X-Greylist: delayed 933 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Jan 2020 05:45:50 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=g2tbO
+        +qzlpA2w5Cd7SBiifcvdUZuxRzhuQ247WytjJ4=; b=bREENsEDpS/bG1RHE+i7N
+        Hn7cEFqrreokTkfTFoS6clEiQwS18uhJ7iGiXxCoISmha84Bqq0TehL6mxkq/Jdg
+        u+n0JBaZdCh3x9bG50fHzx+4z6O1Kd/Z9EmGShVlzwSHMoQ4NSAJ0rzO+biT2KIG
+        yWj58sXe7wRHwFRtE1ctJ4=
+Received: from xilei-TM1604.mioffice.cn (unknown [114.247.175.196])
+        by smtp5 (Coremail) with SMTP id HdxpCgCHCsjgURheqcdzDA--.474S4;
+        Fri, 10 Jan 2020 18:29:26 +0800 (CST)
+From:   Niu Xilei <niu_xilei@163.com>
+To:     davem@davemloft.net
+Cc:     tglx@linutronix.de, fw@strlen.de, peterz@infradead.org,
+        pabeni@redhat.com, anshuman.khandual@arm.com,
+        linyunsheng@huawei.com, bigeasy@linutronix.de,
+        jonathan.lemon@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Niu Xilei <niu_xilei@163.com>
+Subject: [PATCH]     pktgen: create packet use  IPv6 source address between src6_min and src6_max.
+Date:   Fri, 10 Jan 2020 18:28:42 +0800
+Message-Id: <20200110102842.13585-1-niu_xilei@163.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200110101510.87311-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200110101510.87311-1-andriy.shevchenko@linux.intel.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Fri, 10 Jan 2020 11:38:52 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1ruyzoMb18yNWdEn20sv+Sum4FW0AYqmD-SfyR28OygA@mail.gmail.com>
-Message-ID: <CAK8P3a1ruyzoMb18yNWdEn20sv+Sum4FW0AYqmD-SfyR28OygA@mail.gmail.com>
-Subject: Re: [PATCH v1] mfd: syscon: Switch to use devm_ioremap_resource()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:9lVbm9754X4X7JsHNGnoRcblq870MskI9KK5P/+cX0qjfqwiQSE
- m5ufo1ib+GLG9wO4TQ0aI52evGYVGGYtQZQyvuD9ncSFu7TKlXEmB1Ilbqx7H3snwHXCXpS
- OkgRMcEr87CtaPK6nVMPcCytOcwCLA0G1mgGSAXYPH5kY/gWsI5NVmaRk99jutqa28xVBuH
- ai9B0EtVEzmpSDA3XUzvw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:m2M/Lm0v7HU=:L8b00bT1DE96kjISlyjmDC
- fytgc4GG1mdS9Auky+mshxRcAwGDpsUYdNCwIryP8mFLJN/kx3ULoz0KYrAXOXLL41CSCripc
- XAx2TZxLvHsumkCoo05pcD9uJCD858G+nTdsxCKnCMqlQiGoG64NObuZKLwdoEtLMZ1aDldXS
- 88bKx7y+7RisPvlUhMv53k0iQI6bMLILNOCAdV9w8hOwmPxtxlhSmpNlVSBJK2M5VOby/v3oL
- 1RMpKVqDWXMXtk4mZYXZqxDX8gOVOwwm+W261smf7BmlcsIr1qEq1215oyAAqiRSzO7Vaz1s5
- +e00zlfzC/Eh3MBS0fmiZJLntEpsVBOALBQUXmGCoJTHjZibP7KY6Lsfn3oKSMhP+uJwbdhPV
- icWq181yyl63mVgmgaSThWP9zl0vwf1b6XFR2IKKYpqgNch9sFieF1JukwyX1PiP5rWxK9P6W
- J8N50LbMZMTJZETmuPC2vMCmGhQLQ483MVmPHupndUZzkEJjkZHKwOdV4AdRqY4cfLlwj0p1b
- IfAAtOXYwLEpZN9N5GHZEOuEINXKLZbDELhVSaQdBLhbqJ9sZGVs52CdetaLcuKjM1Xob3kZa
- VGQADeV+82MTezCtMkEkbAX0osEsXeyoAde1rUdqlDy+47POv6LKKbimsF8DmaOeQuOlqeUQZ
- 1d+Fym40OfLTqZQPwNnOFwmS3F5mNiqwYMT1ZDMd/azg7nzqul2gyQDv7aNbaNhhzJQI1O0rM
- ieQ/ZEZoM8jvqGhx3NRVWawWq93Q/Ktp/WqxmO8asPyK/k0IyigeMXY8Ln0HX1086Ce7Xr4hb
- q+XKl2D5vvvLg2sa5CdT5mpGNK1TOpQtGSI2has2qTps0UUuWJ9bxAgTp3SsrvLwTP6dYVzxz
- YBiPW+LE1L+dbVn/JY8A==
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: HdxpCgCHCsjgURheqcdzDA--.474S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW3AFyUZF4kGF4Uuw4UuryUJrb_yoWxWF1fpF
+        W5JF98Jry7CF13Jw43JF9Iyw4a9ryvya47WayrZ34FkFs8XrW0vrn7KFy3tF4jqr1fA39x
+        tw4UKa1jgan0vr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jNOz3UUUUU=
+X-Originating-IP: [114.247.175.196]
+X-CM-SenderInfo: pqlxs5plohxqqrwthudrp/1tbiTRmmgFc7O6dgPgAAsc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 11:15 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> Instead of checking resource pointer for being NULL and
-> report some not very standard error codes in this case,
-> switch to devm_ioremap_resource() API.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    Pktgen can use only one IPv6 source address from output device, or src6 command
+    setting. When in pressure test need create lots of session more than 65536.
+    If IPSRC_RND flag is use random  address between src6_min and src6_max.
 
-With syscon, I'm worried there are users that map the same region in another
-driver, so doing devm_ioremap_resource() here will make another driver fail.
+    The GCC  generates code that calls functions in the libgcc library to implement
+    the / and % operations with 128-bit operands on 64-bit CPUs. So kernel need
+    implement the function  to do / and % operation.
 
-Maybe just change the error code and add a comment warning about that
-instead?
+    Signed-off-by: Niu Xilei <niu_xilei@163.com>
+---
+ net/core/pktgen.c | 183 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 183 insertions(+)
 
-      Arnd
+diff --git a/net/core/pktgen.c b/net/core/pktgen.c
+index 294bfcf0ce0e..b07ab5984fa8 100644
+--- a/net/core/pktgen.c
++++ b/net/core/pktgen.c
+@@ -254,6 +254,111 @@ struct flow_state {
+ /* flow flag bits */
+ #define F_INIT   (1<<0)		/* flow has been initialized */
+ 
++#ifdef CONFIG_ARCH_SUPPORTS_INT128
++
++__extension__ typedef  unsigned __int128 u128;
++
++/* Kernel not implement __int128's divide and modulo operator. Implement these
++ * operation use shift-subtract division algorithm  adpater from
++ * https://chromium.googlesource.com/chromium/src/third_party/+/master/abseil-cpp/absl/numeric/int128.cc */
++
++/* find first bit set of u128 */
++static inline int fls128(u128 n)
++{
++	u64 hi = n >> 64;
++
++	if (hi)
++		return fls64(hi) + 64;
++
++	return fls64((__u64)n);
++}
++
++/**
++ * div128_u128 - unsigned 128bit int divide with unsigned 128bit int divisor
++ * @dividend:   128bit dividend
++ * @divisor:    128bit divisor
++ * @remainder:  128bit  remainder
++ * @return:     128bit quotient
++ */
++u128 div128_u128(u128 dividend, u128 divisor, u128 *remainder)
++{
++	int i;
++	int shift;
++	u128 quotient = 0;
++	u128 denominator = divisor;
++
++	if (divisor > dividend) {
++		*remainder = dividend;
++		return 0;
++	}
++	if (divisor == dividend) {
++		*remainder = 0;
++		return 1;
++	}
++
++	/* Left aligns the MSB of the dividend and the dividend. */
++	shift = fls128(dividend) - fls128(denominator);
++	denominator <<= shift;
++	/* Uses shift-subtract algorithm to divide dividend by denominator. The
++	 * remainder will be left in dividend. */
++	for (i = 0; i <= shift; ++i) {
++		quotient <<= 1;
++		if (dividend >= denominator) {
++			dividend -= denominator;
++			quotient |= 1;
++		}
++		denominator >>= 1;
++	}
++	*remainder = dividend;
++	return quotient;
++}
++
++#ifdef __LITTLE_ENDIAN
++
++static inline u128 be128_to_cpu(u128 net128)
++{
++#if defined(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS)
++	u64 *pnet = (u64 *)&net128;
++
++	return (((__force u128)swab64(pnet[0]) << 64) |
++		(__force u128)swab64(pnet[1]));
++#else
++
++	u32 *pnet = (u32 *)&net128;
++
++	return (((__force u128)swap32(pnet[0])) << 96 |
++		((__force u128)swap32(pnet[1])) << 64 |
++		((__force u128)swap32(pnet[2])) << 32 |
++		(__force u128)swap32(pnet[3]));
++
++#endif
++}
++
++static inline u128 cpu_to_be128(u128 host128)
++{
++#if defined(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS)
++	u64 *phost = (u64 *)&host128;
++
++	return  (((__force u128)swab64(phost[0])) << 64 |
++		(__force u128)swab64(phost[1]));
++#else
++	u32 *phost = (u32 *)&host128;
++
++	return (((__force u128)swap32(phost[0])) << 96 |
++		((__force u128)swap32(phost[1])) << 64 |
++		((__force u128)swap32(phost[2])) << 32 |
++		(__force u128)swap32(phost[3]));
++#endif
++}
++
++#else /* !__LITTLE_ENDIAN  */
++
++#define be128_to_cpu(x) (x)
++#define cpu_to_be128(x) (x)
++
++#endif /* __LITTLE_ENDIAN */
++#endif /* CONFIG_ARCH_SUPPORTS_INT128 */
++
+ struct pktgen_dev {
+ 	/*
+ 	 * Try to keep frequent/infrequent used vars. separated.
+@@ -1355,6 +1460,49 @@ static ssize_t pktgen_if_write(struct file *file,
+ 		sprintf(pg_result, "OK: dst6_max=%s", buf);
+ 		return count;
+ 	}
++	if (!strcmp(name, "src6_min")) {
++		len = strn_len(&user_buffer[i], sizeof(buf) - 1);
++		if (len < 0)
++			return len;
++
++		pkt_dev->flags |= F_IPV6;
++
++		if (copy_from_user(buf, &user_buffer[i], len))
++			return -EFAULT;
++		buf[len] = 0;
++
++		in6_pton(buf, -1, pkt_dev->min_in6_saddr.s6_addr, -1, NULL);
++		snprintf(buf, sizeof(buf), "%pI6c", &pkt_dev->min_in6_saddr);
++
++		pkt_dev->cur_in6_saddr = pkt_dev->min_in6_saddr;
++		if (debug)
++			pr_debug("src6_min set to: %s\n", buf);
++
++		i += len;
++		sprintf(pg_result, "OK: src6_min=%s", buf);
++		return count;
++	}
++	if (!strcmp(name, "src6_max")) {
++		len = strn_len(&user_buffer[i], sizeof(buf) - 1);
++		if (len < 0)
++			return len;
++
++		pkt_dev->flags |= F_IPV6;
++
++		if (copy_from_user(buf, &user_buffer[i], len))
++			return -EFAULT;
++		buf[len] = 0;
++
++		in6_pton(buf, -1, pkt_dev->max_in6_saddr.s6_addr, -1, NULL);
++		snprintf(buf, sizeof(buf), "%pI6c", &pkt_dev->max_in6_saddr);
++
++		if (debug)
++			pr_debug("dst6_max set to: %s\n", buf);
++
++		i += len;
++		sprintf(pg_result, "OK: dst6_max=%s", buf);
++		return count;
++	}
+ 	if (!strcmp(name, "src6")) {
+ 		len = strn_len(&user_buffer[i], sizeof(buf) - 1);
+ 		if (len < 0)
+@@ -2286,6 +2434,38 @@ static void set_cur_queue_map(struct pktgen_dev *pkt_dev)
+ 	pkt_dev->cur_queue_map  = pkt_dev->cur_queue_map % pkt_dev->odev->real_num_tx_queues;
+ }
+ 
++/* create ipv6 source addr, random generator or iterator between the range  */
++static inline void set_src_in6_addr(struct pktgen_dev *pkt_dev)
++{
++	u128 t;
++	u128 imn6, imx6;
++
++	if (!ipv6_addr_any(&pkt_dev->min_in6_saddr)) {
++#ifdef CONFIG_ARCH_SUPPORTS_INT128
++		imn6 = be128_to_cpu(*(u128 *)pkt_dev->min_in6_saddr.s6_addr);
++		imx6 = be128_to_cpu(*(u128 *)pkt_dev->max_in6_saddr.s6_addr);
++		if (imn6 < imx6) {
++			if (pkt_dev->flags & F_IPSRC_RND) {
++				do {
++					prandom_bytes(&t, sizeof(t));
++					/*t = t % range */
++					div128_u128(t, imx6 - imn6, &t);
++					t = imn6 + t;
++				} while (ipv6_addr_loopback((struct in6_addr *)&t) ||
++					 ipv6_addr_v4mapped((struct in6_addr *)&t) ||
++					 ipv6_addr_is_multicast((struct in6_addr *)(&t)));
++			} else {
++				t = be128_to_cpu(*(u128 *)pkt_dev->cur_in6_saddr.s6_addr);
++				t++;
++				if (t > imx6)
++					t = imn6;
++			}
++			t = cpu_to_be128(t);
++			pkt_dev->cur_in6_saddr = *(struct in6_addr *)&t;
++		}
++#endif
++	}
++}
+ /* Increment/randomize headers according to flags and current values
+  * for IP src/dest, UDP src/dst port, MAC-Addr src/dst
+  */
+@@ -2293,6 +2473,7 @@ static void mod_cur_headers(struct pktgen_dev *pkt_dev)
+ {
+ 	__u32 imn;
+ 	__u32 imx;
++
+ 	int flow = 0;
+ 
+ 	if (pkt_dev->cflows)
+@@ -2454,6 +2635,8 @@ static void mod_cur_headers(struct pktgen_dev *pkt_dev)
+ 		}
+ 	} else {		/* IPV6 * */
+ 
++		set_src_in6_addr(pkt_dev);
++
+ 		if (!ipv6_addr_any(&pkt_dev->min_in6_daddr)) {
+ 			int i;
+ 
+-- 
+2.20.1
 
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> index 13626bb2d432..fad961b2e4a5 100644
-> --- a/drivers/mfd/syscon.c
-> +++ b/drivers/mfd/syscon.c
-> @@ -238,12 +238,9 @@ static int syscon_probe(struct platform_device *pdev)
->                 return -ENOMEM;
->
->         res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -       if (!res)
-> -               return -ENOENT;
-> -
-> -       base = devm_ioremap(dev, res->start, resource_size(res));
-> -       if (!base)
-> -               return -ENOMEM;
-> +       base = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(base))
-> +               return PTR_ERR(base);
