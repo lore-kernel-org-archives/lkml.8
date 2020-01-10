@@ -2,394 +2,316 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7C5C33CA1
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF3FC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6297E20838
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA6C2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 01:53:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G+uSs+0r"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="c9L+frf0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730652AbgAJBtk (ORCPT
+        id S1730666AbgAJBxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 20:49:40 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51046 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730359AbgAJBtk (ORCPT
+        Thu, 9 Jan 2020 20:53:30 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:41721 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730359AbgAJBxa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 20:49:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=p4QP4PbFBViC/IrJOD8s6DAAUObkiprHZ4ezrP5rzQc=; b=G+uSs+0rSmyXt63Zqlr3fcYDw
-        yzCUKp3ycDsskmVEvt9m+o2W843J405vbd5g24KOcd1jZ2nBEBH8PqbF9t75hWbtaqU/hxzffPrGY
-        H7ygacZixNl8ytRjocJALHiEX+rtUPCJv6hAkeH38mfqnVb7ZOzitL0wbXuDA3ZG4pRaz9gtjzepX
-        d5l9gRUcH/uYakCTvWRYsg0nCJCT7EZVaRPipibIoxKkDGqjJxqLA1Ehc8Sk4CV9UwlPNZj31TUz5
-        s5RYBUyiEJ47WfZZHbQfz+OX9uXfrk2OtVChH/ztxCs3YPYHcjEdDoWCqrGcfTI4/ltquDidDZDG8
-        SBm917RrQ==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ipjQg-0003AO-Qp; Fri, 10 Jan 2020 01:49:38 +0000
-Subject: Re: [PATCH] Documentation: admin-guide: PM: Add intel_idle document
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Len Brown <len.brown@intel.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux Documentation <linux-doc@vger.kernel.org>
-References: <2011307.aCGEDdB8HR@kreacher>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <d89dd544-77c9-4b80-d91f-c44fc2f83144@infradead.org>
-Date:   Thu, 9 Jan 2020 17:49:37 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thu, 9 Jan 2020 20:53:30 -0500
+Received: by mail-qv1-f66.google.com with SMTP id x1so100549qvr.8
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 17:53:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/fMVlCqxH7TYnGng6weJicBdaodJmAWTQi+tUFgHll4=;
+        b=c9L+frf0rw+duLwmB6qHSNoiIPfTUYtK8oqEW7QzYzMerHKt6OccqOlSyTHGvVCTqf
+         Kin2nhmdMCTXyrZ3pw0bAwscFkyMqEwCL5cFVp2kPDTnY8aCLuzokcQrA8pyvA+Npe19
+         454L+KinqcoARRXLI9n3K/XrRuEzoeRSNtmtw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/fMVlCqxH7TYnGng6weJicBdaodJmAWTQi+tUFgHll4=;
+        b=oUSM4Oe9N268z2V6RjEfsIx6q1rjBvXkHEAW13Z+RUjGGCeR4Wa6i6DEp+g9OlWEM1
+         FA1Ga/89deEnKOxAnjYNoxTZ00fRBV7JnhSn3C2unR+mCK3TkzDz7Pyk7zoVGarIKt65
+         jx/xUcRMIT7Vn6pwoaRAaQZXLbqObbg7jHUpofd+hYQ9JLk5PRGbRpFPdxdktHB7Vnm6
+         QKM4OYY80b2lXPlXpTKNZR9tmBLdmq2eTQiANaCcA4qXmN1d5kWTqj1ms/W6QCZwBqRT
+         qOWGl5YT42lw6ue6/pts81XN1Vbq17V4cIjxe4O0mgrtRzSZ8MBgEG91XOEOrpJs3D84
+         gV4Q==
+X-Gm-Message-State: APjAAAVQB8gnMVMpUuSYcpC5fWZMnUCKWQ3vwZ/D0nmREWGxHHNnZc8j
+        m8+jL+/SwiNs2PAHyECUV0VgJVA90OGdo2SoFLvglg==
+X-Google-Smtp-Source: APXvYqwwMn64xtYJxSAfST4HD4Mcg/Ska64cyK6bvZ7Sz6NVYCLT+MPjgY36iu8O+DTFs0t+m6y7JWQK0aWzGRuwboU=
+X-Received: by 2002:a0c:c345:: with SMTP id j5mr555882qvi.156.1578621209242;
+ Thu, 09 Jan 2020 17:53:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <2011307.aCGEDdB8HR@kreacher>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200108052337.65916-1-drinkcat@chromium.org> <20200108052337.65916-6-drinkcat@chromium.org>
+ <b58a8cf9-3275-cf89-6dff-596aceeb8000@arm.com>
+In-Reply-To: <b58a8cf9-3275-cf89-6dff-596aceeb8000@arm.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 10 Jan 2020 09:53:18 +0800
+Message-ID: <CANMq1KBcNr=1_poBHrA_SDo_h-5i3e5TMqASEVaDj5LevsRcOQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] drm/panfrost: Add support for multiple power
+ domain support
+To:     Steven Price <steven.price@arm.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Mark Brown <broonie@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
++Ulf to keep me honest on the power domains
 
-On 1/9/20 4:13 PM, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Add an admin-guide document for the intel_idle driver to describe
-> how it works: how it enumerates idle states, what happens during the
-> initialization of it, how it can be controlled via the kernel command
-> line and so on.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
-> 
-> The document introduced by this patch matches the driver code behavior
-> after the changes recently added to linux-next.
-> 
-> ---
->  Documentation/admin-guide/pm/intel_idle.rst    |  268 +++++++++++++++++++++++++
->  Documentation/admin-guide/pm/working-state.rst |    1 
->  2 files changed, 269 insertions(+)
-> 
-> Index: linux-pm/Documentation/admin-guide/pm/working-state.rst
-> ===================================================================
-> --- linux-pm.orig/Documentation/admin-guide/pm/working-state.rst
-> +++ linux-pm/Documentation/admin-guide/pm/working-state.rst
-> @@ -8,6 +8,7 @@ Working-State Power Management
->     :maxdepth: 2
->  
->     cpuidle
-> +   intel_idle
->     cpufreq
->     intel_pstate
->     intel_epb
-> Index: linux-pm/Documentation/admin-guide/pm/intel_idle.rst
-> ===================================================================
-> --- /dev/null
-> +++ linux-pm/Documentation/admin-guide/pm/intel_idle.rst
-> @@ -0,0 +1,268 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +.. include:: <isonum.txt>
-> +
-> +==============================================
-> +``intel_idle`` CPU Idle Time Management Driver
-> +==============================================
-> +
-> +:Copyright: |copy| 2020 Intel Corporation
-> +
-> +:Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> +
-> +
-> +General Information
-> +===================
-> +
-> +``intel_idle`` is a part of the
-> +:doc:`CPU idle time management subsystem <cpuidle>` in the Linux kernel
-> +(``CPUIdle``).  It is the default CPU idle time management driver for the
-> +Nehalem and later generations of Intel processors, but the level of support for
-> +a particular processor model in it depends on whether or not it recognizes that
-> +processor model and may also depend on information coming from the platform
-> +firmware.  [To understand ``intel_idle`` it is necessary to know how ``CPUIdle``
-> +works in general, so this is the time to get familiar with :doc:`cpuidle` if you
-> +have not done that yet.]
-> +
-> +``intel_idle`` uses the ``MWAIT`` instruction to inform the processor that the
-> +logical CPU executing it is idle and so it may be possible to put some of the
-> +processor's functional blocks into low-power states.  That instruction takes two
-> +arguments (passed in the ``EAX`` and ``ECX`` registers of the target CPU), the
-> +first of which, referred to as a *hint*, can be used by the processor to
-> +determine what can be done (for details refer to Intel Software Developer’s
-> +Manual [1]_).  Accordingly, ``intel_idle`` refuses to work with processors in
-> +which the support for the ``MWAIT`` instruction has been disabled (for example,
-> +via the platform firmware configuration menu) or which do not support that
-> +instruction at all.
-> +
-> +``intel_idle`` is not modular, so it cannot be unloaded, which means that the
-> +only way to pass early-configuration-time parameters to it is via the kernel
-> +command line.
-> +
-> +
-> +.. _intel-idle-enumeration-of-states:
-> +
-> +Enumeration of Idle States
-> +==========================
-> +
-> +Each ``MWAIT`` hint value is interpreted by the processor as a license to
-> +reconfigure itself in a certain way in order to save energy.  The processor
-> +configurations (with reduced power draw) resulting from that are referred to
-> +as C-states (in the ACPI terminology) or idle states.  The list of meaningful
-> +``MWAIT`` hint values and idle states (i.e. low-power configurations of the
-> +processor) corresponding to them depends on the processor model and it may also
-> +depend on the configuration of the platform.
-> +
-> +In order to create a list of available idle states required by the ``CPUIdle``
-> +subsystem (see :ref:`idle-states-representation` in :doc:`cpuidle`),
-> +``intel_idle`` can use two sources of information: static tables of idle states
-> +for different processor models included in the driver itself and the ACPI tables
-> +of the system.  The former are always used if the processor model at hand is
-> +recognized by ``intel_idle`` and the latter are used if that is required for
-> +the given processor model (which is the case for all server processor models
-> +recognized by ``intel_idle``) or if the processor model is not recognized.
-> +
-> +If the ACPI tables are going to be used for building the list of available idle
-> +states, ``intel_idle`` first looks for a ``_CST`` object under one of the ACPI
-> +objects corresponding to the CPUs in the system (refer to the ACPI specification
-> +[2]_ for the description of ``_CST`` and its output package).  Because the
-> +``CPUIdle`` subsystem expects that the list of idle states supplied by the
-> +driver will be suitable for all of the CPUs handled by it and ``intel_idle`` is
-> +registered as the ``CPUIdle`` driver for all of the CPUs in the system, the
-> +driver looks for the first ``_CST`` object returning at least one valid idle
-> +state description and such that all of the idle states included in its return
-> +package are of the FFH (Functional Fixed Hardware) type, which means that the
-> +``MWAIT`` instruction is expected to be used to tell the processor that it can
-> +enter one of them.  The return package of that ``_CST`` is then assumed to be
-> +applicable to all of the other CPUs in the system and the idle state
-> +descriptions extracted from it are stored in a preliminary list of idle states
-> +coming from the ACPI tables.  [This step is skipped if ``intel_idle`` is
-> +configured to ignore the ACPI tables; see `below <intel-idle-parameters_>`_.]
-> +
-> +Next, the first (index 0) entry in the list of available idle states is
-> +initialized to represent a "polling idle state", which means that its
-> +``->enter()`` routine executes a special "pause" sequence of instructions in a
-> +tight loop (it is a pseudo-idle state in which the target CPU continuously
-> +fetches and executes instructions), and the subsequent (real) idle state entries
-> +are populated as follows.
-> +
-> +If the processor model at hand is recognized by ``intel_idle``, there is a
-> +(static) table of idle state descriptions for it in the driver.  In that case,
-> +the "internal" table is the primary source of information on idle states and all
-> +of the entries from it (that are not marked as "unusable" after applying quirks
-> +and the number of ``MWAIT`` substates for them is not zero; see
-> +`below <intel-idle-initialization-and-quirks_>`_) are copied to the final list
-> +of available idle states.  If using the ACPI tables for the enumeration of idle
-> +states is not required (depending on the processor model), all of them are
-> +enabled by default (so all of them will be taken into consideration by
-> +``CPUIdle`` governors during CPU idle state selection).  Otherwise, the idle
-> +states specifically marked as the ones that should be always enabled by default
-> +are enabled by default and for each of the other idle states the ``MWAIT`` hint
-> +included in its description is compared with the ``MWAIT`` hints in the
-> +preliminary list of idle states coming from the ACPI tables.  If there is a
-> +match (i.e. one of the ``MWAIT`` hint values exposed by the platform firmware is
-> +equal to the given idle state's ``MWAIT`` hint), the given idle state will be
-> +enabled by default.  If that is not the case, it will be disabled initially, but
-> +user space will be able to enable it later (on a per-CPU basis) with the help of
-> +the ``disable`` idle state attribute in ``sysfs`` (see
-> +:ref:`idle-states-representation` in :doc:`cpuidle`).  This basically means that
-> +the idle states "known" to the driver are enabled by default if they have
-> +also been exposed by the platform firmware (through the ACPI tables) or if they
-> +are specifically marked to be always enabled by default.
-> +
-> +If the given processor model is not recognized by ``intel_idle``, but it
-> +supports ``MWAIT``, the preliminary list of idle states coming from the ACPI
-> +tables is used for building the final list that will be supplied to the
-> +``CPUIdle`` core during driver registration.  For each idle state in that list,
-> +the description, ``MWAIT`` hint and exit latency are copied to the corresponding
-> +entry in the final list of idle states.  The name of the idle state represented
-> +by it (to be returned by the ``name`` idle state attribute in ``sysfs``) is
-> +"CX_ACPI", where X is the index of that idle state in the final list (note that
-> +the minimum value of X is 1, because 0 is reserved for the "polling" state), and
-> +its target residency is based on the exit latency value.  Specifically, for
-> +C1-type idle states the exit latency value is also used as the target residency
-> +(for compatibility with the majority of the "internal" tables of idle states for
-> +various processor models recognized by ``intel_idle``) and for the other idle
-> +state types (C2 and C3) the target residency value is 3 times the exit latency
-> +(again, that is because it reflects the target residency to exit latency ratio
-> +in the majority of cases for the processor models recognized by ``intel_idle``).
-> +All of the idle states in the final list are enabled by default in this case.
-> +
-> +
-> +.. _intel-idle-initialization-and-quirks:
-> +
-> +Initialization
-> +==============
-> +
-> +The initialization of ``intel_idle`` starts with checking if the kernel command
-> +line options forbid the use of the ``MWAIT`` instruction.  If that is the case,
-> +an error code is returned right away.
-> +
-> +The next step is to check whether or not the processor model is known to the
-> +driver, which determines the idle states enumeration method (see
-> +`above <intel-idle-enumeration-of-states_>`_), and whether or not the processor
-> +supports ``MWAIT`` (the initialization fails if that is not the case).  Then,
-> +the ``MWAIT`` support in the processor is enumerated through ``CPUID`` and the
-> +driver initialization fails if the level of support is not as expected (for
-> +example, if the total number of ``MWAIT`` substates returned is 0).
-> +
-> +Next, if the driver is not configured to ignore the ACPI tables (see
-> +`below <intel-idle-parameters_>`_), the idle states information provided by the
-> +platform firmware is extracted from them.
-> +
-> +Then, ``CPUIdle`` device objects are allocated for all CPUs, quirks are applied
-> +to the "internal" idle states table matching the given processor model (if it is
-> +recognized by the driver) and the list of idle states is created (see
-> +`above <intel-idle-enumeration-of-states_>`_).
-> +
-> +The quirks are needed in the cases when the same "internal" table of idle states
-> +is used for multiple processor models and some of those idle states may not be
-> +supported in some processor configurations (in which case, if the affected
-> +processor configuration is detected, the idle states in question are marked
-> +as "unusable") or the list of idle states to use depends on the number of
-> +processor sockets in the system.  There is also a special way to obtain the
-> +exit latency value for some idle states of Broxton processors that can be used
-> +for updating the "internal" idle states table before using it for the
-> +enumeration of idle states.
-> +
-> +Next, ``intel_idle`` is registered with the help of cpuidle_register_driver() as
-> +the ``CPUIdle`` driver for all CPUs in the system and a CPU online callback for
-> +configuring individual CPUs is registered via cpuhp_setup_state(), which (among
-> +other things) causes the callback routine to be invoked for all of the CPUs
-> +present in the system at that time (each CPU executes its own instance of the
-> +callback routine).  That routine registers a ``CPUIdle`` device for the CPU
-> +running it and if the processor model is recognized by ``intel_idle``, it
-> +modifies the model-specific registers (MSRs) of that CPU in order to disable
-> +auto-demotion of idle states or auto-promotion to the ``C1E`` idle state (or
-> +both) if that needs to be done for the processor model at hand.
-> +
-> +
-> +.. _intel-idle-parameters:
-> +
-> +Kernel Command Line Options and Module Parameters
-> +=================================================
-> +
-> +The *x86* architecture support code recognizes three kernel command line
-> +options related to CPU idle time management: ``idle=poll``, ``idle=halt``,
-> +and ``idle=nomwait``.  If any of them is present in the kernel command line, the
-> +``MWAIT`` instruction is not allowed to be used, so the initialization of
-> +``intel_idle`` will fail.
-> +
-> +Apart from that there are two module parameters recognized by ``intel_idle``
-> +itself that can be set via the kernel command line (they cannot be updated via
-> +sysfs, so that is the only way to set them).
-> +
-> +The ``max_cstate`` parameter value is the maximum idle state index in the list
-> +of idle states supplied to the ``CPUIdle`` core during the registration of the
-> +driver.  It is also the maximum number of regular (non-polling) idle states that
-> +can be used by ``intel_idle``, so the enumeration of idle states is terminated
-> +after finding that number of usable idle states (the other idle states that
-> +potentially might have been used if ``max_cstate`` had been greater are not
-> +taken into consideration at all).  Setting ``max_cstate`` can prevent
-> +``intel_idle`` from exposing idle states that are regarded as "too deep" for
-> +some reason to the ``CPUIdle`` core, but it does so by making them effectively
-> +invisible until the system is shut down and started again which may not always
-> +be desirable.  In practice, it is only really necessary to do that if the idle
-> +states in question cannot be enabled during system startup, because in the
-> +working state of the system the CPU power management quality of service (PM
-> +QoS) feature can be used to prevent ``CPUIdle`` from touching those idle states
-> +even if they have been enumerated (see :ref:`cpu-pm-qos` in :doc:`cpuidle`).
-> +Setting ``max_cstate`` to 0 causes the ``intel_idle`` initialization to fail.
-> +
-> +The ``noacpi`` parameter (which is recognized if the kernel has been configured
-> +with ACPI support) can be used to make ``intel_idle`` ignore the system's ACPI
-> +tables (which is the case if that parameter is equal to 1).
+On Thu, Jan 9, 2020 at 10:08 PM Steven Price <steven.price@arm.com> wrote:
+>
+> On 08/01/2020 05:23, Nicolas Boichat wrote:
+> > When there is a single power domain per device, the core will
+> > ensure the power domains are all switched on.
+> >
+> > However, when there are multiple ones, as in MT8183 Bifrost GPU,
+> > we need to handle them in driver code.
+> >
+> >
+> > Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
+> > ---
+> >
+> > The downstream driver we use on chromeos-4.19 currently uses 2
+> > additional devices in device tree to accomodate for this [1], but
+> > I believe this solution is cleaner.
+>
+> I'm not sure what is best, but it seems odd to encode this into the Panfr=
+ost driver itself - it doesn't have any knowledge of what to do with these =
+power domains. The naming of the domains looks suspiciously like someone th=
+ought that e.g. only half of the cores could be powered, but it doesn't loo=
+k like that was implemented in the chromeos driver linked and anyway that i=
+s *meant* to be automatic in the hardware! (I.e. if you only power up one c=
+ores in one core stack then the PDC should only enable the power domain for=
+ that set of cores).
 
-Where is this "noacpi" parameter?  Is this an intel_idel param?  I see
-libata.noacpi and pci=noacpi but nothing like this for intel_idle.
+This is actually implemented in the Chrome OS driver [1]. IMHO power
+domains are a bit confusing [2]:
+ i. If there's only 1 power domain in the device, then the core takes
+care of power on the domain (based on pm_runtime)
+ ii. If there's more than 1 power domain, then the device needs to
+link the domains manually.
 
-Also, the wording is a little confusing.  What does it mean "if that parameter is equal
-to 1"?  It's basically a word that is entered without a value AFAICT.
+So the Chrome OS [1] driver takes approach (i), by creating 3 devices,
+each with 1 power domain that is switched on/off automatically using
+pm_runtime.
 
+This patch takes approach (ii) with device links to handle the extra domain=
+s.
 
-> +
-> +
-> +.. _intel-idle-core-and-package-idle-states:
-> +
-> +Core and Package Levels of Idle States
-> +======================================
-> +
-> +Typically, in a processor supporting the ``MWAIT`` instruction there are (at
-> +least) two levels of idle states (or C-states).  One level, referred to as
-> +"core C-states", covers individual cores in the processor, whereas the other
-> +level, referred to as "package C-states", covers the entire processor package
-> +and it may also involve other components of the system (GPUs, memory
-> +controllers, I/O hubs etc.).
-> +
-> +Some of the ``MWAIT`` hint values allow the processor to use core C-states only
-> +(most importantly, that is the case for the ``MWAIT`` hint value corresponding
-> +to the ``C1`` idle state), but the majority of them give it a license to put
-> +the target core (i.e. the core containing the logical CPU executing ``MWAIT``
-> +with the given hint value) into a specific core C-state and then (if possible)
-> +to enter a specific package C-state at the deeper level.  For example, the
-> +``MWAIT`` hint value representing the ``C3`` idle state allows the processor to
-> +put the target core into the low-power state referred to as "core ``C3``" (or
-> +``CC3``), which happens if all of the logical CPUs (SMT siblings) in that core
-> +have executed ``MWAIT`` with the ``C3`` hint value (or with a hint value
-> +representing a deeper idle state), and in addition to that (in the majority of
-> +cases) it gives the processor a license to put the entire package (possibly
-> +including some non-CPU components such as a GPU or a memory controller) into the
-> +low-power state referred to as "package ``C3``" (or ``PC3``), which happens if
-> +all of the cores have gone into the ``CC3`` state and (possibly) some additional
-> +conditions are satisfied (for instance, if the GPU is covered by ``PC3``, it may
-> +be required to be in a certain GPU-specific low-power state for ``PC3`` to be
-> +reachable).
-> +
-> +As a rule, there is no simple way to make the processor use core-level C-states
-> +only if the conditions for entering the corresponding package C-states are met,
-> +so the logical CPU executing ``MWAIT`` with a hint value that is not core-level
-> +only (like for ``C1``) must always assume that this may cause the processor to
-> +enter a package C-state.  That is why the exit latency and target residency
-> +values corresponding to the majority of ``MWAIT`` hint values in the "internal"
-> +tables of idle states in ``intel_idle`` reflect the properties of package
-> +C-states.  If using package C-states is not desirable at all, either
-> +:ref:`PM QoS <cpu-pm-qos>` or the ``max_cstate`` module parameter of
-> +``intel_idle`` described `above <intel-idle-parameters_>`_ must be used to
-> +restrict the range of permissible idle states to the ones with core-level only
-> +``MWAIT`` hint values (like ``C1``).
-> +
-> +
-> +References
-> +==========
-> +
-> +.. [1] *Intel® 64 and IA-32 Architectures Software Developer’s Manual Volume 2B*,
-> +       https://www.intel.com/content/www/us/en/architecture-and-technology/64-ia-32-architectures-software-developer-vol-2b-manual.html
-> +
-> +.. [2] *Advanced Configuration and Power Interface (ACPI) Specification*,
-> +       https://uefi.org/specifications
-> 
-> 
-> 
+I believe the latter is more upstream-friendly, but, as always,
+suggestions welcome.
 
-drop ending blank lines....
+[2] https://elixir.bootlin.com/linux/latest/source/drivers/base/power/domai=
+n.c#L2466
 
-This contains lots of good info, but I don't see all of it as admin-guide/ material.
-Lots of it is driver-development info, not admin info.  IMHO.
-
-Anyway:
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-
-thanks.
--- 
-~Randy
-
+> Steve
+>
+> >
+> > [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/r=
+efs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbas=
+e_runtime_pm.c#31
+> >
+> > drivers/gpu/drm/panfrost/panfrost_device.c | 87 ++++++++++++++++++++--
+> >   drivers/gpu/drm/panfrost/panfrost_device.h |  4 +
+> >   2 files changed, 83 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/d=
+rm/panfrost/panfrost_device.c
+> > index a0b0a6fef8b4e63..c6e9e059de94a4d 100644
+> > --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> > +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> > @@ -5,6 +5,7 @@
+> >   #include <linux/clk.h>
+> >   #include <linux/reset.h>
+> >   #include <linux/platform_device.h>
+> > +#include <linux/pm_domain.h>
+> >   #include <linux/regulator/consumer.h>
+> >
+> >   #include "panfrost_device.h"
+> > @@ -131,6 +132,67 @@ static void panfrost_regulator_fini(struct panfros=
+t_device *pfdev)
+> >       regulator_disable(pfdev->regulator_sram);
+> >   }
+> >
+> > +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
+> > +{
+> > +     int i;
+> > +
+> > +     for (i =3D 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
+> > +             if (!pfdev->pm_domain_devs[i])
+> > +                     break;
+> > +
+> > +             if (pfdev->pm_domain_links[i])
+> > +                     device_link_del(pfdev->pm_domain_links[i]);
+> > +
+> > +             dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
+> > +     }
+> > +}
+> > +
+> > +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
+> > +{
+> > +     int err;
+> > +     int i, num_domains;
+> > +
+> > +     num_domains =3D of_count_phandle_with_args(pfdev->dev->of_node,
+> > +                                              "power-domains",
+> > +                                              "#power-domain-cells");
+> > +     /* Single domains are handled by the core. */
+> > +     if (num_domains < 2)
+> > +             return 0;
+> > +
+> > +     if (num_domains > ARRAY_SIZE(pfdev->pm_domain_devs)) {
+> > +             dev_err(pfdev->dev, "Too many pm-domains: %d\n", num_doma=
+ins);
+> > +             return -EINVAL;
+> > +     }
+> > +
+> > +     for (i =3D 0; i < num_domains; i++) {
+> > +             pfdev->pm_domain_devs[i] =3D
+> > +                     dev_pm_domain_attach_by_id(pfdev->dev, i);
+> > +             if (IS_ERR(pfdev->pm_domain_devs[i])) {
+> > +                     err =3D PTR_ERR(pfdev->pm_domain_devs[i]);
+> > +                     pfdev->pm_domain_devs[i] =3D NULL;
+> > +                     dev_err(pfdev->dev,
+> > +                             "failed to get pm-domain %d: %d\n", i, er=
+r);
+> > +                     goto err;
+> > +             }
+> > +
+> > +             pfdev->pm_domain_links[i] =3D device_link_add(pfdev->dev,
+> > +                             pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNT=
+IME |
+> > +                             DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
+> > +             if (!pfdev->pm_domain_links[i]) {
+> > +                     dev_err(pfdev->pm_domain_devs[i],
+> > +                             "adding device link failed!\n");
+> > +                     err =3D -ENODEV;
+> > +                     goto err;
+> > +             }
+> > +     }
+> > +
+> > +     return 0;
+> > +
+> > +err:
+> > +     panfrost_pm_domain_fini(pfdev);
+> > +     return err;
+> > +}
+> > +
+> >   int panfrost_device_init(struct panfrost_device *pfdev)
+> >   {
+> >       int err;
+> > @@ -161,37 +223,45 @@ int panfrost_device_init(struct panfrost_device *=
+pfdev)
+> >               goto err_out1;
+> >       }
+> >
+> > +     err =3D panfrost_pm_domain_init(pfdev);
+> > +     if (err) {
+> > +             dev_err(pfdev->dev, "pm_domain init failed %d\n", err);
+> > +             goto err_out2;
+> > +     }
+> > +
+> >       res =3D platform_get_resource(pfdev->pdev, IORESOURCE_MEM, 0);
+> >       pfdev->iomem =3D devm_ioremap_resource(pfdev->dev, res);
+> >       if (IS_ERR(pfdev->iomem)) {
+> >               dev_err(pfdev->dev, "failed to ioremap iomem\n");
+> >               err =3D PTR_ERR(pfdev->iomem);
+> > -             goto err_out2;
+> > +             goto err_out3;
+> >       }
+> >
+> >       err =3D panfrost_gpu_init(pfdev);
+> >       if (err)
+> > -             goto err_out2;
+> > +             goto err_out3;
+> >
+> >       err =3D panfrost_mmu_init(pfdev);
+> >       if (err)
+> > -             goto err_out3;
+> > +             goto err_out4;
+> >
+> >       err =3D panfrost_job_init(pfdev);
+> >       if (err)
+> > -             goto err_out4;
+> > +             goto err_out5;
+> >
+> >       err =3D panfrost_perfcnt_init(pfdev);
+> >       if (err)
+> > -             goto err_out5;
+> > +             goto err_out6;
+> >
+> >       return 0;
+> > -err_out5:
+> > +err_out6:
+> >       panfrost_job_fini(pfdev);
+> > -err_out4:
+> > +err_out5:
+> >       panfrost_mmu_fini(pfdev);
+> > -err_out3:
+> > +err_out4:
+> >       panfrost_gpu_fini(pfdev);
+> > +err_out3:
+> > +     panfrost_pm_domain_fini(pfdev);
+> >   err_out2:
+> >       panfrost_reset_fini(pfdev);
+> >   err_out1:
+> > @@ -208,6 +278,7 @@ void panfrost_device_fini(struct panfrost_device *p=
+fdev)
+> >       panfrost_mmu_fini(pfdev);
+> >       panfrost_gpu_fini(pfdev);
+> >       panfrost_reset_fini(pfdev);
+> > +     panfrost_pm_domain_fini(pfdev);
+> >       panfrost_regulator_fini(pfdev);
+> >       panfrost_clk_fini(pfdev);
+> >   }
+> > diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/d=
+rm/panfrost/panfrost_device.h
+> > index a124334d69e7e93..92d471676fc7823 100644
+> > --- a/drivers/gpu/drm/panfrost/panfrost_device.h
+> > +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+> > @@ -19,6 +19,7 @@ struct panfrost_job;
+> >   struct panfrost_perfcnt;
+> >
+> >   #define NUM_JOB_SLOTS 3
+> > +#define MAX_PM_DOMAINS 3
+> >
+> >   struct panfrost_features {
+> >       u16 id;
+> > @@ -62,6 +63,9 @@ struct panfrost_device {
+> >       struct regulator *regulator;
+> >       struct regulator *regulator_sram;
+> >       struct reset_control *rstc;
+> > +     /* pm_domains for devices with more than one. */
+> > +     struct device *pm_domain_devs[MAX_PM_DOMAINS];
+> > +     struct device_link *pm_domain_links[MAX_PM_DOMAINS];
+> >
+> >       struct panfrost_features features;
+> >
+> >
+>
