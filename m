@@ -2,212 +2,101 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FECCC33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA52FC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 337A42080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:46:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="IEuAW6+2"
+	by mail.kernel.org (Postfix) with ESMTP id 7A5A22080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 07:47:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgAJHqs (ORCPT
+        id S1726636AbgAJHr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 02:46:48 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.83]:27982 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgAJHqs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 02:46:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578642405;
-        s=strato-dkim-0002; d=chronox.de;
-        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=iGK7Pgzw6tKu2VK9x2Icryn9l1IuJ/TgQW4Aouj2aqc=;
-        b=IEuAW6+2Q10mR3Gb6lYgkCOqpINUw9glVT/0aBTgxrOCWB4hMX4gzmOhDO19ebXC8+
-        MKP8kVd/0aKIVjbwtM6grPp965sIxpVl5DHrmWQHGc0jON531pupkupZ7waVw289Yq9N
-        5+lAddOiN1mhfmv6PVH5CniZHgTn5pve4LoYn+Q6rc2/Tp5xQRpt5BaGp9qqYL/hjL5e
-        9boJ4BspX6MURO8P21C2GRVAqsKys8CBzWQImYgCx0EN3Ke4SfB0CdpUYJ7JVu1Y5NvC
-        pHisfoXHoyl6Krtm6nRN5Yj2gsxE3MsLy7iTosB5a0OhU3OnhTeRM6GjDDvAOczN1mc2
-        uQlA==
-X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzGHXPZJPScHivh"
-X-RZG-CLASS-ID: mo00
-Received: from tauon.chronox.de
-        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
-        with ESMTPSA id u04585w0A7jN7hj
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Fri, 10 Jan 2020 08:45:23 +0100 (CET)
-From:   Stephan Mueller <smueller@chronox.de>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-api@vger.kernel.org,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Alexander E. Patrakov" <patrakov@gmail.com>,
-        "Ahmed S. Darwish" <darwish.07@gmail.com>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
-        Matthew Garrett <mjg59@srcf.ucam.org>,
-        Vito Caputo <vcaputo@pengaru.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
-        William Jon McCann <mccann@jhu.edu>,
-        zhangjs <zachary@baishancloud.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Lennart Poettering <mzxreary@0pointer.de>,
-        Nicolai Stange <nstange@suse.de>,
-        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
-        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
-        Roman Drahtmueller <draht@schaltsekun.de>,
-        Neil Horman <nhorman@redhat.com>,
-        Julia Lawall <julia.lawall@inria.fr>
-Subject: Re: [PATCH v27 09/12] LRNG - add Jitter RNG fast noise source
-Date:   Fri, 10 Jan 2020 08:45:22 +0100
-Message-ID: <3881936.EWlHz54Di6@tauon.chronox.de>
-In-Reply-To: <0ba976fa-fed1-4720-c039-043160dbce9e@infradead.org>
-References: <6157374.ptSnyUpaCn@positron.chronox.de> <6341883.UacF4FzDma@positron.chronox.de> <0ba976fa-fed1-4720-c039-043160dbce9e@infradead.org>
+        Fri, 10 Jan 2020 02:47:57 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60672 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726549AbgAJHr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 02:47:57 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 40D871CBDB19189F9994;
+        Fri, 10 Jan 2020 15:47:52 +0800 (CST)
+Received: from [127.0.0.1] (10.173.221.31) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 10 Jan 2020
+ 15:47:43 +0800
+To:     <catalin.marinas@arm.com>, <will@kernel.org>,
+        <anshuman.khandual@arm.com>, <akpm@linux-foundation.org>,
+        <willy@infradead.org>, <yeyunfeng@huawei.com>,
+        <ard.biesheuvel@arm.com>, <tglx@linutronix.de>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <hushiyuan@huawei.com>, <linfeilong@huawei.com>
+From:   yeyunfeng <yeyunfeng@huawei.com>
+Subject: [PATCH] arm64: mm: support setting page attributes for debug
+ situation
+Message-ID: <5a3ab728-b895-0930-9540-5e9c586e8858@huawei.com>
+Date:   Fri, 10 Jan 2020 15:47:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.221.31]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Freitag, 10. Januar 2020, 01:24:47 CET schrieb Randy Dunlap:
+When rodata_full is set or pagealloc debug is enabled, block mappings or
+contiguou hints are no longer used for linear address area. Therefore,
+support setting page attributes in this case is useful for debugging
+memory corruption problems.
 
-Hi Randy,
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+ arch/arm64/mm/pageattr.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-> Hi,
->=20
-> On 1/9/20 12:34 AM, Stephan M=FCller wrote:
-> > ---
-> >=20
-> >  drivers/char/lrng/Kconfig     | 11 +++++
-> >  drivers/char/lrng/Makefile    |  1 +
-> >  drivers/char/lrng/lrng_jent.c | 87 +++++++++++++++++++++++++++++++++++
-> >  3 files changed, 99 insertions(+)
-> >  create mode 100644 drivers/char/lrng/lrng_jent.c
-> >=20
-> > diff --git a/drivers/char/lrng/lrng_jent.c b/drivers/char/lrng/lrng_jen=
-t.c
-> > new file mode 100644
-> > index 000000000000..97c0d192e9c8
-> > --- /dev/null
-> > +++ b/drivers/char/lrng/lrng_jent.c
-> > @@ -0,0 +1,87 @@
-> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-> > +/*
-> > + * LRNG Fast Noise Source: Jitter RNG
-> > + *
-> > + * Copyright (C) 2016 - 2020, Stephan Mueller <smueller@chronox.de>
-> > + */
-> > +
-> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > +
-> > +#include <linux/types.h>
-> > +#include <crypto/internal/jitterentropy.h>
-> > +
-> > +#include "lrng_internal.h"
-> > +
-> > +/*
-> > + * Estimated entropy of data is a 16th of
-> > LRNG_DRNG_SECURITY_STRENGTH_BITS. + * Albeit a full entropy assessment =
-is
-> > provided for the noise source indicating + * that it provides high
-> > entropy rates and considering that it deactivates + * when it detects
-> > insufficient hardware, the chosen under estimation of + * entropy is
-> > considered to be acceptable to all reviewers.
-> > + */
-> > +static u32 jitterrng =3D LRNG_DRNG_SECURITY_STRENGTH_BITS>>4;
-> > +module_param(jitterrng, uint, 0644);
-> > +MODULE_PARM_DESC(jitterrng, "Entropy in bits of 256 data bits from Jit=
-ter
-> > " +			    "RNG noise source");
-> > +
-> > +/**
-> > + * Get Jitter RNG entropy
-> > + *
-> > + * @outbuf buffer to store entropy
-> > + * @outbuflen length of buffer
-> > + * @return > 0 on success where value provides the added entropy in bi=
-ts
-> > + *	   0 if no fast source was available
-> > + */
->=20
-> Don't begin the comment block with /**
-> or convert it to Linux kernel-doc notation format.
+diff --git a/arch/arm64/mm/pageattr.c b/arch/arm64/mm/pageattr.c
+index 9ce7bd9d4d9c..823143534a93 100644
+--- a/arch/arm64/mm/pageattr.c
++++ b/arch/arm64/mm/pageattr.c
+@@ -65,6 +65,9 @@ static int change_memory_common(unsigned long addr, int numpages,
+ 		WARN_ON_ONCE(1);
+ 	}
 
-Yes, the colons are missing and there is no @return. It will be fixed with =
-the=20
-next patch set.
++	if (!numpages)
++		return 0;
++
+ 	/*
+ 	 * Kernel VA mappings are always live, and splitting live section
+ 	 * mappings into page mappings may cause TLB conflicts. This means
+@@ -81,11 +84,18 @@ static int change_memory_common(unsigned long addr, int numpages,
+ 	area = find_vm_area((void *)addr);
+ 	if (!area ||
+ 	    end > (unsigned long)area->addr + area->size ||
+-	    !(area->flags & VM_ALLOC))
++	    !(area->flags & VM_ALLOC)) {
++
++		/*
++		 * When rodata_full is set, or pagealloc debug is enabled,
++		 * the linear address is mapped with NO_BLOCK_MAPPINGS or
++		 * NO_CONT_MAPPINGS flags, so splitting is never needed.
++		 */
++		if (rodata_full || debug_pagealloc_enabled())
++			return __change_memory_common(start, size, set_mask,
++							clear_mask);
+ 		return -EINVAL;
+-
+-	if (!numpages)
+-		return 0;
++	}
 
-Thank you.
->=20
-> > +static struct rand_data *lrng_jent_state;
-> > +
-> > +u32 lrng_get_jent(u8 *outbuf, unsigned int outbuflen)
-> > +{
-> > +	int ret;
-> > +	u32 ent_bits =3D jitterrng;
-> > +	unsigned long flags;
-> > +	static DEFINE_SPINLOCK(lrng_jent_lock);
-> > +	static int lrng_jent_initialized =3D 0;
-> > +
-> > +	spin_lock_irqsave(&lrng_jent_lock, flags);
-> > +
-> > +	if (!ent_bits || (lrng_jent_initialized =3D=3D -1)) {
-> > +		spin_unlock_irqrestore(&lrng_jent_lock, flags);
-> > +		return 0;
-> > +	}
-> > +
-> > +	if (!lrng_jent_initialized) {
-> > +		lrng_jent_state =3D jent_lrng_entropy_collector();
-> > +		if (!lrng_jent_state) {
-> > +			jitterrng =3D 0;
-> > +			lrng_jent_initialized =3D -1;
-> > +			spin_unlock_irqrestore(&lrng_jent_lock, flags);
-> > +			pr_info("Jitter RNG unusable on current system\n");
-> > +			return 0;
-> > +		}
-> > +		lrng_jent_initialized =3D 1;
-> > +		pr_debug("Jitter RNG working on current system\n");
-> > +	}
-> > +	ret =3D jent_read_entropy(lrng_jent_state, outbuf, outbuflen);
-> > +	spin_unlock_irqrestore(&lrng_jent_lock, flags);
-> > +
-> > +	if (ret) {
-> > +		pr_debug("Jitter RNG failed with %d\n", ret);
-> > +		return 0;
-> > +	}
-> > +
-> > +	/* Obtain entropy statement */
-> > +	if (outbuflen !=3D LRNG_DRNG_SECURITY_STRENGTH_BYTES)
-> > +		ent_bits =3D (ent_bits * outbuflen<<3) /
-> > +			   LRNG_DRNG_SECURITY_STRENGTH_BITS;
-> > +	/* Cap entropy to buffer size in bits */
-> > +	ent_bits =3D min_t(u32, ent_bits, outbuflen<<3);
-> > +	pr_debug("obtained %u bits of entropy from Jitter RNG noise source\n",
-> > +		 ent_bits);
-> > +
-> > +	return ent_bits;
-> > +}
-> > +
-> > +u32 lrng_jent_entropylevel(void)
-> > +{
-> > +	return min_t(u32, jitterrng, LRNG_DRNG_SECURITY_STRENGTH_BITS);
-> > +}
->=20
-> thanks.
-
-
-
-Ciao
-Stephan
-
+ 	/*
+ 	 * If we are manipulating read-only permissions, apply the same
+-- 
+2.7.4
 
