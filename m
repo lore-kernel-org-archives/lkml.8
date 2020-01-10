@@ -2,133 +2,139 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D34F2C33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 751C1C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FE420678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6DF20678
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:03:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578632574;
-	bh=+jjmac1V9FdX+jcDJLTS9cwaq7WDOSaNjjX6s05KjDs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HphQlk0yOha+pFlsx1IAncmNU4X/adDD2+dx/y32hGbz5EyyVPEQMs2KzLnZGt2Dp
-	 ofJiaPRkoerY6JX9QJB3Ps8Lb67PzOwEOYDlsPjZlh1CjTaD7j8iGiidUAHvywPsiV
-	 JPMoGMcvPv8Cq+ICEbkADJsiHX0hgStWhtZCWZIE=
+	s=default; t=1578632605;
+	bh=I/5NguRiVD798gEM9xuQgx1/Q9SGP14gIYHh30D1IHI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=W4udIfY+qQbb2cOnBxF4DPx1gPk3HfjgYAZ4Lp8qzPPWQ27eXpcmGyIoXWBrUIZ8+
+	 xQ3m4y7INYc52uPErf0wBZGv7JUbrSDT3k9Jbhwztl3gmDlnh92wH+CFVGQcqxbvee
+	 ZwmVzum+prSkwED8Cs8OV3zQwd9zHRQBZaGLz3S8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbgAJFCx (ORCPT
+        id S1726073AbgAJFDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 00:02:53 -0500
-Received: from conuserg-07.nifty.com ([210.131.2.74]:23170 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgAJFCx (ORCPT
+        Fri, 10 Jan 2020 00:03:24 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43435 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725822AbgAJFDX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 00:02:53 -0500
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id 00A52T4x008935;
-        Fri, 10 Jan 2020 14:02:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com 00A52T4x008935
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578632550;
-        bh=0/cY8IsswU5niZbLqmUKfFA8G6a7ndo5JrsR3tH+n64=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XZU4uwLv6i3L64c695M6jpmZ+tHOACfvVO45aoT1HUv8+yyUIO9PNyaZEgGRwrYXo
-         xido2cjER3/JPgjK/ifBtXw7UBs1kHT6qtkXoLd7Ovfjr7kwmu2XVrHg7sUNwSk2Sx
-         M1gTbZwcyD9AXlPJ1MF6UUEbIuPW+n8JjDKeecGa2euEQNyIn5YrPdgu/2WAE9Y5tK
-         bM68BIi9OnzNuyfPoi0O0Xy0hR86YfFjqlCkqgM8no1p3E/7d6kG27Yd7XZgKNlXZj
-         BNBnCV3lCbW9TMD/YhA2f8by3gfioPApgk7YFrddsmbQ1uixUv1BIt88hxeMWFAk0D
-         Lyq+acKPK5q4A==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kbuild: remove .tmp file when filechk fails
-Date:   Fri, 10 Jan 2020 14:02:24 +0900
-Message-Id: <20200110050224.1004-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Fri, 10 Jan 2020 00:03:23 -0500
+Received: by mail-lj1-f196.google.com with SMTP id a13so728670ljm.10
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 21:03:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B/GI7mSLrO7+AWyztv1F/7+LjmBRdi9pxniW8srHraM=;
+        b=WJnSkgb5IoN+QFM9zDo/+1LUciNYCKC1uNr4+jda+SHQ4Al4kAzM40Ki7rykrkdSQb
+         LRo6BkP+xKhXKun/nrSizTl2SLNY7SO9HFhXKlKAOnq3AXpHt/oUN004/3so/HMeBcSV
+         czfR5SnYRegkSqQWTz+TDMXgEHM9RAu7JIN+Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B/GI7mSLrO7+AWyztv1F/7+LjmBRdi9pxniW8srHraM=;
+        b=hI8FnIRKmJm3rqK768Dj6A3XkPE+m9TBvQWKfePuqDYiWJ+p1h7/IFjYgWHvAbzEOI
+         V7OR0x7Z8vsgHeQVlnCnxKTbKs2gz2o++o6eowQqUtkXLxkFwsz75nx/LShMliDSSjn5
+         OwtX+w0DIP8kTNXCHv8FenplmHWIinZRt2E/dPZfcvVr+dN1vNyb/f3YUZbdoWV4K8Mv
+         VOfKZocW4uDgeR1w6vbnaOhzuFujAtwHxoLfB+TzwTutpFwJ705oDfdJcEj+cb7+5o+y
+         4n9CTIsECD/s0v4uJcqQP71QWTkuEInRYhGXSF4JmU+OC2ubV2frANJpuwxdGkumDVVf
+         8lyw==
+X-Gm-Message-State: APjAAAVrCso2VgnbS5juacXQvbaYuJUd/zMJy/UkjLIY7N0DQmUu8kVB
+        2wzU4Xr24jViUn2obfRLaHNJ3uPQlgU=
+X-Google-Smtp-Source: APXvYqy9AVf42Q72kx94fgp9uiavpErfWaak8pi/Ex57jp9sWEdN+XY+G6Kfj+uGqZWQCTF9C4/sTg==
+X-Received: by 2002:a2e:8152:: with SMTP id t18mr1165242ljg.255.1578632600358;
+        Thu, 09 Jan 2020 21:03:20 -0800 (PST)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
+        by smtp.gmail.com with ESMTPSA id k1sm340021lji.43.2020.01.09.21.03.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Jan 2020 21:03:18 -0800 (PST)
+Received: by mail-lf1-f49.google.com with SMTP id v201so457974lfa.11
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 21:03:17 -0800 (PST)
+X-Received: by 2002:a05:6512:1dd:: with SMTP id f29mr961529lfp.106.1578632597317;
+ Thu, 09 Jan 2020 21:03:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20200101005446.GH4203@ZenIV.linux.org.uk> <20200101030815.GA17593@ZenIV.linux.org.uk>
+ <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com> <20200101234009.GB8904@ZenIV.linux.org.uk>
+ <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com> <20200103014901.GC8904@ZenIV.linux.org.uk>
+ <20200108031314.GE8904@ZenIV.linux.org.uk> <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
+ <20200108213444.GF8904@ZenIV.linux.org.uk> <CAHk-=wiq11+thoe60qhsSHk_nbRF2TRL1Wnf6eHcYObjhJmsww@mail.gmail.com>
+ <20200110041523.GK8904@ZenIV.linux.org.uk>
+In-Reply-To: <20200110041523.GK8904@ZenIV.linux.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 9 Jan 2020 21:03:00 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wiF6en6WD7JdYAUxHnzeTgs3P08ysDQPv4504hQ2qUcmA@mail.gmail.com>
+Message-ID: <CAHk-=wiF6en6WD7JdYAUxHnzeTgs3P08ysDQPv4504hQ2qUcmA@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over symlinks
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        stable <stable@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bartosz Golaszewski reports that when "make {menu,n,g,x}config" fails
-due to missing packages, a temporary file is left over, which is not
-ignored by git.
+On Thu, Jan 9, 2020 at 8:15 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > Hmm. If that's the case, maybe they should be marked implicitly as
+> > O_PATH when opened?
+>
+> I thought you wanted O_PATH as starting point to have mounts traversed?
+> Confused...
 
-For example, if GTK+ is not installed:
+No, I'm confused.  I meant "non-O_PATH", just got the rules reversed in my mind.
 
-  $ make gconfig
-  *
-  * Unable to find the GTK+ installation. Please make sure that
-  * the GTK+ 2.0 development package is correctly installed.
-  * You need gtk+-2.0 gmodule-2.0 libglade-2.0
-  *
-  scripts/kconfig/Makefile:208: recipe for target 'scripts/kconfig/gconf-cfg' failed
-  make[1]: *** [scripts/kconfig/gconf-cfg] Error 1
-  Makefile:567: recipe for target 'gconfig' failed
-  make: *** [gconfig] Error 2
-  $ git status
-  HEAD detached at v5.4
-  Untracked files:
-    (use "git add <file>..." to include in what will be committed)
+So cwd/root would always act as it non-O_PATH, and only using an
+actual fd would look at the O_PATH flag, and if it was set would walk
+the mountpoints.
 
-          scripts/kconfig/gconf-cfg.tmp
+> <grabs Bach> Right, he simply transcribes v7 iget().
+>
+> So I suspect that you are right - your variant of iget was pretty much
+> one-to-one implementation of Bach's description of v7 iget.
 
-  nothing added to commit but untracked files present (use "git add" to track)
+Ok, that makes sense. My copy of Bach literally had the system call
+list "marked off" when I implemented them back when.
 
-This is because the check scripts are run with filechk, which misses
-to clean up the temporary file on failure.
+I may still have that paperbook copy somewhere. I don't _think_ I'd
+have thrown it out, it has sentimental value.
 
-When the line
+> > I think that in a perfect world, the O_PATH'ness of '42' would be the
+> > deciding factor. Wouldn't those be the best and most consistent
+> > semantics?
+> >
+> > And then 'cwd'/'root' always have the O_PATH behavior.
+>
+> See above - unless I'm misparsing you, you wanted mount traversals in the
+> starting point if it's ...at() with O_PATH fd.
 
-  { $(filechk_$(1)); } > $@.tmp;
+.. and see above, it was just my confusion about the sense of O_PATH.
 
-... fails, it exits immediately due to the 'set -e'. Use trap to make
-sure to delete the temporary file on exit.
+> For cwd and root the situation is opposite - we do NOT traverse mounts
+> for those.  And that's really too late to change.
 
-For extra safety, I replaced $@.tmp with $(dot-target).tmp to make it
-a hidden file.
+Oh, absolutely.
 
-Reported-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+[ snip some more about your automount digging. Looks about right, but
+I'm not going to make a peep after getting O_PATH reversed ;) ]
 
- scripts/Kbuild.include | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
-
-diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-index 3da8321efb74..6cabf20ce66a 100644
---- a/scripts/Kbuild.include
-+++ b/scripts/Kbuild.include
-@@ -59,14 +59,13 @@ kecho := $($(quiet)kecho)
- # - stdin is piped in from the first prerequisite ($<) so one has
- #   to specify a valid file as first prerequisite (often the kbuild file)
- define filechk
--	$(Q)set -e;				\
--	mkdir -p $(dir $@);			\
--	{ $(filechk_$(1)); } > $@.tmp;		\
--	if [ -r $@ ] && cmp -s $@ $@.tmp; then	\
--		rm -f $@.tmp;			\
--	else					\
--		$(kecho) '  UPD     $@';	\
--		mv -f $@.tmp $@;		\
-+	$(Q)set -e;						\
-+	mkdir -p $(dir $@);					\
-+	trap "rm -f $(dot-target).tmp" EXIT;			\
-+	{ $(filechk_$(1)); } > $(dot-target).tmp;		\
-+	if [ ! -r $@ ] || ! cmp -s $@ $(dot-target).tmp; then	\
-+		$(kecho) '  UPD     $@';			\
-+		mv -f $(dot-target).tmp $@;			\
- 	fi
- endef
- 
--- 
-2.17.1
-
+            Linus
