@@ -2,130 +2,192 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A690C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2475FC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:48:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48AF2080D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E040C2080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:48:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o9Mih6qI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AYaJEd1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgAJOsr (ORCPT
+        id S1728289AbgAJOsw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:48:47 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46050 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728115AbgAJOsr (ORCPT
+        Fri, 10 Jan 2020 09:48:52 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:21117 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728069AbgAJOst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:48:47 -0500
-Received: by mail-qk1-f196.google.com with SMTP id x1so1994490qkl.12
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 06:48:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sFl1naCgTqbK89uRYkRmWghDEhCYtKJccfK1ql3J+3U=;
-        b=o9Mih6qISmR7g2GlHhPw7YWjv06+eFio3Vn6JhH5CwHuiF7pkoEvkKexop9L6W9vH1
-         kwsrn29ojVftlzIxIxGE0+qxLuUtZ2NoToPuaMhqIQRP+Ai4QVZTzvHer0aqm5kwhe7r
-         s8vMw7gMPf/FoDa9sffnsJ6W0kHdGm9SSDiwJGH1sIisgo9zU9JC1K0sJT4zCvcEM4mW
-         8f6yRRbBQvlxlXVPSzTDmlFasnhgcziev7QxMsz/u//GZNZkNTUed7F4PeZXqw+/5hi8
-         9PQsTdu3beHvMK3aPbAS5Wfo06fkTUT/wSoBuJw9OkM5o7xp5OxsqehySfvkD+W8mHiO
-         KVLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sFl1naCgTqbK89uRYkRmWghDEhCYtKJccfK1ql3J+3U=;
-        b=lYAay167IqQY6fBVhlugBfmP+sEfgHKzYskjM3sTkRA7yNKPlTMdzhyGWRXuzy5vIX
-         E0BwopP4GNxnA4pL4G4Lu+ji+ZYeOJhqc4WzQgirxxpVOUfZudXju18SwKrqXLAnne41
-         Q6pa+Z9uI3bK3f/XDLQ7ZAxC51adu2zNaBBQb5wMwK3Z3LqWvztdY69E5q/htH6tYJNQ
-         o0BvBF7KGH2HvyqpyeZOsU2AVsJdjuO+SaK0hUvPCs7Rko1ecYKmO89n9Y/18OBO2N1T
-         1vrbSyxhrSBMJpT8lwCRG/zuP/STs8/JqssTqZgKYOzt7TVh1HiefN4if6mGbpxjJpAx
-         zrAw==
-X-Gm-Message-State: APjAAAWadBor8MkNNwPcW5RkeTR/dxNMuuVHTXr808zXNwEx6QmcwN45
-        v0hxtXcYAp6aRRAjPzfJVrqAX8kFpRbJle5CgDs16g==
-X-Google-Smtp-Source: APXvYqwtpnXgeB9AZDLqrlnF7ub1PKzUna6i6N6Bg2B6L8dfxHLyudhjTrmXsO6gJRpXwtaU5kXa9OsGe/pj9YvNmrI=
-X-Received: by 2002:a05:620a:1136:: with SMTP id p22mr3581899qkk.8.1578667725837;
- Fri, 10 Jan 2020 06:48:45 -0800 (PST)
+        Fri, 10 Jan 2020 09:48:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578667727;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=0754l4wH5GpH8+J8tmqv449PcEO7/r8v1M0+jsB/sr4=;
+        b=AYaJEd1omk4xcDMxC+3pgvyHEND52W3wiHFhN2AI7kf+QeMU9r3+EJjfyoVxnrM6Rrp6+U
+        4yQV2GSy2uUOX1krXnbpH8pXm7j2YT00zY32OKktoOx/AqDzQEzIujqx9E5aG2OYT2RGHo
+        3xIur7HB9qJR44ovak88VOkWO8jhmY0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-98-lHHsAGbZNs6Du-T4uK9rMA-1; Fri, 10 Jan 2020 09:48:44 -0500
+X-MC-Unique: lHHsAGbZNs6Du-T4uK9rMA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BAD26CF989;
+        Fri, 10 Jan 2020 14:48:42 +0000 (UTC)
+Received: from [10.36.118.66] (unknown [10.36.118.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A248F1001938;
+        Fri, 10 Jan 2020 14:48:40 +0000 (UTC)
+Subject: Re: [PATCH] mm/page_alloc: Skip non present sections on zone
+ initialization
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>, Mel Gorman <mgorman@suse.de>,
+        "Jin, Zhi" <zhi.jin@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20191230093828.24613-1-kirill.shutemov@linux.intel.com>
+ <20200108144044.GB30379@dhcp22.suse.cz>
+ <73437651-822f-fcec-3b96-281fb1064cf8@redhat.com>
+ <20200110134547.v6ju5dxazknfjdj3@box>
+ <de70ec09-492d-292b-0738-db1ce1f05673@redhat.com>
+ <20200110144717.xufpf4yjkjlngymy@box>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <6cf49e65-ee02-7cbd-596f-ebbc057717c2@redhat.com>
+Date:   Fri, 10 Jan 2020 15:48:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <000000000000946842058bc1291d@google.com> <000000000000ddae64059bc388dc@google.com>
- <20200110094502.2d6015ab@gandalf.local.home>
-In-Reply-To: <20200110094502.2d6015ab@gandalf.local.home>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 10 Jan 2020 15:48:34 +0100
-Message-ID: <CACT4Y+Z2M3p+26KROAAnGH-HuuWZdu8Cx1TrN7YhWTh9Exj+rQ@mail.gmail.com>
-Subject: Re: WARNING in add_event_to_ctx
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     syzbot <syzbot+704bfe2c7d156640ad7a@syzkaller.appspotmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        arvid.brodin@alten.se, Alexei Starovoitov <ast@kernel.org>,
-        bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Miller <davem@davemloft.net>,
-        Josef Bacik <jbacik@fb.com>, jolsa@redhat.com,
-        Martin KaFai Lau <kafai@fb.com>, kernel-team@fb.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200110144717.xufpf4yjkjlngymy@box>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 3:45 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Thu, 09 Jan 2020 22:50:00 -0800
-> syzbot <syzbot+704bfe2c7d156640ad7a@syzkaller.appspotmail.com> wrote:
->
-> > syzbot suspects this bug was fixed by commit:
->
-> I think these reports need some more information. Like the sample crash
-> report, so we don't need to be clicking through links to find it.
-> Because I have no idea what bug was fixed.
+On 10.01.20 15:47, Kirill A. Shutemov wrote:
+> On Fri, Jan 10, 2020 at 03:34:49PM +0100, David Hildenbrand wrote:
+>> On 10.01.20 14:45, Kirill A. Shutemov wrote:
+>>> On Fri, Jan 10, 2020 at 02:15:26PM +0100, David Hildenbrand wrote:
+>>>> On 08.01.20 15:40, Michal Hocko wrote:
+>>>>> On Mon 30-12-19 12:38:28, Kirill A. Shutemov wrote:
+>>>>>> memmap_init_zone() can be called on the ranges with holes during the
+>>>>>> boot. It will skip any non-valid PFNs one-by-one. It works fine as long
+>>>>>> as holes are not too big.
+>>>>>>
+>>>>>> But huge holes in the memory map causes a problem. It takes over 20
+>>>>>> seconds to walk 32TiB hole. x86-64 with 5-level paging allows for much
+>>>>>> larger holes in the memory map which would practically hang the system.
+>>>>>>
+>>>>>> Deferred struct page init doesn't help here. It only works on the
+>>>>>> present ranges.
+>>>>>>
+>>>>>> Skipping non-present sections would fix the issue.
+>>>>>
+>>>>> Makes sense to me.
+>>>>>
+>>>>>> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+>>>>>
+>>>>> That pfn inc back and forth is quite ugly TBH but whatever.
+>>>>
+>>>> Indeed, can we please rewrite the loop to fix that?
+>>>
+>>> Any suggestions?
+>>>
+>>> I don't see an obvious way to not break readablity in another place.
+>>>
+>>
+>> I'd probably do it like this (applied some other tweaks, untested)
+>>
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index cb766aac6772..a96b1ad1d74b 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -5859,6 +5859,22 @@ overlap_memmap_init(unsigned long zone, unsigned long *pfn)
+>>         return false;
+>>  }
+>>  
+>> +static inline __meminit unsigned long next_present_pfn(unsigned long pfn)
+>> +{
+>> +#ifdef CONFIG_SPARSEMEM
+> 
+> I would rather keep it around function, but it's matter of taste.
 
-Hi Steve,
+Yes
 
-Isn't it threaded to the original report in your client? The message
-has both matching subject and In-Reply-To header. At least that was
-the idea.
+> 
+>> +       unsigned long section_nr = pfn_to_section_nr(pfn + 1);
+>> +
+>> +       /*
+>> +        * Note: We don't check the subsection bitmap, so this can produce
+>> +        * false positives when only subsections are present/valid. The
+>> +        * caller should recheck if the returned pfn is valid.
+>> +        */
+>> +       if (!present_section_nr(section_nr))
+>> +               return section_nr_to_pfn(next_present_section_nr(section_nr));
+> 
+> This won't compile. next_present_section_nr() is static to mm/sparse.c.
 
-> > commit 311633b604063a8a5d3fbc74d0565b42df721f68
-> > Author: Cong Wang <xiyou.wangcong@gmail.com>
-> > Date:   Wed Jul 10 06:24:54 2019 +0000
-> >
-> >      hsr: switch ->dellink() to ->ndo_uninit()
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1005033ee00000
-> > start commit:   6fbc7275 Linux 5.2-rc7
-> > git tree:       upstream
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=bff6583efcfaed3f
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=704bfe2c7d156640ad7a
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1016165da00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b27be5a00000
-> >
-> > If the result looks correct, please mark the bug fixed by replying with:
-> >
-> > #syz fix: hsr: switch ->dellink() to ->ndo_uninit()
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/20200110094502.2d6015ab%40gandalf.local.home.
+We should then move that to the header IMHO.
+
+-- 
+Thanks,
+
+David / dhildenb
+
