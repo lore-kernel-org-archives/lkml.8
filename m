@@ -2,130 +2,187 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD11C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCC8C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634582072A
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:06:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5CE72082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 10:06:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VcVywV//"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qBCfB4Ku"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727438AbgAJKGV (ORCPT
+        id S1727469AbgAJKGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 05:06:21 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41302 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbgAJKGT (ORCPT
+        Fri, 10 Jan 2020 05:06:24 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:53664 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727168AbgAJKGW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 05:06:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=W+8o31v5SZYC8i8sg35zrJwWXEuILI8LPiA6P2pCM1o=; b=VcVywV//8iXSRdFbjuO6fx0ne
-        2BsVLzpVmvmt/pK4bmbDn20yOno2JKEKh12YS+kr9Enu+vsGhZB2EJ0JzGxI4OREeTml4bKg85XQ1
-        2sLOq9LDX4ai2CH9N/bRuxiXUVLnxzHxCItgmF9JZ49lIIQi6o85Y1hRaMJOYS8M2fbmo4WTjmxiJ
-        Xe7gsCBT79FnWe2Gzzk8C1TLn9tHwmGc4ln1kW3UrZL30Rh3yGwtUEfS7yI22JIjgYOfewQTyW084
-        wT21mZZBlK1/3gVIt3VdIFlJJUPgYltTj2jCmTA9JZNeaVLG2ocy1nRWXuWJkFDoJidDDiO++mj4g
-        9gQ/c7Bxg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iprBH-0004PE-WC; Fri, 10 Jan 2020 10:06:16 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1234C30018B;
-        Fri, 10 Jan 2020 11:04:38 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C15EF20D3D41E; Fri, 10 Jan 2020 11:06:12 +0100 (CET)
-Date:   Fri, 10 Jan 2020 11:06:12 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] locking/osq: Use more optimized spinning for arm64
-Message-ID: <20200110100612.GC2827@hirez.programming.kicks-ass.net>
-References: <20200109153831.29993-1-longman@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109153831.29993-1-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 10 Jan 2020 05:06:22 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200110100621euoutp011e0c29ee272fd01d6352fb6e297ab7bf~ofoV0_VTa0935709357euoutp01M
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 10:06:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200110100621euoutp011e0c29ee272fd01d6352fb6e297ab7bf~ofoV0_VTa0935709357euoutp01M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578650781;
+        bh=p4sNZBD2GdpPljSI2a6b2CmX3yAWPhs1wFoE2/fvN2A=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=qBCfB4KuJp5n3ycJU6AcGbCfsW4VAWSqesUK2NseczmvBH1t6+DtXfUwWyBq79ytI
+         09cynpagFs7u5elWOup7WOoyRd/ZGrHnqK1bM4kfr/Jnkk7SFx+IaTuu3hsHJ1KMmH
+         ShMJ/pyamswZ3x/JmkJqqFBIvZmlsTLCK9lFuzN4=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200110100620eucas1p1695d36f9a458f68a39a95f1c3c264963~ofoVgDQWd2865128651eucas1p1X;
+        Fri, 10 Jan 2020 10:06:20 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 3D.6B.61286.C9C481E5; Fri, 10
+        Jan 2020 10:06:20 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200110100620eucas1p12fff62b485570e93b283e23c7a9e5b57~ofoVCrNq70796707967eucas1p1z;
+        Fri, 10 Jan 2020 10:06:20 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200110100620eusmtrp24f34024f9e843db99ed9e1725e1c0a02~ofoVB_xdL1290112901eusmtrp2g;
+        Fri, 10 Jan 2020 10:06:20 +0000 (GMT)
+X-AuditID: cbfec7f2-ef1ff7000001ef66-d4-5e184c9c6034
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 99.6D.07950.C9C481E5; Fri, 10
+        Jan 2020 10:06:20 +0000 (GMT)
+Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200110100619eusmtip2203efaed9efa87e527be7ecd0c229ad0~ofoUkheud2870828708eusmtip27;
+        Fri, 10 Jan 2020 10:06:19 +0000 (GMT)
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Matheus Castello <matheus@castello.eng.br>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH] power: supply: max17040: Correct IRQ wake handling
+Date:   Fri, 10 Jan 2020 11:05:40 +0100
+Message-Id: <20200110100540.27371-1-m.szyprowski@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCIsWRmVeSWpSXmKPExsWy7djP87pzfCTiDDa8V7bYOGM9q8X58xvY
+        LS7vmsNm8bn3CKPFjPP7mCzWHrkLFDu/jsni7ms/Bw6PJ3cus3nsuLuE0WPTqk42j74tqxg9
+        Pm+SC2CN4rJJSc3JLEst0rdL4MqYOmc3a8Eq6Yoj26+yNDD+Fe9i5OSQEDCR2HR3IXMXIxeH
+        kMAKRon5DzYzQThfGCUWPXgGlfnMKPFu2UtGmJbrWw6yQiSWM0p0rG5ghmuZcvgWWBWbgKFE
+        19suNhBbRMBeYu62yWBzmQUmM0nM+rcOLCEs4CzxuO04C4jNIqAq8XHFaiYQm1fAVuJI9z52
+        iHXyEqs3HADbICFwm02if+FmqISLROvUIywQtrDEq+NboOIyEv93zmeCaGhmlHh4bi07hNPD
+        KHG5aQbUF9YSd879AjqDA+gmTYn1u/Qhwo4SOye3s4KEJQT4JG68FQQJMwOZk7ZNZ4YI80p0
+        tAlBVKtJzDq+Dm7twQuXmCFsD4mnXY1g5UICsRLrrhVMYJSbhbBqASPjKkbx1NLi3PTUYsO8
+        1HK94sTc4tK8dL3k/NxNjMC0cPrf8U87GL9eSjrEKMDBqMTDe0BUPE6INbGsuDL3EKMEB7OS
+        CO/RG2JxQrwpiZVVqUX58UWlOanFhxilOViUxHmNF72MFRJITyxJzU5NLUgtgskycXBKNTBm
+        3SmwNk57U3dIJJnJw6/9QolUjVbQ8lk7xFoOlqYsD5SZ8EIyY17B/oKc17v5961OaVe+kBOv
+        o/RaWJX1xLflb7M/sTv+M9vzber61hVPSk7uWnm9IdDolCTTsgtl+ya5KU/Yuynv1ONZ958/
+        8HH48vLkbMaSYxMn+KjyqAjr3u4NkEjh2BGrxFKckWioxVxUnAgAhmxxOAcDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsVy+t/xe7pzfCTiDP7M4LTYOGM9q8X58xvY
+        LS7vmsNm8bn3CKPFjPP7mCzWHrkLFDu/jsni7ms/Bw6PJ3cus3nsuLuE0WPTqk42j74tqxg9
+        Pm+SC2CN0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL
+        0MuYOmc3a8Eq6Yoj26+yNDD+Fe9i5OSQEDCRuL7lIGsXIxeHkMBSRomDn9awQyRkJE5Oa2CF
+        sIUl/lzrYoMo+sQoMXfOOSaQBJuAoUTXW5AEJ4eIgKNE257/zCBFzAJTmSQOrzwF1i0s4Czx
+        uO04C4jNIqAq8XHFarBmXgFbiSPd+6C2yUus3nCAeQIjzwJGhlWMIqmlxbnpucVGesWJucWl
+        eel6yfm5mxiB4bjt2M8tOxi73gUfYhTgYFTi4c0QFo8TYk0sK67MPcQowcGsJMJ79IZYnBBv
+        SmJlVWpRfnxRaU5q8SFGU6DlE5mlRJPzgbGSVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZIID2x
+        JDU7NbUgtQimj4mDU6qB0SYoovVQvbwT02M2mc5Fi3duu6eXtfrTjmsz2o3nKp2I+BRUOOXy
+        iekBooZ3dXQY1oox+BZ85912jouX25VDuPpyT3tqr+qhKQfzL/xZ63HmolRy189bNntf/I8u
+        MLrxy+FgWumuoMfpor9+y9/X+nkhctnRE9Os6ybdjvqU55Dgttv7++fpM5RYijMSDbWYi4oT
+        AQopWoVdAgAA
+X-CMS-MailID: 20200110100620eucas1p12fff62b485570e93b283e23c7a9e5b57
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200110100620eucas1p12fff62b485570e93b283e23c7a9e5b57
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200110100620eucas1p12fff62b485570e93b283e23c7a9e5b57
+References: <CGME20200110100620eucas1p12fff62b485570e93b283e23c7a9e5b57@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 10:38:31AM -0500, Waiman Long wrote:
+Don't disable IRQ wake feature without prior enabling it.
 
-> --- a/kernel/locking/osq_lock.c
-> +++ b/kernel/locking/osq_lock.c
-> @@ -134,6 +134,27 @@ bool osq_lock(struct optimistic_spin_queue *lock)
->  	 * cmpxchg in an attempt to undo our queueing.
->  	 */
->  
-> +	/*
-> +	 * If vcpu_is_preempted is not defined, we can skip the check
-> +	 * and use smp_cond_load_relaxed() instead. For arm64, this
-> +	 * could lead to the use of the more optimized wfe instruction.
-> +	 * As need_sched() is set by interrupt handler, it will break
-> +	 * out and do the unqueue in a timely manner.
-> +	 *
-> +	 * TODO: We may need to add a static_key like vcpu_is_preemptible
-> +	 *	 as vcpu_is_preempted() will always return false with
-> +	 *	 bare metal even if it is defined.
-> +	 */
-> +#ifndef vcpu_is_preempted
-> +	{
-> +		int locked = smp_cond_load_relaxed(&node->locked,
-> +						   VAL || need_resched());
-> +		if (!locked)
-> +			goto unqueue;
-> +		return true;
-> +	}
-> +#endif
+This fixes following warning observed on Exynos3250-based Rinato board:
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1288 at kernel/irq/manage.c:724 irq_set_irq_wake+0xfc/0x134
+Unbalanced IRQ 83 wake disable
+Modules linked in:
+CPU: 0 PID: 1288 Comm: rtcwake Not tainted 5.5.0-rc5-next-20200110-00031-g6289fffbb3f5 #7266
+Hardware name: Samsung Exynos (Flattened Device Tree)
+[<c0112e48>] (unwind_backtrace) from [<c010e090>] (show_stack+0x10/0x14)
+[<c010e090>] (show_stack) from [<c0b25b28>] (dump_stack+0xa4/0xd0)
+[<c0b25b28>] (dump_stack) from [<c0128088>] (__warn+0xf4/0x10c)
+[<c0128088>] (__warn) from [<c0128114>] (warn_slowpath_fmt+0x74/0xb8)
+[<c0128114>] (warn_slowpath_fmt) from [<c019e9a0>] (irq_set_irq_wake+0xfc/0x134)
+[<c019e9a0>] (irq_set_irq_wake) from [<c0772708>] (max17040_suspend+0x50/0x58)
+[<c0772708>] (max17040_suspend) from [<c05f55ac>] (dpm_run_callback+0xb4/0x400)
+[<c05f55ac>] (dpm_run_callback) from [<c05f5e38>] (__device_suspend+0x140/0x814)
+[<c05f5e38>] (__device_suspend) from [<c05f9548>] (dpm_suspend+0x16c/0x564)
+[<c05f9548>] (dpm_suspend) from [<c05fa2e4>] (dpm_suspend_start+0x90/0x98)
+[<c05fa2e4>] (dpm_suspend_start) from [<c01977f4>] (suspend_devices_and_enter+0xec/0xc0c)
+[<c01977f4>] (suspend_devices_and_enter) from [<c019862c>] (pm_suspend+0x318/0x3e8)
+[<c019862c>] (pm_suspend) from [<c01963cc>] (state_store+0x68/0xc8)
+[<c01963cc>] (state_store) from [<c03531a4>] (kernfs_fop_write+0x10c/0x220)
+[<c03531a4>] (kernfs_fop_write) from [<c02b44c4>] (__vfs_write+0x2c/0x1c4)
+[<c02b44c4>] (__vfs_write) from [<c02b7288>] (vfs_write+0xa4/0x180)
+[<c02b7288>] (vfs_write) from [<c02b74d0>] (ksys_write+0x58/0xcc)
+[<c02b74d0>] (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+Exception stack(0xd6e83fa8 to 0xd6e83ff0)
+...
+irq event stamp: 18028
+hardirqs last  enabled at (18027): [<c014b99c>] cancel_delayed_work+0x84/0xf8
+hardirqs last disabled at (18028): [<c0b49b1c>] _raw_spin_lock_irqsave+0x1c/0x58
+softirqs last  enabled at (17876): [<c01026d8>] __do_softirq+0x4f0/0x5e4
+softirqs last disabled at (17869): [<c0130d34>] irq_exit+0x16c/0x170
+---[ end trace 0728005730004e60 ]---
 
-Much yuck :-/
-
-With ARM64 being the only arch that currently makes use of this; another
-approach is doing something like:
-
-That is also rather yuck, and definitely needs a few comments sprinked
-on it, but it should just work for everyone.
-
-It basically relies on an arch having a spinning *cond_load*()
-implementation if it has vcpu_is_preempted(), which is true today.
-
+Fixes: 2e17ed94de68 ("power: supply: max17040: Add IRQ handler for low SOC alert")
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 ---
-diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
-index 6ef600aa0f47..6e00d7c077ba 100644
---- a/kernel/locking/osq_lock.c
-+++ b/kernel/locking/osq_lock.c
-@@ -133,18 +133,10 @@ bool osq_lock(struct optimistic_spin_queue *lock)
- 	 * guaranteed their existence -- this allows us to apply
- 	 * cmpxchg in an attempt to undo our queueing.
- 	 */
-+	if (!smp_cond_load_relaxed(&node->locked, VAL || need_resched() ||
-+						  vcpu_is_preempetd(node_cpu(node->prev))))
-+		goto unqueue;
+ drivers/power/supply/max17040_battery.c | 16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+index c1188e94cf54..8a1f0ee493aa 100644
+--- a/drivers/power/supply/max17040_battery.c
++++ b/drivers/power/supply/max17040_battery.c
+@@ -351,12 +351,8 @@ static int max17040_suspend(struct device *dev)
  
--	while (!READ_ONCE(node->locked)) {
--		/*
--		 * If we need to reschedule bail... so we can block.
--		 * Use vcpu_is_preempted() to avoid waiting for a preempted
--		 * lock holder:
--		 */
--		if (need_resched() || vcpu_is_preempted(node_cpu(node->prev)))
--			goto unqueue;
--
--		cpu_relax();
+ 	cancel_delayed_work(&chip->work);
+ 
+-	if (client->irq) {
+-		if (device_may_wakeup(dev))
+-			enable_irq_wake(client->irq);
+-		else
+-			disable_irq_wake(client->irq);
 -	}
- 	return true;
++	if (client->irq && device_may_wakeup(dev))
++		enable_irq_wake(client->irq);
  
- unqueue:
+ 	return 0;
+ }
+@@ -369,12 +365,8 @@ static int max17040_resume(struct device *dev)
+ 	queue_delayed_work(system_power_efficient_wq, &chip->work,
+ 			   MAX17040_DELAY);
+ 
+-	if (client->irq) {
+-		if (device_may_wakeup(dev))
+-			disable_irq_wake(client->irq);
+-		else
+-			enable_irq_wake(client->irq);
+-	}
++	if (client->irq && device_may_wakeup(dev))
++		disable_irq_wake(client->irq);
+ 
+ 	return 0;
+ }
+-- 
+2.17.1
+
