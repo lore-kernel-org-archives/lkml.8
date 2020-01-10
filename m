@@ -2,73 +2,52 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1953C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3867DC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADAFE2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 029C12082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 22:07:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578694062;
-	bh=n5A8zrx5IBkhzFGC6iVubvTMK9ruwTJwfg3zKQNUoG0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I9nu2dJ90vd2rJuCrzmeuPIq8deLVJKeddB5EEF39FWyUdwKlQXHMA+svbp6NYZUj
-	 XSghoSpaF3S82VIT4ZClqzweGXCJM3J3YpcN0UuRKltNu3BWEXkX2dqUWZETfjijAw
-	 YAgrCgFkzzhiNvylcOCdIaPXN+PA4gBfH103/IxA=
+	s=default; t=1578694066;
+	bh=67SukI/cqB+15W0PKzpTvU1wIG0GGRtRd0UGAlywcUs=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=PntIS77G/BcSgUTP3Ocdxa12WAYDqMgWSucWzThQmo0kCAV7YK+DLQE1W7rWr6A4K
+	 r2xuoVsW9sZ5Z2vUuEocmrWS1hr8abOayVDd9XWohIIFhw1jwRYeEpyE/JIUQGPDNU
+	 sDrsRONMT8jtQ1LMNBDV7ASWNr6IYSSWIdNxQSFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgAJWHc (ORCPT
+        id S1728452AbgAJWHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 17:07:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55266 "EHLO mail.kernel.org"
+        Fri, 10 Jan 2020 17:07:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728358AbgAJWH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:07:29 -0500
+        id S1727376AbgAJWHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:07:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D40F2072E;
-        Fri, 10 Jan 2020 22:07:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD0A920678;
+        Fri, 10 Jan 2020 22:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578694048;
-        bh=n5A8zrx5IBkhzFGC6iVubvTMK9ruwTJwfg3zKQNUoG0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yilyjwdmJmvZCjbPYvhgezvAmgsPRSCUGD5FJWdIzgUfgSvxWlwG4IlRmyMalyi2Q
-         TRyceHxn6G7vU6l3OWG3yzMnv/CJON1Ye1Co3/JVQAzHtnN1ynT4a0aa6ic3bp8A2g
-         vmeEQYKVGwDMrbz+DTrcBa7WtXm12j6wpi37Y1fk=
+        s=default; t=1578694061;
+        bh=67SukI/cqB+15W0PKzpTvU1wIG0GGRtRd0UGAlywcUs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Cjdte64DiUNHy/FB9GoZKtz5q8G1l8YJqrsaPr+zepUuT6yA9amZS85gnXrcmLgeR
+         RlTtc0AMDhRE+TJJoyt2hSCn00jztPtZa9ALa9XwRcp4ZQzS9tPtPj48pmqDQMMivO
+         OXIvOu1lg3GpWs52CtpbuJVUzNOrH5gDUTzaaLL0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Sid Manning <sidneym@codeaurora.org>,
-        Brian Cain <bcain@codeaurora.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Tuowen Zhao <ztuowen@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Will Deacon <will@kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-hexagon@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 4/6] hexagon: parenthesize registers in asm predicates
-Date:   Fri, 10 Jan 2020 17:07:19 -0500
-Message-Id: <20200110220721.28780-4-sashal@kernel.org>
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 1/3] hsr: reset network header when supervision frame is created
+Date:   Fri, 10 Jan 2020 17:07:37 -0500
+Message-Id: <20200110220739.28883-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200110220721.28780-1-sashal@kernel.org>
-References: <20200110220721.28780-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -78,252 +57,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Desaulniers <ndesaulniers@google.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 780a0cfda9006a9a22d6473c2d4c527f5c68eb2e ]
+[ Upstream commit 3ed0a1d563903bdb4b4c36c58c4d9c1bcb23a6e6 ]
 
-Hexagon requires that register predicates in assembly be parenthesized.
+The supervision frame is L2 frame.
+When supervision frame is created, hsr module doesn't set network header.
+If tap routine is enabled, dev_queue_xmit_nit() is called and it checks
+network_header. If network_header pointer wasn't set(or invalid),
+it resets network_header and warns.
+In order to avoid unnecessary warning message, resetting network_header
+is needed.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/754
-Link: http://lkml.kernel.org/r/20191209222956.239798-3-ndesaulniers@google.com
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Suggested-by: Sid Manning <sidneym@codeaurora.org>
-Acked-by: Brian Cain <bcain@codeaurora.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Tuowen Zhao <ztuowen@gmail.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Luis Chamberlain <mcgrof@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Will Deacon <will@kernel.org>
-Cc: Richard Fontana <rfontana@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Test commands:
+    ip netns add nst
+    ip link add veth0 type veth peer name veth1
+    ip link add veth2 type veth peer name veth3
+    ip link set veth1 netns nst
+    ip link set veth3 netns nst
+    ip link set veth0 up
+    ip link set veth2 up
+    ip link add hsr0 type hsr slave1 veth0 slave2 veth2
+    ip a a 192.168.100.1/24 dev hsr0
+    ip link set hsr0 up
+    ip netns exec nst ip link set veth1 up
+    ip netns exec nst ip link set veth3 up
+    ip netns exec nst ip link add hsr1 type hsr slave1 veth1 slave2 veth3
+    ip netns exec nst ip a a 192.168.100.2/24 dev hsr1
+    ip netns exec nst ip link set hsr1 up
+    tcpdump -nei veth0
+
+Splat looks like:
+[  175.852292][    C3] protocol 88fb is buggy, dev veth0
+
+Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/hexagon/include/asm/atomic.h   |  8 ++++----
- arch/hexagon/include/asm/bitops.h   |  8 ++++----
- arch/hexagon/include/asm/cmpxchg.h  |  2 +-
- arch/hexagon/include/asm/futex.h    |  6 +++---
- arch/hexagon/include/asm/spinlock.h | 20 ++++++++++----------
- arch/hexagon/kernel/vm_entry.S      |  2 +-
- 6 files changed, 23 insertions(+), 23 deletions(-)
+ net/hsr/hsr_device.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/hexagon/include/asm/atomic.h b/arch/hexagon/include/asm/atomic.h
-index a62ba368b27d..1ae06190b68f 100644
---- a/arch/hexagon/include/asm/atomic.h
-+++ b/arch/hexagon/include/asm/atomic.h
-@@ -103,7 +103,7 @@ static inline void atomic_##op(int i, atomic_t *v)			\
- 		"1:	%0 = memw_locked(%1);\n"			\
- 		"	%0 = "#op "(%0,%2);\n"				\
- 		"	memw_locked(%1,P3)=%0;\n"			\
--		"	if !P3 jump 1b;\n"				\
-+		"	if (!P3) jump 1b;\n"				\
- 		: "=&r" (output)					\
- 		: "r" (&v->counter), "r" (i)				\
- 		: "memory", "p3"					\
-@@ -119,7 +119,7 @@ static inline int atomic_##op##_return(int i, atomic_t *v)		\
- 		"1:	%0 = memw_locked(%1);\n"			\
- 		"	%0 = "#op "(%0,%2);\n"				\
- 		"	memw_locked(%1,P3)=%0;\n"			\
--		"	if !P3 jump 1b;\n"				\
-+		"	if (!P3) jump 1b;\n"				\
- 		: "=&r" (output)					\
- 		: "r" (&v->counter), "r" (i)				\
- 		: "memory", "p3"					\
-@@ -136,7 +136,7 @@ static inline int atomic_fetch_##op(int i, atomic_t *v)			\
- 		"1:	%0 = memw_locked(%2);\n"			\
- 		"	%1 = "#op "(%0,%3);\n"				\
- 		"	memw_locked(%2,P3)=%1;\n"			\
--		"	if !P3 jump 1b;\n"				\
-+		"	if (!P3) jump 1b;\n"				\
- 		: "=&r" (output), "=&r" (val)				\
- 		: "r" (&v->counter), "r" (i)				\
- 		: "memory", "p3"					\
-@@ -185,7 +185,7 @@ static inline int __atomic_add_unless(atomic_t *v, int a, int u)
- 		"	}"
- 		"	memw_locked(%2, p3) = %1;"
- 		"	{"
--		"		if !p3 jump 1b;"
-+		"		if (!p3) jump 1b;"
- 		"	}"
- 		"2:"
- 		: "=&r" (__oldval), "=&r" (tmp)
-diff --git a/arch/hexagon/include/asm/bitops.h b/arch/hexagon/include/asm/bitops.h
-index 2691a1857d20..634306cda006 100644
---- a/arch/hexagon/include/asm/bitops.h
-+++ b/arch/hexagon/include/asm/bitops.h
-@@ -52,7 +52,7 @@ static inline int test_and_clear_bit(int nr, volatile void *addr)
- 	"1:	R12 = memw_locked(R10);\n"
- 	"	{ P0 = tstbit(R12,R11); R12 = clrbit(R12,R11); }\n"
- 	"	memw_locked(R10,P1) = R12;\n"
--	"	{if !P1 jump 1b; %0 = mux(P0,#1,#0);}\n"
-+	"	{if (!P1) jump 1b; %0 = mux(P0,#1,#0);}\n"
- 	: "=&r" (oldval)
- 	: "r" (addr), "r" (nr)
- 	: "r10", "r11", "r12", "p0", "p1", "memory"
-@@ -76,7 +76,7 @@ static inline int test_and_set_bit(int nr, volatile void *addr)
- 	"1:	R12 = memw_locked(R10);\n"
- 	"	{ P0 = tstbit(R12,R11); R12 = setbit(R12,R11); }\n"
- 	"	memw_locked(R10,P1) = R12;\n"
--	"	{if !P1 jump 1b; %0 = mux(P0,#1,#0);}\n"
-+	"	{if (!P1) jump 1b; %0 = mux(P0,#1,#0);}\n"
- 	: "=&r" (oldval)
- 	: "r" (addr), "r" (nr)
- 	: "r10", "r11", "r12", "p0", "p1", "memory"
-@@ -102,7 +102,7 @@ static inline int test_and_change_bit(int nr, volatile void *addr)
- 	"1:	R12 = memw_locked(R10);\n"
- 	"	{ P0 = tstbit(R12,R11); R12 = togglebit(R12,R11); }\n"
- 	"	memw_locked(R10,P1) = R12;\n"
--	"	{if !P1 jump 1b; %0 = mux(P0,#1,#0);}\n"
-+	"	{if (!P1) jump 1b; %0 = mux(P0,#1,#0);}\n"
- 	: "=&r" (oldval)
- 	: "r" (addr), "r" (nr)
- 	: "r10", "r11", "r12", "p0", "p1", "memory"
-@@ -237,7 +237,7 @@ static inline int ffs(int x)
- 	int r;
+diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
+index 943378d6e4c3..8dd239214a14 100644
+--- a/net/hsr/hsr_device.c
++++ b/net/hsr/hsr_device.c
+@@ -289,6 +289,8 @@ static void send_hsr_supervision_frame(struct hsr_port *master, u8 type)
+ 			    skb->dev->dev_addr, skb->len) <= 0)
+ 		goto out;
+ 	skb_reset_mac_header(skb);
++	skb_reset_network_header(skb);
++	skb_reset_transport_header(skb);
  
- 	asm("{ P0 = cmp.eq(%1,#0); %0 = ct0(%1);}\n"
--		"{ if P0 %0 = #0; if !P0 %0 = add(%0,#1);}\n"
-+		"{ if (P0) %0 = #0; if (!P0) %0 = add(%0,#1);}\n"
- 		: "=&r" (r)
- 		: "r" (x)
- 		: "p0");
-diff --git a/arch/hexagon/include/asm/cmpxchg.h b/arch/hexagon/include/asm/cmpxchg.h
-index a6e34e2acbba..db258424059f 100644
---- a/arch/hexagon/include/asm/cmpxchg.h
-+++ b/arch/hexagon/include/asm/cmpxchg.h
-@@ -44,7 +44,7 @@ static inline unsigned long __xchg(unsigned long x, volatile void *ptr,
- 	__asm__ __volatile__ (
- 	"1:	%0 = memw_locked(%1);\n"    /*  load into retval */
- 	"	memw_locked(%1,P0) = %2;\n" /*  store into memory */
--	"	if !P0 jump 1b;\n"
-+	"	if (!P0) jump 1b;\n"
- 	: "=&r" (retval)
- 	: "r" (ptr), "r" (x)
- 	: "memory", "p0"
-diff --git a/arch/hexagon/include/asm/futex.h b/arch/hexagon/include/asm/futex.h
-index c607b77c8215..12bd92f3ea41 100644
---- a/arch/hexagon/include/asm/futex.h
-+++ b/arch/hexagon/include/asm/futex.h
-@@ -15,7 +15,7 @@
- 	    /* For example: %1 = %4 */ \
- 	    insn \
- 	"2: memw_locked(%3,p2) = %1;\n" \
--	"   if !p2 jump 1b;\n" \
-+	"   if (!p2) jump 1b;\n" \
- 	"   %1 = #0;\n" \
- 	"3:\n" \
- 	".section .fixup,\"ax\"\n" \
-@@ -83,10 +83,10 @@ futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr, u32 oldval,
- 	"1: %1 = memw_locked(%3)\n"
- 	"   {\n"
- 	"      p2 = cmp.eq(%1,%4)\n"
--	"      if !p2.new jump:NT 3f\n"
-+	"      if (!p2.new) jump:NT 3f\n"
- 	"   }\n"
- 	"2: memw_locked(%3,p2) = %5\n"
--	"   if !p2 jump 1b\n"
-+	"   if (!p2) jump 1b\n"
- 	"3:\n"
- 	".section .fixup,\"ax\"\n"
- 	"4: %0 = #%6\n"
-diff --git a/arch/hexagon/include/asm/spinlock.h b/arch/hexagon/include/asm/spinlock.h
-index a1c55788c5d6..f61bb3185305 100644
---- a/arch/hexagon/include/asm/spinlock.h
-+++ b/arch/hexagon/include/asm/spinlock.h
-@@ -44,9 +44,9 @@ static inline void arch_read_lock(arch_rwlock_t *lock)
- 	__asm__ __volatile__(
- 		"1:	R6 = memw_locked(%0);\n"
- 		"	{ P3 = cmp.ge(R6,#0); R6 = add(R6,#1);}\n"
--		"	{ if !P3 jump 1b; }\n"
-+		"	{ if (!P3) jump 1b; }\n"
- 		"	memw_locked(%0,P3) = R6;\n"
--		"	{ if !P3 jump 1b; }\n"
-+		"	{ if (!P3) jump 1b; }\n"
- 		:
- 		: "r" (&lock->lock)
- 		: "memory", "r6", "p3"
-@@ -60,7 +60,7 @@ static inline void arch_read_unlock(arch_rwlock_t *lock)
- 		"1:	R6 = memw_locked(%0);\n"
- 		"	R6 = add(R6,#-1);\n"
- 		"	memw_locked(%0,P3) = R6\n"
--		"	if !P3 jump 1b;\n"
-+		"	if (!P3) jump 1b;\n"
- 		:
- 		: "r" (&lock->lock)
- 		: "memory", "r6", "p3"
-@@ -75,7 +75,7 @@ static inline int arch_read_trylock(arch_rwlock_t *lock)
- 	__asm__ __volatile__(
- 		"	R6 = memw_locked(%1);\n"
- 		"	{ %0 = #0; P3 = cmp.ge(R6,#0); R6 = add(R6,#1);}\n"
--		"	{ if !P3 jump 1f; }\n"
-+		"	{ if (!P3) jump 1f; }\n"
- 		"	memw_locked(%1,P3) = R6;\n"
- 		"	{ %0 = P3 }\n"
- 		"1:\n"
-@@ -102,9 +102,9 @@ static inline void arch_write_lock(arch_rwlock_t *lock)
- 	__asm__ __volatile__(
- 		"1:	R6 = memw_locked(%0)\n"
- 		"	{ P3 = cmp.eq(R6,#0);  R6 = #-1;}\n"
--		"	{ if !P3 jump 1b; }\n"
-+		"	{ if (!P3) jump 1b; }\n"
- 		"	memw_locked(%0,P3) = R6;\n"
--		"	{ if !P3 jump 1b; }\n"
-+		"	{ if (!P3) jump 1b; }\n"
- 		:
- 		: "r" (&lock->lock)
- 		: "memory", "r6", "p3"
-@@ -118,7 +118,7 @@ static inline int arch_write_trylock(arch_rwlock_t *lock)
- 	__asm__ __volatile__(
- 		"	R6 = memw_locked(%1)\n"
- 		"	{ %0 = #0; P3 = cmp.eq(R6,#0);  R6 = #-1;}\n"
--		"	{ if !P3 jump 1f; }\n"
-+		"	{ if (!P3) jump 1f; }\n"
- 		"	memw_locked(%1,P3) = R6;\n"
- 		"	%0 = P3;\n"
- 		"1:\n"
-@@ -141,9 +141,9 @@ static inline void arch_spin_lock(arch_spinlock_t *lock)
- 	__asm__ __volatile__(
- 		"1:	R6 = memw_locked(%0);\n"
- 		"	P3 = cmp.eq(R6,#0);\n"
--		"	{ if !P3 jump 1b; R6 = #1; }\n"
-+		"	{ if (!P3) jump 1b; R6 = #1; }\n"
- 		"	memw_locked(%0,P3) = R6;\n"
--		"	{ if !P3 jump 1b; }\n"
-+		"	{ if (!P3) jump 1b; }\n"
- 		:
- 		: "r" (&lock->lock)
- 		: "memory", "r6", "p3"
-@@ -163,7 +163,7 @@ static inline unsigned int arch_spin_trylock(arch_spinlock_t *lock)
- 	__asm__ __volatile__(
- 		"	R6 = memw_locked(%1);\n"
- 		"	P3 = cmp.eq(R6,#0);\n"
--		"	{ if !P3 jump 1f; R6 = #1; %0 = #0; }\n"
-+		"	{ if (!P3) jump 1f; R6 = #1; %0 = #0; }\n"
- 		"	memw_locked(%1,P3) = R6;\n"
- 		"	%0 = P3;\n"
- 		"1:\n"
-diff --git a/arch/hexagon/kernel/vm_entry.S b/arch/hexagon/kernel/vm_entry.S
-index 67c6ccc14770..9f4a73ff7203 100644
---- a/arch/hexagon/kernel/vm_entry.S
-+++ b/arch/hexagon/kernel/vm_entry.S
-@@ -382,7 +382,7 @@ ret_from_fork:
- 		R26.L = #LO(do_work_pending);
- 		R0 = #VM_INT_DISABLE;
- 	}
--	if P0 jump check_work_pending
-+	if (P0) jump check_work_pending
- 	{
- 		R0 = R25;
- 		callr R24
+ 	hsr_stag = (typeof(hsr_stag)) skb_put(skb, sizeof(*hsr_stag));
+ 
 -- 
 2.20.1
 
