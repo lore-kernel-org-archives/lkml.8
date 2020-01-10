@@ -2,131 +2,147 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,TVD_SUBJ_WIPE_DEBT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19C30C33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 03:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496C1C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 03:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF56520709
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 03:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC1020709
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 03:32:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YtagBkPG"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RdwJnl4S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731061AbgAJDah (ORCPT
+        id S1731081AbgAJDcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 22:30:37 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33573 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731008AbgAJDag (ORCPT
+        Thu, 9 Jan 2020 22:32:11 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16554 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730973AbgAJDcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 22:30:36 -0500
-Received: by mail-qk1-f196.google.com with SMTP id d71so713281qkc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 19:30:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fQSajeOAQfVGeFbN5aHcCZ8GjF58hqwqXqYUY48IJUk=;
-        b=YtagBkPGR/UTlV1mAAOaFxHMOljHsjjiS2wQLirMR2Fzgxv6EW7TTC4r9B+TL9B1yq
-         NWaVFRmAza0aOTXho3BLgyNMOaEUD5rAO+3dadDuLCze91GP2O/xAblQ4Bar8WbQ9n5I
-         VHRd0aIuhya384Fv6ydYl7ih39paziVR+/mn8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fQSajeOAQfVGeFbN5aHcCZ8GjF58hqwqXqYUY48IJUk=;
-        b=qNrlDRGnhcXQVqRA4oEOq4qwHOm/hqpqBAaGRTLbD9ohwaXk7ch+gGHhaZu0PklJ7D
-         YvbdmUtmzkx+fxcB04c8x9kwl0VLfjL6MSFK/U7W3pDYHcg/dpkwTNZQXXVJOK3OIioe
-         aQqZ+at8M0wKm9AIAJ9+nEfN1Naz3IqwADyWJC3npYFqnQfDx4qgyzEkHXl8r1imTKVm
-         w4a3zLJFzOwBakQnb4DZzzmkUjASi8Ra/6o7Ws42QfxPx9Wpa0KAeRbc8UNDwwEP0O9a
-         76XcSb0BQX7mHz9XUK1wiR8GDpqGj+EroGnL+7LRLCBkIazkrlATlBpon6Q2guxkphX1
-         izfQ==
-X-Gm-Message-State: APjAAAVgIHvgg/O9CZFRkXRFGhOzKIrBJ1/mm08Ho7DDu+JFcYbMc2Wu
-        Doy/eS24AqO3UyPY3dMDJt477GM82SI4quN9AUGme4Gq0jg=
-X-Google-Smtp-Source: APXvYqyqYae4Ty6/L3KiMnTOZde/4YuvyLf3n5AY0yto3QcHInG86cTI8HzNsXZrvYXKhV3etEXZdfnWPOf1RinGOSs=
-X-Received: by 2002:a37:4bc6:: with SMTP id y189mr1174229qka.18.1578627035990;
- Thu, 09 Jan 2020 19:30:35 -0800 (PST)
+        Thu, 9 Jan 2020 22:32:10 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e17f0060000>; Thu, 09 Jan 2020 19:31:18 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 09 Jan 2020 19:32:09 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 09 Jan 2020 19:32:09 -0800
+Received: from [10.2.166.245] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 10 Jan
+ 2020 03:32:07 +0000
+Subject: Re: [PATCH v7 00/21] Move PMC clocks into Tegra PMC driver
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <broonie@kernel.org>,
+        <lgirdwood@gmail.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <mperttunen@nvidia.com>, <gregkh@linuxfoundation.org>,
+        <sboyd@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <spujar@nvidia.com>, <josephl@nvidia.com>,
+        <daniel.lezcano@linaro.org>, <mmaddireddy@nvidia.com>,
+        <markz@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
+ <4e9fab30-14b5-bf1f-dc91-fd57ef614503@gmail.com>
+ <61a78ba8-4cc3-f6a6-513b-36daa9be32f0@nvidia.com>
+ <37a9676b-e0e5-7e80-5ee4-abfca361dcf7@nvidia.com>
+Message-ID: <62751d2d-2b7d-509b-e236-363d2bb29b02@nvidia.com>
+Date:   Thu, 9 Jan 2020 19:32:06 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200109133104.11661-1-steven.price@arm.com> <20200109134351.GA3053@kevin>
-In-Reply-To: <20200109134351.GA3053@kevin>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 10 Jan 2020 11:30:25 +0800
-Message-ID: <CANMq1KBHu6CWsF0hhhxjWK81B+K0BbrVzbKvuwVgcDGO8SBUVg@mail.gmail.com>
-Subject: Re: [PATCH] drm/panfrost: Remove core stack power management
-To:     Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
-Cc:     Steven Price <steven.price@arm.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>, Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <37a9676b-e0e5-7e80-5ee4-abfca361dcf7@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578627079; bh=h+UK0T0ZVoq0xlRJgSEmpib8ESf+rXQ95WyAK46QTis=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=RdwJnl4St7LW5RgLOTnTJzx7marVTEg5gBkDL5je4bCIpErjkEECgt74tcuUIV7xj
+         AMquKzInk/UBSYXTInphlHW3tm3N6CDNDLOYBNeHnH7CG02uMU2ZQOPq0NvdbLjSmp
+         PTIXdFLTCx0vtXfKDRKJcaIpyLZhVsargsilGQS8/ASADPwMK6ZtfvIhKXowHiLzBS
+         b6R11TGDsHjqjD6e8KR47qe1D/1uwMnH1MsREsrfAeeM3/BKcrt0mSPDXiBlxpm6hH
+         8yHwU0e5sepSvC8LRGKxJsF22wM7R4tUGq1PLHDrj/JHdpeJte6/3X6KP2R9aXkTlZ
+         O0qZR+YvJKVHw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 9:44 PM Alyssa Rosenzweig
-<alyssa.rosenzweig@collabora.com> wrote:
+
+On 1/9/20 7:24 PM, Sowjanya Komatineni wrote:
 >
-> A-b
+> On 1/9/20 5:39 PM, Sowjanya Komatineni wrote:
+>>
+>> On 1/9/20 11:44 AM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 08.01.2020 07:24, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> This patch series moves Tegra PMC clocks from clock driver to pmc=20
+>>>> driver
+>>>> along with the device trees changes and audio driver which uses one of
+>>>> the pmc clock for audio mclk.
+>>>>
+>>>> Tegra PMC has clk_out_1, clk_out_2, clk_out_3 and blink controls which
+>>>> are currently registered by Tegra clock driver using=20
+>>>> clk_regiser_mux and
+>>>> clk_register_gate which performs direct Tegra PMC register access.
+>>>>
+>>>> When Tegra PMC is in secure mode, any access from non-secure world=20
+>>>> will
+>>>> not go through.
+>>>>
+>>>> This patch series adds these Tegra PMC clocks and blink controls to=20
+>>>> Tegra
+>>>> PMC driver with PMC as clock provider and removes them from Tegra=20
+>>>> clock
+>>>> driver.
+>>>>
+>>>> PMC clock clk_out_1 is dedicated for audio mclk from Tegra30 thru=20
+>>>> Tegra210
+>>>> and clock driver does inital parent configuration for it and=20
+>>>> enables them.
+>>>> But this clock should be taken care by audio driver as there is no=20
+>>>> need
+>>>> to have this clock pre enabled.
+>>>>
+>>>> So, this series also includes patch that updates ASoC driver to take
+>>>> care of parent configuration for mclk if device tree don't specify
+>>>> initial parent configuration using assigned-clock-parents and controls
+>>>> audio mclk enable/disable during ASoC machine startup and shutdown.
+>>>>
+>>>> DTs are also updated to use clk_out_1 as audio mclk rather than=20
+>>>> extern1.
+>>>>
+>>>> This series also includes a patch for mclk fallback to extern1 when
+>>>> retrieving mclk fails to have this backward compatible of new DT with
+>>>> old kernels.
+>>> Suspend-resume doesn't work anymore, reverting this series helps. I
+>>> don't have any other information yet, please take a look.
+>> Thanks Dmitry. Will test suspend resume and check..
 >
-> On Thu, Jan 09, 2020 at 01:31:04PM +0000, Steven Price wrote:
-> > Explict management of the GPU's core stacks is only necessary in the
-> > case of a broken integration with the PDC. Since there are no known
-> > platforms which have such a broken integration let's remove the explict
-> > control from the driver since this apparently causes problems on other
-> > platforms and will have a small performance penality.
-> >
-> > The out of tree mali_kbase driver contains this text regarding
-> > controlling the core stack (CONFIGMALI_CORESTACK):
-> >
-> >   Enabling this feature on supported GPUs will let the driver powering
-> >   on/off the GPU core stack independently without involving the Power
-> >   Domain Controller. This should only be enabled on platforms which
-> >   integration of the PDC to the Mali GPU is known to be problematic.
-> >   This feature is currently only supported on t-Six and t-HEx GPUs.
-> >
-> >   If unsure, say N.
-> >
+> I see if we leave audio mclk (cdev1) enabled during=20
+> tegra_asoc_utils_init, suspend resume works.
+>
+> Without audio mclk enabled during tegra_asoc_utils_init, somehow it=20
+> prevents entry to suspend on Tegra30 platform.
+>
+> Will look in detail..
+>
+audio mclk is only needed for audio and werid that having it not enabled=20
+all the time like in current clock driver prevents suspend entry on Tegra30
 
-Work on my G-72 Bifrost, no more errors on power on!
+Looks like this issue is masked earlier with having mclk enabled all the=20
+time by clock driver.
 
-Reviewed-by: Nicolas Boichat <drinkcat@chromium.org>
-Tested-by: Nicolas Boichat <drinkcat@chromium.org>
-
-> > Signed-off-by: Steven Price <steven.price@arm.com>
-> > ---
-> >  drivers/gpu/drm/panfrost/panfrost_gpu.c | 5 -----
-> >  1 file changed, 5 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/panfrost/panfrost_gpu.c b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> > index 8822ec13a0d6..460fc190de6e 100644
-> > --- a/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> > +++ b/drivers/gpu/drm/panfrost/panfrost_gpu.c
-> > @@ -309,10 +309,6 @@ void panfrost_gpu_power_on(struct panfrost_device *pfdev)
-> >       ret = readl_relaxed_poll_timeout(pfdev->iomem + L2_READY_LO,
-> >               val, val == pfdev->features.l2_present, 100, 1000);
-> >
-> > -     gpu_write(pfdev, STACK_PWRON_LO, pfdev->features.stack_present);
-> > -     ret |= readl_relaxed_poll_timeout(pfdev->iomem + STACK_READY_LO,
-> > -             val, val == pfdev->features.stack_present, 100, 1000);
-> > -
-> >       gpu_write(pfdev, SHADER_PWRON_LO, pfdev->features.shader_present);
-> >       ret |= readl_relaxed_poll_timeout(pfdev->iomem + SHADER_READY_LO,
-> >               val, val == pfdev->features.shader_present, 100, 1000);
-> > @@ -329,7 +325,6 @@ void panfrost_gpu_power_off(struct panfrost_device *pfdev)
-> >  {
-> >       gpu_write(pfdev, TILER_PWROFF_LO, 0);
-> >       gpu_write(pfdev, SHADER_PWROFF_LO, 0);
-> > -     gpu_write(pfdev, STACK_PWROFF_LO, 0);
-> >       gpu_write(pfdev, L2_PWROFF_LO, 0);
-> >  }
-> >
-> > --
-> > 2.20.1
-> >
