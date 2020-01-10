@@ -2,95 +2,111 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560E3C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBBCC33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C79A2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FD4A2072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 08:26:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="FmZBjhTY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbgAJIZZ (ORCPT
+        id S1727001AbgAJI0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 03:25:25 -0500
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:47157 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726561AbgAJIZY (ORCPT
+        Fri, 10 Jan 2020 03:26:23 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:45659 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbgAJI0X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 03:25:24 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R761e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TnJTHE8_1578644713;
-Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TnJTHE8_1578644713)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 10 Jan 2020 16:25:20 +0800
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Shile Zhang <shile.zhang@linux.alibaba.com>
-Subject: [PATCH 1/1] mm: fix tick_sched timer blocked by pgdat_resize_lock
-Date:   Fri, 10 Jan 2020 16:25:10 +0800
-Message-Id: <20200110082510.172517-2-shile.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20200110082510.172517-1-shile.zhang@linux.alibaba.com>
-References: <20200110082510.172517-1-shile.zhang@linux.alibaba.com>
+        Fri, 10 Jan 2020 03:26:23 -0500
+Received: by mail-il1-f196.google.com with SMTP id p8so1108230iln.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 00:26:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1Mpto8STXUyff3SuN++CYO1ReCNV8kLrYeZBrybALQQ=;
+        b=FmZBjhTY7sbuVMCk14C7YB05gIcPfuYjlNIumlGDZGFcvL9gObsjtxhanIt0aREDY1
+         yUeIS8tRAPx+xK3UGSEaWYkiRO6HMJDB1w5gMx3egYwW8iw+taMQqD6wf+Fz3B1IguUZ
+         gXmgP459EmWBqG/zTFJFLAf9Ld7XBOOGKvG25VSlDIggvxvbJB+c0l8G9jWUCN2bAPp9
+         2/rlDZbRvbUUVKzTKnJTFHfi1mQ48le2Uh00ABoAjSYICDDKPXgw1LGelTw8lXqf2h9J
+         2ryN5q5rA/42FuIsp+SglWAZtS0a4JdZvTqF1APhypxIZ0KQE9tEi1LRKXhfYLYe9ay1
+         B7Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1Mpto8STXUyff3SuN++CYO1ReCNV8kLrYeZBrybALQQ=;
+        b=Kyq6RmR+zoKYmlyNhv/sgrAhgQYe1kfbD69n64reM1W+zPKxmLiNnNh0XruJlXarzM
+         /SOLvtJMcafguRZXRLnKfIWBZ6sg1kFGmZrq/X+VLVQHHNkcCFdjHYmO7XTtP1flhEX4
+         f5mCWNy7iAZ5Q25HV+a5e+XpKdI6rDQSygAREJszqign5ourNjZbWhGikK4x3wmuBpAj
+         aLrbjxpqe452KQBs0FGww0u/EN28U2mJKqYMlJ6OvSjUPrKOApeHup5+sdbvzD0bNBV4
+         VcfwpS8QCpvQzlqw/O8Bugh13TmLmz+obpzWeTqGTFHFNbMyvqFAVOhCRfV9p4eGMB03
+         LgUg==
+X-Gm-Message-State: APjAAAVXrlVEL0/1+Zap0bdpEthTtyZV5hBtTZTE8UzuIxpIIEdQfI/a
+        9ehgWbHnnDtE3tOYC2ZhwMsEMNJy50XYPeU4w8n2Fw==
+X-Google-Smtp-Source: APXvYqxiZuxf4E+HAmZNdw51irHN6iQPilLO58L76uP/dDwDEuhp/LNJuvWEwYVatV95J0cqnRCHu9XWuHzEaePBa74=
+X-Received: by 2002:a92:8712:: with SMTP id m18mr1633334ild.40.1578644782463;
+ Fri, 10 Jan 2020 00:26:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200110082441.8300-1-brgl@bgdev.pl>
+In-Reply-To: <20200110082441.8300-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Fri, 10 Jan 2020 09:26:11 +0100
+Message-ID: <CAMRc=Mc3hkzJ+Xk_nD3m3uv4_pTUnNaW-0s6Vh3osXCzYBH7fA@mail.gmail.com>
+Subject: Re: [PATCH -next] nvmem: fix a 'makes pointer from integer without a
+ cast' build warning
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Khouloud Touil <ktouil@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        kbuild test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdat_resize_lock'
-will be called inside 'pgdatinit' kthread to initialise the deferred
-pages with local interrupts disabled. Which is introduced by
-commit 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred
-pages").
+pt., 10 sty 2020 o 09:24 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a=
+):
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> nvmem_register() returns a pointer, not a long int. Use ERR_CAST() to
+> cast the struct gpio_desc pointer to struct nvmem_device.
+>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Fixes: 2a127da461a9 ("nvmem: add support for the write-protect pin")
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  drivers/nvmem/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index 3e1c94c4eee8..408ce702347e 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -351,7 +351,7 @@ struct nvmem_device *nvmem_register(const struct nvme=
+m_config *config)
+>                 nvmem->wp_gpio =3D gpiod_get_optional(config->dev, "wp",
+>                                                     GPIOD_OUT_HIGH);
+>         if (IS_ERR(nvmem->wp_gpio))
+> -               return PTR_ERR(nvmem->wp_gpio);
+> +               return ERR_CAST(nvmem->wp_gpio);
+>
+>
+>         kref_init(&nvmem->refcnt);
+> --
+> 2.23.0
+>
 
-But 'pgdatinit' kthread is possible be pined on the boot CPU (CPU#0 by
-default), especially in small system with NRCPUS <= 2. In this case, the
-interrupts are disabled on boot CPU during memory initialising, which
-caused the tick_sched timer be blocked, leading to wall clock stuck.
+Srinivas: this fixes a bug introduced in a patch I took through the
+at24 tree. With your ack I'll apply it as a follow-up.
 
-Fixes: commit 3a2d7fa8a3d5 ("mm: disable interrupts while initializing
-deferred pages")
-
-Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
----
- include/linux/memory_hotplug.h | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-index ba0dca6aac6e..6ffcb5b704bc 100644
---- a/include/linux/memory_hotplug.h
-+++ b/include/linux/memory_hotplug.h
-@@ -282,12 +282,22 @@ static inline bool movable_node_is_enabled(void)
- static inline
- void pgdat_resize_lock(struct pglist_data *pgdat, unsigned long *flags)
- {
--	spin_lock_irqsave(&pgdat->node_size_lock, *flags);
-+	/*
-+	 * Disable local interrupts on boot CPU will stop the tick_sched
-+	 * timer, which will block jiffies(wall clock) update.
-+	 */
-+	if (current->cpu != get_boot_cpu_id())
-+		spin_lock_irqsave(&pgdat->node_size_lock, *flags);
-+	else
-+		spin_lock(&pgdat->node_size_lock);
- }
- static inline
- void pgdat_resize_unlock(struct pglist_data *pgdat, unsigned long *flags)
- {
--	spin_unlock_irqrestore(&pgdat->node_size_lock, *flags);
-+	if (current->cpu != get_boot_cpu_id())
-+		spin_unlock_irqrestore(&pgdat->node_size_lock, *flags);
-+	else
-+		spin_unlock(&pgdat->node_size_lock);
- }
- static inline
- void pgdat_resize_init(struct pglist_data *pgdat)
--- 
-2.24.0.rc2
-
+Bart
