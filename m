@@ -2,70 +2,77 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17192C33C99
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D004CC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE6932072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEDA72073A
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 06:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731572AbgAJGfr (ORCPT
+        id S1731594AbgAJGhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 01:35:47 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8689 "EHLO huawei.com"
+        Fri, 10 Jan 2020 01:37:34 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:41306 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731530AbgAJGfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 01:35:46 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5A3BBBC12301F039CB0;
-        Fri, 10 Jan 2020 14:35:44 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Fri, 10 Jan 2020
- 14:35:34 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <bskeggs@redhat.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <maarten.lankhorst@canonical.com>, <sumit.semwal@linaro.org>
-CC:     <dri-devel@lists.freedesktop.org>, <nouveau@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] drm/nouveau: Fix copy-paste error in nouveau_fence_wait_uevent_handler
-Date:   Fri, 10 Jan 2020 14:32:01 +0800
-Message-ID: <20200110063201.47560-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1731530AbgAJGhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 01:37:34 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E2D89E2F09D53AEEC3E5;
+        Fri, 10 Jan 2020 14:37:32 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.183) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 10 Jan 2020
+ 14:37:23 +0800
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <dhowells@redhat.com>,
+        <akpm@linux-foundation.org>, <torvalds@linux-foundation.org>
+CC:     <bywxiaobai@163.com>, Mingfangsen <mingfangsen@huawei.com>,
+        Guiyao <guiyao@huawei.com>, zhangsaisai <zhangsaisai@huawei.com>,
+        renxudong <renxudong1@huawei.com>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH] kdev_t: mask mi with MINORMASK in MKDEV macro
+Message-ID: <5d384dcb-5590-60f8-a4e1-efa6b8da151f@huawei.com>
+Date:   Fri, 10 Jan 2020 14:37:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.183]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Like other cases, it should use rcu protected 'chan' rather
-than 'fence->channel' in nouveau_fence_wait_uevent_handler.
 
-Fixes: 0ec5f02f0e2c ("drm/nouveau: prevent stale fence->channel pointers, and protect with rcu")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+In MKDEV macro, if mi is larger than MINORMASK, the major will be
+affected by mi. For example, set dev = MKDEV(2, (1U << MINORBITS)),
+then MAJOR(dev) will be equal to 3, incorrectly.
+
+Here, we mask mi with MINORMASK in MKDEV macro.
+
+Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
 ---
- drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
+ include/linux/kdev_t.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
-index 9118df0..70bb6bb 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fence.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
-@@ -156,7 +156,7 @@ nouveau_fence_wait_uevent_handler(struct nvif_notify *notify)
- 
- 		fence = list_entry(fctx->pending.next, typeof(*fence), head);
- 		chan = rcu_dereference_protected(fence->channel, lockdep_is_held(&fctx->lock));
--		if (nouveau_fence_update(fence->channel, fctx))
-+		if (nouveau_fence_update(chan, fctx))
- 			ret = NVIF_NOTIFY_DROP;
- 	}
- 	spin_unlock_irqrestore(&fctx->lock, flags);
--- 
-2.7.4
+diff --git a/include/linux/kdev_t.h b/include/linux/kdev_t.h
+index 85b5151911cf..40a9423720b2 100644
+--- a/include/linux/kdev_t.h
++++ b/include/linux/kdev_t.h
+@@ -9,7 +9,7 @@
 
+ #define MAJOR(dev)	((unsigned int) ((dev) >> MINORBITS))
+ #define MINOR(dev)	((unsigned int) ((dev) & MINORMASK))
+-#define MKDEV(ma,mi)	(((ma) << MINORBITS) | (mi))
++#define MKDEV(ma, mi)	(((ma) << MINORBITS) | ((mi) & MINORMASK))
+
+ #define print_dev_t(buffer, dev)					\
+ 	sprintf((buffer), "%u:%u\n", MAJOR(dev), MINOR(dev))
+-- 
+2.19.1
 
