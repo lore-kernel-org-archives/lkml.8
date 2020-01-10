@@ -2,85 +2,114 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C462C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B14FC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 740B2206ED
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 19:58:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="XPcsW5ON"
+	by mail.kernel.org (Postfix) with ESMTP id 4B8C6206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 20:00:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578686402;
+	bh=wDFDX2EsNHnVI0rZ6nKEKO20SkQDw4fFW9y0xunnvlE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=m8QQzTWk8bYQ4cQ9Z6pdNA3dqhDVP6MTW0n+zIw4ByFNBSHoNoSTa8Hl4nvZhu0C4
+	 EK7tqZ3ZPCFphurbTRViEPXHlpLFGZbAKoGjezUqwUMjR1NpDw+RSggRmpwKP/MinX
+	 VUYbzmnGaGnUbB2Jv1s1X6zeTiJNxT/S+1Qe7GP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgAJT6p (ORCPT
+        id S1728722AbgAJUAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 14:58:45 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:34950 "EHLO mail.skyhub.de"
+        Fri, 10 Jan 2020 15:00:00 -0500
+Received: from foss.arm.com ([217.140.110.172]:50568 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727650AbgAJT6p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 14:58:45 -0500
-Received: from zn.tnic (p200300EC2F0ACA00F8C15324EBC48DF9.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:ca00:f8c1:5324:ebc4:8df9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BAE561EC0AB5;
-        Fri, 10 Jan 2020 20:58:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578686323;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=6Zf4g5IfOki+jdhGV15Erd3yZAnIWoJKHhalmJWvQEg=;
-        b=XPcsW5ON8bdwb6eQ1BUiL3NXPLHQ9MUEhHdnHz3BZ/O+Dq45sCeuiLmkbzg6WOB0079egu
-        mSnz5bc6k6oLWWvtagMQKlfVRHwI754WNIS+l597r4fWVcZcWQuEambYIyxlxIglmvAJcd
-        fCbtHhxI0Yb+ySxSfm4Qap56FFESDic=
-Date:   Fri, 10 Jan 2020 20:58:37 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Changbin Du <changbin.du@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com, x86@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/nmi: remove the irqwork from long duration nmi
- handler
-Message-ID: <20200110195837.GJ19453@zn.tnic>
-References: <20200101072017.82990-1-changbin.du@gmail.com>
- <877e20bb8o.fsf@nanos.tec.linutronix.de>
- <20200109210225.GK5603@zn.tnic>
- <20200110140549.xqjhrdpxllkvqbuk@mail.google.com>
- <20200110151329.GF19453@zn.tnic>
- <20200110173449.rhr5p4lal3aul43g@mail.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200110173449.rhr5p4lal3aul43g@mail.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727650AbgAJT7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 14:59:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D051E328;
+        Fri, 10 Jan 2020 11:59:04 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5615D3F534;
+        Fri, 10 Jan 2020 11:59:04 -0800 (PST)
+Date:   Fri, 10 Jan 2020 19:59:02 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     broonie@kernel.org, chenxiang66@hisilicon.com,
+        fengsheng5@huawei.com, linuxarm@huawei.com,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-spi@vger.kernel.org, marek.vasut@gmail.com,
+        Mark Brown <broonie@kernel.org>, tudor.ambarus@microchip.com,
+        xuejiancheng@hisilicon.com
+Subject: Applied "MAINTAINERS: Add a maintainer for the HiSilicon v3xx SFC driver" to the spi tree
+In-Reply-To: <1575900490-74467-4-git-send-email-john.garry@huawei.com>
+Message-Id: <applied-1575900490-74467-4-git-send-email-john.garry@huawei.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 05:34:50PM +0000, Changbin Du wrote:
-> Just to move all the check code together and be a standalone function.
-> yes, this somewhat does code refining after the irqwork is removed but
-> I think it is normal.
+The patch
 
-But it makes review harder because your patch is removing irq_work,
-*nothing* in the commit message is talking about *why* you're doing
-that additional change. I'd imagine at the end of the commit message
-something like:
+   MAINTAINERS: Add a maintainer for the HiSilicon v3xx SFC driver
 
-"While at it, repurpose the IRQ work callback into a function which
-concentrates the NMI duration checking."
+has been applied to the spi tree at
 
-This lets a reader know know why that additional change is done instead
-of going back'n'forth and having to ask you why you're doing this.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.6
 
-Ok?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 99eb0a1221ac1083b8c87932c438ef016abdaa05 Mon Sep 17 00:00:00 2001
+From: John Garry <john.garry@huawei.com>
+Date: Mon, 9 Dec 2019 22:08:10 +0800
+Subject: [PATCH] MAINTAINERS: Add a maintainer for the HiSilicon v3xx SFC
+ driver
+
+Set John Garry @ Huawei as the maintainer.
+
+Signed-off-by: John Garry <john.garry@huawei.com>
+Link: https://lore.kernel.org/r/1575900490-74467-4-git-send-email-john.garry@huawei.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index bd5847e802de..8c119bd4f687 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7492,6 +7492,12 @@ S:	Supported
+ F:	drivers/scsi/hisi_sas/
+ F:	Documentation/devicetree/bindings/scsi/hisilicon-sas.txt
+ 
++HISILICON V3XX SPI NOR FLASH Controller Driver
++M:	John Garry <john.garry@huawei.com>
++W:	http://www.hisilicon.com
++S:	Maintained
++F:	drivers/spi/spi-hisi-sfc-v3xx.c
++
+ HISILICON QM AND ZIP Controller DRIVER
+ M:	Zhou Wang <wangzhou1@hisilicon.com>
+ L:	linux-crypto@vger.kernel.org
 -- 
-Regards/Gruss,
-    Boris.
+2.20.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
