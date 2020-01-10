@@ -2,252 +2,313 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79906C33CA2
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:18:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEBCC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C8D2082E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:18:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578655133;
-	bh=1LXfK2dJUcjEJ/EmR+OcVddqMQyjQI8vDoMgOjLi3b0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=2P8G49m0f5FEYy9D47sLgzcK1W378X1fjd2TPhAXQHzZNvti3pdMBZzGSzngtAoTD
-	 o0OLUcEYshcMVTX8HUj2/W0wP4N4UwqWGnxu5/QfwLRIxaNMpqSoLz0iOmyMMbSGvY
-	 /WcObJFYZt+Hv1kKa2cNeXbbSaFzp/QZklToikFI=
+	by mail.kernel.org (Postfix) with ESMTP id 52B922072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 11:26:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iGzYOnRH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgAJLSw (ORCPT
+        id S1727787AbgAJL04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 06:18:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52312 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727457AbgAJLSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 06:18:51 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5495220721;
-        Fri, 10 Jan 2020 11:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578655130;
-        bh=1LXfK2dJUcjEJ/EmR+OcVddqMQyjQI8vDoMgOjLi3b0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uZTO5Gz+DQOgGNkBKt57eCylxQVOQJ13c1PEu/PUgWHYK2TzX0uZZrC2CqODnE1MI
-         cNypNlMcjguIdHHa1okYIgyDOe5Ff60aVCYwNLaP122m1SJiSTG5PZF4Gkv3xvfQ1Y
-         vAk5zesvuPiBciANd04ELBjbDQzRC7nl0HcJO0g8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1ipsJU-0007qA-M4; Fri, 10 Jan 2020 11:18:48 +0000
+        Fri, 10 Jan 2020 06:26:56 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42015 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727704AbgAJL04 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 06:26:56 -0500
+Received: by mail-wr1-f67.google.com with SMTP id q6so1439875wro.9;
+        Fri, 10 Jan 2020 03:26:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7lM5EykiimtNQTD/KeOIq/kmlySHaycP9krZGDQj34k=;
+        b=iGzYOnRHF8qfJE+2CKjjnemWNCfW7MyrWra/6FzdtbtueYzzDybIsAv14CDBaGzkGG
+         cIEx+aJSw71lkIJT3ELVtbjM3VEBoI562qwWsKkoe0AJLGuTjqnTRikw+9yGPWs4mkhH
+         K0UDoi+s3pF3np7igHTs31MfHyQ6Audje8BGb4xKOPaNHzvIkD6D5DFestWhxUHzEPGO
+         glp9A5ntoKEWhfPSOJT06r++lhcXTorsr2qGWBAxPLTe/fIA8e3CoJcyLusYqnhXnqxL
+         V/3fblVDIhkPIrff4g0KX0HP0hCm4KQg0DuvGEZIwlh2omaVV2q0uLxD1MAMARrcuYne
+         nrTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7lM5EykiimtNQTD/KeOIq/kmlySHaycP9krZGDQj34k=;
+        b=P43CIQgqsQng0XoX1vyoRCsGVp2vC8RsJZYNBellaKSQmjQt+8cwFSnMIzSnMVGfXH
+         dFhXlQ3/X9F5CmAwfUBtB6m1gk9B+QvmKARRLp7tWV8wtO3W/mrVCt6D9zyCSKptRnU/
+         Dh3jb0B0dvvcYIf1PNk0RemqvQ7jwXpx3DmKEzUAH9HXqPVCXG74SnuJTl4+9Gy1LTyW
+         cxlS+WaBFrIBUwdp3kTb8COmz+NUg8AyK6MHxF9X/YqCEHtWadwER05K0Ufzu4NqK8he
+         yEtxsxVWgvCABRkGs22w3U5WzfPuMyzCeNI43wwHlQt+Ld+y5B0a0yFRj6vHmjzDm+r8
+         wGVQ==
+X-Gm-Message-State: APjAAAVSsKET43SjD478bsAk/Qxn53j82Zxm/yxnvtKQw+WRnnD4edeJ
+        R/GrfhRApfWCuxA+xKVJCiO1NeHn
+X-Google-Smtp-Source: APXvYqxbH08xte7p/ODV3ZKqaFgBmEEdfTUofihVlEjgah++iyPw71yh8uOedNov2pQFaladGCt0Lw==
+X-Received: by 2002:a5d:6346:: with SMTP id b6mr3024170wrw.354.1578655612703;
+        Fri, 10 Jan 2020 03:26:52 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id u22sm1902080wru.30.2020.01.10.03.26.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 03:26:51 -0800 (PST)
+Date:   Fri, 10 Jan 2020 12:26:50 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     JC Kuo <jckuo@nvidia.com>
+Cc:     Rob Herring <robh@kernel.org>, gregkh@linuxfoundation.org,
+        jonathanh@nvidia.com, kishon@ti.com, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, nkristam@nvidia.com
+Subject: Re: [PATCH v5 3/5] dt-bindings: phy: tegra: Add Tegra194 support
+Message-ID: <20200110112650.GB2233456@ulmo>
+References: <20200103081814.9848-1-jckuo@nvidia.com>
+ <20200103081814.9848-4-jckuo@nvidia.com>
+ <20200103223940.GA9205@bogus>
+ <baa9b5f4-74be-0ab4-0b24-bf926cf3207c@nvidia.com>
+ <4c3f3776-65e2-aafd-7bb9-fa69df301cb6@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 10 Jan 2020 11:18:48 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Andrew Murray <andrew.murray@arm.com>
-Cc:     Catalin Marinas <Catalin.Marinas@arm.com>,
-        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
-        Sudeep Holla <Sudeep.Holla@arm.com>, kvm@vger.kernel.org,
-        kvmarm <kvmarm@lists.cs.columbia.edu>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 09/18] arm64: KVM: enable conditional save/restore full
- SPE profiling buffer controls
-In-Reply-To: <20200110105435.GC42593@e119886-lin.cambridge.arm.com>
-References: <20191220143025.33853-1-andrew.murray@arm.com>
- <20191220143025.33853-10-andrew.murray@arm.com>
- <20191221141325.5a177343@why>
- <20200110105435.GC42593@e119886-lin.cambridge.arm.com>
-Message-ID: <2a9c9076588ef1dd36a6a365848cdfe7@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: andrew.murray@arm.com, Catalin.Marinas@arm.com, Mark.Rutland@arm.com, will@kernel.org, Sudeep.Holla@arm.com, kvm@vger.kernel.org, kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="DBIVS5p969aUjpLe"
+Content-Disposition: inline
+In-Reply-To: <4c3f3776-65e2-aafd-7bb9-fa69df301cb6@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-10 10:54, Andrew Murray wrote:
-> On Sat, Dec 21, 2019 at 02:13:25PM +0000, Marc Zyngier wrote:
->> On Fri, 20 Dec 2019 14:30:16 +0000
->> Andrew Murray <andrew.murray@arm.com> wrote:
->> 
->> [somehow managed not to do a reply all, re-sending]
->> 
->> > From: Sudeep Holla <sudeep.holla@arm.com>
->> >
->> > Now that we can save/restore the full SPE controls, we can enable it
->> > if SPE is setup and ready to use in KVM. It's supported in KVM only if
->> > all the CPUs in the system supports SPE.
->> >
->> > However to support heterogenous systems, we need to move the check if
->> > host supports SPE and do a partial save/restore.
->> 
->> No. Let's just not go down that path. For now, KVM on heterogeneous
->> systems do not get SPE. If SPE has been enabled on a guest and a CPU
->> comes up without SPE, this CPU should fail to boot (same as exposing a
->> feature to userspace).
->> 
->> >
->> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
->> > ---
->> >  arch/arm64/kvm/hyp/debug-sr.c | 33 ++++++++++++++++-----------------
->> >  include/kvm/arm_spe.h         |  6 ++++++
->> >  2 files changed, 22 insertions(+), 17 deletions(-)
->> >
->> > diff --git a/arch/arm64/kvm/hyp/debug-sr.c b/arch/arm64/kvm/hyp/debug-sr.c
->> > index 12429b212a3a..d8d857067e6d 100644
->> > --- a/arch/arm64/kvm/hyp/debug-sr.c
->> > +++ b/arch/arm64/kvm/hyp/debug-sr.c
->> > @@ -86,18 +86,13 @@
->> >  	}
->> >
->> >  static void __hyp_text
->> > -__debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
->> > +__debug_save_spe_context(struct kvm_cpu_context *ctxt, bool full_ctxt)
->> >  {
->> >  	u64 reg;
->> >
->> >  	/* Clear pmscr in case of early return */
->> >  	ctxt->sys_regs[PMSCR_EL1] = 0;
->> >
->> > -	/* SPE present on this CPU? */
->> > -	if (!cpuid_feature_extract_unsigned_field(read_sysreg(id_aa64dfr0_el1),
->> > -						  ID_AA64DFR0_PMSVER_SHIFT))
->> > -		return;
->> > -
->> >  	/* Yes; is it owned by higher EL? */
->> >  	reg = read_sysreg_s(SYS_PMBIDR_EL1);
->> >  	if (reg & BIT(SYS_PMBIDR_EL1_P_SHIFT))
->> > @@ -142,7 +137,7 @@ __debug_save_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
->> >  }
->> >
->> >  static void __hyp_text
->> > -__debug_restore_spe_nvhe(struct kvm_cpu_context *ctxt, bool full_ctxt)
->> > +__debug_restore_spe_context(struct kvm_cpu_context *ctxt, bool full_ctxt)
->> >  {
->> >  	if (!ctxt->sys_regs[PMSCR_EL1])
->> >  		return;
->> > @@ -210,11 +205,14 @@ void __hyp_text __debug_restore_guest_context(struct kvm_vcpu *vcpu)
->> >  	struct kvm_guest_debug_arch *host_dbg;
->> >  	struct kvm_guest_debug_arch *guest_dbg;
->> >
->> > +	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
->> > +	guest_ctxt = &vcpu->arch.ctxt;
->> > +
->> > +	__debug_restore_spe_context(guest_ctxt, kvm_arm_spe_v1_ready(vcpu));
->> > +
->> >  	if (!(vcpu->arch.flags & KVM_ARM64_DEBUG_DIRTY))
->> >  		return;
->> >
->> > -	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
->> > -	guest_ctxt = &vcpu->arch.ctxt;
->> >  	host_dbg = &vcpu->arch.host_debug_state.regs;
->> >  	guest_dbg = kern_hyp_va(vcpu->arch.debug_ptr);
->> >
->> > @@ -232,8 +230,7 @@ void __hyp_text __debug_restore_host_context(struct kvm_vcpu *vcpu)
->> >  	host_ctxt = kern_hyp_va(vcpu->arch.host_cpu_context);
->> >  	guest_ctxt = &vcpu->arch.ctxt;
->> >
->> > -	if (!has_vhe())
->> > -		__debug_restore_spe_nvhe(host_ctxt, false);
->> > +	__debug_restore_spe_context(host_ctxt, kvm_arm_spe_v1_ready(vcpu));
->> 
->> So you now do an unconditional save/restore on the exit path for VHE 
->> as
->> well? Even if the host isn't using the SPE HW? That's not acceptable
->> as, in most cases, only the host /or/ the guest will use SPE. Here, 
->> you
->> put a measurable overhead on each exit.
->> 
->> If the host is not using SPE, then the restore/save should happen in
->> vcpu_load/vcpu_put. Only if the host is using SPE should you do
->> something in the run loop. Of course, this only applies to VHE and
->> non-VHE must switch eagerly.
->> 
-> 
-> On VHE where SPE is used in the guest only - we save/restore in 
-> vcpu_load/put.
 
-Yes.
+--DBIVS5p969aUjpLe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On VHE where SPE is used in the host only - we save/restore in the run 
-> loop.
+On Thu, Jan 09, 2020 at 09:31:27AM +0800, JC Kuo wrote:
+> Hi Rob,
+> For now we have two options.
+> 1. reusing the existing "maximum-speed" which is documented in usb/generi=
+c.txt
+> Pro: no need to add new property
+> Con: only "super-speed" and "super-speed-plus" are valid for Tegra XUSB P=
+ADCTL,
+> therefore extra code/document change is required.
+>=20
+> +	if (device_property_present(&port->dev, "maximum-speed")) {
+> +		maximum_speed =3D  usb_get_maximum_speed(&port->dev);
+> +		if (maximum_speed =3D=3D USB_SPEED_SUPER)
+> +			usb3->disable_gen2 =3D true;
+> +		else if (maximum_speed =3D=3D USB_SPEED_SUPER_PLUS)
+> +			usb3->disable_gen2 =3D false;
+> +		else
+> +			return -EINVAL;
+> +	}
+>=20
+> 2. introducing a new proprietary "nvidia,disable-gen2" property
+> Pro: its logic perfectly matches the need, and code change is minimum
+>=20
+> +        usb3->disable_gen2 =3D of_property_read_bool(np, "nvidia,disable=
+-gen2");
+>=20
+> Con: it's a new and proprietary property.
+>=20
+> Please let me know which one do you prefer or there is something else
+> works better.
 
-Why? If only the host is using SPE, why should we do *anything at all*?
+I think the first version is much clearer. maximum-speed =3D "super-speed"
+is very clear and explicit. nvidia,disable-gen2 is less so. While it may
+be true in this case what "disable-gen2" does, using the generic
+bindings has the advantage that it'll be more familiar to people already
+familiar with other USB device tree bindings.
 
-> On VHE where SPE is used in guest and host - we save/restore in the run 
-> loop.
-> 
-> As the guest can't trace EL2 it doesn't matter if we restore guest SPE 
-> early
-> in the vcpu_load/put functions. (I assume it doesn't matter that we 
-> restore
-> an EL0/EL1 profiling buffer address at this point and enable tracing 
-> given
-> that there is nothing to trace until entering the guest).
+Also, the nvidia,disable-gen2 property only perfectly matches the need
+because it reflects the name of the variable. If you rewrote the code to
+do something like this:
 
-As long as you do it after the EL1 sysregs have need restored so that 
-the SPE
-HW has a valid context, we should be fine. Don't restore it before that 
-point
-though (you have no idea whether the SPE HW can do speculative memory 
-accesses
-that would use the wrong page tables).
+	if (port->maximum_speed <=3D USB_SPEED_SUPER) {
+		/* disable gen2 */
+		...
+	}
 
-> However the reason for moving save/restore to vcpu_load/put when the 
-> host is
-> using SPE is to minimise the host EL2 black-out window.
+Then all of a sudden the "maximum-speed" property is a perfect match. In
+general, bindings should be natural to the domain of the bus or device
+that they describe rather than a reflection of how the driver programs
+the device's registers.
 
-You should move it to *the run loop* when both host and guest are using 
-SPE.
+On a side-note: we should also update the usb/generic.txt binding to
+describe the "super-speed-plus" value for the maximum-speed property.
 
-> On nVHE we always save/restore in the run loop. For the SPE 
-> guest-use-only
-> use-case we can't save/restore in vcpu_load/put - because the guest 
-> runs at
-> the same ELx level as the host - and thus doing so would result in the 
-> guest
-> tracing part of the host.
+Thierry
 
-Not only. It would actively corrupt memory in the host by using the 
-wrong
-page tables.
+> Thanks,
+> JC
+>=20
+>=20
+> On 1/6/20 3:10 PM, JC Kuo wrote:
+> > On 1/4/20 6:39 AM, Rob Herring wrote:
+> >> On Fri, Jan 03, 2020 at 04:18:12PM +0800, JC Kuo wrote:
+> >>> Extend the bindings to cover the set of features found in Tegra194.
+> >>> Note that, technically, there are four more supplies connected to the
+> >>> XUSB pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PL=
+L)
+> >>> , but the power sequencing requirements of Tegra194 require these to =
+be
+> >>> under the control of the PMIC.
+> >>>
+> >>> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it
+> >>> is possible for some platforms have long signal trace that could not
+> >>> provide sufficient electrical environment for Gen 2 speed. This patch
+> >>> adds a "maximum-speed" property to usb3 ports which can be used to
+> >>> specify the maximum supported speed for any particular USB 3.1 port.
+> >>> For a port that is not capable of SuperSpeedPlus, "maximum-speed"
+> >>> property should carry "super-speed".
+> >>>
+> >>> Signed-off-by: JC Kuo <jckuo@nvidia.com>
+> >>> ---
+> >>> Changes in v5:
+> >>> - re-use "maximum-speed" instead of adding "nvidia,disable-gen2"
+> >>> Changes in v4: none
+> >>> Changes in v3: none
+> >>> Changes in v2:
+> >>> - fix a typo
+> >>>
+> >>>  .../phy/nvidia,tegra124-xusb-padctl.txt        | 18 ++++++++++++++++=
+++
+> >>>  1 file changed, 18 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xu=
+sb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-=
+padctl.txt
+> >>> index 9fb682e47c29..7d0089006e67 100644
+> >>> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padc=
+tl.txt
+> >>> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padc=
+tl.txt
+> >>> @@ -37,6 +37,7 @@ Required properties:
+> >>>    - Tegra132: "nvidia,tegra132-xusb-padctl", "nvidia,tegra124-xusb-p=
+adctl"
+> >>>    - Tegra210: "nvidia,tegra210-xusb-padctl"
+> >>>    - Tegra186: "nvidia,tegra186-xusb-padctl"
+> >>> +  - Tegra194: "nvidia,tegra194-xusb-padctl"
+> >>>  - reg: Physical base address and length of the controller's register=
+s.
+> >>>  - resets: Must contain an entry for each entry in reset-names.
+> >>>  - reset-names: Must include the following entries:
+> >>> @@ -62,6 +63,10 @@ For Tegra186:
+> >>>  - vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
+> >>>  - vddio-hsic-supply: HSIC PHY power supply. Must supply 1.2 V.
+> >>> =20
+> >>> +For Tegra194:
+> >>> +- avdd-usb-supply: USB I/Os, VBUS, ID, REXT, D+/D- power supply. Mus=
+t supply
+> >>> +  3.3 V.
+> >>> +- vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
+> >>> =20
+> >>>  Pad nodes:
+> >>>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>> @@ -154,6 +159,11 @@ For Tegra210, the list of valid PHY nodes is giv=
+en below:
+> >>>  - sata: sata-0
+> >>>    - functions: "usb3-ss", "sata"
+> >>> =20
+> >>> +For Tegra194, the list of valid PHY nodes is given below:
+> >>> +- usb2: usb2-0, usb2-1, usb2-2, usb2-3
+> >>> +  - functions: "xusb"
+> >>> +- usb3: usb3-0, usb3-1, usb3-2, usb3-3
+> >>> +  - functions: "xusb"
+> >>> =20
+> >>>  Port nodes:
+> >>>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>> @@ -221,6 +231,11 @@ Optional properties:
+> >>>    is internal. In the absence of this property the port is considere=
+d to be
+> >>>    external.
+> >>> =20
+> >>> +- maximum-speed: Only for Tegra194. A string property that specifies=
+ maximum
+> >>> +  supported speed of a usb3 port. Valid values are:
+> >>> +  - "super-speed-plus": default, the usb3 port supports USB 3.1 Gen =
+2 speed.
+> >>
+> >> Not defined as a valid value in usb/generic.txt. '-gen2' instead of=20
+> >> '-plus' would be clearer IMO. However, is there any need to define the=
+=20
+> >> maximum speed possible? The purpose of this property is to limit the=
+=20
+> >> speed below the max.
+> >>
+> > usb_get_maximum_speed(), which parses "maximum-speed" property, indeed =
+handles
+> > string "super-speed-plus". Should "super-speed-plus" be documented in
+> > usb/generic.txt"?
+> >=20
+> > static const char *const speed_names[] =3D {
+> > 	[USB_SPEED_UNKNOWN] =3D "UNKNOWN",
+> > 	[USB_SPEED_LOW] =3D "low-speed",
+> > 	[USB_SPEED_FULL] =3D "full-speed",
+> > 	[USB_SPEED_HIGH] =3D "high-speed",
+> > 	[USB_SPEED_WIRELESS] =3D "wireless",
+> > 	[USB_SPEED_SUPER] =3D "super-speed",
+> > 	[USB_SPEED_SUPER_PLUS] =3D "super-speed-plus",
+> > };
+> >=20
+> > A proprietary "nvidia,disable-gen2" property was proposed in earlier re=
+vision to
+> > "limit the speed below the max". I like it because it fit our needs bet=
+ter and
+> > requires only one line of code change.
+> >=20
+> >    usb3->disable_gen2 =3D of_property_read_bool(np, "nvidia,disable-gen=
+2");
+> >=20
+> > Should I fallback to that approach?
+> >=20
+> > Thanks,
+> > JC
+> >=20
+> >>> +  - "super-speed": the usb3 port supports USB 3.1 Gen 1 speed only.
+> >>> +
+> >>>  For Tegra124 and Tegra132, the XUSB pad controller exposes the follo=
+wing
+> >>>  ports:
+> >>>  - 3x USB2: usb2-0, usb2-1, usb2-2
+> >>> @@ -233,6 +248,9 @@ For Tegra210, the XUSB pad controller exposes the=
+ following ports:
+> >>>  - 2x HSIC: hsic-0, hsic-1
+> >>>  - 4x super-speed USB: usb3-0, usb3-1, usb3-2, usb3-3
+> >>> =20
+> >>> +For Tegra194, the XUSB pad controller exposes the following ports:
+> >>> +- 4x USB2: usb2-0, usb2-1, usb2-2, usb2-3
+> >>> +- 4x super-speed USB: usb3-0, usb3-1, usb3-2, usb3-3
+> >>> =20
+> >>>  Examples:
+> >>>  =3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >>> --=20
+> >>> 2.17.1
+> >>>
 
-> Though if we determine that (for nVHE systems) the guest SPE is 
-> profiling only
-> EL0 - then we could also save/restore in vcpu_load/put where SPE is 
-> only being
-> used in the guest.
+--DBIVS5p969aUjpLe
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Same as above: wrong MM context, speculation, potential memory 
-corruption.
+-----BEGIN PGP SIGNATURE-----
 
-> Does that make sense, are my reasons correct?
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4YX3cACgkQ3SOs138+
+s6FCxg//arY/AcuyLR3BTqpXwVbyi6/GMzL/P1M6/9Lv1Em51mQ0la0M6rj+rCVo
+88caAAiTbOx7MWCjtoQYO3DJUSNEloTzVd0RLLQfia6o6Im+LbKvaUoES+ivcGAk
+/x/IydkBw4UXq4AOiuRemmp4Su1jDaE8mr/lBNXw2w/xQ2whAOEQSUY2I57N47ll
+rFbG1Zl/biyexIO9WWdbdG7SbytehczuOMVZNkObM995/KxkCV/59vsbyeo6citr
+0hNKR1kWC5MT5NGLO0xNmz/hMadz6tg2jH4HwEzKT9n24MUtNln99FoX0z0xe98q
+SpVwOCGlpEc93bu6ynuW4ego4YzJbdWBwL9QIG8hp2gb6LuUNrlrI3ZAvw8/tfbG
+anDexKUpl9tKUlf/yfQ0/yeDc2oogzasy7/J0aG1OYuyZ/ttMqUNoJY990QDU0iC
+eORngBWk7LjdBJUcfNo9QfQ9EpXQct1qose8xoV6gYiTttSDTEAa813R+c2BlsXf
+qe48w75g2uTNcQU4q9vtKNzI4b/AccJG7fGl5oG1ykNi1x4tPd6QWTHI7MVnIDCT
+k3UJbFEwfMMqs6qz3msUMp7yn56ExwCT10WnRPiXW7TK2HKk+vIu94ZoX7QhI8pW
+k8RuQ/u9oofeZqs+yueUlxnxX4BUEauewTefaVYod+i+pSalZDw=
+=fxbc
+-----END PGP SIGNATURE-----
 
-Not entirely. I think you should use the following table:
-
-VHE | Host-SPE | Guest-SPE | Switch location
-  0  |     0    |     0     | none
-  0  |     0    |     1     | run loop
-  0  |     1    |     0     | run loop
-  0  |     1    |     1     | run loop
-  1  |     0    |     0     | none
-  1  |     0    |     1     | load/put
-  1  |     1    |     0     | none
-  1  |     1    |     1     | run loop
-
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+--DBIVS5p969aUjpLe--
