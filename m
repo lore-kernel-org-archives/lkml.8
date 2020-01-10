@@ -2,89 +2,84 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4DDC32771
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 03:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C632C33CA2
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 03:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4319C20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 03:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C832072E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 03:19:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rF/TJsn0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731001AbgAJDOL (ORCPT
+        id S1731019AbgAJDTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 9 Jan 2020 22:14:11 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:60834 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730952AbgAJDOL (ORCPT
+        Thu, 9 Jan 2020 22:19:41 -0500
+Received: from mail-qv1-f51.google.com ([209.85.219.51]:40134 "EHLO
+        mail-qv1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730966AbgAJDTk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 9 Jan 2020 22:14:11 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R371e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07487;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TnHqBGN_1578626049;
-Received: from localhost(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TnHqBGN_1578626049)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 10 Jan 2020 11:14:09 +0800
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: remove unused guest_enter/exit
-Date:   Fri, 10 Jan 2020 11:13:56 +0800
-Message-Id: <1578626036-118506-1-git-send-email-alex.shi@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 9 Jan 2020 22:19:40 -0500
+Received: by mail-qv1-f51.google.com with SMTP id dp13so163614qvb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 09 Jan 2020 19:19:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WFfGhG9FXYFUnx3j3LlD5tdXXW7QcBTE9Rh6RB9Fn9A=;
+        b=rF/TJsn0WhwuZCLQvzJIm3JYucQcKiHDGzlIdnHPmN1I/5qqBn24qTpjI8IyaIXF3c
+         DxRhgs5oO99VZb4gTMZ+7uaJbe1RRlMPU+zH7LinK+i0UojQyodvEa848WxnFtnzm0e2
+         +nqWVSgcMentYXW0uQqXFQxJWwOsZ4UFEd8HNRfl/PTr95PHy3ZW9iM8/a3rWnJFz3eQ
+         YLXzW5fwz1sY2Vupbe/AFoAI3mNtX8Mm6oapbGSrue+msdHN5XcAqU4TotSgHkBk4lmc
+         5PGfz3DgX/+7ruQJ1YWalingDRWuNjUxWfEzFTt/HXJQoMvmGiedVnELa2QBXj8eb3Iw
+         l5xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WFfGhG9FXYFUnx3j3LlD5tdXXW7QcBTE9Rh6RB9Fn9A=;
+        b=HMAs57OP43efJm8Z+m3S+MENy51TeKLO0uPSHk4Sn/WxZ6ozBx74rbyRRYmj+9XcFS
+         fLLCACT1r9rIsc3W2yDqiG25zKcsR9a7OZV7jFoOrWdiVz+ZG+eXYrAg6F8qQImq73Om
+         9AWwMVrI8zfAE7/BIKYUwznXY+EkwOo4MfhyBP3taO3keqfQow6dCmG/px4OJwsWGTcl
+         fYp4/zzN+lbiS/RkJVZzM537pFoqhOj4IwVhvteECL0iSUyCwsKGSUPjOaGLCt1CWZQz
+         2Ohlod7fTVZhO4S02grsvBsOi00alPM01oGJShiDHqQHKsZNMthtkFOVgfuiO8Hv9nNg
+         ++0w==
+X-Gm-Message-State: APjAAAUL9O19QByonpQwkUIgvattFYKVAIDjqiNahtOK03zOux4ppjT3
+        ExEm3s6f/fhs7eVq4vR+Xpyay9Rb8XNIc++DdMLx
+X-Google-Smtp-Source: APXvYqwpzrYY11OpDZbAJer1PQrW1cQQ8ndOMkCZMNtUev4PhkUEDwofAXy3YrRjF11wFlDQx6BS4LDmGwg/cAnn4JY=
+X-Received: by 2002:a05:6214:11ab:: with SMTP id u11mr690224qvv.193.1578626379744;
+ Thu, 09 Jan 2020 19:19:39 -0800 (PST)
+MIME-Version: 1.0
+References: <20200109215444.95995-1-dima@arista.com> <20200109215444.95995-3-dima@arista.com>
+In-Reply-To: <20200109215444.95995-3-dima@arista.com>
+From:   Iurii Zaikin <yzaikin@google.com>
+Date:   Thu, 9 Jan 2020 19:19:03 -0800
+Message-ID: <CAAXuY3rENaHb9yAgdaKRi4A8qQ5QNX8z6WBJRsNM0EVuReL8Qw@mail.gmail.com>
+Subject: Re: [PATCH-next 2/3] sysctl/sysrq: Remove __sysrq_enabled copy
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Linus FS Devel Mailing List <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After commit 6edaa5307f3f ("KVM: remove kvm_guest_enter/exit wrappers")
-no one uses guest_enter/exit anymore.
+> Furthermore, the private copy isn't correct already in case
+> sysrq_always_enabled is true. So, remove __sysrq_enabled and use a
+> getter-helper for sysrq enabled status.
+Since the old way was known to be unreliable, the new way looks like a
+great candidate for a KUnit test.
 
-So better to remove them to simplify code and reduced a bit of object
-size.
-
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@kernel.org> 
-Cc: Frederic Weisbecker <frederic@kernel.org> 
-Cc: linux-kernel@vger.kernel.org 
----
- include/linux/context_tracking.h | 19 -------------------
- 1 file changed, 19 deletions(-)
-
-diff --git a/include/linux/context_tracking.h b/include/linux/context_tracking.h
-index 64ec82851aa3..238ada39ac2e 100644
---- a/include/linux/context_tracking.h
-+++ b/include/linux/context_tracking.h
-@@ -153,23 +153,4 @@ static inline void guest_exit_irqoff(void)
- 	current->flags &= ~PF_VCPU;
- }
- #endif /* CONFIG_VIRT_CPU_ACCOUNTING_GEN */
--
--static inline void guest_enter(void)
--{
--	unsigned long flags;
--
--	local_irq_save(flags);
--	guest_enter_irqoff();
--	local_irq_restore(flags);
--}
--
--static inline void guest_exit(void)
--{
--	unsigned long flags;
--
--	local_irq_save(flags);
--	guest_exit_irqoff();
--	local_irq_restore(flags);
--}
--
- #endif
--- 
-1.8.3.1
-
+Off topic: I wonder if Magic Sysrq could be extended with reasonable
+effort to be triggered by a sequence of keystrokes which would be less
+likely to be generated by a noisy serial.
