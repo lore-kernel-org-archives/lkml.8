@@ -2,87 +2,150 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E8DCC33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4F9C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB762072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 306BF20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:19:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="S0+Ick5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbgAJORm (ORCPT
+        id S1727884AbgAJOTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:17:42 -0500
-Received: from mga11.intel.com ([192.55.52.93]:22303 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727402AbgAJORl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:17:41 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 06:17:41 -0800
-X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
-   d="scan'208";a="212276227"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Jan 2020 06:17:38 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Wambui Karuga <wambui.karugax@gmail.com>,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch
-Cc:     seanpaul@chromium.org, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] drm/i915: conversion to new drm logging macros.
-In-Reply-To: <cover.1578409433.git.wambui.karugax@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <cover.1578409433.git.wambui.karugax@gmail.com>
-Date:   Fri, 10 Jan 2020 16:17:35 +0200
-Message-ID: <8736cno0ow.fsf@intel.com>
+        Fri, 10 Jan 2020 09:19:44 -0500
+Received: from mail-dm6nam10on2046.outbound.protection.outlook.com ([40.107.93.46]:6211
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727539AbgAJOTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 09:19:43 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S+dnL+eHD6PloUj+niX9Trih9pHOQbLD7vvXzS3Nmp/W7GLsm/AMGLRU550mO2sz7RQFAkzkm71nIEmUMvnee7npyqwoe5p3qER4Yfj9FGKuaLFzT4nRqzDOYnJMIegSTPZos9RNOrugXIUnzKWGOYZ9EQ7AYRvEJ/YKWS/I+GFvlRA6YDUoieqkK3caYU3ReF4ZFMfCQeGiZr315OmiI2JI3SHk1QVmAzvlb0cW7I7vfkCxLbdkEZLBbLcVyJzNq72PPkDxsGOe8VrWboAgRSXnZt2xOttKKBHDNx7XsPaubz0JqVTexsDZbSo31t/zw/LPHEXoCW65cYECc52A6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RdjE+hFPeL5EYERiPTUVQUx7B5eGkBAGpy3gawOvgg0=;
+ b=H7NAGVY/S3MRYywVJH03NcAK5UG7Ux6ZSl4+dSBX6rouZyBFthDDtGfBID/gguA0ZC4+She41m2+17AkvMqraBc2i/dFQiQ/Iiqi2KEP6XKr8itM3jr4qkfCir9DRsbe4HvGovEmmxxewG+5LGu7oLLOzu6GNQTs43P973oe/yBAyTllIe+7WLIgraRpbmL3t3PBMFIqAbK9fudX+/og6+XgmPQTvvHWq3hJip7Is62sF6EdEdvZnabYQHTbOaB0U+tprhi8gbRE4S2M0LCzAXrpqwUhONJBPzUe4puJOatkuUTykbSINp2Ycai05a34xiCEQ49Hr34nXK75cTlqbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
+ dkim=pass header.d=xilinx.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RdjE+hFPeL5EYERiPTUVQUx7B5eGkBAGpy3gawOvgg0=;
+ b=S0+Ick5zLU97/5rKDjvVDmH7yxCLCjv+pgGHWIusG+iNvsdmVtFBfHet94X7V9lrSLeqN5D757kpNI3hJDd83nsGjpg3h8Nq/oudLH9Hyqz/Ito/JTxWfvuzt8u9eQXZoOjFEqMadgJpnM/z+r7I77c64OsDOniQTwLImOiqwRY=
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
+ CH2PR02MB6677.namprd02.prod.outlook.com (20.180.16.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.10; Fri, 10 Jan 2020 14:19:34 +0000
+Received: from CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
+ ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2623.013; Fri, 10 Jan 2020
+ 14:19:34 +0000
+From:   Radhey Shyam Pandey <radheys@xilinx.com>
+To:     Andre Przywara <andre.przywara@arm.com>,
+        "David S . Miller" <davem@davemloft.net>
+CC:     Michal Simek <michals@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 01/14] net: xilinx: temac: Relax Kconfig dependencies
+Thread-Topic: [PATCH 01/14] net: xilinx: temac: Relax Kconfig dependencies
+Thread-Index: AQHVx6y1SoyxZ4Q7ME6tl1/NIG0R96fj8kow
+Date:   Fri, 10 Jan 2020 14:19:34 +0000
+Message-ID: <CH2PR02MB70008C3BB2B2F97F92573F11C7380@CH2PR02MB7000.namprd02.prod.outlook.com>
+References: <20200110115415.75683-1-andre.przywara@arm.com>
+ <20200110115415.75683-2-andre.przywara@arm.com>
+In-Reply-To: <20200110115415.75683-2-andre.przywara@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=radheys@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 803b16b7-a392-4441-03dd-08d795d81e28
+x-ms-traffictypediagnostic: CH2PR02MB6677:|CH2PR02MB6677:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR02MB6677BD7AB3B7234153CE504DC7380@CH2PR02MB6677.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 02788FF38E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(346002)(39850400004)(396003)(13464003)(199004)(189003)(53546011)(6506007)(26005)(52536014)(186003)(7696005)(316002)(478600001)(76116006)(66556008)(64756008)(8936002)(66946007)(66446008)(66476007)(2906002)(4326008)(81166006)(81156014)(8676002)(5660300002)(54906003)(86362001)(71200400001)(33656002)(110136005)(55016002)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6677;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 2Pq2iq8XDQcBQuPe8VQYwbS+cnZDGLhZz4AKrQpvIVERqqbHYMXFAhBOQADKwFqbLsWrBCNgW4zvC804F3ieNzSyBJi2Tk3gBmV2odWsgq+t2qYhltdB4wMjxeSA6ZSXbpkq7nut3p1X8tklV7cIKJGPiig3TR7SQBMF1nBQNmeEb1iUw9P1deiLwYR0Y4KqT9tGenZVwDM3nQfvFUI4Zh7mbXKtgVsZ/mWHeTRfTbkiTA4+ioUOvBufIDkFnM/qbWJuSb5tyu6C1AILYTFGDlha6QgLzUKkQ2ARavMEOEah5ZJmJ7U4Vm5Mlu9eAIZBkgwg930h2aH/HtXHRnFeDJyqr37ffe5kpLq1z+OXvca7WD0RkgebclZdoGHxXixzkSt5Ljj6dq2LZSJ8FywR2LYTNKSDYAUspP4GQ/sPWDr1m0HTQlaFSF1F1a1NzB/uNd9XH+ZXnWiilqgpVzx/uUGHrJOWF5BlpuansDpzQNk19I5COWfYcW4fqDcgu3Ax
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 803b16b7-a392-4441-03dd-08d795d81e28
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2020 14:19:34.5995
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2E0IonE601k6AXjiST5bHw0WYR3eUrmD0yOGyyx3ReZtIHSZ4sR+ZfFR24tWDrV6mdYZE9ovUo/SAtTVDocxJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6677
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 07 Jan 2020, Wambui Karuga <wambui.karugax@gmail.com> wrote:
-> This series begins the conversion to using the new struct drm_device
-> based logging macros in drm/i915.
->
-> Wambui Karuga (5):
->   drm/i915: convert to using the drm_dbg_kms() macro.
->   drm/i915: use new struct drm_device logging macros.
->   drm/i915: use new struct drm_device based logging macros.
->   drm/i915: convert to using new struct drm_device logging macros
->   drm/i915: use new struct drm_device based macros.
+> -----Original Message-----
+> From: Andre Przywara <andre.przywara@arm.com>
+> Sent: Friday, January 10, 2020 5:24 PM
+> To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
+> <radheys@xilinx.com>
+> Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
+> <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH 01/14] net: xilinx: temac: Relax Kconfig dependencies
+>=20
+> Similar to axienet, the temac driver is now architecture agnostic, and
+> can be at least compiled for several architectures.
+> Especially the fact that this is a soft IP for implementing in FPGAs
+> makes the current restriction rather pointless, as it could literally
+> appear on any architecture, as long as an FPGA is connected to the bus.
+>=20
+> The driver hasn't been actually tried on any hardware, it is just a
+> drive-by patch when doing the same for axienet (a similar patch for
+> axienet is already merged).
+>=20
+> This (temac and axienet) have been compile-tested for:
+> alpha hppa64 microblaze mips64 powerpc powerpc64 riscv64 s390 sparc64
+> (using kernel.org cross compilers).
+>=20
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 
-Thanks for the patches, pushed to drm-intel-next-queued.
+Thanks!
+> ---
+>  drivers/net/ethernet/xilinx/Kconfig | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/drivers/net/ethernet/xilinx/Kconfig
+> b/drivers/net/ethernet/xilinx/Kconfig
+> index 6304ebd8b5c6..0810af8193cb 100644
+> --- a/drivers/net/ethernet/xilinx/Kconfig
+> +++ b/drivers/net/ethernet/xilinx/Kconfig
+> @@ -32,7 +32,6 @@ config XILINX_AXI_EMAC
+>=20
+>  config XILINX_LL_TEMAC
+>  	tristate "Xilinx LL TEMAC (LocalLink Tri-mode Ethernet MAC) driver"
+> -	depends on PPC || MICROBLAZE || X86 || COMPILE_TEST
+>  	select PHYLIB
+>  	---help---
+>  	  This driver supports the Xilinx 10/100/1000 LocalLink TEMAC
+> --
+> 2.17.1
 
-As it's impossible to distinguish the commits from each other by the
-subject line alone, I've amended the prefix while pushing as follows:
-
-drm/i915/pch: convert to using the drm_dbg_kms() macro.
-drm/i915/pm: use new struct drm_device logging macros.
-drm/i915/lmem: use new struct drm_device based logging macros.
-drm/i915/sideband: convert to using new struct drm_device logging macros
-drm/i915/uncore: use new struct drm_device based macros.
-
-Please pay attention to this in future work. It's not always obvious
-what the prefix should be, but 'git log -- path/to/file.c' will go a
-long way.
-
-BR,
-Jani.
-
-
->
->  drivers/gpu/drm/i915/intel_pch.c         |  46 +--
->  drivers/gpu/drm/i915/intel_pm.c          | 351 +++++++++++++----------
->  drivers/gpu/drm/i915/intel_region_lmem.c |  10 +-
->  drivers/gpu/drm/i915/intel_sideband.c    |  29 +-
->  drivers/gpu/drm/i915/intel_uncore.c      |  25 +-
->  5 files changed, 254 insertions(+), 207 deletions(-)
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
