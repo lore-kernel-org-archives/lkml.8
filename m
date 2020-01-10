@@ -2,157 +2,136 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868F7C33CA4
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C3AC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6BF20721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:39:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="faNHqQwG"
+	by mail.kernel.org (Postfix) with ESMTP id D0E5220721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 23:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgAJXjt (ORCPT
+        id S1727618AbgAJXlE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 18:39:49 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40065 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbgAJXjt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 18:39:49 -0500
-Received: by mail-pf1-f194.google.com with SMTP id q8so1869470pfh.7;
-        Fri, 10 Jan 2020 15:39:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=44y917WLdq58ocmQ2Lws4t8TAPMUMEf06qKa/NEI0S4=;
-        b=faNHqQwGwynn/dgmKt3WYHFpm6uiw2H5QNzf8Mf78NiN4X6Erwrt44chrkNW3PTr/M
-         69ZgnGTonbH/87YLyazDRFzosRf7QL84cJ+RhP7ZQBXOmEJRqmtV0M3yOjyiNrrusd9d
-         J1YF8xOrAr4dqlG02RNErpMVBB+xLlRwWhtOtvICMFuE4+gtrUK07iiUEE3RsuHhke57
-         SbLRnFzYUpTA7BJ+U7StG3VRzJb9Z6i/6NpQTwlnXHIprlv6EENxuHDT9Dw+sOYr6i+4
-         uH0ej6nMkyWQ1oCkoWSXHktPENXAGQ1BZyMhoUPXLfImH2c+4PJAS4i+a5rplD3U84D3
-         mtWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=44y917WLdq58ocmQ2Lws4t8TAPMUMEf06qKa/NEI0S4=;
-        b=PqR2ExDOMTnWqT7E0y0IYIOeJp5gHUAPnQAkBP0MG2dHUqVhnPCmIa+fY1jwQAsQWA
-         mGN2V3mbpt1Aa/krbGjRCzKTM29QlQhu/9cjy3BFOPnfYY+Q+ujtEGm/UoP+i6n4PDTX
-         g3sJPamky9FlNP72woxxQFdIYbvUe34cbFiQxgv6pimF1CdPuAsz60HUurpaxN/bk7nQ
-         /2P6qhEdHfdYG6F+cuS0/cmReZMnQdw3pwI+WISvoNTJIQaPzrPuQ2ZLQmw8rzmZyMkw
-         H43GfYBVWzSg/Skox2HXPtJoFepP+iHTuTtGXwE1xgOgsxvI8dA1JPfjHFJu6vqI/rMP
-         aV5Q==
-X-Gm-Message-State: APjAAAUz7Bkx2m4gvLz3WG9nc6k90TkQMNcWy0aIL19wqxYqBHkCC/y6
-        TGQsl3VOVhguoHBdCvz1S4s=
-X-Google-Smtp-Source: APXvYqzUqPssZI88/RttkJE4mzGnBEeajQSjv67oTTh/hplvPmWaIJqnu7TNCsoM6c7MDq0JSy69AQ==
-X-Received: by 2002:a62:cdcb:: with SMTP id o194mr6850034pfg.117.1578699587626;
-        Fri, 10 Jan 2020 15:39:47 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id v13sm4349910pgc.54.2020.01.10.15.39.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 15:39:46 -0800 (PST)
-Date:   Fri, 10 Jan 2020 15:39:44 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        info@metux.net, tglx@linutronix.de, m.felsch@pengutronix.de
-Subject: Re: [PATCH] Input: ads7846: use new `delay` structure for SPI
- transfer delays
-Message-ID: <20200110233944.GW8314@dtor-ws>
-References: <20191210141103.15910-1-alexandru.ardelean@analog.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210141103.15910-1-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 10 Jan 2020 18:41:04 -0500
+Received: from d.mail.sonic.net ([64.142.111.50]:39162 "EHLO d.mail.sonic.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727544AbgAJXlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 18:41:04 -0500
+X-Greylist: delayed 637 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Jan 2020 18:41:03 EST
+Received: from [10.0.2.187] (96-74-112-17-static.hfc.comcastbusiness.net [96.74.112.17] (may be forged))
+        (authenticated bits=0)
+        by d.mail.sonic.net (8.15.1/8.15.1) with ESMTPSA id 00ANUHkl000977
+        (version=TLSv1.2 cipher=DHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 10 Jan 2020 15:30:17 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: [PATCH] hcidump: add support for time64 based libc
+From:   Guy Harris <guy@alum.mit.edu>
+In-Reply-To: <20200110204903.3495832-1-arnd@arndb.de>
+Date:   Fri, 10 Jan 2020 15:30:16 -0800
+Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Rich Felker <dalias@libc.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <25105A85-A3EE-4E6A-AAF5-D54FCF9E6ACB@alum.mit.edu>
+References: <20200110204903.3495832-1-arnd@arndb.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
+X-Sonic-CAuth: UmFuZG9tSVYIRA+fNi8b3r1FssOT4xb63Qyki99RI6nrAU9tYdzqDLDLe2S+qpusOShKFEAJrb7Op0dy2QU0Tz6fs25ZO/1A
+X-Sonic-ID: C;/GOrKAE06hGTPNIUGYmBQg== M;OHLjKAE06hGTPNIUGYmBQg==
+X-Sonic-Spam-Details: 0.0/5.0 by cerberusd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 04:11:03PM +0200, Alexandru Ardelean wrote:
-> In a recent change to the SPI subsystem [1], a new `delay` struct was added
-> to replace the `delay_usecs`. This change replaces the current `delay_usecs`
-> with `delay` for this driver.
-> 
-> The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-> that both `delay_usecs` & `delay` are used (in this order to preserve
-> backwards compatibility).
-> 
-> [1] commit bebcfd272df6485 ("spi: introduce `delay` field for
-> `spi_transfer` + spi_transfer_delay_exec()")
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+On Jan 10, 2020, at 12:49 PM, Arnd Bergmann <arnd@arndb.de> wrote:
 
-Applied, thank you.
-
-> ---
->  drivers/input/touchscreen/ads7846.c | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
+> diff --git a/monitor/hcidump.c b/monitor/hcidump.c
+> index 8b6f846d3..6d2330287 100644
+> --- a/monitor/hcidump.c
+> +++ b/monitor/hcidump.c
+> @@ -107,6 +107,36 @@ static int open_hci_dev(uint16_t index)
+> 	return fd;
+> }
 > 
-> diff --git a/drivers/input/touchscreen/ads7846.c b/drivers/input/touchscreen/ads7846.c
-> index 51ddb204ca1b..8fd7fc39c4fd 100644
-> --- a/drivers/input/touchscreen/ads7846.c
-> +++ b/drivers/input/touchscreen/ads7846.c
-> @@ -333,7 +333,8 @@ static int ads7846_read12_ser(struct device *dev, unsigned command)
->  		req->xfer[1].len = 2;
->  
->  		/* for 1uF, settle for 800 usec; no cap, 100 usec.  */
-> -		req->xfer[1].delay_usecs = ts->vref_delay_usecs;
-> +		req->xfer[1].delay.value = ts->vref_delay_usecs;
-> +		req->xfer[1].delay.unit = SPI_DELAY_UNIT_USECS;
->  		spi_message_add_tail(&req->xfer[1], &req->msg);
->  
->  		/* Enable reference voltage */
-> @@ -1018,7 +1019,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
->  	 * have had enough time to stabilize.
->  	 */
->  	if (pdata->settle_delay_usecs) {
-> -		x->delay_usecs = pdata->settle_delay_usecs;
-> +		x->delay.value = pdata->settle_delay_usecs;
-> +		x->delay.unit = SPI_DELAY_UNIT_USECS;
->  
->  		x++;
->  		x->tx_buf = &packet->read_y;
-> @@ -1061,7 +1063,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
->  
->  	/* ... maybe discard first sample ... */
->  	if (pdata->settle_delay_usecs) {
-> -		x->delay_usecs = pdata->settle_delay_usecs;
-> +		x->delay.value = pdata->settle_delay_usecs;
-> +		x->delay.unit = SPI_DELAY_UNIT_USECS;
->  
->  		x++;
->  		x->tx_buf = &packet->read_x;
-> @@ -1094,7 +1097,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
->  
->  		/* ... maybe discard first sample ... */
->  		if (pdata->settle_delay_usecs) {
-> -			x->delay_usecs = pdata->settle_delay_usecs;
-> +			x->delay.value = pdata->settle_delay_usecs;
-> +			x->delay.unit = SPI_DELAY_UNIT_USECS;
->  
->  			x++;
->  			x->tx_buf = &packet->read_z1;
-> @@ -1125,7 +1129,8 @@ static void ads7846_setup_spi_msg(struct ads7846 *ts,
->  
->  		/* ... maybe discard first sample ... */
->  		if (pdata->settle_delay_usecs) {
-> -			x->delay_usecs = pdata->settle_delay_usecs;
-> +			x->delay.value = pdata->settle_delay_usecs;
-> +			x->delay.unit = SPI_DELAY_UNIT_USECS;
->  
->  			x++;
->  			x->tx_buf = &packet->read_z2;
-> -- 
-> 2.20.1
-> 
+> +static struct timeval hci_tstamp_read(void *data)
+> +{
+> +	struct timeval tv;
+> +
+> +	/*
+> +	 * On 64-bit architectures, the data matches the timeval
+> +	 * format. Note that on sparc64 this is different from
+> +	 * all others.
+> +	 */
+> +	if (sizeof(long) == 8) {
+> +		memcpy(&tv, data, sizeof(tv));
+> +	}
+> +
+> +	/*
+> +	 * On 32-bit architectures, the timeval definition may
+> +	 * use 32-bit or 64-bit members depending on the C
+> +	 * library and architecture.
+> +	 * The cmsg data however always contains a pair of
+> +	 * 32-bit values. Interpret as unsigned to make it work
+> +	 * past y2038.
+> +	 */
+> +	if (sizeof(long) == 4) {
+> +		unsigned int *stamp = data;
+> +		tv.tv_sec = stamp[0];
+> +		tv.tv_usec = stamp[1];
+> +	}
+> +
+> +	return tv;
+> +}
 
--- 
-Dmitry
+Should it be something more like
+
+	if (sizeof(long) == 8) {
+		/*
+		 * On 64-bit architectures, the data matches the timeval
+		 * format. Note that on sparc64 this is different from
+		 * all others.
+		 */
+		memcpy(&tv, data, sizeof(tv));
+	} else if (sizeof(long) == 4) {
+		/*
+		 * On 32-bit architectures, the timeval definition may
+		 * use 32-bit or 64-bit members depending on the C
+		 * library and architecture.
+		 * The cmsg data however always contains a pair of
+		 * 32-bit values. Interpret as unsigned to make it work
+		 * past y2038.
+		 */
+		unsigned int *stamp = data;
+		tv.tv_sec = stamp[0];
+		tv.tv_usec = stamp[1];
+	} else {
+		abort();	/* or some other "sorry, we're not ready for 128-bit or weird architectures yet" failure */
+	}
+
+	return tv;
+
+> static void device_callback(int fd, uint32_t events, void *user_data)
+> {
+> 	struct hcidump_data *data = user_data;
+> @@ -150,7 +180,7 @@ static void device_callback(int fd, uint32_t events, void *user_data)
+> 				memcpy(&dir, CMSG_DATA(cmsg), sizeof(dir));
+> 				break;
+> 			case HCI_CMSG_TSTAMP:
+> -				memcpy(&ctv, CMSG_DATA(cmsg), sizeof(ctv));
+> +				ctv = hci_tstamp_read(CMSG_DATA(cmsg));
+> 				tv = &ctv;
+> 				break;
+> 			}
+
+And libpcap's Linux BT code should do the same thing, changing its memcpy() call?
+
+If you want, you can submit a pull request, or I can make the change.
+
