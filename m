@@ -2,77 +2,67 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422B5C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:12:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0D9CC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CF9A21569
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFA720721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgAJOM6 (ORCPT
+        id S1728183AbgAJONJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:12:58 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:58092 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727181AbgAJOM5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:12:57 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1ipv1w-0005OX-Jp; Fri, 10 Jan 2020 15:12:52 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 2EF6C105BE5; Fri, 10 Jan 2020 15:12:52 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, kvm <kvm@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: Re: [PATCH v2] sched/nohz: Optimize get_nohz_timer_target()
-In-Reply-To: <CANRm+Cw1eTNgB1r79J7U__ynio7pMSR4Xa35XuQuj-JKAQGxmg@mail.gmail.com>
-Date:   Fri, 10 Jan 2020 15:12:52 +0100
-Message-ID: <87a76v8knv.fsf@nanos.tec.linutronix.de>
+        Fri, 10 Jan 2020 09:13:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:45160 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727951AbgAJONJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 09:13:09 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E075B328;
+        Fri, 10 Jan 2020 06:13:08 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B292E3F534;
+        Fri, 10 Jan 2020 06:13:07 -0800 (PST)
+Date:   Fri, 10 Jan 2020 14:13:03 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/14] net: axienet: Autodetect 64-bit DMA capability
+Message-ID: <20200110141303.2e5863ab@donnerap.cambridge.arm.com>
+In-Reply-To: <20200110140852.GF19739@lunn.ch>
+References: <20200110115415.75683-1-andre.przywara@arm.com>
+        <20200110115415.75683-13-andre.przywara@arm.com>
+        <20200110140852.GF19739@lunn.ch>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng,
+On Fri, 10 Jan 2020 15:08:52 +0100
+Andrew Lunn <andrew@lunn.ch> wrote:
 
-Wanpeng Li <kernellwp@gmail.com> writes:
+Hi Andrew,
 
-> Hi Thomas,
-> On Wed, 23 Oct 2019 at 16:29, Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->> On Wed, 23 Oct 2019, Wanpeng Li wrote:
->> > I didn't see your refactor to get_nohz_timer_target() which you
->> > mentioned in IRC after four months, I can observe cyclictest drop from
->> > 4~5us to 8us in kvm guest(we offload the lapic timer emulation to
->> > housekeeping cpu to avoid timer fire external interrupt on the pCPU
->> > which vCPU resident incur a vCPU vmexit) w/o this patch in the case of
->> > there is no busy housekeeping cpu. The score can be recovered after I
->> > give stress to create a busy housekeeping cpu.
->> >
->> > Could you consider applying this patch for temporary since I'm not
->> > sure when the refactor can be ready.
->>
->> Yeah. It's delayed (again).... Will pick that up.
->
-> I didn't find WIP tag for this work after ~half year since v4 was
-> posted https://lkml.org/lkml/2019/6/28/231 Could you apply this patch
-> for temporary because the completion time of refactor is not
-> deterministic.
+thanks for having a look!
 
-Could you please repost it?
+> > To autodetect this configuration, at probe time we write all 1's to such
+> > an MSB register, and see if any bits stick.  
+> 
+> So there is no register you can read containing the IP version?
 
-Thanks,
+There is, and I actually read this before doing this check. But the 64-bit DMA capability is optional even in this revision. It depends on what you give it as the address width. If you say 32, the IP config tool disables the 64-bit capability completely, so it stays compatible with older revisions.
+Anything beyond 32 will enable the MSB register and will also require you to write to them.
 
-        tglx
+Cheers,
+Andre
