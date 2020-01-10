@@ -2,106 +2,106 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9D4C33CA3
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AA4C33C99
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B8320842
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:52:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7071F20721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 05:54:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="drA2EQW2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oOJhofvz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbgAJFwg (ORCPT
+        id S1726877AbgAJFyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 00:52:36 -0500
-Received: from ozlabs.org ([203.11.71.1]:60663 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726096AbgAJFwg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 00:52:36 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47vBw218Spz9sRQ;
-        Fri, 10 Jan 2020 16:52:34 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578635554;
-        bh=ZgObojzw/bkaVacqay+uyCForK3P1Xluwr5FWR62KkA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=drA2EQW2G76LkTT8bxDqDXYCrdXJsXGpSuB1MOynNb7TBiaZowcxUCsKRyXtYHnXm
-         nKz2AmrB8voSxk+wmlApOUrnKNgSWEEn+vgaWGQ+s7g1QIQ/TobQRDrsuMShWt/s4t
-         UbCy4/5Z3AQCoZFfl0GD7GEHS180G5CvbSp5Kxh4RJEFWtdGpfUS4EGgd7VLAKDg+v
-         yEEKo5cy2piaIP1OrdQFe2ERmh3Ql9F5WzfHzy3qJNOtZd6kv0kfu4RpW4aF5xKBQn
-         XKGN1vZDJoWMsAgpmc29hb9pPwvoh3KDXKW0NkqVVxAUaSh6umPopWV5/2dNoGqYNF
-         Pv07ojKFK7bUQ==
-Date:   Fri, 10 Jan 2020 16:52:33 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christoph Hellwig <hch@lst.de>, Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the generic-ioremap tree with the
- drivers-x86 tree
-Message-ID: <20200110165233.0ee71ee4@canb.auug.org.au>
+        Fri, 10 Jan 2020 00:54:22 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:37840 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726384AbgAJFyW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 00:54:22 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00A5rUEL050818;
+        Fri, 10 Jan 2020 05:54:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
+ bh=5JBntCtAE8aub1WbJjIcxc7ITMNSfHCdwR0Pl1xG8hY=;
+ b=oOJhofvzKJzyBo8FnF3+GqppIDh3rSoXHI/Ik9U8XqQftXb7IJT1m61rdusR3EkRceIj
+ QK8sFNbOMhrTrL8WfZfo/29zZZUTtUQvNnzBhk83laOHEeIOYMQeuSYeYcoKuVxmaCRp
+ gc8xd7XGyJv4P6Hhv93qBNlEE+dOvFs3iNB80n15+zfJRsrP+LysY/qlvdVwL5kRzIE+
+ rboPB5hI4GhXg4COPS+/xbxHoMOKCYX9eW1Do9Pom5JnlSBeRBYdHlBMr/w7r6pSiklM
+ ePwPE5GQAFYb8WYTlcQDKZQUhI4XGdy1N2whD3GLVvmSPX+ZiCOmhVrgmdCuX2m3iG1+ cA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2xajnqfsgw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jan 2020 05:54:15 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00A5sAlI175765;
+        Fri, 10 Jan 2020 05:54:15 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2xdrxf6kg2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jan 2020 05:54:11 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00A5r3Zh009111;
+        Fri, 10 Jan 2020 05:53:03 GMT
+Received: from kili.mountain (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 09 Jan 2020 21:53:02 -0800
+Date:   Fri, 10 Jan 2020 08:52:52 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Markus Reichl <m.reichl@fivetechno.de>
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] regulator: mp8859: tidy up white space in probe
+Message-ID: <20200110055252.rvelu4ysvoxsbmlg@kili.mountain>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.MqWFzW0QPGZWg/nTuWGK=5";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001100050
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9495 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001100050
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/.MqWFzW0QPGZWg/nTuWGK=5
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+These two lines are indented an extra tab.
 
-Hi all,
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/regulator/mp8859.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Today's linux-next merge of the generic-ioremap tree got a conflict in:
+diff --git a/drivers/regulator/mp8859.c b/drivers/regulator/mp8859.c
+index e804a5267301..1d26b506ee5b 100644
+--- a/drivers/regulator/mp8859.c
++++ b/drivers/regulator/mp8859.c
+@@ -123,8 +123,8 @@ static int mp8859_i2c_probe(struct i2c_client *i2c)
+ 		ret = PTR_ERR(rdev);
+ 		dev_err(&i2c->dev, "failed to register %s: %d\n",
+ 			mp8859_regulators[0].name, ret);
+-			return ret;
+-		}
++		return ret;
++	}
+ 	return 0;
+ }
+ 
+-- 
+2.11.0
 
-  drivers/platform/x86/intel_telemetry_pltdrv.c
-
-between commit:
-
-  ebc28a8e59ca ("platform/x86: intel_telemetry_pltdrv: use devm_platform_io=
-remap_resource()")
-
-from the drivers-x86 tree and commit:
-
-  4bdc0d676a64 ("remove ioremap_nocache and devm_ioremap_nocache")
-
-from the generic-ioremap tree.
-
-I fixed it up (the former removed th referneved to ioremap_nocache so
-I just used that) and can carry the fix as necessary. This is now fixed
-as far as linux-next is concerned, but any non trivial conflicts should
-be mentioned to your upstream maintainer when your tree is submitted for
-merging.  You may also want to consider cooperating with the maintainer
-of the conflicting tree to minimise any particularly complex conflicts.
-
-
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.MqWFzW0QPGZWg/nTuWGK=5
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4YESEACgkQAVBC80lX
-0Gw84gf/f+cJv+9SUPipLb6vA5WGY4HWIqZs4pxTyZJ/5yOs3TLMTkNX0GK7FIHS
-NXq3Rd+4/RSbQ8aLH4XxhmqdqVkPj+KQxjMxUazrHgjBWP5hyUZjGUn7FoS8Il5Z
-jMuqqijNa93xDjLZNICLyF7mZN8Xbpo7I5f7FPWZbEKT+klq9Iz2v7h/guk/IgAA
-mmnh0VqQedoZvA9WiINU7Tsl5B8z0QJ0hSzUiVQKyIRMhEvoaJkIj867qmCt/c0D
-z53E0oPjaUZm+2byd/a+KaY5N6m7lptU2kD/gsuLX+kuJ9lK/eWOsTlOq4SrmLTw
-V6XuBYp/3UgrTVauCOgVWNSC8BTPFA==
-=GpJC
------END PGP SIGNATURE-----
-
---Sig_/.MqWFzW0QPGZWg/nTuWGK=5--
