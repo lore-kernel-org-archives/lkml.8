@@ -2,110 +2,83 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64841C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD0CC33CA3
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BD74214D8
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F03742080D
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 14:45:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728225AbgAJOmX convert rfc822-to-8bit (ORCPT
+        id S1728227AbgAJOpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 09:42:23 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:49309 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727952AbgAJOmW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 09:42:22 -0500
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id F40E6240011;
-        Fri, 10 Jan 2020 14:42:19 +0000 (UTC)
-Date:   Fri, 10 Jan 2020 15:42:18 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] mtd: Fixes for v5.5-rc6
-Message-ID: <20200110154218.0b28309f@xps13>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 10 Jan 2020 09:45:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728002AbgAJOpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 09:45:07 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E00372072E;
+        Fri, 10 Jan 2020 14:45:04 +0000 (UTC)
+Date:   Fri, 10 Jan 2020 09:45:02 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     syzbot <syzbot+704bfe2c7d156640ad7a@syzkaller.appspotmail.com>
+Cc:     acme@kernel.org, acme@redhat.com,
+        alexander.shishkin@linux.intel.com, arvid.brodin@alten.se,
+        ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
+        davem@davemloft.net, jbacik@fb.com, jolsa@redhat.com, kafai@fb.com,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
+        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
+        peterz@infradead.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        torvalds@linux-foundation.org, xiyou.wangcong@gmail.com, yhs@fb.com
+Subject: Re: WARNING in add_event_to_ctx
+Message-ID: <20200110094502.2d6015ab@gandalf.local.home>
+In-Reply-To: <000000000000ddae64059bc388dc@google.com>
+References: <000000000000946842058bc1291d@google.com>
+        <000000000000ddae64059bc388dc@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Linus,
+On Thu, 09 Jan 2020 22:50:00 -0800
+syzbot <syzbot+704bfe2c7d156640ad7a@syzkaller.appspotmail.com> wrote:
 
-This is the MTD fixes PR for v5.5-rc6.
+> syzbot suspects this bug was fixed by commit:
 
-Thanks,
-Miquèl
+I think these reports need some more information. Like the sample crash
+report, so we don't need to be clicking through links to find it.
+Because I have no idea what bug was fixed.
 
-The following changes since commit c79f46a282390e0f5b306007bf7b11a46d529538:
+-- Steve
 
-  Linux 5.5-rc5 (2020-01-05 14:23:27 -0800)
+> 
+> commit 311633b604063a8a5d3fbc74d0565b42df721f68
+> Author: Cong Wang <xiyou.wangcong@gmail.com>
+> Date:   Wed Jul 10 06:24:54 2019 +0000
+> 
+>      hsr: switch ->dellink() to ->ndo_uninit()
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1005033ee00000
+> start commit:   6fbc7275 Linux 5.2-rc7
+> git tree:       upstream
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=bff6583efcfaed3f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=704bfe2c7d156640ad7a
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1016165da00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12b27be5a00000
+> 
+> If the result looks correct, please mark the bug fixed by replying with:
+> 
+> #syz fix: hsr: switch ->dellink() to ->ndo_uninit()
+> 
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git tags/mtd/fixes-for-5.5-rc6
-
-for you to fetch changes up to 82de6a6fb67e16a30ec2f586b1f6976c2d7b4b62:
-
-  mtd: spi-nor: Fix the writing of the Status Register on micron flashes (2020-01-09 20:11:34 +0100)
-
-----------------------------------------------------------------
-MTD:
-* sm_ftl: Fix NULL pointer warning.
-
-Raw NAND:
-* Cadence: fix compile testing.
-* STM32: Avoid locking.
-
-Onenand:
-* Fix several sparse/build warnings.
-
-SPI-NOR:
-* Add a flag to fix interaction with Micron parts.
-
-----------------------------------------------------------------
-Amir Mahdi Ghorbanian (1):
-      mtd: onenand: omap2: Fix errors in style
-
-Arnd Bergmann (1):
-      mtd: sm_ftl: fix NULL pointer warning
-
-Christophe Kerello (1):
-      mtd: rawnand: stm32_fmc2: avoid to lock the CPU bus
-
-Krzysztof Kozlowski (1):
-      mtd: onenand: samsung: Fix iomem access with regular memcpy
-
-Peter Ujfalusi (1):
-      mtd: onenand: omap2: Pass correct flags for prep_dma_memcpy
-
-Tudor Ambarus (1):
-      mtd: spi-nor: Fix the writing of the Status Register on micron flashes
-
-Vasyl Gomonovych (1):
-      mtd: cadence: Fix cast to pointer from integer of different size warning
-
- drivers/mtd/nand/onenand/omap2.c               | 14 ++++++------
- drivers/mtd/nand/onenand/onenand_base.c        | 14 ++++++------
- drivers/mtd/nand/onenand/samsung_mtd.c         |  8 +++----
- drivers/mtd/nand/raw/cadence-nand-controller.c | 13 ++++++-----
- drivers/mtd/nand/raw/stm32_fmc2_nand.c         | 38 +++++++++++++++++++++++++++++++--
- drivers/mtd/sm_ftl.c                           |  3 ++-
- drivers/mtd/spi-nor/spi-nor.c                  |  1 +
- include/linux/mtd/flashchip.h                  |  2 +-
- 8 files changed, 65 insertions(+), 28 deletions(-)
