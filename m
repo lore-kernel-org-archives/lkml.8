@@ -2,212 +2,156 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913D0C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C7BC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5296420721
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:39:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="O4rt//V4"
+	by mail.kernel.org (Postfix) with ESMTP id 8D92820721
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 15:39:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgAJPjA (ORCPT
+        id S1728402AbgAJPjw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 10:39:00 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44405 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728151AbgAJPjA (ORCPT
+        Fri, 10 Jan 2020 10:39:52 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:58629 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728151AbgAJPjw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 10:39:00 -0500
-Received: by mail-lj1-f193.google.com with SMTP id u71so2552725lje.11
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 07:38:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cumulusnetworks.com; s=google;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=y1QB9R6bh9eDoK3rwoTzgbhXWkTdUGimAWJVMTqnIFk=;
-        b=O4rt//V4xdikyG8ZAsffheasvFdkAN+OAh9IvXJOvUhXcggzuN+zpjmfBQtfOVsxbx
-         hx/QFFQhmy5ItXBMzARVi8iCfMH550Qq3698afJqO8Bwhos1Zb322LougYzTBnm0bHSB
-         ZE+4vk+pBQYHHcIzYf3BCh0di6krGdaZjEG60=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=y1QB9R6bh9eDoK3rwoTzgbhXWkTdUGimAWJVMTqnIFk=;
-        b=HtCUiiSrG2TZKH3JUECl6i4z0qKDyq4EcKxwMvJYbjCNtP5zEbybJWoLGJpqo89X+n
-         RE1cXz9LSOE1VYBt7kdpjzkbhXIMXNhYpsdIf/akx2WnqYzRxau701NTGRs1yv8uqJtN
-         7Na6QDi97FsUi5Jp5EgZ3Yg+KhqK7aQCwdpJhlFm/2QTfQqF5jSNJEBowXdo7rHYZFTC
-         9FUBWzjJE+QUM+cZ5UzgjmSYDz2LrqqZJ21N+kTFjpz4K24hLC8Kce4PcY2WxZU0UrCh
-         qUZkHEWoBseptRaaFXP3jie3sVoyv5Z+K/UdRNcaQX/2Vh7BXQq/k4u8Z4Hjefc8cm6P
-         VeeQ==
-X-Gm-Message-State: APjAAAVE38m988+8sOrWrIDMlsy9mZech9mdug6+S2YuX3xT4sC8md40
-        odlTvnxVTg0mP/zZjO0mW+LNiw==
-X-Google-Smtp-Source: APXvYqw2w1n9kvLSh45QkHwcUpjk0D61qK+Sb+Kwg9JkqRTWdjboOjzXBxnrWwlUPDSR7BqfSHHQeQ==
-X-Received: by 2002:a2e:3e03:: with SMTP id l3mr3121523lja.237.1578670737371;
-        Fri, 10 Jan 2020 07:38:57 -0800 (PST)
-Received: from [192.168.51.243] ([78.128.78.220])
-        by smtp.gmail.com with ESMTPSA id z5sm1180030lji.40.2020.01.10.07.38.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jan 2020 07:38:56 -0800 (PST)
-Subject: Re: [RFC net-next Patch 0/3] net: bridge: mrp: Add support for Media
- Redundancy Protocol(MRP)
-From:   Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bridge@lists.linux-foundation.org
-Cc:     davem@davemloft.net, roopa@cumulusnetworks.com,
-        jakub.kicinski@netronome.com, vivien.didelot@gmail.com,
-        andrew@lunn.ch, jeffrey.t.kirsher@intel.com, olteanv@gmail.com,
-        anirudh.venkataramanan@intel.com, dsahern@gmail.com,
-        jiri@mellanox.com, UNGLinuxDriver@microchip.com
-References: <20200109150640.532-1-horatiu.vultur@microchip.com>
- <6f1936e9-97e5-9502-f062-f2925c9652c9@cumulusnetworks.com>
-Message-ID: <14d0ef5f-4605-4c28-7029-8f60e79f18f7@cumulusnetworks.com>
-Date:   Fri, 10 Jan 2020 17:38:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Fri, 10 Jan 2020 10:39:52 -0500
+Received: from [5.158.153.53] (helo=g2noscherz.lab.linutronix.de.)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1ipwO5-0007H0-6B; Fri, 10 Jan 2020 16:39:49 +0100
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Dick Hollenbeck <dick@softplc.com>,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: [PATCH RT 2/2] serial: 8250: fsl/ingenic/mtk: fix atomic console
+Date:   Fri, 10 Jan 2020 16:45:32 +0106
+Message-Id: <20200110153932.14970-3-john.ogness@linutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200110153932.14970-1-john.ogness@linutronix.de>
+References: <20200110153932.14970-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <6f1936e9-97e5-9502-f062-f2925c9652c9@cumulusnetworks.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/01/2020 16:13, Nikolay Aleksandrov wrote:
-> On 09/01/2020 17:06, Horatiu Vultur wrote:
->> Media Redundancy Protocol is a data network protocol standardized by
->> International Electrotechnical Commission as IEC 62439-2. It allows rings of
->> Ethernet switches to overcome any single failure with recovery time faster than
->> STP. It is primarily used in Industrial Ethernet applications.
->>
->> This is the first proposal of implementing a subset of the standard. It supports
->> only 2 roles of an MRP node. It supports only Media Redundancy Manager(MRM) and
->> Media Redundancy Client(MRC). In a MRP ring, each node needs to support MRP and
->> in a ring can be only one MRM and multiple MRC. It is possible to have multiple
->> instances of MRP on a single node. But a port can be part of only one MRP
->> instance.
->>
->> The MRM is responsible for detecting when there is a loop in the ring. It is
->> sending the frame MRP_Test to detect the loops. It would send MRP_Test on both
->> ports in the ring and if the frame is received at the other end, then the ring
->> is closed. Meaning that there is a loop. In this case it sets the port state to
->> BLOCKED, not allowing traffic to pass through except MRP frames. In case it
->> stops receiving MRP_Test frames from itself then the MRM will detect that the
->> ring is open, therefor it would notify the other nodes of this change and will
->> set the state of the port to be FORWARDING.
->>
->> The MRC is responsible for forwarding MRP_Test frames between the ring ports
->> (and not to flood on other ports) and to listen when there is a change in the
->> network to clear the FDB.
->>
->> Similar with STP, MRP is implemented on top of the bridge and they can't be
->> enable at the same time. While STP runs on all ports of the bridge, MRP needs to
->> run only on 2 ports.
->>
->> The bridge needs to:
->> - notify when the link of one of the ports goes down or up, because MRP instance
->>   needs to react to link changes by sending MRP_LinkChange frames.
->> - notify when one of the ports are removed from the bridge or when the bridge
->>   is destroyed, because if the port is part of the MRP ring then MRP state
->>   machine should be stopped.
->> - add a handler to allow MRP instance to process MRP frames, if MRP is enabled.
->>   This is similar with STP design.
->> - add logic for MRP frames inside the bridge. The bridge will just detect MRP
->>   frames and it would forward them to the upper layer to allow to process it.
->> - update the logic to update non-MRP frames. If MRP is enabled, then look also
->>   at the state of the port to decide to forward or not.
->>
->> To create a MRP instance on the bridge:
->> $ bridge mrp add dev br0 p_port eth0 s_port eth1 ring_role 2 ring_id 1
->>
->> Where:
->> p_port, s_port: can be any port under the bridge
->> ring_role: can have the value 1(MRC - Media Redundancy Client) or
->>            2(MRM - Media Redundancy Manager). In a ring can be only one MRM.
->> ring_id: unique id for each MRP instance.
->>
->> It is possible to create multiple instances. Each instance has to have it's own
->> ring_id and a port can't be part of multiple instances:
->> $ bridge mrp add dev br0 p_port eth2 s_port eth3 ring_role 1 ring_id 2
->>
->> To see current MRP instances and their status:
->> $ bridge mrp show
->> dev br0 p_port eth2 s_port eth3 ring_role 1 ring_id 2 ring_state 3
->> dev br0 p_port eth0 s_port eth1 ring_role 2 ring_id 1 ring_state 4
->>
->> If this patch series is well received, the in the future it could be extended
->> with the following:
->> - add support for Media Redundancy Automanager. This role allows a node to
->>   detect if needs to behave as a MRM or MRC. The advantage of this role is that
->>   the user doesn't need to configure the nodes each time they are added/removed
->>   from a ring and it adds redundancy to the manager.
->> - add support for Interconnect rings. This allow to connect multiple rings.
->> - add HW offloading. The standard defines 4 recovery times (500, 200, 30 and 10
->>   ms). To be able to achieve 30 and 10 it is required by the HW to generate the
->>   MRP_Test frames and detect when the ring is open/closed.
->>
->> Horatiu Vultur (3):
->>   net: bridge: mrp: Add support for Media Redundancy Protocol
->>   net: bridge: mrp: Integrate MRP into the bridge
->>   net: bridge: mrp: Add netlink support to configure MRP
->>
->>  include/uapi/linux/if_bridge.h |   27 +
->>  include/uapi/linux/if_ether.h  |    1 +
->>  include/uapi/linux/rtnetlink.h |    7 +
->>  net/bridge/Kconfig             |   12 +
->>  net/bridge/Makefile            |    2 +
->>  net/bridge/br.c                |   19 +
->>  net/bridge/br_device.c         |    3 +
->>  net/bridge/br_forward.c        |    1 +
->>  net/bridge/br_if.c             |   10 +
->>  net/bridge/br_input.c          |   22 +
->>  net/bridge/br_mrp.c            | 1517 ++++++++++++++++++++++++++++++++
->>  net/bridge/br_mrp_timer.c      |  227 +++++
->>  net/bridge/br_netlink.c        |    9 +
->>  net/bridge/br_private.h        |   30 +
->>  net/bridge/br_private_mrp.h    |  208 +++++
->>  security/selinux/nlmsgtab.c    |    5 +-
->>  16 files changed, 2099 insertions(+), 1 deletion(-)
->>  create mode 100644 net/bridge/br_mrp.c
->>  create mode 100644 net/bridge/br_mrp_timer.c
->>  create mode 100644 net/bridge/br_private_mrp.h
->>
-> 
-> Hi all,
-> I agree with Stephen here, IMO you have to take note of how STP has progressed
-> and that bringing it in the kernel was a mistake, these days mstpd has an active
-> community and much better support which is being extended. This looks best implemented
-> in user-space in my opinion with minimal kernel changes to support it. You could simply
-> open a packet socket with a filter and work through that, you don't need new netlink
-> sockets. I'm not familiar with the protocol so can't really be the judge of that, if
-> you present a good argument for needing a new netlink socket for these packets - then
-> sure, ok.
+A few 8250 implementations have their own IER access. If the port
+is a console, wrap the accesses with console_atomic_lock.
 
-nevermind the last sentence (about packet/netlink), I misread your earlier reply :)
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+---
+ drivers/tty/serial/8250/8250_fsl.c     |  9 ++++++++
+ drivers/tty/serial/8250/8250_ingenic.c |  7 +++++++
+ drivers/tty/serial/8250/8250_mtk.c     | 29 ++++++++++++++++++++++++--
+ 3 files changed, 43 insertions(+), 2 deletions(-)
 
-> 
-> If you do decide to continue with the kernel version (which I would again discourage)
-> a few general points (from a quick scan):
->  - the single 1.6+k line patch is just hard to review, please break it into more digestable
->    and logical pieces
->  - the locking is wrong, also there're a few use-after-free bugs 
->  - please re-work the bridge integration code, it can be simplified and tests can be eliminated
->  - your netlink helpers usage is generally wrong and needs more work
->  - use the already existing port states instead of adding new ones and you can avoid some tests in fast-path
->  - perhaps look into using br_afspec() for configuration/retrieval initially ? I don't think you need the new rtm messages yet.
->  - I'm sure I can go on, but I really think all of this should be put in user-space -
->    in-kernel STP is a great example of how _not_ to do it. :) As a bonus you'll avoid 90% of the
->    problems above just by making your own abstractions and using them for it.
-> 
-> 
-> Thanks,
->  Nik
-> 
+diff --git a/drivers/tty/serial/8250/8250_fsl.c b/drivers/tty/serial/8250/8250_fsl.c
+index aa0e216d5ead..8f711afadd4b 100644
+--- a/drivers/tty/serial/8250/8250_fsl.c
++++ b/drivers/tty/serial/8250/8250_fsl.c
+@@ -57,9 +57,18 @@ int fsl8250_handle_irq(struct uart_port *port)
+ 
+ 	/* Stop processing interrupts on input overrun */
+ 	if ((orig_lsr & UART_LSR_OE) && (up->overrun_backoff_time_ms > 0)) {
++		unsigned int ca_flags;
+ 		unsigned long delay;
++		bool is_console;
+ 
++		is_console = uart_console(port);
++
++		if (is_console)
++			console_atomic_lock(&ca_flags);
+ 		up->ier = port->serial_in(port, UART_IER);
++		if (is_console)
++			console_atomic_unlock(ca_flags);
++
+ 		if (up->ier & (UART_IER_RLSI | UART_IER_RDI)) {
+ 			port->ops->stop_rx(port);
+ 		} else {
+diff --git a/drivers/tty/serial/8250/8250_ingenic.c b/drivers/tty/serial/8250/8250_ingenic.c
+index 424c07c5f629..47f1482bd818 100644
+--- a/drivers/tty/serial/8250/8250_ingenic.c
++++ b/drivers/tty/serial/8250/8250_ingenic.c
+@@ -146,6 +146,8 @@ OF_EARLYCON_DECLARE(x1000_uart, "ingenic,x1000-uart",
+ 
+ static void ingenic_uart_serial_out(struct uart_port *p, int offset, int value)
+ {
++	unsigned int flags;
++	bool is_console;
+ 	int ier;
+ 
+ 	switch (offset) {
+@@ -167,7 +169,12 @@ static void ingenic_uart_serial_out(struct uart_port *p, int offset, int value)
+ 		 * If we have enabled modem status IRQs we should enable
+ 		 * modem mode.
+ 		 */
++		is_console = uart_console(p);
++		if (is_console)
++			console_atomic_lock(&flags);
+ 		ier = p->serial_in(p, UART_IER);
++		if (is_console)
++			console_atomic_unlock(flags);
+ 
+ 		if (ier & UART_IER_MSI)
+ 			value |= UART_MCR_MDCE | UART_MCR_FCM;
+diff --git a/drivers/tty/serial/8250/8250_mtk.c b/drivers/tty/serial/8250/8250_mtk.c
+index 4d067f515f74..b509c3de0301 100644
+--- a/drivers/tty/serial/8250/8250_mtk.c
++++ b/drivers/tty/serial/8250/8250_mtk.c
+@@ -212,12 +212,37 @@ static void mtk8250_shutdown(struct uart_port *port)
+ 
+ static void mtk8250_disable_intrs(struct uart_8250_port *up, int mask)
+ {
+-	serial_out(up, UART_IER, serial_in(up, UART_IER) & (~mask));
++	struct uart_port *port = &up->port;
++	unsigned int flags;
++	unsigned int ier;
++	bool is_console;
++
++	is_console = uart_console(port);
++
++	if (is_console)
++		console_atomic_lock(&flags);
++
++	ier = serial_in(up, UART_IER);
++	serial_out(up, UART_IER, ier & (~mask));
++
++	if (is_console)
++		console_atomic_unlock(flags);
+ }
+ 
+ static void mtk8250_enable_intrs(struct uart_8250_port *up, int mask)
+ {
+-	serial_out(up, UART_IER, serial_in(up, UART_IER) | mask);
++	struct uart_port *port = &up->port;
++	unsigned int flags;
++	unsigned int ier;
++
++	if (uart_console(port))
++		console_atomic_lock(&flags);
++
++	ier = serial_in(up, UART_IER);
++	serial_out(up, UART_IER, ier | mask);
++
++	if (uart_console(port))
++		console_atomic_unlock(flags);
+ }
+ 
+ static void mtk8250_set_flow_ctrl(struct uart_8250_port *up, int mode)
+-- 
+2.20.1
 
