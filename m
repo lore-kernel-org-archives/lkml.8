@@ -2,277 +2,163 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D0FC282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DFFC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:25:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACF8E2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:24:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="WxLn12q1"
+	by mail.kernel.org (Postfix) with ESMTP id 0FD41206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:25:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgAJRYP (ORCPT
+        id S1727448AbgAJRZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:24:15 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42495 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728224AbgAJRYO (ORCPT
+        Fri, 10 Jan 2020 12:25:39 -0500
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:59833 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726463AbgAJRZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:24:14 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 66so2667354otd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 09:24:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KmjkN0TFKJjjbSzWy55Wf3oPQayBI9yIs42w1jggHVI=;
-        b=WxLn12q1zxo2M/YEeafsDMBIVAWDxT8mYbbiPV1JVx0koqVnc4K13TR+IODf86vUsy
-         aMjfd3epbwoiLiO5cY9f+HhVYIhmZkxjEiFaM+U9FfPJ14hbcO/VVVj2dyR17xLlK2ub
-         z60KEcZ4f/DOXNa23nUJJ2FXTnp9JrxdVy5C29WNnT1ZcoygBUwR3bYyaQ+JwadicBdY
-         UN/UUDdnDg9mKmnLBVJVxFck5CHR1pTs7HrMPFRo+qi0Xx7EqViAfKfKnr42R1UJoTmi
-         o7augFEHW58h2H/kaAKtikJGJWm/wBh6MEtufQF7VmONRTMaSOBXPrET7xXWqMJ/10Tq
-         foNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KmjkN0TFKJjjbSzWy55Wf3oPQayBI9yIs42w1jggHVI=;
-        b=hORqb6MPy0mtavXfe8hkzXBuAH2hHFBY0njydkdIJvwmG/mcib0ui6rbqZSI8CoBhz
-         I0EZ1ZVeTZK4JS4FaGfmk6XnZiERhF4P+4qLF21ro1t8LryFPjpDRz7lUM0w56DKBUW2
-         BEENRy0fwb9uMRjd6EnYCMk8bM0DNQJeXKLiy4rk/nRapVHTrEmZqvYI/r5Q4iLyKHdV
-         sGR2vwUpkkvm8Lj+LC6/gc/K3Gjh2yGWiLAZVBb/eDZJfml5yctL639a6GxW7OSBFNjn
-         TzFsyHABbyxVJ4MoKZcT+h615tiqu3slSKLLgzLb83zZHY1LJpTkhmaCMsrhIpDrtPrL
-         cuCw==
-X-Gm-Message-State: APjAAAWQYv8k5OtdvqTAFqSn+Aug14GTt7+oJNtWazLAMxCShjsGgRYI
-        En/5odzO2LZi9iTt0m9yk8Z/qbGE64cG9UN9wLVbkw==
-X-Google-Smtp-Source: APXvYqwMpPrcm2RWegwCNM6eToQS6t0Lxx9iRToaqlsAvoe2uKkCBTIq8c7jUefHChcBaw8Gm1QR39nDQqVlidLWe7s=
-X-Received: by 2002:a9d:7852:: with SMTP id c18mr3312379otm.247.1578677054316;
- Fri, 10 Jan 2020 09:24:14 -0800 (PST)
+        Fri, 10 Jan 2020 12:25:38 -0500
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Horatiu.Vultur@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="Horatiu.Vultur@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Horatiu.Vultur@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; dkim=none (message not signed) header.i=none; spf=Pass smtp.mailfrom=Horatiu.Vultur@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: pvcClhOlqaI0EMVWXM/DKN4Vp1ybNbncbeoZfVLwSYsn1My5lvN0gAOR/D86Vk2jFrj9WCFGuM
+ GTO6IvJnVUjfLy7MoAS/NhTdYwhRWs+Z18d1kFE+NxEKZxWenKULWNmLrKnUSbEhN17ERiFPQk
+ KyRxZIcNFrv0/b7gkMD+slgicuZ3ucW+bV6BTkT+XYwAnO54gZy/bfFIolJk5w//yhCCu75JKS
+ swpEkV8EnOasrSxeO1FTTZetjdQ5bBxBn2nbwHdf+dmzH8bdgPeFL76fCfXyYtfiDSwFn9Ebh2
+ XXs=
+X-IronPort-AV: E=Sophos;i="5.69,417,1571727600"; 
+   d="scan'208";a="64340904"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Jan 2020 10:25:37 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 10 Jan 2020 10:25:36 -0700
+Received: from localhost (10.10.85.251) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Fri, 10 Jan 2020 10:25:35 -0700
+Date:   Fri, 10 Jan 2020 18:25:36 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+CC:     Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Roopa Prabhu <roopa@cumulusnetworks.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        <anirudh.venkataramanan@intel.com>,
+        David Ahern <dsahern@gmail.com>,
+        "Jiri Pirko" <jiri@mellanox.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: Re: [RFC net-next Patch 0/3] net: bridge: mrp: Add support for Media
+ Redundancy Protocol(MRP)
+Message-ID: <20200110172536.42rdfwdc6eiwsw7m@soft-dev3.microsemi.net>
+References: <20200109150640.532-1-horatiu.vultur@microchip.com>
+ <6f1936e9-97e5-9502-f062-f2925c9652c9@cumulusnetworks.com>
+ <20200110160456.enzomhfsce7bptu3@soft-dev3.microsemi.net>
+ <CA+h21hrq7U4EdqSgpYQRjK8rkcJdvD5jXCSOH_peA-R4xCocTg@mail.gmail.com>
 MIME-Version: 1.0
-References: <157863061737.2230556.3959730620803366776.stgit@dwillia2-desk3.amr.corp.intel.com>
- <e60e64f9-894b-4121-d97b-fb61459cbbe5@redhat.com> <CAPcyv4jm=fmP=-5vbo2jxzMe2qXqZP=zDYF8G_rs3X6_Om0wPg@mail.gmail.com>
- <4d0334e2-c4e7-6d3f-99ba-2ca0495e1549@redhat.com>
-In-Reply-To: <4d0334e2-c4e7-6d3f-99ba-2ca0495e1549@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 10 Jan 2020 09:24:03 -0800
-Message-ID: <CAPcyv4jixmv8fJ5FiYE=97Jud3Mc+6QzRX1txceSYU+WY_0rQA@mail.gmail.com>
-Subject: Re: [PATCH] mm/memory_hotplug: Fix remove_memory() lockdep splat
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        stable <stable@vger.kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <CA+h21hrq7U4EdqSgpYQRjK8rkcJdvD5jXCSOH_peA-R4xCocTg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 8:54 AM David Hildenbrand <david@redhat.com> wrote:
->
-> On 10.01.20 17:42, Dan Williams wrote:
-> > On Fri, Jan 10, 2020 at 1:10 AM David Hildenbrand <david@redhat.com> wrote:
-> >>
-> >> On 10.01.20 05:30, Dan Williams wrote:
-> >>> The daxctl unit test for the dax_kmem driver currently triggers the
-> >>> lockdep splat below. It results from the fact that
-> >>> remove_memory_block_devices() is invoked under the mem_hotplug_lock()
-> >>> causing lockdep entanglements with cpu_hotplug_lock().
-> >>>
-> >>> The mem_hotplug_lock() is not needed to synchronize the memory block
-> >>> device sysfs interface vs the page online state, that is already handled
-> >>> by lock_device_hotplug(). Specifically lock_device_hotplug()
-> >>> is sufficient to allow try_remove_memory() to check the offline
-> >>> state of the memblocks and be assured that subsequent online attempts
-> >>> will be blocked. The device_online() path checks mem->section_count
-> >>> before allowing any state manipulations and mem->section_count is
-> >>> cleared in remove_memory_block_devices().
-> >>>
-> >>> The add_memory() path does create memblock devices under the lock, but
-> >>> there is no lockdep report on that path, so it is left alone for now.
-> >>>
-> >>> This change is only possible thanks to the recent change that refactored
-> >>> memory block device removal out of arch_remove_memory() (commit
-> >>> 4c4b7f9ba948 mm/memory_hotplug: remove memory block devices before
-> >>> arch_remove_memory()).
-> >>>
-> >>>     ======================================================
-> >>>     WARNING: possible circular locking dependency detected
-> >>>     5.5.0-rc3+ #230 Tainted: G           OE
-> >>>     ------------------------------------------------------
-> >>>     lt-daxctl/6459 is trying to acquire lock:
-> >>>     ffff99c7f0003510 (kn->count#241){++++}, at: kernfs_remove_by_name_ns+0x41/0x80
-> >>>
-> >>>     but task is already holding lock:
-> >>>     ffffffffa76a5450 (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x20/0xe0
-> >>>
-> >>>     which lock already depends on the new lock.
-> >>>
-> >>>
-> >>>     the existing dependency chain (in reverse order) is:
-> >>>
-> >>>     -> #2 (mem_hotplug_lock.rw_sem){++++}:
-> >>>            __lock_acquire+0x39c/0x790
-> >>>            lock_acquire+0xa2/0x1b0
-> >>>            get_online_mems+0x3e/0xb0
-> >>>            kmem_cache_create_usercopy+0x2e/0x260
-> >>>            kmem_cache_create+0x12/0x20
-> >>>            ptlock_cache_init+0x20/0x28
-> >>>            start_kernel+0x243/0x547
-> >>>            secondary_startup_64+0xb6/0xc0
-> >>>
-> >>>     -> #1 (cpu_hotplug_lock.rw_sem){++++}:
-> >>>            __lock_acquire+0x39c/0x790
-> >>>            lock_acquire+0xa2/0x1b0
-> >>>            cpus_read_lock+0x3e/0xb0
-> >>>            online_pages+0x37/0x300
-> >>>            memory_subsys_online+0x17d/0x1c0
-> >>>            device_online+0x60/0x80
-> >>>            state_store+0x65/0xd0
-> >>>            kernfs_fop_write+0xcf/0x1c0
-> >>>            vfs_write+0xdb/0x1d0
-> >>>            ksys_write+0x65/0xe0
-> >>>            do_syscall_64+0x5c/0xa0
-> >>>            entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>>
-> >>>     -> #0 (kn->count#241){++++}:
-> >>>            check_prev_add+0x98/0xa40
-> >>>            validate_chain+0x576/0x860
-> >>>            __lock_acquire+0x39c/0x790
-> >>>            lock_acquire+0xa2/0x1b0
-> >>>            __kernfs_remove+0x25f/0x2e0
-> >>>            kernfs_remove_by_name_ns+0x41/0x80
-> >>>            remove_files.isra.0+0x30/0x70
-> >>>            sysfs_remove_group+0x3d/0x80
-> >>>            sysfs_remove_groups+0x29/0x40
-> >>>            device_remove_attrs+0x39/0x70
-> >>>            device_del+0x16a/0x3f0
-> >>>            device_unregister+0x16/0x60
-> >>>            remove_memory_block_devices+0x82/0xb0
-> >>>            try_remove_memory+0xb5/0x130
-> >>>            remove_memory+0x26/0x40
-> >>>            dev_dax_kmem_remove+0x44/0x6a [kmem]
-> >>>            device_release_driver_internal+0xe4/0x1c0
-> >>>            unbind_store+0xef/0x120
-> >>>            kernfs_fop_write+0xcf/0x1c0
-> >>>            vfs_write+0xdb/0x1d0
-> >>>            ksys_write+0x65/0xe0
-> >>>            do_syscall_64+0x5c/0xa0
-> >>>            entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >>>
-> >>>     other info that might help us debug this:
-> >>>
-> >>>     Chain exists of:
-> >>>       kn->count#241 --> cpu_hotplug_lock.rw_sem --> mem_hotplug_lock.rw_sem
-> >>>
-> >>>      Possible unsafe locking scenario:
-> >>>
-> >>>            CPU0                    CPU1
-> >>>            ----                    ----
-> >>>       lock(mem_hotplug_lock.rw_sem);
-> >>>                                    lock(cpu_hotplug_lock.rw_sem);
-> >>>                                    lock(mem_hotplug_lock.rw_sem);
-> >>>       lock(kn->count#241);
-> >>>
-> >>>      *** DEADLOCK ***
-> >>>
-> >>> No fixes tag as this seems to have been a long standing issue that
-> >>> likely predated the addition of kernfs lockdep annotations.
-> >>>
-> >>> Cc: <stable@vger.kernel.org>
-> >>> Cc: Vishal Verma <vishal.l.verma@intel.com>
-> >>> Cc: David Hildenbrand <david@redhat.com>
-> >>> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> >>> Cc: Michal Hocko <mhocko@suse.com>
-> >>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> >>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> >>> ---
-> >>>  mm/memory_hotplug.c |   12 +++++++++---
-> >>>  1 file changed, 9 insertions(+), 3 deletions(-)
-> >>>
-> >>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> >>> index 55ac23ef11c1..a4e7dadded08 100644
-> >>> --- a/mm/memory_hotplug.c
-> >>> +++ b/mm/memory_hotplug.c
-> >>> @@ -1763,8 +1763,6 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
-> >>>
-> >>>       BUG_ON(check_hotplug_memory_range(start, size));
-> >>>
-> >>> -     mem_hotplug_begin();
-> >>> -
-> >>>       /*
-> >>>        * All memory blocks must be offlined before removing memory.  Check
-> >>>        * whether all memory blocks in question are offline and return error
-> >>> @@ -1777,9 +1775,17 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
-> >>>       /* remove memmap entry */
-> >>>       firmware_map_remove(start, start + size, "System RAM");
-> >>>
-> >>> -     /* remove memory block devices before removing memory */
-> >>> +     /*
-> >>> +      * Remove memory block devices before removing memory, and do
-> >>> +      * not hold the mem_hotplug_lock() over kobject removal
-> >>> +      * operations. lock_device_hotplug() keeps the
-> >>> +      * check_memblock_offlined_cb result valid until the entire
-> >>> +      * removal process is complete.
-> >>> +      */
-> >>
-> >> Maybe shorten that to
-> >>
-> >> /*
-> >>  * Remove memory block devices before removing memory. Protected
-> >>  * by the device_hotplug_lock only.
-> >>  */
-> >
-> > Why make someone dig for the reasons this lock is sufficient?
->
-> I think 5 LOC of comment are too much for something that is documented
-> e.g., in Documentation/core-api/memory-hotplug.rst ("Locking
-> Internals"). But whatever you prefer.
 
-Sure, lets beef up that doc to clarify this case and refer to it.
+Hi Valdimir and Andrew
 
->
-> >
-> >>
-> >> AFAIK, the device hotplug lock is sufficient here. The memory hotplug
-> >> lock / cpu hotplug lock is only needed when calling into arch code
-> >> (especially for PPC). We hold both locks when onlining/offlining memory.
-> >>
-> >>>       remove_memory_block_devices(start, size);
-> >>>
-> >>> +     mem_hotplug_begin();
-> >>> +
-> >>>       arch_remove_memory(nid, start, size, NULL);
-> >>>       memblock_free(start, size);
-> >>>       memblock_remove(start, size);
-> >>>
-> >>
-> >> I'd suggest to do the same in the adding part right away (if easily
-> >> possible) to make it clearer.
-> >
-> > Let's let this fix percolate upstream for a bit to make sure there was
-> > no protection the mem_hotplug_begin() was inadvertently providing.
->
-> Yeah, why not.
->
-> >
-> >> I properly documented the semantics of
-> >> add_memory_block_devices()/remove_memory_block_devices() already (that
-> >> they need the device hotplug lock).
-> >
-> > I see that, but I prefer lockdep_assert_held() in the code rather than
-> > comments. I'll send a patch to fix that up.
->
-> That won't work as early boot code from ACPI won't hold it while it adds
-> memory. And we decided (especially Michal :) ) to keep it like that.
+The 01/10/2020 18:21, Vladimir Oltean wrote:
+> I think it would help your case if you explained a bit more about the
+> hw offload primitives you have implemented internally. I believe you
+> are talking about the frame generation engine in the Ocelot switch
+> which has 1024 frame slots that are periodically sent based on one of
+> 8 timers. For receive, I believe that the functionality is to offload
+> the consumption of these periodic frames, and just raise an interrupt
+> if frames were expected but not received.
+Yes something like this. But it is worth mention that it is not just about
+injecting frames, sequence number needs to be incremented (by HW) etc.
 
-So then the comment is actively misleading for that case. I would
-expect an explicit _unlocked path for that case with a comment about
-why it's special. Is there already a comment to that effect somewhere?
+> For your use case of MRP, it makes perfect sense to have this. I am
+> just not sure (and not knowledgeable enough in Linux) what this engine
+> is offloading from the operating system's perspective.
+We will try to make that more clear.
+
+> Your justification for implementing MRP in the kernel seems to be that
+> it's better to make MRP part of the kernel uapi than a configuration
+> interface for your periodic engine, which in principle I agree with.
+> I'm just not sure if the offload that you propose will have a trivial
+> path into the kernel either, so it would make sense for reviewers to
+> see everything put together first.
+You are right. The decision of start by publishing a pure SW implementation with
+no HW offload was not the best.
+
+I can do a new RFC that does including the HW offload hooks, and
+describe what configurations we do when these hooks are called. The
+actual HW which implements these hooks is still not released (and the
+SwitchDev driver for this device is still not submitted).
+
+> Horatiu, could you also give some references to the frames that need
+> to be sent. I've no idea what information they need to contain, if the
+> contents is dynamic, or static, etc.
+It is dynamic - but trivial... Here is a dump from WireShark with
+annotation on what our HW can update:
+
+Ethernet II, Src: 7a:8b:b1:35:96:e1 (7a:8b:b1:35:96:e1), Dst: Iec_00:00:01 (01:15:4e:00:00:01)
+    Destination: Iec_00:00:01 (01:15:4e:00:00:01)
+    Source: 7a:8b:b1:35:96:e1 (7a:8b:b1:35:96:e1)
+    Type: MRP (0x88e3)
+PROFINET MRP MRP_Test, MRP_Common, MRP_End
+    MRP_Version: 1
+    MRP_TLVHeader.Type: MRP_Test (0x02)
+        MRP_TLVHeader.Type: MRP_Test (0x02)
+        MRP_TLVHeader.Length: 18
+        MRP_Prio: 0x1f40 High priorities
+        MRP_SA: 7a:8b:b1:35:96:e1 (7a:8b:b1:35:96:e1)
+        MRP_PortRole: Primary ring port (0x0000)
+        MRP_RingState: Ring closed (0x0001)
+        MRP_Transition: 0x0001
+        MRP_TimeStamp [ms]: 0x000cf574             <---------- Updated automatic
+    MRP_TLVHeader.Type: MRP_Common (0x01)
+        MRP_TLVHeader.Type: MRP_Common (0x01)
+        MRP_TLVHeader.Length: 18
+        MRP_SequenceID: 0x00e9                     <---------- Updated automatic
+        MRP_DomainUUID: ffffffff-ffff-ffff-ffff-ffffffffffff
+    MRP_TLVHeader.Type: MRP_End (0x00)
+        MRP_TLVHeader.Type: MRP_End (0x00)
+        MRP_TLVHeader.Length: 0
+
+But all the fields can change, but to change the other fields we need to
+interact with the HW. Other SoC may have other capabilities in their
+offload. As an example, if the ring becomes open then the fields
+MRP_RingState and MRP_Transition need to change and in our case this
+requires SW interference.
+
+Would you like a PCAP file as an example? Or do you want a better
+description of the frame format.
+
+/Horatiu
