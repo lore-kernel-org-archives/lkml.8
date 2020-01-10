@@ -2,115 +2,116 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A06C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8149EC282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6FEE20673
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:52:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lR9Qv/Rh"
+	by mail.kernel.org (Postfix) with ESMTP id 5FECC20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 16:53:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgAJQww (ORCPT
+        id S1728837AbgAJQxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 11:52:52 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40771 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728107AbgAJQwv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 11:52:51 -0500
-Received: by mail-pl1-f194.google.com with SMTP id s21so1065336plr.7
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 08:52:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:to:from:user-agent:date;
-        bh=SC0UnYuTvxE5OcA375X4sqDX8RR6HMTTrFTXJph6jSE=;
-        b=lR9Qv/Rh2eYbSmBp73Q6BrJGiZOTHErsCfUcGyDbgXcFuMwI36N47x623pr35oqewC
-         DhPd2mZievnpOgj2/IiBIrrrgWgM/jIO2/qryR72NyThU0yuyTlTTrr0uzsWTYuLb8c5
-         JXTo8xNNKwipDeHFgPXASuqAGBA2+0k71Vr1A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:to:from
-         :user-agent:date;
-        bh=SC0UnYuTvxE5OcA375X4sqDX8RR6HMTTrFTXJph6jSE=;
-        b=TBbOJMYlr9rlLVB/I3bljPwp+ngOt/O6CvehXDjd755Y2zzTqy/Bbic1QkKXvjTYFV
-         Zid0q1v3ZzfDjvqLWuE/ToVMtn5eZ/xASOl6bkrxDiBOPzAyLQX/taryqRwMxn3o7Y0H
-         ZQudh8sd1NOZj9kQZ22T8UMU06yBMZsKKqGNfVzRA5XTSZIuw1SzDLUzDIJLVXuxQzYU
-         R76/FAI3C+eU+HuNzZ/E8ybXbHEuJUF63ZhfWAugMK+waOlXqTtIRDPv3V2K3Buo/rQ6
-         aqZJfIAGzN/MRniqSFxlpHrorlCOABVCdixPnJjlt9rY9bHlnvY/mOYwLJbcOqLbtNtE
-         nNww==
-X-Gm-Message-State: APjAAAXDnnT9yWry6DYjLp12vIgyaSE3FMDiNhZxS6q53OpG/Hf+t+Rj
-        UcPLWaol+zQ4FE3/zup1f9R51w==
-X-Google-Smtp-Source: APXvYqxW1qdIS3otqhlBBCjtCjlgjYpsGMdUHQ/sCZODIjnY3CWYaEx8TR2oCPqj2x/eeIHOuztY2Q==
-X-Received: by 2002:a17:902:8541:: with SMTP id d1mr5509047plo.57.1578675171031;
-        Fri, 10 Jan 2020 08:52:51 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id s26sm3533556pfe.166.2020.01.10.08.52.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 08:52:50 -0800 (PST)
-Message-ID: <5e18abe2.1c69fb81.1ab3c.84f9@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Fri, 10 Jan 2020 11:53:10 -0500
+Received: from krieglstein.org ([188.68.35.71]:49986 "EHLO krieglstein.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728492AbgAJQxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 11:53:10 -0500
+X-Greylist: delayed 389 seconds by postgrey-1.27 at vger.kernel.org; Fri, 10 Jan 2020 11:53:08 EST
+Received: from dabox.localnet (gateway.hbm.com [213.157.30.2])
+        by krieglstein.org (Postfix) with ESMTPSA id E68BD4009B;
+        Fri, 10 Jan 2020 17:46:37 +0100 (CET)
+From:   Tim Sander <tim@krieglstein.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Dinh Nguyen <dinguyen@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Richard Weinberger <richard@nod.at>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: mtd raw nand denali.c broken for Intel/Altera Cyclone V
+Date:   Fri, 10 Jan 2020 17:46:37 +0100
+Message-ID: <2827587.laNcgWlGab@dabox>
+Organization: Sander and Lightning
+In-Reply-To: <CAK7LNASG+b03NDhrenB9yfvgYDVpYSnb2vSCu_-DB8dh70boMg@mail.gmail.com>
+References: <5143724.5TqzkYX0oI@dabox> <23083624.r2bJSIadJk@dabox> <CAK7LNASG+b03NDhrenB9yfvgYDVpYSnb2vSCu_-DB8dh70boMg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1578486581-7540-3-git-send-email-sanm@codeaurora.org>
-References: <1578486581-7540-1-git-send-email-sanm@codeaurora.org> <1578486581-7540-3-git-send-email-sanm@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] arm64: dts: qcom: sc7180: Remove global phy reset in QMP phy
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>
-From:   Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 10 Jan 2020 08:52:49 -0800
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sandeep Maheswaram (2020-01-08 04:29:40)
-> Remove global phy reset and do only usb phy reset in QMP phy.
+Hi Masahiro Yamada
 
-Yes that's what this patch does, but you left out the important part:
-Why?
+Sorry for the large delay. I have seen the patches at 
+https://lists.infradead.org/pipermail/linux-mtd/2019-December/092852.html
+Seem to resolve the question about the spare_area_skip_bytes register.
 
->=20
-> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
-> ---
->  arch/arm64/boot/dts/qcom/sc7180.dtsi | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->=20
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/q=
-com/sc7180.dtsi
-> index c00c3d4..448ab88 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -1072,9 +1072,8 @@
->                                  <&gcc GCC_USB3_PRIM_PHY_COM_AUX_CLK>;
->                         clock-names =3D "aux", "cfg_ahb", "ref", "com_aux=
-";
-> =20
-> -                       resets =3D <&gcc GCC_USB3_DP_PHY_PRIM_BCR>,
-> -                                <&gcc GCC_USB3_PHY_PRIM_BCR>;
-> -                       reset-names =3D "phy", "common";
-> +                       resets =3D <&gcc GCC_USB3_PHY_PRIM_BCR>;
-> +                       reset-names =3D "phy";
-> =20
+I have now set the register to 2 which seems to be the right choice on an Intel  
+SocFPGA. But still i am out of luck trying to boot 5.4.5-rt3 or 5.5-rc5. I get the 
+following messages during bootup booting:
+[    1.825590] denali-nand-dt ff900000.nand: timeout while waiting for irq 0x1000
+[    1.832936] denali-nand-dt: probe of ff900000.nand failed with error -5
 
-We shouldn't need to modify the DT node for this. The reset still goes
-to this hardware block, so DT should reflect that. Instead, the driver
-shouldn't drive this reset on this SoC.
+But the commit c19e31d0a32dd 2017-06-13 22:45:38 predates the 4.19 kernel
+release (Mon Oct 22 07:37:37 2018). So it seems there is not an obvious commit
+which is causing the problem. Looking at the changes it might be that the timing
+calculations in the driver changed which might also lead to a similar error.
 
->                         usb_1_ssphy: phy@88e9200 {
->                                 reg =3D <0 0x088e9200 0 0x128>,
+I am booting via NFS the bootloader is placed in NOR flash.  The corresponding 
+nand dts entry is updated to the new format and looks like this:
+                nand@ff900000 {
+                        #address-cells = <0x1>;
+                        #size-cells = <0x0>;
+                        compatible = "altr,socfpga-denali-nand";
+                        reg = <0xff900000 0x100000 0xffb80000 0x10000>;
+                        reg-names = "nand_data", "denali_reg";
+                        interrupts = <0x0 0x90 0x4>;
+                        clocks = <0x2d 0x1e 0x2e>;
+                        clock-names = "nand", "nand_x", "ecc";
+                        resets = <0x6 0x24>;
+                        status = "okay";
+                        nand@0 {
+                                reg = <0x0>;
+                                #address-cells = <0x1>;
+                                #size-cells = <0x1>;
+                                partition@0 {
+                                        label = "work";
+                                        reg = <0x0 0x10000000>;
+                                };
+                        };
+                };
+
+The last kernel i am able to boot is 4.19.10. I have tried booting:
+5.1.21, 5.2.9, 5.3-rc8, 5.4.5-rt3 and 5.5-rc5. They all failed. Unfortunately the 
+range is quite large for bisecting the problem. It also occurred to me that
+all the platforms with Intel Cyclone V in mainline are development boards
+which boot from SD-card not exhibiting this problem on their default boot path.
+
+Best regards
+Tim
+
+PS: Here is some snippet from an older mail i didn't sent to the list yet which
+might be superseded by now:
+To get into this matter i started reading the "Intel Cyclone V HPS TRM" 
+Section 13-20 Preserving Bad Block Markers:
+"You can configure the NAND flash controller to skip over a specified number of 
+bytes when it writes the last sector in a page to the spare area. This option 
+write the desired offset to the spare_area_skip_bytes register in the config 
+group. For example, if the device page size is 2 KB, and the device 
+area, set the spare_area_skip_bytes register to 2. When the flash controller 
+writes the last sector of the page that overlaps with the spare area, it 
+spare_area_skip_bytes must be an even number. For example, if the bad block 
+marker is a single byte, set spare_area_skip_bytes to 2."
+
+
+
+
+
