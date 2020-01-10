@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3E94C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5697FC33CA4
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D49520678
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254F4206ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 17:49:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WwNfzBmv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="czka4vUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728032AbgAJRt0 (ORCPT
+        id S1728485AbgAJRta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 12:49:26 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46001 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727612AbgAJRtZ (ORCPT
+        Fri, 10 Jan 2020 12:49:30 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37749 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728077AbgAJRt1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 12:49:25 -0500
-Received: by mail-pl1-f195.google.com with SMTP id b22so1104834pls.12
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 09:49:25 -0800 (PST)
+        Fri, 10 Jan 2020 12:49:27 -0500
+Received: by mail-pg1-f194.google.com with SMTP id q127so1331946pga.4
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 09:49:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DfYJy9R3cN1g1cl3Z2QjlyF1rhKAw3VaBUq5ODQS3kM=;
-        b=WwNfzBmvT9dFIfcQGzf4IrMgK5HDEAz4hlD9fsRCVa/yhu8hCCvdWBH6mWgr8t6427
-         8xwW8+0bU+6Ukap/xHuqxW8PLx7LFxF1J+Xen8noDMvr+jEawAnnFLjm8aYjHtekWTVM
-         f2HhPtDdawhlf1air4fv6rygDcuPQnDWRfCzo=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5G0JpOASU+8dPsw9dyToFF25u9NctuOa5AaKBeNFrAY=;
+        b=czka4vUoD1xWX1/aGwkqdC76JzOAtN32sVjXs6ELnC11Vep4p5Ae47bSXJUK+y18YP
+         bG0uY3Dh9CriOpwtgcn5L6NNzQj1EsmEN6c9//vn+Jelc80dd3CZ1RChbybS+6eUt1qX
+         BYRGpWIafdWaZ5xoUf9aW6XohXCc7c1KXrdzQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DfYJy9R3cN1g1cl3Z2QjlyF1rhKAw3VaBUq5ODQS3kM=;
-        b=hriwjp1sRG+ud/bzN0wgGrsETx0/x8jmmsqxotTQmvUaQkRj9hT0rhrazWFSRv2Z0h
-         zyXOEUCT5Oax6/1GUbYUzHVxK0VlVxcyfquJ4Mg/Utt2/EPJDCuYhCaAOcd/tYSbp04d
-         kv8hOv3q0JyY30/hIF3VwBrPYGAItynvQEhxfFbxB+GHubJSaWq2vOQfJQZf00ZHcaAD
-         +saUayJTgO7wt9EmgAw3XKT1gZyGu50tfD4+bhWS9i2/oI7legNLsM9sQtRAgZSPw07D
-         9n/gW2s/JIsV0LmCvDefa0yn0JLHEqtpem1lF4i0gUDBXMeGGXoe1P+CNUQIV8ruisGb
-         ikTg==
-X-Gm-Message-State: APjAAAUMHgrN99r5wdfog9qoyS4+Jg666BOKknPyWqu4FiKn4SXDaEnH
-        Qd0oG68dQIG+nSUJpe+bgsM5NA==
-X-Google-Smtp-Source: APXvYqyZtuhKFcYp6Lr/tH6mKtCyycxBtpGzWPFU7a6zD32Vu8rJ0s7UH+QhNLlj1aLi2riDdJFh2Q==
-X-Received: by 2002:a17:902:9a8f:: with SMTP id w15mr5654804plp.149.1578678565058;
-        Fri, 10 Jan 2020 09:49:25 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5G0JpOASU+8dPsw9dyToFF25u9NctuOa5AaKBeNFrAY=;
+        b=CFGNH1k7uX/+6IfpruW5663qdM+UGtHhUw9CVMs8D3nvyd9IwcA93TuXinSs90kVX1
+         WGB1CTZD6M7iAL+2ZjyIcWc9GsEunc5TyD3ZciIQRSF4DvO5N5w28WW940ozB9AZCXeJ
+         CfmHKAkb6oAr2lFY+DBY7zG+P/s44MuyavIkOPRIlzU+m2gpuSnpS+nDAgnisiYRhnlF
+         gB/mqDi45zcw4I4fDlzeIAy270RouBtVFLVwidmlxUABlTYZTDZLU6TEvAopDZCPRVFS
+         9fPbWyuds+Oop6oaehWE2isfLzwaQoI6p+S46r8ajctj5BZ4IcSYkYx7l2Rppham7CQb
+         3E3g==
+X-Gm-Message-State: APjAAAXzDWPmjVX239NCbKF/ATjSf9AUtnQERfCICW6ohXWaTTx/tn2Z
+        wZlCtJbaJzgQIoCPc+7HD74osw==
+X-Google-Smtp-Source: APXvYqxQf/b4p2w/6EVZpvlmPOXsCK5KnE33nu8UunvaeRIukRmlLKB3Lq8IbNv0+zddIinr4awbLA==
+X-Received: by 2002:a62:b418:: with SMTP id h24mr5673684pfn.192.1578678566514;
+        Fri, 10 Jan 2020 09:49:26 -0800 (PST)
 Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
-        by smtp.gmail.com with ESMTPSA id 83sm3486093pgh.12.2020.01.10.09.49.24
+        by smtp.gmail.com with ESMTPSA id a6sm3369154pgg.25.2020.01.10.09.49.25
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 Jan 2020 09:49:24 -0800 (PST)
+        Fri, 10 Jan 2020 09:49:26 -0800 (PST)
 From:   Matthias Kaehlcke <mka@chromium.org>
 To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
         Kyungmin Park <kyungmin.park@samsung.com>,
@@ -63,10 +63,12 @@ To:     MyungJoo Ham <myungjoo.ham@samsung.com>,
 Cc:     Leonard Crestez <leonard.crestez@nxp.com>,
         linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
         Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH 1/2] thermal: devfreq_cooling: Use PM QoS to set frequency limits
-Date:   Fri, 10 Jan 2020 09:49:18 -0800
-Message-Id: <20200110094913.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
+Subject: [PATCH 2/2] PM / devfreq: Use exclusively PM QoS to determine frequency limits
+Date:   Fri, 10 Jan 2020 09:49:19 -0800
+Message-Id: <20200110094913.2.Ie8eacf976ce7a13e421592f5c1ab8dbdc537da5c@changeid>
 X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
+In-Reply-To: <20200110094913.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
+References: <20200110094913.1.I146403d05b9ec82f48b807efd416a57f545b447a@changeid>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,141 +76,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that devfreq supports limiting the frequency range of a device
-through PM QoS make use of it instead of disabling OPPs that should
-not be used.
+Traditionally devfreq cooling devices dynamically disabled OPPs
+that shouldn't be used because of thermal pressure. Devfreq cooling
+devices now use PM QoS to set frequency limits, hence the devfreq
+code dealing that deals with disabled OPPs can be removed.
 
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 ---
 
- drivers/thermal/devfreq_cooling.c | 66 ++++++++++---------------------
- 1 file changed, 20 insertions(+), 46 deletions(-)
+ drivers/devfreq/devfreq.c | 75 +++++----------------------------------
+ include/linux/devfreq.h   |  4 ---
+ 2 files changed, 8 insertions(+), 71 deletions(-)
 
-diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
-index ef59256887ff..3a63603afcf2 100644
---- a/drivers/thermal/devfreq_cooling.c
-+++ b/drivers/thermal/devfreq_cooling.c
-@@ -24,11 +24,13 @@
- #include <linux/idr.h>
- #include <linux/slab.h>
- #include <linux/pm_opp.h>
-+#include <linux/pm_qos.h>
- #include <linux/thermal.h>
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 57f6944d65a6..ec66e2c27cc4 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -73,34 +73,6 @@ static struct devfreq *find_device_devfreq(struct device *dev)
+ 	return ERR_PTR(-ENODEV);
+ }
  
- #include <trace/events/thermal.h>
- 
--#define SCALE_ERROR_MITIGATION 100
-+#define HZ_PER_KHZ		1000
-+#define SCALE_ERROR_MITIGATION	100
- 
- static DEFINE_IDA(devfreq_ida);
- 
-@@ -65,49 +67,9 @@ struct devfreq_cooling_device {
- 	struct devfreq_cooling_power *power_ops;
- 	u32 res_util;
- 	int capped_state;
-+	struct dev_pm_qos_request req_max_freq;
- };
- 
--/**
-- * partition_enable_opps() - disable all opps above a given state
-- * @dfc:	Pointer to devfreq we are operating on
-- * @cdev_state:	cooling device state we're setting
-- *
-- * Go through the OPPs of the device, enabling all OPPs until
-- * @cdev_state and disabling those frequencies above it.
-- */
--static int partition_enable_opps(struct devfreq_cooling_device *dfc,
--				 unsigned long cdev_state)
+-static unsigned long find_available_min_freq(struct devfreq *devfreq)
 -{
--	int i;
--	struct device *dev = dfc->devfreq->dev.parent;
+-	struct dev_pm_opp *opp;
+-	unsigned long min_freq = 0;
 -
--	for (i = 0; i < dfc->freq_table_size; i++) {
--		struct dev_pm_opp *opp;
--		int ret = 0;
--		unsigned int freq = dfc->freq_table[i];
--		bool want_enable = i >= cdev_state ? true : false;
--
--		opp = dev_pm_opp_find_freq_exact(dev, freq, !want_enable);
--
--		if (PTR_ERR(opp) == -ERANGE)
--			continue;
--		else if (IS_ERR(opp))
--			return PTR_ERR(opp);
--
+-	opp = dev_pm_opp_find_freq_ceil(devfreq->dev.parent, &min_freq);
+-	if (IS_ERR(opp))
+-		min_freq = 0;
+-	else
 -		dev_pm_opp_put(opp);
 -
--		if (want_enable)
--			ret = dev_pm_opp_enable(dev, freq);
--		else
--			ret = dev_pm_opp_disable(dev, freq);
--
--		if (ret)
--			return ret;
--	}
--
--	return 0;
+-	return min_freq;
 -}
 -
- static int devfreq_cooling_get_max_state(struct thermal_cooling_device *cdev,
- 					 unsigned long *state)
+-static unsigned long find_available_max_freq(struct devfreq *devfreq)
+-{
+-	struct dev_pm_opp *opp;
+-	unsigned long max_freq = ULONG_MAX;
+-
+-	opp = dev_pm_opp_find_freq_floor(devfreq->dev.parent, &max_freq);
+-	if (IS_ERR(opp))
+-		max_freq = 0;
+-	else
+-		dev_pm_opp_put(opp);
+-
+-	return max_freq;
+-}
+-
+ /**
+  * get_freq_range() - Get the current freq range
+  * @devfreq:	the devfreq instance
+@@ -141,10 +113,6 @@ static void get_freq_range(struct devfreq *devfreq,
+ 		*max_freq = min(*max_freq,
+ 				(unsigned long)HZ_PER_KHZ * qos_max_freq);
+ 
+-	/* Apply constraints from OPP interface */
+-	*min_freq = max(*min_freq, devfreq->scaling_min_freq);
+-	*max_freq = min(*max_freq, devfreq->scaling_max_freq);
+-
+ 	if (*min_freq > *max_freq)
+ 		*min_freq = *max_freq;
+ }
+@@ -610,23 +578,10 @@ static int devfreq_notifier_call(struct notifier_block *nb, unsigned long type,
+ 				 void *devp)
  {
-@@ -134,7 +96,7 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
- 	struct devfreq_cooling_device *dfc = cdev->devdata;
- 	struct devfreq *df = dfc->devfreq;
- 	struct device *dev = df->dev.parent;
--	int ret;
-+	unsigned long freq;
+ 	struct devfreq *devfreq = container_of(nb, struct devfreq, nb);
+-	int err = -EINVAL;
++	int err;
  
- 	if (state == dfc->cooling_state)
- 		return 0;
-@@ -144,9 +106,10 @@ static int devfreq_cooling_set_cur_state(struct thermal_cooling_device *cdev,
- 	if (state >= dfc->freq_table_size)
- 		return -EINVAL;
- 
--	ret = partition_enable_opps(dfc, state);
--	if (ret)
--		return ret;
-+	freq = dfc->freq_table[state];
-+
-+	dev_pm_qos_update_request(&dfc->req_max_freq,
-+				  DIV_ROUND_UP(freq, HZ_PER_KHZ));
- 
- 	dfc->cooling_state = state;
- 
-@@ -529,6 +492,12 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
+ 	mutex_lock(&devfreq->lock);
+-
+-	devfreq->scaling_min_freq = find_available_min_freq(devfreq);
+-	if (!devfreq->scaling_min_freq)
+-		goto out;
+-
+-	devfreq->scaling_max_freq = find_available_max_freq(devfreq);
+-	if (!devfreq->scaling_max_freq) {
+-		devfreq->scaling_max_freq = ULONG_MAX;
+-		goto out;
+-	}
+-
+ 	err = update_devfreq(devfreq);
+-
+-out:
+ 	mutex_unlock(&devfreq->lock);
  	if (err)
- 		goto free_dfc;
+ 		dev_err(devfreq->dev.parent,
+@@ -781,19 +736,15 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 		mutex_lock(&devfreq->lock);
+ 	}
  
-+	err = dev_pm_qos_add_request(df->dev.parent, &dfc->req_max_freq,
+-	devfreq->scaling_min_freq = find_available_min_freq(devfreq);
+-	if (!devfreq->scaling_min_freq) {
+-		mutex_unlock(&devfreq->lock);
+-		err = -EINVAL;
++	err = dev_pm_qos_add_request(dev, &devfreq->user_min_freq_req,
++				     DEV_PM_QOS_MIN_FREQUENCY, 0);
++	if (err < 0)
+ 		goto err_dev;
+-	}
+-
+-	devfreq->scaling_max_freq = find_available_max_freq(devfreq);
+-	if (!devfreq->scaling_max_freq) {
+-		mutex_unlock(&devfreq->lock);
+-		err = -EINVAL;
++	err = dev_pm_qos_add_request(dev, &devfreq->user_max_freq_req,
 +				     DEV_PM_QOS_MAX_FREQUENCY,
 +				     PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
 +	if (err < 0)
-+		goto remove_qos_req;
-+
- 	err = ida_simple_get(&devfreq_ida, 0, 0, GFP_KERNEL);
- 	if (err < 0)
- 		goto free_tables;
-@@ -552,6 +521,10 @@ of_devfreq_cooling_register_power(struct device_node *np, struct devfreq *df,
+ 		goto err_dev;
+-	}
  
- release_ida:
- 	ida_simple_remove(&devfreq_ida, dfc->id);
-+
-+remove_qos_req:
-+	dev_pm_qos_remove_request(&dfc->req_max_freq);
-+
- free_tables:
- 	kfree(dfc->power_table);
- 	kfree(dfc->freq_table);
-@@ -600,6 +573,7 @@ void devfreq_cooling_unregister(struct thermal_cooling_device *cdev)
+ 	devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
+ 	atomic_set(&devfreq->suspend_count, 0);
+@@ -834,16 +785,6 @@ struct devfreq *devfreq_add_device(struct device *dev,
  
- 	thermal_cooling_device_unregister(dfc->cdev);
- 	ida_simple_remove(&devfreq_ida, dfc->id);
-+	dev_pm_qos_remove_request(&dfc->req_max_freq);
- 	kfree(dfc->power_table);
- 	kfree(dfc->freq_table);
+ 	mutex_unlock(&devfreq->lock);
  
+-	err = dev_pm_qos_add_request(dev, &devfreq->user_min_freq_req,
+-				     DEV_PM_QOS_MIN_FREQUENCY, 0);
+-	if (err < 0)
+-		goto err_devfreq;
+-	err = dev_pm_qos_add_request(dev, &devfreq->user_max_freq_req,
+-				     DEV_PM_QOS_MAX_FREQUENCY,
+-				     PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE);
+-	if (err < 0)
+-		goto err_devfreq;
+-
+ 	devfreq->nb_min.notifier_call = qos_min_notifier_call;
+ 	err = dev_pm_qos_add_notifier(devfreq->dev.parent, &devfreq->nb_min,
+ 				      DEV_PM_QOS_MIN_FREQUENCY);
+diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
+index fb376b5b7281..cb75f23ad2f4 100644
+--- a/include/linux/devfreq.h
++++ b/include/linux/devfreq.h
+@@ -126,8 +126,6 @@ struct devfreq_dev_profile {
+  *		touch this.
+  * @user_min_freq_req:	PM QoS minimum frequency request from user (via sysfs)
+  * @user_max_freq_req:	PM QoS maximum frequency request from user (via sysfs)
+- * @scaling_min_freq:	Limit minimum frequency requested by OPP interface
+- * @scaling_max_freq:	Limit maximum frequency requested by OPP interface
+  * @stop_polling:	 devfreq polling status of a device.
+  * @suspend_freq:	 frequency of a device set during suspend phase.
+  * @resume_freq:	 frequency of a device set in resume phase.
+@@ -166,8 +164,6 @@ struct devfreq {
+ 
+ 	struct dev_pm_qos_request user_min_freq_req;
+ 	struct dev_pm_qos_request user_max_freq_req;
+-	unsigned long scaling_min_freq;
+-	unsigned long scaling_max_freq;
+ 	bool stop_polling;
+ 
+ 	unsigned long suspend_freq;
 -- 
 2.25.0.rc1.283.g88dfdc4193-goog
 
