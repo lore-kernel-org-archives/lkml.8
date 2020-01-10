@@ -2,127 +2,162 @@ Return-Path: <SRS0=n6RB=27=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBB7C282DD
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C90C282DD
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39FDA2072E
-	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A097E2082E
+	for <linux-kernel@archiver.kernel.org>; Fri, 10 Jan 2020 18:44:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgAJSoN (ORCPT
+        id S1728761AbgAJSoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 13:44:13 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:53063 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbgAJSoM (ORCPT
+        Fri, 10 Jan 2020 13:44:18 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:41542 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728390AbgAJSoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 10 Jan 2020 13:44:12 -0500
-Received: by mail-il1-f197.google.com with SMTP id n9so2149176ilm.19
+Received: by mail-io1-f72.google.com with SMTP id m12so2087946ioh.8
         for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 10:44:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
-         :content-transfer-encoding;
-        bh=TRXVUW5VdRfR8tbpVKkySd5KgoB+rtYOEj2qlqOy3d8=;
-        b=Lj7ITd01fhdhJ6TkN2k7Rkg5vLeLjJNmkl+/fovXnPdYoEtXqXsw/xAn2eYe0falTg
-         sirMBCfMVv9v9J3K8dHsbC6NS7vhxZEgXL7UW07DVBsSM0EgLbSmIgNWTqvpFDM2efaj
-         WmZMxsZOzT7jl/SfTls7pzg+fu9qA72V2BYN/95SNlWYUhhqqAjumPw7LFkrfoofQxYb
-         7HEcMZzF6k/3m6lWUvIqD1Ktc5aGobXDoJTFlR97YFtpco7Dbl/46yyCWXr0L8TEEqkh
-         1Q46XsR6n6aVv51/8Uz9Os+BsP+8ilsAcWTUn7Tvas5g1Nyua/U0Pmaoa2KB5c1gJvz/
-         S8zg==
-X-Gm-Message-State: APjAAAV8ALZVx1QHnilazArGyv4pxX7lC70C7pvkiXqiFeEaDEUou032
-        sZbZYzTbTrusc+6k001F/AlpI10efg/KfZKq2py56mXhLUT6
-X-Google-Smtp-Source: APXvYqztOglm25N3WF3mJHQF32KEiLuqz1sb1hpDTNozKqaL/axJkCoX9YYR3F10NTnBdFwXcfiQqcfzMl/AEDKxGEkoV3QsTkAn
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=UtgqWyCMHEbuMc1chkx9FfigMbDl2qVQb2WRO39xvW8=;
+        b=B4xPjQzVjZPJoTNyhfWmS/exrMrc5JEIlXs8dIttolTHDSBmnxSM4bmwfx6IEKjH5i
+         Lb5OJpc1jeU9tzx47qD4QHI6IM8QUuqLk6MzPEa7eZcodxl5J6BH4X5oXKYty3ALzyKW
+         VR/wCCLPb28U5ct7Qj23pBWUCwCFnM6BodkqH+IZbwIZtRqsYq67Zw/FdG5jTMy7B4oR
+         v99d0wjCI6KUGoDWpoaPUCQuxsrNPej/OWvjdngQTY9cvJbCJMtu0TCcww8TAedyBy6k
+         jOmJlBtNF1DCmpJyOgWRX2uy3SegvwafjXCl8bK2Wviq/M9r7LuN6W7a6d43Fexsz3eX
+         4tPA==
+X-Gm-Message-State: APjAAAV2FeI11MzgbbvBcQv7IZ00+S5sk/IzfT2TBlJA3XarEypKCTEf
+        u+mEcmIC4+yR6PkF0wRaTO2oV+WdW+puFQyj/9cDgoeVLVCB
+X-Google-Smtp-Source: APXvYqz/absesZKveMvYc0mhZ7cQ4Ny4xIv6iOqFCtlPa1fHpSpzkHhTbbUQGL1GiI5GNSBDPPcZOL+G8hHdpLSrUr+ykFDhxjQy
 MIME-Version: 1.0
-X-Received: by 2002:a92:730d:: with SMTP id o13mr3882562ilc.174.1578681851134;
+X-Received: by 2002:a02:6a10:: with SMTP id l16mr4151275jac.77.1578681851625;
  Fri, 10 Jan 2020 10:44:11 -0800 (PST)
 Date:   Fri, 10 Jan 2020 10:44:11 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f349be059bcd827a@google.com>
-Subject: WARNING in __xlate_proc_name (2)
-From:   syzbot <syzbot+016c7186c1d55575bab8@syzkaller.appspotmail.com>
-To:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Message-ID: <000000000000fac92e059bcd82f4@google.com>
+Subject: WARNING in set_precision (2)
+From:   syzbot <syzbot+6693adf1698864d21734@syzkaller.appspotmail.com>
+To:     andrew@lunn.ch, davem@davemloft.net, f.fainelli@gmail.com,
+        johannes@sipsolutions.net, kvalo@codeaurora.org,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        mkubecek@suse.cz, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
-Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
-bW1pdDogICAgYjA3ZjYzNmYgTWVyZ2UgdGFnICd0cG1kZC1uZXh0LTIwMjAwMTA4JyBvZiBnaXQ6
-Ly9naXQuaW5mci4uDQpnaXQgdHJlZTogICAgICAgdXBzdHJlYW0NCmNvbnNvbGUgb3V0cHV0OiBo
-dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L2xvZy50eHQ/eD0xMjkzZjU0OWUwMDAwMA0K
-a2VybmVsIGNvbmZpZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvLmNvbmZpZz94
-PTE4Njk4YzBjMjQwYmE2MTYNCmRhc2hib2FyZCBsaW5rOiBodHRwczovL3N5emthbGxlci5hcHBz
-cG90LmNvbS9idWc/ZXh0aWQ9MDE2YzcxODZjMWQ1NTU3NWJhYjgNCmNvbXBpbGVyOiAgICAgICBn
-Y2MgKEdDQykgOS4wLjAgMjAxODEyMzEgKGV4cGVyaW1lbnRhbCkNCnN5eiByZXBybzogICAgICBo
-dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L3JlcHJvLnN5ej94PTEzYmFiYzg1ZTAwMDAw
-DQpDIHJlcHJvZHVjZXI6ICAgaHR0cHM6Ly9zeXprYWxsZXIuYXBwc3BvdC5jb20veC9yZXByby5j
-P3g9MTRiMTRkMTVlMDAwMDANCg0KVGhlIGJ1ZyB3YXMgYmlzZWN0ZWQgdG86DQoNCmNvbW1pdCA5
-ODk3ODJkY2RjOTFhNWU2ZDU5OTljN2E1MmE4NGE2MGEwODExZTU2DQpBdXRob3I6IERhdmlkIEhv
-d2VsbHMgPGRob3dlbGxzQHJlZGhhdC5jb20+DQpEYXRlOiAgIFRodSBOb3YgMiAxNToyNzo1MCAy
-MDE3ICswMDAwDQoNCiAgICAgYWZzOiBPdmVyaGF1bCBjZWxsIGRhdGFiYXNlIG1hbmFnZW1lbnQN
-Cg0KYmlzZWN0aW9uIGxvZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFwcHNwb3QuY29tL3gvYmlzZWN0
-LnR4dD94PTEyMDUyMTU2ZTAwMDAwDQpmaW5hbCBjcmFzaDogICAgaHR0cHM6Ly9zeXprYWxsZXIu
-YXBwc3BvdC5jb20veC9yZXBvcnQudHh0P3g9MTEwNTIxNTZlMDAwMDANCmNvbnNvbGUgb3V0cHV0
-OiBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L2xvZy50eHQ/eD0xNjA1MjE1NmUwMDAw
-MA0KDQpJTVBPUlRBTlQ6IGlmIHlvdSBmaXggdGhlIGJ1ZywgcGxlYXNlIGFkZCB0aGUgZm9sbG93
-aW5nIHRhZyB0byB0aGUgY29tbWl0Og0KUmVwb3J0ZWQtYnk6IHN5emJvdCswMTZjNzE4NmMxZDU1
-NTc1YmFiOEBzeXprYWxsZXIuYXBwc3BvdG1haWwuY29tDQpGaXhlczogOTg5NzgyZGNkYzkxICgi
-YWZzOiBPdmVyaGF1bCBjZWxsIGRhdGFiYXNlIG1hbmFnZW1lbnQiKQ0KDQotLS0tLS0tLS0tLS1b
-IGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0NCm5hbWUgJ++/veWTojA977+977+977+9FiPvv716Bg0K
-77+9L++/vWcS77+9IyF3EWph77+9KzInDQpXQVJOSU5HOiBDUFU6IDEgUElEOiAyNjY5IGF0IGZz
-L3Byb2MvZ2VuZXJpYy5jOjE3OCBfX3hsYXRlX3Byb2NfbmFtZSAgDQpmcy9wcm9jL2dlbmVyaWMu
-YzoxNzggW2lubGluZV0NCldBUk5JTkc6IENQVTogMSBQSUQ6IDI2NjkgYXQgZnMvcHJvYy9nZW5l
-cmljLmM6MTc4ICANCl9feGxhdGVfcHJvY19uYW1lKzB4ZTcvMHgxMTAgZnMvcHJvYy9nZW5lcmlj
-LmM6MTYxDQpLZXJuZWwgcGFuaWMgLSBub3Qgc3luY2luZzogcGFuaWNfb25fd2FybiBzZXQgLi4u
-DQpDUFU6IDEgUElEOiAyNjY5IENvbW06IGt3b3JrZXIvMToyIE5vdCB0YWludGVkIDUuNS4wLXJj
-NS1zeXprYWxsZXIgIzANCkhhcmR3YXJlIG5hbWU6IEdvb2dsZSBHb29nbGUgQ29tcHV0ZSBFbmdp
-bmUvR29vZ2xlIENvbXB1dGUgRW5naW5lLCBCSU9TICANCkdvb2dsZSAwMS8wMS8yMDExDQpXb3Jr
-cXVldWU6IGFmcyBhZnNfbWFuYWdlX2NlbGwNCkNhbGwgVHJhY2U6DQogIF9fZHVtcF9zdGFjayBs
-aWIvZHVtcF9zdGFjay5jOjc3IFtpbmxpbmVdDQogIGR1bXBfc3RhY2srMHgxOTcvMHgyMTAgbGli
-L2R1bXBfc3RhY2suYzoxMTgNCiAgcGFuaWMrMHgyZTMvMHg3NWMga2VybmVsL3BhbmljLmM6MjIx
-DQogIF9fd2Fybi5jb2xkKzB4MmYvMHgzZSBrZXJuZWwvcGFuaWMuYzo1ODINCiAgcmVwb3J0X2J1
-ZysweDI4OS8weDMwMCBsaWIvYnVnLmM6MTk1DQogIGZpeHVwX2J1ZyBhcmNoL3g4Ni9rZXJuZWwv
-dHJhcHMuYzoxNzQgW2lubGluZV0NCiAgZml4dXBfYnVnIGFyY2gveDg2L2tlcm5lbC90cmFwcy5j
-OjE2OSBbaW5saW5lXQ0KICBkb19lcnJvcl90cmFwKzB4MTFiLzB4MjAwIGFyY2gveDg2L2tlcm5l
-bC90cmFwcy5jOjI2Nw0KICBkb19pbnZhbGlkX29wKzB4MzcvMHg1MCBhcmNoL3g4Ni9rZXJuZWwv
-dHJhcHMuYzoyODYNCiAgaW52YWxpZF9vcCsweDIzLzB4MzAgYXJjaC94ODYvZW50cnkvZW50cnlf
-NjQuUzoxMDI3DQpSSVA6IDAwMTA6X194bGF0ZV9wcm9jX25hbWUgZnMvcHJvYy9nZW5lcmljLmM6
-MTc4IFtpbmxpbmVdDQpSSVA6IDAwMTA6X194bGF0ZV9wcm9jX25hbWUrMHhlNy8weDExMCBmcy9w
-cm9jL2dlbmVyaWMuYzoxNjENCkNvZGU6IDNmIGViIDkwIGZmIDQ0IDg5IGUwIDQ4IDgzIGM0IDA4
-IDViIDQxIDVjIDQxIDVkIDQxIDVlIDQxIDVmIDVkIGMzIGU4ICANCjI4IGViIDkwIGZmIDRjIDg5
-IGZlIDQ4IGM3IGM3IDQwIDE4IDM5IDg4IGU4IDg4IDk5IDYxIGZmIDwwZj4gMGIgNDEgYmMgZmUg
-IA0KZmYgZmYgZmYgZWIgY2IgNGMgODkgZjcgZTggMzcgYTQgY2UgZmYgZTkgM2QgZmYgZmYNClJT
-UDogMDAxODpmZmZmYzkwMDA3OWJmOWQwIEVGTEFHUzogMDAwMTAyODINClJBWDogMDAwMDAwMDAw
-MDAwMDAwMCBSQlg6IGZmZmY4ODgwOTRlYTNkNDkgUkNYOiAwMDAwMDAwMDAwMDAwMDAwDQpSRFg6
-IDAwMDAwMDAwMDAwMDAwMDAgUlNJOiBmZmZmZmZmZjgxNWU4NTA2IFJESTogZmZmZmY1MjAwMGYz
-N2YyYw0KUkJQOiBmZmZmYzkwMDA3OWJmYTAwIFIwODogZmZmZjg4ODBhMGFhNjQ4MCBSMDk6IGZm
-ZmZmYmZmZjE2NWViYTYNClIxMDogZmZmZmZiZmZmMTY1ZWJhNSBSMTE6IGZmZmZmZmZmOGIyZjVk
-MmYgUjEyOiAwMDAwMDAwMDAwMDAwMDAwDQpSMTM6IGZmZmY4ODgwOTRlYTNkMzkgUjE0OiBmZmZm
-YzkwMDA3OWJmYjA4IFIxNTogZmZmZjg4ODA5NGVhM2QzOQ0KICB4bGF0ZV9wcm9jX25hbWUgZnMv
-cHJvYy9nZW5lcmljLmM6MTk0IFtpbmxpbmVdDQogIF9fcHJvY19jcmVhdGUrMHhhYy8weDg2MCBm
-cy9wcm9jL2dlbmVyaWMuYzozODcNCiAgcHJvY19ta2Rpcl9kYXRhKzB4YmMvMHgxYjAgZnMvcHJv
-Yy9nZW5lcmljLmM6NDczDQogIHByb2NfbmV0X21rZGlyIGluY2x1ZGUvbGludXgvcHJvY19mcy5o
-OjEzOSBbaW5saW5lXQ0KICBhZnNfcHJvY19jZWxsX3NldHVwKzB4OTUvMHgxOTAgZnMvYWZzL3By
-b2MuYzo2MTANCiAgYWZzX2FjdGl2YXRlX2NlbGwgZnMvYWZzL2NlbGwuYzo1OTEgW2lubGluZV0N
-CiAgYWZzX21hbmFnZV9jZWxsKzB4NTRiLzB4MTQxMCBmcy9hZnMvY2VsbC5jOjY3Mw0KICBwcm9j
-ZXNzX29uZV93b3JrKzB4OWFmLzB4MTc0MCBrZXJuZWwvd29ya3F1ZXVlLmM6MjI2NA0KICB3b3Jr
-ZXJfdGhyZWFkKzB4OTgvMHhlNDAga2VybmVsL3dvcmtxdWV1ZS5jOjI0MTANCiAga3RocmVhZCsw
-eDM2MS8weDQzMCBrZXJuZWwva3RocmVhZC5jOjI1NQ0KICByZXRfZnJvbV9mb3JrKzB4MjQvMHgz
-MCBhcmNoL3g4Ni9lbnRyeS9lbnRyeV82NC5TOjM1Mg0KS2VybmVsIE9mZnNldDogZGlzYWJsZWQN
-ClJlYm9vdGluZyBpbiA4NjQwMCBzZWNvbmRzLi4NCg0KDQotLS0NClRoaXMgYnVnIGlzIGdlbmVy
-YXRlZCBieSBhIGJvdC4gSXQgbWF5IGNvbnRhaW4gZXJyb3JzLg0KU2VlIGh0dHBzOi8vZ29vLmds
-L3Rwc21FSiBmb3IgbW9yZSBpbmZvcm1hdGlvbiBhYm91dCBzeXpib3QuDQpzeXpib3QgZW5naW5l
-ZXJzIGNhbiBiZSByZWFjaGVkIGF0IHN5emthbGxlckBnb29nbGVncm91cHMuY29tLg0KDQpzeXpi
-b3Qgd2lsbCBrZWVwIHRyYWNrIG9mIHRoaXMgYnVnIHJlcG9ydC4gU2VlOg0KaHR0cHM6Ly9nb28u
-Z2wvdHBzbUVKI3N0YXR1cyBmb3IgaG93IHRvIGNvbW11bmljYXRlIHdpdGggc3l6Ym90Lg0KRm9y
-IGluZm9ybWF0aW9uIGFib3V0IGJpc2VjdGlvbiBwcm9jZXNzIHNlZTogaHR0cHM6Ly9nb28uZ2wv
-dHBzbUVKI2Jpc2VjdGlvbg0Kc3l6Ym90IGNhbiB0ZXN0IHBhdGNoZXMgZm9yIHRoaXMgYnVnLCBm
-b3IgZGV0YWlscyBzZWU6DQpodHRwczovL2dvby5nbC90cHNtRUojdGVzdGluZy1wYXRjaGVzDQo=
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    1ece2fbe ptp: clockmatrix: Rework clockmatrix version info..
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=1709d58ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ff06bf0a19e7467d
+dashboard link: https://syzkaller.appspot.com/bug?extid=6693adf1698864d21734
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15380c66e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=131916aee00000
+
+The bug was bisected to:
+
+commit 2b4a8990b7df55875745a80a609a1ceaaf51f322
+Author: Michal Kubecek <mkubecek@suse.cz>
+Date:   Fri Dec 27 14:55:18 2019 +0000
+
+     ethtool: introduce ethtool netlink interface
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11c40c66e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=13c40c66e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15c40c66e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6693adf1698864d21734@syzkaller.appspotmail.com
+Fixes: 2b4a8990b7df ("ethtool: introduce ethtool netlink interface")
+
+netlink: 179916 bytes leftover after parsing attributes in process  
+`syz-executor273'.
+------------[ cut here ]------------
+precision 33020 too large
+WARNING: CPU: 0 PID: 9618 at lib/vsprintf.c:2471 set_precision+0x150/0x180  
+lib/vsprintf.c:2471
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 9618 Comm: syz-executor273 Not tainted 5.5.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  panic+0x2e3/0x75c kernel/panic.c:221
+  __warn.cold+0x2f/0x3e kernel/panic.c:582
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:set_precision+0x150/0x180 lib/vsprintf.c:2471
+Code: 24 07 e8 23 30 9f f9 5b 41 5c 41 5d 41 5e 5d c3 e8 15 30 9f f9 89 de  
+48 c7 c7 60 c1 f7 88 c6 05 64 4b a1 02 01 e8 5f de 6f f9 <0f> 0b e9 60 ff  
+ff ff be 08 00 00 00 4c 89 e7 e8 4c e5 dc f9 e9 04
+RSP: 0018:ffffc90001d87280 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 00000000000080fc RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815e8fc6 RDI: fffff520003b0e42
+RBP: ffffc90001d872a0 R08: ffff88808d0702c0 R09: fffffbfff165f9ab
+R10: fffffbfff165f9aa R11: ffffffff8b2fcd57 R12: ffffc90001d87320
+R13: 0000000000000000 R14: ffffc90001d87327 R15: ffffc90001d87360
+  vsnprintf+0xa7b/0x19a0 lib/vsprintf.c:2547
+  kvasprintf+0xb2/0x170 lib/kasprintf.c:22
+  kasprintf+0xbb/0xf0 lib/kasprintf.c:59
+  hwsim_del_radio_nl+0x63a/0x7e0 drivers/net/wireless/mac80211_hwsim.c:3625
+  genl_family_rcv_msg_doit net/netlink/genetlink.c:672 [inline]
+  genl_family_rcv_msg net/netlink/genetlink.c:717 [inline]
+  genl_rcv_msg+0x67d/0xea0 net/netlink/genetlink.c:734
+  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+  genl_rcv+0x29/0x40 net/netlink/genetlink.c:745
+  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+  netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+  netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+  sock_sendmsg_nosec net/socket.c:643 [inline]
+  sock_sendmsg+0xd7/0x130 net/socket.c:663
+  ____sys_sendmsg+0x753/0x880 net/socket.c:2342
+  ___sys_sendmsg+0x100/0x170 net/socket.c:2396
+  __sys_sendmsg+0x105/0x1d0 net/socket.c:2429
+  __do_sys_sendmsg net/socket.c:2438 [inline]
+  __se_sys_sendmsg net/socket.c:2436 [inline]
+  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2436
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4401f9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe53b2d788 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401f9
+RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a80
+R13: 0000000000401b10 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
