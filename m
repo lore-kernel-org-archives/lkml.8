@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF61DC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653F5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 973FC2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:53:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FF02072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:53:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736421;
-	bh=fhlcQmFWTNKfyMD+4xBpzmIXoNDEIhJpEW5MJ8XJlgA=;
+	s=default; t=1578736425;
+	bh=Zoz73Dzh16pD7OKodj6miQbo8eLdSB8KwPVWZllNx/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kjDJW0qJc5wybszhDcDmZZEek6ueolnBhxa+TgrMcC/VzwzeNy5RhTrnhpN3N1eVi
-	 /asBtlNkXsIO5MlJP7ENXOVHe+vpIGHttctMjImu3x6eXlqQsLU5KEgLjP2eHHmPsH
-	 s6Ye7cdVZ46u+1oFtXRe3ok7F+EJ5Oi4UTbIvdUQ=
+	b=s+YMGEm3VXuhxCyc9lilj2mY0mdLQmiAsHaLjaamxE9RpbBlywoISz3inrs3tw8H6
+	 MZpNLHQ6ep/pekXvHdkb31qkd6YrGNru+ASumrb5zsEkPIUcDcPBGZ8VcMMTXH21VR
+	 YCnlzLn7SJ1trE2SYha2jE/5t/WJm3ph93jloioo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgAKJxl (ORCPT
+        id S1728972AbgAKJxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:53:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40744 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:53:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728788AbgAKJxk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:53:40 -0500
+        id S1728767AbgAKJxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:53:44 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38EC52077C;
-        Sat, 11 Jan 2020 09:53:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1AEE2077C;
+        Sat, 11 Jan 2020 09:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736419;
-        bh=fhlcQmFWTNKfyMD+4xBpzmIXoNDEIhJpEW5MJ8XJlgA=;
+        s=default; t=1578736423;
+        bh=Zoz73Dzh16pD7OKodj6miQbo8eLdSB8KwPVWZllNx/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gUfy4aq3InIGu83SWZU9GxZBT/DzHig6kikDltRF0FhKnDozYFx8SBpDr6fIZpyA3
-         pXcyHVh9dR59P8rEWcR/yhLDPSG66Ea1uskgDcoMBdGySnQgm3nxFZDa3Y4wMvWW1y
-         HNGC6GK1xcw0XQV7xiAND0mwAnokXXC5d9wKVjOI=
+        b=FtlmUdfhalQfFnUxHXM+NllZGhe7bdggD6WZqIe3Kxv0BD9Sl5lo6b533b90Tem7p
+         ymf0IghF2f0bRMHfe15c8FT+VbpC/oWzqYUE8jUSPBqK3N9A8nkQcnSHcfuFly6Hsb
+         d9bY7V3G6snCBBPnSSDU2+25JW0jSvLrqxDJPBvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 31/59] s390/smp: fix physical to logical CPU map for SMT
-Date:   Sat, 11 Jan 2020 10:49:40 +0100
-Message-Id: <20200111094844.629668515@linuxfoundation.org>
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 14/59] Revert "perf report: Add warning when libunwind not compiled in"
+Date:   Sat, 11 Jan 2020 10:49:23 +0100
+Message-Id: <20200111094841.123572631@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
 References: <20200111094835.417654274@linuxfoundation.org>
@@ -60,153 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
+This reverts commit 59b706ce44dbfd35a428f2cbad47794ce5dce1eb.
 
-[ Upstream commit 72a81ad9d6d62dcb79f7e8ad66ffd1c768b72026 ]
+This change depends on more changes that didn't exist in 4.9 and older.
 
-If an SMT capable system is not IPL'ed from the first CPU the setup of
-the physical to logical CPU mapping is broken: the IPL core gets CPU
-number 0, but then the next core gets CPU number 1. Correct would be
-that all SMT threads of CPU 0 get the subsequent logical CPU numbers.
-
-This is important since a lot of code (like e.g. the CPU topology
-code) assumes that CPU maps are setup like this. If the mapping is
-broken the system will not IPL due to broken topology masks:
-
-[    1.716341] BUG: arch topology broken
-[    1.716342]      the SMT domain not a subset of the MC domain
-[    1.716343] BUG: arch topology broken
-[    1.716344]      the MC domain not a subset of the BOOK domain
-
-This scenario can usually not happen since LPARs are always IPL'ed
-from CPU 0 and also re-IPL is intiated from CPU 0. However older
-kernels did initiate re-IPL on an arbitrary CPU. If therefore a re-IPL
-from an old kernel into a new kernel is initiated this may lead to
-crash.
-
-Fix this by setting up the physical to logical CPU mapping correctly.
-
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/smp.c | 80 ++++++++++++++++++++++++++++--------------
- 1 file changed, 54 insertions(+), 26 deletions(-)
+ tools/perf/builtin-report.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index 29e5409c0d48..f113fcd781d8 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -702,39 +702,67 @@ static struct sclp_core_info *smp_get_core_info(void)
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 0f7ebac1846b..f256fac1e722 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -285,13 +285,6 @@ static int report__setup_sample_type(struct report *rep)
+ 				PERF_SAMPLE_BRANCH_ANY))
+ 		rep->nonany_branch_mode = true;
  
- static int smp_add_present_cpu(int cpu);
- 
--static int __smp_rescan_cpus(struct sclp_core_info *info, int sysfs_add)
-+static int smp_add_core(struct sclp_core_entry *core, cpumask_t *avail,
-+			bool configured, bool early)
- {
- 	struct pcpu *pcpu;
--	cpumask_t avail;
--	int cpu, nr, i, j;
-+	int cpu, nr, i;
- 	u16 address;
- 
- 	nr = 0;
--	cpumask_xor(&avail, cpu_possible_mask, cpu_present_mask);
--	cpu = cpumask_first(&avail);
--	for (i = 0; (i < info->combined) && (cpu < nr_cpu_ids); i++) {
--		if (sclp.has_core_type && info->core[i].type != boot_core_type)
-+	if (sclp.has_core_type && core->type != boot_core_type)
-+		return nr;
-+	cpu = cpumask_first(avail);
-+	address = core->core_id << smp_cpu_mt_shift;
-+	for (i = 0; (i <= smp_cpu_mtid) && (cpu < nr_cpu_ids); i++) {
-+		if (pcpu_find_address(cpu_present_mask, address + i))
- 			continue;
--		address = info->core[i].core_id << smp_cpu_mt_shift;
--		for (j = 0; j <= smp_cpu_mtid; j++) {
--			if (pcpu_find_address(cpu_present_mask, address + j))
--				continue;
--			pcpu = pcpu_devices + cpu;
--			pcpu->address = address + j;
--			pcpu->state =
--				(cpu >= info->configured*(smp_cpu_mtid + 1)) ?
--				CPU_STATE_STANDBY : CPU_STATE_CONFIGURED;
--			smp_cpu_set_polarization(cpu, POLARIZATION_UNKNOWN);
--			set_cpu_present(cpu, true);
--			if (sysfs_add && smp_add_present_cpu(cpu) != 0)
--				set_cpu_present(cpu, false);
--			else
--				nr++;
--			cpu = cpumask_next(cpu, &avail);
--			if (cpu >= nr_cpu_ids)
-+		pcpu = pcpu_devices + cpu;
-+		pcpu->address = address + i;
-+		if (configured)
-+			pcpu->state = CPU_STATE_CONFIGURED;
-+		else
-+			pcpu->state = CPU_STATE_STANDBY;
-+		smp_cpu_set_polarization(cpu, POLARIZATION_UNKNOWN);
-+		set_cpu_present(cpu, true);
-+		if (!early && smp_add_present_cpu(cpu) != 0)
-+			set_cpu_present(cpu, false);
-+		else
-+			nr++;
-+		cpumask_clear_cpu(cpu, avail);
-+		cpu = cpumask_next(cpu, avail);
-+	}
-+	return nr;
-+}
-+
-+static int __smp_rescan_cpus(struct sclp_core_info *info, bool early)
-+{
-+	struct sclp_core_entry *core;
-+	cpumask_t avail;
-+	bool configured;
-+	u16 core_id;
-+	int nr, i;
-+
-+	nr = 0;
-+	cpumask_xor(&avail, cpu_possible_mask, cpu_present_mask);
-+	/*
-+	 * Add IPL core first (which got logical CPU number 0) to make sure
-+	 * that all SMT threads get subsequent logical CPU numbers.
-+	 */
-+	if (early) {
-+		core_id = pcpu_devices[0].address >> smp_cpu_mt_shift;
-+		for (i = 0; i < info->configured; i++) {
-+			core = &info->core[i];
-+			if (core->core_id == core_id) {
-+				nr += smp_add_core(core, &avail, true, early);
- 				break;
-+			}
- 		}
- 	}
-+	for (i = 0; i < info->combined; i++) {
-+		configured = i < info->configured;
-+		nr += smp_add_core(&info->core[i], &avail, configured, early);
-+	}
- 	return nr;
+-#ifndef HAVE_LIBUNWIND_SUPPORT
+-	if (dwarf_callchain_users) {
+-		ui__warning("Please install libunwind development packages "
+-			    "during the perf build.\n");
+-	}
+-#endif
+-
+ 	return 0;
  }
  
-@@ -782,7 +810,7 @@ static void __init smp_detect_cpus(void)
- 
- 	/* Add CPUs present at boot */
- 	get_online_cpus();
--	__smp_rescan_cpus(info, 0);
-+	__smp_rescan_cpus(info, true);
- 	put_online_cpus();
- 	kfree(info);
- }
-@@ -1140,7 +1168,7 @@ int __ref smp_rescan_cpus(void)
- 		return -ENOMEM;
- 	get_online_cpus();
- 	mutex_lock(&smp_cpu_state_mutex);
--	nr = __smp_rescan_cpus(info, 1);
-+	nr = __smp_rescan_cpus(info, false);
- 	mutex_unlock(&smp_cpu_state_mutex);
- 	put_online_cpus();
- 	kfree(info);
 -- 
 2.20.1
 
