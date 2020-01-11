@@ -7,56 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D4DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44029C33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C98A20882
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B4C720882
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737714;
-	bh=GO7tGw4PWBWDUud0LUtRlKZcxaeqxivaTtMUKSsvUI8=;
+	s=default; t=1578737717;
+	bh=krTLrVFMMhFw59KqM6Sc1XIPnvxmiQ9iy0lkBLR8KnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yWPSZORe12Wvit7KVplOW6Me2DdtKFr/B0XyVt/gYwplPfdHPQD5KOnKnB3Mek/V8
-	 xqpi/zivc+m3DC5/2OM65a8mNJ/cGgIuZyVMSYCOmDbMdps3VwLJbj7yFhKsmIBXas
-	 0fm10oiBNidsI/GopUfqbg5qoJHUxnYS8n166Ggs=
+	b=a0p/ROY52Qo/kCUCiLjDY39PKAy5XX/DI6TCO4zqCKMjuzox06Pu4J42CMscZGAGF
+	 J3w1CDnSqYvc6KqJe4FVqUgkrd6YRTvh/pkDehtuVXEtvAluf1j3XT2hHM30UQsZ6t
+	 yx8/zOVwwgyYGHa9f122FEQVgPl+ce8EBd0mg5EQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbgAKKPN (ORCPT
+        id S1730224AbgAKKPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:15:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56218 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:15:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730048AbgAKKPK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:15:10 -0500
+        id S1730048AbgAKKPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:15:14 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CCAA2082E;
-        Sat, 11 Jan 2020 10:15:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD0CE20673;
+        Sat, 11 Jan 2020 10:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737709;
-        bh=GO7tGw4PWBWDUud0LUtRlKZcxaeqxivaTtMUKSsvUI8=;
+        s=default; t=1578737713;
+        bh=krTLrVFMMhFw59KqM6Sc1XIPnvxmiQ9iy0lkBLR8KnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kMV1dOPDgsFJ33Ns5YQW6JjKmvLMJjcBJ21qODnIbQoHdHdkR1zYu9tJX9UhySKDJ
-         PuCnvH7xxswkeOl6zSgYMiZbK1b/dVIXywumhsFXw5Ox/hE8Hxb3cWZLCDNTmZ2viY
-         Nz05rKmHNThVUmOne/3y7TqTx2DHZkwpLls/HcMg=
+        b=Ww7ly9fyp54VIAZbyDAE9T+tQB8DlwwqNCkHsoRhn59E0kJouWtytJAafKKplxoqV
+         R/CutnQJaMQroQ3YxzvLG+TLhRQqTd/Hf1gQgcDohn8aHHp9+YZtBeRmwtUFm5Go1T
+         XXZmR4q8LxJQLyifQ/zNqT2IPxr/cuk0F0FzlTj8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Michael Weiser <michael@weiser.dinsnail.net>,
-        Dave Young <dyoung@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 10/84] x86/efi: Update e820 with reserved EFI boot services data to fix kexec breakage
-Date:   Sat, 11 Jan 2020 10:49:47 +0100
-Message-Id: <20200111094848.096404230@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 11/84] ASoC: Intel: bytcr_rt5640: Update quirk for Teclast X89
+Date:   Sat, 11 Jan 2020 10:49:48 +0100
+Message-Id: <20200111094848.526477075@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -69,83 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Young <dyoung@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit af164898482817a1d487964b68f3c21bae7a1beb ]
+[ Upstream commit 7eccc05c7101f34cc36afe9405d15de6d4099fb4 ]
 
-Michael Weiser reported that he got this error during a kexec rebooting:
+When the Teclast X89 quirk was added we did not have jack-detection
+support yet.
 
-  esrt: Unsupported ESRT version 2904149718861218184.
+Note the over-current detection limit is set to 2mA instead of the usual
+1.5mA because this tablet tends to give false-positive button-presses
+when it is set to 1.5mA.
 
-The ESRT memory stays in EFI boot services data, and it was reserved
-in kernel via efi_mem_reserve().  The initial purpose of the reservation
-is to reuse the EFI boot services data across kexec reboot. For example
-the BGRT image data and some ESRT memory like Michael reported.
-
-But although the memory is reserved it is not updated in the X86 E820 table,
-and kexec_file_load() iterates system RAM in the IO resource list to find places
-for kernel, initramfs and other stuff. In Michael's case the kexec loaded
-initramfs overwrote the ESRT memory and then the failure happened.
-
-Since kexec_file_load() depends on the E820 table being updated, just fix this
-by updating the reserved EFI boot services memory as reserved type in E820.
-
-Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
-bypassed in the reservation code path because they are assumed as reserved.
-
-But the reservation is still needed for multiple kexec reboots,
-and it is the only possible case we come here thus just drop the code
-chunk, then everything works without side effects.
-
-On my machine the ESRT memory sits in an EFI runtime data range, it does
-not trigger the problem, but I successfully tested with BGRT instead.
-both kexec_load() and kexec_file_load() work and kdump works as well.
-
-[ mingo: Edited the changelog. ]
-
-Reported-by: Michael Weiser <michael@weiser.dinsnail.net>
-Tested-by: Michael Weiser <michael@weiser.dinsnail.net>
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: kexec@lists.infradead.org
-Cc: linux-efi@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191204075233.GA10520@dhcp-128-65.nay.redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191203221442.2657-1-hdegoede@redhat.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/quirks.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ sound/soc/intel/boards/bytcr_rt5640.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 844d31cb8a0c..c9873c9168ad 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -259,10 +259,6 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
- 		return;
- 	}
- 
--	/* No need to reserve regions that will never be freed. */
--	if (md.attribute & EFI_MEMORY_RUNTIME)
--		return;
--
- 	size += addr % EFI_PAGE_SIZE;
- 	size = round_up(size, EFI_PAGE_SIZE);
- 	addr = round_down(addr, EFI_PAGE_SIZE);
-@@ -292,6 +288,8 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
- 	early_memunmap(new, new_size);
- 
- 	efi_memmap_install(new_phys, num_entries);
-+	e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+	e820__update_table(e820_table);
- }
- 
- /*
+diff --git a/sound/soc/intel/boards/bytcr_rt5640.c b/sound/soc/intel/boards/bytcr_rt5640.c
+index 6acd5dd599dc..e58240e18b30 100644
+--- a/sound/soc/intel/boards/bytcr_rt5640.c
++++ b/sound/soc/intel/boards/bytcr_rt5640.c
+@@ -677,13 +677,17 @@ static const struct dmi_system_id byt_rt5640_quirk_table[] = {
+ 					BYT_RT5640_MCLK_EN),
+ 	},
+ 	{
++		/* Teclast X89 */
+ 		.matches = {
+ 			DMI_MATCH(DMI_BOARD_VENDOR, "TECLAST"),
+ 			DMI_MATCH(DMI_BOARD_NAME, "tPAD"),
+ 		},
+ 		.driver_data = (void *)(BYT_RT5640_IN3_MAP |
+-					BYT_RT5640_MCLK_EN |
+-					BYT_RT5640_SSP0_AIF1),
++					BYT_RT5640_JD_SRC_JD1_IN4P |
++					BYT_RT5640_OVCD_TH_2000UA |
++					BYT_RT5640_OVCD_SF_1P0 |
++					BYT_RT5640_SSP0_AIF1 |
++					BYT_RT5640_MCLK_EN),
+ 	},
+ 	{	/* Toshiba Satellite Click Mini L9W-B */
+ 		.matches = {
 -- 
 2.20.1
 
