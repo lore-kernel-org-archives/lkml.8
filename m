@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82478C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CE3C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6BB20673
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C4A9206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:11:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737492;
-	bh=fCECriq/Dd3+bz+oZpgg4nTsESff8bNif0i8bUc+1Qg=;
+	s=default; t=1578737504;
+	bh=kYqk2K6nYY8mkvM5dqaiSdhQb2blKG4W9xp5zpLsvUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R0LE/YmZef6Y3Q0m40SIR8Ac8c1ADNhT17uTnBGh4RPVDVNSDgeVTVPAm4wuVLTWD
-	 CAqQIaom4ZFkwox1/t516kX4i/UXBJJcxnJMB5qcK/IZpgNogJClt5KTsQIFdJ38Od
-	 0oiH86hHGUvuufxMmF8vlIt255U27J7H9kZkDRyU=
+	b=j0xhqmY2vPWovlp9LxXsYVba2+ZkQI+8Gu2W7pYD+bv5H8DaiPSAxe/T0qXQXOW1+
+	 pFhHYj9DayLtzAP7+FGpVLpXIJhcn2q1iHMYmM9CHG3ZFDSH4TQb5o6o1+jEf5VevB
+	 3qFdzTIoqlKPpuZ4rwmCDA39nMzOmnMLMgSlx4Ww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729760AbgAKKLb (ORCPT
+        id S1729818AbgAKKLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:11:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48830 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:11:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728949AbgAKKLb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:11:31 -0500
+        id S1728949AbgAKKLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:11:42 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CAC3206DA;
-        Sat, 11 Jan 2020 10:11:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DF8120673;
+        Sat, 11 Jan 2020 10:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737490;
-        bh=fCECriq/Dd3+bz+oZpgg4nTsESff8bNif0i8bUc+1Qg=;
+        s=default; t=1578737501;
+        bh=kYqk2K6nYY8mkvM5dqaiSdhQb2blKG4W9xp5zpLsvUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vIQEcF+CypMMRPse2oHldA3FPwNHy7af9DgmLFegQgUxTXIx4JGLM/v581Rxe5BUs
-         SaxslZPV5Ygd3tIDJptK0qIqe6czqGWEoLMRHXiPg3vDiuFWvB0KS5eKiXFZANtMd8
-         p+EL+xA7nWmddviFVik66J4fKIwAZIO88eBRDu2o=
+        b=bbfiQlVCYBfwIGNJKpdsYns8Xvlw2UfurH7vZbSqQbfgNYb48X5X9vhbO7MJsh9+d
+         Na0F4dOcnkyA5HhCL11bunfHKO5wuZ73WaQxnsXcm5pGU71TFDZi8iMpugXKBXj+I7
+         VozyDB00pl5yp2sOirym5ITbKyByCS2W041hg57A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mathieu Malaterre <malat@debian.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: [PATCH 4.14 47/62] mmc: block: propagate correct returned value in mmc_rpmb_ioctl
-Date:   Sat, 11 Jan 2020 10:50:29 +0100
-Message-Id: <20200111094851.671908152@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 48/62] gtp: fix bad unlock balance in gtp_encap_enable_socket
+Date:   Sat, 11 Jan 2020 10:50:30 +0100
+Message-Id: <20200111094852.090050610@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -61,41 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Malaterre <malat@debian.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit b25b750df99bcba29317d3f9d9f93c4ec58890e6 upstream.
+[ Upstream commit 90d72256addff9e5f8ad645e8f632750dd1f8935 ]
 
-In commit 97548575bef3 ("mmc: block: Convert RPMB to a character device") a
-new function `mmc_rpmb_ioctl` was added. The final return is simply
-returning a value of `0` instead of propagating the correct return code.
+WARNING: bad unlock balance detected!
+5.5.0-rc5-syzkaller #0 Not tainted
+-------------------------------------
+syz-executor921/9688 is trying to release lock (sk_lock-AF_INET6) at:
+[<ffffffff84bf8506>] gtp_encap_enable_socket+0x146/0x400 drivers/net/gtp.c:830
+but there are no more locks to release!
 
-Discovered during a compilation with W=1, silence the following gcc warning
+other info that might help us debug this:
+2 locks held by syz-executor921/9688:
+ #0: ffffffff8a4d8840 (rtnl_mutex){+.+.}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
+ #0: ffffffff8a4d8840 (rtnl_mutex){+.+.}, at: rtnetlink_rcv_msg+0x405/0xaf0 net/core/rtnetlink.c:5421
+ #1: ffff88809304b560 (slock-AF_INET6){+...}, at: spin_lock_bh include/linux/spinlock.h:343 [inline]
+ #1: ffff88809304b560 (slock-AF_INET6){+...}, at: release_sock+0x20/0x1c0 net/core/sock.c:2951
 
-drivers/mmc/core/block.c:2470:6: warning: variable ‘ret’ set but not used
-[-Wunused-but-set-variable]
+stack backtrace:
+CPU: 0 PID: 9688 Comm: syz-executor921 Not tainted 5.5.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_unlock_imbalance_bug kernel/locking/lockdep.c:4008 [inline]
+ print_unlock_imbalance_bug.cold+0x114/0x123 kernel/locking/lockdep.c:3984
+ __lock_release kernel/locking/lockdep.c:4242 [inline]
+ lock_release+0x5f2/0x960 kernel/locking/lockdep.c:4503
+ sock_release_ownership include/net/sock.h:1496 [inline]
+ release_sock+0x17c/0x1c0 net/core/sock.c:2961
+ gtp_encap_enable_socket+0x146/0x400 drivers/net/gtp.c:830
+ gtp_encap_enable drivers/net/gtp.c:852 [inline]
+ gtp_newlink+0x9fc/0xc60 drivers/net/gtp.c:666
+ __rtnl_newlink+0x109e/0x1790 net/core/rtnetlink.c:3305
+ rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3363
+ rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5424
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:659
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x445d49
+Code: e8 bc b7 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f8019074db8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000006dac38 RCX: 0000000000445d49
+RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
+RBP: 00000000006dac30 R08: 0000000000000004 R09: 0000000000000000
+R10: 0000000000000008 R11: 0000000000000246 R12: 00000000006dac3c
+R13: 00007ffea687f6bf R14: 00007f80190759c0 R15: 20c49ba5e353f7cf
 
-Signed-off-by: Mathieu Malaterre <malat@debian.org>
-Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
-Fixes: 97548575bef3 ("mmc: block: Convert RPMB to a character device")
-Cc: stable@vger.kernel.org # v4.15+
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Fixes: e198987e7dd7 ("gtp: fix suspicious RCU usage")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/mmc/core/block.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/gtp.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/mmc/core/block.c
-+++ b/drivers/mmc/core/block.c
-@@ -2305,7 +2305,7 @@ static long mmc_rpmb_ioctl(struct file *
- 		break;
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -816,7 +816,7 @@ static struct sock *gtp_encap_enable_soc
+ 	lock_sock(sock->sk);
+ 	if (sock->sk->sk_user_data) {
+ 		sk = ERR_PTR(-EBUSY);
+-		goto out_sock;
++		goto out_rel_sock;
  	}
  
--	return 0;
-+	return ret;
- }
+ 	sk = sock->sk;
+@@ -829,8 +829,9 @@ static struct sock *gtp_encap_enable_soc
  
- #ifdef CONFIG_COMPAT
+ 	setup_udp_tunnel_sock(sock_net(sock->sk), sock, &tuncfg);
+ 
+-out_sock:
++out_rel_sock:
+ 	release_sock(sock->sk);
++out_sock:
+ 	sockfd_put(sock);
+ 	return sk;
+ }
 
 
