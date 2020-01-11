@@ -2,52 +2,53 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3978C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 899BCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E51720678
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61C5B2087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738714;
-	bh=34LyDZpfzeijNqR+it7f49pKb0KodFTrOaudxzJinfM=;
+	s=default; t=1578738717;
+	bh=1R8tx3K5QqVZpuOe5G+9ykmdSahGf0KttnPE3BmE5UM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e7blalyTd76kLI0fDT6XQaC5NFQ+ZaZ+2s5AkHAUAF1GkcdZtiI9jX+n0rtegUI48
-	 MC+TFBNgT8tY5AMFKZPOpszSvRa1l0YmNP4EPqh5rSf8T3i+QCu947GPVOSZgpNnxZ
-	 ABYXmfPf7krE6G7UYTzzlHkmQqgehg7r9dahqG5U=
+	b=iQGefve3YdjKoA0UV2xi0im8WpBd6OPmv8yHb8Xuxuguijvx3SxrOFqZScZF3p9EE
+	 u+kHUwnGvDu94CBYdyclmucpLF5FjOahrfLY0kuUV2HeR8a3OrKejMUWQn7cpqcn9z
+	 R13kzLVOuN1goxfhxDo3Q9BuinbsGPoAZAiKFEno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731423AbgAKKbx (ORCPT
+        id S1731381AbgAKK36 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:31:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44018 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:29:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730993AbgAKKbw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:31:52 -0500
+        id S1730997AbgAKK34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:29:56 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6F7F20678;
-        Sat, 11 Jan 2020 10:31:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30E732084D;
+        Sat, 11 Jan 2020 10:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738711;
-        bh=34LyDZpfzeijNqR+it7f49pKb0KodFTrOaudxzJinfM=;
+        s=default; t=1578738595;
+        bh=1R8tx3K5QqVZpuOe5G+9ykmdSahGf0KttnPE3BmE5UM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LsRmrjIphjQ3njqi7063Fz/uc2t2oB+GbkMliWYWBIfjxPmn/9E3qcVjqxFnEHb//
-         5J3nqIyGUnjLIqYi3WEAhPZ/3o8CXePwoxlNI7sCNfzkpjffvuraSPeeupQADobEWQ
-         1Dq623wLxLJjJlpu2sHUoOAlM4OOQDI6wB/qvEIc=
+        b=lQLxzPpJFXBdW50WrPLCu+E7pFMYyBgH4WLJwNBnXI6r6NDfjoEoxghp545Kra1GY
+         0LyZeIe3yus3GwwOBo0bsNxcBRmm7ykA2ZaKV83iUPWDe9exIroGiWUT7CkoTdOe6c
+         CL6aj8STKl5b4V0JqShcKoymECscxiIV8QAQ51mQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 139/165] macvlan: do not assume mac_header is set in macvlan_broadcast()
-Date:   Sat, 11 Jan 2020 10:50:58 +0100
-Message-Id: <20200111094937.897038920@linuxfoundation.org>
+        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 122/165] net/ixgbe: Fix concurrency issues between config flow and XSK
+Date:   Sat, 11 Jan 2020 10:50:41 +0100
+Message-Id: <20200111094934.030792062@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,170 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit 96cc4b69581db68efc9749ef32e9cf8e0160c509 ]
+[ Upstream commit c0fdccfd226a1424683d3000d9e08384391210a2 ]
 
-Use of eth_hdr() in tx path is error prone.
+Use synchronize_rcu to wait until the XSK wakeup function finishes
+before destroying the resources it uses:
 
-Many drivers call skb_reset_mac_header() before using it,
-but others do not.
+1. ixgbe_down already calls synchronize_rcu after setting __IXGBE_DOWN.
 
-Commit 6d1ccff62780 ("net: reset mac header in dev_start_xmit()")
-attempted to fix this generically, but commit d346a3fae3ff
-("packet: introduce PACKET_QDISC_BYPASS socket option") brought
-back the macvlan bug.
+2. After switching the XDP program, call synchronize_rcu to let
+ixgbe_xsk_wakeup exit before the XDP program is freed.
 
-Lets add a new helper, so that tx paths no longer have
-to call skb_reset_mac_header() only to get a pointer
-to skb->data.
+3. Changing the number of channels brings the interface down.
 
-Hopefully we will be able to revert 6d1ccff62780
-("net: reset mac header in dev_start_xmit()") and save few cycles
-in transmit fast path.
+4. Disabling UMEM sets __IXGBE_TX_DISABLED before closing hardware
+resources and resetting xsk_umem. Check that bit in ixgbe_xsk_wakeup to
+avoid using the XDP ring when it's already destroyed. synchronize_rcu is
+called from ixgbe_txrx_ring_disable.
 
-BUG: KASAN: use-after-free in __get_unaligned_cpu32 include/linux/unaligned/packed_struct.h:19 [inline]
-BUG: KASAN: use-after-free in mc_hash drivers/net/macvlan.c:251 [inline]
-BUG: KASAN: use-after-free in macvlan_broadcast+0x547/0x620 drivers/net/macvlan.c:277
-Read of size 4 at addr ffff8880a4932401 by task syz-executor947/9579
-
-CPU: 0 PID: 9579 Comm: syz-executor947 Not tainted 5.5.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
- __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:639
- __asan_report_load_n_noabort+0xf/0x20 mm/kasan/generic_report.c:145
- __get_unaligned_cpu32 include/linux/unaligned/packed_struct.h:19 [inline]
- mc_hash drivers/net/macvlan.c:251 [inline]
- macvlan_broadcast+0x547/0x620 drivers/net/macvlan.c:277
- macvlan_queue_xmit drivers/net/macvlan.c:520 [inline]
- macvlan_start_xmit+0x402/0x77f drivers/net/macvlan.c:559
- __netdev_start_xmit include/linux/netdevice.h:4447 [inline]
- netdev_start_xmit include/linux/netdevice.h:4461 [inline]
- dev_direct_xmit+0x419/0x630 net/core/dev.c:4079
- packet_direct_xmit+0x1a9/0x250 net/packet/af_packet.c:240
- packet_snd net/packet/af_packet.c:2966 [inline]
- packet_sendmsg+0x260d/0x6220 net/packet/af_packet.c:2991
- sock_sendmsg_nosec net/socket.c:639 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:659
- __sys_sendto+0x262/0x380 net/socket.c:1985
- __do_sys_sendto net/socket.c:1997 [inline]
- __se_sys_sendto net/socket.c:1993 [inline]
- __x64_sys_sendto+0xe1/0x1a0 net/socket.c:1993
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x442639
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc13549e08 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000442639
-RDX: 000000000000000e RSI: 0000000020000080 RDI: 0000000000000003
-RBP: 0000000000000004 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000403bb0 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 9389:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:513 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
- __do_kmalloc mm/slab.c:3656 [inline]
- __kmalloc+0x163/0x770 mm/slab.c:3665
- kmalloc include/linux/slab.h:561 [inline]
- tomoyo_realpath_from_path+0xc5/0x660 security/tomoyo/realpath.c:252
- tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
- tomoyo_path_perm+0x230/0x430 security/tomoyo/file.c:822
- tomoyo_inode_getattr+0x1d/0x30 security/tomoyo/tomoyo.c:129
- security_inode_getattr+0xf2/0x150 security/security.c:1222
- vfs_getattr+0x25/0x70 fs/stat.c:115
- vfs_statx_fd+0x71/0xc0 fs/stat.c:145
- vfs_fstat include/linux/fs.h:3265 [inline]
- __do_sys_newfstat+0x9b/0x120 fs/stat.c:378
- __se_sys_newfstat fs/stat.c:375 [inline]
- __x64_sys_newfstat+0x54/0x80 fs/stat.c:375
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 9389:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:335 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10a/0x2c0 mm/slab.c:3757
- tomoyo_realpath_from_path+0x1a7/0x660 security/tomoyo/realpath.c:289
- tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
- tomoyo_path_perm+0x230/0x430 security/tomoyo/file.c:822
- tomoyo_inode_getattr+0x1d/0x30 security/tomoyo/tomoyo.c:129
- security_inode_getattr+0xf2/0x150 security/security.c:1222
- vfs_getattr+0x25/0x70 fs/stat.c:115
- vfs_statx_fd+0x71/0xc0 fs/stat.c:145
- vfs_fstat include/linux/fs.h:3265 [inline]
- __do_sys_newfstat+0x9b/0x120 fs/stat.c:378
- __se_sys_newfstat fs/stat.c:375 [inline]
- __x64_sys_newfstat+0x54/0x80 fs/stat.c:375
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880a4932000
- which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 1025 bytes inside of
- 4096-byte region [ffff8880a4932000, ffff8880a4933000)
-The buggy address belongs to the page:
-page:ffffea0002924c80 refcount:1 mapcount:0 mapping:ffff8880aa402000 index:0x0 compound_mapcount: 0
-raw: 00fffe0000010200 ffffea0002846208 ffffea00028f3888 ffff8880aa402000
-raw: 0000000000000000 ffff8880a4932000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a4932300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a4932380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8880a4932400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff8880a4932480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a4932500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-Fixes: b863ceb7ddce ("[NET]: Add macvlan driver")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20191217162023.16011-5-maximmi@mellanox.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/macvlan.c    |    2 +-
- include/linux/if_ether.h |    8 ++++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 7 ++++++-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c  | 8 ++++++--
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -259,7 +259,7 @@ static void macvlan_broadcast(struct sk_
- 			      struct net_device *src,
- 			      enum macvlan_mode mode)
- {
--	const struct ethhdr *eth = eth_hdr(skb);
-+	const struct ethhdr *eth = skb_eth_hdr(skb);
- 	const struct macvlan_dev *vlan;
- 	struct sk_buff *nskb;
- 	unsigned int i;
---- a/include/linux/if_ether.h
-+++ b/include/linux/if_ether.h
-@@ -24,6 +24,14 @@ static inline struct ethhdr *eth_hdr(con
- 	return (struct ethhdr *)skb_mac_header(skb);
- }
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+index 1a7203fede12..c6404abf2dd1 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
+@@ -10248,7 +10248,12 @@ static int ixgbe_xdp_setup(struct net_device *dev, struct bpf_prog *prog)
  
-+/* Prefer this version in TX path, instead of
-+ * skb_reset_mac_header() + eth_hdr()
-+ */
-+static inline struct ethhdr *skb_eth_hdr(const struct sk_buff *skb)
-+{
-+	return (struct ethhdr *)skb->data;
-+}
+ 	/* If transitioning XDP modes reconfigure rings */
+ 	if (need_reset) {
+-		int err = ixgbe_setup_tc(dev, adapter->hw_tcs);
++		int err;
 +
- static inline struct ethhdr *inner_eth_hdr(const struct sk_buff *skb)
- {
- 	return (struct ethhdr *)skb_inner_mac_header(skb);
++		if (!prog)
++			/* Wait until ndo_xsk_wakeup completes. */
++			synchronize_rcu();
++		err = ixgbe_setup_tc(dev, adapter->hw_tcs);
+ 
+ 		if (err) {
+ 			rcu_assign_pointer(adapter->xdp_prog, old_prog);
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+index d6feaacfbf89..b43be9f14105 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+@@ -709,10 +709,14 @@ int ixgbe_xsk_wakeup(struct net_device *dev, u32 qid, u32 flags)
+ 	if (qid >= adapter->num_xdp_queues)
+ 		return -ENXIO;
+ 
+-	if (!adapter->xdp_ring[qid]->xsk_umem)
++	ring = adapter->xdp_ring[qid];
++
++	if (test_bit(__IXGBE_TX_DISABLED, &ring->state))
++		return -ENETDOWN;
++
++	if (!ring->xsk_umem)
+ 		return -ENXIO;
+ 
+-	ring = adapter->xdp_ring[qid];
+ 	if (!napi_if_scheduled_mark_missed(&ring->q_vector->napi)) {
+ 		u64 eics = BIT_ULL(ring->q_vector->v_idx);
+ 
+-- 
+2.20.1
+
 
 
