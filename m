@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCD4C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFF1C33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1739620842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:32:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B520320842
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738777;
-	bh=QOcdDaWnWLLs1wtbgqB4q+1P23t6Kamg/vmjCzaWMqY=;
+	s=default; t=1578738782;
+	bh=oh/SXPdeD9mcIPH3MTZrdfyDwOY47e7dOXn/wTtRbQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e4IFwrAqKLAWVT5C/NI1aF8ukl7HupGy6dBzZbh8Y1lPPd5C/jYZ99t6Tv2MrjeTQ
-	 QksI4UZAJyt654mMT7iogMyW09Ov1xDRVD6KooHyAUsJK3waMw7pOPmvY1iN2fBvRa
-	 xDpuvL3BhiVcSFmOG2aOiyjwmC26ppBz9OgZwlUk=
+	b=RQk+RtRSaQU//DG8vhRBb8X9B8OzP5321fSpT3ggo5Siv836AO9JYEMBr7nnK8dgA
+	 zN0+c42uuq3KEpvnA+4tPTzJ7lpZmXmGeJac8/hyz49HbNWR2wGz9BqAdkSR27fVqC
+	 xvTyoSLZFENqU26EqELIGzd1pfT4QgFrPCU+DP0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731567AbgAKKc4 (ORCPT
+        id S1731573AbgAKKdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:32:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46634 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:33:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729256AbgAKKcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:32:54 -0500
+        id S1729256AbgAKKdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:33:01 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9DD620842;
-        Sat, 11 Jan 2020 10:32:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65DEC2087F;
+        Sat, 11 Jan 2020 10:32:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738773;
-        bh=QOcdDaWnWLLs1wtbgqB4q+1P23t6Kamg/vmjCzaWMqY=;
+        s=default; t=1578738780;
+        bh=oh/SXPdeD9mcIPH3MTZrdfyDwOY47e7dOXn/wTtRbQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1s3kCIwD1wPx+KB1Ir8ewrUp88yZakPTmL+B7jxFXCjLk6iVmHDDFbtf29yKirEjW
-         NPSC02QT5sA25158EVLzxsw4mexF6DaftlxkwCfvpcpQ16Pi1XaJ6MlvK5jpqtosQI
-         gCjiL3FNdEx78tFV121vEs4nXera7JbGGNaRvQN4=
+        b=HxGybSCm8qJNpZU61xJV4aRaN1pwLXUz+uIqHz+RsIdp0zamYvFwvU1XNl4PH/cIq
+         0GYkHr9JbSVvmKUj/Km5MGM45hfTHH2uwwbRXV3zLU8JbV+f56woqhi81EXj8Xr0d6
+         VjocMMGx3ffHKoVA6Y9LxDFH7Ld0PiASEZTGMCyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 135/165] hv_netvsc: Fix unwanted rx_table reset
-Date:   Sat, 11 Jan 2020 10:50:54 +0100
-Message-Id: <20200111094936.961024266@linuxfoundation.org>
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 126/165] s390/dasd/cio: Interpret ccw_device_get_mdc return value correctly
+Date:   Sat, 11 Jan 2020 10:50:45 +0100
+Message-Id: <20200111094934.979602158@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,114 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Jan Höppner <hoeppner@linux.ibm.com>
 
-[ Upstream commit b0689faa8efc5a3391402d7ae93bd373b7248e51 ]
+[ Upstream commit dd4b3c83b9efac10d48a94c61372119fc555a077 ]
 
-In existing code, the receive indirection table, rx_table, is in
-struct rndis_device, which will be reset when changing MTU, ringparam,
-etc. User configured receive indirection table values will be lost.
+The max data count (mdc) is an unsigned 16-bit integer value as per AR
+documentation and is received via ccw_device_get_mdc() for a specific
+path mask from the CIO layer. The function itself also always returns a
+positive mdc value or 0 in case mdc isn't supported or couldn't be
+determined.
 
-To fix this, move rx_table to struct net_device_context, and check
-netif_is_rxfh_configured(), so rx_table will be set to default only
-if no user configured value.
+Though, the comment for this function describes a negative return value
+to indicate failures.
 
-Fixes: ff4a44199012 ("netvsc: allow get/set of RSS indirection table")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+As a result, the DASD device driver interprets the return value of
+ccw_device_get_mdc() incorrectly. The error case is essentially a dead
+code path.
+
+To fix this behaviour, check explicitly for a return value of 0 and
+change the comment for ccw_device_get_mdc() accordingly.
+
+This fix merely enables the error code path in the DASD functions
+get_fcx_max_data() and verify_fcx_max_data(). The actual functionality
+stays the same and is still correct.
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
+Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hyperv/hyperv_net.h   |  3 ++-
- drivers/net/hyperv/netvsc_drv.c   |  4 ++--
- drivers/net/hyperv/rndis_filter.c | 10 +++++++---
- 3 files changed, 11 insertions(+), 6 deletions(-)
+ drivers/s390/block/dasd_eckd.c | 9 +++++----
+ drivers/s390/cio/device_ops.c  | 2 +-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
-index fb547f37af1e..e74f2d1def80 100644
---- a/drivers/net/hyperv/hyperv_net.h
-+++ b/drivers/net/hyperv/hyperv_net.h
-@@ -169,7 +169,6 @@ struct rndis_device {
- 
- 	u8 hw_mac_adr[ETH_ALEN];
- 	u8 rss_key[NETVSC_HASH_KEYLEN];
--	u16 rx_table[ITAB_NUM];
- };
- 
- 
-@@ -938,6 +937,8 @@ struct net_device_context {
- 
- 	u32 tx_table[VRSS_SEND_TAB_SIZE];
- 
-+	u16 rx_table[ITAB_NUM];
-+
- 	/* Ethtool settings */
- 	u8 duplex;
- 	u32 speed;
-diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
-index 963509add611..78e3e689a733 100644
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -1659,7 +1659,7 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
- 	rndis_dev = ndev->extension;
- 	if (indir) {
- 		for (i = 0; i < ITAB_NUM; i++)
--			indir[i] = rndis_dev->rx_table[i];
-+			indir[i] = ndc->rx_table[i];
- 	}
- 
- 	if (key)
-@@ -1689,7 +1689,7 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
- 				return -EINVAL;
- 
- 		for (i = 0; i < ITAB_NUM; i++)
--			rndis_dev->rx_table[i] = indir[i];
-+			ndc->rx_table[i] = indir[i];
- 	}
- 
- 	if (!key) {
-diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
-index e3d3c9097ff1..f81e58267a6e 100644
---- a/drivers/net/hyperv/rndis_filter.c
-+++ b/drivers/net/hyperv/rndis_filter.c
-@@ -767,6 +767,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
- 				   const u8 *rss_key, u16 flag)
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index c94184d080f8..f5622f4a2ecf 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -1128,7 +1128,8 @@ static u32 get_fcx_max_data(struct dasd_device *device)
  {
- 	struct net_device *ndev = rdev->ndev;
-+	struct net_device_context *ndc = netdev_priv(ndev);
- 	struct rndis_request *request;
- 	struct rndis_set_request *set;
- 	struct rndis_set_complete *set_complete;
-@@ -806,7 +807,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
- 	/* Set indirection table entries */
- 	itab = (u32 *)(rssp + 1);
- 	for (i = 0; i < ITAB_NUM; i++)
--		itab[i] = rdev->rx_table[i];
-+		itab[i] = ndc->rx_table[i];
+ 	struct dasd_eckd_private *private = device->private;
+ 	int fcx_in_css, fcx_in_gneq, fcx_in_features;
+-	int tpm, mdc;
++	unsigned int mdc;
++	int tpm;
  
- 	/* Set hask key values */
- 	keyp = (u8 *)((unsigned long)rssp + rssp->hashkey_offset);
-@@ -1305,6 +1306,7 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
- 				      struct netvsc_device_info *device_info)
+ 	if (dasd_nofcx)
+ 		return 0;
+@@ -1142,7 +1143,7 @@ static u32 get_fcx_max_data(struct dasd_device *device)
+ 		return 0;
+ 
+ 	mdc = ccw_device_get_mdc(device->cdev, 0);
+-	if (mdc < 0) {
++	if (mdc == 0) {
+ 		dev_warn(&device->cdev->dev, "Detecting the maximum supported data size for zHPF requests failed\n");
+ 		return 0;
+ 	} else {
+@@ -1153,12 +1154,12 @@ static u32 get_fcx_max_data(struct dasd_device *device)
+ static int verify_fcx_max_data(struct dasd_device *device, __u8 lpm)
  {
- 	struct net_device *net = hv_get_drvdata(dev);
-+	struct net_device_context *ndc = netdev_priv(net);
- 	struct netvsc_device *net_device;
- 	struct rndis_device *rndis_device;
- 	struct ndis_recv_scale_cap rsscap;
-@@ -1391,9 +1393,11 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
- 	/* We will use the given number of channels if available. */
- 	net_device->num_chn = min(net_device->max_chn, device_info->num_chn);
+ 	struct dasd_eckd_private *private = device->private;
+-	int mdc;
++	unsigned int mdc;
+ 	u32 fcx_max_data;
  
--	for (i = 0; i < ITAB_NUM; i++)
--		rndis_device->rx_table[i] = ethtool_rxfh_indir_default(
-+	if (!netif_is_rxfh_configured(net)) {
-+		for (i = 0; i < ITAB_NUM; i++)
-+			ndc->rx_table[i] = ethtool_rxfh_indir_default(
- 						i, net_device->num_chn);
-+	}
- 
- 	atomic_set(&net_device->open_chn, 1);
- 	vmbus_set_sc_create_callback(dev->channel, netvsc_sc_open);
+ 	if (private->fcx_max_data) {
+ 		mdc = ccw_device_get_mdc(device->cdev, lpm);
+-		if ((mdc < 0)) {
++		if (mdc == 0) {
+ 			dev_warn(&device->cdev->dev,
+ 				 "Detecting the maximum data size for zHPF "
+ 				 "requests failed (rc=%d) for a new path %x\n",
+diff --git a/drivers/s390/cio/device_ops.c b/drivers/s390/cio/device_ops.c
+index 65841af15748..ccecf6b9504e 100644
+--- a/drivers/s390/cio/device_ops.c
++++ b/drivers/s390/cio/device_ops.c
+@@ -635,7 +635,7 @@ EXPORT_SYMBOL(ccw_device_tm_start_timeout);
+  * @mask: mask of paths to use
+  *
+  * Return the number of 64K-bytes blocks all paths at least support
+- * for a transport command. Return values <= 0 indicate failures.
++ * for a transport command. Return value 0 indicates failure.
+  */
+ int ccw_device_get_mdc(struct ccw_device *cdev, u8 mask)
+ {
 -- 
 2.20.1
 
