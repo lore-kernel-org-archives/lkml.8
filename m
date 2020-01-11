@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6791C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4E9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 769F72084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4752082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737984;
-	bh=4pzCguaSA3GA/NKWEPxGAZQFJ/n6JIRy5P0TBnlxuC0=;
+	s=default; t=1578737987;
+	bh=kgklFIXr5YCgi1ccJCz/mgx9tfBvzSz/JflF8EIZIY8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pRlpfMaEullsU6qrlqY0ff1G6pnZ/LV8jS/GqbDW59DZJGzLlyxWOTBZgBJTK8moy
-	 U9l9uxSsHgK7ikX8f2HuXS5l9ab/zJZumzxZfWVMK7nUr/2lkqVBwq7PmKG/QJ5EYK
-	 W506gGyKAFN/2ejZY3ANEflJa43nUWs8ylklpZCU=
+	b=X6+smqGzRXsZxFGZM7qJUcFAeRhAkbNl+cg0OtczANq83yq4jtEucc+VLDKx36Sia
+	 4MUaVvQQDS6/bVQ4fDnXd2yy6/ktRgP5czRss903WALd1x5M4+bigCC3i3MznjEAtV
+	 amZObeSoPHMWr+fkziJ00f4bryiOFEOLuGH1fQLg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbgAKKTn (ORCPT
+        id S1730573AbgAKKTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:19:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39546 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:19:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728998AbgAKKTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:19:39 -0500
+        id S1730558AbgAKKTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:19:43 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D62D20848;
-        Sat, 11 Jan 2020 10:19:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2656920848;
+        Sat, 11 Jan 2020 10:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737978;
-        bh=4pzCguaSA3GA/NKWEPxGAZQFJ/n6JIRy5P0TBnlxuC0=;
+        s=default; t=1578737982;
+        bh=kgklFIXr5YCgi1ccJCz/mgx9tfBvzSz/JflF8EIZIY8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vSitBDcgWnuk8/SX9rymSm02eCwy39GbOpc8pbKEC9BM1BGtuCEeghgITxp1RGt+G
-         r/CRyNbbUWMLP3RJLMANAgmQLTG2LvU7POXQnh0zz5SF49hOuSJB5L7ow2G85NQxUE
-         zArksWhA1w9lK4efq5CAALq/SbmDKgipCkUC9Os8=
+        b=1ssAHiaYlpQm8h2T0c4x5BZmbqijhQkECXTgHc7HBgidCWEOSQ3xFchEfazvjdd1v
+         MdOZqV6+HxggikO6f0pE/QZcDouSFZADo/lUK+YeW3bAcmiTfxI4wkcshK2kHn/QUY
+         AJGl5SIPT5QnIDZPd/rkPn8g1a5XsTKjn2j3Ji/0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 4.19 65/84] arm64: KVM: Trap VM ops when ARM64_WORKAROUND_CAVIUM_TX2_219_TVM is set
-Date:   Sat, 11 Jan 2020 10:50:42 +0100
-Message-Id: <20200111094910.328555272@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 66/84] gtp: fix bad unlock balance in gtp_encap_enable_socket
+Date:   Sat, 11 Jan 2020 10:50:43 +0100
+Message-Id: <20200111094910.533184272@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -59,139 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit d3ec3a08fa700c8b46abb137dce4e2514a6f9668 upstream.
+[ Upstream commit 90d72256addff9e5f8ad645e8f632750dd1f8935 ]
 
-In order to workaround the TX2-219 erratum, it is necessary to trap
-TTBRx_EL1 accesses to EL2. This is done by setting HCR_EL2.TVM on
-guest entry, which has the side effect of trapping all the other
-VM-related sysregs as well.
+WARNING: bad unlock balance detected!
+5.5.0-rc5-syzkaller #0 Not tainted
+-------------------------------------
+syz-executor921/9688 is trying to release lock (sk_lock-AF_INET6) at:
+[<ffffffff84bf8506>] gtp_encap_enable_socket+0x146/0x400 drivers/net/gtp.c:830
+but there are no more locks to release!
 
-To minimize the overhead, a fast path is used so that we don't
-have to go all the way back to the main sysreg handling code,
-unless the rest of the hypervisor expects to see these accesses.
+other info that might help us debug this:
+2 locks held by syz-executor921/9688:
+ #0: ffffffff8a4d8840 (rtnl_mutex){+.+.}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
+ #0: ffffffff8a4d8840 (rtnl_mutex){+.+.}, at: rtnetlink_rcv_msg+0x405/0xaf0 net/core/rtnetlink.c:5421
+ #1: ffff88809304b560 (slock-AF_INET6){+...}, at: spin_lock_bh include/linux/spinlock.h:343 [inline]
+ #1: ffff88809304b560 (slock-AF_INET6){+...}, at: release_sock+0x20/0x1c0 net/core/sock.c:2951
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+stack backtrace:
+CPU: 0 PID: 9688 Comm: syz-executor921 Not tainted 5.5.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_unlock_imbalance_bug kernel/locking/lockdep.c:4008 [inline]
+ print_unlock_imbalance_bug.cold+0x114/0x123 kernel/locking/lockdep.c:3984
+ __lock_release kernel/locking/lockdep.c:4242 [inline]
+ lock_release+0x5f2/0x960 kernel/locking/lockdep.c:4503
+ sock_release_ownership include/net/sock.h:1496 [inline]
+ release_sock+0x17c/0x1c0 net/core/sock.c:2961
+ gtp_encap_enable_socket+0x146/0x400 drivers/net/gtp.c:830
+ gtp_encap_enable drivers/net/gtp.c:852 [inline]
+ gtp_newlink+0x9fc/0xc60 drivers/net/gtp.c:666
+ __rtnl_newlink+0x109e/0x1790 net/core/rtnetlink.c:3305
+ rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3363
+ rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5424
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x58c/0x7d0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:659
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2330
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2384
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg net/socket.c:2424 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2424
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x445d49
+Code: e8 bc b7 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b 12 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f8019074db8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000006dac38 RCX: 0000000000445d49
+RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
+RBP: 00000000006dac30 R08: 0000000000000004 R09: 0000000000000000
+R10: 0000000000000008 R11: 0000000000000246 R12: 00000000006dac3c
+R13: 00007ffea687f6bf R14: 00007f80190759c0 R15: 20c49ba5e353f7cf
+
+Fixes: e198987e7dd7 ("gtp: fix suspicious RCU usage")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arm64/include/asm/cpucaps.h |    3 +
- arch/arm64/kvm/hyp/switch.c      |   69 +++++++++++++++++++++++++++++++++++++--
- 2 files changed, 69 insertions(+), 3 deletions(-)
+ drivers/net/gtp.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/arch/arm64/include/asm/cpucaps.h
-+++ b/arch/arm64/include/asm/cpucaps.h
-@@ -53,7 +53,8 @@
- #define ARM64_HAS_STAGE2_FWB			32
- #define ARM64_WORKAROUND_1463225		33
- #define ARM64_SSBS				34
-+#define ARM64_WORKAROUND_CAVIUM_TX2_219_TVM	35
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -818,7 +818,7 @@ static struct sock *gtp_encap_enable_soc
+ 	lock_sock(sock->sk);
+ 	if (sock->sk->sk_user_data) {
+ 		sk = ERR_PTR(-EBUSY);
+-		goto out_sock;
++		goto out_rel_sock;
+ 	}
  
--#define ARM64_NCAPS				35
-+#define ARM64_NCAPS				36
+ 	sk = sock->sk;
+@@ -831,8 +831,9 @@ static struct sock *gtp_encap_enable_soc
  
- #endif /* __ASM_CPUCAPS_H */
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -130,6 +130,9 @@ static void __hyp_text __activate_traps(
- {
- 	u64 hcr = vcpu->arch.hcr_el2;
+ 	setup_udp_tunnel_sock(sock_net(sock->sk), sock, &tuncfg);
  
-+	if (cpus_have_const_cap(ARM64_WORKAROUND_CAVIUM_TX2_219_TVM))
-+		hcr |= HCR_TVM;
-+
- 	write_sysreg(hcr, hcr_el2);
- 
- 	if (cpus_have_const_cap(ARM64_HAS_RAS_EXTN) && (hcr & HCR_VSE))
-@@ -172,8 +175,10 @@ static void __hyp_text __deactivate_trap
- 	 * the crucial bit is "On taking a vSError interrupt,
- 	 * HCR_EL2.VSE is cleared to 0."
- 	 */
--	if (vcpu->arch.hcr_el2 & HCR_VSE)
--		vcpu->arch.hcr_el2 = read_sysreg(hcr_el2);
-+	if (vcpu->arch.hcr_el2 & HCR_VSE) {
-+		vcpu->arch.hcr_el2 &= ~HCR_VSE;
-+		vcpu->arch.hcr_el2 |= read_sysreg(hcr_el2) & HCR_VSE;
-+	}
- 
- 	if (has_vhe())
- 		deactivate_traps_vhe();
-@@ -379,6 +384,61 @@ static bool __hyp_text __hyp_switch_fpsi
- 	return true;
+-out_sock:
++out_rel_sock:
+ 	release_sock(sock->sk);
++out_sock:
+ 	sockfd_put(sock);
+ 	return sk;
  }
- 
-+static bool __hyp_text handle_tx2_tvm(struct kvm_vcpu *vcpu)
-+{
-+	u32 sysreg = esr_sys64_to_sysreg(kvm_vcpu_get_hsr(vcpu));
-+	int rt = kvm_vcpu_sys_get_rt(vcpu);
-+	u64 val = vcpu_get_reg(vcpu, rt);
-+
-+	/*
-+	 * The normal sysreg handling code expects to see the traps,
-+	 * let's not do anything here.
-+	 */
-+	if (vcpu->arch.hcr_el2 & HCR_TVM)
-+		return false;
-+
-+	switch (sysreg) {
-+	case SYS_SCTLR_EL1:
-+		write_sysreg_el1(val, SYS_SCTLR);
-+		break;
-+	case SYS_TTBR0_EL1:
-+		write_sysreg_el1(val, SYS_TTBR0);
-+		break;
-+	case SYS_TTBR1_EL1:
-+		write_sysreg_el1(val, SYS_TTBR1);
-+		break;
-+	case SYS_TCR_EL1:
-+		write_sysreg_el1(val, SYS_TCR);
-+		break;
-+	case SYS_ESR_EL1:
-+		write_sysreg_el1(val, SYS_ESR);
-+		break;
-+	case SYS_FAR_EL1:
-+		write_sysreg_el1(val, SYS_FAR);
-+		break;
-+	case SYS_AFSR0_EL1:
-+		write_sysreg_el1(val, SYS_AFSR0);
-+		break;
-+	case SYS_AFSR1_EL1:
-+		write_sysreg_el1(val, SYS_AFSR1);
-+		break;
-+	case SYS_MAIR_EL1:
-+		write_sysreg_el1(val, SYS_MAIR);
-+		break;
-+	case SYS_AMAIR_EL1:
-+		write_sysreg_el1(val, SYS_AMAIR);
-+		break;
-+	case SYS_CONTEXTIDR_EL1:
-+		write_sysreg_el1(val, SYS_CONTEXTIDR);
-+		break;
-+	default:
-+		return false;
-+	}
-+
-+	__kvm_skip_instr(vcpu);
-+	return true;
-+}
-+
- /*
-  * Return true when we were able to fixup the guest exit and should return to
-  * the guest, false when we should restore the host state and return to the
-@@ -398,6 +458,11 @@ static bool __hyp_text fixup_guest_exit(
- 	if (*exit_code != ARM_EXCEPTION_TRAP)
- 		goto exit;
- 
-+	if (cpus_have_const_cap(ARM64_WORKAROUND_CAVIUM_TX2_219_TVM) &&
-+	    kvm_vcpu_trap_get_class(vcpu) == ESR_ELx_EC_SYS64 &&
-+	    handle_tx2_tvm(vcpu))
-+		return true;
-+
- 	/*
- 	 * We trap the first access to the FP/SIMD to save the host context
- 	 * and restore the guest context lazily.
 
 
