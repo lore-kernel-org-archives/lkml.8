@@ -2,52 +2,52 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE0AC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EC9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FA092084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:27:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28634205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738439;
-	bh=hWovyhmEjiLOx+RStHpljftNqQBfFJ59Eou4Rnua9cI=;
+	s=default; t=1578738448;
+	bh=zOuj6n+fYGJwlWbMnFsq3QNqgVU7cb1hz3VpkEgVXtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0EPgN4YzQtZqfZHOUvIP2i6nHf8aQlqgef3KtRJaUzzhroVdaSMHxW2k+728RyQIC
-	 iGkcayO0aniJjkvkuSv3fZr2mJ4BmcRT5di/SPqrvMfF3/3jVCk57gUxFZ5IGlAfKD
-	 Ph8Zdg7hFgCi7UNPHwN5ca4J+2KRZ+fpWYPywoXQ=
+	b=I6ZkRfSRrkKqheERz6aSO+8FEq63EOmg6vmpzuwM3h0cvdMQL81mlSKdtXK0Xl9uX
+	 4H0x0CUNPQ2c8qmu1qYpVN5Ivu0n8X7ZRW90vLA2iiResfNWbQuo8gQ1tIWWZB3NQx
+	 IrRxS7VgaDLnePEcPqa5tFvEH+bFLszdps4CoiCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731191AbgAKK1S (ORCPT
+        id S1731195AbgAKK10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:27:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32880 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:27:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729443AbgAKK1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:27:17 -0500
+        id S1730398AbgAKK1V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:27:21 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29D112087F;
-        Sat, 11 Jan 2020 10:27:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F41B92087F;
+        Sat, 11 Jan 2020 10:27:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738436;
-        bh=hWovyhmEjiLOx+RStHpljftNqQBfFJ59Eou4Rnua9cI=;
+        s=default; t=1578738440;
+        bh=zOuj6n+fYGJwlWbMnFsq3QNqgVU7cb1hz3VpkEgVXtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TByl6l8EWb9DEHVJQCcdKcXa69q4gMpQVY6cCpvQlwKeLT30uSmGbYxMn7qZF6L6V
-         9XJ4J3L8BVR7H0iWkKbYyY2juxt7tyWdOXoes6C2KRLHo/m0+lUKtPBmNEb+3AfNH9
-         0gWEXMTLeIFfNCt4DBs3+qNrg3DYfxmzcAV5aECw=
+        b=d19xVFCr/B91FrVGvYgn7QZKSRdc83S/fcUHlvJuBDP2njKHb/FR2OhyiRxlNZCdc
+         z7lyFmaIS8xYemQu5e6FzD0u0mmIsAKz5IQ7gEDBiKBRQDD3Lya4tdyp/COoJz95HO
+         tYI+GnbU5/h6WjW6LHKm48RSIrJIy/bbQyHHINDc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 066/165] pinctrl: aspeed-g6: Fix LPC/eSPI mux configuration
-Date:   Sat, 11 Jan 2020 10:49:45 +0100
-Message-Id: <20200111094926.658806039@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Sven Schnelle <svens@stackframe.org>,
+        Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 087/165] parisc: fix compilation when KEXEC=n and KEXEC_FILE=y
+Date:   Sat, 11 Jan 2020 10:50:06 +0100
+Message-Id: <20200111094928.443787499@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,98 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Jeffery <andrew@aj.id.au>
+From: Sven Schnelle <svens@stackframe.org>
 
-[ Upstream commit eb45f2110b036e4e35d3f3aaee1c2ccf49d92425 ]
+[ Upstream commit e16260c21f87b16a33ae8ecac9e8c79f3a8b89bd ]
 
-Early revisions of the AST2600 datasheet are conflicted about the state
-of the LPC/eSPI strapping bit (SCU510[6]). Conversations with ASPEED
-determined that the reference pinmux configuration tables were in error
-and the SCU documentation contained the correct configuration. Update
-the driver to reflect the state described in the SCU documentation.
+Fix compilation when the CONFIG_KEXEC_FILE=y and
+CONFIG_KEXEC=n.
 
-Fixes: 2eda1cdec49f ("pinctrl: aspeed: Add AST2600 pinmux support")
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-Link: https://lore.kernel.org/r/20191202050110.15340-1-andrew@aj.id.au
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Sven Schnelle <svens@stackframe.org>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 24 ++++++++--------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ arch/parisc/include/asm/kexec.h | 4 ----
+ arch/parisc/kernel/Makefile     | 2 +-
+ 2 files changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index c6800d220920..bb07024d22ed 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -1088,60 +1088,52 @@ SSSF_PIN_DECL(AF15, GPIOV7, LPCSMI, SIG_DESC_SET(SCU434, 15));
+diff --git a/arch/parisc/include/asm/kexec.h b/arch/parisc/include/asm/kexec.h
+index a99ea747d7ed..87e174006995 100644
+--- a/arch/parisc/include/asm/kexec.h
++++ b/arch/parisc/include/asm/kexec.h
+@@ -2,8 +2,6 @@
+ #ifndef _ASM_PARISC_KEXEC_H
+ #define _ASM_PARISC_KEXEC_H
  
- #define AB7 176
- SIG_EXPR_LIST_DECL_SESG(AB7, LAD0, LPC, SIG_DESC_SET(SCU434, 16),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AB7, ESPID0, ESPI, SIG_DESC_SET(SCU434, 16),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AB7, ESPID0, ESPI, SIG_DESC_SET(SCU434, 16));
- PIN_DECL_2(AB7, GPIOW0, LAD0, ESPID0);
+-#ifdef CONFIG_KEXEC
+-
+ /* Maximum physical address we can use pages from */
+ #define KEXEC_SOURCE_MEMORY_LIMIT (-1UL)
+ /* Maximum address we can reach in physical address mode */
+@@ -32,6 +30,4 @@ static inline void crash_setup_regs(struct pt_regs *newregs,
  
- #define AB8 177
- SIG_EXPR_LIST_DECL_SESG(AB8, LAD1, LPC, SIG_DESC_SET(SCU434, 17),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AB8, ESPID1, ESPI, SIG_DESC_SET(SCU434, 17),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AB8, ESPID1, ESPI, SIG_DESC_SET(SCU434, 17));
- PIN_DECL_2(AB8, GPIOW1, LAD1, ESPID1);
+ #endif /* __ASSEMBLY__ */
  
- #define AC8 178
- SIG_EXPR_LIST_DECL_SESG(AC8, LAD2, LPC, SIG_DESC_SET(SCU434, 18),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AC8, ESPID2, ESPI, SIG_DESC_SET(SCU434, 18),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AC8, ESPID2, ESPI, SIG_DESC_SET(SCU434, 18));
- PIN_DECL_2(AC8, GPIOW2, LAD2, ESPID2);
- 
- #define AC7 179
- SIG_EXPR_LIST_DECL_SESG(AC7, LAD3, LPC, SIG_DESC_SET(SCU434, 19),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AC7, ESPID3, ESPI, SIG_DESC_SET(SCU434, 19),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AC7, ESPID3, ESPI, SIG_DESC_SET(SCU434, 19));
- PIN_DECL_2(AC7, GPIOW3, LAD3, ESPID3);
- 
- #define AE7 180
- SIG_EXPR_LIST_DECL_SESG(AE7, LCLK, LPC, SIG_DESC_SET(SCU434, 20),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AE7, ESPICK, ESPI, SIG_DESC_SET(SCU434, 20),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AE7, ESPICK, ESPI, SIG_DESC_SET(SCU434, 20));
- PIN_DECL_2(AE7, GPIOW4, LCLK, ESPICK);
- 
- #define AF7 181
- SIG_EXPR_LIST_DECL_SESG(AF7, LFRAME, LPC, SIG_DESC_SET(SCU434, 21),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AF7, ESPICS, ESPI, SIG_DESC_SET(SCU434, 21),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AF7, ESPICS, ESPI, SIG_DESC_SET(SCU434, 21));
- PIN_DECL_2(AF7, GPIOW5, LFRAME, ESPICS);
- 
- #define AD7 182
- SIG_EXPR_LIST_DECL_SESG(AD7, LSIRQ, LSIRQ, SIG_DESC_SET(SCU434, 22),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AD7, ESPIALT, ESPIALT, SIG_DESC_SET(SCU434, 22),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AD7, ESPIALT, ESPIALT, SIG_DESC_SET(SCU434, 22));
- PIN_DECL_2(AD7, GPIOW6, LSIRQ, ESPIALT);
- FUNC_GROUP_DECL(LSIRQ, AD7);
- FUNC_GROUP_DECL(ESPIALT, AD7);
- 
- #define AD8 183
- SIG_EXPR_LIST_DECL_SESG(AD8, LPCRST, LPC, SIG_DESC_SET(SCU434, 23),
--			  SIG_DESC_CLEAR(SCU510, 6));
--SIG_EXPR_LIST_DECL_SESG(AD8, ESPIRST, ESPI, SIG_DESC_SET(SCU434, 23),
- 			  SIG_DESC_SET(SCU510, 6));
-+SIG_EXPR_LIST_DECL_SESG(AD8, ESPIRST, ESPI, SIG_DESC_SET(SCU434, 23));
- PIN_DECL_2(AD8, GPIOW7, LPCRST, ESPIRST);
- 
- FUNC_GROUP_DECL(LPC, AB7, AB8, AC8, AC7, AE7, AF7, AD8);
+-#endif /* CONFIG_KEXEC */
+-
+ #endif /* _ASM_PARISC_KEXEC_H */
+diff --git a/arch/parisc/kernel/Makefile b/arch/parisc/kernel/Makefile
+index 2663c8f8be11..068d90950d93 100644
+--- a/arch/parisc/kernel/Makefile
++++ b/arch/parisc/kernel/Makefile
+@@ -37,5 +37,5 @@ obj-$(CONFIG_FUNCTION_GRAPH_TRACER)	+= ftrace.o
+ obj-$(CONFIG_JUMP_LABEL)		+= jump_label.o
+ obj-$(CONFIG_KGDB)			+= kgdb.o
+ obj-$(CONFIG_KPROBES)			+= kprobes.o
+-obj-$(CONFIG_KEXEC)			+= kexec.o relocate_kernel.o
++obj-$(CONFIG_KEXEC_CORE)		+= kexec.o relocate_kernel.o
+ obj-$(CONFIG_KEXEC_FILE)		+= kexec_file.o
 -- 
 2.20.1
 
