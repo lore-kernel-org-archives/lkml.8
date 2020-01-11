@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D201C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D93FC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B632084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BDF02084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738588;
-	bh=opyR2F1ucJGFv8k1cGKvBnL71fC1qVEfOu0nJcmSntY=;
+	s=default; t=1578738610;
+	bh=YNKS4Tm3ked/WoWgQbe7SvOeinH9G+RC3XdjwiMRG3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TzePCyngoBoISUGWum5belpaqC43mamap9A5kQTl+8MoA7NVZoN6M2ftWleG7gpCT
-	 sz8G8blladV8DVLPEkpTx40+wArOs+njz7G22OZ5pOmR3ZInMG3iLaZnYy3npH2S4w
-	 sGabqUdAX5TBoNkolEak/Ys5heKQIXlufDkcBH3A=
+	b=vay1IaL3MGkqJz9OtxbbExDbCQmU4neduAnquIKcWkMGUWnc/0do9n8OczlVU8k3T
+	 RDQSuM7Sx3fjuThS+1NRhh6qUGULjlVOUqmihHBrkqWiOKAYalLcca9XugVTEQcfmB
+	 riARtvt3ni9r/QpgW++v704Kzt35ktMHZ7skP3G8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731274AbgAKK3q (ORCPT
+        id S1731216AbgAKKaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:29:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:30:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730398AbgAKK3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:29:45 -0500
+        id S1728889AbgAKKaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:30:08 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 470C520842;
-        Sat, 11 Jan 2020 10:29:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BFFD20842;
+        Sat, 11 Jan 2020 10:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738584;
-        bh=opyR2F1ucJGFv8k1cGKvBnL71fC1qVEfOu0nJcmSntY=;
+        s=default; t=1578738608;
+        bh=YNKS4Tm3ked/WoWgQbe7SvOeinH9G+RC3XdjwiMRG3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QreB8LjWQC0nb/OaYe5U34Md7SWo6K+IDspriWmstmADFZcV5nAWjAwSH/cTYwxLn
-         xv6etzRvHKUHpx9QDNjENU7Iyh1enqBI1Dz/tG4BSJNbDYrdDSMrL+/kqg224X2CjC
-         8pYJYjSelzbkadulX6LOgM83TEoVk8NFJQS9WpQA=
+        b=iLrfdQOqMeo4/qAA4UVjaymkuud8EvLHyCSlhqb3mvT9lUiy550omOG9P0UzY0VwB
+         NW12P2T2nAMbhnj5vEeIkXUAVSqo+NrxqLHRA6J1WNWh1yeOTBjRjDx1akgPNW3+ZI
+         GVwBIaX0uG8pX3ZNm4owcqf+RGhjQBRFmD951zrw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 121/165] net/i40e: Fix concurrency issues between config flow and XSK
-Date:   Sat, 11 Jan 2020 10:50:40 +0100
-Message-Id: <20200111094933.799843970@linuxfoundation.org>
+Subject: [PATCH 5.4 124/165] arm64: cpu_errata: Add Hisilicon TSV110 to spectre-v2 safe list
+Date:   Sat, 11 Jan 2020 10:50:43 +0100
+Message-Id: <20200111094934.506469863@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,94 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Mikityanskiy <maximmi@mellanox.com>
+From: Wei Li <liwei391@huawei.com>
 
-[ Upstream commit b3873a5be757b44d51af542a50a6f2a3b6f95284 ]
+[ Upstream commit aa638cfe3e7358122a15cb1d295b622aae69e006 ]
 
-Use synchronize_rcu to wait until the XSK wakeup function finishes
-before destroying the resources it uses:
+HiSilicon Taishan v110 CPUs didn't implement CSV2 field of the
+ID_AA64PFR0_EL1, but spectre-v2 is mitigated by hardware, so
+whitelist the MIDR in the safe list.
 
-1. i40e_down already calls synchronize_rcu. On i40e_down either
-__I40E_VSI_DOWN or __I40E_CONFIG_BUSY is set. Check the latter in
-i40e_xsk_wakeup (the former is already checked there).
-
-2. After switching the XDP program, call synchronize_rcu to let
-i40e_xsk_wakeup exit before the XDP program is freed.
-
-3. Changing the number of channels brings the interface down (see
-i40e_prep_for_reset and i40e_pf_quiesce_all_vsi).
-
-4. Disabling UMEM sets __I40E_CONFIG_BUSY, too.
-
-Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20191217162023.16011-4-maximmi@mellanox.com
+Signed-off-by: Wei Li <liwei391@huawei.com>
+[hanjun: re-write the commit log]
+Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e.h      |  2 +-
- drivers/net/ethernet/intel/i40e/i40e_main.c | 10 +++++++---
- drivers/net/ethernet/intel/i40e/i40e_xsk.c  |  4 ++++
- 3 files changed, 12 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/cpu_errata.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e.h b/drivers/net/ethernet/intel/i40e/i40e.h
-index 2af9f6308f84..401304d4d553 100644
---- a/drivers/net/ethernet/intel/i40e/i40e.h
-+++ b/drivers/net/ethernet/intel/i40e/i40e.h
-@@ -1151,7 +1151,7 @@ void i40e_set_fec_in_flags(u8 fec_cfg, u32 *flags);
- 
- static inline bool i40e_enabled_xdp_vsi(struct i40e_vsi *vsi)
- {
--	return !!vsi->xdp_prog;
-+	return !!READ_ONCE(vsi->xdp_prog);
- }
- 
- int i40e_create_queue_channel(struct i40e_vsi *vsi, struct i40e_channel *ch);
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index 339925af0206..4960c9c3e773 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -6804,8 +6804,8 @@ void i40e_down(struct i40e_vsi *vsi)
- 	for (i = 0; i < vsi->num_queue_pairs; i++) {
- 		i40e_clean_tx_ring(vsi->tx_rings[i]);
- 		if (i40e_enabled_xdp_vsi(vsi)) {
--			/* Make sure that in-progress ndo_xdp_xmit
--			 * calls are completed.
-+			/* Make sure that in-progress ndo_xdp_xmit and
-+			 * ndo_xsk_wakeup calls are completed.
- 			 */
- 			synchronize_rcu();
- 			i40e_clean_tx_ring(vsi->xdp_rings[i]);
-@@ -12526,8 +12526,12 @@ static int i40e_xdp_setup(struct i40e_vsi *vsi,
- 
- 	old_prog = xchg(&vsi->xdp_prog, prog);
- 
--	if (need_reset)
-+	if (need_reset) {
-+		if (!prog)
-+			/* Wait until ndo_xsk_wakeup completes. */
-+			synchronize_rcu();
- 		i40e_reset_and_rebuild(pf, true, true);
-+	}
- 
- 	for (i = 0; i < vsi->num_queue_pairs; i++)
- 		WRITE_ONCE(vsi->rx_rings[i]->xdp_prog, vsi->xdp_prog);
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_xsk.c b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-index d07e1a890428..f73cd917c44f 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
-@@ -787,8 +787,12 @@ int i40e_xsk_wakeup(struct net_device *dev, u32 queue_id, u32 flags)
- {
- 	struct i40e_netdev_priv *np = netdev_priv(dev);
- 	struct i40e_vsi *vsi = np->vsi;
-+	struct i40e_pf *pf = vsi->back;
- 	struct i40e_ring *ring;
- 
-+	if (test_bit(__I40E_CONFIG_BUSY, pf->state))
-+		return -ENETDOWN;
-+
- 	if (test_bit(__I40E_VSI_DOWN, vsi->state))
- 		return -ENETDOWN;
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index 93f34b4eca25..96f576e9ea46 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -575,6 +575,7 @@ static const struct midr_range spectre_v2_safe_list[] = {
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
+ 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
+ 	MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
++	MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
+ 	{ /* sentinel */ }
+ };
  
 -- 
 2.20.1
