@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCEBC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAAEC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB04D2077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 844092082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737592;
-	bh=YPm26FNPSVIzUMlYWb5L41WLBOkte3nieINzdNvIfL8=;
+	s=default; t=1578737598;
+	bh=lbhtmtzioIGljo56mqJLTPr//RPVp9UAwuyOOVeiPvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rNerb5pdfHrRFELhf8AA4wI6Ww//I/btVVzaD+Y+pI74YZazmlqoBU4ePhi1eQDrn
-	 zFGas2H7qaVjv3xI0Lbs8Oo20UM8bPUy4kKfJ3zldAqihRWsFFwvxWmCpLVFnRmlk8
-	 ccr924XoMEcKASqJRXox3canQ6Vo9wdJ+br78x1M=
+	b=BXEbaHwWy8VCFtGa15o8TllnYzKFMeCYQTpZyAOdWpjqzyJwgvNTe4ghZsQ3RdZ8x
+	 SB1G9nvb+rK5/V1WSN5MOizyUuTclmjnbUzXpJJZgj8kk4r+gbuAAf7OhNR6ubyGb6
+	 wOS9Wwh9ZudJMBk8MDhGPJfEXmLvjEqh0J6CJckc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730089AbgAKKNL (ORCPT
+        id S1730094AbgAKKNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:13:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51646 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:13:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729008AbgAKKNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:13:07 -0500
+        id S1729008AbgAKKNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:13:12 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9974206DA;
-        Sat, 11 Jan 2020 10:13:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 388CA206DA;
+        Sat, 11 Jan 2020 10:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737587;
-        bh=YPm26FNPSVIzUMlYWb5L41WLBOkte3nieINzdNvIfL8=;
+        s=default; t=1578737592;
+        bh=lbhtmtzioIGljo56mqJLTPr//RPVp9UAwuyOOVeiPvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=luW+gbI1oOV4ozaNTvol5nfkQpsNDlqmVi04chzGaDHVxdoL80QagytnWk9EknfAs
-         ZEg7wT8BbcniUvKEMKRYVxdZfBdU65EGJo+SZVEfqNSUjoT8B7uNA5DPX1FMxPP3ol
-         4qr2O12j+G9zqNNU/F/x++DIgllsJUbUyrI61o4s=
+        b=N4DNgue4hf0/sABD2E92WjTSYDuJ7Ymxm28U7LeJLAQBpFfNnOyly9nVxJa37EpHo
+         Go6SE4KsR535INE7iidFSXE+ihktUaXgK+VnPGzYQgdF8u4XjWrDTAjk10BWBhkmd8
+         I6MPeOHEQyoKKorh2G3j8UrJUu3ov/oPZSmWjx8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.14 56/62] USB: serial: option: add Telit ME910G1 0x110a composition
-Date:   Sat, 11 Jan 2020 10:50:38 +0100
-Message-Id: <20200111094855.540302207@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+107c4aff5f392bf1517f@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 57/62] sctp: free cmd->obj.chunk for the unprocessed SCTP_CMD_REPLY
+Date:   Sat, 11 Jan 2020 10:50:39 +0100
+Message-Id: <20200111094855.929883686@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -59,33 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-commit 0d3010fa442429f8780976758719af05592ff19f upstream.
+[ Upstream commit be7a7729207797476b6666f046d765bdf9630407 ]
 
-This patch adds the following Telit ME910G1 composition:
+This patch is to fix a memleak caused by no place to free cmd->obj.chunk
+for the unprocessed SCTP_CMD_REPLY. This issue occurs when failing to
+process a cmd while there're still SCTP_CMD_REPLY cmds on the cmd seq
+with an allocated chunk in cmd->obj.chunk.
 
-0x110a: tty, tty, tty, rmnet
+So fix it by freeing cmd->obj.chunk for each SCTP_CMD_REPLY cmd left on
+the cmd seq when any cmd returns error. While at it, also remove 'nomem'
+label.
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Reported-by: syzbot+107c4aff5f392bf1517f@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/sctp/sm_sideeffect.c |   28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1175,6 +1175,8 @@ static const struct usb_device_id option
- 	  .driver_info = NCTRL(0) | RSVD(3) },
- 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1102, 0xff),	/* Telit ME910 (ECM) */
- 	  .driver_info = NCTRL(0) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x110a, 0xff),	/* Telit ME910G1 */
-+	  .driver_info = NCTRL(0) | RSVD(3) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910),
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910_USBCFG4),
+--- a/net/sctp/sm_sideeffect.c
++++ b/net/sctp/sm_sideeffect.c
+@@ -1359,8 +1359,10 @@ static int sctp_cmd_interpreter(enum sct
+ 			/* Generate an INIT ACK chunk.  */
+ 			new_obj = sctp_make_init_ack(asoc, chunk, GFP_ATOMIC,
+ 						     0);
+-			if (!new_obj)
+-				goto nomem;
++			if (!new_obj) {
++				error = -ENOMEM;
++				break;
++			}
+ 
+ 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
+ 					SCTP_CHUNK(new_obj));
+@@ -1382,7 +1384,8 @@ static int sctp_cmd_interpreter(enum sct
+ 			if (!new_obj) {
+ 				if (cmd->obj.chunk)
+ 					sctp_chunk_free(cmd->obj.chunk);
+-				goto nomem;
++				error = -ENOMEM;
++				break;
+ 			}
+ 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
+ 					SCTP_CHUNK(new_obj));
+@@ -1429,8 +1432,10 @@ static int sctp_cmd_interpreter(enum sct
+ 
+ 			/* Generate a SHUTDOWN chunk.  */
+ 			new_obj = sctp_make_shutdown(asoc, chunk);
+-			if (!new_obj)
+-				goto nomem;
++			if (!new_obj) {
++				error = -ENOMEM;
++				break;
++			}
+ 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
+ 					SCTP_CHUNK(new_obj));
+ 			break;
+@@ -1760,11 +1765,17 @@ static int sctp_cmd_interpreter(enum sct
+ 			break;
+ 		}
+ 
+-		if (error)
++		if (error) {
++			cmd = sctp_next_cmd(commands);
++			while (cmd) {
++				if (cmd->verb == SCTP_CMD_REPLY)
++					sctp_chunk_free(cmd->obj.chunk);
++				cmd = sctp_next_cmd(commands);
++			}
+ 			break;
++		}
+ 	}
+ 
+-out:
+ 	/* If this is in response to a received chunk, wait until
+ 	 * we are done with the packet to open the queue so that we don't
+ 	 * send multiple packets in response to a single request.
+@@ -1779,8 +1790,5 @@ out:
+ 		sp->data_ready_signalled = 0;
+ 
+ 	return error;
+-nomem:
+-	error = -ENOMEM;
+-	goto out;
+ }
+ 
 
 
