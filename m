@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 908B8C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB4EC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65417205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B459205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738405;
-	bh=2m/b3YaV30WQP7EmUHqtvR2SDpsnEF7V/wpRmsP9GRw=;
+	s=default; t=1578738407;
+	bh=wBvesqRv6+JFHdNYD/+gWe4AyEM41kdiYVzP5Y+yzNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qg2ijLy5KeAy6hhJl8fyxLaFmHrEDpu5QsnI/pmbMR7vra6p29PG9E8xazzu34KBN
-	 m8I0dEFqs4ocDAJvwyDhBS+VO/wxsNIFcdl5ODvmbfjJs5+jyPI9HP0WElkUnYdsv3
-	 UYoL2B6ZMPDvc57R/TM7acOw3KI4/3piqepp46aM=
+	b=XLhA3YC24YxzxMnU0DJvDIaKFf7LFES4YbLH29ROw90wGLsaMNZ91HqC4jrAxKhTb
+	 kKXcCPy4Ykac2csuTcvXIwloRaB0lBKqe+xJnolDu9JFEVFqsOp0ZZYGWlW8sxhDZ8
+	 hLtYufQamkRxPWvI1gnxbnux0TY5I50TcJxUO+mk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731117AbgAKK0n (ORCPT
+        id S1731125AbgAKK0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:26:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59650 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:26:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731043AbgAKK0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:26:41 -0500
+        id S1730771AbgAKK0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:26:45 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6A8320842;
-        Sat, 11 Jan 2020 10:26:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0F762082E;
+        Sat, 11 Jan 2020 10:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738400;
-        bh=2m/b3YaV30WQP7EmUHqtvR2SDpsnEF7V/wpRmsP9GRw=;
+        s=default; t=1578738404;
+        bh=wBvesqRv6+JFHdNYD/+gWe4AyEM41kdiYVzP5Y+yzNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bp3wLSwT02m3i2ibJBlkxmpTb7Q10W8wIF4UkySQbZ6CO+JVEEaqGJosVoaA9FRDy
-         mRbH7777dmlkqaomAqKor1AhRp2D3ywa7fZRENYIwWpENUvhqk+6losm7cFvVbI+le
-         4wbYepS883laCByNWqtpumAsLA13Pikm9WVfeDBM=
+        b=aecLYT+K9yU/9r/8UTY65TuFeotjhetZvQZqmOKofUOlrS7oLAMC0MMlcaJ/DaJQv
+         xkqFj+uenVgrALYOrCAGLYT5H29MXMQeNvuwwdCALCemAFUUQFY2n+ngGdN89D43xD
+         IbVxkwr1Cn1Ew7k/voD24gUDNKeWM7GJ8Ccmqp4o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Fredrik Olofsson <fredrik.olofsson@anyfinetworks.com>,
+        =?UTF-8?q?Stefan=20B=C3=BChler?= <source@stbuehler.de>,
         Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 069/165] mac80211: fix TID field in monitor mode transmit
-Date:   Sat, 11 Jan 2020 10:49:48 +0100
-Message-Id: <20200111094926.915883486@linuxfoundation.org>
+Subject: [PATCH 5.4 070/165] cfg80211: fix double-free after changing network namespace
+Date:   Sat, 11 Jan 2020 10:49:49 +0100
+Message-Id: <20200111094927.003403037@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,55 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fredrik Olofsson <fredrik.olofsson@anyfinetworks.com>
+From: Stefan Bühler <source@stbuehler.de>
 
-[ Upstream commit 753ffad3d6243303994227854d951ff5c70fa9e0 ]
+[ Upstream commit 56cb31e185adb61f930743a9b70e700a43625386 ]
 
-Fix overwriting of the qos_ctrl.tid field for encrypted frames injected on
-a monitor interface. While qos_ctrl.tid is not encrypted, it's used as an
-input into the encryption algorithm so it's protected, and thus cannot be
-modified after encryption. For injected frames, the encryption may already
-have been done in userspace, so we cannot change any fields.
+If wdev->wext.keys was initialized it didn't get reset to NULL on
+unregister (and it doesn't get set in cfg80211_init_wdev either), but
+wdev is reused if unregister was triggered through
+cfg80211_switch_netns.
 
-Before passing the frame to the driver, the qos_ctrl.tid field is updated
-from skb->priority. Prior to dbd50a851c50 skb->priority was updated in
-ieee80211_select_queue_80211(), but this function is no longer always
-called.
+The next unregister (for whatever reason) will try to free
+wdev->wext.keys again.
 
-Update skb->priority in ieee80211_monitor_start_xmit() so that the value
-is stored, and when later code 'modifies' the TID it really sets it to
-the same value as before, preserving the encryption.
-
-Fixes: dbd50a851c50 ("mac80211: only allocate one queue when using iTXQs")
-Signed-off-by: Fredrik Olofsson <fredrik.olofsson@anyfinetworks.com>
-Link: https://lore.kernel.org/r/20191119133451.14711-1-fredrik.olofsson@anyfinetworks.com
-[rewrite commit message based on our discussion]
+Signed-off-by: Stefan Bühler <source@stbuehler.de>
+Link: https://lore.kernel.org/r/20191126100543.782023-1-stefan.buehler@tik.uni-stuttgart.de
 Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/tx.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ net/wireless/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
-index 1fa422782905..cbd273c0b275 100644
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -2263,6 +2263,15 @@ netdev_tx_t ieee80211_monitor_start_xmit(struct sk_buff *skb,
- 						    payload[7]);
- 	}
+diff --git a/net/wireless/core.c b/net/wireless/core.c
+index 350513744575..3e25229a059d 100644
+--- a/net/wireless/core.c
++++ b/net/wireless/core.c
+@@ -1102,6 +1102,7 @@ static void __cfg80211_unregister_wdev(struct wireless_dev *wdev, bool sync)
  
-+	/*
-+	 * Initialize skb->priority for QoS frames. This is put in the TID field
-+	 * of the frame before passing it to the driver.
-+	 */
-+	if (ieee80211_is_data_qos(hdr->frame_control)) {
-+		u8 *p = ieee80211_get_qos_ctl(hdr);
-+		skb->priority = *p & IEEE80211_QOS_CTL_TAG1D_MASK;
-+	}
-+
- 	memset(info, 0, sizeof(*info));
- 
- 	info->flags = IEEE80211_TX_CTL_REQ_TX_STATUS |
+ #ifdef CONFIG_CFG80211_WEXT
+ 	kzfree(wdev->wext.keys);
++	wdev->wext.keys = NULL;
+ #endif
+ 	/* only initialized if we have a netdev */
+ 	if (wdev->netdev)
 -- 
 2.20.1
 
