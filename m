@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84548C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9EFC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2112077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3BA520673
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737655;
-	bh=zDPSuGbcNkmbbtTnk9w1Bx3wZxsTbV4rpqmXHikbpRA=;
+	s=default; t=1578737658;
+	bh=fohQj2/as9dqSua8w1ktK1w4smDl+xuPyoiq0d5bKiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o1DZYG4RCLpyLyzeuF4LVoefMcx5y/VO1WHuo4ONOfhv9yE9CpY0k3ayE1Thw+RO1
-	 AyZHm9SXo1Hg9GZaOmvfzWPFhrFeh+9bR1w6mH2j+3ptFZmyojQGMDP61yI+6FaJe1
-	 DSECaeLSf/RU+u1J1lv/GMMkNTLm7YuFvUOMaaWc=
+	b=C2oVlhOG1yg/oCk2d9xdqBOTTo9tlNL9oEzTCE8Eqnpmx52ZDAug+xcunNAHZwu8O
+	 I0X1zfJtC93h1qbKEIbB583YYLBlog1Ls9goIRcGw6/bQw2aMBOVJP8CzfSioINXGy
+	 Z9rHCp5ZxJAr3Ea3dzdJ2FGq2wYGGtpS+/3XIaVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730084AbgAKKOO (ORCPT
+        id S1730020AbgAKKOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:14:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53740 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:14:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729889AbgAKKOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:14:09 -0500
+        id S1730149AbgAKKOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:14:14 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D23D2146E;
-        Sat, 11 Jan 2020 10:14:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE86720673;
+        Sat, 11 Jan 2020 10:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737649;
-        bh=zDPSuGbcNkmbbtTnk9w1Bx3wZxsTbV4rpqmXHikbpRA=;
+        s=default; t=1578737653;
+        bh=fohQj2/as9dqSua8w1ktK1w4smDl+xuPyoiq0d5bKiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LCRDlmQ3u7YnEaYO/RCgyTFqJp0e2Y2itprpTuc0NE0lOxuQ5oxkXW76X10/m7CEj
-         6QAZLEgrd0ciFmW8qZa02twT7YfZRhnfvCFC3vfsGiRJzzGIFkOPMIaBE5mIjYvtiv
-         fWQ1yClgZ2oFAjXN1Sx5fw7vHIhIHkVGOYRA9nAc=
+        b=JT3ThTQJzo90hqEH6o+Vmm9B7CtppOuwL6+PFlSKQR8qLUhWAViNFj+qhrfH7ql9k
+         0brO+EynVW1HGjUvv94JpqgAEAjbO/Xsd6qx15XOU/auUCMoZfFJTMb0X+QrypfjJu
+         r/DjChiWLdJlIXUHwzkyI2yU47pra4LtpXxzrTMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Roese <sr@denx.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Frieder Schrempf <frieder.schrempf@kontron.de>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 15/84] ARM: dts: imx6ul: imx6ul-14x14-evk.dtsi: Fix SPI NOR probing
-Date:   Sat, 11 Jan 2020 10:49:52 +0100
-Message-Id: <20200111094850.519762766@linuxfoundation.org>
+Subject: [PATCH 4.19 16/84] ARM: vexpress: Set-up shared OPP table instead of individual for each CPU
+Date:   Sat, 11 Jan 2020 10:49:53 +0100
+Message-Id: <20200111094851.026831013@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -62,37 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Roese <sr@denx.de>
+From: Sudeep Holla <sudeep.holla@arm.com>
 
-[ Upstream commit 0aeb1f2b74f3402e9cdb7c0b8e2c369c9767301e ]
+[ Upstream commit 2a76352ad2cc6b78e58f737714879cc860903802 ]
 
-Without this "jedec,spi-nor" compatible property, probing of the SPI NOR
-does not work on the NXP i.MX6ULL EVK. Fix this by adding this
-compatible property to the DT.
+Currently we add individual copy of same OPP table for each CPU within
+the cluster. This is redundant and doesn't reflect the reality.
 
-Fixes: 7d77b8505aa9 ("ARM: dts: imx6ull: fix the imx6ull-14x14-evk configuration")
-Signed-off-by: Stefan Roese <sr@denx.de>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+We can't use core cpumask to set policy->cpus in ve_spc_cpufreq_init()
+anymore as it gets called via cpuhp_cpufreq_online()->cpufreq_online()
+->cpufreq_driver->init() and the cpumask gets updated upon CPU hotplug
+operations. It also may cause issues when the vexpress_spc_cpufreq
+driver is built as a module.
+
+Since ve_spc_clk_init is built-in device initcall, we should be able to
+use the same topology_core_cpumask to set the opp sharing cpumask via
+dev_pm_opp_set_sharing_cpus and use the same later in the driver via
+dev_pm_opp_get_sharing_cpus.
+
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul-14x14-evk.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-vexpress/spc.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-index 818021126559..695303435003 100644
---- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-+++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
-@@ -175,7 +175,7 @@
- 	flash0: n25q256a@0 {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--		compatible = "micron,n25q256a";
-+		compatible = "micron,n25q256a", "jedec,spi-nor";
- 		spi-max-frequency = <29000000>;
- 		reg = <0>;
- 	};
+diff --git a/arch/arm/mach-vexpress/spc.c b/arch/arm/mach-vexpress/spc.c
+index 0f5381d13494..55bbbc3b328f 100644
+--- a/arch/arm/mach-vexpress/spc.c
++++ b/arch/arm/mach-vexpress/spc.c
+@@ -551,8 +551,9 @@ static struct clk *ve_spc_clk_register(struct device *cpu_dev)
+ 
+ static int __init ve_spc_clk_init(void)
+ {
+-	int cpu;
++	int cpu, cluster;
+ 	struct clk *clk;
++	bool init_opp_table[MAX_CLUSTERS] = { false };
+ 
+ 	if (!info)
+ 		return 0; /* Continue only if SPC is initialised */
+@@ -578,8 +579,17 @@ static int __init ve_spc_clk_init(void)
+ 			continue;
+ 		}
+ 
++		cluster = topology_physical_package_id(cpu_dev->id);
++		if (init_opp_table[cluster])
++			continue;
++
+ 		if (ve_init_opp_table(cpu_dev))
+ 			pr_warn("failed to initialise cpu%d opp table\n", cpu);
++		else if (dev_pm_opp_set_sharing_cpus(cpu_dev,
++			 topology_core_cpumask(cpu_dev->id)))
++			pr_warn("failed to mark OPPs shared for cpu%d\n", cpu);
++		else
++			init_opp_table[cluster] = true;
+ 	}
+ 
+ 	platform_device_register_simple("vexpress-spc-cpufreq", -1, NULL, 0);
 -- 
 2.20.1
 
