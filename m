@@ -2,109 +2,110 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E74A2C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60576C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED6920848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2951D214DB
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737811;
-	bh=cWDB7LJUkZzYeNN+RNZaHLYw/EuP9iPySeFRixVAIjA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=H+V/RNwuERzvUGCezI/jokcuEA9Sp+RMFWo0fZvyJE3vyiZrLZrM26Ikf55n7CMVB
-	 Lc4ZDqse1gbrXMBgq6PnJSfCInmDpWSi8AOf603no88E5oZMQKANSpDfqR7nwJ8HIc
-	 PM8y8CvbIjOLTt0o5tGlo49CSM1aTQVt5MfweLsM=
+	s=default; t=1578737816;
+	bh=MYIIQKf/tlrqyLKCFLb0w3uYjfXyqxZTHrF8jHYL8dI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WgNbfGgTJOh7ZRKIRBmUSKw82Oh/gyfBxu0M9TT4igfv8y0EQyjoKt4i0YDKJdgD5
+	 tx5iqIIc6eTe9W2bzM37cLnQX/Yy4dLAVTVTMPGIVuVxa+VitIkBkAkvt0iXpN15sQ
+	 YHl6XX51SfQpUJhqjmnHW0WiW+mWVa6gULFvqDeU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730417AbgAKKQu (ORCPT
+        id S1730426AbgAKKQz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:16:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60336 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:16:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgAKKQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:16:47 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        id S1729229AbgAKKQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:16:53 -0500
+Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E34AB20673;
-        Sat, 11 Jan 2020 10:16:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F17AC20848;
+        Sat, 11 Jan 2020 10:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737807;
-        bh=cWDB7LJUkZzYeNN+RNZaHLYw/EuP9iPySeFRixVAIjA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=0qhrTvJ622zuqqpkVY6pldy0gCLgzoi6fLpEKdLGssA+K+q3Fav7TZlYrzPTGIIBl
-         TVokV2Sr087WkhwqRXpD6MVH1E4QUO9n4BX+xy9AuCHloJLmKQFiIN3G08ewL08zRg
-         Je0b8p1WKEiuZZW1e3Yt6xXOhhTJXUYByXAEcbvI=
-Date:   Sat, 11 Jan 2020 10:16:38 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <ludovic.desroches@microchip.com>, <vkoul@kernel.org>,
-        <eugen.hristev@microchip.com>, <knaack.h@gmx.de>,
-        <lars@metafoo.de>, <pmeerw@pmeerw.net>, <mchehab@kernel.org>,
-        <lee.jones@linaro.org>, <radu_nicolae.pirea@upb.ro>,
-        <richard.genoud@gmail.com>, <tudor.ambarus@microchip.com>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
-        <wg@grandegger.com>, <mkl@pengutronix.de>, <a.zummo@towertech.it>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-media@vger.kernel.org>,
-        <linux-spi@vger.kernel.org>, <linux-mtd@lists.infradead.org>,
-        <linux-can@vger.kernel.org>, <linux-rtc@vger.kernel.org>
-Subject: Re: [PATCH v2 06/17] dt-bindings: at91-sama5d2_adc: add
- microchip,sam9x60-adc
-Message-ID: <20200111101638.7920f26c@archlinux>
-In-Reply-To: <1578673089-3484-7-git-send-email-claudiu.beznea@microchip.com>
-References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
-        <1578673089-3484-7-git-send-email-claudiu.beznea@microchip.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        s=default; t=1578737812;
+        bh=MYIIQKf/tlrqyLKCFLb0w3uYjfXyqxZTHrF8jHYL8dI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SlG3++tO+ZYwrtnezKx52OzGKb5gtKGeVinZcb/z5YGgzNxHZkAGLTFZRmQKm6gi7
+         zrYgIKrmWHJ6JvQd+JAdpt9c6fsZPb2uhWCaA7QsDCF0xNn5jGDM0VLKg0xGbz8H7d
+         SvDhHUZJ3CfwmfHsBFN3Waw14Js0ch3QvcgHk/EE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 33/84] powerpc: Ensure that swiotlb buffer is allocated from low memory
+Date:   Sat, 11 Jan 2020 10:50:10 +0100
+Message-Id: <20200111094858.774120262@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
+References: <20200111094845.328046411@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 18:17:58 +0200
-Claudiu Beznea <claudiu.beznea@microchip.com> wrote:
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-> Add microchip,sam9x60-adc to DT bindings documentation.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+[ Upstream commit 8fabc623238e68b3ac63c0dd1657bf86c1fa33af ]
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Some powerpc platforms (e.g. 85xx) limit DMA-able memory way below 4G.
+If a system has more physical memory than this limit, the swiotlb
+buffer is not addressable because it is allocated from memblock using
+top-down mode.
 
-I'm assuming this lot of binding changes will all go via Rob.
-Let me know if you are expecting it to go via the various
-individual trees.
+Force memblock to bottom-up mode before calling swiotlb_init() to
+ensure that the swiotlb buffer is DMA-able.
 
-Thanks,
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191204123524.22919-1-rppt@kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/mm/mem.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Jonathan
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 04ccb274a620..9a6afd9f3f9b 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -344,6 +344,14 @@ void __init mem_init(void)
+ 	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
+ 
+ #ifdef CONFIG_SWIOTLB
++	/*
++	 * Some platforms (e.g. 85xx) limit DMA-able memory way below
++	 * 4G. We force memblock to bottom-up mode to ensure that the
++	 * memory allocated in swiotlb_init() is DMA-able.
++	 * As it's the last memblock allocation, no need to reset it
++	 * back to to-down.
++	 */
++	memblock_set_bottom_up(true);
+ 	swiotlb_init(0);
+ #endif
+ 
+-- 
+2.20.1
 
 
-> ---
->  Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-> index 4a3c1d496e1a..07c59f301b31 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-> @@ -1,7 +1,7 @@
->  * AT91 SAMA5D2 Analog to Digital Converter (ADC)
->  
->  Required properties:
-> -  - compatible: Should be "atmel,sama5d2-adc".
-> +  - compatible: Should be "atmel,sama5d2-adc" or "microchip,sam9x60-adc".
->    - reg: Should contain ADC registers location and length.
->    - interrupts: Should contain the IRQ line for the ADC.
->    - clocks: phandle to device clock.
 
