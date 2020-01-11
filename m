@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60576C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4678FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2951D214DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 145CE205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737816;
-	bh=MYIIQKf/tlrqyLKCFLb0w3uYjfXyqxZTHrF8jHYL8dI=;
+	s=default; t=1578737820;
+	bh=VVAXxor+iPN+v/i1b9zhPl8bSbTs/m3d8lkUIp2osCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WgNbfGgTJOh7ZRKIRBmUSKw82Oh/gyfBxu0M9TT4igfv8y0EQyjoKt4i0YDKJdgD5
-	 tx5iqIIc6eTe9W2bzM37cLnQX/Yy4dLAVTVTMPGIVuVxa+VitIkBkAkvt0iXpN15sQ
-	 YHl6XX51SfQpUJhqjmnHW0WiW+mWVa6gULFvqDeU=
+	b=IVNbjyXt52+PmXrsdJGLD3ZXwJ+DlcD58OxUGcyxBOrkX46eHn2G14gT8ta2f5c+N
+	 J6yUuz8+CcP8ntmi7TVnnJ8EFccpV5V2nNnhsIFqRoLg2Usf8B+TzPTK+xKsLPkRdL
+	 9BGH+LveaPTAiVL5saB0O5QC19JL2ow5z65flY9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730426AbgAKKQz (ORCPT
+        id S1730431AbgAKKQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:16:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60644 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:16:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgAKKQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:16:53 -0500
+        id S1730398AbgAKKQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:16:49 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F17AC20848;
-        Sat, 11 Jan 2020 10:16:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA22220880;
+        Sat, 11 Jan 2020 10:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737812;
-        bh=MYIIQKf/tlrqyLKCFLb0w3uYjfXyqxZTHrF8jHYL8dI=;
+        s=default; t=1578737808;
+        bh=VVAXxor+iPN+v/i1b9zhPl8bSbTs/m3d8lkUIp2osCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SlG3++tO+ZYwrtnezKx52OzGKb5gtKGeVinZcb/z5YGgzNxHZkAGLTFZRmQKm6gi7
-         zrYgIKrmWHJ6JvQd+JAdpt9c6fsZPb2uhWCaA7QsDCF0xNn5jGDM0VLKg0xGbz8H7d
-         SvDhHUZJ3CfwmfHsBFN3Waw14Js0ch3QvcgHk/EE=
+        b=RzlB/Dc5Eds9VClp0Kgz4EEd0bE35Nv0Rn32Kc7uWb6bwh5QjgSoC3a00jCtTtO4k
+         67bGEnJ1sJZ+t6c0SZXvmRamKbs/GNHFTurl+7XywKHwRkKn+A2dPktMZbxXfb41SC
+         q8mZdbQe752nME3Nmh8MdZbLS56Vk8jh5BUEEQ+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 33/84] powerpc: Ensure that swiotlb buffer is allocated from low memory
-Date:   Sat, 11 Jan 2020 10:50:10 +0100
-Message-Id: <20200111094858.774120262@linuxfoundation.org>
+Subject: [PATCH 4.19 32/84] samples: bpf: fix syscall_tp due to unused syscall
+Date:   Sat, 11 Jan 2020 10:50:09 +0100
+Message-Id: <20200111094858.413545470@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -63,47 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+From: Daniel T. Lee <danieltimlee@gmail.com>
 
-[ Upstream commit 8fabc623238e68b3ac63c0dd1657bf86c1fa33af ]
+[ Upstream commit fe3300897cbfd76c6cb825776e5ac0ca50a91ca4 ]
 
-Some powerpc platforms (e.g. 85xx) limit DMA-able memory way below 4G.
-If a system has more physical memory than this limit, the swiotlb
-buffer is not addressable because it is allocated from memblock using
-top-down mode.
+Currently, open() is called from the user program and it calls the syscall
+'sys_openat', not the 'sys_open'. This leads to an error of the program
+of user side, due to the fact that the counter maps are zero since no
+function such 'sys_open' is called.
 
-Force memblock to bottom-up mode before calling swiotlb_init() to
-ensure that the swiotlb buffer is DMA-able.
+This commit adds the kernel bpf program which are attached to the
+tracepoint 'sys_enter_openat' and 'sys_enter_openat'.
 
-Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191204123524.22919-1-rppt@kernel.org
+Fixes: 1da236b6be963 ("bpf: add a test case for syscalls/sys_{enter|exit}_* tracepoints")
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/mem.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ samples/bpf/syscall_tp_kern.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 04ccb274a620..9a6afd9f3f9b 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -344,6 +344,14 @@ void __init mem_init(void)
- 	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
+diff --git a/samples/bpf/syscall_tp_kern.c b/samples/bpf/syscall_tp_kern.c
+index 9149c524d279..8833aacb9c8c 100644
+--- a/samples/bpf/syscall_tp_kern.c
++++ b/samples/bpf/syscall_tp_kern.c
+@@ -50,13 +50,27 @@ static __always_inline void count(void *map)
+ SEC("tracepoint/syscalls/sys_enter_open")
+ int trace_enter_open(struct syscalls_enter_open_args *ctx)
+ {
+-	count((void *)&enter_open_map);
++	count(&enter_open_map);
++	return 0;
++}
++
++SEC("tracepoint/syscalls/sys_enter_openat")
++int trace_enter_open_at(struct syscalls_enter_open_args *ctx)
++{
++	count(&enter_open_map);
+ 	return 0;
+ }
  
- #ifdef CONFIG_SWIOTLB
-+	/*
-+	 * Some platforms (e.g. 85xx) limit DMA-able memory way below
-+	 * 4G. We force memblock to bottom-up mode to ensure that the
-+	 * memory allocated in swiotlb_init() is DMA-able.
-+	 * As it's the last memblock allocation, no need to reset it
-+	 * back to to-down.
-+	 */
-+	memblock_set_bottom_up(true);
- 	swiotlb_init(0);
- #endif
- 
+ SEC("tracepoint/syscalls/sys_exit_open")
+ int trace_enter_exit(struct syscalls_exit_open_args *ctx)
+ {
+-	count((void *)&exit_open_map);
++	count(&exit_open_map);
++	return 0;
++}
++
++SEC("tracepoint/syscalls/sys_exit_openat")
++int trace_enter_exit_at(struct syscalls_exit_open_args *ctx)
++{
++	count(&exit_open_map);
+ 	return 0;
+ }
 -- 
 2.20.1
 
