@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1BFC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B856AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B70652087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823352087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738149;
-	bh=ROlknTGA/2BYqN4mekQwMRs65sDEbN41Qs3dZ6Eh23w=;
+	s=default; t=1578738155;
+	bh=kcmHPfgfUkUIZ9s19Gak9QvxgsL0fT1Ndp20b1yWJ/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sKqTU3eFdxUT80+1ktE2albMTMj+ChjPB7B1AH8R/QRnsFnp2xwK7Ux0aqRssPJD1
-	 /4gb+hdOsxUI9QhZlFuWN11X5ZliA+I18tXQsS+OF0I7CVC6u8LU6lkROdTB18GkYa
-	 yU8EMEMLv6t3iAMruJw6wGsE9zZK/dwzZ9dO6xEI=
+	b=Ajs/aPP6B5berHICz7aXal6gia9HBIfNDjBxGWC1ZYZIRhVzyUpyPcEEpgtVxy8Xa
+	 dr7D1qci+D8lCQb6PKtJV7oXd4/P1vNG+sTugwXw2q9cDKtJbfot5xdPByEVhu8Ikt
+	 kk2A3ifmciDlbg+vojZz+lO+GZPu0IG8HmUf9j2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730839AbgAKKW3 (ORCPT
+        id S1730841AbgAKKWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:22:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47708 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:22:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730486AbgAKKW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:22:27 -0500
+        id S1730631AbgAKKWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:22:32 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D1C42087F;
-        Sat, 11 Jan 2020 10:22:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89EC5214D8;
+        Sat, 11 Jan 2020 10:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738147;
-        bh=ROlknTGA/2BYqN4mekQwMRs65sDEbN41Qs3dZ6Eh23w=;
+        s=default; t=1578738151;
+        bh=kcmHPfgfUkUIZ9s19Gak9QvxgsL0fT1Ndp20b1yWJ/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IrgIgBFrs2pD460VeGTMjCFLod3pnC2BYgYzWwVeQ6E0A4iOwcWoIt5AxRJbO5GAN
-         r6S61vdNoYOqylaoRZ+aVgSw15+/lYF8/aIKpGVDQzhUb4ZehSWsptaL3JAq3BJSoK
-         HmkMOGUtsA6dRszMVmK6LoBM5wSW/iRkHrqr1UD0=
+        b=HTXtKwRmKN4x1HL5sdCtfhpy6tTyur6fzzO+dQtsuCnJNxWgdraGg7iWnxZ/0E3vX
+         kLcEx2ztmE33jVHg4UL538cniEZfu+/GuWPpwANXn6TzV5Bc9x4h3P+DbAVfzr/FGv
+         tE31JJ7t4HAYsNNp9gN6qLuQSKYi2EkZ5TbtBm6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 029/165] netfilter: nf_tables: validate NFT_SET_ELEM_INTERVAL_END
-Date:   Sat, 11 Jan 2020 10:49:08 +0100
-Message-Id: <20200111094923.157271850@linuxfoundation.org>
+Subject: [PATCH 5.4 038/165] selftests: safesetid: Move link library to LDLIBS
+Date:   Sat, 11 Jan 2020 10:49:17 +0100
+Message-Id: <20200111094924.245126205@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -59,48 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit bffc124b6fe37d0ae9b428d104efb426403bb5c9 ]
+[ Upstream commit be12252212fa3dfed6e75112865095c484c0ce87 ]
 
-Only NFTA_SET_ELEM_KEY and NFTA_SET_ELEM_FLAGS make sense for elements
-whose NFT_SET_ELEM_INTERVAL_END flag is set on.
+Move -lcap to LDLIBS from CFLAGS because it is a library
+to be linked.
 
-Fixes: 96518518cc41 ("netfilter: add nftables")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Without this, safesetid failed to build with link error
+as below.
+
+----
+/usr/bin/ld: /tmp/ccL8rZHT.o: in function `drop_caps':
+safesetid-test.c:(.text+0xe7): undefined reference to `cap_get_proc'
+/usr/bin/ld: safesetid-test.c:(.text+0x107): undefined reference to `cap_set_flag'
+/usr/bin/ld: safesetid-test.c:(.text+0x10f): undefined reference to `cap_set_proc'
+/usr/bin/ld: safesetid-test.c:(.text+0x117): undefined reference to `cap_free'
+/usr/bin/ld: safesetid-test.c:(.text+0x136): undefined reference to `cap_clear'
+collect2: error: ld returned 1 exit status
+----
+
+Fixes: c67e8ec03f3f ("LSM: SafeSetID: add selftest")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ tools/testing/selftests/safesetid/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 712a428509ad..7120eba71ac5 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -4489,14 +4489,20 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
- 		if (nla[NFTA_SET_ELEM_DATA] == NULL &&
- 		    !(flags & NFT_SET_ELEM_INTERVAL_END))
- 			return -EINVAL;
--		if (nla[NFTA_SET_ELEM_DATA] != NULL &&
--		    flags & NFT_SET_ELEM_INTERVAL_END)
--			return -EINVAL;
- 	} else {
- 		if (nla[NFTA_SET_ELEM_DATA] != NULL)
- 			return -EINVAL;
- 	}
+diff --git a/tools/testing/selftests/safesetid/Makefile b/tools/testing/selftests/safesetid/Makefile
+index 98da7a504737..cac42cd36a1b 100644
+--- a/tools/testing/selftests/safesetid/Makefile
++++ b/tools/testing/selftests/safesetid/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for mount selftests.
+-CFLAGS = -Wall -lcap -O2
++CFLAGS = -Wall -O2
++LDLIBS = -lcap
  
-+	if ((flags & NFT_SET_ELEM_INTERVAL_END) &&
-+	     (nla[NFTA_SET_ELEM_DATA] ||
-+	      nla[NFTA_SET_ELEM_OBJREF] ||
-+	      nla[NFTA_SET_ELEM_TIMEOUT] ||
-+	      nla[NFTA_SET_ELEM_EXPIRATION] ||
-+	      nla[NFTA_SET_ELEM_USERDATA] ||
-+	      nla[NFTA_SET_ELEM_EXPR]))
-+		return -EINVAL;
-+
- 	timeout = 0;
- 	if (nla[NFTA_SET_ELEM_TIMEOUT] != NULL) {
- 		if (!(set->flags & NFT_SET_TIMEOUT))
+ TEST_PROGS := run_tests.sh
+ TEST_GEN_FILES := safesetid-test
 -- 
 2.20.1
 
