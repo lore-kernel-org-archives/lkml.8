@@ -6,105 +6,60 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08096C33CA7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 23:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 775DFC33CA7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 23:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D098120848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 23:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48FCD20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 23:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731674AbgAKXWf (ORCPT
+        id S1731691AbgAKXdu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 18:22:35 -0500
-Received: from mx.sdf.org ([205.166.94.20]:49296 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730708AbgAKXWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 18:22:35 -0500
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 00BNMN9l022260
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Sat, 11 Jan 2020 23:22:24 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 00BNMp7Q002616;
-        Sat, 11 Jan 2020 23:22:51 GMT
-Date:   Sat, 11 Jan 2020 23:22:51 GMT
-From:   George Spelvin <lkml@sdf.org>
-Message-Id: <202001112322.00BNMp7Q002616@sdf.org>
-To:     andy.shevchenko@gmail.com, kbusch@kernel.org, lkml@sdf.org
-Subject: Re: [PATCH] lib/list_sort: fix function type mismatches
-Cc:     akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux@rasmusvillemoes.dk, mchehab+samsung@kernel.org,
-        samitolvanen@google.com, st5pub@yandex.ru
-In-Reply-To: <202001111144.00BBiXEq002960@sdf.org>
-References: <20200110225602.91663-1-samitolvanen@google.com>,
-    <202001110830.00B8USV0024843@sdf.org>,
-    <CAHp75VcWryeiN_bwJjFk=RO1k+H5q7h6_3oGArf1XzF-6dNxKg@mail.gmail.com>,
-    <202001111144.00BBiXEq002960@sdf.org>
+        Sat, 11 Jan 2020 18:33:50 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:49550 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731663AbgAKXdu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 18:33:50 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A265715A0BDF5;
+        Sat, 11 Jan 2020 15:33:48 -0800 (PST)
+Date:   Sat, 11 Jan 2020 15:33:48 -0800 (PST)
+Message-Id: <20200111.153348.1795240699245945693.davem@davemloft.net>
+To:     mparab@cadence.com
+Cc:     nicolas.ferre@microchip.com, jakub.kicinski@netronome.com,
+        andrew@lunn.ch, antoine.tenart@bootlin.com,
+        rmk+kernel@armlinux.org.uk, Claudiu.Beznea@microchip.com,
+        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org, dkangude@cadence.com,
+        a.fatoum@pengutronix.de, brad.mouring@ni.com, pthombar@cadence.com
+Subject: Re: [PATCH v2 net] net: macb: fix for fixed-link mode
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1578662727-41429-1-git-send-email-mparab@cadence.com>
+References: <1578662727-41429-1-git-send-email-mparab@cadence.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 11 Jan 2020 15:33:49 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(Resend with corrected e-mail address and more thoughts.)
+From: Milind Parab <mparab@cadence.com>
+Date: Fri, 10 Jan 2020 13:25:27 +0000
 
-On Sat, 11 Jan 2020 at 12:35, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> Hint: When you post Message-Id you may prefix them with
-> https://lore.kernel.org/r/ which makes search a bit more convenient
-> and faster.
+>  static int macb_phylink_connect(struct macb *bp)
+>  {
+>  	struct net_device *dev = bp->dev;
+>  	struct phy_device *phydev;
+> +	struct device_node *dn = bp->pdev->dev.of_node;
+>  	int ret;
 
-I just learned that https://marc.info/?i= also works, so
-https://lore.kernel.org/r/20191007135656.37734-1-andriy.shevchenko@linux.intel.com
-https://marc.info/?i=20191007135656.37734-1-andriy.shevchenko@linux.intel.com
+Please retain the reverse christmas tree ordering of local variables
+here.
 
-https://lore.kernel.org/r/20190416154522.65aaa348161fc581181b56d9@linux-foundation.org
-https://marc.info/?i=20190416154522.65aaa348161fc581181b56d9@linux-foundation.org
-
-> For the record, I have just checked users of list_sort() in regard to
-> constify of priv parameter and only ACPI HMAT is using it as not
-> const. UBIFS and XFS do not change the data (if I didn't miss
-> anything).
-
-Yes, that initiator_cmp() at drivers/acpi/hmat/hmat.c:526 is... interesting.
-
-Basically, it wants to fill in a bitmap of all of the processor_pxm
-identifiers, so it avoids having a separate list traversal by
-setting bits in the compare function (which is guaranteed to visit
-each list element at least once).
-
-It ends up setting each bit 2*log2(n) times (since there are an
-average of log2(n) compares per element and each compare sets two
-bits), but it makes the code smaller.  And although it make the
-aggressive performance optimizer in me cringe, I have to agree this
-is not performance-critical code and so it's a reasonable thing to do.
-
-I do note, however, that the list_sort is almost immediately followed
-by a list_for_each_entry() loop and maybe the bitmap computation
-could be folded in there.  Basically start the loop with:
-
-	unsigned int pxm = -1u;	/* Invalid sentinel value */
-	list_for_each_entry(initiator, &initiators, node) {
-		u32 value;
-
-		if (initiator->processor_pxm != pxm) {
-			pxm = initiator->processor_pxm;
-			set_bit(pxm, p_nodes);
-		} else if (!test_bit(pxm, p_nodes)) {
-			continue;
-		}
-
-... but oh, whoops, that won't work.  The "almost immediately"
-glosses over a second loop, so there are multiple passes over the
-initiators list, while we want the bitmap set up only once.
-
-What we should probably do is just cast away the const in the cmp
-function.  That's a strange thing to do, which is appropriate because
-the code is doing something strange.
-
-It might be too subtle, but given the semantics guaranteed by list_sort,
-it would suffice to set only the bit corresponding to the *second*
-argument to cmp(), plus the bit corresponding to the first element
-of the input (not yet sorted) list.
-
-Cc: to Keith Busch <kbusch@kernel.org>, who wrote that code.
-Keith, is there a better way we could avoid the non-const priv
-parameter, just for the sake of code cleanliness in <list_sort.h>?
+Thank you.
