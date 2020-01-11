@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7C4C33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F17AC33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E49472087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBEA72077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736772;
-	bh=Q76nd1rY7PubR1tz37aB6Z90FHySurzEY50SY9L8GaY=;
+	s=default; t=1578736776;
+	bh=HIFgJAD1bqTpIP40iXmXuL5OzcjYdUclAnMKce2y3oE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BTLgh0gwzqAZNtRnlF0wjaJpueQdLxnskOs9x1rG0jt1n+IGgrkIiHjxtTAW8Unt0
-	 Hg5Wa4mrsbyDzQukFBc9gDPFr7E5HbNmDw0HQpVKRd6o4Xe8uO3DYLZqTPSCnN1JH1
-	 vjs6lzda0zFbJ+cZN4Upeq3FkDex1mEWI++FcuEg=
+	b=ZdFWFhTUH5L1gzdk0YeM9XxhmnvODH/g7je9hQxEatNtrtw/UnP8F9Naa6v1FwsaT
+	 jBtUyk6q9FjsuO9wKLx4ezrxhfgfcCN7uv3d1ay9lNy2aVI52Se4SGhS6xfb2ULDfi
+	 4a/aIj989YXMDrriIIwv1nRh5am7DwwgZ/aqS0UI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgAKJ7a (ORCPT
+        id S1729332AbgAKJ7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:59:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54066 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:59:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729147AbgAKJ73 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:59:29 -0500
+        id S1728768AbgAKJ7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:59:33 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4027C2077C;
-        Sat, 11 Jan 2020 09:59:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5DCC2084D;
+        Sat, 11 Jan 2020 09:59:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736768;
-        bh=Q76nd1rY7PubR1tz37aB6Z90FHySurzEY50SY9L8GaY=;
+        s=default; t=1578736773;
+        bh=HIFgJAD1bqTpIP40iXmXuL5OzcjYdUclAnMKce2y3oE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VBZnxWgvKtAMa4Jw088gzdghZNDGNV68v1wclghMmG+tw0eq8u42rG7RnDR0U/bF+
-         3VeGeON18bkwrcEM9wus8UaR9AGPFtGk8TXq7ykzom8k2KOYZf/Tkv2BYOFRY4iMA6
-         ysNVPiqe0iqXgBuLUs6rFUNTKglv+TZVx9pzoS5c=
+        b=JvQ3w0WbhEEN+SywXZte2j7Nc4j81o80jckpti/9xiybg40kZ56Z4cXVdtPMYSza/
+         gA3RfOjfYNI+arWCvm6s436TpRIB4YzUxfnWLjSgG+xz00V3Jr08K/Pfv58Tex7EMF
+         WHulImLI2ydaHyeTiip4GQFDxBMeLSlnNzKlcq9Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Burton <paulburton@kernel.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@canonical.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-mips@vger.kernel.org
-Subject: [PATCH 4.9 20/91] MIPS: Avoid VDSO ABI breakage due to global register variable
-Date:   Sat, 11 Jan 2020 10:49:13 +0100
-Message-Id: <20200111094851.289779602@linuxfoundation.org>
+        stable@vger.kernel.org, Chanho Min <chanho.min@lge.com>,
+        Jinsuk Choi <jjinsuk.choi@lge.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 21/91] mm/zsmalloc.c: fix the migrated zspage statistics.
+Date:   Sat, 11 Jan 2020 10:49:14 +0100
+Message-Id: <20200111094851.756485766@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -63,97 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Burton <paulburton@kernel.org>
+From: Chanho Min <chanho.min@lge.com>
 
-commit bbcc5672b0063b0e9d65dc8787a4f09c3b5bb5cc upstream.
+commit ac8f05da5174c560de122c499ce5dfb5d0dfbee5 upstream.
 
-Declaring __current_thread_info as a global register variable has the
-effect of preventing GCC from saving & restoring its value in cases
-where the ABI would typically do so.
+When zspage is migrated to the other zone, the zone page state should be
+updated as well, otherwise the NR_ZSPAGE for each zone shows wrong
+counts including proc/zoneinfo in practice.
 
-To quote GCC documentation:
-
-> If the register is a call-saved register, call ABI is affected: the
-> register will not be restored in function epilogue sequences after the
-> variable has been assigned. Therefore, functions cannot safely return
-> to callers that assume standard ABI.
-
-When our position independent VDSO is built for the n32 or n64 ABIs all
-functions it exposes should be preserving the value of $gp/$28 for their
-caller, but in the presence of the __current_thread_info global register
-variable GCC stops doing so & simply clobbers $gp/$28 when calculating
-the address of the GOT.
-
-In cases where the VDSO returns success this problem will typically be
-masked by the caller in libc returning & restoring $gp/$28 itself, but
-that is by no means guaranteed. In cases where the VDSO returns an error
-libc will typically contain a fallback path which will now fail
-(typically with a bad memory access) if it attempts anything which
-relies upon the value of $gp/$28 - eg. accessing anything via the GOT.
-
-One fix for this would be to move the declaration of
-__current_thread_info inside the current_thread_info() function,
-demoting it from global register variable to local register variable &
-avoiding inadvertently creating a non-standard calling ABI for the VDSO.
-Unfortunately this causes issues for clang, which doesn't support local
-register variables as pointed out by commit fe92da0f355e ("MIPS: Changed
-current_thread_info() to an equivalent supported by both clang and GCC")
-which introduced the global register variable before we had a VDSO to
-worry about.
-
-Instead, fix this by continuing to use the global register variable for
-the kernel proper but declare __current_thread_info as a simple extern
-variable when building the VDSO. It should never be referenced, and will
-cause a link error if it is. This resolves the calling convention issue
-for the VDSO without having any impact upon the build of the kernel
-itself for either clang or gcc.
-
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Fixes: ebb5e78cc634 ("MIPS: Initial implementation of a VDSO")
-Reported-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Tested-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Christian Brauner <christian.brauner@canonical.com>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: <stable@vger.kernel.org> # v4.4+
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Link: http://lkml.kernel.org/r/1575434841-48009-1-git-send-email-chanho.min@lge.com
+Fixes: 91537fee0013 ("mm: add NR_ZSMALLOC to vmstat")
+Signed-off-by: Chanho Min <chanho.min@lge.com>
+Signed-off-by: Jinsuk Choi <jjinsuk.choi@lge.com>
+Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Cc: <stable@vger.kernel.org>        [4.9+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/asm/thread_info.h |   20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ mm/zsmalloc.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/arch/mips/include/asm/thread_info.h
-+++ b/arch/mips/include/asm/thread_info.h
-@@ -52,8 +52,26 @@ struct thread_info {
- #define init_thread_info	(init_thread_union.thread_info)
- #define init_stack		(init_thread_union.stack)
+--- a/mm/zsmalloc.c
++++ b/mm/zsmalloc.c
+@@ -2138,6 +2138,11 @@ int zs_page_migrate(struct address_space
+ 		zs_pool_dec_isolated(pool);
+ 	}
  
--/* How to get the thread information struct from C.  */
-+/*
-+ * A pointer to the struct thread_info for the currently executing thread is
-+ * held in register $28/$gp.
-+ *
-+ * We declare __current_thread_info as a global register variable rather than a
-+ * local register variable within current_thread_info() because clang doesn't
-+ * support explicit local register variables.
-+ *
-+ * When building the VDSO we take care not to declare the global register
-+ * variable because this causes GCC to not preserve the value of $28/$gp in
-+ * functions that change its value (which is common in the PIC VDSO when
-+ * accessing the GOT). Since the VDSO shouldn't be accessing
-+ * __current_thread_info anyway we declare it extern in order to cause a link
-+ * failure if it's referenced.
-+ */
-+#ifdef __VDSO__
-+extern struct thread_info *__current_thread_info;
-+#else
- register struct thread_info *__current_thread_info __asm__("$28");
-+#endif
- 
- static inline struct thread_info *current_thread_info(void)
- {
++	if (page_zone(newpage) != page_zone(page)) {
++		dec_zone_page_state(page, NR_ZSPAGES);
++		inc_zone_page_state(newpage, NR_ZSPAGES);
++	}
++
+ 	reset_page(page);
+ 	put_page(page);
+ 	page = newpage;
 
 
