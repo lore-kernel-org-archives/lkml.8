@@ -2,53 +2,52 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AF0C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE4BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587692064C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A703C2064C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:56:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736611;
-	bh=xDOMMB9ystxw+a1rSxFAe89xjbK99JXyBZKfIo7oCG0=;
+	s=default; t=1578736614;
+	bh=zfGGtj2NSGPTgMeo8XkeDOGLRWCosge9y98lw8PN9LQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xjwDfudGqkwTUUxpHExRMeae3W82JvSlSRsJYsyyrWeI6l8+nGXUmnXS7VkfE+Fdr
-	 kwwxLz+QscWOL+Keo4/CDx9sMaC2lOU7bXqsHYpK9Pei7ns2dF+tXz6rROgq30SgDf
-	 uWmzWr6owxxm7uFz7ZGOdH9gvfOYtF297DPT85fY=
+	b=MvLR6swQyKdW14YYaNe7wL22dLnQU2PUmYlCoCopqP0vPcbjhtQiQQxKQoewQsUUr
+	 nokiIfx2e68kBcvcV6WSsS7JPTu+mL9ctdLNWn5HAKbKpIYOKZmSVvhIVWBOQOQIW7
+	 yaaRFkJdh6sG1+1rcpuu9XzcofUgKZr9YAMNlJds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgAKJ4u (ORCPT
+        id S1729138AbgAKJ4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:56:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48342 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:56:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728808AbgAKJ4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:56:48 -0500
+        id S1728808AbgAKJ4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:56:52 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 628AF2082E;
-        Sat, 11 Jan 2020 09:56:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 852E72082E;
+        Sat, 11 Jan 2020 09:56:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736608;
-        bh=xDOMMB9ystxw+a1rSxFAe89xjbK99JXyBZKfIo7oCG0=;
+        s=default; t=1578736612;
+        bh=zfGGtj2NSGPTgMeo8XkeDOGLRWCosge9y98lw8PN9LQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yUXbJcZxXWSRwlwvk4Opgy3WDTq7sPNrNsVwvyParAzq0jNpsMljgdDPzW/E3cWyu
-         upWvhi/xOVn1sboLH2GVdqvvPuMtoysIVC2f6Bv/FNvrWxFu+J34eRE5Zuyb1ApEko
-         VdQwClZwwQsv07JCFv3rtArkGnJtV7pMt9A3vpzM=
+        b=lJ3dbA4Jh4tcB1PT1TyYn56YszxwxeU+iHJDpcyw9vyyaD4pVSTrlpzkgZ7vAmmL8
+         D47fRJjO+sE+VYOGr08POrqYiuTi+JPoT7yXHdW3tvggq8sPkkiygq0dwrubnmT1sp
+         HrBZhYcRBkyxnK837KB6EmS9a7CqDgrRmJoPd/uk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+107c4aff5f392bf1517f@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 52/59] sctp: free cmd->obj.chunk for the unprocessed SCTP_CMD_REPLY
-Date:   Sat, 11 Jan 2020 10:50:01 +0100
-Message-Id: <20200111094851.066800319@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 35/59] netfilter: ctnetlink: netns exit must wait for callbacks
+Date:   Sat, 11 Jan 2020 10:49:44 +0100
+Message-Id: <20200111094845.265182968@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
 References: <20200111094835.417654274@linuxfoundation.org>
@@ -61,94 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Florian Westphal <fw@strlen.de>
 
-[ Upstream commit be7a7729207797476b6666f046d765bdf9630407 ]
+[ Upstream commit 18a110b022a5c02e7dc9f6109d0bd93e58ac6ebb ]
 
-This patch is to fix a memleak caused by no place to free cmd->obj.chunk
-for the unprocessed SCTP_CMD_REPLY. This issue occurs when failing to
-process a cmd while there're still SCTP_CMD_REPLY cmds on the cmd seq
-with an allocated chunk in cmd->obj.chunk.
+Curtis Taylor and Jon Maxwell reported and debugged a crash on 3.10
+based kernel.
 
-So fix it by freeing cmd->obj.chunk for each SCTP_CMD_REPLY cmd left on
-the cmd seq when any cmd returns error. While at it, also remove 'nomem'
-label.
+Crash occurs in ctnetlink_conntrack_events because net->nfnl socket is
+NULL.  The nfnl socket was set to NULL by netns destruction running on
+another cpu.
 
-Reported-by: syzbot+107c4aff5f392bf1517f@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The exiting network namespace calls the relevant destructors in the
+following order:
+
+1. ctnetlink_net_exit_batch
+
+This nulls out the event callback pointer in struct netns.
+
+2. nfnetlink_net_exit_batch
+
+This nulls net->nfnl socket and frees it.
+
+3. nf_conntrack_cleanup_net_list
+
+This removes all remaining conntrack entries.
+
+This is order is correct. The only explanation for the crash so ar is:
+
+cpu1: conntrack is dying, eviction occurs:
+ -> nf_ct_delete()
+   -> nf_conntrack_event_report \
+     -> nf_conntrack_eventmask_report
+       -> notify->fcn() (== ctnetlink_conntrack_events).
+
+cpu1: a. fetches rcu protected pointer to obtain ctnetlink event callback.
+      b. gets interrupted.
+ cpu2: runs netns exit handlers:
+     a runs ctnetlink destructor, event cb pointer set to NULL.
+     b runs nfnetlink destructor, nfnl socket is closed and set to NULL.
+cpu1: c. resumes and trips over NULL net->nfnl.
+
+Problem appears to be that ctnetlink_net_exit_batch only prevents future
+callers of nf_conntrack_eventmask_report() from obtaining the callback.
+It doesn't wait of other cpus that might have already obtained the
+callbacks address.
+
+I don't see anything in upstream kernels that would prevent similar
+crash: We need to wait for all cpus to have exited the event callback.
+
+Fixes: 9592a5c01e79dbc59eb56fa ("netfilter: ctnetlink: netns support")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/sm_sideeffect.c |   28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ net/netfilter/nf_conntrack_netlink.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/sctp/sm_sideeffect.c
-+++ b/net/sctp/sm_sideeffect.c
-@@ -1333,8 +1333,10 @@ static int sctp_cmd_interpreter(sctp_eve
- 			/* Generate an INIT ACK chunk.  */
- 			new_obj = sctp_make_init_ack(asoc, chunk, GFP_ATOMIC,
- 						     0);
--			if (!new_obj)
--				goto nomem;
-+			if (!new_obj) {
-+				error = -ENOMEM;
-+				break;
-+			}
+diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+index 3a24c01cb909..f324a1124418 100644
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -3390,6 +3390,9 @@ static void __net_exit ctnetlink_net_exit_batch(struct list_head *net_exit_list)
  
- 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
- 					SCTP_CHUNK(new_obj));
-@@ -1356,7 +1358,8 @@ static int sctp_cmd_interpreter(sctp_eve
- 			if (!new_obj) {
- 				if (cmd->obj.chunk)
- 					sctp_chunk_free(cmd->obj.chunk);
--				goto nomem;
-+				error = -ENOMEM;
-+				break;
- 			}
- 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
- 					SCTP_CHUNK(new_obj));
-@@ -1403,8 +1406,10 @@ static int sctp_cmd_interpreter(sctp_eve
- 
- 			/* Generate a SHUTDOWN chunk.  */
- 			new_obj = sctp_make_shutdown(asoc, chunk);
--			if (!new_obj)
--				goto nomem;
-+			if (!new_obj) {
-+				error = -ENOMEM;
-+				break;
-+			}
- 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
- 					SCTP_CHUNK(new_obj));
- 			break;
-@@ -1733,11 +1738,17 @@ static int sctp_cmd_interpreter(sctp_eve
- 			break;
- 		}
- 
--		if (error)
-+		if (error) {
-+			cmd = sctp_next_cmd(commands);
-+			while (cmd) {
-+				if (cmd->verb == SCTP_CMD_REPLY)
-+					sctp_chunk_free(cmd->obj.chunk);
-+				cmd = sctp_next_cmd(commands);
-+			}
- 			break;
-+		}
- 	}
- 
--out:
- 	/* If this is in response to a received chunk, wait until
- 	 * we are done with the packet to open the queue so that we don't
- 	 * send multiple packets in response to a single request.
-@@ -1748,8 +1759,5 @@ out:
- 	} else if (local_cork)
- 		error = sctp_outq_uncork(&asoc->outqueue);
- 	return error;
--nomem:
--	error = -ENOMEM;
--	goto out;
+ 	list_for_each_entry(net, net_exit_list, exit_list)
+ 		ctnetlink_net_exit(net);
++
++	/* wait for other cpus until they are done with ctnl_notifiers */
++	synchronize_rcu();
  }
  
+ static struct pernet_operations ctnetlink_net_ops = {
+-- 
+2.20.1
+
 
 
