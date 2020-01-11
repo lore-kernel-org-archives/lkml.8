@@ -2,52 +2,55 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD73C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640F1C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8330206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:12:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E790206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737572;
-	bh=UUJlu6B7eFg7yVnaioHjiRE6TTDgjT14RPTA8E2U0QU=;
+	s=default; t=1578737577;
+	bh=aFP7IX833MSPG1i0k3d0tupmv1vVEDZzjYEMJFiptCM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vis92G1oQDsjscD0zd3am+Y3MtXmduuzFlPqnRwgARPrmZ66cXSr02ooM7XWUx2ij
-	 WN0ZknmEqLl6R2+5x6YffugeziF+ghdD+R7HTYAvQAfyBs8zVfXsZoEdvUp1nvIG6d
-	 WWBbORkSYEM1gBlKni0flSB3r8OqWAEv1CClF1TQ=
+	b=EKG1Db3EfQyLZiU3EXbFANLESxYi5wgPvg/oKw6afma/Fx6Y+9cWe+xsx6LY9zTYH
+	 n1nmrExkykQMEISyYm2jRX+K5P8KK9OvX5OI5eVjxn6miwh/IESHCyMaqyHfbcoG7A
+	 ljlpTiwjtvCZOCoEMeLIKRBINSeQWE8OwUZyTgN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730064AbgAKKMv (ORCPT
+        id S1730067AbgAKKM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:12:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51060 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:12:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729782AbgAKKMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:12:50 -0500
+        id S1729517AbgAKKMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:12:55 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 126C62077C;
-        Sat, 11 Jan 2020 10:12:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B71DE206DA;
+        Sat, 11 Jan 2020 10:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737569;
-        bh=UUJlu6B7eFg7yVnaioHjiRE6TTDgjT14RPTA8E2U0QU=;
+        s=default; t=1578737574;
+        bh=aFP7IX833MSPG1i0k3d0tupmv1vVEDZzjYEMJFiptCM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KkAbAjtdmf8lbNULeqCUc7RsZhGywxyX6T32Y0tlmsvcp4Ru1rs5I1axdTEno2OJ+
-         ap7bltjNh6HjGYqqMXy6JdF21JcTdbUvoGfNh+RRit4Zg5fpWPh4kJqOC7+JcqJVZJ
-         0tMZD49tEya1atoy/h+qqeUHPJBa4L+kIdySO6Jg=
+        b=Za+6qLD9EmhKJizMJjieZil2IUIaKVsttpXRBh+uCHFe6x1U07UUFvmvxVDMdohw3
+         /8eKUvP9+0yIlqFm5TXfgcxcmq/rgW0pueqjs2JRw7ts+Gnmp30U+WQA/kg8KsYeFD
+         dvGSgz6/V7TPqI/muot58vozuODB2o4UxHyn6+nQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        RENARD Pierre-Francois <pfrenard@gmail.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 62/62] vlan: fix memory leak in vlan_dev_set_egress_priority
-Date:   Sat, 11 Jan 2020 10:50:44 +0100
-Message-Id: <20200111094858.289778955@linuxfoundation.org>
+Subject: [PATCH 4.14 53/62] net: usb: lan78xx: fix possible skb leak
+Date:   Sat, 11 Jan 2020 10:50:35 +0100
+Message-Id: <20200111094854.255385750@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -62,98 +65,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 9bbd917e0bec9aebdbd0c8dbc966caec15eb33e9 ]
+[ Upstream commit 47240ba0cd09bb6fe6db9889582048324999dfa4 ]
 
-There are few cases where the ndo_uninit() handler might be not
-called if an error happens while device is initialized.
+If skb_linearize() fails, we need to free the skb.
 
-Since vlan_newlink() calls vlan_changelink() before
-trying to register the netdevice, we need to make sure
-vlan_dev_uninit() has been called at least once,
-or we might leak allocated memory.
+TSO makes skb bigger, and this bug might be the reason
+Raspberry Pi 3B+ users had to disable TSO.
 
-BUG: memory leak
-unreferenced object 0xffff888122a206c0 (size 32):
-  comm "syz-executor511", pid 7124, jiffies 4294950399 (age 32.240s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 61 73 00 00 00 00 00 00 00 00  ......as........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000000eb3bb85>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<000000000eb3bb85>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<000000000eb3bb85>] slab_alloc mm/slab.c:3320 [inline]
-    [<000000000eb3bb85>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
-    [<000000007b99f620>] kmalloc include/linux/slab.h:556 [inline]
-    [<000000007b99f620>] vlan_dev_set_egress_priority+0xcc/0x150 net/8021q/vlan_dev.c:194
-    [<000000007b0cb745>] vlan_changelink+0xd6/0x140 net/8021q/vlan_netlink.c:126
-    [<0000000065aba83a>] vlan_newlink+0x135/0x200 net/8021q/vlan_netlink.c:181
-    [<00000000fb5dd7a2>] __rtnl_newlink+0x89a/0xb80 net/core/rtnetlink.c:3305
-    [<00000000ae4273a1>] rtnl_newlink+0x4e/0x80 net/core/rtnetlink.c:3363
-    [<00000000decab39f>] rtnetlink_rcv_msg+0x178/0x4b0 net/core/rtnetlink.c:5424
-    [<00000000accba4ee>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
-    [<00000000319fe20f>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
-    [<00000000d51938dc>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-    [<00000000d51938dc>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
-    [<00000000e539ac79>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
-    [<000000006250c27e>] sock_sendmsg_nosec net/socket.c:639 [inline]
-    [<000000006250c27e>] sock_sendmsg+0x54/0x70 net/socket.c:659
-    [<00000000e2a156d1>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
-    [<000000008c87466e>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
-    [<00000000110e3054>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
-    [<00000000d71077c8>] __do_sys_sendmsg net/socket.c:2426 [inline]
-    [<00000000d71077c8>] __se_sys_sendmsg net/socket.c:2424 [inline]
-    [<00000000d71077c8>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
-
-Fixe: 07b5b17e157b ("[VLAN]: Use rtnl_link API")
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Reported-by: RENARD Pierre-Francois <pfrenard@gmail.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Woojung Huh <woojung.huh@microchip.com>
+Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/8021q/vlan.h         |    1 +
- net/8021q/vlan_dev.c     |    3 ++-
- net/8021q/vlan_netlink.c |    9 +++++----
- 3 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/net/usb/lan78xx.c |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
---- a/net/8021q/vlan.h
-+++ b/net/8021q/vlan.h
-@@ -110,6 +110,7 @@ int vlan_check_real_dev(struct net_devic
- void vlan_setup(struct net_device *dev);
- int register_vlan_dev(struct net_device *dev);
- void unregister_vlan_dev(struct net_device *dev, struct list_head *head);
-+void vlan_dev_uninit(struct net_device *dev);
- bool vlan_dev_inherit_address(struct net_device *dev,
- 			      struct net_device *real_dev);
- 
---- a/net/8021q/vlan_dev.c
-+++ b/net/8021q/vlan_dev.c
-@@ -610,7 +610,8 @@ static int vlan_dev_init(struct net_devi
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -2604,11 +2604,6 @@ static int lan78xx_stop(struct net_devic
  	return 0;
  }
  
--static void vlan_dev_uninit(struct net_device *dev)
-+/* Note: this function might be called multiple times for the same device. */
-+void vlan_dev_uninit(struct net_device *dev)
- {
- 	struct vlan_priority_tci_mapping *pm;
- 	struct vlan_dev_priv *vlan = vlan_dev_priv(dev);
---- a/net/8021q/vlan_netlink.c
-+++ b/net/8021q/vlan_netlink.c
-@@ -161,10 +161,11 @@ static int vlan_newlink(struct net *src_
- 		return -EINVAL;
- 
- 	err = vlan_changelink(dev, tb, data, extack);
--	if (err < 0)
--		return err;
+-static int lan78xx_linearize(struct sk_buff *skb)
+-{
+-	return skb_linearize(skb);
+-}
 -
--	return register_vlan_dev(dev);
-+	if (!err)
-+		err = register_vlan_dev(dev);
-+	if (err)
-+		vlan_dev_uninit(dev);
-+	return err;
- }
+ static struct sk_buff *lan78xx_tx_prep(struct lan78xx_net *dev,
+ 				       struct sk_buff *skb, gfp_t flags)
+ {
+@@ -2619,8 +2614,10 @@ static struct sk_buff *lan78xx_tx_prep(s
+ 		return NULL;
+ 	}
  
- static inline size_t vlan_qos_map_size(unsigned int n)
+-	if (lan78xx_linearize(skb) < 0)
++	if (skb_linearize(skb)) {
++		dev_kfree_skb_any(skb);
+ 		return NULL;
++	}
+ 
+ 	tx_cmd_a = (u32)(skb->len & TX_CMD_A_LEN_MASK_) | TX_CMD_A_FCS_;
+ 
 
 
