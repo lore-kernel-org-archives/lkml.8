@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D05C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90289C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C645B20880
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6524620880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738061;
-	bh=Ls5eP08dXgIKhQU5IUZfcznzPTY9R0mvtRrX9FJWQTQ=;
+	s=default; t=1578738064;
+	bh=fGh5qYSB3I35x/gwyaPv4GcNUN3Bj392V79vARehqmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YNS/VJ1aAFpmMjdV7Q3Shg8KxMvhA4EOngNKJUi8nIrp/2nJkSEq8VbZToDAZ5M+O
-	 ep0jFmMJji+drMilWkXbsNOUZ6rqkF+csRDkc3oLT3LTje8DmdAArPpDZ4ePHRsFaM
-	 C6nIaBYJXCB2tJLWrjTT+hsFmtB9XeRZvl8CK6Mc=
+	b=Qwlvy/8/LyJvceWdbqAmcxa86g9UXDcQHQ2EA7wEQkMoxH+bAMHqx67WhomQ//Wzg
+	 TaTDmYXld5cvXQjZFYGaE6+Ey9tENNW5I76tPVsoZh7AkQHbdNKENcUF//z3GvW5mN
+	 SALJ+Jsf1E/6B8T7fGYyQPl2PhDdhV1eb4vudZJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730699AbgAKKVA (ORCPT
+        id S1730706AbgAKKVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:21:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43308 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:21:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730577AbgAKKU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:20:56 -0500
+        id S1729336AbgAKKVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:21:00 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC8C420848;
-        Sat, 11 Jan 2020 10:20:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 482BE208E4;
+        Sat, 11 Jan 2020 10:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738055;
-        bh=Ls5eP08dXgIKhQU5IUZfcznzPTY9R0mvtRrX9FJWQTQ=;
+        s=default; t=1578738060;
+        bh=fGh5qYSB3I35x/gwyaPv4GcNUN3Bj392V79vARehqmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tAEW9qTJRfWMhZo40h6uKHuGQCWTErlgIJz2HS8S8kOk32wc8qfEQoGdU7OHKoiDg
-         qLS20meJ2FhdaNncNgCzV8NwohYpkDijsTbdeRBop8lWZ1pHkQFMNxxLv72bxowG8s
-         U40qIXyaH93K7VxVDOR1FEcOF8l9iZL/Ror8YmmA=
+        b=Gv4R/Buc3XU47CbsgQAxI/iAb0EYaGC5n2Ymlr6ADTvg/uGZ70+nDvGcGJIORP8d1
+         2bHGp2h+AXHJaCHkDKkn179wLgC5aQ9maI+CBr2871/6K8wJLzpG6Ssk41Jl+hDfnI
+         nameQlVUirgmmVUGA0JD840YtdpmQyA1mjMMmt3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 008/165] gpio: Handle counting of Freescale chipselects
-Date:   Sat, 11 Jan 2020 10:48:47 +0100
-Message-Id: <20200111094921.938767017@linuxfoundation.org>
+Subject: [PATCH 5.4 017/165] regulator: core: fix regulator_register() error paths to properly release rdev
+Date:   Sat, 11 Jan 2020 10:48:56 +0100
+Message-Id: <20200111094922.413716871@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,76 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-[ Upstream commit 71b8f600b034c7f5780f6fb311dabfe331c64feb ]
+[ Upstream commit a3cde9534ebdafe18a9bbab208df724c57e6c8e8 ]
 
-We have a special quirk to handle the Freescale
-nonstandard SPI chipselect GPIOs in the gpiolib-of.c
-file, but it currently only handles the case where
-the GPIOs are actually requested (gpiod_*get()).
+There are several issues with the error handling code of
+the regulator_register() function:
+        ret = device_register(&rdev->dev);
+        if (ret != 0) {
+                put_device(&rdev->dev); --> rdev released
+                goto unset_supplies;
+        }
+...
+unset_supplies:
+...
+        unset_regulator_supplies(rdev); --> use-after-free
+...
+clean:
+        if (dangling_of_gpiod)
+                gpiod_put(config->ena_gpiod);
+        kfree(rdev);                     --> double free
 
-We also need to handle that the SPI core attempts
-to count the GPIOs before use, and that needs a
-similar quirk in the OF part of the library.
+We add a variable to record the failure of device_register() and
+move put_device() down a bit to avoid the above issues.
 
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 0f0581b24bd0 ("spi: fsl: Convert to use CS GPIO descriptors")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Link: https://lore.kernel.org/r/20191128083718.39177-2-linus.walleij@linaro.org
+Fixes: c438b9d01736 ("regulator: core: Move registration of regulator device")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Link: https://lore.kernel.org/r/20191201030250.38074-1-wenyang@linux.alibaba.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/gpiolib-of.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ drivers/regulator/core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 80ea49f570f4..43ffec3a6fbb 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -23,6 +23,29 @@
- #include "gpiolib.h"
- #include "gpiolib-of.h"
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index d66404920976..1dba0bdf3762 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -4992,6 +4992,7 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	struct regulator_dev *rdev;
+ 	bool dangling_cfg_gpiod = false;
+ 	bool dangling_of_gpiod = false;
++	bool reg_device_fail = false;
+ 	struct device *dev;
+ 	int ret, i;
  
-+/**
-+ * of_gpio_spi_cs_get_count() - special GPIO counting for SPI
-+ * Some elder GPIO controllers need special quirks. Currently we handle
-+ * the Freescale GPIO controller with bindings that doesn't use the
-+ * established "cs-gpios" for chip selects but instead rely on
-+ * "gpios" for the chip select lines. If we detect this, we redirect
-+ * the counting of "cs-gpios" to count "gpios" transparent to the
-+ * driver.
-+ */
-+int of_gpio_spi_cs_get_count(struct device *dev, const char *con_id)
-+{
-+	struct device_node *np = dev->of_node;
-+
-+	if (!IS_ENABLED(CONFIG_SPI_MASTER))
-+		return 0;
-+	if (!con_id || strcmp(con_id, "cs"))
-+		return 0;
-+	if (!of_device_is_compatible(np, "fsl,spi") &&
-+	    !of_device_is_compatible(np, "aeroflexgaisler,spictrl"))
-+		return 0;
-+	return of_gpio_named_count(np, "gpios");
-+}
-+
- /*
-  * This is used by external users of of_gpio_count() from <linux/of_gpio.h>
-  *
-@@ -35,6 +58,10 @@ int of_gpio_get_count(struct device *dev, const char *con_id)
- 	char propname[32];
- 	unsigned int i;
+@@ -5177,7 +5178,7 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ 	dev_set_drvdata(&rdev->dev, rdev);
+ 	ret = device_register(&rdev->dev);
+ 	if (ret != 0) {
+-		put_device(&rdev->dev);
++		reg_device_fail = true;
+ 		goto unset_supplies;
+ 	}
  
-+	ret = of_gpio_spi_cs_get_count(dev, con_id);
-+	if (ret > 0)
-+		return ret;
-+
- 	for (i = 0; i < ARRAY_SIZE(gpio_suffixes); i++) {
- 		if (con_id)
- 			snprintf(propname, sizeof(propname), "%s-%s",
+@@ -5208,7 +5209,10 @@ regulator_register(const struct regulator_desc *regulator_desc,
+ clean:
+ 	if (dangling_of_gpiod)
+ 		gpiod_put(config->ena_gpiod);
+-	kfree(rdev);
++	if (reg_device_fail)
++		put_device(&rdev->dev);
++	else
++		kfree(rdev);
+ 	kfree(config);
+ rinse:
+ 	if (dangling_cfg_gpiod)
 -- 
 2.20.1
 
