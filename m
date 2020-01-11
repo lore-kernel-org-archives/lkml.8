@@ -2,344 +2,167 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228A6C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C0DC33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87E42082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313F120848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:52:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736331;
-	bh=Q2SO4Kea09hWd/Mz/B/j/YjRfNf5grbOMoMjb3r70Y8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=NuTs9gr2YQCiO5rUSzd8OOHG35vFA69TtiYXgvKbIzy2nUGT5V1XAssi02ptPZEmn
-	 jtaNNepYrqRvLgrf1k7OCry1t9w6V+WbhXtLQQMBb5dvoenLmqWrT0PiiZKNh16GkN
-	 ROUa0CkgPY/HJdB/INmKcJwb3j458jOknIQbS7Bo=
+	s=default; t=1578736342;
+	bh=MJ/M7tLrt8Znxce3AiWWY84baZvo6f9mbQS4jWLxiYQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nA2x0ttWyIq3KPJaGr7bcv/EfkCn810q/9qPDu+WRpGLC70N5sFnMCjy4h9Tz8ahl
+	 0ugf7yq9GEsk7GX3m3ABSr0K/NNi34jarN6QW21WZ/coGbPGwu4hc2qspGG5x/xiOp
+	 eBwZ2HxBNDPoHJ1Z87rqqU/KttcsC9srC0dyJMDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728985AbgAKJwK (ORCPT
+        id S1728991AbgAKJwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:52:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36980 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:52:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728793AbgAKJwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:52:09 -0500
+        id S1728768AbgAKJwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:52:20 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24E552077C;
-        Sat, 11 Jan 2020 09:52:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCCAF20842;
+        Sat, 11 Jan 2020 09:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736328;
-        bh=Q2SO4Kea09hWd/Mz/B/j/YjRfNf5grbOMoMjb3r70Y8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RzXjOOhgqhgc7PRdf2frS8089vcIWbsKOs50Poi/k5TjTzsUFpQjbte6mmX44MMtE
-         we+GFUpOuRqNl3eEZGiN9ALxi7J2+C4FIYzAXEdgDt50e2BpE4DDBk+HmiN8iuymdW
-         rPCfzNS2KtSu4nwxPO0nFFhfAxifwF4sr5eAeQJ0=
+        s=default; t=1578736340;
+        bh=MJ/M7tLrt8Znxce3AiWWY84baZvo6f9mbQS4jWLxiYQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iVirj2LgAnHhS0uenw3eN2k6mEXV8QmWKDfbCa5IUs7O/uDLxEMh+Fwp8io7TIvvn
+         ZhR4aj0bqpOWJdVMPanHVax1vjYBoPmfDsEsXKzdMVosprHgrt0YUf1PMUfQ0p1z1r
+         VR8u7Zz9pl0L/KmX25uTgUzkOIALyUfZzsQdkEiE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.4 00/59] 4.4.209-stable review
-Date:   Sat, 11 Jan 2020 10:49:09 +0100
-Message-Id: <20200111094835.417654274@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 13/59] taskstats: fix data-race
+Date:   Sat, 11 Jan 2020 10:49:22 +0100
+Message-Id: <20200111094840.703775554@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
+In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
+References: <20200111094835.417654274@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.209-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.209-rc1
-X-KernelTest-Deadline: 2020-01-13T09:48+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.4.209 release.
-There are 59 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: Christian Brauner <christian.brauner@ubuntu.com>
+
+[ Upstream commit 0b8d616fb5a8ffa307b1d3af37f55c15dae14f28 ]
+
+When assiging and testing taskstats in taskstats_exit() there's a race
+when setting up and reading sig->stats when a thread-group with more
+than one thread exits:
+
+write to 0xffff8881157bbe10 of 8 bytes by task 7951 on cpu 0:
+ taskstats_tgid_alloc kernel/taskstats.c:567 [inline]
+ taskstats_exit+0x6b7/0x717 kernel/taskstats.c:596
+ do_exit+0x2c2/0x18e0 kernel/exit.c:864
+ do_group_exit+0xb4/0x1c0 kernel/exit.c:983
+ get_signal+0x2a2/0x1320 kernel/signal.c:2734
+ do_signal+0x3b/0xc00 arch/x86/kernel/signal.c:815
+ exit_to_usermode_loop+0x250/0x2c0 arch/x86/entry/common.c:159
+ prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
+ do_syscall_64+0x2d7/0x2f0 arch/x86/entry/common.c:299
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+read to 0xffff8881157bbe10 of 8 bytes by task 7949 on cpu 1:
+ taskstats_tgid_alloc kernel/taskstats.c:559 [inline]
+ taskstats_exit+0xb2/0x717 kernel/taskstats.c:596
+ do_exit+0x2c2/0x18e0 kernel/exit.c:864
+ do_group_exit+0xb4/0x1c0 kernel/exit.c:983
+ __do_sys_exit_group kernel/exit.c:994 [inline]
+ __se_sys_exit_group kernel/exit.c:992 [inline]
+ __x64_sys_exit_group+0x2e/0x30 kernel/exit.c:992
+ do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fix this by using smp_load_acquire() and smp_store_release().
+
+Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
+Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Acked-by: Marco Elver <elver@google.com>
+Reviewed-by: Will Deacon <will@kernel.org>
+Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+Link: https://lore.kernel.org/r/20191009114809.8643-1-christian.brauner@ubuntu.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/taskstats.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
+
+diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+index 21f82c29c914..0737a50380d7 100644
+--- a/kernel/taskstats.c
++++ b/kernel/taskstats.c
+@@ -582,25 +582,33 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
+ static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
+ {
+ 	struct signal_struct *sig = tsk->signal;
+-	struct taskstats *stats;
++	struct taskstats *stats_new, *stats;
+ 
+-	if (sig->stats || thread_group_empty(tsk))
+-		goto ret;
++	/* Pairs with smp_store_release() below. */
++	stats = smp_load_acquire(&sig->stats);
++	if (stats || thread_group_empty(tsk))
++		return stats;
+ 
+ 	/* No problem if kmem_cache_zalloc() fails */
+-	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
++	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+ 
+ 	spin_lock_irq(&tsk->sighand->siglock);
+-	if (!sig->stats) {
+-		sig->stats = stats;
+-		stats = NULL;
++	stats = sig->stats;
++	if (!stats) {
++		/*
++		 * Pairs with smp_store_release() above and order the
++		 * kmem_cache_zalloc().
++		 */
++		smp_store_release(&sig->stats, stats_new);
++		stats = stats_new;
++		stats_new = NULL;
+ 	}
+ 	spin_unlock_irq(&tsk->sighand->siglock);
+ 
+-	if (stats)
+-		kmem_cache_free(taskstats_cache, stats);
+-ret:
+-	return sig->stats;
++	if (stats_new)
++		kmem_cache_free(taskstats_cache, stats_new);
++
++	return stats;
+ }
+ 
+ /* Send pid data out on exit */
+-- 
+2.20.1
 
-Responses should be made by Mon, 13 Jan 2020 09:46:17 +0000.
-Anything received after that time might be too late.
-
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.209-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-and the diffstat can be found below.
-
-thanks,
-
-greg k-h
-
--------------
-Pseudo-Shortlog of commits:
-
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.4.209-rc1
-
-Daniele Palmas <dnlplm@gmail.com>
-    USB: serial: option: add Telit ME910G1 0x110a composition
-
-Johan Hovold <johan@kernel.org>
-    USB: core: fix check for duplicate endpoints
-
-Eric Dumazet <edumazet@google.com>
-    macvlan: do not assume mac_header is set in macvlan_broadcast()
-
-Hangbin Liu <liuhangbin@gmail.com>
-    vxlan: fix tos value before xmit
-
-Eric Dumazet <edumazet@google.com>
-    vlan: fix memory leak in vlan_dev_set_egress_priority
-
-Eric Dumazet <edumazet@google.com>
-    vlan: vlan_changelink() should propagate errors
-
-Pengcheng Yang <yangpc@wangsu.com>
-    tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
-
-Xin Long <lucien.xin@gmail.com>
-    sctp: free cmd->obj.chunk for the unprocessed SCTP_CMD_REPLY
-
-Eric Dumazet <edumazet@google.com>
-    pkt_sched: fq: do not accept silly TCA_FQ_QUANTUM
-
-Eric Dumazet <edumazet@google.com>
-    net: usb: lan78xx: fix possible skb leak
-
-Chen-Yu Tsai <wens@csie.org>
-    net: stmmac: dwmac-sunxi: Allow all RGMII modes
-
-Chan Shu Tak, Alex <alexchan@task.com.hk>
-    llc2: Fix return statement of llc_stat_ev_rx_null_dsap_xid_c (and _test_c)
-
-Helge Deller <deller@gmx.de>
-    parisc: Fix compiler warnings in debug_core.c
-
-Thomas Hebb <tommyhebb@gmail.com>
-    kconfig: don't crash on NULL expressions in expr_eq()
-
-Andreas Kemnade <andreas@kemnade.info>
-    regulator: rn5t618: fix module aliases
-
-Shengjiu Wang <shengjiu.wang@nxp.com>
-    ASoC: wm8962: fix lambda value
-
-Aditya Pakki <pakki001@umn.edu>
-    rfkill: Fix incorrect check to avoid NULL pointer dereference
-
-Cristian Birsan <cristian.birsan@microchip.com>
-    net: usb: lan78xx: Fix error message format specifier
-
-Manish Chopra <manishc@marvell.com>
-    bnx2x: Fix logic to get total no. of PFs per engine
-
-Manish Chopra <manishc@marvell.com>
-    bnx2x: Do not handle requests from VFs after parity
-
-Mike Rapoport <rppt@linux.ibm.com>
-    powerpc: Ensure that swiotlb buffer is allocated from low memory
-
-Tomi Valkeinen <tomi.valkeinen@ti.com>
-    ARM: dts: am437x-gp/epos-evm: fix panel compatible
-
-Phil Sutter <phil@nwl.cc>
-    netfilter: uapi: Avoid undefined left-shift in xt_sctp.h
-
-Sudeep Holla <sudeep.holla@arm.com>
-    ARM: vexpress: Set-up shared OPP table instead of individual for each CPU
-
-Florian Westphal <fw@strlen.de>
-    netfilter: ctnetlink: netns exit must wait for callbacks
-
-Marco Elver <elver@google.com>
-    locking/spinlock/debug: Fix various data races
-
-Aleksandr Yashkin <a.yashkin@inango-systems.com>
-    pstore/ram: Write new dumps to start of recycled zones
-
-Dmitry Vyukov <dvyukov@google.com>
-    locking/x86: Remove the unused atomic_inc_short() methd
-
-Heiko Carstens <heiko.carstens@de.ibm.com>
-    s390/smp: fix physical to logical CPU map for SMT
-
-Eric Dumazet <edumazet@google.com>
-    net: add annotations on hh->hh_len lockless accesses
-
-Masashi Honma <masashi.honma@gmail.com>
-    ath9k_htc: Discard undersized packets
-
-Masashi Honma <masashi.honma@gmail.com>
-    ath9k_htc: Modify byte order for an error message
-
-Daniel Axtens <dja@axtens.net>
-    powerpc/pseries/hvconsole: Fix stack overread via udbg
-
-Imre Deak <imre.deak@intel.com>
-    drm/mst: Fix MST sideband up-reply failure handling
-
-Leo Yan <leo.yan@linaro.org>
-    tty: serial: msm_serial: Fix lockup for sysrq and oops
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    Bluetooth: delete a stray unlock
-
-Oliver Neukum <oneukum@suse.com>
-    Bluetooth: btusb: fix PM leak in error case of setup
-
-Wen Yang <wenyang@linux.alibaba.com>
-    ftrace: Avoid potential division by zero in function profiler
-
-Colin Ian King <colin.king@canonical.com>
-    ALSA: cs4236: fix error return comparison of an unsigned integer
-
-Russell King <rmk+kernel@armlinux.org.uk>
-    gpiolib: fix up emulated open drain outputs
-
-Arnd Bergmann <arnd@arndb.de>
-    compat_ioctl: block: handle Persistent Reservations
-
-Lukas Wunner <lukas@wunner.de>
-    dmaengine: Fix access to uninitialized dma_slave_caps
-
-Amir Goldstein <amir73il@gmail.com>
-    locks: print unsigned ino in /proc/locks
-
-Paul Burton <paulburton@kernel.org>
-    MIPS: Avoid VDSO ABI breakage due to global register variable
-
-Takashi Iwai <tiwai@suse.de>
-    ALSA: ice1724: Fix sleep-in-atomic in Infrasonic Quartet support code
-
-Sasha Levin <sashal@kernel.org>
-    Revert "perf report: Add warning when libunwind not compiled in"
-
-Christian Brauner <christian.brauner@ubuntu.com>
-    taskstats: fix data-race
-
-Brian Foster <bfoster@redhat.com>
-    xfs: fix mount failure crash on invalid iclog memory access
-
-Juergen Gross <jgross@suse.com>
-    xen/balloon: fix ballooned page accounting without hotplug enabled
-
-Thomas Richter <tmricht@linux.ibm.com>
-    s390/cpum_sf: Avoid SBD overflow condition in irq handler
-
-Thomas Richter <tmricht@linux.ibm.com>
-    s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
-
-Zhiqiang Liu <liuzhiqiang26@huawei.com>
-    md: raid1: check rdev before reference in raid1_sync_request func
-
-EJ Hsu <ejh@nvidia.com>
-    usb: gadget: fix wrong endpoint desc
-
-Jason Yan <yanaijie@huawei.com>
-    scsi: libsas: stop discovering if oob mode is disconnected
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    scsi: iscsi: qla4xxx: fix double free in probe
-
-Roman Bolshakov <r.bolshakov@yadro.com>
-    scsi: qla2xxx: Don't call qlt_async_event twice
-
-Bo Wu <wubo40@huawei.com>
-    scsi: lpfc: Fix memory leak on lpfc_bsg_write_ebuf_set func
-
-Chuhong Yuan <hslester96@gmail.com>
-    RDMA/cma: add missed unregister_pernet_subsys in init failure
-
-Leonard Crestez <leonard.crestez@nxp.com>
-    PM / devfreq: Don't fail devfreq_dev_release if not in list
-
-
--------------
-
-Diffstat:
-
- Makefile                                          |  4 +-
- arch/arm/boot/dts/am437x-gp-evm.dts               |  2 +-
- arch/arm/boot/dts/am43x-epos-evm.dts              |  2 +-
- arch/arm/mach-vexpress/spc.c                      | 12 +++-
- arch/mips/include/asm/thread_info.h               | 20 +++++-
- arch/parisc/include/asm/cmpxchg.h                 | 10 ++-
- arch/powerpc/mm/mem.c                             |  8 +++
- arch/powerpc/platforms/pseries/hvconsole.c        |  2 +-
- arch/s390/kernel/perf_cpum_sf.c                   | 22 +++++--
- arch/s390/kernel/smp.c                            | 80 +++++++++++++++--------
- arch/tile/lib/atomic_asm_32.S                     |  3 +-
- arch/x86/include/asm/atomic.h                     | 13 ----
- block/compat_ioctl.c                              |  9 +++
- drivers/bluetooth/btusb.c                         |  3 +-
- drivers/devfreq/devfreq.c                         |  6 +-
- drivers/firewire/net.c                            |  6 +-
- drivers/gpio/gpiolib.c                            |  8 +++
- drivers/gpu/drm/drm_dp_mst_topology.c             |  6 +-
- drivers/infiniband/core/cma.c                     |  1 +
- drivers/md/raid1.c                                |  2 +-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h   |  2 +-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 12 +++-
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h |  1 +
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c  | 12 ++++
- drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c |  2 +-
- drivers/net/macvlan.c                             |  2 +-
- drivers/net/usb/lan78xx.c                         | 11 ++--
- drivers/net/vxlan.c                               |  2 +-
- drivers/net/wireless/ath/ath9k/htc_drv_txrx.c     | 23 +++++--
- drivers/regulator/rn5t618-regulator.c             |  1 +
- drivers/scsi/libsas/sas_discover.c                | 11 +++-
- drivers/scsi/lpfc/lpfc_bsg.c                      | 15 +++--
- drivers/scsi/qla2xxx/qla_isr.c                    |  4 --
- drivers/scsi/qla4xxx/ql4_os.c                     |  1 -
- drivers/tty/hvc/hvc_vio.c                         | 16 ++++-
- drivers/tty/serial/msm_serial.c                   | 13 +++-
- drivers/usb/core/config.c                         | 70 ++++++++++++++++----
- drivers/usb/gadget/function/f_ecm.c               |  6 +-
- drivers/usb/gadget/function/f_rndis.c             |  1 +
- drivers/usb/serial/option.c                       |  2 +
- drivers/xen/balloon.c                             |  3 +-
- fs/locks.c                                        |  2 +-
- fs/pstore/ram.c                                   | 11 ++++
- fs/xfs/xfs_log.c                                  |  2 +
- include/linux/dmaengine.h                         |  5 +-
- include/linux/if_ether.h                          |  8 +++
- include/net/neighbour.h                           |  2 +-
- include/uapi/linux/netfilter/xt_sctp.h            |  6 +-
- kernel/locking/spinlock_debug.c                   | 32 ++++-----
- kernel/taskstats.c                                | 30 +++++----
- kernel/trace/ftrace.c                             |  6 +-
- net/8021q/vlan.h                                  |  1 +
- net/8021q/vlan_dev.c                              |  3 +-
- net/8021q/vlan_netlink.c                          | 19 ++++--
- net/bluetooth/l2cap_core.c                        |  4 +-
- net/core/neighbour.c                              |  4 +-
- net/ethernet/eth.c                                |  7 +-
- net/ipv4/tcp_input.c                              |  5 +-
- net/llc/llc_station.c                             |  4 +-
- net/netfilter/nf_conntrack_netlink.c              |  3 +
- net/rfkill/core.c                                 |  7 +-
- net/sched/sch_fq.c                                |  2 +-
- net/sctp/sm_sideeffect.c                          | 28 +++++---
- scripts/kconfig/expr.c                            |  7 ++
- sound/isa/cs423x/cs4236.c                         |  3 +-
- sound/pci/ice1712/ice1724.c                       |  9 ++-
- sound/soc/codecs/wm8962.c                         |  4 +-
- tools/perf/builtin-report.c                       |  7 --
- 68 files changed, 460 insertions(+), 190 deletions(-)
 
 
