@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C35D1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 514B5C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B12B20880
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1785F2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738517;
-	bh=R4ozdsrQ0HSBUUROVEtkeFqYCqeDHvvYepahRtJnCIc=;
+	s=default; t=1578738523;
+	bh=w1xY86k7o2X3acrxEgJ49Coa7QPmcFApXCnQ410bYkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mjN/9L8EioGWdUAxdypXkd+tk4kqCsC2MzbLa4IoXghT0nNNf1uEcvvtEmFxtjMko
-	 Sz5CUqKwRyT1Cr6+1RjqBfkg4oym0Y+HxesIjdnWzhFcPnfqmJVaw/84hRzqrxlQC4
-	 PPWwfKSTYzBaB4S9sBu8El0SuZ+dxI7+UGiluNTw=
+	b=qve//jPPPqJfxvQ+9hoM/CQkbW/OlmSnsEdCPpYBPn6FcYWc9CHVYw9tDBM0d3JRU
+	 jMTWJu1dg2RGuX08hHh3me1GVTZtuVh89Dy2XwuyJv1o4SDfAtYjFR7fgFk0HscJCW
+	 2++yRc1QJdxsSfdmlCNaM2bZVQjVoM68zdYzZKPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731287AbgAKK2g (ORCPT
+        id S1731296AbgAKK2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:28:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36286 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:28:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730398AbgAKK2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:28:33 -0500
+        id S1730755AbgAKK2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:28:37 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8319820842;
-        Sat, 11 Jan 2020 10:28:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0AED20842;
+        Sat, 11 Jan 2020 10:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738513;
-        bh=R4ozdsrQ0HSBUUROVEtkeFqYCqeDHvvYepahRtJnCIc=;
+        s=default; t=1578738517;
+        bh=w1xY86k7o2X3acrxEgJ49Coa7QPmcFApXCnQ410bYkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CHQJNEO/6ylSYr4iI/S3HrbIMXgJyqDrKdsA0Py3veo+XBFQMVRKBszgGoZWHkUEI
-         PLPfBskTojZLubX88+gvR+DQ8H15GAcUUfrSxqZHwkNrs2amoLMbv8AHs4BF8namD3
-         AvS98RSMX9Ll50jVjCasR8TkNu2HElLf+rrGm/IA=
+        b=aZvsHYKLkpAbWRsPX6+2cgilzf6KdD1rVLyL4ANisxEfBJrAxcrPWxP+aI8GPCiVu
+         wJRkESSf4j0Ohz9A6xrp+wTV5PMVgY3RxSeuBJoyUE5sTpMQJ6otXuBb6HKS9MALJJ
+         JKJai7Q3gxCooRLN/68gh6gkiuwV4+q+gqsshiEM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
+        stable@vger.kernel.org, Michael Walle <michael@walle.cc>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 091/165] regulator: rn5t618: fix module aliases
-Date:   Sat, 11 Jan 2020 10:50:10 +0100
-Message-Id: <20200111094928.800560441@linuxfoundation.org>
+Subject: [PATCH 5.4 092/165] spi: nxp-fspi: Ensure width is respected in spi-mem operations
+Date:   Sat, 11 Jan 2020 10:50:11 +0100
+Message-Id: <20200111094928.896721945@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,34 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andreas Kemnade <andreas@kemnade.info>
+From: Michael Walle <michael@walle.cc>
 
-[ Upstream commit 62a1923cc8fe095912e6213ed5de27abbf1de77e ]
+[ Upstream commit 007773e16a6f3f49d1439554078c3ba8af131998 ]
 
-platform device aliases were missing, preventing
-autoloading of module.
+Make use of a core helper to ensure the desired width is respected
+when calling spi-mem operators.
 
-Fixes: 811b700630ff ("regulator: rn5t618: add driver for Ricoh RN5T618 regulators")
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-Link: https://lore.kernel.org/r/20191211221600.29438-1-andreas@kemnade.info
+Otherwise only the SPI controller will be matched with the flash chip,
+which might lead to wrong widths. Also consider the width specified by
+the user in the device tree.
+
+Fixes: a5356aef6a90 ("spi: spi-mem: Add driver for NXP FlexSPI controller")
+Signed-off-by: Michael Walle <michael@walle.cc>
+Link: https://lore.kernel.org/r/20191211195730.26794-1-michael@walle.cc
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/rn5t618-regulator.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/spi/spi-nxp-fspi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
-index eb807a059479..aa6e7c5341ce 100644
---- a/drivers/regulator/rn5t618-regulator.c
-+++ b/drivers/regulator/rn5t618-regulator.c
-@@ -148,6 +148,7 @@ static struct platform_driver rn5t618_regulator_driver = {
+diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
+index 501b923f2c27..28ae5229f889 100644
+--- a/drivers/spi/spi-nxp-fspi.c
++++ b/drivers/spi/spi-nxp-fspi.c
+@@ -439,7 +439,7 @@ static bool nxp_fspi_supports_op(struct spi_mem *mem,
+ 	    op->data.nbytes > f->devtype_data->txfifo)
+ 		return false;
  
- module_platform_driver(rn5t618_regulator_driver);
+-	return true;
++	return spi_mem_default_supports_op(mem, op);
+ }
  
-+MODULE_ALIAS("platform:rn5t618-regulator");
- MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
- MODULE_DESCRIPTION("RN5T618 regulator driver");
- MODULE_LICENSE("GPL v2");
+ /* Instead of busy looping invoke readl_poll_timeout functionality. */
 -- 
 2.20.1
 
