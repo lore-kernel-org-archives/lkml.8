@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBA5C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D201C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CCBE2084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B632084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738580;
-	bh=eey/jIOQdDv4cfBwSo8CUBqPBv1XGXv1qTVhHdX9euA=;
+	s=default; t=1578738588;
+	bh=opyR2F1ucJGFv8k1cGKvBnL71fC1qVEfOu0nJcmSntY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HIeL4dbSbt3LNODzEIIaGXP1s60QWj9HSQ6uYAsbJLQAfYHEFRqdWgpAymheKJXxI
-	 s09Dfb8kCPGiIXpX9XV0jGLtAcLUSDLDFmY58R7Kz+GNFEbWhA6/KaqdHVqvDb/uvj
-	 cMSklARkCTqqYBG7KlKDbwOaopi785lE9/bRKZBw=
+	b=TzePCyngoBoISUGWum5belpaqC43mamap9A5kQTl+8MoA7NVZoN6M2ftWleG7gpCT
+	 sz8G8blladV8DVLPEkpTx40+wArOs+njz7G22OZ5pOmR3ZInMG3iLaZnYy3npH2S4w
+	 sGabqUdAX5TBoNkolEak/Ys5heKQIXlufDkcBH3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731372AbgAKK3j (ORCPT
+        id S1731274AbgAKK3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:29:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38990 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:29:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731272AbgAKK3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:29:38 -0500
+        id S1730398AbgAKK3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:29:45 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FD7520880;
-        Sat, 11 Jan 2020 10:29:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 470C520842;
+        Sat, 11 Jan 2020 10:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738577;
-        bh=eey/jIOQdDv4cfBwSo8CUBqPBv1XGXv1qTVhHdX9euA=;
+        s=default; t=1578738584;
+        bh=opyR2F1ucJGFv8k1cGKvBnL71fC1qVEfOu0nJcmSntY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1oXReLlWjuJvGIyJEXQeG4cdBvHw/IfUY1vwGhIYw8pgVRn9cgPmIxwluwV4CuS/T
-         UK4+cugxz8gBQL5ffWhPV+4x0+gqlyHCdYmlDEU3Q/um2YU8qjp48icywxPqun77na
-         MKkwMkAg8PoZU5rtoIbgruhjkOQeFZizYA9/d5SI=
+        b=QreB8LjWQC0nb/OaYe5U34Md7SWo6K+IDspriWmstmADFZcV5nAWjAwSH/cTYwxLn
+         xv6etzRvHKUHpx9QDNjENU7Iyh1enqBI1Dz/tG4BSJNbDYrdDSMrL+/kqg224X2CjC
+         8pYJYjSelzbkadulX6LOgM83TEoVk8NFJQS9WpQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 120/165] net/mlx5e: Fix concurrency issues between config flow and XSK
-Date:   Sat, 11 Jan 2020 10:50:39 +0100
-Message-Id: <20200111094933.573141698@linuxfoundation.org>
+Subject: [PATCH 5.4 121/165] net/i40e: Fix concurrency issues between config flow and XSK
+Date:   Sat, 11 Jan 2020 10:50:40 +0100
+Message-Id: <20200111094933.799843970@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -62,173 +63,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit 9cf88808ad6a0f1e958e00abd9a081295fe6da0c ]
+[ Upstream commit b3873a5be757b44d51af542a50a6f2a3b6f95284 ]
 
-After disabling resources necessary for XSK (the XDP program, channels,
-XSK queues), use synchronize_rcu to wait until the XSK wakeup function
-finishes, before freeing the resources.
+Use synchronize_rcu to wait until the XSK wakeup function finishes
+before destroying the resources it uses:
 
-Suspend XSK wakeups during switching channels. If the XDP program is
-being removed, synchronize_rcu before closing the old channels to allow
-XSK wakeup to complete.
+1. i40e_down already calls synchronize_rcu. On i40e_down either
+__I40E_VSI_DOWN or __I40E_CONFIG_BUSY is set. Check the latter in
+i40e_xsk_wakeup (the former is already checked there).
+
+2. After switching the XDP program, call synchronize_rcu to let
+i40e_xsk_wakeup exit before the XDP program is freed.
+
+3. Changing the number of channels brings the interface down (see
+i40e_prep_for_reset and i40e_pf_quiesce_all_vsi).
+
+4. Disabling UMEM sets __I40E_CONFIG_BUSY, too.
 
 Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
+Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20191217162023.16011-3-maximmi@mellanox.com
+Link: https://lore.kernel.org/bpf/20191217162023.16011-4-maximmi@mellanox.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en.h  |  2 +-
- .../net/ethernet/mellanox/mlx5/core/en/xdp.h  | 22 ++++++++-----------
- .../mellanox/mlx5/core/en/xsk/setup.c         |  1 +
- .../ethernet/mellanox/mlx5/core/en/xsk/tx.c   |  2 +-
- .../net/ethernet/mellanox/mlx5/core/en_main.c | 19 +---------------
- 5 files changed, 13 insertions(+), 33 deletions(-)
+ drivers/net/ethernet/intel/i40e/i40e.h      |  2 +-
+ drivers/net/ethernet/intel/i40e/i40e_main.c | 10 +++++++---
+ drivers/net/ethernet/intel/i40e/i40e_xsk.c  |  4 ++++
+ 3 files changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-index 2c16add0b642..9c8427698238 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -760,7 +760,7 @@ enum {
- 	MLX5E_STATE_OPENED,
- 	MLX5E_STATE_DESTROYING,
- 	MLX5E_STATE_XDP_TX_ENABLED,
--	MLX5E_STATE_XDP_OPEN,
-+	MLX5E_STATE_XDP_ACTIVE,
- };
+diff --git a/drivers/net/ethernet/intel/i40e/i40e.h b/drivers/net/ethernet/intel/i40e/i40e.h
+index 2af9f6308f84..401304d4d553 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e.h
++++ b/drivers/net/ethernet/intel/i40e/i40e.h
+@@ -1151,7 +1151,7 @@ void i40e_set_fec_in_flags(u8 fec_cfg, u32 *flags);
  
- struct mlx5e_rqt {
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h
-index 36ac1e3816b9..d7587f40ecae 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h
-@@ -75,12 +75,18 @@ int mlx5e_xdp_xmit(struct net_device *dev, int n, struct xdp_frame **frames,
- static inline void mlx5e_xdp_tx_enable(struct mlx5e_priv *priv)
+ static inline bool i40e_enabled_xdp_vsi(struct i40e_vsi *vsi)
  {
- 	set_bit(MLX5E_STATE_XDP_TX_ENABLED, &priv->state);
+-	return !!vsi->xdp_prog;
++	return !!READ_ONCE(vsi->xdp_prog);
+ }
+ 
+ int i40e_create_queue_channel(struct i40e_vsi *vsi, struct i40e_channel *ch);
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 339925af0206..4960c9c3e773 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -6804,8 +6804,8 @@ void i40e_down(struct i40e_vsi *vsi)
+ 	for (i = 0; i < vsi->num_queue_pairs; i++) {
+ 		i40e_clean_tx_ring(vsi->tx_rings[i]);
+ 		if (i40e_enabled_xdp_vsi(vsi)) {
+-			/* Make sure that in-progress ndo_xdp_xmit
+-			 * calls are completed.
++			/* Make sure that in-progress ndo_xdp_xmit and
++			 * ndo_xsk_wakeup calls are completed.
+ 			 */
+ 			synchronize_rcu();
+ 			i40e_clean_tx_ring(vsi->xdp_rings[i]);
+@@ -12526,8 +12526,12 @@ static int i40e_xdp_setup(struct i40e_vsi *vsi,
+ 
+ 	old_prog = xchg(&vsi->xdp_prog, prog);
+ 
+-	if (need_reset)
++	if (need_reset) {
++		if (!prog)
++			/* Wait until ndo_xsk_wakeup completes. */
++			synchronize_rcu();
+ 		i40e_reset_and_rebuild(pf, true, true);
++	}
+ 
+ 	for (i = 0; i < vsi->num_queue_pairs; i++)
+ 		WRITE_ONCE(vsi->rx_rings[i]->xdp_prog, vsi->xdp_prog);
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_xsk.c b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
+index d07e1a890428..f73cd917c44f 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_xsk.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
+@@ -787,8 +787,12 @@ int i40e_xsk_wakeup(struct net_device *dev, u32 queue_id, u32 flags)
+ {
+ 	struct i40e_netdev_priv *np = netdev_priv(dev);
+ 	struct i40e_vsi *vsi = np->vsi;
++	struct i40e_pf *pf = vsi->back;
+ 	struct i40e_ring *ring;
+ 
++	if (test_bit(__I40E_CONFIG_BUSY, pf->state))
++		return -ENETDOWN;
 +
-+	if (priv->channels.params.xdp_prog)
-+		set_bit(MLX5E_STATE_XDP_ACTIVE, &priv->state);
- }
- 
- static inline void mlx5e_xdp_tx_disable(struct mlx5e_priv *priv)
- {
-+	if (priv->channels.params.xdp_prog)
-+		clear_bit(MLX5E_STATE_XDP_ACTIVE, &priv->state);
-+
- 	clear_bit(MLX5E_STATE_XDP_TX_ENABLED, &priv->state);
--	/* let other device's napi(s) see our new state */
-+	/* Let other device's napi(s) and XSK wakeups see our new state. */
- 	synchronize_rcu();
- }
- 
-@@ -89,19 +95,9 @@ static inline bool mlx5e_xdp_tx_is_enabled(struct mlx5e_priv *priv)
- 	return test_bit(MLX5E_STATE_XDP_TX_ENABLED, &priv->state);
- }
- 
--static inline void mlx5e_xdp_set_open(struct mlx5e_priv *priv)
--{
--	set_bit(MLX5E_STATE_XDP_OPEN, &priv->state);
--}
--
--static inline void mlx5e_xdp_set_closed(struct mlx5e_priv *priv)
--{
--	clear_bit(MLX5E_STATE_XDP_OPEN, &priv->state);
--}
--
--static inline bool mlx5e_xdp_is_open(struct mlx5e_priv *priv)
-+static inline bool mlx5e_xdp_is_active(struct mlx5e_priv *priv)
- {
--	return test_bit(MLX5E_STATE_XDP_OPEN, &priv->state);
-+	return test_bit(MLX5E_STATE_XDP_ACTIVE, &priv->state);
- }
- 
- static inline void mlx5e_xmit_xdp_doorbell(struct mlx5e_xdpsq *sq)
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
-index 631af8dee517..c28cbae42331 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
-@@ -144,6 +144,7 @@ void mlx5e_close_xsk(struct mlx5e_channel *c)
- {
- 	clear_bit(MLX5E_CHANNEL_STATE_XSK, c->state);
- 	napi_synchronize(&c->napi);
-+	synchronize_rcu(); /* Sync with the XSK wakeup. */
- 
- 	mlx5e_close_rq(&c->xskrq);
- 	mlx5e_close_cq(&c->xskrq.cq);
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
-index 87827477d38c..fe2d596cb361 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
-@@ -14,7 +14,7 @@ int mlx5e_xsk_wakeup(struct net_device *dev, u32 qid, u32 flags)
- 	struct mlx5e_channel *c;
- 	u16 ix;
- 
--	if (unlikely(!mlx5e_xdp_is_open(priv)))
-+	if (unlikely(!mlx5e_xdp_is_active(priv)))
+ 	if (test_bit(__I40E_VSI_DOWN, vsi->state))
  		return -ENETDOWN;
  
- 	if (unlikely(!mlx5e_qid_get_ch_if_in_group(params, qid, MLX5E_RQ_GROUP_XSK, &ix)))
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-index 6abd4ed5b69b..29a5a8c894e3 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -3002,12 +3002,9 @@ void mlx5e_timestamp_init(struct mlx5e_priv *priv)
- int mlx5e_open_locked(struct net_device *netdev)
- {
- 	struct mlx5e_priv *priv = netdev_priv(netdev);
--	bool is_xdp = priv->channels.params.xdp_prog;
- 	int err;
- 
- 	set_bit(MLX5E_STATE_OPENED, &priv->state);
--	if (is_xdp)
--		mlx5e_xdp_set_open(priv);
- 
- 	err = mlx5e_open_channels(priv, &priv->channels);
- 	if (err)
-@@ -3022,8 +3019,6 @@ int mlx5e_open_locked(struct net_device *netdev)
- 	return 0;
- 
- err_clear_state_opened_flag:
--	if (is_xdp)
--		mlx5e_xdp_set_closed(priv);
- 	clear_bit(MLX5E_STATE_OPENED, &priv->state);
- 	return err;
- }
-@@ -3055,8 +3050,6 @@ int mlx5e_close_locked(struct net_device *netdev)
- 	if (!test_bit(MLX5E_STATE_OPENED, &priv->state))
- 		return 0;
- 
--	if (priv->channels.params.xdp_prog)
--		mlx5e_xdp_set_closed(priv);
- 	clear_bit(MLX5E_STATE_OPENED, &priv->state);
- 
- 	netif_carrier_off(priv->netdev);
-@@ -4373,16 +4366,6 @@ static int mlx5e_xdp_allowed(struct mlx5e_priv *priv, struct bpf_prog *prog)
- 	return 0;
- }
- 
--static int mlx5e_xdp_update_state(struct mlx5e_priv *priv)
--{
--	if (priv->channels.params.xdp_prog)
--		mlx5e_xdp_set_open(priv);
--	else
--		mlx5e_xdp_set_closed(priv);
--
--	return 0;
--}
--
- static int mlx5e_xdp_set(struct net_device *netdev, struct bpf_prog *prog)
- {
- 	struct mlx5e_priv *priv = netdev_priv(netdev);
-@@ -4422,7 +4405,7 @@ static int mlx5e_xdp_set(struct net_device *netdev, struct bpf_prog *prog)
- 		mlx5e_set_rq_type(priv->mdev, &new_channels.params);
- 		old_prog = priv->channels.params.xdp_prog;
- 
--		err = mlx5e_safe_switch_channels(priv, &new_channels, mlx5e_xdp_update_state);
-+		err = mlx5e_safe_switch_channels(priv, &new_channels, NULL);
- 		if (err)
- 			goto unlock;
- 	} else {
 -- 
 2.20.1
 
