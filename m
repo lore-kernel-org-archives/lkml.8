@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D38C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8B8C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1592084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8730E2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738122;
-	bh=oBkHsDvgkstaVNNnbYEpO4N/JGbrsZczsZ3CbOKCSQY=;
+	s=default; t=1578738128;
+	bh=9pq68zwuBtcHgShwLeWaVi65N0QZZnhESnqWP6ebRYY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kk2ZRjnvXOZLawlFfAb89DusWM4GwJaYYtxGWseZ+uLOe+u5swXwbZMrZjDNTZY3u
-	 25AFc+pwPetRX0K93JJyZN98tCyKTlUngOX50e14kb/501v3WXWO3TLFXaELASCSXP
-	 Gd+zjlZuy3kIiqUdJ6VHSD2XCNZfRHrdvZn97igs=
+	b=ly9XkI+w+innV/04PRARW8g7BCRAku4h5enZNzBujDKiZ2+YvSzBqNIPVx8yHtmhv
+	 /ZvDF54cjgFx2/c+sRjOicIOiUlFYbiCBAGp1xIeFaKdgWArpmNWnlUVyW7Aetu4KC
+	 7eF6B++bo3W2qCJRi7N1nPU1cJkU0/3MyMTBcIPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730808AbgAKKWB (ORCPT
+        id S1730821AbgAKKWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:22:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46238 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:22:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729380AbgAKKV5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:21:57 -0500
+        id S1730529AbgAKKWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:22:05 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B156220848;
-        Sat, 11 Jan 2020 10:21:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16008205F4;
+        Sat, 11 Jan 2020 10:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738116;
-        bh=oBkHsDvgkstaVNNnbYEpO4N/JGbrsZczsZ3CbOKCSQY=;
+        s=default; t=1578738124;
+        bh=9pq68zwuBtcHgShwLeWaVi65N0QZZnhESnqWP6ebRYY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hosYy5lk5Ioju6bdcIwGdw5dAgZ3pcngEscImfv3Y2NXI0nTZu1rtTv7aTCx7vaCg
-         avg4iMuqQjv99yWUIOUIMjW+a9nqOF+JEifbkPtoNcAnnloFBrqYYIPhM6rj7ci4vR
-         0vbHWK5zK3qpYLsZ9IeLgD+btq+0LbFvUjC7FnRY=
+        b=mXjEejX1+SESuxfw4K83SuPSpqqZVgIEL4ZqytmIsKOeO1RKUtA6znTlJ9gyNSXsX
+         BNlSF5a1xBJi2nDK53Wv63SX3OAYCvYr9DC1+j9651ImRTQrxFrr55nNh2CBy8ykBq
+         QGhNnz8bApXHSo6phXIhypVUnPF2lYv0CkftCQUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        stable@vger.kernel.org, wenxu <wenxu@ucloud.cn>,
         Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 011/165] netfilter: ctnetlink: netns exit must wait for callbacks
-Date:   Sat, 11 Jan 2020 10:48:50 +0100
-Message-Id: <20200111094922.099955022@linuxfoundation.org>
+Subject: [PATCH 5.4 013/165] netfilter: nf_tables_offload: Check for the NETDEV_UNREGISTER event
+Date:   Sat, 11 Jan 2020 10:48:52 +0100
+Message-Id: <20200111094922.204772138@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,77 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: wenxu <wenxu@ucloud.cn>
 
-[ Upstream commit 18a110b022a5c02e7dc9f6109d0bd93e58ac6ebb ]
+[ Upstream commit d1f4c966475c6dd2545c6625022cb24e878bee11 ]
 
-Curtis Taylor and Jon Maxwell reported and debugged a crash on 3.10
-based kernel.
+Check for the NETDEV_UNREGISTER event from the nft_offload_netdev_event
+function, which is the event that actually triggers the clean up.
 
-Crash occurs in ctnetlink_conntrack_events because net->nfnl socket is
-NULL.  The nfnl socket was set to NULL by netns destruction running on
-another cpu.
-
-The exiting network namespace calls the relevant destructors in the
-following order:
-
-1. ctnetlink_net_exit_batch
-
-This nulls out the event callback pointer in struct netns.
-
-2. nfnetlink_net_exit_batch
-
-This nulls net->nfnl socket and frees it.
-
-3. nf_conntrack_cleanup_net_list
-
-This removes all remaining conntrack entries.
-
-This is order is correct. The only explanation for the crash so ar is:
-
-cpu1: conntrack is dying, eviction occurs:
- -> nf_ct_delete()
-   -> nf_conntrack_event_report \
-     -> nf_conntrack_eventmask_report
-       -> notify->fcn() (== ctnetlink_conntrack_events).
-
-cpu1: a. fetches rcu protected pointer to obtain ctnetlink event callback.
-      b. gets interrupted.
- cpu2: runs netns exit handlers:
-     a runs ctnetlink destructor, event cb pointer set to NULL.
-     b runs nfnetlink destructor, nfnl socket is closed and set to NULL.
-cpu1: c. resumes and trips over NULL net->nfnl.
-
-Problem appears to be that ctnetlink_net_exit_batch only prevents future
-callers of nf_conntrack_eventmask_report() from obtaining the callback.
-It doesn't wait of other cpus that might have already obtained the
-callbacks address.
-
-I don't see anything in upstream kernels that would prevent similar
-crash: We need to wait for all cpus to have exited the event callback.
-
-Fixes: 9592a5c01e79dbc59eb56fa ("netfilter: ctnetlink: netns support")
-Signed-off-by: Florian Westphal <fw@strlen.de>
+Fixes: 06d392cbe3db ("netfilter: nf_tables_offload: remove rules when the device unregisters")
+Signed-off-by: wenxu <wenxu@ucloud.cn>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_netlink.c | 3 +++
+ net/netfilter/nf_tables_offload.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
-index e2d13cd18875..aa8adf930b3c 100644
---- a/net/netfilter/nf_conntrack_netlink.c
-+++ b/net/netfilter/nf_conntrack_netlink.c
-@@ -3602,6 +3602,9 @@ static void __net_exit ctnetlink_net_exit_batch(struct list_head *net_exit_list)
+diff --git a/net/netfilter/nf_tables_offload.c b/net/netfilter/nf_tables_offload.c
+index 5f6037695dee..6f7eab502e65 100644
+--- a/net/netfilter/nf_tables_offload.c
++++ b/net/netfilter/nf_tables_offload.c
+@@ -446,6 +446,9 @@ static int nft_offload_netdev_event(struct notifier_block *this,
+ 	struct net *net = dev_net(dev);
+ 	struct nft_chain *chain;
  
- 	list_for_each_entry(net, net_exit_list, exit_list)
- 		ctnetlink_net_exit(net);
++	if (event != NETDEV_UNREGISTER)
++		return NOTIFY_DONE;
 +
-+	/* wait for other cpus until they are done with ctnl_notifiers */
-+	synchronize_rcu();
- }
- 
- static struct pernet_operations ctnetlink_net_ops = {
+ 	mutex_lock(&net->nft.commit_mutex);
+ 	chain = __nft_offload_get_chain(dev);
+ 	if (chain)
 -- 
 2.20.1
 
