@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F17AC33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DC3C33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBEA72077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA732084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736776;
-	bh=HIFgJAD1bqTpIP40iXmXuL5OzcjYdUclAnMKce2y3oE=;
+	s=default; t=1578736781;
+	bh=V+O5gXI50UZr9RiSdJTgPSb6wN43+H/8XMVH3x8sdWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZdFWFhTUH5L1gzdk0YeM9XxhmnvODH/g7je9hQxEatNtrtw/UnP8F9Naa6v1FwsaT
-	 jBtUyk6q9FjsuO9wKLx4ezrxhfgfcCN7uv3d1ay9lNy2aVI52Se4SGhS6xfb2ULDfi
-	 4a/aIj989YXMDrriIIwv1nRh5am7DwwgZ/aqS0UI=
+	b=e0I0JKhQ5tiRQKWYolZEvPZkkZL5cq79zre+UDLP5JIm5QYmveS/9JJzJHhKRr5Ow
+	 /LWrPoAfETWFUATzO/fdBAr3qLmluS22rPdQhbCtgLfs/860/IZtY0lwTVMizdojIi
+	 QMQMy+7gEGh2FwZwlVHSMhgsgG4TIEKNjUnJdNt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgAKJ7f (ORCPT
+        id S1729336AbgAKJ7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:59:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54262 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:59:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728768AbgAKJ7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:59:33 -0500
+        id S1728768AbgAKJ7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:59:38 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5DCC2084D;
-        Sat, 11 Jan 2020 09:59:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5648D2084D;
+        Sat, 11 Jan 2020 09:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736773;
-        bh=HIFgJAD1bqTpIP40iXmXuL5OzcjYdUclAnMKce2y3oE=;
+        s=default; t=1578736777;
+        bh=V+O5gXI50UZr9RiSdJTgPSb6wN43+H/8XMVH3x8sdWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JvQ3w0WbhEEN+SywXZte2j7Nc4j81o80jckpti/9xiybg40kZ56Z4cXVdtPMYSza/
-         gA3RfOjfYNI+arWCvm6s436TpRIB4YzUxfnWLjSgG+xz00V3Jr08K/Pfv58Tex7EMF
-         WHulImLI2ydaHyeTiip4GQFDxBMeLSlnNzKlcq9Q=
+        b=iRVMtXJV3OA7FmIhvZq21OPW7DZx4zF4Pz9aVLY41eknF8QZ3DLjtM6kzhfdcFX22
+         2e0a3xldr6RJPfJACC+SapUMMl5MXdE7mb9az/wESAiiYt477pV90Omouc44/HE8iW
+         XnI2qBcbWAghBDbZYRozFdrun55z8QvPj55gd2fM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanho Min <chanho.min@lge.com>,
-        Jinsuk Choi <jjinsuk.choi@lge.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
+        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
+        Chris Down <chris@chrisdown.name>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 21/91] mm/zsmalloc.c: fix the migrated zspage statistics.
-Date:   Sat, 11 Jan 2020 10:49:14 +0100
-Message-Id: <20200111094851.756485766@linuxfoundation.org>
+Subject: [PATCH 4.9 22/91] memcg: account security cred as well to kmemcg
+Date:   Sat, 11 Jan 2020 10:49:15 +0100
+Message-Id: <20200111094852.213118498@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -63,42 +63,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chanho Min <chanho.min@lge.com>
+From: Shakeel Butt <shakeelb@google.com>
 
-commit ac8f05da5174c560de122c499ce5dfb5d0dfbee5 upstream.
+commit 84029fd04c201a4c7e0b07ba262664900f47c6f5 upstream.
 
-When zspage is migrated to the other zone, the zone page state should be
-updated as well, otherwise the NR_ZSPAGE for each zone shows wrong
-counts including proc/zoneinfo in practice.
+The cred_jar kmem_cache is already memcg accounted in the current kernel
+but cred->security is not.  Account cred->security to kmemcg.
 
-Link: http://lkml.kernel.org/r/1575434841-48009-1-git-send-email-chanho.min@lge.com
-Fixes: 91537fee0013 ("mm: add NR_ZSMALLOC to vmstat")
-Signed-off-by: Chanho Min <chanho.min@lge.com>
-Signed-off-by: Jinsuk Choi <jjinsuk.choi@lge.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Acked-by: Minchan Kim <minchan@kernel.org>
-Cc: <stable@vger.kernel.org>        [4.9+]
+Recently we saw high root slab usage on our production and on further
+inspection, we found a buggy application leaking processes.  Though that
+buggy application was contained within its memcg but we observe much
+more system memory overhead, couple of GiBs, during that period.  This
+overhead can adversely impact the isolation on the system.
+
+One source of high overhead we found was cred->security objects, which
+have a lifetime of at least the life of the process which allocated
+them.
+
+Link: http://lkml.kernel.org/r/20191205223721.40034-1-shakeelb@google.com
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Chris Down <chris@chrisdown.name>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/zsmalloc.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ kernel/cred.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/mm/zsmalloc.c
-+++ b/mm/zsmalloc.c
-@@ -2138,6 +2138,11 @@ int zs_page_migrate(struct address_space
- 		zs_pool_dec_isolated(pool);
- 	}
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -219,7 +219,7 @@ struct cred *cred_alloc_blank(void)
+ 	new->magic = CRED_MAGIC;
+ #endif
  
-+	if (page_zone(newpage) != page_zone(page)) {
-+		dec_zone_page_state(page, NR_ZSPAGES);
-+		inc_zone_page_state(newpage, NR_ZSPAGES);
-+	}
-+
- 	reset_page(page);
- 	put_page(page);
- 	page = newpage;
+-	if (security_cred_alloc_blank(new, GFP_KERNEL) < 0)
++	if (security_cred_alloc_blank(new, GFP_KERNEL_ACCOUNT) < 0)
+ 		goto error;
+ 
+ 	return new;
+@@ -278,7 +278,7 @@ struct cred *prepare_creds(void)
+ 	new->security = NULL;
+ #endif
+ 
+-	if (security_prepare_creds(new, old, GFP_KERNEL) < 0)
++	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
+ 		goto error;
+ 	validate_creds(new);
+ 	return new;
+@@ -653,7 +653,7 @@ struct cred *prepare_kernel_cred(struct
+ #ifdef CONFIG_SECURITY
+ 	new->security = NULL;
+ #endif
+-	if (security_prepare_creds(new, old, GFP_KERNEL) < 0)
++	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
+ 		goto error;
+ 
+ 	put_cred(old);
 
 
