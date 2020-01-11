@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F33C33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78C7C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DE7420848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE93B20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737831;
-	bh=voZJ6+sHQ+7u32dzQueGKsDn3hu12ZM7e5NFUxeERmQ=;
+	s=default; t=1578737834;
+	bh=dDrHh842o8VZe0pFxnAx0kQKFpanyG7stSLmlk9fEQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sN/KS+fgQltll2RhiGgoz6cE0ZEKGd0wG5Aq0ysDJ4K24hR+9Ru9/jOOgUYn6xghI
-	 LAw0yy+kn8zSw4y+XmNvjH4oS/NUtGxE9AZaJFdx2RVTVBQpLMSLsmmo5AMBVc2aSO
-	 XszydA5XersL5IBgouNYvP37r/9N/cpTPy2OqVFY=
+	b=GSCbHxIXnvn+xsXVhBpmezQ+kc5oYTr0ieDUV2Qp5V57qwthD73E8If9kEBkb8cNo
+	 cApTwwYKo/qQRgbCXp1XJirm9NSmZDeVt7YjFnWecuLBYJC4/n2n1kiqkWLJYYfmMY
+	 v2CpKFhlisd6EW+xdZi1y4uGAMlrbAlefNurvejc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730460AbgAKKRK (ORCPT
+        id S1730377AbgAKKRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:17:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33110 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:17:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgAKKRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:17:07 -0500
+        id S1730449AbgAKKRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:17:10 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD6F2205F4;
-        Sat, 11 Jan 2020 10:17:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F32A72082E;
+        Sat, 11 Jan 2020 10:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737825;
-        bh=voZJ6+sHQ+7u32dzQueGKsDn3hu12ZM7e5NFUxeERmQ=;
+        s=default; t=1578737829;
+        bh=dDrHh842o8VZe0pFxnAx0kQKFpanyG7stSLmlk9fEQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LhYtDV4+XSkxySWpa50WEUVjirYE4zlDp4TwbEx+jHF0+1FP1gZ9/bXuKxvp5Rt4Q
-         Ke9WGp555bTXTYCWbu7CFw9lnu9GtMYoGda5D0nhzDStH7JxNqc4oCbZoIxBlB0k6A
-         Qq8u4KQmRmqZLPkl342VQSt7OPNbY0ye53MTZTwE=
+        b=YbpDRccDIeafUdKr5/r4QAVvXW+gUp+oMZ7XJuG3ckizy4bu5KTpIi1urHubtUU8h
+         u2JQ9eNeFUTqUT/IZ0BaXHmbtp42lhirPl3ddqy46YsMUpK5zEtrR6DSMMAOpzVyyV
+         VYHIJ4NeeHqZVEQ2pWBURfwHeCsqPi2rqPfi5mxM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
         Stefan Haberland <sth@linux.ibm.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 54/84] s390/dasd/cio: Interpret ccw_device_get_mdc return value correctly
-Date:   Sat, 11 Jan 2020 10:50:31 +0100
-Message-Id: <20200111094906.768841990@linuxfoundation.org>
+Subject: [PATCH 4.19 55/84] s390/dasd: fix memleak in path handling error case
+Date:   Sat, 11 Jan 2020 10:50:32 +0100
+Message-Id: <20200111094907.022506368@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -62,93 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Höppner <hoeppner@linux.ibm.com>
+From: Stefan Haberland <sth@linux.ibm.com>
 
-[ Upstream commit dd4b3c83b9efac10d48a94c61372119fc555a077 ]
+[ Upstream commit 00b39f698a4f1ee897227cace2e3937fc4412270 ]
 
-The max data count (mdc) is an unsigned 16-bit integer value as per AR
-documentation and is received via ccw_device_get_mdc() for a specific
-path mask from the CIO layer. The function itself also always returns a
-positive mdc value or 0 in case mdc isn't supported or couldn't be
-determined.
+If for whatever reason the dasd_eckd_check_characteristics() function
+exits after at least some paths have their configuration data
+allocated those data is never freed again. In the error case the
+device->private pointer is set to NULL and dasd_eckd_uncheck_device()
+will exit without freeing the path data because of this NULL pointer.
 
-Though, the comment for this function describes a negative return value
-to indicate failures.
+Fix by calling dasd_eckd_clear_conf_data() for error cases.
 
-As a result, the DASD device driver interprets the return value of
-ccw_device_get_mdc() incorrectly. The error case is essentially a dead
-code path.
+Also use dasd_eckd_clear_conf_data() in dasd_eckd_uncheck_device()
+to avoid code duplication.
 
-To fix this behaviour, check explicitly for a return value of 0 and
-change the comment for ccw_device_get_mdc() accordingly.
-
-This fix merely enables the error code path in the DASD functions
-get_fcx_max_data() and verify_fcx_max_data(). The actual functionality
-stays the same and is still correct.
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
-Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
 Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 9 +++++----
- drivers/s390/cio/device_ops.c  | 2 +-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/s390/block/dasd_eckd.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index f89f9d02e788..108fb1c77e1d 100644
+index 108fb1c77e1d..a2e34c853ca9 100644
 --- a/drivers/s390/block/dasd_eckd.c
 +++ b/drivers/s390/block/dasd_eckd.c
-@@ -1135,7 +1135,8 @@ static u32 get_fcx_max_data(struct dasd_device *device)
+@@ -1770,7 +1770,7 @@ dasd_eckd_check_characteristics(struct dasd_device *device)
+ 	dasd_free_block(device->block);
+ 	device->block = NULL;
+ out_err1:
+-	kfree(private->conf_data);
++	dasd_eckd_clear_conf_data(device);
+ 	kfree(device->private);
+ 	device->private = NULL;
+ 	return rc;
+@@ -1779,7 +1779,6 @@ dasd_eckd_check_characteristics(struct dasd_device *device)
+ static void dasd_eckd_uncheck_device(struct dasd_device *device)
  {
  	struct dasd_eckd_private *private = device->private;
- 	int fcx_in_css, fcx_in_gneq, fcx_in_features;
--	int tpm, mdc;
-+	unsigned int mdc;
-+	int tpm;
+-	int i;
  
- 	if (dasd_nofcx)
- 		return 0;
-@@ -1149,7 +1150,7 @@ static u32 get_fcx_max_data(struct dasd_device *device)
- 		return 0;
+ 	if (!private)
+ 		return;
+@@ -1789,21 +1788,7 @@ static void dasd_eckd_uncheck_device(struct dasd_device *device)
+ 	private->sneq = NULL;
+ 	private->vdsneq = NULL;
+ 	private->gneq = NULL;
+-	private->conf_len = 0;
+-	for (i = 0; i < 8; i++) {
+-		kfree(device->path[i].conf_data);
+-		if ((__u8 *)device->path[i].conf_data ==
+-		    private->conf_data) {
+-			private->conf_data = NULL;
+-			private->conf_len = 0;
+-		}
+-		device->path[i].conf_data = NULL;
+-		device->path[i].cssid = 0;
+-		device->path[i].ssid = 0;
+-		device->path[i].chpid = 0;
+-	}
+-	kfree(private->conf_data);
+-	private->conf_data = NULL;
++	dasd_eckd_clear_conf_data(device);
+ }
  
- 	mdc = ccw_device_get_mdc(device->cdev, 0);
--	if (mdc < 0) {
-+	if (mdc == 0) {
- 		dev_warn(&device->cdev->dev, "Detecting the maximum supported data size for zHPF requests failed\n");
- 		return 0;
- 	} else {
-@@ -1160,12 +1161,12 @@ static u32 get_fcx_max_data(struct dasd_device *device)
- static int verify_fcx_max_data(struct dasd_device *device, __u8 lpm)
- {
- 	struct dasd_eckd_private *private = device->private;
--	int mdc;
-+	unsigned int mdc;
- 	u32 fcx_max_data;
- 
- 	if (private->fcx_max_data) {
- 		mdc = ccw_device_get_mdc(device->cdev, lpm);
--		if ((mdc < 0)) {
-+		if (mdc == 0) {
- 			dev_warn(&device->cdev->dev,
- 				 "Detecting the maximum data size for zHPF "
- 				 "requests failed (rc=%d) for a new path %x\n",
-diff --git a/drivers/s390/cio/device_ops.c b/drivers/s390/cio/device_ops.c
-index 4435ae0b3027..f0cae1973f78 100644
---- a/drivers/s390/cio/device_ops.c
-+++ b/drivers/s390/cio/device_ops.c
-@@ -624,7 +624,7 @@ EXPORT_SYMBOL(ccw_device_tm_start_timeout);
-  * @mask: mask of paths to use
-  *
-  * Return the number of 64K-bytes blocks all paths at least support
-- * for a transport command. Return values <= 0 indicate failures.
-+ * for a transport command. Return value 0 indicates failure.
-  */
- int ccw_device_get_mdc(struct ccw_device *cdev, u8 mask)
- {
+ static struct dasd_ccw_req *
 -- 
 2.20.1
 
