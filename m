@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875F5C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924E7C33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0EC206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6601B2077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737633;
-	bh=+T3Y3d9yI+107Pk0MVyUtFWFy1X2FHPoXIHnVNScEbY=;
+	s=default; t=1578737635;
+	bh=qHNS3wiMREKy3bHjmbXF8V0PjdPphGpMiufMHiVl+6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IVB7p7m+AV5DYqoVJBoRXmMriDfXO7N5BhgdS4YdrOn2i/SZ7eSgsqA7R9x9oi6fM
-	 3ed+Dp6vwTs96LQYwfgaZiJEOfyOXvJsMxSHFzSoJMds4vVyc/1bveb1/68Iz88vDs
-	 2tGqaErMLFv5v0XrSyIcC+GeJMtQHkd6CFLXeEb8=
+	b=UtNkKQUQW4rPA/P8c/MiV+A+E6yszPvkucYAvTu20VQXKbjGbECmCDlMS7FgwKIF7
+	 DTss8vqWwe1hW0Z4hLwZzMv0nnTd8lAYfCbSZjYu7vF+fO6r6Jr3t1CaYqFrHuxzEW
+	 Fx8Xig//0nH/gMg5K5cU20Sa02hHbplgMYJ2Y5+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729502AbgAKKNw (ORCPT
+        id S1730120AbgAKKNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:13:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728835AbgAKKNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 11 Jan 2020 05:13:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729883AbgAKKNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:13:44 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 318D720673;
-        Sat, 11 Jan 2020 10:13:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB92720673;
+        Sat, 11 Jan 2020 10:13:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737628;
-        bh=+T3Y3d9yI+107Pk0MVyUtFWFy1X2FHPoXIHnVNScEbY=;
+        s=default; t=1578737623;
+        bh=qHNS3wiMREKy3bHjmbXF8V0PjdPphGpMiufMHiVl+6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UUwMJuLpnMD5IXO9tis4eCa8rUcwQ7JdKbT7IbNv92MnZoSkvVUMm5Td+SQFYyX1z
-         MvlMQKdb6COz5Oun4FrVWlc1tTO8K0Ow/eEoVtiOU0axx0/nsHCKYo3SxzSYbpyorg
-         RSJfm3lfMAxwEYgk0JQ3DIghIoGLHXzrtBMLJsQU=
+        b=cC6d4QMCMK7MKk/iQQK/bC29obYrF3S2AsGpcZgXOXeq8elT+bmyXfykerCltn81B
+         rV8w5U3tFJe3rQcEv0oncEpNyE98+HlXnLkK3Sv5AY5KIdxrZ4BCqUebv7cTctAetY
+         HJhI7GV4IIuwSRTScmu02jppTv3vaUTlMsE5oI3M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Anatoly Trosinenko <anatoly.trosinenko@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 4.19 03/84] bpf: Fix passing modified ctx to ld/abs/ind instruction
-Date:   Sat, 11 Jan 2020 10:49:40 +0100
-Message-Id: <20200111094845.927918481@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>
+Subject: [PATCH 4.19 02/84] USB: dummy-hcd: increase max number of devices to 32
+Date:   Sat, 11 Jan 2020 10:49:39 +0100
+Message-Id: <20200111094845.750421143@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -61,117 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Borkmann <daniel@iogearbox.net>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-commit 6d4f151acf9a4f6fab09b615f246c717ddedcf0c upstream.
+commit 8442b02bf3c6770e0d7e7ea17be36c30e95987b6 upstream.
 
-Anatoly has been fuzzing with kBdysch harness and reported a KASAN
-slab oob in one of the outcomes:
+When fuzzing the USB subsystem with syzkaller, we currently use 8 testing
+processes within one VM. To isolate testing processes from one another it
+is desirable to assign a dedicated USB bus to each of those, which means
+we need at least 8 Dummy UDC/HCD devices.
 
-  [...]
-  [   77.359642] BUG: KASAN: slab-out-of-bounds in bpf_skb_load_helper_8_no_cache+0x71/0x130
-  [   77.360463] Read of size 4 at addr ffff8880679bac68 by task bpf/406
-  [   77.361119]
-  [   77.361289] CPU: 2 PID: 406 Comm: bpf Not tainted 5.5.0-rc2-xfstests-00157-g2187f215eba #1
-  [   77.362134] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
-  [   77.362984] Call Trace:
-  [   77.363249]  dump_stack+0x97/0xe0
-  [   77.363603]  print_address_description.constprop.0+0x1d/0x220
-  [   77.364251]  ? bpf_skb_load_helper_8_no_cache+0x71/0x130
-  [   77.365030]  ? bpf_skb_load_helper_8_no_cache+0x71/0x130
-  [   77.365860]  __kasan_report.cold+0x37/0x7b
-  [   77.366365]  ? bpf_skb_load_helper_8_no_cache+0x71/0x130
-  [   77.366940]  kasan_report+0xe/0x20
-  [   77.367295]  bpf_skb_load_helper_8_no_cache+0x71/0x130
-  [   77.367821]  ? bpf_skb_load_helper_8+0xf0/0xf0
-  [   77.368278]  ? mark_lock+0xa3/0x9b0
-  [   77.368641]  ? kvm_sched_clock_read+0x14/0x30
-  [   77.369096]  ? sched_clock+0x5/0x10
-  [   77.369460]  ? sched_clock_cpu+0x18/0x110
-  [   77.369876]  ? bpf_skb_load_helper_8+0xf0/0xf0
-  [   77.370330]  ___bpf_prog_run+0x16c0/0x28f0
-  [   77.370755]  __bpf_prog_run32+0x83/0xc0
-  [   77.371153]  ? __bpf_prog_run64+0xc0/0xc0
-  [   77.371568]  ? match_held_lock+0x1b/0x230
-  [   77.371984]  ? rcu_read_lock_held+0xa1/0xb0
-  [   77.372416]  ? rcu_is_watching+0x34/0x50
-  [   77.372826]  sk_filter_trim_cap+0x17c/0x4d0
-  [   77.373259]  ? sock_kzfree_s+0x40/0x40
-  [   77.373648]  ? __get_filter+0x150/0x150
-  [   77.374059]  ? skb_copy_datagram_from_iter+0x80/0x280
-  [   77.374581]  ? do_raw_spin_unlock+0xa5/0x140
-  [   77.375025]  unix_dgram_sendmsg+0x33a/0xa70
-  [   77.375459]  ? do_raw_spin_lock+0x1d0/0x1d0
-  [   77.375893]  ? unix_peer_get+0xa0/0xa0
-  [   77.376287]  ? __fget_light+0xa4/0xf0
-  [   77.376670]  __sys_sendto+0x265/0x280
-  [   77.377056]  ? __ia32_sys_getpeername+0x50/0x50
-  [   77.377523]  ? lock_downgrade+0x350/0x350
-  [   77.377940]  ? __sys_setsockopt+0x2a6/0x2c0
-  [   77.378374]  ? sock_read_iter+0x240/0x240
-  [   77.378789]  ? __sys_socketpair+0x22a/0x300
-  [   77.379221]  ? __ia32_sys_socket+0x50/0x50
-  [   77.379649]  ? mark_held_locks+0x1d/0x90
-  [   77.380059]  ? trace_hardirqs_on_thunk+0x1a/0x1c
-  [   77.380536]  __x64_sys_sendto+0x74/0x90
-  [   77.380938]  do_syscall_64+0x68/0x2a0
-  [   77.381324]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-  [   77.381878] RIP: 0033:0x44c070
-  [...]
+This patch increases the maximum number of Dummy UDC/HCD devices to 32
+(more than 8 in case we need more of them in the future).
 
-After further debugging, turns out while in case of other helper functions
-we disallow passing modified ctx, the special case of ld/abs/ind instruction
-which has similar semantics (except r6 being the ctx argument) is missing
-such check. Modified ctx is impossible here as bpf_skb_load_helper_8_no_cache()
-and others are expecting skb fields in original position, hence, add
-check_ctx_reg() to reject any modified ctx. Issue was first introduced back
-in f1174f77b50c ("bpf/verifier: rework value tracking").
-
-Fixes: f1174f77b50c ("bpf/verifier: rework value tracking")
-Reported-by: Anatoly Trosinenko <anatoly.trosinenko@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200106215157.3553-1-daniel@iogearbox.net
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Link: https://lore.kernel.org/r/665578f904484069bb6100fb20283b22a046ad9b.1571667489.git.andreyknvl@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/verifier.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/udc/dummy_hcd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -4272,6 +4272,7 @@ static bool may_access_skb(enum bpf_prog
- static int check_ld_abs(struct bpf_verifier_env *env, struct bpf_insn *insn)
- {
- 	struct bpf_reg_state *regs = cur_regs(env);
-+	static const int ctx_reg = BPF_REG_6;
- 	u8 mode = BPF_MODE(insn->code);
- 	int i, err;
+--- a/drivers/usb/gadget/udc/dummy_hcd.c
++++ b/drivers/usb/gadget/udc/dummy_hcd.c
+@@ -2739,7 +2739,7 @@ static struct platform_driver dummy_hcd_
+ };
  
-@@ -4305,11 +4306,11 @@ static int check_ld_abs(struct bpf_verif
- 	}
+ /*-------------------------------------------------------------------------*/
+-#define MAX_NUM_UDC	2
++#define MAX_NUM_UDC	32
+ static struct platform_device *the_udc_pdev[MAX_NUM_UDC];
+ static struct platform_device *the_hcd_pdev[MAX_NUM_UDC];
  
- 	/* check whether implicit source operand (register R6) is readable */
--	err = check_reg_arg(env, BPF_REG_6, SRC_OP);
-+	err = check_reg_arg(env, ctx_reg, SRC_OP);
- 	if (err)
- 		return err;
- 
--	if (regs[BPF_REG_6].type != PTR_TO_CTX) {
-+	if (regs[ctx_reg].type != PTR_TO_CTX) {
- 		verbose(env,
- 			"at the time of BPF_LD_ABS|IND R6 != pointer to skb\n");
- 		return -EINVAL;
-@@ -4322,6 +4323,10 @@ static int check_ld_abs(struct bpf_verif
- 			return err;
- 	}
- 
-+	err = check_ctx_reg(env, &regs[ctx_reg], ctx_reg);
-+	if (err < 0)
-+		return err;
-+
- 	/* reset caller saved regs to unreadable */
- 	for (i = 0; i < CALLER_SAVED_REGS; i++) {
- 		mark_reg_not_init(env, regs, caller_saved[i]);
 
 
