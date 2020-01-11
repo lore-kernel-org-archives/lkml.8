@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE59C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF25C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69D1A2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 614C920673
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737604;
-	bh=XY7ZkKy9kSzbDS5DeNTcy0Uu1sCW6MRNbGjZFwn4v0k=;
+	s=default; t=1578737609;
+	bh=HoVSnvPJwPy9BocRHBsTb7aIBHaaazMVnh7KWLyLwpU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u/SpS1v3R7fHeDfx6tIP8Ar69j1CWwvYN56aBZVbEzSlgXtl5I1iQQvfxVHVPy0P5
-	 Wq3qSh+eweNkrVY6VsBfMFsXk3wBkkl5Yy97hH+4j/dwkXzJL+K7lJ0Nu8bke+ufMo
-	 J6XklAxoZP2hZFVGlEW4W0GBmFNck/+nAZwNrNvY=
+	b=lHSBaNs1H/ZTlDy57BemSz9jZpyMzqgDhgbJ5yXqpPHC9/z9DZi72SrT3m8KBS6pO
+	 xBH11E/i6+tzmELqgkziVKyETBZYbFKbim5w4+QddsLATJ6r3NDQE2FgHrwyYUosI/
+	 crcsE4blHKTetD5dYwQ6WRyyOyP0EjxB4ldgE+V4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbgAKKNX (ORCPT
+        id S1730110AbgAKKN1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:13:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51982 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:13:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730097AbgAKKNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:13:18 -0500
+        id S1730097AbgAKKNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:13:24 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3AC7206DA;
-        Sat, 11 Jan 2020 10:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E5B3206DA;
+        Sat, 11 Jan 2020 10:13:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737597;
-        bh=XY7ZkKy9kSzbDS5DeNTcy0Uu1sCW6MRNbGjZFwn4v0k=;
+        s=default; t=1578737603;
+        bh=HoVSnvPJwPy9BocRHBsTb7aIBHaaazMVnh7KWLyLwpU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pACnjGZPbSM0sCHcCEOIW0dLQ1cLvYXgwr4EHwO7USGsZmVRqeM6HoWEavpfiOXKG
-         +WauebNypCPkdK4wt58re5fPe1zTdtC1rfn+fCsoTPf/G+Q2W7q2x5Hc+tkhfd0Pmf
-         tg6eNXy/42NfhgnHdCPvnA3NkXVU5AOKbKlvEBwQ=
+        b=vcfTM8ow+hTFaVeuOt3tIn/ZgOfHxtR+9Egpjnz9t0Xg0gSH3cdrstU2sUJH866lM
+         BIUlPENz+oXVDviT65/jZc5ImjP6yAmlELlh39XHEAJxUH+oxgTuFpoIMosGIWvlFd
+         n+9DGKsuiHy0ZJs0oU1/BZosymUVwgpIYjJeTaVg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pengcheng Yang <yangpc@wangsu.com>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 58/62] tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
-Date:   Sat, 11 Jan 2020 10:50:40 +0100
-Message-Id: <20200111094856.417395186@linuxfoundation.org>
+Subject: [PATCH 4.14 59/62] vxlan: fix tos value before xmit
+Date:   Sat, 11 Jan 2020 10:50:41 +0100
+Message-Id: <20200111094856.923691984@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -60,46 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pengcheng Yang <yangpc@wangsu.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit c9655008e7845bcfdaac10a1ed8554ec167aea88 ]
+[ Upstream commit 71130f29979c7c7956b040673e6b9d5643003176 ]
 
-When we receive a D-SACK, where the sequence number satisfies:
-	undo_marker <= start_seq < end_seq <= prior_snd_una
-we consider this is a valid D-SACK and tcp_is_sackblock_valid()
-returns true, then this D-SACK is discarded as "old stuff",
-but the variable first_sack_index is not marked as negative
-in tcp_sacktag_write_queue().
+Before ip_tunnel_ecn_encap() and udp_tunnel_xmit_skb() we should filter
+tos value by RT_TOS() instead of using config tos directly.
 
-If this D-SACK also carries a SACK that needs to be processed
-(for example, the previous SACK segment was lost), this SACK
-will be treated as a D-SACK in the following processing of
-tcp_sacktag_write_queue(), which will eventually lead to
-incorrect updates of undo_retrans and reordering.
+vxlan_get_route() would filter the tos to fl4.flowi4_tos but we didn't
+return it back, as geneve_get_v4_rt() did. So we have to use RT_TOS()
+directly in function ip_tunnel_ecn_encap().
 
-Fixes: fd6dad616d4f ("[TCP]: Earlier SACK block verification & simplify access to them")
-Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: 206aaafcd279 ("VXLAN: Use IP Tunnels tunnel ENC encap API")
+Fixes: 1400615d64cf ("vxlan: allow setting ipv6 traffic class")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_input.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/vxlan.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -1750,8 +1750,11 @@ tcp_sacktag_write_queue(struct sock *sk,
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2216,7 +2216,7 @@ static void vxlan_xmit_one(struct sk_buf
+ 			skb_dst_update_pmtu(skb, mtu);
  		}
  
- 		/* Ignore very old stuff early */
--		if (!after(sp[used_sacks].end_seq, prior_snd_una))
-+		if (!after(sp[used_sacks].end_seq, prior_snd_una)) {
-+			if (i == 0)
-+				first_sack_index = -1;
- 			continue;
-+		}
+-		tos = ip_tunnel_ecn_encap(tos, old_iph, skb);
++		tos = ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
+ 		ttl = ttl ? : ip4_dst_hoplimit(&rt->dst);
+ 		err = vxlan_build_skb(skb, ndst, sizeof(struct iphdr),
+ 				      vni, md, flags, udp_sum);
+@@ -2257,7 +2257,7 @@ static void vxlan_xmit_one(struct sk_buf
+ 			skb_dst_update_pmtu(skb, mtu);
+ 		}
  
- 		used_sacks++;
- 	}
+-		tos = ip_tunnel_ecn_encap(tos, old_iph, skb);
++		tos = ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
+ 		ttl = ttl ? : ip6_dst_hoplimit(ndst);
+ 		skb_scrub_packet(skb, xnet);
+ 		err = vxlan_build_skb(skb, ndst, sizeof(struct ipv6hdr),
 
 
