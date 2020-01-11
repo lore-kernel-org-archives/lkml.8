@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B72A2C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1392AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90189214DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE48B20880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738104;
-	bh=dCuaddNahKCIMhTzWPxdn0qVvTPLXRYoth7KSZ37i4g=;
+	s=default; t=1578738107;
+	bh=9gpBHUXZ9nYOmx16165F46H63Tu2VFAWf/uzX9efg78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ef52IjSBxKohg/DFgBrW7d5Y1eRWsNS5KwtT8WSX3uU+d4O0VDDa2QiBRykGkV+p0
-	 ae2lg8+BcRRFPOUxrG+T7aESzRSbItaYmSy+XZ2wvKEXDJWGBA6e76w1j6Pm8qHTTD
-	 Y6x51hSUesYbnzh24fUrMuBJ4UIPvqQbroCJW7mw=
+	b=fRhJv8gz/XP6ssAqKqm9hrVt68yUbzni7etF9DMaekZ+bkp3Lp0Cugr1iN1itvyVA
+	 u/7bZtZ9HbHl8erCOPtFnLqaRvNr1CVfhJdXuk3AsxXDNdWrRXu2wd7SO6p7uVL4n9
+	 Lxdgl7kJxk/ROsIYFODllkSSqYdA6MgD8FoFQ2Oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730441AbgAKKVn (ORCPT
+        id S1730661AbgAKKVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:21:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45470 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:21:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730407AbgAKKVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:21:40 -0500
+        id S1730407AbgAKKVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:21:44 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D87E20848;
-        Sat, 11 Jan 2020 10:21:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 335FF20848;
+        Sat, 11 Jan 2020 10:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738099;
-        bh=dCuaddNahKCIMhTzWPxdn0qVvTPLXRYoth7KSZ37i4g=;
+        s=default; t=1578738104;
+        bh=9gpBHUXZ9nYOmx16165F46H63Tu2VFAWf/uzX9efg78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t3FKtTsPOKQRtfkvjh0ylWC86xf/EgKNO3y6ZcGEBF5+nib6HcGUk9pOr0Ku534wb
-         VS1jNQbrNbB5rhr2DQ+7XZj9hhKEvuqJ8llRN/5jbf5vNz6gFu9R0uoTRBYDzXDZQr
-         g96EuA8MVhVb/5rvZqHjQLvoN+TNBWscUd2YhGkU=
+        b=0IuVyY4Q7BrP+9V/NKZkcyA1UZCBS3YXK39jwLZrrQd0Td8d4FT0FYS8yzgRA2IqT
+         eR+OFhdTpZW44Wnh7Vs1335wuHBhNYKcEOxevZU4a1iyyxRdPWmBLDgFAhMY78PumC
+         liYCMupO88j2SVJF92AgQbA6QYkIkpT0MZMeUTbA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 026/165] ARM: vexpress: Set-up shared OPP table instead of individual for each CPU
-Date:   Sat, 11 Jan 2020 10:49:05 +0100
-Message-Id: <20200111094922.961071850@linuxfoundation.org>
+Subject: [PATCH 5.4 009/165] spi: fsl: Handle the single hardwired chipselect case
+Date:   Sat, 11 Jan 2020 10:48:48 +0100
+Message-Id: <20200111094921.993197032@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -63,67 +61,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 2a76352ad2cc6b78e58f737714879cc860903802 ]
+[ Upstream commit 7251953d784baf7e5416afabe030a0e81de1a938 ]
 
-Currently we add individual copy of same OPP table for each CPU within
-the cluster. This is redundant and doesn't reflect the reality.
+The Freescale MPC8xxx had a special quirk for handling a
+single hardwired chipselect, the case when we're using neither
+GPIO nor native chip select: when inspecting the device tree
+and finding zero "cs-gpios" on the device node the code would
+assume we have a single hardwired chipselect that leaves the
+device always selected.
 
-We can't use core cpumask to set policy->cpus in ve_spc_cpufreq_init()
-anymore as it gets called via cpuhp_cpufreq_online()->cpufreq_online()
-->cpufreq_driver->init() and the cpumask gets updated upon CPU hotplug
-operations. It also may cause issues when the vexpress_spc_cpufreq
-driver is built as a module.
+This quirk is not handled by the new core code, so we need
+to check the "cs-gpios" explicitly in the driver and set
+pdata->max_chipselect = 1 which will later fall through to
+the SPI master ->num_chipselect.
 
-Since ve_spc_clk_init is built-in device initcall, we should be able to
-use the same topology_core_cpumask to set the opp sharing cpumask via
-dev_pm_opp_set_sharing_cpus and use the same later in the driver via
-dev_pm_opp_get_sharing_cpus.
+Make sure not to assign the chip select handler in this
+case: there is no handling needed since the chip is always
+selected, and this is what the old code did as well.
 
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 0f0581b24bd0 ("spi: fsl: Convert to use CS GPIO descriptors")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Tested-by: Christophe Leroy <christophe.leroy@c-s.fr> (No tested the
+Link: https://lore.kernel.org/r/20191128083718.39177-3-linus.walleij@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-vexpress/spc.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/spi/spi-fsl-spi.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-vexpress/spc.c b/arch/arm/mach-vexpress/spc.c
-index 354e0e7025ae..1da11bdb1dfb 100644
---- a/arch/arm/mach-vexpress/spc.c
-+++ b/arch/arm/mach-vexpress/spc.c
-@@ -551,8 +551,9 @@ static struct clk *ve_spc_clk_register(struct device *cpu_dev)
- 
- static int __init ve_spc_clk_init(void)
- {
--	int cpu;
-+	int cpu, cluster;
- 	struct clk *clk;
-+	bool init_opp_table[MAX_CLUSTERS] = { false };
- 
- 	if (!info)
- 		return 0; /* Continue only if SPC is initialised */
-@@ -578,8 +579,17 @@ static int __init ve_spc_clk_init(void)
- 			continue;
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index ad1abea6e8b0..be7c6ba73072 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -729,8 +729,18 @@ static int of_fsl_spi_probe(struct platform_device *ofdev)
+ 			}
  		}
- 
-+		cluster = topology_physical_package_id(cpu_dev->id);
-+		if (init_opp_table[cluster])
-+			continue;
-+
- 		if (ve_init_opp_table(cpu_dev))
- 			pr_warn("failed to initialise cpu%d opp table\n", cpu);
-+		else if (dev_pm_opp_set_sharing_cpus(cpu_dev,
-+			 topology_core_cpumask(cpu_dev->id)))
-+			pr_warn("failed to mark OPPs shared for cpu%d\n", cpu);
+ #endif
+-
+-		pdata->cs_control = fsl_spi_cs_control;
++		/*
++		 * Handle the case where we have one hardwired (always selected)
++		 * device on the first "chipselect". Else we let the core code
++		 * handle any GPIOs or native chip selects and assign the
++		 * appropriate callback for dealing with the CS lines. This isn't
++		 * supported on the GRLIB variant.
++		 */
++		ret = gpiod_count(dev, "cs");
++		if (ret <= 0)
++			pdata->max_chipselect = 1;
 +		else
-+			init_opp_table[cluster] = true;
++			pdata->cs_control = fsl_spi_cs_control;
  	}
  
- 	platform_device_register_simple("vexpress-spc-cpufreq", -1, NULL, 0);
+ 	ret = of_address_to_resource(np, 0, &mem);
 -- 
 2.20.1
 
