@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBCBC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F96C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE40205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF0E205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738266;
-	bh=tNIxl4x5EyhwWirr1G7H/6k1XgznDwSrGldniwcZWT8=;
+	s=default; t=1578738270;
+	bh=5tjeyfhC2XIQRJSYlk7gvZso8UMNw9iZep7LLOu9dP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eyCE8apgc2vUJc0+6XsA/SCZXH1iLFFJaDPdDnLqZfwcrVpq607lPK7SbAZqHI9Ko
-	 Ggu/kxABrUaneR4n7/zWPLc7eayRG6WtWIFnCqWq8tyfN/NtZ1pk9A7WCxwu2cGo7a
-	 r4VHf9aHmsi+8G29Gs/2VLBktMP4ZZelGQg6n74U=
+	b=TUpaebNxr70XBBamIyeIcr7kRQST+CPoYXAKeNGOa7OHqRZmqYRSTrDwxZL6yZZG1
+	 +XheJQNX29dGg6LNCVVcWbZD/5YUK0Rkp+en8doFqcjHvmQpvpKX21mGos7Ul4GXeX
+	 xQ5U8rxNi9Oeav84L0EqB5JHFkd/KMxncp/JxMXc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbgAKKYY (ORCPT
+        id S1730687AbgAKKY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:24:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53108 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:24:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730986AbgAKKYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:24:20 -0500
+        id S1730986AbgAKKYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:24:25 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D454205F4;
-        Sat, 11 Jan 2020 10:24:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70BD6205F4;
+        Sat, 11 Jan 2020 10:24:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738260;
-        bh=tNIxl4x5EyhwWirr1G7H/6k1XgznDwSrGldniwcZWT8=;
+        s=default; t=1578738264;
+        bh=5tjeyfhC2XIQRJSYlk7gvZso8UMNw9iZep7LLOu9dP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sBkKDlAu5NJutx3Bk9T99Y+MwXx8NrOCumBv5Mb0uni6alFBxMVTSskiuRJkF+OM+
-         2mgGkmu4zYSEnnLfaHf+ZOky+1UD5tAQ1GzyouoYy7PpqQ786SEEGp78mh9N4MGBYE
-         nPEbfIBDzq8Jj6cny4/EWmcxCyn78lwKmazWobcw=
+        b=bKL0W3SgvYYIc9Dos+P6AfL9wLqc2L+ycPtI1PhWmfwr+1H6T2UZ5asz5h2qr/RDt
+         flJDxcyurC5c7+H7Udg5dMIUzw9gyexCpmcNOWHFQ5eJ0gv/69Opy5pxWGvztAFLKr
+         NA3gR7/LNJ7QmycnW1ifTsF3kGgxSTeWUb2JNxrA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, SeongJae Park <sjpark@amazon.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 061/165] kselftest: Support old perl versions
-Date:   Sat, 11 Jan 2020 10:49:40 +0100
-Message-Id: <20200111094926.272746866@linuxfoundation.org>
+Subject: [PATCH 5.4 062/165] samples: bpf: Replace symbol compare of trace_event
+Date:   Sat, 11 Jan 2020 10:49:41 +0100
+Message-Id: <20200111094926.341769629@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,38 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+From: Daniel T. Lee <danieltimlee@gmail.com>
 
-[ Upstream commit 4eac734486fd431e0756cc5e929f140911a36a53 ]
+[ Upstream commit bba1b2a890253528c45aa66cf856f289a215bfbc ]
 
-On an old perl such as v5.10.1, `kselftest/prefix.pl` gives below error
-message:
+Previously, when this sample is added, commit 1c47910ef8013
+("samples/bpf: add perf_event+bpf example"), a symbol 'sys_read' and
+'sys_write' has been used without no prefixes. But currently there are
+no exact symbols with these under kallsyms and this leads to failure.
 
-    Can't locate object method "autoflush" via package "IO::Handle" at kselftest/prefix.pl line 10.
+This commit changes exact compare to substring compare to keep compatible
+with exact symbol or prefixed symbol.
 
-This commit fixes the error by explicitly specifying the use of the
-`IO::Handle` package.
-
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Acked-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 1c47910ef8013 ("samples/bpf: add perf_event+bpf example")
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20191205080114.19766-2-danieltimlee@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/kselftest/prefix.pl | 1 +
- 1 file changed, 1 insertion(+)
+ samples/bpf/trace_event_user.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kselftest/prefix.pl b/tools/testing/selftests/kselftest/prefix.pl
-index ec7e48118183..31f7c2a0a8bd 100755
---- a/tools/testing/selftests/kselftest/prefix.pl
-+++ b/tools/testing/selftests/kselftest/prefix.pl
-@@ -3,6 +3,7 @@
- # Prefix all lines with "# ", unbuffered. Command being piped in may need
- # to have unbuffering forced with "stdbuf -i0 -o0 -e0 $cmd".
- use strict;
-+use IO::Handle;
+diff --git a/samples/bpf/trace_event_user.c b/samples/bpf/trace_event_user.c
+index 16a16eadd509..749a50f2f9f3 100644
+--- a/samples/bpf/trace_event_user.c
++++ b/samples/bpf/trace_event_user.c
+@@ -37,9 +37,9 @@ static void print_ksym(__u64 addr)
+ 	}
  
- binmode STDIN;
- binmode STDOUT;
+ 	printf("%s;", sym->name);
+-	if (!strcmp(sym->name, "sys_read"))
++	if (!strstr(sym->name, "sys_read"))
+ 		sys_read_seen = true;
+-	else if (!strcmp(sym->name, "sys_write"))
++	else if (!strstr(sym->name, "sys_write"))
+ 		sys_write_seen = true;
+ }
+ 
 -- 
 2.20.1
 
