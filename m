@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA8DC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E12C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A591F20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B645220842
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736946;
-	bh=rqh2HQ0MrSBQu+Rjr4Pxb85MCFGCTcTehbCzdEyqgR0=;
+	s=default; t=1578736951;
+	bh=/EViJGYuFse92XYSVCsg7n9J7XgD2T3CK4T0Gd9E/EE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EDF4dzu48wvnfF80ax+t/c4rfzNXp+edsDahXELxo77Ka4PVrMbqufvCWXD667Psc
-	 lPujZibSuelglItCESSCOc7EHaNdLXR5ya9oIGd6W0Etydx7yipb9dn+YvMpAg9SVe
-	 rBxX+HnQFAMBkMexl4zANm8YytWHiPIGVE5zNm30=
+	b=VBTrZjulNTVldypWFwtb+ruIcXNNkronI1AwwxnW2dylyYH2GAhbNONbpPLTwoMfq
+	 20GXLbOKaYhQO6CLuL1cY99r/MoRcmOilvSqR8RPujd+3UWMEb8Tv2p34DQRTFRG8T
+	 K8j/gNqQHXWjzA3EpUbD5hLoAf8yN9GD6WGwCDnU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729090AbgAKKC0 (ORCPT
+        id S1729108AbgAKKCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:02:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60856 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:02:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729034AbgAKKCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:02:25 -0500
+        id S1728819AbgAKKC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:02:29 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 617CA20842;
-        Sat, 11 Jan 2020 10:02:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7918F20842;
+        Sat, 11 Jan 2020 10:02:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736945;
-        bh=rqh2HQ0MrSBQu+Rjr4Pxb85MCFGCTcTehbCzdEyqgR0=;
+        s=default; t=1578736949;
+        bh=/EViJGYuFse92XYSVCsg7n9J7XgD2T3CK4T0Gd9E/EE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TRG/XuyfsD288rV3uTzn7J3YczCbFSNjGC0FV2mVsg94+iR7bQPq9dru4a9CqBcUh
-         IyNPIfs3d6d9yOQpn0GhtGeUyXv3c3//Xw2wvNXuP6AS9Y/LTIhbDH1XWn93qX51jD
-         ++bmAkr6Ghw/BL1mrSnG7s0dLP1kfHhN8n5IzXYo=
+        b=QPZW5xokp2lf3rm0RISd9NwO2PX0nle5nYNND2HKYz/yy1/0GwlJC3FHbl6CJNCzF
+         CbxNXS64Jf2KqXm6VOCKEznLulZoiXUKW02ziRWh15G/nEtcQjnquMY77wcfTWsf8H
+         XIMuIh1K0IGiRNPdUFuBm2FeYDoWGkYimPYslWng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.9 35/91] nfsd4: fix up replay_matches_cache()
-Date:   Sat, 11 Jan 2020 10:49:28 +0100
-Message-Id: <20200111094858.163637835@linuxfoundation.org>
+        stable@vger.kernel.org, Omar Sandoval <osandov@fb.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: [PATCH 4.9 36/91] xfs: dont check for AG deadlock for realtime files in bunmapi
+Date:   Sat, 11 Jan 2020 10:49:29 +0100
+Message-Id: <20200111094858.636450376@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -59,52 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Mayhew <smayhew@redhat.com>
+From: Omar Sandoval <osandov@fb.com>
 
-commit 6e73e92b155c868ff7fce9d108839668caf1d9be upstream.
+commit 69ffe5960df16938bccfe1b65382af0b3de51265 upstream.
 
-When running an nfs stress test, I see quite a few cached replies that
-don't match up with the actual request.  The first comment in
-replay_matches_cache() makes sense, but the code doesn't seem to
-match... fix it.
+Commit 5b094d6dac04 ("xfs: fix multi-AG deadlock in xfs_bunmapi") added
+a check in __xfs_bunmapi() to stop early if we would touch multiple AGs
+in the wrong order. However, this check isn't applicable for realtime
+files. In most cases, it just makes us do unnecessary commits. However,
+without the fix from the previous commit ("xfs: fix realtime file data
+space leak"), if the last and second-to-last extents also happen to have
+different "AG numbers", then the break actually causes __xfs_bunmapi()
+to return without making any progress, which sends
+xfs_itruncate_extents_flags() into an infinite loop.
 
-This isn't exactly a bugfix, as the server isn't required to catch every
-case of a false retry.  So, we may as well do this, but if this is
-fixing a problem then that suggests there's a client bug.
-
-Fixes: 53da6a53e1d4 ("nfsd4: catch some false session retries")
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 5b094d6dac04 ("xfs: fix multi-AG deadlock in xfs_bunmapi")
+Signed-off-by: Omar Sandoval <osandov@fb.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4state.c |   15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ fs/xfs/libxfs/xfs_bmap.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -3067,12 +3067,17 @@ static bool replay_matches_cache(struct
- 	    (bool)seq->cachethis)
- 		return false;
- 	/*
--	 * If there's an error than the reply can have fewer ops than
--	 * the call.  But if we cached a reply with *more* ops than the
--	 * call you're sending us now, then this new call is clearly not
--	 * really a replay of the old one:
-+	 * If there's an error then the reply can have fewer ops than
-+	 * the call.
- 	 */
--	if (slot->sl_opcnt < argp->opcnt)
-+	if (slot->sl_opcnt < argp->opcnt && !slot->sl_status)
-+		return false;
-+	/*
-+	 * But if we cached a reply with *more* ops than the call you're
-+	 * sending us now, then this new call is clearly not really a
-+	 * replay of the old one:
-+	 */
-+	if (slot->sl_opcnt > argp->opcnt)
- 		return false;
- 	/* This is the only check explicitly called by spec: */
- 	if (!same_creds(&rqstp->rq_cred, &slot->sl_cred))
+--- a/fs/xfs/libxfs/xfs_bmap.c
++++ b/fs/xfs/libxfs/xfs_bmap.c
+@@ -5688,7 +5688,7 @@ __xfs_bunmapi(
+ 		 * Make sure we don't touch multiple AGF headers out of order
+ 		 * in a single transaction, as that could cause AB-BA deadlocks.
+ 		 */
+-		if (!wasdel) {
++		if (!wasdel && !isrt) {
+ 			agno = XFS_FSB_TO_AGNO(mp, del.br_startblock);
+ 			if (prev_agno != NULLAGNUMBER && prev_agno > agno)
+ 				break;
 
 
