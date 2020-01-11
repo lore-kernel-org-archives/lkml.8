@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1852C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 839DCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D84206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C53A206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737671;
-	bh=85mxCa5KdB1OA4pYkAMhRlSfScvPXqcsNuof4Jqh048=;
+	s=default; t=1578737676;
+	bh=Jvvz7VAOuf5cr7sba0W0VhPGhpU6NhDWTovzuuWPgIw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PhrV4Vsa+CuwafNuc7DR6kN07efUIaH8C30m5Nm03G5pH8pnsqIz+hNCbYpy/QsJj
-	 6fjDZq7UdF0YABB8AhzYJpGiDXTgv63AI+x/7wc3D45RNZgUZCwA+dRtzhghrgdzy3
-	 zVraH6D9jo5cbfHTyn7NasqLoqmA2pGSSYrViYrE=
+	b=bYGimhXJlHDehpaf5Rg8tnFtcVNqHbTw23kIpsZ3Evl+Y8a9sO2N5UcxCpKEIX7sl
+	 JYgcWda9XNZnPaLj8H2qo5lxgcX14jINA91xoYLKGLOSLLlpU71GOeAuRrvzU9hJy8
+	 j+oV/CeoPJSBY7D1B9ZuPxQlWkmznIEt0qWDddBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729815AbgAKKOa (ORCPT
+        id S1729669AbgAKKOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:14:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54374 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:14:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730156AbgAKKO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:14:27 -0500
+        id S1729888AbgAKKOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:14:31 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C426220673;
-        Sat, 11 Jan 2020 10:14:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07DC720673;
+        Sat, 11 Jan 2020 10:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737666;
-        bh=85mxCa5KdB1OA4pYkAMhRlSfScvPXqcsNuof4Jqh048=;
+        s=default; t=1578737670;
+        bh=Jvvz7VAOuf5cr7sba0W0VhPGhpU6NhDWTovzuuWPgIw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bWPtKsDwFEsCyn08YMxc5uDmagqjnd7Qirq+8ta7HLB6CkbuF4izFv88A4zF9EqdH
-         eD0DHxoePDLGmQNSaacPSF9qMx1HKodN6wIiWIlScNoqZQSVECAwYJR5EEjjgiXy/t
-         vbYemqRcyH380K9IvUrQmsjolKgW1czMTmSeD19o=
+        b=UKypVWz01QDlDIP6oSPwKvXwemjrs+i77W0xs1bVPryLL8HaM446apizPUcz8WDbu
+         aE9F93C0sXgJPTEovNmQPHbvwUjMsv75c7k2qeQXNdIeCb7YaF7V9KKx7yDvxf6QeL
+         4FOb9VArBq3r7hV5K7TLLXs9p5mxy9K5JojRnvFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 18/84] netfilter: nft_set_rbtree: bogus lookup/get on consecutive elements in named sets
-Date:   Sat, 11 Jan 2020 10:49:55 +0100
-Message-Id: <20200111094851.936448164@linuxfoundation.org>
+Subject: [PATCH 4.19 19/84] netfilter: nf_tables: validate NFT_SET_ELEM_INTERVAL_END
+Date:   Sat, 11 Jan 2020 10:49:56 +0100
+Message-Id: <20200111094852.451412708@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -61,91 +61,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit db3b665dd77b34e34df00e17d7b299c98fcfb2c5 ]
+[ Upstream commit bffc124b6fe37d0ae9b428d104efb426403bb5c9 ]
 
-The existing rbtree implementation might store consecutive elements
-where the closing element and the opening element might overlap, eg.
+Only NFTA_SET_ELEM_KEY and NFTA_SET_ELEM_FLAGS make sense for elements
+whose NFT_SET_ELEM_INTERVAL_END flag is set on.
 
-	[ a, a+1) [ a+1, a+2)
-
-This patch removes the optimization for non-anonymous sets in the exact
-matching case, where it is assumed to stop searching in case that the
-closing element is found. Instead, invalidate candidate interval and
-keep looking further in the tree.
-
-The lookup/get operation might return false, while there is an element
-in the rbtree. Moreover, the get operation returns true as if a+2 would
-be in the tree. This happens with named sets after several set updates.
-
-The existing lookup optimization (that only works for the anonymous
-sets) might not reach the opening [ a+1,... element if the closing
-...,a+1) is found in first place when walking over the rbtree. Hence,
-walking the full tree in that case is needed.
-
-This patch fixes the lookup and get operations.
-
-Fixes: e701001e7cbe ("netfilter: nft_rbtree: allow adjacent intervals with dynamic updates")
-Fixes: ba0e4d9917b4 ("netfilter: nf_tables: get set elements via netlink")
+Fixes: 96518518cc41 ("netfilter: add nftables")
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_set_rbtree.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ net/netfilter/nf_tables_api.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
-index b3e75f9cb686..0221510328d4 100644
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -77,8 +77,13 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
- 				parent = rcu_dereference_raw(parent->rb_left);
- 				continue;
- 			}
--			if (nft_rbtree_interval_end(rbe))
--				goto out;
-+			if (nft_rbtree_interval_end(rbe)) {
-+				if (nft_set_is_anonymous(set))
-+					return false;
-+				parent = rcu_dereference_raw(parent->rb_left);
-+				interval = NULL;
-+				continue;
-+			}
- 
- 			*ext = &rbe->ext;
- 			return true;
-@@ -91,7 +96,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
- 		*ext = &interval->ext;
- 		return true;
- 	}
--out:
-+
- 	return false;
- }
- 
-@@ -139,8 +144,10 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
- 		} else if (d > 0) {
- 			parent = rcu_dereference_raw(parent->rb_right);
- 		} else {
--			if (!nft_set_elem_active(&rbe->ext, genmask))
-+			if (!nft_set_elem_active(&rbe->ext, genmask)) {
- 				parent = rcu_dereference_raw(parent->rb_left);
-+				continue;
-+			}
- 
- 			if (!nft_set_ext_exists(&rbe->ext, NFT_SET_EXT_FLAGS) ||
- 			    (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END) ==
-@@ -148,7 +155,11 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
- 				*elem = rbe;
- 				return true;
- 			}
--			return false;
-+
-+			if (nft_rbtree_interval_end(rbe))
-+				interval = NULL;
-+
-+			parent = rcu_dereference_raw(parent->rb_left);
- 		}
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 0e1b1f7f4745..42f79f9532c6 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -4351,14 +4351,20 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
+ 		if (nla[NFTA_SET_ELEM_DATA] == NULL &&
+ 		    !(flags & NFT_SET_ELEM_INTERVAL_END))
+ 			return -EINVAL;
+-		if (nla[NFTA_SET_ELEM_DATA] != NULL &&
+-		    flags & NFT_SET_ELEM_INTERVAL_END)
+-			return -EINVAL;
+ 	} else {
+ 		if (nla[NFTA_SET_ELEM_DATA] != NULL)
+ 			return -EINVAL;
  	}
  
++	if ((flags & NFT_SET_ELEM_INTERVAL_END) &&
++	     (nla[NFTA_SET_ELEM_DATA] ||
++	      nla[NFTA_SET_ELEM_OBJREF] ||
++	      nla[NFTA_SET_ELEM_TIMEOUT] ||
++	      nla[NFTA_SET_ELEM_EXPIRATION] ||
++	      nla[NFTA_SET_ELEM_USERDATA] ||
++	      nla[NFTA_SET_ELEM_EXPR]))
++		return -EINVAL;
++
+ 	timeout = 0;
+ 	if (nla[NFTA_SET_ELEM_TIMEOUT] != NULL) {
+ 		if (!(set->flags & NFT_SET_TIMEOUT))
 -- 
 2.20.1
 
