@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 097E4C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A551C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19AF20880
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37CF2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738319;
-	bh=y5ZUJdBGvEd9wU+ozgECUMyVdZfnmtAjppTvIhvO/fw=;
+	s=default; t=1578738329;
+	bh=jV0Fn+92D1zShlnjiLkLneWO8c8R5+UdB7LDaQECXz8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bvc1w3gVk5N/MX24udHpF6DnHS91nBEf8rmOJu1KSbcpJ39Cx1cznLFsVpRrQEqpp
-	 AokXaGY1sl6jEOyntOcgFEmI68ywPS9x8K2ojYx/yupTPMnze/c44SBYT2eyFElvUn
-	 miInp2yBbquuqhdgFSk2nfIYiN9uCzSvVD7yf3x8=
+	b=zxgD7PAmrrTxw0bJyzjiohc7wwZiSZivYpWhplhiLqEzKpgI0DagOesS6nv97+7M5
+	 9numYxcr3J4K9Nk3+16FT1UTbQrs8oOYqpugdqHXZ81JjhQprXLZbQVIm5wUScNSJ6
+	 UX+KpiUDzx2sZ4SsclbZSqmKXfhoGAtYR38GzHr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731034AbgAKKZS (ORCPT
+        id S1730646AbgAKKZ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:25:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55770 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:25:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730627AbgAKKZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:25:17 -0500
+        id S1730662AbgAKKZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:25:25 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43D822082E;
-        Sat, 11 Jan 2020 10:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D93AA20848;
+        Sat, 11 Jan 2020 10:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738316;
-        bh=y5ZUJdBGvEd9wU+ozgECUMyVdZfnmtAjppTvIhvO/fw=;
+        s=default; t=1578738324;
+        bh=jV0Fn+92D1zShlnjiLkLneWO8c8R5+UdB7LDaQECXz8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=szwNqUxyKcfeX/v9VpefpvgFTlmCcHpjgoj/zMMyu3BREsbF67R1uS4lqcNx0AHwL
-         FUpLGPdupd7K1i5nbaTF5jjbjKmkpa/7Dji4H8dgi/AnLVFMnjexwR1eqWhZzV4sCT
-         rGGOW76OLT5xkDKDgxVLG0eDMbEmjUiJ0J3pyn3Y=
+        b=ADkuKq29ojjbrfn7VQEVde6E8+nsPm/lnJ9+K5m3zK1HARelSnnwQ9vrROOm4Se0n
+         kG8VeugDzQZICiTjhX0DoR6U0HepeHLVpTyIQikKqfUUEqQOV1t/Fwcj7tD/rzuEg/
+         2x9zzTG9/O+ggSf3alBT3W+bfw9R+wxz3rNay1Wg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
+        stable@vger.kernel.org, Michael Petlan <mpetlan@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 055/165] bpftool: Dont crash on missing jited insns or ksyms
-Date:   Sat, 11 Jan 2020 10:49:34 +0100
-Message-Id: <20200111094925.886400657@linuxfoundation.org>
+Subject: [PATCH 5.4 057/165] perf header: Fix false warning when there are no duplicate cache entries
+Date:   Sat, 11 Jan 2020 10:49:36 +0100
+Message-Id: <20200111094926.006892306@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -62,56 +61,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Michael Petlan <mpetlan@redhat.com>
 
-[ Upstream commit 5b79bcdf03628a3a9ee04d9cd5fabcf61a8e20be ]
+[ Upstream commit 28707826877f84bce0977845ea529cbdd08e4e8d ]
 
-When the kptr_restrict sysctl is set, the kernel can fail to return
-jited_ksyms or jited_prog_insns, but still have positive values in
-nr_jited_ksyms and jited_prog_len. This causes bpftool to crash when
-trying to dump the program because it only checks the len fields not
-the actual pointers to the instructions and ksyms.
+Before this patch, perf expected that there might be NPROC*4 unique
+cache entries at max, however, it also expected that some of them would
+be shared and/or of the same size, thus the final number of entries
+would be reduced to be lower than NPROC*4. In case the number of entries
+hadn't been reduced (was NPROC*4), the warning was printed.
 
-Fix this by adding the missing checks.
+However, some systems might have unusual cache topology, such as the
+following two-processor KVM guest:
 
-Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
-Fixes: f84192ee00b7 ("tools: bpftool: resolve calls without using imm field")
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Link: https://lore.kernel.org/bpf/20191210181412.151226-1-toke@redhat.com
+	cpu  level  shared_cpu_list  size
+	  0     1         0           32K
+	  0     1         0           64K
+	  0     2         0           512K
+	  0     3         0           8192K
+	  1     1         1           32K
+	  1     1         1           64K
+	  1     2         1           512K
+	  1     3         1           8192K
+
+This KVM guest has 8 (NPROC*4) unique cache entries, which used to make
+perf printing the message, although there actually aren't "way too many
+cpu caches".
+
+v2: Removing unused argument.
+
+v3: Unifying the way we obtain number of cpus.
+
+v4: Removed '& UINT_MAX' construct which is redundant.
+
+Signed-off-by: Michael Petlan <mpetlan@redhat.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+LPU-Reference: 20191208162056.20772-1-mpetlan@redhat.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/prog.c          | 2 +-
- tools/bpf/bpftool/xlated_dumper.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/header.c | 21 ++++++---------------
+ 1 file changed, 6 insertions(+), 15 deletions(-)
 
-diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-index 43fdbbfe41bb..ea0bcd58bcb9 100644
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -493,7 +493,7 @@ static int do_dump(int argc, char **argv)
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index becc2d109423..d3412f2c0d18 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1089,21 +1089,18 @@ static void cpu_cache_level__fprintf(FILE *out, struct cpu_cache_level *c)
+ 	fprintf(out, "L%d %-15s %8s [%s]\n", c->level, c->type, c->size, c->map);
+ }
  
- 	info = &info_linear->info;
- 	if (mode == DUMP_JITED) {
--		if (info->jited_prog_len == 0) {
-+		if (info->jited_prog_len == 0 || !info->jited_prog_insns) {
- 			p_info("no instructions returned");
- 			goto err_free;
+-static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
++#define MAX_CACHE_LVL 4
++
++static int build_caches(struct cpu_cache_level caches[], u32 *cntp)
+ {
+ 	u32 i, cnt = 0;
+-	long ncpus;
+ 	u32 nr, cpu;
+ 	u16 level;
+ 
+-	ncpus = sysconf(_SC_NPROCESSORS_CONF);
+-	if (ncpus < 0)
+-		return -1;
+-
+-	nr = (u32)(ncpus & UINT_MAX);
++	nr = cpu__max_cpu();
+ 
+ 	for (cpu = 0; cpu < nr; cpu++) {
+-		for (level = 0; level < 10; level++) {
++		for (level = 0; level < MAX_CACHE_LVL; level++) {
+ 			struct cpu_cache_level c;
+ 			int err;
+ 
+@@ -1123,18 +1120,12 @@ static int build_caches(struct cpu_cache_level caches[], u32 size, u32 *cntp)
+ 				caches[cnt++] = c;
+ 			else
+ 				cpu_cache_level__free(&c);
+-
+-			if (WARN_ONCE(cnt == size, "way too many cpu caches.."))
+-				goto out;
  		}
-diff --git a/tools/bpf/bpftool/xlated_dumper.c b/tools/bpf/bpftool/xlated_dumper.c
-index 494d7ae3614d..5b91ee65a080 100644
---- a/tools/bpf/bpftool/xlated_dumper.c
-+++ b/tools/bpf/bpftool/xlated_dumper.c
-@@ -174,7 +174,7 @@ static const char *print_call(void *private_data,
- 	struct kernel_sym *sym;
+ 	}
+- out:
+ 	*cntp = cnt;
+ 	return 0;
+ }
  
- 	if (insn->src_reg == BPF_PSEUDO_CALL &&
--	    (__u32) insn->imm < dd->nr_jited_ksyms)
-+	    (__u32) insn->imm < dd->nr_jited_ksyms && dd->jited_ksyms)
- 		address = dd->jited_ksyms[insn->imm];
+-#define MAX_CACHE_LVL 4
+-
+ static int write_cache(struct feat_fd *ff,
+ 		       struct evlist *evlist __maybe_unused)
+ {
+@@ -1143,7 +1134,7 @@ static int write_cache(struct feat_fd *ff,
+ 	u32 cnt = 0, i, version = 1;
+ 	int ret;
  
- 	sym = kernel_syms_search(dd, address);
+-	ret = build_caches(caches, max_caches, &cnt);
++	ret = build_caches(caches, &cnt);
+ 	if (ret)
+ 		goto out;
+ 
 -- 
 2.20.1
 
