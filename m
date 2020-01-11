@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D7CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F85C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8762077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E0E020673
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737744;
-	bh=wvVGmq4XE2oHNlB21bRNNlRnCfW+IKBgGPSVORd4Cv4=;
+	s=default; t=1578737748;
+	bh=k6QT/VGBgYhYTKy+MtjXvJgXYzPO5IhqpOqJKnhk06U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AliKCpHrjbvDCFgbLsw7aF8cNdJMrXZ48Qv5LexV5XAwrgx11RyleCHoqvV674sML
-	 NlPZEcpeEhxf/bqHLq1sqFPoXjotrCo3pqCCnxkdeBh8NAmIlQvmT/n9+AFqw3sowr
-	 sUX2t9XH5Gfrc+epZmUPzcF/3fflUvi7FCsK9UxI=
+	b=iGIJzTcpYPkPVdJ+Q6zTFIio/H9rV48wZ+/MXwFc04tzXM1TNqFDJBmmUCLQRX3zF
+	 lAkZqJlwcHBydoqRedCK3MX54zF314MF/TFQ3mNa8q/IkEHDi27fO2ZBTHJp0BO4/e
+	 +Hfdcbc+0/M87Iid6xzCtI1ZgY97iqJaF8X3ptXE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbgAKKPn (ORCPT
+        id S1730337AbgAKKPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:15:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57516 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:15:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729868AbgAKKPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:15:39 -0500
+        id S1729126AbgAKKPo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:15:44 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 829B8206DA;
-        Sat, 11 Jan 2020 10:15:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B075920673;
+        Sat, 11 Jan 2020 10:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737739;
-        bh=wvVGmq4XE2oHNlB21bRNNlRnCfW+IKBgGPSVORd4Cv4=;
+        s=default; t=1578737743;
+        bh=k6QT/VGBgYhYTKy+MtjXvJgXYzPO5IhqpOqJKnhk06U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o64/MTMN9A7kA/X8wAE8npMGyvzo+nNEF5PgtY5aRlkAixcc2xP0+jzqKKi0ubvYE
-         uagvpltgHoVlReWBcjM5n4e5nxKsbL41CpA4KdneaWG1PA80Dxp3BKI6PUv/p1H9dz
-         xD2RQAndPn+NK7T1CojlqGIXkUDgPgtCMF70gznE=
+        b=s92jHV4caoeR7ENboMM5FyvLxsf/0u9p98v6bNTW9CKFbYepYTbEg8aPrjc6NTeg3
+         pE3MD6NMmi4LtXj6ZfJql131ZdGBWc3uD6PWVSVAv0A0XZF5r6JG65sdLgnnmuvp+e
+         Tsq0hwzdCJ7gd1MQN0uClVGGG+mDmueQxIgKszzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenz Bauer <lmb@cloudflare.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/84] bpf: Clear skb->tstamp in bpf_redirect when necessary
-Date:   Sat, 11 Jan 2020 10:50:12 +0100
-Message-Id: <20200111094859.445688692@linuxfoundation.org>
+Subject: [PATCH 4.19 36/84] bnx2x: Do not handle requests from VFs after parity
+Date:   Sat, 11 Jan 2020 10:50:13 +0100
+Message-Id: <20200111094859.842767516@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -61,39 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenz Bauer <lmb@cloudflare.com>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit 5133498f4ad1123a5ffd4c08df6431dab882cc32 ]
+[ Upstream commit 7113f796bbbced2470cd6d7379d50d7a7a78bf34 ]
 
-Redirecting a packet from ingress to egress by using bpf_redirect
-breaks if the egress interface has an fq qdisc installed. This is the same
-problem as fixed in 'commit 8203e2d844d3 ("net: clear skb->tstamp in forwarding paths")
+Parity error from the hardware will cause PF to lose the state
+of their VFs due to PF's internal reload and hardware reset following
+the parity error. Restrict any configuration request from the VFs after
+the parity as it could cause unexpected hardware behavior, only way
+for VFs to recover would be to trigger FLR on VFs and reload them.
 
-Clear skb->tstamp when redirecting into the egress path.
-
-Fixes: 80b14dee2bea ("net: Add a new socket option for a future transmit time.")
-Fixes: fb420d5d91c1 ("tcp/fq: move back to CLOCK_MONOTONIC")
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Link: https://lore.kernel.org/bpf/20191213180817.2510-1-lmb@cloudflare.com
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/filter.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 12 ++++++++++--
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h |  1 +
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c  | 12 ++++++++++++
+ 3 files changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index e6fa88506c00..91b950261975 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2007,6 +2007,7 @@ static inline int __bpf_tx_skb(struct net_device *dev, struct sk_buff *skb)
- 	}
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+index af57568c922e..df4f77ad95c4 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -9995,10 +9995,18 @@ static void bnx2x_recovery_failed(struct bnx2x *bp)
+  */
+ static void bnx2x_parity_recover(struct bnx2x *bp)
+ {
+-	bool global = false;
+ 	u32 error_recovered, error_unrecovered;
+-	bool is_parity;
++	bool is_parity, global = false;
++#ifdef CONFIG_BNX2X_SRIOV
++	int vf_idx;
++
++	for (vf_idx = 0; vf_idx < bp->requested_nr_virtfn; vf_idx++) {
++		struct bnx2x_virtf *vf = BP_VF(bp, vf_idx);
  
- 	skb->dev = dev;
-+	skb->tstamp = 0;
++		if (vf)
++			vf->state = VF_LOST;
++	}
++#endif
+ 	DP(NETIF_MSG_HW, "Handling parity\n");
+ 	while (1) {
+ 		switch (bp->recovery_state) {
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
+index eb814c65152f..4dc34de1a09a 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
+@@ -139,6 +139,7 @@ struct bnx2x_virtf {
+ #define VF_ACQUIRED	1	/* VF acquired, but not initialized */
+ #define VF_ENABLED	2	/* VF Enabled */
+ #define VF_RESET	3	/* VF FLR'd, pending cleanup */
++#define VF_LOST		4	/* Recovery while VFs are loaded */
  
- 	__this_cpu_inc(xmit_recursion);
- 	ret = dev_queue_xmit(skb);
+ 	bool flr_clnup_stage;	/* true during flr cleanup */
+ 	bool malicious;		/* true if FW indicated so, until FLR */
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
+index 8e0a317b31f7..152758a45150 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
+@@ -2114,6 +2114,18 @@ static void bnx2x_vf_mbx_request(struct bnx2x *bp, struct bnx2x_virtf *vf,
+ {
+ 	int i;
+ 
++	if (vf->state == VF_LOST) {
++		/* Just ack the FW and return if VFs are lost
++		 * in case of parity error. VFs are supposed to be timedout
++		 * on waiting for PF response.
++		 */
++		DP(BNX2X_MSG_IOV,
++		   "VF 0x%x lost, not handling the request\n", vf->abs_vfid);
++
++		storm_memset_vf_mbx_ack(bp, vf->abs_vfid);
++		return;
++	}
++
+ 	/* check if tlv type is known */
+ 	if (bnx2x_tlv_supported(mbx->first_tlv.tl.type)) {
+ 		/* Lock the per vf op mutex and note the locker's identity.
 -- 
 2.20.1
 
