@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACAAEC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE59C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 844092082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69D1A2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737598;
-	bh=lbhtmtzioIGljo56mqJLTPr//RPVp9UAwuyOOVeiPvA=;
+	s=default; t=1578737604;
+	bh=XY7ZkKy9kSzbDS5DeNTcy0Uu1sCW6MRNbGjZFwn4v0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BXEbaHwWy8VCFtGa15o8TllnYzKFMeCYQTpZyAOdWpjqzyJwgvNTe4ghZsQ3RdZ8x
-	 SB1G9nvb+rK5/V1WSN5MOizyUuTclmjnbUzXpJJZgj8kk4r+gbuAAf7OhNR6ubyGb6
-	 wOS9Wwh9ZudJMBk8MDhGPJfEXmLvjEqh0J6CJckc=
+	b=u/SpS1v3R7fHeDfx6tIP8Ar69j1CWwvYN56aBZVbEzSlgXtl5I1iQQvfxVHVPy0P5
+	 Wq3qSh+eweNkrVY6VsBfMFsXk3wBkkl5Yy97hH+4j/dwkXzJL+K7lJ0Nu8bke+ufMo
+	 J6XklAxoZP2hZFVGlEW4W0GBmFNck/+nAZwNrNvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730094AbgAKKNR (ORCPT
+        id S1730101AbgAKKNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:13:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51780 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:13:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729008AbgAKKNM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:13:12 -0500
+        id S1730097AbgAKKNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:13:18 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 388CA206DA;
-        Sat, 11 Jan 2020 10:13:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3AC7206DA;
+        Sat, 11 Jan 2020 10:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737592;
-        bh=lbhtmtzioIGljo56mqJLTPr//RPVp9UAwuyOOVeiPvA=;
+        s=default; t=1578737597;
+        bh=XY7ZkKy9kSzbDS5DeNTcy0Uu1sCW6MRNbGjZFwn4v0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N4DNgue4hf0/sABD2E92WjTSYDuJ7Ymxm28U7LeJLAQBpFfNnOyly9nVxJa37EpHo
-         Go6SE4KsR535INE7iidFSXE+ihktUaXgK+VnPGzYQgdF8u4XjWrDTAjk10BWBhkmd8
-         I6MPeOHEQyoKKorh2G3j8UrJUu3ov/oPZSmWjx8Q=
+        b=pACnjGZPbSM0sCHcCEOIW0dLQ1cLvYXgwr4EHwO7USGsZmVRqeM6HoWEavpfiOXKG
+         +WauebNypCPkdK4wt58re5fPe1zTdtC1rfn+fCsoTPf/G+Q2W7q2x5Hc+tkhfd0Pmf
+         tg6eNXy/42NfhgnHdCPvnA3NkXVU5AOKbKlvEBwQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+107c4aff5f392bf1517f@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org, Pengcheng Yang <yangpc@wangsu.com>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 57/62] sctp: free cmd->obj.chunk for the unprocessed SCTP_CMD_REPLY
-Date:   Sat, 11 Jan 2020 10:50:39 +0100
-Message-Id: <20200111094855.929883686@linuxfoundation.org>
+Subject: [PATCH 4.14 58/62] tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
+Date:   Sat, 11 Jan 2020 10:50:40 +0100
+Message-Id: <20200111094856.417395186@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -61,94 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Pengcheng Yang <yangpc@wangsu.com>
 
-[ Upstream commit be7a7729207797476b6666f046d765bdf9630407 ]
+[ Upstream commit c9655008e7845bcfdaac10a1ed8554ec167aea88 ]
 
-This patch is to fix a memleak caused by no place to free cmd->obj.chunk
-for the unprocessed SCTP_CMD_REPLY. This issue occurs when failing to
-process a cmd while there're still SCTP_CMD_REPLY cmds on the cmd seq
-with an allocated chunk in cmd->obj.chunk.
+When we receive a D-SACK, where the sequence number satisfies:
+	undo_marker <= start_seq < end_seq <= prior_snd_una
+we consider this is a valid D-SACK and tcp_is_sackblock_valid()
+returns true, then this D-SACK is discarded as "old stuff",
+but the variable first_sack_index is not marked as negative
+in tcp_sacktag_write_queue().
 
-So fix it by freeing cmd->obj.chunk for each SCTP_CMD_REPLY cmd left on
-the cmd seq when any cmd returns error. While at it, also remove 'nomem'
-label.
+If this D-SACK also carries a SACK that needs to be processed
+(for example, the previous SACK segment was lost), this SACK
+will be treated as a D-SACK in the following processing of
+tcp_sacktag_write_queue(), which will eventually lead to
+incorrect updates of undo_retrans and reordering.
 
-Reported-by: syzbot+107c4aff5f392bf1517f@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Fixes: fd6dad616d4f ("[TCP]: Earlier SACK block verification & simplify access to them")
+Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/sm_sideeffect.c |   28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ net/ipv4/tcp_input.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/sctp/sm_sideeffect.c
-+++ b/net/sctp/sm_sideeffect.c
-@@ -1359,8 +1359,10 @@ static int sctp_cmd_interpreter(enum sct
- 			/* Generate an INIT ACK chunk.  */
- 			new_obj = sctp_make_init_ack(asoc, chunk, GFP_ATOMIC,
- 						     0);
--			if (!new_obj)
--				goto nomem;
-+			if (!new_obj) {
-+				error = -ENOMEM;
-+				break;
-+			}
- 
- 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
- 					SCTP_CHUNK(new_obj));
-@@ -1382,7 +1384,8 @@ static int sctp_cmd_interpreter(enum sct
- 			if (!new_obj) {
- 				if (cmd->obj.chunk)
- 					sctp_chunk_free(cmd->obj.chunk);
--				goto nomem;
-+				error = -ENOMEM;
-+				break;
- 			}
- 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
- 					SCTP_CHUNK(new_obj));
-@@ -1429,8 +1432,10 @@ static int sctp_cmd_interpreter(enum sct
- 
- 			/* Generate a SHUTDOWN chunk.  */
- 			new_obj = sctp_make_shutdown(asoc, chunk);
--			if (!new_obj)
--				goto nomem;
-+			if (!new_obj) {
-+				error = -ENOMEM;
-+				break;
-+			}
- 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
- 					SCTP_CHUNK(new_obj));
- 			break;
-@@ -1760,11 +1765,17 @@ static int sctp_cmd_interpreter(enum sct
- 			break;
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -1750,8 +1750,11 @@ tcp_sacktag_write_queue(struct sock *sk,
  		}
  
--		if (error)
-+		if (error) {
-+			cmd = sctp_next_cmd(commands);
-+			while (cmd) {
-+				if (cmd->verb == SCTP_CMD_REPLY)
-+					sctp_chunk_free(cmd->obj.chunk);
-+				cmd = sctp_next_cmd(commands);
-+			}
- 			break;
+ 		/* Ignore very old stuff early */
+-		if (!after(sp[used_sacks].end_seq, prior_snd_una))
++		if (!after(sp[used_sacks].end_seq, prior_snd_una)) {
++			if (i == 0)
++				first_sack_index = -1;
+ 			continue;
 +		}
+ 
+ 		used_sacks++;
  	}
- 
--out:
- 	/* If this is in response to a received chunk, wait until
- 	 * we are done with the packet to open the queue so that we don't
- 	 * send multiple packets in response to a single request.
-@@ -1779,8 +1790,5 @@ out:
- 		sp->data_ready_signalled = 0;
- 
- 	return error;
--nomem:
--	error = -ENOMEM;
--	goto out;
- }
- 
 
 
