@@ -2,121 +2,129 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D65C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08EFC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBC52084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:08:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vWwD3l3v"
+	by mail.kernel.org (Postfix) with ESMTP id 77CA22084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:10:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578744654;
+	bh=6Gv+nt5Z9CLF/Y0YWRCq4mKnmsj8Xz+0ADRolnCe4D0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=J3THxC95ZLLkBWcbtVywJCjIc3EUHpJ847V1HaYVLOg2mJ9kWNdS5Z4P7a/RMRSCj
+	 C9iZE5fNrOpXZLILSFQ8zI7507O4Io7J9NtYbJwj10b6VypmCfQidtvZ5dQxDce2nv
+	 CvF3J5tWVi/kir4OP/c5KkKMmGEB3iJNuF/Wi1g8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729656AbgAKMIY (ORCPT
+        id S1729662AbgAKMKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 07:08:24 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36139 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729126AbgAKMIX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 07:08:23 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p17so4720573wma.1;
-        Sat, 11 Jan 2020 04:08:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gtjh3mkRUNQhRLfkU3LSwvngpCN57b8JcnSgu0JgPt4=;
-        b=vWwD3l3v4WIvc51UphwLC2wvJKEEMnIndL8BIv07ZYBlGItqdhngNdb8W+QkzzwuPJ
-         czuSUW3E6MoHnRWWfNYcbXxksQ4OLjRuLO5bedZZsS7hTJocKohXwLZSMujdf7qUr3Vt
-         bGNAtDX4du93LbTDcLHm2HWu1Ez8txAtG/Ecfu1PCA5aVlfezm78o/DEne5XkdjMYTNA
-         leVJ5X7EFtrjpTSClmfDQiJTdv/Oqm4IMq/uQUTeuCvxocNAgLg8NVMuSp2COfQtl3ta
-         c0qARR0D2f//i8MOWmpS3DP2Oksd6UppjcfXJuDunOW2qDH7ok8kyF8mv8R+E/AoPtPQ
-         I9mA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gtjh3mkRUNQhRLfkU3LSwvngpCN57b8JcnSgu0JgPt4=;
-        b=PF+phO6qyuOCWVok091QSLJnzzZXgpyVw0ds5b2YZOJs88OCL4nHnKxTs0slNhpjab
-         16l5mhSs9bO4i8m12iBDKMM0ZnD0Qj7UFvLOhe01UX/xL1pt5iiX7TCF4GlkW+pMKtPt
-         oxB2TTx09APhQTnVUcUmUQNVhNcLXDMjR7Yifr0b0mLL0bpzdXkX3bDpMdkJZ+NUyuqS
-         H6lRTocywS+h413aP3t5rME3wh3FQIxutnnPPYqsdbg/ptQurnhgF/lQ4CvmPeLi1WdB
-         Nu2ZIE/M832hRH5m2h2dJl7vzF6wZtvk0F75M6ZIvVflSCA6oK8u/TInwKI0PIF+gy07
-         Xa2w==
-X-Gm-Message-State: APjAAAUYz71gfmXP4Wk713H9DfA8XASAkusAkhOkcOGIRx5b+6fuEDUD
-        MKBHzSv05EFdM7ya2qBGpkV7GSnXF4j9p3KPRco=
-X-Google-Smtp-Source: APXvYqyQ1k1E8gWMY4lUkgRf/8mPwzKsPlmBvNGLTcF344kRbD9XiwJnjctr6wE4a2g45bjuhC8BZmo+a3WpLrHT7cY=
-X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr10139432wml.55.1578744501107;
- Sat, 11 Jan 2020 04:08:21 -0800 (PST)
+        Sat, 11 Jan 2020 07:10:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37374 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726609AbgAKMKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 07:10:52 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8228520678;
+        Sat, 11 Jan 2020 12:10:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578744651;
+        bh=6Gv+nt5Z9CLF/Y0YWRCq4mKnmsj8Xz+0ADRolnCe4D0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=W90fwS/7eymyrDtXV+FlTF9c0Iti4GHjkNKW8Z/NoKJO7RMeK11dmhdfQ3YSsl7ra
+         RfCR9ukJiov+tgBOS6GtobfQig/nO0wwNhri3uM/LuoyrGubXJPYruKS+8JdGR03m8
+         tfT5GVgepgI9r+rPLYTbGkE/WoXzLpsS6X9YrCyQ=
+Date:   Sat, 11 Jan 2020 12:10:47 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iio: imu/mpu6050: support dual-edge IRQ
+Message-ID: <20200111121047.79e16365@archlinux>
+In-Reply-To: <e5b39c16dc6dcb25324f6e8389cc0d0f895c1cbd.1578309319.git.mirq-linux@rere.qmqm.pl>
+References: <MN2PR12MB33737F067F25B2F7477C4FE5C43C0@MN2PR12MB3373.namprd12.prod.outlook.com>
+        <e5b39c16dc6dcb25324f6e8389cc0d0f895c1cbd.1578309319.git.mirq-linux@rere.qmqm.pl>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1578730634-109961-1-git-send-email-longli@linuxonhyperv.com>
-In-Reply-To: <1578730634-109961-1-git-send-email-longli@linuxonhyperv.com>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Sat, 11 Jan 2020 20:08:09 +0800
-Message-ID: <CACVXFVOJnDG9HTxdHMKjttHkVsu+12LmbO9+AAU5+TrFYhAz_w@mail.gmail.com>
-Subject: Re: [PATCH] scsi: storvsc: Correctly set number of hardware queues
- for IDE disk
-To:     longli@linuxonhyperv.com
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-hyperv@vger.kernel.org,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Long Li <longli@microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 4:17 PM <longli@linuxonhyperv.com> wrote:
->
-> From: Long Li <longli@microsoft.com>
->
-> Commit 0ed881027690 ("scsi: storvsc: setup 1:1 mapping between hardware queue and CPU queue")
-> introduced a regression for disks attached to IDE. For these disks the host VSP only offers
-> one VMBUS channel. Setting multiple queues can overload the VMBUS channel and result in
-> performance drop for high queue depth workload on system with large number of CPUs.
->
-> Fix it by leaving the number of hardware queues to 1 (default value) for IDE
-> disks.
->
-> Fixes: 0ed881027690 ("scsi: storvsc: setup 1:1 mapping between hardware queue and CPU queue")
-> Signed-off-by: Long Li <longli@microsoft.com>
+On Mon, 06 Jan 2020 12:17:54 +0100
+Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl> wrote:
+
+> Make mpu6050 usable on platforms which provide only any-edge interrupts.
+> This also covers shared interrupt case.
+
+So this had me confused for a bit because I assumed we were trying to make
+a level interrupt providing device work with edge interrupts.  Seems
+device supports a pulsed  mode and the driver supports this.
+
+Why do we want to detect on both edges?  Do you have a crazy board
+with this shared and some devices using the rising edge and some the fallin=
+g one?
+
+For shared case it should return that it did not handle the interrupt
+to allow spurious interrupt detection to work...
+
+Jonathan
+
+>=20
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+
+>=20
 > ---
->  drivers/scsi/storvsc_drv.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-> index f8faf8b3d965..992b28e40374 100644
-> --- a/drivers/scsi/storvsc_drv.c
-> +++ b/drivers/scsi/storvsc_drv.c
-> @@ -1842,9 +1842,11 @@ static int storvsc_probe(struct hv_device *device,
->          */
->         host->sg_tablesize = (stor_device->max_transfer_bytes >> PAGE_SHIFT);
->         /*
-> +        * For non-IDE disks, the host supports multiple channels.
->          * Set the number of HW queues we are supporting.
->          */
-> -       host->nr_hw_queues = num_present_cpus();
-> +       if (dev_id->driver_data != IDE_GUID)
-> +               host->nr_hw_queues = num_present_cpus();
->
->         /*
->          * Set the error handler work queue.
-> --
-> 2.20.1
->
+> v2:
+>    just remove the dev_warn() message
+>=20
+> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
+> ---
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 2 +-
+>  drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c | 5 +----
+>  2 files changed, 2 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu=
+/inv_mpu6050/inv_mpu_core.c
+> index 0686e41bb8a1..b3d138091f89 100644
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
+> @@ -1241,7 +1241,7 @@ int inv_mpu_core_probe(struct regmap *regmap, int i=
+rq, const char *name,
+>  	irq_type =3D irqd_get_trigger_type(desc);
+>  	if (!irq_type)
+>  		irq_type =3D IRQF_TRIGGER_RISING;
+> -	if (irq_type =3D=3D IRQF_TRIGGER_RISING)
+> +	if (irq_type & IRQF_TRIGGER_RISING)	// rising or both-edge
+>  		st->irq_mask =3D INV_MPU6050_ACTIVE_HIGH;
+>  	else if (irq_type =3D=3D IRQF_TRIGGER_FALLING)
+>  		st->irq_mask =3D INV_MPU6050_ACTIVE_LOW;
+> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu=
+/inv_mpu6050/inv_mpu_ring.c
+> index 10d16ec5104b..a4dc2c4a3ca5 100644
+> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
+> @@ -183,11 +183,8 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
+>  			"failed to ack interrupt\n");
+>  		goto flush_fifo;
+>  	}
+> -	if (!(int_status & INV_MPU6050_BIT_RAW_DATA_RDY_INT)) {
+> -		dev_warn(regmap_get_device(st->map),
+> -			"spurious interrupt with status 0x%x\n", int_status);
+> +	if (!(int_status & INV_MPU6050_BIT_RAW_DATA_RDY_INT))
+>  		goto end_session;
+> -	}
+> =20
+>  	if (!(st->chip_config.accl_fifo_enable |
+>  		st->chip_config.gyro_fifo_enable |
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-
--- 
-Ming Lei
