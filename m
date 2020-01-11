@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5C9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35C6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAFCA2087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6EAF2087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578739120;
-	bh=4L+WNPHNKKg6Jw3SiwCYTFzyVmNImrxHEevu5JrADSo=;
+	s=default; t=1578739124;
+	bh=OcCU+lLVcQEXm1jrGQG9cvUwcTHwxePTl7ZsUnaZ3Lo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UxtDqIEzP1/iDlKx6yLjeGQrxzYUodDoqG5bOggFa2bNPBQcCsxwLRALNujV26Q1U
-	 EE8UHSAh7TO9q3Tn8RbpAB9nM4WQecLXV0WirGxIAfenEJCAt8BupmTynukVEUKseM
-	 GUnBL41WGGF0n5npbGnJGWaiUub9NF5Ya236jYOo=
+	b=P5r+ET1fBlr3RDqYemthaYmCyEBmpuHNV0lkc8CwuosSDomqn39HY7OKXuGDYLRYW
+	 t936lfA0ESqjgdTc/SsoFHIIn2DmJBsK/oaR2e/GizWB9+r0XyGBwca9fVG6kPK5Ut
+	 YjcR5o5Jf6DtCcFaNdIz1tA7dtrOAydgaWuoB7d4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbgAKKij (ORCPT
+        id S1729202AbgAKKin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:38:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57366 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:38:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729445AbgAKKig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:38:36 -0500
+        id S1729573AbgAKKik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:38:40 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D032B20848;
-        Sat, 11 Jan 2020 10:38:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BA2820848;
+        Sat, 11 Jan 2020 10:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578739115;
-        bh=4L+WNPHNKKg6Jw3SiwCYTFzyVmNImrxHEevu5JrADSo=;
+        s=default; t=1578739120;
+        bh=OcCU+lLVcQEXm1jrGQG9cvUwcTHwxePTl7ZsUnaZ3Lo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WQXC2J+ljHBQWsA1HyahRDtpLjvKatjWipnCsmHeM4GAz1b9bhB5mJyInOLzQATWt
-         DjraeIs2jyOr172wEwC2aPA3yMOGG7LlWpG8pIj1XZUQP25r/Cu0FY7fjya3j78l5H
-         zP5TbXlB6pps1/pR1ScZwL+RzlGqHnx4LGfjnilM=
+        b=dlMbKhikK0QmAi++n2BMhsf4TwiOlya2cy9CTfvSFC/1BzjRBgah7UWkxztJDWP7r
+         o3HNO3ez4fGKbhUkySBVzlY/sv3/bUkO1iJ80+LppgFuHGjK3HjIHBK/526bskcEmj
+         w3W9UK6Al7wGyjwo5hwWaXH8VxwImfj0DTu2GAOw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Masahiro Yamada <masahiroy@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 097/165] scripts: package: mkdebian: add missing rsync dependency
-Date:   Sat, 11 Jan 2020 10:50:16 +0100
-Message-Id: <20200111094929.770391490@linuxfoundation.org>
+Subject: [PATCH 5.4 123/165] platform/x86: pcengines-apuv2: fix simswap GPIO assignment
+Date:   Sat, 11 Jan 2020 10:50:42 +0100
+Message-Id: <20200111094934.271788492@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -63,32 +63,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Enrico Weigelt, metux IT consult <info@metux.net>
 
-[ Upstream commit a11391b6f50689adb22c65df783e09143fafb794 ]
+[ Upstream commit d4ac8f83dafec205c5db9b86b21587fba43bc017 ]
 
-We've missed the dependency to rsync, so build fails on
-minimal containers.
+The mapping entry has to hold the GPIO line index instead of
+controller's register number.
 
-Fixes: 59b2bd05f5f4 ("kbuild: add 'headers' target to build up uapi headers in usr/include")
+Fixes: 5037d4ddda31 ("platform/x86: pcengines-apuv2: wire up simswitch gpio as led")
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/package/mkdebian | 2 +-
+ drivers/platform/x86/pcengines-apuv2.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/scripts/package/mkdebian b/scripts/package/mkdebian
-index e0750b70453f..7c230016b08d 100755
---- a/scripts/package/mkdebian
-+++ b/scripts/package/mkdebian
-@@ -174,7 +174,7 @@ Source: $sourcename
- Section: kernel
- Priority: optional
- Maintainer: $maintainer
--Build-Depends: bc, kmod, cpio, bison, flex | flex:native $extra_build_depends
-+Build-Depends: bc, rsync, kmod, cpio, bison, flex | flex:native $extra_build_depends
- Homepage: http://www.kernel.org/
- 
- Package: $packagename
+diff --git a/drivers/platform/x86/pcengines-apuv2.c b/drivers/platform/x86/pcengines-apuv2.c
+index 48b112b4f0b0..c32daf087640 100644
+--- a/drivers/platform/x86/pcengines-apuv2.c
++++ b/drivers/platform/x86/pcengines-apuv2.c
+@@ -95,7 +95,7 @@ static struct gpiod_lookup_table gpios_led_table = {
+ 				NULL, 1, GPIO_ACTIVE_LOW),
+ 		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_LED3,
+ 				NULL, 2, GPIO_ACTIVE_LOW),
+-		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_REG_SIMSWAP,
++		GPIO_LOOKUP_IDX(AMD_FCH_GPIO_DRIVER_NAME, APU2_GPIO_LINE_SIMSWAP,
+ 				NULL, 3, GPIO_ACTIVE_LOW),
+ 	}
+ };
 -- 
 2.20.1
 
