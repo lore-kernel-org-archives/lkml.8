@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD9CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E161C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 312ED20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9A4B205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738362;
-	bh=kZlyWVfDQ/Il/ZTXyaCcECiQi49gcTd2X7UKT7IULYw=;
+	s=default; t=1578738372;
+	bh=ibcFiim1TCQTWYVsSeYM5j4nlS5Hx8fc/vR50CMOZMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WZqlKQJlFz7Dv0PJ3b3a3kSEkpu+ygQyoeDBJx+hPvgQSqcWmO5/mI8yY31iczS9Y
-	 b2Uy1w6trhyg0kvx5B+JZCJFDRdRRs1nwx3u6IyAV7lLSO3TEQddRWOrDZZYkAo9Kv
-	 mS+ooBXgcL8/gKuEyt6i/o+OWsQ8BFneW8DxXVOg=
+	b=z3s+vK6ZnCNsHFXmj3HffttgfzgNLU/XKMGFJrVTwmBre6V3UPoKLzipZRGAI7AAf
+	 0q/GUBbz50XP61+rX8zD97QQfkPunEyu6KSv1ZoToKz1lnwMTUOnf0Jm4VcHxDtGL1
+	 iwJdt7kiuqxai9yQZUi599z4NFcfJYOujbNjoT1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731100AbgAKK0A (ORCPT
+        id S1730815AbgAKK0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:26:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57806 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:26:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729374AbgAKKZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:25:58 -0500
+        id S1729047AbgAKK0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:26:09 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AE18205F4;
-        Sat, 11 Jan 2020 10:25:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61A9C205F4;
+        Sat, 11 Jan 2020 10:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738357;
-        bh=kZlyWVfDQ/Il/ZTXyaCcECiQi49gcTd2X7UKT7IULYw=;
+        s=default; t=1578738369;
+        bh=ibcFiim1TCQTWYVsSeYM5j4nlS5Hx8fc/vR50CMOZMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r/GUp/+diySdSVnMgupYgwAkcBzC3kE/r6VQqy227D/Ujo4zjMOvYEZVxe7Tr2qo2
-         tKm1CvvclBe+xDyzbsIhMgB6eTH0ci8dKUWDFLhoSdPQJmO/s7DY9B980D9EMfWt3Q
-         Teo+GWCpi8k8llE35GH03ST8rRvEFp12ssUHRtgA=
+        b=yEKZUQDVgGHmHbAvNifkEY3eHTIxejL6jiIJO8SVDj9mlMrtO82LfTj47aNmPTZ1Z
+         Lye3AbjTDsLtZ5pFr7ne9nE42lgeTbd6nRLRn9ORjNlciAY7wSDIYx7HiyIQYxk3+J
+         jrbrNvjZ0F89clX3sNvIr+CYC2KHUjKllkno3ds0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Greg Kurz <groug@kaod.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Lorenz Bauer <lmb@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 079/165] ocxl: Fix potential memory leak on context creation
-Date:   Sat, 11 Jan 2020 10:49:58 +0100
-Message-Id: <20200111094927.798722801@linuxfoundation.org>
+Subject: [PATCH 5.4 080/165] bpf: Clear skb->tstamp in bpf_redirect when necessary
+Date:   Sat, 11 Jan 2020 10:49:59 +0100
+Message-Id: <20200111094927.877121253@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -62,57 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Barrat <fbarrat@linux.ibm.com>
+From: Lorenz Bauer <lmb@cloudflare.com>
 
-[ Upstream commit 913e73c77d48aeeb50c16450a653dca9c71ae2e2 ]
+[ Upstream commit 5133498f4ad1123a5ffd4c08df6431dab882cc32 ]
 
-If we couldn't fully init a context, we were leaking memory.
+Redirecting a packet from ingress to egress by using bpf_redirect
+breaks if the egress interface has an fq qdisc installed. This is the same
+problem as fixed in 'commit 8203e2d844d3 ("net: clear skb->tstamp in forwarding paths")
 
-Fixes: b9721d275cc2 ("ocxl: Allow external drivers to use OpenCAPI contexts")
-Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
-Reviewed-by: Greg Kurz <groug@kaod.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191209105513.8566-1-fbarrat@linux.ibm.com
+Clear skb->tstamp when redirecting into the egress path.
+
+Fixes: 80b14dee2bea ("net: Add a new socket option for a future transmit time.")
+Fixes: fb420d5d91c1 ("tcp/fq: move back to CLOCK_MONOTONIC")
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
+Link: https://lore.kernel.org/bpf/20191213180817.2510-1-lmb@cloudflare.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/ocxl/context.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/core/filter.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
-index 994563a078eb..de8a66b9d76b 100644
---- a/drivers/misc/ocxl/context.c
-+++ b/drivers/misc/ocxl/context.c
-@@ -10,18 +10,17 @@ int ocxl_context_alloc(struct ocxl_context **context, struct ocxl_afu *afu,
- 	int pasid;
- 	struct ocxl_context *ctx;
- 
--	*context = kzalloc(sizeof(struct ocxl_context), GFP_KERNEL);
--	if (!*context)
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
- 		return -ENOMEM;
- 
--	ctx = *context;
--
- 	ctx->afu = afu;
- 	mutex_lock(&afu->contexts_lock);
- 	pasid = idr_alloc(&afu->contexts_idr, ctx, afu->pasid_base,
- 			afu->pasid_base + afu->pasid_max, GFP_KERNEL);
- 	if (pasid < 0) {
- 		mutex_unlock(&afu->contexts_lock);
-+		kfree(ctx);
- 		return pasid;
+diff --git a/net/core/filter.c b/net/core/filter.c
+index 6d0111bfdb4a..2f76461c120d 100644
+--- a/net/core/filter.c
++++ b/net/core/filter.c
+@@ -2055,6 +2055,7 @@ static inline int __bpf_tx_skb(struct net_device *dev, struct sk_buff *skb)
  	}
- 	afu->pasid_count++;
-@@ -43,6 +42,7 @@ int ocxl_context_alloc(struct ocxl_context **context, struct ocxl_afu *afu,
- 	 * duration of the life of the context
- 	 */
- 	ocxl_afu_get(afu);
-+	*context = ctx;
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(ocxl_context_alloc);
+ 
+ 	skb->dev = dev;
++	skb->tstamp = 0;
+ 
+ 	dev_xmit_recursion_inc();
+ 	ret = dev_queue_xmit(skb);
 -- 
 2.20.1
 
