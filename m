@@ -2,182 +2,158 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CC81C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04AFC33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD4C20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737045;
-	bh=1zi2ODrbGMjzHnceUIZ/YX+A39CetL9uPwsxtPPCQJg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kC9ced2C7y0VZwEVjBlIc/quimS6GvB63LwjqYddI6hz37IPIVKt37CGxUc6G8c90
-	 6zyTyax4/br1/jnbZSpeRcNBzdhZa1bU9CrojRCob7mhwejwHUN6HQssa4473qON7G
-	 Mj9ErndFuNUGyZ8MT/P7z8InY2iG4n5BUpuMdaXk=
+	by mail.kernel.org (Postfix) with ESMTP id 93E152084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bzENziGG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgAKKEE (ORCPT
+        id S1729498AbgAKKEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:04:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35866 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729092AbgAKKEC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:04:02 -0500
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Sat, 11 Jan 2020 05:04:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24101 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729092AbgAKKEJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:04:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578737048;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+A7qVqL+kOfiotLJYXOYSH7AWSTgiw9QTUBY34scgx4=;
+        b=bzENziGGN3yRq7wElvS4CJ/m0uBtlsXdhjMDomQV2+YoJbr3W+MvjnoK1C7ArewTYIdKN6
+        P4c2yiMScalJVeJW9Nx1+ZcfuWHwcn99RBN3W3fvnGj+7ew1XjESTvbFaEpNWNpUsPoQwh
+        +qsJU0LcVlh77h5gRr7HmSqtx6sWc4k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-131-RDdW0EfqOTaHm80AVpxXOg-1; Sat, 11 Jan 2020 05:04:07 -0500
+X-MC-Unique: RDdW0EfqOTaHm80AVpxXOg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 374C120866;
-        Sat, 11 Jan 2020 10:04:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737042;
-        bh=1zi2ODrbGMjzHnceUIZ/YX+A39CetL9uPwsxtPPCQJg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nvqx/OXE1RM4QzI/+i/ZkeY9A0bhgGybigt7V/ygMoaP6bF+F6zABlfXfEUJTLa9+
-         E0HvHl61ESvb/0+Ys0sAhZ7/mNVNEbNwO8vGu046t9+SUTyonPOBmTSQh1HTBLeAL9
-         j2mi3ywMSyLozsenBifmDArjM2OwnlGKtaO7noo4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masashi Honma <masashi.honma@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 51/91] ath9k_htc: Discard undersized packets
-Date:   Sat, 11 Jan 2020 10:49:44 +0100
-Message-Id: <20200111094904.165702237@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
-References: <20200111094844.748507863@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DF24800D41;
+        Sat, 11 Jan 2020 10:04:05 +0000 (UTC)
+Received: from localhost (ovpn-12-65.pek2.redhat.com [10.72.12.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A0E3A8062A;
+        Sat, 11 Jan 2020 10:04:04 +0000 (UTC)
+Date:   Sat, 11 Jan 2020 18:04:01 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Khalid Aziz <khalid@gonehiking.org>
+Cc:     Jerry.Hoemann@hpe.com, Bjorn Helgaas <helgaas@kernel.org>,
+        Kairui Song <kasong@redhat.com>, linux-pci@vger.kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Randy Wright <rwright@hpe.com>
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+Message-ID: <20200111100401.GE19291@MiWiFi-R3L-srv>
+References: <20200110214217.GA88274@google.com>
+ <e0194581-4cdd-3629-d9fe-10a1cfd29d03@gonehiking.org>
+ <20200110230003.GB1875851@anatevka.americas.hpqcorp.net>
+ <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
+ <20200111005041.GB19291@MiWiFi-R3L-srv>
+ <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masashi Honma <masashi.honma@gmail.com>
+On 01/10/20 at 08:45pm, Khalid Aziz wrote:
+> >>>>>> -	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
+> >>>>>> +	if ((kexec_in_progress || is_kdump_kernel()) &&
+> >>>>>> +			pci_dev->current_state <= PCI_D3hot)
+> >>>>>>  		pci_clear_master(pci_dev);
+> >>>>>
+> >>>>> I'm clearly missing something because this will turn off bus mastering
+> >>>>> in cases where we previously left it enabled.
+> >>>>>
+> >>>>> I was assuming the crash was related to a device doing DMA when the
+> >>>>> Root Port had bus mastering disabled.  But that must be wrong.
+> >>>>>
+> >>>>> I'd like to understand the crash/hang better because the quirk
+> >>>>> especially is hard to connect to anything.  If the crash is because of
+> >>>>> an AER or other PCIe error, maybe another possibility is that we could
+> >>>>> handle it better or disable signaling of it or something.
+> >>>>>
+> >>>>
+> >>>> I am not understanding this failure mode either. That code in
+> >>>> pci_device_shutdown() was added originally to address this very issue.
+> >>>> The patch 4fc9bbf98fd6 ("PCI: Disable Bus Master only on kexec reboot")
+> >>>> shut down any errant DMAs from PCI devices as we kexec a new kernel. In
+> >>>> this new patch, this is the same code path that will be taken again when
+> >>>> kdump kernel is shutting down. If the errant DMA problem was not fixed
+> >>>> by clearing Bus Master bit in this path when kdump kernel was being
+> >>>> kexec'd, why does the same code path work the second time around when
+> >>>> kdump kernel is shutting down? Is there more going on that we don't
+> >>>> understand?
+> >>>>
+> >>>
+> >>>   Khalid,
+> >>>
+> >>>   I don't believe we execute that code path in the crash case.
+> >>>
+> >>>   The variable kexec_in_progress is set true in kernel_kexec() before calling
+> >>>   machine_kexec().  This is the fast reboot case.
+> >>>
+> >>>   I don't see kexec_in_progress set true elsewhere.
+> >>>
+> >>>
+> >>>   The code path for crash is different.
+> >>>
+> >>>   For instance, panic() will call
+> >>> 	-> __crash_kexec()  which calls
+> >>> 		-> machine_kexec().
+> >>>
+> >>>  So the setting of kexec_in_progress is bypassed.
+> >>>
+> >>
+> >> True, but what that means is if it is an errant DMA causing the issue
+> >> you are seeing, that errant DMA can happen any time between when we
+> > 
+> > Here, there could be misunderstanding. It's not an errant DMA, it's an
+> > device which may be in DMA transporting state in normal kernel, but in
+> > kdump kernel it's not manipulated by its driver because we don't use it
+> > to dump, so exlucde its driver from kdump initramfs for saving space. 
+> > 
+> 
+> Errant DMA as in currently running kernel did not enable the device to
+> do DMA and is not ready for it. If a device can issue DMA request in
+> this state, it could do it well before kdump kernel starts shutting
+> down. Don't we need to fix this before we start shutting down kdump in
+> preparation for reboot? I can see the need for this fix, but I am not
+> sure if this patch places the fix in right place.
 
-[ Upstream commit cd486e627e67ee9ab66914d36d3127ef057cc010 ]
+Ah, I could get your point now, but not very sure. Do you mean the HPSA
+is in errant DMA state, because it doesn't have driver to re-initilize
+to correct state? 
 
-Sometimes the hardware will push small packets that trigger a WARN_ON
-in mac80211. Discard them early to avoid this issue.
+We have been doing like this for kdump kernel always, to only
+include needed devices' driver to kdump initrd so that the driver will
+initialize and opearte the device. For other unneeded devices by kdump
+kernel, we just leave it as is. This error is only seen on this HPE
+owned system. Wondering if HPE can do something to check their
+firmware/hardware setting.
 
-This patch ports 2 patches from ath9k to ath9k_htc.
-commit 3c0efb745a172bfe96459e20cbd37b0c945d5f8d "ath9k: discard
-undersized packets".
-commit df5c4150501ee7e86383be88f6490d970adcf157 "ath9k: correctly
-handle short radar pulses".
+This patch is using a quirk to adjust all those devices if its
+pci_dev->current_state is beyond PCI_D3hot during bootup. Then clear the
+master bit of device firstly, next clear its parent bridge's master bit,
+to make reboot proceed further. This need you PCI experts to offer help
+to evaluate.
 
-[  112.835889] ------------[ cut here ]------------
-[  112.835971] WARNING: CPU: 5 PID: 0 at net/mac80211/rx.c:804 ieee80211_rx_napi+0xaac/0xb40 [mac80211]
-[  112.835973] Modules linked in: ath9k_htc ath9k_common ath9k_hw ath mac80211 cfg80211 libarc4 nouveau snd_hda_codec_hdmi intel_rapl_msr intel_rapl_common x86_pkg_temp_thermal intel_powerclamp coretemp snd_hda_codec_realtek snd_hda_codec_generic ledtrig_audio snd_hda_intel snd_hda_codec video snd_hda_core ttm snd_hwdep drm_kms_helper snd_pcm crct10dif_pclmul snd_seq_midi drm snd_seq_midi_event crc32_pclmul snd_rawmidi ghash_clmulni_intel snd_seq aesni_intel aes_x86_64 crypto_simd cryptd snd_seq_device glue_helper snd_timer sch_fq_codel i2c_algo_bit fb_sys_fops snd input_leds syscopyarea sysfillrect sysimgblt intel_cstate mei_me intel_rapl_perf soundcore mxm_wmi lpc_ich mei kvm_intel kvm mac_hid irqbypass parport_pc ppdev lp parport ip_tables x_tables autofs4 hid_generic usbhid hid raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c raid1 raid0 multipath linear e1000e ahci libahci wmi
-[  112.836022] CPU: 5 PID: 0 Comm: swapper/5 Not tainted 5.3.0-wt #1
-[  112.836023] Hardware name: MouseComputer Co.,Ltd. X99-S01/X99-S01, BIOS 1.0C-W7 04/01/2015
-[  112.836056] RIP: 0010:ieee80211_rx_napi+0xaac/0xb40 [mac80211]
-[  112.836059] Code: 00 00 66 41 89 86 b0 00 00 00 e9 c8 fa ff ff 4c 89 b5 40 ff ff ff 49 89 c6 e9 c9 fa ff ff 48 c7 c7 e0 a2 a5 c0 e8 47 41 b0 e9 <0f> 0b 48 89 df e8 5a 94 2d ea e9 02 f9 ff ff 41 39 c1 44 89 85 60
-[  112.836060] RSP: 0018:ffffaa6180220da8 EFLAGS: 00010286
-[  112.836062] RAX: 0000000000000024 RBX: ffff909a20eeda00 RCX: 0000000000000000
-[  112.836064] RDX: 0000000000000000 RSI: ffff909a2f957448 RDI: ffff909a2f957448
-[  112.836065] RBP: ffffaa6180220e78 R08: 00000000000006e9 R09: 0000000000000004
-[  112.836066] R10: 000000000000000a R11: 0000000000000001 R12: 0000000000000000
-[  112.836068] R13: ffff909a261a47a0 R14: 0000000000000000 R15: 0000000000000004
-[  112.836070] FS:  0000000000000000(0000) GS:ffff909a2f940000(0000) knlGS:0000000000000000
-[  112.836071] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  112.836073] CR2: 00007f4e3ffffa08 CR3: 00000001afc0a006 CR4: 00000000001606e0
-[  112.836074] Call Trace:
-[  112.836076]  <IRQ>
-[  112.836083]  ? finish_td+0xb3/0xf0
-[  112.836092]  ? ath9k_rx_prepare.isra.11+0x22f/0x2a0 [ath9k_htc]
-[  112.836099]  ath9k_rx_tasklet+0x10b/0x1d0 [ath9k_htc]
-[  112.836105]  tasklet_action_common.isra.22+0x63/0x110
-[  112.836108]  tasklet_action+0x22/0x30
-[  112.836115]  __do_softirq+0xe4/0x2da
-[  112.836118]  irq_exit+0xae/0xb0
-[  112.836121]  do_IRQ+0x86/0xe0
-[  112.836125]  common_interrupt+0xf/0xf
-[  112.836126]  </IRQ>
-[  112.836130] RIP: 0010:cpuidle_enter_state+0xa9/0x440
-[  112.836133] Code: 3d bc 20 38 55 e8 f7 1d 84 ff 49 89 c7 0f 1f 44 00 00 31 ff e8 28 29 84 ff 80 7d d3 00 0f 85 e6 01 00 00 fb 66 0f 1f 44 00 00 <45> 85 ed 0f 89 ff 01 00 00 41 c7 44 24 10 00 00 00 00 48 83 c4 18
-[  112.836134] RSP: 0018:ffffaa61800e3e48 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffde
-[  112.836136] RAX: ffff909a2f96b340 RBX: ffffffffabb58200 RCX: 000000000000001f
-[  112.836137] RDX: 0000001a458adc5d RSI: 0000000026c9b581 RDI: 0000000000000000
-[  112.836139] RBP: ffffaa61800e3e88 R08: 0000000000000002 R09: 000000000002abc0
-[  112.836140] R10: ffffaa61800e3e18 R11: 000000000000002d R12: ffffca617fb40b00
-[  112.836141] R13: 0000000000000002 R14: ffffffffabb582d8 R15: 0000001a458adc5d
-[  112.836145]  ? cpuidle_enter_state+0x98/0x440
-[  112.836149]  ? menu_select+0x370/0x600
-[  112.836151]  cpuidle_enter+0x2e/0x40
-[  112.836154]  call_cpuidle+0x23/0x40
-[  112.836156]  do_idle+0x204/0x280
-[  112.836159]  cpu_startup_entry+0x1d/0x20
-[  112.836164]  start_secondary+0x167/0x1c0
-[  112.836169]  secondary_startup_64+0xa4/0xb0
-[  112.836173] ---[ end trace 9f4cd18479cc5ae5 ]---
-
-Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/wireless/ath/ath9k/htc_drv_txrx.c | 23 +++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-index 92156e519168..52b42ecee621 100644
---- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-+++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
-@@ -972,6 +972,8 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
- 	struct ath_htc_rx_status *rxstatus;
- 	struct ath_rx_status rx_stats;
- 	bool decrypt_error = false;
-+	__be16 rs_datalen;
-+	bool is_phyerr;
- 
- 	if (skb->len < HTC_RX_FRAME_HEADER_SIZE) {
- 		ath_err(common, "Corrupted RX frame, dropping (len: %d)\n",
-@@ -981,11 +983,24 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
- 
- 	rxstatus = (struct ath_htc_rx_status *)skb->data;
- 
--	if (be16_to_cpu(rxstatus->rs_datalen) -
--	    (skb->len - HTC_RX_FRAME_HEADER_SIZE) != 0) {
-+	rs_datalen = be16_to_cpu(rxstatus->rs_datalen);
-+	if (unlikely(rs_datalen -
-+	    (skb->len - HTC_RX_FRAME_HEADER_SIZE) != 0)) {
- 		ath_err(common,
- 			"Corrupted RX data len, dropping (dlen: %d, skblen: %d)\n",
--			be16_to_cpu(rxstatus->rs_datalen), skb->len);
-+			rs_datalen, skb->len);
-+		goto rx_next;
-+	}
-+
-+	is_phyerr = rxstatus->rs_status & ATH9K_RXERR_PHY;
-+	/*
-+	 * Discard zero-length packets and packets smaller than an ACK
-+	 * which are not PHY_ERROR (short radar pulses have a length of 3)
-+	 */
-+	if (unlikely(!rs_datalen || (rs_datalen < 10 && !is_phyerr))) {
-+		ath_warn(common,
-+			 "Short RX data len, dropping (dlen: %d)\n",
-+			 rs_datalen);
- 		goto rx_next;
- 	}
- 
-@@ -1010,7 +1025,7 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
- 	 * Process PHY errors and return so that the packet
- 	 * can be dropped.
- 	 */
--	if (rx_stats.rs_status & ATH9K_RXERR_PHY) {
-+	if (unlikely(is_phyerr)) {
- 		/* TODO: Not using DFS processing now. */
- 		if (ath_cmn_process_fft(&priv->spec_priv, hdr,
- 				    &rx_stats, rx_status->mactime)) {
--- 
-2.20.1
-
-
+Thanks
+Baoquan
 
