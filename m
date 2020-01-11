@@ -2,95 +2,127 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DEADC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE0AC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D65208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:02:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578772939;
-	bh=rZ14m4/Xf8VG4iosR3a8Y22bJ5hwOmuW1l+ZW+ePd1M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RgFPmqzwp8HqeAOlE10BRpCTSLQQDmc7ewXYRjdflizZyVi0wbPKa1KDwJnBla49Q
-	 ehjxKHRSBiDqBXlBsIevo//ncruUuTpCr4ibTCvY0LbBkbmbKbKk2KejaZTu5LpKg6
-	 5CyYvnqGgiDyr/2w9ycchuOLAB+eSIDpMiY26R38=
+	by mail.kernel.org (Postfix) with ESMTP id 64E0A2071A
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:05:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6yfN0yZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731219AbgAKUCS (ORCPT
+        id S1731069AbgAKUFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 15:02:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731181AbgAKUCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 15:02:17 -0500
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D42F20866;
-        Sat, 11 Jan 2020 20:02:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578772936;
-        bh=rZ14m4/Xf8VG4iosR3a8Y22bJ5hwOmuW1l+ZW+ePd1M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UrMJyuogI5VRAPX0mxzxAMSLAxpgCDFCAlr/CeXQZN+uFrTkORsB4v9uuH8Hokoc+
-         RrQvapZDxRiebeTh+sTP/iyr7fjBBItBfF/YOlz+47HVBaQfWHVtKUZFuJuFCPlPH7
-         9jMcJg6jgIQ0IvgG/90pn1N2eU4/KjQn9G84udJM=
-Date:   Sat, 11 Jan 2020 21:01:36 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Colin King <colin.king@canonical.com>,
-        Arnd Bergmann <arnd@arndb.de>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drivers/misc: ti-st: remove redundant assignment to
- variable i
-Message-ID: <20200111200136.GC438314@kroah.com>
-References: <20191202151352.55139-1-colin.king@canonical.com>
- <20191203072824.GA1765@kadam>
+        Sat, 11 Jan 2020 15:05:51 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:39148 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731024AbgAKUFv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 15:05:51 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 77so5372033oty.6;
+        Sat, 11 Jan 2020 12:05:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RzLAmnWojqhB0ggAnVmy3XDm4YXkG89pVF+3MJfjq+k=;
+        b=J6yfN0yZdMfSeKfWuWTCloM4SeKNElZNgH0ScURo8VCfx8w6OVM+2NHkhTIyy7hV3v
+         23kL30Ysw/ocnzNixqYt4Z3aLe1+Cx8yhFfa1B0vBa6/4Nm845TW9r7W0Ol/J7DEuDJe
+         NlaVgz4wuIQRt6b/Nl49ODmDQ3x/YYv48YwHeGdfnFZGUFLr1py4+d9+JI+vT0ZZdUkR
+         h7gF14nBmokY6Ofiifcopo4B/3s8TS2ZkMiTXRrfYnk9IHU8gf6sLrhnBOKXaglu/gqw
+         JLyY5T/Dq3O+TX7dTEWIEXFQIIGHhas0stWKEHkcuDjnhhwD485u54cxNt9NBEJjH8d6
+         4hQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RzLAmnWojqhB0ggAnVmy3XDm4YXkG89pVF+3MJfjq+k=;
+        b=IATrJRK7jSobIOwHS39eajRQCqGaxvksCZ2CA8LZE0/I5y37oBQTrB0zdOLmkYoTC/
+         Ljvo0k5I1oFgVVYyI0lsqZBXsmNXy0JNY4tVe70T6kQuiygpYvL0U/zArMbYVzgfeEzo
+         9JGC83HmpX3tn6HOSRxhSjJ0zr3sNxLE8eOG59ZJUbnOPps9X9uKqWgozJXK6tJQT9r3
+         VXAGlv/mqsdN8oLSUlOvmDcR34J8jrU2hjIfdI1EXSTzILOwAWhNWRCGBXlKq9k8QbMu
+         PNZ2w+5WrcGzqfb8kZReYD4aJ0pMwKB1T9s24iGKu/LANoGXk9uPQIAp9MPeuoU9R76m
+         Wghg==
+X-Gm-Message-State: APjAAAWg1ALfeJok9Vn074eMqeM7lTLVe2wCMuyHSK8wns+XAMR7Oyxd
+        eykj6tVR4JX1N+LAMsy4HOB3nSr1DLHLNG8kgyULdsy/ESM=
+X-Google-Smtp-Source: APXvYqyq8O1inMb9ME/lNTTckosy6SSrdg9FQGcee0wMhb3QH+HwX+cVwS4BAAMlj+1dDjbvM5u9kZmdN9ykFqXVPfk=
+X-Received: by 2002:a9d:da2:: with SMTP id 31mr7465141ots.319.1578773150191;
+ Sat, 11 Jan 2020 12:05:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191203072824.GA1765@kadam>
+References: <000000000000af1c5b059be111e5@google.com>
+In-Reply-To: <000000000000af1c5b059be111e5@google.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sat, 11 Jan 2020 12:05:38 -0800
+Message-ID: <CAM_iQpVHAKqA51tm5LjbOZnUd6Zdb9MsRyAoCsYt0acXDQA=gw@mail.gmail.com>
+Subject: Re: general protection fault in xt_rateest_put
+To:     syzbot <syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com>
+Cc:     coreteam@netfilter.org, David Miller <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 03, 2019 at 10:28:24AM +0300, Dan Carpenter wrote:
-> On Mon, Dec 02, 2019 at 03:13:52PM +0000, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
-> > 
-> > The variable i is being initialized with a value that is never
-> > read and it is being updated later with a new value in a for-loop.
-> > The initialization is redundant and can be removed.
-> > 
-> > Addresses-Coverity: ("Unused value")
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > ---
-> >  drivers/misc/ti-st/st_core.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/misc/ti-st/st_core.c b/drivers/misc/ti-st/st_core.c
-> > index 2ae9948a91e1..6255d9b88122 100644
-> > --- a/drivers/misc/ti-st/st_core.c
-> > +++ b/drivers/misc/ti-st/st_core.c
-> > @@ -736,7 +736,7 @@ static int st_tty_open(struct tty_struct *tty)
-> >  
-> >  static void st_tty_close(struct tty_struct *tty)
-> >  {
-> > -	unsigned char i = ST_MAX_CHANNELS;
-> > +	unsigned char i;
-> >  	unsigned long flags = 0;
-> 
-> I'm surprised that flags doesn't generate a warning as well.
+On Sat, Jan 11, 2020 at 10:05 AM syzbot
+<syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    e69ec487 Merge branch 'for-linus' of git://git.kernel.org/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1239f876e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=18698c0c240ba616
+> dashboard link: https://syzkaller.appspot.com/bug?extid=91bdd8eece0f6629ec8b
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13dbd58ee00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15eff9e1e00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com
+>
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 0 PID: 10213 Comm: syz-executor519 Not tainted 5.5.0-rc5-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
+> RIP: 0010:net_generic include/net/netns/generic.h:45 [inline]
+> RIP: 0010:xt_rateest_put+0xa1/0x440 net/netfilter/xt_RATEEST.c:77
+> Code: 85 87 01 fb 45 84 f6 0f 84 68 02 00 00 e8 37 86 01 fb 49 8d bd 68 13
+> 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f
+> 85 6c 03 00 00 4d 8b b5 68 13 00 00 e8 29 bf ed fa
+> RSP: 0018:ffffc90001cd7940 EFLAGS: 00010202
+> RAX: dffffc0000000000 RBX: ffff8880a779f700 RCX: ffffffff8673a332
+> RDX: 000000000000026d RSI: ffffffff8673a0b9 RDI: 0000000000001368
+> RBP: ffffc90001cd7970 R08: ffff8880a96b2240 R09: ffffed1015d0703d
+> R10: ffffed1015d0703c R11: ffff8880ae8381e3 R12: 000000000000002d
+> R13: 0000000000000000 R14: 0000000000000001 R15: ffffffff8673a470
+> FS:  00000000016ce880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000055cd48aff140 CR3: 0000000096982000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>   xt_rateest_tg_destroy+0x72/0xa0 net/netfilter/xt_RATEEST.c:175
+>   cleanup_entry net/ipv4/netfilter/arp_tables.c:509 [inline]
+>   translate_table+0x11f4/0x1d80 net/ipv4/netfilter/arp_tables.c:587
+>   do_replace net/ipv4/netfilter/arp_tables.c:981 [inline]
+>   do_arpt_set_ctl+0x317/0x650 net/ipv4/netfilter/arp_tables.c:1461
 
-Yes, flags should be not initialized as well.
-
-Colin, can you resend a v2 with that added?
-
-thanks,
-
-greg k-h
+This looks odd, the head commit e69ec487 comes after commit
+1b789577f655060d98d20ed0c6f9fbd469d6ba63 which is supposed
+to fix this...
