@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343A1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCEBC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0701A2077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB04D2077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737587;
-	bh=Szw6ys8LnCVnsTt06jMBo0T+8Yvamx5Z4vLGAz8NCt4=;
+	s=default; t=1578737592;
+	bh=YPm26FNPSVIzUMlYWb5L41WLBOkte3nieINzdNvIfL8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a4oIWRSxPzx5bkn92q6/7sOoCODwh4MLUJLK2jF8I2GyP6p6txbW4JAbKuOYnmSt8
-	 4vOxkiK2t7pzEfGOsg88QA1X4TglJFOWoDhdLBZjjuXL9ljxkaIgQpyCaAU9Ihmjie
-	 OTEQ/Bny8I7rFmirsksqJ4obJHIMmCQbY+1smpK8=
+	b=rNerb5pdfHrRFELhf8AA4wI6Ww//I/btVVzaD+Y+pI74YZazmlqoBU4ePhi1eQDrn
+	 zFGas2H7qaVjv3xI0Lbs8Oo20UM8bPUy4kKfJ3zldAqihRWsFFwvxWmCpLVFnRmlk8
+	 ccr924XoMEcKASqJRXox3canQ6Vo9wdJ+br78x1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbgAKKNF (ORCPT
+        id S1730089AbgAKKNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:13:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51516 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:13:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729008AbgAKKNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:13:04 -0500
+        id S1729008AbgAKKNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:13:07 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1956E206DA;
-        Sat, 11 Jan 2020 10:13:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9974206DA;
+        Sat, 11 Jan 2020 10:13:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737583;
-        bh=Szw6ys8LnCVnsTt06jMBo0T+8Yvamx5Z4vLGAz8NCt4=;
+        s=default; t=1578737587;
+        bh=YPm26FNPSVIzUMlYWb5L41WLBOkte3nieINzdNvIfL8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BVp+JJbLl80Pgi9xw16ESnt/L00wyRxcrh6HzGnMa9LgvBVVhkMrfFuWcip8t11Ne
-         EeJxycIZlbZ6kwoUHcs5hLfasyRuLB85ufJCPlOWrl7JrOJ1/E579yQt7dH2DnSLn8
-         jM1EEoXXAu4koH4UJG/YfiP47qxgWErwovnnh600=
+        b=luW+gbI1oOV4ozaNTvol5nfkQpsNDlqmVi04chzGaDHVxdoL80QagytnWk9EknfAs
+         ZEg7wT8BbcniUvKEMKRYVxdZfBdU65EGJo+SZVEfqNSUjoT8B7uNA5DPX1FMxPP3ol
+         4qr2O12j+G9zqNNU/F/x++DIgllsJUbUyrI61o4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.14 55/62] USB: core: fix check for duplicate endpoints
-Date:   Sat, 11 Jan 2020 10:50:37 +0100
-Message-Id: <20200111094855.154007922@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 56/62] USB: serial: option: add Telit ME910G1 0x110a composition
+Date:   Sat, 11 Jan 2020 10:50:38 +0100
+Message-Id: <20200111094855.540302207@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -59,128 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-commit 3e4f8e21c4f27bcf30a48486b9dcc269512b79ff upstream.
+commit 0d3010fa442429f8780976758719af05592ff19f upstream.
 
-Amend the endpoint-descriptor sanity checks to detect all duplicate
-endpoint addresses in a configuration.
+This patch adds the following Telit ME910G1 composition:
 
-Commit 0a8fd1346254 ("USB: fix problems with duplicate endpoint
-addresses") added a check for duplicate endpoint addresses within a
-single alternate setting, but did not look for duplicate addresses in
-other interfaces.
+0x110a: tty, tty, tty, rmnet
 
-The current check would also not detect all duplicate addresses when one
-endpoint is as a (bi-directional) control endpoint.
-
-This specifically avoids overwriting the endpoint entries in struct
-usb_device when enabling a duplicate endpoint, something which could
-potentially lead to crashes or leaks, for example, when endpoints are
-later disabled.
-
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20191219161016.6695-1-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/config.c |   70 ++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 58 insertions(+), 12 deletions(-)
+ drivers/usb/serial/option.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -203,9 +203,58 @@ static const unsigned short super_speed_
- 	[USB_ENDPOINT_XFER_INT] = 1024,
- };
- 
--static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
--    int asnum, struct usb_host_interface *ifp, int num_ep,
--    unsigned char *buffer, int size)
-+static bool endpoint_is_duplicate(struct usb_endpoint_descriptor *e1,
-+		struct usb_endpoint_descriptor *e2)
-+{
-+	if (e1->bEndpointAddress == e2->bEndpointAddress)
-+		return true;
-+
-+	if (usb_endpoint_xfer_control(e1) || usb_endpoint_xfer_control(e2)) {
-+		if (usb_endpoint_num(e1) == usb_endpoint_num(e2))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+/*
-+ * Check for duplicate endpoint addresses in other interfaces and in the
-+ * altsetting currently being parsed.
-+ */
-+static bool config_endpoint_is_duplicate(struct usb_host_config *config,
-+		int inum, int asnum, struct usb_endpoint_descriptor *d)
-+{
-+	struct usb_endpoint_descriptor *epd;
-+	struct usb_interface_cache *intfc;
-+	struct usb_host_interface *alt;
-+	int i, j, k;
-+
-+	for (i = 0; i < config->desc.bNumInterfaces; ++i) {
-+		intfc = config->intf_cache[i];
-+
-+		for (j = 0; j < intfc->num_altsetting; ++j) {
-+			alt = &intfc->altsetting[j];
-+
-+			if (alt->desc.bInterfaceNumber == inum &&
-+					alt->desc.bAlternateSetting != asnum)
-+				continue;
-+
-+			for (k = 0; k < alt->desc.bNumEndpoints; ++k) {
-+				epd = &alt->endpoint[k].desc;
-+
-+				if (endpoint_is_duplicate(epd, d))
-+					return true;
-+			}
-+		}
-+	}
-+
-+	return false;
-+}
-+
-+static int usb_parse_endpoint(struct device *ddev, int cfgno,
-+		struct usb_host_config *config, int inum, int asnum,
-+		struct usb_host_interface *ifp, int num_ep,
-+		unsigned char *buffer, int size)
- {
- 	unsigned char *buffer0 = buffer;
- 	struct usb_endpoint_descriptor *d;
-@@ -242,13 +291,10 @@ static int usb_parse_endpoint(struct dev
- 		goto skip_to_next_endpoint_or_interface_descriptor;
- 
- 	/* Check for duplicate endpoint addresses */
--	for (i = 0; i < ifp->desc.bNumEndpoints; ++i) {
--		if (ifp->endpoint[i].desc.bEndpointAddress ==
--		    d->bEndpointAddress) {
--			dev_warn(ddev, "config %d interface %d altsetting %d has a duplicate endpoint with address 0x%X, skipping\n",
--			    cfgno, inum, asnum, d->bEndpointAddress);
--			goto skip_to_next_endpoint_or_interface_descriptor;
--		}
-+	if (config_endpoint_is_duplicate(config, inum, asnum, d)) {
-+		dev_warn(ddev, "config %d interface %d altsetting %d has a duplicate endpoint with address 0x%X, skipping\n",
-+				cfgno, inum, asnum, d->bEndpointAddress);
-+		goto skip_to_next_endpoint_or_interface_descriptor;
- 	}
- 
- 	endpoint = &ifp->endpoint[ifp->desc.bNumEndpoints];
-@@ -522,8 +568,8 @@ static int usb_parse_interface(struct de
- 		if (((struct usb_descriptor_header *) buffer)->bDescriptorType
- 		     == USB_DT_INTERFACE)
- 			break;
--		retval = usb_parse_endpoint(ddev, cfgno, inum, asnum, alt,
--		    num_ep, buffer, size);
-+		retval = usb_parse_endpoint(ddev, cfgno, config, inum, asnum,
-+				alt, num_ep, buffer, size);
- 		if (retval < 0)
- 			return retval;
- 		++n;
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1175,6 +1175,8 @@ static const struct usb_device_id option
+ 	  .driver_info = NCTRL(0) | RSVD(3) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1102, 0xff),	/* Telit ME910 (ECM) */
+ 	  .driver_info = NCTRL(0) },
++	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x110a, 0xff),	/* Telit ME910G1 */
++	  .driver_info = NCTRL(0) | RSVD(3) },
+ 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910),
+ 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
+ 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910_USBCFG4),
 
 
