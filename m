@@ -2,122 +2,107 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A43C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AEA2C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA2862087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:34:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738890;
-	bh=ywR3dKnTOobjdUkovDCczSc/ksABxXIILvekC+jkN5s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NKax+RJcTD2y/ZxRnfWDk+NXvwhBAjryr0Zubr+nX5M4Ez9noUkeQxDH+W2aM8+2D
-	 Rg/0vlEmz4DxCfW65Z9EwDFe0GlwwspLOQMVX8V8Nw2wDyIAcDWyCnU8IAwbaFxF8h
-	 hFfboVkq1bwprWwta/Y6FWCpaA9ciR57BzVxN+Oo=
+	by mail.kernel.org (Postfix) with ESMTP id 3913620678
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:35:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bd++4M9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731713AbgAKKet (ORCPT
+        id S1731347AbgAKKfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:34:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728911AbgAKKeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:34:46 -0500
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5450220842;
-        Sat, 11 Jan 2020 10:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738886;
-        bh=ywR3dKnTOobjdUkovDCczSc/ksABxXIILvekC+jkN5s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZLHbxAc79UAKWubNSGCVbttRKJkE11ymzLP9RnauuIYSPlf3TkWLmgn1axVZEjzdd
-         Tt++/WTf534TmQn3Wuu4Fku/gBCt/43haXubJNRjoTsDuS3cq/4+pK3XI35nSOwCJp
-         joBVRvJrHcG0Ebo9QblPbrwQNReHtHoTn7lRPC6M=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 155/165] macb: Dont unregister clks unconditionally
-Date:   Sat, 11 Jan 2020 10:51:14 +0100
-Message-Id: <20200111094941.624505930@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
-References: <20200111094921.347491861@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sat, 11 Jan 2020 05:35:52 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42495 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728861AbgAKKfw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:35:52 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 4so2403838pfz.9
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 02:35:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2td1h3C8GfYA2cMzdn9SMLDmT5nhRRi2kbKs4hQRobg=;
+        b=bd++4M9YYDiSV07yTNggKok9KGoJkQ2oVZM1zvijXTKQXgLBseiahwBgw08PIDQT/3
+         LcUEIDGBYETQZ1MMhlyitkmQUGHVu/wkDbtwlRn0e39+qLrXQZhv9RsaoujkYjaakxUg
+         ScwnZk+7TU+3C525Oqyvdd/qcp4rSSyZEQ6PeFF/dPhsoXE9OCHw7pMwQILtx+Ruooia
+         FmJC4qotLotY5exrVYy6iuSBxFRLBorbAWeJ4F6i0H0AQKo8j9Ikz3w3sX4+XkiidSz6
+         P/ZF/7tk+G73eYI5ojNzt8a1wtIFv8j/5vVGZ/q79VNtxMiK3gYX83ZcihnzB82u+2Fm
+         xlvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2td1h3C8GfYA2cMzdn9SMLDmT5nhRRi2kbKs4hQRobg=;
+        b=YXvyisW+1r5hV+33+9BzYH6H19zBHbN34/rtswA1hdpwlKISoReZ+yWzq/4FBNEyRk
+         XubBEjaFhsQ7mUSUeTYbS6PJ461fX3RoPgV55FwXwMKH6Fdk7B+1m1yGRNaMso+Piyw0
+         koax0cCvdyd7FIj9ir8H/2RAoEdS6XXwKy2BWwg2H5TK382vMEmf6SBu4L3nmelXaTQk
+         Gyk2vrF8YFJBy5QAN/C4Tfcvs1/ffVGpwmkGPIS4tT642s6iNFYcEl2NBpivramoRQOh
+         5pfwa5J6Ip8U1UjyjiYeRrBFzW9wXXtg/HgKRr2GkmByebH4fCdvboXqODl+syH6My8J
+         hzbg==
+X-Gm-Message-State: APjAAAU5PeWML0UJbKlrSbkJNFNoK6hfrtycE4DkXg1mf5LcwM8Jcw6O
+        6OM68aWPH4mvB/jrmHXeD8/aeS/OuTIdF3oxTYw=
+X-Google-Smtp-Source: APXvYqwsByikKWHcE0cHf5FLuEJsP8l/mImFQJfTbF+Ocaj7fZiGoLkYnChzCH9HCDKCB80699t46Be4lAtgCaxvyCs=
+X-Received: by 2002:a65:5242:: with SMTP id q2mr9988753pgp.74.1578738951304;
+ Sat, 11 Jan 2020 02:35:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200110225602.91663-1-samitolvanen@google.com> <202001110830.00B8USV0024843@sdf.org>
+In-Reply-To: <202001110830.00B8USV0024843@sdf.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 11 Jan 2020 12:35:39 +0200
+Message-ID: <CAHp75VcWryeiN_bwJjFk=RO1k+H5q7h6_3oGArf1XzF-6dNxKg@mail.gmail.com>
+Subject: Re: [PATCH] lib/list_sort: fix function type mismatches
+To:     George Spelvin <lkml@sdf.org>
+Cc:     samitolvanen@google.com, Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Andrey Abramov <st5pub@yandex.ru>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <sboyd@kernel.org>
+On Sat, Jan 11, 2020 at 10:31 AM George Spelvin <lkml@sdf.org> wrote:
+>
+> >  typedef int __attribute__((nonnull(2,3))) (*cmp_func)(void *,
+> > -             struct list_head const *, struct list_head const *);
+> > +             struct list_head *, struct list_head *);
+>
+> I'd prefer to leave the const there for documentation.
 
-[ Upstream commit d89091a4930ee0d80bee3e259a98513f3a2543ec ]
+Not only. It's useful to show that we are not going to change those parameters.
 
-The only clk init function in this driver that register a clk is
-fu540_c000_clk_init(), and thus we need to unregister the clk when this
-driver is removed on that platform. Other init functions, for example
-macb_clk_init(), don't register clks and therefore we shouldn't
-unregister the clks when this driver is removed. Convert this
-registration path to devm so it gets auto-unregistered when this driver
-is removed and drop the clk_unregister() calls in driver remove (and
-error paths) so that we don't erroneously remove a clk from the system
-that isn't registered by this driver.
+> Does anyone object to fixing it in the other direction by *adding*
+> const to all the call sites?
 
-Otherwise we get strange crashes with a use-after-free when the
-devm_clk_get() call in macb_clk_init() calls clk_put() on a clk pointer
-that has become invalid because it is freed in clk_unregister().
+Agree.
+Actually we have cmp_r_funct_t which might be used here (I didn't
+check for the possibility, though).
 
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Yash Shah <yash.shah@sifive.com>
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Fixes: c218ad559020 ("macb: Add support for SiFive FU540-C000")
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/cadence/macb_main.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> Andy Shevchenko posted a patch last 7 October that did that.
+> <20191007135656.37734-1-andriy.shevchenko@linux.intel.com>
+>
+> (You could also try taking a second look at why __pure doesn't work,
+> per AKPM's message of 16 April
+> <20190416154522.65aaa348161fc581181b56d9@linux-foundation.org>)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -4027,7 +4027,7 @@ static int fu540_c000_clk_init(struct pl
- 	mgmt->rate = 0;
- 	mgmt->hw.init = &init;
- 
--	*tx_clk = clk_register(NULL, &mgmt->hw);
-+	*tx_clk = devm_clk_register(&pdev->dev, &mgmt->hw);
- 	if (IS_ERR(*tx_clk))
- 		return PTR_ERR(*tx_clk);
- 
-@@ -4361,7 +4361,6 @@ err_out_free_netdev:
- 
- err_disable_clocks:
- 	clk_disable_unprepare(tx_clk);
--	clk_unregister(tx_clk);
- 	clk_disable_unprepare(hclk);
- 	clk_disable_unprepare(pclk);
- 	clk_disable_unprepare(rx_clk);
-@@ -4397,7 +4396,6 @@ static int macb_remove(struct platform_d
- 		pm_runtime_dont_use_autosuspend(&pdev->dev);
- 		if (!pm_runtime_suspended(&pdev->dev)) {
- 			clk_disable_unprepare(bp->tx_clk);
--			clk_unregister(bp->tx_clk);
- 			clk_disable_unprepare(bp->hclk);
- 			clk_disable_unprepare(bp->pclk);
- 			clk_disable_unprepare(bp->rx_clk);
+Hint: When you post Message-Id you may prefix them with
+https://lore.kernel.org/r/ which makes search a bit more convenient
+and faster.
 
 
+-- 
+With Best Regards,
+Andy Shevchenko
