@@ -2,56 +2,59 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5B8C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C81AC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7EA220848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8C92077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736713;
-	bh=lNtSS+g7YuzOW8rkhuOquM3gfaiN1fpKJ89fWOpKUbo=;
+	s=default; t=1578736717;
+	bh=/2gfM4wNvqp7PBRIwfz3c8HJet+zs0Kt0tSU9okw12E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WzgOe9cOsgIfCGQorbGK0gVlorovcqkiXUjJt+nSRJPkjL00IbwBS5vwI7IlZn8KE
-	 cu+O6JKj7UhKiIGyBtPM93o7YH9GGA2uIHeRHBqFNe/fy1WBom780fekLTmyQLtbJi
-	 ZuBtr3oqQdCwBzTOoI2M8EiDEJ6tAY/jKl6NUiuY=
+	b=SGazjo4dmQhG8s+8qKemlctVus/xY3E7nSPyJrZygsYppw4stf1Caq40VuU1RRZUd
+	 1DhG+74mpta5Tf0T5m2FV5e+n6GQ0bkYdpWIutZloJBawbuHwgGE38CkJko06jZCt1
+	 89UCJ64lq1Y2keOYlsAcBCDRTJohawiBtSQYm/aI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbgAKJ6d (ORCPT
+        id S1729242AbgAKJ6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:58:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51894 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:58:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728936AbgAKJ6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:58:32 -0500
+        id S1728900AbgAKJ6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:58:36 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E08F62077C;
-        Sat, 11 Jan 2020 09:58:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AC7320848;
+        Sat, 11 Jan 2020 09:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736711;
-        bh=lNtSS+g7YuzOW8rkhuOquM3gfaiN1fpKJ89fWOpKUbo=;
+        s=default; t=1578736715;
+        bh=/2gfM4wNvqp7PBRIwfz3c8HJet+zs0Kt0tSU9okw12E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wQ5o/MLN1c08jHf5SM87Ej78/kMpY9UTU2Jqi2A65mmKeOOaYBVonM6i1ywu9sqJ3
-         AjjRPflohIswBh729vx2WRpOVW1QZRaToCCHOFl2iLzJekZkvQFLQsCCliBuivAjK2
-         nz/TlODNC0uisU3ws9E16d3IiFwnln+ORaO1V8Co=
+        b=Ly1mGannJrqcjDPCB7bwQIvQOvhKy11brwVYtXLQTPLuJj+JbLvmYVu9Vztfvsu2W
+         ycs0+tXOlNxE5Hsa/Qs+zRzIgPdJ5S3rduNpqil/EojsAosCp6Z1jqawWyS8v8TMwr
+         0X8CyAe+d+IX64fPRMs5J5uxLt2aiNG0Yz/Ml040=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pengcheng Yang <yangpc@wangsu.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 53/59] tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
-Date:   Sat, 11 Jan 2020 10:50:02 +0100
-Message-Id: <20200111094851.453138971@linuxfoundation.org>
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 01/91] PM / devfreq: Dont fail devfreq_dev_release if not in list
+Date:   Sat, 11 Jan 2020 10:48:54 +0100
+Message-Id: <20200111094844.984016422@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
-References: <20200111094835.417654274@linuxfoundation.org>
+In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
+References: <20200111094844.748507863@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,46 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pengcheng Yang <yangpc@wangsu.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-[ Upstream commit c9655008e7845bcfdaac10a1ed8554ec167aea88 ]
+[ Upstream commit 42a6b25e67df6ee6675e8d1eaf18065bd73328ba ]
 
-When we receive a D-SACK, where the sequence number satisfies:
-	undo_marker <= start_seq < end_seq <= prior_snd_una
-we consider this is a valid D-SACK and tcp_is_sackblock_valid()
-returns true, then this D-SACK is discarded as "old stuff",
-but the variable first_sack_index is not marked as negative
-in tcp_sacktag_write_queue().
+Right now devfreq_dev_release will print a warning and abort the rest of
+the cleanup if the devfreq instance is not part of the global
+devfreq_list. But this is a valid scenario, for example it can happen if
+the governor can't be found or on any other init error that happens
+after device_register.
 
-If this D-SACK also carries a SACK that needs to be processed
-(for example, the previous SACK segment was lost), this SACK
-will be treated as a D-SACK in the following processing of
-tcp_sacktag_write_queue(), which will eventually lead to
-incorrect updates of undo_retrans and reordering.
+Initialize devfreq->node to an empty list head in devfreq_add_device so
+that list_del becomes a safe noop inside devfreq_dev_release and we can
+continue the rest of the cleanup.
 
-Fixes: fd6dad616d4f ("[TCP]: Earlier SACK block verification & simplify access to them")
-Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_input.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/devfreq/devfreq.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -1685,8 +1685,11 @@ tcp_sacktag_write_queue(struct sock *sk,
- 		}
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index df62e38de5f5..fb696957eb21 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -482,11 +482,6 @@ static int devfreq_notifier_call(struct notifier_block *nb, unsigned long type,
+ static void _remove_devfreq(struct devfreq *devfreq)
+ {
+ 	mutex_lock(&devfreq_list_lock);
+-	if (IS_ERR(find_device_devfreq(devfreq->dev.parent))) {
+-		mutex_unlock(&devfreq_list_lock);
+-		dev_warn(&devfreq->dev, "releasing devfreq which doesn't exist\n");
+-		return;
+-	}
+ 	list_del(&devfreq->node);
+ 	mutex_unlock(&devfreq_list_lock);
  
- 		/* Ignore very old stuff early */
--		if (!after(sp[used_sacks].end_seq, prior_snd_una))
-+		if (!after(sp[used_sacks].end_seq, prior_snd_una)) {
-+			if (i == 0)
-+				first_sack_index = -1;
- 			continue;
-+		}
- 
- 		used_sacks++;
- 	}
+@@ -558,6 +553,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 	devfreq->dev.parent = dev;
+ 	devfreq->dev.class = devfreq_class;
+ 	devfreq->dev.release = devfreq_dev_release;
++	INIT_LIST_HEAD(&devfreq->node);
+ 	devfreq->profile = profile;
+ 	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+ 	devfreq->previous_freq = profile->initial_freq;
+-- 
+2.20.1
+
 
 
