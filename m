@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7DCC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8934AC33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E215124677
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5408A20678
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738830;
-	bh=s0IQh4DdqFyX1TBRWfPvCvxf0cHcIHtdc9wDARQ3tMQ=;
+	s=default; t=1578738836;
+	bh=v3mttVPp1GerNJolr6lWCMYoGvxolo6C6ng1zXOq1eA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gk2fEYhghG+IZAu2omfFqkGfRqgD9XuiT/Ivk8aNtvdRisNgKa0pscuoRTzNAjzvw
-	 TZCQ4fZbuRwRKF3/ipBDqmJ/iU4MDbFyp+1m11nmS0A91SBXruTi71gtPa1hHb3aiJ
-	 WPlgdnJInN3mL0SUTjKIogWVozYkFSYSLKu1EYp4=
+	b=cCymmsB1lzblKXUNooaM7zgGzkihMH76+Tye8S6WFfJnr5BouXukre4iRxg3ClJCg
+	 aJzP0I1ueJH/jsEgbx3z4YCKObw07nOfkn1FXVdevxvX5NLWXYjfwQA2aBr3xTC3qP
+	 bfmp2jimK3F+MBg21Keef9ODR34cSXMZWMz/lKv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731645AbgAKKds (ORCPT
+        id S1731652AbgAKKdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:33:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48886 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:33:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731148AbgAKKdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:33:46 -0500
+        id S1731148AbgAKKdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:33:49 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 365B620678;
-        Sat, 11 Jan 2020 10:33:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28D1D20678;
+        Sat, 11 Jan 2020 10:33:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738825;
-        bh=s0IQh4DdqFyX1TBRWfPvCvxf0cHcIHtdc9wDARQ3tMQ=;
+        s=default; t=1578738829;
+        bh=v3mttVPp1GerNJolr6lWCMYoGvxolo6C6ng1zXOq1eA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WS14dVqG4A1MEkh+YJ3QAkvmm2a38a/FsN+Gfhcq6EqYr5TYNKHV3HfroihEyXoo7
-         i4wkMrHXdthUwfbidhwVQUfd+HaeuMix4uYmTx0ys8sYaJuEr+OiQ/hR8itjohTDKD
-         T1us6hixj7AoQAdLfISdSWC4jWXyed+zuugEscZs=
+        b=SKEv0Nk+bKcXKpotDNz0uXs19w4qXdmrcwz7fndt7d93SMTw3G9Kx7BOb4yFlExqy
+         fmlQ74E2Ms4jm5dImh/P79VjenBHbcekXHaaWxxvYPDo899/z0Kp1RFv5whkiWtAQs
+         3KTCjTaRTryN06B7WIlwDbyQ3T9aUl8GuZIiUCDA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>,
+        "kernelci.org bot" <bot@kernelci.org>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Sriram Dash <Sriram.dash@samsung.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 153/165] vlan: fix memory leak in vlan_dev_set_egress_priority
-Date:   Sat, 11 Jan 2020 10:51:12 +0100
-Message-Id: <20200111094941.179813569@linuxfoundation.org>
+Subject: [PATCH 5.4 144/165] net: stmmac: Fixed link does not need MDIO Bus
+Date:   Sat, 11 Jan 2020 10:51:03 +0100
+Message-Id: <20200111094939.030296312@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,100 +65,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 9bbd917e0bec9aebdbd0c8dbc966caec15eb33e9 ]
+[ Upstream commit da29f2d84bd10234df570b7f07cbd0166e738230 ]
 
-There are few cases where the ndo_uninit() handler might be not
-called if an error happens while device is initialized.
+When using fixed link we don't need the MDIO bus support.
 
-Since vlan_newlink() calls vlan_changelink() before
-trying to register the netdevice, we need to make sure
-vlan_dev_uninit() has been called at least once,
-or we might leak allocated memory.
-
-BUG: memory leak
-unreferenced object 0xffff888122a206c0 (size 32):
-  comm "syz-executor511", pid 7124, jiffies 4294950399 (age 32.240s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 61 73 00 00 00 00 00 00 00 00  ......as........
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000000eb3bb85>] kmemleak_alloc_recursive include/linux/kmemleak.h:43 [inline]
-    [<000000000eb3bb85>] slab_post_alloc_hook mm/slab.h:586 [inline]
-    [<000000000eb3bb85>] slab_alloc mm/slab.c:3320 [inline]
-    [<000000000eb3bb85>] kmem_cache_alloc_trace+0x145/0x2c0 mm/slab.c:3549
-    [<000000007b99f620>] kmalloc include/linux/slab.h:556 [inline]
-    [<000000007b99f620>] vlan_dev_set_egress_priority+0xcc/0x150 net/8021q/vlan_dev.c:194
-    [<000000007b0cb745>] vlan_changelink+0xd6/0x140 net/8021q/vlan_netlink.c:126
-    [<0000000065aba83a>] vlan_newlink+0x135/0x200 net/8021q/vlan_netlink.c:181
-    [<00000000fb5dd7a2>] __rtnl_newlink+0x89a/0xb80 net/core/rtnetlink.c:3305
-    [<00000000ae4273a1>] rtnl_newlink+0x4e/0x80 net/core/rtnetlink.c:3363
-    [<00000000decab39f>] rtnetlink_rcv_msg+0x178/0x4b0 net/core/rtnetlink.c:5424
-    [<00000000accba4ee>] netlink_rcv_skb+0x61/0x170 net/netlink/af_netlink.c:2477
-    [<00000000319fe20f>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5442
-    [<00000000d51938dc>] netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-    [<00000000d51938dc>] netlink_unicast+0x223/0x310 net/netlink/af_netlink.c:1328
-    [<00000000e539ac79>] netlink_sendmsg+0x2c0/0x570 net/netlink/af_netlink.c:1917
-    [<000000006250c27e>] sock_sendmsg_nosec net/socket.c:639 [inline]
-    [<000000006250c27e>] sock_sendmsg+0x54/0x70 net/socket.c:659
-    [<00000000e2a156d1>] ____sys_sendmsg+0x2d0/0x300 net/socket.c:2330
-    [<000000008c87466e>] ___sys_sendmsg+0x8a/0xd0 net/socket.c:2384
-    [<00000000110e3054>] __sys_sendmsg+0x80/0xf0 net/socket.c:2417
-    [<00000000d71077c8>] __do_sys_sendmsg net/socket.c:2426 [inline]
-    [<00000000d71077c8>] __se_sys_sendmsg net/socket.c:2424 [inline]
-    [<00000000d71077c8>] __x64_sys_sendmsg+0x23/0x30 net/socket.c:2424
-
-Fixe: 07b5b17e157b ("[VLAN]: Use rtnl_link API")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Reported-by: Heiko Stuebner <heiko@sntech.de>
+Reported-by: kernelci.org bot <bot@kernelci.org>
+Fixes: d3e014ec7d5e ("net: stmmac: platform: Fix MDIO init for platforms without PHY")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Acked-by: Sriram Dash <Sriram.dash@samsung.com>
+Tested-by: Patrice Chotard <patrice.chotard@st.com>
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Tested-by: Florian Fainelli <f.fainelli@gmail> # Lamobo R1 (fixed-link + MDIO sub node for roboswitch).
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/8021q/vlan.h         |    1 +
- net/8021q/vlan_dev.c     |    3 ++-
- net/8021q/vlan_netlink.c |    9 +++++----
- 3 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/8021q/vlan.h
-+++ b/net/8021q/vlan.h
-@@ -126,6 +126,7 @@ int vlan_check_real_dev(struct net_devic
- void vlan_setup(struct net_device *dev);
- int register_vlan_dev(struct net_device *dev, struct netlink_ext_ack *extack);
- void unregister_vlan_dev(struct net_device *dev, struct list_head *head);
-+void vlan_dev_uninit(struct net_device *dev);
- bool vlan_dev_inherit_address(struct net_device *dev,
- 			      struct net_device *real_dev);
- 
---- a/net/8021q/vlan_dev.c
-+++ b/net/8021q/vlan_dev.c
-@@ -586,7 +586,8 @@ static int vlan_dev_init(struct net_devi
- 	return 0;
- }
- 
--static void vlan_dev_uninit(struct net_device *dev)
-+/* Note: this function might be called multiple times for the same device. */
-+void vlan_dev_uninit(struct net_device *dev)
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
+@@ -320,7 +320,7 @@ out:
+ static int stmmac_dt_phy(struct plat_stmmacenet_data *plat,
+ 			 struct device_node *np, struct device *dev)
  {
- 	struct vlan_priority_tci_mapping *pm;
- 	struct vlan_dev_priv *vlan = vlan_dev_priv(dev);
---- a/net/8021q/vlan_netlink.c
-+++ b/net/8021q/vlan_netlink.c
-@@ -179,10 +179,11 @@ static int vlan_newlink(struct net *src_
- 		return -EINVAL;
- 
- 	err = vlan_changelink(dev, tb, data, extack);
--	if (err < 0)
--		return err;
--
--	return register_vlan_dev(dev, extack);
-+	if (!err)
-+		err = register_vlan_dev(dev, extack);
-+	if (err)
-+		vlan_dev_uninit(dev);
-+	return err;
- }
- 
- static inline size_t vlan_qos_map_size(unsigned int n)
+-	bool mdio = false;
++	bool mdio = !of_phy_is_fixed_link(np);
+ 	static const struct of_device_id need_mdio_ids[] = {
+ 		{ .compatible = "snps,dwc-qos-ethernet-4.10" },
+ 		{},
 
 
