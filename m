@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35BD3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85172C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E654220848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 514AD20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738301;
-	bh=Qf+Lke/xZRTcVCvZC0012unFzCPQGzOZY/o5doau+BU=;
+	s=default; t=1578738305;
+	bh=sA28e4/Vn28o0eBK2OtFILC07rU4A36VwG070Roqi1Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n9KGsKsTI5kOhlEYHl8jKZb1j6+ZQ2lEcmIl0pawX8zk7W0ftPd98e10uIQz+ZYQh
-	 m8wUQsdeXy7Kj6BHYQU1mUTzea97asopy+C4AHopSOfZRvWeXaw9SFI/0S6nkJI6Vb
-	 Y+EXy4vd8+DamwGcU6Rk8zkcY33qikBbVMB9R7UY=
+	b=KQ0401iLEW+0e5huJaF8XjQitSW/YExv7vq4+0xCw8Iwpqqql3p1Klf1wf5JJFqF/
+	 7Kg+gMB5+4RimrvuWXPJiLYgjirkENzomjsq2FjPHOBvg8VUD6cEXDCFmC2Sng9MDZ
+	 7p9g4RZLlJ856zXXaxZ0JBjX8GlmMY8Fw0GX9L1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730933AbgAKKY4 (ORCPT
+        id S1731119AbgAKKZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:24:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54614 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:25:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731011AbgAKKYw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:24:52 -0500
+        id S1731011AbgAKKY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:24:57 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64D392082E;
-        Sat, 11 Jan 2020 10:24:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F71A2082E;
+        Sat, 11 Jan 2020 10:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738292;
-        bh=Qf+Lke/xZRTcVCvZC0012unFzCPQGzOZY/o5doau+BU=;
+        s=default; t=1578738296;
+        bh=sA28e4/Vn28o0eBK2OtFILC07rU4A36VwG070Roqi1Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YsmBMEjK+8lBU+Y6scCXiESPZz7p1y+maKl7q1qUiUodCkX2lPgXzUH9lLscxD0Ga
-         d2N/pWf14caEety/HchXHCmmXEHFIGgt2X/hOsG1kobM69DZwwaZRGE1fmeKCKPLVh
-         GsPxQ74bVjiUXdlR3luLOIpwdRXlLA121EUvA+d0=
+        b=EqE39Rqrv/b1aQ+qjm2sR0uDC+8kFXI9j2gwEMunZ1z9ZkJDgvltWvr2GXGmM+sQr
+         8UD7Z2/BneFPODvUZY2daxYdnp14YnhT1Vtubr92sQijS0oiC2ah3iyS1EIYwLhWPy
+         UGr9ixSo2WZ7QP4Zx7lEDA8nr9gsB0TXLGE4a31s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Walle <michael@walle.cc>,
-        Tang Yuantian <andy.tang@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Mahshid Khezri <khezri.mahshid@gmail.com>,
+        Paul Chaignon <paul.chaignon@orange.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
+        Martin KaFai Lau <kafai@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 052/165] arm64: dts: ls1028a: fix typo in TMU calibration data
-Date:   Sat, 11 Jan 2020 10:49:31 +0100
-Message-Id: <20200111094925.721232525@linuxfoundation.org>
+Subject: [PATCH 5.4 053/165] bpf, riscv: Limit to 33 tail calls
+Date:   Sat, 11 Jan 2020 10:49:32 +0100
+Message-Id: <20200111094925.775463225@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,38 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
+From: Paul Chaignon <paul.chaignon@orange.com>
 
-[ Upstream commit 961f8209c8d5ef5d33da42e6656d7c8179899da0 ]
+[ Upstream commit 96bc4432f5ade1045521f3b247f516b1478166bd ]
 
-The temperature sensor may jump backwards because there is a wrong
-calibration value. Both values have to be monotonically increasing.
-Fix it.
+All BPF JIT compilers except RISC-V's and MIPS' enforce a 33-tail calls
+limit at runtime.  In addition, a test was recently added, in tailcalls2,
+to check this limit.
 
-This was tested on a custom board.
+This patch updates the tail call limit in RISC-V's JIT compiler to allow
+33 tail calls.  I tested it using the above selftest on an emulated
+RISCV64.
 
-Fixes: 571cebfe8e2b ("arm64: dts: ls1028a: Add Thermal Monitor Unit node")
-Signed-off-by: Michael Walle <michael@walle.cc>
-Acked-by: Tang Yuantian <andy.tang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 2353ecc6f91f ("bpf, riscv: add BPF JIT for RV64G")
+Reported-by: Mahshid Khezri <khezri.mahshid@gmail.com>
+Signed-off-by: Paul Chaignon <paul.chaignon@orange.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Björn Töpel <bjorn.topel@gmail.com>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/966fe384383bf23a0ee1efe8d7291c78a3fb832b.1575916815.git.paul.chaignon@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/net/bpf_jit_comp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-index 72b9a75976a1..c7dae9ec17da 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
-@@ -567,7 +567,7 @@
- 					       0x00010004 0x0000003d
- 					       0x00010005 0x00000045
- 					       0x00010006 0x0000004d
--					       0x00010007 0x00000045
-+					       0x00010007 0x00000055
- 					       0x00010008 0x0000005e
- 					       0x00010009 0x00000066
- 					       0x0001000a 0x0000006e
+diff --git a/arch/riscv/net/bpf_jit_comp.c b/arch/riscv/net/bpf_jit_comp.c
+index 5451ef3845f2..7fbf56aab661 100644
+--- a/arch/riscv/net/bpf_jit_comp.c
++++ b/arch/riscv/net/bpf_jit_comp.c
+@@ -631,14 +631,14 @@ static int emit_bpf_tail_call(int insn, struct rv_jit_context *ctx)
+ 		return -1;
+ 	emit(rv_bgeu(RV_REG_A2, RV_REG_T1, off >> 1), ctx);
+ 
+-	/* if (--TCC < 0)
++	/* if (TCC-- < 0)
+ 	 *     goto out;
+ 	 */
+ 	emit(rv_addi(RV_REG_T1, tcc, -1), ctx);
+ 	off = (tc_ninsn - (ctx->ninsns - start_insn)) << 2;
+ 	if (is_13b_check(off, insn))
+ 		return -1;
+-	emit(rv_blt(RV_REG_T1, RV_REG_ZERO, off >> 1), ctx);
++	emit(rv_blt(tcc, RV_REG_ZERO, off >> 1), ctx);
+ 
+ 	/* prog = array->ptrs[index];
+ 	 * if (!prog)
 -- 
 2.20.1
 
