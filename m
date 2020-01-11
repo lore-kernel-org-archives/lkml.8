@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A668EC33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1BFC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72F5D205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70652087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738145;
-	bh=tu7Sl4ogZwaO849WOpl7I9VcnFryYUZMC8/N6yzu66w=;
+	s=default; t=1578738149;
+	bh=ROlknTGA/2BYqN4mekQwMRs65sDEbN41Qs3dZ6Eh23w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hbpnLgRBWNzvlh8XRZ7G5LlDCaLAAYvg3FpYR5MuRftOOMbyoUB4b5HlL3jz0YU1Q
-	 mNokIYaL/n5W0Oa7nRlmj3XnFXoXFcChM29H7Xz5EsyBF2nAEv8gb9ga6jvkbPT/ez
-	 BO1kZHJpZ7+TPvrHKdNcuTXNKG+Yk3n163DQ6BrM=
+	b=sKqTU3eFdxUT80+1ktE2albMTMj+ChjPB7B1AH8R/QRnsFnp2xwK7Ux0aqRssPJD1
+	 /4gb+hdOsxUI9QhZlFuWN11X5ZliA+I18tXQsS+OF0I7CVC6u8LU6lkROdTB18GkYa
+	 yU8EMEMLv6t3iAMruJw6wGsE9zZK/dwzZ9dO6xEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730671AbgAKKWY (ORCPT
+        id S1730839AbgAKKW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:22:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47422 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:22:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730333AbgAKKWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:22:22 -0500
+        id S1730486AbgAKKW1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:22:27 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84CD5205F4;
-        Sat, 11 Jan 2020 10:22:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D1C42087F;
+        Sat, 11 Jan 2020 10:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738142;
-        bh=tu7Sl4ogZwaO849WOpl7I9VcnFryYUZMC8/N6yzu66w=;
+        s=default; t=1578738147;
+        bh=ROlknTGA/2BYqN4mekQwMRs65sDEbN41Qs3dZ6Eh23w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wNfo96UcaSLS8pZ0pjhBcwowuEoNSxIxhjw+ayu8vbI8ZDI0bGjwrNCXFCHj8Ii3+
-         JAtFM05FpIgS4ckL19pHsnQ6tTuA7OKgGV/JXNojsg5dSwkdTCIG8dwUM2Vf7xnm3P
-         HK/tkxh7qlTRUY+CP8bsfC7LrW+F3nJ8/agIDccY=
+        b=IrgIgBFrs2pD460VeGTMjCFLod3pnC2BYgYzWwVeQ6E0A4iOwcWoIt5AxRJbO5GAN
+         r6S61vdNoYOqylaoRZ+aVgSw15+/lYF8/aIKpGVDQzhUb4ZehSWsptaL3JAq3BJSoK
+         HmkMOGUtsA6dRszMVmK6LoBM5wSW/iRkHrqr1UD0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 007/165] spi: fsl: Fix GPIO descriptor support
-Date:   Sat, 11 Jan 2020 10:48:46 +0100
-Message-Id: <20200111094921.875977602@linuxfoundation.org>
+Subject: [PATCH 5.4 029/165] netfilter: nf_tables: validate NFT_SET_ELEM_INTERVAL_END
+Date:   Sat, 11 Jan 2020 10:49:08 +0100
+Message-Id: <20200111094923.157271850@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,39 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit f106904968e2a075e64653b9b79dda9f0f070ab5 ]
+[ Upstream commit bffc124b6fe37d0ae9b428d104efb426403bb5c9 ]
 
-This makes the driver actually support looking up GPIO
-descriptor. A coding mistake in the initial descriptor
-support patch was that it was failing to turn on the very
-feature it was implementing. Mea culpa.
+Only NFTA_SET_ELEM_KEY and NFTA_SET_ELEM_FLAGS make sense for elements
+whose NFT_SET_ELEM_INTERVAL_END flag is set on.
 
-Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Fixes: 0f0581b24bd0 ("spi: fsl: Convert to use CS GPIO descriptors")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Link: https://lore.kernel.org/r/20191128083718.39177-1-linus.walleij@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 96518518cc41 ("netfilter: add nftables")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-fsl-spi.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/nf_tables_api.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
-index 2d563874b4ac..ad1abea6e8b0 100644
---- a/drivers/spi/spi-fsl-spi.c
-+++ b/drivers/spi/spi-fsl-spi.c
-@@ -612,6 +612,7 @@ static struct spi_master * fsl_spi_probe(struct device *dev,
- 	master->setup = fsl_spi_setup;
- 	master->cleanup = fsl_spi_cleanup;
- 	master->transfer_one_message = fsl_spi_do_one_msg;
-+	master->use_gpio_descriptors = true;
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index 712a428509ad..7120eba71ac5 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -4489,14 +4489,20 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
+ 		if (nla[NFTA_SET_ELEM_DATA] == NULL &&
+ 		    !(flags & NFT_SET_ELEM_INTERVAL_END))
+ 			return -EINVAL;
+-		if (nla[NFTA_SET_ELEM_DATA] != NULL &&
+-		    flags & NFT_SET_ELEM_INTERVAL_END)
+-			return -EINVAL;
+ 	} else {
+ 		if (nla[NFTA_SET_ELEM_DATA] != NULL)
+ 			return -EINVAL;
+ 	}
  
- 	mpc8xxx_spi = spi_master_get_devdata(master);
- 	mpc8xxx_spi->max_bits_per_word = 32;
++	if ((flags & NFT_SET_ELEM_INTERVAL_END) &&
++	     (nla[NFTA_SET_ELEM_DATA] ||
++	      nla[NFTA_SET_ELEM_OBJREF] ||
++	      nla[NFTA_SET_ELEM_TIMEOUT] ||
++	      nla[NFTA_SET_ELEM_EXPIRATION] ||
++	      nla[NFTA_SET_ELEM_USERDATA] ||
++	      nla[NFTA_SET_ELEM_EXPR]))
++		return -EINVAL;
++
+ 	timeout = 0;
+ 	if (nla[NFTA_SET_ELEM_TIMEOUT] != NULL) {
+ 		if (!(set->flags & NFT_SET_TIMEOUT))
 -- 
 2.20.1
 
