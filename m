@@ -6,108 +6,83 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF218C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 13:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDFEC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 13:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C932072E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 13:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BE02072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 13:06:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="grjv1YrP"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="O/hmB+8E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729573AbgAKNCw (ORCPT
+        id S1729542AbgAKNGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 08:02:52 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:51436 "EHLO mail.skyhub.de"
+        Sat, 11 Jan 2020 08:06:09 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:52220 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729468AbgAKNCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 08:02:52 -0500
+        id S1729313AbgAKNGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 08:06:09 -0500
 Received: from zn.tnic (p200300EC2F1E140059EC870F21D98201.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:1400:59ec:870f:21d9:8201])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E49F71EC02A3;
-        Sat, 11 Jan 2020 14:02:50 +0100 (CET)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3E4FB1EC085F;
+        Sat, 11 Jan 2020 14:06:07 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578747771;
+        t=1578747967;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=3EhS3rlRKioZcKfKMZ9vFXvnyxSNnulC/kahqWIylC0=;
-        b=grjv1YrPTLradsLrAe4U65/skQdlInUnF0dTxHdSaGrQd5hRRQmNPGQlnNKhKkv0vPOg8G
-        QnHSWo/aWnG97nXdM0sKnsqFoOcFcRPX/9GdgINg4FUkOzLvCx3qlUhHEcPvCZEZ9Z/VFM
-        6384B1Wm0r2j3zM12aDPnR9I07W/d38=
-Date:   Sat, 11 Jan 2020 14:02:43 +0100
+        bh=BYvSwdrZZUXL1ebcYH13oLjjpeCBly4UESLGD5QNBXs=;
+        b=O/hmB+8EWlsUFmi5xI6cO2XZ2qbhHJgUKS7HWj7i1PCw+PwhEL9DwTQMg47asDXDVh+stV
+        anYjxYAFUMvb6mt0YUyjM8hRbFDRtWKZe5S7F5H3rJ6cBgh0hrkKVB9vIik+x1pgFtQB3z
+        66jwk6wTb2fwJC21Xmds++W5RuFNbWk=
+Date:   Sat, 11 Jan 2020 14:06:04 +0100
 From:   Borislav Petkov <bp@alien8.de>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Jan =?utf-8?Q?H=2E_Sch=C3=B6nherr?= <jschoenh@amazon.de>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>
-Subject: Re: [PATCH] x86/tools/relocs: Add _etext and __end_of_kernel_reserve
- to S_REL
-Message-ID: <20200111130243.GA23583@zn.tnic>
-References: <20200110202349.1881840-1-nivedita@alum.mit.edu>
- <20200110203828.GK19453@zn.tnic>
- <20200110205028.GA2012059@rani.riverdale.lan>
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Subject: Re: [PATCH v2 1/6] x86/mce: Take action on UCNA/Deferred errors again
+Message-ID: <20200111130604.GB23583@zn.tnic>
+References: <20200103150722.20313-1-jschoenh@amazon.de>
+ <20200103150722.20313-2-jschoenh@amazon.de>
+ <20200110095004.GD19453@zn.tnic>
+ <20200110184533.GB20511@agluck-desk2.amr.corp.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200110205028.GA2012059@rani.riverdale.lan>
+In-Reply-To: <20200110184533.GB20511@agluck-desk2.amr.corp.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 03:50:29PM -0500, Arvind Sankar wrote:
-> On Fri, Jan 10, 2020 at 09:38:28PM +0100, Borislav Petkov wrote:
-> > On Fri, Jan 10, 2020 at 03:23:49PM -0500, Arvind Sankar wrote:
-> > > Pre-2.23 binutils makes symbols defined outside sections absolute, so
-> > > these two symbols break the build on old linkers.
-> > 
-> > -ENOTENOUGHINFO
-> > 
-> > Which old linkers, how exactly do they break the build, etc etc?
-> > 
-> > Please give exact reproduction steps.
-> > 
-> > Thx.
-> > 
-> 
-> binutils-2.21 and -2.22. An x86-64 defconfig will fail with
-> 	Invalid absolute R_X86_64_32S relocation: _etext
-> and after fixing that one, with
-> 	Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
+On Fri, Jan 10, 2020 at 10:45:33AM -0800, Luck, Tony wrote:
+> That's a tricky question. We have changing behavior (UCNA pages offlined,
+> then a few kernel versions stopped doing this, now we are going to start
+> doing it again. But is it really a _BUG_ that needs backporting to stable?
+> I'm leaning towards "no it isn't".
 
-I'm still not clear as to why this happens. I tried reproducing on
-openSUSE 12.1 which has
+I think the same, so let's not. We can always backport it later, if it
+turns out that it is needed.
 
-Repository: openSUSE-12.1-Oss
-Name: binutils
-Version: 2.21.1-12.1.4
+> But could perhaps be convinced to change my mind if somebody has a
+> good reason for wanting it there.
 
-and the build there fails with:
+Yah.
 
-objdump: arch/x86/lib/clear_page_64.o: File format not recognized
-objdump: arch/x86/lib/cmdline.o: File format not recognized
-objdump: arch/x86/lib/cmpxchg16b_emu.o: File format not recognized
-objdump: arch/x86/lib/copy_page_64.o: File format not recognized
-objdump: arch/x86/lib/copy_user_64.o: File format not recognized
-objdump: arch/x86/lib/cpu.o: File format not recognized
-...
+> Is there something to put in the tags to stop this being autoselected
+> for backport because it has a Fixes: tag?
 
-and objdump is part of binutils.
+I don't think so.
 
-Now, this looks like another symptom of what you're reporting but what
-we're missing is the rootcause about *why* this happens.
+What we could do is write the "Fixes:" tag in free text in the commit
+message so that tools don't pick up on it.
 
-Because if the issue is hard to fix or similar, then we probably should
-raise the minimum supported binutils version from 2.21 to something
-newer and not do this fix.
-
-But before we do that, we need a proper analysis as to why it happens.
-
-Also, what distro are you using to reproduce it on?
+I'll reply to the other thing below in a separate mail.
 
 Thx.
 
