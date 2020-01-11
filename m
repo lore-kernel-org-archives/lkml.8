@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5068C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F94C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB612082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4FB20673
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737534;
-	bh=EP0SVqUmoXOJjI5gUdiDY42SwakQbyZ3BQJ4zWKpusA=;
+	s=default; t=1578737540;
+	bh=sy2Calgp9CwR7ibuyNniX63iyl5RxqkfSkdj2DtD6cM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zli6raMYre3OxI9JWOJtNu01Z2DAmAre5BNr0mo0JQZ5GUTvA7YIERjXDs2zHZZcz
-	 +o5jAwmq33RDHY0WzhIB3XIF+88or/pMJTR3NxgCYWauk9MDyUzI/GVVgNEJ6syY3f
-	 r2rO82bZrcwY5Nor/6M9XHxGD+7lh+LW2Lab9mHk=
+	b=Xv7Ke44oLQlgwAuTMmYxnqfo3B3bWk3hGFV7LpBD8/U7Ps7jino0dN26Bp4uc8ul+
+	 CDsvqmfmu/Rf4bRYWcfnbBuLk6OK1cKMqYP2Nni9vWtbK0xcQmh2Fx3JlLxDaqkip/
+	 9HhVDS2Mh4eq+ZUHUWpRW/I86tWPLoQrGX311c8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729851AbgAKKMN (ORCPT
+        id S1729746AbgAKKMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:12:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49922 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:12:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50084 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729723AbgAKKML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:12:11 -0500
+        id S1729606AbgAKKMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:12:17 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CF8A2077C;
-        Sat, 11 Jan 2020 10:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DBE12082E;
+        Sat, 11 Jan 2020 10:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737530;
-        bh=EP0SVqUmoXOJjI5gUdiDY42SwakQbyZ3BQJ4zWKpusA=;
+        s=default; t=1578737536;
+        bh=sy2Calgp9CwR7ibuyNniX63iyl5RxqkfSkdj2DtD6cM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D+sI6Fg/gHHCQfIMte1WTzFxz8aQ8OVyZC/ExJrczJ9ARuzqYKtSvRgEgDWnEnEEp
-         13dmHLUtwcf906AgErf0gKUDXiNy4pv1Ei1o/3vvF0OyjPuRBOZzgQu+EUoC7UnSBL
-         pEaste/caao/3re1MRRDs08eTRxU5ZE4cmLCyeN8=
+        b=MV5jkeJwS8sfxU7RCEryNkAnOJEldZI6apkXx5VoVrZ9q4zfpdH8bAbqTLGLlQYsV
+         5OHxy8MuuEq6ihY56UFBNJ+IZbmbm0i7Mz1Jo1s+IOPAhd4WKSz9PSNi89PQmi2YoZ
+         VOJ3ld/8EJJ8+bFUcvLa5I/xNW+qxMqFsg3pvwR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Liu <bob.liu@oracle.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 36/62] block: fix memleak when __blk_rq_map_user_iov() is failed
-Date:   Sat, 11 Jan 2020 10:50:18 +0100
-Message-Id: <20200111094846.643194077@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 37/62] parisc: Fix compiler warnings in debug_core.c
+Date:   Sat, 11 Jan 2020 10:50:19 +0100
+Message-Id: <20200111094847.139609489@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -61,60 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit 3b7995a98ad76da5597b488fa84aa5a56d43b608 ]
+[ Upstream commit 75cf9797006a3a9f29a3a25c1febd6842a4a9eb2 ]
 
-When I doing fuzzy test, get the memleak report:
+Fix this compiler warning:
+kernel/debug/debug_core.c: In function ‘kgdb_cpu_enter’:
+arch/parisc/include/asm/cmpxchg.h:48:3: warning: value computed is not used [-Wunused-value]
+   48 |  ((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
+arch/parisc/include/asm/atomic.h:78:30: note: in expansion of macro ‘xchg’
+   78 | #define atomic_xchg(v, new) (xchg(&((v)->counter), new))
+      |                              ^~~~
+kernel/debug/debug_core.c:596:4: note: in expansion of macro ‘atomic_xchg’
+  596 |    atomic_xchg(&kgdb_active, cpu);
+      |    ^~~~~~~~~~~
 
-BUG: memory leak
-unreferenced object 0xffff88837af80000 (size 4096):
-  comm "memleak", pid 3557, jiffies 4294817681 (age 112.499s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    20 00 00 00 10 01 00 00 00 00 00 00 01 00 00 00   ...............
-  backtrace:
-    [<000000001c894df8>] bio_alloc_bioset+0x393/0x590
-    [<000000008b139a3c>] bio_copy_user_iov+0x300/0xcd0
-    [<00000000a998bd8c>] blk_rq_map_user_iov+0x2f1/0x5f0
-    [<000000005ceb7f05>] blk_rq_map_user+0xf2/0x160
-    [<000000006454da92>] sg_common_write.isra.21+0x1094/0x1870
-    [<00000000064bb208>] sg_write.part.25+0x5d9/0x950
-    [<000000004fc670f6>] sg_write+0x5f/0x8c
-    [<00000000b0d05c7b>] __vfs_write+0x7c/0x100
-    [<000000008e177714>] vfs_write+0x1c3/0x500
-    [<0000000087d23f34>] ksys_write+0xf9/0x200
-    [<000000002c8dbc9d>] do_syscall_64+0x9f/0x4f0
-    [<00000000678d8e9a>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-If __blk_rq_map_user_iov() is failed in blk_rq_map_user_iov(),
-the bio(s) which is allocated before this failing will leak. The
-refcount of the bio(s) is init to 1 and increased to 2 by calling
-bio_get(), but __blk_rq_unmap_user() only decrease it to 1, so
-the bio cannot be freed. Fix it by calling blk_rq_unmap_user().
-
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-map.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/parisc/include/asm/cmpxchg.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-map.c b/block/blk-map.c
-index e31be14da8ea..f72a3af689b6 100644
---- a/block/blk-map.c
-+++ b/block/blk-map.c
-@@ -152,7 +152,7 @@ int blk_rq_map_user_iov(struct request_queue *q, struct request *rq,
- 	return 0;
+diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
+index f627c37dad9c..ab5c215cf46c 100644
+--- a/arch/parisc/include/asm/cmpxchg.h
++++ b/arch/parisc/include/asm/cmpxchg.h
+@@ -44,8 +44,14 @@ __xchg(unsigned long x, __volatile__ void *ptr, int size)
+ **		if (((unsigned long)p & 0xf) == 0)
+ **			return __ldcw(p);
+ */
+-#define xchg(ptr, x) \
+-	((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
++#define xchg(ptr, x)							\
++({									\
++	__typeof__(*(ptr)) __ret;					\
++	__typeof__(*(ptr)) _x_ = (x);					\
++	__ret = (__typeof__(*(ptr)))					\
++		__xchg((unsigned long)_x_, (ptr), sizeof(*(ptr)));	\
++	__ret;								\
++})
  
- unmap_rq:
--	__blk_rq_unmap_user(bio);
-+	blk_rq_unmap_user(bio);
- fail:
- 	rq->bio = NULL;
- 	return ret;
+ /* bug catcher for when unsupported size is used - won't link */
+ extern void __cmpxchg_called_with_bad_pointer(void);
 -- 
 2.20.1
 
