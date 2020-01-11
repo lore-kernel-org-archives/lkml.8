@@ -2,106 +2,106 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA16C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 00:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70A60C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 00:20:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B71382064C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 00:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A382077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 00:20:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7alot6o"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hJNbyZmX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgAKARd (ORCPT
+        id S1727762AbgAKAUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 19:17:33 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:43386 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727444AbgAKARc (ORCPT
+        Fri, 10 Jan 2020 19:20:11 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33459 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727499AbgAKAUL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 19:17:32 -0500
-Received: by mail-wr1-f67.google.com with SMTP id d16so3414429wre.10
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 16:17:31 -0800 (PST)
+        Fri, 10 Jan 2020 19:20:11 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 6so1762192pgk.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 16:20:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SOhHMjy7jdpfI1DMYloTLgZVUnGgeKv/Vqgziyk6eXM=;
-        b=d7alot6oEoRhlxOjMLBtLjjjYjrqNTDRYLUbcpREvaRnqXf+FREesB72vDqa5U/nJf
-         MRHzajAz9C4Bmd6J0+NlRHeYsqRDDz3VPfsLH7WxelGR7Hk+CkZlACaWeLCaD4LXuTAj
-         3Jwp9dwTiNqj3b+Jltdu2wCznan+Qfk+xxeg8qD8dpB9IRg5nXdK/r4V8cxIpPoQaxkv
-         X0miuWjfHUi29kAKpPayo1J/mx/ltWPVjr8pdLBouwFeLHkPY32hayi7r0DKEuS0OGvg
-         NYuW7c4a5CaYEeKM+N5cIuBKSDC35xHWQmY0ZOyJJHfysXO+FQ54O0FlbKySV6UCcCAz
-         qDGA==
+        d=google.com; s=20161025;
+        h=date:from:subject:cc:to:in-reply-to:references:message-id
+         :mime-version:content-transfer-encoding;
+        bh=XmDl8MlBs8zMpHbzwC/Bjnzdb8+0L6MEHqUg6wui8eM=;
+        b=hJNbyZmXObUnnNReXzLTdAuenJ0Cs9Fy3IDYZ6wmGsmrCfWO/CaC/aROMb+knJte+7
+         73WWSHAFx90sYAKfkzcPgTkafMXwmE+twWaKcW+kw+tUqeTw5wGZZo53mRiIrubkGkwv
+         iNBDPHrQ8xtgfzHUWhpdo0W622Z6parTE2pfypw8im/z2EUMs41ye2BuF5xxRSPyqyqx
+         Pba6HoFvucvSPF8pjCuSi+eoZzeKUKRVoOwAL1TQCsbVz0IjE00F8uz7MTSOVZfwrZ1K
+         ppvyJPKSmsbnhN1j+2nD0ZffWePtX7TJvQS3d5IMhgLe0PyI/BcSMkmkfq1wLsfz8EcV
+         nyUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SOhHMjy7jdpfI1DMYloTLgZVUnGgeKv/Vqgziyk6eXM=;
-        b=SNIcwSuuGBmb53tqakJP9qLrmgiTxHM7UBJy9mwpfEnJmzE976xwELhGJsmEeht/QH
-         eTJT+JQRfFGFcGuFqPAtIS1ngUcBsPZaukl3JMtIjGgzK+XF4yseMbo3b5vaqDHrFPat
-         vrivlZJkAq2Vm8NYDiroMaqp7W2WpD0YbSoGmyBuwwgs+mvLABXECSwOkbygo/sYLiLK
-         1o998r5w0lgCWcNh8w0tizFZBJF5w0FpUAmuzJ7H2kcWnN1Gy5p2ye2MEAFI3jyp5RqZ
-         P+5209fDqkp8YS8Sj2YzIK/QXwAkDx9yTlez07g+071F96QWxkLPAC+p2yVNXslaRqnT
-         j3IQ==
-X-Gm-Message-State: APjAAAWxErcSXbY0fn+8PjbdWQFdW3qTD1tG/I++UZRaldTg/GJ7bmXs
-        MQiK/s7GWcyqZeRepW0bH+hLMqFxkkL8UEroxOXWtA==
-X-Google-Smtp-Source: APXvYqw+qKybwrfVajfQDahIQSXrj+ZLJMSfvl8jxphCdSH2XtSjuAr8/dm/HDmXOdEKzHEFntFAa6/pJPj2HQ91x8k=
-X-Received: by 2002:a5d:6886:: with SMTP id h6mr5891985wru.154.1578701850516;
- Fri, 10 Jan 2020 16:17:30 -0800 (PST)
-MIME-Version: 1.0
-References: <20200110071616.84891-1-chenzhou10@huawei.com> <b86d050a-634e-c99d-1302-29fd6257df1c@amd.com>
-In-Reply-To: <b86d050a-634e-c99d-1302-29fd6257df1c@amd.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Fri, 10 Jan 2020 19:17:16 -0500
-Message-ID: <CADnq5_OXHwj=acC7SWg9_gBpennTU7Rqa5VKrafJAJYYFnaWzw@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: remove unnecessary conversion to bool
-To:     Harry Wentland <hwentlan@amd.com>
-Cc:     Chen Zhou <chenzhou10@huawei.com>,
-        "Deucher, Alexander" <alexander.deucher@amd.com>,
-        "Leo (Sunpeng) Li" <sunpeng.li@amd.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:subject:cc:to:in-reply-to:references
+         :message-id:mime-version:content-transfer-encoding;
+        bh=XmDl8MlBs8zMpHbzwC/Bjnzdb8+0L6MEHqUg6wui8eM=;
+        b=diCaml21Qz9EFPTpUuXawr6yCtMH0mPot3K4UckfjzmhomOhfE/s7cjIMP8HlwOhH5
+         V0DJcpOjkBdk1YyGArMt13B6q6k6o7gcmClbPG4YXR3N4ETUjtp/UEdkCNcN4P61id7U
+         ZVgTafOpKjbawdzYmtylOOUpnGOzOzmaaWkp1TCHazklFWps5dSZAvqvYF3XHU3Piq/T
+         zBDzlVahad6qYl+IWjMTRgEeJ8f3hodNXNFk/jaoQJno8GQ5pEa4ew32vF9LcthKn0XT
+         jTNRS2KGN4WBX2zzyDEjEMrqPnerBYtEUl0/mZh/QU5CcWwIE7VfH1ze14WOPk17KC6C
+         slGQ==
+X-Gm-Message-State: APjAAAVKrKSqtynnHZjEUrjx/TJ40zklYTAshTrCYwK1cAatqn6mGyWB
+        cON27xR5S0CKH9wi2eKJgkh47w==
+X-Google-Smtp-Source: APXvYqzjBGpO8kkPo5gF+67AjQ5pa7PPUpyL1EIgRCN2owS8u1ATduGjhglT2mSaECpWO5gFDTOwDQ==
+X-Received: by 2002:aa7:8d8f:: with SMTP id i15mr7093588pfr.220.1578702010124;
+        Fri, 10 Jan 2020 16:20:10 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:7f69:cd98:a2a2:a03d])
+        by smtp.gmail.com with ESMTPSA id q6sm4289190pfh.127.2020.01.10.16.20.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 16:20:09 -0800 (PST)
+Date:   Fri, 10 Jan 2020 16:20:09 -0800 (PST)
+X-Google-Original-Date: Fri, 10 Jan 2020 15:58:58 PST (-0800)
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
+Subject:     Re: [PATCH] RISC-V: Typo fixes in image header and documentation.
+CC:     Atish Patra <Atish.Patra@wdc.com>, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, merker@debian.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, linux-doc@vger.kernel.org,
+        mchehab+samsung@kernel.org
+To:     corbet@lwn.net
+In-Reply-To: <20200110101707.06800f3c@lwn.net>
+References: <20200110101707.06800f3c@lwn.net> <20191210072947.7018340c@lwn.net>
+  <4912c007ab6c19321c8c988ae2328efbfb3e582d.camel@wdc.com> <mhng-3a815562-1222-4737-a77c-6dab9948db79@palmerdabbelt-glaptop>
+  <mhng-94b9cad5-0d14-480f-b428-8752630064d2@palmerdabbelt-glaptop>
+Message-ID: <mhng-9fc36964-582a-4186-818c-e9f7efe05a38@palmerdabbelt-glaptop>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Applied.  thanks!
+On Fri, 10 Jan 2020 09:17:07 PST (-0800), corbet@lwn.net wrote:
+> On Thu, 09 Jan 2020 15:42:27 -0800 (PST)
+> Palmer Dabbelt <palmerdabbelt@google.com> wrote:
+>
+>> > I was assuming it was going through the risc-v tree since it touches arch
+>> > code :)  I can go ahead and apply it.
+>>
+>> I don't see this in 5.5-rc5.
+>
+> It's in docs-next; I've not pushed it through straight to 5.5.  I can do
+> that, I suppose, if it seems urgent?
 
-On Fri, Jan 10, 2020 at 4:41 PM Harry Wentland <hwentlan@amd.com> wrote:
+I just wanted to make sure it didn't get lost.  The resolution of the thread
+was a bit ambiguous and sometimes that results me losing patches, so I just
+want to make sure everything is clear before I drop threads from my inbox
+(which is essentially my TODO list).  I was just digging myself out of a big
+email hole so I figured anything still sitting around would have landed in
+Linus' tree by not, but maybe I wasn't as far behind as I thought I was :)
+
+Thanks!
+
 >
-> On 2020-01-10 2:16 a.m., Chen Zhou wrote:
-> > The conversion to bool is not needed, remove it.
-> >> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> Thanks,
 >
-> Reviewed-by: Harry Wentland <harry.wentland@amd.com>
->
-> Harry
->
-> > ---
-> >  drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-> > index 504055f..a004e8e 100644
-> > --- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-> > +++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-> > @@ -2792,7 +2792,7 @@ static bool retrieve_link_cap(struct dc_link *link)
-> >                       dpcd_data[DP_TRAINING_AUX_RD_INTERVAL];
-> >
-> >               link->dpcd_caps.ext_receiver_cap_field_present =
-> > -                             aux_rd_interval.bits.EXT_RECEIVER_CAP_FIELD_PRESENT == 1 ? true:false;
-> > +                             aux_rd_interval.bits.EXT_RECEIVER_CAP_FIELD_PRESENT == 1;
-> >
-> >               if (aux_rd_interval.bits.EXT_RECEIVER_CAP_FIELD_PRESENT == 1) {
-> >                       uint8_t ext_cap_data[16];
-> >
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> jon
