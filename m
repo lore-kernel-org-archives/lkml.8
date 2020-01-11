@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873C6C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5B8C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53EA82077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7EA220848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736709;
-	bh=yxO19RkpbpT6xRpMIbMXZhoy5cZeZcVraSfibN4vxIA=;
+	s=default; t=1578736713;
+	bh=lNtSS+g7YuzOW8rkhuOquM3gfaiN1fpKJ89fWOpKUbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OcnE19oqHAd4YRQT228BGo/UeB+AnTp3GK8KKyEbOmjWDNDBh/pwl92E1sZ7KJNFv
-	 BuSSF9UV4sfgMbF9HLAZact9HEMr15cJ3n/hqbtUZoqqSb0OZSDzUhxi1twyoNk15o
-	 mRq+450Gqbvs08gMp+rXXOGfJy9SszdvTN69gfjI=
+	b=WzgOe9cOsgIfCGQorbGK0gVlorovcqkiXUjJt+nSRJPkjL00IbwBS5vwI7IlZn8KE
+	 cu+O6JKj7UhKiIGyBtPM93o7YH9GGA2uIHeRHBqFNe/fy1WBom780fekLTmyQLtbJi
+	 ZuBtr3oqQdCwBzTOoI2M8EiDEJ6tAY/jKl6NUiuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729233AbgAKJ62 (ORCPT
+        id S1729237AbgAKJ6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:58:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51718 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:58:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729051AbgAKJ62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:58:28 -0500
+        id S1728936AbgAKJ6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:58:32 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D29AC2077C;
-        Sat, 11 Jan 2020 09:58:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E08F62077C;
+        Sat, 11 Jan 2020 09:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736707;
-        bh=yxO19RkpbpT6xRpMIbMXZhoy5cZeZcVraSfibN4vxIA=;
+        s=default; t=1578736711;
+        bh=lNtSS+g7YuzOW8rkhuOquM3gfaiN1fpKJ89fWOpKUbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sg2dfAlM/ZoVcFHTHdnLUQQs7rrt354aMc1KFnAkIudVmhKSrLSnFXeT5CwPe1sF8
-         qeL9Y981TkzR0iWkXL4diwRGvtknzOqhdVjUWD18kGp57OU+hOsijUlt22FyNy67S7
-         15v5Y/A+hFtBwqzW48PdvRz9vxDWoYPSn3p2HQZg=
+        b=wQ5o/MLN1c08jHf5SM87Ej78/kMpY9UTU2Jqi2A65mmKeOOaYBVonM6i1ywu9sqJ3
+         AjjRPflohIswBh729vx2WRpOVW1QZRaToCCHOFl2iLzJekZkvQFLQsCCliBuivAjK2
+         nz/TlODNC0uisU3ws9E16d3IiFwnln+ORaO1V8Co=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 59/59] USB: serial: option: add Telit ME910G1 0x110a composition
-Date:   Sat, 11 Jan 2020 10:50:08 +0100
-Message-Id: <20200111094854.319738883@linuxfoundation.org>
+        stable@vger.kernel.org, Pengcheng Yang <yangpc@wangsu.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 53/59] tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
+Date:   Sat, 11 Jan 2020 10:50:02 +0100
+Message-Id: <20200111094851.453138971@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
 References: <20200111094835.417654274@linuxfoundation.org>
@@ -59,33 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Pengcheng Yang <yangpc@wangsu.com>
 
-commit 0d3010fa442429f8780976758719af05592ff19f upstream.
+[ Upstream commit c9655008e7845bcfdaac10a1ed8554ec167aea88 ]
 
-This patch adds the following Telit ME910G1 composition:
+When we receive a D-SACK, where the sequence number satisfies:
+	undo_marker <= start_seq < end_seq <= prior_snd_una
+we consider this is a valid D-SACK and tcp_is_sackblock_valid()
+returns true, then this D-SACK is discarded as "old stuff",
+but the variable first_sack_index is not marked as negative
+in tcp_sacktag_write_queue().
 
-0x110a: tty, tty, tty, rmnet
+If this D-SACK also carries a SACK that needs to be processed
+(for example, the previous SACK segment was lost), this SACK
+will be treated as a D-SACK in the following processing of
+tcp_sacktag_write_queue(), which will eventually lead to
+incorrect updates of undo_retrans and reordering.
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: fd6dad616d4f ("[TCP]: Earlier SACK block verification & simplify access to them")
+Signed-off-by: Pengcheng Yang <yangpc@wangsu.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/ipv4/tcp_input.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1167,6 +1167,8 @@ static const struct usb_device_id option
- 	  .driver_info = NCTRL(0) | RSVD(3) },
- 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1102, 0xff),	/* Telit ME910 (ECM) */
- 	  .driver_info = NCTRL(0) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x110a, 0xff),	/* Telit ME910G1 */
-+	  .driver_info = NCTRL(0) | RSVD(3) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910),
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910_USBCFG4),
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -1685,8 +1685,11 @@ tcp_sacktag_write_queue(struct sock *sk,
+ 		}
+ 
+ 		/* Ignore very old stuff early */
+-		if (!after(sp[used_sacks].end_seq, prior_snd_una))
++		if (!after(sp[used_sacks].end_seq, prior_snd_una)) {
++			if (i == 0)
++				first_sack_index = -1;
+ 			continue;
++		}
+ 
+ 		used_sacks++;
+ 	}
 
 
