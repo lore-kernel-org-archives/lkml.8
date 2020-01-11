@@ -2,162 +2,147 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D223FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 541D3C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A526620848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:57:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2202077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578736653;
+	bh=XeHyWWEnQOTi2O9lBiQmY2LxGna8vP21Mi46u6Rip+I=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rmq/16SZXoaHzEa5/JWvHcXxjVJDWQD/hv+mvhjT9UEgfghrfn1tLv9MzJuEjGU4L
+	 eF99EbsPp00tCoT7+yyLejHEbJ+jgtrAZFPTaEeLjOYhrUDz9zWRn4oBLIhjp6KfnQ
+	 +CRw2/ndbr2yZ9xTOIRl/zVMemCtsSHpxkil21Js=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729177AbgAKJ52 (ORCPT
+        id S1729183AbgAKJ5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:57:28 -0500
-Received: from mga11.intel.com ([192.55.52.93]:11196 "EHLO mga11.intel.com"
+        Sat, 11 Jan 2020 04:57:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728808AbgAKJ52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:57:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jan 2020 01:57:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,420,1571727600"; 
-   d="scan'208";a="240570568"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga002.jf.intel.com with ESMTP; 11 Jan 2020 01:57:27 -0800
-Received: from [10.252.24.8] (abudanko-mobl.ccr.corp.intel.com [10.252.24.8])
-        by linux.intel.com (Postfix) with ESMTP id 380C858045A;
-        Sat, 11 Jan 2020 01:57:19 -0800 (PST)
-Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
- privileged process
-To:     arnaldo.melo@gmail.com, Song Liu <songliubraving@fb.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "james.bottomley@hansenpartnership.com" 
-        <james.bottomley@hansenpartnership.com>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
- <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
- <20200108160713.GI2844@hirez.programming.kicks-ass.net>
- <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
- <20200110140234.GO2844@hirez.programming.kicks-ass.net>
- <20200111005213.6dfd98fb36ace098004bde0e@kernel.org>
- <20200110164531.GA2598@kernel.org>
- <20200111084735.0ff01c758bfbfd0ae2e1f24e@kernel.org>
- <2B79131A-3F76-47F5-AAB4-08BCA820473F@fb.com>
- <5e191833.1c69fb81.8bc25.a88c@mx.google.com>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Organization: Intel Corp.
-Message-ID: <158a4033-f8d6-8af7-77b0-20e62ec913b0@linux.intel.com>
-Date:   Sat, 11 Jan 2020 12:57:18 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1728825AbgAKJ5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:57:31 -0500
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EB9A2077C;
+        Sat, 11 Jan 2020 09:57:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578736650;
+        bh=XeHyWWEnQOTi2O9lBiQmY2LxGna8vP21Mi46u6Rip+I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GGu6XO/wlpz4RuMi1UDdZuIjQDoMPMoVLcxrDpdySSorzj9lE8+cUwSN8fKPFqNvy
+         WvfKbCG0aOCuvdAKKndwV6GzpP9sB2kdqoj/tnJqXvNP2r4xRoDFTJV0IFDwCtcEBf
+         o5lM5ZTI3ClgcA5+xoo498IsDYplKiXbfg81oGUE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 40/59] bnx2x: Do not handle requests from VFs after parity
+Date:   Sat, 11 Jan 2020 10:49:49 +0100
+Message-Id: <20200111094846.118726829@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
+References: <20200111094835.417654274@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <5e191833.1c69fb81.8bc25.a88c@mx.google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Manish Chopra <manishc@marvell.com>
 
-On 11.01.2020 3:35, arnaldo.melo@gmail.com wrote:
-> <keescook@chromium.org>,Jann Horn <jannh@google.com>,Thomas Gleixner <tglx@linutronix.de>,Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,Lionel Landwerlin <lionel.g.landwerlin@intel.com>,linux-kernel <linux-kernel@vger.kernel.org>,"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>,"selinux@vger.kernel.org" <selinux@vger.kernel.org>,"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,"bpf@vger.kernel.org" <bpf@vger.kernel.org>,"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,"oprofile-list@lists.sf.net" <oprofile-list@lists.sf.net>
-> From: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Message-ID: <A7F0BF73-9189-44BA-9264-C88F2F51CBF3@kernel.org>
-> 
-> On January 10, 2020 9:23:27 PM GMT-03:00, Song Liu <songliubraving@fb.com> wrote:
->>
->>
->>> On Jan 10, 2020, at 3:47 PM, Masami Hiramatsu <mhiramat@kernel.org>
->> wrote:
->>>
->>> On Fri, 10 Jan 2020 13:45:31 -0300
->>> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
->>>
->>>> Em Sat, Jan 11, 2020 at 12:52:13AM +0900, Masami Hiramatsu escreveu:
->>>>> On Fri, 10 Jan 2020 15:02:34 +0100 Peter Zijlstra
->> <peterz@infradead.org> wrote:
->>>>>> Again, this only allows attaching to previously created kprobes,
->> it does
->>>>>> not allow creating kprobes, right?
->>>>
->>>>>> That is; I don't think CAP_SYS_PERFMON should be allowed to create
->>>>>> kprobes.
->>>>
->>>>>> As might be clear; I don't actually know what the user-ABI is for
->>>>>> creating kprobes.
->>>>
->>>>> There are 2 ABIs nowadays, ftrace and ebpf. perf-probe uses ftrace
->> interface to
->>>>> define new kprobe events, and those events are treated as
->> completely same as
->>>>> tracepoint events. On the other hand, ebpf tries to define new
->> probe event
->>>>> via perf_event interface. Above one is that interface. IOW, it
->> creates new kprobe.
->>>>
->>>> Masami, any plans to make 'perf probe' use the perf_event_open()
->>>> interface for creating kprobes/uprobes?
->>>
->>> Would you mean perf probe to switch to perf_event_open()?
->>> No, perf probe is for setting up the ftrace probe events. I think we
->> can add an
->>> option to use perf_event_open(). But current kprobe creation from
->> perf_event_open()
->>> is separated from ftrace by design.
->>
->> I guess we can extend event parser to understand kprobe directly.
->> Instead of
->>
->> 	perf probe kernel_func
->> 	perf stat/record -e probe:kernel_func ...
->>
->> We can just do 
->>
->> 	perf stat/record -e kprobe:kernel_func ...
-> 
-> 
-> You took the words from my mouth, exactly, that is a perfect use case, an alternative to the 'perf probe' one of making a disabled event that then gets activated via record/stat/trace, in many cases it's better, removes the explicit probe setup case.
+[ Upstream commit 7113f796bbbced2470cd6d7379d50d7a7a78bf34 ]
 
-Arnaldo, Masami, Song,
+Parity error from the hardware will cause PF to lose the state
+of their VFs due to PF's internal reload and hardware reset following
+the parity error. Restrict any configuration request from the VFs after
+the parity as it could cause unexpected hardware behavior, only way
+for VFs to recover would be to trigger FLR on VFs and reload them.
 
-What do you think about making this also open to CAP_SYS_PERFMON privileged processes?
-Could you please also review and comment on patch 5/9 for bpf_trace.c?
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 12 ++++++++++--
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h |  1 +
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c  | 12 ++++++++++++
+ 3 files changed, 23 insertions(+), 2 deletions(-)
 
-Thanks,
-Alexey
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+index 82960603da33..026c72e62c18 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -9942,10 +9942,18 @@ static void bnx2x_recovery_failed(struct bnx2x *bp)
+  */
+ static void bnx2x_parity_recover(struct bnx2x *bp)
+ {
+-	bool global = false;
+ 	u32 error_recovered, error_unrecovered;
+-	bool is_parity;
++	bool is_parity, global = false;
++#ifdef CONFIG_BNX2X_SRIOV
++	int vf_idx;
++
++	for (vf_idx = 0; vf_idx < bp->requested_nr_virtfn; vf_idx++) {
++		struct bnx2x_virtf *vf = BP_VF(bp, vf_idx);
+ 
++		if (vf)
++			vf->state = VF_LOST;
++	}
++#endif
+ 	DP(NETIF_MSG_HW, "Handling parity\n");
+ 	while (1) {
+ 		switch (bp->recovery_state) {
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
+index 6f6f13dc2be3..ab8339594cd3 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
+@@ -139,6 +139,7 @@ struct bnx2x_virtf {
+ #define VF_ACQUIRED	1	/* VF acquired, but not initialized */
+ #define VF_ENABLED	2	/* VF Enabled */
+ #define VF_RESET	3	/* VF FLR'd, pending cleanup */
++#define VF_LOST		4	/* Recovery while VFs are loaded */
+ 
+ 	bool flr_clnup_stage;	/* true during flr cleanup */
+ 
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
+index a12a4236b143..e9fc3b09dba8 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
+@@ -2095,6 +2095,18 @@ static void bnx2x_vf_mbx_request(struct bnx2x *bp, struct bnx2x_virtf *vf,
+ {
+ 	int i;
+ 
++	if (vf->state == VF_LOST) {
++		/* Just ack the FW and return if VFs are lost
++		 * in case of parity error. VFs are supposed to be timedout
++		 * on waiting for PF response.
++		 */
++		DP(BNX2X_MSG_IOV,
++		   "VF 0x%x lost, not handling the request\n", vf->abs_vfid);
++
++		storm_memset_vf_mbx_ack(bp, vf->abs_vfid);
++		return;
++	}
++
+ 	/* check if tlv type is known */
+ 	if (bnx2x_tlv_supported(mbx->first_tlv.tl.type)) {
+ 		/* Lock the per vf op mutex and note the locker's identity.
+-- 
+2.20.1
 
-> 
-> Regards, 
-> 
-> - Arnaldo
-> 
->>
->> Thanks,
->> Song
-> 
+
+
