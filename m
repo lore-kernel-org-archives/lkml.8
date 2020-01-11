@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDFEC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 13:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79596C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 13:17:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6BE02072E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 13:06:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5187620848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 13:17:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="O/hmB+8E"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pFLTkCMG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbgAKNGJ (ORCPT
+        id S1729509AbgAKNRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 08:06:09 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:52220 "EHLO mail.skyhub.de"
+        Sat, 11 Jan 2020 08:17:53 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:54812 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729313AbgAKNGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 08:06:09 -0500
+        id S1729294AbgAKNRw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 08:17:52 -0500
 Received: from zn.tnic (p200300EC2F1E140059EC870F21D98201.dip0.t-ipconnect.de [IPv6:2003:ec:2f1e:1400:59ec:870f:21d9:8201])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3E4FB1EC085F;
-        Sat, 11 Jan 2020 14:06:07 +0100 (CET)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 63A801EC085F;
+        Sat, 11 Jan 2020 14:17:51 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578747967;
+        t=1578748671;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=BYvSwdrZZUXL1ebcYH13oLjjpeCBly4UESLGD5QNBXs=;
-        b=O/hmB+8EWlsUFmi5xI6cO2XZ2qbhHJgUKS7HWj7i1PCw+PwhEL9DwTQMg47asDXDVh+stV
-        anYjxYAFUMvb6mt0YUyjM8hRbFDRtWKZe5S7F5H3rJ6cBgh0hrkKVB9vIik+x1pgFtQB3z
-        66jwk6wTb2fwJC21Xmds++W5RuFNbWk=
-Date:   Sat, 11 Jan 2020 14:06:04 +0100
+        bh=cL/qt2mO3HDc5ZV1IIYpqPif5FcLQqmGpbntiAxlo2s=;
+        b=pFLTkCMGIYbC+kyfnU7Hlx4UfGj0TRfPYkL2psiEEEgrliU6UuJmMnAcI/+zPCM78D47BY
+        MtroX5YBKjnnzgPganINGUEs2/ObrJQDCjvrQEHiU4TQs/An1f1g3RRjIfgE8QYTAjLXZb
+        VeYTl3zt69A0rx5CpUsGTeHO0Pbpawc=
+Date:   Sat, 11 Jan 2020 14:17:44 +0100
 From:   Borislav Petkov <bp@alien8.de>
 To:     "Luck, Tony" <tony.luck@intel.com>
 Cc:     Jan =?utf-8?Q?H=2E_Sch=C3=B6nherr?= <jschoenh@amazon.de>,
@@ -45,7 +45,7 @@ Cc:     Jan =?utf-8?Q?H=2E_Sch=C3=B6nherr?= <jschoenh@amazon.de>,
         Ingo Molnar <mingo@redhat.com>,
         "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 Subject: Re: [PATCH v2 1/6] x86/mce: Take action on UCNA/Deferred errors again
-Message-ID: <20200111130604.GB23583@zn.tnic>
+Message-ID: <20200111131744.GC23583@zn.tnic>
 References: <20200103150722.20313-1-jschoenh@amazon.de>
  <20200103150722.20313-2-jschoenh@amazon.de>
  <20200110095004.GD19453@zn.tnic>
@@ -61,28 +61,33 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Fri, Jan 10, 2020 at 10:45:33AM -0800, Luck, Tony wrote:
-> That's a tricky question. We have changing behavior (UCNA pages offlined,
-> then a few kernel versions stopped doing this, now we are going to start
-> doing it again. But is it really a _BUG_ that needs backporting to stable?
-> I'm leaning towards "no it isn't".
+> I totally agree that counting notifiers is clumsy. Also less than
+> ideal is the concept that any notifier on the chain can declare:
+>   "I fixed it"
+> and prevent any other notifiers from even seeing it. Well the concept
+> is good, but it is overused.
 
-I think the same, so let's not. We can always backport it later, if it
-turns out that it is needed.
+But why can't we use it?
 
-> But could perhaps be convinced to change my mind if somebody has a
-> good reason for wanting it there.
+Don't get me wrong: I'm simply following my KISS approach to do the
+simplest scheme required. So, do you see a use case where the whole
+error handling chain would need more sophisticated handling?
 
-Yah.
+> I think we may do better with a field in the "struct mce" that is being
+> passed to each where notifiers can wiggle some bits (semantics to be
+> defined later) which can tell subsequent notifiers what sort of actions
+> have been taken.
+> E.g. the SRAO/UCNA notifier can say "I took this page offline"
+> the dev_mcelog one can say "I think I handed to a process that has /dev/mcelog open"
+> EDAC drivers can say "I decoded the address and printed something"
+> CEC can say: "I silently counted this corrected error", or "error exceeded
+> threshold and I took the page offline".
+> 
+> The default notifier can print to console if nobody set a bit to say
+> that the error had been somehow logged.
 
-> Is there something to put in the tags to stop this being autoselected
-> for backport because it has a Fixes: tag?
-
-I don't think so.
-
-What we could do is write the "Fixes:" tag in free text in the commit
-message so that tools don't pick up on it.
-
-I'll reply to the other thing below in a separate mail.
+That idea is good and I'll gladly take patches for it so if you wanna do
+it...
 
 Thx.
 
