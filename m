@@ -2,51 +2,54 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EF6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B473C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 736A22072E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:54:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 039222072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:54:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736473;
-	bh=UhKWdznl3WaIfp7JHn+VhYkc7uxuSFKGbwszSTT+IcI=;
+	s=default; t=1578736479;
+	bh=CW+8YHjb911IXQD++FpPnPErWmULIcsG8GPVMa5/gdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wblzRF/edeqC8FJoU8qkDQM7Im42Ulvk8fHP1gjlmvVVXTcGIaDNAo2O5xTS2uOyM
-	 z030WA/g7pD38odHZhPTudeUnmbr1vyfzCmE1wrgBSVePquK7IZajmt7vu8Pf8gh/L
-	 Youg2M2UfKRs2+RWlMa1ROj0hZFmArhELLa4FEoY=
+	b=R3orZLKVreYj3LQOjavLYZ5ecpXCN9bjBubkxZ18sAwgV6b7/hVVVirmerVDQH5+O
+	 j8SqJxoPH63a6c33I7uNa2G5YkZSt373/RBLmKHe1VSrcQyq8p2f34H36yKruAryyt
+	 UIZCbE2NnjpYLHjRuagfSkgjbdtaGQBz+qwNwgkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbgAKJyc (ORCPT
+        id S1728846AbgAKJyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:54:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43066 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:54:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728747AbgAKJya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:54:30 -0500
+        id S1728807AbgAKJyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:54:36 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D23A2084D;
-        Sat, 11 Jan 2020 09:54:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 032512072E;
+        Sat, 11 Jan 2020 09:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736470;
-        bh=UhKWdznl3WaIfp7JHn+VhYkc7uxuSFKGbwszSTT+IcI=;
+        s=default; t=1578736475;
+        bh=CW+8YHjb911IXQD++FpPnPErWmULIcsG8GPVMa5/gdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z0zrGyHAhCN/0UxwvTBKOyPX+sXP+DQ3c0yn46Dmbv21TQxgK8LJGBOYZtD3so4RU
-         3h63o/qne+czeU/WtwSOnHe/W2EytzaGrt8tAIeirxFd7hOZq2JW7/laknGihzRc73
-         P7govJrrDuCyXWOi2RNh7RRrdLB3d5g1X0qb8tKs=
+        b=J5sstdRlfieUO8ZDKO2qRW7vYOAk6Xtu/wDMZFAwJms5iCvhYvZAlAmRIP5qbTn6L
+         vSh7e5uiNATKVf/3ZLh/Tp2mlCy7UkyHFN0+g1JZEH5g6tYjrMmm9Vw41NtEUcEcFy
+         /0MnyIxpLWX4vJ9njkYKSsedYm6I2OAYfAXhYGDk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 21/59] ALSA: cs4236: fix error return comparison of an unsigned integer
-Date:   Sat, 11 Jan 2020 10:49:30 +0100
-Message-Id: <20200111094843.080946833@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+c732f8644185de340492@syzkaller.appspotmail.com,
+        Brian Foster <bfoster@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 12/59] xfs: fix mount failure crash on invalid iclog memory access
+Date:   Sat, 11 Jan 2020 10:49:21 +0100
+Message-Id: <20200111094840.323120975@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
 References: <20200111094835.417654274@linuxfoundation.org>
@@ -59,37 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Brian Foster <bfoster@redhat.com>
 
-commit d60229d84846a8399257006af9c5444599f64361 upstream.
+[ Upstream commit 798a9cada4694ca8d970259f216cec47e675bfd5 ]
 
-The return from pnp_irq is an unsigned integer type resource_size_t
-and hence the error check for a positive non-error code is always
-going to be true.  A check for a non-failure return from pnp_irq
-should in fact be for (resource_size_t)-1 rather than >= 0.
+syzbot (via KASAN) reports a use-after-free in the error path of
+xlog_alloc_log(). Specifically, the iclog freeing loop doesn't
+handle the case of a fully initialized ->l_iclog linked list.
+Instead, it assumes that the list is partially constructed and NULL
+terminated.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: a9824c868a2c ("[ALSA] Add CS4232 PnP BIOS support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20191122131354.58042-1-colin.king@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This bug manifested because there was no possible error scenario
+after iclog list setup when the original code was added.  Subsequent
+code and associated error conditions were added some time later,
+while the original error handling code was never updated. Fix up the
+error loop to terminate either on a NULL iclog or reaching the end
+of the list.
 
+Reported-by: syzbot+c732f8644185de340492@syzkaller.appspotmail.com
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/isa/cs423x/cs4236.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_log.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/isa/cs423x/cs4236.c
-+++ b/sound/isa/cs423x/cs4236.c
-@@ -293,7 +293,8 @@ static int snd_cs423x_pnp_init_mpu(int d
- 	} else {
- 		mpu_port[dev] = pnp_port_start(pdev, 0);
- 		if (mpu_irq[dev] >= 0 &&
--		    pnp_irq_valid(pdev, 0) && pnp_irq(pdev, 0) >= 0) {
-+		    pnp_irq_valid(pdev, 0) &&
-+		    pnp_irq(pdev, 0) != (resource_size_t)-1) {
- 			mpu_irq[dev] = pnp_irq(pdev, 0);
- 		} else {
- 			mpu_irq[dev] = -1;	/* disable interrupt */
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index 73b725f965eb..065aa4752607 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -1503,6 +1503,8 @@ xlog_alloc_log(
+ 		if (iclog->ic_bp)
+ 			xfs_buf_free(iclog->ic_bp);
+ 		kmem_free(iclog);
++		if (prev_iclog == log->l_iclog)
++			break;
+ 	}
+ 	spinlock_destroy(&log->l_icloglock);
+ 	xfs_buf_free(log->l_xbuf);
+-- 
+2.20.1
+
 
 
