@@ -2,53 +2,52 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1856C33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFF0C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C322077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 307092084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736907;
-	bh=4umTLBvz5S2OdW0sMeE323KpP+/GriDm32Nii34vsDE=;
+	s=default; t=1578736912;
+	bh=p+yC9RWYDnv+OJQJHw5r1dkCEKfrtAnQc5kuvhUQ+BU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C2mtZtwgvLKGZaZAwzqyX7Bu6cHUz/hmzGkrCTVj2tzmGzf96DJgqNYsOCbVVW1yy
-	 AdWrBjyOergFLYadGgfSnve7N6CtbDpqJ7uREI70acthe7MzERDcID9nWS1ixqk+Ol
-	 ZLgpGaaJzsHPATLswzfDaUFK26JPbUxYSP6iU5y8=
+	b=FUorHBqXBK9Fp1dMcKvI99jQ9Uvc0xET8CiBAsbk8sE+wPFX7Vvqi0XI/9Bq3vYEy
+	 AR2Leq2KDSTs6iJ+hs48QSW2OEipebG6dzgzpkqviBmiNFHNqRZh2pSxUtBhQZuYdE
+	 WkpSt6Z3hqgmgcyeXCVtHDHvA+wZGH381VReKYhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729461AbgAKKBr (ORCPT
+        id S1729466AbgAKKBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:01:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59422 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:01:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729171AbgAKKBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:01:46 -0500
+        id S1729171AbgAKKBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:01:49 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 905CC2082E;
-        Sat, 11 Jan 2020 10:01:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B19EB2077C;
+        Sat, 11 Jan 2020 10:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736905;
-        bh=4umTLBvz5S2OdW0sMeE323KpP+/GriDm32Nii34vsDE=;
+        s=default; t=1578736909;
+        bh=p+yC9RWYDnv+OJQJHw5r1dkCEKfrtAnQc5kuvhUQ+BU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MP6un/i4FF1y2+QcebNX7t1na1BuiEiK4q9cY0JPAfel37lREZwVju+Q5ONr25UaE
-         LBS4XOy+TpftAS4xwPKhgVyZTFyP2DgB0OqtNdd6ISj+EHJuL9gv7rEWvXksXGfUNE
-         vGKnacnfofjaRZ0My+B5gdvdDkvaqoFxqIjQStrA=
+        b=SYaPBiqvqLpejMFT7Kozah5S3OA9F32xdMqnQLUg0T8FEpU7iFOA3HdoeZIZZ/0Nu
+         sFNciPmdnFJ8tuXA3bG26fSPLDjATGID0ZTPnOzL4zCvNpN451A9gNaXNAx9+RY+d9
+         9J5NOLwZmQQZwkdb7gqKZr/xf0waiDcezDgkSowI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Imre Deak <imre.deak@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 45/91] drm/mst: Fix MST sideband up-reply failure handling
-Date:   Sat, 11 Jan 2020 10:49:38 +0100
-Message-Id: <20200111094902.223157481@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 4.9 29/91] gpiolib: fix up emulated open drain outputs
+Date:   Sat, 11 Jan 2020 10:49:22 +0100
+Message-Id: <20200111094855.400352089@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -61,83 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Imre Deak <imre.deak@intel.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit d8fd3722207f154b53c80eee2cf4977c3fc25a92 ]
+commit 256efaea1fdc4e38970489197409a26125ee0aaa upstream.
 
-Fix the breakage resulting in the stacktrace below, due to tx queue
-being full when trying to send an up-reply. txmsg->seqno is -1 in this
-case leading to a corruption of the mstb object by
+gpiolib has a corner case with open drain outputs that are emulated.
+When such outputs are outputting a logic 1, emulation will set the
+hardware to input mode, which will cause gpiod_get_direction() to
+report that it is in input mode. This is different from the behaviour
+with a true open-drain output.
 
-	txmsg->dst->tx_slots[txmsg->seqno] = NULL;
+Unify the semantics here.
 
-in process_single_up_tx_qlock().
+Cc: <stable@vger.kernel.org>
+Suggested-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-[  +0,005162] [drm:process_single_tx_qlock [drm_kms_helper]] set_hdr_from_dst_qlock: failed to find slot
-[  +0,000015] [drm:drm_dp_send_up_ack_reply.constprop.19 [drm_kms_helper]] failed to send msg in q -11
-[  +0,000939] BUG: kernel NULL pointer dereference, address: 00000000000005a0
-[  +0,006982] #PF: supervisor write access in kernel mode
-[  +0,005223] #PF: error_code(0x0002) - not-present page
-[  +0,005135] PGD 0 P4D 0
-[  +0,002581] Oops: 0002 [#1] PREEMPT SMP NOPTI
-[  +0,004359] CPU: 1 PID: 1200 Comm: kworker/u16:3 Tainted: G     U            5.2.0-rc1+ #410
-[  +0,008433] Hardware name: Intel Corporation Ice Lake Client Platform/IceLake U DDR4 SODIMM PD RVP, BIOS ICLSFWR1.R00.3175.A00.1904261428 04/26/2019
-[  +0,013323] Workqueue: i915-dp i915_digport_work_func [i915]
-[  +0,005676] RIP: 0010:queue_work_on+0x19/0x70
-[  +0,004372] Code: ff ff ff 0f 1f 40 00 66 2e 0f 1f 84 00 00 00 00 00 41 56 49 89 f6 41 55 41 89 fd 41 54 55 53 48 89 d3 9c 5d fa e8 e7 81 0c 00 <f0> 48 0f ba 2b 00 73 31 45 31 e4 f7 c5 00 02 00 00 74 13 e8 cf 7f
-[  +0,018750] RSP: 0018:ffffc900007dfc50 EFLAGS: 00010006
-[  +0,005222] RAX: 0000000000000046 RBX: 00000000000005a0 RCX: 0000000000000001
-[  +0,007133] RDX: 000000000001b608 RSI: 0000000000000000 RDI: ffffffff82121972
-[  +0,007129] RBP: 0000000000000202 R08: 0000000000000000 R09: 0000000000000001
-[  +0,007129] R10: 0000000000000000 R11: 0000000000000000 R12: ffff88847bfa5096
-[  +0,007131] R13: 0000000000000010 R14: ffff88849c08f3f8 R15: 0000000000000000
-[  +0,007128] FS:  0000000000000000(0000) GS:ffff88849dc80000(0000) knlGS:0000000000000000
-[  +0,008083] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  +0,005749] CR2: 00000000000005a0 CR3: 0000000005210006 CR4: 0000000000760ee0
-[  +0,007128] PKRU: 55555554
-[  +0,002722] Call Trace:
-[  +0,002458]  drm_dp_mst_handle_up_req+0x517/0x540 [drm_kms_helper]
-[  +0,006197]  ? drm_dp_mst_hpd_irq+0x5b/0x9c0 [drm_kms_helper]
-[  +0,005764]  drm_dp_mst_hpd_irq+0x5b/0x9c0 [drm_kms_helper]
-[  +0,005623]  ? intel_dp_hpd_pulse+0x205/0x370 [i915]
-[  +0,005018]  intel_dp_hpd_pulse+0x205/0x370 [i915]
-[  +0,004836]  i915_digport_work_func+0xbb/0x140 [i915]
-[  +0,005108]  process_one_work+0x245/0x610
-[  +0,004027]  worker_thread+0x37/0x380
-[  +0,003684]  ? process_one_work+0x610/0x610
-[  +0,004184]  kthread+0x119/0x130
-[  +0,003240]  ? kthread_park+0x80/0x80
-[  +0,003668]  ret_from_fork+0x24/0x50
-
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Dave Airlie <airlied@redhat.com>
-Signed-off-by: Imre Deak <imre.deak@intel.com>
-Reviewed-by: Lyude Paul <lyude@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190523212433.9058-1-imre.deak@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpio/gpiolib.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 4a959740058e..f68dcf5790ad 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -1536,7 +1536,11 @@ static void process_single_up_tx_qlock(struct drm_dp_mst_topology_mgr *mgr,
- 	if (ret != 1)
- 		DRM_DEBUG_KMS("failed to send msg in q %d\n", ret);
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -188,6 +188,14 @@ int gpiod_get_direction(struct gpio_desc
+ 	chip = gpiod_to_chip(desc);
+ 	offset = gpio_chip_hwgpio(desc);
  
--	txmsg->dst->tx_slots[txmsg->seqno] = NULL;
-+	if (txmsg->seqno != -1) {
-+		WARN_ON((unsigned int)txmsg->seqno >
-+			ARRAY_SIZE(txmsg->dst->tx_slots));
-+		txmsg->dst->tx_slots[txmsg->seqno] = NULL;
-+	}
- }
++	/*
++	 * Open drain emulation using input mode may incorrectly report
++	 * input here, fix that up.
++	 */
++	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags) &&
++	    test_bit(FLAG_IS_OUT, &desc->flags))
++		return 0;
++
+ 	if (!chip->get_direction)
+ 		return status;
  
- static void drm_dp_queue_down_tx(struct drm_dp_mst_topology_mgr *mgr,
--- 
-2.20.1
-
 
 
