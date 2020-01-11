@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C461BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6791C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C77420880
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 769F72084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737979;
-	bh=Szw6ys8LnCVnsTt06jMBo0T+8Yvamx5Z4vLGAz8NCt4=;
+	s=default; t=1578737984;
+	bh=4pzCguaSA3GA/NKWEPxGAZQFJ/n6JIRy5P0TBnlxuC0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kGpjFQ12BQnnxF7/EW/h0asnamgtCMIlfSozgZdNGSQRmIkTUG0mADWv00p7A2jCL
-	 jmt3zZ7XIDgMuEKerO2QBuBkEKaaQlADWkPizpdj41HY3NJhFFvNLZX7O1YoGoNq5C
-	 OXbZ22dvdX7x9FtNKcgmoElzj68T2koJW28o9cgA=
+	b=pRlpfMaEullsU6qrlqY0ff1G6pnZ/LV8jS/GqbDW59DZJGzLlyxWOTBZgBJTK8moy
+	 U9l9uxSsHgK7ikX8f2HuXS5l9ab/zJZumzxZfWVMK7nUr/2lkqVBwq7PmKG/QJ5EYK
+	 W506gGyKAFN/2ejZY3ANEflJa43nUWs8ylklpZCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbgAKKTi (ORCPT
+        id S1730559AbgAKKTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:19:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39340 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:19:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728998AbgAKKTf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:19:35 -0500
+        id S1728998AbgAKKTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:19:39 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E00020848;
-        Sat, 11 Jan 2020 10:19:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D62D20848;
+        Sat, 11 Jan 2020 10:19:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737974;
-        bh=Szw6ys8LnCVnsTt06jMBo0T+8Yvamx5Z4vLGAz8NCt4=;
+        s=default; t=1578737978;
+        bh=4pzCguaSA3GA/NKWEPxGAZQFJ/n6JIRy5P0TBnlxuC0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCYOXvM1+3X3ictfo9v3r/kvl22ACWcF3K+fhnGIrq0bAuDDOYDrbrieIPgo8As79
-         8FKNyYuIrz9meG1RTN6tvO4IkmicDilOCg2r4+o2baYQtzJ7eXHKwjKzYTpMbjbf5e
-         koZa4O3rG3FiIriJ/xrbwJq/6jyEU5IkxYNO+DsU=
+        b=vSitBDcgWnuk8/SX9rymSm02eCwy39GbOpc8pbKEC9BM1BGtuCEeghgITxp1RGt+G
+         r/CRyNbbUWMLP3RJLMANAgmQLTG2LvU7POXQnh0zz5SF49hOuSJB5L7ow2G85NQxUE
+         zArksWhA1w9lK4efq5CAALq/SbmDKgipCkUC9Os8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-Subject: [PATCH 4.19 82/84] USB: core: fix check for duplicate endpoints
-Date:   Sat, 11 Jan 2020 10:50:59 +0100
-Message-Id: <20200111094912.820076630@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.19 65/84] arm64: KVM: Trap VM ops when ARM64_WORKAROUND_CAVIUM_TX2_219_TVM is set
+Date:   Sat, 11 Jan 2020 10:50:42 +0100
+Message-Id: <20200111094910.328555272@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -59,128 +59,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Marc Zyngier <marc.zyngier@arm.com>
 
-commit 3e4f8e21c4f27bcf30a48486b9dcc269512b79ff upstream.
+commit d3ec3a08fa700c8b46abb137dce4e2514a6f9668 upstream.
 
-Amend the endpoint-descriptor sanity checks to detect all duplicate
-endpoint addresses in a configuration.
+In order to workaround the TX2-219 erratum, it is necessary to trap
+TTBRx_EL1 accesses to EL2. This is done by setting HCR_EL2.TVM on
+guest entry, which has the side effect of trapping all the other
+VM-related sysregs as well.
 
-Commit 0a8fd1346254 ("USB: fix problems with duplicate endpoint
-addresses") added a check for duplicate endpoint addresses within a
-single alternate setting, but did not look for duplicate addresses in
-other interfaces.
+To minimize the overhead, a fast path is used so that we don't
+have to go all the way back to the main sysreg handling code,
+unless the rest of the hypervisor expects to see these accesses.
 
-The current check would also not detect all duplicate addresses when one
-endpoint is as a (bi-directional) control endpoint.
-
-This specifically avoids overwriting the endpoint entries in struct
-usb_device when enabling a duplicate endpoint, something which could
-potentially lead to crashes or leaks, for example, when endpoints are
-later disabled.
-
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20191219161016.6695-1-johan@kernel.org
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/config.c |   70 ++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 58 insertions(+), 12 deletions(-)
+ arch/arm64/include/asm/cpucaps.h |    3 +
+ arch/arm64/kvm/hyp/switch.c      |   69 +++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 69 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -203,9 +203,58 @@ static const unsigned short super_speed_
- 	[USB_ENDPOINT_XFER_INT] = 1024,
- };
+--- a/arch/arm64/include/asm/cpucaps.h
++++ b/arch/arm64/include/asm/cpucaps.h
+@@ -53,7 +53,8 @@
+ #define ARM64_HAS_STAGE2_FWB			32
+ #define ARM64_WORKAROUND_1463225		33
+ #define ARM64_SSBS				34
++#define ARM64_WORKAROUND_CAVIUM_TX2_219_TVM	35
  
--static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
--    int asnum, struct usb_host_interface *ifp, int num_ep,
--    unsigned char *buffer, int size)
-+static bool endpoint_is_duplicate(struct usb_endpoint_descriptor *e1,
-+		struct usb_endpoint_descriptor *e2)
+-#define ARM64_NCAPS				35
++#define ARM64_NCAPS				36
+ 
+ #endif /* __ASM_CPUCAPS_H */
+--- a/arch/arm64/kvm/hyp/switch.c
++++ b/arch/arm64/kvm/hyp/switch.c
+@@ -130,6 +130,9 @@ static void __hyp_text __activate_traps(
+ {
+ 	u64 hcr = vcpu->arch.hcr_el2;
+ 
++	if (cpus_have_const_cap(ARM64_WORKAROUND_CAVIUM_TX2_219_TVM))
++		hcr |= HCR_TVM;
++
+ 	write_sysreg(hcr, hcr_el2);
+ 
+ 	if (cpus_have_const_cap(ARM64_HAS_RAS_EXTN) && (hcr & HCR_VSE))
+@@ -172,8 +175,10 @@ static void __hyp_text __deactivate_trap
+ 	 * the crucial bit is "On taking a vSError interrupt,
+ 	 * HCR_EL2.VSE is cleared to 0."
+ 	 */
+-	if (vcpu->arch.hcr_el2 & HCR_VSE)
+-		vcpu->arch.hcr_el2 = read_sysreg(hcr_el2);
++	if (vcpu->arch.hcr_el2 & HCR_VSE) {
++		vcpu->arch.hcr_el2 &= ~HCR_VSE;
++		vcpu->arch.hcr_el2 |= read_sysreg(hcr_el2) & HCR_VSE;
++	}
+ 
+ 	if (has_vhe())
+ 		deactivate_traps_vhe();
+@@ -379,6 +384,61 @@ static bool __hyp_text __hyp_switch_fpsi
+ 	return true;
+ }
+ 
++static bool __hyp_text handle_tx2_tvm(struct kvm_vcpu *vcpu)
 +{
-+	if (e1->bEndpointAddress == e2->bEndpointAddress)
++	u32 sysreg = esr_sys64_to_sysreg(kvm_vcpu_get_hsr(vcpu));
++	int rt = kvm_vcpu_sys_get_rt(vcpu);
++	u64 val = vcpu_get_reg(vcpu, rt);
++
++	/*
++	 * The normal sysreg handling code expects to see the traps,
++	 * let's not do anything here.
++	 */
++	if (vcpu->arch.hcr_el2 & HCR_TVM)
++		return false;
++
++	switch (sysreg) {
++	case SYS_SCTLR_EL1:
++		write_sysreg_el1(val, SYS_SCTLR);
++		break;
++	case SYS_TTBR0_EL1:
++		write_sysreg_el1(val, SYS_TTBR0);
++		break;
++	case SYS_TTBR1_EL1:
++		write_sysreg_el1(val, SYS_TTBR1);
++		break;
++	case SYS_TCR_EL1:
++		write_sysreg_el1(val, SYS_TCR);
++		break;
++	case SYS_ESR_EL1:
++		write_sysreg_el1(val, SYS_ESR);
++		break;
++	case SYS_FAR_EL1:
++		write_sysreg_el1(val, SYS_FAR);
++		break;
++	case SYS_AFSR0_EL1:
++		write_sysreg_el1(val, SYS_AFSR0);
++		break;
++	case SYS_AFSR1_EL1:
++		write_sysreg_el1(val, SYS_AFSR1);
++		break;
++	case SYS_MAIR_EL1:
++		write_sysreg_el1(val, SYS_MAIR);
++		break;
++	case SYS_AMAIR_EL1:
++		write_sysreg_el1(val, SYS_AMAIR);
++		break;
++	case SYS_CONTEXTIDR_EL1:
++		write_sysreg_el1(val, SYS_CONTEXTIDR);
++		break;
++	default:
++		return false;
++	}
++
++	__kvm_skip_instr(vcpu);
++	return true;
++}
++
+ /*
+  * Return true when we were able to fixup the guest exit and should return to
+  * the guest, false when we should restore the host state and return to the
+@@ -398,6 +458,11 @@ static bool __hyp_text fixup_guest_exit(
+ 	if (*exit_code != ARM_EXCEPTION_TRAP)
+ 		goto exit;
+ 
++	if (cpus_have_const_cap(ARM64_WORKAROUND_CAVIUM_TX2_219_TVM) &&
++	    kvm_vcpu_trap_get_class(vcpu) == ESR_ELx_EC_SYS64 &&
++	    handle_tx2_tvm(vcpu))
 +		return true;
 +
-+	if (usb_endpoint_xfer_control(e1) || usb_endpoint_xfer_control(e2)) {
-+		if (usb_endpoint_num(e1) == usb_endpoint_num(e2))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
-+/*
-+ * Check for duplicate endpoint addresses in other interfaces and in the
-+ * altsetting currently being parsed.
-+ */
-+static bool config_endpoint_is_duplicate(struct usb_host_config *config,
-+		int inum, int asnum, struct usb_endpoint_descriptor *d)
-+{
-+	struct usb_endpoint_descriptor *epd;
-+	struct usb_interface_cache *intfc;
-+	struct usb_host_interface *alt;
-+	int i, j, k;
-+
-+	for (i = 0; i < config->desc.bNumInterfaces; ++i) {
-+		intfc = config->intf_cache[i];
-+
-+		for (j = 0; j < intfc->num_altsetting; ++j) {
-+			alt = &intfc->altsetting[j];
-+
-+			if (alt->desc.bInterfaceNumber == inum &&
-+					alt->desc.bAlternateSetting != asnum)
-+				continue;
-+
-+			for (k = 0; k < alt->desc.bNumEndpoints; ++k) {
-+				epd = &alt->endpoint[k].desc;
-+
-+				if (endpoint_is_duplicate(epd, d))
-+					return true;
-+			}
-+		}
-+	}
-+
-+	return false;
-+}
-+
-+static int usb_parse_endpoint(struct device *ddev, int cfgno,
-+		struct usb_host_config *config, int inum, int asnum,
-+		struct usb_host_interface *ifp, int num_ep,
-+		unsigned char *buffer, int size)
- {
- 	unsigned char *buffer0 = buffer;
- 	struct usb_endpoint_descriptor *d;
-@@ -242,13 +291,10 @@ static int usb_parse_endpoint(struct dev
- 		goto skip_to_next_endpoint_or_interface_descriptor;
- 
- 	/* Check for duplicate endpoint addresses */
--	for (i = 0; i < ifp->desc.bNumEndpoints; ++i) {
--		if (ifp->endpoint[i].desc.bEndpointAddress ==
--		    d->bEndpointAddress) {
--			dev_warn(ddev, "config %d interface %d altsetting %d has a duplicate endpoint with address 0x%X, skipping\n",
--			    cfgno, inum, asnum, d->bEndpointAddress);
--			goto skip_to_next_endpoint_or_interface_descriptor;
--		}
-+	if (config_endpoint_is_duplicate(config, inum, asnum, d)) {
-+		dev_warn(ddev, "config %d interface %d altsetting %d has a duplicate endpoint with address 0x%X, skipping\n",
-+				cfgno, inum, asnum, d->bEndpointAddress);
-+		goto skip_to_next_endpoint_or_interface_descriptor;
- 	}
- 
- 	endpoint = &ifp->endpoint[ifp->desc.bNumEndpoints];
-@@ -522,8 +568,8 @@ static int usb_parse_interface(struct de
- 		if (((struct usb_descriptor_header *) buffer)->bDescriptorType
- 		     == USB_DT_INTERFACE)
- 			break;
--		retval = usb_parse_endpoint(ddev, cfgno, inum, asnum, alt,
--		    num_ep, buffer, size);
-+		retval = usb_parse_endpoint(ddev, cfgno, config, inum, asnum,
-+				alt, num_ep, buffer, size);
- 		if (retval < 0)
- 			return retval;
- 		++n;
+ 	/*
+ 	 * We trap the first access to the FP/SIMD to save the host context
+ 	 * and restore the guest context lazily.
 
 
