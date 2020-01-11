@@ -2,104 +2,105 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BDCC33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E83C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8834E2084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738015;
-	bh=Zd8skzaUVyeazQpB1RODtoHwHrjmR8gwsqJ5lsTO2bA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f+JYLE93RznKBLhQmK3mhHnFHIkFaaYULozCLFqhI9/A5JZz2JCy0GZb1FSGASjlQ
-	 2wK3L8UgcKbzJmoFQcN2kqRHw/IDpUt7bsJ0r3OCJI1Q7Uq5Oqwy/4vAzC0kGZDmQX
-	 azcVxHq8UkK49sjsOu4/dZB7k5RYSWGG4o5nbv08=
+	by mail.kernel.org (Postfix) with ESMTP id 178F020880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="pw5/utme"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730634AbgAKKUO (ORCPT
+        id S1730603AbgAKKUN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:20:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730333AbgAKKUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 11 Jan 2020 05:20:13 -0500
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D58B2205F4;
-        Sat, 11 Jan 2020 10:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738012;
-        bh=Zd8skzaUVyeazQpB1RODtoHwHrjmR8gwsqJ5lsTO2bA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=srVAg7dsVwFmeZJA8SaHnks9/74gM22lL7QW8M3iCTRsuS9ujoQxrYTWYaxphKD7B
-         jGfP3aasRYO+feOi0Fp42jABjm2T75kemwZ1Ya7FOJvSYM7sJOiVkXYb6fQjP+cMwL
-         W8i4mI0OEL2MxzsskjmEro0uzsqcGACKy2ZdwRR0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH 4.19 63/84] ARM: dts: imx6ul: use nvmem-cells for cpu speed grading
-Date:   Sat, 11 Jan 2020 10:50:40 +0100
-Message-Id: <20200111094909.837271697@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
-References: <20200111094845.328046411@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-il1-f196.google.com ([209.85.166.196]:38842 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729207AbgAKKUK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:20:10 -0500
+Received: by mail-il1-f196.google.com with SMTP id f5so3896948ilq.5
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 02:20:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=pOSVA5uhmk+VM6N/EM2MNyLEc6cHeflZPvPBN7eAFd8=;
+        b=pw5/utmeH7AJPk+rdLyGJXCipp5gbd77aEW91QiO9nVl1bIYk06x9dOeM6DkcadL58
+         3thq1tEd7eV8Nk2Di5aj+lj3IqdBd0HlBKMDbHIe8LSE2THZsFPOc7IEKhJNKs1iQB4N
+         fyMgl2nAWPPIS0iFJi4ZHtj0pbys3V90Rn3BAuWXdf8cNzpORabQQGVJfp7Mc7j+tAah
+         zr0fG3AtvyOqUulcuzL8K6asfjfI3WdmIJ5cc58q+3TnUAFRkOQDijfaYNqKQPiAZ0Ku
+         g9qLawUQMHBrppemekkJ7SH4Fc84ZEvwhuWQYTZIS0GOxqBZZ8ZSXyUgGvu1EyiB7ttE
+         fOfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=pOSVA5uhmk+VM6N/EM2MNyLEc6cHeflZPvPBN7eAFd8=;
+        b=bSGubFYm5YNPHCJWIejz02PetV2gRs0PP7Tj3WVF807IprgKULFiW0uw2xIzxti46l
+         n9cGxMC2czMXAnCnMx03H9jYdYT7l8QB8bhfk6NJTVEvsIlesFVteX6l5zEEkrlxG1DT
+         Sh5Jf6BVP6UaLcM+1Z11V8PczKN/yXUOd9mIQbOzMqfqcJsfWypx8R/gRV1UJf5G857S
+         9tz9YJrDf8hFh6Pn+o6C+SCRk8Kod0d3dgyA1li4cwm/R1U1F3PG5I5GNpbrnOjpdBqA
+         UNpJtWmTjNVQmjjN/tt8/rrd9yPkiLG2SBj2rFOWePsRovlC+9UGqseGrXp94LTAXSil
+         CUlA==
+X-Gm-Message-State: APjAAAXNmDyps7G+ubSaaCzTt401hOmelrmOTTlLRURAD55kUDm5FKt5
+        p5Zd5Rw+ngk/0PtervMnGtnL7fmWTEOloiaZlib1wg==
+X-Google-Smtp-Source: APXvYqysd4ztguN5R8BjDyEl38Q6mSx+PX/LFjJaUO4FAbZ+5rNBxo3P9IYXANJafr9f+JqMLd1b2jjfjMxinkK3Aco=
+X-Received: by 2002:a92:8712:: with SMTP id m18mr6703847ild.40.1578738009666;
+ Sat, 11 Jan 2020 02:20:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200110171643.18578-1-brgl@bgdev.pl> <20200110171643.18578-2-brgl@bgdev.pl>
+ <7be95251-7e26-6090-4770-6e4dbebfadd2@linaro.org>
+In-Reply-To: <7be95251-7e26-6090-4770-6e4dbebfadd2@linaro.org>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Sat, 11 Jan 2020 11:19:58 +0100
+Message-ID: <CAMRc=McesmYcJv7iqE3rLHFyeTJtnW4Gq1TjMjHGSkpcHNPahw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] clocksource: davinci: only enable clockevents once
+ tim34 is initialized
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Sekhar Nori <nsekhar@ti.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        David Lechner <david@lechnology.com>,
+        Kevin Hilman <khilman@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anson Huang <Anson.Huang@nxp.com>
+pt., 10 sty 2020 o 18:56 Daniel Lezcano <daniel.lezcano@linaro.org> napisa=
+=C5=82(a):
+>
+> On 10/01/2020 18:16, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > The DM365 platform has a strange quirk (only present when using ancient
+> > u-boot - mainline u-boot v2013.01 and later works fine) where if we
+> > enable the second half of the timer in periodic mode before we do its
+> > initialization - the time won't start flowing and we can't boot.
+> >
+> > When using more recent u-boot, we can enable the timer, then reinitiali=
+ze
+> > it and all works fine.
+> >
+> > To work around this issue only enable clockevents once tim34 is
+> > initialized i.e. move clockevents_config_and_register() below tim34
+> > initialization.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Shall I take it through my tree?
+>
 
-commit 92f0eb08c66a73594cf200e65689e767f7f0da5e upstream.
+Not sure, I'd say Sekhar should take it through arm-soc together with
+the latter two patches if he's ok with this. Let's wait for him to
+respond.
 
-On i.MX6UL, accessing OCOTP directly is wrong because the ocotp clock
-needs to be enabled first, so use the nvmem-cells binding instead.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Cc: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm/boot/dts/imx6ul.dtsi |    6 ++++++
- 1 file changed, 6 insertions(+)
-
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -87,6 +87,8 @@
- 				      "pll1_sys";
- 			arm-supply = <&reg_arm>;
- 			soc-supply = <&reg_soc>;
-+			nvmem-cells = <&cpu_speed_grade>;
-+			nvmem-cell-names = "speed_grade";
- 		};
- 	};
- 
-@@ -930,6 +932,10 @@
- 				tempmon_temp_grade: temp-grade@20 {
- 					reg = <0x20 4>;
- 				};
-+
-+				cpu_speed_grade: speed-grade@10 {
-+					reg = <0x10 4>;
-+				};
- 			};
- 
- 			lcdif: lcdif@21c8000 {
-
-
+Bart
