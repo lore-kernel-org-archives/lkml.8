@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9648C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D453C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4A62084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EED7D2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737084;
-	bh=ehWXxgL2qGAl8OpB2pwYtJRf+xpwsJCv8hYXYxukeQk=;
+	s=default; t=1578737088;
+	bh=cxid6C6F9WrArkdBSO7ewILRRUwrf6B52AkZM6I+OZc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1TRBPhn2KW0nZ6tZE2viL/AtcqGPlt52Tfj65kvmLzoIy/1xRKkUfPs/UWEFasI+
-	 MsxTg8uy7yz+pxa0I5ZPHQpNv+M0Y9qSAAyTBCxhZh+mPGrm/3ShTWWVqoO1gIzzGP
-	 313sZ/e+Tyrdbgpw5ewCr0nMeup+rNdSr99HsKDw=
+	b=IWyIexBpykJrYxwtj7uEcq+6EHZK+34JAfFPja33kW2xycPy1RmY+b1LM38ar//Q7
+	 cIvir1MCdRPahtFLT4cwgZeV0Ov5Z/HKRxlI4RgWrd5Rw//vdwCXmr3bOQqcef6g7p
+	 yiFZDvbZmr3O5Y6+JcYAWPjr9YEFH90O/AmNnKhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbgAKKEn (ORCPT
+        id S1729302AbgAKKEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:04:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37230 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:04:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729021AbgAKKEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:04:41 -0500
+        id S1729021AbgAKKEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:04:45 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 754322082E;
-        Sat, 11 Jan 2020 10:04:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB4F020848;
+        Sat, 11 Jan 2020 10:04:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737080;
-        bh=ehWXxgL2qGAl8OpB2pwYtJRf+xpwsJCv8hYXYxukeQk=;
+        s=default; t=1578737085;
+        bh=cxid6C6F9WrArkdBSO7ewILRRUwrf6B52AkZM6I+OZc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KagLk3NME//JH/8tH7Kq8JQasxpCaXa25jhs8Ww+gGqHiyAJELNyyWQczEAi99y69
-         MGyPp0puZ2ng8+AJ8L7e2XsRi44QNPSzb6eEsyG829S8Emy0/vVveQiYiBqXHQXReS
-         IfKO+mKKfOYCT+RuNCcfxlfvlt+kNX+Sa1W/k64k=
+        b=ga5lMUWbPKlUR8lncotJbYYq3V3A9acVbAfsjP+4ouvf+TQGO3awXyK7r7oBXPb1c
+         delxHOvFwxV15fpngBk3hRUUxBWm/SIHIXHyfGdVz5ERTkI+SxU5LeTOY9hFEnPMsg
+         40i+7BGWugyb2a5lCC3mcVNnFjfAdfOaxzl2oov0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 75/91] perf/x86/intel: Fix PT PMI handling
-Date:   Sat, 11 Jan 2020 10:50:08 +0100
-Message-Id: <20200111094911.589419533@linuxfoundation.org>
+Subject: [PATCH 4.9 76/91] net: stmmac: RX buffer size must be 16 byte aligned
+Date:   Sat, 11 Jan 2020 10:50:09 +0100
+Message-Id: <20200111094911.724733301@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -65,74 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 92ca7da4bdc24d63bb0bcd241c11441ddb63b80a ]
+[ Upstream commit 8d558f0294fe92e04af192e221d0d0f6a180ee7b ]
 
-Commit:
+We need to align the RX buffer size to at least 16 byte so that IP
+doesn't mis-behave. This is required by HW.
 
-  ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
+Changes from v2:
+- Align UP and not DOWN (David)
 
-skips the PT/LBR exclusivity check on CPUs where PT and LBRs coexist, but
-also inadvertently skips the active_events bump for PT in that case, which
-is a bug. If there aren't any hardware events at the same time as PT, the
-PMI handler will ignore PT PMIs, as active_events reads zero in that case,
-resulting in the "Uhhuh" spurious NMI warning and PT data loss.
-
-Fix this by always increasing active_events for PT events.
-
-Fixes: ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
-Reported-by: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: https://lkml.kernel.org/r/20191210105101.77210-1-alexander.shishkin@linux.intel.com
+Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 1e9f610d36a4..c26cca506f64 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -374,7 +374,7 @@ int x86_add_exclusive(unsigned int what)
- 	 * LBR and BTS are still mutually exclusive.
- 	 */
- 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
--		return 0;
-+		goto out;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 5ac48a594951..a2b7c685cbf1 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -55,7 +55,7 @@
+ #include <linux/of_mdio.h>
+ #include "dwmac1000.h"
  
- 	if (!atomic_inc_not_zero(&x86_pmu.lbr_exclusive[what])) {
- 		mutex_lock(&pmc_reserve_mutex);
-@@ -386,6 +386,7 @@ int x86_add_exclusive(unsigned int what)
- 		mutex_unlock(&pmc_reserve_mutex);
- 	}
+-#define	STMMAC_ALIGN(x)		__ALIGN_KERNEL(x, SMP_CACHE_BYTES)
++#define	STMMAC_ALIGN(x)		ALIGN(ALIGN(x, SMP_CACHE_BYTES), 16)
+ #define	TSO_MAX_BUFF_SIZE	(SZ_16K - 1)
  
-+out:
- 	atomic_inc(&active_events);
- 	return 0;
- 
-@@ -396,11 +397,15 @@ int x86_add_exclusive(unsigned int what)
- 
- void x86_del_exclusive(unsigned int what)
- {
-+	atomic_dec(&active_events);
-+
-+	/*
-+	 * See the comment in x86_add_exclusive().
-+	 */
- 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
- 		return;
- 
- 	atomic_dec(&x86_pmu.lbr_exclusive[what]);
--	atomic_dec(&active_events);
- }
- 
- int x86_setup_perfctr(struct perf_event *event)
+ /* Module parameters */
 -- 
 2.20.1
 
