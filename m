@@ -2,55 +2,54 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EAEC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BDCC33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D9220848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8834E2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738009;
-	bh=vinS0EQcHQyalTCu/vV59w1aPvFPeGkiIDdZxUWu1VQ=;
+	s=default; t=1578738015;
+	bh=Zd8skzaUVyeazQpB1RODtoHwHrjmR8gwsqJ5lsTO2bA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yuRcVJ8ryQF5HdH5uckCVtQmbaobC5fK21cuvR7V0ib3SpLxH7sa5Nvu69+b7ve3D
-	 292IFxiWBFucSh2zJJHbW8e+q+CF16CRf5eD+y3bk/bmbP/2JzkYn2Lo/2FdQ8wRrL
-	 JqrY5nn/lhwElg76ylvp4aN3LYJUzESC3WgtHSE8=
+	b=f+JYLE93RznKBLhQmK3mhHnFHIkFaaYULozCLFqhI9/A5JZz2JCy0GZb1FSGASjlQ
+	 2wK3L8UgcKbzJmoFQcN2kqRHw/IDpUt7bsJ0r3OCJI1Q7Uq5Oqwy/4vAzC0kGZDmQX
+	 azcVxHq8UkK49sjsOu4/dZB7k5RYSWGG4o5nbv08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbgAKKUG (ORCPT
+        id S1730634AbgAKKUO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:20:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40842 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:20:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729320AbgAKKUE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:20:04 -0500
+        id S1730333AbgAKKUN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:20:13 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F51A205F4;
-        Sat, 11 Jan 2020 10:20:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D58B2205F4;
+        Sat, 11 Jan 2020 10:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738004;
-        bh=vinS0EQcHQyalTCu/vV59w1aPvFPeGkiIDdZxUWu1VQ=;
+        s=default; t=1578738012;
+        bh=Zd8skzaUVyeazQpB1RODtoHwHrjmR8gwsqJ5lsTO2bA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1B5k/UkXbKBQ2ujOD6BGSC1NDMiiVpEgL26Ejqml5tcY+js59HogBhTeK6wtJI0lq
-         rE1802dyA0uuRfU/na8nP8pn0BLLBpWuzlH8IcfqmdSWZ82VueaGbIkZozExvqRgGb
-         hdrm/7M8mguOFrL/kQIJ85H931FBVR7vgfHu2QIk=
+        b=srVAg7dsVwFmeZJA8SaHnks9/74gM22lL7QW8M3iCTRsuS9ujoQxrYTWYaxphKD7B
+         jGfP3aasRYO+feOi0Fp42jABjm2T75kemwZ1Ya7FOJvSYM7sJOiVkXYb6fQjP+cMwL
+         W8i4mI0OEL2MxzsskjmEro0uzsqcGACKy2ZdwRR0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        RENARD Pierre-Francois <pfrenard@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 71/84] net: usb: lan78xx: fix possible skb leak
-Date:   Sat, 11 Jan 2020 10:50:48 +0100
-Message-Id: <20200111094911.546097742@linuxfoundation.org>
+        stable@vger.kernel.org, Anson Huang <Anson.Huang@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        =?UTF-8?q?S=C3=A9bastien=20Szymanski?= 
+        <sebastien.szymanski@armadeus.com>,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 4.19 63/84] ARM: dts: imx6ul: use nvmem-cells for cpu speed grading
+Date:   Sat, 11 Jan 2020 10:50:40 +0100
+Message-Id: <20200111094909.837271697@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -63,52 +62,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 47240ba0cd09bb6fe6db9889582048324999dfa4 ]
+commit 92f0eb08c66a73594cf200e65689e767f7f0da5e upstream.
 
-If skb_linearize() fails, we need to free the skb.
+On i.MX6UL, accessing OCOTP directly is wrong because the ocotp clock
+needs to be enabled first, so use the nvmem-cells binding instead.
 
-TSO makes skb bigger, and this bug might be the reason
-Raspberry Pi 3B+ users had to disable TSO.
-
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: RENARD Pierre-Francois <pfrenard@gmail.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Woojung Huh <woojung.huh@microchip.com>
-Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Cc: Sébastien Szymanski <sebastien.szymanski@armadeus.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/usb/lan78xx.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
 
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -2736,11 +2736,6 @@ static int lan78xx_stop(struct net_devic
- 	return 0;
- }
+---
+ arch/arm/boot/dts/imx6ul.dtsi |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -87,6 +87,8 @@
+ 				      "pll1_sys";
+ 			arm-supply = <&reg_arm>;
+ 			soc-supply = <&reg_soc>;
++			nvmem-cells = <&cpu_speed_grade>;
++			nvmem-cell-names = "speed_grade";
+ 		};
+ 	};
  
--static int lan78xx_linearize(struct sk_buff *skb)
--{
--	return skb_linearize(skb);
--}
--
- static struct sk_buff *lan78xx_tx_prep(struct lan78xx_net *dev,
- 				       struct sk_buff *skb, gfp_t flags)
- {
-@@ -2751,8 +2746,10 @@ static struct sk_buff *lan78xx_tx_prep(s
- 		return NULL;
- 	}
+@@ -930,6 +932,10 @@
+ 				tempmon_temp_grade: temp-grade@20 {
+ 					reg = <0x20 4>;
+ 				};
++
++				cpu_speed_grade: speed-grade@10 {
++					reg = <0x10 4>;
++				};
+ 			};
  
--	if (lan78xx_linearize(skb) < 0)
-+	if (skb_linearize(skb)) {
-+		dev_kfree_skb_any(skb);
- 		return NULL;
-+	}
- 
- 	tx_cmd_a = (u32)(skb->len & TX_CMD_A_LEN_MASK_) | TX_CMD_A_FCS_;
- 
+ 			lcdif: lcdif@21c8000 {
 
 
