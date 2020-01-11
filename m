@@ -2,53 +2,53 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36BCC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97459C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD2E20842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A399205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738343;
-	bh=AGTuTrcikLUKSv9a/hD7qcTELIbrLlmCYe2MpA5SRmM=;
+	s=default; t=1578738348;
+	bh=gFGpe93+udtJL3IRuqv7gvEvTZ38Dbi175XlBDXH+/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hX6EpkfL0ZWHJAjhJGyGdsT7vFAMFMMvhZs5MX9n1mT1bYTxvkmgTBZMlHzKk9y+Q
-	 Fl+xl4xRn32Wd3q+4i0B0eUh9S3WDajvmFMjzpx2kiRsT8w/XC3DJxrrVi1VYDhaqL
-	 KBfGNHxujO3gWRmbHPZJiB2BL4SZScE0du7WOlq0=
+	b=WJ3JKnFfThHW9Uk5uLXA5iii5Ngy0Dfmlse958VEbu4Nefy6zT68jvB+SrFHzAeHG
+	 7UDHLCHNswdtX0wZDVQU43NFcd2t1n5Z/FULKS38BgpT/y0lVF1175d+KoAjRknY3G
+	 3GH8N4GhU8aaTyll7aDj3De/KvmoVXCto9l/0MGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbgAKKZm (ORCPT
+        id S1731013AbgAKKZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:25:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56818 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:25:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729245AbgAKKZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:25:38 -0500
+        id S1729245AbgAKKZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:25:44 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3ACA205F4;
-        Sat, 11 Jan 2020 10:25:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDE0920848;
+        Sat, 11 Jan 2020 10:25:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738337;
-        bh=AGTuTrcikLUKSv9a/hD7qcTELIbrLlmCYe2MpA5SRmM=;
+        s=default; t=1578738344;
+        bh=gFGpe93+udtJL3IRuqv7gvEvTZ38Dbi175XlBDXH+/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gASRc011/rFirwU5DNOSTMuCPpBKRWUep20pVvWTKblC/NSncLhTUz3/DGXh0XWUu
-         PdDbyimE3m16NaBFSuIFI2tzFrzKKJmXs6cvS2fMz6lCtyTmXu3v5mqA/tdw8gexEp
-         q017qddLqNehwZXTMJlxwQdtxSvJBM1rq5r6I0i0=
+        b=OmIpYRno8ymqITYFNeNOg3YFdLWIsaa16VzC6vE7+cflFpyx+8War1g2idhRtLwUz
+         N/ow4tdib/8Z4CM9ldiO8Anddp6RGFiQNxEmwnxyUIyQQo1uyt9Mw40fxPYPhA5bSP
+         N1cY1CrB1D03C1kSlf2IaamBkukRoCrjq9/Zr8AE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Srikar Dronamraju <srikar@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Subject: [PATCH 5.4 076/165] powerpc/spinlocks: Include correct header for static key
-Date:   Sat, 11 Jan 2020 10:49:55 +0100
-Message-Id: <20200111094927.541261230@linuxfoundation.org>
+        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 077/165] btrfs: handle error in btrfs_cache_block_group
+Date:   Sat, 11 Jan 2020 10:49:56 +0100
+Message-Id: <20200111094927.634167726@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,42 +61,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason A. Donenfeld <Jason@zx2c4.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 6da3eced8c5f3b03340b0c395bacd552c4d52411 upstream.
+[ Upstream commit db8fe64f9ce61d1d89d3c3c34d111a43afb9f053 ]
 
-Recently, the spinlock implementation grew a static key optimization,
-but the jump_label.h header include was left out, leading to build
-errors:
+We have a BUG_ON(ret < 0) in find_free_extent from
+btrfs_cache_block_group.  If we fail to allocate our ctl we'll just
+panic, which is not good.  Instead just go on to another block group.
+If we fail to find a block group we don't want to return ENOSPC, because
+really we got a ENOMEM and that's the root of the problem.  Save our
+return from btrfs_cache_block_group(), and then if we still fail to make
+our allocation return that ret so we get the right error back.
 
-  linux/arch/powerpc/include/asm/spinlock.h:44:7: error: implicit declaration of function ‘static_branch_unlikely’
-   44 |  if (!static_branch_unlikely(&shared_processor))
+Tested with inject-error.py from bcc.
 
-This commit adds the missing header.
-
-mpe: The build break is only seen with CONFIG_JUMP_LABEL=n.
-
-Fixes: 656c21d6af5d ("powerpc/shared: Use static key to detect shared processor")
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Reviewed-by: Srikar Dronamraju <srikar@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191223133147.129983-1-Jason@zx2c4.com
-Cc: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/spinlock.h |    1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/extent-tree.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/include/asm/spinlock.h
-+++ b/arch/powerpc/include/asm/spinlock.h
-@@ -15,6 +15,7 @@
-  *
-  * (the type definitions are in asm/spinlock_types.h)
-  */
-+#include <linux/jump_label.h>
- #include <linux/irqflags.h>
- #ifdef CONFIG_PPC64
- #include <asm/paca.h>
+diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+index eb95ed78a18e..dc50605ecbda 100644
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -3781,6 +3781,7 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
+ 				u64 flags, int delalloc)
+ {
+ 	int ret = 0;
++	int cache_block_group_error = 0;
+ 	struct btrfs_free_cluster *last_ptr = NULL;
+ 	struct btrfs_block_group_cache *block_group = NULL;
+ 	struct find_free_extent_ctl ffe_ctl = {0};
+@@ -3940,7 +3941,20 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
+ 		if (unlikely(!ffe_ctl.cached)) {
+ 			ffe_ctl.have_caching_bg = true;
+ 			ret = btrfs_cache_block_group(block_group, 0);
+-			BUG_ON(ret < 0);
++
++			/*
++			 * If we get ENOMEM here or something else we want to
++			 * try other block groups, because it may not be fatal.
++			 * However if we can't find anything else we need to
++			 * save our return here so that we return the actual
++			 * error that caused problems, not ENOSPC.
++			 */
++			if (ret < 0) {
++				if (!cache_block_group_error)
++					cache_block_group_error = ret;
++				ret = 0;
++				goto loop;
++			}
+ 			ret = 0;
+ 		}
+ 
+@@ -4027,7 +4041,7 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
+ 	if (ret > 0)
+ 		goto search;
+ 
+-	if (ret == -ENOSPC) {
++	if (ret == -ENOSPC && !cache_block_group_error) {
+ 		/*
+ 		 * Use ffe_ctl->total_free_space as fallback if we can't find
+ 		 * any contiguous hole.
+@@ -4038,6 +4052,8 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
+ 		space_info->max_extent_size = ffe_ctl.max_extent_size;
+ 		spin_unlock(&space_info->lock);
+ 		ins->offset = ffe_ctl.max_extent_size;
++	} else if (ret == -ENOSPC) {
++		ret = cache_block_group_error;
+ 	}
+ 	return ret;
+ }
+-- 
+2.20.1
+
 
 
