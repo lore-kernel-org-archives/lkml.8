@@ -2,54 +2,55 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFF1C33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAB2C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B520320842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2814E20882
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738782;
-	bh=oh/SXPdeD9mcIPH3MTZrdfyDwOY47e7dOXn/wTtRbQ8=;
+	s=default; t=1578738788;
+	bh=ekY1pzXc//oztwUxTxyZSqXmrG1IKiusznaJnwOuNhg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RQk+RtRSaQU//DG8vhRBb8X9B8OzP5321fSpT3ggo5Siv836AO9JYEMBr7nnK8dgA
-	 zN0+c42uuq3KEpvnA+4tPTzJ7lpZmXmGeJac8/hyz49HbNWR2wGz9BqAdkSR27fVqC
-	 xvTyoSLZFENqU26EqELIGzd1pfT4QgFrPCU+DP0A=
+	b=g2Z4n4VHwPmOXbeShIegUQ+iQt6v2ywynByIdPm6pRBtL6/iU13yguWi+Jl2C0beI
+	 OqBhBvgxjVOk61UZMa/q12Dgc2sDy2bkqqwLAMsX9sy7v6sPQmxDOjgB3ywSxj8xOs
+	 2YMbY9S3rWgQFtnz21GBPiWF34ob+QBtQw6TxOxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731573AbgAKKdB (ORCPT
+        id S1731580AbgAKKdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:33:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46862 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:33:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729256AbgAKKdB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:33:01 -0500
+        id S1729256AbgAKKdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:33:05 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65DEC2087F;
-        Sat, 11 Jan 2020 10:32:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8002620842;
+        Sat, 11 Jan 2020 10:33:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738780;
-        bh=oh/SXPdeD9mcIPH3MTZrdfyDwOY47e7dOXn/wTtRbQ8=;
+        s=default; t=1578738784;
+        bh=ekY1pzXc//oztwUxTxyZSqXmrG1IKiusznaJnwOuNhg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HxGybSCm8qJNpZU61xJV4aRaN1pwLXUz+uIqHz+RsIdp0zamYvFwvU1XNl4PH/cIq
-         0GYkHr9JbSVvmKUj/Km5MGM45hfTHH2uwwbRXV3zLU8JbV+f56woqhi81EXj8Xr0d6
-         VjocMMGx3ffHKoVA6Y9LxDFH7Ld0PiASEZTGMCyo=
+        b=1sedDB3cPqh98WvguPn8S0w/XYHo7ydWW31oBGG/QsFLsTDks/Ss/cg2maYRQxn3R
+         enG8cUwMQzrHlYO/aBWe+D6vepSEe/G9jO5MQpDFU4xATV0WpGUuVowzNCRZyvHiO7
+         bMYmB/jy0y0m902Fzrx23+J+gussZckRzALsr4Fs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 126/165] s390/dasd/cio: Interpret ccw_device_get_mdc return value correctly
-Date:   Sat, 11 Jan 2020 10:50:45 +0100
-Message-Id: <20200111094934.979602158@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        RENARD Pierre-Francois <pfrenard@gmail.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Woojung Huh <woojung.huh@microchip.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 145/165] net: usb: lan78xx: fix possible skb leak
+Date:   Sat, 11 Jan 2020 10:51:04 +0100
+Message-Id: <20200111094939.290795974@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -62,95 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Höppner <hoeppner@linux.ibm.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit dd4b3c83b9efac10d48a94c61372119fc555a077 ]
+[ Upstream commit 47240ba0cd09bb6fe6db9889582048324999dfa4 ]
 
-The max data count (mdc) is an unsigned 16-bit integer value as per AR
-documentation and is received via ccw_device_get_mdc() for a specific
-path mask from the CIO layer. The function itself also always returns a
-positive mdc value or 0 in case mdc isn't supported or couldn't be
-determined.
+If skb_linearize() fails, we need to free the skb.
 
-Though, the comment for this function describes a negative return value
-to indicate failures.
+TSO makes skb bigger, and this bug might be the reason
+Raspberry Pi 3B+ users had to disable TSO.
 
-As a result, the DASD device driver interprets the return value of
-ccw_device_get_mdc() incorrectly. The error case is essentially a dead
-code path.
-
-To fix this behaviour, check explicitly for a return value of 0 and
-change the comment for ccw_device_get_mdc() accordingly.
-
-This fix merely enables the error code path in the DASD functions
-get_fcx_max_data() and verify_fcx_max_data(). The actual functionality
-stays the same and is still correct.
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
-Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: RENARD Pierre-Francois <pfrenard@gmail.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Woojung Huh <woojung.huh@microchip.com>
+Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/s390/block/dasd_eckd.c | 9 +++++----
- drivers/s390/cio/device_ops.c  | 2 +-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/usb/lan78xx.c |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index c94184d080f8..f5622f4a2ecf 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -1128,7 +1128,8 @@ static u32 get_fcx_max_data(struct dasd_device *device)
- {
- 	struct dasd_eckd_private *private = device->private;
- 	int fcx_in_css, fcx_in_gneq, fcx_in_features;
--	int tpm, mdc;
-+	unsigned int mdc;
-+	int tpm;
+--- a/drivers/net/usb/lan78xx.c
++++ b/drivers/net/usb/lan78xx.c
+@@ -2724,11 +2724,6 @@ static int lan78xx_stop(struct net_devic
+ 	return 0;
+ }
  
- 	if (dasd_nofcx)
- 		return 0;
-@@ -1142,7 +1143,7 @@ static u32 get_fcx_max_data(struct dasd_device *device)
- 		return 0;
- 
- 	mdc = ccw_device_get_mdc(device->cdev, 0);
--	if (mdc < 0) {
-+	if (mdc == 0) {
- 		dev_warn(&device->cdev->dev, "Detecting the maximum supported data size for zHPF requests failed\n");
- 		return 0;
- 	} else {
-@@ -1153,12 +1154,12 @@ static u32 get_fcx_max_data(struct dasd_device *device)
- static int verify_fcx_max_data(struct dasd_device *device, __u8 lpm)
+-static int lan78xx_linearize(struct sk_buff *skb)
+-{
+-	return skb_linearize(skb);
+-}
+-
+ static struct sk_buff *lan78xx_tx_prep(struct lan78xx_net *dev,
+ 				       struct sk_buff *skb, gfp_t flags)
  {
- 	struct dasd_eckd_private *private = device->private;
--	int mdc;
-+	unsigned int mdc;
- 	u32 fcx_max_data;
+@@ -2740,8 +2735,10 @@ static struct sk_buff *lan78xx_tx_prep(s
+ 		return NULL;
+ 	}
  
- 	if (private->fcx_max_data) {
- 		mdc = ccw_device_get_mdc(device->cdev, lpm);
--		if ((mdc < 0)) {
-+		if (mdc == 0) {
- 			dev_warn(&device->cdev->dev,
- 				 "Detecting the maximum data size for zHPF "
- 				 "requests failed (rc=%d) for a new path %x\n",
-diff --git a/drivers/s390/cio/device_ops.c b/drivers/s390/cio/device_ops.c
-index 65841af15748..ccecf6b9504e 100644
---- a/drivers/s390/cio/device_ops.c
-+++ b/drivers/s390/cio/device_ops.c
-@@ -635,7 +635,7 @@ EXPORT_SYMBOL(ccw_device_tm_start_timeout);
-  * @mask: mask of paths to use
-  *
-  * Return the number of 64K-bytes blocks all paths at least support
-- * for a transport command. Return values <= 0 indicate failures.
-+ * for a transport command. Return value 0 indicates failure.
-  */
- int ccw_device_get_mdc(struct ccw_device *cdev, u8 mask)
- {
--- 
-2.20.1
-
+-	if (lan78xx_linearize(skb) < 0)
++	if (skb_linearize(skb)) {
++		dev_kfree_skb_any(skb);
+ 		return NULL;
++	}
+ 
+ 	tx_cmd_a = (u32)(skb->len & TX_CMD_A_LEN_MASK_) | TX_CMD_A_FCS_;
+ 
 
 
