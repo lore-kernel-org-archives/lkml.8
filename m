@@ -2,42 +2,59 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 137D4C33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1460CC33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E861A2072E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E40862072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729404AbgAKMSK (ORCPT
+        id S1729696AbgAKMS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 07:18:10 -0500
-Received: from comms.puri.sm ([159.203.221.185]:48670 "EHLO comms.puri.sm"
+        Sat, 11 Jan 2020 07:18:29 -0500
+Received: from mga14.intel.com ([192.55.52.115]:5095 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728937AbgAKMSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 07:18:10 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by comms.puri.sm (Postfix) with ESMTP id D5976DF384;
-        Sat, 11 Jan 2020 04:18:08 -0800 (PST)
-Received: from comms.puri.sm ([127.0.0.1])
-        by localhost (comms.puri.sm [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TejDi3c3HHlT; Sat, 11 Jan 2020 04:18:08 -0800 (PST)
-Date:   Sat, 11 Jan 2020 13:18:04 +0100
-In-Reply-To: <20200111121518.34162e02@archlinux>
-References: <20200104132052.28337-1-martin.kepplinger@puri.sm> <20200111121518.34162e02@archlinux>
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] iio: imu: st_lsm6dsx: add mount matrix support
-To:     Jonathan Cameron <jic23@kernel.org>
-CC:     lorenzo.bianconi83@gmail.com, knaack.h@gmx.de, lars@metafoo.de,
-        pmeerw@pmeerw.net, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Martin Kepplinger <martin.kepplinger@puri.sm>
-Message-ID: <07782E31-C423-472C-A8E8-19F7C0124510@puri.sm>
+        id S1728937AbgAKMS3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 07:18:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jan 2020 04:18:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,421,1571727600"; 
+   d="scan'208";a="396689983"
+Received: from syamada-mobl.amr.corp.intel.com (HELO [10.255.229.5]) ([10.255.229.5])
+  by orsmga005.jf.intel.com with ESMTP; 11 Jan 2020 04:18:26 -0800
+Subject: Re: [alsa-devel] [PATCH 2/6] soundwire: stream: update state machine
+ and add state checks
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, Jonathan Corbet <corbet@lwn.net>,
+        tiwai@suse.de, gregkh@linuxfoundation.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, slawomir.blauciak@intel.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+References: <20200108175438.13121-1-pierre-louis.bossart@linux.intel.com>
+ <20200108175438.13121-3-pierre-louis.bossart@linux.intel.com>
+ <20200110064838.GY2818@vkoul-mobl>
+ <a18c668f-4628-0fb9-ffa0-b24cdad1cc8b@linux.intel.com>
+Message-ID: <69ad48b0-fa3c-904a-4106-5cd9bd18de5c@linux.intel.com>
+Date:   Sat, 11 Jan 2020 05:30:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
+MIME-Version: 1.0
+In-Reply-To: <a18c668f-4628-0fb9-ffa0-b24cdad1cc8b@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -45,119 +62,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Am 11=2E J=C3=A4nner 2020 13:15:18 MEZ schrieb Jonathan Cameron <jic23@ker=
-nel=2Eorg>:
->On Sat,  4 Jan 2020 14:20:52 +0100
->Martin Kepplinger <martin=2Ekepplinger@puri=2Esm> wrote:
->
->> Allow to read the mount-matrix device tree property and provide the
->> mount_matrix file for userspace to read=2E
->>=20
->> Signed-off-by: Martin Kepplinger <martin=2Ekepplinger@puri=2Esm>
->> ---
->>=20
->> tested using the lsm9ds1 on the librem5-devkit (and userspace tools
->like
->> iio-sensor-proxy) where this will be needed=2E
->>=20
->> thanks,
->>=20
->>                                        martin
->>=20
->> revision history
->> ----------------
->> v2: additions and simplifications according to Lorenzo's review=2E
->thanks=2E
->>=20
->>=20
->>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx=2Eh      | 19
->+++++++++++++++++++
->>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core=2Ec |  2 +-
->>  2 files changed, 20 insertions(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx=2Eh
->b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx=2Eh
->> index a763ff46f596=2E=2E7076fc8c4c3b 100644
->> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx=2Eh
->> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx=2Eh
->> @@ -76,6 +76,7 @@ enum st_lsm6dsx_hw_id {
->>  		=2Eendianness =3D IIO_LE,					\
->>  	},								\
->>  	=2Eevent_spec =3D &st_lsm6dsx_event,				\
->> +	=2Eext_info =3D st_lsm6dsx_accel_ext_info,				\
->>  	=2Enum_event_specs =3D 1,						\
->>  }
->> =20
->> @@ -380,6 +381,7 @@ struct st_lsm6dsx_sensor {
->>   * @enable_event: enabled event bitmask=2E
->>   * @iio_devs: Pointers to acc/gyro iio_dev instances=2E
->>   * @settings: Pointer to the specific sensor settings in use=2E
->> + * @orientation: sensor chip orientation relative to main hardware=2E
->>   */
->>  struct st_lsm6dsx_hw {
->>  	struct device *dev;
->> @@ -406,6 +408,8 @@ struct st_lsm6dsx_hw {
->>  	struct iio_dev *iio_devs[ST_LSM6DSX_ID_MAX];
->> =20
->>  	const struct st_lsm6dsx_settings *settings;
->> +
->> +	struct iio_mount_matrix orientation;
->>  };
->> =20
->>  static __maybe_unused const struct iio_event_spec st_lsm6dsx_event =3D
->{
->> @@ -479,4 +483,19 @@ st_lsm6dsx_write_locked(struct st_lsm6dsx_hw
->*hw, unsigned int addr,
->>  	return err;
->>  }
->> =20
->> +static const inline struct iio_mount_matrix *
->> +st_lsm6dsx_get_mount_matrix(const struct iio_dev *iio_dev,
->> +			    const struct iio_chan_spec *chan)
->> +{
->> +	struct st_lsm6dsx_sensor *sensor =3D iio_priv(iio_dev);
->> +	struct st_lsm6dsx_hw *hw =3D sensor->hw;
->> +
->> +	return &hw->orientation;
->> +}
->> +
->> +static const struct iio_chan_spec_ext_info
->st_lsm6dsx_accel_ext_info[] =3D {
->> +	IIO_MOUNT_MATRIX(IIO_SHARED_BY_ALL, st_lsm6dsx_get_mount_matrix),
->> +	{ }
->> +};
->> +
->>  #endif /* ST_LSM6DSX_H */
->> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core=2Ec
->b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core=2Ec
->> index 0c64e35c7599=2E=2E27e157f8a031 100644
->> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core=2Ec
->> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core=2Ec
->> @@ -2325,7 +2325,7 @@ int st_lsm6dsx_probe(struct device *dev, int
->irq, int hw_id,
->>  	    (pdata && pdata->wakeup_source))
->>  		device_init_wakeup(dev, true);
->> =20
->> -	return 0;
->> +	return iio_read_mount_matrix(hw->dev, "mount-matrix",
->&hw->orientation);
->
->Race condition=2E  iio_device_register has already been called by this
->point=2E
->Hence userspace interfaces are exposed=2E  Userspace can read the mount
->matrix
->before it is initialized=2E  This needs to be earlier in probe=2E
->
->Jonathan
+On 1/10/20 10:30 AM, Pierre-Louis Bossart wrote:
+> 
+>>> -  int sdw_prepare_stream(struct sdw_stream_runtime * stream);
+>>> +  int sdw_prepare_stream(struct sdw_stream_runtime * stream, bool 
+>>> resume);
+>>
+>> so what does the additional argument of resume do..?
+>>
+>>> diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+>>> index 178ae92b8cc1..6aa0b5d370c0 100644
+>>> --- a/drivers/soundwire/stream.c
+>>> +++ b/drivers/soundwire/stream.c
+>>> @@ -1553,8 +1553,18 @@ int sdw_prepare_stream(struct 
+>>> sdw_stream_runtime *stream)
+>>
+>> and it is not modified here, so is the doc correct or this..?
+> 
+> the doc is correct and the code is updated in
+> 
+> [PATCH 4/6] soundwire: stream: do not update parameters during 
+> DISABLED-PREPARED transition
 
-ah thanks! I somehow knew this looks wrong but I was lazy=2E resending soo=
-n=2E
+Sorry, wrong answer, my bad. The code block in the documentation is 
+incorrect.
 
+The Patch 4/6 implements the transition mentioned in the documentation, 
+but the extra parameter is a left-over from an earlier version. This 
+case is now handled internally. We did revert to the initial prototype 
+after finding out that dealing with transitions in the caller is 
+error-prone.
 
->
->>  }
->>  EXPORT_SYMBOL(st_lsm6dsx_probe);
->> =20
-
---=20
-Sent from mobile=2E
+Will fix in v2, thanks for spotting this.
