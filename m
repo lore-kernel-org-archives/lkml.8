@@ -2,170 +2,157 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7BDC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2FD1C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B97082084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A52B12084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:20:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O8W2kT8S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730574AbgAKRTK (ORCPT
+        id S1730591AbgAKRUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 12:19:10 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:36608 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730544AbgAKRTK (ORCPT
+        Sat, 11 Jan 2020 12:20:51 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:47029 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730519AbgAKRUv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 12:19:10 -0500
-Received: by mail-il1-f197.google.com with SMTP id t2so4247434ilp.3
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 09:19:09 -0800 (PST)
+        Sat, 11 Jan 2020 12:20:51 -0500
+Received: by mail-qt1-f196.google.com with SMTP id g1so5082300qtr.13
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 09:20:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TAr5OK9nYYr6KPzytVTTj/GP8wLPVsT/jCkjRteOAkU=;
+        b=O8W2kT8SOx19v+19A/C+AcDBh/FhX6z5VriorQFDMEZcnoi5Tet7IdI2bw5BMOR9EF
+         ZCoV5kyUP4L9W9OAYEsfW7b6OnTHCQ1nDRYbX22msxD6cljwazHyAPNgwu4NUYAm7KG/
+         6nheoLEb+QockYF74HAQjxFezhfLkiRFaPYW99vnD+b22ODx5F3xqlYiKhX7RMHFLY2t
+         BqaTKn1cL3gsH+g9mEwtZtTXrnBHoL8eqpv0yZ5dAenQqXlNYdWKO8uPUgM06bkIee62
+         q/V5tKltz+gAQFSMqLSGF29JMYv1ei/Ww2SQGGPZx0SBQu8/Vhm1Rp4yTRRpxW5aGQIh
+         xq+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=rOxD20ubENsSvUKR96g4GhYacd9/gWfWmD4fONuaSG0=;
-        b=RbpvdMog1ZxmEVjhvDqoiSdLLCx4GsNtWWn8n+GX2clym+Pg6nJKM24VToSD5x6sSW
-         i+coodhMBXXH7F52zXgw16G84E8ywuT9+HCmtZQGipcUFlpNl7FYhCjUMAzbWCK2wZyZ
-         WvH+FWxIoJUh/N4VtV41hjniuCrxFOAYRQdkQvXwXGvUp5eKUKYJ9QtgQLXhkOyFG7+5
-         9oTvCQZaRowlmnsTw1O/OYbxYjUwBjfqLi68xNF/KVT2yfT3LGTzGknvuLxwn3yGZs0e
-         F35FmdcaGvCsw9VSDBKxaDo+S0QJV2Fj3ry90C8xPTwc1us/STOk4QM5MobjoFlaKRLe
-         csuA==
-X-Gm-Message-State: APjAAAX0EqZF5yhofU3MIb3oiOjJVNwyU8w20NEDy1HtlHwIbpgsTfQq
-        qQTevgKJtrNkzzfGpXERsxCN4WtvO5357pizsykfgKgNmQdP
-X-Google-Smtp-Source: APXvYqxbZH4l1OKZCSVA3wEKraLueKJeidVG10Gfew2kkXB5bcA2+MIjG6lXeleijv5+yLvegBXC/vR4RjNxksi/M7l9sRtVenLv
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TAr5OK9nYYr6KPzytVTTj/GP8wLPVsT/jCkjRteOAkU=;
+        b=tsw7fvBON+1dlWYTHVO7Icba4bNNGbntB3BqjKunBHglgrjymYIpdoQA3fpHNWWnU3
+         CfIymy5CWBxK1rQk/DzNPY4+07dCuCuf5JqSFqKtv6a8c64Sh1y80QJBY5PFse0L1hOY
+         LxWnZrNgXxQDe2jWG1gvoL5ggSIZFWaQayqAiZxM6ilK8fKCDz8u0rrz1xHOGGBLp0OA
+         GSUchG0nJTXo3rJ51Ktul67+g9Tc4XMobDd0gJHSeJ3pM8rjmypqGfsU54HJBJWkkdvy
+         SYopSS7F1B0tTpSEE8dzpVEB3nXdewdZf1NaW2R70QroELgRmPvY9WP9+b+pmoUc2J3t
+         tNhw==
+X-Gm-Message-State: APjAAAUjK4WLZ6rE6ZJRC1+7um1YagwWrXDLLmDqgRXLS8eODqevUN6p
+        esJBXecbz8yBI8FjTf2kbe8=
+X-Google-Smtp-Source: APXvYqz8ylDO2U6dDvIUNFaNKDnjjA8WiIyQkYSfmJM9vJQfD3R856oyQ2fHMJSJKdR4OYjIYUWcOw==
+X-Received: by 2002:ac8:2bcd:: with SMTP id n13mr3779069qtn.21.1578763250270;
+        Sat, 11 Jan 2020 09:20:50 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 65sm2866876qtf.95.2020.01.11.09.20.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jan 2020 09:20:49 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Sat, 11 Jan 2020 12:20:48 -0500
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH] x86/tools/relocs: Add _etext and __end_of_kernel_reserve
+ to S_REL
+Message-ID: <20200111172047.GA2688392@rani.riverdale.lan>
+References: <20200110202349.1881840-1-nivedita@alum.mit.edu>
+ <20200110203828.GK19453@zn.tnic>
+ <20200110205028.GA2012059@rani.riverdale.lan>
+ <20200111130243.GA23583@zn.tnic>
 MIME-Version: 1.0
-X-Received: by 2002:a92:906:: with SMTP id y6mr7879438ilg.157.1578763149416;
- Sat, 11 Jan 2020 09:19:09 -0800 (PST)
-Date:   Sat, 11 Jan 2020 09:19:09 -0800
-In-Reply-To: <0000000000006d0a820599366088@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b4acb6059be070c0@google.com>
-Subject: Re: memory leak in erase_aeb
-From:   syzbot <syzbot+f317896aae32eb281a58@syzkaller.appspotmail.com>
-To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        miquel.raynal@bootlin.com, richard@nod.at,
-        syzkaller-bugs@googlegroups.com, vigneshr@ti.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200111130243.GA23583@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Sat, Jan 11, 2020 at 02:02:43PM +0100, Borislav Petkov wrote:
+> On Fri, Jan 10, 2020 at 03:50:29PM -0500, Arvind Sankar wrote:
+> > On Fri, Jan 10, 2020 at 09:38:28PM +0100, Borislav Petkov wrote:
+> > > On Fri, Jan 10, 2020 at 03:23:49PM -0500, Arvind Sankar wrote:
+> > > > Pre-2.23 binutils makes symbols defined outside sections absolute, so
+> > > > these two symbols break the build on old linkers.
+> > > 
+> > > -ENOTENOUGHINFO
+> > > 
+> > > Which old linkers, how exactly do they break the build, etc etc?
+> > > 
+> > > Please give exact reproduction steps.
+> > > 
+> > > Thx.
+> > > 
+> > 
+> > binutils-2.21 and -2.22. An x86-64 defconfig will fail with
+> > 	Invalid absolute R_X86_64_32S relocation: _etext
+> > and after fixing that one, with
+> > 	Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
+> 
+> I'm still not clear as to why this happens. I tried reproducing on
+> openSUSE 12.1 which has
+> 
+> Repository: openSUSE-12.1-Oss
+> Name: binutils
+> Version: 2.21.1-12.1.4
+> 
+> and the build there fails with:
+> 
+> objdump: arch/x86/lib/clear_page_64.o: File format not recognized
+> objdump: arch/x86/lib/cmdline.o: File format not recognized
+> objdump: arch/x86/lib/cmpxchg16b_emu.o: File format not recognized
+> objdump: arch/x86/lib/copy_page_64.o: File format not recognized
+> objdump: arch/x86/lib/copy_user_64.o: File format not recognized
+> objdump: arch/x86/lib/cpu.o: File format not recognized
+> ...
+> 
+> and objdump is part of binutils.
+> 
+> Now, this looks like another symptom of what you're reporting but what
+> we're missing is the rootcause about *why* this happens.
+> 
+> Because if the issue is hard to fix or similar, then we probably should
+> raise the minimum supported binutils version from 2.21 to something
+> newer and not do this fix.
+> 
+> But before we do that, we need a proper analysis as to why it happens.
+> 
+> Also, what distro are you using to reproduce it on?
+> 
+> Thx.
+> 
 
-HEAD commit:    bef1d882 Merge tag 'pstore-v5.5-rc6' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=158a51b9e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e479cb92d5ce3196
-dashboard link: https://syzkaller.appspot.com/bug?extid=f317896aae32eb281a58
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=132269e1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1247d58ee00000
+I'm not sure if that's the same issue. The root cause for the one I
+reported is described in more detail in [1], and the change that makes
+these symbols no longer absolute is commit d2667025dd30 in binutils-gdb
+(sourceware.org seems to be taking too long to respond from here so I
+don't have the web link).
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+f317896aae32eb281a58@syzkaller.appspotmail.com
+I'm running gentoo, but building the kernel using binutils-2.21.1
+compiled from the GNU source tarball, and gcc-4.6.4 again compiled from
+source. (It's not something I normally need but I was investigating
+something else to see what exactly happens with older toolchains.)
 
-BUG: memory leak
-unreferenced object 0xffff888127cecb00 (size 32):
-   comm "syz-executor527", pid 7144, jiffies 4294957528 (age 23.750s)
-   hex dump (first 32 bytes):
-     00 01 00 00 00 00 ad de 22 01 00 00 00 00 ad de  ........".......
-     00 00 00 00 00 00 00 00 01 00 00 00 02 00 00 00  ................
-   backtrace:
-     [<0000000029f9ef6c>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<0000000029f9ef6c>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<0000000029f9ef6c>] slab_alloc mm/slab.c:3320 [inline]
-     [<0000000029f9ef6c>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3484
-     [<000000003092c936>] erase_aeb+0x2a/0x100 drivers/mtd/ubi/wl.c:1691
-     [<00000000d507b66e>] ubi_wl_init+0x1ae/0x600 drivers/mtd/ubi/wl.c:1758
-     [<0000000072e7d762>] ubi_attach+0x665/0x18e7  
-drivers/mtd/ubi/attach.c:1605
-     [<0000000024d645cb>] ubi_attach_mtd_dev+0x5b3/0xd40  
-drivers/mtd/ubi/build.c:946
-     [<00000000e6600cef>] ctrl_cdev_ioctl+0x149/0x1c0  
-drivers/mtd/ubi/cdev.c:1043
-     [<000000001253992f>] vfs_ioctl fs/ioctl.c:47 [inline]
-     [<000000001253992f>] file_ioctl fs/ioctl.c:545 [inline]
-     [<000000001253992f>] do_vfs_ioctl+0x551/0x890 fs/ioctl.c:732
-     [<00000000c49e8c94>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:749
-     [<00000000261db07c>] __do_sys_ioctl fs/ioctl.c:756 [inline]
-     [<00000000261db07c>] __se_sys_ioctl fs/ioctl.c:754 [inline]
-     [<00000000261db07c>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:754
-     [<000000004f01dc3e>] do_syscall_64+0x73/0x220  
-arch/x86/entry/common.c:294
-     [<000000002de81d29>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+I used the below to compile the kernel (I added in
+readelf/objdump/objcopy just now, and it does build until the relocs
+error). The config is x86-64 defconfig with CONFIG_RETPOLINE overridden
+to n (since gcc 4.6.4 doesn't support retpoline).
 
-BUG: memory leak
-unreferenced object 0xffff888127cecb00 (size 32):
-   comm "syz-executor527", pid 7144, jiffies 4294957528 (age 26.350s)
-   hex dump (first 32 bytes):
-     00 01 00 00 00 00 ad de 22 01 00 00 00 00 ad de  ........".......
-     00 00 00 00 00 00 00 00 01 00 00 00 02 00 00 00  ................
-   backtrace:
-     [<0000000029f9ef6c>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<0000000029f9ef6c>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<0000000029f9ef6c>] slab_alloc mm/slab.c:3320 [inline]
-     [<0000000029f9ef6c>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3484
-     [<000000003092c936>] erase_aeb+0x2a/0x100 drivers/mtd/ubi/wl.c:1691
-     [<00000000d507b66e>] ubi_wl_init+0x1ae/0x600 drivers/mtd/ubi/wl.c:1758
-     [<0000000072e7d762>] ubi_attach+0x665/0x18e7  
-drivers/mtd/ubi/attach.c:1605
-     [<0000000024d645cb>] ubi_attach_mtd_dev+0x5b3/0xd40  
-drivers/mtd/ubi/build.c:946
-     [<00000000e6600cef>] ctrl_cdev_ioctl+0x149/0x1c0  
-drivers/mtd/ubi/cdev.c:1043
-     [<000000001253992f>] vfs_ioctl fs/ioctl.c:47 [inline]
-     [<000000001253992f>] file_ioctl fs/ioctl.c:545 [inline]
-     [<000000001253992f>] do_vfs_ioctl+0x551/0x890 fs/ioctl.c:732
-     [<00000000c49e8c94>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:749
-     [<00000000261db07c>] __do_sys_ioctl fs/ioctl.c:756 [inline]
-     [<00000000261db07c>] __se_sys_ioctl fs/ioctl.c:754 [inline]
-     [<00000000261db07c>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:754
-     [<000000004f01dc3e>] do_syscall_64+0x73/0x220  
-arch/x86/entry/common.c:294
-     [<000000002de81d29>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+make O=~/kernel64 -j LD=~/old/bin/ld AS=~/old/bin/as READELF=~/old/bin/readelf \
+	OBJDUMP=~/old/bin/objdump OBJCOPY=~/old/bin/objcopy GCC=~/old/bin/gcc
 
-BUG: memory leak
-unreferenced object 0xffff888127cecb00 (size 32):
-   comm "syz-executor527", pid 7144, jiffies 4294957528 (age 32.820s)
-   hex dump (first 32 bytes):
-     00 01 00 00 00 00 ad de 22 01 00 00 00 00 ad de  ........".......
-     00 00 00 00 00 00 00 00 01 00 00 00 02 00 00 00  ................
-   backtrace:
-     [<0000000029f9ef6c>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<0000000029f9ef6c>] slab_post_alloc_hook mm/slab.h:586 [inline]
-     [<0000000029f9ef6c>] slab_alloc mm/slab.c:3320 [inline]
-     [<0000000029f9ef6c>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3484
-     [<000000003092c936>] erase_aeb+0x2a/0x100 drivers/mtd/ubi/wl.c:1691
-     [<00000000d507b66e>] ubi_wl_init+0x1ae/0x600 drivers/mtd/ubi/wl.c:1758
-     [<0000000072e7d762>] ubi_attach+0x665/0x18e7  
-drivers/mtd/ubi/attach.c:1605
-     [<0000000024d645cb>] ubi_attach_mtd_dev+0x5b3/0xd40  
-drivers/mtd/ubi/build.c:946
-     [<00000000e6600cef>] ctrl_cdev_ioctl+0x149/0x1c0  
-drivers/mtd/ubi/cdev.c:1043
-     [<000000001253992f>] vfs_ioctl fs/ioctl.c:47 [inline]
-     [<000000001253992f>] file_ioctl fs/ioctl.c:545 [inline]
-     [<000000001253992f>] do_vfs_ioctl+0x551/0x890 fs/ioctl.c:732
-     [<00000000c49e8c94>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:749
-     [<00000000261db07c>] __do_sys_ioctl fs/ioctl.c:756 [inline]
-     [<00000000261db07c>] __se_sys_ioctl fs/ioctl.c:754 [inline]
-     [<00000000261db07c>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:754
-     [<000000004f01dc3e>] do_syscall_64+0x73/0x220  
-arch/x86/entry/common.c:294
-     [<000000002de81d29>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-executing program
-executing program
-executing program
-executing program
-executing program
-
+[1] https://lore.kernel.org/lkml/20200110215005.2164353-1-nivedita@alum.mit.edu/
