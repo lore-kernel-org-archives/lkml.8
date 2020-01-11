@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9EFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE7FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3BA520673
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4313206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737658;
-	bh=fohQj2/as9dqSua8w1ktK1w4smDl+xuPyoiq0d5bKiM=;
+	s=default; t=1578737661;
+	bh=Dpq8wuZ0aaFZMU+WnK22+ipxpSbe3i1U4BrVYFSNTiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C2oVlhOG1yg/oCk2d9xdqBOTTo9tlNL9oEzTCE8Eqnpmx52ZDAug+xcunNAHZwu8O
-	 I0X1zfJtC93h1qbKEIbB583YYLBlog1Ls9goIRcGw6/bQw2aMBOVJP8CzfSioINXGy
-	 Z9rHCp5ZxJAr3Ea3dzdJ2FGq2wYGGtpS+/3XIaVs=
+	b=mJP+FFZfK6ZH4Ede3gKSiSr8EUI0k91dYZSbxiZe+dhK5fWUtNn93WTGSlal7ZVo4
+	 8AfqoQ62I/OipyjhrsBf7uzAUcYLDq0m5ozxML/ypfJnej1SuMJA6s/0oMFKA0em++
+	 Vjion3877zY8ADy8VuV4ULFObzO7SM6cKSsgTGFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbgAKKOR (ORCPT
+        id S1729861AbgAKKOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:14:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53874 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:14:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730149AbgAKKOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:14:14 -0500
+        id S1730050AbgAKKOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:14:06 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE86720673;
-        Sat, 11 Jan 2020 10:14:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3487020880;
+        Sat, 11 Jan 2020 10:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737653;
-        bh=fohQj2/as9dqSua8w1ktK1w4smDl+xuPyoiq0d5bKiM=;
+        s=default; t=1578737645;
+        bh=Dpq8wuZ0aaFZMU+WnK22+ipxpSbe3i1U4BrVYFSNTiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JT3ThTQJzo90hqEH6o+Vmm9B7CtppOuwL6+PFlSKQR8qLUhWAViNFj+qhrfH7ql9k
-         0brO+EynVW1HGjUvv94JpqgAEAjbO/Xsd6qx15XOU/auUCMoZfFJTMb0X+QrypfjJu
-         r/DjChiWLdJlIXUHwzkyI2yU47pra4LtpXxzrTMA=
+        b=SzxIzIw6UaFeqBwJrGWPgR8E90/C3mnmvTBnSAycFjRjlV9PdeP7YOc6EZiKx5is9
+         cakKAQtV2aCCIxu7b83194nZT5c4eKD1dajraXXmv2E9ALNZ1m9xtYl5H3LK+FPGau
+         VIMyVA5o0sZN8Ye9dYYKv25PdT4cwPwCmbISte7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        stable@vger.kernel.org, Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 16/84] ARM: vexpress: Set-up shared OPP table instead of individual for each CPU
-Date:   Sat, 11 Jan 2020 10:49:53 +0100
-Message-Id: <20200111094851.026831013@linuxfoundation.org>
+Subject: [PATCH 4.19 14/84] efi/gop: Fix memory leak in __gop_query32/64()
+Date:   Sat, 11 Jan 2020 10:49:51 +0100
+Message-Id: <20200111094850.057387036@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -63,67 +64,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-[ Upstream commit 2a76352ad2cc6b78e58f737714879cc860903802 ]
+[ Upstream commit ff397be685e410a59c34b21ce0c55d4daa466bb7 ]
 
-Currently we add individual copy of same OPP table for each CPU within
-the cluster. This is redundant and doesn't reflect the reality.
+efi_graphics_output_protocol::query_mode() returns info in
+callee-allocated memory which must be freed by the caller, which
+we aren't doing.
 
-We can't use core cpumask to set policy->cpus in ve_spc_cpufreq_init()
-anymore as it gets called via cpuhp_cpufreq_online()->cpufreq_online()
-->cpufreq_driver->init() and the cpumask gets updated upon CPU hotplug
-operations. It also may cause issues when the vexpress_spc_cpufreq
-driver is built as a module.
+We don't actually need to call query_mode() in order to obtain the
+info for the current graphics mode, which is already there in
+gop->mode->info, so just access it directly in the setup_gop32/64()
+functions.
 
-Since ve_spc_clk_init is built-in device initcall, we should be able to
-use the same topology_core_cpumask to set the opp sharing cpumask via
-dev_pm_opp_set_sharing_cpus and use the same later in the driver via
-dev_pm_opp_get_sharing_cpus.
+Also nothing uses the size of the info structure, so don't update the
+passed-in size (which is the size of the gop_handle table in bytes)
+unnecessarily.
 
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191206165542.31469-5-ardb@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-vexpress/spc.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/firmware/efi/libstub/gop.c | 66 ++++++------------------------
+ 1 file changed, 12 insertions(+), 54 deletions(-)
 
-diff --git a/arch/arm/mach-vexpress/spc.c b/arch/arm/mach-vexpress/spc.c
-index 0f5381d13494..55bbbc3b328f 100644
---- a/arch/arm/mach-vexpress/spc.c
-+++ b/arch/arm/mach-vexpress/spc.c
-@@ -551,8 +551,9 @@ static struct clk *ve_spc_clk_register(struct device *cpu_dev)
- 
- static int __init ve_spc_clk_init(void)
- {
--	int cpu;
-+	int cpu, cluster;
- 	struct clk *clk;
-+	bool init_opp_table[MAX_CLUSTERS] = { false };
- 
- 	if (!info)
- 		return 0; /* Continue only if SPC is initialised */
-@@ -578,8 +579,17 @@ static int __init ve_spc_clk_init(void)
- 			continue;
- 		}
- 
-+		cluster = topology_physical_package_id(cpu_dev->id);
-+		if (init_opp_table[cluster])
-+			continue;
-+
- 		if (ve_init_opp_table(cpu_dev))
- 			pr_warn("failed to initialise cpu%d opp table\n", cpu);
-+		else if (dev_pm_opp_set_sharing_cpus(cpu_dev,
-+			 topology_core_cpumask(cpu_dev->id)))
-+			pr_warn("failed to mark OPPs shared for cpu%d\n", cpu);
-+		else
-+			init_opp_table[cluster] = true;
+diff --git a/drivers/firmware/efi/libstub/gop.c b/drivers/firmware/efi/libstub/gop.c
+index 81ffda5d1e48..fd8053f9556e 100644
+--- a/drivers/firmware/efi/libstub/gop.c
++++ b/drivers/firmware/efi/libstub/gop.c
+@@ -85,30 +85,6 @@ setup_pixel_info(struct screen_info *si, u32 pixels_per_scan_line,
  	}
+ }
  
- 	platform_device_register_simple("vexpress-spc-cpufreq", -1, NULL, 0);
+-static efi_status_t
+-__gop_query32(efi_system_table_t *sys_table_arg,
+-	      struct efi_graphics_output_protocol_32 *gop32,
+-	      struct efi_graphics_output_mode_info **info,
+-	      unsigned long *size, u64 *fb_base)
+-{
+-	struct efi_graphics_output_protocol_mode_32 *mode;
+-	efi_graphics_output_protocol_query_mode query_mode;
+-	efi_status_t status;
+-	unsigned long m;
+-
+-	m = gop32->mode;
+-	mode = (struct efi_graphics_output_protocol_mode_32 *)m;
+-	query_mode = (void *)(unsigned long)gop32->query_mode;
+-
+-	status = __efi_call_early(query_mode, (void *)gop32, mode->mode, size,
+-				  info);
+-	if (status != EFI_SUCCESS)
+-		return status;
+-
+-	*fb_base = mode->frame_buffer_base;
+-	return status;
+-}
+-
+ static efi_status_t
+ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+             efi_guid_t *proto, unsigned long size, void **gop_handle)
+@@ -130,6 +106,7 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 
+ 	nr_gops = size / sizeof(u32);
+ 	for (i = 0; i < nr_gops; i++) {
++		struct efi_graphics_output_protocol_mode_32 *mode;
+ 		struct efi_graphics_output_mode_info *info = NULL;
+ 		efi_guid_t conout_proto = EFI_CONSOLE_OUT_DEVICE_GUID;
+ 		bool conout_found = false;
+@@ -147,9 +124,11 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 		if (status == EFI_SUCCESS)
+ 			conout_found = true;
+ 
+-		status = __gop_query32(sys_table_arg, gop32, &info, &size,
+-				       &current_fb_base);
+-		if (status == EFI_SUCCESS && (!first_gop || conout_found) &&
++		mode = (void *)(unsigned long)gop32->mode;
++		info = (void *)(unsigned long)mode->info;
++		current_fb_base = mode->frame_buffer_base;
++
++		if ((!first_gop || conout_found) &&
+ 		    info->pixel_format != PIXEL_BLT_ONLY) {
+ 			/*
+ 			 * Systems that use the UEFI Console Splitter may
+@@ -203,30 +182,6 @@ setup_gop32(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 	return EFI_SUCCESS;
+ }
+ 
+-static efi_status_t
+-__gop_query64(efi_system_table_t *sys_table_arg,
+-	      struct efi_graphics_output_protocol_64 *gop64,
+-	      struct efi_graphics_output_mode_info **info,
+-	      unsigned long *size, u64 *fb_base)
+-{
+-	struct efi_graphics_output_protocol_mode_64 *mode;
+-	efi_graphics_output_protocol_query_mode query_mode;
+-	efi_status_t status;
+-	unsigned long m;
+-
+-	m = gop64->mode;
+-	mode = (struct efi_graphics_output_protocol_mode_64 *)m;
+-	query_mode = (void *)(unsigned long)gop64->query_mode;
+-
+-	status = __efi_call_early(query_mode, (void *)gop64, mode->mode, size,
+-				  info);
+-	if (status != EFI_SUCCESS)
+-		return status;
+-
+-	*fb_base = mode->frame_buffer_base;
+-	return status;
+-}
+-
+ static efi_status_t
+ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 	    efi_guid_t *proto, unsigned long size, void **gop_handle)
+@@ -248,6 +203,7 @@ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 
+ 	nr_gops = size / sizeof(u64);
+ 	for (i = 0; i < nr_gops; i++) {
++		struct efi_graphics_output_protocol_mode_64 *mode;
+ 		struct efi_graphics_output_mode_info *info = NULL;
+ 		efi_guid_t conout_proto = EFI_CONSOLE_OUT_DEVICE_GUID;
+ 		bool conout_found = false;
+@@ -265,9 +221,11 @@ setup_gop64(efi_system_table_t *sys_table_arg, struct screen_info *si,
+ 		if (status == EFI_SUCCESS)
+ 			conout_found = true;
+ 
+-		status = __gop_query64(sys_table_arg, gop64, &info, &size,
+-				       &current_fb_base);
+-		if (status == EFI_SUCCESS && (!first_gop || conout_found) &&
++		mode = (void *)(unsigned long)gop64->mode;
++		info = (void *)(unsigned long)mode->info;
++		current_fb_base = mode->frame_buffer_base;
++
++		if ((!first_gop || conout_found) &&
+ 		    info->pixel_format != PIXEL_BLT_ONLY) {
+ 			/*
+ 			 * Systems that use the UEFI Console Splitter may
 -- 
 2.20.1
 
