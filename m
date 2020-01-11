@@ -2,57 +2,59 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31550C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 15:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81184C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 15:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5D59206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 15:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DCBA206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 15:59:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B/W02T5M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dQw7p/6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbgAKP7K (ORCPT
+        id S1730198AbgAKP7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 10:59:10 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:39631 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730121AbgAKP7K (ORCPT
+        Sat, 11 Jan 2020 10:59:13 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41446 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730121AbgAKP7M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 10:59:10 -0500
-Received: by mail-qt1-f194.google.com with SMTP id e5so4974210qtm.6
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 07:59:09 -0800 (PST)
+        Sat, 11 Jan 2020 10:59:12 -0500
+Received: by mail-qk1-f195.google.com with SMTP id x129so4772452qke.8
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 07:59:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=IC9NBibNywW5fVccHDvqbghkWbmgZRAxW9BT2JDqADY=;
-        b=B/W02T5M8/H8SW4wtHmJ5XeSZmhwdFiN//ZY48qKGelFaMCfITfLKEAZxGIEhMuNgz
-         1fh+4zDB9NzGPlnTnhP4hIXFvx5jw9bzTBrn3OW/2AdrOEl3fFrbJrnzB4CutghKgOFg
-         MaZZs/d3hQAA8YW72PUjFayCmMG478DkuNUDR2N1t8+MolzxKabP10iuPy4CCVy2w5T+
-         WttjlMKWnvsBnAeBN/loru6WzHKXLdq+l+Wdm6hCA+PMmMRDGR6GsqIil/HumKSSMwVg
-         76d448X+yRCfdtmqvjvZvJyrlpWo1Ii1CPjTjjzitR3cZfYn53aBBgcC+Zg1fa9nFm1c
-         a4mA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=YwOxAUOQlGAOKDvCOZdw7tGVrmEYd8EilAE9D9adyH4=;
+        b=dQw7p/6NB+KFvFWV27Yu3Nr/2Ykn9x0HRWaIZQ2yKQ7lwCSdeoPuhLwcTI2lh1puGe
+         trMoNQmR0gXaTu+wcZCL5VC3Nb4LuECtLSqY9ZJSl0nJoYeRJJgu2C87UHhLTK/YS7HE
+         hFDgwvwKei623RPHA2YgLq8CGTE8Cy0mizwZPmfxzYfwlj07PSa1TufX20t0ypHlkmvD
+         KDdwGIngnDdPtklj/yEpYJSs8/tX0VkUeKa4ToGDGIAV6fqr5mpzWUMn6tr+V33c35QB
+         +XjMxpKb44/mK3ts5dKXQ3Kx5ukJvqKaexId5tm7qZhG53zbnqAYWJEZiwgaU6B2HL4Q
+         eksw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=IC9NBibNywW5fVccHDvqbghkWbmgZRAxW9BT2JDqADY=;
-        b=tCViW4YYgGh3H2KniV9UDCgRAvDaW0uGc2tdVx69oBKBF4Mo16FG7F5NiqFlQHeCuf
-         LsAXhZzxByJ40B9tWB5OSq4GJRNzW/qzncqTYQ6+0eCXpOxCGC7Hvtt/orBvVGibQvTo
-         1NfXm0u+YWniZ65oSyRiYmMGwWfc+55Uw9mdVL1vdWvD6bLPVOS1y/HGy2Qc17OCrfjb
-         gUvzcvRMakiNzB6CU54fL16M09PBdhY6PlUPoH9t/cCoI/Oh5DAJEKJimDE6ByRIkB4u
-         4DsXZSwr1yzrQJytGAcyCKYUqv9/zMOiq5wydTCzqcfUBhda7U1JIuy1CuE35AvrKotX
-         tO0g==
-X-Gm-Message-State: APjAAAUnBvge7Y22Lzun3afeokztuVzOjQP0xVxpXePYGL9231FSiFqB
-        EM89j8Dbn84Dezs/f4WVriQcUA==
-X-Google-Smtp-Source: APXvYqxDW4pNY+cTs8NOgJdj4Jn7FLyOEpqq70RGmDGUu1vDsbYp8IK6I1y/0EJE6lB0qhYDnGC+xA==
-X-Received: by 2002:ac8:7188:: with SMTP id w8mr3383309qto.139.1578758349178;
-        Sat, 11 Jan 2020 07:59:09 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=YwOxAUOQlGAOKDvCOZdw7tGVrmEYd8EilAE9D9adyH4=;
+        b=mQVYE9Ionpy7eN1k++sst6pTh1OFvAtP3CPL3Px4Gki/h9FTk/1B5xiP7V4R4gMsXI
+         /dIwOQRH2nDFWHisrbVepicZxhzM/SztGelb6aArYGonrvbrPnzA9VEaBvD41UDgzbfg
+         3zTTFSgSsUTwbxAN3poBRZhMuaku4RrSJnNZoPJDxBQPS8hSM8D5pDUbiPaP9mg0rltv
+         joTz7KLuS/sllq5vIfLVhJTEpdf9xdhll147QZWxu+ylljchY+HjD+OHjk+5hfRJtSFK
+         nu4Irq6ghSUGolD6W8UEgr5eaQjj86LMuVtjoVChXana4F0U92q6ri6qDr/v45q9Cd+a
+         lG3w==
+X-Gm-Message-State: APjAAAU+jbPT5TYwAKoPyifC50t8Um9vooSpAg4N1Vc6DAY5z551IEqr
+        ZYaXeyG143fdH4AjsKvb3ZYPsg==
+X-Google-Smtp-Source: APXvYqx7r36xEsdk9y5LC7i3GtyNp2dVl9FNlxSvnmiMoqeYWhuRZO9n2Ff+9l8dCChseIXW/db0kg==
+X-Received: by 2002:a05:620a:138d:: with SMTP id k13mr3761930qki.239.1578758350662;
+        Sat, 11 Jan 2020 07:59:10 -0800 (PST)
 Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id l49sm2843478qtk.7.2020.01.11.07.59.07
+        by smtp.googlemail.com with ESMTPSA id l49sm2843478qtk.7.2020.01.11.07.59.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sat, 11 Jan 2020 07:59:08 -0800 (PST)
+        Sat, 11 Jan 2020 07:59:10 -0800 (PST)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
         vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
@@ -60,146 +62,168 @@ To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
         viresh.kumar@linaro.org
 Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
         javi.merino@kernel.org, amit.kucheria@verdurent.com
-Subject: [Patch v7 0/7] Introduce Thermal Pressure
-Date:   Sat, 11 Jan 2020 10:58:59 -0500
-Message-Id: <1578758346-507-1-git-send-email-thara.gopinath@linaro.org>
+Subject: [Patch v7 1/7] sched/pelt: Add support to track thermal pressure
+Date:   Sat, 11 Jan 2020 10:59:00 -0500
+Message-Id: <1578758346-507-2-git-send-email-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.1.4
+In-Reply-To: <1578758346-507-1-git-send-email-thara.gopinath@linaro.org>
+References: <1578758346-507-1-git-send-email-thara.gopinath@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thermal governors can respond to an overheat event of a cpu by
-capping the cpu's maximum possible frequency. This in turn
-means that the maximum available compute capacity of the
-cpu is restricted. But today in the kernel, task scheduler is
-not notified of capping of maximum frequency of a cpu.
-In other words, scheduler is unaware of maximum capacity
-restrictions placed on a cpu due to thermal activity.
-This patch series attempts to address this issue.
-The benefits identified are better task placement among available
-cpus in event of overheating which in turn leads to better
-performance numbers.
+Extrapolating on the existing framework to track rt/dl utilization using
+pelt signals, add a similar mechanism to track thermal pressure. The
+difference here from rt/dl utilization tracking is that, instead of
+tracking time spent by a cpu running a rt/dl task through util_avg, the
+average thermal pressure is tracked through load_avg. This is because
+thermal pressure signal is weighted "delta" capacity and is not
+binary(util_avg is binary). "delta capacity" here means delta between the
+actual capacity of a cpu and the decreased capacity a cpu due to a thermal
+event.
 
-The reduction in the maximum possible capacity of a cpu due to a
-thermal event can be considered as thermal pressure. Instantaneous
-thermal pressure is hard to record and can sometime be erroneous
-as there can be mismatch between the actual capping of capacity
-and scheduler recording it. Thus solution is to have a weighted
-average per cpu value for thermal pressure over time.
-The weight reflects the amount of time the cpu has spent at a
-capped maximum frequency. Since thermal pressure is recorded as
-an average, it must be decayed periodically. Exisiting algorithm
-in the kernel scheduler pelt framework is re-used to calculate
-the weighted average. This patch series also defines a sysctl
-inerface to allow for a configurable decay period.
+In order to track average thermal pressure, a new sched_avg variable
+avg_thermal is introduced. Function update_thermal_load_avg can be called
+to do the periodic bookkeeping (accumulate, decay and average) of the
+thermal pressure.
 
-Regarding testing, basic build, boot and sanity testing have been
-performed on db845c platform with debian file system.
-Further, dhrystone and hackbench tests have been
-run with the thermal pressure algorithm. During testing, due to
-constraints of step wise governor in dealing with big little systems,
-trip point 0 temperature was made assymetric between cpus in little
-cluster and big cluster; the idea being that
-big core will heat up and cpu cooling device will throttle the
-frequency of the big cores faster, there by limiting the maximum available
-capacity and the scheduler will spread out tasks to little cores as well.
-
-Test Results
-
-Hackbench: 1 group , 30000 loops, 10 runs
-                                               Result         SD
-                                               (Secs)     (% of mean)
- No Thermal Pressure                            14.03       2.69%
- Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%
- Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%
- Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%
- Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%
- Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%
-
-Dhrystone Run Time  : 20 threads, 3000 MLOOPS
-                                                 Result      SD
-                                                 (Secs)    (% of mean)
- No Thermal Pressure                              9.452      4.49%
- Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
- Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
- Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
- Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
- Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%
-
-A Brief History
-
-The first version of this patch-series was posted with resuing
-PELT algorithm to decay thermal pressure signal. The discussions
-that followed were around whether intanteneous thermal pressure
-solution is better and whether a stand-alone algortihm to accumulate
-and decay thermal pressure is more appropriate than re-using the
-PELT framework.
-Tests on Hikey960 showed the stand-alone algorithm performing slightly
-better than resuing PELT algorithm and V2 was posted with the stand
-alone algorithm. Test results were shared as part of this series.
-Discussions were around re-using PELT algorithm and running
-further tests with more granular decay period.
-
-For some time after this development was impeded due to hardware
-unavailability, some other unforseen and possibly unfortunate events.
-For this version, h/w was switched from hikey960 to db845c.
-Also Instantaneous thermal pressure was never tested as part of this
-cycle as it is clear that weighted average is a better implementation.
-The non-PELT algorithm never gave any conclusive results to prove that it
-is better than reusing PELT algorithm, in this round of testing.
-Also reusing PELT algorithm means thermal pressure tracks the
-other utilization signals in the scheduler.
-
-v3->v4:
-        - "Patch 3/7:sched: Initialize per cpu thermal pressure structure"
-           is dropped as it is no longer needed following changes in other
-           other patches.
-        - rest of the change log mentioned in specific patches.
-
-v5->v6:
-	- "Added arch_ interface APIs to access and update thermal pressure.
-	   Moved declaration of per cpu thermal_pressure valriable and
-	   infrastructure to update the variable to topology files.
+Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+---
 
 v6->v7:
 	- Added CONFIG_HAVE_SCHED_THERMAL_PRESSURE to stub out
 	  update_thermal_load_avg in unsupported architectures as per
 	  review comments from Peter, Dietmar and Quentin.
-	- Renamed arch_scale_thermal_capacity to arch_cpu_thermal_pressure
-	  as per review comments from Peter, Dietmar and Ionela.
-	- Changed the input argument in arch_set_thermal_pressure from
-	  capped capacity to delta capacity(thermal pressure) as per
-	  Ionela's review comments. Hence the calculation for delta
-	  capacity(thermal pressure) is moved to cpufreq_cooling.c.
-	- Fixed a bunch of spelling typos.
+	- Updated comment for update_thermal_load_avg as per review
+	  comments from Peter and Dietmar.
 
-Thara Gopinath (7):
-  sched/pelt: Add support to track thermal pressure
-  sched/topology: Add hook to read per cpu thermal pressure.
-  arm,arm64,drivers:Add infrastructure to store and update instantaneous
-    thermal pressure
-  sched/fair: Enable periodic update of average thermal pressure
-  sched/fair: update cpu_capacity to reflect thermal pressure
-  thermal/cpu-cooling: Update thermal pressure in case of a maximum
-    frequency capping
-  sched/fair: Enable tuning of decay period
+ include/trace/events/sched.h |  4 ++++
+ init/Kconfig                 |  4 ++++
+ kernel/sched/pelt.c          | 31 +++++++++++++++++++++++++++++++
+ kernel/sched/pelt.h          | 16 ++++++++++++++++
+ kernel/sched/sched.h         |  1 +
+ 5 files changed, 56 insertions(+)
 
- Documentation/admin-guide/kernel-parameters.txt |  5 +++
- arch/arm/include/asm/topology.h                 |  3 ++
- arch/arm64/include/asm/topology.h               |  3 ++
- drivers/base/arch_topology.c                    | 11 ++++++
- drivers/thermal/cpufreq_cooling.c               | 19 +++++++++--
- include/linux/arch_topology.h                   | 10 ++++++
- include/linux/sched/topology.h                  |  8 +++++
- include/trace/events/sched.h                    |  4 +++
- init/Kconfig                                    |  4 +++
- kernel/sched/fair.c                             | 45 +++++++++++++++++++++++++
- kernel/sched/pelt.c                             | 31 +++++++++++++++++
- kernel/sched/pelt.h                             | 16 +++++++++
- kernel/sched/sched.h                            |  1 +
- 13 files changed, 158 insertions(+), 2 deletions(-)
-
+diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+index 420e80e..a8fb667 100644
+--- a/include/trace/events/sched.h
++++ b/include/trace/events/sched.h
+@@ -613,6 +613,10 @@ DECLARE_TRACE(pelt_dl_tp,
+ 	TP_PROTO(struct rq *rq),
+ 	TP_ARGS(rq));
+ 
++DECLARE_TRACE(pelt_thermal_tp,
++	TP_PROTO(struct rq *rq),
++	TP_ARGS(rq));
++
+ DECLARE_TRACE(pelt_irq_tp,
+ 	TP_PROTO(struct rq *rq),
+ 	TP_ARGS(rq));
+diff --git a/init/Kconfig b/init/Kconfig
+index f6a4a91..c16ea88 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -450,6 +450,10 @@ config HAVE_SCHED_AVG_IRQ
+ 	depends on IRQ_TIME_ACCOUNTING || PARAVIRT_TIME_ACCOUNTING
+ 	depends on SMP
+ 
++config HAVE_SCHED_THERMAL_PRESSURE
++	bool "Enable periodic averaging of thermal pressure"
++	depends on SMP
++
+ config BSD_PROCESS_ACCT
+ 	bool "BSD Process Accounting"
+ 	depends on MULTIUSER
+diff --git a/kernel/sched/pelt.c b/kernel/sched/pelt.c
+index bd006b7..5d1fbf0 100644
+--- a/kernel/sched/pelt.c
++++ b/kernel/sched/pelt.c
+@@ -367,6 +367,37 @@ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_HAVE_SCHED_THERMAL_PRESSURE
++/*
++ * thermal:
++ *
++ *   load_sum = \Sum se->avg.load_sum but se->avg.load_sum is not tracked
++ *
++ *   util_avg and runnable_load_avg are not supported and meaningless.
++ *
++ * Unlike rt/dl utilization tracking that track time spent by a cpu
++ * running a rt/dl task through util_avg, the average thermal pressure is
++ * tracked through load_avg. This is because thermal pressure signal is
++ * weighted "delta" capacity and is not binary(util_avg is binary). "delta
++ * capacity" here means delta between the actual capacity of a cpu and the
++ * decreased capacity a cpu due to a thermal event.
++ */
++
++int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
++{
++	if (___update_load_sum(now, &rq->avg_thermal,
++			       capacity,
++			       capacity,
++			       capacity)) {
++		___update_load_avg(&rq->avg_thermal, 1, 1);
++		trace_pelt_thermal_tp(rq);
++		return 1;
++	}
++
++	return 0;
++}
++#endif
++
+ #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+ /*
+  * irq:
+diff --git a/kernel/sched/pelt.h b/kernel/sched/pelt.h
+index afff644..cb20c80 100644
+--- a/kernel/sched/pelt.h
++++ b/kernel/sched/pelt.h
+@@ -7,6 +7,16 @@ int __update_load_avg_cfs_rq(u64 now, struct cfs_rq *cfs_rq);
+ int update_rt_rq_load_avg(u64 now, struct rq *rq, int running);
+ int update_dl_rq_load_avg(u64 now, struct rq *rq, int running);
+ 
++#ifdef CONFIG_HAVE_SCHED_THERMAL_PRESSURE
++int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity);
++#else
++static inline int
++update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
++{
++	return 0;
++}
++#endif
++
+ #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+ int update_irq_load_avg(struct rq *rq, u64 running);
+ #else
+@@ -159,6 +169,12 @@ update_dl_rq_load_avg(u64 now, struct rq *rq, int running)
+ }
+ 
+ static inline int
++update_thermal_rq_load_avg(u64 now, struct rq *rq, u64 capacity)
++{
++	return 0;
++}
++
++static inline int
+ update_irq_load_avg(struct rq *rq, u64 running)
+ {
+ 	return 0;
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 280a3c7..37bd7ef 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -944,6 +944,7 @@ struct rq {
+ #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+ 	struct sched_avg	avg_irq;
+ #endif
++	struct sched_avg	avg_thermal;
+ 	u64			idle_stamp;
+ 	u64			avg_idle;
+ 
 -- 
 2.1.4
 
