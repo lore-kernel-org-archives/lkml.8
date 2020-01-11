@@ -6,71 +6,71 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3CEC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EDE1C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58CC2072E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7546E2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:56:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKF/bcZW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kDJvQAJP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729888AbgAKOzD (ORCPT
+        id S1729926AbgAKO4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 09:55:03 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46854 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729666AbgAKOzC (ORCPT
+        Sat, 11 Jan 2020 09:56:05 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:39924 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729666AbgAKO4F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 09:55:02 -0500
-Received: by mail-pg1-f196.google.com with SMTP id z124so2431714pgb.13;
-        Sat, 11 Jan 2020 06:55:02 -0800 (PST)
+        Sat, 11 Jan 2020 09:56:05 -0500
+Received: by mail-pf1-f194.google.com with SMTP id q10so2612680pfs.6;
+        Sat, 11 Jan 2020 06:56:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7A6TM08yhdwCzbB22XBkTlOh0QvoYvX1yy2apjyznsk=;
-        b=mKF/bcZWLw8HaSVx6sXe0WL8Tyc5gbVmhSmT9OcEIM8SkZ7WqfxYGd+FXQBLuuh0uW
-         fMr6ukd2tT6x8ysZ59aEX4sCzwfqfmdKQlXpEdQGnHOzbehs93K6Vh7tcaBUAIrAvAzH
-         DnCoNXiG7VHTyZK9ItGsY088QoBcfs6VMg5Q39mqo4+5XOJd7ML/od0xvKnc8Vl15g1J
-         lGzw6QcNlpFd1Hb3/oVgmM8WjmSlCPvRLBfivVaSOzwnaq8HY6grbEiq4A9S7noIgRNZ
-         2j2O2HEHaUQZr048rsAQ6OnwgRvuimKNAsShjR57FNszsGOlqGraAym9euJRf8a6gIaJ
-         d8qw==
+        bh=gFENvhdwcTkHMIAMPDZsyyz5lEt5cXETOuhyXZqS3c0=;
+        b=kDJvQAJPLRPuHLL7mN6NM+nttQ9oxHbWukjVDHuIJPeBuFbFNRKLNqalbyEbliK6Ga
+         YwoDHKFZlEFbLL/kWGtm0OhI6+kegr+EtbHQsglCwGOrXPg2xVkAmzkfkThWOaioYvyM
+         fVw8at4QG3x0Mxoj7HGeKPnCer/dGhlUXN6sltECQqMNZ6nsx5PPPH7mstpp1GdYuedQ
+         jQjv9mCgsDI1+tngi3Y0jPRLVQMca09qHVSdVejDCrxmOMTiKIaYGcy7b/XQvw5/4/U9
+         6yUt/+AAcWlYPFgI9upGZB+zDQCJXfUxy+fy/4B+6N905t/xHOsGnhbRTRoQCsWuSPYR
+         favg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=7A6TM08yhdwCzbB22XBkTlOh0QvoYvX1yy2apjyznsk=;
-        b=laLDQd527TrwcAwAPfEK/omGPUcWUZp/GuSSoGyPuR6JHMcaotboD8gHShDMb9mjDJ
-         d5DCsrV0ANDQjb0iRXwAa8SZYAh6HBXt4xFxzhFoKtK1SlInODyB5OrOIA/EgxL/sMzJ
-         NTktXL8wqg9m9pMtKQ6LTLXtiiesT/i9VLiO35c5pexAxqFUpnL79QZnCsVAPls3Y+Lz
-         2Ewy+Jtqnsw0ehQmrWxZEQ5R5U5BYNUPptNLdbyLosgYm+mZwC78ODpSrxG4TY6+J4Xd
-         mCY3SiL2QZr9akmahmxzFfp3lffeqqF1qpi6w6BEIS67HP6MzuiN9mzd28TWhkuqWGQ9
-         f9Kg==
-X-Gm-Message-State: APjAAAWOrEKbmGOKmqoFjBzIofCm7KbJjXTUABSqMYYR6vKaU7wyRSV0
-        iFhYqUbK0fN72BJBGCfTj6ONjben
-X-Google-Smtp-Source: APXvYqwL8kKA/t7BXQEwEFOWv2HnNHRauPHjo9IIrviVvmKoZ7pE4c10WMyHsoZ80oW15aZFeN+GnA==
-X-Received: by 2002:a63:5657:: with SMTP id g23mr11204107pgm.452.1578754501838;
-        Sat, 11 Jan 2020 06:55:01 -0800 (PST)
+        bh=gFENvhdwcTkHMIAMPDZsyyz5lEt5cXETOuhyXZqS3c0=;
+        b=a7+K8UdGcENVcchpcPxG2bVFAXcuHFLWbTqS+EEA8qV++hVtpsqB5SsmEvmmGPI8ZP
+         BunEAl6A6T/qVQ/npZvoOrOfiwIZwTr+LfUQYbfJY36sQ9SU9NSIgFJU7L/KeFo7B3Al
+         9PtyRYkwygAikTyjpiq6quG9NEKWv2rL5eS4EvEn7O3gd6pwAZkg3ntA8FT0NNBcM+YY
+         sWr7VfomJhDarhyr9uQIZIzUTPjZFWhYTKk3jJjF+P7Wmb8GAnxVbMxBJS7QP4Xh1ZQR
+         T4UK36kxBuY7JwNnpSnB/dXxTr+a7w2Pr9udd96bHZiWIO4FbPCwF9vKiC47HvoYiMkU
+         d1pw==
+X-Gm-Message-State: APjAAAWtA3ejkfgTZ21HKj13d3J11zSVwJ8STmY4JCOXRIjb6fdm1K3S
+        Vlc0xMpvRESn8RsluUYfcJzkMZvA
+X-Google-Smtp-Source: APXvYqwwISHGv4pE0+31Aii3X6QMz9woGMx1fg3/Nx0+AyTssu5IjLRka6FUshFD5awEF6HIsmwX1Q==
+X-Received: by 2002:aa7:800e:: with SMTP id j14mr10948558pfi.174.1578754564407;
+        Sat, 11 Jan 2020 06:56:04 -0800 (PST)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id u128sm7488449pfu.60.2020.01.11.06.55.00
+        by smtp.gmail.com with ESMTPSA id g16sm6858151pgj.1.2020.01.11.06.56.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jan 2020 06:55:01 -0800 (PST)
-Subject: Re: [PATCH 4.14 00/62] 4.14.164-stable review
+        Sat, 11 Jan 2020 06:56:04 -0800 (PST)
+Subject: Re: [PATCH 5.4 000/165] 5.4.11-stable review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
 Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
         shuah@kernel.org, patches@kernelci.org,
         ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         stable@vger.kernel.org
-References: <20200111094837.425430968@linuxfoundation.org>
+References: <20200111094921.347491861@linuxfoundation.org>
 From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <8f2337db-80f6-b02f-9440-94ec887aba7c@roeck-us.net>
-Date:   Sat, 11 Jan 2020 06:55:00 -0800
+Message-ID: <eebfd768-9b52-f8c5-55f3-e4204cad956d@roeck-us.net>
+Date:   Sat, 11 Jan 2020 06:56:02 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
+In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,9 +79,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/11/20 1:49 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.14.164 release.
-> There are 62 patches in this series, all will be posted as a response
+On 1/11/20 1:48 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.11 release.
+> There are 165 patches in this series, all will be posted as a response
 > to this one.  If anyone has any issues with these being applied, please
 > let me know.
 > 
@@ -90,8 +90,8 @@ On 1/11/20 1:49 AM, Greg Kroah-Hartman wrote:
 > 
 
 Build results:
-	total: 172 pass: 172 fail: 0
+	total: 158 pass: 158 fail: 0
 Qemu test results:
-	total: 374 pass: 374 fail: 0
+	total: 386 pass: 386 fail: 0
 
 Guenter
