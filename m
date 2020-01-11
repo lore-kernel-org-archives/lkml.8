@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF25C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E77DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EEFF24649
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 230202077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737762;
-	bh=mk1Dheni6cG1VPoktrykkcjXvZKF59DSkIlfQ+SO/cs=;
+	s=default; t=1578737767;
+	bh=h4EI1R3/8ZqYDlUaddUK89wFS87jVB3ZVX4EeXuri7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sIah0hI5NXOqseCzjfVAShblpYLTDeSUMa3a92o6JdDk2Gjlf12F1q1TsF/oYEPqm
-	 oJHOy95vFKRnzLehQcaoLXGLiDeFPsVvNYORPPSjjLb85AWunXM/S87zhyjqCtEt9T
-	 Ohiv4sJS6M0xYaocSYk2Qbptj36g34PIMSPF9Jog=
+	b=oXqnXNkS7TPYRbrsyX5Ab1PfvLBPkW9bQsAB83xV1X4+2YpyVlbRCdQB74GPQsfuc
+	 uRYy2A95I7+0sK9hV3HH9cU7FvFCnya4GFAcyeViOkvb9Dae9YKAWyT5IjkUg0v1jC
+	 tPpFjnr0b0xDhTndKjPSzu8h5Iu4nk6UabEb+Cts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730190AbgAKKQB (ORCPT
+        id S1729958AbgAKKQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:16:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58384 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:16:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729748AbgAKKP7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:15:59 -0500
+        id S1729748AbgAKKQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:16:03 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94263205F4;
-        Sat, 11 Jan 2020 10:15:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA53E205F4;
+        Sat, 11 Jan 2020 10:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737758;
-        bh=mk1Dheni6cG1VPoktrykkcjXvZKF59DSkIlfQ+SO/cs=;
+        s=default; t=1578737762;
+        bh=h4EI1R3/8ZqYDlUaddUK89wFS87jVB3ZVX4EeXuri7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RnDSd6v4+xHjpTJb++5vl6car3dCBwfTMsR/RDp5vJ1uUMfkndqScM0jNkNwWK+Oz
-         MUWsGfuEq77L2W6ofLkB91f+p2ubPHjUUjb7bywWW9+kg1WyAmqXAHGurjePTbU1r8
-         cMD7/WP4UW1r4G5tMswQEcMYHk9OEF0Jy+jGvg0g=
+        b=dWOWgZhRCx2TE51Y0vHx8Bgl4Gyis36zXVD32Tx/01OALwAWKxMeaixsWgH+QDV4N
+         PWiBFlrEyPUpjt619jSmjhfNJP0h4YpPEglMPl82EHjdmNjAFowl9VAhIkXW0XbHQN
+         2oU9XliFKXBomeCPblM7KmhwU1AfD3D1/b67sMcQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Cristian Birsan <cristian.birsan@microchip.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 39/84] net: usb: lan78xx: Fix error message format specifier
-Date:   Sat, 11 Jan 2020 10:50:16 +0100
-Message-Id: <20200111094901.123124315@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Schnelle <svens@stackframe.org>,
+        Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 40/84] parisc: add missing __init annotation
+Date:   Sat, 11 Jan 2020 10:50:17 +0100
+Message-Id: <20200111094901.521679707@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -61,33 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cristian Birsan <cristian.birsan@microchip.com>
+From: Sven Schnelle <svens@stackframe.org>
 
-[ Upstream commit 858ce8ca62ea1530f2779d0e3f934b0176e663c3 ]
+[ Upstream commit aeea5eae4fd54e94d820ed17ea3b238160be723e ]
 
-Display the return code as decimal integer.
+compilation failed with:
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+MODPOST vmlinux.o
+WARNING: vmlinux.o(.text.unlikely+0xa0c): Section mismatch in reference from the function walk_lower_bus() to the function .init.text:walk_native_bus()
+The function walk_lower_bus() references
+the function __init walk_native_bus().
+This is often because walk_lower_bus lacks a __init
+annotation or the annotation of walk_native_bus is wrong.
+
+FATAL: modpost: Section mismatches detected.
+Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.
+make[2]: *** [/home/svens/linux/parisc-linux/src/scripts/Makefile.modpost:64: __modpost] Error 1
+make[1]: *** [/home/svens/linux/parisc-linux/src/Makefile:1077: vmlinux] Error 2
+make[1]: Leaving directory '/home/svens/linux/parisc-linux/build'
+make: *** [Makefile:179: sub-make] Error 2
+
+Signed-off-by: Sven Schnelle <svens@stackframe.org>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/lan78xx.c | 2 +-
+ arch/parisc/kernel/drivers.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 6dd24a1ca10d..0f6b8d4689b3 100644
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -522,7 +522,7 @@ static int lan78xx_read_stats(struct lan78xx_net *dev,
- 		}
- 	} else {
- 		netdev_warn(dev->net,
--			    "Failed to read stat ret = 0x%x", ret);
-+			    "Failed to read stat ret = %d", ret);
- 	}
+diff --git a/arch/parisc/kernel/drivers.c b/arch/parisc/kernel/drivers.c
+index 5eb979d04b90..a1a5e4c59e6b 100644
+--- a/arch/parisc/kernel/drivers.c
++++ b/arch/parisc/kernel/drivers.c
+@@ -789,7 +789,7 @@ EXPORT_SYMBOL(device_to_hwpath);
+ static void walk_native_bus(unsigned long io_io_low, unsigned long io_io_high,
+                             struct device *parent);
  
- 	kfree(stats);
+-static void walk_lower_bus(struct parisc_device *dev)
++static void __init walk_lower_bus(struct parisc_device *dev)
+ {
+ 	unsigned long io_io_low, io_io_high;
+ 
 -- 
 2.20.1
 
