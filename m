@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B067C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4EEC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 330902146E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C6720848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738174;
-	bh=3cMs4tT+RemEJnmuF4khxgCvz9o2HcNgNZpneHdQLRw=;
+	s=default; t=1578738180;
+	bh=LXSItio5r38Tkfc003AwtVAQ31ISjAGXhsab1xkw3Uw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UNRfFoajtkjVs9CTo5qrMIcztsF6S4qp9xFg7mnpxo+iv7IFtIjT4KyayumzynpC2
-	 EnN2f1Z8cuDqYzV2ZeViVf12s2flyQDnXsQNdAVt46oBjYQvW6KoZPXAmI6ihFf74l
-	 leInvUULEYAe5S2ieyDhx455tFXDz3Sqi4Yz1kf0=
+	b=UjJwMEXiXzYeXz3lbNnCTv7Y5W7DCr4HPXvH0wbH2CKD17AD422nrr/BtyjY2BV77
+	 sZmoufCW+B1aTHxoR2i8iuMohFZTqU2S027R+XMVhr+maMZudAfaYuJRIulmsAmKmz
+	 vXjt+RaaVav6tpP1XQExnbQyIadvTssRBkQ8Sw/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730873AbgAKKWw (ORCPT
+        id S1730876AbgAKKW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:22:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48722 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:22:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730855AbgAKKWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:22:48 -0500
+        id S1729391AbgAKKWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:22:54 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D9162082E;
-        Sat, 11 Jan 2020 10:22:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B068820848;
+        Sat, 11 Jan 2020 10:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738168;
-        bh=3cMs4tT+RemEJnmuF4khxgCvz9o2HcNgNZpneHdQLRw=;
+        s=default; t=1578738174;
+        bh=LXSItio5r38Tkfc003AwtVAQ31ISjAGXhsab1xkw3Uw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CMYMCVjy52RJ2MHYmgNveMmzwbjLhM+4e4iJRSKMNojvDjSjBjPmH4O0pcp3Ya66d
-         Y+P3WyWGLgBLVvOf95LK5WI9oDOsDbwOkKbbThBbNDDxBofDMTmNKcVUl+mCAR/HE5
-         jcmoXgh5N9U4unv71YpcifWIYkL7DsZraQJfXKZ8=
+        b=YctXUry8x5DylFygSny3cxgZqscq3fg11DHUm28h41Rw/NM1l7HBBZd+tfYsZvDW6
+         d1YUc7uUI0uB2Q7UL/W+GUhLiFlu3OTP7BYG9JDGrDBjEostBZ5dVBXQhk1QUqBvRD
+         Fsdv+On9M4nlkfPKfyb7sgt6SHBTpAxJ3q7WeR2w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Simon Horman <simon.horman@netronome.com>,
-        Ray Jui <ray.jui@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 042/165] ARM: dts: Cygnus: Fix MDIO node address/size cells
-Date:   Sat, 11 Jan 2020 10:49:21 +0100
-Message-Id: <20200111094924.462913621@linuxfoundation.org>
+Subject: [PATCH 5.4 043/165] spi: spi-cavium-thunderx: Add missing pci_release_regions()
+Date:   Sat, 11 Jan 2020 10:49:22 +0100
+Message-Id: <20200111094924.523980135@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,38 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit fac2c2da3596d77c343988bb0d41a8c533b2e73c ]
+[ Upstream commit a841e2853e1afecc2ee692b8cc5bff606bc84e4c ]
 
-The MDIO node on Cygnus had an reversed #address-cells and
- #size-cells properties, correct those.
+The driver forgets to call pci_release_regions() in probe failure
+and remove.
+Add the missed calls to fix it.
 
-Fixes: 40c26d3af60a ("ARM: dts: Cygnus: Add the ethernet switch and ethernet PHY")
-Reported-by: Simon Horman <simon.horman@netronome.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191206075500.18525-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm-cygnus.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-cavium-thunderx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index 2dac3efc7640..1bc45cfd5453 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -174,8 +174,8 @@
- 		mdio: mdio@18002000 {
- 			compatible = "brcm,iproc-mdio";
- 			reg = <0x18002000 0x8>;
--			#size-cells = <1>;
--			#address-cells = <0>;
-+			#size-cells = <0>;
-+			#address-cells = <1>;
- 			status = "disabled";
+diff --git a/drivers/spi/spi-cavium-thunderx.c b/drivers/spi/spi-cavium-thunderx.c
+index d12e149f1a41..fd6b9caffaf0 100644
+--- a/drivers/spi/spi-cavium-thunderx.c
++++ b/drivers/spi/spi-cavium-thunderx.c
+@@ -82,6 +82,7 @@ static int thunderx_spi_probe(struct pci_dev *pdev,
  
- 			gphy0: ethernet-phy@0 {
+ error:
+ 	clk_disable_unprepare(p->clk);
++	pci_release_regions(pdev);
+ 	spi_master_put(master);
+ 	return ret;
+ }
+@@ -96,6 +97,7 @@ static void thunderx_spi_remove(struct pci_dev *pdev)
+ 		return;
+ 
+ 	clk_disable_unprepare(p->clk);
++	pci_release_regions(pdev);
+ 	/* Put everything in a known state. */
+ 	writeq(0, p->register_base + OCTEON_SPI_CFG(p));
+ }
 -- 
 2.20.1
 
