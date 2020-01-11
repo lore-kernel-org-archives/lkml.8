@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86EC8C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E14C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5287220848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 126B72084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736856;
-	bh=/m9tjbU0+CnjBeSRGS7TlOATIewy4GJ57V1oDDytE78=;
+	s=default; t=1578736860;
+	bh=Lo5Smt3oSA4bNODey7pLbvX9J2tYch+fFpPESUk3xPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hIBiIU459vHUfqwo4cwFKR61OnezvQZwx6/7WImxk2N8xasCP64XLsewu03xjevuA
-	 GtplM5MkJOLFd0PGyZHijscPr6TESj9jn92uKTJT2DTp84Jf9qJUzUN+h12h6e9Ucn
-	 YLRuru73kgy2QZ/k4j8y6f8lBaACnEkLpKGmBGf4=
+	b=tM8bIEZrUJg5p+XnFRhAziw1vd1jaR4q8wFpgqOlcPnGbVwy7dWEF5EmA7l1wm1Ez
+	 XQMZvq1R86r/mWWojXnrjlkpCRKnkw2ka8295EglmYHq8qRlNW/Xx8ynCLiCsSjzyf
+	 CpeiOVURe5GPk3/jNFA4hhQrNaEtpKNeU5WTp5ic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728784AbgAKKAz (ORCPT
+        id S1729434AbgAKKA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:00:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57562 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:00:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729064AbgAKKAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:00:51 -0500
+        id S1729064AbgAKKA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:00:56 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB8A92082E;
-        Sat, 11 Jan 2020 10:00:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C905D2082E;
+        Sat, 11 Jan 2020 10:00:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736850;
-        bh=/m9tjbU0+CnjBeSRGS7TlOATIewy4GJ57V1oDDytE78=;
+        s=default; t=1578736855;
+        bh=Lo5Smt3oSA4bNODey7pLbvX9J2tYch+fFpPESUk3xPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SGYCuhWEn3PwxG7+b4Z2VoHfcqnw8aA/uD9N2frMlafWGfoZJ+xrM+XmyAd9uC6pH
-         J8KPgw8lnH8sFFW2/62TEgPUmRXxZc8kcAHxfEOZqAKK6O6DrSPj8SxCQ3r56+0Vio
-         O3izB+t22FDLKUYsO4/epRSLnlwKBRB03Fa48d90=
+        b=XcSPHlNuxNMhlaJbvkHVTv4HA8r96hTLROr7m51swRf7LlzZbkjwlX6g3bI0cqYO2
+         iZPJjf8DCU9U7Kj7E7ggp4aG+JtqRqVJS75Md24uTu1E+8EqI5HUVKuzzdifvH2ig0
+         Uz2LpqA0nkKEUGdzbdScuxS4rVDCdMGt/RpsSQLw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.9 28/91] ata: ahci_brcm: Fix AHCI resources management
-Date:   Sat, 11 Jan 2020 10:49:21 +0100
-Message-Id: <20200111094854.961696898@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 4.9 37/91] Bluetooth: btusb: fix PM leak in error case of setup
+Date:   Sat, 11 Jan 2020 10:49:30 +0100
+Message-Id: <20200111094858.986634438@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -60,223 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit c0cdf2ac4b5bf3e5ef2451ea29fb4104278cdabc upstream.
+commit 3d44a6fd0775e6215e836423e27f8eedf8c871ea upstream.
 
-The AHCI resources management within ahci_brcm.c is a little
-convoluted, largely because it historically had a dedicated clock that
-was managed within this file in the downstream tree. Once brough
-upstream though, the clock was left to be managed by libahci_platform.c
-which is entirely appropriate.
+If setup() fails a reference for runtime PM has already
+been taken. Proper use of the error handling in btusb_open()is needed.
+You cannot just return.
 
-This patch series ensures that the AHCI resources are fetched and
-enabled before any register access is done, thus avoiding bus errors on
-platforms which clock gate the controller by default.
-
-As a result we need to re-arrange the suspend() and resume() functions
-in order to avoid accessing registers after the clocks have been turned
-off respectively before the clocks have been turned on. Finally, we can
-refactor brcm_ahci_get_portmask() in order to fetch the number of ports
-from hpriv->mmio which is now accessible without jumping through hoops
-like we used to do.
-
-The commit pointed in the Fixes tag is both old and new enough not to
-require major headaches for backporting of this patch.
-
-Fixes: eba68f829794 ("ata: ahci_brcmstb: rename to support across Broadcom SoC's")
-Cc: stable@vger.kernel.org
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: ace31982585a3 ("Bluetooth: btusb: Add setup callback for chip init on USB")
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/ata/ahci_brcm.c |  105 ++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 76 insertions(+), 29 deletions(-)
+ drivers/bluetooth/btusb.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/ata/ahci_brcm.c
-+++ b/drivers/ata/ahci_brcm.c
-@@ -228,19 +228,12 @@ static void brcm_sata_phys_disable(struc
- 			brcm_sata_phy_disable(priv, i);
- }
- 
--static u32 brcm_ahci_get_portmask(struct platform_device *pdev,
-+static u32 brcm_ahci_get_portmask(struct ahci_host_priv *hpriv,
- 				  struct brcm_ahci_priv *priv)
- {
--	void __iomem *ahci;
--	struct resource *res;
- 	u32 impl;
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ahci");
--	ahci = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(ahci))
--		return 0;
--
--	impl = readl(ahci + HOST_PORTS_IMPL);
-+	impl = readl(hpriv->mmio + HOST_PORTS_IMPL);
- 
- 	if (fls(impl) > SATA_TOP_MAX_PHYS)
- 		dev_warn(priv->dev, "warning: more ports than PHYs (%#x)\n",
-@@ -248,9 +241,6 @@ static u32 brcm_ahci_get_portmask(struct
- 	else if (!impl)
- 		dev_info(priv->dev, "no ports found\n");
- 
--	devm_iounmap(&pdev->dev, ahci);
--	devm_release_mem_region(&pdev->dev, res->start, resource_size(res));
--
- 	return impl;
- }
- 
-@@ -277,11 +267,10 @@ static int brcm_ahci_suspend(struct devi
- 	struct ata_host *host = dev_get_drvdata(dev);
- 	struct ahci_host_priv *hpriv = host->private_data;
- 	struct brcm_ahci_priv *priv = hpriv->plat_data;
--	int ret;
- 
--	ret = ahci_platform_suspend(dev);
- 	brcm_sata_phys_disable(priv);
--	return ret;
-+
-+	return ahci_platform_suspend(dev);
- }
- 
- static int brcm_ahci_resume(struct device *dev)
-@@ -289,11 +278,44 @@ static int brcm_ahci_resume(struct devic
- 	struct ata_host *host = dev_get_drvdata(dev);
- 	struct ahci_host_priv *hpriv = host->private_data;
- 	struct brcm_ahci_priv *priv = hpriv->plat_data;
-+	int ret;
-+
-+	/* Make sure clocks are turned on before re-configuration */
-+	ret = ahci_platform_enable_clks(hpriv);
-+	if (ret)
-+		return ret;
- 
- 	brcm_sata_init(priv);
- 	brcm_sata_phys_enable(priv);
- 	brcm_sata_alpm_init(hpriv);
--	return ahci_platform_resume(dev);
-+
-+	/* Since we had to enable clocks earlier on, we cannot use
-+	 * ahci_platform_resume() as-is since a second call to
-+	 * ahci_platform_enable_resources() would bump up the resources
-+	 * (regulators, clocks, PHYs) count artificially so we copy the part
-+	 * after ahci_platform_enable_resources().
-+	 */
-+	ret = ahci_platform_enable_phys(hpriv);
-+	if (ret)
-+		goto out_disable_phys;
-+
-+	ret = ahci_platform_resume_host(dev);
-+	if (ret)
-+		goto out_disable_platform_phys;
-+
-+	/* We resumed so update PM runtime state */
-+	pm_runtime_disable(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
-+	return 0;
-+
-+out_disable_platform_phys:
-+	ahci_platform_disable_phys(hpriv);
-+out_disable_phys:
-+	brcm_sata_phys_disable(priv);
-+	ahci_platform_disable_clks(hpriv);
-+	return ret;
- }
- #endif
- 
-@@ -345,37 +367,62 @@ static int brcm_ahci_probe(struct platfo
- 		priv->quirks |= BRCM_AHCI_QUIRK_SKIP_PHY_ENABLE;
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -1069,7 +1069,7 @@ static int btusb_open(struct hci_dev *hd
+ 	if (data->setup_on_usb) {
+ 		err = data->setup_on_usb(hdev);
+ 		if (err < 0)
+-			return err;
++			goto setup_fail;
  	}
  
-+	hpriv = ahci_platform_get_resources(pdev);
-+	if (IS_ERR(hpriv)) {
-+		ret = PTR_ERR(hpriv);
-+		goto out_reset;
-+	}
-+
-+	ret = ahci_platform_enable_clks(hpriv);
-+	if (ret)
-+		goto out_reset;
-+
-+	/* Must be first so as to configure endianness including that
-+	 * of the standard AHCI register space.
-+	 */
- 	brcm_sata_init(priv);
+ 	data->intf->needs_remote_wakeup = 1;
+@@ -1101,6 +1101,7 @@ done:
  
--	priv->port_mask = brcm_ahci_get_portmask(pdev, priv);
--	if (!priv->port_mask)
--		return -ENODEV;
-+	/* Initializes priv->port_mask which is used below */
-+	priv->port_mask = brcm_ahci_get_portmask(hpriv, priv);
-+	if (!priv->port_mask) {
-+		ret = -ENODEV;
-+		goto out_disable_clks;
-+	}
- 
-+	/* Must be done before ahci_platform_enable_phys() */
- 	brcm_sata_phys_enable(priv);
- 
--	hpriv = ahci_platform_get_resources(pdev);
--	if (IS_ERR(hpriv))
--		return PTR_ERR(hpriv);
- 	hpriv->plat_data = priv;
- 	hpriv->flags = AHCI_HFLAG_WAKE_BEFORE_STOP;
- 
- 	brcm_sata_alpm_init(hpriv);
- 
--	ret = ahci_platform_enable_resources(hpriv);
--	if (ret)
--		return ret;
--
- 	if (priv->quirks & BRCM_AHCI_QUIRK_NO_NCQ)
- 		hpriv->flags |= AHCI_HFLAG_NO_NCQ;
- 
-+	ret = ahci_platform_enable_phys(hpriv);
-+	if (ret)
-+		goto out_disable_phys;
-+
- 	ret = ahci_platform_init_host(pdev, hpriv, &ahci_brcm_port_info,
- 				      &ahci_platform_sht);
- 	if (ret)
--		return ret;
-+		goto out_disable_platform_phys;
- 
- 	dev_info(dev, "Broadcom AHCI SATA3 registered\n");
- 
- 	return 0;
-+
-+out_disable_platform_phys:
-+	ahci_platform_disable_phys(hpriv);
-+out_disable_phys:
-+	brcm_sata_phys_disable(priv);
-+out_disable_clks:
-+	ahci_platform_disable_clks(hpriv);
-+out_reset:
-+	if (!IS_ERR_OR_NULL(priv->rcdev))
-+		reset_control_assert(priv->rcdev);
-+	return ret;
+ failed:
+ 	clear_bit(BTUSB_INTR_RUNNING, &data->flags);
++setup_fail:
+ 	usb_autopm_put_interface(data->intf);
+ 	return err;
  }
- 
- static int brcm_ahci_remove(struct platform_device *pdev)
-@@ -385,12 +432,12 @@ static int brcm_ahci_remove(struct platf
- 	struct brcm_ahci_priv *priv = hpriv->plat_data;
- 	int ret;
- 
-+	brcm_sata_phys_disable(priv);
-+
- 	ret = ata_platform_remove_one(pdev);
- 	if (ret)
- 		return ret;
- 
--	brcm_sata_phys_disable(priv);
--
- 	return 0;
- }
- 
 
 
