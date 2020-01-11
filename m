@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F3DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64AF1C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E84920880
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3197320880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738794;
-	bh=Dlpxu94Gw2w8+mGmgROP8VFW0qGP7TgxW2vUEk6Kb/s=;
+	s=default; t=1578738798;
+	bh=ubuMjO1Bri5Vs7asPttjWLYKlnNz0woyvUAWYohQ6C8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wPKkOPMoooSzes+pgJCqIdYUXJYzyuS3wqdGr9u9yB7O3nICz5NBtYqqJGYnU6ltK
-	 CC9TYxCHzZimn/63syIyUoertdQhxWxINnh8j9uTkGEJcgMYlmV6YfYbtSCZIrnvat
-	 aWp15jFN3qYwVRjCr+3tfOXmbA2/0jjEEYHNi9nc=
+	b=jYNpPKvZsFhZr4P4xzn3b/Q/6qhw/tN4ysChylykxw0IqTY/HtqQEvahwaJ3ue/b1
+	 U0eKvAGOUCkaT1zAhoIu0RsTnQqpsDsiVdXhETpW81kW4Ch0pQVVMfRd/UXa7+kNPh
+	 LWzTFlhdrHdQ7/lR0ucSOEOrK4bLbWvfmFRiYHLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbgAKKdM (ORCPT
+        id S1731590AbgAKKdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:33:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47258 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:33:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731531AbgAKKdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:33:09 -0500
+        id S1731514AbgAKKdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:33:13 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB09420842;
-        Sat, 11 Jan 2020 10:33:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17EF620842;
+        Sat, 11 Jan 2020 10:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738788;
-        bh=Dlpxu94Gw2w8+mGmgROP8VFW0qGP7TgxW2vUEk6Kb/s=;
+        s=default; t=1578738792;
+        bh=ubuMjO1Bri5Vs7asPttjWLYKlnNz0woyvUAWYohQ6C8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RrhCnwqMv8AgMdII7Tk25Fjigt6z5E1OT3qKwkDumblpqcAbjg/1R4kjXD3RbAR7o
-         i5myZAdjUHza0N4Fwu7m5TgU2nZCm1e5GiZ9c4Z/FQhBCK8OuJCtlQhrVMRnDFiKWK
-         HMn6uF9JhecJhkIFVV9Y9/DcS/wM6awEIpnwvI9U=
+        b=sTcdpRgwuQzGr+iP7N+XiCpm5RkVyUbYIONicxtL2JNwdUxzwpXKqcAVBjy4qxgbV
+         VQWooHHCtuIWQr8Uuq9TK+VK3weqrdNugTqTwRgSehxVoVhcL9NPu0yDotckbACOdE
+         Dr37KmXzYeRqJFAJNzzcO0qQjLWcjUHVUSAT9czo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 154/165] vlan: vlan_changelink() should propagate errors
-Date:   Sat, 11 Jan 2020 10:51:13 +0100
-Message-Id: <20200111094941.406970971@linuxfoundation.org>
+        syzbot+dc9071cc5a85950bdfce@syzkaller.appspotmail.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>
+Subject: [PATCH 5.4 146/165] pkt_sched: fq: do not accept silly TCA_FQ_QUANTUM
+Date:   Sat, 11 Jan 2020 10:51:05 +0100
+Message-Id: <20200111094939.516112995@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,47 +63,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit eb8ef2a3c50092bb018077c047b8dba1ce0e78e3 ]
+[ Upstream commit d9e15a2733067c9328fb56d98fe8e574fa19ec31 ]
 
-Both vlan_dev_change_flags() and vlan_dev_set_egress_priority()
-can return an error. vlan_changelink() should not ignore them.
+As diagnosed by Florian :
 
-Fixes: 07b5b17e157b ("[VLAN]: Use rtnl_link API")
+If TCA_FQ_QUANTUM is set to 0x80000000, fq_deueue()
+can loop forever in :
+
+if (f->credit <= 0) {
+  f->credit += q->quantum;
+  goto begin;
+}
+
+... because f->credit is either 0 or -2147483648.
+
+Let's limit TCA_FQ_QUANTUM to no more than 1 << 20 :
+This max value should limit risks of breaking user setups
+while fixing this bug.
+
+Fixes: afe4fd062416 ("pkt_sched: fq: Fair Queue packet scheduler")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
+Diagnosed-by: Florian Westphal <fw@strlen.de>
+Reported-by: syzbot+dc9071cc5a85950bdfce@syzkaller.appspotmail.com
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/8021q/vlan_netlink.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/sched/sch_fq.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/net/8021q/vlan_netlink.c
-+++ b/net/8021q/vlan_netlink.c
-@@ -108,11 +108,13 @@ static int vlan_changelink(struct net_de
- 	struct ifla_vlan_flags *flags;
- 	struct ifla_vlan_qos_mapping *m;
- 	struct nlattr *attr;
--	int rem;
-+	int rem, err;
+--- a/net/sched/sch_fq.c
++++ b/net/sched/sch_fq.c
+@@ -787,10 +787,12 @@ static int fq_change(struct Qdisc *sch,
+ 	if (tb[TCA_FQ_QUANTUM]) {
+ 		u32 quantum = nla_get_u32(tb[TCA_FQ_QUANTUM]);
  
- 	if (data[IFLA_VLAN_FLAGS]) {
- 		flags = nla_data(data[IFLA_VLAN_FLAGS]);
--		vlan_dev_change_flags(dev, flags->flags, flags->mask);
-+		err = vlan_dev_change_flags(dev, flags->flags, flags->mask);
-+		if (err)
-+			return err;
+-		if (quantum > 0)
++		if (quantum > 0 && quantum <= (1 << 20)) {
+ 			q->quantum = quantum;
+-		else
++		} else {
++			NL_SET_ERR_MSG_MOD(extack, "invalid quantum");
+ 			err = -EINVAL;
++		}
  	}
- 	if (data[IFLA_VLAN_INGRESS_QOS]) {
- 		nla_for_each_nested(attr, data[IFLA_VLAN_INGRESS_QOS], rem) {
-@@ -123,7 +125,9 @@ static int vlan_changelink(struct net_de
- 	if (data[IFLA_VLAN_EGRESS_QOS]) {
- 		nla_for_each_nested(attr, data[IFLA_VLAN_EGRESS_QOS], rem) {
- 			m = nla_data(attr);
--			vlan_dev_set_egress_priority(dev, m->from, m->to);
-+			err = vlan_dev_set_egress_priority(dev, m->from, m->to);
-+			if (err)
-+				return err;
- 		}
- 	}
- 	return 0;
+ 
+ 	if (tb[TCA_FQ_INITIAL_QUANTUM])
 
 
