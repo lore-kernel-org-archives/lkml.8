@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97459C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC6EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A399205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A170B20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738348;
-	bh=gFGpe93+udtJL3IRuqv7gvEvTZ38Dbi175XlBDXH+/A=;
+	s=default; t=1578738355;
+	bh=JnENt95K+w08kWQTXHyJ6+4jxa4P7bY6b/46UFKPQbo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WJ3JKnFfThHW9Uk5uLXA5iii5Ngy0Dfmlse958VEbu4Nefy6zT68jvB+SrFHzAeHG
-	 7UDHLCHNswdtX0wZDVQU43NFcd2t1n5Z/FULKS38BgpT/y0lVF1175d+KoAjRknY3G
-	 3GH8N4GhU8aaTyll7aDj3De/KvmoVXCto9l/0MGc=
+	b=VPj+HQPNp87uCYyXc1WQ976S27yN42alypkeIyyA1Ed6ZPmccBwLXntDZ/zl5fjBG
+	 +nA4a2c8RB5qNL8+MDC+1wVQqdiViFlsbexjimKhA2aOCmToy6hDPc7KZD8M/zfYHJ
+	 jv/Bssm/93jH4lB000okGKcVPDLP9BNTqrSQUZns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731013AbgAKKZr (ORCPT
+        id S1730948AbgAKKZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:25:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57122 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:25:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729245AbgAKKZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:25:44 -0500
+        id S1729245AbgAKKZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:25:51 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EDE0920848;
-        Sat, 11 Jan 2020 10:25:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D72B205F4;
+        Sat, 11 Jan 2020 10:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738344;
-        bh=gFGpe93+udtJL3IRuqv7gvEvTZ38Dbi175XlBDXH+/A=;
+        s=default; t=1578738350;
+        bh=JnENt95K+w08kWQTXHyJ6+4jxa4P7bY6b/46UFKPQbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OmIpYRno8ymqITYFNeNOg3YFdLWIsaa16VzC6vE7+cflFpyx+8War1g2idhRtLwUz
-         N/ow4tdib/8Z4CM9ldiO8Anddp6RGFiQNxEmwnxyUIyQQo1uyt9Mw40fxPYPhA5bSP
-         N1cY1CrB1D03C1kSlf2IaamBkukRoCrjq9/Zr8AE=
+        b=tig5/hDSEYFO2YPS4C4pNnc46O4QinR6aHjh0sFReVJOdJ7uhRQtizmvFJaCOO/Qw
+         99NNyim/0NZ0oYeNYRbZ5WtCf0gJ68dFRxTg6pe6aWrr1djti8e2BfSFKzIHQzV7yE
+         c9izvdk5d1xQJFwhYPQLwO8L4u9yP/oTx9HXHvdc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Thumshirn <jthumshirn@suse.de>,
+        stable@vger.kernel.org, David Sterba <dsterba@suse.com>,
+        Filipe Manana <fdmanana@suse.com>,
         Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 077/165] btrfs: handle error in btrfs_cache_block_group
-Date:   Sat, 11 Jan 2020 10:49:56 +0100
-Message-Id: <20200111094927.634167726@linuxfoundation.org>
+Subject: [PATCH 5.4 078/165] Btrfs: fix hole extent items with a zero size after range cloning
+Date:   Sat, 11 Jan 2020 10:49:57 +0100
+Message-Id: <20200111094927.716053977@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,81 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit db8fe64f9ce61d1d89d3c3c34d111a43afb9f053 ]
+[ Upstream commit 147271e35ba267506dde6550f58ccf8d287db3ef ]
 
-We have a BUG_ON(ret < 0) in find_free_extent from
-btrfs_cache_block_group.  If we fail to allocate our ctl we'll just
-panic, which is not good.  Instead just go on to another block group.
-If we fail to find a block group we don't want to return ENOSPC, because
-really we got a ENOMEM and that's the root of the problem.  Save our
-return from btrfs_cache_block_group(), and then if we still fail to make
-our allocation return that ret so we get the right error back.
+Normally when cloning a file range if we find an implicit hole at the end
+of the range we assume it is because the NO_HOLES feature is enabled.
+However that is not always the case. One well known case [1] is when we
+have a power failure after mixing buffered and direct IO writes against
+the same file.
 
-Tested with inject-error.py from bcc.
+In such cases we need to punch a hole in the destination file, and if
+the NO_HOLES feature is not enabled, we need to insert explicit file
+extent items to represent the hole. After commit 690a5dbfc51315
+("Btrfs: fix ENOSPC errors, leading to transaction aborts, when cloning
+extents"), we started to insert file extent items representing the hole
+with an item size of 0, which is invalid and should be 53 bytes (the size
+of a btrfs_file_extent_item structure), resulting in all sorts of
+corruptions and invalid memory accesses. This is detected by the tree
+checker when we attempt to write a leaf to disk.
 
-Reviewed-by: Johannes Thumshirn <jthumshirn@suse.de>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
+The problem can be sporadically triggered by test case generic/561 from
+fstests. That test case does not exercise power failure and creates a new
+filesystem when it starts, so it does not use a filesystem created by any
+previous test that tests power failure. However the test does both
+buffered and direct IO writes (through fsstress) and it's precisely that
+which is creating the implicit holes in files. That happens even before
+the commit mentioned earlier. I need to investigate why we get those
+implicit holes to check if there is a real problem or not. For now this
+change fixes the regression of introducing file extent items with an item
+size of 0 bytes.
+
+Fix the issue by calling btrfs_punch_hole_range() without passing a
+btrfs_clone_extent_info structure, which ensures file extent items are
+inserted to represent the hole with a correct item size. We were passing
+a btrfs_clone_extent_info with a value of 0 for its 'item_size' field,
+which was causing the insertion of file extent items with an item size
+of 0.
+
+[1] https://www.spinics.net/lists/linux-btrfs/msg75350.html
+
+Reported-by: David Sterba <dsterba@suse.com>
+Fixes: 690a5dbfc51315 ("Btrfs: fix ENOSPC errors, leading to transaction aborts, when cloning extents")
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/extent-tree.c | 20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ fs/btrfs/ioctl.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
-index eb95ed78a18e..dc50605ecbda 100644
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -3781,6 +3781,7 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
- 				u64 flags, int delalloc)
- {
- 	int ret = 0;
-+	int cache_block_group_error = 0;
- 	struct btrfs_free_cluster *last_ptr = NULL;
- 	struct btrfs_block_group_cache *block_group = NULL;
- 	struct find_free_extent_ctl ffe_ctl = {0};
-@@ -3940,7 +3941,20 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
- 		if (unlikely(!ffe_ctl.cached)) {
- 			ffe_ctl.have_caching_bg = true;
- 			ret = btrfs_cache_block_group(block_group, 0);
--			BUG_ON(ret < 0);
-+
-+			/*
-+			 * If we get ENOMEM here or something else we want to
-+			 * try other block groups, because it may not be fatal.
-+			 * However if we can't find anything else we need to
-+			 * save our return here so that we return the actual
-+			 * error that caused problems, not ENOSPC.
-+			 */
-+			if (ret < 0) {
-+				if (!cache_block_group_error)
-+					cache_block_group_error = ret;
-+				ret = 0;
-+				goto loop;
-+			}
- 			ret = 0;
- 		}
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index a56dcc0c9c2a..5720e450a46f 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -3727,24 +3727,18 @@ static int btrfs_clone(struct inode *src, struct inode *inode,
+ 	ret = 0;
  
-@@ -4027,7 +4041,7 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
- 	if (ret > 0)
- 		goto search;
- 
--	if (ret == -ENOSPC) {
-+	if (ret == -ENOSPC && !cache_block_group_error) {
+ 	if (last_dest_end < destoff + len) {
+-		struct btrfs_clone_extent_info clone_info = { 0 };
  		/*
- 		 * Use ffe_ctl->total_free_space as fallback if we can't find
- 		 * any contiguous hole.
-@@ -4038,6 +4052,8 @@ static noinline int find_free_extent(struct btrfs_fs_info *fs_info,
- 		space_info->max_extent_size = ffe_ctl.max_extent_size;
- 		spin_unlock(&space_info->lock);
- 		ins->offset = ffe_ctl.max_extent_size;
-+	} else if (ret == -ENOSPC) {
-+		ret = cache_block_group_error;
- 	}
- 	return ret;
- }
+-		 * We have an implicit hole (NO_HOLES feature is enabled) that
+-		 * fully or partially overlaps our cloning range at its end.
++		 * We have an implicit hole that fully or partially overlaps our
++		 * cloning range at its end. This means that we either have the
++		 * NO_HOLES feature enabled or the implicit hole happened due to
++		 * mixing buffered and direct IO writes against this file.
+ 		 */
+ 		btrfs_release_path(path);
+ 		path->leave_spinning = 0;
+ 
+-		/*
+-		 * We are dealing with a hole and our clone_info already has a
+-		 * disk_offset of 0, we only need to fill the data length and
+-		 * file offset.
+-		 */
+-		clone_info.data_len = destoff + len - last_dest_end;
+-		clone_info.file_offset = last_dest_end;
+ 		ret = btrfs_punch_hole_range(inode, path,
+ 					     last_dest_end, destoff + len - 1,
+-					     &clone_info, &trans);
++					     NULL, &trans);
+ 		if (ret)
+ 			goto out;
+ 
 -- 
 2.20.1
 
