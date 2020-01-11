@@ -2,135 +2,133 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEAFC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47159C33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 101C32082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:25:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hdRCBOSX"
+	by mail.kernel.org (Postfix) with ESMTP id 277C42082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729754AbgAKOZt (ORCPT
+        id S1729792AbgAKObz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 09:25:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47272 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729382AbgAKOZs (ORCPT
+        Sat, 11 Jan 2020 09:31:55 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:58275 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729743AbgAKObz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 09:25:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578752747;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uwm6fzYAwEwYeUfJoESjpA/0Z/xwqqojB6vogh+wkjc=;
-        b=hdRCBOSXPuBExbHjmDfXCr9fKwJf29R4rIYcHXDUH9Is352NVa5OT3qAeh0mX8DoYdWqXm
-        ZvJr9C104URymMN+rhmU0aZakYda6MDTfB9keYVF0C2QEt98bUmjYyIN/vvltCosxya+oG
-        yANE6NtAmS/IK5Bc+Zyr78UK+gdJ2cA=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-277-whW4jLAmP9ua5CkdeIgzIQ-1; Sat, 11 Jan 2020 09:25:45 -0500
-X-MC-Unique: whW4jLAmP9ua5CkdeIgzIQ-1
-Received: by mail-wr1-f72.google.com with SMTP id f17so2406611wrt.19
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 06:25:45 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=uwm6fzYAwEwYeUfJoESjpA/0Z/xwqqojB6vogh+wkjc=;
-        b=kvz4AabTPRbpHA+jLJ0cGjr6RVC1Z26SC7HFZ637d1HWSxvSX7ppujRixtKdkajdLq
-         aAq1p6Wv97fs5gL0kTGlX6F9n8ItRrJA/DoEDRP7Xd92ZNC2GTTj5t5BsddQduf5iLQz
-         xmEjD1RdSJ2Mt0xlw2WZlqtxCvznEEXXmaF9OBoMrGaXFnQRtUXhUqGBN2+4MkpPbJab
-         VSQtGM0sVhpC4RtUOU1viCT2ZukDakRLExMW951LhZiEahRuD7Qap4D5mlyb5BV8gbLS
-         i9ZYHevtWJcG9sK+eij+C06juXebtiAuKDsDLAssqGAQ9z4FC1YGJqITYwoJDUSRz+F5
-         dCQw==
-X-Gm-Message-State: APjAAAXA/yzFhD6LDgyIdadtgLQj7K++3n67E/b3X92GOzUXMGOUnmiR
-        4I6WUUB14rFl3ceD3NovSivPhpR+Vs4o5KD/XRaSiAX0EV+5hYYWe9EqTO6FEgNznT1rLXKFk3d
-        yNFGGV1RXZAnMKbDbMkMNmo/8
-X-Received: by 2002:a05:600c:230d:: with SMTP id 13mr10515192wmo.13.1578752744910;
-        Sat, 11 Jan 2020 06:25:44 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzSMY0g766OIWIeVMg+yNdNqGqj5e1pDAALjmcABqjRilt5M6mGJLkpE9/bqBayyDf6yzOWnA==
-X-Received: by 2002:a05:600c:230d:: with SMTP id 13mr10515180wmo.13.1578752744691;
-        Sat, 11 Jan 2020 06:25:44 -0800 (PST)
-Received: from ?IPv6:2a01:598:a803:c918:4c2f:c5d7:9026:f3de? ([2a01:598:a803:c918:4c2f:c5d7:9026:f3de])
-        by smtp.gmail.com with ESMTPSA id z83sm6670184wmg.2.2020.01.11.06.25.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jan 2020 06:25:44 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v4] mm/memory_hotplug: Fix remove_memory() lockdep splat
-Date:   Sat, 11 Jan 2020 15:25:43 +0100
-Message-Id: <A5A31713-0D55-487C-814A-1415BB26DC1F@redhat.com>
-References: <0BE8F7EF-01DC-47BD-899B-11FB8B40EB0A@lca.pw>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable <stable@vger.kernel.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg KH <gregkh@linuxfoundation.org>
-In-Reply-To: <0BE8F7EF-01DC-47BD-899B-11FB8B40EB0A@lca.pw>
-To:     Qian Cai <cai@lca.pw>
-X-Mailer: iPhone Mail (17C54)
+        Sat, 11 Jan 2020 09:31:55 -0500
+X-Originating-IP: 79.86.19.127
+Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alexandre@ghiti.fr)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id D0921E0002;
+        Sat, 11 Jan 2020 14:31:50 +0000 (UTC)
+From:   Alexandre Ghiti <alexandre@ghiti.fr>
+Subject: Re: linux-next: build warning after merge of the bpf-next tree
+To:     Palmer Dabbelt <palmerdabbelt@google.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>, daniel@iogearbox.net,
+        ast@kernel.org, netdev@vger.kernel.org, linux-next@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, zong.li@sifive.com
+References: <a367af4d-7267-2e94-74dc-2a2aac204080@ghiti.fr>
+ <20191018105657.4584ec67@canb.auug.org.au>
+ <20191028110257.6d6dba6e@canb.auug.org.au>
+ <mhng-0daa1a90-2bed-4b2e-833e-02cd9c0aa73f@palmerdabbelt-glaptop>
+Message-ID: <d5d59f54-e391-3659-d4c0-eada50f88187@ghiti.fr>
+Date:   Sat, 11 Jan 2020 09:31:48 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <mhng-0daa1a90-2bed-4b2e-833e-02cd9c0aa73f@palmerdabbelt-glaptop>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On 1/10/20 7:20 PM, Palmer Dabbelt wrote:
+> On Fri, 10 Jan 2020 14:28:17 PST (-0800), alexandre@ghiti.fr wrote:
+>> Hi guys,
+>>
+>> On 10/27/19 8:02 PM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> On Fri, 18 Oct 2019 10:56:57 +1100 Stephen Rothwell 
+>>> <sfr@canb.auug.org.au> wrote:
+>>>> Hi all,
+>>>>
+>>>> After merging the bpf-next tree, today's linux-next build (powerpc
+>>>> ppc64_defconfig) produced this warning:
+>>>>
+>>>> WARNING: 2 bad relocations
+>>>> c000000001998a48 R_PPC64_ADDR64 _binary__btf_vmlinux_bin_start
+>>>> c000000001998a50 R_PPC64_ADDR64 _binary__btf_vmlinux_bin_end
+>>>>
+>>>> Introduced by commit
+>>>>
+>>>>    8580ac9404f6 ("bpf: Process in-kernel BTF")
+>>> This warning now appears in the net-next tree build.
+>>>
+>>>
+>> I bump that thread up because Zong also noticed that 2 new 
+>> relocations for
+>> those symbols appeared in my riscv relocatable kernel branch following
+>> that commit.
+>>
+>> I also noticed 2 new relocations R_AARCH64_ABS64 appearing in arm64 
+>> kernel.
+>>
+>> Those 2 weak undefined symbols have existed since commit
+>> 341dfcf8d78e ("btf: expose BTF info through sysfs") but this is the fact
+>> to declare those symbols into btf.c that produced those relocations.
+>>
+>> I'm not sure what this all means, but this is not something I expected
+>> for riscv for
+>> a kernel linked with -shared/-fpie. Maybe should we just leave them to
+>> zero ?
+>>
+>> I think that deserves a deeper look if someone understands all this
+>> better than I do.
+>
+> Can you give me a pointer to your tree and how to build a relocatable 
+> kernel?
+> Weak undefined symbols have the absolute value 0,
 
-> Am 11.01.2020 um 14:56 schrieb Qian Cai <cai@lca.pw>:
->=20
-> =EF=BB=BF
->=20
->> On Jan 11, 2020, at 6:03 AM, David Hildenbrand <david@redhat.com> wrote:
->>=20
->> So I just remember why I think this (and the previously reported done
->> for ACPI DIMMs) are false positives. The actual locking order is
->>=20
->> onlining/offlining from user space:
->>=20
->> kn->count -> device_hotplug_lock -> cpu_hotplug_lock -> mem_hotplug_lock
->>=20
->> memory removal:
->>=20
->> device_hotplug_lock -> cpu_hotplug_lock -> mem_hotplug_lock -> kn->count
->>=20
->>=20
->> This looks like a locking inversion - but it's not. Whenever we come via
->> user space we do a mutex_trylock(), which resolves this issue by backing
->> up. The device_hotplug_lock will prevent
->>=20
->> I have no clue why the device_hotplug_lock does not pop up in the
->> lockdep report here. Sounds wrong to me.
->>=20
->> I think this is a false positive and not stable material.
->=20
-> The point is that there are other paths does kn->count =E2=80=94> cpu_hotp=
-lug_lock without needing device_hotplug_lock to race with memory removal.
->=20
-> kmem_cache_shrink_all+0x50/0x100 (cpu_hotplug_lock.rw_sem/mem_hotplug_lock=
-.rw_sem)
-> shrink_store+0x34/0x60
-> slab_attr_store+0x6c/0x170
-> sysfs_kf_write+0x70/0xb0
-> kernfs_fop_write+0x11c/0x270 ((kn->count)
-> __vfs_write+0x3c/0x70
-> vfs_write+0xcc/0x200
-> ksys_write+0x7c/0x140
-> system_call+0x5c/0x6
->=20
 
-But not the lock of the memory devices, or am I missing something?=
+So according to you the 2 new relocations R_RISCV_64 are normal and 
+should not
+be modified at runtime right ?
+
+
+> but the kernel is linked at
+> an address such that 0 can't be reached by normal means.  When I added 
+> support
+> to binutils for this I did it in a way that required almost no code --
+> essetially I just stopped dissallowing x0 as a possible base register 
+> for PCREL
+> relocations, which results in 0 always being accessible.  I just 
+> wanted to get
+> the kernel to build again, so I didn't worry about chasing around all the
+> addressing modes.  The PIC/PIE support generates different relocations 
+> and I
+> wouldn't be surprised if I just missed one (or more likely all) of them.
+>
+> It's probably a simple fix, though I feel like every time I say that 
+> about the
+> linker I end up spending a month in there...
+
+You can find it here:
+
+https://github.com/AlexGhiti/riscv-linux/tree/int/alex/riscv_relocatable_v1
+
+Zong fixed the bug introduced by those 2 new relocations and everything 
+works
+like a charm, so I'm not sure you have to dig in the linker :)
+
+Alex
 
