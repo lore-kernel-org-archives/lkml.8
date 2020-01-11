@@ -2,52 +2,52 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C6FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59E0C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361732084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5BB20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736800;
-	bh=vcovTOHbKP78JFWf13jdL/gXq0Zxg4qPHG5JDYfThhw=;
+	s=default; t=1578736804;
+	bh=JFCUHKxyVKwgSL+NanAh19r9rBcLUNYoar4WgrPBQPA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SLaVG8CEtos/xfYG1f9OWSwxCLtVowYGVUJy80cDoaAZm5nJNgVTGNKFGEqVqwRcR
-	 4NXiD1HY/fC9Zc3qm0qIdTupJuvgeCba+PKVlpVhGkHXlAx9pzr9bZhHyV4YWVPRO1
-	 ARdm8O2NXm9TtGhQELvUcCUzA3rOkwhdje6ANyIg=
+	b=VWpolN5VUZnLw9Hk3fT8pQwLMqREbS+Fy3fEjZgg0kM+C7X6Y2KKqPiAQCbSFf4GF
+	 bI9JuARSAhwrXSlxZz0e43xrNo2sKkj/PhNNQ8+Z85gHKdyUHUXjVygUC6nHQxa/hZ
+	 91BoAolS+uX807gJiO52TzsAwiDeHz9x0uu/KhAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbgAKJ77 (ORCPT
+        id S1729184AbgAKKAD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:59:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55168 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:00:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729346AbgAKJ7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:59:54 -0500
+        id S1729133AbgAKJ77 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:59:59 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 552F02084D;
-        Sat, 11 Jan 2020 09:59:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B612A20848;
+        Sat, 11 Jan 2020 09:59:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736794;
-        bh=vcovTOHbKP78JFWf13jdL/gXq0Zxg4qPHG5JDYfThhw=;
+        s=default; t=1578736798;
+        bh=JFCUHKxyVKwgSL+NanAh19r9rBcLUNYoar4WgrPBQPA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KPO2q8o7xGalFZ541xM+/pXctutTD+USTQLrKEkhlSRzGmvSOu5vaYNXUpA/dCd4o
-         xdlRxOl2mnS09AsvjZltvUM9fHkk/Vur8e/i4JIttm4Mu+igNzY3lZF31Cvj58K+VC
-         kRRZnF7qhXLUoED07VovvY3R+5LhcYg0hdaHPZ/8=
+        b=Vs1d7g04Ftg87jKWOp35PgenG/EgLCpwGkwTyeQPtsYbveYTkE++J6itIjZQNqxU9
+         baAVpw+DG/xJDsmWDDfh30oawQ7NHNtwZa0mTGNtZl8swTHE+6JzSjXm5kLLUF4RrF
+         /JQU1TNKbcsuyyngsPsNWgglGNjT3xYsyFko8Fkg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.9 26/91] ata: libahci_platform: Export again ahci_platform_<en/dis>able_phys()
-Date:   Sat, 11 Jan 2020 10:49:19 +0100
-Message-Id: <20200111094854.129854519@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 10/91] s390/cpum_sf: Avoid SBD overflow condition in irq handler
+Date:   Sat, 11 Jan 2020 10:49:03 +0100
+Message-Id: <20200111094846.581063465@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -60,76 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-commit 84b032dbfdf1c139cd2b864e43959510646975f8 upstream.
+[ Upstream commit 0539ad0b22877225095d8adef0c376f52cc23834 ]
 
-This reverts commit 6bb86fefa086faba7b60bb452300b76a47cde1a5
-("libahci_platform: Staticize ahci_platform_<en/dis>able_phys()") we are
-going to need ahci_platform_{enable,disable}_phys() in a subsequent
-commit for ahci_brcm.c in order to properly control the PHY
-initialization order.
+The s390 CPU Measurement sampling facility has an overflow condition
+which fires when all entries in a SBD are used.
+The measurement alert interrupt is triggered and reads out all samples
+in this SDB. It then tests the successor SDB, if this SBD is not full,
+the interrupt handler does not read any samples at all from this SDB
+The design waits for the hardware to fill this SBD and then trigger
+another meassurement alert interrupt.
 
-Also make sure the function prototypes are declared in
-include/linux/ahci_platform.h as a result.
+This scheme works nicely until
+an perf_event_overflow() function call discards the sample due to
+a too high sampling rate.
+The interrupt handler has logic to read out a partially filled SDB
+when the perf event overflow condition in linux common code is met.
+This causes the CPUM sampling measurement hardware and the PMU
+device driver to operate on the same SBD's trailer entry.
+This should not happen.
 
-Cc: stable@vger.kernel.org
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This can be seen here using this trace:
+   cpumsf_pmu_add: tear:0xb5286000
+   hw_perf_event_update: sdbt 0xb5286000 full 1 over 0 flush_all:0
+   hw_perf_event_update: sdbt 0xb5286008 full 0 over 0 flush_all:0
+        above shows 1. interrupt
+   hw_perf_event_update: sdbt 0xb5286008 full 1 over 0 flush_all:0
+   hw_perf_event_update: sdbt 0xb5286008 full 0 over 0 flush_all:0
+        above shows 2. interrupt
+	... this goes on fine until...
+   hw_perf_event_update: sdbt 0xb5286068 full 1 over 0 flush_all:0
+   perf_push_sample1: overflow
+      one or more samples read from the IRQ handler are rejected by
+      perf_event_overflow() and the IRQ handler advances to the next SDB
+      and modifies the trailer entry of a partially filled SDB.
+   hw_perf_event_update: sdbt 0xb5286070 full 0 over 0 flush_all:1
+      timestamp: 14:32:52.519953
 
+Next time the IRQ handler is called for this SDB the trailer entry shows
+an overflow count of 19 missed entries.
+   hw_perf_event_update: sdbt 0xb5286070 full 1 over 19 flush_all:1
+      timestamp: 14:32:52.970058
+
+Remove access to a follow on SDB when event overflow happened.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/libahci_platform.c |    6 ++++--
- include/linux/ahci_platform.h  |    2 ++
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ arch/s390/kernel/perf_cpum_sf.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
---- a/drivers/ata/libahci_platform.c
-+++ b/drivers/ata/libahci_platform.c
-@@ -46,7 +46,7 @@ EXPORT_SYMBOL_GPL(ahci_platform_ops);
-  * RETURNS:
-  * 0 on success otherwise a negative error code
-  */
--static int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
-+int ahci_platform_enable_phys(struct ahci_host_priv *hpriv)
- {
- 	int rc, i;
- 
-@@ -71,6 +71,7 @@ disable_phys:
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index 3b8e5a3d2d64..c62eb09b2ba7 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1295,12 +1295,6 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
+ 		 */
+ 		if (flush_all && done)
+ 			break;
+-
+-		/* If an event overflow happened, discard samples by
+-		 * processing any remaining sample-data-blocks.
+-		 */
+-		if (event_overflow)
+-			flush_all = 1;
  	}
- 	return rc;
- }
-+EXPORT_SYMBOL_GPL(ahci_platform_enable_phys);
  
- /**
-  * ahci_platform_disable_phys - Disable PHYs
-@@ -78,7 +79,7 @@ disable_phys:
-  *
-  * This function disables all PHYs found in hpriv->phys.
-  */
--static void ahci_platform_disable_phys(struct ahci_host_priv *hpriv)
-+void ahci_platform_disable_phys(struct ahci_host_priv *hpriv)
- {
- 	int i;
- 
-@@ -87,6 +88,7 @@ static void ahci_platform_disable_phys(s
- 		phy_exit(hpriv->phys[i]);
- 	}
- }
-+EXPORT_SYMBOL_GPL(ahci_platform_disable_phys);
- 
- /**
-  * ahci_platform_enable_clks - Enable platform clocks
---- a/include/linux/ahci_platform.h
-+++ b/include/linux/ahci_platform.h
-@@ -23,6 +23,8 @@ struct ahci_host_priv;
- struct platform_device;
- struct scsi_host_template;
- 
-+int ahci_platform_enable_phys(struct ahci_host_priv *hpriv);
-+void ahci_platform_disable_phys(struct ahci_host_priv *hpriv);
- int ahci_platform_enable_clks(struct ahci_host_priv *hpriv);
- void ahci_platform_disable_clks(struct ahci_host_priv *hpriv);
- int ahci_platform_enable_regulators(struct ahci_host_priv *hpriv);
+ 	/* Account sample overflows in the event hardware structure */
+-- 
+2.20.1
+
 
 
