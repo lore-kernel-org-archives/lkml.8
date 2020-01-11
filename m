@@ -7,50 +7,56 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57235C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:08:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4DBC33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D40D206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:08:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743F02084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:08:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737329;
-	bh=QwCiPWsHROdyM6XfCtmVRetKjby4HK+y9x9ed/v9fuk=;
+	s=default; t=1578737334;
+	bh=GKYrCZ9/aDSL9Px/0Qf08dFJn+ZicSl101ldxGOtSH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pHftu85UsXWyC+csy+ISEtbYDvcgLoWyqnWWNlFSUMp7MCeqjF7Sxb2hI4ELLbw76
-	 FnQEeGWcHfTsk1cXs+ZePhUtqhceE7Unk800ECVfExDaXvV1HXoCyACSK+ZLN3oGrz
-	 B5g3R4GSxO7WKEALStnVE3zR2C+itSaE44IPBlHY=
+	b=gPTu6PH0Q5DzMPt7nLMnWepVNnVH8ORR4g0N6OLFWKuXU65x27Z/oxsWRkjUurCvG
+	 63PurL5CPr+ZedXC9eKbIUB6RlEeOJ50Q09wqcxvKSov/BQwG8u9ZjAEHm3JIUFOj0
+	 qpZlT8ve5XRWaP2/GWn0mm72wixGar8+kCrBiA0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729655AbgAKKIs (ORCPT
+        id S1729686AbgAKKIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:08:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44044 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:08:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728812AbgAKKIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:08:47 -0500
+        id S1729148AbgAKKIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:08:52 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BB782064C;
-        Sat, 11 Jan 2020 10:08:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 496092082E;
+        Sat, 11 Jan 2020 10:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737327;
-        bh=QwCiPWsHROdyM6XfCtmVRetKjby4HK+y9x9ed/v9fuk=;
+        s=default; t=1578737331;
+        bh=GKYrCZ9/aDSL9Px/0Qf08dFJn+ZicSl101ldxGOtSH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aI7I0PxNjqd8nvN4bOAKz3aK3Tm4GW0kLgWldw4STJ59mjR7tStyuulFLFDCEpit/
-         TEIcMh9SVvtNhtLecIa5XcNGg3CI3CoGYZvgPEY49gcokAE0mO2xlvMpin1hqA2LyH
-         WiuG5hgFc6R+HspzSnl15ErC5MYq10RmwUe8lP80=
+        b=CWpXMHFlMo3OIiiGHunzvEWSkYu+DqJf70HS/BgHoygYwbWj7bigg9CYgKOcV1eTO
+         lbyDOu9/uixqqT2ZMp88cqcFOy3CeeKf0V7NII3PaWT4xKwdQk0I1vSUXWG8MDEIKE
+         3SUXFQOMUADFMvHNkYLd91YDxXbv2t+9d5xrS+Qg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sudipm Mukherjee <sudipm.mukherjee@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        linux-trace-devel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 06/62] libtraceevent: Fix lib installation with O=
-Date:   Sat, 11 Jan 2020 10:49:48 +0100
-Message-Id: <20200111094840.134928601@linuxfoundation.org>
+        Michael Weiser <michael@weiser.dinsnail.net>,
+        Dave Young <dyoung@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-efi@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 07/62] x86/efi: Update e820 with reserved EFI boot services data to fix kexec breakage
+Date:   Sat, 11 Jan 2020 10:49:49 +0100
+Message-Id: <20200111094840.574018450@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -63,54 +69,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Dave Young <dyoung@redhat.com>
 
-[ Upstream commit 587db8ebdac2c5eb3a8851e16b26f2e2711ab797 ]
+[ Upstream commit af164898482817a1d487964b68f3c21bae7a1beb ]
 
-When we use 'O=' with make to build libtraceevent in a separate folder
-it fails to install libtraceevent.a and libtraceevent.so.1.1.0 with the
-error:
+Michael Weiser reported that he got this error during a kexec rebooting:
 
-  INSTALL  /home/sudip/linux/obj-trace/libtraceevent.a
-  INSTALL  /home/sudip/linux/obj-trace/libtraceevent.so.1.1.0
+  esrt: Unsupported ESRT version 2904149718861218184.
 
-  cp: cannot stat 'libtraceevent.a': No such file or directory
-  Makefile:225: recipe for target 'install_lib' failed
-  make: *** [install_lib] Error 1
+The ESRT memory stays in EFI boot services data, and it was reserved
+in kernel via efi_mem_reserve().  The initial purpose of the reservation
+is to reuse the EFI boot services data across kexec reboot. For example
+the BGRT image data and some ESRT memory like Michael reported.
 
-I used the command:
+But although the memory is reserved it is not updated in the X86 E820 table,
+and kexec_file_load() iterates system RAM in the IO resource list to find places
+for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+initramfs overwrote the ESRT memory and then the failure happened.
 
-  make O=../../../obj-trace DESTDIR=~/test prefix==/usr  install
+Since kexec_file_load() depends on the E820 table being updated, just fix this
+by updating the reserved EFI boot services memory as reserved type in E820.
 
-It turns out libtraceevent Makefile, even though it builds in a separate
-folder, searches for libtraceevent.a and libtraceevent.so.1.1.0 in its
-source folder.
+Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+bypassed in the reservation code path because they are assumed as reserved.
 
-So, add the 'OUTPUT' prefix to the source path so that 'make' looks for
-the files in the correct place.
+But the reservation is still needed for multiple kexec reboots,
+and it is the only possible case we come here thus just drop the code
+chunk, then everything works without side effects.
 
-Signed-off-by: Sudipm Mukherjee <sudipm.mukherjee@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191115113610.21493-1-sudipm.mukherjee@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On my machine the ESRT memory sits in an EFI runtime data range, it does
+not trigger the problem, but I successfully tested with BGRT instead.
+both kexec_load() and kexec_file_load() work and kdump works as well.
+
+[ mingo: Edited the changelog. ]
+
+Reported-by: Michael Weiser <michael@weiser.dinsnail.net>
+Tested-by: Michael Weiser <michael@weiser.dinsnail.net>
+Signed-off-by: Dave Young <dyoung@redhat.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Eric W. Biederman <ebiederm@xmission.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: kexec@lists.infradead.org
+Cc: linux-efi@vger.kernel.org
+Link: https://lkml.kernel.org/r/20191204075233.GA10520@dhcp-128-65.nay.redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/platform/efi/quirks.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index 8107f060fa84..a0ac01c647f5 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -115,6 +115,7 @@ EVENT_PARSE_VERSION = $(EP_VERSION).$(EP_PATCHLEVEL).$(EP_EXTRAVERSION)
+diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
+index 5b513ccffde4..cadd7fd290fa 100644
+--- a/arch/x86/platform/efi/quirks.c
++++ b/arch/x86/platform/efi/quirks.c
+@@ -257,10 +257,6 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+ 		return;
+ 	}
  
- LIB_TARGET  = libtraceevent.a libtraceevent.so.$(EVENT_PARSE_VERSION)
- LIB_INSTALL = libtraceevent.a libtraceevent.so*
-+LIB_INSTALL := $(addprefix $(OUTPUT),$(LIB_INSTALL))
+-	/* No need to reserve regions that will never be freed. */
+-	if (md.attribute & EFI_MEMORY_RUNTIME)
+-		return;
+-
+ 	size += addr % EFI_PAGE_SIZE;
+ 	size = round_up(size, EFI_PAGE_SIZE);
+ 	addr = round_down(addr, EFI_PAGE_SIZE);
+@@ -290,6 +286,8 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
+ 	early_memunmap(new, new_size);
  
- INCLUDES = -I. -I $(srctree)/tools/include $(CONFIG_INCLUDES)
+ 	efi_memmap_install(new_phys, num_entries);
++	e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
++	e820__update_table(e820_table);
+ }
  
+ /*
 -- 
 2.20.1
 
