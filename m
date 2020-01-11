@@ -4,64 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFCDC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C142C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206DD20842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 141B820842
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578753938;
-	bh=LCQal0F47sx1zk123eqgeAx2OltA8LoOc76EWgyHADg=;
+	s=default; t=1578753940;
+	bh=9ScKvS8kQxXGTEoGGcCyHr0nk8zo26T+uw4ZzvyRijE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=nXfAVrSTwivqY9f9eyTiOkaJOFd527L8fWUER3exFEXjbR46mNfYAQ7BLFBL842R7
-	 ijedhk0rwYCxeoRMJNH+bMnRb22Ldr9LPVsMYmhhWAPgPWCs5vUkiYBORD6jEIeRK3
-	 x4RBHi5WM/nDMypTKQ6J3OrbzyJfSJCzfV7v0DOk=
+	b=K/H4O7z5y7OOZcR26nJBfTehbx2VzHZ+5nsgx2opieyR2umQ7AK4jntXDPnVOD9pJ
+	 TfynIKbYcVtkrk1VzsHUXrqLG6mOn1/pj5pL3nREXEc+PFKdjTa3LO2hwXtNcqHCwb
+	 rAhd/B1YCP0WaJ6TVQRUN9jq4y2MVUGyYAqBj694=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbgAKOpF (ORCPT
+        id S1730107AbgAKOpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 09:45:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35972 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 09:45:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729824AbgAKOpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729855AbgAKOpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 11 Jan 2020 09:45:05 -0500
-Subject: Re: [GIT PULL] Please pull RDMA subsystem changes
+Subject: Re: [GIT PULL] Power management fixes for v5.5-rc6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578753904;
-        bh=LCQal0F47sx1zk123eqgeAx2OltA8LoOc76EWgyHADg=;
+        s=default; t=1578753905;
+        bh=9ScKvS8kQxXGTEoGGcCyHr0nk8zo26T+uw4ZzvyRijE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=qs7obUzGUNOl7E10b7svO9hW3gvOw58LX2VTc8dwuVIF7i9qC9jsJSm95GfI2KdY+
-         kaKnfqteYxX7Uln0sVF2tiEucg6b7xfZvkHUgiewYa2I6Mj8xGlHq4nG56MZRD65MX
-         4lKd/rWeWkDU23fxs/uHy7Ct3FtV59ClB+AU7/JU=
+        b=GSk1g4jmGhQXRHYIhORDZIwNLZfc5D03EJ8VTrqsoCjTRKDpXQSOeY+hhRbc1EHiz
+         Xy8WimbwZZaACFimp9rhttbO5A3LM1SLuO8yt2J2L1xRcq6j7MaGgEvDKX4t4vfnYI
+         IiJFrcIEoPoOZgEnsJO5VKs6TRgIIzjJkox0Eyjs=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200110021623.GA6057@ziepe.ca>
-References: <20200110021623.GA6057@ziepe.ca>
+In-Reply-To: <CAJZ5v0g27E7+wsrMXw1KhUQV6PZJhWcSQ5VG_HTZ5JgYejh15w@mail.gmail.com>
+References: <CAJZ5v0g27E7+wsrMXw1KhUQV6PZJhWcSQ5VG_HTZ5JgYejh15w@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200110021623.GA6057@ziepe.ca>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
-X-PR-Tracked-Commit-Id: 9554de394b7eee01606e64c3806cd43893f3037e
+X-PR-Tracked-Message-Id: <CAJZ5v0g27E7+wsrMXw1KhUQV6PZJhWcSQ5VG_HTZ5JgYejh15w@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.5-rc6
+X-PR-Tracked-Commit-Id: 10674d97c4e266e8c50ce794d1c470c26228d52b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5e7c1b75bd2a75005313574dd6e5354907005f93
-Message-Id: <157875390454.30634.8465355856938892660.pr-tracker-bot@kernel.org>
-Date:   Sat, 11 Jan 2020 14:45:04 +0000
-To:     Jason Gunthorpe <jgg@mellanox.com>
+X-PR-Merge-Commit-Id: c23e744b59efcf546b2b16834c68b85248d6bf3b
+Message-Id: <157875390529.30634.2723351899925028830.pr-tracker-bot@kernel.org>
+Date:   Sat, 11 Jan 2020 14:45:05 +0000
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Doug Ledford <dledford@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 10 Jan 2020 02:16:26 +0000:
+The pull request you sent on Fri, 10 Jan 2020 11:23:29 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git tags/for-linus
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.5-rc6
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5e7c1b75bd2a75005313574dd6e5354907005f93
+https://git.kernel.org/torvalds/c/c23e744b59efcf546b2b16834c68b85248d6bf3b
 
 Thank you!
 
