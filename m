@@ -2,110 +2,162 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC79C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D223FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 168592077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:57:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736645;
-	bh=BnLs3eJXQ2CZywcsuDZU0bHvjjYjw5q6uT2TT9dO8M0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rN/B4Im+JKQ/TeJX1WyFDLwfh6RkUIOm4XyhBYI9HHVGN6+OF32idLT+5I8EfA/36
-	 jz7lnoUoI75ra3XnhBIwmVRTq0egtn0nAsDgn0ZmmhMTT53mNnus1g02B/owjcplu7
-	 /JCUshdtb7v28fWBBuBwPnAgU04g3PsakcCXXT4U=
+	by mail.kernel.org (Postfix) with ESMTP id A526620848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:57:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbgAKJ5Y (ORCPT
+        id S1729177AbgAKJ52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:57:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49590 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:57:28 -0500
+Received: from mga11.intel.com ([192.55.52.93]:11196 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728808AbgAKJ5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:57:24 -0500
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0FF92064C;
-        Sat, 11 Jan 2020 09:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736643;
-        bh=BnLs3eJXQ2CZywcsuDZU0bHvjjYjw5q6uT2TT9dO8M0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aS4MIJuOec7ta6XraW11l/QxAqMxHDGKET+zc1hPjwbhslf4Go/VjupfrzkJXuJL9
-         VtgK670zQEBnjoq/hRQ/Vr8qq5/FrLlSaVOQe0dGET6ddYyDtSuAvxXDtKbdNrW/hB
-         09qISwGdlkyB284xmF9HG3JqchdmUKSfXnZZosAY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>,
+        id S1728808AbgAKJ52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:57:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jan 2020 01:57:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,420,1571727600"; 
+   d="scan'208";a="240570568"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 11 Jan 2020 01:57:27 -0800
+Received: from [10.252.24.8] (abudanko-mobl.ccr.corp.intel.com [10.252.24.8])
+        by linux.intel.com (Postfix) with ESMTP id 380C858045A;
+        Sat, 11 Jan 2020 01:57:19 -0800 (PST)
+Subject: Re: [PATCH v4 2/9] perf/core: open access for CAP_SYS_PERFMON
+ privileged process
+To:     arnaldo.melo@gmail.com, Song Liu <songliubraving@fb.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 39/59] powerpc: Ensure that swiotlb buffer is allocated from low memory
-Date:   Sat, 11 Jan 2020 10:49:48 +0100
-Message-Id: <20200111094845.950477105@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
-References: <20200111094835.417654274@linuxfoundation.org>
-User-Agent: quilt/0.66
+        "james.bottomley@hansenpartnership.com" 
+        <james.bottomley@hansenpartnership.com>,
+        Serge Hallyn <serge@hallyn.com>,
+        James Morris <jmorris@namei.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Robert Richter <rric@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Igor Lubashev <ilubashe@akamai.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <c0460c78-b1a6-b5f7-7119-d97e5998f308@linux.intel.com>
+ <c93309dc-b920-f5fa-f997-e8b2faf47b88@linux.intel.com>
+ <20200108160713.GI2844@hirez.programming.kicks-ass.net>
+ <cc239899-5c52-2fd0-286d-4bff18877937@linux.intel.com>
+ <20200110140234.GO2844@hirez.programming.kicks-ass.net>
+ <20200111005213.6dfd98fb36ace098004bde0e@kernel.org>
+ <20200110164531.GA2598@kernel.org>
+ <20200111084735.0ff01c758bfbfd0ae2e1f24e@kernel.org>
+ <2B79131A-3F76-47F5-AAB4-08BCA820473F@fb.com>
+ <5e191833.1c69fb81.8bc25.a88c@mx.google.com>
+From:   Alexey Budankov <alexey.budankov@linux.intel.com>
+Organization: Intel Corp.
+Message-ID: <158a4033-f8d6-8af7-77b0-20e62ec913b0@linux.intel.com>
+Date:   Sat, 11 Jan 2020 12:57:18 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <5e191833.1c69fb81.8bc25.a88c@mx.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit 8fabc623238e68b3ac63c0dd1657bf86c1fa33af ]
+On 11.01.2020 3:35, arnaldo.melo@gmail.com wrote:
+> <keescook@chromium.org>,Jann Horn <jannh@google.com>,Thomas Gleixner <tglx@linutronix.de>,Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,Lionel Landwerlin <lionel.g.landwerlin@intel.com>,linux-kernel <linux-kernel@vger.kernel.org>,"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>,"selinux@vger.kernel.org" <selinux@vger.kernel.org>,"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,"bpf@vger.kernel.org" <bpf@vger.kernel.org>,"linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,"oprofile-list@lists.sf.net" <oprofile-list@lists.sf.net>
+> From: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Message-ID: <A7F0BF73-9189-44BA-9264-C88F2F51CBF3@kernel.org>
+> 
+> On January 10, 2020 9:23:27 PM GMT-03:00, Song Liu <songliubraving@fb.com> wrote:
+>>
+>>
+>>> On Jan 10, 2020, at 3:47 PM, Masami Hiramatsu <mhiramat@kernel.org>
+>> wrote:
+>>>
+>>> On Fri, 10 Jan 2020 13:45:31 -0300
+>>> Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+>>>
+>>>> Em Sat, Jan 11, 2020 at 12:52:13AM +0900, Masami Hiramatsu escreveu:
+>>>>> On Fri, 10 Jan 2020 15:02:34 +0100 Peter Zijlstra
+>> <peterz@infradead.org> wrote:
+>>>>>> Again, this only allows attaching to previously created kprobes,
+>> it does
+>>>>>> not allow creating kprobes, right?
+>>>>
+>>>>>> That is; I don't think CAP_SYS_PERFMON should be allowed to create
+>>>>>> kprobes.
+>>>>
+>>>>>> As might be clear; I don't actually know what the user-ABI is for
+>>>>>> creating kprobes.
+>>>>
+>>>>> There are 2 ABIs nowadays, ftrace and ebpf. perf-probe uses ftrace
+>> interface to
+>>>>> define new kprobe events, and those events are treated as
+>> completely same as
+>>>>> tracepoint events. On the other hand, ebpf tries to define new
+>> probe event
+>>>>> via perf_event interface. Above one is that interface. IOW, it
+>> creates new kprobe.
+>>>>
+>>>> Masami, any plans to make 'perf probe' use the perf_event_open()
+>>>> interface for creating kprobes/uprobes?
+>>>
+>>> Would you mean perf probe to switch to perf_event_open()?
+>>> No, perf probe is for setting up the ftrace probe events. I think we
+>> can add an
+>>> option to use perf_event_open(). But current kprobe creation from
+>> perf_event_open()
+>>> is separated from ftrace by design.
+>>
+>> I guess we can extend event parser to understand kprobe directly.
+>> Instead of
+>>
+>> 	perf probe kernel_func
+>> 	perf stat/record -e probe:kernel_func ...
+>>
+>> We can just do 
+>>
+>> 	perf stat/record -e kprobe:kernel_func ...
+> 
+> 
+> You took the words from my mouth, exactly, that is a perfect use case, an alternative to the 'perf probe' one of making a disabled event that then gets activated via record/stat/trace, in many cases it's better, removes the explicit probe setup case.
 
-Some powerpc platforms (e.g. 85xx) limit DMA-able memory way below 4G.
-If a system has more physical memory than this limit, the swiotlb
-buffer is not addressable because it is allocated from memblock using
-top-down mode.
+Arnaldo, Masami, Song,
 
-Force memblock to bottom-up mode before calling swiotlb_init() to
-ensure that the swiotlb buffer is DMA-able.
+What do you think about making this also open to CAP_SYS_PERFMON privileged processes?
+Could you please also review and comment on patch 5/9 for bpf_trace.c?
 
-Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191204123524.22919-1-rppt@kernel.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/mm/mem.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Thanks,
+Alexey
 
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 1efe5ca5c3bc..5bb2c89d55c8 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -330,6 +330,14 @@ void __init mem_init(void)
- 	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
- 
- #ifdef CONFIG_SWIOTLB
-+	/*
-+	 * Some platforms (e.g. 85xx) limit DMA-able memory way below
-+	 * 4G. We force memblock to bottom-up mode to ensure that the
-+	 * memory allocated in swiotlb_init() is DMA-able.
-+	 * As it's the last memblock allocation, no need to reset it
-+	 * back to to-down.
-+	 */
-+	memblock_set_bottom_up(true);
- 	swiotlb_init(0);
- #endif
- 
--- 
-2.20.1
-
-
-
+> 
+> Regards, 
+> 
+> - Arnaldo
+> 
+>>
+>> Thanks,
+>> Song
+> 
