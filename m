@@ -2,86 +2,199 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D32C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 00:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C71C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 00:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EE652082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 00:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ED8520838
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 00:31:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TwKbw/ma"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iLFlOeIv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbgAKA2e (ORCPT
+        id S1727790AbgAKAbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 19:28:34 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:32845 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbgAKA2e (ORCPT
+        Fri, 10 Jan 2020 19:31:24 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45447 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727718AbgAKAbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 19:28:34 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b18so3741256otp.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 16:28:33 -0800 (PST)
+        Fri, 10 Jan 2020 19:31:24 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b9so1741935pgk.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 16:31:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NJNkeTlQeivzybUuWcx9iwSzhzlDjNiYUt081VfoN4c=;
-        b=TwKbw/maTje9O+6K+AaSChQ3qI7lnU05ARSs0EJm+ULMqILrCJLwsvhBP7NhMsDYVW
-         Sy+DSLyCZwJr/9LoAfM/h+x6S+FrcD/7ASrj5IVeb8j6lE0mlxL2Hj8ajX9gV9mm5ZC8
-         H9dB/o9QJQlpmb8VeCy1owDzjedi0JBlbAag2P6wvvmbzTC+zWK618sI9T0Ip6obAU61
-         fqPrK3D+C3bQowSmWKnZyGThkNiBpLN3Z9vkbSEhZ/7mG6FKhJOaNmH3cJ8Masbu962F
-         AmtS6Ns7Tn2J87fZDOcddZkZzcdTBA5E28OjaKb7qkCFG76BKUnNZSvm22nTKpEsAout
-         y/og==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YF+XBwmeW7gMU2m1kq2ajUEOp6kfHK6MdHE8gUKg6T0=;
+        b=iLFlOeIvGtjXQ6QmLDCHibczQzimWNj1FRpWHLj2tvKQwNn1P3PwnzxbZnewZ7juX7
+         UPeLXzmV/MXFgYDr3F1c15g5QD1kfKN+Ac3r8BglOjrUBKbN8Zw6JrWwYElV3jXCVLMY
+         hAhcgNhWTVMkslFFcwspQ/Gmp9tW12Z1uiZs8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NJNkeTlQeivzybUuWcx9iwSzhzlDjNiYUt081VfoN4c=;
-        b=tuL8CcBm1TeF/F4hMG4XFDp1eHyxaJno7WGCsFOKfgUx3CwFD3BWCe6/qvX9Om3qPO
-         iboUXP/0U1tm25oSaQ8awOT578J7zK8YRnUWWat9GitD1C7q6z6K/ktPu3fTqI2NO1+J
-         tF/EWARu8YpDzah7QOOeN244H8L8gNDQKDz8gS2erlrtGcya2gryHoU1OmVcB/NYzDTx
-         NcFNWbf62Qo/X3Qnd3CXvHhwd4IusTyuwTIvGpL9Rd5Hr3zFDmq0y+Xr2K1ApdLC4nkk
-         6vzO/ip5eHQ9yUmV1qziVe9+/fO1673j1M4depaKt/M6j0wKtVIaUF9TonzKBWDUkJmR
-         j+pw==
-X-Gm-Message-State: APjAAAXm6bEsfg8C4YvEuIEl/U0embRI3TJhRkqlbGPoGI+spHCsaqUz
-        2vQoVck9TDog76HjBH2jgM5aBn5JqTEIuT3+kXs/HA==
-X-Google-Smtp-Source: APXvYqzix9yfkezMicGVnwOPqgQD9fq0U9kpLygPZIeiqIZ0LYEG/OhqYmMoZ1F9dWJUX+jVXmOmR4gPatuKT+srtok=
-X-Received: by 2002:a9d:7c8a:: with SMTP id q10mr4622088otn.124.1578702513230;
- Fri, 10 Jan 2020 16:28:33 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YF+XBwmeW7gMU2m1kq2ajUEOp6kfHK6MdHE8gUKg6T0=;
+        b=qiq4uyd4YjdsC2PjGlmgOZcN7JfbSN9gtLJLwjWION742BQnFaLMnRDawKiUB6nZSl
+         qa5imxkAmdRJaOvnW3iTIPTgONa1kpU+iTmSYLuIYFNCn9OG+4+Ydvt9L4+EPRSjjsQF
+         L9NxtP2y4GlwP09gXOXG5pWV2VhRLe3rhIHUbdoJwAuVdiFiQoxv01jciFcSU2J4k14S
+         dTn0LSHBFgjM1yrxUC4INNYHTFWCLgerSpnJfZBbEy0bKzr1yarYaHkYLAU9WWvpDOHL
+         U3UKlo2IboOJMtvDTG2uWWJ0MA/W8aHWV4gZ1vDNGsRkwbtTmqpwtUkViCCvBBzWKnhb
+         ThuA==
+X-Gm-Message-State: APjAAAVKHt9SmPkvPpixXk5UoOiWIBekIGZ7UyFVtDEjAhkOL3CU+bWm
+        iwcRV87QmqpIkx/s8x6GEt+rKA==
+X-Google-Smtp-Source: APXvYqwM49cGGJmod3ZROpphQDvw/toVhkkiCx9OFDSYmtnGWl3HMu87yJxDPHaHnwwBpmFNyCd4XA==
+X-Received: by 2002:a63:4d1b:: with SMTP id a27mr7509254pgb.352.1578702683163;
+        Fri, 10 Jan 2020 16:31:23 -0800 (PST)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id a18sm4061269pjq.30.2020.01.10.16.31.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jan 2020 16:31:21 -0800 (PST)
+Date:   Fri, 10 Jan 2020 16:31:20 -0800
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rocky Liao <rjliao@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v4] Bluetooth: hci_qca: Add qca_power_on() API to support
+ both wcn399x and Rome power up
+Message-ID: <20200111003120.GG89495@google.com>
+References: <20200107052601.32216-1-rjliao@codeaurora.org>
+ <20200110033214.16327-1-rjliao@codeaurora.org>
 MIME-Version: 1.0
-References: <20200109202659.752357-1-guro@fb.com> <20200109202659.752357-6-guro@fb.com>
-In-Reply-To: <20200109202659.752357-6-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Fri, 10 Jan 2020 16:28:22 -0800
-Message-ID: <CALvZod7DGkXkzUosRqCDrEVKpfA89sxrURBqYpWk5Eqeskb_9w@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] mm: memcg/slab: cache page number in memcg_(un)charge_slab()
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200110033214.16327-1-rjliao@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 12:27 PM Roman Gushchin <guro@fb.com> wrote:
->
-> There are many places in memcg_charge_slab() and memcg_uncharge_slab()
-> which are calculating the number of pages to charge, css references to
-> grab etc depending on the order of the slab page.
->
-> Let's simplify the code by calculating it once and caching in the
-> local variable.
->
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+Hi Rocky,
 
-Reviewed-by: Shakeel Butt <shakeelb@google.com>
+On Fri, Jan 10, 2020 at 11:32:14AM +0800, Rocky Liao wrote:
+> This patch adds a unified API qca_power_on() to support both wcn399x and
+> Rome power on. For wcn399x it calls the qca_wcn3990_init() to init the
+> regulators, and for Rome it pulls up the bt_en GPIO to power up the btsoc.
+> It also moves all the power up operation from hdev->open() to
+> hdev->setup().
+> 
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> 
+> Changes in v2: None
+> Changes in v3:
+>   -moved all the power up operation from open() to setup()
+>   -updated the commit message
+> Changes in v4:
+>   -made a single call to qca_power_on() in setup()
+> 
+> 
+>  drivers/bluetooth/hci_qca.c | 48 +++++++++++++++++++++++--------------
+>  1 file changed, 30 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index 82e4cd4b6663..6a67e5489b16 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -541,7 +541,6 @@ static int qca_open(struct hci_uart *hu)
+>  {
+>  	struct qca_serdev *qcadev;
+>  	struct qca_data *qca;
+> -	int ret;
+>  
+>  	BT_DBG("hu %p qca_open", hu);
+>  
+> @@ -582,23 +581,10 @@ static int qca_open(struct hci_uart *hu)
+>  	hu->priv = qca;
+>  
+>  	if (hu->serdev) {
+> -
+>  		qcadev = serdev_device_get_drvdata(hu->serdev);
+> -		if (!qca_is_wcn399x(qcadev->btsoc_type)) {
+> -			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+> -			/* Controller needs time to bootup. */
+> -			msleep(150);
+> -		} else {
+> +		if (qca_is_wcn399x(qcadev->btsoc_type)) {
+>  			hu->init_speed = qcadev->init_speed;
+>  			hu->oper_speed = qcadev->oper_speed;
+> -			ret = qca_regulator_enable(qcadev);
+> -			if (ret) {
+> -				destroy_workqueue(qca->workqueue);
+> -				kfree_skb(qca->rx_skb);
+> -				hu->priv = NULL;
+> -				kfree(qca);
+> -				return ret;
+> -			}
+>  		}
+>  	}
+>  
+> @@ -1531,6 +1517,31 @@ static int qca_wcn3990_init(struct hci_uart *hu)
+>  	return 0;
+>  }
+>  
+> +static int qca_power_on(struct hci_dev *hdev)
+> +{
+> +	struct hci_uart *hu = hci_get_drvdata(hdev);
+> +	enum qca_btsoc_type soc_type = qca_soc_type(hu);
+> +	struct qca_serdev *qcadev;
+> +	int ret = 0;
+> +
+> +	/* Non-serdev device usually is powered by external power
+> +	 * and don't need additional action in driver for power on
+> +	 */
+> +	if (!hu->serdev)
+> +		return 0;
+> +
+> +	if (qca_is_wcn399x(soc_type)) {
+> +		ret = qca_wcn3990_init(hu);
+> +	} else {
+> +		qcadev = serdev_device_get_drvdata(hu->serdev);
+> +		gpiod_set_value_cansleep(qcadev->bt_en, 1);
+> +		/* Controller needs time to bootup. */
+> +		msleep(150);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int qca_setup(struct hci_uart *hu)
+>  {
+>  	struct hci_dev *hdev = hu->hdev;
+> @@ -1553,6 +1564,10 @@ static int qca_setup(struct hci_uart *hu)
+>  	 */
+>  	set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+>  
+> +	ret = qca_power_on(hdev);
+> +	if (ret)
+> +		return ret;
+> +
+
+Now if qca_power_on() fails there is no log entry indicating that Bluetooth
+setup was running. That's why I suggested to put this log entry before
+the call, and remove the corresponding entries from the if/else branches:
+
+	bt_dev_info(hdev, "setting up %s",
+		qca_is_wcn399x(soc_type)? "wcn399x" : "ROME");
+
+>  	if (qca_is_wcn399x(soc_type)) {
+>  		bt_dev_info(hdev, "setting up wcn3990");
+>  
+> @@ -1562,9 +1577,6 @@ static int qca_setup(struct hci_uart *hu)
+>  		set_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks);
+>  		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
+>  		hu->hdev->shutdown = qca_power_off;
+> -		ret = qca_wcn3990_init(hu);
+> -		if (ret)
+> -			return ret;
+>  
+>  		ret = qca_read_soc_version(hdev, &soc_ver, soc_type);
+>  		if (ret)
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
