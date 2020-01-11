@@ -2,39 +2,41 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAB6C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 08:34:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85097C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 08:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B2D2072E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 08:34:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EFC12072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 08:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgAKIeE (ORCPT
+        id S1728747AbgAKIeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 03:34:04 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36850 "EHLO huawei.com"
+        Sat, 11 Jan 2020 03:34:10 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36972 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728641AbgAKIeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 03:34:03 -0500
+        id S1728691AbgAKIeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 03:34:06 -0500
 Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 90C47CE2EC48E026DEB9;
+        by Forcepoint Email with ESMTP id C317AF9CC153B2469547;
         Sat, 11 Jan 2020 16:34:01 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 11 Jan 2020 16:33:52 +0800
+ 14.3.439.0; Sat, 11 Jan 2020 16:33:54 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 0/7] net: hns3: add some misc update about reset issue
-Date:   Sat, 11 Jan 2020 16:33:46 +0800
-Message-ID: <1578731633-10709-1-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 6/7] net: hns3: modify hclge_func_reset_sync_vf()'s return type to void
+Date:   Sat, 11 Jan 2020 16:33:52 +0800
+Message-ID: <1578731633-10709-7-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1578731633-10709-1-git-send-email-tanhuazhong@huawei.com>
+References: <1578731633-10709-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.69.192.56]
@@ -44,36 +46,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series includes some misc update relating to reset issue.
-[patch 1/7] & [patch 2/7] splits hclge_reset()/hclgevf_reset()
-into two parts: preparing and rebuilding. Since the procedure
-of FLR should be separated out from the reset task([patch 3/7 &
-patch 3/7]), then the FLR's processing can reuse these codes.
+When synchronizes with VFs fail before PF function reset,
+PF driver should go on its function reset, otherwise it
+can not run normally anymore. So, hclge_func_reset_sync_vf()
+should not affect the processing of PF reset, this patch
+modifies its return type to void.
 
-pci_error_handlers.reset_prepare() is void type function, so
-[patch 6/7] & [patch 7/7] factor some codes related to PF
-function reset to make the preparing done before .reset_prepare()
-return.
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+---
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 29 +++++++---------------
+ 1 file changed, 9 insertions(+), 20 deletions(-)
 
-BTW, [patch 5/7] enlarges the waiting time of reset for matching
-the hardware's.
-
-Huazhong Tan (7):
-  net: hns3: split hclge_reset() into preparing and rebuilding part
-  net: hns3: split hclgevf_reset() into preparing and rebuilding part
-  net: hns3: refactor the precedure of PF FLR
-  net: hns3: refactor the procedure of VF FLR
-  net: hns3: enlarge HCLGE_RESET_WAIT_CNT
-  net: hns3: modify hclge_func_reset_sync_vf()'s return type to void
-  net: hns3: refactor the notification scheme of PF reset
-
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   5 -
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 204 ++++++++++-----------
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   1 +
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 195 ++++++++++----------
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |   1 +
- 5 files changed, 194 insertions(+), 212 deletions(-)
-
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index d81c976..21ecd79 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -3362,7 +3362,7 @@ static void hclge_mailbox_service_task(struct hclge_dev *hdev)
+ 	clear_bit(HCLGE_STATE_MBX_HANDLING, &hdev->state);
+ }
+ 
+-static int hclge_func_reset_sync_vf(struct hclge_dev *hdev)
++static void hclge_func_reset_sync_vf(struct hclge_dev *hdev)
+ {
+ 	struct hclge_pf_rst_sync_cmd *req;
+ 	struct hclge_desc desc;
+@@ -3382,20 +3382,19 @@ static int hclge_func_reset_sync_vf(struct hclge_dev *hdev)
+ 		 */
+ 		if (ret == -EOPNOTSUPP) {
+ 			msleep(HCLGE_RESET_SYNC_TIME);
+-			return 0;
++			return;
+ 		} else if (ret) {
+-			dev_err(&hdev->pdev->dev, "sync with VF fail %d!\n",
+-				ret);
+-			return ret;
++			dev_warn(&hdev->pdev->dev, "sync with VF fail %d!\n",
++				 ret);
++			return;
+ 		} else if (req->all_vf_ready) {
+-			return 0;
++			return;
+ 		}
+ 		msleep(HCLGE_PF_RESET_SYNC_TIME);
+ 		hclge_cmd_reuse_desc(&desc, true);
+ 	} while (cnt++ < HCLGE_PF_RESET_SYNC_CNT);
+ 
+-	dev_err(&hdev->pdev->dev, "sync with VF timeout!\n");
+-	return -ETIME;
++	dev_warn(&hdev->pdev->dev, "sync with VF timeout!\n");
+ }
+ 
+ void hclge_report_hw_error(struct hclge_dev *hdev,
+@@ -3600,12 +3599,7 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
+ 
+ 	switch (hdev->reset_type) {
+ 	case HNAE3_FUNC_RESET:
+-		/* to confirm whether all running VF is ready
+-		 * before request PF reset
+-		 */
+-		ret = hclge_func_reset_sync_vf(hdev);
+-		if (ret)
+-			return ret;
++		hclge_func_reset_sync_vf(hdev);
+ 
+ 		ret = hclge_func_reset_cmd(hdev, 0);
+ 		if (ret) {
+@@ -3623,12 +3617,7 @@ static int hclge_reset_prepare_wait(struct hclge_dev *hdev)
+ 		hdev->rst_stats.pf_rst_cnt++;
+ 		break;
+ 	case HNAE3_FLR_RESET:
+-		/* to confirm whether all running VF is ready
+-		 * before request PF reset
+-		 */
+-		ret = hclge_func_reset_sync_vf(hdev);
+-		if (ret)
+-			return ret;
++		hclge_func_reset_sync_vf(hdev);
+ 		break;
+ 	case HNAE3_IMP_RESET:
+ 		hclge_handle_imp_error(hdev);
 -- 
 2.7.4
 
