@@ -2,105 +2,97 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E83C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C88C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 178F020880
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="pw5/utme"
+	by mail.kernel.org (Postfix) with ESMTP id 51AD2205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578738022;
+	bh=jmJB1y3x5UX3kTWCdOAhvNiSyyyMa/BYn7obqSdk+PY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xXr0gnW8eTubwsawIi5+sf6Q8/Iz0s3XQHx81QeJUtISyikFNmRhyBB7d1a9T3k7L
+	 ZzKKqKPGC2PhM7uf4DIi5jcZMpOLiqGvmsLzOBdhXqoIlAIhNuaM0pct3cfa6YotK6
+	 s3TW946qAqu+F0fx+wpQS2DjvunXXPMgKdPSZaqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730603AbgAKKUN (ORCPT
+        id S1730532AbgAKKUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:20:13 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:38842 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729207AbgAKKUK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:20:10 -0500
-Received: by mail-il1-f196.google.com with SMTP id f5so3896948ilq.5
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 02:20:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=pOSVA5uhmk+VM6N/EM2MNyLEc6cHeflZPvPBN7eAFd8=;
-        b=pw5/utmeH7AJPk+rdLyGJXCipp5gbd77aEW91QiO9nVl1bIYk06x9dOeM6DkcadL58
-         3thq1tEd7eV8Nk2Di5aj+lj3IqdBd0HlBKMDbHIe8LSE2THZsFPOc7IEKhJNKs1iQB4N
-         fyMgl2nAWPPIS0iFJi4ZHtj0pbys3V90Rn3BAuWXdf8cNzpORabQQGVJfp7Mc7j+tAah
-         zr0fG3AtvyOqUulcuzL8K6asfjfI3WdmIJ5cc58q+3TnUAFRkOQDijfaYNqKQPiAZ0Ku
-         g9qLawUQMHBrppemekkJ7SH4Fc84ZEvwhuWQYTZIS0GOxqBZZ8ZSXyUgGvu1EyiB7ttE
-         fOfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=pOSVA5uhmk+VM6N/EM2MNyLEc6cHeflZPvPBN7eAFd8=;
-        b=bSGubFYm5YNPHCJWIejz02PetV2gRs0PP7Tj3WVF807IprgKULFiW0uw2xIzxti46l
-         n9cGxMC2czMXAnCnMx03H9jYdYT7l8QB8bhfk6NJTVEvsIlesFVteX6l5zEEkrlxG1DT
-         Sh5Jf6BVP6UaLcM+1Z11V8PczKN/yXUOd9mIQbOzMqfqcJsfWypx8R/gRV1UJf5G857S
-         9tz9YJrDf8hFh6Pn+o6C+SCRk8Kod0d3dgyA1li4cwm/R1U1F3PG5I5GNpbrnOjpdBqA
-         UNpJtWmTjNVQmjjN/tt8/rrd9yPkiLG2SBj2rFOWePsRovlC+9UGqseGrXp94LTAXSil
-         CUlA==
-X-Gm-Message-State: APjAAAXNmDyps7G+ubSaaCzTt401hOmelrmOTTlLRURAD55kUDm5FKt5
-        p5Zd5Rw+ngk/0PtervMnGtnL7fmWTEOloiaZlib1wg==
-X-Google-Smtp-Source: APXvYqysd4ztguN5R8BjDyEl38Q6mSx+PX/LFjJaUO4FAbZ+5rNBxo3P9IYXANJafr9f+JqMLd1b2jjfjMxinkK3Aco=
-X-Received: by 2002:a92:8712:: with SMTP id m18mr6703847ild.40.1578738009666;
- Sat, 11 Jan 2020 02:20:09 -0800 (PST)
+        Sat, 11 Jan 2020 05:20:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729211AbgAKKUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:20:17 -0500
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4105A20848;
+        Sat, 11 Jan 2020 10:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578738017;
+        bh=jmJB1y3x5UX3kTWCdOAhvNiSyyyMa/BYn7obqSdk+PY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sdgWSD4ONJqLuxw8B7Hzso4cM0C8fRzmQZIQ645dX3PrOsjXjSkdKqSGkpwOM0ApE
+         5LyMWJTbd7++o3ux2FGH6qCtS9UhQdPWRGa/VX1OVxhMwxQstw1k53H9lizTtxHTtr
+         zBof8N2VYQ/8Rad8rDXX+BsTwnbCTCvgHRbhHrU8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Qi Zhou <atmgnd@outlook.com>
+Subject: [PATCH 4.19 84/84] usb: missing parentheses in USE_NEW_SCHEME
+Date:   Sat, 11 Jan 2020 10:51:01 +0100
+Message-Id: <20200111094913.052164288@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
+References: <20200111094845.328046411@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200110171643.18578-1-brgl@bgdev.pl> <20200110171643.18578-2-brgl@bgdev.pl>
- <7be95251-7e26-6090-4770-6e4dbebfadd2@linaro.org>
-In-Reply-To: <7be95251-7e26-6090-4770-6e4dbebfadd2@linaro.org>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 11 Jan 2020 11:19:58 +0100
-Message-ID: <CAMRc=McesmYcJv7iqE3rLHFyeTJtnW4Gq1TjMjHGSkpcHNPahw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] clocksource: davinci: only enable clockevents once
- tim34 is initialized
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Sekhar Nori <nsekhar@ti.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        David Lechner <david@lechnology.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 10 sty 2020 o 18:56 Daniel Lezcano <daniel.lezcano@linaro.org> napisa=
-=C5=82(a):
->
-> On 10/01/2020 18:16, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > The DM365 platform has a strange quirk (only present when using ancient
-> > u-boot - mainline u-boot v2013.01 and later works fine) where if we
-> > enable the second half of the timer in periodic mode before we do its
-> > initialization - the time won't start flowing and we can't boot.
-> >
-> > When using more recent u-boot, we can enable the timer, then reinitiali=
-ze
-> > it and all works fine.
-> >
-> > To work around this issue only enable clockevents once tim34 is
-> > initialized i.e. move clockevents_config_and_register() below tim34
-> > initialization.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Shall I take it through my tree?
->
+From: Qi Zhou <atmgnd@outlook.com>
 
-Not sure, I'd say Sekhar should take it through arm-soc together with
-the latter two patches if he's ok with this. Let's wait for him to
-respond.
+commit 1530f6f5f5806b2abbf2a9276c0db313ae9a0e09 upstream.
 
-Bart
+According to bd0e6c9614b9 ("usb: hub: try old enumeration scheme first
+for high speed devices") the kernel will try the old enumeration scheme
+first for high speed devices.  This can happen when a high speed device
+is plugged in.
+
+But due to missing parentheses in the USE_NEW_SCHEME define, this logic
+can get messed up and the incorrect result happens.
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Qi Zhou <atmgnd@outlook.com>
+Link: https://lore.kernel.org/r/ht4mtag8ZP-HKEhD0KkJhcFnVlOFV8N8eNjJVRD9pDkkLUNhmEo8_cL_sl7xy9mdajdH-T8J3TFQsjvoYQT61NFjQXy469Ed_BbBw_x4S1E=@protonmail.com
+[ fixup changelog text - gregkh]
+Cc: stable <stable@vger.kernel.org>
+Fixes: bd0e6c9614b9 ("usb: hub: try old enumeration scheme first for high speed devices")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/core/hub.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -2657,7 +2657,7 @@ static unsigned hub_is_wusb(struct usb_h
+ #define SET_ADDRESS_TRIES	2
+ #define GET_DESCRIPTOR_TRIES	2
+ #define SET_CONFIG_TRIES	(2 * (use_both_schemes + 1))
+-#define USE_NEW_SCHEME(i, scheme)	((i) / 2 == (int)scheme)
++#define USE_NEW_SCHEME(i, scheme)	((i) / 2 == (int)(scheme))
+ 
+ #define HUB_ROOT_RESET_TIME	60	/* times are in msec */
+ #define HUB_SHORT_RESET_TIME	10
+
+
