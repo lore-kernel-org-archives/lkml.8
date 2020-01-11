@@ -6,35 +6,34 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC96C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 02:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFBDC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 02:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2AB2077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 02:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB6632072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 02:25:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728092AbgAKCVy (ORCPT
+        id S1728123AbgAKCZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 21:21:54 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:45951 "EHLO
+        Fri, 10 Jan 2020 21:25:20 -0500
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:48827 "EHLO
         relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbgAKCVx (ORCPT
+        with ESMTP id S1728027AbgAKCZT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 21:21:53 -0500
+        Fri, 10 Jan 2020 21:25:19 -0500
 X-Originating-IP: 50.39.173.182
 Received: from localhost (50-39-173-182.bvtn.or.frontiernet.net [50.39.173.182])
         (Authenticated sender: josh@joshtriplett.org)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 19A1B240005;
-        Sat, 11 Jan 2020 02:21:47 +0000 (UTC)
-Date:   Fri, 10 Jan 2020 18:21:45 -0800
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 8F8E1240004;
+        Sat, 11 Jan 2020 02:25:15 +0000 (UTC)
+Date:   Fri, 10 Jan 2020 18:25:13 -0800
 From:   Josh Triplett <josh@joshtriplett.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
         Arjan van de Ven <arjan@linux.intel.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH] acpi: button: Provide option for power button to directly
- signal init
-Message-ID: <20200111022145.GA166025@localhost>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] serial: 8250: Support disabling mdelay-filled probes of
+ 16550A variants
+Message-ID: <20200111022513.GA166267@localhost>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -43,79 +42,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Virtual machines and containers often use an ACPI power button event to
-tell the machine to shut down gracefully.
+The 8250 driver can probe for many variants of the venerable 16550A
+serial port. Some of those probes involve long (20ms) mdelay calls,
+which delay system boot. Modern systems and virtual machines don't have
+those variants.
 
-Provide an optional, extremely lightweight way to handle this event by
-signaling init directly, rather than running a separate daemon (such as
-acpid or systemd-logind) that adds to startup time and VM image
-complexity.
+Provide a Kconfig option to disable probes for 16550A variants.
+Disabling this speeds up the boot of a virtual machine with a serial
+console by more than 20ms (a substantial fraction of the ~100ms needed
+to boot a carefully configured VM).
 
-By default, the power button will continue to notify userspace through
-the input layer. With the button.power_signal parameter set, the
-power button will instead send the configured signal to init. (For
-instance, sending SIGINT will make the power button simulate
-ctrl-alt-del.)
+Before:
+[  +0.021919] 00:04: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+After:
+[  +0.000097] 00:04: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
 
 Signed-off-by: Josh Triplett <josh@joshtriplett.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  6 ++++++
- drivers/acpi/button.c                           | 11 +++++++++++
- 2 files changed, 17 insertions(+)
+ drivers/tty/serial/8250/8250_port.c |  3 +++
+ drivers/tty/serial/8250/Kconfig     | 10 ++++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ade4e6ec23e0..bbb598e148f4 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -450,6 +450,12 @@
- 			firmware feature for flushing multiple hpte entries
- 			at a time.
+diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+index 90655910b0c7..925bc26d3f15 100644
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -1001,6 +1001,9 @@ static void autoconfig_16550a(struct uart_8250_port *up)
+ 	up->port.type = PORT_16550A;
+ 	up->capabilities |= UART_CAP_FIFO;
  
-+	button.power_signal=
-+			[ACPI] When the power button is pressed, send this
-+			signal number to the init process. If set to 0
-+			(default), do not send a signal.
-+			Format: integer
++	if (!IS_ENABLED(CONFIG_SERIAL_8250_16550A_VARIANTS))
++		return;
 +
- 	c101=		[NET] Moxa C101 synchronous serial card
+ 	/*
+ 	 * Check for presence of the EFR when DLAB is set.
+ 	 * Only ST16C650V1 UARTs pass this test.
+diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
+index fab3d4f20667..ffd167e886ae 100644
+--- a/drivers/tty/serial/8250/Kconfig
++++ b/drivers/tty/serial/8250/Kconfig
+@@ -60,6 +60,16 @@ config SERIAL_8250_PNP
+ 	  This builds standard PNP serial support. You may be able to
+ 	  disable this feature if you only need legacy serial support.
  
- 	cachesize=	[BUGS=X86-32] Override level 2 CPU cache size detection.
-diff --git a/drivers/acpi/button.c b/drivers/acpi/button.c
-index b758b45737f5..923259f132d6 100644
---- a/drivers/acpi/button.c
-+++ b/drivers/acpi/button.c
-@@ -14,6 +14,7 @@
- #include <linux/init.h>
- #include <linux/types.h>
- #include <linux/proc_fs.h>
-+#include <linux/sched/signal.h>
- #include <linux/seq_file.h>
- #include <linux/input.h>
- #include <linux/slab.h>
-@@ -167,6 +168,10 @@ static unsigned long lid_report_interval __read_mostly = 500;
- module_param(lid_report_interval, ulong, 0644);
- MODULE_PARM_DESC(lid_report_interval, "Interval (ms) between lid key events");
- 
-+static int power_signal __read_mostly = 0;
-+module_param(power_signal, int, 0644);
-+MODULE_PARM_DESC(power_signal, "Power button sends this signal to init");
++config SERIAL_8250_16550A_VARIANTS
++	bool "Support for variants of the 16550A serial port"
++	depends on SERIAL_8250
++	help
++	  The 8250 driver can probe for many variants of the venerable 16550A
++	  serial port. Doing so takes additional time at boot.
 +
- /* --------------------------------------------------------------------------
-                               FS Interface (/proc)
-    -------------------------------------------------------------------------- */
-@@ -426,6 +431,12 @@ static void acpi_button_notify(struct acpi_device *device, u32 event)
- 			if (button->suspended)
- 				break;
- 
-+			if (power_signal
-+			    && button->type == ACPI_BUTTON_TYPE_POWER) {
-+				kill_cad_pid(power_signal, 1);
-+				break;
-+			}
++	  On modern systems, especially those using serial only for a simple
++	  console, you can say N here.
 +
- 			keycode = test_bit(KEY_SLEEP, input->keybit) ?
- 						KEY_SLEEP : KEY_POWER;
- 			input_report_key(input, keycode, 1);
+ config SERIAL_8250_FINTEK
+ 	bool "Support for Fintek F81216A LPC to 4 UART RS485 API"
+ 	depends on SERIAL_8250
 -- 
 2.25.0.rc2
 
