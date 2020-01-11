@@ -2,92 +2,82 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E1CC33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E55FC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 462AB2087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E6820866
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578765101;
-	bh=jx3kcM6qGze6CYM2SBoNSYF7Vp/HAkC1tNSfVTZLE2M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TYscNc0bXhv+h82g3RjoL74TnsUJCJGPiBxlM5Cwn0XnEmiISqMVgdNo22hQ17UoN
-	 LKWVuUCxOKFaiaGhVdhc7kPOLvwmV5nY7xEhWh9ziWRzERMuaxhQ1fqLoyMSPbQgGY
-	 dtgsc5JqUJzG/QcdtKXQk4j9DPU0rCJfv6beC05s=
+	s=default; t=1578765104;
+	bh=Gn32yt7yDafbCrEP6CuzTE6zxS0cmiMcJC2FaZB1pNA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=cZ6PkpANBqFwPyI5Am+KQ0vYS5Vx7fbDwbr0ZAn4SJmA4crEhUKuvaReqqN/jdVxZ
+	 TlIcMhHMytbGoRT4XjRLbv0AvlMoLGxSM5mJNT7/4NqmzrxdFbERuvWfyk8iNsGksF
+	 X97qHbpKUC2yuogLb5XCpv0a0dEji4R//mKJyzqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730754AbgAKRvk (ORCPT
+        id S1730797AbgAKRvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 12:51:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47982 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 12:51:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730696AbgAKRvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 12:51:40 -0500
-Received: from localhost (unknown [84.241.193.141])
+        id S1730696AbgAKRvl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 12:51:41 -0500
+Received: from localhost (mobile-166-170-223-177.mycingular.net [166.170.223.177])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D801A2084D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A40B20866;
         Sat, 11 Jan 2020 17:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578765099;
-        bh=jx3kcM6qGze6CYM2SBoNSYF7Vp/HAkC1tNSfVTZLE2M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XHJWaTnIaS1MKqb4zE7vw8djtMlCzhp4QAUmrseAjPJflRU5K4Zntgz3lfS4z70hZ
-         FdmD0KwTxMl16PqPkn6pGRTFb88+AOg4IP144/LzEEzC+/h0Q4SOWz6BtbpuZ0E6TO
-         kn4RIYyCZsoL32mNO5iR2UzsKfLA7Kc9WmKMyVZQ=
-Date:   Sat, 11 Jan 2020 18:51:14 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/91] 4.9.209-stable review
-Message-ID: <20200111175114.GA403776@kroah.com>
-References: <20200111094844.748507863@linuxfoundation.org>
- <0668a7b6-502b-719b-a2eb-59519de7bf3e@roeck-us.net>
+        s=default; t=1578765100;
+        bh=Gn32yt7yDafbCrEP6CuzTE6zxS0cmiMcJC2FaZB1pNA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=XgGJiouiPfHunOJvb2+TAoTR9CN4aeUG6YeCWGtO77P/3WagmbRPj35aEV2valCc6
+         8iWhjYWMDBX//f75/Mh92oi6yG2vC8OCxcz/XbS6pX7NfXO/2N3WvrUjzMIlhWc2cU
+         wYKlHXPcrDdy6v3wWpdunjTqPIxlbPSyAlHGULJk=
+Date:   Sat, 11 Jan 2020 11:51:34 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     longli@linuxonhyperv.com
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Long Li <longli@microsoft.com>
+Subject: Re: [Patch v3 2/2] PCI: hv: Add support for protocol 1.3 and support
+ PCI_BUS_RELATIONS2
+Message-ID: <20200111175134.GA237990@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0668a7b6-502b-719b-a2eb-59519de7bf3e@roeck-us.net>
+In-Reply-To: <1577389241-108450-2-git-send-email-longli@linuxonhyperv.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 07:44:31AM -0800, Guenter Roeck wrote:
-> On 1/11/20 1:48 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.9.209 release.
-> > There are 91 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Mon, 13 Jan 2020 09:46:17 +0000.
-> > Anything received after that time might be too late.
-> > 
+On Thu, Dec 26, 2019 at 11:40:41AM -0800, longli@linuxonhyperv.com wrote:
+> From: Long Li <longli@microsoft.com>
 > 
-> Build results:
-> 	total: 172 pass: 169 fail: 3
-> Failed builds:
-> 	arm:allmodconfig
-> 	arm:u8500_defconfig
-> 	arm64:allmodconfig
-> Qemu test results:
-> 	total: 358 pass: 358 fail: 0
+> Starting with Hyper-V PCI protocol version 1.3, the host VSP can send
+> PCI_BUS_RELATIONS2 and pass the vNUMA node information for devices on the bus.
+> The vNUMA node tells which guest NUMA node this device is on based on guest
+> VM configuration topology and physical device inforamtion.
 > 
-> drivers/hwtracing/coresight/coresight-tmc-etf.c: In function 'tmc_alloc_etf_buffer':
-> drivers/hwtracing/coresight/coresight-tmc-etf.c:295:10: error: 'event' undeclared
+> The patch adds code to negotiate v1.3 and process PCI_BUS_RELATIONS2.
 
-Ugh, I thought I dropped those earlier, but they came back through
-Sasha's autosel.  There's another build error with another coresight
-patch in there too, looks rare enough that your scripts didn't catch it
-:)
+s/The patch adds code/Add code/
 
-I'll go push out a -rc2 now with the offending patches dropped.
+> + * hv_pci_devices_present2() - Handles list of new children
+> + * @hbus:	Root PCI bus, as understood by this driver
+> + * @relations2:	Packet from host listing children
+> + *
+> + * This function is the v2 version of hv_pci_devices_present()
 
-thanks,
-
-greg k-h
+s/Handles list/Handle list/
