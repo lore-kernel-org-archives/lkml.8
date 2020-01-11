@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D256C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCD4C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A17020678
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1739620842
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:32:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738768;
-	bh=ARu5wbjtq+VmR9Sl0KDeo986xTS2vi01f/eBTHLGts4=;
+	s=default; t=1578738777;
+	bh=QOcdDaWnWLLs1wtbgqB4q+1P23t6Kamg/vmjCzaWMqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hna8tjWT4qPDSCz/+gjgOy7R3ynsOodSGty0ue54lMCYOI5M44nw98nCTh12F549P
-	 DfFYBnH935u+nEMETyuNxVfcmRGUjoFWP5MUeQV3YTwH1jmo8P93Ilc3PG7XJGmY+3
-	 mpA97HXaYup4sNfVEIeDxTIy39d5dt5Qo23MIeug=
+	b=e4IFwrAqKLAWVT5C/NI1aF8ukl7HupGy6dBzZbh8Y1lPPd5C/jYZ99t6Tv2MrjeTQ
+	 QksI4UZAJyt654mMT7iogMyW09Ov1xDRVD6KooHyAUsJK3waMw7pOPmvY1iN2fBvRa
+	 xDpuvL3BhiVcSFmOG2aOiyjwmC26ppBz9OgZwlUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731560AbgAKKcr (ORCPT
+        id S1731567AbgAKKc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:32:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46312 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:32:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731293AbgAKKcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:32:45 -0500
+        id S1729256AbgAKKcy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:32:54 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89ACD20678;
-        Sat, 11 Jan 2020 10:32:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9DD620842;
+        Sat, 11 Jan 2020 10:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738765;
-        bh=ARu5wbjtq+VmR9Sl0KDeo986xTS2vi01f/eBTHLGts4=;
+        s=default; t=1578738773;
+        bh=QOcdDaWnWLLs1wtbgqB4q+1P23t6Kamg/vmjCzaWMqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MZr804y3EC2LFaxGQXrYABjomtjX8//rpg+nwis/GVc7iMxb063olZuiJhkzylbic
-         ULGSmBjN1mmaZZAEKMTSTF3dxdoKWG2EMqmKtlMQWCoMpFwJX1tZR42F8/MtLAXhJ5
-         BxjcZtSL9QVmgU/L3MIrXhahQe1K4t09JSL/XBz4=
+        b=1s3kCIwD1wPx+KB1Ir8ewrUp88yZakPTmL+B7jxFXCjLk6iVmHDDFbtf29yKirEjW
+         NPSC02QT5sA25158EVLzxsw4mexF6DaftlxkwCfvpcpQ16Pi1XaJ6MlvK5jpqtosQI
+         gCjiL3FNdEx78tFV121vEs4nXera7JbGGNaRvQN4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Julian Wiedmann <jwi@linux.ibm.com>,
+        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 133/165] s390/qeth: dont return -ENOTSUPP to userspace
-Date:   Sat, 11 Jan 2020 10:50:52 +0100
-Message-Id: <20200111094936.507006833@linuxfoundation.org>
+Subject: [PATCH 5.4 135/165] hv_netvsc: Fix unwanted rx_table reset
+Date:   Sat, 11 Jan 2020 10:50:54 +0100
+Message-Id: <20200111094936.961024266@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,33 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-[ Upstream commit 39bdbf3e648d801596498a5a625fbc9fc1c0002f ]
+[ Upstream commit b0689faa8efc5a3391402d7ae93bd373b7248e51 ]
 
-ENOTSUPP is not uapi, use EOPNOTSUPP instead.
+In existing code, the receive indirection table, rx_table, is in
+struct rndis_device, which will be reset when changing MTU, ringparam,
+etc. User configured receive indirection table values will be lost.
 
-Fixes: d66cb37e9664 ("qeth: Add new priority queueing options")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+To fix this, move rx_table to struct net_device_context, and check
+netif_is_rxfh_configured(), so rx_table will be set to default only
+if no user configured value.
+
+Fixes: ff4a44199012 ("netvsc: allow get/set of RSS indirection table")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_sys.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/hyperv/hyperv_net.h   |  3 ++-
+ drivers/net/hyperv/netvsc_drv.c   |  4 ++--
+ drivers/net/hyperv/rndis_filter.c | 10 +++++++---
+ 3 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_sys.c b/drivers/s390/net/qeth_core_sys.c
-index 9f392497d570..4c3e222e5572 100644
---- a/drivers/s390/net/qeth_core_sys.c
-+++ b/drivers/s390/net/qeth_core_sys.c
-@@ -227,7 +227,7 @@ static ssize_t qeth_dev_prioqing_store(struct device *dev,
- 		card->qdio.default_out_queue = QETH_DEFAULT_QUEUE;
- 	} else if (sysfs_streq(buf, "prio_queueing_vlan")) {
- 		if (IS_LAYER3(card)) {
--			rc = -ENOTSUPP;
-+			rc = -EOPNOTSUPP;
- 			goto out;
- 		}
- 		card->qdio.do_prio_queueing = QETH_PRIO_Q_ING_VLAN;
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index fb547f37af1e..e74f2d1def80 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -169,7 +169,6 @@ struct rndis_device {
+ 
+ 	u8 hw_mac_adr[ETH_ALEN];
+ 	u8 rss_key[NETVSC_HASH_KEYLEN];
+-	u16 rx_table[ITAB_NUM];
+ };
+ 
+ 
+@@ -938,6 +937,8 @@ struct net_device_context {
+ 
+ 	u32 tx_table[VRSS_SEND_TAB_SIZE];
+ 
++	u16 rx_table[ITAB_NUM];
++
+ 	/* Ethtool settings */
+ 	u8 duplex;
+ 	u32 speed;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 963509add611..78e3e689a733 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1659,7 +1659,7 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+ 	rndis_dev = ndev->extension;
+ 	if (indir) {
+ 		for (i = 0; i < ITAB_NUM; i++)
+-			indir[i] = rndis_dev->rx_table[i];
++			indir[i] = ndc->rx_table[i];
+ 	}
+ 
+ 	if (key)
+@@ -1689,7 +1689,7 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
+ 				return -EINVAL;
+ 
+ 		for (i = 0; i < ITAB_NUM; i++)
+-			rndis_dev->rx_table[i] = indir[i];
++			ndc->rx_table[i] = indir[i];
+ 	}
+ 
+ 	if (!key) {
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index e3d3c9097ff1..f81e58267a6e 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -767,6 +767,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 				   const u8 *rss_key, u16 flag)
+ {
+ 	struct net_device *ndev = rdev->ndev;
++	struct net_device_context *ndc = netdev_priv(ndev);
+ 	struct rndis_request *request;
+ 	struct rndis_set_request *set;
+ 	struct rndis_set_complete *set_complete;
+@@ -806,7 +807,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 	/* Set indirection table entries */
+ 	itab = (u32 *)(rssp + 1);
+ 	for (i = 0; i < ITAB_NUM; i++)
+-		itab[i] = rdev->rx_table[i];
++		itab[i] = ndc->rx_table[i];
+ 
+ 	/* Set hask key values */
+ 	keyp = (u8 *)((unsigned long)rssp + rssp->hashkey_offset);
+@@ -1305,6 +1306,7 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 				      struct netvsc_device_info *device_info)
+ {
+ 	struct net_device *net = hv_get_drvdata(dev);
++	struct net_device_context *ndc = netdev_priv(net);
+ 	struct netvsc_device *net_device;
+ 	struct rndis_device *rndis_device;
+ 	struct ndis_recv_scale_cap rsscap;
+@@ -1391,9 +1393,11 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 	/* We will use the given number of channels if available. */
+ 	net_device->num_chn = min(net_device->max_chn, device_info->num_chn);
+ 
+-	for (i = 0; i < ITAB_NUM; i++)
+-		rndis_device->rx_table[i] = ethtool_rxfh_indir_default(
++	if (!netif_is_rxfh_configured(net)) {
++		for (i = 0; i < ITAB_NUM; i++)
++			ndc->rx_table[i] = ethtool_rxfh_indir_default(
+ 						i, net_device->num_chn);
++	}
+ 
+ 	atomic_set(&net_device->open_chn, 1);
+ 	vmbus_set_sc_create_callback(dev->channel, netvsc_sc_open);
 -- 
 2.20.1
 
