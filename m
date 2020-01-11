@@ -2,111 +2,183 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2F1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 05:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE50C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 05:13:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D85D2077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 05:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AB2C2077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 05:13:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578719615;
+	bh=VfNQMl8cgP6Aq4h1FNNSFRYjQ2+soJJipV7tLxByGwk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=p1q3aexu2a4emvnN9VOYc36sZPj7kYUIcvUtgCsMFDbZazeVLeJBJXk5Af034FF26
+	 QhCHnUVLGishxVfna92e3NOWguppAvpm1ebe2fqDkYwXRMyjttY6JJxwozKHcgHkMu
+	 t97R+uWcxB2ND62LDlvaV+1ywvnG3EfUuJbGJh/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbgAKFGn (ORCPT
+        id S1726116AbgAKFNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 00:06:43 -0500
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:37793 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725816AbgAKFGn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 00:06:43 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07486;MF=wenyang@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0TnNYIC5_1578719194;
-Received: from IT-C02W23QPG8WN.local(mailfrom:wenyang@linux.alibaba.com fp:SMTPD_---0TnNYIC5_1578719194)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sat, 11 Jan 2020 13:06:39 +0800
-Subject: Re: [PATCH v3] coccinelle: semantic patch to check for inappropriate
- do_div() calls
-To:     Markus Elfring <Markus.Elfring@web.de>, cocci@systeme.lip6.fr,
-        kernel-janitors@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Julia Lawall <Julia.Lawall@lip6.fr>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        =?UTF-8?Q?Matthias_M=c3=a4nnich?= <maennich@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200110131526.60180-1-wenyang@linux.alibaba.com>
- <91abb141-57b8-7659-25ec-8080e290d846@web.de>
-From:   Wen Yang <wenyang@linux.alibaba.com>
-Message-ID: <c4ada2f2-19b0-91ef-ddf3-a1999f4209ea@linux.alibaba.com>
-Date:   Sat, 11 Jan 2020 13:06:34 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.1.1
+        Sat, 11 Jan 2020 00:13:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50054 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726009AbgAKFNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 00:13:31 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C69B52077C;
+        Sat, 11 Jan 2020 05:13:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578719610;
+        bh=VfNQMl8cgP6Aq4h1FNNSFRYjQ2+soJJipV7tLxByGwk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=rYcvO1RXQ88dYk/lm2ZyJgv+OQp2DNTfq1bqIU/0uiL/XdMz1SHu9xLnZUy/AdAlZ
+         jd7alyP5QZWxrVKaTQV3iBVcYwA8DXCO9DP0bdQ/Rhnj3O32yW4ZNndpCvvAqyvNTs
+         OWPI/LWVvEDYchzjzpPk8rYasui2vP2HbsVhMZwc=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 859AD3522887; Fri, 10 Jan 2020 21:13:30 -0800 (PST)
+Date:   Fri, 10 Jan 2020 21:13:30 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>, Qian Cai <cai@lca.pw>
+Subject: Re: [PATCH -rcu 2/2] kcsan: Rate-limit reporting per data races
+Message-ID: <20200111051330.GG13449@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200109152322.104466-1-elver@google.com>
+ <20200109152322.104466-3-elver@google.com>
+ <CANpmjNNt_+EQHLFZyV5_Wq1frU3A=Rh8y5P7Zjp-0cAU2X7N6w@mail.gmail.com>
+ <CANpmjNOcjdr6HNaSP4Q7GTR72vx4bSMa_2O=_9oQwcz3xFk=Wg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <91abb141-57b8-7659-25ec-8080e290d846@web.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANpmjNOcjdr6HNaSP4Q7GTR72vx4bSMa_2O=_9oQwcz3xFk=Wg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/1/11 12:35 上午, Markus Elfring wrote:
->> +@initialize:python@
-> …
->> +def filter_out_safe_constants(str):
-> …
->> +def construct_warnings(str, suggested_fun):
+On Fri, Jan 10, 2020 at 07:54:09PM +0100, Marco Elver wrote:
+> On Fri, 10 Jan 2020 at 19:20, Marco Elver <elver@google.com> wrote:
+> >
+> > On Thu, 9 Jan 2020 at 16:23, Marco Elver <elver@google.com> wrote:
+> > >
+> > > Adds support for rate limiting reports. This uses a time based rate
+> > > limit, that limits any given data race report to no more than one in a
+> > > fixed time window (default is 3 sec). This should prevent the console
+> > > from being spammed with data race reports, that would render the system
+> > > unusable.
+> > >
+> > > The implementation assumes that unique data races and the rate at which
+> > > they occur is bounded, since we cannot store arbitrarily many past data
+> > > race report information: we use a fixed-size array to store the required
+> > > information. We cannot use kmalloc/krealloc and resize the list when
+> > > needed, as reporting is triggered by the instrumentation calls; to
+> > > permit using KCSAN on the allocators, we cannot (re-)allocate any memory
+> > > during report generation (data races in the allocators lead to
+> > > deadlock).
+> > >
+> > > Reported-by: Qian Cai <cai@lca.pw>
+> > > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> > > Signed-off-by: Marco Elver <elver@google.com>
+> > > ---
+> > >  kernel/kcsan/report.c | 112 ++++++++++++++++++++++++++++++++++++++----
+> > >  lib/Kconfig.kcsan     |  10 ++++
+> > >  2 files changed, 112 insertions(+), 10 deletions(-)
+> > >
+> > > diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+> > > index 9f503ca2ff7a..e324af7d14c9 100644
+> > > --- a/kernel/kcsan/report.c
+> > > +++ b/kernel/kcsan/report.c
+> > > @@ -1,6 +1,7 @@
+> > >  // SPDX-License-Identifier: GPL-2.0
+> > >
+> > >  #include <linux/kernel.h>
+> > > +#include <linux/ktime.h>
+> > >  #include <linux/preempt.h>
+> > >  #include <linux/printk.h>
+> > >  #include <linux/sched.h>
+> > > @@ -31,12 +32,101 @@ static struct {
+> > >         int                     num_stack_entries;
+> > >  } other_info = { .ptr = NULL };
+> > >
+> > > +/*
+> > > + * Information about reported data races; used to rate limit reporting.
+> > > + */
+> > > +struct report_time {
+> > > +       /*
+> > > +        * The last time the data race was reported.
+> > > +        */
+> > > +       ktime_t time;
+> > > +
+> > > +       /*
+> > > +        * The frames of the 2 threads; if only 1 thread is known, one frame
+> > > +        * will be 0.
+> > > +        */
+> > > +       unsigned long frame1;
+> > > +       unsigned long frame2;
+> > > +};
+> > > +
+> > > +/*
+> > > + * Since we also want to be able to debug allocators with KCSAN, to avoid
+> > > + * deadlock, report_times cannot be dynamically resized with krealloc in
+> > > + * rate_limit_report.
+> > > + *
+> > > + * Therefore, we use a fixed-size array, which at most will occupy a page. This
+> > > + * still adequately rate limits reports, assuming that a) number of unique data
+> > > + * races is not excessive, and b) occurrence of unique data races within the
+> > > + * same time window is limited.
+> > > + */
+> > > +#define REPORT_TIMES_MAX (PAGE_SIZE / sizeof(struct report_time))
+> > > +#define REPORT_TIMES_SIZE                                                      \
+> > > +       (CONFIG_KCSAN_REPORT_ONCE_IN_MS > REPORT_TIMES_MAX ?                   \
+> > > +                REPORT_TIMES_MAX :                                            \
+> > > +                CONFIG_KCSAN_REPORT_ONCE_IN_MS)
+> > > +static struct report_time report_times[REPORT_TIMES_SIZE];
+> > > +
+> > >  /*
+> > >   * This spinlock protects reporting and other_info, since other_info is usually
+> > >   * required when reporting.
+> > >   */
+> > >  static DEFINE_SPINLOCK(report_lock);
+> > >
+> > > +/*
+> > > + * Checks if the data race identified by thread frames frame1 and frame2 has
+> > > + * been reported since (now - KCSAN_REPORT_ONCE_IN_MS).
+> > > + */
+> > > +static bool rate_limit_report(unsigned long frame1, unsigned long frame2)
+> > > +{
+> > > +       struct report_time *use_entry = &report_times[0];
+> > > +       ktime_t now;
+> > > +       ktime_t invalid_before;
+> > > +       int i;
+> > > +
+> > > +       BUILD_BUG_ON(CONFIG_KCSAN_REPORT_ONCE_IN_MS != 0 && REPORT_TIMES_SIZE == 0);
+> > > +
+> > > +       if (CONFIG_KCSAN_REPORT_ONCE_IN_MS == 0)
+> > > +               return false;
+> > > +
+> > > +       now = ktime_get();
+> > > +       invalid_before = ktime_sub_ms(now, CONFIG_KCSAN_REPORT_ONCE_IN_MS);
+> >
+> > Been thinking about this a bit more, and wondering if we should just
+> > use jiffies here?  Don't think we need the precision.
 > 
-> * I suggest once more to adjust the dependency specifications for the usage
->    of these functions by SmPL rules.
+> Sent v2: http://lkml.kernel.org/r/20200110184834.192636-1-elver@google.com
+> I think it's also safer to use jiffies, as noted in the v2 patch.
 > 
+> Paul: sorry for sending v2, seeing you already had these in your tree.
+> Hope this is ok.
 
-Most of the functions here are for all operation modes.
+Not a problem!  Pulling in the replacements shortly.
 
-
-> * Can the local variable “msg” be omitted?
-> 
-> 
->> +coccilib.org.print_todo(p[0], construct_warnings("div64_ul"))
-> 
-> I suggest again to move the prefix “div64_” into the string literal
-> of the function implementation.
-> 
-
-“div64_ul” indicates the function name we recommend.
-As shown in the patch:
-
-+def construct_warnings(suggested_fun):
-+    msg="WARNING: do_div() does a 64-by-32 division, please consider 
-using %s instead."
-+    return  msg % suggested_fun
-...
-+coccilib.org.print_todo(p[0], construct_warnings("div64_ul"))
-
-If we delete the prefix "div64_", it may reduce readability.
-
-> 
-> The SmPL code for two disjunctions could become shorter.
-> 
-
-You may suggest to modify it as follows:
-+@@
-+*do_div(f, \( l \| ul \| ul64 \| sl64 \) );
-
-We agree with Julia:
-I don't se any point to this.  The code matched will be the same in both
-cases.  The original code is quite readable, without the ugly \( etc.
-
---
-Regards，
-Wen
-
-> Regards,
-> Markus
-> 
+							Thanx, Paul
