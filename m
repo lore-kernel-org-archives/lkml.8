@@ -2,113 +2,812 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31728C33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D0EC33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:56:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F2E2077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736583;
-	bh=Q1o8h/zPHzFtnLMEx2DXNfR7tGOva6KqlcozL3/R9Ww=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ay4SH3xXy8movIB7j2L9nHqCBK++guRpUIr28VxdtSSqlm5i8rrJ6v0NSnw89X1QW
-	 Gv6RoV0X1PxZ0UrnJghfGGT701EdzYRnCoIsFoZEKH6fomKV3g79do5BhRZLDbnSBG
-	 DQHvegyk8WgQfUIPBTDPRfUm3mw9V8Ltue9lxfs0=
+	by mail.kernel.org (Postfix) with ESMTP id C0D982064C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:56:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729003AbgAKJ4W (ORCPT
+        id S1729084AbgAKJ4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Sat, 11 Jan 2020 04:56:25 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44105 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728881AbgAKJ4W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 11 Jan 2020 04:56:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728768AbgAKJ4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:56:21 -0500
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EE7E2064C;
-        Sat, 11 Jan 2020 09:56:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736580;
-        bh=Q1o8h/zPHzFtnLMEx2DXNfR7tGOva6KqlcozL3/R9Ww=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vCrlgFNXTQBliUKS0rx8T5qdKUoqE1CyoN888kyORucgAoWBK3vTHUdqcpqRmWxer
-         swB7GTKdIbE2buBgjx48LSK7slhmxJ8r4t39djeQVgmjyIvO2h7SgLTd758AXzaJDV
-         j9Git7JQg9Xh4qoTfI9b0270t6PEPfBHnF9Cv9uM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        RENARD Pierre-Francois <pfrenard@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 50/59] net: usb: lan78xx: fix possible skb leak
-Date:   Sat, 11 Jan 2020 10:49:59 +0100
-Message-Id: <20200111094850.091642079@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
-References: <20200111094835.417654274@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-lf1-f68.google.com with SMTP id v201so3343660lfa.11;
+        Sat, 11 Jan 2020 01:56:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Sm2k5HjAjtoTktVez1h0k1p+QJ6RvISUacL3QyS1Ay0=;
+        b=GevAGIsFANRh/BBSEexOtGMDkuGbfzj73TTUAvOISFuIynxzASNf9TYNtBiUyITTya
+         FblwDBYa91kfy0UOF9E5WnGfciqpkT7/KxVA5wdpnye7cXOsssPcSBnrmQuw/qMLaGRV
+         JHxlp488fIopHcHKfxHkmTxAl1Gu1c8kpJ7aMRQ/QU/oqAOyqEyzr+7FvOO+hXUuoKmJ
+         Dh0plOEJJIzHU09X00CIsVKbAskmuzpikctjVKQhgIqWCFUg1LPqMY0+ao+YaauynpS8
+         3ggVFx0mCboC+GBlSFpJhCNHCpO7GruMMOz8CKIj4mOOsmEvF0DATKem4/7utEOsRpq+
+         DO1w==
+X-Gm-Message-State: APjAAAWlEO1lGuOMjWqG3dJNx6dYMNBzBpJA8Pg35+dfR9KAoAtY51SD
+        p4g6y2rNybY7R5BtgEYfr88=
+X-Google-Smtp-Source: APXvYqyEgAfiLEMtBiOZXBc58uQ4hOySM5uyrmjs8hFEA5qNOZjHQdf74RTk6NdGsltSF4lTE8s1+w==
+X-Received: by 2002:a19:5007:: with SMTP id e7mr5149569lfb.153.1578736578667;
+        Sat, 11 Jan 2020 01:56:18 -0800 (PST)
+Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
+        by smtp.gmail.com with ESMTPSA id s9sm2598109ljh.90.2020.01.11.01.56.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jan 2020 01:56:18 -0800 (PST)
+Date:   Sat, 11 Jan 2020 11:56:12 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v9 11/12] leds: Add common LED binding parsing support to LED
+ class/core
+Message-ID: <c9f8cfc4c0a1f087f1f372d6e7a0d37a84542f66.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+Quick grep for 'for_each' or 'linux,default-trigger' or
+'default-state' under drivers/leds can tell quite a lot. It seems
+multiple LED controller drivers implement the very similar looping
+through the child nodes in order to locate the LED nodes and read
+and support the common LED dt bindings. Implementing this same
+stuff for all LED controllers gets old pretty fast.
 
-[ Upstream commit 47240ba0cd09bb6fe6db9889582048324999dfa4 ]
+This commit adds support for locating the LED node (based on known
+node names - or given property name-value pair) and handling of
+few common LED properties.
 
-If skb_linearize() fails, we need to free the skb.
+linux,default-trigger,
+default-state (with the exception of keep),
 
-TSO makes skb bigger, and this bug might be the reason
-Raspberry Pi 3B+ users had to disable TSO.
+(in addition to already handled
+function-enumerator,
+function,
+color
+and label).
 
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: RENARD Pierre-Francois <pfrenard@gmail.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Woojung Huh <woojung.huh@microchip.com>
-Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The handling of linux,default-trigger and default-state are omitted
+if init_data->parse_fwnode is not set to true. Thus the existing
+LED drivers are not impacted until they set this field to true.
+
+Regarding the node look-up:
+
+1. If no init_data is given, then no node-lookup is done and cdev
+   name is used as such. (as was earlier)
+
+2. If neither match_property nor of_match is given then passed starting
+   point is used as such. (as was earlier - it might help in
+   few cases to use dev_fwnode() here but that would change existing
+   logic and possibly cause some existing setup to break).
+
+3. If init_data is given but no starting point for node lookup - then
+   (parent) device's own DT node is used as starting point for look-up.
+
+4. The match_property has priority over of_match and is first used for
+   look-up. If a node with matching property is found then the found node
+   is used.
+
+5. If no match_property is given or no mathicng property was found then
+   of_macth is used. The node which name matches of_match is searched for
+   and used if found.
+
+This ensures that existing drivers which do not populate of_match or
+match_property in init_data wont be impacted bu node look-up.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- drivers/net/usb/lan78xx.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+No changes since v8
 
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -2036,11 +2036,6 @@ int lan78xx_stop(struct net_device *net)
- 	return 0;
+ drivers/leds/led-class.c | 115 +++++++++++++++--
+ drivers/leds/led-core.c  | 258 ++++++++++++++++++++++++++++++++-------
+ include/linux/leds.h     |  94 ++++++++++++--
+ 3 files changed, 401 insertions(+), 66 deletions(-)
+
+diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
+index 438774315e6c..170ab227eaa9 100644
+--- a/drivers/leds/led-class.c
++++ b/drivers/leds/led-class.c
+@@ -235,6 +235,32 @@ static int led_classdev_next_name(const char *init_name, char *name,
+ 	return i;
  }
  
--static int lan78xx_linearize(struct sk_buff *skb)
--{
--	return skb_linearize(skb);
--}
++static void led_add_props(struct led_classdev *ld, struct led_properties *props)
++{
++	if (props->default_trigger)
++		ld->default_trigger = props->default_trigger;
++	/*
++	 * According to binding docs the LED is by-default turned OFF unless
++	 * default_state is used to indicate it should be ON or that state
++	 * should be kept as is
++	 */
++	if (props->default_state) {
++		ld->brightness = LED_OFF;
++		if (!strcmp(props->default_state, "on")) {
++			if (!ld->max_brightness)
++				ld->brightness = LED_FULL;
++			else
++				ld->brightness = ld->max_brightness;
++	/*
++	 * We probably should not call the brightness_get prior calling
++	 * the of_parse_cb if one is provided.
++	 * Add a flag to advertice that state should be queried and kept as-is.
++	 */
++		} else if (!strcmp(props->default_state, "keep"))
++			props->brightness_keep = true;
++	}
++}
++
+ /**
+  * led_classdev_register_ext - register a new object of led_classdev class
+  *			       with init data.
+@@ -251,22 +277,69 @@ int led_classdev_register_ext(struct device *parent,
+ 	char final_name[LED_MAX_NAME_SIZE];
+ 	const char *proposed_name = composed_name;
+ 	int ret;
 -
- static struct sk_buff *lan78xx_tx_prep(struct lan78xx_net *dev,
- 				       struct sk_buff *skb, gfp_t flags)
- {
-@@ -2051,8 +2046,10 @@ static struct sk_buff *lan78xx_tx_prep(s
- 		return NULL;
++	struct led_properties props = {0};
++	struct fwnode_handle *fw;
++
++	/*
++	 * We don't try getting the name based on DT node if init-data is not
++	 * given. We could see if we find LED properties from the device's node
++	 * but that might change LED names for old users of
++	 * led_classdev_register who have been providing the LED name in
++	 * cdev->name. So we seek fwnode for names only if init_data is given
++	 */
+ 	if (init_data) {
++		led_cdev->init_data = init_data;
+ 		if (init_data->devname_mandatory && !init_data->devicename) {
+ 			dev_err(parent, "Mandatory device name is missing");
+ 			return -EINVAL;
+ 		}
+-		ret = led_compose_name(parent, init_data, composed_name);
++
++		fw = led_get_fwnode(parent, init_data);
++		if (IS_ERR(fw))
++			return PTR_ERR(fw);
++
++		if (fw) {
++			/*
++			 * We did increase refcount for fwnode. Let's set a flag
++			 * so we can decrease it during deregistration
++			 */
++			led_cdev->fwnode_owned = true;
++
++			ret = led_parse_fwnode_props(parent, fw, &props);
++			if (ret)
++				goto err_out;
++
++			if (init_data->of_parse_cb)
++				ret = init_data->of_parse_cb(led_cdev, fw,
++							     &props);
++			if (ret < 0)
++				goto err_out;
++
++			/*
++			 * Handle the common LED properties only for drivers
++			 * that explicitly request it. This allows us to test
++			 * and convert drivers to utilize common LED parsing one
++			 * by one.
++			 */
++			if (init_data->parse_fwnode)
++				led_add_props(led_cdev, &props);
++
++		} else {
++			led_cdev->fwnode_owned = false;
++		}
++		ret = led_compose_name(parent, init_data, &props,
++				       composed_name);
+ 		if (ret < 0)
+-			return ret;
++			goto err_out;
+ 	} else {
+ 		proposed_name = led_cdev->name;
++		led_cdev->fwnode_owned = false;
++		fw = NULL;
  	}
  
--	if (lan78xx_linearize(skb) < 0)
-+	if (skb_linearize(skb)) {
-+		dev_kfree_skb_any(skb);
- 		return NULL;
+ 	ret = led_classdev_next_name(proposed_name, final_name, sizeof(final_name));
+ 	if (ret < 0)
+-		return ret;
++		goto err_out;
+ 
+ 	mutex_init(&led_cdev->led_access);
+ 	mutex_lock(&led_cdev->led_access);
+@@ -274,22 +347,28 @@ int led_classdev_register_ext(struct device *parent,
+ 				led_cdev, led_cdev->groups, "%s", final_name);
+ 	if (IS_ERR(led_cdev->dev)) {
+ 		mutex_unlock(&led_cdev->led_access);
+-		return PTR_ERR(led_cdev->dev);
++		ret = PTR_ERR(led_cdev->dev);
++		goto err_out;
+ 	}
+-	if (init_data && init_data->fwnode)
+-		led_cdev->dev->fwnode = init_data->fwnode;
++	if (fw)
++		led_cdev->dev->fwnode = fw;
+ 
+ 	if (ret)
+ 		dev_warn(parent, "Led %s renamed to %s due to name collision",
+ 				led_cdev->name, dev_name(led_cdev->dev));
+ 
++	if (props.brightness_keep)
++		if (led_cdev->brightness_get)
++			led_cdev->brightness =
++				 led_cdev->brightness_get(led_cdev);
++
+ 	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED) {
+ 		ret = led_add_brightness_hw_changed(led_cdev);
+ 		if (ret) {
+ 			device_unregister(led_cdev->dev);
+ 			led_cdev->dev = NULL;
+ 			mutex_unlock(&led_cdev->led_access);
+-			return ret;
++			goto err_out;
+ 		}
+ 	}
+ 
+@@ -322,6 +401,17 @@ int led_classdev_register_ext(struct device *parent,
+ 			led_cdev->name);
+ 
+ 	return 0;
++err_out:
++	if (led_cdev->fwnode_owned) {
++		fwnode_handle_put(fw);
++		/*
++		 * This might not be needed as 'fwnode_owned' is always
++		 * initialized in led_classdev_register_ext
++		 */
++		led_cdev->fwnode_owned = false;
++	}
++
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(led_classdev_register_ext);
+ 
+@@ -355,6 +445,15 @@ void led_classdev_unregister(struct led_classdev *led_cdev)
+ 	if (led_cdev->flags & LED_BRIGHT_HW_CHANGED)
+ 		led_remove_brightness_hw_changed(led_cdev);
+ 
++	if (led_cdev->fwnode_owned) {
++		fwnode_handle_put(led_cdev->dev->fwnode);
++		/*
++		 * This might not be needed as 'fwnode_owned' is always
++		 * initialized in led_classdev_register_ext
++		 */
++		led_cdev->fwnode_owned = false;
++	}
++
+ 	device_unregister(led_cdev->dev);
+ 
+ 	down_write(&leds_list_lock);
+diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+index f1f718dbe0f8..3cd1784494f2 100644
+--- a/drivers/leds/led-core.c
++++ b/drivers/leds/led-core.c
+@@ -365,70 +365,226 @@ void led_sysfs_enable(struct led_classdev *led_cdev)
+ }
+ EXPORT_SYMBOL_GPL(led_sysfs_enable);
+ 
+-static void led_parse_fwnode_props(struct device *dev,
+-				   struct fwnode_handle *fwnode,
+-				   struct led_properties *props)
++static int fw_is_match(struct fwnode_handle *fw,
++		       struct led_fw_match_property *mp, void *val)
+ {
+-	int ret;
++	void *cmp = mp->raw_val;
++	int ret = -EINVAL;
++
++	if (mp->raw_val) {
++		ret = fwnode_property_read_u8_array(fw, mp->name, val,
++						    mp->size);
++	} else if (mp->intval) {
++		cmp = mp->intval;
++		switch (mp->size) {
++		case 1:
++			ret = fwnode_property_read_u8_array(fw, mp->name, val,
++						    mp->size);
++			break;
++		case 2:
++			ret = fwnode_property_read_u16_array(fw, mp->name, val,
++						    mp->size);
++			break;
++		case 4:
++			ret = fwnode_property_read_u32_array(fw, mp->name, val,
++						    mp->size);
++			break;
++		case 8:
++			ret = fwnode_property_read_u64_array(fw, mp->name, val,
++						    mp->size);
++			break;
++		default:
++			return -EINVAL;
++		}
++	}
++	if (!ret && cmp)
++		if (!memcmp(val, cmp, mp->size))
++			return 1;
++
++	return 0;
++}
++/**
++ * led_get_fwnode - find fwnode for led
++ * @parent	LED controller device
++ * @init_data	led init data with match information
++ *
++ * Scans the firmware nodes and returns node matching the given init_data.
++ * NOTE: Function increases refcount for found node. Caller must decrease
++ * refcount using fwnode_handle_put when finished with node.
++ */
++struct fwnode_handle *led_get_fwnode(struct device *parent,
++				      struct led_init_data *init_data)
++{
++	struct fwnode_handle *fw;
++
++	/*
++	 * This should never be called without init data. We could always return
++	 * dev_fwnode() - but then we should pump-up the refcount
++	 */
++	if (!init_data)
++		return NULL;
++
++	/*
++	 * For now we do only do node look-up for drivers which populate
++	 * the new match properties. We could and perhaps should do
++	 * fw = dev_fwnode(parent); if given fwnode is NULL. But in order not to
++	 * break the existing setups we keep the old behaviour and just directly
++	 * use the given init_data->fwnode no matter if it is NULL or not.
++	 */
++
++	if ((!init_data->match_property.name ||
++	     !init_data->match_property.size) && !init_data->of_match)
++		return fwnode_handle_get(init_data->fwnode);
++
++	/* match information was given - do node look-up */
++
++	if (!init_data->fwnode)
++		fw = dev_fwnode(parent);
++	else
++		fw = init_data->fwnode;
++
++	if (!fw)
++		return NULL;
++
++	/*
++	 * Simple things are pretty. I think simplest is to use DT node-name
++	 * for matching the node with LED - same way regulators use the node
++	 * name to match with desc.
++	 *
++	 * This may not work with existing LED DT entries if the node name has
++	 * been freely pickable. In order to this to work the binding doc
++	 * for LED driver should define usable node names.
++	 *
++	 * If this is not working we can define specific match property which
++	 * value we scan and use for matching for LEDs connected to the
++	 * controller.
++	 */
++	if (init_data->match_property.name && init_data->match_property.size) {
++		u8 *val;
++		int ret;
++		struct fwnode_handle *child;
++		struct led_fw_match_property *mp;
++
++		mp = &init_data->match_property;
++
++		val = kzalloc(mp->size, GFP_KERNEL);
++		if (!val)
++			return ERR_PTR(-ENOMEM);
++
++		fwnode_for_each_child_node(fw, child) {
++			ret = fw_is_match(child, mp, val);
++			if (ret > 0) {
++				kfree(val);
++				return child;
++			}
++			if (ret < 0) {
++				dev_err(parent,
++					"invalid fw match. Use raw_val?\n");
++				fwnode_handle_put(child);
++				break;
++			}
++		}
++		kfree(val);
++	}
++	if (init_data->of_match)
++		fw = fwnode_get_named_child_node(fw, init_data->of_match);
++
++	return fw;
++}
++EXPORT_SYMBOL(led_get_fwnode);
++
++int led_parse_fwnode_props(struct device *dev, struct fwnode_handle *fwnode,
++			   struct led_properties *props)
++{
++	int ret = 0;
+ 
+ 	if (!fwnode)
+-		return;
++		return 0;
+ 
+ 	if (fwnode_property_present(fwnode, "label")) {
+ 		ret = fwnode_property_read_string(fwnode, "label", &props->label);
+ 		if (ret)
+ 			dev_err(dev, "Error parsing 'label' property (%d)\n", ret);
+-		return;
++		return ret;
+ 	}
+ 
++	/*
++	 * Please note, logic changed - if invalid property is found we bail
++	 * early out without parsing the rest of the properties. Originally
++	 * this was the case only for 'label' property. I don't know the
++	 * rationale behind original logic allowing invalid properties to be
++	 * given. If there is a reason then we should reconsider this.
++	 * Intuitively it feels correct to just yell and quit if we hit value we
++	 * don't understand - but intuition may be wrong at times :)
++	 */
+ 	if (fwnode_property_present(fwnode, "color")) {
+ 		ret = fwnode_property_read_u32(fwnode, "color", &props->color);
+-		if (ret)
++		if (ret) {
+ 			dev_err(dev, "Error parsing 'color' property (%d)\n", ret);
+-		else if (props->color >= LED_COLOR_ID_MAX)
++			return ret;
++		} else if (props->color >= LED_COLOR_ID_MAX) {
+ 			dev_err(dev, "LED color identifier out of range\n");
+-		else
+-			props->color_present = true;
++			return ret;
++		}
++		props->color_present = true;
+ 	}
+ 
++	if (fwnode_property_present(fwnode, "function")) {
++		ret = fwnode_property_read_string(fwnode, "function",
++						  &props->function);
++		if (ret) {
++			dev_err(dev,
++				"Error parsing 'function' property (%d)\n",
++				ret);
++			return ret;
++		}
 +	}
  
- 	tx_cmd_a = (u32)(skb->len & TX_CMD_A_LEN_MASK_) | TX_CMD_A_FCS_;
+-	if (!fwnode_property_present(fwnode, "function"))
+-		return;
+-
+-	ret = fwnode_property_read_string(fwnode, "function", &props->function);
+-	if (ret) {
+-		dev_err(dev,
+-			"Error parsing 'function' property (%d)\n",
+-			ret);
++	if (fwnode_property_present(fwnode, "function-enumerator")) {
++		ret = fwnode_property_read_u32(fwnode, "function-enumerator",
++					       &props->func_enum);
++		if (ret) {
++			dev_err(dev,
++				"Error parsing 'function-enumerator' property (%d)\n",
++				ret);
++			return ret;
++		}
++		props->func_enum_present = true;
+ 	}
  
+-	if (!fwnode_property_present(fwnode, "function-enumerator"))
+-		return;
++	if (fwnode_property_present(fwnode, "default-state")) {
++		ret = fwnode_property_read_string(fwnode, "default-state",
++						  &props->default_state);
++		if (ret) {
++			dev_err(dev,
++				"Error parsing 'default-state' property (%d)\n",
++				ret);
++			return ret;
++		}
++	}
+ 
+-	ret = fwnode_property_read_u32(fwnode, "function-enumerator",
+-				       &props->func_enum);
+-	if (ret) {
+-		dev_err(dev,
+-			"Error parsing 'function-enumerator' property (%d)\n",
+-			ret);
+-	} else {
+-		props->func_enum_present = true;
++	if (fwnode_property_present(fwnode, "linux,default-trigger")) {
++		ret = fwnode_property_read_string(fwnode,
++						  "linux,default-trigger",
++						  &props->default_trigger);
++		if (ret)
++			dev_err(dev,
++				"Error parsing 'linux,default-trigger' property (%d)\n",
++				ret);
+ 	}
++	return ret;
+ }
++EXPORT_SYMBOL_GPL(led_parse_fwnode_props);
+ 
+ int led_compose_name(struct device *dev, struct led_init_data *init_data,
+-		     char *led_classdev_name)
++		     struct led_properties *props, char *led_classdev_name)
+ {
+-	struct led_properties props = {};
+-	struct fwnode_handle *fwnode = init_data->fwnode;
+ 	const char *devicename = init_data->devicename;
+ 
+ 	if (!led_classdev_name)
+ 		return -EINVAL;
+ 
+-	led_parse_fwnode_props(dev, fwnode, &props);
+-
+-	if (props.label) {
++	if (props->label) {
+ 		/*
+ 		 * If init_data.devicename is NULL, then it indicates that
+ 		 * DT label should be used as-is for LED class device name.
+@@ -436,23 +592,23 @@ int led_compose_name(struct device *dev, struct led_init_data *init_data,
+ 		 * the final LED class device name.
+ 		 */
+ 		if (!devicename) {
+-			strscpy(led_classdev_name, props.label,
++			strscpy(led_classdev_name, props->label,
+ 				LED_MAX_NAME_SIZE);
+ 		} else {
+ 			snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
+-				 devicename, props.label);
++				 devicename, props->label);
+ 		}
+-	} else if (props.function || props.color_present) {
++	} else if (props->function || props->color_present) {
+ 		char tmp_buf[LED_MAX_NAME_SIZE];
+ 
+-		if (props.func_enum_present) {
++		if (props->func_enum_present) {
+ 			snprintf(tmp_buf, LED_MAX_NAME_SIZE, "%s:%s-%d",
+-				 props.color_present ? led_colors[props.color] : "",
+-				 props.function ?: "", props.func_enum);
++				 props->color_present ? led_colors[props->color] : "",
++				 props->function ?: "", props->func_enum);
+ 		} else {
+ 			snprintf(tmp_buf, LED_MAX_NAME_SIZE, "%s:%s",
+-				 props.color_present ? led_colors[props.color] : "",
+-				 props.function ?: "");
++				 props->color_present ? led_colors[props->color] : "",
++				 props->function ?: "");
+ 		}
+ 		if (init_data->devname_mandatory) {
+ 			snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
+@@ -468,11 +624,19 @@ int led_compose_name(struct device *dev, struct led_init_data *init_data,
+ 		}
+ 		snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
+ 			 devicename, init_data->default_label);
+-	} else if (is_of_node(fwnode)) {
+-		strscpy(led_classdev_name, to_of_node(fwnode)->name,
+-			LED_MAX_NAME_SIZE);
+-	} else
+-		return -EINVAL;
++	} else {
++		struct fwnode_handle *fwnode = led_get_fwnode(dev, init_data);
++		int ret = -EINVAL;
++
++		if (is_of_node(fwnode)) {
++			ret = 0;
++			strscpy(led_classdev_name, to_of_node(fwnode)->name,
++				LED_MAX_NAME_SIZE);
++		}
++		fwnode_handle_put(fwnode);
++
++		return ret;
++	}
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/leds.h b/include/linux/leds.h
+index 242258f7d837..af8ca4291d7d 100644
+--- a/include/linux/leds.h
++++ b/include/linux/leds.h
+@@ -13,6 +13,7 @@
+ #include <linux/kernfs.h>
+ #include <linux/list.h>
+ #include <linux/mutex.h>
++#include <linux/property.h>
+ #include <linux/rwsem.h>
+ #include <linux/spinlock.h>
+ #include <linux/timer.h>
+@@ -20,6 +21,7 @@
+ 
+ struct device;
+ struct led_pattern;
++struct led_classdev;
+ /*
+  * LED Core
+  */
+@@ -31,8 +33,47 @@ enum led_brightness {
+ 	LED_FULL	= 255,
+ };
+ 
++struct led_properties {
++	u32		color;
++	bool		color_present;
++	const char	*function;
++	u32		func_enum;
++	bool		func_enum_present;
++	const char	*label;
++	const char	*default_trigger;
++	const char	*default_state;
++	bool		brightness_keep;
++};
++
++struct led_fw_match_property {
++	const char *name;	/* Name of the property to match */
++	void *raw_val;		/* Raw property value as present in fwnode */
++	void *intval;		/* Property value if 8,16,32 or 64bit integer */
++	size_t size;		/* Size of value in bytes */
++};
++
+ struct led_init_data {
+-	/* device fwnode handle */
++	/*
++	 * If DT binding dictates the node name the driver can fill of_match
++	 * corresponding to node name describing this LED. If fwnode is given
++	 * the match is searched from it's child nodes. If not, the match is
++	 * searched from device's own child nodes.
++	 */
++	const char *of_match;
++	/*
++	 * If fwnode contains property with known value the driver can specify
++	 * correct propertty-value pair here to do the matching. This has higher
++	 * priority than of_match. If fwnode is given the match is searched
++	 * from it's child nodes. If not match is searched from device's
++	 * own child nodes.
++	 */
++	struct led_fw_match_property match_property;
++	/*
++	 * device fwnode handle. If of_match or led_compatible are not given
++	 * this is used for LED as given. If of_match or led_compatible are
++	 * given then this is used as a parent node whose child nodes are
++	 * scanned for given match.
++	 */
+ 	struct fwnode_handle *fwnode;
+ 	/*
+ 	 * default <color:function> tuple, for backward compatibility
+@@ -53,9 +94,19 @@ struct led_init_data {
+ 	 * set it to true
+ 	 */
+ 	bool devname_mandatory;
++	/*
++	 * Callback which a LED driver can register if it has own non-standard
++	 * DT properties. Core calls this with the located DT node during
++	 * class_device registration
++	 */
++	int (*of_parse_cb)(struct led_classdev *ld, struct fwnode_handle *fw,
++			    struct led_properties *props);
++	 /* LED core should parse and handle the common firmware properties */
++	bool parse_fwnode;
+ };
+ 
+ struct led_classdev {
++	struct led_init_data	*init_data;
+ 	const char		*name;
+ 	enum led_brightness	 brightness;
+ 	enum led_brightness	 max_brightness;
+@@ -148,6 +199,7 @@ struct led_classdev {
+ 
+ 	/* Ensures consistent access to the LED Flash Class device */
+ 	struct mutex		led_access;
++	bool			fwnode_owned;
+ };
+ 
+ /**
+@@ -299,6 +351,7 @@ void led_sysfs_enable(struct led_classdev *led_cdev);
+  * led_compose_name - compose LED class device name
+  * @dev: LED controller device object
+  * @init_data: the LED class device initialization data
++ * @props: LED properties as parsed from fwnode.
+  * @led_classdev_name: composed LED class device name
+  *
+  * Create LED class device name basing on the provided init_data argument.
+@@ -308,7 +361,8 @@ void led_sysfs_enable(struct led_classdev *led_cdev);
+  * Returns: 0 on success or negative error value on failure
+  */
+ int led_compose_name(struct device *dev, struct led_init_data *init_data,
+-		     char *led_classdev_name);
++			    struct led_properties *props,
++			    char *led_classdev_name);
+ 
+ /**
+  * led_sysfs_is_disabled - check if LED sysfs interface is disabled
+@@ -321,6 +375,33 @@ static inline bool led_sysfs_is_disabled(struct led_classdev *led_cdev)
+ 	return led_cdev->flags & LED_SYSFS_DISABLE;
+ }
+ 
++/**
++ * led_get_fwnode - find fwnode matching given LED init data
++ * @parent: LED controller device this LED is driven by
++ * @init_data: the LED class device initialization data
++ *
++ * Find the fw node matching given LED init data.
++ * NOTE: Function increases refcount for found node. Caller must decrease
++ * refcount using fwnode_handle_put when finished with node.
++ *
++ * Returns: node handle or NULL if matching fw node was not found
++ */
++struct fwnode_handle *led_get_fwnode(struct device *parent,
++				      struct led_init_data *init_data);
++
++/**
++ * led_parse_fwnode_props - parse LED common properties from fwnode
++ * @dev: pointer to LED device.
++ * @fwnode: LED node containing the properties
++ * @props: structure where found property data is stored.
++ *
++ * Parse the common LED properties from fwnode.
++ *
++ * Returns: 0 on success or negative error value on failure
++ */
++int led_parse_fwnode_props(struct device *dev, struct fwnode_handle *fwnode,
++			   struct led_properties *props);
++
+ /*
+  * LED Triggers
+  */
+@@ -478,15 +559,6 @@ struct led_platform_data {
+ 	struct led_info	*leds;
+ };
+ 
+-struct led_properties {
+-	u32		color;
+-	bool		color_present;
+-	const char	*function;
+-	u32		func_enum;
+-	bool		func_enum_present;
+-	const char	*label;
+-};
+-
+ struct gpio_desc;
+ typedef int (*gpio_blink_set_t)(struct gpio_desc *desc, int state,
+ 				unsigned long *delay_on,
+-- 
+2.21.0
 
 
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
