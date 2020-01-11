@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC453C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F46C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8908E2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36E072082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737015;
-	bh=lTg5GAODvTblUNGEeU/zAHWtWfxOlrGH8S10r5uIj24=;
+	s=default; t=1578737025;
+	bh=rn+RqjIAdDdOswpcLXNztAWhWJuyC+dPZFWOqYFTTr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OkA2hejIiNYIAJC+a7fXKMCr3WZQG8XIgTBiz1msPcFlLGKVOutHM8g57YO1OUq2V
-	 x1I5n3PfDQxrq/XZT9fKMQoZtjkLOtLjWpgTNbBpmQYTpssDGpIy5ILKqFFnXY4qfU
-	 PQS+1DrR8dUs7TUehmBbuLbIabNUe+W4FkGxnf5k=
+	b=I/i5FfMNHwCkqUlb7wIdg8kOHhzD6HP5e5aGBXs3z4PzSop5PgJ5eJRnG0Q4P3DTa
+	 ngNt0+b/alJ72b5/4Lzp1J+X25AiyyEZRrRxEqVXLWtjx5IJRir7cYZvtsB+lNy2rN
+	 ayEmuByXXMX+XSPuAL1JMmGAX3vKVKK7HI4AWusU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgAKKDe (ORCPT
+        id S1729284AbgAKKDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:03:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35046 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:03:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728919AbgAKKDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:03:34 -0500
+        id S1728832AbgAKKDn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:03:43 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96A6C20848;
-        Sat, 11 Jan 2020 10:03:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BF7E2082E;
+        Sat, 11 Jan 2020 10:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737013;
-        bh=lTg5GAODvTblUNGEeU/zAHWtWfxOlrGH8S10r5uIj24=;
+        s=default; t=1578737022;
+        bh=rn+RqjIAdDdOswpcLXNztAWhWJuyC+dPZFWOqYFTTr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mx2O0n+mfg73GXlOdmBFMmaFbSn1Se063DE54eWZ8QTB6rJMPrdXEcP/mGPg/CaEK
-         K7i5qdtWK0mcMpvFgPArAg/UBcWwFmIJxlce9nfSw4doYq9yTNdzXtpIaBFTpy9Gl0
-         MlaLkabywinU7TWMz+M9Ng0eGtVHMuWNaZ648b4w=
+        b=lYT5XPrjG7zW2zh3kqg5cccgNgoyg5Jw0v5BZjC69ZKmjPIKNC6SZOLQj8N6G1RDR
+         6JRHzYRaodcZQ1pqa5Bk+JYdwqW20KZcYQs9o3ipOa06AgSSBDLGqgflpWOlIDt6HW
+         aDW/VFn7APITWHAmPtK4lluyILCN9aPdnKY6wh5M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 63/91] netfilter: uapi: Avoid undefined left-shift in xt_sctp.h
-Date:   Sat, 11 Jan 2020 10:49:56 +0100
-Message-Id: <20200111094908.429777643@linuxfoundation.org>
+Subject: [PATCH 4.9 64/91] spi: spi-cavium-thunderx: Add missing pci_release_regions()
+Date:   Sat, 11 Jan 2020 10:49:57 +0100
+Message-Id: <20200111094908.774870716@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -60,48 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Sutter <phil@nwl.cc>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit 164166558aacea01b99c8c8ffb710d930405ba69 ]
+[ Upstream commit a841e2853e1afecc2ee692b8cc5bff606bc84e4c ]
 
-With 'bytes(__u32)' being 32, a left-shift of 31 may happen which is
-undefined for the signed 32-bit value 1. Avoid this by declaring 1 as
-unsigned.
+The driver forgets to call pci_release_regions() in probe failure
+and remove.
+Add the missed calls to fix it.
 
-Signed-off-by: Phil Sutter <phil@nwl.cc>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191206075500.18525-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/netfilter/xt_sctp.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/spi/spi-cavium-thunderx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/uapi/linux/netfilter/xt_sctp.h b/include/uapi/linux/netfilter/xt_sctp.h
-index 58ffcfb7978e..c2b0886c7c25 100644
---- a/include/uapi/linux/netfilter/xt_sctp.h
-+++ b/include/uapi/linux/netfilter/xt_sctp.h
-@@ -40,19 +40,19 @@ struct xt_sctp_info {
- #define SCTP_CHUNKMAP_SET(chunkmap, type) 		\
- 	do { 						\
- 		(chunkmap)[type / bytes(__u32)] |= 	\
--			1 << (type % bytes(__u32));	\
-+			1u << (type % bytes(__u32));	\
- 	} while (0)
+diff --git a/drivers/spi/spi-cavium-thunderx.c b/drivers/spi/spi-cavium-thunderx.c
+index 877937706240..828fbbebc3c4 100644
+--- a/drivers/spi/spi-cavium-thunderx.c
++++ b/drivers/spi/spi-cavium-thunderx.c
+@@ -81,6 +81,7 @@ static int thunderx_spi_probe(struct pci_dev *pdev,
  
- #define SCTP_CHUNKMAP_CLEAR(chunkmap, type)		 	\
- 	do {							\
- 		(chunkmap)[type / bytes(__u32)] &= 		\
--			~(1 << (type % bytes(__u32)));	\
-+			~(1u << (type % bytes(__u32)));	\
- 	} while (0)
+ error:
+ 	clk_disable_unprepare(p->clk);
++	pci_release_regions(pdev);
+ 	spi_master_put(master);
+ 	return ret;
+ }
+@@ -95,6 +96,7 @@ static void thunderx_spi_remove(struct pci_dev *pdev)
+ 		return;
  
- #define SCTP_CHUNKMAP_IS_SET(chunkmap, type) 			\
- ({								\
- 	((chunkmap)[type / bytes (__u32)] & 		\
--		(1 << (type % bytes (__u32)))) ? 1: 0;	\
-+		(1u << (type % bytes (__u32)))) ? 1: 0;	\
- })
- 
- #define SCTP_CHUNKMAP_RESET(chunkmap) \
+ 	clk_disable_unprepare(p->clk);
++	pci_release_regions(pdev);
+ 	/* Put everything in a known state. */
+ 	writeq(0, p->register_base + OCTEON_SPI_CFG(p));
+ }
 -- 
 2.20.1
 
