@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DA1C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34466C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C0CB206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09C072064C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737314;
-	bh=5xoNdYn26opBSDh04DZK7AGpg1tz1m+vcD613elU4+s=;
+	s=default; t=1578737325;
+	bh=M/AhzUGI5hmN2hMMcmvCmBrnaWXHGDnoI5kLM8rRwP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YnCofZ3RlUNZ1130BS3cgPfB3jv4sTQO1GbltnVaZG7B2go3+J/kLk6MAekoIlOEp
-	 0wZXHp7juPe2w2g2Ld8DEoexEiY6O1kD6tsgvPL21peb5F6PuExxnW/nTPhURGvvhJ
-	 8BJQKrVR1FoBxpERsha+dw8EXPYk/RmrZiS/INj0=
+	b=F4WLg+IYTz+Ub6D2Ar9U5TKpQwg+e7M+xIDQcoA8S5X3HAO+SJbCOh40JW/oujKDe
+	 w1a6ha5DfegEg4F9sACXxat3ZDXeHTiQkToGi/0/34iczD5MtEuKmE7r+L4nVa6y2j
+	 TI+3kYNSONXPnfC764pnt5vsZ0Ejk3Wp6s1rbT4c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgAKKId (ORCPT
+        id S1729616AbgAKKIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:08:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43660 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:08:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728949AbgAKKIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:08:32 -0500
+        id S1728949AbgAKKIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:08:42 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78D4C2082E;
-        Sat, 11 Jan 2020 10:08:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED62D2064C;
+        Sat, 11 Jan 2020 10:08:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737312;
-        bh=5xoNdYn26opBSDh04DZK7AGpg1tz1m+vcD613elU4+s=;
+        s=default; t=1578737321;
+        bh=M/AhzUGI5hmN2hMMcmvCmBrnaWXHGDnoI5kLM8rRwP4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gaoe1+cPU5rhDHf6iZbrjvIu8rxBST275UVhdRYB84zUSd1kHfCwrqaANKotmf0gs
-         5eXy3Q9BP1/PSBvspB9s6plZ2PdG8UkDhoQyFnCmuV5wuL6MSJ+1IcDFUAooPd0a/z
-         88KpHuJAykXgRnY1dRMY80RQz6wWOdwRBB05Siz4=
+        b=piRYLjppQTS/iAym6onu7I2SzZ8eixEwObfqGLYDR/lx8VZQAEu/pYH1wuOLRycJa
+         o3hXet60/XOVX8QwalUmO/zXL69bUOUcXVA0hTGwgdtskBrarK5ATtNFNrQ2HmRaV5
+         o4LT8UfPUuICnDaToLQeAnW7OtIlaF4Oytmdz3mE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, qize wang <wangqize888888888@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 04/62] netfilter: ctnetlink: netns exit must wait for callbacks
-Date:   Sat, 11 Jan 2020 10:49:46 +0100
-Message-Id: <20200111094839.309829854@linuxfoundation.org>
+Subject: [PATCH 4.14 05/62] mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()
+Date:   Sat, 11 Jan 2020 10:49:47 +0100
+Message-Id: <20200111094839.726725190@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -60,77 +60,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Westphal <fw@strlen.de>
+From: qize wang <wangqize888888888@gmail.com>
 
-[ Upstream commit 18a110b022a5c02e7dc9f6109d0bd93e58ac6ebb ]
+[ Upstream commit 1e58252e334dc3f3756f424a157d1b7484464c40 ]
 
-Curtis Taylor and Jon Maxwell reported and debugged a crash on 3.10
-based kernel.
+mwifiex_process_tdls_action_frame() without checking
+the incoming tdls infomation element's vality before use it,
+this may cause multi heap buffer overflows.
 
-Crash occurs in ctnetlink_conntrack_events because net->nfnl socket is
-NULL.  The nfnl socket was set to NULL by netns destruction running on
-another cpu.
+Fix them by putting vality check before use it.
 
-The exiting network namespace calls the relevant destructors in the
-following order:
+IE is TLV struct, but ht_cap and  ht_oper aren’t TLV struct.
+the origin marvell driver code is wrong:
 
-1. ctnetlink_net_exit_batch
+memcpy(&sta_ptr->tdls_cap.ht_oper, pos,....
+memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos,...
 
-This nulls out the event callback pointer in struct netns.
+Fix the bug by changing pos(the address of IE) to
+pos+2 ( the address of IE value ).
 
-2. nfnetlink_net_exit_batch
-
-This nulls net->nfnl socket and frees it.
-
-3. nf_conntrack_cleanup_net_list
-
-This removes all remaining conntrack entries.
-
-This is order is correct. The only explanation for the crash so ar is:
-
-cpu1: conntrack is dying, eviction occurs:
- -> nf_ct_delete()
-   -> nf_conntrack_event_report \
-     -> nf_conntrack_eventmask_report
-       -> notify->fcn() (== ctnetlink_conntrack_events).
-
-cpu1: a. fetches rcu protected pointer to obtain ctnetlink event callback.
-      b. gets interrupted.
- cpu2: runs netns exit handlers:
-     a runs ctnetlink destructor, event cb pointer set to NULL.
-     b runs nfnetlink destructor, nfnl socket is closed and set to NULL.
-cpu1: c. resumes and trips over NULL net->nfnl.
-
-Problem appears to be that ctnetlink_net_exit_batch only prevents future
-callers of nf_conntrack_eventmask_report() from obtaining the callback.
-It doesn't wait of other cpus that might have already obtained the
-callbacks address.
-
-I don't see anything in upstream kernels that would prevent similar
-crash: We need to wait for all cpus to have exited the event callback.
-
-Fixes: 9592a5c01e79dbc59eb56fa ("netfilter: ctnetlink: netns support")
-Signed-off-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: qize wang <wangqize888888888@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_conntrack_netlink.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/marvell/mwifiex/tdls.c | 70 +++++++++++++++++++--
+ 1 file changed, 64 insertions(+), 6 deletions(-)
 
-diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
-index c781c9a1a697..39a32edaa92c 100644
---- a/net/netfilter/nf_conntrack_netlink.c
-+++ b/net/netfilter/nf_conntrack_netlink.c
-@@ -3422,6 +3422,9 @@ static void __net_exit ctnetlink_net_exit_batch(struct list_head *net_exit_list)
+diff --git a/drivers/net/wireless/marvell/mwifiex/tdls.c b/drivers/net/wireless/marvell/mwifiex/tdls.c
+index e76af2866a19..b5340af9fa5e 100644
+--- a/drivers/net/wireless/marvell/mwifiex/tdls.c
++++ b/drivers/net/wireless/marvell/mwifiex/tdls.c
+@@ -956,59 +956,117 @@ void mwifiex_process_tdls_action_frame(struct mwifiex_private *priv,
  
- 	list_for_each_entry(net, net_exit_list, exit_list)
- 		ctnetlink_net_exit(net);
-+
-+	/* wait for other cpus until they are done with ctnl_notifiers */
-+	synchronize_rcu();
- }
+ 		switch (*pos) {
+ 		case WLAN_EID_SUPP_RATES:
++			if (pos[1] > 32)
++				return;
+ 			sta_ptr->tdls_cap.rates_len = pos[1];
+ 			for (i = 0; i < pos[1]; i++)
+ 				sta_ptr->tdls_cap.rates[i] = pos[i + 2];
+ 			break;
  
- static struct pernet_operations ctnetlink_net_ops = {
+ 		case WLAN_EID_EXT_SUPP_RATES:
++			if (pos[1] > 32)
++				return;
+ 			basic = sta_ptr->tdls_cap.rates_len;
++			if (pos[1] > 32 - basic)
++				return;
+ 			for (i = 0; i < pos[1]; i++)
+ 				sta_ptr->tdls_cap.rates[basic + i] = pos[i + 2];
+ 			sta_ptr->tdls_cap.rates_len += pos[1];
+ 			break;
+ 		case WLAN_EID_HT_CAPABILITY:
+-			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos,
++			if (pos > end - sizeof(struct ieee80211_ht_cap) - 2)
++				return;
++			if (pos[1] != sizeof(struct ieee80211_ht_cap))
++				return;
++			/* copy the ie's value into ht_capb*/
++			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos + 2,
+ 			       sizeof(struct ieee80211_ht_cap));
+ 			sta_ptr->is_11n_enabled = 1;
+ 			break;
+ 		case WLAN_EID_HT_OPERATION:
+-			memcpy(&sta_ptr->tdls_cap.ht_oper, pos,
++			if (pos > end -
++			    sizeof(struct ieee80211_ht_operation) - 2)
++				return;
++			if (pos[1] != sizeof(struct ieee80211_ht_operation))
++				return;
++			/* copy the ie's value into ht_oper*/
++			memcpy(&sta_ptr->tdls_cap.ht_oper, pos + 2,
+ 			       sizeof(struct ieee80211_ht_operation));
+ 			break;
+ 		case WLAN_EID_BSS_COEX_2040:
++			if (pos > end - 3)
++				return;
++			if (pos[1] != 1)
++				return;
+ 			sta_ptr->tdls_cap.coex_2040 = pos[2];
+ 			break;
+ 		case WLAN_EID_EXT_CAPABILITY:
++			if (pos > end - sizeof(struct ieee_types_header))
++				return;
++			if (pos[1] < sizeof(struct ieee_types_header))
++				return;
++			if (pos[1] > 8)
++				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.extcap, pos,
+ 			       sizeof(struct ieee_types_header) +
+ 			       min_t(u8, pos[1], 8));
+ 			break;
+ 		case WLAN_EID_RSN:
++			if (pos > end - sizeof(struct ieee_types_header))
++				return;
++			if (pos[1] < sizeof(struct ieee_types_header))
++				return;
++			if (pos[1] > IEEE_MAX_IE_SIZE -
++			    sizeof(struct ieee_types_header))
++				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.rsn_ie, pos,
+ 			       sizeof(struct ieee_types_header) +
+ 			       min_t(u8, pos[1], IEEE_MAX_IE_SIZE -
+ 				     sizeof(struct ieee_types_header)));
+ 			break;
+ 		case WLAN_EID_QOS_CAPA:
++			if (pos > end - 3)
++				return;
++			if (pos[1] != 1)
++				return;
+ 			sta_ptr->tdls_cap.qos_info = pos[2];
+ 			break;
+ 		case WLAN_EID_VHT_OPERATION:
+-			if (priv->adapter->is_hw_11ac_capable)
+-				memcpy(&sta_ptr->tdls_cap.vhtoper, pos,
++			if (priv->adapter->is_hw_11ac_capable) {
++				if (pos > end -
++				    sizeof(struct ieee80211_vht_operation) - 2)
++					return;
++				if (pos[1] !=
++				    sizeof(struct ieee80211_vht_operation))
++					return;
++				/* copy the ie's value into vhtoper*/
++				memcpy(&sta_ptr->tdls_cap.vhtoper, pos + 2,
+ 				       sizeof(struct ieee80211_vht_operation));
++			}
+ 			break;
+ 		case WLAN_EID_VHT_CAPABILITY:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos,
++				if (pos > end -
++				    sizeof(struct ieee80211_vht_cap) - 2)
++					return;
++				if (pos[1] != sizeof(struct ieee80211_vht_cap))
++					return;
++				/* copy the ie's value into vhtcap*/
++				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos + 2,
+ 				       sizeof(struct ieee80211_vht_cap));
+ 				sta_ptr->is_11ac_enabled = 1;
+ 			}
+ 			break;
+ 		case WLAN_EID_AID:
+-			if (priv->adapter->is_hw_11ac_capable)
++			if (priv->adapter->is_hw_11ac_capable) {
++				if (pos > end - 4)
++					return;
++				if (pos[1] != 2)
++					return;
+ 				sta_ptr->tdls_cap.aid =
+ 					get_unaligned_le16((pos + 2));
++			}
++			break;
+ 		default:
+ 			break;
+ 		}
 -- 
 2.20.1
 
