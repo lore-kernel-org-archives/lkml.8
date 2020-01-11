@@ -2,118 +2,121 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C00CC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB634C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38750206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F1320866
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:09:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bvMyDRkg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731101AbgAKUHO (ORCPT
+        id S1731118AbgAKUJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 15:07:14 -0500
-Received: from sauhun.de ([88.99.104.3]:47180 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731046AbgAKUHO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 15:07:14 -0500
-Received: from localhost (p54B3334B.dip0.t-ipconnect.de [84.179.51.75])
-        by pokefinder.org (Postfix) with ESMTPSA id AA6E62C06AC;
-        Sat, 11 Jan 2020 21:07:11 +0100 (CET)
-Date:   Sat, 11 Jan 2020 21:07:11 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PULL REQUEST] i2c for 5.5
-Message-ID: <20200111200704.GA5308@kunai>
+        Sat, 11 Jan 2020 15:09:08 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42727 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731045AbgAKUJH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 15:09:07 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 4so2835377pfz.9;
+        Sat, 11 Jan 2020 12:09:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wk18T4+rpZl8nR0ilzJ0XuyNcWqQpKsC9psMIMKwahw=;
+        b=bvMyDRkgHeE0IP2M6Cb7pVNb0PIDFKi/X3GH8aiacqdXoZGQ+wSmWUh7VFvPDR/eB2
+         MShbCmt0cjBw0Wt0aBfvj5LlY/e1ynus/ZidQWxWtFxELwnUM63zaaw1NT549vMV81zh
+         JQfm2NdQp8fffj22vVlgV3Q0UJ+o3PEV6qhvU1+h/3BN/ytXDy1+hfQ7dmwc4RV2iGbR
+         ohWp+IgFOqgqzbnTWxqAWkuxgLEac0wDMvaM+IzJU+f78gRoENDZlCOeUtSWsP707Efi
+         gM/TxuOHo6a4H8ifbUJivPgwM9a/msuLuwDaEv4jrOB6OlOJ3xJYrrnZNU39uGJzOU1L
+         BAbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wk18T4+rpZl8nR0ilzJ0XuyNcWqQpKsC9psMIMKwahw=;
+        b=YGA7l+yrOjhuwEwmUnRU38tlarsay0o/I0Ho7KgVexmVRavrWANh0dFkiubP3jlmeC
+         Pn6MgDe0nMVTOTlDHlxND/pHDNGGM7Fs1o5wNieYzaYwmXtvYsi8fG4DN5o+eUWt+sJG
+         oae+47bDyMDVSbQ1ox1diDJMxheggwqjW/lEVndBXS6GFb1tD+82VcRntqqMJpAAB7JZ
+         OCvs7mjuWFtBvQdNPmASb20olyXTdexp8f9Kn4MoXLtKD3Y+Nss5ZslXpjB+d0j8QjB0
+         bmE0t4J/AC99loaS2xj8nmC9g1VaMTT/Qcrji04wv+MmDrNP3NckCh9Oc3/0i0Q6Tj8M
+         PAxQ==
+X-Gm-Message-State: APjAAAWYai814P6loub/YtFUxHXT9xpPwmtqzvta9ijF37CcfpRy5bCD
+        uZWhaav/YCyrgdFelhO1P5u+PDCB
+X-Google-Smtp-Source: APXvYqx8hGIdiTuPmg6kYRpoeZEdGolClTAJo7GIxOR7t0erRze87CbnBqf8fyP0sz85F7Occ+s8Tg==
+X-Received: by 2002:a63:4d1b:: with SMTP id a27mr12430008pgb.352.1578773346559;
+        Sat, 11 Jan 2020 12:09:06 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j17sm7769342pfa.28.2020.01.11.12.09.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Jan 2020 12:09:05 -0800 (PST)
+Subject: Re: [PATCH 4.9 00/91] 4.9.209-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200111094844.748507863@linuxfoundation.org>
+ <0668a7b6-502b-719b-a2eb-59519de7bf3e@roeck-us.net>
+ <20200111175114.GA403776@kroah.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <8f9def49-8985-e7ca-417b-a4069fc6e8a3@roeck-us.net>
+Date:   Sat, 11 Jan 2020 12:09:04 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200111175114.GA403776@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 1/11/20 9:51 AM, Greg Kroah-Hartman wrote:
+> On Sat, Jan 11, 2020 at 07:44:31AM -0800, Guenter Roeck wrote:
+>> On 1/11/20 1:48 AM, Greg Kroah-Hartman wrote:
+>>> This is the start of the stable review cycle for the 4.9.209 release.
+>>> There are 91 patches in this series, all will be posted as a response
+>>> to this one.  If anyone has any issues with these being applied, please
+>>> let me know.
+>>>
+>>> Responses should be made by Mon, 13 Jan 2020 09:46:17 +0000.
+>>> Anything received after that time might be too late.
+>>>
+>>
+>> Build results:
+>> 	total: 172 pass: 169 fail: 3
+>> Failed builds:
+>> 	arm:allmodconfig
+>> 	arm:u8500_defconfig
+>> 	arm64:allmodconfig
+>> Qemu test results:
+>> 	total: 358 pass: 358 fail: 0
+>>
+>> drivers/hwtracing/coresight/coresight-tmc-etf.c: In function 'tmc_alloc_etf_buffer':
+>> drivers/hwtracing/coresight/coresight-tmc-etf.c:295:10: error: 'event' undeclared
+> 
+> Ugh, I thought I dropped those earlier, but they came back through
+> Sasha's autosel.  There's another build error with another coresight
+> patch in there too, looks rare enough that your scripts didn't catch it
+> :)
+> 
+> I'll go push out a -rc2 now with the offending patches dropped.
+> 
 
---2oS5YaxWCcQjTEyO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For v4.9.208-90-g0dd28c11952d:
 
-Linus,
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 358 pass: 358 fail: 0
 
-=66rom I2C world, here are two driver bugfixes, a documentation fix, and a
-removal of a spec violation for the bus recovery algorithm in the core.
-
-Please pull.
-
-Thanks,
-
-   Wolfram
-
-
-The following changes since commit c79f46a282390e0f5b306007bf7b11a46d529538:
-
-  Linux 5.5-rc5 (2020-01-05 14:23:27 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-curre=
-nt
-
-for you to fetch changes up to cf8ce8b80f8bf9669f6ec4e71e16668430febdac:
-
-  i2c: fix bus recovery stop mode timing (2020-01-09 22:21:08 +0100)
-
-----------------------------------------------------------------
-Eugen Hristev (2):
-      i2c: at91: fix clk_offset for sam9x60
-      dt-bindings: i2c: at91: fix i2c-sda-hold-time-ns documentation for sa=
-m9x60
-
-Russell King (1):
-      i2c: fix bus recovery stop mode timing
-
-Stefan Wahren (1):
-      i2c: bcm2835: Store pointer to bus clock
-
-
-with much appreciated quality assurance from
-----------------------------------------------------------------
-Codrin Ciubotariu (1):
-      (Rev.) i2c: at91: fix clk_offset for sam9x60
-
- Documentation/devicetree/bindings/i2c/i2c-at91.txt |  6 ++++--
- drivers/i2c/busses/i2c-at91-core.c                 |  2 +-
- drivers/i2c/busses/i2c-bcm2835.c                   | 17 ++++++++---------
- drivers/i2c/i2c-core-base.c                        | 13 ++++++++++---
- 4 files changed, 23 insertions(+), 15 deletions(-)
-
---2oS5YaxWCcQjTEyO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4aKuMACgkQFA3kzBSg
-KbYAAg/+Ihepsp+HZa8Pjwu8DvfIOAKWINVVXObI/1oftlpqKwnEICzdvLc7/zJt
-enIztwdaxXkPx51hwJXRQlATlAE5GkrBmG++NsM/ltiajFCcXyzYjHF1hwtiOGbS
-ZDbKu7TGHrWZXDCgR3ZpymyvE1dgqXyxSBAJzf/iejTx0wWqdSRq2Bvxo+XsZnww
-ye/zZbY8ToH1+94ruckgksx05yiB0YHXFgwuNapI79jJSgbKHUyVy11Ab6LPGOlu
-5tsov6tmUnpOhiaXeEoDZwrPAsPMpgboui+lzQ9DdCVD0rWTsY3dwBuruRFHcYsp
-bn8WcHEfmYgTMg3/RWxqQDGaZ4MBI+gX2Ld8has6p3/qu55ijgT6seXIDbbr5q2N
-ifDAK5tEoUxVHXN4ZZhY1uVGkaWtmiP/ASmOyLad9kUWMj7IIUsEMfTuBSOum+q6
-IEZB1EpOBN43fq09oyL9KeqeF9+/eL5gNECie8iie8VZ5vPd/fzNDA44iJzUI5Rp
-+j8sWu3y6xB6ml1LZS0LiTMAqfVi1y0gKmr/MnoTFb8UILr8k+knhiQPvtaard8m
-cj48SovVgRZ9GaCr8dG4Uc3BLboo8mwPJAFRUTXRPc84h/ed823+n2PzKixkLOZy
-aGl8eZuxH2ZIQufEsheu6ICWBYCHsYyzz7LQPplwpboIERxs47g=
-=nWNm
------END PGP SIGNATURE-----
-
---2oS5YaxWCcQjTEyO--
+Guenter
