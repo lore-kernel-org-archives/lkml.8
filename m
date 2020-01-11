@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9749C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B67C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABA2E2187F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604BE2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738230;
-	bh=EydVJe9a2aFceUo5JpBojCfmSL5Lb+6U5EVpz1YQors=;
+	s=default; t=1578738239;
+	bh=FI2zumC+h06Z1xumFA3Cq4/NFMfxrB4/U/qNtkyGovA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BiGHwyz5kBq/OBjjmAc9/AbBHn9yWi0QBV2cO89VInq0LWozZNNKb5nkqY3USOrmh
-	 a/7si0Lhe324v6HNAhcAZ5cYVX2834/SkWTtdrEwnDAouxZbxEp8WT9KFXY9L+sFov
-	 WX6Y31HLae+PJN0HXl8bgnTpeqmhWDtl0FMLlffE=
+	b=KXTtJ1i7FYXqhHoA1xFZHaKV4S8lqoCARw5lGpgzmZXhAW5W5m9sUYy2EoPMexIwV
+	 Kn8RyxWvIYhdlMG9heVKCd2SYz9tEPebQsZg5GiP4asnk7gUxjJmTPyZ9GcsNCWPLg
+	 xKGnDzkSJpe8uXd47FVzNQFa+Bf3mX/BMLsb7CXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbgAKKXt (ORCPT
+        id S1730788AbgAKKX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:23:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51490 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:23:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728833AbgAKKXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:23:46 -0500
+        id S1730776AbgAKKXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:23:52 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41945214DB;
-        Sat, 11 Jan 2020 10:23:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D3342082E;
+        Sat, 11 Jan 2020 10:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738226;
-        bh=EydVJe9a2aFceUo5JpBojCfmSL5Lb+6U5EVpz1YQors=;
+        s=default; t=1578738231;
+        bh=FI2zumC+h06Z1xumFA3Cq4/NFMfxrB4/U/qNtkyGovA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UGqT9sOVL+At/KEtm0b+QgEcThQ9/4p+9Pzu1kUHe7BDBmxCw1weUCE11HgCPiBT3
-         OGbOFwuRAKoNUgrgnnIE07kYZ9fO8Karb7XceG6ikXAoMVBTPDCgiSMvix55/SSId8
-         3eDSWih26jBQz4z7TwQNDfIx3N4KJx1ANYKNqFeQ=
+        b=ZBtQ+LmGCM1wlzEx1uMwVtlV31Y83/f7wkXuUjHSaJnX17tNDp4yDzMVa7MacqbiC
+         Np6VAqdOPa4R3EftsiQdjpIwDUyzseMokMZVI3tg9yXdfFMHxZ6aTgobLTUZKgit9P
+         WuUh2kImybx/ohqOf2ZutL3PwzXq8hQTDC7m7oDE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 037/165] selftests/ftrace: Fix multiple kprobe testcase
-Date:   Sat, 11 Jan 2020 10:49:16 +0100
-Message-Id: <20200111094924.191333723@linuxfoundation.org>
+Subject: [PATCH 5.4 028/165] netfilter: nft_set_rbtree: bogus lookup/get on consecutive elements in named sets
+Date:   Sat, 11 Jan 2020 10:49:07 +0100
+Message-Id: <20200111094923.091623278@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,45 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 5cc6c8d4a99d0ee4d5466498e258e593df1d3eb6 ]
+[ Upstream commit db3b665dd77b34e34df00e17d7b299c98fcfb2c5 ]
 
-Fix multiple kprobe event testcase to work it correctly.
-There are 2 bugfixes.
- - Since `wc -l FILE` returns not only line number but also
-   FILE filename, following "if" statement always failed.
-   Fix this bug by replacing it with 'cat FILE | wc -l'
- - Since "while do-done loop" block with pipeline becomes a
-   subshell, $N local variable is not update outside of
-   the loop.
-   Fix this bug by using actual target number (256) instead
-   of $N.
+The existing rbtree implementation might store consecutive elements
+where the closing element and the opening element might overlap, eg.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+	[ a, a+1) [ a+1, a+2)
+
+This patch removes the optimization for non-anonymous sets in the exact
+matching case, where it is assumed to stop searching in case that the
+closing element is found. Instead, invalidate candidate interval and
+keep looking further in the tree.
+
+The lookup/get operation might return false, while there is an element
+in the rbtree. Moreover, the get operation returns true as if a+2 would
+be in the tree. This happens with named sets after several set updates.
+
+The existing lookup optimization (that only works for the anonymous
+sets) might not reach the opening [ a+1,... element if the closing
+...,a+1) is found in first place when walking over the rbtree. Hence,
+walking the full tree in that case is needed.
+
+This patch fixes the lookup and get operations.
+
+Fixes: e701001e7cbe ("netfilter: nft_rbtree: allow adjacent intervals with dynamic updates")
+Fixes: ba0e4d9917b4 ("netfilter: nf_tables: get set elements via netlink")
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../selftests/ftrace/test.d/kprobe/multiple_kprobes.tc      | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/nft_set_rbtree.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc b/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
-index 5862eee91e1d..6e3dbe5f96b7 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
-@@ -20,9 +20,9 @@ while read i; do
-   test $N -eq 256 && break
- done
+diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
+index 57123259452f..a9f804f7a04a 100644
+--- a/net/netfilter/nft_set_rbtree.c
++++ b/net/netfilter/nft_set_rbtree.c
+@@ -74,8 +74,13 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
+ 				parent = rcu_dereference_raw(parent->rb_left);
+ 				continue;
+ 			}
+-			if (nft_rbtree_interval_end(rbe))
+-				goto out;
++			if (nft_rbtree_interval_end(rbe)) {
++				if (nft_set_is_anonymous(set))
++					return false;
++				parent = rcu_dereference_raw(parent->rb_left);
++				interval = NULL;
++				continue;
++			}
  
--L=`wc -l kprobe_events`
--if [ $L -ne $N ]; then
--  echo "The number of kprobes events ($L) is not $N"
-+L=`cat kprobe_events | wc -l`
-+if [ $L -ne 256 ]; then
-+  echo "The number of kprobes events ($L) is not 256"
-   exit_fail
- fi
+ 			*ext = &rbe->ext;
+ 			return true;
+@@ -88,7 +93,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
+ 		*ext = &interval->ext;
+ 		return true;
+ 	}
+-out:
++
+ 	return false;
+ }
+ 
+@@ -139,8 +144,10 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
+ 			if (flags & NFT_SET_ELEM_INTERVAL_END)
+ 				interval = rbe;
+ 		} else {
+-			if (!nft_set_elem_active(&rbe->ext, genmask))
++			if (!nft_set_elem_active(&rbe->ext, genmask)) {
+ 				parent = rcu_dereference_raw(parent->rb_left);
++				continue;
++			}
+ 
+ 			if (!nft_set_ext_exists(&rbe->ext, NFT_SET_EXT_FLAGS) ||
+ 			    (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END) ==
+@@ -148,7 +155,11 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
+ 				*elem = rbe;
+ 				return true;
+ 			}
+-			return false;
++
++			if (nft_rbtree_interval_end(rbe))
++				interval = NULL;
++
++			parent = rcu_dereference_raw(parent->rb_left);
+ 		}
+ 	}
  
 -- 
 2.20.1
