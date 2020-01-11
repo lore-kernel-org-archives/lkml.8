@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85172C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F35CC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514AD20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D62432082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738305;
-	bh=sA28e4/Vn28o0eBK2OtFILC07rU4A36VwG070Roqi1Y=;
+	s=default; t=1578738313;
+	bh=/HIwhlNmpl78m/mcuJJ4q/f+IzAoDcULwkDxvESQ+wM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KQ0401iLEW+0e5huJaF8XjQitSW/YExv7vq4+0xCw8Iwpqqql3p1Klf1wf5JJFqF/
-	 7Kg+gMB5+4RimrvuWXPJiLYgjirkENzomjsq2FjPHOBvg8VUD6cEXDCFmC2Sng9MDZ
-	 7p9g4RZLlJ856zXXaxZ0JBjX8GlmMY8Fw0GX9L1I=
+	b=W5dUSfhiZa+XXgKw6riVIqyMbJhuImkgn0ERdHczueelnDOmrpF+HyKYPnOTlqYYP
+	 q1A6c79U771w8n4aD9T18ZTYoxqqqphDB2yz3U9ceVwfE5CeBq4akx7AgZqDqi/Wk0
+	 PrBX9BjyUSQdiV3XQJITrHlkDdTC1eOSYqNLx9/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731119AbgAKKZE (ORCPT
+        id S1730795AbgAKKZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:25:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54850 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:25:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731011AbgAKKY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:24:57 -0500
+        id S1730755AbgAKKZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:25:09 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F71A2082E;
-        Sat, 11 Jan 2020 10:24:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C277B24656;
+        Sat, 11 Jan 2020 10:25:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738296;
-        bh=sA28e4/Vn28o0eBK2OtFILC07rU4A36VwG070Roqi1Y=;
+        s=default; t=1578738308;
+        bh=/HIwhlNmpl78m/mcuJJ4q/f+IzAoDcULwkDxvESQ+wM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EqE39Rqrv/b1aQ+qjm2sR0uDC+8kFXI9j2gwEMunZ1z9ZkJDgvltWvr2GXGmM+sQr
-         8UD7Z2/BneFPODvUZY2daxYdnp14YnhT1Vtubr92sQijS0oiC2ah3iyS1EIYwLhWPy
-         UGr9ixSo2WZ7QP4Zx7lEDA8nr9gsB0TXLGE4a31s=
+        b=JtCLGCTQ3nVeTwrIAWSVLBYiGiTBnE8Su2sPeTLgXl7lgiOKlcE8gAMVlnw2lUbo4
+         3iai3uPFtKNmt1gf6AzGhc3KITJstrT56ZCuIZlAtnBo6UPdEGygaQTpnu6Gw7nvnE
+         mSI00bdt5I5+BQAUm3dDIXHHiwerDYJqexP05fwI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Mahshid Khezri <khezri.mahshid@gmail.com>,
         Paul Chaignon <paul.chaignon@orange.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
         Martin KaFai Lau <kafai@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 053/165] bpf, riscv: Limit to 33 tail calls
-Date:   Sat, 11 Jan 2020 10:49:32 +0100
-Message-Id: <20200111094925.775463225@linuxfoundation.org>
+Subject: [PATCH 5.4 054/165] bpf, mips: Limit to 33 tail calls
+Date:   Sat, 11 Jan 2020 10:49:33 +0100
+Message-Id: <20200111094925.829562564@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -65,49 +64,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Paul Chaignon <paul.chaignon@orange.com>
 
-[ Upstream commit 96bc4432f5ade1045521f3b247f516b1478166bd ]
+[ Upstream commit e49e6f6db04e915dccb494ae10fa14888fea6f89 ]
 
 All BPF JIT compilers except RISC-V's and MIPS' enforce a 33-tail calls
 limit at runtime.  In addition, a test was recently added, in tailcalls2,
 to check this limit.
 
-This patch updates the tail call limit in RISC-V's JIT compiler to allow
-33 tail calls.  I tested it using the above selftest on an emulated
-RISCV64.
+This patch updates the tail call limit in MIPS' JIT compiler to allow
+33 tail calls.
 
-Fixes: 2353ecc6f91f ("bpf, riscv: add BPF JIT for RV64G")
+Fixes: b6bd53f9c4e8 ("MIPS: Add missing file for eBPF JIT.")
 Reported-by: Mahshid Khezri <khezri.mahshid@gmail.com>
 Signed-off-by: Paul Chaignon <paul.chaignon@orange.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Björn Töpel <bjorn.topel@gmail.com>
 Acked-by: Martin KaFai Lau <kafai@fb.com>
-Link: https://lore.kernel.org/bpf/966fe384383bf23a0ee1efe8d7291c78a3fb832b.1575916815.git.paul.chaignon@gmail.com
+Link: https://lore.kernel.org/bpf/b8eb2caac1c25453c539248e56ca22f74b5316af.1575916815.git.paul.chaignon@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/net/bpf_jit_comp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/net/ebpf_jit.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/riscv/net/bpf_jit_comp.c b/arch/riscv/net/bpf_jit_comp.c
-index 5451ef3845f2..7fbf56aab661 100644
---- a/arch/riscv/net/bpf_jit_comp.c
-+++ b/arch/riscv/net/bpf_jit_comp.c
-@@ -631,14 +631,14 @@ static int emit_bpf_tail_call(int insn, struct rv_jit_context *ctx)
- 		return -1;
- 	emit(rv_bgeu(RV_REG_A2, RV_REG_T1, off >> 1), ctx);
+diff --git a/arch/mips/net/ebpf_jit.c b/arch/mips/net/ebpf_jit.c
+index a2405d5f7d1e..561154cbcc40 100644
+--- a/arch/mips/net/ebpf_jit.c
++++ b/arch/mips/net/ebpf_jit.c
+@@ -604,6 +604,7 @@ static void emit_const_to_reg(struct jit_ctx *ctx, int dst, u64 value)
+ static int emit_bpf_tail_call(struct jit_ctx *ctx, int this_idx)
+ {
+ 	int off, b_off;
++	int tcc_reg;
  
--	/* if (--TCC < 0)
-+	/* if (TCC-- < 0)
+ 	ctx->flags |= EBPF_SEEN_TC;
+ 	/*
+@@ -616,14 +617,14 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int this_idx)
+ 	b_off = b_imm(this_idx + 1, ctx);
+ 	emit_instr(ctx, bne, MIPS_R_AT, MIPS_R_ZERO, b_off);
+ 	/*
+-	 * if (--TCC < 0)
++	 * if (TCC-- < 0)
  	 *     goto out;
  	 */
- 	emit(rv_addi(RV_REG_T1, tcc, -1), ctx);
- 	off = (tc_ninsn - (ctx->ninsns - start_insn)) << 2;
- 	if (is_13b_check(off, insn))
- 		return -1;
--	emit(rv_blt(RV_REG_T1, RV_REG_ZERO, off >> 1), ctx);
-+	emit(rv_blt(tcc, RV_REG_ZERO, off >> 1), ctx);
- 
- 	/* prog = array->ptrs[index];
- 	 * if (!prog)
+ 	/* Delay slot */
+-	emit_instr(ctx, daddiu, MIPS_R_T5,
+-		   (ctx->flags & EBPF_TCC_IN_V1) ? MIPS_R_V1 : MIPS_R_S4, -1);
++	tcc_reg = (ctx->flags & EBPF_TCC_IN_V1) ? MIPS_R_V1 : MIPS_R_S4;
++	emit_instr(ctx, daddiu, MIPS_R_T5, tcc_reg, -1);
+ 	b_off = b_imm(this_idx + 1, ctx);
+-	emit_instr(ctx, bltz, MIPS_R_T5, b_off);
++	emit_instr(ctx, bltz, tcc_reg, b_off);
+ 	/*
+ 	 * prog = array->ptrs[index];
+ 	 * if (prog == NULL)
 -- 
 2.20.1
 
