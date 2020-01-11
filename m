@@ -2,288 +2,180 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C126C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA0AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B72E20661
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iG/hsw+h"
+	by mail.kernel.org (Postfix) with ESMTP id A945F2077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgAKJgF (ORCPT
+        id S1728740AbgAKJi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:36:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24130 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728693AbgAKJgF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:36:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578735362;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=raquESQG+I5khJ1hkdzWbyI9ahA7o/hvNFJshfHG5h8=;
-        b=iG/hsw+h1LCa0QEI/BffhQ1/GZi3ZSjRD4IILWeDnLPwgJdAwVfkknJW21qCiNH1GHPtnF
-        clAzNH90LYE/3W04D+zE5DZUyKmMtNiVShbR60hr0IM0Hde0rezFkm6j3a9zDLAtCNqHVY
-        BXk5UECKPflVTAwKh/b7UafjjN7Mr88=
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
- [209.85.166.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-365-WFsS011yO42vUqszH_WPRw-1; Sat, 11 Jan 2020 04:36:01 -0500
-X-MC-Unique: WFsS011yO42vUqszH_WPRw-1
-Received: by mail-io1-f69.google.com with SMTP id x2so3070118iog.5
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 01:36:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=raquESQG+I5khJ1hkdzWbyI9ahA7o/hvNFJshfHG5h8=;
-        b=rX6MKKsUyBD/RqI1spfVmO2fC+r1zbICWxMW0rYLqRNBmisaJZpcB4ap9lgoecytMV
-         XPUtNYNugYKhOX5bpdDERJdxRboTds+is0gWsGrTd3xkCh3kkqQ1SuMbVA8y1bZMVbg3
-         AKDOAJWZCjfXm1+RadnyMvSkDPdUsLarnTKlPAPj13Sz6sfpt5NrzKd2KAdNqpOAxMrV
-         VZAB1+fM1iE9b/wjJaA+VbKIK5Rjf7nyzPxzONTTrqpT1FZQPHZ6dDhIQ1zwxRMGaBmk
-         eI7Z2xMHFuTVEvIlnicLGEecYVPIX1U1fBTKtta8XYKr9hjsWouaCQBQ0iD/ATXS1q+t
-         vOmQ==
-X-Gm-Message-State: APjAAAXp78g8ktt/W9qIC2UUB+t461vKXCmfiwN+PMndxV1BYN1cD80X
-        waINPPZ7pTFfk9gXWm9w5OONh4Qzpr6p2Zu5Rc19R1eE3JxTHbU8l1IzrOvdRZKtwV3jTnP279E
-        NbmKIuU0cpjt5+7P1G16mqZGFzGT6GclHgCdUudIl
-X-Received: by 2002:a92:b11:: with SMTP id b17mr6572502ilf.202.1578735360379;
-        Sat, 11 Jan 2020 01:36:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyyomTlT7wgn1HHUwpr5NfjTCRw7HSs0oqFvATDnoSdFujPB7iTMZ+8LN4CNrLRX6TleaPzj+DiEWQujdRXHZw=
-X-Received: by 2002:a92:b11:: with SMTP id b17mr6572487ilf.202.1578735360105;
- Sat, 11 Jan 2020 01:36:00 -0800 (PST)
-MIME-Version: 1.0
-References: <20200110214217.GA88274@google.com> <e0194581-4cdd-3629-d9fe-10a1cfd29d03@gonehiking.org>
- <20200110230003.GB1875851@anatevka.americas.hpqcorp.net> <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
- <20200111005041.GB19291@MiWiFi-R3L-srv> <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
-In-Reply-To: <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Sat, 11 Jan 2020 17:35:48 +0800
-Message-ID: <CACPcB9c0-nRjM3DSN8wzZBTPsJKWjZ9d_aNTq5zUj4k4egb32Q@mail.gmail.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-To:     Khalid Aziz <khalid@gonehiking.org>
-Cc:     Baoquan He <bhe@redhat.com>, Jerry Hoemann <Jerry.Hoemann@hpe.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Randy Wright <rwright@hpe.com>
+        Sat, 11 Jan 2020 04:38:56 -0500
+Received: from [167.172.186.51] ([167.172.186.51]:44884 "EHLO shell.v3.sk"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728719AbgAKJiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:38:55 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 4031EDF32F;
+        Sat, 11 Jan 2020 09:39:00 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Ya1nGhOda276; Sat, 11 Jan 2020 09:38:59 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 5A32BDFCCC;
+        Sat, 11 Jan 2020 09:38:59 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id MVlENj0UXhEs; Sat, 11 Jan 2020 09:38:59 +0000 (UTC)
+Received: from nedofet.lan (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 02FE1DF32F;
+        Sat, 11 Jan 2020 09:38:58 +0000 (UTC)
+Message-ID: <8818b5338153790fc42d5b4d40cc7f061a6b861a.camel@v3.sk>
+Subject: Re: [RESEND PATCH] iscsi_ibft: Don't limits Targets and NICs to two
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Konrad Rzeszutek Wilk <konrad@darnok.org>
+Cc:     Konrad Rzeszutek Wilk <konrad@kernel.org>,
+        Peter Jones <pjones@redhat.com>, linux-kernel@vger.kernel.org
+Date:   Sat, 11 Jan 2020 10:38:50 +0100
+In-Reply-To: <20191230170340.GA23237@localhost.localdomain>
+References: <20191221070956.268321-1-lkundrak@v3.sk>
+         <20191230170340.GA23237@localhost.localdomain>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 11:46 AM Khalid Aziz <khalid@gonehiking.org> wrote:
->
-> On 1/10/20 5:50 PM, Baoquan He wrote:
-> > On 01/10/20 at 05:18pm, Khalid Aziz wrote:
-> >> On 1/10/20 4:00 PM, Jerry Hoemann wrote:
-> >>> On Fri, Jan 10, 2020 at 03:25:36PM -0700, Khalid Aziz and Shuah Khan wrote:
-> >>>> On 1/10/20 2:42 PM, Bjorn Helgaas wrote:
-> >>>>> [+cc Deepa (also working in this area)]
-> >>>>>
-> >>>>> On Thu, Dec 26, 2019 at 03:21:18AM +0800, Kairui Song wrote:
-> >>>>>> There are reports about kdump hang upon reboot on some HPE machines,
-> >>>>>> kernel hanged when trying to shutdown a PCIe port, an uncorrectable
-> >>>>>> error occurred and crashed the system.
-> >>>>>
-> >>>>> Details?  Do you have URLs for bug reports, dmesg logs, etc?
-> >>>>>
-> >>>>>> On the machine I can reproduce this issue, part of the topology
-> >>>>>> looks like this:
-> >>>>>>
-> >>>>>> [0000:00]-+-00.0  Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2
-> >>>>>>           +-01.0-[02]--
-> >>>>>>           +-01.1-[05]--
-> >>>>>>           +-02.0-[06]--+-00.0  tEmulex Corporation OneConnect NIC (Skyhawk)
-> >>>>>>           |            +-00.1  Emulex Corporation OneConnect NIC (Skyhawk)
-> >>>>>>           |            +-00.2  Emulex Corporation OneConnect NIC (Skyhawk)
-> >>>>>>           |            +-00.3  Emulex Corporation OneConnect NIC (Skyhawk)
-> >>>>>>           |            +-00.4  Emulex Corporation OneConnect NIC (Skyhawk)
-> >>>>>>           |            +-00.5  Emulex Corporation OneConnect NIC (Skyhawk)
-> >>>>>>           |            +-00.6  Emulex Corporation OneConnect NIC (Skyhawk)
-> >>>>>>           |            \-00.7  Emulex Corporation OneConnect NIC (Skyhawk)
-> >>>>>>           +-02.1-[0f]--
-> >>>>>>           +-02.2-[07]----00.0  Hewlett-Packard Company Smart Array Gen9 Controllers
-> >>>>>>
-> >>>>>> When shutting down PCIe port 0000:00:02.2 or 0000:00:02.0, the machine
-> >>>>>> will hang, depend on which device is reinitialized in kdump kernel.
-> >>>>>>
-> >>>>>> If force remove unused device then trigger kdump, the problem will never
-> >>>>>> happen:
-> >>>>>>
-> >>>>>>     echo 1 > /sys/bus/pci/devices/0000\:00\:02.2/0000\:07\:00.0/remove
-> >>>>>>     echo c > /proc/sysrq-trigger
-> >>>>>>
-> >>>>>>     ... Kdump save vmcore through network, the NIC get reinitialized and
-> >>>>>>     hpsa is untouched. Then reboot with no problem. (If hpsa is used
-> >>>>>>     instead, shutdown the NIC in first kernel will help)
-> >>>>>>
-> >>>>>> The cause is that some devices are enabled by the first kernel, but it
-> >>>>>> don't have the chance to shutdown the device, and kdump kernel is not
-> >>>>>> aware of it, unless it reinitialize the device.
-> >>>>>>
-> >>>>>> Upon reboot, kdump kernel will skip downstream device shutdown and
-> >>>>>> clears its bridge's master bit directly. The downstream device could
-> >>>>>> error out as it can still send requests but upstream refuses it.
-> >>>>>
-> >>>>> Can you help me understand the sequence of events?  If I understand
-> >>>>> correctly, the desired sequence is:
-> >>>>>
-> >>>>>   - user kernel boots
-> >>>>>   - user kernel panics and kexecs to kdump kernel
-> >>>>>   - kdump kernel writes vmcore to network or disk
-> >>>>>   - kdump kernel reboots
-> >>>>>   - user kernel boots
-> >>>>>
-> >>>>> But the problem is that as part of the kdump kernel reboot,
-> >>>>>
-> >>>>>   - kdump kernel disables bus mastering for a Root Port
-> >>>>>   - device below the Root Port attempts DMA
-> >>>>>   - Root Port receives DMA transaction, handles it as Unsupported
-> >>>>>     Request, sends UR Completion to device
-> >>>>>   - device signals uncorrectable error
-> >>>>>   - uncorrectable error causes a crash (Or a hang?  You mention both
-> >>>>>     and I'm not sure which it is)
-> >>>>>
-> >>>>> Is that right so far?
-> >>>>>
-> >>>>>> So for kdump, let kernel read the correct hardware power state on boot,
-> >>>>>> and always clear the bus master bit of PCI device upon shutdown if the
-> >>>>>> device is on. PCIe port driver will always shutdown all downstream
-> >>>>>> devices first, so this should ensure all downstream devices have bus
-> >>>>>> master bit off before clearing the bridge's bus master bit.
-> >>>>>>
-> >>>>>> Signed-off-by: Kairui Song <kasong@redhat.com>
-> >>>>>> ---
-> >>>>>>  drivers/pci/pci-driver.c | 11 ++++++++---
-> >>>>>>  drivers/pci/quirks.c     | 20 ++++++++++++++++++++
-> >>>>>>  2 files changed, 28 insertions(+), 3 deletions(-)
-> >>>>>>
-> >>>>>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> >>>>>> index 0454ca0e4e3f..84a7fd643b4d 100644
-> >>>>>> --- a/drivers/pci/pci-driver.c
-> >>>>>> +++ b/drivers/pci/pci-driver.c
-> >>>>>> @@ -18,6 +18,7 @@
-> >>>>>>  #include <linux/kexec.h>
-> >>>>>>  #include <linux/of_device.h>
-> >>>>>>  #include <linux/acpi.h>
-> >>>>>> +#include <linux/crash_dump.h>
-> >>>>>>  #include "pci.h"
-> >>>>>>  #include "pcie/portdrv.h"
-> >>>>>>
-> >>>>>> @@ -488,10 +489,14 @@ static void pci_device_shutdown(struct device *dev)
-> >>>>>>           * If this is a kexec reboot, turn off Bus Master bit on the
-> >>>>>>           * device to tell it to not continue to do DMA. Don't touch
-> >>>>>>           * devices in D3cold or unknown states.
-> >>>>>> -         * If it is not a kexec reboot, firmware will hit the PCI
-> >>>>>> -         * devices with big hammer and stop their DMA any way.
-> >>>>>> +         * If this is kdump kernel, also turn off Bus Master, the device
-> >>>>>> +         * could be activated by previous crashed kernel and may block
-> >>>>>> +         * it's upstream from shutting down.
-> >>>>>> +         * Else, firmware will hit the PCI devices with big hammer
-> >>>>>> +         * and stop their DMA any way.
-> >>>>>>           */
-> >>>>>> -        if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
-> >>>>>> +        if ((kexec_in_progress || is_kdump_kernel()) &&
-> >>>>>> +                        pci_dev->current_state <= PCI_D3hot)
-> >>>>>>                  pci_clear_master(pci_dev);
-> >>>>>
-> >>>>> I'm clearly missing something because this will turn off bus mastering
-> >>>>> in cases where we previously left it enabled.
-> >>>>>
-> >>>>> I was assuming the crash was related to a device doing DMA when the
-> >>>>> Root Port had bus mastering disabled.  But that must be wrong.
-> >>>>>
-> >>>>> I'd like to understand the crash/hang better because the quirk
-> >>>>> especially is hard to connect to anything.  If the crash is because of
-> >>>>> an AER or other PCIe error, maybe another possibility is that we could
-> >>>>> handle it better or disable signaling of it or something.
-> >>>>>
-> >>>>
-> >>>> I am not understanding this failure mode either. That code in
-> >>>> pci_device_shutdown() was added originally to address this very issue.
-> >>>> The patch 4fc9bbf98fd6 ("PCI: Disable Bus Master only on kexec reboot")
-> >>>> shut down any errant DMAs from PCI devices as we kexec a new kernel. In
-> >>>> this new patch, this is the same code path that will be taken again when
-> >>>> kdump kernel is shutting down. If the errant DMA problem was not fixed
-> >>>> by clearing Bus Master bit in this path when kdump kernel was being
-> >>>> kexec'd, why does the same code path work the second time around when
-> >>>> kdump kernel is shutting down? Is there more going on that we don't
-> >>>> understand?
-> >>>>
-> >>>
-> >>>   Khalid,
-> >>>
-> >>>   I don't believe we execute that code path in the crash case.
-> >>>
-> >>>   The variable kexec_in_progress is set true in kernel_kexec() before calling
-> >>>   machine_kexec().  This is the fast reboot case.
-> >>>
-> >>>   I don't see kexec_in_progress set true elsewhere.
-> >>>
-> >>>
-> >>>   The code path for crash is different.
-> >>>
-> >>>   For instance, panic() will call
-> >>>     -> __crash_kexec()  which calls
-> >>>             -> machine_kexec().
-> >>>
-> >>>  So the setting of kexec_in_progress is bypassed.
-> >>>
-> >>
-> >> True, but what that means is if it is an errant DMA causing the issue
-> >> you are seeing, that errant DMA can happen any time between when we
-> >
-> > Here, there could be misunderstanding. It's not an errant DMA, it's an
-> > device which may be in DMA transporting state in normal kernel, but in
-> > kdump kernel it's not manipulated by its driver because we don't use it
-> > to dump, so exlucde its driver from kdump initramfs for saving space.
-> >
->
-> Errant DMA as in currently running kernel did not enable the device to
-> do DMA and is not ready for it. If a device can issue DMA request in
-> this state, it could do it well before kdump kernel starts shutting
-> down. Don't we need to fix this before we start shutting down kdump in
-> preparation for reboot? I can see the need for this fix, but I am not
-> sure if this patch places the fix in right place.
->
-> --
-> Khalid
->
+On Mon, 2019-12-30 at 12:03 -0500, Konrad Rzeszutek Wilk wrote:
+> On Sat, Dec 21, 2019 at 08:09:56AM +0100, Lubomir Rintel wrote:
+> > According to iSCSI Boot Firmware Table Version 1.03 [1], the length of
+> > the control table is ">= 18", where the optional expansion structure
+> > pointer follow the mandatory ones. This allows for more than two NICs
+> > and Targets.
+> > 
+> > [1] ftp://ftp.software.ibm.com/systems/support/bladecenter/iscsi_boot_firmware_table_v1.03.pdf
+> > 
+> > Let's enforce the minimum length of the control structure instead
+> > instead of limiting it to the smallest allowed size.
+> 
+> Hi!
+> 
+> Do you have an example of such iBFT table? Thanks
 
-Hi, there are some previous works about this issue, reset PCI devices
-in kdump kernel to stop ongoing DMA:
+Sorry for the late response, your message somehow slipped throught the
+cracks during the holidays.
 
-[v7,0/5] Reset PCIe devices to address DMA problem on kdump with iommu
-https://lore.kernel.org/patchwork/cover/343767/
+Please feed the following to "xxd -r". The md5sum is
+991d671cc36367da6b104cce120a6048. You can test it with
+"qemu -acpitable file=ibft.img".
 
-[v2] PCI: Reset PCIe devices to stop ongoing DMA
-https://lore.kernel.org/patchwork/patch/379191/
+00000000: 69 42 46 54 fb 02 00 00 01 d2 54 45 53 54 49 4e  iBFT......TESTIN
+00000010: 54 45 53 54 00 00 00 00 00 00 00 00 00 00 00 00  TEST............
+00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000030: 01 01 16 00 00 00 00 00 48 00 98 00 d0 01 00 01  ........H.......
+00000040: 08 02 68 01 40 02 00 00 02 01 4a 00 00 03 00 00  ..h.@.....J.....
+00000050: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000070: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 22 00  ..............".
+00000090: 78 02 00 00 00 00 00 00 03 01 66 00 00 03 00 00  x.........f.....
+000000a0: 00 00 00 00 00 00 00 00 ff ff c0 a8 32 65 18 03  ............2e..
+000000b0: 00 00 00 00 00 00 00 00 00 00 ff ff c0 a8 32 01  ..............2.
+000000c0: 00 00 00 00 00 00 00 00 00 00 ff ff c0 a8 32 01  ..............2.
+000000d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+000000e0: 00 00 00 00 00 00 00 00 00 00 ff ff c0 a8 32 01  ..............2.
+000000f0: 00 00 52 54 00 12 34 00 18 00 06 00 9b 02 00 00  ..RT..4.........
+00000100: 03 01 66 00 01 03 00 00 00 00 00 00 00 00 00 00  ..f.............
+00000110: ff ff c0 a8 33 65 18 03 00 00 00 00 00 00 00 00  ....3e..........
+00000120: 00 00 ff ff c0 a8 33 01 00 00 00 00 00 00 00 00  ......3.........
+00000130: 00 00 ff ff c0 a8 33 01 00 00 00 00 00 00 00 00  ......3.........
+00000140: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000150: 00 00 ff ff c0 a8 33 01 00 00 52 54 00 12 34 01  ......3...RT..4.
+00000160: 20 00 06 00 a2 02 00 00 03 01 66 00 02 03 00 00   .........f.....
+00000170: 00 00 00 00 00 00 00 00 ff ff c0 a8 34 65 18 03  ............4e..
+00000180: 00 00 00 00 00 00 00 00 00 00 ff ff c0 a8 34 01  ..............4.
+00000190: 00 00 00 00 00 00 00 00 00 00 ff ff c0 a8 34 01  ..............4.
+000001a0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+000001b0: 00 00 00 00 00 00 00 00 00 00 ff ff c0 a8 34 01  ..............4.
+000001c0: 00 00 52 54 00 12 34 01 28 00 06 00 a9 02 00 00  ..RT..4.(.......
+000001d0: 04 01 36 00 00 03 00 00 00 00 00 00 00 00 00 00  ..6.............
+000001e0: ff ff c0 a8 32 01 bc 0c 00 01 00 00 00 00 00 00  ....2...........
+000001f0: 00 00 18 00 b0 02 00 00 00 00 00 00 00 00 00 00  ................
+00000200: 00 00 00 00 00 00 00 00 04 01 36 00 01 03 00 00  ..........6.....
+00000210: 00 00 00 00 00 00 00 00 ff ff c0 a8 33 01 bc 0c  ............3...
+00000220: 00 02 00 00 00 00 00 00 00 00 18 00 c9 02 00 00  ................
+00000230: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+00000240: 04 01 36 00 02 03 00 00 00 00 00 00 00 00 00 00  ..6.............
+00000250: ff ff c0 a8 34 01 bc 0c 00 03 00 00 00 00 00 00  ....4...........
+00000260: 00 00 18 00 e2 02 00 00 00 00 00 00 00 00 00 00  ................
+00000270: 00 00 00 00 00 00 00 00 69 71 6e 2e 31 39 39 34  ........iqn.1994
+00000280: 2d 30 35 2e 63 6f 6d 2e 72 65 64 68 61 74 3a 36  -05.com.redhat:6
+00000290: 33 33 31 31 34 61 61 63 66 32 00 63 6c 69 65 6e  33114aacf2.clien
+000002a0: 74 00 63 6c 69 65 6e 74 00 63 6c 69 65 6e 74 00  t.client.client.
+000002b0: 69 71 6e 2e 32 30 30 39 2d 30 36 2e 74 65 73 74  iqn.2009-06.test
+000002c0: 3a 74 61 72 67 65 74 30 00 69 71 6e 2e 32 30 30  :target0.iqn.200
+000002d0: 39 2d 30 36 2e 74 65 73 74 3a 74 61 72 67 65 74  9-06.test:target
+000002e0: 31 00 69 71 6e 2e 32 30 30 39 2d 30 36 2e 74 65  1.iqn.2009-06.te
+000002f0: 73 74 3a 74 61 72 67 65 74 32 00                 st:target2.
 
-And didn't get merged, that patch are trying to fix some DMAR error
-problem, but resetting devices is a bit too destructive, and the
-problem is later fixed in IOMMU side. And in most case the DMA seems
-harmless, as they targets first kernel's memory and kdump kernel only
-live in crash memory.
+Thanks
+Lubo
 
-Also, by the time kdump kernel is able to scan and reset devices,
-there are already a very large time window where things could go
-wrong.
-
-The currently problem observed only happens upon kdump kernel
-shutdown, as the upper bridge is disabled before the device is
-disabledm so DMA will raise error. It's more like a problem of wrong
-device shutting down order.
-
--- 
-Best Regards,
-Kairui Song
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > ---
+> >  drivers/firmware/iscsi_ibft.c | 9 +++++----
+> >  1 file changed, 5 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
+> > index 7e12cbdf957cc..96758b71a8db8 100644
+> > --- a/drivers/firmware/iscsi_ibft.c
+> > +++ b/drivers/firmware/iscsi_ibft.c
+> > @@ -104,6 +104,7 @@ struct ibft_control {
+> >  	u16 tgt0_off;
+> >  	u16 nic1_off;
+> >  	u16 tgt1_off;
+> > +	u16 expansion[0];
+> >  } __attribute__((__packed__));
+> >  
+> >  struct ibft_initiator {
+> > @@ -235,7 +236,7 @@ static int ibft_verify_hdr(char *t, struct ibft_hdr *hdr, int id, int length)
+> >  				"found %d instead!\n", t, id, hdr->id);
+> >  		return -ENODEV;
+> >  	}
+> > -	if (hdr->length != length) {
+> > +	if (length && hdr->length != length) {
+> >  		printk(KERN_ERR "iBFT error: We expected the %s " \
+> >  				"field header.length to have %d but " \
+> >  				"found %d instead!\n", t, length, hdr->length);
+> > @@ -749,16 +750,16 @@ static int __init ibft_register_kobjects(struct acpi_table_ibft *header)
+> >  	control = (void *)header + sizeof(*header);
+> >  	end = (void *)control + control->hdr.length;
+> >  	eot_offset = (void *)header + header->header.length - (void *)control;
+> > -	rc = ibft_verify_hdr("control", (struct ibft_hdr *)control, id_control,
+> > -			     sizeof(*control));
+> > +	rc = ibft_verify_hdr("control", (struct ibft_hdr *)control, id_control, 0);
+> >  
+> >  	/* iBFT table safety checking */
+> >  	rc |= ((control->hdr.index) ? -ENODEV : 0);
+> > +	rc |= ((control->hdr.length < sizeof(*control)) ? -ENODEV : 0);
+> >  	if (rc) {
+> >  		printk(KERN_ERR "iBFT error: Control header is invalid!\n");
+> >  		return rc;
+> >  	}
+> > -	for (ptr = &control->initiator_off; ptr < end; ptr += sizeof(u16)) {
+> > +	for (ptr = &control->initiator_off; ptr + sizeof(u16) <= end; ptr += sizeof(u16)) {
+> >  		offset = *(u16 *)ptr;
+> >  		if (offset && offset < header->header.length &&
+> >  						offset < eot_offset) {
+> > -- 
+> > 2.24.1
+> > 
 
