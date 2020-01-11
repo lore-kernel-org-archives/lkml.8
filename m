@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E78C7C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8198BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE93B20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5496A208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737834;
-	bh=dDrHh842o8VZe0pFxnAx0kQKFpanyG7stSLmlk9fEQM=;
+	s=default; t=1578737838;
+	bh=WHjFgNYP6inPBpEBgMdiquy7P92dDHNZgcPaa/lqkQw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GSCbHxIXnvn+xsXVhBpmezQ+kc5oYTr0ieDUV2Qp5V57qwthD73E8If9kEBkb8cNo
-	 cApTwwYKo/qQRgbCXp1XJirm9NSmZDeVt7YjFnWecuLBYJC4/n2n1kiqkWLJYYfmMY
-	 v2CpKFhlisd6EW+xdZi1y4uGAMlrbAlefNurvejc=
+	b=lY3HRKQ0mcGsAdz60iv9fbW01957zXuad74AkO6lU5zrV7jrNraCv0AueXY2NVVik
+	 B8MLs/JsbMjnlor+17qokEd2hkwYgfMxJkxbsy/PrIDsIvPhgQSdFzU8J3ZCUR7RA2
+	 cyXABpqyQYO4E1imo0G2dSFVOlVRjk5a6ex+kuf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730377AbgAKKRN (ORCPT
+        id S1730463AbgAKKRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:17:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33282 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:17:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730449AbgAKKRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:17:10 -0500
+        id S1730449AbgAKKRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:17:14 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F32A72082E;
-        Sat, 11 Jan 2020 10:17:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E918205F4;
+        Sat, 11 Jan 2020 10:17:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737829;
-        bh=dDrHh842o8VZe0pFxnAx0kQKFpanyG7stSLmlk9fEQM=;
+        s=default; t=1578737833;
+        bh=WHjFgNYP6inPBpEBgMdiquy7P92dDHNZgcPaa/lqkQw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YbpDRccDIeafUdKr5/r4QAVvXW+gUp+oMZ7XJuG3ckizy4bu5KTpIi1urHubtUU8h
-         u2JQ9eNeFUTqUT/IZ0BaXHmbtp42lhirPl3ddqy46YsMUpK5zEtrR6DSMMAOpzVyyV
-         VYHIJ4NeeHqZVEQ2pWBURfwHeCsqPi2rqPfi5mxM=
+        b=MXYqpoPKfglsYOT7ZSBtyPiI3N9kO7u/ZzbsKA1D9UlOfZmlnETMbmJLrLp+9WTuU
+         ExE+R/XGzqDFQysWNbmMMZnYHDRlIzCkodnZIspGDwAgAqRRgV24jWFZJFVmEYJ2Kr
+         XuPdrw42Y+QryiUlwEMwZljZHUCYHG4ZZsxC5p8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
+        stable@vger.kernel.org, Bob Liu <bob.liu@oracle.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
         Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 55/84] s390/dasd: fix memleak in path handling error case
-Date:   Sat, 11 Jan 2020 10:50:32 +0100
-Message-Id: <20200111094907.022506368@linuxfoundation.org>
+Subject: [PATCH 4.19 56/84] block: fix memleak when __blk_rq_map_user_iov() is failed
+Date:   Sat, 11 Jan 2020 10:50:33 +0100
+Message-Id: <20200111094907.436465370@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -61,74 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Haberland <sth@linux.ibm.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-[ Upstream commit 00b39f698a4f1ee897227cace2e3937fc4412270 ]
+[ Upstream commit 3b7995a98ad76da5597b488fa84aa5a56d43b608 ]
 
-If for whatever reason the dasd_eckd_check_characteristics() function
-exits after at least some paths have their configuration data
-allocated those data is never freed again. In the error case the
-device->private pointer is set to NULL and dasd_eckd_uncheck_device()
-will exit without freeing the path data because of this NULL pointer.
+When I doing fuzzy test, get the memleak report:
 
-Fix by calling dasd_eckd_clear_conf_data() for error cases.
+BUG: memory leak
+unreferenced object 0xffff88837af80000 (size 4096):
+  comm "memleak", pid 3557, jiffies 4294817681 (age 112.499s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+    20 00 00 00 10 01 00 00 00 00 00 00 01 00 00 00   ...............
+  backtrace:
+    [<000000001c894df8>] bio_alloc_bioset+0x393/0x590
+    [<000000008b139a3c>] bio_copy_user_iov+0x300/0xcd0
+    [<00000000a998bd8c>] blk_rq_map_user_iov+0x2f1/0x5f0
+    [<000000005ceb7f05>] blk_rq_map_user+0xf2/0x160
+    [<000000006454da92>] sg_common_write.isra.21+0x1094/0x1870
+    [<00000000064bb208>] sg_write.part.25+0x5d9/0x950
+    [<000000004fc670f6>] sg_write+0x5f/0x8c
+    [<00000000b0d05c7b>] __vfs_write+0x7c/0x100
+    [<000000008e177714>] vfs_write+0x1c3/0x500
+    [<0000000087d23f34>] ksys_write+0xf9/0x200
+    [<000000002c8dbc9d>] do_syscall_64+0x9f/0x4f0
+    [<00000000678d8e9a>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Also use dasd_eckd_clear_conf_data() in dasd_eckd_uncheck_device()
-to avoid code duplication.
+If __blk_rq_map_user_iov() is failed in blk_rq_map_user_iov(),
+the bio(s) which is allocated before this failing will leak. The
+refcount of the bio(s) is init to 1 and increased to 2 by calling
+bio_get(), but __blk_rq_unmap_user() only decrease it to 1, so
+the bio cannot be freed. Fix it by calling blk_rq_unmap_user().
 
-Reported-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ block/blk-map.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index 108fb1c77e1d..a2e34c853ca9 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -1770,7 +1770,7 @@ dasd_eckd_check_characteristics(struct dasd_device *device)
- 	dasd_free_block(device->block);
- 	device->block = NULL;
- out_err1:
--	kfree(private->conf_data);
-+	dasd_eckd_clear_conf_data(device);
- 	kfree(device->private);
- 	device->private = NULL;
- 	return rc;
-@@ -1779,7 +1779,6 @@ dasd_eckd_check_characteristics(struct dasd_device *device)
- static void dasd_eckd_uncheck_device(struct dasd_device *device)
- {
- 	struct dasd_eckd_private *private = device->private;
--	int i;
+diff --git a/block/blk-map.c b/block/blk-map.c
+index db9373bd31ac..9d8627acc2f5 100644
+--- a/block/blk-map.c
++++ b/block/blk-map.c
+@@ -145,7 +145,7 @@ int blk_rq_map_user_iov(struct request_queue *q, struct request *rq,
+ 	return 0;
  
- 	if (!private)
- 		return;
-@@ -1789,21 +1788,7 @@ static void dasd_eckd_uncheck_device(struct dasd_device *device)
- 	private->sneq = NULL;
- 	private->vdsneq = NULL;
- 	private->gneq = NULL;
--	private->conf_len = 0;
--	for (i = 0; i < 8; i++) {
--		kfree(device->path[i].conf_data);
--		if ((__u8 *)device->path[i].conf_data ==
--		    private->conf_data) {
--			private->conf_data = NULL;
--			private->conf_len = 0;
--		}
--		device->path[i].conf_data = NULL;
--		device->path[i].cssid = 0;
--		device->path[i].ssid = 0;
--		device->path[i].chpid = 0;
--	}
--	kfree(private->conf_data);
--	private->conf_data = NULL;
-+	dasd_eckd_clear_conf_data(device);
- }
- 
- static struct dasd_ccw_req *
+ unmap_rq:
+-	__blk_rq_unmap_user(bio);
++	blk_rq_unmap_user(bio);
+ fail:
+ 	rq->bio = NULL;
+ 	return ret;
 -- 
 2.20.1
 
