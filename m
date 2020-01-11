@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D623DC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 270CFC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D262082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECC0B2087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738395;
-	bh=VILDewDdZZ57MJtd8nZfpQtoINtvKmzSvR8cAHZgqHE=;
+	s=default; t=1578738400;
+	bh=2fWph/ItbPzO4DF1XjbTfqheJe3a3uYNXv0N8SZl55w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fb9Vzi1omYmgUHYRKlofXMxFZENGBaMAiL+Vc/TtWHT+f+16ytbX4MsybAXLGX7iD
-	 Zfvyqh6fwE38pAK99A9COfvzPwg4ZTRvGaB/2gibHR4NFBLQNV40MG09cVMTjNUEHG
-	 cRy22Y+oswlyCOyrzuHh7VKLhNHhBjzjArhjahiQ=
+	b=nCfPQ91Vc/3zrcjUuZqJtf/o9yokUK/P625YLDVXwJg5kmVRtzOaozkzl7ydK52Z5
+	 jXNpLfc49HWvPuAvSqo+x+8VgC4Ukg4DwrhbYqVBCwcQL+hM84uk0WWlxjKmeWVAJw
+	 GRfjB36XxqhgjkMG30zVjyadzKUiBlaX9L8noJaA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731030AbgAKK0e (ORCPT
+        id S1731102AbgAKK0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:26:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59304 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:26:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730871AbgAKK0c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:26:32 -0500
+        id S1731043AbgAKK0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:26:37 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FF992082E;
-        Sat, 11 Jan 2020 10:26:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C499B20842;
+        Sat, 11 Jan 2020 10:26:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738392;
-        bh=VILDewDdZZ57MJtd8nZfpQtoINtvKmzSvR8cAHZgqHE=;
+        s=default; t=1578738396;
+        bh=2fWph/ItbPzO4DF1XjbTfqheJe3a3uYNXv0N8SZl55w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mQWM6eWj63pG4HbpN+zqvPJ6r0o3U0FDFVQzdC5VAz6BNStz8ABbEwP6G1qdYmbPZ
-         AHXVYxG/WGliXh8GoxaiDGzXUlnalijzC9+Pm8/l6FmHQTarviHGKcYSR6k1jWq1xU
-         YLsEMWbkz4Y/h9SJxNfckQW6rvUxlvHDiYG9OlpQ=
+        b=0wzyHeABeC9JJpW4mcvtYFkjazY2MLc9MNgJDaIJM/y7MT++er88WRqqTeTdY+oLH
+         7IeALHUgJzfHrW4fiyXY2q4cOJTgbeUFfVFqD/yw5SP1NIiX8JMH7+XhafHILCIscp
+         0z0GITKan75QPqPMcPg4TC23eb+rpvsaqIRXrKoE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herat Ramani <herat@chelsio.com>,
-        Vishal Kulkarni <vishal@chelsio.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        stable@vger.kernel.org, Jian Hu <jian.hu@amlogic.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 085/165] cxgb4: Fix kernel panic while accessing sge_info
-Date:   Sat, 11 Jan 2020 10:50:04 +0100
-Message-Id: <20200111094928.271154438@linuxfoundation.org>
+Subject: [PATCH 5.4 068/165] clk: walk orphan list on clock provider registration
+Date:   Sat, 11 Jan 2020 10:49:47 +0100
+Message-Id: <20200111094926.831944277@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,58 +61,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishal Kulkarni <vishal@chelsio.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
 
-[ Upstream commit 479a0d1376f6d97c60871442911f1394d4446a25 ]
+[ Upstream commit 66d9506440bb05289eb4867059e7b8c6ed209717 ]
 
-The sge_info debugfs collects offload queue info even when offload
-capability is disabled and leads to panic.
+So far, we walked the orphan list every time a new clock was registered
+in CCF. This was fine since the clocks were only referenced by name.
 
-[  144.139871] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  144.139874] CR2: 0000000000000000 CR3: 000000082d456005 CR4: 00000000001606e0
-[  144.139876] Call Trace:
-[  144.139887]  sge_queue_start+0x12/0x30 [cxgb4]
-[  144.139897]  seq_read+0x1d4/0x3d0
-[  144.139906]  full_proxy_read+0x50/0x70
-[  144.139913]  vfs_read+0x89/0x140
-[  144.139916]  ksys_read+0x55/0xd0
-[  144.139924]  do_syscall_64+0x5b/0x1d0
-[  144.139933]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[  144.139936] RIP: 0033:0x7f4b01493990
+Now that the clock can be referenced through DT, it is not enough:
+* Controller A register first a reference clocks from controller B
+  through DT.
+* Controller B register all its clocks then register the provider.
 
-Fix this crash by skipping the offload queue access in sge_qinfo when
-offload capability is disabled
+Each time controller B registers a new clock, the orphan list is walked
+but it can't match since the provider is registered yet. When the
+provider is finally registered, the orphan list is not walked unless
+another clock is registered afterward.
 
-Signed-off-by: Herat Ramani <herat@chelsio.com>
-Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+This can lead to situation where some clocks remain orphaned even if
+the parent is available.
+
+Walking the orphan list on provider registration solves the problem.
+
+Reported-by: Jian Hu <jian.hu@amlogic.com>
+Fixes: fc0c209c147f ("clk: Allow parents to be specified without string names")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Link: https://lkml.kernel.org/r/20191203080805.104628-1-jbrunet@baylibre.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/clk/clk.c | 62 ++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 40 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-index ae6a47dd7dc9..fb8ade9a05a9 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
-@@ -2996,6 +2996,9 @@ static int sge_queue_entries(const struct adapter *adap)
- 	int tot_uld_entries = 0;
- 	int i;
+diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+index 1c677d7f7f53..9c570bfc40d6 100644
+--- a/drivers/clk/clk.c
++++ b/drivers/clk/clk.c
+@@ -3231,6 +3231,41 @@ static inline void clk_debug_unregister(struct clk_core *core)
+ }
+ #endif
  
-+	if (!is_uld(adap))
-+		goto lld_only;
++static void clk_core_reparent_orphans_nolock(void)
++{
++	struct clk_core *orphan;
++	struct hlist_node *tmp2;
 +
- 	mutex_lock(&uld_mutex);
- 	for (i = 0; i < CXGB4_TX_MAX; i++)
- 		tot_uld_entries += sge_qinfo_uld_txq_entries(adap, i);
-@@ -3006,6 +3009,7 @@ static int sge_queue_entries(const struct adapter *adap)
- 	}
- 	mutex_unlock(&uld_mutex);
++	/*
++	 * walk the list of orphan clocks and reparent any that newly finds a
++	 * parent.
++	 */
++	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
++		struct clk_core *parent = __clk_init_parent(orphan);
++
++		/*
++		 * We need to use __clk_set_parent_before() and _after() to
++		 * to properly migrate any prepare/enable count of the orphan
++		 * clock. This is important for CLK_IS_CRITICAL clocks, which
++		 * are enabled during init but might not have a parent yet.
++		 */
++		if (parent) {
++			/* update the clk tree topology */
++			__clk_set_parent_before(orphan, parent);
++			__clk_set_parent_after(orphan, parent, NULL);
++			__clk_recalc_accuracies(orphan);
++			__clk_recalc_rates(orphan, 0);
++		}
++	}
++}
++
++static void clk_core_reparent_orphans(void)
++{
++	clk_prepare_lock();
++	clk_core_reparent_orphans_nolock();
++	clk_prepare_unlock();
++}
++
+ /**
+  * __clk_core_init - initialize the data structures in a struct clk_core
+  * @core:	clk_core being initialized
+@@ -3241,8 +3276,6 @@ static inline void clk_debug_unregister(struct clk_core *core)
+ static int __clk_core_init(struct clk_core *core)
+ {
+ 	int ret;
+-	struct clk_core *orphan;
+-	struct hlist_node *tmp2;
+ 	unsigned long rate;
  
-+lld_only:
- 	return DIV_ROUND_UP(adap->sge.ethqsets, 4) +
- 	       tot_uld_entries +
- 	       DIV_ROUND_UP(MAX_CTRL_QUEUES, 4) + 1;
+ 	if (!core)
+@@ -3389,27 +3422,8 @@ static int __clk_core_init(struct clk_core *core)
+ 		clk_enable_unlock(flags);
+ 	}
+ 
+-	/*
+-	 * walk the list of orphan clocks and reparent any that newly finds a
+-	 * parent.
+-	 */
+-	hlist_for_each_entry_safe(orphan, tmp2, &clk_orphan_list, child_node) {
+-		struct clk_core *parent = __clk_init_parent(orphan);
++	clk_core_reparent_orphans_nolock();
+ 
+-		/*
+-		 * We need to use __clk_set_parent_before() and _after() to
+-		 * to properly migrate any prepare/enable count of the orphan
+-		 * clock. This is important for CLK_IS_CRITICAL clocks, which
+-		 * are enabled during init but might not have a parent yet.
+-		 */
+-		if (parent) {
+-			/* update the clk tree topology */
+-			__clk_set_parent_before(orphan, parent);
+-			__clk_set_parent_after(orphan, parent, NULL);
+-			__clk_recalc_accuracies(orphan);
+-			__clk_recalc_rates(orphan, 0);
+-		}
+-	}
+ 
+ 	kref_init(&core->ref);
+ out:
+@@ -4255,6 +4269,8 @@ int of_clk_add_provider(struct device_node *np,
+ 	mutex_unlock(&of_clk_mutex);
+ 	pr_debug("Added clock from %pOF\n", np);
+ 
++	clk_core_reparent_orphans();
++
+ 	ret = of_clk_set_defaults(np, true);
+ 	if (ret < 0)
+ 		of_clk_del_provider(np);
+@@ -4290,6 +4306,8 @@ int of_clk_add_hw_provider(struct device_node *np,
+ 	mutex_unlock(&of_clk_mutex);
+ 	pr_debug("Added clk_hw provider from %pOF\n", np);
+ 
++	clk_core_reparent_orphans();
++
+ 	ret = of_clk_set_defaults(np, true);
+ 	if (ret < 0)
+ 		of_clk_del_provider(np);
 -- 
 2.20.1
 
