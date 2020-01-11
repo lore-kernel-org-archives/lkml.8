@@ -6,61 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C142C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37943C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 141B820842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF8320848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:45:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578753940;
-	bh=9ScKvS8kQxXGTEoGGcCyHr0nk8zo26T+uw4ZzvyRijE=;
+	s=default; t=1578753945;
+	bh=eaAZH6GvI/NqgGKMXPBT/vj2NICbj1FOZi2dC4hx8rk=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=K/H4O7z5y7OOZcR26nJBfTehbx2VzHZ+5nsgx2opieyR2umQ7AK4jntXDPnVOD9pJ
-	 TfynIKbYcVtkrk1VzsHUXrqLG6mOn1/pj5pL3nREXEc+PFKdjTa3LO2hwXtNcqHCwb
-	 rAhd/B1YCP0WaJ6TVQRUN9jq4y2MVUGyYAqBj694=
+	b=EcNitHbKso+CMibi/zasaakFdwyEMQ3qgsvPRyW/hxLY6admjZqYRGtTs/YGNVA9K
+	 HNiKe7B736fPQetZ5JLB8O4RxoIGVDa0h3phh3lv+X9RaW7qpcWxuCTDGtZLBlOEmY
+	 rwydpc1Omlw2sElD2uhDsn7FsEQZTmajfybFxy5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbgAKOpi (ORCPT
+        id S1730121AbgAKOpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 09:45:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36024 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 09:45:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729855AbgAKOpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729837AbgAKOpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 11 Jan 2020 09:45:05 -0500
-Subject: Re: [GIT PULL] Power management fixes for v5.5-rc6
+Subject: Re: [GIT PULL] pstore fix for v5.5-rc6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1578753905;
-        bh=9ScKvS8kQxXGTEoGGcCyHr0nk8zo26T+uw4ZzvyRijE=;
+        bh=eaAZH6GvI/NqgGKMXPBT/vj2NICbj1FOZi2dC4hx8rk=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=GSk1g4jmGhQXRHYIhORDZIwNLZfc5D03EJ8VTrqsoCjTRKDpXQSOeY+hhRbc1EHiz
-         Xy8WimbwZZaACFimp9rhttbO5A3LM1SLuO8yt2J2L1xRcq6j7MaGgEvDKX4t4vfnYI
-         IiJFrcIEoPoOZgEnsJO5VKs6TRgIIzjJkox0Eyjs=
+        b=14+bZklKxCt/UBXXWL2GxIw4dI4Q3b9jUsjUaBBeajmh33qvpq9e9MjIAwNbeq7cS
+         VgeuEjVhjShA22Wpbk287Y15hsb5rDhUylX8UT+yUalcuYDy8snTVk0fewzuWn65MT
+         n9GeeXOCggSshNpmn40yWopCdvOzlfApFcbt0S68=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAJZ5v0g27E7+wsrMXw1KhUQV6PZJhWcSQ5VG_HTZ5JgYejh15w@mail.gmail.com>
-References: <CAJZ5v0g27E7+wsrMXw1KhUQV6PZJhWcSQ5VG_HTZ5JgYejh15w@mail.gmail.com>
+In-Reply-To: <202001092044.EE43B805@keescook>
+References: <202001092044.EE43B805@keescook>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAJZ5v0g27E7+wsrMXw1KhUQV6PZJhWcSQ5VG_HTZ5JgYejh15w@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.5-rc6
-X-PR-Tracked-Commit-Id: 10674d97c4e266e8c50ce794d1c470c26228d52b
+X-PR-Tracked-Message-Id: <202001092044.EE43B805@keescook>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git
+ tags/pstore-v5.5-rc6
+X-PR-Tracked-Commit-Id: e163fdb3f7f8c62dccf194f3f37a7bcb3c333aa8
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c23e744b59efcf546b2b16834c68b85248d6bf3b
-Message-Id: <157875390529.30634.2723351899925028830.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: bef1d88263ff769f15aa0e1515cdcede84e61d15
+Message-Id: <157875390506.30634.10154844647759820656.pr-tracker-bot@kernel.org>
 Date:   Sat, 11 Jan 2020 14:45:05 +0000
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        linux-kernel@vger.kernel.org, Cengiz Can <cengiz@kernel.wtf>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 10 Jan 2020 11:23:29 +0100:
+The pull request you sent on Thu, 9 Jan 2020 20:46:57 -0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.5-rc6
+> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/pstore-v5.5-rc6
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c23e744b59efcf546b2b16834c68b85248d6bf3b
+https://git.kernel.org/torvalds/c/bef1d88263ff769f15aa0e1515cdcede84e61d15
 
 Thank you!
 
