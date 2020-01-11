@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58C6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9B9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE25206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53CFC206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737616;
-	bh=T39gpd+rLfX8rZmsdvoqRfz2AhhG+TRtteGvr0j7RuM=;
+	s=default; t=1578737621;
+	bh=HlecI9gKXoWl/hPCI+PALO7fLagPd1bhdYS2AohH6bo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FZEzAp7TJOtnqbaOFrI1Zzyy+KWQ+/9iV/DObyQQwG6QBbVPMLiZx9b3jvk1ukGB1
-	 CJqLRgm/q01ITo7UOei+RksR9AOLiLMPJRRoueDc/RJtPGt9mbbfH22Zo/tZ245Tnw
-	 aTjAeGviC+3wl54BGz/vEwM6KVKh5vDtE0osCdog=
+	b=09adKObyUX+NY2WTzc6SNWhCNerr6amELnNmv8H65M1gX4W5CeZbAuJqoiF7SfmAt
+	 8lMzYF4U6CsDr5Qt9BUzA2B9hqIen38dpr1QmiiFwjDs7C0iq+tgwveM6jnny00OrD
+	 1M0/nsxZf5YIFosJQXN82jlPGovHab1Zn7bbeJ4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729870AbgAKKNe (ORCPT
+        id S1729959AbgAKKNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:13:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52388 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:13:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729794AbgAKKNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:13:31 -0500
+        id S1729738AbgAKKNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:13:36 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BE6A206DA;
-        Sat, 11 Jan 2020 10:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A857420673;
+        Sat, 11 Jan 2020 10:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737610;
-        bh=T39gpd+rLfX8rZmsdvoqRfz2AhhG+TRtteGvr0j7RuM=;
+        s=default; t=1578737615;
+        bh=HlecI9gKXoWl/hPCI+PALO7fLagPd1bhdYS2AohH6bo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qWyN74eNTu36c08qyYxsCaa0nR9vtaL+3cL7OQom6XDE8xAwyI9/EhdS5U5NtLSmH
-         x9HmMgFngmqcARpCkGGjXyLLhBpUE+Z8e6RQLZ2tgZAduC01QsiRj22QYNxvPjfIuO
-         yvT0pD2RNP3HYT1vtVRdR0AiAvBGLuI94v5q8F2c=
+        b=M8j6VFAGcH9ORbMddatS4fmcZAuQc6oOqa3lF+Y74aRmXpGvj6cNKq19q9BeAZzol
+         xvNJ1s92wqrPup+uRALTd1AvOlY6Sz9it1myfRUoKHmZE6XSpanm/uV5Af5QmJUq/P
+         Ezl36EKi6FIqUBmGtDT+9XSmVCEhnO7eT9H2d30Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 60/62] vlan: vlan_changelink() should propagate errors
-Date:   Sat, 11 Jan 2020 10:50:42 +0100
-Message-Id: <20200111094857.284709841@linuxfoundation.org>
+Subject: [PATCH 4.14 51/62] net: stmmac: dwmac-sun8i: Allow all RGMII modes
+Date:   Sat, 11 Jan 2020 10:50:33 +0100
+Message-Id: <20200111094853.543106050@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -59,49 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit eb8ef2a3c50092bb018077c047b8dba1ce0e78e3 ]
+[ Upstream commit f1239d8aa84dad8fe4b6cc1356f40fc8e842db47 ]
 
-Both vlan_dev_change_flags() and vlan_dev_set_egress_priority()
-can return an error. vlan_changelink() should not ignore them.
+Allow all the RGMII modes to be used. This would allow us to represent
+the hardware better in the device tree with RGMII_ID where in most
+cases the PHY's internal delay for both RX and TX are used.
 
-Fixes: 07b5b17e157b ("[VLAN]: Use rtnl_link API")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
+Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/8021q/vlan_netlink.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/8021q/vlan_netlink.c
-+++ b/net/8021q/vlan_netlink.c
-@@ -95,11 +95,13 @@ static int vlan_changelink(struct net_de
- 	struct ifla_vlan_flags *flags;
- 	struct ifla_vlan_qos_mapping *m;
- 	struct nlattr *attr;
--	int rem;
-+	int rem, err;
- 
- 	if (data[IFLA_VLAN_FLAGS]) {
- 		flags = nla_data(data[IFLA_VLAN_FLAGS]);
--		vlan_dev_change_flags(dev, flags->flags, flags->mask);
-+		err = vlan_dev_change_flags(dev, flags->flags, flags->mask);
-+		if (err)
-+			return err;
- 	}
- 	if (data[IFLA_VLAN_INGRESS_QOS]) {
- 		nla_for_each_nested(attr, data[IFLA_VLAN_INGRESS_QOS], rem) {
-@@ -110,7 +112,9 @@ static int vlan_changelink(struct net_de
- 	if (data[IFLA_VLAN_EGRESS_QOS]) {
- 		nla_for_each_nested(attr, data[IFLA_VLAN_EGRESS_QOS], rem) {
- 			m = nla_data(attr);
--			vlan_dev_set_egress_priority(dev, m->from, m->to);
-+			err = vlan_dev_set_egress_priority(dev, m->from, m->to);
-+			if (err)
-+				return err;
- 		}
- 	}
- 	return 0;
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+@@ -724,6 +724,9 @@ static int sun8i_dwmac_set_syscon(struct
+ 		/* default */
+ 		break;
+ 	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
+ 		reg |= SYSCON_EPIT | SYSCON_ETCS_INT_GMII;
+ 		break;
+ 	case PHY_INTERFACE_MODE_RMII:
 
 
