@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9B9C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE16C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53CFC206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54DCB206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737621;
-	bh=HlecI9gKXoWl/hPCI+PALO7fLagPd1bhdYS2AohH6bo=;
+	s=default; t=1578737625;
+	bh=SRPiCPtw8xiS5BgQpUB5PsQmVLTB2kcg5TaYCoT3vdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=09adKObyUX+NY2WTzc6SNWhCNerr6amELnNmv8H65M1gX4W5CeZbAuJqoiF7SfmAt
-	 8lMzYF4U6CsDr5Qt9BUzA2B9hqIen38dpr1QmiiFwjDs7C0iq+tgwveM6jnny00OrD
-	 1M0/nsxZf5YIFosJQXN82jlPGovHab1Zn7bbeJ4I=
+	b=g9uXm5kK0R63BTgIW9TwBwRBMCVz9Url09WlB/QtbZvraRewTehKZzhN8LdmWGNC7
+	 h9kUf64sjb/+hGvRBoziNk2JNr+PisFvF61KfJBqhC8vzwp4sTLhq/mtvulY4jkMUx
+	 rTFkqIQRQIdFmJBZ4at6SfGEcoLdCWtyWLkOrqQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbgAKKNk (ORCPT
+        id S1730036AbgAKKNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:13:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52522 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:13:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729738AbgAKKNg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:13:36 -0500
+        id S1729883AbgAKKNk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:13:40 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A857420673;
-        Sat, 11 Jan 2020 10:13:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0AE520673;
+        Sat, 11 Jan 2020 10:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737615;
-        bh=HlecI9gKXoWl/hPCI+PALO7fLagPd1bhdYS2AohH6bo=;
+        s=default; t=1578737619;
+        bh=SRPiCPtw8xiS5BgQpUB5PsQmVLTB2kcg5TaYCoT3vdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M8j6VFAGcH9ORbMddatS4fmcZAuQc6oOqa3lF+Y74aRmXpGvj6cNKq19q9BeAZzol
-         xvNJ1s92wqrPup+uRALTd1AvOlY6Sz9it1myfRUoKHmZE6XSpanm/uV5Af5QmJUq/P
-         Ezl36EKi6FIqUBmGtDT+9XSmVCEhnO7eT9H2d30Q=
+        b=bqggsr9CrX+So1B7vjpYJgoBtdFxAWfl3gXpesVsZ26BFb50RTZXSwiansyT5+yhL
+         rGjb4C0usP/4JnPWSLluw2DzxVh7nL1lVe/CDYMSxWQunn/O5GLTkGmfY5F7WH/DIM
+         zwCDY3mUvZDvCp5qSTgpXOQ1HzF1QQwcBOTf+szQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 51/62] net: stmmac: dwmac-sun8i: Allow all RGMII modes
-Date:   Sat, 11 Jan 2020 10:50:33 +0100
-Message-Id: <20200111094853.543106050@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>
+Subject: [PATCH 4.19 01/84] USB: dummy-hcd: use usb_urb_dir_in instead of usb_pipein
+Date:   Sat, 11 Jan 2020 10:49:38 +0100
+Message-Id: <20200111094845.571050552@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
-References: <20200111094837.425430968@linuxfoundation.org>
+In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
+References: <20200111094845.328046411@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,33 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-[ Upstream commit f1239d8aa84dad8fe4b6cc1356f40fc8e842db47 ]
+commit 6dabeb891c001c592645df2f477fed9f5d959987 upstream.
 
-Allow all the RGMII modes to be used. This would allow us to represent
-the hardware better in the device tree with RGMII_ID where in most
-cases the PHY's internal delay for both RX and TX are used.
+Commit fea3409112a9 ("USB: add direction bit to urb->transfer_flags") has
+added a usb_urb_dir_in() helper function that can be used to determine
+the direction of the URB. With that patch USB_DIR_IN control requests with
+wLength == 0 are considered out requests by real USB HCDs. This patch
+changes dummy-hcd to use the usb_urb_dir_in() helper to match that
+behavior.
 
-Fixes: 9f93ac8d4085 ("net-next: stmmac: Add dwmac-sun8i")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Link: https://lore.kernel.org/r/4ae9e68ebca02f08a93ac61fe065057c9a01f0a8.1571667489.git.andreyknvl@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -724,6 +724,9 @@ static int sun8i_dwmac_set_syscon(struct
- 		/* default */
- 		break;
- 	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		reg |= SYSCON_EPIT | SYSCON_ETCS_INT_GMII;
- 		break;
- 	case PHY_INTERFACE_MODE_RMII:
+---
+ drivers/usb/gadget/udc/dummy_hcd.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- a/drivers/usb/gadget/udc/dummy_hcd.c
++++ b/drivers/usb/gadget/udc/dummy_hcd.c
+@@ -1335,7 +1335,7 @@ static int dummy_perform_transfer(struct
+ 	u32 this_sg;
+ 	bool next_sg;
+ 
+-	to_host = usb_pipein(urb->pipe);
++	to_host = usb_urb_dir_in(urb);
+ 	rbuf = req->req.buf + req->req.actual;
+ 
+ 	if (!urb->num_sgs) {
+@@ -1423,7 +1423,7 @@ top:
+ 
+ 		/* FIXME update emulated data toggle too */
+ 
+-		to_host = usb_pipein(urb->pipe);
++		to_host = usb_urb_dir_in(urb);
+ 		if (unlikely(len == 0))
+ 			is_short = 1;
+ 		else {
+@@ -1844,7 +1844,7 @@ restart:
+ 
+ 		/* find the gadget's ep for this request (if configured) */
+ 		address = usb_pipeendpoint (urb->pipe);
+-		if (usb_pipein(urb->pipe))
++		if (usb_urb_dir_in(urb))
+ 			address |= USB_DIR_IN;
+ 		ep = find_endpoint(dum, address);
+ 		if (!ep) {
+@@ -2399,7 +2399,7 @@ static inline ssize_t show_urb(char *buf
+ 			s = "?";
+ 			break;
+ 		 } s; }),
+-		ep, ep ? (usb_pipein(urb->pipe) ? "in" : "out") : "",
++		ep, ep ? (usb_urb_dir_in(urb) ? "in" : "out") : "",
+ 		({ char *s; \
+ 		switch (usb_pipetype(urb->pipe)) { \
+ 		case PIPE_CONTROL: \
 
 
