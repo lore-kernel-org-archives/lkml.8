@@ -2,128 +2,110 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E2EC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3EDC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0974920880
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AAA020880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:08:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578740939;
+	bh=MvZS5WNLqGW/doVpAC+w0vfPLEIYo0Xh8CvN9CODJMw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LH/2d+rF6zvLcxTAbO8N868qMNoFk7WNPRA2Ga5iYElDh9R2S2oj9eoHnbffwxng9
+	 PorfrXF8j2bxy0H2u6ffn4cKtfP/qMs6St3uzea9Xk/2OpvvUDF6mZkRHKuYY9vxmC
+	 3qn3kRuopBqUuvM8SqV1y6/7eYvVhtWZQ2g7ju2Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729445AbgAKLHz (ORCPT
+        id S1729504AbgAKLI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 06:07:55 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:32947 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729302AbgAKLHy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 06:07:54 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iqEcB-0000Ef-0n; Sat, 11 Jan 2020 12:07:35 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 45B3D100C52; Sat, 11 Jan 2020 12:07:34 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, arnd@arndb.de,
-        vincenzo.frascino@arm.com, luto@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [RFC PATCH v2 07/10] lib: vdso: don't use READ_ONCE() in __c_kernel_time()
-In-Reply-To: <a995445f-9b00-ca13-d23a-1aea3b345718@c-s.fr>
-References: <cover.1577111363.git.christophe.leroy@c-s.fr> <fc1ff722c7cbe63a63ae02ade3a714d2049d54a5.1577111367.git.christophe.leroy@c-s.fr> <87lfqfrp7d.fsf@nanos.tec.linutronix.de> <a995445f-9b00-ca13-d23a-1aea3b345718@c-s.fr>
-Date:   Sat, 11 Jan 2020 12:07:34 +0100
-Message-ID: <878smes13d.fsf@nanos.tec.linutronix.de>
+        Sat, 11 Jan 2020 06:08:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36242 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729474AbgAKLI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 06:08:58 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB1C82082E;
+        Sat, 11 Jan 2020 11:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578740937;
+        bh=MvZS5WNLqGW/doVpAC+w0vfPLEIYo0Xh8CvN9CODJMw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=W71HK4nQVFWYKXO6PQmIEYQacdiYUhe84vSF8z0aNinhUlqnsJA5H1t+E3MPqyhES
+         oxshknnX5UWpQCJNOpFjV3dtVuXEAh/Yv4gpf3SJVcsgdB8g4WvXnx0YDSWLcR06z7
+         ZwsH34HdzX+e51ZbHSWI6E+eWYT/L1u8fWJlWGOs=
+Date:   Sat, 11 Jan 2020 11:08:48 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Beniamin Bia <beniamin.bia@analog.com>
+Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
+        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
+        <knaack.h@gmx.de>
+Subject: Re: [PATCH] iio: frequency: adf4371: Fix divide by zero exception
+ bug
+Message-ID: <20200111110848.7c45a4f3@archlinux>
+In-Reply-To: <20200107131559.17772-1-beniamin.bia@analog.com>
+References: <20200107131559.17772-1-beniamin.bia@analog.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
->
-> With READ_ONCE() the 64 bits are being read:
->
-> Without the READ_ONCE() only 32 bits are read. That's the most optimal.
->
-> Without READ_ONCE() but with a barrier() after the read, we should get 
-> the same result but GCC (GCC 8.1) does less good:
->
-> Assuming both part of the 64 bits data will fall into a single 
-> cacheline, the second read is in the noise.
+On Tue, 7 Jan 2020 15:15:59 +0200
+Beniamin Bia <beniamin.bia@analog.com> wrote:
 
-They definitely are in the same cacheline.
+> From: Michael Hennerich <michael.hennerich@analog.com>
+> 
+> During initialization adf4371_pll_fract_n_get_rate() is called on all
+> output channels to determine if the device was setup. In this case
+> mod2 is zero which can cause a divide by zero exception.
+> Return before that can happen.
+I'm confused by this description vs the code.
 
-> So agreed to drop this change.
+As far as I can see fract_n_get_rate is only called on a sysfs read of
+the frequency. 
 
-We could be smart about this and force the compiler to issue a 32bit
-read for 32bit builds. See below. Not sure whether it's worth it, but
-OTOH it will take quite a while until the 32bit time interfaces die
-completely.
+mod2 is set when fract_n_compute is called in the relevant set_freq calls.
+This seems to occur on a sysfs set frequency call.
 
-Thanks,
+So the issue here is that a sysfs read before a write of the frequency
+will cause a div zero?  If so, is there a sane set of initial values we
+can put in mod2 and friends before exposing them via the device register?
 
-        tglx
+If mod2==0 is a valid value and indicates for example that the channel
+is turned off, then the description should make that clear.
 
-8<------------
---- a/include/vdso/datapage.h
-+++ b/include/vdso/datapage.h
-@@ -21,6 +21,18 @@
- #define CS_RAW		1
- #define CS_BASES	(CS_RAW + 1)
- 
-+#ifdef __LITTLE_ENDIAN
-+struct sec_hl {
-+	u32	sec_l;
-+	u32	sec_h;
-+};
-+#else
-+struct sec_hl {
-+	u32	sec_h;
-+	u32	sec_l;
-+};
-+#endif
-+
- /**
-  * struct vdso_timestamp - basetime per clock_id
-  * @sec:	seconds
-@@ -35,7 +47,10 @@
-  * vdso_data.cs[x].shift.
-  */
- struct vdso_timestamp {
--	u64	sec;
-+	union {
-+		u64		sec;
-+		struct sec_hl	sec_hl;
-+	};
- 	u64	nsec;
- };
- 
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -165,8 +165,13 @@ static __maybe_unused int
- static __maybe_unused __kernel_old_time_t __cvdso_time(__kernel_old_time_t *time)
- {
- 	const struct vdso_data *vd = __arch_get_vdso_data();
--	__kernel_old_time_t t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
-+	__kernel_old_time_t t;
- 
-+#if BITS_PER_LONG == 32
-+	t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec_hl.sec_l);
-+#else
-+	t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
-+#endif
- 	if (time)
- 		*time = t;
- 
+Jonathan
+
+> 
+> Fixes: 7f699bd149134 ("iio: frequency: adf4371: Add support for ADF4371 PLL")
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+> ---
+>  drivers/iio/frequency/adf4371.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/drivers/iio/frequency/adf4371.c b/drivers/iio/frequency/adf4371.c
+> index e2a599b912e5..c21462238314 100644
+> --- a/drivers/iio/frequency/adf4371.c
+> +++ b/drivers/iio/frequency/adf4371.c
+> @@ -191,6 +191,9 @@ static unsigned long long adf4371_pll_fract_n_get_rate(struct adf4371_state *st,
+>  	unsigned long long val, tmp;
+>  	unsigned int ref_div_sel;
+>  
+> +	if (st->mod2 == 0)
+> +		return 0;
+> +
+>  	val = (((u64)st->integer * ADF4371_MODULUS1) + st->fract1) * st->fpfd;
+>  	tmp = (u64)st->fract2 * st->fpfd;
+>  	do_div(tmp, st->mod2);
+
