@@ -2,82 +2,68 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE816C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 23:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B93C6C33CA7
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 23:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 990C520882
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 23:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FC72087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 23:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578786605;
+	bh=2HUMJJssHUU296MPTkQi4Y/r+PClSLkFwz9ElNmEE6o=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=1jAX/sYoFL95/uS2Ga44YgC4mqY75zNsIL4i1L33fMVnYqfP6ynUys+ETOdDm8yMf
+	 yKdLQlONNuQVjX60UnUEztvhLYDHW2VPP4qtyAZlg+HiMmTy5i3K4oyibor+d/j79z
+	 DlFUNFuts0+Et5G7a25KTLfzOhsgyNMqNY9sT7DA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731740AbgAKXif (ORCPT
+        id S1731736AbgAKXuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 18:38:35 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:33246 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731706AbgAKXic (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 18:38:32 -0500
-Received: by mail-il1-f199.google.com with SMTP id s9so4755771ilk.0
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 15:38:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to:cc;
-        bh=HG8PSEk+Nu2G0yzQ1sauBjh8yX4UWlbofl1tNDseMog=;
-        b=gxbPYcf5TynFC36idqUc+QfGggvKDO4fqWK1xKVeA9Y1HX9fV4adF5tKKqcRJaraHT
-         tmG51CUlJ29ZxzMR4xKfH8c1mE8lh3fWvWqOdGyMl90rDNqdJUheoqj7T+HEKn9wUwbR
-         bAWZ6ok8EiqU9lai5JfLf1I1sP1LR2eNB6arnhaHia/SlirzkiRzhv16YAicF4PaNNMF
-         2jTEJYDDYV+7RqItWWvGy+5tzD8gqoE0CKnRoU3+2xJ1AGOVTalA7YtZok/MLgPO4pJV
-         VXhRhu3wh3rLyutUuYRLDmTHnmxDWEuqIi/2tWwqJHMjSgfEeyuLyxuSmDVg3NfKUZ3x
-         6J0w==
-X-Gm-Message-State: APjAAAVTcmBcmnIw78uJlZCPTB6nBPYqcSxF1HTA/k6WIWFBN69uaKbe
-        vcQU2dmPrbWTRYPd3eleIiPYpg+fMb30Q4ImHsKA44Bw05zz
-X-Google-Smtp-Source: APXvYqzY3G/r7L2fdqmCj2j/h1C1sHPcBcM4PyU4coxfrfPzxUmQUqHGDBOKiBTJVPd2Dc1kvuMmxK6iFOuHlz4BJK9Zg+ciJv/g
-MIME-Version: 1.0
-X-Received: by 2002:a6b:c804:: with SMTP id y4mr7776396iof.210.1578785911931;
- Sat, 11 Jan 2020 15:38:31 -0800 (PST)
-Date:   Sat, 11 Jan 2020 15:38:31 -0800
-In-Reply-To: <CAM_iQpWN-SKjjrG_7EQ-x+7UMiu6foaNWMJuwQuwN0BGmayB+A@mail.gmail.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000751268059be5bdfc@google.com>
-Subject: Re: Re: WARNING: bad unlock balance in __dev_queue_xmit
-From:   syzbot <syzbot+ad4ea1dd5d26131a58a6@syzkaller.appspotmail.com>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     a@unstable.cc, alex.aring@gmail.com, allison@lohutok.net,
-        andrew@lunn.ch, andy@greyhouse.net, ap420073@gmail.com,
-        ast@domdv.de, b.a.t.m.a.n@lists.open-mesh.org,
-        bridge@lists.linux-foundation.org, cleech@redhat.com,
-        daniel@iogearbox.net, davem@davemloft.net, dsa@cumulusnetworks.com,
-        f.fainelli@gmail.com, fw@strlen.de, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, haiyangz@microsoft.com, info@metux.net,
-        j.vosburgh@gmail.com, j@w1.fi, jakub.kicinski@netronome.com,
-        jhs@mojatatu.com, jiri@resnulli.us, johan.hedberg@gmail.com,
-        johannes.berg@intel.com, john.hurley@netronome.com,
-        jwi@linux.ibm.com, kstewart@linuxfoundation.org,
-        kuznet@ms2.inr.ac.ru, kvalo@codeaurora.org, kys@microsoft.com,
-        linmiaohe@huawei.com, linux-bluetooth@vger.kernel.org,
-        linux-hams@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-ppp@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-wpan@vger.kernel.org,
-        liuhangbin@gmail.com, marcel@holtmann.org,
-        mareklindner@neomailbox.ch, mkubecek@suse.cz,
-        mmanning@vyatta.att-mail.com, netdev@vger.kernel.org,
-        nikolay@cumulusnetworks.com, oss-drivers@netronome.com,
-        pabeni@redhat.com, paulus@samba.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Sat, 11 Jan 2020 18:50:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36528 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731718AbgAKXuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 18:50:04 -0500
+Subject: Re: [GIT PULL] thread fixes v5.5-rc6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578786603;
+        bh=2HUMJJssHUU296MPTkQi4Y/r+PClSLkFwz9ElNmEE6o=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=qx4s3y73vqnVMRYEVhq4XlSwxV/aZT6LtIoZcfHziLykMpU25mOri/3b1hxc8N2r+
+         tRP9SoTCScizTRCEFXGY22Vqr5UVWlhTTD7yieJkGQiSG+BxukMP3udFUSTSF+deZx
+         zgN+HNK+hk56oCFgxS4QY+7nfuPdMedGN6qJUo90=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200111182330.27309-1-christian.brauner@ubuntu.com>
+References: <20200111182330.27309-1-christian.brauner@ubuntu.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200111182330.27309-1-christian.brauner@ubuntu.com>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux
+ tags/clone3-tls-v5.5-rc6
+X-PR-Tracked-Commit-Id: 457677c70c7672a4586b0b8abc396cc1ecdd376d
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 606e9ad20094f6d500166881d301f31a51bc8aa7
+Message-Id: <157878660369.3074.18007303733434529451.pr-tracker-bot@kernel.org>
+Date:   Sat, 11 Jan 2020 23:50:03 +0000
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> #syz dup: WARNING: bad unlock balance in sch_direct_xmit
+The pull request you sent on Sat, 11 Jan 2020 19:23:30 +0100:
 
-Your 'dup:' command is accepted, but please keep  
-syzkaller-bugs@googlegroups.com mailing list in CC next time. It serves as  
-a history of what happened with each bug report. Thank you.
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/brauner/linux tags/clone3-tls-v5.5-rc6
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/606e9ad20094f6d500166881d301f31a51bc8aa7
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
