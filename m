@@ -2,99 +2,102 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A16C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 05:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD91C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 05:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87EBF2072E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 05:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA67B2072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 05:24:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EfLNcTrA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKkDsIox"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgAKFVe (ORCPT
+        id S1726314AbgAKFYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 00:21:34 -0500
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:39764 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbgAKFVd (ORCPT
+        Sat, 11 Jan 2020 00:24:12 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35062 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgAKFYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 00:21:33 -0500
-Received: by mail-pg1-f202.google.com with SMTP id v2so2561348pgv.6
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 21:21:33 -0800 (PST)
+        Sat, 11 Jan 2020 00:24:11 -0500
+Received: by mail-ot1-f67.google.com with SMTP id i15so4135098oto.2;
+        Fri, 10 Jan 2020 21:24:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=akStK7cAQ1K40w8QqJEEzvrlAYC6BEPLaA78AG3pM3c=;
-        b=EfLNcTrAXh/gBFWOy/gII1NLW7dRm7gbI2I/wTLJpbxCYZmibQJfGJ2SiLIzBO7MOj
-         NQY967j8uHyXwE8P1QX1o28ld8XXHEFiSwCkV6fE85bt8ut6bLSEPMGQkJHjT0RC4lZo
-         XSe5YYQsS00wunej07dbAIkFcS8zLRrXFopTpPx8SA2vvRsxNiQEo9vj1LchyoiKUROt
-         lC6aJcIdxiEviPYKnrckkZAB+bJBYUMIsccfeO1ZMGmRARGLQa7cMmkS3vIfyE2pIt/Z
-         uoLpmhLsT8fTQq37D9osD2GD6LFhSaRemkxB9iMR3zgEj6iKVpy/+nKccnSht34PVDZA
-         7nyw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ulN2oU6xZjaVScLYbWPyLshfWZ9NLYCBI301oK8HmTc=;
+        b=KKkDsIoxY+z4pfkRvdwVhz06iHBeS+Km6wMD5Gd9lKk8HfdIe7tyFqNXw8B4M/pYSs
+         rBNAE/kV7AMQn/yjzTTrPfOZik3TFDGcOvBi4xK6sdMy4GSPYPCsb0jZIGTM0HJfTVi0
+         clqWSA4oPnvxYRN6plRnrQrONZ2v5/emp7HaaYs8TRO4NsfZb9Y3Ii5xiwDnjvyBE7io
+         807pKvWH/9vgKwkAxvy/3nT4FKwkh8y6pcw56IG43tASV7twVeyumj/x1JPad3iOUrue
+         1II8kD7pyUGAweXuFUpbL04JtsjJoAJVaHOxkgU81+Jznj4RkgbRdckZNGjFkNA5KML0
+         O7Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=akStK7cAQ1K40w8QqJEEzvrlAYC6BEPLaA78AG3pM3c=;
-        b=ew4k8B0ClaSlQzC4kAl/hJvbVkOyjUoDDEi89oqdi77gOQl3SbGfpCHEPeFvp8DEMU
-         I6CLiCR0Sb+ZaXteNej9sTYMAffqmXSetpMHToFF30WPAJxHMRATmEfmoBxs4/S0jkAI
-         vNJo63uB//2n7Uxc0VonHldMfgfrP1Hyi1IfM0b1q/M1X9UQyv+TGCjr16Qe/VPhJUHi
-         TF2i2JLxpBCdcelsqGDemPrBIq6oICWaaf6pXTEjN3Mn79FVdFRU1duqT32bt4hxYZwG
-         sPQhc2GLPcdeDwd22osP4zhJynfzKHsFWRQuqjq9wHWDYTYpORix+qzvtKmMEbC0OZ+h
-         zaxw==
-X-Gm-Message-State: APjAAAWSXtxaTWJCnZtw6tcksIxQfNIZTCNNYczakLIoWWSan+tVqi4c
-        s79tHkMjIKDFT3jqafitox2BUniioVw+qCA=
-X-Google-Smtp-Source: APXvYqxrcAZKAOCmlJkcK00pEZ1ULraOQ25v9oaNtJVmR1a9xAwuh5cvtTe4RR9EFA0ve0lSU2kt4O9GCO4Q4w0=
-X-Received: by 2002:a63:5807:: with SMTP id m7mr8296993pgb.83.1578720092840;
- Fri, 10 Jan 2020 21:21:32 -0800 (PST)
-Date:   Fri, 10 Jan 2020 21:21:25 -0800
-Message-Id: <20200111052125.238212-1-saravanak@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
-Subject: [PATCH v1] clocksource: Avoid creating dead devices
-From:   Saravana Kannan <saravanak@google.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
-        linux-kernel@vger.kernel.org
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ulN2oU6xZjaVScLYbWPyLshfWZ9NLYCBI301oK8HmTc=;
+        b=ddHVPldLrDGlOR0ts0YciT07f3j7aEO8V4FzL9z5ZrKGJeoK5xvVuhEv488205xHVM
+         ItwM2FnM1XG02lj6XzuMpcYYB2jHRyiGN8Lt1Qj5q0tv0rqJrcP8Wnd2+DEQBeqVr9t/
+         34FX6YUE6FVoTbz797xHfXaqmnvG9qJP0AahjNdBtM8PjXrTqCGY1EsWK8Mk90fMwYBD
+         ZrqAyCHkPbt2mHm71h/MUoypy093NJ+6mdyiOpkWIHQdLwvJJg1dHQkui4R38wBOj97a
+         IMtjfoW4dAB59GmZTL9q2596/e2mFhX4utFKXKKl0XRl8YBimtIgotRWYSRUvRFCPyel
+         q+dg==
+X-Gm-Message-State: APjAAAX6VdjL7zlMOlVQl+9Ov377eHXfmDTVoWC9+CBG9Hx8bSP6KbZK
+        oxjzeh1PmUkujQEIv+XGXtz8r6coxKvIWVcn5XcLxj/IuUHwgw==
+X-Google-Smtp-Source: APXvYqw9ewCZDB4jVPAZcXejrgmV2upwbAa/c2CbDKio7tYR1Bk+jtkM+YJNvNgdzbZ6t+UPeZMrc4fVvYqXxQYv2F8=
+X-Received: by 2002:a05:6830:1515:: with SMTP id k21mr5241169otp.177.1578720250672;
+ Fri, 10 Jan 2020 21:24:10 -0800 (PST)
+MIME-Version: 1.0
+References: <00000000000073b469059bcde315@google.com> <b5d74ce6b6e3c4b39cfac7df6c2b65d0a43d4416.camel@sipsolutions.net>
+In-Reply-To: <b5d74ce6b6e3c4b39cfac7df6c2b65d0a43d4416.camel@sipsolutions.net>
+From:   Justin Capella <justincapella@gmail.com>
+Date:   Fri, 10 Jan 2020 21:23:57 -0800
+Message-ID: <CAMrEMU_a9evtp26tYB6VUxznmSmH98AmpP8xnejQr5bGTgE+8g@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel NULL pointer dereference in cfg80211_wext_siwrts
+To:     Johannes Berg <johannes@sipsolutions.net>
+Cc:     syzbot <syzbot+34b582cf32c1db008f8e@syzkaller.appspotmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        Cody Schuffelen <schuffelen@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Timer initialization is done during early boot way before the driver
-core starts processing devices and drivers. Timers initialized during
-this early boot period don't really need or use a struct device.
+I noticed pfifo_qdisc_ops is exported as default_qdisc_ops is it
+possible this is how rdev->ops is NULL
 
-However, for timers represented as device tree nodes, the struct devices
-are still created and sit around unused and wasting memory. This change
-avoid this by marking the device tree nodes as "populated" if the
-corresponding timer is successfully initialized.
+Seems unlikely, but thought I'd point it out.
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- drivers/clocksource/timer-probe.c | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
-index ee9574da53c0..a10f28d750a9 100644
---- a/drivers/clocksource/timer-probe.c
-+++ b/drivers/clocksource/timer-probe.c
-@@ -27,8 +27,10 @@ void __init timer_probe(void)
- 
- 		init_func_ret = match->data;
- 
-+		of_node_set_flag(np, OF_POPULATED);
- 		ret = init_func_ret(np);
- 		if (ret) {
-+			of_node_clear_flag(np, OF_POPULATED);
- 			if (ret != -EPROBE_DEFER)
- 				pr_err("Failed to initialize '%pOF': %d\n", np,
- 				       ret);
--- 
-2.25.0.rc1.283.g88dfdc4193-goog
-
+On Fri, Jan 10, 2020 at 11:13 AM Johannes Berg
+<johannes@sipsolutions.net> wrote:
+>
+> On Fri, 2020-01-10 at 11:11 -0800, syzbot wrote:
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    2f806c2a Merge branch 'net-ungraft-prio'
+> > git tree:       net
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1032069ee00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5c90cac8f1f8c619
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=34b582cf32c1db008f8e
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> >
+> > Unfortunately, I don't have any reproducer for this crash yet.
+>
+> It's quite likely also in virt_wifi, evidently that has some issues.
+>
+> Cody, did you take a look at the previous report by any chance?
+>
+> johannes
+>
