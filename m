@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFD2C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2A28C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476D62082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B25720882
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:09:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737356;
-	bh=4FTqzjfn+w4KqdDw37CbAaA3bjTre5V3IOWDORrU7oI=;
+	s=default; t=1578737360;
+	bh=3BSS7eqYolKQLg45blKvyGb2gdE7a0VSAT/zm/DuAvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gN2b+2fMGFxhm6H5lLCVl51me1wh908vak+4celhBNjotcid9XE+EFDYaIoOZgBPj
-	 GvmHKYgrUX/xvhKapG2y2eYaLc7xinEf6q22iSNT2CsnYP55d7Rn5X9hs3iWjbfQxu
-	 2xUqaMSuFQkA3TadS7aa9zXxfJ2b34Z99kvTBTpU=
+	b=xvOssc3tRDhxJlgfMGnIOoqc1rJGTMIc/T4bnxcqMzzEO9Y5o7qhGXdEyIvKR/pIM
+	 JooZ1BcJWMrtgeTOHt1WLSYDQFhW6lM4E9WROocXI8/zeU8bLCvkgk4RMzV8RFGLFg
+	 /OoIAthBwdLjHCFvq4ZiqtkDL9eJHJy7tyAg0rdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729731AbgAKKJP (ORCPT
+        id S1729743AbgAKKJT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:09:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44910 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:09:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729097AbgAKKJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:09:14 -0500
+        id S1729097AbgAKKJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:09:18 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C31002082E;
-        Sat, 11 Jan 2020 10:09:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C99E2082E;
+        Sat, 11 Jan 2020 10:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737354;
-        bh=4FTqzjfn+w4KqdDw37CbAaA3bjTre5V3IOWDORrU7oI=;
+        s=default; t=1578737358;
+        bh=3BSS7eqYolKQLg45blKvyGb2gdE7a0VSAT/zm/DuAvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q2SuLRrqsPkdOfZZN1eljsy+xZYsJ9JY3w/TP3AaLf+cQUQuV0VLyHGm6C1+2D+zf
-         sc7ScKWzx/50H5L0N3hY6NtIL6FDYzhKg8qoe4a7doa0M157Yg9CNB7CsOeA2QsXfG
-         ITdsUmxGVlu68qvzTkgSb9MlaX4a8lCi8GOrilbU=
+        b=Zh36AS5qyj9vDOxr9DYm1gKQPbrYYgadeqiPfrPuNAQI5j/3ZmaQ0whnrTLwGd1Fy
+         nqiB3DzD30wJMG9XuUxd2meGjAx3RoIW4mj1WwNnjJh/6dJFgJCjrTOi4pB3ZuthL2
+         4c+v6pMiLmZoV3uwt2lb8YopzHQgz6eU5qiKhWuI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org,
+        Christian Zigotzky <chzigotzky@xenosoft.de>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 13/62] netfilter: nf_tables: validate NFT_SET_ELEM_INTERVAL_END
-Date:   Sat, 11 Jan 2020 10:49:55 +0100
-Message-Id: <20200111094842.726629076@linuxfoundation.org>
+Subject: [PATCH 4.14 22/62] powerpc: Ensure that swiotlb buffer is allocated from low memory
+Date:   Sat, 11 Jan 2020 10:50:04 +0100
+Message-Id: <20200111094844.242659539@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -59,48 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-[ Upstream commit bffc124b6fe37d0ae9b428d104efb426403bb5c9 ]
+[ Upstream commit 8fabc623238e68b3ac63c0dd1657bf86c1fa33af ]
 
-Only NFTA_SET_ELEM_KEY and NFTA_SET_ELEM_FLAGS make sense for elements
-whose NFT_SET_ELEM_INTERVAL_END flag is set on.
+Some powerpc platforms (e.g. 85xx) limit DMA-able memory way below 4G.
+If a system has more physical memory than this limit, the swiotlb
+buffer is not addressable because it is allocated from memblock using
+top-down mode.
 
-Fixes: 96518518cc41 ("netfilter: add nftables")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Force memblock to bottom-up mode before calling swiotlb_init() to
+ensure that the swiotlb buffer is DMA-able.
+
+Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191204123524.22919-1-rppt@kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ arch/powerpc/mm/mem.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 7ef126489d4e..91490446ebb4 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -3917,14 +3917,20 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
- 		if (nla[NFTA_SET_ELEM_DATA] == NULL &&
- 		    !(flags & NFT_SET_ELEM_INTERVAL_END))
- 			return -EINVAL;
--		if (nla[NFTA_SET_ELEM_DATA] != NULL &&
--		    flags & NFT_SET_ELEM_INTERVAL_END)
--			return -EINVAL;
- 	} else {
- 		if (nla[NFTA_SET_ELEM_DATA] != NULL)
- 			return -EINVAL;
- 	}
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index 30bf13b72e5e..3c5abfbbe60e 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -353,6 +353,14 @@ void __init mem_init(void)
+ 	BUILD_BUG_ON(MMU_PAGE_COUNT > 16);
  
-+	if ((flags & NFT_SET_ELEM_INTERVAL_END) &&
-+	     (nla[NFTA_SET_ELEM_DATA] ||
-+	      nla[NFTA_SET_ELEM_OBJREF] ||
-+	      nla[NFTA_SET_ELEM_TIMEOUT] ||
-+	      nla[NFTA_SET_ELEM_EXPIRATION] ||
-+	      nla[NFTA_SET_ELEM_USERDATA] ||
-+	      nla[NFTA_SET_ELEM_EXPR]))
-+		return -EINVAL;
-+
- 	timeout = 0;
- 	if (nla[NFTA_SET_ELEM_TIMEOUT] != NULL) {
- 		if (!(set->flags & NFT_SET_TIMEOUT))
+ #ifdef CONFIG_SWIOTLB
++	/*
++	 * Some platforms (e.g. 85xx) limit DMA-able memory way below
++	 * 4G. We force memblock to bottom-up mode to ensure that the
++	 * memory allocated in swiotlb_init() is DMA-able.
++	 * As it's the last memblock allocation, no need to reset it
++	 * back to to-down.
++	 */
++	memblock_set_bottom_up(true);
+ 	swiotlb_init(0);
+ #endif
+ 
 -- 
 2.20.1
 
