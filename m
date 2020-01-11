@@ -7,54 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05BFC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8343C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76892082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC4D20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736674;
-	bh=PlIafMZBo8Mwk2jZIYXatKhI+E4AfG6SYJgcW9+Cu58=;
+	s=default; t=1578736680;
+	bh=94hAH9NlWUCGPC3/bxmyNYELJcLDeZ9hO8DfsagdILU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Azd08pZrLt+fEZMqr8K204lDVvOnne/ZhfZ0GfifPXr2OXW5gqchemoDOv4d4dDRt
-	 t6i6Q1srsK14/dfBeT5GD6Udt1rMOX7ZyZMT5Epc7agHwwEcP6I2aXx0AgyLd7WDgi
-	 lpduANH2qwq12lZ43hJoXzfgiohgVcIOS3lBMKWs=
+	b=Dfpuvw2lLvN4BOgoi0U2OYLBFnz/FkiR++MCfqWWTGFUY64UkBaxwdJPVfIBxlAGr
+	 IjslGM3rcmLKCc02HCVeb85DM20w5FXCDABg99167OsmrFEvG4BcaKf+hH5Kf3g2Dq
+	 G8jqgb8+w8VpQnUKcHXb4/kF2n4UaFt2W6GBxwTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbgAKJ5y (ORCPT
+        id S1729189AbgAKJ6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:57:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50556 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:58:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728825AbgAKJ5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:57:53 -0500
+        id S1728825AbgAKJ57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:57:59 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 811612077C;
-        Sat, 11 Jan 2020 09:57:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99B4F2082E;
+        Sat, 11 Jan 2020 09:57:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736673;
-        bh=PlIafMZBo8Mwk2jZIYXatKhI+E4AfG6SYJgcW9+Cu58=;
+        s=default; t=1578736678;
+        bh=94hAH9NlWUCGPC3/bxmyNYELJcLDeZ9hO8DfsagdILU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PA457pU90wKv3ui5O63UQqtBPKaruOmpTtpWkqSaFFS2eQYHKJwKzy+bHxYCjVOIU
-         Zp9KFB/6axuM3kk8sX+7SF8ByBC8qqlyxnNd4Halyc/6TTN0DlZNR9rdLx+AM/5HRr
-         E3F9pMXKqyfYyy70KulZ4q0j8W+MqQIL2wQtN6fQ=
+        b=r6RFa0SnyR5gU8WzZF7uJrDx373sR5m6oUqqjnObJL5YJKDksWzqsCyZ4OE1Exvf4
+         rkPiNvzw9DaG3x4hXlaFVhGNsUOBSurNSw4ymnSzWEIqjJVNfZD8mk0CNcy6z5TDA1
+         6Xt24BgF4ne9KtcV743ZxM9cpYPj0F9GrAH6MV3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Subject: [PATCH 4.4 32/59] locking/x86: Remove the unused atomic_inc_short() methd
-Date:   Sat, 11 Jan 2020 10:49:41 +0100
-Message-Id: <20200111094844.781299931@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 54/59] vlan: vlan_changelink() should propagate errors
+Date:   Sat, 11 Jan 2020 10:50:03 +0100
+Message-Id: <20200111094851.924608194@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
 References: <20200111094835.417654274@linuxfoundation.org>
@@ -67,65 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Vyukov <dvyukov@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 31b35f6b4d5285a311e10753f4eb17304326b211 upstream.
+[ Upstream commit eb8ef2a3c50092bb018077c047b8dba1ce0e78e3 ]
 
-It is completely unused and implemented only on x86.
-Remove it.
+Both vlan_dev_change_flags() and vlan_dev_set_egress_priority()
+can return an error. vlan_changelink() should not ignore them.
 
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: http://lkml.kernel.org/r/20170526172900.91058-1-dvyukov@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Ben Hutchings <ben@decadent.org.uk>
+Fixes: 07b5b17e157b ("[VLAN]: Use rtnl_link API")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/tile/lib/atomic_asm_32.S |    3 +--
- arch/x86/include/asm/atomic.h |   13 -------------
- 2 files changed, 1 insertion(+), 15 deletions(-)
+ net/8021q/vlan_netlink.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/arch/tile/lib/atomic_asm_32.S
-+++ b/arch/tile/lib/atomic_asm_32.S
-@@ -24,8 +24,7 @@
-  * has an opportunity to return -EFAULT to the user if needed.
-  * The 64-bit routines just return a "long long" with the value,
-  * since they are only used from kernel space and don't expect to fault.
-- * Support for 16-bit ops is included in the framework but we don't provide
-- * any (x86_64 has an atomic_inc_short(), so we might want to some day).
-+ * Support for 16-bit ops is included in the framework but we don't provide any.
-  *
-  * Note that the caller is advised to issue a suitable L1 or L2
-  * prefetch on the address being manipulated to avoid extra stalls.
---- a/arch/x86/include/asm/atomic.h
-+++ b/arch/x86/include/asm/atomic.h
-@@ -220,19 +220,6 @@ static __always_inline int __atomic_add_
- 	return c;
- }
+--- a/net/8021q/vlan_netlink.c
++++ b/net/8021q/vlan_netlink.c
+@@ -92,11 +92,13 @@ static int vlan_changelink(struct net_de
+ 	struct ifla_vlan_flags *flags;
+ 	struct ifla_vlan_qos_mapping *m;
+ 	struct nlattr *attr;
+-	int rem;
++	int rem, err;
  
--/**
-- * atomic_inc_short - increment of a short integer
-- * @v: pointer to type int
-- *
-- * Atomically adds 1 to @v
-- * Returns the new value of @u
-- */
--static __always_inline short int atomic_inc_short(short int *v)
--{
--	asm(LOCK_PREFIX "addw $1, %0" : "+m" (*v));
--	return *v;
--}
--
- #ifdef CONFIG_X86_32
- # include <asm/atomic64_32.h>
- #else
+ 	if (data[IFLA_VLAN_FLAGS]) {
+ 		flags = nla_data(data[IFLA_VLAN_FLAGS]);
+-		vlan_dev_change_flags(dev, flags->flags, flags->mask);
++		err = vlan_dev_change_flags(dev, flags->flags, flags->mask);
++		if (err)
++			return err;
+ 	}
+ 	if (data[IFLA_VLAN_INGRESS_QOS]) {
+ 		nla_for_each_nested(attr, data[IFLA_VLAN_INGRESS_QOS], rem) {
+@@ -107,7 +109,9 @@ static int vlan_changelink(struct net_de
+ 	if (data[IFLA_VLAN_EGRESS_QOS]) {
+ 		nla_for_each_nested(attr, data[IFLA_VLAN_EGRESS_QOS], rem) {
+ 			m = nla_data(attr);
+-			vlan_dev_set_egress_priority(dev, m->from, m->to);
++			err = vlan_dev_set_egress_priority(dev, m->from, m->to);
++			if (err)
++				return err;
+ 		}
+ 	}
+ 	return 0;
 
 
