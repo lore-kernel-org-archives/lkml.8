@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29BD2C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE31C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0043B2146E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAB54214D8
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738840;
-	bh=bgXcfIByg55/2c4gGWxgG8H1jaDFW+ARq/kqI3jFuVE=;
+	s=default; t=1578738844;
+	bh=VdA8x5GJQUpm6U1ydO98WlhWqQKCLKaoQCa5iaUupi4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aQxgCebLZd5XJea7EdYmXa1dcNgzOiICSrEgLj3OIrJaZuuUsWcfuVq1ks3xJBUMG
-	 j34qvUyQPxnuT7OLhz5MYE6U9L7qORtVyHRLMp00A7QS3r1sG3dKiaGOtPG23+bA3T
-	 /ROkIzhTIjafUFh5UGVLo3GG+8DFkE2sIVAqDpM4=
+	b=kKhaUWUqFDIR8P8alK/xoV0xeWtys/mAft4J9J/VET/KeHuXNWVACuw2OnP33bXoy
+	 nIgrTL4SsuMdJI5GgAH4JTX002j/7NT/IL0ogd2tCUIla2WOcS6StlqRRP/AIJHIqG
+	 L/aC37J/UEEUl4Mrg7IfdNV1njVGES+WwfKycEqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731658AbgAKKd6 (ORCPT
+        id S1731539AbgAKKeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:33:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49248 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:34:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731211AbgAKKdy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:33:54 -0500
+        id S1731532AbgAKKd6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:33:58 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B785320880;
-        Sat, 11 Jan 2020 10:33:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFA3920678;
+        Sat, 11 Jan 2020 10:33:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738833;
-        bh=bgXcfIByg55/2c4gGWxgG8H1jaDFW+ARq/kqI3jFuVE=;
+        s=default; t=1578738837;
+        bh=VdA8x5GJQUpm6U1ydO98WlhWqQKCLKaoQCa5iaUupi4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y/UbYnwGqkEqrw6wwRCw8BJfRSz7O7gjuYfV2olQYMszkqqCEtRftvqU9kgmJl6Y8
-         95lm65mSxWYK/YLs+qYY5yTjjpH7qxHGP7DyFzP7olurgdXp3MFEzzt/MIujFuQ939
-         eAYfGBGzz82JhB4o99G1qWKCV30uv2kZXfW+Wyhw=
+        b=MrHNecXbRY1muN6MEubbfZtAyUrIZP7b3zUpwrJRXNt0+OqtrAxxrBIwsy32Wky4/
+         3KFJ9KOzZuTgABSBVFwblT7KmOuIvcgXXJ9KgQmXko3XCyrG1gRPgZSTZdYn9CbAPd
+         J99Uk6meSLUGBZTYOqlJVKLHFWuC4alMB8e4XKxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Guralnik <michaelgur@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 156/165] net/mlx5: Move devlink registration before interfaces load
-Date:   Sat, 11 Jan 2020 10:51:15 +0100
-Message-Id: <20200111094941.826266859@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Qi Zhou <atmgnd@outlook.com>
+Subject: [PATCH 5.4 165/165] usb: missing parentheses in USE_NEW_SCHEME
+Date:   Sat, 11 Jan 2020 10:51:24 +0100
+Message-Id: <20200111094943.996593208@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -59,67 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Guralnik <michaelgur@mellanox.com>
+From: Qi Zhou <atmgnd@outlook.com>
 
-[ Upstream commit a6f3b62386a02c1e94bfa22c543f82d63f5e631b ]
+commit 1530f6f5f5806b2abbf2a9276c0db313ae9a0e09 upstream.
 
-Register devlink before interfaces are added.
-This will allow interfaces to use devlink while initalizing. For example,
-call mlx5_is_roce_enabled.
+According to bd0e6c9614b9 ("usb: hub: try old enumeration scheme first
+for high speed devices") the kernel will try the old enumeration scheme
+first for high speed devices.  This can happen when a high speed device
+is plugged in.
 
-Fixes: aba25279c100 ("net/mlx5e: Add TX reporter support")
-Signed-off-by: Michael Guralnik <michaelgur@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+But due to missing parentheses in the USE_NEW_SCHEME define, this logic
+can get messed up and the incorrect result happens.
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Qi Zhou <atmgnd@outlook.com>
+Link: https://lore.kernel.org/r/ht4mtag8ZP-HKEhD0KkJhcFnVlOFV8N8eNjJVRD9pDkkLUNhmEo8_cL_sl7xy9mdajdH-T8J3TFQsjvoYQT61NFjQXy469Ed_BbBw_x4S1E=@protonmail.com
+[ fixup changelog text - gregkh]
+Cc: stable <stable@vger.kernel.org>
+Fixes: bd0e6c9614b9 ("usb: hub: try old enumeration scheme first for high speed devices")
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/main.c |   16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -1197,6 +1197,12 @@ static int mlx5_load_one(struct mlx5_cor
- 	if (err)
- 		goto err_load;
+---
+ drivers/usb/core/hub.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -2691,7 +2691,7 @@ static unsigned hub_is_wusb(struct usb_h
+ #define SET_ADDRESS_TRIES	2
+ #define GET_DESCRIPTOR_TRIES	2
+ #define SET_CONFIG_TRIES	(2 * (use_both_schemes + 1))
+-#define USE_NEW_SCHEME(i, scheme)	((i) / 2 == (int)scheme)
++#define USE_NEW_SCHEME(i, scheme)	((i) / 2 == (int)(scheme))
  
-+	if (boot) {
-+		err = mlx5_devlink_register(priv_to_devlink(dev), dev->device);
-+		if (err)
-+			goto err_devlink_reg;
-+	}
-+
- 	if (mlx5_device_registered(dev)) {
- 		mlx5_attach_device(dev);
- 	} else {
-@@ -1214,6 +1220,9 @@ out:
- 	return err;
- 
- err_reg_dev:
-+	if (boot)
-+		mlx5_devlink_unregister(priv_to_devlink(dev));
-+err_devlink_reg:
- 	mlx5_unload(dev);
- err_load:
- 	if (boot)
-@@ -1353,10 +1362,6 @@ static int init_one(struct pci_dev *pdev
- 
- 	request_module_nowait(MLX5_IB_MOD);
- 
--	err = mlx5_devlink_register(devlink, &pdev->dev);
--	if (err)
--		goto clean_load;
--
- 	err = mlx5_crdump_enable(dev);
- 	if (err)
- 		dev_err(&pdev->dev, "mlx5_crdump_enable failed with error code %d\n", err);
-@@ -1364,9 +1369,6 @@ static int init_one(struct pci_dev *pdev
- 	pci_save_state(pdev);
- 	return 0;
- 
--clean_load:
--	mlx5_unload_one(dev, true);
--
- err_load_one:
- 	mlx5_pci_close(dev);
- pci_init_err:
+ #define HUB_ROOT_RESET_TIME	60	/* times are in msec */
+ #define HUB_SHORT_RESET_TIME	10
 
 
