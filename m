@@ -2,142 +2,129 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAFDC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 01:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B769CC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 01:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CF0520721
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 01:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C8320721
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 01:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="qp8Wu09f";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="fEl9Q9Uo"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="njJ3fqs6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgAKBOS (ORCPT
+        id S1727993AbgAKBOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 20:14:18 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:44786 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727899AbgAKBOS (ORCPT
+        Fri, 10 Jan 2020 20:14:51 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45606 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727865AbgAKBOv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 20:14:18 -0500
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00B1A2Oc026290;
-        Fri, 10 Jan 2020 17:14:01 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=9JePUcnKJgc2YsFYRoRK/qNNuic8J+imM67BNNkL0lw=;
- b=qp8Wu09fM77uU1XSzEpH4eyjnUYlnOtssTjreciMGrvyIOQFuT4Vcy5YSJJVctQy+77k
- fFr0gWB5TV6G2OIYC7IZ/rHkG+D8ggdz76W4dU0w240ZONxEs2+TJv0HhJDig/9q1PXc
- 0KDlpo4qhtQjHCS2o5cjGJDutBUxAn5A/Ok= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2xeuvwbg6w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Fri, 10 Jan 2020 17:14:01 -0800
-Received: from prn-hub01.TheFacebook.com (2620:10d:c081:35::125) by
- prn-hub06.TheFacebook.com (2620:10d:c081:35::130) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Fri, 10 Jan 2020 17:14:00 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Fri, 10 Jan 2020 17:14:00 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DEXTaeh4+fcMS4Z+OnZccjl/7f0hQMXJ3D93aYW/7FVJtQ/lhbg+jmtuUVxCHNCX4fMEqwTn0LbjdJtMiKq5CkEr2tQRlHfnrnu6b00ruKoPS7znWltxDt7XN/m6CBfto+Es+egK9jRHywgWaTsjNSkZ+j/pi0q4KtyQL6JPR8kvttBQa2DjcS78GPuQDCKolMd3EJBdO0E+PYX5GzUea/FZXoJnoxBhg33UQfWxjNxlH+9R0ywrD6u/DwbIMSJyTBlor2nkfuc4gEHWYUzPpmePwfbYF9tS2Xq1kpidQ3+3A1n73BKBD61BjQr3wvCz2wF/183OUSSyQ3/FrHM5aQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9JePUcnKJgc2YsFYRoRK/qNNuic8J+imM67BNNkL0lw=;
- b=aesbwjlOrUDYauuSxOu1cw02gEw8XEn/fAnnmBzFfrFtAgNwkgoNn35soHbfljyAJZnINuLFtiL3bzCv5rTlKc2DTTcY1Bg7ruYXp1+eIFmIEOVGEOYH9QH6h988x3Qz8/f+z6DUBHZkMWHWg4XeaYljICCHGC4OzHDpetL9N3u+G1NS/bZzxGFHNt2eLmiqrBvcbRC6YJoRv0ycz0mmD8b5w8K5F5zLdRe5zMu9IL3eA3RxQoHROj+SWYIDcTzFuyCU8aRcDdicjoyqo7xXjSfe+nMP9EwbSM0Vzhshax2rM3MWLz4bYWJZiLoZrH2xJcwwgzEwzgF8MpW80akiVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9JePUcnKJgc2YsFYRoRK/qNNuic8J+imM67BNNkL0lw=;
- b=fEl9Q9Uon6mw53YwOQ5zUMUgwVOoo/sxNPEyF78MJEiRH8SpyZYhHAKdWs+w7NQPtlBRGmH3FYf7zK84GgTJdMNpTv611rZ05Y5ycrXgF7vOfLZj15UMVyrb8MwUQl29eBnhkhbuNrEv3zM695k4UZou6FwET45/SXT7LRHQaLs=
-Received: from MWHPR15MB1597.namprd15.prod.outlook.com (10.173.234.137) by
- MWHPR15MB1776.namprd15.prod.outlook.com (10.174.96.135) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Sat, 11 Jan 2020 01:13:59 +0000
-Received: from MWHPR15MB1597.namprd15.prod.outlook.com
- ([fe80::cdbf:b63c:437:4dd2]) by MWHPR15MB1597.namprd15.prod.outlook.com
- ([fe80::cdbf:b63c:437:4dd2%8]) with mapi id 15.20.2623.011; Sat, 11 Jan 2020
- 01:13:58 +0000
-From:   Vijay Khemka <vijaykhemka@fb.com>
-To:     David Miller <davem@davemloft.net>
-CC:     "sam@mendozajonas.com" <sam@mendozajonas.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "joel@jms.id.au" <joel@jms.id.au>,
-        "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-        Sai Dasari <sdasari@fb.com>
-Subject: Re: [net-next PATCH] net/ncsi: Support for multi host mellanox card
-Thread-Topic: [net-next PATCH] net/ncsi: Support for multi host mellanox card
-Thread-Index: AQHVxn2QUFjYVaSmN0a5L6zvE4MlVKfjMJSAgAD1IQA=
-Date:   Sat, 11 Jan 2020 01:13:58 +0000
-Message-ID: <8C9F6A65-E1E5-49FE-83B3-CF69CFCC53AC@fb.com>
-References: <20200108234341.2590674-1-vijaykhemka@fb.com>
- <20200109.183637.755651104106589448.davem@davemloft.net>
-In-Reply-To: <20200109.183637.755651104106589448.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [2620:10d:c090:200::2:70aa]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4e615605-8603-442e-1e56-08d79633896d
-x-ms-traffictypediagnostic: MWHPR15MB1776:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR15MB1776ED22FA6C2AB22BCCD339DD3B0@MWHPR15MB1776.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0279B3DD0D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(366004)(396003)(39860400002)(136003)(189003)(199004)(8936002)(81166006)(8676002)(81156014)(4326008)(86362001)(36756003)(64756008)(316002)(66446008)(66476007)(66946007)(66556008)(54906003)(478600001)(33656002)(186003)(5660300002)(6506007)(76116006)(2616005)(6512007)(2906002)(6916009)(6486002)(4744005)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1776;H:MWHPR15MB1597.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 77iqKrWCgzH/IoH0Ulpo08azPpgYYFvygNl4trxLWDCDy5ORmKNrorigFRxirPr0rk8NzpcOUjgFJrWrSBHDfT7Y3MQ3AUaGGR35hzLKauVMXrI2McqKlOAPW2PHXkGSIOswWPCaD/nPDURt4VBurrp8i+w2YwmnAnIszYZwIzNPHoJbcYaKBdTLUnugf9qIvtRXkuXCHdsmQZFxLfUzCoT5ZgDa4RqZqCF0bn5TIk1ZyYUhiDEKMFK95Suxc10ZzWpWcL98p/1eQoyidPmxNvwPCKcUZJSHyhYEBBhzGW8saiyUJPkhw3jN9WHdXEQJ5lSSev4svD4iGPcsYvwyaYIGmsbQP3+veBF3WNBRlmKoymToOp7FisAk+NkW6SZKHerJ0Hf9ryNodS65WQBclOPsamFGMCDrUSxdC9kQKn7DCYUinWwJXFmKuAufEWft
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D0E4D48E59034947B5B61B824E5A32E6@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 10 Jan 2020 20:14:51 -0500
+Received: by mail-io1-f67.google.com with SMTP id i11so4016557ioi.12
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 17:14:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=jxhHO7TnUt5CFGxVXLp4PUaAlysstA2E9WFkNf6HeEw=;
+        b=njJ3fqs69ekKsCewD9b3mom64w15+ISwWIy/ODiGAXKNvHUgcfSg1JJuQZ5tnEPics
+         f1yeJT8BbjZC6k0+66TTJT6oMkR5ceOQSjs1GM+KbwOoXMIxCwyFNTeIc6v1jbvekuKb
+         bQ53zRrQaMBhyANsyVNsfIdvnUC43QZ5l1StqXlzEj6TTokCxg9glGd5aBvb+BCzGo5h
+         oI+sZyAh/lgeg54K4rdaYfEIfw27T8OWtCrLFqTUmH0spYweujD/lTMmnuIzWJ191EM1
+         x3UgIsYCIZ6U4KM5NO1Ta2jJ77bTEMnGgvjwZtDt54YjMEY08pNvHlvWJaie8qQArhJR
+         gWnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=jxhHO7TnUt5CFGxVXLp4PUaAlysstA2E9WFkNf6HeEw=;
+        b=ojywIzN0T1d8AnCy4vCIEHF2BxJsF8NJsW+aC3ZZ57WFNY95AwNSxI41PbA9B0yRNn
+         Y8uqRrffjOhff5Aj+BBWtWSo49R53zWCHPxsoAsd8tVocQgTBksYUgJam+wIpAFEAKIG
+         s/t8D+h0fjSNWK9wmWvkvCZhOLxK3fMQRHPi5DB19w4IJ3F4LjpMezJWPh8daAfts6DU
+         GryxUGQ3VGDT/zYnWSuHOTyxoAPRetrvu8WizFOPKVuqR3RbVCsDZ+6rROB6aPddpfSy
+         EqiY6/oAu0CQG+YZO9b1t2qichOKvn+yi4NdFoL2cBCbuS7BhZHdo6na3+xxJsV/L7YZ
+         O0hQ==
+X-Gm-Message-State: APjAAAXSJw/7/M8U9OFIobteiV1+0nE9DIvIWKNZHUY56+v3v5FTmFyS
+        2K3cKH7HFnRTPGpS2v1VZN0xGw==
+X-Google-Smtp-Source: APXvYqz1rr2BqNNcAIUBymdzx5yCkz75wNEsxLMCAEkRabGthYkaNySJoF9RhlWykCmMx/ULGKNU4w==
+X-Received: by 2002:a6b:e30e:: with SMTP id u14mr4919205ioc.242.1578705289216;
+        Fri, 10 Jan 2020 17:14:49 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id f7sm950752ioo.27.2020.01.10.17.14.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 17:14:48 -0800 (PST)
+Date:   Fri, 10 Jan 2020 17:14:46 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Palmer Dabbelt <palmerdabbelt@google.com>
+cc:     Olof Johansson <olof@lixom.net>, aou@eecs.berkeley.edu,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] riscv: keep 32-bit kernel to 32-bit phys_addr_t
+In-Reply-To: <mhng-d39bd2da-7e27-484a-b8f8-a96edf1336c0@palmerdabbelt-glaptop>
+Message-ID: <alpine.DEB.2.21.9999.2001101709090.2113@viisi.sifive.com>
+References: <20200106232024.97137-1-olof@lixom.net> <20200106231611.10169-1-olof@lixom.net> <mhng-d39bd2da-7e27-484a-b8f8-a96edf1336c0@palmerdabbelt-glaptop>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e615605-8603-442e-1e56-08d79633896d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jan 2020 01:13:58.7703
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qekzpvMoyst9u5wAFS8bV65UmDttPZtBFKsfuYVqj2t14gwptU4qPhv5Ktigg1kkkHV66+xQOtgVpEX8FmkZEw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1776
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-10_04:2020-01-10,2020-01-10 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 mlxscore=0 phishscore=0 bulkscore=0
- adultscore=0 priorityscore=1501 mlxlogscore=999 impostorscore=0
- clxscore=1015 suspectscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001110006
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCu+7v09uIDEvOS8yMCwgNjozNiBQTSwgIkRhdmlkIE1pbGxlciIgPGRhdmVtQGRhdmVtbG9m
-dC5uZXQ+IHdyb3RlOg0KDQogICAgRnJvbTogVmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5j
-b20+DQogICAgRGF0ZTogV2VkLCA4IEphbiAyMDIwIDE1OjQzOjQwIC0wODAwDQogICAgDQogICAg
-PiBNdWx0aSBob3N0IE1lbGxhbm94IGNhcmRzIHJlcXVpcmUgTUFDIGFmZmluaXR5IHRvIGJlIHNl
-dA0KICAgID4gYmVmb3JlIHJlY2VpdmluZyBhbnkgY29uZmlnIGNvbW1hbmRzLiBBbGwgY29uZmln
-IGNvbW1hbmRzDQogICAgPiBzaG91bGQgYWxzbyBoYXZlIHVuaWNhc3QgYWRkcmVzcyBmb3Igc291
-cmNlIGFkZHJlc3MgaW4NCiAgICA+IGNvbW1hbmQgaGVhZGVyLg0KICAgID4gDQogICAgPiBBZGRp
-bmcgR01BIGFuZCBTTUFGKFNldCBNYWMgQWZmaW5pdHkpIGZvciBNZWxsYW5veCBjYXJkDQogICAg
-PiBhbmQgY2FsbCB0aGVzZSBpbiBjaGFubmVsIHByb2JlIHN0YXRlIG1hY2hpbmUgaWYgaXQgaXMN
-CiAgICA+IGRlZmluZWQgaW4gZGV2aWNlIHRyZWUuDQogICAgPiANCiAgICA+IFNpZ25lZC1vZmYt
-Ynk6IFZpamF5IEtoZW1rYSA8dmlqYXlraGVta2FAZmIuY29tPg0KICAgIA0KICAgIEFwcGxpZWQs
-IHRoYW5rIHlvdS4NCg0KVGhhbmtzIERhdmlkLg0KICAgIA0KDQo=
+On Fri, 10 Jan 2020, Palmer Dabbelt wrote:
+
+> On Mon, 06 Jan 2020 15:20:24 PST (-0800), Olof Johansson wrote:
+> > While rv32 technically has 34-bit physical addresses, no current platforms
+> > use it and it's likely to shake out driver bugs.
+> > 
+> > Let's keep 64-bit phys_addr_t off on 32-bit builds until one shows up,
+> > since other work will be needed to make such a system useful anyway.
+> > 
+> > PHYS_ADDR_T_64BIT is def_bool 64BIT, so just remove the select.
+> > 
+> > Signed-off-by: Olof Johansson <olof@lixom.net>
+> > ---
+> > 
+> > v2: Just remove the select, since it's set by default if CONFIG_64BIT
+> > 
+> >  arch/riscv/Kconfig | 2 --
+> >  1 file changed, 2 deletions(-)
+> > 
+> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> > index a31169b02ec06..569fc6deb94d6 100644
+> > --- a/arch/riscv/Kconfig
+> > +++ b/arch/riscv/Kconfig
+> > @@ -12,8 +12,6 @@ config 32BIT
+> > 
+> >  config RISCV
+> >  	def_bool y
+> > -	# even on 32-bit, physical (and DMA) addresses are > 32-bits
+> > -	select PHYS_ADDR_T_64BIT
+> >  	select OF
+> >  	select OF_EARLY_FLATTREE
+> >  	select OF_IRQ
+> 
+> I gave 5.5-rc5 a quick test on a 32-bit QEMU with 8GiB of RAM and the system
+> wouldn't boot, so we've got at least some bugs floating around somewhere.
+> Given that this doesn't work I don't see any reason to keep it around as an
+> option, as if someone wants to make it work there's a lot more to do than make
+> things compile.
+> 
+> I've put this on for-next.  If anyone cares about 34-bit physical addresses on
+> rv32 then now is the right time to speak up... ideally by fixing it :)
+
+You know, if, according to 
+
+https://freenode.logbot.info/riscv/20200106
+
+the main reason for doing this is to avoid autobuilder warnings, I'd be 
+tempted to suggest we leave it in there so people have some incentive to 
+go fix the real bugs ;-)
+
+(that said, the patch is basically okay by me until at least QEMU is 
+fixed or hardware appears)
+
+- Paul
