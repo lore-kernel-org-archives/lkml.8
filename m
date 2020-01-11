@@ -2,125 +2,77 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E9AC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82678C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD2220848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58B072084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729686AbgAKOGH (ORCPT
+        id S1729716AbgAKOJy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 09:06:07 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:59487 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729622AbgAKOGH (ORCPT
+        Sat, 11 Jan 2020 09:09:54 -0500
+Received: from smtprelay0215.hostedemail.com ([216.40.44.215]:46564 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729630AbgAKOJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 09:06:07 -0500
-X-Originating-IP: 79.86.19.127
-Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alexandre@ghiti.fr)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id EE08540002;
-        Sat, 11 Jan 2020 14:06:00 +0000 (UTC)
-Subject: Re: linux-next: build warning after merge of the bpf-next tree
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel@lists.infradead.org, zong.li@sifive.com,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>
-References: <20191018105657.4584ec67@canb.auug.org.au>
- <20191028110257.6d6dba6e@canb.auug.org.au>
- <a367af4d-7267-2e94-74dc-2a2aac204080@ghiti.fr>
- <CAADnVQLo5HEjTpTTRm=BtExuKifPtCJm+Hu_WP6yeyV-Er55Qg@mail.gmail.com>
-From:   Alexandre Ghiti <alexandre@ghiti.fr>
-Message-ID: <3e6f298c-e428-fdee-47a8-14addc581501@ghiti.fr>
-Date:   Sat, 11 Jan 2020 09:06:00 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Sat, 11 Jan 2020 09:09:54 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 2E45A181D3417;
+        Sat, 11 Jan 2020 14:09:53 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: spot67_733f2d71df901
+X-Filterd-Recvd-Size: 1566
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Sat, 11 Jan 2020 14:09:51 +0000 (UTC)
+Message-ID: <f0e313b585cd8fa30e85ee86d6612af4a860a50a.camel@perches.com>
+Subject: Re: [PATCH-next 3/3] serial/sysrq: Add MAGIC_SYSRQ_SERIAL_SEQUENCE
+From:   Joe Perches <joe@perches.com>
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org
+Date:   Sat, 11 Jan 2020 06:08:58 -0800
+In-Reply-To: <056bff50-f67e-f00f-c98f-ccb427344691@arista.com>
+References: <20200109215444.95995-1-dima@arista.com>
+         <20200109215444.95995-4-dima@arista.com>
+         <5293a7cb1ccb16275ddb36c7f26fb9e83f4fac9b.camel@perches.com>
+         <056bff50-f67e-f00f-c98f-ccb427344691@arista.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <CAADnVQLo5HEjTpTTRm=BtExuKifPtCJm+Hu_WP6yeyV-Er55Qg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2020-01-10 at 22:10 +0000, Dmitry Safonov wrote:
+> Hi Joe,
 
-On 1/10/20 6:18 PM, Alexei Starovoitov wrote:
-> On Fri, Jan 10, 2020 at 2:28 PM Alexandre Ghiti <alexandre@ghiti.fr> wrote:
->> Hi guys,
->>
->> On 10/27/19 8:02 PM, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> On Fri, 18 Oct 2019 10:56:57 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>>> Hi all,
->>>>
->>>> After merging the bpf-next tree, today's linux-next build (powerpc
->>>> ppc64_defconfig) produced this warning:
->>>>
->>>> WARNING: 2 bad relocations
->>>> c000000001998a48 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_start
->>>> c000000001998a50 R_PPC64_ADDR64    _binary__btf_vmlinux_bin_end
->>>>
->>>> Introduced by commit
->>>>
->>>>     8580ac9404f6 ("bpf: Process in-kernel BTF")
->>> This warning now appears in the net-next tree build.
->>>
->>>
->> I bump that thread up because Zong also noticed that 2 new relocations for
->> those symbols appeared in my riscv relocatable kernel branch following
->> that commit.
->>
->> I also noticed 2 new relocations R_AARCH64_ABS64 appearing in arm64 kernel.
->>
->> Those 2 weak undefined symbols have existed since commit
->> 341dfcf8d78e ("btf: expose BTF info through sysfs") but this is the fact
->> to declare those symbols into btf.c that produced those relocations.
->>
->> I'm not sure what this all means, but this is not something I expected
->> for riscv for
->> a kernel linked with -shared/-fpie. Maybe should we just leave them to
->> zero ?
->>
->> I think that deserves a deeper look if someone understands all this
->> better than I do.
-> Are you saying there is a warning for arm64 as well?
+Hi Dmitry.
+
+> I'm not aware of a way to put the max string length in Kconfig,
+
+Nor am I.
 
 
-Nop.
+>  so I did
+> in the patch:
+> BUILD_BUG_ON(ARRAY_SIZE(sysrq_toggle_seq) >=
+> sizeof(port->sysrq_seq)*U8_MAX);
+> 
+> Do you have something more elegant in your mind?
 
+No, I didn't notice this and think this is fine
+so thanks for that.
 
-> Can ppc folks explain the above warning?
-> What does it mean "2 bad relocations"?
-
-
-This is what I'd like to understand too, it is not clear in
-the ppc tool that outputs this message why it is considered 'bad'.
-
-
-> The code is doing:
-> extern char __weak _binary__btf_vmlinux_bin_start[];
-> extern char __weak _binary__btf_vmlinux_bin_end[];
-> Since they are weak they should be zero when not defined.
-> What's the issue?
-
-
-There likely is no issue, I just want to make sure those relocations
-are legitimate and I want to understand what we should do with those.
-
-At the moment arm64 does not relocate those at runtime and purely
-ignore them: is this the right thing to do ?
-
+It's be nice to have something like BUILD_BUG_ON_MSG.
 
