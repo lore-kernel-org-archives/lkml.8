@@ -2,140 +2,144 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56CA6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 06:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61048C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 06:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29BD62072E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 06:52:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578725535;
-	bh=ATUnMcR6sYpmKxE57KEhS888bjjuCOJGvve4dlJPmpo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ciMCMbWmu0h7K59vvtknkQM42OaJ9I42nmpABKN2suc7RFYsr+tP50b6e3QKHTQe0
-	 W0t6XVjx6WtkVMCd0b6F1Cnwgo0MqQkyu4KdmZ1qWq2RH5owd4YiVnSXTffvUsF+HU
-	 MHIIcpUn/4BMLmHrlhO/pIrWiqI4TBRcPe1JgHNU=
+	by mail.kernel.org (Postfix) with ESMTP id 303EB2072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 06:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728455AbgAKGwE (ORCPT
+        id S1728441AbgAKG5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 01:52:04 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:44272 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728432AbgAKGwD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 01:52:03 -0500
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 00B6pvsa000504;
-        Sat, 11 Jan 2020 15:51:57 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 00B6pvsa000504
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578725518;
-        bh=OlrKDXE4Lubzhxdxm7bFeDqmZzH9BVlU/DaWPg7f2Ow=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rIwke7reRkhK9Chys451XaCQY1CqP5TPzuVqsOPe9wYMAOF/vRe8DhTszECEa+8NR
-         8HFWxaAZl/mNg7mxsQ0WvGyzvacATJpgGcXsucsFHIew8BR4op6wInHf0rjw49Kq4a
-         mqGM4daC6jc/7+OENIMqMKng+/7zt5mr6hBWZaaSCVG2cDr/sITtZ59l9v5bEpcI6P
-         Z+C1T55ycq9frjgOESnM6zqp+cTzzDBXUm5ZI09Pj6uem3tvdVpSzINqw3pv0/Kogi
-         OF8Oc1pa8Wl6UHkDa80D50zhnpbnoYH6Lo4+dxPwFeji7Ssr6g1Nadn+yJiZCkHgEB
-         wDtLVf24avfXg==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id x123so2739826vsc.2;
-        Fri, 10 Jan 2020 22:51:57 -0800 (PST)
-X-Gm-Message-State: APjAAAXvfGiIgzmLcAv1skkhnp3iQwvxwU62oi96yfM4Fe60lmBxiSmM
-        7nst0j0vxZ2bIMU9Fdmyw9cJoZL8jV8hAyUi/qE=
-X-Google-Smtp-Source: APXvYqz2x+Uxm+3+HujMB6p8b6Jw9Xi9SKEWemrmgaptxAexM2qfSurkw8KIc7YE3u63lp17nLe/MTyRGKUY5POcEOw=
-X-Received: by 2002:a05:6102:48b:: with SMTP id n11mr1355277vsa.181.1578725516419;
- Fri, 10 Jan 2020 22:51:56 -0800 (PST)
+        Sat, 11 Jan 2020 01:57:43 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8693 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728413AbgAKG5n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 01:57:43 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 202AF6B31E8B1024BCDB;
+        Sat, 11 Jan 2020 14:57:39 +0800 (CST)
+Received: from localhost.localdomain (10.67.165.24) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 11 Jan 2020 14:57:29 +0800
+From:   Zeng Tao <prime.zeng@hisilicon.com>
+To:     <sudeep.holla@arm.com>
+CC:     <linuxarm@huawei.com>, Zeng Tao <prime.zeng@hisilicon.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] cpu-topology: Skip the exist but not possible cpu nodes
+Date:   Sat, 11 Jan 2020 14:53:40 +0800
+Message-ID: <1578725620-39677-1-git-send-email-prime.zeng@hisilicon.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-References: <09f5b36d9c64b4e6d1d235f84a7333b7802b2866.1578131485.git.mirq-linux@rere.qmqm.pl>
-In-Reply-To: <09f5b36d9c64b4e6d1d235f84a7333b7802b2866.1578131485.git.mirq-linux@rere.qmqm.pl>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 11 Jan 2020 15:51:20 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQNYQY=Z6TqacifFi-ycnHgSdWtD+YBQAGWPZA52RQm0w@mail.gmail.com>
-Message-ID: <CAK7LNAQNYQY=Z6TqacifFi-ycnHgSdWtD+YBQAGWPZA52RQm0w@mail.gmail.com>
-Subject: Re: [PATCH 1/2] builddeb: allow selection of .deb compressor
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Hutchings <ben@decadent.org.uk>,
-        Riku Voipio <riku.voipio@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.67.165.24]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(+CC: Ben Hutchings, Riku Voipio)
+When CONFIG_NR_CPUS is smaller than the cpu nodes defined in the device
+tree, all the cpu nodes parsing will fail.
+And this is not reasonable for a legal device tree configs.
+In this patch, skip such cpu nodes rather than return an error.
+With CONFIG_NR_CPUS = 128 and cpus nodes num in device tree is 130,
+The following warning messages will be print during boot:
+CPU node for /cpus/cpu@128 exist but the possible cpu range is :0-127
+CPU node for /cpus/cpu@129 exist but the possible cpu range is :0-127
+CPU node for /cpus/cpu@130 exist but the possible cpu range is :0-127
 
-On Sat, Jan 4, 2020 at 6:56 PM Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.q=
-mqm.pl> wrote:
->
-> Select deb compression using KPKG_COMPRESS make variable. This allows to
-> use gzip compression for local or test builds, and that's way faster
-> than now-default xz compression.
->
-> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> ---
->  scripts/package/builddeb | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-> index c4c580f547ef..d289c4ebc891 100755
-> --- a/scripts/package/builddeb
-> +++ b/scripts/package/builddeb
-> @@ -43,7 +43,7 @@ create_package() {
->
->         # Create the package
->         dpkg-gencontrol -p$pname -P"$pdir"
-> -       dpkg --build "$pdir" ..
-> +       dpkg-deb ${KPKG_COMPRESS:+-Z$KPKG_COMPRESS} --build "$pdir" ..
->  }
->
->  version=3D$KERNELRELEASE
-> --
-> 2.20.1
->
+Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+---
+Changelog:
+v1->v2:
+ -Remove redundant -ENODEV assignment in get_cpu_for_node
+ -Add comment to describe the get_cpu_for_node return values
+ -Add skip process for cpu threads
+ -Update the commit log with more detail
+---
+ drivers/base/arch_topology.c | 37 +++++++++++++++++++++++++++++--------
+ 1 file changed, 29 insertions(+), 8 deletions(-)
 
-I have not seen any comment on this,
-but using gzip is indeed way faster.
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 5fe44b3..01f0e21 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -248,22 +248,44 @@ core_initcall(free_raw_capacity);
+ #endif
+ 
+ #if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
++/*
++ * This function returns the logic cpu number of the node.
++ * There are totally three kinds of return values:
++ * (1) logic cpu number which is > 0.
++ * (2) -ENDEV when the node is valid one which can be found in the device tree
++ * but there is no possible cpu nodes to match, when the CONFIG_NR_CPUS is
++ * smaller than cpus node numbers in device tree, this will happen. It's
++ * suggested to just ignore this case.
++ * (3) -EINVAL when other errors occur.
++ */
+ static int __init get_cpu_for_node(struct device_node *node)
+ {
+-	struct device_node *cpu_node;
++	struct device_node *cpu_node, *t;
+ 	int cpu;
++	bool found = false;
+ 
+ 	cpu_node = of_parse_phandle(node, "cpu", 0);
+ 	if (!cpu_node)
+-		return -1;
++		return -EINVAL;
++
++	for_each_of_cpu_node(t)
++		if (t == cpu_node) {
++			found = true;
++			break;
++		}
++
++	if (!found) {
++		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
++		return -EINVAL;
++	}
+ 
+ 	cpu = of_cpu_node_to_id(cpu_node);
+ 	if (cpu >= 0)
+ 		topology_parse_cpu_capacity(cpu_node, cpu);
+ 	else
+-		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
++		pr_warn("CPU node for %pOF exist but the possible cpu range is :%*pbl\n",
++			cpu_node, cpumask_pr_args(cpu_possible_mask));
+ 
+-	of_node_put(cpu_node);
+ 	return cpu;
+ }
+ 
+@@ -286,9 +308,8 @@ static int __init parse_core(struct device_node *core, int package_id,
+ 				cpu_topology[cpu].package_id = package_id;
+ 				cpu_topology[cpu].core_id = core_id;
+ 				cpu_topology[cpu].thread_id = i;
+-			} else {
+-				pr_err("%pOF: Can't get CPU for thread\n",
+-				       t);
++			} else if (cpu != -ENODEV) {
++				pr_err("%pOF: Can't get CPU for thread\n", t);
+ 				of_node_put(t);
+ 				return -EINVAL;
+ 			}
+@@ -307,7 +328,7 @@ static int __init parse_core(struct device_node *core, int package_id,
+ 
+ 		cpu_topology[cpu].package_id = package_id;
+ 		cpu_topology[cpu].core_id = core_id;
+-	} else if (leaf) {
++	} else if (leaf && cpu != -ENODEV) {
+ 		pr_err("%pOF: Can't get CPU for leaf core\n", core);
+ 		return -EINVAL;
+ 	}
+-- 
+2.8.1
 
-
-Some minor comments:
-
-I see some variables staring "KDEB_",
-but nothing starting "KPKG_".
-
-
-
-masahiro@grover:~/workspace/linux-kbuild$ git grep KDEB_
-scripts/Makefile.package:KDEB_SOURCENAME ?=3D linux-$(KERNELRELEASE)
-scripts/Makefile.package:export KDEB_SOURCENAME
-scripts/Makefile.package:       $(call cmd,src_tar,$(KDEB_SOURCENAME))
-scripts/Makefile.package:               mv $(KDEB_SOURCENAME).tar.gz
-../$(KDEB_SOURCENAME)_$${origversion}.orig.tar.gz
-scripts/package/builddeb:# specified in KDEB_HOOKDIR) that will be
-called on package install and
-scripts/package/builddeb:debhookdir=3D${KDEB_HOOKDIR:-/etc/kernel}
-scripts/package/mkdebian:if [ -n "$KDEB_PKGVERSION" ]; then
-scripts/package/mkdebian:       packageversion=3D$KDEB_PKGVERSION
-scripts/package/mkdebian:sourcename=3D$KDEB_SOURCENAME
-scripts/package/mkdebian:if [ -n "$KDEB_CHANGELOG_DIST" ]; then
-scripts/package/mkdebian:        distribution=3D$KDEB_CHANGELOG_DIST
-scripts/package/mkdebian:        echo >&2 "Install lsb-release or set
-\$KDEB_CHANGELOG_DIST explicitly"
-masahiro@grover:~/workspace/linux-kbuild$ git grep KPKG_
-
-
-Maybe starting KDEB_ seems to be better for consistency?
-
-
-
-
---=20
-Best Regards
-Masahiro Yamada
