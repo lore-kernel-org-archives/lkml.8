@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC01C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9749C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C26F621569
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABA2E2187F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738226;
-	bh=jvIKsNNS0M5HdCCq0no463cJMVXdRbq/EAGpse4yLuE=;
+	s=default; t=1578738230;
+	bh=EydVJe9a2aFceUo5JpBojCfmSL5Lb+6U5EVpz1YQors=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mUzpbaYpa4QDlBoOOEDq1xnZHFmgMd/3k/Gj/szmFOOCfHsL+Nhjt7VaePOyU3bpL
-	 AteO9AgX+4yevWkRZWN9LBUYOJxrVG7HKzSSPe4/4HwTrDgj4WcrETbpv3NMrrI2Bp
-	 MnIfEvRwJL4f/fmfZfTV4VQEu0yiSx1WpU1KLTgI=
+	b=BiGHwyz5kBq/OBjjmAc9/AbBHn9yWi0QBV2cO89VInq0LWozZNNKb5nkqY3USOrmh
+	 a/7si0Lhe324v6HNAhcAZ5cYVX2834/SkWTtdrEwnDAouxZbxEp8WT9KFXY9L+sFov
+	 WX6Y31HLae+PJN0HXl8bgnTpeqmhWDtl0FMLlffE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730941AbgAKKXp (ORCPT
+        id S1730953AbgAKKXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:23:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51272 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:23:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728833AbgAKKXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:23:42 -0500
+        id S1728833AbgAKKXq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:23:46 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D90520880;
-        Sat, 11 Jan 2020 10:23:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41945214DB;
+        Sat, 11 Jan 2020 10:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738221;
-        bh=jvIKsNNS0M5HdCCq0no463cJMVXdRbq/EAGpse4yLuE=;
+        s=default; t=1578738226;
+        bh=EydVJe9a2aFceUo5JpBojCfmSL5Lb+6U5EVpz1YQors=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KXqclM7C8ciHEHp0Se5Ox4YaaFGdA4QPPWuHuC171d/vnmpK1soJlHt4L2dUrMeug
-         Et/CcZ0sMZGpYU7Qm87nkW5W3Kk/cuUHCCLWBHjdqxk8OH5xRtPJ45dPvMDAztkPLv
-         Ti4EMs9m8mhUZ3f8NEahD/4VkQbNDktIqJsilCuM=
+        b=UGqT9sOVL+At/KEtm0b+QgEcThQ9/4p+9Pzu1kUHe7BDBmxCw1weUCE11HgCPiBT3
+         OGbOFwuRAKoNUgrgnnIE07kYZ9fO8Karb7XceG6ikXAoMVBTPDCgiSMvix55/SSId8
+         3eDSWih26jBQz4z7TwQNDfIx3N4KJx1ANYKNqFeQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Shuah Khan <skhan@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 036/165] selftests/ftrace: Do not to use absolute debugfs path
-Date:   Sat, 11 Jan 2020 10:49:15 +0100
-Message-Id: <20200111094924.138112623@linuxfoundation.org>
+Subject: [PATCH 5.4 037/165] selftests/ftrace: Fix multiple kprobe testcase
+Date:   Sat, 11 Jan 2020 10:49:16 +0100
+Message-Id: <20200111094924.191333723@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -63,70 +63,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit ba1b9c5048e43716921abe3a1db19cebebf4a5f5 ]
+[ Upstream commit 5cc6c8d4a99d0ee4d5466498e258e593df1d3eb6 ]
 
-Use relative path to trigger file instead of absolute debugfs path,
-because if the user uses tracefs instead of debugfs, it can be
-mounted at /sys/kernel/tracing.
-Anyway, since the ftracetest is designed to be run at the tracing
-directory, user doesn't need to use absolute path.
+Fix multiple kprobe event testcase to work it correctly.
+There are 2 bugfixes.
+ - Since `wc -l FILE` returns not only line number but also
+   FILE filename, following "if" statement always failed.
+   Fix this bug by replacing it with 'cat FILE | wc -l'
+ - Since "while do-done loop" block with pipeline becomes a
+   subshell, $N local variable is not update outside of
+   the loop.
+   Fix this bug by using actual target number (256) instead
+   of $N.
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../test.d/trigger/inter-event/trigger-action-hist-xfail.tc   | 4 ++--
- .../trigger/inter-event/trigger-onchange-action-hist.tc       | 2 +-
- .../trigger/inter-event/trigger-snapshot-action-hist.tc       | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ .../selftests/ftrace/test.d/kprobe/multiple_kprobes.tc      | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-index 1221240f8cf6..3f2aee115f6e 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-action-hist-xfail.tc
-@@ -21,10 +21,10 @@ grep -q "snapshot()" README || exit_unsupported # version issue
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc b/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
+index 5862eee91e1d..6e3dbe5f96b7 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
+@@ -20,9 +20,9 @@ while read i; do
+   test $N -eq 256 && break
+ done
  
- echo "Test expected snapshot action failure"
+-L=`wc -l kprobe_events`
+-if [ $L -ne $N ]; then
+-  echo "The number of kprobes events ($L) is not $N"
++L=`cat kprobe_events | wc -l`
++if [ $L -ne 256 ]; then
++  echo "The number of kprobes events ($L) is not 256"
+   exit_fail
+ fi
  
--echo 'hist:keys=comm:onmatch(sched.sched_wakeup).snapshot()' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger && exit_fail
-+echo 'hist:keys=comm:onmatch(sched.sched_wakeup).snapshot()' >> events/sched/sched_waking/trigger && exit_fail
- 
- echo "Test expected save action failure"
- 
--echo 'hist:keys=comm:onmatch(sched.sched_wakeup).save(comm,prio)' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger && exit_fail
-+echo 'hist:keys=comm:onmatch(sched.sched_wakeup).save(comm,prio)' >> events/sched/sched_waking/trigger && exit_fail
- 
- exit_xfail
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-index 064a284e4e75..c80007aa9f86 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-onchange-action-hist.tc
-@@ -16,7 +16,7 @@ grep -q "onchange(var)" README || exit_unsupported # version issue
- 
- echo "Test onchange action"
- 
--echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio) if comm=="ping"' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
-+echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio) if comm=="ping"' >> events/sched/sched_waking/trigger
- 
- ping $LOCALHOST -c 3
- nice -n 1 ping $LOCALHOST -c 3
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-index 18fff69fc433..f546c1b66a9b 100644
---- a/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-snapshot-action-hist.tc
-@@ -23,9 +23,9 @@ grep -q "snapshot()" README || exit_unsupported # version issue
- 
- echo "Test snapshot action"
- 
--echo 1 > /sys/kernel/debug/tracing/events/sched/enable
-+echo 1 > events/sched/enable
- 
--echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio):onchange($newprio).snapshot() if comm=="ping"' >> /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
-+echo 'hist:keys=comm:newprio=prio:onchange($newprio).save(comm,prio):onchange($newprio).snapshot() if comm=="ping"' >> events/sched/sched_waking/trigger
- 
- ping $LOCALHOST -c 3
- nice -n 1 ping $LOCALHOST -c 3
 -- 
 2.20.1
 
