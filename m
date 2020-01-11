@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F80FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EABC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 684BA2064C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:06:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2082064C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737177;
-	bh=RriJfyQO+dMF4xwB9ajO0E4R54j6o4aGYeu+fFPkl9A=;
+	s=default; t=1578737182;
+	bh=yUC5nHPeyD/6kiFN+bmX5PVb39x116XVP84xnT3fuqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vPQKORPgSe67EAtDOUT9D7lHd2Y/tmgc8CZepqH7ZYRhW8QijYkegk5W7XZmZtur8
-	 9LPfPvdkWMxob1eJDeh4uSjvdHN+md+jlpVjAe9ugzvZx0FSDvzQDwy2+i9UZlsV08
-	 YJUCgJnxS93IJNuQC+xNEjp/M3llPvq0mvsYiOMM=
+	b=GmrHt/PAHRHJ2Ylat/OBuYsqPN1I0RaPUm/gGMJ+fdFuLl6CuN8fiqLfDLLnNMFG1
+	 amoY4v11ig2unH0AUFJ6FQxyeCLfmXHEco3yFWOHO5kAA5nrhVms0AgrqU98aAsGAa
+	 zFiBHfAqFmb4SLDf7bnNxODov03w5Z4h+YJj5VF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbgAKKGQ (ORCPT
+        id S1729446AbgAKKGW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:06:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40058 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:06:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729007AbgAKKGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:06:15 -0500
+        id S1729007AbgAKKGV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:06:21 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DFBC20848;
-        Sat, 11 Jan 2020 10:06:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58A592064C;
+        Sat, 11 Jan 2020 10:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737174;
-        bh=RriJfyQO+dMF4xwB9ajO0E4R54j6o4aGYeu+fFPkl9A=;
+        s=default; t=1578737180;
+        bh=yUC5nHPeyD/6kiFN+bmX5PVb39x116XVP84xnT3fuqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xyXr8I1+haDEJebGC0c/U3SQ3XFa0z2WqePZSsE7vXbNcZtjqjw9SXsLKwZBuJno7
-         V16S35Xp4zCbw5lMWQl+dIrzgjZf/qlDMrfkDtQyv+3BrNxl5zUWnStfZEAeTU7kK7
-         6pq8XeVw+h1s/acbKAACWlpvYfm52ssDBXYTfkAI=
+        b=YHt6VOoALGNLpb1uy2KIfK0XoKG8QLyUc/t0WXrAJNu427w7qAVn81D/TVXk7KsIo
+         0ZRJNa3sLMteR1yeGlkcqjLd8auxyghhdUvTjqx+vShq4krvrHKe90cBxA8U5OgNWK
+         7fQ5uK9wGRawzjFvl0k26LZ7ZE0sUwT5kkfJWU84=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot+dc9071cc5a85950bdfce@syzkaller.appspotmail.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Westphal <fw@strlen.de>
-Subject: [PATCH 4.9 83/91] pkt_sched: fq: do not accept silly TCA_FQ_QUANTUM
-Date:   Sat, 11 Jan 2020 10:50:16 +0100
-Message-Id: <20200111094912.594229733@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+107c4aff5f392bf1517f@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 84/91] sctp: free cmd->obj.chunk for the unprocessed SCTP_CMD_REPLY
+Date:   Sat, 11 Jan 2020 10:50:17 +0100
+Message-Id: <20200111094912.703395790@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -61,46 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit d9e15a2733067c9328fb56d98fe8e574fa19ec31 ]
+[ Upstream commit be7a7729207797476b6666f046d765bdf9630407 ]
 
-As diagnosed by Florian :
+This patch is to fix a memleak caused by no place to free cmd->obj.chunk
+for the unprocessed SCTP_CMD_REPLY. This issue occurs when failing to
+process a cmd while there're still SCTP_CMD_REPLY cmds on the cmd seq
+with an allocated chunk in cmd->obj.chunk.
 
-If TCA_FQ_QUANTUM is set to 0x80000000, fq_deueue()
-can loop forever in :
+So fix it by freeing cmd->obj.chunk for each SCTP_CMD_REPLY cmd left on
+the cmd seq when any cmd returns error. While at it, also remove 'nomem'
+label.
 
-if (f->credit <= 0) {
-  f->credit += q->quantum;
-  goto begin;
-}
-
-... because f->credit is either 0 or -2147483648.
-
-Let's limit TCA_FQ_QUANTUM to no more than 1 << 20 :
-This max value should limit risks of breaking user setups
-while fixing this bug.
-
-Fixes: afe4fd062416 ("pkt_sched: fq: Fair Queue packet scheduler")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Diagnosed-by: Florian Westphal <fw@strlen.de>
-Reported-by: syzbot+dc9071cc5a85950bdfce@syzkaller.appspotmail.com
+Reported-by: syzbot+107c4aff5f392bf1517f@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_fq.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sctp/sm_sideeffect.c |   28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
---- a/net/sched/sch_fq.c
-+++ b/net/sched/sch_fq.c
-@@ -736,7 +736,7 @@ static int fq_change(struct Qdisc *sch,
- 	if (tb[TCA_FQ_QUANTUM]) {
- 		u32 quantum = nla_get_u32(tb[TCA_FQ_QUANTUM]);
+--- a/net/sctp/sm_sideeffect.c
++++ b/net/sctp/sm_sideeffect.c
+@@ -1321,8 +1321,10 @@ static int sctp_cmd_interpreter(sctp_eve
+ 			/* Generate an INIT ACK chunk.  */
+ 			new_obj = sctp_make_init_ack(asoc, chunk, GFP_ATOMIC,
+ 						     0);
+-			if (!new_obj)
+-				goto nomem;
++			if (!new_obj) {
++				error = -ENOMEM;
++				break;
++			}
  
--		if (quantum > 0)
-+		if (quantum > 0 && quantum <= (1 << 20))
- 			q->quantum = quantum;
- 		else
- 			err = -EINVAL;
+ 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
+ 					SCTP_CHUNK(new_obj));
+@@ -1344,7 +1346,8 @@ static int sctp_cmd_interpreter(sctp_eve
+ 			if (!new_obj) {
+ 				if (cmd->obj.chunk)
+ 					sctp_chunk_free(cmd->obj.chunk);
+-				goto nomem;
++				error = -ENOMEM;
++				break;
+ 			}
+ 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
+ 					SCTP_CHUNK(new_obj));
+@@ -1391,8 +1394,10 @@ static int sctp_cmd_interpreter(sctp_eve
+ 
+ 			/* Generate a SHUTDOWN chunk.  */
+ 			new_obj = sctp_make_shutdown(asoc, chunk);
+-			if (!new_obj)
+-				goto nomem;
++			if (!new_obj) {
++				error = -ENOMEM;
++				break;
++			}
+ 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
+ 					SCTP_CHUNK(new_obj));
+ 			break;
+@@ -1721,11 +1726,17 @@ static int sctp_cmd_interpreter(sctp_eve
+ 			break;
+ 		}
+ 
+-		if (error)
++		if (error) {
++			cmd = sctp_next_cmd(commands);
++			while (cmd) {
++				if (cmd->verb == SCTP_CMD_REPLY)
++					sctp_chunk_free(cmd->obj.chunk);
++				cmd = sctp_next_cmd(commands);
++			}
+ 			break;
++		}
+ 	}
+ 
+-out:
+ 	/* If this is in response to a received chunk, wait until
+ 	 * we are done with the packet to open the queue so that we don't
+ 	 * send multiple packets in response to a single request.
+@@ -1740,8 +1751,5 @@ out:
+ 		sp->data_ready_signalled = 0;
+ 
+ 	return error;
+-nomem:
+-	error = -ENOMEM;
+-	goto out;
+ }
+ 
 
 
