@@ -2,280 +2,223 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DEF9C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 03:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21AFC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 03:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2ECF20661
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 03:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B412072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 03:57:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=sifive.com header.i=@sifive.com header.b="G0Okwd4H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbgAKDp6 (ORCPT
+        id S1728270AbgAKD5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 22:45:58 -0500
-Received: from mailout.easymail.ca ([64.68.200.34]:48652 "EHLO
-        mailout.easymail.ca" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728261AbgAKDp6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 22:45:58 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mailout.easymail.ca (Postfix) with ESMTP id 65A052122E;
-        Sat, 11 Jan 2020 03:45:56 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at emo06-pco.easydns.vpn
-Received: from mailout.easymail.ca ([127.0.0.1])
-        by localhost (emo06-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id sBerH9McGsTG; Sat, 11 Jan 2020 03:45:56 +0000 (UTC)
-Received: from mail.gonehiking.org (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        by mailout.easymail.ca (Postfix) with ESMTPA id 3E072210FE;
-        Sat, 11 Jan 2020 03:45:35 +0000 (UTC)
-Received: from [192.168.1.4] (rhapsody.internal [192.168.1.4])
-        by mail.gonehiking.org (Postfix) with ESMTP id E47D13EEEF;
-        Fri, 10 Jan 2020 20:45:34 -0700 (MST)
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Jerry.Hoemann@hpe.com, Bjorn Helgaas <helgaas@kernel.org>,
-        Kairui Song <kasong@redhat.com>, linux-pci@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Randy Wright <rwright@hpe.com>
-References: <20200110214217.GA88274@google.com>
- <e0194581-4cdd-3629-d9fe-10a1cfd29d03@gonehiking.org>
- <20200110230003.GB1875851@anatevka.americas.hpqcorp.net>
- <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
- <20200111005041.GB19291@MiWiFi-R3L-srv>
-From:   Khalid Aziz <khalid@gonehiking.org>
-Autocrypt: addr=khalid@gonehiking.org; prefer-encrypt=mutual; keydata=
- mQINBFA5V58BEADa1EDo4fqJ3PMxVmv0ZkyezncGLKX6N7Dy16P6J0XlysqHZANmLR98yUk4
- 1rpAY/Sj/+dhHy4AeMWT/E+f/5vZeUc4PXN2xqOlkpANPuFjQ/0I1KI2csPdD0ZHMhsXRKeN
- v32eOBivxyV0ZHUzO6wLie/VZHeem2r35mRrpOBsMLVvcQpmlkIByStXGpV4uiBgUfwE9zgo
- OSZ6m3sQnbqE7oSGJaFdqhusrtWesH5QK5gVmsQoIrkOt3Al5MvwnTPKNX5++Hbi+SaavCrO
- DBoJolWd5R+H8aRpBh5B5R2XbIS8ELGJZfqV+bb1BRKeo0kvCi7G6G4X//YNsgLv7Xl0+Aiw
- Iu/ybxI1d4AtBE9yZlyG21q4LnO93lCMJz/XqpcyG7DtrWTVfAFaF5Xl1GT+BKPEJcI2NnYn
- GIXydyh7glBjI8GAZA/8aJ+Y3OCQtVxEub5gyx/6oKcM12lpbztVFnB8+S/+WLbHLxm/t8l+
- Rg+Y4jCNm3zB60Vzlz8sj1NQbjqZYBtBbmpy7DzYTAbE3P7P+pmvWC2AevljxepR42hToIY0
- sxPAX00K+UzTUwXb2Fxvw37ibC5wk3t7d/IC0OLV+X29vyhmuwZ0K1+oKeI34ESlyU9Nk7sy
- c1WJmk71XIoxJhObOiXmZIvWaOJkUM2yZ2onXtDM45YZ8kyYTwARAQABtCNLaGFsaWQgQXpp
- eiA8a2hhbGlkQGdvbmVoaWtpbmcub3JnPokCOgQTAQgAJAIbAwULCQgHAwUVCgkICwUWAgMB
- AAIeAQIXgAUCUDlYcgIZAQAKCRDNWKGxftAz+mCdD/4s/LpQAYcoZ7TwwQnZFNHNZmVQ2+li
- 3sht1MnFNndcCzVXHSWd/fh00z2du3ccPl51fXU4lHbiG3ZyrjX2Umx48C20Xg8gbmdUBzq4
- 9+s12COrgwgsLyWZAXzCMWYXOn9ijPHeSQSq1XYj8p2w4oVjMa/QfGueKiJ5a14yhCwye2AM
- f5o8uDLf+UNPgJIYAGJ46fT6k5OzXGVIgIGmMZCbYPhhSAvLKBfLaIFd5Bu6sPjp0tJDXJd8
- pG831Kalbqxk7e08FZ76opzWF9x/ZjLPfTtr4xiVvx+f9g/5E83/A5SvgKyYHdb3Nevz0nvn
- MqQIVfZFPUAQfGxdWgRsFCudl6i9wEGYTcOGe00t7JPbYolLlvdn+tA+BCE5jW+4cFg3HmIf
- YFchQtp+AGxDXG3lwJcNwk0/x+Py3vwlZIVXbdxXqYc7raaO/+us8GSlnsO+hzC3TQE2E/Hy
- n45FDXgl51rV6euNcDRFUWGE0d/25oKBXGNHm+l/MRvV8mAdg3iTiy2+tAKMYmg0PykiNsjD
- b3P5sMtqeDxr3epMO+dO6+GYzZsWU2YplWGGzEKI8sn1CrPsJzcMJDoWUv6v3YL+YKnwSyl1
- Q1Dlo+K9FeALqBE5FTDlwWPh2SSIlRtHEf8EynUqLSCjOtRhykmqAn+mzIQk+hIy6a0to9iX
- uLRdVbkCDQRQOVefARAAsdGTEi98RDUGFrxK5ai2R2t9XukLLRbRmwyYYx7sc7eYp7W4zbnI
- W6J+hKv3aQsk0C0Em4QCHf9vXOH7dGrgkfpvG6aQlTMRWnmiVY99V9jTZGwK619fpmFXgdAt
- WFPMeNKVGkYzyMMjGQ4YbfDcy04BSH2fEok0jx7Jjjm0U+LtSJL8fU4tWhlkKHtO1oQ9Y9HH
- Uie/D/90TYm1nh7TBlEn0I347zoFHw1YwRO13xcTCh4SL6XaQuggofvlim4rhwSN/I19wK3i
- YwAm3BTBzvJGXbauW0HiLygOvrvXiuUbyugMksKFI9DMPRbDiVgCqe0lpUVW3/0ynpFwFKeR
- FyDouBc2gOx8UTbcFRceOEew9eNMhzKJ2cvIDqXqIIvwEBrA+o92VkFmRG78PleBr0E8WH2/
- /H/MI3yrHD4F4vTRiPwpJ1sO/JUKjOdfZonDF6Hu/Beb0U5coW6u7ENKBmaQ/nO1pHrsqZp+
- 2ErG02yOHF5wDWxxgbd4jgcNTKJiY9F1cdKP+NbWW/rnJgem8qYI3a4VkIkFT5BE2eYLvZlR
- cIzWc/ve/RoQh6jzXD0T08whoajZ1Y3yFQ8oyLSFt8ybxF0b5XryL2RVeHQTkE8NKwoGVYTn
- ER+o7x2sUGbIkjHrE4Gq2cooEl9lMv6I5TEkvP1E5hiZFJWYYnrXa/cAEQEAAYkCHwQYAQgA
- CQUCUDlXnwIbDAAKCRDNWKGxftAz+reUEACQ+rz2AlVZZcUdMxWoiHqJTb5JnaF7RBIBt6Ia
- LB9triebZ7GGW+dVPnLW0ZR1X3gTaswo0pSFU9ofHkG2WKoYM8FbzSR031k2NNk/CR0lw5Bh
- whAUZ0w2jgF4Lr+u8u6zU7Qc2dKEIa5rpINPYDYrJpRrRvNne7sj5ZoWNp5ctl8NBory6s3b
- bXvQ8zlMxx42oF4ouCcWtrm0mg3Zk3SQQSVn/MIGCafk8HdwtYsHpGmNEVn0hJKvUP6lAGGS
- uDDmwP+Q+ThOq6b6uIDPKZzYSaa9TmL4YIUY8OTjONJ0FLOQl7DsCVY9UIHF61AKOSrdgCJm
- N3d5lXevKWeYa+v6U7QXxM53e1L+6h1CSABlICA09WJP0Fy7ZOTvVjlJ3ApO0Oqsi8iArScp
- fbUuQYfPdk/QjyIzqvzklDfeH95HXLYEq8g+u7nf9jzRgff5230YW7BW0Xa94FPLXyHSc85T
- E1CNnmSCtgX15U67Grz03Hp9O29Dlg2XFGr9rK46Caph3seP5dBFjvPXIEC2lmyRDFPmw4yw
- KQczTkg+QRkC4j/CEFXw0EkwR8tDAPW/NVnWr/KSnR/qzdA4RRuevLSK0SYSouLQr4IoxAuj
- nniu8LClUU5YxbF57rmw5bPlMrBNhO5arD8/b/XxLx/4jGQrcYM+VrMKALwKvPfj20mB6A==
-Message-ID: <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
-Date:   Fri, 10 Jan 2020 20:45:34 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200111005041.GB19291@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=utf-8
+        Fri, 10 Jan 2020 22:57:34 -0500
+Received: from mail-dm6nam11on2041.outbound.protection.outlook.com ([40.107.223.41]:21498
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728243AbgAKD5d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 22:57:33 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a5wvNuw9eJl9eI6Q/oeqBYMkwBHbsXHdTScZtP2kN9gEbTNOnnrDZMv2S+vRKrAv03CmarM2O7J9YnLu3byVyw2XlfJuM8Lafh2whU7XuZs/jiFPlsa03jW62YVrV03CHVeYNp2dOZbziISGyg2r52foDxlyh7Tm56CMixuZZnvj0eLWewafCQBDWftJgCBvXPZgDhpQm8AVsRsmvs7MuKN/Klk2ZwVNkqSP9sR4IWLe8xZNZ7QRgPp7gdxa09VNapdWYsyRDbiSzwRxlMFCbUSTeaqc1JPXlQcntrPAXY67mxOGOm7UXiINBch0pxkkl9dq2c33NwJ9Bh/CJzjY2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nDgHu8yScAACB31qoDwmYnBppMkg5oPumfVdTWX1/SY=;
+ b=EA5cwPYV/mAZ+v8bu0sr62Pcs1rT8R0npLkw9GA1q9GgcC+vkQNCCElX5d2la/G6ENQzpf4OCir0q+BiToxa+mZUkQYCCZ1NWUTpFo/5Z19CVzVOGL8YBDycKV9yEtP6iu+1VEOmkFBUdbDHVHXTPZy86gFXrFD+xSP8O/xJNVj2rYep7S+nyyJja4rd9t6PSQlLkVwbPKvhOsAB62TgdWZJCPRnVTyRe3QoSxtCFNWYW8jIo73WL74XO1Uo2seUuQeZm6sW6Ml/X9NbyKJIywlNl3P66EhN126XWT+ma9N1O3z0NSHLgxDT3DXABXFcQhHYNzX5uWJPxWR5lCM3pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=sifive.com; dmarc=pass action=none header.from=sifive.com;
+ dkim=pass header.d=sifive.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sifive.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nDgHu8yScAACB31qoDwmYnBppMkg5oPumfVdTWX1/SY=;
+ b=G0Okwd4HgfYsohTlv0aNiXMpTCy2KzuBrYhYLO7XG2JT/U5svrAJTP4BxbT4qLBuX/7YWB9ahNBp1PfvCdWlkR3wOzcjvYSpdDmhyAy86NuDQd6I6BeiBfUefeEXWa50ZnC3TWuiPEfrQbzF29xwyQA62KFDnuYUnouoS4lG1sU=
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com (52.132.246.90) by
+ CH2PR13MB3590.namprd13.prod.outlook.com (52.132.246.32) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.10; Sat, 11 Jan 2020 03:57:26 +0000
+Received: from CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5]) by CH2PR13MB3368.namprd13.prod.outlook.com
+ ([fe80::eccb:16ac:e897:85d5%3]) with mapi id 15.20.2644.012; Sat, 11 Jan 2020
+ 03:57:26 +0000
+From:   Yash Shah <yash.shah@sifive.com>
+To:     "Paul Walmsley ( Sifive)" <paul.walmsley@sifive.com>
+CC:     "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "rrichter@marvell.com" <rrichter@marvell.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Subject: RE: [PATCH] riscv: move sifive_l2_cache.h to include/soc
+Thread-Topic: [PATCH] riscv: move sifive_l2_cache.h to include/soc
+Thread-Index: AQHVxeorDALZ3QQDdE2BsC6QnTnA3KfkqnIAgAAL4gCAACLh8A==
+Date:   Sat, 11 Jan 2020 03:57:25 +0000
+Message-ID: <CH2PR13MB3368D2DF7D06BA494AECBE238C3B0@CH2PR13MB3368.namprd13.prod.outlook.com>
+References: <1578463746-25279-1-git-send-email-yash.shah@sifive.com>
+ <alpine.DEB.2.21.9999.2001101704440.32308@viisi.sifive.com>
+ <alpine.DEB.2.21.9999.2001101746310.40553@viisi.sifive.com>
+In-Reply-To: <alpine.DEB.2.21.9999.2001101746310.40553@viisi.sifive.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yash.shah@sifive.com; 
+x-originating-ip: [114.143.65.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d41a66f8-3fbf-43be-e724-08d7964a5f0f
+x-ms-traffictypediagnostic: CH2PR13MB3590:
+x-ld-processed: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR13MB359086FF07B92FC5AC7680958C3B0@CH2PR13MB3590.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1227;
+x-forefront-prvs: 0279B3DD0D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39830400003)(396003)(346002)(136003)(366004)(376002)(189003)(199004)(2906002)(44832011)(9686003)(8676002)(55016002)(81156014)(81166006)(86362001)(53546011)(6506007)(7696005)(33656002)(7416002)(6636002)(71200400001)(186003)(26005)(6862004)(5660300002)(316002)(8936002)(54906003)(76116006)(66946007)(66476007)(66446008)(66556008)(64756008)(52536014)(478600001)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR13MB3590;H:CH2PR13MB3368.namprd13.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: sifive.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PjZCvxFw3iugPFKaxKc1yDjt7OZfoWTcT/mg5M7NknV4yEonF9vROyMc7a9Nnkiqy9SQZvc4cDBp+2E/Q1Azm3OSyMvrUyy7eu/Rk08IeQ2ANkKc7IOy+q5jj3oYQObZdWM9W8rosfQyxBtpV9QZIGKiVA3w74iogTXZ2TFjl5RBdyPb1yB0FFSgOFTfOGanln4E1+8Y5HGimBeOP+cWS2w0FTp8261Rsq+3uBmK15kPoi3/QtHu2iThyUIuz4zL3ew76zSyIhDSozl2/AjS6z1UpGwwbp9ytRslwbDgKNGjeTM1i0MUWa6BoL0BRa8ZKDiRh8jo1tf43CzDO3KydZtq5d+Bdq3SYDRLvNRQ06CtmtaEPbJnRBlNOiZtAaAVx5Iw2KXYfGcZCFx8TKOEvqkG6su0nYqPR0EUXbfuYrfizGXJqctuAnzBfdzA4GFH
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: sifive.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d41a66f8-3fbf-43be-e724-08d7964a5f0f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jan 2020 03:57:25.7011
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 22f88e9d-ae0d-4ed9-b984-cdc9be1529f1
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: o+OP+VEZjDHzOQObiN8lFsh/85yxU+EZpa3jHPsN/MDMHkLlssqfPJF6xIrsti2c0HcDfWeqQLS+DYUIy1VGWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3590
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/10/20 5:50 PM, Baoquan He wrote:
-> On 01/10/20 at 05:18pm, Khalid Aziz wrote:
->> On 1/10/20 4:00 PM, Jerry Hoemann wrote:
->>> On Fri, Jan 10, 2020 at 03:25:36PM -0700, Khalid Aziz and Shuah Khan wrote:
->>>> On 1/10/20 2:42 PM, Bjorn Helgaas wrote:
->>>>> [+cc Deepa (also working in this area)]
->>>>>
->>>>> On Thu, Dec 26, 2019 at 03:21:18AM +0800, Kairui Song wrote:
->>>>>> There are reports about kdump hang upon reboot on some HPE machines,
->>>>>> kernel hanged when trying to shutdown a PCIe port, an uncorrectable
->>>>>> error occurred and crashed the system.
->>>>>
->>>>> Details?  Do you have URLs for bug reports, dmesg logs, etc?
->>>>>
->>>>>> On the machine I can reproduce this issue, part of the topology
->>>>>> looks like this:
->>>>>>
->>>>>> [0000:00]-+-00.0  Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2
->>>>>>           +-01.0-[02]--
->>>>>>           +-01.1-[05]--
->>>>>>           +-02.0-[06]--+-00.0  tEmulex Corporation OneConnect NIC (Skyhawk)
->>>>>>           |            +-00.1  Emulex Corporation OneConnect NIC (Skyhawk)
->>>>>>           |            +-00.2  Emulex Corporation OneConnect NIC (Skyhawk)
->>>>>>           |            +-00.3  Emulex Corporation OneConnect NIC (Skyhawk)
->>>>>>           |            +-00.4  Emulex Corporation OneConnect NIC (Skyhawk)
->>>>>>           |            +-00.5  Emulex Corporation OneConnect NIC (Skyhawk)
->>>>>>           |            +-00.6  Emulex Corporation OneConnect NIC (Skyhawk)
->>>>>>           |            \-00.7  Emulex Corporation OneConnect NIC (Skyhawk)
->>>>>>           +-02.1-[0f]--
->>>>>>           +-02.2-[07]----00.0  Hewlett-Packard Company Smart Array Gen9 Controllers
->>>>>>
->>>>>> When shutting down PCIe port 0000:00:02.2 or 0000:00:02.0, the machine
->>>>>> will hang, depend on which device is reinitialized in kdump kernel.
->>>>>>
->>>>>> If force remove unused device then trigger kdump, the problem will never
->>>>>> happen:
->>>>>>
->>>>>>     echo 1 > /sys/bus/pci/devices/0000\:00\:02.2/0000\:07\:00.0/remove
->>>>>>     echo c > /proc/sysrq-trigger
->>>>>>
->>>>>>     ... Kdump save vmcore through network, the NIC get reinitialized and
->>>>>>     hpsa is untouched. Then reboot with no problem. (If hpsa is used
->>>>>>     instead, shutdown the NIC in first kernel will help)
->>>>>>
->>>>>> The cause is that some devices are enabled by the first kernel, but it
->>>>>> don't have the chance to shutdown the device, and kdump kernel is not
->>>>>> aware of it, unless it reinitialize the device.
->>>>>>
->>>>>> Upon reboot, kdump kernel will skip downstream device shutdown and
->>>>>> clears its bridge's master bit directly. The downstream device could
->>>>>> error out as it can still send requests but upstream refuses it.
->>>>>
->>>>> Can you help me understand the sequence of events?  If I understand
->>>>> correctly, the desired sequence is:
->>>>>
->>>>>   - user kernel boots
->>>>>   - user kernel panics and kexecs to kdump kernel
->>>>>   - kdump kernel writes vmcore to network or disk
->>>>>   - kdump kernel reboots
->>>>>   - user kernel boots
->>>>>
->>>>> But the problem is that as part of the kdump kernel reboot,
->>>>>
->>>>>   - kdump kernel disables bus mastering for a Root Port
->>>>>   - device below the Root Port attempts DMA
->>>>>   - Root Port receives DMA transaction, handles it as Unsupported
->>>>>     Request, sends UR Completion to device
->>>>>   - device signals uncorrectable error
->>>>>   - uncorrectable error causes a crash (Or a hang?  You mention both
->>>>>     and I'm not sure which it is)
->>>>>
->>>>> Is that right so far?
->>>>>
->>>>>> So for kdump, let kernel read the correct hardware power state on boot,
->>>>>> and always clear the bus master bit of PCI device upon shutdown if the
->>>>>> device is on. PCIe port driver will always shutdown all downstream
->>>>>> devices first, so this should ensure all downstream devices have bus
->>>>>> master bit off before clearing the bridge's bus master bit.
->>>>>>
->>>>>> Signed-off-by: Kairui Song <kasong@redhat.com>
->>>>>> ---
->>>>>>  drivers/pci/pci-driver.c | 11 ++++++++---
->>>>>>  drivers/pci/quirks.c     | 20 ++++++++++++++++++++
->>>>>>  2 files changed, 28 insertions(+), 3 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
->>>>>> index 0454ca0e4e3f..84a7fd643b4d 100644
->>>>>> --- a/drivers/pci/pci-driver.c
->>>>>> +++ b/drivers/pci/pci-driver.c
->>>>>> @@ -18,6 +18,7 @@
->>>>>>  #include <linux/kexec.h>
->>>>>>  #include <linux/of_device.h>
->>>>>>  #include <linux/acpi.h>
->>>>>> +#include <linux/crash_dump.h>
->>>>>>  #include "pci.h"
->>>>>>  #include "pcie/portdrv.h"
->>>>>>  
->>>>>> @@ -488,10 +489,14 @@ static void pci_device_shutdown(struct device *dev)
->>>>>>  	 * If this is a kexec reboot, turn off Bus Master bit on the
->>>>>>  	 * device to tell it to not continue to do DMA. Don't touch
->>>>>>  	 * devices in D3cold or unknown states.
->>>>>> -	 * If it is not a kexec reboot, firmware will hit the PCI
->>>>>> -	 * devices with big hammer and stop their DMA any way.
->>>>>> +	 * If this is kdump kernel, also turn off Bus Master, the device
->>>>>> +	 * could be activated by previous crashed kernel and may block
->>>>>> +	 * it's upstream from shutting down.
->>>>>> +	 * Else, firmware will hit the PCI devices with big hammer
->>>>>> +	 * and stop their DMA any way.
->>>>>>  	 */
->>>>>> -	if (kexec_in_progress && (pci_dev->current_state <= PCI_D3hot))
->>>>>> +	if ((kexec_in_progress || is_kdump_kernel()) &&
->>>>>> +			pci_dev->current_state <= PCI_D3hot)
->>>>>>  		pci_clear_master(pci_dev);
->>>>>
->>>>> I'm clearly missing something because this will turn off bus mastering
->>>>> in cases where we previously left it enabled.
->>>>>
->>>>> I was assuming the crash was related to a device doing DMA when the
->>>>> Root Port had bus mastering disabled.  But that must be wrong.
->>>>>
->>>>> I'd like to understand the crash/hang better because the quirk
->>>>> especially is hard to connect to anything.  If the crash is because of
->>>>> an AER or other PCIe error, maybe another possibility is that we could
->>>>> handle it better or disable signaling of it or something.
->>>>>
->>>>
->>>> I am not understanding this failure mode either. That code in
->>>> pci_device_shutdown() was added originally to address this very issue.
->>>> The patch 4fc9bbf98fd6 ("PCI: Disable Bus Master only on kexec reboot")
->>>> shut down any errant DMAs from PCI devices as we kexec a new kernel. In
->>>> this new patch, this is the same code path that will be taken again when
->>>> kdump kernel is shutting down. If the errant DMA problem was not fixed
->>>> by clearing Bus Master bit in this path when kdump kernel was being
->>>> kexec'd, why does the same code path work the second time around when
->>>> kdump kernel is shutting down? Is there more going on that we don't
->>>> understand?
->>>>
->>>
->>>   Khalid,
->>>
->>>   I don't believe we execute that code path in the crash case.
->>>
->>>   The variable kexec_in_progress is set true in kernel_kexec() before calling
->>>   machine_kexec().  This is the fast reboot case.
->>>
->>>   I don't see kexec_in_progress set true elsewhere.
->>>
->>>
->>>   The code path for crash is different.
->>>
->>>   For instance, panic() will call
->>> 	-> __crash_kexec()  which calls
->>> 		-> machine_kexec().
->>>
->>>  So the setting of kexec_in_progress is bypassed.
->>>
->>
->> True, but what that means is if it is an errant DMA causing the issue
->> you are seeing, that errant DMA can happen any time between when we
-> 
-> Here, there could be misunderstanding. It's not an errant DMA, it's an
-> device which may be in DMA transporting state in normal kernel, but in
-> kdump kernel it's not manipulated by its driver because we don't use it
-> to dump, so exlucde its driver from kdump initramfs for saving space. 
-> 
 
-Errant DMA as in currently running kernel did not enable the device to
-do DMA and is not ready for it. If a device can issue DMA request in
-this state, it could do it well before kdump kernel starts shutting
-down. Don't we need to fix this before we start shutting down kdump in
-preparation for reboot? I can see the need for this fix, but I am not
-sure if this patch places the fix in right place.
 
---
-Khalid
+> -----Original Message-----
+> From: Paul Walmsley <paul.walmsley@sifive.com>
+> Sent: 11 January 2020 07:17
+> To: Yash Shah <yash.shah@sifive.com>
+> Cc: palmer@dabbelt.com; aou@eecs.berkeley.edu; bp@alien8.de;
+> mchehab@kernel.org; tony.luck@intel.com; james.morse@arm.com;
+> rrichter@marvell.com; linux-riscv@lists.infradead.org; linux-
+> kernel@vger.kernel.org; linux-edac@vger.kernel.org
+> Subject: Re: [PATCH] riscv: move sifive_l2_cache.h to include/soc
+>=20
+> On Fri, 10 Jan 2020, Paul Walmsley wrote:
+>=20
+> > On Tue, 7 Jan 2020, Yash Shah wrote:
+> >
+> > > The commit 9209fb51896f ("riscv: move sifive_l2_cache.c to
+> > > drivers/soc") moves the sifive L2 cache driver to driver/soc. It did
+> > > not move the header file along with the driver. Therefore this patch
+> > > moves the header file to driver/soc
+> > >
+> > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> >
+> > Thanks, queued for v5.5-rc.
+>=20
+> By the way, I fixed the include guard also.  The queued patch follows.
+
+Thanks, somehow I had overseen that.
+
+- Yash
+
+>=20
+>=20
+> - Paul
+>=20
+> From: Yash Shah <yash.shah@sifive.com>
+> Date: Tue, 7 Jan 2020 22:09:06 -0800
+> Subject: [PATCH] riscv: move sifive_l2_cache.h to include/soc
+>=20
+> The commit 9209fb51896f ("riscv: move sifive_l2_cache.c to drivers/soc")
+> moves the sifive L2 cache driver to driver/soc. It did not move the heade=
+r file
+> along with the driver. Therefore this patch moves the header file to
+> driver/soc
+>=20
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> Reviewed-by: Anup Patel <anup@brainfault.org>
+> [paul.walmsley@sifive.com: updated to fix the include guard]
+> Fixes: 9209fb51896f ("riscv: move sifive_l2_cache.c to drivers/soc")
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> ---
+>  drivers/edac/sifive_edac.c                                  | 2 +-
+>  drivers/soc/sifive/sifive_l2_cache.c                        | 2 +-
+>  .../include/asm =3D> include/soc/sifive}/sifive_l2_cache.h    | 6 +++---
+>  3 files changed, 5 insertions(+), 5 deletions(-)  rename
+> {arch/riscv/include/asm =3D> include/soc/sifive}/sifive_l2_cache.h (72%)
+>=20
+> diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c inde=
+x
+> 413cdb4a591d..c0cc72a3b2be 100644
+> --- a/drivers/edac/sifive_edac.c
+> +++ b/drivers/edac/sifive_edac.c
+> @@ -10,7 +10,7 @@
+>  #include <linux/edac.h>
+>  #include <linux/platform_device.h>
+>  #include "edac_module.h"
+> -#include <asm/sifive_l2_cache.h>
+> +#include <soc/sifive/sifive_l2_cache.h>
+>=20
+>  #define DRVNAME "sifive_edac"
+>=20
+> diff --git a/drivers/soc/sifive/sifive_l2_cache.c
+> b/drivers/soc/sifive/sifive_l2_cache.c
+> index a9ffff3277c7..a5069394cd61 100644
+> --- a/drivers/soc/sifive/sifive_l2_cache.c
+> +++ b/drivers/soc/sifive/sifive_l2_cache.c
+> @@ -9,7 +9,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_address.h>
+> -#include <asm/sifive_l2_cache.h>
+> +#include <soc/sifive/sifive_l2_cache.h>
+>=20
+>  #define SIFIVE_L2_DIRECCFIX_LOW 0x100
+>  #define SIFIVE_L2_DIRECCFIX_HIGH 0x104
+> diff --git a/arch/riscv/include/asm/sifive_l2_cache.h
+> b/include/soc/sifive/sifive_l2_cache.h
+> similarity index 72%
+> rename from arch/riscv/include/asm/sifive_l2_cache.h
+> rename to include/soc/sifive/sifive_l2_cache.h
+> index 04f6748fc50b..92ade10ed67e 100644
+> --- a/arch/riscv/include/asm/sifive_l2_cache.h
+> +++ b/include/soc/sifive/sifive_l2_cache.h
+> @@ -4,8 +4,8 @@
+>   *
+>   */
+>=20
+> -#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
+> -#define _ASM_RISCV_SIFIVE_L2_CACHE_H
+> +#ifndef __SOC_SIFIVE_L2_CACHE_H
+> +#define __SOC_SIFIVE_L2_CACHE_H
+>=20
+>  extern int register_sifive_l2_error_notifier(struct notifier_block *nb);=
+  extern
+> int unregister_sifive_l2_error_notifier(struct notifier_block *nb); @@ -1=
+3,4
+> +13,4 @@ extern int unregister_sifive_l2_error_notifier(struct notifier_b=
+lock
+> *nb);  #define SIFIVE_L2_ERR_TYPE_CE 0  #define SIFIVE_L2_ERR_TYPE_UE 1
+>=20
+> -#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
+> +#endif /* __SOC_SIFIVE_L2_CACHE_H */
+> --
+> 2.25.0.rc2
+>=20
+>=20
 
