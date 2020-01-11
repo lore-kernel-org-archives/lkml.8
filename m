@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC42C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA8DC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8798720848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A591F20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736942;
-	bh=KFUxjOKDDuEoX/HZBQoELlfUW0gsxH8DtfLuAzv8vGc=;
+	s=default; t=1578736946;
+	bh=rqh2HQ0MrSBQu+Rjr4Pxb85MCFGCTcTehbCzdEyqgR0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NgCU+jChpUOsD03bKP9ByOdlYwdvPMt1Mlu1Hks1MQDNTpZezZ7iIleFQNjoQTUAX
-	 qsl3p/6f5Toe4DRLItzcTZ3K/FiXAb/TunZNu1v9wHeLxX3YMvyHHrAIAg+Ldt+BGD
-	 B96fZQJyolsxlZcQDaW0Q+BebP6e0i/vFqWkHC90=
+	b=EDF4dzu48wvnfF80ax+t/c4rfzNXp+edsDahXELxo77Ka4PVrMbqufvCWXD667Psc
+	 lPujZibSuelglItCESSCOc7EHaNdLXR5ya9oIGd6W0Etydx7yipb9dn+YvMpAg9SVe
+	 rBxX+HnQFAMBkMexl4zANm8YytWHiPIGVE5zNm30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729029AbgAKKCW (ORCPT
+        id S1729090AbgAKKC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:02:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60692 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:02:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728888AbgAKKCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:02:21 -0500
+        id S1729034AbgAKKCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:02:25 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9279620842;
-        Sat, 11 Jan 2020 10:02:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 617CA20842;
+        Sat, 11 Jan 2020 10:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736940;
-        bh=KFUxjOKDDuEoX/HZBQoELlfUW0gsxH8DtfLuAzv8vGc=;
+        s=default; t=1578736945;
+        bh=rqh2HQ0MrSBQu+Rjr4Pxb85MCFGCTcTehbCzdEyqgR0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xExCdzAIv5a+WzNvcujdQzuEYIR7/g18fRkaoiY7+0WTOVA6bSWXSgzawWBnANic1
-         L4caefLE6lNuoKfxv6TC5HlnjWbGnVqcanrVTQqeraXgxi90HYuhIW6osBhUc08qoC
-         oyrf2z+6IBKTvhOg62wu1GfEwx9RMr+8ALcM4dmc=
+        b=TRG/XuyfsD288rV3uTzn7J3YczCbFSNjGC0FV2mVsg94+iR7bQPq9dru4a9CqBcUh
+         IyNPIfs3d6d9yOQpn0GhtGeUyXv3c3//Xw2wvNXuP6AS9Y/LTIhbDH1XWn93qX51jD
+         ++bmAkr6Ghw/BL1mrSnG7s0dLP1kfHhN8n5IzXYo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 4.9 34/91] PM / devfreq: Check NULL governor in available_governors_show
-Date:   Sat, 11 Jan 2020 10:49:27 +0100
-Message-Id: <20200111094857.826488674@linuxfoundation.org>
+        stable@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.9 35/91] nfsd4: fix up replay_matches_cache()
+Date:   Sat, 11 Jan 2020 10:49:28 +0100
+Message-Id: <20200111094858.163637835@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -60,34 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Scott Mayhew <smayhew@redhat.com>
 
-commit d68adc8f85cd757bd33c8d7b2660ad6f16f7f3dc upstream.
+commit 6e73e92b155c868ff7fce9d108839668caf1d9be upstream.
 
-The governor is initialized after sysfs attributes become visible so in
-theory the governor field can be NULL here.
+When running an nfs stress test, I see quite a few cached replies that
+don't match up with the actual request.  The first comment in
+replay_matches_cache() makes sense, but the code doesn't seem to
+match... fix it.
 
-Fixes: bcf23c79c4e46 ("PM / devfreq: Fix available_governor sysfs")
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+This isn't exactly a bugfix, as the server isn't required to catch every
+case of a false retry.  So, we may as well do this, but if this is
+fixing a problem then that suggests there's a client bug.
+
+Fixes: 53da6a53e1d4 ("nfsd4: catch some false session retries")
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/devfreq/devfreq.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -982,7 +982,7 @@ static ssize_t available_governors_show(
- 	 * The devfreq with immutable governor (e.g., passive) shows
- 	 * only own governor.
- 	 */
--	if (df->governor->immutable) {
-+	if (df->governor && df->governor->immutable) {
- 		count = scnprintf(&buf[count], DEVFREQ_NAME_LEN,
- 				   "%s ", df->governor_name);
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -3067,12 +3067,17 @@ static bool replay_matches_cache(struct
+ 	    (bool)seq->cachethis)
+ 		return false;
  	/*
+-	 * If there's an error than the reply can have fewer ops than
+-	 * the call.  But if we cached a reply with *more* ops than the
+-	 * call you're sending us now, then this new call is clearly not
+-	 * really a replay of the old one:
++	 * If there's an error then the reply can have fewer ops than
++	 * the call.
+ 	 */
+-	if (slot->sl_opcnt < argp->opcnt)
++	if (slot->sl_opcnt < argp->opcnt && !slot->sl_status)
++		return false;
++	/*
++	 * But if we cached a reply with *more* ops than the call you're
++	 * sending us now, then this new call is clearly not really a
++	 * replay of the old one:
++	 */
++	if (slot->sl_opcnt > argp->opcnt)
+ 		return false;
+ 	/* This is the only check explicitly called by spec: */
+ 	if (!same_creds(&rqstp->rq_cred, &slot->sl_cred))
 
 
