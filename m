@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06814C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7CAC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71812082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 910DE20673
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:16:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737777;
-	bh=S7renQ6JMhoqB5VfJ2q31j4ceVXaE9rW61AyX8FoOGE=;
+	s=default; t=1578737784;
+	bh=4YIWANv+xk2ULjgUiU9TKCAH+VD5k1p14EtAPNJLawo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OhmCjsVW+3vUdo5XNrywQ3a8d1BtYo0I1SDTquxxcijO9n+CsRhHXBZJxVOE8HrTx
-	 ozSR1KpKSqxxL6ZEe8NQpTY5FmSSMzUtJdymVzNY/FR4H8ybeHhTI9LI8Icyn3DXsi
-	 Hr6cCp3W8pDnTD7nMVbKC9TbgRY2ZbRGzl8iZ+mY=
+	b=IWQIhWYejDXk+tsYfZSki5IKj9Eb4bdaWtzKEMTlavAfrYLiRYq7ttu9c3BBcY5Y1
+	 8J8ER2euMYl3Fhk1vVCq6q+2vaWQ+aoQLMdfNKnmNQOFW+coinoj/dA9pO7q1aMQy1
+	 TqT5PVcH1dHjD85g2PiZOnnrRdpPx3F7AubyEwps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbgAKKQQ (ORCPT
+        id S1730256AbgAKKQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:16:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58856 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:16:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730299AbgAKKQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:16:11 -0500
+        id S1730151AbgAKKQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:16:21 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3399A205F4;
-        Sat, 11 Jan 2020 10:16:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B6222082E;
+        Sat, 11 Jan 2020 10:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737771;
-        bh=S7renQ6JMhoqB5VfJ2q31j4ceVXaE9rW61AyX8FoOGE=;
+        s=default; t=1578737780;
+        bh=4YIWANv+xk2ULjgUiU9TKCAH+VD5k1p14EtAPNJLawo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RvaLH6w43ZQVPnX8StZ9lOjASeyz7ieN+R3adIAgI8PmIjjDows6B8Ib4rsIdqu47
-         Vy4r3LoPR5+LfLxyXaGVEfmJmCFTrG+uL1Pc6wdMRbgbL1ag3ZDygRDwr/qHNNl0OF
-         Sjs/GGGNE2ZCA3iaNbilon5R6S3ZDE+srUTe5Xc4=
+        b=DdSwxXLDvO//f+Gkh47cdpffca/XdO75+RZDrYRnSnCFHsWLg892MXg0/6ZgM6/Ay
+         y4ayOxlOm+yvMguOd2dxE+UBIOZGju1ZG29EtHrFP7TC8ukk/62bhgyrDhFHG7gdIB
+         /bCwgZfpuqsm17yS1p10DSi+EqETRAixVveV5YgI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 42/84] ASoC: wm8962: fix lambda value
-Date:   Sat, 11 Jan 2020 10:50:19 +0100
-Message-Id: <20200111094902.227377246@linuxfoundation.org>
+Subject: [PATCH 4.19 26/84] ARM: dts: bcm283x: Fix critical trip point
+Date:   Sat, 11 Jan 2020 10:50:03 +0100
+Message-Id: <20200111094855.550236467@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -61,45 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Stefan Wahren <wahrenst@gmx.net>
 
-[ Upstream commit 556672d75ff486e0b6786056da624131679e0576 ]
+[ Upstream commit 30e647a764d446723a7e0fb08d209e0104f16173 ]
 
-According to user manual, it is required that FLL_LAMBDA > 0
-in all cases (Integer and Franctional modes).
+During definition of the CPU thermal zone of BCM283x SoC family there
+was a misunderstanding of the meaning "criticial trip point" and the
+thermal throttling range of the VideoCore firmware. The latter one takes
+effect when the core temperature is at least 85 degree celsius or higher
 
-Fixes: 9a76f1ff6e29 ("ASoC: Add initial WM8962 CODEC driver")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+So the current critical trip point doesn't make sense, because the
+thermal shutdown appears before the firmware has a chance to throttle
+the ARM core(s).
+
+Fix these unwanted shutdowns by increasing the critical trip point
+to a value which shouldn't be reached with working thermal throttling.
+
+Fixes: 0fe4d2181cc4 ("ARM: dts: bcm283x: Add CPU thermal zone with 1 trip point")
+Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/bcm283x.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index efd8910b1ff7..dde015fd70a4 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2792,7 +2792,7 @@ static int fll_factors(struct _fll_div *fll_div, unsigned int Fref,
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 31b29646b14c..c9322a56300d 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -39,7 +39,7 @@
  
- 	if (target % Fref == 0) {
- 		fll_div->theta = 0;
--		fll_div->lambda = 0;
-+		fll_div->lambda = 1;
- 	} else {
- 		gcd_fll = gcd(target, fratio * Fref);
- 
-@@ -2862,7 +2862,7 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
- 		return -EINVAL;
- 	}
- 
--	if (fll_div.theta || fll_div.lambda)
-+	if (fll_div.theta)
- 		fll1 |= WM8962_FLL_FRAC;
- 
- 	/* Stop the FLL while we reconfigure */
+ 			trips {
+ 				cpu-crit {
+-					temperature	= <80000>;
++					temperature	= <90000>;
+ 					hysteresis	= <0>;
+ 					type		= "critical";
+ 				};
 -- 
 2.20.1
 
