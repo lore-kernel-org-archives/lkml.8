@@ -2,55 +2,51 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EAB2C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F3DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2814E20882
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E84920880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738788;
-	bh=ekY1pzXc//oztwUxTxyZSqXmrG1IKiusznaJnwOuNhg=;
+	s=default; t=1578738794;
+	bh=Dlpxu94Gw2w8+mGmgROP8VFW0qGP7TgxW2vUEk6Kb/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g2Z4n4VHwPmOXbeShIegUQ+iQt6v2ywynByIdPm6pRBtL6/iU13yguWi+Jl2C0beI
-	 OqBhBvgxjVOk61UZMa/q12Dgc2sDy2bkqqwLAMsX9sy7v6sPQmxDOjgB3ywSxj8xOs
-	 2YMbY9S3rWgQFtnz21GBPiWF34ob+QBtQw6TxOxI=
+	b=wPKkOPMoooSzes+pgJCqIdYUXJYzyuS3wqdGr9u9yB7O3nICz5NBtYqqJGYnU6ltK
+	 CC9TYxCHzZimn/63syIyUoertdQhxWxINnh8j9uTkGEJcgMYlmV6YfYbtSCZIrnvat
+	 aWp15jFN3qYwVRjCr+3tfOXmbA2/0jjEEYHNi9nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731580AbgAKKdH (ORCPT
+        id S1731584AbgAKKdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:33:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47062 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:33:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729256AbgAKKdF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:33:05 -0500
+        id S1731531AbgAKKdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:33:09 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8002620842;
-        Sat, 11 Jan 2020 10:33:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB09420842;
+        Sat, 11 Jan 2020 10:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738784;
-        bh=ekY1pzXc//oztwUxTxyZSqXmrG1IKiusznaJnwOuNhg=;
+        s=default; t=1578738788;
+        bh=Dlpxu94Gw2w8+mGmgROP8VFW0qGP7TgxW2vUEk6Kb/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1sedDB3cPqh98WvguPn8S0w/XYHo7ydWW31oBGG/QsFLsTDks/Ss/cg2maYRQxn3R
-         enG8cUwMQzrHlYO/aBWe+D6vepSEe/G9jO5MQpDFU4xATV0WpGUuVowzNCRZyvHiO7
-         bMYmB/jy0y0m902Fzrx23+J+gussZckRzALsr4Fs=
+        b=RrhCnwqMv8AgMdII7Tk25Fjigt6z5E1OT3qKwkDumblpqcAbjg/1R4kjXD3RbAR7o
+         i5myZAdjUHza0N4Fwu7m5TgU2nZCm1e5GiZ9c4Z/FQhBCK8OuJCtlQhrVMRnDFiKWK
+         HMn6uF9JhecJhkIFVV9Y9/DcS/wM6awEIpnwvI9U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        RENARD Pierre-Francois <pfrenard@gmail.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Woojung Huh <woojung.huh@microchip.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 145/165] net: usb: lan78xx: fix possible skb leak
-Date:   Sat, 11 Jan 2020 10:51:04 +0100
-Message-Id: <20200111094939.290795974@linuxfoundation.org>
+Subject: [PATCH 5.4 154/165] vlan: vlan_changelink() should propagate errors
+Date:   Sat, 11 Jan 2020 10:51:13 +0100
+Message-Id: <20200111094941.406970971@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -65,50 +61,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 47240ba0cd09bb6fe6db9889582048324999dfa4 ]
+[ Upstream commit eb8ef2a3c50092bb018077c047b8dba1ce0e78e3 ]
 
-If skb_linearize() fails, we need to free the skb.
+Both vlan_dev_change_flags() and vlan_dev_set_egress_priority()
+can return an error. vlan_changelink() should not ignore them.
 
-TSO makes skb bigger, and this bug might be the reason
-Raspberry Pi 3B+ users had to disable TSO.
-
-Fixes: 55d7de9de6c3 ("Microchip's LAN7800 family USB 2/3 to 10/100/1000 Ethernet device driver")
+Fixes: 07b5b17e157b ("[VLAN]: Use rtnl_link API")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: RENARD Pierre-Francois <pfrenard@gmail.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Woojung Huh <woojung.huh@microchip.com>
-Cc: Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/lan78xx.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ net/8021q/vlan_netlink.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
---- a/drivers/net/usb/lan78xx.c
-+++ b/drivers/net/usb/lan78xx.c
-@@ -2724,11 +2724,6 @@ static int lan78xx_stop(struct net_devic
- 	return 0;
- }
+--- a/net/8021q/vlan_netlink.c
++++ b/net/8021q/vlan_netlink.c
+@@ -108,11 +108,13 @@ static int vlan_changelink(struct net_de
+ 	struct ifla_vlan_flags *flags;
+ 	struct ifla_vlan_qos_mapping *m;
+ 	struct nlattr *attr;
+-	int rem;
++	int rem, err;
  
--static int lan78xx_linearize(struct sk_buff *skb)
--{
--	return skb_linearize(skb);
--}
--
- static struct sk_buff *lan78xx_tx_prep(struct lan78xx_net *dev,
- 				       struct sk_buff *skb, gfp_t flags)
- {
-@@ -2740,8 +2735,10 @@ static struct sk_buff *lan78xx_tx_prep(s
- 		return NULL;
+ 	if (data[IFLA_VLAN_FLAGS]) {
+ 		flags = nla_data(data[IFLA_VLAN_FLAGS]);
+-		vlan_dev_change_flags(dev, flags->flags, flags->mask);
++		err = vlan_dev_change_flags(dev, flags->flags, flags->mask);
++		if (err)
++			return err;
  	}
- 
--	if (lan78xx_linearize(skb) < 0)
-+	if (skb_linearize(skb)) {
-+		dev_kfree_skb_any(skb);
- 		return NULL;
-+	}
- 
- 	tx_cmd_a = (u32)(skb->len & TX_CMD_A_LEN_MASK_) | TX_CMD_A_FCS_;
- 
+ 	if (data[IFLA_VLAN_INGRESS_QOS]) {
+ 		nla_for_each_nested(attr, data[IFLA_VLAN_INGRESS_QOS], rem) {
+@@ -123,7 +125,9 @@ static int vlan_changelink(struct net_de
+ 	if (data[IFLA_VLAN_EGRESS_QOS]) {
+ 		nla_for_each_nested(attr, data[IFLA_VLAN_EGRESS_QOS], rem) {
+ 			m = nla_data(attr);
+-			vlan_dev_set_egress_priority(dev, m->from, m->to);
++			err = vlan_dev_set_egress_priority(dev, m->from, m->to);
++			if (err)
++				return err;
+ 		}
+ 	}
+ 	return 0;
 
 
