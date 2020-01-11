@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 041CDC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3100AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4BE820673
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F20A0206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737732;
-	bh=FnZPoNBagxvxWxZ/U8zTvEliUMOg4jheX72GYnmXcUg=;
+	s=default; t=1578737737;
+	bh=0ef4R91hDWE4O4cgP2m+U+Frfl8u+9MVu8EB+owp2iI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YlegN04FkH62WpJueKnlwbqki0w92xpmPPxMe+Xsxzik+BaKTZBkj5omkWh6bDoFf
-	 9ITZNul//Ac3RYfvWDC7s13ouMTQZoRRw7hE2blYO+8zuhcUBCBBbTk2qhOHgd0bwX
-	 hdPvyQQDjc1h0TYXQoCRR6n0+XZc38YSSNFM1txc=
+	b=IRbxviPA1cIqKG1WB5G1ACscYIG5S1RbAcf0uiFT+oEqPo0+T1CkpBrs4p619xp+x
+	 v6PkZswqBHza8TaEgYjtHE+D79OnfSeFA3xDtwPgzsJfEtFegfJfwhF+9Ih7F+ll7d
+	 k8tqjRLTaHvKzp9dB3aYRtua4u04zXteL3jjLihc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730260AbgAKKPb (ORCPT
+        id S1730266AbgAKKPf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:15:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56970 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:15:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730123AbgAKKP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:15:26 -0500
+        id S1729051AbgAKKPa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:15:30 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E2F320673;
-        Sat, 11 Jan 2020 10:15:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A7B220673;
+        Sat, 11 Jan 2020 10:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737726;
-        bh=FnZPoNBagxvxWxZ/U8zTvEliUMOg4jheX72GYnmXcUg=;
+        s=default; t=1578737730;
+        bh=0ef4R91hDWE4O4cgP2m+U+Frfl8u+9MVu8EB+owp2iI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xJtPs7xYIQqs80kwdWq7xi4VziYb7kw5WpnvFeo6LjYdNJJEs8IPy59AHXqGQNEMD
-         mfpOsDIBMdiYCtlHD8ixQ6eeNuSbrv9k50/94GseVrpU3erNa2U7pExdnRhrO49ufd
-         V0EZNeP/9veobUI1QPkscVT67RPzkEWFPiV82FBY=
+        b=JuCFW329xTKFi4ku6UwXE+zZ24DXsAJhy74NgP3ZLKmq7pAB02dw9VDvlWs9IpqX6
+         Ny4lChu3UAAHnKlrULkqhxBO7BtBrg2JeF2unCCkmyiuYzClTjgRkhpJyhJVSp8jpI
+         WI82kdcs2LN2llH05hOHo9y1t1/X91P5hyd6tWrs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
+        stable@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Dragos Tarcatu <dragos_tarcatu@mentor.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 04/84] regulator: fix use after free issue
-Date:   Sat, 11 Jan 2020 10:49:41 +0100
-Message-Id: <20200111094846.083565992@linuxfoundation.org>
+Subject: [PATCH 4.19 25/84] ASoC: topology: Check return value for soc_tplg_pcm_create()
+Date:   Sat, 11 Jan 2020 10:50:02 +0100
+Message-Id: <20200111094855.180554414@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -61,55 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen Yang <wenyang@linux.alibaba.com>
+From: Dragos Tarcatu <dragos_tarcatu@mentor.com>
 
-[ Upstream commit 4affd79a125ac91e6a53be843ea3960a8fc00cbb ]
+[ Upstream commit a3039aef52d9ffeb67e9211899cd3e8a2953a01f ]
 
-This is caused by dereferencing 'rdev' after put_device() in
-the _regulator_get()/_regulator_put() functions.
-This patch just moves the put_device() down a bit to avoid the
-issue.
+The return value of soc_tplg_pcm_create() is currently not checked
+in soc_tplg_pcm_elems_load(). If an error is to occur there, the
+topology ignores it and continues loading.
 
-Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20191124145835.25999-1-wenyang@linux.alibaba.com
+Fix that by checking the status and rejecting the topology on error.
+
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Signed-off-by: Dragos Tarcatu <dragos_tarcatu@mentor.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Link: https://lore.kernel.org/r/20191210003939.15752-3-pierre-louis.bossart@linux.intel.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/soc-topology.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index f312764660e6..4bab758d14b1 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1724,8 +1724,8 @@ struct regulator *_regulator_get(struct device *dev, const char *id,
- 	regulator = create_regulator(rdev, dev, id);
- 	if (regulator == NULL) {
- 		regulator = ERR_PTR(-ENOMEM);
--		put_device(&rdev->dev);
- 		module_put(rdev->owner);
-+		put_device(&rdev->dev);
- 		return regulator;
- 	}
+diff --git a/sound/soc/soc-topology.c b/sound/soc/soc-topology.c
+index 88a7e860b175..069f38fbf07b 100644
+--- a/sound/soc/soc-topology.c
++++ b/sound/soc/soc-topology.c
+@@ -1890,6 +1890,7 @@ static int soc_tplg_pcm_elems_load(struct soc_tplg *tplg,
+ 	int count = hdr->count;
+ 	int i;
+ 	bool abi_match;
++	int ret;
  
-@@ -1851,13 +1851,13 @@ static void _regulator_put(struct regulator *regulator)
+ 	if (tplg->pass != SOC_TPLG_PASS_PCM_DAI)
+ 		return 0;
+@@ -1926,7 +1927,12 @@ static int soc_tplg_pcm_elems_load(struct soc_tplg *tplg,
+ 		}
  
- 	rdev->open_count--;
- 	rdev->exclusive = 0;
--	put_device(&rdev->dev);
- 	regulator_unlock(rdev);
+ 		/* create the FE DAIs and DAI links */
+-		soc_tplg_pcm_create(tplg, _pcm);
++		ret = soc_tplg_pcm_create(tplg, _pcm);
++		if (ret < 0) {
++			if (!abi_match)
++				kfree(_pcm);
++			return ret;
++		}
  
- 	kfree_const(regulator->supply_name);
- 	kfree(regulator);
- 
- 	module_put(rdev->owner);
-+	put_device(&rdev->dev);
- }
- 
- /**
+ 		/* offset by version-specific struct size and
+ 		 * real priv data size
 -- 
 2.20.1
 
