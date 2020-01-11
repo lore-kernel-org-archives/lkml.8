@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F223C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1346C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF646205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E68C2146E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738508;
-	bh=h5NfLAMahDeyBWLnNDHOkNGkRzHip58O6rBMQh4p7X4=;
+	s=default; t=1578738513;
+	bh=GQiAvbWLjMvJk09cCba+syEJkkqYycnVG/FlajrljWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cvaMYKVplrQt9p6xWsGPB1mac7N74j/nYL8veKilZyXTQFI08LsF4icGSc5/BOomp
-	 2CDHH+76x+VnzIvV4iiTWQIPXoY0UfH9ZKaDZ5sbQT5kp5Zv7NXgPUfz6OhzdIaaM8
-	 wz6E5jGdQVN6n3YjdYE4BTOx8Ih+82GouWfriC7Y=
+	b=RxRK06R3DG9QY/QwFf2X4BfpDDK23KHUzdGA3nj58nzzIze6eacFFmtHclFAQOBL7
+	 oqzRCcIhAMAhmBo1RaW4e58OilsWyqh8kGLJegSfLJWCid6E5WIY+B8V5wHSSNl+37
+	 UqO2dJe91N9x2f5NPRm/guIB1WwlaDcYHNGrDxZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbgAKK21 (ORCPT
+        id S1731279AbgAKK2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:28:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35826 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:28:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731047AbgAKK2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:28:24 -0500
+        id S1730398AbgAKK23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:28:29 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5440205F4;
-        Sat, 11 Jan 2020 10:28:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C80B2082E;
+        Sat, 11 Jan 2020 10:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738503;
-        bh=h5NfLAMahDeyBWLnNDHOkNGkRzHip58O6rBMQh4p7X4=;
+        s=default; t=1578738509;
+        bh=GQiAvbWLjMvJk09cCba+syEJkkqYycnVG/FlajrljWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=paq/kgpU0wUFFQeek+xRBxBiP/rB22SgxPY8wWEbFOHYsDo9bmpmeeB7wLgvf6Reo
-         Kzuj4JckBT0kMbRX7T37wJUbcXPUGHapC6HI5WEdbd0mSXgOkOsdvYznHe/DV/8DLB
-         QIu4Oc6Jtox3ZUmYW7/Uk0VVwz3eE7G+JjrJItnw=
+        b=f+vbQ9pNKNG86xsBq+8HI7jii921gfMZGRkoC06WgqdPAF1FH3YgMGkJ90nl/zpCq
+         Q4JdpfhlOHmvXDlHW+IVyyFIpOodbeOn7W6GhHrMdMUi2dlfwRAbDcFBALKl08rncO
+         JfNPidXzPMBhX7KZCKMcYjw8oUpwlkKQe5p+hL0Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Johannes Berg <johannes.berg@intel.com>,
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 089/165] rfkill: Fix incorrect check to avoid NULL pointer dereference
-Date:   Sat, 11 Jan 2020 10:50:08 +0100
-Message-Id: <20200111094928.612233905@linuxfoundation.org>
+Subject: [PATCH 5.4 090/165] ASoC: wm8962: fix lambda value
+Date:   Sat, 11 Jan 2020 10:50:09 +0100
+Message-Id: <20200111094928.703357933@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,42 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-[ Upstream commit 6fc232db9e8cd50b9b83534de9cd91ace711b2d7 ]
+[ Upstream commit 556672d75ff486e0b6786056da624131679e0576 ]
 
-In rfkill_register, the struct rfkill pointer is first derefernced
-and then checked for NULL. This patch removes the BUG_ON and returns
-an error to the caller in case rfkill is NULL.
+According to user manual, it is required that FLL_LAMBDA > 0
+in all cases (Integer and Franctional modes).
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Link: https://lore.kernel.org/r/20191215153409.21696-1-pakki001@umn.edu
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Fixes: 9a76f1ff6e29 ("ASoC: Add initial WM8962 CODEC driver")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rfkill/core.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ sound/soc/codecs/wm8962.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/rfkill/core.c b/net/rfkill/core.c
-index 0bf9bf1ceb8f..6c089320ae4f 100644
---- a/net/rfkill/core.c
-+++ b/net/rfkill/core.c
-@@ -1002,10 +1002,13 @@ static void rfkill_sync_work(struct work_struct *work)
- int __must_check rfkill_register(struct rfkill *rfkill)
- {
- 	static unsigned long rfkill_no;
--	struct device *dev = &rfkill->dev;
-+	struct device *dev;
- 	int error;
+diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
+index 3e5c69fbc33a..d9d59f45833f 100644
+--- a/sound/soc/codecs/wm8962.c
++++ b/sound/soc/codecs/wm8962.c
+@@ -2788,7 +2788,7 @@ static int fll_factors(struct _fll_div *fll_div, unsigned int Fref,
  
--	BUG_ON(!rfkill);
-+	if (!rfkill)
-+		return -EINVAL;
-+
-+	dev = &rfkill->dev;
+ 	if (target % Fref == 0) {
+ 		fll_div->theta = 0;
+-		fll_div->lambda = 0;
++		fll_div->lambda = 1;
+ 	} else {
+ 		gcd_fll = gcd(target, fratio * Fref);
  
- 	mutex_lock(&rfkill_global_mutex);
+@@ -2858,7 +2858,7 @@ static int wm8962_set_fll(struct snd_soc_component *component, int fll_id, int s
+ 		return -EINVAL;
+ 	}
  
+-	if (fll_div.theta || fll_div.lambda)
++	if (fll_div.theta)
+ 		fll1 |= WM8962_FLL_FRAC;
+ 
+ 	/* Stop the FLL while we reconfigure */
 -- 
 2.20.1
 
