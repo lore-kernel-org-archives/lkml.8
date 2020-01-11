@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F92C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 343A1C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C8B2077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0701A2077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737582;
-	bh=W8+PLToq94olnkIJpfcaWNMWOwuoBjdMIKHR/EdvEvI=;
+	s=default; t=1578737587;
+	bh=Szw6ys8LnCVnsTt06jMBo0T+8Yvamx5Z4vLGAz8NCt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lAawjY4wOb+7eitPNR3z3jpd2spJSPtp1K52a6KW/9xjKvNmqN1gnupm/p7JZ9dFn
-	 iDrSwIJfz4S1gsyUy/5c8XJ+mbozEBYCmMqvXo+1SrMDU9/QMOr92/5aeKMhMX6in/
-	 AmxVQDKL2Nc+QD+042fngstrsbJRErhvPEqMHbMQ=
+	b=a4oIWRSxPzx5bkn92q6/7sOoCODwh4MLUJLK2jF8I2GyP6p6txbW4JAbKuOYnmSt8
+	 4vOxkiK2t7pzEfGOsg88QA1X4TglJFOWoDhdLBZjjuXL9ljxkaIgQpyCaAU9Ihmjie
+	 OTEQ/Bny8I7rFmirsksqJ4obJHIMmCQbY+1smpK8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbgAKKNB (ORCPT
+        id S1730083AbgAKKNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:13:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51346 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:13:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729008AbgAKKM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:12:59 -0500
+        id S1729008AbgAKKNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:13:04 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2C512077C;
-        Sat, 11 Jan 2020 10:12:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1956E206DA;
+        Sat, 11 Jan 2020 10:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737578;
-        bh=W8+PLToq94olnkIJpfcaWNMWOwuoBjdMIKHR/EdvEvI=;
+        s=default; t=1578737583;
+        bh=Szw6ys8LnCVnsTt06jMBo0T+8Yvamx5Z4vLGAz8NCt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gB41pR8PyN1yDtxFVscebZTqJ/VwOUB90G/SQcD+sm8cRdWWhWudKk5WF4XwX2Qdg
-         oXjYgC5uMyqxytgpdCjFut5PMz9ayMGlT88hRUmD6ZnqrSuqH4t6Z8ZuauXjTpyzEC
-         hetZlZNVeaeFK79QC0CEAQNm2Si3quLOjoqw1m20=
+        b=BVp+JJbLl80Pgi9xw16ESnt/L00wyRxcrh6HzGnMa9LgvBVVhkMrfFuWcip8t11Ne
+         EeJxycIZlbZ6kwoUHcs5hLfasyRuLB85ufJCPlOWrl7JrOJ1/E579yQt7dH2DnSLn8
+         jM1EEoXXAu4koH4UJG/YfiP47qxgWErwovnnh600=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot+dc9071cc5a85950bdfce@syzkaller.appspotmail.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Westphal <fw@strlen.de>
-Subject: [PATCH 4.14 54/62] pkt_sched: fq: do not accept silly TCA_FQ_QUANTUM
-Date:   Sat, 11 Jan 2020 10:50:36 +0100
-Message-Id: <20200111094854.690332365@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: [PATCH 4.14 55/62] USB: core: fix check for duplicate endpoints
+Date:   Sat, 11 Jan 2020 10:50:37 +0100
+Message-Id: <20200111094855.154007922@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -61,46 +59,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit d9e15a2733067c9328fb56d98fe8e574fa19ec31 ]
+commit 3e4f8e21c4f27bcf30a48486b9dcc269512b79ff upstream.
 
-As diagnosed by Florian :
+Amend the endpoint-descriptor sanity checks to detect all duplicate
+endpoint addresses in a configuration.
 
-If TCA_FQ_QUANTUM is set to 0x80000000, fq_deueue()
-can loop forever in :
+Commit 0a8fd1346254 ("USB: fix problems with duplicate endpoint
+addresses") added a check for duplicate endpoint addresses within a
+single alternate setting, but did not look for duplicate addresses in
+other interfaces.
 
-if (f->credit <= 0) {
-  f->credit += q->quantum;
-  goto begin;
-}
+The current check would also not detect all duplicate addresses when one
+endpoint is as a (bi-directional) control endpoint.
 
-... because f->credit is either 0 or -2147483648.
+This specifically avoids overwriting the endpoint entries in struct
+usb_device when enabling a duplicate endpoint, something which could
+potentially lead to crashes or leaks, for example, when endpoints are
+later disabled.
 
-Let's limit TCA_FQ_QUANTUM to no more than 1 << 20 :
-This max value should limit risks of breaking user setups
-while fixing this bug.
-
-Fixes: afe4fd062416 ("pkt_sched: fq: Fair Queue packet scheduler")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Diagnosed-by: Florian Westphal <fw@strlen.de>
-Reported-by: syzbot+dc9071cc5a85950bdfce@syzkaller.appspotmail.com
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/20191219161016.6695-1-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/sch_fq.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sched/sch_fq.c
-+++ b/net/sched/sch_fq.c
-@@ -734,7 +734,7 @@ static int fq_change(struct Qdisc *sch,
- 	if (tb[TCA_FQ_QUANTUM]) {
- 		u32 quantum = nla_get_u32(tb[TCA_FQ_QUANTUM]);
+---
+ drivers/usb/core/config.c |   70 ++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 58 insertions(+), 12 deletions(-)
+
+--- a/drivers/usb/core/config.c
++++ b/drivers/usb/core/config.c
+@@ -203,9 +203,58 @@ static const unsigned short super_speed_
+ 	[USB_ENDPOINT_XFER_INT] = 1024,
+ };
  
--		if (quantum > 0)
-+		if (quantum > 0 && quantum <= (1 << 20))
- 			q->quantum = quantum;
- 		else
- 			err = -EINVAL;
+-static int usb_parse_endpoint(struct device *ddev, int cfgno, int inum,
+-    int asnum, struct usb_host_interface *ifp, int num_ep,
+-    unsigned char *buffer, int size)
++static bool endpoint_is_duplicate(struct usb_endpoint_descriptor *e1,
++		struct usb_endpoint_descriptor *e2)
++{
++	if (e1->bEndpointAddress == e2->bEndpointAddress)
++		return true;
++
++	if (usb_endpoint_xfer_control(e1) || usb_endpoint_xfer_control(e2)) {
++		if (usb_endpoint_num(e1) == usb_endpoint_num(e2))
++			return true;
++	}
++
++	return false;
++}
++
++/*
++ * Check for duplicate endpoint addresses in other interfaces and in the
++ * altsetting currently being parsed.
++ */
++static bool config_endpoint_is_duplicate(struct usb_host_config *config,
++		int inum, int asnum, struct usb_endpoint_descriptor *d)
++{
++	struct usb_endpoint_descriptor *epd;
++	struct usb_interface_cache *intfc;
++	struct usb_host_interface *alt;
++	int i, j, k;
++
++	for (i = 0; i < config->desc.bNumInterfaces; ++i) {
++		intfc = config->intf_cache[i];
++
++		for (j = 0; j < intfc->num_altsetting; ++j) {
++			alt = &intfc->altsetting[j];
++
++			if (alt->desc.bInterfaceNumber == inum &&
++					alt->desc.bAlternateSetting != asnum)
++				continue;
++
++			for (k = 0; k < alt->desc.bNumEndpoints; ++k) {
++				epd = &alt->endpoint[k].desc;
++
++				if (endpoint_is_duplicate(epd, d))
++					return true;
++			}
++		}
++	}
++
++	return false;
++}
++
++static int usb_parse_endpoint(struct device *ddev, int cfgno,
++		struct usb_host_config *config, int inum, int asnum,
++		struct usb_host_interface *ifp, int num_ep,
++		unsigned char *buffer, int size)
+ {
+ 	unsigned char *buffer0 = buffer;
+ 	struct usb_endpoint_descriptor *d;
+@@ -242,13 +291,10 @@ static int usb_parse_endpoint(struct dev
+ 		goto skip_to_next_endpoint_or_interface_descriptor;
+ 
+ 	/* Check for duplicate endpoint addresses */
+-	for (i = 0; i < ifp->desc.bNumEndpoints; ++i) {
+-		if (ifp->endpoint[i].desc.bEndpointAddress ==
+-		    d->bEndpointAddress) {
+-			dev_warn(ddev, "config %d interface %d altsetting %d has a duplicate endpoint with address 0x%X, skipping\n",
+-			    cfgno, inum, asnum, d->bEndpointAddress);
+-			goto skip_to_next_endpoint_or_interface_descriptor;
+-		}
++	if (config_endpoint_is_duplicate(config, inum, asnum, d)) {
++		dev_warn(ddev, "config %d interface %d altsetting %d has a duplicate endpoint with address 0x%X, skipping\n",
++				cfgno, inum, asnum, d->bEndpointAddress);
++		goto skip_to_next_endpoint_or_interface_descriptor;
+ 	}
+ 
+ 	endpoint = &ifp->endpoint[ifp->desc.bNumEndpoints];
+@@ -522,8 +568,8 @@ static int usb_parse_interface(struct de
+ 		if (((struct usb_descriptor_header *) buffer)->bDescriptorType
+ 		     == USB_DT_INTERFACE)
+ 			break;
+-		retval = usb_parse_endpoint(ddev, cfgno, inum, asnum, alt,
+-		    num_ep, buffer, size);
++		retval = usb_parse_endpoint(ddev, cfgno, config, inum, asnum,
++				alt, num_ep, buffer, size);
+ 		if (retval < 0)
+ 			return retval;
+ 		++n;
 
 
