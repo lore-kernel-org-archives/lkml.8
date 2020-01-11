@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0214CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A598EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9DDD20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A0F620882
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737061;
-	bh=fbvmo8+KlHIKYVvh0cnmPiWMpsqcNZRAXgK+EO7LOKA=;
+	s=default; t=1578737066;
+	bh=p5dwTaPMJdCvDh7Dvuak61KLF/ftAgyeRcG3MUwknos=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKIWEpp2NS9/f49iFRpTeZpMIhSesCGhQd6qpEimfp8B5gdmqaqf2JcSvZQ9Ger6s
-	 urFXEl28QLc+8bwezlTeDuEy0Ii/JgoyLaSNLxG5vgHgg3pB7OHRa+xtU22zjZF4We
-	 XfHsNCSoXlAslx3cV9qZu6rcepjln6jLk9lA6J9M=
+	b=Cz6WZt7LzCAXdvsdOyWmKeKcCHUx2pxzbme6ALbbL5q8MmRxKDdcTUgx50aNpQDnw
+	 RsAjKIOIKF5AbSgOXsOTDiRyqY0Z4jLHBzQb5LL1xGBKsbRP7q+EJ6HfVXEWqBKKd2
+	 LVWK/eXA1OxIWzWgXdIK4a3r90IPU+cvp+1J2Ww8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgAKKEU (ORCPT
+        id S1729518AbgAKKEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:04:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36252 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:04:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728930AbgAKKER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:04:17 -0500
+        id S1729510AbgAKKEV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:04:21 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E51820848;
-        Sat, 11 Jan 2020 10:04:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0F9F2082E;
+        Sat, 11 Jan 2020 10:04:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737055;
-        bh=fbvmo8+KlHIKYVvh0cnmPiWMpsqcNZRAXgK+EO7LOKA=;
+        s=default; t=1578737060;
+        bh=p5dwTaPMJdCvDh7Dvuak61KLF/ftAgyeRcG3MUwknos=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jwmscnpoeTyzO+kPWdHNUuYynDhFsR7hBRy7JLBTN5Kq3tymIuE7IBwgziiUxIRTg
-         v0fthjCcE66gKz+tpJnZ5DgHrZib6zGCKhYqhOAXTuQhBEgdnKVim+bLiCtOSwVy+b
-         qJdVgg9uycNptkYYBFUmMMFAjoIMgVuDPpfAedF8=
+        b=Zng8ASsNEOAQViXfEL/Z/sAUctKKDvxHp5LovM76RcO6jPvzBhSdX2YLHDU75vr/O
+         Odmp4vRPgUMq197oLt1a35OmGA1E27YvqRcfvLknaA/zZ0YOmLQiJshP5PXIyOenUP
+         cOEoCL8tPkG8Pxl2LmblM8XZSjgbknQLTGtGv0j8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        stable@vger.kernel.org, David Woodhouse <dwmw@amazon.de>,
+        Maximilian Heyne <mheyne@amazon.de>,
+        Paul Durrant <pdurrant@amazon.co.uk>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>,
+        SeongJae Park <sjpark@amazon.de>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 53/91] s390/smp: fix physical to logical CPU map for SMT
-Date:   Sat, 11 Jan 2020 10:49:46 +0100
-Message-Id: <20200111094904.876955444@linuxfoundation.org>
+Subject: [PATCH 4.9 54/91] xen/blkback: Avoid unmapping unmapped grant pages
+Date:   Sat, 11 Jan 2020 10:49:47 +0100
+Message-Id: <20200111094905.256448047@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -60,153 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
+From: SeongJae Park <sjpark@amazon.de>
 
-[ Upstream commit 72a81ad9d6d62dcb79f7e8ad66ffd1c768b72026 ]
+[ Upstream commit f9bd84a8a845d82f9b5a081a7ae68c98a11d2e84 ]
 
-If an SMT capable system is not IPL'ed from the first CPU the setup of
-the physical to logical CPU mapping is broken: the IPL core gets CPU
-number 0, but then the next core gets CPU number 1. Correct would be
-that all SMT threads of CPU 0 get the subsequent logical CPU numbers.
+For each I/O request, blkback first maps the foreign pages for the
+request to its local pages.  If an allocation of a local page for the
+mapping fails, it should unmap every mapping already made for the
+request.
 
-This is important since a lot of code (like e.g. the CPU topology
-code) assumes that CPU maps are setup like this. If the mapping is
-broken the system will not IPL due to broken topology masks:
+However, blkback's handling mechanism for the allocation failure does
+not mark the remaining foreign pages as unmapped.  Therefore, the unmap
+function merely tries to unmap every valid grant page for the request,
+including the pages not mapped due to the allocation failure.  On a
+system that fails the allocation frequently, this problem leads to
+following kernel crash.
 
-[    1.716341] BUG: arch topology broken
-[    1.716342]      the SMT domain not a subset of the MC domain
-[    1.716343] BUG: arch topology broken
-[    1.716344]      the MC domain not a subset of the BOOK domain
+  [  372.012538] BUG: unable to handle kernel NULL pointer dereference at 0000000000000001
+  [  372.012546] IP: [<ffffffff814071ac>] gnttab_unmap_refs.part.7+0x1c/0x40
+  [  372.012557] PGD 16f3e9067 PUD 16426e067 PMD 0
+  [  372.012562] Oops: 0002 [#1] SMP
+  [  372.012566] Modules linked in: act_police sch_ingress cls_u32
+  ...
+  [  372.012746] Call Trace:
+  [  372.012752]  [<ffffffff81407204>] gnttab_unmap_refs+0x34/0x40
+  [  372.012759]  [<ffffffffa0335ae3>] xen_blkbk_unmap+0x83/0x150 [xen_blkback]
+  ...
+  [  372.012802]  [<ffffffffa0336c50>] dispatch_rw_block_io+0x970/0x980 [xen_blkback]
+  ...
+  Decompressing Linux... Parsing ELF... done.
+  Booting the kernel.
+  [    0.000000] Initializing cgroup subsys cpuset
 
-This scenario can usually not happen since LPARs are always IPL'ed
-from CPU 0 and also re-IPL is intiated from CPU 0. However older
-kernels did initiate re-IPL on an arbitrary CPU. If therefore a re-IPL
-from an old kernel into a new kernel is initiated this may lead to
-crash.
+This commit fixes this problem by marking the grant pages of the given
+request that didn't mapped due to the allocation failure as invalid.
 
-Fix this by setting up the physical to logical CPU mapping correctly.
+Fixes: c6cc142dac52 ("xen-blkback: use balloon pages for all mappings")
 
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Reviewed-by: David Woodhouse <dwmw@amazon.de>
+Reviewed-by: Maximilian Heyne <mheyne@amazon.de>
+Reviewed-by: Paul Durrant <pdurrant@amazon.co.uk>
+Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/smp.c | 80 ++++++++++++++++++++++++++++--------------
- 1 file changed, 54 insertions(+), 26 deletions(-)
+ drivers/block/xen-blkback/blkback.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/s390/kernel/smp.c b/arch/s390/kernel/smp.c
-index d52a94e9f57f..cba8e56cd63d 100644
---- a/arch/s390/kernel/smp.c
-+++ b/arch/s390/kernel/smp.c
-@@ -691,39 +691,67 @@ static struct sclp_core_info *smp_get_core_info(void)
- 
- static int smp_add_present_cpu(int cpu);
- 
--static int __smp_rescan_cpus(struct sclp_core_info *info, int sysfs_add)
-+static int smp_add_core(struct sclp_core_entry *core, cpumask_t *avail,
-+			bool configured, bool early)
- {
- 	struct pcpu *pcpu;
--	cpumask_t avail;
--	int cpu, nr, i, j;
-+	int cpu, nr, i;
- 	u16 address;
- 
- 	nr = 0;
--	cpumask_xor(&avail, cpu_possible_mask, cpu_present_mask);
--	cpu = cpumask_first(&avail);
--	for (i = 0; (i < info->combined) && (cpu < nr_cpu_ids); i++) {
--		if (sclp.has_core_type && info->core[i].type != boot_core_type)
-+	if (sclp.has_core_type && core->type != boot_core_type)
-+		return nr;
-+	cpu = cpumask_first(avail);
-+	address = core->core_id << smp_cpu_mt_shift;
-+	for (i = 0; (i <= smp_cpu_mtid) && (cpu < nr_cpu_ids); i++) {
-+		if (pcpu_find_address(cpu_present_mask, address + i))
- 			continue;
--		address = info->core[i].core_id << smp_cpu_mt_shift;
--		for (j = 0; j <= smp_cpu_mtid; j++) {
--			if (pcpu_find_address(cpu_present_mask, address + j))
--				continue;
--			pcpu = pcpu_devices + cpu;
--			pcpu->address = address + j;
--			pcpu->state =
--				(cpu >= info->configured*(smp_cpu_mtid + 1)) ?
--				CPU_STATE_STANDBY : CPU_STATE_CONFIGURED;
--			smp_cpu_set_polarization(cpu, POLARIZATION_UNKNOWN);
--			set_cpu_present(cpu, true);
--			if (sysfs_add && smp_add_present_cpu(cpu) != 0)
--				set_cpu_present(cpu, false);
--			else
--				nr++;
--			cpu = cpumask_next(cpu, &avail);
--			if (cpu >= nr_cpu_ids)
-+		pcpu = pcpu_devices + cpu;
-+		pcpu->address = address + i;
-+		if (configured)
-+			pcpu->state = CPU_STATE_CONFIGURED;
-+		else
-+			pcpu->state = CPU_STATE_STANDBY;
-+		smp_cpu_set_polarization(cpu, POLARIZATION_UNKNOWN);
-+		set_cpu_present(cpu, true);
-+		if (!early && smp_add_present_cpu(cpu) != 0)
-+			set_cpu_present(cpu, false);
-+		else
-+			nr++;
-+		cpumask_clear_cpu(cpu, avail);
-+		cpu = cpumask_next(cpu, avail);
-+	}
-+	return nr;
-+}
-+
-+static int __smp_rescan_cpus(struct sclp_core_info *info, bool early)
-+{
-+	struct sclp_core_entry *core;
-+	cpumask_t avail;
-+	bool configured;
-+	u16 core_id;
-+	int nr, i;
-+
-+	nr = 0;
-+	cpumask_xor(&avail, cpu_possible_mask, cpu_present_mask);
-+	/*
-+	 * Add IPL core first (which got logical CPU number 0) to make sure
-+	 * that all SMT threads get subsequent logical CPU numbers.
-+	 */
-+	if (early) {
-+		core_id = pcpu_devices[0].address >> smp_cpu_mt_shift;
-+		for (i = 0; i < info->configured; i++) {
-+			core = &info->core[i];
-+			if (core->core_id == core_id) {
-+				nr += smp_add_core(core, &avail, true, early);
- 				break;
-+			}
- 		}
- 	}
-+	for (i = 0; i < info->combined; i++) {
-+		configured = i < info->configured;
-+		nr += smp_add_core(&info->core[i], &avail, configured, early);
-+	}
- 	return nr;
+diff --git a/drivers/block/xen-blkback/blkback.c b/drivers/block/xen-blkback/blkback.c
+index d6eaaa25d1cc..a700e525535c 100644
+--- a/drivers/block/xen-blkback/blkback.c
++++ b/drivers/block/xen-blkback/blkback.c
+@@ -929,6 +929,8 @@ next:
+ out_of_memory:
+ 	pr_alert("%s: out of memory\n", __func__);
+ 	put_free_pages(ring, pages_to_gnt, segs_to_map);
++	for (i = last_map; i < num; i++)
++		pages[i]->handle = BLKBACK_INVALID_HANDLE;
+ 	return -ENOMEM;
  }
  
-@@ -771,7 +799,7 @@ static void __init smp_detect_cpus(void)
- 
- 	/* Add CPUs present at boot */
- 	get_online_cpus();
--	__smp_rescan_cpus(info, 0);
-+	__smp_rescan_cpus(info, true);
- 	put_online_cpus();
- 	kfree(info);
- }
-@@ -1127,7 +1155,7 @@ int __ref smp_rescan_cpus(void)
- 		return -ENOMEM;
- 	get_online_cpus();
- 	mutex_lock(&smp_cpu_state_mutex);
--	nr = __smp_rescan_cpus(info, 1);
-+	nr = __smp_rescan_cpus(info, false);
- 	mutex_unlock(&smp_cpu_state_mutex);
- 	put_online_cpus();
- 	kfree(info);
 -- 
 2.20.1
 
