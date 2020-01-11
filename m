@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0DCC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 329BDC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3AF920848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0925D2077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:50:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736241;
-	bh=PdGLMF2OD5/ld95lLa3G0skB1kOT9bPdXFngZo/PVK0=;
+	s=default; t=1578736247;
+	bh=JlgtrppGD+MvGnFuUUDYMZx+Du5iuv/E0fzgDwXsA0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pYUdqUFPrSMZBIRX5A2K1N4qsmVbWs+6A9Tb5MCcde8gLQcym8YaREGapQUethrx1
-	 cgQdu/Zl2dOo4/+dNx0zWL+44Rx7ZDgHS47fd06VNzjcPWuaTBKHA8wJJveI2m9Sb0
-	 ML87zhN191g0qDQUAEwPgsXEeR9SEsqBzD4mpdeI=
+	b=l7x2/xl0/oXcZJP54ClsQBgJfXQxDbF+2CWQwR4/h9YdxFe9auaB3umoPHO8YconL
+	 pKeYZh+uUaQb6TLDODsxU8ECH13ZsSnacElDRLUAb1CKm2NiTdv6vgtqLXaWJ6VEvC
+	 G7FOIcNeqfWD4G5FoJZQK7E3kEz3Ziir7iOZqMY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbgAKJuk (ORCPT
+        id S1728860AbgAKJuq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:50:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60464 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:50:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbgAKJuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:50:40 -0500
+        id S1728759AbgAKJup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:50:45 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D80F2082E;
-        Sat, 11 Jan 2020 09:50:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A10522077C;
+        Sat, 11 Jan 2020 09:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736239;
-        bh=PdGLMF2OD5/ld95lLa3G0skB1kOT9bPdXFngZo/PVK0=;
+        s=default; t=1578736244;
+        bh=JlgtrppGD+MvGnFuUUDYMZx+Du5iuv/E0fzgDwXsA0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nChPGQsI3GGOVtnSjxjUcy2n1esP8djJoyQa1X5s3Wk9Tuf+/03S5xhNtVW5vI3A9
-         GejC/ooc5HKvZmTp/f5IvWgHeYtMXQAlyF6IsnDrg7ZkZQP77WLv3T1MKiPIXnUE3j
-         NRvy1YDnrfOkuMmJEjOUjki45kFOPjds51+FxBMQ=
+        b=Ios1dcD668ycpzRvbgk/TaNeJExqOlr6rg8tYzo+Kg8Dx2XE8wh4HII1GKVsyceJZ
+         BN88EgFDrmiBsny3l6eIFI6GnA3NEzmdSLNqfDy0phwfxovdR+N74plkjHT4iCq6ac
+         gIfSuoqKy60E01+tXXpMvT80Jobtq+Ux3bqhIn2o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
+        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 01/59] PM / devfreq: Dont fail devfreq_dev_release if not in list
-Date:   Sat, 11 Jan 2020 10:49:10 +0100
-Message-Id: <20200111094836.063165095@linuxfoundation.org>
+Subject: [PATCH 4.4 10/59] s390/cpum_sf: Avoid SBD overflow condition in irq handler
+Date:   Sat, 11 Jan 2020 10:49:19 +0100
+Message-Id: <20200111094839.534257301@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
 References: <20200111094835.417654274@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,53 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-[ Upstream commit 42a6b25e67df6ee6675e8d1eaf18065bd73328ba ]
+[ Upstream commit 0539ad0b22877225095d8adef0c376f52cc23834 ]
 
-Right now devfreq_dev_release will print a warning and abort the rest of
-the cleanup if the devfreq instance is not part of the global
-devfreq_list. But this is a valid scenario, for example it can happen if
-the governor can't be found or on any other init error that happens
-after device_register.
+The s390 CPU Measurement sampling facility has an overflow condition
+which fires when all entries in a SBD are used.
+The measurement alert interrupt is triggered and reads out all samples
+in this SDB. It then tests the successor SDB, if this SBD is not full,
+the interrupt handler does not read any samples at all from this SDB
+The design waits for the hardware to fill this SBD and then trigger
+another meassurement alert interrupt.
 
-Initialize devfreq->node to an empty list head in devfreq_add_device so
-that list_del becomes a safe noop inside devfreq_dev_release and we can
-continue the rest of the cleanup.
+This scheme works nicely until
+an perf_event_overflow() function call discards the sample due to
+a too high sampling rate.
+The interrupt handler has logic to read out a partially filled SDB
+when the perf event overflow condition in linux common code is met.
+This causes the CPUM sampling measurement hardware and the PMU
+device driver to operate on the same SBD's trailer entry.
+This should not happen.
 
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+This can be seen here using this trace:
+   cpumsf_pmu_add: tear:0xb5286000
+   hw_perf_event_update: sdbt 0xb5286000 full 1 over 0 flush_all:0
+   hw_perf_event_update: sdbt 0xb5286008 full 0 over 0 flush_all:0
+        above shows 1. interrupt
+   hw_perf_event_update: sdbt 0xb5286008 full 1 over 0 flush_all:0
+   hw_perf_event_update: sdbt 0xb5286008 full 0 over 0 flush_all:0
+        above shows 2. interrupt
+	... this goes on fine until...
+   hw_perf_event_update: sdbt 0xb5286068 full 1 over 0 flush_all:0
+   perf_push_sample1: overflow
+      one or more samples read from the IRQ handler are rejected by
+      perf_event_overflow() and the IRQ handler advances to the next SDB
+      and modifies the trailer entry of a partially filled SDB.
+   hw_perf_event_update: sdbt 0xb5286070 full 0 over 0 flush_all:1
+      timestamp: 14:32:52.519953
+
+Next time the IRQ handler is called for this SDB the trailer entry shows
+an overflow count of 19 missed entries.
+   hw_perf_event_update: sdbt 0xb5286070 full 1 over 19 flush_all:1
+      timestamp: 14:32:52.970058
+
+Remove access to a follow on SDB when event overflow happened.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/devfreq.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ arch/s390/kernel/perf_cpum_sf.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 4f6fc1cfd7da..f01f7434df8e 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -396,11 +396,6 @@ static int devfreq_notifier_call(struct notifier_block *nb, unsigned long type,
- static void _remove_devfreq(struct devfreq *devfreq)
- {
- 	mutex_lock(&devfreq_list_lock);
--	if (IS_ERR(find_device_devfreq(devfreq->dev.parent))) {
--		mutex_unlock(&devfreq_list_lock);
--		dev_warn(&devfreq->dev, "releasing devfreq which doesn't exist\n");
--		return;
--	}
- 	list_del(&devfreq->node);
- 	mutex_unlock(&devfreq_list_lock);
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index 01766671fa2a..4a76b381d25a 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1294,12 +1294,6 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
+ 		 */
+ 		if (flush_all && done)
+ 			break;
+-
+-		/* If an event overflow happened, discard samples by
+-		 * processing any remaining sample-data-blocks.
+-		 */
+-		if (event_overflow)
+-			flush_all = 1;
+ 	}
  
-@@ -472,6 +467,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
- 	devfreq->dev.parent = dev;
- 	devfreq->dev.class = devfreq_class;
- 	devfreq->dev.release = devfreq_dev_release;
-+	INIT_LIST_HEAD(&devfreq->node);
- 	devfreq->profile = profile;
- 	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
- 	devfreq->previous_freq = profile->initial_freq;
+ 	/* Account sample overflows in the event hardware structure */
 -- 
 2.20.1
 
