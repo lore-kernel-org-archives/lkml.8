@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 133B4C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB40C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D378920673
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB54E20673
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:15:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737752;
-	bh=ZmekE+k1PgyuB6/a4NtSTGrTldWGFVwuQzAQvua1n2Q=;
+	s=default; t=1578737757;
+	bh=Z8ksYwPemdXrZ6H22mZdTp/D5Owf5h5ychDnd3Hi6Cc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vtcC2T5ADK2WtUHITNfoK1s1QSBkhlyCORcfFERN8OM6Se7Q7OZXVcmvSi5GpzRW9
-	 JEStIHh+RYkZiWUhncdfDtGwxTe6i0/HQQ7MtjjSNOdjKwh+6+vunLRwT83SdP4MYE
-	 UngQ7aKM23EIdFUFCIHW6KRu8JhmlHhYUHJuUHgg=
+	b=PMXbj8LxM/GbYmTOdK/td8zsRjKaAwpFUQAJXrPr35Qpvv2FfEtGg7J93SQbxh631
+	 /OZiWGqJFifLjCX+SzsZX+QK+F3XyIs4bgQHTYpiaXTO2k9gSZzrLkHehhAMzdv7Wq
+	 99H2BCYA1rDnWJJRLd/BsTvqKYi0+mAYlGyao8Tg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730347AbgAKKPv (ORCPT
+        id S1730350AbgAKKP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:15:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58012 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:15:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729668AbgAKKPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:15:49 -0500
+        id S1729748AbgAKKPy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:15:54 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 041DB205F4;
-        Sat, 11 Jan 2020 10:15:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0AC1120848;
+        Sat, 11 Jan 2020 10:15:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737749;
-        bh=ZmekE+k1PgyuB6/a4NtSTGrTldWGFVwuQzAQvua1n2Q=;
+        s=default; t=1578737753;
+        bh=Z8ksYwPemdXrZ6H22mZdTp/D5Owf5h5ychDnd3Hi6Cc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GbBvC/KhsuJ7poJCaWSzcjhiSkm2KpS6oEqhBQiuDMaLwiO3dZQV2cFJCfVwlMuGi
-         txP+y6ase+qS2fkVgXXJqFHDGsEF+roCkPbQGwFClAI+SuXoUaITvwnm/698Hdhc/k
-         RNLd+TFdwBbptZr/m+wiP3R3zZEsgiRP0Ce0gWwg=
+        b=uinKs5ZZOVLfYY95szEXnvfzxK1mH5n4xE966k6NedV8bzZt0N2l7aGPl2dn+nNou
+         PpR6P6vp/dppB5YCsaTEIpXeducVoX75wHbPXmN8GzhiFEWsVNYq4N8X8/L2SPncD9
+         tIefD/NKGKsTA1vpzAwZgrhr7FrhnnEPHaqha9ZE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
+        stable@vger.kernel.org, Herat Ramani <herat@chelsio.com>,
+        Vishal Kulkarni <vishal@chelsio.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 37/84] bnx2x: Fix logic to get total no. of PFs per engine
-Date:   Sat, 11 Jan 2020 10:50:14 +0100
-Message-Id: <20200111094900.338741678@linuxfoundation.org>
+Subject: [PATCH 4.19 38/84] cxgb4: Fix kernel panic while accessing sge_info
+Date:   Sat, 11 Jan 2020 10:50:15 +0100
+Message-Id: <20200111094900.746972054@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -61,37 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Chopra <manishc@marvell.com>
+From: Vishal Kulkarni <vishal@chelsio.com>
 
-[ Upstream commit ee699f89bdbaa19c399804504241b5c531b48888 ]
+[ Upstream commit 479a0d1376f6d97c60871442911f1394d4446a25 ]
 
-Driver doesn't calculate total number of PFs configured on a
-given engine correctly which messed up resources in the PFs
-loaded on that engine, leading driver to exceed configuration
-of resources (like vlan filters etc.) beyond the limit per
-engine, which ended up with asserts from the firmware.
+The sge_info debugfs collects offload queue info even when offload
+capability is disabled and leads to panic.
 
-Signed-off-by: Manish Chopra <manishc@marvell.com>
-Signed-off-by: Ariel Elior <aelior@marvell.com>
+[  144.139871] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  144.139874] CR2: 0000000000000000 CR3: 000000082d456005 CR4: 00000000001606e0
+[  144.139876] Call Trace:
+[  144.139887]  sge_queue_start+0x12/0x30 [cxgb4]
+[  144.139897]  seq_read+0x1d4/0x3d0
+[  144.139906]  full_proxy_read+0x50/0x70
+[  144.139913]  vfs_read+0x89/0x140
+[  144.139916]  ksys_read+0x55/0xd0
+[  144.139924]  do_syscall_64+0x5b/0x1d0
+[  144.139933]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[  144.139936] RIP: 0033:0x7f4b01493990
+
+Fix this crash by skipping the offload queue access in sge_qinfo when
+offload capability is disabled
+
+Signed-off-by: Herat Ramani <herat@chelsio.com>
+Signed-off-by: Vishal Kulkarni <vishal@chelsio.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-index ee5159ef837e..df5e8c2e8eaf 100644
---- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-+++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h
-@@ -1113,7 +1113,7 @@ static inline u8 bnx2x_get_path_func_num(struct bnx2x *bp)
- 		for (i = 0; i < E1H_FUNC_MAX / 2; i++) {
- 			u32 func_config =
- 				MF_CFG_RD(bp,
--					  func_mf_config[BP_PORT(bp) + 2 * i].
-+					  func_mf_config[BP_PATH(bp) + 2 * i].
- 					  config);
- 			func_num +=
- 				((func_config & FUNC_MF_CFG_FUNC_HIDE) ? 0 : 1);
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+index b429b726b987..d320e9afab88 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_debugfs.c
+@@ -3035,6 +3035,9 @@ static int sge_queue_entries(const struct adapter *adap)
+ 	int tot_uld_entries = 0;
+ 	int i;
+ 
++	if (!is_uld(adap))
++		goto lld_only;
++
+ 	mutex_lock(&uld_mutex);
+ 	for (i = 0; i < CXGB4_TX_MAX; i++)
+ 		tot_uld_entries += sge_qinfo_uld_txq_entries(adap, i);
+@@ -3045,6 +3048,7 @@ static int sge_queue_entries(const struct adapter *adap)
+ 	}
+ 	mutex_unlock(&uld_mutex);
+ 
++lld_only:
+ 	return DIV_ROUND_UP(adap->sge.ethqsets, 4) +
+ 	       tot_uld_entries +
+ 	       DIV_ROUND_UP(MAX_CTRL_QUEUES, 4) + 1;
 -- 
 2.20.1
 
