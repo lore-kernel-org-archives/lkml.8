@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3085FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DD1C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078B7205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7602082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737823;
-	bh=rn+RqjIAdDdOswpcLXNztAWhWJuyC+dPZFWOqYFTTr8=;
+	s=default; t=1578737825;
+	bh=dFQraUQ897zd/9F+NFuGJy0G1y79+V4LN5u273fGebw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wXc+yqp8JSXFvEUcxC17ejh2KljUypM3xyR71kJywU/Ogq2ZLdVPvDL39VR/2IVnY
-	 WW2ZMHYenLVjf10U8Dq408OG+1qFgM2PX9kt/rchTua7/8wf7Tu5eiAb6s/gyHd9/z
-	 7xx0qneosAppYeQheKsroYt15o0lFsh9QW42Acvs=
+	b=lfTaP6f4u7+g9+FX2Z3qefeOlpM5T4YQC/f6FXcPR7HJIvhh7PPeiQ7zS8gmvST4y
+	 TCoPMm6FvCpVwMXuZqOVlEnKIE1m9qJHc01usloAZHQTEqfE9tRW9gxxgic/f3SyIQ
+	 Y652vXEuOzcGLcERDCVEfF+uBQFlSMaKs3fJQ0gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730445AbgAKKRB (ORCPT
+        id S1730453AbgAKKRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:17:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60888 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:17:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgAKKQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:16:57 -0500
+        id S1730441AbgAKKRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:17:01 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A92520882;
-        Sat, 11 Jan 2020 10:16:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49C4420848;
+        Sat, 11 Jan 2020 10:16:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737816;
-        bh=rn+RqjIAdDdOswpcLXNztAWhWJuyC+dPZFWOqYFTTr8=;
+        s=default; t=1578737821;
+        bh=dFQraUQ897zd/9F+NFuGJy0G1y79+V4LN5u273fGebw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xf0oczA4Xm5IL9hAwXiO8UXuAhDI1TD8KLCQ0sWDYTtR1C1d17++7FeJhpHfaSzqx
-         Pv/y8zpTt7Kp58rv00SsAY9xV/VEMRrNTarql/v4VbCuFCWHGJGA4HcG8hxbYOZVJc
-         5lbHSON8PXB0lLJJBTBOUnXMljWryjOagVnNxdZg=
+        b=GkkBg9aLEotHQmbBI2Cv2RWlUC88dw6CMhshmSwSyKhiBA/1ZG1NE9hQSO0f0LSmB
+         RO2x3WCFrLKx84b1Alm0f/GZ/4JAT6y/aB6E/gXy4nQqKhv8cv+JRaKSMuivJFrzKS
+         LKXqTDeTh+G1ZafEvuK0kFm4cC0Qu3zSNwgvAlyk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 24/84] spi: spi-cavium-thunderx: Add missing pci_release_regions()
-Date:   Sat, 11 Jan 2020 10:50:01 +0100
-Message-Id: <20200111094854.787583225@linuxfoundation.org>
+Subject: [PATCH 4.19 45/84] kconfig: dont crash on NULL expressions in expr_eq()
+Date:   Sat, 11 Jan 2020 10:50:22 +0100
+Message-Id: <20200111094903.417945382@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -60,42 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Thomas Hebb <tommyhebb@gmail.com>
 
-[ Upstream commit a841e2853e1afecc2ee692b8cc5bff606bc84e4c ]
+[ Upstream commit 272a72103012862e3a24ea06635253ead0b6e808 ]
 
-The driver forgets to call pci_release_regions() in probe failure
-and remove.
-Add the missed calls to fix it.
+NULL expressions are taken to always be true, as implemented by the
+expr_is_yes() macro and by several other functions in expr.c. As such,
+they ought to be valid inputs to expr_eq(), which compares two
+expressions.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191206075500.18525-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-cavium-thunderx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ scripts/kconfig/expr.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/spi/spi-cavium-thunderx.c b/drivers/spi/spi-cavium-thunderx.c
-index 877937706240..828fbbebc3c4 100644
---- a/drivers/spi/spi-cavium-thunderx.c
-+++ b/drivers/spi/spi-cavium-thunderx.c
-@@ -81,6 +81,7 @@ static int thunderx_spi_probe(struct pci_dev *pdev,
+diff --git a/scripts/kconfig/expr.c b/scripts/kconfig/expr.c
+index e1a39e90841d..7e38070ee523 100644
+--- a/scripts/kconfig/expr.c
++++ b/scripts/kconfig/expr.c
+@@ -252,6 +252,13 @@ static int expr_eq(struct expr *e1, struct expr *e2)
+ {
+ 	int res, old_count;
  
- error:
- 	clk_disable_unprepare(p->clk);
-+	pci_release_regions(pdev);
- 	spi_master_put(master);
- 	return ret;
- }
-@@ -95,6 +96,7 @@ static void thunderx_spi_remove(struct pci_dev *pdev)
- 		return;
- 
- 	clk_disable_unprepare(p->clk);
-+	pci_release_regions(pdev);
- 	/* Put everything in a known state. */
- 	writeq(0, p->register_base + OCTEON_SPI_CFG(p));
- }
++	/*
++	 * A NULL expr is taken to be yes, but there's also a different way to
++	 * represent yes. expr_is_yes() checks for either representation.
++	 */
++	if (!e1 || !e2)
++		return expr_is_yes(e1) && expr_is_yes(e2);
++
+ 	if (e1->type != e2->type)
+ 		return 0;
+ 	switch (e1->type) {
 -- 
 2.20.1
 
