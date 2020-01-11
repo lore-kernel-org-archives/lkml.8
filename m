@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 200CEC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE38C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86A720866
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3638520848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737134;
-	bh=J3NkTOWXOZmH0EY4PU7cHQHu00J6XATnSgRlK4EGgIQ=;
+	s=default; t=1578737139;
+	bh=L15HIpr8PyjWt4L4qeeQDUtoArz4zU1Ao4IJyvKdTT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NoJal0yRgSdXbHh9+em7VsFTtc3uQ0AMSlK+ACxAOGIMVZF1rmyxT0r+axxUKfwBh
-	 IdBWZ8HktPv2IAJCQeD2jJi6oWcW8LIOzosqnSK1Aqjj6UBNslgFJ7RwjUEyy6uDSR
-	 jp++U3E80VNDPYdHvahOMrTmnNyLBiuVxTo78H6c=
+	b=Uj0c9BWFO3YJzAhq57uokqpMCPTBQ1QM8lwQ+mhtd1GWNB/pKKPYutWGLgeGtlBms
+	 D3dt8+Mwqxgu4ms1gpSADBU9lz2XVmaMOQkq/agniQvWUc72mcXeBMQTLzVNx2qlVE
+	 FssVeOEVU35XI4Y9FC9L4FafnLD5oDAeDR3vQWOs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbgAKKFd (ORCPT
+        id S1729597AbgAKKFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:05:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38702 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:05:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728850AbgAKKFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:05:32 -0500
+        id S1728850AbgAKKFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:05:38 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 336A22082E;
-        Sat, 11 Jan 2020 10:05:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAA392082E;
+        Sat, 11 Jan 2020 10:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737132;
-        bh=J3NkTOWXOZmH0EY4PU7cHQHu00J6XATnSgRlK4EGgIQ=;
+        s=default; t=1578737137;
+        bh=L15HIpr8PyjWt4L4qeeQDUtoArz4zU1Ao4IJyvKdTT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xPG0+KAR89scgcURlZytdDRDbx3pEUviNcypRH0jpux4LeK9zDm5DhhkyTW1rkWNJ
-         ZfaBbs/NPJyubqe3nh0joDanIwfDD8yq3KdjhlWEn5njC3NyU99uRiabG25thr6BAD
-         naOAmXKba2wnJkV13Jpbx/tvv/6YgcrYHBLURHAQ=
+        b=Ol8in2bGPfqpAj2F+veHijMGMP2Iu1Ue/PvESiEwlK4V1TQcngjveoVC8KCRntj+N
+         +fQ6sPW4deJ8xsfAS9sr7l14WMTlkgEyFKWlQbaI4jbw1Do9HGZM2ULLHXfl7cvjXU
+         8s8eTQa2mgSDuUPx55XRmPWRMP271f8YTH4fj5eU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 72/91] ASoC: wm8962: fix lambda value
-Date:   Sat, 11 Jan 2020 10:50:05 +0100
-Message-Id: <20200111094911.065953981@linuxfoundation.org>
+Subject: [PATCH 4.9 73/91] regulator: rn5t618: fix module aliases
+Date:   Sat, 11 Jan 2020 10:50:06 +0100
+Message-Id: <20200111094911.253423775@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -61,45 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-[ Upstream commit 556672d75ff486e0b6786056da624131679e0576 ]
+[ Upstream commit 62a1923cc8fe095912e6213ed5de27abbf1de77e ]
 
-According to user manual, it is required that FLL_LAMBDA > 0
-in all cases (Integer and Franctional modes).
+platform device aliases were missing, preventing
+autoloading of module.
 
-Fixes: 9a76f1ff6e29 ("ASoC: Add initial WM8962 CODEC driver")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/1576065442-19763-1-git-send-email-shengjiu.wang@nxp.com
+Fixes: 811b700630ff ("regulator: rn5t618: add driver for Ricoh RN5T618 regulators")
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+Link: https://lore.kernel.org/r/20191211221600.29438-1-andreas@kemnade.info
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8962.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/regulator/rn5t618-regulator.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/codecs/wm8962.c b/sound/soc/codecs/wm8962.c
-index fd2731d171dd..0e8008d38161 100644
---- a/sound/soc/codecs/wm8962.c
-+++ b/sound/soc/codecs/wm8962.c
-@@ -2791,7 +2791,7 @@ static int fll_factors(struct _fll_div *fll_div, unsigned int Fref,
+diff --git a/drivers/regulator/rn5t618-regulator.c b/drivers/regulator/rn5t618-regulator.c
+index 9c930eb68cda..ffc34e1ee35d 100644
+--- a/drivers/regulator/rn5t618-regulator.c
++++ b/drivers/regulator/rn5t618-regulator.c
+@@ -127,6 +127,7 @@ static struct platform_driver rn5t618_regulator_driver = {
  
- 	if (target % Fref == 0) {
- 		fll_div->theta = 0;
--		fll_div->lambda = 0;
-+		fll_div->lambda = 1;
- 	} else {
- 		gcd_fll = gcd(target, fratio * Fref);
+ module_platform_driver(rn5t618_regulator_driver);
  
-@@ -2861,7 +2861,7 @@ static int wm8962_set_fll(struct snd_soc_codec *codec, int fll_id, int source,
- 		return -EINVAL;
- 	}
- 
--	if (fll_div.theta || fll_div.lambda)
-+	if (fll_div.theta)
- 		fll1 |= WM8962_FLL_FRAC;
- 
- 	/* Stop the FLL while we reconfigure */
++MODULE_ALIAS("platform:rn5t618-regulator");
+ MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
+ MODULE_DESCRIPTION("RN5T618 regulator driver");
+ MODULE_LICENSE("GPL v2");
 -- 
 2.20.1
 
