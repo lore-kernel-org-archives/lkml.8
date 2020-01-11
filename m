@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DC3C33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B80C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA732084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B892077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736781;
-	bh=V+O5gXI50UZr9RiSdJTgPSb6wN43+H/8XMVH3x8sdWY=;
+	s=default; t=1578736785;
+	bh=FcKDkoL4hUJwb/IRfjZI2sCgStj/wMe/Fo10W6vTUk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e0I0JKhQ5tiRQKWYolZEvPZkkZL5cq79zre+UDLP5JIm5QYmveS/9JJzJHhKRr5Ow
-	 /LWrPoAfETWFUATzO/fdBAr3qLmluS22rPdQhbCtgLfs/860/IZtY0lwTVMizdojIi
-	 QMQMy+7gEGh2FwZwlVHSMhgsgG4TIEKNjUnJdNt0=
+	b=upHi28/wh4BER8BRrTR/wPZ60r870VfF+TjMPfkVWbdTjl/F6b/HBJ5p6/wPYY+B6
+	 l19pSTqnO4G0wvtuIVo6AxNQ3qMJ3u7MwK4LNsg2R4qMRlc0x3I959emS4Tj57+96d
+	 qB/7fE2s+hNkoCzl5OrMvt6tHPsgKiemYwyIsOB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgAKJ7k (ORCPT
+        id S1729247AbgAKJ7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:59:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54432 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:59:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728768AbgAKJ7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:59:38 -0500
+        id S1728768AbgAKJ7m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:59:42 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5648D2084D;
-        Sat, 11 Jan 2020 09:59:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3BF22077C;
+        Sat, 11 Jan 2020 09:59:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736777;
-        bh=V+O5gXI50UZr9RiSdJTgPSb6wN43+H/8XMVH3x8sdWY=;
+        s=default; t=1578736781;
+        bh=FcKDkoL4hUJwb/IRfjZI2sCgStj/wMe/Fo10W6vTUk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iRVMtXJV3OA7FmIhvZq21OPW7DZx4zF4Pz9aVLY41eknF8QZ3DLjtM6kzhfdcFX22
-         2e0a3xldr6RJPfJACC+SapUMMl5MXdE7mb9az/wESAiiYt477pV90Omouc44/HE8iW
-         XnI2qBcbWAghBDbZYRozFdrun55z8QvPj55gd2fM=
+        b=ZoFfKpLwKlnpDg5IfQI+C0CawLAmHhXXDTvAqNoe1NI5nKJxOYOlQWbnsnh/3NuDp
+         +/zhGcneUOjcr/P91yUEpRQ9hMQzo+Hyh1d2iLG8S0wArJYsM1mq2R1dTxj92iKvNG
+         6vi+OXLj4/fTPPxG5zSQSxm0fQg41+rFAEFYpCgc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        Chris Down <chris@chrisdown.name>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 22/91] memcg: account security cred as well to kmemcg
-Date:   Sat, 11 Jan 2020 10:49:15 +0100
-Message-Id: <20200111094852.213118498@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 4.9 23/91] locks: print unsigned ino in /proc/locks
+Date:   Sat, 11 Jan 2020 10:49:16 +0100
+Message-Id: <20200111094852.696473549@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -63,66 +59,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shakeel Butt <shakeelb@google.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit 84029fd04c201a4c7e0b07ba262664900f47c6f5 upstream.
+commit 98ca480a8f22fdbd768e3dad07024c8d4856576c upstream.
 
-The cred_jar kmem_cache is already memcg accounted in the current kernel
-but cred->security is not.  Account cred->security to kmemcg.
+An ino is unsigned, so display it as such in /proc/locks.
 
-Recently we saw high root slab usage on our production and on further
-inspection, we found a buggy application leaking processes.  Though that
-buggy application was contained within its memcg but we observe much
-more system memory overhead, couple of GiBs, during that period.  This
-overhead can adversely impact the isolation on the system.
-
-One source of high overhead we found was cred->security objects, which
-have a lifetime of at least the life of the process which allocated
-them.
-
-Link: http://lkml.kernel.org/r/20191205223721.40034-1-shakeelb@google.com
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Acked-by: Chris Down <chris@chrisdown.name>
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cred.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/locks.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -219,7 +219,7 @@ struct cred *cred_alloc_blank(void)
- 	new->magic = CRED_MAGIC;
- #endif
- 
--	if (security_cred_alloc_blank(new, GFP_KERNEL) < 0)
-+	if (security_cred_alloc_blank(new, GFP_KERNEL_ACCOUNT) < 0)
- 		goto error;
- 
- 	return new;
-@@ -278,7 +278,7 @@ struct cred *prepare_creds(void)
- 	new->security = NULL;
- #endif
- 
--	if (security_prepare_creds(new, old, GFP_KERNEL) < 0)
-+	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
- 		goto error;
- 	validate_creds(new);
- 	return new;
-@@ -653,7 +653,7 @@ struct cred *prepare_kernel_cred(struct
- #ifdef CONFIG_SECURITY
- 	new->security = NULL;
- #endif
--	if (security_prepare_creds(new, old, GFP_KERNEL) < 0)
-+	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
- 		goto error;
- 
- 	put_cred(old);
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -2681,7 +2681,7 @@ static void lock_get_status(struct seq_f
+ 	}
+ 	if (inode) {
+ 		/* userspace relies on this representation of dev_t */
+-		seq_printf(f, "%d %02x:%02x:%ld ", fl_pid,
++		seq_printf(f, "%d %02x:%02x:%lu ", fl_pid,
+ 				MAJOR(inode->i_sb->s_dev),
+ 				MINOR(inode->i_sb->s_dev), inode->i_ino);
+ 	} else {
 
 
