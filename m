@@ -4,117 +4,155 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A7AC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 19:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F256CC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 19:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 872672084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 19:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C091E206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 19:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730881AbgAKTAS (ORCPT
+        id S1730971AbgAKTal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 14:00:18 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36402 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730851AbgAKTAS (ORCPT
+        Sat, 11 Jan 2020 14:30:41 -0500
+Received: from orion.archlinux.org ([88.198.91.70]:49554 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730948AbgAKTal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 14:00:18 -0500
-Received: by mail-qk1-f196.google.com with SMTP id a203so5069531qkc.3
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 11:00:17 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sladguh/MWEPFdXOX2gUvv7NIFdbKZrPNbZv9Rn+p2w=;
-        b=RfnYgmX5aXt4nGx5itAt1pMa5NV1nq8+CEKnEk2UgNXJh4W4/rkULl1xG0wa+tjT9/
-         egIl4yv20wwhGJRqAIkqjuJG4rrsu7K5NCRLgsu1vjMfcMJ30KWRMmJv/NP3O05RjdzI
-         keJjvJOz8jPFijEAu8bWGHuJrvnGP5LiNUsSfITeQY2xHI4cNXZt5pN8TvgVDLqnkbCz
-         cvHeow/yPFGY+OogMsiHsHjeiJy9rRRAOGF1lg+eg9gd9IBBCBr1qLPzCBXtGZl8t8cV
-         thjqcUYeUnPXmGvyQOudQUE0pN0UlydoxvpcZFDXgUyec7ocZr5VDrhSHT26xk5F9gaK
-         IX9g==
-X-Gm-Message-State: APjAAAXa2ABmHGadEMrk677GrmaEdtVfK9EoadK1MSRLLdQUkEHILzR8
-        DKJ8/PR7RAA3NzXGGXw568s=
-X-Google-Smtp-Source: APXvYqx2ekOCERHJD8IIBA+MA6nFGdpAFyK86diHqEELmRiuUq+UIpcMUhwbSw8i/qQ6+2MD0AbL0A==
-X-Received: by 2002:a05:620a:8ca:: with SMTP id z10mr4176340qkz.345.1578769217126;
-        Sat, 11 Jan 2020 11:00:17 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id s27sm2588518qkm.97.2020.01.11.11.00.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jan 2020 11:00:16 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/boot/compressed: Correct relocation destination on old linkers
-Date:   Sat, 11 Jan 2020 14:00:15 -0500
-Message-Id: <20200111190015.3257863-1-nivedita@alum.mit.edu>
+        Sat, 11 Jan 2020 14:30:41 -0500
+X-Greylist: delayed 357 seconds by postgrey-1.27 at vger.kernel.org; Sat, 11 Jan 2020 14:30:40 EST
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id 4841E180A9717F;
+        Sat, 11 Jan 2020 19:24:41 +0000 (UTC)
+Received: from localhost.localdomain (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Sat, 11 Jan 2020 19:24:40 +0000 (UTC)
+From:   =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pedro Vanzella <pedro@pedrovanzella.com>
+Cc:     =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
+Subject: [PATCH] HID: logitech-hidpp: BatteryVoltage: only read chargeStatus if extPower is active
+Date:   Sat, 11 Jan 2020 19:24:19 +0000
+Message-Id: <20200111192419.2503922-1-lains@archlinux.org>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As described in commit 6d92bc9d483a ("x86/build: Build compressed x86
-kernels as PIE"), pre-2.26 binutils generates R_386_32 relocations in
-PIE mode.  Since the startup code does not perform relocation, any reloc
-entry with R_386_32 will remain as 0 in the executing code.
+In the HID++ 2.0 function getBatteryInfo() from the BatteryVoltage
+(0x1001) feature, chargeStatus is only valid if extPower is active.
 
-Commit 974f221c84b0 ("x86/boot: Move compressed kernel to the end of the
-decompression buffer") added a new symbol _end but did not mark it
-hidden, which doesn't give the correct offset on older linkers. This
-doesn't cause a crash, but means the compressed kernel is actually
-relocated starting from the end of the decompression buffer, rather than
-ending there.
+Previously we were ignoring extPower, which resulted in wrong values.
 
-Mark _end as hidden to fix.
+Example:
+    With an unplugged mouse
 
-Fixes: 974f221c84b0 ("x86/boot: Move compressed kernel to the end of the decompression buffer")
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+    $ cat /sys/class/power_supply/hidpp_battery_0/status
+    Charging
+
+This patch makes fixes that, it also renames charge_sts to flags as
+charge_sts can be confused with chargeStatus from the spec.
+
+Spec:
++--------+-------------------------------------------------------------------------+
+|  byte  |                                    2                                    |
++--------+--------------+------------+------------+----------+----------+----------+
+|   bit  |     0..2     |      3     |      4     |     5    |     6    |     7    |
++--------+--------------+------------+------------+----------+----------+----------+
+| buffer | chargeStatus | fastCharge | slowCharge | critical | (unused) | extPower |
++--------+--------------+------------+------------+----------+----------+----------+
+Table 1 - battery voltage (0x1001), getBatteryInfo() (ASE 0), 3rd byte
+
++-------+--------------------------------------+
+| value |                meaning               |
++-------+--------------------------------------+
+|   0   | Charging                             |
++-------+--------------------------------------+
+|   1   | End of charge (100% charged)         |
++-------+--------------------------------------+
+|   2   | Charge stopped (any "normal" reason) |
++-------+--------------------------------------+
+|   7   | Hardware error                       |
++-------+--------------------------------------+
+Table 2 - chargeStatus value
+
+Signed-off-by: Filipe Laíns <lains@archlinux.org>
 ---
- arch/x86/boot/compressed/head_32.S | 5 +++--
- arch/x86/boot/compressed/head_64.S | 1 +
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/hid/hid-logitech-hidpp.c | 43 ++++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index f2dfd6d083ef..e4d1142f9f65 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -49,16 +49,17 @@
-  * Position Independent Executable (PIE) so that linker won't optimize
-  * R_386_GOT32X relocation to its fixed symbol address.  Older
-  * linkers generate R_386_32 relocations against locally defined symbols,
-- * _bss, _ebss, _got and _egot, in PIE.  It isn't wrong, just less
-+ * _bss, _ebss, _got, _egot and _end, in PIE.  It isn't wrong, just less
-  * optimal than R_386_RELATIVE.  But the x86 kernel fails to properly handle
-  * R_386_32 relocations when relocating the kernel.  To generate
-- * R_386_RELATIVE relocations, we mark _bss, _ebss, _got and _egot as
-+ * R_386_RELATIVE relocations, we mark _bss, _ebss, _got, _egot and _end as
-  * hidden:
-  */
- 	.hidden _bss
- 	.hidden _ebss
- 	.hidden _got
- 	.hidden _egot
-+	.hidden _end
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index bb063e7d48df..39a5ee0aaab0 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -1256,36 +1256,35 @@ static int hidpp20_battery_map_status_voltage(u8 data[3], int *voltage,
+ {
+ 	int status;
  
- 	__HEAD
- SYM_FUNC_START(startup_32)
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 6eb30f8a3ce7..206fb95e827c 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -42,6 +42,7 @@
- 	.hidden _ebss
- 	.hidden _got
- 	.hidden _egot
-+	.hidden _end
+-	long charge_sts = (long)data[2];
++	long flags = (long) data[2];
  
- 	__HEAD
- 	.code32
+-	*level = POWER_SUPPLY_CAPACITY_LEVEL_UNKNOWN;
+-	switch (data[2] & 0xe0) {
+-	case 0x00:
+-		status = POWER_SUPPLY_STATUS_CHARGING;
+-		break;
+-	case 0x20:
+-		status = POWER_SUPPLY_STATUS_FULL;
+-		*level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
+-		break;
+-	case 0x40:
++	if (flags & 0x80)
++		switch (flags & 0x07) {
++		case 0:
++			status = POWER_SUPPLY_STATUS_CHARGING;
++			break;
++		case 1:
++			status = POWER_SUPPLY_STATUS_FULL;
++			*level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
++			break;
++		case 2:
++			status = POWER_SUPPLY_STATUS_NOT_CHARGING;
++			break;
++		default:
++			status = POWER_SUPPLY_STATUS_UNKNOWN;
++			break;
++		}
++	else
+ 		status = POWER_SUPPLY_STATUS_DISCHARGING;
+-		break;
+-	case 0xe0:
+-		status = POWER_SUPPLY_STATUS_NOT_CHARGING;
+-		break;
+-	default:
+-		status = POWER_SUPPLY_STATUS_UNKNOWN;
+-	}
+ 
+ 	*charge_type = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
+-	if (test_bit(3, &charge_sts)) {
++	if (test_bit(3, &flags)) {
+ 		*charge_type = POWER_SUPPLY_CHARGE_TYPE_FAST;
+ 	}
+-	if (test_bit(4, &charge_sts)) {
++	if (test_bit(4, &flags)) {
+ 		*charge_type = POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
+ 	}
+-
+-	if (test_bit(5, &charge_sts)) {
++	if (test_bit(5, &flags)) {
+ 		*level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
+ 	}
+ 
 -- 
 2.24.1
-
