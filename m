@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBE87C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29028C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D1220842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 016ED20842
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738562;
-	bh=N0ebsgcUGh9PNCm8/eL8/9B2lBOlU4cHFC0L/BnKwMQ=;
+	s=default; t=1578738569;
+	bh=w+TK/z6q5eNOhYC/9sUbz1Bb8kYTxNA9IKc3SIJiSLE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rM8MirMUf+qWZU0h307PENRfWQG4febrbqiReJ4MbA+Qby8pOO+zUFdshnKFX27Jp
-	 c8gRUWGdNFjmhQCC1F0El4HXW8r3Cb/6KJFX2Voz7CXtR8rYTfZYV0i/jsCkoIrIdi
-	 hHl5eeT0WYjg0vQ6L8/xSWCJongEd7CPritHc7j4=
+	b=rofm7Mz8yvneSbwzLJ+NpiPm4x/cmP4N6aRrTpJ/7hU5dhhvJ6yBDfNLK7IR3JBh9
+	 ivWRAw++It6aPGFM0EGN5kq1AMi3E2CbksxztP7y0G8LoaHvdhJcqT27qEmrqr5yqU
+	 W1rFlsSDeoFYN/LeQV8bXaDRVhf1dkzzixdsECU0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731240AbgAKK3V (ORCPT
+        id S1731339AbgAKK32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:29:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38324 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:29:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729310AbgAKK3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:29:21 -0500
+        id S1729171AbgAKK31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:29:27 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6CB1E205F4;
-        Sat, 11 Jan 2020 10:29:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 713F820842;
+        Sat, 11 Jan 2020 10:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738560;
-        bh=N0ebsgcUGh9PNCm8/eL8/9B2lBOlU4cHFC0L/BnKwMQ=;
+        s=default; t=1578738566;
+        bh=w+TK/z6q5eNOhYC/9sUbz1Bb8kYTxNA9IKc3SIJiSLE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AQnDS6sYjGTewyyWCP/Mxu8RnDO6qdx/0CJGGzGVstBcSV9D8XP2qx4I/XTwdyq/r
-         R8qqywnEbtQFt+emt9gHl67PIEKihWVFxV4qWsEo4uhQy/6mpWxjByYDSf+5ggz6Ca
-         0IfiWbhT2wViYS+ci/JG2ZcpdV/w6Fx/L9m4JgtQ=
+        b=k802gherOn40Syrg6Au90Nte7VpxJb5sNCkUg+ER37h48Lmks1e952hriAuMCp2lL
+         acPKcROh/5AYeT6FdnhF+Fo8Ci4Aj4j3/b3LyzKLO768KVt8DXu9etUMfWKaMAubO+
+         +n52YY/8ISwTAu2zeK4KD8Sc1ROeS9vnQHLWQELs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Inki Dae <inki.dae@samsung.net>,
+        stable@vger.kernel.org,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 117/165] drm/exynos: gsc: add missed component_del
-Date:   Sat, 11 Jan 2020 10:50:36 +0100
-Message-Id: <20200111094932.833126423@linuxfoundation.org>
+Subject: [PATCH 5.4 118/165] tpm/tpm_ftpm_tee: add shutdown call back
+Date:   Sat, 11 Jan 2020 10:50:37 +0100
+Message-Id: <20200111094933.053228465@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,33 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
 
-[ Upstream commit 84c92365b20a44c363b95390ea00dfbdd786f031 ]
+[ Upstream commit 1760eb689ed68c6746744aff2092bff57c78d907 ]
 
-The driver forgets to call component_del in remove to match component_add
-in probe.
-Add the missed call to fix it.
+Add shutdown call back to close existing session with fTPM TA
+to support kexec scenario.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Inki Dae <inki.dae@samsung.net>
+Add parentheses to function names in comments as specified in kdoc.
+
+Signed-off-by: Thirupathaiah Annapureddy <thiruan@microsoft.com>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Tested-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/exynos/exynos_drm_gsc.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/char/tpm/tpm_ftpm_tee.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_gsc.c b/drivers/gpu/drm/exynos/exynos_drm_gsc.c
-index 7ae087b0504d..88b6fcaa20be 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_gsc.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_gsc.c
-@@ -1313,6 +1313,7 @@ static int gsc_remove(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
+diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
+index 6640a14dbe48..22bf553ccf9d 100644
+--- a/drivers/char/tpm/tpm_ftpm_tee.c
++++ b/drivers/char/tpm/tpm_ftpm_tee.c
+@@ -32,7 +32,7 @@ static const uuid_t ftpm_ta_uuid =
+ 		  0x82, 0xCB, 0x34, 0x3F, 0xB7, 0xF3, 0x78, 0x96);
  
-+	component_del(dev, &gsc_component_ops);
- 	pm_runtime_dont_use_autosuspend(dev);
- 	pm_runtime_disable(dev);
+ /**
+- * ftpm_tee_tpm_op_recv - retrieve fTPM response.
++ * ftpm_tee_tpm_op_recv() - retrieve fTPM response.
+  * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h.
+  * @buf:	the buffer to store data.
+  * @count:	the number of bytes to read.
+@@ -61,7 +61,7 @@ static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+ }
  
+ /**
+- * ftpm_tee_tpm_op_send - send TPM commands through the TEE shared memory.
++ * ftpm_tee_tpm_op_send() - send TPM commands through the TEE shared memory.
+  * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h
+  * @buf:	the buffer to send.
+  * @len:	the number of bytes to send.
+@@ -208,7 +208,7 @@ static int ftpm_tee_match(struct tee_ioctl_version_data *ver, const void *data)
+ }
+ 
+ /**
+- * ftpm_tee_probe - initialize the fTPM
++ * ftpm_tee_probe() - initialize the fTPM
+  * @pdev: the platform_device description.
+  *
+  * Return:
+@@ -298,7 +298,7 @@ static int ftpm_tee_probe(struct platform_device *pdev)
+ }
+ 
+ /**
+- * ftpm_tee_remove - remove the TPM device
++ * ftpm_tee_remove() - remove the TPM device
+  * @pdev: the platform_device description.
+  *
+  * Return:
+@@ -328,6 +328,19 @@ static int ftpm_tee_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++/**
++ * ftpm_tee_shutdown() - shutdown the TPM device
++ * @pdev: the platform_device description.
++ */
++static void ftpm_tee_shutdown(struct platform_device *pdev)
++{
++	struct ftpm_tee_private *pvt_data = dev_get_drvdata(&pdev->dev);
++
++	tee_shm_free(pvt_data->shm);
++	tee_client_close_session(pvt_data->ctx, pvt_data->session);
++	tee_client_close_context(pvt_data->ctx);
++}
++
+ static const struct of_device_id of_ftpm_tee_ids[] = {
+ 	{ .compatible = "microsoft,ftpm" },
+ 	{ }
+@@ -341,6 +354,7 @@ static struct platform_driver ftpm_tee_driver = {
+ 	},
+ 	.probe = ftpm_tee_probe,
+ 	.remove = ftpm_tee_remove,
++	.shutdown = ftpm_tee_shutdown,
+ };
+ 
+ module_platform_driver(ftpm_tee_driver);
 -- 
 2.20.1
 
