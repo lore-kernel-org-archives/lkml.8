@@ -2,97 +2,86 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5165C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F903C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3C420842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578743735;
-	bh=zf3aky38BFQys5osBniOy3aL6y5X0B2KB1mSCjcd3po=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MQLcVw2WCNk0nJ1faIqbCEWSS1wVSSkRpBhZ93HWdDjanKhUPVyoDQj+3u4cS564w
-	 Yaz6jkj1eUtYWM3eY95YqLYR5E7D6HIkKMaLTyyT4qj0k38CldxRXRooII3bn0OaME
-	 W3w5/lxHkal53Nq69vSAL3UrNwVVbKhn2gRa1YZg=
+	by mail.kernel.org (Postfix) with ESMTP id 5938B20661
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:57:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbgAKLze (ORCPT
+        id S1729653AbgAKL5P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 06:55:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726358AbgAKLze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 06:55:34 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF1EF2082E;
-        Sat, 11 Jan 2020 11:55:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578743734;
-        bh=zf3aky38BFQys5osBniOy3aL6y5X0B2KB1mSCjcd3po=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=T237RgWUut0WIWOsIofuwixaPYKnET5gGNwYEjZCoAS4LtrYB6jnS9quMWXbuH4I2
-         eXJxEMF/Gr7jOk9mRenA8Qut7Ac6CHWVfXgxvbrkkeV+diZVa+NaAOBNQUodtaLEi2
-         wyWh2nmozVMsQq3AujloMjGj6dwrtLwrY3L7ApxA=
-Date:   Sat, 11 Jan 2020 11:55:29 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Kent Gustavsson <kent@minoris.se>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Shobhit Kukreti <shobhitkukreti@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: humidity: dht11 remove TODO since it doesn't make
- sense
-Message-ID: <20200111115529.68d0cf88@archlinux>
-In-Reply-To: <20200104181929.1505510-1-kent@minoris.se>
-References: <20200104181929.1505510-1-kent@minoris.se>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 11 Jan 2020 06:57:15 -0500
+Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:21200 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729229AbgAKL5O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 06:57:14 -0500
+Received: from [192.168.42.210] ([93.22.149.238])
+        by mwinf5d27 with ME
+        id ozxC2100d58rESd03zxDWh; Sat, 11 Jan 2020 12:57:13 +0100
+X-ME-Helo: [192.168.42.210]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 11 Jan 2020 12:57:13 +0100
+X-ME-IP: 93.22.149.238
+Subject: Re: [PATCH][next] ath11k: avoid null pointer dereference when pointer
+ band is null
+From:   Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Colin King <colin.king@canonical.com>
+Cc:     David Miller <davem@davemloft.net>, linux-wireless@vger.kernel.org,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Kernel Janitors <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <05d5d54e035e4d69ad4ffb4a835a495a@huawei.com>
+ <64797126-0c77-4c2c-ad2b-29d7af452c13@wanadoo.fr>
+Message-ID: <17571eee-9d72-98cb-00f5-d714a28b853b@wanadoo.fr>
+Date:   Sat, 11 Jan 2020 12:57:11 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <64797126-0c77-4c2c-ad2b-29d7af452c13@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  4 Jan 2020 19:19:29 +0100
-Kent Gustavsson <kent@minoris.se> wrote:
+Le 11/01/2020 à 10:50, linmiaohe a écrit :
+> Colin Ian King<colin.king@canonical.com>  wrote：
+>> From: Colin Ian King<colin.king@canonical.com>
+>>
+>> In the unlikely event that cap->supported_bands has neither WMI_HOST_WLAN_2G_CAP set or WMI_HOST_WLAN_5G_CAP set then pointer band is null and a null dereference occurs when assigning
+>> band->n_iftype_data.  Move the assignment to the if blocks to
+>> avoid this.  Cleans up static analysis warnings.
+>>
+>> Addresses-Coverity: ("Explicit null dereference")
+>> Fixes: 9f056ed8ee01 ("ath11k: add HE support")
+>> Signed-off-by: Colin Ian King<colin.king@canonical.com>
+>> ---
+>> drivers/net/wireless/ath/ath11k/mac.c | 8 ++++----
+>> 1 file changed, 4 insertions(+), 4 deletions(-)
+> It looks fine for me. Thanks.
+> Reviewed-by: Miaohe Lin<linmiaohe@huawei.com>
+(sorry for incomplete mail and mailing list addresses, my newsreader ate 
+them, and I cannot get the list from get_maintainer.pl because my 
+(outdated) tree does not have ath11k/...
+I've only including the ones in memory of my mail writer.
 
-> DHT11 isn't addressable and will trigger temperature measurement on any
-> data sent on the bus.
-> 
-> Signed-off-by: Kent Gustavsson <kent@minoris.se>
-Applied.
+Please forward if needed)
 
-Thanks,
 
-Jonathan
+Hi
 
-> ---
->  drivers/iio/humidity/dht11.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/iio/humidity/dht11.c b/drivers/iio/humidity/dht11.c
-> index b459600e1a33..d05c6fdb758b 100644
-> --- a/drivers/iio/humidity/dht11.c
-> +++ b/drivers/iio/humidity/dht11.c
-> @@ -174,7 +174,6 @@ static irqreturn_t dht11_handle_irq(int irq, void *data)
->  	struct iio_dev *iio = data;
->  	struct dht11 *dht11 = iio_priv(iio);
->  
-> -	/* TODO: Consider making the handler safe for IRQ sharing */
->  	if (dht11->num_edges < DHT11_EDGES_PER_READ && dht11->num_edges >= 0) {
->  		dht11->edges[dht11->num_edges].ts = ktime_get_boottime_ns();
->  		dht11->edges[dht11->num_edges++].value =
+Shouldn't there be a
+
+|
+
+- band->n_iftype_data  =  count; at the end of the patch if the assignment is *moved*? Without it, 
+'band' (as well as 'count') could be un-initialized, and lead to memory 
+corruption. Just my 2c. CJ |
 
