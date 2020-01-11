@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DAFFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F223C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA280205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF646205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738505;
-	bh=V4IO6kOWJmt05tF5obmitFkuflGbBRrOd2f4vBuEhxQ=;
+	s=default; t=1578738508;
+	bh=h5NfLAMahDeyBWLnNDHOkNGkRzHip58O6rBMQh4p7X4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AWFoCCLSkwW1PXpEQlBisTLHmBmVkO0Llwo7KW9dQdHZgfGi+3zIkDdo070HE39fr
-	 P6gjI5LP6gXvZ89XbPC2WkkbQyQzrkpBaIoR1uIUdngRfu0BDLBDEM7bIGDBDcn4we
-	 /rzDjhdqg/QPgXSv3VcSpAoIXq88vVfET790DPFI=
+	b=cvaMYKVplrQt9p6xWsGPB1mac7N74j/nYL8veKilZyXTQFI08LsF4icGSc5/BOomp
+	 2CDHH+76x+VnzIvV4iiTWQIPXoY0UfH9ZKaDZ5sbQT5kp5Zv7NXgPUfz6OhzdIaaM8
+	 wz6E5jGdQVN6n3YjdYE4BTOx8Ih+82GouWfriC7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbgAKK2Y (ORCPT
+        id S1731271AbgAKK21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:28:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35632 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:28:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729383AbgAKK2T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:28:19 -0500
+        id S1731047AbgAKK2Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:28:24 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E793D205F4;
-        Sat, 11 Jan 2020 10:28:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5440205F4;
+        Sat, 11 Jan 2020 10:28:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738499;
-        bh=V4IO6kOWJmt05tF5obmitFkuflGbBRrOd2f4vBuEhxQ=;
+        s=default; t=1578738503;
+        bh=h5NfLAMahDeyBWLnNDHOkNGkRzHip58O6rBMQh4p7X4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xG+NWgWkZGSmrOM9l24/dCH/UnbTWhm9tIuBtcmlq5d8eyv6TvX0n3hVaXbOc9AQK
-         Wct3Tv9QCcHJb8FPiwDThXjihWNW3rE9ZX/Ll4sW6nQol9YeK6elAcC5Uf5XjYoTGf
-         Hc/h6t7kyEGJk116KXvSW6UDp12o7Qo5b13AUvtg=
+        b=paq/kgpU0wUFFQeek+xRBxBiP/rB22SgxPY8wWEbFOHYsDo9bmpmeeB7wLgvf6Reo
+         Kzuj4JckBT0kMbRX7T37wJUbcXPUGHapC6HI5WEdbd0mSXgOkOsdvYznHe/DV/8DLB
+         QIu4Oc6Jtox3ZUmYW7/Uk0VVwz3eE7G+JjrJItnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Schnelle <svens@stackframe.org>,
-        Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 088/165] parisc: add missing __init annotation
-Date:   Sat, 11 Jan 2020 10:50:07 +0100
-Message-Id: <20200111094928.526171242@linuxfoundation.org>
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 089/165] rfkill: Fix incorrect check to avoid NULL pointer dereference
+Date:   Sat, 11 Jan 2020 10:50:08 +0100
+Message-Id: <20200111094928.612233905@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -59,45 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@stackframe.org>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit aeea5eae4fd54e94d820ed17ea3b238160be723e ]
+[ Upstream commit 6fc232db9e8cd50b9b83534de9cd91ace711b2d7 ]
 
-compilation failed with:
+In rfkill_register, the struct rfkill pointer is first derefernced
+and then checked for NULL. This patch removes the BUG_ON and returns
+an error to the caller in case rfkill is NULL.
 
-MODPOST vmlinux.o
-WARNING: vmlinux.o(.text.unlikely+0xa0c): Section mismatch in reference from the function walk_lower_bus() to the function .init.text:walk_native_bus()
-The function walk_lower_bus() references
-the function __init walk_native_bus().
-This is often because walk_lower_bus lacks a __init
-annotation or the annotation of walk_native_bus is wrong.
-
-FATAL: modpost: Section mismatches detected.
-Set CONFIG_SECTION_MISMATCH_WARN_ONLY=y to allow them.
-make[2]: *** [/home/svens/linux/parisc-linux/src/scripts/Makefile.modpost:64: __modpost] Error 1
-make[1]: *** [/home/svens/linux/parisc-linux/src/Makefile:1077: vmlinux] Error 2
-make[1]: Leaving directory '/home/svens/linux/parisc-linux/build'
-make: *** [Makefile:179: sub-make] Error 2
-
-Signed-off-by: Sven Schnelle <svens@stackframe.org>
-Signed-off-by: Helge Deller <deller@gmx.de>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Link: https://lore.kernel.org/r/20191215153409.21696-1-pakki001@umn.edu
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/kernel/drivers.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/rfkill/core.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/parisc/kernel/drivers.c b/arch/parisc/kernel/drivers.c
-index 3b330e58a4f0..a6c9f49c6612 100644
---- a/arch/parisc/kernel/drivers.c
-+++ b/arch/parisc/kernel/drivers.c
-@@ -810,7 +810,7 @@ EXPORT_SYMBOL(device_to_hwpath);
- static void walk_native_bus(unsigned long io_io_low, unsigned long io_io_high,
-                             struct device *parent);
- 
--static void walk_lower_bus(struct parisc_device *dev)
-+static void __init walk_lower_bus(struct parisc_device *dev)
+diff --git a/net/rfkill/core.c b/net/rfkill/core.c
+index 0bf9bf1ceb8f..6c089320ae4f 100644
+--- a/net/rfkill/core.c
++++ b/net/rfkill/core.c
+@@ -1002,10 +1002,13 @@ static void rfkill_sync_work(struct work_struct *work)
+ int __must_check rfkill_register(struct rfkill *rfkill)
  {
- 	unsigned long io_io_low, io_io_high;
+ 	static unsigned long rfkill_no;
+-	struct device *dev = &rfkill->dev;
++	struct device *dev;
+ 	int error;
+ 
+-	BUG_ON(!rfkill);
++	if (!rfkill)
++		return -EINVAL;
++
++	dev = &rfkill->dev;
+ 
+ 	mutex_lock(&rfkill_global_mutex);
  
 -- 
 2.20.1
