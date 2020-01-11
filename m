@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E161C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF1EC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A4B205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148852084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738372;
-	bh=ibcFiim1TCQTWYVsSeYM5j4nlS5Hx8fc/vR50CMOZMw=;
+	s=default; t=1578738377;
+	bh=dkNy826DC2l0wBjP/1QqqtSStFbYBWhyqa/0i34FXI4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z3s+vK6ZnCNsHFXmj3HffttgfzgNLU/XKMGFJrVTwmBre6V3UPoKLzipZRGAI7AAf
-	 0q/GUBbz50XP61+rX8zD97QQfkPunEyu6KSv1ZoToKz1lnwMTUOnf0Jm4VcHxDtGL1
-	 iwJdt7kiuqxai9yQZUi599z4NFcfJYOujbNjoT1w=
+	b=cGz9DmMtT6iA1WgoctV3OkV1Cukl/PJKqk9m+yNYKK6VZZI2jp4R2B3Vgn8U5Uqpw
+	 I53q7yrGcN811NoQLzvRJTlSxfK+J39/l/eK4oOnZ1SWskDvqnQ1HZqssQQVT2GhUm
+	 gJjEVhoQ5xmmXrWSYEEBatGnIDyEVMl+xBIAD+9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730815AbgAKK0L (ORCPT
+        id S1730970AbgAKK0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:26:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58300 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:26:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbgAKK0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:26:09 -0500
+        id S1729047AbgAKK0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:26:15 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61A9C205F4;
-        Sat, 11 Jan 2020 10:26:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A5FB2082E;
+        Sat, 11 Jan 2020 10:26:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738369;
-        bh=ibcFiim1TCQTWYVsSeYM5j4nlS5Hx8fc/vR50CMOZMw=;
+        s=default; t=1578738375;
+        bh=dkNy826DC2l0wBjP/1QqqtSStFbYBWhyqa/0i34FXI4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yEKZUQDVgGHmHbAvNifkEY3eHTIxejL6jiIJO8SVDj9mlMrtO82LfTj47aNmPTZ1Z
-         Lye3AbjTDsLtZ5pFr7ne9nE42lgeTbd6nRLRn9ORjNlciAY7wSDIYx7HiyIQYxk3+J
-         jrbrNvjZ0F89clX3sNvIr+CYC2KHUjKllkno3ds0=
+        b=jFHq/dFI4w+VhB/AtSI7uKs/mDWTAbFuwLWYoj9n3m0jIvEoV0fyf2lTq2rNUtLya
+         oLm9QtQ85Y14SxCIBw2XAcuBL4s7qKjjC2zjRCmHxvIm0pTtxVyQkpuereW0YmayVi
+         oTARDXBsDeqkSVPjGkhUCR5XspfbUFbFYm9DAcC8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenz Bauer <lmb@cloudflare.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 080/165] bpf: Clear skb->tstamp in bpf_redirect when necessary
-Date:   Sat, 11 Jan 2020 10:49:59 +0100
-Message-Id: <20200111094927.877121253@linuxfoundation.org>
+        stable@vger.kernel.org, Oded Gabbay <oded.gabbay@gmail.com>,
+        Tomer Tayar <ttayar@habana.ai>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 081/165] habanalabs: rate limit error msg on waiting for CS
+Date:   Sat, 11 Jan 2020 10:50:00 +0100
+Message-Id: <20200111094927.954065460@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,39 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenz Bauer <lmb@cloudflare.com>
+From: Oded Gabbay <oded.gabbay@gmail.com>
 
-[ Upstream commit 5133498f4ad1123a5ffd4c08df6431dab882cc32 ]
+[ Upstream commit 018e0e3594f7dcd029d258e368c485e742fa9cdb ]
 
-Redirecting a packet from ingress to egress by using bpf_redirect
-breaks if the egress interface has an fq qdisc installed. This is the same
-problem as fixed in 'commit 8203e2d844d3 ("net: clear skb->tstamp in forwarding paths")
+In case a user submits a CS, and the submission fails, and the user doesn't
+check the return value and instead use the error return value as a valid
+sequence number of a CS and ask to wait on it, the driver will print an
+error and return an error code for that wait.
 
-Clear skb->tstamp when redirecting into the egress path.
+The real problem happens if now the user ignores the error of the wait, and
+try to wait again and again. This can lead to a flood of error messages
+from the driver and even soft lockup event.
 
-Fixes: 80b14dee2bea ("net: Add a new socket option for a future transmit time.")
-Fixes: fb420d5d91c1 ("tcp/fq: move back to CLOCK_MONOTONIC")
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
-Link: https://lore.kernel.org/bpf/20191213180817.2510-1-lmb@cloudflare.com
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Reviewed-by: Tomer Tayar <ttayar@habana.ai>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/filter.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/habanalabs/command_submission.c | 5 +++--
+ drivers/misc/habanalabs/context.c            | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/net/core/filter.c b/net/core/filter.c
-index 6d0111bfdb4a..2f76461c120d 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2055,6 +2055,7 @@ static inline int __bpf_tx_skb(struct net_device *dev, struct sk_buff *skb)
- 	}
+diff --git a/drivers/misc/habanalabs/command_submission.c b/drivers/misc/habanalabs/command_submission.c
+index a9ac045dcfde..447f307ef4d6 100644
+--- a/drivers/misc/habanalabs/command_submission.c
++++ b/drivers/misc/habanalabs/command_submission.c
+@@ -777,8 +777,9 @@ int hl_cs_wait_ioctl(struct hl_fpriv *hpriv, void *data)
+ 	memset(args, 0, sizeof(*args));
  
- 	skb->dev = dev;
-+	skb->tstamp = 0;
+ 	if (rc < 0) {
+-		dev_err(hdev->dev, "Error %ld on waiting for CS handle %llu\n",
+-			rc, seq);
++		dev_err_ratelimited(hdev->dev,
++				"Error %ld on waiting for CS handle %llu\n",
++				rc, seq);
+ 		if (rc == -ERESTARTSYS) {
+ 			args->out.status = HL_WAIT_CS_STATUS_INTERRUPTED;
+ 			rc = -EINTR;
+diff --git a/drivers/misc/habanalabs/context.c b/drivers/misc/habanalabs/context.c
+index 17db7b3dfb4c..2df6fb87e7ff 100644
+--- a/drivers/misc/habanalabs/context.c
++++ b/drivers/misc/habanalabs/context.c
+@@ -176,7 +176,7 @@ struct dma_fence *hl_ctx_get_fence(struct hl_ctx *ctx, u64 seq)
+ 	spin_lock(&ctx->cs_lock);
  
- 	dev_xmit_recursion_inc();
- 	ret = dev_queue_xmit(skb);
+ 	if (seq >= ctx->cs_sequence) {
+-		dev_notice(hdev->dev,
++		dev_notice_ratelimited(hdev->dev,
+ 			"Can't wait on seq %llu because current CS is at seq %llu\n",
+ 			seq, ctx->cs_sequence);
+ 		spin_unlock(&ctx->cs_lock);
 -- 
 2.20.1
 
