@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B60C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:19:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229E6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A2F20880
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:19:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E388320882
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:19:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737968;
-	bh=dk+3MMAwjTso1YmYWkr8pKICsyxn79LCQn43REnpZQg=;
+	s=default; t=1578737975;
+	bh=RjKyGyHDjMtfKLgwT6hxJC6iWMeiB35CNzj+g9jOmzY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NQ5VBjLPd1JVKmBsVyYBPBXnI6jNPFJOmYrkXEmj8KtbaYKmzDf1t8XUlUGrrSVdf
-	 AxGdczSrZ0jjdhVsqnMW9Yv+a4fJot1kStwK+bukNTS16TDSlpsIrMiy2zhxKe7MIF
-	 bz4y0sIQpGgpC2MNDXbiiiaYCvd0vkdKr5bsgHeo=
+	b=TvTg+vqhzYT3hNnpdzJNgwHxaFmlJryOIRTwsThNVhKowK2aLRKIn14lP6PFy8MQa
+	 S5OZNdPDpcsLbu5J3/EnxLRDYfdtBff9Orj+NO8S7f3cwvnFcO1Xv6EApw5LlPhHP5
+	 V9zg3jVunxp9tfFnHJ7wyYXe47V4HY1GDIypo2y8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730501AbgAKKT1 (ORCPT
+        id S1730509AbgAKKTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:19:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38930 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:19:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729290AbgAKKTZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:19:25 -0500
+        id S1728998AbgAKKTb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:19:31 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B281620848;
-        Sat, 11 Jan 2020 10:19:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE2B520848;
+        Sat, 11 Jan 2020 10:19:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737965;
-        bh=dk+3MMAwjTso1YmYWkr8pKICsyxn79LCQn43REnpZQg=;
+        s=default; t=1578737970;
+        bh=RjKyGyHDjMtfKLgwT6hxJC6iWMeiB35CNzj+g9jOmzY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fdTdsoWCn3dXmOrT/bFmHPZ8JZKminM9AjKt+TYUh+NzxIDgokLf33JJTkXM/s52/
-         LVgtyxZPl+N6rdVYD0HQoYBEW2ECAVHSRePBlCrgnYpoLkce8r1kAmFjJHKAlL6qmW
-         FhlsNYYWdO1OgWGiBQtCpTxcQ5q9Dpx7Wg2Bk9wQ=
+        b=hv+qoPhMTsY+2KyqFo/BeNBzlQ65GKzLSLkZUAplIrUJ+13ZpBYFPSC/6HpE3pxjf
+         V6rVAfi1RXHpq5r5G3nMzGc1tYpuPQj1QLZCJwCMpGFABnw+T/qHatUU6o2MDRWhkE
+         AGFCycip40ySkmy/EXoaqwBAzVLPJogrHd/eFTZc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Machata <petrm@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 80/84] net: sch_prio: When ungrafting, replace with FIFO
-Date:   Sat, 11 Jan 2020 10:50:57 +0100
-Message-Id: <20200111094912.587569466@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>
+Subject: [PATCH 4.19 81/84] usb: dwc3: gadget: Fix request complete check
+Date:   Sat, 11 Jan 2020 10:50:58 +0100
+Message-Id: <20200111094912.700962986@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -60,48 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Machata <petrm@mellanox.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-[ Upstream commit 240ce7f6428ff5188b9eedc066e1e4d645b8635f ]
+commit ea0d762775e20aaff7909a3f0866ff1688b1c618 upstream.
 
-When a child Qdisc is removed from one of the PRIO Qdisc's bands, it is
-replaced unconditionally by a NOOP qdisc. As a result, any traffic hitting
-that band gets dropped. That is incorrect--no Qdisc was explicitly added
-when PRIO was created, and after removal, none should have to be added
-either.
+We can only check for IN direction if the request had completed. For OUT
+direction, it's perfectly fine that the host can send less than the
+setup length. Let's return true fall all cases of OUT direction.
 
-Fix PRIO by first attempting to create a default Qdisc and only falling
-back to noop when that fails. This pattern of attempting to create an
-invisible FIFO, using NOOP only as a fallback, is also seen in other
-Qdiscs.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Petr Machata <petrm@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: e0c42ce590fe ("usb: dwc3: gadget: simplify IOC handling")
+Cc: stable@vger.kernel.org
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Link: https://lore.kernel.org/r/ac5a3593a94fdaa3d92e6352356b5f7a01ccdc7c.1576291140.git.thinhn@synopsys.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/sch_prio.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/net/sched/sch_prio.c
-+++ b/net/sched/sch_prio.c
-@@ -314,8 +314,14 @@ static int prio_graft(struct Qdisc *sch,
- 	bool any_qdisc_is_offloaded;
- 	int err;
+---
+ drivers/usb/dwc3/gadget.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
+
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2271,6 +2271,13 @@ static int dwc3_gadget_ep_reclaim_trb_li
  
--	if (new == NULL)
--		new = &noop_qdisc;
-+	if (!new) {
-+		new = qdisc_create_dflt(sch->dev_queue, &pfifo_qdisc_ops,
-+					TC_H_MAKE(sch->handle, arg), extack);
-+		if (!new)
-+			new = &noop_qdisc;
-+		else
-+			qdisc_hash_add(new, true);
-+	}
- 
- 	*old = qdisc_replace(sch, new, &q->queues[band]);
+ static bool dwc3_gadget_ep_request_completed(struct dwc3_request *req)
+ {
++	/*
++	 * For OUT direction, host may send less than the setup
++	 * length. Return true for all OUT requests.
++	 */
++	if (!req->direction)
++		return true;
++
+ 	return req->request.actual == req->request.length;
+ }
  
 
 
