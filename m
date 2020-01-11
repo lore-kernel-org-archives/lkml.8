@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68290C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00285C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7E820842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C094020678
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738808;
-	bh=jQp9bemt5ZIrIqiVgbTZLdlJ8l36Q0NJtwarDDg30/k=;
+	s=default; t=1578738815;
+	bh=yWzHrt0DsAtoHX5GuKIUt91IM/ZOpBXSoBuEPzdtW+M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i8sNTLCdVPH7Oj2d+6fJV6wXjPCX4/3uW4p9xYOg7n3Pzikfu63VPo+nlJJxGHAOs
-	 7qqCDIpC1v1zOcV9AfsjljNWofn5Cous1Nb6Ha9fWasy61giOWvgQqR1DxC5ElJPN3
-	 iix17T9ihYyjcBsIIOxiB6CkOodMhMF3ZjNEBcHA=
+	b=iHeoRb3L6Mq8GgCJjBmC9J131iqSyBYQxQ+xzrg4osbQ+0Vpi1hLQjH2Xolbd3AyI
+	 eUEiIBbveoX3xTabwHwOF44iDyjVhvxcyVS0juqBSE/XaZ9m+oLhvGbIlmzBw1ZKPH
+	 vt2ulTlVdTyagHkbeJJfrhOS1GCKijqbMrkDvoWo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731454AbgAKKd1 (ORCPT
+        id S1731623AbgAKKdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:33:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47874 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:33:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731419AbgAKKdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:33:23 -0500
+        id S1731612AbgAKKdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:33:33 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DF5A20678;
-        Sat, 11 Jan 2020 10:33:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9660F21744;
+        Sat, 11 Jan 2020 10:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738803;
-        bh=jQp9bemt5ZIrIqiVgbTZLdlJ8l36Q0NJtwarDDg30/k=;
+        s=default; t=1578738812;
+        bh=yWzHrt0DsAtoHX5GuKIUt91IM/ZOpBXSoBuEPzdtW+M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=acOgKofgu9Fuk1N25gMdDUa2SHS57WA/Z5syygwqr4IJrEm4pDb8jebxOd4pfHV5l
-         QWZ22IynMgddZlUfcd1QetQklH8OUGZCBuF1D38bBbfW/GQA8SIeywfMv0t1KXFbTO
-         tJeoWoTRycTiCkCuqVuLKyckGV8XSrvIHdNw9EZ0=
+        b=Vji2kS9yewMGj6uQ8KG2R9jhsmhGpvE6gre4+i++wy9UMA4p8opS2UNRpAX2JeiEh
+         C7tkvG68xildqRGu2AAo3IUS+W0Qh3CS0Zc97rKl2zICgTh/Ud0vOCEFt+JSurFHXq
+         C/vPwPYMG6tSXQYAClDp8yYGC043XySO/Rzv6CeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+107c4aff5f392bf1517f@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 148/165] sctp: free cmd->obj.chunk for the unprocessed SCTP_CMD_REPLY
-Date:   Sat, 11 Jan 2020 10:51:07 +0100
-Message-Id: <20200111094940.013179440@linuxfoundation.org>
+Subject: [PATCH 5.4 150/165] vxlan: fix tos value before xmit
+Date:   Sat, 11 Jan 2020 10:51:09 +0100
+Message-Id: <20200111094940.471588748@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,93 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit be7a7729207797476b6666f046d765bdf9630407 ]
+[ Upstream commit 71130f29979c7c7956b040673e6b9d5643003176 ]
 
-This patch is to fix a memleak caused by no place to free cmd->obj.chunk
-for the unprocessed SCTP_CMD_REPLY. This issue occurs when failing to
-process a cmd while there're still SCTP_CMD_REPLY cmds on the cmd seq
-with an allocated chunk in cmd->obj.chunk.
+Before ip_tunnel_ecn_encap() and udp_tunnel_xmit_skb() we should filter
+tos value by RT_TOS() instead of using config tos directly.
 
-So fix it by freeing cmd->obj.chunk for each SCTP_CMD_REPLY cmd left on
-the cmd seq when any cmd returns error. While at it, also remove 'nomem'
-label.
+vxlan_get_route() would filter the tos to fl4.flowi4_tos but we didn't
+return it back, as geneve_get_v4_rt() did. So we have to use RT_TOS()
+directly in function ip_tunnel_ecn_encap().
 
-Reported-by: syzbot+107c4aff5f392bf1517f@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Fixes: 206aaafcd279 ("VXLAN: Use IP Tunnels tunnel ENC encap API")
+Fixes: 1400615d64cf ("vxlan: allow setting ipv6 traffic class")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/sm_sideeffect.c |   28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ drivers/net/vxlan.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/sctp/sm_sideeffect.c
-+++ b/net/sctp/sm_sideeffect.c
-@@ -1358,8 +1358,10 @@ static int sctp_cmd_interpreter(enum sct
- 			/* Generate an INIT ACK chunk.  */
- 			new_obj = sctp_make_init_ack(asoc, chunk, GFP_ATOMIC,
- 						     0);
--			if (!new_obj)
--				goto nomem;
-+			if (!new_obj) {
-+				error = -ENOMEM;
-+				break;
-+			}
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -2542,7 +2542,7 @@ static void vxlan_xmit_one(struct sk_buf
+ 		ndst = &rt->dst;
+ 		skb_tunnel_check_pmtu(skb, ndst, VXLAN_HEADROOM);
  
- 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
- 					SCTP_CHUNK(new_obj));
-@@ -1381,7 +1383,8 @@ static int sctp_cmd_interpreter(enum sct
- 			if (!new_obj) {
- 				if (cmd->obj.chunk)
- 					sctp_chunk_free(cmd->obj.chunk);
--				goto nomem;
-+				error = -ENOMEM;
-+				break;
- 			}
- 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
- 					SCTP_CHUNK(new_obj));
-@@ -1428,8 +1431,10 @@ static int sctp_cmd_interpreter(enum sct
+-		tos = ip_tunnel_ecn_encap(tos, old_iph, skb);
++		tos = ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
+ 		ttl = ttl ? : ip4_dst_hoplimit(&rt->dst);
+ 		err = vxlan_build_skb(skb, ndst, sizeof(struct iphdr),
+ 				      vni, md, flags, udp_sum);
+@@ -2582,7 +2582,7 @@ static void vxlan_xmit_one(struct sk_buf
  
- 			/* Generate a SHUTDOWN chunk.  */
- 			new_obj = sctp_make_shutdown(asoc, chunk);
--			if (!new_obj)
--				goto nomem;
-+			if (!new_obj) {
-+				error = -ENOMEM;
-+				break;
-+			}
- 			sctp_add_cmd_sf(commands, SCTP_CMD_REPLY,
- 					SCTP_CHUNK(new_obj));
- 			break;
-@@ -1765,11 +1770,17 @@ static int sctp_cmd_interpreter(enum sct
- 			break;
- 		}
+ 		skb_tunnel_check_pmtu(skb, ndst, VXLAN6_HEADROOM);
  
--		if (error)
-+		if (error) {
-+			cmd = sctp_next_cmd(commands);
-+			while (cmd) {
-+				if (cmd->verb == SCTP_CMD_REPLY)
-+					sctp_chunk_free(cmd->obj.chunk);
-+				cmd = sctp_next_cmd(commands);
-+			}
- 			break;
-+		}
- 	}
- 
--out:
- 	/* If this is in response to a received chunk, wait until
- 	 * we are done with the packet to open the queue so that we don't
- 	 * send multiple packets in response to a single request.
-@@ -1784,7 +1795,4 @@ out:
- 		sp->data_ready_signalled = 0;
- 
- 	return error;
--nomem:
--	error = -ENOMEM;
--	goto out;
- }
+-		tos = ip_tunnel_ecn_encap(tos, old_iph, skb);
++		tos = ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
+ 		ttl = ttl ? : ip6_dst_hoplimit(ndst);
+ 		skb_scrub_packet(skb, xnet);
+ 		err = vxlan_build_skb(skb, ndst, sizeof(struct ipv6hdr),
 
 
