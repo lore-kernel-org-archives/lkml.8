@@ -2,57 +2,78 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA873C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 08:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAB6C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 08:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FE92077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 08:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72B2D2072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 08:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbgAKIaX (ORCPT
+        id S1728689AbgAKIeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 03:30:23 -0500
-Received: from mx.sdf.org ([205.166.94.20]:54569 "EHLO mx.sdf.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728599AbgAKIaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 03:30:23 -0500
-Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
-        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 00B8U35n019457
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits) verified NO);
-        Sat, 11 Jan 2020 08:30:03 GMT
-Received: (from lkml@localhost)
-        by sdf.org (8.15.2/8.12.8/Submit) id 00B8USV0024843;
-        Sat, 11 Jan 2020 08:30:28 GMT
-Date:   Sat, 11 Jan 2020 08:30:28 GMT
-From:   George Spelvin <lkml@sdf.org>
-Message-Id: <202001110830.00B8USV0024843@sdf.org>
-To:     samitolvanen@google.com
-Subject: Re: [PATCH] lib/list_sort: fix function type mismatches
-Cc:     akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        linux@rasmusvillemoes.dk, lkml@sdf.org, mchehab+samsung@kernel.org,
-        st5pub@yandex.ru
-In-Reply-To: <20200110225602.91663-1-samitolvanen@google.com>
-References: <20200110225602.91663-1-samitolvanen@google.com>
+        Sat, 11 Jan 2020 03:34:04 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36850 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728641AbgAKIeD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 03:34:03 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 90C47CE2EC48E026DEB9;
+        Sat, 11 Jan 2020 16:34:01 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Sat, 11 Jan 2020 16:33:52 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 0/7] net: hns3: add some misc update about reset issue
+Date:   Sat, 11 Jan 2020 16:33:46 +0800
+Message-ID: <1578731633-10709-1-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->  typedef int __attribute__((nonnull(2,3))) (*cmp_func)(void *,
-> -		struct list_head const *, struct list_head const *);
-> +		struct list_head *, struct list_head *);
+This series includes some misc update relating to reset issue.
+[patch 1/7] & [patch 2/7] splits hclge_reset()/hclgevf_reset()
+into two parts: preparing and rebuilding. Since the procedure
+of FLR should be separated out from the reset task([patch 3/7 &
+patch 3/7]), then the FLR's processing can reuse these codes.
 
-I'd prefer to leave the const there for documentation.
-Does anyone object to fixing it in the other direction by *adding*
-const to all the call sites?
+pci_error_handlers.reset_prepare() is void type function, so
+[patch 6/7] & [patch 7/7] factor some codes related to PF
+function reset to make the preparing done before .reset_prepare()
+return.
 
-Andy Shevchenko posted a patch last 7 October that did that.
-<20191007135656.37734-1-andriy.shevchenko@linux.intel.com>
+BTW, [patch 5/7] enlarges the waiting time of reset for matching
+the hardware's.
 
-(You could also try taking a second look at why __pure doesn't work,
-per AKPM's message of 16 April
-<20190416154522.65aaa348161fc581181b56d9@linux-foundation.org>)
+Huazhong Tan (7):
+  net: hns3: split hclge_reset() into preparing and rebuilding part
+  net: hns3: split hclgevf_reset() into preparing and rebuilding part
+  net: hns3: refactor the precedure of PF FLR
+  net: hns3: refactor the procedure of VF FLR
+  net: hns3: enlarge HCLGE_RESET_WAIT_CNT
+  net: hns3: modify hclge_func_reset_sync_vf()'s return type to void
+  net: hns3: refactor the notification scheme of PF reset
+
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   5 -
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 204 ++++++++++-----------
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   1 +
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  | 195 ++++++++++----------
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |   1 +
+ 5 files changed, 194 insertions(+), 212 deletions(-)
+
+-- 
+2.7.4
+
