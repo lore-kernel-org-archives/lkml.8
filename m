@@ -2,252 +2,154 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE79C33CA2
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 02:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A1BC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 02:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEDC520721
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 02:43:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578710634;
-	bh=CWbttsm2o11kp5cEuSjUFRLDi+fWalj+3kyOpy/44TA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=1bkOxvpuIC+XyFhclXX2gO9WT6OI086s7+E5LGi/AV9U4C9kuZ2NnimufU3vXQoXK
-	 7vSvwO42uerquX7Vl4yMh8LD0vqKqBaLRM7VV8SunsqPkelqVwik3bM1+YbBwZkGfi
-	 HeVjLxJ13peV83QlSdKHZUlRZhg0PoBF3/JUcq70=
+	by mail.kernel.org (Postfix) with ESMTP id 4545B20721
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 02:48:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vy5ZskNf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgAKCjR (ORCPT
+        id S1728220AbgAKCsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 21:39:17 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:48629 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728113AbgAKCjQ (ORCPT
+        Fri, 10 Jan 2020 21:48:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20972 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728123AbgAKCsy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 21:39:16 -0500
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 00B2dB44031656
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 11:39:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 00B2dB44031656
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578710352;
-        bh=cCpKJptwbytiKiuqP/ywOWw+40BFhuBXXDegbirkwCo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=svowljHXZWLZoE1LrBpA6UNa1/JS0ynD8no/EX7I9sLNPBjR5/H0Pfs2khkq7ZKOV
-         D2fho13/6BcY0LDa6g/K+l5FgOmxT1pr/XdLG6iYMcMEuo3l9GnhPkRukYr7uMqf5l
-         zd3R6BO3g7/+KDFD7zdak59e4amu3Hms7c56pMRboczcERExMRop5s7lRJg/wVei+6
-         x+vSlgqvvfXBipQ1mC2cp0a7s5v8vfmxNHqw82wERCGXkW6iAZ7CWG8n+fq4u8/OCL
-         EBifEd51EYv8YoT2Yj7puvH7YlK+vpK5MmBpwAvWDa9XKZ2bGWit6eoKb1Jc6PHXcx
-         /rmIvE3zslJLA==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id b79so2524866vsd.9
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 18:39:12 -0800 (PST)
-X-Gm-Message-State: APjAAAVrXUdN0Wa42GyNeN6Z2wAbhO9rlA3RV08nm+VktTm5GnluDA4z
-        cjXqPlKMDjvDMFgfsoG3SacoystLMx80J1/tfOI=
-X-Google-Smtp-Source: APXvYqyGfuynkA1llTi0lP764vulPUvdwDrV8zogwS7oYJCk1KcQf4MlTbfGMBz7tvzDdh5lgBD93b6Tg4OjcCQfQtc=
-X-Received: by 2002:a05:6102:2334:: with SMTP id b20mr1065290vsa.155.1578710351167;
- Fri, 10 Jan 2020 18:39:11 -0800 (PST)
-MIME-Version: 1.0
-References: <5143724.5TqzkYX0oI@dabox> <2827587.laNcgWlGab@dabox>
- <CAK7LNAQOCoJC0RzOhTEofHdR+zU5sQTxV-t4nERBExW1ddW5hw@mail.gmail.com> <2585494.6OhLyxUeiZ@hydra>
-In-Reply-To: <2585494.6OhLyxUeiZ@hydra>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 11 Jan 2020 11:38:35 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASZMH34QcQij8CuGnOkC1_g6UShiHw3+_QBLddzf6W4XA@mail.gmail.com>
-Message-ID: <CAK7LNASZMH34QcQij8CuGnOkC1_g6UShiHw3+_QBLddzf6W4XA@mail.gmail.com>
-Subject: Re: mtd raw nand denali.c broken for Intel/Altera Cyclone V
-To:     Tim Sander <tim@krieglstein.org>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
+        Fri, 10 Jan 2020 21:48:54 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578710933;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yyBF0xPIxCR6ZxPQyowHmzsUIxzVycle+XUdhruB+uU=;
+        b=Vy5ZskNf7b933SSZcXVt6XFsLhHPEwa0+yDkG8/hfouYguW37FzIo3qhaG9qkS+0ZHqLyK
+        H2NQW/RL8c4gpzEZzgt1n99SYERIqEXaWJLze9pHbkgwOWk+UkTVrDhMqz+zfUPMVU/Y4/
+        SJZP7nLm4KuZrwOZx1s5k1i2e83l1ro=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-bc-YXPzBO-Grb9vXyF4O6A-1; Fri, 10 Jan 2020 21:48:51 -0500
+X-MC-Unique: bc-YXPzBO-Grb9vXyF4O6A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 623841800D4E;
+        Sat, 11 Jan 2020 02:48:50 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-16.pek2.redhat.com [10.72.8.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 617118068F;
+        Sat, 11 Jan 2020 02:48:39 +0000 (UTC)
+Date:   Sat, 11 Jan 2020 10:48:35 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Peter Xu <peterx@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Ming Lei <minlei@redhat.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-block@vger.kernel.org
+Subject: Re: Kernel-managed IRQ affinity (cont)
+Message-ID: <20200111024835.GA24575@ming.t460p>
+References: <20191216195712.GA161272@xz-x1>
+ <20191219082819.GB15731@ming.t460p>
+ <20191219143214.GA50561@xz-x1>
+ <20191219161115.GA18672@ming.t460p>
+ <87eew8l7oz.fsf@nanos.tec.linutronix.de>
+ <20200110012802.GA4501@ming.t460p>
+ <87v9pjrtbh.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v9pjrtbh.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 7:38 AM Tim Sander <tim@krieglstein.org> wrote:
->
-> Hi
-> Am Freitag, 10. Januar 2020, 20:05:20 CET schrieb Masahiro Yamada:
-> > On Sat, Jan 11, 2020 at 1:47 AM Tim Sander <tim@krieglstein.org> wrote:
-> > > Hi Masahiro Yamada
-> > >
-> > > Sorry for the large delay. I have seen the patches at
-> > > https://lists.infradead.org/pipermail/linux-mtd/2019-December/092852.html
-> > > Seem to resolve the question about the spare_area_skip_bytes register.
-> > >
-> > > I have now set the register to 2 which seems to be the right choice on an
-> > > Intel SocFPGA. But still i am out of luck trying to boot 5.4.5-rt3 or
-> > > 5.5-rc5. I get the following messages during bootup booting:
-> > > [    1.825590] denali-nand-dt ff900000.nand: timeout while waiting for irq
-> > > 0x1000 [    1.832936] denali-nand-dt: probe of ff900000.nand failed with
-> > > error -5
-> > >
-> > > But the commit c19e31d0a32dd 2017-06-13 22:45:38 predates the 4.19 kernel
-> > > release (Mon Oct 22 07:37:37 2018). So it seems there is not an obvious
-> > > commit which is causing the problem. Looking at the changes it might be
-> > > that the timing calculations in the driver changed which might also lead
-> > > to a similar error.
-> > >
-> > > I am booting via NFS the bootloader is placed in NOR flash.  The
-> > > corresponding>
-> > > nand dts entry is updated to the new format and looks like this:
-> > >                 nand@ff900000 {
-> > >
-> > >                         #address-cells = <0x1>;
-> > >                         #size-cells = <0x0>;
-> > >                         compatible = "altr,socfpga-denali-nand";
-> > >                         reg = <0xff900000 0x100000 0xffb80000 0x10000>;
-> > >                         reg-names = "nand_data", "denali_reg";
-> > >                         interrupts = <0x0 0x90 0x4>;
-> > >                         clocks = <0x2d 0x1e 0x2e>;
-> > >                         clock-names = "nand", "nand_x", "ecc";
-> > >                         resets = <0x6 0x24>;
-> > >                         status = "okay";
-> > >                         nand@0 {
-> > >
-> > >                                 reg = <0x0>;
-> > >                                 #address-cells = <0x1>;
-> > >                                 #size-cells = <0x1>;
-> > >                                 partition@0 {
-> > >
-> > >                                         label = "work";
-> > >                                         reg = <0x0 0x10000000>;
-> > >
-> > >                                 };
-> > >
-> > >                         };
-> > >
-> > >                 };
-> > >
-> > > The last kernel i am able to boot is 4.19.10. I have tried booting:
-> > > 5.1.21, 5.2.9, 5.3-rc8, 5.4.5-rt3 and 5.5-rc5. They all failed.
-> > > Unfortunately the range is quite large for bisecting the problem. It also
-> > > occurred to me that all the platforms with Intel Cyclone V in mainline
-> > > are development boards which boot from SD-card not exhibiting this
-> > > problem on their default boot path.
-> > What will happen if you apply all of these:
+Hi Thomas,
+
+On Fri, Jan 10, 2020 at 08:43:14PM +0100, Thomas Gleixner wrote:
+> Ming,
+> 
+> Ming Lei <ming.lei@redhat.com> writes:
+> > On Thu, Jan 09, 2020 at 09:02:20PM +0100, Thomas Gleixner wrote:
+> >> Ming Lei <ming.lei@redhat.com> writes:
+> >>
+> >> This is duct tape engineering with absolutely no semantics. I can't even
+> >> figure out the intent of this 'managed_irq' parameter.
 > >
-> > http://patchwork.ozlabs.org/project/linux-mtd/list/?series=149821
-> I have applied this patch set but it does not help completely.
-
-
-OK, I just wanted to eliminate any other possibility, just in case.
-
-
-> The timings are
-> wrong. I don't have access to the hardware now but one thing i tested before i
-> left (the HW) was to write the NAND timings from the bootloader into the
-> denali controller after the driver configured the timings in denali_init.
-> After that the driver worked again for me.
->
-> > on top of the mainline kernel,
-> > and then, hack denali->clk_rate and denali->clk_x_rate as follows?
+> > The intent is to isolate the specified CPUs from handling managed
+> > interrupt.
+> 
+> That's what I figured, but it still does not provide semantics and works
+> just for specific cases.
+> 
+> > We can do that. The big problem is that the RT case can't guarantee that
+> > IO won't be submitted from isolated CPU always. blk-mq's queue mapping
+> > relies on the setup affinity, so un-known behavior(kernel crash, or io
+> > hang, or other) may be caused if we exclude isolated CPUs from interrupt
+> > affinity.
 > >
-> >
-> > -       denali->clk_rate = clk_get_rate(dt->clk);
-> > -       denali->clk_x_rate = clk_get_rate(dt->clk_x);
-> > +       denali->clk_rate = 50000000;
-> > +       denali->clk_x_rate = 200000000;
-> >
-> > If it still fails, what about this?
-> >
-> >        denali->clk_rate = 0;
-> >        denali->clk_x_rate = 0;
-> Will try the above next week. Skimming over the socfpga.dtsi it seems as if
-> on the Intel SocFPGA the OSC1 has a value of 25000000 set in
-> socfpga_cyclone5.dtsi (I am currently not sure about the clock tree with all
-> the plls and i am missing the value of osc2?). Also right now it seems i am to
-> tired to parse denali_setup_data_interface...
+> > That is why I try to exclude isolated CPUs from interrupt effective affinity,
+> > turns out the approach is simple and doable.
+> 
+> Yes, it's doable. But it still is inconsistent behaviour. Assume the
+> following configuration:
+> 
+>   8 CPUs CPU0,1 assigned for housekeeping
+> 
+> With 8 queues the proposed change does nothing because each queue is
+> mapped to exactly one CPU.
+
+That is expected behavior for this RT case, given userspace won't submit
+IO from isolated CPUs.
+
+> 
+> With 4 queues you get the following:
+> 
+>  CPU0,1       queue 0
+>  CPU2,3       queue 1
+>  CPU4,5       queue 2
+>  CPU6,7       queue 3
+> 
+> No effect on the isolated CPUs either.
+> 
+> With 2 queues you get the following:
+> 
+>  CPU0,1,2,3   queue 0
+>  CPU4,5,6,7   queue 1
+> 
+> So here the isolated CPUs 2 and 3 get the isolation, but 4-7
+> not. That's perhaps intended, but definitely not documented.
+
+That is intentional change, given no IO will be submitted from 4-7
+most of times in RT case, so it is fine to select effective CPU from
+isolated CPUs in this case. As peter mentioned, IO may just be submitted
+from isolated CPUs during booting. Once the system is setup, no IO
+comes from isolated CPUs, then no interrupt is delivered to isolated
+CPUs, then meet RT's requirement.
+
+We can document this change somewhere.
+
+> 
+> So you really need to make your mind up and describe what the intended
+> effect of this is and why you think that the result is correct.
+
+In short, if there is at least one housekeeping available in the
+interrupt's affinity, we choose effective CPU from housekeeping CPUs.
+Otherwise, keep the current behavior wrt. selecting effective CPU.
+
+With this approach, no interrupts can be delivered to isolated CPUs
+if no IOs are submitted from these CPUs.
+
+Please let us know if it addresses your concerns.
 
 
-You do not need to parse denali_setup_data_interface().
+Thanks,
+Ming
 
-
-There are good hints.
-
-You said:
-"The last kernel i am able to boot is 4.19.10. I have tried booting:
-5.1.21, 5.2.9, 5.3-rc8, 5.4.5-rt3 and 5.5-rc5. They all failed."
-
-There is no commit between 4.19.10 and 5.1.21
-that changes denali_setup_data_interface().
-
-So, denali_setup_data_interface() is not the
-root cause.
-
-
-From the information you provided,
-I suspect some clock settings are wrong.
-
-
-
-> > > PS: Here is some snippet from an older mail i didn't sent to the list yet
-> > > which might be superseded by now:
-> > > To get into this matter i started reading the "Intel Cyclone V HPS TRM"
-> > > Section 13-20 Preserving Bad Block Markers:
-> > > "You can configure the NAND flash controller to skip over a specified
-> > > number of bytes when it writes the last sector in a page to the spare
-> > > area. This option write the desired offset to the spare_area_skip_bytes
-> > > register in the config group. For example, if the device page size is 2
-> > > KB, and the device area, set the spare_area_skip_bytes register to 2.
-> > > When the flash controller writes the last sector of the page that
-> > > overlaps with the spare area, it spare_area_skip_bytes must be an even
-> > > number. For example, if the bad block marker is a single byte, set
-> > > spare_area_skip_bytes to 2."
-> >
-> > I did not know this documentation.
-> >
-> > It says "For example" (twice),
-> > it sounds uncertain to me, though.
-> >
-> > Anyway, an intel engineer checked the boot ROM code.
-> > SPARE_AREA_SKIP_BYTES=2 is correct, he said.
-> As far as i understand the documentation it must be a multiple of 2. The most
-> nand flashes i know need one byte for bad block marking so 2 seems to be a
-> pretty sane value.
-
-
-Most of NAND flashes, but not all.
-
-See the "Bad Block Location" in this page:
-
-http://www.linux-mtd.infradead.org/nand-data/nanddata.html
-
-
-
-Many of devices have BBM at 1st byte/word,
-but there are devices that have it at 6th byte.
-
-SPARE_AREA_SKIP_BYTES=2 for SOCFPGA
-corrupts the BBM at offset 6.
-So, probably such a device is not used
-on SOCFPGA boards.
-
-I am guessing that is why the UniPhier platform
-adopted SPARE_AREA_SKIP_BYTES=8.
-
-
-
-
-
-> The explanation why default value of
-> spare_area_skip_bytes=0 of the boot rom is a little unfortunate is also in the
-> documentation: The fact that the ECC values might spill into the spare area
-> where the bad block marker of the nand is located.
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
