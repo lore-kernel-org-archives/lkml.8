@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10183C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBA5C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8AA92084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCBE2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738574;
-	bh=gvUfKMKRH/t4NRqfU6iHpf39qn7HbiZhJj6cXBk/K10=;
+	s=default; t=1578738580;
+	bh=eey/jIOQdDv4cfBwSo8CUBqPBv1XGXv1qTVhHdX9euA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L2SXRmuJOvz5vPUIWr4Cz47Rs7tGkHu88KM9oKfCb/b5FNQeL2OP7W1sJo9jCxHB7
-	 fiH4/fFtgsJAV4x9Uw7RWn0JsOFQ5Rg/ITElxe0ej3Z5oMwSLcY7LJPaxtSH1XlZXY
-	 XVH++FAhuLGUTjrn53JtEP9DCbYsyAJv+yh0LyQ4=
+	b=HIeL4dbSbt3LNODzEIIaGXP1s60QWj9HSQ6uYAsbJLQAfYHEFRqdWgpAymheKJXxI
+	 s09Dfb8kCPGiIXpX9XV0jGLtAcLUSDLDFmY58R7Kz+GNFEbWhA6/KaqdHVqvDb/uvj
+	 cMSklARkCTqqYBG7KlKDbwOaopi785lE9/bRKZBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731359AbgAKK3d (ORCPT
+        id S1731372AbgAKK3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:29:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38780 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:29:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729171AbgAKK3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:29:32 -0500
+        id S1731272AbgAKK3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:29:38 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCEDE20842;
-        Sat, 11 Jan 2020 10:29:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FD7520880;
+        Sat, 11 Jan 2020 10:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738571;
-        bh=gvUfKMKRH/t4NRqfU6iHpf39qn7HbiZhJj6cXBk/K10=;
+        s=default; t=1578738577;
+        bh=eey/jIOQdDv4cfBwSo8CUBqPBv1XGXv1qTVhHdX9euA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cXJXSPqXv0gWdme58hCKgg2XTVcJ4V0noQU4ags7r81xFokOexH62VfZda8fMy3Dn
-         OVsb1lI1LGc4UPswpDzQWbvz1PclZuMb97oxKWsS2lWV78BiK2G5e7WrV2ZR69wcgb
-         8PkSC8r1L6lRoQUeD8bqtrYBH3hlxlEh3KdeCmdI=
+        b=1oXReLlWjuJvGIyJEXQeG4cdBvHw/IfUY1vwGhIYw8pgVRn9cgPmIxwluwV4CuS/T
+         UK4+cugxz8gBQL5ffWhPV+4x0+gqlyHCdYmlDEU3Q/um2YU8qjp48icywxPqun77na
+         MKkwMkAg8PoZU5rtoIbgruhjkOQeFZizYA9/d5SI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Maxim Mikityanskiy <maximmi@mellanox.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 119/165] xsk: Add rcu_read_lock around the XSK wakeup
-Date:   Sat, 11 Jan 2020 10:50:38 +0100
-Message-Id: <20200111094933.339758468@linuxfoundation.org>
+Subject: [PATCH 5.4 120/165] net/mlx5e: Fix concurrency issues between config flow and XSK
+Date:   Sat, 11 Jan 2020 10:50:39 +0100
+Message-Id: <20200111094933.573141698@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -63,85 +62,173 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Maxim Mikityanskiy <maximmi@mellanox.com>
 
-[ Upstream commit 06870682087b58398671e8cdc896cd62314c4399 ]
+[ Upstream commit 9cf88808ad6a0f1e958e00abd9a081295fe6da0c ]
 
-The XSK wakeup callback in drivers makes some sanity checks before
-triggering NAPI. However, some configuration changes may occur during
-this function that affect the result of those checks. For example, the
-interface can go down, and all the resources will be destroyed after the
-checks in the wakeup function, but before it attempts to use these
-resources. Wrap this callback in rcu_read_lock to allow driver to
-synchronize_rcu before actually destroying the resources.
+After disabling resources necessary for XSK (the XDP program, channels,
+XSK queues), use synchronize_rcu to wait until the XSK wakeup function
+finishes, before freeing the resources.
 
-xsk_wakeup is a new function that encapsulates calling ndo_xsk_wakeup
-wrapped into the RCU lock. After this commit, xsk_poll starts using
-xsk_wakeup and checks xs->zc instead of ndo_xsk_wakeup != NULL to decide
-ndo_xsk_wakeup should be called. It also fixes a bug introduced with the
-need_wakeup feature: a non-zero-copy socket may be used with a driver
-supporting zero-copy, and in this case ndo_xsk_wakeup should not be
-called, so the xs->zc check is the correct one.
+Suspend XSK wakeups during switching channels. If the XDP program is
+being removed, synchronize_rcu before closing the old channels to allow
+XSK wakeup to complete.
 
-Fixes: 77cd0d7b3f25 ("xsk: add support for need_wakeup flag in AF_XDP rings")
 Signed-off-by: Maxim Mikityanskiy <maximmi@mellanox.com>
-Signed-off-by: Björn Töpel <bjorn.topel@intel.com>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20191217162023.16011-2-maximmi@mellanox.com
+Link: https://lore.kernel.org/bpf/20191217162023.16011-3-maximmi@mellanox.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/xdp/xsk.c | 22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en.h  |  2 +-
+ .../net/ethernet/mellanox/mlx5/core/en/xdp.h  | 22 ++++++++-----------
+ .../mellanox/mlx5/core/en/xsk/setup.c         |  1 +
+ .../ethernet/mellanox/mlx5/core/en/xsk/tx.c   |  2 +-
+ .../net/ethernet/mellanox/mlx5/core/en_main.c | 19 +---------------
+ 5 files changed, 13 insertions(+), 33 deletions(-)
 
-diff --git a/net/xdp/xsk.c b/net/xdp/xsk.c
-index 9044073fbf22..d426fc01c529 100644
---- a/net/xdp/xsk.c
-+++ b/net/xdp/xsk.c
-@@ -305,12 +305,21 @@ bool xsk_umem_consume_tx(struct xdp_umem *umem, struct xdp_desc *desc)
- }
- EXPORT_SYMBOL(xsk_umem_consume_tx);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en.h b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+index 2c16add0b642..9c8427698238 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
+@@ -760,7 +760,7 @@ enum {
+ 	MLX5E_STATE_OPENED,
+ 	MLX5E_STATE_DESTROYING,
+ 	MLX5E_STATE_XDP_TX_ENABLED,
+-	MLX5E_STATE_XDP_OPEN,
++	MLX5E_STATE_XDP_ACTIVE,
+ };
  
--static int xsk_zc_xmit(struct xdp_sock *xs)
-+static int xsk_wakeup(struct xdp_sock *xs, u8 flags)
+ struct mlx5e_rqt {
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h
+index 36ac1e3816b9..d7587f40ecae 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xdp.h
+@@ -75,12 +75,18 @@ int mlx5e_xdp_xmit(struct net_device *dev, int n, struct xdp_frame **frames,
+ static inline void mlx5e_xdp_tx_enable(struct mlx5e_priv *priv)
  {
- 	struct net_device *dev = xs->dev;
-+	int err;
+ 	set_bit(MLX5E_STATE_XDP_TX_ENABLED, &priv->state);
 +
-+	rcu_read_lock();
-+	err = dev->netdev_ops->ndo_xsk_wakeup(dev, xs->queue_id, flags);
-+	rcu_read_unlock();
-+
-+	return err;
-+}
- 
--	return dev->netdev_ops->ndo_xsk_wakeup(dev, xs->queue_id,
--					       XDP_WAKEUP_TX);
-+static int xsk_zc_xmit(struct xdp_sock *xs)
-+{
-+	return xsk_wakeup(xs, XDP_WAKEUP_TX);
++	if (priv->channels.params.xdp_prog)
++		set_bit(MLX5E_STATE_XDP_ACTIVE, &priv->state);
  }
  
- static void xsk_destruct_skb(struct sk_buff *skb)
-@@ -424,19 +433,16 @@ static unsigned int xsk_poll(struct file *file, struct socket *sock,
- 	unsigned int mask = datagram_poll(file, sock, wait);
- 	struct sock *sk = sock->sk;
- 	struct xdp_sock *xs = xdp_sk(sk);
--	struct net_device *dev;
- 	struct xdp_umem *umem;
+ static inline void mlx5e_xdp_tx_disable(struct mlx5e_priv *priv)
+ {
++	if (priv->channels.params.xdp_prog)
++		clear_bit(MLX5E_STATE_XDP_ACTIVE, &priv->state);
++
+ 	clear_bit(MLX5E_STATE_XDP_TX_ENABLED, &priv->state);
+-	/* let other device's napi(s) see our new state */
++	/* Let other device's napi(s) and XSK wakeups see our new state. */
+ 	synchronize_rcu();
+ }
  
- 	if (unlikely(!xsk_is_bound(xs)))
- 		return mask;
+@@ -89,19 +95,9 @@ static inline bool mlx5e_xdp_tx_is_enabled(struct mlx5e_priv *priv)
+ 	return test_bit(MLX5E_STATE_XDP_TX_ENABLED, &priv->state);
+ }
  
--	dev = xs->dev;
- 	umem = xs->umem;
+-static inline void mlx5e_xdp_set_open(struct mlx5e_priv *priv)
+-{
+-	set_bit(MLX5E_STATE_XDP_OPEN, &priv->state);
+-}
+-
+-static inline void mlx5e_xdp_set_closed(struct mlx5e_priv *priv)
+-{
+-	clear_bit(MLX5E_STATE_XDP_OPEN, &priv->state);
+-}
+-
+-static inline bool mlx5e_xdp_is_open(struct mlx5e_priv *priv)
++static inline bool mlx5e_xdp_is_active(struct mlx5e_priv *priv)
+ {
+-	return test_bit(MLX5E_STATE_XDP_OPEN, &priv->state);
++	return test_bit(MLX5E_STATE_XDP_ACTIVE, &priv->state);
+ }
  
- 	if (umem->need_wakeup) {
--		if (dev->netdev_ops->ndo_xsk_wakeup)
--			dev->netdev_ops->ndo_xsk_wakeup(dev, xs->queue_id,
--							umem->need_wakeup);
-+		if (xs->zc)
-+			xsk_wakeup(xs, umem->need_wakeup);
- 		else
- 			/* Poll needs to drive Tx also in copy mode */
- 			__xsk_sendmsg(sk);
+ static inline void mlx5e_xmit_xdp_doorbell(struct mlx5e_xdpsq *sq)
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
+index 631af8dee517..c28cbae42331 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/setup.c
+@@ -144,6 +144,7 @@ void mlx5e_close_xsk(struct mlx5e_channel *c)
+ {
+ 	clear_bit(MLX5E_CHANNEL_STATE_XSK, c->state);
+ 	napi_synchronize(&c->napi);
++	synchronize_rcu(); /* Sync with the XSK wakeup. */
+ 
+ 	mlx5e_close_rq(&c->xskrq);
+ 	mlx5e_close_cq(&c->xskrq.cq);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
+index 87827477d38c..fe2d596cb361 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/tx.c
+@@ -14,7 +14,7 @@ int mlx5e_xsk_wakeup(struct net_device *dev, u32 qid, u32 flags)
+ 	struct mlx5e_channel *c;
+ 	u16 ix;
+ 
+-	if (unlikely(!mlx5e_xdp_is_open(priv)))
++	if (unlikely(!mlx5e_xdp_is_active(priv)))
+ 		return -ENETDOWN;
+ 
+ 	if (unlikely(!mlx5e_qid_get_ch_if_in_group(params, qid, MLX5E_RQ_GROUP_XSK, &ix)))
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+index 6abd4ed5b69b..29a5a8c894e3 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
+@@ -3002,12 +3002,9 @@ void mlx5e_timestamp_init(struct mlx5e_priv *priv)
+ int mlx5e_open_locked(struct net_device *netdev)
+ {
+ 	struct mlx5e_priv *priv = netdev_priv(netdev);
+-	bool is_xdp = priv->channels.params.xdp_prog;
+ 	int err;
+ 
+ 	set_bit(MLX5E_STATE_OPENED, &priv->state);
+-	if (is_xdp)
+-		mlx5e_xdp_set_open(priv);
+ 
+ 	err = mlx5e_open_channels(priv, &priv->channels);
+ 	if (err)
+@@ -3022,8 +3019,6 @@ int mlx5e_open_locked(struct net_device *netdev)
+ 	return 0;
+ 
+ err_clear_state_opened_flag:
+-	if (is_xdp)
+-		mlx5e_xdp_set_closed(priv);
+ 	clear_bit(MLX5E_STATE_OPENED, &priv->state);
+ 	return err;
+ }
+@@ -3055,8 +3050,6 @@ int mlx5e_close_locked(struct net_device *netdev)
+ 	if (!test_bit(MLX5E_STATE_OPENED, &priv->state))
+ 		return 0;
+ 
+-	if (priv->channels.params.xdp_prog)
+-		mlx5e_xdp_set_closed(priv);
+ 	clear_bit(MLX5E_STATE_OPENED, &priv->state);
+ 
+ 	netif_carrier_off(priv->netdev);
+@@ -4373,16 +4366,6 @@ static int mlx5e_xdp_allowed(struct mlx5e_priv *priv, struct bpf_prog *prog)
+ 	return 0;
+ }
+ 
+-static int mlx5e_xdp_update_state(struct mlx5e_priv *priv)
+-{
+-	if (priv->channels.params.xdp_prog)
+-		mlx5e_xdp_set_open(priv);
+-	else
+-		mlx5e_xdp_set_closed(priv);
+-
+-	return 0;
+-}
+-
+ static int mlx5e_xdp_set(struct net_device *netdev, struct bpf_prog *prog)
+ {
+ 	struct mlx5e_priv *priv = netdev_priv(netdev);
+@@ -4422,7 +4405,7 @@ static int mlx5e_xdp_set(struct net_device *netdev, struct bpf_prog *prog)
+ 		mlx5e_set_rq_type(priv->mdev, &new_channels.params);
+ 		old_prog = priv->channels.params.xdp_prog;
+ 
+-		err = mlx5e_safe_switch_channels(priv, &new_channels, mlx5e_xdp_update_state);
++		err = mlx5e_safe_switch_channels(priv, &new_channels, NULL);
+ 		if (err)
+ 			goto unlock;
+ 	} else {
 -- 
 2.20.1
 
