@@ -2,79 +2,118 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95BFC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8E6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9965F2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:50:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5B5C2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:50:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgAKJuR (ORCPT
+        id S1728842AbgAKJuY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:50:17 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2985 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728759AbgAKJuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:50:16 -0500
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id B6A7D6195E8CA0ACD33A;
-        Sat, 11 Jan 2020 17:50:13 +0800 (CST)
-Received: from dggeme764-chm.china.huawei.com (10.3.19.110) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 11 Jan 2020 17:50:13 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme764-chm.china.huawei.com (10.3.19.110) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Sat, 11 Jan 2020 17:50:13 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Sat, 11 Jan 2020 17:50:13 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Colin King <colin.king@canonical.com>
-CC:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Crispin <john@phrozen.org>,
-        Shashidhar Lakkavalli <slakkavalli@datto.com>,
-        "ath11k@lists.infradead.org" <ath11k@lists.infradead.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] ath11k: avoid null pointer dereference when pointer
- band is null
-Thread-Topic: [PATCH][next] ath11k: avoid null pointer dereference when
- pointer band is null
-Thread-Index: AdXIZDUYESk9sMb86Em1GlFaBBmLPA==
-Date:   Sat, 11 Jan 2020 09:50:12 +0000
-Message-ID: <05d5d54e035e4d69ad4ffb4a835a495a@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sat, 11 Jan 2020 04:50:24 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41290 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728759AbgAKJuW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:50:22 -0500
+Received: by mail-lj1-f195.google.com with SMTP id h23so4690611ljc.8;
+        Sat, 11 Jan 2020 01:50:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RPxM58KftHxJAM+nPlRg/hGQEelhpre9yEtcVj8KnWU=;
+        b=WiWUb9O27vUL7d8cgkJgJiLmS9Pvc4z/KSo8i4EgCtsGxkWfHI0NcGpCgJdJF+W6JI
+         EwP+D2h2xMPv1NTjLin3rC9/ZsusrRYutNlO9h7ZINa+3cnV2yU3WSXCJmHikKZK+US0
+         mLA8UlkMu32XnL3xPOT1z5PpwGwYwU0P6OiOigeUjt97T2IO/B4mXDfF/I5G/sOVjBtV
+         JrS9iGBeHZD3li1UBgIsXNod4iV+r0j2y7kLXh2nvVeqpfLcTw3UZjWAxvXwiLWHLZB7
+         jHUNyvXTUWYKsNdZe/Z1+H4BlPzdYYFkr3XLX0UfL+Lusyb2HueCUTWEVCmvtwjGA/aS
+         SxGw==
+X-Gm-Message-State: APjAAAVz4d1ct0UIvt+tPYQBjj2WaAWcUC+2FikCwMjWKlvQGNUUA1P2
+        pH8Nx2OoYI9LyQ1+F0jlOxE=
+X-Google-Smtp-Source: APXvYqyLZan6NeieKOboZ+3FxvCsakx0qhqenJQ6gesFQTRRwQc/U0vlcEcDYBc+tp9D1sU+hFviAA==
+X-Received: by 2002:a2e:9f17:: with SMTP id u23mr5245745ljk.112.1578736219212;
+        Sat, 11 Jan 2020 01:50:19 -0800 (PST)
+Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
+        by smtp.gmail.com with ESMTPSA id r15sm2269410ljh.11.2020.01.11.01.50.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jan 2020 01:50:18 -0800 (PST)
+Date:   Sat, 11 Jan 2020 11:50:12 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v9 04/12] mfd: bd718x7: Add compatible for BD71850
+Message-ID: <b6c2980cc937598bc1e11c6830c43e9df5d1a4b3.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmljYWwuY29tPiB3cm90Ze+8mg0KPkZy
-b206IENvbGluIElhbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQo+DQo+SW4gdGhl
-IHVubGlrZWx5IGV2ZW50IHRoYXQgY2FwLT5zdXBwb3J0ZWRfYmFuZHMgaGFzIG5laXRoZXIgV01J
-X0hPU1RfV0xBTl8yR19DQVAgc2V0IG9yIFdNSV9IT1NUX1dMQU5fNUdfQ0FQIHNldCB0aGVuIHBv
-aW50ZXIgYmFuZCBpcyBudWxsIGFuZCBhIG51bGwgZGVyZWZlcmVuY2Ugb2NjdXJzIHdoZW4gYXNz
-aWduaW5nDQo+YmFuZC0+bl9pZnR5cGVfZGF0YS4gIE1vdmUgdGhlIGFzc2lnbm1lbnQgdG8gdGhl
-IGlmIGJsb2NrcyB0bw0KPmF2b2lkIHRoaXMuICBDbGVhbnMgdXAgc3RhdGljIGFuYWx5c2lzIHdh
-cm5pbmdzLg0KPg0KPkFkZHJlc3Nlcy1Db3Zlcml0eTogKCJFeHBsaWNpdCBudWxsIGRlcmVmZXJl
-bmNlIikNCj5GaXhlczogOWYwNTZlZDhlZTAxICgiYXRoMTFrOiBhZGQgSEUgc3VwcG9ydCIpDQo+
-U2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4N
-Cj4tLS0NCj4gZHJpdmVycy9uZXQvd2lyZWxlc3MvYXRoL2F0aDExay9tYWMuYyB8IDggKysrKy0t
-LS0NCj4gMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCg0K
-SXQgbG9va3MgZmluZSBmb3IgbWUuIFRoYW5rcy4NClJldmlld2VkLWJ5OiBNaWFvaGUgTGluIDxs
-aW5taWFvaGVAaHVhd2VpLmNvbT4NCg==
+ROHM BD71850 PMIC is almost identical to BD71847. Main difference is some
+initial voltage values for regulators. The BD71850 can be handled by
+BD71847 driver but adding own compatible makes it clearer for one who
+creates the DT for board containing this PMIC and allows SW to be
+differentiating PMICs if needed.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+---
+No changes since v8
+
+ drivers/mfd/rohm-bd718x7.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
+index bb86ec829079..c32c1b6c98fa 100644
+--- a/drivers/mfd/rohm-bd718x7.c
++++ b/drivers/mfd/rohm-bd718x7.c
+@@ -213,6 +213,10 @@ static const struct of_device_id bd718xx_of_match[] = {
+ 		.compatible = "rohm,bd71847",
+ 		.data = (void *)ROHM_CHIP_TYPE_BD71847,
+ 	},
++	{
++		.compatible = "rohm,bd71850",
++		.data = (void *)ROHM_CHIP_TYPE_BD71847,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, bd718xx_of_match);
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
