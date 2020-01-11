@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837D8C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:10:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D82EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A99320673
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:10:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBEBC20673
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737451;
-	bh=J0cPKhFxQCuZu+uLL9G/eNDy4tjEa8vlQ6PtGjaXh5k=;
+	s=default; t=1578737456;
+	bh=0H7jxEWn0kJ94GucQWB7iemHQgpagReOFqt9e26JIAU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=puNEt3JRxYchucOOUfKPaGD+20rSbpYz+TIzGg+1RaY+M76XkhaV/m7z5n6CCY289
-	 0vhsp7tMxNQQSFQ3APJAJ4wNe1VjXR+0Yq4ySlla79xXY2aZQS8zvJTmsp4S6SjcMR
-	 NBlfK6Tx411KS2mYoeUN3qzP++TLyPXMmb2FbAwY=
+	b=ioXqYp+AEbkO/Gr3RqsyBuZiaw0k9WQB5Ls125Tcm2dz4qt8jW3usPPj/jjJHW9C/
+	 2Cptq22rLU994G+EHDg5YGl3sbTNhFcPheP7IVXrqIb1TdaBjfUdDMRNCicYV1szHn
+	 +rXQ7JoV68iSc9E9jreLwQ+HO43DB2lajSKpmBXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbgAKKKu (ORCPT
+        id S1729936AbgAKKKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:10:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47620 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:10:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgAKKKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:10:48 -0500
+        id S1729229AbgAKKKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:10:53 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8B5920673;
-        Sat, 11 Jan 2020 10:10:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E28232077C;
+        Sat, 11 Jan 2020 10:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737448;
-        bh=J0cPKhFxQCuZu+uLL9G/eNDy4tjEa8vlQ6PtGjaXh5k=;
+        s=default; t=1578737452;
+        bh=0H7jxEWn0kJ94GucQWB7iemHQgpagReOFqt9e26JIAU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SjRgztevO2APNaH4Gzf/zopg2VOMVvrJ9R5KpZMJO+WMHj6YlQVNyJaNrJN/n5F2A
-         6tE6c6Ve6tsDddqFJfb7RhGyKC8Cia/vhnQnxjNaK5AlwNmMonA2Icghk0UAkGG1fW
-         6q38WUxf+F2fIVCSEdAASXPAchX5QansVjFDK2l8=
+        b=1vaCsI7i3MnCfaQbxAbfMnvC+3N+kJU9aZYtrezr/UgJFL5TTJjOfjNB42LITm0jv
+         aeHIiyEj2f54NfqX4sBsc3lD4gbW1S0zSW2s5UZ7HILkYAPceJt29KGQ94ZI6iSuFZ
+         wip8FLYWYc/VL+J7j7aYbwvaF3F5aABtnF+xz9pg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 12/62] netfilter: uapi: Avoid undefined left-shift in xt_sctp.h
-Date:   Sat, 11 Jan 2020 10:49:54 +0100
-Message-Id: <20200111094842.530267605@linuxfoundation.org>
+Subject: [PATCH 4.14 32/62] net: stmmac: Do not accept invalid MTU values
+Date:   Sat, 11 Jan 2020 10:50:14 +0100
+Message-Id: <20200111094845.869349916@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -60,48 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Sutter <phil@nwl.cc>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit 164166558aacea01b99c8c8ffb710d930405ba69 ]
+[ Upstream commit eaf4fac478077d4ed57cbca2c044c4b58a96bd98 ]
 
-With 'bytes(__u32)' being 32, a left-shift of 31 may happen which is
-undefined for the signed 32-bit value 1. Avoid this by declaring 1 as
-unsigned.
+The maximum MTU value is determined by the maximum size of TX FIFO so
+that a full packet can fit in the FIFO. Add a check for this in the MTU
+change callback.
 
-Signed-off-by: Phil Sutter <phil@nwl.cc>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Also check if provided and rounded MTU does not passes the maximum limit
+of 16K.
+
+Changes from v2:
+- Align MTU before checking if its valid
+
+Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/netfilter/xt_sctp.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/include/uapi/linux/netfilter/xt_sctp.h b/include/uapi/linux/netfilter/xt_sctp.h
-index 4bc6d1a08781..b4d804a9fccb 100644
---- a/include/uapi/linux/netfilter/xt_sctp.h
-+++ b/include/uapi/linux/netfilter/xt_sctp.h
-@@ -41,19 +41,19 @@ struct xt_sctp_info {
- #define SCTP_CHUNKMAP_SET(chunkmap, type) 		\
- 	do { 						\
- 		(chunkmap)[type / bytes(__u32)] |= 	\
--			1 << (type % bytes(__u32));	\
-+			1u << (type % bytes(__u32));	\
- 	} while (0)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index e6d16c48ffef..4ef923f1094a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3597,12 +3597,24 @@ static void stmmac_set_rx_mode(struct net_device *dev)
+ static int stmmac_change_mtu(struct net_device *dev, int new_mtu)
+ {
+ 	struct stmmac_priv *priv = netdev_priv(dev);
++	int txfifosz = priv->plat->tx_fifo_size;
++
++	if (txfifosz == 0)
++		txfifosz = priv->dma_cap.tx_fifo_size;
++
++	txfifosz /= priv->plat->tx_queues_to_use;
  
- #define SCTP_CHUNKMAP_CLEAR(chunkmap, type)		 	\
- 	do {							\
- 		(chunkmap)[type / bytes(__u32)] &= 		\
--			~(1 << (type % bytes(__u32)));	\
-+			~(1u << (type % bytes(__u32)));	\
- 	} while (0)
+ 	if (netif_running(dev)) {
+ 		netdev_err(priv->dev, "must be stopped to change its MTU\n");
+ 		return -EBUSY;
+ 	}
  
- #define SCTP_CHUNKMAP_IS_SET(chunkmap, type) 			\
- ({								\
- 	((chunkmap)[type / bytes (__u32)] & 		\
--		(1 << (type % bytes (__u32)))) ? 1: 0;	\
-+		(1u << (type % bytes (__u32)))) ? 1: 0;	\
- })
++	new_mtu = STMMAC_ALIGN(new_mtu);
++
++	/* If condition true, FIFO is too small or MTU too large */
++	if ((txfifosz < new_mtu) || (new_mtu > BUF_SIZE_16KiB))
++		return -EINVAL;
++
+ 	dev->mtu = new_mtu;
  
- #define SCTP_CHUNKMAP_RESET(chunkmap) \
+ 	netdev_update_features(dev);
 -- 
 2.20.1
 
