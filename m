@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50F29C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A43C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 181E220842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:34:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2862087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:34:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738885;
-	bh=2ANPraND6LtqpzGN5B9VgWNulfpGmjENQvaFPvVenlg=;
+	s=default; t=1578738890;
+	bh=ywR3dKnTOobjdUkovDCczSc/ksABxXIILvekC+jkN5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UU2FcKR7usjyPWsnH3Vxe1ySQcX3CXnGLzBM9SXDLLhPwB4TLq5F7tzUnrJmMMlYv
-	 VwfxTNlpbWobQt8c1cSaScaKV45OQsTG32qVay6JhQWc2GeWvPuKMGVf7dLpHeO1Mm
-	 KizfjgswASCVuugvpsERSQrNhHQ6BJE9h4rZ5GxE=
+	b=NKax+RJcTD2y/ZxRnfWDk+NXvwhBAjryr0Zubr+nX5M4Ez9noUkeQxDH+W2aM8+2D
+	 Rg/0vlEmz4DxCfW65Z9EwDFe0GlwwspLOQMVX8V8Nw2wDyIAcDWyCnU8IAwbaFxF8h
+	 hFfboVkq1bwprWwta/Y6FWCpaA9ciR57BzVxN+Oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbgAKKeo (ORCPT
+        id S1731713AbgAKKet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:34:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51204 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:34:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728911AbgAKKem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:34:42 -0500
+        id S1728911AbgAKKeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:34:46 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 920A420880;
-        Sat, 11 Jan 2020 10:34:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5450220842;
+        Sat, 11 Jan 2020 10:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738881;
-        bh=2ANPraND6LtqpzGN5B9VgWNulfpGmjENQvaFPvVenlg=;
+        s=default; t=1578738886;
+        bh=ywR3dKnTOobjdUkovDCczSc/ksABxXIILvekC+jkN5s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dn71KTncmnFEi1mf5Yq7dsUEhSl5+GVJUgZMHm0BHzho3csPLDY4aeslxqZecrRLK
-         V28OG2NwjIYBbJQFaIu0/TeqXcIOJX02BZrdx84SCjfyECI5v5ukNjt9zx+ypuaynv
-         qcPwoUFqwpKVa+UcyNR0Y7JkSmw2PXTfWf6P07dg=
+        b=ZLHbxAc79UAKWubNSGCVbttRKJkE11ymzLP9RnauuIYSPlf3TkWLmgn1axVZEjzdd
+         Tt++/WTf534TmQn3Wuu4Fku/gBCt/43haXubJNRjoTsDuS3cq/4+pK3XI35nSOwCJp
+         joBVRvJrHcG0Ebo9QblPbrwQNReHtHoTn7lRPC6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 164/165] USB: serial: option: add Telit ME910G1 0x110a composition
-Date:   Sat, 11 Jan 2020 10:51:23 +0100
-Message-Id: <20200111094943.763188870@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 155/165] macb: Dont unregister clks unconditionally
+Date:   Sat, 11 Jan 2020 10:51:14 +0100
+Message-Id: <20200111094941.624505930@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -59,33 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
 
-commit 0d3010fa442429f8780976758719af05592ff19f upstream.
+[ Upstream commit d89091a4930ee0d80bee3e259a98513f3a2543ec ]
 
-This patch adds the following Telit ME910G1 composition:
+The only clk init function in this driver that register a clk is
+fu540_c000_clk_init(), and thus we need to unregister the clk when this
+driver is removed on that platform. Other init functions, for example
+macb_clk_init(), don't register clks and therefore we shouldn't
+unregister the clks when this driver is removed. Convert this
+registration path to devm so it gets auto-unregistered when this driver
+is removed and drop the clk_unregister() calls in driver remove (and
+error paths) so that we don't erroneously remove a clk from the system
+that isn't registered by this driver.
 
-0x110a: tty, tty, tty, rmnet
+Otherwise we get strange crashes with a use-after-free when the
+devm_clk_get() call in macb_clk_init() calls clk_put() on a clk pointer
+that has become invalid because it is freed in clk_unregister().
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: Yash Shah <yash.shah@sifive.com>
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: c218ad559020 ("macb: Add support for SiFive FU540-C000")
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/cadence/macb_main.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1172,6 +1172,8 @@ static const struct usb_device_id option
- 	  .driver_info = NCTRL(0) | RSVD(3) },
- 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1102, 0xff),	/* Telit ME910 (ECM) */
- 	  .driver_info = NCTRL(0) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x110a, 0xff),	/* Telit ME910G1 */
-+	  .driver_info = NCTRL(0) | RSVD(3) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910),
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910_USBCFG4),
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4027,7 +4027,7 @@ static int fu540_c000_clk_init(struct pl
+ 	mgmt->rate = 0;
+ 	mgmt->hw.init = &init;
+ 
+-	*tx_clk = clk_register(NULL, &mgmt->hw);
++	*tx_clk = devm_clk_register(&pdev->dev, &mgmt->hw);
+ 	if (IS_ERR(*tx_clk))
+ 		return PTR_ERR(*tx_clk);
+ 
+@@ -4361,7 +4361,6 @@ err_out_free_netdev:
+ 
+ err_disable_clocks:
+ 	clk_disable_unprepare(tx_clk);
+-	clk_unregister(tx_clk);
+ 	clk_disable_unprepare(hclk);
+ 	clk_disable_unprepare(pclk);
+ 	clk_disable_unprepare(rx_clk);
+@@ -4397,7 +4396,6 @@ static int macb_remove(struct platform_d
+ 		pm_runtime_dont_use_autosuspend(&pdev->dev);
+ 		if (!pm_runtime_suspended(&pdev->dev)) {
+ 			clk_disable_unprepare(bp->tx_clk);
+-			clk_unregister(bp->tx_clk);
+ 			clk_disable_unprepare(bp->hclk);
+ 			clk_disable_unprepare(bp->pclk);
+ 			clk_disable_unprepare(bp->rx_clk);
 
 
