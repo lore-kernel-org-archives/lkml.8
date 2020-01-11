@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF73C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B9BC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3376920848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F78220880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737680;
-	bh=RtFS6Ig+xSxNO0ISJNYHYxVZI60x+9oEXxbVu9DCVwA=;
+	s=default; t=1578737684;
+	bh=8ly01OGIEPnk2p8j5+xPUt2405IE4J4LAvf+++GTJN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EW7RlNZEsDi3cViVPrnmyDP91YgzAElcKGSmaFmEQM/42aDhFen7GsqygJnH9EvFQ
-	 JDI16jpKzeEocSUzANipv8udDtsmJkUZMTOYuXzOqcgWEqDyItX6nWo6HMmgjvQQYI
-	 X+3zMT769tJArgNspYbHQ7ZFie7XHBAF68rG87+U=
+	b=tFCrLvM+WFMi0bkMzHm2MxlB1FKMgFWNrBhldXAb5ZuMYAPxMrslnnp8mPqDORIho
+	 UxEgPGeayqcAvVmkb61pITRTMtxD84zn1WLQLV5rd+nP8XDLiFioQyqay+dLBRsoc1
+	 o2Joez8bus4DZMfowTLXmJYkUE6JW1hwASnPRn2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbgAKKOi (ORCPT
+        id S1730171AbgAKKOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:14:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54724 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:14:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730160AbgAKKOg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:14:36 -0500
+        id S1729423AbgAKKOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:14:40 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8367320673;
-        Sat, 11 Jan 2020 10:14:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECE5320673;
+        Sat, 11 Jan 2020 10:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737675;
-        bh=RtFS6Ig+xSxNO0ISJNYHYxVZI60x+9oEXxbVu9DCVwA=;
+        s=default; t=1578737679;
+        bh=8ly01OGIEPnk2p8j5+xPUt2405IE4J4LAvf+++GTJN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=np1pOfCi+PX/fFkQW0oT4AjqfhdKXTvT5sXLOn9YGVwcJrEQjg+Y5QjGqhWRl/Bo9
-         Rjw5bbs8sBM9jzlILsgeISFp6qOlzRD+EMQhprqn1A5qq6VzSSknW35V8tqWIYGHmO
-         IACKRdst/4H2hfNSBxnYUi8rUAHwk+pqIyr/f5YE=
+        b=2SKnDQNmsBgHyXMqwsX/Xv5mPfmqZZql8aUPyYU7fCIwqX/7OvX8Qg9fGjdozMstB
+         7KCjLIfYJUODuPSs7ADdSCK1ql0LNNWJA0GCXJjt0hr8TiG3UezpgNpTvUHaCOfiGF
+         Fs9lAL5SuiLoVNp/oAIbYTVcCWVC4STd/JXv8mb4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Simon Horman <simon.horman@netronome.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 20/84] netfilter: nf_tables: validate NFT_DATA_VALUE after nft_data_init()
-Date:   Sat, 11 Jan 2020 10:49:57 +0100
-Message-Id: <20200111094853.004631684@linuxfoundation.org>
+Subject: [PATCH 4.19 21/84] ARM: dts: BCM5301X: Fix MDIO node address/size cells
+Date:   Sat, 11 Jan 2020 10:49:58 +0100
+Message-Id: <20200111094853.429814088@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -59,107 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 0d2c96af797ba149e559c5875c0151384ab6dd14 ]
+[ Upstream commit 093c3f94e922d83a734fc4da08cc5814990f32c6 ]
 
-Userspace might bogusly sent NFT_DATA_VERDICT in several netlink
-attributes that assume NFT_DATA_VALUE. Moreover, make sure that error
-path invokes nft_data_release() to decrement the reference count on the
-chain object.
+The MDIO node on BCM5301X had an reversed #address-cells and
+ #size-cells properties, correct those, silencing checker warnings:
 
-Fixes: 96518518cc41 ("netfilter: add nftables")
-Fixes: 0f3cd9b36977 ("netfilter: nf_tables: add range expression")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+.../linux/arch/arm/boot/dts/bcm4708-asus-rt-ac56u.dt.yaml: mdio@18003000: #address-cells:0:0: 1 was expected
+
+Reported-by: Simon Horman <simon.horman@netronome.com>
+Fixes: 23f1eca6d59b ("ARM: dts: BCM5301X: Specify MDIO bus in the DT")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c |  4 +++-
- net/netfilter/nft_bitwise.c   |  4 ++--
- net/netfilter/nft_cmp.c       |  6 ++++++
- net/netfilter/nft_range.c     | 10 ++++++++++
- 4 files changed, 21 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/bcm5301x.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 42f79f9532c6..4711a8b56f32 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -4117,8 +4117,10 @@ static int nft_get_set_elem(struct nft_ctx *ctx, struct nft_set *set,
- 		return err;
+diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
+index bc607d11eef8..a678fb7c9e3b 100644
+--- a/arch/arm/boot/dts/bcm5301x.dtsi
++++ b/arch/arm/boot/dts/bcm5301x.dtsi
+@@ -350,8 +350,8 @@
+ 	mdio: mdio@18003000 {
+ 		compatible = "brcm,iproc-mdio";
+ 		reg = <0x18003000 0x8>;
+-		#size-cells = <1>;
+-		#address-cells = <0>;
++		#size-cells = <0>;
++		#address-cells = <1>;
+ 	};
  
- 	err = -EINVAL;
--	if (desc.type != NFT_DATA_VALUE || desc.len != set->klen)
-+	if (desc.type != NFT_DATA_VALUE || desc.len != set->klen) {
-+		nft_data_release(&elem.key.val, desc.type);
- 		return err;
-+	}
- 
- 	priv = set->ops->get(ctx->net, set, &elem, flags);
- 	if (IS_ERR(priv))
-diff --git a/net/netfilter/nft_bitwise.c b/net/netfilter/nft_bitwise.c
-index fff8073e2a56..058ee84ea531 100644
---- a/net/netfilter/nft_bitwise.c
-+++ b/net/netfilter/nft_bitwise.c
-@@ -83,7 +83,7 @@ static int nft_bitwise_init(const struct nft_ctx *ctx,
- 			    tb[NFTA_BITWISE_MASK]);
- 	if (err < 0)
- 		return err;
--	if (d1.len != priv->len) {
-+	if (d1.type != NFT_DATA_VALUE || d1.len != priv->len) {
- 		err = -EINVAL;
- 		goto err1;
- 	}
-@@ -92,7 +92,7 @@ static int nft_bitwise_init(const struct nft_ctx *ctx,
- 			    tb[NFTA_BITWISE_XOR]);
- 	if (err < 0)
- 		goto err1;
--	if (d2.len != priv->len) {
-+	if (d2.type != NFT_DATA_VALUE || d2.len != priv->len) {
- 		err = -EINVAL;
- 		goto err2;
- 	}
-diff --git a/net/netfilter/nft_cmp.c b/net/netfilter/nft_cmp.c
-index 79d48c1d06f4..7007045c0849 100644
---- a/net/netfilter/nft_cmp.c
-+++ b/net/netfilter/nft_cmp.c
-@@ -82,6 +82,12 @@ static int nft_cmp_init(const struct nft_ctx *ctx, const struct nft_expr *expr,
- 	if (err < 0)
- 		return err;
- 
-+	if (desc.type != NFT_DATA_VALUE) {
-+		err = -EINVAL;
-+		nft_data_release(&priv->data, desc.type);
-+		return err;
-+	}
-+
- 	priv->sreg = nft_parse_register(tb[NFTA_CMP_SREG]);
- 	err = nft_validate_register_load(priv->sreg, desc.len);
- 	if (err < 0)
-diff --git a/net/netfilter/nft_range.c b/net/netfilter/nft_range.c
-index cedb96c3619f..2e1d2ec2f52a 100644
---- a/net/netfilter/nft_range.c
-+++ b/net/netfilter/nft_range.c
-@@ -70,11 +70,21 @@ static int nft_range_init(const struct nft_ctx *ctx, const struct nft_expr *expr
- 	if (err < 0)
- 		return err;
- 
-+	if (desc_from.type != NFT_DATA_VALUE) {
-+		err = -EINVAL;
-+		goto err1;
-+	}
-+
- 	err = nft_data_init(NULL, &priv->data_to, sizeof(priv->data_to),
- 			    &desc_to, tb[NFTA_RANGE_TO_DATA]);
- 	if (err < 0)
- 		goto err1;
- 
-+	if (desc_to.type != NFT_DATA_VALUE) {
-+		err = -EINVAL;
-+		goto err2;
-+	}
-+
- 	if (desc_from.len != desc_to.len) {
- 		err = -EINVAL;
- 		goto err2;
+ 	mdio-bus-mux {
 -- 
 2.20.1
 
