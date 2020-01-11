@@ -2,244 +2,261 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CEEAC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 15:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707CAC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 15:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D30DA20842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 15:32:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WEqUPqIN"
+	by mail.kernel.org (Postfix) with ESMTP id 50FDB20842
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 15:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730008AbgAKPcM (ORCPT
+        id S1730043AbgAKPgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 10:32:12 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37185 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729958AbgAKPcL (ORCPT
+        Sat, 11 Jan 2020 10:36:32 -0500
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:23863 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729989AbgAKPgc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 10:32:11 -0500
-Received: by mail-lj1-f196.google.com with SMTP id o13so5253133ljg.4;
-        Sat, 11 Jan 2020 07:32:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Jzwxp3lWZeyeoVo+7adSEFYxLkJCA6sCkYkRhViRSF4=;
-        b=WEqUPqINVv8iSLFS7PGBWB0tCktQhyTKsxEAX2Hut6ihWFSzNO9B7XQFwzJc/b6bCy
-         6d9qK6otsCJyMu74C7I6i5PQDwUFog69bZVU5zYz9lYfZEoLKG2Yn/hlz7JJYrHVWAIg
-         wpWT83V1yBDp2uYSSoMpEpjsDLEKo7s9Z1p7+j4CeD3F6zsTNcGIag3yxNuui2SUnY/P
-         ICK5Gb832cKL1x3VePNWO1zMnQDVr+AE0wshMPUX2JBJFFDiuGaYg1cfZYg8mlPwZV81
-         0joAxyaW0t6s++vzIiadLscFoYbOdw8LlxN+OaYafgo7reKk4wwie/SMysivS7/PxPoL
-         pk4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Jzwxp3lWZeyeoVo+7adSEFYxLkJCA6sCkYkRhViRSF4=;
-        b=qsrShAcAbFND1zuutDYGkaP+NLPNt/Vy0G4PxLp+Dg/OtsYSlpDyLrsddPKuj8BhO7
-         ewHLI1a0prvhfJ6S3BrsD9kL1Crdstg2UUGRMJdt2DcMRTGqTzesfXbeEHh17hwU5bDR
-         rq+2UPN9utNeB05R2xzLJGdh0D009aY47cp0W0t8gNLyVK/0GzD0NdWRmOpwl1DKK+0t
-         hvfYbqc9wKp8KndG3TfiWXTRHYFHkrz/3K6+YuvED9ZLVHupmJ96X/8Pe9enSxk+TYQ2
-         cffxM7OXfUk1Rw1uGKkFRhADGTBzdMtX5gCp4W6SVSvkU4UdELJ6FFoyyXuOAutngm5T
-         dPZQ==
-X-Gm-Message-State: APjAAAUqXKTvbxh8A7m2aw9k3PWozs3gs4RXOkzFNgw1g7ffURcKnZMO
-        QIFcvQuQM1Aprc704yfx6OR+nVnr
-X-Google-Smtp-Source: APXvYqz7GKZn3IvrC1VjsoXBOdrMCrzr8YTMIOnxEhesELZ/ZaMW6I+1WG0TxSzkPry/rXlXazFEkA==
-X-Received: by 2002:a2e:9e03:: with SMTP id e3mr6129684ljk.186.1578756727755;
-        Sat, 11 Jan 2020 07:32:07 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id d4sm2845137lfn.42.2020.01.11.07.32.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jan 2020 07:32:07 -0800 (PST)
-Subject: Re: [PATCH v7 15/21] ASoC: tegra: Add fallback implementation for
- audio mclk
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Sameer Pujar <spujar@nvidia.com>, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, broonie@kernel.org, lgirdwood@gmail.com,
-        perex@perex.cz, tiwai@suse.com, mperttunen@nvidia.com,
-        gregkh@linuxfoundation.org, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, josephl@nvidia.com,
-        daniel.lezcano@linaro.org, mmaddireddy@nvidia.com,
-        markz@nvidia.com, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Sat, 11 Jan 2020 10:36:32 -0500
+X-IronPort-AV: E=Sophos;i="5.69,421,1571695200"; 
+   d="scan'208";a="430910632"
+Received: from abo-154-110-68.mrs.modulonet.fr (HELO hadrien) ([85.68.110.154])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jan 2020 16:36:29 +0100
+Date:   Sat, 11 Jan 2020 16:36:28 +0100 (CET)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Wen Yang <wenyang@linux.alibaba.com>
+cc:     Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Matthias Maennich <maennich@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thomas Gleixner <tglx@linutronix.de>, cocci@systeme.lip6.fr,
         linux-kernel@vger.kernel.org
-References: <1578457515-3477-1-git-send-email-skomatineni@nvidia.com>
- <1578457515-3477-16-git-send-email-skomatineni@nvidia.com>
- <f3f550a2-c6e0-7a78-5c83-da3e54dab309@nvidia.com>
- <d7ac6135-73b0-1087-dafa-4df558a06ef4@nvidia.com>
- <a3c5293b-9ed4-3266-f792-38b980e54b1e@nvidia.com>
- <745b8c7b-4fe3-c9ea-284e-b89546e8ad87@nvidia.com>
- <705edf9b-d1bc-8090-017e-fa4ad445f9fb@nvidia.com>
- <135f0c0b-86d1-9b1a-af02-c14c4b5308c4@gmail.com>
- <575aa30e-1b5a-2a2d-5893-3f6832f416f1@nvidia.com>
- <9bca6c3e-bfe0-7130-b233-3f25c436f76e@gmail.com>
- <dcfd35f3-7fdd-fdc9-1c77-bcb63bcabd5b@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1319c4d2-7929-43e1-c036-45396f28c2fa@gmail.com>
-Date:   Sat, 11 Jan 2020 18:32:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+Subject: Re: [PATCH v3] coccinelle: semantic patch to check for inappropriate
+ do_div() calls
+In-Reply-To: <20200110131526.60180-1-wenyang@linux.alibaba.com>
+Message-ID: <alpine.DEB.2.21.2001111633130.2568@hadrien>
+References: <20200110131526.60180-1-wenyang@linux.alibaba.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <dcfd35f3-7fdd-fdc9-1c77-bcb63bcabd5b@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-11.01.2020 02:14, Sowjanya Komatineni пишет:
-> 
-> On 1/10/20 3:02 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 11.01.2020 01:13, Sowjanya Komatineni пишет:
->>> On 1/10/20 2:05 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 10.01.2020 20:04, Sowjanya Komatineni пишет:
->>>>> On 1/9/20 10:52 AM, Sowjanya Komatineni wrote:
->>>>>> On 1/7/20 10:28 PM, Sameer Pujar wrote:
->>>>>>> On 1/8/2020 11:18 AM, Sowjanya Komatineni wrote:
->>>>>>>> On 1/7/20 9:34 PM, Sameer Pujar wrote:
->>>>>>>>> On 1/8/2020 9:55 AM, Sowjanya Komatineni wrote:
->>>>>>>>>> mclk is from clk_out_1 which is part of Tegra PMC block and pmc
->>>>>>>>>> clocks
->>>>>>>>>> are moved to Tegra PMC driver with pmc as clock provider and
->>>>>>>>>> using
->>>>>>>>>> pmc
->>>>>>>>>> clock ids.
->>>>>>>>>>
->>>>>>>>>> New device tree uses clk_out_1 from pmc clock provider.
->>>>>>>>>>
->>>>>>>>>> So, this patch adds implementation for mclk fallback to extern1
->>>>>>>>>> when
->>>>>>>>>> retrieving mclk returns -ENOENT to be backward compatible of new
->>>>>>>>>> device
->>>>>>>>>> tree with older kernels.
->>>>>>>>>>
->>>>>>>>>> Tested-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>>>>> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>>>> ---
->>>>>>>>>>     sound/soc/tegra/tegra_asoc_utils.c | 11 ++++++++++-
->>>>>>>>>>     1 file changed, 10 insertions(+), 1 deletion(-)
->>>>>>>>>>
->>>>>>>>>> diff --git a/sound/soc/tegra/tegra_asoc_utils.c
->>>>>>>>>> b/sound/soc/tegra/tegra_asoc_utils.c
->>>>>>>>>> index 9cfebef74870..9a5f81039491 100644
->>>>>>>>>> --- a/sound/soc/tegra/tegra_asoc_utils.c
->>>>>>>>>> +++ b/sound/soc/tegra/tegra_asoc_utils.c
->>>>>>>>>> @@ -183,7 +183,16 @@ int tegra_asoc_utils_init(struct
->>>>>>>>>> tegra_asoc_utils_data *data,
->>>>>>>>>>         data->clk_cdev1 = devm_clk_get(dev, "mclk");
->>>>>>>>>>         if (IS_ERR(data->clk_cdev1)) {
->>>>>>>>>>             dev_err(data->dev, "Can't retrieve clk cdev1\n");
->>>>>>>>> This error print can be moved inside below if, when this actually
->>>>>>>>> meant to be an error condition.
->>>>>>>>>
->>>>>>>> Want to show error even if mclk retrieval returns ENOENT to clearly
->>>>>>>> indicate mclk does not exist along with message of falling back to
->>>>>>>> extern1.
->>>>>>> Yes, but falling back essentially means 'mclk' is not available and
->>>>>>> fallback print is not an error.
->>>>>>> Not a major issue though, you can consider updating. Otherwise LGTM.
->>>>>>>
->>>>>> Will update
->>>>>>>>>> -        return PTR_ERR(data->clk_cdev1);
->>>>>>>>>> +        if (PTR_ERR(data->clk_cdev1) != -ENOENT)
->>>>>>>>>> +            return PTR_ERR(data->clk_cdev1);
->>>>>>>>>> +        /* Fall back to extern1 */
->>>>>>>>>> +        data->clk_cdev1 = devm_clk_get(dev, "extern1");
->>>>>>>>>> +        if (IS_ERR(data->clk_cdev1)) {
->>>>>>>>>> +            dev_err(data->dev, "Can't retrieve clk extern1\n");
->>>>>>>>>> +            return PTR_ERR(data->clk_cdev1);
->>>>>>>>>> +        }
->>>>>>>>>> +
->>>>>>>>>> +        dev_err(data->dev, "Falling back to extern1\n");
->>>>>>>>> This can be a info print?
->>>>>> Will use dev_info
->>>>>>>>>>         }
->>>>>>>>>>           /*
->>>>>> Dmitry/Rob, there was discussion in v3 regarding backporting mclk
->>>>>> fallback.
->>>>>>
->>>>>> Dmitry wanted Rob to confirm on this
->>>>>>
->>>>>> I think openSUSE Leap could be one of those distros that use LTS
->>>>>> kernel
->>>>>> with newer device-trees, but that's not 100%. Maybe Rob could help
->>>>>> clarifying that.
->>>>>>
->>>>>> Dmitry/Rob, Can you please confirm if mclk fallback patch need
->>>>>> backport to have new device tree work with old kernels?
->>>>>>
->>>>> Dmitry,
->>>>>
->>>>> Can you please confirm if we need to backport this mclk fallback
->>>>> patch?
->>>>>
->>>> Seems only T210 was making use of the CaR's TEGRA*_CLK_CLK_OUT_*, thus
->>>> the backporting isn't needed.
->>> Thanks Dmitry
->>>> Also, please use 'git rebase --exec make ...' to make sure that all
->>>> patches are compiling without problems. The removal of the legacy clock
->>>> IDs should be done after the device-trees changes, otherwise it looks
->>>> like DTBs compilation will fail. It's possible that the order of the
->>>> patches could be changed if Thierry will chose to split this series
->>>> into
->>>> several pull requests, nevertheless all patches should compile and work
->>>> in the original order.
->>> OK, Will move patches of device tree updates to use new DT ID prior to
->>> removal of old ID.
->> Oh, wait. But then the newer device-trees won't work with the stable
->> kernels, so it actually won't hurt to backport this change.
-> ok will add Fixes tag to have this mclk fallback patch backported.
->>
->> Secondly, please move the "Use device managed resource APIs to get the
->> clock" after the ASoC patches with the stable tags, such that the stable
->> patches could be applied cleanly.
-> OK
->>
->> Lastly, please separate the assigned-clocks change from the the audio
->> mclk enable/disable into a standalone patch. These changes are not
->> interdependent, unless I'm missing something.
-> 
-> But parent configuration when assigned-clock-parents are not in DT are
-> needed along with mclk enable
-> 
-> as we are removing audio clocks parent configuration and enabling them
-> together from clock driver.
-> 
-> So doesn't both parent configuration and enabling mclk together need to
-> be in same patch to match what we are removing from clock driver?
-> 
 
-All current stable kernels happen to work without any visible problems
-because of the non-critical clk-enable refcounting bug that masks the
-problem. Thus the mclk will be enabled in stable kernels without any
-extra changes and the assigned-clock-parents shouldn't affect that.
+On Fri, 10 Jan 2020, Wen Yang wrote:
 
-Please make sure that every patch in this series:
+> do_div() does a 64-by-32 division.
+> When the divisor is unsigned long, u64, or s64,
+> do_div() truncates it to 32 bits, this means it
+> can test non-zero and be truncated to zero for division.
+> This semantic patch is inspired by Mateusz Guzik's patch:
+> commit b0ab99e7736a ("sched: Fix possible divide by zero in avg_atom() calculation")
+>
+> Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
 
-1) Compiles without any errors and warnings.
+Acked-by: Julia Lawall <julia.lawall@inria.fr>
 
-2) Works, i.e. you should be able to checkout any commit and kernel
-should boot/work without any regressions.
+This looks good to me.
 
-3) Stable patches could be cherry-picked into stable kernels without
-merge conflicts.
+A small detail is that you don't need the parentheses in:
 
-To achieve that you'll need to sort patches in the correct order and do
-some basic testing.
+@r depends on (org || report)@
+
+julia
+
+> Cc: Julia Lawall <julia.lawall@inria.fr>
+> Cc: Gilles Muller <Gilles.Muller@lip6.fr>
+> Cc: Nicolas Palix <nicolas.palix@imag.fr>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Cc: Matthias Maennich <maennich@google.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: cocci@systeme.lip6.fr
+> Cc: linux-kernel@vger.kernel.org
+> ---
+> v3:
+> - also filter out safe consts for context mode.
+> - cleanup code.
+>
+> v2:
+> - add a special case for constants and checking whether the value is obviously safe and no warning is needed.
+> - fix 'WARNING:' twice in each case.
+> - extend the warning to say "consider using div64_xxx instead".
+>
+>  scripts/coccinelle/misc/do_div.cocci | 155 +++++++++++++++++++++++++++
+>  1 file changed, 155 insertions(+)
+>  create mode 100644 scripts/coccinelle/misc/do_div.cocci
+>
+> diff --git a/scripts/coccinelle/misc/do_div.cocci b/scripts/coccinelle/misc/do_div.cocci
+> new file mode 100644
+> index 000000000000..79db083c5208
+> --- /dev/null
+> +++ b/scripts/coccinelle/misc/do_div.cocci
+> @@ -0,0 +1,155 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/// do_div() does a 64-by-32 division.
+> +/// When the divisor is long, unsigned long, u64, or s64,
+> +/// do_div() truncates it to 32 bits, this means it can test
+> +/// non-zero and be truncated to 0 for division on 64bit platforms.
+> +///
+> +//# This makes an effort to find those inappropriate do_div() calls.
+> +//
+> +// Confidence: Moderate
+> +// Copyright: (C) 2020 Wen Yang, Alibaba.
+> +// Comments:
+> +// Options: --no-includes --include-headers
+> +
+> +virtual context
+> +virtual org
+> +virtual report
+> +
+> +@initialize:python@
+> +@@
+> +
+> +def get_digit_type_and_value(str):
+> +    is_digit = False
+> +    value = 0
+> +
+> +    try:
+> +        if (str.isdigit()):
+> +           is_digit = True
+> +           value =  int(str, 0)
+> +        elif (str.upper().endswith('ULL')):
+> +           is_digit = True
+> +           value = int(str[:-3], 0)
+> +        elif (str.upper().endswith('LL')):
+> +           is_digit = True
+> +           value = int(str[:-2], 0)
+> +        elif (str.upper().endswith('UL')):
+> +           is_digit = True
+> +           value = int(str[:-2], 0)
+> +        elif (str.upper().endswith('L')):
+> +           is_digit = True
+> +           value = int(str[:-1], 0)
+> +        elif (str.upper().endswith('U')):
+> +           is_digit = True
+> +           value = int(str[:-1], 0)
+> +    except Exception as e:
+> +          print('Error:',e)
+> +          is_digit = False
+> +          value = 0
+> +    finally:
+> +        return is_digit, value
+> +
+> +def filter_out_safe_constants(str):
+> +    is_digit, value = get_digit_type_and_value(str)
+> +    if (is_digit):
+> +        if (value >= 0x100000000):
+> +            return True
+> +        else:
+> +            return False
+> +    else:
+> +        return True
+> +
+> +def construct_warnings(suggested_fun):
+> +    msg="WARNING: do_div() does a 64-by-32 division, please consider using %s instead."
+> +    return  msg % suggested_fun
+> +
+> +@depends on context@
+> +expression f;
+> +long l: script:python() { filter_out_safe_constants(l) };
+> +unsigned long ul : script:python() { filter_out_safe_constants(ul) };
+> +u64 ul64 : script:python() { filter_out_safe_constants(ul64) };
+> +s64 sl64 : script:python() { filter_out_safe_constants(sl64) };
+> +
+> +@@
+> +(
+> +* do_div(f, l);
+> +|
+> +* do_div(f, ul);
+> +|
+> +* do_div(f, ul64);
+> +|
+> +* do_div(f, sl64);
+> +)
+> +
+> +@r depends on (org || report)@
+> +expression f;
+> +position p;
+> +long l: script:python() { filter_out_safe_constants(l) };
+> +unsigned long ul : script:python() { filter_out_safe_constants(ul) };
+> +u64 ul64 : script:python() { filter_out_safe_constants(ul64) };
+> +s64 sl64 : script:python() { filter_out_safe_constants(sl64) };
+> +@@
+> +(
+> +do_div@p(f, l);
+> +|
+> +do_div@p(f, ul);
+> +|
+> +do_div@p(f, ul64);
+> +|
+> +do_div@p(f, sl64);
+> +)
+> +
+> +@script:python depends on org@
+> +p << r.p;
+> +ul << r.ul;
+> +@@
+> +
+> +coccilib.org.print_todo(p[0], construct_warnings("div64_ul"))
+> +
+> +@script:python depends on org@
+> +p << r.p;
+> +l << r.l;
+> +@@
+> +
+> +coccilib.org.print_todo(p[0], construct_warnings("div64_long"))
+> +
+> +@script:python depends on org@
+> +p << r.p;
+> +ul64 << r.ul64;
+> +@@
+> +
+> +coccilib.org.print_todo(p[0], construct_warnings("div64_u64"))
+> +
+> +@script:python depends on org@
+> +p << r.p;
+> +sl64 << r.sl64;
+> +@@
+> +
+> +coccilib.org.print_todo(p[0], construct_warnings("div64_s64"))
+> +
+> +@script:python depends on report@
+> +p << r.p;
+> +ul << r.ul;
+> +@@
+> +
+> +coccilib.report.print_report(p[0], construct_warnings("div64_ul"))
+> +
+> +@script:python depends on report@
+> +p << r.p;
+> +l << r.l;
+> +@@
+> +
+> +coccilib.report.print_report(p[0], construct_warnings("div64_long"))
+> +
+> +@script:python depends on report@
+> +p << r.p;
+> +sl64 << r.sl64;
+> +@@
+> +
+> +coccilib.report.print_report(p[0], construct_warnings("div64_s64"))
+> +
+> +@script:python depends on report@
+> +p << r.p;
+> +ul64 << r.ul64;
+> +@@
+> +
+> +coccilib.report.print_report(p[0], construct_warnings("div64_u64"))
+> --
+> 2.23.0
+>
+>
