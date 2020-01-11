@@ -2,86 +2,94 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1B7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B95C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F04212087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:47:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578764855;
-	bh=0DgBgLzxR09id1aaAHZTFdk36WW2whOoZrUpy/pDqWA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jKSVuV6fgCDMtX7DMGAm772DMwWXSkQK1bm12Q/VXffVIpCYlrtxJDhYlqHE/my2k
-	 tm/Zz1+NMsl1xy71k4GAq6UqeT8wOkX+NwKpVETz1oPPRo0Nj34s1F0tp1Mfoo34il
-	 SkW+jIfQvtFhGLiaF6mdbGJ+eRMkuIH8xTErcCVA=
+	by mail.kernel.org (Postfix) with ESMTP id A3ABF2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:48:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Ndqg+k0Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730732AbgAKRre (ORCPT
+        id S1730751AbgAKRsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 12:47:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44474 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 12:48:18 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:13767 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730683AbgAKRre (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 12:47:34 -0500
-Received: from localhost (unknown [84.241.193.141])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AF6120866;
-        Sat, 11 Jan 2020 17:47:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578764853;
-        bh=0DgBgLzxR09id1aaAHZTFdk36WW2whOoZrUpy/pDqWA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rhARnQjP3So5k1r2DU1SjuZvoPeakcNdMparUmM5BlzFCYGXOpMkQkKx2pmkBK9M6
-         IeQxy+2NBbvHDTkAtP64cGKVx5fvIEYP8gF5dCreb/eSz8ho5+QqwiagKD+VtWqEqu
-         ns2sbwLnAbw2ZgVUCOVlwFVBpVGkJPnjTzHP+t/U=
-Date:   Sat, 11 Jan 2020 18:47:15 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/84] 4.19.95-stable review
-Message-ID: <20200111174715.GB394778@kroah.com>
-References: <20200111094845.328046411@linuxfoundation.org>
- <23c3a0d1-1655-8cc2-7c96-743a47953795@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <23c3a0d1-1655-8cc2-7c96-743a47953795@roeck-us.net>
+        id S1730647AbgAKRsS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 12:48:18 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47w6lL6K8cz9tyVC;
+        Sat, 11 Jan 2020 18:48:14 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Ndqg+k0Q; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id kGPBY1kr8M4S; Sat, 11 Jan 2020 18:48:14 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47w6lL4t6kz9tyVB;
+        Sat, 11 Jan 2020 18:48:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1578764894; bh=rWzye87XejSTOoMHiw7Qf2ytvLtb8fImWFNoum8VhkY=;
+        h=From:Subject:To:Cc:Date:From;
+        b=Ndqg+k0Q+U706ClKg/A77m9CAJWL+dmX83zxMFCi51x4RXQvVbMRWXypUNrag2Xkw
+         w673desfBUJ0oDhueeWvnNkiNtOU8McOEpwTZxrlULnTUURmT3pssRfdnR8TOrQN/N
+         n9JZ9z1RZz3v0siXxWmqPLn1k/xAxa6yiIwv1AzM=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 589B28B791;
+        Sat, 11 Jan 2020 18:48:16 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id V5T1u6D6LVz7; Sat, 11 Jan 2020 18:48:16 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 201C28B752;
+        Sat, 11 Jan 2020 18:48:16 +0100 (CET)
+Received: by po14934vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id BA9BC63BCA; Sat, 11 Jan 2020 17:48:15 +0000 (UTC)
+Message-Id: <e7becc50bee355e3872b84d91cc68ae8d7776bb9.1578764712.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] lib: vdso: mark __cvdso_clock_getres() as static
+To:     arnd@arndb.de, tglx@linutronix.de, vincenzo.frascino@arm.com,
+        luto@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        x86@kernel.org
+Date:   Sat, 11 Jan 2020 17:48:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 08:02:40AM -0800, Guenter Roeck wrote:
-> On 1/11/20 1:49 AM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 4.19.95 release.
-> > There are 84 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Mon, 13 Jan 2020 09:46:17 +0000.
-> > Anything received after that time might be too late.
-> > 
-> Build results:
-> 	total: 156 pass: 154 fail: 2
-> Failed builds:
-> 	arm64:defconfig
-> 	arm64:allmodconfig
-> Qemu test results:
-> 	total: 382 pass: 339 fail: 43
-> Failed tests:
-> 	<all arm64>
-> 
-> arch/arm64/kvm/hyp/switch.c: In function 'handle_tx2_tvm':
-> arch/arm64/kvm/hyp/switch.c:438:2: error: implicit declaration of function '__kvm_skip_instr'; did you mean 'kvm_skip_instr'?
+When __cvdso_clock_getres() became __cvdso_clock_getres_common()
+and a new __cvdso_clock_getres() was added, static qualifier was
+forgotten.
 
-Thanks for this, I'll go push out a -rc2 with the offending patch
-removed.
+Fixes: 502a590a170b ("lib/vdso: Move fallback invocation to the callers")
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ lib/vdso/gettimeofday.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-greg k-h
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index 9ecfd3b547ba..42bd8ab955fa 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -221,6 +221,7 @@ int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
+ 	return 0;
+ }
+ 
++static __maybe_unused
+ int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
+ {
+ 	int ret = __cvdso_clock_getres_common(clock, res);
+-- 
+2.13.3
+
