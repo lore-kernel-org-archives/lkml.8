@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D88C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661BAC33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF6120842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 396A82082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738467;
-	bh=mPnIziU1WI+Cdnd2zDTDHWhEYD0fDDA3WPrsrAkV9S0=;
+	s=default; t=1578738472;
+	bh=buJIurWmdxWI2/cwccgbXMDQqdr6WG9SdxVB4gYp83w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xy8/xPZk4WfsyiVLHrQEED3i/rkmtSjFxPdq/uxhpTaODF+N8ih7nxwQmUmAyyRHN
-	 fC2dbViNS8vdV5Ordn31BvrU+kBTlxxdDkYVQj652NPPHwslotch7kjexqJ1BpKkGF
-	 GwMdicR0bVj+YAesPZ63IpKqixlveU00GfFdrF/A=
+	b=ZSeo+K+7fMRGVLhYHJgerTXrrsXP7wD+0rrAN0zIvF1x6gtxirn9w5IGCshDDM5y+
+	 z5q/bUNk0NFfx8nIJEvAsyC4Uj9wTWsukmmcqkVKNLjfmRB7a8Mvyn3U5yplLo4ZHP
+	 mJE78+45HGF1Qd5RBOFjJRwbx3Km6tymvBIYPLu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731200AbgAKK1q (ORCPT
+        id S1731209AbgAKK1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:27:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34024 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:27:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729453AbgAKK1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:27:44 -0500
+        id S1731083AbgAKK1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:27:48 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 340F620842;
-        Sat, 11 Jan 2020 10:27:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54A592082E;
+        Sat, 11 Jan 2020 10:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738464;
-        bh=mPnIziU1WI+Cdnd2zDTDHWhEYD0fDDA3WPrsrAkV9S0=;
+        s=default; t=1578738468;
+        bh=buJIurWmdxWI2/cwccgbXMDQqdr6WG9SdxVB4gYp83w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZX2Tml3LFHE6/w8sdsv3jjiuTknUHHViElhbBiECA79C/7S4lD0X0c3EFP3bGXBNR
-         zJbh1BtuizoUpic7VdvErcx5wKevD/8xFmCY5lxKb4fPmwn7f2sNWwWN5zhAZdLbFX
-         P3fY4A+YwIQVMDOH3sMaobFnGSCas+Aapzww3Y3E=
+        b=kLmKHXFjH3JmLifbmqhzc9SZ9Z3r/qs2mItCK3OMRNyqRy4AeoEsumlldjPwjfLk+
+         mZl14yi24i9n8E04QI9hp1ZivOhjTOXsbnG323b7ciHnZBUyzt8qVkxbav/4XK220d
+         avDbBknuK13+SiGDle3GrzdYBFtzaNpHCuCqOx3w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jingfeng Xie <xiejingfeng@linux.alibaba.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Suren Baghdasaryan <surenb@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 099/165] perf/x86/intel: Fix PT PMI handling
-Date:   Sat, 11 Jan 2020 10:50:18 +0100
-Message-Id: <20200111094929.966208470@linuxfoundation.org>
+Subject: [PATCH 5.4 100/165] sched/psi: Fix sampling error and rare div0 crashes with cgroups and high uptime
+Date:   Sat, 11 Jan 2020 10:50:19 +0100
+Message-Id: <20200111094930.059510844@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -65,74 +63,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Johannes Weiner <hannes@cmpxchg.org>
 
-[ Upstream commit 92ca7da4bdc24d63bb0bcd241c11441ddb63b80a ]
+[ Upstream commit 3dfbe25c27eab7c90c8a7e97b4c354a9d24dd985 ]
 
-Commit:
+Jingfeng reports rare div0 crashes in psi on systems with some uptime:
 
-  ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
+[58914.066423] divide error: 0000 [#1] SMP
+[58914.070416] Modules linked in: ipmi_poweroff ipmi_watchdog toa overlay fuse tcp_diag inet_diag binfmt_misc aisqos(O) aisqos_hotfixes(O)
+[58914.083158] CPU: 94 PID: 140364 Comm: kworker/94:2 Tainted: G W OE K 4.9.151-015.ali3000.alios7.x86_64 #1
+[58914.093722] Hardware name: Alibaba Alibaba Cloud ECS/Alibaba Cloud ECS, BIOS 3.23.34 02/14/2019
+[58914.102728] Workqueue: events psi_update_work
+[58914.107258] task: ffff8879da83c280 task.stack: ffffc90059dcc000
+[58914.113336] RIP: 0010:[] [] psi_update_stats+0x1c1/0x330
+[58914.122183] RSP: 0018:ffffc90059dcfd60 EFLAGS: 00010246
+[58914.127650] RAX: 0000000000000000 RBX: ffff8858fe98be50 RCX: 000000007744d640
+[58914.134947] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00003594f700648e
+[58914.142243] RBP: ffffc90059dcfdf8 R08: 0000359500000000 R09: 0000000000000000
+[58914.149538] R10: 0000000000000000 R11: 0000000000000000 R12: 0000359500000000
+[58914.156837] R13: 0000000000000000 R14: 0000000000000000 R15: ffff8858fe98bd78
+[58914.164136] FS: 0000000000000000(0000) GS:ffff887f7f380000(0000) knlGS:0000000000000000
+[58914.172529] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[58914.178467] CR2: 00007f2240452090 CR3: 0000005d5d258000 CR4: 00000000007606f0
+[58914.185765] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[58914.193061] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[58914.200360] PKRU: 55555554
+[58914.203221] Stack:
+[58914.205383] ffff8858fe98bd48 00000000000002f0 0000002e81036d09 ffffc90059dcfde8
+[58914.213168] ffff8858fe98bec8 0000000000000000 0000000000000000 0000000000000000
+[58914.220951] 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[58914.228734] Call Trace:
+[58914.231337] [] psi_update_work+0x22/0x60
+[58914.237067] [] process_one_work+0x189/0x420
+[58914.243063] [] worker_thread+0x4e/0x4b0
+[58914.248701] [] ? process_one_work+0x420/0x420
+[58914.254869] [] kthread+0xe6/0x100
+[58914.259994] [] ? kthread_park+0x60/0x60
+[58914.265640] [] ret_from_fork+0x39/0x50
+[58914.271193] Code: 41 29 c3 4d 39 dc 4d 0f 42 dc <49> f7 f1 48 8b 13 48 89 c7 48 c1
+[58914.279691] RIP [] psi_update_stats+0x1c1/0x330
 
-skips the PT/LBR exclusivity check on CPUs where PT and LBRs coexist, but
-also inadvertently skips the active_events bump for PT in that case, which
-is a bug. If there aren't any hardware events at the same time as PT, the
-PMI handler will ignore PT PMIs, as active_events reads zero in that case,
-resulting in the "Uhhuh" spurious NMI warning and PT data loss.
+The crashing instruction is trying to divide the observed stall time
+by the sampling period. The period, stored in R8, is not 0, but we are
+dividing by the lower 32 bits only, which are all 0 in this instance.
 
-Fix this by always increasing active_events for PT events.
+We could switch to a 64-bit division, but the period shouldn't be that
+big in the first place. It's the time between the last update and the
+next scheduled one, and so should always be around 2s and comfortably
+fit into 32 bits.
 
-Fixes: ccbebba4c6bf ("perf/x86/intel/pt: Bypass PT vs. LBR exclusivity if the core supports it")
-Reported-by: Vitaly Slobodskoy <vitaly.slobodskoy@intel.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+The bug is in the initialization of new cgroups: we schedule the first
+sampling event in a cgroup as an offset of sched_clock(), but fail to
+initialize the last_update timestamp, and it defaults to 0. That
+results in a bogusly large sampling period the first time we run the
+sampling code, and consequently we underreport pressure for the first
+2s of a cgroup's life. But worse, if sched_clock() is sufficiently
+advanced on the system, and the user gets unlucky, the period's lower
+32 bits can all be 0 and the sampling division will crash.
+
+Fix this by initializing the last update timestamp to the creation
+time of the cgroup, thus correctly marking the start of the first
+pressure sampling period in a new cgroup.
+
+Reported-by: Jingfeng Xie <xiejingfeng@linux.alibaba.com>
+Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: https://lkml.kernel.org/r/20191210105101.77210-1-alexander.shishkin@linux.intel.com
+Cc: Suren Baghdasaryan <surenb@google.com>
+Link: https://lkml.kernel.org/r/20191203183524.41378-2-hannes@cmpxchg.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ kernel/sched/psi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index b9673396b571..e622158f5659 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -375,7 +375,7 @@ int x86_add_exclusive(unsigned int what)
- 	 * LBR and BTS are still mutually exclusive.
- 	 */
- 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
--		return 0;
-+		goto out;
+diff --git a/kernel/sched/psi.c b/kernel/sched/psi.c
+index 517e3719027e..970db4686dd4 100644
+--- a/kernel/sched/psi.c
++++ b/kernel/sched/psi.c
+@@ -185,7 +185,8 @@ static void group_init(struct psi_group *group)
  
- 	if (!atomic_inc_not_zero(&x86_pmu.lbr_exclusive[what])) {
- 		mutex_lock(&pmc_reserve_mutex);
-@@ -387,6 +387,7 @@ int x86_add_exclusive(unsigned int what)
- 		mutex_unlock(&pmc_reserve_mutex);
- 	}
- 
-+out:
- 	atomic_inc(&active_events);
- 	return 0;
- 
-@@ -397,11 +398,15 @@ int x86_add_exclusive(unsigned int what)
- 
- void x86_del_exclusive(unsigned int what)
- {
-+	atomic_dec(&active_events);
-+
-+	/*
-+	 * See the comment in x86_add_exclusive().
-+	 */
- 	if (x86_pmu.lbr_pt_coexist && what == x86_lbr_exclusive_pt)
- 		return;
- 
- 	atomic_dec(&x86_pmu.lbr_exclusive[what]);
--	atomic_dec(&active_events);
- }
- 
- int x86_setup_perfctr(struct perf_event *event)
+ 	for_each_possible_cpu(cpu)
+ 		seqcount_init(&per_cpu_ptr(group->pcpu, cpu)->seq);
+-	group->avg_next_update = sched_clock() + psi_period;
++	group->avg_last_update = sched_clock();
++	group->avg_next_update = group->avg_last_update + psi_period;
+ 	INIT_DELAYED_WORK(&group->avgs_work, psi_avgs_work);
+ 	mutex_init(&group->avgs_lock);
+ 	/* Init trigger-related members */
 -- 
 2.20.1
 
