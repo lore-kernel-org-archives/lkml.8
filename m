@@ -6,72 +6,75 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22A9C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01717C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9276208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA842084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:23:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ap3Qxu9y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vZ2ZQzhb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbgAKUKO (ORCPT
+        id S1731196AbgAKUXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 15:10:14 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42729 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731045AbgAKUKN (ORCPT
+        Sat, 11 Jan 2020 15:23:01 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36061 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731119AbgAKUXA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 15:10:13 -0500
-Received: by mail-pl1-f194.google.com with SMTP id p9so2193366plk.9;
-        Sat, 11 Jan 2020 12:10:13 -0800 (PST)
+        Sat, 11 Jan 2020 15:23:00 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x184so2861699pfb.3;
+        Sat, 11 Jan 2020 12:23:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+        h=sender:subject:from:to:cc:references:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EjEIhTS0iFDpHoRJO5ZblD6G1YeXP+2uPWxoytZcfgA=;
-        b=Ap3Qxu9yHUTBHmX9MFzouoGff8y7oJqDatdU2bsRFXRy75z2xvjtEDzyVUyOuMhl+Q
-         cb3x+m5S3JQZg7gtTIiArhAFPSupIpru1FwpAFv8QA1k+/mlLh6bRSMh5DptVZrl1Tfh
-         Fc4MgXXGmaImBOrhTEBij4OPqI3PJXCI0KeKymSTvrZpra9TPOVLiHlrv3sJtScSg9vQ
-         bNZu8qc7rgbxV9Ccunqxt8vasizFz9+VCtHO09z7z0t7xVwT80M1d0Z+QIFh7V8t3iRo
-         SckA+oMsBcN/w8QsjL/MFFdTbE9KmMd8oq+D5x+VonpLUF16mWfWQD0Ot7SNqf42Sy+r
-         5qtA==
+        bh=41KWMk1pZePqF7DfgTawJC7PFNFV1UU7PbNC+WCjwvw=;
+        b=vZ2ZQzhbAdvQJc6i1VGPzo9PLxV1GRAtcj4FNeKlizCfjGVoIi1N+h4A+/941KxN+K
+         Or5V7F/FqqwYcoY/I0IELwJMc1OB4/SeieFXzIQXNzzWHAJFiHE95uQYNxUWFE79oRqR
+         SQZlM1xt9m+6DjAGHIR4JN+Ky8GXwFR83vc0513L656LSwct6Lf0m77fXi2k6tw2isKF
+         f9+8Wpaeji9ri//KUKpJRXjfdo9GjKJLE9pdawsG4HeaW/e6Es0PrxCMCAUuHSAMyQAV
+         lzMa/3Qlagy1ZW2ZrRKzsVFyQxoF43PQsooNsstDlyuGruyMrX2F+ZA4x8xxLL01cRwj
+         63sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+        h=x-gm-message-state:sender:subject:from:to:cc:references:message-id
          :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=EjEIhTS0iFDpHoRJO5ZblD6G1YeXP+2uPWxoytZcfgA=;
-        b=FlPRj57Seh6hAEDt7+zBjBV+BQFMmZgWXWM7a1ygR3B/3tVqf1EjB4dqKTGqcDKRXm
-         MZnyWB7jnrPzJOHko6moC5OILEFoofSF1T4PYTp/svIVuglOy4cXDcCH7otBYxBXWA34
-         Z5sGDt1IojQeF98vjYIbbGMvfgZJiGgUTQG6sLWQWssBAXHkm57HXpX4RL0DXxIAe6Dj
-         piMvjfEoTTX4uCqG+DNwLOX2qMahirPzQhEENzhnNw00A/2fPHgf7n0F6gib8c9yjrLY
-         Ft4HHxCscEP2J4KRl64lDC2qtXhXuP7iSTuul+COi1WjKzC6oYNt3r7ujne9AiBuy7F+
-         t8Dg==
-X-Gm-Message-State: APjAAAUooKx+DJtn52gvAc89IarphLUY4siJnicM6rDRxNbGWnpifLFE
-        3Gd9hNQ2a7vioNYJNrWLMd/60HLX
-X-Google-Smtp-Source: APXvYqwwlxVho/Edn9u5Kr57ZjbZhv+FJdmPDcA8eKmLyDqqU2VoIibaoFHWrR6At2lZ0YOvF8vokw==
-X-Received: by 2002:a17:902:74cb:: with SMTP id f11mr6183241plt.139.1578773412581;
-        Sat, 11 Jan 2020 12:10:12 -0800 (PST)
+        bh=41KWMk1pZePqF7DfgTawJC7PFNFV1UU7PbNC+WCjwvw=;
+        b=tbkucNVnTzmfcaSDn2PpG0mduXkGdk+XO+O392RSiGY0KOYUlAe4vPan3+x6DGIgKO
+         kGeuHrIeI3M8LCQXiZXFcvTV6C4iYOKLA13mfa4AGPBcWI/Cy3TT9RdjbuE0pmePfgBm
+         0LbUGpWXgKpMqlEeJ+UptuGvqfyuT/b90XvlyyBtllIhsDuR5EgfvIdhZG3Xvk1oGhDu
+         36TSUmNMi2ccyPVb9KMwoFTn4roWH9GU6a0+LqM9O+PbE1x5OxYYBDGIbXQdstBchEzo
+         iuqMGGoGJcFpmT8GkjrJ6kIm6pO6V6q3PfzXGkcNEdDnz1py4qp3VHpVlR6jodMVNPZW
+         hOdw==
+X-Gm-Message-State: APjAAAXNdIMhAASR74GnhuNMUhlDNTPDDUSkZ9IpD5K9p92OY+FOCYHN
+        aL55M6qMFRYX2eY6NxRoOiw=
+X-Google-Smtp-Source: APXvYqyzTVgDIcY913y1z652I02ZglZtHagv5esZ0OSA1Rm/rl7v3G+QeLDwAGkHey9qCR8Hz8yWjg==
+X-Received: by 2002:a63:d306:: with SMTP id b6mr12428585pgg.195.1578774179696;
+        Sat, 11 Jan 2020 12:22:59 -0800 (PST)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 13sm7857811pfi.78.2020.01.11.12.10.11
+        by smtp.gmail.com with ESMTPSA id b193sm7962800pfb.57.2020.01.11.12.22.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jan 2020 12:10:12 -0800 (PST)
-Subject: Re: [PATCH 4.19 00/84] 4.19.95-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200111094845.328046411@linuxfoundation.org>
- <23c3a0d1-1655-8cc2-7c96-743a47953795@roeck-us.net>
- <20200111174715.GB394778@kroah.com>
+        Sat, 11 Jan 2020 12:22:59 -0800 (PST)
+Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
 From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <565353ce-9383-9af6-3150-529e9ef73398@roeck-us.net>
-Date:   Sat, 11 Jan 2020 12:10:11 -0800
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org,
+        Chris Healy <cphealy@gmail.com>
+References: <20191215174509.1847-1-linux@roeck-us.net>
+ <20191215174509.1847-2-linux@roeck-us.net> <yq1r211dvck.fsf@oracle.com>
+ <b22a519c-8f26-e731-345f-9deca1b2150e@roeck-us.net>
+ <yq1sgkq21ll.fsf@oracle.com> <20200108153341.GB28530@roeck-us.net>
+Message-ID: <38af9fda-9edf-1b54-bd8d-92f712ae4cda@roeck-us.net>
+Date:   Sat, 11 Jan 2020 12:22:57 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200111174715.GB394778@kroah.com>
+In-Reply-To: <20200108153341.GB28530@roeck-us.net>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -80,39 +83,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/11/20 9:47 AM, Greg Kroah-Hartman wrote:
-> On Sat, Jan 11, 2020 at 08:02:40AM -0800, Guenter Roeck wrote:
->> On 1/11/20 1:49 AM, Greg Kroah-Hartman wrote:
->>> This is the start of the stable review cycle for the 4.19.95 release.
->>> There are 84 patches in this series, all will be posted as a response
->>> to this one.  If anyone has any issues with these being applied, please
->>> let me know.
->>>
->>> Responses should be made by Mon, 13 Jan 2020 09:46:17 +0000.
->>> Anything received after that time might be too late.
->>>
->> Build results:
->> 	total: 156 pass: 154 fail: 2
->> Failed builds:
->> 	arm64:defconfig
->> 	arm64:allmodconfig
->> Qemu test results:
->> 	total: 382 pass: 339 fail: 43
->> Failed tests:
->> 	<all arm64>
+On 1/8/20 7:33 AM, Guenter Roeck wrote:
+> On Tue, Jan 07, 2020 at 08:12:06PM -0500, Martin K. Petersen wrote:
 >>
->> arch/arm64/kvm/hyp/switch.c: In function 'handle_tx2_tvm':
->> arch/arm64/kvm/hyp/switch.c:438:2: error: implicit declaration of function '__kvm_skip_instr'; did you mean 'kvm_skip_instr'?
-> 
-> Thanks for this, I'll go push out a -rc2 with the offending patch
-> removed.
+>> Guenter,
+>>
+>>> Any idea how I might be able to reproduce this ? So far I have been
+>>> unsuccessful.
+>>>
+>>> Building drivetemp into the kernel, with ahci and everything SCSI
+>>> built as module, doesn't trigger the crash for me. This is with the
+>>> drivetemp patch (v3) as well as commit d188b0675b ("scsi: core: Add
+>>> sysfs attributes for VPD pages 0h and 89h") applied on top of v5.4.7.
+>>
+>> This is with 5.5-rc1. I'll try another kernel.
+>>
+>> My repro is:
+>>
+>> # modprobe drivetemp
+>> # modprobe <any SCSI driver, including ahci>
+>>
+> No luck on my side. Can you provide a traceback ? Maybe we can use it
+> to find out what is happening.
 > 
 
-For v4.19.94-84-g4f77fc728c70:
+I tried again, this time with v5.5-rc5. Loading and unloading ahci and
+drivetemp in any order does not cause any problems for me.
 
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 382 pass: 382 fail: 0
+At this point I don't know what else I could test. I went ahead and
+applied the drivetemp patch to hwmon-next. Maybe we'll get some additional
+test feedback this way.
 
 Guenter
