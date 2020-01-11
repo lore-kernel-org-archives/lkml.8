@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEEFC33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FBEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA202077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E47CA2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736875;
-	bh=3WK0oIKseIdJBhhcDj5MvEQFhrbomsZXfcbffUOPnCI=;
+	s=default; t=1578736886;
+	bh=Dbl+ncwhMB3Xk8G2+tbpLHrwmr3/Xrw+XklCgJMWSjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sk5sT+UC2imm6kYKT1frjFFp4bmR1VnPEiXdK6mEjE8hTmvEFMHF8f0UL14beikwM
-	 lO/2jvuQDSBsxV2pcSSLReMl+9+FfmKEPs6wTgo83Lzb0WNLtB25BLnkIGs0Nxky7D
-	 97JRY/ZRXxTVhpg2gtVXItEraa5XvGWH60mmALQA=
+	b=ZBP4CG0eiHDmQqe1MdQvCOJXjKz8bEsOP7Bp4NEoxXoq1oJo7tVYYap1XteV2kJFh
+	 ZvOEIwroBCvVAbsaUKPirAAFjnsLLUrmri5mOWR3MCZBkoHO6y5lEKMZrDHfAGPdsJ
+	 VnDx2XBYlqqmw9fKAIJxW6ejWqwaIKa5EoECKj7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729453AbgAKKBO (ORCPT
+        id S1729295AbgAKKBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:01:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58380 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:01:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729106AbgAKKBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:01:12 -0500
+        id S1728747AbgAKKBY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:01:24 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3DB92077C;
-        Sat, 11 Jan 2020 10:01:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 690142077C;
+        Sat, 11 Jan 2020 10:01:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736872;
-        bh=3WK0oIKseIdJBhhcDj5MvEQFhrbomsZXfcbffUOPnCI=;
+        s=default; t=1578736884;
+        bh=Dbl+ncwhMB3Xk8G2+tbpLHrwmr3/Xrw+XklCgJMWSjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2TG8mkgwR5XY4Ym0YkwfRKERICZKoDL2c3TMbNxaxCd6HvVGSK3XMRjvhYJXsENGU
-         lsOwDZ9Wf+l29lzoWvLB7leBwzeenLMxAABAYyk3MNFJY8Nlz4ybMMNHcu1LV3uzpN
-         0a4B6uvLfUFzD/dJj2CXBTmK5YnH3EFsLYPqyMOQ=
+        b=YhwFYV2pmRp9RYNDaanDsKeubXgQCgJybtUy5wMuqfwIAHJlHsfR8UWUP1fV4+CdG
+         V9cEJtgYjyIUR8pFXn/mE/GwjXmH0DOe8xuXZQWqhJLq4ZiwJtIdWqzAlGqbj0bPwJ
+         8tb0YZp9lx9/iS+7UneVJffJRv+d01DIPH+gzrpU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: [PATCH 4.9 40/91] media: flexcop-usb: ensure -EIO is returned on error condition
-Date:   Sat, 11 Jan 2020 10:49:33 +0100
-Message-Id: <20200111094900.180958529@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.9 41/91] regulator: ab8500: Remove AB8505 USB regulator
+Date:   Sat, 11 Jan 2020 10:49:34 +0100
+Message-Id: <20200111094900.556473956@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -60,37 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit 74a96b51a36de4d86660fbc56b05d86668162d6b upstream.
+commit 99c4f70df3a6446c56ca817c2d0f9c12d85d4e7c upstream.
 
-An earlier commit hard coded a return 0 to function flexcop_usb_i2c_req
-even though the an -EIO was intended to be returned in the case where
-ret != buflen.  Fix this by replacing the return 0 with the return of
-ret to return the error return code.
+The USB regulator was removed for AB8500 in
+commit 41a06aa738ad ("regulator: ab8500: Remove USB regulator").
+It was then added for AB8505 in
+commit 547f384f33db ("regulator: ab8500: add support for ab8505").
 
-Addresses-Coverity: ("Unused value")
+However, there was never an entry added for it in
+ab8505_regulator_match. This causes all regulators after it
+to be initialized with the wrong device tree data, eventually
+leading to an out-of-bounds array read.
 
-Fixes: b430eaba0be5 ("[media] flexcop-usb: don't use stack for DMA")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Given that it is not used anywhere in the kernel, it seems
+likely that similar arguments against supporting it exist for
+AB8505 (it is controlled by hardware).
+
+Therefore, simply remove it like for AB8500 instead of adding
+an entry in ab8505_regulator_match.
+
+Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191106173125.14496-1-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/b2c2/flexcop-usb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/regulator/ab8500.c       |   17 -----------------
+ include/linux/regulator/ab8500.h |    1 -
+ 2 files changed, 18 deletions(-)
 
---- a/drivers/media/usb/b2c2/flexcop-usb.c
-+++ b/drivers/media/usb/b2c2/flexcop-usb.c
-@@ -295,7 +295,7 @@ static int flexcop_usb_i2c_req(struct fl
- 
- 	mutex_unlock(&fc_usb->data_mutex);
- 
--	return 0;
-+	return ret;
- }
- 
- /* actual bus specific access functions,
+--- a/drivers/regulator/ab8500.c
++++ b/drivers/regulator/ab8500.c
+@@ -1099,23 +1099,6 @@ static struct ab8500_regulator_info
+ 		.update_val_idle	= 0x82,
+ 		.update_val_normal	= 0x02,
+ 	},
+-	[AB8505_LDO_USB] = {
+-		.desc = {
+-			.name           = "LDO-USB",
+-			.ops            = &ab8500_regulator_mode_ops,
+-			.type           = REGULATOR_VOLTAGE,
+-			.id             = AB8505_LDO_USB,
+-			.owner          = THIS_MODULE,
+-			.n_voltages     = 1,
+-			.volt_table	= fixed_3300000_voltage,
+-		},
+-		.update_bank            = 0x03,
+-		.update_reg             = 0x82,
+-		.update_mask            = 0x03,
+-		.update_val		= 0x01,
+-		.update_val_idle	= 0x03,
+-		.update_val_normal	= 0x01,
+-	},
+ 	[AB8505_LDO_AUDIO] = {
+ 		.desc = {
+ 			.name		= "LDO-AUDIO",
+--- a/include/linux/regulator/ab8500.h
++++ b/include/linux/regulator/ab8500.h
+@@ -38,7 +38,6 @@ enum ab8505_regulator_id {
+ 	AB8505_LDO_AUX6,
+ 	AB8505_LDO_INTCORE,
+ 	AB8505_LDO_ADC,
+-	AB8505_LDO_USB,
+ 	AB8505_LDO_AUDIO,
+ 	AB8505_LDO_ANAMIC1,
+ 	AB8505_LDO_ANAMIC2,
 
 
