@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E14C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D6A4C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 126B72084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18CCD2082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736860;
-	bh=Lo5Smt3oSA4bNODey7pLbvX9J2tYch+fFpPESUk3xPY=;
+	s=default; t=1578736865;
+	bh=R4b/CKHP7JvZDV66qTaF7d//2d8ksi5dmX0LRaHr1z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tM8bIEZrUJg5p+XnFRhAziw1vd1jaR4q8wFpgqOlcPnGbVwy7dWEF5EmA7l1wm1Ez
-	 XQMZvq1R86r/mWWojXnrjlkpCRKnkw2ka8295EglmYHq8qRlNW/Xx8ynCLiCsSjzyf
-	 CpeiOVURe5GPk3/jNFA4hhQrNaEtpKNeU5WTp5ic=
+	b=EBjSImfXbUL8Jis2qwPBKo8QO6bvjrqXKQHQUlMPHBSyMWWiz+m9QtWXbEThEBhQW
+	 Z74vpK1dqvDcMADahvXGDnTZrq022rf5lt8M00Hg2umqGxRqRQ8XmVZU+IrHJannbc
+	 tBBlZa+l0Nv5hKvs+RQVvKG+3q+/r413i04MXPTk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbgAKKA7 (ORCPT
+        id S1729436AbgAKKBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:00:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57772 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:01:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729064AbgAKKA4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:00:56 -0500
+        id S1729064AbgAKKBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:01:01 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C905D2082E;
-        Sat, 11 Jan 2020 10:00:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D59C2082E;
+        Sat, 11 Jan 2020 10:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736855;
-        bh=Lo5Smt3oSA4bNODey7pLbvX9J2tYch+fFpPESUk3xPY=;
+        s=default; t=1578736860;
+        bh=R4b/CKHP7JvZDV66qTaF7d//2d8ksi5dmX0LRaHr1z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XcSPHlNuxNMhlaJbvkHVTv4HA8r96hTLROr7m51swRf7LlzZbkjwlX6g3bI0cqYO2
-         iZPJjf8DCU9U7Kj7E7ggp4aG+JtqRqVJS75Md24uTu1E+8EqI5HUVKuzzdifvH2ig0
-         Uz2LpqA0nkKEUGdzbdScuxS4rVDCdMGt/RpsSQLw=
+        b=i6xZS+3ZHK70M3t2t+TM0n1QnLVYxETSN+w5zv9KLzUfHwt/ccgfE/mVnQCr1l+KU
+         e41/DfpCujqHdKml3I6s0lxpmWmaUzQVTw261ezLrsyuQ96NCsywRXYMiiLCDHQ37j
+         jmv97sjG455jMJHXNIXWOph/kfPoCEJ5kcabUcaU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
         Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.9 37/91] Bluetooth: btusb: fix PM leak in error case of setup
-Date:   Sat, 11 Jan 2020 10:49:30 +0100
-Message-Id: <20200111094858.986634438@linuxfoundation.org>
+Subject: [PATCH 4.9 38/91] Bluetooth: delete a stray unlock
+Date:   Sat, 11 Jan 2020 10:49:31 +0100
+Message-Id: <20200111094859.385467870@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -59,41 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 3d44a6fd0775e6215e836423e27f8eedf8c871ea upstream.
+commit df66499a1fab340c167250a5743931dc50d5f0fa upstream.
 
-If setup() fails a reference for runtime PM has already
-been taken. Proper use of the error handling in btusb_open()is needed.
-You cannot just return.
+We used to take a lock in amp_physical_cfm() but then we moved it to
+the caller function.  Unfortunately the unlock on this error path was
+overlooked so it leads to a double unlock.
 
-Fixes: ace31982585a3 ("Bluetooth: btusb: Add setup callback for chip init on USB")
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Fixes: a514b17fab51 ("Bluetooth: Refactor locking in amp_physical_cfm")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/btusb.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/bluetooth/l2cap_core.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -1069,7 +1069,7 @@ static int btusb_open(struct hci_dev *hd
- 	if (data->setup_on_usb) {
- 		err = data->setup_on_usb(hdev);
- 		if (err < 0)
--			return err;
-+			goto setup_fail;
- 	}
+--- a/net/bluetooth/l2cap_core.c
++++ b/net/bluetooth/l2cap_core.c
+@@ -4908,10 +4908,8 @@ void __l2cap_physical_cfm(struct l2cap_c
+ 	BT_DBG("chan %p, result %d, local_amp_id %d, remote_amp_id %d",
+ 	       chan, result, local_amp_id, remote_amp_id);
  
- 	data->intf->needs_remote_wakeup = 1;
-@@ -1101,6 +1101,7 @@ done:
+-	if (chan->state == BT_DISCONN || chan->state == BT_CLOSED) {
+-		l2cap_chan_unlock(chan);
++	if (chan->state == BT_DISCONN || chan->state == BT_CLOSED)
+ 		return;
+-	}
  
- failed:
- 	clear_bit(BTUSB_INTR_RUNNING, &data->flags);
-+setup_fail:
- 	usb_autopm_put_interface(data->intf);
- 	return err;
- }
+ 	if (chan->state != BT_CONNECTED) {
+ 		l2cap_do_create(chan, result, local_amp_id, remote_amp_id);
 
 
