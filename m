@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43922C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:10:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837D8C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E81820673
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A99320673
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:10:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737445;
-	bh=VVAXxor+iPN+v/i1b9zhPl8bSbTs/m3d8lkUIp2osCk=;
+	s=default; t=1578737451;
+	bh=J0cPKhFxQCuZu+uLL9G/eNDy4tjEa8vlQ6PtGjaXh5k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qWPJWv/41a9YGM0kNK6Do1eDG0zbFmzdxS9MJ7s+yEd0z4LM43kUhkKcPB2tdvYme
-	 8ec1ad0+rSPjil4w6uoHOj7GpN0OKZ376QVc29naGjO2hMqZ5a5CP/E5b6f2Rv6zEW
-	 bQOL4+Z3qmgAcfNtiNoIVudBWYWEJXWniy2nhyAw=
+	b=puNEt3JRxYchucOOUfKPaGD+20rSbpYz+TIzGg+1RaY+M76XkhaV/m7z5n6CCY289
+	 0vhsp7tMxNQQSFQ3APJAJ4wNe1VjXR+0Yq4ySlla79xXY2aZQS8zvJTmsp4S6SjcMR
+	 NBlfK6Tx411KS2mYoeUN3qzP++TLyPXMmb2FbAwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbgAKKKn (ORCPT
+        id S1729926AbgAKKKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:10:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47424 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:10:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729701AbgAKKKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:10:41 -0500
+        id S1729229AbgAKKKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:10:48 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72B602084D;
-        Sat, 11 Jan 2020 10:10:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8B5920673;
+        Sat, 11 Jan 2020 10:10:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737440;
-        bh=VVAXxor+iPN+v/i1b9zhPl8bSbTs/m3d8lkUIp2osCk=;
+        s=default; t=1578737448;
+        bh=J0cPKhFxQCuZu+uLL9G/eNDy4tjEa8vlQ6PtGjaXh5k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zbjNm3bThSrY34sRgiV0gkqlza7T9Ygkq6VUAOPoMbaA1hTGjl2eDKQcLi6BGvOB/
-         VGc16VcucA2AFK1fgYeQkdNUfkAhF3DgEQGSItY30H/B1Ueb54V0LgX/WqJISAAo1+
-         /0HH/OrtCL2nBO/Paipyaypa8UeRqVSLGRj7j5kY=
+        b=SjRgztevO2APNaH4Gzf/zopg2VOMVvrJ9R5KpZMJO+WMHj6YlQVNyJaNrJN/n5F2A
+         6tE6c6Ve6tsDddqFJfb7RhGyKC8Cia/vhnQnxjNaK5AlwNmMonA2Icghk0UAkGG1fW
+         6q38WUxf+F2fIVCSEdAASXPAchX5QansVjFDK2l8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 21/62] samples: bpf: fix syscall_tp due to unused syscall
-Date:   Sat, 11 Jan 2020 10:50:03 +0100
-Message-Id: <20200111094844.096095095@linuxfoundation.org>
+Subject: [PATCH 4.14 12/62] netfilter: uapi: Avoid undefined left-shift in xt_sctp.h
+Date:   Sat, 11 Jan 2020 10:49:54 +0100
+Message-Id: <20200111094842.530267605@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -60,60 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel T. Lee <danieltimlee@gmail.com>
+From: Phil Sutter <phil@nwl.cc>
 
-[ Upstream commit fe3300897cbfd76c6cb825776e5ac0ca50a91ca4 ]
+[ Upstream commit 164166558aacea01b99c8c8ffb710d930405ba69 ]
 
-Currently, open() is called from the user program and it calls the syscall
-'sys_openat', not the 'sys_open'. This leads to an error of the program
-of user side, due to the fact that the counter maps are zero since no
-function such 'sys_open' is called.
+With 'bytes(__u32)' being 32, a left-shift of 31 may happen which is
+undefined for the signed 32-bit value 1. Avoid this by declaring 1 as
+unsigned.
 
-This commit adds the kernel bpf program which are attached to the
-tracepoint 'sys_enter_openat' and 'sys_enter_openat'.
-
-Fixes: 1da236b6be963 ("bpf: add a test case for syscalls/sys_{enter|exit}_* tracepoints")
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Phil Sutter <phil@nwl.cc>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/syscall_tp_kern.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ include/uapi/linux/netfilter/xt_sctp.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/samples/bpf/syscall_tp_kern.c b/samples/bpf/syscall_tp_kern.c
-index 9149c524d279..8833aacb9c8c 100644
---- a/samples/bpf/syscall_tp_kern.c
-+++ b/samples/bpf/syscall_tp_kern.c
-@@ -50,13 +50,27 @@ static __always_inline void count(void *map)
- SEC("tracepoint/syscalls/sys_enter_open")
- int trace_enter_open(struct syscalls_enter_open_args *ctx)
- {
--	count((void *)&enter_open_map);
-+	count(&enter_open_map);
-+	return 0;
-+}
-+
-+SEC("tracepoint/syscalls/sys_enter_openat")
-+int trace_enter_open_at(struct syscalls_enter_open_args *ctx)
-+{
-+	count(&enter_open_map);
- 	return 0;
- }
+diff --git a/include/uapi/linux/netfilter/xt_sctp.h b/include/uapi/linux/netfilter/xt_sctp.h
+index 4bc6d1a08781..b4d804a9fccb 100644
+--- a/include/uapi/linux/netfilter/xt_sctp.h
++++ b/include/uapi/linux/netfilter/xt_sctp.h
+@@ -41,19 +41,19 @@ struct xt_sctp_info {
+ #define SCTP_CHUNKMAP_SET(chunkmap, type) 		\
+ 	do { 						\
+ 		(chunkmap)[type / bytes(__u32)] |= 	\
+-			1 << (type % bytes(__u32));	\
++			1u << (type % bytes(__u32));	\
+ 	} while (0)
  
- SEC("tracepoint/syscalls/sys_exit_open")
- int trace_enter_exit(struct syscalls_exit_open_args *ctx)
- {
--	count((void *)&exit_open_map);
-+	count(&exit_open_map);
-+	return 0;
-+}
-+
-+SEC("tracepoint/syscalls/sys_exit_openat")
-+int trace_enter_exit_at(struct syscalls_exit_open_args *ctx)
-+{
-+	count(&exit_open_map);
- 	return 0;
- }
+ #define SCTP_CHUNKMAP_CLEAR(chunkmap, type)		 	\
+ 	do {							\
+ 		(chunkmap)[type / bytes(__u32)] &= 		\
+-			~(1 << (type % bytes(__u32)));	\
++			~(1u << (type % bytes(__u32)));	\
+ 	} while (0)
+ 
+ #define SCTP_CHUNKMAP_IS_SET(chunkmap, type) 			\
+ ({								\
+ 	((chunkmap)[type / bytes (__u32)] & 		\
+-		(1 << (type % bytes (__u32)))) ? 1: 0;	\
++		(1u << (type % bytes (__u32)))) ? 1: 0;	\
+ })
+ 
+ #define SCTP_CHUNKMAP_RESET(chunkmap) \
 -- 
 2.20.1
 
