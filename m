@@ -2,102 +2,101 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDFBDC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 02:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F25C33CA2
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 02:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB6632072E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 02:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E992072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 02:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbgAKCZU (ORCPT
+        id S1728105AbgAKC1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 21:25:20 -0500
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:48827 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbgAKCZT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 21:25:19 -0500
-X-Originating-IP: 50.39.173.182
-Received: from localhost (50-39-173-182.bvtn.or.frontiernet.net [50.39.173.182])
-        (Authenticated sender: josh@joshtriplett.org)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 8F8E1240004;
-        Sat, 11 Jan 2020 02:25:15 +0000 (UTC)
-Date:   Fri, 10 Jan 2020 18:25:13 -0800
-From:   Josh Triplett <josh@joshtriplett.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Arjan van de Ven <arjan@linux.intel.com>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] serial: 8250: Support disabling mdelay-filled probes of
- 16550A variants
-Message-ID: <20200111022513.GA166267@localhost>
+        Fri, 10 Jan 2020 21:27:09 -0500
+Received: from smtp.h3c.com ([60.191.123.50]:30106 "EHLO h3cspam02-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728062AbgAKC1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 10 Jan 2020 21:27:08 -0500
+Received: from DAG2EX10-IDC.srv.huawei-3com.com ([10.8.0.73])
+        by h3cspam02-ex.h3c.com with ESMTPS id 00B2Qhl7005200
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 11 Jan 2020 10:26:43 +0800 (GMT-8)
+        (envelope-from li.kai4@h3c.com)
+Received: from DAG2EX10-IDC.srv.huawei-3com.com (10.8.0.73) by
+ DAG2EX10-IDC.srv.huawei-3com.com (10.8.0.73) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sat, 11 Jan 2020 10:26:44 +0800
+Received: from BJHUB01-EX.srv.huawei-3com.com (10.63.20.169) by
+ DAG2EX10-IDC.srv.huawei-3com.com (10.8.0.73) with Microsoft SMTP Server
+ (version=TLS1_0, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.1.1713.5
+ via Frontend Transport; Sat, 11 Jan 2020 10:26:44 +0800
+Received: from RDVDI-L14391V.h3c.huawei-3com.com (10.125.108.72) by
+ rndsmtp.h3c.com (10.63.20.174) with Microsoft SMTP Server id 14.3.408.0; Sat,
+ 11 Jan 2020 10:26:33 +0800
+From:   Kai Li <li.kai4@h3c.com>
+To:     <jack@suse.cz>
+CC:     <tytso@mit.edu>, <linux-ext4@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <joseph.qi@linux.alibaba.com>,
+        <gechangwei@live.cn>, <wang.yongd@h3c.com>, <wang.xibo@h3c.com>,
+        Kai Li <li.kai4@h3c.com>
+Subject: [PATCH] jbd2: clear JBD2_ABORT flag before journal_reset to update log tail info when load journal
+Date:   Sat, 11 Jan 2020 10:25:42 +0800
+Message-ID: <20200111022542.5008-1-li.kai4@h3c.com>
+X-Mailer: git-send-email 2.24.0.windows.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.125.108.72]
+X-DNSRBL: 
+X-MAIL: h3cspam02-ex.h3c.com 00B2Qhl7005200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 8250 driver can probe for many variants of the venerable 16550A
-serial port. Some of those probes involve long (20ms) mdelay calls,
-which delay system boot. Modern systems and virtual machines don't have
-those variants.
+Fixes: 85e0c4e89c1b "jbd2: if the journal is aborted then don't allow update of the log tail"
 
-Provide a Kconfig option to disable probes for 16550A variants.
-Disabling this speeds up the boot of a virtual machine with a serial
-console by more than 20ms (a substantial fraction of the ~100ms needed
-to boot a carefully configured VM).
+If journal is dirty when mount, it will be replayed but jbd2 sb
+log tail cannot be updated to mark a new start because
+journal->j_flags has already been set with JBD2_ABORT first
+in journal_init_common.
+When a new transaction is committed, it will be recorded in block 1
+first(journal->j_tail is set to 1 in journal_reset). If emergency
+restart again before journal super block is updated unfortunately,
+the new recorded trans will not be replayed in the next mount.
+It is danerous which may lead to metadata corruption for file system.
 
-Before:
-[  +0.021919] 00:04: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
-After:
-[  +0.000097] 00:04: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
-
-Signed-off-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: Kai Li <li.kai4@h3c.com>
 ---
- drivers/tty/serial/8250/8250_port.c |  3 +++
- drivers/tty/serial/8250/Kconfig     | 10 ++++++++++
- 2 files changed, 13 insertions(+)
+ fs/jbd2/journal.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 90655910b0c7..925bc26d3f15 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -1001,6 +1001,9 @@ static void autoconfig_16550a(struct uart_8250_port *up)
- 	up->port.type = PORT_16550A;
- 	up->capabilities |= UART_CAP_FIFO;
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index 5e408ee24a1a..069b22eba795 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -1710,6 +1710,11 @@ int jbd2_journal_load(journal_t *journal)
+ 		       journal->j_devname);
+ 		return -EFSCORRUPTED;
+ 	}
++	/*
++	 * clear JBD2_ABORT flag initialized in journal_init_common
++	 * here to update log tail information with the newest seq.
++	 */
++	journal->j_flags &= ~JBD2_ABORT;
  
-+	if (!IS_ENABLED(CONFIG_SERIAL_8250_16550A_VARIANTS))
-+		return;
-+
- 	/*
- 	 * Check for presence of the EFR when DLAB is set.
- 	 * Only ST16C650V1 UARTs pass this test.
-diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-index fab3d4f20667..ffd167e886ae 100644
---- a/drivers/tty/serial/8250/Kconfig
-+++ b/drivers/tty/serial/8250/Kconfig
-@@ -60,6 +60,16 @@ config SERIAL_8250_PNP
- 	  This builds standard PNP serial support. You may be able to
- 	  disable this feature if you only need legacy serial support.
+ 	/* OK, we've finished with the dynamic journal bits:
+ 	 * reinitialise the dynamic contents of the superblock in memory
+@@ -1717,7 +1722,6 @@ int jbd2_journal_load(journal_t *journal)
+ 	if (journal_reset(journal))
+ 		goto recovery_error;
  
-+config SERIAL_8250_16550A_VARIANTS
-+	bool "Support for variants of the 16550A serial port"
-+	depends on SERIAL_8250
-+	help
-+	  The 8250 driver can probe for many variants of the venerable 16550A
-+	  serial port. Doing so takes additional time at boot.
-+
-+	  On modern systems, especially those using serial only for a simple
-+	  console, you can say N here.
-+
- config SERIAL_8250_FINTEK
- 	bool "Support for Fintek F81216A LPC to 4 UART RS485 API"
- 	depends on SERIAL_8250
+-	journal->j_flags &= ~JBD2_ABORT;
+ 	journal->j_flags |= JBD2_LOADED;
+ 	return 0;
+ 
 -- 
-2.25.0.rc2
+2.24.0.windows.2
 
