@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84889C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8FCC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2562077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 083362082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736922;
-	bh=UhKWdznl3WaIfp7JHn+VhYkc7uxuSFKGbwszSTT+IcI=;
+	s=default; t=1578736933;
+	bh=eF14u/Agx2NnQzrUulSSIaE+Ij+oL00qwPCin6NyJss=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VDWW11GkrqL7LgPT5JKpkh+Gf6pAlxM/v/qQxOIEP9O1GMbs2FG1drUrdX3SIoglK
-	 OnZ9i9VF3g77gLpsScjMyoTW3OyfCB7NpaKqWHCyh0xFcv5HZSjJCl/n26aesmFJFI
-	 aG0NJOoIpVFUeb0ObDMoIKoFCeWTxVKu0gC0sB48=
+	b=yqaX8HgdyDJplHjVQsfABpUWCzlr12njL7YsEwpnzfMudVOhzMR0RP5EU+BveHHNs
+	 dNxgsepwzMsY1ujpWHbsS0KblTvmVTqmvw6sW5kzs4xYNhyx8BWGfMEXrQjI/iFW07
+	 lcmC74GqsoMGP7aByy5n09MvH8Dva5e6c0R83oOA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbgAKKCB (ORCPT
+        id S1729256AbgAKKCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:02:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59880 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:02:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728833AbgAKKB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:01:58 -0500
+        id S1728833AbgAKKCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:02:11 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06D942077C;
-        Sat, 11 Jan 2020 10:01:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 696DD2077C;
+        Sat, 11 Jan 2020 10:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736917;
-        bh=UhKWdznl3WaIfp7JHn+VhYkc7uxuSFKGbwszSTT+IcI=;
+        s=default; t=1578736930;
+        bh=eF14u/Agx2NnQzrUulSSIaE+Ij+oL00qwPCin6NyJss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c0VbprYl2u82AydcEmSpCc1ihbdRvO289KJHDRQVr1YwM2DXvdUbgURnLgyFY0Ka4
-         yvg+ffYBhYhdZStUuyUZ4NUbqTP3ejEyjzPBTaqjeSlw/spYkyi/5NmDdb65lILXJk
-         yrojE2WCWkftS+xeYRBQkEvarAWsqKuC/HMsqgl4=
+        b=VyOS26LDm0Qhl0F21AldXE6QuujKr4Fp9yDvLZB+apfJNAWN5cWgnlmgN9vfx4I8q
+         wGx6foJGebXavbbXWHbfTohAkAaxtzF0D+Ne5g+RESJyqBseYpyNcH9iP7+aIfyOm9
+         IYkR4SwaEfBbIG3eIL4Se3m6VJ4GmoVpB25nODnQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 31/91] ALSA: cs4236: fix error return comparison of an unsigned integer
-Date:   Sat, 11 Jan 2020 10:49:24 +0100
-Message-Id: <20200111094856.406546046@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.9 32/91] ftrace: Avoid potential division by zero in function profiler
+Date:   Sat, 11 Jan 2020 10:49:25 +0100
+Message-Id: <20200111094856.874096754@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -59,37 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-commit d60229d84846a8399257006af9c5444599f64361 upstream.
+commit e31f7939c1c27faa5d0e3f14519eaf7c89e8a69d upstream.
 
-The return from pnp_irq is an unsigned integer type resource_size_t
-and hence the error check for a positive non-error code is always
-going to be true.  A check for a non-failure return from pnp_irq
-should in fact be for (resource_size_t)-1 rather than >= 0.
+The ftrace_profile->counter is unsigned long and
+do_div truncates it to 32 bits, which means it can test
+non-zero and be truncated to zero for division.
+Fix this issue by using div64_ul() instead.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: a9824c868a2c ("[ALSA] Add CS4232 PnP BIOS support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20191122131354.58042-1-colin.king@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: http://lkml.kernel.org/r/20200103030248.14516-1-wenyang@linux.alibaba.com
+
+Cc: stable@vger.kernel.org
+Fixes: e330b3bcd8319 ("tracing: Show sample std dev in function profiling")
+Fixes: 34886c8bc590f ("tracing: add average time in function to function profiler")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/isa/cs423x/cs4236.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/ftrace.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/sound/isa/cs423x/cs4236.c
-+++ b/sound/isa/cs423x/cs4236.c
-@@ -293,7 +293,8 @@ static int snd_cs423x_pnp_init_mpu(int d
- 	} else {
- 		mpu_port[dev] = pnp_port_start(pdev, 0);
- 		if (mpu_irq[dev] >= 0 &&
--		    pnp_irq_valid(pdev, 0) && pnp_irq(pdev, 0) >= 0) {
-+		    pnp_irq_valid(pdev, 0) &&
-+		    pnp_irq(pdev, 0) != (resource_size_t)-1) {
- 			mpu_irq[dev] = pnp_irq(pdev, 0);
- 		} else {
- 			mpu_irq[dev] = -1;	/* disable interrupt */
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -609,8 +609,7 @@ static int function_stat_show(struct seq
+ 	}
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+-	avg = rec->time;
+-	do_div(avg, rec->counter);
++	avg = div64_ul(rec->time, rec->counter);
+ 	if (tracing_thresh && (avg < tracing_thresh))
+ 		goto out;
+ #endif
+@@ -636,7 +635,8 @@ static int function_stat_show(struct seq
+ 		 * Divide only 1000 for ns^2 -> us^2 conversion.
+ 		 * trace_print_graph_duration will divide 1000 again.
+ 		 */
+-		do_div(stddev, rec->counter * (rec->counter - 1) * 1000);
++		stddev = div64_ul(stddev,
++				  rec->counter * (rec->counter - 1) * 1000);
+ 	}
+ 
+ 	trace_seq_init(&s);
 
 
