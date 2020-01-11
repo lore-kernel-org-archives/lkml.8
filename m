@@ -2,109 +2,105 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC4D9C33CA7
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 23:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89F6C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 23:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 848C720848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 23:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E34D20866
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 23:38:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyDXLARC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CUzzXi3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731704AbgAKXfW (ORCPT
+        id S1731729AbgAKXic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 18:35:22 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37380 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731623AbgAKXfW (ORCPT
+        Sat, 11 Jan 2020 18:38:32 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:46380 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731674AbgAKXib (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 18:35:22 -0500
-Received: by mail-oi1-f193.google.com with SMTP id z64so5195928oia.4;
-        Sat, 11 Jan 2020 15:35:21 -0800 (PST)
+        Sat, 11 Jan 2020 18:38:31 -0500
+Received: by mail-oi1-f194.google.com with SMTP id 13so5133123oij.13;
+        Sat, 11 Jan 2020 15:38:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=6nsqiMT9oMX01YJWr2NQaCFjUFg9E87lTHlKtmL/4JU=;
-        b=jyDXLARC4k7VXdXWwWGocAv7u6XXI1C3kObhkXU7msPtMaC1AKSSX4qoZ0+hHGbEEc
-         p6Q47yLsjt0o0908SGKRRiYTgx7Kub3t3oQzIqOIVPPQug++rKL5LoTHOWOwIFghzq/k
-         tYjl79RptnOa38hS8LUdT0vnkZT5x4rm1pIvnpvYDQbpnLhEImOg5laNAV9ZMvMjAON0
-         cnElF3OTMOvoyORRpX+GuclcTSdWeW4N5YGjGKnz1aNqWMkFzXyKMwqE+f+wyKWBISD+
-         ArrhJdFnr2tNZbrrvqig3m9jjav2i/WRE1XpdXJVxNnJTGeawQqwheVAwpaojgoWW2Zf
-         OrZA==
+        bh=c7HFrOGQ3phE12eoMeyUfOtwv87GN61OlvlGebweSPE=;
+        b=CUzzXi3uv6xXm/4UnggMbWvrrN2Up+aCdXgbjG6cA1RSh2Hsl7MaJGyUzdoMoTmd4R
+         ZrHmzvSIQzS9GFymrJPYSFUJoVbzF0PJ/iecYAh4HGcrfH/zwmd4F6x9nsoOeailYobC
+         MujffRFXqGvkpsurYLOjgR9qmZoZeeEk+kwuIIysdTEHyy0eM0MPpC10Mh0InyVmHn1v
+         5FsP+pOKLqj3MpjEbbWZWOZEilHIuIlxKrmee02exZm69I3xF9XolTxJTNhKMd4CPNUr
+         7TK8yRsQode2rHqJa9VpU78VxSiyf+Oi7TyRFsjn5WlXmrtjazYZe5Wjb+yrJwuo7Mdn
+         THlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=6nsqiMT9oMX01YJWr2NQaCFjUFg9E87lTHlKtmL/4JU=;
-        b=brYZVtfy0RJmYfgYAsa3nmz0HtHY3/Dc9cMXxgf8JxGfWfUlWDL5gDyzTOfoqegl/t
-         JVlG8GoRAiito0AeXdjM0F7u7moYXgesaJJFgYoxD3FOQiKDXsfmJ/J9TbLNZPsLGANk
-         jVEbgFR1sGAvVP32o3IZKE2bhULO6vvHGUlWsGf79O8fOZwh658i+qCpOSAm0QkaGADe
-         quSkwsEaptB8iC2eRtJ8qAaIOhM83n+Xtd40oJGxeDd7Pac6C4GygEWTST3lHsrEHHQs
-         RTjKdDJsx9XgvAUKmCwUaZzY0Ance20z5KITC5SMYC/c4YMj4c//r4ihdSWG3+ff2KZ+
-         6RrQ==
-X-Gm-Message-State: APjAAAWT/cm2WtHTgMPd2kiUx99nAIP3xUNnQNZ8XVa5EMPxKkzpavAw
-        qBT2blcLHxqVGPIeKRaBnD141w1nXpixb9h2xQH/5w==
-X-Google-Smtp-Source: APXvYqyUB0xeTnDpzHjEuZdGxoOL5/li0WIDrMMHdo+U4FwFwZTbhGAUZVZRm78WL5ug4KSpmT9xG14s300ZUTE+3dk=
-X-Received: by 2002:a05:6808:a11:: with SMTP id n17mr7456835oij.94.1578785721361;
- Sat, 11 Jan 2020 15:35:21 -0800 (PST)
+        bh=c7HFrOGQ3phE12eoMeyUfOtwv87GN61OlvlGebweSPE=;
+        b=bxv7pUmTisUVgD+MUMFJzRwz7jTOyA95aKv2lnmdVyt683eTmk5lOAk+hHrc00fyEm
+         JUWSbjqtcPd5xfgOj9EORmlXwwrxOssY2VVyKUH3msazCFtTjFMiuU30JXwJqadflaph
+         KXec1c4uiPvqEWkdHI/U8P9CzU8yYNnKbvo0bgXQVU6DrrI8C/MmKfPJ3frpcuDB5v9O
+         Ys3q2nykxV1MWh4/XZ0Pjvt5KeWrUxmlmMbN2zUnWDGGY0C2uc3MH/e/QKqjRWgCJCk/
+         GSY5WdUcFAtZMyXyoOPjcfx98yjYQ6IWFabZhUna3F8IvdTTPWcuDTtW6qIpikE+ZtV7
+         cgmg==
+X-Gm-Message-State: APjAAAVyKkpUTAaea+nQZ/TAFNaaBgpNZUiwcxk0mtGSWA5TElDm34Vv
+        0BfM0CJQRD2yQe6Jj0oweVsYgg368fs77blTbaE=
+X-Google-Smtp-Source: APXvYqzdwu5h+fnSlpdGrTkZ59bgP9nPDYS+jBNWRgOtKGV1J84qw+h5nryOcSbFDC8q8K7HsV9LDhKqwf7dQGAQUsU=
+X-Received: by 2002:aca:1e11:: with SMTP id m17mr7953939oic.5.1578785910973;
+ Sat, 11 Jan 2020 15:38:30 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a8a:87:0:0:0:0:0 with HTTP; Sat, 11 Jan 2020 15:35:20 -0800 (PST)
-In-Reply-To: <20200111175611.GA422540@kroah.com>
-References: <20200111121419.22669-1-linkinjeon@gmail.com> <20200111175611.GA422540@kroah.com>
-From:   Namjae Jeon <linkinjeon@gmail.com>
-Date:   Sun, 12 Jan 2020 08:35:20 +0900
-Message-ID: <CAKYAXd-+o-cmn17r0Z-k9gmrQW=8Pj_PDFNvG+jP8eCSPDbV9Q@mail.gmail.com>
-Subject: Re: [PATCH] staging: exfat: make staging/exfat and fs/exfat mutually exclusive
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     valdis.kletnieks@vt.edu, devel@driverdev.osuosl.org,
-        Namjae Jeon <namjae.jeon@samsung.com>, amir73il@gmail.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+References: <000000000000a06985059be4002e@google.com>
+In-Reply-To: <000000000000a06985059be4002e@google.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Sat, 11 Jan 2020 15:38:19 -0800
+Message-ID: <CAM_iQpWN-SKjjrG_7EQ-x+7UMiu6foaNWMJuwQuwN0BGmayB+A@mail.gmail.com>
+Subject: Re: WARNING: bad unlock balance in __dev_queue_xmit
+To:     syzbot <syzbot+ad4ea1dd5d26131a58a6@syzkaller.appspotmail.com>
+Cc:     a@unstable.cc, Alexander Aring <alex.aring@gmail.com>,
+        allison@lohutok.net, andrew@lunn.ch,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Taehee Yoo <ap420073@gmail.com>, ast@domdv.de,
+        b.a.t.m.a.n@lists.open-mesh.org, bridge@lists.linux-foundation.org,
+        cleech@redhat.com, Daniel Borkmann <daniel@iogearbox.net>,
+        David Miller <davem@davemloft.net>,
+        David Ahern <dsa@cumulusnetworks.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Florian Westphal <fw@strlen.de>,
+        Greg KH <gregkh@linuxfoundation.org>, gustavo@embeddedor.com,
+        haiyangz@microsoft.com, info@metux.net,
+        Jay Vosburgh <j.vosburgh@gmail.com>, j@w1.fi,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        John Hurley <john.hurley@netronome.com>, jwi@linux.ibm.com,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Kalle Valo <kvalo@codeaurora.org>, kys@microsoft.com,
+        linmiaohe@huawei.com,
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        linux-hams <linux-hams@vger.kernel.org>,
+        linux-hyperv@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-ppp@vger.kernel.org,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        linux-wpan@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Marek Lindner <mareklindner@neomailbox.ch>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        mmanning@vyatta.att-mail.com,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        oss-drivers@netronome.com, Paolo Abeni <pabeni@redhat.com>,
+        Paul Mackerras <paulus@samba.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020-01-12 2:56 GMT+09:00, Greg KH <gregkh@linuxfoundation.org>:
-> On Sat, Jan 11, 2020 at 09:14:19PM +0900, Namjae Jeon wrote:
->> From: Namjae Jeon <namjae.jeon@samsung.com>
->>
->> Make staging/exfat and fs/exfat mutually exclusive to select the one
->> between two same filesystem.
->>
->> Suggested-by: Amir Goldstein <amir73il@gmail.com>
->> Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
->> ---
->>  drivers/staging/exfat/Kconfig | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/staging/exfat/Kconfig
->> b/drivers/staging/exfat/Kconfig
->> index 292a19dfcaf5..9a0fccec65d9 100644
->> --- a/drivers/staging/exfat/Kconfig
->> +++ b/drivers/staging/exfat/Kconfig
->> @@ -1,7 +1,7 @@
->>  # SPDX-License-Identifier: GPL-2.0
->>  config STAGING_EXFAT_FS
->>  	tristate "exFAT fs support"
->> -	depends on BLOCK
->> +	depends on BLOCK && !EXFAT_FS
->
-> There is no such symbol in the kernel tree, so this isn't going to do
-> anything :(
->
-> When/if EXFAT_FS does show up, I will be glad to add this.  Or better
-> yet, just have this as part of the "real" exfat patchset, that would
-> make the most sense, right?
-Right,
-Thanks!
->
-> thanks,
->
-> greg k-h
->
+#syz dup: WARNING: bad unlock balance in sch_direct_xmit
