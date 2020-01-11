@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1592C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2DCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:27:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB7C2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A1020842
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738423;
-	bh=S+w4KJDE5XByCpBm+fE8vRGeqF8zC6rTCNGq2iQEB5w=;
+	s=default; t=1578738429;
+	bh=mm4956ygG+jablg48bigObr7P6aCT2lVITov/2olgyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VDEDsej+9toIvIFvr86yCGc1QcY98FabpC1/opSUAtfz7eHfbumcIhykw09DmuViV
-	 WnvSaKZBeQzozOWvWnaruNEEDonl8ME0aeqHOuwbmK20ILPeoBMfA62wX0GMDxkpwJ
-	 vNS5LFxTxpPnB5bchC/SiCxAbNrc1lrgQOB1a8CA=
+	b=swdNMnIqJijFtSBum/914bSaDoKpzCMoPejJkXf7dPcm5ZWFfIbT9nNtLFuqNAGzG
+	 l4TMgeU+2DqIpAOGta8iHpZYauPmIQ4HEdGMR7iR94eo55mNPZQFKdTyt0QBKzTNyJ
+	 vUskOdi0dw385dqGFXGtprRmFPvUwFkRk/JNNQAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731114AbgAKK1C (ORCPT
+        id S1731170AbgAKK1I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:27:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60398 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:27:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729122AbgAKK07 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:26:59 -0500
+        id S1729122AbgAKK1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:27:06 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78DD020842;
-        Sat, 11 Jan 2020 10:26:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DBD320842;
+        Sat, 11 Jan 2020 10:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738418;
-        bh=S+w4KJDE5XByCpBm+fE8vRGeqF8zC6rTCNGq2iQEB5w=;
+        s=default; t=1578738425;
+        bh=mm4956ygG+jablg48bigObr7P6aCT2lVITov/2olgyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cp8kZ7vD1TebMggLHxgE8TD7UoYsMm85CnzJJnUDfDukJMravnReqUjdkSuxVTrDE
-         0Jpm7H2TA71Nk9TGLsZqs2Trqpe2PW4vOeb0HX2vtlVoZM8grhAFrQeaBAVaDiF59R
-         NyH1Rv6Sjn0vqawcqn4Yyjgn6Kif+p3JRuAdHBwI=
+        b=fpMaJPZfXOj1rsT+Gy1uSB4jKyiscnrdTo3TBsyjvGDq5Er2t21BKJS0AbGb0qBLU
+         tl9k3Q2RKWfcZrqND6pdfVAT4fQvwyr8UUqAq8PvJDMbcRFMQZc8F1CLeRcDdKOeP6
+         HS2Iabk5/i/eJcduMaMv7AJiKhI8XdKU04C9x88s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
         David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 073/165] btrfs: Fix error messages in qgroup_rescan_init
-Date:   Sat, 11 Jan 2020 10:49:52 +0100
-Message-Id: <20200111094927.278639956@linuxfoundation.org>
+Subject: [PATCH 5.4 074/165] Btrfs: fix cloning range with a hole when using the NO_HOLES feature
+Date:   Sat, 11 Jan 2020 10:49:53 +0100
+Message-Id: <20200111094927.367746025@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,42 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 37d02592f11bb76e4ab1dcaa5b8a2a0715403207 ]
+[ Upstream commit fcb970581dd900675c4371c2b688a57924a8368c ]
 
-The branch of qgroup_rescan_init which is executed from the mount
-path prints wrong errors messages. The textual print out in case
-BTRFS_QGROUP_STATUS_FLAG_RESCAN/BTRFS_QGROUP_STATUS_FLAG_ON are not
-set are transposed. Fix it by exchanging their place.
+When using the NO_HOLES feature if we clone a range that contains a hole
+and a temporary ENOSPC happens while dropping extents from the target
+inode's range, we can end up failing and aborting the transaction with
+-EEXIST or with a corrupt file extent item, that has a length greater
+than it should and overlaps with other extents. For example when cloning
+the following range from inode A to inode B:
 
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
+  Inode A:
+
+    extent A1                                          extent A2
+  [ ----------- ]  [ hole, implicit, 4MB length ]  [ ------------- ]
+  0            1MB                                 5MB            6MB
+
+  Range to clone: [1MB, 6MB)
+
+  Inode B:
+
+    extent B1       extent B2        extent B3         extent B4
+  [ ---------- ]  [ --------- ]    [ ---------- ]    [ ---------- ]
+  0           1MB 1MB        2MB   2MB        5MB    5MB         6MB
+
+  Target range: [1MB, 6MB) (same as source, to make it easier to explain)
+
+The following can happen:
+
+1) btrfs_punch_hole_range() gets -ENOSPC from __btrfs_drop_extents();
+
+2) At that point, 'cur_offset' is set to 1MB and __btrfs_drop_extents()
+   set 'drop_end' to 2MB, meaning it was able to drop only extent B2;
+
+3) We then compute 'clone_len' as 'drop_end' - 'cur_offset' = 2MB - 1MB =
+   1MB;
+
+4) We then attempt to insert a file extent item at inode B with a file
+   offset of 5MB, which is the value of clone_info->file_offset. This
+   fails with error -EEXIST because there's already an extent at that
+   offset (extent B4);
+
+5) We abort the current transaction with -EEXIST and return that error
+   to user space as well.
+
+Another example, for extent corruption:
+
+  Inode A:
+
+    extent A1                                           extent A2
+  [ ----------- ]   [ hole, implicit, 10MB length ]  [ ------------- ]
+  0            1MB                                  11MB            12MB
+
+  Inode B:
+
+    extent B1         extent B2
+  [ ----------- ]   [ --------- ]    [ ----------------------------- ]
+  0            1MB 1MB         5MB  5MB                             12MB
+
+  Target range: [1MB, 12MB) (same as source, to make it easier to explain)
+
+1) btrfs_punch_hole_range() gets -ENOSPC from __btrfs_drop_extents();
+
+2) At that point, 'cur_offset' is set to 1MB and __btrfs_drop_extents()
+   set 'drop_end' to 5MB, meaning it was able to drop only extent B2;
+
+3) We then compute 'clone_len' as 'drop_end' - 'cur_offset' = 5MB - 1MB =
+   4MB;
+
+4) We then insert a file extent item at inode B with a file offset of 11MB
+   which is the value of clone_info->file_offset, and a length of 4MB (the
+   value of 'clone_len'). So we get 2 extents items with ranges that
+   overlap and an extent length of 4MB, larger then the extent A2 from
+   inode A (1MB length);
+
+5) After that we end the transaction, balance the btree dirty pages and
+   then start another or join the previous transaction. It might happen
+   that the transaction which inserted the incorrect extent was committed
+   by another task so we end up with extent corruption if a power failure
+   happens.
+
+So fix this by making sure we attempt to insert the extent to clone at
+the destination inode only if we are past dropping the sub-range that
+corresponds to a hole.
+
+Fixes: 690a5dbfc51315 ("Btrfs: fix ENOSPC errors, leading to transaction aborts, when cloning extents")
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/qgroup.c | 4 ++--
+ fs/btrfs/file.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index 27a903aaf43b..aeb5f2f3cdd7 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -3232,12 +3232,12 @@ qgroup_rescan_init(struct btrfs_fs_info *fs_info, u64 progress_objectid,
- 		if (!(fs_info->qgroup_flags &
- 		      BTRFS_QGROUP_STATUS_FLAG_RESCAN)) {
- 			btrfs_warn(fs_info,
--			"qgroup rescan init failed, qgroup is not enabled");
-+			"qgroup rescan init failed, qgroup rescan is not queued");
- 			ret = -EINVAL;
- 		} else if (!(fs_info->qgroup_flags &
- 			     BTRFS_QGROUP_STATUS_FLAG_ON)) {
- 			btrfs_warn(fs_info,
--			"qgroup rescan init failed, qgroup rescan is not queued");
-+			"qgroup rescan init failed, qgroup is not enabled");
- 			ret = -EINVAL;
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index c332968f9056..eaafd00f93d4 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -2601,8 +2601,8 @@ int btrfs_punch_hole_range(struct inode *inode, struct btrfs_path *path,
+ 			}
  		}
  
+-		if (clone_info) {
+-			u64 clone_len = drop_end - cur_offset;
++		if (clone_info && drop_end > clone_info->file_offset) {
++			u64 clone_len = drop_end - clone_info->file_offset;
+ 
+ 			ret = btrfs_insert_clone_extent(trans, inode, path,
+ 							clone_info, clone_len);
 -- 
 2.20.1
 
