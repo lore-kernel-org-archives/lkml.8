@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD63DC33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEB4C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1FC020848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075F920848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:04:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737034;
-	bh=R3F0oxfs8gfJYmPuvUSgnD2wieukgLsd+9x58Xcb2FU=;
+	s=default; t=1578737040;
+	bh=fGuciEcsdfsX09LD7VTdPj3qRBcgigr8Fz+R5DKgs6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d3jJjrW7+oJt4a8izCfC8txIOH4ZEXEPyOwZmUfwwCTcr8Gpo5VxOVTfrJOoj+DLV
-	 Ktwl68DQtrd70m2QXU8rrEsiqCLy0ap+F3H5jVtk0QieRFUGvAd0COuVcHW6SOqNkm
-	 uvdDfoJKX97IxWLFWebx1riIpLzETfSXMGM0Z1UQ=
+	b=JYj/esKgDDdNd+pLXfZoTCzNpdrKHPT6zlqZ1ufv6HtxZSkAoHPrWE/a4ZwTXthEh
+	 QoabHJem2P1e8YleZHNeudxW2HDI7drK6MmNTC6XvZuFnhrKZ+ODPGC42RcZGGtA9F
+	 Oc6G09WLP93QL3SI7R3L4kerf4xadimwB8q1KjkM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729477AbgAKKDx (ORCPT
+        id S1729483AbgAKKD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:03:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35554 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:03:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728850AbgAKKDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:03:52 -0500
+        id S1728850AbgAKKD5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:03:57 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A707220866;
-        Sat, 11 Jan 2020 10:03:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 148A320848;
+        Sat, 11 Jan 2020 10:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737031;
-        bh=R3F0oxfs8gfJYmPuvUSgnD2wieukgLsd+9x58Xcb2FU=;
+        s=default; t=1578737037;
+        bh=fGuciEcsdfsX09LD7VTdPj3qRBcgigr8Fz+R5DKgs6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Bm8T6DtpnyRszpHfBSvV+9cpzQFMRpcjI8CEN9VGkOeczY1dPsM6XPJE5dnD2AP2
-         sEAnKpR+hFcDOEBqnZw4swEK99FZxCChUVCv3/milhKq+SL3VUILCKfrOBczlkQlhn
-         0K3f8g594XK0Bix9qzfmMW2qkVWftHxcRAVVl6Q0=
+        b=Qay2B+h5hTkXj1Q83lN2d7T0QZ+BzqLb6eyJNLsJgogFqJtjSysP4ua0zlDbJybU+
+         Wp95xHktwg+VlPHMTX/DJIXrXx8fEfKLliZnKfSLaoPHO/Wu42dSG83j42ZuoulKds
+         gRshfJO6Wl5YhBbp0vVjeWnxNzWl/254woAMWN58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+611164843bd48cc2190c@syzkaller.appspotmail.com,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Masashi Honma <masashi.honma@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 49/91] rxrpc: Fix possible NULL pointer access in ICMP handling
-Date:   Sat, 11 Jan 2020 10:49:42 +0100
-Message-Id: <20200111094903.559798696@linuxfoundation.org>
+Subject: [PATCH 4.9 50/91] ath9k_htc: Modify byte order for an error message
+Date:   Sat, 11 Jan 2020 10:49:43 +0100
+Message-Id: <20200111094903.848661114@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -62,66 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Masashi Honma <masashi.honma@gmail.com>
 
-[ Upstream commit f0308fb0708078d6c1d8a4d533941a7a191af634 ]
+[ Upstream commit e01fddc19d215f6ad397894ec2a851d99bf154e2 ]
 
-If an ICMP packet comes in on the UDP socket backing an AF_RXRPC socket as
-the UDP socket is being shut down, rxrpc_error_report() may get called to
-deal with it after sk_user_data on the UDP socket has been cleared, leading
-to a NULL pointer access when this local endpoint record gets accessed.
+rs_datalen is be16 so we need to convert it before printing.
 
-Fix this by just returning immediately if sk_user_data was NULL.
-
-The oops looks like the following:
-
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-...
-RIP: 0010:rxrpc_error_report+0x1bd/0x6a9
-...
-Call Trace:
- ? sock_queue_err_skb+0xbd/0xde
- ? __udp4_lib_err+0x313/0x34d
- __udp4_lib_err+0x313/0x34d
- icmp_unreach+0x1ee/0x207
- icmp_rcv+0x25b/0x28f
- ip_protocol_deliver_rcu+0x95/0x10e
- ip_local_deliver+0xe9/0x148
- __netif_receive_skb_one_core+0x52/0x6e
- process_backlog+0xdc/0x177
- net_rx_action+0xf9/0x270
- __do_softirq+0x1b6/0x39a
- ? smpboot_register_percpu_thread+0xce/0xce
- run_ksoftirqd+0x1d/0x42
- smpboot_thread_fn+0x19e/0x1b3
- kthread+0xf1/0xf6
- ? kthread_delayed_work_timer_fn+0x83/0x83
- ret_from_fork+0x24/0x30
-
-Fixes: 17926a79320a ("[AF_RXRPC]: Provide secure RxRPC sockets for use by userspace and kernel both")
-Reported-by: syzbot+611164843bd48cc2190c@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Masashi Honma <masashi.honma@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/peer_event.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/wireless/ath/ath9k/htc_drv_txrx.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/rxrpc/peer_event.c b/net/rxrpc/peer_event.c
-index bf13b8470c9a..80950a4384aa 100644
---- a/net/rxrpc/peer_event.c
-+++ b/net/rxrpc/peer_event.c
-@@ -148,6 +148,9 @@ void rxrpc_error_report(struct sock *sk)
- 	struct rxrpc_peer *peer;
- 	struct sk_buff *skb;
+diff --git a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+index f333ef1e3e7b..92156e519168 100644
+--- a/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
++++ b/drivers/net/wireless/ath/ath9k/htc_drv_txrx.c
+@@ -985,7 +985,7 @@ static bool ath9k_rx_prepare(struct ath9k_htc_priv *priv,
+ 	    (skb->len - HTC_RX_FRAME_HEADER_SIZE) != 0) {
+ 		ath_err(common,
+ 			"Corrupted RX data len, dropping (dlen: %d, skblen: %d)\n",
+-			rxstatus->rs_datalen, skb->len);
++			be16_to_cpu(rxstatus->rs_datalen), skb->len);
+ 		goto rx_next;
+ 	}
  
-+	if (unlikely(!local))
-+		return;
-+
- 	_enter("%p{%d}", sk, local->debug_id);
- 
- 	skb = sock_dequeue_err_skb(sk);
 -- 
 2.20.1
 
