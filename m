@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8198BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A2FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5496A208E4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F514205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737838;
-	bh=WHjFgNYP6inPBpEBgMdiquy7P92dDHNZgcPaa/lqkQw=;
+	s=default; t=1578737842;
+	bh=sy2Calgp9CwR7ibuyNniX63iyl5RxqkfSkdj2DtD6cM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lY3HRKQ0mcGsAdz60iv9fbW01957zXuad74AkO6lU5zrV7jrNraCv0AueXY2NVVik
-	 B8MLs/JsbMjnlor+17qokEd2hkwYgfMxJkxbsy/PrIDsIvPhgQSdFzU8J3ZCUR7RA2
-	 cyXABpqyQYO4E1imo0G2dSFVOlVRjk5a6ex+kuf0=
+	b=xe7ndf29WKZcxXo6OtnznHbXNmmxcxDOvX0cCavnYGpiIh2yro9xmhbfzU31iQbm5
+	 4LlyZXLZHcx6IF3izm7z1MRo4VwGlYSjQvJxy1b2GaiN9IcP/WA+tSzJ/mizxRE0EL
+	 gs6RI9p1bHJrETyVk5XhzKFNY/bJmoaPv2qiom3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730463AbgAKKRR (ORCPT
+        id S1730474AbgAKKRV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:17:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33494 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:17:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730449AbgAKKRO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:17:14 -0500
+        id S1728946AbgAKKRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:17:18 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E918205F4;
-        Sat, 11 Jan 2020 10:17:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DCCC2082E;
+        Sat, 11 Jan 2020 10:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737833;
-        bh=WHjFgNYP6inPBpEBgMdiquy7P92dDHNZgcPaa/lqkQw=;
+        s=default; t=1578737838;
+        bh=sy2Calgp9CwR7ibuyNniX63iyl5RxqkfSkdj2DtD6cM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MXYqpoPKfglsYOT7ZSBtyPiI3N9kO7u/ZzbsKA1D9UlOfZmlnETMbmJLrLp+9WTuU
-         ExE+R/XGzqDFQysWNbmMMZnYHDRlIzCkodnZIspGDwAgAqRRgV24jWFZJFVmEYJ2Kr
-         XuPdrw42Y+QryiUlwEMwZljZHUCYHG4ZZsxC5p8w=
+        b=QfpWFmoEqZHPEQoW5+91zCcBAI7eP79DsXKh4Qn5SxzXJVPXw5K6dj5XCugLRBGI2
+         fpEVYRnoWOLgfmo6ESBgDak5pIxSoBEo4KNR8KlTVEKr367xwWgl/cgIqwnGoW39O7
+         XK9DOg83tgbRY7cZfr1zZ/RkuYD7zWD4L+gRxTzk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bob Liu <bob.liu@oracle.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 56/84] block: fix memleak when __blk_rq_map_user_iov() is failed
-Date:   Sat, 11 Jan 2020 10:50:33 +0100
-Message-Id: <20200111094907.436465370@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 57/84] parisc: Fix compiler warnings in debug_core.c
+Date:   Sat, 11 Jan 2020 10:50:34 +0100
+Message-Id: <20200111094907.843466351@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -61,60 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit 3b7995a98ad76da5597b488fa84aa5a56d43b608 ]
+[ Upstream commit 75cf9797006a3a9f29a3a25c1febd6842a4a9eb2 ]
 
-When I doing fuzzy test, get the memleak report:
+Fix this compiler warning:
+kernel/debug/debug_core.c: In function ‘kgdb_cpu_enter’:
+arch/parisc/include/asm/cmpxchg.h:48:3: warning: value computed is not used [-Wunused-value]
+   48 |  ((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
+arch/parisc/include/asm/atomic.h:78:30: note: in expansion of macro ‘xchg’
+   78 | #define atomic_xchg(v, new) (xchg(&((v)->counter), new))
+      |                              ^~~~
+kernel/debug/debug_core.c:596:4: note: in expansion of macro ‘atomic_xchg’
+  596 |    atomic_xchg(&kgdb_active, cpu);
+      |    ^~~~~~~~~~~
 
-BUG: memory leak
-unreferenced object 0xffff88837af80000 (size 4096):
-  comm "memleak", pid 3557, jiffies 4294817681 (age 112.499s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-    20 00 00 00 10 01 00 00 00 00 00 00 01 00 00 00   ...............
-  backtrace:
-    [<000000001c894df8>] bio_alloc_bioset+0x393/0x590
-    [<000000008b139a3c>] bio_copy_user_iov+0x300/0xcd0
-    [<00000000a998bd8c>] blk_rq_map_user_iov+0x2f1/0x5f0
-    [<000000005ceb7f05>] blk_rq_map_user+0xf2/0x160
-    [<000000006454da92>] sg_common_write.isra.21+0x1094/0x1870
-    [<00000000064bb208>] sg_write.part.25+0x5d9/0x950
-    [<000000004fc670f6>] sg_write+0x5f/0x8c
-    [<00000000b0d05c7b>] __vfs_write+0x7c/0x100
-    [<000000008e177714>] vfs_write+0x1c3/0x500
-    [<0000000087d23f34>] ksys_write+0xf9/0x200
-    [<000000002c8dbc9d>] do_syscall_64+0x9f/0x4f0
-    [<00000000678d8e9a>] entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-If __blk_rq_map_user_iov() is failed in blk_rq_map_user_iov(),
-the bio(s) which is allocated before this failing will leak. The
-refcount of the bio(s) is init to 1 and increased to 2 by calling
-bio_get(), but __blk_rq_unmap_user() only decrease it to 1, so
-the bio cannot be freed. Fix it by calling blk_rq_unmap_user().
-
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-map.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/parisc/include/asm/cmpxchg.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-map.c b/block/blk-map.c
-index db9373bd31ac..9d8627acc2f5 100644
---- a/block/blk-map.c
-+++ b/block/blk-map.c
-@@ -145,7 +145,7 @@ int blk_rq_map_user_iov(struct request_queue *q, struct request *rq,
- 	return 0;
+diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
+index f627c37dad9c..ab5c215cf46c 100644
+--- a/arch/parisc/include/asm/cmpxchg.h
++++ b/arch/parisc/include/asm/cmpxchg.h
+@@ -44,8 +44,14 @@ __xchg(unsigned long x, __volatile__ void *ptr, int size)
+ **		if (((unsigned long)p & 0xf) == 0)
+ **			return __ldcw(p);
+ */
+-#define xchg(ptr, x) \
+-	((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
++#define xchg(ptr, x)							\
++({									\
++	__typeof__(*(ptr)) __ret;					\
++	__typeof__(*(ptr)) _x_ = (x);					\
++	__ret = (__typeof__(*(ptr)))					\
++		__xchg((unsigned long)_x_, (ptr), sizeof(*(ptr)));	\
++	__ret;								\
++})
  
- unmap_rq:
--	__blk_rq_unmap_user(bio);
-+	blk_rq_unmap_user(bio);
- fail:
- 	rq->bio = NULL;
- 	return ret;
+ /* bug catcher for when unsupported size is used - won't link */
+ extern void __cmpxchg_called_with_bad_pointer(void);
 -- 
 2.20.1
 
