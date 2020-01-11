@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3530CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972E8C33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07AEB20842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A3420880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738675;
-	bh=M2LHe5QnNlZndOPbv4fl/oy/tZyYqlsTgxfoviEve74=;
+	s=default; t=1578738682;
+	bh=IcAf5GWaWV+M9qR9GNjimHZIHg9mUcpicUl2jZMA1JU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wVldxHJTwGw1Taiu3EMDa/CP1txEh3/eAlG7ngAFJgqGRfGih/mUhxcOwsHcgdo5z
-	 QcniIH/lZsINGAkW7TclUsvFRWdiCFhJbWj2ut5NgVI9Ob5qwT2b6TsCQ/yS0/g38R
-	 1C/6o6MSZmtxTyHw3ipxb5/aFFTHCnL1Vf5MhKsU=
+	b=EVDTlnfr943CHonNV2e+b8Dia6Qc9bcDgB1436u72o5T1vP+1l4+ABn32cG/N1bjJ
+	 upyXgXHRGUodFrsz8LrhjemTPD1eCflX7XpMKKA2/5CRWrWtI6ebDvtaddTeKifcXc
+	 8DLs92kPcZc8s/5Ccm5a5HukpVZqi4HqmQHU9C+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731028AbgAKKbO (ORCPT
+        id S1731518AbgAKKbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:31:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42554 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:31:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42848 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728901AbgAKKbM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:31:12 -0500
+        id S1728901AbgAKKbU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:31:20 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74A4C2146E;
-        Sat, 11 Jan 2020 10:31:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11F4B20842;
+        Sat, 11 Jan 2020 10:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738671;
-        bh=M2LHe5QnNlZndOPbv4fl/oy/tZyYqlsTgxfoviEve74=;
+        s=default; t=1578738679;
+        bh=IcAf5GWaWV+M9qR9GNjimHZIHg9mUcpicUl2jZMA1JU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TTXae3iqnLH4/Csv1Ntq1TuJvNwkPgKMhXD2NlFaWj8UwXY3AqiKad52pi4yrneDb
-         e3EoivT1nMVxWHCiS4WpfSOct4jLH4Zx/EGV5QRHXWqXAjzYA/EpNkKJhX5N3ZgRIF
-         Lw+aJtXrbgb9TeMr5TuFcFikQRyR/Gqc4LKWmPEo=
+        b=sUEmNxT/QntqFbKTpUcGhyWSldCq7KfoOgONPpvEyGB4QpWsbaXk4+qzGf0f5Jjw3
+         pbpHWcLJdSykE7tjSTDsQkQvZ2hRE7PbwCJQJ6p2iRnol1VI8IWY+NFO8k4/Bmw9cx
+         p0a+jYJur2WyW7O/i69YBevDBEDKYClTxx912RCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 127/165] s390/dasd: fix memleak in path handling error case
-Date:   Sat, 11 Jan 2020 10:50:46 +0100
-Message-Id: <20200111094935.208049521@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 136/165] selftests: pmtu: fix init mtu value in description
+Date:   Sat, 11 Jan 2020 10:50:55 +0100
+Message-Id: <20200111094937.214323515@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,74 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Haberland <sth@linux.ibm.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 00b39f698a4f1ee897227cace2e3937fc4412270 ]
+[ Upstream commit 152044775d0b9a9ed9509caed40efcba2677951d ]
 
-If for whatever reason the dasd_eckd_check_characteristics() function
-exits after at least some paths have their configuration data
-allocated those data is never freed again. In the error case the
-device->private pointer is set to NULL and dasd_eckd_uncheck_device()
-will exit without freeing the path data because of this NULL pointer.
+There is no a_r3, a_r4 in the testing topology.
+It should be b_r1, b_r2. Also b_r1 mtu is 1400 and b_r2 mtu is 1500.
 
-Fix by calling dasd_eckd_clear_conf_data() for error cases.
-
-Also use dasd_eckd_clear_conf_data() in dasd_eckd_uncheck_device()
-to avoid code duplication.
-
-Reported-by: Qian Cai <cai@lca.pw>
-Reviewed-by: Jan Hoeppner <hoeppner@linux.ibm.com>
-Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: e44e428f59e4 ("selftests: pmtu: add basic IPv4 and IPv6 PMTU tests")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Acked-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/block/dasd_eckd.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ tools/testing/selftests/net/pmtu.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index f5622f4a2ecf..a28b9ff82378 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -2074,7 +2074,7 @@ dasd_eckd_check_characteristics(struct dasd_device *device)
- 	dasd_free_block(device->block);
- 	device->block = NULL;
- out_err1:
--	kfree(private->conf_data);
-+	dasd_eckd_clear_conf_data(device);
- 	kfree(device->private);
- 	device->private = NULL;
- 	return rc;
-@@ -2083,7 +2083,6 @@ dasd_eckd_check_characteristics(struct dasd_device *device)
- static void dasd_eckd_uncheck_device(struct dasd_device *device)
- {
- 	struct dasd_eckd_private *private = device->private;
--	int i;
- 
- 	if (!private)
- 		return;
-@@ -2093,21 +2092,7 @@ static void dasd_eckd_uncheck_device(struct dasd_device *device)
- 	private->sneq = NULL;
- 	private->vdsneq = NULL;
- 	private->gneq = NULL;
--	private->conf_len = 0;
--	for (i = 0; i < 8; i++) {
--		kfree(device->path[i].conf_data);
--		if ((__u8 *)device->path[i].conf_data ==
--		    private->conf_data) {
--			private->conf_data = NULL;
--			private->conf_len = 0;
--		}
--		device->path[i].conf_data = NULL;
--		device->path[i].cssid = 0;
--		device->path[i].ssid = 0;
--		device->path[i].chpid = 0;
--	}
--	kfree(private->conf_data);
--	private->conf_data = NULL;
-+	dasd_eckd_clear_conf_data(device);
- }
- 
- static struct dasd_ccw_req *
+diff --git a/tools/testing/selftests/net/pmtu.sh b/tools/testing/selftests/net/pmtu.sh
+index d697815d2785..71a62e7e35b1 100755
+--- a/tools/testing/selftests/net/pmtu.sh
++++ b/tools/testing/selftests/net/pmtu.sh
+@@ -11,9 +11,9 @@
+ #	R1 and R2 (also implemented with namespaces), with different MTUs:
+ #
+ #	  segment a_r1    segment b_r1		a_r1: 2000
+-#	.--------------R1--------------.	a_r2: 1500
+-#	A                               B	a_r3: 2000
+-#	'--------------R2--------------'	a_r4: 1400
++#	.--------------R1--------------.	b_r1: 1400
++#	A                               B	a_r2: 2000
++#	'--------------R2--------------'	b_r2: 1500
+ #	  segment a_r2    segment b_r2
+ #
+ #	Check that PMTU exceptions with the correct PMTU are created. Then
 -- 
 2.20.1
 
