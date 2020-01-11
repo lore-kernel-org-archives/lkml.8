@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A2EC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C24C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6A620848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6AB2077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736891;
-	bh=bDANlImqzOWC7Mbdrh57R0b9pLFSzdomDK9sy7LxT8A=;
+	s=default; t=1578736897;
+	bh=+eCP+1RMX52ZH6Ze/sdrtcDWgKk8QJnkn9Btzvb6h10=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jPiaBlZ2TtKjB5c0PQNZoDub51c7J0FdFWJhmnxScuyy9uodHIGaHMvOvARwMnTq9
-	 F+3ajXuEPHK2m+fWQdJL98+JpqJKAT31lHrWYLW5AorAkzMtP+syBKF1dmW+4E7690
-	 y2f7Tg6sHMkQmUboxNTvJXRIyACMrizlOGX2KT3o=
+	b=pILlW2Ovw/evwVZjgSrAe6WLmwOu33GjoKJLMXgEkXwkFvX7uMsL0YTIU9WIFQml+
+	 I80qlBWuz9DD0ZME6Ozna7DXQeEHjIPS2kyydH8Yp6SfwbzfP8EVXVFSu+mqzteJtN
+	 9lkVR24UkYr1DLa5uEAwO8bSXAp9J2b2IP5X0Q4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729310AbgAKKBa (ORCPT
+        id S1729425AbgAKKBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:01:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58832 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:01:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729143AbgAKKB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:01:28 -0500
+        id S1729143AbgAKKBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:01:33 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B076E2077C;
-        Sat, 11 Jan 2020 10:01:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0293820842;
+        Sat, 11 Jan 2020 10:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736888;
-        bh=bDANlImqzOWC7Mbdrh57R0b9pLFSzdomDK9sy7LxT8A=;
+        s=default; t=1578736893;
+        bh=+eCP+1RMX52ZH6Ze/sdrtcDWgKk8QJnkn9Btzvb6h10=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bvCiahLWOOZMH/i3jHNmNfmY5zZkgIYaOy4PobFf89OiEWDLNt5H3fVItrUUr6JG+
-         V3eA1HI+BZds0roNr1zhhE3HK8bzFZ2sWvgMmx5WAFZDP1CQGhP69wK6oDhh6VLlus
-         AvHYkket+Q2o1W3ayGW39V4t5y+rqNEqYoQ6/hBw=
+        b=zxzkfUWz+b+2Byi08AVIXreVsHgdVp8ZoL6gsfH0jMrNuo8scbfk61UtC2vmZjJ/A
+         aWA/Rmd0FsrQCI6mQ8Kv4VqfSe3ao7RjmgYLpgL3UEZz+tGOqQgcfo48hxDQ31dslQ
+         zoEcUIRtNGfw5huqASd3KCJCQvcF31EDhNEFEkw0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 4.9 42/91] media: usb: fix memory leak in af9005_identify_state
-Date:   Sat, 11 Jan 2020 10:49:35 +0100
-Message-Id: <20200111094900.993167576@linuxfoundation.org>
+        stable@vger.kernel.org, Leo Yan <leo.yan@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 4.9 43/91] tty: serial: msm_serial: Fix lockup for sysrq and oops
+Date:   Sat, 11 Jan 2020 10:49:36 +0100
+Message-Id: <20200111094901.413283246@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -61,37 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Leo Yan <leo.yan@linaro.org>
 
-commit 2289adbfa559050d2a38bcd9caac1c18b800e928 upstream.
+commit 0e4f7f920a5c6bfe5e851e989f27b35a0cc7fb7e upstream.
 
-In af9005_identify_state when returning -EIO the allocated buffer should
-be released. Replace the "return -EIO" with assignment into ret and move
-deb_info() under a check.
+As the commit 677fe555cbfb ("serial: imx: Fix recursive locking bug")
+has mentioned the uart driver might cause recursive locking between
+normal printing and the kernel debugging facilities (e.g. sysrq and
+oops).  In the commit it gave out suggestion for fixing recursive
+locking issue: "The solution is to avoid locking in the sysrq case
+and trylock in the oops_in_progress case."
 
-Fixes: af4e067e1dcf ("V4L/DVB (5625): Add support for the AF9005 demodulator from Afatech")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+This patch follows the suggestion (also used the exactly same code with
+other serial drivers, e.g. amba-pl011.c) to fix the recursive locking
+issue, this can avoid stuck caused by deadlock and print out log for
+sysrq and oops.
+
+Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Link: https://lore.kernel.org/r/20191127141544.4277-2-leo.yan@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/dvb-usb/af9005.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/tty/serial/msm_serial.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/drivers/media/usb/dvb-usb/af9005.c
-+++ b/drivers/media/usb/dvb-usb/af9005.c
-@@ -990,8 +990,9 @@ static int af9005_identify_state(struct
- 	else if (reply == 0x02)
- 		*cold = 0;
- 	else
--		return -EIO;
--	deb_info("Identify state cold = %d\n", *cold);
-+		ret = -EIO;
-+	if (!ret)
-+		deb_info("Identify state cold = %d\n", *cold);
+--- a/drivers/tty/serial/msm_serial.c
++++ b/drivers/tty/serial/msm_serial.c
+@@ -1579,6 +1579,7 @@ static void __msm_console_write(struct u
+ 	int num_newlines = 0;
+ 	bool replaced = false;
+ 	void __iomem *tf;
++	int locked = 1;
  
- err:
- 	kfree(buf);
+ 	if (is_uartdm)
+ 		tf = port->membase + UARTDM_TF;
+@@ -1591,7 +1592,13 @@ static void __msm_console_write(struct u
+ 			num_newlines++;
+ 	count += num_newlines;
+ 
+-	spin_lock(&port->lock);
++	if (port->sysrq)
++		locked = 0;
++	else if (oops_in_progress)
++		locked = spin_trylock(&port->lock);
++	else
++		spin_lock(&port->lock);
++
+ 	if (is_uartdm)
+ 		msm_reset_dm_count(port, count);
+ 
+@@ -1627,7 +1634,9 @@ static void __msm_console_write(struct u
+ 		iowrite32_rep(tf, buf, 1);
+ 		i += num_chars;
+ 	}
+-	spin_unlock(&port->lock);
++
++	if (locked)
++		spin_unlock(&port->lock);
+ }
+ 
+ static void msm_console_write(struct console *co, const char *s,
 
 
