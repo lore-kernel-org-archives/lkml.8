@@ -2,103 +2,132 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735EDC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A843EC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A17E205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="apGZuJag"
+	by mail.kernel.org (Postfix) with ESMTP id 7DD9D2084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578738251;
+	bh=YsvyNulDze0pM9EOznZ/h1F/BfCyg96OFeBPGK5KHc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xVf1H8Rd/fvwRwAk/hj7PFewu6vaR7VhYjpZ9TLKpC7EDBEDBlU3KfJBNlRaKZ5fs
+	 QTsRaeTosh6MbkBA+yEGV/D/susYp99g5rtJz2IBDggj2iA2koUiGLagVESSDlUKqL
+	 zc4up+MJGSOI3knb/L/1vRRcGmqRdrZClqmMQenU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730964AbgAKKYH (ORCPT
+        id S1730971AbgAKKYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:24:07 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37169 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730797AbgAKKXG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:23:06 -0500
-Received: by mail-io1-f66.google.com with SMTP id k24so4761420ioc.4
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 02:23:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=vU2+i2GO3WHRg+jV5YDCjUlPGe/9rhbunzFmSeBXEWs=;
-        b=apGZuJagwClqbxqX07aG9onUwlXW+H6wqSje8JaxzprMtEUYR5NB1bvF15EYuwiCMe
-         J/6L1a0tS80/ibAhAGjIApfioD9g98McJp6RDN+tDdZWxUZ7ePfYbizd/kcOtS18BrLb
-         8yBicbElljp0ywh37I6WLhmWlzMukCi2WNOrZQ1HPb4CyOqN+VhSN0NeCqTNrh0YsctB
-         5q8UlfGE+WDxXcKItttXVsB5ZKS2u49Y5b+jjIsvM7z/LBqyns97E7vt2c8S6WEPES5Z
-         ZXFdudV/uob5aIHPpn56BS8LcdHKJOtRsVDXgJFWX4s73n9/2fASW2Z8uFAK64DDxD6S
-         tc3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=vU2+i2GO3WHRg+jV5YDCjUlPGe/9rhbunzFmSeBXEWs=;
-        b=ZsOlHyH2Dj4eSkFHggiwvzdMUXiXfqIPCFswSs6U9SIvkGbvzpLqIn8usc0jJpcFQy
-         qIxmJgRqseZ//3aHd6PKta1xg2kOt3I0KtG7plFkjsnC0t+cZ7j5/YR5JB7W3wvdVhc4
-         KRR53Z0vAximHc36DEpIVIiGxTQI7oNJCUDplZYXwcsBSs7ZNos/hbnXzwRV49g//X3U
-         eRu+xodMSK4rpfNYpb1N0G7wSfTGlcTt5101xpY/T5FkRorYDZduh+j4H3YoxCqePBKD
-         kZ0Att+vCj2ALY9DTvcCOTf5XG/euKH7bAn2jWqny5lRoWz/644dh54D3ijN92Pvb/SP
-         scKA==
-X-Gm-Message-State: APjAAAWTCLSGBHG/W8ShGTy/xAxOfUAYUXOuEMTWkp9/M4+pZL6vsB7y
-        M5VKYUa9cJ4NOI5BbnS49W17RpaDu/zNfnIrxp6mWg==
-X-Google-Smtp-Source: APXvYqzpvyDTaxYdZtZGArwDIzWwAKCU3pngPn20GQcVt5O6FZInAzvQo0UuAlIgrGMYv/s2x55pDLoDBJmaLmIxHFg=
-X-Received: by 2002:a05:6602:2352:: with SMTP id r18mr5779111iot.220.1578738185997;
- Sat, 11 Jan 2020 02:23:05 -0800 (PST)
+        Sat, 11 Jan 2020 05:24:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730643AbgAKKYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:24:06 -0500
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27337205F4;
+        Sat, 11 Jan 2020 10:24:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578738246;
+        bh=YsvyNulDze0pM9EOznZ/h1F/BfCyg96OFeBPGK5KHc4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=p9K2NnpcQCWHjAOy5JsV3eCvFBB2tU/ICyP8cd8YkJFHEbP0s7YL6ABKUAip54diM
+         xIDyyxqh5EWGCg7W2hJrK2uMSTY4PLrCjfICgLCF18BL6BhsnGoUkZkPZpuarvuZpR
+         iP+nonpjk4g18kUuxSGXvDc86u3ai/aNYWwiZKJc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Andreas Dannenberg <dannenberg@ti.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 058/165] spi: spi-ti-qspi: Fix a bug when accessing non default CS
+Date:   Sat, 11 Jan 2020 10:49:37 +0100
+Message-Id: <20200111094926.071778933@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
+References: <20200111094921.347491861@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20191210100753.11090-1-brgl@bgdev.pl> <20200110182841.GT8314@dtor-ws>
-In-Reply-To: <20200110182841.GT8314@dtor-ws>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Sat, 11 Jan 2020 11:22:55 +0100
-Message-ID: <CAMRc=Mcu-oNC009JLkNSDrKjg_ygb63ZTnrmu+8NwNZrOVsEZQ@mail.gmail.com>
-Subject: Re: [PATCH] input: max77650-onkey: add of_match table
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Input <linux-input@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 10 sty 2020 o 19:28 Dmitry Torokhov <dmitry.torokhov@gmail.com> napisa=
-=C5=82(a):
->
-> On Tue, Dec 10, 2019 at 11:07:53AM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > We need the of_match table if we want to use the compatible string in
-> > the pmic's child node and get the onkey driver loaded automatically.
->
-> Do we really need of_match table or adding
->
+From: Vignesh Raghavendra <vigneshr@ti.com>
 
-Not really. Technically not anyway but we merged bindings that define
-it (at the time I didn't know any better) and seems we're stuck with
-it. Please see the discussion below a similar patch for regulator
-subsystem[1].
+[ Upstream commit c52c91bb9aa6bd8c38dbf9776158e33038aedd43 ]
 
-> MODULE_ALIAS("platform:max77650-onkey");
->
+When switching ChipSelect from default CS0 to any other CS, driver fails
+to update the bits in system control module register that control which
+CS is mapped for MMIO access. This causes reads to fail when driver
+tries to access QSPI flash on CS1/2/3.
 
-This is already in there, but if someone defines the compatible in the
-device tree as per bindings, the module won't be loaded despite the
-MODULE_ALIAS() definition.
+Fix this by updating appropriate bits whenever active CS changes.
 
-> will work as well?
->
-> In general, do we ever instantiate onkey portion from device tree? Or
-> is it always an MFD cell that is instantiated unconditionally?
->
+Reported-by: Andreas Dannenberg <dannenberg@ti.com>
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Link: https://lore.kernel.org/r/20191211155216.30212-1-vigneshr@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-ti-qspi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Bart
+diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
+index 3cb65371ae3b..66dcb6128539 100644
+--- a/drivers/spi/spi-ti-qspi.c
++++ b/drivers/spi/spi-ti-qspi.c
+@@ -62,6 +62,7 @@ struct ti_qspi {
+ 	u32 dc;
+ 
+ 	bool mmap_enabled;
++	int current_cs;
+ };
+ 
+ #define QSPI_PID			(0x0)
+@@ -487,6 +488,7 @@ static void ti_qspi_enable_memory_map(struct spi_device *spi)
+ 				   MEM_CS_EN(spi->chip_select));
+ 	}
+ 	qspi->mmap_enabled = true;
++	qspi->current_cs = spi->chip_select;
+ }
+ 
+ static void ti_qspi_disable_memory_map(struct spi_device *spi)
+@@ -498,6 +500,7 @@ static void ti_qspi_disable_memory_map(struct spi_device *spi)
+ 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
+ 				   MEM_CS_MASK, 0);
+ 	qspi->mmap_enabled = false;
++	qspi->current_cs = -1;
+ }
+ 
+ static void ti_qspi_setup_mmap_read(struct spi_device *spi, u8 opcode,
+@@ -543,7 +546,7 @@ static int ti_qspi_exec_mem_op(struct spi_mem *mem,
+ 
+ 	mutex_lock(&qspi->list_lock);
+ 
+-	if (!qspi->mmap_enabled)
++	if (!qspi->mmap_enabled || qspi->current_cs != mem->spi->chip_select)
+ 		ti_qspi_enable_memory_map(mem->spi);
+ 	ti_qspi_setup_mmap_read(mem->spi, op->cmd.opcode, op->data.buswidth,
+ 				op->addr.nbytes, op->dummy.nbytes);
+@@ -799,6 +802,7 @@ static int ti_qspi_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 	qspi->mmap_enabled = false;
++	qspi->current_cs = -1;
+ 
+ 	ret = devm_spi_register_master(&pdev->dev, master);
+ 	if (!ret)
+-- 
+2.20.1
 
-[1] https://lkml.org/lkml/2019/12/10/271
+
+
