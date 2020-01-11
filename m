@@ -2,157 +2,97 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F256CC282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 19:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB2AC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 19:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C091E206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 19:30:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6768206ED
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 19:34:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbgAKTal (ORCPT
+        id S1730994AbgAKTei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 14:30:41 -0500
-Received: from orion.archlinux.org ([88.198.91.70]:49554 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730948AbgAKTal (ORCPT
+        Sat, 11 Jan 2020 14:34:38 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41793 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730903AbgAKTei (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 14:30:41 -0500
-X-Greylist: delayed 357 seconds by postgrey-1.27 at vger.kernel.org; Sat, 11 Jan 2020 14:30:40 EST
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id 4841E180A9717F;
-        Sat, 11 Jan 2020 19:24:41 +0000 (UTC)
-Received: from localhost.localdomain (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Sat, 11 Jan 2020 19:24:40 +0000 (UTC)
-From:   =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pedro Vanzella <pedro@pedrovanzella.com>
-Cc:     =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
-Subject: [PATCH] HID: logitech-hidpp: BatteryVoltage: only read chargeStatus if extPower is active
-Date:   Sat, 11 Jan 2020 19:24:19 +0000
-Message-Id: <20200111192419.2503922-1-lains@archlinux.org>
-X-Mailer: git-send-email 2.24.1
+        Sat, 11 Jan 2020 14:34:38 -0500
+Received: by mail-oi1-f194.google.com with SMTP id i1so4884884oie.8
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 11:34:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+kzPUFskPYF67uvQ48PsuGeDeO/lR4tRZnkBHPNyReQ=;
+        b=ipAST4xk5pQ/SLDIPaNQX98wB1hcRrxNklplAx3/sVavlW4T8i+G8XBL5m+AOiMFz5
+         CQKg8ExbgAa8EuIKr4a9G3A7c7+52u54OzMvzLLXgVNTR/HUX0JVm7x3gXCtVbwEmzoK
+         bkmCzj9mOL5NN06WkJCbwHpxT7Xn2J8hwTlQTCodTfiYxceyVB0TFhpymYNkZ1/XQRTd
+         +P4M21l8UIyjDnqo+UcNFz2qTuP4EGvdc2Lw1yolDgyCZuhOuaUc1xZ/zXFzEMZNFYy/
+         kExko89NskzNr2OWcirLagVMq3fqWbtMMOw9dVSSi1ZrXvR9dbWJWU9mBI03enLfGhOz
+         8xzA==
+X-Gm-Message-State: APjAAAVhomyZr35mnjOtkeTWc9e9BknlokAv+d1FIj4ylX++sD2VZgEc
+        C9QbQGbLaifiPEq7AtE66u+jFeVs2CoiMLO8Tjw478AD
+X-Google-Smtp-Source: APXvYqwLXcbAsakZUaEFDSsuFl9fmtkoSI8uEH6El1cM0eP4mnI+swhvMAby8qGytkTrPQqtQq4CqGOsXO4np4RE1eI=
+X-Received: by 2002:aca:48cd:: with SMTP id v196mr7512514oia.102.1578771277699;
+ Sat, 11 Jan 2020 11:34:37 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <157867915825.30329.14197641774716750430.tip-bot2@tip-bot2>
+In-Reply-To: <157867915825.30329.14197641774716750430.tip-bot2@tip-bot2>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Sat, 11 Jan 2020 20:34:26 +0100
+Message-ID: <CAMuHMdWTuwuCuhZ0tFOAcDNEUHqgqvfATP-NG=G=oWJAb8+NAg@mail.gmail.com>
+Subject: Re: [tip: x86/mm] mm/vmalloc: Add empty <asm/vmalloc.h> headers and
+ use them from <linux/vmalloc.h>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the HID++ 2.0 function getBatteryInfo() from the BatteryVoltage
-(0x1001) feature, chargeStatus is only valid if extPower is active.
+Hi Ingo,
 
-Previously we were ignoring extPower, which resulted in wrong values.
+On Fri, Jan 10, 2020 at 7:00 PM tip-bot2 for Ingo Molnar
+<tip-bot2@linutronix.de> wrote:
+> The following commit has been merged into the x86/mm branch of tip:
+>
+> Commit-ID:     1f059dfdf5d170dccbac92193be2fee3c1763384
+> Gitweb:        https://git.kernel.org/tip/1f059dfdf5d170dccbac92193be2fee3c1763384
+> Author:        Ingo Molnar <mingo@kernel.org>
+> AuthorDate:    Thu, 28 Nov 2019 08:19:36 +01:00
+> Committer:     Ingo Molnar <mingo@kernel.org>
+> CommitterDate: Tue, 10 Dec 2019 10:12:55 +01:00
+>
+> mm/vmalloc: Add empty <asm/vmalloc.h> headers and use them from <linux/vmalloc.h>
+>
+> In the x86 MM code we'd like to untangle various types of historic
+> header dependency spaghetti, but for this we'd need to pass to
+> the generic vmalloc code various vmalloc related defines that
+> customarily come via the <asm/page.h> low level arch header.
 
-Example:
-    With an unplugged mouse
+<asm/vmalloc.h>?
 
-    $ cat /sys/class/power_supply/hidpp_battery_0/status
-    Charging
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> ---
+>  arch/alpha/include/asm/vmalloc.h      | 4 ++++
 
-This patch makes fixes that, it also renames charge_sts to flags as
-charge_sts can be confused with chargeStatus from the spec.
+Why not include/asm-generic/vmalloc.h, and add
 
-Spec:
-+--------+-------------------------------------------------------------------------+
-|  byte  |                                    2                                    |
-+--------+--------------+------------+------------+----------+----------+----------+
-|   bit  |     0..2     |      3     |      4     |     5    |     6    |     7    |
-+--------+--------------+------------+------------+----------+----------+----------+
-| buffer | chargeStatus | fastCharge | slowCharge | critical | (unused) | extPower |
-+--------+--------------+------------+------------+----------+----------+----------+
-Table 1 - battery voltage (0x1001), getBatteryInfo() (ASE 0), 3rd byte
+    generic-y += vmalloc.h
 
-+-------+--------------------------------------+
-| value |                meaning               |
-+-------+--------------------------------------+
-|   0   | Charging                             |
-+-------+--------------------------------------+
-|   1   | End of charge (100% charged)         |
-+-------+--------------------------------------+
-|   2   | Charge stopped (any "normal" reason) |
-+-------+--------------------------------------+
-|   7   | Hardware error                       |
-+-------+--------------------------------------+
-Table 2 - chargeStatus value
+in each arch/*/include/asm/Kbuild?
 
-Signed-off-by: Filipe Laíns <lains@archlinux.org>
----
- drivers/hid/hid-logitech-hidpp.c | 43 ++++++++++++++++----------------
- 1 file changed, 21 insertions(+), 22 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-index bb063e7d48df..39a5ee0aaab0 100644
---- a/drivers/hid/hid-logitech-hidpp.c
-+++ b/drivers/hid/hid-logitech-hidpp.c
-@@ -1256,36 +1256,35 @@ static int hidpp20_battery_map_status_voltage(u8 data[3], int *voltage,
- {
- 	int status;
- 
--	long charge_sts = (long)data[2];
-+	long flags = (long) data[2];
- 
--	*level = POWER_SUPPLY_CAPACITY_LEVEL_UNKNOWN;
--	switch (data[2] & 0xe0) {
--	case 0x00:
--		status = POWER_SUPPLY_STATUS_CHARGING;
--		break;
--	case 0x20:
--		status = POWER_SUPPLY_STATUS_FULL;
--		*level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
--		break;
--	case 0x40:
-+	if (flags & 0x80)
-+		switch (flags & 0x07) {
-+		case 0:
-+			status = POWER_SUPPLY_STATUS_CHARGING;
-+			break;
-+		case 1:
-+			status = POWER_SUPPLY_STATUS_FULL;
-+			*level = POWER_SUPPLY_CAPACITY_LEVEL_FULL;
-+			break;
-+		case 2:
-+			status = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+			break;
-+		default:
-+			status = POWER_SUPPLY_STATUS_UNKNOWN;
-+			break;
-+		}
-+	else
- 		status = POWER_SUPPLY_STATUS_DISCHARGING;
--		break;
--	case 0xe0:
--		status = POWER_SUPPLY_STATUS_NOT_CHARGING;
--		break;
--	default:
--		status = POWER_SUPPLY_STATUS_UNKNOWN;
--	}
- 
- 	*charge_type = POWER_SUPPLY_CHARGE_TYPE_STANDARD;
--	if (test_bit(3, &charge_sts)) {
-+	if (test_bit(3, &flags)) {
- 		*charge_type = POWER_SUPPLY_CHARGE_TYPE_FAST;
- 	}
--	if (test_bit(4, &charge_sts)) {
-+	if (test_bit(4, &flags)) {
- 		*charge_type = POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
- 	}
--
--	if (test_bit(5, &charge_sts)) {
-+	if (test_bit(5, &flags)) {
- 		*level = POWER_SUPPLY_CAPACITY_LEVEL_CRITICAL;
- 	}
- 
+                        Geert
+
 -- 
-2.24.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
