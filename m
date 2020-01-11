@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C634C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D463AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718432077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1F92082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736827;
-	bh=J5k4I5PjDOISQmUJ+K3wvYYqJ/TLF/0wPiYvQi9KZAA=;
+	s=default; t=1578736831;
+	bh=ymVgdOoEAFWU4jK0LXVfQteJ4Fzw/vFX8zfX+147bdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MYghJ910Qsou2njiBbtgVS+ZyXAwqvO981NeTe+7cm6qCpmPREE2ZY9acL+2iqZPH
-	 zxpg/IpslUMCdZIdECjb/gmiI8SLPugWwY/jdRFGk1hZDINNRoB+2NDXSMCYbK2P8B
-	 zeb7xA6xu0e7vZlcPB+T+MvvSSAD3mQLlnzCBDAs=
+	b=AC5ImAwC+GAkZPvst0S9fbOTlC75ZDhmed55sIUrJYaQo4XopG/JTeef3+q3CabDP
+	 3Q6jdJaP/I2c/6XdXht+zwhrsDA6LiFcJL2C/xSWOV5rOVd28JTyEKnPZlC36QwQQ2
+	 d+LPX/I2IFrPn2hWBuVv07vO/fUHHXLiO3ctDqAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgAKKA0 (ORCPT
+        id S1729374AbgAKKAa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:00:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56368 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:00:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbgAKKAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:00:21 -0500
+        id S1729185AbgAKKA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:00:26 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E26222077C;
-        Sat, 11 Jan 2020 10:00:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C58662082E;
+        Sat, 11 Jan 2020 10:00:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736820;
-        bh=J5k4I5PjDOISQmUJ+K3wvYYqJ/TLF/0wPiYvQi9KZAA=;
+        s=default; t=1578736825;
+        bh=ymVgdOoEAFWU4jK0LXVfQteJ4Fzw/vFX8zfX+147bdE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EizOxTpT1H3WTSyMQKaCyEPKQBqaKYYFr4/dvtC72Qg9PdJKQ7P0Y0d1IlIQm17Lq
-         a/Fnhd+5Z3//bYMnOygNuSrQcUh+6yj3s+9alecWMc+X5ajJlajchCRoeYQpMOsMfH
-         7bFrjniYLmtHx4Shak0Czp/texS0tUuARYMGPr+A=
+        b=FANfavlqjckXgxNpukAy2A0NiAXaE38M6uNG8EQC+Rl269HicBV9p9sWVVvhl43My
+         2xuTfLBrbXVth1pI13MUTlYcWRL/WJmaOI2oiP3UTGAHQZVjHE1RQ6XZWqrEDkaWfm
+         fDKwjAfJAVDS3OcmqRQ/BcE9sHVUVTv3S+ilI3pE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Righi <andrea.righi@canonical.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org,
+        syzbot+c732f8644185de340492@syzkaller.appspotmail.com,
+        Brian Foster <bfoster@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 14/91] PM / hibernate: memory_bm_find_bit(): Tighten node optimisation
-Date:   Sat, 11 Jan 2020 10:49:07 +0100
-Message-Id: <20200111094848.319826655@linuxfoundation.org>
+Subject: [PATCH 4.9 15/91] xfs: fix mount failure crash on invalid iclog memory access
+Date:   Sat, 11 Jan 2020 10:49:08 +0100
+Message-Id: <20200111094848.660860249@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -61,56 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Whitcroft <apw@canonical.com>
+From: Brian Foster <bfoster@redhat.com>
 
-[ Upstream commit da6043fe85eb5ec621e34a92540735dcebbea134 ]
+[ Upstream commit 798a9cada4694ca8d970259f216cec47e675bfd5 ]
 
-When looking for a bit by number we make use of the cached result from the
-preceding lookup to speed up operation.  Firstly we check if the requested
-pfn is within the cached zone and if not lookup the new zone.  We then
-check if the offset for that pfn falls within the existing cached node.
-This happens regardless of whether the node is within the zone we are
-now scanning.  With certain memory layouts it is possible for this to
-false trigger creating a temporary alias for the pfn to a different bit.
-This leads the hibernation code to free memory which it was never allocated
-with the expected fallout.
+syzbot (via KASAN) reports a use-after-free in the error path of
+xlog_alloc_log(). Specifically, the iclog freeing loop doesn't
+handle the case of a fully initialized ->l_iclog linked list.
+Instead, it assumes that the list is partially constructed and NULL
+terminated.
 
-Ensure the zone we are scanning matches the cached zone before considering
-the cached node.
+This bug manifested because there was no possible error scenario
+after iclog list setup when the original code was added.  Subsequent
+code and associated error conditions were added some time later,
+while the original error handling code was never updated. Fix up the
+error loop to terminate either on a NULL iclog or reaching the end
+of the list.
 
-Deep thanks go to Andrea for many, many, many hours of hacking and testing
-that went into cornering this bug.
-
-Reported-by: Andrea Righi <andrea.righi@canonical.com>
-Tested-by: Andrea Righi <andrea.righi@canonical.com>
-Signed-off-by: Andy Whitcroft <apw@canonical.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reported-by: syzbot+c732f8644185de340492@syzkaller.appspotmail.com
+Signed-off-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/power/snapshot.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ fs/xfs/xfs_log.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-index 4f0f0604f1c4..5dfac92521fa 100644
---- a/kernel/power/snapshot.c
-+++ b/kernel/power/snapshot.c
-@@ -732,8 +732,15 @@ static int memory_bm_find_bit(struct memory_bitmap *bm, unsigned long pfn,
- 	 * We have found the zone. Now walk the radix tree to find the leaf node
- 	 * for our PFN.
- 	 */
-+
-+	/*
-+	 * If the zone we wish to scan is the the current zone and the
-+	 * pfn falls into the current node then we do not need to walk
-+	 * the tree.
-+	 */
- 	node = bm->cur.node;
--	if (((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
-+	if (zone == bm->cur.zone &&
-+	    ((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
- 		goto node_found;
- 
- 	node      = zone->rtree;
+diff --git a/fs/xfs/xfs_log.c b/fs/xfs/xfs_log.c
+index 33c9a3aae948..7bfcd09d446b 100644
+--- a/fs/xfs/xfs_log.c
++++ b/fs/xfs/xfs_log.c
+@@ -1540,6 +1540,8 @@ xlog_alloc_log(
+ 		if (iclog->ic_bp)
+ 			xfs_buf_free(iclog->ic_bp);
+ 		kmem_free(iclog);
++		if (prev_iclog == log->l_iclog)
++			break;
+ 	}
+ 	spinlock_destroy(&log->l_icloglock);
+ 	xfs_buf_free(log->l_xbuf);
 -- 
 2.20.1
 
