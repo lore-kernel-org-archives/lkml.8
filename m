@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78666C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 309DEC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41BF72064C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05AC206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737216;
-	bh=M7VYEJ/d+UYKXQF/Q+zU9SOZ8rWib3lJynw0OrmCYxE=;
+	s=default; t=1578737275;
+	bh=reDOtUnETufv/1y1RpJJHyn5uAqQGM5xB/EbvAZU16E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x1fxHFQGP/6TXj/WBrPQ84wuugKqv3mwuMfwI6ozmldPbZgH0khN0hOwrCRDGsoHo
-	 OaAWl2qh51IWk7bAY01ty3yPccZ5Fc0JFfJ3doQY2yN1HBW2/1SbAOD4zqb8t0+e3/
-	 Gk3pMEHgDVwcq/6HDEAh1ROjGVvgBnTsubkLJMb0=
+	b=Jbs2kAnIaXnjhcE+oduh1EkzJnjSIyDfoHBqXTobj3lWjwkEkvCgKduFS03rNQ3Vw
+	 W8JQUBmWVF1wxjxi+Pz0IjdBhoI4GYdW+pVtU7VE5B1LRiq7uTCF4gQm5OAb26HSSk
+	 dD8BA1c1mS5BWSoEVnsZffLjw8lOE/Pg6dZmHtoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729684AbgAKKGz (ORCPT
+        id S1729217AbgAKKHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:06:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41316 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:07:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728893AbgAKKGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:06:54 -0500
+        id S1729004AbgAKKHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:07:53 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F8B820848;
-        Sat, 11 Jan 2020 10:06:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0167C2064C;
+        Sat, 11 Jan 2020 10:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737213;
-        bh=M7VYEJ/d+UYKXQF/Q+zU9SOZ8rWib3lJynw0OrmCYxE=;
+        s=default; t=1578737273;
+        bh=reDOtUnETufv/1y1RpJJHyn5uAqQGM5xB/EbvAZU16E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eV/f+Nl2uqd+me/UqQWA9nN/03jA9MlNtwZ40cCiv76M2mYVf0CpyE7c+xAacQvTa
-         fcdKmIyp7fWf6qLuYJTJ5buFtLEVwqClFlNg5eWH8tpetr8gzyAQo/WGx478dto4yq
-         MsN7/MS+V7f2GN6kDP4JznihUfOQP0qSwevt2lmo=
+        b=R7jZQ4IS5kddMMG8K4ecHPmrKgWqkkZNju2XUcGjPRRvZG7vrhV9GD1bsRFKnqRRW
+         qRUiuGgmbuSGFCNn1gxDJMp6LsxVJZX3b4pHD/CnWhNcWyqbmAzvu8iZbiT+PkB60s
+         zCyHoZlrvB0TlVM42CzxsZ5KAxW5+z4vKXM6B/gM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 80/91] macvlan: do not assume mac_header is set in macvlan_broadcast()
-Date:   Sat, 11 Jan 2020 10:50:13 +0100
-Message-Id: <20200111094912.209765499@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>
+Subject: [PATCH 4.14 01/62] USB: dummy-hcd: use usb_urb_dir_in instead of usb_pipein
+Date:   Sat, 11 Jan 2020 10:49:43 +0100
+Message-Id: <20200111094838.063504740@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
-References: <20200111094844.748507863@linuxfoundation.org>
+In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
+References: <20200111094837.425430968@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,170 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-[ Upstream commit 96cc4b69581db68efc9749ef32e9cf8e0160c509 ]
+commit 6dabeb891c001c592645df2f477fed9f5d959987 upstream.
 
-Use of eth_hdr() in tx path is error prone.
+Commit fea3409112a9 ("USB: add direction bit to urb->transfer_flags") has
+added a usb_urb_dir_in() helper function that can be used to determine
+the direction of the URB. With that patch USB_DIR_IN control requests with
+wLength == 0 are considered out requests by real USB HCDs. This patch
+changes dummy-hcd to use the usb_urb_dir_in() helper to match that
+behavior.
 
-Many drivers call skb_reset_mac_header() before using it,
-but others do not.
-
-Commit 6d1ccff62780 ("net: reset mac header in dev_start_xmit()")
-attempted to fix this generically, but commit d346a3fae3ff
-("packet: introduce PACKET_QDISC_BYPASS socket option") brought
-back the macvlan bug.
-
-Lets add a new helper, so that tx paths no longer have
-to call skb_reset_mac_header() only to get a pointer
-to skb->data.
-
-Hopefully we will be able to revert 6d1ccff62780
-("net: reset mac header in dev_start_xmit()") and save few cycles
-in transmit fast path.
-
-BUG: KASAN: use-after-free in __get_unaligned_cpu32 include/linux/unaligned/packed_struct.h:19 [inline]
-BUG: KASAN: use-after-free in mc_hash drivers/net/macvlan.c:251 [inline]
-BUG: KASAN: use-after-free in macvlan_broadcast+0x547/0x620 drivers/net/macvlan.c:277
-Read of size 4 at addr ffff8880a4932401 by task syz-executor947/9579
-
-CPU: 0 PID: 9579 Comm: syz-executor947 Not tainted 5.5.0-rc4-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
- __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
- kasan_report+0x12/0x20 mm/kasan/common.c:639
- __asan_report_load_n_noabort+0xf/0x20 mm/kasan/generic_report.c:145
- __get_unaligned_cpu32 include/linux/unaligned/packed_struct.h:19 [inline]
- mc_hash drivers/net/macvlan.c:251 [inline]
- macvlan_broadcast+0x547/0x620 drivers/net/macvlan.c:277
- macvlan_queue_xmit drivers/net/macvlan.c:520 [inline]
- macvlan_start_xmit+0x402/0x77f drivers/net/macvlan.c:559
- __netdev_start_xmit include/linux/netdevice.h:4447 [inline]
- netdev_start_xmit include/linux/netdevice.h:4461 [inline]
- dev_direct_xmit+0x419/0x630 net/core/dev.c:4079
- packet_direct_xmit+0x1a9/0x250 net/packet/af_packet.c:240
- packet_snd net/packet/af_packet.c:2966 [inline]
- packet_sendmsg+0x260d/0x6220 net/packet/af_packet.c:2991
- sock_sendmsg_nosec net/socket.c:639 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:659
- __sys_sendto+0x262/0x380 net/socket.c:1985
- __do_sys_sendto net/socket.c:1997 [inline]
- __se_sys_sendto net/socket.c:1993 [inline]
- __x64_sys_sendto+0xe1/0x1a0 net/socket.c:1993
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x442639
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc13549e08 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000442639
-RDX: 000000000000000e RSI: 0000000020000080 RDI: 0000000000000003
-RBP: 0000000000000004 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000403bb0 R14: 0000000000000000 R15: 0000000000000000
-
-Allocated by task 9389:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc mm/kasan/common.c:513 [inline]
- __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:486
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:527
- __do_kmalloc mm/slab.c:3656 [inline]
- __kmalloc+0x163/0x770 mm/slab.c:3665
- kmalloc include/linux/slab.h:561 [inline]
- tomoyo_realpath_from_path+0xc5/0x660 security/tomoyo/realpath.c:252
- tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
- tomoyo_path_perm+0x230/0x430 security/tomoyo/file.c:822
- tomoyo_inode_getattr+0x1d/0x30 security/tomoyo/tomoyo.c:129
- security_inode_getattr+0xf2/0x150 security/security.c:1222
- vfs_getattr+0x25/0x70 fs/stat.c:115
- vfs_statx_fd+0x71/0xc0 fs/stat.c:145
- vfs_fstat include/linux/fs.h:3265 [inline]
- __do_sys_newfstat+0x9b/0x120 fs/stat.c:378
- __se_sys_newfstat fs/stat.c:375 [inline]
- __x64_sys_newfstat+0x54/0x80 fs/stat.c:375
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 9389:
- save_stack+0x23/0x90 mm/kasan/common.c:72
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:335 [inline]
- __kasan_slab_free+0x102/0x150 mm/kasan/common.c:474
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:483
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10a/0x2c0 mm/slab.c:3757
- tomoyo_realpath_from_path+0x1a7/0x660 security/tomoyo/realpath.c:289
- tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
- tomoyo_path_perm+0x230/0x430 security/tomoyo/file.c:822
- tomoyo_inode_getattr+0x1d/0x30 security/tomoyo/tomoyo.c:129
- security_inode_getattr+0xf2/0x150 security/security.c:1222
- vfs_getattr+0x25/0x70 fs/stat.c:115
- vfs_statx_fd+0x71/0xc0 fs/stat.c:145
- vfs_fstat include/linux/fs.h:3265 [inline]
- __do_sys_newfstat+0x9b/0x120 fs/stat.c:378
- __se_sys_newfstat fs/stat.c:375 [inline]
- __x64_sys_newfstat+0x54/0x80 fs/stat.c:375
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880a4932000
- which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 1025 bytes inside of
- 4096-byte region [ffff8880a4932000, ffff8880a4933000)
-The buggy address belongs to the page:
-page:ffffea0002924c80 refcount:1 mapcount:0 mapping:ffff8880aa402000 index:0x0 compound_mapcount: 0
-raw: 00fffe0000010200 ffffea0002846208 ffffea00028f3888 ffff8880aa402000
-raw: 0000000000000000 ffff8880a4932000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a4932300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a4932380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8880a4932400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff8880a4932480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a4932500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-Fixes: b863ceb7ddce ("[NET]: Add macvlan driver")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Link: https://lore.kernel.org/r/4ae9e68ebca02f08a93ac61fe065057c9a01f0a8.1571667489.git.andreyknvl@google.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/macvlan.c    |    2 +-
- include/linux/if_ether.h |    8 ++++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
 
---- a/drivers/net/macvlan.c
-+++ b/drivers/net/macvlan.c
-@@ -234,7 +234,7 @@ static void macvlan_broadcast(struct sk_
- 			      struct net_device *src,
- 			      enum macvlan_mode mode)
- {
--	const struct ethhdr *eth = eth_hdr(skb);
-+	const struct ethhdr *eth = skb_eth_hdr(skb);
- 	const struct macvlan_dev *vlan;
- 	struct sk_buff *nskb;
- 	unsigned int i;
---- a/include/linux/if_ether.h
-+++ b/include/linux/if_ether.h
-@@ -28,6 +28,14 @@ static inline struct ethhdr *eth_hdr(con
- 	return (struct ethhdr *)skb_mac_header(skb);
- }
+---
+ drivers/usb/gadget/udc/dummy_hcd.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+--- a/drivers/usb/gadget/udc/dummy_hcd.c
++++ b/drivers/usb/gadget/udc/dummy_hcd.c
+@@ -1325,7 +1325,7 @@ static int dummy_perform_transfer(struct
+ 	u32 this_sg;
+ 	bool next_sg;
  
-+/* Prefer this version in TX path, instead of
-+ * skb_reset_mac_header() + eth_hdr()
-+ */
-+static inline struct ethhdr *skb_eth_hdr(const struct sk_buff *skb)
-+{
-+	return (struct ethhdr *)skb->data;
-+}
-+
- static inline struct ethhdr *inner_eth_hdr(const struct sk_buff *skb)
- {
- 	return (struct ethhdr *)skb_inner_mac_header(skb);
+-	to_host = usb_pipein(urb->pipe);
++	to_host = usb_urb_dir_in(urb);
+ 	rbuf = req->req.buf + req->req.actual;
+ 
+ 	if (!urb->num_sgs) {
+@@ -1413,7 +1413,7 @@ top:
+ 
+ 		/* FIXME update emulated data toggle too */
+ 
+-		to_host = usb_pipein(urb->pipe);
++		to_host = usb_urb_dir_in(urb);
+ 		if (unlikely(len == 0))
+ 			is_short = 1;
+ 		else {
+@@ -1837,7 +1837,7 @@ restart:
+ 
+ 		/* find the gadget's ep for this request (if configured) */
+ 		address = usb_pipeendpoint (urb->pipe);
+-		if (usb_pipein(urb->pipe))
++		if (usb_urb_dir_in(urb))
+ 			address |= USB_DIR_IN;
+ 		ep = find_endpoint(dum, address);
+ 		if (!ep) {
+@@ -2390,7 +2390,7 @@ static inline ssize_t show_urb(char *buf
+ 			s = "?";
+ 			break;
+ 		 } s; }),
+-		ep, ep ? (usb_pipein(urb->pipe) ? "in" : "out") : "",
++		ep, ep ? (usb_urb_dir_in(urb) ? "in" : "out") : "",
+ 		({ char *s; \
+ 		switch (usb_pipetype(urb->pipe)) { \
+ 		case PIPE_CONTROL: \
 
 
