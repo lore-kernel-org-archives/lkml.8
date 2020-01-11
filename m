@@ -2,52 +2,52 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E351C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 381B1C33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374AD206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 052992077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737513;
-	bh=2Rmy882+v3ZU/D0FsubaW4hnxblpvIlq1ohsA+xGmLA=;
+	s=default; t=1578737518;
+	bh=gIyIU93aBqwRp4LrB8fM2LEhhTHoiTkDl6m3HJi/KcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CsYBPE8rR/EocjWvKhNKQm0uaUCsOeTsIsKbds/wmIgqWKetakr18+nl20XblTVkA
-	 S9gKnP0lo/PcKZmCgJe4p5S8OZvIQvho4jVHQHXrNqjE3Uj8UFyEFokKyDWHYCJBdf
-	 ZXYQ2aPQuPywB4WsdLlRlTH4clWD4n0WEt8DKWgQ=
+	b=MdIMtE2kTZUbI5u9X0hm3TCaUx3NtWOBRxU/Km5/lT9TuhMHXsr2yv7EySpA+8DyD
+	 UENZTShdaUsahChJLBLk6PNAVQ2W1iT+amMvTkHCRXHySOGTXxIEVN1qerDOMttBqa
+	 B7wyTdwZ4OfayOv3RXP+M8EfukocKCuwT6H6gbi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730002AbgAKKLw (ORCPT
+        id S1730010AbgAKKL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:11:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49338 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:11:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729839AbgAKKLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:11:51 -0500
+        id S1729420AbgAKKLz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:11:55 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B84C6206DA;
-        Sat, 11 Jan 2020 10:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EE992082E;
+        Sat, 11 Jan 2020 10:11:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737510;
-        bh=2Rmy882+v3ZU/D0FsubaW4hnxblpvIlq1ohsA+xGmLA=;
+        s=default; t=1578737515;
+        bh=gIyIU93aBqwRp4LrB8fM2LEhhTHoiTkDl6m3HJi/KcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a/2gec3FUX8/TjUGVJ6TLxo3JEvg/EA+B14OGsiKZXSQWpVYSVGPJ+JtGmQij7L/b
-         Vdl1HwtehU/KLg9cCt92EJ0I74/XcH2LTRQDPZNASQ5uhJuDxCxtpr2lQ17c/yQ8HO
-         HhJxXhrj1WqEF1ndlN57OtszP2O0SW6tnfWIIoKs=
+        b=HoQ1zZlUDOe6stMOLatPOAai+zgGpc4pY3f7RtZzgl7BEgbkyKbH1Dtxzwev1eoUy
+         2ASOelZ0YyyM8g/MEOI2Jz9prz5OVZvhHsgIvhRHhW1iFZrbH58CoeyeWk62cKISQ0
+         B0xu/HU6TM9O43mxgKIvb47oH44hotoC1BifL0mI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
-        Chris Healy <cphealy@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 50/62] net: dsa: mv88e6xxx: Preserve priority when setting CPU port.
-Date:   Sat, 11 Jan 2020 10:50:32 +0100
-Message-Id: <20200111094853.119503692@linuxfoundation.org>
+        stable@vger.kernel.org, Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 33/62] net: stmmac: RX buffer size must be 16 byte aligned
+Date:   Sat, 11 Jan 2020 10:50:15 +0100
+Message-Id: <20200111094846.043011725@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -60,50 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
 
-[ Upstream commit d8dc2c9676e614ef62f54a155b50076888c8a29a ]
+[ Upstream commit 8d558f0294fe92e04af192e221d0d0f6a180ee7b ]
 
-The 6390 family uses an extended register to set the port connected to
-the CPU. The lower 5 bits indicate the port, the upper three bits are
-the priority of the frames as they pass through the switch, what
-egress queue they should use, etc. Since frames being set to the CPU
-are typically management frames, BPDU, IGMP, ARP, etc set the priority
-to 7, the reset default, and the highest.
+We need to align the RX buffer size to at least 16 byte so that IP
+doesn't mis-behave. This is required by HW.
 
-Fixes: 33641994a676 ("net: dsa: mv88e6xxx: Monitor and Management tables")
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-Tested-by: Chris Healy <cphealy@gmail.com>
+Changes from v2:
+- Align UP and not DOWN (David)
+
+Fixes: 7ac6653a085b ("stmmac: Move the STMicroelectronics driver")
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/global1.c |    5 +++++
- drivers/net/dsa/mv88e6xxx/global1.h |    1 +
- 2 files changed, 6 insertions(+)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/dsa/mv88e6xxx/global1.c
-+++ b/drivers/net/dsa/mv88e6xxx/global1.c
-@@ -313,6 +313,11 @@ int mv88e6390_g1_set_cpu_port(struct mv8
- {
- 	u16 ptr = MV88E6390_G1_MONITOR_MGMT_CTL_PTR_CPU_DEST;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 4ef923f1094a..e89466bd432d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -51,7 +51,7 @@
+ #include <linux/of_mdio.h>
+ #include "dwmac1000.h"
  
-+	/* Use the default high priority for management frames sent to
-+	 * the CPU.
-+	 */
-+	port |= MV88E6390_G1_MONITOR_MGMT_CTL_PTR_CPU_DEST_MGMTPRI;
-+
- 	return mv88e6390_g1_monitor_write(chip, ptr, port);
- }
+-#define	STMMAC_ALIGN(x)		__ALIGN_KERNEL(x, SMP_CACHE_BYTES)
++#define	STMMAC_ALIGN(x)		ALIGN(ALIGN(x, SMP_CACHE_BYTES), 16)
+ #define	TSO_MAX_BUFF_SIZE	(SZ_16K - 1)
  
---- a/drivers/net/dsa/mv88e6xxx/global1.h
-+++ b/drivers/net/dsa/mv88e6xxx/global1.h
-@@ -189,6 +189,7 @@
- #define MV88E6390_G1_MONITOR_MGMT_CTL_PTR_INGRESS_DEST		0x2000
- #define MV88E6390_G1_MONITOR_MGMT_CTL_PTR_EGRESS_DEST		0x2100
- #define MV88E6390_G1_MONITOR_MGMT_CTL_PTR_CPU_DEST		0x3000
-+#define MV88E6390_G1_MONITOR_MGMT_CTL_PTR_CPU_DEST_MGMTPRI	0x00e0
- #define MV88E6390_G1_MONITOR_MGMT_CTL_DATA_MASK			0x00ff
- 
- /* Offset 0x1C: Global Control 2 */
+ /* Module parameters */
+-- 
+2.20.1
+
 
 
