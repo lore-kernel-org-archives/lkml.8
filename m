@@ -2,51 +2,53 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF04C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC8BC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D20DC20842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1166720842
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736956;
-	bh=0t7sFC/dghiBRKtxczAFkc+MQIDlbu6/0fLf7MkGFtU=;
+	s=default; t=1578736961;
+	bh=iu9/s3BMOP1/KtOrOmZzB/tj8XuAQWeyw5t7+Au6Zhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kSR2KgSzp8ZFFyWOzZcSNxbvzcNKx2SPnksNG5lf80jOPqc9xDionbRGZikEyPGTh
-	 UloL15C89VvqrXRKffxtYG/eZa3dsp8QmGBSB9oVggqlg/ij9a9W6fOQc03DQ5sO/7
-	 WNoK0KGrJwD8mPfxaI4DMyu4djF0a8UW5L5HU708=
+	b=I9LNGhRXaEas6NecMJkM/yFcwTbOB0euk5YXIbeqQk7DXXpCtLI/i0UIkTpJ1fi5j
+	 P7BdlwaaB4dsimJEAF0egSn4foq5QVXAOiLsoyDDjxdPs9x0RxZ7ox1f+M6ztxUkx+
+	 OEcKphhfLe+Gk/JpjykDCnY8zT+QHteR5I6KLSTc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729203AbgAKKCf (ORCPT
+        id S1729301AbgAKKCk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:02:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32954 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:02:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728819AbgAKKCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:02:34 -0500
+        id S1728819AbgAKKCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:02:39 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86CEA20848;
-        Sat, 11 Jan 2020 10:02:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D98852077C;
+        Sat, 11 Jan 2020 10:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736953;
-        bh=0t7sFC/dghiBRKtxczAFkc+MQIDlbu6/0fLf7MkGFtU=;
+        s=default; t=1578736959;
+        bh=iu9/s3BMOP1/KtOrOmZzB/tj8XuAQWeyw5t7+Au6Zhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2v2E2Di5AwU+i1LgdWHFDzrhaXYUUQgma23YcTo8/P1ypmbN7l/cs29pm4BVXAxMU
-         kj7QNsAwH3dZuG/QGSfYZvBkaR8uUmX95XAnRiVk408PjN+LcQEhUXJyfiNWOcqQYM
-         C/rL1YmmmKP5dTIsE6UHVKLIGzI6wguiAIfrnHK8=
+        b=zo4kskDOLFLqnyGhaQHr0zgbUZ+gHoTThQHmbCqI1B46WARetFEYXBJITVnck29Vx
+         I2v68g+STfQXQ5ghe0qKKdc+hCNywOvMjHqcc1EEG1gHMyFIJKEEEB/AisrjMbS6ev
+         Uf5iJ/CAPLNiYK5u2I13Hcy12yCo5zINXDu48LgI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.9 27/91] ata: ahci_brcm: Allow optional reset controller to be used
-Date:   Sat, 11 Jan 2020 10:49:20 +0100
-Message-Id: <20200111094854.595033052@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 47/91] coresight: tmc-etf: Do not call smp_processor_id from preemptible
+Date:   Sat, 11 Jan 2020 10:49:40 +0100
+Message-Id: <20200111094902.887009248@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -59,50 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-commit 2b2c47d9e1fe90311b725125d6252a859ee87a79 upstream.
+[ Upstream commit 024c1fd9dbcc1d8a847f1311f999d35783921b7f ]
 
-On BCM63138, we need to reset the AHCI core prior to start utilizing it,
-grab the reset controller device cookie and do that.
+During a perf session we try to allocate buffers on the "node" associated
+with the CPU the event is bound to. If it is not bound to a CPU, we
+use the current CPU node, using smp_processor_id(). However this is unsafe
+in a pre-emptible context and could generate the splats as below :
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+ BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
+ caller is tmc_alloc_etf_buffer+0x5c/0x60
+ CPU: 2 PID: 2544 Comm: perf Not tainted 5.1.0-rc6-147786-g116841e #344
+ Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Feb  1 2019
+ Call trace:
+  dump_backtrace+0x0/0x150
+  show_stack+0x14/0x20
+  dump_stack+0x9c/0xc4
+  debug_smp_processor_id+0x10c/0x110
+  tmc_alloc_etf_buffer+0x5c/0x60
+  etm_setup_aux+0x1c4/0x230
+  rb_alloc_aux+0x1b8/0x2b8
+  perf_mmap+0x35c/0x478
+  mmap_region+0x34c/0x4f0
+  do_mmap+0x2d8/0x418
+  vm_mmap_pgoff+0xd0/0xf8
+  ksys_mmap_pgoff+0x88/0xf8
+  __arm64_sys_mmap+0x28/0x38
+  el0_svc_handler+0xd8/0x138
+  el0_svc+0x8/0xc
+
+Use NUMA_NO_NODE hint instead of using the current node for events
+not bound to CPUs.
+
+Fixes: 2e499bbc1a929ac ("coresight: tmc: implementing TMC-ETF AUX space API")
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: stable <stable@vger.kernel.org> # 4.7+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Link: https://lore.kernel.org/r/20190620221237.3536-4-mathieu.poirier@linaro.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ata/ahci_brcm.c |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/ata/ahci_brcm.c
-+++ b/drivers/ata/ahci_brcm.c
-@@ -25,6 +25,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/platform_device.h>
-+#include <linux/reset.h>
- #include <linux/string.h>
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+index 14df4e34c21c..faf68412eb92 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
+@@ -292,9 +292,7 @@ static void *tmc_alloc_etf_buffer(struct coresight_device *csdev, int cpu,
+ 	int node;
+ 	struct cs_buffers *buf;
  
- #include "ahci.h"
-@@ -88,6 +89,7 @@ struct brcm_ahci_priv {
- 	u32 port_mask;
- 	u32 quirks;
- 	enum brcm_ahci_version version;
-+	struct reset_control *rcdev;
- };
+-	if (cpu == -1)
+-		cpu = smp_processor_id();
+-	node = cpu_to_node(cpu);
++	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
  
- static const struct ata_port_info ahci_brcm_port_info = {
-@@ -332,6 +334,11 @@ static int brcm_ahci_probe(struct platfo
- 	if (IS_ERR(priv->top_ctrl))
- 		return PTR_ERR(priv->top_ctrl);
- 
-+	/* Reset is optional depending on platform */
-+	priv->rcdev = devm_reset_control_get(&pdev->dev, "ahci");
-+	if (!IS_ERR_OR_NULL(priv->rcdev))
-+		reset_control_deassert(priv->rcdev);
-+
- 	if ((priv->version == BRCM_SATA_BCM7425) ||
- 		(priv->version == BRCM_SATA_NSP)) {
- 		priv->quirks |= BRCM_AHCI_QUIRK_NO_NCQ;
+ 	/* Allocate memory structure for interaction with Perf */
+ 	buf = kzalloc_node(sizeof(struct cs_buffers), GFP_KERNEL, node);
+-- 
+2.20.1
+
 
 
