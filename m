@@ -2,168 +2,332 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE258C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC6AC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F4A2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED8D2087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbgAKJnp (ORCPT
+        id S1728775AbgAKJsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:43:45 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:8700 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728737AbgAKJnp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:43:45 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 5064B8E2B9F4581B6FE7;
-        Sat, 11 Jan 2020 17:43:43 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.204) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 11 Jan
- 2020 17:43:40 +0800
-Subject: Re: [f2fs-dev] [PATCH] resize.f2fs: add option for large_nat_bitmap
- feature
-To:     xiong ping <xp1982.06.06@gmail.com>
-CC:     =?UTF-8?B?UGluZzEgWGlvbmcg54aK5bmz?= <xiongping1@xiaomi.com>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1578482416650.67283@xiaomi.com>
- <d48d8d65-1308-278c-db86-0806a0c3637a@huawei.com>
- <CAOqdbhdyaNg3RoGF0+gJ=6wX4YDrgpfuVDsuAg05BSp3dmZKww@mail.gmail.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <cd24098e-5c26-39de-6024-1bbb71375556@huawei.com>
-Date:   Sat, 11 Jan 2020 17:43:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sat, 11 Jan 2020 04:48:06 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34305 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728743AbgAKJsF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:48:05 -0500
+Received: by mail-lj1-f195.google.com with SMTP id z22so4714376ljg.1;
+        Sat, 11 Jan 2020 01:48:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=fiX6t3Ui8loxUwEDcblpsDhCjfWgNUhlgpu67I+0s5E=;
+        b=G0yneX/Q85H6ulBBHHwHFP2AcrtndOG5m8ucKftO5oPqTY4q0jHn2wXteh8Ul4L0/l
+         T4N/ExES8O+ISJklzUgcQKEAXr6RV+YhXrCDZicE1t7EV7Tl2OP75M/Q+GcekEMH8X3Y
+         lvGK1F/D+/SFi75dTJ/OmGs14BuqIOP7lxIXJY6svThaZ3/c2mrUErOllLzD7Fk9SDOB
+         zoBBgGGuI8Vgvb9+tQ3NpSLmY1E/f22JkuOYdooQAJm2F0TJwF9PRMp1D3VEY8ahKgPa
+         MH9c/cWgeuj9BeIzpQWMQdWIwhp12JJTX7tmCoWzaMNmkUKva/tqCo47muDkugiTABKJ
+         Ywbw==
+X-Gm-Message-State: APjAAAXa7s13A9jatWYvw5l2Toz10jCWDBx9thtFVJLwxLtPmkDX3Gvu
+        N4qZms5T5HQusY7AwabxPXw=
+X-Google-Smtp-Source: APXvYqz0WsdeGhDrnePxLI168HedGyWgaqRFLhs9mAt3yMBp062y/aMb0/3jC+EUEejaxd8BtnF5tQ==
+X-Received: by 2002:a2e:a486:: with SMTP id h6mr5217950lji.235.1578736080915;
+        Sat, 11 Jan 2020 01:48:00 -0800 (PST)
+Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
+        by smtp.gmail.com with ESMTPSA id f22sm2268934ljh.74.2020.01.11.01.47.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jan 2020 01:48:00 -0800 (PST)
+Date:   Sat, 11 Jan 2020 11:47:52 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: [PATCH v9 00/12] Support ROHM BD71828 PMIC
+Message-ID: <cover.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <CAOqdbhdyaNg3RoGF0+gJ=6wX4YDrgpfuVDsuAg05BSp3dmZKww@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/1/10 17:58, xiong ping wrote:
-> Chao Yu <yuchao0@huawei.com> 于2020年1月9日周四 下午3:16写道：
->>
->> On 2020/1/8 19:20, Ping1 Xiong 熊平 wrote:
->>> From d5b8411dbae37180c37d96bf164fab16138fc21a Mon Sep 17 00:00:00 2001
->>>
->>> From: xiongping1 <xiongping1@xiaomi.com>
->>> Date: Wed, 8 Jan 2020 17:20:55 +0800
->>> Subject: [PATCH] resize.f2fs: add option for large_nat_bitmap feature
->>
->> Thanks for your contribution.
->>
->> The patch format is incorrect, I guess it was changed by email client or when
->> you paste patch's content, could you check it?
->>
-> I have resend the patch with this email account yesterday, can you check it?
->>>
->>> resize.f2fs has already supported large_nat_bitmap feature, but has no
->>> option to turn on it.
->>>
->>> This change add a new '-i' option to control turning on/off it.
->>
->> We only add a option to turn on this feature, right? rather than turning
->> on or off it?
->>
-> yes, the feature is off by default, so we need an option to enable it.
+Patch series introducing support for ROHM BD71828 PMIC
 
-So, I meant it needs to adjust commit message from "turning on/off it" to
-"turning on it".
+ROHM BD71828 is a power management IC containing 7 bucks and 7 LDOs. All
+regulators can be controlled individually via I2C. Bucks 1,2,6 and
+7 can also be assigned to a "regulator group" controlled by run-levels.
+Eg. Run level specific voltages and enable/disable statuses for each of
+these bucks can be set via register interface. The buck run-level group
+assignment (selection if buck is to be controlled individually or via
+run-levels) can be changed at run-time via I2C.
 
->> Thanks,
->>
->>>
->>> Signed-off-by: xiongping1 <xiongping1@xiaomi.com>
->>> ---
->>>  fsck/main.c   | 6 +++++-
->>>  fsck/resize.c | 5 +++++
->>>  2 files changed, 10 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/fsck/main.c b/fsck/main.c
->>> index 9a7d499..e7e3dfc 100644
->>> --- a/fsck/main.c
->>> +++ b/fsck/main.c
->>> @@ -104,6 +104,7 @@ void resize_usage()
->>>          MSG(0, "\nUsage: resize.f2fs [options] device\n");
->>>          MSG(0, "[options]:\n");
->>>          MSG(0, "  -d debug level [default:0]\n");
->>> +       MSG(0, "  -i extended node bitmap, node ratio is 20%% by default\n");
->>>          MSG(0, "  -s safe resize (Does not resize metadata)");
->>>          MSG(0, "  -t target sectors [default: device size]\n");
->>>          MSG(0, "  -V print the version number and exit\n");
->>> @@ -449,7 +450,7 @@ void f2fs_parse_options(int argc, char *argv[])
->>>                                  break;
->>>                  }
->>>          } else if (!strcmp("resize.f2fs", prog)) {
->>> -               const char *option_string = "d:st:V";
->>> +               const char *option_string = "d:st:iV";
->>>
->>>                  c.func = RESIZE;
->>>                  while ((option = getopt(argc, argv, option_string)) != EOF) {
->>> @@ -476,6 +477,9 @@ void f2fs_parse_options(int argc, char *argv[])
->>>                                          ret = sscanf(optarg, "%"PRIx64"",
->>>                                                          &c.target_sectors);
->>>                                  break;
->>> +                       case 'i':
->>> +                               c.large_nat_bitmap = 1;
->>> +                               break;
->>>                          case 'V':
->>>                                  show_version(prog);
->>>                                  exit(0);
->>> diff --git a/fsck/resize.c b/fsck/resize.c
->>> index fc563f2..88e063e 100644
->>> --- a/fsck/resize.c
->>> +++ b/fsck/resize.c
->>> @@ -519,6 +519,11 @@ static void rebuild_checkpoint(struct f2fs_sb_info *sbi,
->>>          else
->>>                  set_cp(checksum_offset, CP_CHKSUM_OFFSET);
->>>
->>> +       if (c.large_nat_bitmap) {
->>> +               set_cp(checksum_offset, CP_MIN_CHKSUM_OFFSET);
->>> +               flags |= CP_LARGE_NAT_BITMAP_FLAG;
->>> +       }
+This patch series brings only the basic support for controlling
+regulators individually via I2C.
 
-How about relocating above codes to below position:
+In addition to the bucks and LDOs there are:
 
-	flags = update_nat_bits_flags(new_sb, cp, get_cp(ckpt_flags));
+- The usual clk gate
+- 4 IO pins (mostly usable as GPO or tied to specific purpose)
+- power button support
+- RTC
+- two LEDs
+- battery charger
+- HALL sensor input
 
-+	if (c.large_nat_bitmap)
-+		flags |= CP_LARGE_NAT_BITMAP_FLAG;
+This patch series adds support to regulators, clk, RTC, GPIOs and LEDs.
 
-	if (flags & CP_COMPACT_SUM_FLAG)
-		flags &= ~CP_COMPACT_SUM_FLAG;
+Power-supply driver for charger is not included in this series.
 
-Thanks,
+The series also adds LED DT-node lookup based on node name or given
+property name/value pair in LED core. It also adds generic default-state
+and default-trigger property handling to LED core. Follow-up patches
+simplifying few other LED drivers should follow.
 
->>> +
->>>          set_cp(ckpt_flags, flags);
->>>
->>>          memcpy(new_cp, cp, (unsigned char *)cp->sit_nat_version_bitmap -
->>> --
->>> 2.7.4
->>>
->>>
->>>
->>>
->>> #/******本邮件及其附件含有小米公司的保密信息，仅限于发送给上面地址中列出的个人或群组。禁止任何其他人以任何形式使用（包括但不限于全部或部分地泄露、复制、或散发）本邮件中的信息。如果您错收了本邮件，请您立即电话或邮件通知发件人并删除本邮件！ This e-mail and its attachments contain confidential information from XIAOMI, which is intended only for the person or entity whose address is listed above. Any use of the information contained herein in any way (including, but not limited to, total or partial disclosure, reproduction, or dissemination) by persons other than the intended recipient(s) is prohibited. If you receive this e-mail in error, please notify the sender by phone or email immediately and delete it!******/#
->>
->>
->> _______________________________________________
->> Linux-f2fs-devel mailing list
->> Linux-f2fs-devel@lists.sourceforge.net
->> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> .
-> 
+Changelog v9: (Changes suggested by Lee)
+  - Added kerneldoc to struct rohm_dvs_config
+  - cleaned few comments
+  - updated copyright date
+  - renamed variable 'mfd' to 'parent'.
+
+Changelog v8:
+  LEDs:
+    - Fixed bunch of typos.
+    - Corrected the commit message which errorneously contained the
+      'leds-compatible' which I dropped in favour of match_property.
+    - use max_brightness instead of LED_FULL if it is given when
+      handling the default_state, "on".
+    - clean fwnode_owned at the end of unsuccessfull registration or
+      at the end of deregistration.
+    - fix the accidental linuxdoc comment.
+    - rename led_find_fwnode to led_get_fwnode as it increases refcount.
+
+Changelog v7:
+  - Rebased on top of v5.5-rc2
+  - Dropped already applied patches
+    - basic regulator support (in regulator tree now)
+    - regulator dt-bindings (in regulator tree now)
+    - gpio devm function documentation (in GPIO tree now)
+  - Dropped new devm-variant of gpio_array getting for MFD sub-devices who
+    have consumer information in parent DT node as gpio consumer was
+    dropped from the series
+  - removed extra line-breaks from MFD driver and Makefile
+  - fixed RTC patch subject line (added missing colon)
+  - included a patch which adds compatible for ROHM BD71850 PMIC
+
+Changelog v6:
+  Rebased on top of v5.5-rc1
+  LED core:
+    - Do new fw-node look-up only if the new match data is given. That
+      way behaviour for existing drivers is not changed
+    - Handle generic LED properties by core only if explisitly requested
+      in init-data. That way behaviour for existing drivers is not changed
+      until they are verified to work.
+  BD71828 LEDs:
+    - Fix module loading by adding "dummy" of_device_id table.
+  DT bindings:
+    All:
+    - Remove regulator run-level properties as run-level support was
+      dropped for now.
+    - Change SPDX to dual lisence
+    LED:
+    - added select: false
+    - replace oneOf + const by enum
+    Regulator:
+    - remove forgotten comments
+    - comment indenting
+    MFD:
+    - remove unnecessary descriptions
+  Regulators:
+    - Dropped patch 12 with run-level controls
+    - Dropped unnecessary ramp_delay_supported() - ram_delay ops were
+      already only filled for DVS bucks.
+  GPIO:
+    - rename internal function.
+  RTC:
+    - Added missing blank line
+  
+Changelog v5:
+  Only LED patch (patch 15) changed, rest as in v4.
+  LED:
+    - Fixed issues reported by Dan Carpenter and kbuild-bot static
+      analysis.
+Changelog v4 (first non RFC):
+  General:
+    - Changed subdevice loading and chip version identification to use
+      platform ID.
+    - License identifiers changed to GPL-2.0-only
+  MFD:
+    - Styling fixes mostly
+  DT-Bindings:
+    - a few more checks as suggested by Rob Herring.
+    - Order of DT patches changed.
+    - me as maintainer
+    - standard units to new properties (microvolts, ohms)
+    - runlevel values in an array
+  LED:
+    - BD71828 driver added (back)
+      - Added DT support
+    - Added LED DT node lookup in led framework when init_data is given
+      with DT node match information.
+    - Added common property parsing for default-state and
+      default-trigger.
+  Regulators:
+    - dropped sysfs interfaces
+    - fixed module unload/reload by binding gpio consumer information to
+      regulator device not to MFD.
+  GPIO:
+    - Added devm_gpiod_get_parent_array
+    - added few missing devm functions to documentation
+
+Changelog v3:
+  DT-Bindings:
+    - yamlify
+    - add LED binding doc
+  CLK:
+    - Move clk register definitions from MFD headers to clk driver
+  GPIO:
+    - Add generic direction define and use it.
+  LED:
+    - Drop LED driver from the series (for now).
+
+Changelog v2: Mainly RTC and GPIO fixes suggested by Alexandre and Bartosz
+  General:
+    -Patch ordering changed to provide dt binding documents right after the
+     MFD core.
+  DT-Bindings for regulators (Patch 3)
+    -Fix typo in PMIC model number
+  RTC (patch 11)
+    -Reverted renaming in order to reduce patch size.
+    -Reworded commit message
+  BD71828 regulator (patch 7)
+    -Add MODULE_ALIAS
+  GPIO (patch 12)
+    -Remove file-name from comment
+    -prefix IN and OUT defines with chip type
+    -improved documentation for the INPUT only pin.
+    -removed empty left-over function
+    -removed unnecessary #ifdef CONFIG_OF_GPIO
+    -removed unnecessary error print
+    -Add MODULE_ALIAS
+
+Patch 1:
+        dt-bindings for LEDs on BD71828 PMIC
+Patch 2:
+	dt-bindings for BD71828 PMIC
+Patch 3:
+	Convert rohm PMICs with common sub-devices to use platform_
+	device_id to match MFD sub-devices
+Patch 4:
+	Add compatible for BD71850
+Patch 5:
+        BD71828 MFD core.
+Patch 6:
+	Power button support using GPIO keys.
+Patch 7:
+        CLK gate support using existing clk-bd718x7
+Patch 8:
+        Split existing bd718x7 regulator driver to generic ROHM dt
+        parsing portion (used by more than one ROHM drivers) and
+        bd718x8 specific parts
+Patch 9:
+        Support BD71828 RTC block using BD70528 RTC driver
+Patch 10:
+        Allow control of GP(I)O pins on BD71828 via GPIO subsystem
+Patch 11:
+	Add LED node lookup and common LED binding parsing support
+	to LED class/core
+Patch 12:
+        Support toggling the LEDs on BD71828.
+
+---
+
+Matti Vaittinen (12):
+  dt-bindings: leds: ROHM BD71282 PMIC LED driver
+  dt-bindings: mfd: Document ROHM BD71828 bindings
+  mfd: rohm PMICs - use platform_device_id to match MFD sub-devices
+  mfd: bd718x7: Add compatible for BD71850
+  mfd: bd71828: Support ROHM BD71828 PMIC - core
+  mfd: input: bd71828: Add power-key support
+  clk: bd718x7: Support ROHM BD71828 clk block
+  regulator: bd718x7: Split driver to common and bd718x7 specific parts
+  rtc: bd70528: add BD71828 support
+  gpio: bd71828: Initial support for ROHM BD71828 PMIC GPIOs
+  leds: Add common LED binding parsing support to LED class/core
+  led: bd71828: Support LED outputs on ROHM BD71828 PMIC
+
+ .../bindings/leds/rohm,bd71828-leds.yaml      |  52 +++
+ .../bindings/mfd/rohm,bd71828-pmic.yaml       | 193 ++++++++
+ drivers/clk/Kconfig                           |   6 +-
+ drivers/clk/clk-bd718x7.c                     |  50 ++-
+ drivers/gpio/Kconfig                          |  12 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-bd71828.c                   | 159 +++++++
+ drivers/leds/Kconfig                          |  10 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/led-class.c                      | 115 ++++-
+ drivers/leds/led-core.c                       | 258 +++++++++--
+ drivers/leds/leds-bd71828.c                   | 118 +++++
+ drivers/mfd/Kconfig                           |  15 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/rohm-bd70528.c                    |   3 +-
+ drivers/mfd/rohm-bd71828.c                    | 344 ++++++++++++++
+ drivers/mfd/rohm-bd718x7.c                    |  43 +-
+ drivers/regulator/Kconfig                     |   4 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/bd718x7-regulator.c         | 200 +++------
+ drivers/regulator/rohm-regulator.c            |  95 ++++
+ drivers/rtc/Kconfig                           |   3 +-
+ drivers/rtc/rtc-bd70528.c                     | 220 +++++++--
+ include/linux/leds.h                          |  94 +++-
+ include/linux/mfd/rohm-bd70528.h              |  19 +-
+ include/linux/mfd/rohm-bd71828.h              | 423 ++++++++++++++++++
+ include/linux/mfd/rohm-bd718x7.h              |   6 -
+ include/linux/mfd/rohm-generic.h              |  70 ++-
+ include/linux/mfd/rohm-shared.h               |  21 +
+ 29 files changed, 2248 insertions(+), 289 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/rohm,bd71828-leds.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml
+ create mode 100644 drivers/gpio/gpio-bd71828.c
+ create mode 100644 drivers/leds/leds-bd71828.c
+ create mode 100644 drivers/mfd/rohm-bd71828.c
+ create mode 100644 drivers/regulator/rohm-regulator.c
+ create mode 100644 include/linux/mfd/rohm-bd71828.h
+ create mode 100644 include/linux/mfd/rohm-shared.h
+
+
+base-commit: commit d1eef1c61974 ("Linux 5.5-rc2")
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
