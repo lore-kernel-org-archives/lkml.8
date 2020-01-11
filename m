@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E8DC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C629C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F23EE205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5642082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738274;
-	bh=g58wm3jf3ZZNnWrYIXWNE+bas/pWp0HpG5yu9qv5D0c=;
+	s=default; t=1578738278;
+	bh=HbygnXdb9+pNdvN77EkwyXpwBKKeuf9al5hOlxjXzp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hp4CdbrxpiZAVYOhq0JmcLWpmNSipAOFMWygwwvdvoFrh4urL7wVgzjDyHVoLEzsz
-	 f8/9HjuGnVc8U60YhqaxpkR4XtHvyHMG57w/NCy3Gd4UBlet5aD2H4WW82r1Gw4b38
-	 0BEmWy4ujtsGHQNy8BDRSSaRg6fPUMr8s78Q4z2w=
+	b=WU8bjPs1zFTOq8t2y61n7jAT9cfhkSz1m6SSrtdojS8CfNGdh46CC+dKWGPJmezY7
+	 VcScn05e/ab7gNF77GVXLcbG+Lz6qLey/oJ3MlT+jzBB+mOEveGf9oGwqWL5sPukbE
+	 dRYldMcArlluoQXxLPzJmwt7eySnPHCQj09CFDWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731000AbgAKKYc (ORCPT
+        id S1730748AbgAKKYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:24:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53516 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:24:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730986AbgAKKY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:24:29 -0500
+        id S1730986AbgAKKYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:24:33 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 189D920848;
-        Sat, 11 Jan 2020 10:24:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5018620848;
+        Sat, 11 Jan 2020 10:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738268;
-        bh=g58wm3jf3ZZNnWrYIXWNE+bas/pWp0HpG5yu9qv5D0c=;
+        s=default; t=1578738273;
+        bh=HbygnXdb9+pNdvN77EkwyXpwBKKeuf9al5hOlxjXzp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lzo1ANtgzCKHfqprcrJl7bVeLpighm8mLlMWZj+9z7mBLQ+l8Xb0FdgtUd3V9k7nI
-         7IJXBc7hlf7ePfL++LavRU8m0EI5r0MwurcJ023o1lFSSQC/5gO/3A1nMLvrUDYzUJ
-         HFEy38HRJb5s0ce7O5MmFGNvV1HDcc6BL95A8+Ok=
+        b=g8wFL2J4VHLMIJycHytcWyhVTH36Kzwb50DS65hhuLLx7+8DpUZL3AcPBCsPgSxlW
+         I9pABoHqbwX7uGGNP0tXjT+scnDQHX2pefC9ESOShk44bNJ82VdVBywi+CFTcRKAX+
+         MLJPRHBy9rinPGS4i+5nt4qWjSyzsv0n8JiCiSzw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Michael Walle <michael@walle.cc>,
+        Li Yang <leoyang.li@nxp.com>, Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 063/165] samples: bpf: fix syscall_tp due to unused syscall
-Date:   Sat, 11 Jan 2020 10:49:42 +0100
-Message-Id: <20200111094926.411312864@linuxfoundation.org>
+Subject: [PATCH 5.4 064/165] arm64: dts: ls1028a: fix reboot node
+Date:   Sat, 11 Jan 2020 10:49:43 +0100
+Message-Id: <20200111094926.483420867@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,60 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel T. Lee <danieltimlee@gmail.com>
+From: Michael Walle <michael@walle.cc>
 
-[ Upstream commit fe3300897cbfd76c6cb825776e5ac0ca50a91ca4 ]
+[ Upstream commit 3f0fb37b22b460e3dec62bee284932881574acb9 ]
 
-Currently, open() is called from the user program and it calls the syscall
-'sys_openat', not the 'sys_open'. This leads to an error of the program
-of user side, due to the fact that the counter maps are zero since no
-function such 'sys_open' is called.
+The reboot register isn't located inside the DCFG controller, but in its
+own RST controller. Fix it.
 
-This commit adds the kernel bpf program which are attached to the
-tracepoint 'sys_enter_openat' and 'sys_enter_openat'.
-
-Fixes: 1da236b6be963 ("bpf: add a test case for syscalls/sys_{enter|exit}_* tracepoints")
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 8897f3255c9c ("arm64: dts: Add support for NXP LS1028A SoC")
+Signed-off-by: Michael Walle <michael@walle.cc>
+Acked-by: Li Yang <leoyang.li@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/syscall_tp_kern.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/samples/bpf/syscall_tp_kern.c b/samples/bpf/syscall_tp_kern.c
-index 1d78819ffef1..630ce8c4d5a2 100644
---- a/samples/bpf/syscall_tp_kern.c
-+++ b/samples/bpf/syscall_tp_kern.c
-@@ -47,13 +47,27 @@ static __always_inline void count(void *map)
- SEC("tracepoint/syscalls/sys_enter_open")
- int trace_enter_open(struct syscalls_enter_open_args *ctx)
- {
--	count((void *)&enter_open_map);
-+	count(&enter_open_map);
-+	return 0;
-+}
-+
-+SEC("tracepoint/syscalls/sys_enter_openat")
-+int trace_enter_open_at(struct syscalls_enter_open_args *ctx)
-+{
-+	count(&enter_open_map);
- 	return 0;
- }
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index c7dae9ec17da..bb960fe2bb64 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -102,7 +102,7 @@
  
- SEC("tracepoint/syscalls/sys_exit_open")
- int trace_enter_exit(struct syscalls_exit_open_args *ctx)
- {
--	count((void *)&exit_open_map);
-+	count(&exit_open_map);
-+	return 0;
-+}
+ 	reboot {
+ 		compatible ="syscon-reboot";
+-		regmap = <&dcfg>;
++		regmap = <&rst>;
+ 		offset = <0xb0>;
+ 		mask = <0x02>;
+ 	};
+@@ -161,6 +161,12 @@
+ 			big-endian;
+ 		};
+ 
++		rst: syscon@1e60000 {
++			compatible = "syscon";
++			reg = <0x0 0x1e60000 0x0 0x10000>;
++			little-endian;
++		};
 +
-+SEC("tracepoint/syscalls/sys_exit_openat")
-+int trace_enter_exit_at(struct syscalls_exit_open_args *ctx)
-+{
-+	count(&exit_open_map);
- 	return 0;
- }
+ 		scfg: syscon@1fc0000 {
+ 			compatible = "fsl,ls1028a-scfg", "syscon";
+ 			reg = <0x0 0x1fc0000 0x0 0x10000>;
 -- 
 2.20.1
 
