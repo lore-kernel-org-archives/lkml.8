@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC8BC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74CBFC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1166720842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CE132077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736961;
-	bh=iu9/s3BMOP1/KtOrOmZzB/tj8XuAQWeyw5t7+Au6Zhs=;
+	s=default; t=1578736966;
+	bh=x46ZqZekimlPN+R+iky3j2yxrRSHk+gskssGOu7DI3Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=I9LNGhRXaEas6NecMJkM/yFcwTbOB0euk5YXIbeqQk7DXXpCtLI/i0UIkTpJ1fi5j
-	 P7BdlwaaB4dsimJEAF0egSn4foq5QVXAOiLsoyDDjxdPs9x0RxZ7ox1f+M6ztxUkx+
-	 OEcKphhfLe+Gk/JpjykDCnY8zT+QHteR5I6KLSTc=
+	b=JbW25QGPSOyhhsg4e6OWqzeUdLNx5vH8SQ/8XKOWlfrDinS9lzsmmcQocz7pFT4z/
+	 F3LY8ri/Rvbo8r5BMmMmoGnjjyPW3KDGABZtl+iTajmdTWlT4gSerlPwlrXkYA8RwO
+	 rw2Vvl6r1mSXtoVnO8y577PctTEcLp3jkj54+lq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729301AbgAKKCk (ORCPT
+        id S1729356AbgAKKCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:02:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33166 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:02:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728819AbgAKKCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:02:39 -0500
+        id S1729172AbgAKKCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:02:44 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D98852077C;
-        Sat, 11 Jan 2020 10:02:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B4BA20842;
+        Sat, 11 Jan 2020 10:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736959;
-        bh=iu9/s3BMOP1/KtOrOmZzB/tj8XuAQWeyw5t7+Au6Zhs=;
+        s=default; t=1578736964;
+        bh=x46ZqZekimlPN+R+iky3j2yxrRSHk+gskssGOu7DI3Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zo4kskDOLFLqnyGhaQHr0zgbUZ+gHoTThQHmbCqI1B46WARetFEYXBJITVnck29Vx
-         I2v68g+STfQXQ5ghe0qKKdc+hCNywOvMjHqcc1EEG1gHMyFIJKEEEB/AisrjMbS6ev
-         Uf5iJ/CAPLNiYK5u2I13Hcy12yCo5zINXDu48LgI=
+        b=mieM/oC8o8mTXs8/+tEOxYWMgm/5sGb5Rc3JmB2P2dAppJNpaea6FziN9dxuPGJ7u
+         5mBldILUGuf/IELXiFfkcJqOvz7VTrwg8FIyVPzOfgzYVnDfm0PSWy9dBH17p6CImu
+         93UZ3joWutnbO1+NZQ/SOxGUy+m71b62NspBWjKY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Aleksandr Yashkin <a.yashkin@inango-systems.com>,
+        Nikolay Merinov <n.merinov@inango-systems.com>,
+        Ariel Gilman <a.gilman@inango-systems.com>,
+        Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 47/91] coresight: tmc-etf: Do not call smp_processor_id from preemptible
-Date:   Sat, 11 Jan 2020 10:49:40 +0100
-Message-Id: <20200111094902.887009248@linuxfoundation.org>
+Subject: [PATCH 4.9 56/91] pstore/ram: Write new dumps to start of recycled zones
+Date:   Sat, 11 Jan 2020 10:49:49 +0100
+Message-Id: <20200111094905.956540988@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -61,66 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Aleksandr Yashkin <a.yashkin@inango-systems.com>
 
-[ Upstream commit 024c1fd9dbcc1d8a847f1311f999d35783921b7f ]
+[ Upstream commit 9e5f1c19800b808a37fb9815a26d382132c26c3d ]
 
-During a perf session we try to allocate buffers on the "node" associated
-with the CPU the event is bound to. If it is not bound to a CPU, we
-use the current CPU node, using smp_processor_id(). However this is unsafe
-in a pre-emptible context and could generate the splats as below :
+The ram_core.c routines treat przs as circular buffers. When writing a
+new crash dump, the old buffer needs to be cleared so that the new dump
+doesn't end up in the wrong place (i.e. at the end).
 
- BUG: using smp_processor_id() in preemptible [00000000] code: perf/2544
- caller is tmc_alloc_etf_buffer+0x5c/0x60
- CPU: 2 PID: 2544 Comm: perf Not tainted 5.1.0-rc6-147786-g116841e #344
- Hardware name: ARM LTD ARM Juno Development Platform/ARM Juno Development Platform, BIOS EDK II Feb  1 2019
- Call trace:
-  dump_backtrace+0x0/0x150
-  show_stack+0x14/0x20
-  dump_stack+0x9c/0xc4
-  debug_smp_processor_id+0x10c/0x110
-  tmc_alloc_etf_buffer+0x5c/0x60
-  etm_setup_aux+0x1c4/0x230
-  rb_alloc_aux+0x1b8/0x2b8
-  perf_mmap+0x35c/0x478
-  mmap_region+0x34c/0x4f0
-  do_mmap+0x2d8/0x418
-  vm_mmap_pgoff+0xd0/0xf8
-  ksys_mmap_pgoff+0x88/0xf8
-  __arm64_sys_mmap+0x28/0x38
-  el0_svc_handler+0xd8/0x138
-  el0_svc+0x8/0xc
+The solution to this problem is to reset the circular buffer state before
+writing a new Oops dump.
 
-Use NUMA_NO_NODE hint instead of using the current node for events
-not bound to CPUs.
-
-Fixes: 2e499bbc1a929ac ("coresight: tmc: implementing TMC-ETF AUX space API")
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: stable <stable@vger.kernel.org> # 4.7+
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Link: https://lore.kernel.org/r/20190620221237.3536-4-mathieu.poirier@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Aleksandr Yashkin <a.yashkin@inango-systems.com>
+Signed-off-by: Nikolay Merinov <n.merinov@inango-systems.com>
+Signed-off-by: Ariel Gilman <a.gilman@inango-systems.com>
+Link: https://lore.kernel.org/r/20191223133816.28155-1-n.merinov@inango-systems.com
+Fixes: 896fc1f0c4c6 ("pstore/ram: Switch to persistent_ram routines")
+[kees: backport to v4.9]
+Link: https://lore.kernel.org/stable/157831399811194@kroah.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwtracing/coresight/coresight-tmc-etf.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ fs/pstore/ram.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-tmc-etf.c b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-index 14df4e34c21c..faf68412eb92 100644
---- a/drivers/hwtracing/coresight/coresight-tmc-etf.c
-+++ b/drivers/hwtracing/coresight/coresight-tmc-etf.c
-@@ -292,9 +292,7 @@ static void *tmc_alloc_etf_buffer(struct coresight_device *csdev, int cpu,
- 	int node;
- 	struct cs_buffers *buf;
+diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+index 8b09271e5d66..a73959e6ae32 100644
+--- a/fs/pstore/ram.c
++++ b/fs/pstore/ram.c
+@@ -321,6 +321,17 @@ static int notrace ramoops_pstore_write_buf(enum pstore_type_id type,
  
--	if (cpu == -1)
--		cpu = smp_processor_id();
--	node = cpu_to_node(cpu);
-+	node = (event->cpu == -1) ? NUMA_NO_NODE : cpu_to_node(event->cpu);
+ 	prz = cxt->przs[cxt->dump_write_cnt];
  
- 	/* Allocate memory structure for interaction with Perf */
- 	buf = kzalloc_node(sizeof(struct cs_buffers), GFP_KERNEL, node);
++	/*
++	 * Since this is a new crash dump, we need to reset the buffer in
++	 * case it still has an old dump present. Without this, the new dump
++	 * will get appended, which would seriously confuse anything trying
++	 * to check dump file contents. Specifically, ramoops_read_kmsg_hdr()
++	 * expects to find a dump header in the beginning of buffer data, so
++	 * we must to reset the buffer values, in order to ensure that the
++	 * header will be written to the beginning of the buffer.
++	 */
++	persistent_ram_zap(prz);
++
+ 	hlen = ramoops_write_kmsg_hdr(prz, compressed);
+ 	if (size + hlen > prz->buffer_size)
+ 		size = prz->buffer_size - hlen;
 -- 
 2.20.1
 
