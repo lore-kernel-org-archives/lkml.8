@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A843EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93B5C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD9D2084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B286F20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738251;
-	bh=YsvyNulDze0pM9EOznZ/h1F/BfCyg96OFeBPGK5KHc4=;
+	s=default; t=1578738256;
+	bh=3tyyKQREqMsKu1Ee8ah4w/mCEkqxToX7uq09Ncf4VDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xVf1H8Rd/fvwRwAk/hj7PFewu6vaR7VhYjpZ9TLKpC7EDBEDBlU3KfJBNlRaKZ5fs
-	 QTsRaeTosh6MbkBA+yEGV/D/susYp99g5rtJz2IBDggj2iA2koUiGLagVESSDlUKqL
-	 zc4up+MJGSOI3knb/L/1vRRcGmqRdrZClqmMQenU=
+	b=lLT1Bn/5pVg8Ky4v7itlmg+mLMI7lEYHJ9Pv3l/BSsyf6cZxY1hIfPiOonioj4+2H
+	 StQPOcg8xcfhFVjWVZA9T8iFCYng1tvz9CqR8pLHttTtC06Z453hKHmP4ChsYmni9G
+	 5uUFoUB9zUGMtNu6DUJ7rYOWmenWYmwFfSXxLBCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbgAKKYK (ORCPT
+        id S1730976AbgAKKYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:24:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52440 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:24:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52702 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730643AbgAKKYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:24:06 -0500
+        id S1730643AbgAKKYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:24:11 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27337205F4;
-        Sat, 11 Jan 2020 10:24:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0356205F4;
+        Sat, 11 Jan 2020 10:24:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738246;
-        bh=YsvyNulDze0pM9EOznZ/h1F/BfCyg96OFeBPGK5KHc4=;
+        s=default; t=1578738250;
+        bh=3tyyKQREqMsKu1Ee8ah4w/mCEkqxToX7uq09Ncf4VDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p9K2NnpcQCWHjAOy5JsV3eCvFBB2tU/ICyP8cd8YkJFHEbP0s7YL6ABKUAip54diM
-         xIDyyxqh5EWGCg7W2hJrK2uMSTY4PLrCjfICgLCF18BL6BhsnGoUkZkPZpuarvuZpR
-         iP+nonpjk4g18kUuxSGXvDc86u3ai/aNYWwiZKJc=
+        b=eb79hHitGm2Yjmzz8vWHrYnM5umQjac/6e0dXalJjED00DeodiNhAa2UhElcqvy31
+         zHvSed9CiKr3x4weVB9bB+LKvqjKw9QUMyrupa4wGsNOUpav0k4XAnK9F1eWmVtTtW
+         TtymYtAzh5sn2r/SONMWAJjjCBJZ9UiTL0VkHwOY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andreas Dannenberg <dannenberg@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 058/165] spi: spi-ti-qspi: Fix a bug when accessing non default CS
-Date:   Sat, 11 Jan 2020 10:49:37 +0100
-Message-Id: <20200111094926.071778933@linuxfoundation.org>
+Subject: [PATCH 5.4 059/165] ARM: dts: am437x-gp/epos-evm: fix panel compatible
+Date:   Sat, 11 Jan 2020 10:49:38 +0100
+Message-Id: <20200111094926.137770389@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,71 +62,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh Raghavendra <vigneshr@ti.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-[ Upstream commit c52c91bb9aa6bd8c38dbf9776158e33038aedd43 ]
+[ Upstream commit c6b16761c6908d3dc167a0a566578b4b0b972905 ]
 
-When switching ChipSelect from default CS0 to any other CS, driver fails
-to update the bits in system control module register that control which
-CS is mapped for MMIO access. This causes reads to fail when driver
-tries to access QSPI flash on CS1/2/3.
+The LCD panel on AM4 GP EVMs and ePOS boards seems to be
+osd070t1718-19ts. The current dts files say osd057T0559-34ts. Possibly
+the panel has changed since the early EVMs, or there has been a mistake
+with the panel type.
 
-Fix this by updating appropriate bits whenever active CS changes.
+Update the DT files accordingly.
 
-Reported-by: Andreas Dannenberg <dannenberg@ti.com>
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Link: https://lore.kernel.org/r/20191211155216.30212-1-vigneshr@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-ti-qspi.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
+ arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
-index 3cb65371ae3b..66dcb6128539 100644
---- a/drivers/spi/spi-ti-qspi.c
-+++ b/drivers/spi/spi-ti-qspi.c
-@@ -62,6 +62,7 @@ struct ti_qspi {
- 	u32 dc;
+diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+index cae4500194fe..811c8cae315b 100644
+--- a/arch/arm/boot/dts/am437x-gp-evm.dts
++++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+@@ -86,7 +86,7 @@
+ 		};
  
- 	bool mmap_enabled;
-+	int current_cs;
- };
+ 	lcd0: display {
+-		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
++		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
+ 		label = "lcd";
  
- #define QSPI_PID			(0x0)
-@@ -487,6 +488,7 @@ static void ti_qspi_enable_memory_map(struct spi_device *spi)
- 				   MEM_CS_EN(spi->chip_select));
- 	}
- 	qspi->mmap_enabled = true;
-+	qspi->current_cs = spi->chip_select;
- }
+ 		backlight = <&lcd_bl>;
+diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
+index 95314121d111..078cb473fa7d 100644
+--- a/arch/arm/boot/dts/am43x-epos-evm.dts
++++ b/arch/arm/boot/dts/am43x-epos-evm.dts
+@@ -42,7 +42,7 @@
+ 	};
  
- static void ti_qspi_disable_memory_map(struct spi_device *spi)
-@@ -498,6 +500,7 @@ static void ti_qspi_disable_memory_map(struct spi_device *spi)
- 		regmap_update_bits(qspi->ctrl_base, qspi->ctrl_reg,
- 				   MEM_CS_MASK, 0);
- 	qspi->mmap_enabled = false;
-+	qspi->current_cs = -1;
- }
+ 	lcd0: display {
+-		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
++		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
+ 		label = "lcd";
  
- static void ti_qspi_setup_mmap_read(struct spi_device *spi, u8 opcode,
-@@ -543,7 +546,7 @@ static int ti_qspi_exec_mem_op(struct spi_mem *mem,
- 
- 	mutex_lock(&qspi->list_lock);
- 
--	if (!qspi->mmap_enabled)
-+	if (!qspi->mmap_enabled || qspi->current_cs != mem->spi->chip_select)
- 		ti_qspi_enable_memory_map(mem->spi);
- 	ti_qspi_setup_mmap_read(mem->spi, op->cmd.opcode, op->data.buswidth,
- 				op->addr.nbytes, op->dummy.nbytes);
-@@ -799,6 +802,7 @@ static int ti_qspi_probe(struct platform_device *pdev)
- 		}
- 	}
- 	qspi->mmap_enabled = false;
-+	qspi->current_cs = -1;
- 
- 	ret = devm_spi_register_master(&pdev->dev, master);
- 	if (!ret)
+ 		backlight = <&lcd_bl>;
 -- 
 2.20.1
 
