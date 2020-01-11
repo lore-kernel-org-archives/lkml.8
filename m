@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F94C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4E4C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:12:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4FB20673
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09E12077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737540;
-	bh=sy2Calgp9CwR7ibuyNniX63iyl5RxqkfSkdj2DtD6cM=;
+	s=default; t=1578737550;
+	bh=SpG7v37tUUuA7j39arXZTuMTJF/voDgeGjrgOMU/Rn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xv7Ke44oLQlgwAuTMmYxnqfo3B3bWk3hGFV7LpBD8/U7Ps7jino0dN26Bp4uc8ul+
-	 CDsvqmfmu/Rf4bRYWcfnbBuLk6OK1cKMqYP2Nni9vWtbK0xcQmh2Fx3JlLxDaqkip/
-	 9HhVDS2Mh4eq+ZUHUWpRW/I86tWPLoQrGX311c8Y=
+	b=PVqsb5bHYA7Hq7+84yhYAY2p9fzh8ksBclmTIqZCd39ggpxmJgQtVskBlAF7c6ns7
+	 1Ag3BLFB/FpLcVMYf0ZpRfohpmUjFfaEvLONxyjtMQr4q1bs4B0ChuLlhiZfUXNyXH
+	 gW9EKLYv7yCe5ZnBoQSYR85d0ehau6nEBSAsFgr0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbgAKKMT (ORCPT
+        id S1729878AbgAKKM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:12:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50084 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:12:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729606AbgAKKMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:12:17 -0500
+        id S1729606AbgAKKM2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:12:28 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DBE12082E;
-        Sat, 11 Jan 2020 10:12:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5535D206DA;
+        Sat, 11 Jan 2020 10:12:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737536;
-        bh=sy2Calgp9CwR7ibuyNniX63iyl5RxqkfSkdj2DtD6cM=;
+        s=default; t=1578737547;
+        bh=SpG7v37tUUuA7j39arXZTuMTJF/voDgeGjrgOMU/Rn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MV5jkeJwS8sfxU7RCEryNkAnOJEldZI6apkXx5VoVrZ9q4zfpdH8bAbqTLGLlQYsV
-         5OHxy8MuuEq6ihY56UFBNJ+IZbmbm0i7Mz1Jo1s+IOPAhd4WKSz9PSNi89PQmi2YoZ
-         VOJ3ld/8EJJ8+bFUcvLa5I/xNW+qxMqFsg3pvwR8=
+        b=KTDLA37nQpqc34fiSyQPxbv27aXcVLH3yK1VPTwoiqbhve4qCm9aavlhS6TsuqF5I
+         lc8l84M2WJsBC8NmwOZieG07u0YRh0iByOohqzjFShbOzunWh+du3pChJnYbZ2XqHs
+         t6M2cFAHxJPr/i8h1F1+7LXrIDmti1mUfK9jup0M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>,
+        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 37/62] parisc: Fix compiler warnings in debug_core.c
-Date:   Sat, 11 Jan 2020 10:50:19 +0100
-Message-Id: <20200111094847.139609489@linuxfoundation.org>
+Subject: [PATCH 4.14 39/62] hv_netvsc: Fix unwanted rx_table reset
+Date:   Sat, 11 Jan 2020 10:50:21 +0100
+Message-Id: <20200111094847.800797761@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -59,48 +60,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-[ Upstream commit 75cf9797006a3a9f29a3a25c1febd6842a4a9eb2 ]
+[ Upstream commit b0689faa8efc5a3391402d7ae93bd373b7248e51 ]
 
-Fix this compiler warning:
-kernel/debug/debug_core.c: In function ‘kgdb_cpu_enter’:
-arch/parisc/include/asm/cmpxchg.h:48:3: warning: value computed is not used [-Wunused-value]
-   48 |  ((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
-arch/parisc/include/asm/atomic.h:78:30: note: in expansion of macro ‘xchg’
-   78 | #define atomic_xchg(v, new) (xchg(&((v)->counter), new))
-      |                              ^~~~
-kernel/debug/debug_core.c:596:4: note: in expansion of macro ‘atomic_xchg’
-  596 |    atomic_xchg(&kgdb_active, cpu);
-      |    ^~~~~~~~~~~
+In existing code, the receive indirection table, rx_table, is in
+struct rndis_device, which will be reset when changing MTU, ringparam,
+etc. User configured receive indirection table values will be lost.
 
-Signed-off-by: Helge Deller <deller@gmx.de>
+To fix this, move rx_table to struct net_device_context, and check
+netif_is_rxfh_configured(), so rx_table will be set to default only
+if no user configured value.
+
+Fixes: ff4a44199012 ("netvsc: allow get/set of RSS indirection table")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/parisc/include/asm/cmpxchg.h | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/hyperv/hyperv_net.h   |  3 ++-
+ drivers/net/hyperv/netvsc_drv.c   |  4 ++--
+ drivers/net/hyperv/rndis_filter.c | 10 +++++++---
+ 3 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/arch/parisc/include/asm/cmpxchg.h b/arch/parisc/include/asm/cmpxchg.h
-index f627c37dad9c..ab5c215cf46c 100644
---- a/arch/parisc/include/asm/cmpxchg.h
-+++ b/arch/parisc/include/asm/cmpxchg.h
-@@ -44,8 +44,14 @@ __xchg(unsigned long x, __volatile__ void *ptr, int size)
- **		if (((unsigned long)p & 0xf) == 0)
- **			return __ldcw(p);
- */
--#define xchg(ptr, x) \
--	((__typeof__(*(ptr)))__xchg((unsigned long)(x), (ptr), sizeof(*(ptr))))
-+#define xchg(ptr, x)							\
-+({									\
-+	__typeof__(*(ptr)) __ret;					\
-+	__typeof__(*(ptr)) _x_ = (x);					\
-+	__ret = (__typeof__(*(ptr)))					\
-+		__xchg((unsigned long)_x_, (ptr), sizeof(*(ptr)));	\
-+	__ret;								\
-+})
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index 0f07b5978fa1..fc794e69e6a1 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -179,7 +179,6 @@ struct rndis_device {
  
- /* bug catcher for when unsupported size is used - won't link */
- extern void __cmpxchg_called_with_bad_pointer(void);
+ 	u8 hw_mac_adr[ETH_ALEN];
+ 	u8 rss_key[NETVSC_HASH_KEYLEN];
+-	u16 rx_table[ITAB_NUM];
+ };
+ 
+ 
+@@ -741,6 +740,8 @@ struct net_device_context {
+ 
+ 	u32 tx_table[VRSS_SEND_TAB_SIZE];
+ 
++	u16 rx_table[ITAB_NUM];
++
+ 	/* Ethtool settings */
+ 	bool udp4_l4_hash;
+ 	bool udp6_l4_hash;
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 5a44b9795266..a89de5752a8c 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -1528,7 +1528,7 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
+ 	rndis_dev = ndev->extension;
+ 	if (indir) {
+ 		for (i = 0; i < ITAB_NUM; i++)
+-			indir[i] = rndis_dev->rx_table[i];
++			indir[i] = ndc->rx_table[i];
+ 	}
+ 
+ 	if (key)
+@@ -1558,7 +1558,7 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
+ 				return -EINVAL;
+ 
+ 		for (i = 0; i < ITAB_NUM; i++)
+-			rndis_dev->rx_table[i] = indir[i];
++			ndc->rx_table[i] = indir[i];
+ 	}
+ 
+ 	if (!key) {
+diff --git a/drivers/net/hyperv/rndis_filter.c b/drivers/net/hyperv/rndis_filter.c
+index fc1d5e14d83e..b19557c035f2 100644
+--- a/drivers/net/hyperv/rndis_filter.c
++++ b/drivers/net/hyperv/rndis_filter.c
+@@ -715,6 +715,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 				   const u8 *rss_key, u16 flag)
+ {
+ 	struct net_device *ndev = rdev->ndev;
++	struct net_device_context *ndc = netdev_priv(ndev);
+ 	struct rndis_request *request;
+ 	struct rndis_set_request *set;
+ 	struct rndis_set_complete *set_complete;
+@@ -754,7 +755,7 @@ static int rndis_set_rss_param_msg(struct rndis_device *rdev,
+ 	/* Set indirection table entries */
+ 	itab = (u32 *)(rssp + 1);
+ 	for (i = 0; i < ITAB_NUM; i++)
+-		itab[i] = rdev->rx_table[i];
++		itab[i] = ndc->rx_table[i];
+ 
+ 	/* Set hask key values */
+ 	keyp = (u8 *)((unsigned long)rssp + rssp->kashkey_offset);
+@@ -1204,6 +1205,7 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 				      struct netvsc_device_info *device_info)
+ {
+ 	struct net_device *net = hv_get_drvdata(dev);
++	struct net_device_context *ndc = netdev_priv(net);
+ 	struct netvsc_device *net_device;
+ 	struct rndis_device *rndis_device;
+ 	struct ndis_recv_scale_cap rsscap;
+@@ -1286,9 +1288,11 @@ struct netvsc_device *rndis_filter_device_add(struct hv_device *dev,
+ 	/* We will use the given number of channels if available. */
+ 	net_device->num_chn = min(net_device->max_chn, device_info->num_chn);
+ 
+-	for (i = 0; i < ITAB_NUM; i++)
+-		rndis_device->rx_table[i] = ethtool_rxfh_indir_default(
++	if (!netif_is_rxfh_configured(net)) {
++		for (i = 0; i < ITAB_NUM; i++)
++			ndc->rx_table[i] = ethtool_rxfh_indir_default(
+ 						i, net_device->num_chn);
++	}
+ 
+ 	atomic_set(&net_device->open_chn, 1);
+ 	vmbus_set_sc_create_callback(dev->channel, netvsc_sc_open);
 -- 
 2.20.1
 
