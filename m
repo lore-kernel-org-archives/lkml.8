@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F35CC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39571C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D62432082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0207E20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738313;
-	bh=/HIwhlNmpl78m/mcuJJ4q/f+IzAoDcULwkDxvESQ+wM=;
+	s=default; t=1578738316;
+	bh=bxw/s/0mmi4d1HPjam3EBwcbNipwUxX5FJj0gvVh/MU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W5dUSfhiZa+XXgKw6riVIqyMbJhuImkgn0ERdHczueelnDOmrpF+HyKYPnOTlqYYP
-	 q1A6c79U771w8n4aD9T18ZTYoxqqqphDB2yz3U9ceVwfE5CeBq4akx7AgZqDqi/Wk0
-	 PrBX9BjyUSQdiV3XQJITrHlkDdTC1eOSYqNLx9/k=
+	b=EzroF97JArtzlVhxaRUFNZMoqSUaQ943Axty/goBHBodK+ErPCiwRSVggMW5iROpV
+	 I+XR0X1s38RGp0yUTR6TSgAPf+wNfBCGJc2jg7FbQmGtW9ZShtzwCvJmcxkOfWvut5
+	 EVJyl8rpoJBbJoAEfVsbzy4zc4zF/Xbo1wtnIzhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730795AbgAKKZN (ORCPT
+        id S1730809AbgAKKWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:25:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55404 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:22:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730755AbgAKKZJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:25:09 -0500
+        id S1730117AbgAKKWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:22:01 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C277B24656;
-        Sat, 11 Jan 2020 10:25:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F1462082E;
+        Sat, 11 Jan 2020 10:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738308;
-        bh=/HIwhlNmpl78m/mcuJJ4q/f+IzAoDcULwkDxvESQ+wM=;
+        s=default; t=1578738120;
+        bh=bxw/s/0mmi4d1HPjam3EBwcbNipwUxX5FJj0gvVh/MU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JtCLGCTQ3nVeTwrIAWSVLBYiGiTBnE8Su2sPeTLgXl7lgiOKlcE8gAMVlnw2lUbo4
-         3iai3uPFtKNmt1gf6AzGhc3KITJstrT56ZCuIZlAtnBo6UPdEGygaQTpnu6Gw7nvnE
-         mSI00bdt5I5+BQAUm3dDIXHHiwerDYJqexP05fwI=
+        b=LDx/iGou4xURJXOdhuinoUNS35rWCF6FTGAgaHo8XhXpYgn6sMPd6hvBJgJQLE8vZ
+         7HaKBoil1nqUIKKKBOXkTFSKpX8FeimS1du5RSE/TjS3SPhA0qXK7/iS7TyEAgANUl
+         9HD7Mk86Pebqgg/ujDeFE+x36J0DiRtIvHt18r7s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mahshid Khezri <khezri.mahshid@gmail.com>,
-        Paul Chaignon <paul.chaignon@orange.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 054/165] bpf, mips: Limit to 33 tail calls
-Date:   Sat, 11 Jan 2020 10:49:33 +0100
-Message-Id: <20200111094925.829562564@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        feng.tang@intel.com, harry.pan@intel.com, hpa@zytor.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 012/165] x86/intel: Disable HPET on Intel Ice Lake platforms
+Date:   Sat, 11 Jan 2020 10:48:51 +0100
+Message-Id: <20200111094922.152309311@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -62,59 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Chaignon <paul.chaignon@orange.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit e49e6f6db04e915dccb494ae10fa14888fea6f89 ]
+[ Upstream commit e0748539e3d594dd26f0d27a270f14720b22a406 ]
 
-All BPF JIT compilers except RISC-V's and MIPS' enforce a 33-tail calls
-limit at runtime.  In addition, a test was recently added, in tailcalls2,
-to check this limit.
+Like CFL and CFL-H, ICL SoC has skewed HPET timer once it hits PC10.
+So let's disable HPET on ICL.
 
-This patch updates the tail call limit in MIPS' JIT compiler to allow
-33 tail calls.
-
-Fixes: b6bd53f9c4e8 ("MIPS: Add missing file for eBPF JIT.")
-Reported-by: Mahshid Khezri <khezri.mahshid@gmail.com>
-Signed-off-by: Paul Chaignon <paul.chaignon@orange.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Link: https://lore.kernel.org/bpf/b8eb2caac1c25453c539248e56ca22f74b5316af.1575916815.git.paul.chaignon@gmail.com
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: feng.tang@intel.com
+Cc: harry.pan@intel.com
+Cc: hpa@zytor.com
+Link: https://lkml.kernel.org/r/20191129062303.18982-2-kai.heng.feng@canonical.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/net/ebpf_jit.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/x86/kernel/early-quirks.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/net/ebpf_jit.c b/arch/mips/net/ebpf_jit.c
-index a2405d5f7d1e..561154cbcc40 100644
---- a/arch/mips/net/ebpf_jit.c
-+++ b/arch/mips/net/ebpf_jit.c
-@@ -604,6 +604,7 @@ static void emit_const_to_reg(struct jit_ctx *ctx, int dst, u64 value)
- static int emit_bpf_tail_call(struct jit_ctx *ctx, int this_idx)
- {
- 	int off, b_off;
-+	int tcc_reg;
- 
- 	ctx->flags |= EBPF_SEEN_TC;
- 	/*
-@@ -616,14 +617,14 @@ static int emit_bpf_tail_call(struct jit_ctx *ctx, int this_idx)
- 	b_off = b_imm(this_idx + 1, ctx);
- 	emit_instr(ctx, bne, MIPS_R_AT, MIPS_R_ZERO, b_off);
- 	/*
--	 * if (--TCC < 0)
-+	 * if (TCC-- < 0)
- 	 *     goto out;
- 	 */
- 	/* Delay slot */
--	emit_instr(ctx, daddiu, MIPS_R_T5,
--		   (ctx->flags & EBPF_TCC_IN_V1) ? MIPS_R_V1 : MIPS_R_S4, -1);
-+	tcc_reg = (ctx->flags & EBPF_TCC_IN_V1) ? MIPS_R_V1 : MIPS_R_S4;
-+	emit_instr(ctx, daddiu, MIPS_R_T5, tcc_reg, -1);
- 	b_off = b_imm(this_idx + 1, ctx);
--	emit_instr(ctx, bltz, MIPS_R_T5, b_off);
-+	emit_instr(ctx, bltz, tcc_reg, b_off);
- 	/*
- 	 * prog = array->ptrs[index];
- 	 * if (prog == NULL)
+diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
+index 606711f5ebf8..2f9ec14be3b1 100644
+--- a/arch/x86/kernel/early-quirks.c
++++ b/arch/x86/kernel/early-quirks.c
+@@ -714,6 +714,8 @@ static struct chipset early_qrk[] __initdata = {
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
+ 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
++	{ PCI_VENDOR_ID_INTEL, 0x8a12,
++		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
+ 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
+ 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
+ 	{}
 -- 
 2.20.1
 
