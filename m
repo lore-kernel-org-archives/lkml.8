@@ -2,150 +2,171 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF39FC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 01:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FC0C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 01:48:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B65712077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 01:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 644842072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 01:48:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hslK5rcH"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="eS8XOCrl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727995AbgAKBrL (ORCPT
+        id S1728040AbgAKBrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 20:47:11 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45291 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727782AbgAKBrK (ORCPT
+        Fri, 10 Jan 2020 20:47:33 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:35326 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727782AbgAKBrc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 20:47:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578707229;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jPPryPK1OzAOrv4+dW4KgmKutLsT1pslZulH2MfJk2s=;
-        b=hslK5rcH4fUzFmxbJkOZs3qst7QnW5w6RGeMPjukZyU5VA6wFJ+Jj2LcRJNVB3gJxGYuad
-        7RmxLe9vJYpQOYjNsiXnl1fg5HLM9+f4ahTebLIHIJfRQ43YdY41N8tYNZnBs8eaAHXkoJ
-        mYMopGCpt6H6l5X6kEWOpqhOKp8LQTk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-346-aLeYG5BTPdu8ka9bzGE9Zw-1; Fri, 10 Jan 2020 20:47:06 -0500
-X-MC-Unique: aLeYG5BTPdu8ka9bzGE9Zw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28F7A107ACC4;
-        Sat, 11 Jan 2020 01:47:05 +0000 (UTC)
-Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 488955C1D4;
-        Sat, 11 Jan 2020 01:47:01 +0000 (UTC)
-Date:   Sat, 11 Jan 2020 09:46:57 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Jerry Hoemann <jerry.hoemann@hpe.com>
-Cc:     Khalid Aziz and Shuah Khan <azizkhan@gonehiking.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Kairui Song <kasong@redhat.com>, linux-pci@vger.kernel.org,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Randy Wright <rwright@hpe.com>, dyoung@redhat.com
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-Message-ID: <20200111014657.GD19291@MiWiFi-R3L-srv>
-References: <20200110214217.GA88274@google.com>
- <e0194581-4cdd-3629-d9fe-10a1cfd29d03@gonehiking.org>
- <20200110230003.GB1875851@anatevka.americas.hpqcorp.net>
- <20200111004510.GA19291@MiWiFi-R3L-srv>
+        Fri, 10 Jan 2020 20:47:32 -0500
+Received: by mail-il1-f193.google.com with SMTP id g12so3329551ild.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 17:47:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=JpGgv9YXpOY23vNaDGLnGu2ZYwtNlfr2fI6wCXLF6hg=;
+        b=eS8XOCrlzpPjxW1PSce3x/VyPZ0UI1WQ5mm74rB0ThP5HaiAR4TIY7OmEtTfDXRzAd
+         QKu4ngof12qGPnk6of+WyvhO/HCk5pHoWifAnLMvUqYwZiikUuK3WcpWcC1ibRO70mTX
+         Ujf0VSKSNldiCbUbFzBZdnWesiuw6hN9nwyu7Uiuq0KEb30VZqK9oazOqkK3E2Dvudh1
+         b3eOGeONjxv/8VivJAbyFYSXmlamqsfjb7rJy36VdHFrBlr+zJq+jtveAuZVi5h57I8w
+         ixULOXQVBmcmhHGNXLy1dAmrXI6zCeWa2W8CYAXA4MT0bNBgheiBMSeK6dHilHZTiCDc
+         g1Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=JpGgv9YXpOY23vNaDGLnGu2ZYwtNlfr2fI6wCXLF6hg=;
+        b=cjFP8+o4IWjClgEM0ghwICfAs7vQ2hOps/lFFKhUPqfmMNXvXM8eYlJv+Px0mlkf4X
+         6xKWDO9IouxRRCKNWiwPQERR+sh+5brQ8NzViuJbRVkxEFNOQA1Ch8k6xSWQdwoLVl1L
+         4OlI3TmzHAt1L/bjmF4yC6oZp96Md+4OPTx+xQxEYP6JlqpLTJ5cOMZjnF2nUYcZNyGT
+         TY+uCk6xGzXVRJhHXQL2NJD3lxMqi+157IknSHTTj4CpzsCnOvuw+X20EAGSz7EHjAvD
+         44cDelLnIlO2mi4dhgBXVXyyk7DphAaevLapwGsI2halqSq5T8Xac/bMnGx3fZg07AcR
+         pTEA==
+X-Gm-Message-State: APjAAAUV9BF8QWLnVBBe/r1Fo/oiMBNUsB2wRo3Bd+IbSid3gjZRF1Se
+        a8RybVlgYY6V5gEe0Df/RsUC3Q==
+X-Google-Smtp-Source: APXvYqzvTbYxaqhyu6BnLTlw8zXYSIqbffrMcP/tgEXK6y4UgsYmv2TR2ti1KFqsTKd8zJEWPnxIhw==
+X-Received: by 2002:a05:6e02:5c8:: with SMTP id l8mr5429771ils.287.1578707251939;
+        Fri, 10 Jan 2020 17:47:31 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id p12sm1237771ilk.66.2020.01.10.17.47.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Jan 2020 17:47:31 -0800 (PST)
+Date:   Fri, 10 Jan 2020 17:47:28 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Yash Shah <yash.shah@sifive.com>
+cc:     palmer@dabbelt.com, aou@eecs.berkeley.edu, bp@alien8.de,
+        mchehab@kernel.org, tony.luck@intel.com, james.morse@arm.com,
+        rrichter@marvell.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+Subject: Re: [PATCH] riscv: move sifive_l2_cache.h to include/soc
+In-Reply-To: <alpine.DEB.2.21.9999.2001101704440.32308@viisi.sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.2001101746310.40553@viisi.sifive.com>
+References: <1578463746-25279-1-git-send-email-yash.shah@sifive.com> <alpine.DEB.2.21.9999.2001101704440.32308@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200111004510.GA19291@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/11/20 at 08:45am, Baoquan He wrote:
-> On 01/10/20 at 04:00pm, Jerry Hoemann wrote:
-> > > I am not understanding this failure mode either. That code in
-> > > pci_device_shutdown() was added originally to address this very issue.
-> > > The patch 4fc9bbf98fd6 ("PCI: Disable Bus Master only on kexec reboot")
-> > > shut down any errant DMAs from PCI devices as we kexec a new kernel. In
-> > > this new patch, this is the same code path that will be taken again when
-> > > kdump kernel is shutting down. If the errant DMA problem was not fixed
-> > > by clearing Bus Master bit in this path when kdump kernel was being
-> > > kexec'd, why does the same code path work the second time around when
-> > > kdump kernel is shutting down? Is there more going on that we don't
-> > > understand?
-> > > 
+On Fri, 10 Jan 2020, Paul Walmsley wrote:
+
+> On Tue, 7 Jan 2020, Yash Shah wrote:
+> 
+> > The commit 9209fb51896f ("riscv: move sifive_l2_cache.c to drivers/soc")
+> > moves the sifive L2 cache driver to driver/soc. It did not move the
+> > header file along with the driver. Therefore this patch moves the header
+> > file to driver/soc
 > > 
-> >   Khalid,
-> > 
-> >   I don't believe we execute that code path in the crash case.
-> > 
-> >   The variable kexec_in_progress is set true in kernel_kexec() before calling
-> >   machine_kexec().  This is the fast reboot case.
-> > 
-> >   I don't see kexec_in_progress set true elsewhere.
-> > 
-> > 
-> >   The code path for crash is different.
-> > 
-> >   For instance, panic() will call
-> > 	-> __crash_kexec()  which calls
-> > 		-> machine_kexec().
-> > 
-> >  So the setting of kexec_in_progress is bypassed.
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
 > 
-> Yeah, it's a differet behaviour than kexec case. I talked to Kairui, the
-> patch log may be not very clear. Below is summary I got from my
-> understanding about this issue:
-> 
-> ~~~~~~~~~~~~~~~~~~~~~~~
-> Problem:
-> 
-> When crash is triggered, system jumps into kdump kernel to collect
-> vmcore and dump out. After dumping is finished, kdump kernel will try
-> ty reboot to normal kernel. This hang happened during kdump kernel
-> rebooting, when dumping is network dumping, e.g ssh/nfs, local storage
-> is HPSA.
-> 
-> Root cause:
-> 
-> When configuring network dumping, only network driver modules are added
-> into kdump initramfs. However, the storage HPSA pcie device is enabled
-> in 1st kernel, its status is PCI_D3hot. When crashed system jumps to kdump
-> kernel, we didn't shutdown any device for safety and efficiency. Then
-> during kdump kernel boot up, the pci scan will get hpsa device and only
-> initialize its status as pci_dev->current_state = PCI_UNKNOWN. This
-> pci_dev->current_state will be manipulated by the relevant device
-> driver. So HPSA device will never have chance to calibrate its status,
-> and can't be shut down by pci_device_shutdown() called by reboot
-> service. It's still PCI_D3hot, then crash happened when system try to
-                                      ~~~~~ s/crash/hang/, sorry, typo again
-> shutdown its upper bridge.
-> 
-> Fix:
-> 
-> Here, Kairui uses a quirk to get PM state and mask off value bigger than
-> PCI_D3cold. Means, all devices will get PM state 
-> pci_dev->current_state = PCI_D0 or PCI_D3hot. Finally, during kdump
-> reboot stage, this device can be shut down successfully by clearing its
-> master bit.
-> 
-> ~~~~~~~~~~~~~~~
-> 
-> About this patch, I think the quirk getting active PM state for all devices
-> may be risky, it will impact normal kernel too which doesn't have this issue.
-> 
-> Wondering if there's any other way to fix or work around it.
-> 
-> Thanks
-> Baoquan
+> Thanks, queued for v5.5-rc.
+
+By the way, I fixed the include guard also.  The queued patch follows.
+
+
+- Paul
+
+From: Yash Shah <yash.shah@sifive.com>
+Date: Tue, 7 Jan 2020 22:09:06 -0800
+Subject: [PATCH] riscv: move sifive_l2_cache.h to include/soc
+
+The commit 9209fb51896f ("riscv: move sifive_l2_cache.c to drivers/soc")
+moves the sifive L2 cache driver to driver/soc. It did not move the
+header file along with the driver. Therefore this patch moves the header
+file to driver/soc
+
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Reviewed-by: Anup Patel <anup@brainfault.org>
+[paul.walmsley@sifive.com: updated to fix the include guard]
+Fixes: 9209fb51896f ("riscv: move sifive_l2_cache.c to drivers/soc")
+Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+---
+ drivers/edac/sifive_edac.c                                  | 2 +-
+ drivers/soc/sifive/sifive_l2_cache.c                        | 2 +-
+ .../include/asm => include/soc/sifive}/sifive_l2_cache.h    | 6 +++---
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+ rename {arch/riscv/include/asm => include/soc/sifive}/sifive_l2_cache.h (72%)
+
+diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
+index 413cdb4a591d..c0cc72a3b2be 100644
+--- a/drivers/edac/sifive_edac.c
++++ b/drivers/edac/sifive_edac.c
+@@ -10,7 +10,7 @@
+ #include <linux/edac.h>
+ #include <linux/platform_device.h>
+ #include "edac_module.h"
+-#include <asm/sifive_l2_cache.h>
++#include <soc/sifive/sifive_l2_cache.h>
+ 
+ #define DRVNAME "sifive_edac"
+ 
+diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
+index a9ffff3277c7..a5069394cd61 100644
+--- a/drivers/soc/sifive/sifive_l2_cache.c
++++ b/drivers/soc/sifive/sifive_l2_cache.c
+@@ -9,7 +9,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_address.h>
+-#include <asm/sifive_l2_cache.h>
++#include <soc/sifive/sifive_l2_cache.h>
+ 
+ #define SIFIVE_L2_DIRECCFIX_LOW 0x100
+ #define SIFIVE_L2_DIRECCFIX_HIGH 0x104
+diff --git a/arch/riscv/include/asm/sifive_l2_cache.h b/include/soc/sifive/sifive_l2_cache.h
+similarity index 72%
+rename from arch/riscv/include/asm/sifive_l2_cache.h
+rename to include/soc/sifive/sifive_l2_cache.h
+index 04f6748fc50b..92ade10ed67e 100644
+--- a/arch/riscv/include/asm/sifive_l2_cache.h
++++ b/include/soc/sifive/sifive_l2_cache.h
+@@ -4,8 +4,8 @@
+  *
+  */
+ 
+-#ifndef _ASM_RISCV_SIFIVE_L2_CACHE_H
+-#define _ASM_RISCV_SIFIVE_L2_CACHE_H
++#ifndef __SOC_SIFIVE_L2_CACHE_H
++#define __SOC_SIFIVE_L2_CACHE_H
+ 
+ extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
+ extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
+@@ -13,4 +13,4 @@ extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
+ #define SIFIVE_L2_ERR_TYPE_CE 0
+ #define SIFIVE_L2_ERR_TYPE_UE 1
+ 
+-#endif /* _ASM_RISCV_SIFIVE_L2_CACHE_H */
++#endif /* __SOC_SIFIVE_L2_CACHE_H */
+-- 
+2.25.0.rc2
+
+
 
