@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B585BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEC8C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82A5D20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620AD20880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738029;
-	bh=W+sKJaj7dhNZNE8kx03VWm50nT0eOXV4jWWj0vm9+18=;
+	s=default; t=1578738031;
+	bh=2ANPraND6LtqpzGN5B9VgWNulfpGmjENQvaFPvVenlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ReUx5UFJDsdpDHAXq8zzB96mQlrfMglgNYiO5/STq48Ny+FCndhCXHvA1NSvOgz5O
-	 woL+Dd0TbCjiGRnoa9hTlP41Gk9WAPKuBeqcE16yKXNXI3FYOwxnQePII9gvvFemAR
-	 pf3UmPDxz1RIZpInPHE5XAi1PAlABQZKgkwmtbUs=
+	b=SzRgF6VImTFIe8DEtC3jOZiryIZ3LmEZpGnLJ88BcV90boWsUzvAVOZQSAVfBuS4a
+	 EUse/KYY1Vc3owp39goky12zN7Yh+5vn0I5N60iJ7c2dESsqF7KKh9moWj3WdNpDr7
+	 2xl4wpx4wzCMSOt/wR2fPyo4EgL3FDudV5dTS2qk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730632AbgAKKU2 (ORCPT
+        id S1729231AbgAKKU0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:20:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41918 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730625AbgAKKU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 11 Jan 2020 05:20:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41750 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729211AbgAKKUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:20:21 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DABC205F4;
-        Sat, 11 Jan 2020 10:20:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6230B2084D;
+        Sat, 11 Jan 2020 10:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738025;
-        bh=W+sKJaj7dhNZNE8kx03VWm50nT0eOXV4jWWj0vm9+18=;
+        s=default; t=1578738021;
+        bh=2ANPraND6LtqpzGN5B9VgWNulfpGmjENQvaFPvVenlg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CsjEv2sI1K1sUx5MbMAy2zEejWIR8HVqQz8iZPBgF9KetkvMNitpyChm+fC3o1ic0
-         11ZwPhQNCqMSST1IxW7Do+lQRTanNlZhg8Mg9zvPeMAcxP3XwAAHS+L9u/9p0UfxU+
-         VbIuJhds7ltlu0A1+RgZkoDuEroxDm8qV93JjC1U=
+        b=IwTgxSIXI3O0rDisuSnbC8mPL41RuK7IoKwmmQ5DDmV9UkGG6dM8wkmOGJI6J59pi
+         u9gQmAYyu27g4uJupp8tSbgIFHhzsdnV2WZWQkQEMP3q7KdjocCLXZPfO77wlTVufj
+         N4kiU0sznQJAGte5Pdx4isaa98RknpPGCqCRauEM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>
-Subject: [PATCH 5.4 001/165] USB: dummy-hcd: use usb_urb_dir_in instead of usb_pipein
-Date:   Sat, 11 Jan 2020 10:48:40 +0100
-Message-Id: <20200111094921.447775542@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 83/84] USB: serial: option: add Telit ME910G1 0x110a composition
+Date:   Sat, 11 Jan 2020 10:51:00 +0100
+Message-Id: <20200111094912.931468770@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
-References: <20200111094921.347491861@linuxfoundation.org>
+In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
+References: <20200111094845.328046411@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,62 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-commit 6dabeb891c001c592645df2f477fed9f5d959987 upstream.
+commit 0d3010fa442429f8780976758719af05592ff19f upstream.
 
-Commit fea3409112a9 ("USB: add direction bit to urb->transfer_flags") has
-added a usb_urb_dir_in() helper function that can be used to determine
-the direction of the URB. With that patch USB_DIR_IN control requests with
-wLength == 0 are considered out requests by real USB HCDs. This patch
-changes dummy-hcd to use the usb_urb_dir_in() helper to match that
-behavior.
+This patch adds the following Telit ME910G1 composition:
 
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Link: https://lore.kernel.org/r/4ae9e68ebca02f08a93ac61fe065057c9a01f0a8.1571667489.git.andreyknvl@google.com
+0x110a: tty, tty, tty, rmnet
+
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/dummy_hcd.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/serial/option.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/gadget/udc/dummy_hcd.c
-+++ b/drivers/usb/gadget/udc/dummy_hcd.c
-@@ -1321,7 +1321,7 @@ static int dummy_perform_transfer(struct
- 	u32 this_sg;
- 	bool next_sg;
- 
--	to_host = usb_pipein(urb->pipe);
-+	to_host = usb_urb_dir_in(urb);
- 	rbuf = req->req.buf + req->req.actual;
- 
- 	if (!urb->num_sgs) {
-@@ -1409,7 +1409,7 @@ top:
- 
- 		/* FIXME update emulated data toggle too */
- 
--		to_host = usb_pipein(urb->pipe);
-+		to_host = usb_urb_dir_in(urb);
- 		if (unlikely(len == 0))
- 			is_short = 1;
- 		else {
-@@ -1830,7 +1830,7 @@ restart:
- 
- 		/* find the gadget's ep for this request (if configured) */
- 		address = usb_pipeendpoint (urb->pipe);
--		if (usb_pipein(urb->pipe))
-+		if (usb_urb_dir_in(urb))
- 			address |= USB_DIR_IN;
- 		ep = find_endpoint(dum, address);
- 		if (!ep) {
-@@ -2385,7 +2385,7 @@ static inline ssize_t show_urb(char *buf
- 			s = "?";
- 			break;
- 		 } s; }),
--		ep, ep ? (usb_pipein(urb->pipe) ? "in" : "out") : "",
-+		ep, ep ? (usb_urb_dir_in(urb) ? "in" : "out") : "",
- 		({ char *s; \
- 		switch (usb_pipetype(urb->pipe)) { \
- 		case PIPE_CONTROL: \
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1172,6 +1172,8 @@ static const struct usb_device_id option
+ 	  .driver_info = NCTRL(0) | RSVD(3) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1102, 0xff),	/* Telit ME910 (ECM) */
+ 	  .driver_info = NCTRL(0) },
++	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x110a, 0xff),	/* Telit ME910G1 */
++	  .driver_info = NCTRL(0) | RSVD(3) },
+ 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910),
+ 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
+ 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910_USBCFG4),
 
 
