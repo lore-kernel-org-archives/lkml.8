@@ -2,146 +2,98 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39EC0C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54645C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F05220848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:23:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578741804;
-	bh=iv+opu/8ILwPL72sR/xt6cuOHbjVcLdweIxvjH8r9Fg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ukBNmjIo8wDPN3I4zvr5a+On3gSk7ZuCaLZAc3YEfX9pVqeOcaJpTKjYNK1Amcitu
-	 h/jy61+VqlHBMekgva3DbjHKK4a//gxnJpI/CpIsJxo9bctJGO8Ln/xIIGdex4DJRL
-	 jxRXBsbkmxttDEUFtX0dBApOWknwxfWoITulqtDE=
+	by mail.kernel.org (Postfix) with ESMTP id 229F12087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JGK80v3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729573AbgAKLXX (ORCPT
+        id S1729651AbgAKLcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 06:23:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729517AbgAKLXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 06:23:23 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 839D320848;
-        Sat, 11 Jan 2020 11:23:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578741802;
-        bh=iv+opu/8ILwPL72sR/xt6cuOHbjVcLdweIxvjH8r9Fg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xam88gtmyR+tp8uwOooLp1xVqz/KFV6+TStVUG3VjEKKDxH063RMnNqJJ9SKA5/CC
-         TWWveOnWtLgVoyZvd/cOyQicUq4eii0DyLxwuDw08gAq/UZFjhee49JNKEwoKwEtyM
-         VhcFLbWvoKQHoR/ilodrXRsd8LRL0PtdD6bLLZoQ=
-Date:   Sat, 11 Jan 2020 11:23:17 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Tachici <alexandru.tachici@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2] iio: ad_sigma_delta: Add custom irq flags
-Message-ID: <20200111112317.1cf2d878@archlinux>
-In-Reply-To: <20200107110636.28834-1-alexandru.tachici@analog.com>
-References: <20200106105747.8244-1-alexandru.tachici@analog.com>
-        <20200107110636.28834-1-alexandru.tachici@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 11 Jan 2020 06:32:05 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55264 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729600AbgAKLcF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 06:32:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578742324;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=D9JIMBpzykMbGN0PuzYKFE4Hdd5GOclhmtbykLJmrSs=;
+        b=JGK80v3B2p5OPFmH3jq+YwrZRFTsrYcHg1G/5QhAwtsEwL9+EU8L5wlT0dFLkRVqILWson
+        p6Ih2LEcf1yN7jWzeFA9ZgNhNVEzlsrl6L3e13jKRUVCthW2d6xzUor8pNYvhMXisptA8N
+        8A/akAvKBx1Q4RQxKEh7iOFbZcXeIR0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-162-smPJw9mMOtSunfKzdwulRg-1; Sat, 11 Jan 2020 06:32:02 -0500
+X-MC-Unique: smPJw9mMOtSunfKzdwulRg-1
+Received: by mail-wr1-f70.google.com with SMTP id c6so2228414wrm.18
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 03:32:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=D9JIMBpzykMbGN0PuzYKFE4Hdd5GOclhmtbykLJmrSs=;
+        b=i8GqxM1nyjgkGJE25fgW3U9nPe8ZZMVGIbUIfy1YaPcLLQPON+vP1NXK99S7EszEhY
+         i2fxd2AQ3+hpkXTEJkQHmXv8vgqm7U7pYiU6b4TMiN2QpXcjc0oDiE2Hfl90VDTyVgp7
+         5xH6uqCyFHwW+nSGEc3pkQOfXf7Z7Yoiy+OltyWfcgM3D5kBfgTpDLfh/qVIllFHePME
+         umUJJx07DgVgIa5bGE6Gsnjg0x4D8et8BGGc1rOVZ6yvgEJAEA9S85fZAJqEgt9usGSS
+         OkyQlU6vaxlH1jgblNsWpcSUYNm9iVyo9CyOJB76ZWqblhpXYJbPMfM8JPNbOoJ8LPOB
+         N/SQ==
+X-Gm-Message-State: APjAAAUn38lgY8Q8Age6ul8DbNdiqH6qtqtqCpdSYnHxJFC2+f3dsFfT
+        6IV8tnCAL/svJAj1yXVgmMOHXulMd7NVi2dsx8Swp/IO/xIjHxct3bBab3ObHVVIQhzF4gw7AK3
+        6O/9AEfxmSzdC6Q+Pco+Mp6yM
+X-Received: by 2002:a05:600c:2409:: with SMTP id 9mr9103117wmp.109.1578742321317;
+        Sat, 11 Jan 2020 03:32:01 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwTB6ueVlV4g+TgfCHSZSvhFvEG7JF0PtXvFrZYJfBeGz7gM2JkRl361wMaio4LIfIp6QJ62A==
+X-Received: by 2002:a05:600c:2409:: with SMTP id 9mr9103104wmp.109.1578742321127;
+        Sat, 11 Jan 2020 03:32:01 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:bc4e:7fe8:2916:6a59? ([2001:b07:6468:f312:bc4e:7fe8:2916:6a59])
+        by smtp.gmail.com with ESMTPSA id g9sm6149277wro.67.2020.01.11.03.32.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 11 Jan 2020 03:32:00 -0800 (PST)
+Subject: Re: [PATCH] KVM: remove unused guest_enter/exit
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        linux-kernel@vger.kernel.org
+References: <1578626036-118506-1-git-send-email-alex.shi@linux.alibaba.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <c84ec6d3-4f5a-a24e-d907-8e5bc2729dbe@redhat.com>
+Date:   Sat, 11 Jan 2020 12:32:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1578626036-118506-1-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 7 Jan 2020 13:06:36 +0200
-Alexandru Tachici <alexandru.tachici@analog.com> wrote:
-
-> The data-sheet of AD7124, from the Sigma-Delta ADC family,
-> recommends that the falling edge of the DOUT line should be used for
-> an interrupt.
+On 10/01/20 04:13, Alex Shi wrote:
+> After commit 6edaa5307f3f ("KVM: remove kvm_guest_enter/exit wrappers")
+> no one uses guest_enter/exit anymore.
 > 
-> The ad_sigma_delta implementation hardcodes the irq trigger type
-> to low, assuming that all Sigma-Delta ADCs have the same interrupt-type.
-> This causes unwanted behaviour. If DOUT line is already low, the
-> interrupt will fire once, when enabled and the irq handler will send a
-> read request to the device. At this time the device has not yet finished
-> the previous conversion and will give a bad reading.
-> 
-> This patch allows drivers using the ad_sigma_delta layer to set the
-> irq trigger type to the one specified in the corresponding data-sheet.
-> 
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+> So better to remove them to simplify code and reduced a bit of object
+> size.
 
-Hi Alexandru.
+There is no reduction in object size, since these are inlines.  But PPC
+still uses them.
 
-Patch is fine, but I'd expect to see it in a series with the change
-for the ad7124 driver.  I'm never keen to merge new features without
-a user.  So send a v3, with the change to that driver (which I'm guessing
-is pretty trivial!)
-
-Thanks,
-
-Jonathan
-
-> ---
-> Changelog V1-V2:
->  - added a V2 tag
-> 
->  drivers/iio/adc/ad_sigma_delta.c       | 9 ++++++++-
->  include/linux/iio/adc/ad_sigma_delta.h | 2 ++
->  2 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
-> index d10bd0c97233..0007df8d50fb 100644
-> --- a/drivers/iio/adc/ad_sigma_delta.c
-> +++ b/drivers/iio/adc/ad_sigma_delta.c
-> @@ -454,7 +454,7 @@ static int ad_sd_probe_trigger(struct iio_dev *indio_dev)
->  
->  	ret = request_irq(sigma_delta->spi->irq,
->  			  ad_sd_data_rdy_trig_poll,
-> -			  IRQF_TRIGGER_LOW,
-> +			  sigma_delta->irq_flags,
->  			  indio_dev->name,
->  			  sigma_delta);
->  	if (ret)
-> @@ -540,8 +540,15 @@ EXPORT_SYMBOL_GPL(ad_sd_cleanup_buffer_and_trigger);
->  int ad_sd_init(struct ad_sigma_delta *sigma_delta, struct iio_dev *indio_dev,
->  	struct spi_device *spi, const struct ad_sigma_delta_info *info)
->  {
-> +	unsigned long set_trigger_flags;
-> +
->  	sigma_delta->spi = spi;
->  	sigma_delta->info = info;
-> +
-> +	set_trigger_flags = sigma_delta->irq_flags & IRQF_TRIGGER_MASK;
-> +	if (set_trigger_flags == IRQF_TRIGGER_NONE)
-> +		sigma_delta->irq_flags |= IRQF_TRIGGER_LOW;
-> +
->  	iio_device_set_drvdata(indio_dev, sigma_delta);
->  
->  	return 0;
-> diff --git a/include/linux/iio/adc/ad_sigma_delta.h b/include/linux/iio/adc/ad_sigma_delta.h
-> index 5ba430cc9a87..94a91731c8e8 100644
-> --- a/include/linux/iio/adc/ad_sigma_delta.h
-> +++ b/include/linux/iio/adc/ad_sigma_delta.h
-> @@ -53,6 +53,7 @@ struct ad_sigma_delta_info {
->   * struct ad_sigma_delta - Sigma Delta device struct
->   * @spi: The spi device associated with the Sigma Delta device.
->   * @trig: The IIO trigger associated with the Sigma Delta device.
-> + * @irq_flags: flags for the interrupt used by the triggered buffer
->   *
->   * Most of the fields are private to the sigma delta library code and should not
->   * be accessed by individual drivers.
-> @@ -60,6 +61,7 @@ struct ad_sigma_delta_info {
->  struct ad_sigma_delta {
->  	struct spi_device	*spi;
->  	struct iio_trigger	*trig;
-> +	unsigned long		irq_flags;
->  
->  /* private: */
->  	struct completion	completion;
+Paolo
 
