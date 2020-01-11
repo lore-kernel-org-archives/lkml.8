@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83220C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E028C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 541E420842
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD102082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738382;
-	bh=COBC09XpNymQw6b0tBfDvAq6aOaIfPtQHpnj8ZBaIzA=;
+	s=default; t=1578738387;
+	bh=KXFzMoosRGn71pIzVBaVLYYeBw7GeuvaqQZzxBF8k0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uIZVyWtqsxSJH/41JZBpAAxGTunQ+qhNqvHWLregXrZdcu47XoONDjq/VAk45nxe/
-	 joSEM3X/9tyxeqVExnR4hr4j7fT8ZcGhVTiMlCAhhCeAUGSHiVSVEFNuQxQJwNRIxH
-	 sdDEtgchYgPrWdZgIApHzpc5uNxWV/3NXiMaMIQQ=
+	b=Gtv/xCCxvrDZlnSV6q5FvClPbILI+JwyQWCOqhy9P37VF/5op7JYIxGbxISqcHb6D
+	 f+9S6IJnKfJJTdFWHWFYuU6NDLE1SXq/JKBB7VykqP/nay77CaUBzJxlCPSc9VG3Jq
+	 jgAFsEP4nCoI2wCgOBkur7ySyk15gFNJQ4RlxPFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731001AbgAKK0V (ORCPT
+        id S1731055AbgAKK0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:26:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58732 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:26:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729047AbgAKK0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:26:20 -0500
+        id S1729047AbgAKK0Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:26:24 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC58A2082E;
-        Sat, 11 Jan 2020 10:26:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E7F920842;
+        Sat, 11 Jan 2020 10:26:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738379;
-        bh=COBC09XpNymQw6b0tBfDvAq6aOaIfPtQHpnj8ZBaIzA=;
+        s=default; t=1578738383;
+        bh=KXFzMoosRGn71pIzVBaVLYYeBw7GeuvaqQZzxBF8k0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O+cNUK1kVQVnmsBnxDNPC0yZseApGcypw7uzalVLUCBIJpRY22VrbF9Nyr7PtNu2K
-         +xHkPNqshd5OuT6i1qKIzBCpmoU4PQcaBh37LbhUz1KlcsLIq3QUt3ErFiOV5gQf4D
-         EF/Rgq6ScMVTLcoFitKlNjW0aFNsgdmCayQjqGjc=
+        b=ueqULBpJ1i6vZ924o7jD9YWE4OSTtvsHO3kY2EMUPVwHS+DEP/sTUsbfNCWqeLurs
+         7PmjEj8LvxgB3ITEfjpuou2+bVOqSxD4YfQmHof5H6cP59nwGoeR0hnluVZ8OzZEVw
+         BP0zGrQ8S4S5NzRyQPmqsN9pF9xs9ZYViX6PTBdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen Wandun <chenwandun@huawei.com>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
+        stable@vger.kernel.org, Manish Chopra <manishc@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 082/165] habanalabs: remove variable val set but not used
-Date:   Sat, 11 Jan 2020 10:50:01 +0100
-Message-Id: <20200111094928.031788029@linuxfoundation.org>
+Subject: [PATCH 5.4 083/165] bnx2x: Do not handle requests from VFs after parity
+Date:   Sat, 11 Jan 2020 10:50:02 +0100
+Message-Id: <20200111094928.109784836@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,90 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen Wandun <chenwandun@huawei.com>
+From: Manish Chopra <manishc@marvell.com>
 
-[ Upstream commit 68a1fdf2451f38b4ada0607eb6e1303f8a02e0b7 ]
+[ Upstream commit 7113f796bbbced2470cd6d7379d50d7a7a78bf34 ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Parity error from the hardware will cause PF to lose the state
+of their VFs due to PF's internal reload and hardware reset following
+the parity error. Restrict any configuration request from the VFs after
+the parity as it could cause unexpected hardware behavior, only way
+for VFs to recover would be to trigger FLR on VFs and reload them.
 
-drivers/misc/habanalabs/goya/goya.c: In function goya_pldm_init_cpu:
-drivers/misc/habanalabs/goya/goya.c:2195:6: warning: variable val set but not used [-Wunused-but-set-variable]
-drivers/misc/habanalabs/goya/goya.c: In function goya_hw_init:
-drivers/misc/habanalabs/goya/goya.c:2505:6: warning: variable val set but not used [-Wunused-but-set-variable]
-
-Fixes: 9494a8dd8d22 ("habanalabs: add h/w queues module")
-Signed-off-by: Chen Wandun <chenwandun@huawei.com>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Manish Chopra <manishc@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/goya/goya.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c  | 12 ++++++++++--
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h |  1 +
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c  | 12 ++++++++++++
+ 3 files changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 6fba14b81f90..fe3574a83b7c 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -2171,7 +2171,7 @@ static int goya_push_linux_to_device(struct hl_device *hdev)
- 
- static int goya_pldm_init_cpu(struct hl_device *hdev)
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+index 192ff8d5da32..cff64e43bdd8 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c
+@@ -9976,10 +9976,18 @@ static void bnx2x_recovery_failed(struct bnx2x *bp)
+  */
+ static void bnx2x_parity_recover(struct bnx2x *bp)
  {
--	u32 val, unit_rst_val;
-+	u32 unit_rst_val;
- 	int rc;
+-	bool global = false;
+ 	u32 error_recovered, error_unrecovered;
+-	bool is_parity;
++	bool is_parity, global = false;
++#ifdef CONFIG_BNX2X_SRIOV
++	int vf_idx;
++
++	for (vf_idx = 0; vf_idx < bp->requested_nr_virtfn; vf_idx++) {
++		struct bnx2x_virtf *vf = BP_VF(bp, vf_idx);
  
- 	/* Must initialize SRAM scrambler before pushing u-boot to SRAM */
-@@ -2179,14 +2179,14 @@ static int goya_pldm_init_cpu(struct hl_device *hdev)
++		if (vf)
++			vf->state = VF_LOST;
++	}
++#endif
+ 	DP(NETIF_MSG_HW, "Handling parity\n");
+ 	while (1) {
+ 		switch (bp->recovery_state) {
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
+index b6ebd92ec565..3a716c015415 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h
+@@ -139,6 +139,7 @@ struct bnx2x_virtf {
+ #define VF_ACQUIRED	1	/* VF acquired, but not initialized */
+ #define VF_ENABLED	2	/* VF Enabled */
+ #define VF_RESET	3	/* VF FLR'd, pending cleanup */
++#define VF_LOST		4	/* Recovery while VFs are loaded */
  
- 	/* Put ARM cores into reset */
- 	WREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL, CPU_RESET_ASSERT);
--	val = RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
-+	RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
- 
- 	/* Reset the CA53 MACRO */
- 	unit_rst_val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
- 	WREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N, CA53_RESET);
--	val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
-+	RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
- 	WREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N, unit_rst_val);
--	val = RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
-+	RREG32(mmPSOC_GLOBAL_CONF_UNIT_RST_N);
- 
- 	rc = goya_push_uboot_to_device(hdev);
- 	if (rc)
-@@ -2207,7 +2207,7 @@ static int goya_pldm_init_cpu(struct hl_device *hdev)
- 	/* Release ARM core 0 from reset */
- 	WREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL,
- 					CPU_RESET_CORE0_DEASSERT);
--	val = RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
-+	RREG32(mmCPU_CA53_CFG_ARM_RST_CONTROL);
- 
- 	return 0;
- }
-@@ -2475,13 +2475,12 @@ int goya_mmu_init(struct hl_device *hdev)
- static int goya_hw_init(struct hl_device *hdev)
+ 	bool flr_clnup_stage;	/* true during flr cleanup */
+ 	bool malicious;		/* true if FW indicated so, until FLR */
+diff --git a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
+index 0752b7fa4d9c..ea0e9394f898 100644
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c
+@@ -2107,6 +2107,18 @@ static void bnx2x_vf_mbx_request(struct bnx2x *bp, struct bnx2x_virtf *vf,
  {
- 	struct asic_fixed_properties *prop = &hdev->asic_prop;
--	u32 val;
- 	int rc;
+ 	int i;
  
- 	dev_info(hdev->dev, "Starting initialization of H/W\n");
- 
- 	/* Perform read from the device to make sure device is up */
--	val = RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
-+	RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
- 
- 	/*
- 	 * Let's mark in the H/W that we have reached this point. We check
-@@ -2533,7 +2532,7 @@ static int goya_hw_init(struct hl_device *hdev)
- 		goto disable_queues;
- 
- 	/* Perform read from the device to flush all MSI-X configuration */
--	val = RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
-+	RREG32(mmPCIE_DBI_DEVICE_ID_VENDOR_ID_REG);
- 
- 	return 0;
- 
++	if (vf->state == VF_LOST) {
++		/* Just ack the FW and return if VFs are lost
++		 * in case of parity error. VFs are supposed to be timedout
++		 * on waiting for PF response.
++		 */
++		DP(BNX2X_MSG_IOV,
++		   "VF 0x%x lost, not handling the request\n", vf->abs_vfid);
++
++		storm_memset_vf_mbx_ack(bp, vf->abs_vfid);
++		return;
++	}
++
+ 	/* check if tlv type is known */
+ 	if (bnx2x_tlv_supported(mbx->first_tlv.tl.type)) {
+ 		/* Lock the per vf op mutex and note the locker's identity.
 -- 
 2.20.1
 
