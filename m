@@ -2,110 +2,114 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D307BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:54:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF4FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7E5A214D8
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:54:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DG1rrq1e"
+	by mail.kernel.org (Postfix) with ESMTP id 32DB620848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:54:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578736447;
+	bh=NOONUvF9kJjBxTEf6adfuyqO6k9ELW7UnMqCWQbJMCw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=X9zJCKDymzp6mcp1ngPhsZQUUjjNBA7Hvip6QjvX6bibAwKDQqiGFcT7gIg97KaLa
+	 w11siwJXZK10DyPJB5ds3/f6QHkrvWMzEJlIrLO1aeEn2NVIueUuoJ17+rC2ZgL/+X
+	 +69ZdCB/4t52hnTO5yphJYVbMIthA92M/wPtrXHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729047AbgAKJyC (ORCPT
+        id S1729082AbgAKJyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:54:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55161 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728978AbgAKJxy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:53:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578736433;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=DZxy64tFDfrC2+LuLzWjbCt/f7jnHkWOMjnqxtC1c1o=;
-        b=DG1rrq1eJvDUz0jVOSZLop2y+B4peW4zDtZhhyojRZDXBFX8wneiBm2N0vcyAL1HpdVCx1
-        /6c8TF/t7vTuHYahsSF9gDyA36QQAp/c2g9E8RohYPOV7H+N0H+7uw3FXas8QHf8/eTA5J
-        OWEVIPpdjogFyd1hBCA6LJFQRXEvLjM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-363-xYX4i7j5MAy-AsEckaf86Q-1; Sat, 11 Jan 2020 04:53:45 -0500
-X-MC-Unique: xYX4i7j5MAy-AsEckaf86Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Sat, 11 Jan 2020 04:54:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728810AbgAKJyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:54:01 -0500
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B44BA100550E;
-        Sat, 11 Jan 2020 09:53:41 +0000 (UTC)
-Received: from intel-purley-fpgabmp-02.ml3.eng.bos.redhat.com (intel-purley-fpgabmp-02.ml3.eng.bos.redhat.com [10.19.176.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2290A272A3;
-        Sat, 11 Jan 2020 09:53:41 +0000 (UTC)
-From:   Scott Wood <swood@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Scott Wood <swood@redhat.com>
-Subject: [PATCH v2 1/2] sched/core: Don't skip remote tick for idle cpus
-Date:   Sat, 11 Jan 2020 04:53:38 -0500
-Message-Id: <1578736419-14628-2-git-send-email-swood@redhat.com>
-In-Reply-To: <1578736419-14628-1-git-send-email-swood@redhat.com>
-References: <1578736419-14628-1-git-send-email-swood@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FD9220848;
+        Sat, 11 Jan 2020 09:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578736441;
+        bh=NOONUvF9kJjBxTEf6adfuyqO6k9ELW7UnMqCWQbJMCw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=W+ScUM3v++cjowhU5JB9hX/lEbfvzXOt2SnitZPMUwLspl2f3tjsD42UhYjiI9CBx
+         0aaSqIY6ork4LJgiZPcGJs81MK4f34qP6JEcolK0JnyejtaqmbguMyiCf3MwFWQTeE
+         q6rBDp6RhcBKz+MuQMtuFR3atkusOPG0wVb0ChyA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Lukas Wunner <lukas@wunner.de>, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 4.4 18/59] dmaengine: Fix access to uninitialized dma_slave_caps
+Date:   Sat, 11 Jan 2020 10:49:27 +0100
+Message-Id: <20200111094842.443057321@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
+References: <20200111094835.417654274@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This will be used in the next patch to get a loadavg update from
-nohz cpus.  The delta check is skipped because idle_sched_class
-doesn't update se.exec_start.
+From: Lukas Wunner <lukas@wunner.de>
 
-Signed-off-by: Scott Wood <swood@redhat.com>
+commit 53a256a9b925b47c7e67fc1f16ca41561a7b877c upstream.
+
+dmaengine_desc_set_reuse() allocates a struct dma_slave_caps on the
+stack, populates it using dma_get_slave_caps() and then accesses one
+of its members.
+
+However dma_get_slave_caps() may fail and this isn't accounted for,
+leading to a legitimate warning of gcc-4.9 (but not newer versions):
+
+   In file included from drivers/spi/spi-bcm2835.c:19:0:
+   drivers/spi/spi-bcm2835.c: In function 'dmaengine_desc_set_reuse':
+>> include/linux/dmaengine.h:1370:10: warning: 'caps.descriptor_reuse' is used uninitialized in this function [-Wuninitialized]
+     if (caps.descriptor_reuse) {
+
+Fix it, thereby also silencing the gcc-4.9 warning.
+
+The issue has been present for 4 years but surfaces only now that
+the first caller of dmaengine_desc_set_reuse() has been added in
+spi-bcm2835.c. Another user of reusable DMA descriptors has existed
+for a while in pxa_camera.c, but it sets the DMA_CTRL_REUSE flag
+directly instead of calling dmaengine_desc_set_reuse(). Nevertheless,
+tag this commit for stable in case there are out-of-tree users.
+
+Fixes: 272420214d26 ("dmaengine: Add DMA_CTRL_REUSE")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v4.3+
+Link: https://lore.kernel.org/r/ca92998ccc054b4f2bfd60ef3adbab2913171eac.1575546234.git.lukas@wunner.de
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/sched/core.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ include/linux/dmaengine.h |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 90e4b00ace89..dfb8ea801700 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3668,22 +3668,24 @@ static void sched_tick_remote(struct work_struct *work)
- 	 * statistics and checks timeslices in a time-independent way, regardless
- 	 * of when exactly it is running.
- 	 */
--	if (idle_cpu(cpu) || !tick_nohz_tick_stopped_cpu(cpu))
-+	if (!tick_nohz_tick_stopped_cpu(cpu))
- 		goto out_requeue;
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -1207,8 +1207,11 @@ static inline int dma_get_slave_caps(str
+ static inline int dmaengine_desc_set_reuse(struct dma_async_tx_descriptor *tx)
+ {
+ 	struct dma_slave_caps caps;
++	int ret;
  
- 	rq_lock_irq(rq, &rf);
- 	curr = rq->curr;
--	if (is_idle_task(curr) || cpu_is_offline(cpu))
-+	if (cpu_is_offline(cpu))
- 		goto out_unlock;
+-	dma_get_slave_caps(tx->chan, &caps);
++	ret = dma_get_slave_caps(tx->chan, &caps);
++	if (ret)
++		return ret;
  
- 	update_rq_clock(rq);
--	delta = rq_clock_task(rq) - curr->se.exec_start;
- 
--	/*
--	 * Make sure the next tick runs within a reasonable
--	 * amount of time.
--	 */
--	WARN_ON_ONCE(delta > (u64)NSEC_PER_SEC * 3);
-+	if (!is_idle_task(curr)) {
-+		/*
-+		 * Make sure the next tick runs within a reasonable
-+		 * amount of time.
-+		 */
-+		delta = rq_clock_task(rq) - curr->se.exec_start;
-+		WARN_ON_ONCE(delta > (u64)NSEC_PER_SEC * 3);
-+	}
- 	curr->sched_class->task_tick(rq, curr, 0);
- 
- out_unlock:
--- 
-1.8.3.1
+ 	if (caps.descriptor_reuse) {
+ 		tx->flags |= DMA_CTRL_REUSE;
+
 
