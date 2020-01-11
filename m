@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B3BC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84548C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49B3120673
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C2112077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737647;
-	bh=LaIgDCjYNZSyIf79BWzdHZ5zY5nUBnitqsEpNBejW4A=;
+	s=default; t=1578737655;
+	bh=zDPSuGbcNkmbbtTnk9w1Bx3wZxsTbV4rpqmXHikbpRA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GeZHKxpoRLGp4Ue6bBvBz/YsU0XWH4Q55ILPYNPBDlW9qrREDe+pMOQg/jz7nET41
-	 M+piQ/QxmTT9gJ+SA7uIDJTki2t58nqk402bnfK0xRhmUW9iahCidPGN53dAClvDpk
-	 GTXSsQ4ROBi3a+mYgAS4Dc3aghTXcSmnFB1tN9LA=
+	b=o1DZYG4RCLpyLyzeuF4LVoefMcx5y/VO1WHuo4ONOfhv9yE9CpY0k3ayE1Thw+RO1
+	 AyZHm9SXo1Hg9GZaOmvfzWPFhrFeh+9bR1w6mH2j+3ptFZmyojQGMDP61yI+6FaJe1
+	 DSECaeLSf/RU+u1J1lv/GMMkNTLm7YuFvUOMaaWc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbgAKKOG (ORCPT
+        id S1730084AbgAKKOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:14:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53382 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:14:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729781AbgAKKOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:14:01 -0500
+        id S1729889AbgAKKOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:14:09 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D53C220673;
-        Sat, 11 Jan 2020 10:13:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D23D2146E;
+        Sat, 11 Jan 2020 10:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737640;
-        bh=LaIgDCjYNZSyIf79BWzdHZ5zY5nUBnitqsEpNBejW4A=;
+        s=default; t=1578737649;
+        bh=zDPSuGbcNkmbbtTnk9w1Bx3wZxsTbV4rpqmXHikbpRA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LGbx5TTB9sVxv/fmKxXWoa8wY+YhTPf2xGKxQW3wOGD7JM61RpStZmk+eHXVFTXlb
-         D1ZMlkQEVxnVwpilR0b7WLGOpv5fGqLdhG5OYI6sR+x1l7a8Q36NSchKPr9gZbRWzq
-         9R2tdVf9wdriVrc3jBTuSYNgB+X58eXwuZHguvK4=
+        b=LCRDlmQ3u7YnEaYO/RCgyTFqJp0e2Y2itprpTuc0NE0lOxuQ5oxkXW76X10/m7CEj
+         6QAZLEgrd0ciFmW8qZa02twT7YfZRhnfvCFC3vfsGiRJzzGIFkOPMIaBE5mIjYvtiv
+         fWQ1yClgZ2oFAjXN1Sx5fw7vHIhIHkVGOYRA9nAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tzung-Bi Shih <tzungbi@google.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Stefan Roese <sr@denx.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Shawn Guo <shawnguo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 05/84] ASoC: max98090: fix possible race conditions
-Date:   Sat, 11 Jan 2020 10:49:42 +0100
-Message-Id: <20200111094846.266421787@linuxfoundation.org>
+Subject: [PATCH 4.19 15/84] ARM: dts: imx6ul: imx6ul-14x14-evk.dtsi: Fix SPI NOR probing
+Date:   Sat, 11 Jan 2020 10:49:52 +0100
+Message-Id: <20200111094850.519762766@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -61,128 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tzung-Bi Shih <tzungbi@google.com>
+From: Stefan Roese <sr@denx.de>
 
-[ Upstream commit 45dfbf56975994822cce00b7475732a49f8aefed ]
+[ Upstream commit 0aeb1f2b74f3402e9cdb7c0b8e2c369c9767301e ]
 
-max98090_interrupt() and max98090_pll_work() run in 2 different threads.
-There are 2 possible races:
+Without this "jedec,spi-nor" compatible property, probing of the SPI NOR
+does not work on the NXP i.MX6ULL EVK. Fix this by adding this
+compatible property to the DT.
 
-Note: M98090_REG_DEVICE_STATUS = 0x01.
-Note: ULK == 0, PLL is locked; ULK == 1, PLL is unlocked.
-
-max98090_interrupt      max98090_pll_work
-----------------------------------------------
-schedule max98090_pll_work
-                        restart max98090 codec
-receive ULK INT
-                        assert ULK == 0
-schedule max98090_pll_work (1).
-
-In the case (1), the PLL is locked but max98090_interrupt unnecessarily
-schedules another max98090_pll_work.
-
-max98090_interrupt      max98090_pll_work      max98090 codec
-----------------------------------------------------------------------
-                                               ULK = 1
-receive ULK INT
-read 0x01
-                                               ULK = 0 (clear on read)
-schedule max98090_pll_work
-                        restart max98090 codec
-                                               ULK = 1
-receive ULK INT
-read 0x01
-                                               ULK = 0 (clear on read)
-                        read 0x01
-                        assert ULK == 0 (2).
-
-In the case (2), both max98090_interrupt and max98090_pll_work read
-the same clear-on-read register.  max98090_pll_work would falsely
-thought PLL is locked.
-Note: the case (2) race is introduced by the previous commit ("ASoC:
-max98090: exit workaround earlier if PLL is locked") to check the status
-and exit the loop earlier in max98090_pll_work.
-
-There are 2 possible solution options:
-A. turn off ULK interrupt before scheduling max98090_pll_work; and turn
-on again before exiting max98090_pll_work.
-B. remove the second thread of execution.
-
-Option A cannot fix the case (2) race because it still has 2 threads
-access the same clear-on-read register simultaneously.  Although we
-could suppose the register is volatile and read the status via I2C could
-be much slower than the hardware raises the bits.
-
-Option B introduces a maximum 10~12 msec penalty delay in the interrupt
-handler.  However, it could only punish the jack detection by extra
-10~12 msec.
-
-Adopts option B which is the better solution overall.
-
-Signed-off-by: Tzung-Bi Shih <tzungbi@google.com>
-Link: https://lore.kernel.org/r/20191122073114.219945-4-tzungbi@google.com
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 7d77b8505aa9 ("ARM: dts: imx6ull: fix the imx6ull-14x14-evk configuration")
+Signed-off-by: Stefan Roese <sr@denx.de>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/max98090.c | 8 ++------
- sound/soc/codecs/max98090.h | 1 -
- 2 files changed, 2 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/imx6ul-14x14-evk.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index c3b28b2f4b10..89b6e187ac23 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -2121,10 +2121,8 @@ static void max98090_pll_det_disable_work(struct work_struct *work)
- 			    M98090_IULK_MASK, 0);
- }
- 
--static void max98090_pll_work(struct work_struct *work)
-+static void max98090_pll_work(struct max98090_priv *max98090)
- {
--	struct max98090_priv *max98090 =
--		container_of(work, struct max98090_priv, pll_work);
- 	struct snd_soc_component *component = max98090->component;
- 
- 	if (!snd_soc_component_is_active(component))
-@@ -2277,7 +2275,7 @@ static irqreturn_t max98090_interrupt(int irq, void *data)
- 
- 	if (active & M98090_ULK_MASK) {
- 		dev_dbg(component->dev, "M98090_ULK_MASK\n");
--		schedule_work(&max98090->pll_work);
-+		max98090_pll_work(max98090);
- 	}
- 
- 	if (active & M98090_JDET_MASK) {
-@@ -2440,7 +2438,6 @@ static int max98090_probe(struct snd_soc_component *component)
- 			  max98090_pll_det_enable_work);
- 	INIT_WORK(&max98090->pll_det_disable_work,
- 		  max98090_pll_det_disable_work);
--	INIT_WORK(&max98090->pll_work, max98090_pll_work);
- 
- 	/* Enable jack detection */
- 	snd_soc_component_write(component, M98090_REG_JACK_DETECT,
-@@ -2493,7 +2490,6 @@ static void max98090_remove(struct snd_soc_component *component)
- 	cancel_delayed_work_sync(&max98090->jack_work);
- 	cancel_delayed_work_sync(&max98090->pll_det_enable_work);
- 	cancel_work_sync(&max98090->pll_det_disable_work);
--	cancel_work_sync(&max98090->pll_work);
- 	max98090->component = NULL;
- }
- 
-diff --git a/sound/soc/codecs/max98090.h b/sound/soc/codecs/max98090.h
-index b1572a2d19da..388d2f74674b 100644
---- a/sound/soc/codecs/max98090.h
-+++ b/sound/soc/codecs/max98090.h
-@@ -1533,7 +1533,6 @@ struct max98090_priv {
- 	struct delayed_work jack_work;
- 	struct delayed_work pll_det_enable_work;
- 	struct work_struct pll_det_disable_work;
--	struct work_struct pll_work;
- 	struct snd_soc_jack *jack;
- 	unsigned int dai_fmt;
- 	int tdm_slots;
+diff --git a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+index 818021126559..695303435003 100644
+--- a/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
++++ b/arch/arm/boot/dts/imx6ul-14x14-evk.dtsi
+@@ -175,7 +175,7 @@
+ 	flash0: n25q256a@0 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		compatible = "micron,n25q256a";
++		compatible = "micron,n25q256a", "jedec,spi-nor";
+ 		spi-max-frequency = <29000000>;
+ 		reg = <0>;
+ 	};
 -- 
 2.20.1
 
