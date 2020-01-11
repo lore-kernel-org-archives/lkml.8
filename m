@@ -2,129 +2,98 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08EFC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EEB2C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77CA22084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:10:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578744654;
-	bh=6Gv+nt5Z9CLF/Y0YWRCq4mKnmsj8Xz+0ADRolnCe4D0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=J3THxC95ZLLkBWcbtVywJCjIc3EUHpJ847V1HaYVLOg2mJ9kWNdS5Z4P7a/RMRSCj
-	 C9iZE5fNrOpXZLILSFQ8zI7507O4Io7J9NtYbJwj10b6VypmCfQidtvZ5dQxDce2nv
-	 CvF3J5tWVi/kir4OP/c5KkKMmGEB3iJNuF/Wi1g8=
+	by mail.kernel.org (Postfix) with ESMTP id 106D920678
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:14:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjzy0T/K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729662AbgAKMKw (ORCPT
+        id S1729601AbgAKMOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 07:10:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37374 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbgAKMKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 07:10:52 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8228520678;
-        Sat, 11 Jan 2020 12:10:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578744651;
-        bh=6Gv+nt5Z9CLF/Y0YWRCq4mKnmsj8Xz+0ADRolnCe4D0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=W90fwS/7eymyrDtXV+FlTF9c0Iti4GHjkNKW8Z/NoKJO7RMeK11dmhdfQ3YSsl7ra
-         RfCR9ukJiov+tgBOS6GtobfQig/nO0wwNhri3uM/LuoyrGubXJPYruKS+8JdGR03m8
-         tfT5GVgepgI9r+rPLYTbGkE/WoXzLpsS6X9YrCyQ=
-Date:   Sat, 11 Jan 2020 12:10:47 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: imu/mpu6050: support dual-edge IRQ
-Message-ID: <20200111121047.79e16365@archlinux>
-In-Reply-To: <e5b39c16dc6dcb25324f6e8389cc0d0f895c1cbd.1578309319.git.mirq-linux@rere.qmqm.pl>
-References: <MN2PR12MB33737F067F25B2F7477C4FE5C43C0@MN2PR12MB3373.namprd12.prod.outlook.com>
-        <e5b39c16dc6dcb25324f6e8389cc0d0f895c1cbd.1578309319.git.mirq-linux@rere.qmqm.pl>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Sat, 11 Jan 2020 07:14:35 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:53156 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729126AbgAKMOe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 07:14:34 -0500
+Received: by mail-pj1-f67.google.com with SMTP id a6so2113206pjh.2;
+        Sat, 11 Jan 2020 04:14:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gu2ibxt9IusIRe4xp3l3i73y94wbInkbEdTzlnDJ/Hc=;
+        b=tjzy0T/KSZ3UjlaLBTfw2/8lFtiZm3+yjrQHbuZ3t6/zmAFh+0Vy8rpYf/FWb2erRW
+         PxFq93aqRmY60ABG7XFvYcQ2jKWiFHUnUAgxeyqTJUfCE6n848KhjWxdqjigPKDyd9tE
+         MXMnoZ70HuKCY0Q12TVntc+8vAfxIlLIo4HzR2hTgy+GHLCjWYRPiidFkza8LQGGUh5f
+         H+MEhPHhi8SZLqQROf9W6q29sm0HgZKXa95sPMHp4wv8SGHE5BUV0wGQqx+KRxtJFE93
+         xQuV7U+DmmnYfBdvwDaLjIVfdEPI8u06ncyiOEKzhgLEYrLXHedUbej2xJg9wKZe8uYA
+         s1ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gu2ibxt9IusIRe4xp3l3i73y94wbInkbEdTzlnDJ/Hc=;
+        b=M0bnyeaxtwVUODNoc08EpSt1Ur3ZM65pwdDYr0b9AgQPr9R2J+6Jdsrr6GjUUSmb1u
+         N1poQyXfNIRtmtS9p6E5hh+G1CO8jf1XHZrUO5Y8uEtH8K/c4rWcvg+nc7mlT2MSxUz7
+         3/1aq7ZWpU/9iQZgPHu67gvAfSkRIuplNO23ncjQSXxE+ig8q8UCcf9l5UMsJzHdh/nY
+         xMDzUKub73Q5x+r+soxK1AA1QwyOLJiUlPldIHmFdRADVy2g1lEHAlUBMHjIj7lMzdPm
+         ean+yOetNg8mBM4v+IaCOVHqKG8N5PC1HgKUkGNUwIIYfrMPs0FRMOlIFduxzvY9hAXP
+         bAVg==
+X-Gm-Message-State: APjAAAUoNImv2TLcBIfm/E9XiqC2BqhbRXCkep+j2qFpTohVt4tJrF4W
+        dp0FP3aWmy58/sFQwulbmqWlB0aU
+X-Google-Smtp-Source: APXvYqwQ7aNRjEnfjZKONGUaZ9HVJML5GxucrnI6Y3/wARh9a3H12o1je3NDZm5+BOYgAiU1XwTQtQ==
+X-Received: by 2002:a17:902:24:: with SMTP id 33mr4343218pla.212.1578744873684;
+        Sat, 11 Jan 2020 04:14:33 -0800 (PST)
+Received: from localhost.localdomain ([221.146.116.86])
+        by smtp.gmail.com with ESMTPSA id 7sm6868513pfx.52.2020.01.11.04.14.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 Jan 2020 04:14:33 -0800 (PST)
+From:   Namjae Jeon <linkinjeon@gmail.com>
+To:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org, amir73il@gmail.com,
+        Namjae Jeon <linkinjeon@gmail.com>,
+        Namjae Jeon <namjae.jeon@samsung.com>
+Subject: [PATCH] staging: exfat: make staging/exfat and fs/exfat mutually exclusive
+Date:   Sat, 11 Jan 2020 21:14:19 +0900
+Message-Id: <20200111121419.22669-1-linkinjeon@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 06 Jan 2020 12:17:54 +0100
-Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl> wrote:
+From: Namjae Jeon <namjae.jeon@samsung.com>
 
-> Make mpu6050 usable on platforms which provide only any-edge interrupts.
-> This also covers shared interrupt case.
+Make staging/exfat and fs/exfat mutually exclusive to select the one
+between two same filesystem.
 
-So this had me confused for a bit because I assumed we were trying to make
-a level interrupt providing device work with edge interrupts.  Seems
-device supports a pulsed  mode and the driver supports this.
+Suggested-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Namjae Jeon <namjae.jeon@samsung.com>
+---
+ drivers/staging/exfat/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Why do we want to detect on both edges?  Do you have a crazy board
-with this shared and some devices using the rising edge and some the fallin=
-g one?
-
-For shared case it should return that it did not handle the interrupt
-to allow spurious interrupt detection to work...
-
-Jonathan
-
->=20
-> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-
->=20
-> ---
-> v2:
->    just remove the dev_warn() message
->=20
-> Signed-off-by: Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl>
-> ---
->  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 2 +-
->  drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c | 5 +----
->  2 files changed, 2 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu=
-/inv_mpu6050/inv_mpu_core.c
-> index 0686e41bb8a1..b3d138091f89 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> @@ -1241,7 +1241,7 @@ int inv_mpu_core_probe(struct regmap *regmap, int i=
-rq, const char *name,
->  	irq_type =3D irqd_get_trigger_type(desc);
->  	if (!irq_type)
->  		irq_type =3D IRQF_TRIGGER_RISING;
-> -	if (irq_type =3D=3D IRQF_TRIGGER_RISING)
-> +	if (irq_type & IRQF_TRIGGER_RISING)	// rising or both-edge
->  		st->irq_mask =3D INV_MPU6050_ACTIVE_HIGH;
->  	else if (irq_type =3D=3D IRQF_TRIGGER_FALLING)
->  		st->irq_mask =3D INV_MPU6050_ACTIVE_LOW;
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c b/drivers/iio/imu=
-/inv_mpu6050/inv_mpu_ring.c
-> index 10d16ec5104b..a4dc2c4a3ca5 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_ring.c
-> @@ -183,11 +183,8 @@ irqreturn_t inv_mpu6050_read_fifo(int irq, void *p)
->  			"failed to ack interrupt\n");
->  		goto flush_fifo;
->  	}
-> -	if (!(int_status & INV_MPU6050_BIT_RAW_DATA_RDY_INT)) {
-> -		dev_warn(regmap_get_device(st->map),
-> -			"spurious interrupt with status 0x%x\n", int_status);
-> +	if (!(int_status & INV_MPU6050_BIT_RAW_DATA_RDY_INT))
->  		goto end_session;
-> -	}
-> =20
->  	if (!(st->chip_config.accl_fifo_enable |
->  		st->chip_config.gyro_fifo_enable |
+diff --git a/drivers/staging/exfat/Kconfig b/drivers/staging/exfat/Kconfig
+index 292a19dfcaf5..9a0fccec65d9 100644
+--- a/drivers/staging/exfat/Kconfig
++++ b/drivers/staging/exfat/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ config STAGING_EXFAT_FS
+ 	tristate "exFAT fs support"
+-	depends on BLOCK
++	depends on BLOCK && !EXFAT_FS
+ 	select NLS
+ 	help
+ 	  This adds support for the exFAT file system.
+-- 
+2.17.1
 
