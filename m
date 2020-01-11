@@ -2,155 +2,110 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520F6C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FEDC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 21:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C654206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 20:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 594292084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 21:13:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731346AbgAKU46 (ORCPT
+        id S1731396AbgAKVNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 15:56:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:57004 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731097AbgAKU46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 15:56:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0968830E;
-        Sat, 11 Jan 2020 12:56:57 -0800 (PST)
-Received: from [10.0.2.15] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 014473F534;
-        Sat, 11 Jan 2020 12:56:55 -0800 (PST)
-Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts with
- lower layer
-To:     "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
- <20191231164051.GA4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
- <20200102112955.GC4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
- <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340AFCA0@dggemm526-mbx.china.huawei.com>
- <20200103114011.GB19390@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340B31E9@dggemm526-mbx.china.huawei.com>
- <20200109104306.GA10914@e105550-lin.cambridge.arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340BEDD6@dggemm526-mbx.china.huawei.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <1a8f7963-97e9-62cc-12d2-39f816dfaf67@arm.com>
-Date:   Sat, 11 Jan 2020 20:56:28 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sat, 11 Jan 2020 16:13:55 -0500
+Received: from Chamillionaire.breakpoint.cc ([193.142.43.52]:38178 "EHLO
+        Chamillionaire.breakpoint.cc" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731352AbgAKVNz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 16:13:55 -0500
+Received: from fw by Chamillionaire.breakpoint.cc with local (Exim 4.92)
+        (envelope-from <fw@strlen.de>)
+        id 1iqO4r-0004Pd-J0; Sat, 11 Jan 2020 22:13:49 +0100
+Date:   Sat, 11 Jan 2020 22:13:49 +0100
+From:   Florian Westphal <fw@strlen.de>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     syzbot <syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com>,
+        coreteam@netfilter.org, David Miller <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: general protection fault in xt_rateest_put
+Message-ID: <20200111211349.GG795@breakpoint.cc>
+References: <000000000000af1c5b059be111e5@google.com>
+ <CAM_iQpVHAKqA51tm5LjbOZnUd6Zdb9MsRyAoCsYt0acXDQA=gw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED340BEDD6@dggemm526-mbx.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM_iQpVHAKqA51tm5LjbOZnUd6Zdb9MsRyAoCsYt0acXDQA=gw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/01/2020 12:58, Zengtao (B) wrote:
->> IIUC, the problem is that virt can set up a broken topology in some
->> cases where MPIDR doesn't line up correctly with the defined NUMA
->> nodes.
->>
->> We could argue that it is a qemu/virt problem, but it would be nice if
->> we could at least detect it. The proposed patch isn't really the right
->> solution as it warns on some valid topologies as Sudeep already pointed
->> out.
->>
->> It sounds more like we need a mask subset check in the sched_domain
->> building code, if there isn't already one?
+Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> On Sat, Jan 11, 2020 at 10:05 AM syzbot
+> <syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    e69ec487 Merge branch 'for-linus' of git://git.kernel.org/..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=1239f876e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=18698c0c240ba616
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=91bdd8eece0f6629ec8b
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13dbd58ee00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15eff9e1e00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+91bdd8eece0f6629ec8b@syzkaller.appspotmail.com
+> >
+> > kasan: CONFIG_KASAN_INLINE enabled
+> > kasan: GPF could be caused by NULL-ptr deref or user memory access
+> > general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> > CPU: 0 PID: 10213 Comm: syz-executor519 Not tainted 5.5.0-rc5-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
+> > RIP: 0010:net_generic include/net/netns/generic.h:45 [inline]
+> > RIP: 0010:xt_rateest_put+0xa1/0x440 net/netfilter/xt_RATEEST.c:77
+> > Code: 85 87 01 fb 45 84 f6 0f 84 68 02 00 00 e8 37 86 01 fb 49 8d bd 68 13
+> > 00 00 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f
+> > 85 6c 03 00 00 4d 8b b5 68 13 00 00 e8 29 bf ed fa
+> > RSP: 0018:ffffc90001cd7940 EFLAGS: 00010202
+> > RAX: dffffc0000000000 RBX: ffff8880a779f700 RCX: ffffffff8673a332
+> > RDX: 000000000000026d RSI: ffffffff8673a0b9 RDI: 0000000000001368
+> > RBP: ffffc90001cd7970 R08: ffff8880a96b2240 R09: ffffed1015d0703d
+> > R10: ffffed1015d0703c R11: ffff8880ae8381e3 R12: 000000000000002d
+> > R13: 0000000000000000 R14: 0000000000000001 R15: ffffffff8673a470
+> > FS:  00000000016ce880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> > CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > CR2: 000055cd48aff140 CR3: 0000000096982000 CR4: 00000000001406f0
+> > DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > Call Trace:
+> >   xt_rateest_tg_destroy+0x72/0xa0 net/netfilter/xt_RATEEST.c:175
+> >   cleanup_entry net/ipv4/netfilter/arp_tables.c:509 [inline]
+> >   translate_table+0x11f4/0x1d80 net/ipv4/netfilter/arp_tables.c:587
+> >   do_replace net/ipv4/netfilter/arp_tables.c:981 [inline]
+> >   do_arpt_set_ctl+0x317/0x650 net/ipv4/netfilter/arp_tables.c:1461
 > 
-> Currently no, it's a bit complex to do the check in the sched_domain building code,
-> I need to take a think of that.
-> Suggestion welcomed.
-> 
+> This looks odd, the head commit e69ec487 comes after commit
+> 1b789577f655060d98d20ed0c6f9fbd469d6ba63 which is supposed
+> to fix this...
 
-Doing a search on the sched_domain spans themselves should look something like
-the completely untested:
+The fix is incomplete,  net/ipv4/netfilter/arp_tables.c:cleanup_entry()
+doesn't init *net either.
 
----8<---
-diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-index 6ec1e595b1d4..96128d12ec23 100644
---- a/kernel/sched/topology.c
-+++ b/kernel/sched/topology.c
-@@ -1879,6 +1879,43 @@ static struct sched_domain *build_sched_domain(struct sched_domain_topology_leve
- 	return sd;
- }
- 
-+/* Ensure topology masks are sane; non-NUMA spans shouldn't overlap */
-+static int validate_topology_spans(const struct cpumask *cpu_map)
-+{
-+	struct sched_domain_topology_level *tl;
-+	int i, j;
-+
-+	for_each_sd_topology(tl) {
-+		/* NUMA levels are allowed to overlap */
-+		if (tl->flags & SDTL_OVERLAP)
-+			break;
-+
-+		/*
-+		 * Non-NUMA levels cannot partially overlap - they must be
-+		 * either equal or wholly disjoint. Otherwise we can end up
-+		 * breaking the sched_group lists - i.e. a later get_group()
-+		 * pass breaks the linking done for an earlier span.
-+		 */
-+		for_each_cpu(i, cpu_map) {
-+			for_each_cpu(j, cpu_map) {
-+				if (i == j)
-+					continue;
-+				/*
-+				 * We should 'and' all those masks with 'cpu_map'
-+				 * to exactly match the topology we're about to
-+				 * build, but that can only remove CPUs, which
-+				 * only lessens our ability to detect overlaps
-+				 */
-+				if (!cpumask_equal(tl->mask(i), tl->mask(j)) &&
-+				    cpumask_intersects(tl->mask(i), tl->mask(j)))
-+					return -1;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * Find the sched_domain_topology_level where all CPU capacities are visible
-  * for all CPUs.
-@@ -1953,7 +1990,8 @@ build_sched_domains(const struct cpumask *cpu_map, struct sched_domain_attr *att
- 	struct sched_domain_topology_level *tl_asym;
- 	bool has_asym = false;
- 
--	if (WARN_ON(cpumask_empty(cpu_map)))
-+	if (WARN_ON(cpumask_empty(cpu_map)) ||
-+	    WARN_ON(validate_topology_spans(cpu_map)))
- 		goto error;
- 
- 	alloc_state = __visit_domain_allocation_hell(&d, cpu_map);
---->8---
+Are you working on a fix already?
 
-Alternatively the assertion on the sched_group linking I suggested earlier
-in the thread should suffice, since this should trigger whenever we have
-overlapping non-NUMA sched domains.
-
-Since you have a setup where you can reproduce the issue, could please give
-either (ideally both!) a try? Thanks.
-
-> Thanks 
-> Zengtao 
-> 
->>
->> Morten
+Otherwise I can handle this.
