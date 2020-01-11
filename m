@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD873C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF95C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989402084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06EA820880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738204;
-	bh=b0j4uUP36eM65YwUbTde7dNnwD7Sf+hUVDxtcT2ZUDk=;
+	s=default; t=1578738208;
+	bh=1TsBAZt0kGZestdFokrITKiGHIC4EGqDGcbQA7U+5uU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z2vUYD16q59PET9flLJT4b1AQy3CFHCuBs7kQE9pnRtP3TvXxoAGuXfkoLKVCydzq
-	 Ps45tTzv0hqOAoacS2fAuj6KcFXHM1YrCQw3d86wCvvObqiyhYAQtAQZMF7Y9KkaPq
-	 Ucdplu58IDRe+LAHl9YbvbMabDM18Da1j4lvR7bc=
+	b=FnMr1LYA/81zDQgxVZ55naldQEPIr2E7PzD9WWQYbCZ7xrlz4VJQNdzYBqExFurjq
+	 Qe8JQdQ9S4O3HXitaOD5vDWuKfvxtFk2r/+JPrQtUdbMjo9WibM1NTI62bT5v6QMS0
+	 COUandIgGyntIb0mBQaHHWZac67mlWjQrcvuApv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730912AbgAKKXX (ORCPT
+        id S1730918AbgAKKX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:23:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:23:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730160AbgAKKXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:23:20 -0500
+        id S1730914AbgAKKXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:23:24 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AEDE2084D;
-        Sat, 11 Jan 2020 10:23:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46AA12082E;
+        Sat, 11 Jan 2020 10:23:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738200;
-        bh=b0j4uUP36eM65YwUbTde7dNnwD7Sf+hUVDxtcT2ZUDk=;
+        s=default; t=1578738204;
+        bh=1TsBAZt0kGZestdFokrITKiGHIC4EGqDGcbQA7U+5uU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0AAW4rTgGOY33vtaDdqpFiKvYNKBp16bFdqq+L78k2Rk7jazRLrQpCRXhITf8K/PZ
-         rupyGuRye1ukPLBWlVN8ziqEOqQvK01nf9BDCrMeVaf4Qdqrb2VKAM3tnVXt0+ASU3
-         D/Vcj4u1YK7uyOc9b/AsbGLlp4I19dgIknSDhh8I=
+        b=sqay0AGgmG6Yhv4tig2+pFjPwogbgKi+oRweu/4XVfe76aJJckVFbrzXEboLFvR3G
+         tEUWrU05sApUXxFyUahKPKS7qPWunT3uxPI//uDSkzBRHmL244KHJ4znCs6jy78mwd
+         djIPRDvJunq7y5fINtSI7kH2KU8Zj14miLoHx/Ro=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 031/165] netfilter: nf_tables: skip module reference count bump on object updates
-Date:   Sat, 11 Jan 2020 10:49:10 +0100
-Message-Id: <20200111094923.288123504@linuxfoundation.org>
+Subject: [PATCH 5.4 032/165] netfilter: nf_tables_offload: return EOPNOTSUPP if rule specifies no actions
+Date:   Sat, 11 Jan 2020 10:49:11 +0100
+Message-Id: <20200111094923.576241586@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,31 +61,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit fd57d0cbe187e93f63777d36e9f49293311d417f ]
+[ Upstream commit 81ec61074bcf68acfcb2820cda3ff9d9984419c7 ]
 
-Use __nft_obj_type_get() instead, otherwise there is a module reference
-counter leak.
+If the rule only specifies the matching side, return EOPNOTSUPP.
+Otherwise, the front-end relies on the drivers to reject this rule.
 
-Fixes: d62d0ba97b58 ("netfilter: nf_tables: Introduce stateful object update operation")
+Fixes: c9626a2cbdb2 ("netfilter: nf_tables: add hardware offload support")
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/netfilter/nf_tables_offload.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 4c03c14e46bc..67ca47c7ce54 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -5217,7 +5217,7 @@ static int nf_tables_newobj(struct net *net, struct sock *nlsk,
- 		if (nlh->nlmsg_flags & NLM_F_REPLACE)
- 			return -EOPNOTSUPP;
+diff --git a/net/netfilter/nf_tables_offload.c b/net/netfilter/nf_tables_offload.c
+index 6f7eab502e65..e743f811245f 100644
+--- a/net/netfilter/nf_tables_offload.c
++++ b/net/netfilter/nf_tables_offload.c
+@@ -44,6 +44,9 @@ struct nft_flow_rule *nft_flow_rule_create(struct net *net,
+ 		expr = nft_expr_next(expr);
+ 	}
  
--		type = nft_obj_type_get(net, objtype);
-+		type = __nft_obj_type_get(objtype);
- 		nft_ctx_init(&ctx, net, skb, nlh, family, table, NULL, nla);
- 
- 		return nf_tables_updobj(&ctx, type, nla[NFTA_OBJ_DATA], obj);
++	if (num_actions == 0)
++		return ERR_PTR(-EOPNOTSUPP);
++
+ 	flow = nft_flow_rule_alloc(num_actions);
+ 	if (!flow)
+ 		return ERR_PTR(-ENOMEM);
 -- 
 2.20.1
 
