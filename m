@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64955C33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC42C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B41D20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8798720848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736938;
-	bh=1fnI6aUTDTUR6gujDAhqQrt0aJB0YLNvLt5D3fwF7xo=;
+	s=default; t=1578736942;
+	bh=KFUxjOKDDuEoX/HZBQoELlfUW0gsxH8DtfLuAzv8vGc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tl1FWHacsPy1QttTFR3goYiWCnxpaFjbQAimn2+x3uWKLJD5paQwGSMfRQXO6xHXA
-	 3Tm3w5kHiNooXxbQiGo03piBaTF9fB7lNpsyPOx1+y9dFPtM0DohsOZfv43ZqY4GSC
-	 4iYbnLx/wh0YNCZrq8bUcHsXfO3IggHdOM6xjxfs=
+	b=NgCU+jChpUOsD03bKP9ByOdlYwdvPMt1Mlu1Hks1MQDNTpZezZ7iIleFQNjoQTUAX
+	 qsl3p/6f5Toe4DRLItzcTZ3K/FiXAb/TunZNu1v9wHeLxX3YMvyHHrAIAg+Ldt+BGD
+	 B96fZQJyolsxlZcQDaW0Q+BebP6e0i/vFqWkHC90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAKKCR (ORCPT
+        id S1729029AbgAKKCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:02:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60500 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:02:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728888AbgAKKCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:02:16 -0500
+        id S1728888AbgAKKCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:02:21 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00A8320842;
-        Sat, 11 Jan 2020 10:02:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9279620842;
+        Sat, 11 Jan 2020 10:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736935;
-        bh=1fnI6aUTDTUR6gujDAhqQrt0aJB0YLNvLt5D3fwF7xo=;
+        s=default; t=1578736940;
+        bh=KFUxjOKDDuEoX/HZBQoELlfUW0gsxH8DtfLuAzv8vGc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=15RJp5JFqhqamehM8WAg0y7cNsOiwUg6IrTyYRRbZrFqMD1G3374lY9T/cHooTWHS
-         WhWv8von4/R9G3BSq8y2hkAbdS3gqTUCE2hlx7MwGVWScO9ZvcTlBjXC6GTccCDvj1
-         O7OfGgDBiCjkLI5ygHayqysTA5auEIAx96RyMMUk=
+        b=xExCdzAIv5a+WzNvcujdQzuEYIR7/g18fRkaoiY7+0WTOVA6bSWXSgzawWBnANic1
+         L4caefLE6lNuoKfxv6TC5HlnjWbGnVqcanrVTQqeraXgxi90HYuhIW6osBhUc08qoC
+         oyrf2z+6IBKTvhOg62wu1GfEwx9RMr+8ALcM4dmc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 33/91] arm64: Revert support for execute-only user mappings
-Date:   Sat, 11 Jan 2020 10:49:26 +0100
-Message-Id: <20200111094857.366585437@linuxfoundation.org>
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 4.9 34/91] PM / devfreq: Check NULL governor in available_governors_show
+Date:   Sat, 11 Jan 2020 10:49:27 +0100
+Message-Id: <20200111094857.826488674@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -60,116 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-commit 24cecc37746393432d994c0dbc251fb9ac7c5d72 upstream.
+commit d68adc8f85cd757bd33c8d7b2660ad6f16f7f3dc upstream.
 
-The ARMv8 64-bit architecture supports execute-only user permissions by
-clearing the PTE_USER and PTE_UXN bits, practically making it a mostly
-privileged mapping but from which user running at EL0 can still execute.
+The governor is initialized after sysfs attributes become visible so in
+theory the governor field can be NULL here.
 
-The downside, however, is that the kernel at EL1 inadvertently reading
-such mapping would not trip over the PAN (privileged access never)
-protection.
-
-Revert the relevant bits from commit cab15ce604e5 ("arm64: Introduce
-execute-only page access permissions") so that PROT_EXEC implies
-PROT_READ (and therefore PTE_USER) until the architecture gains proper
-support for execute-only user mappings.
-
-Fixes: cab15ce604e5 ("arm64: Introduce execute-only page access permissions")
-Cc: <stable@vger.kernel.org> # 4.9.x-
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: bcf23c79c4e46 ("PM / devfreq: Fix available_governor sysfs")
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- arch/arm64/include/asm/pgtable-prot.h |    5 ++---
- arch/arm64/include/asm/pgtable.h      |   10 +++-------
- arch/arm64/mm/fault.c                 |    2 +-
- mm/mmap.c                             |    6 ------
- 4 files changed, 6 insertions(+), 17 deletions(-)
+ drivers/devfreq/devfreq.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm64/include/asm/pgtable-prot.h
-+++ b/arch/arm64/include/asm/pgtable-prot.h
-@@ -77,13 +77,12 @@
- #define PAGE_COPY_EXEC		__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_NG | PTE_PXN)
- #define PAGE_READONLY		__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_NG | PTE_PXN | PTE_UXN)
- #define PAGE_READONLY_EXEC	__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_NG | PTE_PXN)
--#define PAGE_EXECONLY		__pgprot(_PAGE_DEFAULT | PTE_NG | PTE_PXN)
- 
- #define __P000  PAGE_NONE
- #define __P001  PAGE_READONLY
- #define __P010  PAGE_COPY
- #define __P011  PAGE_COPY
--#define __P100  PAGE_EXECONLY
-+#define __P100  PAGE_READONLY_EXEC
- #define __P101  PAGE_READONLY_EXEC
- #define __P110  PAGE_COPY_EXEC
- #define __P111  PAGE_COPY_EXEC
-@@ -92,7 +91,7 @@
- #define __S001  PAGE_READONLY
- #define __S010  PAGE_SHARED
- #define __S011  PAGE_SHARED
--#define __S100  PAGE_EXECONLY
-+#define __S100  PAGE_READONLY_EXEC
- #define __S101  PAGE_READONLY_EXEC
- #define __S110  PAGE_SHARED_EXEC
- #define __S111  PAGE_SHARED_EXEC
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -83,12 +83,8 @@ extern unsigned long empty_zero_page[PAG
- #define pte_dirty(pte)		(pte_sw_dirty(pte) || pte_hw_dirty(pte))
- 
- #define pte_valid(pte)		(!!(pte_val(pte) & PTE_VALID))
--/*
-- * Execute-only user mappings do not have the PTE_USER bit set. All valid
-- * kernel mappings have the PTE_UXN bit set.
-- */
- #define pte_valid_not_user(pte) \
--	((pte_val(pte) & (PTE_VALID | PTE_USER | PTE_UXN)) == (PTE_VALID | PTE_UXN))
-+	((pte_val(pte) & (PTE_VALID | PTE_USER)) == PTE_VALID)
- #define pte_valid_young(pte) \
- 	((pte_val(pte) & (PTE_VALID | PTE_AF)) == (PTE_VALID | PTE_AF))
- #define pte_valid_user(pte) \
-@@ -104,8 +100,8 @@ extern unsigned long empty_zero_page[PAG
- 
- /*
-  * p??_access_permitted() is true for valid user mappings (subject to the
-- * write permission check) other than user execute-only which do not have the
-- * PTE_USER bit set. PROT_NONE mappings do not have the PTE_VALID bit set.
-+ * write permission check). PROT_NONE mappings do not have the PTE_VALID bit
-+ * set.
-  */
- #define pte_access_permitted(pte, write) \
- 	(pte_valid_user(pte) && (!(write) || pte_write(pte)))
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -319,7 +319,7 @@ static int __kprobes do_page_fault(unsig
- 	struct task_struct *tsk;
- 	struct mm_struct *mm;
- 	int fault, sig, code;
--	unsigned long vm_flags = VM_READ | VM_WRITE;
-+	unsigned long vm_flags = VM_READ | VM_WRITE | VM_EXEC;
- 	unsigned int mm_flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
- 
- 	if (notify_page_fault(regs, esr))
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -87,12 +87,6 @@ static void unmap_region(struct mm_struc
-  * MAP_PRIVATE	r: (no) no	r: (yes) yes	r: (no) yes	r: (no) yes
-  *		w: (no) no	w: (no) no	w: (copy) copy	w: (no) no
-  *		x: (no) no	x: (no) yes	x: (no) yes	x: (yes) yes
-- *
-- * On arm64, PROT_EXEC has the following behaviour for both MAP_SHARED and
-- * MAP_PRIVATE:
-- *								r: (no) no
-- *								w: (no) no
-- *								x: (yes) yes
-  */
- pgprot_t protection_map[16] = {
- 	__P000, __P001, __P010, __P011, __P100, __P101, __P110, __P111,
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -982,7 +982,7 @@ static ssize_t available_governors_show(
+ 	 * The devfreq with immutable governor (e.g., passive) shows
+ 	 * only own governor.
+ 	 */
+-	if (df->governor->immutable) {
++	if (df->governor && df->governor->immutable) {
+ 		count = scnprintf(&buf[count], DEVFREQ_NAME_LEN,
+ 				   "%s ", df->governor_name);
+ 	/*
 
 
