@@ -8,124 +8,145 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF73C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 07:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CF6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 07:43:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3324620848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 07:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6DD22072E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 07:43:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BRq3uXnf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiwLzAiA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgAKHj4 (ORCPT
+        id S1728553AbgAKHnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 02:39:56 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39652 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728507AbgAKHjz (ORCPT
+        Sat, 11 Jan 2020 02:43:09 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33720 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728507AbgAKHnI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 02:39:55 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g6so1750015plp.6
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 23:39:55 -0800 (PST)
+        Sat, 11 Jan 2020 02:43:08 -0500
+Received: by mail-wr1-f65.google.com with SMTP id b6so3888581wrq.0;
+        Fri, 10 Jan 2020 23:43:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sj2E8hbf+1n1JQewsDgj2Fs29eg9VqanuSP3luTlahg=;
-        b=BRq3uXnfOC/WIjl9+DbaxslikTOCbxvw6S5ZzMoh4VEfmtZlzzVlFRaHOrgci0WAyE
-         DVwlYZ/G1nx8+Y+ZCNlj/3oY8GUL2ALOuiYPxwJEykRMfQAmi3LDX1vsEy4rYKWeMEP9
-         9wXW7dXUK3CkxPh6L70MMH9ULPtXUIo6H6bJRU49x77fPNzY6G/H/HaQ7mpnd4yMgRWx
-         Ujqwg0XQgfw02W2MFxuW8EePWRt5AhXTOIegnlKtxPP+w7QIupOKFWBngtU7XMb3cFRh
-         uvPRzR9VOsY/PxEC8sZagAbNn4J2tlzh2kMr4GEPgrF8uMOjGqDoHStkZlIyY9XRsUmP
-         uLRw==
+        h=from:to:cc:subject:date:message-id:in-reply-to;
+        bh=7phXSgAkhV7ekY+XxbbLPgZzgDKYvBOEXbRLHHpKIRM=;
+        b=RiwLzAiADjNU/CdyggCMb4mC3tAkhOf/tdXXpjZGd0923CM74Nwwwg4xxLJQrX7c69
+         DtVyroORkLm4kZI6fWasSzTvLxPTjryytOT7sOfsmMMANDvIHs06tPEd8km9VCIUumuw
+         88L4s8w7oj5wqKMX7X0dUzmwpgJWfbKc1V8+sdFGKJUfX0lTaLoV8cH809OCNznwxPSm
+         z6f6eBeVAwMG9FJNoSa4N2jNY9TfpM04GTn7jsetbGzdD89Z9SPOljf3wFWN5yh3xlqp
+         P+kbJB/o2kU/OHaSzhPWwAfixETFkGRfgkOyzZ61zC6LhoDAq5jwo6dSMyjkTuhNd1nX
+         hU4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=sj2E8hbf+1n1JQewsDgj2Fs29eg9VqanuSP3luTlahg=;
-        b=q+buk/TiXUgHRU6suX7PpGr1ZmiPAeRwOdmHQktdM+v+VrEvxe8csdxPAoYGVWs5mX
-         y4+ZKGKZcyfjv94vyOMOWGfESIACm1FR2UYXgL9/tE9f8XxI8XjSnzx1HiQxht9G9Ha2
-         exvRwSKR9UB1y+1he6ZpAThOzYLnPtpcJbDt7yICgTvrd3GNFuPcFqXpfb+wiOm6cj/L
-         Jzp6ounSDzQ5yXk9oYvNTSpQdJ1X18kaFSYSS71Jf/HSYYB768KvNx442oBSE5/sfM/g
-         JeSUXG6My1QLTRx2Oy+4XYgQETmk6AWWlXB2OFfy7DkGuSKHn6wgoKg99cIdxUfrR/oO
-         W38A==
-X-Gm-Message-State: APjAAAV+7LR32kx2tj9sQujbf3ECJdRGezv6oaiuLSsmCyBF1QjRPJPd
-        PEQnq+nWgY8C1RRfIvzykmk=
-X-Google-Smtp-Source: APXvYqzQun+14sGBUPw6UTkEDD50gGQAL0YWb8/xCo0l7Y8qM6mXd12JR0SEd2bwgk3cOVE3zuf3UQ==
-X-Received: by 2002:a17:902:61:: with SMTP id 88mr3257670pla.17.1578728394863;
-        Fri, 10 Jan 2020 23:39:54 -0800 (PST)
-Received: from localhost.localdomain ([146.196.37.13])
-        by smtp.googlemail.com with ESMTPSA id z4sm5437450pfn.42.2020.01.10.23.39.51
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to;
+        bh=7phXSgAkhV7ekY+XxbbLPgZzgDKYvBOEXbRLHHpKIRM=;
+        b=GjI3q/qsJWgUUlyUN+x9jp/iGjShMlSygMGeT5W//oNW5S3u+Dvg7wmTFRXqSRFSV+
+         OqL52+OHuOnsPg9Rt5vZEDHkzbwsly0pYTNvAtY2pFZb+BlQrT4CL0hBpH7enf0mhcbP
+         twdPRlpy0uGy3lNBJ2DLEw1dUwHmbwuqs0A5MIngy2pb7p7XyqNOEsJ3EjACLcuR0KnE
+         5kRQjW8DM0d30rmeHFbXakCaJfM+2a0Vp82id0WpJs/NphzNkPSby0ATFfSKAcCD7RCJ
+         ijHro7pbTEQpMBOWZXeP4SrGnkPPdi6DVCO1ETQNFNF8oKb5XMupEAyoEhfH4gBtrqQd
+         8MUg==
+X-Gm-Message-State: APjAAAXps345GZ3X6d7LLyyAQA9CfIcCnhHSXZZ9GDqIq32US6B+Zxma
+        HG2Lz9yEoJQln1zG7SeGR99kte3+
+X-Google-Smtp-Source: APXvYqyRmODzfldBA8D/NN893xpmrLQXVhwM3VmayHW+WSWW0/eolokZQbHHru134cl6zX8cgpAI7w==
+X-Received: by 2002:adf:e641:: with SMTP id b1mr7581841wrn.34.1578728587074;
+        Fri, 10 Jan 2020 23:43:07 -0800 (PST)
+Received: from localhost.localdomain ([2a02:2450:10d2:194d:d1f3:c74b:f29c:a970])
+        by smtp.gmail.com with ESMTPSA id r68sm5236515wmr.43.2020.01.10.23.43.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 23:39:54 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>,
-        kbuild test robot <lkp@intel.com>
-Subject: [PATCH v3] drivers: nvme: target: core: Pass lockdep expression to RCU lists
-Date:   Sat, 11 Jan 2020 13:08:16 +0530
-Message-Id: <20200111073815.7659-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 10 Jan 2020 23:43:06 -0800 (PST)
+From:   SeongJae Park <sj38.park@gmail.com>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>
+Subject: Re: [PATCH 4/4] mm/madvise: allow KSM hints for remote API
+Date:   Sat, 11 Jan 2020 08:42:59 +0100
+Message-Id: <20200111074259.25577-1-sj38.park@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200110213433.94739-5-minchan@kernel.org> (raw)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ctrl->subsys->namespaces and subsys->namespaces are traversed with
-list_for_each_entry_rcu outside an RCU read-side critical section
-but under the protection of ctrl->subsys->lock and subsys->lock
-respectively.
+On Fri, 10 Jan 2020 13:34:33 -0800 Minchan Kim <minchan@kernel.org> wrote:
 
-Hence, add the corresponding lockdep expression to the list traversal
-primitive to silence false-positive lockdep warnings, and
-harden RCU lists.
+> From: Oleksandr Natalenko <oleksandr@redhat.com>
+> 
+> It all began with the fact that KSM works only on memory that is marked
+> by madvise(). And the only way to get around that is to either:
+> 
+>   * use LD_PRELOAD; or
+>   * patch the kernel with something like UKSM or PKSM.
+> 
+> (i skip ptrace can of worms here intentionally)
+> 
+> To overcome this restriction, lets employ a new remote madvise API. This
+> can be used by some small userspace helper daemon that will do auto-KSM
+> job for us.
+> 
+> I think of two major consumers of remote KSM hints:
+> 
+>   * hosts, that run containers, especially similar ones and especially in
+>     a trusted environment, sharing the same runtime like Node.js;
+> 
+>   * heavy applications, that can be run in multiple instances, not
+>     limited to opensource ones like Firefox, but also those that cannot be
+>     modified since they are binary-only and, maybe, statically linked.
+> 
+> Speaking of statistics, more numbers can be found in the very first
+> submission, that is related to this one [1]. For my current setup with
+> two Firefox instances I get 100 to 200 MiB saved for the second instance
+> depending on the amount of tabs.
+> 
+> 1 FF instance with 15 tabs:
+> 
+>    $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
+>    410
+> 
+> 2 FF instances, second one has 12 tabs (all the tabs are different):
+> 
+>    $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
+>    592
+> 
+> At the very moment I do not have specific numbers for containerised
+> workload, but those should be comparable in case the containers share
+> similar/same runtime.
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1012142/
+> 
+> Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-Signed-off-by: Amol Grover <frextrite@gmail.com>
----
-v3:
-- Fix error reported by kbuild test robot
+Reviewed-by: SeongJae Park <sjpark@amazon.de>
 
-v2:
-- Fix sparse error
-  CHECK: Alignment should match open parenthesis
-- Remove global macro and use local lockdep expressions
-
- drivers/nvme/target/core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
-index 28438b833c1b..35810a0a8d21 100644
---- a/drivers/nvme/target/core.c
-+++ b/drivers/nvme/target/core.c
-@@ -555,7 +555,8 @@ int nvmet_ns_enable(struct nvmet_ns *ns)
- 	} else {
- 		struct nvmet_ns *old;
- 
--		list_for_each_entry_rcu(old, &subsys->namespaces, dev_link) {
-+		list_for_each_entry_rcu(old, &subsys->namespaces, dev_link,
-+					lockdep_is_held(&subsys->lock)) {
- 			BUG_ON(ns->nsid == old->nsid);
- 			if (ns->nsid < old->nsid)
- 				break;
-@@ -1172,7 +1173,8 @@ static void nvmet_setup_p2p_ns_map(struct nvmet_ctrl *ctrl,
- 
- 	ctrl->p2p_client = get_device(req->p2p_client);
- 
--	list_for_each_entry_rcu(ns, &ctrl->subsys->namespaces, dev_link)
-+	list_for_each_entry_rcu(ns, &ctrl->subsys->namespaces, dev_link,
-+				lockdep_is_held(&ctrl->subsys->lock))
- 		nvmet_p2pmem_ns_add_p2p(ctrl, ns);
- }
- 
--- 
-2.24.1
-
+> ---
+>  mm/madvise.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index eb42b2b7f49b..3aa9aec6bfd9 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -1000,6 +1000,8 @@ process_madvise_behavior_valid(int behavior)
+>  	switch (behavior) {
+>  	case MADV_COLD:
+>  	case MADV_PAGEOUT:
+> +	case MADV_MERGEABLE:
+> +	case MADV_UNMERGEABLE:
+>  		return true;
+>  	default:
+>  		return false;
+> -- 
+> 2.25.0.rc1.283.g88dfdc4193-goog
