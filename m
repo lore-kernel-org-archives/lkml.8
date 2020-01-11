@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DD1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F33C33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7602082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE7420848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737825;
-	bh=dFQraUQ897zd/9F+NFuGJy0G1y79+V4LN5u273fGebw=;
+	s=default; t=1578737831;
+	bh=voZJ6+sHQ+7u32dzQueGKsDn3hu12ZM7e5NFUxeERmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lfTaP6f4u7+g9+FX2Z3qefeOlpM5T4YQC/f6FXcPR7HJIvhh7PPeiQ7zS8gmvST4y
-	 TCoPMm6FvCpVwMXuZqOVlEnKIE1m9qJHc01usloAZHQTEqfE9tRW9gxxgic/f3SyIQ
-	 Y652vXEuOzcGLcERDCVEfF+uBQFlSMaKs3fJQ0gs=
+	b=sN/KS+fgQltll2RhiGgoz6cE0ZEKGd0wG5Aq0ysDJ4K24hR+9Ru9/jOOgUYn6xghI
+	 LAw0yy+kn8zSw4y+XmNvjH4oS/NUtGxE9AZaJFdx2RVTVBQpLMSLsmmo5AMBVc2aSO
+	 XszydA5XersL5IBgouNYvP37r/9N/cpTPy2OqVFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730453AbgAKKRE (ORCPT
+        id S1730460AbgAKKRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:17:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32890 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:17:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730441AbgAKKRB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:17:01 -0500
+        id S1729229AbgAKKRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:17:07 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49C4420848;
-        Sat, 11 Jan 2020 10:16:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD6F2205F4;
+        Sat, 11 Jan 2020 10:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737821;
-        bh=dFQraUQ897zd/9F+NFuGJy0G1y79+V4LN5u273fGebw=;
+        s=default; t=1578737825;
+        bh=voZJ6+sHQ+7u32dzQueGKsDn3hu12ZM7e5NFUxeERmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GkkBg9aLEotHQmbBI2Cv2RWlUC88dw6CMhshmSwSyKhiBA/1ZG1NE9hQSO0f0LSmB
-         RO2x3WCFrLKx84b1Alm0f/GZ/4JAT6y/aB6E/gXy4nQqKhv8cv+JRaKSMuivJFrzKS
-         LKXqTDeTh+G1ZafEvuK0kFm4cC0Qu3zSNwgvAlyk=
+        b=LhYtDV4+XSkxySWpa50WEUVjirYE4zlDp4TwbEx+jHF0+1FP1gZ9/bXuKxvp5Rt4Q
+         Ke9WGp555bTXTYCWbu7CFw9lnu9GtMYoGda5D0nhzDStH7JxNqc4oCbZoIxBlB0k6A
+         Qq8u4KQmRmqZLPkl342VQSt7OPNbY0ye53MTZTwE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Hebb <tommyhebb@gmail.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 45/84] kconfig: dont crash on NULL expressions in expr_eq()
-Date:   Sat, 11 Jan 2020 10:50:22 +0100
-Message-Id: <20200111094903.417945382@linuxfoundation.org>
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 54/84] s390/dasd/cio: Interpret ccw_device_get_mdc return value correctly
+Date:   Sat, 11 Jan 2020 10:50:31 +0100
+Message-Id: <20200111094906.768841990@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -60,40 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hebb <tommyhebb@gmail.com>
+From: Jan Höppner <hoeppner@linux.ibm.com>
 
-[ Upstream commit 272a72103012862e3a24ea06635253ead0b6e808 ]
+[ Upstream commit dd4b3c83b9efac10d48a94c61372119fc555a077 ]
 
-NULL expressions are taken to always be true, as implemented by the
-expr_is_yes() macro and by several other functions in expr.c. As such,
-they ought to be valid inputs to expr_eq(), which compares two
-expressions.
+The max data count (mdc) is an unsigned 16-bit integer value as per AR
+documentation and is received via ccw_device_get_mdc() for a specific
+path mask from the CIO layer. The function itself also always returns a
+positive mdc value or 0 in case mdc isn't supported or couldn't be
+determined.
 
-Signed-off-by: Thomas Hebb <tommyhebb@gmail.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Though, the comment for this function describes a negative return value
+to indicate failures.
+
+As a result, the DASD device driver interprets the return value of
+ccw_device_get_mdc() incorrectly. The error case is essentially a dead
+code path.
+
+To fix this behaviour, check explicitly for a return value of 0 and
+change the comment for ccw_device_get_mdc() accordingly.
+
+This fix merely enables the error code path in the DASD functions
+get_fcx_max_data() and verify_fcx_max_data(). The actual functionality
+stays the same and is still correct.
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
+Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/kconfig/expr.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/s390/block/dasd_eckd.c | 9 +++++----
+ drivers/s390/cio/device_ops.c  | 2 +-
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/scripts/kconfig/expr.c b/scripts/kconfig/expr.c
-index e1a39e90841d..7e38070ee523 100644
---- a/scripts/kconfig/expr.c
-+++ b/scripts/kconfig/expr.c
-@@ -252,6 +252,13 @@ static int expr_eq(struct expr *e1, struct expr *e2)
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index f89f9d02e788..108fb1c77e1d 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -1135,7 +1135,8 @@ static u32 get_fcx_max_data(struct dasd_device *device)
  {
- 	int res, old_count;
+ 	struct dasd_eckd_private *private = device->private;
+ 	int fcx_in_css, fcx_in_gneq, fcx_in_features;
+-	int tpm, mdc;
++	unsigned int mdc;
++	int tpm;
  
-+	/*
-+	 * A NULL expr is taken to be yes, but there's also a different way to
-+	 * represent yes. expr_is_yes() checks for either representation.
-+	 */
-+	if (!e1 || !e2)
-+		return expr_is_yes(e1) && expr_is_yes(e2);
-+
- 	if (e1->type != e2->type)
+ 	if (dasd_nofcx)
  		return 0;
- 	switch (e1->type) {
+@@ -1149,7 +1150,7 @@ static u32 get_fcx_max_data(struct dasd_device *device)
+ 		return 0;
+ 
+ 	mdc = ccw_device_get_mdc(device->cdev, 0);
+-	if (mdc < 0) {
++	if (mdc == 0) {
+ 		dev_warn(&device->cdev->dev, "Detecting the maximum supported data size for zHPF requests failed\n");
+ 		return 0;
+ 	} else {
+@@ -1160,12 +1161,12 @@ static u32 get_fcx_max_data(struct dasd_device *device)
+ static int verify_fcx_max_data(struct dasd_device *device, __u8 lpm)
+ {
+ 	struct dasd_eckd_private *private = device->private;
+-	int mdc;
++	unsigned int mdc;
+ 	u32 fcx_max_data;
+ 
+ 	if (private->fcx_max_data) {
+ 		mdc = ccw_device_get_mdc(device->cdev, lpm);
+-		if ((mdc < 0)) {
++		if (mdc == 0) {
+ 			dev_warn(&device->cdev->dev,
+ 				 "Detecting the maximum data size for zHPF "
+ 				 "requests failed (rc=%d) for a new path %x\n",
+diff --git a/drivers/s390/cio/device_ops.c b/drivers/s390/cio/device_ops.c
+index 4435ae0b3027..f0cae1973f78 100644
+--- a/drivers/s390/cio/device_ops.c
++++ b/drivers/s390/cio/device_ops.c
+@@ -624,7 +624,7 @@ EXPORT_SYMBOL(ccw_device_tm_start_timeout);
+  * @mask: mask of paths to use
+  *
+  * Return the number of 64K-bytes blocks all paths at least support
+- * for a transport command. Return values <= 0 indicate failures.
++ * for a transport command. Return value 0 indicates failure.
+  */
+ int ccw_device_get_mdc(struct ccw_device *cdev, u8 mask)
+ {
 -- 
 2.20.1
 
