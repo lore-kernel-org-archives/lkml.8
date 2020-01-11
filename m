@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4EEC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A75FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C6720848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E3F20880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738180;
-	bh=LXSItio5r38Tkfc003AwtVAQ31ISjAGXhsab1xkw3Uw=;
+	s=default; t=1578738184;
+	bh=5+KBnVdLRuk87lNb6TdfP6q2MkTmfaix4p79kTqEKBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UjJwMEXiXzYeXz3lbNnCTv7Y5W7DCr4HPXvH0wbH2CKD17AD422nrr/BtyjY2BV77
-	 sZmoufCW+B1aTHxoR2i8iuMohFZTqU2S027R+XMVhr+maMZudAfaYuJRIulmsAmKmz
-	 vXjt+RaaVav6tpP1XQExnbQyIadvTssRBkQ8Sw/U=
+	b=uSWUqba9hPGleAFAzDoTogl+bvuMKbLMjfoc7QzeX1ZmrK4tV6OuY1BzvSYx8/GHS
+	 hfp3tgKgSRSz6FaGOJV1E9QqcFrNKvrOoQxt+SRBT5RotDM8P+CaHPlBemLLIgu05J
+	 nwaATfu1fuSqHHiM6DvG2pIdpuKIkHkEkyeMoYOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbgAKKW6 (ORCPT
+        id S1730883AbgAKKXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:22:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48982 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:23:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729391AbgAKKWy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:22:54 -0500
+        id S1729391AbgAKKW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:22:59 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B068820848;
-        Sat, 11 Jan 2020 10:22:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C780205F4;
+        Sat, 11 Jan 2020 10:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738174;
-        bh=LXSItio5r38Tkfc003AwtVAQ31ISjAGXhsab1xkw3Uw=;
+        s=default; t=1578738178;
+        bh=5+KBnVdLRuk87lNb6TdfP6q2MkTmfaix4p79kTqEKBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YctXUry8x5DylFygSny3cxgZqscq3fg11DHUm28h41Rw/NM1l7HBBZd+tfYsZvDW6
-         d1YUc7uUI0uB2Q7UL/W+GUhLiFlu3OTP7BYG9JDGrDBjEostBZ5dVBXQhk1QUqBvRD
-         Fsdv+On9M4nlkfPKfyb7sgt6SHBTpAxJ3q7WeR2w=
+        b=WUefFcL5vGsi+8Tl2kdHN0WFvOQC0Ijtz/9q9aHZVdNn+6QlCt/bhcCdHOEJrCire
+         E2vcfiVFdE9g3VtrEiCPDVAjCZGNm5nQU72Em3MspXO1bB/EY6BvV23/emdYaA1z1d
+         nddqHyiPN0AkWgj5iw9YR0/ssKFKpcQzSQdblLdw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 043/165] spi: spi-cavium-thunderx: Add missing pci_release_regions()
-Date:   Sat, 11 Jan 2020 10:49:22 +0100
-Message-Id: <20200111094924.523980135@linuxfoundation.org>
+Subject: [PATCH 5.4 044/165] reset: Do not register resource data for missing resets
+Date:   Sat, 11 Jan 2020 10:49:23 +0100
+Message-Id: <20200111094924.584538805@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -60,42 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-[ Upstream commit a841e2853e1afecc2ee692b8cc5bff606bc84e4c ]
+[ Upstream commit db23808615e29d9a04f96806cac56f78b0fee0ef ]
 
-The driver forgets to call pci_release_regions() in probe failure
-and remove.
-Add the missed calls to fix it.
+When an optional reset is not present, __devm_reset_control_get() and
+devm_reset_control_array_get() still register resource data to release
+the non-existing reset on cleanup, which is futile.
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Link: https://lore.kernel.org/r/20191206075500.18525-1-hslester96@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fix this by skipping NULL reset control pointers.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-cavium-thunderx.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/reset/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-cavium-thunderx.c b/drivers/spi/spi-cavium-thunderx.c
-index d12e149f1a41..fd6b9caffaf0 100644
---- a/drivers/spi/spi-cavium-thunderx.c
-+++ b/drivers/spi/spi-cavium-thunderx.c
-@@ -82,6 +82,7 @@ static int thunderx_spi_probe(struct pci_dev *pdev,
+diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+index 3c9a64c1b7a8..f343bd814d32 100644
+--- a/drivers/reset/core.c
++++ b/drivers/reset/core.c
+@@ -787,7 +787,7 @@ struct reset_control *__devm_reset_control_get(struct device *dev,
+ 		return ERR_PTR(-ENOMEM);
  
- error:
- 	clk_disable_unprepare(p->clk);
-+	pci_release_regions(pdev);
- 	spi_master_put(master);
- 	return ret;
- }
-@@ -96,6 +97,7 @@ static void thunderx_spi_remove(struct pci_dev *pdev)
- 		return;
+ 	rstc = __reset_control_get(dev, id, index, shared, optional, acquired);
+-	if (!IS_ERR(rstc)) {
++	if (!IS_ERR_OR_NULL(rstc)) {
+ 		*ptr = rstc;
+ 		devres_add(dev, ptr);
+ 	} else {
+@@ -930,7 +930,7 @@ devm_reset_control_array_get(struct device *dev, bool shared, bool optional)
+ 		return ERR_PTR(-ENOMEM);
  
- 	clk_disable_unprepare(p->clk);
-+	pci_release_regions(pdev);
- 	/* Put everything in a known state. */
- 	writeq(0, p->register_base + OCTEON_SPI_CFG(p));
- }
+ 	rstc = of_reset_control_array_get(dev->of_node, shared, optional, true);
+-	if (IS_ERR(rstc)) {
++	if (IS_ERR_OR_NULL(rstc)) {
+ 		devres_free(devres);
+ 		return rstc;
+ 	}
 -- 
 2.20.1
 
