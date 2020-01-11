@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B67C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F92DC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 604BE2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32DD6205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:24:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738239;
-	bh=FI2zumC+h06Z1xumFA3Cq4/NFMfxrB4/U/qNtkyGovA=;
+	s=default; t=1578738243;
+	bh=zKTBkj+dms4Z/T6nHnFDicQS7r9JXyUG8csVj+Gi90c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KXTtJ1i7FYXqhHoA1xFZHaKV4S8lqoCARw5lGpgzmZXhAW5W5m9sUYy2EoPMexIwV
-	 Kn8RyxWvIYhdlMG9heVKCd2SYz9tEPebQsZg5GiP4asnk7gUxjJmTPyZ9GcsNCWPLg
-	 xKGnDzkSJpe8uXd47FVzNQFa+Bf3mX/BMLsb7CXA=
+	b=kA+gqYzCXnmgCoGcQ3ytjjNR8aFd5ZUYEsm8eo7uSpJEtIVzac/57opQa9J0CTYPl
+	 QwRWq9kSAAOkxjJfiWUSQO4TlpeCpNV9UxXGE8/Z1msPl9Re9Wk5S55isfjmp5oikq
+	 BZ68ioxy49Q0SJOqGQr4/0FLgyE9838uXpcgYlPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730788AbgAKKX6 (ORCPT
+        id S1730804AbgAKKYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:23:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51786 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:24:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730776AbgAKKXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:23:52 -0500
+        id S1730850AbgAKKX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:23:57 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D3342082E;
-        Sat, 11 Jan 2020 10:23:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAF6D205F4;
+        Sat, 11 Jan 2020 10:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738231;
-        bh=FI2zumC+h06Z1xumFA3Cq4/NFMfxrB4/U/qNtkyGovA=;
+        s=default; t=1578738236;
+        bh=zKTBkj+dms4Z/T6nHnFDicQS7r9JXyUG8csVj+Gi90c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZBtQ+LmGCM1wlzEx1uMwVtlV31Y83/f7wkXuUjHSaJnX17tNDp4yDzMVa7MacqbiC
-         Np6VAqdOPa4R3EftsiQdjpIwDUyzseMokMZVI3tg9yXdfFMHxZ6aTgobLTUZKgit9P
-         WuUh2kImybx/ohqOf2ZutL3PwzXq8hQTDC7m7oDE=
+        b=CezUM83UskxEAUl2+jzcnHoURjBdaVS6TYDDO6sbWlp4ps1ok2JJAluIqp3LMXsHA
+         yPgYz0Izx++xOW1c66QzHVARxZ5hcIF4fIdIVbkmBOHx+VjiJ04iijxb1RyJaA0OmT
+         t7ZUCBwbOJqAf0nuX//KKcFEo+mCy3UwT92SPV3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Mans Rullgard <mans@mansr.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 028/165] netfilter: nft_set_rbtree: bogus lookup/get on consecutive elements in named sets
-Date:   Sat, 11 Jan 2020 10:49:07 +0100
-Message-Id: <20200111094923.091623278@linuxfoundation.org>
+Subject: [PATCH 5.4 049/165] ARM: dts: am335x-sancloud-bbe: fix phy mode
+Date:   Sat, 11 Jan 2020 10:49:28 +0100
+Message-Id: <20200111094925.508283640@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -59,93 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Mans Rullgard <mans@mansr.com>
 
-[ Upstream commit db3b665dd77b34e34df00e17d7b299c98fcfb2c5 ]
+[ Upstream commit c842b8c4ff9859f750447f3ca08f64b2ed23cebc ]
 
-The existing rbtree implementation might store consecutive elements
-where the closing element and the opening element might overlap, eg.
+The phy mode should be rgmii-id.  For some reason, it used to work with
+rgmii-txid but doesn't any more.
 
-	[ a, a+1) [ a+1, a+2)
-
-This patch removes the optimization for non-anonymous sets in the exact
-matching case, where it is assumed to stop searching in case that the
-closing element is found. Instead, invalidate candidate interval and
-keep looking further in the tree.
-
-The lookup/get operation might return false, while there is an element
-in the rbtree. Moreover, the get operation returns true as if a+2 would
-be in the tree. This happens with named sets after several set updates.
-
-The existing lookup optimization (that only works for the anonymous
-sets) might not reach the opening [ a+1,... element if the closing
-...,a+1) is found in first place when walking over the rbtree. Hence,
-walking the full tree in that case is needed.
-
-This patch fixes the lookup and get operations.
-
-Fixes: e701001e7cbe ("netfilter: nft_rbtree: allow adjacent intervals with dynamic updates")
-Fixes: ba0e4d9917b4 ("netfilter: nf_tables: get set elements via netlink")
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nft_set_rbtree.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/am335x-sancloud-bbe.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
-index 57123259452f..a9f804f7a04a 100644
---- a/net/netfilter/nft_set_rbtree.c
-+++ b/net/netfilter/nft_set_rbtree.c
-@@ -74,8 +74,13 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
- 				parent = rcu_dereference_raw(parent->rb_left);
- 				continue;
- 			}
--			if (nft_rbtree_interval_end(rbe))
--				goto out;
-+			if (nft_rbtree_interval_end(rbe)) {
-+				if (nft_set_is_anonymous(set))
-+					return false;
-+				parent = rcu_dereference_raw(parent->rb_left);
-+				interval = NULL;
-+				continue;
-+			}
+diff --git a/arch/arm/boot/dts/am335x-sancloud-bbe.dts b/arch/arm/boot/dts/am335x-sancloud-bbe.dts
+index 8678e6e35493..e5fdb7abb0d5 100644
+--- a/arch/arm/boot/dts/am335x-sancloud-bbe.dts
++++ b/arch/arm/boot/dts/am335x-sancloud-bbe.dts
+@@ -108,7 +108,7 @@
  
- 			*ext = &rbe->ext;
- 			return true;
-@@ -88,7 +93,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
- 		*ext = &interval->ext;
- 		return true;
- 	}
--out:
-+
- 	return false;
- }
+ &cpsw_emac0 {
+ 	phy-handle = <&ethphy0>;
+-	phy-mode = "rgmii-txid";
++	phy-mode = "rgmii-id";
+ };
  
-@@ -139,8 +144,10 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
- 			if (flags & NFT_SET_ELEM_INTERVAL_END)
- 				interval = rbe;
- 		} else {
--			if (!nft_set_elem_active(&rbe->ext, genmask))
-+			if (!nft_set_elem_active(&rbe->ext, genmask)) {
- 				parent = rcu_dereference_raw(parent->rb_left);
-+				continue;
-+			}
- 
- 			if (!nft_set_ext_exists(&rbe->ext, NFT_SET_EXT_FLAGS) ||
- 			    (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END) ==
-@@ -148,7 +155,11 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
- 				*elem = rbe;
- 				return true;
- 			}
--			return false;
-+
-+			if (nft_rbtree_interval_end(rbe))
-+				interval = NULL;
-+
-+			parent = rcu_dereference_raw(parent->rb_left);
- 		}
- 	}
- 
+ &i2c0 {
 -- 
 2.20.1
 
