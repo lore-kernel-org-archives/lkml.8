@@ -2,126 +2,79 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7EDC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B038AC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 562EC2087F
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736809;
-	bh=b9feuh1X62L8XNcbF6YOz/POC/CpMDvqh3CP6FF44Bo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K4XUrYootHM71uzT9qHiMJnRxKrv2QSrJSo8wg9OYcCToLlZjOYKVc93lyftQoaXH
-	 N/DwVewCFADmlW8VqV9W7xRiG5nywQCuLBY9M83c1JpFwkmVLOQwA9yx62M8JcjEhV
-	 u6f81+89gZcK7y5xBY22DJ0Xx2bBC7qkkmVCgUns=
+	by mail.kernel.org (Postfix) with ESMTP id 831162087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:00:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729373AbgAKKAG (ORCPT
+        id S1729258AbgAKKAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:00:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729133AbgAKKAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:00:03 -0500
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CB972082E;
-        Sat, 11 Jan 2020 10:00:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736803;
-        bh=b9feuh1X62L8XNcbF6YOz/POC/CpMDvqh3CP6FF44Bo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a2IurvZzG2VG0oqg6ZttlKKszmibchZODIiMNpMigCCAmu8TvKv/pzyCXkJPlxXB+
-         IMaepXqWJqDw53ryFNRruYH9G572dsx3GTD6pZW4CznN0T1V2UzY3Xrg+WEkzIb2Re
-         AfQidJaD5wnugpeqgI/gRB6RrQC9rhpl5zSlWLxU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Parav Pandit <parav@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 11/91] IB/mlx4: Follow mirror sequence of device add during device removal
-Date:   Sat, 11 Jan 2020 10:49:04 +0100
-Message-Id: <20200111094847.033591288@linuxfoundation.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
-References: <20200111094844.748507863@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Sat, 11 Jan 2020 05:00:15 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:46368 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729262AbgAKKAC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:00:02 -0500
+Received: by mail-io1-f72.google.com with SMTP id p206so3099315iod.13
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 02:00:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=DrXkIWbrBX7Fd3/gNLvsOw44mmxpzBLe8lrnfiRlxxU=;
+        b=C2ypjF/xy5mwflnRBv6/B2GyHBNZjQeg1IDXAIj4nQmezylCVv75JnUOgzhYYBmQae
+         ZOM49+jNNzTtb+ncc7boc9H8VqeOcFlvoSIddFHfyc3D5Q9ZqWIR25tScpKqhzaXKRP+
+         yhLOmC9KtUvkYVIVrfUlB4z3Z3gFeicXGri8i1WzDFsVsjRtNzKMTSMf+hO39qDub9pm
+         VzjQlB/tsPxXGPIw6zn/kY+K63hqoZ+iFg8/bILtOnfhGIqlCOsh1SGnAWiZGLZRvNXU
+         qVKARyCkaD4EEeO1PDUU9e7Gr8KPNaTQDMvGdnl4j/bOEt/IBW+0D/mzaIrwO4UCgM7p
+         cQEA==
+X-Gm-Message-State: APjAAAWuZG17eNbRohK1rSyn8xDpEah/Jk8AJ9ehTQedGgKexF4MUbRB
+        KWA/1IltonZdKefRet1qDQ5TRBuYke1God7oeVO8QqQ0PpHh
+X-Google-Smtp-Source: APXvYqyyzAXe87hNpCj8KaNkoKxDWd8rM9/pHrdZJgUyZW+0chTRAqzVJVUlQ1uS+a/5JliEf7yngQJ01ZzullfmzWMeqcTDBvPj
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:5c3:: with SMTP id l3mr6947066ils.260.1578736801574;
+ Sat, 11 Jan 2020 02:00:01 -0800 (PST)
+Date:   Sat, 11 Jan 2020 02:00:01 -0800
+In-Reply-To: <0000000000007a5aad057e7748c9@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000004078ac059bda4ef9@google.com>
+Subject: Re: KASAN: use-after-free Read in lock_sock_nested
+From:   syzbot <syzbot+500c69d1e21d970e461b@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jhogan@kernel.org, linux-hams@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        netdev@vger.kernel.org, paul.burton@mips.com,
+        paulburton@kernel.org, ralf@linux-mips.org,
+        syzkaller-bugs@googlegroups.com, tbogendoerfer@suse.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Parav Pandit <parav@mellanox.com>
+syzbot suspects this bug was fixed by commit:
 
-[ Upstream commit 89f988d93c62384758b19323c886db917a80c371 ]
+commit a07e3324538a989b7cdbf2c679be6a7f9df2544f
+Author: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Date:   Mon May 13 11:47:25 2019 +0000
 
-Current code device add sequence is:
+     MIPS: kernel: only use i8253 clocksource with periodic clockevent
 
-ib_register_device()
-ib_mad_init()
-init_sriov_init()
-register_netdev_notifier()
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11dd033ee00000
+start commit:   3ea54d9b Merge tag 'docs-5.3-1' of git://git.lwn.net/linux
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=195ab3ca46c2e324
+dashboard link: https://syzkaller.appspot.com/bug?extid=500c69d1e21d970e461b
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=145318b4600000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14ac7b78600000
 
-Therefore, the remove sequence should be,
+If the result looks correct, please mark the bug fixed by replying with:
 
-unregister_netdev_notifier()
-close_sriov()
-mad_cleanup()
-ib_unregister_device()
+#syz fix: MIPS: kernel: only use i8253 clocksource with periodic clockevent
 
-However it is not above.
-Hence, make do above remove sequence.
-
-Fixes: fa417f7b520ee ("IB/mlx4: Add support for IBoE")
-Signed-off-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Link: https://lore.kernel.org/r/20191212091214.315005-3-leon@kernel.org
-Signed-off-by: Doug Ledford <dledford@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/hw/mlx4/main.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/infiniband/hw/mlx4/main.c b/drivers/infiniband/hw/mlx4/main.c
-index 7ccf7225f75a..adc46b809ef2 100644
---- a/drivers/infiniband/hw/mlx4/main.c
-+++ b/drivers/infiniband/hw/mlx4/main.c
-@@ -3031,16 +3031,17 @@ static void mlx4_ib_remove(struct mlx4_dev *dev, void *ibdev_ptr)
- 	ibdev->ib_active = false;
- 	flush_workqueue(wq);
- 
--	mlx4_ib_close_sriov(ibdev);
--	mlx4_ib_mad_cleanup(ibdev);
--	ib_unregister_device(&ibdev->ib_dev);
--	mlx4_ib_diag_cleanup(ibdev);
- 	if (ibdev->iboe.nb.notifier_call) {
- 		if (unregister_netdevice_notifier(&ibdev->iboe.nb))
- 			pr_warn("failure unregistering notifier\n");
- 		ibdev->iboe.nb.notifier_call = NULL;
- 	}
- 
-+	mlx4_ib_close_sriov(ibdev);
-+	mlx4_ib_mad_cleanup(ibdev);
-+	ib_unregister_device(&ibdev->ib_dev);
-+	mlx4_ib_diag_cleanup(ibdev);
-+
- 	mlx4_qp_release_range(dev, ibdev->steer_qpn_base,
- 			      ibdev->steer_qpn_count);
- 	kfree(ibdev->ib_uc_qpns_bitmap);
--- 
-2.20.1
-
-
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
