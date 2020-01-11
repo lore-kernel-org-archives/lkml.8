@@ -2,93 +2,150 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7605CC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 01:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF39FC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 01:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D904206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 01:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B65712077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 01:47:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="f+zFDYAN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hslK5rcH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgAKBay (ORCPT
+        id S1727995AbgAKBrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 10 Jan 2020 20:30:54 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:42270 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbgAKBax (ORCPT
+        Fri, 10 Jan 2020 20:47:11 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:45291 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727782AbgAKBrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 10 Jan 2020 20:30:53 -0500
-Received: by mail-il1-f194.google.com with SMTP id t2so3277737ilq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 10 Jan 2020 17:30:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=kJ7xbVxtwPEzAF+se04VqwxgQEGFSkrxN6PInKK4g18=;
-        b=f+zFDYAN4/EL5Kpz1xl4MZTusWwAsEndfJyrqc2rm3YlZrxBq0iogepFL9jtdkhT3H
-         eUQjXMJZ9S+EIqgikcqaaUTCiBnnugQWTdOVIh7rDgqm6pN0WsQG+mK53NKTRM//tAsN
-         m9ThcF11//B/phL21f0wbDiy6lCVvVnVZoNFs8gpnmZ3xkt50+y4FpJQC274DZVE3hZC
-         asWW1b9jDpvGYJNYaNuQhtK2rTBZwwMbiQA30e2jSLFB674Df4jESm1P9EOSjEi3NIRW
-         06HJO44VYuMkMx6Jls3cNOT1sa9LFbmlqxdjkxu93wKA0Ep2A10FEfZhv87B3NRnbvvh
-         7tGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=kJ7xbVxtwPEzAF+se04VqwxgQEGFSkrxN6PInKK4g18=;
-        b=ro32iTS7zhdnGAsqO2f5ftSzncvwVnfAu4332mBxC8Bee76qkSopQy4eNPJlS+CwqB
-         9+Pu136mmJIyPHGRp18V8Zd16FJFJPeFzdnkRNxuXsIb+p6/VRzXb6hbaKqWlwIKQcmf
-         P6dNcgSzzc4FdJi80zRATST6m1V7bSzJFW/uujPyDDZpNKxBFWmRCLdMYklkce7RddRR
-         ZNk9AmeVjRtjKg7gNAmI/oFz8w01AWtL0umKkEHxCrsHZR/PrIOxhIb3tlOzEadYOaKR
-         aHoSZQMGSlVXFLHFu8BW2Ywo8sH0DKBuHlNpWSgPLPcekgYC8nb2v6uFLvqtgryl54hR
-         BN5w==
-X-Gm-Message-State: APjAAAX5K2VqGsDIkqV2Y8Yv1b2Y4uLbFOb7uwXmAPujsV3YflYKpDnk
-        BueTUhbG5A7WwcHVZFqEdifunQ==
-X-Google-Smtp-Source: APXvYqzWFX4H4Nqk0plSxJ+POvbf5RF+Ea/qNv/kluRjeJOkrIPJKvY1jK5CswtigjH1VedncaXqyA==
-X-Received: by 2002:a92:b11:: with SMTP id b17mr5323857ilf.202.1578706252651;
-        Fri, 10 Jan 2020 17:30:52 -0800 (PST)
-Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id z15sm1224781ill.20.2020.01.10.17.30.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Jan 2020 17:30:52 -0800 (PST)
-Date:   Fri, 10 Jan 2020 17:30:45 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     guoren@kernel.org
-cc:     palmer@dabbelt.com, aou@eecs.berkeley.edu, Anup.Patel@wdc.com,
-        vincent.chen@sifive.com, zong.li@sifive.com,
-        greentime.hu@sifive.com, bmeng.cn@gmail.com, atish.patra@wdc.com,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        arnd@arndb.de, linux-csky@vger.kernel.org,
-        linux-riscv@lists.infradead.org, Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH 1/2] riscv: Fixup obvious bug for fp-regs reset
-In-Reply-To: <20200105025215.2522-1-guoren@kernel.org>
-Message-ID: <alpine.DEB.2.21.9999.2001101730140.38813@viisi.sifive.com>
-References: <20200105025215.2522-1-guoren@kernel.org>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Fri, 10 Jan 2020 20:47:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578707229;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jPPryPK1OzAOrv4+dW4KgmKutLsT1pslZulH2MfJk2s=;
+        b=hslK5rcH4fUzFmxbJkOZs3qst7QnW5w6RGeMPjukZyU5VA6wFJ+Jj2LcRJNVB3gJxGYuad
+        7RmxLe9vJYpQOYjNsiXnl1fg5HLM9+f4ahTebLIHIJfRQ43YdY41N8tYNZnBs8eaAHXkoJ
+        mYMopGCpt6H6l5X6kEWOpqhOKp8LQTk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-346-aLeYG5BTPdu8ka9bzGE9Zw-1; Fri, 10 Jan 2020 20:47:06 -0500
+X-MC-Unique: aLeYG5BTPdu8ka9bzGE9Zw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28F7A107ACC4;
+        Sat, 11 Jan 2020 01:47:05 +0000 (UTC)
+Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 488955C1D4;
+        Sat, 11 Jan 2020 01:47:01 +0000 (UTC)
+Date:   Sat, 11 Jan 2020 09:46:57 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Jerry Hoemann <jerry.hoemann@hpe.com>
+Cc:     Khalid Aziz and Shuah Khan <azizkhan@gonehiking.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Kairui Song <kasong@redhat.com>, linux-pci@vger.kernel.org,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Randy Wright <rwright@hpe.com>, dyoung@redhat.com
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
+Message-ID: <20200111014657.GD19291@MiWiFi-R3L-srv>
+References: <20200110214217.GA88274@google.com>
+ <e0194581-4cdd-3629-d9fe-10a1cfd29d03@gonehiking.org>
+ <20200110230003.GB1875851@anatevka.americas.hpqcorp.net>
+ <20200111004510.GA19291@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200111004510.GA19291@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 5 Jan 2020, guoren@kernel.org wrote:
-
-> From: Guo Ren <ren_guo@c-sky.com>
+On 01/11/20 at 08:45am, Baoquan He wrote:
+> On 01/10/20 at 04:00pm, Jerry Hoemann wrote:
+> > > I am not understanding this failure mode either. That code in
+> > > pci_device_shutdown() was added originally to address this very issue.
+> > > The patch 4fc9bbf98fd6 ("PCI: Disable Bus Master only on kexec reboot")
+> > > shut down any errant DMAs from PCI devices as we kexec a new kernel. In
+> > > this new patch, this is the same code path that will be taken again when
+> > > kdump kernel is shutting down. If the errant DMA problem was not fixed
+> > > by clearing Bus Master bit in this path when kdump kernel was being
+> > > kexec'd, why does the same code path work the second time around when
+> > > kdump kernel is shutting down? Is there more going on that we don't
+> > > understand?
+> > > 
+> > 
+> >   Khalid,
+> > 
+> >   I don't believe we execute that code path in the crash case.
+> > 
+> >   The variable kexec_in_progress is set true in kernel_kexec() before calling
+> >   machine_kexec().  This is the fast reboot case.
+> > 
+> >   I don't see kexec_in_progress set true elsewhere.
+> > 
+> > 
+> >   The code path for crash is different.
+> > 
+> >   For instance, panic() will call
+> > 	-> __crash_kexec()  which calls
+> > 		-> machine_kexec().
+> > 
+> >  So the setting of kexec_in_progress is bypassed.
 > 
-> CSR_MISA is defined in Privileged Architectures' spec: 3.1.1 Machine
-> ISA Register misa. Every bit:1 indicate a feature, so we should beqz
-> reset_done when there is no F/D bit in csr_msia register.
+> Yeah, it's a differet behaviour than kexec case. I talked to Kairui, the
+> patch log may be not very clear. Below is summary I got from my
+> understanding about this issue:
 > 
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> ~~~~~~~~~~~~~~~~~~~~~~~
+> Problem:
+> 
+> When crash is triggered, system jumps into kdump kernel to collect
+> vmcore and dump out. After dumping is finished, kdump kernel will try
+> ty reboot to normal kernel. This hang happened during kdump kernel
+> rebooting, when dumping is network dumping, e.g ssh/nfs, local storage
+> is HPSA.
+> 
+> Root cause:
+> 
+> When configuring network dumping, only network driver modules are added
+> into kdump initramfs. However, the storage HPSA pcie device is enabled
+> in 1st kernel, its status is PCI_D3hot. When crashed system jumps to kdump
+> kernel, we didn't shutdown any device for safety and efficiency. Then
+> during kdump kernel boot up, the pci scan will get hpsa device and only
+> initialize its status as pci_dev->current_state = PCI_UNKNOWN. This
+> pci_dev->current_state will be manipulated by the relevant device
+> driver. So HPSA device will never have chance to calibrate its status,
+> and can't be shut down by pci_device_shutdown() called by reboot
+> service. It's still PCI_D3hot, then crash happened when system try to
+                                      ~~~~~ s/crash/hang/, sorry, typo again
+> shutdown its upper bridge.
+> 
+> Fix:
+> 
+> Here, Kairui uses a quirk to get PM state and mask off value bigger than
+> PCI_D3cold. Means, all devices will get PM state 
+> pci_dev->current_state = PCI_D0 or PCI_D3hot. Finally, during kdump
+> reboot stage, this device can be shut down successfully by clearing its
+> master bit.
+> 
+> ~~~~~~~~~~~~~~~
+> 
+> About this patch, I think the quirk getting active PM state for all devices
+> may be risky, it will impact normal kernel too which doesn't have this issue.
+> 
+> Wondering if there's any other way to fix or work around it.
+> 
+> Thanks
+> Baoquan
 
-Thanks Guo Ren, queued for v5.5-rc.
-
-
-- Paul
