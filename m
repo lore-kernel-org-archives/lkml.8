@@ -2,86 +2,121 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F903C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D65C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:08:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5938B20661
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 11:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FBC52084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 12:08:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vWwD3l3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbgAKL5P (ORCPT
+        id S1729656AbgAKMIY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 06:57:15 -0500
-Received: from smtp04.smtpout.orange.fr ([80.12.242.126]:21200 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729229AbgAKL5O (ORCPT
+        Sat, 11 Jan 2020 07:08:24 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36139 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729126AbgAKMIX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 06:57:14 -0500
-Received: from [192.168.42.210] ([93.22.149.238])
-        by mwinf5d27 with ME
-        id ozxC2100d58rESd03zxDWh; Sat, 11 Jan 2020 12:57:13 +0100
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 11 Jan 2020 12:57:13 +0100
-X-ME-IP: 93.22.149.238
-Subject: Re: [PATCH][next] ath11k: avoid null pointer dereference when pointer
- band is null
-From:   Marion & Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To:     Colin King <colin.king@canonical.com>
-Cc:     David Miller <davem@davemloft.net>, linux-wireless@vger.kernel.org,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Kernel Janitors <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <05d5d54e035e4d69ad4ffb4a835a495a@huawei.com>
- <64797126-0c77-4c2c-ad2b-29d7af452c13@wanadoo.fr>
-Message-ID: <17571eee-9d72-98cb-00f5-d714a28b853b@wanadoo.fr>
-Date:   Sat, 11 Jan 2020 12:57:11 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Sat, 11 Jan 2020 07:08:23 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so4720573wma.1;
+        Sat, 11 Jan 2020 04:08:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Gtjh3mkRUNQhRLfkU3LSwvngpCN57b8JcnSgu0JgPt4=;
+        b=vWwD3l3v4WIvc51UphwLC2wvJKEEMnIndL8BIv07ZYBlGItqdhngNdb8W+QkzzwuPJ
+         czuSUW3E6MoHnRWWfNYcbXxksQ4OLjRuLO5bedZZsS7hTJocKohXwLZSMujdf7qUr3Vt
+         bGNAtDX4du93LbTDcLHm2HWu1Ez8txAtG/Ecfu1PCA5aVlfezm78o/DEne5XkdjMYTNA
+         leVJ5X7EFtrjpTSClmfDQiJTdv/Oqm4IMq/uQUTeuCvxocNAgLg8NVMuSp2COfQtl3ta
+         c0qARR0D2f//i8MOWmpS3DP2Oksd6UppjcfXJuDunOW2qDH7ok8kyF8mv8R+E/AoPtPQ
+         I9mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Gtjh3mkRUNQhRLfkU3LSwvngpCN57b8JcnSgu0JgPt4=;
+        b=PF+phO6qyuOCWVok091QSLJnzzZXgpyVw0ds5b2YZOJs88OCL4nHnKxTs0slNhpjab
+         16l5mhSs9bO4i8m12iBDKMM0ZnD0Qj7UFvLOhe01UX/xL1pt5iiX7TCF4GlkW+pMKtPt
+         oxB2TTx09APhQTnVUcUmUQNVhNcLXDMjR7Yifr0b0mLL0bpzdXkX3bDpMdkJZ+NUyuqS
+         H6lRTocywS+h413aP3t5rME3wh3FQIxutnnPPYqsdbg/ptQurnhgF/lQ4CvmPeLi1WdB
+         Nu2ZIE/M832hRH5m2h2dJl7vzF6wZtvk0F75M6ZIvVflSCA6oK8u/TInwKI0PIF+gy07
+         Xa2w==
+X-Gm-Message-State: APjAAAUYz71gfmXP4Wk713H9DfA8XASAkusAkhOkcOGIRx5b+6fuEDUD
+        MKBHzSv05EFdM7ya2qBGpkV7GSnXF4j9p3KPRco=
+X-Google-Smtp-Source: APXvYqyQ1k1E8gWMY4lUkgRf/8mPwzKsPlmBvNGLTcF344kRbD9XiwJnjctr6wE4a2g45bjuhC8BZmo+a3WpLrHT7cY=
+X-Received: by 2002:a05:600c:2215:: with SMTP id z21mr10139432wml.55.1578744501107;
+ Sat, 11 Jan 2020 04:08:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <64797126-0c77-4c2c-ad2b-29d7af452c13@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: fr
+References: <1578730634-109961-1-git-send-email-longli@linuxonhyperv.com>
+In-Reply-To: <1578730634-109961-1-git-send-email-longli@linuxonhyperv.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Sat, 11 Jan 2020 20:08:09 +0800
+Message-ID: <CACVXFVOJnDG9HTxdHMKjttHkVsu+12LmbO9+AAU5+TrFYhAz_w@mail.gmail.com>
+Subject: Re: [PATCH] scsi: storvsc: Correctly set number of hardware queues
+ for IDE disk
+To:     longli@linuxonhyperv.com
+Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hyperv@vger.kernel.org,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Long Li <longli@microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 11/01/2020 à 10:50, linmiaohe a écrit :
-> Colin Ian King<colin.king@canonical.com>  wrote：
->> From: Colin Ian King<colin.king@canonical.com>
->>
->> In the unlikely event that cap->supported_bands has neither WMI_HOST_WLAN_2G_CAP set or WMI_HOST_WLAN_5G_CAP set then pointer band is null and a null dereference occurs when assigning
->> band->n_iftype_data.  Move the assignment to the if blocks to
->> avoid this.  Cleans up static analysis warnings.
->>
->> Addresses-Coverity: ("Explicit null dereference")
->> Fixes: 9f056ed8ee01 ("ath11k: add HE support")
->> Signed-off-by: Colin Ian King<colin.king@canonical.com>
->> ---
->> drivers/net/wireless/ath/ath11k/mac.c | 8 ++++----
->> 1 file changed, 4 insertions(+), 4 deletions(-)
-> It looks fine for me. Thanks.
-> Reviewed-by: Miaohe Lin<linmiaohe@huawei.com>
-(sorry for incomplete mail and mailing list addresses, my newsreader ate 
-them, and I cannot get the list from get_maintainer.pl because my 
-(outdated) tree does not have ath11k/...
-I've only including the ones in memory of my mail writer.
+On Sat, Jan 11, 2020 at 4:17 PM <longli@linuxonhyperv.com> wrote:
+>
+> From: Long Li <longli@microsoft.com>
+>
+> Commit 0ed881027690 ("scsi: storvsc: setup 1:1 mapping between hardware queue and CPU queue")
+> introduced a regression for disks attached to IDE. For these disks the host VSP only offers
+> one VMBUS channel. Setting multiple queues can overload the VMBUS channel and result in
+> performance drop for high queue depth workload on system with large number of CPUs.
+>
+> Fix it by leaving the number of hardware queues to 1 (default value) for IDE
+> disks.
+>
+> Fixes: 0ed881027690 ("scsi: storvsc: setup 1:1 mapping between hardware queue and CPU queue")
+> Signed-off-by: Long Li <longli@microsoft.com>
+> ---
+>  drivers/scsi/storvsc_drv.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> index f8faf8b3d965..992b28e40374 100644
+> --- a/drivers/scsi/storvsc_drv.c
+> +++ b/drivers/scsi/storvsc_drv.c
+> @@ -1842,9 +1842,11 @@ static int storvsc_probe(struct hv_device *device,
+>          */
+>         host->sg_tablesize = (stor_device->max_transfer_bytes >> PAGE_SHIFT);
+>         /*
+> +        * For non-IDE disks, the host supports multiple channels.
+>          * Set the number of HW queues we are supporting.
+>          */
+> -       host->nr_hw_queues = num_present_cpus();
+> +       if (dev_id->driver_data != IDE_GUID)
+> +               host->nr_hw_queues = num_present_cpus();
+>
+>         /*
+>          * Set the error handler work queue.
+> --
+> 2.20.1
+>
 
-Please forward if needed)
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-
-Hi
-
-Shouldn't there be a
-
-|
-
-- band->n_iftype_data  =  count; at the end of the patch if the assignment is *moved*? Without it, 
-'band' (as well as 'count') could be un-initialized, and lead to memory 
-corruption. Just my 2c. CJ |
-
+-- 
+Ming Lei
