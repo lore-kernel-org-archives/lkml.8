@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFFBC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1852C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44C8D206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D84206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737666;
-	bh=J0cPKhFxQCuZu+uLL9G/eNDy4tjEa8vlQ6PtGjaXh5k=;
+	s=default; t=1578737671;
+	bh=85mxCa5KdB1OA4pYkAMhRlSfScvPXqcsNuof4Jqh048=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aXN/F721iTFGGNDo/lyA9fXWgH0hm4+dLKIPc/EFD5Uf99TusRQMBm+PRT7d9vFau
-	 jnQIAqf5nBxu+5NTAr05Ej6WjvklNQl0/PIhw5KvSd6Cm7n9240I8H/fIpZWWntT3Y
-	 TivtJUz04OlPg04m1iNl6j4hOO7eKKo6GRPUod+4=
+	b=PhrV4Vsa+CuwafNuc7DR6kN07efUIaH8C30m5Nm03G5pH8pnsqIz+hNCbYpy/QsJj
+	 6fjDZq7UdF0YABB8AhzYJpGiDXTgv63AI+x/7wc3D45RNZgUZCwA+dRtzhghrgdzy3
+	 zVraH6D9jo5cbfHTyn7NasqLoqmA2pGSSYrViYrE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730105AbgAKKOZ (ORCPT
+        id S1729815AbgAKKOa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:14:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54188 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:14:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729762AbgAKKOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:14:23 -0500
+        id S1730156AbgAKKO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:14:27 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6489720673;
-        Sat, 11 Jan 2020 10:14:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C426220673;
+        Sat, 11 Jan 2020 10:14:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737662;
-        bh=J0cPKhFxQCuZu+uLL9G/eNDy4tjEa8vlQ6PtGjaXh5k=;
+        s=default; t=1578737666;
+        bh=85mxCa5KdB1OA4pYkAMhRlSfScvPXqcsNuof4Jqh048=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c8xlP5CcUnJ9xltQuQ9keOQzmn3DMTF3GZKoO0rjYRy7tgPiER8uVyNs9bTXRfYN8
-         cjPA7RqUCEAAZAC9n4bkHc0Rd0BWzAiObsDr46K6OjKnC5CRsmwv4DIVBuP3TahtoU
-         BhKlXviZIUew4D4Su7zTR4pkuYtQBesrZZyi+znI=
+        b=bWPtKsDwFEsCyn08YMxc5uDmagqjnd7Qirq+8ta7HLB6CkbuF4izFv88A4zF9EqdH
+         eD0DHxoePDLGmQNSaacPSF9qMx1HKodN6wIiWIlScNoqZQSVECAwYJR5EEjjgiXy/t
+         vbYemqRcyH380K9IvUrQmsjolKgW1czMTmSeD19o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 17/84] netfilter: uapi: Avoid undefined left-shift in xt_sctp.h
-Date:   Sat, 11 Jan 2020 10:49:54 +0100
-Message-Id: <20200111094851.570126625@linuxfoundation.org>
+Subject: [PATCH 4.19 18/84] netfilter: nft_set_rbtree: bogus lookup/get on consecutive elements in named sets
+Date:   Sat, 11 Jan 2020 10:49:55 +0100
+Message-Id: <20200111094851.936448164@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -60,48 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Phil Sutter <phil@nwl.cc>
+From: Pablo Neira Ayuso <pablo@netfilter.org>
 
-[ Upstream commit 164166558aacea01b99c8c8ffb710d930405ba69 ]
+[ Upstream commit db3b665dd77b34e34df00e17d7b299c98fcfb2c5 ]
 
-With 'bytes(__u32)' being 32, a left-shift of 31 may happen which is
-undefined for the signed 32-bit value 1. Avoid this by declaring 1 as
-unsigned.
+The existing rbtree implementation might store consecutive elements
+where the closing element and the opening element might overlap, eg.
 
-Signed-off-by: Phil Sutter <phil@nwl.cc>
+	[ a, a+1) [ a+1, a+2)
+
+This patch removes the optimization for non-anonymous sets in the exact
+matching case, where it is assumed to stop searching in case that the
+closing element is found. Instead, invalidate candidate interval and
+keep looking further in the tree.
+
+The lookup/get operation might return false, while there is an element
+in the rbtree. Moreover, the get operation returns true as if a+2 would
+be in the tree. This happens with named sets after several set updates.
+
+The existing lookup optimization (that only works for the anonymous
+sets) might not reach the opening [ a+1,... element if the closing
+...,a+1) is found in first place when walking over the rbtree. Hence,
+walking the full tree in that case is needed.
+
+This patch fixes the lookup and get operations.
+
+Fixes: e701001e7cbe ("netfilter: nft_rbtree: allow adjacent intervals with dynamic updates")
+Fixes: ba0e4d9917b4 ("netfilter: nf_tables: get set elements via netlink")
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/netfilter/xt_sctp.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ net/netfilter/nft_set_rbtree.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/include/uapi/linux/netfilter/xt_sctp.h b/include/uapi/linux/netfilter/xt_sctp.h
-index 4bc6d1a08781..b4d804a9fccb 100644
---- a/include/uapi/linux/netfilter/xt_sctp.h
-+++ b/include/uapi/linux/netfilter/xt_sctp.h
-@@ -41,19 +41,19 @@ struct xt_sctp_info {
- #define SCTP_CHUNKMAP_SET(chunkmap, type) 		\
- 	do { 						\
- 		(chunkmap)[type / bytes(__u32)] |= 	\
--			1 << (type % bytes(__u32));	\
-+			1u << (type % bytes(__u32));	\
- 	} while (0)
+diff --git a/net/netfilter/nft_set_rbtree.c b/net/netfilter/nft_set_rbtree.c
+index b3e75f9cb686..0221510328d4 100644
+--- a/net/netfilter/nft_set_rbtree.c
++++ b/net/netfilter/nft_set_rbtree.c
+@@ -77,8 +77,13 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
+ 				parent = rcu_dereference_raw(parent->rb_left);
+ 				continue;
+ 			}
+-			if (nft_rbtree_interval_end(rbe))
+-				goto out;
++			if (nft_rbtree_interval_end(rbe)) {
++				if (nft_set_is_anonymous(set))
++					return false;
++				parent = rcu_dereference_raw(parent->rb_left);
++				interval = NULL;
++				continue;
++			}
  
- #define SCTP_CHUNKMAP_CLEAR(chunkmap, type)		 	\
- 	do {							\
- 		(chunkmap)[type / bytes(__u32)] &= 		\
--			~(1 << (type % bytes(__u32)));	\
-+			~(1u << (type % bytes(__u32)));	\
- 	} while (0)
+ 			*ext = &rbe->ext;
+ 			return true;
+@@ -91,7 +96,7 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
+ 		*ext = &interval->ext;
+ 		return true;
+ 	}
+-out:
++
+ 	return false;
+ }
  
- #define SCTP_CHUNKMAP_IS_SET(chunkmap, type) 			\
- ({								\
- 	((chunkmap)[type / bytes (__u32)] & 		\
--		(1 << (type % bytes (__u32)))) ? 1: 0;	\
-+		(1u << (type % bytes (__u32)))) ? 1: 0;	\
- })
+@@ -139,8 +144,10 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
+ 		} else if (d > 0) {
+ 			parent = rcu_dereference_raw(parent->rb_right);
+ 		} else {
+-			if (!nft_set_elem_active(&rbe->ext, genmask))
++			if (!nft_set_elem_active(&rbe->ext, genmask)) {
+ 				parent = rcu_dereference_raw(parent->rb_left);
++				continue;
++			}
  
- #define SCTP_CHUNKMAP_RESET(chunkmap) \
+ 			if (!nft_set_ext_exists(&rbe->ext, NFT_SET_EXT_FLAGS) ||
+ 			    (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END) ==
+@@ -148,7 +155,11 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
+ 				*elem = rbe;
+ 				return true;
+ 			}
+-			return false;
++
++			if (nft_rbtree_interval_end(rbe))
++				interval = NULL;
++
++			parent = rcu_dereference_raw(parent->rb_left);
+ 		}
+ 	}
+ 
 -- 
 2.20.1
 
