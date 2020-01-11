@@ -2,194 +2,159 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80B7C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7165C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B43E0206ED
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811D12082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:41:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SuLv0ONw"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="L43oGdX9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbgAKRcy (ORCPT
+        id S1730693AbgAKRlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 12:32:54 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40025 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730630AbgAKRcy (ORCPT
+        Sat, 11 Jan 2020 12:41:22 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35769 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730669AbgAKRlW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 12:32:54 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c14so4655091wrn.7
-        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 09:32:53 -0800 (PST)
+        Sat, 11 Jan 2020 12:41:22 -0500
+Received: by mail-oi1-f193.google.com with SMTP id k4so4780319oik.2
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 09:41:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:subject:to:cc:references:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=70ytUnmhwrudFnoecGdHNYxLDAnPBHWwG+JwR7zpRzg=;
-        b=SuLv0ONworow06A1GrBG0SxavmzPr8zr8Fl9spDYFV9z6ZHyEAZW6AuUm8u98hU2Zt
-         PecGHmaYYzIubki2Zd+4luz5aFb7PctL9kZXH7NmAVuh2tXAs6HMS6kqY5O40vwLnD9J
-         YiHZ5wJW+jyHo5FgA21YiQkrp4JJpJTl2NcceIbcL0nR+x/Mt2QqwrZ9LTPK9ab3/jXS
-         evAzKbS0nWMwpJPrT0//iOkKvg/H2ujMY/hAL1gY0yqX1SY5+HrwzFk56olnYmjnCn+Z
-         PxntDUXxEv+4e7FECG7/nUmJhmNE5XSzfDHJbXKqyyQ0FSXz8fcdNpI0nSIx965U2HmJ
-         XalA==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=vURIp5OkMqsQKj2rZ69zRSR7WBHOsnIzv1RRvafYQZM=;
+        b=L43oGdX9yy3rjkRtJUhtCZQB4Ug6JBVXzhPixH+6vui6VO/Ph5ASarVzj6f0ouD3Hw
+         Z3N/Cr4fuo8giPxd5Vft1O03XiJWWsay9nMuD7x11VQHXG7GJUY30+ge8qzjsMJDlREK
+         9CyrU17imfstdfvQYFGggQaHDDXnmVRQnzokVsVNoGIz4JVMxoP2UFbBJfqYRrXB4Zgx
+         BnBFq3b+gGMs7roxnEAPnobz9V5COXiNI/NUTr31zzq932Z6IOTxXNeObue4fuTDG1L9
+         Yk1PsE2vBgmI4NaCQPMrYbeMKYSaeqqp2K3tWD0hXNitg+Iav6ky/GgmB9A/WtHc3ZYY
+         mO+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=70ytUnmhwrudFnoecGdHNYxLDAnPBHWwG+JwR7zpRzg=;
-        b=g/S0T8RWdUAuPcFNhoIUUezG+mfosPJZJVPpFmuvCKq6DDRQZETjM8nD5UylB8RMdV
-         ffS/zviiv6CdiPhpNL6qGVoSs2HBIWhenjkcigoWRieX3ArHsh5fq0KiYNAtJ59E6Q5k
-         cxbPGGLvNlWmxaZX9OSEKmQqSzYkx+8UhVKA+c6jL909mldAFCZio7C5HntG97SYS/QD
-         11fq2iq60STWfri9eg6Mm3uSpkZMR1e66NAGHP5SqssbnYIEm1YjIJgi1ViwD0Sgo4nD
-         +mvyP9dlQyRfhn+F+aAMcgiFU0/eFke2WIOZfAfDjgCrTccmL6cLGc6uCXB+UB0fk4tI
-         CDBA==
-X-Gm-Message-State: APjAAAVIE/EcODHfiTU4aHQOaOUoA4sISPUAcmPYGtZe9WyNypoeH1Vv
-        UJnVJMvpLNdpt4eIqF20vVyex7x4H6SnpA==
-X-Google-Smtp-Source: APXvYqxY5lhsuUtXeUGtuYVPVFEUaUnqsgaHxl05NrdQXsthYod7+GEM8gQgCgvmyjRvWo6RfNZFPQ==
-X-Received: by 2002:adf:81c2:: with SMTP id 60mr9453590wra.8.1578763971982;
-        Sat, 11 Jan 2020 09:32:51 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:b8db:7f65:1d72:db78? ([2a01:e34:ed2f:f020:b8db:7f65:1d72:db78])
-        by smtp.googlemail.com with ESMTPSA id 60sm7259666wrn.86.2020.01.11.09.32.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 11 Jan 2020 09:32:51 -0800 (PST)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH 1/2] DT: bindings: Add cooling cells for idle states
-To:     Rob Herring <robh@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20191219221932.15930-1-daniel.lezcano@linaro.org>
- <20200108140333.GA12276@bogus>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <3b94b423-ca26-b96f-90fa-2662dbc523d8@linaro.org>
-Date:   Sat, 11 Jan 2020 18:32:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=vURIp5OkMqsQKj2rZ69zRSR7WBHOsnIzv1RRvafYQZM=;
+        b=A3Hjgw+XOwJtmYp/SGHuHWjl3ZmwuiYKAPmtfZsOb/FKI2fRjnU1siJqhPOTDqcovO
+         GkKwLagxepnZk3MMMbOInh2Kz+4NkkyHVguDOJ10QhK1yPX696NX95zvU7bxGxtgvGTg
+         XHQ3k548FRdrDybYlp1KGC9Q1RKVnkG2wjeDpEuH85OHVm/Kurkk7BeJogsgWrh2NM9S
+         ZvZlkcQsKXsCOwJnLhJW4+0Bb1HJTmwGX+nvIbH4T4/7WzyMFfm1pQ99Yg9gGTQtmf3q
+         noj7BpKV6nOAS/6qXgNF/06GuF3svyF4wJq9bT7xGOiA2r4vPp2xtaOEqb+waK6/FTxT
+         Inpw==
+X-Gm-Message-State: APjAAAWldPfPqzJ4zF3vGlIQX2ainGYQS0pBfPv1sizucP/UAfeJajSz
+        46Fj1+ba0g0xfJ0ejy7eGiABouy244rsQsJxC7/WJkF4
+X-Google-Smtp-Source: APXvYqxb3f/o87RH8Y6Z3KBTkNfO5vS8R+FnqquMeXGfJpWajIZieMeyLLmHbOpdps5qdQaccRiPAw67mOFgSsnGt5Y=
+X-Received: by 2002:a05:6808:b37:: with SMTP id t23mr7126364oij.149.1578764481384;
+ Sat, 11 Jan 2020 09:41:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200108140333.GA12276@bogus>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <0BE8F7EF-01DC-47BD-899B-11FB8B40EB0A@lca.pw> <A5A31713-0D55-487C-814A-1415BB26DC1F@redhat.com>
+ <4fa0a559-dd5a-8405-0533-37cfe6973eeb@redhat.com>
+In-Reply-To: <4fa0a559-dd5a-8405-0533-37cfe6973eeb@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 11 Jan 2020 09:41:10 -0800
+Message-ID: <CAPcyv4hbGnTnAHg0yxoj41KUfFf8z4yH8nVmhhZ4Z7AoxNooHA@mail.gmail.com>
+Subject: Re: [PATCH v4] mm/memory_hotplug: Fix remove_memory() lockdep splat
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        stable <stable@vger.kernel.org>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-
-
-On Wed, 8 Jan 2020 at 15:03, Rob Herring <robh@kernel.org> wrote:
+On Sat, Jan 11, 2020 at 6:52 AM David Hildenbrand <david@redhat.com> wrote:
 >
-> On Thu, Dec 19, 2019 at 11:19:27PM +0100, Daniel Lezcano wrote:
-> > Add DT documentation to add an idle state as a cooling device. The CPU
-> > is actually the cooling device but the definition is already used by
-> > frequency capping. As we need to make cpufreq capping and idle
-> > injection to co-exist together on the system in order to mitigate at
-> > different trip points, the CPU can not be used as the cooling device
-> > for idle injection. The idle state can be seen as an hardware feature
-> > and therefore as a component for the passive mitigation.
+> On 11.01.20 15:25, David Hildenbrand wrote:
 > >
-> > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/idle-states.txt | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
+> >
+> >> Am 11.01.2020 um 14:56 schrieb Qian Cai <cai@lca.pw>:
+> >>
+> >> =EF=BB=BF
+> >>
+> >>> On Jan 11, 2020, at 6:03 AM, David Hildenbrand <david@redhat.com> wro=
+te:
+> >>>
+> >>> So I just remember why I think this (and the previously reported done
+> >>> for ACPI DIMMs) are false positives. The actual locking order is
+> >>>
+> >>> onlining/offlining from user space:
+> >>>
+> >>> kn->count -> device_hotplug_lock -> cpu_hotplug_lock -> mem_hotplug_l=
+ock
+> >>>
+> >>> memory removal:
+> >>>
+> >>> device_hotplug_lock -> cpu_hotplug_lock -> mem_hotplug_lock -> kn->co=
+unt
+> >>>
+> >>>
+> >>> This looks like a locking inversion - but it's not. Whenever we come =
+via
+> >>> user space we do a mutex_trylock(), which resolves this issue by back=
+ing
+> >>> up. The device_hotplug_lock will prevent
+> >>>
+> >>> I have no clue why the device_hotplug_lock does not pop up in the
+> >>> lockdep report here. Sounds wrong to me.
+> >>>
+> >>> I think this is a false positive and not stable material.
+> >>
+> >> The point is that there are other paths does kn->count =E2=80=94> cpu_=
+hotplug_lock without needing device_hotplug_lock to race with memory remova=
+l.
+> >>
+> >> kmem_cache_shrink_all+0x50/0x100 (cpu_hotplug_lock.rw_sem/mem_hotplug_=
+lock.rw_sem)
+> >> shrink_store+0x34/0x60
+> >> slab_attr_store+0x6c/0x170
+> >> sysfs_kf_write+0x70/0xb0
+> >> kernfs_fop_write+0x11c/0x270 ((kn->count)
+> >> __vfs_write+0x3c/0x70
+> >> vfs_write+0xcc/0x200
+> >> ksys_write+0x7c/0x140
+> >> system_call+0x5c/0x6
+> >>
+> >
+> > But not the lock of the memory devices, or am I missing something?
+> >
 >
-> This is now a schema in my tree. Can you rebase on that and I'll pick up
-> the binding change.
+> To clarify:
+>
+> memory unplug will remove e.g., /sys/devices/system/memory/memoryX/,
+> which has a dedicated kn->count AFAIK
+>
+> If you do a "echo 1 > /sys/kernel/slab/X/shrink", you would not lock the
+> kn->count of /sys/devices/system/memory/memoryX/, but the one of some
+> slab thingy.
+>
+> The only scenario I could see is if remove_memory_block_devices() will
+> not only remove /sys/devices/system/memory/memoryX/, but also implicitly
+> e.g., /sys/kernel/slab/X/. If that is the case, then this is indeed not
+> a false positive, but something rather hard to trigger (which would
+> still classify as stable material).
 
-Mmh, I'm now having some doubts about this binding because it will
-restrict any improvement of the cooling device for the future.
+Yes, already agreed to drop stable.
 
-It looks like adding a node to the CPU for the cooling device is more
-adequate.
-eg:
-CPU0: cpu@300 {
-   device_type = "cpu";
-   compatible = "arm,cortex-a9";
-   reg = <0x300>;
-   /* cpufreq controls */
-   operating-points = <998400 0
-          800000 0
-          400000 0
-          200000 0>;
-   clocks = <&prcmu_clk PRCMU_ARMSS>;
-   clock-names = "cpu";
-   clock-latency = <20000>;
-   #cooling-cells = <2>;
-   thermal-idle {
-      #cooling-cells = <2>;
-   };
-};
+However, the trylock does not solve the race it just turns the
+blocking wait to a spin wait, but the subsequent 5ms sleep does make
+the theoretical race nearly impossible, Thanks for pointing that out.
 
-[ ... ]
-
-cooling-device = <&{/cpus/cpu@300/thermal-idle}
-			THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-
-A quick test with different configurations combination shows it is much
-more flexible and it is open for future changes.
-
-What do you think?
-
+The theoretical race is still a problem because it hides future
+lockdep violations, but I otherwise can't point to whether the
+kn->count in question is a false positive concern for an actual
+deadlock or not. Tracking that down is possible, but not something I
+have time for at present.
