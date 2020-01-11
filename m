@@ -6,63 +6,63 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE082C47409
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17377C282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:45:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E9B20866
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC53720842
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 14:45:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578753906;
-	bh=B5e2FWQy3aMIJYfhP1REi3QWeZ2OLib3kFPKkA77TZw=;
+	s=default; t=1578753916;
+	bh=/qK54LK2kczwRX0gyZHJOnOCp5kozbzusUO7ViGSjQg=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=UnAINfLhnyW+FguTgB9MSpwLwwBbk/Q/MduoYbw/U5h/LasoVu6tfxRC1pqNIjoB4
-	 q30wUKpuKosIpBOThpAdyHfL55huCYgARMiXH/KorzyoMv6xFWl1hguSBDOan94Igw
-	 TqVQl34F7HTo5HOmFUXZIW+24BIIyak9wj+r63Wk=
+	b=iw956NRV6Mdwq+Oeu7hxUdZwPDVmc29UnVpcTw21iHxzR/+8sKuFwgOC0MVT4CPE7
+	 dt6hn3KYwXV0Wt30+nt83l7VN+bwTl96sVr8Um1oAzBfAicFoWtj5h4v9z3EwiBLPn
+	 Hhhrmf9O8DfIql4k9xQCJbj+8FN7oqBJRmBqONJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbgAKOpG (ORCPT
+        id S1729900AbgAKOpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 09:45:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35982 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 09:45:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729836AbgAKOpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 09:45:05 -0500
-Subject: Re: [git pull] drm fixes for 5.5-rc6
+        id S1729824AbgAKOpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 09:45:06 -0500
+Subject: Re: [GIT PULL] thermal fixes for v5.5-rc6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578753904;
-        bh=B5e2FWQy3aMIJYfhP1REi3QWeZ2OLib3kFPKkA77TZw=;
+        s=default; t=1578753905;
+        bh=/qK54LK2kczwRX0gyZHJOnOCp5kozbzusUO7ViGSjQg=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=VZiaZ6r98dJoqS8I6CSHiilf7FNV+2wbwCMHsR4GkUGas1WzgNvuaYP3gA2/Oa7HZ
-         T0MF7tskAYYYSX7maoH1IZ4t57r19YNw+1TXQbcmTVkQLdcrC9bfbojv4jfsDeNbRO
-         Tyq7N5ZtFltDaN+EOOkwBZk+IK9f1Ajo8CdOOyR0=
+        b=NiDSGvY8ub5N1z2KbSZT+TsIQ8YGnEO64Owqmcga1f9qQ7tiA50qjEOYukF8C9poy
+         QWcL4hFFNCsuDRnES3emIfcjKug+uQpn4ixLCob+tAynwpgDHhSTnNXJ3oykgaGlgI
+         oUttrVWPQEXBkD07wr6gceFYW6dCziz0FnDk3Djc=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CAPM=9txLfwePjpy4euR+VX+g44=YN=uq4OX6zEix6FWaO05PLA@mail.gmail.com>
-References: <CAPM=9txLfwePjpy4euR+VX+g44=YN=uq4OX6zEix6FWaO05PLA@mail.gmail.com>
+In-Reply-To: <dae56d94-114b-18b3-92dd-0c390b0cbe86@linaro.org>
+References: <dae56d94-114b-18b3-92dd-0c390b0cbe86@linaro.org>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CAPM=9txLfwePjpy4euR+VX+g44=YN=uq4OX6zEix6FWaO05PLA@mail.gmail.com>
-X-PR-Tracked-Remote: git://anongit.freedesktop.org/drm/drm
- tags/drm-fixes-2020-01-10
-X-PR-Tracked-Commit-Id: 023b3b0e139f54a680202790ba801f61aa43a5c8
+X-PR-Tracked-Message-Id: <dae56d94-114b-18b3-92dd-0c390b0cbe86@linaro.org>
+X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git
+ tags/thermal-v5.5-rc5
+X-PR-Tracked-Commit-Id: 344fa0bad6932204146d305607790340f2324a90
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6d25ef773538c82445ee2ea849acecc0889cc7f6
-Message-Id: <157875390477.30634.10659038757747679933.pr-tracker-bot@kernel.org>
-Date:   Sat, 11 Jan 2020 14:45:04 +0000
-To:     Dave Airlie <airlied@gmail.com>
+X-PR-Merge-Commit-Id: 658e1af5eec6d51f95fa81e61f67d2fe1c6376aa
+Message-Id: <157875390552.30634.4580926022712227530.pr-tracker-bot@kernel.org>
+Date:   Sat, 11 Jan 2020 14:45:05 +0000
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Zhang Rui <rui.zhang@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM mailing list <linux-pm@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 10 Jan 2020 13:55:10 +1000:
+The pull request you sent on Fri, 10 Jan 2020 11:31:20 +0100:
 
-> git://anongit.freedesktop.org/drm/drm tags/drm-fixes-2020-01-10
+> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git tags/thermal-v5.5-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6d25ef773538c82445ee2ea849acecc0889cc7f6
+https://git.kernel.org/torvalds/c/658e1af5eec6d51f95fa81e61f67d2fe1c6376aa
 
 Thank you!
 
