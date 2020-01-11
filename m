@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B0B2C33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2F8C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4A02077C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 749952077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736752;
-	bh=IdsqEv+0P/InKarh+yeasd9RSRIkmp5CsiKgW5/w++o=;
+	s=default; t=1578736756;
+	bh=dttOYxbFUmZTQ08wNe1y48EEtGukWONk3FPYnvKnQpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6wqLweXfl1g9+q4X45gkpujDhdrh/OP5mo3ZmiYdvzbgrHL8CSuGpf2X+ig3JGix
-	 EcCeek93URxDRobZv8KgEvm1c0FnQ3Yh1avuD04LNM+//4capmuudlq2VyLbRcQLzk
-	 FKu7N7iYbgYL+9zukp6UBikaMKsRnCRVuCiNFkBU=
+	b=TdDtTs4EWwUh2MRdkELMkAASvprVJwKd0iygmXByTbGx4TwdUnmLW3nuIt4aILrHb
+	 wPPkFhBpSbZtR+PZF0yVtyaohA8xZlFqqTvREArBrSEX1obcTmURVgI0emVpaVlIeB
+	 TOvnnmGd2A6cxNCFGj3FrlaqeAUR2U8bnhaDO/HM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgAKJ7L (ORCPT
+        id S1729315AbgAKJ7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:59:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53414 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:59:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729186AbgAKJ7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:59:10 -0500
+        id S1729143AbgAKJ7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:59:14 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CC3C20848;
-        Sat, 11 Jan 2020 09:59:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A6CC2077C;
+        Sat, 11 Jan 2020 09:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736749;
-        bh=IdsqEv+0P/InKarh+yeasd9RSRIkmp5CsiKgW5/w++o=;
+        s=default; t=1578736754;
+        bh=dttOYxbFUmZTQ08wNe1y48EEtGukWONk3FPYnvKnQpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B5skvaDprJYi4uphC41rRdT7z0eqkHmNBTbpXKD9/wsk1xvA/qAbBAbOtKTzwv4Lz
-         o6NwfXdHFDDiG2Jw/gEON8EXrdrdgNt6kXRkucEwfqDQjJRzYZ9axTJp/KpAuanc5H
-         Hwa0r+p2M2KkWme5J0f+O5vUPVOqjtr1xodJbQDo=
+        b=V9czFErIkcrJOFRdlAIHv86V+gVHMALzmv+KkO7pZoU87C1Gasz7Vfo8TLSXqg491
+         ikRZB3c0kBavFPlgVzQeb8004C08G9J6aq2FhFip9YWMeN2WT4IMspFFXBRgANT0h3
+         MnD7GgcHaWEtNcA9OtDE3VhkAXgw3l+2qsh0eMf4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 09/91] s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
-Date:   Sat, 11 Jan 2020 10:49:02 +0100
-Message-Id: <20200111094846.358092309@linuxfoundation.org>
+        stable@vger.kernel.org, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 18/91] Revert "perf report: Add warning when libunwind not compiled in"
+Date:   Sat, 11 Jan 2020 10:49:11 +0100
+Message-Id: <20200111094850.366473395@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -60,73 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+This reverts commit 59b706ce44dbfd35a428f2cbad47794ce5dce1eb.
 
-[ Upstream commit 39d4a501a9ef55c57b51e3ef07fc2aeed7f30b3b ]
+This change depends on more changes that didn't exist in 4.9 and older.
 
-Function perf_event_ever_overflow() and perf_event_account_interrupt()
-are called every time samples are processed by the interrupt handler.
-However function perf_event_account_interrupt() has checks to avoid being
-flooded with interrupts (more then 1000 samples are received per
-task_tick).  Samples are then dropped and a PERF_RECORD_THROTTLED is
-added to the perf data. The perf subsystem limit calculation is:
-
-    maximum sample frequency := 100000 --> 1 samples per 10 us
-    task_tick = 10ms = 10000us --> 1000 samples per task_tick
-
-The work flow is
-
-measurement_alert() uses SDBT head and each SBDT points to 511
- SDB pages, each with 126 sample entries. After processing 8 SBDs
- and for each valid sample calling:
-
-     perf_event_overflow()
-       perf_event_account_interrupts()
-
-there is a considerable amount of samples being dropped, especially when
-the sample frequency is very high and near the 100000 limit.
-
-To avoid the high amount of samples being dropped near the end of a
-task_tick time frame, increment the sampling interval in case of
-dropped events. The CPU Measurement sampling facility on the s390
-supports only intervals, specifiing how many CPU cycles have to be
-executed before a sample is generated. Increase the interval when the
-samples being generated hit the task_tick limit.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ tools/perf/builtin-report.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 02476d2333df..3b8e5a3d2d64 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -1307,6 +1307,22 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
- 	if (sampl_overflow)
- 		OVERFLOW_REG(hwc) = DIV_ROUND_UP(OVERFLOW_REG(hwc) +
- 						 sampl_overflow, 1 + num_sdb);
-+
-+	/* Perf_event_overflow() and perf_event_account_interrupt() limit
-+	 * the interrupt rate to an upper limit. Roughly 1000 samples per
-+	 * task tick.
-+	 * Hitting this limit results in a large number
-+	 * of throttled REF_REPORT_THROTTLE entries and the samples
-+	 * are dropped.
-+	 * Slightly increase the interval to avoid hitting this limit.
-+	 */
-+	if (event_overflow) {
-+		SAMPL_RATE(hwc) += DIV_ROUND_UP(SAMPL_RATE(hwc), 10);
-+		debug_sprintf_event(sfdbg, 1, "%s: rate adjustment %ld\n",
-+				    __func__,
-+				    DIV_ROUND_UP(SAMPL_RATE(hwc), 10));
-+	}
-+
- 	if (sampl_overflow || event_overflow)
- 		debug_sprintf_event(sfdbg, 4, "hw_perf_event_update: "
- 				    "overflow stats: sample=%llu event=%llu\n",
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 33ff5c843346..6e88460cd13d 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -292,13 +292,6 @@ static int report__setup_sample_type(struct report *rep)
+ 				PERF_SAMPLE_BRANCH_ANY))
+ 		rep->nonany_branch_mode = true;
+ 
+-#ifndef HAVE_LIBUNWIND_SUPPORT
+-	if (dwarf_callchain_users) {
+-		ui__warning("Please install libunwind development packages "
+-			    "during the perf build.\n");
+-	}
+-#endif
+-
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
