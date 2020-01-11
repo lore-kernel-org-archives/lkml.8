@@ -2,118 +2,116 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB8E6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0DCC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B5C2082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:50:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3AF920848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:50:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578736241;
+	bh=PdGLMF2OD5/ld95lLa3G0skB1kOT9bPdXFngZo/PVK0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pYUdqUFPrSMZBIRX5A2K1N4qsmVbWs+6A9Tb5MCcde8gLQcym8YaREGapQUethrx1
+	 cgQdu/Zl2dOo4/+dNx0zWL+44Rx7ZDgHS47fd06VNzjcPWuaTBKHA8wJJveI2m9Sb0
+	 ML87zhN191g0qDQUAEwPgsXEeR9SEsqBzD4mpdeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgAKJuY (ORCPT
+        id S1728849AbgAKJuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:50:24 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41290 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728759AbgAKJuW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:50:22 -0500
-Received: by mail-lj1-f195.google.com with SMTP id h23so4690611ljc.8;
-        Sat, 11 Jan 2020 01:50:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RPxM58KftHxJAM+nPlRg/hGQEelhpre9yEtcVj8KnWU=;
-        b=WiWUb9O27vUL7d8cgkJgJiLmS9Pvc4z/KSo8i4EgCtsGxkWfHI0NcGpCgJdJF+W6JI
-         EwP+D2h2xMPv1NTjLin3rC9/ZsusrRYutNlO9h7ZINa+3cnV2yU3WSXCJmHikKZK+US0
-         mLA8UlkMu32XnL3xPOT1z5PpwGwYwU0P6OiOigeUjt97T2IO/B4mXDfF/I5G/sOVjBtV
-         JrS9iGBeHZD3li1UBgIsXNod4iV+r0j2y7kLXh2nvVeqpfLcTw3UZjWAxvXwiLWHLZB7
-         jHUNyvXTUWYKsNdZe/Z1+H4BlPzdYYFkr3XLX0UfL+Lusyb2HueCUTWEVCmvtwjGA/aS
-         SxGw==
-X-Gm-Message-State: APjAAAVz4d1ct0UIvt+tPYQBjj2WaAWcUC+2FikCwMjWKlvQGNUUA1P2
-        pH8Nx2OoYI9LyQ1+F0jlOxE=
-X-Google-Smtp-Source: APXvYqyLZan6NeieKOboZ+3FxvCsakx0qhqenJQ6gesFQTRRwQc/U0vlcEcDYBc+tp9D1sU+hFviAA==
-X-Received: by 2002:a2e:9f17:: with SMTP id u23mr5245745ljk.112.1578736219212;
-        Sat, 11 Jan 2020 01:50:19 -0800 (PST)
-Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
-        by smtp.gmail.com with ESMTPSA id r15sm2269410ljh.11.2020.01.11.01.50.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jan 2020 01:50:18 -0800 (PST)
-Date:   Sat, 11 Jan 2020 11:50:12 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: [PATCH v9 04/12] mfd: bd718x7: Add compatible for BD71850
-Message-ID: <b6c2980cc937598bc1e11c6830c43e9df5d1a4b3.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
+        Sat, 11 Jan 2020 04:50:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60464 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728764AbgAKJuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:50:40 -0500
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D80F2082E;
+        Sat, 11 Jan 2020 09:50:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578736239;
+        bh=PdGLMF2OD5/ld95lLa3G0skB1kOT9bPdXFngZo/PVK0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nChPGQsI3GGOVtnSjxjUcy2n1esP8djJoyQa1X5s3Wk9Tuf+/03S5xhNtVW5vI3A9
+         GejC/ooc5HKvZmTp/f5IvWgHeYtMXQAlyF6IsnDrg7ZkZQP77WLv3T1MKiPIXnUE3j
+         NRvy1YDnrfOkuMmJEjOUjki45kFOPjds51+FxBMQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 01/59] PM / devfreq: Dont fail devfreq_dev_release if not in list
+Date:   Sat, 11 Jan 2020 10:49:10 +0100
+Message-Id: <20200111094836.063165095@linuxfoundation.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
+References: <20200111094835.417654274@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1578644144.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROHM BD71850 PMIC is almost identical to BD71847. Main difference is some
-initial voltage values for regulators. The BD71850 can be handled by
-BD71847 driver but adding own compatible makes it clearer for one who
-creates the DT for board containing this PMIC and allows SW to be
-differentiating PMICs if needed.
+From: Leonard Crestez <leonard.crestez@nxp.com>
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+[ Upstream commit 42a6b25e67df6ee6675e8d1eaf18065bd73328ba ]
+
+Right now devfreq_dev_release will print a warning and abort the rest of
+the cleanup if the devfreq instance is not part of the global
+devfreq_list. But this is a valid scenario, for example it can happen if
+the governor can't be found or on any other init error that happens
+after device_register.
+
+Initialize devfreq->node to an empty list head in devfreq_add_device so
+that list_del becomes a safe noop inside devfreq_dev_release and we can
+continue the rest of the cleanup.
+
+Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-No changes since v8
+ drivers/devfreq/devfreq.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
- drivers/mfd/rohm-bd718x7.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/mfd/rohm-bd718x7.c b/drivers/mfd/rohm-bd718x7.c
-index bb86ec829079..c32c1b6c98fa 100644
---- a/drivers/mfd/rohm-bd718x7.c
-+++ b/drivers/mfd/rohm-bd718x7.c
-@@ -213,6 +213,10 @@ static const struct of_device_id bd718xx_of_match[] = {
- 		.compatible = "rohm,bd71847",
- 		.data = (void *)ROHM_CHIP_TYPE_BD71847,
- 	},
-+	{
-+		.compatible = "rohm,bd71850",
-+		.data = (void *)ROHM_CHIP_TYPE_BD71847,
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, bd718xx_of_match);
+diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
+index 4f6fc1cfd7da..f01f7434df8e 100644
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -396,11 +396,6 @@ static int devfreq_notifier_call(struct notifier_block *nb, unsigned long type,
+ static void _remove_devfreq(struct devfreq *devfreq)
+ {
+ 	mutex_lock(&devfreq_list_lock);
+-	if (IS_ERR(find_device_devfreq(devfreq->dev.parent))) {
+-		mutex_unlock(&devfreq_list_lock);
+-		dev_warn(&devfreq->dev, "releasing devfreq which doesn't exist\n");
+-		return;
+-	}
+ 	list_del(&devfreq->node);
+ 	mutex_unlock(&devfreq_list_lock);
+ 
+@@ -472,6 +467,7 @@ struct devfreq *devfreq_add_device(struct device *dev,
+ 	devfreq->dev.parent = dev;
+ 	devfreq->dev.class = devfreq_class;
+ 	devfreq->dev.release = devfreq_dev_release;
++	INIT_LIST_HEAD(&devfreq->node);
+ 	devfreq->profile = profile;
+ 	strncpy(devfreq->governor_name, governor_name, DEVFREQ_NAME_LEN);
+ 	devfreq->previous_freq = profile->initial_freq;
 -- 
-2.21.0
+2.20.1
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
