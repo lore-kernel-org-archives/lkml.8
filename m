@@ -2,55 +2,50 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78D4C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8CDC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:08:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABE8F206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B44B206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:08:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737291;
-	bh=eBjrplUd8aCTYwHqod0BQxVuTBr6XQqjFyvzyzNAwv0=;
+	s=default; t=1578737299;
+	bh=0lK4VOY8PtGifnpe8N3UmYimhiU69nzdp5TXS/Zy5TU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NnUvzmkM0LnEr2Vkg637f+wQ111uP0g6+Dw5AVLQk8s8rjmSQ6qTNbSbajdZUrpi5
-	 ZbaLAzQ9+fJJXpoONQ+GMX1QtmsgQDJ6et6MyrYj3uvU2kOP2lj/4/zmAsoTtRG0lm
-	 A3r/kZ14rZX1+3tvq7eqMORTqj2AtKaUQdHX89Cw=
+	b=pb+yMLdvMpcg9u21rsma5BMbydvGDURp39w92tOf06kyFTZE+Jy9AMPkiXwZu489h
+	 506M7fUNUFB8Y2eqcREn3BPkyhkIineb0A9Iex7bHzxeF3OJdpPrTUjMB5CXU32dzO
+	 warj8zL8vrPk3JSTVnpnbOHUMqTrm8i9VLLFW5ZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbgAKKIL (ORCPT
+        id S1729542AbgAKKIS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:08:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43056 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:08:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729136AbgAKKIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:08:10 -0500
+        id S1729277AbgAKKIR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:08:17 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BC192064C;
-        Sat, 11 Jan 2020 10:08:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17DC22064C;
+        Sat, 11 Jan 2020 10:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737290;
-        bh=eBjrplUd8aCTYwHqod0BQxVuTBr6XQqjFyvzyzNAwv0=;
+        s=default; t=1578737297;
+        bh=0lK4VOY8PtGifnpe8N3UmYimhiU69nzdp5TXS/Zy5TU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RpLnhtPx5o7l/OXzLhhbV4oIrRT+iY+kylZyaRfpCyfgn2zcybS3WjPwdqx1A4pWY
-         eXZgl7+vHZvoe+d6WwGSkfqG2bSIZO5M1sjZqD3cavbf4qoj6zrrWQ+UNmAe51YqGa
-         hDOcITkQ4sBBjQ1wOOXwsiLbaCKDPt0tXhn4sqfo=
+        b=Wcl9Um8ehtRBK2M9iU54+oyuQcbp5dEJQZZI0tLBTA2S/VchlXCgVnC3mxW9jBaNI
+         yGQbhA3RT0S5LkEmzs3ssvFbR8UbHasIBk79N9DxM+Wp0PBfP7D61s9cpGPUAozJmA
+         KbUCaXdtxkNfJROfUBEv1ptdba4ejfrhjnPV7gL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liviu Dudau <liviu.dudau@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 11/62] ARM: vexpress: Set-up shared OPP table instead of individual for each CPU
-Date:   Sat, 11 Jan 2020 10:49:53 +0100
-Message-Id: <20200111094842.224295811@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>
+Subject: [PATCH 4.14 02/62] USB: dummy-hcd: increase max number of devices to 32
+Date:   Sat, 11 Jan 2020 10:49:44 +0100
+Message-Id: <20200111094838.434987692@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094837.425430968@linuxfoundation.org>
 References: <20200111094837.425430968@linuxfoundation.org>
@@ -63,69 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-[ Upstream commit 2a76352ad2cc6b78e58f737714879cc860903802 ]
+commit 8442b02bf3c6770e0d7e7ea17be36c30e95987b6 upstream.
 
-Currently we add individual copy of same OPP table for each CPU within
-the cluster. This is redundant and doesn't reflect the reality.
+When fuzzing the USB subsystem with syzkaller, we currently use 8 testing
+processes within one VM. To isolate testing processes from one another it
+is desirable to assign a dedicated USB bus to each of those, which means
+we need at least 8 Dummy UDC/HCD devices.
 
-We can't use core cpumask to set policy->cpus in ve_spc_cpufreq_init()
-anymore as it gets called via cpuhp_cpufreq_online()->cpufreq_online()
-->cpufreq_driver->init() and the cpumask gets updated upon CPU hotplug
-operations. It also may cause issues when the vexpress_spc_cpufreq
-driver is built as a module.
+This patch increases the maximum number of Dummy UDC/HCD devices to 32
+(more than 8 in case we need more of them in the future).
 
-Since ve_spc_clk_init is built-in device initcall, we should be able to
-use the same topology_core_cpumask to set the opp sharing cpumask via
-dev_pm_opp_set_sharing_cpus and use the same later in the driver via
-dev_pm_opp_get_sharing_cpus.
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Link: https://lore.kernel.org/r/665578f904484069bb6100fb20283b22a046ad9b.1571667489.git.andreyknvl@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Cc: Liviu Dudau <liviu.dudau@arm.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-vexpress/spc.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/udc/dummy_hcd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-vexpress/spc.c b/arch/arm/mach-vexpress/spc.c
-index fe488523694c..635b0d549487 100644
---- a/arch/arm/mach-vexpress/spc.c
-+++ b/arch/arm/mach-vexpress/spc.c
-@@ -555,8 +555,9 @@ static struct clk *ve_spc_clk_register(struct device *cpu_dev)
+--- a/drivers/usb/gadget/udc/dummy_hcd.c
++++ b/drivers/usb/gadget/udc/dummy_hcd.c
+@@ -2734,7 +2734,7 @@ static struct platform_driver dummy_hcd_
+ };
  
- static int __init ve_spc_clk_init(void)
- {
--	int cpu;
-+	int cpu, cluster;
- 	struct clk *clk;
-+	bool init_opp_table[MAX_CLUSTERS] = { false };
+ /*-------------------------------------------------------------------------*/
+-#define MAX_NUM_UDC	2
++#define MAX_NUM_UDC	32
+ static struct platform_device *the_udc_pdev[MAX_NUM_UDC];
+ static struct platform_device *the_hcd_pdev[MAX_NUM_UDC];
  
- 	if (!info)
- 		return 0; /* Continue only if SPC is initialised */
-@@ -582,8 +583,17 @@ static int __init ve_spc_clk_init(void)
- 			continue;
- 		}
- 
-+		cluster = topology_physical_package_id(cpu_dev->id);
-+		if (init_opp_table[cluster])
-+			continue;
-+
- 		if (ve_init_opp_table(cpu_dev))
- 			pr_warn("failed to initialise cpu%d opp table\n", cpu);
-+		else if (dev_pm_opp_set_sharing_cpus(cpu_dev,
-+			 topology_core_cpumask(cpu_dev->id)))
-+			pr_warn("failed to mark OPPs shared for cpu%d\n", cpu);
-+		else
-+			init_opp_table[cluster] = true;
- 	}
- 
- 	platform_device_register_simple("vexpress-spc-cpufreq", -1, NULL, 0);
--- 
-2.20.1
-
 
 
