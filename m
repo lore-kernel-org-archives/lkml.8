@@ -2,56 +2,51 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C0DC33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F08C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 313F120848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 151D1208E4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 09:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736342;
-	bh=MJ/M7tLrt8Znxce3AiWWY84baZvo6f9mbQS4jWLxiYQ=;
+	s=default; t=1578736353;
+	bh=yg0QfuqU30SxhBJhQLpYiiZq3tdC2n3ly8OyMMAfgac=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nA2x0ttWyIq3KPJaGr7bcv/EfkCn810q/9qPDu+WRpGLC70N5sFnMCjy4h9Tz8ahl
-	 0ugf7yq9GEsk7GX3m3ABSr0K/NNi34jarN6QW21WZ/coGbPGwu4hc2qspGG5x/xiOp
-	 eBwZ2HxBNDPoHJ1Z87rqqU/KttcsC9srC0dyJMDs=
+	b=grJj3IEst4754JBc8wR2+vp9q2OQlxGvRkr4YBDtAyfUrPEzqtxBZE9i8nGi3g4h/
+	 43BVoOBank+SfHJsf1SxGozEdonvT0s+GN/4QSAk1z7NRHp2SCyGznZU7Xqui6gqF0
+	 zlgOr1T4UjiQhexOItUmIraUYAl3qzF9FRKpC4rM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbgAKJwV (ORCPT
+        id S1728943AbgAKJwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 04:52:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37572 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 04:52:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728768AbgAKJwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 04:52:20 -0500
+        id S1728768AbgAKJwc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 04:52:32 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCCAF20842;
-        Sat, 11 Jan 2020 09:52:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AA1B2077C;
+        Sat, 11 Jan 2020 09:52:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736340;
-        bh=MJ/M7tLrt8Znxce3AiWWY84baZvo6f9mbQS4jWLxiYQ=;
+        s=default; t=1578736351;
+        bh=yg0QfuqU30SxhBJhQLpYiiZq3tdC2n3ly8OyMMAfgac=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iVirj2LgAnHhS0uenw3eN2k6mEXV8QmWKDfbCa5IUs7O/uDLxEMh+Fwp8io7TIvvn
-         ZhR4aj0bqpOWJdVMPanHVax1vjYBoPmfDsEsXKzdMVosprHgrt0YUf1PMUfQ0p1z1r
-         VR8u7Zz9pl0L/KmX25uTgUzkOIALyUfZzsQdkEiE=
+        b=eWl9i0Iy5whj24pPzysl59GepBBM2ivQcuE23QLsM+NNGAz/YR0xIAtFZXcm6Kf8I
+         o0LsOJMGjC7xYKiGvHW7xa5dOl8tgnRUH5Zog4nEetOCrm8de1P2dc+xQzj9z9+lmJ
+         csn4FusmVZ0pubUwjc337kU0K+o0WyZ+kxFdJqfk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Marco Elver <elver@google.com>, Will Deacon <will@kernel.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 13/59] taskstats: fix data-race
-Date:   Sat, 11 Jan 2020 10:49:22 +0100
-Message-Id: <20200111094840.703775554@linuxfoundation.org>
+        stable@vger.kernel.org, Wen Yang <wenyang@linux.alibaba.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.4 22/59] ftrace: Avoid potential division by zero in function profiler
+Date:   Sat, 11 Jan 2020 10:49:31 +0100
+Message-Id: <20200111094843.256972343@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
 References: <20200111094835.417654274@linuxfoundation.org>
@@ -64,105 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
+From: Wen Yang <wenyang@linux.alibaba.com>
 
-[ Upstream commit 0b8d616fb5a8ffa307b1d3af37f55c15dae14f28 ]
+commit e31f7939c1c27faa5d0e3f14519eaf7c89e8a69d upstream.
 
-When assiging and testing taskstats in taskstats_exit() there's a race
-when setting up and reading sig->stats when a thread-group with more
-than one thread exits:
+The ftrace_profile->counter is unsigned long and
+do_div truncates it to 32 bits, which means it can test
+non-zero and be truncated to zero for division.
+Fix this issue by using div64_ul() instead.
 
-write to 0xffff8881157bbe10 of 8 bytes by task 7951 on cpu 0:
- taskstats_tgid_alloc kernel/taskstats.c:567 [inline]
- taskstats_exit+0x6b7/0x717 kernel/taskstats.c:596
- do_exit+0x2c2/0x18e0 kernel/exit.c:864
- do_group_exit+0xb4/0x1c0 kernel/exit.c:983
- get_signal+0x2a2/0x1320 kernel/signal.c:2734
- do_signal+0x3b/0xc00 arch/x86/kernel/signal.c:815
- exit_to_usermode_loop+0x250/0x2c0 arch/x86/entry/common.c:159
- prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
- syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
- do_syscall_64+0x2d7/0x2f0 arch/x86/entry/common.c:299
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Link: http://lkml.kernel.org/r/20200103030248.14516-1-wenyang@linux.alibaba.com
 
-read to 0xffff8881157bbe10 of 8 bytes by task 7949 on cpu 1:
- taskstats_tgid_alloc kernel/taskstats.c:559 [inline]
- taskstats_exit+0xb2/0x717 kernel/taskstats.c:596
- do_exit+0x2c2/0x18e0 kernel/exit.c:864
- do_group_exit+0xb4/0x1c0 kernel/exit.c:983
- __do_sys_exit_group kernel/exit.c:994 [inline]
- __se_sys_exit_group kernel/exit.c:992 [inline]
- __x64_sys_exit_group+0x2e/0x30 kernel/exit.c:992
- do_syscall_64+0xcf/0x2f0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Fix this by using smp_load_acquire() and smp_store_release().
-
-Reported-by: syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
-Fixes: 34ec12349c8a ("taskstats: cleanup ->signal->stats allocation")
 Cc: stable@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Acked-by: Marco Elver <elver@google.com>
-Reviewed-by: Will Deacon <will@kernel.org>
-Reviewed-by: Andrea Parri <parri.andrea@gmail.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Link: https://lore.kernel.org/r/20191009114809.8643-1-christian.brauner@ubuntu.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: e330b3bcd8319 ("tracing: Show sample std dev in function profiling")
+Fixes: 34886c8bc590f ("tracing: add average time in function to function profiler")
+Signed-off-by: Wen Yang <wenyang@linux.alibaba.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/taskstats.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+ kernel/trace/ftrace.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/taskstats.c b/kernel/taskstats.c
-index 21f82c29c914..0737a50380d7 100644
---- a/kernel/taskstats.c
-+++ b/kernel/taskstats.c
-@@ -582,25 +582,33 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
- static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
- {
- 	struct signal_struct *sig = tsk->signal;
--	struct taskstats *stats;
-+	struct taskstats *stats_new, *stats;
- 
--	if (sig->stats || thread_group_empty(tsk))
--		goto ret;
-+	/* Pairs with smp_store_release() below. */
-+	stats = smp_load_acquire(&sig->stats);
-+	if (stats || thread_group_empty(tsk))
-+		return stats;
- 
- 	/* No problem if kmem_cache_zalloc() fails */
--	stats = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
-+	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
- 
- 	spin_lock_irq(&tsk->sighand->siglock);
--	if (!sig->stats) {
--		sig->stats = stats;
--		stats = NULL;
-+	stats = sig->stats;
-+	if (!stats) {
-+		/*
-+		 * Pairs with smp_store_release() above and order the
-+		 * kmem_cache_zalloc().
-+		 */
-+		smp_store_release(&sig->stats, stats_new);
-+		stats = stats_new;
-+		stats_new = NULL;
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -637,8 +637,7 @@ static int function_stat_show(struct seq
  	}
- 	spin_unlock_irq(&tsk->sighand->siglock);
  
--	if (stats)
--		kmem_cache_free(taskstats_cache, stats);
--ret:
--	return sig->stats;
-+	if (stats_new)
-+		kmem_cache_free(taskstats_cache, stats_new);
-+
-+	return stats;
- }
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+-	avg = rec->time;
+-	do_div(avg, rec->counter);
++	avg = div64_ul(rec->time, rec->counter);
+ 	if (tracing_thresh && (avg < tracing_thresh))
+ 		goto out;
+ #endif
+@@ -664,7 +663,8 @@ static int function_stat_show(struct seq
+ 		 * Divide only 1000 for ns^2 -> us^2 conversion.
+ 		 * trace_print_graph_duration will divide 1000 again.
+ 		 */
+-		do_div(stddev, rec->counter * (rec->counter - 1) * 1000);
++		stddev = div64_ul(stddev,
++				  rec->counter * (rec->counter - 1) * 1000);
+ 	}
  
- /* Send pid data out on exit */
--- 
-2.20.1
-
+ 	trace_seq_init(&s);
 
 
