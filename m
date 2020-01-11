@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC6EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD9CC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A170B20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 312ED20848
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738355;
-	bh=JnENt95K+w08kWQTXHyJ6+4jxa4P7bY6b/46UFKPQbo=;
+	s=default; t=1578738362;
+	bh=kZlyWVfDQ/Il/ZTXyaCcECiQi49gcTd2X7UKT7IULYw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VPj+HQPNp87uCYyXc1WQ976S27yN42alypkeIyyA1Ed6ZPmccBwLXntDZ/zl5fjBG
-	 +nA4a2c8RB5qNL8+MDC+1wVQqdiViFlsbexjimKhA2aOCmToy6hDPc7KZD8M/zfYHJ
-	 jv/Bssm/93jH4lB000okGKcVPDLP9BNTqrSQUZns=
+	b=WZqlKQJlFz7Dv0PJ3b3a3kSEkpu+ygQyoeDBJx+hPvgQSqcWmO5/mI8yY31iczS9Y
+	 b2Uy1w6trhyg0kvx5B+JZCJFDRdRRs1nwx3u6IyAV7lLSO3TEQddRWOrDZZYkAo9Kv
+	 mS+ooBXgcL8/gKuEyt6i/o+OWsQ8BFneW8DxXVOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730948AbgAKKZz (ORCPT
+        id S1731100AbgAKK0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:25:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57474 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:26:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729245AbgAKKZv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:25:51 -0500
+        id S1729374AbgAKKZ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:25:58 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D72B205F4;
-        Sat, 11 Jan 2020 10:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AE18205F4;
+        Sat, 11 Jan 2020 10:25:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738350;
-        bh=JnENt95K+w08kWQTXHyJ6+4jxa4P7bY6b/46UFKPQbo=;
+        s=default; t=1578738357;
+        bh=kZlyWVfDQ/Il/ZTXyaCcECiQi49gcTd2X7UKT7IULYw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tig5/hDSEYFO2YPS4C4pNnc46O4QinR6aHjh0sFReVJOdJ7uhRQtizmvFJaCOO/Qw
-         99NNyim/0NZ0oYeNYRbZ5WtCf0gJ68dFRxTg6pe6aWrr1djti8e2BfSFKzIHQzV7yE
-         c9izvdk5d1xQJFwhYPQLwO8L4u9yP/oTx9HXHvdc=
+        b=r/GUp/+diySdSVnMgupYgwAkcBzC3kE/r6VQqy227D/Ujo4zjMOvYEZVxe7Tr2qo2
+         tKm1CvvclBe+xDyzbsIhMgB6eTH0ci8dKUWDFLhoSdPQJmO/s7DY9B980D9EMfWt3Q
+         Teo+GWCpi8k8llE35GH03ST8rRvEFp12ssUHRtgA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Sterba <dsterba@suse.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
+        stable@vger.kernel.org, Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Greg Kurz <groug@kaod.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 078/165] Btrfs: fix hole extent items with a zero size after range cloning
-Date:   Sat, 11 Jan 2020 10:49:57 +0100
-Message-Id: <20200111094927.716053977@linuxfoundation.org>
+Subject: [PATCH 5.4 079/165] ocxl: Fix potential memory leak on context creation
+Date:   Sat, 11 Jan 2020 10:49:58 +0100
+Message-Id: <20200111094927.798722801@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,90 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Frederic Barrat <fbarrat@linux.ibm.com>
 
-[ Upstream commit 147271e35ba267506dde6550f58ccf8d287db3ef ]
+[ Upstream commit 913e73c77d48aeeb50c16450a653dca9c71ae2e2 ]
 
-Normally when cloning a file range if we find an implicit hole at the end
-of the range we assume it is because the NO_HOLES feature is enabled.
-However that is not always the case. One well known case [1] is when we
-have a power failure after mixing buffered and direct IO writes against
-the same file.
+If we couldn't fully init a context, we were leaking memory.
 
-In such cases we need to punch a hole in the destination file, and if
-the NO_HOLES feature is not enabled, we need to insert explicit file
-extent items to represent the hole. After commit 690a5dbfc51315
-("Btrfs: fix ENOSPC errors, leading to transaction aborts, when cloning
-extents"), we started to insert file extent items representing the hole
-with an item size of 0, which is invalid and should be 53 bytes (the size
-of a btrfs_file_extent_item structure), resulting in all sorts of
-corruptions and invalid memory accesses. This is detected by the tree
-checker when we attempt to write a leaf to disk.
-
-The problem can be sporadically triggered by test case generic/561 from
-fstests. That test case does not exercise power failure and creates a new
-filesystem when it starts, so it does not use a filesystem created by any
-previous test that tests power failure. However the test does both
-buffered and direct IO writes (through fsstress) and it's precisely that
-which is creating the implicit holes in files. That happens even before
-the commit mentioned earlier. I need to investigate why we get those
-implicit holes to check if there is a real problem or not. For now this
-change fixes the regression of introducing file extent items with an item
-size of 0 bytes.
-
-Fix the issue by calling btrfs_punch_hole_range() without passing a
-btrfs_clone_extent_info structure, which ensures file extent items are
-inserted to represent the hole with a correct item size. We were passing
-a btrfs_clone_extent_info with a value of 0 for its 'item_size' field,
-which was causing the insertion of file extent items with an item size
-of 0.
-
-[1] https://www.spinics.net/lists/linux-btrfs/msg75350.html
-
-Reported-by: David Sterba <dsterba@suse.com>
-Fixes: 690a5dbfc51315 ("Btrfs: fix ENOSPC errors, leading to transaction aborts, when cloning extents")
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: b9721d275cc2 ("ocxl: Allow external drivers to use OpenCAPI contexts")
+Signed-off-by: Frederic Barrat <fbarrat@linux.ibm.com>
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+Reviewed-by: Greg Kurz <groug@kaod.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191209105513.8566-1-fbarrat@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ioctl.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+ drivers/misc/ocxl/context.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index a56dcc0c9c2a..5720e450a46f 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -3727,24 +3727,18 @@ static int btrfs_clone(struct inode *src, struct inode *inode,
- 	ret = 0;
+diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
+index 994563a078eb..de8a66b9d76b 100644
+--- a/drivers/misc/ocxl/context.c
++++ b/drivers/misc/ocxl/context.c
+@@ -10,18 +10,17 @@ int ocxl_context_alloc(struct ocxl_context **context, struct ocxl_afu *afu,
+ 	int pasid;
+ 	struct ocxl_context *ctx;
  
- 	if (last_dest_end < destoff + len) {
--		struct btrfs_clone_extent_info clone_info = { 0 };
- 		/*
--		 * We have an implicit hole (NO_HOLES feature is enabled) that
--		 * fully or partially overlaps our cloning range at its end.
-+		 * We have an implicit hole that fully or partially overlaps our
-+		 * cloning range at its end. This means that we either have the
-+		 * NO_HOLES feature enabled or the implicit hole happened due to
-+		 * mixing buffered and direct IO writes against this file.
- 		 */
- 		btrfs_release_path(path);
- 		path->leave_spinning = 0;
+-	*context = kzalloc(sizeof(struct ocxl_context), GFP_KERNEL);
+-	if (!*context)
++	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
+ 		return -ENOMEM;
  
--		/*
--		 * We are dealing with a hole and our clone_info already has a
--		 * disk_offset of 0, we only need to fill the data length and
--		 * file offset.
--		 */
--		clone_info.data_len = destoff + len - last_dest_end;
--		clone_info.file_offset = last_dest_end;
- 		ret = btrfs_punch_hole_range(inode, path,
- 					     last_dest_end, destoff + len - 1,
--					     &clone_info, &trans);
-+					     NULL, &trans);
- 		if (ret)
- 			goto out;
- 
+-	ctx = *context;
+-
+ 	ctx->afu = afu;
+ 	mutex_lock(&afu->contexts_lock);
+ 	pasid = idr_alloc(&afu->contexts_idr, ctx, afu->pasid_base,
+ 			afu->pasid_base + afu->pasid_max, GFP_KERNEL);
+ 	if (pasid < 0) {
+ 		mutex_unlock(&afu->contexts_lock);
++		kfree(ctx);
+ 		return pasid;
+ 	}
+ 	afu->pasid_count++;
+@@ -43,6 +42,7 @@ int ocxl_context_alloc(struct ocxl_context **context, struct ocxl_afu *afu,
+ 	 * duration of the life of the context
+ 	 */
+ 	ocxl_afu_get(afu);
++	*context = ctx;
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(ocxl_context_alloc);
 -- 
 2.20.1
 
