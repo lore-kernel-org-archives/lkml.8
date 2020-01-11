@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39571C33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 097E4C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0207E20848
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D19AF20880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:25:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738316;
-	bh=bxw/s/0mmi4d1HPjam3EBwcbNipwUxX5FJj0gvVh/MU=;
+	s=default; t=1578738319;
+	bh=y5ZUJdBGvEd9wU+ozgECUMyVdZfnmtAjppTvIhvO/fw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EzroF97JArtzlVhxaRUFNZMoqSUaQ943Axty/goBHBodK+ErPCiwRSVggMW5iROpV
-	 I+XR0X1s38RGp0yUTR6TSgAPf+wNfBCGJc2jg7FbQmGtW9ZShtzwCvJmcxkOfWvut5
-	 EVJyl8rpoJBbJoAEfVsbzy4zc4zF/Xbo1wtnIzhM=
+	b=bvc1w3gVk5N/MX24udHpF6DnHS91nBEf8rmOJu1KSbcpJ39Cx1cznLFsVpRrQEqpp
+	 AokXaGY1sl6jEOyntOcgFEmI68ywPS9x8K2ojYx/yupTPMnze/c44SBYT2eyFElvUn
+	 miInp2yBbquuqhdgFSk2nfIYiN9uCzSvVD7yf3x8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbgAKKWF (ORCPT
+        id S1731034AbgAKKZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:22:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46426 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:25:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730117AbgAKKWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:22:01 -0500
+        id S1730627AbgAKKZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:25:17 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F1462082E;
-        Sat, 11 Jan 2020 10:21:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43D822082E;
+        Sat, 11 Jan 2020 10:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738120;
-        bh=bxw/s/0mmi4d1HPjam3EBwcbNipwUxX5FJj0gvVh/MU=;
+        s=default; t=1578738316;
+        bh=y5ZUJdBGvEd9wU+ozgECUMyVdZfnmtAjppTvIhvO/fw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LDx/iGou4xURJXOdhuinoUNS35rWCF6FTGAgaHo8XhXpYgn6sMPd6hvBJgJQLE8vZ
-         7HaKBoil1nqUIKKKBOXkTFSKpX8FeimS1du5RSE/TjS3SPhA0qXK7/iS7TyEAgANUl
-         9HD7Mk86Pebqgg/ujDeFE+x36J0DiRtIvHt18r7s=
+        b=szwNqUxyKcfeX/v9VpefpvgFTlmCcHpjgoj/zMMyu3BREsbF67R1uS4lqcNx0AHwL
+         FUpLGPdupd7K1i5nbaTF5jjbjKmkpa/7Dji4H8dgi/AnLVFMnjexwR1eqWhZzV4sCT
+         rGGOW76OLT5xkDKDgxVLG0eDMbEmjUiJ0J3pyn3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
-        feng.tang@intel.com, harry.pan@intel.com, hpa@zytor.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 012/165] x86/intel: Disable HPET on Intel Ice Lake platforms
-Date:   Sat, 11 Jan 2020 10:48:51 +0100
-Message-Id: <20200111094922.152309311@linuxfoundation.org>
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 055/165] bpftool: Dont crash on missing jited insns or ksyms
+Date:   Sat, 11 Jan 2020 10:49:34 +0100
+Message-Id: <20200111094925.886400657@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -64,41 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit e0748539e3d594dd26f0d27a270f14720b22a406 ]
+[ Upstream commit 5b79bcdf03628a3a9ee04d9cd5fabcf61a8e20be ]
 
-Like CFL and CFL-H, ICL SoC has skewed HPET timer once it hits PC10.
-So let's disable HPET on ICL.
+When the kptr_restrict sysctl is set, the kernel can fail to return
+jited_ksyms or jited_prog_insns, but still have positive values in
+nr_jited_ksyms and jited_prog_len. This causes bpftool to crash when
+trying to dump the program because it only checks the len fields not
+the actual pointers to the instructions and ksyms.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bp@alien8.de
-Cc: feng.tang@intel.com
-Cc: harry.pan@intel.com
-Cc: hpa@zytor.com
-Link: https://lkml.kernel.org/r/20191129062303.18982-2-kai.heng.feng@canonical.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fix this by adding the missing checks.
+
+Fixes: 71bb428fe2c1 ("tools: bpf: add bpftool")
+Fixes: f84192ee00b7 ("tools: bpftool: resolve calls without using imm field")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/20191210181412.151226-1-toke@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/early-quirks.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/bpf/bpftool/prog.c          | 2 +-
+ tools/bpf/bpftool/xlated_dumper.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/early-quirks.c b/arch/x86/kernel/early-quirks.c
-index 606711f5ebf8..2f9ec14be3b1 100644
---- a/arch/x86/kernel/early-quirks.c
-+++ b/arch/x86/kernel/early-quirks.c
-@@ -714,6 +714,8 @@ static struct chipset early_qrk[] __initdata = {
- 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
- 	{ PCI_VENDOR_ID_INTEL, 0x3ec4,
- 		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
-+	{ PCI_VENDOR_ID_INTEL, 0x8a12,
-+		PCI_CLASS_BRIDGE_HOST, PCI_ANY_ID, 0, force_disable_hpet},
- 	{ PCI_VENDOR_ID_BROADCOM, 0x4331,
- 	  PCI_CLASS_NETWORK_OTHER, PCI_ANY_ID, 0, apple_airport_reset},
- 	{}
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index 43fdbbfe41bb..ea0bcd58bcb9 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -493,7 +493,7 @@ static int do_dump(int argc, char **argv)
+ 
+ 	info = &info_linear->info;
+ 	if (mode == DUMP_JITED) {
+-		if (info->jited_prog_len == 0) {
++		if (info->jited_prog_len == 0 || !info->jited_prog_insns) {
+ 			p_info("no instructions returned");
+ 			goto err_free;
+ 		}
+diff --git a/tools/bpf/bpftool/xlated_dumper.c b/tools/bpf/bpftool/xlated_dumper.c
+index 494d7ae3614d..5b91ee65a080 100644
+--- a/tools/bpf/bpftool/xlated_dumper.c
++++ b/tools/bpf/bpftool/xlated_dumper.c
+@@ -174,7 +174,7 @@ static const char *print_call(void *private_data,
+ 	struct kernel_sym *sym;
+ 
+ 	if (insn->src_reg == BPF_PSEUDO_CALL &&
+-	    (__u32) insn->imm < dd->nr_jited_ksyms)
++	    (__u32) insn->imm < dd->nr_jited_ksyms && dd->jited_ksyms)
+ 		address = dd->jited_ksyms[insn->imm];
+ 
+ 	sym = kernel_syms_search(dd, address);
 -- 
 2.20.1
 
