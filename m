@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1A6C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EEEFC33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449F92082E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFA202077C
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:01:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578736871;
-	bh=CJ9r3J8vA2Z0KxY4AMcc8usw0Wmaqp5e6LI5Hy2xaeE=;
+	s=default; t=1578736875;
+	bh=3WK0oIKseIdJBhhcDj5MvEQFhrbomsZXfcbffUOPnCI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DnquGvSoIKWfMMUUklehAxhx7b7cEubTafyD/6W18rsm+Y5qJ9Qo27ENFsRYWvGgF
-	 tpVtlbtWraruEbR0GCDCIrICG/pymwavJZLHm69MD728IS96nGnDVXSjScJSaKrxr5
-	 L0Os1FyN1upBZTb9XLCpHyVcFmppJ6Xu3xFH2IGg=
+	b=Sk5sT+UC2imm6kYKT1frjFFp4bmR1VnPEiXdK6mEjE8hTmvEFMHF8f0UL14beikwM
+	 lO/2jvuQDSBsxV2pcSSLReMl+9+FfmKEPs6wTgo83Lzb0WNLtB25BLnkIGs0Nxky7D
+	 97JRY/ZRXxTVhpg2gtVXItEraa5XvGWH60mmALQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbgAKKBK (ORCPT
+        id S1729453AbgAKKBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:01:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58158 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:01:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729437AbgAKKBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:01:05 -0500
+        id S1729106AbgAKKBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:01:12 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 294F72077C;
-        Sat, 11 Jan 2020 10:01:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3DB92077C;
+        Sat, 11 Jan 2020 10:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578736865;
-        bh=CJ9r3J8vA2Z0KxY4AMcc8usw0Wmaqp5e6LI5Hy2xaeE=;
+        s=default; t=1578736872;
+        bh=3WK0oIKseIdJBhhcDj5MvEQFhrbomsZXfcbffUOPnCI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nRXTkwFWlupU5Mz/vMgN11+w6eBnEBd1AZYTlHYnbyXXyyXI+NKuB6AMRcgC6oQlv
-         dtmopJ5GEICbHy8kHQvE3abCaOJaKBJGdxPZ7LgkFOhgEphA4Hc7o6ChJCrzg6NJ+y
-         q6g1u5iHOHuto2QjjLWBbtfOSJiRqwHNCt61j72g=
+        b=2TG8mkgwR5XY4Ym0YkwfRKERICZKoDL2c3TMbNxaxCd6HvVGSK3XMRjvhYJXsENGU
+         lsOwDZ9Wf+l29lzoWvLB7leBwzeenLMxAABAYyk3MNFJY8Nlz4ybMMNHcu1LV3uzpN
+         0a4B6uvLfUFzD/dJj2CXBTmK5YnH3EFsLYPqyMOQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 4.9 39/91] Bluetooth: Fix memory leak in hci_connect_le_scan
-Date:   Sat, 11 Jan 2020 10:49:32 +0100
-Message-Id: <20200111094859.807807687@linuxfoundation.org>
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: [PATCH 4.9 40/91] media: flexcop-usb: ensure -EIO is returned on error condition
+Date:   Sat, 11 Jan 2020 10:49:33 +0100
+Message-Id: <20200111094900.180958529@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -60,36 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit d088337c38a5cd8f0230fbf2d514ff7672f9d0d3 upstream.
+commit 74a96b51a36de4d86660fbc56b05d86668162d6b upstream.
 
-In the implementation of hci_connect_le_scan() when conn is added via
-hci_conn_add(), if hci_explicit_conn_params_set() fails the allocated
-memory for conn is leaked. Use hci_conn_del() to release it.
+An earlier commit hard coded a return 0 to function flexcop_usb_i2c_req
+even though the an -EIO was intended to be returned in the case where
+ret != buflen.  Fix this by replacing the return 0 with the return of
+ret to return the error return code.
 
-Fixes: f75113a26008 ("Bluetooth: add hci_connect_le_scan")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Addresses-Coverity: ("Unused value")
+
+Fixes: b430eaba0be5 ("[media] flexcop-usb: don't use stack for DMA")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/bluetooth/hci_conn.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/usb/b2c2/flexcop-usb.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/bluetooth/hci_conn.c
-+++ b/net/bluetooth/hci_conn.c
-@@ -1054,8 +1054,10 @@ struct hci_conn *hci_connect_le_scan(str
- 	if (!conn)
- 		return ERR_PTR(-ENOMEM);
+--- a/drivers/media/usb/b2c2/flexcop-usb.c
++++ b/drivers/media/usb/b2c2/flexcop-usb.c
+@@ -295,7 +295,7 @@ static int flexcop_usb_i2c_req(struct fl
  
--	if (hci_explicit_conn_params_set(hdev, dst, dst_type) < 0)
-+	if (hci_explicit_conn_params_set(hdev, dst, dst_type) < 0) {
-+		hci_conn_del(conn);
- 		return ERR_PTR(-EBUSY);
-+	}
+ 	mutex_unlock(&fc_usb->data_mutex);
  
- 	conn->state = BT_CONNECT;
- 	set_bit(HCI_CONN_SCANNING, &conn->flags);
+-	return 0;
++	return ret;
+ }
+ 
+ /* actual bus specific access functions,
 
 
