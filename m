@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F904C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DABB9C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA794205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A387C2087F
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738483;
-	bh=3l1KICiLGAHbaDqp64hBkx4pmtGm3ykWiyUsFzWdfSY=;
+	s=default; t=1578738488;
+	bh=vzw/zTQ3T+frq0XShFckbtvL19mBCHgNPnD0vRv4qCc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rce+N1zd2OOSEBKAcO+pTfgtn95E6e3li+Kf2DrhmMelXMwv/O1q+jDCwN+14W/s9
-	 QkqHQmT4thkPjKPiePTDZDg0hr3k7Zttuq7NKuYXGnLPgUzQ4lvcd6JsOR98n2SO3v
-	 Axb+ykhC+umdx/t1l5uVN5znuP+AOOzMnnWVC8Ic=
+	b=VTDrnA/+xdxWcSJo41SFV1zLNJSEyJy5kF3DjrPQPZtqWZ2p1e1uRD81QXl5h3Ekb
+	 tIWwERVJ3bFab0h7zjp6neY2ubL/oJNyHTVPWisj6SNblFSzhpgCFpc/td1ZShZrsX
+	 MVkAT+kh3m6RszPQUluUIYbM5pooRhbGkrBTq+9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730666AbgAKK2C (ORCPT
+        id S1731157AbgAKK2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:28:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34710 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:28:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729295AbgAKK17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:27:59 -0500
+        id S1731015AbgAKK2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:28:04 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 945862082E;
-        Sat, 11 Jan 2020 10:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 665D824649;
+        Sat, 11 Jan 2020 10:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738479;
-        bh=3l1KICiLGAHbaDqp64hBkx4pmtGm3ykWiyUsFzWdfSY=;
+        s=default; t=1578738484;
+        bh=vzw/zTQ3T+frq0XShFckbtvL19mBCHgNPnD0vRv4qCc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DPTGIkZD8tbiCFOh3FRajIq+yty9lh9L8nmN48GsPGYr3lBN5CZuUn9yjsurDL+gW
-         Cxu7df5R4GHP74OyoveKi5hhr1XsrN+LTuKO28WrkPF5A3wRkJmqV4Tqwc7Me1jveD
-         RpQ8ap4nb0IBdKxpt8/HkeJ4at86VCNP8eIyMMoE=
+        b=XBw9RgT3tiPQgCQcKGntkgL32+b+Hg5jRrtPem5WG9vRejq0tyS2b4ZZAl2bGuTZQ
+         evlZwshIKPu0TticO9aApqt26MHZzHtuLuh00Msjft/Q6as4iV033H3aIIvWIKDw6B
+         KT63fIzLhXqGnl7IPCysShSuid4TSTd6icMEDN1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 102/165] usb: typec: fusb302: Fix an undefined reference to extcon_get_state
-Date:   Sat, 11 Jan 2020 10:50:21 +0100
-Message-Id: <20200111094930.268150068@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Penyaev <rpenyaev@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 103/165] block: end bio with BLK_STS_AGAIN in case of non-mq devs and REQ_NOWAIT
+Date:   Sat, 11 Jan 2020 10:50:22 +0100
+Message-Id: <20200111094930.377706110@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -62,46 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhong jiang <zhongjiang@huawei.com>
+From: Roman Penyaev <rpenyaev@suse.de>
 
-[ Upstream commit 547fc228755d79af648898187e7831a825d4f42c ]
+[ Upstream commit c58c1f83436b501d45d4050fd1296d71a9760bcb ]
 
-Fixes the following compile error:
+Non-mq devs do not honor REQ_NOWAIT so give a chance to the caller to repeat
+request gracefully on -EAGAIN error.
 
-drivers/usb/typec/tcpm/fusb302.o: In function `tcpm_get_current_limit':
-fusb302.c:(.text+0x3ee): undefined reference to `extcon_get_state'
-fusb302.c:(.text+0x422): undefined reference to `extcon_get_state'
-fusb302.c:(.text+0x450): undefined reference to `extcon_get_state'
-fusb302.c:(.text+0x48c): undefined reference to `extcon_get_state'
-drivers/usb/typec/tcpm/fusb302.o: In function `fusb302_probe':
-fusb302.c:(.text+0x980): undefined reference to `extcon_get_extcon_dev'
-make: *** [vmlinux] Error 1
+The problem is well reproduced using io_uring:
 
-It is because EXTCON is build as a module, but FUSB302 is not.
+   mkfs.ext4 /dev/ram0
+   mount /dev/ram0 /mnt
 
-Suggested-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: zhong jiang <zhongjiang@huawei.com>
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/1576239378-50795-1-git-send-email-zhongjiang@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+   # Preallocate a file
+   dd if=/dev/zero of=/mnt/file bs=1M count=1
+
+   # Start fio with io_uring and get -EIO
+   fio --rw=write --ioengine=io_uring --size=1M --direct=1 --name=job --filename=/mnt/file
+
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/typec/tcpm/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ block/blk-core.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
-index 72481bbb2af3..5b986d6c801d 100644
---- a/drivers/usb/typec/tcpm/Kconfig
-+++ b/drivers/usb/typec/tcpm/Kconfig
-@@ -32,6 +32,7 @@ endif # TYPEC_TCPCI
- config TYPEC_FUSB302
- 	tristate "Fairchild FUSB302 Type-C chip driver"
- 	depends on I2C
-+	depends on EXTCON || !EXTCON
- 	help
- 	  The Fairchild FUSB302 Type-C chip driver that works with
- 	  Type-C Port Controller Manager to provide USB PD and USB
+diff --git a/block/blk-core.c b/block/blk-core.c
+index d5e668ec751b..1075aaff606d 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -886,11 +886,14 @@ generic_make_request_checks(struct bio *bio)
+ 	}
+ 
+ 	/*
+-	 * For a REQ_NOWAIT based request, return -EOPNOTSUPP
+-	 * if queue is not a request based queue.
++	 * Non-mq queues do not honor REQ_NOWAIT, so complete a bio
++	 * with BLK_STS_AGAIN status in order to catch -EAGAIN and
++	 * to give a chance to the caller to repeat request gracefully.
+ 	 */
+-	if ((bio->bi_opf & REQ_NOWAIT) && !queue_is_mq(q))
+-		goto not_supported;
++	if ((bio->bi_opf & REQ_NOWAIT) && !queue_is_mq(q)) {
++		status = BLK_STS_AGAIN;
++		goto end_io;
++	}
+ 
+ 	if (should_fail_bio(bio))
+ 		goto end_io;
 -- 
 2.20.1
 
