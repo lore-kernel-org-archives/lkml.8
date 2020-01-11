@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DD0C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A668EC33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC782214DB
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72F5D205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738142;
-	bh=qM1K8b9ABcWajK0PB6SL3OmVqdsQlj0LkxqO2SEIa10=;
+	s=default; t=1578738145;
+	bh=tu7Sl4ogZwaO849WOpl7I9VcnFryYUZMC8/N6yzu66w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ey47dqvu7tV711HdF4dpoZyJXUZSfQbsyvadQI6xwAJLftdUM9kkAjRrtWrOFF3sc
-	 S2fxsFr3MDObNOJ28+gBlLMSGj0N2+rptfkOovUQxuembIrYiP6feSbGbC9IebPr2L
-	 L7Qiyv3DbDEK+Gz5iFSvvcRzxj09pFxWw9h9d4x8=
+	b=hbpnLgRBWNzvlh8XRZ7G5LlDCaLAAYvg3FpYR5MuRftOOMbyoUB4b5HlL3jz0YU1Q
+	 mNokIYaL/n5W0Oa7nRlmj3XnFXoXFcChM29H7Xz5EsyBF2nAEv8gb9ga6jvkbPT/ez
+	 BO1kZHJpZ7+TPvrHKdNcuTXNKG+Yk3n163DQ6BrM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730650AbgAKKWV (ORCPT
+        id S1730671AbgAKKWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:22:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47200 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:22:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730333AbgAKKWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:22:18 -0500
+        id S1730333AbgAKKWW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:22:22 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 374112084D;
-        Sat, 11 Jan 2020 10:22:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84CD5205F4;
+        Sat, 11 Jan 2020 10:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738138;
-        bh=qM1K8b9ABcWajK0PB6SL3OmVqdsQlj0LkxqO2SEIa10=;
+        s=default; t=1578738142;
+        bh=tu7Sl4ogZwaO849WOpl7I9VcnFryYUZMC8/N6yzu66w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BqejxFdYyMhpXyulmr+j4tU8S1aatpAZipBOmCIKBJK58P2QOvFcQ0K1oc+RzVHCm
-         5gi21eEwjDDc7LAci9eToznOZqQdKaXzY0hYb3LdnZ6Owin6yKBiCj3YV/Hpw5++kt
-         lbPVGQkQw3gu1IiiFagtzKIhtRCpDPUhw/9yBFQI=
+        b=wNfo96UcaSLS8pZ0pjhBcwowuEoNSxIxhjw+ayu8vbI8ZDI0bGjwrNCXFCHj8Ii3+
+         JAtFM05FpIgS4ckL19pHsnQ6tTuA7OKgGV/JXNojsg5dSwkdTCIG8dwUM2Vf7xnm3P
+         HK/tkxh7qlTRUY+CP8bsfC7LrW+F3nJ8/agIDccY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sudipm Mukherjee <sudipm.mukherjee@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        linux-trace-devel@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 016/165] libtraceevent: Copy pkg-config file to output folder when using O=
-Date:   Sat, 11 Jan 2020 10:48:55 +0100
-Message-Id: <20200111094922.361098351@linuxfoundation.org>
+Subject: [PATCH 5.4 007/165] spi: fsl: Fix GPIO descriptor support
+Date:   Sat, 11 Jan 2020 10:48:46 +0100
+Message-Id: <20200111094921.875977602@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -63,43 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-[ Upstream commit 15b3904f8e884e0d34d5f09906cf6526d0b889a2 ]
+[ Upstream commit f106904968e2a075e64653b9b79dda9f0f070ab5 ]
 
-When we use 'O=' with make to build libtraceevent in a separate folder
-it still copies 'libtraceevent.pc' to its source folder. Modify the
-Makefile so that it uses the output folder to copy the pkg-config file
-and install from there.
+This makes the driver actually support looking up GPIO
+descriptor. A coding mistake in the initial descriptor
+support patch was that it was failing to turn on the very
+feature it was implementing. Mea culpa.
 
-Signed-off-by: Sudipm Mukherjee <sudipm.mukherjee@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191115113610.21493-2-sudipm.mukherjee@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Reported-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Fixes: 0f0581b24bd0 ("spi: fsl: Convert to use CS GPIO descriptors")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Link: https://lore.kernel.org/r/20191128083718.39177-1-linus.walleij@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/traceevent/Makefile | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/spi/spi-fsl-spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/lib/traceevent/Makefile b/tools/lib/traceevent/Makefile
-index d008e64042ce..ecf882308d8a 100644
---- a/tools/lib/traceevent/Makefile
-+++ b/tools/lib/traceevent/Makefile
-@@ -208,10 +208,11 @@ define do_install
- 	$(INSTALL) $(if $3,-m $3,) $1 '$(DESTDIR_SQ)$2'
- endef
+diff --git a/drivers/spi/spi-fsl-spi.c b/drivers/spi/spi-fsl-spi.c
+index 2d563874b4ac..ad1abea6e8b0 100644
+--- a/drivers/spi/spi-fsl-spi.c
++++ b/drivers/spi/spi-fsl-spi.c
+@@ -612,6 +612,7 @@ static struct spi_master * fsl_spi_probe(struct device *dev,
+ 	master->setup = fsl_spi_setup;
+ 	master->cleanup = fsl_spi_cleanup;
+ 	master->transfer_one_message = fsl_spi_do_one_msg;
++	master->use_gpio_descriptors = true;
  
--PKG_CONFIG_FILE = libtraceevent.pc
-+PKG_CONFIG_SOURCE_FILE = libtraceevent.pc
-+PKG_CONFIG_FILE := $(addprefix $(OUTPUT),$(PKG_CONFIG_SOURCE_FILE))
- define do_install_pkgconfig_file
- 	if [ -n "${pkgconfig_dir}" ]; then 					\
--		cp -f ${PKG_CONFIG_FILE}.template ${PKG_CONFIG_FILE}; 		\
-+		cp -f ${PKG_CONFIG_SOURCE_FILE}.template ${PKG_CONFIG_FILE};	\
- 		sed -i "s|INSTALL_PREFIX|${1}|g" ${PKG_CONFIG_FILE}; 		\
- 		sed -i "s|LIB_VERSION|${EVENT_PARSE_VERSION}|g" ${PKG_CONFIG_FILE}; \
- 		sed -i "s|LIB_DIR|${libdir}|g" ${PKG_CONFIG_FILE}; \
+ 	mpc8xxx_spi = spi_master_get_devdata(master);
+ 	mpc8xxx_spi->max_bits_per_word = 32;
 -- 
 2.20.1
 
