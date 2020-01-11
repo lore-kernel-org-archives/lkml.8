@@ -2,102 +2,81 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A605C33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 07:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F210C33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 07:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC86A206DA
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 07:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578727014;
-	bh=HDSP2oTtfSFU114yfQGCOMiUGUYX33QemXRuO6w7M5w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=uVwV1cYu4jm9m6MEtj/E+s8DtQjLnyVgRYB87o/LqPSuLkv/PlYmCQvMADaGU4SF9
-	 SE6kgs6ZW6dCCibaI1eWUcUZ5GYGoMmY75OhJqL83KCv0gI9epxVPrXXiAE4vdeZDm
-	 aMyKhNCLYFZQYW9T6Dxpi81xkASb2J+EUjCU/a50=
+	by mail.kernel.org (Postfix) with ESMTP id 5BE9F206DA
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 07:17:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZVBa5wrB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728562AbgAKHQx (ORCPT
+        id S1728534AbgAKHRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 02:16:53 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:54266 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728441AbgAKHQx (ORCPT
+        Sat, 11 Jan 2020 02:17:34 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:15016 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728441AbgAKHRd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 02:16:53 -0500
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 00B7GRUl015214;
-        Sat, 11 Jan 2020 16:16:28 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 00B7GRUl015214
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578726988;
-        bh=IvZfS9DeJZajc+wxWo/yLxgBuC+n3MDy/OBtsSizkkg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zAvIjxArSV1JbiqMaW1P6pYULSxYYvvTFSJuVGhXcbkGE7C1Pk39rBn3Z7AvU/jKZ
-         Nwt4gOsv/z+GsPBO6mlbktFX/trqTKrZ0dF/sAbPTWIk0o5eFUHptuOdZaoA/agmLB
-         l8y/xIYOriGmwPfiZ7GYmDcWe0IWAlL2Ov+Rh9f4OaHlo8ueX7Qlfsgo6c19XRWt+v
-         h8+ViULoi9FPWgZABGKgAvR2MEmub0C/R8FGsdtXq7Fua4+PBTz8W6Y9T68Zzq77Lf
-         cplG5qgv3UmQfU92ZuxVr/VDXsd5QNdfq89a7hgT9zlJE2+/9r8Qpt37ZsKpVMyS+c
-         7L8Nl6IZYXQAg==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id s16so2732174vsc.10;
-        Fri, 10 Jan 2020 23:16:28 -0800 (PST)
-X-Gm-Message-State: APjAAAWg86mmnJSwE/UzG2saSTe+sAKe2ES83Fypy+QreygssHa8eSS/
-        U6M7Z2TMj6iCuN3Lh4rtQrjuNQ8JEOZi8ZQ+00E=
-X-Google-Smtp-Source: APXvYqxLgR6NQoIKFGvmbBbZKQvV9GD2gLOLM2pdBpOZOzrXhCEWossqRhvEDekh73aWQEImX5FJhTigvEEh/om+LIc=
-X-Received: by 2002:a05:6102:190:: with SMTP id r16mr1305915vsq.215.1578726987419;
- Fri, 10 Jan 2020 23:16:27 -0800 (PST)
-MIME-Version: 1.0
-References: <20200109161636.9362-1-brgl@bgdev.pl>
-In-Reply-To: <20200109161636.9362-1-brgl@bgdev.pl>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sat, 11 Jan 2020 16:15:51 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT34K7OcpXYhsAemd5Jd7px8P1+DyS=7s76pW2h6d663A@mail.gmail.com>
-Message-ID: <CAK7LNAT34K7OcpXYhsAemd5Jd7px8P1+DyS=7s76pW2h6d663A@mail.gmail.com>
-Subject: Re: [PATCH v2] kconfig: fix an "implicit declaration of function" warning
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+        Sat, 11 Jan 2020 02:17:33 -0500
+X-UUID: c5f96851d910426bafc55b24aedba67c-20200111
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=k/r+E+rZ5TVzR0eoZZhVyF7N7msarS1XBPeVmbXXWk4=;
+        b=ZVBa5wrB4rvX+2AEe5YsQqcasDmFRy0Cmbk0jkZdfRkeAdUBlAj+Z3U2n1wNiNX3s5SLP3+Ngb5FXXMulIqDqm3SNm+9RTu8R1GLB7BNvc7UkN4dWadBhnLJTRHNR8NgjeZr+XXVu7laUKuPOFFaz/+cQuJow+Fso+diSDgm++o=;
+X-UUID: c5f96851d910426bafc55b24aedba67c-20200111
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1077272840; Sat, 11 Jan 2020 15:17:24 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Sat, 11 Jan 2020 15:16:29 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Sat, 11 Jan 2020 15:18:03 +0800
+Message-ID: <1578727042.17435.8.camel@mtkswgap22>
+Subject: Re: [PATCH v1 0/3] scsi: ufs: fix error history and complete device
+ reset history
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>
+CC:     <martin.petersen@oracle.com>, <avri.altman@wdc.com>,
+        <alim.akhtar@samsung.com>, <jejb@linux.ibm.com>,
+        <beanhuo@micron.com>, <asutoshd@codeaurora.org>,
+        <cang@codeaurora.org>, <matthias.bgg@gmail.com>,
+        <bvanassche@acm.org>, <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>
+Date:   Sat, 11 Jan 2020 15:17:22 +0800
+In-Reply-To: <1578147968-30938-1-git-send-email-stanley.chu@mediatek.com>
+References: <1578147968-30938-1-git-send-email-stanley.chu@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: BE6CDD5CE9F68F62515C03A4103563C2B33C58080B14D1E2DA17F98058B84D642000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 1:16 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> strncasecmp() & strcasecmp() functions are declared in strings.h, not
-> string.h. On most environments the former is implicitly included by
-> the latter but on some setups, building menuconfig results in the
-> following warning:
->
->   HOSTCC  scripts/kconfig/mconf.o
-> scripts/kconfig/mconf.c: In function =E2=80=98search_conf=E2=80=99:
-> scripts/kconfig/mconf.c:423:6: warning: implicit declaration of function =
-=E2=80=98strncasecmp=E2=80=99 [-Wimplicit-function-declaration]
->   if (strncasecmp(dialog_input_result, CONFIG_, strlen(CONFIG_)) =3D=3D 0=
-)
->       ^~~~~~~~~~~
-> scripts/kconfig/mconf.c: In function =E2=80=98main=E2=80=99:
-> scripts/kconfig/mconf.c:1021:8: warning: implicit declaration of function=
- =E2=80=98strcasecmp=E2=80=99 [-Wimplicit-function-declaration]
->    if (!strcasecmp(mode, "single_menu"))
->         ^~~~~~~~~~
->
-> Fix it by explicitly including strings.h.
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+SGksDQoNCkdlbnRsZSBwaW5nIGZvciB0aGlzIHNldC4NCg0KT24gU2F0LCAyMDIwLTAxLTA0IGF0
+IDIyOjI2ICswODAwLCBTdGFubGV5IENodSB3cm90ZToNCj4gSGksDQo+IA0KPiBUaGlzIHNlcmll
+cyB0YXJnZXRzIG9uIFVGUyBlcnJvciBoaXN0b3J5IGZpeGVzIGFuZCBmZWF0dXJlIGFkZC1vbiwN
+Cj4gDQo+IDEuIEZpeCBlbXB0eSBjaGVjayBsb2dpYyB3aGlsZSBvdXRwdXRpbmcgZXJyb3IgaGlz
+dG9yeS4NCj4gMi4gQWRkIGRldmljZSByZXNldCBoaXN0b3J5IGV2ZW50cyBmb3IgdmVuZG9yJ3Mg
+aW1wbGVtZW50YXRpb25zLg0KPiAzLiBSZW1vdmUgZHVtbXkgd29yZCBpbiBvdXRwdXQgZm9ybWF0
+Lg0KPiANCj4gU3RhbmxleSBDaHUgKDMpOg0KPiAgIHNjc2k6IHVmczogZml4IGVtcHR5IGNoZWNr
+IG9mIGVycm9yIGhpc3RvcnkNCj4gICBzY3NpOiB1ZnM6IGFkZCBkZXZpY2UgcmVzZXQgaGlzdG9y
+eSBmb3IgdmVuZG9yIGltcGxlbWVudGF0aW9ucw0KPiAgIHNjc2k6IHVmczogcmVtb3ZlICJlcnJv
+cnMiIHdvcmQgaW4gdWZzaGNkX3ByaW50X2Vycl9oaXN0KCkNCj4gDQo+ICBkcml2ZXJzL3Njc2kv
+dWZzL3Vmc2hjZC5jIHwgOSArKysrKy0tLS0NCj4gIGRyaXZlcnMvc2NzaS91ZnMvdWZzaGNkLmgg
+fCA2ICsrKysrLQ0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspLCA1IGRlbGV0
+aW9ucygtKQ0KPiANCg0K
 
-Applied to linux-kbuild.
-Thanks.
-
-
---=20
-Best Regards
-Masahiro Yamada
