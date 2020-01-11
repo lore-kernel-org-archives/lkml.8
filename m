@@ -2,54 +2,51 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1C4C33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2142EC33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F342064C
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:05:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2E772082E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737148;
-	bh=ToLPPtJfE+wN/2xv6SeS8tOQ77wFmdJQl3445EtNQdc=;
+	s=default; t=1578737157;
+	bh=TfKscB+YyGmraVZx/JDDwLL3JwcC8LoM23ldBIGOkXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PFjLTMuskYRnDBbx6UGcMHMB3oXNKul5mxUlu+iSoMRTlGUHqPkkwgCnRrcQuXglW
-	 LgcEqMHHnBiawhQlHZqtq4Xag8SSuhW4PoQ8SBiDEIqnO+72L4/coIZASNZ1XDm7pJ
-	 rNZ9lJ9wldjHo6OoIsgMuVUjeBCey97Yq55lIJlA=
+	b=E8pRk/4bJCYm77EIl6D6AZO1pIhQt5G4cSPBod9oPpxuD4v1wh/o2O1IEwiJsw6A4
+	 MxLikXf15BYwBr50q+ToCSD0MB2zPYBFTm8+tLkP/NgLDLEAyL3SsqmI6OY1oCdw+9
+	 DRC/sO59DratU2YPXhNalEcH9Z8xTaTviVOM9igw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729624AbgAKKFr (ORCPT
+        id S1729553AbgAKKF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:05:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39168 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:05:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729337AbgAKKFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:05:46 -0500
+        id S1729277AbgAKKFz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:05:55 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D11920848;
-        Sat, 11 Jan 2020 10:05:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1225E2064C;
+        Sat, 11 Jan 2020 10:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737146;
-        bh=ToLPPtJfE+wN/2xv6SeS8tOQ77wFmdJQl3445EtNQdc=;
+        s=default; t=1578737155;
+        bh=TfKscB+YyGmraVZx/JDDwLL3JwcC8LoM23ldBIGOkXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eIGdm2tpn7iosXMUYgFZ55oRdpz0CO0zGRMst/kb2bdEVTD3m4LpJ+OBx9nvZb6nC
-         GSy9eFhZxbWTWobia4AGYZcWNIGJqxxpmnd3yE2YAaDAl6X47ZDCCA42hBpiVc+BIL
-         vICU0VdSQu+rpEe0lcYW9nZESLej7scT976ZS/KE=
+        b=s9U+kFKeGzxEFuQ1lawjDFBxn4aJuNW++p7Ula9Hpap/SNT4WZ4SfFrIqYXpEyMbx
+         38+lJ6vWwQCZ9aO1WBzZcj1iiPQLL815P80Wkujjpj3KGDu9RSFfETPq1tYNBQlwch
+         kVObnFt0M4gu83bdTuuaAnp9Ubp1LujwUCR/1/oQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 65/91] ARM: dts: am437x-gp/epos-evm: fix panel compatible
-Date:   Sat, 11 Jan 2020 10:49:58 +0100
-Message-Id: <20200111094909.153116596@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 81/91] net: stmmac: dwmac-sunxi: Allow all RGMII modes
+Date:   Sat, 11 Jan 2020 10:50:14 +0100
+Message-Id: <20200111094912.341783620@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094844.748507863@linuxfoundation.org>
 References: <20200111094844.748507863@linuxfoundation.org>
@@ -62,54 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-[ Upstream commit c6b16761c6908d3dc167a0a566578b4b0b972905 ]
+[ Upstream commit 52cc73e5404c7ba0cbfc50cb4c265108c84b3d5a ]
 
-The LCD panel on AM4 GP EVMs and ePOS boards seems to be
-osd070t1718-19ts. The current dts files say osd057T0559-34ts. Possibly
-the panel has changed since the early EVMs, or there has been a mistake
-with the panel type.
+Allow all the RGMII modes to be used. This would allow us to represent
+the hardware better in the device tree with RGMII_ID where in most
+cases the PHY's internal delay for both RX and TX are used.
 
-Update the DT files accordingly.
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: af0bd4e9ba80 ("net: stmmac: sunxi platform extensions for GMAC in Allwinner A20 SoC's")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/boot/dts/am437x-gp-evm.dts  | 2 +-
- arch/arm/boot/dts/am43x-epos-evm.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 957840cc7b78..b55c094893c6 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -79,7 +79,7 @@
- 		};
- 
- 	lcd0: display {
--		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
- 		label = "lcd";
- 
- 		panel-timing {
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 9d35c3f07cad..21918807c9f6 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -41,7 +41,7 @@
- 	};
- 
- 	lcd0: display {
--		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
-+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
- 		label = "lcd";
- 
- 		panel-timing {
--- 
-2.20.1
-
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c
+@@ -53,7 +53,7 @@ static int sun7i_gmac_init(struct platfo
+ 	 * rate, which then uses the auto-reparenting feature of the
+ 	 * clock driver, and enabling/disabling the clock.
+ 	 */
+-	if (gmac->interface == PHY_INTERFACE_MODE_RGMII) {
++	if (phy_interface_mode_is_rgmii(gmac->interface)) {
+ 		clk_set_rate(gmac->tx_clk, SUN7I_GMAC_GMII_RGMII_RATE);
+ 		clk_prepare_enable(gmac->tx_clk);
+ 		gmac->clk_enabled = 1;
 
 
