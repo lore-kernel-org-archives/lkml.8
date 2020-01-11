@@ -2,140 +2,170 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.6 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFC6C282DD
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED7BDC282DD
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D73102084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:16:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aaVHG5LZ"
+	by mail.kernel.org (Postfix) with ESMTP id B97082084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 17:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730540AbgAKRQT (ORCPT
+        id S1730574AbgAKRTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 12:16:19 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40974 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730423AbgAKRQS (ORCPT
+        Sat, 11 Jan 2020 12:19:10 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:36608 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730544AbgAKRTK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 12:16:18 -0500
-Received: by mail-pf1-f194.google.com with SMTP id w62so2715871pfw.8;
-        Sat, 11 Jan 2020 09:16:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Li992Inl6qlK9dLbIXMHvdL8lIRzO4/rvMMlJnBSYOA=;
-        b=aaVHG5LZLJzn9bL5nsMjFha4VHzpuAjs6cHT4gm680uONrLp1NjmAcnK2gbfgXZWWD
-         g9ZkOxjqGHvx0UYYTRKOnTYx0aM9So0HAirKrWrqu+H3OlJgHO0MInLT2j5JsNRyT97C
-         H79SF6PvxoMrFwSiprsxRAyAo99s7AZ6t8kKgmze+k0doLozIZ4lHAk7vxS0Tshp0G7d
-         fNhOgxHoI3o5yQo5tNzbYVheQYYbhOsDaiGQHlwnXa1+iWiVzUUIKwtF72kMnH2lav7r
-         i4oaBufB8y5kK5QVN+n06cJ3S1FfO1VlHrqgnErgAdQdfSi16TCEVPnn7FMhPHX9BODu
-         B2YQ==
+        Sat, 11 Jan 2020 12:19:10 -0500
+Received: by mail-il1-f197.google.com with SMTP id t2so4247434ilp.3
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 09:19:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Li992Inl6qlK9dLbIXMHvdL8lIRzO4/rvMMlJnBSYOA=;
-        b=pJdmu/sokonlQjqPtlfMQrWHgxjHm+M8EN+g6g1tfWsIk5eejOt48RKLVOyDLQ1A4Q
-         cQeiC2uLvC+8uSy/0xbrfMNTGLJSV385UcG42m8dOIWeYFHLjiID9U0NyESEvX/YXHil
-         LC9ypXKqZnBI8I8eFnqSCyHfucL/hZ0nzueygnvmr9uRn21zDThxcE/lYlnLKzoD10Fq
-         MI/DqqtwHzPQjf5fqwldx4l4HlSs4XFVVh6c1vMOhwiKXNn+pXTwHpduSBCFYojbBWcs
-         vHYT2lYxTwCtlObLpzaCgJsXKO59D7EhPTDAQk1BERp7G7aNE2oZB9s3WY2iMm3etLcr
-         y6ZQ==
-X-Gm-Message-State: APjAAAWEWOrgWApMEzLjrYUzyfIaf/pMmfXFQEqiXraByUeyY/2tytJK
-        aRVo/quu+82QJKaP1KAnGNk=
-X-Google-Smtp-Source: APXvYqyZ9MxvudC4km4COLPCC/MGFZZRHwBHvfuCzm+d+wi8wQx/9swWuz5czVpRsj7St4CMLTgwxQ==
-X-Received: by 2002:a63:1853:: with SMTP id 19mr11774376pgy.170.1578762977781;
-        Sat, 11 Jan 2020 09:16:17 -0800 (PST)
-Received: from oslab.tsinghua.edu.cn ([166.111.139.172])
-        by smtp.gmail.com with ESMTPSA id o184sm6997015pgo.62.2020.01.11.09.16.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jan 2020 09:16:17 -0800 (PST)
-From:   Jia-Ju Bai <baijiaju1990@gmail.com>
-To:     ath9k-devel@qca.qualcomm.com, kvalo@codeaurora.org,
-        davem@davemloft.net
-Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>
-Subject: [PATCH] ath9k: Fix possible data races in ath_set_channel()
-Date:   Sun, 12 Jan 2020 01:15:28 +0800
-Message-Id: <20200111171528.7053-1-baijiaju1990@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=rOxD20ubENsSvUKR96g4GhYacd9/gWfWmD4fONuaSG0=;
+        b=RbpvdMog1ZxmEVjhvDqoiSdLLCx4GsNtWWn8n+GX2clym+Pg6nJKM24VToSD5x6sSW
+         i+coodhMBXXH7F52zXgw16G84E8ywuT9+HCmtZQGipcUFlpNl7FYhCjUMAzbWCK2wZyZ
+         WvH+FWxIoJUh/N4VtV41hjniuCrxFOAYRQdkQvXwXGvUp5eKUKYJ9QtgQLXhkOyFG7+5
+         9oTvCQZaRowlmnsTw1O/OYbxYjUwBjfqLi68xNF/KVT2yfT3LGTzGknvuLxwn3yGZs0e
+         F35FmdcaGvCsw9VSDBKxaDo+S0QJV2Fj3ry90C8xPTwc1us/STOk4QM5MobjoFlaKRLe
+         csuA==
+X-Gm-Message-State: APjAAAX0EqZF5yhofU3MIb3oiOjJVNwyU8w20NEDy1HtlHwIbpgsTfQq
+        qQTevgKJtrNkzzfGpXERsxCN4WtvO5357pizsykfgKgNmQdP
+X-Google-Smtp-Source: APXvYqxbZH4l1OKZCSVA3wEKraLueKJeidVG10Gfew2kkXB5bcA2+MIjG6lXeleijv5+yLvegBXC/vR4RjNxksi/M7l9sRtVenLv
+MIME-Version: 1.0
+X-Received: by 2002:a92:906:: with SMTP id y6mr7879438ilg.157.1578763149416;
+ Sat, 11 Jan 2020 09:19:09 -0800 (PST)
+Date:   Sat, 11 Jan 2020 09:19:09 -0800
+In-Reply-To: <0000000000006d0a820599366088@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000b4acb6059be070c0@google.com>
+Subject: Re: memory leak in erase_aeb
+From:   syzbot <syzbot+f317896aae32eb281a58@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        miquel.raynal@bootlin.com, richard@nod.at,
+        syzkaller-bugs@googlegroups.com, vigneshr@ti.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The functions ath9k_config() and ath_ani_calibrate() may be concurrently
-executed.
+syzbot has found a reproducer for the following crash on:
 
-A variable survey->filled is accessed with holding a spinlock
-common->cc_lock, through:
-ath_ani_calibrate()
-    spin_lock_irqsave(&common->cc_lock, flags);
-    ath_update_survey_stats()
-        ath_update_survey_nf()
-            survey->filled |= SURVEY_INFO_NOISE_DBM;
+HEAD commit:    bef1d882 Merge tag 'pstore-v5.5-rc6' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=158a51b9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e479cb92d5ce3196
+dashboard link: https://syzkaller.appspot.com/bug?extid=f317896aae32eb281a58
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=132269e1e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1247d58ee00000
 
-The identical variables sc->cur_survey->filled and 
-sc->survey[pos].filled is accessed without holding this lock, through:
-ath9k_config()
-    ath_chanctx_set_channel()
-        ath_set_channel()
-            sc->cur_survey->filled &= ~SURVEY_INFO_IN_USE;
-            sc->cur_survey->filled |= SURVEY_INFO_IN_USE;
-            else if (!(sc->survey[pos].filled & SURVEY_INFO_IN_USE))
-            ath_update_survey_nf
-                survey->filled |= SURVEY_INFO_NOISE_DBM;
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+f317896aae32eb281a58@syzkaller.appspotmail.com
 
-Thus, possible data races may occur.
+BUG: memory leak
+unreferenced object 0xffff888127cecb00 (size 32):
+   comm "syz-executor527", pid 7144, jiffies 4294957528 (age 23.750s)
+   hex dump (first 32 bytes):
+     00 01 00 00 00 00 ad de 22 01 00 00 00 00 ad de  ........".......
+     00 00 00 00 00 00 00 00 01 00 00 00 02 00 00 00  ................
+   backtrace:
+     [<0000000029f9ef6c>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<0000000029f9ef6c>] slab_post_alloc_hook mm/slab.h:586 [inline]
+     [<0000000029f9ef6c>] slab_alloc mm/slab.c:3320 [inline]
+     [<0000000029f9ef6c>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3484
+     [<000000003092c936>] erase_aeb+0x2a/0x100 drivers/mtd/ubi/wl.c:1691
+     [<00000000d507b66e>] ubi_wl_init+0x1ae/0x600 drivers/mtd/ubi/wl.c:1758
+     [<0000000072e7d762>] ubi_attach+0x665/0x18e7  
+drivers/mtd/ubi/attach.c:1605
+     [<0000000024d645cb>] ubi_attach_mtd_dev+0x5b3/0xd40  
+drivers/mtd/ubi/build.c:946
+     [<00000000e6600cef>] ctrl_cdev_ioctl+0x149/0x1c0  
+drivers/mtd/ubi/cdev.c:1043
+     [<000000001253992f>] vfs_ioctl fs/ioctl.c:47 [inline]
+     [<000000001253992f>] file_ioctl fs/ioctl.c:545 [inline]
+     [<000000001253992f>] do_vfs_ioctl+0x551/0x890 fs/ioctl.c:732
+     [<00000000c49e8c94>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:749
+     [<00000000261db07c>] __do_sys_ioctl fs/ioctl.c:756 [inline]
+     [<00000000261db07c>] __se_sys_ioctl fs/ioctl.c:754 [inline]
+     [<00000000261db07c>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:754
+     [<000000004f01dc3e>] do_syscall_64+0x73/0x220  
+arch/x86/entry/common.c:294
+     [<000000002de81d29>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-To fix these data races, in ath_set_channel(), these variables are
-accessed with holding the spinlock common->cc_lock.
+BUG: memory leak
+unreferenced object 0xffff888127cecb00 (size 32):
+   comm "syz-executor527", pid 7144, jiffies 4294957528 (age 26.350s)
+   hex dump (first 32 bytes):
+     00 01 00 00 00 00 ad de 22 01 00 00 00 00 ad de  ........".......
+     00 00 00 00 00 00 00 00 01 00 00 00 02 00 00 00  ................
+   backtrace:
+     [<0000000029f9ef6c>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<0000000029f9ef6c>] slab_post_alloc_hook mm/slab.h:586 [inline]
+     [<0000000029f9ef6c>] slab_alloc mm/slab.c:3320 [inline]
+     [<0000000029f9ef6c>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3484
+     [<000000003092c936>] erase_aeb+0x2a/0x100 drivers/mtd/ubi/wl.c:1691
+     [<00000000d507b66e>] ubi_wl_init+0x1ae/0x600 drivers/mtd/ubi/wl.c:1758
+     [<0000000072e7d762>] ubi_attach+0x665/0x18e7  
+drivers/mtd/ubi/attach.c:1605
+     [<0000000024d645cb>] ubi_attach_mtd_dev+0x5b3/0xd40  
+drivers/mtd/ubi/build.c:946
+     [<00000000e6600cef>] ctrl_cdev_ioctl+0x149/0x1c0  
+drivers/mtd/ubi/cdev.c:1043
+     [<000000001253992f>] vfs_ioctl fs/ioctl.c:47 [inline]
+     [<000000001253992f>] file_ioctl fs/ioctl.c:545 [inline]
+     [<000000001253992f>] do_vfs_ioctl+0x551/0x890 fs/ioctl.c:732
+     [<00000000c49e8c94>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:749
+     [<00000000261db07c>] __do_sys_ioctl fs/ioctl.c:756 [inline]
+     [<00000000261db07c>] __se_sys_ioctl fs/ioctl.c:754 [inline]
+     [<00000000261db07c>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:754
+     [<000000004f01dc3e>] do_syscall_64+0x73/0x220  
+arch/x86/entry/common.c:294
+     [<000000002de81d29>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-These data races are found by the runtime testing of our tool DILP-2.
+BUG: memory leak
+unreferenced object 0xffff888127cecb00 (size 32):
+   comm "syz-executor527", pid 7144, jiffies 4294957528 (age 32.820s)
+   hex dump (first 32 bytes):
+     00 01 00 00 00 00 ad de 22 01 00 00 00 00 ad de  ........".......
+     00 00 00 00 00 00 00 00 01 00 00 00 02 00 00 00  ................
+   backtrace:
+     [<0000000029f9ef6c>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<0000000029f9ef6c>] slab_post_alloc_hook mm/slab.h:586 [inline]
+     [<0000000029f9ef6c>] slab_alloc mm/slab.c:3320 [inline]
+     [<0000000029f9ef6c>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3484
+     [<000000003092c936>] erase_aeb+0x2a/0x100 drivers/mtd/ubi/wl.c:1691
+     [<00000000d507b66e>] ubi_wl_init+0x1ae/0x600 drivers/mtd/ubi/wl.c:1758
+     [<0000000072e7d762>] ubi_attach+0x665/0x18e7  
+drivers/mtd/ubi/attach.c:1605
+     [<0000000024d645cb>] ubi_attach_mtd_dev+0x5b3/0xd40  
+drivers/mtd/ubi/build.c:946
+     [<00000000e6600cef>] ctrl_cdev_ioctl+0x149/0x1c0  
+drivers/mtd/ubi/cdev.c:1043
+     [<000000001253992f>] vfs_ioctl fs/ioctl.c:47 [inline]
+     [<000000001253992f>] file_ioctl fs/ioctl.c:545 [inline]
+     [<000000001253992f>] do_vfs_ioctl+0x551/0x890 fs/ioctl.c:732
+     [<00000000c49e8c94>] ksys_ioctl+0x86/0xb0 fs/ioctl.c:749
+     [<00000000261db07c>] __do_sys_ioctl fs/ioctl.c:756 [inline]
+     [<00000000261db07c>] __se_sys_ioctl fs/ioctl.c:754 [inline]
+     [<00000000261db07c>] __x64_sys_ioctl+0x1e/0x30 fs/ioctl.c:754
+     [<000000004f01dc3e>] do_syscall_64+0x73/0x220  
+arch/x86/entry/common.c:294
+     [<000000002de81d29>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
----
- drivers/net/wireless/ath/ath9k/channel.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/ath/ath9k/channel.c b/drivers/net/wireless/ath/ath9k/channel.c
-index fd61ae4782b6..b16f7f65e9c6 100644
---- a/drivers/net/wireless/ath/ath9k/channel.c
-+++ b/drivers/net/wireless/ath/ath9k/channel.c
-@@ -54,6 +54,7 @@ static int ath_set_channel(struct ath_softc *sc)
- 	 * Reset the survey data for the new channel, unless we're switching
- 	 * back to the operating channel from an off-channel operation.
- 	 */
-+	spin_lock_irqsave(&common->cc_lock, flags);
- 	if (!sc->cur_chan->offchannel && sc->cur_survey != &sc->survey[pos]) {
- 		if (sc->cur_survey)
- 			sc->cur_survey->filled &= ~SURVEY_INFO_IN_USE;
-@@ -65,6 +66,7 @@ static int ath_set_channel(struct ath_softc *sc)
- 	} else if (!(sc->survey[pos].filled & SURVEY_INFO_IN_USE)) {
- 		memset(&sc->survey[pos], 0, sizeof(struct survey_info));
- 	}
-+	spin_unlock_irqrestore(&common->cc_lock, flags);
- 
- 	hchan = &sc->sc_ah->channels[pos];
- 	r = ath_reset(sc, hchan);
-@@ -75,8 +77,11 @@ static int ath_set_channel(struct ath_softc *sc)
- 	 * channel is only available after the hardware reset. Copy it to
- 	 * the survey stats now.
- 	 */
--	if (old_pos >= 0)
-+	if (old_pos >= 0) {
-+		spin_lock_irqsave(&common->cc_lock, flags);
- 		ath_update_survey_nf(sc, old_pos);
-+		spin_unlock_irqrestore(&common->cc_lock, flags);
-+	}
- 
- 	/* Enable radar pulse detection if on a DFS channel. Spectral
- 	 * scanning and radar detection can not be used concurrently.
--- 
-2.17.1
+executing program
+executing program
+executing program
+executing program
+executing program
 
