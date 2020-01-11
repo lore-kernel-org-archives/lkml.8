@@ -2,262 +2,110 @@ Return-Path: <SRS0=GvTR=3A=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3458C33CA3
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D543C33CA4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B5320866
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578739862;
-	bh=cTuWgKCN3FBK/E/Nnb+VWrwvbZTJ2ygu/AkLoz8trO0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kBFy6ZGdRG9D4AfCPKrZYYpApeeO6xBVBCLiiy5mgcBl4pU3XbUh4bP4fU0VrCoUg
-	 oS6KKszhDak9Q4j9tXBEIOPsL6OP+gFqc4j9gKp6/zCL8P9h5Rrzh0ttFMfBA2ggmm
-	 KC/2x5/g8W7g60czuIUzbjhwBWD8+r/zJuzU+dvU=
+	by mail.kernel.org (Postfix) with ESMTP id 4D26A20842
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:53:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729079AbgAKKvB (ORCPT
+        id S1729128AbgAKKxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:51:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45188 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:53:15 -0500
+Received: from mga03.intel.com ([134.134.136.65]:61226 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728974AbgAKKvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:51:01 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 508E920848;
-        Sat, 11 Jan 2020 10:50:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578739860;
-        bh=cTuWgKCN3FBK/E/Nnb+VWrwvbZTJ2ygu/AkLoz8trO0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uyUYba7N1OZqK69x8xhFPT8qFwy2xCFwzShFbBJhd+Pmt8Sr4pmjv7UKqW7Tyq6JR
-         7au2OQM0TuxWoZVhR2B0X6EIieDCjJrbnYfYGvTg9Uh2wxp1bz6vGCkf3GAqX0oyKB
-         qHrCFZfi/euO+G4vuZcfIT0jPFPmhp/hrBj4gmBQ=
-Date:   Sat, 11 Jan 2020 10:50:55 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Andreas Klinger <ak@it-klinger.de>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, rpi-receiver@htl-steyr.ac.at,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] iio: srf04: add power management feature
-Message-ID: <20200111105055.42c814ca@archlinux>
-In-Reply-To: <20200109083926.GA5377@arbad>
-References: <20200109083926.GA5377@arbad>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728974AbgAKKxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:53:15 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jan 2020 02:53:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,420,1571727600"; 
+   d="scan'208";a="396678241"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 11 Jan 2020 02:53:13 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iqEOG-0006jI-P0; Sat, 11 Jan 2020 18:53:12 +0800
+Date:   Sat, 11 Jan 2020 18:52:41 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Vasiliy Khoruzhick <vasilykh@arista.com>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH-next 3/3] serial/sysrq: Add MAGIC_SYSRQ_SERIAL_SEQUENCE
+Message-ID: <202001111841.jHEbSpeP%lkp@intel.com>
+References: <20200109215444.95995-4-dima@arista.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200109215444.95995-4-dima@arista.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 Jan 2020 09:39:28 +0100
-Andreas Klinger <ak@it-klinger.de> wrote:
+Hi Dmitry,
 
-> Add suspend and resume operations for being used by optional power
-> management.
-> 
-> The suspend function is switching off an GPIO which can be used by the
-> hardware to switch power off. The resume function is switching the GPIO
-> on and sleeps an adjustable time to give the device a chance to be up
-> and running.
-> 
-> If activated the driver gets into autosuspend after some time of
-> inactivity.
-> 
-Generally we try to avoid introducing ifdef CONFIG_PM where
-possible, because it tends to be error prone.  Mostly
-marking functions __maybe_unused is sufficient.
+Thank you for the patch! Perhaps something to improve:
 
-Otherwise looks good to me.
+[auto build test WARNING on tty/tty-testing]
+[also build test WARNING on next-20200110]
+[cannot apply to linux/master usb/usb-testing linus/master v5.5-rc5]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-Jonathan
+url:    https://github.com/0day-ci/linux/commits/Dmitry-Safonov/serial-sysrq-Add-MAGIC_SYSRQ_SERIAL_SEQUENCE/20200110-191606
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
 
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-> Suggested-by: Franz Parzer <rpi-receiver@htl-steyr.ac.at>
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
-> ---
->  drivers/iio/proximity/srf04.c | 104 +++++++++++++++++++++++++++++++++-
->  1 file changed, 103 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
-> index 01eb8cc63076..b19d910298d6 100644
-> --- a/drivers/iio/proximity/srf04.c
-> +++ b/drivers/iio/proximity/srf04.c
-> @@ -45,6 +45,7 @@
->  #include <linux/sched.h>
->  #include <linux/interrupt.h>
->  #include <linux/delay.h>
-> +#include <linux/pm_runtime.h>
->  #include <linux/iio/iio.h>
->  #include <linux/iio/sysfs.h>
->  
-> @@ -56,6 +57,7 @@ struct srf04_data {
->  	struct device		*dev;
->  	struct gpio_desc	*gpiod_trig;
->  	struct gpio_desc	*gpiod_echo;
-> +	struct gpio_desc	*gpiod_power;
->  	struct mutex		lock;
->  	int			irqnr;
->  	ktime_t			ts_rising;
-> @@ -63,6 +65,7 @@ struct srf04_data {
->  	struct completion	rising;
->  	struct completion	falling;
->  	const struct srf04_cfg	*cfg;
-> +	int			startup_time_ms;
->  };
->  
->  static const struct srf04_cfg srf04_cfg = {
-> @@ -97,6 +100,9 @@ static int srf04_read(struct srf04_data *data)
->  	u64 dt_ns;
->  	u32 time_ns, distance_mm;
->  
-> +	if (data->gpiod_power)
-> +		pm_runtime_get_sync(data->dev);
-> +
->  	/*
->  	 * just one read-echo-cycle can take place at a time
->  	 * ==> lock against concurrent reading calls
-> @@ -110,6 +116,11 @@ static int srf04_read(struct srf04_data *data)
->  	udelay(data->cfg->trigger_pulse_us);
->  	gpiod_set_value(data->gpiod_trig, 0);
->  
-> +	if (data->gpiod_power) {
-> +		pm_runtime_mark_last_busy(data->dev);
-> +		pm_runtime_put_autosuspend(data->dev);
-> +	}
-> +
->  	/* it should not take more than 20 ms until echo is rising */
->  	ret = wait_for_completion_killable_timeout(&data->rising, HZ/50);
->  	if (ret < 0) {
-> @@ -268,6 +279,26 @@ static int srf04_probe(struct platform_device *pdev)
->  		return PTR_ERR(data->gpiod_echo);
->  	}
->  
-> +#ifdef CONFIG_PM
-> +	data->gpiod_power = devm_gpiod_get_optional(dev, "power",
-> +								GPIOD_OUT_LOW);
+New smatch warnings:
+drivers/tty/serial/serial_core.c:3105 uart_try_toggle_sysrq() warn: unsigned '++port->sysrq_seq' is never less than zero.
 
-As the gpio is optional anyway and the various runtime pm calls will be stubbed
-out if CONFIG_PM is not enabled, it seems to me that we can just always leave
-this code in place.  So drop the CONFIG_PM protection.
+Old smatch warnings:
+drivers/tty/serial/serial_core.c:295 uart_shutdown() error: we previously assumed 'uport' could be null (see line 291)
+drivers/tty/serial/serial_core.c:2729 uart_get_attr_iomem_base() warn: argument 4 to %lX specifier is cast from pointer
 
-> +	if (IS_ERR(data->gpiod_power)) {
-> +		dev_err(dev, "failed to get power-gpios: err=%ld\n",
-> +						PTR_ERR(data->gpiod_power));
-> +		return PTR_ERR(data->gpiod_power);
-> +	}
-> +	if (data->gpiod_power) {
-> +
-> +		if (of_property_read_u32(dev->of_node, "startup-time-ms",
-> +						&data->startup_time_ms))
-> +			data->startup_time_ms = 100;
-> +		dev_dbg(dev, "using power gpio: startup-time-ms=%d\n",
-> +							data->startup_time_ms);
-> +	}
-> +#else
-> +	data->gpiod_power = NULL;
-> +#endif
-> +
->  	if (gpiod_cansleep(data->gpiod_echo)) {
->  		dev_err(data->dev, "cansleep-GPIOs not supported\n");
->  		return -ENODEV;
-> @@ -296,14 +327,85 @@ static int srf04_probe(struct platform_device *pdev)
->  	indio_dev->channels = srf04_chan_spec;
->  	indio_dev->num_channels = ARRAY_SIZE(srf04_chan_spec);
->  
-> -	return devm_iio_device_register(dev, indio_dev);
-> +	ret = iio_device_register(indio_dev);
-> +	if (ret < 0) {
-> +		dev_err(data->dev, "iio_device_register: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (data->gpiod_power) {
-> +		pm_runtime_set_autosuspend_delay(data->dev, 1000);
-> +		pm_runtime_use_autosuspend(data->dev);
-> +
-> +		ret = pm_runtime_set_active(data->dev);
-> +		if (ret) {
-> +			dev_err(data->dev, "pm_runtime_set_active: %d\n", ret);
-> +			iio_device_unregister(indio_dev);
-> +		}
-> +
-> +		pm_runtime_enable(data->dev);
-> +		pm_runtime_idle(data->dev);
-> +	}
-> +
-> +	return ret;
->  }
->  
-> +static int srf04_remove(struct platform_device *pdev)
-> +{
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct srf04_data *data = iio_priv(indio_dev);
-> +
-> +	iio_device_unregister(indio_dev);
-> +
-> +	if (data->gpiod_power) {
-> +		pm_runtime_disable(data->dev);
-> +		pm_runtime_set_suspended(data->dev);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM
+vim +3105 drivers/tty/serial/serial_core.c
 
-If we drop CONFIG_PM these will need to be marked __maybe_unused.
+  3092	
+  3093	static int uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch)
+  3094	{
+  3095		if (sysrq_toggle_seq[0] == '\0')
+  3096			return 0;
+  3097	
+  3098		BUILD_BUG_ON(ARRAY_SIZE(sysrq_toggle_seq) >= sizeof(port->sysrq_seq)*U8_MAX);
+  3099		if (sysrq_toggle_seq[port->sysrq_seq] != ch) {
+  3100			port->sysrq_seq = 0;
+  3101			return 0;
+  3102		}
+  3103	
+  3104		/* Without the last \0 */
+> 3105		if (++port->sysrq_seq < (ARRAY_SIZE(sysrq_toggle_seq) - 1)) {
+  3106			port->sysrq = jiffies + HZ*5;
+  3107			return 1;
+  3108		}
+  3109	
+  3110		schedule_work(&sysrq_enable_work);
+  3111	
+  3112		port->sysrq = 0;
+  3113		return 1;
+  3114	}
+  3115	
 
-> +static int srf04_pm_runtime_suspend(struct device *dev)
-> +{
-> +	struct platform_device *pdev = container_of(dev,
-> +						struct platform_device, dev);
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct srf04_data *data = iio_priv(indio_dev);
-> +
-> +	gpiod_set_value(data->gpiod_power, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int srf04_pm_runtime_resume(struct device *dev)
-> +{
-> +	struct platform_device *pdev = container_of(dev,
-> +						struct platform_device, dev);
-> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-> +	struct srf04_data *data = iio_priv(indio_dev);
-> +
-> +	gpiod_set_value(data->gpiod_power, 1);
-> +	msleep(data->startup_time_ms);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct dev_pm_ops srf04_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(srf04_pm_runtime_suspend,
-> +				srf04_pm_runtime_resume, NULL)
-> +};
-> +#endif
-> +
->  static struct platform_driver srf04_driver = {
->  	.probe		= srf04_probe,
-> +	.remove		= srf04_remove,
->  	.driver		= {
->  		.name		= "srf04-gpio",
->  		.of_match_table	= of_srf04_match,
-> +#ifdef CONFIG_PM
-> +		.pm		= &srf04_pm_ops,
-> +#endif
->  	},
->  };
->  
-
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
