@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D93FC33CA4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C36C33CA3
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDF02084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D38520880
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578738610;
-	bh=YNKS4Tm3ked/WoWgQbe7SvOeinH9G+RC3XdjwiMRG3Y=;
+	s=default; t=1578738616;
+	bh=nDGNkb97TAMHMFhdA+qF/xMW2/R1B4L6cCRGHxKUuhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vay1IaL3MGkqJz9OtxbbExDbCQmU4neduAnquIKcWkMGUWnc/0do9n8OczlVU8k3T
-	 RDQSuM7Sx3fjuThS+1NRhh6qUGULjlVOUqmihHBrkqWiOKAYalLcca9XugVTEQcfmB
-	 riARtvt3ni9r/QpgW++v704Kzt35ktMHZ7skP3G8=
+	b=z69puh+EpHjTprVXG6hETHVnCiKbzklJALj5lbHcfHtgtvnSLqaRKo6Ure+yzga0s
+	 bmzG3yPxqniShrKImxqbV/yXayMogh0ShNj+7RW++FjRIS8TvhZXDWHkx1CXK29Et7
+	 FccOQmTDwX7oAdyI3Ep2lOzsPr/X1MDHYccOa9AM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731216AbgAKKaJ (ORCPT
+        id S1731313AbgAKKaP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:30:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40080 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:30:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728889AbgAKKaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:30:08 -0500
+        id S1728889AbgAKKaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:30:13 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BFFD20842;
-        Sat, 11 Jan 2020 10:30:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED4892087F;
+        Sat, 11 Jan 2020 10:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578738608;
-        bh=YNKS4Tm3ked/WoWgQbe7SvOeinH9G+RC3XdjwiMRG3Y=;
+        s=default; t=1578738612;
+        bh=nDGNkb97TAMHMFhdA+qF/xMW2/R1B4L6cCRGHxKUuhI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iLrfdQOqMeo4/qAA4UVjaymkuud8EvLHyCSlhqb3mvT9lUiy550omOG9P0UzY0VwB
-         NW12P2T2nAMbhnj5vEeIkXUAVSqo+NrxqLHRA6J1WNWh1yeOTBjRjDx1akgPNW3+ZI
-         GVwBIaX0uG8pX3ZNm4owcqf+RGhjQBRFmD951zrw=
+        b=zAr7JYWbmMrj/qPIEPXxrM5yxPYlvjdZoh45f8OKHYpI71/24kKyvkZFszM+I5uaW
+         LG+JqqPLwyuk8MXcrFZsT5wb4vPhAGkevTZHeZwRp5da18obF1CDQqo1jr9FPO7ji7
+         4Bib2tcysQCgXe6hLd4wLR2nEbZ4C4BqGu9K2r9U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wei Li <liwei391@huawei.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 124/165] arm64: cpu_errata: Add Hisilicon TSV110 to spectre-v2 safe list
-Date:   Sat, 11 Jan 2020 10:50:43 +0100
-Message-Id: <20200111094934.506469863@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 125/165] block: Fix a lockdep complaint triggered by request queue flushing
+Date:   Sat, 11 Jan 2020 10:50:44 +0100
+Message-Id: <20200111094934.717071949@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 References: <20200111094921.347491861@linuxfoundation.org>
@@ -61,33 +62,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Li <liwei391@huawei.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-[ Upstream commit aa638cfe3e7358122a15cb1d295b622aae69e006 ]
+[ Upstream commit b3c6a59975415bde29cfd76ff1ab008edbf614a9 ]
 
-HiSilicon Taishan v110 CPUs didn't implement CSV2 field of the
-ID_AA64PFR0_EL1, but spectre-v2 is mitigated by hardware, so
-whitelist the MIDR in the safe list.
+Avoid that running test nvme/012 from the blktests suite triggers the
+following false positive lockdep complaint:
 
-Signed-off-by: Wei Li <liwei391@huawei.com>
-[hanjun: re-write the commit log]
-Signed-off-by: Hanjun Guo <guohanjun@huawei.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+============================================
+WARNING: possible recursive locking detected
+5.0.0-rc3-xfstests-00015-g1236f7d60242 #841 Not tainted
+--------------------------------------------
+ksoftirqd/1/16 is trying to acquire lock:
+000000000282032e (&(&fq->mq_flush_lock)->rlock){..-.}, at: flush_end_io+0x4e/0x1d0
+
+but task is already holding lock:
+00000000cbadcbc2 (&(&fq->mq_flush_lock)->rlock){..-.}, at: flush_end_io+0x4e/0x1d0
+
+other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+       CPU0
+       ----
+  lock(&(&fq->mq_flush_lock)->rlock);
+  lock(&(&fq->mq_flush_lock)->rlock);
+
+ *** DEADLOCK ***
+
+ May be due to missing lock nesting notation
+
+1 lock held by ksoftirqd/1/16:
+ #0: 00000000cbadcbc2 (&(&fq->mq_flush_lock)->rlock){..-.}, at: flush_end_io+0x4e/0x1d0
+
+stack backtrace:
+CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.0.0-rc3-xfstests-00015-g1236f7d60242 #841
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ dump_stack+0x67/0x90
+ __lock_acquire.cold.45+0x2b4/0x313
+ lock_acquire+0x98/0x160
+ _raw_spin_lock_irqsave+0x3b/0x80
+ flush_end_io+0x4e/0x1d0
+ blk_mq_complete_request+0x76/0x110
+ nvmet_req_complete+0x15/0x110 [nvmet]
+ nvmet_bio_done+0x27/0x50 [nvmet]
+ blk_update_request+0xd7/0x2d0
+ blk_mq_end_request+0x1a/0x100
+ blk_flush_complete_seq+0xe5/0x350
+ flush_end_io+0x12f/0x1d0
+ blk_done_softirq+0x9f/0xd0
+ __do_softirq+0xca/0x440
+ run_ksoftirqd+0x24/0x50
+ smpboot_thread_fn+0x113/0x1e0
+ kthread+0x121/0x140
+ ret_from_fork+0x3a/0x50
+
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/cpu_errata.c | 1 +
- 1 file changed, 1 insertion(+)
+ block/blk-flush.c | 5 +++++
+ block/blk.h       | 1 +
+ 2 files changed, 6 insertions(+)
 
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index 93f34b4eca25..96f576e9ea46 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -575,6 +575,7 @@ static const struct midr_range spectre_v2_safe_list[] = {
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
- 	MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
- 	MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
-+	MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
- 	{ /* sentinel */ }
+diff --git a/block/blk-flush.c b/block/blk-flush.c
+index 1eec9cbe5a0a..b1f0a1ac505c 100644
+--- a/block/blk-flush.c
++++ b/block/blk-flush.c
+@@ -69,6 +69,7 @@
+ #include <linux/blkdev.h>
+ #include <linux/gfp.h>
+ #include <linux/blk-mq.h>
++#include <linux/lockdep.h>
+ 
+ #include "blk.h"
+ #include "blk-mq.h"
+@@ -492,6 +493,9 @@ struct blk_flush_queue *blk_alloc_flush_queue(struct request_queue *q,
+ 	INIT_LIST_HEAD(&fq->flush_queue[1]);
+ 	INIT_LIST_HEAD(&fq->flush_data_in_flight);
+ 
++	lockdep_register_key(&fq->key);
++	lockdep_set_class(&fq->mq_flush_lock, &fq->key);
++
+ 	return fq;
+ 
+  fail_rq:
+@@ -506,6 +510,7 @@ void blk_free_flush_queue(struct blk_flush_queue *fq)
+ 	if (!fq)
+ 		return;
+ 
++	lockdep_unregister_key(&fq->key);
+ 	kfree(fq->flush_rq);
+ 	kfree(fq);
+ }
+diff --git a/block/blk.h b/block/blk.h
+index 47fba9362e60..ffea1691470e 100644
+--- a/block/blk.h
++++ b/block/blk.h
+@@ -30,6 +30,7 @@ struct blk_flush_queue {
+ 	 * at the same time
+ 	 */
+ 	struct request		*orig_rq;
++	struct lock_class_key	key;
+ 	spinlock_t		mq_flush_lock;
  };
  
 -- 
