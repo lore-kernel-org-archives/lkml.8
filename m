@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4678FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3085FC33C9E
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 145CE205F4
-	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 078B7205F4
+	for <linux-kernel@archiver.kernel.org>; Sat, 11 Jan 2020 10:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578737820;
-	bh=VVAXxor+iPN+v/i1b9zhPl8bSbTs/m3d8lkUIp2osCk=;
+	s=default; t=1578737823;
+	bh=rn+RqjIAdDdOswpcLXNztAWhWJuyC+dPZFWOqYFTTr8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IVNbjyXt52+PmXrsdJGLD3ZXwJ+DlcD58OxUGcyxBOrkX46eHn2G14gT8ta2f5c+N
-	 J6yUuz8+CcP8ntmi7TVnnJ8EFccpV5V2nNnhsIFqRoLg2Usf8B+TzPTK+xKsLPkRdL
-	 9BGH+LveaPTAiVL5saB0O5QC19JL2ow5z65flY9Y=
+	b=wXc+yqp8JSXFvEUcxC17ejh2KljUypM3xyR71kJywU/Ogq2ZLdVPvDL39VR/2IVnY
+	 WW2ZMHYenLVjf10U8Dq408OG+1qFgM2PX9kt/rchTua7/8wf7Tu5eiAb6s/gyHd9/z
+	 7xx0qneosAppYeQheKsroYt15o0lFsh9QW42Acvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbgAKKQ7 (ORCPT
+        id S1730445AbgAKKRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 05:16:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60466 "EHLO mail.kernel.org"
+        Sat, 11 Jan 2020 05:17:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730398AbgAKKQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 05:16:49 -0500
+        id S1729229AbgAKKQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 05:16:57 -0500
 Received: from localhost (unknown [62.119.166.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA22220880;
-        Sat, 11 Jan 2020 10:16:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A92520882;
+        Sat, 11 Jan 2020 10:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578737808;
-        bh=VVAXxor+iPN+v/i1b9zhPl8bSbTs/m3d8lkUIp2osCk=;
+        s=default; t=1578737816;
+        bh=rn+RqjIAdDdOswpcLXNztAWhWJuyC+dPZFWOqYFTTr8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RzlB/Dc5Eds9VClp0Kgz4EEd0bE35Nv0Rn32Kc7uWb6bwh5QjgSoC3a00jCtTtO4k
-         67bGEnJ1sJZ+t6c0SZXvmRamKbs/GNHFTurl+7XywKHwRkKn+A2dPktMZbxXfb41SC
-         q8mZdbQe752nME3Nmh8MdZbLS56Vk8jh5BUEEQ+I=
+        b=xf0oczA4Xm5IL9hAwXiO8UXuAhDI1TD8KLCQ0sWDYTtR1C1d17++7FeJhpHfaSzqx
+         Pv/y8zpTt7Kp58rv00SsAY9xV/VEMRrNTarql/v4VbCuFCWHGJGA4HcG8hxbYOZVJc
+         5lbHSON8PXB0lLJJBTBOUnXMljWryjOagVnNxdZg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 32/84] samples: bpf: fix syscall_tp due to unused syscall
-Date:   Sat, 11 Jan 2020 10:50:09 +0100
-Message-Id: <20200111094858.413545470@linuxfoundation.org>
+Subject: [PATCH 4.19 24/84] spi: spi-cavium-thunderx: Add missing pci_release_regions()
+Date:   Sat, 11 Jan 2020 10:50:01 +0100
+Message-Id: <20200111094854.787583225@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200111094845.328046411@linuxfoundation.org>
 References: <20200111094845.328046411@linuxfoundation.org>
@@ -60,59 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel T. Lee <danieltimlee@gmail.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit fe3300897cbfd76c6cb825776e5ac0ca50a91ca4 ]
+[ Upstream commit a841e2853e1afecc2ee692b8cc5bff606bc84e4c ]
 
-Currently, open() is called from the user program and it calls the syscall
-'sys_openat', not the 'sys_open'. This leads to an error of the program
-of user side, due to the fact that the counter maps are zero since no
-function such 'sys_open' is called.
+The driver forgets to call pci_release_regions() in probe failure
+and remove.
+Add the missed calls to fix it.
 
-This commit adds the kernel bpf program which are attached to the
-tracepoint 'sys_enter_openat' and 'sys_enter_openat'.
-
-Fixes: 1da236b6be963 ("bpf: add a test case for syscalls/sys_{enter|exit}_* tracepoints")
-Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Link: https://lore.kernel.org/r/20191206075500.18525-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- samples/bpf/syscall_tp_kern.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
+ drivers/spi/spi-cavium-thunderx.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/samples/bpf/syscall_tp_kern.c b/samples/bpf/syscall_tp_kern.c
-index 9149c524d279..8833aacb9c8c 100644
---- a/samples/bpf/syscall_tp_kern.c
-+++ b/samples/bpf/syscall_tp_kern.c
-@@ -50,13 +50,27 @@ static __always_inline void count(void *map)
- SEC("tracepoint/syscalls/sys_enter_open")
- int trace_enter_open(struct syscalls_enter_open_args *ctx)
- {
--	count((void *)&enter_open_map);
-+	count(&enter_open_map);
-+	return 0;
-+}
-+
-+SEC("tracepoint/syscalls/sys_enter_openat")
-+int trace_enter_open_at(struct syscalls_enter_open_args *ctx)
-+{
-+	count(&enter_open_map);
- 	return 0;
- }
+diff --git a/drivers/spi/spi-cavium-thunderx.c b/drivers/spi/spi-cavium-thunderx.c
+index 877937706240..828fbbebc3c4 100644
+--- a/drivers/spi/spi-cavium-thunderx.c
++++ b/drivers/spi/spi-cavium-thunderx.c
+@@ -81,6 +81,7 @@ static int thunderx_spi_probe(struct pci_dev *pdev,
  
- SEC("tracepoint/syscalls/sys_exit_open")
- int trace_enter_exit(struct syscalls_exit_open_args *ctx)
- {
--	count((void *)&exit_open_map);
-+	count(&exit_open_map);
-+	return 0;
-+}
-+
-+SEC("tracepoint/syscalls/sys_exit_openat")
-+int trace_enter_exit_at(struct syscalls_exit_open_args *ctx)
-+{
-+	count(&exit_open_map);
- 	return 0;
+ error:
+ 	clk_disable_unprepare(p->clk);
++	pci_release_regions(pdev);
+ 	spi_master_put(master);
+ 	return ret;
+ }
+@@ -95,6 +96,7 @@ static void thunderx_spi_remove(struct pci_dev *pdev)
+ 		return;
+ 
+ 	clk_disable_unprepare(p->clk);
++	pci_release_regions(pdev);
+ 	/* Put everything in a known state. */
+ 	writeq(0, p->register_base + OCTEON_SPI_CFG(p));
  }
 -- 
 2.20.1
