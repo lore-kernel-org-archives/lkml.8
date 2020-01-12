@@ -2,98 +2,105 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DA6C33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A80C33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E23CD2053B
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8082921744
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="UPPSeWIa"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="CSIf8zze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387410AbgALUAL (ORCPT
+        id S2387416AbgALUA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 15:00:11 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:46418 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728659AbgALUAK (ORCPT
+        Sun, 12 Jan 2020 15:00:59 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:46913 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733064AbgALUA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 15:00:10 -0500
-Received: by mail-io1-f67.google.com with SMTP id t26so7325007ioi.13
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 12:00:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4mB/pHZUD7pjqdY45Y5CDvGVoduZ0ZQ2r5DCq1x4iog=;
-        b=UPPSeWIa8hQFLkbNLWRaxUgSYb7TwmCHtvRkLp1TpTRt4i0ahGu0JrwZmLsSVBtxef
-         fOvWys6QfXgKHL5I6BAgz+e/whyHzQjbg5WP8MI2J7qEjPtaYm40v/8CsdeIbs/F3CNF
-         zK1T3MvNTJ2UPXusLsfkZ3t4FlycfJoxPvPS6jErw5AFU7u1dy62EgZJllR4weH/vj/R
-         eoI1j+iqmk4ttbJ1xX9uvw/SyCaZ2Fcn52DUxkynHOwRMpo3HVnzt6QdJ0a5pgWphPln
-         pFkXqHo1ud5kQrIU1zlHrq4w86zzD6u2vo2/HEjtTEF5PVcJqJVKqRhGiZc8wAhojoTW
-         183Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4mB/pHZUD7pjqdY45Y5CDvGVoduZ0ZQ2r5DCq1x4iog=;
-        b=B3mVK/K9YwERvldx9342ydYlaaWLMabGTZJf0Gls7/obg7svTaPNyuCswyjKwoXn3k
-         uopVK6m6rWE7Vjl9mrZK+eO2eySVLcQOMQVuvi0+z+6XUNpVJfvklAFG0OuGIqxMjuqK
-         zymwR97WbpJLARBaPWRuqqFL4U9odfOclmkr2JMtPNJqpfS0gOmbtZT9wmLl0rDNqV1k
-         XyEJNreZ1wUbezIwaimK/yn8wJFMSMF5UsfyNUIehheknnVAlrWSa0kCmB6AvcLSXJqi
-         NLrEylityCfctuGuvOvJNSklw5LqRX8xqBvO6HVriHwqGsX7mtutOUD97GlSSjVTp635
-         p0jQ==
-X-Gm-Message-State: APjAAAXMnrmXm1vJw2jevG7/eOSITtda+lB3xq9CBljODYJlnCSX0MNd
-        i2/I5ks2s9qthXZAjLEee9KULOh1ZBGQilFSXtZhiw==
-X-Google-Smtp-Source: APXvYqyqtIdNVp4dAlM2o9n7nX85aZbnej16a5k16emsTD5losR5+msLRBN07golodtkhQMVuCOh2ZGuVt7FoBUusA8=
-X-Received: by 2002:a02:7fd0:: with SMTP id r199mr11669542jac.126.1578859209969;
- Sun, 12 Jan 2020 12:00:09 -0800 (PST)
+        Sun, 12 Jan 2020 15:00:58 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 2B141886BF;
+        Mon, 13 Jan 2020 09:00:55 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1578859255;
+        bh=IL1PdJcKPjwwEdc8J7wiAsXAM3GoztCVHbvafOTX1zQ=;
+        h=From:To:Subject:Date:References:In-Reply-To;
+        b=CSIf8zzef7dEYp1DL6QhYthfJZu/dlT6Ctgg0s6NR4HbVeIvHatiwZ7die+7XNVjr
+         CC4+GikPKHqO+1pvUroGu/Qon2OI/M3TVNyl91GckDt2Qc3Jmfzx4j9cGizptbPJmd
+         9avqT1OeHSxnUw1ll+it/3j9/K0MQ7eGBsC4SDHND/YPUQKAmftd4T4mg4TE1BW/9h
+         5F910XTXZ9/Ax+tO+Y+jaj9GMkZo0JaW81jUje+JrntmyqWXOBPRfjdOUVURJ3oSDe
+         SljtZkXPv7N2ZWVSTBlyPdzbrAMK51cpYCEOR7lW2hNLLQOczvRuBt6q+iXE5478dy
+         QHhZ6xQRLO0LA==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e1b7af70001>; Mon, 13 Jan 2020 09:00:55 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jan 2020 09:00:54 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1473.005; Mon, 13 Jan 2020 09:00:54 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bcm-kernel-feedback-list@broadcom.com" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "rjui@broadcom.com" <rjui@broadcom.com>,
+        "rayagonda.kokatanur@broadcom.com" <rayagonda.kokatanur@broadcom.com>,
+        "sbranden@broadcom.com" <sbranden@broadcom.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "li.jin@broadcom.com" <li.jin@broadcom.com>
+Subject: Re: [PATCH v1 1/1] pinctrl: iproc: Use platform_get_irq_optional() to
+ avoid error message
+Thread-Topic: [PATCH v1 1/1] pinctrl: iproc: Use platform_get_irq_optional()
+ to avoid error message
+Thread-Index: AQHVx2nXfGk87Uyk9UmbQT0PK/pn36fmnTwA
+Date:   Sun, 12 Jan 2020 20:00:54 +0000
+Message-ID: <f9ea8a877194fb0a928ab4f41171a5a7ef3233f0.camel@alliedtelesis.co.nz>
+References: <20200110035524.23511-1-rayagonda.kokatanur@broadcom.com>
+In-Reply-To: <20200110035524.23511-1-rayagonda.kokatanur@broadcom.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:d1a1:ea74:6baa:5aa3]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B700B6FD4109D04A82F8CC6910E30027@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200113065808.25f28c40@canb.auug.org.au>
-In-Reply-To: <20200113065808.25f28c40@canb.auug.org.au>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Sun, 12 Jan 2020 11:59:58 -0800
-Message-ID: <CAOesGMifHn6DbNgYm6YUbdKjSL5rNgdWrq+HX9dEusrOr9xX2A@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the arm-soc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ludovic Barre <ludovic.barre@st.com>,
-        Yann Gautier <yann.gautier@st.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen,
-
-Thanks for the report. Time to automate this at our end, we've had a
-few too many of these slip through all the way to you lately.
-
-Where do you keep your scripts that you catch these things with? Do
-you have a writeup of the checks you do? I should add it to my
-automation once and for all.
-
-
--Olof
-
-On Sun, Jan 12, 2020 at 11:58 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> Commit
->
->   7e5d83981911 ("ARM: dts: stm32: add sdmmc3 node for STM32MP1 boards")
->
-> is missing a Signed-off-by from its committer.
->
-> --
-> Cheers,
-> Stephen Rothwell
+T24gRnJpLCAyMDIwLTAxLTEwIGF0IDA5OjI1ICswNTMwLCBSYXlhZ29uZGEgS29rYXRhbnVyIHdy
+b3RlOg0KPiBVc2UgcGxhdGZvcm1fZ2V0X2lycV9vcHRpb25hbCgpIGluc3RlYWQgb2YgcGxhdGZv
+cm1fZ2V0X2lycSgpIHRvIGF2b2lkDQo+IGJlbG93IGVycm9yIG1lc3NhZ2UgZHVyaW5nIHByb2Jl
+Og0KPiANCj4gWyAwLjU4OTEyMV0gaXByb2MtZ3BpbyA2NjQyNDgwMC5ncGlvOiBJUlEgaW5kZXgg
+MCBub3QgZm91bmQNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFJheWFnb25kYSBLb2thdGFudXIgPHJh
+eWFnb25kYS5rb2thdGFudXJAYnJvYWRjb20uY29tPg0KDQpSZXZpZXdlZC1ieTogQ2hyaXMgUGFj
+a2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KDQo+IC0tLQ0KPiAgZHJp
+dmVycy9waW5jdHJsL2JjbS9waW5jdHJsLWlwcm9jLWdwaW8uYyB8IDIgKy0NCj4gIDEgZmlsZSBj
+aGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvcGluY3RybC9iY20vcGluY3RybC1pcHJvYy1ncGlvLmMgYi9kcml2ZXJzL3BpbmN0
+cmwvYmNtL3BpbmN0cmwtaXByb2MtZ3Bpby5jDQo+IGluZGV4IDgzMWE5MzE4YzM4NC4uMGQyYmRi
+ODE4ZDQxIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3BpbmN0cmwvYmNtL3BpbmN0cmwtaXByb2Mt
+Z3Bpby5jDQo+ICsrKyBiL2RyaXZlcnMvcGluY3RybC9iY20vcGluY3RybC1pcHJvYy1ncGlvLmMN
+Cj4gQEAgLTg0Myw3ICs4NDMsNyBAQCBzdGF0aWMgaW50IGlwcm9jX2dwaW9fcHJvYmUoc3RydWN0
+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAkJCQkJCQkiZ3Bpby1yYW5nZXMiKTsNCj4gIA0K
+PiAgCS8qIG9wdGlvbmFsIEdQSU8gaW50ZXJydXB0IHN1cHBvcnQgKi8NCj4gLQlpcnEgPSBwbGF0
+Zm9ybV9nZXRfaXJxKHBkZXYsIDApOw0KPiArCWlycSA9IHBsYXRmb3JtX2dldF9pcnFfb3B0aW9u
+YWwocGRldiwgMCk7DQo+ICAJaWYgKGlycSA+IDApIHsNCj4gIAkJc3RydWN0IGlycV9jaGlwICpp
+cnFjOw0KPiAgCQlzdHJ1Y3QgZ3Bpb19pcnFfY2hpcCAqZ2lycTsNCg==
