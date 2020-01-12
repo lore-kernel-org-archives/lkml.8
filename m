@@ -2,138 +2,106 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 415CAC33CA2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 734D0C33CA9
 	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10967214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:32:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Imz0Dk/x"
+	by mail.kernel.org (Postfix) with ESMTP id 5D3E7214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:32:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733212AbgALSWE (ORCPT
+        id S1733219AbgALScj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 13:22:04 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36259 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732957AbgALSWD (ORCPT
+        Sun, 12 Jan 2020 13:32:39 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:38282 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732957AbgALScj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 13:22:03 -0500
-Received: by mail-qt1-f194.google.com with SMTP id i13so7172171qtr.3
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 10:22:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Pykkr3F66k7d7FVxfuvlxLW7YZg4/2EqKAq/W06OIdQ=;
-        b=Imz0Dk/xVUbz1ODH7orlJWunNhmZ3/M5FvVyYYmtXFoorYCuAvnJhuZIx5i775wwjR
-         zHrrOHgH6pltrG+f8KdWMvwp4ne30QQiNe9GcpwZM0+NmfDiiuY8Axn8RihQVAqSwmH/
-         BWPjk4Y+Lxk59rQonUkw+uy2AiNAcjmCDHUn7GVeJN6NpMH/JRMuv8BXWigTRxiHE7Pa
-         cynNMzqlu1WTUnMb1h42xnPnw/yw9nzxxWhTSL9TSI2CoF4EHW3F0uX18a4Zq5886Izx
-         XQ+p3sO8sRRPyubDIElonrLx2isnLC9KfEFKCw3Ueh395NKfrcCyelgUGUDH1cq+T+TJ
-         3aLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Pykkr3F66k7d7FVxfuvlxLW7YZg4/2EqKAq/W06OIdQ=;
-        b=np7eYmXxGxo/4j6sAafhc7/qDHvc2NKvZSuHfhg8/3NU2mV+VY23ekfu8NRnIiZVNN
-         PbP/6+iPykwfS02P4nM8WZOlVcUwrjd5wSZNoyO+KVPFYnyalPMIUj0aa8yMfEo0pmQo
-         RC2cfa16+WC+EbzkJtxHX0XwVaw++t4HLngasO/M8/rtin6twGkQcwh/b83PcrCqLBQG
-         p6crEakwpExYEzyDTTYfJYvLy+YqNrsYnfzUD0GnmywQmrceVDk49DQb2GDPp3DD+Nwz
-         rcSyS+9zxN7bNJfbR9lau8IN+HRqS+cCIzPxAO7XpYrPi9KFH0IWnu2ehmcMXYu7ZZq+
-         Qzrw==
-X-Gm-Message-State: APjAAAVZgcB7YHIzZJjJIbabvc7l8H9sBXP2HzGZPxzkV+VnukbjhQLU
-        hdTbQVJhUNfev2fGIVhErQs=
-X-Google-Smtp-Source: APXvYqwV8zszJaNPB5Mzahgr+LxbH9mxiEcfFhjHDktrcHg2qQTiZPIAGbKvi34j17tJCULrNJnEng==
-X-Received: by 2002:ac8:4a10:: with SMTP id x16mr10896100qtq.371.1578853322791;
-        Sun, 12 Jan 2020 10:22:02 -0800 (PST)
-Received: from localhost.localdomain (209-6-36-129.s6527.c3-0.smr-cbr2.sbo-smr.ma.cable.rcncustomer.com. [209.6.36.129])
-        by smtp.gmail.com with ESMTPSA id h8sm4361679qtm.51.2020.01.12.10.22.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 10:22:02 -0800 (PST)
-Date:   Sun, 12 Jan 2020 13:22:00 -0500
-From:   Konrad Rzeszutek Wilk <konrad@darnok.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Konrad Rzeszutek Wilk <konrad@kernel.org>,
-        Peter Jones <pjones@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND PATCH] iscsi_ibft: Don't limits Targets and NICs to two
-Message-ID: <20200112182200.GA11668@localhost.localdomain>
-References: <20191221070956.268321-1-lkundrak@v3.sk>
+        Sun, 12 Jan 2020 13:32:39 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iqi2N-006mo9-2h; Sun, 12 Jan 2020 18:32:35 +0000
+Date:   Sun, 12 Jan 2020 18:32:35 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: Re: linux-next: build failure after merge of the block tree
+Message-ID: <20200112183235.GO8904@ZenIV.linux.org.uk>
+References: <20200106123027.1a162197@canb.auug.org.au>
+ <e9a87175-64c9-46da-4737-72987a53e836@kernel.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191221070956.268321-1-lkundrak@v3.sk>
+In-Reply-To: <e9a87175-64c9-46da-4737-72987a53e836@kernel.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Dec 21, 2019 at 08:09:56AM +0100, Lubomir Rintel wrote:
-> According to iSCSI Boot Firmware Table Version 1.03 [1], the length of
-> the control table is ">= 18", where the optional expansion structure
-> pointer follow the mandatory ones. This allows for more than two NICs
-> and Targets.
+On Mon, Jan 06, 2020 at 09:04:01PM -0700, Jens Axboe wrote:
+> On 1/5/20 6:30 PM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > After merging the block tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> > 
+> > fs/open.c:977:12: error: conflicting types for 'build_open_flags'
+> >   977 | inline int build_open_flags(const struct open_how *how,
+> >       |            ^~~~~~~~~~~~~~~~
+> > In file included from /home/sfr/next/next/fs/open.c:36:
+> > fs/internal.h:127:12: note: previous declaration of 'build_open_flags' was here
+> >   127 | extern int build_open_flags(int flags, umode_t mode, struct open_flags *op);
+> >       |            ^~~~~~~~~~~~~~~~
+> > 
+> > Caused by commits
+> > 
+> >   4e9e15c9426e ("fs: make build_open_flags() available internally")
+> >   3bba3e571bc8 ("io_uring: add support for IORING_OP_OPENAT")
+> > 
+> > interacting with commit
+> > 
+> >   0a51692d49ec ("open: introduce openat2(2) syscall")
+> > 
+> > from the vfs tree.
+> > 
+> > I have applied the following fix up patch for today:
 > 
-> [1] ftp://ftp.software.ibm.com/systems/support/bladecenter/iscsi_boot_firmware_table_v1.03.pdf
-> 
-> Let's enforce the minimum length of the control structure instead
-> instead of limiting it to the smallest allowed size.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Thanks Stephen - I'll pull in the VFS tree and rebase the 5.6 io_uring
+> bits on that. Then I'll send it out for review again, haven't heard from
+> Al on the non-block open change.
 
-Put it in my tree and will send it up to Linus for the next merge
-window.
+FWIW, I don't believe that your approach is workable.  First of all,
+*ANY* transition out of RCU mode can lead to blocking.  You need to
+acquire several references (mount and dentry, at the very least).
+Suppose the last one fails (->d_seq mismatch).  Now you suddenly
+have to drop the one(s) you've acquired.  And both dput() and mntput()
+are fundamentally blocking operations.
 
-Thanks!
-> ---
->  drivers/firmware/iscsi_ibft.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
-> index 7e12cbdf957cc..96758b71a8db8 100644
-> --- a/drivers/firmware/iscsi_ibft.c
-> +++ b/drivers/firmware/iscsi_ibft.c
-> @@ -104,6 +104,7 @@ struct ibft_control {
->  	u16 tgt0_off;
->  	u16 nic1_off;
->  	u16 tgt1_off;
-> +	u16 expansion[0];
->  } __attribute__((__packed__));
->  
->  struct ibft_initiator {
-> @@ -235,7 +236,7 @@ static int ibft_verify_hdr(char *t, struct ibft_hdr *hdr, int id, int length)
->  				"found %d instead!\n", t, id, hdr->id);
->  		return -ENODEV;
->  	}
-> -	if (hdr->length != length) {
-> +	if (length && hdr->length != length) {
->  		printk(KERN_ERR "iBFT error: We expected the %s " \
->  				"field header.length to have %d but " \
->  				"found %d instead!\n", t, length, hdr->length);
-> @@ -749,16 +750,16 @@ static int __init ibft_register_kobjects(struct acpi_table_ibft *header)
->  	control = (void *)header + sizeof(*header);
->  	end = (void *)control + control->hdr.length;
->  	eot_offset = (void *)header + header->header.length - (void *)control;
-> -	rc = ibft_verify_hdr("control", (struct ibft_hdr *)control, id_control,
-> -			     sizeof(*control));
-> +	rc = ibft_verify_hdr("control", (struct ibft_hdr *)control, id_control, 0);
->  
->  	/* iBFT table safety checking */
->  	rc |= ((control->hdr.index) ? -ENODEV : 0);
-> +	rc |= ((control->hdr.length < sizeof(*control)) ? -ENODEV : 0);
->  	if (rc) {
->  		printk(KERN_ERR "iBFT error: Control header is invalid!\n");
->  		return rc;
->  	}
-> -	for (ptr = &control->initiator_off; ptr < end; ptr += sizeof(u16)) {
-> +	for (ptr = &control->initiator_off; ptr + sizeof(u16) <= end; ptr += sizeof(u16)) {
->  		offset = *(u16 *)ptr;
->  		if (offset && offset < header->header.length &&
->  						offset < eot_offset) {
-> -- 
-> 2.24.1
-> 
+It simply does not work.  You could cobble up something that kinda-sorta
+works, if your added flag had
+	* caused hard failure on unlazy_child()
+	* caused hard failure on unlazy_walk() with any symlinks in stack
+	* caused hard failure on unlazy_walk() if it would've been required
+to grab root
+	* made unlazy_walk() go through very careful dance if it's just
+about nd->path; I'm not sure how well that could be done, but theoretically
+it's not impossible.
+
+But for open() it's not going to work at all.  Any open for write => you
+will have to wait if you run into fs freeze.  O_TRUNC => you've got IO
+to do.  Worst of all, once you've dropped out of RCU mode, *YOU* *CAN'T*
+*FAIL*.  Because that means blocking operations.  So you need to verify
+that you won't run into a blocking ->open(), IMA deciding to play silly
+buggers and read through the entire file, etc., etc. _before_ dropping
+out of RCU mode.
+
+do_last() is messy enough as it is; adding _this_ is completely out of
+question.
+
+Jens, if you have a workable plan on that non-blocking open of yours,
+post it in full details.  Until then - NAK, and that's about as hard one
+as I ever had to give.
