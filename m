@@ -2,78 +2,166 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD364C33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 23:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38538C33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 23:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8416F20848
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 23:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E7820724
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 23:59:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yn6uC4+C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387502AbgALXwf (ORCPT
+        id S2387538AbgALX7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 18:52:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:33092 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727323AbgALXwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 18:52:35 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E00FB30E;
-        Sun, 12 Jan 2020 15:52:34 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A9B2E3F68E;
-        Sun, 12 Jan 2020 15:52:33 -0800 (PST)
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-kernel@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>
-Subject: [PATCH] sched/uclamp: reject negative values in cpu_uclamp_write
-Date:   Sun, 12 Jan 2020 23:52:17 +0000
-Message-Id: <20200112235217.26647-1-qais.yousef@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 12 Jan 2020 18:59:23 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25528 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387460AbgALX7X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 18:59:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578873561;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=shjAXqX0XtuUm3vvQnDz2Q/Zb3ofWUI9QTq2ZaDFd1Y=;
+        b=Yn6uC4+C25vgWx4W/mwOGgaKLP4dmSlwt9Siu94PbKN652lPmglrPodHADxiiN0rmcn2UI
+        flDt5KSMzBFK2ggTBgWO5LhbYQnUKOoZYTGxC2+N1jbE7cbrBE9UpMStHWCol+GwdV/vCr
+        4Mapsgw7wOPdS7e365YJGi2okEwInYQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-122-bDP-4MxGMTqtPa2ekniHGw-1; Sun, 12 Jan 2020 18:59:18 -0500
+X-MC-Unique: bDP-4MxGMTqtPa2ekniHGw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B175477;
+        Sun, 12 Jan 2020 23:59:17 +0000 (UTC)
+Received: from llong.com (ovpn-121-25.rdu2.redhat.com [10.10.121.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CE6FE60BE2;
+        Sun, 12 Jan 2020 23:59:13 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v2] locking/osq: Use optimized spinning loop for arm64
+Date:   Sun, 12 Jan 2020 18:58:54 -0500
+Message-Id: <20200112235854.32089-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The check to ensure that the new written value into cpu.uclamp.{min,max}
-is within range, [0:100], wasn't working because of the signed
-comparison
+Arm64 has a more optimized spinning loop (atomic_cond_read_acquire)
+for spinlock that can boost performance of sibling threads by putting
+the current cpu to a shallow sleep state that is woken up only when
+the monitored variable changes or an external event happens.
 
-7301                 if (req.percent > UCLAMP_PERCENT_SCALE) {
-7302                         req.ret = -ERANGE;
-7303                         return req;
-7304                 }
+OSQ has a more complicated spinning loop. Besides the lock value, it
+also checks for need_resched() and vcpu_is_preempted(). The check for
+need_resched() is not a problem as it is only set by the tick interrupt
+handler. That will be detected by the spinning cpu right after iret.
 
-Cast req.percent into u64 to force the comparison to be unsigned and
-work as intended in capacity_from_percent().
+The vcpu_is_preempted() check, however, is a problem as changes to the
+preempt state of of previous node will not affect the sleep state. For
+ARM64, vcpu_is_preempted is not defined and so is a no-op. To guard
+against future addition of vcpu_is_preempted() to arm64, code is added
+to cause build error when vcpu_is_preempted becomes defined in arm64
+without the corresponding changes in the OSQ spinning code.
 
-Fixes: 2480c093130f ("sched/uclamp: Extend CPU's cgroup controller")
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+On a 2-socket 56-core 224-thread ARM64 system, a kernel mutex locking
+microbenchmark was run for 10s with and without the patch. The
+performance numbers before patch were:
+
+Running locktest with mutex [runtime = 10s, load = 1]
+Threads = 224, Min/Mean/Max = 316/123,143/2,121,269
+Threads = 224, Total Rate = 2,757 kop/s; Percpu Rate = 12 kop/s
+
+After patch, the numbers were:
+
+Running locktest with mutex [runtime = 10s, load = 1]
+Threads = 224, Min/Mean/Max = 334/147,836/1,304,787
+Threads = 224, Total Rate = 3,311 kop/s; Percpu Rate = 15 kop/s
+
+So there was about 20% performance improvement.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/barrier.h | 10 ++++++++++
+ kernel/locking/osq_lock.c        | 25 ++++++++++++-------------
+ 2 files changed, 22 insertions(+), 13 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 90e4b00ace89..e66b131e3aeb 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7254,7 +7254,7 @@ capacity_from_percent(char *buf)
- 					     &req.percent);
- 		if (req.ret)
- 			return req;
--		if (req.percent > UCLAMP_PERCENT_SCALE) {
-+		if ((u64)req.percent > UCLAMP_PERCENT_SCALE) {
- 			req.ret = -ERANGE;
- 			return req;
- 		}
+diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
+index 7d9cc5ec4971..8eb5f1239885 100644
+--- a/arch/arm64/include/asm/barrier.h
++++ b/arch/arm64/include/asm/barrier.h
+@@ -152,6 +152,16 @@ do {									\
+ 	VAL;								\
+ })
+ 
++/*
++ * In osq_lock(), smp_cond_load_relaxed() is called with a condition
++ * that includes vcpu_is_preempted(). For arm64, vcpu_is_preempted is not
++ * currently defined. So it is a no-op. If vcpu_is_preempted is defined in
++ * the future, smp_cond_load_relaxed() will not response to changes in the
++ * preempt state in a timely manner. So code changes will have to be made
++ * to address this deficiency.
++ */
++#define vcpu_is_preempted_not_used
++
+ #define smp_cond_load_acquire(ptr, cond_expr)				\
+ ({									\
+ 	typeof(ptr) __PTR = (ptr);					\
+diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
+index 6ef600aa0f47..69ec5161c3cc 100644
+--- a/kernel/locking/osq_lock.c
++++ b/kernel/locking/osq_lock.c
+@@ -13,6 +13,14 @@
+  */
+ static DEFINE_PER_CPU_SHARED_ALIGNED(struct optimistic_spin_node, osq_node);
+ 
++/*
++ * The optimized smp_cond_load_relaxed() spin loop should not be used with
++ * vcpu_is_preempted defined.
++ */
++#if defined(vcpu_is_preempted) && defined(vcpu_is_preempted_not_used)
++#error "vcpu_is_preempted() inside smp_cond_load_relaxed() may not work!"
++#endif
++
+ /*
+  * We use the value 0 to represent "no CPU", thus the encoded value
+  * will be the CPU number incremented by 1.
+@@ -134,20 +142,11 @@ bool osq_lock(struct optimistic_spin_queue *lock)
+ 	 * cmpxchg in an attempt to undo our queueing.
+ 	 */
+ 
+-	while (!READ_ONCE(node->locked)) {
+-		/*
+-		 * If we need to reschedule bail... so we can block.
+-		 * Use vcpu_is_preempted() to avoid waiting for a preempted
+-		 * lock holder:
+-		 */
+-		if (need_resched() || vcpu_is_preempted(node_cpu(node->prev)))
+-			goto unqueue;
+-
+-		cpu_relax();
+-	}
+-	return true;
++	if (smp_cond_load_relaxed(&node->locked, VAL || need_resched() ||
++				  vcpu_is_preempted(node_cpu(node->prev))))
++		return true;
+ 
+-unqueue:
++	/* unqueue */
+ 	/*
+ 	 * Step - A  -- stabilize @prev
+ 	 *
 -- 
-2.17.1
+2.18.1
 
