@@ -2,110 +2,159 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C833C32771
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 10:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 924E1C33CA2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 10:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0733A206DA
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 10:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6898B206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 10:21:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Z6i8AbYB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="PAtKzfwM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732568AbgALKRU (ORCPT
+        id S1732580AbgALKVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 05:17:20 -0500
-Received: from mout.web.de ([212.227.15.14]:45441 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732557AbgALKRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 05:17:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1578824230;
-        bh=5i96d9WBH6Yxu0PP+hyCQbbIFIlqnaw0r9G2sPEDDhw=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Z6i8AbYB65Cd9EpS6dkzLU92Yeimce0XscMnPMPLBn13rpoMhu64cxwNMftJqGtll
-         Lj9TlWv/O6b5oqmHZOMPqOGoNWhH82SPObQNyLZys8JAOqNjkDsZsJB+WEpqwCYjT5
-         dxBs5qtWbRJcauFg1eJazYOimQ4+zFD2PCQqSdh0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.23] ([89.12.27.144]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LbftD-1jVwWj2ODr-00lEAA; Sun, 12
- Jan 2020 11:17:10 +0100
-Subject: Re: [PATCH v2 0/5] mfd: RK8xx tidyup
-To:     Robin Murphy <robin.murphy@arm.com>, lee.jones@linaro.org
-Cc:     linux-kernel@vger.kernel.org, heiko@sntech.de,
-        linux-rockchip@lists.infradead.org
-References: <cover.1578789410.git.robin.murphy@arm.com>
-From:   Soeren Moch <smoch@web.de>
-Message-ID: <fafe31fa-8a26-6993-2c78-e1cc06ecc05a@web.de>
-Date:   Sun, 12 Jan 2020 11:17:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 12 Jan 2020 05:21:16 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:11364 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732559AbgALKVP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 05:21:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1578824470;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=spDiSF2kVe66KeNhBEUZtkVMiNeZ0VQUQ1+8pDQUBF0=;
+        b=PAtKzfwMGJgAKz1akesGIDjKheUMH9ElOBDykgcOdY1ntnYZobk5o1XAOpZcuxGD/l
+        r4DdQ4D+8llM7kzKowjqEor6czaMBn6u5+O/+MRcGJTl4AgYQwQ1+dec0Z5M5k09iLnU
+        Gt17Kfd/uQg8+7viRgHh55mijK2KpqtUlk9uO51ZeQbuakHAaUO1X4c5cNsdAU9CYIDO
+        H/MKxrIZ+PAJg5cN33EP0kbOKOop1FpNbrT/5fxMbNbWF8cHD8RtrWiB+AzMIHtOtobi
+        MtExUzRvFI5Mx3IB5xOuIhAqIBlH/cHBv8mOFVtjhtJrsE1htAcE5NB0uuEd++152xNz
+        VvfA==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9zXABM8C3w2hSri9QCQ=="
+X-RZG-CLASS-ID: mo00
+Received: from positron.chronox.de
+        by smtp.strato.de (RZmta 46.1.4 DYNA|AUTH)
+        with ESMTPSA id u04585w0CAJlFOm
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Sun, 12 Jan 2020 11:19:47 +0100 (CET)
+From:   Stephan =?ISO-8859-1?Q?M=FCller?= <smueller@chronox.de>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-crypto@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-api@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Alexander E. Patrakov" <patrakov@gmail.com>,
+        "Ahmed S. Darwish" <darwish.07@gmail.com>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Willy Tarreau <w@1wt.eu>,
+        Matthew Garrett <mjg59@srcf.ucam.org>,
+        Vito Caputo <vcaputo@pengaru.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.cz>, Ray Strode <rstrode@redhat.com>,
+        William Jon McCann <mccann@jhu.edu>,
+        zhangjs <zachary@baishancloud.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Lennart Poettering <mzxreary@0pointer.de>,
+        Nicolai Stange <nstange@suse.de>,
+        "Peter, Matthias" <matthias.peter@bsi.bund.de>,
+        Marcelo Henrique Cerri <marcelo.cerri@canonical.com>,
+        Roman Drahtmueller <draht@schaltsekun.de>,
+        Neil Horman <nhorman@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Julia Lawall <julia.lawall@inria.fr>
+Subject: Re: [PATCH v27 04/12] LRNG - add switchable DRNG support
+Date:   Sun, 12 Jan 2020 11:12:49 +0100
+Message-ID: <6344127.aaDc98gsnP@positron.chronox.de>
+In-Reply-To: <202001111540.5y2emdGQ%lkp@intel.com>
+References: <5087131.2PHHu6SUIE@positron.chronox.de> <202001111540.5y2emdGQ%lkp@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1578789410.git.robin.murphy@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Provags-ID: V03:K1:PlqFJBikMPfIGJPHDPMU3lWulN2oviAdnx+7/MmzajGV0k3IQkh
- CoAn8J87rJmjfGklRZjOfZciV9Iy2koLfmlcvEB151pahokN9/QBja+GAHWpeoJfudHpymx
- r3WUN5NrackIpyDo4CNQ8Dla61rz/2ZJPUtFStFB8wIpqw0AIOBnlNUaucUydS588FLneMn
- DNuwb1fh5fAAdgKlG1YuQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1Q/z5ypQwFw=:VBZE/RZssMZIOWKI4nrZNh
- I4vEsojy2gAu2fCLj+xW7+HW0jlKwprN90EIQjLoJDFDoPuBr6VUIJuTBjej+9n27E0JeoVbH
- 3YuI8CzCjserm0NpvO7pGoqfP5l5gDu4gasHLnR+qvdHQoNu+PV6keDfAMLToo4Gn0xzAqKws
- 3Zxna9FqYnvHcNtUoDIj0/IKZWobY0JsPNoHiPl2V9+3k2/+vgxtBNyS0M6whYjHP2enKZIRN
- G3+vdkPYwwSbey8wMGBP7hLVHv4+uchTWR3k39hAPFNCBVemqk+TAI9/I1BuDwk8EAw3GR36u
- 4wNM0xNWU96b1fJyPut9IXXJUAToow3K9PZ+455hime9iQCt5SkbwfSvxitm1zgIHledZ7Zvl
- /CciWcxluE/FTZKkhjSyEa0DnO3WKdWx24fwqYuE6bWK7p/ligXcLtqewJg4cKq4dSZKu+Obg
- wTBAmwbWTU0h+vFi3oCakdScw73shye5wOIb+SoSyWcWZsjvPHFOKUQxq0QYJGhvX2ZgbfrhA
- 4WKUJiyxuM1sd6PBvb9oCOTPSG11VlJaFUbagkQdpGb1EwYMJVMj6VfPkP7dKVGi5DL1NJSjB
- ZDahO5xqYBAWjotC9fDtx8KxThyFPUfmBoiGLVhnYmTeIJQK1D3KGE5pyyKGg+wJm7DjAIK6o
- Q1kI2uayBQmKkXMOTEWQVUJQBJExFHigcNEbpMgNaaW1aaPGLZBxiEd/pxU3UEhrsTJ2FXwiB
- TJ+R8mo2I34NICONi3bzdy2BIXciEwALd9Mp9OHW4CHz+VLC1oRGQquB6l+RWn+acLf3QRk3a
- sLgAAYSRq1c4v722l6Xi6xzzFeX5SZJcSv6nmmHeCqtpDYl3yiZDaGY9vdyJ7eDJTiItIPgJ6
- I8SXsde3X5R+UDeMppK/GsETwywA/2MMwWhH8IDP5vc3LunzyvsFmYo/b79ZK1NB/4HqOnZ4r
- LI3iVOjad2rOc7/3LcvvJFFRNUWn/Zlh/XpO6V5+VXjWUOA9TMWRe4NenvEyXBdDFleHhtsSZ
- lKKeCze4CK29CLmUm70sDoXNzUMhgMcljNoqRTdRDaYouLdsE6JpCuy196MksEADKhfZvbAD5
- /p58zLnyQCKHusb+pSfMZF6WIlalrc5u/TG/f2AuicgvA/zqTjThhC61L7GCejwWMKO//DIxx
- UXVWsCf2mW0esIlv/z291GU6DRv4D36MD6ZrW0orCiEfpJXGQnkUrAREim/U6BGZIdQGMCGQ/
- o6LrMb4JG6HjEh4kYMCPASpv4YqMHB9m5IU1VuA==
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12.01.20 02:54, Robin Murphy wrote:
-> Hi all,
->
-> Here's a second crack at my RK805-inspired cleanup. There was a bit
-> of debate around v1[1], but it seems like we're now all happy that this
-> is a reasonable way to go. For clarity I decided to include Soeren's
-> patch as #1/5, but since I've rewritten most of my patches I've not
-> included the tested-by tags.
-I re-tested this series on a RockPro64 board with RK808 PMIC.
+Am Samstag, 11. Januar 2020, 08:09:50 CET schrieb kbuild test robot:
 
-Tested-by: Soeren Moch <smoch@web.de>
+Hi,
 
-Regards,
-Soeren
->
-> Robin.
->
-> [1] https://lore.kernel.org/lkml/cover.1575932654.git.robin.murphy@arm.com/
->
-> Robin Murphy (4):
->   mfd: rk808: Ensure suspend/resume hooks always work
->   mfd: rk808: Stop using syscore ops
->   mfd: rk808: Reduce shutdown duplication
->   mfd: rk808: Convert RK805 to shutdown/suspend hooks
->
-> Soeren Moch (1):
->   mfd: rk808: Always use poweroff when requested
->
->  drivers/mfd/rk808.c       | 139 +++++++++++++-------------------------
->  include/linux/mfd/rk808.h |   2 -
->  2 files changed, 48 insertions(+), 93 deletions(-)
->
+> Hi "Stephan,
+>=20
+> Thank you for the patch! Perhaps something to improve:
+>=20
+> [auto build test WARNING on char-misc/char-misc-testing]
+> [also build test WARNING on cryptodev/master crypto/master v5.5-rc5
+> next-20200110] [if your patch is applied to the wrong git tree, please dr=
+op
+> us a note to help improve the system. BTW, we also suggest to use '--base'
+> option to specify the base tree in git format-patch, please see
+> https://stackoverflow.com/a/37406982]
+>=20
+> url:  =20
+> https://github.com/0day-ci/linux/commits/Stephan-M-ller/dev-random-a-new-=
+ap
+> proach-with-full-SP800-90B/20200110-084934 base: =20
+> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git
+> 68faa679b8be1a74e6663c21c3a9d25d32f1c079 reproduce:
+>         # apt-get install sparse
+>         # sparse version: v0.6.1-129-g341daf20-dirty
+>         make ARCH=3Dx86_64 allmodconfig
+>         make C=3D1 CF=3D'-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+>=20
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>=20
+>=20
+> sparse warnings: (new ones prefixed by >>)
+>=20
+> >> drivers/char/lrng/lrng_internal.h:239:39: sparse: sparse: context
+> >> imbalance in 'lrng_drng_switch' - unexpected unlock
+> vim +/lrng_drng_switch +239 drivers/char/lrng/lrng_internal.h
+>=20
+> 58c283819a1e87 Stephan M=FCller 2020-01-09  233
+> 58c283819a1e87 Stephan M=FCller 2020-01-09  234  /* Unlock the DRNG */
+> 58c283819a1e87 Stephan M=FCller 2020-01-09  235  static __always_inline v=
+oid
+> lrng_drng_unlock(struct lrng_drng *drng, 58c283819a1e87 Stephan M=FCller
+> 2020-01-09  236  					     unsigned long *flags)=20
+58c283819a1e87 Stephan
+> M=FCller 2020-01-09  237  {
+> 58c283819a1e87 Stephan M=FCller 2020-01-09  238  	if
+> (lrng_drng_is_atomic(drng)) 58c283819a1e87 Stephan M=FCller 2020-01-09 @2=
+39=20
+> 		spin_unlock_irqrestore(&drng->spin_lock, *flags); 58c283819a1e87=20
+Stephan
+> M=FCller 2020-01-09  240  	else
+> 58c283819a1e87 Stephan M=FCller 2020-01-09  241  		mutex_unlock(&drng-
+>lock);
+> 58c283819a1e87 Stephan M=FCller 2020-01-09  242  }
+> 58c283819a1e87 Stephan M=FCller 2020-01-09  243
+>=20
+> :::::: The code at line 239 was first introduced by commit
+> :::::: 58c283819a1e879bc2e30d05720285f9709f7f6d Linux Random Number
+> :::::: Generator
+> ::::::=20
+> :::::: TO: Stephan M=FCller <smueller@chronox.de>
+> :::::: CC: 0day robot <lkp@intel.com>
+>=20
+> ---
+> 0-DAY kernel test infrastructure                 Open Source Technology
+> Center https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel
+> Corporation
+
+After analyzing the issue a bit more, it seems that I have to remove=20
+"unlikely" from lrng_drng_lock which seems to cause additional grief
+with sparse. Note, sparse will still report a lock context imbalance as it
+used to since we indeed have two lock context as documented in
+lrng_drng_switch.
+
+Ciao
+Stephan
+
 
