@@ -2,196 +2,116 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419CBC33CA2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 19:36:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A5D1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 19:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B0E21744
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 19:36:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E10222D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 19:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r2dCEqzs"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="s+QfH5pV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733271AbgALTgv (ORCPT
+        id S1733290AbgALTvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 14:36:51 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43027 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733146AbgALTgv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 14:36:51 -0500
-Received: by mail-ed1-f67.google.com with SMTP id dc19so6598777edb.10;
-        Sun, 12 Jan 2020 11:36:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2aCgGAHsmpPiDsI7trI6K+Ww2+Ja2/dxdFxLqxWkQx0=;
-        b=r2dCEqzsrhxk3FPYXVH8+9S25XABFhYimFIGqwl2yYBHJWhvyY+tprWSnDvDZlQWuc
-         TG3E5ATa1lzi1VxtdCbhp15sIpMgWfjF+uSfQdxSsjgHIXLzCu+PEqW2R9wbyKNTGE7F
-         bTBSidsRL88hMuNf75mFto9WLULI3pBShkLD8EBBC1eNlOZaYTbfvWOLL8dQpaw0FXys
-         T9sCrnQA9AeyizDYdasBNHIgVUdeSvz5TQCLUQ7pl2AZLuFbUTtCMpSdfupaR7dRcemv
-         Pk6zUUKj/InhpXAnVm0ErBTF9Lvnh4ZuF0R0ECZADdD8eaaBMeJl+ODFna52ODfNH7EV
-         HqCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2aCgGAHsmpPiDsI7trI6K+Ww2+Ja2/dxdFxLqxWkQx0=;
-        b=e8QYgOov77h/xzhy7hiQxncZulHgGfYIWam3OfxIjMlhAtmKSFsLJv7qQDveJbigJ9
-         13r4nJM2S3WHC/4SrNryUe9KstUnA5Naiwl9ehIR1TQIPkbyZvsnajBDWYI19t1XdUvp
-         DlXUI7Zxyz41ff2fydikKQ1oiPoIap74HOiHBXdMFP+J5y+/6qj14/I9hMpIR0tb1GuQ
-         R9GL4hczl5tRt+STga6bZywlaFw6N6KGewUsSjIdgS3AzakTLYb4C9oTeUq9VjgWtyHB
-         B6GKbrpCb+IOH7LGxPKY/MQlgE5ktQB7jhbaRUlCO0gcn7YxGlxNLsGAj4OJ0sRrGhrp
-         1YtA==
-X-Gm-Message-State: APjAAAV7w6qAD1op8EjGec7CAljuA3KUx2Aj4oziTC8mPwjb+lBGikQX
-        3rEf/cziMyWMvzOqf33ZMLcczU+qMqpbG9rT+EE=
-X-Google-Smtp-Source: APXvYqxfpc4WZmwMOUhRUzssy8Rba2fcFBg3p4r2GJeMannK10uLlFzVxrMktZs94M9toNiBP14FJc16JaJ+wG6de8E=
-X-Received: by 2002:aa7:da18:: with SMTP id r24mr13588531eds.111.1578857808753;
- Sun, 12 Jan 2020 11:36:48 -0800 (PST)
+        Sun, 12 Jan 2020 14:51:06 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45273 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732957AbgALTvG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 14:51:06 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47wnQb4Mvpz9s29;
+        Mon, 13 Jan 2020 06:51:02 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578858664;
+        bh=YJrCAGCTW+pQ5Aa6nSfF6ttqD/5c99CvooxYkZ1k7rI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=s+QfH5pVowiaXM4tywG/+M7If6zwgOb/MjyXy2j/qUFmgni+FKvPzcBDCfZd2q5L9
+         nynP+RbvfbHgUpK2gYE3yKtv4Rjzrs5ll+E4MLMcJSdXG6cc669SoA/z+4b22BI9f6
+         seQAmfWRZzP/EOcBk82fJlOZqDTe5hPfTaFt+h5X9tMmoH9BA1xKY7qUw7PkNQdeTx
+         xmHzQwhzuEgAS7WX8MnnGxd1Oo3cjRnDSs6YiaYX3IX7VgeIcyTgaL7q+OLOjuAGMn
+         1GavuWld8l0vILEd9jeUX0Nina7UMgy74EjccQfpmheUhrHHJLGIFf8kg+2DAzhwro
+         hqiuloOW9VEXA==
+Date:   Mon, 13 Jan 2020 06:50:54 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>
+Subject: linux-next: Fixes tags need some work in the net tree
+Message-ID: <20200113065054.25c85bac@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200108013847.899170-1-robdclark@gmail.com> <20200108013847.899170-2-robdclark@gmail.com>
- <37d0baaa-3f94-9414-88e7-7e849b0c5de5@redhat.com> <CAF6AEGseE9iV1xDd1_hRDiKp0-a1usk+xqnyyqbuphwsvLTZmQ@mail.gmail.com>
-In-Reply-To: <CAF6AEGseE9iV1xDd1_hRDiKp0-a1usk+xqnyyqbuphwsvLTZmQ@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Sun, 12 Jan 2020 11:36:37 -0800
-Message-ID: <CAF6AEGsrLKVKgLQW=-gqEsxdds6F-eaMzGq2cgjkXGYbBQ4yWA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] drm/msm: support firmware-name for zap fw
-To:     Tom Rix <trix@redhat.com>
-Cc:     freedreno <freedreno@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/CvnqbAAkyhjcYWh8YyqqyGO";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 8:30 AM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Wed, Jan 8, 2020 at 7:38 AM Tom Rix <trix@redhat.com> wrote:
-> >
-> >
-> > On 1/7/20 5:38 PM, Rob Clark wrote:
-> > > From: Rob Clark <robdclark@chromium.org>
-> > >
-> > > Since zap firmware can be device specific, allow for a firmware-name
-> > > property in the zap node to specify which firmware to load, similarly to
-> > > the scheme used for dsp/wifi/etc.
-> > >
-> > > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > > ---
-> > >  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 32 ++++++++++++++++++++++---
-> > >  1 file changed, 29 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > > index 112e8b8a261e..aa8737bd58db 100644
-> > > --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > > +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > > @@ -26,6 +26,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
-> > >  {
-> > >       struct device *dev = &gpu->pdev->dev;
-> > >       const struct firmware *fw;
-> > > +     const char *signed_fwname = NULL;
-> > >       struct device_node *np, *mem_np;
-> > >       struct resource r;
-> > >       phys_addr_t mem_phys;
-> > > @@ -58,8 +59,33 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
-> > >
-> > >       mem_phys = r.start;
-> > >
-> > > -     /* Request the MDT file for the firmware */
-> > > -     fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
-> > > +     /*
-> > > +      * Check for a firmware-name property.  This is the new scheme
-> > > +      * to handle firmware that may be signed with device specific
-> > > +      * keys, allowing us to have a different zap fw path for different
-> > > +      * devices.
-> > > +      *
-> > > +      * If the firmware-name property is found, we bypass the
-> > > +      * adreno_request_fw() mechanism, because we don't need to handle
-> > > +      * the /lib/firmware/qcom/* vs /lib/firmware/* case.
-> > > +      *
-> > > +      * If the firmware-name property is not found, for backwards
-> > > +      * compatibility we fall back to the fwname from the gpulist
-> > > +      * table.
-> > > +      */
-> > > +     of_property_read_string_index(np, "firmware-name", 0, &signed_fwname);
-> > > +     if (signed_fwname) {
-> > > +             fwname = signed_fwname;
-> > > +             ret = request_firmware_direct(&fw, signed_fwname, gpu->dev->dev);
-> > > +             if (ret) {
-> > > +                     DRM_DEV_ERROR(dev, "could not load signed zap firmware: %d\n", ret);
-> > Could adreno_request_fw be called with fwname if request_firmware_direct fails ?
->
->
-> *possibly*.. initially I avoided this because the failure mode for
-> incorrectly signed firmware was silent and catestrophic.  But Bjorn
-> tells me this has been fixed.. in which case we could try and detect
-> if it is the incorrect fw.  I need to try some experiments to confirm
-> we can detect this case properly.
+--Sig_/CvnqbAAkyhjcYWh8YyqqyGO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I've been thinking about fallback to using fwname from the gpulist
-table, but I think I don't really like the idea.
+Hi all,
 
-The failure mode for not falling back to $firmware/qcom/$fwname is
-pretty safe.. you simply don't get gpu accel, but display and
-everything else works, so you can boot up far enough to see what the
-problem is and fix it.  But the failure mode if, with some device's
-scm fw doesn't report incorrectly signed zap fw, is pretty
-catastrophic (insta-reboot, which can be hard to debug on phone/laptop
-without debug uart).
+In commit
 
-Since we haven't pushed the test-key signed qcom/sdm835/a630_zap.mbn
-to linux-firmware yet, I think this is a good time to make this switch
-for a6xx.
+  a26ad4d5676f ("net: phy: DP83822: Update Kconfig with DP83825I support")
 
-For a530 devices, maybe we hold of adding firmware-name to dt until
-linux-firmware gains a qcom/msm8996/a530_zap.mbn (which would be a
-good time to switch to the packed .mbn instead of split .mdt + .b0*
-files).. or just not specify a firmware-name for device using test-key
-signed zap and fallback to adreno_request_fw() and the existing path.
+Fixes tag
 
-Fortunately zap is not used prior to a5xx, so we mainly just need to
-care about backwards compat for a530.
+  Fixes: 32b12dc8fde1  ("net: phy: Add DP83825I to the DP83822 driver")
 
-BR,
--R
+has these problem(s):
 
-> BR,
-> -R
->
-> > > +                     fw = ERR_PTR(ret);
-> > > +             }
-> > > +     } else {
-> > > +             /* Request the MDT file for the firmware */
-> > > +             fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
-> > > +     }
-> > > +
-> > >       if (IS_ERR(fw)) {
-> > >               DRM_DEV_ERROR(dev, "Unable to load %s\n", fwname);
-> > >               return PTR_ERR(fw);
-> > > @@ -95,7 +121,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
-> > >        * not.  But since we've already gotten through adreno_request_fw()
-> > >        * we know which of the two cases it is:
-> > >        */
-> > > -     if (to_adreno_gpu(gpu)->fwloc == FW_LOCATION_LEGACY) {
-> > > +     if (signed_fwname || (to_adreno_gpu(gpu)->fwloc == FW_LOCATION_LEGACY)) {
-> > >               ret = qcom_mdt_load(dev, fw, fwname, pasid,
-> > >                               mem_region, mem_phys, mem_size, NULL);
-> > >       } else {
-> >
+  - Target SHA1 does not exist
+
+Maybe you meant
+
+Fixes: 06acc17a9621 ("net: phy: Add DP83825I to the DP83822 driver")
+
+In commit
+
+  443180567763 ("net: phy: DP83TC811: Fix typo in Kconfig")
+
+Fixes tag
+
+  Fixes: 6d749428788b {"net: phy: DP83TC811: Introduce support for the DP83=
+TC811 phy")
+
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Maybe you meant
+
+Fixes: b753a9faaf9a ("net: phy: DP83TC811: Introduce support for the DP83TC=
+811 phy")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/CvnqbAAkyhjcYWh8YyqqyGO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4beJ4ACgkQAVBC80lX
+0Gyx5Af/XjIKBgM9cjcJWHgZQVHNKx9nPlblb1KgEZfAZTIk3X72akLIlxzQB2CN
+NQwKRLiK3ulDnqbJGGoPan3AUXFulQCl5O7W4+Dh0zp55pdOjvSJMCrd/aDHrdhL
+ub19p6H/cG08+t+tkiamIl5JTMPqwrfcFBWsxIBs1qPGX5rQRaum+hvQa0ZjMdE/
+7yQhQ4Pq6pJ8rg3O48/6QnCQ3aCxWnOVnnSKTa4aJMZODPL2g4a3v2CL83O6S2qf
+lLKR/dendQVHRRKoEcglqDuhYRykZlLcYIkUyDZ0PRvAmyKvAAOc1EFBswo8luN1
+Q9sZJ/VgfpGJ/fLokgawkeRlyee9ew==
+=iWsT
+-----END PGP SIGNATURE-----
+
+--Sig_/CvnqbAAkyhjcYWh8YyqqyGO--
