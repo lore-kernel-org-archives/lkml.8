@@ -2,261 +2,104 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F08BC32771
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 12:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49367C33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 13:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75424222D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 12:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 214B924649
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 13:00:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9Dc/7CF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732827AbgALMTB (ORCPT
+        id S1732849AbgALNA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 07:19:01 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:60776 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732784AbgALMS6 (ORCPT
+        Sun, 12 Jan 2020 08:00:56 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45885 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732833AbgALNA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 07:18:58 -0500
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from vadimp@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 12 Jan 2020 14:18:55 +0200
-Received: from r-build-lowlevel.mtr.labs.mlnx. (r-build-lowlevel.mtr.labs.mlnx [10.209.0.190])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 00CCIpSS023227;
-        Sun, 12 Jan 2020 14:18:55 +0200
-From:   Vadim Pasternak <vadimp@mellanox.com>
-To:     andy@infradead.org, dvhart@infradead.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v2 04/10] platform/x86: mlx-platform: Add more definitions for system attributes
-Date:   Sun, 12 Jan 2020 12:18:43 +0000
-Message-Id: <20200112121849.7056-5-vadimp@mellanox.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200112121849.7056-1-vadimp@mellanox.com>
-References: <20200112121849.7056-1-vadimp@mellanox.com>
+        Sun, 12 Jan 2020 08:00:56 -0500
+Received: by mail-ed1-f65.google.com with SMTP id v28so5997454edw.12;
+        Sun, 12 Jan 2020 05:00:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=Si82Ae7kSJL+W4RyecalMW+utXj0IbUfyQpBmFzvOtA=;
+        b=D9Dc/7CFHPXJQVdy/5TZscGlGRW1iaIhizUvNxcihtUpSXSlOuL+keCEabVYJnlc6t
+         WvTCUaYYCxGMk54GmHljuD0Lba4EZHmmrD5Lj9u1nugcIXptlqadw20VM7+l/BFNskwd
+         n9MhGAHfqMKMFm7KM3/fGrJemBnn95/mXgxbimqWcsTjvdBUYjO9ujnKvP8rdI0J942F
+         kOGZ9iXSMZFzYKg9ax6T4Esc/tagbjUi+6LZLFZJIB7djY9lBUKQHGyxARxF5K57ZHNT
+         GMuPNbYPQJ4K2WkZ6UVvM51R9s+0muwISWP5Lw7Z8Cz+igSQiPgYQRLGwIvoyhkdJnT7
+         Z/jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=Si82Ae7kSJL+W4RyecalMW+utXj0IbUfyQpBmFzvOtA=;
+        b=XDJ9+ITkv1+foBF6oBOamYGHm7IATt/ugJLMKM8+cq/dF1gpNwbIn6+6YausNZ2Gc6
+         /rqSFMM4a5wcJ+y6xJl+jNCAWHpcoakqRGUiEacVFy4nUjobur0gWEJjHHcOIacbLGr0
+         AsubnaqyQt4jXwMZnYcpkyH6n7gFw9RZkd6ie8SM98b4w78MAvBnAuca2GcddnypVgka
+         7FhKGRQHbA770DaCxS3o8gB5BtgVgspCIHoaK5NVLtVmT4ADIU7ksJvoiMshER61kkhD
+         ymgxLfzUw0ChxLZVlknWMz27Mxory553jjlbdjaVb00GPI+26x+uxWw4zzFvgwA0fJoy
+         3ZFg==
+X-Gm-Message-State: APjAAAUNfnnuR3s2ePMIEwQMMLhs12Nzbg+XSnrLiWUAmCrrLfC6wSpz
+        I5jnInlAUajAntOqfxLp2JcDxxFCC+YIcifFbwQ=
+X-Google-Smtp-Source: APXvYqyWvIkTKOqWajExla8O+rETb3kMvSDjQqfQ2T3mmyUlLBrOA6iNlWpVGOXUY9+MhD7zUOC3FGEDuBrX3tWmZ1g=
+X-Received: by 2002:aa7:cf86:: with SMTP id z6mr12549252edx.85.1578834054234;
+ Sun, 12 Jan 2020 05:00:54 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a05:6402:1c11:0:0:0:0 with HTTP; Sun, 12 Jan 2020 05:00:53
+ -0800 (PST)
+From:   Jari Ruusu <jari.ruusu@gmail.com>
+Date:   Sun, 12 Jan 2020 15:00:53 +0200
+Message-ID: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
+Subject: Fix built-in early-load Intel microcode alignment
+To:     Borislav Petkov <bp@alien8.de>, Fenghua Yu <fenghua.yu@intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add new attributes for "next-generation" type systems:
-- Reset cause indication, when system reset has been caused by the
-  platform reset request through CPLD, by AC power failure,
-  by software power off request through CPLD. by signal asserted by SOC
-  through ACPI register. It introduces more reset causes, which can
-  be monitored after the reboots.
-- Setting and removing system VPD (EEPROM) hardware write protection.
-  It allows to access VPD during production cycle and prevents VPD
-  corruption on system in field.
-- Voltage regulator devices configuration update status and version. It
-  allows to monitor configuration update status and current active
-  version for such sort of devices.
-- PCIe ASIC reset disable - when set ASIC will go down upon PCIe
-  root complex reset, otherwise ASIC will stay up during PCIe root
-  complex reset.
-- System configuration Ids to provide system static topology
-  identification, like system's static I2C topology, number and type of
-  FPGA devices within the system and so on.
+Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
+"Note that the microcode update must be aligned on a 16-byte
+boundary and the size of the microcode update must be 1-KByte
+granular"
 
-Add the existing attribute for "iio" bank selection for system type
-"msn21xx".
+When early-load Intel microcode is loaded from initramfs,
+userspace tool 'iucode_tool' has already 16-byte aligned those
+microcode bits in that initramfs image. Image that was created
+something like this:
 
-All the above attributes are exposed through "sysfs" by "mlxreg-io"
-driver.
+ iucode_tool --write-earlyfw=FOO.cpio microcode-files...
 
-Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
----
- drivers/platform/x86/mlx-platform.c | 84 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+However, when early-load Intel microcode is loaded from built-in
+firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option,
+that 16-byte alignment is not guaranteed.
 
-diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
-index 565a67a65554..7e92dc52071f 100644
---- a/drivers/platform/x86/mlx-platform.c
-+++ b/drivers/platform/x86/mlx-platform.c
-@@ -35,6 +35,8 @@
- #define MLXPLAT_CPLD_LPC_REG_LED4_OFFSET	0x23
- #define MLXPLAT_CPLD_LPC_REG_LED5_OFFSET	0x24
- #define MLXPLAT_CPLD_LPC_REG_FAN_DIRECTION	0x2a
-+#define MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET	0x2b
-+#define MLXPLAT_CPLD_LPC_REG_GP0_OFFSET		0x2e
- #define MLXPLAT_CPLD_LPC_REG_GP1_OFFSET		0x30
- #define MLXPLAT_CPLD_LPC_REG_WP1_OFFSET		0x31
- #define MLXPLAT_CPLD_LPC_REG_GP2_OFFSET		0x32
-@@ -68,6 +70,7 @@
- #define MLXPLAT_CPLD_LPC_REG_WD3_TMR_OFFSET	0xd1
- #define MLXPLAT_CPLD_LPC_REG_WD3_TLEFT_OFFSET	0xd2
- #define MLXPLAT_CPLD_LPC_REG_WD3_ACT_OFFSET	0xd3
-+#define MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET	0xe2
- #define MLXPLAT_CPLD_LPC_REG_PWM1_OFFSET	0xe3
- #define MLXPLAT_CPLD_LPC_REG_TACHO1_OFFSET	0xe4
- #define MLXPLAT_CPLD_LPC_REG_TACHO2_OFFSET	0xe5
-@@ -85,6 +88,8 @@
- #define MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET	0xf6
- #define MLXPLAT_CPLD_LPC_REG_FAN_DRW_CAP_OFFSET	0xf7
- #define MLXPLAT_CPLD_LPC_REG_TACHO_SPEED_OFFSET	0xf8
-+#define MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET	0xfb
-+#define MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET	0xfc
- #define MLXPLAT_CPLD_LPC_IO_RANGE		0x100
- #define MLXPLAT_CPLD_LPC_I2C_CH1_OFF		0xdb
- #define MLXPLAT_CPLD_LPC_I2C_CH2_OFF		0xda
-@@ -117,6 +122,7 @@
- #define MLXPLAT_CPLD_FAN_NG_MASK	GENMASK(5, 0)
- #define MLXPLAT_CPLD_LED_LO_NIBBLE_MASK	GENMASK(7, 4)
- #define MLXPLAT_CPLD_LED_HI_NIBBLE_MASK	GENMASK(3, 0)
-+#define MLXPLAT_CPLD_VOLTREG_UPD_MASK	GENMASK(5, 4)
- 
- /* Default I2C parent bus number */
- #define MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR	1
-@@ -1157,6 +1163,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_msn21xx_regs_io_data[] = {
- 		.mode = 0200,
- 	},
- 	{
-+		.label = "select_iio",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(6),
-+		.mode = 0644,
-+	},
-+	{
- 		.label = "asic_health",
- 		.reg = MLXPLAT_CPLD_LPC_REG_ASIC_HEALTH_OFFSET,
- 		.mask = MLXPLAT_CPLD_ASIC_MASK,
-@@ -1245,6 +1257,18 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.mode = 0444,
- 	},
- 	{
-+		.label = "reset_platform",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(4),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "reset_soc",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(5),
-+		.mode = 0444,
-+	},
-+	{
- 		.label = "reset_comex_wd",
- 		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE1_OFFSET,
- 		.mask = GENMASK(7, 0) & ~BIT(6),
-@@ -1263,6 +1287,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.mode = 0444,
- 	},
- 	{
-+		.label = "reset_sw_pwr_off",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(2),
-+		.mode = 0444,
-+	},
-+	{
- 		.label = "reset_comex_thermal",
- 		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
- 		.mask = GENMASK(7, 0) & ~BIT(3),
-@@ -1275,6 +1305,12 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.mode = 0444,
- 	},
- 	{
-+		.label = "reset_ac_pwr_fail",
-+		.reg = MLXPLAT_CPLD_LPC_REG_RST_CAUSE2_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(6),
-+		.mode = 0444,
-+	},
-+	{
- 		.label = "psu1_on",
- 		.reg = MLXPLAT_CPLD_LPC_REG_GP1_OFFSET,
- 		.mask = GENMASK(7, 0) & ~BIT(0),
-@@ -1317,6 +1353,43 @@ static struct mlxreg_core_data mlxplat_mlxcpld_default_ng_regs_io_data[] = {
- 		.bit = GENMASK(7, 0),
- 		.mode = 0444,
- 	},
-+	{
-+		.label = "voltreg_update_status",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET,
-+		.mask = MLXPLAT_CPLD_VOLTREG_UPD_MASK,
-+		.bit = 5,
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "vpd_wp",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(3),
-+		.mode = 0644,
-+	},
-+	{
-+		.label = "pcie_asic_reset_dis",
-+		.reg = MLXPLAT_CPLD_LPC_REG_GP0_OFFSET,
-+		.mask = GENMASK(7, 0) & ~BIT(4),
-+		.mode = 0644,
-+	},
-+	{
-+		.label = "config1",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "config2",
-+		.reg = MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
-+	{
-+		.label = "ufm_version",
-+		.reg = MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET,
-+		.bit = GENMASK(7, 0),
-+		.mode = 0444,
-+	},
- };
- 
- static struct mlxreg_core_platform_data mlxplat_default_ng_regs_io_data = {
-@@ -1575,6 +1648,7 @@ static bool mlxplat_mlxcpld_writeable_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_LED3_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_LED4_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_LED5_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_GP0_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_GP1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_WP1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_GP2_OFFSET:
-@@ -1621,6 +1695,8 @@ static bool mlxplat_mlxcpld_readable_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_LED4_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_LED5_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_FAN_DIRECTION:
-+	case MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_GP0_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_GP1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_WP1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_GP2_OFFSET:
-@@ -1671,6 +1747,9 @@ static bool mlxplat_mlxcpld_readable_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_FAN_DRW_CAP_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_TACHO_SPEED_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET:
- 		return true;
- 	}
- 	return false;
-@@ -1692,6 +1771,8 @@ static bool mlxplat_mlxcpld_volatile_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_LED4_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_LED5_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_FAN_DIRECTION:
-+	case MLXPLAT_CPLD_LPC_REG_GP0_RO_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_GP0_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_GP1_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_GP2_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_AGGR_OFFSET:
-@@ -1734,6 +1815,9 @@ static bool mlxplat_mlxcpld_volatile_reg(struct device *dev, unsigned int reg)
- 	case MLXPLAT_CPLD_LPC_REG_FAN_CAP2_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_FAN_DRW_CAP_OFFSET:
- 	case MLXPLAT_CPLD_LPC_REG_TACHO_SPEED_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CONFIG1_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_CONFIG2_OFFSET:
-+	case MLXPLAT_CPLD_LPC_REG_UFM_VERSION_OFFSET:
- 		return true;
- 	}
- 	return false;
+Fix this by forcing all built-in firmware BLOBs to 16-byte
+alignment.
+
+
+Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
+
+--- a/drivers/base/firmware_loader/builtin/Makefile
++++ b/drivers/base/firmware_loader/builtin/Makefile
+@@ -17,7 +17,7 @@
+ filechk_fwbin = \
+ 	echo "/* Generated by $(src)/Makefile */"		;\
+ 	echo "    .section .rodata"				;\
+-	echo "    .p2align $(ASM_ALIGN)"			;\
++	echo "    .p2align 4"					;\
+ 	echo "_fw_$(FWSTR)_bin:"				;\
+ 	echo "    .incbin \"$(fwdir)/$(FWNAME)\""		;\
+ 	echo "_fw_end:"						;\
+
 -- 
-2.11.0
-
+Jari Ruusu  4096R/8132F189 12D6 4C3A DCDA 0AA4 27BD  ACDF F073 3C80 8132 F189
