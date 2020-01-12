@@ -2,83 +2,91 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D043EC32771
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 10:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A741AC32771
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 10:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3EB322314
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 10:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578824547;
-	bh=UZzvA2p7iJMamh9HphZLb6mHUktjDOcp5TageZeULDo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oycFCJp/REmKVMYm2y9z3rL2Ws73O4HS9XrS8KkPigVQYrSF+v5wlBlUBqB8P+to0
-	 ktpdLc7L52k3N39b51jqmK1fqeuxESL9tQqy2pBsOyqqoPjbjwI71pBHdbzaIcK5Hy
-	 QqigbGGr8+Uyqjx7vz1ZDlLF9bL3Qq6KrUjnl66Y=
+	by mail.kernel.org (Postfix) with ESMTP id 740D9222D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 10:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732599AbgALKW0 (ORCPT
+        id S1732602AbgALKc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 05:22:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732565AbgALKWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 05:22:25 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 371DA2253D;
-        Sun, 12 Jan 2020 10:22:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578824544;
-        bh=UZzvA2p7iJMamh9HphZLb6mHUktjDOcp5TageZeULDo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EfAAX7gRziMju5IWVmOZLdUBYLT3N7nVMmg3yzS3QwAGryO0davXbMQOi2cI2C63V
-         LN1bMVB1KIF9Icnt2kI+ASWAJsMngnzCo2o6icdq9ix0/RO4o4V7BBGjbwd6VoCBKQ
-         0/cgu1P4FT9kYrIiCH3EokfjBulQ/+pWVvy9P6L0=
-Date:   Sun, 12 Jan 2020 09:14:52 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, patches@kernelci.org,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>
-Subject: Re: [PATCH 4.19 00/84] 4.19.95-stable review
-Message-ID: <20200112081452.GA464465@kroah.com>
-References: <20200111094845.328046411@linuxfoundation.org>
- <23c3a0d1-1655-8cc2-7c96-743a47953795@roeck-us.net>
- <20200111174715.GB394778@kroah.com>
- <CA+G9fYtPeGWPGmd-R55VWwfx6QXSH=NmofVR3vPVtMZomov7qg@mail.gmail.com>
+        Sun, 12 Jan 2020 05:32:29 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:35372 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732569AbgALKc2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 05:32:28 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iqaXV-00084R-AG; Sun, 12 Jan 2020 11:32:13 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 188DC100C2F; Sun, 12 Jan 2020 11:32:12 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+Subject: Re: [PATCHv8 20/34] lib/vdso: Prepare for time namespace support
+In-Reply-To: <20191112012724.250792-21-dima@arista.com>
+References: <20191112012724.250792-1-dima@arista.com> <20191112012724.250792-21-dima@arista.com>
+Date:   Sun, 12 Jan 2020 11:32:12 +0100
+Message-ID: <8736clrmmr.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYtPeGWPGmd-R55VWwfx6QXSH=NmofVR3vPVtMZomov7qg@mail.gmail.com>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 10:27:16AM +0530, Naresh Kamboju wrote:
-> On Sat, 11 Jan 2020 at 23:17, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > > arch/arm64/kvm/hyp/switch.c: In function 'handle_tx2_tvm':
-> > > arch/arm64/kvm/hyp/switch.c:438:2: error: implicit declaration of function '__kvm_skip_instr'; did you mean 'kvm_skip_instr'?
-> >
-> > Thanks for this, I'll go push out a -rc2 with the offending patch
-> > removed.
-> 
-> 
-> Results from Linaro’s test farm.
-> No regressions on arm64, arm, x86_64, and i386.
+Dmitry Safonov <dima@arista.com> writes:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> +#ifdef CONFIG_TIME_NS
+> +static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
+> +		      struct __kernel_timespec *ts)
+> +{
+> +	const struct vdso_data *vd = __arch_get_timens_vdso_data();
+> +	const struct vdso_timestamp *vdso_ts;
+> +	const struct timens_offset *offs = &vdns->offset[clk];
+> +	u64 cycles, last, ns;
+> +	u32 seq, msk;
+> +	s64 sec;
+> +
+> +	msk = 1U << clk;
+> +	if (msk & VDSO_HRES)
+> +		vd = &vd[CS_HRES_COARSE];
+> +	else if (msk & VDSO_RAW)
+> +		vd = &vd[CS_RAW];
+> +	else
+> +		return -1;
 
-Wonderful, thanks for testing all of these and letting me know.
+This part is redundant. The initial call site already made sure that
+this is only called for clocks matching VDSO_HRES or VDSO_RAW. I just
+drop it.
 
-greg k-h
+Thanks,
+
+        tglx
