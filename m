@@ -2,313 +2,275 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B950DC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B483EC33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F5BC214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:27:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4cFTvUp"
+	by mail.kernel.org (Postfix) with ESMTP id 7F3C921744
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:45:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578869125;
+	bh=0GZEGpPzCGuL/Yh1V/9xQ1rCTWIFkQVZGOa+pizi/yA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YLOPYKSK32Ljb8md7VkDqrdjzO/u4V+335cQutIC8XiPUHqtGS8RYBjogp0VgadLm
+	 f81yn6Q/C1tlBCwm30GD6nw89ZOskZ+Sb46Jdg5fEHzxpRtexQ54Z4kJpE1LG+bbyd
+	 1b+cT/Z9XmXw3s1ISbsksZeOdbGRgfv6R0WmW3AM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387468AbgALW1I (ORCPT
+        id S2387464AbgALWpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 17:27:08 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33078 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbgALW1H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 17:27:07 -0500
-Received: by mail-lf1-f66.google.com with SMTP id n25so5454055lfl.0;
-        Sun, 12 Jan 2020 14:27:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Mx0X58/M+liK5b3REtC9PFWCFoWTiSER+fiitTumkCI=;
-        b=P4cFTvUpl+Rr4K+1lvO+kIXcpcFZDKu57lnqGKP2vbtSHCsxuEWDirc+ESRZF7RvCc
-         8uL8VCXIr/cZzJ5UfQAElzeHRqtwIrfGOiVn25rHwqyczxZtgf0TQ3Cw6q7VrwkdZDUu
-         v4V3AmlFy6+VxSOLA3jg2BRdMC0sgeJFvTs6gWl8wVA2xoWOjtMKB0kKspWk4SlDO41I
-         benzkOMPHZGRCJkT7xgQrIAKAyvuOzz3r5hpNwmEVE+pr7wBAth3jz+z0juXquuJxINe
-         0dnUtqVL/9GTpnTBd2HR6vMa5JhE+AR5HFPcYgtPW/QNPhI/1nN+yL+RXciAvYntTf92
-         WP9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Mx0X58/M+liK5b3REtC9PFWCFoWTiSER+fiitTumkCI=;
-        b=UV7y9RmT2Ng2WIshje02dTS7cyQr7fliu1m4J6zozQfLnSoO+9h17nZmfE0HuskA4w
-         MqxaVJ3/mO3SDxA5z+89EkaffWz35mg+OzOUF9l3mmnTQgr9vMijVwfceKpvUzM/YBWw
-         cPrH/MHQcHnf3NQ3nnshq3t0SDPW03gDnBVfWWZHnwsRG/QU6xcIz93TIRu5VmVof7ZL
-         j0qbBGH7sM34lRqDnSMFPhgT7ecexi/1EtTUinTh5Fu4TridIG7745smw+UVX/f4hIfO
-         f+rZ4SsxToScfnObp6QxgLOSMrNO1Ss/49SYSysyrVj3c1k+sqygkO9nC2cv78CnoOx8
-         97KQ==
-X-Gm-Message-State: APjAAAXzOFtpYpvxE6hEkpk5sxLv9KOOI1P6pSxOhWVMKhSRxK1QJIGx
-        o/EIct/s8DjS75oYlrQFYKjWka8l+VMqOej4RQ==
-X-Google-Smtp-Source: APXvYqwhqcO9vZMfti+ImW4YMmZADkQ3VzUtJDC5sggG88ki5gIlp++zg+h2GlYpbsXIY0vAw6eXd8/AJVddCtoKhMg=
-X-Received: by 2002:ac2:5c4b:: with SMTP id s11mr8267686lfp.133.1578868023868;
- Sun, 12 Jan 2020 14:27:03 -0800 (PST)
+        Sun, 12 Jan 2020 17:45:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45438 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387463AbgALWpX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 17:45:23 -0500
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A7E024649
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578869122;
+        bh=0GZEGpPzCGuL/Yh1V/9xQ1rCTWIFkQVZGOa+pizi/yA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IH0moXNZ+raWKby2wZZTkL5pj7cQmLbIaAVRLpQJQwurm4qeKGd07BI/6xEmlMDEG
+         6l2rCusL8SAywbGKb3tL8x6diUBkeYZ5u59cnPZL+zSj+aX7GzjmnRuPThPLhz8CsM
+         2mf6rxIpZyuwCg41YG9IGeyc3+kwJSO5Nx/M1ebw=
+Received: by mail-wr1-f41.google.com with SMTP id d16so6758317wre.10
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 14:45:22 -0800 (PST)
+X-Gm-Message-State: APjAAAXtQZydQXX6Ru9bpWq16ARznnUrAi+lc6ij+vEpWEygK0OWVf/U
+        s555C5VI5Q5sU/kyrEQu1EMbzaExz7/bxd6wtPnxLw==
+X-Google-Smtp-Source: APXvYqyT6CDS6nQCsUI7FRMpOYPBG+ma/dLH32SCCjPVnRJcoY4JWdZf3QaLnUqHBLjSmocrDg7HXZRTfc9FdqTyIzk=
+X-Received: by 2002:a5d:4acb:: with SMTP id y11mr3933522wrs.106.1578869120894;
+ Sun, 12 Jan 2020 14:45:20 -0800 (PST)
 MIME-Version: 1.0
-References: <20191215174509.1847-1-linux@roeck-us.net> <20191215174509.1847-2-linux@roeck-us.net>
- <yq1r211dvck.fsf@oracle.com> <b22a519c-8f26-e731-345f-9deca1b2150e@roeck-us.net>
- <yq1sgkq21ll.fsf@oracle.com> <20200108153341.GB28530@roeck-us.net>
- <38af9fda-9edf-1b54-bd8d-92f712ae4cda@roeck-us.net> <CAEJqkgg_piiAWy4r3VD=KyQ7pi69bZNym2Ws=Tr8SY5wf+Sprg@mail.gmail.com>
- <CACRpkdYU7ZDcKp+BbXRCnEFDw1xwDkU_vXsfo-AZNUWGEVknXQ@mail.gmail.com>
- <CAEJqkggo3Mou1SykjisyYn+3SGGgNfnKagr=7ZPyw=Y=1MZ55w@mail.gmail.com>
- <CACRpkdayHFmdz4nAMaXR07Hcy=dLLGnnU8PkFhwQKuDTLnvOSw@mail.gmail.com>
- <e3caa946-b8f2-75c7-4bcb-69ad198de472@roeck-us.net> <CAEJqkggBvBus-G=TevSf0OUWLx_63qmZEThi-tNyPmAD2JXW-g@mail.gmail.com>
- <25c57e9d-94db-3a8b-5f68-f8a49e500b45@roeck-us.net> <CAEJqkggnQzPw1uyMUZ5F-nqSwKAu5Ur7C_VujhZxZrvv-iUt_g@mail.gmail.com>
- <de8861e8-f21b-6a66-4f5b-25acc8ff40e2@roeck-us.net>
-In-Reply-To: <de8861e8-f21b-6a66-4f5b-25acc8ff40e2@roeck-us.net>
-From:   Gabriel C <nix.or.die@gmail.com>
-Date:   Sun, 12 Jan 2020 23:26:37 +0100
-Message-ID: <CAEJqkgi1yDUmMcvfaQfuyukCBKjgnpY0n5BxvTTw0U_4+PoAHQ@mail.gmail.com>
-Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+References: <20200111145703.533809-1-hdegoede@redhat.com> <20200111145703.533809-3-hdegoede@redhat.com>
+In-Reply-To: <20200111145703.533809-3-hdegoede@redhat.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 12 Jan 2020 14:45:09 -0800
+X-Gmail-Original-Message-ID: <CALCETrUz4gdVOH=5X+MkB56ST=DNcHKicRST1j1ff0kU1yXWzw@mail.gmail.com>
+Message-ID: <CALCETrUz4gdVOH=5X+MkB56ST=DNcHKicRST1j1ff0kU1yXWzw@mail.gmail.com>
+Subject: Re: [PATCH v11 02/10] efi: Add embedded peripheral firmware support
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, X86 ML <x86@kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>, Chris Healy <cphealy@gmail.com>
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am So., 12. Jan. 2020 um 21:08 Uhr schrieb Guenter Roeck <linux@roeck-us.ne=
-t>:
+On Sat, Jan 11, 2020 at 6:57 AM Hans de Goede <hdegoede@redhat.com> wrote:
 >
-> On 1/12/20 10:37 AM, Gabriel C wrote:
-> > Am So., 12. Jan. 2020 um 16:26 Uhr schrieb Guenter Roeck <linux@roeck-u=
-s.net>:
-> >>
-> >> On 1/12/20 5:45 AM, Gabriel C wrote:
-> >>> Am So., 12. Jan. 2020 um 14:07 Uhr schrieb Guenter Roeck <linux@roeck=
--us.net>:
-> >>>>
-> >>>> On 1/12/20 4:07 AM, Linus Walleij wrote:
-> >>>>> On Sun, Jan 12, 2020 at 1:03 PM Gabriel C <nix.or.die@gmail.com> wr=
-ote:
-> >>>>>> Am So., 12. Jan. 2020 um 12:22 Uhr schrieb Linus Walleij
-> >>>>>> <linus.walleij@linaro.org>:
-> >>>>>>>
-> >>>>>>> On Sun, Jan 12, 2020 at 12:18 PM Gabriel C <nix.or.die@gmail.com>=
- wrote:
-> >>>>>>>
-> >>>>>>>> What I've noticed however is the nvme temperature low/high value=
-s on
-> >>>>>>>> the Sensors X are strange here.
-> >>>>>>> (...)
-> >>>>>>>> Sensor 1:     +27.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +6=
-5261.8=C2=B0C)
-> >>>>>>>> Sensor 2:     +29.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +6=
-5261.8=C2=B0C)
-> >>>>>>> (...)
-> >>>>>>>> Sensor 1:     +23.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +6=
-5261.8=C2=B0C)
-> >>>>>>>> Sensor 2:     +25.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +6=
-5261.8=C2=B0C)
-> >>>>>>>
-> >>>>>>> That doesn't look strange to me. It seems like reasonable default=
-s
-> >>>>>>> from the firmware if either it doesn't really log the min/max tem=
-peratures
-> >>>>>>> or hasn't been through a cycle of updating these yet. Just set bo=
-th
-> >>>>>>> to absolute min/max temperatures possible.
-> >>>>>>
-> >>>>>> Ok I'll check that.
-> >>>>>>
-> >>>>>> Do you mean by setting the temperatures to use a lmsensors config?
-> >>>>>> Or is there a way to set these with a nvme command?
-> >>>>>
-> >>>>> Not that I know of.
-> >>>>>
-> >>>>> The min/max are the minumum and maximum temperatures the
-> >>>>> device has experienced during this power-on cycle.
-> >>>>>
-> >>>>
-> >>>> No, that would be lowest/highest. The above are (or should be) per-s=
-ensor
-> >>>> setpoints. The default for those is typically the absolute minimum /
-> >>>> maximum of the supported range.
-> >>>>
-> >>>> Some SATA drives report the lowest/highest temperatures experienced
-> >>>> since power cycle, like here.
-> >>>>
-> >>>> drivetemp-scsi-5-0
-> >>>> Adapter: SCSI adapter
-> >>>> temp1:        +23.0=C2=B0C  (low  =3D  +0.0=C2=B0C, high =3D +60.0=
-=C2=B0C)
-> >>>>                           (crit low =3D -41.0=C2=B0C, crit =3D +85.0=
-=C2=B0C)
-> >>>>                           (lowest =3D +20.0=C2=B0C, highest =3D +31.=
-0=C2=B0C)
-> >>>>
-> >>>
-> >>> The SATA temperatures are fine and reported like this here too, just
-> >>> the nvme ones are strange.
-> >>>
-> >>> drivetemp-scsi-4-0
-> >>> Adapter: SCSI adapter
-> >>> temp1:        +28.0=C2=B0C  (low  =3D  +1.0=C2=B0C, high =3D +61.0=C2=
-=B0C)
-> >>>                         (crit low =3D  +2.0=C2=B0C, crit =3D +60.0=C2=
-=B0C)
-> >>>                         (lowest =3D +16.0=C2=B0C, highest =3D +31.0=
-=C2=B0C)
-> >>>
-> >>> drivetemp-scsi-12-0
-> >>> Adapter: SCSI adapter
-> >>> temp1:        +29.0=C2=B0C  (low  =3D  +1.0=C2=B0C, high =3D +61.0=C2=
-=B0C)
-> >>>                         (crit low =3D  +2.0=C2=B0C, crit =3D +60.0=C2=
-=B0C)
-> >>>                         (lowest =3D +18.0=C2=B0C, highest =3D +32.0=
-=C2=B0C)
-> >>>
-> >>> and so on.
-> >>>
-> >>> Btw, where I can find the code does these calculations?
-> >>>
-> >>
-> >> Not sure if that is what you are looking for, but the nvme hardware
-> >> monitoring driver is at drivers/nvme/host/hwmon.c, the SATA hardware
-> >> monitoring driver is at drivers/hwmon/drivetemp.c.
-> >>
-> >
-> > I have a look thanks.
-> >
-> > I'm using your v2 patch for the nvme part since you posted it on 5.4 ke=
-rnels.
-> > This is probably why I find the way the temperatures are now reported
-> > very strange.
-> >
-> > The ADATA XPG SX8200 Pro in my laptop seems to work better:
-> >
-> > nvme-pci-0200
-> > Adapter: PCI adapter
-> > Composite:    +37.9=C2=B0C  (low  =3D  -0.1=C2=B0C, high =3D +74.8=C2=
-=B0C)
-> >                        (crit =3D +79.8=C2=B0C)
-> >
-> > Low is 0=C2=B0 which is what the spec suggests.
-> >
-> >> The limits on nvme drives are configurable.
-> >
-> > Yes, I found this out already.
-> >
-> >> root@server:/sys/class/hwmon# sensors nvme-pci-0100
-> >> nvme-pci-0100
-> >> Adapter: PCI adapter
-> >> Composite:    +40.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +84.8=C2=
-=B0C)
-> >>                          (crit =3D +84.8=C2=B0C)
-> >> Sensor 1:     +40.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=
-=C2=B0C)
-> >> Sensor 2:     +43.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=
-=C2=B0C)
-> >>
-> >> root@server:/sys/class/hwmon# echo 0 > hwmon1/temp2_min
-> >> root@server:/sys/class/hwmon# echo 100000 > hwmon1/temp2_max
-> >
-> > An lm-sensors configuration will work too.
-> >
-> Sure, the above was just an example.
+> Just like with PCI options ROMs, which we save in the setup_efi_pci*
+> functions from arch/x86/boot/compressed/eboot.c, the EFI code / ROM itself
+> sometimes may contain data which is useful/necessary for peripheral drivers
+> to have access to.
 >
-> >> root@server:/sys/class/hwmon# sensors nvme-pci-0100
-> >> nvme-pci-0100
-> >> Adapter: PCI adapter
-> >> Composite:    +38.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +84.8=C2=
-=B0C)
-> >>                          (crit =3D +84.8=C2=B0C)
-> >> Sensor 1:     +38.9=C2=B0C  (low  =3D  -0.1=C2=B0C, high =3D +99.8=C2=
-=B0C)
-> >> Sensor 2:     +42.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=
-=C2=B0C)
-> >>
-> >> If you dislike the defaults, just configure whatever you think is
-> >> appropriate for your system.
-> >
-> > It's not about disliking the values. I want to find out if these Samsun=
-g models
-> > don't support that, or it is a bug somewhere in writing/calculating the=
- values.
-> >
-> No, this is not a bug. It is perfectly valid for individual sensors to ha=
-ve
-> uninitialized limits. If I recall correctly, the NVME specification
-> specifically states that the default settings for individual sensors
-> shall be those values (0 and 65535 Kelvin, specifically).
+> Specifically the EFI code may contain an embedded copy of firmware which
+> needs to be (re)loaded into the peripheral. Normally such firmware would be
+> part of linux-firmware, but in some cases this is not feasible, for 2
+> reasons:
 >
-> And, yes, I would agree that is a bit odd that NVME drives report tempera=
-tures
-> in Kelvin, but such is the world.
+> 1) The firmware is customized for a specific use-case of the chipset / use
+> with a specific hardware model, so we cannot have a single firmware file
+> for the chipset. E.g. touchscreen controller firmwares are compiled
+> specifically for the hardware model they are used with, as they are
+> calibrated for a specific model digitizer.
 >
-> > In the case, Samsung and others don't support such a thing wouldn't be
-> > better to just ignore
-> > the bogus reading altogether?
+> 2) Despite repeated attempts we have failed to get permission to
+> redistribute the firmware. This is especially a problem with customized
+> firmwares, these get created by the chip vendor for a specific ODM and the
+> copyright may partially belong with the ODM, so the chip vendor cannot
+> give a blanket permission to distribute these.
 >
-> Again, you can set whatever limits you like. The default limits on many
-> hardware sensor chips have odd values. Just looking at my system:
+> This commit adds support for finding peripheral firmware embedded in the
+> EFI code and makes the found firmware available through the new
+> efi_get_embedded_fw() function.
 >
-> nct6797-isa-0a20
-> Adapter: ISA adapter
-> in0:                    +0.48 V  (min =3D  +0.00 V, max =3D  +1.74 V)
-> in1:                    +1.02 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
-> in2:                    +3.39 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
-> in3:                    +3.31 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
-> in4:                    +1.00 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
-> in5:                    +0.14 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
-> in6:                    +0.82 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
-> in7:                    +3.38 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
-> in8:                    +3.26 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
-> in9:                    +1.82 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
-> in10:                   +0.00 V  (min =3D  +0.00 V, max =3D  +0.00 V)
-> in11:                   +0.74 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
-> in12:                   +1.20 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
-> in13:                   +0.68 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
-> in14:                   +1.50 V  (min =3D  +0.00 V, max =3D  +0.00 V)  AL=
-ARM
+> Support for loading these firmwares through the standard firmware loading
+> mechanism is added in a follow-up commit in this patch-series.
 >
+> Note we check the EFI_BOOT_SERVICES_CODE for embedded firmware near the end
+> of start_kernel(), just before calling rest_init(), this is on purpose
+> because the typical EFI_BOOT_SERVICES_CODE memory-segment is too large for
+> early_memremap(), so the check must be done after mm_init(). This relies
+> on EFI_BOOT_SERVICES_CODE not being free-ed until efi_free_boot_services()
+> is called, which means that this will only work on x86 for now.
 >
-> Are you suggesting that we should not support setting min/max values for
-> all drivers just because they are often not initialized to reasonable val=
-ues
-> by default ?
 
-No, I'm not suggesting that. I'm aware of strange I/O monitoring chips valu=
-es
-and the lack of documentation, so in this case, something is better
-than nothing.
+A couple general comments:
 
-In the nvme case, these are only 2 values who either are working/supported
-by firmware or not, so I thought it would be reasonable to have
-known-good values
-instead of 65261.8=C2=B0C, which will probably cause users to report that
-as a bug a lot.
+How does this interact with modules?  It looks like you're referencing
+the dmi table from otherwise modular or potentially modular code in
+early EFI code, which seems like it will either prevent modular builds
+or will actually fail at compile time depending on config.  Perhaps
+you should have a single collection of EFI firmware references in a
+separate place in the kernel tree and reference *that* from the EFI
+code.
 
-Can we at least have that documented and explain how the values can be
-set/changed?
+In the event you have many DMI matches (e.g. if anyone ends up using
+this in a case where the DMI match has to match very broad things),
+you'll iterate over the EFI code and data multiple times and
+performance will suck.  It would be much better to iterate once and
+search for everything.
+
+I suspect that a rolling hash would be better than the prefix you're
+using, but this could be changed later, assuming someone can actually
+find all the firmware needed.
+
+> +static int __init efi_check_md_for_embedded_firmware(
+> +       efi_memory_desc_t *md, const struct efi_embedded_fw_desc *desc)
+> +{
+> +       const u64 prefix = *((u64 *)desc->prefix);
+> +       struct sha256_state sctx;
+> +       struct efi_embedded_fw *fw;
+> +       u8 sha256[32];
+> +       u64 i, size;
+> +       void *map;
+> +
+> +       size = md->num_pages << EFI_PAGE_SHIFT;
+> +       map = memremap(md->phys_addr, size, MEMREMAP_WB);
+> +       if (!map) {
+> +               pr_err("Error mapping EFI mem at %#llx\n", md->phys_addr);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       for (i = 0; (i + desc->length) <= size; i += 8) {
+> +               u64 *mem = map + i;
+> +
+> +               if (*mem != prefix)
+> +                       continue;
+
+This is very ugly.  You're casting a pointer to a bunch of bytes to
+u64* and then dereferencing it like it's an integer.  This has major
+endian issues with are offset by the similar endianness issues when
+you type-pun prefix to u64.  You should instead just memcmp the
+pointer with the data.  This will get rid of all the type punning in
+this function.  You will also fail to detect firmware that isn't
+8-byte-aligned.
+
+So perhaps just use memmem() to replace this whole mess?
+
+> +
+> +               sha256_init(&sctx);
+> +               sha256_update(&sctx, map + i, desc->length);
+> +               sha256_final(&sctx, sha256);
+> +               if (memcmp(sha256, desc->sha256, 32) == 0)
+> +                       break;
+> +       }
+> +       if ((i + desc->length) > size) {
+> +               memunmap(map);
+> +               return -ENOENT;
+> +       }
+> +
+> +       pr_info("Found EFI embedded fw '%s'\n", desc->name);
+> +
+
+It might be nice to also log which EFI section it was in?
+
+> +       fw = kmalloc(sizeof(*fw), GFP_KERNEL);
+> +       if (!fw) {
+> +               memunmap(map);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       fw->data = kmemdup(map + i, desc->length, GFP_KERNEL);
+> +       memunmap(map);
+> +       if (!fw->data) {
+> +               kfree(fw);
+> +               return -ENOMEM;
+> +       }
+> +
+> +       fw->name = desc->name;
+> +       fw->length = desc->length;
+> +       list_add(&fw->list, &efi_embedded_fw_list);
+> +
+
+If you actually copy the firmware name instead of just a pointer to
+it, then you could potentially free the list of EFI firmwares.
+
+Why are you copying the firmware into linear (kmemdup) memory here
+just to copy it to vmalloc space down below...
+
+> +       return 0;
+> +}
+> +
+> +void __init efi_check_for_embedded_firmwares(void)
+> +{
+> +       const struct efi_embedded_fw_desc *fw_desc;
+> +       const struct dmi_system_id *dmi_id;
+> +       efi_memory_desc_t *md;
+> +       int i, r;
+> +
+> +       for (i = 0; embedded_fw_table[i]; i++) {
+> +               dmi_id = dmi_first_match(embedded_fw_table[i]);
+> +               if (!dmi_id)
+> +                       continue;
+> +
+> +               fw_desc = dmi_id->driver_data;
+> +
+> +               /*
+> +                * In some drivers the struct driver_data contains may contain
+> +                * other driver specific data after the fw_desc struct; and
+> +                * the fw_desc struct itself may be empty, skip these.
+> +                */
+> +               if (!fw_desc->name)
+> +                       continue;
+> +
+> +               for_each_efi_memory_desc(md) {
+> +                       if (md->type != EFI_BOOT_SERVICES_CODE)
+> +                               continue;
+> +
+> +                       r = efi_check_md_for_embedded_firmware(md, fw_desc);
+> +                       if (r == 0)
+> +                               break;
+> +               }
+> +       }
+> +
+> +       checked_for_fw = true;
+> +}
+
+Have you measured how long this takes on a typical system per matching DMI id?
+
+> +
+> +int efi_get_embedded_fw(const char *name, void **data, size_t *size)
+> +{
+> +       struct efi_embedded_fw *iter, *fw = NULL;
+> +       void *buf = *data;
+> +
+> +       if (!checked_for_fw) {
+
+WARN_ON_ONCE?  A stack dump would be quite nice here.
+
+> +       buf = vmalloc(fw->length);
+> +       if (!buf)
+> +               return -ENOMEM;
+> +
+> +       memcpy(buf, fw->data, fw->length);
+> +       *size = fw->length;
+> +       *data = buf;
+
+See above.  What's vmalloc() for?  Where's the vfree()?
+
+BTW, it would be very nice to have a straightforward way
+(/sys/kernel/debug/efi_firmware/[name]?) to dump all found firmwares.
