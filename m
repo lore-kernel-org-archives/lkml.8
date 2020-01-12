@@ -2,61 +2,102 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8CDC33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FAEC33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5184D24656
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A48432080D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387451AbgALUfl (ORCPT
+        id S2387442AbgALUup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 15:35:41 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:47292 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732914AbgALUfl (ORCPT
+        Sun, 12 Jan 2020 15:50:45 -0500
+Received: from orion.archlinux.org ([88.198.91.70]:33904 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732825AbgALUup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 15:35:41 -0500
-Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iqjxS-0004tC-II; Sun, 12 Jan 2020 20:35:38 +0000
-Date:   Sun, 12 Jan 2020 21:35:37 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commits in the pidfd tree
-Message-ID: <20200112203536.ahxzux7ao6b3ypul@wittgenstein>
-References: <20200113072221.4c17f28a@canb.auug.org.au>
+        Sun, 12 Jan 2020 15:50:45 -0500
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id CA8DC1813D7A86;
+        Sun, 12 Jan 2020 20:50:42 +0000 (UTC)
+Received: from localhost.localdomain (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Sun, 12 Jan 2020 20:50:42 +0000 (UTC)
+From:   =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
+Subject: [PATCH] HID: logitech-hidpp: add support for the Powerplay mat/receiver
+Date:   Sun, 12 Jan 2020 20:50:21 +0000
+Message-Id: <20200112205021.3004703-1-lains@archlinux.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200113072221.4c17f28a@canb.auug.org.au>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 07:22:21AM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Commits
-> 
->   f8e8354b6b5f ("test: Add test for pidfd getfd")
->   666c3470317f ("arch: wire up pidfd_getfd syscall")
->   527051993a23 ("pid: Implement pidfd_getfd syscall")
->   6fbe955c41ae ("vfs, fdtable: Add fget_task helper")
-> 
-> are missing a Signed-off-by from their committer.
+The Logitech G Powerplay has a lightspeed receiver with a static HID++
+device with ID 7 attached to it to. It is used to configure the led on
+the mat. For this reason I increased the max number of devices.
 
-Thanks for reporting this.
-Fixed now!
+I also marked all lightspeed devices as HID++ compatible. As the
+internal powerplay device does not have REPORT_TYPE_KEYBOARD or
+REPORT_TYPE_KEYBOARD it was not being marked as HID++ compatible in
+logi_hidpp_dev_conn_notif_equad.
 
-Christian
+Signed-off-by: Filipe Laíns <lains@archlinux.org>
+---
+ drivers/hid/hid-logitech-dj.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
+index bb50d6e7745b..732380b55b15 100644
+--- a/drivers/hid/hid-logitech-dj.c
++++ b/drivers/hid/hid-logitech-dj.c
+@@ -16,11 +16,11 @@
+ #include <asm/unaligned.h>
+ #include "hid-ids.h"
+ 
+-#define DJ_MAX_PAIRED_DEVICES			6
++#define DJ_MAX_PAIRED_DEVICES			7
+ #define DJ_MAX_NUMBER_NOTIFS			8
+ #define DJ_RECEIVER_INDEX			0
+ #define DJ_DEVICE_INDEX_MIN			1
+-#define DJ_DEVICE_INDEX_MAX			6
++#define DJ_DEVICE_INDEX_MAX			7
+ 
+ #define DJREPORT_SHORT_LENGTH			15
+ #define DJREPORT_LONG_LENGTH			32
+@@ -971,7 +971,7 @@ static void logi_hidpp_recv_queue_notif(struct hid_device *hdev,
+ 	case 0x0c:
+ 		device_type = "eQUAD Lightspeed 1";
+ 		logi_hidpp_dev_conn_notif_equad(hdev, hidpp_report, &workitem);
+-		workitem.reports_supported |= STD_KEYBOARD;
++		workitem.reports_supported |= STD_KEYBOARD | HIDPP;
+ 		break;
+ 	case 0x0d:
+ 		device_type = "eQUAD Lightspeed 1_1";
+@@ -1850,6 +1850,10 @@ static const struct hid_device_id logi_dj_receivers[] = {
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
+ 		USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED_1_1),
+ 	 .driver_data = recvr_type_gaming_hidpp},
++	{ /* Logitech powerplay mat/receiver (0xc539) */
++	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
++		0xc53a),
++	 .driver_data = recvr_type_gaming_hidpp},
+ 	{ /* Logitech 27 MHz HID++ 1.0 receiver (0xc513) */
+ 	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_MX3000_RECEIVER),
+ 	 .driver_data = recvr_type_27mhz},
+-- 
+2.24.1
