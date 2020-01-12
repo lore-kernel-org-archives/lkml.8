@@ -2,1238 +2,701 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C25C33CA7
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 00:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A41C33CA7
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 00:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25582071A
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 00:25:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="gY3MjcEg"
+	by mail.kernel.org (Postfix) with ESMTP id 8754620866
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 00:45:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731831AbgALAZ3 (ORCPT
+        id S1731808AbgALApe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 19:25:29 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40080 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731800AbgALAZ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 19:25:26 -0500
-Received: by mail-wr1-f68.google.com with SMTP id c14so5197102wrn.7;
-        Sat, 11 Jan 2020 16:25:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RaQWf+PmAf6IKG/rZpjUeWgHgCz/c6HJPVR4aWwl6TI=;
-        b=gY3MjcEgdh7hDo/svYN/uij8eIRswdRX1Z3zc10DxQaHfgI/xi7feuTil9rrHMMNwE
-         YzkZX/+LB9MSK2iw0h3J3rIgK35APIBZJITGsutHtFy6paQHKy/rQ09O6Llipq7DFBJt
-         VYB0BaP682qnn71R4Mc5WXi4o9weDPXsPcvvI53jSu8fr9l1wNASVmm1RQBcUVjHR0oA
-         ats7vwMBIJglPiqGtdWAjyQxceOWIpg1orfUHAtWYyh6nMtuIcFCJPwgLBiHZpbSu7S2
-         bUnteEdeasT6TXipc8RB5moSWgB2gnTiy8UXzPthxUB9YDuwtTjh+Qa8+l8YPBZfR5CY
-         kUgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RaQWf+PmAf6IKG/rZpjUeWgHgCz/c6HJPVR4aWwl6TI=;
-        b=G/s9o+gEzGhCc+61uZshLFeuHTILOBKHuSKlIJCwnT9S5JUnwqjo/1uavzCNmfLFiW
-         a63ab5yZlnjPkRMrK9Xd0rIPOLWxfMrSFHIE0hKR5bdgC2his60L+2qPCsRmj7jT9Gpw
-         R2h5DVZjD14MN9crOuVoaYIiOLnP6hgKukHWNuvYtG+ROFh6LndkOCiBolL52nj27QLG
-         dCYThavQVGngf0vBg9pJQcG2LliP1tH+J2izNcOSxR0t29TsYjvvoZcZQA/2rRVBWG1v
-         f+eYzSh/O2l+AROJnqTa+n0q+m7LrIB95y66YBneB3Uz+/HnBjPuDBZe585wG7taM5ir
-         U0qw==
-X-Gm-Message-State: APjAAAXR9rHYtPA26fdDgUdyl7a7bViLKypsXCxb6tDPnId/B4FuLUoh
-        okWwBmi942U+rpg5KGIuMXs=
-X-Google-Smtp-Source: APXvYqzBtByYdj/wXN3TQYo4hhVhka6XtrYMUTkKPA4wxwc7yncrD6UT9NdTE4TOH64b7VSFbSWPXA==
-X-Received: by 2002:adf:a285:: with SMTP id s5mr10652819wra.118.1578788722802;
-        Sat, 11 Jan 2020 16:25:22 -0800 (PST)
-Received: from localhost.localdomain (p200300F1373A1900428D5CFFFEB99DB8.dip0.t-ipconnect.de. [2003:f1:373a:1900:428d:5cff:feb9:9db8])
-        by smtp.googlemail.com with ESMTPSA id t5sm8407389wrr.35.2020.01.11.16.25.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 Jan 2020 16:25:22 -0800 (PST)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
-        robh+dt@kernel.org
-Cc:     jianxin.pan@amlogic.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        lnykww@gmail.com, yinxin_1989@aliyun.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v4 3/3] mmc: host: meson-mx-sdhc: new driver for the Amlogic Meson SDHC host
-Date:   Sun, 12 Jan 2020 01:24:59 +0100
-Message-Id: <20200112002459.2124850-4-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200112002459.2124850-1-martin.blumenstingl@googlemail.com>
-References: <20200112002459.2124850-1-martin.blumenstingl@googlemail.com>
+        Sat, 11 Jan 2020 19:45:34 -0500
+Received: from mga12.intel.com ([192.55.52.136]:23902 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731791AbgALApe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 19:45:34 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jan 2020 16:45:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,423,1571727600"; 
+   d="gz'50?scan'50,208,50";a="396797002"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 11 Jan 2020 16:45:29 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1iqRNh-0003nm-CK; Sun, 12 Jan 2020 08:45:29 +0800
+Date:   Sun, 12 Jan 2020 08:44:57 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     kbuild-all@lists.01.org, darrick.wong@oracle.com,
+        linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vincenzo.frascino@arm.com
+Subject: Re: [PATCH] xfs: Fix xfs_dir2_sf_entry_t size check
+Message-ID: <202001120813.Jgl7Tryt%lkp@intel.com>
+References: <20200109141459.21808-1-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="6cwccv77cih4dpjg"
+Content-Disposition: inline
+In-Reply-To: <20200109141459.21808-1-vincenzo.frascino@arm.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SDHC MMC host controller on Amlogic SoCs provides an eMMC and MMC
-card interface with 1/4/8-bit bus width.
-It supports eMMC spec 4.4x/4.5x including HS200 (up to 100MHz clock).
 
-The public S805 datasheet [0] contains a short documentation about the
-registers. Unfortunately it does not describe how to use the registers
-to make the hardware work. Thus this driver is based on reading (and
-understanding) the Amlogic 3.10 GPL kernel code.
+--6cwccv77cih4dpjg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Some hardware details are not easy to see. Jianxin Pan was kind enough
-to answer my questions:
-The hardware has built-in busy timeout support. The maximum timeout is
-30 seconds. This is only documented in Amlogic's internal
-documentation.
+Hi Vincenzo,
 
-The controller only works with very specific clock configurations. The
-details are not part of the public datasheet. In my own words the
-supported configurations are:
-- 399.812kHz:	clkin =  850MHz div = 2126 sd_rx_phase = 63
-- 1MHz:		clkin =  850MHz div = 850  sd_rx_phase = 55
-- 5.986MHz:	clkin =  850MHz div = 142  sd_rx_phase = 24
-- 25MHz:	clkin =  850MHz div = 34   sd_rx_phase = 15
-- 47.222MHz:	clkin =  850MHz div = 18   sd_rx_phase = 11/15 (SDR50/HS)
-- 53.125MHz:	clkin =  850MHz div = 16   sd_rx_phase = (tuning)
-- 70.833MHz:	clkin =  850MHz div = 12   sd_rx_phase = (tuning)
-- 85MHz:	clkin =  850MHz div = 10   sd_rx_phase = (tuning)
-- 94.44MHz:	clkin =  850MHz div = 9    sd_rx_phase = (tuning)
-- 106.25MHz:	clkin =  850MHz div = 8    sd_rx_phase = (tuning)
-- 127.5MHz:     clkin = 1275MHz div = 10   sd_rx_phase = (tuning)
-- 141.667MHz:   clkin =  850MHz div = 6    sd_rx_phase = (tuning)
-- 159.375MHz:	clkin = 1275MHz div = 8    sd_rx_phase = (tuning)
-- 212.5MHz:	clkin = 1275MHz div = 6    sd_rx_phase = (tuning)
-- (sd_tx_phase is always 1, 94.44MHz is not listed in the datasheet
-   but this is what the 3.10 BSP kernel on Odroid-C1 actually uses)
+I love your patch! Yet something to improve:
 
-NOTE: CMD23 support is disabled for now because it results in command
-timeouts and thus decreases read performance.
+[auto build test ERROR on xfs-linux/for-next]
+[also build test ERROR on djwong-xfs/djwong-devel v5.5-rc5 next-20200110]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
 
-Tested-by: Wei Wang <lnykww@gmail.com>
-Tested-by: Xin Yin <yinxin_1989@aliyun.com>
-Reviewed-by: Xin Yin <yinxin_1989@aliyun.com>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+url:    https://github.com/0day-ci/linux/commits/Vincenzo-Frascino/xfs-Fix-xfs_dir2_sf_entry_t-size-check/20200110-144608
+base:   https://git.kernel.org/pub/scm/fs/xfs/xfs-linux.git for-next
+config: x86_64-lkp (attached as .config)
+compiler: gcc-7 (Debian 7.5.0-3) 7.5.0
+reproduce:
+        # save the attached .config to linux build tree
+        make ARCH=x86_64 
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   In file included from include/linux/string.h:6:0,
+                    from include/linux/uuid.h:12,
+                    from fs/xfs/xfs_linux.h:10,
+                    from fs/xfs/xfs.h:22,
+                    from fs/xfs/xfs_super.c:7:
+   In function 'xfs_check_ondisk_structs',
+       inlined from 'init_xfs_fs' at fs/xfs/xfs_super.c:2025:2:
+>> include/linux/compiler.h:350:38: error: call to '__compiletime_assert_107' declared with attribute error: XFS: sizeof(xfs_dir2_sf_entry_t) is wrong, expected 4
+     _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+                                         ^
+   include/linux/compiler.h:331:4: note: in definition of macro '__compiletime_assert'
+       prefix ## suffix();    \
+       ^~~~~~
+   include/linux/compiler.h:350:2: note: in expansion of macro '_compiletime_assert'
+     _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+     ^~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+    #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+                                        ^~~~~~~~~~~~~~~~~~
+   fs/xfs/xfs_ondisk.h:10:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+     BUILD_BUG_ON_MSG(sizeof(structname) != (size), "XFS: sizeof(" \
+     ^~~~~~~~~~~~~~~~
+   fs/xfs/xfs_ondisk.h:107:2: note: in expansion of macro 'XFS_CHECK_STRUCT_SIZE'
+     XFS_CHECK_STRUCT_SIZE(xfs_dir2_sf_entry_t,  4);
+     ^~~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/string.h:6:0,
+                    from include/linux/uuid.h:12,
+                    from fs//xfs/xfs_linux.h:10,
+                    from fs//xfs/xfs.h:22,
+                    from fs//xfs/xfs_super.c:7:
+   In function 'xfs_check_ondisk_structs',
+       inlined from 'init_xfs_fs' at fs//xfs/xfs_super.c:2025:2:
+>> include/linux/compiler.h:350:38: error: call to '__compiletime_assert_107' declared with attribute error: XFS: sizeof(xfs_dir2_sf_entry_t) is wrong, expected 4
+     _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+                                         ^
+   include/linux/compiler.h:331:4: note: in definition of macro '__compiletime_assert'
+       prefix ## suffix();    \
+       ^~~~~~
+   include/linux/compiler.h:350:2: note: in expansion of macro '_compiletime_assert'
+     _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+     ^~~~~~~~~~~~~~~~~~~
+   include/linux/build_bug.h:39:37: note: in expansion of macro 'compiletime_assert'
+    #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+                                        ^~~~~~~~~~~~~~~~~~
+   fs//xfs/xfs_ondisk.h:10:2: note: in expansion of macro 'BUILD_BUG_ON_MSG'
+     BUILD_BUG_ON_MSG(sizeof(structname) != (size), "XFS: sizeof(" \
+     ^~~~~~~~~~~~~~~~
+   fs//xfs/xfs_ondisk.h:107:2: note: in expansion of macro 'XFS_CHECK_STRUCT_SIZE'
+     XFS_CHECK_STRUCT_SIZE(xfs_dir2_sf_entry_t,  4);
+     ^~~~~~~~~~~~~~~~~~~~~
+
+vim +/__compiletime_assert_107 +350 include/linux/compiler.h
+
+9a8ab1c39970a4 Daniel Santos 2013-02-21  336  
+9a8ab1c39970a4 Daniel Santos 2013-02-21  337  #define _compiletime_assert(condition, msg, prefix, suffix) \
+9a8ab1c39970a4 Daniel Santos 2013-02-21  338  	__compiletime_assert(condition, msg, prefix, suffix)
+9a8ab1c39970a4 Daniel Santos 2013-02-21  339  
+9a8ab1c39970a4 Daniel Santos 2013-02-21  340  /**
+9a8ab1c39970a4 Daniel Santos 2013-02-21  341   * compiletime_assert - break build and emit msg if condition is false
+9a8ab1c39970a4 Daniel Santos 2013-02-21  342   * @condition: a compile-time constant condition to check
+9a8ab1c39970a4 Daniel Santos 2013-02-21  343   * @msg:       a message to emit if condition is false
+9a8ab1c39970a4 Daniel Santos 2013-02-21  344   *
+9a8ab1c39970a4 Daniel Santos 2013-02-21  345   * In tradition of POSIX assert, this macro will break the build if the
+9a8ab1c39970a4 Daniel Santos 2013-02-21  346   * supplied condition is *false*, emitting the supplied error message if the
+9a8ab1c39970a4 Daniel Santos 2013-02-21  347   * compiler has support to do so.
+9a8ab1c39970a4 Daniel Santos 2013-02-21  348   */
+9a8ab1c39970a4 Daniel Santos 2013-02-21  349  #define compiletime_assert(condition, msg) \
+9a8ab1c39970a4 Daniel Santos 2013-02-21 @350  	_compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+9a8ab1c39970a4 Daniel Santos 2013-02-21  351  
+
+:::::: The code at line 350 was first introduced by commit
+:::::: 9a8ab1c39970a4938a72d94e6fd13be88a797590 bug.h, compiler.h: introduce compiletime_assert & BUILD_BUG_ON_MSG
+
+:::::: TO: Daniel Santos <daniel.santos@pobox.com>
+:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
+
 ---
- drivers/mmc/host/Kconfig         |   14 +
- drivers/mmc/host/Makefile        |    1 +
- drivers/mmc/host/meson-mx-sdhc.c | 1064 ++++++++++++++++++++++++++++++
- 3 files changed, 1079 insertions(+)
- create mode 100644 drivers/mmc/host/meson-mx-sdhc.c
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
 
-diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-index d06b2dfe3c95..23d24aad1145 100644
---- a/drivers/mmc/host/Kconfig
-+++ b/drivers/mmc/host/Kconfig
-@@ -405,6 +405,20 @@ config MMC_MESON_GX
- 
- 	  If you have a controller with this interface, say Y here.
- 
-+config MMC_MESON_MX_SDHC
-+	tristate "Amlogic Meson SDHC Host Controller support"
-+	depends on (ARM && ARCH_MESON) || COMPILE_TEST
-+	depends on OF
-+	imply COMMON_CLK_MESON_MX_SDHC
-+	help
-+	  This selects support for the SDHC Host Controller on
-+	  Amlogic Meson6, Meson8, Meson8b and Meson8m2 SoCs.
-+	  The controller supports the SD/SDIO Spec 3.x and eMMC Spec 4.5x
-+	  with 1, 4, and 8 bit bus widths.
-+
-+	  If you have a controller with this interface, say Y or M here.
-+	  If unsure, say N.
-+
- config MMC_MESON_MX_SDIO
- 	tristate "Amlogic Meson6/Meson8/Meson8b SD/MMC Host Controller support"
- 	depends on ARCH_MESON || COMPILE_TEST
-diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-index 21d9089e5eda..9a0c22a8139a 100644
---- a/drivers/mmc/host/Makefile
-+++ b/drivers/mmc/host/Makefile
-@@ -68,6 +68,7 @@ obj-$(CONFIG_MMC_VUB300)	+= vub300.o
- obj-$(CONFIG_MMC_USHC)		+= ushc.o
- obj-$(CONFIG_MMC_WMT)		+= wmt-sdmmc.o
- obj-$(CONFIG_MMC_MESON_GX)	+= meson-gx-mmc.o
-+obj-$(CONFIG_MMC_MESON_MX_SDHC)	+= meson-mx-sdhc.o
- obj-$(CONFIG_MMC_MESON_MX_SDIO)	+= meson-mx-sdio.o
- obj-$(CONFIG_MMC_MOXART)	+= moxart-mmc.o
- obj-$(CONFIG_MMC_SUNXI)		+= sunxi-mmc.o
-diff --git a/drivers/mmc/host/meson-mx-sdhc.c b/drivers/mmc/host/meson-mx-sdhc.c
-new file mode 100644
-index 000000000000..b92400ee488b
---- /dev/null
-+++ b/drivers/mmc/host/meson-mx-sdhc.c
-@@ -0,0 +1,1064 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Amlogic Meson6/Meson8/Meson8b/Meson8m2 SDHC MMC host controller driver.
-+ *
-+ * Copyright (C) 2019 Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/interrupt.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/types.h>
-+
-+#include <linux/mmc/host.h>
-+#include <linux/mmc/mmc.h>
-+#include <linux/mmc/sdio.h>
-+#include <linux/mmc/slot-gpio.h>
-+
-+#define MESON_SDHC_ARGU						0x00
-+
-+#define MESON_SDHC_SEND						0x04
-+	#define MESON_SDHC_SEND_CMD_INDEX			GENMASK(5, 0)
-+	#define MESON_SDHC_SEND_CMD_HAS_RESP			BIT(6)
-+	#define MESON_SDHC_SEND_CMD_HAS_DATA			BIT(7)
-+	#define MESON_SDHC_SEND_RESP_LEN			BIT(8)
-+	#define MESON_SDHC_SEND_RESP_NO_CRC			BIT(9)
-+	#define MESON_SDHC_SEND_DATA_DIR			BIT(10)
-+	#define MESON_SDHC_SEND_DATA_STOP			BIT(11)
-+	#define MESON_SDHC_SEND_R1B				BIT(12)
-+	#define MESON_SDHC_SEND_TOTAL_PACK			GENMASK(31, 16)
-+
-+#define MESON_SDHC_CTRL						0x08
-+	#define MESON_SDHC_CTRL_DAT_TYPE			GENMASK(1, 0)
-+	#define MESON_SDHC_CTRL_DDR_MODE			BIT(2)
-+	#define MESON_SDHC_CTRL_TX_CRC_NOCHECK			BIT(3)
-+	#define MESON_SDHC_CTRL_PACK_LEN			GENMASK(12, 4)
-+	#define MESON_SDHC_CTRL_RX_TIMEOUT			GENMASK(19, 13)
-+	#define MESON_SDHC_CTRL_RX_PERIOD			GENMASK(23, 20)
-+	#define MESON_SDHC_CTRL_RX_ENDIAN			GENMASK(26, 24)
-+	#define MESON_SDHC_CTRL_SDIO_IRQ_MODE			BIT(27)
-+	#define MESON_SDHC_CTRL_DAT0_IRQ_SEL			BIT(28)
-+	#define MESON_SDHC_CTRL_TX_ENDIAN			GENMASK(31, 29)
-+
-+#define MESON_SDHC_STAT						0x0c
-+	#define MESON_SDHC_STAT_CMD_BUSY			BIT(0)
-+	#define MESON_SDHC_STAT_DAT3_0				GENMASK(4, 1)
-+	#define MESON_SDHC_STAT_CMD				BIT(5)
-+	#define MESON_SDHC_STAT_RXFIFO_CNT			GENMASK(12, 6)
-+	#define MESON_SDHC_STAT_TXFIFO_CNT			GENMASK(19, 13)
-+	#define MESON_SDHC_STAT_DAT7_4				GENMASK(23, 20)
-+
-+#define MESON_SDHC_CLKC						0x10
-+	#define MESON_SDHC_CLKC_CLK_DIV				GENMASK(11, 0)
-+	#define MESON_SDHC_CLKC_CLK_JIC				BIT(24)
-+	#define MESON_SDHC_CLKC_MEM_PWR_OFF			GENMASK(26, 25)
-+
-+#define MESON_SDHC_ADDR						0x14
-+
-+#define MESON_SDHC_PDMA						0x18
-+	#define MESON_SDHC_PDMA_DMA_MODE			BIT(0)
-+	#define MESON_SDHC_PDMA_PIO_RDRESP			GENMASK(3, 1)
-+	#define MESON_SDHC_PDMA_DMA_URGENT			BIT(4)
-+	#define MESON_SDHC_PDMA_WR_BURST			GENMASK(9, 5)
-+	#define MESON_SDHC_PDMA_RD_BURST			GENMASK(14, 10)
-+	#define MESON_SDHC_PDMA_RXFIFO_TH			GENMASK(21, 15)
-+	#define MESON_SDHC_PDMA_TXFIFO_TH			GENMASK(28, 22)
-+	#define MESON_SDHC_PDMA_RXFIFO_MANUAL_FLUSH		GENMASK(30, 29)
-+	#define MESON_SDHC_PDMA_TXFIFO_FILL			BIT(31)
-+
-+#define MESON_SDHC_MISC						0x1c
-+	#define MESON_SDHC_MISC_WCRC_ERR_PATT			GENMASK(6, 4)
-+	#define MESON_SDHC_MISC_WCRC_OK_PATT			GENMASK(9, 7)
-+	#define MESON_SDHC_MISC_BURST_NUM			GENMASK(21, 16)
-+	#define MESON_SDHC_MISC_THREAD_ID			GENMASK(27, 22)
-+	#define MESON_SDHC_MISC_MANUAL_STOP			BIT(28)
-+	#define MESON_SDHC_MISC_TXSTART_THRES			GENMASK(31, 29)
-+
-+#define MESON_SDHC_DATA						0x20
-+
-+#define MESON_SDHC_ICTL						0x24
-+	#define MESON_SDHC_ICTL_RESP_OK				BIT(0)
-+	#define MESON_SDHC_ICTL_RESP_TIMEOUT			BIT(1)
-+	#define MESON_SDHC_ICTL_RESP_ERR_CRC			BIT(2)
-+	#define MESON_SDHC_ICTL_RESP_OK_NOCLEAR			BIT(3)
-+	#define MESON_SDHC_ICTL_DATA_1PACK_OK			BIT(4)
-+	#define MESON_SDHC_ICTL_DATA_TIMEOUT			BIT(5)
-+	#define MESON_SDHC_ICTL_DATA_ERR_CRC			BIT(6)
-+	#define MESON_SDHC_ICTL_DATA_XFER_OK			BIT(7)
-+	#define MESON_SDHC_ICTL_RX_HIGHER			BIT(8)
-+	#define MESON_SDHC_ICTL_RX_LOWER			BIT(9)
-+	#define MESON_SDHC_ICTL_DAT1_IRQ			BIT(10)
-+	#define MESON_SDHC_ICTL_DMA_DONE			BIT(11)
-+	#define MESON_SDHC_ICTL_RXFIFO_FULL			BIT(12)
-+	#define MESON_SDHC_ICTL_TXFIFO_EMPTY			BIT(13)
-+	#define MESON_SDHC_ICTL_ADDI_DAT1_IRQ			BIT(14)
-+	#define MESON_SDHC_ICTL_ALL_IRQS			GENMASK(14, 0)
-+	#define MESON_SDHC_ICTL_DAT1_IRQ_DELAY			GENMASK(17, 16)
-+
-+#define MESON_SDHC_ISTA						0x28
-+	#define MESON_SDHC_ISTA_RESP_OK				BIT(0)
-+	#define MESON_SDHC_ISTA_RESP_TIMEOUT			BIT(1)
-+	#define MESON_SDHC_ISTA_RESP_ERR_CRC			BIT(2)
-+	#define MESON_SDHC_ISTA_RESP_OK_NOCLEAR			BIT(3)
-+	#define MESON_SDHC_ISTA_DATA_1PACK_OK			BIT(4)
-+	#define MESON_SDHC_ISTA_DATA_TIMEOUT			BIT(5)
-+	#define MESON_SDHC_ISTA_DATA_ERR_CRC			BIT(6)
-+	#define MESON_SDHC_ISTA_DATA_XFER_OK			BIT(7)
-+	#define MESON_SDHC_ISTA_RX_HIGHER			BIT(8)
-+	#define MESON_SDHC_ISTA_RX_LOWER			BIT(9)
-+	#define MESON_SDHC_ISTA_DAT1_IRQ			BIT(10)
-+	#define MESON_SDHC_ISTA_DMA_DONE			BIT(11)
-+	#define MESON_SDHC_ISTA_RXFIFO_FULL			BIT(12)
-+	#define MESON_SDHC_ISTA_TXFIFO_EMPTY			BIT(13)
-+	#define MESON_SDHC_ISTA_ADDI_DAT1_IRQ			BIT(14)
-+	#define MESON_SDHC_ISTA_ALL_IRQS			GENMASK(14, 0)
-+
-+#define MESON_SDHC_SRST						0x2c
-+	#define MESON_SDHC_SRST_MAIN_CTRL			BIT(0)
-+	#define MESON_SDHC_SRST_RXFIFO				BIT(1)
-+	#define MESON_SDHC_SRST_TXFIFO				BIT(2)
-+	#define MESON_SDHC_SRST_DPHY_RX				BIT(3)
-+	#define MESON_SDHC_SRST_DPHY_TX				BIT(4)
-+	#define MESON_SDHC_SRST_DMA_IF				BIT(5)
-+
-+#define MESON_SDHC_ESTA						0x30
-+	#define MESON_SDHC_ESTA_11_13				GENMASK(13, 11)
-+
-+#define MESON_SDHC_ENHC						0x34
-+	#define MESON_SDHC_ENHC_MESON8M2_WRRSP_MODE		BIT(0)
-+	#define MESON_SDHC_ENHC_MESON8M2_CHK_WRRSP		BIT(1)
-+	#define MESON_SDHC_ENHC_MESON8M2_CHK_DMA		BIT(2)
-+	#define MESON_SDHC_ENHC_MESON8M2_DEBUG			GENMASK(5, 3)
-+	#define MESON_SDHC_ENHC_MESON6_RX_TIMEOUT		GENMASK(7, 0)
-+	#define MESON_SDHC_ENHC_MESON6_DMA_RD_RESP		BIT(16)
-+	#define MESON_SDHC_ENHC_MESON6_DMA_WR_RESP		BIT(17)
-+	#define MESON_SDHC_ENHC_SDIO_IRQ_PERIOD			GENMASK(15, 8)
-+	#define MESON_SDHC_ENHC_RXFIFO_TH			GENMASK(24, 18)
-+	#define MESON_SDHC_ENHC_TXFIFO_TH			GENMASK(31, 25)
-+
-+#define MESON_SDHC_CLK2						0x38
-+	#define MESON_SDHC_CLK2_RX_CLK_PHASE			GENMASK(11, 0)
-+	#define MESON_SDHC_CLK2_SD_CLK_PHASE			GENMASK(23, 12)
-+
-+#define MESON_SDHC_NUM_BULK_CLKS				4
-+#define MESON_SDHC_MAX_BLK_SIZE					512
-+#define MESON_SDHC_NUM_TUNING_TRIES				10
-+
-+struct meson_mx_sdhc_data {
-+	void		(*init_hw)(struct mmc_host *mmc);
-+	void		(*set_pdma)(struct mmc_host *mmc);
-+	void		(*wait_before_send)(struct mmc_host *mmc);
-+	bool		hardware_flush_all_cmds;
-+	const char	*clkc_name;
-+};
-+
-+struct meson_mx_sdhc_host {
-+	struct mmc_host			*mmc;
-+
-+	struct mmc_request		*mrq;
-+	struct mmc_command		*cmd;
-+	int				error;
-+
-+	struct regmap			*regmap;
-+
-+	struct platform_device		*clkc_pdev;
-+	struct clk			*pclk;
-+	struct clk			*sd_clk;
-+	struct clk_bulk_data		bulk_clks[MESON_SDHC_NUM_BULK_CLKS];
-+	bool				bulk_clks_enabled;
-+
-+	const struct meson_mx_sdhc_data	*platform;
-+};
-+
-+static const struct regmap_config meson_mx_sdhc_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = MESON_SDHC_CLK2,
-+};
-+
-+static void meson_mx_sdhc_hw_reset(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	regmap_write(host->regmap, MESON_SDHC_SRST, MESON_SDHC_SRST_MAIN_CTRL |
-+		     MESON_SDHC_SRST_RXFIFO | MESON_SDHC_SRST_TXFIFO |
-+		     MESON_SDHC_SRST_DPHY_RX | MESON_SDHC_SRST_DPHY_TX |
-+		     MESON_SDHC_SRST_DMA_IF);
-+	usleep_range(10, 100);
-+
-+	regmap_write(host->regmap, MESON_SDHC_SRST, 0);
-+	usleep_range(10, 100);
-+}
-+
-+static void meson_mx_sdhc_clear_fifo(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	u32 stat;
-+
-+	regmap_read(host->regmap, MESON_SDHC_STAT, &stat);
-+	if (!FIELD_GET(MESON_SDHC_STAT_RXFIFO_CNT, stat) &&
-+	    !FIELD_GET(MESON_SDHC_STAT_TXFIFO_CNT, stat))
-+		return;
-+
-+	regmap_write(host->regmap, MESON_SDHC_SRST, MESON_SDHC_SRST_RXFIFO |
-+		     MESON_SDHC_SRST_TXFIFO | MESON_SDHC_SRST_MAIN_CTRL);
-+	udelay(5);
-+
-+	regmap_read(host->regmap, MESON_SDHC_STAT, &stat);
-+	if (FIELD_GET(MESON_SDHC_STAT_RXFIFO_CNT, stat) ||
-+	    FIELD_GET(MESON_SDHC_STAT_TXFIFO_CNT, stat))
-+		dev_warn(mmc_dev(host->mmc),
-+			 "Failed to clear FIFOs, RX: %lu, TX: %lu\n",
-+			 FIELD_GET(MESON_SDHC_STAT_RXFIFO_CNT, stat),
-+			 FIELD_GET(MESON_SDHC_STAT_TXFIFO_CNT, stat));
-+}
-+
-+static void meson_mx_sdhc_wait_cmd_ready(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	u32 stat, esta;
-+	int ret;
-+
-+	ret = regmap_read_poll_timeout(host->regmap, MESON_SDHC_STAT, stat,
-+				       !(stat & MESON_SDHC_STAT_CMD_BUSY), 1,
-+				       100000);
-+	if (ret) {
-+		dev_warn(mmc_dev(mmc),
-+			 "Failed to poll for CMD_BUSY while processing CMD%d\n",
-+			 host->cmd->opcode);
-+		meson_mx_sdhc_hw_reset(mmc);
-+	}
-+
-+	ret = regmap_read_poll_timeout(host->regmap, MESON_SDHC_ESTA, esta,
-+				       !(esta & MESON_SDHC_ESTA_11_13), 1,
-+				       100000);
-+	if (ret) {
-+		dev_warn(mmc_dev(mmc),
-+			 "Failed to poll for ESTA[13:11] while processing CMD%d\n",
-+			 host->cmd->opcode);
-+		meson_mx_sdhc_hw_reset(mmc);
-+	}
-+}
-+
-+static void meson_mx_sdhc_start_cmd(struct mmc_host *mmc,
-+				    struct mmc_command *cmd)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	u32 ictl, send;
-+	int pack_len;
-+
-+	host->cmd = cmd;
-+
-+	ictl = MESON_SDHC_ICTL_DATA_TIMEOUT | MESON_SDHC_ICTL_DATA_ERR_CRC |
-+	       MESON_SDHC_ICTL_RXFIFO_FULL | MESON_SDHC_ICTL_TXFIFO_EMPTY |
-+	       MESON_SDHC_ICTL_RESP_TIMEOUT | MESON_SDHC_ICTL_RESP_ERR_CRC;
-+
-+	send = FIELD_PREP(MESON_SDHC_SEND_CMD_INDEX, cmd->opcode);
-+
-+	if (cmd->data) {
-+		send |= MESON_SDHC_SEND_CMD_HAS_DATA;
-+		send |= FIELD_PREP(MESON_SDHC_SEND_TOTAL_PACK,
-+				   cmd->data->blocks - 1);
-+
-+		if (cmd->data->blksz < MESON_SDHC_MAX_BLK_SIZE)
-+			pack_len = cmd->data->blksz;
-+		else
-+			pack_len = 0;
-+
-+		if (cmd->data->flags & MMC_DATA_WRITE)
-+			send |= MESON_SDHC_SEND_DATA_DIR;
-+
-+		/*
-+		 * If command with no data, just wait response done
-+		 * interrupt(int[0]), and if command with data transfer, just
-+		 * wait dma done interrupt(int[11]), don't need care about
-+		 * dat0 busy or not.
-+		 */
-+		if (host->platform->hardware_flush_all_cmds ||
-+		    cmd->data->flags & MMC_DATA_WRITE)
-+			/* hardware flush: */
-+			ictl |= MESON_SDHC_ICTL_DMA_DONE;
-+		else
-+			/* software flush: */
-+			ictl |= MESON_SDHC_ICTL_DATA_XFER_OK;
-+	} else {
-+		pack_len = 0;
-+
-+		ictl |= MESON_SDHC_ICTL_RESP_OK;
-+	}
-+
-+	if (cmd->opcode == MMC_STOP_TRANSMISSION)
-+		send |= MESON_SDHC_SEND_DATA_STOP;
-+
-+	if (cmd->flags & MMC_RSP_PRESENT)
-+		send |= MESON_SDHC_SEND_CMD_HAS_RESP;
-+
-+	if (cmd->flags & MMC_RSP_136) {
-+		send |= MESON_SDHC_SEND_RESP_LEN;
-+		send |= MESON_SDHC_SEND_RESP_NO_CRC;
-+	}
-+
-+	if (!(cmd->flags & MMC_RSP_CRC))
-+		send |= MESON_SDHC_SEND_RESP_NO_CRC;
-+
-+	if (cmd->flags & MMC_RSP_BUSY)
-+		send |= MESON_SDHC_SEND_R1B;
-+
-+	/* enable the new IRQs and mask all pending ones */
-+	regmap_write(host->regmap, MESON_SDHC_ICTL, ictl);
-+	regmap_write(host->regmap, MESON_SDHC_ISTA, MESON_SDHC_ISTA_ALL_IRQS);
-+
-+	regmap_write(host->regmap, MESON_SDHC_ARGU, cmd->arg);
-+
-+	regmap_update_bits(host->regmap, MESON_SDHC_CTRL,
-+			   MESON_SDHC_CTRL_PACK_LEN,
-+			   FIELD_PREP(MESON_SDHC_CTRL_PACK_LEN, pack_len));
-+
-+	if (cmd->data)
-+		regmap_write(host->regmap, MESON_SDHC_ADDR,
-+			     sg_dma_address(cmd->data->sg));
-+
-+	meson_mx_sdhc_wait_cmd_ready(mmc);
-+
-+	if (cmd->data)
-+		host->platform->set_pdma(mmc);
-+
-+	if (host->platform->wait_before_send)
-+		host->platform->wait_before_send(mmc);
-+
-+	regmap_write(host->regmap, MESON_SDHC_SEND, send);
-+}
-+
-+static void meson_mx_sdhc_disable_clks(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	if (!host->bulk_clks_enabled)
-+		return;
-+
-+	clk_bulk_disable_unprepare(MESON_SDHC_NUM_BULK_CLKS, host->bulk_clks);
-+
-+	host->bulk_clks_enabled = false;
-+}
-+
-+static int meson_mx_sdhc_enable_clks(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	int ret;
-+
-+	if (host->bulk_clks_enabled)
-+		return 0;
-+
-+	ret = clk_bulk_prepare_enable(MESON_SDHC_NUM_BULK_CLKS,
-+				      host->bulk_clks);
-+	if (ret)
-+		return ret;
-+
-+	host->bulk_clks_enabled = true;
-+
-+	return 0;
-+}
-+
-+static int meson_mx_sdhc_set_clk(struct mmc_host *mmc, struct mmc_ios *ios)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	u32 rx_clk_phase;
-+	int ret;
-+
-+	meson_mx_sdhc_disable_clks(mmc);
-+
-+	if (ios->clock) {
-+		ret = clk_set_rate(host->sd_clk, ios->clock);
-+		if (ret) {
-+			dev_warn(mmc_dev(mmc),
-+				 "Failed to set MMC clock to %uHz: %d\n",
-+				 ios->clock, host->error);
-+			return ret;
-+		}
-+
-+		ret = meson_mx_sdhc_enable_clks(mmc);
-+		if (ret)
-+			return ret;
-+
-+		mmc->actual_clock = clk_get_rate(host->sd_clk);
-+
-+		/*
-+		 * according to Amlogic the following latching points are
-+		 * selected with empirical values, there is no (known) formula
-+		 * to calculate these.
-+		 */
-+		if (mmc->actual_clock > 100000000) {
-+			rx_clk_phase = 1;
-+		} else if (mmc->actual_clock > 45000000) {
-+			if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330)
-+				rx_clk_phase = 15;
-+			else
-+				rx_clk_phase = 11;
-+		} else if (mmc->actual_clock >= 25000000) {
-+			rx_clk_phase = 15;
-+		} else if (mmc->actual_clock > 5000000) {
-+			rx_clk_phase = 23;
-+		} else if (mmc->actual_clock > 1000000) {
-+			rx_clk_phase = 55;
-+		} else {
-+			rx_clk_phase = 1061;
-+		}
-+
-+		regmap_update_bits(host->regmap, MESON_SDHC_CLK2,
-+				   MESON_SDHC_CLK2_RX_CLK_PHASE,
-+				   FIELD_PREP(MESON_SDHC_CLK2_RX_CLK_PHASE,
-+					      rx_clk_phase));
-+	} else {
-+		mmc->actual_clock = 0;
-+	}
-+
-+	return 0;
-+}
-+
-+static void meson_mx_sdhc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	unsigned short vdd = ios->vdd;
-+
-+	switch (ios->power_mode) {
-+	case MMC_POWER_OFF:
-+		vdd = 0;
-+		/* fall through */
-+
-+	case MMC_POWER_UP:
-+		if (!IS_ERR(mmc->supply.vmmc)) {
-+			host->error = mmc_regulator_set_ocr(mmc,
-+							    mmc->supply.vmmc,
-+							    vdd);
-+			if (host->error)
-+				return;
-+		}
-+
-+		break;
-+
-+	case MMC_POWER_ON:
-+		break;
-+	}
-+
-+	host->error = meson_mx_sdhc_set_clk(mmc, ios);
-+	if (host->error)
-+		return;
-+
-+	switch (ios->bus_width) {
-+	case MMC_BUS_WIDTH_1:
-+		regmap_update_bits(host->regmap, MESON_SDHC_CTRL,
-+				   MESON_SDHC_CTRL_DAT_TYPE,
-+				   FIELD_PREP(MESON_SDHC_CTRL_DAT_TYPE, 0));
-+		break;
-+
-+	case MMC_BUS_WIDTH_4:
-+		regmap_update_bits(host->regmap, MESON_SDHC_CTRL,
-+				   MESON_SDHC_CTRL_DAT_TYPE,
-+				   FIELD_PREP(MESON_SDHC_CTRL_DAT_TYPE, 1));
-+		break;
-+
-+	case MMC_BUS_WIDTH_8:
-+		regmap_update_bits(host->regmap, MESON_SDHC_CTRL,
-+				   MESON_SDHC_CTRL_DAT_TYPE,
-+				   FIELD_PREP(MESON_SDHC_CTRL_DAT_TYPE, 2));
-+		break;
-+
-+	default:
-+		dev_err(mmc_dev(mmc), "unsupported bus width: %d\n",
-+			ios->bus_width);
-+		host->error = -EINVAL;
-+		return;
-+	}
-+}
-+
-+static int meson_mx_sdhc_map_dma(struct mmc_host *mmc, struct mmc_request *mrq)
-+{
-+	struct mmc_data *data = mrq->data;
-+	int dma_len;
-+
-+	if (!data)
-+		return 0;
-+
-+	dma_len = dma_map_sg(mmc_dev(mmc), data->sg, data->sg_len,
-+			     mmc_get_dma_dir(data));
-+	if (dma_len <= 0) {
-+		dev_err(mmc_dev(mmc), "dma_map_sg failed\n");
-+		return -ENOMEM;
-+	}
-+
-+	return 0;
-+}
-+
-+static void meson_mx_sdhc_request(struct mmc_host *mmc, struct mmc_request *mrq)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	struct mmc_command *cmd = mrq->cmd;
-+
-+	if (!host->error)
-+		host->error = meson_mx_sdhc_map_dma(mmc, mrq);
-+
-+	if (host->error) {
-+		cmd->error = host->error;
-+		mmc_request_done(mmc, mrq);
-+		return;
-+	}
-+
-+	host->mrq = mrq;
-+
-+	meson_mx_sdhc_start_cmd(mmc, mrq->cmd);
-+}
-+
-+static int meson_mx_sdhc_card_busy(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	u32 stat;
-+
-+	regmap_read(host->regmap, MESON_SDHC_STAT, &stat);
-+	return FIELD_GET(MESON_SDHC_STAT_DAT3_0, stat) == 0;
-+}
-+
-+static bool meson_mx_sdhc_tuning_point_matches(struct mmc_host *mmc,
-+					       u32 opcode)
-+{
-+	unsigned int i, num_matches = 0;
-+	int ret;
-+
-+	for (i = 0; i < MESON_SDHC_NUM_TUNING_TRIES; i++) {
-+		ret = mmc_send_tuning(mmc, opcode, NULL);
-+		if (!ret)
-+			num_matches++;
-+	}
-+
-+	return num_matches == MESON_SDHC_NUM_TUNING_TRIES;
-+}
-+
-+static int meson_mx_sdhc_execute_tuning(struct mmc_host *mmc, u32 opcode)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	int div, start, len, best_start, best_len;
-+	int curr_phase, old_phase, new_phase;
-+	u32 val;
-+
-+	len = 0;
-+	start = 0;
-+	best_len = 0;
-+
-+	regmap_read(host->regmap, MESON_SDHC_CLK2, &val);
-+	old_phase = FIELD_GET(MESON_SDHC_CLK2_RX_CLK_PHASE, val);
-+
-+	regmap_read(host->regmap, MESON_SDHC_CLKC, &val);
-+	div = FIELD_GET(MESON_SDHC_CLKC_CLK_DIV, val);
-+
-+	for (curr_phase = 0; curr_phase <= div; curr_phase++) {
-+		regmap_update_bits(host->regmap, MESON_SDHC_CLK2,
-+				   MESON_SDHC_CLK2_RX_CLK_PHASE,
-+				   FIELD_PREP(MESON_SDHC_CLK2_RX_CLK_PHASE,
-+					      curr_phase));
-+
-+		if (meson_mx_sdhc_tuning_point_matches(mmc, opcode)) {
-+			if (!len) {
-+				start = curr_phase;
-+
-+				dev_dbg(mmc_dev(mmc),
-+					"New RX phase window starts at %u\n",
-+					start);
-+			}
-+
-+			len++;
-+		} else {
-+			if (len > best_len) {
-+				best_start = start;
-+				best_len = len;
-+
-+				dev_dbg(mmc_dev(mmc),
-+					"New best RX phase window: %u - %u\n",
-+					best_start, best_start + best_len);
-+			}
-+
-+			/* reset the current window */
-+			len = 0;
-+		}
-+	}
-+
-+	if (len > best_len)
-+		/* the last window is the best (or possibly only) window */
-+		new_phase = start + (len / 2);
-+	else if (best_len)
-+		/* there was a better window than the last */
-+		new_phase = best_start + (best_len / 2);
-+	else
-+		/* no window was found at all, reset to the original phase */
-+		new_phase = old_phase;
-+
-+	regmap_update_bits(host->regmap, MESON_SDHC_CLK2,
-+			   MESON_SDHC_CLK2_RX_CLK_PHASE,
-+			   FIELD_PREP(MESON_SDHC_CLK2_RX_CLK_PHASE,
-+				      new_phase));
-+
-+	if (!len && !best_len)
-+		return -EIO;
-+
-+	dev_dbg(mmc_dev(mmc), "Tuned RX clock phase to %u\n", new_phase);
-+
-+	return 0;
-+}
-+
-+static const struct mmc_host_ops meson_mx_sdhc_ops = {
-+	.hw_reset			= meson_mx_sdhc_hw_reset,
-+	.request			= meson_mx_sdhc_request,
-+	.set_ios			= meson_mx_sdhc_set_ios,
-+	.card_busy			= meson_mx_sdhc_card_busy,
-+	.execute_tuning			= meson_mx_sdhc_execute_tuning,
-+	.get_cd				= mmc_gpio_get_cd,
-+	.get_ro				= mmc_gpio_get_ro,
-+};
-+
-+static void meson_mx_sdhc_request_done(struct meson_mx_sdhc_host *host)
-+{
-+	struct mmc_request *mrq = host->mrq;
-+	struct mmc_host *mmc = host->mmc;
-+
-+	/* disable interrupts and mask all pending ones */
-+	regmap_update_bits(host->regmap, MESON_SDHC_ICTL,
-+			   MESON_SDHC_ICTL_ALL_IRQS, 0);
-+	regmap_update_bits(host->regmap, MESON_SDHC_ISTA,
-+			   MESON_SDHC_ISTA_ALL_IRQS, MESON_SDHC_ISTA_ALL_IRQS);
-+
-+	host->mrq = NULL;
-+	host->cmd = NULL;
-+
-+	mmc_request_done(mmc, mrq);
-+}
-+
-+static u32 meson_mx_sdhc_read_response(struct meson_mx_sdhc_host *host, u8 idx)
-+{
-+	u32 val;
-+
-+	regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+			   MESON_SDHC_PDMA_DMA_MODE, 0);
-+
-+	regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+			   MESON_SDHC_PDMA_PIO_RDRESP,
-+			   FIELD_PREP(MESON_SDHC_PDMA_PIO_RDRESP, idx));
-+
-+	regmap_read(host->regmap, MESON_SDHC_ARGU, &val);
-+
-+	return val;
-+}
-+
-+static irqreturn_t meson_mx_sdhc_irq(int irq, void *data)
-+{
-+	struct meson_mx_sdhc_host *host = data;
-+	struct mmc_command *cmd = host->cmd;
-+	u32 ictl, ista;
-+
-+	regmap_read(host->regmap, MESON_SDHC_ICTL, &ictl);
-+	regmap_read(host->regmap, MESON_SDHC_ISTA, &ista);
-+
-+	if (!(ictl & ista))
-+		return IRQ_NONE;
-+
-+	if (ista & MESON_SDHC_ISTA_RXFIFO_FULL ||
-+	    ista & MESON_SDHC_ISTA_TXFIFO_EMPTY)
-+		cmd->error = -EIO;
-+	else if (ista & MESON_SDHC_ISTA_RESP_ERR_CRC)
-+		cmd->error = -EILSEQ;
-+	else if (ista & MESON_SDHC_ISTA_RESP_TIMEOUT)
-+		cmd->error = -ETIMEDOUT;
-+
-+	if (cmd->data) {
-+		if (ista & MESON_SDHC_ISTA_DATA_ERR_CRC)
-+			cmd->data->error = -EILSEQ;
-+		else if (ista & MESON_SDHC_ISTA_DATA_TIMEOUT)
-+			cmd->data->error = -ETIMEDOUT;
-+	}
-+
-+	if (cmd->error || (cmd->data && cmd->data->error))
-+		dev_dbg(mmc_dev(host->mmc), "CMD%d error, ISTA: 0x%08x\n",
-+			cmd->opcode, ista);
-+
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+static irqreturn_t meson_mx_sdhc_irq_thread(int irq, void *irq_data)
-+{
-+	struct meson_mx_sdhc_host *host = irq_data;
-+	struct mmc_command *cmd;
-+	u32 val;
-+
-+	cmd = host->cmd;
-+	if (WARN_ON(!cmd))
-+		return IRQ_HANDLED;
-+
-+	if (cmd->data && !cmd->data->error) {
-+		if (!host->platform->hardware_flush_all_cmds &&
-+		    cmd->data->flags & MMC_DATA_READ) {
-+			meson_mx_sdhc_wait_cmd_ready(host->mmc);
-+
-+			val = FIELD_PREP(MESON_SDHC_PDMA_RXFIFO_MANUAL_FLUSH,
-+					 2);
-+			regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+					   MESON_SDHC_PDMA_RXFIFO_MANUAL_FLUSH,
-+					   val);
-+		}
-+
-+		dma_unmap_sg(mmc_dev(host->mmc), cmd->data->sg,
-+			     cmd->data->sg_len, mmc_get_dma_dir(cmd->data));
-+
-+		cmd->data->bytes_xfered = cmd->data->blksz * cmd->data->blocks;
-+	}
-+
-+	meson_mx_sdhc_wait_cmd_ready(host->mmc);
-+
-+	if (cmd->flags & MMC_RSP_136) {
-+		cmd->resp[0] = meson_mx_sdhc_read_response(host, 4);
-+		cmd->resp[1] = meson_mx_sdhc_read_response(host, 3);
-+		cmd->resp[2] = meson_mx_sdhc_read_response(host, 2);
-+		cmd->resp[3] = meson_mx_sdhc_read_response(host, 1);
-+	} else {
-+		cmd->resp[0] = meson_mx_sdhc_read_response(host, 0);
-+	}
-+
-+	if (cmd->error == -EIO || cmd->error == -ETIMEDOUT)
-+		meson_mx_sdhc_hw_reset(host->mmc);
-+	else if (cmd->data)
-+		/*
-+		 * Clear the FIFOs after completing data transfers to prevent
-+		 * corrupting data on write access. It's not clear why this is
-+		 * needed (for reads and writes), but it mimics what the BSP
-+		 * kernel did.
-+		 */
-+		meson_mx_sdhc_clear_fifo(host->mmc);
-+
-+	meson_mx_sdhc_request_done(host);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int meson_mx_sdhc_register_clkc(struct meson_mx_sdhc_host *host)
-+{
-+	struct device *dev = mmc_dev(host->mmc);
-+	int ret;
-+
-+	host->clkc_pdev = platform_device_alloc(host->platform->clkc_name,
-+						PLATFORM_DEVID_NONE);
-+	if (!host->clkc_pdev) {
-+		dev_err(dev, "Failed to allocate %s clock controller device\n",
-+			host->platform->clkc_name);
-+		return -ENOMEM;
-+	}
-+
-+	host->clkc_pdev->dev.parent = dev;
-+
-+	ret = platform_device_add(host->clkc_pdev);
-+	if (ret) {
-+		dev_err(dev, "Failed to register %s clock controller device\n",
-+			host->platform->clkc_name);
-+		platform_device_put(host->clkc_pdev);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void meson_mx_sdhc_init_hw_meson8(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	regmap_write(host->regmap, MESON_SDHC_MISC,
-+		     FIELD_PREP(MESON_SDHC_MISC_TXSTART_THRES, 7) |
-+		     FIELD_PREP(MESON_SDHC_MISC_WCRC_ERR_PATT, 5) |
-+		     FIELD_PREP(MESON_SDHC_MISC_WCRC_OK_PATT, 2));
-+
-+	regmap_write(host->regmap, MESON_SDHC_ENHC,
-+		     FIELD_PREP(MESON_SDHC_ENHC_RXFIFO_TH, 63) |
-+		     MESON_SDHC_ENHC_MESON6_DMA_WR_RESP |
-+		     FIELD_PREP(MESON_SDHC_ENHC_MESON6_RX_TIMEOUT, 255) |
-+		     FIELD_PREP(MESON_SDHC_ENHC_SDIO_IRQ_PERIOD, 12));
-+};
-+
-+static void meson_mx_sdhc_set_pdma_meson8(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	if (host->cmd->data->flags & MMC_DATA_WRITE)
-+		regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+				   MESON_SDHC_PDMA_DMA_MODE |
-+				   MESON_SDHC_PDMA_RD_BURST |
-+				   MESON_SDHC_PDMA_TXFIFO_FILL,
-+				   MESON_SDHC_PDMA_DMA_MODE |
-+				   FIELD_PREP(MESON_SDHC_PDMA_RD_BURST, 31) |
-+				   MESON_SDHC_PDMA_TXFIFO_FILL);
-+	else
-+		regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+				   MESON_SDHC_PDMA_DMA_MODE |
-+				   MESON_SDHC_PDMA_RXFIFO_MANUAL_FLUSH,
-+				   MESON_SDHC_PDMA_DMA_MODE |
-+				   FIELD_PREP(MESON_SDHC_PDMA_RXFIFO_MANUAL_FLUSH,
-+					      1));
-+
-+	if (host->cmd->data->flags & MMC_DATA_WRITE)
-+		regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+				   MESON_SDHC_PDMA_RD_BURST,
-+				   FIELD_PREP(MESON_SDHC_PDMA_RD_BURST, 15));
-+}
-+
-+static void meson_mx_sdhc_wait_before_send_meson8(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+	u32 val;
-+	int ret;
-+
-+	ret = regmap_read_poll_timeout(host->regmap, MESON_SDHC_ESTA, val,
-+				       val == 0, 1, 200);
-+	if (ret)
-+		dev_warn(mmc_dev(mmc),
-+			 "Failed to wait for ESTA to clear: 0x%08x\n", val);
-+
-+	if (host->cmd->data && host->cmd->data->flags & MMC_DATA_WRITE) {
-+		ret = regmap_read_poll_timeout(host->regmap, MESON_SDHC_STAT,
-+					       val,
-+					       val & MESON_SDHC_STAT_TXFIFO_CNT,
-+					       1, 200);
-+		if (ret)
-+			dev_warn(mmc_dev(mmc),
-+				 "Failed to wait for TX FIFO to fill\n");
-+	}
-+}
-+
-+static void meson_mx_sdhc_init_hw_meson8m2(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	regmap_write(host->regmap, MESON_SDHC_MISC,
-+		     FIELD_PREP(MESON_SDHC_MISC_TXSTART_THRES, 6) |
-+		     FIELD_PREP(MESON_SDHC_MISC_WCRC_ERR_PATT, 5) |
-+		     FIELD_PREP(MESON_SDHC_MISC_WCRC_OK_PATT, 2));
-+
-+	regmap_write(host->regmap, MESON_SDHC_ENHC,
-+		     FIELD_PREP(MESON_SDHC_ENHC_RXFIFO_TH, 64) |
-+		     FIELD_PREP(MESON_SDHC_ENHC_MESON8M2_DEBUG, 1) |
-+		     MESON_SDHC_ENHC_MESON8M2_WRRSP_MODE |
-+		     FIELD_PREP(MESON_SDHC_ENHC_SDIO_IRQ_PERIOD, 12));
-+}
-+
-+static void meson_mx_sdhc_set_pdma_meson8m2(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	regmap_update_bits(host->regmap, MESON_SDHC_PDMA,
-+			   MESON_SDHC_PDMA_DMA_MODE, MESON_SDHC_PDMA_DMA_MODE);
-+}
-+
-+static void meson_mx_sdhc_init_hw(struct mmc_host *mmc)
-+{
-+	struct meson_mx_sdhc_host *host = mmc_priv(mmc);
-+
-+	meson_mx_sdhc_hw_reset(mmc);
-+
-+	regmap_write(host->regmap, MESON_SDHC_CTRL,
-+		     FIELD_PREP(MESON_SDHC_CTRL_RX_PERIOD, 0xf) |
-+		     FIELD_PREP(MESON_SDHC_CTRL_RX_TIMEOUT, 0x7f) |
-+		     FIELD_PREP(MESON_SDHC_CTRL_RX_ENDIAN, 0x7) |
-+		     FIELD_PREP(MESON_SDHC_CTRL_TX_ENDIAN, 0x7));
-+
-+	/*
-+	 * start with a valid divider and enable the memory (un-setting
-+	 * MESON_SDHC_CLKC_MEM_PWR_OFF).
-+	 */
-+	regmap_write(host->regmap, MESON_SDHC_CLKC, MESON_SDHC_CLKC_CLK_DIV);
-+
-+	regmap_write(host->regmap, MESON_SDHC_CLK2,
-+		     FIELD_PREP(MESON_SDHC_CLK2_SD_CLK_PHASE, 1));
-+
-+	regmap_write(host->regmap, MESON_SDHC_PDMA,
-+		     MESON_SDHC_PDMA_DMA_URGENT |
-+		     FIELD_PREP(MESON_SDHC_PDMA_WR_BURST, 7) |
-+		     FIELD_PREP(MESON_SDHC_PDMA_TXFIFO_TH, 49) |
-+		     FIELD_PREP(MESON_SDHC_PDMA_RD_BURST, 15) |
-+		     FIELD_PREP(MESON_SDHC_PDMA_RXFIFO_TH, 7));
-+
-+	/* some initialization bits depend on the SoC: */
-+	host->platform->init_hw(mmc);
-+
-+	/* disable and mask all interrupts: */
-+	regmap_write(host->regmap, MESON_SDHC_ICTL, 0);
-+	regmap_write(host->regmap, MESON_SDHC_ISTA, MESON_SDHC_ISTA_ALL_IRQS);
-+}
-+
-+static int meson_mx_sdhc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct meson_mx_sdhc_host *host;
-+	struct mmc_host *mmc;
-+	void __iomem *base;
-+	int ret, irq;
-+
-+	mmc = mmc_alloc_host(sizeof(*host), dev);
-+	if (!mmc)
-+		return -ENOMEM;
-+
-+	ret = devm_add_action_or_reset(dev, (void(*)(void *))mmc_free_host,
-+				       mmc);
-+	if (ret) {
-+		dev_err(dev, "Failed to register mmc_free_host action\n");
-+		return ret;
-+	}
-+
-+	host = mmc_priv(mmc);
-+	host->mmc = mmc;
-+
-+	platform_set_drvdata(pdev, host);
-+
-+	host->platform = device_get_match_data(dev);
-+	if (!host->platform)
-+		return -EINVAL;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	host->regmap = devm_regmap_init_mmio(dev, base,
-+					     &meson_mx_sdhc_regmap_config);
-+	if (IS_ERR(host->regmap))
-+		return PTR_ERR(host->regmap);
-+
-+	host->pclk = devm_clk_get(dev, "pclk");
-+	if (IS_ERR(host->pclk))
-+		return PTR_ERR(host->pclk);
-+
-+	/* accessing any register requires the module clock to be enabled: */
-+	ret = clk_prepare_enable(host->pclk);
-+	if (ret) {
-+		dev_err(dev, "Failed to enable 'pclk' clock\n");
-+		return ret;
-+	}
-+
-+	meson_mx_sdhc_init_hw(mmc);
-+
-+	ret = meson_mx_sdhc_register_clkc(host);
-+	if (ret)
-+		goto err_disable_pclk;
-+
-+	host->bulk_clks[0].id = "mod_clk";
-+	host->bulk_clks[1].id = "sd_clk";
-+	host->bulk_clks[2].id = "tx_clk";
-+	host->bulk_clks[3].id = "rx_clk";
-+	ret = devm_clk_bulk_get(dev, MESON_SDHC_NUM_BULK_CLKS,
-+				host->bulk_clks);
-+	if (ret)
-+		goto err_clkc_pdev_unregister;
-+
-+	host->sd_clk = host->bulk_clks[1].clk;
-+
-+	/* Get regulators and the supported OCR mask */
-+	ret = mmc_regulator_get_supply(mmc);
-+	if (ret)
-+		goto err_clkc_pdev_unregister;
-+
-+	mmc->max_req_size = SZ_128K;
-+	mmc->max_seg_size = mmc->max_req_size;
-+	mmc->max_blk_count = FIELD_GET(MESON_SDHC_SEND_TOTAL_PACK, ~0);
-+	mmc->max_blk_size = MESON_SDHC_MAX_BLK_SIZE;
-+	mmc->max_busy_timeout = 30 * MSEC_PER_SEC;
-+	mmc->f_min = clk_round_rate(host->sd_clk, 1);
-+	mmc->f_max = clk_round_rate(host->sd_clk, ULONG_MAX);
-+	mmc->max_current_180 = 300;
-+	mmc->max_current_330 = 300;
-+	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_HW_RESET;
-+	mmc->ops = &meson_mx_sdhc_ops;
-+
-+	ret = mmc_of_parse(mmc);
-+	if (ret)
-+		goto err_clkc_pdev_unregister;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	ret = devm_request_threaded_irq(dev, irq, meson_mx_sdhc_irq,
-+					meson_mx_sdhc_irq_thread, IRQF_ONESHOT,
-+					NULL, host);
-+	if (ret)
-+		goto err_clkc_pdev_unregister;
-+
-+	ret = mmc_add_host(mmc);
-+	if (ret)
-+		goto err_clkc_pdev_unregister;
-+
-+	return 0;
-+
-+err_clkc_pdev_unregister:
-+	platform_device_unregister(host->clkc_pdev);
-+err_disable_pclk:
-+	clk_disable_unprepare(host->pclk);
-+	return ret;
-+}
-+
-+static int meson_mx_sdhc_remove(struct platform_device *pdev)
-+{
-+	struct meson_mx_sdhc_host *host = platform_get_drvdata(pdev);
-+
-+	mmc_remove_host(host->mmc);
-+
-+	meson_mx_sdhc_disable_clks(host->mmc);
-+
-+	platform_device_unregister(host->clkc_pdev);
-+
-+	clk_disable_unprepare(host->pclk);
-+
-+	return 0;
-+}
-+
-+static const struct meson_mx_sdhc_data meson_mx_sdhc_data_meson8 = {
-+	.init_hw			= meson_mx_sdhc_init_hw_meson8,
-+	.set_pdma			= meson_mx_sdhc_set_pdma_meson8,
-+	.wait_before_send		= meson_mx_sdhc_wait_before_send_meson8,
-+	.hardware_flush_all_cmds	= false,
-+	.clkc_name			= "meson8-sdhc-clkc",
-+};
-+
-+static const struct meson_mx_sdhc_data meson_mx_sdhc_data_meson8m2 = {
-+	.init_hw			= meson_mx_sdhc_init_hw_meson8m2,
-+	.set_pdma			= meson_mx_sdhc_set_pdma_meson8m2,
-+	.hardware_flush_all_cmds	= true,
-+	.clkc_name			= "meson8m2-sdhc-clkc",
-+};
-+
-+static const struct of_device_id meson_mx_sdhc_of_match[] = {
-+	{
-+		.compatible = "amlogic,meson8-sdhc",
-+		.data = &meson_mx_sdhc_data_meson8
-+	},
-+	{
-+		.compatible = "amlogic,meson8b-sdhc",
-+		.data = &meson_mx_sdhc_data_meson8
-+	},
-+	{
-+		.compatible = "amlogic,meson8m2-sdhc",
-+		.data = &meson_mx_sdhc_data_meson8m2
-+	},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, meson_mx_sdhc_of_match);
-+
-+static struct platform_driver meson_mx_sdhc_driver = {
-+	.probe   = meson_mx_sdhc_probe,
-+	.remove  = meson_mx_sdhc_remove,
-+	.driver  = {
-+		.name = "meson-mx-sdhc",
-+		.of_match_table = of_match_ptr(meson_mx_sdhc_of_match),
-+	},
-+};
-+
-+module_platform_driver(meson_mx_sdhc_driver);
-+
-+MODULE_DESCRIPTION("Meson6, Meson8, Meson8b and Meson8m2 SDHC Host Driver");
-+MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl@googlemail.com>");
-+MODULE_LICENSE("GPL v2");
--- 
-2.24.1
+--6cwccv77cih4dpjg
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
+H4sICPBgGl4AAy5jb25maWcAlDzbctw2su/5iinnJaktJ5JsK67d0gMGBDnIkAQDgKMZv7AU
+eeyo1pZ8dNm1//50A7w0QFDObm3Fmu7GrdHoGxr88YcfV+zp8e7z1ePN9dWnT99WH4+3x/ur
+x+P71YebT8d/rTK1qpVdiUzaX4C4vLl9+vrr17fn3fnr1Ztf3vxy8vL++vVqe7y/PX5a8bvb
+Dzcfn6D9zd3tDz/+AP//EYCfv0BX9/9cfby+fvnb6qfs+OfN1e3qN9f61c/+DyDlqs5l0XHe
+SdMVnF98G0Dwo9sJbaSqL347eXNyMtKWrC5G1AnpgrO6K2W9nToB4IaZjpmqK5RVSYSsoY2Y
+oS6ZrruKHdaia2tZSytZKd+JLCDMpGHrUvwNYqn/6C6VJnNbt7LMrKxEJ/bW9WKUthPebrRg
+GUwvV/CfzjKDjR17C7dhn1YPx8enLxMXceBO1LuO6QIYUUl78eoMd6Ofr6oaCcNYYezq5mF1
+e/eIPQytS8VZObD1xYsUuGMtZaJbQWdYaQn9hu1EtxW6FmVXvJPNRE4xa8CcpVHlu4qlMft3
+Sy3UEuL1hAjnNHKFTohyJSbAaT2H3797vrV6Hv06sSOZyFlb2m6jjK1ZJS5e/HR7d3v8eeS1
+uWSEv+ZgdrLhMwD+y205wRtl5L6r/mhFK9LQWROulTFdJSqlDx2zlvHNhGyNKOWaMpW1oDsS
+K3KbwzTfeAochZXlINZwRlYPT38+fHt4PH6exLoQtdCSuyPUaLUmc6Yos1GXaYzIc8GtxKHz
+HI6p2c7pGlFnsnbnNN1JJQvNLJ6N4ExnqmIyghlZpYi6jRQaF3+Yj1AZmR66R8zGCabGrIat
+A07CWbVKp6m0MELv3BK6SmUinGKuNBdZr3SAEUSKGqaN6Gc37jDtORPrtshNKODH2/eruw/R
+nk46XPGtUS2MCbrT8k2myIhOQChJxix7Bo16j4gqwexADUNj0ZXM2I4feJkQHqeDd5MsRmjX
+n9iJ2ppnkd1aK5ZxGOh5sgokgWW/t0m6SpmubXDKw6GwN5+P9w+pc2El33aqFiD4pKtadZt3
+qOsrJ6rjhgGwgTFUJnniYPpWMnP8Gdt4aN6W5VITondlsUEZc+zUxnXTy8BsCdMIjRaiaix0
+VovEGAN6p8q2tkwf6Ox65DPNuIJWAyN50/5qrx7+vXqE6ayuYGoPj1ePD6ur6+u7p9vHm9uP
+EWuhQce468MfiHHkndQ2QuMWJjU8HhAnYRNtYsZrk6Fu4wK0LBCS/Ywx3e4V8RFAlxnLqGQi
+CE5kyQ5RRw6xT8CkWlhmY2TyTP8NTo6HEZgkjSoHzel2QvN2ZRLyDLvWAY5OAX6CewSCm9pm
+44lp8wiE7OkCEHYIHCvL6YgQTC1ABxpR8HUp3fkc1xzOedScW/8H0aXbUQYVpyuR2w1oVjgZ
+SdcLnakcTJjM7cXZCYUjByu2J/jTs0nOZW234IHlIurj9FVgctva9C4m38AKnToadsNc/3V8
+/wTO+urD8erx6f744MD9uhPYQA+btmnAbTVd3VasWzNwznlgPhzVJastIK0bva0r1nS2XHd5
+2RriR/SeN6zp9Oxt1MM4ToydjTtprwAzelOiRk5kiW3ghVZtQ85SwwrhlYggRhW8IF5EPyNX
+bIINw8W4LfxDDnm57Ucn3HC/u0strVgzvp1h3F5O0JxJ3YWYyfXPwTyxOruUmd0k1RQoNNJ2
+kTldIzMzm4nOqMveA3M4j+8o33r4pi0EbD6BN+BAUhWGRwcH6jGzHjKxkzwwVD0C6FG/PTN7
+ofNZd+smT/TlnJqU0lF8O9IEfgm66OAsgaYmrjGeDPIb3XH6G9anAwAum/6uhQ1+w+7wbaPg
+FKCxBWcv4IM/3hiluQkmdxocHZCGTICRBG8xudcazUconcBz52dpGtPib1ZBb97dIlGgzqLg
+DwBRzAeQMNQDAI3wHF5Fv18HO8U71YBthUgb/Ve3u0pXcN5TvkRMbeCPIFYKAh6vNmV2eh7T
+gD3ionFuNKyei6hNw02zhbmAycPJEC42RPS8TSNyEI5UgaKSKBtkcDg1GLp0M0fVb+gMnG/g
+wJezAG90zwIbEv/u6krSQJ/oO1HmoBM17XhxyQwCB3QfyaxaK/bRTxB60n2jgsXJomZlTqTO
+LYACnF9NAWYTKFcmiRSBs9Pq0EBlO2nEwD/CGehkzbSWdBe2SHKozBzSBcyfoGvwfmCRKJyg
+nhIUjkl44jBCDcRlvqcoEs6K0eU6+4iGc5owtKx5tEsQxAURnFNwDpo4LNCTyDJqXrxww/Dd
+GAtNjiI/PQkSGM6D6BOEzfH+w93956vb6+NK/Od4C44iA9+Co6sIYcHk/y107ufpkLD8ble5
+ODfpmP7NEYcBd5UfbjDxZFdN2a79yIF6RWhv292hU2mfHzNtDBwevU1r4JKtU5YFeg9HU2ky
+hpPQ4Jr0Lk3YCLBoetGB7TSoAFUtTmIi3DCdQQyapUk3bZ6D8+jcoTHLsLAC57A2TGMKNNBR
+VlTOYGLqVuaSR8kUMPq5LIOT6dSrs3VBOBlmPwfi89drmgXYu3R18JsaLmN1y50OzwRXGT3i
+qrVNaztnSezFi+OnD+evX359e/7y/PWL4MgB93vv/8XV/fVfmCH/9dplwx/6bHn3/vjBQ2g6
+dQu2d/BnCYcs+HhuxXNcVbXRca/QhdY1GFXpUwoXZ2+fI2B7TAUnCQZhHTpa6Ccgg+5Ozwe6
+MRVkWBc4ggMiMB8EOGq9zm1ycAD94BDE9ka1yzM+7wS0o1xrTPBkocsy6kSURhxmn8IxcJfw
+xkBEzsBIARIJ0+qaAqTTRroQPFPvUfpMgBbUFcQ4ckA5XQpdaUxBbVp6PxHQueOVJPPzkWuh
+a5+/A1Nu5LqMp2xag3nMJbSLwhzrWDl3w98p4APs3yvio7ksrWu8FI712hmm7hRDfAA7UzVL
+TVuXzCV7noN7IpguDxxTlNSEN4UPX0vQ12Ci30QRo2G4hXiAcJ8E9zlQZ4Sa+7vr48PD3f3q
+8dsXn6wgYW60dHIa6bRxKblgttXCO/lU4SJyf8aaZFoNkVXjEqi0TaHKLJdmk3S9LThAwYUU
+duLFGNxPXYYIsbew4yhFk/cVzG0HS0lqdUSmJhIQ4LEsQS2kDcNEUTbGLJKwappeH7ylU2XK
+5F21lguMHAWnv4aAgLdsU/GPqkBoc4hMRsWSuoo4wLkDzw8igaIVNBkL28Uwwxd4OD1sHhbO
+SUwja5eDTjMkzBMO3iD4ItE0fJq7aTEpC1Je2t4xngbcpfcN+/LHMs7JxzP9fl5yJB1SRmMn
+vwP3Nwo9Mjfv5ECM6/oZdLV9m4Y3hqcR6NGmb+nAVoeOTmwpqO89yK2uwfT3ZsDnzc4pSXm6
+jLMm0nW8avZ8U0Q+B2b0dyEEbKys2sod6ZxVsjxcnL+mBG7vINCsjA622yeBMXIVpUhnOaBL
+OCX+TAYJFgeGczgHbg4FdcMGMAe/mLV6jni3YWpPb6I2jfCSpCOYgCgWTbO2hFUZjSsLcBPh
+1Hv3hmzlPtJZg7V0dtKgVwuWci0KdHvSSNCJF29OZ8jBYZ4Y3mMosVcipqLOmQNVfA7BeFmF
+G+xuzDu0CJHEqQRQC60wPMSMxFqrrai7tVIWrw1MJDdczACY9C1FwfhhhhqFIFDFiAAxWDJV
+gMUbQLMBu5Dq8XeQu4vPwTnYCPCTS3DqA6tLIrDPd7c3j3f3wf0KCfV6A9LWUU5hRqFZUz6H
+53gRElgDSuNskLoMTcEYUizMly709HwWXwjTgMsSn/jhJrGX/yDI8WLQlPgfQTMl8u124msl
+OZz14Ip2BMVne0IEp3sCw056XZezmQAZHQKctQlBb5zLFcIyqWG3u2KNbt/MGeINQ1/MQlgp
+edoA4WaAEYdTyvUheYOHuXtiCoE+hPTeJeONjDCo0g1eWtedQuH0gIv4XgA2J3mn6RqH6t57
+rc6J85NmCc97RE8xeYB3KnvwXPD6vYwoelRU4OBQLh++xfPRWfD3iNSUePjLwcvB6+5WXJx8
+fX+8en9C/ke51uAkvc6YEulpfHjSXeYZ4j9lMLGk22Yu2qi50GOohtVMhL55rPuwIgGvri6J
+Rq6sppct8Av9e2llcJkQwvtNGZl/skCG24TJNqf3B+LTYPks3jpwcQwEIKihWHjj4tA+xRIu
+zFQsCh/aSkaQ3rNu9knwKAwYzSD7tuJgUpTW7J04dSrP45MYU6STVQlKvEBIJQVzmqfNJRzz
+MGOFsEruk3cKRnBMIVDyzbvu9OQk5Zu/687enESkr0LSqJd0NxfQTWixNxrv9kkaVuxFcE/r
+ABj4J+8QNDObLmtpdOgb/B7Ams3BSPQCQBFCIHHy9TQ8iFq4JFqvSKZLOCdLeEGBSeGUOz70
+y0pZ1PN+swPEp1g15OWnZAdwLohbBsezbIvQGZ4OLUEHzPfBBMWmWOPzQ7vMEHeo1zORSQzW
+HJPsVV0ekhsdU8Y1I1P6tcpcUgdWlipcARGXOTAns/MEu8vslHInGrysDuY5ANMOxDNphllW
+iWVZN5hOiuuVWL95Pb+/R6PhL3pvgBGZv2vwhs6FODLWWn03pikhVG7QN7J9gJegwlSRS04l
+auAond00AYl3Be/+e7xfgWt19fH4+Xj76HiDdnt19wVLhkkaZpbm8hUTxOn2+a0ZgNw1T6mA
+HmW2snHXISkF0Y+FMWBZ4iU72RIyEXKwKzjSmc9v27BQFlGlEE1IjJAwmwRQ1K8D7eStVt0l
+24pZ5mBEB10MdxOk02yHN5/Z/NoCkFjzO7Ak2Xk/01nbzE3LV+ilkwmVz9NjmJfumZdB4uDy
+D++IY1mm5BLvX3pLnOwf4/eid5kS/YcpRZQrIpuzX4MOcZrXgOOhtm2cnwQJ3ti+UhWbNDTx
+7CD9ZYZfhYs6DMnZk+wH0DqGFskMlO+r4bqzkUfpZtrQcMPTxiLj5wfeYW7mwQ2l0WLXgZbQ
+WmaCZofDnsCMJUo5KQWLWbFmFhzPQwxtrQ2UBAJzVs9GtCwljZ5xoTpCkMuYaAHyY0yEmpIj
+YxiYRstsxmneNLzzBczJNhFcNpWcPGMHStrVaGBWFOB3uvLcsHEfQRPoaCc8i1C1tg2o1Sye
+eYxLiN4SexuO8qRiEYO/LQPbqWe9DWv0lmep24FKqj7VEXZi1ouiFVUs+dm0xioMJuxGpTPQ
+XtwKvZR/dLKftagW8YrzEt3/2MGgxPAXJjimWBF+o+vaamkPz3O0D0MjrlVsuQ7enahGEB0V
+wsMijAT5RFlsRHwkHBy2WTARi7BDzbLoMwoh69+TcLyiSlgKmz+vhSB2LVURiT/L9mFWG/1X
+1cBZkQsByyCo8HdSU/kodkxJTh5BHtwsDEXBq/z++H9Px9vrb6uH66tPQZ5q0DhhGtTpoELt
+8CEEZmPtAjquMB2RqKLozEbEUKOIrReqmb7TCPlvQIoWssOzBlhR4orWvjsfVWcCZpM+h8kW
+gOufHOz+hyW4OK21MmXtA/YSBi1swMiNBTxdfAo/LHlxf6f1Jdm3uJxR9j7Esrd6f3/zn6As
+ZorPm8i0OUHn7m7DCWmQrhks5vMY+HcddYg8q9Vlt31LFeFwj+flV9QG3N8d6MSlu7pGiAy8
+JH+RoGWt4s6a1/5OqQo1u+PMw19X98f3JECgpeeJ8zqyU77/dAxPb2jvB4jbmRLiMKEXkJWo
+23hPR6QV6ddcAdFwZZdU/x41XO9dfAtX6JYxJvnc3sdk3w+rHFPWTw8DYPUTGIPV8fH6l59J
+Ih7cAJ/OJbEEwKrK/yAJNwfBG6vTkyAwRnJer89OYN1/tHKh5gmLQ9ZtSl33ZSN4NxJlfIPc
+kpOqg8nXYfc9OxbW6Xlwc3t1/20lPj99uooiTslenQV5+vBa/9VZSgf5RActk/Cg+Le702kx
+S43JGhAoeqHUP80bW04rmc3WLSK/uf/8XzgVqyzWDyILHCf4ibnAxMRzqSvnAIHlDxKUWSVl
+0AcAfIFb6lEi4vClbcX4BrMsNQTqmPjL+xCadiQNx/dr6zztn+WXHc+L+VCkUEIVpRhnPlMU
+MO7qJ/H18Xj7cPPnp+PEJYmVfh+uro8/r8zTly93949eR/Q8gunuWPIpBqKEocVXCNF4QV4B
+51gQf/llbweOLnQ3NL7UrGmGp1EEz1ljWixuUZjtSAfBQBY/2538oabB4jyNV0pWijQnMddu
+/cvNLYS4VhZO5BdH01ye+fgied7+F8aPmSm32Iaq3BEU1ue5TegLgYY8kj1+vL9afRjG8WaS
+moYFggE9O0CBz73dkfTKAMFLWJDx2RNmj8nj4tge3uGFblDHOGJnlcoIrCp6gYwQ5qp3abn4
+2ENl4mgBoWORm7/pw/L0sMddHo8x1EWA8rcHvEZ2j837C4eQNNZuwWLXh4bRaHxE1qoLK7mx
+jKTFZ/FRSi1gves2vrh2PKnSjqfnYLv44niHj6fxFcXkAzkQdUc8jX/ijM+A8TMCLk800zdD
+6SnWe948Hq8xwfvy/fELyBja4FlG098XhDfb/r4ghA1hsy86GCemfFFsypl3fB7wU0cDBEPH
+uChjO9bbTUU8bdWAH7ROptZUY+MKvb4LcIy7PHr8MKvmczOccnxt7cwgPk/hmBKJsm6Ytsbv
+CcDJ6dbhY6ot1sRFnbt3MwBvdQ2SZmUeVOm7oSVwGItXE6Wb2+RcU+P0bE7Dn+GGw+dt7S/v
+hNaYenLlE4HsO7Igyp9eyLseN0ptIyT6SvAbNHir2sSTZANb6pxQ/5Y74rOralVgJ/LD8Gpn
+ToCmwqcHFpB9BUDgRZCZ+y9X+Brr7nIjreifU9K+sBrVjDdW7iWqbxF3aSrM/vafoIj3QIvC
+dAzz/M6yedkKfUlPZ2gUH24Pfi5jsaHPXlPI5rJbwwL9K6wI524/Cdq4CUZEf0N4aenKXD4w
+lYWxk3um5utdo6dtUyeJ8Ye3FLpnWnifOe3jpB2exyZer3ie87ZPUeL9zEyUvOj716t99Vw8
+Tq8xeknCO6h4d3w7X3O1gMtUu1AL3fvp6Ij7jxwMnz9J0GIdzUSfYkh/w90XjRNffwFOWuI2
+lCAzEXJW0jyYlb7sOUC7+1Ay6kLbqBGwVs18Fb9qacG/70XEVdPGcoRaSOyt01Tbucez8Eo+
+VtPz9/HxmVIos1Xsbg1KsnZFHbBDwzXl36XrmjbZJ+LxmVF8MeTEwCHxwtTAIUwOZVRuvVs1
+W0c2FAsJji9gSHCtshYvpNAK4vs6PFAJPom9tGht3EdGLJvd16JQuOZDHUFqfsHLkNhc4wBJ
+uxG2mh6bJPolL0WWOqEkia56tCPHSoi54DWHwcrYMsZ6ie0//TE3t8Bb6S+/xxc3xH/CDxrJ
+or8pJV9a6KfU41lkx8ecwFr6WtgU41Gk4m1LwSZLa8Ge2+EbQfpyT0/xIipu7mUr2TyFmubb
+AKdenQ21KqHtHX02cBMCN2uql8B30uR5XfLih7xcHIoBh3iv4Gr38s+rh+P71b/9s74v93cf
+bvr8/JQhALKeDc8N4MgG35j1dfTDe7JnRho6Qu8cv+ADgQLnFy8+/uMf4Qev8GtlnoZ6ZAGw
+XxVfffn09PGmT2vOKPEjNU6cSjyL6UIYQo3VNDV+0wDUePNdatQL3pYmg/pgcvFru++EPMOa
+QeVX+KaXnln3wtXgu01SmOc1HpWYXhrdl4hcMiRdu4M0bY34xcYenX4nMHmSS3jsx2g+fvMs
+TOHOKGW6LqJH41ZqsfA4pqfBl1OX4DoagyZy/IxAJytX1ZBs2tZw+kAXHaq1KtMkcMargW6L
+T40X+Wn8x1Picoh1WBKEnwFw+Twt/gifqkyfrwBd0l9uERR+O2BtiiQwuHefPjRgRYE3rnMU
+PtXK5mAwBsraMvoCyByLtaZJZrkl9HVjzhdMJ+KQ7HKdzsMRLkjlDiZPn8iAkKvk1/j81P0j
+nni5HjqyIugXN1s1bH7b1FzdP97gWV3Zb1/o47exlmmsILoIbrEVRCkjTToBKfdpisGompxU
+TJEcPxjSADH1aJmWz/ZZ/T9nX9Ykt42s+1c65uHGTMTxdZG1sR78gCJZVVBza4K1tF4YbanH
+7hhJ7Wi1z7H//UECXAAwE9S9jpClQn4AsSORyIXFWJm5SEqBEcCNUsLFvXOdAWOcWyvOeyQL
+uC2quejUgifks8ypxOlmsePxl+Te+osjx5t+zpQzN2/ec4FV6J7VOcMIIE5FvwWvEJtoZnSN
+VYGh+vcoZ3pZe8hEhAgzNX+Ap6NJGtwaTGElJCvdN+0isBw9EhlzWObjpVbwTSRTaNtPGsT7
+x72tE9AT9ocHtFn294YlM3gt05d3y2WQ46xOFMH4S/saVRaC6pCSXWN5/evoirHVdB8Nzav8
+BVGZTaKd29Gja0oQytS54VFRHeu66nKvKK+FeZeV275k4Qii+hpBGxhJ5XcyGY0nRwhNcTPX
+VzzrJH3kkXs/Ge0+PcBfIBaxvSMaWK133L3jjIhR+1Q/Sv31/OnP9yd4FgF/unfKsujdmK17
+XhzyBm5qkxsERpI/YsfPj6oxiG1Gr1by2kc7GOuKFXHNzaeBLllyHrFZE9CY6jT1++ceokmq
+vfnz19e3v+/y8S16Igf3mr+MtjM5K84Mo4xJymJeuceBR6/etse6Zve2E6mwn1xHC54baE2n
+GOmiX/ImRj4TxPSjeqdT6tZT+gH8Tx7PtoswqKbpHM/MAFr58Dnl/rewbcEI/XA7vauyxSPb
+gH7qlGpvwM5YUsm80xtv9OYO9pMrJ9MemFrrANYJeqJj12cnDdE1j5XUu3UcDYBNBKjU123j
+OgHZy4unebvXRs8lKCIYH8rPiBT2XhiTru8pNTW0/86k/mWzXi8dIzHSQt3unEn66VqVciYU
+ExNLQr5l8PiIXItlV/aIbQMoOtcOkBBhl1Aa/fZjDJLiFKrEtMpUytqxspRpAypcE6CWYwvl
+YgoXtl6l/Omxwh+oqPICUGVNmfhlay0LQ2iHlvqxckxJRsr+jF80P4qpo6KO1L/UqCfu/p3K
+bKKcb2ld24Jv5W0NU59Jes88UzHscHRVykOKLdPUTi8cC0C4LUFhMNHLyvHDBFCwd77Iuw0l
+bFHWcsoXrPxae8jYETt2q86czTTVVQbm4MsUl2KAoz55ozrljNAwUowR6PaqOQq6N7geu9kn
+ShLLLGkQfZqNR9BU1Uemged5OZeEsC17xP1eO+noX6/UmVk8v//P69t/QOFvcljKrfDe/IT+
+LWcnM3Rn4fZh30Xk6Z47KV2WcbfIUH3Zg2mJDL/kDnIsnaTOG92oIAWJg2ExblkIEHm3AkUA
+TtyFFUbv9b5C/PbE4CRRzig8f1Ipn40pKoHk1mDySrMWthNnmTrY1ihjffsGAQ87exC2pNPp
+65QLLIs2PbFK1x4ANII1J4R2Set9ae7RklIVlfu7TU7xNFEZ+E1Sa1Zbew70Ia847itGE4/A
+dKb5+YZZTitE25yLwuTtoOW6Ca4y9EBxOjM3e2PoL7xTK54LyZEFduN0oqGeJ5l8+fnynjt2
+4KrKlwbzNwO0czJtD6QfyvMkYWy79QmYXi3D3bQoWirwDue6crC7ELN2rJqdCdY8dvTHFfBP
+R1PI45L2tsXGkB6fJQUXMfaQayqaa0kYaQyok/zXDELMQx73GR6JYYBc0iMjZKI9pLj46XDV
+m2q/uahspq6XtMA1hQfEY0pMjwHBM3mySO7Qj0ri2Y6LE5xlGsd/j5lu9MyvMzv65NppokPu
+C//lH7++fPqH/dE8WTvS82EVXzb2tnDZdFsv3OsO+JIBkPbwCidFmxAvALBKNr5FufGuyg2y
+LO065LzaEIt2g2yQMofcg8aTXaUI3kw6QKa1mxp7FVHkIpHXeHVVbB6r1PkC+llrI+tTcOj0
++HLqdt7DEwI+SXUJavyoyov0uGmzK7KnDVTJ+WHM9AiwHOzKzoZwO6B8ARyjvWFXTQVhhITg
+h0fnRFCZ5JVSveLK8zyvHMdYJlhrdOAy/mpKHM+oJFbntGIF4d93ccyT75NYSua5CLAWYCFp
+hmails6xOhJmszeHureHHLhispJjEzrnq6enT/9x3mj7gpFbm1m8U4BRLRE3Fq8Cv9tkf2zL
+/Ye4QEMDKES3B+mzX00g2HOmJSE4cWIBOrBkDiKEhcLP1eCHvlwn6J3e0kaCX/ISIpkAYF+c
+dPW+XjqJ6o5gPb3g/mKzsMH3vH3NkyOpoqpYEsFcvksmYcq6GSvaaBEGlqPiMbU9Xmq8EgYm
+pzBJGstP443LYtytHGtYhl83b+EaL4pVe5RQnUrq85usvFaMiB+Spik0bL2idqGpy/6xyTHm
+QTgpQC1RlBDWy+zovRx7pp4B0cLKKi0u4sonPjD6MUCuWWY91QXZZU9HKUxFPGNrD/j4J08C
+331Vr6iaJukF6QGgZ0sIBQUshcS487OIBXYtqM3oEPVBRWSxvGPZIpPukVcdOTUnbMZGjD6S
+sAMeqDXEABGPjlb9/sE6LsFr+AdUTqT8icszmuXd+7ZzhwEVBB0zzhZR3L0/f393NnTVoPuG
+CnmjFnhdSgavLLjjKXrY8ifFOwRTNGIMOMtrlnCM44xZMTJRYKBUs6udsI9zO+F4NaUjkPIh
+2C13k7dzSblLnv/75RNifgW5LvrbVkmXW0ysaKCKzKEaNJiOVjXlVSQGXTlgbW0FB6DeXxio
+8oKl94EwzoUyWl914ni7xb0rAZUrI6XCU3ruLb1K2f1c/cQH5npxsunlwXVROgzNWchdrrc7
+svSqIGcEMk0FIYpOc+GniwTo+AGhppE/fzdAPkge75kXoLrQBzhPBqC3J512kJ1T65No6S4e
+ww2Z/saOQxilHeSGVVe42EAS72PMWyuxQYGArT5bYrMrr9PMMiO5giqybVajkrpATH2LD0c4
+TQPLyUOmkpSFHbxN4p3cZYSeSjOwtVNRP+WcxI+tAR+DVV7v774tC9QIdkCDbpVsmop7AfLG
+9Jjsp7VXj9698idAHP9wRmU1o+qcSyOZfCkZql8nbOqRfiBfLYeEkn/te9dJUSL3Op5CZSI8
+qcHIZzh1eH37EdQv//j68u37+9vzl/b3939MgPJOd0Lyd/1gPZYaWUT/vELdBe2ClPE49p7a
+o+S9EvrjpAJ7Kdfzi7GsK5ep+AXgcM/xUHzywN1V9oG+q0ZVGutk3qEXsWFD4Lh0JU6rE1wK
+8QP/gK/zSjBQZKVFygfs3mCIAZwU+4qfgNFe987YJUleStbUiuKiWEF4ps5NDUTFoqQXO1ow
+PMuWl4mJRtoxVcOFneAENJjblx34Td2NLPUn90cX8VNYiSmsQuv1un/MhxwAsOHMZvC7pO6V
+GR8yCWnTuEZ9eUF2YTki61KwSCQDDfVJQsBgp/khsDfUk2pEladuddqEOJB0BuLmq4j7K/4d
+2yK3S0AjtgJN+UdwQufQjpqAVuu4Cr2LPTsAs3LiBD44v9oFKlb/jF39gGqFi4QE0OKAs7Rz
+qmMTuem/XBVeOw2umLDdB6jEsEpybOarDzo2ZeMcxid258htvAU4tJbv8aEzgTG4hZgDiZM9
+Q7TqrMz46fXb+9vrFwiEOHpoGa+++dSJSfL8/eW3b1cwOYcC4lf5D8QXgZ6XVxUgQdkXUHMQ
+DiJC+dL3Kf2tp8/P4NtaUp+NpkBM1rFCPbc3ix10PvF+Gfos/fb5j1fJdzrNBRtrZRyJtsXK
+OBT1/X9e3j/9PjMKagCv3cW/SfEYUf7SxlkaMzPUXRXnMWfub2Wl0Mbc5LxkNr1Bd3X/6dPT
+2+e7X99ePv9mal0/gn/9MZv62Zahm1LzuDy5iQ13U9IiBbl9OkGW4sT31oFUJZttuEMnGY/C
+xQ5zeaJ7AySc6iHeegeqWcWdC/loKv/yqTsm70pXy+GsbYNOaeZ4hDCSW/Uc/o+fv//68u3n
+31/fwThl4Onk8d3k1cHVUVFpbQ4mR+gFgxUJyyxLyarW3xz8o6i49v0IDn4jvrzKhfE2NuBw
+7Tx2GAxEn6R0aBKIxzoSQeuQDR8xHIeOuZRNrtsjKBn1tjIiMauTETQqZ7m+Mbo29lhtmAL3
+Z0spdOhsdXGs+YV4AxluljXxMKQByjepLqbViob4MyXAtGuMDqzM75EmGjE/1IFJBI0H8uWc
+QTikPc94w837pbxVWdpS+nfLQyuWBdNmoGqkDzavBcRDWsT64oB7USHWyOC56bPiNC0HWGby
+sOeUkjm2rXyVy/hpLL1jQVkiNbhopsQcCbluUrX5tOv+tEvCthNTc0WprXS3pkF3qg/d9P76
+6fWLqRpVVLZT187CxxKBdkY/xTnL4Af+aNGBCIlUT4bDWYhEdg+vluENv5b14HOeYjKNnpyV
+ZTWpuEpVKqU6Vnk0LVa/2gDO+/Wk3mOS46E39onJJfbJ4t7fAeIWeQqtmSFQNRK7xowh4kya
+uu8Gm2W0Mm6XSV3mIFKOkwvh6BOOR1j0aYOFzdJXXfiO9XI0pCrDNW9Lne6b0oU9/FpGfslT
+g6nrL5cyVUuiJp0DpDFVAU29r/F2DJTTNUftfxTxwPZyExOWHEul4zccRXNURCwSq4+mkxwj
+Uc9c9zsdzfs5DZkopvSCfrPztCXBy/dP1qbXD36yDtc3eXsrce5Ynkz5I1y6cLZmDy6ViLvd
+iRUNESGz4YdcDSNeaix2y1CsFvhjrdz5s1JAxDhwETkVrfZ3D3mkZPjDEKsSsYsWISPexbjI
+wt1isfQQQ1yeDu4by1q0jQSt137M/hRQTwM9RFV0t8A3x1Meb5ZrXHaeiGAT4SQhdwryItTf
+H2iXaDeIJHprRXJwbwF9MZeKFRynxaF7bmmznlQeqrl1Y+rHWlHkFhXib7QdfepTykXk7LaJ
+tvi7cgfZLePbxgfgSdNGu1OVCnxAOliaBovFCl2XTkONjtlvg8VkRXTe2f56+n7HQfL651cV
+cbfz4fn+9vTtO5Rz9+Xl2/PdZ7nCX/6Af5od2IAYA63L/0e50wmacbEEzg1fZqCloyIWVbiG
+fx+RBT8+Bqr8MwNobjjiom8dlzye+icGd3pf7nI5U//P3dvzl6d32XRkBvZhGmPXx+bYFzE/
+kMSL5EEmtN4C0lMDg7FMi+sD3rw0PuEbHJidye6PS/V4SUNqiEszj6Bex05szwrWMo42zzpy
+LOkst12q82Q66xVToTMbozL0uOBg6mbcIRhPlM9o0zwgNuWHKo8diBRSOuUJJ1Xx+IeBXVaV
+6Wqho5D8U66K//zX3fvTH8//dRcnP8lVbbh+HVg8S3YXn2qdStu4KzKm2DbkPaIlxhjjploS
+K8FC0Tj9IhmP49EyaFGpyvuoughaTW/6HeG7MwYCvIxPe12yLmiy9lmKUQT45CfSM76Xf6EZ
+3NGEVOVxUOSOVhsQ60p/A52tbkOd3rr2wdoMPgAolGqwpqp4g7QPVj1Ct+N+qfF+0GoOtC9u
+oQezT0MPsZt9y2t7k/+pBUV/6VQJXE9cUWUZuxtxo+sBgmESFD0/bPmgTmMx1MhN5fFWfmhM
+7RLAsF6o4M+dEdbKBWifrSqydZuLX4K1Eempx+ir8yQmnUXNmbg3XxjH8pXwq2nAWtaRx7ot
+2Lkt2M21YPcDLdh5W7DztmD3/9aC3Uq1wCwCkjxvoXoDvwjClKAjn3PPZE+qRjIe+PGnKwbW
+GOLR8wVWxzmh5aboqaxfiO3GuWQ31YlTpFfL7dpAyHMskfFsX94QihtodCBMN768apaQ+tVN
+DWHzU6/ex/SXYHQjZuby0UNdqrNn5qxuqgfPOJwP4hSjUen0RtFwUzaj96mzkMePLevWx0bG
+xAl5v7Bq+ljjzEhPJfgwzQlWF3IHlMcMcePWPUHdaTrG4rYMdoFnyzzoR0uX2zIhx8S0UOtP
+TD4ZFF55JjXYshL6kD2dBYQ2mG5ok3q2bvGYr5dxJFc3cbvUFcRWjSI9qJFv5fxbOE19yJjk
+GyZzApJnzr2s8g1cEi936788uwA0aLfF75cKcU22wQ6zzNPlq2gt7hhVeew/Qqs8WhACDr1I
+DsyRAJnUqf6JZhNOaSZ4KTOW+I3B4ma6pzZP1+ER+TDefDhcLA8tDevtK7WjXpvkvj0LSPxY
+lQm6nQCxygfbjth4Pv2fl/ffJf7bT+JwuPv29P7y38+jUp7BsqqPnsyncJWUl3vwXZcpTQkw
+px19qQ1Z1CMy6EVYIw1UuaDiYBMSa0a3E574oBQaI3hmiziMfhIq/qhmx2UDP7kt//Tn9/fX
+r3dKKcBo9SiRSSQ77qgM2F9/EBNdYqtyN6pq+1xfqXTlZApeQwUzohHCUHJ+mwx+jqvHKxph
+Vqjnhbx/cUFM+a57fURiP1XEC+7VTBHPmWdIL9TS0sQmFWJ6761m+3AcVjW3iBpoIuHZXRPr
+hnj30ORGDpCXXkWbLT7rFUBysJuVj/5Ie+9TgPTA8DmpqJKzWG5wcd1A91UP6LcQ16weAbgI
+WNF5E4XBHN1TgQ8qkLinApL1kps0Pm8VoEib2A/gxQe2xA9qDRDRdhXgUlEFKLMEFqoHIBk8
+amtRALn5hIvQNxKwPcnv0AAwS6AYeQ1ICFG0WsCETY0mQpTsGiwTPcXLzWMT4RxT5ds/FLHT
+E/EAan7ICJar8u0jinjlxb4spipSFS9/ev325W93L5lsIGqZLkghoJ6J/jmgZ5Gng2CSeMaf
+5kI0vTt5PeP/0TVwsPRk/v305cuvT5/+c/fz3Zfn354+/Y1qOPUcCS7KlsROuYGuxvQVor/O
+IW41c9vHaqLUKbTLebSEFjxJMTNMe6KENItJSjBNmYJW642VhrjIgJBkoHlqugqdOB/SKZ6r
+fgfonuwEqZE5PLbnfbCKaZ8lua0GQhamCjnYDHIP7/wm5qxgx7RWGpqO7rlRiOSlqxrcR5mq
+KSCXkWteuQfuXBKaXzmDLj2v0FDtkty7Yh5TRMEqcbJ9PMtk5SNecjYXDv5tyDo6etp9iry6
+PzgFKheFtKMoiUhrfB1CoRluhJuAj5mOtzfxEPhmCAJIFepekUbKx7QurUahb/lmurwpUp8Z
+MahDWDUzMvbozpYzIalP8onHKGv8lXIQ/p1Dxu5T90PyBKL8UcPsmJiF2p2sRtWS3CT56OaX
+KlV5uEWJnWqB+xbZUQ9nO4qD/g0PAZO0QzyFmeKsLq0XSa0WDiFuLHl7l9o9XEw2ezDmvQuW
+u9XdPw8vb89X+edf2HvegdcpWDihbe+JbVEKp+v6NzvfZ4z9HAxa4OjvFOowYbdk3zrTMGPP
+5UY/FulgdTVup/Kwp0xllK4GSkkfVHgoQpmw8CibgJJJSigMyEaCcThK4xVJutwoCpywhIri
+scH0a2QNRBpbPSb/JcrM1AQa0vqIOBbetvlV5rcqfGQJft+zzFQXbc6WKar82V7UGKnwVoQx
+zsWrVaV9ZI3dnRFqSfIrFxWEZuRIatfkXqvGv3x/f3v59U94SxZaF5sZ7uUtzqdXcf/BLH1l
+UgirbTn3ypOpLZTcA5OybpdxiWnuGQiWsKpJ7YDWOgk0B+oDR/chswB5jFtrJG2CZUB50uoz
+ZSxWx6F1noiMxyWq22tlbVI7BHtauAG5IaUtcxWy4gjOJ3GuUitINGKuhTn7aLuXTgs2jMNc
+XjPeSJ5EQRBAVlPhXsJVzM2RndU6+EUeU0sVoojejqiOsPlxue8UDbeDdz8QvrfNfLW9SId0
+aHJpuj1sstD6Fdi/UvunPUoZfqcxv3eWjA1mamNg9nXJEjnLrV16hYuT93EOexzqRKC4WUMQ
+O+8N/aYD08kInqJ/a31GqwayOEIk+Sg519zVwzIzzswo2eCY2Roc+2KmkyBDYUfClns3ZkZl
+Zbrws9WvzelcgBI+rK4Kt6Y0IZd5yP6I95KJqY/YZqJrBw6PzBpm/OHsGm1MiE7FkJZrOb6t
+66FF+w3+ZjCQcYnUQMbn5UierRkXcWnvROg8NbNATLzCdjR7a+VFhOCgZ7e0xDny5Umcccd+
+IgwWK2zUJlCV0OZXfIfuqDkxoJosr2/Ym16Srm7rsaKdpKaNVsZtPMl3wcLYwWR563BzQ/bi
+G69nj9LEVmVKstDS2RZyShNmnUYhELM5tWqwT8PZMUk/2uFcDdLh/IE34oy06ZBfPgTRzEmt
+AxWbuY+XmSaczuya2maNfHaa8ihcm5oYJqkLm9pP+WCxsH+5P1P3t9ygTRUsftxbP6b7t0xE
+lyK/WVnhCHZ+ImVBMl7aamFr4snfxKbJiVv8IQ8WRFzyI36n+JDPDF8n+LYOi0uOu6YR97bX
+bvjtUzwBMhzBjsx2ID+GdmmPtE84s8ayuqworVWTZ7dVS7jxkbQ1rf8uqeLqJR8wk2mzPjyu
+nUC/IorWgcyLC0nuxccoWk10QfGSy26pj+caK7ar5cw6VjlFmnN0ieWPtbVg4XewOBJzLmVZ
+MfO5gjXdx0bGTifhTJ+IlpGt1I+UmUp+3Q30EhJnw+WGum6zi6vLorSN6YsDakhi5LLbxCUb
+nnbSzFwHLJvbq6PlboHsxuxG5QzvOwNyN0vl3kGR6l4kx2PoBKgwYol1ATHQ5b31GQlD3bwb
+OToX3mlx5IXtPfMkr01ypiLZH1OwvjzwwpISDCWmhYAoj9bGWM6eHw8TnaaHjC0pPciHzGXw
+zfvHLS1aivyACpbNipxB8zu3GOeHGAwTHDefA7XOZ4exTmzT5M1iNbNYwL1CkxrsSBQsd6YP
+bfjdlOUkoa1szrdPBivstrmC4B2XY/XAKCCssAGg4kzWnf4k0oI6CjY7dG7WcGwwgdPAP1+N
+kgTLJeNl6W0LdU7jgiEzZ2oGVjYJED7rIP/YRx+lBXWIwaY5nrt0Cy73cavAeBculsFcLlND
+kYvdwtpbZEqwm5kpIhcxsrmIPN4F8Q5/vk4rHpNqbLK8XUC8vSviam6nF2Usl7zlgMmkNuow
+s9rZ5OBhdH5Mz4W9R1XVY54yQjtFzpsUl73G4M+wIM4yjrlIMivxWJSVsMNEJNe4vWVH3BOw
+kbdJT+fG2qR1ykwuOwe4DJEsDjgDFine9iZDvfgZZV7MY0X+aOuTDk42HsF94uQGZwDA5Vhs
+BUQ0vnHlHx0RrU5pr2tq9g2A5WJmkmlTOrPwzriO3Ti9WXeYLJMdPzta+tZIXCdDQo/0kCSE
+OxdeEe/jyhXU3n2F73k5EHm44VBUonbnMTJ9Ki2GJ1RONV9jeLNnlMMwAMhFDr7POPFwAZBO
+woPUV05L7aNZW85yfidTeoVHRHWAJfBQe8KfXkBQStI68SgNuEXRdrfZkwDZWcrewEOPtlP6
+SNUvHn2D+/ROpAkES2zDY5bQte0EPSQ9YXIK6FJxegU8eOilN3EUBP4SVpGfvtnO0Hck/cBv
+KT2cPK6ys6DJypLwdmWPJCQDq4MmWARBTGNuDUnrbs6zdHmzojHq7uglqwvgDyAaeqSG2yCJ
+KJRXR0bXpLjJL3xg8qCn5/8D9ome09MMqjvJOzaPLBJYPW/7gcOgiU0aLAi9SngMksuRx/TH
+O7VRkt4dDke5aYU1/B9FVRVeAZFx7PJ5FvvO8bB6yjaklZIQsya2U+7Z1breQVoFYUPOTta6
+yaJgbbGLYzLO9gEdpA3RDbv+A1X+sd4m+8rDVhpsbxRh1wbbiE2pcRKrdzaU0qZm/ESTUMS5
+2ywgacFkjyBb2JeS7zkm8R3GI99tFgH2HVHvtgR7YkAi9LQeAHIaby2JqEnZoZRjtgkXSC8W
+sKmZFh89ATbM/TQ5j8U2WiL4GkJxKBNPvN/FeS+UNMA2eZtCbBrLeJuvN8vQSS7CbejUYp9m
+96ZumsLVuVx2Z6dD0kqURRhFkbM84jDYIU37yM61zQ4Ntb5F4TJYuJeLCe6eZTmhSNlDHuRu
+eL2inHUPkcfUOrgFdgV5dZqsacHTumauCgNQLtlmZvbFJ3m19EPYQxwE2OXz6lxTe3/F7RWN
+4gDwUdcg1yIJg3fLo5D8jPHubGVqTh4Zs6SucYm4opCqtpK6I/Pt7iHEE3EVrLNdQHgSkVk3
+9/gNi9XrdYg/F165XMiERq8skZL4X+NiuUF3Zrszc1s2rRKIb2038Xox8UCAlIo/w+PNk+ke
+jyF7MAulrh9APODXLrM2k2dSxmvCFw0Hx7pzE7d/gRqZyeoaUjdQoFGri1+z1W6Da/xL2nK3
+ImlXfsBu+W41a8GtmsJmzXB+Q56rOeG9p1qvurh2OLnmIl9jVklmdZCHJHnPSeuGsDvuiUr1
+FtwJ4qwrdAShsJ9fs+h+rlYQQ8bZhnI50RfBGS9T0v5a+GjEOxHQQh+NLnOxpPMFa+xdw2xh
+zbqH6JFpbsIbym1Y2QaJsZFP8oKE7YWmbTHOvsmUt1BLK1bBdyHxjNlRCRuyjkr4rwfqNlwy
+L3XvKTmKUu93PVR5eHm+C+3FBxmot9uNIl4jzDmdNVjCEunJn+0OVbozMwmLVYivQTg7KWzJ
+4TULwjWuAQMk4rFFkiKSRCg6m3X4+JiwCWf2MZG1x6sCpCCosUdas1gl/UkLWzXmoSngfFH+
+EfGtTwvwavZIhGztAHIzXy8wxmaMG3AV3LJntbnsK6nAC7G+3dNAO/L6pgLZX1/Az/4/p+Fm
+/nX3/irRz3fvv/coRJ52pb6bwwslfqR3SiYtGs9Ua1rrxo5JplP68ZwTCeEX0Hp1veRt5TjA
+7JxK/fHnO+m3iBfV2Yx+Cz/bwwHCZHcBNwxhEdBAFdkJs+QgdCj6+5w4YTUoZ03Nby5IVfj8
+/fnty9O3z3aUFzt3eRap4wnUpkA0AjR0rQMTcZ2mRXv7JViEKz/m8ZftJnK/96F8xINOaXJ6
+QWuZXhxO3RgpKuCAznmfPu5L7YxmKLNPkzeHar22t0kKtEOqPEKa+z3+hQd5aSZ8CFoYgvU3
+MGGwmcEkXQixehPhDOCAzO7vCX+eA+RYEToRFkLNbsIIZQA2MdusAtzO1wRFq2BmKPQimGlb
+Hi2X+AZjlHPbLtf4A/MIIvbmEVDV8ozwY4r02hD874CByHFwgs18rnuEngE15ZVdGX4rGlHn
+YnYC3Jp71GWusdaNlyD4KbeQEElqWWbGhRvT948Jlgw6GPLvqsKI4rFgFYhXvcRW5FYYkBHS
+Wayj3+WHdF+W9xgNnFTfK682Fsc/0NMM2ADCStmoYAp3QE68io1fK8/x6R6NUzeCDmUMrLZt
+/DCSL7n6t7cItJdEWnOWTQtlVZWlqmae2u/jfE35YdGI+JFVuHxL06EnSW+UGnIRkutlvkLI
+zatr4jBP/B8acZT3xOFMg5jKhAqlgqjAwLiydAeAntUHJ73ouK1koVNZsg0IJw0asM9ZQJxB
+3em6vC3a/bmhdqru6xA3nu9rRvkZ6fidWFT3PkCey53eW59jFeKj25Ph+ThNK0KHyEAlaVwm
+8zDVLA+INRkT7b4pCF/DHYgrB/1Nir97DPyI5PeKDukD3poPRCCKjq+8prU8EH1lPKbqFu9B
+xHmw8H3lrP7yDvchWhMr3ujhumxY/Qh+n2fGgyW3bOmdznHOllQsRI3gSSo3mQTewpJ0T3gg
+0dCkvoSbxQ2UeGChzyE36x9Gbr3IOucr3Ffw6ents4o2wX8u71yHnaC6Om7YSKQBB6F+tjxa
+rEI3Uf7fjUmgCXEThfGWkBxriLzYyvMD2ac0OeN7zQo42WpG+OFR1M6SzinY/bIIwRLcV0wd
+z5ShGVcCclYYlHRkeTq1ueosMLFhG50EIzdKfVv+/ent6dM7hNgZ/Lp3X2tMdaaLGVyws4SV
+PEkhMvXCLkxkD8DS5JKQ++ZIOV1R9Jjc7rkyVjaejQp+20Vt1di6Z1oYr5KJecGyLkROkTj3
+MaV52ZDmbPFjnLEElQrk5Y1pwXomp/1XK1n5PVSp4/g/FjG5IfbEnHhY78jtEa9lUX4sCcV0
+Tni+K9pTkhEKxO2R8Mmv4qW0gmqFiuvRNJiyRJYol9JnCJfBDNZb3rhz8xFc/r7XCdol2PPb
+y9MXQ8hjj2nK6uwxNo1pO0IUrhdoovyAZMJjeXQlyq2MNX9NnI6EYq3ennSAQcek9CZoMrWt
+wi0fcgYhvbGa+iz6yGMCiro9y2knflmGGLk+Fw3P0w6zwj/fpEWSJnjlclZAjOu6IbpMBdyB
+WA9Uz4NzGppeC0ZkvGrtMrRXEnpbHwpuwgi1EjNB8p5INCvnQ8Sp4vXbT5AmC1HzUjn0RpxE
+dNmhpzPeYBehDmEHxTUSjfnjlvqBWJwdWcRxQSgIDYhgw8WW8rCsQd2J+KFhR2jGD0BnYTWh
+X67JdUWfm5J8EJkco7lvKBQvwCHWFNq7n7T3FKfz87ipM3VMI10PAkbKU//g6RjbGU6XPjSW
+qXKsXDhMNgpe5VzyVEUCziO+WqkJ/FHXCgeuQhS6voQ0BYJptJRLGV2qUq3Vj68HucE7HxWW
+B1mdJDhqDgi0K2viU1IenVLUlaE8HMZkedDXYCdjScaHxBb2KskN4ZGbRphjWzkSLMcFY7Kl
+9W0mdw5R+6PsAhGUzAf4qgLnDlZlujiCyv3YJ4Sbmp7fBEcOj41yd21XdJz1HrAieOO4Dqmb
+S9VruKDLgay/IZG4UlFfJVeNhJnre7eyVXvgN9zAicd8VhzjUxrf65HH11gs/1QEb5JmMTjj
+QioiJ7h73bjxLHukAmtMOWOzxXp21meIcVwRD6AmCJz46+B/00eEMEZeecxAdjqGahhLZqVO
+j5brJEhV4lK535V2MgQZZFZ7Vao8n8nXIEnP8TcYSekiG9ohboHAsmO5H+MvQ3uGywjEwxsb
+162VO5FD+u+v399nQobq4nmwXhIaJT19Q8RZ6umEE05Fz5PtGn8c6MiRo0Pm0tucOLaALu++
+dGZOOZbUxJwQfEgieFMkhB6SWigLSbpS2qBSnnD41AWI4GK93tHdLumbJSEE0eTdhtiLJJny
+R9nRqnoasVT5VSTmiIjz6UOyWlh/f39//nr3K4Rl1Fnv/vlVzrsvf989f/31+fPn5893P3eo
+nyRj9+n3lz/+5ZYeyz2CFukCQl4O+bHQ3uF9niZdLKHFB7A0Ty/0AHprU9KPOWrqxDP+MPX4
+5ZMQvQZZ64hPujz9S26Y3yRjJTE/61X+9Pnpj3d6dSe8BIH7mZCDq/rqSJWSpzue6AVRl/uy
+OZw/fmxLhzGxYA0rheSE6IY3XF5wHHG7qnT5/rtsxtgwY065jcqzW1y53mh7WQy1PTr97wQI
+t4kZdRbrCQYeKunIeAMENu4ZCBl2yji0jHxLgrsnLL5ERQgsTgLTEqwqOzZ7hXgC1UdMJe4+
+fXnRAcmQmN4yo2TFwND9nuYzDJQSXMyB3CU51OQ3cCH79P76Nj0Km0rW8/XTf6YMgCS1wTqK
+WsXP9Gdrpxujba3uQOWiSBvwPKzMIKEtomF5Bc79DCWZp8+fX0B1Rq5L9bXv/5f6Tntv66g4
+VJ40rsVBz0BOWmIUwgu4TyEDCl1mGY11Ce2BiUb52sx4LjmLdRCaiInTfz1XyT1R5ZlEUNKG
+ec9fX9/+vvv69Mcf8iRQJSBrWn80Typ8+9EvPVdW4StWkUGoQ1P7mMfebVkhOcEwKGL2KG/9
+ZOgTBcn30UYQnrT1U9QtWuOnviJPN/5JL7UHt459MDe6s/VykPPmp44KUmzvcBy2gSPQcTqq
+sdU6ndng60ZJXFKm3wqAOMx2ACLYxKsIXyq+Vg6Mi0p9/usPucbRyehRHNLjDBomxEVyBBDu
+3fQDRcx266UXAC9vHkBT8TiM3Icc4wRxGqlX5CHBGt9PoSm1u1Tw2S7zMPL6RbehFDx1h2Ut
+Lz2zBkKfKsdshKZRD0o1ighGqh8rk3g58fs/XNUnLdVKeJJlofsNoVo7ai6397Ml7L7iPaVE
+OC27EGqjikq5xdBUca6qzLKWNNNJT0kWaOKeqgKTYkAQYgHReMhwJwY33rCoFhu83XvWNGkt
+qyfCLaFLbkF+oBScu+8hYk+IibrKUvQ+//4h3FKOY3qM3AOCLSVNckB4bfvaSFC0I4Id95is
+irYhvif3EPIIH8polhtCd7uHyIav5IV/FhOu/XUBzJaQOxiYdbQjxHX9QOX75Qr/VN/FR3Y+
+prJtcbhb+RtXN7uVfTz3HLO7IlRCfxc48anWbqFjHCHn6xA5es+b8/Fc40KCCQof/QGWbFcB
+ESDLhOBn2gjJgwWh82hj8IGzMfhGbWNw5RQLs5ytzy6kRLYDpiHDX9iYuW9JzIZ6RDEwc0HD
+FWamD8VyrhQRbzczo3UfgSdZPyRYzGIOLA/WJ88mP4ZDr7JU5NQzVF/xPekYaIBUKaF4PECa
+W+VvfCI2M0HgIQh7iFlgDADwxSByO6ZYR+Pre8n2EKEO+46TfPRijQtMTEwUHgh3iANovdyu
+iShYPUay1kQ8qQHSiCY9N6whJFg97pitg4h8BR0w4WIOs90siBhbI8K/oE78tAkIWegwFPuc
+EW6YDEhFhU0cBnQ9My1B7DO7WMi7UQ/4EBPnfQ+Q66wOwpm5q6LNEO4XB4w69PwbjcZsSWVZ
+C0ecxgZGcgf+VQmYkIhoZWFCfycpzHzbViFhWGFj/HUGLm2zIIxyLVDgP9EUZuM/hQGz888g
+CdnMbf0Ks5ytzmYzMxkVhlDotTDzdV4G25kJlMfVco4DaeLN2s/qZDnxYjUCtrOAmZmVb/3N
+lQD/MGc5cdMxAHOVJCyBDMBcJecWdE549zMAc5XcrcPl3HhJDMGb2xh/e6s42i5nljtgVsRF
+qccUTdyCS5mc01E3e2jcyPXs7wLAbGfmk8TIm6+/rwGzW/i7sqiUv7GZLjhE6x0hgcgp7Zs+
+tzg1M7u3RMwsYYlYEgF/R0Q8U4bnCXVg3/I02C79g53mcbAiLtcGJgzmMZsrZW88VDoX8Wqb
+/xhoZulp2H45s+9KpnC9mZnwCrP0X9hE04jtzNkuOeXNzCnJkjgIoySavYqKbRTOYGSPRzMz
+jRcsJEwgTMjMipGQZTh7LFERqnvAKY9nztEmr4KZTUBB/DNRQfxdJyGrmakKkLkm59WaCLDa
+Q8B/Z1ydZ5lmidtEG/9V4dIE4cwN/dKAIyYv5Bott9ul/7YFmIiKFW9gyHjyJib8AYy/ExXE
+v6wkJNtG68a/d2vUhjAzNVBywzj5b60alM6gbvD2ZiK8yibDwgaVrB8QNjT3i8AW63QIdXjb
+Zo5dEkSsarhwLXccUJqntaw5WDx0SpU6/mCbizHyeA/uhYNOMkT9A7NACB9rWsj29CRVsTvb
+Y3kBn4NVe+UixWpsAg+M11oLHO0ZLAuYvLR0jMc+C106AvTWFwDg+7V1HcAiuLFyWEkQ6IS5
+sag63wDvz1/g+f3tK2a8oB15qrGLM5ZXo0rsLdq01T08WuTVME1M5VuVU5RxmzSiB+ATWEKX
+q8UNqYVZGkCwcobHI29ZbsWq+OQtDO+XwbVJrzj8t5syiWI4EIryyh7LM/biNGC0KrVSw+wc
++yXIJ8AQXmlRyNLkKpp+ClciuD69f/r98+tvd9Xb8/vL1+fXP9/vjq+yXd9eXackXTlVnXaf
+gTlGF0i5lhDloTH7avxCwiQhwRUAOseefT4U85HzGkz5vKAuEpcflFz9dLiRL28z1WHxwxli
+aVJNYslFG77TiIznoD/qBWyDRUAC0n3cxstoRQKUCDWiKykqcPQt2S/8bUvI8g+8qeLQ3xfp
+uS69TeX7rfwMTc2ZwI+rKzvITc7J2GfbLBeLVOyBbCkTpxsYPDyPbGqHN1MG9/WVq4kNAskg
+PNB1l3SSeKr8/SZicBFFZlfX7WBJ0osLOXKbxbQLxkVSnelJp/z7dnomXtByu9962t485HBe
+UGTgbSlaz0P5ANF266XvfHSInPKRbpyc9Wl1kyvLP3oF3y2WdB8VPN4ugoiuhNzRWThZ3L3S
+yE+/Pn1//jxuuPHT22c7pHvMq9hbQVmyo8fb62PMFi4xeOF9H4HX41IIvneMwFBPlvs4Zygc
+CJP65X9+eX/595/fPoFm4NQxfd99h2Ry8EIavP0RF50q57HWTyKeB1R+1oTRduEJUCVBypnH
+grj4KkCyW2+D/IqbM6jv3KpQcjekm40D+OJJqJDlqikJgwlIZgfyOvR+QUHwy1FPJl6YBjJ+
+++rIlHMNRc4Kuug8DiC4EFn5UwPa14LH+OeBLLNONJ2NL2ie8OHM6ntUb72DZlUMmo2WPXcV
+k1p6IwusRig+NQkobs/UAqw71cXtR3CUaj7APrDiYxvnJRWiEzD3knv39EsUVXlEPOWNdHrO
+KLo8fjyz+has1sQLQAfYbjfEtX4ARIT32w4Q7RbeL0Q7Qg9joBOiwZGOS4kUvdlQkkVFTotD
+GOyJl35AXHiV1sp6ioRIPp1wcCqJVXxYy6VJ9xCqx2fSm/XClz1eN2tCcg90kcb+DVTw1XZz
+m8Hka0LMpqj3j5GcR/QWAjwKzlbvb+vFzAYvr1Mx4fIHyA1vWb5cruXtVMgrBz2QWbXceSYq
+KJ4RurLdZ7LcM8osywlfv00lNsGC0DUDouxafI1rIqE8qyqlABEu8B4BxONY3yzZcM/RpYqI
+CCutAbAjmmAA/MefBMmtjpB5NtdstVh65okEQJw4/0QCv63bpR+T5cu1Z7FpTpreK0i1eMVm
+1PxjWTBvN1zzaOXZ8SV5Gfg5FYCsF3OQ3c4R8veq0z6GbyylTo8g0ioxY95a7zejrEom5MyQ
+XWXcDLpex73/K9stKUStjP2usWrY/OYhmznIh8vsh0RZPM5iWPGIOvMyICdWVz3EktfVks9K
+2/t9MveVW175v8G1Sif2iTrOc09mNRQXHtvRLWXq6DSMqpUjHjdJnHKt3teVcrik+4R0aidz
+N2kbc7Knpt5XrNl1vpSkKzlQT09qRrgAhoFs6pTlHylnuPUQhNtTP34s6yo7H30tPJ5ZQRjB
+1m3TyKycGMmsLKs9i++dKaD9U5DNImory7vty1ubXAguCDzN9zKbyS3y+Pb0x+8vn1AzO3bE
+AgFdjkxul4bNV5cA7B4YJItfgo0hwJBEceXyhpzWJc5tJ4S5lExvk6qNbStWLRyXWUwPDb2c
+20juheh3/2R/fn55vYtfq7dXSfj++vYv+ePbv19++/PtCbZSq4QfyqByHN6evj7f/frnv//9
+/NbJeS3ZwMGZOd0X0Gwq3/7pfym7tubGcR39V1z9sLUPM2cSJ06c3eoHWZJttnWLKPnSLypP
+4u52TRKnnHSdzf76BUhJJilAzj4lBj5SvBMgQeDhn6f9z1/vg/8YRH7QdSB9Uq18GLyRJ2W9
+JpDNhwNMvbjtgdZlOvNl/enDy9vhCTac/dvr0/aj3ni67x6xw/2OR7CZB//pU2/p52kUqeF/
+hg9D/nv49ebaGk0ULsN4E7LQgY/Vhdhk01xQESM4KON40y2kRYa/URkn8uv4gubn6Up+HY5O
+jXiugRpcZ8YZx0JpaT9K0/78RNBt5rkwHaOI4PTsBFa/ZGaHqgE+t5CXmHu3iTDH+k1j68Xr
+dfeALncwQeeYCfHetetMVlF9v+SdvmpETvqsUDw09u5kiURmNVT8MneCqZrt1IRuspJMwiLN
+qinlDwfZuHrlG7vB/bmAXxs3Jz8tZ8xLUWTHnu9FEe1dWSVXyzXPhpoVYhlWcnIxIoMvK5Tr
+oxiJMARmaZI7N6onqlN767NhLHvZUeg41XHY1JGR4nxfhJ0WnIUx7Jz0Zqb4U2bDQOY8jTjB
+Atnwuc5gNNmbzmArfRXSm81x5UUwdFj2UoQrycQNV5XZ5Or62f0sBtmk13XFZaQ95H3zHFe0
+Bq8A0WfuJfbAWISJFLBkdAsR+byFhOKHSbqkN3U91qHhOk6kHUhU5Iykp/mbKexe/OKhZMEZ
+GdVapVcRJmG7sKsMoi0slt2hh55BRf9qlZBRjjUnFzP7OyBxmcHPkZR5Cd6uR6ntwdIg9820
+LEygQRNqV9PswsM35G69MliqcGNns0Xv4zkOU/qcRGFygaE6+I6ADHqGbJ76vsfc/wn0TS9o
+d4ya2Ymersj4gIf1xqkQBWgCfdwwQqGb9AyqEGWCwQndD+cxNwZm6H7bk8Jy4dYS+Q1GuRr9
+lm7cr5n0vnEBewK3xsLqJMPQkRaKOXq1ij1oAsOZnUmFr3WWQpQiqkwylwlqMezbB9YCBi9T
+yu+gHriVb2h9FceoPH7fCqItuao5441FyQuRGwO7cTJIiDztW21SLMPgOR3RLDMJNaIJUmI8
+7zYzPDnisr5y0gfRn5focVDTyUtZ7QhYSbkc1dUJAPh86Sxa/8XmJ43KpnNfVJEoChCawwSE
+Gydu5smawCDqqG/mYFBhXaNMsK4bdbIk4a6odIxOH+rnyWru211if117drVy9pIE1l0/xHgc
+zUlMR1KP928Pu6en7cvu8PtN9Wkd8sgeII3pXK22uJ8KNomHt2KxSNKcr2ta0NfZNa9azQWG
+ipD0mtugJpFSE2XhzhCz7iDAyxJW2yTQNopfhyZbd9RpXqBXOP/kFS7o2qyprrq5XV9cYEew
+5VvjyHEABjus2XbfKWqOZmJQoaooCG6BsWhXEoR6Ki3R+Yo+lfTRjFmUfv8vqs3X5fDyYp71
+VlzI7PLyZt2LmULvQU497ZOS7ZO2Re3WM+2rhjkPTzlb6WWEcdn7Sp2PvZub0d1tLwhLoDw+
+xI5A0Y6x2qzOf9q+kT681Kjtia2sXLwygm2pTKX4tEXcPY9K0iL8r4FqgiLN8cnk4+4V1sW3
+weFlIH0pBn//fh9MooVyPiuDwfP2o/EhtX16Owz+3g1edrvH3eN/D9Dpk5nTfPf0OvhxOA6e
+D8fdYP/y42CvJjWu0xea3BOi1kTVUReZ/m7z8gpv6jmLZcOcgpSjQ68STCGD4cUFzYP/vYJm
+ySDIL+543mhE876VcSbnKZOrF3ll4HENliY9QWpM4MLLYz7QcoOqdfEKms6nRRATHSbQHpOb
+IWMQoiaf1914cE6I5+1PjLJHeK5Vq3Tgc/YKio2KEqc541F2xl/OqeU8SBi5UOWupnXA+I5W
+m96KsVGpmXwkePSNgfE6elfTW/vJXttoyvc3s4B0j+PbZPZGz6QPY8FYBdVcxn2FWryCsihp
+ZUsXbSlDflZH4SwtWM1dIXqW32bE+ptbn7Fb0jBlJc43e8Cr/moDKwKhgjXxjYDnfAF0X8SE
+I9MByEE0mSxnfP8zVjxqLc89kOl6YxKpqqQrL88FeaWqsgm7Ulw4xxj0ahubinVR9swdIfGY
+fsoc0AJgA6n5wRB+V8255scaSkLwdzi6XPNL0FyCzAn/XI2Yt18m6PqGeSSqGhydZEOfgRKJ
+9e+ZuV4qF+GGnGLZr4+3/QMoX9H2g/Y+mqSZFhP9UNAGhMjVPvH6lAZcH65cExpDL2NK4nzG
+C2ZMeK5ikzGOWJVEpIKqqBsyEhNz9k9hzIcMQyUFpg5dZ88H3UWKiQCljJ5XGPc6ERMvoUTL
+EBRu2M1SVFGkn5eGOKBYHX0OqQ6mjvWiXmOYE0cxOQdiijmbh9LJLLwdDdedXMR4eHfLWPZo
+ABsDqmZz0dM1O7xy4xbbgPUVbbCkU4+uyZjHmnlb22i4afrLO+Ic3tSZXvFflJNcwPA9mYFo
+6mLdLcTlRUIv+YqdJQEV1Ckv/MpyE4oEfBN9M74cdznqvtImzX1QQTc0sVbHv345vj9cfDEB
+wCxAp7FT1UQnVVsPhHAjEHnJ0ohsAwQyZi4CQcOYtiPcpWd56hNkJ3StSa9KEarXamTrq1Ln
+y856254jYUmJNbRJ500mo+8hI8GdQGH6nX7ofIKsx4xRawMJJKy2tNWnCWFeOhuQm1t6x2sg
++D7pjpkTDSaXI//qTD5CRjDV6dlsYxh3Mg1oDRDaBK1BKLcJw/5eUBjOoNwCXX0G9BkMY8La
+NvT1ZcE4Gmkgk/urIb1VNQh5Nbq6Yxw5NZhpfMW5aWo7FMYfY+9oQEaMe0czF8bwuYGE8dUF
+4/KgzWUJkP5xky/HY0bcahsmgOky7kxqdMltT2pz0cC4BgnekIj2+h7w6G/6E4tBIK+GV/1D
+GYbF8PIz1b+zNTf9bOdp+/7jcHzmy4/J/TiV7mJYz/whY+dpQEbM4xYTMupveFxixiN0TCeY
+C3sDecu4ODpBhteMyNx2dLG4vC28/gETX4+LM7VHCOP20oQw0atbiIxvhmcqNbm/5hzKtIMg
+G/mMeXoDwWHS1c4PL39iYJYzQ3VawH/OhG+NZuTu5e1w5LII8N0QfY4PrEk57R7eYwQg0Oas
+gHArRbW0vzo5VWfNAv09muJWTV87OZ83JPdy3asOk/ceIr+vJpsMTcBiL/FmoRWbDkMm1cF/
+qEtQN6JSHe4qDpOyQ7Ti4Z1otbDvfhSZdFiomjvxoii174BqTieirFO42A77ZZBhUcEL47Dn
+BufheHg7/HgfzD9ed8c/l4Ofv3dv79SF2RzUunxJduC5XE6ZzPLQDWDUDKzCmwn7zjvLhYyH
+bChpP0XbIWaqRePLuyET56iIMBgBycJXvUwqEN3HIZejHHES07K4uWEM8RXrptMn8nW3/ef3
+K0YaUgZ2b6+73cMvy6lHFnqLMiP7gkltJNYNXXUMr7QF6cvj8bB/tMxi5TxmPEHCnpunaPUj
+U8rgx478hIaMoIuEcTUPPct1N7LwLSjSyUo1pToliYqwmgXxLRc/bCaraTbz0H8CvXYkAgoj
+M8Z0DfZiwnZ4+/bP7p0MlVa36cyTi7CoprkXhxjlgqyMk80pl6kIowBD93DxrtRVjTpJmnj0
+eluu6IEdrqcelIs+ILmPZpR3kgRqUr+An1vdNc8uSd1aOQKpb9Io633Px0f7ZFg3AzEPKKOR
+wA8mnpVb7Ud2IlI6r5qfjsdkYRU7n5RmltPymyhk2Rd7fpYFVaai74KgxFhhZOrIiVZc8e1/
+Xwu0LloDzzXSaCaLMlyAHSlK6RNUT8IQOtPMmahWTCgbtJ8pvLyKvIwz9CtSORcTr5oUVT5d
+iIiuaoOaczVRxfDjjImkpA00kuLi4mJYLfkAUgqnrCvdeJEOZjkpmDcW+lO9DZ7FPW8XxSTG
+bYXuUW3MVd0zaprOPmfOjeuXw2gWBZQk9PtgWEbBNKcsVZhMPIm5qiZlwb430TnB+liwecXR
++kxALpVJUeYTFbej4oPZKQtEwGOU60J4Rff+W5vhwLa2ewQJ92n38D4oYEd7OTwdfn6cTqN4
+Gx9lNociqArk28QLJZfm/++3jOZVO9vtTee9diPLxPoQ2fVLgOaaFXNc7s9zEHHalqZHZwzr
+mJekdIc0GUULPFED8VLHzGjWIvSbAzz07gMboSHla3Mk5DXqtH94fj68DHwVMkm96fj34fiP
+2dinNNjld9eMI1UDJsXoigsfYKO4CAoW6ppWNw2QH/jh7QWtTZowObzAl8C0LMK0hLHEr2Qm
+Ejeqp24qlUgefh8p3xXw7XBZ4En+6MqQm/BnVQfVOiEnUdAiT2Wj8m9dY3gimqTrUy6Zb+lx
+dUTkGDCkLBfHpXHZoSUijBS2fxgo5iDb/ty9q3hf0piLjdRzBmpKg/gldSbNCCwYs0nn07Oa
+83xQEPPQieiqj7d3z4f33evx8EDq4OrVIZ5kk+OCSKwzfX1++0nml8UStgUYeNVMXSHmTJBY
+DdRqHf1p6xPGooTva1AS6OoYUIn/lDrWZAqDGaNIoqrwsP8BfXQyYdM6wTMsf0CWB/tgoRHO
+CbZO96YXUiZZl6ufhR0P28eHwzOXjuRrq6R19tf0uNu9PWxhYN0fjuKey+QcVGH3/4rXXAYd
+nmLe/94+QdHYspN8s79cryAq8Xr/tH/5n06ejdStnaQt/ZIcG1TiVlf81CgwFHIl1k/z8J5R
+MlBGYXapOM2Zy1dGrksKWpVZwpbIXW9nq26oa5juA4ySagkIzX7v8oxiZfjSjvuQihiF5rcF
+PsojgiRn8w0sbX/rQK1WaK8mct6cbo6JH1cLfJqPBgwsCqMnZmuvGo6TWBkpnEdhfuQIsYtq
+pFa+HplnxbHfDTiagXR0OD5vX2DzgS1y/344Uo3eB2sPxW1dD36672JPasYcFjl0ixJ1NfbT
+aYZ9YGFte/UZxkRgNl2Z1z2CaA4gxCRZBkLFMWm6rrZ3xHO+EzUJkGH99iNPGIaDiCgKIx/T
+iheY2TQxkquPKtqHQws8Y3OHH/U5p0UzfkBJkfDsEJziN9QFSUVsE7jbKKK+MjZ/tjfD+rR6
+NXg/bh/QfI8Q22XRq1XQsRqJLA3FPuPspdQxEOytoHSzXtpFyriyjgTr2l3pGX0am4/PmlyL
+teZA3PaiqZ9f7/EwT81RQ2QMfM+fh9UKn1FpOxfrJNiLRAA6VTWVGJRYkp4WgAeykmfoBbCO
+DyvzGr8mVGuvKPIuOUulWMPnoy5Lhn6Zi2Jjca7czK/4XK7YXK7dXK75XK6dXMwt65o1f/g2
+CYYmGH+zYPhAPFG9Ydg5hALafCor2+qnJQPYp2yQWwAKm2idlJJ5uv1hsoh2MNlUW3xTLOpc
+T9fg2fx9X6aFd8p7TX8SyaZpFP5OE3Uj4ZhSGRxURkVus1Sr2yRPQm3wFK6wvVKD0jCk65H6
+mnWqSUOp0qE/Icjo2doYZJquQ9TFnlxEti9bk00WYFLkTlM2FKvxTrJAw1UDRa0ps5wzYmvB
+eZmg/xfAVcSdm4XmjeU1X7fxmc+F0wp2GTGli5WIiO2Q6dBpDkXARrfmdg1zh3tDJpuuYTYD
+nSybAum2ZTRNhcDIsDnn7Ft/SL1vEsk3WO0F+TgXG9vcffVv2D8Di0YuX6hxO3aDNQ0kCwxz
+nWZk64ooVOcG+lqtPQVIAjT+3TB8yDRM/HyTua+0gYHdbDdly0vSAkaAIV24BKEJyj25la2n
+GUSuzRpzuqhAAt5LKHWZOcprpFd88lKnWHl5IhgP/RrBreqaW+Sh9d7kfhoX1ZIKcqc5w1O1
+VQZ+EXUpjdjUMvDZ2VTa25qm2bOhRN8F1nDwObvz+iqYXg2hN9H/vpp/pzWspeJTc5HjmWlA
++vWhkF608kCcmoJOlK6spfEERjGblqcM0BqGi6r8OWAcQmOmWdem2t8+/HIc1Ei1PdOHehqt
+4cGfeRr/hf6FUOjqyFwgK97d3FxYnfItjURo9OV3AJn8Mpg2fdZ8kf6KtsdI5V+wr/2VFHQJ
+ps4CGUtIYVGWLgR/N+8w0edWhk+orq9uKb5IMXorKLhfv2zfHvb7L+ZsPcHKYkpfeSdFR5I4
+ibZ01bT++Lb7/XgY/KCqrCQhs0KKsKhd/Zq0Zez6/zXI9bUk+rahfD0pJDp5NCesImJ74ctP
+AUunw/LnIgryMHFT4EtrfH+L+1lplHwR5olZE8dmtoizzk9qX9AMZ0+clzNYHSdmBjVJ1cAY
+MqG+fQhBPTCWm+a98EzM8D7Gd1LpP86CFE7F0subdaRR8rt92X5aSG1VpO9MrJUszb1kFhLD
+pylg0MOb8rxQ7Wgcd84nBJZ+ks+IUT1lnfQUh2f5uRczLHlfenLOMJdrTnyPRQJjx1nm454q
+ZzzvPllf93JvuFLk9ScNfURR0KFVGKADq4l9x6HZaeLSM3w7GLq/cVWKUNXFXTV39OAaEn1P
+WzYtMzS468/i5v6nkOPr4adw32URkEAbZtSxvxGatboD7AC+PO5+PG3fd186QMdrWE3HKwmi
+iacdQdnmw+C24v5u5JIbTGXP9MlTbpiBcIiGN8760jCdEYi/TWFN/b5yf9vLrqJdm1VHilx5
+1H6iwdWlm7wyPpqpUilZXEWFcTju6FfoKFybKZ7d71UizqIwDpNCOVuq0B1WGnsi+frln93x
+Zff0r8Px5xe7CipdLGZ5JzxQOyHTokpsyRMTojxaP3AKErJPahBufGGEIKs9AvsX9EinxQO3
+WwKqX4JuxwS6/aJOvB0bhE/Wz2GaRu/iatQsV/YVoCOlRpXw8+5PXU6jdaAm3XdkyGj9gjQT
+pkzyzHd/VzNzLahpuLCCHJdAkxuLauajE27AV4t8MjJbq04WCKk8CopEqc74RNvHF33MllQn
+Ys8R/DCb0zPVF44SI5oDF+pJleKihezqVLLW0NbErEJvUWUrlGLmnezLDL3Rcdk7spSiKcHL
+oTWHUXbeikobh5/4SvBEr2zM5q+AZEFtTM7ZNYJs7/ECErNo3mXWsqh+0scqmkUdqjSDNjIn
+d2RsML/ff4y/mJxGDalADbGmrcnjQo3aICYSrAUaMz4GHBDdgw7oU5/7RMHHTGRdB0Rbvzig
+zxScefzkgGg7Ggf0mSa4oU1tHBD9LsMC3TGBVG3QZzr4jnnoY4OuP1GmMfNiD0Gg/Y/Ho7uK
+0Y/NbC453xcuijpuQownfSHsOdd8/tKdVg2Db4MGwQ+UBnG+9vwQaRB8rzYIfhI1CL6r2mY4
+X5nL87VhIjQjZJGKcUUbkrds2hYJ2bHno7LDWBM3CD+MQB8/A0kKjLnWD8pTEPDOfWyTiyg6
+87mZF56F5CHjYqVBCB9dYtAeK1pMUgpGMDOb71ylijJfCEm5QkUEnmaZ0yWIGFcfifAdN001
+R6TV6t484rOubLXZ1e7h93H//tF9aoUigfl5/F3l4X2JDjWIc8tGHTh5goYUuUhmzFlEnSWt
+Tunz/jDgIcCogjnGm9TqAWe8ruUCDBIulZFMkQvm/rv3YqZhktKKWhB1HFiYm1HjTrbmKqPW
+uZcHYQIVwtsGPB5WoqPv6cO700mHC6NveEAqx5sLmZY5c9mgIuD6Khv04TUPo4y8a2+OTk8N
+ZbqKiGT89QtacD4e/v3yx8f2efvH02H7+Lp/+eNt+2MH+ewf/0Aj5J84hr7oIbVQ+tzg1/b4
+uHtB64fT0NIvvHbPhyPaLu/f99un/f82LuCbQYt23lB8f1ElaWIdm858v8KYACJBJ9ulX0Qo
+WpeScbNDwyebPKSfqvTgK072tdKgIz9IQgJVtUDxVd3eNjtr8q7B6NGLxTZP3ejmbNh8b7Q2
+d+4S0N5pp7lWVs3rH/UC0z7k1rQ4jP1s41LX5uG0JmX3LiX3RHADk9NPl4ZigysAmhnoK5Dj
+x+v7YfCAHtgOx8Gv3dPr7mgYKiswNO7My4SbR00edumhF5DELlQufJHNTdMlh9FNUut7XWIX
+mpv3nScaCeyeoDUFZ0vicYVfZBmBxqO4Lvn0dJWkW3YpNcudmWTCVr9XpgGd7GfTy+E4LqMO
+Iykjmtgteqb+dsjqDzEAymIeJn6HrnxMPbvdL+JuDrOohBVfLbn4BK3DDxNYL9DZi75k+v33
+0/7hz392H4MHNcp/YnyCj87gzqVHtHFAOy1qvuSf4+eBpA3RmkYq82U4HI0uaam2g6qcEFDa
+6vH3+6/dy/v+Yfu+exyEL6qeGEPp3/v3XwPv7e3wsFesYPu+7VTc9+NuE/sx0Rj+HOQSb3iR
+pdHm8opx9dHO85lARwafwcA/MhGVlCF5ElQPhfBedNYvaOG5B8v5suntiXoQ8Xx4NL3VNMWf
++FSlppRb2IZZdGekT0yj0J90aFG+Ij6X9n0u00W0ietCEvmAgLbKGVvdZrbOm47qNG0P1Fsy
+jtaaTkMPx0VJPjuqG0P+X2VHthw5bnvPV7jylFQlUz5nPKmaB+rq1rYuU5K77ReVd6bjde3a
+M2W3tyb5+gAgJfEAZedhp9YAmgcEgiAIAi19KRX5effyW+h7lMKf7ZoD7ji+XCtKdYH+cL9/
+Ofg9yPjs1P+lAqvwUh7JQ+H7FJyu3O1oM3KVV1SITXoamfcfFiZ0H2iSuOvdG1V3cpzkGSfX
+I06POtzKynOdaml8xzKfxAbfAtuOJGc7Ss49vpXJhQ/LYUXje9fc/26yTEBbsOCPxxz49MLf
+HQB8dupTt2txwgJh7bTpGcMeQEL7Cr3EIqC7ODn16bjWuBHAj/nel3stl9EY4hSxNZ3H/Xgl
+Tz77C2HbqPEwIjSQnA1VPq0sZVs+/PjNfvY2an9OrwF0YCtQGHijBwdZ9VHua2chY1/4wPTe
+ZjljQ44I7y7GxSuR91WFwCeauQgi3vqh3g5BEc+U3ur2aE/fXIKxQNcCPynE+YuRoPZAfAJf
+aAm69LOE/fQAPRvSJH1zIhlvcG7W4pY5cbSiaAWt+JA9s2h6aZo3B2XXoJiAskkrf6gaTvty
+iEkjzaIcGEScAPhaYWEGXerLbLet2UWi4SFxGtGBqdno4WwrboI01vTHp8k/nvcvL5ZfY5Ih
+CojwjbHbmuHeZSD/0/SjRWZSOMgSAUZ3eMa6vHv69v3xqHp9/HX/rF7JOi6aSZm1+RA33OE1
+kdHKyVFkYrQN5a0vwoWKDZlEYPaGxQQpvH5/ybE6W4rP4xr/W+JJdeBcByOCP81PWMM9wB2C
+iUYG4n1dOnRAhCdH+5h+gGF6Rv54+PX57vk/R8/fXw8PT4wxW+SR3tEYuNp/PPkB1DssQSRT
+WuhNKvYw6dMlgXFOxpykwoTnbCfvsQrnIfOHRZ86YP6suSMUPbkTifvgniMTHWyTcDpbXKYz
+IY7i+HyRz0gcu5kCfJIrjJtdX36++Pl230gbn+12fJC0S/jx9F10Y+fXvDOW6/6dpDCAtymr
+HDTBboir6uJix6UXMGh1Djb/mES1JESW7kLJdcwPWFIZu2G14046or0pyxQvJ+hmA+NbLC/p
+iGz6qNA0bR/ZZLuL489DnOLdQB5j0J16YWcKaLOJ20t8iXCNeGwl+AoPST+BDm9bvN3gm/qk
+0qs7GcTnS4h8hXcZTaqiyehNDo7MieZSamz/fMBH3neH/QsV23h5uH+6O7w+74++/rb/+vvD
+072ZBpCydnVYLEtdEknryYiPb7/81Ygu0/h010lhcix09VNXiZA3bn88tWp6rurDEo8h9++Y
+9DinKK9wDPSKJBuVfxHU+sqnbvraR8gQpVUMO7DcWJ9T0LMbRhAiWCkpZic0RG18Mw6ntCpu
+boZM1uX4kIYhKdIqgMWUXn2XmzE6IyrLqwT+kcBDGIKlZmuZ5Fx6N3UVKAq/MUyD6DwqHVEO
+mCLOMTgwLptdvFYBcjLNHAqMSc/wvEL5gpoit13jMejgvLPs6vjko00xeUYMWN71g/2rM+dw
+jW6eMXslq7aIAJREGt1cMj9VmJDdSCRCbkOLQVFEeaBr9wgQB/v5xDQA++zkEDNpLxla7dKy
+nuRXSV0uc+cWt3KwnmwT/FbZHA7UDM62oVgk3oefs3ArgHr2wBHYoJ+fst4i2FDq9Ld9jaBh
+lA6h8WlzYZ5oNFDIkoN1676MPARmIfTbjeJfTH5raIDT89yG1W1urC8DEQHilMUUt6VgEbvb
+AH0dgJ/7C968eR9lhxJy1UWNZ8VHDooxCZf8D7BDAxXpx3n6T3oUeC2KwQbvhJTiRmkPc6dv
+6zhXBYaJYEahwgFVZeYxUCCM0R0sFYbwxGRgRaOl5LdYMlYVpzZxiIAmKGzAfX2DOJEkcujg
+iKs08bjXbfO6KwzxQdKYOlZO7/2/717/OGDmz8PD/StW6nlUt9V3z/s72Oz+u/+XcU6BH6NZ
+P5TRDQjVl9PjYw/VouNVoU0VYaKbVGLYkVgFFJjVVM7fv9tEgjUPkSsFGDgY0/7l0gjTQQQc
+40IPONtVoSTQEBHKL6UuDA3d3/SDtL5rcmXubEUdmUzAv5dUX1U4wcTFLcasGKOQV3h2Mroo
+m9wqDVFTldkVWDVmKe4+bk9xl7csMAp6GRfcddLW/jJcpV2Xl2mdJaaYZzV6ndzIc4Je/jR3
+UAJRYUTKo2dIJSaKqQtHinFNUG4Q65QPAJyQ6SCaqHuVvmLIir5dO3kUPKIyxnOAQ0ARIVtR
+GK8lWlhApZ1rVrGO/XSToejZeXakzWgeE/TH88PT4XdKNf/tcf9y74d2kQ25GZD7lgmowBjn
+zd/bq5c3YBCtCjAIiykS4VOQ4qrHR6jnM7vVacJrwTjJY4LccShU65LbXHSBTicJAxyTohqP
+R6mUQGB8DhXqDv9dY14eXYBd8zbIr8mX9/DH/p+Hh0dtlL8Q6VcFf/a5q/qyc2TMMHya3Mep
+lfDHwLZgSfLhaQZRshUy4y0rgyrqAmFOSYS5LvKm42LZ0oqCMcoeXfGYiMBYcZhEmJ6ug24+
+v7QluIG9C3PqBJJCylQk1DBQsQRrIIAzhkq8yb6IqBsQWFTKOWblcDJzq3m3KtsBPugsRccW
+mXdJaD6Y6MPQQSr6TOeqcZIO6GQaNWwy+mVHKlFV8+e79wqPlbtQL+tk/+vrPRUUzJ9eDs+v
+j/ungyFmVNsdj5vSOOMZwCluTH3RL8c/TzgqVWPPlVTrua4gYwRYtQHRMXmBf3O+jEk5Rq3Q
+mT/wu4nCerlBWObn6lfz3mos1XdxyJ6JeuLlzg9f/I5Wig6gmxozX+hTZGe669KqzQOxeqpB
+JKRdnQ+KpbKW2yoQqEjops7bOpgUYu5lcMIXLQJZY4VQrxyeQtYRZgMJBMoWfTSS8fMkCnoN
+xfROMqIZDnsqRkH6/Y+YhQmqlde3IeuNSgZrKiyG7OUrctq75qJAJvnUNLnsejtjj4UIMlul
+EKRgTcuiQCClEMlBNcBWVEudiMX0IOoPqpQH2t5BtqqlJ1rhxhTPCAw1sU3KOKYZKqy2uKyl
+K/jFp35ADP5y8hc3yHReI96HW2PmQtepR/RH9fcfL/84Kr5//f31h9J/67un+xd7nVWgkUAt
+13zmGAuPmrkHhWYjyZbsOwDP0lJnHXpv+gZG2cEHYOtHYsy1plKZd7Al4EBpp5ifqbi2DHYg
+clhjgu1OtLxwbq9g24HNJ6l5v+Ay31TgPmwn316pvLehuKxl4lpHBLTtEoKNOaXmiGCmbfeD
+I5M2ado4Ckt5JTHEbVbOf3v58fCEYW8wm8fXw/7nHv5nf/j64cOHv89jprxB1DYVLpiPAIZ9
+Wl9P+YFYvlIbOJ0FlYCH5b5Ld4H3o1qcmXzJDsnbjWy3ighUZ71thJsm0B7Vtk0DppMioKl5
+O4xFMpaELOCz+NpM801dV3LVb0wegnRjwVQn5nWekP69mV/j//noY4P0Nh8PnlkhVq1jgBHS
+nAdZasCCoa8wlgGEWbn8Fri2UXteQDGpl+dH3+4Od0doP3xFz7tdokixLg/kwtdK/A18y7kB
+FGrcJix3htqEqdY3urpl37g3Jo6iCMzDHUcMR48Uc9oXftkdGfecIuHlAIhx58oYcPgHuM2R
+aT9p6o+GqqbfBlOaITa9YrPDjQmnrfF7K/FKW+ySsdXtIyKJP1h8eGcXeNAME1nXHb76UP6y
+Mesut5gAXcU3XW14ceiif5Zw5pl93SheSGfDz/pKHV6WsSspmjVPMx6cs3FxhZHDNu/W6O5x
+jwIcmc62ha4Dl1yTlZRelB55yMQhwfxGJBhICXZw1XmNYODGjQOMdWuq6RmpZk5lHpxpqqHE
+TloX1IpRn2Umt6hyB9Fbbi380igcqlywx2OjKZ0aANNwzPhGpmkJqxnOXexcvf5GX5nbkSZk
+HGXOjIMiE5IWY7edxkrM4PYKQIKNlXmNK1PDb3O9hQWh4UxzWlS0OLTeF20rMJNh6QURkz1t
+sz3CIuNrtB/oHtp9VjbCRQXqWOAFr/pBYHOfyEFiFwnVMSU42zE585jMcR7vBrqIUs12y2o3
+EbhHwIAD6W16p42x0ybzYOOCduF8CyEV8rb2eL/imIRT89oSIpyCZgSm3ZM5+/Y1oHamVkZZ
+6wRsWE3oFgtL1jE6hKqVWTcueNPfyXy1cvZy1YvSJuoQyIrK1E+4XvusMOYLfH6zNJTQ+ylD
+jOD0Abll3xgpzFkUdKeEHzC0kK7h4w31Os5Pzj6f09UJnqb51SQwgxCnhYzzPCX2znVeFtvJ
+ql7+ahrP/vl5+ZG1fywD1Ve3GPepXcrkuDaL2aRCFjpew3KGmPAhiVZ8qJZFhRXWdknEO5eo
+yFnn5g+cG8ryoVl1XoJB10TiLrmSuo+K6bmhewIsIroaYRs1SqaE/BqzzDNnPZwU3uNiAvyF
+S6281sJ4vLu0AqgNRMq/5Z8oeu+WwafBLWPJaqQ7CyFF4AgXN0xCV6cNsnAW8FWZL3FCMYx8
+t41VQk4VzsKzYfBz9NVWlRqopV1HdYQrzz8pn4ALcyJd9V5GOW2i20vMvMDq9i8HPDOiiyP+
+/uf++e5+b57CNn3FBpywTrbcvMFvyrc9cVXaUUAgR8dtLOPe5HY671527mVr1xF50RaCryOC
+SOXiDZ3ziaIUm3RMxOC2TcaEOl6Fu8jwDM+2bo3bvApwG6hCWaUnXbyxH3Mrd2QL1lJ9rbVq
+YzskAcFFdMHuDfOhzUbVCK0s6S42SaA2A0UmUgReWwcyhhNJEKtsjNbMXM7SRfNJDpZnmE5S
+YMgC3gwpCVJZ4SQLu3Uq0Q4OKAvlKfp4PjtyzPIjxpv88B6PrFunu+CuonirrrZVZAO3dY9U
+LaYOeHR+vQFEx5b+IrSOhHy0gPp63W0KwFTLNDzUvs8XsCpaJ4xHQzQLlb8kConhapQjZIGf
+oacPhM0TEWJFsSkdPowXAjaUXA+YVsTlWuPxEeNX13iXD7rRZCdFZQI7edPSbCLLZbkVMnVa
+1smM3S/k78K2iFA6EwrktZvblHXiNYa5KOCguSiZFO8asDXHRoIEgAvGaixual5aDhW68T8L
+Z0Cys9QBAA==
+
+--6cwccv77cih4dpjg--
