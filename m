@@ -2,147 +2,107 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0073CC33CA7
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5475C33CA2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:12:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2421214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE0D2214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:12:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ivY56i+g"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="WFSsG2/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733227AbgALSMB (ORCPT
+        id S1733259AbgALSM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 13:12:01 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40882 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733163AbgALSMA (ORCPT
+        Sun, 12 Jan 2020 13:12:26 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:45547 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732957AbgALSMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 13:12:00 -0500
-Received: by mail-lj1-f194.google.com with SMTP id u1so7513366ljk.7;
-        Sun, 12 Jan 2020 10:11:59 -0800 (PST)
+        Sun, 12 Jan 2020 13:12:25 -0500
+Received: by mail-il1-f194.google.com with SMTP id p8so5955276iln.12
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 10:12:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YJVXU10oDfgvRexuSvPa3vqWcQwamQAihJMaOV5Iic0=;
-        b=ivY56i+gykXt6XSjr3FikFQwY77Fr9C+OXP1AARna4DuN6bBI+m95XWKyi9oLu7BM6
-         6zFwEHYQDWBHO+WZH8Lv4bUNuObyRWo1XVtzaU9wREABN0QYDm1l4L/hvlXp8GNaqULL
-         8BcVb/3cdcA3k/Rkv5DOnU+RjIw9HBAlab8naD1tlYhDu/SJhcoURMzd9lStruEeuNaQ
-         m+BFYeBH2xj5X/e2DQyQbEOmVd6AeFQZldyg7LSUFNEm3qjv+E6ZgpKwPc8E+n0JDYPl
-         3LTAzMiu5nDZI86qFNF0sEMtoR8w5e8fVirrsg6R2FMhQ6HgODnXuyZ9+1jRNdh9jNMQ
-         E9Sg==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=e3CTVqfwVB8ZiU/Nlsteqsk0IzbNSugwDXW2au/cyRw=;
+        b=WFSsG2/yf3wle5KTOl/qmjFIRIKTF5AF+9fGE9V+3GLXs8NGX7DQK4xKIVd7dLtMFF
+         9HahEOH1PIQ433mvns+NP4lp5Cl05pA55L4575fITfrFfeV+Wm7ATvqdiwXBf8r62MTK
+         wkMDKIgnMd4HpRqGrGJPuHo2oFJJ7ao0M5VN+t7t8pOV8GE4pU7W1JEt55JnXO3uGyrS
+         YnUNzarWKyVsY636bzkmd9/cOKf2HJPhBg7sQbEeQF/OrhReJFVX1wnOcqpXpSsPtgaa
+         bUDDUxxxh/t1/7fQKvstNqtJbTw4P8fLT4RiRlIuv3H+gfCzFl7j4A9Cun/u8DlYYaMw
+         +WMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YJVXU10oDfgvRexuSvPa3vqWcQwamQAihJMaOV5Iic0=;
-        b=QdoPS280pBfhd5PPzIO2VvBonzVmpQOlfLDQrjnDwwqva6YA4bYxw4CItBHuR2xBgY
-         xTpnmeIHvphT+1NTrp9kNzgTGpG9MSK5A26a3YdbHOuifSPMrY1zMwiFZTQWEsjTKGng
-         QuujJh1xa3vvrwL3FGz/K/tci6mql8V61bJuVPiIxAV0vYOZoBzYOC2YkL2JcMREKZ1V
-         8WWJ4by8wJlTHTETX2PA73ejuwR1h1cM8UkFEJoMeW8qv+hzCFEaidDuibLVegKmOyNr
-         i46yKZQw3XrEpVFJWDpkNB3CSd8Jm8QymB8wZ5iQBHiQpP6DS47upthQ8G7GveZifQzw
-         6Ydg==
-X-Gm-Message-State: APjAAAWV/5ffqM4A9Ek8+WBmjlX3AJjGVSNYld4ju+tYWbmB/RxeNLCl
-        o7om439qiOHpiN/1rMtDeAIGJDE+
-X-Google-Smtp-Source: APXvYqzxbmtigao8IDfOesGjBcx8TQpyFsw3ke+jRYHd2RJd/0K0yJjUZzSsz/w18OB7mcByIgak4w==
-X-Received: by 2002:a2e:b4e7:: with SMTP id s7mr8382268ljm.58.1578852718367;
-        Sun, 12 Jan 2020 10:11:58 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id 195sm4542784ljj.55.2020.01.12.10.11.57
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=e3CTVqfwVB8ZiU/Nlsteqsk0IzbNSugwDXW2au/cyRw=;
+        b=RtiwrQXdKs4k8YEKgEgIvZb4d4PpDgBp4awv9piVsPGOurA/YV7bZEFMkrp2lu9y6Z
+         FRUwClviee8MNn7HGGo0UKgxMTYV4D62GndQ61Gx7Gld8wv3rxKDhLTCPUZ1hgjHATXl
+         bjH2xjlwm/INgECHRM3T1of9Sl86xZA2RE4+aQwDqoRfjLrLsTUFlPdEMKVPzd5sLgtd
+         OMwWLLuQl3Cii2lmr1O1fwFCIqDJMBqhRa2TpbsXnvJ6yvzFVT45gDY+dWqvY0xeBlDJ
+         hmDOQD8dOerqz7DlXQXSHuZtiLItCnbIkz8UBXodYJa/tqq8Mz2SOZ/sx7q/8p4z3A66
+         0Ucw==
+X-Gm-Message-State: APjAAAXr222BLgPZlMMcjUuYhuw9PSn0xPuHB5eArZ9euWO/cuosQeQZ
+        2B6EVQ5hMyOLQ3/ixIy/gHsUzQ==
+X-Google-Smtp-Source: APXvYqx9xtCFFybB8/4h3gLqXwDMu4zv4xw5vqc48ZNym/BcQuFJaDGJ7EuiIDNzweQ8PjnWqsJjOQ==
+X-Received: by 2002:a05:6e02:d05:: with SMTP id g5mr11426851ilj.272.1578852744782;
+        Sun, 12 Jan 2020 10:12:24 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id a3sm2146879iot.87.2020.01.12.10.12.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 10:11:57 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v1 2/2] tty: serial: tegra: Optimize DMA buffer synchronization
-Date:   Sun, 12 Jan 2020 21:09:19 +0300
-Message-Id: <20200112180919.5194-3-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200112180919.5194-1-digetx@gmail.com>
-References: <20200112180919.5194-1-digetx@gmail.com>
+        Sun, 12 Jan 2020 10:12:24 -0800 (PST)
+Date:   Sun, 12 Jan 2020 10:12:21 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Greentime Hu <greentime.hu@sifive.com>
+cc:     green.hu@gmail.com, greentime@kernel.org, palmer@dabbelt.com,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        schwab@suse.de, anup@brainfault.org
+Subject: Re: [PATCH v3] riscv: make sure the cores stay looping in
+ .Lsecondary_park
+In-Reply-To: <alpine.DEB.2.21.9999.2001091126480.135239@viisi.sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.2001121011100.160130@viisi.sifive.com>
+References: <20200109031516.29639-1-greentime.hu@sifive.com> <alpine.DEB.2.21.9999.2001091126480.135239@viisi.sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Synchronize only the dirty part of DMA buffer in order to avoid
-unnecessary overhead of syncing of the clean part, which is the case
-of every serial DMA transfer in practice.
+Hi Greentime,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/tty/serial/serial-tegra.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+On Thu, 9 Jan 2020, Paul Walmsley wrote:
 
-diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/serial-tegra.c
-index 3b495e7c9534..33034b852a51 100644
---- a/drivers/tty/serial/serial-tegra.c
-+++ b/drivers/tty/serial/serial-tegra.c
-@@ -534,11 +534,12 @@ static int tegra_uart_start_tx_dma(struct tegra_uart_port *tup,
- 	struct circ_buf *xmit = &tup->uport.state->xmit;
- 	dma_addr_t tx_phys_addr;
- 
--	dma_sync_single_for_device(tup->uport.dev, tup->tx_dma_buf_phys,
--				UART_XMIT_SIZE, DMA_TO_DEVICE);
--
- 	tup->tx_bytes = count & ~(0xF);
- 	tx_phys_addr = tup->tx_dma_buf_phys + xmit->tail;
-+
-+	dma_sync_single_for_device(tup->uport.dev, tx_phys_addr,
-+				   tup->tx_bytes, DMA_TO_DEVICE);
-+
- 	tup->tx_dma_desc = dmaengine_prep_slave_single(tup->tx_dma_chan,
- 				tx_phys_addr, tup->tx_bytes, DMA_MEM_TO_DEV,
- 				DMA_PREP_INTERRUPT);
-@@ -680,7 +681,7 @@ static void tegra_uart_copy_rx_to_tty(struct tegra_uart_port *tup,
- 		return;
- 
- 	dma_sync_single_for_cpu(tup->uport.dev, tup->rx_dma_buf_phys,
--				TEGRA_UART_RX_DMA_BUFFER_SIZE, DMA_FROM_DEVICE);
-+				count, DMA_FROM_DEVICE);
- 	copied = tty_insert_flip_string(tty,
- 			((unsigned char *)(tup->rx_dma_buf_virt)), count);
- 	if (copied != count) {
-@@ -688,7 +689,7 @@ static void tegra_uart_copy_rx_to_tty(struct tegra_uart_port *tup,
- 		dev_err(tup->uport.dev, "RxData copy to tty layer failed\n");
- 	}
- 	dma_sync_single_for_device(tup->uport.dev, tup->rx_dma_buf_phys,
--				TEGRA_UART_RX_DMA_BUFFER_SIZE, DMA_TO_DEVICE);
-+				   count, DMA_TO_DEVICE);
- }
- 
- static void tegra_uart_rx_buffer_push(struct tegra_uart_port *tup,
-@@ -788,8 +789,6 @@ static int tegra_uart_start_rx_dma(struct tegra_uart_port *tup)
- 	tup->rx_dma_active = true;
- 	tup->rx_dma_desc->callback = tegra_uart_rx_dma_complete;
- 	tup->rx_dma_desc->callback_param = tup;
--	dma_sync_single_for_device(tup->uport.dev, tup->rx_dma_buf_phys,
--				count, DMA_TO_DEVICE);
- 	tup->rx_bytes_requested = count;
- 	tup->rx_cookie = dmaengine_submit(tup->rx_dma_desc);
- 	dma_async_issue_pending(tup->rx_dma_chan);
-@@ -1154,6 +1153,9 @@ static int tegra_uart_dma_channel_allocate(struct tegra_uart_port *tup,
- 			dma_release_channel(dma_chan);
- 			return -ENOMEM;
- 		}
-+		dma_sync_single_for_device(tup->uport.dev, dma_phys,
-+					   TEGRA_UART_RX_DMA_BUFFER_SIZE,
-+					   DMA_TO_DEVICE);
- 		dma_sconfig.src_addr = tup->uport.mapbase;
- 		dma_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
- 		dma_sconfig.src_maxburst = tup->cdata->max_dma_burst_bytes;
--- 
-2.24.0
+> On Thu, 9 Jan 2020, Greentime Hu wrote:
+> 
+> > The code in secondary_park is currently placed in the .init section.  The
+> > kernel reclaims and clears this code when it finishes booting.  That
+> > causes the cores parked in it to go to somewhere unpredictable, so we
+> > move this function out of init to make sure the cores stay looping there.
+> > 
+> > Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
+> > Reviewed-by: Anup Patel <anup@brainfault.org>
+> 
+> Thanks, the following is what's been queued for v5.5-rc.
 
+During final testing, when building the kernel with an initramfs, I hit 
+the following linker error:
+
+  LD      .tmp_vmlinux1
+arch/riscv/kernel/head.o: in function `.L0 ':(.init.text+0x5c): relocation truncated to fit: R_RISCV_JAL against `.Lsecondary_park'
+make[1]: *** [Makefile:1079: vmlinux] Error 1
+make: *** [Makefile:326: __build_one_by_one] Error 2
+
+Could you take a look at this?
+
+
+thanks,
+
+- Paul
