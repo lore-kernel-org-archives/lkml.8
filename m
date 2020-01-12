@@ -2,147 +2,222 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF07C33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425BFC33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 21:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FFFE20842
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 200C82187F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 21:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387446AbgALUyd (ORCPT
+        id S2387455AbgALVeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 15:54:33 -0500
-Received: from orion.archlinux.org ([88.198.91.70]:34282 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732825AbgALUyc (ORCPT
+        Sun, 12 Jan 2020 16:34:06 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:40248 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727128AbgALVeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 15:54:32 -0500
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id 5063E1813D7AE2;
-        Sun, 12 Jan 2020 20:54:30 +0000 (UTC)
-Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Sun, 12 Jan 2020 20:54:29 +0000 (UTC)
-Message-ID: <a69fce19ca3fe0c1f27c66b2444dc82891e8cf41.camel@archlinux.org>
-Subject: Re: [PATCH] HID: logitech-hidpp: add support for the Powerplay
- mat/receiver
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200112205021.3004703-1-lains@archlinux.org>
-References: <20200112205021.3004703-1-lains@archlinux.org>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-lEnwmwvdKE79Ibcub5po"
-Date:   Sun, 12 Jan 2020 20:54:22 +0000
+        Sun, 12 Jan 2020 16:34:06 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iqkro-006qzE-Fy; Sun, 12 Jan 2020 21:33:52 +0000
+Date:   Sun, 12 Jan 2020 21:33:52 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Ian Kent <raven@themaw.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        stable <stable@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
+ symlinks
+Message-ID: <20200112213352.GP8904@ZenIV.linux.org.uk>
+References: <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
+ <20200101234009.GB8904@ZenIV.linux.org.uk>
+ <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
+ <20200103014901.GC8904@ZenIV.linux.org.uk>
+ <20200108031314.GE8904@ZenIV.linux.org.uk>
+ <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
+ <20200108213444.GF8904@ZenIV.linux.org.uk>
+ <CAHk-=wiq11+thoe60qhsSHk_nbRF2TRL1Wnf6eHcYObjhJmsww@mail.gmail.com>
+ <20200110041523.GK8904@ZenIV.linux.org.uk>
+ <979cf680b0fbdce515293a3449d564690cde6a3f.camel@themaw.net>
 MIME-Version: 1.0
-User-Agent: Evolution 3.34.3 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <979cf680b0fbdce515293a3449d564690cde6a3f.camel@themaw.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 10, 2020 at 02:20:55PM +0800, Ian Kent wrote:
 
---=-lEnwmwvdKE79Ibcub5po
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> Yeah, autofs ->d_automount() doesn't return -EISDIR, by the time
+> we get there it's not relevant any more, so that check looks
+> redundant. I'm not aware of any other fs automount implementation
+> that needs that EISDIR pass-thru function.
+> 
+> I didn't notice it at the time of the merge, sorry about that.
+> 
+> While we're at it that:
+>    if (!path->dentry->d_op || !path->dentry->d_op->d_automount)
+>        return -EREMOTE;
+> 
+> at the top of follow_automount() isn't going to be be relevant
+> for autofs because ->d_automount() really must always be defined
+> for it.
+> 
+> But, at the time of the merge, I didn't object to it because
+> there were (are) other file systems that use the VFS automount
+> function which may accidentally not define the method.
 
-On Sun, 2020-01-12 at 20:50 +0000, Filipe La=C3=ADns wrote:
-> The Logitech G Powerplay has a lightspeed receiver with a static
-> HID++
-> device with ID 7 attached to it to. It is used to configure the led
-> on
-> the mat. For this reason I increased the max number of devices.
->=20
-> I also marked all lightspeed devices as HID++ compatible. As the
-> internal powerplay device does not have REPORT_TYPE_KEYBOARD or
-> REPORT_TYPE_KEYBOARD it was not being marked as HID++ compatible in
-  ^^^^^^^^^^^^^^^^^^^^
-   REPORT_TYPE_MOUSE
+OK...
 
-Err, should I send another patch?
+> > Unfortunately, there are other interesting questions related to
+> > autofs-specific bits (->d_manage()) and the timezone-related fun
+> > is, of course, still there.  I hope to sort that out today or
+> > tomorrow, at least enough to do a reasonable set of backportable
+> > fixes to put in front of follow_managed()/step_into() queue.
+> > Oh, well...
+> 
+> Yeah, I know it slows you down but I kink-off like having a chance
 
-> logi_hidpp_dev_conn_notif_equad.
->=20
-> Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
-> ---
->  drivers/hid/hid-logitech-dj.c | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
-> logitech-dj.c
-> index bb50d6e7745b..732380b55b15 100644
-> --- a/drivers/hid/hid-logitech-dj.c
-> +++ b/drivers/hid/hid-logitech-dj.c
-> @@ -16,11 +16,11 @@
->  #include <asm/unaligned.h>
->  #include "hid-ids.h"
-> =20
-> -#define DJ_MAX_PAIRED_DEVICES			6
-> +#define DJ_MAX_PAIRED_DEVICES			7
->  #define DJ_MAX_NUMBER_NOTIFS			8
->  #define DJ_RECEIVER_INDEX			0
->  #define DJ_DEVICE_INDEX_MIN			1
-> -#define DJ_DEVICE_INDEX_MAX			6
-> +#define DJ_DEVICE_INDEX_MAX			7
-> =20
->  #define DJREPORT_SHORT_LENGTH			15
->  #define DJREPORT_LONG_LENGTH			32
-> @@ -971,7 +971,7 @@ static void logi_hidpp_recv_queue_notif(struct
-> hid_device *hdev,
->  	case 0x0c:
->  		device_type =3D "eQUAD Lightspeed 1";
->  		logi_hidpp_dev_conn_notif_equad(hdev, hidpp_report,
-> &workitem);
-> -		workitem.reports_supported |=3D STD_KEYBOARD;
-> +		workitem.reports_supported |=3D STD_KEYBOARD | HIDPP;
->  		break;
->  	case 0x0d:
->  		device_type =3D "eQUAD Lightspeed 1_1";
-> @@ -1850,6 +1850,10 @@ static const struct hid_device_id
-> logi_dj_receivers[] =3D {
->  	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
->  		USB_DEVICE_ID_LOGITECH_NANO_RECEIVER_LIGHTSPEED_1_1),
->  	 .driver_data =3D recvr_type_gaming_hidpp},
-> +	{ /* Logitech powerplay mat/receiver (0xc539) */
-> +	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
-> +		0xc53a),
-> +	 .driver_data =3D recvr_type_gaming_hidpp},
->  	{ /* Logitech 27 MHz HID++ 1.0 receiver (0xc513) */
->  	  HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH,
-> USB_DEVICE_ID_MX3000_RECEIVER),
->  	 .driver_data =3D recvr_type_27mhz},
+Nice typo, that ;-)
 
---=20
-Filipe La=C3=ADns
+> to look at what's going and think about your questions before trying
+> to answer them, rather than replying prematurely, as I usually do ...
+> 
+> It's been a bit of a busy day so far but I'm getting to look into
+> the questions you've asked.
 
---=-lEnwmwvdKE79Ibcub5po
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+Here's a bit more of those (I might've missed some of your replies on
+IRC; my apologies if that's the case):
 
------BEGIN PGP SIGNATURE-----
+1) AFAICS, -EISDIR from ->d_manage() actually means "don't even try
+->d_automount() here".  If its effect can be delayed until the decision
+to call ->d_automount(), the things seem to get simpler.  Is it ever
+returned in situation when the sucker _is_ overmounted?
 
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl4bh34ACgkQ+JPGdIFq
-qV2a2hAAnJZ+LA8ZpZCF4ghG7ZaqqBWXAegZqy0G1DsIUSM+A+EY2/SC27oxadZC
-S7uxGuvkIChGuVv4rYXnvYEaTwo1pw+nA7+Oe769yC1ggpMvmVHnge5K2zao6rQT
-njnQ2QPvEj1nBTSPwq798r/bH2v0nYjejQ98yJ51wWLFWkZ22B7gwVeCYWzsfyPq
-Wdt/Cf7XllqRrHo7+HqPZaMneCMlJVd//rI2TPjgVDDBKxWxBfgOiKE4VMHel2hj
-PtQ+lFf/y+9y4s1VWVFRDEEx5rHT4Ws4eRkQ5WcC937pzIAa7g+eVUEME/0cFjiM
-r8lj8HGXaINg1okLg0pgo4HG2aGpyMnaxTjQ5FKdkAlTAmyKhcpmbQgpKIr695xt
-tks37HDRO39NAdIjVGwgrplPSvoHQMJ3S92qrfUAmFXDfNMN5099u4cAlT+tl3Wa
-s05hatOsrlpzKxofvPPg1XoqpuITpt3jETmbLY+0xHx5l5PhaYWlVXqlX8d6AD/Q
-h6PYDDWpJ4VyJU8iJxNJOla0mLoxD3/fIw90+9UN8rO8hkX853PqyHOad3Ri+NC0
-yTa1EVV3d9P3xUOGHs1G9O7H5QTwtnnq4SFb3/C2wYePmSB1yTaDRkKeAtp/kchL
-rR8hIzl8hTDLD/X/JjOixFuAL4SXf74YuXx1q0O9ugyNXmIj+gc=
-=sU5W
------END PGP SIGNATURE-----
+2) can autofs_d_automount() ever be called for a daemon?  Looks like it
+shouldn't be...
 
---=-lEnwmwvdKE79Ibcub5po--
+3) is _anything_ besides root directory ever created in direct autofs
+superblocks by anyone?  If not, why does autofs_lookup() even bother to
+do anything there?  IOW, why not have it return ERR_PTR(-ENOENT) immediately
+for direct ones?  Or am I missing something and it is, in fact, possible
+to have the daemon create something in those?
+
+4) Symlinks look like they should qualify for parent being non-empty;
+at least autofs_d_manage() seems to think so (simple_empty() use).
+So shouldn't we remove the trap from its parent on symlink/restore on
+unlink if parent gets empty?  For version 4 or earlier, that is.  Or is
+it simply that daemon only creates symlinks in root directory?
+
+
+Anyway, intermediate state of the series is in #work.namei right now,
+and some _very_ interesting possibilities open up.  It definitely
+needs more massage around __follow_mount_rcu() (as it is, the
+fastpath in there is still too twisted).  Said that
+	* call graph is less convoluted
+	* follow_managed() calls are folded into step_into().  Interface:
+int step_into(nd, flags, dentry, inode, seq), with inode/seq used only
+if we are in RCU mode.
+	* ".." still doesn't use that; it probably ought to.
+	* lookup_fast() doesn't take path - nd, &inode, &seq and returns dentry
+	* lookup_open() and fs/namei.c:atomic_open() get similar treatment
+- don't take path, return dentry.
+	* calls of follow_managed()/step_into() combination returning 1
+are always followed by get_link(), and very shortly, at that.  So much
+that we can realistically merge pick_link() (in the end of
+step_into()) with get_link().  That merge is NOT done in this branch yet.
+
+The last one promises to get rid of a rather unpleasant group of calling
+conventions.  Right now we have several functions (step_into()/
+walk_component()/lookup_last()/do_last()) with the following calling
+conventions:
+	-E...	=> error
+	0	=> non-symlink or symlink not followed; nd->path points to it
+	1	=> picked a symlink to follow; its mount/dentry/seq has been
+pushed on nd->stack[]; its inode is stashed into nd->link_inode for
+subsequent get_link() to pick.  nd->path is left unchanged.
+
+That way all of those become
+	ERR_PTR(-E...)	=> error
+	NULL		=> non-symlink, symlink not followed or a pure
+jump (bare "/" or procfs ones); nd->path points to where we end up
+        string		=> symlink being followed; the sucker's pushed
+to stack, initial jump (if any) has been handled and the string returned
+is what we need to traverse.
+
+IMO it's less arbitrary that way.  More importantly, the separation between
+step_into() committing to symlink traversal and (inevitably following)
+get_link() is gone - it's one operation after that change.  No nd->link_inode
+either - it's only needed to carry the information from pick_link() to the
+next get_link().
+
+Loops turn into
+	while (!(err = link_path_walk(nd, s)) &&
+	       (s = lookup_last(nd)) != NULL)
+		;
+and
+	while (!(err = link_path_walk(nd, s)) &&
+	       (s = do_last(nd, file, op)) != NULL)
+		;
+
+trailing_symlink() goes away (folded into pick_link()/get_link() combo,
+conditional upon nd->depth at the entry).  And in link_path_walk() we'll
+have
+                if (unlikely(!*name)) {
+                        /* pathname body, done */
+                        if (!nd->depth)
+                                return 0;
+                        name = nd->stack[nd->depth - 1].name;
+                        /* trailing symlink, done */
+                        if (!name)
+                                return 0;
+                        /* last component of nested symlink */
+                        s = walk_component(nd, WALK_FOLLOW);
+                } else {
+                        /* not the last component */
+                        s = walk_component(nd, WALK_FOLLOW | WALK_MORE);
+                }
+                if (s) {
+                        if (IS_ERR(s))
+                                return PTR_ERR(s);
+			/* a symlink to follow */
+			nd->stack[nd->depth - 1].name = name;
+                        name = s;
+                        continue;
+                }
+
+Anyway, before I try that one I'm going to fold path_openat2() into
+that series - that step is definitely going to require some massage
+there; it's too close to get_link() changes done in Aleksa's series.
+
+If we do that, we get a single primitive for "here's the result of
+lookup; traverse mounts and either move into the result or, if
+it's a symlink that needs to be traversed, start the symlink
+traversal - jump into the base position for it (if needed) and
+return the pathname that needs to be handled".  As it is, mainline
+has that logics spread over about a dozen locations...
+
+Diffstat at the moment:
+ fs/autofs/dev-ioctl.c |   6 +-
+ fs/internal.h         |   1 -
+ fs/namei.c            | 460 ++++++++++++++------------------------------------
+ fs/namespace.c        |  97 +++++++----
+ fs/nfs/nfstrace.h     |   2 -
+ fs/open.c             |   4 +-
+ include/linux/namei.h |   3 +-
+ 7 files changed, 197 insertions(+), 376 deletions(-)
+
+In the current form the sucker appears to work (so far - about 30%
+into the usual xfstests run) without visible slowdowns...
