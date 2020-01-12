@@ -2,172 +2,109 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93169C33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 11:36:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE32C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 12:03:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B94924125
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 11:36:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578828990;
-	bh=x3lkok6yMxz/trfKMecT0QU+pQYlkaiXwXy+75fbrL4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=AGLgWnStKr4bEiBpLg06QJLo6wb6vzIMZ+i7ZgWSK9FVGxQXEH/3qTMKXVQQ3oyZw
-	 GQ+3GzIs/hFU6s7jTzUfWAo4sSxS33zQOIMO5vY5ST45Vaez7VJA26FW1KBfwSZZJK
-	 WOx2bpz4ixMgyjY3Y893NquQUHGkhFShZxwJKFnc=
+	by mail.kernel.org (Postfix) with ESMTP id A2445222D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 12:03:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfj+bQ0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732718AbgALLg3 (ORCPT
+        id S1732770AbgALMDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 06:36:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57260 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732673AbgALLg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 06:36:29 -0500
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B36422314;
-        Sun, 12 Jan 2020 11:36:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578828988;
-        bh=x3lkok6yMxz/trfKMecT0QU+pQYlkaiXwXy+75fbrL4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=y2N7sm80JAw90ZvCwM/MuJup7eE879aePES4MtLWzqKqolaCBQYLa2a0UFOt0jSBo
-         J3LOSzuEsSjP+SmMKZmyzYfD4tRxa/kzb+z3SECqVmorgDiCM5Q6i6l/r7LHwROtBj
-         hxBVfV7ma3bBILFyx+19usU+Y/ZpbsM3PXGEuYr8=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Helge Deller <deller@gmx.de>
-Cc:     "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Meelis Roos <mroos@linux.ee>, Jeroen Roovers <jer@gentoo.org>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH] parisc: map_pages(): cleanup page table initialization
-Date:   Sun, 12 Jan 2020 13:36:15 +0200
-Message-Id: <20200112113615.24198-1-rppt@kernel.org>
-X-Mailer: git-send-email 2.24.0
+        Sun, 12 Jan 2020 07:03:24 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:32990 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732724AbgALMDX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 07:03:23 -0500
+Received: by mail-lf1-f65.google.com with SMTP id n25so4848185lfl.0;
+        Sun, 12 Jan 2020 04:03:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=sEmJTxEE0PvPQVReFiQag94yiboJ+l0iwk94EmqCjTY=;
+        b=lfj+bQ0pJ8FU4DOEcT4Cdwq3lX9IVDbLCEbU8xbToizF6Zvcv63z4q4n2FBHgMXLVw
+         q9l5JnyW7lH3Or+0PEhfXmnmmxLhtND66h3Cu13hnAS1BVgLTS1GNveylGnKRUQSiy5Y
+         l4gpRLBk7pYcaBX66u4FnYOmPjDDQNJ9ANlTR4YBEe5sqB8Ac3sQQNs5lj3yXNllacaO
+         RHwiejTxdCJEuCbkpoQJItkRfRobWXexZ/cKY9CXtOqhIZLYXa8znCVCGxJvRS7cUIIO
+         a3EMRzmAdLOhx37Lt1+ng3wxjhC01lwpr8+jToD39fP5fptt7wRL5ytvxaNGG9xCZJ3T
+         oOag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sEmJTxEE0PvPQVReFiQag94yiboJ+l0iwk94EmqCjTY=;
+        b=mmpESsD/TVMhLWGIpPgcrSpmpi0Th2kq2PtODZDjgda4bgoMX5bpLKraXwttXmVA+4
+         fA2XSe5KyW2I4kwcP2pLJ/dhdKa4BNjTSJJqBCAYVb3xBRYhf88zA3IsvjLah+Ns3Obn
+         qBNmaZcRNDxyRDEoNY9dhIM32MWF9F8UiF8g9eWZ35wYFKo2UkoUsoM9qgedPp59ahcH
+         1uYU/BgS1g3kHpbPGI56+S7F/sneFx5X0GxpslM+a9PI0R+cRt4+OI9zrPwIFnKCMERu
+         lhd1fYIUk8mS73Yjl4BOsc7l5R76QqUfkgC/9BGbMFenR0DUz/et+49ZFbvInvS+1A+O
+         KkxA==
+X-Gm-Message-State: APjAAAWtvoQMagQx1vzI8HniG+0BNOjdJbhbu/QqhAhvzOgDNGY5ontM
+        r6556Dfs7G/PEOnpadQhhrqJYIQ+SKRi30H43g==
+X-Google-Smtp-Source: APXvYqzHuFhY3knllWMxVzoAhBYtL89Au5uCCd0wnHJQO2uuZ/d4ZXz1pZ0tIkmeoLdVL79DdbGTe4xIpMKT6UzH/jY=
+X-Received: by 2002:a19:4b87:: with SMTP id y129mr7327020lfa.32.1578830600795;
+ Sun, 12 Jan 2020 04:03:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191215174509.1847-1-linux@roeck-us.net> <20191215174509.1847-2-linux@roeck-us.net>
+ <yq1r211dvck.fsf@oracle.com> <b22a519c-8f26-e731-345f-9deca1b2150e@roeck-us.net>
+ <yq1sgkq21ll.fsf@oracle.com> <20200108153341.GB28530@roeck-us.net>
+ <38af9fda-9edf-1b54-bd8d-92f712ae4cda@roeck-us.net> <CAEJqkgg_piiAWy4r3VD=KyQ7pi69bZNym2Ws=Tr8SY5wf+Sprg@mail.gmail.com>
+ <CACRpkdYU7ZDcKp+BbXRCnEFDw1xwDkU_vXsfo-AZNUWGEVknXQ@mail.gmail.com>
+In-Reply-To: <CACRpkdYU7ZDcKp+BbXRCnEFDw1xwDkU_vXsfo-AZNUWGEVknXQ@mail.gmail.com>
+From:   Gabriel C <nix.or.die@gmail.com>
+Date:   Sun, 12 Jan 2020 13:02:54 +0100
+Message-ID: <CAEJqkggo3Mou1SykjisyYn+3SGGgNfnKagr=7ZPyw=Y=1MZ55w@mail.gmail.com>
+Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>, Chris Healy <cphealy@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+Am So., 12. Jan. 2020 um 12:22 Uhr schrieb Linus Walleij
+<linus.walleij@linaro.org>:
+>
+> On Sun, Jan 12, 2020 at 12:18 PM Gabriel C <nix.or.die@gmail.com> wrote:
+>
+> > What I've noticed however is the nvme temperature low/high values on
+> > the Sensors X are strange here.
+> (...)
+> > Sensor 1:     +27.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=
+=C2=B0C)
+> > Sensor 2:     +29.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=
+=C2=B0C)
+> (...)
+> > Sensor 1:     +23.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=
+=C2=B0C)
+> > Sensor 2:     +25.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=
+=C2=B0C)
+>
+> That doesn't look strange to me. It seems like reasonable defaults
+> from the firmware if either it doesn't really log the min/max temperature=
+s
+> or hasn't been through a cycle of updating these yet. Just set both
+> to absolute min/max temperatures possible.
 
-The current code uses '#if PTRS_PER_PMD == 1' to distinguish 2 vs 3 levels,
-setup, it casts pgd to pgd to cope with page table folding and converts
-addresses of page table entries from physical to virtual and back for no
-good reason.
+Ok I'll check that.
 
-Simplify the accesses to the page table entries using proper unfolding of
-the upper layers and replacing '#if PTRS_PER_PMD' with explicit
-'#if CONFIG_PGTABLE_LEVELS == 3'
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
-Hi,
-
-This patch is on top of the current parisc/for-next.
-I've build-tested for generic-{32,64}_defconfig and was able to boot
-qemu-system-parisc up to rootfs mount.
-
- arch/parisc/mm/init.c | 50 +++++++++++--------------------------------
- 1 file changed, 12 insertions(+), 38 deletions(-)
-
-diff --git a/arch/parisc/mm/init.c b/arch/parisc/mm/init.c
-index 354cf060b67f..5224fb38d766 100644
---- a/arch/parisc/mm/init.c
-+++ b/arch/parisc/mm/init.c
-@@ -351,7 +351,6 @@ static void __init map_pages(unsigned long start_vaddr,
- 			     unsigned long start_paddr, unsigned long size,
- 			     pgprot_t pgprot, int force)
- {
--	pgd_t *pg_dir;
- 	pmd_t *pmd;
- 	pte_t *pg_table;
- 	unsigned long end_paddr;
-@@ -372,62 +371,37 @@ static void __init map_pages(unsigned long start_vaddr,
- 
- 	end_paddr = start_paddr + size;
- 
--	pg_dir = pgd_offset_k(start_vaddr);
--
--#if PTRS_PER_PMD == 1
--	start_pmd = 0;
--#else
-+	/* for 2-level configuration PTRS_PER_PMD is 0 so start_pmd will be 0 */
- 	start_pmd = ((start_vaddr >> PMD_SHIFT) & (PTRS_PER_PMD - 1));
--#endif
- 	start_pte = ((start_vaddr >> PAGE_SHIFT) & (PTRS_PER_PTE - 1));
- 
- 	address = start_paddr;
- 	vaddr = start_vaddr;
- 	while (address < end_paddr) {
--#if PTRS_PER_PMD == 1
--		pmd = (pmd_t *)__pa(pg_dir);
--#else
--		pmd = (pmd_t *)pgd_address(*pg_dir);
--
--		/*
--		 * pmd is physical at this point
--		 */
-+		pgd_t *pgd = pgd_offset_k(vaddr);
-+		p4d_t *p4d = p4d_offset(pgd, vaddr);
-+		pud_t *pud = pud_offset(p4d, vaddr);
- 
--		if (!pmd) {
-+#if CONFIG_PGTABLE_LEVELS == 3
-+		if (pud_none(*pud)) {
- 			pmd = memblock_alloc(PAGE_SIZE << PMD_ORDER,
- 					     PAGE_SIZE << PMD_ORDER);
- 			if (!pmd)
- 				panic("pmd allocation failed.\n");
--			pmd = (pmd_t *) __pa(pmd);
-+			pud_populate(NULL, pud, pmd);
- 		}
--
--		pud_populate(NULL, (pud_t *)pg_dir, __va(pmd));
- #endif
--		pg_dir++;
--
--		/* now change pmd to kernel virtual addresses */
- 
--		pmd = (pmd_t *)__va(pmd) + start_pmd;
-+		pmd = pmd_offset(pud, vaddr);
- 		for (tmp1 = start_pmd; tmp1 < PTRS_PER_PMD; tmp1++, pmd++) {
--
--			/*
--			 * pg_table is physical at this point
--			 */
--
--			pg_table = (pte_t *)pmd_address(*pmd);
--			if (!pg_table) {
--				pg_table = memblock_alloc(PAGE_SIZE,
--							  PAGE_SIZE);
-+			if (pmd_none(*pmd)) {
-+				pg_table = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
- 				if (!pg_table)
- 					panic("page table allocation failed\n");
--				pg_table = (pte_t *) __pa(pg_table);
-+				pmd_populate_kernel(NULL, pmd, pg_table);
- 			}
- 
--			pmd_populate_kernel(NULL, pmd, __va(pg_table));
--
--			/* now change pg_table to kernel virtual addresses */
--
--			pg_table = (pte_t *) __va(pg_table) + start_pte;
-+			pg_table = pte_offset_kernel(pmd, vaddr);
- 			for (tmp2 = start_pte; tmp2 < PTRS_PER_PTE; tmp2++, pg_table++) {
- 				pte_t pte;
- 				pgprot_t prot;
-
-base-commit: 9cf86a639ffdd9c38d510d35efcc15ed6dfb2efa
--- 
-2.24.0
-
+Do you mean by setting the temperatures to use a lmsensors config?
+Or is there a way to set these with a nvme command?
