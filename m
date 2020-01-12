@@ -6,36 +6,36 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0110DC33CAA
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10A0C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:46:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA5012084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB0E2187F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:46:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387507AbgALWqK (ORCPT
+        id S2387543AbgALWqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 17:46:10 -0500
-Received: from mga18.intel.com ([134.134.136.126]:34750 "EHLO mga18.intel.com"
+        Sun, 12 Jan 2020 17:46:16 -0500
+Received: from mga18.intel.com ([134.134.136.126]:34749 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387489AbgALWqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 17:46:08 -0500
+        id S2387493AbgALWqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 17:46:09 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
   by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jan 2020 14:46:06 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,426,1571727600"; 
-   d="scan'208";a="396989495"
+   d="scan'208";a="396989490"
 Received: from skuppusw-desk.jf.intel.com ([10.54.74.33])
-  by orsmga005.jf.intel.com with ESMTP; 12 Jan 2020 14:46:06 -0800
+  by orsmga005.jf.intel.com with ESMTP; 12 Jan 2020 14:46:05 -0800
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
         Keith Busch <keith.busch@intel.com>
-Subject: [PATCH v12 7/8] PCI/DPC: Clear AER registers in EDR mode
-Date:   Sun, 12 Jan 2020 14:44:01 -0800
-Message-Id: <dd6804be5c5d44786cb18407db1f5caac9c2dfe5.1578682741.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v12 2/8] PCI/DPC: Allow dpc_probe() even if firmware first mode is enabled
+Date:   Sun, 12 Jan 2020 14:43:56 -0800
+Message-Id: <306d01cd3f1716cd158df51277b244b775c0c1f2.1578682741.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1578682741.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1578682741.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -48,34 +48,154 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-As per PCI firmware specification r3.2 System Firmware Intermediary
-(SFI) _OSC and DPC Updates ECR
-(https://members.pcisig.com/wg/PCI-SIG/document/13563), sec titled
-"DPC Event Handling Implementation Note", page 10, OS is responsible
-for clearing the AER registers in EDR mode. So clear AER registers in
-dpc_process_error() function.
+As per ACPI specification v6.3, sec 5.6.6, Error Disconnect Recover
+(EDR) notification used by firmware to let OS know about the DPC event
+and permit OS to perform error recovery when processing the EDR
+notification. Also, as per PCI firmware specification r3.2 Downstream
+Port Containment Related Enhancements ECN, sec 4.5.1, table 4-6, if DPC
+is controlled by firmware (firmware first mode), it's responsible for
+initializing Downstream Port Containment Extended Capability Structures
+per firmware policy. And, OS is permitted to read or write DPC Control
+and Status registers of a port while processing an Error Disconnect
+Recover (EDR) notification from firmware on that port.
+
+Currently, if firmware controls DPC (firmware first mode), OS will not
+create/enumerate DPC PCIe port services. But, if OS supports EDR
+feature, then as mentioned in above spec references, it should permit
+enumeration of DPC driver and also support handling ACPI EDR
+notification. So as first step, allow dpc_probe() to continue even if
+firmware first mode is enabled. Also add appropriate checks to ensure
+device registers are not modified outside EDR notification window in
+firmware first mode. This is a preparatory patch for adding EDR support.
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Acked-by: Keith Busch <keith.busch@intel.com>
 ---
- drivers/pci/pcie/dpc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/pci/pcie/dpc.c | 68 ++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 55 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 412e4d63cc37..49e020d46ea1 100644
+index e06f42f58d3d..2c1251afb6a2 100644
 --- a/drivers/pci/pcie/dpc.c
 +++ b/drivers/pci/pcie/dpc.c
-@@ -284,6 +284,10 @@ static void dpc_process_error(struct dpc_dev *dpc)
- 		pci_aer_clear_fatal_status(pdev, 0);
+@@ -22,6 +22,7 @@ struct dpc_dev {
+ 	u16			cap_pos;
+ 	bool			rp_extensions;
+ 	u8			rp_log_size;
++	bool			edr_enabled; /* EDR mode is supported */
+ };
+ 
+ static const char * const rp_pio_error_string[] = {
+@@ -69,6 +70,14 @@ void pci_save_dpc_state(struct pci_dev *dev)
+ 	if (!dpc)
+ 		return;
+ 
++	/*
++	 * If DPC is controlled by firmware then save/restore tasks are also
++	 * controller by firmware. So skip rest of the function if DPC is
++	 * controlled by firmware.
++	 */
++	if (dpc->edr_enabled)
++		return;
++
+ 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
+ 	if (!save_state)
+ 		return;
+@@ -90,6 +99,14 @@ void pci_restore_dpc_state(struct pci_dev *dev)
+ 	if (!dpc)
+ 		return;
+ 
++	/*
++	 * If DPC is controlled by firmware then save/restore tasks are also
++	 * controller by firmware. So skip rest of the function if DPC is
++	 * controlled by firmware.
++	 */
++	if (dpc->edr_enabled)
++		return;
++
+ 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_DPC);
+ 	if (!save_state)
+ 		return;
+@@ -291,24 +308,42 @@ static int dpc_probe(struct pcie_device *dev)
+ 	int status;
+ 	u16 ctl, cap;
+ 
+-	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
+-		return -ENOTSUPP;
+-
+ 	dpc = devm_kzalloc(device, sizeof(*dpc), GFP_KERNEL);
+ 	if (!dpc)
+ 		return -ENOMEM;
+ 
+ 	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
+ 	dpc->dev = dev;
++	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
++		dpc->edr_enabled = 1;
+ 	set_service_data(dev, dpc);
+ 
+-	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
+-					   dpc_handler, IRQF_SHARED,
+-					   "pcie-dpc", dpc);
+-	if (status) {
+-		pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
+-			 status);
+-		return status;
++	/*
++	 * As per PCIe spec r5.0, implementation note titled "Determination
++	 * of DPC Control", to avoid conflicts over whether platform
++	 * firmware or the operating system have control of DPC, it is
++	 * recommended that platform firmware and operating systems always link
++	 * the control of DPC to the control of Advanced Error Reporting.
++	 *
++	 * So use AER FF mode check API pcie_aer_get_firmware_first() to decide
++	 * whether DPC is controlled by software or firmware.
++	 *
++	 * If DPC is handled in firmware and ACPI support is not enabled
++	 * in OS, skip probe and return error.
++	 */
++	if (dpc->edr_enabled && !IS_ENABLED(CONFIG_ACPI))
++		return -ENODEV;
++
++	/* Register interrupt handler only if OS controls DPC */
++	if (!dpc->edr_enabled) {
++		status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
++						   dpc_handler, IRQF_SHARED,
++						   "pcie-dpc", dpc);
++		if (status) {
++			pci_warn(pdev, "request IRQ%d failed: %d\n", dev->irq,
++				 status);
++			return status;
++		}
  	}
  
-+	/* In EDR mode, OS is responsible for clearing AER registers */
-+	if (pcie_aer_get_firmware_first(pdev))
-+		pci_cleanup_aer_error_status_regs(pdev, 0);
+ 	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CAP, &cap);
+@@ -323,9 +358,12 @@ static int dpc_probe(struct pcie_device *dev)
+ 			dpc->rp_log_size = 0;
+ 		}
+ 	}
+-
+-	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
+-	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
++	if (!dpc->edr_enabled) {
++		ctl = (ctl & 0xfff4) |
++			(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
++		pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL,
++				      ctl);
++	}
+ 
+ 	pci_info(pdev, "error containment capabilities: Int Msg #%d, RPExt%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
+ 		 cap & PCI_EXP_DPC_IRQ, FLAG(cap, PCI_EXP_DPC_CAP_RP_EXT),
+@@ -343,6 +381,10 @@ static void dpc_remove(struct pcie_device *dev)
+ 	struct pci_dev *pdev = dev->port;
+ 	u16 ctl;
+ 
++	/* Skip updating DPC registers if DPC is controlled by firmware */
++	if (dpc->edr_enabled)
++		return;
 +
- 	/*
- 	 * Irrespective of whether the DPC event is triggered by
- 	 * ERR_FATAL or ERR_NONFATAL, since the link is already down,
+ 	pci_read_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, &ctl);
+ 	ctl &= ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
+ 	pci_write_config_word(pdev, dpc->cap_pos + PCI_EXP_DPC_CTL, ctl);
 -- 
 2.21.0
 
