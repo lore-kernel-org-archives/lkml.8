@@ -2,119 +2,88 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEAB1C33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4283C33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 23:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 860EB21556
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:57:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="17mnMprW"
+	by mail.kernel.org (Postfix) with ESMTP id B507B21744
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 23:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387479AbgALW5e (ORCPT
+        id S2387485AbgALXb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 17:57:34 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:45424 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbgALW5e (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 17:57:34 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 203so5440876lfa.12
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 14:57:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YhEnPWc7hBMgzTi8jrnUahHh/j3JJLesjhzD86DLwCs=;
-        b=17mnMprWe4+SB2cTaLQImgJbVUQMzsjRXuwdjTe6KETCHH94Zi6GGwUo5/WsHFRbJL
-         /NAoOp0F4Dj8T562fMLT2GENv5UucZ+oCPCg5+TMX0LVwjxzaxeNMIfdloCgKwLQ6QYs
-         +aw6FaoTAN1olVQlSVat6zHRBfOtwJH4EV0K9WdxN9TvaTkUxjahKqF3aEHkUp4DgWjE
-         ISIP32ImjX7TZHNBYrb04W84s7tWZ6Sr56cznaStx43sgf33DhEwl8jkvJd2ZBZ8vHkN
-         2Kck6f7sk1Y0y5vqhxkc+AODNs15YZjkIJf6xKEGBk1k6iBEWZkEVuqS6cyWL9xrpjCD
-         7BWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YhEnPWc7hBMgzTi8jrnUahHh/j3JJLesjhzD86DLwCs=;
-        b=Ty94NVjrvQaX15iN1ig+4rnIYZd0SLgke2hpia6bxVACZX61DtNsp6AFiUje3fsNBb
-         ctjGHji05PKdOZkonqmi6/+VoCsSjNDPmoY5tnHfLlqVTDmHuBkc0KBuf5E2/+2P7rCr
-         u7oD//dTzg3r4l12CXIMVuae0ZCXthlmDO9ZoYot9XBBSb0XHDEb0L838OvsdOfa6UST
-         96l82lWZeEPxr6n5jD9MponeBMMOJyCdL2MXfTjYU5YPp1Qqjpchak/nLCIJ/sLlJKrI
-         27e8f00nGZBkvnI0lQTO3llq4RljxXVjryfMKxCi1erxB8STRHKUPDtf0RoeEvB637h4
-         HoOA==
-X-Gm-Message-State: APjAAAVsn5rHTIXNslbmF/ZDZK63InAmzFjjOKU+ejYR/sz/5DHlaA4H
-        Df+qA3uegWtdflmgobfl8GG9sg==
-X-Google-Smtp-Source: APXvYqyI3dhoVWz1rlW2tbfefaOwjJIzY3iO0lO9eqrbCp4ajUvL39rdjB4jk+LQl0B9QgQR6EZbCg==
-X-Received: by 2002:a19:c3cc:: with SMTP id t195mr7915631lff.144.1578869852309;
-        Sun, 12 Jan 2020 14:57:32 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id r6sm4849697ljk.37.2020.01.12.14.57.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 14:57:31 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 5BF79100376; Mon, 13 Jan 2020 01:57:18 +0300 (+03)
-Date:   Mon, 13 Jan 2020 01:57:18 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
-        alexander.duyck@gmail.com, rientjes@google.com
-Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200112225718.5vqzezfclacujyx3@box>
-References: <20200109143054.13203-1-richardw.yang@linux.intel.com>
- <20200111000352.efy6krudecpshezh@box>
- <20200112022858.GA17733@richard>
+        Sun, 12 Jan 2020 18:31:28 -0500
+Received: from foss.arm.com ([217.140.110.172]:33012 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727323AbgALXb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 18:31:27 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F10530E;
+        Sun, 12 Jan 2020 15:31:27 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20B963F534;
+        Sun, 12 Jan 2020 15:31:25 -0800 (PST)
+Date:   Sun, 12 Jan 2020 23:31:22 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        valentin.schneider@arm.com, qperret@google.com,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
+Message-ID: <20200112233122.b26kidww6xphuyqq@e107158-lin.cambridge.arm.com>
+References: <20191220164838.31619-1-qais.yousef@arm.com>
+ <20200108134448.GG2844@hirez.programming.kicks-ass.net>
+ <20200109130052.feebuwuuvwvm324w@e107158-lin.cambridge.arm.com>
+ <20200110134236.GM2844@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200112022858.GA17733@richard>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200110134236.GM2844@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 10:28:58AM +0800, Wei Yang wrote:
-> On Sat, Jan 11, 2020 at 03:03:52AM +0300, Kirill A. Shutemov wrote:
-> >On Thu, Jan 09, 2020 at 10:30:54PM +0800, Wei Yang wrote:
-> >> As all the other places, we grab the lock before manipulate the defer list.
-> >> Current implementation may face a race condition.
-> >> 
-> >> For example, the potential race would be:
-> >> 
-> >>     CPU1                      CPU2
-> >>     mem_cgroup_move_account   split_huge_page_to_list
-> >>       !list_empty
-> >>                                 lock
-> >>                                 !list_empty
-> >>                                 list_del
-> >>                                 unlock
-> >>       lock
-> >>       # !list_empty might not hold anymore
-> >>       list_del_init
-> >>       unlock
-> >
-> >I don't think this particular race is possible. Both parties take page
-> >lock before messing with deferred queue, but anytway:
+On 01/10/20 14:42, Peter Zijlstra wrote:
+> On Thu, Jan 09, 2020 at 01:00:58PM +0000, Qais Yousef wrote:
+> > On 01/08/20 14:44, Peter Zijlstra wrote:
 > 
-> I am afraid not. Page lock is per page, while defer queue is per pgdate or
-> memcg.
+> > > Did cpu_uclamp_write() forget to check for input<0 ?
+> > 
+> > Hmm just tried that and it seems so
+> > 
+> > # echo -1 > cpu.uclamp.min
+> > # cat cpu.uclamp.min
+> > 42949671.96
+> > 
+> > capacity_from_percent(); we check for
+> > 
+> > 7301                 if (req.percent > UCLAMP_PERCENT_SCALE) {
+> > 7302                         req.ret = -ERANGE;
+> > 7303                         return req;
+> > 7304                 }
+> > 
+> > But req.percent is s64, maybe it should be u64?
 > 
-> It is possible two page in the same pgdate or memcg grab page lock
-> respectively and then access the same defer queue concurrently.
+> 		if ((u64)req.percent > UCLAMP_PERCENT_SCALE)
+> 
+> should do, I think.
 
-Look closer on the list_empty() argument. It's list_head local to the
-page. Too different pages can be handled in parallel without any problem
-in this particular scenario. As long as we as we modify it under the lock.
+Okay I'll send a separate fix for that.
 
-Said that, page lock here was somewhat accidential and I still belive we
-need to move the check under the lock anyway.
+Cheers
 
--- 
- Kirill A. Shutemov
+--
+Qais Yousef
