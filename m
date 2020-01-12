@@ -2,121 +2,171 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB48C33CA2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:32:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D65C33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26447214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE244214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:33:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PR4yTzhW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387422AbgALUc4 (ORCPT
+        id S2387448AbgALUdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 15:32:56 -0500
-Received: from ofcsgdbm.dwd.de ([141.38.3.245]:50339 "EHLO ofcsgdbm.dwd.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732825AbgALUcz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 15:32:55 -0500
-X-Greylist: delayed 474 seconds by postgrey-1.27 at vger.kernel.org; Sun, 12 Jan 2020 15:32:53 EST
-Received: from localhost (localhost [127.0.0.1])
-        by ofcsg2dn3.dwd.de (Postfix) with ESMTP id 47wp9k1Jv0z11P1
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 20:24:58 +0000 (UTC)
-X-Virus-Scanned: by amavisd-new at csg.dwd.de
-Received: from ofcsg2dn3.dwd.de ([127.0.0.1])
-        by localhost (ofcsg2dn3.dwd.de [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id MN8nxA3CBnXW for <linux-kernel@vger.kernel.org>;
-        Sun, 12 Jan 2020 20:24:57 +0000 (UTC)
-Received: from ofmailhub.dwd.de (oflxs446.dwd.de [141.38.40.78])
-        by ofcsg2dn3.dwd.de (Postfix) with ESMTP id 47wp9j6dLmz11L3
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 20:24:57 +0000 (UTC)
-Received: from diagnostix.dwd.de (diagnostix.dwd.de [141.38.42.141])
-        by ofmailhub.dwd.de (Postfix) with ESMTP id B301355809
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 20:24:57 +0000 (UTC)
-Date:   Sun, 12 Jan 2020 20:24:57 +0000 (UTC)
-From:   Holger Kiehl <Holger.Kiehl@dwd.de>
-X-X-Sender: kiehl@diagnostix.dwd.de
-To:     linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Lockup with kernel 5.5.0-rc5
-Message-ID: <alpine.LRH.2.21.2001122012080.11995@diagnostix.dwd.de>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Sun, 12 Jan 2020 15:33:31 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:44469 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732825AbgALUda (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 15:33:30 -0500
+Received: by mail-lj1-f195.google.com with SMTP id u71so7708590lje.11;
+        Sun, 12 Jan 2020 12:33:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IrLDzyGfd9Y65dDT7UGMmoZnTT7I7zow/6QfstVQ1DA=;
+        b=PR4yTzhWStLUhH3DAX7PztJkvplbspQP1sh3ZPkIxh99aUo16NYjsw1SkMtWfI4QQN
+         1Mr8p/lm6LQjAR4Hf/SWSPJ+lwa31z/0hEylxaAVjvBCV/yQLo0/CxixjrPt1/x07Mj/
+         9NBM8h5sfAVUvaWcyhwiPx5+qOyq/eEhubGuJ/8Q2phD2xh1Dk/kgX7+g4RUp8iFM1V8
+         4LVMop1fLxL8F4T7uv/JKAUI37X+bXeaCVsS0eqsdT3DRSycvCS0xS0O3uZRx5xxIlFA
+         UHtWrys6/cCmbWju3qjsu+jC1bKSbbJl7V5pdtt2pjUjJY0qavSoS8M7uyoWYwuhSGuG
+         KLRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IrLDzyGfd9Y65dDT7UGMmoZnTT7I7zow/6QfstVQ1DA=;
+        b=tXLG6ns9J8n5VpPsu7T5XrEukKbqnjOTezrcfBEt7SKZqyrETvseEnOC2TtOiGeRX3
+         Y/YyK84Ce1uHcksqIwTV420wDRbd/nUl4BC8Hgw2KsjF+9m1LIPw9UNUFWKX8jpPm042
+         HBMyw/k4mn0mJqyE/25wSevp/UKynTeC3eSML+HhAN75FH/3P/EpzSKf3yLXjzG8zSfd
+         770SpxIqJkEMpClM7ROvfmnMBnflxTMFopcXg3WU5I+kri0PRi6fTKpasF6wUI/7XASh
+         uROrcPsdNZz2Nz+f25y4Og3j8PhJsl77dMxgbfzRupW5/AGIocq0KQ3jzxenGRbjbA/k
+         MM2Q==
+X-Gm-Message-State: APjAAAWz+fD3VKoluFyigalzVJ6NZZPb4nkA1C+Yu18mHO95aDHII+Wl
+        pTJFzT9KBrKrX6KRCN4i1Xc=
+X-Google-Smtp-Source: APXvYqwBfFAR8OQmBDBjCB3tz+Dj8/kUMmk3fxUvn9wOopBq3+C0Rda9DnZGFOZcSEMrlFNwxHgDKA==
+X-Received: by 2002:a05:651c:1045:: with SMTP id x5mr6601786ljm.266.1578861208532;
+        Sun, 12 Jan 2020 12:33:28 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id u16sm5255192lfi.36.2020.01.12.12.33.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2020 12:33:27 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Robert Yang <decatf@gmail.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 1/2] iio: accel: kxcjk1013: Support orientation matrix
+Date:   Sun, 12 Jan 2020 23:33:00 +0300
+Message-Id: <20200112203301.30235-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hardware could be physically mounted in any possible direction and
+userpspace needs to be aware of the mounting orientation in order to
+process sensor's data correctly. In particular this helps iio-sensor-proxy
+to report display's orientation properly on a phone/tablet devices.
 
-on a Broadwell CPU Xeon E3-1285L (with L4-Cache 128MB eDRAM) I got
-the following Oops:
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/iio/accel/kxcjk-1013.c       | 27 +++++++++++++++++++++++++--
+ include/linux/iio/accel/kxcjk_1013.h |  3 +++
+ 2 files changed, 28 insertions(+), 2 deletions(-)
 
-[ 7759.828500] general protection fault: 0000 [#1] SMP PTI
-[ 7759.828506] CPU: 1 PID: 2114 Comm: Xorg Not tainted 5.5.0-rc5 #1
-[ 7759.828508] Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./C226M WS, BIOS L2.32 05/16/2019
-[ 7759.828515] RIP: 0010:kmem_cache_alloc+0x7a/0x210
-[ 7759.828518] Code: 65 48 8b 51 08 65 48 03 0d f3 6a d8 7c 4c 8b 21 4d 85 e4 0f 84 7c 01 00 00 41 8b 5e 20 48 8d 4a 01 4c 89 e0 49 8b 3e 4c 01 e3 <48> 33 1b 49 33 9e 70 01 00 00 65 48 0f c7 0f 0f 94 c0 84 c0 74 bd
-[ 7759.828520] RSP: 0018:ffffa72744a2ba28 EFLAGS: 00010206
-[ 7759.828522] RAX: 0b1b4d50ef46eaf3 RBX: 0b1b4d50ef46eaf3 RCX: 000000000001b5a9
-[ 7759.828524] RDX: 000000000001b5a8 RSI: 0000000000000cc0 RDI: 000000000002ff20
-[ 7759.828525] RBP: 0000000000000cc0 R08: 0000000000000000 R09: ffff9be2339e3c80
-[ 7759.828527] R10: 000000000000a000 R11: ffff9be3872118e8 R12: 0b1b4d50ef46eaf3
-[ 7759.828529] R13: ffffffffc039ddce R14: ffff9be38b823640 R15: ffff9be38b823640
-[ 7759.828531] FS:  00007fa28d224f00(0000) GS:ffff9be38ec40000(0000) knlGS:0000000000000000
-[ 7759.828533] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 7759.828534] CR2: 00007fa28818b000 CR3: 00000007df1d8005 CR4: 00000000003606e0
-[ 7759.828536] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 7759.828537] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 7759.828539] Call Trace:
-[ 7759.828577]  i915_active_ref+0x5e/0x170 [i915]
-[ 7759.828609]  i915_vma_move_to_active+0x24/0x150 [i915]
-[ 7759.828636]  i915_gem_do_execbuffer+0xd3f/0x1880 [i915]
-[ 7759.828644]  ? unix_stream_read_generic+0x1fe/0x990
-[ 7759.828647]  ? xas_load+0x5/0x70
-[ 7759.828651]  ? find_get_entry+0xb3/0x170
-[ 7759.828657]  ? shmem_getpage_gfp+0xf1/0x8f0
-[ 7759.828661]  ? __kmalloc+0x174/0x260
-[ 7759.828688]  i915_gem_execbuffer2_ioctl+0xee/0x3b0 [i915]
-[ 7759.828718]  ? i915_gem_madvise_ioctl+0x10f/0x2c0 [i915]
-[ 7759.828744]  ? i915_gem_execbuffer_ioctl+0x2c0/0x2c0 [i915]
-[ 7759.828748]  drm_ioctl_kernel+0xab/0xf0
-[ 7759.828753]  drm_ioctl+0x200/0x3a0
-[ 7759.828793]  ? i915_gem_execbuffer_ioctl+0x2c0/0x2c0 [i915]
-[ 7759.828801]  do_vfs_ioctl+0x447/0x6c0
-[ 7759.828807]  ? handle_mm_fault+0xae/0x1e0
-[ 7759.828812]  ksys_ioctl+0x5e/0x90
-[ 7759.828817]  __x64_sys_ioctl+0x16/0x20
-[ 7759.828821]  do_syscall_64+0x55/0x1a0
-[ 7759.828826]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[ 7759.828831] RIP: 0033:0x7fa28d69b34b
-[ 7759.828835] Code: 0f 1e fa 48 8b 05 3d 9b 0c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 0d 9b 0c 00 f7 d8 64 89 01 48
-[ 7759.828838] RSP: 002b:00007ffc1ae65108 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-[ 7759.828842] RAX: ffffffffffffffda RBX: 00007ffc1ae65150 RCX: 00007fa28d69b34b
-[ 7759.828845] RDX: 00007ffc1ae65150 RSI: 0000000040406469 RDI: 0000000000000010
-[ 7759.828848] RBP: 0000000040406469 R08: 00005557e3a829a0 R09: 0000000000000000
-[ 7759.828850] R10: 0000000000000000 R11: 0000000000000246 R12: 00005557e3a40100
-[ 7759.828853] R13: 0000000000000010 R14: ffffffffffffffff R15: 00007fa28cb34a68
-[ 7759.828858] Modules linked in: xt_CHECKSUM xt_MASQUERADE nf_nat_tftp nf_conntrack_tftp tun bridge stp llc nf_conntrack_netbios_ns nf_conntrack_broadcast xt_CT ip6t_REJECT nf_reject_ipv6 ip6t_rpfilter xt_conntrack ebtable_nat ebtable_broute ip6table_nat ip6table_mangle ip6table_raw ip6table_security iptable_nat nf_nat iptable_mangle iptable_raw iptable_security nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c ip_set nfnetlink ebtable_filter ebtables x86_pkg_temp_thermal ip6table_filter kvm_intel ip6_tables kvm irqbypass bpfilter iTCO_wdt iTCO_vendor_support snd_hda_codec_realtek crct10dif_pclmul snd_hda_codec_generic snd_hda_codec_hdmi crc32_pclmul snd_hda_intel snd_intel_dspcfg snd_hda_codec snd_hwdep snd_hda_core nct6775 hwmon_vid ghash_clmulni_intel i2c_i801 snd_seq jc42 lpc_ich bfq mfd_core coretemp snd_seq_device snd_pcm snd_timer snd mei_me mei soundcore acpi_pad sunrpc vfat fat sch_fq_codel i915 crc32c_intel igb dca video fuse ecryptfs
-[ 7759.828934] ---[ end trace f5069fc029a440f1 ]---
-[ 7759.929159] RIP: 0010:kmem_cache_alloc+0x7a/0x210
-[ 7759.929162] Code: 65 48 8b 51 08 65 48 03 0d f3 6a d8 7c 4c 8b 21 4d 85 e4 0f 84 7c 01 00 00 41 8b 5e 20 48 8d 4a 01 4c 89 e0 49 8b 3e 4c 01 e3 <48> 33 1b 49 33 9e 70 01 00 00 65 48 0f c7 0f 0f 94 c0 84 c0 74 bd
-[ 7759.929163] RSP: 0018:ffffa72744a2ba28 EFLAGS: 00010206
-[ 7759.929165] RAX: 0b1b4d50ef46eaf3 RBX: 0b1b4d50ef46eaf3 RCX: 000000000001b5a9
-[ 7759.929166] RDX: 000000000001b5a8 RSI: 0000000000000cc0 RDI: 000000000002ff20
-[ 7759.929167] RBP: 0000000000000cc0 R08: 0000000000000000 R09: ffff9be2339e3c80
-[ 7759.929168] R10: 000000000000a000 R11: ffff9be3872118e8 R12: 0b1b4d50ef46eaf3
-[ 7759.929169] R13: ffffffffc039ddce R14: ffff9be38b823640 R15: ffff9be38b823640
-[ 7759.929171] FS:  00007fa28d224f00(0000) GS:ffff9be38ec40000(0000) knlGS:0000000000000000
-[ 7759.929172] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 7759.929173] CR2: 00007fa28818b000 CR3: 00000007df1d8005 CR4: 00000000003606e0
-[ 7759.929174] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 7759.929175] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+diff --git a/drivers/iio/accel/kxcjk-1013.c b/drivers/iio/accel/kxcjk-1013.c
+index fee535d6e45b..c9924a65c32a 100644
+--- a/drivers/iio/accel/kxcjk-1013.c
++++ b/drivers/iio/accel/kxcjk-1013.c
+@@ -130,6 +130,7 @@ struct kxcjk1013_data {
+ 	struct i2c_client *client;
+ 	struct iio_trigger *dready_trig;
+ 	struct iio_trigger *motion_trig;
++	struct iio_mount_matrix orientation;
+ 	struct mutex mutex;
+ 	s16 buffer[8];
+ 	u8 odr_bits;
+@@ -983,6 +984,20 @@ static const struct iio_event_spec kxcjk1013_event = {
+ 				 BIT(IIO_EV_INFO_PERIOD)
+ };
+ 
++static const struct iio_mount_matrix *
++kxcjk1013_get_mount_matrix(const struct iio_dev *indio_dev,
++			   const struct iio_chan_spec *chan)
++{
++	struct kxcjk1013_data *data = iio_priv(indio_dev);
++
++	return &data->orientation;
++}
++
++static const struct iio_chan_spec_ext_info kxcjk1013_ext_info[] = {
++	IIO_MOUNT_MATRIX(IIO_SHARED_BY_TYPE, kxcjk1013_get_mount_matrix),
++	{ }
++};
++
+ #define KXCJK1013_CHANNEL(_axis) {					\
+ 	.type = IIO_ACCEL,						\
+ 	.modified = 1,							\
+@@ -999,6 +1014,7 @@ static const struct iio_event_spec kxcjk1013_event = {
+ 		.endianness = IIO_LE,					\
+ 	},								\
+ 	.event_spec = &kxcjk1013_event,				\
++	.ext_info = kxcjk1013_ext_info,					\
+ 	.num_event_specs = 1						\
+ }
+ 
+@@ -1267,11 +1283,18 @@ static int kxcjk1013_probe(struct i2c_client *client,
+ 	data->client = client;
+ 
+ 	pdata = dev_get_platdata(&client->dev);
+-	if (pdata)
++	if (pdata) {
+ 		data->active_high_intr = pdata->active_high_intr;
+-	else
++		data->orientation = pdata->orientation;
++	} else {
+ 		data->active_high_intr = true; /* default polarity */
+ 
++		ret = iio_read_mount_matrix(&client->dev, "mount-matrix",
++					    &data->orientation);
++		if (ret)
++			return ret;
++	}
++
+ 	if (id) {
+ 		data->chipset = (enum kx_chipset)(id->driver_data);
+ 		name = id->name;
+diff --git a/include/linux/iio/accel/kxcjk_1013.h b/include/linux/iio/accel/kxcjk_1013.h
+index 8c3c78bc9f91..ea0ecb774371 100644
+--- a/include/linux/iio/accel/kxcjk_1013.h
++++ b/include/linux/iio/accel/kxcjk_1013.h
+@@ -7,8 +7,11 @@
+ #ifndef __IIO_KXCJK_1013_H__
+ #define __IIO_KXCJK_1013_H__
+ 
++#include <linux/iio/iio.h>
++
+ struct kxcjk_1013_platform_data {
+ 	bool active_high_intr;
++	struct iio_mount_matrix orientation;
+ };
+ 
+ #endif
+-- 
+2.24.0
 
-It cannot be reproduced, but it has happened now the second time with
-a 5.5.0-rc kernel. Before this system was stable if one does not enable
-C6 power saving. It is limited to C3.
-
-Regards,
-Holger
