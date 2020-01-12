@@ -2,193 +2,101 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E51C33CA2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 19:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CFCC33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 19:56:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74264214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 19:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5E832053B
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 19:56:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTq8olhq"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Cz2xorTD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387437AbgALTyb (ORCPT
+        id S1733293AbgALT4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 14:54:31 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42435 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387413AbgALTyX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 14:54:23 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 4so3815042pfz.9;
-        Sun, 12 Jan 2020 11:54:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9M3dlkPvAA74ZA3Dz07VUPHZPdx7oFweuiEOAHoWN1M=;
-        b=GTq8olhq3p+o5nwwODwkds2g5yTd6UB+6v/XDM8BPwRZeMADFiH8YZ1Ni44TcURnBj
-         VvRlqpR+kB20Ux7C7kDIkqObcxLq4ib2T5CkIgL4wVHMOefExmqIdzW4vfevzhzNJ1HQ
-         iw8CudWouK/PM5OBRvSOya7XbJRj/CUOgKshFFrvreQt0cUxiKDcK3CpRovxgDlZ37h7
-         hEsFT/1OTxgZsSZswWeTz9pBqI+wBig1Kt6JZQNjzO54UA9kUY0OchqgIZyJuqHCDJKc
-         Cvm1jF3yy5DMjMDzQcqVodvcUqqjprYeoO/zsu3PBKe/o78N2NZYIrqnRYeyxN7TsfJb
-         +ePQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9M3dlkPvAA74ZA3Dz07VUPHZPdx7oFweuiEOAHoWN1M=;
-        b=DMnztNyvwGZ9aqie5YXFj3bydX0Sk8p0j/zQX10uU7xFzBEQU1LBtcSSyeOqf8guoE
-         o1fG7nuvjki6VkHHW+3YIZUSD7ylmisk5ZuT6nI/A5dvozbL7zLR1VUEPxb7yC1Va3Ta
-         yLedO6r7WV5jDOfnLUm8SFWQEX4YMrGnBBi9vPj0x2ithjqy13MSbr8QfXwVLQNZrtte
-         NTfjRRJLAgYWt2Kxx1/vcN4L/AdHhlFcDMS8EmnwTSOaaNDhGosPEXqPluAycGUeqZ6g
-         zyys2va1CQ+vv6URDxZSd49Tq9ihFlgO+gAC/46BTmUlWA80tmrqYxhBFCuv7ELjqXG9
-         bKfg==
-X-Gm-Message-State: APjAAAUl7YhwlYaNAOU6uL2kGW+tVGGmcCzPiOY+VVTAr/t8D7TjKRJv
-        mrtK/hSjmRaYxlU+DfSDJ/s=
-X-Google-Smtp-Source: APXvYqxgtDha2wIIkYQ0s11XiURON/vwog3S3qZJcZWdKW6/HnjDdywO8lijSbdzd2JcnS/+b7qgug==
-X-Received: by 2002:a63:4a0e:: with SMTP id x14mr17052016pga.360.1578858862865;
-        Sun, 12 Jan 2020 11:54:22 -0800 (PST)
-Received: from localhost (c-73-25-156-94.hsd1.or.comcast.net. [73.25.156.94])
-        by smtp.gmail.com with ESMTPSA id n24sm11082138pff.12.2020.01.12.11.54.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 11:54:22 -0800 (PST)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 4/4] arm64: dts: sdm845: move gpu zap nodes to per-device dts
-Date:   Sun, 12 Jan 2020 11:54:00 -0800
-Message-Id: <20200112195405.1132288-5-robdclark@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200112195405.1132288-1-robdclark@gmail.com>
-References: <20200112195405.1132288-1-robdclark@gmail.com>
+        Sun, 12 Jan 2020 14:56:30 -0500
+Received: from ozlabs.org ([203.11.71.1]:55221 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728659AbgALT43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 14:56:29 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47wnXl3B0Gz9sPW;
+        Mon, 13 Jan 2020 06:56:23 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578858987;
+        bh=JEaFgT13395F8z6RSXB4BOtl0VLZfQth8DbGdBHoACo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Cz2xorTD/sU2vA7umeBBu3Acqoo0PutXTtqK0/U3F4ghpBRquhGLSHN0VioS70NkB
+         sd7IzVxruSaB9O8wF6v6H7UwY6vBRrZUyfMySd5Rws4BnVNXi/lfY6SfLAcZ5G5sQw
+         3WBpxRfr8I4OmN/tpXpKf38Ye6hmjEEGohUUbOm+yEXXSjGIb4UlINklQH6pHfgeg0
+         98CXmoDIHKwbL6X+f2dv/PdoQEs8FqiajutZrdI3s8EwBEMdmtbg3uTJKRXajUfkKt
+         a4ILcud0/ecz3TVd5+wI/VuSYFCqgcVQL7Fbzzl3dfjPoZBSlHNPXOKxdD6LJpnYO+
+         N18w9dfZZlBZw==
+Date:   Mon, 13 Jan 2020 06:56:22 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: linux-next: Fixes tag needs some work in the arm-soc tree
+Message-ID: <20200113065622.15eb3c87@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/=dfYuDVEKiAfgopGaB+pRQ0";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+--Sig_/=dfYuDVEKiAfgopGaB+pRQ0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-We want to specify per-device firmware-name, so move the zap node into
-the .dts file for individual boards/devices.  This lets us get rid of
-the /delete-node/ for cheza, which does not use zap.
+Hi all,
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
-v2: use 'sdm845' for subdir for devices that use test-key signed fw
+n commit
 
- arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi           | 1 -
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts           | 7 +++++++
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts              | 7 +++++++
- arch/arm64/boot/dts/qcom/sdm845.dtsi                 | 6 +-----
- arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 7 +++++++
- 5 files changed, 22 insertions(+), 6 deletions(-)
+  0ff15a86d0c5 ("ARM: dts: stm32: Add power-supply for DSI panel on stm32f4=
+69-disco")
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-index 9a4ff57fc877..2db79c1ecdac 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-@@ -165,7 +165,6 @@ panel_in_edp: endpoint {
- /delete-node/ &venus_mem;
- /delete-node/ &cdsp_mem;
- /delete-node/ &cdsp_pas;
--/delete-node/ &zap_shader;
- /delete-node/ &gpu_mem;
- 
- /* Increase the size from 120 MB to 128 MB */
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index d100f46791a6..6cd9201ffbbd 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -352,6 +352,13 @@ &gcc {
- 			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
- };
- 
-+&gpu {
-+	zap-shader {
-+		memory-region = <&gpu_mem>;
-+		firmware-name = "qcom/sdm845/a630_zap.mbn";
-+	};
-+};
-+
- &pm8998_gpio {
- 	vol_up_pin_a: vol-up-active {
- 		pins = "gpio6";
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index c57548b7b250..09ad37b0dd71 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -360,6 +360,13 @@ &gcc {
- 			   <GCC_LPASS_SWAY_CLK>;
- };
- 
-+&gpu {
-+	zap-shader {
-+		memory-region = <&gpu_mem>;
-+		firmware-name = "qcom/sdm845/a630_zap.mbn";
-+	};
-+};
-+
- &i2c10 {
- 	status = "okay";
- 	clock-frequency = <400000>;
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index ddb1f23c936f..601c57cc9b6d 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -2804,7 +2804,7 @@ dsi1_phy: dsi-phy@ae96400 {
- 			};
- 		};
- 
--		gpu@5000000 {
-+		gpu: gpu@5000000 {
- 			compatible = "qcom,adreno-630.2", "qcom,adreno";
- 			#stream-id-cells = <16>;
- 
-@@ -2824,10 +2824,6 @@ gpu@5000000 {
- 
- 			qcom,gmu = <&gmu>;
- 
--			zap_shader: zap-shader {
--				memory-region = <&gpu_mem>;
--			};
--
- 			gpu_opp_table: opp-table {
- 				compatible = "operating-points-v2";
- 
-diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-index 13dc619687f3..b255be3a4a0a 100644
---- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-@@ -245,6 +245,13 @@ &gcc {
- 			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
- };
- 
-+&gpu {
-+	zap-shader {
-+		memory-region = <&gpu_mem>;
-+		firmware-name = "qcom/LENOVO/81JL/qcdxkmsuc850.mbn";
-+	};
-+};
-+
- &i2c1 {
- 	status = "okay";
- 	clock-frequency = <400000>;
--- 
-2.24.1
+Fixes tag
 
+  Fixes: 18c8866266 ("ARM: dts: stm32: Add display support on stm32f469-dis=
+co")
+
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+Also, please keep the commit message tags together.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/=dfYuDVEKiAfgopGaB+pRQ0
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4beeYACgkQAVBC80lX
+0Gwj4wgAof2ZXe39HMVp4vHI4FVJ9EfaCK9P1+4weTVebEXYokK1t2rX7VtpkHYd
+MOdotYwdVeH3l2f7GUq462vygVU2Cs6LDWpnsT2LxpHUSpvLhEyhoXf+PMiNG5N/
+a33sQo3k5M4ErHOWjMeN+3tvH5reX06MbNk1ihgMyYo1JBE+xildptitmQG010bJ
+Pa+WSsiGXJPGrLvrjcIrWOfuaXDWunOPnqX2d4LJYUl7Kh1cdawJI4bYt0EdtrYm
+7nJTaB9DMW7nZBtZbqLCQsHk+PLgzb0+iCBg+yYCEP91E3O+XYBBYsO/aeBKan+y
+PoLERKhsUzuGG39l00SzpcJjf3MUwQ==
+=iF0B
+-----END PGP SIGNATURE-----
+
+--Sig_/=dfYuDVEKiAfgopGaB+pRQ0--
