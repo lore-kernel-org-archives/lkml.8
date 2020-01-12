@@ -2,99 +2,193 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 231AAC33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 14:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD68BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 15:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E456221744
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 14:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84AA02084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 15:26:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEEn1sRj"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QbaxMTLB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733020AbgALOdZ (ORCPT
+        id S1733080AbgALP0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 09:33:25 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45159 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732841AbgALOdY (ORCPT
+        Sun, 12 Jan 2020 10:26:41 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36723 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733062AbgALP0l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 09:33:24 -0500
-Received: by mail-pl1-f196.google.com with SMTP id b22so2783166pls.12;
-        Sun, 12 Jan 2020 06:33:24 -0800 (PST)
+        Sun, 12 Jan 2020 10:26:41 -0500
+Received: by mail-pg1-f194.google.com with SMTP id k3so3472055pgc.3;
+        Sun, 12 Jan 2020 07:26:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=UVg/F2RNpDB9kBXeS+NVyoBtj6BWxNkqjrNEvbi9DZk=;
-        b=KEEn1sRjtTmXw5h+uBGaJmzi+EsGLLNHvw4zux4GqzAHSDN8+GkM/qO09wTHBjxTT2
-         k0Ai5OophxVwOmtczeMSnie7Nxnr66oyZMatSN14dxQtEiY9jMUYfIXEzL3PEW4b1T1f
-         Z7dffQN9cxipKaVhC0eMtnnrBw8Vf3HqYBfFtvNX1alySxeNxkeXJsdj8VVED4OB9enF
-         d/sOK3HFYGEXmTiPyQS1vIbbYYKxnz+XcKEcNFZUdL1l8/j0EJrWeoejl/Blhv95g0To
-         D7FRAp2UKYLbr+eLBW/3EROjnJsb71EGyZoD3xrcsM8MQKX63/H2Yjxk0wjeM8+b4UHn
-         Z/FA==
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=9mpci+1EtRHccMISBpQo/AaeUz8hmG5B92+V59ldewE=;
+        b=QbaxMTLBdKalE2qMh2Tpw+5yK7FumIrWlcYNOLDH18cuwZlJNkNE5Pdg4ERKs+7hSr
+         jKs4+T5bHy1SSe+2xxdCJ5B0XxIcbDaRWJwFW/J/GHcutfT/+XVWH9Rd5Klqg4ZMKa4o
+         zNYmr9Os9X0xFrTzo5dcCsTNrAaJ4ecIn+pjhA2ck1lKeiTCA2x1xuCEkvRQeP7wyXnH
+         SGWs0oqSy1X6zBwEZI4F+u25DKFcwJYGblp/drIaV0ETZLxQYPACy/BnfVmBQHzE+4X6
+         wA+U5OhkUlsAohaeB3ebYNhBr228glL/KrNLYWW825nnPqcnHPNk3vxB49NToK3bqnGh
+         PbtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=UVg/F2RNpDB9kBXeS+NVyoBtj6BWxNkqjrNEvbi9DZk=;
-        b=FfgY9mvEdaV1c4E9wPufHN8MF5PYtoT2wFBfw2u2Y1YOEDIoPLCCKHpnEZPzZho/aV
-         uay9bE3cmRmjywtzG7SHV9WZ1pRhjprSAtz4qC2yZ3rR0ay0SUTarZkpe+UuLxrJsYmk
-         vaYErPGqFuSsoFr8Qm1YyKd+IPIt0Ma2sCJCWZ6shJOQkRnvODF7m0nylLhhE/xUE3Yr
-         S6Qi+PW0xmH/kNZAE9rGD9QBXA/WPs7JtJCZU3FRAZzIykwQyjfeZBYBQYg9nQ6Tr8m/
-         jceZ5C0CXNy/Y7lUOQ9K/aUVOl98z8sVams/b1OZfnQjOjGEa15zBDDZD1TOe8V8x8CA
-         eTKA==
-X-Gm-Message-State: APjAAAUWrGxa8pjbh4Max7UWM7CULdUZ5N85BXZcl7xoFbCbt7g71Wco
-        0wZ6O2L4bHGORBIgf251mUc=
-X-Google-Smtp-Source: APXvYqzG4NH4BoSyqQj+gBN4li8QAnYRWgGx9+iZvgxidRhEmKte0t5pq+i6/vrc580B9MqEeyBJnQ==
-X-Received: by 2002:a17:90a:1a14:: with SMTP id 20mr17451826pjk.33.1578839604114;
-        Sun, 12 Jan 2020 06:33:24 -0800 (PST)
-Received: from localhost.localdomain ([183.82.121.105])
-        by smtp.gmail.com with ESMTPSA id w187sm10738921pfw.62.2020.01.12.06.33.21
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Sun, 12 Jan 2020 06:33:23 -0800 (PST)
-From:   sachin agarwal <asachin591@gmail.com>
-X-Google-Original-From: sachin agarwal <sachinagarwal@sachins-MacBook-2.local>
-To:     linus.walleij@linaro.org
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sachin agarwal <asachin591@gmail.com>
-Subject: [PATCH] GPIO: vx855: fixed a typo
-Date:   Sun, 12 Jan 2020 20:03:12 +0530
-Message-Id: <20200112143312.66048-1-sachinagarwal@sachins-MacBook-2.local>
-X-Mailer: git-send-email 2.24.1
+        bh=9mpci+1EtRHccMISBpQo/AaeUz8hmG5B92+V59ldewE=;
+        b=Amf/bol+Y+qwKHZ3VmNVdQbyw1tdCatnGFzYyUkK/5HgVAlkjo6ayspFfPeYvYK1bs
+         0R8shQIiIEv8y+x68YV82VOKFpy/R4XMjlnmaCI5AGouR1LzzroSGbE2CzDCpLef6oWK
+         9OvhNkXqM2SeX5rv0k2ANfLsT116MnYt6aeCdyLAuLyVTCGqWcl0rawYZKnq9rMi0g+F
+         tGHbioZLFcflvfk3uU0DnpmsTNYBkNVg4CU26GICLaqM4vXMG6g0WcwSRgEq0bdiOFnF
+         oLeVvN/hb625ifkeJ1aGVpTaUDR8+61kil2Yq18lXtOPie998kPpWj8dEo9K9mxy7h+u
+         kemA==
+X-Gm-Message-State: APjAAAVK2OZhTsxu35omG/fdXn5SKAn+1vFQiWa8raiHpsYZWVndiORc
+        EBUXYR+6RDASF2S8nhC8y7A=
+X-Google-Smtp-Source: APXvYqwtXlY/DrUh/9KJc0JZMcj64zOvfPnmBKd6tEWpEB6gV61zOaYlOu+px7l9oQR+Mgboegh2xw==
+X-Received: by 2002:aa7:848c:: with SMTP id u12mr14881679pfn.12.1578842799627;
+        Sun, 12 Jan 2020 07:26:39 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l21sm10624740pff.100.2020.01.12.07.26.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 12 Jan 2020 07:26:38 -0800 (PST)
+Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
+To:     Gabriel C <nix.or.die@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>, Chris Healy <cphealy@gmail.com>
+References: <20191215174509.1847-1-linux@roeck-us.net>
+ <20191215174509.1847-2-linux@roeck-us.net> <yq1r211dvck.fsf@oracle.com>
+ <b22a519c-8f26-e731-345f-9deca1b2150e@roeck-us.net>
+ <yq1sgkq21ll.fsf@oracle.com> <20200108153341.GB28530@roeck-us.net>
+ <38af9fda-9edf-1b54-bd8d-92f712ae4cda@roeck-us.net>
+ <CAEJqkgg_piiAWy4r3VD=KyQ7pi69bZNym2Ws=Tr8SY5wf+Sprg@mail.gmail.com>
+ <CACRpkdYU7ZDcKp+BbXRCnEFDw1xwDkU_vXsfo-AZNUWGEVknXQ@mail.gmail.com>
+ <CAEJqkggo3Mou1SykjisyYn+3SGGgNfnKagr=7ZPyw=Y=1MZ55w@mail.gmail.com>
+ <CACRpkdayHFmdz4nAMaXR07Hcy=dLLGnnU8PkFhwQKuDTLnvOSw@mail.gmail.com>
+ <e3caa946-b8f2-75c7-4bcb-69ad198de472@roeck-us.net>
+ <CAEJqkggBvBus-G=TevSf0OUWLx_63qmZEThi-tNyPmAD2JXW-g@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <25c57e9d-94db-3a8b-5f68-f8a49e500b45@roeck-us.net>
+Date:   Sun, 12 Jan 2020 07:26:36 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <CAEJqkggBvBus-G=TevSf0OUWLx_63qmZEThi-tNyPmAD2JXW-g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sachin agarwal <asachin591@gmail.com>
+On 1/12/20 5:45 AM, Gabriel C wrote:
+> Am So., 12. Jan. 2020 um 14:07 Uhr schrieb Guenter Roeck <linux@roeck-us.net>:
+>>
+>> On 1/12/20 4:07 AM, Linus Walleij wrote:
+>>> On Sun, Jan 12, 2020 at 1:03 PM Gabriel C <nix.or.die@gmail.com> wrote:
+>>>> Am So., 12. Jan. 2020 um 12:22 Uhr schrieb Linus Walleij
+>>>> <linus.walleij@linaro.org>:
+>>>>>
+>>>>> On Sun, Jan 12, 2020 at 12:18 PM Gabriel C <nix.or.die@gmail.com> wrote:
+>>>>>
+>>>>>> What I've noticed however is the nvme temperature low/high values on
+>>>>>> the Sensors X are strange here.
+>>>>> (...)
+>>>>>> Sensor 1:     +27.9°C  (low  = -273.1°C, high = +65261.8°C)
+>>>>>> Sensor 2:     +29.9°C  (low  = -273.1°C, high = +65261.8°C)
+>>>>> (...)
+>>>>>> Sensor 1:     +23.9°C  (low  = -273.1°C, high = +65261.8°C)
+>>>>>> Sensor 2:     +25.9°C  (low  = -273.1°C, high = +65261.8°C)
+>>>>>
+>>>>> That doesn't look strange to me. It seems like reasonable defaults
+>>>>> from the firmware if either it doesn't really log the min/max temperatures
+>>>>> or hasn't been through a cycle of updating these yet. Just set both
+>>>>> to absolute min/max temperatures possible.
+>>>>
+>>>> Ok I'll check that.
+>>>>
+>>>> Do you mean by setting the temperatures to use a lmsensors config?
+>>>> Or is there a way to set these with a nvme command?
+>>>
+>>> Not that I know of.
+>>>
+>>> The min/max are the minumum and maximum temperatures the
+>>> device has experienced during this power-on cycle.
+>>>
+>>
+>> No, that would be lowest/highest. The above are (or should be) per-sensor
+>> setpoints. The default for those is typically the absolute minimum /
+>> maximum of the supported range.
+>>
+>> Some SATA drives report the lowest/highest temperatures experienced
+>> since power cycle, like here.
+>>
+>> drivetemp-scsi-5-0
+>> Adapter: SCSI adapter
+>> temp1:        +23.0°C  (low  =  +0.0°C, high = +60.0°C)
+>>                          (crit low = -41.0°C, crit = +85.0°C)
+>>                          (lowest = +20.0°C, highest = +31.0°C)
+>>
+> 
+> The SATA temperatures are fine and reported like this here too, just
+> the nvme ones are strange.
+> 
+> drivetemp-scsi-4-0
+> Adapter: SCSI adapter
+> temp1:        +28.0°C  (low  =  +1.0°C, high = +61.0°C)
+>                        (crit low =  +2.0°C, crit = +60.0°C)
+>                        (lowest = +16.0°C, highest = +31.0°C)
+> 
+> drivetemp-scsi-12-0
+> Adapter: SCSI adapter
+> temp1:        +29.0°C  (low  =  +1.0°C, high = +61.0°C)
+>                        (crit low =  +2.0°C, crit = +60.0°C)
+>                        (lowest = +18.0°C, highest = +32.0°C)
+> 
+> and so on.
+> 
+> Btw, where I can find the code does these calculations?
+> 
 
-we had written "betwee" rather than "between".
+Not sure if that is what you are looking for, but the nvme hardware
+monitoring driver is at drivers/nvme/host/hwmon.c, the SATA hardware
+monitoring driver is at drivers/hwmon/drivetemp.c.
 
-Signed-off-by: Sachin agarwal <asachin591@gmail.com>
----
- drivers/gpio/gpio-vx855.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The limits on nvme drives are configurable.
 
-diff --git a/drivers/gpio/gpio-vx855.c b/drivers/gpio/gpio-vx855.c
-index 4ff146ca32fe..3bf397b8dfbc 100644
---- a/drivers/gpio/gpio-vx855.c
-+++ b/drivers/gpio/gpio-vx855.c
-@@ -71,7 +71,7 @@ static inline u_int32_t gpio_o_bit(int i)
- 		return 1 << (i + 13);
- }
- 
--/* Mapping betwee numeric GPIO ID and the actual GPIO hardware numbering:
-+/* Mapping between numeric GPIO ID and the actual GPIO hardware numbering:
-  * 0..13	GPI 0..13
-  * 14..26	GPO 0..12
-  * 27..41	GPIO 0..14
--- 
-2.24.0
+root@server:/sys/class/hwmon# sensors nvme-pci-0100
+nvme-pci-0100
+Adapter: PCI adapter
+Composite:    +40.9°C  (low  = -273.1°C, high = +84.8°C)
+                        (crit = +84.8°C)
+Sensor 1:     +40.9°C  (low  = -273.1°C, high = +65261.8°C)
+Sensor 2:     +43.9°C  (low  = -273.1°C, high = +65261.8°C)
 
+root@server:/sys/class/hwmon# echo 0 > hwmon1/temp2_min
+root@server:/sys/class/hwmon# echo 100000 > hwmon1/temp2_max
+
+root@server:/sys/class/hwmon# sensors nvme-pci-0100
+nvme-pci-0100
+Adapter: PCI adapter
+Composite:    +38.9°C  (low  = -273.1°C, high = +84.8°C)
+                        (crit = +84.8°C)
+Sensor 1:     +38.9°C  (low  =  -0.1°C, high = +99.8°C)
+Sensor 2:     +42.9°C  (low  = -273.1°C, high = +65261.8°C)
+
+If you dislike the defaults, just configure whatever you think is
+appropriate for your system.
+
+Thanks,
+Guenter
