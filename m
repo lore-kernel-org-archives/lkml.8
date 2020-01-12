@@ -2,153 +2,305 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBD21C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:55:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B682C33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 19:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A98BC2080D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:55:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WB3lwemy"
+	by mail.kernel.org (Postfix) with ESMTP id 6AE4322314
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 19:02:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578855748;
+	bh=UIRS0SEnchyp42iLA05TKe9m/L5UjGhkJdPBlBBFwXk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=zpyAGziZm9pUtjl+Y3dknyGhg33BzArBhQS8R/Ke7dEvHbeLepj5b8lhKew2GBiKs
+	 BGKwF5gG6kRja7EWD4VNExEwJ7g6OqkmbZgV/I6336ISkJkX8yXlI8qjl5jGE+XIdO
+	 ogp+q7WWeYdel2IWSuSELLnAN7nvI2IU0MGpz1rM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733256AbgALSz5 (ORCPT
+        id S1733225AbgALTC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 13:55:57 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38632 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733180AbgALSz5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 13:55:57 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so6479136wrh.5
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 10:55:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fY8B4ZtvP83/dTjMK/JRm9bWAGsviMXVUWMOmsCs0pg=;
-        b=WB3lwemyq+W4GXNL/b7f9IvgYyiS2yfWAZYFVSR3Ryva4Qlwt7o2S/6HqMA7ZMHFfB
-         Fv6EEHUjTnCSWLsg4qqK20IbZUXt8QTTeHttyLvyP7sEwRq0Of/Xya4uEZvVGD4qNPNK
-         SuReACe+8fBS0PP9Wezg5Pj9mtaD3KuzmqX7V9O18St9/cP8W36tk2RahXSAep6dUCdV
-         MJqknn/mr7YwvubTm20DBF8rnejv2qRh1QDQ/HgCim3FlbM32RHCC1/E0KTIcn41koDA
-         J1pGkDMHTulnCP3Gx3lqGHAcFMFTOpHmjiuKaAdUpwkAQ7rEGX43LToxMbWuNHaVksAc
-         FqHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=fY8B4ZtvP83/dTjMK/JRm9bWAGsviMXVUWMOmsCs0pg=;
-        b=I0J0hCho+lZrGmD9x8tAIdtrBYTQyHiOOqWrIG1fe8IXQqfj6mfyDZQ4D+gktSxpsA
-         ufpJyGIgK9xVxFj5FfQz+fAg7q0He5uvDUa1xW9VN9jKx9tIBl4HZl+sjBepm5tyUMby
-         6+WYUy3tYXUNgqLNxy0zRy6QcZbwE7Ev+pLoa+Bb5IR6sPxYPzD2QFesqPM/7VuXTqzh
-         QBrcAwF2SWV5KBa4iqzQ0XSVnks87zSTWgPbgfbrXublldzXpBLeJev5kw4A2mMpzRGy
-         cejzeJePetHSat3VrLzXuAnasYdFxK5Xx4njmLZCDRCP/10p8ksVmh/sViU2x9ArjVt8
-         +fRQ==
-X-Gm-Message-State: APjAAAUXJPhU0ty7nRYy5NBjS3cCc9euHZNI+56bFxcDjaUlWhCTMAKD
-        L4tCl5jKkDyTCXbi1ogD9vxqI49PdNlAcw==
-X-Google-Smtp-Source: APXvYqxJAWyMKXPUjlPEm0yYQVn1sbKbTd2AsWLI1scp/eYPBwFnmJ2xBq7L8qvnVDrcccXkhkT8eg==
-X-Received: by 2002:adf:d850:: with SMTP id k16mr13930751wrl.96.1578855354698;
-        Sun, 12 Jan 2020 10:55:54 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:5d47:bb17:fc0:dfcb? ([2a01:e34:ed2f:f020:5d47:bb17:fc0:dfcb])
-        by smtp.googlemail.com with ESMTPSA id s8sm11299788wrt.57.2020.01.12.10.55.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jan 2020 10:55:54 -0800 (PST)
-Subject: Re: [PATCH] thermal: sun8i: remove unused variable and unneeded
- macros
-To:     Yangtao Li <tiny.windzz@gmail.com>, anarsoul@gmail.com,
-        rui.zhang@intel.com, amit.kucheria@verdurent.com,
-        mripard@kernel.org, wens@csie.org
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200112180925.23705-1-tiny.windzz@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <ed851f6a-e07b-380c-dc5d-2b765cc17e9b@linaro.org>
-Date:   Sun, 12 Jan 2020 19:55:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 12 Jan 2020 14:02:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730219AbgALTC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 14:02:27 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5875A214D8;
+        Sun, 12 Jan 2020 19:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578855745;
+        bh=UIRS0SEnchyp42iLA05TKe9m/L5UjGhkJdPBlBBFwXk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=sJHaBKGQXg4dyPDJtcdCGl1KkNrCRVtFCSvjNYzGQ+MrllHYhwiWz5ar8Qhu/XkIg
+         UA4F8aVoqMtGI+FSUS9mkQqkhPVpZ23Vy1xUCBN/PG1CqPI+ZSirQcfXKpbGa8rv15
+         FYdJvlrOGKBnTXipO928twZ0RsWMbvTGAmkBhjWs=
+Date:   Sun, 12 Jan 2020 20:02:23 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Linux 4.4.209
+Message-ID: <20200112190223.GA1364011@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <20200112180925.23705-1-tiny.windzz@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/01/2020 19:09, Yangtao Li wrote:
-> The cp_ft_flag variable is not used after initialization, so delete
-> it. After that, THS_EFUSE_CP_FT_MASK, THS_EFUSE_CP_FT_BIT and
-> THS_CALIBRATION_IN_FT are not needed, so delete them.
-> 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> ---
+I'm announcing the release of the 4.4.209 kernel.
 
-Applied, thanks
+All users of the 4.4 kernel series must upgrade.
 
+The updated 4.4.y git tree can be found at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
+and can be browsed at the normal kernel.org git web browser:
+	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+thanks,
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+greg k-h
+
+------------
+
+ Makefile                                          |    2 
+ arch/arm/boot/dts/am437x-gp-evm.dts               |    2 
+ arch/arm/boot/dts/am43x-epos-evm.dts              |    2 
+ arch/arm/mach-vexpress/spc.c                      |   12 +++
+ arch/mips/include/asm/thread_info.h               |   20 +++++
+ arch/parisc/include/asm/cmpxchg.h                 |   10 ++
+ arch/powerpc/mm/mem.c                             |    8 ++
+ arch/powerpc/platforms/pseries/hvconsole.c        |    2 
+ arch/s390/kernel/perf_cpum_sf.c                   |   22 ++++--
+ arch/s390/kernel/smp.c                            |   80 ++++++++++++++--------
+ arch/tile/lib/atomic_asm_32.S                     |    3 
+ arch/x86/include/asm/atomic.h                     |   13 ---
+ block/compat_ioctl.c                              |    9 ++
+ drivers/bluetooth/btusb.c                         |    3 
+ drivers/devfreq/devfreq.c                         |    6 -
+ drivers/firewire/net.c                            |    6 +
+ drivers/gpio/gpiolib.c                            |    8 ++
+ drivers/gpu/drm/drm_dp_mst_topology.c             |    6 +
+ drivers/infiniband/core/cma.c                     |    1 
+ drivers/md/raid1.c                                |    2 
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.h   |    2 
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_main.c  |   12 ++-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_sriov.h |    1 
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c  |   12 +++
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sunxi.c |    2 
+ drivers/net/macvlan.c                             |    2 
+ drivers/net/usb/lan78xx.c                         |   11 +--
+ drivers/net/vxlan.c                               |    2 
+ drivers/net/wireless/ath/ath9k/htc_drv_txrx.c     |   23 +++++-
+ drivers/regulator/rn5t618-regulator.c             |    1 
+ drivers/scsi/libsas/sas_discover.c                |   11 ++-
+ drivers/scsi/lpfc/lpfc_bsg.c                      |   15 ++--
+ drivers/scsi/qla2xxx/qla_isr.c                    |    4 -
+ drivers/scsi/qla4xxx/ql4_os.c                     |    1 
+ drivers/tty/hvc/hvc_vio.c                         |   16 ++++
+ drivers/tty/serial/msm_serial.c                   |   13 +++
+ drivers/usb/core/config.c                         |   70 +++++++++++++++----
+ drivers/usb/gadget/function/f_ecm.c               |    6 +
+ drivers/usb/gadget/function/f_rndis.c             |    1 
+ drivers/usb/serial/option.c                       |    2 
+ drivers/xen/balloon.c                             |    3 
+ fs/locks.c                                        |    2 
+ fs/pstore/ram.c                                   |   11 +++
+ fs/xfs/xfs_log.c                                  |    2 
+ include/linux/dmaengine.h                         |    5 +
+ include/linux/if_ether.h                          |    8 ++
+ include/net/neighbour.h                           |    2 
+ include/uapi/linux/netfilter/xt_sctp.h            |    6 -
+ kernel/locking/spinlock_debug.c                   |   32 ++++----
+ kernel/taskstats.c                                |   30 +++++---
+ kernel/trace/ftrace.c                             |    6 -
+ net/8021q/vlan.h                                  |    1 
+ net/8021q/vlan_dev.c                              |    3 
+ net/8021q/vlan_netlink.c                          |   19 +++--
+ net/bluetooth/l2cap_core.c                        |    4 -
+ net/core/neighbour.c                              |    4 -
+ net/ethernet/eth.c                                |    7 +
+ net/ipv4/tcp_input.c                              |    5 +
+ net/llc/llc_station.c                             |    4 -
+ net/netfilter/nf_conntrack_netlink.c              |    3 
+ net/rfkill/core.c                                 |    7 +
+ net/sched/sch_fq.c                                |    2 
+ net/sctp/sm_sideeffect.c                          |   28 ++++---
+ scripts/kconfig/expr.c                            |    7 +
+ sound/isa/cs423x/cs4236.c                         |    3 
+ sound/pci/ice1712/ice1724.c                       |    9 +-
+ sound/soc/codecs/wm8962.c                         |    4 -
+ tools/perf/builtin-report.c                       |    7 -
+ 68 files changed, 459 insertions(+), 189 deletions(-)
+
+Aditya Pakki (1):
+      rfkill: Fix incorrect check to avoid NULL pointer dereference
+
+Aleksandr Yashkin (1):
+      pstore/ram: Write new dumps to start of recycled zones
+
+Amir Goldstein (1):
+      locks: print unsigned ino in /proc/locks
+
+Andreas Kemnade (1):
+      regulator: rn5t618: fix module aliases
+
+Arnd Bergmann (1):
+      compat_ioctl: block: handle Persistent Reservations
+
+Bo Wu (1):
+      scsi: lpfc: Fix memory leak on lpfc_bsg_write_ebuf_set func
+
+Brian Foster (1):
+      xfs: fix mount failure crash on invalid iclog memory access
+
+Chan Shu Tak, Alex (1):
+      llc2: Fix return statement of llc_stat_ev_rx_null_dsap_xid_c (and _test_c)
+
+Chen-Yu Tsai (1):
+      net: stmmac: dwmac-sunxi: Allow all RGMII modes
+
+Christian Brauner (1):
+      taskstats: fix data-race
+
+Chuhong Yuan (1):
+      RDMA/cma: add missed unregister_pernet_subsys in init failure
+
+Colin Ian King (1):
+      ALSA: cs4236: fix error return comparison of an unsigned integer
+
+Cristian Birsan (1):
+      net: usb: lan78xx: Fix error message format specifier
+
+Dan Carpenter (2):
+      scsi: iscsi: qla4xxx: fix double free in probe
+      Bluetooth: delete a stray unlock
+
+Daniel Axtens (1):
+      powerpc/pseries/hvconsole: Fix stack overread via udbg
+
+Daniele Palmas (1):
+      USB: serial: option: add Telit ME910G1 0x110a composition
+
+Dmitry Vyukov (1):
+      locking/x86: Remove the unused atomic_inc_short() methd
+
+EJ Hsu (1):
+      usb: gadget: fix wrong endpoint desc
+
+Eric Dumazet (6):
+      net: add annotations on hh->hh_len lockless accesses
+      net: usb: lan78xx: fix possible skb leak
+      pkt_sched: fq: do not accept silly TCA_FQ_QUANTUM
+      vlan: vlan_changelink() should propagate errors
+      vlan: fix memory leak in vlan_dev_set_egress_priority
+      macvlan: do not assume mac_header is set in macvlan_broadcast()
+
+Florian Westphal (1):
+      netfilter: ctnetlink: netns exit must wait for callbacks
+
+Greg Kroah-Hartman (1):
+      Linux 4.4.209
+
+Hangbin Liu (1):
+      vxlan: fix tos value before xmit
+
+Heiko Carstens (1):
+      s390/smp: fix physical to logical CPU map for SMT
+
+Helge Deller (1):
+      parisc: Fix compiler warnings in debug_core.c
+
+Imre Deak (1):
+      drm/mst: Fix MST sideband up-reply failure handling
+
+Jason Yan (1):
+      scsi: libsas: stop discovering if oob mode is disconnected
+
+Johan Hovold (1):
+      USB: core: fix check for duplicate endpoints
+
+Juergen Gross (1):
+      xen/balloon: fix ballooned page accounting without hotplug enabled
+
+Leo Yan (1):
+      tty: serial: msm_serial: Fix lockup for sysrq and oops
+
+Leonard Crestez (1):
+      PM / devfreq: Don't fail devfreq_dev_release if not in list
+
+Lukas Wunner (1):
+      dmaengine: Fix access to uninitialized dma_slave_caps
+
+Manish Chopra (2):
+      bnx2x: Do not handle requests from VFs after parity
+      bnx2x: Fix logic to get total no. of PFs per engine
+
+Marco Elver (1):
+      locking/spinlock/debug: Fix various data races
+
+Masashi Honma (2):
+      ath9k_htc: Modify byte order for an error message
+      ath9k_htc: Discard undersized packets
+
+Mike Rapoport (1):
+      powerpc: Ensure that swiotlb buffer is allocated from low memory
+
+Oliver Neukum (1):
+      Bluetooth: btusb: fix PM leak in error case of setup
+
+Paul Burton (1):
+      MIPS: Avoid VDSO ABI breakage due to global register variable
+
+Pengcheng Yang (1):
+      tcp: fix "old stuff" D-SACK causing SACK to be treated as D-SACK
+
+Phil Sutter (1):
+      netfilter: uapi: Avoid undefined left-shift in xt_sctp.h
+
+Roman Bolshakov (1):
+      scsi: qla2xxx: Don't call qlt_async_event twice
+
+Russell King (1):
+      gpiolib: fix up emulated open drain outputs
+
+Sasha Levin (1):
+      Revert "perf report: Add warning when libunwind not compiled in"
+
+Shengjiu Wang (1):
+      ASoC: wm8962: fix lambda value
+
+Sudeep Holla (1):
+      ARM: vexpress: Set-up shared OPP table instead of individual for each CPU
+
+Takashi Iwai (1):
+      ALSA: ice1724: Fix sleep-in-atomic in Infrasonic Quartet support code
+
+Thomas Hebb (1):
+      kconfig: don't crash on NULL expressions in expr_eq()
+
+Thomas Richter (2):
+      s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
+      s390/cpum_sf: Avoid SBD overflow condition in irq handler
+
+Tomi Valkeinen (1):
+      ARM: dts: am437x-gp/epos-evm: fix panel compatible
+
+Wen Yang (1):
+      ftrace: Avoid potential division by zero in function profiler
+
+Xin Long (1):
+      sctp: free cmd->obj.chunk for the unprocessed SCTP_CMD_REPLY
+
+Zhiqiang Liu (1):
+      md: raid1: check rdev before reference in raid1_sync_request func
 
