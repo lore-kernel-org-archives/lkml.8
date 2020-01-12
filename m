@@ -2,115 +2,110 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 896C5C32771
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 09:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C833C32771
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 10:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50CAB21744
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 09:59:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0733A206DA
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 10:17:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Z6i8AbYB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732542AbgALJ7o (ORCPT
+        id S1732568AbgALKRU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 04:59:44 -0500
-Received: from 8bytes.org ([81.169.241.247]:59692 "EHLO theia.8bytes.org"
+        Sun, 12 Jan 2020 05:17:20 -0500
+Received: from mout.web.de ([212.227.15.14]:45441 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732395AbgALJ7o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 04:59:44 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 0116D3AA; Sun, 12 Jan 2020 10:59:42 +0100 (CET)
-Date:   Sun, 12 Jan 2020 10:59:41 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [git pull] IOMMU Fixes for Linux v5.5-rc5
-Message-ID: <20200112095936.GA17108@8bytes.org>
+        id S1732557AbgALKRU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 05:17:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1578824230;
+        bh=5i96d9WBH6Yxu0PP+hyCQbbIFIlqnaw0r9G2sPEDDhw=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Z6i8AbYB65Cd9EpS6dkzLU92Yeimce0XscMnPMPLBn13rpoMhu64cxwNMftJqGtll
+         Lj9TlWv/O6b5oqmHZOMPqOGoNWhH82SPObQNyLZys8JAOqNjkDsZsJB+WEpqwCYjT5
+         dxBs5qtWbRJcauFg1eJazYOimQ4+zFD2PCQqSdh0=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.23] ([89.12.27.144]) by smtp.web.de (mrweb004
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LbftD-1jVwWj2ODr-00lEAA; Sun, 12
+ Jan 2020 11:17:10 +0100
+Subject: Re: [PATCH v2 0/5] mfd: RK8xx tidyup
+To:     Robin Murphy <robin.murphy@arm.com>, lee.jones@linaro.org
+Cc:     linux-kernel@vger.kernel.org, heiko@sntech.de,
+        linux-rockchip@lists.infradead.org
+References: <cover.1578789410.git.robin.murphy@arm.com>
+From:   Soeren Moch <smoch@web.de>
+Message-ID: <fafe31fa-8a26-6993-2c78-e1cc06ecc05a@web.de>
+Date:   Sun, 12 Jan 2020 11:17:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cover.1578789410.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Provags-ID: V03:K1:PlqFJBikMPfIGJPHDPMU3lWulN2oviAdnx+7/MmzajGV0k3IQkh
+ CoAn8J87rJmjfGklRZjOfZciV9Iy2koLfmlcvEB151pahokN9/QBja+GAHWpeoJfudHpymx
+ r3WUN5NrackIpyDo4CNQ8Dla61rz/2ZJPUtFStFB8wIpqw0AIOBnlNUaucUydS588FLneMn
+ DNuwb1fh5fAAdgKlG1YuQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:1Q/z5ypQwFw=:VBZE/RZssMZIOWKI4nrZNh
+ I4vEsojy2gAu2fCLj+xW7+HW0jlKwprN90EIQjLoJDFDoPuBr6VUIJuTBjej+9n27E0JeoVbH
+ 3YuI8CzCjserm0NpvO7pGoqfP5l5gDu4gasHLnR+qvdHQoNu+PV6keDfAMLToo4Gn0xzAqKws
+ 3Zxna9FqYnvHcNtUoDIj0/IKZWobY0JsPNoHiPl2V9+3k2/+vgxtBNyS0M6whYjHP2enKZIRN
+ G3+vdkPYwwSbey8wMGBP7hLVHv4+uchTWR3k39hAPFNCBVemqk+TAI9/I1BuDwk8EAw3GR36u
+ 4wNM0xNWU96b1fJyPut9IXXJUAToow3K9PZ+455hime9iQCt5SkbwfSvxitm1zgIHledZ7Zvl
+ /CciWcxluE/FTZKkhjSyEa0DnO3WKdWx24fwqYuE6bWK7p/ligXcLtqewJg4cKq4dSZKu+Obg
+ wTBAmwbWTU0h+vFi3oCakdScw73shye5wOIb+SoSyWcWZsjvPHFOKUQxq0QYJGhvX2ZgbfrhA
+ 4WKUJiyxuM1sd6PBvb9oCOTPSG11VlJaFUbagkQdpGb1EwYMJVMj6VfPkP7dKVGi5DL1NJSjB
+ ZDahO5xqYBAWjotC9fDtx8KxThyFPUfmBoiGLVhnYmTeIJQK1D3KGE5pyyKGg+wJm7DjAIK6o
+ Q1kI2uayBQmKkXMOTEWQVUJQBJExFHigcNEbpMgNaaW1aaPGLZBxiEd/pxU3UEhrsTJ2FXwiB
+ TJ+R8mo2I34NICONi3bzdy2BIXciEwALd9Mp9OHW4CHz+VLC1oRGQquB6l+RWn+acLf3QRk3a
+ sLgAAYSRq1c4v722l6Xi6xzzFeX5SZJcSv6nmmHeCqtpDYl3yiZDaGY9vdyJ7eDJTiItIPgJ6
+ I8SXsde3X5R+UDeMppK/GsETwywA/2MMwWhH8IDP5vc3LunzyvsFmYo/b79ZK1NB/4HqOnZ4r
+ LI3iVOjad2rOc7/3LcvvJFFRNUWn/Zlh/XpO6V5+VXjWUOA9TMWRe4NenvEyXBdDFleHhtsSZ
+ lKKeCze4CK29CLmUm70sDoXNzUMhgMcljNoqRTdRDaYouLdsE6JpCuy196MksEADKhfZvbAD5
+ /p58zLnyQCKHusb+pSfMZF6WIlalrc5u/TG/f2AuicgvA/zqTjThhC61L7GCejwWMKO//DIxx
+ UXVWsCf2mW0esIlv/z291GU6DRv4D36MD6ZrW0orCiEfpJXGQnkUrAREim/U6BGZIdQGMCGQ/
+ o6LrMb4JG6HjEh4kYMCPASpv4YqMHB9m5IU1VuA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 12.01.20 02:54, Robin Murphy wrote:
+> Hi all,
+>
+> Here's a second crack at my RK805-inspired cleanup. There was a bit
+> of debate around v1[1], but it seems like we're now all happy that this
+> is a reasonable way to go. For clarity I decided to include Soeren's
+> patch as #1/5, but since I've rewritten most of my patches I've not
+> included the tested-by tags.
+I re-tested this series on a RockPro64 board with RK808 PMIC.
 
---IJpNTDwzlM2Ie8A6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Tested-by: Soeren Moch <smoch@web.de>
 
-Hi Linus,
+Regards,
+Soeren
+>
+> Robin.
+>
+> [1] https://lore.kernel.org/lkml/cover.1575932654.git.robin.murphy@arm.com/
+>
+> Robin Murphy (4):
+>   mfd: rk808: Ensure suspend/resume hooks always work
+>   mfd: rk808: Stop using syscore ops
+>   mfd: rk808: Reduce shutdown duplication
+>   mfd: rk808: Convert RK805 to shutdown/suspend hooks
+>
+> Soeren Moch (1):
+>   mfd: rk808: Always use poweroff when requested
+>
+>  drivers/mfd/rk808.c       | 139 +++++++++++++-------------------------
+>  include/linux/mfd/rk808.h |   2 -
+>  2 files changed, 48 insertions(+), 93 deletions(-)
+>
 
-The following changes since commit c79f46a282390e0f5b306007bf7b11a46d529538:
-
-  Linux 5.5-rc5 (2020-01-05 14:23:27 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git iommu-fixes-v5.5-rc5
-
-for you to fetch changes up to 55817b340a31951d23d1692db45522560b1d20f9:
-
-  iommu/dma: fix variable 'cookie' set but not used (2020-01-07 17:08:58 +0100)
-
-----------------------------------------------------------------
-IOMMU Fixes for Linux v5.5-rc5
-
-Including:
-
-	- Two fixes for VT-d and generic IOMMU code to fix teardown on
-	  error handling code paths.
-
-	- Patch for the Intel VT-d driver to fix handling of non-PCI
-	  devices
-
-	- Fix W=1 compile warning in dma-iommu code
-
-----------------------------------------------------------------
-Jon Derrick (2):
-      iommu: Remove device link to group on failure
-      iommu/vt-d: Unlink device if failed to add to group
-
-Patrick Steinhardt (1):
-      iommu/vt-d: Fix adding non-PCI devices to Intel IOMMU
-
-Qian Cai (1):
-      iommu/dma: fix variable 'cookie' set but not used
-
- drivers/iommu/dma-iommu.c   |  3 ---
- drivers/iommu/intel-iommu.c | 22 ++++++++++++++++++----
- drivers/iommu/iommu.c       |  1 +
- 3 files changed, 19 insertions(+), 7 deletions(-)
-
-Please pull.
-
-Thanks,
-
-	Joerg
-
---IJpNTDwzlM2Ie8A6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEr9jSbILcajRFYWYyK/BELZcBGuMFAl4a7ggACgkQK/BELZcB
-GuO5JA/+Je/0TqClzmUhSe6RXC4s+fHx9kvT+ZDcQH6LPbh8zgUfSwIs2WnrqpJZ
-gIsdrLNehRv8PYin8AJg14ZxzQ/SOuJC7vf0NybVRGq5fsDPbEPh9T6k6bf7czzF
-Z0lMrby3qt1NHHsjRJHKmnPStgYuchwFvJy8JK/dZ0gmQsU79m5kVKdqtAVntIDg
-DDdaXBQCUa+jlZi9ndgkQklm2zaxdBVCkSEEfFjBHOOSMJJAce3wjDTEfQBSurZs
-NU7Nw0dR7Nq2YZJGTIAMj5RKWH6N3Cn9NUnL6stsKXOo5ivJPLaUEVBncXQLLjuL
-Yp4USo1hPhKCPCJzemGljcU7PN1ALlvNW6KFzy6eFEAlZ7k9vHWKejbGDj3hkBu8
-eM4Ia9h4rAyLellqI06+KOWZK9liikCo7n9bzI8+jvzsWUo/GuIJ9cWm4IEtlDpW
-DS+dyqldqW9K3ykK2q9w3CY6u3dQTLb0cIhNlePBQ+Y6u/cHpmfn2DMccPRXnLy2
-+uiUsk+et9IXbGRhqc9n0XLoBO7KXWdkDlNXBwmYFwHx9+vASwgmyUI7TjUHS5M3
-5+SEra0BmsE9M3DoZgXWGyr1qZypb+LveXooDF5aeE4DJ00XS7dkELe9p1hNL/fk
-S7dcK7IJJDlX5kmoq/iXYdxBYhK7ncvsiQvUvNV4QM07l2FN2Oc=
-=2L+s
------END PGP SIGNATURE-----
-
---IJpNTDwzlM2Ie8A6--
