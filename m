@@ -2,105 +2,96 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1451C33CA7
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B25C33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88289214AF
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27B721569
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:59:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+Bqtn3n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733180AbgALRs5 (ORCPT
+        id S1733166AbgALR7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 12:48:57 -0500
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:52504 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732957AbgALRs5 (ORCPT
+        Sun, 12 Jan 2020 12:59:50 -0500
+Received: from mail-wr1-f50.google.com ([209.85.221.50]:42622 "EHLO
+        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732917AbgALR7t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 12:48:57 -0500
-Received: from ramsan ([84.195.182.253])
-        by baptiste.telenet-ops.be with bizsmtp
-        id pVov210015USYZQ01Vov0H; Sun, 12 Jan 2020 18:48:55 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iqhM7-0000EV-10; Sun, 12 Jan 2020 18:48:55 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iqhM6-0000ik-Up; Sun, 12 Jan 2020 18:48:54 +0100
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] m68k: Switch to asm-generic/hardirq.h
-Date:   Sun, 12 Jan 2020 18:48:54 +0100
-Message-Id: <20200112174854.2726-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Sun, 12 Jan 2020 12:59:49 -0500
+Received: by mail-wr1-f50.google.com with SMTP id q6so6345972wro.9;
+        Sun, 12 Jan 2020 09:59:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dkGln0QRf/x6afs/q7FCW+45jv0mw0n5WnVAJt290Dw=;
+        b=P+Bqtn3noQnr5XyQLuyM7vu2d3ZHWfymTFQHj5zKTwZGzlIsQvxquP+aqckhoGw62x
+         3LZ0joGA2X2srcrwcwvs1V9fHhk79IJ8UWhhyxNrrYXiYyvLgp5M1e4ernLLhQSIrqJQ
+         ijipoLwcD+lvBXSKPHgzz+l7jp/mdDesunp44Gkntaj6oyBuhs4t0FZCZtT8sfSLo4bb
+         su1w8Qmckm82mJEMNYchl24Sa6uxe0QJy/XBYK5VtkH+GjXOiYmlEYX4fdFSlN/NXHQx
+         RVxlX2ZxpRoDq6PScGSax+XBxnJkr0aUVXBfO+w7N6CLbvFR8F9ZNGT6p5COa+Rp3IG8
+         pM4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dkGln0QRf/x6afs/q7FCW+45jv0mw0n5WnVAJt290Dw=;
+        b=SiSdhXP0likZCFsI23Coai79Cr1GkQLnPC0HapCJgwveCHGqu7v2S+dokC+CNFwXoY
+         Qewi7PLRH4hKU+rKaCj+/pZgTuhUZzXUx3QOLIVUE2+C8o00x+gUU445aOdlt/JV0Via
+         fLWdxRe6cGwM1OUnstCLJTU1oHhHh5fBi6b1SPA1yZCc6o/v/oN56icDsXsTA36Shaij
+         hWuJP0iBd0SZOiqGX91vD11oxYcWSC/7lAGpVEI48ojAnKoS50XRz73WylOeuVCo0fpQ
+         GoFTmAL+WYoE8eVtZaO6aSsAmhH8NyrKKrXSAzFV7lNmDqSeI940R06ZozYFFyKq9t0P
+         fmFQ==
+X-Gm-Message-State: APjAAAUvLfOoIzseCPtcwtM6WV2Up3mLXWlcTWHols1v1JHaqKfLkb+L
+        r+6FE5cZxMEoOlqloXpjH11Yg28K
+X-Google-Smtp-Source: APXvYqwW2P+VlaYfrXQ2LwOSEOyGan788/8HN6IDAONHvKCapAyRgUSb7ruHZmBdM88obL6AQZCtzA==
+X-Received: by 2002:adf:f80c:: with SMTP id s12mr14283354wrp.1.1578851987346;
+        Sun, 12 Jan 2020 09:59:47 -0800 (PST)
+Received: from Pali-Latitude.lan (ip-89-103-160-142.net.upcbroadband.cz. [89.103.160.142])
+        by smtp.gmail.com with ESMTPSA id t25sm11076522wmj.19.2020.01.12.09.59.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2020 09:59:46 -0800 (PST)
+From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jan Kara <jack@suse.cz>
+Subject: [WIP PATCH 0/4] Support for UDF 1.01 and 2.60 revisions
+Date:   Sun, 12 Jan 2020 18:59:29 +0100
+Message-Id: <20200112175933.5259-1-pali.rohar@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Classic m68k with MMU was converted to generic hardirqs a long time ago,
-and there are no longer include dependency issues preventing the direct
-use of asm-generic/hardirq.h.
+These are my work-in-progress patches for UDF 1.01 and 2.60 revisions.
+Patches are untested and UDF 2.60 support is only in R/O mode.
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- arch/m68k/include/asm/Kbuild    |  1 +
- arch/m68k/include/asm/hardirq.h | 29 -----------------------------
- 2 files changed, 1 insertion(+), 29 deletions(-)
- delete mode 100644 arch/m68k/include/asm/hardirq.h
+I'm sending them to know what do you think about it. There is missing
+code for parsing of numFiles, numDirs, minUDFReadRev and minUDFWriteRev
+values from UDF 1.50 VAT discs, but this could be done in other patches.
 
-diff --git a/arch/m68k/include/asm/Kbuild b/arch/m68k/include/asm/Kbuild
-index 591d53b763b71b27..63f12afc48749c96 100644
---- a/arch/m68k/include/asm/Kbuild
-+++ b/arch/m68k/include/asm/Kbuild
-@@ -8,6 +8,7 @@ generic-y += emergency-restart.h
- generic-y += exec.h
- generic-y += extable.h
- generic-y += futex.h
-+generic-y += hardirq.h
- generic-y += hw_irq.h
- generic-y += irq_regs.h
- generic-y += irq_work.h
-diff --git a/arch/m68k/include/asm/hardirq.h b/arch/m68k/include/asm/hardirq.h
-deleted file mode 100644
-index 11793165445df45a..0000000000000000
---- a/arch/m68k/include/asm/hardirq.h
-+++ /dev/null
-@@ -1,29 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--#ifndef __M68K_HARDIRQ_H
--#define __M68K_HARDIRQ_H
--
--#include <linux/threads.h>
--#include <linux/cache.h>
--#include <asm/irq.h>
--
--#ifdef CONFIG_MMU
--
--static inline void ack_bad_irq(unsigned int irq)
--{
--	pr_crit("unexpected IRQ trap at vector %02x\n", irq);
--}
--
--/* entry.S is sensitive to the offsets of these fields */
--typedef struct {
--	unsigned int __softirq_pending;
--} ____cacheline_aligned irq_cpustat_t;
--
--#include <linux/irq_cpustat.h>	/* Standard mappings for irq_cpustat_t above */
--
--#else
--
--#include <asm-generic/hardirq.h>
--
--#endif /* !CONFIG_MMU */
--
--#endif
+PS: If somebody is interested in UDF 1.01 specification, please let me
+know and I could send it. It is missing on OSTA website.
+
+Pali Rohár (4):
+  udf: Do not access LVIDIU revision members when they are not filled
+  udf: Fix reading numFiles and numDirs from UDF 2.00+ VAT discs
+  udf: Fix reading minUDFReadRev and minUDFWriteRev from UDF 2.00+ VAT
+    discs
+  udf: Allow to read UDF 2.60 discs
+
+ fs/udf/super.c  | 71 +++++++++++++++++++++++++++++++++++++++----------
+ fs/udf/udf_sb.h | 10 ++++++-
+ 2 files changed, 66 insertions(+), 15 deletions(-)
+
 -- 
-2.17.1
+2.20.1
 
