@@ -2,149 +2,162 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4287FC33CA8
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 02:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFBCC33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 04:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 108A620866
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 02:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578796861;
-	bh=/IIGU/qgpqqRTXW8bMohqvTwPewVuB6W2G42p3yc9HE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XY9kiY0ZxeLCNjYX1/c++I7PjaQGb0GE28rxxhY+cRID1uM5TtJEKXZRDKf1wn2gO
-	 yh0DuWAYdnG7SqlBC8rlKehIay+4OkdXrLsr+sepwKNTNISPAetMFD7TBe2wcEpesI
-	 wZjUhQgXD7LmRkl+UEvdayWyumdoBKkD094Y1S+0=
+	by mail.kernel.org (Postfix) with ESMTP id 37856214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 04:55:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hAmHcKkr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732015AbgALClA (ORCPT
+        id S1732191AbgALEzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 21:41:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731986AbgALCk7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 21:40:59 -0500
-Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5380C2084D;
-        Sun, 12 Jan 2020 02:40:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578796858;
-        bh=/IIGU/qgpqqRTXW8bMohqvTwPewVuB6W2G42p3yc9HE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ImEJwUTEMXWvenNIqnbvhqnBQZTjX3B2m84HwCyMPCThfYeDfZcKPhf5Ad1ba/AGu
-         3jUgo70nCH90gVas+ybFyBfGoQ6IH50MOlI9oC3FUlmnda/OMf6m0Tn/YnQ/tMYwSq
-         2U2c4xFwQS/G9z1C/+zgJZGiNu5kQQ126qwJYp+0=
-Date:   Sun, 12 Jan 2020 10:40:48 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "sboyd@kernel.org" <sboyd@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anson Huang <anson.huang@nxp.com>, Jacky Bai <ping.bai@nxp.com>
-Subject: Re: [PATCH 3/3] clk: imx: imx8m: use imx_clk_hw_pll14xx_flags for
- dram pll
-Message-ID: <20200112024046.GZ4456@T480>
-References: <1577696903-27870-1-git-send-email-peng.fan@nxp.com>
- <1577696903-27870-4-git-send-email-peng.fan@nxp.com>
+        Sat, 11 Jan 2020 23:55:21 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35403 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732179AbgALEzV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 23:55:21 -0500
+Received: by mail-lj1-f195.google.com with SMTP id j1so6386460lja.2
+        for <linux-kernel@vger.kernel.org>; Sat, 11 Jan 2020 20:55:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=e3re4IXkyyw/6+2ZpdvvKRwtPpdPNGOyATLsdF0oXqM=;
+        b=hAmHcKkru7Ws+bYPtWoibuV5UJ72IuF6dgWGL5tJuMeheEKvkn+UBiWpIq8J4qR0mW
+         uCJjZnwGvlY+QCH/RxCwWGPK5SFHCcFUq5GvYcMjwrQcxaHDsh7bDcwhvgeHrGZseHlN
+         gACfjpW7OPENtY9heTGfHC5M/UCpS8SqRHwlfEGTMCqCRb5YLrhTr3NnJauFntM4LhRG
+         LJRjxaN/8Op3CUFo/93QTWC8tSBTjx7Dx/fvUe1VEQCJxDUK5LuSFEh6lROpm3cpRbM6
+         WXYkoM4Q02P/7ZWw+dNGXv1lG0t1QwYJVufPr4j4sdekbmMV6xYT7hr0C2wekAh2miNh
+         Jlug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=e3re4IXkyyw/6+2ZpdvvKRwtPpdPNGOyATLsdF0oXqM=;
+        b=NC33+/oQu3imtvmy1HTLRsTztWU+vvv5PByd/7SEq+34Q5snHG+Dt4yMLaEsekU0pD
+         nScgxKWs39M9kswM7/PFMxt0+zzK+2Qk+C2i5+OePHA/GPnasQHstcIZS4ooSGi69Fgx
+         UEScBC0YXJaNHUcMw9gsOetb/shspL1bxECsy4Vq1oqiA63zhQ8rlJhRtkGpar0bVyos
+         4ILl2EApJ6VQ7h30p3XCMJRK5zEVF5kZkhqPSjFbESSJ0qXU/M9zSAgvWpIilMIhhvAg
+         rVpb0BM/XyuKUndj2RPjy0+1sPiCPFN+vFUbmII4LjZaFLVVqn795iCtPpLM2srVOsZR
+         MgIw==
+X-Gm-Message-State: APjAAAWE3UuQd1i3v1AngtZFwapT0zJ9L0pQRZklUPYuUbw+Pl4flj3n
+        pBLLgTNl9vIm8F+AwYBEM0MoEKOnW4wIeD/iX5EqGg==
+X-Google-Smtp-Source: APXvYqyWXRnqElnMRXdT/2ppNEwfNstxcJF5mmLRZ6EnkTVr4weuScXNYSC42S6L4+iVxmFc4PHQVgRO4GteHdVJHmk=
+X-Received: by 2002:a2e:b017:: with SMTP id y23mr7516131ljk.229.1578804918969;
+ Sat, 11 Jan 2020 20:55:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1577696903-27870-4-git-send-email-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200111094844.748507863@linuxfoundation.org> <0668a7b6-502b-719b-a2eb-59519de7bf3e@roeck-us.net>
+ <20200111175114.GA403776@kroah.com>
+In-Reply-To: <20200111175114.GA403776@kroah.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Sun, 12 Jan 2020 10:25:07 +0530
+Message-ID: <CA+G9fYuwQW1qqTSdYTCc6es5R6AJ6zHScmw1952raHHJ7x+uNw@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/91] 4.9.209-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 30, 2019 at 09:13:10AM +0000, Peng Fan wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Use imx_clk_hw_pll14xx_flags for dram pll.
-> Modify imx_1443x_dram_pll to imx_1443x_dram_readonly, because dram pll
-> is not expected to be modified from Linux.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  drivers/clk/imx/clk-imx8mm.c  | 2 +-
->  drivers/clk/imx/clk-imx8mn.c  | 2 +-
->  drivers/clk/imx/clk-pll14xx.c | 3 +--
->  drivers/clk/imx/clk.h         | 2 +-
->  4 files changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/clk/imx/clk-imx8mm.c b/drivers/clk/imx/clk-imx8mm.c
-> index 2ed93fc25087..55862652b19f 100644
-> --- a/drivers/clk/imx/clk-imx8mm.c
-> +++ b/drivers/clk/imx/clk-imx8mm.c
-> @@ -337,7 +337,7 @@ static int imx8mm_clocks_probe(struct platform_device *pdev)
->  	hws[IMX8MM_AUDIO_PLL1] = imx_clk_hw_pll14xx("audio_pll1", "audio_pll1_ref_sel", base, &imx_1443x_pll);
->  	hws[IMX8MM_AUDIO_PLL2] = imx_clk_hw_pll14xx("audio_pll2", "audio_pll2_ref_sel", base + 0x14, &imx_1443x_pll);
->  	hws[IMX8MM_VIDEO_PLL1] = imx_clk_hw_pll14xx("video_pll1", "video_pll1_ref_sel", base + 0x28, &imx_1443x_pll);
-> -	hws[IMX8MM_DRAM_PLL] = imx_clk_hw_pll14xx("dram_pll", "dram_pll_ref_sel", base + 0x50, &imx_1443x_dram_pll);
-> +	hws[IMX8MM_DRAM_PLL] = imx_clk_hw_pll14xx_flags("dram_pll", "dram_pll_ref_sel", base + 0x50, &imx_1443x_pll_readonly, CLK_GET_RATE_NOCACHE);
->  	hws[IMX8MM_GPU_PLL] = imx_clk_hw_pll14xx("gpu_pll", "gpu_pll_ref_sel", base + 0x64, &imx_1416x_pll);
->  	hws[IMX8MM_VPU_PLL] = imx_clk_hw_pll14xx("vpu_pll", "vpu_pll_ref_sel", base + 0x74, &imx_1416x_pll);
->  	hws[IMX8MM_ARM_PLL] = imx_clk_hw_pll14xx("arm_pll", "arm_pll_ref_sel", base + 0x84, &imx_1416x_pll);
-> diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
-> index c5e7316b4c66..e4710d3cf3e0 100644
-> --- a/drivers/clk/imx/clk-imx8mn.c
-> +++ b/drivers/clk/imx/clk-imx8mn.c
-> @@ -334,7 +334,7 @@ static int imx8mn_clocks_probe(struct platform_device *pdev)
->  	hws[IMX8MN_AUDIO_PLL1] = imx_clk_hw_pll14xx("audio_pll1", "audio_pll1_ref_sel", base, &imx_1443x_pll);
->  	hws[IMX8MN_AUDIO_PLL2] = imx_clk_hw_pll14xx("audio_pll2", "audio_pll2_ref_sel", base + 0x14, &imx_1443x_pll);
->  	hws[IMX8MN_VIDEO_PLL1] = imx_clk_hw_pll14xx("video_pll1", "video_pll1_ref_sel", base + 0x28, &imx_1443x_pll);
-> -	hws[IMX8MN_DRAM_PLL] = imx_clk_hw_pll14xx("dram_pll", "dram_pll_ref_sel", base + 0x50, &imx_1443x_dram_pll);
-> +	hws[IMX8MN_DRAM_PLL] = imx_clk_hw_pll14xx_flags("dram_pll", "dram_pll_ref_sel", base + 0x50, &imx_1443x_pll_readonly, CLK_GET_RATE_NOCACHE);
->  	hws[IMX8MN_GPU_PLL] = imx_clk_hw_pll14xx("gpu_pll", "gpu_pll_ref_sel", base + 0x64, &imx_1416x_pll);
->  	hws[IMX8MN_VPU_PLL] = imx_clk_hw_pll14xx("vpu_pll", "vpu_pll_ref_sel", base + 0x74, &imx_1416x_pll);
->  	hws[IMX8MN_ARM_PLL] = imx_clk_hw_pll14xx("arm_pll", "arm_pll_ref_sel", base + 0x84, &imx_1416x_pll);
-> diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
-> index 030159dc4884..33236d8580a6 100644
-> --- a/drivers/clk/imx/clk-pll14xx.c
-> +++ b/drivers/clk/imx/clk-pll14xx.c
-> @@ -67,9 +67,8 @@ struct imx_pll14xx_clk imx_1443x_pll = {
->  	.rate_count = ARRAY_SIZE(imx_pll1443x_tbl),
->  };
->  
-> -struct imx_pll14xx_clk imx_1443x_dram_pll = {
-> +struct imx_pll14xx_clk imx_1443x_pll_readonly = {
->  	.type = PLL_1443X,
-> -	.flags = CLK_GET_RATE_NOCACHE,
+On Sat, 11 Jan 2020 at 23:21, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> Ugh, I thought I dropped those earlier, but they came back through
+> Sasha's autosel.  There's another build error with another coresight
+> patch in there too, looks rare enough that your scripts didn't catch it
+> :)
+>
+> I'll go push out a -rc2 now with the offending patches dropped.
 
-Not really sure what we gain from creating a new function and moving the
-flag from here to there.  I'm personally not fond of it.
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Shawn
+Summary
+------------------------------------------------------------------------
 
->  };
->  
->  struct imx_pll14xx_clk imx_1416x_pll = {
-> diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-> index 35a9d294b6df..ea84d2993b57 100644
-> --- a/drivers/clk/imx/clk.h
-> +++ b/drivers/clk/imx/clk.h
-> @@ -53,7 +53,7 @@ struct imx_pll14xx_clk {
->  
->  extern struct imx_pll14xx_clk imx_1416x_pll;
->  extern struct imx_pll14xx_clk imx_1443x_pll;
-> -extern struct imx_pll14xx_clk imx_1443x_dram_pll;
-> +extern struct imx_pll14xx_clk imx_1443x_pll_readonly;
->  
->  #define imx_clk_cpu(name, parent_name, div, mux, pll, step) \
->  	to_clk(imx_clk_hw_cpu(name, parent_name, div, mux, pll, step))
-> -- 
-> 2.16.4
-> 
+kernel: 4.9.209-rc2
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 0dd28c11952d3a45280706afe87a14db95f8cf21
+git describe: v4.9.208-90-g0dd28c11952d
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.208-90-g0dd28c11952d
+
+No regressions (compared to build v4.9.208)
+
+No fixes (compared to build v4.9.208)
+
+Ran 21877 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* linux-log-parser
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-none
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
