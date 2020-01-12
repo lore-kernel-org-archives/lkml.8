@@ -2,152 +2,125 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C428AC33C9E
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 02:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB3CC33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 02:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99B632087F
+	by mail.kernel.org (Postfix) with ESMTP id E715C2146E
 	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 02:33:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578796382;
+	bh=YRjvlsgTQuj3u/TvrEuaCjHvc+8K0Fs4QuWe6tKRScc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hVEq1f87KuR60I+i+dw1J2INX6xypKdVo4scB5OHsgk3NrFBebvcSzWA/KGxPNWa1
+	 oMzX6HyA+fbj7NgNlNSL2t/XbnQNvJLjXC9sI70f76c3MgRW+2uoGNNEbEttkU5zNk
+	 /WZDt6yMVnItVYNpv68RQXmiZpdLg2OdHQWnxvs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731993AbgALC3H (ORCPT
+        id S1732005AbgALCdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 11 Jan 2020 21:29:07 -0500
-Received: from mga01.intel.com ([192.55.52.88]:37031 "EHLO mga01.intel.com"
+        Sat, 11 Jan 2020 21:33:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731982AbgALC3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 11 Jan 2020 21:29:06 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 11 Jan 2020 18:29:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,423,1571727600"; 
-   d="scan'208";a="218389651"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga007.fm.intel.com with ESMTP; 11 Jan 2020 18:29:03 -0800
-Date:   Sun, 12 Jan 2020 10:28:58 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
-        alexander.duyck@gmail.com, rientjes@google.com
-Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200112022858.GA17733@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200109143054.13203-1-richardw.yang@linux.intel.com>
- <20200111000352.efy6krudecpshezh@box>
+        id S1731968AbgALCdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 11 Jan 2020 21:33:00 -0500
+Received: from T480 (98.142.130.235.16clouds.com [98.142.130.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 645F020848;
+        Sun, 12 Jan 2020 02:32:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578796380;
+        bh=YRjvlsgTQuj3u/TvrEuaCjHvc+8K0Fs4QuWe6tKRScc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l6g4ajT4+0Mr+WYNrKFrvvSJJNJvYkHNG0j9MSzzXTtNPmBFoqpQR4MOkTSIhcuLk
+         F/MC8iFih1/iDbLj1m7bHlBuGzm84duo4vQoLt6B2IRW6ktcMWr4gtM+y9VSYaqXp8
+         J3UIhN+oAHG0CI70PyjrR2yFE20OakC10FSx24BE=
+Date:   Sun, 12 Jan 2020 10:32:49 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peng Fan <peng.fan@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Cc:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Anson Huang <anson.huang@nxp.com>, Jacky Bai <ping.bai@nxp.com>
+Subject: Re: [PATCH 1/3] clk: imx: pll14xx: avoid modify dram pll
+Message-ID: <20200112023248.GY4456@T480>
+References: <1577696903-27870-1-git-send-email-peng.fan@nxp.com>
+ <1577696903-27870-2-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200111000352.efy6krudecpshezh@box>
+In-Reply-To: <1577696903-27870-2-git-send-email-peng.fan@nxp.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 03:03:52AM +0300, Kirill A. Shutemov wrote:
->On Thu, Jan 09, 2020 at 10:30:54PM +0800, Wei Yang wrote:
->> As all the other places, we grab the lock before manipulate the defer list.
->> Current implementation may face a race condition.
->> 
->> For example, the potential race would be:
->> 
->>     CPU1                      CPU2
->>     mem_cgroup_move_account   split_huge_page_to_list
->>       !list_empty
->>                                 lock
->>                                 !list_empty
->>                                 list_del
->>                                 unlock
->>       lock
->>       # !list_empty might not hold anymore
->>       list_del_init
->>       unlock
->
->I don't think this particular race is possible. Both parties take page
->lock before messing with deferred queue, but anytway:
+On Mon, Dec 30, 2019 at 09:13:00AM +0000, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> The dram pll is only expected to be modified in firmware,
+> so we should only support read clk frequency in Linux Kernel.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-I am afraid not. Page lock is per page, while defer queue is per pgdate or
-memcg.
+@Leonard, do you agree?
 
-It is possible two page in the same pgdate or memcg grab page lock
-respectively and then access the same defer queue concurrently.
+Shawn
 
->
->Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
->
->> 
->> When this sequence happens, the list_del_init() in
->> mem_cgroup_move_account() would crash if CONFIG_DEBUG_LIST since the
->> page is already been removed by list_del in split_huge_page_to_list().
->> 
->> Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
->> 
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> Acked-by: David Rientjes <rientjes@google.com>
->> 
->> ---
->> v2:
->>   * move check on compound outside suggested by Alexander
->>   * an example of the race condition, suggested by Michal
->> ---
->>  mm/memcontrol.c | 18 +++++++++++-------
->>  1 file changed, 11 insertions(+), 7 deletions(-)
->> 
->> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> index bc01423277c5..1492eefe4f3c 100644
->> --- a/mm/memcontrol.c
->> +++ b/mm/memcontrol.c
->> @@ -5368,10 +5368,12 @@ static int mem_cgroup_move_account(struct page *page,
->>  	}
->>  
->>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> -	if (compound && !list_empty(page_deferred_list(page))) {
->> +	if (compound) {
->>  		spin_lock(&from->deferred_split_queue.split_queue_lock);
->> -		list_del_init(page_deferred_list(page));
->> -		from->deferred_split_queue.split_queue_len--;
->> +		if (!list_empty(page_deferred_list(page))) {
->> +			list_del_init(page_deferred_list(page));
->> +			from->deferred_split_queue.split_queue_len--;
->> +		}
->>  		spin_unlock(&from->deferred_split_queue.split_queue_lock);
->>  	}
->>  #endif
->> @@ -5385,11 +5387,13 @@ static int mem_cgroup_move_account(struct page *page,
->>  	page->mem_cgroup = to;
->>  
->>  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->> -	if (compound && list_empty(page_deferred_list(page))) {
->> +	if (compound) {
->>  		spin_lock(&to->deferred_split_queue.split_queue_lock);
->> -		list_add_tail(page_deferred_list(page),
->> -			      &to->deferred_split_queue.split_queue);
->> -		to->deferred_split_queue.split_queue_len++;
->> +		if (list_empty(page_deferred_list(page))) {
->> +			list_add_tail(page_deferred_list(page),
->> +				      &to->deferred_split_queue.split_queue);
->> +			to->deferred_split_queue.split_queue_len++;
->> +		}
->>  		spin_unlock(&to->deferred_split_queue.split_queue_lock);
->>  	}
->>  #endif
->> -- 
->> 2.17.1
->> 
->> 
->
->-- 
-> Kirill A. Shutemov
-
--- 
-Wei Yang
-Help you, Help me
+> ---
+>  drivers/clk/imx/clk-pll14xx.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
+> index 5b0519a81a7a..9288b21d4d59 100644
+> --- a/drivers/clk/imx/clk-pll14xx.c
+> +++ b/drivers/clk/imx/clk-pll14xx.c
+> @@ -69,8 +69,6 @@ struct imx_pll14xx_clk imx_1443x_pll = {
+>  
+>  struct imx_pll14xx_clk imx_1443x_dram_pll = {
+>  	.type = PLL_1443X,
+> -	.rate_table = imx_pll1443x_tbl,
+> -	.rate_count = ARRAY_SIZE(imx_pll1443x_tbl),
+>  	.flags = CLK_GET_RATE_NOCACHE,
+>  };
+>  
+> @@ -376,6 +374,10 @@ static const struct clk_ops clk_pll1443x_ops = {
+>  	.set_rate	= clk_pll1443x_set_rate,
+>  };
+>  
+> +static const struct clk_ops clk_pll1443x_min_ops = {
+> +	.recalc_rate	= clk_pll1443x_recalc_rate,
+> +};
+> +
+>  struct clk_hw *imx_clk_hw_pll14xx(const char *name, const char *parent_name,
+>  				  void __iomem *base,
+>  				  const struct imx_pll14xx_clk *pll_clk)
+> @@ -403,7 +405,10 @@ struct clk_hw *imx_clk_hw_pll14xx(const char *name, const char *parent_name,
+>  			init.ops = &clk_pll1416x_ops;
+>  		break;
+>  	case PLL_1443X:
+> -		init.ops = &clk_pll1443x_ops;
+> +		if (!pll_clk->rate_table)
+> +			init.ops = &clk_pll1443x_min_ops;
+> +		else
+> +			init.ops = &clk_pll1443x_ops;
+>  		break;
+>  	default:
+>  		pr_err("%s: Unknown pll type for pll clk %s\n",
+> -- 
+> 2.16.4
+> 
