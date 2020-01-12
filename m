@@ -2,104 +2,173 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6230BC33CA2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F25C33CA2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AF66214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0A4F2084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:34:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TU4wcA6d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J+P1T0by"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387395AbgALRc1 (ORCPT
+        id S1733152AbgALRef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 12:32:27 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36121 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733152AbgALRbg (ORCPT
+        Sun, 12 Jan 2020 12:34:35 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44902 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732957AbgALRef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 12:31:36 -0500
-Received: by mail-lf1-f65.google.com with SMTP id n12so5153666lfe.3;
-        Sun, 12 Jan 2020 09:31:35 -0800 (PST)
+        Sun, 12 Jan 2020 12:34:35 -0500
+Received: by mail-wr1-f68.google.com with SMTP id q10so6329282wrm.11
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 09:34:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KfuSooXOkxJU0/VsQZ2ZGbsgKKy+nQ25m7jbl5DejHM=;
-        b=TU4wcA6dES1E3c5DikAX5RTjfTAZDt++p3dfUk6koqvGT7aJcOMgP66k2vRwLjpkeV
-         ogz4EWKuGcXhDZYNq55NsB26SkKU3K6jM87WGFl4eme3GSP6G2Sb4geiLP18Pu29Gjhu
-         uWmyN+6G+t9XN6uESFmQHr0n2W5kevJBDgIA1j7oq58leYbTkKN2WFhA3uZ57rKvEgxM
-         lqDINrg4ZhyTjljew0ULQWQ2GcM6njyusH9zi8MbLq30mZlMqfoQcqMq2jve2hfDLdnP
-         cyYX9wziAbqmbFErQSC/LuChu8Z60/sPKm3h2Rj6/khk7tu3XE+z59bVgUJXqFKmAKAt
-         LRNA==
+        d=linaro.org; s=google;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=xD727d9Ui3KOTr1j3t1vZYixFuxqk7ANu6/szk9FtOI=;
+        b=J+P1T0byGY7KIR48XnI7odTOnBjj6enq7Cko7pIC9benHRy7trJFO4x3yWs8eC7KRq
+         uwxxlxIRb09i/7SiMDoYimSlQ/KxI3HJNERaT/6L9BGoGy8V5KC5KX9fowaf9gG5vLoC
+         nQQrYBJxN6SWsvEInQwzO/HRmV079EwQ8AXV1wlTTr3Dmn2ru0xOuPA7NY72S2dPbWR9
+         3mi/IDKmzcKjZcRuq530m38Pc1vlcLpJjTWn6tGv7vayrnWQ1AGdMXqb18pANGe6N++2
+         E7sIX3cezUMKpfhMbtyqxaLWkpCwTlq0JKbvtyLw5iaLfg0ojDDXVincWA7cTTAOHh71
+         PWaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KfuSooXOkxJU0/VsQZ2ZGbsgKKy+nQ25m7jbl5DejHM=;
-        b=Px5TMBjtA442Snt5P4pM4nAk5KB2XRlo9TpcuzRVdPNwFQnCIny11g/yB4ZTHdJUCt
-         D+VbKdFlKeSJVtnL5lOhM3JCXvmbufNWo/wXKDz1HJNumS+Qn4ff6tTiPBqiINWNtQFW
-         UEzONxWQAFJ4iOzf7v1nGMtMIxEdR+FcseFefMGvPDjhjhsT5ChfVH2Ktu2CtzwckUAN
-         ccKoSQw6z737VsSnKw15z/w905EjpETJHDsrbSxXSwdSUadkq+d86u13qj92IvHPnyIm
-         /tinW8PDVa3W/rRGeoXOS/eqWKSVFkmYz+Ba1zq1ueJ9QGNlmvKkoKD/jw3P952UIfpt
-         7Ifw==
-X-Gm-Message-State: APjAAAV0f1gSFnTnOxHYu/np1TNQTeBmgdNkFuWrrEPaQxs+172YbB2Q
-        Fv5rSvdvVQhWf/6uUWJi7nc=
-X-Google-Smtp-Source: APXvYqwULa8/QnjzJ8ktnccpfzu7jYvhSJqzgEte3YBhequmV+ogCORMJn9TE5/4LXrlF7lPYudTnQ==
-X-Received: by 2002:ac2:5f68:: with SMTP id c8mr5501762lfc.196.1578850294315;
-        Sun, 12 Jan 2020 09:31:34 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id 140sm4458888lfk.78.2020.01.12.09.31.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 09:31:33 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=xD727d9Ui3KOTr1j3t1vZYixFuxqk7ANu6/szk9FtOI=;
+        b=JFg+dj/VTWG4ZwymmgqEJ21l3fFoQTfzpBNqNXdNuqyzxl5s5rZOTMpeh4OLrcqXe0
+         DumssugCanQtiLV/F2EpnNV9boHWexAr63onAFdrVztfzKREa1xhhCyB06LeaMZy85nn
+         VANdFn9y1VRKkWjUODeeOGC9G4Q9voUewffdvejYSCM5Nm2d4+Zn4AdBndfGHlKCtYPE
+         Loe/lEds/kgo/dUxiTzo0a0MpVu9/ogbcnv/yrxpIFrmGHMhVriw7ojVolnvofYCeDiY
+         iye48sCcHSVtinBfV8ZFMbfkuOJM/wH4gKZNjQcSifW+uFrwtxTk37CwxPxnXz99PWYl
+         AeaQ==
+X-Gm-Message-State: APjAAAUFxsxmPjTxg5GPdlKkfe13PO/6uQGHM3QZJytXfa+TWnnNSWG/
+        H0s5RG07IeisGmngQxKx87lW7I0SlhgR2Q==
+X-Google-Smtp-Source: APXvYqzSHQiSE12DiqM6HwFcknXbTNxPJPizZWRkY3425KaLoXZn2NdBsUlGqhHTkgILli9dM16uEg==
+X-Received: by 2002:adf:f2c1:: with SMTP id d1mr13970441wrp.111.1578850473017;
+        Sun, 12 Jan 2020 09:34:33 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:5d47:bb17:fc0:dfcb? ([2a01:e34:ed2f:f020:5d47:bb17:fc0:dfcb])
+        by smtp.googlemail.com with ESMTPSA id g21sm10880143wmh.17.2020.01.12.09.34.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 12 Jan 2020 09:34:32 -0800 (PST)
+Subject: Re: [PATCH] thermal: sun8i: fix using plain integer as NULL pointer
+ in sun8i_ths_resource_init
+To:     Yangtao Li <tiny.windzz@gmail.com>, anarsoul@gmail.com,
+        rui.zhang@intel.com, amit.kucheria@verdurent.com,
+        mripard@kernel.org, wens@csie.org, p.zabel@pengutronix.de,
+        linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 06/14] dmaengine: tegra-apb: Use devm_platform_ioremap_resource
-Date:   Sun, 12 Jan 2020 20:29:58 +0300
-Message-Id: <20200112173006.29863-7-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200112173006.29863-1-digetx@gmail.com>
-References: <20200112173006.29863-1-digetx@gmail.com>
+References: <20200112171318.23025-1-tiny.windzz@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ffa67377-95fe-5335-d199-6b7d4b7e5587@linaro.org>
+Date:   Sun, 12 Jan 2020 18:34:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <20200112171318.23025-1-tiny.windzz@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource to keep code cleaner a tad.
+On 12/01/2020 18:13, Yangtao Li wrote:
+> To fix:
+> 
+> drivers/thermal/sun8i_thermal.c:341:60: sparse: sparse: Using plain
+> integer as NULL pointer
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/dma/tegra20-apb-dma.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Applied, thanks
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index aafad50d075e..f44291207928 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -1402,8 +1402,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 	tdma->chip_data = cdata;
- 	platform_set_drvdata(pdev, tdma);
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	tdma->base_addr = devm_ioremap_resource(&pdev->dev, res);
-+	tdma->base_addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(tdma->base_addr))
- 		return PTR_ERR(tdma->base_addr);
- 
+> ---
+>  drivers/thermal/sun8i_thermal.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
+> index c5661d7c3e20..4bcde9491edb 100644
+> --- a/drivers/thermal/sun8i_thermal.c
+> +++ b/drivers/thermal/sun8i_thermal.c
+> @@ -338,7 +338,7 @@ static int sun8i_ths_resource_init(struct ths_device *tmdev)
+>  		return PTR_ERR(tmdev->regmap);
+>  
+>  	if (tmdev->chip->has_bus_clk_reset) {
+> -		tmdev->reset = devm_reset_control_get(dev, 0);
+> +		tmdev->reset = devm_reset_control_get(dev, NULL);
+>  		if (IS_ERR(tmdev->reset))
+>  			return PTR_ERR(tmdev->reset);
+>  
+> 
+
+
 -- 
-2.24.0
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
