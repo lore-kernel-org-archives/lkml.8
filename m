@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68961C33CA7
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D38C33CA2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA85214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:31:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D22C2084D
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:31:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJjsUnua"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jLYnfmpa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733201AbgALRbm (ORCPT
+        id S1733223AbgALRbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 12:31:42 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:33734 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728512AbgALRbe (ORCPT
+        Sun, 12 Jan 2020 12:31:46 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38623 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733130AbgALRbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 12:31:34 -0500
-Received: by mail-lf1-f67.google.com with SMTP id n25so5171820lfl.0;
-        Sun, 12 Jan 2020 09:31:32 -0800 (PST)
+        Sun, 12 Jan 2020 12:31:35 -0500
+Received: by mail-lj1-f196.google.com with SMTP id w1so7453864ljh.5;
+        Sun, 12 Jan 2020 09:31:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cVivrbUaLAvYOWEQyaxZv2B+LG1a8MlZfEIn/W+0au8=;
-        b=SJjsUnuacjwEmmFeP1a4th9a3eAh0uaYtlNT7/X4jvCpH1AI7dHTBFWk0SVlk+b0IH
-         E3hD/TbeBVZHBOEXVL5vr8LQthhIu2TW65i8uVVBOSt6h3cVUp/NmB97oYtccCmB8xx1
-         gMCqnBds58LoBwEE3Wnze9BFP25Mxj9IVeSVm+I9WVmp07YH/FFuSvbrsfiWlmcdo/80
-         Q6PgSqmBQeinfTpsuHqALeldYcuX2ZhlTFnl0t4hAqGaT8iYhoBIrHz0iF9jRewRWGUs
-         gnvmjrGTKpb6f8DwiO6i6nQ5re1kqeRMs4jHLbvTxPsvoTdU0QiCvOy/m8HrEiCkE3fE
-         4sZw==
+        bh=PqNp1UdCqeyiLALCUBHMvdBWRB+JgxkXykXZjY6I1uo=;
+        b=jLYnfmpaDvagxToMteOAX02zqX3JdNkY1NNHBc2V5F5AdomTR+cE43o9jQF5NkfiT3
+         zIJ6R3KAGRSEB55TbV/s00z+cspVPJu57SEXavK810Ltu/e7aTLBJv46aminE9dl2Xr4
+         eIltzKsXZtcwwMQ8XUbJzG+VAjZZzguzhCU7MYTLrn1W+aMpWWeKJl5+rsWdMitZqm6Q
+         bg8TIcM0sucYLne1Zpf+h0F512rbtXkfho1/Vo4ZR1mMzT9YXGoE4UsM3GJvoiXV8IR4
+         +QUgA9pt4YDqFvUUg4KCxY1Qt8e0r6RXPrA1IZapuP2tsieeOummlM4APJrp6yVZQIYO
+         XqYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cVivrbUaLAvYOWEQyaxZv2B+LG1a8MlZfEIn/W+0au8=;
-        b=nAelAacijgjj34quagI8X6oD1Av8MAS6cZFRvUz/Bhd2cfeQRLMWmy3dUm/d2O0rsc
-         BSYHkvdAjB3ScQaZ4V7tJ6cnzfegpolcP2aCMnNWFk7fzIEqnoT24CYcnYChHs6yTdOr
-         eFXbCcnc4SySr0QQNF9lILG1PYJSvTiw1vpDXoEeNHqdkc6Dd4z7Pclp55Yr8eW3+es0
-         xJE8vpwpH3IjiB+A1AwheSEUGI2hihkvQoFd5qICa3Nt+jIPpziEaqP5+NngbAuK0DeG
-         m8l9tNaoFTY9CiLxl/3sYSan2taiKzbgOoVPm+3M+Ia9yA7hWQ4awX4ZTQIs0265NdKp
-         4/zg==
-X-Gm-Message-State: APjAAAXjeJsnO1tDEGQRN01el0dRB+dWz6ivRLvQpTFmfP0hUDA0AOpJ
-        xiTCzydUbc5Tz+WIEUi+gHM=
-X-Google-Smtp-Source: APXvYqxche74SfZP3bBOfOX10phuAZEUaoTHurS8Kbd28t9dK269h60bqAU/0dfFh9UYQFWgHAv9+w==
-X-Received: by 2002:a19:8a06:: with SMTP id m6mr7003628lfd.99.1578850291621;
-        Sun, 12 Jan 2020 09:31:31 -0800 (PST)
+        bh=PqNp1UdCqeyiLALCUBHMvdBWRB+JgxkXykXZjY6I1uo=;
+        b=Zso5z+trE9JvTckMSarhzSHtcqHpNw4AodnGSb59lGbzMhvDteBmw5fB/bFCgBTFzC
+         oUHEG/CfC5CJ7EeaCmALQY4eeExrUfftJYhNjgTkPJWvhhwJum88f3V9v8QxW1FB0OEF
+         3gTcRsDYzzfhBwMH2oU5MnyWHD7myWP+sl8nVYGGQwcHVig5GYDekB19WUmnW7vWi7te
+         7KTSQ1Yk/91xC6ej/LN+6wSNCAN9wBpUWk3wYbXS/ORFBC39LvX9Ze6sxSVCaKt9Vdro
+         6RzodL4Z4fK+HN+AUj/ayYpgEWpWBJ4j2UGibiRqOSMC9Tj71Kd1+a0BC52bmFIO2Lev
+         ujwA==
+X-Gm-Message-State: APjAAAVQdEldWZd1h+HUUo6pjtc4EWXUXlcdwU1uo9bytOFLHh5pNuRh
+        kPIguhPUOkEOyuk5KT7LZVM=
+X-Google-Smtp-Source: APXvYqyk69gPnTU1szw7MirFqod0bsijIASrwmHqWCpYENr6jHmuA6nt+B6zXBSrYyGl34NYqcEkbQ==
+X-Received: by 2002:a2e:b0c4:: with SMTP id g4mr8281818ljl.83.1578850293432;
+        Sun, 12 Jan 2020 09:31:33 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id 140sm4458888lfk.78.2020.01.12.09.31.30
+        by smtp.gmail.com with ESMTPSA id 140sm4458888lfk.78.2020.01.12.09.31.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 09:31:31 -0800 (PST)
+        Sun, 12 Jan 2020 09:31:32 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Vinod Koul <vkoul@kernel.org>,
@@ -66,9 +66,9 @@ To:     Laxman Dewangan <ldewangan@nvidia.com>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 03/14] dmaengine: tegra-apb: Prevent race conditions on channel's freeing
-Date:   Sun, 12 Jan 2020 20:29:55 +0300
-Message-Id: <20200112173006.29863-4-digetx@gmail.com>
+Subject: [PATCH v4 05/14] dmaengine: tegra-apb: Prevent race conditions of tasklet vs free list
+Date:   Sun, 12 Jan 2020 20:29:57 +0300
+Message-Id: <20200112173006.29863-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200112173006.29863-1-digetx@gmail.com>
 References: <20200112173006.29863-1-digetx@gmail.com>
@@ -79,29 +79,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's incorrect to check the channel's "busy" state without taking a lock.
-That shouldn't cause any real troubles, nevertheless it's always better
-not to have any race conditions in the code.
+The interrupt handler puts a half-completed DMA descriptor on a free list
+and then schedules tasklet to process bottom half of the descriptor that
+executes client's callback, this creates possibility to pick up the busy
+descriptor from the free list. Thus let's disallow descriptor's re-use
+until it is fully processed.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/dma/tegra20-apb-dma.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/dma/tegra20-apb-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 664e9c5df3ba..24ad3a5a04e3 100644
+index 1b8a11804962..aafad50d075e 100644
 --- a/drivers/dma/tegra20-apb-dma.c
 +++ b/drivers/dma/tegra20-apb-dma.c
-@@ -1294,8 +1294,7 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+@@ -281,7 +281,7 @@ static struct tegra_dma_desc *tegra_dma_desc_get(
  
- 	dev_dbg(tdc2dev(tdc), "Freeing channel %d\n", tdc->id);
- 
--	if (tdc->busy)
--		tegra_dma_terminate_all(dc);
-+	tegra_dma_terminate_all(dc);
- 
- 	spin_lock_irqsave(&tdc->lock, flags);
- 	list_splice_init(&tdc->pending_sg_req, &sg_req_list);
+ 	/* Do not allocate if desc are waiting for ack */
+ 	list_for_each_entry(dma_desc, &tdc->free_dma_desc, node) {
+-		if (async_tx_test_ack(&dma_desc->txd)) {
++		if (async_tx_test_ack(&dma_desc->txd) && !dma_desc->cb_count) {
+ 			list_del(&dma_desc->node);
+ 			spin_unlock_irqrestore(&tdc->lock, flags);
+ 			dma_desc->txd.flags = 0;
 -- 
 2.24.0
 
