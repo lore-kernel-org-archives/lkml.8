@@ -2,163 +2,100 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6072C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 13:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 445E0C33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 13:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B238A2084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 13:45:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C52424649
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 13:58:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r07fONfQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="zQUnJnEy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732938AbgALNpz (ORCPT
+        id S1732972AbgALN6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 08:45:55 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36381 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732915AbgALNpy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 08:45:54 -0500
-Received: by mail-lf1-f68.google.com with SMTP id n12so4925761lfe.3;
-        Sun, 12 Jan 2020 05:45:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=tGmFqY35zV+IscWAY4Mv8Yx1TIq5YT4ZN36b2g1WYdY=;
-        b=r07fONfQAwy5RzyqTEQf4EfPz9f1HLu1lOEn7F5/GEnwlRMgE1nLWAUW0wXLkBHRPn
-         Kj+zcMoHOD9r9rYKJ4p2onEDZAUSM+tXEeNSRMci3Aq9aEM3VveMdKPNcAmQMO9eyrNw
-         bG2W/C86x19CelVHk+GAE6R+TkSoyfm0paVPsC0iT8GXPV+cfj8zSt36E9WPQzGRzcSr
-         B/rKgUkOvKUyOTzG9IGYAkYoh6FvtPWPlHfkWiYpMZYbwa21536RTrZvkJ2cFydBdkA9
-         dHGkIzkJBqnKU1eHx07hWzFQQQllewaxYrigGsxGJbGFhmKdzW0awpUyGjkSZS2QYsVE
-         x7SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=tGmFqY35zV+IscWAY4Mv8Yx1TIq5YT4ZN36b2g1WYdY=;
-        b=VgJk97UBk8Jvp44JIxBEr07IqQffSXt2xSC69LItUNmf2JAfSWb+t8l6YA352y7JIh
-         w9ZE3kNwgkUMfr6wfXe5vSepSBT1ZuwvxHr+qYvc9Rh/qsiCAljmfOjQMucNpGqKi5xS
-         UJT1dMIa6mWWFlnwc1Xn9k99+KW8NTqIUX/jsVmGC4gru7uH4QTMe2K/EIIfrbtA/4zk
-         AaP9ZfghSllSr+pT0n2MrKGqaA6Us5l6Rq8qf2PoNEO2xq6wZVnZvxxfO4SGrw+CqWmV
-         RNhIW1ryQcqKzQgSsAoraXQPCscP0V7DWZBNyabNzrXTDPxQHOUA5nQnUXuXzz69dxGu
-         8WwA==
-X-Gm-Message-State: APjAAAU/AYyeLEUrVX7L9cfO0pQ7QF2ZRvb4SnCXG5HmMkV3qe9l74Wm
-        t4/6/cxxzpn3xpttjq94yLQt1qWNVHd7dFYHAQ==
-X-Google-Smtp-Source: APXvYqwGrYfWauC9mf6cSdgn/uQX40uwBo2drelGZOOiB9mHxaLBBLKg3Amx0FfHj92ttYiJ3YMwemwz6gokLvUvGC8=
-X-Received: by 2002:a19:f811:: with SMTP id a17mr7261764lff.182.1578836752028;
- Sun, 12 Jan 2020 05:45:52 -0800 (PST)
+        Sun, 12 Jan 2020 08:58:09 -0500
+Received: from mail.kapsi.fi ([91.232.154.25]:53307 "EHLO mail.kapsi.fi"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732961AbgALN6J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 08:58:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
+         s=20161220; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
+        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=7oOpo2inSu8WG7brh9iGn0I2sFswOBV0OELwq4Ouxes=; b=zQUnJnEyN6kRhonzsM291O0LyZ
+        M4lAmlz3OkbmSpJL0m80g5MNxJ6UzwpcPrbg0AccWgFHUBaj++GDiLWoB4brzLwiYXuWZ6f9XULj6
+        hADta4Ulp9jG+sKyBCZruEFzRfE2/6rufihbgNqZneNpvwUP1g0v5rZzLacV0S7cyblMvEaUtSmaa
+        eDr0Lh8HhU2SvhJXfu15iX6VQ6LlY39WBhOQqbhADIO5fivqus5wVqfuk7wdhSEhmvvs+h99bnPVl
+        1tX95obSbVfdOZbZg/FtFQk2mTM2Wq8qtheOkeG7/MlHfsWTH5lJMfOPFLopWUKhvjVYru5LXUDiG
+        9PWjZ0zw==;
+Received: from puh7.kyla.fi ([82.130.43.239] helo=localhost)
+        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <aapo.vienamo@iki.fi>)
+        id 1iqdka-0003LW-Os; Sun, 12 Jan 2020 15:57:56 +0200
+From:   Aapo Vienamo <aapo.vienamo@iki.fi>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Aapo Vienamo <aapo.vienamo@iki.fi>
+Subject: [PATCH v2] ARM: mxs: Enable usbphy1 and usb1 on apx4devkit DTS
+Date:   Sun, 12 Jan 2020 15:57:41 +0200
+Message-Id: <20200112135741.24840-1-aapo.vienamo@iki.fi>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20191215174509.1847-1-linux@roeck-us.net> <20191215174509.1847-2-linux@roeck-us.net>
- <yq1r211dvck.fsf@oracle.com> <b22a519c-8f26-e731-345f-9deca1b2150e@roeck-us.net>
- <yq1sgkq21ll.fsf@oracle.com> <20200108153341.GB28530@roeck-us.net>
- <38af9fda-9edf-1b54-bd8d-92f712ae4cda@roeck-us.net> <CAEJqkgg_piiAWy4r3VD=KyQ7pi69bZNym2Ws=Tr8SY5wf+Sprg@mail.gmail.com>
- <CACRpkdYU7ZDcKp+BbXRCnEFDw1xwDkU_vXsfo-AZNUWGEVknXQ@mail.gmail.com>
- <CAEJqkggo3Mou1SykjisyYn+3SGGgNfnKagr=7ZPyw=Y=1MZ55w@mail.gmail.com>
- <CACRpkdayHFmdz4nAMaXR07Hcy=dLLGnnU8PkFhwQKuDTLnvOSw@mail.gmail.com> <e3caa946-b8f2-75c7-4bcb-69ad198de472@roeck-us.net>
-In-Reply-To: <e3caa946-b8f2-75c7-4bcb-69ad198de472@roeck-us.net>
-From:   Gabriel C <nix.or.die@gmail.com>
-Date:   Sun, 12 Jan 2020 14:45:25 +0100
-Message-ID: <CAEJqkggBvBus-G=TevSf0OUWLx_63qmZEThi-tNyPmAD2JXW-g@mail.gmail.com>
-Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>, Chris Healy <cphealy@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 82.130.43.239
+X-SA-Exim-Mail-From: aapo.vienamo@iki.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am So., 12. Jan. 2020 um 14:07 Uhr schrieb Guenter Roeck <linux@roeck-us.ne=
-t>:
->
-> On 1/12/20 4:07 AM, Linus Walleij wrote:
-> > On Sun, Jan 12, 2020 at 1:03 PM Gabriel C <nix.or.die@gmail.com> wrote:
-> >> Am So., 12. Jan. 2020 um 12:22 Uhr schrieb Linus Walleij
-> >> <linus.walleij@linaro.org>:
-> >>>
-> >>> On Sun, Jan 12, 2020 at 12:18 PM Gabriel C <nix.or.die@gmail.com> wro=
-te:
-> >>>
-> >>>> What I've noticed however is the nvme temperature low/high values on
-> >>>> the Sensors X are strange here.
-> >>> (...)
-> >>>> Sensor 1:     +27.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261=
-.8=C2=B0C)
-> >>>> Sensor 2:     +29.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261=
-.8=C2=B0C)
-> >>> (...)
-> >>>> Sensor 1:     +23.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261=
-.8=C2=B0C)
-> >>>> Sensor 2:     +25.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261=
-.8=C2=B0C)
-> >>>
-> >>> That doesn't look strange to me. It seems like reasonable defaults
-> >>> from the firmware if either it doesn't really log the min/max tempera=
-tures
-> >>> or hasn't been through a cycle of updating these yet. Just set both
-> >>> to absolute min/max temperatures possible.
-> >>
-> >> Ok I'll check that.
-> >>
-> >> Do you mean by setting the temperatures to use a lmsensors config?
-> >> Or is there a way to set these with a nvme command?
-> >
-> > Not that I know of.
-> >
-> > The min/max are the minumum and maximum temperatures the
-> > device has experienced during this power-on cycle.
-> >
->
-> No, that would be lowest/highest. The above are (or should be) per-sensor
-> setpoints. The default for those is typically the absolute minimum /
-> maximum of the supported range.
->
-> Some SATA drives report the lowest/highest temperatures experienced
-> since power cycle, like here.
->
-> drivetemp-scsi-5-0
-> Adapter: SCSI adapter
-> temp1:        +23.0=C2=B0C  (low  =3D  +0.0=C2=B0C, high =3D +60.0=C2=B0C=
-)
->                         (crit low =3D -41.0=C2=B0C, crit =3D +85.0=C2=B0C=
-)
->                         (lowest =3D +20.0=C2=B0C, highest =3D +31.0=C2=B0=
-C)
->
+Enable the USB host port on the APx4 development board.
 
-The SATA temperatures are fine and reported like this here too, just
-the nvme ones are strange.
+Signed-off-by: Aapo Vienamo <aapo.vienamo@iki.fi>
+---
+ arch/arm/boot/dts/imx28-apx4devkit.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-drivetemp-scsi-4-0
-Adapter: SCSI adapter
-temp1:        +28.0=C2=B0C  (low  =3D  +1.0=C2=B0C, high =3D +61.0=C2=B0C)
-                      (crit low =3D  +2.0=C2=B0C, crit =3D +60.0=C2=B0C)
-                      (lowest =3D +16.0=C2=B0C, highest =3D +31.0=C2=B0C)
+diff --git a/arch/arm/boot/dts/imx28-apx4devkit.dts b/arch/arm/boot/dts/imx28-apx4devkit.dts
+index 3a184d13887b..f00d201ce242 100644
+--- a/arch/arm/boot/dts/imx28-apx4devkit.dts
++++ b/arch/arm/boot/dts/imx28-apx4devkit.dts
+@@ -183,6 +183,12 @@ auart2: serial@8006e000 {
+ 				pinctrl-0 = <&auart2_2pins_a>;
+ 				status = "okay";
+ 			};
++
++			usbphy1: usbphy@8007e000 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&usb1_pins_a>;
++				status = "okay";
++			};
+ 		};
+ 	};
+ 
+@@ -193,6 +199,10 @@ mac0: ethernet@800f0000 {
+ 			pinctrl-0 = <&mac0_pins_a>;
+ 			status = "okay";
+ 		};
++
++		usb1: usb@80090000 {
++		      status = "okay";
++		};
+ 	};
+ 
+ 	regulators {
+-- 
+2.24.1
 
-drivetemp-scsi-12-0
-Adapter: SCSI adapter
-temp1:        +29.0=C2=B0C  (low  =3D  +1.0=C2=B0C, high =3D +61.0=C2=B0C)
-                      (crit low =3D  +2.0=C2=B0C, crit =3D +60.0=C2=B0C)
-                      (lowest =3D +18.0=C2=B0C, highest =3D +32.0=C2=B0C)
-
-and so on.
-
-Btw, where I can find the code does these calculations?
-
-Best regards,
-
-Gabriel C.
