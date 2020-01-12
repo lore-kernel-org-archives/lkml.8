@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62F2C33CA7
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:17:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE05C33CA2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:17:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B126222D9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A052E22314
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:17:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tivx4iE8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YxUlMTYb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733194AbgALRRy (ORCPT
+        id S1733201AbgALRR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 12:17:54 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42027 "EHLO
+        Sun, 12 Jan 2020 12:17:58 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44726 "EHLO
         mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733154AbgALRRr (ORCPT
+        with ESMTP id S1732827AbgALRRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 12:17:47 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y4so7417766ljj.9;
-        Sun, 12 Jan 2020 09:17:45 -0800 (PST)
+        Sun, 12 Jan 2020 12:17:48 -0500
+Received: by mail-lj1-f196.google.com with SMTP id u71so7388632lje.11;
+        Sun, 12 Jan 2020 09:17:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DKcajWqETcYxz0G58Z+vZAfLySB6HXY6m/67CXA4AZc=;
-        b=tivx4iE8IykK+6ikNZHoI/BIg8DBp4x46ck+nK3H3zTq9KoLSDtoJNqqNlGxfCNCe0
-         AETCKBXZdhbN4mRYhWJZqIJ4X0n8+d3HtNSYEKXLYUAhjHTXHfsxwBUY5fP6XPmVNBqU
-         cyN2XZF05myd52rVhKh52L7jnZXUx6Www0py6dAJULk9gWtLIW11TKqDmpLdY+LzfsIR
-         YogFkc7ppH+tBemPzLXT7K3F8YTV3jrTuHMR9F+ZaNddqTL3Ukx+UMFHpqWNpoqwrWL1
-         4Z9rTi9pHV5uLyqngL45JnTXIzNFys0vlcrYe+gYp/MzyhStftZyNQdoCrOJAEdKC5ez
-         Y+Pw==
+        bh=j37XV7ANVgjgiPiKALeBvbZ2E7R44griMSfBNJCXDRY=;
+        b=YxUlMTYbP+mjKXblNt3Ko1I8Jd2YHZyBb2kSWgutntGD7ceWE5nsjMXw/Y4NHChWUf
+         J+J7PZUxpgM1oYBudKBrN4Zc9yVM7fYDb427zOP5VDEEf2XNQOja9/CkHaE+Gfc3TpVr
+         b5nU5fliYiZSzVWNoiS6QW4NGbuKq0ZdzivY8XSxobdzenNv5gtq0PDcWXMc/uHGOlWN
+         7CdDVkoEFshUVMHnvu4DloGPxuzADOtf1haMuED4lrOyokDFg2JavcuujPbyWqqNiVL6
+         ce2yiIuHOEfs4rZaSqiZZRwV8tDJuCge5WmHgXsdtu6qniD68gnwONBur9gL7hGpr0kt
+         FOSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DKcajWqETcYxz0G58Z+vZAfLySB6HXY6m/67CXA4AZc=;
-        b=sd+d37JLvdhbvZCl3uuqAvW/xoNWfvE0RhitQumawg9iQjOMUxPG9qnOEFEOkfntM8
-         8uxsQS6SxjiZHBpboT/s2f7w8cBksXq3iKd4fmuP1pgWuvDkSoNJNob0f98vku5DiFyD
-         sO+P2QX3QQLEnVlvbJVyZx/4QYxqvbhuIvTnJ3Ql1SbnAgN2C0Z7ksyHeb+4LMRsiwUN
-         +ettaVy6ipI3h3xxEinvhurbD+sJyFDxbFbFPow07+ZNtOGltb+eBcPPqGNYRlaNbmDE
-         R+hnN138h9Ymd468x1kEKU3r/PDEkbCv4j3FnrhP5el7mggomj9HMKcwQANTW/tTBgsN
-         yBYw==
-X-Gm-Message-State: APjAAAVIvFq/mBLKhxnq7/r+e3kNPBK1UEOjVClxTmkYHjakbngjG11D
-        bAGqmuUeBJmVrSIADRd1xvc=
-X-Google-Smtp-Source: APXvYqy1I/KeU+rqaOkngiDRulwYrJI+UOzYh8xuZIvE3OAu3vpbwD9/08Y/Pfixp8CcFMzetRdD2A==
-X-Received: by 2002:a2e:6c13:: with SMTP id h19mr8193248ljc.221.1578849464799;
-        Sun, 12 Jan 2020 09:17:44 -0800 (PST)
+        bh=j37XV7ANVgjgiPiKALeBvbZ2E7R44griMSfBNJCXDRY=;
+        b=OrIZkqLGsOc0x1Ld/B6i6R7aWHYEhAICLJj15THflX4c8FvQUnsoPPrg8H78k/dwTf
+         kbCyXjaB8TRPoKg1LsoWpHaEZwp6oXCHCxUPDVw6/kgWNE276Orr4/ELRlZm23OO8hDK
+         +FE89YTdH+HcGxS0y8KEBUFpSBbz5U1rKRLK22pYznuAu+OkExkaLbeFSk8o6WrJ35q0
+         1suEfLpiPCUgXe4k5um2QbQHrDVDerNSFGwyvW+W4uBiF34RjzdPuNJYQqiJ45xPyWt/
+         F1I1GgJmt8uI2D1Y2L3kQIY+gsiOnUAZde5KgtxblER3GpPHLAKApTX4WoBfU6OoTcrd
+         DUUQ==
+X-Gm-Message-State: APjAAAXq58jM0jjW+r3XX7ldwo+ZO3sp4/RrEk4BrqH375buJhrwyJ4q
+        uhTKZfeEYOLddZLLiICWqZw=
+X-Google-Smtp-Source: APXvYqzlP6fpT09HuEaM6B6VsCvyBoTGQq8J42WIHVzQfkxVIvgUVYUlaqr9rJXF7adKs+hbwC2ZWA==
+X-Received: by 2002:a2e:2c16:: with SMTP id s22mr8379264ljs.248.1578849466466;
+        Sun, 12 Jan 2020 09:17:46 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id i13sm4506628ljg.89.2020.01.12.09.17.43
+        by smtp.gmail.com with ESMTPSA id i13sm4506628ljg.89.2020.01.12.09.17.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 09:17:44 -0800 (PST)
+        Sun, 12 Jan 2020 09:17:46 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Wolfram Sang <wsa@the-dreams.de>
 Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 6/8] i2c: tegra: Use relaxed versions of readl/writel
-Date:   Sun, 12 Jan 2020 20:14:28 +0300
-Message-Id: <20200112171430.27219-7-digetx@gmail.com>
+Subject: [PATCH v4 8/8] i2c: tegra: Check DMA completion status in addition to left time
+Date:   Sun, 12 Jan 2020 20:14:30 +0300
+Message-Id: <20200112171430.27219-9-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
 In-Reply-To: <20200112171430.27219-1-digetx@gmail.com>
 References: <20200112171430.27219-1-digetx@gmail.com>
@@ -78,73 +78,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is nothing to synchronize in regards to memory accesses for PIO
-transfers and for DMA transfers the DMA API takes care of the syncing.
+It is more robust to check completion status in addition to the left time
+in a case of DMA transfer because transfer's completion happens in two
+phases [one is ISR, other is tasklet] and thus it is possible that DMA is
+completed while I2C completion awaiting times out because of the deferred
+notification done by the DMA driver. The DMA completion status becomes
+100% actual after DMA synchronization. This fixes spurious DMA timeouts
+when system is under load.
 
 Tested-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ drivers/i2c/busses/i2c-tegra.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index e0eb8f5dcd6b..1a390e1bff72 100644
+index 3c7c86d4b0e4..cbc2ad49043e 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -284,12 +284,12 @@ struct tegra_i2c_dev {
- static void dvc_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
- 		       unsigned long reg)
- {
--	writel(val, i2c_dev->base + reg);
-+	writel_relaxed(val, i2c_dev->base + reg);
- }
+@@ -1224,7 +1224,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 					 i2c_dev->rx_dma_chan :
+ 					 i2c_dev->tx_dma_chan);
  
- static u32 dvc_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
- {
--	return readl(i2c_dev->base + reg);
-+	return readl_relaxed(i2c_dev->base + reg);
- }
- 
- /*
-@@ -307,16 +307,16 @@ static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
- static void i2c_writel(struct tegra_i2c_dev *i2c_dev, u32 val,
- 		       unsigned long reg)
- {
--	writel(val, i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
-+	writel_relaxed(val, i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
- 
- 	/* Read back register to make sure that register writes completed */
- 	if (reg != I2C_TX_FIFO)
--		readl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
-+		readl_relaxed(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
- }
- 
- static u32 i2c_readl(struct tegra_i2c_dev *i2c_dev, unsigned long reg)
- {
--	return readl(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
-+	return readl_relaxed(i2c_dev->base + tegra_i2c_reg_addr(i2c_dev, reg));
- }
- 
- static void i2c_writesl(struct tegra_i2c_dev *i2c_dev, void *data,
-@@ -689,12 +689,13 @@ static int tegra_i2c_wait_for_config_load(struct tegra_i2c_dev *i2c_dev)
- 		i2c_writel(i2c_dev, I2C_MSTR_CONFIG_LOAD, I2C_CONFIG_LOAD);
- 
- 		if (i2c_dev->is_curr_atomic_xfer)
--			err = readl_poll_timeout_atomic(addr, val, val == 0,
--							1000,
--							I2C_CONFIG_LOAD_TIMEOUT);
-+			err = readl_relaxed_poll_timeout_atomic(
-+						addr, val, val == 0, 1000,
-+						I2C_CONFIG_LOAD_TIMEOUT);
- 		else
--			err = readl_poll_timeout(addr, val, val == 0, 1000,
--						 I2C_CONFIG_LOAD_TIMEOUT);
-+			err = readl_relaxed_poll_timeout(
-+						addr, val, val == 0, 1000,
-+						I2C_CONFIG_LOAD_TIMEOUT);
- 
- 		if (err) {
- 			dev_warn(i2c_dev->dev,
+-		if (time_left == 0) {
++		if (!time_left && !completion_done(&i2c_dev->dma_complete)) {
+ 			dev_err(i2c_dev->dev, "DMA transfer timeout\n");
+ 			tegra_i2c_init(i2c_dev, true);
+ 			return -ETIMEDOUT;
 -- 
 2.24.0
 
