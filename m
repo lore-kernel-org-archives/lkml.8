@@ -2,97 +2,113 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC608C33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 14:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B00C33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 14:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83007207FF
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 14:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689DC20848
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 14:02:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kapsi.fi header.i=@kapsi.fi header.b="PeFHqgnJ"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ofuU86pu";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cYzxR5UW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732975AbgALOA6 (ORCPT
+        id S1732981AbgALOCX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 09:00:58 -0500
-Received: from mail.kapsi.fi ([91.232.154.25]:40841 "EHLO mail.kapsi.fi"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732953AbgALOA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 09:00:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=kapsi.fi;
-         s=20161220; h=Content-Transfer-Encoding:MIME-Version:Message-Id:Date:Subject
-        :Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:Content-Description:
-        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=x/nFsgxdZk2EqfYZUP7PzEgKBJXPtYD799bZSXKee+k=; b=PeFHqgnJWiimG9LrZ3vLnHxqif
-        oYhJwWGkITCb/A2EvB/FCHV1/EfHeVVA3JePB5swfYvm+mVI0ZnxlFCz0ZUcPuZ+G2XNKB5Gmbq4V
-        XUh+2MiZxMMO1yExblF8UO+tqO0DPVONvEMNU8q6jEcI4p0wWptjevLW9W90qIqvOq1qR0/Bvw8ML
-        X+6zlocRWHQZh4HV4i0uB0GxmrKVmKUWpjonBUha48JK4IhnFehltEcNDBquiLRwl+2E7ufZoeoTy
-        lSaAN14TswxPNNcTHdYLmGgBEIMBBz28pNthx1MfE9ABK7aPMSmpAiUVS9XDLut1/6bJeMCi0Yo32
-        sWqEe6yQ==;
-Received: from puh7.kyla.fi ([82.130.43.239] helo=localhost)
-        by mail.kapsi.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <aapo.vienamo@iki.fi>)
-        id 1iqdnQ-0004c3-Q3; Sun, 12 Jan 2020 16:00:52 +0200
-From:   Aapo Vienamo <aapo.vienamo@iki.fi>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Aapo Vienamo <aapo.vienamo@iki.fi>
-Subject: [PATCH v3] ARM: mxs: Enable usbphy1 and usb1 on apx4devkit DTS
-Date:   Sun, 12 Jan 2020 16:00:39 +0200
-Message-Id: <20200112140039.25420-1-aapo.vienamo@iki.fi>
-X-Mailer: git-send-email 2.24.1
+        Sun, 12 Jan 2020 09:02:23 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:59229 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732953AbgALOCW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 09:02:22 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 7951B21FF3;
+        Sun, 12 Jan 2020 09:02:21 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Sun, 12 Jan 2020 09:02:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=NJHVvAW6H45CORrSOrRuKfIQ+gp
+        hAzjARjRdpy0mtZU=; b=ofuU86puPMAxtQzA1HSo5IrkN3wwdhjS1hZYNjCYcof
+        LCGwJyy9qDOYYqZOJ94o+MriK+60V/vqf4Ga1N6aiJajuhe+I32/mgQF/jbQZptN
+        MNj00JiTuUMTv3dyuFjMxJBcARFZFmRJcCZt7VGiSpzVIB37D7RdNjdM/sbm/3t6
+        KCU6WLd0gzPP5IX3VUhbWGAITGu5SQW8QF4jFvnAawK9f8sjqTKKhL02Kyu64/q6
+        +s4lzIjvq6UnmI7n588vgHHUxJ0gobmPVL+dc9Dxs9pr5PdiTG0OtT4DGKnnldv7
+        6HSq+wyP83zeUn07R7aHfxgFF4Q3gu4SHtI9neg9ARg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=NJHVvA
+        W6H45CORrSOrRuKfIQ+gphAzjARjRdpy0mtZU=; b=cYzxR5UWGSFLtYh27kOQii
+        6R4dp5H2kabSo57qlG6K031/ON7fEXKaNMaxEo9d0RwbHTeajqdAWcRL4hbmhGnH
+        Eaxxh+b7PJEFvLz+4FkUqkgWHPlNnWQvF/MctRjYYIeCdoLqI0EJ0h0oBTaVtUcs
+        vq7r+JiRovKZANDjhIDf+LgfanLEk57xYZZcC5vEyhAzIWAnKYbXse9HKJiR+qzg
+        c3IiHclubyHj8LUkB5Twh9HiFahBnnM9AbNcaW+AvkdarS1SFBuRPUkGVB0dRvGa
+        rDsaHNayn+hVqz00+CkZ5JSiHOv4fPUcz4qqAxq3udz5W/89pKgTRXJPChRMLzPQ
+        ==
+X-ME-Sender: <xms:7CYbXmgzj8tYjkQk0VeFa8mG-T7FRCoynFDPPpdcccZ-2uvUTA7uLg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeikedgheekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:7CYbXmWBMQngVZt3grB6kqf6PLtAQAG6bcHL8_HvrT0sQpHnD1gb5A>
+    <xmx:7CYbXlCQuXf3rWRW9Cl4YYqk8V3VIKDWvKQSridujQr1Bg2Wq8DFCA>
+    <xmx:7CYbXqkXDzt0C2SVctkFJeWJBKj_Pl7droBrJJ7ET4feQlu-OTOZVQ>
+    <xmx:7SYbXlDY7op9ooJpZqIncmA_Y9SaQ6p0yhj0y3Xt794nNmUtUagnJg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6ABE880062;
+        Sun, 12 Jan 2020 09:02:20 -0500 (EST)
+Date:   Sun, 12 Jan 2020 15:02:18 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Jari Ruusu <jari.ruusu@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Fenghua Yu <fenghua.yu@intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: Fix built-in early-load Intel microcode alignment
+Message-ID: <20200112140218.GA902610@kroah.com>
+References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
+ <CACMCwJ+FE8yD10VF07ci6tTqiBA8aBejKQT0EwyayQQOrLGUKQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 82.130.43.239
-X-SA-Exim-Mail-From: aapo.vienamo@iki.fi
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACMCwJ+FE8yD10VF07ci6tTqiBA8aBejKQT0EwyayQQOrLGUKQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable the USB host port on the APx4 development board.
+On Sun, Jan 12, 2020 at 03:03:44PM +0200, Jari Ruusu wrote:
+> On 1/12/20, Jari Ruusu <jari.ruusu@gmail.com> wrote:
+> > Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
+> > "Note that the microcode update must be aligned on a 16-byte
+> > boundary and the size of the microcode update must be 1-KByte
+> > granular"
+> >
+> > When early-load Intel microcode is loaded from initramfs,
+> > userspace tool 'iucode_tool' has already 16-byte aligned those
+> > microcode bits in that initramfs image. Image that was created
+> > something like this:
+> >
+> >  iucode_tool --write-earlyfw=FOO.cpio microcode-files...
+> >
+> > However, when early-load Intel microcode is loaded from built-in
+> > firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option,
+> > that 16-byte alignment is not guaranteed.
+> >
+> > Fix this by forcing all built-in firmware BLOBs to 16-byte
+> > alignment.
+> 
+> Backport of "Fix built-in early-load Intel microcode alignment"
+> for linux-4.19 and older stable kernels.
 
-Signed-off-by: Aapo Vienamo <aapo.vienamo@iki.fi>
----
- arch/arm/boot/dts/imx28-apx4devkit.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Any hint as to what that git commit id is?
 
-diff --git a/arch/arm/boot/dts/imx28-apx4devkit.dts b/arch/arm/boot/dts/imx28-apx4devkit.dts
-index 3a184d13887b..c5acc19c982d 100644
---- a/arch/arm/boot/dts/imx28-apx4devkit.dts
-+++ b/arch/arm/boot/dts/imx28-apx4devkit.dts
-@@ -183,10 +183,20 @@ auart2: serial@8006e000 {
- 				pinctrl-0 = <&auart2_2pins_a>;
- 				status = "okay";
- 			};
-+
-+			usbphy1: usbphy@8007e000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&usb1_pins_a>;
-+				status = "okay";
-+			};
- 		};
- 	};
- 
- 	ahb@80080000 {
-+		usb1: usb@80090000 {
-+		      status = "okay";
-+		};
-+
- 		mac0: ethernet@800f0000 {
- 			phy-mode = "rmii";
- 			pinctrl-names = "default";
--- 
-2.24.1
+thanks,
 
+greg k-h
