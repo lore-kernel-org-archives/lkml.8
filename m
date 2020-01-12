@@ -2,37 +2,37 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA1AC32771
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 12:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAF7C32771
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 12:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA1C2465A
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 12:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D7321744
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 12:19:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732873AbgALMTG (ORCPT
+        id S1732892AbgALMTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 07:19:06 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:60829 "EHLO
+        Sun, 12 Jan 2020 07:19:10 -0500
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:60813 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732843AbgALMTD (ORCPT
+        with ESMTP id S1732870AbgALMTH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 07:19:03 -0500
+        Sun, 12 Jan 2020 07:19:07 -0500
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from vadimp@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 12 Jan 2020 14:19:00 +0200
+        with ESMTPS (AES256-SHA encrypted); 12 Jan 2020 14:18:57 +0200
 Received: from r-build-lowlevel.mtr.labs.mlnx. (r-build-lowlevel.mtr.labs.mlnx [10.209.0.190])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 00CCIpSX023227;
-        Sun, 12 Jan 2020 14:19:00 +0200
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 00CCIpSU023227;
+        Sun, 12 Jan 2020 14:18:57 +0200
 From:   Vadim Pasternak <vadimp@mellanox.com>
 To:     andy@infradead.org, dvhart@infradead.org
 Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
         Vadim Pasternak <vadimp@mellanox.com>
-Subject: [PATCH platform-next v2 09/10] platform/mellanox: mlxreg-hotplug: Add support for new capability register
-Date:   Sun, 12 Jan 2020 12:18:48 +0000
-Message-Id: <20200112121849.7056-10-vadimp@mellanox.com>
+Subject: [PATCH platform-next v2 06/10] platform/x86: mlx-platform: Set system mux configuration based on system type
+Date:   Sun, 12 Jan 2020 12:18:45 +0000
+Message-Id: <20200112121849.7056-7-vadimp@mellanox.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200112121849.7056-1-vadimp@mellanox.com>
 References: <20200112121849.7056-1-vadimp@mellanox.com>
@@ -41,66 +41,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for capability register, which is used for detection of the
-actual number of interrupt capable components within the particular
-group, supported by the specific system.
-Such components could be for example the number of power units and
-interrupts related to these units.
-The motivation is to avoid adding a new code in the future in order to
-distinct between the systems type supported different number of the
-components like power supplies, FANs, ASICs, line cards.
+Separate assignment for systems mux configuration based on system type,
+instead of setting the same configuration for the all.
+The motivation is to allow introduction of new systems types with the
+different mux topology.
 
 Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
 ---
- drivers/platform/mellanox/mlxreg-hotplug.c | 14 ++++++++++++++
- include/linux/platform_data/mlxreg.h       |  2 ++
- 2 files changed, 16 insertions(+)
+v1-v2:
+ Comments pointed out by Andy:
+ Drop semicolon after mlxplat_dmi_qmb7xx_matched().
+---
+ drivers/platform/x86/mlx-platform.c | 44 +++++++++++++++++++++++++++----------
+ 1 file changed, 32 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/platform/mellanox/mlxreg-hotplug.c b/drivers/platform/mellanox/mlxreg-hotplug.c
-index 706207d192ae..77be37a1fbcf 100644
---- a/drivers/platform/mellanox/mlxreg-hotplug.c
-+++ b/drivers/platform/mellanox/mlxreg-hotplug.c
-@@ -504,6 +504,20 @@ static int mlxreg_hotplug_set_irq(struct mlxreg_hotplug_priv_data *priv)
- 	item = pdata->items;
+diff --git a/drivers/platform/x86/mlx-platform.c b/drivers/platform/x86/mlx-platform.c
+index 7e92dc52071f..53c23a99e182 100644
+--- a/drivers/platform/x86/mlx-platform.c
++++ b/drivers/platform/x86/mlx-platform.c
+@@ -219,7 +219,7 @@ static const int mlxplat_default_channels[][MLXPLAT_CPLD_GRP_CHNL_NUM] = {
+ static const int mlxplat_msn21xx_channels[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
  
- 	for (i = 0; i < pdata->counter; i++, item++) {
-+		if (item->capability) {
-+			/*
-+			 * Read group capability register to get actual number
-+			 * of interrupt capable components and set group mask
-+			 * accordingly.
-+			 */
-+			ret = regmap_read(priv->regmap, item->capability,
-+					  &regval);
-+			if (ret)
-+				goto out;
+ /* Platform mux data */
+-static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
++static struct i2c_mux_reg_platform_data mlxplat_default_mux_data[] = {
+ 	{
+ 		.parent = 1,
+ 		.base_nr = MLXPLAT_CPLD_CH1,
+@@ -239,6 +239,11 @@ static struct i2c_mux_reg_platform_data mlxplat_mux_data[] = {
+ 
+ };
+ 
++/* Platform mux configuration variables */
++static int mlxplat_max_adap_num;
++static int mlxplat_mux_num;
++static struct i2c_mux_reg_platform_data *mlxplat_mux_data;
 +
-+			item->mask = GENMASK((regval & item->mask) - 1, 0);
-+		}
-+
- 		/* Clear group presense event. */
- 		ret = regmap_write(priv->regmap, item->reg +
- 				   MLXREG_HOTPLUG_EVENT_OFF, 0);
-diff --git a/include/linux/platform_data/mlxreg.h b/include/linux/platform_data/mlxreg.h
-index 6d54fe3bcac9..b8da8aef2446 100644
---- a/include/linux/platform_data/mlxreg.h
-+++ b/include/linux/platform_data/mlxreg.h
-@@ -101,6 +101,7 @@ struct mlxreg_core_data {
-  * @aggr_mask: group aggregation mask;
-  * @reg: group interrupt status register;
-  * @mask: group interrupt mask;
-+ * @capability: group capability register;
-  * @cache: last status value for elements fro the same group;
-  * @count: number of available elements in the group;
-  * @ind: element's index inside the group;
-@@ -112,6 +113,7 @@ struct mlxreg_core_item {
- 	u32 aggr_mask;
- 	u32 reg;
- 	u32 mask;
-+	u32 capability;
- 	u32 cache;
- 	u8 count;
- 	u8 ind;
+ /* Platform hotplug devices */
+ static struct i2c_board_info mlxplat_mlxcpld_psu[] = {
+ 	{
+@@ -1905,7 +1910,10 @@ static int __init mlxplat_dmi_default_matched(const struct dmi_system_id *dmi)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
++	mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
++	mlxplat_mux_data = mlxplat_default_mux_data;
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		mlxplat_mux_data[i].values = mlxplat_default_channels[i];
+ 		mlxplat_mux_data[i].n_values =
+ 				ARRAY_SIZE(mlxplat_default_channels[i]);
+@@ -1924,7 +1932,10 @@ static int __init mlxplat_dmi_msn21xx_matched(const struct dmi_system_id *dmi)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
++	mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
++	mlxplat_mux_data = mlxplat_default_mux_data;
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
+ 		mlxplat_mux_data[i].n_values =
+ 				ARRAY_SIZE(mlxplat_msn21xx_channels);
+@@ -1943,7 +1954,10 @@ static int __init mlxplat_dmi_msn274x_matched(const struct dmi_system_id *dmi)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
++	mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
++	mlxplat_mux_data = mlxplat_default_mux_data;
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
+ 		mlxplat_mux_data[i].n_values =
+ 				ARRAY_SIZE(mlxplat_msn21xx_channels);
+@@ -1962,7 +1976,10 @@ static int __init mlxplat_dmi_msn201x_matched(const struct dmi_system_id *dmi)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
++	mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
++	mlxplat_mux_data = mlxplat_default_mux_data;
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
+ 		mlxplat_mux_data[i].n_values =
+ 				ARRAY_SIZE(mlxplat_msn21xx_channels);
+@@ -1981,7 +1998,10 @@ static int __init mlxplat_dmi_qmb7xx_matched(const struct dmi_system_id *dmi)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	mlxplat_max_adap_num = MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM;
++	mlxplat_mux_num = ARRAY_SIZE(mlxplat_default_mux_data);
++	mlxplat_mux_data = mlxplat_default_mux_data;
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		mlxplat_mux_data[i].values = mlxplat_msn21xx_channels;
+ 		mlxplat_mux_data[i].n_values =
+ 				ARRAY_SIZE(mlxplat_msn21xx_channels);
+@@ -2127,7 +2147,7 @@ static int mlxplat_mlxcpld_verify_bus_topology(int *nr)
+ 	/* Scan adapters from expected id to verify it is free. */
+ 	*nr = MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR;
+ 	for (i = MLXPLAT_CPLD_PHYS_ADAPTER_DEF_NR; i <
+-	     MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM; i++) {
++	     mlxplat_max_adap_num; i++) {
+ 		search_adap = i2c_get_adapter(i);
+ 		if (search_adap) {
+ 			i2c_put_adapter(search_adap);
+@@ -2141,12 +2161,12 @@ static int mlxplat_mlxcpld_verify_bus_topology(int *nr)
+ 	}
+ 
+ 	/* Return with error if free id for adapter is not found. */
+-	if (i == MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM)
++	if (i == mlxplat_max_adap_num)
+ 		return -ENODEV;
+ 
+ 	/* Shift adapter ids, since expected parent adapter is not free. */
+ 	*nr = i;
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		shift = *nr - mlxplat_mux_data[i].parent;
+ 		mlxplat_mux_data[i].parent = *nr;
+ 		mlxplat_mux_data[i].base_nr += shift;
+@@ -2202,7 +2222,7 @@ static int __init mlxplat_init(void)
+ 	if (nr < 0)
+ 		goto fail_alloc;
+ 
+-	nr = (nr == MLXPLAT_CPLD_MAX_PHYS_ADAPTER_NUM) ? -1 : nr;
++	nr = (nr == mlxplat_max_adap_num) ? -1 : nr;
+ 	if (mlxplat_i2c)
+ 		mlxplat_i2c->regmap = priv->regmap;
+ 	priv->pdev_i2c = platform_device_register_resndata(
+@@ -2215,7 +2235,7 @@ static int __init mlxplat_init(void)
+ 		goto fail_alloc;
+ 	}
+ 
+-	for (i = 0; i < ARRAY_SIZE(mlxplat_mux_data); i++) {
++	for (i = 0; i < mlxplat_mux_num; i++) {
+ 		priv->pdev_mux[i] = platform_device_register_resndata(
+ 						&priv->pdev_i2c->dev,
+ 						"i2c-mux-reg", i, NULL,
+@@ -2349,7 +2369,7 @@ static void __exit mlxplat_exit(void)
+ 	platform_device_unregister(priv->pdev_led);
+ 	platform_device_unregister(priv->pdev_hotplug);
+ 
+-	for (i = ARRAY_SIZE(mlxplat_mux_data) - 1; i >= 0 ; i--)
++	for (i = mlxplat_mux_num - 1; i >= 0 ; i--)
+ 		platform_device_unregister(priv->pdev_mux[i]);
+ 
+ 	platform_device_unregister(priv->pdev_i2c);
 -- 
 2.11.0
 
