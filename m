@@ -2,100 +2,117 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519BEC33CAB
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 23:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E202C33CAB
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 23:50:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FEB521744
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 23:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F1E2187F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 23:50:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387501AbgALXfe (ORCPT
+        id S2387485AbgALXub (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 18:35:34 -0500
-Received: from foss.arm.com ([217.140.110.172]:33038 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727323AbgALXfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 18:35:34 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FB7B30E;
-        Sun, 12 Jan 2020 15:35:31 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F7D13F534;
-        Sun, 12 Jan 2020 15:35:29 -0800 (PST)
-Date:   Sun, 12 Jan 2020 23:35:27 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        valentin.schneider@arm.com, qperret@google.com,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] sched/rt: Add a new sysctl to control uclamp_util_min
-Message-ID: <20200112233526.wmrq5i6hqqez4oby@e107158-lin.cambridge.arm.com>
-References: <20191220164838.31619-1-qais.yousef@arm.com>
- <20200108134448.GG2844@hirez.programming.kicks-ass.net>
- <20200109130052.feebuwuuvwvm324w@e107158-lin.cambridge.arm.com>
- <20200110133956.GL2844@hirez.programming.kicks-ass.net>
+        Sun, 12 Jan 2020 18:50:31 -0500
+Received: from orion.archlinux.org ([88.198.91.70]:59150 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbgALXub (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 18:50:31 -0500
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id E4D6B18144FDB0;
+        Sun, 12 Jan 2020 23:50:27 +0000 (UTC)
+Received: from localhost.localdomain (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Sun, 12 Jan 2020 23:50:27 +0000 (UTC)
+From:   =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
+To:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Filipe=20La=C3=ADns?= <lains@archlinux.org>
+Subject: [PATCH v2] HID: logitech: drop outdated references to unifying receivers
+Date:   Sun, 12 Jan 2020 23:50:09 +0000
+Message-Id: <20200112235009.4074405-1-lains@archlinux.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200110133956.GL2844@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/10/20 14:39, Peter Zijlstra wrote:
-> On Thu, Jan 09, 2020 at 01:00:58PM +0000, Qais Yousef wrote:
-> > On 01/08/20 14:44, Peter Zijlstra wrote:
-> > > On Fri, Dec 20, 2019 at 04:48:38PM +0000, Qais Yousef wrote:
-> > > > RT tasks by default try to run at the highest capacity/performance
-> > > > level. When uclamp is selected this default behavior is retained by
-> > > > enforcing the uclamp_util_min of the RT tasks to be
-> > > > uclamp_none(UCLAMP_MAX), which is SCHED_CAPACITY_SCALE; the maximum
-> > > > value.
-> > > > 
-> > > > See commit 1a00d999971c ("sched/uclamp: Set default clamps for RT tasks").
-> > > > 
-> > > > On battery powered devices, this default behavior could consume more
-> > > > power, and it is desired to be able to tune it down. While uclamp allows
-> > > > tuning this by changing the uclamp_util_min of the individual tasks, but
-> > > > this is cumbersome and error prone.
-> > > > 
-> > > > To control the default behavior globally by system admins and device
-> > > > integrators, introduce the new sysctl_sched_rt_uclamp_util_min to
-> > > > change the default uclamp_util_min value of the RT tasks.
-> > > > 
-> > > > Whenever the new default changes, it'd be applied on the next wakeup of
-> > > > the RT task, assuming that it still uses the system default value and
-> > > > not a user applied one.
-> > > 
-> > > This is because these RT tasks are not in a cgroup or not affected by
-> > > cgroup settings? I feel the justification is a little thin here.
-> > 
-> > The uclamp_min for RT tasks is always hardcoded to 1024 at the moment. So even
-> > if they belong to a cgroup->uclamp_min = 0, they'll still run at max frequency,
-> > no?
-> 
-> Argh, this is that counter intuitive max aggregate nonsense biting me.
+The hid-logitech-{dj,hidpp} were originally developed for unifying
+receivers but since then they have evolved and now support other types
+of receivers and devices. This patch adjusts the original descriptions
+with this in mind.
 
-Yeah I thought we already have a mechanism to control this, until you try to do
-it then you find out we don't. Not conveniently at least.
+Signed-off-by: Filipe Laíns <lains@archlinux.org>
+---
+ drivers/hid/Kconfig              | 6 +++---
+ drivers/hid/hid-logitech-dj.c    | 4 ++--
+ drivers/hid/hid-logitech-hidpp.c | 2 +-
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-Are you okay with the sysctl to tune this behavior then?
-
-Thanks
-
---
-Qais Yousef
+diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+index 494a39e74939..56f9f16220e3 100644
+--- a/drivers/hid/Kconfig
++++ b/drivers/hid/Kconfig
+@@ -531,14 +531,14 @@ config HID_LOGITECH
+ 	Support for Logitech devices that are not fully compliant with HID standard.
+ 
+ config HID_LOGITECH_DJ
+-	tristate "Logitech Unifying receivers full support"
++	tristate "Logitech receivers full support"
+ 	depends on USB_HID
+ 	depends on HIDRAW
+ 	depends on HID_LOGITECH
+ 	select HID_LOGITECH_HIDPP
+ 	---help---
+-	Say Y if you want support for Logitech Unifying receivers and devices.
+-	Unifying receivers are capable of pairing up to 6 Logitech compliant
++	Say Y if you want support for Logitech receivers and devices.
++	Logitech receivers are capable of pairing multiple Logitech compliant
+ 	devices to the same receiver. Without this driver it will be handled by
+ 	generic USB_HID driver and all incoming events will be multiplexed
+ 	into a single mouse and a single keyboard device.
+diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-logitech-dj.c
+index 732380b55b15..cc7fc71d8b05 100644
+--- a/drivers/hid/hid-logitech-dj.c
++++ b/drivers/hid/hid-logitech-dj.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- *  HID driver for Logitech Unifying receivers
++ *  HID driver for Logitech receivers
+  *
+  *  Copyright (c) 2011 Logitech
+  */
+@@ -701,7 +701,7 @@ static void logi_dj_recv_add_djhid_device(struct dj_receiver_dev *djrcv_dev,
+ 			type_str, dj_hiddev->product);
+ 	} else {
+ 		snprintf(dj_hiddev->name, sizeof(dj_hiddev->name),
+-			"Logitech Unifying Device. Wireless PID:%04x",
++			"Logitech Wireless Device PID:%04x",
+ 			dj_hiddev->product);
+ 	}
+ 
+diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
+index 39a5ee0aaab0..c04018f8a727 100644
+--- a/drivers/hid/hid-logitech-hidpp.c
++++ b/drivers/hid/hid-logitech-hidpp.c
+@@ -1,6 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- *  HIDPP protocol for Logitech Unifying receivers
++ *  HIDPP protocol for Logitech receivers
+  *
+  *  Copyright (c) 2011 Logitech (c)
+  *  Copyright (c) 2012-2013 Google (c)
+-- 
+2.24.1
