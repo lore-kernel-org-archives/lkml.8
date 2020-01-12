@@ -2,113 +2,95 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8BCC3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF357C33CA7
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D612187F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC888214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:12:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ga9pgm5C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYRQ9gfR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733180AbgALSJ2 (ORCPT
+        id S1733197AbgALSL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 13:09:28 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40130 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728211AbgALSJ2 (ORCPT
+        Sun, 12 Jan 2020 13:11:59 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37473 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728211AbgALSL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 13:09:28 -0500
-Received: by mail-pg1-f195.google.com with SMTP id k25so3581204pgt.7;
-        Sun, 12 Jan 2020 10:09:28 -0800 (PST)
+        Sun, 12 Jan 2020 13:11:58 -0500
+Received: by mail-lj1-f194.google.com with SMTP id o13so7519950ljg.4;
+        Sun, 12 Jan 2020 10:11:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YFlf1XFp+d/uDi+uNrIPUk2Y6SDrznnoWTCo2qHOO1c=;
-        b=Ga9pgm5C0iLfeWe33cE/koxxKjwfcNFvrEKZf0Ky9E+MhCXRIhF55ivsqpgOWXHnO2
-         svJHmJcAZKyc3wiybnfIPa9oksPPTYNxafloj1RYVq9WvoPiEl4LBvk0MKcHiUREiI2X
-         5pAtar9oUyns+ELlqUCO6hfI+J6sltPPex4G1qOIIP2vCX7Lk+fvxuphQ+IZIDeWKcsQ
-         TNEx44J6zuxPNdvd16G7obkCswt/HQosXzudv8rCo8d9mKp5hhHUZ0em9rsFHoJgEqq8
-         iHuSHaTW/09OqWfW/VZ82DTfg8ZKYOgHTQ413qc1ohs3ZZwOoO/BM7hDZ6hRjY5tXulJ
-         ee9Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wk7Ak6kU1DxFZaH2IkQYiSLzwBzI4ulZa0ve89UBNdM=;
+        b=rYRQ9gfR4DVB6VsvePCbuhGkkPMI2P/I5Xij0VxNDpQj7homrUvjumwwUDY4UW2pRY
+         iku2G1cbkVkfifWz7lOMaL2Ji5P/TixrcNH3fx0N0ZNuuVihxk6mEqJqSRBL04ilJfKo
+         ySAZFlUSkqh90dxQ81sIFLv1MFK3a5DTVIbHvVv9ABXH5iQs2dQ7JbAlps0VuTGvJIZA
+         C/jmXy+4xwOoLXkV7yuIimyc/Rzy9k6zJGGQxQKynSmkOOWAN9iTNVqrYYZtukDRBeU8
+         dRMsbXc9eHmPXwiILeJXdSRZQEtcC1MFU02jj8gRuuooc/+apNXSqYbj2u1ihlek7g0I
+         /4zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YFlf1XFp+d/uDi+uNrIPUk2Y6SDrznnoWTCo2qHOO1c=;
-        b=jmifh1cu/KP8/qPzFz87CtalBryjG5Ih/k2wxA06g2Ba8VE/SNj3wjG8e7NYgzM1bo
-         sEgRflJtizVFbtiUpehJdZ/l7sy2LPLqFiHa8Ofxek+A1BLuynDcfJnnNmCKM2+DozpB
-         sufb/KF5r5ZQdFiPPhs17kaNSB2m7+BjKBpb6BtRmVFZNSg/Ag6sRa0jLGChrO9vw/Qe
-         9hRkyuAzEWALX0i8UWpISZkv9nQVH0USDVFk2wKNifT/Vz+p3sA3K5bqxCsBEOkfR2Yg
-         fItSIIpQDYsWuiKc5vtRYKaaSXlglFQuUByWo5YG0eJPR6OQftOePlDj35n9aSNpuiCF
-         uFKg==
-X-Gm-Message-State: APjAAAV7fKwuJDYbdnztrjX/SxNi7uK45MZYFrz8qk8jtk79z7Dac45S
-        19vpS3RWkJyO0A648+XbrhQ=
-X-Google-Smtp-Source: APXvYqxEgc9wZ0mKVVT83Rm+ImBq7gb/sKaV6A45p6k4lTER/9OBierK3/qh/wcJSzfWagVHGso/og==
-X-Received: by 2002:a63:234f:: with SMTP id u15mr16705116pgm.88.1578852567496;
-        Sun, 12 Jan 2020 10:09:27 -0800 (PST)
-Received: from localhost ([2001:19f0:6001:12c8:5400:2ff:fe72:6403])
-        by smtp.gmail.com with ESMTPSA id d22sm10183754pgg.52.2020.01.12.10.09.26
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 12 Jan 2020 10:09:26 -0800 (PST)
-From:   Yangtao Li <tiny.windzz@gmail.com>
-To:     anarsoul@gmail.com, rui.zhang@intel.com, daniel.lezcano@linaro.org,
-        amit.kucheria@verdurent.com, mripard@kernel.org, wens@csie.org
-Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>
-Subject: [PATCH] thermal: sun8i: remove unused variable and unneeded macros
-Date:   Sun, 12 Jan 2020 18:09:25 +0000
-Message-Id: <20200112180925.23705-1-tiny.windzz@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Wk7Ak6kU1DxFZaH2IkQYiSLzwBzI4ulZa0ve89UBNdM=;
+        b=DIiHGh+0tlpp8fRdnWISVh3Kjp1hk30NOzrAuUq+vHVbIoDpenNwOKJhAwGrXa8fMT
+         U5UIUHUYKoy3pHFjt9pIdUgDHYkFXorroneciNS7GyEJPJysd+A3m+vvt5zRF1yFwY2j
+         wKZnz8nTopEuhxHF78wfdAVc4EyWI9Wqlo7tvsxeK+OzIrWyM4bZ+SQimCfkKWQ9OdWC
+         cMu3jepS3zGc2abOOtB+w71utc+J1qD1Bk508pMCiLP+P0SS8Rt80B6D0R0+qXWOTQcV
+         /STgw5L5ElSlit7QoIMQg3jz1xlXLd861oKn5ugSa8r5O0w9tVre5IWVprbmmrlQOgFu
+         oAAg==
+X-Gm-Message-State: APjAAAWHPurvrSQT8gwteYgWKVvhGuNRWIx8HJQAJvflAjgcPWpdm5hb
+        LuUWZSOAmKDxwy9/1kRG9WM=
+X-Google-Smtp-Source: APXvYqwnRt9hIqF5ldWMJYF8oM9wgKv3fTLzx8EXRVWW24Thkgi0BlCjYpwBMrxZr/e//Tghy8kO5g==
+X-Received: by 2002:a2e:b0f5:: with SMTP id h21mr8781711ljl.9.1578852716636;
+        Sun, 12 Jan 2020 10:11:56 -0800 (PST)
+Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.gmail.com with ESMTPSA id 195sm4542784ljj.55.2020.01.12.10.11.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2020 10:11:55 -0800 (PST)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/2] NVIDIA Tegra serial driver improvements
+Date:   Sun, 12 Jan 2020 21:09:17 +0300
+Message-Id: <20200112180919.5194-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.24.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cp_ft_flag variable is not used after initialization, so delete
-it. After that, THS_EFUSE_CP_FT_MASK, THS_EFUSE_CP_FT_BIT and
-THS_CALIBRATION_IN_FT are not needed, so delete them.
+Hello,
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
----
- drivers/thermal/sun8i_thermal.c | 6 ------
- 1 file changed, 6 deletions(-)
+This series is a complement to [1], which changed APB DMA driver's runtime
+PM to make DMA clock enabled only during of actual transfer activity.
+Unfortunately turned out that it wasn't enough because serial driver keeps
+RX DMA active all the time in practice and that's what the first patch of
+this series addresses. Secondly, I noticed that DMA synchronization could
+be improved, it is also addressed now. Please review and apply, thanks in
+advance!
 
-diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-index 4bcde9491edb..bd7549f9ecba 100644
---- a/drivers/thermal/sun8i_thermal.c
-+++ b/drivers/thermal/sun8i_thermal.c
-@@ -54,9 +54,6 @@
- #define SUN50I_H6_THS_DATA_IRQ_STS(x)		BIT(x)
- 
- /* millidegree celsius */
--#define THS_EFUSE_CP_FT_MASK			0x3000
--#define THS_EFUSE_CP_FT_BIT			12
--#define THS_CALIBRATION_IN_FT			1
- 
- struct tsensor {
- 	struct ths_device		*tmdev;
-@@ -88,7 +85,6 @@ struct ths_device {
- 	struct clk				*bus_clk;
- 	struct clk                              *mod_clk;
- 	struct tsensor				sensor[MAX_SENSOR_NUM];
--	u32					cp_ft_flag;
- };
- 
- /* Temp Unit: millidegree Celsius */
-@@ -244,8 +240,6 @@ static int sun50i_h6_ths_calibrate(struct ths_device *tmdev,
- 	 * register values and this will become a calibration offset.
- 	 */
- 	ft_temp = (caldata[0] & FT_TEMP_MASK) * 100;
--	tmdev->cp_ft_flag = (caldata[0] & THS_EFUSE_CP_FT_MASK)
--		>> THS_EFUSE_CP_FT_BIT;
- 
- 	for (i = 0; i < tmdev->chip->sensor_num; i++) {
- 		int sensor_reg = caldata[i + 1];
+Dmitry Osipenko (2):
+  tty: serial: tegra: Activate RX DMA transfer by request
+  tty: serial: tegra: Optimize DMA buffer synchronization
+
+ drivers/tty/serial/serial-tegra.c | 94 ++++++++++++++++++-------------
+ 1 file changed, 55 insertions(+), 39 deletions(-)
+
 -- 
-2.17.1
+2.24.0
 
