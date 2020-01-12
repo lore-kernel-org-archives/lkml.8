@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C885C33CAC
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DAEC33CA7
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F12B21556
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:00:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C65821556
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rXMVpie4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="APD6gBkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733247AbgALR76 (ORCPT
+        id S1733217AbgALR7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 12:59:58 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37616 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733203AbgALR7x (ORCPT
+        Sun, 12 Jan 2020 12:59:52 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39083 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733155AbgALR7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 12:59:53 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w15so6401250wru.4;
-        Sun, 12 Jan 2020 09:59:51 -0800 (PST)
+        Sun, 12 Jan 2020 12:59:51 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y11so6379353wrt.6;
+        Sun, 12 Jan 2020 09:59:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=2z5jKKd1kP0MGK92fjPfQhagxUNB4WYrYfTGQCeaJaI=;
-        b=rXMVpie4I6835JSVbDI3sQTxOTKQBd4BFGhjhKZrbphGEySSZzqRSr0qnd2eIKPPo8
-         vdvgA7v/itexM++eH+lQ1NpYal+yPaIg3u7nvqBVXSwIAHraetE+pj0VG571Gd1ofU4T
-         lQ4OnuIdr0s0UjvdY2QwqFNLFQM/L/nOGg+0OUu2+NwqxbNNT0Lj0VRa/y682ZwvHLXW
-         ul72ef0RkEjARu+VTWER4uOHcsqDgoZaCpf3htgZhd/Y86waa6n4Wh18RjCLljM4BiFB
-         CYcVOizz3KjADECUewAdUh8eJgBkdoTnr1ZgD1pFsD2K9jdWnmuQNL4QXal/E9o9apje
-         7Kww==
+        bh=I7p3MTVh7YW9DcnuTnIP7pDzwPRCSGKLfSdL+8Sg37M=;
+        b=APD6gBkArkoCRa5hy0KIkpF9vcj82jkyOWBkslfE0wW7/PzK87pTLmwiYM6a7yM90a
+         8wzH0lzDh+vYapb5+OotTkwql512VUuDVJou0acaXY5hobfJz0MQWpbcOijOs/0YM/ue
+         Ws/Z/zQeQ7TNy7btBJ52k0A1rn1SrOCjf8CqWO/MXGQdoDIknS4nbhPcmMQjJ7XAD52H
+         Oybo1fnhoeu3Pc1ZPp6g2OdgUvE33DxP7/3sfxgGl3woY76uwmumXd1A9TXmSvu2gyXw
+         6LN/jIh2fL+SS4B4tmjFQDiJEAg9vyJH9ETqz9hBOr7LgibghfiTuNeqgUR83jfZdipv
+         I9lQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2z5jKKd1kP0MGK92fjPfQhagxUNB4WYrYfTGQCeaJaI=;
-        b=hL8POZuczpWDDAddz/SKEF8H75kj+zqRHmZUvo24JDyMrNwCuvKWSoVBb+K7KKZ/8g
-         CS8sJjj1nPrCP3B8RuyVSk6X87PDw8lpw62OPhX6xXGPHBCKfgUeceZfayQsmteG2TjM
-         2dhi8ayMeM4qX7wcuddLSL2vphhOS2r2ssl463h8VO5yh4Vrzagzst3QyESnAU6AWJJM
-         Omx4mnhNIdxgQ33EkPdbDHrTEhQLKOj0yQ5M5a7GUCLLeXyl9QA3dn99kTELe3ykiqnK
-         4csGqNhwZcL8Ywpk66VDhn2cJhXX9NZNFZmIGVjmm2EvDY4ehTrUmZtdC87k1umMHyKL
-         XnCw==
-X-Gm-Message-State: APjAAAWChXJnTT7KLn81ioe1dwYZK5MtBwxw3cP5tj4P8R5x5HSjID2v
-        CtzBlq1NsCNE1lfv9DVDa6xWZ+C8
-X-Google-Smtp-Source: APXvYqzgINU2cjDfDKUuG7UoPCMbyduVF4vZdkmSesEde07NJ1C2f9Pfn0IOeksN6sakxsL/wGRVyA==
-X-Received: by 2002:adf:f5cf:: with SMTP id k15mr14775327wrp.182.1578851991201;
-        Sun, 12 Jan 2020 09:59:51 -0800 (PST)
+        bh=I7p3MTVh7YW9DcnuTnIP7pDzwPRCSGKLfSdL+8Sg37M=;
+        b=KwfQCTtlpq6+y1R8OiO0UNGnBKvWG0Z12w4/kM90AhQ+Yz7ydzuJMC3mAA2NOiJjGy
+         6Y6RkW9R/XMiLcxGM39vuLzOTS4uzLxZIdhQV45JDlnZ8c2y0FG9lrw9GeMLSneKJbeG
+         l0i+k9RGSUlnm4uAiF00rguu9rV7SOjmlyivK0xStYeDU6Di3AcHeic4+HTEyXadBjt8
+         M5h1+Ft8dL9iP2TqwQLagZmDDaW3Hak6AHaEDYOfND5iZ5V2Yvl6zOCXrddZu8r7q3s9
+         5FsRk8NrtyVPg7Sdiq7J+PzMs6okaA6FNaVxU0+MoqrevoO/37T1/WeZibQ1fkF+fUqr
+         5gdw==
+X-Gm-Message-State: APjAAAUpmBkn4GJW4LbcXHwBi/IW/8zEdeft/8x4SesGBfshHk3fbtyj
+        iF7dt1puNBBa6AHeq2b3A+RQPM33
+X-Google-Smtp-Source: APXvYqx8jVVXP2mT9xjVxDqVe2Ls7boR3vrxUDKVudBmPvhg1niv2uT8b9SxZjnAcIt0ulVVbx7gVg==
+X-Received: by 2002:a5d:4b8f:: with SMTP id b15mr15105861wrt.100.1578851989330;
+        Sun, 12 Jan 2020 09:59:49 -0800 (PST)
 Received: from Pali-Latitude.lan (ip-89-103-160-142.net.upcbroadband.cz. [89.103.160.142])
-        by smtp.gmail.com with ESMTPSA id t25sm11076522wmj.19.2020.01.12.09.59.50
+        by smtp.gmail.com with ESMTPSA id t25sm11076522wmj.19.2020.01.12.09.59.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 09:59:50 -0800 (PST)
+        Sun, 12 Jan 2020 09:59:48 -0800 (PST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jan Kara <jack@suse.cz>
-Subject: [WIP PATCH 4/4] udf: Allow to read UDF 2.60 discs
-Date:   Sun, 12 Jan 2020 18:59:33 +0100
-Message-Id: <20200112175933.5259-5-pali.rohar@gmail.com>
+Subject: [WIP PATCH 2/4] udf: Fix reading numFiles and numDirs from UDF 2.00+ VAT discs
+Date:   Sun, 12 Jan 2020 18:59:31 +0100
+Message-Id: <20200112175933.5259-3-pali.rohar@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200112175933.5259-1-pali.rohar@gmail.com>
 References: <20200112175933.5259-1-pali.rohar@gmail.com>
@@ -74,27 +74,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current udf implementation now should be able to properly mount and read
-images with UDF 2.60 revision in R/O mode without any problem.
+These two fields are stored in VAT and override previous values stored in
+LVIDIU.
+
+This change contains only implementation for UDF 2.00+. For UDF 1.50 there
+is an optional structure "Logical Volume Extended Information" which is not
+implemented in this change yet.
 
 Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
 ---
- fs/udf/udf_sb.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/udf/super.c  | 25 ++++++++++++++++++++++---
+ fs/udf/udf_sb.h |  3 +++
+ 2 files changed, 25 insertions(+), 3 deletions(-)
 
+diff --git a/fs/udf/super.c b/fs/udf/super.c
+index 8df6e9962..e8661bf01 100644
+--- a/fs/udf/super.c
++++ b/fs/udf/super.c
+@@ -1202,6 +1202,8 @@ static int udf_load_vat(struct super_block *sb, int p_index, int type1_index)
+ 		map->s_type_specific.s_virtual.s_start_offset = 0;
+ 		map->s_type_specific.s_virtual.s_num_entries =
+ 			(sbi->s_vat_inode->i_size - 36) >> 2;
++		/* TODO: Add support for reading Logical Volume Extended Information (UDF 1.50 Errata, DCN 5003, 3.3.4.5.1.3) */
++		map->s_type_specific.s_virtual.s_has_additional_data = false;
+ 	} else if (map->s_partition_type == UDF_VIRTUAL_MAP20) {
+ 		vati = UDF_I(sbi->s_vat_inode);
+ 		if (vati->i_alloc_type != ICBTAG_FLAG_AD_IN_ICB) {
+@@ -1215,6 +1217,12 @@ static int udf_load_vat(struct super_block *sb, int p_index, int type1_index)
+ 							vati->i_ext.i_data;
+ 		}
+ 
++		map->s_type_specific.s_virtual.s_has_additional_data =
++			true;
++		map->s_type_specific.s_virtual.s_num_files =
++			le32_to_cpu(vat20->numFiles);
++		map->s_type_specific.s_virtual.s_num_dirs =
++			le32_to_cpu(vat20->numDirs);
+ 		map->s_type_specific.s_virtual.s_start_offset =
+ 			le16_to_cpu(vat20->lengthHeader);
+ 		map->s_type_specific.s_virtual.s_num_entries =
+@@ -2417,9 +2425,20 @@ static int udf_statfs(struct dentry *dentry, struct kstatfs *buf)
+ 	buf->f_blocks = sbi->s_partmaps[sbi->s_partition].s_partition_len;
+ 	buf->f_bfree = udf_count_free(sb);
+ 	buf->f_bavail = buf->f_bfree;
+-	buf->f_files = (lvidiu != NULL ? (le32_to_cpu(lvidiu->numFiles) +
+-					  le32_to_cpu(lvidiu->numDirs)) : 0)
+-			+ buf->f_bfree;
++
++	if ((sbi->s_partmaps[sbi->s_partition].s_partition_type == UDF_VIRTUAL_MAP15 ||
++	     sbi->s_partmaps[sbi->s_partition].s_partition_type == UDF_VIRTUAL_MAP20) &&
++	     sbi->s_partmaps[sbi->s_partition].s_type_specific.s_virtual.s_has_additional_data)
++		buf->f_files = sbi->s_partmaps[sbi->s_partition].s_type_specific.s_virtual.s_num_files +
++			       sbi->s_partmaps[sbi->s_partition].s_type_specific.s_virtual.s_num_dirs +
++			       buf->f_bfree;
++	else if (lvidiu != NULL)
++		buf->f_files = le32_to_cpu(lvidiu->numFiles) +
++			       le32_to_cpu(lvidiu->numDirs) +
++			       buf->f_bfree;
++	else
++		buf->f_files = buf->f_bfree;
++
+ 	buf->f_ffree = buf->f_bfree;
+ 	buf->f_namelen = UDF_NAME_LEN;
+ 	buf->f_fsid.val[0] = (u32)id;
 diff --git a/fs/udf/udf_sb.h b/fs/udf/udf_sb.h
-index baac0357b..be8cb9f3b 100644
+index 6bd0d4430..c74abbc84 100644
 --- a/fs/udf/udf_sb.h
 +++ b/fs/udf/udf_sb.h
-@@ -6,7 +6,7 @@
- #include <linux/bitops.h>
- #include <linux/magic.h>
+@@ -78,6 +78,9 @@ struct udf_sparing_data {
+ struct udf_virtual_data {
+ 	__u32	s_num_entries;
+ 	__u16	s_start_offset;
++	bool	s_has_additional_data;
++	__u32	s_num_files;
++	__u32	s_num_dirs;
+ };
  
--#define UDF_MAX_READ_VERSION		0x0250
-+#define UDF_MAX_READ_VERSION		0x0260
- #define UDF_MAX_WRITE_VERSION		0x0201
- 
- #define UDF_FLAG_USE_EXTENDED_FE	0
+ struct udf_bitmap {
 -- 
 2.20.1
 
