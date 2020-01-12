@@ -4,39 +4,39 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8A3C33CA2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 16:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E43C33CA2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 16:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E03BF214D8
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 16:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B315214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 16:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733150AbgALQuE (ORCPT
+        id S1733159AbgALQuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 11:50:04 -0500
-Received: from andre.telenet-ops.be ([195.130.132.53]:33000 "EHLO
-        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733067AbgALQtx (ORCPT
+        Sun, 12 Jan 2020 11:50:06 -0500
+Received: from baptiste.telenet-ops.be ([195.130.132.51]:53700 "EHLO
+        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730241AbgALQtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 12 Jan 2020 11:49:53 -0500
 Received: from ramsan ([84.195.182.253])
-        by andre.telenet-ops.be with bizsmtp
-        id pUpr210055USYZQ01UprH8; Sun, 12 Jan 2020 17:49:51 +0100
+        by baptiste.telenet-ops.be with bizsmtp
+        id pUpr210055USYZQ01UprS1; Sun, 12 Jan 2020 17:49:51 +0100
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iqgQw-0007yI-Um; Sun, 12 Jan 2020 17:49:50 +0100
+        id 1iqgQw-0007yK-VU; Sun, 12 Jan 2020 17:49:50 +0100
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1iqgQw-0005Gm-Tv; Sun, 12 Jan 2020 17:49:50 +0100
+        id 1iqgQw-0005Gp-Ub; Sun, 12 Jan 2020 17:49:50 +0100
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
 To:     linux-m68k@lists.linux-m68k.org
 Cc:     linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 3/5] zorro: Use zorro_match_device() helper in zorro_bus_match()
-Date:   Sun, 12 Jan 2020 17:49:47 +0100
-Message-Id: <20200112164949.20196-4-geert@linux-m68k.org>
+Subject: [PATCH 4/5] zorro: Remove unused zorro_dev_driver()
+Date:   Sun, 12 Jan 2020 17:49:48 +0100
+Message-Id: <20200112164949.20196-5-geert@linux-m68k.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200112164949.20196-1-geert@linux-m68k.org>
 References: <20200112164949.20196-1-geert@linux-m68k.org>
@@ -45,32 +45,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make zorro_bus_match() use the existing zorro_match_device() helper,
-instead of open-coding the same operation.
+This function was never used.
 
 Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 ---
- drivers/zorro/zorro-driver.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ include/linux/zorro.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/zorro/zorro-driver.c b/drivers/zorro/zorro-driver.c
-index 67e68880554245e1..0dd7cbcec2b0d478 100644
---- a/drivers/zorro/zorro-driver.c
-+++ b/drivers/zorro/zorro-driver.c
-@@ -133,12 +133,7 @@ static int zorro_bus_match(struct device *dev, struct device_driver *drv)
- 	if (!ids)
- 		return 0;
+diff --git a/include/linux/zorro.h b/include/linux/zorro.h
+index cb72515b0ac17040..22f3f80fbcb5afe6 100644
+--- a/include/linux/zorro.h
++++ b/include/linux/zorro.h
+@@ -70,10 +70,6 @@ struct zorro_driver {
+ /* New-style probing */
+ extern int zorro_register_driver(struct zorro_driver *);
+ extern void zorro_unregister_driver(struct zorro_driver *);
+-static inline struct zorro_driver *zorro_dev_driver(const struct zorro_dev *z)
+-{
+-    return z->driver;
+-}
  
--	while (ids->id) {
--		if (ids->id == ZORRO_WILDCARD || ids->id == z->id)
--			return 1;
--		ids++;
--	}
--	return 0;
-+	return !!zorro_match_device(ids, z);
- }
  
- static int zorro_uevent(struct device *dev, struct kobj_uevent_env *env)
+ extern unsigned int zorro_num_autocon;	/* # of autoconfig devices found */
 -- 
 2.17.1
 
