@@ -2,138 +2,138 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6879AC33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415CAC33CA2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B4124656
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10967214AF
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:32:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Arz/bOll"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Imz0Dk/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733268AbgALSNB (ORCPT
+        id S1733212AbgALSWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 13:13:01 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37634 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732957AbgALSNA (ORCPT
+        Sun, 12 Jan 2020 13:22:04 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36259 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732957AbgALSWD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 13:13:00 -0500
-Received: by mail-io1-f67.google.com with SMTP id k24so7185688ioc.4;
-        Sun, 12 Jan 2020 10:13:00 -0800 (PST)
+        Sun, 12 Jan 2020 13:22:03 -0500
+Received: by mail-qt1-f194.google.com with SMTP id i13so7172171qtr.3
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 10:22:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Uet7UosEM0x42r0t79COTHjDMTaGXqxwiypPdPTlDvQ=;
-        b=Arz/bOllwZ22bxNSvvZEKI4wuhd+Jl5Z+SuR7m/iyTibT48MlrRs9YkZ8LBFAZFigk
-         OXvInp/riYoGpU2D2NVxQU6ZRyJ6t6sVHzEoA1wimW9gaB4vuOdGCWC7C3qErPNml+7j
-         /fuM93zY5RODQBrAUXb0VBXAZO7UkgQNEJOFSU6gUL1SKGzrJ7HMs84IVJhDprX72vpc
-         twqszPUVCaxGBJEcXPm7Bgn4l5Im5005oJdHXolSAt0kjl3tW6sZTeyXwROvOPYh29Po
-         zxk0g8Tj/4dXdsgoQjfTqQKuydqMFhHfsDdksF+jpulbTILiwSDIR20Vat4ugmSEV3Q/
-         5RXw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Pykkr3F66k7d7FVxfuvlxLW7YZg4/2EqKAq/W06OIdQ=;
+        b=Imz0Dk/xVUbz1ODH7orlJWunNhmZ3/M5FvVyYYmtXFoorYCuAvnJhuZIx5i775wwjR
+         zHrrOHgH6pltrG+f8KdWMvwp4ne30QQiNe9GcpwZM0+NmfDiiuY8Axn8RihQVAqSwmH/
+         BWPjk4Y+Lxk59rQonUkw+uy2AiNAcjmCDHUn7GVeJN6NpMH/JRMuv8BXWigTRxiHE7Pa
+         cynNMzqlu1WTUnMb1h42xnPnw/yw9nzxxWhTSL9TSI2CoF4EHW3F0uX18a4Zq5886Izx
+         XQ+p3sO8sRRPyubDIElonrLx2isnLC9KfEFKCw3Ueh395NKfrcCyelgUGUDH1cq+T+TJ
+         3aLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Uet7UosEM0x42r0t79COTHjDMTaGXqxwiypPdPTlDvQ=;
-        b=uE3oYoS8xCltgqsc0zqOA+WQxjzAqCl0hTdJwMQb3OoomZ8VLBRhd5f8UDYf5HIt3G
-         mFBT3dLrB0/4pex6BgocREwLyxKsScUf/XpAl7YgoAnXELAeihSmPZJDLyPAaN888V9F
-         T9eJwALRmz9OL6DleDnQjc3OdlevMuRl4X5cxFao9koRJ/SH8OcW3xOYnVSawbnqPiUy
-         zFxOc2W/5LZDlE9UUiPAUHOuZ/v9cAzb+DpCPXI3v2PE3aywStwYXhUnASwP9jLt9GHM
-         qRM27cP5pEmxwVQOEKPtuiTINyIfCMZp/4SdsWOgPqJZ8E/kg8r3dhk7yQI3k6v4UhX6
-         KcCw==
-X-Gm-Message-State: APjAAAXqNJk0+9NE/dGkmZgdNWTzqa7h3eMGzDFuayIWb68w1XLRpBWh
-        l9AJ87CfhA1T9XB5YmJO9y/ppxSbVsj/cPiI2mA=
-X-Google-Smtp-Source: APXvYqyxYgfM9TzQjZ5G0/d9Cs3I3vTG8Gsfi7Q8Mud+a3lGLWo1Q1n9O9mPklIwqu323vLFytx1rJU9eX8URzspP3M=
-X-Received: by 2002:a6b:c410:: with SMTP id y16mr9421191ioa.18.1578852780237;
- Sun, 12 Jan 2020 10:13:00 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Pykkr3F66k7d7FVxfuvlxLW7YZg4/2EqKAq/W06OIdQ=;
+        b=np7eYmXxGxo/4j6sAafhc7/qDHvc2NKvZSuHfhg8/3NU2mV+VY23ekfu8NRnIiZVNN
+         PbP/6+iPykwfS02P4nM8WZOlVcUwrjd5wSZNoyO+KVPFYnyalPMIUj0aa8yMfEo0pmQo
+         RC2cfa16+WC+EbzkJtxHX0XwVaw++t4HLngasO/M8/rtin6twGkQcwh/b83PcrCqLBQG
+         p6crEakwpExYEzyDTTYfJYvLy+YqNrsYnfzUD0GnmywQmrceVDk49DQb2GDPp3DD+Nwz
+         rcSyS+9zxN7bNJfbR9lau8IN+HRqS+cCIzPxAO7XpYrPi9KFH0IWnu2ehmcMXYu7ZZq+
+         Qzrw==
+X-Gm-Message-State: APjAAAVZgcB7YHIzZJjJIbabvc7l8H9sBXP2HzGZPxzkV+VnukbjhQLU
+        hdTbQVJhUNfev2fGIVhErQs=
+X-Google-Smtp-Source: APXvYqwV8zszJaNPB5Mzahgr+LxbH9mxiEcfFhjHDktrcHg2qQTiZPIAGbKvi34j17tJCULrNJnEng==
+X-Received: by 2002:ac8:4a10:: with SMTP id x16mr10896100qtq.371.1578853322791;
+        Sun, 12 Jan 2020 10:22:02 -0800 (PST)
+Received: from localhost.localdomain (209-6-36-129.s6527.c3-0.smr-cbr2.sbo-smr.ma.cable.rcncustomer.com. [209.6.36.129])
+        by smtp.gmail.com with ESMTPSA id h8sm4361679qtm.51.2020.01.12.10.22.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2020 10:22:02 -0800 (PST)
+Date:   Sun, 12 Jan 2020 13:22:00 -0500
+From:   Konrad Rzeszutek Wilk <konrad@darnok.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Konrad Rzeszutek Wilk <konrad@kernel.org>,
+        Peter Jones <pjones@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND PATCH] iscsi_ibft: Don't limits Targets and NICs to two
+Message-ID: <20200112182200.GA11668@localhost.localdomain>
+References: <20191221070956.268321-1-lkundrak@v3.sk>
 MIME-Version: 1.0
-References: <20191228171904.24618-1-tiny.windzz@gmail.com> <CAGb2v67YPLy_qFuLKKMFytPEdFRUazoNfsQ1tYj8z3WVSRqC3Q@mail.gmail.com>
- <CAEExFWtkPBhqT-wteE0_bC=QqaTyuvAcj_4SMOLjYAdc6p4tkg@mail.gmail.com>
- <CAGb2v673PM_3QazNWBKYd=4pumyyyE3XFmwa4LY7qFt2=QwEVQ@mail.gmail.com> <CAEExFWtaeiX0bq6VO5294w8vCtnnNDDB0HA_nvR19adg=KFANQ@mail.gmail.com>
-In-Reply-To: <CAEExFWtaeiX0bq6VO5294w8vCtnnNDDB0HA_nvR19adg=KFANQ@mail.gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Mon, 13 Jan 2020 02:12:49 +0800
-Message-ID: <CAEExFWsGZD=Hm3OWmTLmKu82VDfG31y3ENJz7CfRHENqT8jJUw@mail.gmail.com>
-Subject: Re: [PATCH] thermal: sun8i: Add hwmon support
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191221070956.268321-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-HI Daniel:
+On Sat, Dec 21, 2019 at 08:09:56AM +0100, Lubomir Rintel wrote:
+> According to iSCSI Boot Firmware Table Version 1.03 [1], the length of
+> the control table is ">= 18", where the optional expansion structure
+> pointer follow the mandatory ones. This allows for more than two NICs
+> and Targets.
+> 
+> [1] ftp://ftp.software.ibm.com/systems/support/bladecenter/iscsi_boot_firmware_table_v1.03.pdf
+> 
+> Let's enforce the minimum length of the control structure instead
+> instead of limiting it to the smallest allowed size.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-On Sun, Jan 12, 2020 at 2:08 AM Frank Lee <tiny.windzz@gmail.com> wrote:
->
-> On Tue, Jan 7, 2020 at 11:15 AM Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> > On Tue, Jan 7, 2020 at 12:14 AM Frank Lee <tiny.windzz@gmail.com> wrote:
-> > >
-> > > HI Chen-Yu.
-> > >
-> > > On Mon, Jan 6, 2020 at 12:32 PM Chen-Yu Tsai <wens@csie.org> wrote:
-> > > >
-> > > > On Sun, Dec 29, 2019 at 1:19 AM Yangtao Li <tiny.windzz@gmail.com> wrote:
-> > > > >
-> > > > > Expose sun8i thermal as a HWMON device.
-> > > > >
-> > > > > Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-> > > > > ---
-> > > > >  drivers/thermal/sun8i_thermal.c | 6 ++++++
-> > > > >  1 file changed, 6 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/thermal/sun8i_thermal.c b/drivers/thermal/sun8i_thermal.c
-> > > > > index 23a5f4aa4be4..619e75cb41b0 100644
-> > > > > --- a/drivers/thermal/sun8i_thermal.c
-> > > > > +++ b/drivers/thermal/sun8i_thermal.c
-> > > > > @@ -20,6 +20,8 @@
-> > > > >  #include <linux/slab.h>
-> > > > >  #include <linux/thermal.h>
-> > > > >
-> > > > > +#include "thermal_hwmon.h"
-> > > > > +
-> > > > >  #define MAX_SENSOR_NUM 4
-> > > > >
-> > > > >  #define FT_TEMP_MASK                           GENMASK(11, 0)
-> > > > > @@ -477,6 +479,10 @@ static int sun8i_ths_register(struct ths_device *tmdev)
-> > > > >                                                              &ths_ops);
-> > > > >                 if (IS_ERR(tmdev->sensor[i].tzd))
-> > > > >                         return PTR_ERR(tmdev->sensor[i].tzd);
-> > > > > +
-> > > > > +               if (devm_thermal_add_hwmon_sysfs(tmdev->sensor[i].tzd))
-> > > > > +                       dev_warn(tmdev->dev,
-> > > > > +                                "Failed to add hwmon sysfs attributes\n");
-> > > >
-> > > > Maybe you want a hard failure instead?
-> > >
-> > > I don't quite understand what you mean.
-> > > What do you think should be done?
-> >
-> > Return an error instead of just printing a warning.
->
-> Sometimes, even if hwmon fails to add, it can still work as a thermal driver.
-> At this time, I don't really want to interrupt the registration of the
-> thermal driver.
->
-> Anyone else's opinion here?
->
+Put it in my tree and will send it up to Linus for the next merge
+window.
 
-What's your point? Can you choose this patch?
-
-MBR,
-Yangtao
+Thanks!
+> ---
+>  drivers/firmware/iscsi_ibft.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/firmware/iscsi_ibft.c b/drivers/firmware/iscsi_ibft.c
+> index 7e12cbdf957cc..96758b71a8db8 100644
+> --- a/drivers/firmware/iscsi_ibft.c
+> +++ b/drivers/firmware/iscsi_ibft.c
+> @@ -104,6 +104,7 @@ struct ibft_control {
+>  	u16 tgt0_off;
+>  	u16 nic1_off;
+>  	u16 tgt1_off;
+> +	u16 expansion[0];
+>  } __attribute__((__packed__));
+>  
+>  struct ibft_initiator {
+> @@ -235,7 +236,7 @@ static int ibft_verify_hdr(char *t, struct ibft_hdr *hdr, int id, int length)
+>  				"found %d instead!\n", t, id, hdr->id);
+>  		return -ENODEV;
+>  	}
+> -	if (hdr->length != length) {
+> +	if (length && hdr->length != length) {
+>  		printk(KERN_ERR "iBFT error: We expected the %s " \
+>  				"field header.length to have %d but " \
+>  				"found %d instead!\n", t, length, hdr->length);
+> @@ -749,16 +750,16 @@ static int __init ibft_register_kobjects(struct acpi_table_ibft *header)
+>  	control = (void *)header + sizeof(*header);
+>  	end = (void *)control + control->hdr.length;
+>  	eot_offset = (void *)header + header->header.length - (void *)control;
+> -	rc = ibft_verify_hdr("control", (struct ibft_hdr *)control, id_control,
+> -			     sizeof(*control));
+> +	rc = ibft_verify_hdr("control", (struct ibft_hdr *)control, id_control, 0);
+>  
+>  	/* iBFT table safety checking */
+>  	rc |= ((control->hdr.index) ? -ENODEV : 0);
+> +	rc |= ((control->hdr.length < sizeof(*control)) ? -ENODEV : 0);
+>  	if (rc) {
+>  		printk(KERN_ERR "iBFT error: Control header is invalid!\n");
+>  		return rc;
+>  	}
+> -	for (ptr = &control->initiator_off; ptr < end; ptr += sizeof(u16)) {
+> +	for (ptr = &control->initiator_off; ptr + sizeof(u16) <= end; ptr += sizeof(u16)) {
+>  		offset = *(u16 *)ptr;
+>  		if (offset && offset < header->header.length &&
+>  						offset < eot_offset) {
+> -- 
+> 2.24.1
+> 
