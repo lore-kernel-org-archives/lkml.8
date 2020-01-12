@@ -4,43 +4,43 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7498C33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 08:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B091AC32771
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 08:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD790217BA
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 08:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83B65214D8
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 08:20:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="vtVOJ5uu"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="m07jpV3w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732418AbgALIUo (ORCPT
+        id S1732441AbgALIUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 03:20:44 -0500
-Received: from forward104o.mail.yandex.net ([37.140.190.179]:48898 "EHLO
-        forward104o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732369AbgALIUo (ORCPT
+        Sun, 12 Jan 2020 03:20:48 -0500
+Received: from forward100j.mail.yandex.net ([5.45.198.240]:58038 "EHLO
+        forward100j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732369AbgALIUq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 03:20:44 -0500
-Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
-        by forward104o.mail.yandex.net (Yandex) with ESMTP id 440DD940B15;
-        Sun, 12 Jan 2020 11:15:21 +0300 (MSK)
-Received: from mxback10q.mail.yandex.net (mxback10q.mail.yandex.net [IPv6:2a02:6b8:c0e:1b4:0:640:b6ef:cb3])
-        by forward100q.mail.yandex.net (Yandex) with ESMTP id 3EA1D7080004;
-        Sun, 12 Jan 2020 11:15:21 +0300 (MSK)
+        Sun, 12 Jan 2020 03:20:46 -0500
+Received: from forward103q.mail.yandex.net (forward103q.mail.yandex.net [IPv6:2a02:6b8:c0e:50:0:640:b21c:d009])
+        by forward100j.mail.yandex.net (Yandex) with ESMTP id C778150E0222;
+        Sun, 12 Jan 2020 11:14:39 +0300 (MSK)
+Received: from mxback5q.mail.yandex.net (mxback5q.mail.yandex.net [IPv6:2a02:6b8:c0e:1ba:0:640:b716:ad89])
+        by forward103q.mail.yandex.net (Yandex) with ESMTP id BE52261E0005;
+        Sun, 12 Jan 2020 11:14:39 +0300 (MSK)
 Received: from vla1-ee05250d997a.qloud-c.yandex.net (vla1-ee05250d997a.qloud-c.yandex.net [2a02:6b8:c0d:3495:0:640:ee05:250d])
-        by mxback10q.mail.yandex.net (mxback/Yandex) with ESMTP id zMZ6PamTTa-FKq0GxCt;
-        Sun, 12 Jan 2020 11:15:21 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1578816921;
-        bh=kFUYrcnxgHhYt9NZF/PFTRJ9jW7qOpJ8qLdxtiiXBEo=;
+        by mxback5q.mail.yandex.net (mxback/Yandex) with ESMTP id tR0KhGblhy-EdcCaSf8;
+        Sun, 12 Jan 2020 11:14:39 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1578816879;
+        bh=pebq8GHSI7IfOohalTm91NbPof6IcZx9lXx9DQZnkKc=;
         h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=vtVOJ5uuuwcqZt3Wp7mDGcWm2RTU0ac3q6QqObK27nejqJ+QKpZyybI9vTpYCpsMh
-         JxWONnunGnLvc21+FaEOMuWidfSRcIzrdpdhKy+x6o/Z/uKkZ3ZsbgVcGDIX7bKuhb
-         VTRw3D1A/eOEQP6JVMH4Y98E3MU+c+5vvL6DodNU=
-Authentication-Results: mxback10q.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by vla1-ee05250d997a.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 3jM5RHRYtF-FDV4R9L7;
-        Sun, 12 Jan 2020 11:15:18 +0300
+        b=m07jpV3wts2wecQalw6r5Ip2J7np1IuKGiaBK1ZcjWyWeTvo3N/DbIKEmF5tsVKJK
+         qCz6p8iinWuqHlPWc81UgUYB58UeTRNgg8be+Dz9M2Cji6iAJet46ImkwfLRW/Ld20
+         yam8DCuMa1g6DHBOljBteanDPS/EuQlgXJ9EkMhA=
+Authentication-Results: mxback5q.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by vla1-ee05250d997a.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 3jM5RHRYtF-EWV4Iv0P;
+        Sun, 12 Jan 2020 11:14:38 +0300
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (Client certificate not present)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
@@ -50,9 +50,9 @@ Cc:     chenhc@lemote.com, paul.burton@mips.com, tglx@linutronix.de,
         robh+dt@kernel.org, mark.rutland@arm.co,
         devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 05/10] dt-bindings: interrupt-controller: Add Loongson-3 HTPIC
-Date:   Sun, 12 Jan 2020 16:14:11 +0800
-Message-Id: <20200112081416.722218-6-jiaxun.yang@flygoat.com>
+Subject: [PATCH v3 01/10] dt-bindings: Document loongson vendor-prefix
+Date:   Sun, 12 Jan 2020 16:14:07 +0800
+Message-Id: <20200112081416.722218-2-jiaxun.yang@flygoat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200112081416.722218-1-jiaxun.yang@flygoat.com>
 References: <20200112081416.722218-1-jiaxun.yang@flygoat.com>
@@ -63,80 +63,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document Loongson-3 HyperTransport PIC controller.
+Loongson is a MIPS-compatible processor vendor.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../interrupt-controller/loongson,htpic.yaml  | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,htpic.yaml
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,htpic.yaml b/Documentation/devicetree/bindings/interrupt-controller/loongson,htpic.yaml
-new file mode 100644
-index 000000000000..efcc3f43e45b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,htpic.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/interrupt-controller/loongson,htpic.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Loongson-3 HyperTransport Interrupt Controller
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
-+description: |
-+  This interrupt controller is found in the Loongson-3 family of chips to transfer
-+  interrupts from PCH PIC connected on HyperTransport bus.
-+
-+properties:
-+  compatible:
-+    const: loongson,htpic-1.0
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 4
-+    description: |
-+      Four parent interrupts that recieve chained interrupts.
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    htintc: interrupt-controller@1fb000080 {
-+      compatible = "loongson,htintc-1.0";
-+      reg = <0x1fb000080 0x100>;
-+      interrupt-controller;
-+      #interrupt-cells = <1>;
-+
-+      interrupt-parent = <&iointc>;
-+      interrupts = <24 IRQ_TYPE_LEVEL_HIGH>,
-+            <25 IRQ_TYPE_LEVEL_HIGH>,
-+            <26 IRQ_TYPE_LEVEL_HIGH>,
-+            <27 IRQ_TYPE_LEVEL_HIGH>;
-+    };
-+...
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 50c2b635ecfd..31b364107e60 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -545,6 +545,8 @@ patternProperties:
+     description: Logic PD, Inc.
+   "^longcheer,.*":
+     description: Longcheer Technology (Shanghai) Co., Ltd.
++  "^loongson,.*":
++    description: Loongson Technology Corporation Limited
+   "^lsi,.*":
+     description: LSI Corp. (LSI Logic)
+   "^lwn,.*":
 -- 
 2.24.1
 
