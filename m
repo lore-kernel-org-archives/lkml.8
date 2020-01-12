@@ -7,56 +7,60 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49367C33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 13:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E12AC33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 13:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 214B924649
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 13:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C4821744
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 13:03:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9Dc/7CF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vPTZxsUI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732849AbgALNA4 (ORCPT
+        id S1732873AbgALNDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 08:00:56 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:45885 "EHLO
+        Sun, 12 Jan 2020 08:03:47 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:38778 "EHLO
         mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732833AbgALNA4 (ORCPT
+        with ESMTP id S1732859AbgALNDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 08:00:56 -0500
-Received: by mail-ed1-f65.google.com with SMTP id v28so5997454edw.12;
-        Sun, 12 Jan 2020 05:00:54 -0800 (PST)
+        Sun, 12 Jan 2020 08:03:46 -0500
+Received: by mail-ed1-f65.google.com with SMTP id i16so6018711edr.5;
+        Sun, 12 Jan 2020 05:03:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=Si82Ae7kSJL+W4RyecalMW+utXj0IbUfyQpBmFzvOtA=;
-        b=D9Dc/7CFHPXJQVdy/5TZscGlGRW1iaIhizUvNxcihtUpSXSlOuL+keCEabVYJnlc6t
-         WvTCUaYYCxGMk54GmHljuD0Lba4EZHmmrD5Lj9u1nugcIXptlqadw20VM7+l/BFNskwd
-         n9MhGAHfqMKMFm7KM3/fGrJemBnn95/mXgxbimqWcsTjvdBUYjO9ujnKvP8rdI0J942F
-         kOGZ9iXSMZFzYKg9ax6T4Esc/tagbjUi+6LZLFZJIB7djY9lBUKQHGyxARxF5K57ZHNT
-         GMuPNbYPQJ4K2WkZ6UVvM51R9s+0muwISWP5Lw7Z8Cz+igSQiPgYQRLGwIvoyhkdJnT7
-         Z/jQ==
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=LPfprFmHx12pshQR3Bs7ESSVF/5so2k7WxJXYYduZPg=;
+        b=vPTZxsUIA5eLyW3Lcq4lKc8uJM113sfAzCegClUwRRstF49nXwf9i+pUZe9xI15OUq
+         0VsfeOKayn4jTTysh3cV2xUs9/petOgBBrblaBVCBkFgl5VdJJKmEVIKJ54bRFCJelbF
+         if4aJU8gyTPRJDv7eYCHL5SVfY2NCpnOnxacO5d0r7zyGTxgYaYWJiq9UWNOKfXyMzpw
+         ZGf20qJXPJ1qSSNVP+prepth9hocWLgIK8LAZNsIhbZRQecnvhXQwE4niViUBkQpwxYr
+         6u9PRL2oT25mUAhuYI2ok4iPzJPxo5K8YAyOKK2vdgLCLLeHWlHuUa1IYHy/pKrJLZy2
+         F5FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=Si82Ae7kSJL+W4RyecalMW+utXj0IbUfyQpBmFzvOtA=;
-        b=XDJ9+ITkv1+foBF6oBOamYGHm7IATt/ugJLMKM8+cq/dF1gpNwbIn6+6YausNZ2Gc6
-         /rqSFMM4a5wcJ+y6xJl+jNCAWHpcoakqRGUiEacVFy4nUjobur0gWEJjHHcOIacbLGr0
-         AsubnaqyQt4jXwMZnYcpkyH6n7gFw9RZkd6ie8SM98b4w78MAvBnAuca2GcddnypVgka
-         7FhKGRQHbA770DaCxS3o8gB5BtgVgspCIHoaK5NVLtVmT4ADIU7ksJvoiMshER61kkhD
-         ymgxLfzUw0ChxLZVlknWMz27Mxory553jjlbdjaVb00GPI+26x+uxWw4zzFvgwA0fJoy
-         3ZFg==
-X-Gm-Message-State: APjAAAUNfnnuR3s2ePMIEwQMMLhs12Nzbg+XSnrLiWUAmCrrLfC6wSpz
-        I5jnInlAUajAntOqfxLp2JcDxxFCC+YIcifFbwQ=
-X-Google-Smtp-Source: APXvYqyWvIkTKOqWajExla8O+rETb3kMvSDjQqfQ2T3mmyUlLBrOA6iNlWpVGOXUY9+MhD7zUOC3FGEDuBrX3tWmZ1g=
-X-Received: by 2002:aa7:cf86:: with SMTP id z6mr12549252edx.85.1578834054234;
- Sun, 12 Jan 2020 05:00:54 -0800 (PST)
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=LPfprFmHx12pshQR3Bs7ESSVF/5so2k7WxJXYYduZPg=;
+        b=LUaEVQnuF4QuzrVxRkcYrcG7xWCCco+WHQ1b/k5JE9gUCdowlMYeWgnwty1TTxdGFL
+         FY7xMtO1YPBzQ0BdozqqacUIlnZJLUXoX0htzXuLuhPU4wOOcDYQMZG8BfxfnvEVx1XO
+         P2PyziEduDFeGdA1/BXWCMixFpRL1uk8cFAtqKRqHdpQFrWPi80uTjAmEgPKmeNc4rkA
+         6U1u8w/LFh6emoDpDRH2/OU0eOHeqKuU+KuCcpJU7spkWKZUyLrOJcZglLWsnCNClLzv
+         rbckirMG+Vj2l9nGOJbD67i8ZNWPdLGmZpEQ/3KoQ1jhAnKVTL/QuMk2A2t6kVjJj5EA
+         Abyw==
+X-Gm-Message-State: APjAAAXXTckdPUB3gxCWfTPayrqXz5T/wke17UPMM0oGVepkdtlpcTt0
+        9xSgV/HO3wLxRK+amtU+oB+e/M/op7CwU0qCUCQ=
+X-Google-Smtp-Source: APXvYqwlUMYr23tNBhpBcFuIK3B0WALvP6qMmcpZAbLqHBPTW6q94EPoYE3AFf8nuwJ/cEOhHznauMgUuIGU9j1GXg4=
+X-Received: by 2002:a05:6402:31b5:: with SMTP id dj21mr9677434edb.308.1578834225028;
+ Sun, 12 Jan 2020 05:03:45 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a05:6402:1c11:0:0:0:0 with HTTP; Sun, 12 Jan 2020 05:00:53
+Received: by 2002:a05:6402:1c11:0:0:0:0 with HTTP; Sun, 12 Jan 2020 05:03:44
  -0800 (PST)
+In-Reply-To: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
+References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
 From:   Jari Ruusu <jari.ruusu@gmail.com>
-Date:   Sun, 12 Jan 2020 15:00:53 +0200
-Message-ID: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
-Subject: Fix built-in early-load Intel microcode alignment
+Date:   Sun, 12 Jan 2020 15:03:44 +0200
+Message-ID: <CACMCwJ+FE8yD10VF07ci6tTqiBA8aBejKQT0EwyayQQOrLGUKQ@mail.gmail.com>
+Subject: Re: Fix built-in early-load Intel microcode alignment
 To:     Borislav Petkov <bp@alien8.de>, Fenghua Yu <fenghua.yu@intel.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
@@ -67,39 +71,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
-"Note that the microcode update must be aligned on a 16-byte
-boundary and the size of the microcode update must be 1-KByte
-granular"
+On 1/12/20, Jari Ruusu <jari.ruusu@gmail.com> wrote:
+> Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
+> "Note that the microcode update must be aligned on a 16-byte
+> boundary and the size of the microcode update must be 1-KByte
+> granular"
+>
+> When early-load Intel microcode is loaded from initramfs,
+> userspace tool 'iucode_tool' has already 16-byte aligned those
+> microcode bits in that initramfs image. Image that was created
+> something like this:
+>
+>  iucode_tool --write-earlyfw=FOO.cpio microcode-files...
+>
+> However, when early-load Intel microcode is loaded from built-in
+> firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option,
+> that 16-byte alignment is not guaranteed.
+>
+> Fix this by forcing all built-in firmware BLOBs to 16-byte
+> alignment.
 
-When early-load Intel microcode is loaded from initramfs,
-userspace tool 'iucode_tool' has already 16-byte aligned those
-microcode bits in that initramfs image. Image that was created
-something like this:
-
- iucode_tool --write-earlyfw=FOO.cpio microcode-files...
-
-However, when early-load Intel microcode is loaded from built-in
-firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option,
-that 16-byte alignment is not guaranteed.
-
-Fix this by forcing all built-in firmware BLOBs to 16-byte
-alignment.
-
+Backport of "Fix built-in early-load Intel microcode alignment"
+for linux-4.19 and older stable kernels.
 
 Signed-off-by: Jari Ruusu <jari.ruusu@gmail.com>
 
---- a/drivers/base/firmware_loader/builtin/Makefile
-+++ b/drivers/base/firmware_loader/builtin/Makefile
-@@ -17,7 +17,7 @@
- filechk_fwbin = \
- 	echo "/* Generated by $(src)/Makefile */"		;\
- 	echo "    .section .rodata"				;\
--	echo "    .p2align $(ASM_ALIGN)"			;\
-+	echo "    .p2align 4"					;\
- 	echo "_fw_$(FWSTR)_bin:"				;\
- 	echo "    .incbin \"$(fwdir)/$(FWNAME)\""		;\
- 	echo "_fw_end:"						;\
+--- a/firmware/Makefile
++++ b/firmware/Makefile
+@@ -19,7 +19,7 @@
+ 		  PROGBITS=$(if $(CONFIG_ARM),%,@)progbits;		     \
+ 		  echo "/* Generated by firmware/Makefile */"		> $@;\
+ 		  echo "    .section .rodata"				>>$@;\
+-		  echo "    .p2align $${ASM_ALIGN}"			>>$@;\
++		  echo "    .p2align 4"					>>$@;\
+ 		  echo "_fw_$${FWSTR}_bin:"				>>$@;\
+ 		  echo "    .incbin \"$(2)\""				>>$@;\
+ 		  echo "_fw_end:"					>>$@;\
 
 -- 
 Jari Ruusu  4096R/8132F189 12D6 4C3A DCDA 0AA4 27BD  ACDF F073 3C80 8132 F189
