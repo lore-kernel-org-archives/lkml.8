@@ -2,116 +2,123 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B837C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E38BC33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4A224125
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:50:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qPkSFfty"
+	by mail.kernel.org (Postfix) with ESMTP id 4F96B21556
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578869659;
+	bh=OTPSk1FDbrul0QY/pUOTlMEtUEMURhj6Q/PvlUu/sI8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=abgA/nhdsY9KqJmMNpQC7htUkjT6lgPOwlGCKK5NGP2czJPQZdL7FJL4Zl7zcUf/9
+	 FJh+4Ti/BFt6Tiy0DNjpNRF2kjN8MucHHqVZxBWnACH7Usnd/bXzRUdAOc9eLZc2Id
+	 IVIt5A9gDsf1TE80bhAnhAIpThvlo+UJoz/L3iGw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387473AbgALWus (ORCPT
+        id S2387482AbgALWyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 17:50:48 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60179 "EHLO ozlabs.org"
+        Sun, 12 Jan 2020 17:54:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727222AbgALWus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 17:50:48 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727222AbgALWyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 17:54:17 -0500
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47wsPx47Psz9s29;
-        Mon, 13 Jan 2020 09:50:45 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578869446;
-        bh=a40F7aV+hWzizltZThnoRmNQqVG+tCjrmJGUSDxJcSE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=qPkSFftygoxCdS17z92QrtHv9IZ3zF+rd/I8zVakIY8AS3BRMixfMhN+g7sz3j6W/
-         f+QFBIC0m2RFFxO9Me6jtePAcPzele2+JyYgNMIpuajGTFkrmEp8s5pRSmVMhvgeG2
-         dTMEoewO8KLEmzZXUMUb78gvEJTeK6o7ZlfMwiI+qR+Kr8kvf/FQfWbsnoi1rRt8HO
-         seTcNvMc9CRB08yEwXZFbu85M81GVa1yyoMQhC2hi1lV0Wq3x0ln08WIkRu3pzDdHb
-         inB+txpbIivkbPJRmiup0kav3eX36A/G2W1mwuSU2oQ6tuDHJ3rOC+sMhE4z0sb7Ck
-         CI+hLUMhRHH2Q==
-Date:   Mon, 13 Jan 2020 09:50:37 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Al Viro <viro@ZenIV.linux.org.uk>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Aleksa Sarai <cyphar@cyphar.com>
-Subject: linux-next: manual merge of the vfs tree with the m68k tree
-Message-ID: <20200113095037.156597ff@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id CF7E721556
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:54:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578869657;
+        bh=OTPSk1FDbrul0QY/pUOTlMEtUEMURhj6Q/PvlUu/sI8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hzhvSFdpz62gogZ9QN7lfmafoGsakUjT1kaPTgxvKWg5Xq+befE3iVxPLwm79hZTC
+         daPQyiQvVm0j+WIy9HH+k4T6lNya6yT+5xyuppstOXHcEnLAtcJfMXOwB4xoUxPQBi
+         wd32iWGi8yUPDeOVPUB/jfWtezETqeizKYZhYU6U=
+Received: by mail-wr1-f43.google.com with SMTP id w15so6814015wru.4
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 14:54:16 -0800 (PST)
+X-Gm-Message-State: APjAAAU5NXUoZBpEfJORJws9/eCqh7hL3oMlE39/CXPqzcU4bhy299zT
+        yjJp65iZ0rrcThlnj48DzET+SDqAS4rGY10AJ64UOA==
+X-Google-Smtp-Source: APXvYqwqvYzhEdydCPNO7qcIvHe+8nzILh5eaIaQCyGHnDLwjQKEoFRnKyCjU2psD4HOU4Uu55mc3jpLpIFWqLzfw5Q=
+X-Received: by 2002:adf:f491:: with SMTP id l17mr14897341wro.149.1578869655295;
+ Sun, 12 Jan 2020 14:54:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/qdDVBgrf0IRmeQx=vnxyL/T";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200111145703.533809-1-hdegoede@redhat.com> <20200111145703.533809-5-hdegoede@redhat.com>
+In-Reply-To: <20200111145703.533809-5-hdegoede@redhat.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Sun, 12 Jan 2020 14:54:04 -0800
+X-Gmail-Original-Message-ID: <CALCETrXi_P1_nCp27yawLeUKuR=Wo11rKao222SVsnhi6qF9fA@mail.gmail.com>
+Message-ID: <CALCETrXi_P1_nCp27yawLeUKuR=Wo11rKao222SVsnhi6qF9fA@mail.gmail.com>
+Subject: Re: [PATCH v11 04/10] firmware: Add new platform fallback mechanism
+ and firmware_request_platform()
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, X86 ML <x86@kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/qdDVBgrf0IRmeQx=vnxyL/T
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, Jan 11, 2020 at 6:57 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> In some cases the platform's main firmware (e.g. the UEFI fw) may contain
+> an embedded copy of device firmware which needs to be (re)loaded into the
+> peripheral. Normally such firmware would be part of linux-firmware, but in
+> some cases this is not feasible, for 2 reasons:
+>
+> 1) The firmware is customized for a specific use-case of the chipset / use
+> with a specific hardware model, so we cannot have a single firmware file
+> for the chipset. E.g. touchscreen controller firmwares are compiled
+> specifically for the hardware model they are used with, as they are
+> calibrated for a specific model digitizer.
+>
+> 2) Despite repeated attempts we have failed to get permission to
+> redistribute the firmware. This is especially a problem with customized
+> firmwares, these get created by the chip vendor for a specific ODM and the
+> copyright may partially belong with the ODM, so the chip vendor cannot
+> give a blanket permission to distribute these.
+>
+> This commit adds a new platform fallback mechanism to the firmware loader
+> which will try to lookup a device fw copy embedded in the platform's main
+> firmware if direct filesystem lookup fails.
+>
+> Drivers which need such embedded fw copies can enable this fallback
+> mechanism by using the new firmware_request_platform() function.
 
-Hi all,
+After finally wrapping my head around how this all fits together:
 
-Today's linux-next merge of the vfs tree got a conflict in:
+Early in boot, you check a bunch of firmware descriptors, bundled with
+drivers, to search EFI code and data for firmware before you free said
+code and data.  You catalogue it by name.  Later on, you use this list
+as a fallback, again catalogued by name.  I think it would be rather
+nicer if you simply had a list in a single file containing all these
+descriptors rather than commingling it with the driver's internal dmi
+data.  This gets rid of all the ifdeffery and module issues.  It also
+avoids any potential nastiness when you have a dmi entry that contains
+driver_data that points into the driver when the driver is a module.
 
-  arch/m68k/kernel/syscalls/syscall.tbl
+And you can mark the entire list __initdata.  And you can easily (now
+or later on) invert the code flow so you map each EFI region exactly
+once and then search for all the firmware in it.
 
-between commit:
-
-  e8bb2a2a1d51 ("m68k: Wire up clone3() syscall")
-
-from the m68k tree and commit:
-
-  0a51692d49ec ("open: introduce openat2(2) syscall")
-
-from the vfs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/m68k/kernel/syscalls/syscall.tbl
-index a00a5d0db602,2559925f1924..000000000000
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@@ -434,4 -434,5 +434,5 @@@
-  432	common	fsmount				sys_fsmount
-  433	common	fspick				sys_fspick
-  434	common	pidfd_open			sys_pidfd_open
- -# 435 reserved for clone3
- +435	common	clone3				__sys_clone3
-+ 437	common	openat2				sys_openat2
-
---Sig_/qdDVBgrf0IRmeQx=vnxyL/T
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4bor0ACgkQAVBC80lX
-0GxS6gf9EyIhphzB22czNbb6SV+mMX/x9U6I9YDZFvrKO9xvuH/3qi9JVZxVIn8J
-Acq62df3bJu4SOkn8C6a+xS5ZAx4IVWc8pWvnqdybxQuRiZXFsFOiN8smuJeP0k+
-iPyg2JN5/me94oDIL9fAHhXmuviQeGrlYRHQfsdVijuDVb3ynqKOsHQKtE/vwv28
-wGLSLcje7fGU9fet11c42ajD4+N+vOAUH9gOJCUxnvHxySPaxxGDb3njaClJfbW9
-r2dSQwlSBvyJyeUCAx+bgE+dOA/B+I6wB4K5n6w1nKRnI8rmSFkjjKresytvaqWO
-iW3SJ3AbCM1xZfW8Sff7N8KFdHocJg==
-=qU5P
------END PGP SIGNATURE-----
-
---Sig_/qdDVBgrf0IRmeQx=vnxyL/T--
+--Andy
