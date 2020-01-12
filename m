@@ -2,113 +2,99 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B00C33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 14:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 231AAC33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 14:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 689DC20848
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 14:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E456221744
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 14:33:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="ofuU86pu";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cYzxR5UW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KEEn1sRj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732981AbgALOCX (ORCPT
+        id S1733020AbgALOdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 09:02:23 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:59229 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732953AbgALOCW (ORCPT
+        Sun, 12 Jan 2020 09:33:25 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45159 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732841AbgALOdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 09:02:22 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 7951B21FF3;
-        Sun, 12 Jan 2020 09:02:21 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sun, 12 Jan 2020 09:02:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm2; bh=NJHVvAW6H45CORrSOrRuKfIQ+gp
-        hAzjARjRdpy0mtZU=; b=ofuU86puPMAxtQzA1HSo5IrkN3wwdhjS1hZYNjCYcof
-        LCGwJyy9qDOYYqZOJ94o+MriK+60V/vqf4Ga1N6aiJajuhe+I32/mgQF/jbQZptN
-        MNj00JiTuUMTv3dyuFjMxJBcARFZFmRJcCZt7VGiSpzVIB37D7RdNjdM/sbm/3t6
-        KCU6WLd0gzPP5IX3VUhbWGAITGu5SQW8QF4jFvnAawK9f8sjqTKKhL02Kyu64/q6
-        +s4lzIjvq6UnmI7n588vgHHUxJ0gobmPVL+dc9Dxs9pr5PdiTG0OtT4DGKnnldv7
-        6HSq+wyP83zeUn07R7aHfxgFF4Q3gu4SHtI9neg9ARg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=NJHVvA
-        W6H45CORrSOrRuKfIQ+gphAzjARjRdpy0mtZU=; b=cYzxR5UWGSFLtYh27kOQii
-        6R4dp5H2kabSo57qlG6K031/ON7fEXKaNMaxEo9d0RwbHTeajqdAWcRL4hbmhGnH
-        Eaxxh+b7PJEFvLz+4FkUqkgWHPlNnWQvF/MctRjYYIeCdoLqI0EJ0h0oBTaVtUcs
-        vq7r+JiRovKZANDjhIDf+LgfanLEk57xYZZcC5vEyhAzIWAnKYbXse9HKJiR+qzg
-        c3IiHclubyHj8LUkB5Twh9HiFahBnnM9AbNcaW+AvkdarS1SFBuRPUkGVB0dRvGa
-        rDsaHNayn+hVqz00+CkZ5JSiHOv4fPUcz4qqAxq3udz5W/89pKgTRXJPChRMLzPQ
-        ==
-X-ME-Sender: <xms:7CYbXmgzj8tYjkQk0VeFa8mG-T7FRCoynFDPPpdcccZ-2uvUTA7uLg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeikedgheekucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:7CYbXmWBMQngVZt3grB6kqf6PLtAQAG6bcHL8_HvrT0sQpHnD1gb5A>
-    <xmx:7CYbXlCQuXf3rWRW9Cl4YYqk8V3VIKDWvKQSridujQr1Bg2Wq8DFCA>
-    <xmx:7CYbXqkXDzt0C2SVctkFJeWJBKj_Pl7droBrJJ7ET4feQlu-OTOZVQ>
-    <xmx:7SYbXlDY7op9ooJpZqIncmA_Y9SaQ6p0yhj0y3Xt794nNmUtUagnJg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 6ABE880062;
-        Sun, 12 Jan 2020 09:02:20 -0500 (EST)
-Date:   Sun, 12 Jan 2020 15:02:18 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Jari Ruusu <jari.ruusu@gmail.com>
-Cc:     Borislav Petkov <bp@alien8.de>, Fenghua Yu <fenghua.yu@intel.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: Fix built-in early-load Intel microcode alignment
-Message-ID: <20200112140218.GA902610@kroah.com>
-References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
- <CACMCwJ+FE8yD10VF07ci6tTqiBA8aBejKQT0EwyayQQOrLGUKQ@mail.gmail.com>
+        Sun, 12 Jan 2020 09:33:24 -0500
+Received: by mail-pl1-f196.google.com with SMTP id b22so2783166pls.12;
+        Sun, 12 Jan 2020 06:33:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UVg/F2RNpDB9kBXeS+NVyoBtj6BWxNkqjrNEvbi9DZk=;
+        b=KEEn1sRjtTmXw5h+uBGaJmzi+EsGLLNHvw4zux4GqzAHSDN8+GkM/qO09wTHBjxTT2
+         k0Ai5OophxVwOmtczeMSnie7Nxnr66oyZMatSN14dxQtEiY9jMUYfIXEzL3PEW4b1T1f
+         Z7dffQN9cxipKaVhC0eMtnnrBw8Vf3HqYBfFtvNX1alySxeNxkeXJsdj8VVED4OB9enF
+         d/sOK3HFYGEXmTiPyQS1vIbbYYKxnz+XcKEcNFZUdL1l8/j0EJrWeoejl/Blhv95g0To
+         D7FRAp2UKYLbr+eLBW/3EROjnJsb71EGyZoD3xrcsM8MQKX63/H2Yjxk0wjeM8+b4UHn
+         Z/FA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UVg/F2RNpDB9kBXeS+NVyoBtj6BWxNkqjrNEvbi9DZk=;
+        b=FfgY9mvEdaV1c4E9wPufHN8MF5PYtoT2wFBfw2u2Y1YOEDIoPLCCKHpnEZPzZho/aV
+         uay9bE3cmRmjywtzG7SHV9WZ1pRhjprSAtz4qC2yZ3rR0ay0SUTarZkpe+UuLxrJsYmk
+         vaYErPGqFuSsoFr8Qm1YyKd+IPIt0Ma2sCJCWZ6shJOQkRnvODF7m0nylLhhE/xUE3Yr
+         S6Qi+PW0xmH/kNZAE9rGD9QBXA/WPs7JtJCZU3FRAZzIykwQyjfeZBYBQYg9nQ6Tr8m/
+         jceZ5C0CXNy/Y7lUOQ9K/aUVOl98z8sVams/b1OZfnQjOjGEa15zBDDZD1TOe8V8x8CA
+         eTKA==
+X-Gm-Message-State: APjAAAUWrGxa8pjbh4Max7UWM7CULdUZ5N85BXZcl7xoFbCbt7g71Wco
+        0wZ6O2L4bHGORBIgf251mUc=
+X-Google-Smtp-Source: APXvYqzG4NH4BoSyqQj+gBN4li8QAnYRWgGx9+iZvgxidRhEmKte0t5pq+i6/vrc580B9MqEeyBJnQ==
+X-Received: by 2002:a17:90a:1a14:: with SMTP id 20mr17451826pjk.33.1578839604114;
+        Sun, 12 Jan 2020 06:33:24 -0800 (PST)
+Received: from localhost.localdomain ([183.82.121.105])
+        by smtp.gmail.com with ESMTPSA id w187sm10738921pfw.62.2020.01.12.06.33.21
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Sun, 12 Jan 2020 06:33:23 -0800 (PST)
+From:   sachin agarwal <asachin591@gmail.com>
+X-Google-Original-From: sachin agarwal <sachinagarwal@sachins-MacBook-2.local>
+To:     linus.walleij@linaro.org
+Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sachin agarwal <asachin591@gmail.com>
+Subject: [PATCH] GPIO: vx855: fixed a typo
+Date:   Sun, 12 Jan 2020 20:03:12 +0530
+Message-Id: <20200112143312.66048-1-sachinagarwal@sachins-MacBook-2.local>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACMCwJ+FE8yD10VF07ci6tTqiBA8aBejKQT0EwyayQQOrLGUKQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 03:03:44PM +0200, Jari Ruusu wrote:
-> On 1/12/20, Jari Ruusu <jari.ruusu@gmail.com> wrote:
-> > Intel Software Developer's Manual, volume 3, chapter 9.11.6 says:
-> > "Note that the microcode update must be aligned on a 16-byte
-> > boundary and the size of the microcode update must be 1-KByte
-> > granular"
-> >
-> > When early-load Intel microcode is loaded from initramfs,
-> > userspace tool 'iucode_tool' has already 16-byte aligned those
-> > microcode bits in that initramfs image. Image that was created
-> > something like this:
-> >
-> >  iucode_tool --write-earlyfw=FOO.cpio microcode-files...
-> >
-> > However, when early-load Intel microcode is loaded from built-in
-> > firmware BLOB using CONFIG_EXTRA_FIRMWARE= kernel config option,
-> > that 16-byte alignment is not guaranteed.
-> >
-> > Fix this by forcing all built-in firmware BLOBs to 16-byte
-> > alignment.
-> 
-> Backport of "Fix built-in early-load Intel microcode alignment"
-> for linux-4.19 and older stable kernels.
+From: Sachin agarwal <asachin591@gmail.com>
 
-Any hint as to what that git commit id is?
+we had written "betwee" rather than "between".
 
-thanks,
+Signed-off-by: Sachin agarwal <asachin591@gmail.com>
+---
+ drivers/gpio/gpio-vx855.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-greg k-h
+diff --git a/drivers/gpio/gpio-vx855.c b/drivers/gpio/gpio-vx855.c
+index 4ff146ca32fe..3bf397b8dfbc 100644
+--- a/drivers/gpio/gpio-vx855.c
++++ b/drivers/gpio/gpio-vx855.c
+@@ -71,7 +71,7 @@ static inline u_int32_t gpio_o_bit(int i)
+ 		return 1 << (i + 13);
+ }
+ 
+-/* Mapping betwee numeric GPIO ID and the actual GPIO hardware numbering:
++/* Mapping between numeric GPIO ID and the actual GPIO hardware numbering:
+  * 0..13	GPI 0..13
+  * 14..26	GPO 0..12
+  * 27..41	GPIO 0..14
+-- 
+2.24.0
+
