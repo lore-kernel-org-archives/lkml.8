@@ -2,101 +2,237 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E17C33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 11:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EBDAC33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 11:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED8A621744
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 11:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162B8222D9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 11:30:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YXbrrp5j"
+	dkim=pass (2048-bit key) header.d=sartura-hr.20150623.gappssmtp.com header.i=@sartura-hr.20150623.gappssmtp.com header.b="jacPjBbx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732686AbgALLWD (ORCPT
+        id S1732688AbgALLaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 06:22:03 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40878 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732673AbgALLWC (ORCPT
+        Sun, 12 Jan 2020 06:30:13 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38054 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732675AbgALLaN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 06:22:02 -0500
-Received: by mail-lf1-f67.google.com with SMTP id i23so4780016lfo.7
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 03:22:01 -0800 (PST)
+        Sun, 12 Jan 2020 06:30:13 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so5809404wrh.5
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 03:30:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=J/hGPBV9O8y1r4I/kNVXxaBjxv5wLfCvrzJ+lyF5gU8=;
-        b=YXbrrp5jiT1psd89mFxIh1l3s2A3XepycVbFh/kPLR8Guiy005rNYBb/ebqinuQSjm
-         7vJMXLmcuhp1PojpdzEqkKtVe2H8dm7gQKHsUr/E0yDIt1uy2vHRuHCy+mU4mtVLu3/+
-         plwmBnqKWERkiXStEkIWVNHyNkGMRGh7hmZh0ABbwsM5T/N9ZtdeDMLne27uzfuRgXKA
-         kX8XsC//O5/ujKQLtJMWIJMlAwmyfTYdE4skK3NtnC8tCsCqkeV1d1sRvTen9UuuP5lj
-         o8p/9hK7TNgU8Pv1RydZqaJ1vPa1U0hXXH9LrKri8RGKpskOijePWM74RG1uPYCrCjXV
-         ayBQ==
+        d=sartura-hr.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vSm7IjczDllIQBdzJHpYkk9BizbkbQU1pIXfoPgr3P8=;
+        b=jacPjBbxEHLwtLsQ9Yu3llDPqhrqfGzlJ3FxJ1gXzvVFSUDP0GuiKZz+c/haGzZlt7
+         2zm8Uun6TsGs05hO6qtIh1X96cHQ6exFf5bZy3c+WEXbfD7AlsnbWe6rv5bsZZ0U2Qci
+         6IAYwi1BABW56oH8dWWJUTwHPQalXGvzt87MTWxuA2IvFnKZELiJBRoc17sLfiOdX2OD
+         1SkFKAHa9DJ6vd+ucv/MElYfhwEInQUOIHixfnjSOzhhIPxmyAv86DEQ1/K6ojH/VWh/
+         OiYDI3wD6G4XGy2JQpqTPighS9SZ8gJ3XDyZKBfiqat31UHa2cJXvbe/yC8qshJjpPmi
+         46JQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=J/hGPBV9O8y1r4I/kNVXxaBjxv5wLfCvrzJ+lyF5gU8=;
-        b=PQ5rR9hWcX960YlTOTCSm5wTet0ItZsrinmNN7lQHenbcv+wqNGqgeE/lLqB/Z/XUL
-         ibvYCvblIic4y8zKscSET0WzO8jF/G6ecBLE3uaxph4mXANGZy/MwEFzyVevrVHVYGOF
-         Ts7m1DxQuG4UBr46JOid/PKyz05tlmXiMtjmvYwNBgC9Zc/RMBxmg2GCxi1n3Nks8M2y
-         HK/PjOZu74WPnJXRB0wwj5rWkAyzfJ6sGVaV/fDO53HpwSj7oSPkupikQyKc0d4U/imu
-         Qn+aIgpgyoaMhbqFhmlOqt6VOidl2l0YK3KnqNYbL6ojpscRJpW1PpEQJRxIicROZtpk
-         0S5Q==
-X-Gm-Message-State: APjAAAVi5fZRDD6LVDskrDKa3iSiSE9N3uz6iZ2d1ZYBjPCIIbsgWooj
-        FjADsICAmxkd2nkDiGrBazydfl9nzkyS/h/3v0DAtw==
-X-Google-Smtp-Source: APXvYqxIl+s85PduWiqfAEx7nOiaIevZBLUsVcio0qfitsaWujhuW7W5l0Ud7kTZiN0gAlnZOeOTZrvUgoy15qbK+Hw=
-X-Received: by 2002:a19:5513:: with SMTP id n19mr4806877lfe.205.1578828120912;
- Sun, 12 Jan 2020 03:22:00 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vSm7IjczDllIQBdzJHpYkk9BizbkbQU1pIXfoPgr3P8=;
+        b=Su9SI5crbGMEYM+jl/7KgKv5segxQmT680qr4JjiZpYE/RkbrpLeOMq6rARsKOJpfH
+         zlwl6EnDOp0/uZcCezSkWZoj6VPtbBwhlnDkmiUmzGf8E2Rr50tky0TkGaaWJTKSAkYI
+         iaX8ugGIf5ewTmqTdESTVpwQu5jbDgbDcw6bTyvRSUzSEgY8MjgBayjuq9AO1PwnjdK/
+         O5AS3Spk9w6j5bL78IKTx31qcUSxgsAjYJLYPdBMAbh6TJcfHOAE+8v4mxEDYliBATuK
+         oJkyHqituvri/YThPaV5eVUIObeTRCFpOl26Ger0Ld+oYpaxVB7iGoucPdfYvBHICWp4
+         pFgw==
+X-Gm-Message-State: APjAAAUns+iaTzokZUITlMBAneCo3QZlKgl4rNSgBAJgviwFrzlMPIZY
+        OpdkKaTeg5K0wFXH5WIjhiIZ0w==
+X-Google-Smtp-Source: APXvYqxgvliBKMsfF8PC9AKLAdu/jQnRVrYEIQQcHRWHz3Z+MVgU4zeFYlLobc4BQQBrz7edTCsYKQ==
+X-Received: by 2002:adf:eb8e:: with SMTP id t14mr13088069wrn.384.1578828610872;
+        Sun, 12 Jan 2020 03:30:10 -0800 (PST)
+Received: from localhost.localdomain (dh207-5-115.xnet.hr. [88.207.5.115])
+        by smtp.googlemail.com with ESMTPSA id y17sm9943045wma.36.2020.01.12.03.30.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2020 03:30:10 -0800 (PST)
+From:   Robert Marko <robert.marko@sartura.hr>
+To:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org
+Cc:     Robert Marko <robert.marko@sartura.hr>,
+        Mantas Pucka <mantas@8devices.com>
+Subject: [PATCH 1/3] regulator: add IPQ4019 SDHCI VQMMC LDO driver
+Date:   Sun, 12 Jan 2020 12:30:01 +0100
+Message-Id: <20200112113003.11110-1-robert.marko@sartura.hr>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <20191215174509.1847-1-linux@roeck-us.net> <20191215174509.1847-2-linux@roeck-us.net>
- <yq1r211dvck.fsf@oracle.com> <b22a519c-8f26-e731-345f-9deca1b2150e@roeck-us.net>
- <yq1sgkq21ll.fsf@oracle.com> <20200108153341.GB28530@roeck-us.net>
- <38af9fda-9edf-1b54-bd8d-92f712ae4cda@roeck-us.net> <CAEJqkgg_piiAWy4r3VD=KyQ7pi69bZNym2Ws=Tr8SY5wf+Sprg@mail.gmail.com>
-In-Reply-To: <CAEJqkgg_piiAWy4r3VD=KyQ7pi69bZNym2Ws=Tr8SY5wf+Sprg@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Sun, 12 Jan 2020 12:21:49 +0100
-Message-ID: <CACRpkdYU7ZDcKp+BbXRCnEFDw1xwDkU_vXsfo-AZNUWGEVknXQ@mail.gmail.com>
-Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
-To:     Gabriel C <nix.or.die@gmail.com>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
-        <linux-ide@vger.kernel.org>, Chris Healy <cphealy@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 12:18 PM Gabriel C <nix.or.die@gmail.com> wrote:
+This introduces the IPQ4019 VQMMC LDO driver needed for
+the SD/EMMC driver I/O level operation.
+This will enable introducing SD/EMMC support for the built-in controller.
 
-> What I've noticed however is the nvme temperature low/high values on
-> the Sensors X are strange here.
-(...)
-> Sensor 1:     +27.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=C2=
-=B0C)
-> Sensor 2:     +29.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=C2=
-=B0C)
-(...)
-> Sensor 1:     +23.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=C2=
-=B0C)
-> Sensor 2:     +25.9=C2=B0C  (low  =3D -273.1=C2=B0C, high =3D +65261.8=C2=
-=B0C)
+Signed-off-by: Mantas Pucka <mantas@8devices.com>
+Signed-off-by: Robert Marko <robert.marko@sartura.hr>
+---
+ drivers/regulator/Kconfig                   |   7 ++
+ drivers/regulator/Makefile                  |   1 +
+ drivers/regulator/vqmmc-ipq4019-regulator.c | 111 ++++++++++++++++++++
+ 3 files changed, 119 insertions(+)
+ create mode 100644 drivers/regulator/vqmmc-ipq4019-regulator.c
 
-That doesn't look strange to me. It seems like reasonable defaults
-from the firmware if either it doesn't really log the min/max temperatures
-or hasn't been through a cycle of updating these yet. Just set both
-to absolute min/max temperatures possible.
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 3ee63531f6d5..0a91cf1777c5 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -1077,6 +1077,13 @@ config REGULATOR_VEXPRESS
+ 	  This driver provides support for voltage regulators available
+ 	  on the ARM Ltd's Versatile Express platform.
+ 
++config REGULATOR_VQMMC_IPQ4019
++	tristate "IPQ4019 VQMMC SD LDO regulator support"
++	depends on ARCH_QCOM
++	help
++	  This driver provides support for the VQMMC LDO I/0
++	  voltage regulator of the IPQ4019 SD/EMMC controller.
++
+ config REGULATOR_WM831X
+ 	tristate "Wolfson Microelectronics WM831x PMIC regulators"
+ 	depends on MFD_WM831X
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 2210ba56f9bd..59f124afd5f5 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -132,6 +132,7 @@ obj-$(CONFIG_REGULATOR_TWL4030) += twl-regulator.o twl6030-regulator.o
+ obj-$(CONFIG_REGULATOR_UNIPHIER) += uniphier-regulator.o
+ obj-$(CONFIG_REGULATOR_VCTRL) += vctrl-regulator.o
+ obj-$(CONFIG_REGULATOR_VEXPRESS) += vexpress-regulator.o
++obj-$(CONFIG_REGULATOR_VQMMC_IPQ4019) += vqmmc-ipq4019-regulator.o
+ obj-$(CONFIG_REGULATOR_WM831X) += wm831x-dcdc.o
+ obj-$(CONFIG_REGULATOR_WM831X) += wm831x-isink.o
+ obj-$(CONFIG_REGULATOR_WM831X) += wm831x-ldo.o
+diff --git a/drivers/regulator/vqmmc-ipq4019-regulator.c b/drivers/regulator/vqmmc-ipq4019-regulator.c
+new file mode 100644
+index 000000000000..dae16094d3a2
+--- /dev/null
++++ b/drivers/regulator/vqmmc-ipq4019-regulator.c
+@@ -0,0 +1,111 @@
++// SPDX-License-Identifier: GPL-2.0+
++//
++// Copyright (c) 2019 Mantas Pucka <mantas@8devices.com>
++// Copyright (c) 2019 Robert Marko <robert.marko@sartura.hr>
++//
++// Driver for IPQ4019 SD/MMC controller's I/O LDO voltage regulator
++
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
++
++static const unsigned int ipq4019_vmmc_voltages[] = {
++	1500000, 1800000, 2500000, 3000000,
++};
++
++static struct regulator_ops ipq4019_regulator_voltage_ops = {
++	.list_voltage = regulator_list_voltage_table,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++};
++
++static struct regulator_desc vmmc_regulator = {
++	.name		= "vmmcq",
++	.ops		= &ipq4019_regulator_voltage_ops,
++	.type		= REGULATOR_VOLTAGE,
++	.owner		= THIS_MODULE,
++	.volt_table	= ipq4019_vmmc_voltages,
++	.n_voltages	= ARRAY_SIZE(ipq4019_vmmc_voltages),
++	.vsel_reg	= 0,
++	.vsel_mask	= 0x3,
++};
++
++const struct regmap_config ipq4019_vmmcq_regmap_config = {
++	.reg_bits	= 32,
++	.reg_stride	= 4,
++	.val_bits	= 32,
++};
++
++static int ipq4019_regulator_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct regulator_init_data *init_data;
++	struct regulator_config cfg = {};
++	struct regulator_dev *rdev;
++	struct resource *res;
++	struct regmap *rmap;
++	void __iomem *base;
++
++	init_data = of_get_regulator_init_data(dev, dev->of_node,
++					       &vmmc_regulator);
++	if (!init_data)
++		return -EINVAL;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	rmap = devm_regmap_init_mmio(dev, base, &ipq4019_vmmcq_regmap_config);
++	if (IS_ERR(rmap))
++		return PTR_ERR(rmap);
++
++	cfg.dev = dev;
++	cfg.init_data = init_data;
++	cfg.of_node = dev->of_node;
++	cfg.regmap = rmap;
++
++	rdev = devm_regulator_register(dev, &vmmc_regulator, &cfg);
++	if (IS_ERR(rdev)) {
++		dev_err(dev, "Failed to register regulator: %ld\n",
++			PTR_ERR(rdev));
++		return PTR_ERR(rdev);
++	}
++	platform_set_drvdata(pdev, rdev);
++
++	return 0;
++}
++
++static int ipq4019_regulator_remove(struct platform_device *pdev)
++{
++	struct regulator_dev *rdev = platform_get_drvdata(pdev);
++
++	regulator_unregister(rdev);
++
++	return 0;
++}
++
++static const struct of_device_id regulator_ipq4019_of_match[] = {
++	{ .compatible = "qcom,vqmmc-ipq4019-regulator", },
++	{},
++};
++
++static struct platform_driver ipq4019_regulator_driver = {
++	.probe = ipq4019_regulator_probe,
++	.remove = ipq4019_regulator_remove,
++	.driver = {
++		.name = "vqmmc-ipq4019-regulator",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(regulator_ipq4019_of_match),
++	},
++};
++module_platform_driver(ipq4019_regulator_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Mantas Pucka <mantas@8devices.com>");
++MODULE_DESCRIPTION("IPQ4019 VQMMC voltage regulator");
+-- 
+2.24.1
 
-Yours,
-Linus Walleij
