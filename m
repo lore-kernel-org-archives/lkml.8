@@ -2,169 +2,68 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EA3C33CA2
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:35:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9428DC33CA2
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2575E2084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:35:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q8ozB9BB"
+	by mail.kernel.org (Postfix) with ESMTP id 6B9C621569
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 17:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578850805;
+	bh=F2rMj+tDgCY54uolmRKP8Lu3t4cWtvsfHk3J8aI4QqI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=waCud7QILRliZSxLIY8cBuIgGml/PZoyhcGcz6jXD6N/NL0qypgDEdq1R22h8k0Z1
+	 YV4/GY8jMrCjQ4Onr3fc7X1QbUaPdfiwoY4EeqltF35vTwt04Cht7qsW3SKu3hg75L
+	 NlFP3V7SkzvdtEMZq7NXHLhUVtH14mhcv42nfWqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733190AbgALRfn (ORCPT
+        id S1733165AbgALRkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 12:35:43 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40281 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732957AbgALRfm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 12:35:42 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k25so3554833pgt.7;
-        Sun, 12 Jan 2020 09:35:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HV69n1sqlwCoeE6RtvaA5t9cef2ER7wcuo/YS6s88Ew=;
-        b=q8ozB9BB5rSWksjJ6EcOWBHRubJTBy23cuWDS+nVzuRJ5tdkSw3HT+74UmTZvuT8ut
-         wgSJHsk5HtyP6dloHeNLYdtAAb0VEfCkoa76yTUq4BAU+FrXLOvYCxHUFFasJ+wlp8pm
-         C74VScwW/Drio/Ds8V1Gnys/8o4WyFw7W2izVUcqk62FLFyq/wfAHNHpGt52BeZ0cYIY
-         x9rZNibB5oUo7fC/iVwR6j8KmQacW9+0mw+vAGHEWay47UK6Yh7nXhHnjTtljViXf3EJ
-         1j88IaPWuYNqhXv8DPcWAc9GTs1pTzwKSB4QkqhItIBM1N5Brk1GmhWf8MCxSgPwZAXo
-         Itpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HV69n1sqlwCoeE6RtvaA5t9cef2ER7wcuo/YS6s88Ew=;
-        b=lAn8qfUihzJUdPkd8/eNK/4VJVHSaS1H1n2AZhvBK2JJ/8E0HH+vu37PxERxx0R73B
-         fzpkJHS5ZDBTBKMkHgUQAmxjHer0zyh9bCiwQkSIYUu0IAuH2uuJd1vZ8v3uO/8TUj7s
-         XXO1hjEudhhVxJbjLc8Wfmc9g9rzb+FCSLI5o6IKKjpvpC7EtfnK02fLYTRntU36FyCu
-         agqU2ir6Nk6yn/OsQ/hqR0VbY+1DD6rvLN3ce5tSQpPmGZ+zoun7myrDDFE0g9yYz8hX
-         UfMWdkT9nOA2HH5Cn5i9MOrwzBLYTG8vsN244jFoDGYF5yOEBKpMYuZnkgjrgsoGJDMu
-         zCmg==
-X-Gm-Message-State: APjAAAXjvY4fey+x8Z9e+f/l1S1gt0tHvP8B6U8rQ8ZiVNRcOsyhaamn
-        JuiAKYONbYFd6Emuk/VFkw8Q9Sw6
-X-Google-Smtp-Source: APXvYqyeEgRfOUKPiKviv2UctIzA+tz4njA/s6AWf7JhcjcGfgNP3FA3N8bjZcmz1+17J3ulmDGWvQ==
-X-Received: by 2002:a63:6704:: with SMTP id b4mr17345507pgc.424.1578850541828;
-        Sun, 12 Jan 2020 09:35:41 -0800 (PST)
-Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id g21sm11098526pfo.126.2020.01.12.09.35.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 09:35:41 -0800 (PST)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next] net: phy: Added IRQ print to phylink_bringup_phy()
-Date:   Sun, 12 Jan 2020 09:35:38 -0800
-Message-Id: <20200112173539.18503-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.19.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 12 Jan 2020 12:40:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732957AbgALRkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 12:40:04 -0500
+Subject: Re: [git pull] IOMMU Fixes for Linux v5.5-rc5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578850803;
+        bh=F2rMj+tDgCY54uolmRKP8Lu3t4cWtvsfHk3J8aI4QqI=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=lLEEPy6Ds5dpxuAqq/QJJ+LYZBSXpWSGRkuJV6SC3oeQYNumlOFwz3mBoVs11KJuT
+         CEBVmVS9uvG7v9K7c1BPGy1mTBedL33wIKOEJpYo748FlNU51lYRJMZ9tJ+1DcMxwn
+         05mzKsvG1V27jh7fh+fwzVn68zy9a6p9yQT3aXwg=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20200112095936.GA17108@8bytes.org>
+References: <20200112095936.GA17108@8bytes.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200112095936.GA17108@8bytes.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
+ iommu-fixes-v5.5-rc5
+X-PR-Tracked-Commit-Id: 55817b340a31951d23d1692db45522560b1d20f9
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 040a3c33623ba4bd11588ab0820281b854a3ffaf
+Message-Id: <157885080357.18926.14855458420719655456.pr-tracker-bot@kernel.org>
+Date:   Sun, 12 Jan 2020 17:40:03 +0000
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The information about the PHY attached to the PHYLINK instance is useful
-but is missing the IRQ prints that phy_attached_info() adds.
-phy_attached_info() is a bit long and it would not be possible to use
-phylink_info() anyway.
+The pull request you sent on Sun, 12 Jan 2020 10:59:41 +0100:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/phy/phy_device.c | 12 ++++++++++--
- drivers/net/phy/phylink.c    |  7 +++++--
- include/linux/phy.h          |  2 ++
- 3 files changed, 17 insertions(+), 4 deletions(-)
+> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git iommu-fixes-v5.5-rc5
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index e5dc9f87f495..6a5056e0ae77 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1107,9 +1107,8 @@ void phy_attached_info(struct phy_device *phydev)
- EXPORT_SYMBOL(phy_attached_info);
- 
- #define ATTACHED_FMT "attached PHY driver [%s] (mii_bus:phy_addr=%s, irq=%s)"
--void phy_attached_print(struct phy_device *phydev, const char *fmt, ...)
-+char *phy_attached_info_irq(struct phy_device *phydev)
- {
--	const char *drv_name = phydev->drv ? phydev->drv->name : "unbound";
- 	char *irq_str;
- 	char irq_num[8];
- 
-@@ -1126,6 +1125,14 @@ void phy_attached_print(struct phy_device *phydev, const char *fmt, ...)
- 		break;
- 	}
- 
-+	return kasprintf(GFP_KERNEL, "%s", irq_str);
-+}
-+EXPORT_SYMBOL(phy_attached_info_irq);
-+
-+void phy_attached_print(struct phy_device *phydev, const char *fmt, ...)
-+{
-+	const char *drv_name = phydev->drv ? phydev->drv->name : "unbound";
-+	char *irq_str = phy_attached_info_irq(phydev);
- 
- 	if (!fmt) {
- 		phydev_info(phydev, ATTACHED_FMT "\n",
-@@ -1142,6 +1149,7 @@ void phy_attached_print(struct phy_device *phydev, const char *fmt, ...)
- 		vprintk(fmt, ap);
- 		va_end(ap);
- 	}
-+	kfree(irq_str);
- }
- EXPORT_SYMBOL(phy_attached_print);
- 
-diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-index 8d786c99f97a..efabbfa4a6d3 100644
---- a/drivers/net/phy/phylink.c
-+++ b/drivers/net/phy/phylink.c
-@@ -726,6 +726,7 @@ static int phylink_bringup_phy(struct phylink *pl, struct phy_device *phy,
- {
- 	struct phylink_link_state config;
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(supported);
-+	char *irq_str;
- 	int ret;
- 
- 	/*
-@@ -761,9 +762,11 @@ static int phylink_bringup_phy(struct phylink *pl, struct phy_device *phy,
- 	phy->phylink = pl;
- 	phy->phy_link_change = phylink_phy_change;
- 
-+	irq_str = phy_attached_info_irq(phy);
- 	phylink_info(pl,
--		     "PHY [%s] driver [%s]\n", dev_name(&phy->mdio.dev),
--		     phy->drv->name);
-+		     "PHY [%s] driver [%s] (irq=%s)\n",
-+		     dev_name(&phy->mdio.dev), phy->drv->name, irq_str);
-+	kfree(irq_str);
- 
- 	mutex_lock(&phy->lock);
- 	mutex_lock(&pl->state_mutex);
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 5932bb8e9c35..3a70b756ac1a 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -1131,6 +1131,8 @@ static inline void phy_unlock_mdio_bus(struct phy_device *phydev)
- 
- void phy_attached_print(struct phy_device *phydev, const char *fmt, ...)
- 	__printf(2, 3);
-+char *phy_attached_info_irq(struct phy_device *phydev)
-+	__malloc;
- void phy_attached_info(struct phy_device *phydev);
- 
- /* Clause 22 PHY */
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/040a3c33623ba4bd11588ab0820281b854a3ffaf
+
+Thank you!
+
 -- 
-2.19.1
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
