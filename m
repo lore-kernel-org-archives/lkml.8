@@ -2,101 +2,116 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCF7C33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B837C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2042084D
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4A224125
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 22:50:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/BDkbWv"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="qPkSFfty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387460AbgALWt1 (ORCPT
+        id S2387473AbgALWus (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 17:49:27 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38030 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbgALWt0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 17:49:26 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so6791618wrh.5
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 14:49:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=MzoQ2jg4oFupXMXlxp1CLkIfp3lD+zbiYm54IT89hQE=;
-        b=n/BDkbWvwPexU6KNI3DcndbVPFfvq6msl56o2Vs8WDpxxUWVLXJSM542ofKL3ni5V0
-         FZTyvLjw4btxAQtK5JSTRiTzoggcyD+S3Uua993GbnNpPvlXru6WNyyC6dk6oDkKX2oK
-         67kH4gkLR72NOORdAE6vNxPqyOci0T6zpGu+sGyW2ykzIV422CoZcDQdQn5ah+1xssYO
-         vxSHrp011TrKmNpOBwS9cVcL+inamf0M65LqC9GEN/u/BdZp/0CBG841i6FzJUjdEiPA
-         bTDPRVN9FO/irN5OQOhA42CSvSfVBAcrpE3jIhujT1DVFoC10NgB2TC6UcQCr9NIy99p
-         rOVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=MzoQ2jg4oFupXMXlxp1CLkIfp3lD+zbiYm54IT89hQE=;
-        b=O1iE+6D6hx61c8bOlBN1wG2IR4jsQE/pfxk+Tc3e1Cdkx6xuKPujPtb6E7NiP7IOt2
-         oBRzr+D+4Wx2D2kefEayo2+j9HNun134FmDIRSQsDBLcLGf5/ZXGlaU7dCU9S5mZAZRk
-         1fevhfUvtWtvc7SgPyxvhvu1m07l/0gi0i+EkGnx7x79tv3M/gD/8I9EPaz67Q04BXhY
-         gWZV5DO31Hnr5flhwRHSnK5Znyhlu7lHik0ROyTomJI0PwJNS3gy+HDIPwcZH8FrRUNj
-         M0Ina6aFi+OKt+jQ6AwWWRfPUW+m+gGbWXqYaEXuy7mX4hbcQq9ubN83mn+T4QxzyvQN
-         6m8g==
-X-Gm-Message-State: APjAAAU29M12BqU98ItEBq9YIkULtv9ae9ByPtth87UjBHNSlnRO9MfW
-        p4a2fvtLEHuIgs8+NDQqMJEgdjtbw/lQKxbW6Ws=
-X-Google-Smtp-Source: APXvYqyBmCq60wRqDN13DYHLpE3BpSEwtVRR+D2yDu1FVab464RRHamv0OXBlql/KPpTX0dNN0j7XsT1oj35CNKNbPI=
-X-Received: by 2002:adf:a308:: with SMTP id c8mr14660636wrb.240.1578869364989;
- Sun, 12 Jan 2020 14:49:24 -0800 (PST)
+        Sun, 12 Jan 2020 17:50:48 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60179 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727222AbgALWus (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 17:50:48 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47wsPx47Psz9s29;
+        Mon, 13 Jan 2020 09:50:45 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578869446;
+        bh=a40F7aV+hWzizltZThnoRmNQqVG+tCjrmJGUSDxJcSE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qPkSFftygoxCdS17z92QrtHv9IZ3zF+rd/I8zVakIY8AS3BRMixfMhN+g7sz3j6W/
+         f+QFBIC0m2RFFxO9Me6jtePAcPzele2+JyYgNMIpuajGTFkrmEp8s5pRSmVMhvgeG2
+         dTMEoewO8KLEmzZXUMUb78gvEJTeK6o7ZlfMwiI+qR+Kr8kvf/FQfWbsnoi1rRt8HO
+         seTcNvMc9CRB08yEwXZFbu85M81GVa1yyoMQhC2hi1lV0Wq3x0ln08WIkRu3pzDdHb
+         inB+txpbIivkbPJRmiup0kav3eX36A/G2W1mwuSU2oQ6tuDHJ3rOC+sMhE4z0sb7Ck
+         CI+hLUMhRHH2Q==
+Date:   Mon, 13 Jan 2020 09:50:37 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Al Viro <viro@ZenIV.linux.org.uk>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kars de Jong <jongk@linux-m68k.org>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: linux-next: manual merge of the vfs tree with the m68k tree
+Message-ID: <20200113095037.156597ff@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191216154441.6648-1-fishland@aliyun.com>
-In-Reply-To: <20191216154441.6648-1-fishland@aliyun.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Sun, 12 Jan 2020 23:49:13 +0100
-Message-ID: <CAFLxGvyU=zh23vkYiAGRzyd4LGJodLwRRa1S03THAoSaSL=dGA@mail.gmail.com>
-Subject: Re: [PATCH] ubifs: Fix potentially out-of-bounds memory access in ubifs_dump_node
-To:     Liu Song <fishland@aliyun.com>
-Cc:     Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>, liu.song11@zte.com.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/qdDVBgrf0IRmeQx=vnxyL/T";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 16, 2019 at 4:45 PM Liu Song <fishland@aliyun.com> wrote:
->
-> From: Liu Song <liu.song11@zte.com.cn>
->
-> In =E2=80=9Cubifs_check_node=E2=80=9D, when =E2=80=9Cnode_len + offs> c->=
- leb_size=E2=80=9D, then
-> goto label of "out_len". Then, in the following "ubifs_dump_node",
-> if inode type is "UBIFS_DATA_NODE", in "print_hex_dump", an
-> out-of-bounds access may occur due to the wrong "ch->len".
-> We encountered this problem in our environment. If "ch-> len" is
-> very large, it may even cause the kernel to crash.
->
-> There are three reasons to choose to remove "print_hex_dump".
-> 1) As mentioned earlier, the exception "ch-> len" may cause an
-> exception in "print_hex_dump";
-> 2) Data nodes are often large. When printing data content in
-> "print_hex_dump", a large amount of output will bring a high load
-> on the system, and may even cause a watchdog reset;
-> 3) Even if there is a CRC check error, the stuff of file is difficult
-> to identify, and difficult to find the problem from a large amount of
-> output. We have already output the LEB and offset of the node. So we
-> can take the initiative to view the data of interest, instead of
-> printing it directly.
+--Sig_/qdDVBgrf0IRmeQx=vnxyL/T
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-If UBIFS dumps data nodes due an error we are already in deep trouble
-and having the content of bad data nodes can be helpful.
-This feature helped me more than once to debug issues.
+Hi all,
+
+Today's linux-next merge of the vfs tree got a conflict in:
+
+  arch/m68k/kernel/syscalls/syscall.tbl
+
+between commit:
+
+  e8bb2a2a1d51 ("m68k: Wire up clone3() syscall")
+
+from the m68k tree and commit:
+
+  0a51692d49ec ("open: introduce openat2(2) syscall")
+
+from the vfs tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
 --=20
-Thanks,
-//richard
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/m68k/kernel/syscalls/syscall.tbl
+index a00a5d0db602,2559925f1924..000000000000
+--- a/arch/m68k/kernel/syscalls/syscall.tbl
++++ b/arch/m68k/kernel/syscalls/syscall.tbl
+@@@ -434,4 -434,5 +434,5 @@@
+  432	common	fsmount				sys_fsmount
+  433	common	fspick				sys_fspick
+  434	common	pidfd_open			sys_pidfd_open
+ -# 435 reserved for clone3
+ +435	common	clone3				__sys_clone3
++ 437	common	openat2				sys_openat2
+
+--Sig_/qdDVBgrf0IRmeQx=vnxyL/T
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4bor0ACgkQAVBC80lX
+0GxS6gf9EyIhphzB22czNbb6SV+mMX/x9U6I9YDZFvrKO9xvuH/3qi9JVZxVIn8J
+Acq62df3bJu4SOkn8C6a+xS5ZAx4IVWc8pWvnqdybxQuRiZXFsFOiN8smuJeP0k+
+iPyg2JN5/me94oDIL9fAHhXmuviQeGrlYRHQfsdVijuDVb3ynqKOsHQKtE/vwv28
+wGLSLcje7fGU9fet11c42ajD4+N+vOAUH9gOJCUxnvHxySPaxxGDb3njaClJfbW9
+r2dSQwlSBvyJyeUCAx+bgE+dOA/B+I6wB4K5n6w1nKRnI8rmSFkjjKresytvaqWO
+iW3SJ3AbCM1xZfW8Sff7N8KFdHocJg==
+=qU5P
+-----END PGP SIGNATURE-----
+
+--Sig_/qdDVBgrf0IRmeQx=vnxyL/T--
