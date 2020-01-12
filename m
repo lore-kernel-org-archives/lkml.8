@@ -2,100 +2,260 @@ Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC7BC33CA7
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA15C33CA9
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 380C021744
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:01:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A5BB22314
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 20:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="kVUKzsKN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rBsBsIyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387431AbgALUBo (ORCPT
+        id S2387435AbgALUIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 15:01:44 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:34220 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733212AbgALUBn (ORCPT
+        Sun, 12 Jan 2020 15:08:14 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:56297 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733294AbgALUIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 15:01:43 -0500
-Received: by mail-il1-f196.google.com with SMTP id s15so6159669iln.1
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 12:01:43 -0800 (PST)
+        Sun, 12 Jan 2020 15:08:13 -0500
+Received: by mail-pj1-f65.google.com with SMTP id d5so3243633pjz.5;
+        Sun, 12 Jan 2020 12:08:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vltSl3yoS/o4Pj3eivfuysNtj4INdjuW6Z4PNbKDFMw=;
-        b=kVUKzsKNr/UN1LgzbrH3VmkkKF/GgSjl47zvtaJVSsJ4ANthVbnW21/egA78M/fnrl
-         IfpicMsnXfcbxwEqpieyIAu8rZRsUkSQRo/OPoNmBXJgds0yfPDiduhz+VPWjSk+tw4S
-         dYJ4Iug6HP0lwCjKdXgp0ltM2EaGfFIhJlSMu3sjA13JJMNDfovRQT0axtVMsKmy7QeG
-         97lJNUoTmoQFhyrPZb5ZJHgZF4Tw67Kd0VGatq8d7xoZCL9rnyXYoLYrTLM+LRVDbrrn
-         BI7LN23YdH7gkAhLbb4SXaSD+V+WoL4rQIyWhZfvMuQ14H4G79pr3EyrPWvHL2bNFpYt
-         r1Rw==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=IHJMxTJZ/pJoCk7j7QVl6dnURrLsbC4A/8uoxV4CQ9Y=;
+        b=rBsBsIyOO/RAqOiBWfo6Oc7tEaRNL1YVgMQMISAnVcakEYOfkDJKC8BoTUgIZLnVDa
+         oPoTl4HuFnp0R39rKbivivHXrWgdtKe60N77K+pC7QXSH80R126K6xReO8tuatNvHwnV
+         IvTqhJ6Zmt8Pwx2u4D6C3pVg+xGQBwrtIgpmyBfzOYs3Qn0WbxWbDsxj0zvVy/EsWeKi
+         zT13sLhdrhdJJqhUBZjvhf3LZ91brHpyoC72Y8t5QfXJO4931lpqf8HCnpG/4OgTL9Ba
+         kZlV9aypvXst7frS0ogWacP17X28OS9w0jM0JLN8/yIyyvdhAohOvXXtZt2ktuLepYME
+         JogQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vltSl3yoS/o4Pj3eivfuysNtj4INdjuW6Z4PNbKDFMw=;
-        b=YqTPaSHjUR4Cs9h/EVEIou5krlJwkXAq2S9BzzOuyQ8Tt+lvjH6xi6STbQhte+HSgM
-         GC8kWJOPyUZtWoupW0KWiFMyPNoPzD9F9tgLGjFBVhliIVYkwdL1rjAHG31p4vhxZGyc
-         nBqWvJfHmMpKN9CSbgAntP39blPeGAzn/Ubt/rjWaYIbOgSr2jBbeGESCOhE3+h8x6Mj
-         EoHdhYgOwLGbrLxBvvzdON6Nt4Sn7YBPRKVGr6admKPViCcIAXH689x9EQ/dORarI/k9
-         8YmmSssPQTGPlZQK3ElL5q1/GnIgGTB0txsUVy5MqKU81kSIOePU48FaIF4Tf8vUHDhY
-         Pepg==
-X-Gm-Message-State: APjAAAWJtH/dXyXoFpK0HfZFWZaSWhNQNLpVueLiEJ/bT8baaT3+Q7hf
-        DGkBOhDRFfWaB1s6C0LyWfg20RPcFtyIwmQMdN6Qxw==
-X-Google-Smtp-Source: APXvYqxhD0AB5i0ZIFt3OAw1DMt1N8WD3Cw6RX5iRKqkktFYUteW/DA4rDMoJZRrtrEqDiSmAxbWzcBPtQpncRxq5eM=
-X-Received: by 2002:a92:afc5:: with SMTP id v66mr11073775ill.123.1578859303168;
- Sun, 12 Jan 2020 12:01:43 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=IHJMxTJZ/pJoCk7j7QVl6dnURrLsbC4A/8uoxV4CQ9Y=;
+        b=AUB2ofZwJtL+Yzu20Yxd8u+nsLirYIdEn5VsxHFIzeG6M/U+IJQPXYGY46XkR/mKnI
+         tzRZ0TMktisv2D12zbf3mXec80mnmCrcuMY2+cgBoqxkbPWAsg1uCkvwTMNN4wzbQKzS
+         E0PBN5dX1VVLMpHSNVosE70rFpqNZq85Y7mip7gV6J2HUCVYpzSyIIZS46vmp+/KzUsr
+         slWdmGQ5IeDR9BYClqanRxSCELV7C8Y1Fp79iTU3m1O9lUQbSUp/OPqsDVSfwNnFZyAU
+         R+H4ixCE2mHl+4o7ub5VlmZjl3uwlhvhXWO0th9azu1x3bDNWE3JTLSJ+UgIhjjf8v20
+         oYQw==
+X-Gm-Message-State: APjAAAXLqRu2mjZS1RUfqJyb+8h3cWvcgtEFA35XGp/jEuFDVo9CGdjv
+        09h4yLGQjAIxBK5pfqH0BPuZla7W
+X-Google-Smtp-Source: APXvYqwHV99/uoMu0rXhLT8zV4PFzDn1rEU9yjIQ/XNAq9/Dhf97bvvEJqtHKHOKlbJba4JHNdm7OQ==
+X-Received: by 2002:a17:90a:6587:: with SMTP id k7mr17797687pjj.40.1578859692224;
+        Sun, 12 Jan 2020 12:08:12 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p21sm10917969pfn.103.2020.01.12.12.08.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 12 Jan 2020 12:08:11 -0800 (PST)
+Subject: Re: [PATCH v2] hwmon: Driver for temperature sensors on SATA drives
+To:     Gabriel C <nix.or.die@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-hwmon@vger.kernel.org, Jean Delvare <jdelvare@suse.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" 
+        <linux-ide@vger.kernel.org>, Chris Healy <cphealy@gmail.com>
+References: <20191215174509.1847-1-linux@roeck-us.net>
+ <20191215174509.1847-2-linux@roeck-us.net> <yq1r211dvck.fsf@oracle.com>
+ <b22a519c-8f26-e731-345f-9deca1b2150e@roeck-us.net>
+ <yq1sgkq21ll.fsf@oracle.com> <20200108153341.GB28530@roeck-us.net>
+ <38af9fda-9edf-1b54-bd8d-92f712ae4cda@roeck-us.net>
+ <CAEJqkgg_piiAWy4r3VD=KyQ7pi69bZNym2Ws=Tr8SY5wf+Sprg@mail.gmail.com>
+ <CACRpkdYU7ZDcKp+BbXRCnEFDw1xwDkU_vXsfo-AZNUWGEVknXQ@mail.gmail.com>
+ <CAEJqkggo3Mou1SykjisyYn+3SGGgNfnKagr=7ZPyw=Y=1MZ55w@mail.gmail.com>
+ <CACRpkdayHFmdz4nAMaXR07Hcy=dLLGnnU8PkFhwQKuDTLnvOSw@mail.gmail.com>
+ <e3caa946-b8f2-75c7-4bcb-69ad198de472@roeck-us.net>
+ <CAEJqkggBvBus-G=TevSf0OUWLx_63qmZEThi-tNyPmAD2JXW-g@mail.gmail.com>
+ <25c57e9d-94db-3a8b-5f68-f8a49e500b45@roeck-us.net>
+ <CAEJqkggnQzPw1uyMUZ5F-nqSwKAu5Ur7C_VujhZxZrvv-iUt_g@mail.gmail.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <de8861e8-f21b-6a66-4f5b-25acc8ff40e2@roeck-us.net>
+Date:   Sun, 12 Jan 2020 12:08:09 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200113065622.15eb3c87@canb.auug.org.au>
-In-Reply-To: <20200113065622.15eb3c87@canb.auug.org.au>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Sun, 12 Jan 2020 12:01:32 -0800
-Message-ID: <CAOesGMjZQTjos9fU52zsrKFZj9LVE3oUXQFpjJov3-dBD0cT+w@mail.gmail.com>
-Subject: Re: linux-next: Fixes tag needs some work in the arm-soc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAEJqkggnQzPw1uyMUZ5F-nqSwKAu5Ur7C_VujhZxZrvv-iUt_g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Stephen,
+On 1/12/20 10:37 AM, Gabriel C wrote:
+> Am So., 12. Jan. 2020 um 16:26 Uhr schrieb Guenter Roeck <linux@roeck-us.net>:
+>>
+>> On 1/12/20 5:45 AM, Gabriel C wrote:
+>>> Am So., 12. Jan. 2020 um 14:07 Uhr schrieb Guenter Roeck <linux@roeck-us.net>:
+>>>>
+>>>> On 1/12/20 4:07 AM, Linus Walleij wrote:
+>>>>> On Sun, Jan 12, 2020 at 1:03 PM Gabriel C <nix.or.die@gmail.com> wrote:
+>>>>>> Am So., 12. Jan. 2020 um 12:22 Uhr schrieb Linus Walleij
+>>>>>> <linus.walleij@linaro.org>:
+>>>>>>>
+>>>>>>> On Sun, Jan 12, 2020 at 12:18 PM Gabriel C <nix.or.die@gmail.com> wrote:
+>>>>>>>
+>>>>>>>> What I've noticed however is the nvme temperature low/high values on
+>>>>>>>> the Sensors X are strange here.
+>>>>>>> (...)
+>>>>>>>> Sensor 1:     +27.9°C  (low  = -273.1°C, high = +65261.8°C)
+>>>>>>>> Sensor 2:     +29.9°C  (low  = -273.1°C, high = +65261.8°C)
+>>>>>>> (...)
+>>>>>>>> Sensor 1:     +23.9°C  (low  = -273.1°C, high = +65261.8°C)
+>>>>>>>> Sensor 2:     +25.9°C  (low  = -273.1°C, high = +65261.8°C)
+>>>>>>>
+>>>>>>> That doesn't look strange to me. It seems like reasonable defaults
+>>>>>>> from the firmware if either it doesn't really log the min/max temperatures
+>>>>>>> or hasn't been through a cycle of updating these yet. Just set both
+>>>>>>> to absolute min/max temperatures possible.
+>>>>>>
+>>>>>> Ok I'll check that.
+>>>>>>
+>>>>>> Do you mean by setting the temperatures to use a lmsensors config?
+>>>>>> Or is there a way to set these with a nvme command?
+>>>>>
+>>>>> Not that I know of.
+>>>>>
+>>>>> The min/max are the minumum and maximum temperatures the
+>>>>> device has experienced during this power-on cycle.
+>>>>>
+>>>>
+>>>> No, that would be lowest/highest. The above are (or should be) per-sensor
+>>>> setpoints. The default for those is typically the absolute minimum /
+>>>> maximum of the supported range.
+>>>>
+>>>> Some SATA drives report the lowest/highest temperatures experienced
+>>>> since power cycle, like here.
+>>>>
+>>>> drivetemp-scsi-5-0
+>>>> Adapter: SCSI adapter
+>>>> temp1:        +23.0°C  (low  =  +0.0°C, high = +60.0°C)
+>>>>                           (crit low = -41.0°C, crit = +85.0°C)
+>>>>                           (lowest = +20.0°C, highest = +31.0°C)
+>>>>
+>>>
+>>> The SATA temperatures are fine and reported like this here too, just
+>>> the nvme ones are strange.
+>>>
+>>> drivetemp-scsi-4-0
+>>> Adapter: SCSI adapter
+>>> temp1:        +28.0°C  (low  =  +1.0°C, high = +61.0°C)
+>>>                         (crit low =  +2.0°C, crit = +60.0°C)
+>>>                         (lowest = +16.0°C, highest = +31.0°C)
+>>>
+>>> drivetemp-scsi-12-0
+>>> Adapter: SCSI adapter
+>>> temp1:        +29.0°C  (low  =  +1.0°C, high = +61.0°C)
+>>>                         (crit low =  +2.0°C, crit = +60.0°C)
+>>>                         (lowest = +18.0°C, highest = +32.0°C)
+>>>
+>>> and so on.
+>>>
+>>> Btw, where I can find the code does these calculations?
+>>>
+>>
+>> Not sure if that is what you are looking for, but the nvme hardware
+>> monitoring driver is at drivers/nvme/host/hwmon.c, the SATA hardware
+>> monitoring driver is at drivers/hwmon/drivetemp.c.
+>>
+> 
+> I have a look thanks.
+> 
+> I'm using your v2 patch for the nvme part since you posted it on 5.4 kernels.
+> This is probably why I find the way the temperatures are now reported
+> very strange.
+> 
+> The ADATA XPG SX8200 Pro in my laptop seems to work better:
+> 
+> nvme-pci-0200
+> Adapter: PCI adapter
+> Composite:    +37.9°C  (low  =  -0.1°C, high = +74.8°C)
+>                        (crit = +79.8°C)
+> 
+> Low is 0° which is what the spec suggests.
+> 
+>> The limits on nvme drives are configurable.
+> 
+> Yes, I found this out already.
+> 
+>> root@server:/sys/class/hwmon# sensors nvme-pci-0100
+>> nvme-pci-0100
+>> Adapter: PCI adapter
+>> Composite:    +40.9°C  (low  = -273.1°C, high = +84.8°C)
+>>                          (crit = +84.8°C)
+>> Sensor 1:     +40.9°C  (low  = -273.1°C, high = +65261.8°C)
+>> Sensor 2:     +43.9°C  (low  = -273.1°C, high = +65261.8°C)
+>>
+>> root@server:/sys/class/hwmon# echo 0 > hwmon1/temp2_min
+>> root@server:/sys/class/hwmon# echo 100000 > hwmon1/temp2_max
+> 
+> An lm-sensors configuration will work too.
+> 
+Sure, the above was just an example.
 
-On Sun, Jan 12, 2020 at 11:56 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi all,
->
-> n commit
->
->   0ff15a86d0c5 ("ARM: dts: stm32: Add power-supply for DSI panel on stm32f469-disco")
->
-> Fixes tag
->
->   Fixes: 18c8866266 ("ARM: dts: stm32: Add display support on stm32f469-disco")
->
-> has these problem(s):
->
->   - SHA1 should be at least 12 digits long
->     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->     or later) just making sure it is not set (or set to "auto").
->
-> Also, please keep the commit message tags together.
+>> root@server:/sys/class/hwmon# sensors nvme-pci-0100
+>> nvme-pci-0100
+>> Adapter: PCI adapter
+>> Composite:    +38.9°C  (low  = -273.1°C, high = +84.8°C)
+>>                          (crit = +84.8°C)
+>> Sensor 1:     +38.9°C  (low  =  -0.1°C, high = +99.8°C)
+>> Sensor 2:     +42.9°C  (low  = -273.1°C, high = +65261.8°C)
+>>
+>> If you dislike the defaults, just configure whatever you think is
+>> appropriate for your system.
+> 
+> It's not about disliking the values. I want to find out if these Samsung models
+> don't support that, or it is a bug somewhere in writing/calculating the values.
+> 
+No, this is not a bug. It is perfectly valid for individual sensors to have
+uninitialized limits. If I recall correctly, the NVME specification
+specifically states that the default settings for individual sensors
+shall be those values (0 and 65535 Kelvin, specifically).
 
-Thanks for the report, we'll keep an eye out for these formatting
-tweaks in the future.
+And, yes, I would agree that is a bit odd that NVME drives report temperatures
+in Kelvin, but such is the world.
 
-Alexandre; no respin needed to fix this IMHO, just something to keep in mind.
+> In the case, Samsung and others don't support such a thing wouldn't be
+> better to just ignore
+> the bogus reading altogether?
 
--Olof
+Again, you can set whatever limits you like. The default limits on many
+hardware sensor chips have odd values. Just looking at my system:
+
+nct6797-isa-0a20
+Adapter: ISA adapter
+in0:                    +0.48 V  (min =  +0.00 V, max =  +1.74 V)
+in1:                    +1.02 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+in2:                    +3.39 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+in3:                    +3.31 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+in4:                    +1.00 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+in5:                    +0.14 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+in6:                    +0.82 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+in7:                    +3.38 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+in8:                    +3.26 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+in9:                    +1.82 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+in10:                   +0.00 V  (min =  +0.00 V, max =  +0.00 V)
+in11:                   +0.74 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+in12:                   +1.20 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+in13:                   +0.68 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+in14:                   +1.50 V  (min =  +0.00 V, max =  +0.00 V)  ALARM
+
+
+Are you suggesting that we should not support setting min/max values for
+all drivers just because they are often not initialized to reasonable values
+by default ?
+
+Guenter
