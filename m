@@ -5,64 +5,64 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E3DC33CAB
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C885C33CAC
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9772C21556
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F12B21556
+	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 18:00:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u4VYHSVt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rXMVpie4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733233AbgALR7x (ORCPT
+        id S1733247AbgALR76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 12:59:53 -0500
-Received: from mail-wm1-f52.google.com ([209.85.128.52]:51302 "EHLO
-        mail-wm1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733191AbgALR7w (ORCPT
+        Sun, 12 Jan 2020 12:59:58 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37616 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733203AbgALR7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 12:59:52 -0500
-Received: by mail-wm1-f52.google.com with SMTP id d73so7216562wmd.1;
+        Sun, 12 Jan 2020 12:59:53 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w15so6401250wru.4;
         Sun, 12 Jan 2020 09:59:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=UI0olG8Ukex2VWgAiT/l06nIRGJslLR40+ZHv7ZVUKc=;
-        b=u4VYHSVtc62kKwCw8LfnRdHaQz785lmJ/mFM6OwbwFG5eM/ox/lljIrE490W5Ivl1E
-         TvVGQ031Wu269rPLrJPT61hw4wFDbd0xQCLGONvT5PjYTWlcqw4QShlWzkiLJbcP4LwE
-         D6MWSImvjwW4uiJMmKNF53GD2dPjUUlr2IioWYh5HS/wTnORZellfnu04Kk2zewQvGuk
-         Kpra+pFY6+0LbSt5aIzuTrBKAD1weJI0gpgLdelEgDO/LeUeoUkI+kwV827xCOnoo3n5
-         m4c8iICpKkPWsMqwIOpYu/btWo08a4CN6V31UoN7g1JQrSJFtNp5SYd74G4ECIc94uyd
-         r+Uw==
+        bh=2z5jKKd1kP0MGK92fjPfQhagxUNB4WYrYfTGQCeaJaI=;
+        b=rXMVpie4I6835JSVbDI3sQTxOTKQBd4BFGhjhKZrbphGEySSZzqRSr0qnd2eIKPPo8
+         vdvgA7v/itexM++eH+lQ1NpYal+yPaIg3u7nvqBVXSwIAHraetE+pj0VG571Gd1ofU4T
+         lQ4OnuIdr0s0UjvdY2QwqFNLFQM/L/nOGg+0OUu2+NwqxbNNT0Lj0VRa/y682ZwvHLXW
+         ul72ef0RkEjARu+VTWER4uOHcsqDgoZaCpf3htgZhd/Y86waa6n4Wh18RjCLljM4BiFB
+         CYcVOizz3KjADECUewAdUh8eJgBkdoTnr1ZgD1pFsD2K9jdWnmuQNL4QXal/E9o9apje
+         7Kww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UI0olG8Ukex2VWgAiT/l06nIRGJslLR40+ZHv7ZVUKc=;
-        b=K8cyzcYICi0OOSeh6OeMpz0pbHh2kbE3csN7yHbs0hWM/x7VF8lx4rXZwedu7iyt4h
-         xbzuTmEvSMRQ5hRDZcUpRLmmkwr4KBjcs46w9EBjc9Z4phkGOhOikVStmc+ENwSyJh2n
-         tdFVOSP+CqJ7Nix3CyGFuUEdGpBLZl8spZkxbUst22hfClGfLTtF6FYCJOfB0ic8u5vC
-         wwvszQzKODwIXPiQvEVLEOVqACrwfvyy8pFQ0PVD/hq1XEokQYZe0ZvYcnJv4cRXNLYP
-         GVlXkXE1cpi1dTZeESKs+QDBI7hWPDMnnWwBLt4qSmg4Q4EnxH1ud7MttkHhDWHzZ/bN
-         CEbg==
-X-Gm-Message-State: APjAAAUe+zPWUiZXaeBuEGmvy8VYd/nInxGosEjh6NRxSPl3fNFCYHBK
-        yrAGx4AuCqKjm0m4mD0lYYVstTbQ
-X-Google-Smtp-Source: APXvYqwIILguQViiff3Pti4Cez1bl6U3fwyMu1qvpJl99JqO/PKZcXKhB0sk5rqPaBqdjWso1LIdyA==
-X-Received: by 2002:a7b:c450:: with SMTP id l16mr14913994wmi.166.1578851990392;
-        Sun, 12 Jan 2020 09:59:50 -0800 (PST)
+        bh=2z5jKKd1kP0MGK92fjPfQhagxUNB4WYrYfTGQCeaJaI=;
+        b=hL8POZuczpWDDAddz/SKEF8H75kj+zqRHmZUvo24JDyMrNwCuvKWSoVBb+K7KKZ/8g
+         CS8sJjj1nPrCP3B8RuyVSk6X87PDw8lpw62OPhX6xXGPHBCKfgUeceZfayQsmteG2TjM
+         2dhi8ayMeM4qX7wcuddLSL2vphhOS2r2ssl463h8VO5yh4Vrzagzst3QyESnAU6AWJJM
+         Omx4mnhNIdxgQ33EkPdbDHrTEhQLKOj0yQ5M5a7GUCLLeXyl9QA3dn99kTELe3ykiqnK
+         4csGqNhwZcL8Ywpk66VDhn2cJhXX9NZNFZmIGVjmm2EvDY4ehTrUmZtdC87k1umMHyKL
+         XnCw==
+X-Gm-Message-State: APjAAAWChXJnTT7KLn81ioe1dwYZK5MtBwxw3cP5tj4P8R5x5HSjID2v
+        CtzBlq1NsCNE1lfv9DVDa6xWZ+C8
+X-Google-Smtp-Source: APXvYqzgINU2cjDfDKUuG7UoPCMbyduVF4vZdkmSesEde07NJ1C2f9Pfn0IOeksN6sakxsL/wGRVyA==
+X-Received: by 2002:adf:f5cf:: with SMTP id k15mr14775327wrp.182.1578851991201;
+        Sun, 12 Jan 2020 09:59:51 -0800 (PST)
 Received: from Pali-Latitude.lan (ip-89-103-160-142.net.upcbroadband.cz. [89.103.160.142])
-        by smtp.gmail.com with ESMTPSA id t25sm11076522wmj.19.2020.01.12.09.59.49
+        by smtp.gmail.com with ESMTPSA id t25sm11076522wmj.19.2020.01.12.09.59.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 09:59:49 -0800 (PST)
+        Sun, 12 Jan 2020 09:59:50 -0800 (PST)
 From:   =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jan Kara <jack@suse.cz>
-Subject: [WIP PATCH 3/4] udf: Fix reading minUDFReadRev and minUDFWriteRev from UDF 2.00+ VAT discs
-Date:   Sun, 12 Jan 2020 18:59:32 +0100
-Message-Id: <20200112175933.5259-4-pali.rohar@gmail.com>
+Subject: [WIP PATCH 4/4] udf: Allow to read UDF 2.60 discs
+Date:   Sun, 12 Jan 2020 18:59:33 +0100
+Message-Id: <20200112175933.5259-5-pali.rohar@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200112175933.5259-1-pali.rohar@gmail.com>
 References: <20200112175933.5259-1-pali.rohar@gmail.com>
@@ -74,61 +74,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These two fields are stored in VAT and override previous values stored in
-LVIDIU.
-
-This change contains only implementation for UDF 2.00+. For UDF 1.50 there
-is an optional structure "Logical Volume Extended Information" which is not
-implemented in this change yet.
+Current udf implementation now should be able to properly mount and read
+images with UDF 2.60 revision in R/O mode without any problem.
 
 Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
 ---
- fs/udf/super.c  | 11 ++++++++++-
- fs/udf/udf_sb.h |  2 ++
- 2 files changed, 12 insertions(+), 1 deletion(-)
+ fs/udf/udf_sb.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/udf/super.c b/fs/udf/super.c
-index e8661bf01..0dad63f88 100644
---- a/fs/udf/super.c
-+++ b/fs/udf/super.c
-@@ -1223,6 +1223,10 @@ static int udf_load_vat(struct super_block *sb, int p_index, int type1_index)
- 			le32_to_cpu(vat20->numFiles);
- 		map->s_type_specific.s_virtual.s_num_dirs =
- 			le32_to_cpu(vat20->numDirs);
-+		map->s_type_specific.s_virtual.s_min_udf_read_rev =
-+			le16_to_cpu(vat20->minUDFReadRev);
-+		map->s_type_specific.s_virtual.s_min_udf_write_rev =
-+			le16_to_cpu(vat20->minUDFWriteRev);
- 		map->s_type_specific.s_virtual.s_start_offset =
- 			le16_to_cpu(vat20->lengthHeader);
- 		map->s_type_specific.s_virtual.s_num_entries =
-@@ -2238,7 +2242,12 @@ static int udf_fill_super(struct super_block *sb, void *options, int silent)
- 			goto error_out;
- 		}
- 
--		if (sbi->s_lvd_udfrev >= 0x0102) { /* minUDFReadRev and minUDFWriteRev were introduced in UDF 1.02 */
-+		if ((sbi->s_partmaps[sbi->s_partition].s_partition_type == UDF_VIRTUAL_MAP15 ||
-+		     sbi->s_partmaps[sbi->s_partition].s_partition_type == UDF_VIRTUAL_MAP20) &&
-+		     sbi->s_partmaps[sbi->s_partition].s_type_specific.s_virtual.s_has_additional_data) {
-+			minUDFReadRev = sbi->s_partmaps[sbi->s_partition].s_type_specific.s_virtual.s_min_udf_read_rev;
-+			minUDFWriteRev = sbi->s_partmaps[sbi->s_partition].s_type_specific.s_virtual.s_min_udf_write_rev;
-+		} else if (sbi->s_lvd_udfrev >= 0x0102) { /* minUDFReadRev and minUDFWriteRev were introduced in UDF 1.02 */
- 			minUDFReadRev = le16_to_cpu(lvidiu->minUDFReadRev);
- 			minUDFWriteRev = le16_to_cpu(lvidiu->minUDFWriteRev);
- 		} else {
 diff --git a/fs/udf/udf_sb.h b/fs/udf/udf_sb.h
-index c74abbc84..baac0357b 100644
+index baac0357b..be8cb9f3b 100644
 --- a/fs/udf/udf_sb.h
 +++ b/fs/udf/udf_sb.h
-@@ -81,6 +81,8 @@ struct udf_virtual_data {
- 	bool	s_has_additional_data;
- 	__u32	s_num_files;
- 	__u32	s_num_dirs;
-+	__u16	s_min_udf_read_rev;
-+	__u16	s_min_udf_write_rev;
- };
+@@ -6,7 +6,7 @@
+ #include <linux/bitops.h>
+ #include <linux/magic.h>
  
- struct udf_bitmap {
+-#define UDF_MAX_READ_VERSION		0x0250
++#define UDF_MAX_READ_VERSION		0x0260
+ #define UDF_MAX_WRITE_VERSION		0x0201
+ 
+ #define UDF_FLAG_USE_EXTENDED_FE	0
 -- 
 2.20.1
 
