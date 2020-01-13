@@ -2,160 +2,126 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A6CC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 600D4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4482721569
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578914476;
-	bh=MacVSu0STCJHhHc0ljONo5y6xoV7nal96sORZMm0SSc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Nh9gw8z4ZazD1Pkg+AnSxtvS+vVg9m4QaYlv9yPHINVq/BZHSdSm+6yKJMWl+dNQp
-	 TWSDn26HT77A7gUbgPkNWTh1sSuwo/BPJBwAMmYOnR4dyFnkeYGWbYvsX0FUyVLhZw
-	 fFTi3HCFDqxDLEeX+8vwdKmWh2Na7pEzRb68XZFI=
+	by mail.kernel.org (Postfix) with ESMTP id 4195620661
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:22:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728779AbgAMLVP (ORCPT
+        id S1728721AbgAMLWG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:21:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51056 "EHLO mail.kernel.org"
+        Mon, 13 Jan 2020 06:22:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:38004 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgAMLVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:21:14 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9C962081E;
-        Mon, 13 Jan 2020 11:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578914472;
-        bh=MacVSu0STCJHhHc0ljONo5y6xoV7nal96sORZMm0SSc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=arrIa/WEpFeLMrHb//HLi36Tu08TB6YjYA8H+g4g+xc4jaJ8j4yheAtFN9FfH3HTH
-         Xtvpvb7DQQV57PNFlCG/Dy2IywB5ZQPZ1qsVvoik8KhBkjLGzzONiHH9bZTNOkALRE
-         lobe4VzuZIKnbUV0n1Xb0KTEfKzVSFsEccDNleEA=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1iqxmR-000307-1i; Mon, 13 Jan 2020 11:21:11 +0000
+        id S1726127AbgAMLWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 06:22:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C31E013D5;
+        Mon, 13 Jan 2020 03:22:04 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0499C3F6C4;
+        Mon, 13 Jan 2020 03:22:04 -0800 (PST)
+Date:   Mon, 13 Jan 2020 11:22:02 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv9 06/12] PCI: mobiveil: Add callback function for link up
+ check
+Message-ID: <20200113112201.GL42593@e119886-lin.cambridge.arm.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <20191120034451.30102-7-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 13 Jan 2020 11:21:11 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jianyong Wu <Jianyong.Wu@arm.com>
-Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, richardcochran@gmail.com,
-        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [RFC PATCH v9 7/8] ptp: arm64: Enable ptp_kvm for arm64
-In-Reply-To: <HE1PR0801MB16765F2905CD0F381E33AD9EF4350@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-References: <20191210034026.45229-1-jianyong.wu@arm.com>
- <20191210034026.45229-8-jianyong.wu@arm.com>
- <ca162efb3a0de530e119f5237c006515@kernel.org>
- <HE1PR0801MB1676EE12CF0DB7C5BB8CC62DF4390@HE1PR0801MB1676.eurprd08.prod.outlook.com>
- <ee801dacbf4143e8d41807d5bfad1409@kernel.org>
- <HE1PR0801MB16765B52E5DCD8EA480EDABFF4380@HE1PR0801MB1676.eurprd08.prod.outlook.com>
- <a85deebc23c1fa77e6f70b6eaef22a34@kernel.org>
- <HE1PR0801MB16765F2905CD0F381E33AD9EF4350@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-Message-ID: <a65143199c03230c74cb456586f75627@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com, Justin.He@arm.com, nd@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120034451.30102-7-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-13 10:37, Jianyong Wu wrote:
-> Hi Marc,
+On Wed, Nov 20, 2019 at 03:45:57AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
->> -----Original Message-----
->> From: Marc Zyngier <maz@kernel.org>
->> Sent: Friday, January 10, 2020 6:35 PM
->> To: Jianyong Wu <Jianyong.Wu@arm.com>
->> Cc: netdev@vger.kernel.org; yangbo.lu@nxp.com; john.stultz@linaro.org;
->> tglx@linutronix.de; pbonzini@redhat.com; 
->> sean.j.christopherson@intel.com;
->> richardcochran@gmail.com; Mark Rutland <Mark.Rutland@arm.com>;
->> will@kernel.org; Suzuki Poulose <Suzuki.Poulose@arm.com>; Steven Price
->> <Steven.Price@arm.com>; linux-kernel@vger.kernel.org; linux-arm-
->> kernel@lists.infradead.org; kvmarm@lists.cs.columbia.edu;
->> kvm@vger.kernel.org; Steve Capper <Steve.Capper@arm.com>; Kaly Xin
->> <Kaly.Xin@arm.com>; Justin He <Justin.He@arm.com>; nd <nd@arm.com>
->> Subject: Re: [RFC PATCH v9 7/8] ptp: arm64: Enable ptp_kvm for arm64
->> 
->> Hi Jianyong,
->> 
->> On 2020-01-10 10:15, Jianyong Wu wrote:
->> > Hi Marc,
->> 
->> [...]
->> 
->> >> >> > +	ktime_overall = hvc_res.a0 << 32 | hvc_res.a1;
->> >> >> > +	*ts = ktime_to_timespec64(ktime_overall);
->> >> >> > +	*cycle = hvc_res.a2 << 32 | hvc_res.a3;
->> >> >>
->> >> >> So why isn't that just a read of the virtual counter, given that
->> >> >> what you do in the hypervisor seems to be "cntpct - cntvoff"?
->> >> >>
->> >> >> What am I missing here?
->> >> >>
->> >> > We need get clock time and counter cycle at the same time, so we
->> >> > can't just read virtual counter at guest and must get it from host.
->> >>
->> >> See my comment in my reply to patch #6: *Must* seems like a very
->> >> strong word, and you don't explain *why* that's better than just
->> >> computing the total hypercall cost. Hint: given the frequency of the
->> >> counter (in the few MHz
->> >> range) vs the frequency of a CPU (in the multiple GHz range, and with
->> >> an IPC close enough to 1), I doubt that you'll see the counter making
->> >> much progress across a hypercall.
->> >>
->> > Sorry, I will avoid to use those strong words.
->> >
->> > It's really the case that the hypercall won't across cycle in general.
->> > But sometimes, kernel preempt
->> > may happen in the middle of the hypercall which we can't assume how
->> > long before schedule back. so it's better capture them together at the
->> > same time.
->> 
->> Fair enough. Please document the rational, as I guess others will ask 
->> the
->> same questions.
->> 
-> Ok
+> The platforms, in which the Mobiveil GPEX is integrated,
+> may have their specific mechanism to check link up status.
+> This patch is to enable these platforms to implement theirs.
 > 
->> Then the problem to solve is that of the reference counter, as you so 
->> far
->> assume the virtual counter. I guess you need to be able to let the 
->> guest
->> select the reference counter when calling the PTP service.
->> 
-> I could not come up with an idea about the point where the guest give
-> this info of counter value.
-> Where we give that interface to ptp service, as it's not a user space
-> application.
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> V9:
+>  - New patch splited from the #1 of V8 patches to make it easy to review.
+> 
+>  drivers/pci/controller/mobiveil/pcie-mobiveil.c | 3 +++
+>  drivers/pci/controller/mobiveil/pcie-mobiveil.h | 5 +++++
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.c b/drivers/pci/controller/mobiveil/pcie-mobiveil.c
+> index 2773f823c9ea..b9ed2d95641c 100644
+> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.c
+> @@ -125,6 +125,9 @@ void mobiveil_csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off,
+>  
+>  bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
+>  {
+> +	if (pcie->ops->link_up)
+> +		return pcie->ops->link_up(pcie);
+> +
+>  	return (mobiveil_csr_readl(pcie, LTSSM_STATUS) &
+>  		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
 
-Again: why don't you let the guest ask for the counter it wants as part
-of the SMC call? What is preventing this?
+On the previous patch I suggested that we don't mix up the link_up logic
+with the logic that decides which function to call. In this case the link_up
+logic is trivial. So this is probably OK.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+
+>  }
+> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> index 18d85806a7fc..95d2e7c809b8 100644
+> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> @@ -148,6 +148,10 @@ struct root_port {
+>  	struct pci_host_bridge *bridge;
+>  };
+>  
+> +struct mobiveil_pab_ops {
+> +	int (*link_up)(struct mobiveil_pcie *pcie);
+> +};
+> +
+>  struct mobiveil_pcie {
+>  	struct platform_device *pdev;
+>  	void __iomem *csr_axi_slave_base;	/* root port config base */
+> @@ -157,6 +161,7 @@ struct mobiveil_pcie {
+>  	int ppio_wins;
+>  	int ob_wins_configured;		/* configured outbound windows */
+>  	int ib_wins_configured;		/* configured inbound windows */
+> +	const struct mobiveil_pab_ops *ops;
+>  	struct root_port rp;
+>  };
+>  
+> -- 
+> 2.17.1
+> 
