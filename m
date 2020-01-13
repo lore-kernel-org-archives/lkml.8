@@ -2,35 +2,34 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7231C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B493C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A575A20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C508920661
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbgAMN4m (ORCPT
+        id S1729015AbgAMN4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:56:42 -0500
-Received: from mga11.intel.com ([192.55.52.93]:54632 "EHLO mga11.intel.com"
+        Mon, 13 Jan 2020 08:56:46 -0500
+Received: from mga11.intel.com ([192.55.52.93]:54638 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728884AbgAMN4e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:56:34 -0500
+        id S1728890AbgAMN4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:56:37 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:56:33 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:56:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
-   d="scan'208";a="372269005"
+   d="scan'208";a="422812841"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga004.jf.intel.com with ESMTP; 13 Jan 2020 05:56:29 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 13 Jan 2020 05:56:33 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 45709492; Mon, 13 Jan 2020 15:56:24 +0200 (EET)
+        id A520A649; Mon, 13 Jan 2020 15:56:24 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -46,9 +45,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 05/36] platform/x86: intel_scu_ipc: Drop intel_scu_ipc_i2c_cntrl()
-Date:   Mon, 13 Jan 2020 16:55:52 +0300
-Message-Id: <20200113135623.56286-6-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 15/36] platform/x86: intel_mid_powerbtn: Convert to use new SCU IPC API
+Date:   Mon, 13 Jan 2020 16:56:02 +0300
+Message-Id: <20200113135623.56286-16-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
 References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
@@ -59,139 +58,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no existing users for this functionality so drop it from the
-driver completely.
+This converts the power button driver to use the new SCU IPC API where
+the SCU IPC instance is passed to the functions.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_scu_ipc.h |  3 --
- drivers/platform/x86/intel_scu_ipc.c | 62 ----------------------------
- 2 files changed, 65 deletions(-)
+ drivers/platform/x86/intel_mid_powerbtn.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
-index 4a8c6e817398..d7bbebf4b729 100644
---- a/arch/x86/include/asm/intel_scu_ipc.h
-+++ b/arch/x86/include/asm/intel_scu_ipc.h
-@@ -53,9 +53,6 @@ int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
- int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
- 			      u32 *out, int outlen, u32 dptr, u32 sptr);
- 
--/* I2C control api */
--int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data);
--
- /* Update FW version */
- int intel_scu_ipc_fw_update(u8 *buffer, u32 length);
- 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index 6c44fe5e55b5..b39680b53387 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -64,28 +64,21 @@
- 
- /* intel scu ipc driver data */
- struct intel_scu_ipc_pdata_t {
--	u32 i2c_base;
--	u32 i2c_len;
- 	u8 irq_mode;
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 6f436836fe50..1fdcdef1d89f 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -46,6 +46,7 @@ struct mid_pb_ddata {
+ 	unsigned short mirqlvl1_addr;
+ 	unsigned short pbstat_addr;
+ 	u8 pbstat_mask;
++	struct intel_scu_ipc_dev *scu;
+ 	int (*setup)(struct mid_pb_ddata *ddata);
  };
  
- /* Penwell and Cloverview */
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
--	.i2c_base = 0xff12b000,
--	.i2c_len = 0x10,
- 	.irq_mode = 1,
- };
+@@ -55,7 +56,8 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
+ 	int ret;
+ 	u8 pbstat;
  
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
--	.i2c_base  = 0xff00d000,
--	.i2c_len = 0x10,
- 	.irq_mode = 0,
- };
+-	ret = intel_scu_ipc_ioread8(ddata->pbstat_addr, &pbstat);
++	ret = intel_scu_ipc_dev_ioread8(ddata->scu, ddata->pbstat_addr,
++					&pbstat);
+ 	if (ret)
+ 		return ret;
  
- struct intel_scu_ipc_dev {
- 	struct device *dev;
- 	void __iomem *ipc_base;
--	void __iomem *i2c_base;
- 	struct completion cmd_complete;
- 	u8 irq_mode;
- };
-@@ -103,9 +96,6 @@ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
- #define IPC_WRITE_BUFFER	0x80
- #define IPC_READ_BUFFER		0x90
+@@ -67,14 +69,15 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
  
--#define IPC_I2C_CNTRL_ADDR	0
--#define I2C_DATA_ADDR		0x04
--
- static DEFINE_MUTEX(ipclock); /* lock used to prevent multiple call to SCU */
- 
- /*
-@@ -549,54 +539,6 @@ int intel_scu_ipc_raw_command(int cmd, int sub, u8 *in, int inlen,
+ static int mid_irq_ack(struct mid_pb_ddata *ddata)
+ {
+-	return intel_scu_ipc_update_register(ddata->mirqlvl1_addr, 0, MSIC_PWRBTNM);
++	return intel_scu_ipc_dev_update(ddata->scu, ddata->mirqlvl1_addr, 0,
++					MSIC_PWRBTNM);
  }
- EXPORT_SYMBOL_GPL(intel_scu_ipc_raw_command);
  
--/* I2C commands */
--#define IPC_I2C_WRITE 1 /* I2C Write command */
--#define IPC_I2C_READ  2 /* I2C Read command */
--
--/**
-- *	intel_scu_ipc_i2c_cntrl		-	I2C read/write operations
-- *	@addr: I2C address + command bits
-- *	@data: data to read/write
-- *
-- *	Perform an an I2C read/write operation via the SCU. All locking is
-- *	handled for the caller. This function may sleep.
-- *
-- *	Returns an error code or 0 on success.
-- *
-- *	This has to be in the IPC driver for the locking.
-- */
--int intel_scu_ipc_i2c_cntrl(u32 addr, u32 *data)
--{
--	struct intel_scu_ipc_dev *scu = &ipcdev;
--	u32 cmd = 0;
--
--	mutex_lock(&ipclock);
--	if (scu->dev == NULL) {
--		mutex_unlock(&ipclock);
--		return -ENODEV;
--	}
--	cmd = (addr >> 24) & 0xFF;
--	if (cmd == IPC_I2C_READ) {
--		writel(addr, scu->i2c_base + IPC_I2C_CNTRL_ADDR);
--		/* Write not getting updated without delay */
--		usleep_range(1000, 2000);
--		*data = readl(scu->i2c_base + I2C_DATA_ADDR);
--	} else if (cmd == IPC_I2C_WRITE) {
--		writel(*data, scu->i2c_base + I2C_DATA_ADDR);
--		usleep_range(1000, 2000);
--		writel(addr, scu->i2c_base + IPC_I2C_CNTRL_ADDR);
--	} else {
--		dev_err(scu->dev,
--			"intel_scu_ipc: I2C INVALID_CMD = 0x%x\n", cmd);
--
--		mutex_unlock(&ipclock);
--		return -EIO;
--	}
--	mutex_unlock(&ipclock);
--	return 0;
--}
--EXPORT_SYMBOL(intel_scu_ipc_i2c_cntrl);
--
- /*
-  * Interrupt handler gets called when ioc bit of IPC_COMMAND_REG set to 1
-  * When ioc bit is set to 1, caller api must wait for interrupt handler called
-@@ -649,10 +591,6 @@ static int ipc_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ static int mrfld_setup(struct mid_pb_ddata *ddata)
+ {
+ 	/* Unmask the PBIRQ and MPBIRQ on Tangier */
+-	intel_scu_ipc_update_register(BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
+-	intel_scu_ipc_update_register(BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
++	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
  
- 	scu->ipc_base = pcim_iomap_table(pdev)[0];
+ 	return 0;
+ }
+@@ -161,6 +164,10 @@ static int mid_pb_probe(struct platform_device *pdev)
+ 			return error;
+ 	}
  
--	scu->i2c_base = ioremap_nocache(pdata->i2c_base, pdata->i2c_len);
--	if (!scu->i2c_base)
--		return -ENOMEM;
--
- 	err = devm_request_irq(&pdev->dev, pdev->irq, ioc, 0, "intel_scu_ipc",
- 			       scu);
- 	if (err)
++	ddata->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
++	if (!ddata->scu)
++		return -EPROBE_DEFER;
++
+ 	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mid_pb_isr,
+ 					  IRQF_ONESHOT, DRIVER_NAME, ddata);
+ 	if (error) {
 -- 
 2.24.1
 
