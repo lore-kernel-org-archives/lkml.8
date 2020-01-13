@@ -2,91 +2,172 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 196AFC33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB6DC33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF830206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:47:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="RNzqCJVX"
+	by mail.kernel.org (Postfix) with ESMTP id 1AF20206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:48:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387464AbgAMDri (ORCPT
+        id S2387489AbgAMDsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 22:47:38 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39596 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387415AbgAMDrh (ORCPT
+        Sun, 12 Jan 2020 22:48:35 -0500
+Received: from lucky1.263xmail.com ([211.157.147.133]:38606 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387415AbgAMDse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 22:47:37 -0500
-Received: by mail-qk1-f193.google.com with SMTP id c16so7335141qko.6
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 19:47:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PExcPvgc6/JC2Ar9r1T4zc/h/pcxxQjdKuFy6nmEZXA=;
-        b=RNzqCJVXNNXnDMN6b2ESf+l0CbgcBiNVVqy/jcbHWp4q7ss6+YegoHwonWgZVonmJE
-         xfxi80gDEphZex+Be31dwvw7XppRkdyV0BKleW0GJzFQwurx7CvVMjjGPuUF1nVebsA9
-         NO1g94A6EmTb49KTIKSsx5OlZxw+D6aGe+fNUy9UhbWMx+SROFAHh/SfuVdZnPQ4u+QK
-         op2q97Tv3KwEkrQ37cyrMWJupZvcD672iBNR8voCr6PmOOLuu2G2nUU2Zd3zDumFHzpA
-         CbLlMm0BljoC+VQ0S9Ts+N1TNp0UEsWRWatnQmg7qHO4GyoffUjVD4H8BPVps1y7wAqA
-         GhwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PExcPvgc6/JC2Ar9r1T4zc/h/pcxxQjdKuFy6nmEZXA=;
-        b=Kr+WoI46bkkfE0+3JD5iXYR6xJln7su7Yc7uIyRTHt/YILNncLEzxkhi8x5coRbiJm
-         +W5q0ZSFQZUg5t63OtE/5BYHPjOdndZ1IiJcxvIKL1LwvBOq/V4ZZPXpe3dwhfc6kOH4
-         c0T0byW0Oyu0rvdwy6Ji/T900RRYzNMTcn9Y0LcCL6NTE0CtMKOAvWNIe7AE7VcUc26p
-         Q2NXWpHNeQESFRQYVLQEIFWI7RvKmoB/Pd96/Rktn3iJCcAFIBmHYosrd45RVbXnPDr4
-         Svg2RkxzKQmy8Xtly5RbiWf8pwxbxlfBs9PmH/+lLKWRMLerlACowJYIU88IujiZBAmO
-         IFeg==
-X-Gm-Message-State: APjAAAWtV+EfP0Gfby4vMSwbYWpaTwQX+1CaAriBjUVjThaEgP4MUnpQ
-        aIjpqFE0n5vYgFbp8BcgHo9mE/y+ciY83z8ipCKn2w==
-X-Google-Smtp-Source: APXvYqwxW6CiHtKx7wgAErCRRHPqiIgBTAMd69XAKg2ZAirZnO7V/RhS3zO7gBXaEoC5wEj5wU+tEYpD5aTQgQa0ASs=
-X-Received: by 2002:a37:9ec2:: with SMTP id h185mr14185032qke.14.1578887256821;
- Sun, 12 Jan 2020 19:47:36 -0800 (PST)
-MIME-Version: 1.0
-References: <20191230083044.11582-1-jian-hong@endlessm.com> <CAD8Lp45Le=s=1Q9oi0JCJTPepNmX002hK7W6UwKztTq09QBUgw@mail.gmail.com>
-In-Reply-To: <CAD8Lp45Le=s=1Q9oi0JCJTPepNmX002hK7W6UwKztTq09QBUgw@mail.gmail.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Mon, 13 Jan 2020 11:47:25 +0800
-Message-ID: <CAD8Lp44Vd6Moi+UmbdZDsQx-e_CHoHbgtZHpf8sV_yuHwzRrBA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: asus-wmi: Fix keyboard brightness cannot be
- set to 0
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     Corentin Chary <corentin.chary@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>,
-        nweibley@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 12 Jan 2020 22:48:34 -0500
+Received: from localhost (unknown [192.168.167.235])
+        by lucky1.263xmail.com (Postfix) with ESMTP id CD0458AA05;
+        Mon, 13 Jan 2020 11:48:28 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost (unknown [103.29.142.67])
+        by smtp.263.net (postfix) whith ESMTP id P25811T139966185199360S1578887298528581_;
+        Mon, 13 Jan 2020 11:48:28 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <a46402c84bd3a5dcc572e49ce2c0273b>
+X-RL-SENDER: jeffy.chen@rock-chips.com
+X-SENDER: cjf@rock-chips.com
+X-LOGIN-NAME: jeffy.chen@rock-chips.com
+X-FST-TO: linux-kernel@vger.kernel.org
+X-SENDER-IP: 103.29.142.67
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+From:   Jeffy Chen <jeffy.chen@rock-chips.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Heiko Stuebner <heiko@sntech.de>,
+        Brian Norris <briannorris@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Douglas Anderson <dianders@chromium.org>, sudeep.holla@arm.com,
+        Marc Zyngier <marc.zyngier@arm.com>, dietmar.eggemann@arm.com,
+        Jeffy Chen <jeffy.chen@rock-chips.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: [PATCH v2] arch_topology: Adjust initial CPU capacities with current freq
+Date:   Mon, 13 Jan 2020 11:48:15 +0800
+Message-Id: <20200113034815.25924-1-jeffy.chen@rock-chips.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 2:53 PM Daniel Drake <drake@endlessm.com> wrote:
-> Here, writing 0x80 to turn off the keyboard LED will result in an
-> additional WRAM(0x9f0, 0) call that was not there before. I think we
-> should double check this detail.
->
-> Let's see if we can borrow one of the affected models and double check
-> this patch there before proceeding. I'll follow up internally.
+The CPU freqs are not supposed to change before cpufreq policies
+properly registered, meaning that they should be used to calculate the
+initial CPU capacities.
 
-Asus were unable to find a product sample with the affected behaviour.
-They did provide us with one from the list I had made, but with a
-newer BIOS version where that behaviour has been eliminated. They also
-advised that always setting bit 7 is the way they do it on Windows. So
-I don't think we have the opportunity for extra verification, but it
-should be safe.
+Doing this helps choosing the best CPU during early boot, especially
+for the initramfs decompressing.
 
-Reviewed-by: Daniel Drake <drake@endlessm.com>
+There's no functional changes for non-clk CPU DVFS mechanism.
+
+Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+---
+
+Changes in v2:
+Fix u64 div compile error on 32-bit platforms, and be compatible with
+non-clk CPU DVFS mechanism.
+
+ drivers/base/arch_topology.c | 40 ++++++++++++++++++++++++++++------------
+ 1 file changed, 28 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+index 1eb81f113786..54a48dfafd2f 100644
+--- a/drivers/base/arch_topology.c
++++ b/drivers/base/arch_topology.c
+@@ -94,7 +94,7 @@ static void update_topology_flags_workfn(struct work_struct *work)
+ 	update_topology = 0;
+ }
+ 
+-static u32 capacity_scale;
++static DEFINE_PER_CPU(u32, freq_factor) = 1;
+ static u32 *raw_capacity;
+ 
+ static int free_raw_capacity(void)
+@@ -108,17 +108,23 @@ static int free_raw_capacity(void)
+ void topology_normalize_cpu_scale(void)
+ {
+ 	u64 capacity;
++	u64 capacity_scale;
+ 	int cpu;
+ 
+ 	if (!raw_capacity)
+ 		return;
+ 
+-	pr_debug("cpu_capacity: capacity_scale=%u\n", capacity_scale);
++	capacity_scale = 1;
+ 	for_each_possible_cpu(cpu) {
+-		pr_debug("cpu_capacity: cpu=%d raw_capacity=%u\n",
+-			 cpu, raw_capacity[cpu]);
+-		capacity = (raw_capacity[cpu] << SCHED_CAPACITY_SHIFT)
+-			/ capacity_scale;
++		capacity = raw_capacity[cpu] * per_cpu(freq_factor, cpu);
++		capacity_scale = max(capacity, capacity_scale);
++	}
++
++	pr_debug("cpu_capacity: capacity_scale=%llu\n", capacity_scale);
++	for_each_possible_cpu(cpu) {
++		capacity = raw_capacity[cpu] * per_cpu(freq_factor, cpu);
++		capacity = div64_u64(capacity << SCHED_CAPACITY_SHIFT,
++			capacity_scale);
+ 		topology_set_cpu_scale(cpu, capacity);
+ 		pr_debug("cpu_capacity: CPU%d cpu_capacity=%lu\n",
+ 			cpu, topology_get_cpu_scale(cpu));
+@@ -127,6 +133,7 @@ void topology_normalize_cpu_scale(void)
+ 
+ bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
+ {
++	struct clk *cpu_clk;
+ 	static bool cap_parsing_failed;
+ 	int ret;
+ 	u32 cpu_capacity;
+@@ -146,10 +153,22 @@ bool __init topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu)
+ 				return false;
+ 			}
+ 		}
+-		capacity_scale = max(cpu_capacity, capacity_scale);
+ 		raw_capacity[cpu] = cpu_capacity;
+ 		pr_debug("cpu_capacity: %pOF cpu_capacity=%u (raw)\n",
+ 			cpu_node, raw_capacity[cpu]);
++
++		/*
++		 * Update freq_factor for calculating early boot cpu capacities.
++		 * For non-clk CPU DVFS mechanism, there's no way to get the
++		 * frequency value now, assuming they are running at the same
++		 * frequency (by keeping the initial freq_factor value).
++		 */
++		cpu_clk = of_clk_get(cpu_node, 0);
++		if (!PTR_ERR_OR_ZERO(cpu_clk))
++			per_cpu(freq_factor, cpu) =
++				clk_get_rate(cpu_clk) / 1000;
++
++		clk_put(cpu_clk);
+ 	} else {
+ 		if (raw_capacity) {
+ 			pr_err("cpu_capacity: missing %pOF raw capacity\n",
+@@ -188,11 +207,8 @@ init_cpu_capacity_callback(struct notifier_block *nb,
+ 
+ 	cpumask_andnot(cpus_to_visit, cpus_to_visit, policy->related_cpus);
+ 
+-	for_each_cpu(cpu, policy->related_cpus) {
+-		raw_capacity[cpu] = topology_get_cpu_scale(cpu) *
+-				    policy->cpuinfo.max_freq / 1000UL;
+-		capacity_scale = max(raw_capacity[cpu], capacity_scale);
+-	}
++	for_each_cpu(cpu, policy->related_cpus)
++		per_cpu(freq_factor, cpu) = policy->cpuinfo.max_freq / 1000;
+ 
+ 	if (cpumask_empty(cpus_to_visit)) {
+ 		topology_normalize_cpu_scale();
+-- 
+2.11.0
+
+
+
