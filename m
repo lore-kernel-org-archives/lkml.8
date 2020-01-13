@@ -2,178 +2,102 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC71C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C851C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAEF624656
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF4021556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:44:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578944687;
+	bh=iB8vGfDlaHIUZ2AV2rd53ZOdGWj2rHs6LWJYKBYRW+k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tn7UTGzA9ykluCtD5SpDRiGxCqtX9p9eI9hH0fQ3y4rBNhq2j1LW7OnM1njNZBJeo
+	 x/tMZid2XIY/enpv33uQ3YHuxRs71/X8qhHBU9XnVOb1fZX/3J0ZQwwfmxCo0ADzCz
+	 7ayuEx8oZmLJkodZtiXJ+2SCnnOuNkV0DeWtsknM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbgAMTeM (ORCPT
+        id S1728731AbgAMToq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:34:12 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:36889 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbgAMTeL (ORCPT
+        Mon, 13 Jan 2020 14:44:46 -0500
+Received: from mail-lj1-f177.google.com ([209.85.208.177]:35892 "EHLO
+        mail-lj1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728516AbgAMTop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:34:11 -0500
-Received: by mail-io1-f70.google.com with SMTP id t70so6475091iof.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 11:34:11 -0800 (PST)
+        Mon, 13 Jan 2020 14:44:45 -0500
+Received: by mail-lj1-f177.google.com with SMTP id r19so11512737ljg.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 11:44:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wPAvecB831XwECXLNHT/jipdJ8QCTyIHynNy8tewQr4=;
+        b=FK0vItQAusk78N59VNKD5q6yeGqREAJio/AJqlKLNDwM1HMi9cvpnSNBm4zX3mh+ce
+         7RXDwy4PHImlGjWKKoyeDH13SoA8NaJMAIEvXv3vHkgB93VujlAZhkGJOUJSQrNxvDxs
+         8UBoCzWU2Dt7Re03GPBHR2VRz7rgkGuTbXhR4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=iKgXkUUifDTHe1wYti7XokONx9JjbAC539M6HstQB/k=;
-        b=sZz0+05SJO/8iEyyN+g3l+SLJz4ljPV227/CiyTt2sT5qIYEmpGp2uelpEYWQ762OV
-         C85xzGlGehtTiVLjtrM76p5so2gLYTH6/tLyszVZgSZTIkZagCP+QoBF0j7PZWB4bp6x
-         yQUjtFNpgiy5EHNulsbiFjFNJwNI+fC6oV3B/g++b4V81XwB1+6lmJpFudaMFCUGFSwe
-         kaoSm4wePQoB6bpkp5oFiuEpW0Df+GTZZQxExxXKXRxe0RAbun6Mxj+y/sfFM2cgQieH
-         B9Ya9252N4g10lPooqikUugUbn3rvLvDY1QUxL+a/5RjVcDqZVuMQ7lEcC2zRple2IA3
-         vncw==
-X-Gm-Message-State: APjAAAUDkZVUR33+FXFGKtplguQ9lupcHtivVzDGhtSREP7vkUDvCxNq
-        1ucLGKC5gjI9oIsi6QtwnFOskkf5HCNQ5RVifjDnM6EwJeDZ
-X-Google-Smtp-Source: APXvYqzaNcVpE7dne1l1ihiEgfr6Zy2LxQzVYEVdovLQ5xW8OKaJwY513n5SHhDdl21ILG0FBwo9bbP7vlQ9sXE0LfOo+H5i3o5w
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wPAvecB831XwECXLNHT/jipdJ8QCTyIHynNy8tewQr4=;
+        b=oOde9j/J9cbIw7hkm3M4WEMfeoJ9zhYBembqW4x+N9SoVet0wB6QKD0gMcXSLYd3+W
+         MHbRWzUteN1ml1NZ9AaHZW19fuqMgDS9NgSXYbLhZ8ta+ozWg0oSlikoqiFS5NSE/zrf
+         e6iOQyIBHw1OK2Y1uwttT9FUTUjZ7Jh/uo2eosPYaZDOqcZaCihZUQQkZJbkbjYL7B4P
+         MpQFxIJj/XGmx0BPvGqVp5Z2h4kMiNIxq20bGYVsxIde5zXCDsuRsRGYqxSPHL51zea/
+         nt7zkoiFAk8E7ei/fmPltRY1xG/YuYhXE1MP7zCdN+qDDrM97HD98rQx9VfNpzyoA02y
+         0YaQ==
+X-Gm-Message-State: APjAAAXtgqOqdBpNEFmIMMVt31VlGZIbDjDKZ2BiLxhvG3y1A0qNf1dV
+        KQzuZ3/E3XixkTuhc9XzCOeDN8TdxHM=
+X-Google-Smtp-Source: APXvYqy1PYrpOqEV7nbVwrXX+JAgZdMNuqmyT6SYora4oDD3qZRo5s3/KjvtUXHH13mRkuaRGusp0Q==
+X-Received: by 2002:a05:651c:30a:: with SMTP id a10mr11698736ljp.101.1578944683321;
+        Mon, 13 Jan 2020 11:44:43 -0800 (PST)
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com. [209.85.167.47])
+        by smtp.gmail.com with ESMTPSA id y7sm6130427lfe.7.2020.01.13.11.44.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 11:44:42 -0800 (PST)
+Received: by mail-lf1-f47.google.com with SMTP id r14so7820058lfm.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 11:44:42 -0800 (PST)
+X-Received: by 2002:a19:22cc:: with SMTP id i195mr10887464lfi.148.1578944681789;
+ Mon, 13 Jan 2020 11:44:41 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6e06:: with SMTP id d6mr13077449ioh.95.1578944051034;
- Mon, 13 Jan 2020 11:34:11 -0800 (PST)
-Date:   Mon, 13 Jan 2020 11:34:11 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000048427b059c0a8f9d@google.com>
-Subject: WARNING: locking bug in finish_task_switch
-From:   syzbot <syzbot+edec84a8b77e5a0cae31@syzkaller.appspotmail.com>
-To:     coreteam@netfilter.org, davem@davemloft.net,
-        johan.hedberg@gmail.com, kaber@trash.net, kadlec@blackhole.kfki.hu,
-        kernel@stlinux.com, linux-arm-kernel@lists.infradead.org,
-        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, marcel@holtmann.org,
-        mchehab@kernel.org, mchehab@s-opensource.com,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        pablo@netfilter.org, patrice.chotard@st.com,
-        peter.griffin@linaro.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
+ <20200113154739.GB11244@42.do-not-panic.com>
+In-Reply-To: <20200113154739.GB11244@42.do-not-panic.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 13 Jan 2020 11:44:25 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wja2GChi_JBu0xBkQ96mqXC3TMKUp=YvRhgPy0+1m5YNw@mail.gmail.com>
+Message-ID: <CAHk-=wja2GChi_JBu0xBkQ96mqXC3TMKUp=YvRhgPy0+1m5YNw@mail.gmail.com>
+Subject: Re: Fix built-in early-load Intel microcode alignment
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Jari Ruusu <jari.ruusu@gmail.com>, Borislav Petkov <bp@alien8.de>,
+        Fenghua Yu <fenghua.yu@intel.com>, johannes.berg@intel.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, Jan 13, 2020 at 7:47 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+>
+> So I'd like to determine first if we really need this. Then if so,
+> either add a new global config option, and worst comes to worst
+> figure out a way to do it per driver. I don't think we'd need it
+> per driver.
 
-syzbot found the following crash on:
+I really don't think we need to have a config option for some small
+alignment. Increasing the alignment unconditionally to 16 bytes won't
+hurt anybody.
 
-HEAD commit:    6c09d7db Add linux-next specific files for 20200110
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=150b6a9ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7dc7ab9739654fbe
-dashboard link: https://syzkaller.appspot.com/bug?extid=edec84a8b77e5a0cae31
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d005e1e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1527b6aee00000
+Now, whether there might be other firmware loaders that need even more
+alignment, that might be an interesting question, and if such an
+alignment would be _huge_ we might want to worry about actual memory
+waste.
 
-The bug was bisected to:
+But 16-byte alignment for a fw blob? That's nothing.
 
-commit 7152c88e556bcbee525689063c260cd296f295a8
-Author: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Date:   Tue Oct 18 19:44:11 2016 +0000
-
-     [media] c8sectpfe: don't break long lines
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10930c21e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12930c21e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14930c21e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+edec84a8b77e5a0cae31@syzkaller.appspotmail.com
-Fixes: 7152c88e556b ("[media] c8sectpfe: don't break long lines")
-
-------------[ cut here ]------------
-DEBUG_LOCKS_WARN_ON(1)
-WARNING: CPU: 1 PID: 9970 at kernel/locking/lockdep.c:167 hlock_class  
-kernel/locking/lockdep.c:167 [inline]
-WARNING: CPU: 1 PID: 9970 at kernel/locking/lockdep.c:167 hlock_class  
-kernel/locking/lockdep.c:156 [inline]
-WARNING: CPU: 1 PID: 9970 at kernel/locking/lockdep.c:167  
-__lock_acquire+0x21dd/0x4a00 kernel/locking/lockdep.c:3950
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 9970 Comm: syz-executor719 Not tainted  
-5.5.0-rc5-next-20200110-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x3e kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:176 [inline]
-  fixup_bug arch/x86/kernel/traps.c:171 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:269
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:288
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:hlock_class kernel/locking/lockdep.c:167 [inline]
-RIP: 0010:hlock_class kernel/locking/lockdep.c:156 [inline]
-RIP: 0010:__lock_acquire+0x21dd/0x4a00 kernel/locking/lockdep.c:3950
-Code: 05 98 39 4a 09 85 c0 75 a0 48 c7 c6 e0 91 4b 88 48 c7 c7 20 92 4b 88  
-4c 89 9d 30 ff ff ff 4c 89 95 70 ff ff ff e8 b2 ff ea ff <0f> 0b 31 db 4c  
-8b 95 70 ff ff ff 4c 8b 9d 30 ff ff ff e9 22 f8 ff
-RSP: 0018:ffffc90002d87738 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 00000000000005e3 RCX: 0000000000000000
-RDX: 0000000040000000 RSI: ffffffff815e8546 RDI: fffff520005b0ed9
-RBP: ffffc90002d87850 R08: ffff8880903f8380 R09: fffffbfff13748ed
-R10: fffffbfff13748ec R11: ffffffff89ba4763 R12: 000000009ecb23e7
-R13: ffffffff8aa50270 R14: ffff8880903f8c48 R15: 0000000000000000
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-  finish_lock_switch kernel/sched/core.c:3123 [inline]
-  finish_task_switch+0x13f/0x750 kernel/sched/core.c:3224
-  context_switch kernel/sched/core.c:3388 [inline]
-  __schedule+0x93c/0x1f90 kernel/sched/core.c:4081
-  preempt_schedule_irq+0xb5/0x160 kernel/sched/core.c:4338
-  retint_kernel+0x1b/0x2b
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:752  
-[inline]
-RIP: 0010:lock_acquire+0x20b/0x410 kernel/locking/lockdep.c:4487
-Code: 9c 08 00 00 00 00 00 00 48 c1 e8 03 80 3c 10 00 0f 85 d3 01 00 00 48  
-83 3d a9 a4 58 08 00 0f 84 53 01 00 00 48 8b 7d c8 57 9d <0f> 1f 44 00 00  
-48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 65 8b
-RSP: 0018:ffffc90002d87ae0 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff13675eb RBX: ffff8880903f8380 RCX: ffffffff815ad05a
-RDX: dffffc0000000000 RSI: 0000000000000004 RDI: 0000000000000286
-RBP: ffffc90002d87b28 R08: 0000000000000004 R09: fffffbfff1708c51
-R10: fffffbfff1708c50 R11: ffff8880903f8380 R12: ffff888094a93d28
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-  flush_workqueue+0x126/0x14c0 kernel/workqueue.c:2775
-  hci_dev_open+0xe0/0x280 net/bluetooth/hci_core.c:1626
-  hci_sock_bind+0x4bf/0x12d0 net/bluetooth/hci_sock.c:1189
-  __sys_bind+0x239/0x290 net/socket.c:1662
-  __do_sys_bind net/socket.c:1673 [inline]
-  __se_sys_bind net/socket.c:1671 [inline]
-  __x64_sys_bind+0x73/0xb0 net/socket.c:1671
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4483b9
-Code: e8 9c e6 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 3b 05 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fb43a523d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-RAX: ffffffffffffffda RBX: 00000000006e4a18 RCX: 00000000004483b9
-RDX: 0000000000000006 RSI: 00000000200007c0 RDI: 0000000000000004
-RBP: 00000000006e4a10 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006e4a1c
-R13: 00007ffc78f07a4f R14: 00007fb43a5249c0 R15: 20c49ba5e353f7cf
-Shutting down cpus with NMI
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+                Linus
