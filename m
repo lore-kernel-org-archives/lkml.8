@@ -2,425 +2,152 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B19BC33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 252CFC33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C86AC2187F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3ED82084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:10:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="c568one4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbgAMKJg (ORCPT
+        id S1728516AbgAMKKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:09:36 -0500
-Received: from foss.arm.com ([217.140.110.172]:36870 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgAMKJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:09:36 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 745A213D5;
-        Mon, 13 Jan 2020 02:09:35 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B587C3F534;
-        Mon, 13 Jan 2020 02:09:34 -0800 (PST)
-Date:   Mon, 13 Jan 2020 10:09:33 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv9 01/12] PCI: mobiveil: Re-abstract the private structure
-Message-ID: <20200113100931.GG42593@e119886-lin.cambridge.arm.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <20191120034451.30102-2-Zhiqiang.Hou@nxp.com>
+        Mon, 13 Jan 2020 05:10:30 -0500
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:4793 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgAMKK3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 05:10:29 -0500
+Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa6.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: KqN1Cj2pjtDSrXrs5lrLCUL/HVQIl3ikxEpTHQIHAdvJjyPGWSwH8dCWqKZSSJMT0myfpxhb5h
+ FTpChnGVMZQ9az4dah/TzMeGy+C208RMyvRmFCmXX+UZpD8mXNRjeImds6D/nygkX1+cxCH2y1
+ JsOpIJWSybhtCg+W/hyYQMrg/Y8y2v41LJOq3eb5dtMzDMrS0LtwOSZ43HM4HUMUMwrytgStiG
+ ok2+DIjlKL2JZfxrUh5xw+xJFuBpfwo+9wfmlw2S91OKQw/3NvmIUmZwR6snPL7vNfD5Btp8Qi
+ oFQ=
+X-IronPort-AV: E=Sophos;i="5.69,428,1571727600"; 
+   d="scan'208";a="60582878"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Jan 2020 03:10:28 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 13 Jan 2020 03:10:28 -0700
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 13 Jan 2020 03:10:28 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zbl7VCXmeblTp4hnWqFHz+n6NHpkrQq5g2M/CO7HVIk6nkZSAmLB0yR6aJ0+6pDhwvZuHKoFsNrTDRfXzHm3tAjX8rSYMT6ZBeAJ1tIQXr0xY7Pv1DGbP5tcAIHW19HSnnIbw7WcsICzEGlzYlbQ8RWXJ3pQm9qr15CpWh+dnScqNdEx4l+qB9MK3caJ8OFEKPuizyKQdGMK4MAku3B0woCfEAMLF13WjIgFaC1YMs/qfQ93S9WBM7E/u+lt/Ia1efLDWpN8XtYbKCbAETaD/LvhJEzZ8Dy/VAgg1tnZf3r4ZtIU0FF8bA2v1F/AkL6fAZx9VUkTYBSypOKkckvaog==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Lr0i2o/BAHBMybjq3kFoqxacZgUeo2lnEFdJ1x3Nkho=;
+ b=nQSSFH+f9RNCerhmjpHJiQHzUvBCSYK0jkkuonvBO8S/7i71lMzJAXk2wcN5QFWoJ0JR3KLRsszimw3zsbPU2TWm4+mwT3ELce4SRaHFk2RKCCea60/df6TgictWHOv/b96hzG755UnK8oFVxJ5qwSW3AqkTFpdJ9HnGdNHnFRAEfODUqada2Bj09J3R2iyHSJm0YdtLov9jiMPsqQITgPQ3OtqEP37HFXYiCCxYkOGdAv1PR0al8KdonS+ve/f32ViErLysWnB3BIzvPtj29lSVd6hvDTDk1gbzdWIf+XifZR9bDxmMOQzf6h8Qa8gbqrttZxBq65tyHbLHe7eN3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Lr0i2o/BAHBMybjq3kFoqxacZgUeo2lnEFdJ1x3Nkho=;
+ b=c568one4FLC24psOO56MC0ivUxanH6qqigLjGB5IANW6rd2+ZOEaFanloqffpIK9Bfu2CdBaN6busXRUeDdD0HFVmCnXPEpa5Ex91oE3vlYOAja/SR7DaYBHZ31fircUvxRQITO3EjvpEU0d5+Qn3MZtitwGyt7COVhFd3m98Gc=
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
+ MN2PR11MB4335.namprd11.prod.outlook.com (52.135.38.20) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.14; Mon, 13 Jan 2020 10:10:27 +0000
+Received: from MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::71cc:a5d4:8e1a:198b]) by MN2PR11MB4448.namprd11.prod.outlook.com
+ ([fe80::71cc:a5d4:8e1a:198b%7]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
+ 10:10:27 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <michael@walle.cc>
+CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>, <vigneshr@ti.com>,
+        <computersforpeace@gmail.com>
+Subject: Re: [PATCH 2/2] mtd: spi-nor: fix locking argument in
+ spi_nor_is_locked()
+Thread-Topic: [PATCH 2/2] mtd: spi-nor: fix locking argument in
+ spi_nor_is_locked()
+Thread-Index: AQHVyfmtB/RTe4VPuUuyKr1XQJxpYg==
+Date:   Mon, 13 Jan 2020 10:10:27 +0000
+Message-ID: <1617765.HVoytVeEL0@localhost.localdomain>
+References: <20200107222317.3527-1-michael@walle.cc>
+ <20200107222317.3527-2-michael@walle.cc>
+In-Reply-To: <20200107222317.3527-2-michael@walle.cc>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d0c1ecdd-cdb7-4a20-e443-08d79810d00d
+x-ms-traffictypediagnostic: MN2PR11MB4335:
+x-microsoft-antispam-prvs: <MN2PR11MB4335F2806F01014A54D62556F0350@MN2PR11MB4335.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1227;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(366004)(39850400004)(346002)(376002)(396003)(199004)(189003)(4326008)(6486002)(53546011)(6506007)(86362001)(186003)(316002)(26005)(478600001)(54906003)(6916009)(81156014)(66946007)(66446008)(81166006)(8936002)(6512007)(4744005)(9686003)(66556008)(64756008)(8676002)(5660300002)(66476007)(71200400001)(91956017)(2906002)(76116006)(39026012);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4335;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: c9+bTQJUslgqVXZIEebceDjXvvQt55roTbP7TmpU/heP4ZNwIFs3++pIuPNgQFx0G8uA/wPUDy3A3SSlPE597rkX6tgWM8RbzNzlUp0oKN4CVl64NnSs9qWA00uzggvSz/XtrqrJazhGUHTjqScPdSvG82LTflB6h4ZM1Wu5YWbBl5TTUg+hqVB8IDfFzNuta1go5/MOOBrk40dJK+7mdIWzA2mVFIrzl3tqHlBfl/zR4Nl1VwmeCzm6efUEJCuM3r5bXUv4qnqoYuQxbx/EiBWv125yDGc5/MU1Z1s9k8NopeCxAqXautTAFdrVjjsC1L14DB/Ch8FI/ZFwpEdaCyVKOgOIVrLW3Zhbt1s8+zP6U6nc32/zVDG4fUfDVCd23R1qdxfdaRYLNNQbV3yu7U+kv4UAKEOWrzC4zc1I/Beu4CDh6rZF5QvqSY1HETs3L7DBtU9dcKBOq8hbJ3hsvqkCh7IHKaE6q58fP0unfSgjXb2+iVyLWyajzXSPA/Ky
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <AB3A0BE49DAE9E42AE777CF0B42EE019@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120034451.30102-2-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0c1ecdd-cdb7-4a20-e443-08d79810d00d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 10:10:27.2155
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4EyAp0h2Mp9F5VjDwXugWDsDXQISAM1r2OxuzM4eZhv0Dq7HaMSxW9IxbTjVcwouJYe1RViaB6mte3Je1KpyiKGmrjQKHWEerHF3vNiJ2pE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4335
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 03:45:23AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> 
-> The Mobiveil PCIe controller can work in either Root Complex
-> mode or Endpoint mode. So introduce a new structure root_port,
-> and abstract the RC related members into it.
+Hi, Michael,
 
-The first sentence explains the trigger for this work, the second
-explains what you are changing, it would be helpful to also describe
-why you need to make this change. You could do this by extending the
-last sentence, e.g.
-
-"So introduce a new structure root_port, and abstract the RC
- related members into it such that it can be used by both ..."
-
-As this series doesn't actually add a EP driver, this abstraction
-isn't needed now - but it is nice to have - it may be helpful to explain
-this.
-
-The email subject could also more precisely explain what this patch
-does.
-
-
-> 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
-> V9:
->  - New patch splited from the #1 of V8 patches to make it easy to review.
-
-Indeed, it's much nicer to review - thanks.
-
-
-> 
->  drivers/pci/controller/pcie-mobiveil.c | 99 ++++++++++++++++----------
->  1 file changed, 60 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> index 3a696ca45bfa..5fd26e376af2 100644
-> --- a/drivers/pci/controller/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/pcie-mobiveil.c
-> @@ -3,7 +3,10 @@
->   * PCIe host controller driver for Mobiveil PCIe Host controller
->   *
->   * Copyright (c) 2018 Mobiveil Inc.
-> + * Copyright 2019 NXP
-> + *
->   * Author: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> + * Recode: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-
-As per my previous feedback, I'm not sure the value of using the term refactor
-or a synonym of it. And I certaintly don't want to encourage anyone that
-modifies this file to add a similar tag when the information is easily visible
-via GIT and the get_maintainers script.
-
->   */
->  
->  #include <linux/delay.h>
-> @@ -138,22 +141,27 @@ struct mobiveil_msi {			/* MSI information */
->  	DECLARE_BITMAP(msi_irq_in_use, PCI_NUM_MSI);
+On Wednesday, January 8, 2020 12:23:17 AM EET Michael Walle wrote:
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index b661fd948a25..a8fcb1d70510 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -235,6 +235,7 @@ enum spi_nor_ops {
+>         SPI_NOR_OPS_ERASE,
+>         SPI_NOR_OPS_LOCK,
+>         SPI_NOR_OPS_UNLOCK,
+> +       SPI_NOR_OPS_IS_LOCKED,
 >  };
->  
-> +struct root_port {
-> +	char root_bus_nr;
-> +	void __iomem *config_axi_slave_base;	/* endpoint config base */
-> +	struct resource *ob_io_res;
-> +	int irq;
-> +	raw_spinlock_t intx_mask_lock;
-> +	struct irq_domain *intx_domain;
-> +	struct mobiveil_msi msi;
-> +	struct pci_host_bridge *bridge;
-> +};
 
-Please prefix with mobiveil given we have mobiveil related structures
-inside it.
+There is no NOR controller that uses this enum, can we get rid of it?
 
-(Also on your respin, please rebase as per Olof's feedback).
+Cheers,
+ta
 
-Thanks,
-
-Andrew Murray
-
-> +
->  struct mobiveil_pcie {
->  	struct platform_device *pdev;
-> -	void __iomem *config_axi_slave_base;	/* endpoint config base */
->  	void __iomem *csr_axi_slave_base;	/* root port config base */
->  	void __iomem *apb_csr_base;	/* MSI register base */
->  	phys_addr_t pcie_reg_base;	/* Physical PCIe Controller Base */
-> -	struct irq_domain *intx_domain;
-> -	raw_spinlock_t intx_mask_lock;
-> -	int irq;
->  	int apio_wins;
->  	int ppio_wins;
->  	int ob_wins_configured;		/* configured outbound windows */
->  	int ib_wins_configured;		/* configured inbound windows */
-> -	struct resource *ob_io_res;
-> -	char root_bus_nr;
-> -	struct mobiveil_msi msi;
-> +	struct root_port rp;
->  };
->  
->  /*
-> @@ -281,16 +289,17 @@ static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
->  static bool mobiveil_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
->  {
->  	struct mobiveil_pcie *pcie = bus->sysdata;
-> +	struct root_port *rp = &pcie->rp;
->  
->  	/* Only one device down on each root port */
-> -	if ((bus->number == pcie->root_bus_nr) && (devfn > 0))
-> +	if ((bus->number == rp->root_bus_nr) && (devfn > 0))
->  		return false;
->  
->  	/*
->  	 * Do not read more than one device on the bus directly
->  	 * attached to RC
->  	 */
-> -	if ((bus->primary == pcie->root_bus_nr) && (PCI_SLOT(devfn) > 0))
-> +	if ((bus->primary == rp->root_bus_nr) && (PCI_SLOT(devfn) > 0))
->  		return false;
->  
->  	return true;
-> @@ -304,13 +313,14 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
->  					   unsigned int devfn, int where)
->  {
->  	struct mobiveil_pcie *pcie = bus->sysdata;
-> +	struct root_port *rp = &pcie->rp;
->  	u32 value;
->  
->  	if (!mobiveil_pcie_valid_device(bus, devfn))
->  		return NULL;
->  
->  	/* RC config access */
-> -	if (bus->number == pcie->root_bus_nr)
-> +	if (bus->number == rp->root_bus_nr)
->  		return pcie->csr_axi_slave_base + where;
->  
->  	/*
-> @@ -325,7 +335,7 @@ static void __iomem *mobiveil_pcie_map_bus(struct pci_bus *bus,
->  
->  	mobiveil_csr_writel(pcie, value, PAB_AXI_AMAP_PEX_WIN_L(WIN_NUM_0));
->  
-> -	return pcie->config_axi_slave_base + where;
-> +	return rp->config_axi_slave_base + where;
->  }
->  
->  static struct pci_ops mobiveil_pcie_ops = {
-> @@ -339,7 +349,8 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
->  	struct irq_chip *chip = irq_desc_get_chip(desc);
->  	struct mobiveil_pcie *pcie = irq_desc_get_handler_data(desc);
->  	struct device *dev = &pcie->pdev->dev;
-> -	struct mobiveil_msi *msi = &pcie->msi;
-> +	struct root_port *rp = &pcie->rp;
-> +	struct mobiveil_msi *msi = &rp->msi;
->  	u32 msi_data, msi_addr_lo, msi_addr_hi;
->  	u32 intr_status, msi_status;
->  	unsigned long shifted_status;
-> @@ -365,7 +376,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
->  		shifted_status >>= PAB_INTX_START;
->  		do {
->  			for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-> -				virq = irq_find_mapping(pcie->intx_domain,
-> +				virq = irq_find_mapping(rp->intx_domain,
->  							bit + 1);
->  				if (virq)
->  					generic_handle_irq(virq);
-> @@ -424,15 +435,16 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
->  	struct device *dev = &pcie->pdev->dev;
->  	struct platform_device *pdev = pcie->pdev;
->  	struct device_node *node = dev->of_node;
-> +	struct root_port *rp = &pcie->rp;
->  	struct resource *res;
->  
->  	/* map config resource */
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->  					   "config_axi_slave");
-> -	pcie->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
-> -	if (IS_ERR(pcie->config_axi_slave_base))
-> -		return PTR_ERR(pcie->config_axi_slave_base);
-> -	pcie->ob_io_res = res;
-> +	rp->config_axi_slave_base = devm_pci_remap_cfg_resource(dev, res);
-> +	if (IS_ERR(rp->config_axi_slave_base))
-> +		return PTR_ERR(rp->config_axi_slave_base);
-> +	rp->ob_io_res = res;
->  
->  	/* map csr resource */
->  	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> @@ -455,9 +467,9 @@ static int mobiveil_pcie_parse_dt(struct mobiveil_pcie *pcie)
->  	if (of_property_read_u32(node, "ppio-wins", &pcie->ppio_wins))
->  		pcie->ppio_wins = MAX_PIO_WINDOWS;
->  
-> -	pcie->irq = platform_get_irq(pdev, 0);
-> -	if (pcie->irq <= 0) {
-> -		dev_err(dev, "failed to map IRQ: %d\n", pcie->irq);
-> +	rp->irq = platform_get_irq(pdev, 0);
-> +	if (rp->irq <= 0) {
-> +		dev_err(dev, "failed to map IRQ: %d\n", rp->irq);
->  		return -ENODEV;
->  	}
->  
-> @@ -564,9 +576,9 @@ static int mobiveil_bringup_link(struct mobiveil_pcie *pcie)
->  static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
->  {
->  	phys_addr_t msg_addr = pcie->pcie_reg_base;
-> -	struct mobiveil_msi *msi = &pcie->msi;
-> +	struct mobiveil_msi *msi = &pcie->rp.msi;
->  
-> -	pcie->msi.num_of_vectors = PCI_NUM_MSI;
-> +	msi->num_of_vectors = PCI_NUM_MSI;
->  	msi->msi_pages_phys = (phys_addr_t)msg_addr;
->  
->  	writel_relaxed(lower_32_bits(msg_addr),
-> @@ -579,7 +591,8 @@ static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
->  
->  static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->  {
-> -	struct pci_host_bridge *bridge = pci_host_bridge_from_priv(pcie);
-> +	struct root_port *rp = &pcie->rp;
-> +	struct pci_host_bridge *bridge = rp->bridge;
->  	u32 value, pab_ctrl, type;
->  	struct resource_entry *win;
->  
-> @@ -629,8 +642,8 @@ static int mobiveil_host_init(struct mobiveil_pcie *pcie)
->  	 */
->  
->  	/* config outbound translation window */
-> -	program_ob_windows(pcie, WIN_NUM_0, pcie->ob_io_res->start, 0,
-> -			   CFG_WINDOW_TYPE, resource_size(pcie->ob_io_res));
-> +	program_ob_windows(pcie, WIN_NUM_0, rp->ob_io_res->start, 0,
-> +			   CFG_WINDOW_TYPE, resource_size(rp->ob_io_res));
->  
->  	/* memory inbound translation window */
->  	program_ib_windows(pcie, WIN_NUM_0, 0, 0, MEM_WINDOW_TYPE, IB_WIN_SIZE);
-> @@ -667,32 +680,36 @@ static void mobiveil_mask_intx_irq(struct irq_data *data)
->  {
->  	struct irq_desc *desc = irq_to_desc(data->irq);
->  	struct mobiveil_pcie *pcie;
-> +	struct root_port *rp;
->  	unsigned long flags;
->  	u32 mask, shifted_val;
->  
->  	pcie = irq_desc_get_chip_data(desc);
-> +	rp = &pcie->rp;
->  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
-> -	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
-> +	raw_spin_lock_irqsave(&rp->intx_mask_lock, flags);
->  	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
->  	shifted_val &= ~mask;
->  	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-> -	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
-> +	raw_spin_unlock_irqrestore(&rp->intx_mask_lock, flags);
->  }
->  
->  static void mobiveil_unmask_intx_irq(struct irq_data *data)
->  {
->  	struct irq_desc *desc = irq_to_desc(data->irq);
->  	struct mobiveil_pcie *pcie;
-> +	struct root_port *rp;
->  	unsigned long flags;
->  	u32 shifted_val, mask;
->  
->  	pcie = irq_desc_get_chip_data(desc);
-> +	rp = &pcie->rp;
->  	mask = 1 << ((data->hwirq + PAB_INTX_START) - 1);
-> -	raw_spin_lock_irqsave(&pcie->intx_mask_lock, flags);
-> +	raw_spin_lock_irqsave(&rp->intx_mask_lock, flags);
->  	shifted_val = mobiveil_csr_readl(pcie, PAB_INTP_AMBA_MISC_ENB);
->  	shifted_val |= mask;
->  	mobiveil_csr_writel(pcie, shifted_val, PAB_INTP_AMBA_MISC_ENB);
-> -	raw_spin_unlock_irqrestore(&pcie->intx_mask_lock, flags);
-> +	raw_spin_unlock_irqrestore(&rp->intx_mask_lock, flags);
->  }
->  
->  static struct irq_chip intx_irq_chip = {
-> @@ -760,7 +777,7 @@ static int mobiveil_irq_msi_domain_alloc(struct irq_domain *domain,
->  					 unsigned int nr_irqs, void *args)
->  {
->  	struct mobiveil_pcie *pcie = domain->host_data;
-> -	struct mobiveil_msi *msi = &pcie->msi;
-> +	struct mobiveil_msi *msi = &pcie->rp.msi;
->  	unsigned long bit;
->  
->  	WARN_ON(nr_irqs != 1);
-> @@ -787,7 +804,7 @@ static void mobiveil_irq_msi_domain_free(struct irq_domain *domain,
->  {
->  	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
->  	struct mobiveil_pcie *pcie = irq_data_get_irq_chip_data(d);
-> -	struct mobiveil_msi *msi = &pcie->msi;
-> +	struct mobiveil_msi *msi = &pcie->rp.msi;
->  
->  	mutex_lock(&msi->lock);
->  
-> @@ -808,9 +825,9 @@ static int mobiveil_allocate_msi_domains(struct mobiveil_pcie *pcie)
->  {
->  	struct device *dev = &pcie->pdev->dev;
->  	struct fwnode_handle *fwnode = of_node_to_fwnode(dev->of_node);
-> -	struct mobiveil_msi *msi = &pcie->msi;
-> +	struct mobiveil_msi *msi = &pcie->rp.msi;
->  
-> -	mutex_init(&pcie->msi.lock);
-> +	mutex_init(&msi->lock);
->  	msi->dev_domain = irq_domain_add_linear(NULL, msi->num_of_vectors,
->  						&msi_domain_ops, pcie);
->  	if (!msi->dev_domain) {
-> @@ -834,18 +851,19 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
->  {
->  	struct device *dev = &pcie->pdev->dev;
->  	struct device_node *node = dev->of_node;
-> +	struct root_port *rp = &pcie->rp;
->  	int ret;
->  
->  	/* setup INTx */
-> -	pcie->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-> -						  &intx_domain_ops, pcie);
-> +	rp->intx_domain = irq_domain_add_linear(node, PCI_NUM_INTX,
-> +						&intx_domain_ops, pcie);
->  
-> -	if (!pcie->intx_domain) {
-> +	if (!rp->intx_domain) {
->  		dev_err(dev, "Failed to get a INTx IRQ domain\n");
->  		return -ENOMEM;
->  	}
->  
-> -	raw_spin_lock_init(&pcie->intx_mask_lock);
-> +	raw_spin_lock_init(&rp->intx_mask_lock);
->  
->  	/* setup MSI */
->  	ret = mobiveil_allocate_msi_domains(pcie);
-> @@ -862,6 +880,7 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
->  	struct pci_bus *child;
->  	struct pci_host_bridge *bridge;
->  	struct device *dev = &pdev->dev;
-> +	struct root_port *rp;
->  	int ret;
->  
->  	/* allocate the PCIe port */
-> @@ -870,6 +889,8 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	pcie = pci_host_bridge_priv(bridge);
-> +	rp = &pcie->rp;
-> +	rp->bridge = bridge;
->  
->  	pcie->pdev = pdev;
->  
-> @@ -904,12 +925,12 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	irq_set_chained_handler_and_data(pcie->irq, mobiveil_pcie_isr, pcie);
-> +	irq_set_chained_handler_and_data(rp->irq, mobiveil_pcie_isr, pcie);
->  
->  	/* Initialize bridge */
->  	bridge->dev.parent = dev;
->  	bridge->sysdata = pcie;
-> -	bridge->busnr = pcie->root_bus_nr;
-> +	bridge->busnr = rp->root_bus_nr;
->  	bridge->ops = &mobiveil_pcie_ops;
->  	bridge->map_irq = of_irq_parse_and_map_pci;
->  	bridge->swizzle_irq = pci_common_swizzle;
-> -- 
-> 2.17.1
-> 
