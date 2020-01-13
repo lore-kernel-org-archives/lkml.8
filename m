@@ -7,102 +7,110 @@ X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4306C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6367C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862A5207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:50:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 989C6207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:52:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuOx5yHc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pD54b2vF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgAMOub (ORCPT
+        id S1728799AbgAMOwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:50:31 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:40901 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbgAMOub (ORCPT
+        Mon, 13 Jan 2020 09:52:04 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:35268 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgAMOwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:50:31 -0500
-Received: by mail-ed1-f66.google.com with SMTP id b8so8692480edx.7;
-        Mon, 13 Jan 2020 06:50:29 -0800 (PST)
+        Mon, 13 Jan 2020 09:52:04 -0500
+Received: by mail-il1-f195.google.com with SMTP id g12so8390530ild.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 06:52:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qoLqzXdrbilZqhirWy6N7+fMr1NtgjKpfzyuJ+M+kac=;
-        b=MuOx5yHcNcFfR0jxVW3pvnvW9BxnEiI+157fOGVTCOB9120OWpV9Lp2S/fQvcx0Rv1
-         FEfOLnlXKLLOknh6FpGGgsKjCBHsGzOoMI88rnVtEILnOPvE5hO2IJwCKPxje/xFozk+
-         mypj5YTgRIaH9hpc21VEybYynQlng9Rj69pHpeponaQmpF4owLLcFK1F6sx58NlGSIkI
-         MqGOGCZz3gXYaCdSbc/JJ9WrYlEcmIo7LWA5Cnzssqg2Ijv3WRFLwggs/ywG53lxONKC
-         +VDwR1l9UhYvntLb4G86nkIc4hxEhfpnRS3I9A1hbENAq2IPvw1k5bdsAlnkuoXuV28O
-         vVDA==
+        bh=YX2j6/aVYY0oyXSlbbCOKmU+Ff+R7PXUUFucGLtqEZc=;
+        b=pD54b2vF0OL3APyGS2FYWquHYvbSHt2+mDz0qqZYJVJKS4xrJEU3kGi9UQAQui03aP
+         oPxoThY+/eB3UiBL63ipXM0eyzZW8Yg0WvXiVe14BeqC2dBJOMA1D13T+viEgaShwfCC
+         3+jdDcJxFZ9PUdbfKr5VlpJoAwdcMnZ8RbUGYKR8e8sAW6tmzASNLJWHVEsPQXp7FuSM
+         gr4Emm85qKxkNitHkdeoE4GZSIEw92HAjxpXIDhle9/Mu6BEsx/pllKJnyvmPECsU9/K
+         v654FIVxSz5HuaQOfKF55qNMUIQyTqQ6Sm0Sg4m+MEW4COFiwkyeZoTAYhDgwE7NjKT2
+         LXCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qoLqzXdrbilZqhirWy6N7+fMr1NtgjKpfzyuJ+M+kac=;
-        b=fX8ORh0ZkVJGgTJagha4axtdziY8mV3hP1L/mL810p2O2pVWvMa8DU4jwjjytSz446
-         GDPm0qbbgtkGKrZtCAZhkqvGVYfjjNSjXGHBEG9YNmlbRiOZrPcy4PcKkoQd34DvlbMS
-         VcMveHOiVJvivvdNBvIAWDT7+VrE32gh2Dout58hs2xAQQWjHoksRJMd2DJNA893sxJI
-         lT1CbBjmbYVbU3WDxwXbLHDoanq1nvHUcb55fZDC7fC+8oEnxbWnU3C0cPPlk0o21oQJ
-         LJrobxa4d+MkZCr/ksBMo/+plRGZBQpGJdVmdetGmqfk1jtjpqzKjCZdizF0VLU5mhql
-         JcaQ==
-X-Gm-Message-State: APjAAAVLnWM0tgUT6rjotoD74Infx2PF2fxWNoyFcV5pKNPDN72s61Cx
-        EJAHrDKkLE/8RVmXAWMINZrah6BaLKC22N0+yj0=
-X-Google-Smtp-Source: APXvYqxfimYZBDjuQ+nHG9oT+BPrb+35m6utZ8lzc2T2SD4MReedVpJma3L1GSez6D1lUcqyUMeZnAXqzWc8XZkRX98=
-X-Received: by 2002:aa7:c402:: with SMTP id j2mr17276124edq.51.1578927029298;
- Mon, 13 Jan 2020 06:50:29 -0800 (PST)
+        bh=YX2j6/aVYY0oyXSlbbCOKmU+Ff+R7PXUUFucGLtqEZc=;
+        b=Vq7jVDWjFZZMOBnjv+4VyEETmNqkkJk2/E3blcmbOEl81CD2XxUWhpTo1veIHH5nGd
+         KO9qHmvnvaVIMVCsnISfBjVtoZLuJ0j7WXPB4TZWPkv98tLkHrwcN63BOKBp6DAvcX8z
+         5PWfMYnzrcyGd0VON7f8u4sR0jOjoy6DZ6cD7/tTsnBoaxnpJUTQOAOU9wfUmcXz0KK3
+         t8r4nJ2uTd13qiDl7T+fp35iINOCul2NU1+vWM+lu/0PxHwmig66CvGa4d1cA88oZ9HM
+         xeZJy7Ux3gVAcQypjX0+S7+R3bmJ10GSfb7sSKTJBn44ZH8hk4Hk1Z0Z++FZKscZJs5N
+         aZtw==
+X-Gm-Message-State: APjAAAV+NiWZc7avxvHJb1fp19XiUfQs21Hw9jYnsezJb1MtmB8Hcyhh
+        oVYcM7FOB+iFsJztueN+nNp8LL6CJIIp2A8Mtw1uinFw
+X-Google-Smtp-Source: APXvYqyt+vEO+HWXZFJbDJmsViNsAKH88qGkQ/e/5oAuQgR33TSr56D6tCedpeUHpa+P2JqBu9+hmpBQr0J05fwog3s=
+X-Received: by 2002:a92:390c:: with SMTP id g12mr14496630ila.246.1578927123873;
+ Mon, 13 Jan 2020 06:52:03 -0800 (PST)
 MIME-Version: 1.0
-References: <4953fc69a26bee930bccdeb612f1ce740a4294df.1578921062.git.Jose.Abreu@synopsys.com>
- <20200113133845.GD11788@lunn.ch> <BN8PR12MB32666F34D45D7881BDD4CAB3D3350@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200113141817.GN25745@shell.armlinux.org.uk>
-In-Reply-To: <20200113141817.GN25745@shell.armlinux.org.uk>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Mon, 13 Jan 2020 16:50:18 +0200
-Message-ID: <CA+h21hqYeq_D5hLi8yssNko6ucNSVCFMQxqkvGcGxL86niu7pA@mail.gmail.com>
-Subject: Re: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
- using a PHY driver
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>, Andrew Lunn <andrew@lunn.ch>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <cover.1578789410.git.robin.murphy@arm.com>
+In-Reply-To: <cover.1578789410.git.robin.murphy@arm.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Mon, 13 Jan 2020 20:21:53 +0530
+Message-ID: <CANAwSgTTx3TvtxWgp1E3LW15ejc06v7jiKg7xg_95GwuuVtb+w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] mfd: RK8xx tidyup
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        linux-rockchip@lists.infradead.org, Soeren Moch <smoch@web.de>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Russell,
+Hi Robin,
 
-On Mon, 13 Jan 2020 at 16:19, Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
+On Sun, 12 Jan 2020 at 07:25, Robin Murphy <robin.murphy@arm.com> wrote:
 >
-> I've recently suggested a patch to phylink to add a generic helper to
-> read the state from a generic 802.3 clause 37 PCS, but I guess that
-> won't be sufficient for an XPCS.  However, it should give some clues
-> if you're intending to use phylink.
+> Hi all,
+>
+> Here's a second crack at my RK805-inspired cleanup. There was a bit
+> of debate around v1[1], but it seems like we're now all happy that this
+> is a reasonable way to go. For clarity I decided to include Soeren's
+> patch as #1/5, but since I've rewritten most of my patches I've not
+> included the tested-by tags.
+>
+> Robin.
+>
+> [1] https://lore.kernel.org/lkml/cover.1575932654.git.robin.murphy@arm.com/
 >
 
-I don't think the PCS implementations out there are sufficiently
-similar to be driven by a unified driver, and at least nothing
-mandates that for now. Although the configuration interface is MDIO
-with registers quasi-compliant to C22 or C45, many times bits in
-BMCR/BMSR are not implemented, you can't typically achieve full
-functionality [ sometimes not at all ] without writing to some
-vendor-specific registers, there might be errata workarounds that need
-to be implemented through PCS writes, often the PCS driver needs to be
-correlated with a MMIO region corresponding to that SerDes lane for
-stuff such as eye parameters.
-The code duplication isn't even all that bad.
+Despite the i2c warning message  it performs clean shutdown. So Please add my
 
-_But_ I am not sure how PHYLINK comes into play here. A PHY driver
-should work with the plain PHY library too. Dealing with clause 73
-autoneg indicates to me that this is more than just a MAC PCS,
-therefore it shouldn't be tied in with PHYLINK.
+Tested-by: Anand Moon <linux.amoon@gmail.com>
 
-Thanks,
--Vladimir
+-Anand
+
+> Robin Murphy (4):
+>   mfd: rk808: Ensure suspend/resume hooks always work
+>   mfd: rk808: Stop using syscore ops
+>   mfd: rk808: Reduce shutdown duplication
+>   mfd: rk808: Convert RK805 to shutdown/suspend hooks
+>
+> Soeren Moch (1):
+>   mfd: rk808: Always use poweroff when requested
+>
+>  drivers/mfd/rk808.c       | 139 +++++++++++++-------------------------
+>  include/linux/mfd/rk808.h |   2 -
+>  2 files changed, 48 insertions(+), 93 deletions(-)
+>
+> --
+> 2.17.1
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
