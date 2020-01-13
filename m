@@ -2,80 +2,390 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B111FC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FE3C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8104720678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF16721739
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:52:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgAMQuy (ORCPT
+        id S1728731AbgAMQwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:50:54 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:56352 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726567AbgAMQuy (ORCPT
+        Mon, 13 Jan 2020 11:52:32 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50324 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgAMQwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:50:54 -0500
-Received: (qmail 2814 invoked by uid 2102); 13 Jan 2020 11:50:53 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 13 Jan 2020 11:50:53 -0500
-Date:   Mon, 13 Jan 2020 11:50:53 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Andrey Konovalov <andreyknvl@google.com>
-cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Subject: Re: [PATCH v4 1/1] usb: gadget: add raw-gadget interface
-In-Reply-To: <CAAeHK+z2+_UHNp4_D2iL9FzPtDoU1YBohCaDJG8sAy12uc_-ew@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44L0.2001131049090.1502-100000@iolanthe.rowland.org>
+        Mon, 13 Jan 2020 11:52:31 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 9533428ED5C
+Subject: Re: [PATCH] cros_ec: treewide: Remove 'include/linux/mfd/cros_ec.h'
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
+        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-iio@vger.kernel.org, Nick Vaccaro <nvaccaro@chromium.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Mark Brown <broonie@kernel.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>
+References: <20191203145018.14015-1-enric.balletbo@collabora.com>
+Message-ID: <74a0c896-6d1a-5cb5-d14f-6dd994382982@collabora.com>
+Date:   Mon, 13 Jan 2020 17:52:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+In-Reply-To: <20191203145018.14015-1-enric.balletbo@collabora.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jan 2020, Andrey Konovalov wrote:
 
-> I've also found an issue, but I'm not sure if that is the bug in Raw
-> Gadget, or in the gadget layer (in the former case I'll add this fix
-> to v5 as well). What I believe I'm seeing is
-> __fput()->usb_gadget_unregister_driver()->usb_gadget_remove_driver()->gadget_unbind()
-> racing with dummy_timer()->gadget_setup(). In my case it results in
-> gadget_unbind() doing set_gadget_data(gadget, NULL), and then
-> gadget_setup() dereferencing get_gadget_data(gadget).
+
+On 3/12/19 15:50, Enric Balletbo i Serra wrote:
+> This header file now only includes the cros_ec_dev struct, however, is the
+> 'include/linux/platform_data/cros_ec_proto.h' who contains the definition of
+> all the Chrome OS EC related structs. There is no reason to have a
+> separate include for this struct so move to the place where other
+> structs are defined. That way, we can remove the include itself, but also
+> simplify the common pattern
 > 
-> Alan, does it look possible for those two functions to race? Should
-> this be prevented by the gadget layer, or should I use some kind of
-> locking in my gadget driver to prevent this?
+>     #include <linux/mfd/cros_ec.h>
+>     #include <linux/platform_data/cros_ec_proto.h>
+> 
+> for a single include
+> 
+>     #include <linux/platform_data/cros_ec_proto.h>
+> 
+> The changes to remove the cros_ec.h include were generated with the
+> following shell script:
+> 
+>     git grep -l "<linux/mfd/cros_ec.h>" | xargs sed -i '/<linux\/mfd\/cros_ec.h>/d'
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-In your situation this race shouldn't happen, because before
-udc->driver->unbind() is invoked we call usb_gadget_disconnect().  If
-that routine succeeds -- which it always does under dummy-hcd -- then
-there can't be any more setup callbacks, because find_endpoint() will
-always return NULL (the is_active() test fails; see the various
-set_link_state* routines).  So I don't see how you could have ended up
-with the race you describe.
+Applied for 5.6 with all the collected acks, thanks.
 
-However, a real UDC might not be able to perform a disconnect under
-software control.  In that case usb_gadget_disconnect() would not
-change the pullup state, and there would be a real possibility of a
-setup callback racing with an unbind callback.  This seems like a 
-genuine problem and I can't think of a solution offhand.
+ Enric
 
-What we would need is a way to tell the UDC driver to stop invoking
-gadget callbacks, _before_ the UDC driver's stop callback gets called.
-Maybe this should be merged into the pullup callback somehow.
-
-Alan Stern
-
+> ---
+> 
+>  drivers/iio/accel/cros_ec_accel_legacy.c      |  1 -
+>  .../common/cros_ec_sensors/cros_ec_sensors.c  |  1 -
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    |  1 -
+>  drivers/iio/light/cros_ec_light_prox.c        |  1 -
+>  drivers/iio/pressure/cros_ec_baro.c           |  1 -
+>  .../media/platform/cros-ec-cec/cros-ec-cec.c  |  1 -
+>  drivers/mfd/cros_ec_dev.c                     |  1 -
+>  drivers/platform/chrome/cros_ec_chardev.c     |  1 -
+>  drivers/platform/chrome/cros_ec_debugfs.c     |  1 -
+>  drivers/platform/chrome/cros_ec_lightbar.c    |  1 -
+>  drivers/platform/chrome/cros_ec_sensorhub.c   |  1 -
+>  drivers/platform/chrome/cros_ec_sysfs.c       |  1 -
+>  drivers/platform/chrome/cros_ec_vbc.c         |  1 -
+>  drivers/platform/chrome/cros_usbpd_logger.c   |  1 -
+>  drivers/power/supply/cros_usbpd-charger.c     |  1 -
+>  drivers/rtc/rtc-cros-ec.c                     |  1 -
+>  include/linux/mfd/cros_ec.h                   | 35 -------------------
+>  include/linux/platform_data/cros_ec_proto.h   | 23 +++++++++++-
+>  18 files changed, 22 insertions(+), 52 deletions(-)
+>  delete mode 100644 include/linux/mfd/cros_ec.h
+> 
+> diff --git a/drivers/iio/accel/cros_ec_accel_legacy.c b/drivers/iio/accel/cros_ec_accel_legacy.c
+> index 65f85faf6f31..68e847c6255e 100644
+> --- a/drivers/iio/accel/cros_ec_accel_legacy.c
+> +++ b/drivers/iio/accel/cros_ec_accel_legacy.c
+> @@ -18,7 +18,6 @@
+>  #include <linux/iio/trigger_consumer.h>
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/kernel.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/slab.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> index 7dce04473467..576e45faafaf 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
+> @@ -16,7 +16,6 @@
+>  #include <linux/iio/trigger_consumer.h>
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/kernel.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> index 81a7f692de2f..d3a3626c7cd8 100644
+> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> @@ -13,7 +13,6 @@
+>  #include <linux/iio/kfifo_buf.h>
+>  #include <linux/iio/trigger_consumer.h>
+>  #include <linux/kernel.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/slab.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+> diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
+> index d85a391e50c5..7a838e2956f4 100644
+> --- a/drivers/iio/light/cros_ec_light_prox.c
+> +++ b/drivers/iio/light/cros_ec_light_prox.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/iio/trigger_consumer.h>
+>  #include <linux/kernel.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+> diff --git a/drivers/iio/pressure/cros_ec_baro.c b/drivers/iio/pressure/cros_ec_baro.c
+> index 2354302375de..d2a67dceb996 100644
+> --- a/drivers/iio/pressure/cros_ec_baro.c
+> +++ b/drivers/iio/pressure/cros_ec_baro.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/iio/trigger_consumer.h>
+>  #include <linux/kernel.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/slab.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+> diff --git a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
+> index 4a3b3810fd89..72c70f123650 100644
+> --- a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
+> +++ b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
+> @@ -14,7 +14,6 @@
+>  #include <linux/cec.h>
+>  #include <linux/slab.h>
+>  #include <linux/interrupt.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+>  #include <media/cec.h>
+> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> index c4b977a5dd96..8da4e4cef26f 100644
+> --- a/drivers/mfd/cros_ec_dev.c
+> +++ b/drivers/mfd/cros_ec_dev.c
+> @@ -6,7 +6,6 @@
+>   */
+>  
+>  #include <linux/mfd/core.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/of_platform.h>
+> diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
+> index 74ded441bb50..c65e70bc168d 100644
+> --- a/drivers/platform/chrome/cros_ec_chardev.c
+> +++ b/drivers/platform/chrome/cros_ec_chardev.c
+> @@ -13,7 +13,6 @@
+>  #include <linux/init.h>
+>  #include <linux/device.h>
+>  #include <linux/fs.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/miscdevice.h>
+>  #include <linux/module.h>
+>  #include <linux/notifier.h>
+> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+> index 6ae484989d1f..ecfada00e6c5 100644
+> --- a/drivers/platform/chrome/cros_ec_debugfs.c
+> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
+> @@ -7,7 +7,6 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+>  #include <linux/fs.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
+> index c0f2eec35a48..b4c110c5fee0 100644
+> --- a/drivers/platform/chrome/cros_ec_lightbar.c
+> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
+> @@ -8,7 +8,6 @@
+>  #include <linux/device.h>
+>  #include <linux/fs.h>
+>  #include <linux/kobject.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+> diff --git a/drivers/platform/chrome/cros_ec_sensorhub.c b/drivers/platform/chrome/cros_ec_sensorhub.c
+> index 04d8879689e9..79fefd3bb0fa 100644
+> --- a/drivers/platform/chrome/cros_ec_sensorhub.c
+> +++ b/drivers/platform/chrome/cros_ec_sensorhub.c
+> @@ -9,7 +9,6 @@
+>  #include <linux/init.h>
+>  #include <linux/device.h>
+>  #include <linux/module.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+>  #include <linux/platform_data/cros_ec_sensorhub.h>
+> diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
+> index 74d36b8d4f46..07dac97ad57c 100644
+> --- a/drivers/platform/chrome/cros_ec_sysfs.c
+> +++ b/drivers/platform/chrome/cros_ec_sysfs.c
+> @@ -8,7 +8,6 @@
+>  #include <linux/device.h>
+>  #include <linux/fs.h>
+>  #include <linux/kobject.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+> diff --git a/drivers/platform/chrome/cros_ec_vbc.c b/drivers/platform/chrome/cros_ec_vbc.c
+> index f11a1283e5c8..8edae465105c 100644
+> --- a/drivers/platform/chrome/cros_ec_vbc.c
+> +++ b/drivers/platform/chrome/cros_ec_vbc.c
+> @@ -6,7 +6,6 @@
+>  
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+> diff --git a/drivers/platform/chrome/cros_usbpd_logger.c b/drivers/platform/chrome/cros_usbpd_logger.c
+> index 374cdd1e868a..7de3ea75ef46 100644
+> --- a/drivers/platform/chrome/cros_usbpd_logger.c
+> +++ b/drivers/platform/chrome/cros_usbpd_logger.c
+> @@ -6,7 +6,6 @@
+>   */
+>  
+>  #include <linux/ktime.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/math64.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+> diff --git a/drivers/power/supply/cros_usbpd-charger.c b/drivers/power/supply/cros_usbpd-charger.c
+> index 6cc7c3910e09..0aca0da41cb7 100644
+> --- a/drivers/power/supply/cros_usbpd-charger.c
+> +++ b/drivers/power/supply/cros_usbpd-charger.c
+> @@ -5,7 +5,6 @@
+>   * Copyright (c) 2014 - 2018 Google, Inc
+>   */
+>  
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+> diff --git a/drivers/rtc/rtc-cros-ec.c b/drivers/rtc/rtc-cros-ec.c
+> index d043d30f05bc..f7343c289cab 100644
+> --- a/drivers/rtc/rtc-cros-ec.c
+> +++ b/drivers/rtc/rtc-cros-ec.c
+> @@ -5,7 +5,6 @@
+>  // Author: Stephen Barber <smbarber@chromium.org>
+>  
+>  #include <linux/kernel.h>
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+> deleted file mode 100644
+> index 61c2875c2a40..000000000000
+> --- a/include/linux/mfd/cros_ec.h
+> +++ /dev/null
+> @@ -1,35 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0-only */
+> -/*
+> - * ChromeOS EC multi-function device
+> - *
+> - * Copyright (C) 2012 Google, Inc
+> - */
+> -
+> -#ifndef __LINUX_MFD_CROS_EC_H
+> -#define __LINUX_MFD_CROS_EC_H
+> -
+> -#include <linux/device.h>
+> -
+> -/**
+> - * struct cros_ec_dev - ChromeOS EC device entry point.
+> - * @class_dev: Device structure used in sysfs.
+> - * @ec_dev: cros_ec_device structure to talk to the physical device.
+> - * @dev: Pointer to the platform device.
+> - * @debug_info: cros_ec_debugfs structure for debugging information.
+> - * @has_kb_wake_angle: True if at least 2 accelerometer are connected to the EC.
+> - * @cmd_offset: Offset to apply for each command.
+> - * @features: Features supported by the EC.
+> - */
+> -struct cros_ec_dev {
+> -	struct device class_dev;
+> -	struct cros_ec_device *ec_dev;
+> -	struct device *dev;
+> -	struct cros_ec_debugfs *debug_info;
+> -	bool has_kb_wake_angle;
+> -	u16 cmd_offset;
+> -	u32 features[2];
+> -};
+> -
+> -#define to_cros_ec_dev(dev)  container_of(dev, struct cros_ec_dev, class_dev)
+> -
+> -#endif /* __LINUX_MFD_CROS_EC_H */
+> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
+> index 30098a551523..119b9951c055 100644
+> --- a/include/linux/platform_data/cros_ec_proto.h
+> +++ b/include/linux/platform_data/cros_ec_proto.h
+> @@ -12,7 +12,6 @@
+>  #include <linux/mutex.h>
+>  #include <linux/notifier.h>
+>  
+> -#include <linux/mfd/cros_ec.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  
+>  #define CROS_EC_DEV_NAME	"cros_ec"
+> @@ -185,6 +184,28 @@ struct cros_ec_platform {
+>  	u16 cmd_offset;
+>  };
+>  
+> +/**
+> + * struct cros_ec_dev - ChromeOS EC device entry point.
+> + * @class_dev: Device structure used in sysfs.
+> + * @ec_dev: cros_ec_device structure to talk to the physical device.
+> + * @dev: Pointer to the platform device.
+> + * @debug_info: cros_ec_debugfs structure for debugging information.
+> + * @has_kb_wake_angle: True if at least 2 accelerometer are connected to the EC.
+> + * @cmd_offset: Offset to apply for each command.
+> + * @features: Features supported by the EC.
+> + */
+> +struct cros_ec_dev {
+> +	struct device class_dev;
+> +	struct cros_ec_device *ec_dev;
+> +	struct device *dev;
+> +	struct cros_ec_debugfs *debug_info;
+> +	bool has_kb_wake_angle;
+> +	u16 cmd_offset;
+> +	u32 features[2];
+> +};
+> +
+> +#define to_cros_ec_dev(dev)  container_of(dev, struct cros_ec_dev, class_dev)
+> +
+>  int cros_ec_suspend(struct cros_ec_device *ec_dev);
+>  
+>  int cros_ec_resume(struct cros_ec_device *ec_dev);
+> 
