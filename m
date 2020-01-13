@@ -2,122 +2,106 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4225C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD07CC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B230E207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBEA207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PbUozQIi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjQqyXt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgAMRko (ORCPT
+        id S1728679AbgAMRmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:40:44 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44172 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgAMRkn (ORCPT
+        Mon, 13 Jan 2020 12:42:31 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36381 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726985AbgAMRmb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:40:43 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 195so5183825pfw.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 09:40:43 -0800 (PST)
+        Mon, 13 Jan 2020 12:42:31 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so9522242wru.3;
+        Mon, 13 Jan 2020 09:42:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BVAS/5gDM35E+vwqcWj4iTNingff3wxRTXoRrLJ2q00=;
-        b=PbUozQIiNWcYiivH2d8I/Q2/mmC03ElGYL8BeMeEiv7rT62VOBMRJhYp6DUZdsTLzB
-         i2aruOVld4neB7dXlGb+PPyKcrcD2QBO7p1lE3z6d08KbBBzfy/of7wNgpej6eO2NiRH
-         qyJAc0F8pnU6MMVWkY81NPm7xe2OA+QsZbE4LIIRcqIBn0OPKdrPC1Q8XPCsPpyspboN
-         sUr3+8leOwyY89F/oSFv3cGrNSHmUlynYX2bOUbH+MV0uOTI5ztlTTSvZTB7f47EB940
-         9BYe61kQnH0QOdtBTCSmRfuc3h358BlzcWmxeCAZgWOqtNXs9cMTpai7VPRj19osxYe3
-         hHUw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VX/aiy+bNT0cIjEcj2DQ1zjepFgpqKkfM/HtHDWmDAI=;
+        b=BjQqyXt5fKCdk8DNnWg0JM1q4KtfXPSfkqX89TPhIQIa7oVYbCS4gF/V/TwP1R1+gS
+         qZYIqsokY4iZvxPaMjhGDc5+GQHfn0w3H61fTgu0Tmhh5cwkh0CMMrF3ES+4B0RPRqSq
+         vXnq3nCwoqIuFP53+/Vamw8bRD02xnTh8WXYssuq0EFZocsZWzi9IV8M6LLv+7mJ7sWv
+         ZKs0buEIuqEHO4HCOg9bNUXGZwhPUTC73iYV2hU3hSSjpVCEihEi82+2f4A0TBy8jMdR
+         OQ84tpZSZVYJPzv/LJIVifkw+irOZVRw2MDXWPlGyKEI/gUEgQY55hm5F7K0TipRmn4s
+         95nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BVAS/5gDM35E+vwqcWj4iTNingff3wxRTXoRrLJ2q00=;
-        b=Vd7Ih9nz5QfrdOIM/GMAE91/MY7CqJwzgnuBKxtDLP+jYdEY/53EWdQjUk+M8bOieK
-         lUqJ7pu7GfonjsPcnDIUSns7a9F4ppP6klxj8SBJ9FGe7Bs+TvJ1/pfJcJ29fCZVZELM
-         hWzexLbSBLdU+TrVOnD2qA5kA+93qATzOZCBiSijZwqKHztn+CFkLfcWhIzGgpblpsDx
-         vGQNKFcfmbtkw+4ZaX3T7/QnJS+J9pgjoxjWo6QjOZINUt/FkVT7kZ18Wl7RXaLohbFH
-         OKS0epg3vVA8EdwIP+0vxqvhLLWXrLfJmdPCi8Eb3KHQVIyrDerqJBTCfqDIunnb2N9V
-         jU8A==
-X-Gm-Message-State: APjAAAV9GcGdCOs3iRYR1sCnfrwgymWfEkIJY9Mh73dtniPIVhUipIie
-        enBdkmsFiSKtwsJdo3gY3ujq8SZgPoYZnepkDGhrQQ==
-X-Google-Smtp-Source: APXvYqwZIQ4UdM7SZQDr51CoDArHUpzRGAe6Q8bNEvEr3P+INcGbapfQuu3m6Q3BghOv0Yv945p4cNNPuIJi/eX8d7k=
-X-Received: by 2002:a63:d906:: with SMTP id r6mr22112095pgg.440.1578937242731;
- Mon, 13 Jan 2020 09:40:42 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VX/aiy+bNT0cIjEcj2DQ1zjepFgpqKkfM/HtHDWmDAI=;
+        b=X9RCvDyvqgWbtR3sXVphDcknVT7zeBpggM6XY7ohFfc5M231wAy1ttvawgHBiPOwKy
+         6xOc0DsW6D/ppZywZpfuJPYufmuhX+zYWE+q7ZBMt19+Mana2qgCSBORcp5paqwNHWV3
+         gxlFB8MARox/L5Xbc88SdvFOmgyWbHPG5Rjm5F179Ou033iit6MIojfGHIiDhUauFjPS
+         d7gTrL8eWAF5V8wZKHxUBIuWxINrdFDMoVHLoP5KNGHfmWyVm8IR4Q2d/sdmxTcJwPXl
+         jov0fC6zPywgTli7mMXCPbl1/wjRZLDXgX3BMHU0+cv7E6p+GPXXHTe9qyNXTAU33Drg
+         UK4g==
+X-Gm-Message-State: APjAAAWVYrpP+YUgyB60nvnJaU832KHgv6Z3W8BWXzIFU9NJdWhZ5Qsq
+        0pD6F/YQvkLenlS2wmO4K78=
+X-Google-Smtp-Source: APXvYqy9/b6n+yAw3orNojEpLtY1zjet4t3YPWmZfVFJ7OEjhl7rlyML3gas7tggQmwNZmUvG16d9w==
+X-Received: by 2002:a5d:5267:: with SMTP id l7mr21067930wrc.84.1578937348999;
+        Mon, 13 Jan 2020 09:42:28 -0800 (PST)
+Received: from ltop.local ([2a02:a03f:40c7:f800:a11f:9c52:9797:c64b])
+        by smtp.gmail.com with ESMTPSA id x132sm573127wmg.0.2020.01.13.09.42.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 09:42:28 -0800 (PST)
+Date:   Mon, 13 Jan 2020 18:42:25 +0100
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 6/8] READ_ONCE: Drop pointer qualifiers when reading
+ from scalar types
+Message-ID: <20200113174225.xs3n7t3obysbsmzd@ltop.local>
+References: <20200110165636.28035-1-will@kernel.org>
+ <20200110165636.28035-7-will@kernel.org>
+ <CAHk-=wia5ppBsfHLMx648utCjO01JAZiME0K0eSHmhWuRyL+6w@mail.gmail.com>
+ <20200113145954.GB4458@willie-the-truck>
 MIME-Version: 1.0
-References: <CAAeHK+z2+_UHNp4_D2iL9FzPtDoU1YBohCaDJG8sAy12uc_-ew@mail.gmail.com>
- <Pine.LNX.4.44L0.2001131049090.1502-100000@iolanthe.rowland.org> <CAAeHK+x9Gk3cD77MA9jkhpwO8S62i6KT7PP3NZ6QTZ2qk2FB6w@mail.gmail.com>
-In-Reply-To: <CAAeHK+x9Gk3cD77MA9jkhpwO8S62i6KT7PP3NZ6QTZ2qk2FB6w@mail.gmail.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 13 Jan 2020 18:40:31 +0100
-Message-ID: <CAAeHK+zKAHGAgYKxMNJEiaBhreGB0MgWNsEUFCO8Sxiqvcq57Q@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] usb: gadget: add raw-gadget interface
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113145954.GB4458@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 6:34 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> On Mon, Jan 13, 2020 at 5:50 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> >
-> > On Mon, 13 Jan 2020, Andrey Konovalov wrote:
-> >
-> > > I've also found an issue, but I'm not sure if that is the bug in Raw
-> > > Gadget, or in the gadget layer (in the former case I'll add this fix
-> > > to v5 as well). What I believe I'm seeing is
-> > > __fput()->usb_gadget_unregister_driver()->usb_gadget_remove_driver()->gadget_unbind()
-> > > racing with dummy_timer()->gadget_setup(). In my case it results in
-> > > gadget_unbind() doing set_gadget_data(gadget, NULL), and then
-> > > gadget_setup() dereferencing get_gadget_data(gadget).
-> > >
-> > > Alan, does it look possible for those two functions to race? Should
-> > > this be prevented by the gadget layer, or should I use some kind of
-> > > locking in my gadget driver to prevent this?
-> >
-> > In your situation this race shouldn't happen, because before
-> > udc->driver->unbind() is invoked we call usb_gadget_disconnect().  If
-> > that routine succeeds -- which it always does under dummy-hcd -- then
-> > there can't be any more setup callbacks, because find_endpoint() will
-> > always return NULL (the is_active() test fails; see the various
-> > set_link_state* routines).  So I don't see how you could have ended up
-> > with the race you describe.
->
-> I've managed to reproduce the race by adding an mdelay() into the
-> beginning of the setup() callback. AFAIU what happens is setup() gets
-> called (and waits on the mdelay()), then unbind() comes in and does
-> set_gadget_data(NULL), and then setup() proceeds, gets NULL through
-> get_gadget_data() and crashes on null-ptr-deref. I've got the same
-> crash a few times after many days of fuzzing, so I assume it can
-> happen without the mdelay() as well.
->
-> > However, a real UDC might not be able to perform a disconnect under
-> > software control.  In that case usb_gadget_disconnect() would not
-> > change the pullup state, and there would be a real possibility of a
-> > setup callback racing with an unbind callback.  This seems like a
-> > genuine problem and I can't think of a solution offhand.
-> >
-> > What we would need is a way to tell the UDC driver to stop invoking
-> > gadget callbacks, _before_ the UDC driver's stop callback gets called.
-> > Maybe this should be merged into the pullup callback somehow.
+On Mon, Jan 13, 2020 at 02:59:54PM +0000, Will Deacon wrote:
+> // Insert big fat comment here
+> #define unqual_typeof(x)    typeof(({_Atomic typeof(x) ___x __maybe_unused; ___x; }))
+> 
+> That apparently *requires* GCC 4.8, but I think the question is more about
+> whether it's easier to stomach the funny use of _Atomic or the nested
+> __builtin_choose_expr() I have here. I'm also worried about how reliable
+> the _Atomic thing is, or whether it's just an artifact of how GCC happens
+> to work today.
 
-Perhaps for the dummy driver we need to wait for setup() to finish if
-it's being executed and then stop the dummy timer in dummy_pullup()?
+As far as I understand it, it's an artifact of how GCC works today (it
+was added to support the type-generic macros in <tgmath.h>).
+I also think it's also quite fragile, for example, the unqualified type
+is returned if typeof's argument is an expression but not if it's a
+'typename'. IOW:
+	typeof(_Atomic typeof(const int))
+returns 'const int', while
+	typeof(({_Atomic typeof(const int) x; x; }))
+returns 'int'.
+
+-- Luc
