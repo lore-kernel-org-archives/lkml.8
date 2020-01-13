@@ -2,120 +2,98 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F16CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDECEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597352081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:46:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EAA720661
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578923203;
+	bh=AIlrTSnZ1J1BYZeDE/zgmZ4IXahNEVbk9lgMh1AEQ7Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=yZq5W5q51BBKK7/9iAi49+kqRxJvrTeKdfIAAzk3IO/V+H5Au7Nymn48dZKv/ib8X
+	 T4cXAJPyhtHQO5hJrCdXTpXQ/EwNDRShydbYgKOz8ZLThzPnd+SNKPv5s+F9oSYCvY
+	 qkQSRLDT+E7av0OwxGbmHcQ372GhLT0O2czowjSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbgAMNqU (ORCPT
+        id S1728868AbgAMNqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:46:20 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:39949 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgAMNqU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:46:20 -0500
-Received: from nexussix.ar.arcelik (unknown [84.44.14.226])
-        (Authenticated sender: cengiz@kernel.wtf)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 01116200012;
-        Mon, 13 Jan 2020 13:46:10 +0000 (UTC)
-From:   Cengiz Can <cengiz@kernel.wtf>
-To:     Leon Romanovsky <leon@kernel.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Yevgeny Kliteynik <kliteyn@mellanox.com>,
-        Alex Vesker <valex@mellanox.com>,
-        Erez Shitrit <erezsh@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Cc:     netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Cengiz Can <cengiz@kernel.wtf>
-Subject: [PATCH] net: mellanox: prevent resource leak on htbl
-Date:   Mon, 13 Jan 2020 16:44:16 +0300
-Message-Id: <20200113134415.86110-1-cengiz@kernel.wtf>
-X-Mailer: git-send-email 2.24.1
+        Mon, 13 Jan 2020 08:46:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34716 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbgAMNqm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:46:42 -0500
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07C3D21556;
+        Mon, 13 Jan 2020 13:46:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578923202;
+        bh=AIlrTSnZ1J1BYZeDE/zgmZ4IXahNEVbk9lgMh1AEQ7Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=iuAnG+CuflajR1/NGCyzA+4OgWdGpK3JBRoW8i3KxcgXNDqf9Araj+ScJo6ZeOjjT
+         ToxoD9QgrlII2z7n3Hm7SMXMKF36MPInnWtwtpDLa2NsPpMtB1H9dT9mt/EKuNq5Z+
+         kUI3gsWP6kXyJfteOQcIJNHfn36dpPu35Nr5/ljs=
+Received: by mail-qv1-f42.google.com with SMTP id n8so3978800qvg.11;
+        Mon, 13 Jan 2020 05:46:41 -0800 (PST)
+X-Gm-Message-State: APjAAAV7DtlWb1lfK2/kPKNLyY5PFq0LGhIoWZspvrEIaYZOLh57gCe2
+        qIhs+iVySQHVCFDzCBiIygIBwx7BQEvIdZiQBA==
+X-Google-Smtp-Source: APXvYqyIYYc2t9K2miXG3KyEWH3O5mjcXutnn4DUpikq6B35lTbFFyOCnIJ1ccg69kvCPXEd2zULH+m1JMCJtqyImI8=
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr15327544qvo.20.1578923201111;
+ Mon, 13 Jan 2020 05:46:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191230090419.137141-1-enric.balletbo@collabora.com> <20191230090419.137141-2-enric.balletbo@collabora.com>
+In-Reply-To: <20191230090419.137141-2-enric.balletbo@collabora.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 13 Jan 2020 07:46:29 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLHWa9n167xn+aPFVDvcFLNZpNvWVkrJ15v1WnTtYBLWg@mail.gmail.com>
+Message-ID: <CAL_JsqLHWa9n167xn+aPFVDvcFLNZpNvWVkrJ15v1WnTtYBLWg@mail.gmail.com>
+Subject: Re: [PATCH v24 1/2] Documentation: bridge: Add documentation for
+ ps8640 DT properties
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Ulrich Hecht <uli@fpond.eu>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        David Airlie <airlied@linux.ie>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to a Coverity static analysis tool,
-`drivers/net/mellanox/mlx5/core/steering/dr_rule.c#63` leaks a
-`struct mlx5dr_ste_htbl *` named `new_htbl` while returning from
-`dr_rule_create_collision_htbl` function.
+On Mon, Dec 30, 2019 at 3:04 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> From: Jitao Shi <jitao.shi@mediatek.com>
+>
+> Add documentation for DT properties supported by
+> ps8640 DSI-eDP converter.
+>
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Ulrich Hecht <uli@fpond.eu>
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> I maintained the ack from Rob Herring and the review from Philipp
+> because in essence the only thing I did is migrate to YAML format and
+> check that no errors are reported via dtbs_check. Just let me know if
+> you're not agree.
 
-A annotated snippet of the possible resource leak follows:
-
-```
-static struct mlx5dr_ste *
-dr_rule_create_collision_htbl(struct mlx5dr_matcher *matcher,
-                              struct mlx5dr_matcher_rx_tx *nic_matcher,
-                              u8 *hw_ste)
-   /* ... */
-   /* ... */
-
-   /* Storage is returned from allocation function mlx5dr_ste_htbl_alloc. */
-   /* Assigning: new_htbl = storage returned from mlx5dr_ste_htbl_alloc(..) */
-        new_htbl = mlx5dr_ste_htbl_alloc(dmn->ste_icm_pool,
-                                         DR_CHUNK_SIZE_1,
-                                         MLX5DR_STE_LU_TYPE_DONT_CARE,
-                                         0);
-   /* Condition !new_htbl, taking false branch. */
-        if (!new_htbl) {
-                mlx5dr_dbg(dmn, "Failed allocating collision table\n");
-                return NULL;
-        }
-
-        /* One and only entry, never grows */
-        ste = new_htbl->ste_arr;
-        mlx5dr_ste_set_miss_addr(hw_ste, nic_matcher->e_anchor->chunk->icm_addr);
-   /* Resource new_htbl is not freed or pointed-to in mlx5dr_htbl_get */
-        mlx5dr_htbl_get(new_htbl);
-
-   /* Variable new_htbl going out of scope leaks the storage it points to. */
-        return ste;
-```
-
-There's a caller of this function which does refcounting and free'ing by
-itself but that function also skips free'ing `new_htbl` due to missing
-jump to error label. (referring to `dr_rule_create_collision_entry lines
-75-77. They don't jump to `free_tbl`)
-
-Added a `kfree(new_htbl)` just before returning `ste` pointer to fix the
-leak.
-
-Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
----
-
-This might be totally breaking the refcounting logic in the file so
-please provide any feedback so I can evolve this into something more
-suitable.
-
-For the record, Coverity scan id is CID 1457773.
-
- drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c
-index e4cff7abb348..047b403c61db 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c
-@@ -60,6 +60,8 @@ dr_rule_create_collision_htbl(struct mlx5dr_matcher *matcher,
- 	mlx5dr_ste_set_miss_addr(hw_ste, nic_matcher->e_anchor->chunk->icm_addr);
- 	mlx5dr_htbl_get(new_htbl);
-
-+	kfree(new_htbl);
-+
- 	return ste;
- }
-
---
-2.24.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
