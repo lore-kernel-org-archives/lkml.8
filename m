@@ -2,163 +2,293 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7488BC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA27C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AFE82080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65BF32080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="woLsoFo8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O5asr7il"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgAMKwp (ORCPT
+        id S1727231AbgAMK6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:52:45 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51173 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgAMKwo (ORCPT
+        Mon, 13 Jan 2020 05:58:49 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57842 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725992AbgAMK6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:52:44 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a5so9111719wmb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:52:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ZgZbNBWe0oTcqdIBNdNvd74B3ro0WVKyi3/VTdqw3xE=;
-        b=woLsoFo8w6H55+I2zLR2KHGqFepzum+orJMMrLzKCgk1ZJK212giD75NsNz8DNfjlP
-         vodvnf5v+e7GXZsYfps9azChJyoplTYXHzTXHM6oJ8gDA7ltgi33YYzABGb6l8CIE9c5
-         hMv3K6ZPvkOFnsDgXeVZqXsNofOaN8AiM2PHq7+IHOIDZdKR7nbPDShmz6x3+Mf3CWix
-         bYGxSqk6ZFO9B7Icj1OsAaDdjqD8AaCjk+XeSlKSNfEIGojIYHc/p9hLrJ9fOIcRGaJF
-         i8L4nWE354nw10ZeJTDo5wwrjCjl7fJ905rU03Czk/VeCDLFgkEzPkWz1mCBWhND4DST
-         82BA==
+        Mon, 13 Jan 2020 05:58:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578913127;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MAIEx8cHnHOVRlTiWsQtbwI/8/to6aYjrn2aGGLywaU=;
+        b=O5asr7ilB+nzkEeDKcpd2Y5KJwdIlRB2xFjXN+xUcfZdYX5zMOuTrq2i8PZ1fxOzod0VSO
+        nPwGsALdx3mX9RIxXXeKp0hrzq3lgn9G1Eme3/DhJZBnKxsqWPtE2pZyqLjIqOEygEZre9
+        7/p47FxTQsJ+zrS6gb0lyxeYs1ffitM=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-231-w6u5EupMOUOV-0T5fN4k_Q-1; Mon, 13 Jan 2020 05:58:44 -0500
+X-MC-Unique: w6u5EupMOUOV-0T5fN4k_Q-1
+Received: by mail-wr1-f72.google.com with SMTP id f15so4885559wrr.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:58:44 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ZgZbNBWe0oTcqdIBNdNvd74B3ro0WVKyi3/VTdqw3xE=;
-        b=Ui3k/cNeyZW0c8vZjnQwMMQX82wNTIF48ZE/AQiyMPt5P1xm28zUqBRjBhLBT7uF5b
-         l6lywpdvuBv72QfzQhGq6Hr3locBtN6IjNvbH4mcTuEr9CmHv1u+uT4iuDkhTYvWvx5P
-         C3c4KonZOX5wwfCKqpCzmw++0pgvguIBPLfSDY5RB+uMClyklxNrfMqhrVq1ATpwNJLu
-         McF6bLjc2IqYZ0FQQQ1lEhSOpmv6/FrFOrEj5Wyjk87RGuzepP6K86zPsUF+uT7kKPgj
-         6a/4Vz3EVsDob4W4lhsSghho3S7KVy9J1AtbC6h3ctV5A5kLo53W1KTKRFgQ/mEO7XNb
-         iHEg==
-X-Gm-Message-State: APjAAAXhSg3BsrEzgd5M5nDIa7kMijlLoAVAaXRtf7y6AdQzuEQVikky
-        vVZnFLSZaYYLFNQK+yfI7ORJYg==
-X-Google-Smtp-Source: APXvYqx8Vm7CK6+Z+RiNNpP0t0i/mmfam2P7FFBzWOE/l3fKY62yfP75eVxj2Ys8ub0l0x8bGFfDQQ==
-X-Received: by 2002:a05:600c:2046:: with SMTP id p6mr19619532wmg.110.1578912761970;
-        Mon, 13 Jan 2020 02:52:41 -0800 (PST)
-Received: from dell ([95.147.198.95])
-        by smtp.gmail.com with ESMTPSA id x14sm13574924wmj.42.2020.01.13.02.52.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 02:52:41 -0800 (PST)
-Date:   Mon, 13 Jan 2020 10:53:01 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
- bd718x7 specific parts
-Message-ID: <20200113105301.GF5414@dell>
-References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
- <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
- <20200107124124.GI14821@dell>
- <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MAIEx8cHnHOVRlTiWsQtbwI/8/to6aYjrn2aGGLywaU=;
+        b=dFX/lwF0NzTffJBV4HtojrIEawBFpxaYhJo1m4gAPaXFgAgkNyGWzQd4Fc8Pn09bH8
+         H4cXCNsp9WjIz6qONC9M6khX27MmXnZLsxyy7eot3E+8kp7endiAV0hPGp2pbGQuNH+8
+         5TRZJ532LAVTIqm5+a+W3931UF0MKfxaUHCEQ09BGQoqplBF/Ghs/rP8hOvbMekUmhwl
+         cqN7TchYQoKXqCVjLnXK/biLlkbZxeKcqLh03fzI/LH/i5I0rC5OzLNDxhj+bTNlBL4n
+         6xp9WS65l3L/gzgx395tUf85i8f3MOCo36SXGa4Vld/LHvRalKdTFU6WLaSfkBTiCIYL
+         c0sg==
+X-Gm-Message-State: APjAAAXY+s39aP2L+zItyrUV8cPodeXtICFrTCsQW/g+rh4spk/Utlh/
+        NvJ2GEZiRCbHujuLxmlmeLLUyAU20KPvYu9yj3sUt24CYB2b62KcK3VzT/rrC1DOLcUnKCNbyVr
+        tLUxBjD822O718PUV+RvFbGaw
+X-Received: by 2002:adf:fe0e:: with SMTP id n14mr17776287wrr.116.1578913123559;
+        Mon, 13 Jan 2020 02:58:43 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy0X+GCNnIYMa9/uyFL3BntxkkCxwnCzMMKnBBjLzSQeAoUow1Y6WTCKG6G63ALbSxLbBAaQQ==
+X-Received: by 2002:adf:fe0e:: with SMTP id n14mr17776251wrr.116.1578913123227;
+        Mon, 13 Jan 2020 02:58:43 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id x11sm14953648wre.68.2020.01.13.02.58.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 02:58:41 -0800 (PST)
+Subject: Re: [PATCH 1/3] Input: axp20x-pek - Remove unique wakeup event
+ handling
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Samuel Holland <samuel@sholland.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+References: <20200113032032.38709-1-samuel@sholland.org>
+ <6c876812-6ec1-cf28-8ce4-7732c5cf67da@redhat.com>
+Message-ID: <22828711-7e60-a0cb-4ac9-e7c6d6aff080@redhat.com>
+Date:   Mon, 13 Jan 2020 11:58:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <6c876812-6ec1-cf28-8ce4-7732c5cf67da@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Jan 2020, Vaittinen, Matti wrote:
-
-> Hello Lee,
+On 13-01-2020 11:41, Hans de Goede wrote:
+> Hi,
 > 
-> On Tue, 2020-01-07 at 12:41 +0000, Lee Jones wrote:
-> > On Mon, 30 Dec 2019, Matti Vaittinen wrote:
-> > 
-> > > Few ROHM PMICs allow setting the voltage states for different
-> > > system states
-> > > like RUN, IDLE, SUSPEND and LPSR. States are then changed via SoC
-> > > specific
-> > > mechanisms. bd718x7 driver implemented device-tree parsing
-> > > functions for
-> > > these state specific voltages. The parsing functions can be re-used 
-> > > by
-> > > other ROHM chip drivers like bd71828. Split the generic functions
-> > > from
-> > > bd718x7-regulator.c to rohm-regulator.c and export them for other
-> > > modules
-> > > to use.
-> > > 
-> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > Acked-by: Mark Brown <broonie@kernel.org>
-> > > ---
-
-[...]
-
-> > > +#if IS_ENABLED(CONFIG_REGULATOR_ROHM)
-> > > +int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config
-> > > *dvs,
-> > > +				  struct device_node *np,
-> > > +				  const struct regulator_desc *desc,
-> > > +				  struct regmap *regmap);
-> > 
-> > Does these really need to live in the parent's header file?
+> On 13-01-2020 04:20, Samuel Holland wrote:
+>> This driver attempts to avoid reporting wakeup events to userspace by
+>> clearing a possible pending IRQ before IRQs are enabled during resume.
+>> The assumption seems to be that userspace cannot cope with a KEY_POWER
+>> press during resume. However, no other input driver does this, so it
+>> would be a bug that such events are missing with this driver.
+>>
+>> Furthermore, for PMICs connected via I2C or RSB, it is not possible to
+>> update the regmap during the noirq resume phase, because the bus
+>> controller drivers require IRQs to perform bus transactions. And the
+>> resume hook cannot move to a later phase, because then it would race
+>> with the power key IRQ handler.
+>>
+>> So the best solution seems to be simply removing the hook.
 > 
-> I don't know what would be a better place?
-
-You don't have a regulator header file?
-
-It seems over-kill to create one for this, so leave it as is.
-
-> > What other call-sites are there?
+> Hmm, I'm not sure this is a good idea, let me give you some background
+> info on this:
 > 
-> After this series the bd718x7-regulator.c and bd71828-regulator.c are
-> the in-tree drivers using these. rohm-regulator.c is implementing them.
-> And I hope we see yet another driver landing in later this year. 
+> This hook was handled because on X86 systems/laptops when waking
+> them up typically the power-button does not send a KEY_POWER press event
+> when the system was woken up through the power-button.
 > 
-> Anyways, I will investigate if I can switch this to some common (not
-> rohm specific) DT bindings at some point (I've scheduled this study to
-> March) - If I can then they should live in regulator core headers.
+> So normal (e.g. Debian, Fedora) userspace does not expect this event
+> and will directly go to sleep again because that is the default behavior
+> on a KEY_POWER event.
+
+p.s.
+
+The main reason why typical userspace does not expect the KEY_POWER
+event is because most of the devices which run mainline and have
+suspend/resume working and are using the ACPI button driver for
+the power-button: drivers/acpi/button.c, which has:
+
+                         acpi_pm_wakeup_event(&device->dev);
+                         if (button->suspended)
+                                 break;
+
+                         keycode = test_bit(KEY_SLEEP, input->keybit) ?
+                                                 KEY_SLEEP : KEY_POWER;
+                         input_report_key(input, keycode, 1);
+                         input_sync(input);
+                         input_report_key(input, keycode, 0);
+                         input_sync(input);
+
+And:
+
+static int acpi_button_suspend(struct device *dev)
+{
+         struct acpi_device *device = to_acpi_device(dev);
+         struct acpi_button *button = acpi_driver_data(device);
+
+         button->suspended = true;
+         return 0;
+}
+
+static int acpi_button_resume(struct device *dev)
+{
+         struct acpi_device *device = to_acpi_device(dev);
+         struct acpi_button *button = acpi_driver_data(device);
+
+         button->suspended = false;
+         return 0;
+}
+
+So when the ACPI notify for the button runs on resume, suspended is
+still true; and no KEY_POWER event is send...
+
+Arguably to be consistent we should fix drivers/acpi/button.c to
+send KEY_POWER on wakeup too, but that will break things for many
+users with a likelyhood of breakage approaching 100%.
+
+Note I'm not telling this to argue against your change, just as
+background for why I added this behavior to the axp20x-pek code.
+
+Oh and taking a second look, I see that the hook is already
+written so as to only execute on the AXP288 PMIC, which means
+it should effectively already only influence X86 machines.
+
+So are you trying to get the KEY_POWER event after wakeup
+by power-button to work on a X86 device ?  In that case please
+be aware of the drivers/acpi/button.c issue...
+
+I have the feeling that we may need a Kconfig option to configure
+whether or not to send KEY_POWER on wakeup by power-button, because
+as discussed in my previous mail Android wants this, KDE/MATE/GNOME
+not so much...
+
+Regards,
+
+Hans
+
+
+
 > 
-> But changing the existing properties should again be own set of patches
-> and I'd prefer doing that work independently of this series and not
-> delaying the BD71828 due to not-yet-evaluated bd718x7 property changes.
+> On x86 axp20x-pek is only used for the power-button on Bay Trail devices
+> with a AXP288 PMIC. On Cherry Trail devices with an AXP288 PMIC the
+> power-button is also connected directly to a GPIO on the SoC and that
+> is used (also see the axp20x_pek_should_register_input function).
+> 
+> So after writing this patch, when doing hw-enablement for the power-button
+> on the Cherry Trail devices I learned that the gpio_keys driver does
+> send userspace a KEY_POWER event when woken up with the power-button.
+> 
+> I wrote a patch for gpio-keys to not do this, as that is what normal
+> Linux userspace expects, but that was nacked, because under e.g.
+> Android the KEY_POWER event is actually desirable / necessary to avoid
+> Android immediately re-suspending the system again. Since my "fix" to
+> the gpio-keys devices was nacked I have instead wroked around this in
+> userspace, but *only* for the GNOME3 desktop environment, by teaching
+> GNOME3 to ignore KEY_POWER events for the first couple of seconds after
+> a resume.
+> 
+> So your suggested change, which will cause KEY_POWER to be send on
+> Bay Trail devices after a wake-up by the power button, should be
+> fine for recent GNOME3 versions, but for other desktop environments
+> this may cause a regression where they respond to the new KEY_POWER
+> event by immediately going back to sleep again.
+> 
+> As for this not working with the i2c bus, it does on X86 because
+> the PMIC is also directly accessed by the power-management HW of
+> the SoC and to make this work the i2c-controller is never suspended
+> and its irq is marked IRQF_NO_SUSPEND. But this is X86 special
+> sauce.
+> 
+> Summarizing:
+> 
+> I'm personally fine with remove the magic I added to suppress
+> the KEY_POWER press reporting as in hindsight given the gpio-keys
+> story I should have never added it. But I'm worried about this
+> causing regressions for some Bay Trail users. OTOH making this
+> change would be good for Android X86 users.
+> 
+> Another IMHO better fix would be to drop the __maybe_unused and
+> instead wrap both the axp20x_pek_resume_noirq function and the
+> init of the  .resume_noirq struct member with:
+> 
+> #if defined X86 && defined CONFIG_PM_SLEEP
+> 
+> This keeps the current behavior on Bay Trail machines, while
+> I assume it should also fix the issues this was causing for
+> your setup.
+> 
+> Regards,
+> 
+> Hans
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+>> Signed-off-by: Samuel Holland <samuel@sholland.org>
+>> ---
+>>   drivers/input/misc/axp20x-pek.c | 25 -------------------------
+>>   1 file changed, 25 deletions(-)
+>>
+>> diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
+>> index 17c1cca74498..7d0ee5bececb 100644
+>> --- a/drivers/input/misc/axp20x-pek.c
+>> +++ b/drivers/input/misc/axp20x-pek.c
+>> @@ -352,30 +352,6 @@ static int axp20x_pek_probe(struct platform_device *pdev)
+>>       return 0;
+>>   }
+>> -static int __maybe_unused axp20x_pek_resume_noirq(struct device *dev)
+>> -{
+>> -    struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
+>> -
+>> -    if (axp20x_pek->axp20x->variant != AXP288_ID)
+>> -        return 0;
+>> -
+>> -    /*
+>> -     * Clear interrupts from button presses during suspend, to avoid
+>> -     * a wakeup power-button press getting reported to userspace.
+>> -     */
+>> -    regmap_write(axp20x_pek->axp20x->regmap,
+>> -             AXP20X_IRQ1_STATE + AXP288_IRQ_POKN / 8,
+>> -             BIT(AXP288_IRQ_POKN % 8));
+>> -
+>> -    return 0;
+>> -}
+>> -
+>> -static const struct dev_pm_ops axp20x_pek_pm_ops = {
+>> -#ifdef CONFIG_PM_SLEEP
+>> -    .resume_noirq = axp20x_pek_resume_noirq,
+>> -#endif
+>> -};
+>> -
+>>   static const struct platform_device_id axp_pek_id_match[] = {
+>>       {
+>>           .name = "axp20x-pek",
+>> @@ -394,7 +370,6 @@ static struct platform_driver axp20x_pek_driver = {
+>>       .id_table    = axp_pek_id_match,
+>>       .driver        = {
+>>           .name        = "axp20x-pek",
+>> -        .pm        = &axp20x_pek_pm_ops,
+>>           .dev_groups    = axp20x_groups,
+>>       },
+>>   };
+>>
 
-That's fine.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
