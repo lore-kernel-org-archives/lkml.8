@@ -2,89 +2,101 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 359E2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:46:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA773C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F29592467A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:46:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="a+xBrkWd"
+	by mail.kernel.org (Postfix) with ESMTP id A3CED2187F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578948753;
+	bh=a4C03n1KgrsJmIToOaMx3niqTHgt3oaYJCNoDWV3wnQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=k8zXgVzXmFVvTFBFPpljwnlTnNBfq1KBgaXdy6XdjTpla1gKZD8yhiqmtJwvq1/lo
+	 nmsP5ojWAARVh0dKeKqAL6njKPnmbRC7UW1vnVF4UK87sIZJBWoXbaiNNI5UX37Vcb
+	 PJ2SKgfbaq8NqMijnvBmT1JJPCWkWw1K2uDECU1E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgAMUqU (ORCPT
+        id S1727331AbgAMUwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 15:46:20 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:49028 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726778AbgAMUqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 15:46:20 -0500
-Received: from zn.tnic (p200300EC2F05D300358610FD1FF8C6B9.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:d300:3586:10fd:1ff8:c6b9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0B09D1EC0C98;
-        Mon, 13 Jan 2020 21:46:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578948378;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=dW6ZKQ6DQh5kTanDhU2IOHJ1t4Hr6XOG3diwIIiq8mo=;
-        b=a+xBrkWd/Ok0phsODwK9yJv2tgak87EEbk8f2uKdTXwvSMQZV7I00LwmBBwV0ViWpfY6s5
-        x6xrgiFDXpGp7jH9BYJY9G7zAvw/aVWyXoBHjnJ/PwoHibXXx1MtzPqx26L3SCdbhkv7mQ
-        0e36SEMCBWjaOLrS8zJhiI+0sDhAI3Y=
-Date:   Mon, 13 Jan 2020 21:46:11 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Jari Ruusu <jari.ruusu@gmail.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        johannes.berg@intel.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: Fix built-in early-load Intel microcode alignment
-Message-ID: <20200113204611.GS13310@zn.tnic>
-References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
- <20200113154739.GB11244@42.do-not-panic.com>
- <CACMCwJL8tu+GHPeRADR_12xhcYSiDv+Yxdy=yLqMxEsn=P9zFA@mail.gmail.com>
- <20200113200832.GR13310@zn.tnic>
- <CACMCwJLsj6D884Sxy82VbpKkip=ja2ymHKvQ78c=-ftx-zmV_Q@mail.gmail.com>
+        Mon, 13 Jan 2020 15:52:32 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36910 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbgAMUwc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 15:52:32 -0500
+Received: by mail-qt1-f194.google.com with SMTP id w47so10398532qtk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 12:52:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=lsWiL3UnmG1D5Zt8iTnfdynsV+4fybuDrOYr1/WPZ2U=;
+        b=P+UkFriYZumuinWVUg3IK8rta0OfS1X3Hw57A/u5ZIV+AWApAv2nBYU9uWRJ/LjaJ6
+         0PBxZBHdWIBCCESdPsmx3CJu5+WXZvntMP+ioTo453ZJtGZgYSPuT5DH3R/5P3TY7d1Q
+         nPYGILYJnQpgvu1Mx3zY0UMYlSkl46H51PZVk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=lsWiL3UnmG1D5Zt8iTnfdynsV+4fybuDrOYr1/WPZ2U=;
+        b=AVzPb814mYVwydVVthXg7rltCu064NENP/AZ9bqioI4LmWFoaYpA6jAhHUzXOaUwDq
+         y2QCPpiXqXgi7tpMjkbuaKVeobWWdWi7Js1WcVP/HB3HpOp6NT39uSluFXOyunlbOobb
+         6Xbq80ph65XpNSHZIniRS6tWJYdDo7Duq3GOGM+TM1+zTqJKAQmjAKfmI7G2J+zLfWfz
+         /f0smZaIPk4yzSbghKqmc/pUHIL2brIWFx7P+ZeWQvlr5qS7cx2RyMQ7J3jMcA5YoQCo
+         5cOdW8KDg/NINP7trajd0ONYOsnTzFvhKMEz3SsPoh4LB8vJ5VwNnXF7maB99TkUG+1E
+         wVfw==
+X-Gm-Message-State: APjAAAW2edM/yGBfG0HcOoV8vjWbVchsBsBMpVbVqAI8Oosi+dqN+vvx
+        W+QJUvJaaTpoYJJ/i4RqIWnTmQ==
+X-Google-Smtp-Source: APXvYqwPFOS5t92sYuJVXrtCnYFX7G+y/A7AY5AqTqa2h5nzVyoVk4ENjGQm3E7H3mIV5p8MvmVQqg==
+X-Received: by 2002:aed:2906:: with SMTP id s6mr491409qtd.12.1578948751464;
+        Mon, 13 Jan 2020 12:52:31 -0800 (PST)
+Received: from chatter.i7.local (107-179-243-71.cpe.teksavvy.com. [107.179.243.71])
+        by smtp.gmail.com with ESMTPSA id r80sm5591176qke.134.2020.01.13.12.52.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 12:52:30 -0800 (PST)
+Date:   Mon, 13 Jan 2020 15:52:29 -0500
+From:   Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Richard Weinberger <richard@nod.at>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [GIT PULL] mtd: Fixes for v5.5-rc6
+Message-ID: <20200113205229.v5xjcsljmivcaei4@chatter.i7.local>
+References: <20200110154218.0b28309f@xps13>
+ <CAHk-=wg=8=nTeOYGoAbJ=VjS47Nh4-_OFK9zKsK3mK4nAi2dNA@mail.gmail.com>
+ <CAHk-=whdsFSX0gTOiNkTANONgHHVY+8jUd1DmY2SJpdNOq5xJw@mail.gmail.com>
+ <20200111145004.htnpdf6oaiksryxz@chatter.i7.local>
+ <CAMuHMdUtk9m+BNrH1BuqGxWXR5h1DZmUasHMVKNYFxsd5wa5YA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CACMCwJLsj6D884Sxy82VbpKkip=ja2ymHKvQ78c=-ftx-zmV_Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMuHMdUtk9m+BNrH1BuqGxWXR5h1DZmUasHMVKNYFxsd5wa5YA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 10:30:13PM +0200, Jari Ruusu wrote:
-> On 1/13/20, Borislav Petkov <bp@alien8.de> wrote:
-> > Btw, just out of curiosity: why are you using built-in microcode and not
-> > the initrd method?
+On Mon, Jan 13, 2020 at 09:02:44AM +0100, Geert Uytterhoeven wrote:
+> > Things should be unstuck now, and at least this particular bug is 
+> > fixed
+> > -- hopefully it'll be smooth and automatic the next time the epoch rolls
+> > over to 9.git.
 > 
-> Initrd method is better when it is a kernel intended to be booted
-> on many different computers. Built-in microcode method kernel is
-> tuned for one computer only. It is less hassle that way.
+> Are you prepared for multi-digit epochs? ;-)
+> They not only contain more than one digit, but compare incorrectly
+> when using lexical sorting...
 
-Oh well, you only need to do an initrd which is not that big of a deal.
+I had to check, but yes -- we start from 0 and count up until we get a 
+"no such dir":
+https://git.kernel.org/pub/scm/linux/kernel/git/mricon/korg-helpers.git/tree/pr-tracker-bot.py#n376
 
-The built-in method requires you to rebuild the kernel when there's
-new microcode but new microcode is a relatively seldom occurrence
-in practice. The last two years putting my statistics completely
-out-of-whack.
-
-But they should be coming back to normal because there should simply
-be no more room for microcode patches anymore in the most x86 CPUs out
-there. :)
-
-So if you're building kernels often, it doesn't really matter if you do
-initrd or builtin microcode.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Best,
+-K
