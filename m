@@ -2,109 +2,99 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5991BC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29431C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C72C207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:59:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aHSFk8cC"
+	by mail.kernel.org (Postfix) with ESMTP id 05F75207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:59:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgAMM7s (ORCPT
+        id S1728714AbgAMM75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:59:48 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:49198 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgAMM7s (ORCPT
+        Mon, 13 Jan 2020 07:59:57 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8374 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728643AbgAMM74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:59:48 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DCwcl9062900;
-        Mon, 13 Jan 2020 12:59:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=ZfQ1LgEbn14jkZf0Ql+4WtMf3jaMLStq+biPvvi5LeY=;
- b=aHSFk8cCApgGWGP9EVWzSjLQdiG2Bpi9zxuSrvIVNMKnFz4ekCONCWcx4xcSeZLOX55D
- aM8DohhHK0kwdp9UeShe1Bx8n91QLMOChpyAMw1HJLU8YQdgqaDp9SuVcnCiZwSARTFy
- MhNWao7CBnUQvOI5wqv6upPCvtMFRbTQNL3sPNhzatrYm6IzcKOeFPm6AjcHO5VGptlM
- XxRvgeBe+d1CSpoCiQH9T568qZcwQ/UOuYu94b1V8YDe2JzrX9GWgq7Hz4pImRRXAU8y
- y4jmXd4yrVt8pFCycTcddauB+lLWyX+qZUOM5rJ66Uw1I77eDhXx6O2BpZuf77TCRnFL Gg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2xf73tesk9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 12:59:44 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DCwaqv020336;
-        Mon, 13 Jan 2020 12:59:44 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2xfrh61xqa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 12:59:44 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00DCxg8o012055;
-        Mon, 13 Jan 2020 12:59:42 GMT
-Received: from kili.mountain (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 04:59:42 -0800
-Date:   Mon, 13 Jan 2020 15:59:33 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Saravanan Sekar <sravanhome@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] regulator: mpq7920: Check the correct variable in
- mpq7920_regulator_register()
-Message-ID: <20200113125805.xri6jqoxy2ldzqyg@kili.mountain>
+        Mon, 13 Jan 2020 07:59:56 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00DCvuIC181350
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 07:59:55 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xfvjxbskj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 07:59:55 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
+        Mon, 13 Jan 2020 12:59:49 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 13 Jan 2020 12:59:46 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00DCxja240894502
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 12:59:45 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4D9DC4204C;
+        Mon, 13 Jan 2020 12:59:45 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E6994203F;
+        Mon, 13 Jan 2020 12:59:43 +0000 (GMT)
+Received: from JAVRIS.in.ibm.com (unknown [9.199.42.111])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 13 Jan 2020 12:59:42 +0000 (GMT)
+Subject: Re: [PATCH 1/2] selftests/livepatch: Replace set_dynamic_debug() with
+ setup_config() in README
+To:     Miroslav Benes <mbenes@suse.cz>, jpoimboe@redhat.com,
+        jikos@kernel.org, pmladek@suse.com, joe.lawrence@redhat.com,
+        shuah@kernel.org
+Cc:     live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200113124907.11086-1-mbenes@suse.cz>
+ <20200113124907.11086-2-mbenes@suse.cz>
+From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
+Date:   Mon, 13 Jan 2020 18:29:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9498 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001130108
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9498 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001130108
+In-Reply-To: <20200113124907.11086-2-mbenes@suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20011312-0028-0000-0000-000003D0A7A5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011312-0029-0000-0000-00002494C58B
+Message-Id: <e0ca1fee-1770-7d8a-8a7a-9539aabda1d5@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-13_03:2020-01-13,2020-01-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=906
+ lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0 phishscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0
+ clxscore=1015 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001130108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a typo in the error checking.  We should be checking
-"->rdev[i]" instead of just "->rdev".
+On 1/13/20 6:19 PM, Miroslav Benes wrote:
+> Commit 35c9e74cff4c ("selftests/livepatch: Make dynamic debug setup and
+> restore generic") introduced setup_config() to set up the environment
+> for each test. It superseded set_dynamic_debug().  README still mentions
+> set_dynamic_debug(), so update it to setup_config() which should be used
+> now in every test.
+> 
+> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
 
-Fixes: 6501c1f54a17 ("regulator: mpq7920: add mpq7920 regulator driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
- drivers/regulator/mpq7920.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Reviewed-by: Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
 
-diff --git a/drivers/regulator/mpq7920.c b/drivers/regulator/mpq7920.c
-index ab1b847c57e5..80f3131f0d1b 100644
---- a/drivers/regulator/mpq7920.c
-+++ b/drivers/regulator/mpq7920.c
-@@ -274,8 +274,8 @@ static inline int mpq7920_regulator_register(
- 
- 		info->rdev[i] = devm_regulator_register(info->dev, rdesc,
- 					 config);
--		if (IS_ERR(info->rdev))
--			return PTR_ERR(info->rdev);
-+		if (IS_ERR(info->rdev[i]))
-+			return PTR_ERR(info->rdev[i]);
- 	}
- 
- 	return 0;
+
 -- 
-2.11.0
+Kamalesh
 
