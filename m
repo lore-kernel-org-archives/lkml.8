@@ -2,148 +2,71 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E03BFC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2112C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A5F207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E41207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:15:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgAMOPV (ORCPT
+        id S1729011AbgAMOPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:15:21 -0500
-Received: from mout.kundenserver.de ([212.227.17.24]:41521 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728774AbgAMOPU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:15:20 -0500
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1Mhl0I-1jLvTC41B2-00dkGK; Mon, 13 Jan 2020 15:15:11 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id A5F5D64F294;
-        Mon, 13 Jan 2020 14:15:10 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id VgsXzwaqNrMb; Mon, 13 Jan 2020 15:15:10 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 54CA164E74F;
-        Mon, 13 Jan 2020 15:15:10 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.10.2.141) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1320.4; Mon, 13 Jan 2020 15:15:10 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 03FBA804E9; Mon, 13 Jan 2020 15:15:10 +0100 (CET)
-Date:   Mon, 13 Jan 2020 15:15:09 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH 1/8] media: adv748x: add a device-specific wrapper for
- register block read
-Message-ID: <20200113141509.GB3606@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-References: <cover.1578924232.git.alexander.riesen@cetitec.com>
+        Mon, 13 Jan 2020 09:15:37 -0500
+Received: from mga04.intel.com ([192.55.52.120]:37977 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728774AbgAMOPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 09:15:37 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 06:15:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
+   d="scan'208";a="244336798"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 13 Jan 2020 06:15:34 -0800
+Received: by lahna (sSMTP sendmail emulation); Mon, 13 Jan 2020 16:15:33 +0200
+Date:   Mon, 13 Jan 2020 16:15:33 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v1 2/3] PCI: Change
+ pci_bus_distribute_available_resources() args to struct resource
+Message-ID: <20200113141533.GJ2838@lahna.fi.intel.com>
+References: <PSXP216MB0438587C47CBEDF365B1EA27803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1578924232.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.10.2.141]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29536F936F657D64
-X-Provags-ID: V03:K1:1JPns5GasBHjZTgrFQHGNnhSdRNObQT1UzzxL7GpDV7WAKNmB4M
- FkmhKG1563Jb6HctQGmZSpMgIeSwQB+IAPuB1DWMHLL5UWjYbjY8q6VDpW2YPVZ5mXxmRAU
- 7tHsDxWHLTkOkig+l361chO7oeD+NzSokH6TWf34P6Jdw3ab1GrVde5sd82zoUD+n5IywYX
- olpMdKOipTgyqYe01wKJw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ohg2w/+Fy6k=:lzV+9xqdJNzc3oSdT6agH+
- thHHtKQem4M1Am71+kbcrfFKd39yx56vI1nLOMttFkaLr4qxZ7UDsxqgaGbJDoIN9r0Wrtosp
- KWSkR8EcOqyvt5mQWprLNxGywSReXV1pleSMIj9VQuCpOtVOf8CNZSJAYLvwAYuI63o8GS5FW
- 4k6nOe2ZnMmvGiOm733eLxi09/+DOjrGI+ZRJCbO8Z2GsqJOcRL7gnsJfLw75l1Cbv6aKv6Gv
- Dj6YhPpGUHSQhEzbV6nzFB7MCkzSIwmnEqDzvV39q4Dn2DkgMeKK16SbskOcmeHYWK2v6wmZG
- 5savYW5J0YNWjuCV1rksX067WIi00wcwYF5WaM4NdqtHFcW1HwPkSjqF68fq3Ah4BpgpxMiaA
- MVzc4VCEMNy20bYk3apcSxFyo/YHusB1Hm2mwyPsfzXZ/x2lf2FP1eKO5mGHyUJipot1UeI/X
- Jbyeu/tiWrDMaityXq+uyVvC/zp54T9beB1dXJdozTqDSvwvmcsA/nQzIA76+YZRoo2B4UFp7
- BjMI2vs5CqzzzNBPdfcrPvar1peF55ZGLgaXdYSYiP2tAFxS5ZfUZyfc6NfQpIHuNuFjxM3yr
- dV53B2pWPHPOfMorlfatB89qnN2aeXQXD0jA6Jdvw5NHu+zmj0Wxzh80SemVMrVYbj0Jf2vDt
- cTatCC3f9hlUENlkAAo+v0rBYa1/xGpjYfWonHa0qeWqS6DyqwEYO9l9nFb1M2KHpI35Ll05C
- 03pH4bWxaSkw8MPXdrekRDBJrwEeH0xWsLhcqCmtJMjG89g+Sgl2Z+s5Sjljpha8PurgWr+qB
- NAQPCSK8F0X7JoQC8mdqow+2G+StDrmxIVXl7PR+qPwwobSO4f2/sJJAKkQyt/zWGfUdH9Tm9
- Ah4f3/LUgRYgWQPxVjlZ7AsmSKyB2ywV4T8hyAEtA=
+In-Reply-To: <PSXP216MB0438587C47CBEDF365B1EA27803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of the devices I2C-accessible registers (for instance, cs_data for
-stereo channel information or tmds_params for TMDS channel information)
-located in adjacent cells. According to manufacturers information, these
-registers can be read using block transactions.
+On Mon, Jan 06, 2020 at 03:45:52PM +0000, Nicholas Johnson wrote:
+> Change pci_bus_distribute_available_resources() arguments from
+> resource_size_t to struct resource to add more information required to
+> get the alignment correct for bridge windows with alignment >1M.
+> 
+> We require (size, alignment), instead of just (size) which is what is
+> currently available. The change from resource_size_t to struct resource
+> does just that.
+> 
+> Note that the struct resource arguments are passed by value and not by
+> reference. We do not want to pass by reference and change the resource
+> size of the parent bridge window. We only want the size information.
+> 
+> No functional changes.
+> 
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
----
- drivers/media/i2c/adv748x/adv748x-core.c | 15 +++++++++++++++
- drivers/media/i2c/adv748x/adv748x.h      |  2 ++
- 2 files changed, 17 insertions(+)
-
-diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-index 23e02ff27b17..bc49aa93793c 100644
---- a/drivers/media/i2c/adv748x/adv748x-core.c
-+++ b/drivers/media/i2c/adv748x/adv748x-core.c
-@@ -97,6 +97,21 @@ static const struct adv748x_register_map adv748x_default_addresses[] = {
- 	[ADV748X_PAGE_TXA] = { "txa", 0x4a },
- };
- 
-+int adv748x_read_block(struct adv748x_state *state, u8 client_page, u8 reg,
-+		       void *val, size_t reg_count)
-+{
-+	struct i2c_client *client = state->i2c_clients[client_page];
-+	int err;
-+
-+	err = regmap_bulk_read(state->regmap[client_page], reg, val, reg_count);
-+	if (err) {
-+		adv_err(state, "error reading %02x, %02x-%02lx: %d\n",
-+				client->addr, reg, reg + reg_count - 1, err);
-+		return err;
-+	}
-+	return 0;
-+}
-+
- static int adv748x_read_check(struct adv748x_state *state,
- 			      int client_page, u8 reg)
- {
-diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
-index 5042f9e94aee..db6346a06351 100644
---- a/drivers/media/i2c/adv748x/adv748x.h
-+++ b/drivers/media/i2c/adv748x/adv748x.h
-@@ -387,6 +387,8 @@ struct adv748x_state {
- /* Register handling */
- 
- int adv748x_read(struct adv748x_state *state, u8 addr, u8 reg);
-+int adv748x_read_block(struct adv748x_state *state, u8 page, u8 reg,
-+		       void *val, size_t reg_count);
- int adv748x_write(struct adv748x_state *state, u8 page, u8 reg, u8 value);
- int adv748x_write_block(struct adv748x_state *state, int client_page,
- 			unsigned int init_reg, const void *val,
--- 
-2.24.1.508.g91d2dafee0
-
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
