@@ -1,167 +1,109 @@
-Return-Path: <SRS0=/A4t=3B=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38538C33CA9
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 23:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DD0C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 00:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05E7820724
-	for <linux-kernel@archiver.kernel.org>; Sun, 12 Jan 2020 23:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F61E206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 00:06:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Yn6uC4+C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BJ46d3g1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387538AbgALX7X (ORCPT
+        id S2387502AbgAMAGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 18:59:23 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25528 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387460AbgALX7X (ORCPT
+        Sun, 12 Jan 2020 19:06:25 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:42237 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727323AbgAMAGZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 18:59:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578873561;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=shjAXqX0XtuUm3vvQnDz2Q/Zb3ofWUI9QTq2ZaDFd1Y=;
-        b=Yn6uC4+C25vgWx4W/mwOGgaKLP4dmSlwt9Siu94PbKN652lPmglrPodHADxiiN0rmcn2UI
-        flDt5KSMzBFK2ggTBgWO5LhbYQnUKOoZYTGxC2+N1jbE7cbrBE9UpMStHWCol+GwdV/vCr
-        4Mapsgw7wOPdS7e365YJGi2okEwInYQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-bDP-4MxGMTqtPa2ekniHGw-1; Sun, 12 Jan 2020 18:59:18 -0500
-X-MC-Unique: bDP-4MxGMTqtPa2ekniHGw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B175477;
-        Sun, 12 Jan 2020 23:59:17 +0000 (UTC)
-Received: from llong.com (ovpn-121-25.rdu2.redhat.com [10.10.121.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CE6FE60BE2;
-        Sun, 12 Jan 2020 23:59:13 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH v2] locking/osq: Use optimized spinning loop for arm64
-Date:   Sun, 12 Jan 2020 18:58:54 -0500
-Message-Id: <20200112235854.32089-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Sun, 12 Jan 2020 19:06:25 -0500
+Received: by mail-vk1-f193.google.com with SMTP id s142so2077612vkd.9
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 16:06:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2HL17RsQhpvHGVShSuMEnDCDjyjoYw8RfuvSsolxtKc=;
+        b=BJ46d3g1EqtVBj1REWG1osVEA0ioMzxPhH28Voa7Awf1EbCYKRi/or0ikFnFF0Xtj5
+         e0JfYLf1HxqHlmkqdsJ7sRitHZuL6W1USF1SxIJv60yhpJTNYkDvM4MUVLdt1kUs3sAa
+         hn901YxwMn96I/6B6WDo8r63EhWYRW72DyhKp85pfztWr116M8l96gtMgjJ5uoYjgn7i
+         qLzV40TO01xhlnShJitRxTqNCZgZL76N2mQr3gFOHb79/NGtJkPvH0DsV1MhgHPflAgN
+         Ib0YwyNqtbrWiCbmZVKzEEZUB1P09dM4gNkaqm0cZuppRHBWUK5tW1cUyP8RJaSKvcAT
+         JfuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2HL17RsQhpvHGVShSuMEnDCDjyjoYw8RfuvSsolxtKc=;
+        b=mLZe6cfjXCGA692AP4d719uXoNIRRkPSg47tpd8pYDCiRkB1jh5Mqp5X7/t/+1u2Gi
+         U9L2ckyat9siTc7mBKj1kVXC+8cX61/f5lFJ3rMXIWc7v7MB6uEusBvzhHXvXFuV8mip
+         Kh/gBcJ68VzC8CoR0rbqK380NQelJVnb5uA77QDcxPJiuDfhk12XH1GwPfd6BJ08BM2e
+         SBqjx11FQ8CfK8OvwI+fJ06JCZtFywBK7W8Y5ma5a9/tA3is+c6B8bbfM8Opcrswhv+T
+         sHnPgms/jXOd5yRUrk2iopbEvSKTvkL6++yFYDSbmAXIhyaG6Da2R35ch6YGF+xm/ah8
+         UdWw==
+X-Gm-Message-State: APjAAAWhuXcmBXxvfUI6SPJ62iQFzRjWl2lwfNgghFnRM6rOGQM/KIdY
+        5IpsEUrO1dHfDoT5J7veHJej+A7qBkLZlMiBqXU=
+X-Google-Smtp-Source: APXvYqzGUmlmfiMEzFg+1Y2A/xrmXNSvnyyQzuYUdfcc1RWK1JrFT8cW87AN1eibIhZjvgcBqYpoB/Fmq6QSxuCaLFI=
+X-Received: by 2002:a1f:1144:: with SMTP id 65mr5884087vkr.77.1578873984539;
+ Sun, 12 Jan 2020 16:06:24 -0800 (PST)
+MIME-Version: 1.0
+References: <20200110063201.47560-1-yuehaibing@huawei.com>
+In-Reply-To: <20200110063201.47560-1-yuehaibing@huawei.com>
+From:   Ben Skeggs <skeggsb@gmail.com>
+Date:   Mon, 13 Jan 2020 10:06:13 +1000
+Message-ID: <CACAvsv6EG0wvF4XCs=jisEjMDkfVUgMorgURko4uubqc3DOgOQ@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH] drm/nouveau: Fix copy-paste error in nouveau_fence_wait_uevent_handler
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@canonical.com>,
+        sumit.semwal@linaro.org,
+        ML nouveau <nouveau@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arm64 has a more optimized spinning loop (atomic_cond_read_acquire)
-for spinlock that can boost performance of sibling threads by putting
-the current cpu to a shallow sleep state that is woken up only when
-the monitored variable changes or an external event happens.
+On Fri, 10 Jan 2020 at 16:51, YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> Like other cases, it should use rcu protected 'chan' rather
+> than 'fence->channel' in nouveau_fence_wait_uevent_handler.
+>
+> Fixes: 0ec5f02f0e2c ("drm/nouveau: prevent stale fence->channel pointers, and protect with rcu")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Got it, thanks!
 
-OSQ has a more complicated spinning loop. Besides the lock value, it
-also checks for need_resched() and vcpu_is_preempted(). The check for
-need_resched() is not a problem as it is only set by the tick interrupt
-handler. That will be detected by the spinning cpu right after iret.
-
-The vcpu_is_preempted() check, however, is a problem as changes to the
-preempt state of of previous node will not affect the sleep state. For
-ARM64, vcpu_is_preempted is not defined and so is a no-op. To guard
-against future addition of vcpu_is_preempted() to arm64, code is added
-to cause build error when vcpu_is_preempted becomes defined in arm64
-without the corresponding changes in the OSQ spinning code.
-
-On a 2-socket 56-core 224-thread ARM64 system, a kernel mutex locking
-microbenchmark was run for 10s with and without the patch. The
-performance numbers before patch were:
-
-Running locktest with mutex [runtime = 10s, load = 1]
-Threads = 224, Min/Mean/Max = 316/123,143/2,121,269
-Threads = 224, Total Rate = 2,757 kop/s; Percpu Rate = 12 kop/s
-
-After patch, the numbers were:
-
-Running locktest with mutex [runtime = 10s, load = 1]
-Threads = 224, Min/Mean/Max = 334/147,836/1,304,787
-Threads = 224, Total Rate = 3,311 kop/s; Percpu Rate = 15 kop/s
-
-So there was about 20% performance improvement.
-
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- arch/arm64/include/asm/barrier.h | 10 ++++++++++
- kernel/locking/osq_lock.c        | 25 ++++++++++++-------------
- 2 files changed, 22 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm64/include/asm/barrier.h b/arch/arm64/include/asm/barrier.h
-index 7d9cc5ec4971..8eb5f1239885 100644
---- a/arch/arm64/include/asm/barrier.h
-+++ b/arch/arm64/include/asm/barrier.h
-@@ -152,6 +152,16 @@ do {									\
- 	VAL;								\
- })
- 
-+/*
-+ * In osq_lock(), smp_cond_load_relaxed() is called with a condition
-+ * that includes vcpu_is_preempted(). For arm64, vcpu_is_preempted is not
-+ * currently defined. So it is a no-op. If vcpu_is_preempted is defined in
-+ * the future, smp_cond_load_relaxed() will not response to changes in the
-+ * preempt state in a timely manner. So code changes will have to be made
-+ * to address this deficiency.
-+ */
-+#define vcpu_is_preempted_not_used
-+
- #define smp_cond_load_acquire(ptr, cond_expr)				\
- ({									\
- 	typeof(ptr) __PTR = (ptr);					\
-diff --git a/kernel/locking/osq_lock.c b/kernel/locking/osq_lock.c
-index 6ef600aa0f47..69ec5161c3cc 100644
---- a/kernel/locking/osq_lock.c
-+++ b/kernel/locking/osq_lock.c
-@@ -13,6 +13,14 @@
-  */
- static DEFINE_PER_CPU_SHARED_ALIGNED(struct optimistic_spin_node, osq_node);
- 
-+/*
-+ * The optimized smp_cond_load_relaxed() spin loop should not be used with
-+ * vcpu_is_preempted defined.
-+ */
-+#if defined(vcpu_is_preempted) && defined(vcpu_is_preempted_not_used)
-+#error "vcpu_is_preempted() inside smp_cond_load_relaxed() may not work!"
-+#endif
-+
- /*
-  * We use the value 0 to represent "no CPU", thus the encoded value
-  * will be the CPU number incremented by 1.
-@@ -134,20 +142,11 @@ bool osq_lock(struct optimistic_spin_queue *lock)
- 	 * cmpxchg in an attempt to undo our queueing.
- 	 */
- 
--	while (!READ_ONCE(node->locked)) {
--		/*
--		 * If we need to reschedule bail... so we can block.
--		 * Use vcpu_is_preempted() to avoid waiting for a preempted
--		 * lock holder:
--		 */
--		if (need_resched() || vcpu_is_preempted(node_cpu(node->prev)))
--			goto unqueue;
--
--		cpu_relax();
--	}
--	return true;
-+	if (smp_cond_load_relaxed(&node->locked, VAL || need_resched() ||
-+				  vcpu_is_preempted(node_cpu(node->prev))))
-+		return true;
- 
--unqueue:
-+	/* unqueue */
- 	/*
- 	 * Step - A  -- stabilize @prev
- 	 *
--- 
-2.18.1
-
+> ---
+>  drivers/gpu/drm/nouveau/nouveau_fence.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_fence.c b/drivers/gpu/drm/nouveau/nouveau_fence.c
+> index 9118df0..70bb6bb 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_fence.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_fence.c
+> @@ -156,7 +156,7 @@ nouveau_fence_wait_uevent_handler(struct nvif_notify *notify)
+>
+>                 fence = list_entry(fctx->pending.next, typeof(*fence), head);
+>                 chan = rcu_dereference_protected(fence->channel, lockdep_is_held(&fctx->lock));
+> -               if (nouveau_fence_update(fence->channel, fctx))
+> +               if (nouveau_fence_update(chan, fctx))
+>                         ret = NVIF_NOTIFY_DROP;
+>         }
+>         spin_unlock_irqrestore(&fctx->lock, flags);
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> Nouveau mailing list
+> Nouveau@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/nouveau
