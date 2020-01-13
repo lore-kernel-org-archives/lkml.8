@@ -2,141 +2,131 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF29C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15F67C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:51:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE84E207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C992084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:51:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbgAMMtv (ORCPT
+        id S1728734AbgAMMvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:49:51 -0500
-Received: from mout.kundenserver.de ([212.227.17.13]:59001 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726375AbgAMMtu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:49:50 -0500
-Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
- mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MGi6m-1ivuqF03wQ-00DrnK; Mon, 13 Jan 2020 13:49:49 +0100
-Received: by mail-qt1-f178.google.com with SMTP id d5so8957935qto.0;
-        Mon, 13 Jan 2020 04:49:48 -0800 (PST)
-X-Gm-Message-State: APjAAAUL/nH/v9bWPYRP8YJpHanBsQwHTVZb607yHl2wwT5fuWQyIxSM
-        qlDNPAIcKddfz+9xeQUDwo61b4pqsbU3Y2SPP0I=
-X-Google-Smtp-Source: APXvYqzFNee6oMqlwdnJFaK96+kqQeTvX1mVko2+fsSOjGGm7mJkzAnLuZGtaJ8nkF1quBL2liWsixLifYLOWUujuDc=
-X-Received: by 2002:ac8:709a:: with SMTP id y26mr13837250qto.304.1578919787752;
- Mon, 13 Jan 2020 04:49:47 -0800 (PST)
+        Mon, 13 Jan 2020 07:51:33 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44914 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726480AbgAMMvc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 07:51:32 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id CEAC2ACC9;
+        Mon, 13 Jan 2020 12:51:30 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id 28CC0E3C1F; Mon, 13 Jan 2020 13:51:29 +0100 (CET)
+Date:   Mon, 13 Jan 2020 13:51:29 +0100
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     netdev@vger.kernel.org
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>, davem@davemloft.ne,
+        jeffrey.t.kirsher@intel.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Li RongQing <lirongqing@baidu.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] ethtool: Call begin() and complete() in
+ __ethtool_get_link_ksettings()
+Message-ID: <20200113125129.GD25361@unicorn.suse.cz>
+References: <20200110074159.18473-1-kai.heng.feng@canonical.com>
+ <20200110074159.18473-2-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-References: <20191029182320.GA17569@mwanda> <CGME20191029190229epcas3p4e9b24bd8cde962681ef3dc4644ed2c2e@epcas3p4.samsung.com>
- <87zhhjjryk.fsf@x220.int.ebiederm.org> <fd4e6f01-074b-def7-7ffb-9a9197930c31@samsung.com>
-In-Reply-To: <fd4e6f01-074b-def7-7ffb-9a9197930c31@samsung.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 13 Jan 2020 13:49:30 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a2uLm9pJtx42qDXJSdD71-dVW6+iDcRAnEB85Ajak-HLw@mail.gmail.com>
-Message-ID: <CAK8P3a2uLm9pJtx42qDXJSdD71-dVW6+iDcRAnEB85Ajak-HLw@mail.gmail.com>
-Subject: Re: [PATCH] fbdev: potential information leak in do_fb_ioctl()
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Joe Perches <joe@perches.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Andrea Righi <righi.andrea@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Peter Rosin <peda@axentia.se>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, security@kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Julia Lawall <Julia.Lawall@lip6.fr>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:Z86KGNz51oiEIbBwBmTRv1ygKjG0C0oJVToiYX8G7GmKClLf85N
- NxX50AhreeFufMRAYcsX5mIWe4vF1q9dqwzjp1me5o9Om9Wzb9DVtsQMhOXuXWvKCjz3Wht
- Fh/iCbvwpJOj3Wi6jtF9ISpm9Xw8l9kX7Yku9tQwJGTbpwbeb9Zq1lVn8KRVF6ImrXa000T
- PBOk7r2qkNiADqHmh/adQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9wOE/U8AERY=:AyuhiL5DijWN3TEddRb/Vh
- RXvq/IR8r+JpcYSRGy3udJCcE7aKqDhokzRZN7q6EOKhFcLZhSGBQLIt6Swp//hcYAcEPfiSK
- BuMqRA1UOsO5ftu1CHaNCyOKlVi2yvQCPpt25UKVu3ImQwebEe2jILvL63oXQYFUJgWbVytSg
- CXiFleX9B+hI3Ou5/5PCdxlz95kHHEGrzdsAZlQJ6gtand+Jo+x9Vb0Keu8QaH6QY5v4ZDGK/
- Q1NIewK1EptszTFZhm4Tj0OWxxxMIQDfTTaRRwUUIp0URIyGn3Lk6l1PHALMbt/RPyNbb/g1Q
- p4K5PujpLsdnPdOAfwT4LaRlwF6+quugJiWLQA5yyLGxZ63DuaclfDTPcxWm5A72kjdeHbMaT
- B4jYnGIMbCltmcWQjx/lo1OgXR8hoYCKGGaS6LMOTvWhXAt9kDmXa+4AP3sC+TYZ+cs+km+Ht
- kpCCIZNjDyBb0BqjOmrA8oBlVp4QwU5aMK2u2j3d2HTZjhkee0NvYuPu/2Q5RRTXuUEtRhZ6r
- uABrdiRsbwOXThMhbsftOa/COk1O86y18Vs8Vdkb8rlv8+TjAaTZ8IYU6TZmQCmm5o6CYB6+5
- 6JQB40q4vK4fQS4sXxYI0RoOmoNZfHHOAYHkQiqiXNz8kh+iVwsNy6FEP/Ze97lqR9YrUL+ws
- +NaK1plV8BoqQtHD7v+3wa+HdKXQ8sYHKgEiphjEvTUF3KXXtxHt3IAmW97iGoc5UcF4k1sx+
- +41lZMgHtGK3nz6LZ88B5UXwju2Pi6yBkQGs5kfcCMM7ZnwN+52HHYLqFcT27JzhGwNULgKK+
- FrFUGEKDdn4OHPDjpdRKsz/pkmiTJnjoYRa8xIjokp1fdeQAGjcvzhgfxGMX7jOSkihqNr2QW
- f2eMJznjCBvCzqPcocMg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110074159.18473-2-kai.heng.feng@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 3, 2020 at 2:09 PM Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
-> On 10/29/19 8:02 PM, Eric W. Biederman wrote:
-> >
-> > The goal is to avoid memory that has values of the previous users of
-> > that memory region from leaking to userspace.  Which depending on who
-> > the previous user of that memory region is could tell userspace
-> > information about what the kernel is doing that it should not be allowed
-> > to find out.
-> >
-> > I tried to trace through where "info" and thus presumably "info->fix" is
-> > coming from and only made it as far as  register_framebuffer.  Given
->
-> "info" (and thus "info->fix") comes from framebuffer_alloc() (which is
-> called by fbdev device drivers prior to registering "info" with
-> register_framebuffer()). framebuffer_alloc() does kzalloc() on "info".
->
-> Therefore shouldn't memcpy() (as suggested by Jeo Perches) be enough?
+On Fri, Jan 10, 2020 at 03:41:59PM +0800, Kai-Heng Feng wrote:
+> Device like igb gets runtime suspended when there's no link partner. We
+> can't get correct speed under that state:
+> $ cat /sys/class/net/enp3s0/speed
+> 1000
+> 
+> In addition to that, an error can also be spotted in dmesg:
+> [  385.991957] igb 0000:03:00.0 enp3s0: PCIe link lost
+> 
+> It's because the igb device doesn't get runtime resumed before calling
+> get_link_ksettings().
+> 
+> So let's call begin() and complete() like what dev_ethtool() does, to
+> runtime resume/suspend or power up/down the device properly.
+> 
+> Once this fix is in place, igb can show the speed correctly without link
+> partner:
+> $ cat /sys/class/net/enp3s0/speed
+> -1
 
-Is it guaranteed that all drivers call framebuffer_alloc() rather than
-open-coding it somewhere?
+I agree that we definitely should make sure ->begin() and ->complete()
+are always called around ethtool_ops calls. But even if nesting should
+be safe now (for in-tree drivers, that is), I'm not really happy about
+calling them even in places where we positively know we are always
+inside a begin / complete block as e.g. vxlan or net_failover do. (And
+also linkinfo.c and linkmodes.c but it may be easier to call
+->get_link_ksettings() directly there.)
 
-Here is a list of all files that call register_framebuffer() without first
-calling framebuffer_alloc:
+How about having two helpers: one simple for "ethtool context" where we
+know we already are between ->begin() and ->complete() and one with the
+begin/complete calls for the rest? Another interesting question is if
+any of the callers which do not have their own begin()/complete() wrap
+does actually need anything more than speed and duplex (I didn't do
+a full check).
 
-$ git grep -wl register_framebuffer | xargs grep -L framebuffer_alloc
-Documentation/fb/framebuffer.rst
-drivers/media/pci/ivtv/ivtvfb.c
-drivers/media/platform/vivid/vivid-osd.c
-drivers/video/fbdev/68328fb.c
-drivers/video/fbdev/acornfb.c
-drivers/video/fbdev/amba-clcd.c
-drivers/video/fbdev/atafb.c
-drivers/video/fbdev/au1100fb.c
-drivers/video/fbdev/controlfb.c
-drivers/video/fbdev/core/fbmem.c
-drivers/video/fbdev/cyber2000fb.c
-drivers/video/fbdev/fsl-diu-fb.c
-drivers/video/fbdev/g364fb.c
-drivers/video/fbdev/goldfishfb.c
-drivers/video/fbdev/hpfb.c
-drivers/video/fbdev/macfb.c
-drivers/video/fbdev/matrox/matroxfb_base.c
-drivers/video/fbdev/matrox/matroxfb_crtc2.c
-drivers/video/fbdev/maxinefb.c
-drivers/video/fbdev/ocfb.c
-drivers/video/fbdev/pxafb.c
-drivers/video/fbdev/sa1100fb.c
-drivers/video/fbdev/stifb.c
-drivers/video/fbdev/valkyriefb.c
-drivers/video/fbdev/vermilion/vermilion.c
-drivers/video/fbdev/vt8500lcdfb.c
-drivers/video/fbdev/wm8505fb.c
-drivers/video/fbdev/xilinxfb.c
+Michal
 
-It's possible (even likely, the ones I looked at are fine) that they
-all correctly
-zero out the fb_info structure first, but it seems hard to guarantee, so
-Eric's suggestion would possibly still be the safer choice.
-
-      Arnd
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+>  net/ethtool/ioctl.c | 15 ++++++++++++++-
+>  1 file changed, 14 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/ethtool/ioctl.c b/net/ethtool/ioctl.c
+> index 182bffbffa78..c768dbf45fc4 100644
+> --- a/net/ethtool/ioctl.c
+> +++ b/net/ethtool/ioctl.c
+> @@ -423,13 +423,26 @@ struct ethtool_link_usettings {
+>  int __ethtool_get_link_ksettings(struct net_device *dev,
+>  				 struct ethtool_link_ksettings *link_ksettings)
+>  {
+> +	int rc;
+> +
+>  	ASSERT_RTNL();
+>  
+>  	if (!dev->ethtool_ops->get_link_ksettings)
+>  		return -EOPNOTSUPP;
+>  
+> +	if (dev->ethtool_ops->begin) {
+> +		rc = dev->ethtool_ops->begin(dev);
+> +		if (rc  < 0)
+> +			return rc;
+> +	}
+> +
+>  	memset(link_ksettings, 0, sizeof(*link_ksettings));
+> -	return dev->ethtool_ops->get_link_ksettings(dev, link_ksettings);
+> +	rc = dev->ethtool_ops->get_link_ksettings(dev, link_ksettings);
+> +
+> +	if (dev->ethtool_ops->complete)
+> +		dev->ethtool_ops->complete(dev);
+> +
+> +	return rc;
+>  }
+>  EXPORT_SYMBOL(__ethtool_get_link_ksettings);
+>  
+> -- 
+> 2.17.1
+> 
