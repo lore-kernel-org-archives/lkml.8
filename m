@@ -2,194 +2,95 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785EAC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3407C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CC1C20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:51:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oKkpYKtv"
+	by mail.kernel.org (Postfix) with ESMTP id 769542080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbgAMKvF (ORCPT
+        id S1728676AbgAMKwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:51:05 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34980 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgAMKvE (ORCPT
+        Mon, 13 Jan 2020 05:52:03 -0500
+Received: from laurent.telenet-ops.be ([195.130.137.89]:54022 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726193AbgAMKwC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:51:04 -0500
-Received: by mail-wr1-f68.google.com with SMTP id g17so8038110wro.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:51:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rX6hYkQTcPkxFSQTp22iI/GTbRzDTSn2mT2N78MPltg=;
-        b=oKkpYKtvG22DswPrnQPe4mDphOZzPeWS9Fm/gBtPFXIi/eh1IzHY8X22AlrD5VKaYE
-         s+qOTZJe21UPh7e2M2/VVXjI1lW86ypWRIgklVRlnZXV2m3TNbBYjdeCk1bOikndC3V+
-         aTL2Zqv9kyPeC8epB3SLemTlwjlE2X2XmGN7A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rX6hYkQTcPkxFSQTp22iI/GTbRzDTSn2mT2N78MPltg=;
-        b=lNocnEXp6Q3E9QAsmhk+MF5EuzZGOvP5MhyUXwSJrrQ5vnY6Mm0BlRfWz47puiKnpu
-         tTYizR3z0UGU+BNaqrxNdyosfL9b1wy92P2ECKM+KZpihnyG0mG5yr6I5NrIQrQoXMP3
-         iEKNg61y3PUS6UjkkRepqC7U8C+FpDx6RlNLS31NGBGXpUGMPl9HLKKwku4ODXf1k4KH
-         h8HHt99AdjLI9UN5HA0cpiEH03RZ7BG0IuNwXH/DNjdRrV9EeqL/8FJZLlachLO+tAS3
-         4JGtKlWAc0CfbqNkv/UyhrTzUCLMjdd6uM3/FaJjHMIez91Gjma8s6rIe4iBpDJO5TEK
-         XeRg==
-X-Gm-Message-State: APjAAAWJIS9IeAMU0Vu5ELiKaCwl7AP/QIY9K+J+2u1mE2LLmLLlRuuG
-        pKzcoxQqwjjVOjISpjC0ab8yyQ==
-X-Google-Smtp-Source: APXvYqzk/HkmF6+cavSIKEIJ+Fq8mnrnSFzOKUU4OvMZdAPLWjQsZPS2kwS1LaOaiSPQQo0ar0Br5A==
-X-Received: by 2002:adf:ef8b:: with SMTP id d11mr12548851wro.45.1578912662627;
-        Mon, 13 Jan 2020 02:51:02 -0800 (PST)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id s3sm13791867wmh.25.2020.01.13.02.51.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 02:51:02 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Mon, 13 Jan 2020 11:51:00 +0100
-To:     Florent Revest <revest@chromium.org>
-Cc:     linux-integrity@vger.kernel.org, kpsingh@chromium.org,
-        mjg59@google.com, zohar@linux.ibm.com, nramas@linux.microsoft.com,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Florent Revest <revest@google.com>
-Subject: Re: [PATCH v3] ima: add the ability to query the cached hash of a
- given file
-Message-ID: <20200113105100.GA31000@google.com>
-References: <20200113094244.26678-1-revest@chromium.org>
+        Mon, 13 Jan 2020 05:52:02 -0500
+Received: from ramsan ([84.195.182.253])
+        by laurent.telenet-ops.be with bizsmtp
+        id pmry210015USYZQ01mryH4; Mon, 13 Jan 2020 11:52:01 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iqxK9-0000up-Tz; Mon, 13 Jan 2020 11:51:57 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1iqxK9-0006lD-R3; Mon, 13 Jan 2020 11:51:57 +0100
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     linux-mtd@lists.infradead.org, linux-alpha@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] ubifs: Fix ino_t format warnings in orphan_delete()
+Date:   Mon, 13 Jan 2020 11:51:56 +0100
+Message-Id: <20200113105156.25945-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113094244.26678-1-revest@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-Jan 10:42, Florent Revest wrote:
-> From: Florent Revest <revest@google.com>
-> 
-> This allows other parts of the kernel (perhaps a stacked LSM allowing
-> system monitoring, eg. the proposed KRSI LSM [1]) to retrieve the hash
-> of a given file from IMA if it's present in the iint cache.
-> 
-> It's true that the existence of the hash means that it's also in the
-> audit logs or in /sys/kernel/security/ima/ascii_runtime_measurements,
-> but it can be difficult to pull that information out for every
-> subsequent exec. This is especially true if a given host has been up
-> for a long time and the file was first measured a long time ago.
-> 
-> It should be kept in mind that this function gives access to cached
-> entries which can be removed, for instance on security_inode_free().
-> 
-> This is based on Peter Moody's patch:
->  https://sourceforge.net/p/linux-ima/mailman/message/33036180/
-> 
-> [1] https://lkml.org/lkml/2019/9/10/393
-> 
-> Signed-off-by: Florent Revest <revest@google.com>
+On alpha and s390x:
 
-Reviewed-by: KP Singh <kpsingh@chromium.org>
+    fs/ubifs/debug.h:158:11: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘ino_t {aka unsigned int}’ [-Wformat=]
+    ...
+    fs/ubifs/orphan.c:132:3: note: in expansion of macro ‘dbg_gen’
+       dbg_gen("deleted twice ino %lu", orph->inum);
+    ...
+    fs/ubifs/orphan.c:140:3: note: in expansion of macro ‘dbg_gen’
+       dbg_gen("delete later ino %lu", orph->inum);
 
-> ---
->  include/linux/ima.h               |  6 ++++
->  security/integrity/ima/ima_main.c | 49 +++++++++++++++++++++++++++++++
->  2 files changed, 55 insertions(+)
-> 
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index f4644c54f648..1659217e9b60 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -23,6 +23,7 @@ extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
->  extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
->  			      enum kernel_read_file_id id);
->  extern void ima_post_path_mknod(struct dentry *dentry);
-> +extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
->  extern void ima_kexec_cmdline(const void *buf, int size);
->  
->  #ifdef CONFIG_IMA_KEXEC
-> @@ -91,6 +92,11 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
->  	return;
->  }
->  
-> +static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
->  static inline void ima_kexec_cmdline(const void *buf, int size) {}
->  #endif /* CONFIG_IMA */
->  
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 2272c3255c7d..9fe949c6a530 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -445,6 +445,55 @@ int ima_file_check(struct file *file, int mask)
->  }
->  EXPORT_SYMBOL_GPL(ima_file_check);
->  
-> +/**
-> + * ima_file_hash - return the stored measurement if a file has been hashed and
-> + * is in the iint cache.
-> + * @file: pointer to the file
-> + * @buf: buffer in which to store the hash
-> + * @buf_size: length of the buffer
-> + *
-> + * On success, return the hash algorithm (as defined in the enum hash_algo).
-> + * If buf is not NULL, this function also outputs the hash into buf.
-> + * If the hash is larger than buf_size, then only buf_size bytes will be copied.
-> + * It generally just makes sense to pass a buffer capable of holding the largest
-> + * possible hash: IMA_MAX_DIGEST_SIZE.
-> + * The file hash returned is based on the entire file, including the appended
-> + * signature.
-> + *
-> + * If IMA is disabled or if no measurement is available, return -EOPNOTSUPP.
-> + * If the parameters are incorrect, return -EINVAL.
-> + */
-> +int ima_file_hash(struct file *file, char *buf, size_t buf_size)
-> +{
-> +	struct inode *inode;
-> +	struct integrity_iint_cache *iint;
-> +	int hash_algo;
-> +
-> +	if (!file)
-> +		return -EINVAL;
-> +
-> +	if (!ima_policy_flag)
-> +		return -EOPNOTSUPP;
-> +
-> +	inode = file_inode(file);
-> +	iint = integrity_iint_find(inode);
-> +	if (!iint)
-> +		return -EOPNOTSUPP;
-> +
-> +	mutex_lock(&iint->mutex);
-> +	if (buf) {
-> +		size_t copied_size;
-> +
-> +		copied_size = min_t(size_t, iint->ima_hash->length, buf_size);
-> +		memcpy(buf, iint->ima_hash->digest, copied_size);
-> +	}
-> +	hash_algo = iint->ima_hash->algo;
-> +	mutex_unlock(&iint->mutex);
-> +
-> +	return hash_algo;
-> +}
-> +EXPORT_SYMBOL_GPL(ima_file_hash);
-> +
->  /**
->   * ima_post_create_tmpfile - mark newly created tmpfile as new
->   * @file : newly created tmpfile
-> -- 
-> 2.25.0.rc1.283.g88dfdc4193-goog
-> 
+__kernel_ino_t is "unsigned long" on most architectures, but not on
+alpha and s390x, where it is "unsigned int".  Hence when printing an
+ino_t, it should always be cast to "unsigned long" first.
+
+Fix this by re-adding the recently removed casts.
+
+Fixes: 8009ce956c3d2802 ("ubifs: Don't leak orphans on memory during commit")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ fs/ubifs/orphan.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/ubifs/orphan.c b/fs/ubifs/orphan.c
+index 54d6db61106ffc45..edf43ddd7dce4779 100644
+--- a/fs/ubifs/orphan.c
++++ b/fs/ubifs/orphan.c
+@@ -129,7 +129,7 @@ static void __orphan_drop(struct ubifs_info *c, struct ubifs_orphan *o)
+ static void orphan_delete(struct ubifs_info *c, struct ubifs_orphan *orph)
+ {
+ 	if (orph->del) {
+-		dbg_gen("deleted twice ino %lu", orph->inum);
++		dbg_gen("deleted twice ino %lu", (unsigned long)orph->inum);
+ 		return;
+ 	}
+ 
+@@ -137,7 +137,7 @@ static void orphan_delete(struct ubifs_info *c, struct ubifs_orphan *orph)
+ 		orph->del = 1;
+ 		orph->dnext = c->orph_dnext;
+ 		c->orph_dnext = orph;
+-		dbg_gen("delete later ino %lu", orph->inum);
++		dbg_gen("delete later ino %lu", (unsigned long)orph->inum);
+ 		return;
+ 	}
+ 
+-- 
+2.17.1
+
