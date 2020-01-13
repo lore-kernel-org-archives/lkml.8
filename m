@@ -2,190 +2,122 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE71C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA19AC33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D663D2081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:37:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="FD6+qbMQ"
+	by mail.kernel.org (Postfix) with ESMTP id 9D19F2081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:43:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578915801;
+	bh=g2n49SGBTNUtqISjbMsN587xlnonpg3/x81aMuFYk+w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AwVHnJSUS+BdLxvN3bxFlhAPuT+k5kkKmbkTv11iKIyxzzlD8vAw5L8VSDZSK8LaO
+	 mMI8pZgU7urvH1u4IRObBDtiPc1rQmIut6EHX0eZyQPCgxi30wiBaiT4tGVe7GhUf8
+	 Q989Omk+lRIIud4ic/nt3a36WfnpTI5ZNSAgLwfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbgAMLhf (ORCPT
+        id S1728640AbgAMLnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:37:35 -0500
-Received: from mail-m971.mail.163.com ([123.126.97.1]:41730 "EHLO
-        mail-m971.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgAMLhf (ORCPT
+        Mon, 13 Jan 2020 06:43:20 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49584 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbgAMLnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:37:35 -0500
-X-Greylist: delayed 936 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Jan 2020 06:37:33 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ebuOu
-        i0AX5Ee0xOZV1fWjPDv5XEGQ0+O2EC0o8syPO0=; b=FD6+qbMQNkhULhMdfo+Oc
-        x3DiomSPA4esnDPYm9q9RdcrV+9HTrcRowzaZozeuEmoMI8Pd5LC919i+LO7lqhH
-        AI9jvDdcVrVlWlCButHxgwC82kqOyurF+IA8FUozLUeIF8qs34Kp05uox/l1NCkZ
-        BkXV4w7I/z+T66ly/yX69s=
-Received: from xilei-TM1604.mioffice.cn (unknown [114.247.175.223])
-        by smtp1 (Coremail) with SMTP id GdxpCgBXROKhUhxeZ+sQBA--.1392S4;
-        Mon, 13 Jan 2020 19:21:05 +0800 (CST)
-From:   Niu Xilei <niu_xilei@163.com>
-To:     davem@davemloft.net
-Cc:     tglx@linutronix.de, fw@strlen.de, peterz@infradead.org,
-        steffen.klassert@secunet.com, bigeasy@linutronix.de,
-        jonathan.lemon@gmail.com, pabeni@redhat.com,
-        anshuman.khandual@arm.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Niu Xilei <niu_xilei@163.com>
-Subject: [PATCH v2] pktgen: create packet use IPv6 source address between src6_min and src6_max.
-Date:   Mon, 13 Jan 2020 19:21:02 +0800
-Message-Id: <20200113112103.6766-1-niu_xilei@163.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 13 Jan 2020 06:43:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=g2n49SGBTNUtqISjbMsN587xlnonpg3/x81aMuFYk+w=; b=GTD5rauEfghSV4/oUex1iEqWr
+        bX8wCRdUTchQ9oIAMcrz4sIGn3JnxNCtq+wW60KqPFqZSICTwL3tIrQ7F6KujZQnv/KIr+dTFxgEx
+        2RnydC2JGjuxtyhPcvTjXyDaBRFVz9nAE/nUW1P3drRG5QBr2MLXfRghZC11aZPsOJUs8=;
+Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1iqy7V-0001fp-Lj; Mon, 13 Jan 2020 11:42:57 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id EF79BD00AD6; Mon, 13 Jan 2020 11:42:56 +0000 (GMT)
+Date:   Mon, 13 Jan 2020 11:42:56 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        tudor.ambarus@microchip.com, linux-kernel@vger.kernel.org,
+        chenxiang66@hisilicon.com, linuxarm@huawei.com,
+        linux-spi@vger.kernel.org, marek.vasut@gmail.com,
+        linux-mtd@lists.infradead.org, xuejiancheng@hisilicon.com,
+        fengsheng5@huawei.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>, liusimin4@huawei.com
+Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
+ driver
+Message-ID: <20200113114256.GH3897@sirena.org.uk>
+References: <1575900490-74467-1-git-send-email-john.garry@huawei.com>
+ <1575900490-74467-3-git-send-email-john.garry@huawei.com>
+ <0dc5cb2e-b765-9e13-b05e-9e3c835c5985@huawei.com>
+ <20200109212842.GK3702@sirena.org.uk>
+ <df67b562-7d82-19f6-7581-680190a7772d@huawei.com>
+ <20200110140726.GB5889@sirena.org.uk>
+ <6db83881-927c-d11c-9c77-23a45892ddab@huawei.com>
+ <20200110193119.GI32742@smile.fi.intel.com>
+ <612a3c5d-69a4-af6b-5c79-c3fb853193ab@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: GdxpCgBXROKhUhxeZ+sQBA--.1392S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxur47Zr1DJF1xWw4xAF1UZFb_yoWrJw1kpa
-        y3GF9xJryxZr43twsxJF9rtr1S9w4v9345XayfA3sY9FyDWryrA397Ga43tFyjqr9ak398
-        Jr42gFWqga1qqrUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jhb18UUUUU=
-X-Originating-IP: [114.247.175.223]
-X-CM-SenderInfo: pqlxs5plohxqqrwthudrp/1tbiTRepgFc7O8RRGwAAsq
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="X+8siUETKMkW99st"
+Content-Disposition: inline
+In-Reply-To: <612a3c5d-69a4-af6b-5c79-c3fb853193ab@huawei.com>
+X-Cookie: Programming is an unnatural act.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pktgen can use only one IPv6 source address from output device, or src6 command
-setting. In pressure test we need create lots of session more than 65536.If
-IPSRC_RND flag is set, generate random source address between src6_min and src6_max.
 
-Signed-off-by: Niu Xilei <niu_xilei@163.com>
+--X+8siUETKMkW99st
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Changes since v1:
- - only create IPv6 source address over least significant 64 bit range
----
- net/core/pktgen.c | 90 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+On Mon, Jan 13, 2020 at 10:09:27AM +0000, John Garry wrote:
+> On 10/01/2020 19:31, Andy Shevchenko wrote:
 
-diff --git a/net/core/pktgen.c b/net/core/pktgen.c
-index 294bfcf0ce0e..33435ae0ba68 100644
---- a/net/core/pktgen.c
-+++ b/net/core/pktgen.c
-@@ -1355,6 +1355,49 @@ static ssize_t pktgen_if_write(struct file *file,
- 		sprintf(pg_result, "OK: dst6_max=%s", buf);
- 		return count;
- 	}
-+	if (!strcmp(name, "src6_min")) {
-+		len = strn_len(&user_buffer[i], sizeof(buf) - 1);
-+		if (len < 0)
-+			return len;
-+
-+		pkt_dev->flags |= F_IPV6;
-+
-+		if (copy_from_user(buf, &user_buffer[i], len))
-+			return -EFAULT;
-+		buf[len] = 0;
-+
-+		in6_pton(buf, -1, pkt_dev->min_in6_saddr.s6_addr, -1, NULL);
-+		snprintf(buf, sizeof(buf), "%pI6c", &pkt_dev->min_in6_saddr);
-+
-+		pkt_dev->cur_in6_saddr = pkt_dev->min_in6_saddr;
-+		if (debug)
-+			pr_debug("src6_min set to: %s\n", buf);
-+
-+		i += len;
-+		sprintf(pg_result, "OK: src6_min=%s", buf);
-+		return count;
-+	}
-+	if (!strcmp(name, "src6_max")) {
-+		len = strn_len(&user_buffer[i], sizeof(buf) - 1);
-+		if (len < 0)
-+			return len;
-+
-+		pkt_dev->flags |= F_IPV6;
-+
-+		if (copy_from_user(buf, &user_buffer[i], len))
-+			return -EFAULT;
-+		buf[len] = 0;
-+
-+		in6_pton(buf, -1, pkt_dev->max_in6_saddr.s6_addr, -1, NULL);
-+		snprintf(buf, sizeof(buf), "%pI6c", &pkt_dev->max_in6_saddr);
-+
-+		if (debug)
-+			pr_debug("dst6_max set to: %s\n", buf);
-+
-+		i += len;
-+		sprintf(pg_result, "OK: dst6_max=%s", buf);
-+		return count;
-+	}
- 	if (!strcmp(name, "src6")) {
- 		len = strn_len(&user_buffer[i], sizeof(buf) - 1);
- 		if (len < 0)
-@@ -2286,6 +2329,51 @@ static void set_cur_queue_map(struct pktgen_dev *pkt_dev)
- 	pkt_dev->cur_queue_map  = pkt_dev->cur_queue_map % pkt_dev->odev->real_num_tx_queues;
- }
- 
-+/* generate ipv6 source addr */
-+static inline void set_src_in6_addr(struct pktgen_dev *pkt_dev)
-+{
-+	__be64 min6_h, min6_l, max6_h, max6_l, addr_l, *t;
-+	u64 min6, max6, rand, i;
-+	struct in6_addr addr6;
-+
-+	memcpy(&min6_h, pkt_dev->min_in6_saddr.s6_addr, 8);
-+	memcpy(&min6_l, pkt_dev->min_in6_saddr.s6_addr + 8, 8);
-+	memcpy(&max6_h, pkt_dev->max_in6_saddr.s6_addr, 8);
-+	memcpy(&max6_l, pkt_dev->max_in6_saddr.s6_addr + 8, 8);
-+
-+	/* only generate source address in least significant 64 bits range
-+	 * most significant 64 bits must be equal
-+	 */
-+	if (max6_h != min6_h)
-+		return;
-+
-+	addr6 = pkt_dev->min_in6_saddr;
-+	t = (__be64 *)addr6.s6_addr + 1;
-+	min6 = be64_to_cpu(min6_l);
-+	max6 = be64_to_cpu(max6_l);
-+
-+	if (min6 < max6) {
-+		if (pkt_dev->flags & F_IPSRC_RND) {
-+			do {
-+				prandom_bytes(&rand, sizeof(rand));
-+				rand = rand % (max6 - min6) + min6;
-+				addr_l = cpu_to_be64(rand);
-+				memcpy(t, &addr_l, 8);
-+			} while (ipv6_addr_loopback(&addr6) ||
-+				 ipv6_addr_v4mapped(&addr6) ||
-+				 ipv6_addr_is_multicast(&addr6));
-+		} else {
-+			addr6 = pkt_dev->cur_in6_saddr;
-+			i = be64_to_cpu(*t);
-+			if (++i > max6)
-+				i = min6;
-+			addr_l = cpu_to_be64(i);
-+			memcpy(t, &addr_l, 8);
-+		}
-+	}
-+	pkt_dev->cur_in6_saddr = addr6;
-+}
-+
- /* Increment/randomize headers according to flags and current values
-  * for IP src/dest, UDP src/dst port, MAC-Addr src/dst
-  */
-@@ -2454,6 +2542,8 @@ static void mod_cur_headers(struct pktgen_dev *pkt_dev)
- 		}
- 	} else {		/* IPV6 * */
- 
-+		set_src_in6_addr(pkt_dev);
-+
- 		if (!ipv6_addr_any(&pkt_dev->min_in6_daddr)) {
- 			int i;
- 
--- 
-2.20.1
+> > PRP method is only for vendors to *test* the hardware in ACPI environment.
+> > The proper method is to allocate correct ACPI ID.
 
+> Yes, that would seem the proper thing to do. So the SPI NOR driver is based
+> on micron m25p80 and compatible string is "jedec,spi-nor", so I don't know
+> who should or would do this registration.
+
+The idiomatic approach appears to be for individual board vendors
+to allocate IDs, you do end up with multiple IDs from multiple
+vendors for the same thing.
+
+> BTW, Do any of these sensors you mention have any ACPI standardization?
+
+In general there's not really much standardizaiton for devices,
+the bindings that do exist aren't really centrally documented and
+the Windows standard is just to have the basic device
+registration in the firmware and do all properties based on
+quirking based on DMI information.
+
+--X+8siUETKMkW99st
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4cV8AACgkQJNaLcl1U
+h9C/cAf/f3KqQoM3kgbWl0MgRMi2T0mY02dvLgcINSfWU08s8WPRzo3zWZ+2Bnwy
+EtoOy7yu9z4hC9RVNYaA3/FibeE10MJHizzwRnxzzxmu3MjPDixmON8GO+hsKPd6
+DYhpptH+23ceLUX3O7l8v34vvslFYKaUeSJkTlCR0OxxEkTCxwnWnWo/wKBYTRer
+T58Cj6e/WnAl2qZ4Yl4qJF2TpNTC7T5tHki/I72eEZfiaNylIKxERV27zddbrgHE
+dyOKFqftALoJvu2cf/ddKpXKNt1ceMDNGhu3bIBJuoSdYAedtvWRs9TPRigY5bvZ
+IiypAujroXyiqSqmQq+3FBBNH9tTXw==
+=w5W/
+-----END PGP SIGNATURE-----
+
+--X+8siUETKMkW99st--
