@@ -2,132 +2,149 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724C9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BC5C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45F0B24673
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FFCA207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:33:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sIQl3gJ8"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="dZDPKYDU";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="PiGagw38"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbgAMKdh (ORCPT
+        id S1728670AbgAMKd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:33:37 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:41512 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726133AbgAMKdg (ORCPT
+        Mon, 13 Jan 2020 05:33:58 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:51720 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726133AbgAMKd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:33:36 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DANP9j169492;
-        Mon, 13 Jan 2020 10:33:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2019-08-05; bh=bXiZojaHjBD1dP3hyyEd5RCQpgbq825ponM/lKiehBY=;
- b=sIQl3gJ8B9H5FSHRq2zEk2h4Vhkt1VfOJRWi3xWeFNkQ9KPk0Nwk71nImscaQ33nFV/2
- m4opZKugYjpnUWBe0A8wvSGXicnQsZViFLzSLsG0ywrlappX3WtOaKqb9RboVjBGg4K+
- NvpGFdEcE9ewp+wIESbZt9Lg5k+th3a9x6BOCe/HjRkUGZh7Pd3TamyNygV7a0FtlX6F
- LBoCKAR5h+HC4iVaTR6ckBHGzgJbzsM5Td3Q+6FZIo6qh9NPaFCLn5IPVsJ5Fzj4ZUeA
- pYKHQS1KKql0GYfY6HknepiFQSA/A791zN0QHs8oDSf1J6upOceFlvX8SZLLMuWebK9I vg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2xf74rx3k9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 10:33:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DAO8Gi119110;
-        Mon, 13 Jan 2020 10:33:29 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2xfqu4anym-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 10:33:29 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00DAXSB1001279;
-        Mon, 13 Jan 2020 10:33:28 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 02:33:27 -0800
-Date:   Mon, 13 Jan 2020 13:33:20 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     kbuild@lists.01.org, Dan Murphy <dmurphy@ti.com>
-Cc:     kbuild-all@lists.01.org, sebastian.reichel@collabora.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 4/4] power: supply: bq2515x: Introduce the bq2515x
- family
-Message-ID: <20200113103320.GA9488@kadam>
+        Mon, 13 Jan 2020 05:33:58 -0500
+Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8C27BC05BE;
+        Mon, 13 Jan 2020 10:33:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1578911637; bh=7h7sF/cWD7D1q3YsPr141shuUQYRbZwzf4h1krCkHEc=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=dZDPKYDU0+JGIlYhdm5y8SZgbvLHNxWUwEAJUdp8EdLTBbNXUYZ4q0rHEKhVT2DZE
+         vnAR6SLk4X8FOyX+uAvEc46oZykbTPeU5HP56kVJk8IZVqjXBte6BwYFBkTmsHG7Fn
+         ggpdgK0TqLMoqoh7f7DqM0egWM+wEFx3TRvm0lwwzcNrt/CyIaBDO/uP3RTvM+69cY
+         PSxy7E6TQOXGkIa2+1n+H4nMkVOK0GjmHRkykT1K1qqZ3KIqR7an1CcCEF6JAprDoT
+         Lmt3hvwC/+xltsVr0Vfa6LmJ2gKEkNDPYqiJRDtRX8+P3VQ0jaxWhIBzd2iqIWzyhW
+         2HdJrCHviHIZA==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id C2780A0085;
+        Mon, 13 Jan 2020 10:33:55 +0000 (UTC)
+Received: from US01HYBRID2.internal.synopsys.com (10.15.246.24) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 13 Jan 2020 02:33:55 -0800
+Received: from NAM04-SN1-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.15.246.24) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 13 Jan 2020 02:33:55 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CdoALJ/MSGOcCNYbQXJdAEIPqR8+rEUruKpGZs7pw2CQuv4CMcclUrqIzJnFceIDXPR5JxW3L9qvfNxYN0RNPBaGjjYDtTPDzfo1OcYz1cPCJw1mOaXD78rsywaAM14/EEF2c8zTX7y7EHmnAdQ4+BNyFuPHXWkRkRegJZQNU8E7392FxxxcLHtbe4FWIjT1Wixmw0dKPxwHBj/2eoQNvVYqWauxmnZouGBcaI+8SYZkDrUfJmtnmM6PWRyQjmKWuP+aGs4GWidr7WOw4xFt6zcySYtXJKTuNSnxbZDoxdYIKi6Yb4iQKMgT/oBtiOn5pnxcyDgkqRXFqJui++rw/A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7h7sF/cWD7D1q3YsPr141shuUQYRbZwzf4h1krCkHEc=;
+ b=Fmlfh1wSQS8w+52QKWIjdKEr0g5aaZgHlC2If+ZF6W+i8TpM0/kWHhDhI9Myt4Svp4WNMfCe8TeyNMs9pWCnM8eRWWV+INPsz8S8xLbvu1DJFddohLpwR7OY5a5QZ74b4UB0olyX7Y/mBSvNmfthjJUiR5Di78olcztRkIBVuLli2EIHLuOtNsZQPCCCFvsvv9+z0ZM9RukOg8/94v+Asduq8EqoIcQADVbUAJ7ah1WS1kir5FQ9gRBFCWFE2XeLORq3cHhA5DErZVcYSbdgNr9QQbXVWbRJRnarnmB3f4k+XWkgqOE7cxu5ddgfGBRVzZTRj9MuzPd5KeveqERVfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7h7sF/cWD7D1q3YsPr141shuUQYRbZwzf4h1krCkHEc=;
+ b=PiGagw386WW1F8pNsgCca7l1WcDSvuZH27Kh4Q2KW2sVD18Z5NCvzSdBszwB33r1XMHl0AVL8vHUL+vX3DSiTa1ZYfeUaUvKUsnQe+ZcySXnpIBGm/S+Hmbq6NPkm2n6haLHC6yucXG7LebpmLH0mgjvZ/9v8hEIpOhjsCv8eqQ=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB3155.namprd12.prod.outlook.com (20.178.223.222) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Mon, 13 Jan 2020 10:33:54 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
+ 10:33:54 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Ong Boon Leong <boon.leong.ong@intel.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Maxime Coquelin" <mcoquelin.stm32@gmail.com>,
+        Tan Tee Min <tee.min.tan@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net 4/7] net: stmmac: Fix priority steering for tx/rx
+ queue >3
+Thread-Topic: [PATCH net 4/7] net: stmmac: Fix priority steering for tx/rx
+ queue >3
+Thread-Index: AQHVyfozEt+278ljEUiIZ6nV3ZPkrqfoZRcA
+Date:   Mon, 13 Jan 2020 10:33:53 +0000
+Message-ID: <BN8PR12MB3266F6242596920E608021ACD3350@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <1578967276-55956-1-git-send-email-boon.leong.ong@intel.com>
+ <1578967276-55956-5-git-send-email-boon.leong.ong@intel.com>
+In-Reply-To: <1578967276-55956-5-git-send-email-boon.leong.ong@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f5daceb8-73cc-4118-c5f1-08d798141697
+x-ms-traffictypediagnostic: BN8PR12MB3155:
+x-microsoft-antispam-prvs: <BN8PR12MB31552649F08D5D9B3C6AEDA7D3350@BN8PR12MB3155.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:605;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39850400004)(346002)(366004)(396003)(136003)(189003)(199004)(64756008)(54906003)(86362001)(66476007)(8936002)(2906002)(110136005)(81166006)(81156014)(316002)(66556008)(76116006)(66946007)(66446008)(8676002)(7416002)(5660300002)(4744005)(478600001)(966005)(33656002)(6506007)(52536014)(55016002)(26005)(186003)(71200400001)(9686003)(4326008)(7696005);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3155;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SOCI3R1qu5FH6vwNlNNZ5zK023Wxmae3wtG4JiEbmUl7J+Ozmh6KpZbWiPR1Vi6fVLsK4M9Vz2NP3drCDRQcsKw1pItrAVWMlqnnxTStteyNw6q9iVKvwtRqsa8WraOO3LK4UHhFZVGLKDkqKGJ2ZpYYVCk8K6RVJAnuGp8t6RhyT0+i4dheAaQl0v6RtxXu+pizu8hP37lrD3rxvbCaL7jXxU+T39LWMpS+ck7OCQcn6Vlb6AMxYocZiR3GD8DD4qGkE6LtpoB4fsr9DFig02IwfMME2wHKKdHfo2jYDmUzcnUdi5CvlRkQpU41qkxAlC1BnUFZWyXqI8qJ4yqyjjQwMVDp87/eR+7jynNQG4wFLrJ22DOvwZdlj7sAcl0scQPL9KSgjP8Wnq9xww3AF7GJ6I+mWiVm07weCtOeVy0febI1GK4uOouYOiL6H7yOuQn+YRxwnpGxKdV4TXo8Iz6YRzNGLi6cKlNfaV1G23A=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108202314.11791-5-dmurphy@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9498 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001130089
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9498 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001130089
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5daceb8-73cc-4118-c5f1-08d798141697
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 10:33:54.1148
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: iGhki2WwkzAFDrc0bkGBSEwlu248NX3eNDg6vq93SX9Iur1rpQon2QkrbxqY/8wwDmYkuZD1MmnMCY9kCQzgpA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3155
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan,
+From: Ong Boon Leong <boon.leong.ong@intel.com>
+Date: Jan/14/2020, 02:01:13 (UTC+00:00)
 
-url:    https://github.com/0day-ci/linux/commits/Dan-Murphy/BQ25150-155-Charger/20200110-055201
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
+> Fix MACRO function define for TX and RX user priority queue steering for
+> register masking and shifting.
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+I think this was already fixed as seen on:
+- https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git/commi=
+t/?id=3De8df7e8c233a18d2704e37ecff47583b494789d3
 
-New smatch warnings:
-drivers/power/supply/bq2515x_charger.c:316 bq2515x_set_ilim_lvl() error: buffer overflow 'bq2515x_ilim_lvl_values' 8 <= 8
-
-Old smatch warnings:
-drivers/power/supply/bq2515x_charger.c:320 bq2515x_set_ilim_lvl() error: buffer overflow 'bq2515x_ilim_lvl_values' 8 <= 8
-drivers/power/supply/bq2515x_charger.c:322 bq2515x_set_ilim_lvl() error: buffer overflow 'bq2515x_ilim_lvl_values' 8 <= 8
-
-# https://github.com/0day-ci/linux/commit/f5918978695e4e465d54f5c34f356af86874b051
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout f5918978695e4e465d54f5c34f356af86874b051
-vim +/bq2515x_ilim_lvl_values +316 drivers/power/supply/bq2515x_charger.c
-
-f5918978695e4e Dan Murphy 2020-01-08  311  static int bq2515x_set_ilim_lvl(struct bq2515x_device *bq2515x, int val)
-f5918978695e4e Dan Murphy 2020-01-08  312  {
-f5918978695e4e Dan Murphy 2020-01-08  313  	int i;
-f5918978695e4e Dan Murphy 2020-01-08  314  
-f5918978695e4e Dan Murphy 2020-01-08  315  	for (i = 0; i <= ARRAY_SIZE(bq2515x_ilim_lvl_values); i++) {
-                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Typo.  This should be < ARRAY_SIZE().
-
-f5918978695e4e Dan Murphy 2020-01-08 @316  		if (val == bq2515x_ilim_lvl_values[i])
-f5918978695e4e Dan Murphy 2020-01-08  317  			break;
-f5918978695e4e Dan Murphy 2020-01-08  318  
-f5918978695e4e Dan Murphy 2020-01-08  319  		if (val > bq2515x_ilim_lvl_values[i - 1] &&
-f5918978695e4e Dan Murphy 2020-01-08  320  		    val < bq2515x_ilim_lvl_values[i]) {
-f5918978695e4e Dan Murphy 2020-01-08  321  			if (val - bq2515x_ilim_lvl_values[i - 1] <
-f5918978695e4e Dan Murphy 2020-01-08  322  			    bq2515x_ilim_lvl_values[i] - val) {
-f5918978695e4e Dan Murphy 2020-01-08  323  				i = i - 1;
-f5918978695e4e Dan Murphy 2020-01-08  324  				break;
-f5918978695e4e Dan Murphy 2020-01-08  325  			}
-f5918978695e4e Dan Murphy 2020-01-08  326  		}
-f5918978695e4e Dan Murphy 2020-01-08  327  	}
-f5918978695e4e Dan Murphy 2020-01-08  328  
-f5918978695e4e Dan Murphy 2020-01-08  329  	return regmap_write(bq2515x->regmap, BQ2515X_ILIMCTRL, i);
-f5918978695e4e Dan Murphy 2020-01-08  330  }
+Did I forget something ?
 
 ---
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+Thanks,
+Jose Miguel Abreu
