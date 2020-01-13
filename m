@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82086C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD991C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D69C2187F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB09A21734
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgAMN47 (ORCPT
+        id S1729043AbgAMN4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:56:59 -0500
-Received: from mga05.intel.com ([192.55.52.43]:12785 "EHLO mga05.intel.com"
+        Mon, 13 Jan 2020 08:56:49 -0500
+Received: from mga18.intel.com ([134.134.136.126]:28793 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbgAMN4l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:56:41 -0500
+        id S1728920AbgAMN4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:56:37 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:56:40 -0800
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:56:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
-   d="scan'208";a="247709312"
+   d="scan'208";a="255892043"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Jan 2020 05:56:37 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 13 Jan 2020 05:56:33 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 9BDFE9FE; Mon, 13 Jan 2020 15:56:25 +0200 (EET)
+        id 27B697C4; Mon, 13 Jan 2020 15:56:25 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -45,9 +45,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 36/36] MAINTAINERS: Update entry for Intel Broxton PMC driver
-Date:   Mon, 13 Jan 2020 16:56:23 +0300
-Message-Id: <20200113135623.56286-37-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 26/36] mfd: intel_soc_pmic: Add SCU IPC member to struct intel_soc_pmic
+Date:   Mon, 13 Jan 2020 16:56:13 +0300
+Message-Id: <20200113135623.56286-27-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
 References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
@@ -58,50 +58,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver lives now under MFD so split the current entry into two parts
-and add me as co-maintainer of the Intel Broxton PMC driver. While there
-correct formatting of Zha Qipeng's email address.
+Both PMIC drivers (intel_soc_pmic_mrfld and intel_soc_pmic_bxtwc) will
+be using this field going forward to access the SCU IPC instance.
+
+While there add kernel-doc for the intel_soc_pmic structure.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- MAINTAINERS | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ include/linux/mfd/intel_soc_pmic.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4017e6b760be..fc8bc60b1ff2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8280,6 +8280,13 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/intel_atomisp2_pm.c
+diff --git a/include/linux/mfd/intel_soc_pmic.h b/include/linux/mfd/intel_soc_pmic.h
+index bfecd6bd4990..bda22d750be6 100644
+--- a/include/linux/mfd/intel_soc_pmic.h
++++ b/include/linux/mfd/intel_soc_pmic.h
+@@ -13,6 +13,20 @@
  
-+INTEL BROXTON PMC DRIVER
-+M:	Mika Westerberg <mika.westerberg@linux.intel.com>
-+M:	Zha Qipeng <qipeng.zha@intel.com>
-+S:	Maintained
-+F:	drivers/mfd/intel_pmc_bxt.c
-+F:	include/linux/mfd/intel_pmc_bxt.h
-+
- INTEL C600 SERIES SAS CONTROLLER DRIVER
- M:	Intel SCU Linux support <intel-linux-scu@intel.com>
- M:	Artur Paszkiewicz <artur.paszkiewicz@intel.com>
-@@ -8488,13 +8495,11 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/intel_pmc_core*
+ #include <linux/regmap.h>
  
--INTEL PMC/P-Unit IPC DRIVER
--M:	Zha Qipeng<qipeng.zha@intel.com>
-+INTEL P-Unit IPC DRIVER
-+M:	Zha Qipeng <qipeng.zha@intel.com>
- L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
--F:	drivers/platform/x86/intel_pmc_ipc.c
- F:	drivers/platform/x86/intel_punit_ipc.c
--F:	arch/x86/include/asm/intel_pmc_ipc.h
- F:	arch/x86/include/asm/intel_punit_ipc.h
++/**
++ * struct intel_soc_pmic - Intel SoC PMIC data
++ * @irq: Interrupt number
++ * @regmap: Pointer to the regmap structure
++ * @irq_chip_data: IRQ chip data for the PMIC itself
++ * @irq_chip_data_pwrbtn: Chained IRQ chip data for the power button
++ * @irq_chip_data_tmu: Chained IRQ chip data for the TMU
++ * @irq_chip_data_bcu: Chained IRQ chip data for the BCU
++ * @irq_chip_data_adc: Chained IRQ chip data for the ADC
++ * @irq_chip_data_chgr: Chained IRQ chip data for the CHGR
++ * @irq_chip_data_crit: Chained IRQ chip data for the CRIT
++ * @dev: Pointer to the PMIC device
++ * @scu: SCU IPC pointer used for IPC operations
++ */
+ struct intel_soc_pmic {
+ 	int irq;
+ 	struct regmap *regmap;
+@@ -24,6 +38,7 @@ struct intel_soc_pmic {
+ 	struct regmap_irq_chip_data *irq_chip_data_chgr;
+ 	struct regmap_irq_chip_data *irq_chip_data_crit;
+ 	struct device *dev;
++	struct intel_scu_ipc_dev *scu;
+ };
  
- INTEL PMIC GPIO DRIVERS
+ int intel_soc_pmic_exec_mipi_pmic_seq_element(u16 i2c_address, u32 reg_address,
 -- 
 2.24.1
 
