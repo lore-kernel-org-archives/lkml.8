@@ -2,106 +2,76 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD07CC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA34C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBEA207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:42:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BjQqyXt5"
+	by mail.kernel.org (Postfix) with ESMTP id 7587B21744
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgAMRmb (ORCPT
+        id S1728679AbgAMRo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:42:31 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36381 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726985AbgAMRmb (ORCPT
+        Mon, 13 Jan 2020 12:44:58 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:35497 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgAMRo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:42:31 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so9522242wru.3;
-        Mon, 13 Jan 2020 09:42:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VX/aiy+bNT0cIjEcj2DQ1zjepFgpqKkfM/HtHDWmDAI=;
-        b=BjQqyXt5fKCdk8DNnWg0JM1q4KtfXPSfkqX89TPhIQIa7oVYbCS4gF/V/TwP1R1+gS
-         qZYIqsokY4iZvxPaMjhGDc5+GQHfn0w3H61fTgu0Tmhh5cwkh0CMMrF3ES+4B0RPRqSq
-         vXnq3nCwoqIuFP53+/Vamw8bRD02xnTh8WXYssuq0EFZocsZWzi9IV8M6LLv+7mJ7sWv
-         ZKs0buEIuqEHO4HCOg9bNUXGZwhPUTC73iYV2hU3hSSjpVCEihEi82+2f4A0TBy8jMdR
-         OQ84tpZSZVYJPzv/LJIVifkw+irOZVRw2MDXWPlGyKEI/gUEgQY55hm5F7K0TipRmn4s
-         95nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VX/aiy+bNT0cIjEcj2DQ1zjepFgpqKkfM/HtHDWmDAI=;
-        b=X9RCvDyvqgWbtR3sXVphDcknVT7zeBpggM6XY7ohFfc5M231wAy1ttvawgHBiPOwKy
-         6xOc0DsW6D/ppZywZpfuJPYufmuhX+zYWE+q7ZBMt19+Mana2qgCSBORcp5paqwNHWV3
-         gxlFB8MARox/L5Xbc88SdvFOmgyWbHPG5Rjm5F179Ou033iit6MIojfGHIiDhUauFjPS
-         d7gTrL8eWAF5V8wZKHxUBIuWxINrdFDMoVHLoP5KNGHfmWyVm8IR4Q2d/sdmxTcJwPXl
-         jov0fC6zPywgTli7mMXCPbl1/wjRZLDXgX3BMHU0+cv7E6p+GPXXHTe9qyNXTAU33Drg
-         UK4g==
-X-Gm-Message-State: APjAAAWVYrpP+YUgyB60nvnJaU832KHgv6Z3W8BWXzIFU9NJdWhZ5Qsq
-        0pD6F/YQvkLenlS2wmO4K78=
-X-Google-Smtp-Source: APXvYqy9/b6n+yAw3orNojEpLtY1zjet4t3YPWmZfVFJ7OEjhl7rlyML3gas7tggQmwNZmUvG16d9w==
-X-Received: by 2002:a5d:5267:: with SMTP id l7mr21067930wrc.84.1578937348999;
-        Mon, 13 Jan 2020 09:42:28 -0800 (PST)
-Received: from ltop.local ([2a02:a03f:40c7:f800:a11f:9c52:9797:c64b])
-        by smtp.gmail.com with ESMTPSA id x132sm573127wmg.0.2020.01.13.09.42.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 09:42:28 -0800 (PST)
-Date:   Mon, 13 Jan 2020 18:42:25 +0100
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 6/8] READ_ONCE: Drop pointer qualifiers when reading
- from scalar types
-Message-ID: <20200113174225.xs3n7t3obysbsmzd@ltop.local>
-References: <20200110165636.28035-1-will@kernel.org>
- <20200110165636.28035-7-will@kernel.org>
- <CAHk-=wia5ppBsfHLMx648utCjO01JAZiME0K0eSHmhWuRyL+6w@mail.gmail.com>
- <20200113145954.GB4458@willie-the-truck>
+        Mon, 13 Jan 2020 12:44:58 -0500
+X-Originating-IP: 84.44.14.226
+Received: from nexussix.ar.arcelik (unknown [84.44.14.226])
+        (Authenticated sender: cengiz@kernel.wtf)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id AE1D91BF206;
+        Mon, 13 Jan 2020 17:44:55 +0000 (UTC)
+From:   Cengiz Can <cengiz@kernel.wtf>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Cengiz Can <cengiz@kernel.wtf>
+Subject: [PATCH] tools: perf: fix augmented syscall format warning
+Date:   Mon, 13 Jan 2020 20:44:39 +0300
+Message-Id: <20200113174438.102975-1-cengiz@kernel.wtf>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113145954.GB4458@willie-the-truck>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 02:59:54PM +0000, Will Deacon wrote:
-> // Insert big fat comment here
-> #define unqual_typeof(x)    typeof(({_Atomic typeof(x) ___x __maybe_unused; ___x; }))
-> 
-> That apparently *requires* GCC 4.8, but I think the question is more about
-> whether it's easier to stomach the funny use of _Atomic or the nested
-> __builtin_choose_expr() I have here. I'm also worried about how reliable
-> the _Atomic thing is, or whether it's just an artifact of how GCC happens
-> to work today.
+sockaddr related examples given in
+`tools/perf/examples/bpf/augmented_syscalls.c` almost always use `long`s
+to represent most of their fields.
 
-As far as I understand it, it's an artifact of how GCC works today (it
-was added to support the type-generic macros in <tgmath.h>).
-I also think it's also quite fragile, for example, the unqualified type
-is returned if typeof's argument is an expression but not if it's a
-'typename'. IOW:
-	typeof(_Atomic typeof(const int))
-returns 'const int', while
-	typeof(({_Atomic typeof(const int) x; x; }))
-returns 'int'.
+However, `size_t syscall_arg__scnprintf_sockaddr(..)` has a `scnprintf`
+call that uses `"%#x"` as format string.
 
--- Luc
+This throws a warning (whenever the syscall argument is `unsigned
+long`).
+
+Added `l` identifier to indicate that the `arg->value` is an unsigned
+long.
+
+Not sure about the complications of this with x86 though.
+
+Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+---
+ tools/perf/trace/beauty/sockaddr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/trace/beauty/sockaddr.c b/tools/perf/trace/beauty/sockaddr.c
+index 173c8f760763..e0c13e6a5788 100644
+--- a/tools/perf/trace/beauty/sockaddr.c
++++ b/tools/perf/trace/beauty/sockaddr.c
+@@ -72,5 +72,5 @@ size_t syscall_arg__scnprintf_sockaddr(char *bf, size_t size, struct syscall_arg
+ 	if (arg->augmented.args)
+ 		return syscall_arg__scnprintf_augmented_sockaddr(arg, bf, size);
+
+-	return scnprintf(bf, size, "%#x", arg->val);
++	return scnprintf(bf, size, "%#lx", arg->val);
+ }
+--
+2.24.1
+
