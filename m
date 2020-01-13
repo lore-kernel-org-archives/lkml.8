@@ -2,203 +2,116 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350C7C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034B5C33CB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078CC2073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB71320661
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:46:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578901597;
+	bh=krPn9+Yz3BGizB05V7pAVesjTH5/X9HVzlmktZdWQd8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hOxWcbOVDZPhELsmWgVlzLzw004R2WGI8huXTDZ1DvnhH/+jMgfbrhNebpMQuSWrf
+	 q6kd+SW9SOy3rrAj7LI5q+5vCFTemdXdQTT2yM4Xraz1V8rnRvflum/YNODrJDPVFh
+	 E7NKorlkzAQ5SmqXgCt8sO21em/xNF6nZQXm9KoE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbgAMHox (ORCPT
+        id S1728712AbgAMHqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 02:44:53 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30756 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728558AbgAMHox (ORCPT
+        Mon, 13 Jan 2020 02:46:37 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33837 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgAMHqh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 02:44:53 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00D7gLot009159
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:44:52 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfvvaa3nw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:44:51 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Mon, 13 Jan 2020 07:44:50 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 13 Jan 2020 07:44:47 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00D7ijAO30539948
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 07:44:46 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E65F0AE057;
-        Mon, 13 Jan 2020 07:44:45 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF999AE055;
-        Mon, 13 Jan 2020 07:44:43 +0000 (GMT)
-Received: from oc0525413822.ibm.com (unknown [9.80.202.21])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 13 Jan 2020 07:44:43 +0000 (GMT)
-Date:   Sun, 12 Jan 2020 23:44:40 -0800
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
-        pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
-Subject: Re: [RESEND PATCH v2 1/3] powerpc/powernv: Interface to define
- support and preference for a SPR
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <cover.1578886602.git.psampat@linux.ibm.com>
- <926baad3fd0bf0b01b0adf83c71f2f4f6e9cf1e7.1578886602.git.psampat@linux.ibm.com>
+        Mon, 13 Jan 2020 02:46:37 -0500
+Received: by mail-ed1-f68.google.com with SMTP id l8so7617811edw.1;
+        Sun, 12 Jan 2020 23:46:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9+NYHUXqWb5LThglCHJH2RV2/Z3BgkHI4Ngou8ygTeM=;
+        b=kOam0NbcyKwGIva9cZkCOy0xKIIhe7/hBsO9MzRHTtWbaJ8esZSxvMO5b/xtRZlXek
+         Vx0K6EFCwFlaTUaE7ED1P46cIN28t9I8TBw13EAO7/ae8obq//hJfev6gvDmhU+cHlJW
+         4nlJbfL0rez7cNBR1RXOdYPvN/NTqMuJrllIwfAgyFZsSmUQpvdn5zyRzosAlyxt9JI4
+         /vp9V3sTspNv228344hgwaGgoSLV5uJ8idYQpkyxU9+g0H9MW2Zqn1NQa9kxOUcUkIih
+         egPN4/Ue42B8QfOV48u7X486Gn08WRh2wNzO68hYxOAiWyc60/dtG/yfoWlGatSQ+Eoc
+         4gOA==
+X-Gm-Message-State: APjAAAVIsZf5lfezYcUT9D2wiq/Yg/ftaOSG7HGtaaSy9Kc9TMS4ZuOJ
+        j2UgRzob9gwMZ57JR3sGhFo=
+X-Google-Smtp-Source: APXvYqzi2butQD8WUbdthxqJ+MEw6KBLKjtLWPlvu/eksm5HSQg2bqJpNmL4e5nbvOjMdE7ge3nd1Q==
+X-Received: by 2002:a17:906:948e:: with SMTP id t14mr15643734ejx.123.1578901595055;
+        Sun, 12 Jan 2020 23:46:35 -0800 (PST)
+Received: from pi3 ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id n14sm400975ejs.40.2020.01.12.23.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2020 23:46:34 -0800 (PST)
+Date:   Mon, 13 Jan 2020 08:46:32 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH 3/3] mtd: onenand: Enable compile testing of OMAP and
+ Samsung drivers
+Message-ID: <20200113074632.GA1187@pi3>
+References: <20191229183612.22133-3-krzk@kernel.org>
+ <201912310904.9iM6MaFr%lkp@intel.com>
+ <20191231073339.GA6747@pi3>
+ <20200109161826.7fda02a4@xps13>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <926baad3fd0bf0b01b0adf83c71f2f4f6e9cf1e7.1578886602.git.psampat@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 20011307-0008-0000-0000-00000348D974
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20011307-0009-0000-0000-00004A6927A5
-Message-Id: <20200113074440.GC5419@oc0525413822.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-13_01:2020-01-13,2020-01-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- mlxlogscore=999 phishscore=0 clxscore=1015 priorityscore=1501
- impostorscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0
- malwarescore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001130065
+In-Reply-To: <20200109161826.7fda02a4@xps13>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 09:15:07AM +0530, Pratik Rajesh Sampat wrote:
-> Define a bitmask interface to determine support for the Self Restore,
-> Self Save or both.
+On Thu, Jan 09, 2020 at 04:18:26PM +0100, Miquel Raynal wrote:
+> Hi Krzysztof,
 > 
-> Also define an interface to determine the preference of that SPR to
-> be strictly saved or restored or encapsulated with an order of preference.
+> Krzysztof Kozlowski <krzk@kernel.org> wrote on Tue, 31 Dec 2019
+> 08:33:39 +0100:
 > 
-> The preference bitmask is shown as below:
-> ----------------------------
-> |... | 2nd pref | 1st pref |
-> ----------------------------
-> MSB			  LSB
+> > On Tue, Dec 31, 2019 at 10:00:48AM +0800, kbuild test robot wrote:
+> > > Hi Krzysztof,
+> > > 
+> > > I love your patch! Perhaps something to improve:
+> > > 
+> > > [auto build test WARNING on linus/master]
+> > > [also build test WARNING on v5.5-rc4 next-20191220]
+> > > [if your patch is applied to the wrong git tree, please drop us a note to help
+> > > improve the system. BTW, we also suggest to use '--base' option to specify the
+> > > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> > > 
+> > > url:    https://github.com/0day-ci/linux/commits/Krzysztof-Kozlowski/mtd-onenand-samsung-Fix-pointer-cast-Wpointer-to-int-cast-warnings-on-64-bit/20191230-030838
+> > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git bf8d1cd4386535004c4afe7f03d37f9864c9940e
+> > > reproduce:
+> > >         # apt-get install sparse
+> > >         # sparse version: v0.6.1-129-g341daf20-dirty
+> > >         make ARCH=x86_64 allmodconfig
+> > >         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+> > > 
+> > > If you fix the issue, kindly add following tag
+> > > Reported-by: kbuild test robot <lkp@intel.com>
+> > >   
+> > 
+> > It is not related to my patch. I'll fix it up soon.
 > 
-> The preference from higher to lower is from LSB to MSB with a shift of 8
-> bits.
-> Example:
-> Prefer self save first, if not available then prefer self
-> restore
-> The preference mask for this scenario will be seen as below.
-> ((SELF_RESTORE_STRICT << PREFERENCE_SHIFT) | SELF_SAVE_STRICT)
-> ---------------------------------
-> |... | Self restore | Self save |
-> ---------------------------------
-> MSB			        LSB
-> 
-> Finally, declare a list of preferred SPRs which encapsulate the bitmaks
-> for preferred and supported with defaults of both being set to support
-> legacy firmware.
-> 
-> This commit also implements using the above interface and retains the
-> legacy functionality of self restore.
-> 
-> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
-> ---
->  arch/powerpc/platforms/powernv/idle.c | 327 +++++++++++++++++++++-----
->  1 file changed, 271 insertions(+), 56 deletions(-)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-> index 78599bca66c2..2f328403b0dc 100644
-> --- a/arch/powerpc/platforms/powernv/idle.c
-> +++ b/arch/powerpc/platforms/powernv/idle.c
-> @@ -32,9 +32,106 @@
->  #define P9_STOP_SPR_MSR 2000
->  #define P9_STOP_SPR_PSSCR      855
-> 
-> +/* Interface for the stop state supported and preference */
-> +#define SELF_RESTORE_TYPE    0
-> +#define SELF_SAVE_TYPE       1
-> +
-> +#define NR_PREFERENCES    2
-> +#define PREFERENCE_SHIFT  4
-> +#define PREFERENCE_MASK   0xf
-> +
-> +#define UNSUPPORTED         0x0
-> +#define SELF_RESTORE_STRICT 0x1
-> +#define SELF_SAVE_STRICT    0x2
-> +
-> +/*
-> + * Bitmask defining the kind of preferences available.
-> + * Note : The higher to lower preference is from LSB to MSB, with a shift of
-> + * 4 bits.
-> + * ----------------------------
-> + * |    | 2nd pref | 1st pref |
-> + * ----------------------------
-> + * MSB			      LSB
-> + */
-> +/* Prefer Restore if available, otherwise unsupported */
-> +#define PREFER_SELF_RESTORE_ONLY	SELF_RESTORE_STRICT
-> +/* Prefer Save if available, otherwise unsupported */
-> +#define PREFER_SELF_SAVE_ONLY		SELF_SAVE_STRICT
-> +/* Prefer Restore when available, otherwise prefer Save */
-> +#define PREFER_RESTORE_SAVE		((SELF_SAVE_STRICT << \
-> +					  PREFERENCE_SHIFT)\
-> +					  | SELF_RESTORE_STRICT)
-> +/* Prefer Save when available, otherwise prefer Restore*/
-> +#define PREFER_SAVE_RESTORE		((SELF_RESTORE_STRICT <<\
-> +					  PREFERENCE_SHIFT)\
-> +					  | SELF_SAVE_STRICT)
->  static u32 supported_cpuidle_states;
->  struct pnv_idle_states_t *pnv_idle_states;
->  int nr_pnv_idle_states;
-> +/* Caching the lpcr & ptcr support to use later */
-> +static bool is_lpcr_self_save;
-> +static bool is_ptcr_self_save;
-> +
-> +struct preferred_sprs {
-> +	u64 spr;
-> +	u32 preferred_mode;
-> +	u32 supported_mode;
-> +};
-> +
-> +struct preferred_sprs preferred_sprs[] = {
-> +	{
-> +		.spr = SPRN_HSPRG0,
-> +		.preferred_mode = PREFER_RESTORE_SAVE,
-> +		.supported_mode = SELF_RESTORE_STRICT,
-> +	},
-> +	{
-> +		.spr = SPRN_LPCR,
-> +		.preferred_mode = PREFER_RESTORE_SAVE,
-> +		.supported_mode = SELF_RESTORE_STRICT,
-> +	},
-> +	{
-> +		.spr = SPRN_PTCR,
-> +		.preferred_mode = PREFER_SAVE_RESTORE,
-> +		.supported_mode = SELF_RESTORE_STRICT,
-> +	},
+> I would like this to be fixed before enabling compile testing, is your
+> fix read?
 
-This confuses me.  It says SAVE takes precedence over RESTORE.
-and than it says it is strictly 'RESTORE' only.
+Yes, you picked up the fix here:
+https://lore.kernel.org/lkml/20200103164158.4265-1-krzk@kernel.org/
 
-Maybe you should not initialize the 'supported_mode' ?
-or put a comment somewhere here, saying this value will be overwritten
-during system initialization?
-
-
-Otherwise the code looks correct.
-
-Reviewed-by: Ram Pai <linuxram@us.ibm.com>
-RP
+Best regards,
+Krzysztof
 
