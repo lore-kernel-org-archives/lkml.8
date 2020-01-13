@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B2DC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08566C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01B42081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD901207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:57:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgAMN5x (ORCPT
+        id S1729251AbgAMN55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:57:53 -0500
-Received: from mga06.intel.com ([134.134.136.31]:7017 "EHLO mga06.intel.com"
+        Mon, 13 Jan 2020 08:57:57 -0500
+Received: from mga11.intel.com ([192.55.52.93]:54632 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728926AbgAMN4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728925AbgAMN4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Jan 2020 08:56:38 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:56:37 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:56:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
-   d="scan'208";a="397165130"
+   d="scan'208";a="422812849"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga005.jf.intel.com with ESMTP; 13 Jan 2020 05:56:32 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 13 Jan 2020 05:56:34 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 377C28AA; Mon, 13 Jan 2020 15:56:25 +0200 (EET)
+        id 814009AD; Mon, 13 Jan 2020 15:56:25 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -45,9 +45,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 27/36] mfd: intel_soc_pmic_bxtwc: Convert to use new SCU IPC API
-Date:   Mon, 13 Jan 2020 16:56:14 +0300
-Message-Id: <20200113135623.56286-28-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 33/36] platform/x86: intel_pmc_ipc: Use octal permissions in sysfs attributes
+Date:   Mon, 13 Jan 2020 16:56:20 +0300
+Message-Id: <20200113135623.56286-34-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
 References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
@@ -58,95 +58,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the Intel Broxton Whiskey Cover PMIC driver to use the new SCU
-IPC API. This allows us to get rid of the PMC IPC implementation which
-is now covered in SCU IPC driver.
-
-Also move PMIC specific IPC message constants to the PMIC driver from
-the intel_pmc_ipc.h header.
+This is the current preferred way so replace the S_IWUSR with the
+corresponding octal value. While there move the attributes to follow
+directly their store functions.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel_pmc_ipc.h |  3 ---
- drivers/mfd/intel_soc_pmic_bxtwc.c   | 22 +++++++++++++++-------
- 2 files changed, 15 insertions(+), 10 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
-index e6da1ce26256..b438a488f613 100644
---- a/arch/x86/include/asm/intel_pmc_ipc.h
-+++ b/arch/x86/include/asm/intel_pmc_ipc.h
-@@ -3,9 +3,6 @@
- #define  _ASM_X86_INTEL_PMC_IPC_H_
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index c6cf0e28fce1..ae614dbe5083 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -215,6 +215,7 @@ static ssize_t intel_pmc_ipc_simple_cmd_store(struct device *dev,
+ 	}
+ 	return (ssize_t)count;
+ }
++static DEVICE_ATTR(simplecmd, 0200, NULL, intel_pmc_ipc_simple_cmd_store);
  
- /* Commands */
--#define PMC_IPC_PMIC_ACCESS		0xFF
--#define		PMC_IPC_PMIC_ACCESS_READ	0x0
--#define		PMC_IPC_PMIC_ACCESS_WRITE	0x1
- #define PMC_IPC_USB_PWR_CTRL		0xF0
- #define PMC_IPC_PMIC_BLACKLIST_SEL	0xEF
- #define PMC_IPC_PHY_CONFIG		0xEE
-diff --git a/drivers/mfd/intel_soc_pmic_bxtwc.c b/drivers/mfd/intel_soc_pmic_bxtwc.c
-index 739cfb5b69fe..60aba2a1561c 100644
---- a/drivers/mfd/intel_soc_pmic_bxtwc.c
-+++ b/drivers/mfd/intel_soc_pmic_bxtwc.c
-@@ -15,7 +15,7 @@
- #include <linux/mfd/intel_soc_pmic_bxtwc.h>
- #include <linux/module.h>
+ static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
+ 					     struct device_attribute *attr,
+@@ -239,11 +240,7 @@ static ssize_t intel_pmc_ipc_northpeak_store(struct device *dev,
+ 	}
+ 	return (ssize_t)count;
+ }
+-
+-static DEVICE_ATTR(simplecmd, S_IWUSR,
+-		   NULL, intel_pmc_ipc_simple_cmd_store);
+-static DEVICE_ATTR(northpeak, S_IWUSR,
+-		   NULL, intel_pmc_ipc_northpeak_store);
++static DEVICE_ATTR(northpeak, 0200, NULL, intel_pmc_ipc_northpeak_store);
  
--#include <asm/intel_pmc_ipc.h>
-+#include <asm/intel_scu_ipc.h>
- 
- /* PMIC device registers */
- #define REG_ADDR_MASK		0xFF00
-@@ -58,6 +58,10 @@
- /* Whiskey Cove PMIC share same ACPI ID between different platforms */
- #define BROXTON_PMIC_WC_HRV	4
- 
-+#define PMC_PMIC_ACCESS		0xFF
-+#define PMC_PMIC_READ		0x0
-+#define PMC_PMIC_WRITE		0x1
-+
- enum bxtwc_irqs {
- 	BXTWC_PWRBTN_LVL1_IRQ = 0,
- 	BXTWC_TMU_LVL1_IRQ,
-@@ -288,9 +292,9 @@ static int regmap_ipc_byte_reg_read(void *context, unsigned int reg,
- 
- 	ipc_in[0] = reg;
- 	ipc_in[1] = i2c_addr;
--	ret = intel_pmc_ipc_command(PMC_IPC_PMIC_ACCESS,
--			PMC_IPC_PMIC_ACCESS_READ,
--			ipc_in, sizeof(ipc_in), (u32 *)ipc_out, 1);
-+	ret = intel_scu_ipc_dev_command(pmic->scu, PMC_PMIC_ACCESS,
-+					PMC_PMIC_READ, ipc_in, sizeof(ipc_in),
-+					ipc_out, sizeof(ipc_out));
- 	if (ret) {
- 		dev_err(pmic->dev, "Failed to read from PMIC\n");
- 		return ret;
-@@ -321,9 +325,9 @@ static int regmap_ipc_byte_reg_write(void *context, unsigned int reg,
- 	ipc_in[0] = reg;
- 	ipc_in[1] = i2c_addr;
- 	ipc_in[2] = val;
--	ret = intel_pmc_ipc_command(PMC_IPC_PMIC_ACCESS,
--			PMC_IPC_PMIC_ACCESS_WRITE,
--			ipc_in, sizeof(ipc_in), NULL, 0);
-+	ret = intel_scu_ipc_dev_command(pmic->scu, PMC_PMIC_ACCESS,
-+					PMC_PMIC_WRITE, ipc_in, sizeof(ipc_in),
-+					NULL, 0);
- 	if (ret) {
- 		dev_err(pmic->dev, "Failed to write to PMIC\n");
- 		return ret;
-@@ -457,6 +461,10 @@ static int bxtwc_probe(struct platform_device *pdev)
- 	dev_set_drvdata(&pdev->dev, pmic);
- 	pmic->dev = &pdev->dev;
- 
-+	pmic->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
-+	if (!pmic->scu)
-+		return -EPROBE_DEFER;
-+
- 	pmic->regmap = devm_regmap_init(&pdev->dev, NULL, pmic,
- 					&bxtwc_regmap_config);
- 	if (IS_ERR(pmic->regmap)) {
+ static struct attribute *intel_ipc_attrs[] = {
+ 	&dev_attr_northpeak.attr,
 -- 
 2.24.1
 
