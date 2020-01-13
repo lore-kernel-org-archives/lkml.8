@@ -2,147 +2,84 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8FCC33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BEBC33CB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB212075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 206D52084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578901938;
+	bh=soxPPP1ZI0ONRGIE6bmBJhnEMY0uT/RfAdWeC6j5b0E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LCM4XPf0TtuhCAF91Qu8YKBjcem712u2PowtVTVofKZGdDp1l7EW62NOWw+ITw9k4
+	 P8ZqGYc0W4r4zJdg5yVhG5NfBjhuoiuZ9zlwXCCu48wgh3Vc+DTXyXgohdc5YNRI7Q
+	 mnxGB1amfkWenF/GArlGGEV6imvXnR47U/yq69vc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgAMHvq (ORCPT
+        id S1728778AbgAMHwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 02:51:46 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51398 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727021AbgAMHvq (ORCPT
+        Mon, 13 Jan 2020 02:52:17 -0500
+Received: from mail-ed1-f52.google.com ([209.85.208.52]:45633 "EHLO
+        mail-ed1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgAMHwR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 02:51:46 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00D7gFor030853
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:51:45 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfvrhjey2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:51:45 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Mon, 13 Jan 2020 07:51:42 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 13 Jan 2020 07:51:40 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00D7pcaI59899986
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 07:51:38 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ABBA2A4060;
-        Mon, 13 Jan 2020 07:51:38 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AFEB3A405B;
-        Mon, 13 Jan 2020 07:51:36 +0000 (GMT)
-Received: from oc0525413822.ibm.com (unknown [9.80.202.21])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 13 Jan 2020 07:51:36 +0000 (GMT)
-Date:   Sun, 12 Jan 2020 23:51:33 -0800
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     Pratik Rajesh Sampat <psampat@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
-        pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
-Subject: Re: [RESEND PATCH v2 2/3] powerpc/powernv: Introduce Self save
- support
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <cover.1578886602.git.psampat@linux.ibm.com>
- <9cade84b37a910c96ec3d0a6b39b00e5082d59ab.1578886602.git.psampat@linux.ibm.com>
+        Mon, 13 Jan 2020 02:52:17 -0500
+Received: by mail-ed1-f52.google.com with SMTP id v28so7591180edw.12;
+        Sun, 12 Jan 2020 23:52:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=soxPPP1ZI0ONRGIE6bmBJhnEMY0uT/RfAdWeC6j5b0E=;
+        b=Tgy0RsXLOyZDrlw6l4V568dDaz/KtijZVTJ+nAA4Kv4p3jyVC+micLNzr2spsrb67k
+         wntjwDN22LvVBlLnqkpeykvJ1HO0Kydhu60JOuCGHvucTih8uiroN1dmn48K5XcqLuH2
+         WDHuaUTg9lAg7/wo7sUH7gqtG6SlMehvQctTnPMePnhtHodqwOE0VqBGKISpcrncUWaK
+         Dy/n18JqtjR5zr4uDsBftz7E71ISiRkosxMZ1AcxJtVv+kKizoKoenf4aJ4FYsIcRsC4
+         AR5jq2/97l9r5y0YtqGUoZct3NyhKXf/GSd6cpccgCSPIE6R8wMJQwumgGT35UsFu75x
+         Ll+w==
+X-Gm-Message-State: APjAAAVOnOrUP76QtCmagtOS9s1+Ses1T4EDN6Lz9iOGm7WEGm8xVfaW
+        5ZtBgibN0DRYcAIkdXYJOIPv8F1wvWA=
+X-Google-Smtp-Source: APXvYqygRlTjwBeD/K++XU6RwcobqP3LASm8y+JWasFBexgo6vO46tqs9Hx9bUNGjyxeTXmev9FWyQ==
+X-Received: by 2002:a17:906:2892:: with SMTP id o18mr15492554ejd.312.1578901935058;
+        Sun, 12 Jan 2020 23:52:15 -0800 (PST)
+Received: from pi3 ([194.230.155.229])
+        by smtp.googlemail.com with ESMTPSA id qc1sm388327ejb.49.2020.01.12.23.52.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2020 23:52:14 -0800 (PST)
+Date:   Mon, 13 Jan 2020 08:52:12 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Chuhong Yuan <hslester96@gmail.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 RFT] media: exynos4-is: add missed
+ clk_disable_unprepare in remove
+Message-ID: <20200113075212.GA1218@pi3>
+References: <20191219074824.15047-1-hslester96@gmail.com>
+ <f253eb6e-5e21-fd9b-8c2f-371beea66afa@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <9cade84b37a910c96ec3d0a6b39b00e5082d59ab.1578886602.git.psampat@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 20011307-0016-0000-0000-000002DCD1D9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20011307-0017-0000-0000-0000333F5AAA
-Message-Id: <20200113075133.GD5419@oc0525413822.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-13_01:2020-01-13,2020-01-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 impostorscore=0 phishscore=0
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001130065
+In-Reply-To: <f253eb6e-5e21-fd9b-8c2f-371beea66afa@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 09:15:08AM +0530, Pratik Rajesh Sampat wrote:
-> This commit introduces and leverages the Self save API which OPAL now
-> supports.
-> 
-> Add the new Self Save OPAL API call in the list of OPAL calls.
-> Implement the self saving of the SPRs based on the support populated
-> while respecting it's preferences.
-> 
-> This implementation allows mixing of support for the SPRs, which
-> means that a SPR can be self restored while another SPR be self saved if
-> they support and prefer it to be so.
-> 
-> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
-> ---
->  arch/powerpc/include/asm/opal-api.h        | 3 ++-
->  arch/powerpc/include/asm/opal.h            | 1 +
->  arch/powerpc/platforms/powernv/idle.c      | 2 ++
->  arch/powerpc/platforms/powernv/opal-call.c | 1 +
->  4 files changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-> index c1f25a760eb1..1b6e1a68d431 100644
-> --- a/arch/powerpc/include/asm/opal-api.h
-> +++ b/arch/powerpc/include/asm/opal-api.h
-> @@ -214,7 +214,8 @@
->  #define OPAL_SECVAR_GET				176
->  #define OPAL_SECVAR_GET_NEXT			177
->  #define OPAL_SECVAR_ENQUEUE_UPDATE		178
-> -#define OPAL_LAST				178
-> +#define OPAL_SLW_SELF_SAVE_REG			181
-> +#define OPAL_LAST				181
-> 
->  #define QUIESCE_HOLD			1 /* Spin all calls at entry */
->  #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
-> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-> index 9986ac34b8e2..389a85b63805 100644
-> --- a/arch/powerpc/include/asm/opal.h
-> +++ b/arch/powerpc/include/asm/opal.h
-> @@ -203,6 +203,7 @@ int64_t opal_handle_hmi(void);
->  int64_t opal_handle_hmi2(__be64 *out_flags);
->  int64_t opal_register_dump_region(uint32_t id, uint64_t start, uint64_t end);
->  int64_t opal_unregister_dump_region(uint32_t id);
-> +int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
->  int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val);
->  int64_t opal_config_cpu_idle_state(uint64_t state, uint64_t flag);
->  int64_t opal_pci_set_phb_cxl_mode(uint64_t phb_id, uint64_t mode, uint64_t pe_number);
-> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-> index 2f328403b0dc..d67d4d0b169b 100644
-> --- a/arch/powerpc/platforms/powernv/idle.c
-> +++ b/arch/powerpc/platforms/powernv/idle.c
-> @@ -1172,6 +1172,8 @@ void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
->  		if (!is_lpcr_self_save)
->  			opal_slw_set_reg(pir, SPRN_LPCR,
->  					 lpcr_val);
-> +		else
-> +			opal_slw_self_save_reg(pir, SPRN_LPCR);
+On Fri, Jan 10, 2020 at 02:40:21PM +0100, Hans Verkuil wrote:
+> Anyone able/willing to test this patch?
 
-opal_slw_self_save_reg() was used in the prior patch too. How did it
-compile, if the definition is in this patch?
+I do not have the hardware with FIMC/camera so I cannot provide testing.
+However it looks good, so I propose to just take it:
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-
-Reviewed-by: Ram Pai <linuxram@us.ibm.com>
-
-RP
+Best regards,
+Krzysztof
 
