@@ -7,53 +7,62 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9A9C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106B0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96FFD206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D168D206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578936242;
-	bh=f7ymohb97S6b58KJNRXy0ZTCMS6AMDRFCM6vKzcZbSc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y1d6l36n+JUPZzS9PmGk6MfoFSoRI35IpzHOJrOCYZ/DEZooy1Ir4g110AdcPEMKD
-	 v4xoy5lLugeD5QABipQqXeOIEKAnJYiVmApP2BpouPLRltMp4m38sPic95h83Un4v0
-	 KgujezWsZJOwLne/f/cyzV6nEs6L3ZcR+CzNQM88=
+	s=default; t=1578936252;
+	bh=Vrh46dOWw9BYEu8vGpaGylnACcsRePCg5uU3EjPK5Tk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=h5subNCZHaN1HJTINpcfcmNuIYuhBZfGd8JzA+cv1zsaLchYzNVf8JndgEwQutu2N
+	 mSbnyepNtdcyIm+1ySibnllIE2nXZx94LNJEeKk5f++fEyjhGwGPWc84TqiaIjJyPA
+	 gVeIOIkn/xD658DBUwIV6BaoMgF2aDPH3tbKZ3wY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgAMRYB (ORCPT
+        id S1729067AbgAMRYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:24:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728850AbgAMRXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:23:18 -0500
-Received: from dogfood.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10C43206DA;
-        Mon, 13 Jan 2020 17:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578936197;
-        bh=f7ymohb97S6b58KJNRXy0ZTCMS6AMDRFCM6vKzcZbSc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z2fLnfDjeLLXm+R00A0QgLFKw1e9CTcm2vmKN1TxwkXfNKHwDPibnlyE1BTgJF1rm
-         IPl0O6ezRM94ccQvwNGFbeO6CcVDzVea5DCRo9a2RWXrjSNMDKh8NFWx26iCweqxm/
-         3WZFHeKW88kbnS2nKpTEc7N8hseF+VEHS+UA0EOk=
-From:   Ard Biesheuvel <ardb@kernel.org>
-To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Young <dyoung@redhat.com>,
-        Saravana Kannan <saravanak@google.com>
-Subject: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for mixed mode
-Date:   Mon, 13 Jan 2020 18:22:37 +0100
-Message-Id: <20200113172245.27925-6-ardb@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200113172245.27925-1-ardb@kernel.org>
-References: <20200113172245.27925-1-ardb@kernel.org>
+        Mon, 13 Jan 2020 12:24:12 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34834 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728775AbgAMRYL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 12:24:11 -0500
+Received: by mail-lj1-f194.google.com with SMTP id j1so11012892lja.2;
+        Mon, 13 Jan 2020 09:24:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QlfFAdFScE9eazBxy44sDKtFGtk3es9wEFbHmp3zDH8=;
+        b=Dwi2MzSf3x75Cm3NUReGz4TmJIv3IL8zxYwqhwh7l+atsApn4JQMxRsmOKI+bbmzdu
+         vx3oQz4JCRQzXeBDnRiJFTNqi420EohDflU5e7g/gqFexFG3KwZZnDIcSFlSEtdQF/JD
+         eAqmnw8hFaU3o/3JPmK01bNhFinkwiltDQR5EJVU0B9C9m80K9kmIo1X06mzTBg0yUyp
+         QAGS+TKhdNWCvSc2+T/4zOVgVtq2+VlJz1wyUKXUo/n5hqyikTk5pFDhzGl6Ciy4Yfum
+         g78pchG55OOYohherHGgVQ+6sPbVpapPrVDe62ofAALWrkuLdjmcrFSvJoM/CgFqMSn5
+         uSiQ==
+X-Gm-Message-State: APjAAAU1PPxCLgv8a9uW9XgIoIu8IvN8ZDLmRGprVlgXqSU2tWnQy0K4
+        54vOqI7yZlhoy9a1TXh4fKm6juZB
+X-Google-Smtp-Source: APXvYqzJvte/a6SWB5ZAj9L2MQ7QjnxsCkcIXmQtT/nS+1XGi9SQt7q7KO1lF5rx8+2E6/c+2EldWA==
+X-Received: by 2002:a2e:3619:: with SMTP id d25mr11668282lja.231.1578936248566;
+        Mon, 13 Jan 2020 09:24:08 -0800 (PST)
+Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
+        by smtp.gmail.com with ESMTPSA id 144sm6083349lfi.67.2020.01.13.09.24.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 09:24:07 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1ir3Rf-00084L-UG; Mon, 13 Jan 2020 18:24:07 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     netdev@vger.kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] NFC: pn533: fix bulk-message timeout
+Date:   Mon, 13 Jan 2020 18:23:58 +0100
+Message-Id: <20200113172358.30973-1-johan@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -61,41 +70,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mixed mode thunking routine requires a part of it to be
-mapped 1:1, and for this reason, we currently map the entire
-kernel .text read/write in the EFI page tables, which is bad.
+The driver was doing a synchronous uninterruptible bulk-transfer without
+using a timeout. This could lead to the driver hanging on probe due to a
+malfunctioning (or malicious) device until the device is physically
+disconnected. While sleeping in probe the driver prevents other devices
+connected to the same hub from being added to (or removed from) the bus.
 
-In fact, the kernel_map_pages_in_pgd() invocation that installs
-this mapping is entirely redundant, since all of DRAM is already
-1:1 mapped read/write in the EFI page tables when we reach this
-point, which means that .rodata is mapped read-write as well.
+An arbitrary limit of five seconds should be more than enough.
 
-So let's remap both .text and .rodata read-only in the EFI
-page tables.
-
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Fixes: dbafc28955fa ("NFC: pn533: don't send USB data off of the stack")
+Cc: stable <stable@vger.kernel.org>     # 4.18
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 ---
- arch/x86/platform/efi/efi_64.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/nfc/pn533/usb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index c13fa2150976..6ec58ff60b56 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -391,11 +391,11 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
+index 4590fbf82dc2..f5bb7ace2ff5 100644
+--- a/drivers/nfc/pn533/usb.c
++++ b/drivers/nfc/pn533/usb.c
+@@ -391,7 +391,7 @@ static int pn533_acr122_poweron_rdr(struct pn533_usb_phy *phy)
+ 		       cmd, sizeof(cmd), false);
  
- 	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
- 
--	npages = (_etext - _text) >> PAGE_SHIFT;
-+	npages = (__end_rodata_aligned - _text) >> PAGE_SHIFT;
- 	text = __pa(_text);
- 	pfn = text >> PAGE_SHIFT;
- 
--	pf = _PAGE_RW | _PAGE_ENC;
-+	pf = _PAGE_ENC;
- 	if (kernel_map_pages_in_pgd(pgd, pfn, text, npages, pf)) {
- 		pr_err("Failed to map kernel text 1:1\n");
- 		return 1;
+ 	rc = usb_bulk_msg(phy->udev, phy->out_urb->pipe, buffer, sizeof(cmd),
+-			  &transferred, 0);
++			  &transferred, 5000);
+ 	kfree(buffer);
+ 	if (rc || (transferred != sizeof(cmd))) {
+ 		nfc_err(&phy->udev->dev,
 -- 
-2.20.1
+2.24.1
 
