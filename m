@@ -2,88 +2,77 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43E2C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F47C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89892080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3467A207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgAMNbG (ORCPT
+        id S1728750AbgAMNcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:31:06 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:50722 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgAMNbF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:31:05 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iqznr-007J3N-Qf; Mon, 13 Jan 2020 13:30:47 +0000
-Date:   Mon, 13 Jan 2020 13:30:47 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Ian Kent <raven@themaw.net>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        David Howells <dhowells@redhat.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        stable@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
- symlinks
-Message-ID: <20200113133047.GR8904@ZenIV.linux.org.uk>
-References: <20200101030815.GA17593@ZenIV.linux.org.uk>
- <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
- <20200101234009.GB8904@ZenIV.linux.org.uk>
- <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
- <20200103014901.GC8904@ZenIV.linux.org.uk>
- <20200110231945.GL8904@ZenIV.linux.org.uk>
- <aea0bc800b6a1e547ca1944738ff9db4379098ba.camel@themaw.net>
- <20200113035407.GQ8904@ZenIV.linux.org.uk>
- <41c535d689530f3715f21cd25074eb61e825a5f6.camel@themaw.net>
- <58f9894e51a00ad2a4ac3d4122bf29e7cb6c0d54.camel@themaw.net>
+        Mon, 13 Jan 2020 08:32:02 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:9164 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726074AbgAMNcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:32:01 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C9B0F35E7DAC81E21025;
+        Mon, 13 Jan 2020 21:31:58 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 13 Jan 2020 21:31:51 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <jani.nikula@linux.intel.com>, <airlied@linux.ie>,
+        <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <chenzhou10@huawei.com>
+Subject: [PATCH next] drm/i915: fix build error without ACPI
+Date:   Mon, 13 Jan 2020 21:27:24 +0800
+Message-ID: <20200113132724.143687-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <58f9894e51a00ad2a4ac3d4122bf29e7cb6c0d54.camel@themaw.net>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 02:03:00PM +0800, Ian Kent wrote:
+If CONFIG_ACPI=n and CONFIG_BACKLIGHT_CLASS_DEVICE=m, compilation complains
+with undefined references:
 
-> Oh wait, for systemd I was actually looking at:
-> https://github.com/systemd/systemd/blob/master/src/shared/switch-root.c
-> 
-> > 
-> > Mind you, that's not the actual systemd repo. either I probably
-> > need to look a lot deeper (and at the actual systemd repo) to
-> > work out what's actually being called.
-> > 
-> > > Sigh...  Guess I'll have to dig that Fedora KVM image out and
-> > > try to see what it's about... ;-/  Here comes a couple of hours
-> > > of build...
+drivers/gpu/drm/i915/display/intel_panel.o: In function `intel_backlight_device_register':
+intel_panel.c:(.text+0x4dd9): undefined reference to `backlight_device_register'
+drivers/gpu/drm/i915/display/intel_panel.o: In function `intel_backlight_device_unregister':
+intel_panel.c:(.text+0x4e96): undefined reference to `backlight_device_unregister'
 
-D'oh...  And yes, that would've been a bisect hazard - switch to
-path_lookupat() later in the series gets rid of that.  Incremental
-(to be foldede, of course):
+This patch select BACKLIGHT_CLASS_DEVICE directly.
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 1793661c3342..204677c37751 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2634,7 +2634,7 @@ path_mountpoint(struct nameidata *nd, unsigned flags, struct path *path)
- 		(err = lookup_last(nd)) > 0) {
- 		s = trailing_symlink(nd);
- 	}
--	if (!err)
-+	if (!err && (nd->flags & LOOKUP_RCU))
- 		err = unlazy_walk(nd);
- 	if (!err)
- 		err = handle_lookup_down(nd);
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ drivers/gpu/drm/i915/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/i915/Kconfig b/drivers/gpu/drm/i915/Kconfig
+index ba95959..6b69dab 100644
+--- a/drivers/gpu/drm/i915/Kconfig
++++ b/drivers/gpu/drm/i915/Kconfig
+@@ -16,7 +16,7 @@ config DRM_I915
+ 	select IRQ_WORK
+ 	# i915 depends on ACPI_VIDEO when ACPI is enabled
+ 	# but for select to work, need to select ACPI_VIDEO's dependencies, ick
+-	select BACKLIGHT_CLASS_DEVICE if ACPI
++	select BACKLIGHT_CLASS_DEVICE
+ 	select INPUT if ACPI
+ 	select ACPI_VIDEO if ACPI
+ 	select ACPI_BUTTON if ACPI
+-- 
+2.7.4
+
