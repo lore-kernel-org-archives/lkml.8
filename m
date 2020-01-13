@@ -2,100 +2,104 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC915C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F03C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86C5A206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D403421556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbgAMQF1 (ORCPT
+        id S1728838AbgAMQHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:05:27 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33395 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgAMQF0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:05:26 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 6so4923281pgk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 08:05:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aEeCpWwviwIRvJF8GSSSNrsZUv5cSc10vbu3m/zOYRg=;
-        b=m5lxnNfW3PYEUg9Cnl3CMIFk41gmcA2mZS7w09jaloBomauzSMZFTVzdpQ96DxnumK
-         OwC74zXjuYoAoUA00TZcl+poZoKNO/YUwgMjjNCW0yjuKeh6Fcc5XLhvHm/P9oJcLksQ
-         vJp9n1+wfxdeMxnbaAFmcqqcmh9xqEPxt0TRNG3tTZsmvDrXY1B1oxY/Ltz+xCpIxZDF
-         MKb/ykmPzUHVUXCTb+tR847SSmeifIGOrj792bO03BBLVs7qd6RJ54UgPY5OXS/kvsQf
-         Y7qpUBr9vFitWjigzQt8FqiEkK8I/UGduxbLLUyBtHa0mcPfcLsd4qqlMvuRYuOosZ6w
-         9TVQ==
-X-Gm-Message-State: APjAAAWpTdufBAVNFpgWqBA4C7Hu50HBU0N76GE9MKQiIDNtxWVvXBwW
-        usLvJwDrIaPsnLDWh+DyfbDdWprf
-X-Google-Smtp-Source: APXvYqyqFgcg1x4Hu00x5gvetPIPmoZKU2sdYj7U1D4pEjVk1Qof1drPL35HKq7J+Ta9niEffQ2iuQ==
-X-Received: by 2002:a63:3245:: with SMTP id y66mr21368254pgy.234.1578931525631;
-        Mon, 13 Jan 2020 08:05:25 -0800 (PST)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id 68sm13948043pge.14.2020.01.13.08.05.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 08:05:24 -0800 (PST)
-Subject: Re: [PATCH v2 2/6] locking/lockdep: Throw away all lock chains with
- zapped class
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <20191216151517.7060-1-longman@redhat.com>
- <20191216151517.7060-3-longman@redhat.com>
- <20200113151806.GW2844@hirez.programming.kicks-ass.net>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <8bf44cb0-81fa-1056-0158-7c14ee424044@acm.org>
-Date:   Mon, 13 Jan 2020 08:05:24 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 13 Jan 2020 11:07:12 -0500
+Received: from mga11.intel.com ([192.55.52.93]:64300 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728734AbgAMQHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 11:07:11 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 08:07:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
+   d="scan'208";a="244664707"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 13 Jan 2020 08:07:08 -0800
+Received: by lahna (sSMTP sendmail emulation); Mon, 13 Jan 2020 18:07:08 +0200
+Date:   Mon, 13 Jan 2020 18:07:08 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v1 3/3] PCI: Consider alignment of hot-added bridges when
+ distributing available resources
+Message-ID: <20200113160708.GK2838@lahna.fi.intel.com>
+References: <PSXP216MB0438C2BFD0FD3691ED9C83F4803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-In-Reply-To: <20200113151806.GW2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB0438C2BFD0FD3691ED9C83F4803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/13/20 7:18 AM, Peter Zijlstra wrote:
-> On Mon, Dec 16, 2019 at 10:15:13AM -0500, Waiman Long wrote:
->> If a lock chain contains a class that is zapped, the whole lock chain is
->> now invalid.
+On Mon, Jan 06, 2020 at 03:46:13PM +0000, Nicholas Johnson wrote:
+> Change pci_bus_distribute_available_resources() to better handle bridges
+> with different resource alignment requirements.
 > 
-> Possibly. But I'm thinking that argument can/should be made mode elaborate.
+> The arguments io, mmio and mmio_pref represent the start and end
+> addresses of resource, in which we must fit the current bridge window.
 > 
-> Suppose we have A->B->C, and we're about to remove B.
+> The steps taken by pci_bus_distribute_available_resources():
 > 
-> Now, I suppose the trivial argument goes that if we remove the text that
-> causes A->B, then so B->C will no longer happen. However, that doesn't
-> mean A->C won't still occur.
+> 	- For io, mmio and mmio_pref, increase .start to align with the
+> 	  alignment of the current bridge window (otherwise the current
+> 	  bridge window may not fit within the available range).
 > 
-> OTOH, we might already have A->C and so our resulting chain would be a
-> duplicate. Conversely, if we didn't already have A->C and it does indeed
-> still occur (say it was omitted due to the redundant logic), then we
-> will create this dependency the next time we'll encounter it.
+> 	- For io, mmio and mmio_pref, adjust the current bridge window
+> 	  to the size after the above.
 > 
-> Bart, do you see a problem with this reasoning?
+> 	- Count the number of hotplug bridges and normal bridges on this
+> 	  bus.
 > 
-> In short, yes, I think you're right and we can remove the whole thing.
-> But please, expand the Changelog a bit, possibly add some of this
-> reasoning into a comment.
+> 	- If the total number of bridges is one, give that bridge all of
+> 	  the resources and return.
+> 
+> 	- If there are no hotplug bridges, return.
+> 
+> 	- For io, mmio and mmio_pref, increase .start by the amount
+> 	  required for each bridge resource on the bus for non hotplug
+> 	  bridges, giving extra room to make up for alignment of those
+> 	  resources.
+> 
+> 	- For io, mmio and mmio_pref, calculate the resource size per
+> 	  hotplug bridge which is available after the previous steps.
+> 
+> 	- For io, mmio and mmio_pref, distribute the resources to each
+> 	  hotplug bridge, with the sizes calculated above.
+> 
+> The motivation for fixing this is Thunderbolt with native PCI
+> enumeration, enabling external graphics cards and other devices with
+> bridge alignment higher than 1MB. This fixes the use case where the user
+> hot-adds Thunderbolt devices containing PCI devices with BAR
+> alignment >1M and having the resources fail to assign.
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=199581
+> Reported-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-I think unconditionally dropping lock chains is wrong. If a lock class 
-is zapped the rest of the lock chain remains valid and hence should be 
-retained unless it duplicates another lock chain or if the length of the 
-lock chain is reduced to a single element.
+Still solves the issue I reported above so,
 
-Bart.
+Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 
+Also looks good to me,
 
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
