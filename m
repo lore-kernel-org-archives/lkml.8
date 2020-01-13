@@ -2,101 +2,97 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E78C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB605C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5EB8207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC8F207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:06:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="RYPWm/IX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSa0JUdd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgAMMET (ORCPT
+        id S1728748AbgAMMGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:04:19 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:9166 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728641AbgAMMES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:04:18 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47xC1R5FbGz9txxD;
-        Mon, 13 Jan 2020 13:04:11 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=RYPWm/IX; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Hval_bWc400h; Mon, 13 Jan 2020 13:04:11 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47xC1R4CpHz9txxC;
-        Mon, 13 Jan 2020 13:04:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1578917051; bh=MvSTc3YCiZWGwG0qnYB8ibq5lqkALByXbfzJloZm6VI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=RYPWm/IXQ/KxMHRniZs4sJA0UPIhBFyVBryEW3BKqF+e4rY1+/0Wr9KTb1Oy2Acmm
-         QrU95xCviWgxho42vEOCHJ/Ec2LbEtDqIZJ4fGcLpTEgDDzqFJ3q5Tte95EDnP9ZWN
-         /49rH0RisWsJHOGyX6JNukoKDcuHt44/tBSegBbY=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 82B088B7B7;
-        Mon, 13 Jan 2020 13:04:16 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 5C6xgoSYmG2P; Mon, 13 Jan 2020 13:04:16 +0100 (CET)
-Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 47C788B79F;
-        Mon, 13 Jan 2020 13:04:16 +0100 (CET)
-Subject: Re: [PATCH] lib: vdso: mark __cvdso_clock_getres() as static
-To:     Thomas Gleixner <tglx@linutronix.de>, arnd@arndb.de,
-        vincenzo.frascino@arm.com, luto@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        x86@kernel.org
-References: <e7becc50bee355e3872b84d91cc68ae8d7776bb9.1578764712.git.christophe.leroy@c-s.fr>
- <875zhhsr0h.fsf@nanos.tec.linutronix.de>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <658045cd-3f97-946d-6920-bea772e9be24@c-s.fr>
-Date:   Mon, 13 Jan 2020 13:04:14 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        Mon, 13 Jan 2020 07:06:09 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40261 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgAMMGJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 07:06:09 -0500
+Received: by mail-io1-f67.google.com with SMTP id x1so9488566iop.7
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:06:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=CZK7dKMZNH+opiefMkjMH6OKZgUdNCuAi9u4ncS4wdg=;
+        b=kSa0JUdd3YnKxBRGqACx+Ne5dK/rMCJJkhZf559JIGUykLgOXhxeAww20f30yj00Bn
+         aaCPzWBAaATN96iT3JLBrb8Q8+wA4cuzEY752aDWIytReQhqduCxfgLL3VAs1+690vzV
+         v3jTZZBJerV+wMtuWDit2M8Oiy2RXQwgZTMdAE+TzwGdKynmfmeZaEURJK4y/RCfZfhy
+         TFM+OwRecfareeXROEWfq1q0F7cs/L7lGW6/p1bTcdObTHB6Fvn0FjrHzr0euJwZ/arJ
+         +rl5bOvHrMYriqBi4kmvdcn7nmJVmL0smYFQlMZ3P6z714BgO5wPlVS48N3mzgok5/Mi
+         HuXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=CZK7dKMZNH+opiefMkjMH6OKZgUdNCuAi9u4ncS4wdg=;
+        b=CZTSA2EEEwujjqd6PAVACKFfA8b9k8c4RqQIRF32scoF7hMKBaVCc4XXbf+riYLqbs
+         KGbTQqd7GYxBB9JaSTKTar/6Q7zxDbZ4ZF5UKPwBvxBNqQur0Ekvle/jrW/1d2UdoV7q
+         W44ZbUk8OSoc4r8CIrAPvn7ufJjkg1/shbDwPzO2/YN5aLprRtVaodg8tLC3zfYe+OmZ
+         pYsYIORkNjXXrZj49BknNmrUKKjAe29rZhpfDUbdwAfuOQbO+I9HXgfnUOnb3RTBTMui
+         J2VuxNPSkJFzGnlMXxn1EsPpvxQwchkSlbsw6yVGjqYUha0Q/Z3+pqtGYcsfRG1LG3zN
+         xsgw==
+X-Gm-Message-State: APjAAAXfM5YfXLsiLusH0CVDw722fwpJ3K7+7T0MdAgm5ZMojdW46+Ff
+        Sw7Qm633ZkqnDxHvM/nLbAr3HFEUHQvslChLptd6MA==
+X-Google-Smtp-Source: APXvYqyv0BV7Oc5zyIS8CA5WnrzdTPGhbYbpOIMjm/w4RLq5BoeVmpILQ0dErwSOcrPrx8FusRqpyrwOSancPdZoveA=
+X-Received: by 2002:a6b:700e:: with SMTP id l14mr12995432ioc.170.1578917168494;
+ Mon, 13 Jan 2020 04:06:08 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <875zhhsr0h.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <CAFZWReakYoDcSgEXw-d-SPAzum=fw=uLo7sh8OMqZV6FjP1ymA@mail.gmail.com>
+In-Reply-To: <CAFZWReakYoDcSgEXw-d-SPAzum=fw=uLo7sh8OMqZV6FjP1ymA@mail.gmail.com>
+From:   Uday R <opensource.linuz@gmail.com>
+Date:   Mon, 13 Jan 2020 17:35:56 +0530
+Message-ID: <CAFZWReYF83JPvnqqVPgw88UBwQwJkeDk0wMTAeOdWDe-xoYtzA@mail.gmail.com>
+Subject: Re: Issue with Kexec memory allocation
+To:     linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Any help ?
 
+Thanks,
+RK
 
-Le 11/01/2020 à 20:59, Thomas Gleixner a écrit :
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->> When __cvdso_clock_getres() became __cvdso_clock_getres_common()
->> and a new __cvdso_clock_getres() was added, static qualifier was
->> forgotten.
->>
->> Fixes: 502a590a170b ("lib/vdso: Move fallback invocation to the callers")
->> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> 
-> I've already queued:
-> 
->       https://lore.kernel.org/r/20191128111719.8282-1-vincenzo.frascino@arm.com
-> 
-> but thanks for caring!
-> 
-
-
-Is there a git tree with the latest VDSO status ?
-
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git?h=timers%2Fvdso 
-is 6 monthes old.
-
-Christophe
+On Mon, Jan 6, 2020 at 12:43 PM Uday R <opensource.linuz@gmail.com> wrote:
+>
+> Hello folks,
+>
+> I am using kexec to load into the new kernel from the existing kernel.
+> My vmlinuz image size is 6.6MB, initrd size is 18MB, and the root file
+> system size is 715MB.  I use kexec command to load the new kernel into
+> memory. I observed that before calling kexec if the available memory
+> is less than 1.33GB then kexec lands into an out of memory issue
+> effectively kexec being killed by OOM-KILLER.  I dont get into out of
+> memory issue if i have memory >=1.33GB.
+>
+> My question is why kexec tries to over allocate memory when the
+> available memory is less than 1.33GB and gets the available memory to
+> ZERO.
+> In case if the available memory is >= 1.33GB before calling kexec,
+> After kexec load, i see the memory consumed by kexec load is
+> approximately equal to size of "linux+initrd+root file system".
+>
+> Is there a bug in the 'Kexec' code and had been fixed ?
+>
+> Note: i am using the kernel from a vendor, Just wanted to know if
+> there is no such issue in mainstream code.
+>
+> Thanks in Advance,
+> Uday
