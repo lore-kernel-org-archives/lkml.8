@@ -2,113 +2,94 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61D70C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06D93C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:30:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3809B21569
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:30:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="bGqnuwxb"
+	by mail.kernel.org (Postfix) with ESMTP id D27A8214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:30:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578907854;
+	bh=kO4+vTp5Pf9yF5MFBXYv+fbzeN3YsHdoVpGiHtqh4oE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MulCDBDdvwZW7cZAMCUO6Vr5jFITXFBMFWgE5bOb0hzC4aCDwAd49A/61fn+KCLPr
+	 7xsneM3n6iDNtkl+SM+IH0Yiljr0nHnjGAM+V3dDVm4ZQoNAfGMGBzwIFm1onEHpv9
+	 frnFH5gIZYMwxuvXvPLzi0VgCVSzO3o1olQDrs6o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbgAMJaY (ORCPT
+        id S1728682AbgAMJay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:30:24 -0500
-Received: from fd.dlink.ru ([178.170.168.18]:52132 "EHLO fd.dlink.ru"
+        Mon, 13 Jan 2020 04:30:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgAMJaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:30:23 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id D580E1B214D6; Mon, 13 Jan 2020 12:30:20 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru D580E1B214D6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1578907820; bh=ay0aQdubfRd2z0EzjvG25Fck9nkLxv3o/IS7a8ekqDc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=bGqnuwxbo0Z07sOYtv9NUXBctnRgbn7nlabKLezk3u4M46bLYz7z9E6ySDnUpTWMZ
-         Ezwe/0ZWB6UgSVedSes8EerOVLi70PFeujrQSEqsZJjOB/rMRcy+0gc9E7jce0wj47
-         gC4dSYDAHBLi17t9IhWDm9gDK7btRMzc9ex8AXt0=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id CCEA41B20968;
-        Mon, 13 Jan 2020 12:30:07 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru CCEA41B20968
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id 2FC251B2613E;
-        Mon, 13 Jan 2020 12:30:07 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Mon, 13 Jan 2020 12:30:07 +0300 (MSK)
+        id S1725832AbgAMJax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 04:30:53 -0500
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 053062082E;
+        Mon, 13 Jan 2020 09:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578907853;
+        bh=kO4+vTp5Pf9yF5MFBXYv+fbzeN3YsHdoVpGiHtqh4oE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=O2ZzGY/1L6N03VHwkufdNp/AHbueNn8soeStyXgMUkkTGq8XHEBb7x2za3xzp3r4T
+         MH9n4iKviuLAxyZPwtSyKle2pH4ZoSY0AUdZmcyg+biaY95r2aE46Mwk+opOU5Rw+P
+         LaQQtlNuJYEB7yIjjlfy6ux6HnqINLIrtO4q/r0A=
+Date:   Mon, 13 Jan 2020 10:30:50 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Ondrej Jirman <megous@megous.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v6 1/6] dt-bindings: mailbox: Add a sun6i message box
+ binding
+Message-ID: <20200113093050.32qv7l7466c5mz64@gilmour.lan>
+References: <20200113051852.15996-1-samuel@sholland.org>
+ <20200113051852.15996-2-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 13 Jan 2020 12:30:06 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Edward Cree <ecree@solarflare.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH RFC net-next 00/20] net: dsa: add GRO support
-In-Reply-To: <CA+h21hq95SmS3BraUQeEytP+3Y7irmShBEwpXqqJv+xOp4ePrg@mail.gmail.com>
-References: <20191230143028.27313-1-alobakin@dlink.ru>
- <CA+h21hq95SmS3BraUQeEytP+3Y7irmShBEwpXqqJv+xOp4ePrg@mail.gmail.com>
-User-Agent: Roundcube Webmail/1.4.0
-Message-ID: <607283965483d3bc3c0e969b1fadf540@dlink.ru>
-X-Sender: alobakin@dlink.ru
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mjfyfyav2c5rsq4t"
+Content-Disposition: inline
+In-Reply-To: <20200113051852.15996-2-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vladimir Oltean wrote 31.12.2019 18:32:
-> Hi Alexander,
 
-Hi,
+--mjfyfyav2c5rsq4t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On Mon, 30 Dec 2019 at 16:31, Alexander Lobakin <alobakin@dlink.ru> 
-> wrote:
->> 
->> I mark this as RFC, and there are the key questions for maintainers,
->> developers, users etc.:
->> - Do we need GRO support for DSA at all?
->> - Which tagger protocols really need it and which don't?
->> - Does this series bring any performance improvements on the
->>   affected systems?
-> 
-> If these are these questions for maintainers, developers, users etc,
-> then what has determined you to make these changes?
+On Sun, Jan 12, 2020 at 11:18:47PM -0600, Samuel Holland wrote:
+> This mailbox hardware is present in Allwinner sun6i, sun8i, sun9i, and
+> sun50i SoCs. Add a device tree binding for it.
+>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-The main reason was obviously pretty good results on a particular
-hardware on which I developed this (and other) series and a general
-opinion that GRO improves overall performance on most systems.
-DSA is a special case though.
+Acked-by: Maxime Ripard <mripard@kernel.org>
 
-> Thanks,
-> -Vladimir
+Thanks!
+Maxime
 
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
+--mjfyfyav2c5rsq4t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXhw4ygAKCRDj7w1vZxhR
+xag8AQDndez/6x/OQZ3/TuccUojDbTqhJitIb4T5bYONg/61zAEA3gsBZUTbUxVl
+riZ0r5u5J4h8Y7XnMXS3oFkAhIoMkwI=
+=LNDX
+-----END PGP SIGNATURE-----
+
+--mjfyfyav2c5rsq4t--
