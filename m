@@ -2,139 +2,86 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C6A8C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B83EBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 100EE21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F65C24655
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:30:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WPcIaPi6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nL46GAVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgAMU2N (ORCPT
+        id S1728664AbgAMUaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 15:28:13 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39539 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgAMU2M (ORCPT
+        Mon, 13 Jan 2020 15:30:16 -0500
+Received: from mail-ed1-f53.google.com ([209.85.208.53]:33982 "EHLO
+        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbgAMUaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 15:28:12 -0500
-Received: by mail-pf1-f193.google.com with SMTP id q10so5413929pfs.6;
-        Mon, 13 Jan 2020 12:28:12 -0800 (PST)
+        Mon, 13 Jan 2020 15:30:16 -0500
+Received: by mail-ed1-f53.google.com with SMTP id l8so9778444edw.1;
+        Mon, 13 Jan 2020 12:30:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RRhPxYtI12WE5buq2I+zvusZGT++RtYK4QcGcmE99jI=;
-        b=WPcIaPi6hE90GSQqZ1OfQnwK3DNiEiNTF3Nv6MgLAm5epDAsMm9DKxVKjcruunecCU
-         wPQZCf1w0P2qQIW1gXwQpbpEaWNjE1MoKP13aB94rzpPpWjQjxglIfzvHpW6Y7VpzTZ9
-         17yvLWttMTPV/KZXBdmTn7bpbVJ0gOdGJBUI4xRUN+JI5cfSNCco6bAmESU0QEjRfNk/
-         IP/AhGl/EJPssg4zCIus8KYQRlnp4HIEhvMtrDl44NjIAMd54QAUHSJmorbkVB6rlgaY
-         6d1rYH1gKgGMU/yn3nw/6N76mwP7eHstrzr8fwD2DThSDvWLPJ3yypDVgCKIBIpU0J/v
-         zx6A==
+        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+         :cc;
+        bh=y4sfoniwMt9T4FiSeYM4bsL8cfJwjPsCGqccD51JtpA=;
+        b=nL46GAVtjSmtZ8xePpnFZINToDH3tlVTOwHkrcGWgriTapFPkhnQMabvHVXJcu4/i+
+         chH95kEmxhKOfaOk0IGYO/YCLAIND8B/PnNg/N5NIHCFYE8oRvan1DTXcyv7pHoVWbMt
+         JnG04h9ZWrjms73Mx+qj2OqlteR39jku+QyJ9XlyAHLTxAYxuwF07ebIb1fWvCadgcLt
+         PcKDndpdg0xPyhmGI5GhSlPHwpVBmwElJfFr34byiLrv5aOMMyurpzNkxuNQK6OsaZ6O
+         OGdQZrec+OJFUdKw7iTrOHrW32AgEfOrSECccPhEzgZFfsy3dm6u8N07J2FlmG11i5ba
+         frfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RRhPxYtI12WE5buq2I+zvusZGT++RtYK4QcGcmE99jI=;
-        b=sQlIDp+h/g+ahTX6seUTQ9Gywehf3tJo/LR7arwHFHmxljTcu6Dbp9Ho0NUWDwLbbC
-         RwFV0kh1Mwr/MaqohR4xm06/m6h2BKtYEnMToB4pnmyYRGt5Bi+CRWrOhkC+eY7qEHbl
-         IoxnkgN9U8AcSnc7GICjQHe92XhXWulyiBc27FQMxpfvJWJCdB7/Ru4WdqvSGZYFBMrb
-         N7Z+/PGb11CgEgiuuvlN9bKeyX7C+1DUxftksInoTIb1MWp13LqBuR8r+bBiBBGXa+7S
-         QBgV7lGK8++RbpkPQbxS6Z+QrhC9DBa2KYO8Bd73S+M+A7EfZVlLNFk6HlhQ5OCF/E79
-         3T4g==
-X-Gm-Message-State: APjAAAUt7lKQz/aN/2EUlTlOC9bq61FrpFWxpLdFOThELblr+mXGkGBY
-        7wQNGmr4yFBn6IgQGfPX0hIBhu2C
-X-Google-Smtp-Source: APXvYqxUixEYeLuRAI5UDbxecGt6gjWhPqKiZc26gUjE7oCDhz4EXXH1fKvuTON6xFeAPWg7kD3W6g==
-X-Received: by 2002:a63:3cb:: with SMTP id 194mr23342069pgd.123.1578947292040;
-        Mon, 13 Jan 2020 12:28:12 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c1sm15461800pfa.51.2020.01.13.12.28.10
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 Jan 2020 12:28:10 -0800 (PST)
-Date:   Mon, 13 Jan 2020 12:28:09 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     support.opensource@diasemi.com, contact@stefanchrist.eu,
-        Adam.Thomson.Opensource@diasemi.com,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH] watchdog: da9062: make restart handler atomic safe
-Message-ID: <20200113202809.GA21484@roeck-us.net>
-References: <20200113091521.5754-1-m.felsch@pengutronix.de>
+        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+         :message-id:subject:to:cc;
+        bh=y4sfoniwMt9T4FiSeYM4bsL8cfJwjPsCGqccD51JtpA=;
+        b=OKv7ghtIAZikVVvF/6KZc1Te1WC2Yz2kkSL9FXADeFVrJAhsQhOtLSdNnlwK6H1DfM
+         6ldTeIRSf6uX4nvgZgL6rZEzhgYg1V7Jkvoe5rz8MwT19LVNlkRmJO3PXHhamggLi9B4
+         5sWdahlIGtEvqUM4uB8NPPJvYVWEGMiDlI07VdDY7fA59BAFRQdh+ICybKGFRa32tSxW
+         6MJI4LJcooyAmtT+a/WLFsfMMlzlwnwLizCRoaxpkyjaRwLbzfWDNYeFFP/53EYNbrEz
+         XyadUnEka11VHNKmTdF8aZj/Pdk9gkm9wsO56y70bPTBzz68dODR4JoGrMiiTVUjlydW
+         rPdA==
+X-Gm-Message-State: APjAAAVtdCePZ1lmEifA9iBrv7iJQhT+ojnTe0tj/NafEO4800M0aV52
+        R/xDznFrdpl5VeG/RDcp0Ohs13K34a3VDP4gTG8=
+X-Google-Smtp-Source: APXvYqz9/JaxDYLS7qf9ai/vBBO77c5WjJfn1LFXo5DOAhceZ8y1KH6605evQXQgZCq8BjUSknUEMAmHEEL95mYNIBs=
+X-Received: by 2002:a50:d69a:: with SMTP id r26mr19358575edi.148.1578947414160;
+ Mon, 13 Jan 2020 12:30:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113091521.5754-1-m.felsch@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Received: by 2002:a05:6402:1c11:0:0:0:0 with HTTP; Mon, 13 Jan 2020 12:30:13
+ -0800 (PST)
+In-Reply-To: <20200113200832.GR13310@zn.tnic>
+References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
+ <20200113154739.GB11244@42.do-not-panic.com> <CACMCwJL8tu+GHPeRADR_12xhcYSiDv+Yxdy=yLqMxEsn=P9zFA@mail.gmail.com>
+ <20200113200832.GR13310@zn.tnic>
+From:   Jari Ruusu <jari.ruusu@gmail.com>
+Date:   Mon, 13 Jan 2020 22:30:13 +0200
+Message-ID: <CACMCwJLsj6D884Sxy82VbpKkip=ja2ymHKvQ78c=-ftx-zmV_Q@mail.gmail.com>
+Subject: Re: Fix built-in early-load Intel microcode alignment
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        johannes.berg@intel.com, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 10:15:21AM +0100, Marco Felsch wrote:
-> The restart handler is executed during the shutdown phase which is
-> atomic/irq-less. The i2c framework supports atomic transfers since
-> commit 63b96983a5dd ("i2c: core: introduce callbacks for atomic
-> transfers") but unfortunately the regmap framework doesn't support it
-> yet. Hard coding the i2c stuff can be done without worries since the
-> DA9062 is an i2c-only device.
-> 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
-> Hi,
-> 
-> This patch is based on Stefan Lengfeld's RFC Patch [1].
-> 
-> [1] https://patchwork.ozlabs.org/patch/1085942/
-> ---
->  drivers/watchdog/da9062_wdt.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-> index c9b9d6394525..84c5a0a455b2 100644
-> --- a/drivers/watchdog/da9062_wdt.c
-> +++ b/drivers/watchdog/da9062_wdt.c
-> @@ -11,6 +11,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/uaccess.h>
->  #include <linux/slab.h>
-> +#include <linux/i2c.h>
->  #include <linux/delay.h>
->  #include <linux/jiffies.h>
->  #include <linux/mfd/da9062/registers.h>
-> @@ -149,12 +150,18 @@ static int da9062_wdt_restart(struct watchdog_device *wdd, unsigned long action,
->  			      void *data)
->  {
->  	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
-> +	struct i2c_client *client = to_i2c_client(wdt->hw->dev);
-> +	u8 buf[] = {DA9062AA_CONTROL_F, DA9062AA_SHUTDOWN_MASK};
-> +	struct i2c_msg msg = {
-> +		.addr = client->addr,
-> +		.flags = 0,
-> +		.len = sizeof(buf),
-> +		.buf = buf,
-> +	};
->  	int ret;
->  
-> -	ret = regmap_write(wdt->hw->regmap,
-> -			   DA9062AA_CONTROL_F,
-> -			   DA9062AA_SHUTDOWN_MASK);
-> -	if (ret)
-> +	ret = i2c_transfer(client->adapter, &msg, 1);
+On 1/13/20, Borislav Petkov <bp@alien8.de> wrote:
+> Btw, just out of curiosity: why are you using built-in microcode and not
+> the initrd method?
 
-Why not i2c_smbus_write_byte_data() ? I don't immediately see the difference.
+Initrd method is better when it is a kernel intended to be booted
+on many different computers. Built-in microcode method kernel is
+tuned for one computer only. It is less hassle that way.
 
-Guenter
-
-> +	if (ret < 0)
->  		dev_alert(wdt->hw->dev, "Failed to shutdown (err = %d)\n",
->  			  ret);
->  
-> -- 
-> 2.20.1
-> 
+-- 
+Jari Ruusu  4096R/8132F189 12D6 4C3A DCDA 0AA4 27BD  ACDF F073 3C80 8132 F189
