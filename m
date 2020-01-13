@@ -2,179 +2,194 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1836C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA577C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:22:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8179A2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:21:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XBlxvOFS"
+	by mail.kernel.org (Postfix) with ESMTP id B7437207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:22:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgAMPVN (ORCPT
+        id S1729008AbgAMPWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 10:21:13 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44265 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728558AbgAMPVN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 10:21:13 -0500
-Received: by mail-pl1-f194.google.com with SMTP id az3so3926088plb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 07:21:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Xio3ltsZ5CL1rGBail8nUykniEUKdTJ+MhVEQqazwvU=;
-        b=XBlxvOFSWkhf5jOxtE1Jstbl/y1fHgss2bgjBDGytbhH8Aq/6Te18ZGLd92cxH3SoR
-         2v/9Y6BkFaLkj56QsKKo9yEBtiWdkZ4Q0D6dhJggBWWJeEH5eWu0N4HSuxaNHkHeWkx5
-         69gjs+FOSPISRwpreQg5IlDtCIrtXwVNJXfO3AktEPrG3Rl3rI7ZYx0Ga3PL7MJC/aB8
-         skZBN2UPl0R4zMOA/GUVivuDD9wxODbeRXG3IXzjP20npcrKtE7IYOv+cD2vPPMhPEnK
-         pia71Duax2cEASLqn+YA9PyqA9Ecf55dHUdPMSp+2fQ7LHJ4zFvhKQ8RpKJstZZeNJei
-         610w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Xio3ltsZ5CL1rGBail8nUykniEUKdTJ+MhVEQqazwvU=;
-        b=XM9y+bGDhdY2LRf/oS1uFZtfkpbXCg59QpwV1JVFo4s/iSg14f5LzWDP0oRbHPA181
-         z5VY2DFf4N7vJV4+X+RCplMN9+cqo9AFTPcqvVqyNxIsSXelyzB101Dpl3cdIa+aSDl+
-         xz/KfeFWe4W7W6nm5NKKeggvhN0Bmb3m1e6Q6zcPbLltD3mNKxHbIZqBdAV5N618ziTC
-         R8KCbtJZx6MQBwU7LUIV1H8rQFNjeIWRp7t2QzVet2jyIEQzYivC4CMvYNE64mrA8/s1
-         gLm/NsRyLPVVidTfm8LeOTKnLYovBZ5ACSMFcjNVruaPQGY89IpNVy7h+AvKF56o7E49
-         X97w==
-X-Gm-Message-State: APjAAAW6fq3cGRxqG1WKsWTNk29MNhBl155i03/rj6wCRwVpaHB5aMg4
-        j5mQF0dh66USD97H5J5zF4kSvQ==
-X-Google-Smtp-Source: APXvYqyytvMkDTSyPxScTbeP6EkWGYOBA7VViLmMT3aJFn+73OPR2r5RlBpFUBv6hrE0NeeXjZrNQg==
-X-Received: by 2002:a17:902:ab83:: with SMTP id f3mr20933451plr.106.1578928872619;
-        Mon, 13 Jan 2020 07:21:12 -0800 (PST)
-Received: from leoy-ThinkPad-X240s (li519-153.members.linode.com. [66.175.222.153])
-        by smtp.gmail.com with ESMTPSA id w4sm13737264pjt.23.2020.01.13.07.21.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 Jan 2020 07:21:12 -0800 (PST)
-Date:   Mon, 13 Jan 2020 23:21:03 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH v4 1/2] perf parse: Refactor struct perf_evsel_config_term
-Message-ID: <20200113152103.GC10620@leoy-ThinkPad-X240s>
-References: <20200108142010.11269-1-leo.yan@linaro.org>
- <CANLsYkzv2Di-qeU1Q3M4Ro21hQ09eE26FBjeP1A9uSsA_W2Uww@mail.gmail.com>
- <20200109050753.GA24741@leoy-ThinkPad-X240s>
- <20200109163424.GA5721@xps15>
- <20200110150410.GG82989@krava>
+        Mon, 13 Jan 2020 10:22:18 -0500
+Received: from mga01.intel.com ([192.55.52.88]:2225 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727286AbgAMPWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 10:22:17 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 07:22:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
+   d="scan'208";a="304865985"
+Received: from bcoogan-mobl1.amr.corp.intel.com (HELO [10.252.137.69]) ([10.252.137.69])
+  by orsmga001.jf.intel.com with ESMTP; 13 Jan 2020 07:22:15 -0800
+Subject: Re: [alsa-devel] [PATCH v5 09/17] soundwire: intel: remove platform
+ devices and use 'Master Devices' instead
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, slawomir.blauciak@intel.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+References: <20191217210314.20410-1-pierre-louis.bossart@linux.intel.com>
+ <20191217210314.20410-10-pierre-louis.bossart@linux.intel.com>
+ <20191227090826.GM3006@vkoul-mobl>
+ <5be4d9df-0f46-d36f-471c-aae9e1f55cc0@linux.intel.com>
+ <20200106054221.GN2818@vkoul-mobl>
+ <32ae46a7-59ee-4815-270a-a519ff462345@linux.intel.com>
+ <20200110064303.GX2818@vkoul-mobl>
+ <39000dd7-3f77-bc33-0ad3-aa47ba2360f7@linux.intel.com>
+ <20200113051800.GP2818@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <d77dcdfd-2b33-d533-e0b2-564c12223eec@linux.intel.com>
+Date:   Mon, 13 Jan 2020 09:22:15 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110150410.GG82989@krava>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200113051800.GP2818@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 04:04:10PM +0100, Jiri Olsa wrote:
-> On Thu, Jan 09, 2020 at 09:34:24AM -0700, Mathieu Poirier wrote:
-> 
-> SNIP
-> 
-> > 
-> > If we are to deal with all flields of the union, I think it should be as below:
-> > 
-> >         union {
-> >                 bool            cfg_bool;
-> >                 int             cfg_int;
-> >                 unsigned long   cfg_ulong;
-> >                 u32             cfg_u32;
-> >                 char            *cfg_str;
-> >         } val;
-> > 
-> > But just dealing with the "char *" as below would also be fine with me:
-> > 
-> >         union {
-> >                 u64           period;
-> >                 u64           freq;
-> >                 bool          time;
-> >                 u64           stack_user;
-> >                 int           max_stack;
-> >                 bool          inherit;
-> >                 bool          overwrite;
-> >                 unsigned long max_events;
-> >                 bool          percore;
-> >                 bool          aux_output;
-> >                 u32           aux_sample_size;
-> >                 u64           cfg_chg;
-> >                 u64           num;
-> >                 char          *str;
-> >         } val;
-> > 
-> > > 
-> > > struct perf_evsel_config_term {
-> > >         struct list_head      list;
-> > >         enum evsel_term_type  type;
-> > >         union {
-> > >                 u64           period;
-> > >                 u64           freq;
-> > >                 bool          time;
-> > >                 char          *callgraph;
-> > >                 char          *drv_cfg;
-> > >                 u64           stack_user;
-> > >                 int           max_stack;
-> > >                 bool          inherit;
-> > >                 bool          overwrite;
-> > >                 char          *branch;
-> > >                 unsigned long max_events;
-> > >                 bool          percore;
-> > >                 bool          aux_output;
-> > >                 u32           aux_sample_size;
-> > >                 u64           cfg_chg;
-> > > +               u64           num;
-> > > +               char          *str;
-> > >         } val;
-> > >         bool weak;
-> > > };
-> > > 
-> > > > I will let Jiri make the
-> > > > final call but if we are to proceed this way I think we should have a
-> > > > member per type to avoid casting issues.
-> > > 
-> > > Yeah, let's see what's Jiri thinking.
-> > > 
-> > > Just note, with this change, I don't see any casting warning or errors
-> > > when built perf on arm64/arm32.
-> > 
-> > At this time you may not, but they will happen and it will be very hard to
-> > debug.
-> 
-> hi,
-> sry for late reply..
-> 
-> I think ;-) we should either add all different types to the union
-> or just add 'str' pointer to handle strings correctly.. which seems
-> better, because it's less changes and there's no real issue that
-> would need that other bigger change
 
-Thanks for the suggestion, Jiri.
 
-Have sent out patch v5 with following the ideas.
+On 1/12/20 11:18 PM, Vinod Koul wrote:
+> On 10-01-20, 10:08, Pierre-Louis Bossart wrote:
+>>
+>>>>> The "big" difference is that probe is called by core (asoc) and not by
+>>>>> driver onto themselves.. IMO that needs to go away.
+>>>>
+>>>> What I did is not different from what existed already with platform devices.
+>>>> They were manually created, weren't they?
+>>>
+>>> Manual creation of device based on a requirement is different, did I ask
+>>> you why you are creating device :)
+>>>
+>>> I am simple asking you not to call probe in the driver. If you need
+>>> that, move it to core! We do not want these kind of things in the
+>>> drivers...
+>>
+>> What core are you talking about?
+> 
+> soundwire core ofcourse! IMO All that which goes into soundwire-bus-objs is
+> considered as soundwire core part and rest are drivers intel, qc, so on!
+This master code was added to the bus:   v
+                                          v
+soundwire-bus-objs := bus_type.o bus.o master.o slave.o mipi_disco.o 
+stream.o
+obj-$(CONFIG_SOUNDWIRE) += soundwire-bus.o
 
-Thanks,
-Leo Yan
+and the API is also part of the sdw.h include file. That seems to meet 
+exactly what you describe above, no?
+
+git grep sdw_master_device_add (reformatted output)
+
+drivers/soundwire/intel_init.c:
+md = sdw_master_device_add(&intel_sdw_driver,
+
+drivers/soundwire/master.c:
+*sdw_master_device_add(struct sdw_master_driver *driver,
+
+drivers/soundwire/master.c:
+EXPORT_SYMBOL_GPL(sdw_master_device_add);
+
+include/linux/soundwire/sdw.h:
+*sdw_master_device_add(struct sdw_master_driver *driver,
+
+So, what exactly is the issue?
+
+We are not 'calling the probe in the [Intel] driver' as you state it, we 
+use a SoundWire core API which in turn will create a device. The device 
+core takes care of calling the probe, see the master.c code which is NOT 
+Intel-specific.
+
+>>
+>> The SOF intel driver needs to create a device, which will then be bound with
+>> a SoundWire master driver.
+>>
+>> What I am doing is no different from what your team did with
+>> platform_register_device, I am really lost on what you are asking.
+> 
+> Again repeating myself, you call an API to do that is absolutely fine,
+> but we don't do that in drivers or open code these things
+That is still quite unclear, what 'open-coding' are you referring to?
+
+I am starting to wonder if you missed the addition of the master 
+functionality in the previous patch:
+
+[PATCH v5 08/17] soundwire: add initial definitions for sdw_master_device
+
+What this patch 9 does is call the core-defined API and implement the 
+intel-specific master driver.
+
+> 
+>>>>>> FWIW, the implementation here follows what was suggested for Greybus 'Host
+>>>>>> Devices' [1] [2], so it's not like I am creating any sort of dangerous
+>>>>>> precedent.
+>>>>>>
+>>>>>> [1]
+>>>>>> https://elixir.bootlin.com/linux/latest/source/drivers/greybus/es2.c#L1275
+>>>>>> [2] https://elixir.bootlin.com/linux/latest/source/drivers/greybus/hd.c#L124
+>>>>>
+>>>>> And if you look closely all this work is done by core not by drivers!
+>>>>> Drivers _should_ never do all this, it is the job of core to do that for
+>>>>> you.
+>>>>
+>>>> Please look at the code again, you have a USB probe that will manually call
+>>>> the GreyBus device creation.
+>>>>
+>>>> static int ap_probe(struct usb_interface *interface,
+>>>> 		    const struct usb_device_id *id)
+>>>> {
+>>>> 	hd = gb_hd_create(&es2_driver, &udev->dev, 	
+>>>>
+>>>>
+>>>> static struct usb_driver es2_ap_driver = {
+>>>> 	.name =		"es2_ap_driver",
+>>>> 	.probe =	ap_probe, <<< code above
+>>>> 	.disconnect =	ap_disconnect,
+>>>> 	.id_table =	id_table,
+>>>> 	.soft_unbind =	1,
+>>>> };
+>>>
+>>> Look closely the driver es2 calls into greybus core hd.c and gets the
+>>> work done, subtle but a big differances in the approaches..
+>>
+>> I am sorry, I have absolutely no idea what you are referring to.
+>>
+>> The code I copy/pasted here makes no call to the greybus core, it's ap_probe
+>> -> gb_hd_create. No core involved. If I am mistaken, please show me what I
+>> got wrong.
+> 
+> 1. es2_ap_driver is host controller driver
+> 
+> 2. gb_hd_create() is an API provided by greybus core!
+
+same in my code...
+
+> 
+> es2 driver doesn't open code creation like you are doing in intel driver,
+> it doesn't call probe on its own, greybus does that
+> 
+> This is very common pattern in linux kernel subsytems, drivers dont do
+> these things, the respective subsystem core does that... see about es2
+> driver and implementation of gb_hd_create(). See callers of
+> platform_register_device() and its implementation.
+> 
+> I don't know how else I can explain this to you, is something wrong in
+> how I conveyed this info or you... or something else, I dont know!!!
+the new 'master' functionality is part of the bus code, so please 
+clarify what you see as problematic for the partition.
+
