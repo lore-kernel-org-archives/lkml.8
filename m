@@ -2,133 +2,99 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697E9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C58C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B3DF207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:16:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF8DA2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:19:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OhRwE4on"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PWAQO6n8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgAMTQk (ORCPT
+        id S1728777AbgAMTTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:16:40 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:34766 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbgAMTQk (ORCPT
+        Mon, 13 Jan 2020 14:19:01 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42041 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgAMTTB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:16:40 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DJDCo8040438;
-        Mon, 13 Jan 2020 19:16:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=j+nonUWYJFk1Vzwjjy0hf7VzlyfS+OofzKgfB2BtZAs=;
- b=OhRwE4on1w8kwTLu16NPWr+EvXOM9ASNGEvQz98MR1HQv8KsLCY7wAlzpW1jCRjdOEvK
- XLic3hEGvI35YUDZo6LYHChrgdl1z9F2xuQfd7uwwP6VN2hZ3teq08nGWFj9K0Sa4E0s
- atMJducqIAtEvg6kTNgHyAuKFtNDF9663cYozppsgxvGttJYp/qb8p3HQaJfKaEv144x
- unlgV3KcHdRTScOe/SU9qJ/JnFYdzXOj56IitE6nDrPiaft4j0dU/7wzlkZ/7Zq+O29o
- Mt0EK0anUhQM8wQrzgBEFTABH5lC0tTecsThemtBQRg6u07SjHj7tZ2ekAMpH13zVP7R 4g== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2xf74s12at-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 19:16:30 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DJEFUQ164977;
-        Mon, 13 Jan 2020 19:16:30 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2xfqu521bf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 19:16:30 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00DJGSJ5028834;
-        Mon, 13 Jan 2020 19:16:28 GMT
-Received: from [10.159.240.107] (/10.159.240.107)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 11:16:28 -0800
-Subject: Re: [PATCH v2 1/2] Introduce maximum WQE size to check limits
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
-        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1574106879-19211-1-git-send-email-rao.shoaib@oracle.com>
- <1574106879-19211-2-git-send-email-rao.shoaib@oracle.com>
- <20191119203138.GA13145@ziepe.ca>
- <44d1242a-fc32-9918-dd53-cd27ebf61811@oracle.com>
- <20191119231334.GO4991@ziepe.ca>
- <dff3da9b-06a3-3904-e9eb-7feaa1ae9e01@oracle.com>
- <20191120000840.GQ4991@ziepe.ca>
- <ccceac68-db4f-77a3-500d-12f60a8a1354@oracle.com>
- <20191219182511.GI17227@ziepe.ca>
- <6da00014-0fd2-c7fc-93ab-7653b23aeb1e@oracle.com>
- <20200113184757.GB9861@ziepe.ca>
-From:   Rao Shoaib <rao.shoaib@oracle.com>
-Message-ID: <f3210e8d-1783-2d2d-f835-bee9cc0ec3e7@oracle.com>
-Date:   Mon, 13 Jan 2020 11:16:27 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 13 Jan 2020 14:19:01 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 66so10035963otd.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 11:19:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NoYTay9gEdUwJzd8flck47gwEsidyqOErVEeC39Jq2o=;
+        b=PWAQO6n8uYq2a4CdtE53n1PqHPbBvA3iHygW7xlF/mSri9aldE4CMUkmnObd7hvGs+
+         XD3R1Xw11ZzgSnhSmK2jiytZo/UPfvHdS8pHGjOXyjnUpk963f33BYXN60mn6ZimSH7g
+         iiZRP7Sm1suyhXpkmTz0ed2tCy9XjdSobgkM3xuDVIL8GV5mRpPyinERHpcyJgDMCaIn
+         j+f26vKogVX03oygCZPnkb35fMmNiERhbVQNmh0mCoevC5PTlQTz2jgggfS3utSfwGla
+         fT5WYAnROxmU06T+LAPng4nnHMe9Zi4KN5FYNFewShO4WtQI1iD4Zd5FGjZ8i9u1WEvK
+         +kDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NoYTay9gEdUwJzd8flck47gwEsidyqOErVEeC39Jq2o=;
+        b=Bdyp7r4GdvNWIf/H8fZ3yia9CIoSXO9IrTt4Ti5oXIKc8AEQDBepZN3+SF+aFvCdPY
+         oP+nmKUP+aECVT8Sxv4Gii7IdPLDP50MCxxDxOEBtYaAx7JGl4PW91RHjkjGD/rz6MnC
+         4dL3W3pEuJt3juLWzJN+Xm82UwjTG8GlVV+8kkVVp9ACg18Wk56cBd742KF0dXVgvIjz
+         MLU1wM112YfW4aFdsA0cOc7u8AENGF8pgF7seikcX/11AZfNn7rReCDyZatAcoLrYiF3
+         yVa1RpEH8DXL6l+ELqy09br/rGrbUgUpscBtUuTaO/V2ueGeD340Cmib54izLQrAZCfB
+         iksg==
+X-Gm-Message-State: APjAAAUfDLMa2rVGdZuO/rZa1rVcU71OjIh19OQFKpKKq2NGu8Wa/vsX
+        fDjSXjGBFXAGgkU4QISMT+Dh44/9IFnUYFIDMVa9tAPH
+X-Google-Smtp-Source: APXvYqwzd6z4BsjCgwUlGC6h2jl1N7nb469FD4i67Yk4Xbt8zlAhmtvz3QdfKHsOBvBT2VACljpoCk6xfa7vX5xy6N0=
+X-Received: by 2002:a9d:2028:: with SMTP id n37mr14712535ota.127.1578943140656;
+ Mon, 13 Jan 2020 11:19:00 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200113184757.GB9861@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=799
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001130156
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=850 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001130156
+References: <20200110213433.94739-1-minchan@kernel.org> <20200110213433.94739-3-minchan@kernel.org>
+ <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
+In-Reply-To: <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Mon, 13 Jan 2020 11:18:23 -0800
+Message-ID: <CAKOZuevwbQvrFWqy5GOm4RXuGszKLBvRs9i-KbAi3nPcHhwvSw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] mm: introduce external memory hinting API
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 1/13/20 10:47 AM, Jason Gunthorpe wrote:
-> On Mon, Jan 13, 2020 at 10:35:14AM -0800, Rao Shoaib wrote:
->> On 12/19/19 10:25 AM, Jason Gunthorpe wrote:
->>> On Tue, Dec 17, 2019 at 11:38:52AM -0800, Rao Shoaib wrote:
->>>> Any update on my patch?
->>>>
->>>> If there is some change needed please let me know.
->>> You need to repost it with the comments addressed
->>>
->>> https://patchwork.kernel.org/patch/11250179/
->>>
->>> Jason
->>>
->> Jason,
->>
->> Following is a pointer to the patch that I posted in response to your
->> comments
->>
->> https://www.spinics.net/lists/linux-rdma/msg86241.html
->>
->> I posted this on Nov 18. Can you please take a look and let me know what
->> else has to be done.
-> You mean this:
+On Mon, Jan 13, 2020, 12:47 AM Kirill Tkhai <ktkhai@virtuozzo.com> wrote:
+> > +SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
+> > +             size_t, len_in, int, behavior, unsigned long, flags)
 >
-> https://www.spinics.net/lists/linux-rdma/msg86333.html
->
-> ?
->
-> Don't mix the inline size and the # SGEs. They both drive the maximum
-> WQE size and all the math should be directly connected.
->
-> Jason
+> I don't like the interface. The fact we have pidfd does not mean,
+> we have to use it for new syscalls always. A user may want to set
+> madvise for specific pid from console and pass pid as argument.
+> pidfd would be an overkill in this case.
+> We usually call "kill -9 pid" from console. Why shouldn't process_madvise()
+> allow this?
 
-Nope. I have just resent the patch. Sorry for the confusion.
-
-Shoaib.
-
+All new APIs should use pidfds: they're better than numeric PIDs in
+every way. If a program wants to allow users to specify processes by
+numeric PID, it can parse that numeric PID, open the corresponding
+pidfd, and then use that pidfd with whatever system call it wants.
+It's not necessary to support numeric PIDs at the system call level to
+allow a console program to identify a process by numeric PID.
