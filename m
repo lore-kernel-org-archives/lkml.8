@@ -2,88 +2,146 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE2D4C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:59:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCA5C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E650207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7FD207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578927603;
+	bh=aa9EO2uekBujHfVtcvhLTBuPFLejzJ8R98SroFJlRlQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VyFuaNmvJpt0wJRX3o/CM3OPg2PbhwuOYW7W5OtC0tJ7pZB0AYIRmKsbMDeCNmdLv
+	 Sui7WfR2a+WqbuBFIMH0CgTAU2Uz/3QXjoAdD8f44kUf7oOFJal77l5YXMgD773sDV
+	 XVGUCcMz4gKqNxdWQFz51PWtc3fJYuDqaOBkHJ+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729092AbgAMO74 (ORCPT
+        id S1728883AbgAMPAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:59:56 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:38907 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728843AbgAMO7y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:59:54 -0500
-Received: from mail-qt1-f169.google.com ([209.85.160.169]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mv3M8-1jhkGu2QxU-00qyh5; Mon, 13 Jan 2020 15:59:52 +0100
-Received: by mail-qt1-f169.google.com with SMTP id 5so9339754qtz.1;
-        Mon, 13 Jan 2020 06:59:52 -0800 (PST)
-X-Gm-Message-State: APjAAAUkWUZHjTkzsf5F1mDo85SPeANxN5MtDe6cNFWG6JZjqfgNvNgt
-        bYS925y3u3ErEsKuPlzTrMe5O5dKnaPo4XKI1R8=
-X-Google-Smtp-Source: APXvYqxiLj2wevglx5PMrcSeH3ieonohCOIBtZJiPN4aZqmn8jtgw7RUzenpGKQGwDOInwqXHgXQNFN0lGfRPS4hcg8=
-X-Received: by 2002:ac8:768d:: with SMTP id g13mr10516984qtr.7.1578927591343;
- Mon, 13 Jan 2020 06:59:51 -0800 (PST)
+        Mon, 13 Jan 2020 10:00:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728843AbgAMPAA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 10:00:00 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE9D6207FF;
+        Mon, 13 Jan 2020 14:59:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578927599;
+        bh=aa9EO2uekBujHfVtcvhLTBuPFLejzJ8R98SroFJlRlQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=w+RfN76orFFirc2tM4axk9pWZCEaqU4hy00VCYWN+oAs799sNABs+VESEs1g/ToMM
+         fESl4+A/K/hkPREmlcWrobsTIMmVBBSNfUUpARLK6wwitllEcSBIbwOsARsS3ujke5
+         UtpTmgNbX2M2cjeOzC6Gg/BLqtMGpCm3T14KGats=
+Date:   Mon, 13 Jan 2020 14:59:54 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH 6/8] READ_ONCE: Drop pointer qualifiers when reading
+ from scalar types
+Message-ID: <20200113145954.GB4458@willie-the-truck>
+References: <20200110165636.28035-1-will@kernel.org>
+ <20200110165636.28035-7-will@kernel.org>
+ <CAHk-=wia5ppBsfHLMx648utCjO01JAZiME0K0eSHmhWuRyL+6w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200107175927.4558-1-sargun@sargun.me> <20200107175927.4558-4-sargun@sargun.me>
-In-Reply-To: <20200107175927.4558-4-sargun@sargun.me>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 13 Jan 2020 15:59:35 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0NO2d5oD1dMhunyrHmoa_+CeD-JsM-Yffbp+vgJwu8fA@mail.gmail.com>
-Message-ID: <CAK8P3a0NO2d5oD1dMhunyrHmoa_+CeD-JsM-Yffbp+vgJwu8fA@mail.gmail.com>
-Subject: Re: [PATCH v9 3/4] arch: wire up pidfd_getfd syscall
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Gian-Carlo Pascutto <gpascutto@mozilla.com>,
-        =?UTF-8?Q?Emilio_Cobos_=C3=81lvarez?= <ealvarez@mozilla.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jed Davis <jld@mozilla.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:2AACtcI4qkurdtORyUyh4PXYxvV94KBzn9Ud9I489qlGWCMakAL
- 0Qtg97WXjtBsns67iAaS8UiACPmURGdHm35slfCae15WEGX+8Du8ZDK63mPI/itcWFvlByt
- 6/fOAv9agSTK1ufYVLULfcOQFHil/338kndMoRmYkYzV7H9JfAETjixFSRGiR4h3kHswxBG
- TPv4ocfyyJMtrhyTFYZvA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/XoSKrJOcRc=:6RmmOTiWEj5AmHd7ljY4NI
- AuBj1ifmljtEWVta9rVL18WFBEx7NZGrRIh/9qkvJ2q+J07Fo6vmZXrG/0Y3FMMPrgLMCKVZE
- JxICpCMdBVhP5/zmqD84oGoGVb6/o9Ia4x8ng6Fwq0vX0VrxKXsRaJfeps05660cDYsgYIM/O
- K8OqQ1N2n4MO7ddDB0XWfdaUpy53ob6KwwVX13SjMPxsPKC+DUAVOeluawtUfJ3dvON5OYgky
- mCjT/1PkB08fcKc8RHAh+fPKes0UTdDI3vkLcL1G+isXfzve5cjIZghSwXXpvuHgmIuQOotUf
- mGE8e73i+TBzo0exhUxzP0/J2v5krNKOykm1/Z+QmZKlgsFV1sdTHGUSg8h0SRqmyaRhh8r+g
- 0Ob+Up1L5wOMO65oFS+FEj4Y9Apas72aC6V+CZ8RCpEVkZBzShtuEkd+D4jwEY1zWN4VQHWe6
- q13HZ6Td5RNzzbUcqa56JTn5R7CbO/8JJ9ZINZpQKcg8WsebU6/GYWVT8+kwCnfOZHz/2DNug
- F3UMuGaK7TfIRZ9LaSmprqVlVtSnqKYm3Ifym35aV8eXACoos8lgHqD51k9U4rMPU+fTRfSoy
- xdhmzqinDe+rMcltPZLyqyLZGcwmjZdAvzs3TtFiZJXi+2KSa1P5av5Xwt2cqXWO9+Y0MdnA6
- c4sMgSi0SkNQmcEQvsH/SSY5AxSxaLiSX/hTkBU3Pw0BGLTPcIQ7n/KdXOqYzYbb0wpbjgsmc
- V7t1jex2fulLFhstVgIWUc+AG55r+r2A0M3a6lwbIlYV6yPwHqDmEIxVm/QllJgsOCuba6cNE
- 0hyULfPDKXLzTVMal4pFP93YZtTHLNvRXzmT4aGupH78hgjRuMuthZ+PMqzW1v7NpqptO4VjR
- 25DIRpw2mqZ/4NNiypSA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wia5ppBsfHLMx648utCjO01JAZiME0K0eSHmhWuRyL+6w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 6:59 PM Sargun Dhillon <sargun@sargun.me> wrote:
->
-> This wires up the pidfd_getfd syscall for all architectures.
->
-> Signed-off-by: Sargun Dhillon <sargun@sargun.me>
-> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+On Fri, Jan 10, 2020 at 10:54:27AM -0800, Linus Torvalds wrote:
+> On Fri, Jan 10, 2020 at 8:56 AM Will Deacon <will@kernel.org> wrote:
+> >
+> > +/* Declare an unqualified scalar type. Leaves non-scalar types unchanged. */
+> > +#define __unqual_scalar_typeof(x) typeof(                                      \
+> 
+> Ugh. My eyes. That's horrendous.
+> 
+> I can't see any better alternatives, but it does make me go "Eww".
 
-This all looks correct,
+I can't disagree with that, but the only option we've come up with so far
+that solves this in the READ_ONCE() macro itself is the thing from PeterZ:
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+// Insert big fat comment here
+#define unqual_typeof(x)    typeof(({_Atomic typeof(x) ___x __maybe_unused; ___x; }))
+
+That apparently *requires* GCC 4.8, but I think the question is more about
+whether it's easier to stomach the funny use of _Atomic or the nested
+__builtin_choose_expr() I have here. I'm also worried about how reliable
+the _Atomic thing is, or whether it's just an artifact of how GCC happens
+to work today.
+
+> Well, I do see one possible alternative: just re-write the bitop
+> implementations in terms of "atomic_long_t", and just avoid the issue
+> entirely.
+> 
+> IOW, do something like the attached (but fleshed out and tested - this
+> patch has not seen a compiler, much less any thought at all).
+
+The big downside of this approach in preference to the proposal here is that
+as long as we've got volatile-qualified pointer arguments describing shared
+memory, I fear that we'll be playing a constant game of whack-a-mole adding
+non-volatile casts as you do below. The same problem manifests for the
+acquire/release accessors, which is why having something like
+__unqual_typeof() would be beneficial and at least the awfulness is
+contained in one place.
+
+So I suppose my question is: how ill does this code really make you feel?
+The disassembly is really nice!
+
+Will
+
+>  include/asm-generic/bitops/lock.h | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/asm-generic/bitops/lock.h b/include/asm-generic/bitops/lock.h
+> index 3ae021368f48..071d8bfd86e5 100644
+> --- a/include/asm-generic/bitops/lock.h
+> +++ b/include/asm-generic/bitops/lock.h
+> @@ -6,6 +6,12 @@
+>  #include <linux/compiler.h>
+>  #include <asm/barrier.h>
+>  
+> +/* Drop the volatile, we will be doing READ_ONCE by hand */
+> +static inline atomic_long_t *atomic_long_bit_word(unsigned int nr, volatile unsigned long *p)
+> +{
+> +	return BIT_WORD(nr) + (atomic_long_t *)p;
+> +}
+> +
+>  /**
+>   * test_and_set_bit_lock - Set a bit and return its old value, for lock
+>   * @nr: Bit to set
+> @@ -20,12 +26,12 @@ static inline int test_and_set_bit_lock(unsigned int nr,
+>  {
+>  	long old;
+>  	unsigned long mask = BIT_MASK(nr);
+> +	atomic_long_t *loc = atomic_long_bit_word(nr, p);
+>  
+> -	p += BIT_WORD(nr);
+> -	if (READ_ONCE(*p) & mask)
+> +	if (atomic_read(loc) & mask)
+>  		return 1;
+>  
+> -	old = atomic_long_fetch_or_acquire(mask, (atomic_long_t *)p);
+> +	old = atomic_long_fetch_or_acquire(mask, loc);
+>  	return !!(old & mask);
+>  }
+>  
+
