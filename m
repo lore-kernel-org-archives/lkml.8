@@ -2,91 +2,81 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953FDC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7960C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A04A207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:02:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8221E20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:02:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbgAMOCZ (ORCPT
+        id S1728918AbgAMOCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:02:25 -0500
-Received: from foss.arm.com ([217.140.110.172]:39940 "EHLO foss.arm.com"
+        Mon, 13 Jan 2020 09:02:34 -0500
+Received: from mga18.intel.com ([134.134.136.126]:29206 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726399AbgAMOCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:02:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6C3B1045;
-        Mon, 13 Jan 2020 06:02:23 -0800 (PST)
-Received: from [10.37.12.172] (unknown [10.37.12.172])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ACAD13F68E;
-        Mon, 13 Jan 2020 06:02:22 -0800 (PST)
-Subject: Re: [PATCH] xfs: Fix xfs_dir2_sf_entry_t size check
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <20200109141459.21808-1-vincenzo.frascino@arm.com>
- <c43539f2-aa9b-4afa-985c-c438099732ff@sandeen.net>
- <1a540ee4-6597-c79e-1bce-6592cb2f3eae@arm.com>
- <20200109165048.GB8247@magnolia>
- <435bcb71-9126-b1f1-3803-4977754b36ff@arm.com>
- <CAK8P3a0eY6Vm5PNdzR8Min9MrwAqH8vnMZ3C+pxTQhiFVNPyWA@mail.gmail.com>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <ae266015-7521-e1fa-e72d-f3f97e623ad2@arm.com>
-Date:   Mon, 13 Jan 2020 14:05:21 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726074AbgAMOCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 09:02:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 06:02:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
+   d="scan'208";a="304845419"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga001.jf.intel.com with ESMTP; 13 Jan 2020 06:02:32 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 55AE01AD; Mon, 13 Jan 2020 16:02:31 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] mfd: intel-lpss: Add Intel Jasper Lake PCI IDs
+Date:   Mon, 13 Jan 2020 16:02:30 +0200
+Message-Id: <20200113140230.56561-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a0eY6Vm5PNdzR8Min9MrwAqH8vnMZ3C+pxTQhiFVNPyWA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+Intel Jasper Lake has the same LPSS than Intel Ice Lake.
+Add the new IDs to the list of supported devices.
 
-On 1/13/20 1:55 PM, Arnd Bergmann wrote:
-> On Thu, Jan 9, 2020 at 10:01 PM Vincenzo Frascino
-> <vincenzo.frascino@arm.com> wrote:
->>
->> Hi Darrick,
->>
->> On 09/01/2020 16:50, Darrick J. Wong wrote:
->>> This sounds like gcc getting confused by the zero length array.  Though
->>> it's odd that randconfig breaks, but defconfig doesn't?  This sounds
->>> like one of the kernel gcc options causing problems.
->>>
->>
->> This is what I started suspecting as well.
-> 
-> The important bit into the configuration is
-> 
-> # CONFIG_AEABI is not set
-> 
-> With ARM OABI (which you get when EABI is disabled), structures are padded
-> to multiples of 32 bits. See commits 8353a649f577 ("xfs: kill
-> xfs_dir2_sf_off_t")
-> and aa2dd0ad4d6d ("xfs: remove __arch_pack"). Those could be partially
-> reverted to fix it again, but it doesn't seem worth it as there is
-> probably nobody
-> running XFS on OABI machines (actually with the build failure we can
-> be fairly sure there isn't ;-).
-> 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/mfd/intel-lpss-pci.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Thanks for this, for some reasons I was convinced that CONFIG_AEABI was set in
-this configuration file as I reported as well in my previous email.
-Since it is OABI makes sense disabling xfs for randconfig purposes.
-
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index b33030e3385c..c40a6c7d0cf8 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -240,6 +240,19 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x4b79), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x4b7a), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x4b7b), (kernel_ulong_t)&bxt_i2c_info },
++	/* JSL */
++	{ PCI_VDEVICE(INTEL, 0x4da8), (kernel_ulong_t)&spt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x4da9), (kernel_ulong_t)&spt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x4daa), (kernel_ulong_t)&spt_info },
++	{ PCI_VDEVICE(INTEL, 0x4dab), (kernel_ulong_t)&spt_info },
++	{ PCI_VDEVICE(INTEL, 0x4daf), (kernel_ulong_t)&spt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x4dc5), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x4dc6), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x4de8), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x4de9), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x4dea), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x4deb), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x4dfb), (kernel_ulong_t)&spt_info },
+ 	/* APL */
+ 	{ PCI_VDEVICE(INTEL, 0x5aac), (kernel_ulong_t)&apl_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x5aae), (kernel_ulong_t)&apl_i2c_info },
 -- 
-Regards,
-Vincenzo
+2.24.1
+
