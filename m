@@ -2,120 +2,226 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF12C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75941C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F0B6206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC38207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:37:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bHUxH4h7"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="PTzjYjBN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgAMRej (ORCPT
+        id S1728699AbgAMRhZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:34:39 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:45569 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728664AbgAMRej (ORCPT
+        Mon, 13 Jan 2020 12:37:25 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36570 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727331AbgAMRhZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:34:39 -0500
-Received: by mail-pl1-f195.google.com with SMTP id b22so4067892pls.12
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 09:34:38 -0800 (PST)
+        Mon, 13 Jan 2020 12:37:25 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x184so5204307pfb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 09:37:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1PJ13D+KFCkNQkN2EIudaVpEqGNZODR++Sj1BPuo/ZE=;
-        b=bHUxH4h7szTdb1IgkxMSHl1LpvDPXrw+WDyMWAPf7c3MB7w02xunVZWtUZCdADY4Hj
-         d4D1Pu0lWUi+wPPmAy3uzD0euIaNsbCAPIz8+Cagp4fmYrOq0UhEk87VexH5DYwPKmAw
-         /Pjdwsn1VaK9QJNhO0HysvG3+1jGwUqp8hNiu+oHH+A/Yx4ohJ/GUdBmu+TzZ8LH4ggx
-         tUUbFCBVCMQPhKtP2uMS/a/VSRMvzKpB7bHmBGAj1zq3ru2OFCsSfI2MhGcHDlpOeQ25
-         j5RTtLChMAGY9IKx/APGv0aBRW+NqAclwtjgFbkPAyYnEmHvjmSZG2qkQsndOH+MLqeC
-         XYaA==
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7NUUBv1d9hVMN/MOLil3JlrznYYqtPVEh75UpiK5KN4=;
+        b=PTzjYjBNuD3DIZt5nHP5ka8qT6p8zlVQNEUA3Y4BGE80QKgTZ33SQqA2pn/ivKEeIa
+         WF4UuW253kYimF36X3XSgmQ/m30olwU+T7cUfNYAfyetCgxbk7+pus9tef/ov11PuOqO
+         SVMkV6l0qIqS1O30g7tUTRmRt897db4vvvF6EL04t8vl8YUFNdxcDRx3gJAWOdiA1wMV
+         KqCzm0qhWnmW1H/5PxxmoiC5WKDTekshKvIrVe3+26Om5R7ALpZw5S3u8kkHfMfxksuY
+         pwYAp7+MjSWZMgZpcoFKqcuSdLi016FaavfSyPoPB0p+TNGsjH+QHUTbvZ6NtFy5o92r
+         Hb9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1PJ13D+KFCkNQkN2EIudaVpEqGNZODR++Sj1BPuo/ZE=;
-        b=ALgOExJtZ4bABsd1+tFe91q3H5bR5Qn4eXWe6/48GhnG1el0X9MCuWtyRZCl5Kkx1Y
-         IWOoLDw0b8L+ZyiTq5HedrhOrAjT29oFdLSrfTq2AIyEbt6YGh5XmHLWX+Pw4v+CmFvv
-         mL6UcRR31hl2bY8RrNhwrM1SQdBZ8jxRILbZlYmy54ETOE+wqJE4rohlgTfqzKMIujs1
-         7ceftT6d8Kuar/WmmsS1vkFSI/BM0G1+szfCR1+La2SXrGVUSEAtMT+9WrkpqHK7IGNy
-         MoGbSntmD42UQh1juYxhRqXR1U4EWm8ya++kaVGo796wVJzs0zDELfaR7iWw02mCS1hR
-         ffzg==
-X-Gm-Message-State: APjAAAXM8jO4QLSqEbjpnWfJSLQwrH+XxHg//+dMNN8sZomhGM1FO9fm
-        QWSPEaRhGtl4UVrJo1iZ1cv85eCPLtZ2soL2XhlBJA==
-X-Google-Smtp-Source: APXvYqzhSw66ss9J19Bjac2oaOFq/pDddpDORRAOnLXq4ahSX0R0wKp+qgDirMl7EaPEK0XTjarlevURK39Dyda2jqo=
-X-Received: by 2002:a17:902:9889:: with SMTP id s9mr7931281plp.252.1578936878099;
- Mon, 13 Jan 2020 09:34:38 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7NUUBv1d9hVMN/MOLil3JlrznYYqtPVEh75UpiK5KN4=;
+        b=b6/yt+8TImA4Lb5Jl3nqey6IMfK/Tj6+6P6lwfvtLkmwau4yp+KZ9NAuJjyFY0MI4V
+         xbp0w4CidACYc4ycuMJYopfnU0tpo7aLzpdVVoHgS7GYuctyGeyiiRsNnpoy7rcFWEgY
+         Vn2p0XhqQe4AgGoT/jZg8cJObKmq40jgoaQwN39stCv9ThzsDceteJGBR1H8e28PCsl5
+         cFl74XfbmBorsMAq4XwYkXBuSFftvycynC8s///TI58ml8Ww7OLNsuZB9t3hs/pIUkiF
+         uHZ/eQRWUImOcQolsVGs5t8gVuHi84MSMAiXoywq3i99o9XgfrqzWaFGAC+vio54bgTU
+         2DDg==
+X-Gm-Message-State: APjAAAVZBDeWr2/VcznHnqsI0RfJfERz1eapbLOHj2IU8qNVAHc7tNIg
+        3oUqXStFf5tXGvB3NHM9CWxPvQ==
+X-Google-Smtp-Source: APXvYqwTowABvkEbj/in0CAQMR+iWNEXa7EcZClcYS/ATY+t1lX6t5MboGeVSaQ8sinsRcOWAXp9GQ==
+X-Received: by 2002:a63:1a1c:: with SMTP id a28mr22827499pga.374.1578937043886;
+        Mon, 13 Jan 2020 09:37:23 -0800 (PST)
+Received: from ?IPv6:2620:10d:c082:1055:14f9:7e4a:9f6f:4d05? ([2620:10d:c090:200::3:ee39])
+        by smtp.gmail.com with ESMTPSA id l14sm13111375pgt.42.2020.01.13.09.37.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 09:37:22 -0800 (PST)
+Subject: Re: [PATCH 2/2] btrfs: Introduce new BTRFS_IOC_SNAP_DESTROY_V2 ioctl
+To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     dsterba@suse.com, linux-btrfs@vger.kernel.org,
+        Marcos Paulo de Souza <mpdesouza@suse.com>, wqu@suse.com,
+        Chris Mason <clm@fb.com>
+References: <20200111043942.15366-1-marcos.souza.org@gmail.com>
+ <20200111043942.15366-3-marcos.souza.org@gmail.com>
+From:   Josef Bacik <josef@toxicpanda.com>
+Message-ID: <18611492-2f20-4c09-1208-c39251a54200@toxicpanda.com>
+Date:   Mon, 13 Jan 2020 09:37:21 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <CAAeHK+z2+_UHNp4_D2iL9FzPtDoU1YBohCaDJG8sAy12uc_-ew@mail.gmail.com>
- <Pine.LNX.4.44L0.2001131049090.1502-100000@iolanthe.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.2001131049090.1502-100000@iolanthe.rowland.org>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 13 Jan 2020 18:34:27 +0100
-Message-ID: <CAAeHK+x9Gk3cD77MA9jkhpwO8S62i6KT7PP3NZ6QTZ2qk2FB6w@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] usb: gadget: add raw-gadget interface
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200111043942.15366-3-marcos.souza.org@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 5:50 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Mon, 13 Jan 2020, Andrey Konovalov wrote:
->
-> > I've also found an issue, but I'm not sure if that is the bug in Raw
-> > Gadget, or in the gadget layer (in the former case I'll add this fix
-> > to v5 as well). What I believe I'm seeing is
-> > __fput()->usb_gadget_unregister_driver()->usb_gadget_remove_driver()->gadget_unbind()
-> > racing with dummy_timer()->gadget_setup(). In my case it results in
-> > gadget_unbind() doing set_gadget_data(gadget, NULL), and then
-> > gadget_setup() dereferencing get_gadget_data(gadget).
-> >
-> > Alan, does it look possible for those two functions to race? Should
-> > this be prevented by the gadget layer, or should I use some kind of
-> > locking in my gadget driver to prevent this?
->
-> In your situation this race shouldn't happen, because before
-> udc->driver->unbind() is invoked we call usb_gadget_disconnect().  If
-> that routine succeeds -- which it always does under dummy-hcd -- then
-> there can't be any more setup callbacks, because find_endpoint() will
-> always return NULL (the is_active() test fails; see the various
-> set_link_state* routines).  So I don't see how you could have ended up
-> with the race you describe.
+On 1/10/20 8:39 PM, Marcos Paulo de Souza wrote:
+> From: Marcos Paulo de Souza <mpdesouza@suse.com>
+> 
+> This ioctl will be responsible for deleting a subvolume using it's id.
+> This can be used when a system has a file system mounted from a
+> subvolume, rather than the root file system, like below:
+> 
+> /
+> |- @subvol1
+> |- @subvol2
+> \- @subvol_default
+> If only @subvol_default is mounted, we have no path to reach
+> @subvol1 and @subvol2, thus no way to delete them.
+> This patch introduces a new flag to allow BTRFS_IOC_SNAP_DESTORY_V2
+> to delete subvolume using subvolid.
+> 
+> Also in this patch, add BTRFS_SUBVOL_DELETE_BY_ID flag and add subvolid
+> as a union member of fd in struct btrfs_ioctl_vol_args_v2.
+> 
+> Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+> ---
+>   fs/btrfs/ctree.h           |  8 ++++++
+>   fs/btrfs/export.c          |  4 +--
+>   fs/btrfs/ioctl.c           | 53 ++++++++++++++++++++++++++++++++++++++
+>   fs/btrfs/super.c           |  2 +-
+>   include/uapi/linux/btrfs.h | 12 +++++++--
+>   5 files changed, 74 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
+> index 569931dd0ce5..421a2f57f9ec 100644
+> --- a/fs/btrfs/ctree.h
+> +++ b/fs/btrfs/ctree.h
+> @@ -3010,6 +3010,8 @@ int btrfs_defrag_leaves(struct btrfs_trans_handle *trans,
+>   int btrfs_parse_options(struct btrfs_fs_info *info, char *options,
+>   			unsigned long new_flags);
+>   int btrfs_sync_fs(struct super_block *sb, int wait);
+> +char *get_subvol_name_from_objectid(struct btrfs_fs_info *fs_info,
+> +					   u64 subvol_objectid);
+>   
+>   static inline __printf(2, 3) __cold
+>   void btrfs_no_printk(const struct btrfs_fs_info *fs_info, const char *fmt, ...)
+> @@ -3442,6 +3444,12 @@ int btrfs_reada_wait(void *handle);
+>   void btrfs_reada_detach(void *handle);
+>   int btree_readahead_hook(struct extent_buffer *eb, int err);
+>   
+> +/* export.c */
+> +struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
+> +				       u64 root_objectid, u32 generation,
+> +				       int check_generation);
+> +struct dentry *btrfs_get_parent(struct dentry *child);
+> +
+>   static inline int is_fstree(u64 rootid)
+>   {
+>   	if (rootid == BTRFS_FS_TREE_OBJECTID ||
+> diff --git a/fs/btrfs/export.c b/fs/btrfs/export.c
+> index 72e312cae69d..027411cdbae7 100644
+> --- a/fs/btrfs/export.c
+> +++ b/fs/btrfs/export.c
+> @@ -57,7 +57,7 @@ static int btrfs_encode_fh(struct inode *inode, u32 *fh, int *max_len,
+>   	return type;
+>   }
+>   
+> -static struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
+> +struct dentry *btrfs_get_dentry(struct super_block *sb, u64 objectid,
+>   				       u64 root_objectid, u32 generation,
+>   				       int check_generation)
+>   {
+> @@ -152,7 +152,7 @@ static struct dentry *btrfs_fh_to_dentry(struct super_block *sb, struct fid *fh,
+>   	return btrfs_get_dentry(sb, objectid, root_objectid, generation, 1);
+>   }
+>   
+> -static struct dentry *btrfs_get_parent(struct dentry *child)
+> +struct dentry *btrfs_get_parent(struct dentry *child)
+>   {
+>   	struct inode *dir = d_inode(child);
+>   	struct btrfs_fs_info *fs_info = btrfs_sb(dir->i_sb);
+> diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+> index dcceae4c5d28..68da45ad4904 100644
+> --- a/fs/btrfs/ioctl.c
+> +++ b/fs/btrfs/ioctl.c
+> @@ -2960,6 +2960,57 @@ static noinline int btrfs_ioctl_snap_destroy(struct file *file,
+>   	return err;
+>   }
+>   
+> +static noinline int btrfs_ioctl_snap_destroy_v2(struct file *file,
+> +					     void __user *arg)
+> +{
+> +	struct btrfs_fs_info *fs_info = btrfs_sb(file->f_path.dentry->d_sb);
+> +	struct dentry *dentry, *pdentry;
+> +	struct btrfs_ioctl_vol_args_v2 *vol_args;
+> +	char *name, *p;
+> +	size_t namelen;
+> +	int err = 0;
+> +
+> +	vol_args = memdup_user(arg, sizeof(*vol_args));
+> +	if (IS_ERR(vol_args))
+> +		return PTR_ERR(vol_args);
+> +
+> +	if (vol_args->subvolid == 0)
+> +		return -EINVAL;
+> +
+> +	if (!(vol_args->flags & BTRFS_SUBVOL_DELETE_BY_ID))
+> +		return -EINVAL;
+> +
+> +	dentry = btrfs_get_dentry(fs_info->sb, BTRFS_FIRST_FREE_OBJECTID,
+> +				vol_args->subvolid, 0, 0);
+> +	if (IS_ERR(dentry)) {
+> +		err = PTR_ERR(dentry);
+> +		return err;
+> +	}
+> +
+> +	pdentry = btrfs_get_parent(dentry);
+> +	if (IS_ERR(pdentry)) {
+> +		err = PTR_ERR(pdentry);
+> +		goto out_dentry;
+> +	}
 
-I've managed to reproduce the race by adding an mdelay() into the
-beginning of the setup() callback. AFAIU what happens is setup() gets
-called (and waits on the mdelay()), then unbind() comes in and does
-set_gadget_data(NULL), and then setup() proceeds, gets NULL through
-get_gadget_data() and crashes on null-ptr-deref. I've got the same
-crash a few times after many days of fuzzing, so I assume it can
-happen without the mdelay() as well.
+What happens if we have something like
 
-> However, a real UDC might not be able to perform a disconnect under
-> software control.  In that case usb_gadget_disconnect() would not
-> change the pullup state, and there would be a real possibility of a
-> setup callback racing with an unbind callback.  This seems like a
-> genuine problem and I can't think of a solution offhand.
->
-> What we would need is a way to tell the UDC driver to stop invoking
-> gadget callbacks, _before_ the UDC driver's stop callback gets called.
-> Maybe this should be merged into the pullup callback somehow.
->
-> Alan Stern
->
+/subvol
+/subvol2
+/subvol3/subvol4
+/subvol5
+
+and we mount /subvol5, and then we try to delete subvol4?  We aren't going to be 
+able to find the parent dentry for subvol3 right?  Cause that thing isn't linked 
+into our currently mounted tree, and things will go wonky right?  I'm only 
+working on like 4 hours of sleep so I could be missing something obvious here.
+
+> +
+> +	name = get_subvol_name_from_objectid(fs_info, vol_args->subvolid);
+> +	if (IS_ERR(name)) {
+> +		err = PTR_ERR(name);
+> +		goto out_pdentry;
+> +	}
+> +	p = (char *)kbasename(name);
+> +	namelen = strlen(p);
+> +
+> +	err = btrfs_subvolume_deleter(file, pdentry, p, namelen);
+
+We looked up the dentry to send the name into btrfs_subvolume_deleter(), which 
+just takes the name and looks up the dentry again?  Have the common function 
+just take both dentries and have v1 and v2 do their lookup shenanigans.  Thanks,
+
+Josef
