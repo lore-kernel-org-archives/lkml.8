@@ -2,98 +2,90 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1790C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCD4C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2EAA207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35D5B24658
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:39:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XlRk9bRC"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="RA1f5Dyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgAMQfA (ORCPT
+        id S1728931AbgAMQjF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:35:00 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:33280 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726943AbgAMQe7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:34:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=OyWI+2CxCOjVFobV/HzUixcC6m6SP/UUicEvP6oEb8U=; b=XlRk9bRCU394R+rkkl6rrGt/r6
-        Qqn9DBhqjxKtJUEgSFbDy5JQNJbJrSLegPLKMIFaGZJU18NogpLUuIVMtSW9KicfpHxIQHnBO/ocW
-        i6b7r6Sypq7BF6c/ab4JiZ9/G5L1ZIk9k7+CCRNARPqSaAzbPWx9fppVhgFp9uixD9X1Ccq6Wkp3i
-        qaaCOJ0wKe++RohEAsXFx/2Fd4hbRAGlSezRtNA9jQ80y1+7E21HirlBOjtVUEsSogU7s6DPjzYcu
-        hkcFwwu2lw67HcSA5E7Nk/AqE+ag7qc1Laiq0dLRZsn/4YzeVcznnqauAkfvMcLgbfs3C3d5NsjI/
-        kYfSRGdQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1ir2g4-0005KO-K2; Mon, 13 Jan 2020 16:34:56 +0000
-Date:   Mon, 13 Jan 2020 08:34:56 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        shakeelb@google.com, hannes@cmpxchg.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Subject: Re: [PATCH v7 02/10] mm/memcg: fold lru_lock in lock_page_lru
-Message-ID: <20200113163456.GA332@bombadil.infradead.org>
-References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
- <1577264666-246071-3-git-send-email-alex.shi@linux.alibaba.com>
- <36d7e390-a3d1-908c-d181-4a9e9c8d3d98@yandex-team.ru>
- <952d02c2-8aa5-40bb-88bb-c43dee65c8bc@linux.alibaba.com>
- <2ba8a04e-d8e0-1d50-addc-dbe1b4d8e0f1@yandex-team.ru>
- <a095d80d-8e34-c84f-e4be-085a5aae1929@linux.alibaba.com>
+        Mon, 13 Jan 2020 11:39:05 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:38378 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726567AbgAMQjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 11:39:04 -0500
+Received: from zn.tnic (p200300EC2F05D30061EC8816C59C4425.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:d300:61ec:8816:c59c:4425])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D46F01EC0CAA;
+        Mon, 13 Jan 2020 17:39:02 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578933543;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=9e88VmXVZOWwKi7Lf0kiLhtpdX2JvIFuLxWAoudDvAA=;
+        b=RA1f5DyiqVuzD5fniya6vj7rBWgoi0MQ2vs5IWw2iTyjsLsB0UAaBOB2lYkVsAKjz4X9zW
+        sec6pJTKJbdg4w/2CUMY7UGLc1VKJkDmzyGaWtnAF8pZhAbSFrxrLkzCXsqlOK529IZDEy
+        5l41uoE7NjOig9UoP0guj/XHFvczJ0I=
+Date:   Mon, 13 Jan 2020 17:38:55 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] x86/tools/relocs: Add _etext and __end_of_kernel_reserve
+ to S_REL
+Message-ID: <20200113163855.GK13310@zn.tnic>
+References: <20200110202349.1881840-1-nivedita@alum.mit.edu>
+ <20200110203828.GK19453@zn.tnic>
+ <20200110205028.GA2012059@rani.riverdale.lan>
+ <20200111130243.GA23583@zn.tnic>
+ <20200111172047.GA2688392@rani.riverdale.lan>
+ <20200113134306.GF13310@zn.tnic>
+ <20200113161310.GA191743@rani.riverdale.lan>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a095d80d-8e34-c84f-e4be-085a5aae1929@linux.alibaba.com>
+In-Reply-To: <20200113161310.GA191743@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 08:47:25PM +0800, Alex Shi wrote:
-> 在 2020/1/13 下午5:55, Konstantin Khlebnikov 写道:
-> >>> That's wrong. Here PageLRU must be checked again under lru_lock.
-> >> Hi, Konstantin,
-> >>
-> >> For logical remain, we can get the lock and then release for !PageLRU.
-> >> but I still can figure out the problem scenario. Would like to give more hints?
-> > 
-> > That's trivial race: page could be isolated from lru between
-> > 
-> > if (PageLRU(page))
-> > and
-> > spin_lock_irq(&pgdat->lru_lock);
-> 
-> yes, it could be a problem. guess the following change could helpful:
-> I will update it in new version.
+On Mon, Jan 13, 2020 at 11:13:10AM -0500, Arvind Sankar wrote:
+> I will note that the purpose of S_REL in relocs.c was originally to
+> handle exactly this case of symbols defined outside output sections:
 
-> +       if (lrucare) {
-> +               lruvec = lock_page_lruvec_irq(page);
-> +               if (likely(PageLRU(page))) {
-> +                       ClearPageLRU(page);
-> +                       del_page_from_lru_list(page, lruvec, page_lru(page));
-> +               } else {
-> +                       unlock_page_lruvec_irq(lruvec);
-> +                       lruvec = NULL;
-> +               }
+And we should try not to do hacks, if it can be fixed properly, as
+binutils expects symbols to be usually relative to a section.
 
-What about a harder race to hit like a page being on LRU list A when you
-look up the lruvec, then it's removed and added to LRU list B by the
-time you get the lock?  At that point, you are holding a lock on the
-wrong LRU list.  I think you need to check not just that the page
-is still PageLRU but also still on the same LRU list.
+> How to reproduce is just "build with old binutils". I don't see it's
+> reasonable to include a tutorial on how to build the kernel with a
+> toolchain that's not installed in the default PATH, as part of the commit
+> message.
+
+The point is that it should be clear that it should state whether it is
+something you trigger with some stock distro which has been shipping
+this way or it is something you've customly created. Huge difference.
+
+So pls make sure that is clear from the commit message.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
