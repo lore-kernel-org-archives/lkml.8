@@ -2,111 +2,71 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492BCC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CB0C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14F13207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11E4207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:18:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbgAMLQt (ORCPT
+        id S1727331AbgAMLSB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:16:49 -0500
-Received: from foss.arm.com ([217.140.110.172]:37900 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgAMLQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:16:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FCCB13D5;
-        Mon, 13 Jan 2020 03:16:48 -0800 (PST)
-Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4755C3F6C4;
-        Mon, 13 Jan 2020 03:16:47 -0800 (PST)
-Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts with
- lower layer
-To:     "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
- <20191231164051.GA4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
- <20200102112955.GC4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
- <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340AFCA0@dggemm526-mbx.china.huawei.com>
- <20200103114011.GB19390@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340B31E9@dggemm526-mbx.china.huawei.com>
- <20200109104306.GA10914@e105550-lin.cambridge.arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340BEDD6@dggemm526-mbx.china.huawei.com>
- <1a8f7963-97e9-62cc-12d2-39f816dfaf67@arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340E2592@DGGEMM506-MBX.china.huawei.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <15050bf2-99ec-e604-ab95-827ce86fd693@arm.com>
-Date:   Mon, 13 Jan 2020 11:16:46 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 13 Jan 2020 06:18:01 -0500
+Received: from mail.fireflyinternet.com ([109.228.58.192]:52061 "EHLO
+        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725992AbgAMLSB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 06:18:01 -0500
+X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
+Received: from localhost (unverified [78.156.65.138]) 
+        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 19860154-1500050 
+        for multiple; Mon, 13 Jan 2020 11:17:55 +0000
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED340E2592@DGGEMM506-MBX.china.huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
+To:     Wambui Karuga <wambui.karugax@gmail.com>, airlied@linux.ie,
+        daniel@ffwll.ch, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com
+From:   Chris Wilson <chris@chris-wilson.co.uk>
+In-Reply-To: <20200113111025.2048-1-wambui.karugax@gmail.com>
+Cc:     sean@poorly.run, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200113111025.2048-1-wambui.karugax@gmail.com>
+Message-ID: <157891427231.27314.12398974277241668021@skylake-alporthouse-com>
+User-Agent: alot/0.6
+Subject: Re: [PATCH] drm/i915: convert to new logging macros based on struct
+ intel_engine_cs.
+Date:   Mon, 13 Jan 2020 11:17:52 +0000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/01/2020 06:51, Zengtao (B) wrote:
-> I have tried both, this previous one don't work. But this one seems work
-> correctly with the warning message printout as expected.
-> 
+Quoting Wambui Karuga (2020-01-13 11:10:25)
+> fn(...) {
+> ...
+> struct intel_engine_cs *E = ...;
+> +struct drm_i915_private *dev_priv = E->i915;
 
-Thanks for trying it out.
+No new dev_priv.
 
-> This patch is based on the fact " non-NUMA spans shouldn't overlap ", I am
-> not quite sure if this is always true? 
-> 
+There should be no reason for drm_dbg here, as the rest of the debug is
+behind ENGINE_TRACE and so the vestigial debug should be moved over, or
+deleted as not being useful.
 
-I think this is required for get_group() to work properly. Otherwise,
-successive get_group() calls may override (and break) the sd->groups
-linking as you initially reported.
+The error messages look unhelpful.
 
-In your example, for MC level we have
+>                 if ((batch_end - cmd) < length) {
+> -                       DRM_DEBUG("CMD: Command length exceeds batch length: 0x%08X length=%u batchlen=%td\n",
+> -                                 *cmd,
+> -                                 length,
+> -                                 batch_end - cmd);
+> +                       drm_dbg(&dev_priv->drm,
+> +                               "CMD: Command length exceeds batch length: 0x%08X length=%u batchlen=%td\n",
 
-  tl->mask(3) == 3-7
-  tl->mask(4) == 4-7
-
-Which partially overlaps, causing the relinking of '7->3' to '7->4'. Valid
-configurations would be
-
-  wholly disjoint:
-  tl->mask(3) == 0-3
-  tl->maks(4) == 4-7
-
-  equal:
-  tl->mask(3) == 3-7
-  tl->mask(4) == 3-7
-
-> Anyway, Could you help to raise the new patch?
-> 
-
-Ideally I'd like to be able to reproduce this locally first (TBH I'd like
-to get my first suggestion to work since it's less intrusive). Could you
-share how you were able to trigger this? Dietmar's been trying to reproduce
-this with qemu but I don't think he's there just yet.
-
-> Thanks
-> Zengtao
-> 
->>
->>> Thanks
->>> Zengtao
->>>
->>>>
->>>> Morten
+No. This is not driver debug. If anything this should be pr_debug, or
+some over user centric channel.
+-Chris
