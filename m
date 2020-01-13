@@ -2,208 +2,208 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AA98C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA82BC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34D41214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:54:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="cZsy6o/7"
+	by mail.kernel.org (Postfix) with ESMTP id A6426214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:56:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731590AbgAMFyr (ORCPT
+        id S1732572AbgAMF4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 00:54:47 -0500
-Received: from mail-bn8nam11on2042.outbound.protection.outlook.com ([40.107.236.42]:6157
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726105AbgAMFyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 00:54:46 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ikMVegvcLHwN54d/lRcB3OQsdXHb9W+tcijSHPOs2x6NYXuVOuk9ua3gz3+KSr304x7Jn4VUFg89SKBOsMLZVrCJwevswYsnIvSmOBpTGS85lXT2fWF9+IJhBl6JCq//mGidMWmXjsa+uMM0yhgVixRCdm9NfB4RrhNrGlRJbdtc9RVx1FzcTsTXPkZ7V6abOzTsrYzKMq1OSiY4AieN6ZayhE5JBVbqgwmtwy4vm+7mJiCYpWB3QgpHXeR+5R2Q4EY07RKOMJvXG1uD1T3tUQ3qYvTawV7BIjiOAKXvzboVWfjlJ2mg8m1eCR2cLfdMy0t9/y1L8HXRx3Ozvz3YcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xbExrjRHLYrj+ysdWFSVdoVhEaI2OqdjqEaFOz/pK8Q=;
- b=MUzzxhj9fkgm6PTYtMXDzpKrzdPm5NyHmrZm4eDPQE8rjWn6KViAcwPAT94pewEyWqGPr291eNY/2Tj+oxFyysgUSQjriwm27/BTK4EkaxuTAZjWb5iE0LMEX01T5oC/hXVBdvVFWTQJkO8Uudgn96rZC/AzENeI5jZMnMR8X4luKgWKR1VI3C7nGVlT+WeAgHS+SKTRb7Pv/5IBQNlvFxaxBhupB7l4R06JM3TJ+/kfGpp8eXCjHndHTSc4Ezg/R6zsoGdCasce2l1J6MuO1RBAsoN9/5fVgD2YFumr4br4OKPW154uz75lZgZFromixRE0hXodVO4V6fgMAr1srA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xbExrjRHLYrj+ysdWFSVdoVhEaI2OqdjqEaFOz/pK8Q=;
- b=cZsy6o/7WaH1RmGmF5zAJoYLOxEyoDxsc6lG6HNayUdufQRNOcZ96Md2ZN85paMkK7DAZ8UXhEHFWNqhd1tGm2Q+F8c0wuLZhTSxUnz7PwUv2POCSfKVTqAQOECl9PMgAkST3VQm3DW5iJ+tfRB3DqMQmhh2S9F6iieNBJcSBjY=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6597.namprd02.prod.outlook.com (20.180.17.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.10; Mon, 13 Jan 2020 05:54:43 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
- 05:54:42 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Andre Przywara <andre.przywara@arm.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     Michal Simek <michals@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 06/14] net: axienet: Check for DMA mapping errors
-Thread-Topic: [PATCH 06/14] net: axienet: Check for DMA mapping errors
-Thread-Index: AQHVx6y50lT2nOuC90+8UAg/2dRde6foFwfg
-Date:   Mon, 13 Jan 2020 05:54:42 +0000
-Message-ID: <CH2PR02MB70001247E6EE3EF6968CCC04C7350@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
- <20200110115415.75683-7-andre.przywara@arm.com>
-In-Reply-To: <20200110115415.75683-7-andre.przywara@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1fd32a2e-8a84-402f-5cbd-08d797ed1617
-x-ms-traffictypediagnostic: CH2PR02MB6597:|CH2PR02MB6597:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB659796EEE90F5D97A53DE734C7350@CH2PR02MB6597.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(396003)(39860400002)(366004)(189003)(199004)(54906003)(86362001)(5660300002)(316002)(110136005)(52536014)(4326008)(478600001)(33656002)(9686003)(55016002)(26005)(2906002)(186003)(6506007)(53546011)(66446008)(7696005)(81166006)(81156014)(66556008)(8676002)(8936002)(66946007)(76116006)(66476007)(64756008)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6597;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3m6BupiJdki17xPVJOnQsUvwUmq813lNwnyMD+vYaJDfE21xxXpx2PJZsz6Lc2Unv6TAD0kPi8FRLgehG3I7vI9iYoXqm9gujfQAqWPFqH27YCWeB4baXhFpLRudnfd7YpQP5XDLHRz24Xj3CkffVpSt+/iaJLDlGdwoDGT0VNQYHTpd6b/2LPHjQkcisoo1oMB9SyqIC6kZdOtEOe07D3kFPUv0bhMBcmvEu9FUG91zIN7VVNv7DLG/gjatmCWzrLguImoV780KE58fmHTWDHmo8c4TfwWWphZF8ziyVr57bcmlokUGLf/dV+5oKxpP+NZ9PqPeskvjpt8XTVgMBvOFvrx5xgZUW3gOp+iOjvHjlaXluMThDX0+ccXHatw35PVFomSLsaa9EUPWox7UjGRe5TT28lrNOYhXD8BFrVVXkvtrf/ismVVCf03eVDK7
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 Jan 2020 00:56:16 -0500
+Received: from mga06.intel.com ([134.134.136.31]:9250 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726105AbgAMF4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 00:56:15 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jan 2020 21:56:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,427,1571727600"; 
+   d="scan'208";a="397060238"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by orsmga005.jf.intel.com with ESMTP; 12 Jan 2020 21:56:13 -0800
+Date:   Mon, 13 Jan 2020 14:00:33 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        jmattson@google.com, yu.c.zhang@linux.intel.com,
+        alazar@bitdefender.com, edwin.zhai@intel.com
+Subject: Re: [RESEND PATCH v10 03/10] mmu: spp: Add SPP Table setup functions
+Message-ID: <20200113060033.GB12253@local-michael-cet-test.sh.intel.com>
+References: <20200102061319.10077-1-weijiang.yang@intel.com>
+ <20200102061319.10077-4-weijiang.yang@intel.com>
+ <20200110172611.GC21485@linux.intel.com>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1fd32a2e-8a84-402f-5cbd-08d797ed1617
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 05:54:42.7577
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PdAnmZKsw/byrfoKC6WXpMlgjBvGQn9/tv//M8fFPcSKQjc/81OVayry4IOZYkTzQhJdM0gLHTgHs61jW45N5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6597
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110172611.GC21485@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Andre Przywara <andre.przywara@arm.com>
-> Sent: Friday, January 10, 2020 5:24 PM
-> To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
-> <radheys@xilinx.com>
-> Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
-> <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH 06/14] net: axienet: Check for DMA mapping errors
->=20
-> Especially with the default 32-bit DMA mask, DMA buffers are a limited
-> resource, so their allocation can fail.
-> So as the DMA API documentation requires, add error checking code after
-> dma_map_single() calls to catch the case where we run out of "low" memory=
-.
->=20
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  .../net/ethernet/xilinx/xilinx_axienet_main.c | 22 ++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> index 82abe2b0f16a..8d2b67cbecf9 100644
-> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> @@ -248,6 +248,11 @@ static int axienet_dma_bd_init(struct net_device
-> *ndev)
->  						     skb->data,
->  						     lp->max_frm_size,
->  						     DMA_FROM_DEVICE);
-> +		if (dma_mapping_error(ndev->dev.parent, lp->rx_bd_v[i].phys))
+On Fri, Jan 10, 2020 at 09:26:11AM -0800, Sean Christopherson wrote:
+> On Thu, Jan 02, 2020 at 02:13:12PM +0800, Yang Weijiang wrote:
+> > SPPT is a 4-level paging structure similar to EPT, when SPP is
+> 
+> How does SPP interact with 5-level EPT?
+>
+It should work, will add the test later.
 
-Prefer using unlikely compiler hint for dma_mapping_error.=20
-Also, we need to add error print to report this condition to the user,
-in case it isn't there in dma_mapping_error implementation.
+> > armed for target physical page, bit 61 of the corresponding
+> > EPT entry is flaged, then SPPT is traversed with the gfn,
+> > the leaf entry of SPPT contains the access bitmap of subpages
+> > inside the target 4KB physical page, one bit per 128-byte subpage.
+> > 
+> > Co-developed-by: He Chen <he.chen@linux.intel.com>
+> > Signed-off-by: He Chen <he.chen@linux.intel.com>
+> > Co-developed-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Zhang Yi <yi.z.zhang@linux.intel.com>
+> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> > ---
+> 
+> ...
+> 
+> > +static u64 format_spp_spte(u32 spp_wp_bitmap)
+> > +{
+> > +	u64 new_spte = 0;
+> > +	int i = 0;
+> > +
+> > +	/*
+> > +	 * One 4K page contains 32 sub-pages, in SPP table L4E, old bits
+> 
+> Is this
+> 
+> 	One 4k page constains 32 sub-pages in SPP table L4E.  Old bits are...
+> 
+> or
+> 	One 4k page contains 32 sub-pages.  In SPP table L4E, old bits are...
+> 
+> or
+> 	???
+>
+The second case, there's a typo, old should be odd. will modify it,
+thank you!
 
-> {
-> +			dev_kfree_skb(skb);
+> > +	 * are reserved, so we need to transfer u32 subpage write
+> 
+> Wrap comments at 80 columns to save lines.
+> 
+> > +	 * protect bitmap to u64 SPP L4E format.
+> 
+> What is a "page" in "one 4k page"?  What old bits?  Why not just track a
+> 64-bit value?  I understand *what* the code below does, but I have no clue
+> why or whether it's correct.
+old should be "odd", according to SDM, the write-permission is tracked
+via even bits(2i), then 32*128 = 4KB. odd bits are reserved now.
+> 
+> > +	 */
+> > +	while (i < 32) {
+> > +		if (spp_wp_bitmap & (1ULL << i))
+> > +			new_spte |= 1ULL << (i * 2);
+> > +		i++;
+> > +	}
+> 
+> 	for (i = 0; i < 32; i++)
+> 		new_spte |= (spp_wp_bitmap & BIT_ULL(i)) << i;
+> 
+> At the very least, use a for loop.
+Sure, will change it, thank you!
 
-free of skb is already handled in _release. We can reuse that?
-> +			goto out;
-> +		}
-> +
->  		lp->rx_bd_v[i].cntrl =3D lp->max_frm_size;
->  	}
->=20
-> @@ -668,6 +673,7 @@ axienet_start_xmit(struct sk_buff *skb, struct
-> net_device *ndev)
->  	dma_addr_t tail_p;
->  	struct axienet_local *lp =3D netdev_priv(ndev);
->  	struct axidma_bd *cur_p;
-> +	u32 orig_tail_ptr =3D lp->tx_bd_tail;
->=20
->  	num_frag =3D skb_shinfo(skb)->nr_frags;
->  	cur_p =3D &lp->tx_bd_v[lp->tx_bd_tail];
-> @@ -703,9 +709,11 @@ axienet_start_xmit(struct sk_buff *skb, struct
-> net_device *ndev)
->  		cur_p->app0 |=3D 2; /* Tx Full Checksum Offload Enabled */
->  	}
->=20
-> -	cur_p->cntrl =3D skb_headlen(skb) | XAXIDMA_BD_CTRL_TXSOF_MASK;
->  	cur_p->phys =3D dma_map_single(ndev->dev.parent, skb->data,
->  				     skb_headlen(skb), DMA_TO_DEVICE);
-> +	if (dma_mapping_error(ndev->dev.parent, cur_p->phys))
-> +		return NETDEV_TX_BUSY;
-
-This is not ideally tx busy and related to available mem mapping in the sys=
-tem.=20
-I just looked at other eth drivers and it seems they return TX_OK with drop
-count stats incremented.
-
-> +	cur_p->cntrl =3D skb_headlen(skb) | XAXIDMA_BD_CTRL_TXSOF_MASK;
->=20
->  	for (ii =3D 0; ii < num_frag; ii++) {
->  		if (++lp->tx_bd_tail >=3D lp->tx_bd_num) @@ -716,6 +724,13 @@
-> axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
->  					     skb_frag_address(frag),
->  					     skb_frag_size(frag),
->  					     DMA_TO_DEVICE);
-> +		if (dma_mapping_error(ndev->dev.parent, cur_p->phys)) {
-> +			axienet_free_tx_chain(ndev, orig_tail_ptr, ii + 1,
-> +					      NULL);
-> +			lp->tx_bd_tail =3D orig_tail_ptr;
-> +
-> +			return NETDEV_TX_BUSY;
-> +		}
->  		cur_p->cntrl =3D skb_frag_size(frag);
->  	}
->=20
-> @@ -796,6 +811,11 @@ static void axienet_recv(struct net_device *ndev)
->  		cur_p->phys =3D dma_map_single(ndev->dev.parent, new_skb-
-> >data,
->  					     lp->max_frm_size,
->  					     DMA_FROM_DEVICE);
-> +		if (dma_mapping_error(ndev->dev.parent, cur_p->phys)) {
-> +			dev_kfree_skb(new_skb);
-> +			return;
-> +		}
-> +
->  		cur_p->cntrl =3D lp->max_frm_size;
->  		cur_p->status =3D 0;
->  		cur_p->skb =3D new_skb;
-> --
-> 2.17.1
-
+> 
+> > +
+> > +	return new_spte;
+> > +}
+> > +
+> > +static void spp_spte_set(u64 *sptep, u64 new_spte)
+> > +{
+> > +	__set_spte(sptep, new_spte);
+> > +}
+> > +
+> > +bool is_spp_spte(struct kvm_mmu_page *sp)
+> > +{
+> > +	return sp->role.spp;
+> > +}
+> > +
+> > +#define SPPT_ENTRY_PHA_MASK (0xFFFFFFFFFF << 12)
+> > +
+> > +int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
+> > +			    u32 access_map, gfn_t gfn)
+> > +{
+> > +	struct kvm_shadow_walk_iterator iter;
+> > +	struct kvm_mmu_page *sp;
+> > +	gfn_t pseudo_gfn;
+> > +	u64 old_spte, spp_spte;
+> > +	int ret = -EFAULT;
+> > +
+> > +	/* direct_map spp start */
+> > +	if (!VALID_PAGE(vcpu->kvm->arch.sppt_root))
+> > +		return -EFAULT;
+> > +
+> > +	for_each_shadow_spp_entry(vcpu, (u64)gfn << PAGE_SHIFT, iter) {
+> > +		if (iter.level == PT_PAGE_TABLE_LEVEL) {
+> > +			spp_spte = format_spp_spte(access_map);
+> > +			old_spte = mmu_spte_get_lockless(iter.sptep);
+> > +			if (old_spte != spp_spte)
+> > +				spp_spte_set(iter.sptep, spp_spte);
+> > +			ret = 0;
+> > +			break;
+> > +		}
+> > +
+> > +		if (!is_shadow_present_pte(*iter.sptep)) {
+> > +			u64 base_addr = iter.addr;
+> > +
+> > +			base_addr &= PT64_LVL_ADDR_MASK(iter.level);
+> > +			pseudo_gfn = base_addr >> PAGE_SHIFT;
+> > +			spp_spte = *iter.sptep;
+> > +			sp = kvm_spp_get_page(vcpu, pseudo_gfn,
+> > +					      iter.level - 1);
+> > +			link_spp_shadow_page(vcpu, iter.sptep, sp);
+> > +		} else if (iter.level == PT_DIRECTORY_LEVEL  &&
+> > +			   !(spp_spte & PT_PRESENT_MASK) &&
+> > +			   (spp_spte & SPPT_ENTRY_PHA_MASK)) {
+> > +			spp_spte = *iter.sptep;
+> > +			spp_spte |= PT_PRESENT_MASK;
+> > +			spp_spte_set(iter.sptep, spp_spte);
+> > +		}
+> > +	}
+> > +
+> > +	kvm_flush_remote_tlbs(vcpu->kvm);
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(kvm_spp_setup_structure);
+> > +
+> > +inline u64 construct_spptp(unsigned long root_hpa)
+> > +{
+> > +	return root_hpa & PAGE_MASK;
+> > +}
+> > +EXPORT_SYMBOL_GPL(construct_spptp);
+> > +
+> > diff --git a/arch/x86/kvm/mmu/spp.h b/arch/x86/kvm/mmu/spp.h
+> > new file mode 100644
+> > index 000000000000..8ef94b7a2057
+> > --- /dev/null
+> > +++ b/arch/x86/kvm/mmu/spp.h
+> > @@ -0,0 +1,10 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#ifndef __KVM_X86_VMX_SPP_H
+> > +#define __KVM_X86_VMX_SPP_H
+> > +
+> > +bool is_spp_spte(struct kvm_mmu_page *sp);
+> > +u64 construct_spptp(unsigned long root_hpa);
+> > +int kvm_spp_setup_structure(struct kvm_vcpu *vcpu,
+> > +			    u32 access_map, gfn_t gfn);
+> > +
+> > +#endif /* __KVM_X86_VMX_SPP_H */
+> > -- 
+> > 2.17.2
+> > 
