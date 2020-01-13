@@ -2,195 +2,146 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49576C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AE7C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:43:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E0824655
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:42:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578930158;
-	bh=RVsyyyEak92HbEk5ozmzJ7WvLdzHYvkt6miQWJICS50=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=cxHoMV4grn5iwypysTzQSlb1FBK3YDr65ADCM4TEfNFr6Oben/UMIGsj4Rlf1AgG3
-	 nwuCrvQJkxEW1LFx7K7bP8TJrP70a7Lp3ztfF2Q7jPW3DiyNFExrvefrXr/XSZ67ry
-	 Kh4UCkpxPkK91pXKAqnCqsWyrRzokEVlO344U3MM=
+	by mail.kernel.org (Postfix) with ESMTP id DA7402081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:43:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sE8GHT2S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgAMPmh (ORCPT
+        id S1728795AbgAMPnA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 10:42:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727286AbgAMPmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 10:42:36 -0500
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E45A21739;
-        Mon, 13 Jan 2020 15:42:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578930155;
-        bh=RVsyyyEak92HbEk5ozmzJ7WvLdzHYvkt6miQWJICS50=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zsMXx19K/zG854+NtB/NSsH0j0812u2mBkgKLZHL36fLhfQBHrThEZkuTyd99dmPY
-         rmgmR7O0wWFyxqDN1663OT1yr9EMHeTgq0S8YqbPQjjnWSnUyQpgjxAHP5MF8E+Qsy
-         PgeAOpFuIKlp0GsxxajNArfw9mrxd+/ArZxe+g1Y=
-Received: by mail-qk1-f176.google.com with SMTP id x129so8842308qke.8;
-        Mon, 13 Jan 2020 07:42:35 -0800 (PST)
-X-Gm-Message-State: APjAAAUB75kPCkO9P+Z3R9Fm5hpA5I5Sk5KA8v1vdX/Bp4CVVGcYF5Wg
-        BzTH8SPrj5xZ3omss6RCArmJ09jTkAfj7jg2Kg==
-X-Google-Smtp-Source: APXvYqzd0iEA7ClpG/m//hBuec06RmDCtwQlY/Y+ZnupRPmSRvxene/XYpn3ed7tl82meicsVhfecOBtCK0sGE5Gue4=
-X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr15396199qkl.119.1578930154331;
- Mon, 13 Jan 2020 07:42:34 -0800 (PST)
+        Mon, 13 Jan 2020 10:43:00 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:41358 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727286AbgAMPm7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 10:42:59 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DFcw7o009205;
+        Mon, 13 Jan 2020 15:41:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=DaiMzq10P7q2znpRBBajknZMYi+ZtWubzic8NGU8mfo=;
+ b=sE8GHT2SDtHhjkzDOynzxChoJhv6zkVeBzHBdfCaY7p+DOvJXh69L7uo8fa07mQ/fMVr
+ /miOInt1cI3EVZvZEziLjpafJrDa2xOrvUs5t+gLqTsIJ/PZVC+wb8Ip7ZV/BSb+Pzkv
+ Uoihwv3ROB3y2pgzcZVXOkFpfMHJ+RfiWkfHV09AMKe45a4Wj26LQBsMJ3lY/WposRWF
+ c16UC4OfUtsOIFzL4tJTnx3qBOzbirK88CUCIS6IPj2eZyUIxcuqcliUl0pg/cw8z703
+ 7dCQsJ9IzjpzUWP04nR9rty4p7SVtX3wqO7FXMuHQiF8WrJKW2vIgmBjte4zpRaZdNzJ 9A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xf73tfr9h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 15:41:24 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DFdOHu063080;
+        Mon, 13 Jan 2020 15:41:23 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2xfrghx04f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 15:41:23 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00DFf9gR030155;
+        Mon, 13 Jan 2020 15:41:09 GMT
+Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jan 2020 07:41:08 -0800
+Date:   Mon, 13 Jan 2020 10:41:16 -0500
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com, hannes@cmpxchg.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Roman Gushchin <guro@fb.com>,
+        Chris Down <chris@chrisdown.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Rientjes <rientjes@google.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        swkhack <swkhack@gmail.com>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Colin Ian King <colin.king@canonical.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Peng Fan <peng.fan@nxp.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: Re: [PATCH v7 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
+Message-ID: <20200113154116.mwly5hl5yfvjkzl2@ca-dmjordan1.us.oracle.com>
+References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1577264666-246071-4-git-send-email-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
-References: <1577165532-28772-1-git-send-email-sthella@codeaurora.org>
- <20200108163943.GA26863@bogus> <8aeb91730552357db340f8bfb21e6d15@codeaurora.org>
- <CAL_JsqL5Gh2A3KfCgRFv+B50Y4PPF1b+qq8vY6yKhbea6KPAkw@mail.gmail.com> <b4f2fcc0d0a6724d77947f917f114d80@codeaurora.org>
-In-Reply-To: <b4f2fcc0d0a6724d77947f917f114d80@codeaurora.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 13 Jan 2020 09:42:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLZN9F9=1sqFkoaWpwNKDOUAgOMrc9cqk-iohMxkeM-8A@mail.gmail.com>
-Message-ID: <CAL_JsqLZN9F9=1sqFkoaWpwNKDOUAgOMrc9cqk-iohMxkeM-8A@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: nvmem: add binding for QTI SPMI SDAM
-To:     Shyam Kumar Thella <sthella@codeaurora.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1577264666-246071-4-git-send-email-alex.shi@linux.alibaba.com>
+User-Agent: NeoMutt/20180716
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9498 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=629
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001130130
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9498 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=696 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001130130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 2:54 AM <sthella@codeaurora.org> wrote:
->
-> On 2020-01-09 21:01, Rob Herring wrote:
-> > On Thu, Jan 9, 2020 at 4:57 AM <sthella@codeaurora.org> wrote:
-> >>
-> >> On 2020-01-08 22:09, Rob Herring wrote:
-> >> > On Tue, Dec 24, 2019 at 11:02:12AM +0530, Shyam Kumar Thella wrote:
-> >> >> QTI SDAM allows PMIC peripherals to access the shared memory that is
-> >> >> available on QTI PMICs. Add documentation for it.
-> >> >>
-> >> >> Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
-> >> >> ---
-> >> >>  .../devicetree/bindings/nvmem/qcom,spmi-sdam.yaml  | 79
-> >> >> ++++++++++++++++++++++
-> >> >>  1 file changed, 79 insertions(+)
-> >> >>  create mode 100644
-> >> >> Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-> >> >>
-> >> >> diff --git
-> >> >> a/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-> >> >> b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-> >> >> new file mode 100644
-> >> >> index 0000000..8961a99
-> >> >> --- /dev/null
-> >> >> +++ b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-> >> >> @@ -0,0 +1,79 @@
-> >> >> +# SPDX-License-Identifier: GPL-2.0
-> >> >
-> >> > Dual license new bindings:
-> >> >
-> >> > (GPL-2.0-only OR BSD-2-Clause)
-> >> >
-> >> > Please spread the word in QCom.
-> >> Sure. I will add Dual license in next patchset.
-> >> >
-> >> >> +%YAML 1.2
-> >> >> +---
-> >> >> +$id: http://devicetree.org/schemas/nvmem/qcom,spmi-sdam.yaml#
-> >> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> >> >> +
-> >> >> +title: Qualcomm Technologies, Inc. SPMI SDAM DT bindings
-> >> >> +
-> >> >> +maintainers:
-> >> >> +  - Shyam Kumar Thella <sthella@codeaurora.org>
-> >> >> +
-> >> >> +description: |
-> >> >> +  The SDAM provides scratch register space for the PMIC clients. This
-> >> >> +  memory can be used by software to store information or communicate
-> >> >> +  to/from the PBUS.
-> >> >> +
-> >> >> +allOf:
-> >> >> +  - $ref: "nvmem.yaml#"
-> >> >> +
-> >> >> +properties:
-> >> >> +  compatible:
-> >> >> +    enum:
-> >> >> +      - qcom,spmi-sdam
-> >> >> +
-> >> >> +  reg:
-> >> >> +    maxItems: 1
-> >> >> +
-> >> >> +  "#address-cells":
-> >> >> +    const: 1
-> >> >> +
-> >> >> +  "#size-cells":
-> >> >> +    const: 1
-> >> >
-> >> > ranges? The child addresses should be translateable I assume.
-> >> The addresses are not memory mapped on the CPU's address domain. They
-> >> are the SPMI addresses which can be accessed over SPMI controller.
-> >
-> > Doesn't have to be a CPU address. Are the child offsets within the
-> > range defined in the parent 'reg'? If so, then it should have
-> > 'ranges'.
-> Yes the child offsets fall within parent reg's address space.
-> I will add ranges in the next patch set.
-> >
-> >> >
-> >> >> +
-> >> >> +required:
-> >> >> +  - compatible
-> >> >> +  - reg
-> >> >> +
-> >> >> +patternProperties:
-> >> >> +  "^.*@[0-9a-f]+$":
-> >> >> +    type: object
-> >> >> +
-> >> >> +    properties:
-> >> >> +      reg:
-> >> >> +        maxItems: 1
-> >> >> +        description:
-> >> >> +          Offset and size in bytes within the storage device.
-> >> >> +
-> >> >> +      bits:
-> >> >
-> >> > Needs a type reference.
-> >> Yes. I will add a reference in the next patch set.
-> >> >
-> >> >> +        maxItems: 1
-> >> >> +        items:
-> >> >> +          items:
-> >> >> +            - minimum: 0
-> >> >> +              maximum: 7
-> >> >> +              description:
-> >> >> +                Offset in bit within the address range specified by
-> >> >> reg.
-> >> >> +            - minimum: 1
-> >> >
-> >> > max is 7?
-> >> I don't think it is limited to 7 as it is the size within the address
-> >> range specified by reg. If the address range is more than a byte size
-> >> can be more.
-> >
-> > Then why is the maximum offset 7?
-> I see. Offset can be more than 7 within the address range specified in
-> case
-> of data cells with more than a byte. I will remove maximum in the next
-> patch set.
+Hi Alex,
 
-That's the wrong thing to do though. If the offset is more than 7, you
-should just increase 'reg' value. IOW, 'bits' should only be used to
-express bit position up to the minimum alignment of 'reg'. I guess you
-could have an unaligned multi-byte field, so I guess this is fine
-as-is.
+On Wed, Dec 25, 2019 at 05:04:19PM +0800, Alex Shi wrote:
+> @@ -900,6 +904,29 @@ static inline struct lruvec *mem_cgroup_page_lruvec(struct page *page,
+>  {
+>  	return &pgdat->__lruvec;
+>  }
+> +#define lock_page_lruvec_irq(page)			\
+> +({							\
+> +	struct pglist_data *pgdat = page_pgdat(page);	\
+> +	spin_lock_irq(&pgdat->__lruvec.lru_lock);	\
+> +	&pgdat->__lruvec;				\
+> +})
+> +
+> +#define lock_page_lruvec_irqsave(page, flagsp)			\
+> +({								\
+> +	struct pglist_data *pgdat = page_pgdat(page);		\
+> +	spin_lock_irqsave(&pgdat->__lruvec.lru_lock, *flagsp);	\
+> +	&pgdat->__lruvec;					\
+> +})
+> +
+> +#define unlock_page_lruvec_irq(lruvec)			\
+> +({							\
+> +	spin_unlock_irq(&lruvec->lru_lock);		\
+> +})
+> +
+> +#define unlock_page_lruvec_irqrestore(lruvec, flags)		\
+> +({								\
+> +	spin_unlock_irqrestore(&lruvec->lru_lock, flags);	\
+> +})
 
-Rob
+Noticed this while testing your series.  These are safe as inline functions, so
+I think you may have gotten the wrong impression when Johannes made this point:
+
+https://lore.kernel.org/linux-mm/20191119164448.GA396644@cmpxchg.org/
