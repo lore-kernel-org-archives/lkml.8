@@ -6,133 +6,79 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C82C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:17:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CDFC33CAA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940462080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:17:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8B02080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:18:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbgAMJR5 (ORCPT
+        id S1725992AbgAMJSR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:17:57 -0500
-Received: from mx2.suse.de ([195.135.220.15]:37746 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgAMJR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:17:57 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id AAFC8B00A;
-        Mon, 13 Jan 2020 09:17:53 +0000 (UTC)
-Date:   Mon, 13 Jan 2020 10:17:51 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-kernel@vger.kernel.org, rafael@kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-acpi@vger.kernel.org, devicetree@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v9 09/12] lib/vsprintf: Make use of fwnode API to obtain
- node names and separators
-Message-ID: <20200113091751.d63u7jbyh6p2rj23@pathway.suse.cz>
-References: <20191003123219.11237-1-sakari.ailus@linux.intel.com>
- <20191003123219.11237-10-sakari.ailus@linux.intel.com>
- <20200102222041.GA29067@roeck-us.net>
- <20200103112145.GM19828@paasikivi.fi.intel.com>
- <20200103144253.y6fnw44oe7asyniz@pathway.suse.cz>
- <20200103183555.GA28369@roeck-us.net>
+        Mon, 13 Jan 2020 04:18:17 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:35018 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgAMJSQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 04:18:16 -0500
+Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iqvrT-0001U2-Eu; Mon, 13 Jan 2020 09:18:15 +0000
+Date:   Mon, 13 Jan 2020 10:18:14 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Kars de Jong <jongk@linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux/m68k <linux-m68k@vger.kernel.org>,
+        Amanieu d'Antras <amanieu@gmail.com>
+Subject: Re: [PATCH] m68k: Wire up clone3() syscall
+Message-ID: <20200113091813.zkye72cubpfhemww@wittgenstein>
+References: <20191124195225.31230-1-jongk@linux-m68k.org>
+ <CAMuHMdXQAbw_Skj99q_PWXKn77bzVbJf60n38Etmq-zhOoHsHQ@mail.gmail.com>
+ <CAMuHMdU9hu+EAAnBD5dH3+LS5pNi9fOjFNesv3eFSCoqbW3CCA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200103183555.GA28369@roeck-us.net>
-User-Agent: NeoMutt/20170912 (1.9.0)
+In-Reply-To: <CAMuHMdU9hu+EAAnBD5dH3+LS5pNi9fOjFNesv3eFSCoqbW3CCA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 2020-01-03 10:35:55, Guenter Roeck wrote:
-> On Fri, Jan 03, 2020 at 03:42:53PM +0100, Petr Mladek wrote:
-> > On Fri 2020-01-03 13:21:45, Sakari Ailus wrote:
-> > > Hi Guenter,
-> > > 
-> > > On Thu, Jan 02, 2020 at 02:20:41PM -0800, Guenter Roeck wrote:
-> > > > Hi,
-> > > > 
-> > > > On Thu, Oct 03, 2019 at 03:32:16PM +0300, Sakari Ailus wrote:
-> > > > > Instead of implementing our own means of discovering parent nodes, node
-> > > > > names or counting how many parents a node has, use the newly added
-> > > > > functions in the fwnode API to obtain that information.
-> > > > > 
-> > > > > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > > Reviewed-by: Petr Mladek <pmladek@suse.com>
-> > > > > ---
-> > > > 
-> > > > This patch results in a lockdep splat when running one of my qemu
-> > > > emulations. See below for log and bisect results. A complete log
-> > > > is available at
-> > > > https://kerneltests.org/builders/qemu-arm-master/builds/1408/steps/qemubuildcommand/logs/stdio
-> > > > 
-> > > > Guenter
-> > > 
-> > > Thank you for reporting this.
-> > > 
-> > > I looked into the issue, and indeed I can conform the patch introduces this
-> > > as it takes the devtree_lock for printing the name of the fwnode. There is
-> > 
-> > I guess that you meant "is not".
-> > 
-> > 
-> > > however chance of a deadlock in practice as the code in mm/slub.c does not
-> > > deal with fwnodes (in which case acquiring devtree_lock could be possible),
-> > > maybe for other reasons as well. The patch however introduces an unpleasant
-> > > source of such warnings.
-> > 
-> > I agree that it is a false positive. alloc/free is called in OF code
-> > under devtree_lock. But OF code is not called from alloc/free (slub.c)
-> > and it should not happen.
-> > 
+On Mon, Jan 13, 2020 at 10:10:26AM +0100, Geert Uytterhoeven wrote:
+> On Sun, Jan 12, 2020 at 5:06 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Sun, Nov 24, 2019 at 8:52 PM Kars de Jong <jongk@linux-m68k.org> wrote:
+> > > Wire up the clone3() syscall for m68k. The special entry point is done in
+> > > assembler as was done for clone() as well. This is needed because all
+> > > registers need to be saved. The C wrapper then calls the generic
+> > > sys_clone3() with the correct arguments.
+> > >
+> > > Tested on A1200 using the simple test program from:
+> > >
+> > >   https://lore.kernel.org/lkml/20190716130631.tohj4ub54md25dys@brauner.io/
+> > >
+> > > Cc: linux-m68k@vger.kernel.org
+> > > Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
+> >
+> > Thanks, applied and queued for v5.6.
 > 
-> Assuming that memory allocation is indeed called from code holding
-> devtree_lock: The problem, as I see it, is that the order of acquiring
-> locks is different. In OF code, the order is
-> 	devtree_lock
-> 	(&n->list_lock)->rlock
+> Which is now broken because of commit dd499f7a7e342702 ("clone3: ensure
+> copy_thread_tls is implemented") in v5.5-rc6 :-(
 
-Yes, this happens when alloc is called in OF code under devtree_lock.
+Sorry, just for clarification what and how is it broken by 
+dd499f7a7e342702 ("clone3: ensure > copy_thread_tls is implemented")
+?
 
-> Elsewhere, in %pOF print sequences, it is
-> 	(&n->list_lock)->rlock
-> 	devtree_lock
+> 
+> BTW, was this the reason for the failures at the end of
+> https://lore.kernel.org/lkml/CACz-3rhmUfxbfhznvA6NOF69SR49NDZwnkZ=Bmhw_cf4SkiadQ@mail.gmail.com/?
 
-I believe that this order does not exist in reality. lockep "just"
-connected this the two locks via logbuf_lock. When printk() is
-called in the allocator:
+Unlikely since CLONE_SETTLS is currently not covered by the
+clone3()/process creation test suite because it is highly arch
+dependent on how to retrieve the tls pointer. But we're going to add
+tests soon I hope.
 
-	(&n->list_lock)->rlock
-	logbuf_lock
-
-and when %pOF is used in printk():
-
-	logbuf_lock
-	devtree_lock
-
-From this two lockdep assumes that it might be possible to
-use %pOF in printk() from allocator code:
-
-	(&n->list_lock)->rlock
-	logbuf_lock
-	devtree_lock
-
-But I believe that this does not make sense and never happen reality.
-
-That said, I would still prefer when %pOF could be implemented
-without the lock. It would make it usable anywhere without any
-risk of deadlock.
-
-Sakari, what is your opinion, please?
-
-Best Regards,
-Petr
+Thanks!
+Christian
