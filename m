@@ -2,113 +2,84 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D57C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:40:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FFEC33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A84207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:40:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F348C20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:40:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XfcH2QGe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgAMOkF (ORCPT
+        id S1728909AbgAMOkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:40:05 -0500
-Received: from mout.kundenserver.de ([212.227.126.130]:38769 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgAMOkD (ORCPT
+        Mon, 13 Jan 2020 09:40:45 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:21386 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728643AbgAMOko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:40:03 -0500
-Received: from mail-lj1-f173.google.com ([209.85.208.173]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Ml6i4-1jVcZa0wRw-00lTV4; Mon, 13 Jan 2020 15:40:02 +0100
-Received: by mail-lj1-f173.google.com with SMTP id w1so10347745ljh.5;
-        Mon, 13 Jan 2020 06:40:02 -0800 (PST)
-X-Gm-Message-State: APjAAAWzD2ul6sj5rXLMJh6USlbl9+jEM5edJO9fuOZ9NHXkwo5abrxC
-        W9AznZbF3fycNJtTX4qhfE1io+6S2xrYEV9GMOk=
-X-Google-Smtp-Source: APXvYqyG+qKmdLtlyo+saYSnu5MHSGySW3aSQW9RS5F+YJRsHBRHifqWafDZ2kjCxII1OEgtsIpm5t4+I0vXZQXNo/k=
-X-Received: by 2002:a2e:b5d5:: with SMTP id g21mr11036798ljn.89.1578926401740;
- Mon, 13 Jan 2020 06:40:01 -0800 (PST)
+        Mon, 13 Jan 2020 09:40:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578926444;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=VWP7TBPDC/WWtI6AhL9UEcGZAEvWSrBUOBnztnDpDig=;
+        b=XfcH2QGewCGHgIvzzWOezXVIrTtLCRaTnxuhm+GCxJoht/2uK03rqYDZobZz4W1TnoCobg
+        dzix4OLlS6ZNGtSbjFcjugYqqtfnAq/OV14K/7HOfP6dckkndP/ubJJffWgAmdkGqbvtny
+        W7VHtyhnYBuneJsJNt8Uxz7qKjz6B04=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-354-hlxp6qwtO6mee55SJFtWCw-1; Mon, 13 Jan 2020 09:40:42 -0500
+X-MC-Unique: hlxp6qwtO6mee55SJFtWCw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BB9F41800D48;
+        Mon, 13 Jan 2020 14:40:40 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-117-201.ams2.redhat.com [10.36.117.201])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B277638C;
+        Mon, 13 Jan 2020 14:40:36 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>
+Subject: [PATCH v1 0/2] mm/page_alloc: memmap_init_zone() cleanups
+Date:   Mon, 13 Jan 2020 15:40:33 +0100
+Message-Id: <20200113144035.10848-1-david@redhat.com>
 MIME-Version: 1.0
-References: <20200110165636.28035-1-will@kernel.org> <20200110165636.28035-2-will@kernel.org>
- <CAK8P3a3ueJ_rQc-1JTg=3N0JSuY9BduJ6FrrPFG1K2FWVzJdfA@mail.gmail.com> <8fe4f81699517758b44afbe0e1a53bc080f64a62.camel@perches.com>
-In-Reply-To: <8fe4f81699517758b44afbe0e1a53bc080f64a62.camel@perches.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 13 Jan 2020 15:39:45 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1t9757M5CRKNX_X+T9VuLX+5=z5_845rLJGTG50RogXA@mail.gmail.com>
-Message-ID: <CAK8P3a1t9757M5CRKNX_X+T9VuLX+5=z5_845rLJGTG50RogXA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/8] compiler/gcc: Emit build-time warning for GCC
- prior to version 4.8
-To:     Joe Perches <joe@perches.com>
-Cc:     Will Deacon <will@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:3fb8OaF47jNPkU9w7BdKJ+Mbx9CBT63TVUqOnD2X2APo3pepp1j
- qfqBVCjdOzuMymbGtjeyRYNBSSF1KFj/FsIxDZwGLKcKShfe4SGA079YWcijY4TK/Hzams7
- tacw5suIT4/Vw556Bb3qHPbwM1G7c4dq/FuSJVA8saQ7au8gbjzDqWx6o2Td9JWr5mo1CM4
- J/GDtkQLC4qa8zyFtExCA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0hMiuvmEWa4=:IEnRoS5lIk4tJZDzirdCkJ
- MLLloKSgGBLBT2SB8S34L9+190u4DKsvRZvDwYYJixcEwNNvs6rqbxe++a4Qjs5oho/10zKgx
- r7JYCPRlPgjTc/LOJgWeFiQNRX5mP/xVIyrg9GvV5X3tOyMYukV/GGnf1iNwJVgnMRDK4NrFv
- RwwEW83bO3oVHsyHGNLfRCyD1hoYeKE2h7BjJWNHiRAPBECRF6rPPDY6utyOXVWkJWCDsJOQX
- b19pjMPGFWl02fo9N9OeCAdF+2ftPBcGQofTubclZ76/a+Avp7gKPuXQI86C8fuOBc5OM3Dd5
- w8uZmSXHwPI4c5rPo/MxiM7LuObG56HuWQ/SIXyQsgmbzBWKgkFFkD7tIjOI5yWTcOUaZRIbm
- 52P3ZGDCOyOrBZtLETMqdAs0quYCP1/hZqLAJ7XC1gqTTT0e0KB4kwFjzewODMXzb5h90ayD4
- I3ZEJEyJOq7CNnaX5mOTX1wj5fm1Nh3JMsXWEy2vmqKC1jwoe/0HW/bGoejTRCMIcIKmh3QIj
- 4pfwuV3AqRx2KayTn17MfDABC8SIUNuwxByLF7B6MZILP4OCmqUzCblAmmCtfOGahC5sZKaR7
- rYX5BDzZolZN09PnmYmyoFiJ7SWr+eSV6FuMJs73w9kxuqHFIQE9HheP4rOL98sQoD9xh7US3
- aqNviaxiq4EWXFjjYilnaKsPSsxYnBZdh8Syxyi3MmLyNdEAQAMBBBcM1JFPpTon6+oGhRRwG
- QmRlxtX87M/XKREA+/1BuLh/1+6vnno6R/J3QI+CfoiTRN4iiy94ibzUf7Yxqz+6iSR/Rg0f3
- ziUbHmJ/a3BW0XByP86Z0pEw2Or8WFH+eF1AjFh2FV+wR4IfhZr40HYfwofgWjFngnJai2A/C
- KoIpEidkRLoHYroi5Dtg==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 6:54 PM Joe Perches <joe@perches.com> wrote:
->
-> On Fri, 2020-01-10 at 18:35 +0100, Arnd Bergmann wrote:
-> > On Fri, Jan 10, 2020 at 5:56 PM Will Deacon <will@kernel.org> wrote:
-> > > Prior to version 4.8, GCC may miscompile READ_ONCE() by erroneously
-> > > discarding the 'volatile' qualifier:
-> > >
-> > > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
-> > >
-> > > We've been working around this using some nasty hacks which make
-> > > READ_ONCE() both horribly complicated and also prevent us from enforcing
-> > > that it is only used on scalar types. Since GCC 4.8 is pretty old for
-> > > kernel builds now, emit a warning if we detect it during the build.
-> >
-> > No objection to recommending gcc-4.8, but I think this should either
-> > just warn once during the kernel build instead of for every file, or
-> > it should become a hard requirement.
->
-> It might as well be a hard requirement as
-> gcc 4.8.0 is already nearly 7 years old.
->
-> gcc 4.6.0 released 2011-03-25
-> gcc 4.8.0 released 2013-03-22
->
-> Perhaps there are exceedingly few to zero new
-> instances using gcc compiler versions < 4.8
+Two cleanups for "[PATCH] mm/page_alloc: Skip non present sections on zon=
+e
+initialization" [1], whereby one cleanup seems to also be a fix for a
+(theoretial?) kernelcore=3Dmirror case - unless I am messing something up=
+ :)
 
-The last time we had this discussion, the result was that gcc-4.8 is
-probably ok as a minimum version, but moving to 5.1+ (from 2015)
-was not an obvious choice:
+[1] https://lkml.kernel.org/r/20191230093828.24613-1-kirill.shutemov@linu=
+x.intel.com
 
-https://www.spinics.net/lists/linux-kbuild/msg23648.html
+David Hildenbrand (2):
+  mm/page_alloc: fix and rework pfn handling in memmap_init_zone()
+  mm: factor out next_present_section_nr()
 
-If nobody complains about the move to 4.8, we can try moving to
-gcc-5.1 and GNU99/GNU11 next year  ;-)
+ include/linux/mmzone.h | 10 ++++++++++
+ mm/page_alloc.c        | 20 ++++++++------------
+ mm/sparse.c            | 10 ----------
+ 3 files changed, 18 insertions(+), 22 deletions(-)
 
-       Arnd
+--=20
+2.24.1
+
