@@ -2,141 +2,94 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C9EC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAC76C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06F01207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E5952081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:31:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgAMKar (ORCPT
+        id S1728766AbgAMKb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:30:47 -0500
-Received: from michel.telenet-ops.be ([195.130.137.88]:37312 "EHLO
-        michel.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbgAMKaq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:30:46 -0500
-Received: from ramsan ([84.195.182.253])
-        by michel.telenet-ops.be with bizsmtp
-        id pmWi210035USYZQ06mWi1z; Mon, 13 Jan 2020 11:30:44 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iqwzZ-0000aP-SZ; Mon, 13 Jan 2020 11:30:41 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1iqwzZ-0006AN-Pz; Mon, 13 Jan 2020 11:30:41 +0100
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     Amanieu d'Antras <amanieu@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        linux-next@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] m68k: Implement copy_thread_tls()
-Date:   Mon, 13 Jan 2020 11:30:40 +0100
-Message-Id: <20200113103040.23661-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Jan 2020 05:31:26 -0500
+Received: from foss.arm.com ([217.140.110.172]:37300 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726163AbgAMKb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 05:31:26 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DFF713D5;
+        Mon, 13 Jan 2020 02:31:25 -0800 (PST)
+Received: from arm.com (e112269-lin.cambridge.arm.com [10.1.194.52])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 571363F534;
+        Mon, 13 Jan 2020 02:31:23 -0800 (PST)
+Date:   Mon, 13 Jan 2020 10:31:18 +0000
+From:   Steven Price <steven.price@arm.com>
+To:     yezengruan <yezengruan@huawei.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "maz@kernel.org" <maz@kernel.org>,
+        James Morse <James.Morse@arm.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "julien.thierry.kdev@gmail.com" <julien.thierry.kdev@gmail.com>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "Wanghaibin (D)" <wanghaibin.wang@huawei.com>
+Subject: Re: [PATCH v2 3/6] KVM: arm64: Support pvlock preempted via shared
+ structure
+Message-ID: <20200113103117.GA44375@arm.com>
+References: <20191226135833.1052-1-yezengruan@huawei.com>
+ <20191226135833.1052-4-yezengruan@huawei.com>
+ <468e2bb4-8986-5e1e-8c4a-31aa56a9ae4f@arm.com>
+ <c479977c-3824-4b53-ef46-300d59ac35de@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c479977c-3824-4b53-ef46-300d59ac35de@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is required for clone3(), which passes the TLS value through a
-struct rather than a register.
+On Sat, Jan 11, 2020 at 07:30:42AM +0000, yezengruan wrote:
+> Hi Steve,
+> 
+> On 2020/1/9 23:02, Steven Price wrote:
+> > On 26/12/2019 13:58, Zengruan Ye wrote:
+> >> Implement the service call for configuring a shared structure between a
+> >> VCPU and the hypervisor in which the hypervisor can tell the VCPU is
+> >> running or not.
+> >>
+> >> The preempted field is zero if 1) some old KVM deos not support this filed.
+> > 
+> > NIT: s/deos/does/
+> 
+> Thanks for posting this.
+> 
+> > 
+> > However, I would hope that the service call will fail if it's an old KVM not simply return zero.
+> 
+> Sorry, I'm not sure what you mean. The service call will fail if it's an old KVM, and the Guest will use __native_vcpu_is_preempted.
 
-As do_fork() is only available if CONFIG_HAVE_COPY_THREAD_TLS is set,
-m68k_clone() must be changed to call _do_fork() directly.
+You previously said the "field is zero if [...] some old KVM does not
+support this field". This seems a bit of an odd statement, because the
+field just doesn't exist (it's an old KVM so won't have allocated it),
+and if the guest attempts to find the field using the service call then
+the call will fail.
 
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
-This is a dependency for the combination of commits
-e8bb2a2a1d51511e ("m68k: Wire up clone3() syscall") in m68k/for-next,
-dd499f7a7e342702 ("clone3: ensure copy_thread_tls is implemented") in
-v5.5-rc6.
----
- arch/m68k/Kconfig          |  1 +
- arch/m68k/kernel/process.c | 31 ++++++++++++++++++++++---------
- 2 files changed, 23 insertions(+), 9 deletions(-)
+So I'm not sure in what situation you are expecting the field to be zero
+on an old KVM.
 
-diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-index 6663f1741798e83f..6ad6cdac74b3dc42 100644
---- a/arch/m68k/Kconfig
-+++ b/arch/m68k/Kconfig
-@@ -14,6 +14,7 @@ config M68K
- 	select HAVE_AOUT if MMU
- 	select HAVE_ASM_MODVERSIONS
- 	select HAVE_DEBUG_BUGVERBOSE
-+	select HAVE_COPY_THREAD_TLS
- 	select GENERIC_IRQ_SHOW
- 	select GENERIC_ATOMIC64
- 	select HAVE_UID16
-diff --git a/arch/m68k/kernel/process.c b/arch/m68k/kernel/process.c
-index 22e6b8f4f9582aa4..8f0d9140700f09ad 100644
---- a/arch/m68k/kernel/process.c
-+++ b/arch/m68k/kernel/process.c
-@@ -108,16 +108,28 @@ void flush_thread(void)
-  * on top of pt_regs, which means that sys_clone() arguments would be
-  * buried.  We could, of course, copy them, but it's too costly for no
-  * good reason - generic clone() would have to copy them *again* for
-- * do_fork() anyway.  So in this case it's actually better to pass pt_regs *
-- * and extract arguments for do_fork() from there.  Eventually we might
-- * go for calling do_fork() directly from the wrapper, but only after we
-- * are finished with do_fork() prototype conversion.
-+ * _do_fork() anyway.  So in this case it's actually better to pass pt_regs *
-+ * and extract arguments for _do_fork() from there.  Eventually we might
-+ * go for calling _do_fork() directly from the wrapper, but only after we
-+ * are finished with _do_fork() prototype conversion.
-  */
- asmlinkage int m68k_clone(struct pt_regs *regs)
- {
- 	/* regs will be equal to current_pt_regs() */
--	return do_fork(regs->d1, regs->d2, 0,
--		       (int __user *)regs->d3, (int __user *)regs->d4);
-+	struct kernel_clone_args args = {
-+		.flags		= regs->d1 & ~CSIGNAL,
-+		.pidfd		= (int __user *)regs->d3,
-+		.child_tid	= (int __user *)regs->d4,
-+		.parent_tid	= (int __user *)regs->d3,
-+		.exit_signal	= regs->d1 & CSIGNAL,
-+		.stack		= regs->d2,
-+		.tls		= regs->d5,
-+	};
-+
-+	if (!legacy_clone_args_valid(&args))
-+		return -EINVAL;
-+
-+	return _do_fork(&args);
- }
- 
- /*
-@@ -130,8 +142,9 @@ asmlinkage int m68k_clone3(struct pt_regs *regs)
- 	return sys_clone3((struct clone_args __user *)regs->d1, regs->d2);
- }
- 
--int copy_thread(unsigned long clone_flags, unsigned long usp,
--		 unsigned long arg, struct task_struct *p)
-+int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
-+		    unsigned long arg, struct task_struct *p,
-+		    unsigned long tls)
- {
- 	struct fork_frame {
- 		struct switch_stack sw;
-@@ -166,7 +179,7 @@ int copy_thread(unsigned long clone_flags, unsigned long usp,
- 	p->thread.usp = usp ?: rdusp();
- 
- 	if (clone_flags & CLONE_SETTLS)
--		task_thread_info(p)->tp_value = frame->regs.d5;
-+		task_thread_info(p)->tp_value = tls;
- 
- #ifdef CONFIG_FPU
- 	if (!FPU_IS_EMU) {
--- 
-2.17.1
-
+Steve
