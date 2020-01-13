@@ -2,123 +2,112 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E32C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 01:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E946C33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 01:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A08A22314
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 01:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5373D22314
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 01:45:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tY5Y4d+S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsrlKaUQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733109AbgAMBhD (ORCPT
+        id S1732961AbgAMBpB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 20:37:03 -0500
-Received: from ozlabs.org ([203.11.71.1]:60039 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727494AbgAMBhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 20:37:03 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47wx5n1mBCz9sP3;
-        Mon, 13 Jan 2020 12:37:01 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578879421;
-        bh=+E9/y7ZqNrVh5A4Mdg1MXXzDnmtB35I9JqeIGqTthOY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tY5Y4d+SbhrJwRxL6blpvuvFNPTvZkl3cyTufl1b+M5K3YGx17A9SpwM3GwjExDpW
-         V73n6ieu5eO3bLqNcuUDuxoYSuDcjo1vkoZqRorjLkKhSc4V3BAd+c12M2ziSa7RrP
-         nNDUic0cL22h9ehtkAZAlrS5s68idsRc8wXlczfOHCKRxk6rs7Gl5MprM5yyiaAZfX
-         9/EY713+6sS4Y+bBT5mw3fkVHIcTDoOp6WjfMB2DL+Gkk9/8lgZ3w3UsudpIxeMNM7
-         aV6NlhCiZ8QvQo37pttU3tqIVDPbCo19wXddBOPOvuQnixVjz7E3CcDr8jaoDlSH71
-         k2UGo3M0PE22Q==
-Date:   Mon, 13 Jan 2020 12:37:00 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kars de Jong <jongk@linux-m68k.org>
-Subject: Re: linux-next: manual merge of the keys tree with the m86k tree
-Message-ID: <20200113123700.66678b59@canb.auug.org.au>
-In-Reply-To: <20200113123603.33c957e1@canb.auug.org.au>
-References: <20200113123603.33c957e1@canb.auug.org.au>
+        Sun, 12 Jan 2020 20:45:01 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38861 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbgAMBpB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 20:45:01 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so6972723wrh.5;
+        Sun, 12 Jan 2020 17:44:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=znJUBdsKtgEwaqOljiJ5EK/1WMSAL9tXrpMQjheFjHs=;
+        b=IsrlKaUQ30FPFeUfmzEnivEsohh548kKdNxG4LU2anUO1HksC6D6K7pmSZokMFC6gK
+         GQR+Dab0mjjrscxb+RNcIBhpJavvfoopbcEUaMAB95TcFeWpUfdkRWCzCDl/7KAbNAVe
+         /BhdzEAPGIf2FDVLo5YDNnEfDGHFaPfKMFj+wWWyy0zzQGSRnSChbVKX7YL8tXYbu1EU
+         3iIqcwh87j5OOysOcs1KGKKxMIFH/ieTF9i1cTrut1D1pQP5mGBujavxP2pxWxUmz8e8
+         kqEyOelKx/8Bubzn3mqh0BXnCH4FAJ5GVi72+Wce+nRiP93wd0NDsxWjbf6E7bGZq4SM
+         Iz7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=znJUBdsKtgEwaqOljiJ5EK/1WMSAL9tXrpMQjheFjHs=;
+        b=G5lqQbRal07wqiKjCh8IVvzBD//sRiLyBk/bQWVFKrl9xkVrm/FETNuBzv+tf5fWAc
+         x1mPujQDzTOHATsJU5bgZJyzpUYo4Y5Gm6Vuv5O6oHWjKiTmrSqbz3f7W/Hq6Y5fIEot
+         9QEyTHO4hxEvOXnPwdeOVZSGBf64R9xOq6HJzxgcT7Jd6sPfbgXaopdTKtwcS2fQTqB2
+         KNgOgfsh7bj3Z8npCz5CjDq5jo2fVFeTaPd10uixFQdbIt/6KP6ib57UM2Ur44k8Vori
+         w4G1PVyV/nCjI0bt/UhAhABQUpuFZjkZNJZTkid+IFanKfsJKFP2aWDek9I/NcOaizWo
+         3vXQ==
+X-Gm-Message-State: APjAAAUPkDyLzl6EaQi9LDWz9W5LnG2SMyPjccjaPMwATUbzFnzyIcMR
+        G8GjCrXuoRnXV7XeUEInHzH1gkKv/AxlIn2fgRM=
+X-Google-Smtp-Source: APXvYqxEkdvBQ9aEz55XkTJia5J/yxixfzNCbd2z1PzezHPGyfdv+shkuWFIdWmXEf6iRgjHh6jgGG5kuQj4cy2uKzM=
+X-Received: by 2002:a5d:6748:: with SMTP id l8mr15805825wrw.188.1578879898836;
+ Sun, 12 Jan 2020 17:44:58 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/pmX1aiNqPKM4ADVfByxEXCA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200110063755.19804-1-zhang.lyra@gmail.com> <20200110063755.19804-3-zhang.lyra@gmail.com>
+ <CAOesGMjNkVpTOhSrLUKjNZnKFk55DTgg29QzVBEFVh3Z=Ra+cQ@mail.gmail.com>
+In-Reply-To: <CAOesGMjNkVpTOhSrLUKjNZnKFk55DTgg29QzVBEFVh3Z=Ra+cQ@mail.gmail.com>
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+Date:   Mon, 13 Jan 2020 09:44:21 +0800
+Message-ID: <CAAfSe-tx+S_tc1y0c5wobQy2xygNr01b3LOqQ4FQtHoDNhHNeA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] arm64: dts: Add Unisoc's SC9863A SoC support
+To:     Olof Johansson <olof@lixom.net>
+Cc:     SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/pmX1aiNqPKM4ADVfByxEXCA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Mon, 13 Jan 2020 12:36:03 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Sat, 11 Jan 2020 at 01:41, Olof Johansson <olof@lixom.net> wrote:
 >
-> Today's linux-next merge of the keys tree got a conflict in:
->=20
->   arch/m68k/kernel/syscalls/syscall.tbl
->=20
-> between commit:
->=20
->   e8bb2a2a1d51 ("m68k: Wire up clone3() syscall")
->=20
-> from the m86k tree and commit:
->=20
->   519c484a997a ("Add a general, global device notification watch list")
->=20
-> from the keys tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
+> Hi,
+>
+> On Thu, Jan 9, 2020 at 10:38 PM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> >
+> > From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+> >
+> > Add basic DT to support Unisoc's SC9863A, with this patch,
+> > the board sp9863a-1h10 can run into console.
+> >
+> > Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
+>
+> You reposting a patch that we have already applied, and there's also
+> no changelog for it in the description.
 
-Sorry, forgot the diff ...
+Oh, I have to explain a bit.
 
---=20
-Cheers,
-Stephen Rothwell
+I was expecting an email which inform me that the patch was got merged.
+That's the reason I resent this patchset.
 
-diff --cc arch/m68k/kernel/syscalls/syscall.tbl
-index b911e0f50a71,83e4e8784b88..000000000000
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@@ -434,5 -434,5 +434,6 @@@
-  432	common	fsmount				sys_fsmount
-  433	common	fspick				sys_fspick
-  434	common	pidfd_open			sys_pidfd_open
- -# 435 reserved for clone3
- +435	common	clone3				__sys_clone3
-+ 436	common	watch_devices			sys_watch_devices
- +437	common	openat2				sys_openat2
+About the changelog, this new patchset actually had a cover-letter[1]
+in which I documented a little changes (which was not important now).
 
---Sig_/pmX1aiNqPKM4ADVfByxEXCA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks for your help,
+Chunyan
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4bybwACgkQAVBC80lX
-0Gy3tQf+JTWHpzmgLKxMC6EnUpwvvKATptxnrrx5UEBBSaPACd3Cmr2tLmDHETR8
-dUSxD8load1scgLI5RbU0JvYz68TTINm/LgNcxWW1BCWqp1FYOv1L9HAqCDYhEgV
-3p3MmM3C/AnMVYHNNLv+RZc6TmaB8LkUq4Nbc2JqsX+o/WgCTh/z+cqthXGgi5m2
-MsdAnx3gmSbueHBnIwM4NLpw3X/Lg/Ca1lCD16UUm9o4/ocwtksAftAL/4rMdR5D
-ru9d52cbZI7pzLQD6wHwiTDol/JKukEZ0MZhTdGzu0ZMau1Yb6PGaVvsIEJ62TTc
-xprh4RCZxY/8nDux0u1q7xzje0HM8A==
-=1kU1
------END PGP SIGNATURE-----
-
---Sig_/pmX1aiNqPKM4ADVfByxEXCA--
+[1] https://lkml.org/lkml/2020/1/10/36
+>
+> If you need to change the contents to fix something, you need to send
+> a patch for the delta by now, with the usual expectations of
+> explaining why the fix is needed, etc.
+>
+>
+> Thanks,
+>
+> -Olof
