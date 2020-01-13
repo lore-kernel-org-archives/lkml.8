@@ -2,390 +2,334 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34FE3C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DCAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF16721739
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C052222C2
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:57:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578934630;
+	bh=20et0LeLmZcC7OKy7vKwN9+K/OlCrNBAUQXGF/uI4Ag=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xLcPSmsJr+QucSukJc3jsf0AsNcUhhPbTTOEuwleb8SmLtA5A6mZaPNYO2VxNCi2B
+	 NTXXTQRo/F4rlz8/UEvhvoIexyY00LLUE9pVYbgsL7gPtIgIZO+3io8CIxKvbtzBxY
+	 7l1Kb2jPIeAlnoqh1TY+Ju2Mp20efkUAeHZBbCxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgAMQwc (ORCPT
+        id S1728699AbgAMQ5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:52:32 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50324 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgAMQwb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:52:31 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 9533428ED5C
-Subject: Re: [PATCH] cros_ec: treewide: Remove 'include/linux/mfd/cros_ec.h'
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Collabora Kernel ML <kernel@collabora.com>, groeck@chromium.org,
-        bleung@chromium.org, dtor@chromium.org, gwendal@chromium.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-iio@vger.kernel.org, Nick Vaccaro <nvaccaro@chromium.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Mark Brown <broonie@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-References: <20191203145018.14015-1-enric.balletbo@collabora.com>
-Message-ID: <74a0c896-6d1a-5cb5-d14f-6dd994382982@collabora.com>
-Date:   Mon, 13 Jan 2020 17:52:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 13 Jan 2020 11:57:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726943AbgAMQ5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 11:57:09 -0500
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9894321569;
+        Mon, 13 Jan 2020 16:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578934627;
+        bh=20et0LeLmZcC7OKy7vKwN9+K/OlCrNBAUQXGF/uI4Ag=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=veBU+eKOUE5VGAUmt7sNuZhR1+9WkXvOzHOGSXdXg+/YtqYHJY2VT7k5klhydzHaq
+         iuhX+Yv4NPz7Hy+qIjnmvpnUB0koPQuneDpJN7zSWUxFuU79fLv4bFuLQseP5WQcl9
+         pd6t5FPqVo55UIfkdkarWRzLGHz0fGH7gtt8/tAc=
+Received: by mail-qk1-f180.google.com with SMTP id c17so9116093qkg.7;
+        Mon, 13 Jan 2020 08:57:07 -0800 (PST)
+X-Gm-Message-State: APjAAAXYxIhihUyX1s1LmRZxO5rVMLwYEyMQMJG42pqiw6G3yRRDAY4u
+        dSKzDDrAdv+veAsCNx5cpC3eOHm7TSsscPGn8w==
+X-Google-Smtp-Source: APXvYqx0AU9Rs93kGIbdKP4WuIqx2HQeMHqGE1y+wqUojZ5zlZijSOTRfZHRaa0C2MdvTpIMqNAVwVf3+uFigUY3viw=
+X-Received: by 2002:a05:620a:1eb:: with SMTP id x11mr17722883qkn.254.1578934626652;
+ Mon, 13 Jan 2020 08:57:06 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191203145018.14015-1-enric.balletbo@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200109112548.23914-1-sravanhome@gmail.com> <20200109112548.23914-3-sravanhome@gmail.com>
+In-Reply-To: <20200109112548.23914-3-sravanhome@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 13 Jan 2020 10:56:55 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ4vTzyfAG2UWzzkhVkBSLDRPjdyDUFZJ9LrDmsFsQ1gA@mail.gmail.com>
+Message-ID: <CAL_JsqJ4vTzyfAG2UWzzkhVkBSLDRPjdyDUFZJ9LrDmsFsQ1gA@mail.gmail.com>
+Subject: Re: [PATCH v6 2/4] dt-bindings: regulator: add document bindings for mpq7920
+To:     Saravanan Sekar <sravanhome@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        David Miller <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 9, 2020 at 5:26 AM Saravanan Sekar <sravanhome@gmail.com> wrote:
+>
+> Add device tree binding information for mpq7920 regulator driver.
+> Example bindings for mpq7920 are added.
 
+Mark, Please revert this. Not even close to valid schema and my
+questions on v4 are unanswered.
 
-On 3/12/19 15:50, Enric Balletbo i Serra wrote:
-> This header file now only includes the cros_ec_dev struct, however, is the
-> 'include/linux/platform_data/cros_ec_proto.h' who contains the definition of
-> all the Chrome OS EC related structs. There is no reason to have a
-> separate include for this struct so move to the place where other
-> structs are defined. That way, we can remove the include itself, but also
-> simplify the common pattern
-> 
->     #include <linux/mfd/cros_ec.h>
->     #include <linux/platform_data/cros_ec_proto.h>
-> 
-> for a single include
-> 
->     #include <linux/platform_data/cros_ec_proto.h>
-> 
-> The changes to remove the cros_ec.h include were generated with the
-> following shell script:
-> 
->     git grep -l "<linux/mfd/cros_ec.h>" | xargs sed -i '/<linux\/mfd\/cros_ec.h>/d'
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-
-Applied for 5.6 with all the collected acks, thanks.
-
- Enric
-
+>
+> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
 > ---
-> 
->  drivers/iio/accel/cros_ec_accel_legacy.c      |  1 -
->  .../common/cros_ec_sensors/cros_ec_sensors.c  |  1 -
->  .../cros_ec_sensors/cros_ec_sensors_core.c    |  1 -
->  drivers/iio/light/cros_ec_light_prox.c        |  1 -
->  drivers/iio/pressure/cros_ec_baro.c           |  1 -
->  .../media/platform/cros-ec-cec/cros-ec-cec.c  |  1 -
->  drivers/mfd/cros_ec_dev.c                     |  1 -
->  drivers/platform/chrome/cros_ec_chardev.c     |  1 -
->  drivers/platform/chrome/cros_ec_debugfs.c     |  1 -
->  drivers/platform/chrome/cros_ec_lightbar.c    |  1 -
->  drivers/platform/chrome/cros_ec_sensorhub.c   |  1 -
->  drivers/platform/chrome/cros_ec_sysfs.c       |  1 -
->  drivers/platform/chrome/cros_ec_vbc.c         |  1 -
->  drivers/platform/chrome/cros_usbpd_logger.c   |  1 -
->  drivers/power/supply/cros_usbpd-charger.c     |  1 -
->  drivers/rtc/rtc-cros-ec.c                     |  1 -
->  include/linux/mfd/cros_ec.h                   | 35 -------------------
->  include/linux/platform_data/cros_ec_proto.h   | 23 +++++++++++-
->  18 files changed, 22 insertions(+), 52 deletions(-)
->  delete mode 100644 include/linux/mfd/cros_ec.h
-> 
-> diff --git a/drivers/iio/accel/cros_ec_accel_legacy.c b/drivers/iio/accel/cros_ec_accel_legacy.c
-> index 65f85faf6f31..68e847c6255e 100644
-> --- a/drivers/iio/accel/cros_ec_accel_legacy.c
-> +++ b/drivers/iio/accel/cros_ec_accel_legacy.c
-> @@ -18,7 +18,6 @@
->  #include <linux/iio/trigger_consumer.h>
->  #include <linux/iio/triggered_buffer.h>
->  #include <linux/kernel.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/platform_data/cros_ec_commands.h>
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-> index 7dce04473467..576e45faafaf 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors.c
-> @@ -16,7 +16,6 @@
->  #include <linux/iio/trigger_consumer.h>
->  #include <linux/iio/triggered_buffer.h>
->  #include <linux/kernel.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
-> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> index 81a7f692de2f..d3a3626c7cd8 100644
-> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> @@ -13,7 +13,6 @@
->  #include <linux/iio/kfifo_buf.h>
->  #include <linux/iio/trigger_consumer.h>
->  #include <linux/kernel.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/platform_data/cros_ec_commands.h>
-> diff --git a/drivers/iio/light/cros_ec_light_prox.c b/drivers/iio/light/cros_ec_light_prox.c
-> index d85a391e50c5..7a838e2956f4 100644
-> --- a/drivers/iio/light/cros_ec_light_prox.c
-> +++ b/drivers/iio/light/cros_ec_light_prox.c
-> @@ -14,7 +14,6 @@
->  #include <linux/iio/triggered_buffer.h>
->  #include <linux/iio/trigger_consumer.h>
->  #include <linux/kernel.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
-> diff --git a/drivers/iio/pressure/cros_ec_baro.c b/drivers/iio/pressure/cros_ec_baro.c
-> index 2354302375de..d2a67dceb996 100644
-> --- a/drivers/iio/pressure/cros_ec_baro.c
-> +++ b/drivers/iio/pressure/cros_ec_baro.c
-> @@ -14,7 +14,6 @@
->  #include <linux/iio/triggered_buffer.h>
->  #include <linux/iio/trigger_consumer.h>
->  #include <linux/kernel.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
->  #include <linux/slab.h>
->  #include <linux/platform_data/cros_ec_commands.h>
-> diff --git a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-> index 4a3b3810fd89..72c70f123650 100644
-> --- a/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-> +++ b/drivers/media/platform/cros-ec-cec/cros-ec-cec.c
-> @@ -14,7 +14,6 @@
->  #include <linux/cec.h>
->  #include <linux/slab.h>
->  #include <linux/interrupt.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
->  #include <media/cec.h>
-> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-> index c4b977a5dd96..8da4e4cef26f 100644
-> --- a/drivers/mfd/cros_ec_dev.c
-> +++ b/drivers/mfd/cros_ec_dev.c
-> @@ -6,7 +6,6 @@
->   */
->  
->  #include <linux/mfd/core.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/of_platform.h>
-> diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
-> index 74ded441bb50..c65e70bc168d 100644
-> --- a/drivers/platform/chrome/cros_ec_chardev.c
-> +++ b/drivers/platform/chrome/cros_ec_chardev.c
-> @@ -13,7 +13,6 @@
->  #include <linux/init.h>
->  #include <linux/device.h>
->  #include <linux/fs.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/miscdevice.h>
->  #include <linux/module.h>
->  #include <linux/notifier.h>
-> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
-> index 6ae484989d1f..ecfada00e6c5 100644
-> --- a/drivers/platform/chrome/cros_ec_debugfs.c
-> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
-> @@ -7,7 +7,6 @@
->  #include <linux/debugfs.h>
->  #include <linux/delay.h>
->  #include <linux/fs.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
->  #include <linux/platform_data/cros_ec_commands.h>
-> diff --git a/drivers/platform/chrome/cros_ec_lightbar.c b/drivers/platform/chrome/cros_ec_lightbar.c
-> index c0f2eec35a48..b4c110c5fee0 100644
-> --- a/drivers/platform/chrome/cros_ec_lightbar.c
-> +++ b/drivers/platform/chrome/cros_ec_lightbar.c
-> @@ -8,7 +8,6 @@
->  #include <linux/device.h>
->  #include <linux/fs.h>
->  #include <linux/kobject.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
-> diff --git a/drivers/platform/chrome/cros_ec_sensorhub.c b/drivers/platform/chrome/cros_ec_sensorhub.c
-> index 04d8879689e9..79fefd3bb0fa 100644
-> --- a/drivers/platform/chrome/cros_ec_sensorhub.c
-> +++ b/drivers/platform/chrome/cros_ec_sensorhub.c
-> @@ -9,7 +9,6 @@
->  #include <linux/init.h>
->  #include <linux/device.h>
->  #include <linux/module.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
->  #include <linux/platform_data/cros_ec_sensorhub.h>
-> diff --git a/drivers/platform/chrome/cros_ec_sysfs.c b/drivers/platform/chrome/cros_ec_sysfs.c
-> index 74d36b8d4f46..07dac97ad57c 100644
-> --- a/drivers/platform/chrome/cros_ec_sysfs.c
-> +++ b/drivers/platform/chrome/cros_ec_sysfs.c
-> @@ -8,7 +8,6 @@
->  #include <linux/device.h>
->  #include <linux/fs.h>
->  #include <linux/kobject.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
-> diff --git a/drivers/platform/chrome/cros_ec_vbc.c b/drivers/platform/chrome/cros_ec_vbc.c
-> index f11a1283e5c8..8edae465105c 100644
-> --- a/drivers/platform/chrome/cros_ec_vbc.c
-> +++ b/drivers/platform/chrome/cros_ec_vbc.c
-> @@ -6,7 +6,6 @@
->  
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
-> diff --git a/drivers/platform/chrome/cros_usbpd_logger.c b/drivers/platform/chrome/cros_usbpd_logger.c
-> index 374cdd1e868a..7de3ea75ef46 100644
-> --- a/drivers/platform/chrome/cros_usbpd_logger.c
-> +++ b/drivers/platform/chrome/cros_usbpd_logger.c
-> @@ -6,7 +6,6 @@
->   */
->  
->  #include <linux/ktime.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/math64.h>
->  #include <linux/module.h>
->  #include <linux/platform_data/cros_ec_commands.h>
-> diff --git a/drivers/power/supply/cros_usbpd-charger.c b/drivers/power/supply/cros_usbpd-charger.c
-> index 6cc7c3910e09..0aca0da41cb7 100644
-> --- a/drivers/power/supply/cros_usbpd-charger.c
-> +++ b/drivers/power/supply/cros_usbpd-charger.c
-> @@ -5,7 +5,6 @@
->   * Copyright (c) 2014 - 2018 Google, Inc
->   */
->  
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
-> diff --git a/drivers/rtc/rtc-cros-ec.c b/drivers/rtc/rtc-cros-ec.c
-> index d043d30f05bc..f7343c289cab 100644
-> --- a/drivers/rtc/rtc-cros-ec.c
-> +++ b/drivers/rtc/rtc-cros-ec.c
-> @@ -5,7 +5,6 @@
->  // Author: Stephen Barber <smbarber@chromium.org>
->  
->  #include <linux/kernel.h>
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/module.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
-> diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-> deleted file mode 100644
-> index 61c2875c2a40..000000000000
-> --- a/include/linux/mfd/cros_ec.h
-> +++ /dev/null
-> @@ -1,35 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0-only */
-> -/*
-> - * ChromeOS EC multi-function device
-> - *
-> - * Copyright (C) 2012 Google, Inc
-> - */
-> -
-> -#ifndef __LINUX_MFD_CROS_EC_H
-> -#define __LINUX_MFD_CROS_EC_H
-> -
-> -#include <linux/device.h>
-> -
-> -/**
-> - * struct cros_ec_dev - ChromeOS EC device entry point.
-> - * @class_dev: Device structure used in sysfs.
-> - * @ec_dev: cros_ec_device structure to talk to the physical device.
-> - * @dev: Pointer to the platform device.
-> - * @debug_info: cros_ec_debugfs structure for debugging information.
-> - * @has_kb_wake_angle: True if at least 2 accelerometer are connected to the EC.
-> - * @cmd_offset: Offset to apply for each command.
-> - * @features: Features supported by the EC.
-> - */
-> -struct cros_ec_dev {
-> -	struct device class_dev;
-> -	struct cros_ec_device *ec_dev;
-> -	struct device *dev;
-> -	struct cros_ec_debugfs *debug_info;
-> -	bool has_kb_wake_angle;
-> -	u16 cmd_offset;
-> -	u32 features[2];
-> -};
-> -
-> -#define to_cros_ec_dev(dev)  container_of(dev, struct cros_ec_dev, class_dev)
-> -
-> -#endif /* __LINUX_MFD_CROS_EC_H */
-> diff --git a/include/linux/platform_data/cros_ec_proto.h b/include/linux/platform_data/cros_ec_proto.h
-> index 30098a551523..119b9951c055 100644
-> --- a/include/linux/platform_data/cros_ec_proto.h
-> +++ b/include/linux/platform_data/cros_ec_proto.h
-> @@ -12,7 +12,6 @@
->  #include <linux/mutex.h>
->  #include <linux/notifier.h>
->  
-> -#include <linux/mfd/cros_ec.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  
->  #define CROS_EC_DEV_NAME	"cros_ec"
-> @@ -185,6 +184,28 @@ struct cros_ec_platform {
->  	u16 cmd_offset;
->  };
->  
-> +/**
-> + * struct cros_ec_dev - ChromeOS EC device entry point.
-> + * @class_dev: Device structure used in sysfs.
-> + * @ec_dev: cros_ec_device structure to talk to the physical device.
-> + * @dev: Pointer to the platform device.
-> + * @debug_info: cros_ec_debugfs structure for debugging information.
-> + * @has_kb_wake_angle: True if at least 2 accelerometer are connected to the EC.
-> + * @cmd_offset: Offset to apply for each command.
-> + * @features: Features supported by the EC.
-> + */
-> +struct cros_ec_dev {
-> +	struct device class_dev;
-> +	struct cros_ec_device *ec_dev;
-> +	struct device *dev;
-> +	struct cros_ec_debugfs *debug_info;
-> +	bool has_kb_wake_angle;
-> +	u16 cmd_offset;
-> +	u32 features[2];
-> +};
+>  .../bindings/regulator/mps,mpq7920.yaml       | 202 ++++++++++++++++++
+>  1 file changed, 202 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+> new file mode 100644
+> index 000000000000..598f3ea070c9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+> @@ -0,0 +1,202 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/mps,mpq7920.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +#define to_cros_ec_dev(dev)  container_of(dev, struct cros_ec_dev, class_dev)
+> +title: Monolithic Power System MPQ7920 PMIC
 > +
->  int cros_ec_suspend(struct cros_ec_device *ec_dev);
->  
->  int cros_ec_resume(struct cros_ec_device *ec_dev);
-> 
+> +maintainers:
+> +  - Saravanan Sekar <sravanhome@gmail.com>
+> +
+> +properties:
+> +  $nodename:
+> +    pattern: "pmic@[0-9a-f]{1,2}"
+> +  compatible:
+> +    enum:
+> +      - mps,mpq7920
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  regulators:
+> +    type: object
+> +    description: |
+> +      list of regulators provided by this controller, must be named
+> +      after their hardware counterparts BUCK[1-4], one LDORTC, and LDO[2-5]
+> +
+> +      mps,switch-freq:
+
+This needs to be under 'properties'. Otherwise, everything below here
+is just part of 'description'.
+
+As I asked on v4, shouldn't this be a common property? Switching
+frequency is a common property for switching regulators, right?
+
+> +        description: |
+> +          switching frequency must be one of following corresponding value
+> +          1.1MHz, 1.65MHz, 2.2MHz, 2.75MHz
+> +        $ref: "/schemas/types.yaml#/definitions/uint8"
+> +        enum: [ 0, 1, 2, 3 ]
+> +        default: 2
+> +
+> +      buck1:
+
+This should be under 'patternProperties' as '^buck[1-4]$'. Then you
+aren't duplicating a bunch of property schemas.
+
+> +        type: object
+> +        $ref: "regulator.yaml#"
+
+Should be:
+
+allOf:
+  - $ref: regulator.yaml#
+
+> +        description: |
+> +          4.5A DC-DC step down converter
+> +
+> +        mps,buck-softstart:
+
+Needs to be under 'properties'
+
+> +           $ref: "/schemas/types.yaml#/definitions/uint8"
+> +           enum: [ 0, 1, 2, 3 ]
+> +           default: 1
+> +           description: |
+> +             defines the soft start time of this buck, must be one of the following
+> +             corresponding values 150us, 300us, 610us, 920us
+> +
+> +         mps,buck-phase-delay:
+> +           $ref: "/schemas/types.yaml#/definitions/uint8"
+> +           enum: [ 0, 1, 2, 3 ]
+> +           default: 0
+> +           description: |
+> +             defines the phase delay of this buck, must be one of the following
+> +             corresponding values 0deg, 90deg, 180deg, 270deg
+> +
+> +         mps,buck-ovp-disable:
+> +           type: boolean
+> +           description: |
+> +             disables over voltage protection of this buck
+
+Seems like configurable over voltage protection would be a common
+regulator property?
+
+> +
+> +      buck2:
+> +        type: object
+> +        $ref: "regulator.yaml#"
+> +        description: |
+> +          2.5A DC-DC step down converter
+> +
+> +        mps,buck-softstart:
+> +          description: |
+> +            defines the soft start time of this buck, must be one of the following
+> +            corresponding values 150us, 300us, 610us, 920us
+> +          $ref: "/schemas/types.yaml#/definitions/uint8"
+> +          enum: [ 0, 1, 2, 3 ]
+> +          default: 1
+> +
+> +        mps,buck-phase-delay:
+> +          description: |
+> +            defines the phase delay of this buck, must be one of the following
+> +            corresponding values 0deg, 90deg, 180deg, 270deg
+> +          $ref: "/schemas/types.yaml#/definitions/uint8"
+> +          enum: [ 0, 1, 2, 3 ]
+> +          default: 0
+> +
+> +        mps,buck-ovp-disable:
+> +          description: |
+> +            disables over voltage protection of this buck
+> +          type: boolean
+> +
+> +      buck3:
+> +        type: object
+> +        $ref: "regulator.yaml#"
+> +        description: |
+> +          4.5A DC-DC step down converter
+> +
+> +        mps,buck-softstart:
+> +           description: |
+> +             defines the soft start time of this buck, must be one of the following
+> +             corresponding values 150us, 300us, 610us, 920us
+> +           $ref: "/schemas/types.yaml#/definitions/uint8"
+> +           enum: [ 0, 1, 2, 3 ]
+> +           default: 1
+> +
+> +         mps,buck-phase-delay:
+> +           description: |
+> +             defines the phase delay of this buck, must be one of the following
+> +             corresponding values 0deg, 90deg, 180deg, 270deg
+> +           $ref: "/schemas/types.yaml#/definitions/uint8"
+> +           enum: [ 0, 1, 2, 3 ]
+> +           default: 1
+> +
+> +         mps,buck-ovp-disable:
+> +           description: |
+> +             disables over voltage protection of this buck
+> +           type: boolean
+> +
+> +      buck4:
+> +        type: object
+> +        $ref: "regulator.yaml#"
+> +        description: |
+> +          2.5A DC-DC step down converter
+> +
+> +        mps,buck-softstart:
+> +          description: |
+> +            defines the soft start time of this buck, must be one of the following
+> +            corresponding values 150us, 300us, 610us, 920us
+> +          $ref: "/schemas/types.yaml#/definitions/uint8"
+> +          enum: [ 0, 1, 2, 3 ]
+> +          default: 1
+> +
+> +        mps,buck-phase-delay:
+> +          description: |
+> +            defines the phase delay of this buck, must be one of the following
+> +            corresponding values 0deg, 90deg, 180deg, 270deg
+> +          $ref: "/schemas/types.yaml#/definitions/uint8"
+> +          enum: [ 0, 1, 2, 3 ]
+> +          default: 1
+> +
+> +        mps,buck-ovp-disable:
+> +          description: |
+> +            disables over voltage protection of this buck
+> +          type: boolean
+> +
+> +      ldortc:
+
+Again, make this a pattern.
+
+> +        $ref: "regulator.yaml#"
+> +        description: |
+> +          regulator with 0.65V-3.5875V for RTC, always enabled
+> +
+> +      ldo2:
+> +        $ref: "regulator.yaml#"
+> +        description: |
+> +          regulator with 0.65V-3.5875V
+> +
+> +      ldo3:
+> +        $ref: "regulator.yaml#"
+> +        description: |
+> +          regulator with 0.65V-3.5875V
+> +
+> +      ldo4:
+> +        $ref: "regulator.yaml#"
+> +        description: |
+> +          regulator with 0.65V-3.5875V
+> +
+> +      ldo5:
+> +        $ref: "regulator.yaml#"
+> +        description: |
+> +          regulator with 0.65V-3.5875V
+
+You need 'required' here listing compatible, reg, and regulators.
+
+And then 'additionalProperties: false'
+
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        pmic@69 {
+> +          compatible = "mps,mpq7920";
+> +          reg = <0x69>;
+> +
+> +          regulators {
+> +            mps,switch-freq = <1>;
+> +
+> +            buck1 {
+> +             regulator-name = "buck1";
+> +             regulator-min-microvolt = <400000>;
+> +             regulator-max-microvolt = <3587500>;
+> +             regulator-min-microamp  = <460000>;
+> +             regulator-max-microamp  = <7600000>;
+> +             regulator-boot-on;
+> +             mps,buck-ovp-disable;
+> +             mps,buck-phase-delay = <2>;
+> +             mps,buck-softstart = <1>;
+> +            };
+> +
+> +            ldo2 {
+> +             regulator-name = "ldo2";
+> +             regulator-min-microvolt = <650000>;
+> +             regulator-max-microvolt = <3587500>;
+> +            };
+> +         };
+> +       };
+> +     };
+> +...
+> --
+> 2.17.1
+>
