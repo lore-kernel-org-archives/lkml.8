@@ -2,174 +2,216 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A35AC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5FCC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:24:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 205A0214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7956214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:24:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CI7frn+v"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bjI2dpJ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbgAMQYu (ORCPT
+        id S1729173AbgAMQYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:24:50 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:29349 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728871AbgAMQYo (ORCPT
+        Mon, 13 Jan 2020 11:24:55 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:37166 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726567AbgAMQYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:24:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578932683;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ixW7JQtSvj+gusuiXmdphjnX8Xf32o1d+txjLiFEcpw=;
-        b=CI7frn+vjq0OB+qGdOFHDwlAqfHsvAJUlnSrlMvuYsn4nbtoXedvoGle+BfDR2f3AbEdJT
-        FaE2N7p/pyUFyzJ+T//usnS3vlsPJUJjcWhevXqwDUP23tF0ae5T2ecENxlzy5x5L4E46g
-        4/2vi8GJ/eR2cNx1KMNmZx+efT82LnQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-279-FbPGoYA2Mk6shQDnz384gA-1; Mon, 13 Jan 2020 11:24:40 -0500
-X-MC-Unique: FbPGoYA2Mk6shQDnz384gA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 13 Jan 2020 11:24:22 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC829801E78;
-        Mon, 13 Jan 2020 16:24:38 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 48E7119C5B;
-        Mon, 13 Jan 2020 16:24:38 +0000 (UTC)
-Subject: Re: [PATCH v2 4/6] locking/lockdep: Reuse freed chain_hlocks entries
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-References: <20191216151517.7060-1-longman@redhat.com>
- <20191216151517.7060-5-longman@redhat.com>
- <20200113155823.GY2844@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <e282e7f3-6010-ef13-bd07-524445049ef8@redhat.com>
-Date:   Mon, 13 Jan 2020 11:24:37 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <20200113155823.GY2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D3709C05DF;
+        Mon, 13 Jan 2020 16:24:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1578932661; bh=+Et9MFkbtSRJVkOU4n9NKLthz4fCYsmxr3gPjk2wX0I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=bjI2dpJ0TEEDXyA+bjNLyPs2cWdmWwJwoHb8ZAp8rog5Ig0yeuJNLu2mvlaUdSC0s
+         dUfVAoPF2v9FZHDsj8gjfJZwOIMibUAeIVEkSfvKof4r1MtfiX5piTNCFgp7Bc15EF
+         nkO+h7M4S2hwzbzs6qg56Mm6grHJlK7b8rc0MANHlX0GtdPhfMRjWX99hPhLRw5FWF
+         4PwtGptxV3aPYzAiRFCzSn6a+/+kyiqD8WmHiPYV53Rrj/oGBlGNJP6EY3WfGAF6/d
+         F4xM007Pz9qu5PCUJ5L33Yemj/tEdJKbNkLJp7MMgcpcA67TZW5nMReUNP51Yqeb77
+         0dbK7c737TUKA==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 6F76CA0066;
+        Mon, 13 Jan 2020 16:24:19 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v3 3/8] net: stmmac: xgmac: Add TBS support
+Date:   Mon, 13 Jan 2020 17:24:11 +0100
+Message-Id: <8036baa14425e1ff1f2d3a7dd60acbe010144e59.1578932287.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1578932287.git.Jose.Abreu@synopsys.com>
+References: <cover.1578932287.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1578932287.git.Jose.Abreu@synopsys.com>
+References: <cover.1578932287.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/13/20 10:58 AM, Peter Zijlstra wrote:
-> On Mon, Dec 16, 2019 at 10:15:15AM -0500, Waiman Long wrote:
->> +/*
->> + * Return offset of a chain block of the right size or -1 if not found.
->> + */
->> +static inline int alloc_chain_hlocks_from_buckets(int size)
->> +{
->> +	int prev, curr, next;
->> +
->> +	if (!nr_free_chain_hlocks)
->> +		return -1;
->> +
->> +	if (size <= MAX_CHAIN_BUCKETS) {
->> +		curr = chain_block_buckets[size - 1];
->> +		if (curr < 0)
->> +			return -1;
->> +
->> +		chain_block_buckets[size - 1] = next_chain_block(curr);
->> +		nr_free_chain_hlocks -= size;
->> +		return curr;
->> +	}
->> +
->> +	/*
->> +	 * Look for a free chain block of the given size
->> +	 *
->> +	 * It is rare to have a lock chain with depth > MAX_CHAIN_BUCKETS.
->> +	 * It is also more expensive as we may iterate the whole list
->> +	 * without finding one.
->> +	 */
->> +	prev = -1;
->> +	curr = chain_block_buckets[0];
->> +	while (curr >= 0) {
->> +		next = next_chain_block(curr);
->> +		if (chain_block_size(curr) == size) {
->> +			set_chain_block(prev, 0, next);
->> +			nr_free_chain_hlocks -= size;
->> +			nr_large_chain_blocks--;
->> +			return curr;
->> +		}
->> +		prev = curr;
->> +		curr = next;
->> +	}
->> +	return -1;
->> +}
->> +/*
->> + * The graph lock must be held before calling this function.
->> + *
->> + * Return: an offset to chain_hlocks if successful, or
->> + *	   -1 with graph lock released
->> + */
->> +static int alloc_chain_hlocks(int size)
->> +{
->> +	int curr;
->> +
->> +	if (size < 2)
->> +		size = 2;
->> +
->> +	curr = alloc_chain_hlocks_from_buckets(size);
->> +	if (curr >= 0)
->> +		return curr;
->> +
->> +	BUILD_BUG_ON((1UL << 24) <= ARRAY_SIZE(chain_hlocks));
->> +	BUILD_BUG_ON((1UL << 6)  <= ARRAY_SIZE(current->held_locks));
->> +	BUILD_BUG_ON((1UL << 8*sizeof(chain_hlocks[0])) <=
->> +		     ARRAY_SIZE(lock_classes));
->> +
->> +	/*
->> +	 * Allocate directly from chain_hlocks.
->> +	 */
->> +	if (likely(nr_chain_hlocks + size <= MAX_LOCKDEP_CHAIN_HLOCKS)) {
->> +		curr = nr_chain_hlocks;
->> +		nr_chain_hlocks += size;
->> +		return curr;
->> +	}
->> +	if (!debug_locks_off_graph_unlock())
->> +		return -1;
->> +
->> +	print_lockdep_off("BUG: MAX_LOCKDEP_CHAIN_HLOCKS too low!");
->> +	dump_stack();
->> +	return -1;
->> +}
-> *groan*....
->
-> That's _two_ allocators :/ And it can trivially fail, even if there's
-> plenty space available.
->
-> Consider nr_chain_hlocks is exhaused, and @size is empty, but size+1
-> still has blocks.
->
-> I'm guessing you didn't make it a single allocator because you didn't
-> want to implement block splitting? why?
->
-In my testing, most of the lock chains tend to be rather short (within
-the 2-8 range). I don't see a lot of free blocks left in the system
-after the test. So I don't see a need to implement block splitting for now.
+Adds all the necessary HW hooks to support TBS feature in XGMAC cores.
 
-If you think this is a feature that needs to be implemented for the
-patch to be complete, I can certainly add patch to do that. My initial
-thought is just to split long blocks in the unsized list for allocation
-request that is no longer than 8 to make thing easier.
+Changes from v1:
+- Remove unneeded LT shift as the IP already does this.
 
-Cheers,
-Longman
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     | 13 ++++++++++++
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   |  9 ++++++++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 24 ++++++++++++++++++++++
+ 3 files changed, 46 insertions(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+index 64d13e50e403..6c3b8a950f58 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+@@ -139,6 +139,7 @@
+ #define XGMAC_HWFEAT_TXQCNT		GENMASK(9, 6)
+ #define XGMAC_HWFEAT_RXQCNT		GENMASK(3, 0)
+ #define XGMAC_HW_FEATURE3		0x00000128
++#define XGMAC_HWFEAT_TBSSEL		BIT(27)
+ #define XGMAC_HWFEAT_FPESEL		BIT(26)
+ #define XGMAC_HWFEAT_ESTWID		GENMASK(24, 23)
+ #define XGMAC_HWFEAT_ESTDEP		GENMASK(22, 20)
+@@ -346,6 +347,13 @@
+ #define XGMAC_TDPS			GENMASK(29, 0)
+ #define XGMAC_RX_EDMA_CTRL		0x00003044
+ #define XGMAC_RDPS			GENMASK(29, 0)
++#define XGMAC_DMA_TBS_CTRL0		0x00003054
++#define XGMAC_DMA_TBS_CTRL1		0x00003058
++#define XGMAC_DMA_TBS_CTRL2		0x0000305c
++#define XGMAC_DMA_TBS_CTRL3		0x00003060
++#define XGMAC_FTOS			GENMASK(31, 8)
++#define XGMAC_FTOV			BIT(0)
++#define XGMAC_DEF_FTOS			(XGMAC_FTOS | XGMAC_FTOV)
+ #define XGMAC_DMA_SAFETY_INT_STATUS	0x00003064
+ #define XGMAC_MCSIS			BIT(31)
+ #define XGMAC_MSUIS			BIT(29)
+@@ -360,6 +368,7 @@
+ #define XGMAC_SPH			BIT(24)
+ #define XGMAC_PBLx8			BIT(16)
+ #define XGMAC_DMA_CH_TX_CONTROL(x)	(0x00003104 + (0x80 * (x)))
++#define XGMAC_EDSE			BIT(28)
+ #define XGMAC_TxPBL			GENMASK(21, 16)
+ #define XGMAC_TxPBL_SHIFT		16
+ #define XGMAC_TSE			BIT(12)
+@@ -404,6 +413,9 @@
+ #define XGMAC_REGSIZE			((0x0000317c + (0x80 * 15)) / 4)
+ 
+ /* Descriptors */
++#define XGMAC_TDES0_LTV			BIT(31)
++#define XGMAC_TDES0_LT			GENMASK(7, 0)
++#define XGMAC_TDES1_LT			GENMASK(31, 8)
+ #define XGMAC_TDES2_IVT			GENMASK(31, 16)
+ #define XGMAC_TDES2_IVT_SHIFT		16
+ #define XGMAC_TDES2_IOC			BIT(31)
+@@ -422,6 +434,7 @@
+ #define XGMAC_TDES3_TCMSSV		BIT(26)
+ #define XGMAC_TDES3_SAIC		GENMASK(25, 23)
+ #define XGMAC_TDES3_SAIC_SHIFT		23
++#define XGMAC_TDES3_TBSV		BIT(24)
+ #define XGMAC_TDES3_THL			GENMASK(22, 19)
+ #define XGMAC_TDES3_THL_SHIFT		19
+ #define XGMAC_TDES3_IVTIR		GENMASK(19, 18)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+index bd5838ce1e8a..c3d654cfa9ef 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+@@ -339,6 +339,14 @@ static void dwxgmac2_set_vlan(struct dma_desc *p, u32 type)
+ 	p->des2 |= cpu_to_le32(type & XGMAC_TDES2_VTIR);
+ }
+ 
++static void dwxgmac2_set_tbs(struct dma_edesc *p, u32 sec, u32 nsec)
++{
++	p->des4 = cpu_to_le32((sec & XGMAC_TDES0_LT) | XGMAC_TDES0_LTV);
++	p->des5 = cpu_to_le32(nsec & XGMAC_TDES1_LT);
++	p->des6 = 0;
++	p->des7 = 0;
++}
++
+ const struct stmmac_desc_ops dwxgmac210_desc_ops = {
+ 	.tx_status = dwxgmac2_get_tx_status,
+ 	.rx_status = dwxgmac2_get_rx_status,
+@@ -368,4 +376,5 @@ const struct stmmac_desc_ops dwxgmac210_desc_ops = {
+ 	.set_sarc = dwxgmac2_set_sarc,
+ 	.set_vlan_tag = dwxgmac2_set_vlan_tag,
+ 	.set_vlan = dwxgmac2_set_vlan,
++	.set_tbs = dwxgmac2_set_tbs,
+ };
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+index bbbfa793a367..77308c5c5d29 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+@@ -429,6 +429,7 @@ static void dwxgmac2_get_hw_feature(void __iomem *ioaddr,
+ 
+ 	/* MAC HW feature 3 */
+ 	hw_cap = readl(ioaddr + XGMAC_HW_FEATURE3);
++	dma_cap->tbssel = (hw_cap & XGMAC_HWFEAT_TBSSEL) >> 27;
+ 	dma_cap->fpesel = (hw_cap & XGMAC_HWFEAT_FPESEL) >> 26;
+ 	dma_cap->estwid = (hw_cap & XGMAC_HWFEAT_ESTWID) >> 23;
+ 	dma_cap->estdep = (hw_cap & XGMAC_HWFEAT_ESTDEP) >> 20;
+@@ -523,6 +524,28 @@ static void dwxgmac2_enable_sph(void __iomem *ioaddr, bool en, u32 chan)
+ 	writel(value, ioaddr + XGMAC_DMA_CH_CONTROL(chan));
+ }
+ 
++static int dwxgmac2_enable_tbs(void __iomem *ioaddr, bool en, u32 chan)
++{
++	u32 value = readl(ioaddr + XGMAC_DMA_CH_TX_CONTROL(chan));
++
++	if (en)
++		value |= XGMAC_EDSE;
++	else
++		value &= ~XGMAC_EDSE;
++
++	writel(value, ioaddr + XGMAC_DMA_CH_TX_CONTROL(chan));
++
++	value = readl(ioaddr + XGMAC_DMA_CH_TX_CONTROL(chan)) & XGMAC_EDSE;
++	if (en && !value)
++		return -EIO;
++
++	writel(XGMAC_DEF_FTOS, ioaddr + XGMAC_DMA_TBS_CTRL0);
++	writel(XGMAC_DEF_FTOS, ioaddr + XGMAC_DMA_TBS_CTRL1);
++	writel(XGMAC_DEF_FTOS, ioaddr + XGMAC_DMA_TBS_CTRL2);
++	writel(XGMAC_DEF_FTOS, ioaddr + XGMAC_DMA_TBS_CTRL3);
++	return 0;
++}
++
+ const struct stmmac_dma_ops dwxgmac210_dma_ops = {
+ 	.reset = dwxgmac2_dma_reset,
+ 	.init = dwxgmac2_dma_init,
+@@ -550,4 +573,5 @@ const struct stmmac_dma_ops dwxgmac210_dma_ops = {
+ 	.qmode = dwxgmac2_qmode,
+ 	.set_bfsize = dwxgmac2_set_bfsize,
+ 	.enable_sph = dwxgmac2_enable_sph,
++	.enable_tbs = dwxgmac2_enable_tbs,
+ };
+-- 
+2.7.4
 
