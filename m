@@ -2,125 +2,152 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C77C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 085ECC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C002075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D36172075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:23:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g3m860U9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F3cpbs7o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbgAMSXJ (ORCPT
+        id S1728855AbgAMSXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:23:09 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:34040 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728633AbgAMSXI (ORCPT
+        Mon, 13 Jan 2020 13:23:53 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:44127 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728633AbgAMSXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:23:08 -0500
-Received: by mail-qk1-f196.google.com with SMTP id j9so9458275qkk.1;
-        Mon, 13 Jan 2020 10:23:08 -0800 (PST)
+        Mon, 13 Jan 2020 13:23:53 -0500
+Received: by mail-il1-f193.google.com with SMTP id z12so8968388iln.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 10:23:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=YmmSvyn5Ka4mUit6kvopVG0e++A9vopcwQJc+Ac8cPw=;
-        b=g3m860U9KBcklp4Vfp3dHNeOazKl1B5xu7fRIlJZWuhUQz0Cx4K17MuU1Fz+04I6GK
-         f2gKden77W05LeVTFtP/oKlhs+VjKw+BPwbC0lMAKVp5l9VPICVLujTcx7KqtAWxIm5r
-         jpJSMfnCwUdE7zfsmhrLwQI1sF27RKuKhMgVnERPMI9ASwcqNJ8FmfGeGPQk/Ioh4Vas
-         Ju+b9MohiFDL6WYYs3tECijiFTJbJc9MS/F3mMveT9fzC5k966lxdZ/V5/7/6wG3vr8w
-         4SKGcNOfRDCDnAlL75BhVkUi6eH9pX82JMfZkget/d5O/qFBYPs1G9bs2lwnNgjnaPwl
-         xClA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=GdPsIU0hG7suGBkyMM6A9F/OIU18NvlvaZKX62ICZx8=;
+        b=F3cpbs7os6RE8zrBTuxlPO7wpMoMKwrvMNGtUUy7U6PmvdA/3IuWrXhdlDTRvA2nfq
+         VkWS495dAWj/I8us3RuMz8J3YM4xEJXTLHgxpKlzGdWjYTafRlf1MJrve5FE6GLKsYEd
+         2w83Ziko98Ggm9AWNE5NwXzIynltxqB5/FBPA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=YmmSvyn5Ka4mUit6kvopVG0e++A9vopcwQJc+Ac8cPw=;
-        b=C+/1Zyi8bVjzMa+l6KOp0vbEhqf550729cZaweSm684QHePXmkY5LRccXTwEf6MuGC
-         p/k6hMXtY8yAW8ugZquSFdLn0PQyrockXJ9CNcTap+jTEyNE8b+RqMW4RyBtFViDa200
-         txBiyIEF7nKoxZ8SiIR1Y/cfvXB07ddclXaNsWaun+/FUL7lpoa2KSL/L3GDadYZ86T+
-         2/BAi5NnZh0XsV/Zgtb3MUVo5dsXGfrTMqI/Ohq87EHQ+kg34mGYpD27FsIJLXGJZgIY
-         wfNYPp48tcv5phimvjP7q5iwfXTSNmjke00pXMEgBe5aA13xViCGkc3isY/ybBVe+gAl
-         fXkw==
-X-Gm-Message-State: APjAAAVVwOccdzpBPt8vT6o3xQylmMLwKGcFBrE5krS6osI8Qbh5l7oY
-        6ucB6o04xq3qskiO9k1y+Ug=
-X-Google-Smtp-Source: APXvYqzpHpCANvGcMQtO+BCaZNdbqhnWjfbggggFs7EUVOZ3FcLytDzEYS3jnGLSYEpcYWgZynigQg==
-X-Received: by 2002:a37:e210:: with SMTP id g16mr17483419qki.413.1578939787671;
-        Mon, 13 Jan 2020 10:23:07 -0800 (PST)
-Received: from ?IPv6:2804:14d:72b1:8920:a2ce:f815:f14d:bfac? ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
-        by smtp.gmail.com with ESMTPSA id w25sm6098136qts.91.2020.01.13.10.23.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 10:23:07 -0800 (PST)
-Subject: Re: [PATCH v2] media: dvb_dummy_tuner: implement driver skeleton
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     mchehab@kernel.org, sean@mess.org, tglx@linutronix.de,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-References: <20200109233757.734008-1-dwlsalmeida@gmail.com>
- <20200110073024.GA156006@kroah.com>
-From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
-Message-ID: <d6d119cf-7447-31ce-37db-25503cf2f9bc@gmail.com>
-Date:   Mon, 13 Jan 2020 15:23:02 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=GdPsIU0hG7suGBkyMM6A9F/OIU18NvlvaZKX62ICZx8=;
+        b=ZtPwDaburFq8p3QhsC0AzZzE1ltPtvUWWkjiCgJ+vQSyMcImXmH4snHqZmeSFfPFA9
+         khrzu+euqhZpB51qdDzc7fYgIHZEnXHmpL0kUI5D/q/hmke3iZ/a9oIPdNx0KZ0N/4R+
+         p/18hyVCjfKN9EYdxoeWBu2yQinlQxaFzPAceykrXmA2NZrqR9qqpa4kJjSOT7ZN5gNq
+         BYJAsTGeesq5TwZ9R6Wy+7jfsBZvB6ORSmlUljjdQDwtOVglmvBZA31ubrbJ4Ep1nS1H
+         sM5dhzyQEHKMCOSYo7sOsxPpofkmrqDRZTnaMiDTjK6viv2OrIyO4V7iVRn9S7yQ98N+
+         jaJw==
+X-Gm-Message-State: APjAAAXPm0/APEveWwAKN1rJatLdhXib7LLFxrLXpBvmAkovyl/7J6fb
+        G/rjB6sDPK1FHAkygwYhGt11BoovuHUo0EGMxdwUlA==
+X-Google-Smtp-Source: APXvYqy5QyVk/5iwd6Haxkd59B9tye4fF6hipWkapfAO86tgVjEQHDFjCK8QluGjqVB6hzY+3DU3VGHD2/A24xBIO/c=
+X-Received: by 2002:a92:d708:: with SMTP id m8mr15406018iln.244.1578939832899;
+ Mon, 13 Jan 2020 10:23:52 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200110073024.GA156006@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200113153605.52350-1-brian@brkho.com> <20200113153605.52350-2-brian@brkho.com>
+ <20200113175522.GD26711@jcrouse1-lnx.qualcomm.com>
+In-Reply-To: <20200113175522.GD26711@jcrouse1-lnx.qualcomm.com>
+From:   Rob Clark <robdclark@chromium.org>
+Date:   Mon, 13 Jan 2020 10:23:42 -0800
+Message-ID: <CAJs_Fx6e1LjjdHDxKVKzw+PZx5P6xiVjDCdb0iP0mnkUd4gitA@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH 1/2] drm/msm: Add a GPU-wide wait queue
+To:     Brian Ho <brian@brkho.com>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        robdclark@chromium.org, David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Kristian Kristensen <hoegsberg@chromium.org>,
+        Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
-
-I am working on v3. Would you mind clarifying this?
-
-
->> + *
->> + * The virtual DVB test driver serves as a reference DVB driver and helps
->> + * validate the existing APIs in the media subsystem. It can also aid developers
->> + * working on userspace applications.
->> + *
->> + * This dummy tuner should support common TV standards such as DVB-T/T2/S/S2,
->> + * ISDB-T and ATSC when completed.
->> + *
->> + * Copyright (c) 2020 Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-> Normally this is the first comment line above in this block.
+On Mon, Jan 13, 2020 at 9:55 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
 >
+> On Mon, Jan 13, 2020 at 10:36:04AM -0500, Brian Ho wrote:
+> > This wait queue is signaled on all IRQs for a given GPU and will be
+> > used as part of the new MSM_WAIT_IOVA ioctl so userspace can sleep
+> > until the value at a given iova reaches a certain condition.
+> >
+> > Signed-off-by: Brian Ho <brian@brkho.com>
+> > ---
+> >  drivers/gpu/drm/msm/msm_gpu.c | 4 ++++
+> >  drivers/gpu/drm/msm/msm_gpu.h | 3 +++
+> >  2 files changed, 7 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+> > index a052364a5d74..d7310c1336e5 100644
+> > --- a/drivers/gpu/drm/msm/msm_gpu.c
+> > +++ b/drivers/gpu/drm/msm/msm_gpu.c
+> > @@ -779,6 +779,8 @@ void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+> >  static irqreturn_t irq_handler(int irq, void *data)
+> >  {
+> >       struct msm_gpu *gpu = data;
+> > +     wake_up_all(&gpu->event);
+> > +
+>
+> I suppose it is intentional to have this happen on *all* interrupts because you
+> might be using the CP interrupts for fun and profit and you don't want to plumb
+> in callbacks?  I suppose it is okay to do this for all interrupts (including
+> errors) but if we're spending a lot of time here we might want to only trigger
+> on certain IRQs.
 
-Just so we're clear, do you mean this? e.g.:
+Was just talking to Kristian about GPU hangs.. and I suspect we might
+want the ioctl to return an error if there is a gpu reset (so that
+userspace can use the robustness uapi to test if the gpu reset was
+something it cares about, etc)
 
-+ * Copyright (c) 2020 Daniel W. S. Almeida <dwlsalmeida@gmail.com>
-+ *
-+ * The virtual DVB test driver serves as a reference DVB driver and helps
-+ * validate the existing APIs in the media subsystem. It can also aid developers
-+ * working on userspace applications.
-+ *
-+ * This dummy tuner should support common TV standards such as DVB-T/T2/S/S2,
-+ * ISDB-T and ATSC when completed.
-+ *
+Which is as good as a reason as I can think of the wake_up_all() on all irqs..
 
+BR,
+-R
 
-> Not the same license as your .c file?  Odd :(
-
-Oops! :(
-
-
-> If you keep this file, same comments as above for the comment block, but
-> really, you don't need this .h file at all, just drop it.
-
-OK.
-
-
-- Daniel
-
-
+>
+> >       return gpu->funcs->irq(gpu);
+> >  }
+> >
+> > @@ -871,6 +873,8 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+> >
+> >       spin_lock_init(&gpu->perf_lock);
+> >
+> > +     init_waitqueue_head(&gpu->event);
+> > +
+> >
+> >       /* Map registers: */
+> >       gpu->mmio = msm_ioremap(pdev, config->ioname, name);
+> > diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+> > index ab8f0f9c9dc8..60562f065dbc 100644
+> > --- a/drivers/gpu/drm/msm/msm_gpu.h
+> > +++ b/drivers/gpu/drm/msm/msm_gpu.h
+> > @@ -104,6 +104,9 @@ struct msm_gpu {
+> >
+> >       struct msm_gem_address_space *aspace;
+> >
+> > +     /* GPU-wide wait queue that is signaled on all IRQs */
+> > +     wait_queue_head_t event;
+> > +
+> >       /* Power Control: */
+> >       struct regulator *gpu_reg, *gpu_cx;
+> >       struct clk_bulk_data *grp_clks;
+> > --
+> > 2.25.0.rc1.283.g88dfdc4193-goog
+> >
+> > _______________________________________________
+> > Freedreno mailing list
+> > Freedreno@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/freedreno
+>
+> --
+> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
