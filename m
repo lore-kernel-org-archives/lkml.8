@@ -2,187 +2,159 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964DDC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E77CAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 634C42080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:17:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="GBO0cpTK"
+	by mail.kernel.org (Postfix) with ESMTP id C79FB2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:19:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgAMKRs (ORCPT
+        id S1726976AbgAMKTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:17:48 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:18174 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgAMKRs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:17:48 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: vIWTnFFM6h117cfhgT7Tw50qzQp/nYt0yCJvuDYH2ybEW25DnOcUfpls8hzFawAUouwtgsUv/G
- LZ4WVZ8PeKHaZI2NR0BN0RnA11U28tAeM8aNRyW7QRpf8F45QLqqJ3p4ulgdmxD6tUdjxqGXFB
- u0Jr5guBxLhbB0ub9/LHz6p/Q/OL9ht5V6ruBXJzA4mtOsEJjN+lNBcFQ9W1eExPvkJ295MEk/
- dW9kWPspyi1E2dCFFSv2Zqh0egurpuv/XDTO/C8YE3ayxAnrNoqDdSscw4za2WoaCFGZZgYnDw
- efw=
-X-IronPort-AV: E=Sophos;i="5.69,428,1571727600"; 
-   d="scan'208";a="63049100"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Jan 2020 03:17:46 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 13 Jan 2020 03:17:46 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 13 Jan 2020 03:17:46 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dzb3I3GTOzuM7IaP0k8cU3bR9ESE8r2cMbpTs7MzsNDVCJwr17H/jJidTo9gsmXf+EYbmtoJxKVCRCWzLjn/qykrG7OJaY9Hhna3732LnV4gyfel3VqCKo6s8phFuqwkItOUbrSVrYAFGqO9dOeOovGy3WL2UsWo89RGOGxN9UL4/6k5Q7+fNM+3eUXYB95JnSUG5jDaajg41lladchwvApWqNf+UQ0dbODqx7VTwUrqSukC9dpUB3tgtpqrK0di4vhVeTU/NGmadJ8hF+zzTBoFQdZN1FZXce2I7A+CexvWeGY3VOXpEe5Eowbs+hHsp+4T43EBTLdT4BPMMqCS3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UhI20TNRgwf4GK0Htr2IjMmlwgW22gFtlJ0hp/8ESgI=;
- b=H3rSL75LM/ozfpHMyWBfiYP4Sb62Cuo6mG4jKQ7oOqUAG2a807rtD/5x/085yf+zG3BY12sJgCQL/1Q0nSCE42+udpNUX4x77f8UQxh0V6syqjn28o8x9orcBWikoDvJUK4TW57ORybd6FZ2XCkjMkHBlODPHRfdlhq6DN9d3n3ikjQwHyb8FRQJBFKsmD4/dHgrJXestbxk8/kh9dCZTBGVNEkuNVPxCJxvP20+Cj1mDpNC/YCliSiJElXiryiEMkbp6NqKkzk97SmevfzqnWIcGO9bJy76yYeTNGvWwOwomxkfIywIZ1LSBHjOwYQOz/X6do2prvDJSNH7PGYRBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UhI20TNRgwf4GK0Htr2IjMmlwgW22gFtlJ0hp/8ESgI=;
- b=GBO0cpTKTYDbWrZ4ByLm4xDFET2zL4cYZvXAIXYE2ZAWD1XclfoThhOv4C1FVoggDs60h4bNTOz2RFQ8KSHE//0RQ1CEe/FYOVJeFWWfkA2ZwI6ne50pVIt6QvbVLP5jc86pRwp1In0lmZ9TXnoRtb5OAMrmhIJUE5rnpN0j1+w=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB4303.namprd11.prod.outlook.com (52.135.37.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Mon, 13 Jan 2020 10:17:44 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::71cc:a5d4:8e1a:198b]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::71cc:a5d4:8e1a:198b%7]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
- 10:17:43 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <vigneshr@ti.com>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mtd: spi-nor: Fix selection of 4-byte addressing opcodes
- on Spansion
-Thread-Topic: [PATCH] mtd: spi-nor: Fix selection of 4-byte addressing opcodes
- on Spansion
-Thread-Index: AQHVyfqx7b4WTBnS4UypfxmdSedmUg==
-Date:   Mon, 13 Jan 2020 10:17:43 +0000
-Message-ID: <4323032.MiQHyusyOz@localhost.localdomain>
-References: <20200108051343.1939-1-vigneshr@ti.com>
-In-Reply-To: <20200108051343.1939-1-vigneshr@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7eb70763-b3cb-4967-f68c-08d79811d445
-x-ms-traffictypediagnostic: MN2PR11MB4303:
-x-microsoft-antispam-prvs: <MN2PR11MB4303A3EF76F0F8863A824CFDF0350@MN2PR11MB4303.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1303;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39850400004)(396003)(366004)(136003)(346002)(376002)(199004)(189003)(66476007)(478600001)(86362001)(53546011)(6506007)(9686003)(76116006)(6916009)(91956017)(6512007)(4326008)(66946007)(26005)(64756008)(66446008)(66556008)(186003)(6486002)(5660300002)(8676002)(81166006)(81156014)(71200400001)(8936002)(54906003)(316002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB4303;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fRcFlir0gucGwiaD6L7gQwt3eLjGRPAFmCoBKNmF5uNATFvCfai0H4CQAWKf5WNg6jQkhLlwenqKqrEFcbojFeYQEs4fo0JtT3VQhaA8fS29sJgXNOBsCVk2ld68TOMtuTIKFt45dnfcNVxr+JuLkjXRdJuAG50DRMuWAtgPWzpeGNoESr58tTkX3X3C88B9AKdejLqncwhMb6PqDsaYq/EdNntxdipqlq3QcwIJ4cvnGevRLguEkimNzgucZ/IMqOXUtjPa8jcxbr0+SoWBmqUDJjzVg/stJs0JR9aTqPi6o88VU41cqwkmXxSoXbisdF8Ynq1WhairTsAjT2NEEaZbvESQ5xns0jhKy82mx+MxTDy4hTSZVYdJxYSrjq0gRBacBhl9oiSm35w/FYUy5tyY/7vXzVQPQNzV8FMBPd2ojOzyj8DOGJCSuK1ZGBrf
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <5D3AA406E295F449901DD33A7A5C4971@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 Jan 2020 05:19:16 -0500
+Received: from foss.arm.com ([217.140.110.172]:37098 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726001AbgAMKTP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 05:19:15 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0D1C13D5;
+        Mon, 13 Jan 2020 02:19:14 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0189D3F534;
+        Mon, 13 Jan 2020 02:19:14 -0800 (PST)
+Date:   Mon, 13 Jan 2020 10:19:12 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv9 02/12] PCI: mobiveil: Move the host initialization into
+ a routine
+Message-ID: <20200113101912.GH42593@e119886-lin.cambridge.arm.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <20191120034451.30102-3-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7eb70763-b3cb-4967-f68c-08d79811d445
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 10:17:43.6866
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Fj9NuUbEqsIAjkAbI5QvLC8iJnedM0wOXHGyw1hd4X7ZqasdGlYf6/z5OpRxer8S7oAWvOoQVzd7GaEsP6nwc5k9EatovfXgQnov0XONZeQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4303
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120034451.30102-3-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Vignesh,
+On Wed, Nov 20, 2019 at 03:45:30AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> Move the host initialization related operations into a new
+> routine to make it can be reused by other incoming platform's
 
-On Wednesday, January 8, 2020 7:13:43 AM EET Vignesh Raghavendra wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know th=
-e
-> content is safe
->=20
-> mtd->size is still unassigned when running spansion_post_sfdp_fixups()
-> hook, therefore use nor->params.size to determine the size of flash devic=
-e.
->=20
-> This makes sure that 4-byte addressing opcodes are used on Spansion
-> flashes that are larger than 16MiB and don't have SFDP 4BAIT table
-> populated.
->=20
-> Fixes: 92094ebc385e ("mtd: spi-nor: Add spansion_post_sfdp_fixups()")
-> Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+s/to make/such that/
 
-This fixes a recent bug, so if you want to take it through mtd/fixes you ca=
-n=20
-add:
+'function' is probably a better word than 'routine'.
 
-Reviewed-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-If you want this through spi-nor/next, please let me know and I'll queue it=
-.
-
-Cheers,
-ta
-
+> PCIe host driver, in which the Mobiveil GPEX is integrated.
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > ---
->  drivers/mtd/spi-nor/spi-nor.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->=20
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.=
-c
-> index 1082b6bb1393..cd47f07deff3 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -4783,9 +4783,7 @@ static void spi_nor_info_init_params(struct spi_nor
-> *nor)
->=20
->  static void spansion_post_sfdp_fixups(struct spi_nor *nor)
+> V9:
+>  - New patch splited from the #1 of V8 patches to make it easy to review.
+> 
+>  drivers/pci/controller/pcie-mobiveil.c | 38 +++++++++++++++-----------
+>  1 file changed, 22 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
+> index 5fd26e376af2..97f682ca7c7a 100644
+> --- a/drivers/pci/controller/pcie-mobiveil.c
+> +++ b/drivers/pci/controller/pcie-mobiveil.c
+> @@ -873,27 +873,15 @@ static int mobiveil_pcie_init_irq_domain(struct mobiveil_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> -static int mobiveil_pcie_probe(struct platform_device *pdev)
+> +int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
+
+This is no longer static - but do you need to add a header file somewhere?
+
+
 >  {
-> -       struct mtd_info *mtd =3D &nor->mtd;
+> -	struct mobiveil_pcie *pcie;
+> +	struct root_port *rp = &pcie->rp;
+> +	struct pci_host_bridge *bridge = rp->bridge;
+> +	struct device *dev = &pcie->pdev->dev;
+>  	struct pci_bus *bus;
+>  	struct pci_bus *child;
+> -	struct pci_host_bridge *bridge;
+> -	struct device *dev = &pdev->dev;
+> -	struct root_port *rp;
+>  	int ret;
+>  
+> -	/* allocate the PCIe port */
+> -	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
+> -	if (!bridge)
+> -		return -ENOMEM;
 > -
-> -       if (mtd->size <=3D SZ_16M)
-> +       if (nor->params.size <=3D SZ_16M)
->                 return;
->=20
->         nor->flags |=3D SNOR_F_4B_OPCODES;
-> --
-> 2.24.1
+> -	pcie = pci_host_bridge_priv(bridge);
+> -	rp = &pcie->rp;
+> -	rp->bridge = bridge;
+> -
+> -	pcie->pdev = pdev;
+> -
+>  	ret = mobiveil_pcie_parse_dt(pcie);
+>  	if (ret) {
+>  		dev_err(dev, "Parsing DT failed, ret: %x\n", ret);
+> @@ -956,6 +944,24 @@ static int mobiveil_pcie_probe(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int mobiveil_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct mobiveil_pcie *pcie;
+> +	struct pci_host_bridge *bridge;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*pcie));
 
+You've lost the comment that was above this.
 
+Thanks,
 
+Andrew Murray
+
+> +	if (!bridge)
+> +		return -ENOMEM;
+> +
+> +	pcie = pci_host_bridge_priv(bridge);
+> +	pcie->rp.bridge = bridge;
+> +
+> +	pcie->pdev = pdev;
+> +
+> +	return mobiveil_pcie_host_probe(pcie);
+> +}
+> +
+>  static const struct of_device_id mobiveil_pcie_of_match[] = {
+>  	{.compatible = "mbvl,gpex40-pcie",},
+>  	{},
+> -- 
+> 2.17.1
+> 
