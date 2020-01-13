@@ -2,225 +2,57 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F305C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8629EC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3369820678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6242D2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:33:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgAMXbf (ORCPT
+        id S1729014AbgAMXdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 18:31:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:45718 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729370AbgAMXb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 18:31:29 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 51C6A1424;
-        Mon, 13 Jan 2020 15:31:28 -0800 (PST)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3809E3F68E;
-        Mon, 13 Jan 2020 15:31:27 -0800 (PST)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     linux-kernel@vger.kernel.org, will@kernel.org, maz@kernel.org,
-        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
-        mark.rutland@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v3 7/7] arm64: nofpsmid: Handle TIF_FOREIGN_FPSTATE flag cleanly
-Date:   Mon, 13 Jan 2020 23:30:23 +0000
-Message-Id: <20200113233023.928028-8-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200113233023.928028-1-suzuki.poulose@arm.com>
-References: <20200113233023.928028-1-suzuki.poulose@arm.com>
+        Mon, 13 Jan 2020 18:33:32 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:40300 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728802AbgAMXdc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 18:33:32 -0500
+Received: from callcc.thunk.org (guestnat-104-133-0-111.corp.google.com [104.133.0.111] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00DNXPX2021946
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jan 2020 18:33:26 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 685044207DF; Mon, 13 Jan 2020 18:33:25 -0500 (EST)
+Date:   Mon, 13 Jan 2020 18:33:25 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Martijn Coenen <maco@android.com>
+Cc:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org, maco@google.com, sspatil@google.com,
+        drosen@google.com
+Subject: Re: [PATCH] ext4: Add EXT4_IOC_FSGETXATTR/EXT4_IOC_FSSETXATTR to
+ compat_ioctl.
+Message-ID: <20200113233325.GM76141@mit.edu>
+References: <20191227134639.35869-1-maco@android.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191227134639.35869-1-maco@android.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We detect the absence of FP/SIMD after an incapable CPU is brought up,
-and by then we have kernel threads running already with TIF_FOREIGN_FPSTATE set
-which could be set for early userspace applications (e.g, modprobe triggered
-from initramfs) and init. This could cause the applications to loop forever in
-do_nofity_resume() as we never clear the TIF flag, once we now know that
-we don't support FP.
+On Fri, Dec 27, 2019 at 02:46:39PM +0100, Martijn Coenen wrote:
+> These are backed by 'struct fsxattr' which has the same size on all
+> architectures.
+> 
+> Signed-off-by: Martijn Coenen <maco@android.com>
 
-Fix this by making sure that we clear the TIF_FOREIGN_FPSTATE flag
-for tasks which may have them set, as we would have done in the normal
-case, but avoiding touching the hardware state (since we don't support any).
+Thanks, applied.
 
-Also to make sure we handle the cases seemlessly we categorise the
-helper functions to two :
- 1) Helpers for common core code, which calls into take appropriate
-    actions without knowing the current FPSIMD state of the CPU/task.
-
-    e.g fpsimd_restore_current_state(), fpsimd_flush_task_state(),
-        fpsimd_save_and_flush_cpu_state().
-
-    We bail out early for these functions, taking any appropriate actions
-    (e.g, clearing the TIF flag) where necessary to hide the handling
-    from core code.
-
- 2) Helpers used when the presence of FP/SIMD is apparent.
-    i.e, save/restore the FP/SIMD register state, modify the CPU/task
-    FP/SIMD state.
-    e.g,
-
-    fpsimd_save(), task_fpsimd_load() - save/restore task FP/SIMD registers
-
-    fpsimd_bind_task_to_cpu()  \
-                                - Update the "state" metadata for CPU/task.
-    fpsimd_bind_state_to_cpu() /
-
-    fpsimd_update_current_state() - Update the fp/simd state for the current
-                                    task from memory.
-
-    These must not be called in the absence of FP/SIMD. Put in a WARNING
-    to make sure they are not invoked in the absence of FP/SIMD.
-
-KVM also uses the TIF_FOREIGN_FPSTATE flag to manage the FP/SIMD state
-on the CPU. However, without FP/SIMD support we trap all accesses and
-inject undefined instruction. Thus we should never "load" guest state.
-Add a sanity check to make sure this is valid.
-
-Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
-Changes since v2:
-  - Fixed a nit, dont combine WARN_ON()s
----
- arch/arm64/kernel/fpsimd.c  | 30 +++++++++++++++++++++++++++---
- arch/arm64/kvm/hyp/switch.c | 10 +++++++++-
- 2 files changed, 36 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index 3eb338f14386..94289d126993 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -269,6 +269,7 @@ static void sve_free(struct task_struct *task)
-  */
- static void task_fpsimd_load(void)
- {
-+	WARN_ON(!system_supports_fpsimd());
- 	WARN_ON(!have_cpu_fpsimd_context());
- 
- 	if (system_supports_sve() && test_thread_flag(TIF_SVE))
-@@ -289,6 +290,7 @@ static void fpsimd_save(void)
- 		this_cpu_ptr(&fpsimd_last_state);
- 	/* set by fpsimd_bind_task_to_cpu() or fpsimd_bind_state_to_cpu() */
- 
-+	WARN_ON(!system_supports_fpsimd());
- 	WARN_ON(!have_cpu_fpsimd_context());
- 
- 	if (!test_thread_flag(TIF_FOREIGN_FPSTATE)) {
-@@ -1092,6 +1094,7 @@ void fpsimd_bind_task_to_cpu(void)
- 	struct fpsimd_last_state_struct *last =
- 		this_cpu_ptr(&fpsimd_last_state);
- 
-+	WARN_ON(!system_supports_fpsimd());
- 	last->st = &current->thread.uw.fpsimd_state;
- 	last->sve_state = current->thread.sve_state;
- 	last->sve_vl = current->thread.sve_vl;
-@@ -1114,6 +1117,7 @@ void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *st, void *sve_state,
- 	struct fpsimd_last_state_struct *last =
- 		this_cpu_ptr(&fpsimd_last_state);
- 
-+	WARN_ON(!system_supports_fpsimd());
- 	WARN_ON(!in_softirq() && !irqs_disabled());
- 
- 	last->st = st;
-@@ -1128,8 +1132,19 @@ void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *st, void *sve_state,
-  */
- void fpsimd_restore_current_state(void)
- {
--	if (!system_supports_fpsimd())
-+	/*
-+	 * For the tasks that were created before we detected the absence of
-+	 * FP/SIMD, the TIF_FOREIGN_FPSTATE could be set via fpsimd_thread_switch(),
-+	 * e.g, init. This could be then inherited by the children processes.
-+	 * If we later detect that the system doesn't support FP/SIMD,
-+	 * we must clear the flag for  all the tasks to indicate that the
-+	 * FPSTATE is clean (as we can't have one) to avoid looping for ever in
-+	 * do_notify_resume().
-+	 */
-+	if (!system_supports_fpsimd()) {
-+		clear_thread_flag(TIF_FOREIGN_FPSTATE);
- 		return;
-+	}
- 
- 	get_cpu_fpsimd_context();
- 
-@@ -1148,7 +1163,7 @@ void fpsimd_restore_current_state(void)
-  */
- void fpsimd_update_current_state(struct user_fpsimd_state const *state)
- {
--	if (!system_supports_fpsimd())
-+	if (WARN_ON(!system_supports_fpsimd()))
- 		return;
- 
- 	get_cpu_fpsimd_context();
-@@ -1179,7 +1194,13 @@ void fpsimd_update_current_state(struct user_fpsimd_state const *state)
- void fpsimd_flush_task_state(struct task_struct *t)
- {
- 	t->thread.fpsimd_cpu = NR_CPUS;
--
-+	/*
-+	 * If we don't support fpsimd, bail out after we have
-+	 * reset the fpsimd_cpu for this task and clear the
-+	 * FPSTATE.
-+	 */
-+	if (!system_supports_fpsimd())
-+		return;
- 	barrier();
- 	set_tsk_thread_flag(t, TIF_FOREIGN_FPSTATE);
- 
-@@ -1193,6 +1214,7 @@ void fpsimd_flush_task_state(struct task_struct *t)
-  */
- static void fpsimd_flush_cpu_state(void)
- {
-+	WARN_ON(!system_supports_fpsimd());
- 	__this_cpu_write(fpsimd_last_state.st, NULL);
- 	set_thread_flag(TIF_FOREIGN_FPSTATE);
- }
-@@ -1203,6 +1225,8 @@ static void fpsimd_flush_cpu_state(void)
-  */
- void fpsimd_save_and_flush_cpu_state(void)
- {
-+	if (!system_supports_fpsimd())
-+		return;
- 	WARN_ON(preemptible());
- 	__get_cpu_fpsimd_context();
- 	fpsimd_save();
-diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-index 72fbbd86eb5e..e5816d885761 100644
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -28,7 +28,15 @@
- /* Check whether the FP regs were dirtied while in the host-side run loop: */
- static bool __hyp_text update_fp_enabled(struct kvm_vcpu *vcpu)
- {
--	if (vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
-+	/*
-+	 * When the system doesn't support FP/SIMD, we cannot rely on
-+	 * the _TIF_FOREIGN_FPSTATE flag. However, we always inject an
-+	 * abort on the very first access to FP and thus we should never
-+	 * see KVM_ARM64_FP_ENABLED. For added safety, make sure we always
-+	 * trap the accesses.
-+	 */
-+	if (!system_supports_fpsimd() ||
-+	    vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
- 		vcpu->arch.flags &= ~(KVM_ARM64_FP_ENABLED |
- 				      KVM_ARM64_FP_HOST);
- 
--- 
-2.24.1
-
+						- Ted
