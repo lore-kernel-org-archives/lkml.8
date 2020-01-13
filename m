@@ -2,123 +2,135 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 434EAC33C9A
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:03:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B3FC33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217392080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:03:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C70212080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:04:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="fFDbB+Ez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgAMKDi (ORCPT
+        id S1728640AbgAMKEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:03:38 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3916 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725978AbgAMKDi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:03:38 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00D9oxdv120638;
-        Mon, 13 Jan 2020 05:03:27 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfvrhpa4y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jan 2020 05:03:26 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00DA2xq8018518;
-        Mon, 13 Jan 2020 10:03:25 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma03dal.us.ibm.com with ESMTP id 2xf74xwcyw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jan 2020 10:03:25 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00DA3OUa35389860
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 10:03:24 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C5E0112061;
-        Mon, 13 Jan 2020 10:03:24 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E076112066;
-        Mon, 13 Jan 2020 10:03:22 +0000 (GMT)
-Received: from [9.152.98.246] (unknown [9.152.98.246])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Mon, 13 Jan 2020 10:03:22 +0000 (GMT)
-Subject: Re: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware
- compression
-To:     dsterba@suse.cz, Josef Bacik <josef@toxicpanda.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-        Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Eduard Shishkin <edward6@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200107143058.GU3929@twin.jikos.cz>
- <20200108105103.29028-1-zaslonko@linux.ibm.com>
- <75a2d45c-fd7b-9542-403d-caea7d977add@toxicpanda.com>
- <94e06859-6174-c80d-3eb6-065f67fbe95d@linux.ibm.com>
- <20200109011025.GM3929@suse.cz>
-From:   Zaslonko Mikhail <zaslonko@linux.ibm.com>
-Message-ID: <62a53ff3-a515-8801-d58b-b518dbe0c55c@linux.ibm.com>
-Date:   Mon, 13 Jan 2020 11:03:29 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 13 Jan 2020 05:04:06 -0500
+Received: from mail-mw2nam10on2087.outbound.protection.outlook.com ([40.107.94.87]:28096
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725992AbgAMKEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 05:04:06 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gkOLIccrA8RgGRvHrU6/6DUCFcGqk3tm210UWGPrQyOtJ2cAuRgwIwTr6iM5Cltopq3EVa71IAD1S+bJhZlwI1u6CVIiWpKm5LldnNYw7ARtme5W2XWXaUzztAyQRdkiBBufVvxp3wlHLQbbEZULRpAPsi28Zu1hiwHSTwwG2X34yAS3e8duWL8WhkPfYr+92hoR8e0zUMYjTEbAimzyQBqc8TL6MIZ3lilSAr93C6P1SGhsY8RhCVSdG9OgAcnhbQiUwaQ/KEVi+78by8NyXhptXEah95oQL07wFBbOg1ZU46D3JdYdA9khPfoSdd1k43FNnbYHN+YWFh9t0uONUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p5zHngbkWyYuY1iUrN1UUCLewEbJc3dtlVWzTQj+3N8=;
+ b=G/ETSQ39s2ImUQ0ftXTrtcU1dQWba7BTrW764e3tLK5ciKLmPUqqDLNQ1AU99NVT6RaBPK8EKgAfP8poW/83tAvFCGV/gAaAR3h5YMLd866IcHVMd+xunKLNfTImi0ylE9p77AIoHRRyjF6McHxE8POcZ2jxHzaKSJVbdj1d0w2T5+HZTAotSWr6wA3Wg7gwZa9HY7Hr1i5biYMSgFEbACDnyKoPhC/4qER8GopzOI6zACqtv9cquowG5xHWg/yyZQmaH+97P8g6nTXVgNRvTehZwYaSX8lfersFi1yynafFzpSscav9L9KBm/zImLZzr7iwycQ/NYp/mp6o1xUwFQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p5zHngbkWyYuY1iUrN1UUCLewEbJc3dtlVWzTQj+3N8=;
+ b=fFDbB+EzaxiEKvxRPuj8tRqNkx2dIamprFNlocCgHOMNDFpqAOuO7zDvwZqf07UWI3GrB7tL/78Z+jVsGVVdx88hAUYqTlXfmcv7b/3qftEJeLVGWQyphuIKHOr5RWYNw9OCRCFl+ssyIz0XNPnnNjka1vp6glLoTflITeI8Ouk=
+Received: from BL0PR02CA0034.namprd02.prod.outlook.com (2603:10b6:207:3c::47)
+ by BYAPR02MB4101.namprd02.prod.outlook.com (2603:10b6:a02:f6::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.15; Mon, 13 Jan
+ 2020 10:04:03 +0000
+Received: from SN1NAM02FT034.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::206) by BL0PR02CA0034.outlook.office365.com
+ (2603:10b6:207:3c::47) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.13 via Frontend
+ Transport; Mon, 13 Jan 2020 10:04:03 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT034.mail.protection.outlook.com (10.152.72.141) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2623.9
+ via Frontend Transport; Mon, 13 Jan 2020 10:04:02 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1iqwZm-0000Rv-C8; Mon, 13 Jan 2020 02:04:02 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1iqwZg-0007Wa-Ur; Mon, 13 Jan 2020 02:03:57 -0800
+Received: from [10.140.9.2] (helo=xhdbharatku40.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <bharat.kumar.gogada@xilinx.com>)
+        id 1iqwZe-0007VY-2j; Mon, 13 Jan 2020 02:03:54 -0800
+From:   Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+To:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     bhelgaas@google.com, rgummal@xilinx.com,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: [PATCH v3 0/2] Adding support for Versal CPM as Root Port driver.
+Date:   Mon, 13 Jan 2020 15:33:39 +0530
+Message-Id: <1578909821-10604-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(136003)(39860400002)(396003)(189003)(199004)(107886003)(36756003)(81156014)(81166006)(8676002)(316002)(426003)(8936002)(26005)(186003)(4326008)(478600001)(336012)(2616005)(9786002)(70586007)(4744005)(6666004)(356004)(70206006)(5660300002)(2906002)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR02MB4101;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
 MIME-Version: 1.0
-In-Reply-To: <20200109011025.GM3929@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-13_02:2020-01-13,2020-01-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 impostorscore=0 phishscore=0
- clxscore=1015 priorityscore=1501 lowpriorityscore=0 malwarescore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001130083
+Content-Type: text/plain
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 75ab98c8-5ad0-4638-2f1d-08d7980feae7
+X-MS-TrafficTypeDiagnostic: BYAPR02MB4101:
+X-Microsoft-Antispam-PRVS: <BYAPR02MB41015E14CDBD466150A9764BA5350@BYAPR02MB4101.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Forefront-PRVS: 028166BF91
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: C2YJxLYVdCRm4YNaSQrh7SQeQP4KXPIjcYbwo1tqSDh+cRTpsJja4EM5c3720flr2wXGXpOdPeXUDYMsmhlkRBVuZkUy2ppzlpbQWJjIrKs2pZGEVrlnx/XNJvue5PUjl2MIBgJrT2/dakSbq+kMzLMZ7YlqJPYkQOGvsRamN0lHeB2d+jlAQvothJkP/h1i4zFfYlusDoZ6N9BvVs1SlI+u3AGeQsC7qPkTfDX4RhNil0q1PDFMvKO6bzYP+Pia2p5jhgak++xe8CmY40vZSGTU1gFtUgcdWdSr4roiv4mB2j2OiI0hsMgHIAfn7ZGkaVjW/QYSVOpHMO8tCrp3PVGYdheLLha5nO7thd62FE211yRTKdivQj/s5Y4bBbm6zt7UTpLtTeo4S5jTA3SCPLwowBuDTOAyHLDZoKFoYOz1TGQAObYxtXDuwC7MSlMw
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2020 10:04:02.7524
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75ab98c8-5ad0-4638-2f1d-08d7980feae7
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB4101
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello David,
+- Adding support for Versal CPM as Root port.
+- The Versal ACAP devices include CCIX-PCIe Module (CPM). The integrated
+  block for CPM along with the integrated bridge can function
+  as PCIe Root Port.
+- Versal CPM uses GICv3 ITS feature for assigning MSI/MSI-X
+  vectors and handling MSI/MSI-X interrupts.
+- Bridge error and legacy interrupts in Versal CPM are handled using
+  Versal CPM specific MISC interrupt line.
 
-On 09.01.2020 02:10, David Sterba wrote:
-> On Wed, Jan 08, 2020 at 07:48:31PM +0100, Zaslonko Mikhail wrote:
->>>> +        } else if (workspace->strm.avail_out == 0) {
->>>> +            /* get another page for the stream end */
->>>> +            kunmap(out_page);
->>>> +            if (nr_pages == nr_dest_pages) {
->>>> +                out_page = NULL;
->>>> +                ret = -E2BIG;
->>>> +                goto out;
->>>> +            }
->>>> +            out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
->>>> +            if (out_page == NULL) {
->>>> +                ret = -ENOMEM;
->>>> +                goto out;
->>>> +            }
->>>
->>> Do we need zlib_deflateEnd() for the above error cases?  Thanks,
->>
->> The original btrfs code did not call zlib_deflateEnd() for -E2BIG and 
->> -ENOMEM cases, so I stick to the same logic.
->> Unlike userspace zlib where deflateEnd() frees all dynamically allocated 
->> memory, in the kernel it doesn't do much apart from setting the return 
->> code (since all the memory allocations for kernel zlib are performed in advance).
-> 
-> Agreed, deflateEnd is not necessary in the error cases.
+Bharat Kumar Gogada (2):
+  PCI: Versal CPM: Add device tree binding for Versal CPM host
+    controller
+  PCI: Versal CPM: Add support for Versal CPM Root Port driver
 
-Can I consider this as 'Acked-by' from your side?
-Are there any unanswered questions left on this patch?
+ .../devicetree/bindings/pci/xilinx-versal-cpm.txt  |  66 +++
+ drivers/pci/controller/Kconfig                     |   8 +
+ drivers/pci/controller/Makefile                    |   1 +
+ drivers/pci/controller/pcie-xilinx-cpm.c           | 505 +++++++++++++++++++++
+ 4 files changed, 580 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/xilinx-versal-cpm.txt
+ create mode 100644 drivers/pci/controller/pcie-xilinx-cpm.c
 
-> 
+-- 
+2.7.4
 
-Thanks,
-Mikhail
