@@ -2,202 +2,116 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05341C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521ECC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C25732084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:25:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578950726;
-	bh=NkUE8z5Tm7eUYlTSBrC30F4W/PL1bcCe7Kzu6YA9Z3s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FxgslQPo8OSKDJwSNK/oFMrI5hA8yeYm3p21Hx5hh/FB0RM6sIvnzL2JCAxIv/Yxm
-	 bl4e5/2aUyqX09kuoiGqxWrFFSVG27iPB1dIP6S9QkC4Aj5qW6MAyJ43RYIcBPUVbE
-	 67MjJrTdZJQNOyRNMC8aisDNUIO+zEgV7RzAM3KA=
+	by mail.kernel.org (Postfix) with ESMTP id 175F32084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:25:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="DriF7U/x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbgAMVZ0 (ORCPT
+        id S1728748AbgAMVZb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 16:25:26 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:42816 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726536AbgAMVZZ (ORCPT
+        Mon, 13 Jan 2020 16:25:31 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:48236 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgAMVZa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 16:25:25 -0500
-Received: by mail-oi1-f194.google.com with SMTP id 18so9745659oin.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 13:25:24 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Kdq9aN9RfFQuJmNV+vqMSqQdkkLqzs/g4fONHkpv+9g=;
-        b=ZEBOaelpBjRisEFOExvJwXUji56MohBiL2UQjjuH0Hi2V2eylVWDbEx1/m+uMxXjU8
-         6zPtgBmhBGbk5tQlQoXsQqMSOvF74wfE083g3dw3fcR/9DEL/jL3SMznLH1JwoUHCIpB
-         r/85aou4WYVczVJ8vY1+rbFlGBeI6xf9iYxLK1/VXCdsFgT06lY7meTeuzdzIOv3cnVC
-         CWBomqTClJZthyTU7E3P6gSg7BYxAWO2SijqlAL1aMhtJPbe4d+CPy/yDEKkvqkefcJF
-         2t0NIXDRqDs0wsV4ImByhQzMBnuA3ASmeuFtbDpTBZyB+TO2hxPIw+pLPz9sqkrqMHew
-         uHOA==
-X-Gm-Message-State: APjAAAWta3uWUXWffg/P8gqdrveSZ1yLGuErXpLVXIA0Xs4/NW6rO1hc
-        LCCyjXBN1sMeRprfOL32dUDtHyk=
-X-Google-Smtp-Source: APXvYqypYyWd4u3pL2en60NXVnrTrllxjH2K/Xr6yVtxz6DFONhpij+4vnzlvpvcqmLVhc5hOfsWjA==
-X-Received: by 2002:aca:458:: with SMTP id 85mr14713741oie.56.1578950724425;
-        Mon, 13 Jan 2020 13:25:24 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a74sm3944882oii.37.2020.01.13.13.25.23
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 13:25:24 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 221998
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Mon, 13 Jan 2020 15:22:52 -0600
-Date:   Mon, 13 Jan 2020 15:22:52 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-renesas-soc@vger.kernel.org,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [v3 4/6] dt-bindings: PCI: rcar: Add bindings for R-Car PCIe
- endpoint controller
-Message-ID: <20200113212252.GA3120@bogus>
-References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200108162211.22358-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        Mon, 13 Jan 2020 16:25:30 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DLD57N106965;
+        Mon, 13 Jan 2020 21:25:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=cHsTBdtsjyMBjpEmHOMBIzAOK2aybGLClLw5Dw0FMU4=;
+ b=DriF7U/x59tUMa4a+ruGdgyK71k7z75JA6gSo/bwcgE6z1Md1T07cRERw+GQRJBY4wgw
+ m0NU/wsqh1AwV7Z8aIrw2cMHbwvmAly1stpAZdtEV3g/3WG4NlYBLmS51aLnUBbD5HYf
+ UGhZf+Fgbma4ykUqICsDDIRAlk7mLSGGI0GPrmuuZuuf8cZbEct5FEtsvlhMrnBwIgEs
+ bXGw31kI6oH+142j8LLkuoPLcTit1MIYt5rDJT6ia4bq32vgZpvAYcwTqXqPw5VvN85h
+ iuXKtnzI1AYgSzzddpNtpVmxcjDeE1aXNZeorJqeZH2Z+uxNoZvS87GN3DumiQaKO5bT QQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xf73thqs5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 21:25:07 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DLEnrf174468;
+        Mon, 13 Jan 2020 21:25:07 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2xfrh6qwf0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 21:25:07 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00DLP31N022435;
+        Mon, 13 Jan 2020 21:25:04 GMT
+Received: from bostrovs-us.us.oracle.com (/10.152.32.65)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jan 2020 13:25:03 -0800
+Subject: Re: [PATCH v3] xen-pciback: optionally allow interrupt enable flag
+ writes
+To:     =?UTF-8?Q?Marek_Marczykowski-G=c3=b3recki?= 
+        <marmarek@invisiblethingslab.com>, xen-devel@lists.xenproject.org
+Cc:     Jan Beulich <jbeulich@suse.com>,
+        Simon Gaiser <simon@invisiblethingslab.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200111034347.5270-1-marmarek@invisiblethingslab.com>
+From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Message-ID: <9ea42829-6a1a-09eb-9d59-67a0487980b6@oracle.com>
+Date:   Mon, 13 Jan 2020 16:25:02 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200108162211.22358-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200111034347.5270-1-marmarek@invisiblethingslab.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=747
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001130173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=808 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001130173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 04:22:09PM +0000, Lad Prabhakar wrote:
-> This patch adds the bindings for the R-Car PCIe endpoint driver.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
->  .../devicetree/bindings/pci/rcar-pci-ep.yaml  | 76 +++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
 
-Fails 'make dt_binding_check':
 
-Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml: $id: 
-path/filename 'pci/rcar-pcie-ep.yaml' doesn't match actual filename
+On 1/10/20 10:43 PM, Marek Marczykowski-Górecki wrote:
+> @@ -117,6 +117,24 @@ static int command_write(struct pci_dev *dev, int offset, u16 value, void *data)
+>   		pci_clear_mwi(dev);
+>   	}
+>   
+> +	if (dev_data && dev_data->allow_interrupt_control) {
+> +		if ((cmd->val ^ val) & PCI_COMMAND_INTX_DISABLE) {
+> +			if (value & PCI_COMMAND_INTX_DISABLE) {
+> +				pci_intx(dev, 0);
+> +			} else {
+> +				/* Do not allow enabling INTx together with MSI or MSI-X. */
+> +				switch (xen_pcibk_get_interrupt_type(dev)) {
+> +				case INTERRUPT_TYPE_NONE:
+> +				case INTERRUPT_TYPE_INTX:
+> +					pci_intx(dev, 1);
 
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> new file mode 100644
-> index 000000000000..99c2a1174463
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.yaml
-> @@ -0,0 +1,76 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2020 Renesas Electronics Europe GmbH - https://www.renesas.com/eu/en/
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/rcar-pcie-ep.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas R-Car PCIe Endpoint
-> +
-> +maintainers:
-> +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: renesas,r8a774c0-pcie-ep
-> +      - const: renesas,rcar-gen3-pcie-ep
-> +
-> +  reg:
-> +    maxItems: 5
-> +
-> +  reg-names:
-> +    items:
-> +      - const: apb-base
-> +      - const: memory0
-> +      - const: memory1
-> +      - const: memory2
-> +      - const: memory3
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: pcie
-> +
-> +  max-functions:
-> +    minimum: 1
-> +    maximum: 6
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - resets
-> +  - power-domains
-> +  - clocks
-> +  - clock-names
-> +  - max-functions
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/r8a774c0-cpg-mssr.h>
-> +    #include <dt-bindings/power/r8a774c0-sysc.h>
-> +
-> +     pcie0_ep: pcie-ep@fe000000 {
-> +            compatible = "renesas,r8a774c0-pcie-ep",
-> +                         "renesas,rcar-gen3-pcie-ep";
-> +            reg = <0 0xfe000000 0 0x80000>,
-> +                  <0x0 0xfe100000 0 0x100000>,
-> +                  <0x0 0xfe200000 0 0x200000>,
-> +                  <0x0 0x30000000 0 0x8000000>,
-> +                  <0x0 0x38000000 0 0x8000000>;
-> +            reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
-> +            resets = <&cpg 319>;
-> +            power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-> +            clocks = <&cpg CPG_MOD 319>;
-> +            clock-names = "pcie";
-> +            max-functions = /bits/ 8 <1>;
-> +    };
-> -- 
-> 2.20.1
-> 
+If INTERRUPT_TYPE_INTX , why call pci_intx(1)?
+
+(I think I asked this last time as well).
+
+
+-boris
+
+
