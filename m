@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F610C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:56:52 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED58720661
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CE6C33CAD
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:56:51 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id AE39624691
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:56:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgAMN4u (ORCPT
+        id S1729027AbgAMN4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:56:50 -0500
-Received: from mga03.intel.com ([134.134.136.65]:23447 "EHLO mga03.intel.com"
+        Mon, 13 Jan 2020 08:56:48 -0500
+Received: from mga06.intel.com ([134.134.136.31]:7017 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728933AbgAMN4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:56:38 -0500
+        id S1728922AbgAMN4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:56:37 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:56:38 -0800
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:56:37 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
-   d="scan'208";a="219300382"
+   d="scan'208";a="218671205"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 13 Jan 2020 05:56:34 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 13 Jan 2020 05:56:33 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 6567E897; Mon, 13 Jan 2020 15:56:25 +0200 (EET)
+        id C654070A; Mon, 13 Jan 2020 15:56:24 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -45,9 +45,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 31/36] x86/platform/intel-mid: Add empty stubs for intel_scu_devices_[create|destroy]()
-Date:   Mon, 13 Jan 2020 16:56:18 +0300
-Message-Id: <20200113135623.56286-32-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 18/36] platform/x86: intel_pmc_ipc: Make intel_pmc_gcr_update() static
+Date:   Mon, 13 Jan 2020 16:56:05 +0300
+Message-Id: <20200113135623.56286-19-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
 References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
@@ -58,47 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows to call the functions even when CONFIG_X86_INTEL_MID is not
-enabled.
+This function is not called outside of intel_pmc_ipc.c so we can make it
+static instead.
 
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- arch/x86/include/asm/intel-mid.h | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/intel_pmc_ipc.h | 6 ------
+ drivers/platform/x86/intel_pmc_ipc.c | 3 +--
+ 2 files changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-mid.h b/arch/x86/include/asm/intel-mid.h
-index 8e5af119dc2d..de58391bdee0 100644
---- a/arch/x86/include/asm/intel-mid.h
-+++ b/arch/x86/include/asm/intel-mid.h
-@@ -88,11 +88,17 @@ static inline bool intel_mid_has_msic(void)
- 	return (intel_mid_identify_cpu() == INTEL_MID_CPU_CHIP_PENWELL);
+diff --git a/arch/x86/include/asm/intel_pmc_ipc.h b/arch/x86/include/asm/intel_pmc_ipc.h
+index 9e7adcdbe031..3b2e8b461520 100644
+--- a/arch/x86/include/asm/intel_pmc_ipc.h
++++ b/arch/x86/include/asm/intel_pmc_ipc.h
+@@ -40,7 +40,6 @@ int intel_pmc_s0ix_counter_read(u64 *data);
+ int intel_pmc_gcr_read(u32 offset, u32 *data);
+ int intel_pmc_gcr_read64(u32 offset, u64 *data);
+ int intel_pmc_gcr_write(u32 offset, u32 data);
+-int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val);
+ 
+ #else
+ 
+@@ -81,11 +80,6 @@ static inline int intel_pmc_gcr_write(u32 offset, u32 data)
+ 	return -EINVAL;
  }
  
-+extern void intel_scu_devices_create(void);
-+extern void intel_scu_devices_destroy(void);
-+
- #else /* !CONFIG_X86_INTEL_MID */
- 
- #define intel_mid_identify_cpu()	0
- #define intel_mid_has_msic()		0
- 
-+static inline void intel_scu_devices_create(void) { }
-+static inline void intel_scu_devices_destroy(void) { }
-+
- #endif /* !CONFIG_X86_INTEL_MID */
- 
- enum intel_mid_timer_options {
-@@ -115,9 +121,6 @@ extern enum intel_mid_timer_options intel_mid_timer_options;
- #define SFI_MTMR_MAX_NUM		8
- #define SFI_MRTC_MAX			8
- 
--extern void intel_scu_devices_create(void);
--extern void intel_scu_devices_destroy(void);
+-static inline int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+-{
+-	return -EINVAL;
+-}
 -
- /* VRTC timer */
- #define MRST_VRTC_MAP_SZ		1024
- /* #define MRST_VRTC_PGOFFSET		0xc00 */
+ #endif /*CONFIG_INTEL_PMC_IPC*/
+ 
+ #endif
+diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
+index 5c1da2bb1435..9229c7a16536 100644
+--- a/drivers/platform/x86/intel_pmc_ipc.c
++++ b/drivers/platform/x86/intel_pmc_ipc.c
+@@ -309,7 +309,7 @@ EXPORT_SYMBOL_GPL(intel_pmc_gcr_write);
+  *
+  * Return:	negative value on error or 0 on success.
+  */
+-int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
++static int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+ {
+ 	u32 new_val;
+ 	int ret = 0;
+@@ -339,7 +339,6 @@ int intel_pmc_gcr_update(u32 offset, u32 mask, u32 val)
+ 	spin_unlock(&ipcdev.gcr_lock);
+ 	return ret;
+ }
+-EXPORT_SYMBOL_GPL(intel_pmc_gcr_update);
+ 
+ static int update_no_reboot_bit(void *priv, bool set)
+ {
 -- 
 2.24.1
 
