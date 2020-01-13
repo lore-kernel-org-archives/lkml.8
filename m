@@ -2,145 +2,105 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A23D2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E64CEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77DCA21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:32:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBCB32081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:33:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VyN/ooBc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mXHlDgiS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgAMScj (ORCPT
+        id S1728863AbgAMSdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:32:39 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:55866 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728516AbgAMScj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:32:39 -0500
-Received: from zn.tnic (p200300EC2F05D30049A87F91DFBF49F4.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:d300:49a8:7f91:dfbf:49f4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 63B0C1EC0CD0;
-        Mon, 13 Jan 2020 19:32:36 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578940356;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=RBW1TCM6YPQlrLEyu7NFV1MDLei+4JpYY2ymbBbRI68=;
-        b=VyN/ooBc5iiyPlTUlqldiBTCt29HwDoTiD6Ey/I6uzPt3mCbCr8TL2UUjlo4TUJ5+pJweE
-        AyoXTnRkd/eVyf9RHRFAZ4Ccl+P9GC0chkkXxYIZELQ+MiVviifPcx7HOFq0CoovzMgFdB
-        G8y+SSry8iOc4sNMcE6Ds+Vtkn0YQNM=
-Date:   Mon, 13 Jan 2020 19:32:28 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v5 17/19] KVM: VMX: Use VMX_FEATURE_* flags to define
- VMCS control bits
-Message-ID: <20200113183228.GO13310@zn.tnic>
-References: <20191221044513.21680-1-sean.j.christopherson@intel.com>
- <20191221044513.21680-18-sean.j.christopherson@intel.com>
+        Mon, 13 Jan 2020 13:33:54 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37353 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728516AbgAMSdy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 13:33:54 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f129so10835961wmf.2;
+        Mon, 13 Jan 2020 10:33:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZXLr4jt3Z0ly6bJlY2S1K+QAkB0UsTXiQL9zQoG2s4c=;
+        b=mXHlDgiSO7p/uX3R9XNTgDdGIu/YGZA6qA1uL9FgkaEBt6vhBsjXg3YO9i7CMOhB3j
+         MuaaxXJs/7qCYAEOy2rl0yDccD8H+XsP1E4tFJlOvdnNzUnD0BS58a3jfG/MalY4chV0
+         dOr1o8A8uUET4aVYVcbOfbaTOTLCHvjclGvrZHrFOgqByKRWF+qdD17NoRYOZLFIxhHw
+         dVpVKw9JiDqQN8uveu+hdDr0HHc1vnPKJI8ooC9hXAW2MKWtxD6feQNOS4M+xLC11235
+         ln/lgNKbndSLF+653ME1m/3cWrD6ygFqw8OM/mUwQF8A2ApvzcXk4Bt4GOH+ySRbDtCN
+         hmlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZXLr4jt3Z0ly6bJlY2S1K+QAkB0UsTXiQL9zQoG2s4c=;
+        b=ateiwigVuuCKHyvddOUuh6Z7ttbpm67aH4q+aGn/+IV9P4X0jtoWesMK0SKJ73q+g9
+         e0c6n/7Uc8aNsHfUVccNpLNBrB5OT1Rl3Tcf7i3XbsK+o6ueZ0FkQX8nBrvqUfCDGWY7
+         c5mvtVdcd5jZTMv5Mlh7p+GGwvLI8esyupMRyeeq8WZnRzEbPIdiMhjidpwBJ+tTyAA0
+         X0vYfiOm+ZWYcIbIhBQh126z/yugWbyBkFkjWKPOxjurkhZiCMo8h2X1VO7fIW8aPEk6
+         TGmWy+Z2qpjF01Q8lvKUAH6MDJQRWdgLJvSwSIc0B0datf1SQIW/DwT9ids0b2VldaSj
+         /3Hw==
+X-Gm-Message-State: APjAAAUms9voyA1oSVlF1P0BKEwyrMH9lEXgRLvdzkVBG+f+vf08/E0M
+        x35BXs0JRBEF/aPJ9cIdUm/EDdSD
+X-Google-Smtp-Source: APXvYqyGePBR9ORItEnsI4A/VolH7tK5HABxUgERqXN9F5gLMCg+0OuRxmIZVKfdKncZ1preY0W6VA==
+X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr21557885wmk.172.1578940433124;
+        Mon, 13 Jan 2020 10:33:53 -0800 (PST)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id n1sm15518360wrw.52.2020.01.13.10.33.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 10:33:52 -0800 (PST)
+Subject: =?UTF-8?Q?Re=3a_=5bRFC_PATCH_v1_00/10=5d_Enable_RK3066_NANDC_for_MK?=
+ =?UTF-8?B?ODA444CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGludXgtcm9ja2NoaXAtYm91bmNl?=
+ =?UTF-8?Q?s+shawn=2elin=3drock-chips=2ecom=40lists=2einfradead=2eorg?=
+ =?UTF-8?B?5Luj5Y+R44CR?=
+To:     Shawn Lin <shawn.lin@rock-chips.com>, miquel.raynal@bootlin.com
+Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org, vigneshr@ti.com,
+        richard@nod.at, linux-kernel@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, robh+dt@kernel.org,
+        linux-mtd@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, heiko@sntech.de,
+        =?UTF-8?B?6LW15Luq5bOw?= <yifeng.zhao@rock-chips.com>
+References: <20200108205338.11369-1-jbx6244@gmail.com>
+ <aad92eb5-00ed-5071-c206-491eff243537@rock-chips.com>
+From:   Johan Jonker <jbx6244@gmail.com>
+Message-ID: <73cb4b1a-aad3-c613-a642-1887905e3932@gmail.com>
+Date:   Mon, 13 Jan 2020 19:33:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191221044513.21680-18-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <aad92eb5-00ed-5071-c206-491eff243537@rock-chips.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 20, 2019 at 08:45:11PM -0800, Sean Christopherson wrote:
-> Define the VMCS execution control flags (consumed by KVM) using their
-> associated VMX_FEATURE_* to provide a strong hint that new VMX features
-> are expected to be added to VMX_FEATURE and considered for reporting via
-> /proc/cpuinfo.
+Hi Shawn,
+
+Thank you for your notice.
+In that case I think that I produce a version 2 "light",
+where I address only a small amount of the TODO's and leave all other
+things up to you, so that you can do what suits you best.
+Hope that RK3066 support for MTD can be included.(Linux and Uboot)
+
+Thanks
+
+On 1/13/20 2:55 AM, Shawn Lin wrote:
+
 > 
-> No functional change intended.
+> Hi Johan,
 > 
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/include/asm/vmx.h | 105 +++++++++++++++++++------------------
->  1 file changed, 55 insertions(+), 50 deletions(-)
+> I loop in the author of the original NANDC driver who is now gonna to
+> develop a new version of NANDC driver in near future that supports more
+> features like bad block supoort. Maybe he could share his TODO.
 > 
-> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-> index 1835767aa335..9fbba31be825 100644
-> --- a/arch/x86/include/asm/vmx.h
-> +++ b/arch/x86/include/asm/vmx.h
-> @@ -15,67 +15,70 @@
->  #include <linux/bitops.h>
->  #include <linux/types.h>
->  #include <uapi/asm/vmx.h>
-> +#include <asm/vmxfeatures.h>
-> +
-> +#define VMCS_CONTROL_BIT(x)	BIT(VMX_FEATURE_##x & 0x1f)
->  
->  /*
->   * Definitions of Primary Processor-Based VM-Execution Controls.
->   */
-> -#define CPU_BASED_VIRTUAL_INTR_PENDING          0x00000004
-> -#define CPU_BASED_USE_TSC_OFFSETING             0x00000008
-> -#define CPU_BASED_HLT_EXITING                   0x00000080
-> -#define CPU_BASED_INVLPG_EXITING                0x00000200
-> -#define CPU_BASED_MWAIT_EXITING                 0x00000400
-> -#define CPU_BASED_RDPMC_EXITING                 0x00000800
-> -#define CPU_BASED_RDTSC_EXITING                 0x00001000
-> -#define CPU_BASED_CR3_LOAD_EXITING		0x00008000
-> -#define CPU_BASED_CR3_STORE_EXITING		0x00010000
-> -#define CPU_BASED_CR8_LOAD_EXITING              0x00080000
-> -#define CPU_BASED_CR8_STORE_EXITING             0x00100000
-> -#define CPU_BASED_TPR_SHADOW                    0x00200000
-> -#define CPU_BASED_VIRTUAL_NMI_PENDING		0x00400000
-> -#define CPU_BASED_MOV_DR_EXITING                0x00800000
-> -#define CPU_BASED_UNCOND_IO_EXITING             0x01000000
-> -#define CPU_BASED_USE_IO_BITMAPS                0x02000000
-> -#define CPU_BASED_MONITOR_TRAP_FLAG             0x08000000
-> -#define CPU_BASED_USE_MSR_BITMAPS               0x10000000
-> -#define CPU_BASED_MONITOR_EXITING               0x20000000
-> -#define CPU_BASED_PAUSE_EXITING                 0x40000000
-> -#define CPU_BASED_ACTIVATE_SECONDARY_CONTROLS   0x80000000
-> +#define CPU_BASED_VIRTUAL_INTR_PENDING          VMCS_CONTROL_BIT(VIRTUAL_INTR_PENDING)
-> +#define CPU_BASED_USE_TSC_OFFSETING             VMCS_CONTROL_BIT(TSC_OFFSETTING)
-
-checkpatch correctly complains here:
-
-WARNING: 'OFFSETING' may be misspelled - perhaps 'OFFSETTING'?
-#80: FILE: arch/x86/include/asm/vmx.h:26:
-+#define CPU_BASED_USE_TSC_OFFSETING             VMCS_CONTROL_BIT(TSC_OFFSETTING)
-
-and VMX_FEATURE_TSC_OFFSETTING is correct.
-
-Should I fix it up to CPU_BASED_USE_TSC_OFFSETTING while applying?
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
