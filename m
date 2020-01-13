@@ -2,138 +2,127 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6C8C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2DFC33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:41:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 354652075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 253902082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:41:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OicGA1dL"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="GoFdUuDx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbgAMJlv (ORCPT
+        id S1728656AbgAMJl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:41:51 -0500
-Received: from mail-eopbgr50083.outbound.protection.outlook.com ([40.107.5.83]:41550
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725978AbgAMJlv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:41:51 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G2BavV0W0+wV3fQdR3tvMN9mLvKVqscJ+kHnnrFNJVQNLkUsJEYSkqPVfBgnyhCIeObXJhvfg7+S2xLrn9mauD0J3WlpXTrfolixDufKLtjjgbgxRgOHZzVhNdgyhz80DVa3oTlemj23szj61BB6fpSc5hOXT2KnwaVWWnkQqtx63d3O3AYPyfWbLcUexZTw6Y/iFMQvEi7Ia9I4/9y4ChD6BiraiytRM71pm85rMHEBT3bhlbkNUrHJuF6MJRybFVWmekG+AVt8suu/Un8wMO/+2OdX+T2Wqg5p4wfD7vw4J/oYCChQWDH0VX6nLnUf/nfyglGB/iwjGJX+ScDY4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y3r+jATN8vMlxq+TdVqp/qk6QFOmIjNHIT0zH94l59c=;
- b=iPu4FB5RjDNr1daqalm3NJAXZxjr/89L6mmlHQjzNyxq163MjtEDISddM2uR2MOPcFVLAG3vYAMzQBCuVBt3QG9pee2i8uvZg+PgzEBfIeXT5yspOH7kfWUI05sSLY1g0jvu2IyaCOQoT+7OCsJ7MwuaPg8NBu1m4BppyTVtkmP0JCEG6eiRUL5Hw+oNYsB85exCVj1mRIkYsEWkeF0Lf0Oe5wc3dIpi2AqaOs9Ys6cmhNJzpUg5Mar0yqVd704Ykln8s+AXltBNORFenRwsabh57D0ZGGKRnsJLx+y9pU7HLWIP0HsnAIEuuQsbYMUelFdjzsWjoL2kHAzRJepN4w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y3r+jATN8vMlxq+TdVqp/qk6QFOmIjNHIT0zH94l59c=;
- b=OicGA1dL3CNxzJUlGLgQ+Z7OGL/Ggz/x3I0XRipvUcVYe12Gm3QF7edVsvVG0GvAmKgDHTsaJVh+0hJ8OU5xo/8wgLWa+OHjnt3f6fIeqLBT6B2h+ga+yL9E4Js4/iW1SnGNcEo/H0GILH0T2SZzT0+0dv2gDswJTE0DsgCMLWI=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3342.eurprd04.prod.outlook.com (52.134.8.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.13; Mon, 13 Jan 2020 09:41:47 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
- 09:41:47 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
-CC:     Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v6 2/7] crypto: caam - drop global context pointer and
- init_done
-Thread-Topic: [PATCH v6 2/7] crypto: caam - drop global context pointer and
- init_done
-Thread-Index: AQHVxjorybhrSXCVfEWf2tbJo513AA==
-Date:   Mon, 13 Jan 2020 09:41:47 +0000
-Message-ID: <VI1PR0402MB3485A38A9A71500E632191AD98350@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20200108154047.12526-1-andrew.smirnov@gmail.com>
- <20200108154047.12526-3-andrew.smirnov@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0dd421a7-c854-411f-21fa-08d7980ccf2c
-x-ms-traffictypediagnostic: VI1PR0402MB3342:|VI1PR0402MB3342:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB334210E3925704AB297781F098350@VI1PR0402MB3342.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(136003)(396003)(39860400002)(189003)(199004)(8676002)(2906002)(81156014)(66476007)(91956017)(76116006)(54906003)(4326008)(110136005)(44832011)(478600001)(66556008)(81166006)(316002)(8936002)(66946007)(66446008)(64756008)(7696005)(5660300002)(86362001)(26005)(33656002)(71200400001)(6506007)(53546011)(52536014)(9686003)(55016002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3342;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nN560O4rVYojNGA4pL04kWfgQBtBffJpfnTT+supTgUCpYuBqIg/FtqSbTu6k7h/l2M7eKusNdNNjcOgA3UA/+elZJEqshbIKzECJf/ejRp1f4a01tNNrVsjD1hSSFsIlWIYZKXt+ul69H9VXnXsSS49PoRFRPczLcmDBp/bmTJbTvux9mzVaP/uI2g8dKAz0K462kiQQZeudUFXciWAjtPPYB+10Uub8pesVD1l7aFfB+snvc2cxhnD8J4SSx0rUlrT8nWLqfHL7hfXG3/3J14fIu3ZuFZ+QNlmbgpgJB8CzzpWp0WTNQ+DU++8A2KpKWO+evOcxMPAvs5OzLASPyiX/K2hTceB9QB9TAc0oK0h46xA1pU3JfLCUO1AB7mmBatGdsaDUpPgQJVyzHkITZVjbX7NPhTENDBfKxv9SLdQjKidp9+5QCzf7vobwQuN
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 Jan 2020 04:41:57 -0500
+Received: from mailgw02.mediatek.com ([1.203.163.81]:57382 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725978AbgAMJl5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 04:41:57 -0500
+X-UUID: d4f4942aaa794b93ac2c4d6174355c9d-20200113
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=S0IU+IlcBs9/Y/kx+XkqovfN2BvG7GbCFGZg+SIoQY8=;
+        b=GoFdUuDxf6ZePGlRa9Ume0doVpfMw1s5gYrZHzoqWXjEa/xWS6BxUH/FkNeRWGWqfNWlKpQQV+XTozXD/GopKX2ihcpuEABYJ48eNEr5YB9AjHyDfdMiZy0jiPSXJx2u3fMFxpW1gbwTfQoTnfMReUHrisFwCmZtqG8do4XrVak=;
+X-UUID: d4f4942aaa794b93ac2c4d6174355c9d-20200113
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <yong.liang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 288412862; Mon, 13 Jan 2020 17:41:50 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 13 Jan
+ 2020 17:40:36 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 13 Jan 2020 17:41:10 +0800
+Message-ID: <1578908504.20923.25.camel@mhfsdcap03>
+Subject: Re: [PATCH v3 1/2] amr64: dts: modify mt8183.dtsi
+From:   Yong Liang <yong.liang@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Jiaxin Yu =?UTF-8?Q?=28=E4=BF=9E=E5=AE=B6=E9=91=AB=29?= 
+        <Jiaxin.Yu@mediatek.com>,
+        "Sj Huang =?UTF-8?Q?=28=E9=BB=83=E4=BF=A1=E7=92=8B=29?=" 
+        <sj.huang@mediatek.com>
+Date:   Mon, 13 Jan 2020 17:41:44 +0800
+In-Reply-To: <CANMq1KCLGx2K5qSVJLFkFqYjghVk40HaZcBeUmSxpBSJQAMOzg@mail.gmail.com>
+References: <20191227141405.3396-1-yong.liang@mediatek.com>
+         <20191227141405.3396-2-yong.liang@mediatek.com>
+         <CANMq1KD=jAPn4Y7zQZrsg9FB7Cq6tNX0R8OF4qX21Sjy2=0Naw@mail.gmail.com>
+         <CANMq1KB4PzAUdp03go0Ur_khi2bM3+oNUhHtMK=--V6DmGXiDA@mail.gmail.com>
+         <2bbd8f47-fe68-574c-cbe9-bcc680dd4c84@gmail.com>
+         <CANMq1KCXMUP=5ijqLsZ67MvO2ROFkG0vSX64KqmWtYKm7w8f2g@mail.gmail.com>
+         <CANMq1KCLGx2K5qSVJLFkFqYjghVk40HaZcBeUmSxpBSJQAMOzg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0dd421a7-c854-411f-21fa-08d7980ccf2c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 09:41:47.8260
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5C5eUl1subrNY7kEieizAykIRN3eTSSfUXnye6GZQxBM+SNAK2LVeAEZdsSLswmYDkvNCPOIbs7sNibeM99Y+Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3342
+X-TM-SNTS-SMTP: 8790C72DB21B4EEB78AB1FFA7DCBD2718DE0EE4272E3427235AA391B91F06AFE2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/8/2020 5:42 PM, Andrey Smirnov wrote:=0A=
-> @@ -342,18 +324,16 @@ int caam_rng_init(struct device *ctrldev)=0A=
->  	if (!rng_inst)=0A=
->  		return 0;=0A=
->  =0A=
-> -	rng_ctx =3D kmalloc(sizeof(*rng_ctx), GFP_DMA | GFP_KERNEL);=0A=
-> -	if (!rng_ctx)=0A=
-> +	ctx =3D devm_kzalloc(ctrldev, sizeof(*ctx), GFP_DMA | GFP_KERNEL);=0A=
-> +	if (!ctx)=0A=
->  		return -ENOMEM;=0A=
->  =0A=
-> -	dev_info(ctrldev, "registering rng-caam\n");=0A=
-> +	ctx->rng.name    =3D "rng-caam";=0A=
-> +	ctx->rng.init    =3D caam_init;=0A=
-> +	ctx->rng.cleanup =3D caam_cleanup;=0A=
-> +	ctx->rng.read    =3D caam_read;=0A=
->  =0A=
-> -	err =3D hwrng_register(&caam_rng);=0A=
-> -	if (!err) {=0A=
-> -		init_done =3D true;=0A=
-> -		return err;=0A=
-> -	}=0A=
-> +	dev_info(ctrldev, "registering rng-caam\n");=0A=
->  =0A=
-> -	kfree(rng_ctx);=0A=
-> -	return err;=0A=
-> +	return devm_hwrng_register(ctrldev, &ctx->rng);=0A=
-This means hwrng_unregister() is called only when ctrldev is removed.=0A=
-=0A=
-OTOH caam_rng_init() could be called multiple times, e.g. if there's only o=
-ne=0A=
-jrdev left in the system and it's removed then added back.=0A=
-This will lead to caam_rng_init() -> hwrng_register() called twice=0A=
-with the same "rng-caam" name, without a hwrng_unregister() called in-betwe=
-en.=0A=
-=0A=
-Horia=0A=
+T24gTW9uLCAyMDIwLTAxLTEzIGF0IDE0OjI3ICswODAwLCBOaWNvbGFzIEJvaWNoYXQgd3JvdGU6
+DQo+ICtKaWF4aW4gK1NqIEh1YW5nDQo+IA0KPiBPbiBNb24sIEphbiAxMywgMjAyMCBhdCAxMjo0
+NCBQTSBOaWNvbGFzIEJvaWNoYXQgPGRyaW5rY2F0QGNocm9taXVtLm9yZz4gd3JvdGU6DQo+ID4N
+Cj4gPiBPbiBGcmksIEphbiAxMCwgMjAyMCBhdCA2OjA5IFBNIE1hdHRoaWFzIEJydWdnZXIgPG1h
+dHRoaWFzLmJnZ0BnbWFpbC5jb20+IHdyb3RlOg0KPiA+ID4gW3NuaXBdDQo+ID4gPiBUaGF0J3Mg
+YWxsIGEgYml0IGNvbmZ1c2luZywgSSB0aG91Z2h0IHdlIGFyZSBmaW5lIHRvIGFkZCB0aGUgcmVz
+ZXQgY2VsbHMgdG8NCj4gPiA+IGluZnJhY2ZnIGFzIHdlIGhhdmUgdGhlIHJlc2V0cyBkZWZpbmVk
+IGluDQo+ID4gPiA2NGViYjU3YTNkZjYgKCJjbGs6IHJlc2V0OiBNb2RpZnkgcmVzZXQtY29udHJv
+bGxlciBkcml2ZXIiKQ0KPiA+DQo+ID4gWW91J3JlIHJpZ2h0LCB3ZSdyZSBmaW5lLiBCdXQgYXQg
+bGVhc3QgaW4gdGhlb3J5LCB3ZSBzaG91bGQgc3RpbGwgaGF2ZQ0KPiA+IHRoZSBiaW5kaW5nIGRv
+Y3VtZW50YXRpb24gdGhhdCBJIGxpbmtlZCBhYm92ZS4NCj4gPg0KPiA+IEkgd2lsbCB0cnkgdG8g
+cGljayB1cCBhbGwgdGhlIHJlcXVpcmVkIHBhdGNoZXMsIHNwbGl0IHRoZW0gYWNyb3NzDQo+ID4g
+ODE4My8yNzEyIGFuZCByZXNlbmQgYXMgb25lIHNlcmllcy4NCj4gDQo+IE9rYXksIHN1bW1hcnkg
+b2YgdGhlIHBhdGNoZXMsIHRoZXJlIGFyZSAyIHNlcmllczoNCj4gDQo+IGh0dHBzOi8vcGF0Y2h3
+b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTEzMTEyMzcvDQo+IFsxLjFdIFt2MywxLzJdIGFtcjY0OiBk
+dHM6IG1vZGlmeSBtdDgxODMuZHRzaQ0KPiAgID0+IFBhcnRpYWxseSBhcHBsaWVkIHRvIE1hdHRo
+aWFzJyB2NS41LW5leHQvZHRzNjQNCj4gICA9PiBPdGhlciBwYXJ0IGRlcGVuZCBvbiBbMS4yXSwg
+bmVlZHMgdG8gYmUgYXBwbGllZA0KPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNo
+LzExMzExMjQxLw0KPiBbMS4yXSBbdjMsMi8yXSBkdC1iaW5kaW5nczogbXQ4MTgzOiBBZGQgd2F0
+Y2hkb2cgZHQtYmluZGluZw0KPiAgID0+IFBlbmRpbmcgR3VlbnRlci9XaW0NCj4gDQo+IGh0dHBz
+Oi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTEzMjY3NTcvDQo+IFsyLjBdIFtQQVRDSCB2
+MTEgMC8zXSBBU29DOiBtdDgxODM6IGZpeCBhdWRpbyBwbGF5YmFjayBzbG93bHkgYWZ0ZXIgcGxh
+eWJhY2sNCj4gWzIuMV0gW1BBVENIIHYxMSAxLzNdIGR0LWJpbmRpbmdzOiBtZWRpYXRlazogbXQ4
+MTgzOiBBZGQgI3Jlc2V0LWNlbGxzDQo+ICAgPT4gSU1ITyBhZGRpbmcgbXQyNzEyIGNvbXBhdGli
+bGUgc2hvdWxkIGJlIGFub3RoZXIgcGF0Y2gNCj4gICA9PiBEZXBlbmRzIG9uIFsxLjJdDQo+ICAg
+PT4gVGFncyBzaG91bGQgYmUgYWxsIGRyb3BwZWQNCj4gWzIuMl0gW1BBVENIIHYxMSAyLzNdIHdh
+dGNoZG9nOiBtdGtfd2R0OiBtdDgxODM6IEFkZCByZXNldCBjb250cm9sbGVyDQo+ICAgPT4gSXNz
+dWVzIGFib3V0IHRhZ3MNCj4gWzIuM10gW1BBVENIIHYxMSAzLzNdIHdhdGNoZG9nOiBtdGtfd2R0
+OiBtdDI3MTI6IEFkZCByZXNldCBjb250cm9sbGVyDQo+ICAgPT4gSXNzdWVzIGFib3V0IHRhZ3MN
+Cj4gDQo+IEppYXhpbi9Zb25nIExpYW5nL01hdHRoaWFzOiBQbGVhc2UgbGV0IG1lIGtub3csIEkn
+bSBoYXBweSB0byBwaWNrIHVwDQo+IHRoZSBwYXRjaGVzLCBjbGVhbiB0aGVtIHVwIGFuZCByZXNl
+bmQgdGhlbSwgaWYgeW91IHRoaW5rIHRoYXQgaGVscHMuDQo+IA0KICBbMS4yXSBbdjMsMi8yXSBk
+dC1iaW5kaW5nczogbXQ4MTgzOiBBZGQgd2F0Y2hkb2cgZHQtYmluZGluZw0KICAtPiBJdCBpcyBu
+byB1c2UsIEkgd2lsbCBzZW5kIDgxODMgaW4gamlheGluJ3MgcGF0Y2gNCiAgICAgV2Ugd2FudCB0
+byBzZW5kIGppYXhpbidzIHBhdGNoIHByaW9yaXRpbHkuIFNvIHlvdSBjYW4gbWVyZ2UNCmppYXhp
+bidzIHBhdGNoIGZpcnN0bHkuDQo+IA0KPiA+ID4gVGhhdCdzIHdoeSBJIHRvb2sgdGhpcyBwYXJ0
+IGZyb206DQo+ID4gPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1tZWRpYXRlay8yMDE5
+MTIyNjA5MzkzMC4yMjQxMy0xLXlvbmcubGlhbmdAbWVkaWF0ZWsuY29tLw0KPiA+ID4NCj4gPiA+
+IFBsZWFzZSBsZXQgbWUga25vdyBpZiBJJ20gd3JvbmcgYW5kIEknbGwgZHJvcCBpdC4NCj4gPiA+
+DQo+ID4gPiBSZWdhcmRzLA0KPiA+ID4gTWF0dGhpYXMNCj4gPiA+DQo+ID4gPiA+Pj4gMi4gQWRk
+IHdhdGNoZG9nIGRldmljZSBub2RlDQo+ID4gPiA+DQo+ID4gPiA+IENhbiB3ZSBoYXZlIGEgcGF0
+Y2ggd2l0aCBqdXN0IHRoaXMgY2hhbmdlIGluc3RlYWQsIHNpbmNlIHlvdSdyZQ0KPiA+ID4gPiBz
+ZW5kaW5nIHRoZSBiaW5kaW5nIHdpdGggaXQuDQo+ID4gPiA+DQo+ID4gPiA+Pj4NCj4gPiA+ID4+
+PiBTaWduZWQtb2ZmLWJ5OiB5b25nLmxpYW5nIDx5b25nLmxpYW5nQG1lZGlhdGVrLmNvbT4NCj4g
+PiA+ID4+DQo+ID4gPiA+PiBUZXN0ZWQtYnk6IE5pY29sYXMgQm9pY2hhdCA8ZHJpbmtjYXRAY2hy
+b21pdW0ub3JnPg0KPiA+ID4gPj4NCj4gPiA+ID4+PiAtLS0NCj4gPiA+ID4+PiAgYXJjaC9hcm02
+NC9ib290L2R0cy9tZWRpYXRlay9tdDgxODMuZHRzaSB8IDggKysrKysrKysNCj4gPiA+ID4+PiAg
+MSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKQ0KPiA+ID4gPj4+IFtzbmlwXQ0KDQo=
+
