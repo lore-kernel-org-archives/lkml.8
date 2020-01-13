@@ -2,129 +2,127 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF8CC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB452C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0C32084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA7E207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727014AbgAML3h convert rfc822-to-8bit (ORCPT
+        id S1728516AbgAMLbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:29:37 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:56307 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgAML3h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:29:37 -0500
-Received: from 79.184.255.90.ipv4.supernova.orange.pl (79.184.255.90) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id 9ab51728271c6d21; Mon, 13 Jan 2020 12:29:34 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PM-runtime: add tracepoints for usage_count changes
-Date:   Mon, 13 Jan 2020 12:29:33 +0100
-Message-ID: <12840272.KYWuQ3LjJR@kreacher>
-In-Reply-To: <20200106100004.GA10946@qmqm.qmqm.pl>
-References: <cb199a03895f8a11d9039209e6ac1cd92b1d1fb9.1578155207.git.mirq-linux@rere.qmqm.pl> <20200104182123.GA1485543@kroah.com> <20200106100004.GA10946@qmqm.qmqm.pl>
+        Mon, 13 Jan 2020 06:31:39 -0500
+Received: from foss.arm.com ([217.140.110.172]:38102 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbgAMLbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 06:31:38 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95C6113D5;
+        Mon, 13 Jan 2020 03:31:37 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA5453F6C4;
+        Mon, 13 Jan 2020 03:31:36 -0800 (PST)
+Date:   Mon, 13 Jan 2020 11:31:35 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv9 08/12] PCI: mobiveil: Add 8-bit and 16-bit CSR register
+ accessors
+Message-ID: <20200113113135.GN42593@e119886-lin.cambridge.arm.com>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <20191120034451.30102-9-Zhiqiang.Hou@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191120034451.30102-9-Zhiqiang.Hou@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, January 6, 2020 11:00:04 AM CET Michał Mirosław wrote:
-> On Sat, Jan 04, 2020 at 07:21:23PM +0100, Greg Kroah-Hartman wrote:
-> > On Sat, Jan 04, 2020 at 05:27:57PM +0100, Michał Mirosław wrote:
-> > > Add tracepoints to remaining places where device's power.usage_count
-> > > is changed. This helps debugging where and why autosuspend is prevented.
-> > > 
-> > > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-> > > ---
-> > >  drivers/base/power/runtime.c | 13 +++++++++++--
-> > >  include/trace/events/rpm.h   |  6 ++++++
-> > >  2 files changed, 17 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
-> > > index 48616f358854..16134a69bf6f 100644
-> > > --- a/drivers/base/power/runtime.c
-> > > +++ b/drivers/base/power/runtime.c
-> > > @@ -1006,8 +1006,10 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
-> > >  	int retval;
-> > >  
-> > >  	if (rpmflags & RPM_GET_PUT) {
-> > > -		if (!atomic_dec_and_test(&dev->power.usage_count))
-> > > +		if (!atomic_dec_and_test(&dev->power.usage_count)) {
-> > > +			trace_rpm_usage_rcuidle(dev, rpmflags);
-> > 
-> > Who and what is really going to use these tracepoints?
-> > 
-> > And putting them in these if statements seems odd, are you sure that's
-> > the correct place?  What do these show to userspace?
-> > 
-> > >  			return 0;
-> > > +		}
-> > >  	}
-> > >  
-> > >  	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
-> > > @@ -1038,8 +1040,10 @@ int __pm_runtime_suspend(struct device *dev, int rpmflags)
-> > >  	int retval;
-> > >  
-> > >  	if (rpmflags & RPM_GET_PUT) {
-> > > -		if (!atomic_dec_and_test(&dev->power.usage_count))
-> > > +		if (!atomic_dec_and_test(&dev->power.usage_count)) {
-> > > +			trace_rpm_usage_rcuidle(dev, rpmflags);
-> > >  			return 0;
-> > > +		}
-> > >  	}
-> > >  
-> > >  	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
-> > > @@ -1101,6 +1105,7 @@ int pm_runtime_get_if_in_use(struct device *dev)
-> > >  	retval = dev->power.disable_depth > 0 ? -EINVAL :
-> > >  		dev->power.runtime_status == RPM_ACTIVE
-> > >  			&& atomic_inc_not_zero(&dev->power.usage_count);
-> > > +	trace_rpm_usage_rcuidle(dev, 0);
-> > 
-> > Why this one?
-> > 
-> > 
-> > >  	spin_unlock_irqrestore(&dev->power.lock, flags);
-> > >  	return retval;
-> > >  }
-> > > @@ -1434,6 +1439,8 @@ void pm_runtime_allow(struct device *dev)
-> > >  	dev->power.runtime_auto = true;
-> > >  	if (atomic_dec_and_test(&dev->power.usage_count))
-> > >  		rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
-> > > +	else
-> > > +		trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
-> > 
-> > Are you sure this is correct?
-> > 
-> > These feel odd...
+On Wed, Nov 20, 2019 at 03:46:10AM +0000, Z.q. Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 > 
-> This covers all places where power.usage_count might have changed.
-> If atomic_dec_and_test() decrements usage_count but not to zero,
-> the new value will be traced in rpm_idle(). But if the value drops to
-> zero, then we need to trace it explicitly to be able to have all changes
-> accounted for in the trace.
+> There are some 8-bit and 16-bit registers in PCIe configuration
+> space, so add these accessors accordingly.
 > 
-> I actually used this patch to track down why USB storage device was
-> not autosuspending correctly.
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> ---
+> V9:
+>  - No change
+> 
+>  .../pci/controller/mobiveil/pcie-mobiveil.h   | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> index 37116c2a19fe..750a7fd95bc1 100644
+> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
+> @@ -182,10 +182,33 @@ static inline u32 mobiveil_csr_readl(struct mobiveil_pcie *pcie, u32 off)
+>  	return mobiveil_csr_read(pcie, off, 0x4);
+>  }
+>  
+> +static inline u32 mobiveil_csr_readw(struct mobiveil_pcie *pcie, u32 off)
+> +{
+> +	return mobiveil_csr_read(pcie, off, 0x2);
+> +}
+> +
+> +static inline u32 mobiveil_csr_readb(struct mobiveil_pcie *pcie, u32 off)
+> +{
+> +	return mobiveil_csr_read(pcie, off, 0x1);
+> +}
 
-Fair enough, and the patch makes sense to me, so I'm queuing it up as 5.6
-material.
+Do you think the above two return types should reflect the size of the access?
 
-Thanks!
+Thanks,
 
+Andrew Murray
 
-
+> +
+> +
+>  static inline void mobiveil_csr_writel(struct mobiveil_pcie *pcie, u32 val,
+>  				       u32 off)
+>  {
+>  	mobiveil_csr_write(pcie, val, off, 0x4);
+>  }
+>  
+> +static inline void mobiveil_csr_writew(struct mobiveil_pcie *pcie, u32 val,
+> +				       u32 off)
+> +{
+> +	mobiveil_csr_write(pcie, val, off, 0x2);
+> +}
+> +
+> +static inline void mobiveil_csr_writeb(struct mobiveil_pcie *pcie, u32 val,
+> +				       u32 off)
+> +{
+> +	mobiveil_csr_write(pcie, val, off, 0x1);
+> +}
+> +
+>  #endif /* _PCIE_MOBIVEIL_H */
+> -- 
+> 2.17.1
+> 
