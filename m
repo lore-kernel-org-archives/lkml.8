@@ -2,238 +2,206 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE595C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EBB1C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:14:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2862080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D02B42075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PV5JelTA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QI1q10T8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726943AbgAMMOD (ORCPT
+        id S1727331AbgAMMOk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:14:03 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33914 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgAMMOD (ORCPT
+        Mon, 13 Jan 2020 07:14:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29764 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726180AbgAMMOj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:14:03 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00DCDwf6099736;
-        Mon, 13 Jan 2020 06:13:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578917638;
-        bh=LXtb0EB1d+BCfS/uqY0B5xrzlDGST+kyyTU4YDibppU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=PV5JelTAoiBeTlvaCu21C6R031ttAsg40OaYipqjPQvdYmThYA5rQDaOqc3VZLwiZ
-         ACC2vxEzEqLRaNNSHm6oWp46/aFIl2WhtjzmFzrLHXCDELvnY+0l7M2CNTis2kp4W4
-         QwyRbZElHgXYOJXvAHAp6bWgVyh8m4BjGyP/1PUQ=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00DCDwCY092185
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jan 2020 06:13:58 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 13
- Jan 2020 06:13:58 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 13 Jan 2020 06:13:58 -0600
-Received: from [172.24.145.246] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00DCDt2L126167;
-        Mon, 13 Jan 2020 06:13:56 -0600
-Subject: Re: [PATCH] ARM: davinci: dm365-evm: Add Fixed regulators needed for
- tlv320aic3101
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, <bgolaszewski@baylibre.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190830102252.22488-1-peter.ujfalusi@ti.com>
- <e2e10e39-aa21-1c53-75b2-18013937a841@ti.com>
- <698562e3-6391-f0e3-a7a8-f64794cfa33e@ti.com>
- <7a6179ab-6ef1-767d-9b19-576aa1c6dcdd@ti.com>
- <14d31170-82ab-f263-e23d-14835e968ce3@ti.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <2f30f543-f96f-e464-03b4-d0160063e5eb@ti.com>
-Date:   Mon, 13 Jan 2020 17:43:55 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 13 Jan 2020 07:14:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578917677;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=quQDksyPyFcIuCqVPGqUPwx5B1xPgTdkurY5s4DtTQ8=;
+        b=QI1q10T8ZPvkGjSYuoeZg0U2DRDkJWSZKfO7H3qMpe4dF9mkw6RYyBLleRxgVg9TZgGiea
+        nSQPwyiVSZ6vSxhHOJsBPZ5O3GMKiHPgZc1Fy9CgPewUXBDQOh1IwQBu2FEIX6mvU1qjUi
+        GbJ0ZeCaXxbYMyhdtMQsXnIxad7AboM=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-432-IsOTbq30Nvm_z1_CkQYNyg-1; Mon, 13 Jan 2020 07:14:36 -0500
+X-MC-Unique: IsOTbq30Nvm_z1_CkQYNyg-1
+Received: by mail-pj1-f71.google.com with SMTP id dw15so6645310pjb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:14:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=quQDksyPyFcIuCqVPGqUPwx5B1xPgTdkurY5s4DtTQ8=;
+        b=MJuelnjAxWX+7FM/dIjtOMqpISv6BZMJo2nBMKfx/rAI0chOJIB2NWBOoyLTgrfvDK
+         kB8mgfhBFfQHgyyRYlVcHbyi6Mm9gh0l5/C1TgB0jh/472F8eQCCm8YiCxywssd5HUBz
+         3O9+m4LM9gFjphOqNWaqUKaxfiZrkdnd1wkfS0OuwjKYQKOJKDDOCOSSmzY08J8ddhFB
+         si/zNK1SiPFpr7ttAKZhxJqr3QOzyjNHiM3E3EwDVZQSDQD9CSNL2pmnnQFMObYZiP6H
+         qs/CgvWm9rvZ3rvUHxciuYmLc351MhXzfbFK6imdRGJjM4VmTba4Feq7XLud9C/kxbMg
+         iEgw==
+X-Gm-Message-State: APjAAAXQjKikr2rD9DmrbjbNwR9Y8hTBVCh9WaKIbQfg/2KmRoPvQKrI
+        4F666XrK75cci/yroX43YgMQqmo5ZjqqBbRxIfb2HMnX8Pe1XK0EoV8JYPJY/913LtAU8R06Qhv
+        C4medzc7rIUKMYl1jik0V8Sqv
+X-Received: by 2002:a17:90a:fa88:: with SMTP id cu8mr20913866pjb.141.1578917675074;
+        Mon, 13 Jan 2020 04:14:35 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxALQgnDcQJ9NkcfjZ+inUPcVHYoZsvLYAu6/sEEIOSdSjVJI/LaGA1hgTl2PAA71Zt8AwepA==
+X-Received: by 2002:a17:90a:fa88:: with SMTP id cu8mr20913845pjb.141.1578917674799;
+        Mon, 13 Jan 2020 04:14:34 -0800 (PST)
+Received: from localhost.localdomain ([122.177.255.46])
+        by smtp.gmail.com with ESMTPSA id j20sm13806331pfe.168.2020.01.13.04.14.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Jan 2020 04:14:34 -0800 (PST)
+Subject: Re: [RESEND PATCH v5 2/5] arm64/crash_core: Export TCR_EL1.T1SZ in
+ vmcoreinfo
+To:     Dave Anderson <anderson@redhat.com>,
+        James Morse <james.morse@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        bhupesh linux <bhupesh.linux@gmail.com>, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+        kexec@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Steve Capper <steve.capper@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+References: <1575057559-25496-1-git-send-email-bhsharma@redhat.com>
+ <1575057559-25496-3-git-send-email-bhsharma@redhat.com>
+ <63d6e63c-7218-d2dd-8767-4464be83603f@arm.com>
+ <af0fd2b0-99db-9d58-bc8d-0dd9d640b1eb@redhat.com>
+ <f791e777-781c-86ce-7619-1de3fe3e7b90@arm.com>
+ <351975548.1986001.1578682810951.JavaMail.zimbra@redhat.com>
+From:   Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <04287d60-e99e-631b-c134-d6dc39e6a193@redhat.com>
+Date:   Mon, 13 Jan 2020 17:44:10 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-In-Reply-To: <14d31170-82ab-f263-e23d-14835e968ce3@ti.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <351975548.1986001.1578682810951.JavaMail.zimbra@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/10/19 1:12 PM, Peter Ujfalusi wrote:
-> 
-> 
-> On 21/10/2019 13.40, Peter Ujfalusi wrote:
->>
->>
->> On 17/10/2019 16.49, Sekhar Nori wrote:
->>> On 17/10/19 4:39 PM, Sekhar Nori wrote:
->>>> On 30/08/19 3:52 PM, Peter Ujfalusi wrote:
->>>>> The codec driver needs correct regulators in order to probe.
->>>>> Both VCC_3V3 and VCC_1V8 is always on fixed regulators on the board.
->>>>>
->>>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>>>
->>>> Applied for v5.4
->>>
->>> This is breaking boot on DM365 EVM.
->>>
->>> Booting Linux on physical CPU 0x0                                               
->>> Linux version 5.4.0-rc1-00001-g927d10a85791-dirty (a0875516@psplinux063) (gcc v9
->>> CPU: ARM926EJ-S [41069265] revision 5 (ARMv5TEJ), cr=0005317f                   
->>> CPU: VIVT data cache, VIVT instruction cache                                    
->>> Machine: DaVinci DM365 EVM                                                      
->>> Memory policy: Data cache writethrough                                          
->>> cma: Reserved 16 MiB at 0x86c00000                                              
->>> DaVinci dm365_rev1.1 variant 0x0                                                
->>> On node 0 totalpages: 32768                                                     
->>>   DMA zone: 256 pages used for memmap                                           
->>>   DMA zone: 0 pages reserved                                                    
->>>   DMA zone: 32768 pages, LIFO batch:7                                           
->>> pcpu-alloc: s0 r0 d32768 u32768 alloc=1*32768                                   
->>> pcpu-alloc: [0] 0                                                               
->>> Built 1 zonelists, mobility grouping on.  Total pages: 32512                    
->>> Kernel command line: console=ttyS0,115200n8 root=/dev/nfs rw nfsroot=172.24.210p
->>> Dentry cache hash table entries: 16384 (order: 4, 65536 bytes, linear)          
->>> Inode-cache hash table entries: 8192 (order: 3, 32768 bytes, linear)            
->>> mem auto-init: stack:off, heap alloc:off, heap free:off                         
->>> Memory: 106776K/131072K available (4760K kernel code, 253K rwdata, 1160K rodata)
->>> SLUB: HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1                      
->>> rcu: Preemptible hierarchical RCU implementation.                               
->>>         Tasks RCU enabled.                                                      
->>> rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.          
->>> NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16                                 
->>> random: get_random_bytes called from start_kernel+0x25c/0x440 with crng_init=0  
->>> clocksource: timer0_1: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 79s
->>> sched_clock: 32 bits at 24MHz, resolution 41ns, wraps every 89478484971ns       
->>> Console: colour dummy device 80x30                                              
->>> Calibrating delay loop... 146.84 BogoMIPS (lpj=734208)                          
->>> pid_max: default: 32768 minimum: 301                                            
->>> Mount-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)             
->>> Mountpoint-cache hash table entries: 1024 (order: 0, 4096 bytes, linear)        
->>> CPU: Testing write buffer coherency: ok                                         
->>> Setting up static identity map for 0x80008400 - 0x80008458                      
->>> rcu: Hierarchical SRCU implementation.                                          
->>> devtmpfs: initialized                                                           
->>> clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 191s
->>> futex hash table entries: 256 (order: -1, 3072 bytes, linear)                   
->>> pinctrl core: initialized pinctrl subsystem                                     
->>> NET: Registered protocol family 16                                              
->>> DMA: preallocated 256 KiB pool for atomic coherent allocations                  
->>> mux: initialized INT_EDMA_CC                                                    
->>> mux: Setting register INT_EDMA_CC                                               
->>> mux:    INTMUX (0x00000018) = 0x00000000 -> 0x00000004                          
->>> cpuidle: using governor menu                                                    
->>> mux: initialized INT_EMAC_RXTHRESH                                              
->>> mux: Setting register INT_EMAC_RXTHRESH                                         
->>> mux:    INTMUX (0x00000018) = 0x00000004 -> 0x00004004                          
->>> mux: initialized INT_EMAC_RXPULSE                                               
->>> mux: Setting register INT_EMAC_RXPULSE                                          
->>> mux:    INTMUX (0x00000018) = 0x00004004 -> 0x0000c004                          
->>> mux: initialized INT_EMAC_TXPULSE                                               
->>> mux: Setting register INT_EMAC_TXPULSE                                          
->>> mux:    INTMUX (0x00000018) = 0x0000c004 -> 0x0001c004                          
->>> mux: initialized INT_EMAC_MISCPULSE                                             
->>> mux: Setting register INT_EMAC_MISCPULSE                                        
->>> mux:    INTMUX (0x00000018) = 0x0001c004 -> 0x0003c004                          
->>> EVM: tvp5146 SD video input                                                     
->>> mux: initialized INT_PRTCSS                                                     
->>> mux: Setting register INT_PRTCSS                                                
->>> mux:    INTMUX (0x00000018) = 0x0003c004 -> 0x0003c404                          
->>> mux: initialized SPI0_SCLK                                                      
->>> mux: Setting register SPI0_SCLK                                                 
->>> mux:    PINMUX3 (0x0000000c) = 0x015affff -> 0x115affff                         
->>> mux: initialized SPI0_SDI                                                       
->>> mux: Setting register SPI0_SDI                                                  
->>> mux:    PINMUX3 (0x0000000c) = 0x115affff -> 0x155affff                         
->>> mux: initialized SPI0_SDO                                                       
->>> mux: Setting register SPI0_SDO                                                  
->>> mux:    PINMUX3 (0x0000000c) = 0x155affff -> 0x175affff                         
->>> mux: initialized SPI0_SDENA0                                                    
->>> mux: Setting register SPI0_SDENA0                                               
->>> mux:    PINMUX3 (0x0000000c) = 0x175affff -> 0x375affff                         
->>> edma edma.0: Legacy memcpy is enabled, things might not work                    
->>> edma edma.0: TI EDMA DMA engine driver                                          
->>> 8<--- cut here ---                                                              
->>> Unable to handle kernel NULL pointer dereference at virtual address 000000c0    
->>> pgd = (ptrval)                                                                  
->>> [000000c0] *pgd=00000000                                                        
->>> Internal error: Oops: 5 [#1] PREEMPT ARM                                        
->>> Modules linked in:                                                              
->>> CPU: 0 PID: 1 Comm: swapper Not tainted 5.4.0-rc1-00001-g927d10a85791-dirty #146
->>> Hardware name: DaVinci DM365 EVM                                                
->>> PC is at reg_fixed_voltage_probe+0x30/0x2ec                                     
->>> LR is at reg_fixed_voltage_probe+0x2c/0x2ec                                     
->>> pc : [<c02a9628>]    lr : [<c02a9624>]    psr: 60000053                         
->>> sp : c6837de0  ip : 00000000  fp : c062cfd8                                     
->>> r10: c05f44a8  r9 : 00000000  r8 : c68a24d0                                     
->>> r7 : c0631008  r6 : c68a24e0  r5 : 00000000  r4 : c68a24e0                      
->>> r3 : 00000000  r2 : c065a854  r1 : 00000000  r0 : 00000000                      
->>> Flags: nZCv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  Segment none              
->>> Control: 0005317f  Table: 80004000  DAC: 00000053                               
->>> Process swapper (pid: 1, stack limit = 0x(ptrval))                              
->>> Stack: (0xc6837de0 to 0xc6838000)                                               
->>> 7de0: c689be40 c0167044 00000000 c68f4720 c68f4660 c68f4660 c68f4720 c689be40   
->>> 7e00: c0575ca4 64d9cb0d 00000000 c68a24e0 00000000 c065a854 c065a854 00000000   
->>> 7e20: 00000000 c05f44a8 c062cfd8 c02e0a64 c68a24e0 c0688d00 00000000 c02dec54   
->>> 7e40: c68a24e0 c065a854 c065a854 c0631008 ffffe000 c061e828 c05f44a8 c02def44   
->>> 7e60: 00000000 ffffff08 ffff0a00 c68a24e0 00000000 c065a854 c0631008 ffffe000   
->>> 7e80: c061e828 c05f44a8 c062cfd8 c02df1f8 00000000 c065a854 c68a24e0 c02df258   
->>> 7ea0: c68337b0 c065a854 c02df200 c02dced4 c061e828 c681db90 c68337b0 64d9cb0d   
->>> 7ec0: c062cfd8 c065a854 c682af00 c065ea48 00000000 c02de070 c054f984 c0494cc0   
->>> 7ee0: c065a854 c065a854 c0631008 c060b098 00000000 c02dfb04 c066d5c0 c0631008   
->>> 7f00: c060b098 c000a624 0000007f c7fffea8 c05d00c4 00000000 c7fffee9 c00372e0   
->>> 7f20: c05cf6d8 c0549714 00000000 00000004 00000004 00000000 00000000 c7fffee2   
->>> 7f40: c7fffee5 64d9cb0d 00000000 0000007f c061e844 64d9cb0d 0000007f c061e848   
->>> 7f60: 00000005 c066d5c0 c066d5c0 c05f4e6c 00000004 00000004 00000000 c05f44a8   
->>> 7f80: 00000000 00000000 c04a71bc 00000000 00000000 00000000 00000000 00000000   
->>> 7fa0: 00000000 c04a71c4 00000000 c00090e0 00000000 00000000 00000000 00000000   
->>> 7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000   
->>> 7fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000   
->>> [<c02a9628>] (reg_fixed_voltage_probe) from [<c02e0a64>] (platform_drv_probe+0x)
->>> [<c02e0a64>] (platform_drv_probe) from [<c02dec54>] (really_probe+0x1e0/0x34c)  
->>> [<c02dec54>] (really_probe) from [<c02def44>] (driver_probe_device+0x5c/0x168)  
->>> [<c02def44>] (driver_probe_device) from [<c02df1f8>] (device_driver_attach+0x58)
->>> [<c02df1f8>] (device_driver_attach) from [<c02df258>] (__driver_attach+0x58/0xc)
->>> [<c02df258>] (__driver_attach) from [<c02dced4>] (bus_for_each_dev+0x70/0xb4)   
->>> [<c02dced4>] (bus_for_each_dev) from [<c02de070>] (bus_add_driver+0x194/0x1cc)  
->>> [<c02de070>] (bus_add_driver) from [<c02dfb04>] (driver_register+0x74/0x108)    
->>> [<c02dfb04>] (driver_register) from [<c000a624>] (do_one_initcall+0x6c/0x1d8)   
->>> [<c000a624>] (do_one_initcall) from [<c05f4e6c>] (kernel_init_freeable+0x10c/0x)
->>> [<c05f4e6c>] (kernel_init_freeable) from [<c04a71c4>] (kernel_init+0x8/0xec)    
->>> [<c04a71c4>] (kernel_init) from [<c00090e0>] (ret_from_fork+0x14/0x34)          
->>> Exception stack(0xc6837fb0 to 0xc6837ff8)                                       
->>> 7fa0:                                     00000000 00000000 00000000 00000000   
->>> 7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000   
->>> 7fe0: 00000000 00000000 00000000 00000000 00000013 00000000                     
->>> Code: e5920018 e58d3024 eb02b71e e3a03000 (e59090c0)                            
->>> ---[ end trace 90e87368a248f7f6 ]---                                            
->>> Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b      
->>
->> Interesting.
->> Something has changed in regulators core which causes crash when not
->> booted with DT?
->>
->> It did worked when I have sent the patches. I'll take a look what might
->> be the issue.
-> 
-> can this be the fix: https://lkml.org/lkml/2019/9/21/199 ?
+Hi James,
 
-It seems like, and I confirm it works now! Queuing for v5.6
+On 01/11/2020 12:30 AM, Dave Anderson wrote:
+> 
+> ----- Original Message -----
+>> Hi Bhupesh,
+>>
+>> On 25/12/2019 19:01, Bhupesh Sharma wrote:
+>>> On 12/12/2019 04:02 PM, James Morse wrote:
+>>>> On 29/11/2019 19:59, Bhupesh Sharma wrote:
+>>>>> vabits_actual variable on arm64 indicates the actual VA space size,
+>>>>> and allows a single binary to support both 48-bit and 52-bit VA
+>>>>> spaces.
+>>>>>
+>>>>> If the ARMv8.2-LVA optional feature is present, and we are running
+>>>>> with a 64KB page size; then it is possible to use 52-bits of address
+>>>>> space for both userspace and kernel addresses. However, any kernel
+>>>>> binary that supports 52-bit must also be able to fall back to 48-bit
+>>>>> at early boot time if the hardware feature is not present.
+>>>>>
+>>>>> Since TCR_EL1.T1SZ indicates the size offset of the memory region
+>>>>> addressed by TTBR1_EL1 (and hence can be used for determining the
+>>>>> vabits_actual value) it makes more sense to export the same in
+>>>>> vmcoreinfo rather than vabits_actual variable, as the name of the
+>>>>> variable can change in future kernel versions, but the architectural
+>>>>> constructs like TCR_EL1.T1SZ can be used better to indicate intended
+>>>>> specific fields to user-space.
+>>>>>
+>>>>> User-space utilities like makedumpfile and crash-utility, need to
+>>>>> read/write this value from/to vmcoreinfo
+>>>>
+>>>> (write?)
+>>>
+>>> Yes, also write so that the vmcoreinfo from an (crashing) arm64 system can
+>>> be used for
+>>> analysis of the root-cause of panic/crash on say an x86_64 host using
+>>> utilities like
+>>> crash-utility/gdb.
+>>
+>> I read this as as "User-space [...] needs to write to vmcoreinfo".
+
+That's correct. But for writing to vmcore dump in the kdump kernel, we 
+need to read the symbols from the vmcoreinfo in the primary kernel.
+
+>>>>> for determining if a virtual address lies in the linear map range.
+>>>>
+>>>> I think this is a fragile example. The debugger shouldn't need to know
+>>>> this.
+>>>
+>>> Well that the current user-space utility design, so I am not sure we can
+>>> tweak that too much.
+>>>
+>>>>> The user-space computation for determining whether an address lies in
+>>>>> the linear map range is the same as we have in kernel-space:
+>>>>>
+>>>>>     #define __is_lm_address(addr)    (!(((u64)addr) & BIT(vabits_actual -
+>>>>>     1)))
+>>>>
+>>>> This was changed with 14c127c957c1 ("arm64: mm: Flip kernel VA space"). If
+>>>> user-space
+>>>> tools rely on 'knowing' the kernel memory layout, they must have to
+>>>> constantly be fixed
+>>>> and updated. This is a poor argument for adding this to something that
+>>>> ends up as ABI.
+>>>
+>>> See above. The user-space has to rely on some ABI/guaranteed
+>>> hardware-symbols which can be
+>>> used for 'determining' the kernel memory layout.
+>>
+>> I disagree. Everything and anything in the kernel will change. The ABI rules apply to
+>> stuff exposed via syscalls and kernel filesystems. It does not apply to kernel internals,
+>> like the memory layout we used yesterday. 14c127c957c1 is a case in point.
+>>
+>> A debugger trying to rely on this sort of thing would have to play catchup whenever it
+>> changes.
+> 
+> Exactly.  That's the whole point.
+> 
+> The crash utility and makedumpfile are not in the same league as other user-space tools.
+> They have always had to "play catchup" precisely because they depend upon kernel internals,
+> which constantly change.
+
+I agree with you and DaveA here. Software user-space debuggers are 
+dependent on kernel internals (which can change from time-to-time) and 
+will have to play catch-up (which has been the case since the very start).
+
+Unfortunately we don't have any clear ABI for software debugging tools - 
+may be something to look for in future.
+
+A case in point is gdb/kgdb, which still needs to run with KASLR 
+turned-off (nokaslr) for debugging, as it confuses gdb which resolve 
+kernel symbol address from symbol table of vmlinux. But we can 
+work-around the same in makedumpfile/crash by reading the 'kaslr_offset' 
+value. And I have several users telling me now they cannot use gdb on 
+KASLR enabled kernel to debug panics, but can makedumpfile + crash 
+combination to achieve the same.
+
+So, we should be looking to fix these utilities which are broken since 
+the 52-bit changes for arm64. Accordingly, I will try to send the v6
+soon while incorporating the comments posted on the v5.
 
 Thanks,
-Sekhar
+Bhupesh
+
+
+
+
