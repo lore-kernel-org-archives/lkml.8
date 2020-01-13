@@ -2,28 +2,29 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EACC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8018EC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:44:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C031420678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BB4320678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:44:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgAMQoU (ORCPT
+        id S1728927AbgAMQoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:44:20 -0500
-Received: from out28-123.mail.aliyun.com ([115.124.28.123]:45419 "EHLO
-        out28-123.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgAMQoT (ORCPT
+        Mon, 13 Jan 2020 11:44:24 -0500
+Received: from out28-49.mail.aliyun.com ([115.124.28.49]:56635 "EHLO
+        out28-49.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728775AbgAMQoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:44:19 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.1069409|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.492603-0.0599459-0.447451;DS=CONTINUE|ham_system_inform|0.0415556-0.000420485-0.958024;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03312;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=25;RT=25;SR=0;TI=SMTPD_---.GbRhA7M_1578933839;
+        Mon, 13 Jan 2020 11:44:23 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4632446|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.571545-0.0205303-0.407925;DS=CONTINUE|ham_enroll_verification|0.0125564-0.000309334-0.987134;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07389;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=25;RT=25;SR=0;TI=SMTPD_---.GbRhA7M_1578933839;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GbRhA7M_1578933839)
           by smtp.aliyun-inc.com(10.147.40.233);
-          Tue, 14 Jan 2020 00:44:08 +0800
+          Tue, 14 Jan 2020 00:44:13 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-mips@vger.kernel.org
@@ -36,9 +37,9 @@ Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         ebiederm@xmission.com, keescook@chromium.org, ak@linux.intel.com,
         krzk@kernel.org, paul@crapouillou.net, prasannatsmkumar@gmail.com,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH 0/6] Introduce SMP support for JZ4780.
-Date:   Tue, 14 Jan 2020 00:43:27 +0800
-Message-Id: <1578933813-80122-2-git-send-email-zhouyanjie@wanyeetech.com>
+Subject: [PATCH 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
+Date:   Tue, 14 Jan 2020 00:43:30 +0800
+Message-Id: <1578933813-80122-5-git-send-email-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1578933813-80122-1-git-send-email-zhouyanjie@wanyeetech.com>
 References: <Introduce SMP support for CI20 (based on JZ4780).>
@@ -51,41 +52,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce SMP support for MIPS Creator CI20, which is
-based on Ingenic JZ4780 SoC.
+Document the available properties for the SoC root node and the
+CPU nodes of the devicetree for the Ingenic XBurst SoCs.
 
-周琰杰 (Zhou Yanjie) (6):
-  MIPS: JZ4780: Introduce SMP support.
-  clocksource: Ingenic: Add high resolution timer support for SMP.
-  dt-bindings: MIPS: Document Ingenic SoCs binding.
-  MIPS: Ingenic: Add 'cpus' node for Ingenic SoCs.
-  MIPS: CI20: Modify DTS to support high resolution timer for SMP.
-  MIPS: CI20: Update defconfig to support SMP.
-
- .../bindings/mips/ingenic/ingenic,cpu.txt          |  32 +++
- .../bindings/mips/ingenic/ingenic,soc,txt          |  18 ++
- arch/mips/boot/dts/ingenic/ci20.dts                |  11 +-
- arch/mips/boot/dts/ingenic/jz4740.dtsi             |  14 +
- arch/mips/boot/dts/ingenic/jz4770.dtsi             |  15 +-
- arch/mips/boot/dts/ingenic/jz4780.dtsi             |  23 ++
- arch/mips/boot/dts/ingenic/x1000.dtsi              |  14 +
- arch/mips/configs/ci20_defconfig                   |   2 +
- arch/mips/include/asm/mach-jz4740/jz4780-smp.h     |  91 +++++++
- arch/mips/jz4740/Kconfig                           |   3 +
- arch/mips/jz4740/Makefile                          |   5 +
- arch/mips/jz4740/prom.c                            |   4 +
- arch/mips/jz4740/smp-entry.S                       |  57 ++++
- arch/mips/jz4740/smp.c                             | 300 +++++++++++++++++++++
- arch/mips/kernel/idle.c                            |  14 +-
- drivers/clocksource/ingenic-timer.c                | 114 ++++++--
- drivers/irqchip/irq-ingenic.c                      |  21 ++
- 17 files changed, 713 insertions(+), 25 deletions(-)
+Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+---
+ .../bindings/mips/ingenic/ingenic,cpu.txt          | 32 ++++++++++++++++++++++
+ .../bindings/mips/ingenic/ingenic,soc,txt          | 18 ++++++++++++
+ 2 files changed, 50 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
  create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,txt
- create mode 100644 arch/mips/include/asm/mach-jz4740/jz4780-smp.h
- create mode 100644 arch/mips/jz4740/smp-entry.S
- create mode 100644 arch/mips/jz4740/smp.c
 
+diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
+new file mode 100644
+index 00000000..f23e9be
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
+@@ -0,0 +1,32 @@
++Bindings for Ingenic XBurst family CPUs.
++
++Required properties:
++- device_type: Must be "cpu".
++- compatible: One of:
++  - "ingenic,xburst".
++  - "ingenic,xburst2".
++- reg: The number of the CPU.
++
++Example:
++cpus {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	cpu0: cpu@0 {
++		device_type = "cpu";
++		compatible = "ingenic,xburst";
++		reg = <0>;
++
++		clocks = <&cgu JZ4780_CLK_CPU>;
++		clock-names = "cpu";
++	};
++
++	cpu1: cpu@1 {
++		device_type = "cpu";
++		compatible = "ingenic,xburst";
++		reg = <1>;
++
++		clocks = <&cgu JZ4780_CLK_CORE1>;
++		clock-names = "cpu";
++	};
++};
+diff --git a/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,txt b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,txt
+new file mode 100644
+index 00000000..c731fa3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,txt
+@@ -0,0 +1,18 @@
++Bindings for Ingenic SoCs with XBurst CPU inside.
++
++Required properties:
++- compatible: One of:
++  - "ingenic,jz4740".
++  - "ingenic,jz4725b".
++  - "ingenic,jz4760".
++  - "ingenic,jz4760b".
++  - "ingenic,jz4770".
++  - "ingenic,jz4780".
++  - "ingenic,x1000".
++  - "ingenic,x1000e".
++  - "ingenic,x1500".
++
++Example:
++#address-cells = <1>;
++#size-cells = <1>;
++compatible = "ingenic,jz4780";
 -- 
 2.7.4
 
