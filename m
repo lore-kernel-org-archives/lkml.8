@@ -2,163 +2,101 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D3CC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:21:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF884C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738C42084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 929B2207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:21:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="R7cLjYaR"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AZkS3aHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgAMWV0 (ORCPT
+        id S1728957AbgAMWVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:21:26 -0500
-Received: from mail-eopbgr1310110.outbound.protection.outlook.com ([40.107.131.110]:20928
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728746AbgAMWVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:21:25 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YWvKdXhQS+gCrPgGJU4cSF4T9MJVfUnY6iqJUbIvuFwf6XMTYsm3jMuzkmuT54zyHwQho4ON3FtYX7L8BF6ecjALUWVN0xKzP3614uSSFp6pMz7OPHpveUNjB+FlOLf8LMhYjZqYu+aiCunxVEtLXPBIJR77q+vaYQYH+H3MGIYWEQuzPcu/Bf9ba/cNNIUX97mXe/kNtm3cM25tyaHE7W81eqYPklmI/4aWTjb9w0rI4GkUmbiMwxXUuN48HxigFqL869yLO7+f2V8EE4RPX8Ef1RVIZmKwVcsnNx4W72nQoi78sJNsQtzYAe35DRMqUjkgND/baN2mGDxLfx15/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UWHOMA1VK28NQcDd1c9ecAJ8Lq9KeO3QYZFvjPy0go4=;
- b=OGvtva27UBxbMvpIaMbzxuNqJq2S8lapdfUjtobitw+OAzZCvq7Jpiap9pbuleVDkvp+qK8Kgpi4TiknFr1a17n+5y6rrFYcr30c16jZ0oTQwS/MM4TWrlc3cWbrIyex1yvAE1zb2BLe7+jlVrlgTKqSI3of/nqyl+2pMCwggERDjGikZZKmwCwOaQgqXrbRyPccamF3YDdjArvgEu0jBmzlx+rQ18U83nmMKtt3JkfuhqVOZ3mViopYZuOPxCR703+wMdA7S6YKWkwp+TLQxVmrfpHxcg0WmT+ADcwjHb77JYymLuhNDmNK0/uxjXKVeVqOAs4m7SUweX3KJ8E8Jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UWHOMA1VK28NQcDd1c9ecAJ8Lq9KeO3QYZFvjPy0go4=;
- b=R7cLjYaRDQvNk+ZhGugaYywlCis5ILBsukfxWg657TuxiLq+QWjakMi8rIum5vD3ZcbrqOHCSNLYIzdu8/eIhmcpvvRc4hlrOOjP/QigQpkJZulvn8za9NSZeu8EX8Zn537ud+ZkvOXZf18L2H0p1xQ7xm0p4aaJNUyPxf3uAPU=
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
- HK0P153MB0322.APCP153.PROD.OUTLOOK.COM (52.132.237.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2665.5; Mon, 13 Jan 2020 22:21:19 +0000
-Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::15e7:8155:31bc:d4e7]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
- ([fe80::15e7:8155:31bc:d4e7%7]) with mapi id 15.20.2644.014; Mon, 13 Jan 2020
- 22:21:18 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 0/4] hv_utils: Add the support of hibernation
-Thread-Topic: [PATCH v2 0/4] hv_utils: Add the support of hibernation
-Thread-Index: AdXJ2sJyDrPgyG+3TJyc2gafIqgsoAAg4Ifw
-Date:   Mon, 13 Jan 2020 22:21:18 +0000
-Message-ID: <HK0P153MB0148F30D914976A906B35427BF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-References: <HK0P153MB0148968D9EFBFAE1E881674CBF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-In-Reply-To: <HK0P153MB0148968D9EFBFAE1E881674CBF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T06:29:11.3769804Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7131548d-9dec-47e9-bdec-19b34d517361;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2601:600:a280:7f70:192a:f6df:afac:5af7]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6e5e02f0-804b-42e2-9681-08d79876e97e
-x-ms-traffictypediagnostic: HK0P153MB0322:|HK0P153MB0322:|HK0P153MB0322:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <HK0P153MB0322AE79B4D6A7F50936F775BF350@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(346002)(39860400002)(376002)(396003)(189003)(199004)(86362001)(8936002)(316002)(110136005)(71200400001)(966005)(8676002)(7696005)(6506007)(478600001)(81166006)(10290500003)(81156014)(5660300002)(66946007)(52536014)(66476007)(2940100002)(33656002)(64756008)(55016002)(66446008)(76116006)(66556008)(9686003)(186003)(8990500004)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0322;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: BoS7NAGV7WmGwKzuv6rcxikcMuqJVUJD07XuOsEIesTzTLYsm0dJWq5FlMaeKtuALYdBexk28OXqSbat2eKZRpZla4uLnNhJTv2rmUHQpyKtsOZiAJS5lBJzxvgjd57V2nr4OoXBTx8+d1TYVLK9F1e9uR6t0IKvgbAKavJOJerH16O9qLjxYD3U4++nFfIbYZE+RGhKWNPdeoTtjlkzPii1eIJBWBc8ZcxEeZoseL89IlZJ31XRysI1F3Dp9ZX7F9roRc8EcabuaBu2OkBdu34vGG3EHRgHaHW5B/fSPQ4KrjdzS2LYUWrc2sHmMSKJfyUqQZEXvoQIR0ffpg2gSNP5UUEoI/F6GYdO6sw7e/qV9dCACcBMU06sleYOgNs6hK+Mz561iYi7QgEBw9oDyE0BgwdsDoeKJZNBw894RboBwUlcxSytuJVcwXCVRlwt3aEWfs8zJxjcsrYRJAnAbFTnrjGI/pBh0x7S5UImgppvdtLDeNfvL3YDOKCZjqfCOdJ0WgG6x9VfaLgh+3BeVw==
-x-ms-exchange-antispam-messagedata: 426NDlxabvohD2ujTkC4SHQqnJQUcVw4S+6Gq3/5lUqDHeNxH89CVpR513x4F/qNToQ5CcWKfT3H2Jd2dlnIpS7eo7un1BQ1iPRze9MGImT3LmKXcCQGrLiBnZad8F+dU/9trl/rn75hH5/IMp6bWQJlhmwaj/nCsFa0CMhvU/kd5zXB41i5VSf/Qu298NmV+1R/V0U7pU+uNbGANMOlYw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 Jan 2020 17:21:46 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44794 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728932AbgAMWVp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 17:21:45 -0500
+Received: by mail-ot1-f67.google.com with SMTP id h9so10533735otj.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 14:21:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ex3UFTMAEfhKx0guG0nwsJE0zOFUmspUTiiCdQZAYOo=;
+        b=AZkS3aHZwBxsqylTsn1eEWpbfT0deg5vrOTs7LiyGB8g1lnK6FH2+UfYXBWvkY6ULv
+         L2AahUncm3u08u2KnFq3IkcZNVLL+0q4Df/VS2nMgtdTEfhMV6UmkKoHEo30LFduORFW
+         lNtWDDlPGuB18xsIfzirjOzb5FUEr8JVFbQ9lixTPZk9w8y2vYfwtQWfryXPkGPPJmEo
+         tw1PmN8C9ibxP8UQDb/8CkVIA+vS9SZrs1AqtZyUwsA44pNP5dS4Vm06VWqn+YiWccoj
+         7cM9PqJcK+T1kfuzzQlB+nt4mJ/rZmLAEFfmiWh12bHooq+Vhe2YKTYhcZvmM4l2p4UK
+         Lc6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ex3UFTMAEfhKx0guG0nwsJE0zOFUmspUTiiCdQZAYOo=;
+        b=kPn/72rhW4PL1mX6I2KIh5qGUfDgmg9mFgyYfXiVXD4UaRCVd41eWdfJcfVjfGNZz9
+         gDEJpxzIhYPtsjOLz3jAZGAVqa5hxbsx8IXN3Sk+8n+uXGZXfS4arlhOMk7TZapGlllr
+         CkF6ykxGJ5U6LFHICs/f0i8qgfeoFVoe62JwIsHgnjR2RKPfuiBMhSWkeLa7lBLw0n2N
+         0g8G76FCyTCg31wa+40bzXss95CkNvcOK6SdPOA4jj32w7Rastorh3EMsHzo4NlUftdf
+         /CxO40Wz9MCDyYbE7KKu/4VZoTEJuvsQIqQ7Qw2H1EWXIYO3LiyZcHuosKwiMF5StJN7
+         cBJg==
+X-Gm-Message-State: APjAAAVABgf3mD4OKlzHnvm2q1BVHxACPY+2dH+g9tIdWfS1+lrDvgYk
+        G2hz8Ak33A5iiJSL/gBsKsyXblC1oH65l56m4JrnUw==
+X-Google-Smtp-Source: APXvYqyrwZQq75+I2BdkZCiafYfDDHWMS1tOXED+Q+CkQ89ZkgEcOJ+i4XsDk7VSWnoOQlqxRkrnw6Hl75zqF784lYs=
+X-Received: by 2002:a9d:2c68:: with SMTP id f95mr15033850otb.33.1578954104459;
+ Mon, 13 Jan 2020 14:21:44 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6e5e02f0-804b-42e2-9681-08d79876e97e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 22:21:18.3007
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XxCbsPbyUS6eDb5AfMFprtuWwl4YGZTlDZaGbTJA2CFIdckd8oWhHRp5NjGajUb3d5C6scVeE6o3mU9pySIvaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0322
+References: <20191217231615.164161-1-almasrymina@google.com>
+ <817e2c4b-4c72-09f9-22ea-bbaf97584161@oracle.com> <CAHS8izNs24KOaRuQkVUuZZUh42rvkyBXJEJYrHNf9bLFnZEXCg@mail.gmail.com>
+ <a78595a8-448c-14bb-a54b-9be685f36388@oracle.com>
+In-Reply-To: <a78595a8-448c-14bb-a54b-9be685f36388@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Mon, 13 Jan 2020 14:21:33 -0800
+Message-ID: <CAHS8izMT2vNASsR2H+3-4XN=+EkAEpS-LJ_UouaAa7iUfbLBhQ@mail.gmail.com>
+Subject: Re: [PATCH v9 1/8] hugetlb_cgroup: Add hugetlb_cgroup reservation counter
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Greg Thelen <gthelen@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        Aneesh Kumar <aneesh.kumar@linux.vnet.ibm.com>,
+        =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>,
+        Hillf Danton <hdanton@sina.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Dexuan Cui
-> Sent: Sunday, January 12, 2020 10:29 PM
->=20
-> Hi,
-> This is an updated version of the v1 patchset:
-> https://lkml.org/lkml/2019/9/11/861
->=20
-> Patch #1 is a new patch that makes the daemons more robust.
->=20
-> Patch #2 is the same as v1.
->=20
-> Patch #3 sends the host-initiated hibernation request to the user space v=
-ia
-> udev.
-> (v1 used call_usermodehelper() and "/sbin/hyperv-hibernate".)
->=20
-> Patch #4 handles fcopy/vss specially to avoid possible inconsistent state=
-s.
->=20
-> Please review.
->=20
-> Thanks!
->=20
-> Dexuan Cui (4):
->   Patch #1: Tools: hv: Reopen the devices if read() or write() returns er=
-rors
->   Patch #2: hv_utils: Support host-initiated restart request
->   Patch #3: hv_utils: Support host-initiated hibernation request
->   Patch #4: hv_utils: Add the support of hibernation
+> >> On 12/17/19 3:16 PM, Mina Almasry wrote:
+> >
+> > The design we went with based on previous discussions is as follows:
+> > hugetlb pages faulted without a prior reservation get accounted at
+> > fault time, rather than reservation time, and if the fault causes the
+> > counter to cross the limit, the charge fails, hence the fault fails,
+> > hence the process gets sigbus'd.
+>
+> Ok, sorry I did not recall the design discussion.
+>
 
-Hi Vitaly,
-I forgot to mention this for patch #4: IMO we don't need to add a new
-HVUTIL_SUSPENDED state to the hvutil state machine, because:
+No worries! It has indeed been a while since that discussion.
 
-When we reach util_suspend(), all the userspace processes have been
-frozen: see kernel/power/hibernate.c: hibernate() -> freeze_processes() ->
-try_to_freeze_tasks(true) -> freeze_task() -> fake_signal_wake_up(). When
-try_to_freeze_tasks(true) returns 0, all the user-space processes must be=20
-frozen in do_signal() -> get_signal() -> try_to_freeze() -> ... -> __refrig=
-erator().
+> > This means that one counter I'm adding here can cover both use cases:
+> > if the userspace uses MAP_NORESERVE, then their memory is accounted at
+> > fault time and they may get sigbus'd.
+>
+> Let's make sure this is clearly documented.  Someone could be surprised
+> if their application not using reserves gets a SIGBUS because there is a
+> reserve limit.
 
-hibernate () -> hibernation_snapshot () -> dpm_suspend() -> ... ->=20
-util_suspend() only runs after hibernate() -> freeze_processes(), so I'm
-pretty sure we have no race condition with the user space daemon.
-
-util_suspend() -> srv->util_pre_suspend() disables the tasklet and cancels =
-any
-pening work items, so there is no race in the kernel space, either.
-
-Thanks,
--- Dexuan
+I have some stuff on that already in the docs patch, but I'll beef
+that section up to ensure there is no confusion.
