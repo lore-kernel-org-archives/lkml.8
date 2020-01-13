@@ -2,135 +2,195 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72965C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C6EC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4989C214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:44:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578941054;
-	bh=Jt+HCvjoUehH1ULTVi1If77nC6jENatri0t+e+EqeU0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0WgG+h7dH59gFS4m2ozJE3yhcuFdoUp08WJeBwxvekDHejyHwQDoQmh7/gBc8BT/E
-	 AF/8lcJoflNSa+Aj5OMg/B5ZrN9MVz/xPl7LltN0YHHXWPcHEvtSfBNj6gP1LiDu3G
-	 D3XLhmdmnWsYPSIcb8fW8wGB4gO7wBTmArvIl1/s=
+	by mail.kernel.org (Postfix) with ESMTP id 0075F21569
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:44:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TEFnciVL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728829AbgAMSoN (ORCPT
+        id S1728850AbgAMSoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:44:13 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:40351 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728664AbgAMSoM (ORCPT
+        Mon, 13 Jan 2020 13:44:19 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:58918 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728664AbgAMSoS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:44:12 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k25so5112837pgt.7;
-        Mon, 13 Jan 2020 10:44:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XCFW0Yfpgoj7tyuIPW7yq6i9Mkax8uk0L6HzdUrT4A0=;
-        b=UmiF87Pmy7EMCj5XCheHSLZsszlG5ZSZMFIh7wiSNffTKrTM5HIFOk5tBwvl4jcvhV
-         MCMl1R1gjAmNlaPSREuj0dM3j5ZCV+zPUSGJ01CAu5cDgZY5wrLKXX6tQF9HjnOPVeG4
-         HVsd2tUXtKOOMu3JMD+63nTXdMheehqDAdP6SHAPVg5EL6yJzMyxhWUrwRpPur6OORsF
-         t0zFoA7NHCANedW4Ksf5Rje8n8dhVSNb1rhp8ENxsfstADzq4tydyeyqOCyChA1tEO2Q
-         mZDSO0H3AmCQRYCR3WpE82jA2FusRTPPMlHy3HYsT/+d8xQTOFYYeqkH7AgG+WipvJ9G
-         ophg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XCFW0Yfpgoj7tyuIPW7yq6i9Mkax8uk0L6HzdUrT4A0=;
-        b=KJekepyI153Ti0ayNG6ESLtPw6QXhZ2Db0eLxcd8q9JWzCW2TusaRHEb3b7p9TErCn
-         xK14+g5es/mHY22T/KFxJGOW+zfnUveybkAagidA3WhYWcdEMK+m0Tzl9fBYOzqVTFsb
-         /91Xbp4f9SvJd1bT52Tkn1ocTBlzMMo0nyEbftFGf4sWihd++ua56f0VStQgAhr+HOqa
-         48X+OTnDKpJM1oBycNnfkkHEqmvY1EjVExCENpyjodx+n++XF5eQGJcyBYvrNQqC7Dym
-         5IaUiGNU8v8dMPFb35OR3Fa2MMvwCz8ftXv9DqqB4Wqed+VcvgJ+LKh+LLtZjV8fMBEq
-         eF6g==
-X-Gm-Message-State: APjAAAW1KK0/mE0Y0SdG71bP5i4pXPf0ocoqfsswVK+6UstFOZidVZhV
-        +8YocLDHjVN7sgnAO8PWJoU=
-X-Google-Smtp-Source: APXvYqwqaUyEulapjBKHUnWFZXcRt0mFnT42KUI+pS33SC0ueuwKMg1+GGSrydffaYzLBb4Y/EMrDg==
-X-Received: by 2002:a63:a357:: with SMTP id v23mr22421783pgn.223.1578941051972;
-        Mon, 13 Jan 2020 10:44:11 -0800 (PST)
-Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
-        by smtp.gmail.com with ESMTPSA id a16sm14152648pgb.5.2020.01.13.10.44.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 10:44:10 -0800 (PST)
-Date:   Mon, 13 Jan 2020 10:44:08 -0800
-From:   Minchan Kim <minchan@kernel.org>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>
-Subject: Re: [PATCH 2/4] mm: introduce external memory hinting API
-Message-ID: <20200113184408.GD110363@google.com>
-References: <20200110213433.94739-1-minchan@kernel.org>
- <20200110213433.94739-3-minchan@kernel.org>
- <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
- <20200113104256.5ujbplyec2sk4onn@wittgenstein>
+        Mon, 13 Jan 2020 13:44:18 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DIhSuM014798;
+        Mon, 13 Jan 2020 18:44:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=58bZpuiFAks0nyTSTapJdzHryQVmx7OwYqtXIuvSXB4=;
+ b=TEFnciVLOWX1iv14uTDL8MJpviCcdFoR7s5SF/pkyIHJbsjDrBA43BxejJUzkyMsqYo2
+ 3BNGaD6rBHVKjN1eeWN3d3SvxY5MlynKEI8hPWrYD89c2qawHaaJFWHxtgGwcelSNtwo
+ CxvRdHxgB9UBA1yJ/qFmyGjkVXcI0mvERL3mnmhzC/C7y+C53Q96d4kwWKrhYLwP8rxo
+ eCIS8QTjlBr27FDDINdjhvYGgRSQb14fPIWQLl92Frf3HFsVDGU/SOji65IuLZms2rt1
+ BIVGnYVaDAgYJ4PQGqSA9DIiHaYUT0anDaPgMjWRVlDR3zwoWUSQhl4XgjGxSnKXmprb NA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2xf74s0vcd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 18:44:04 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DIhpix077970;
+        Mon, 13 Jan 2020 18:44:04 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2xfqu50evu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 18:44:04 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00DIhEAn028860;
+        Mon, 13 Jan 2020 18:43:14 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jan 2020 10:43:14 -0800
+Subject: Re: [PATCH v9 1/8] hugetlb_cgroup: Add hugetlb_cgroup reservation
+ counter
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        aneesh.kumar@linux.vnet.ibm.com, mkoutny@suse.com,
+        Hillf Danton <hdanton@sina.com>
+References: <20191217231615.164161-1-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <817e2c4b-4c72-09f9-22ea-bbaf97584161@oracle.com>
+Date:   Mon, 13 Jan 2020 10:43:12 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113104256.5ujbplyec2sk4onn@wittgenstein>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191217231615.164161-1-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001130151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001130151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 11:42:57AM +0100, Christian Brauner wrote:
-> On Mon, Jan 13, 2020 at 11:47:11AM +0300, Kirill Tkhai wrote:
-
-< snip >
-
-> > > +SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
-> > > +		size_t, len_in, int, behavior, unsigned long, flags)
-> > 
-> > I don't like the interface. The fact we have pidfd does not mean,
-> > we have to use it for new syscalls always. A user may want to set
-> > madvise for specific pid from console and pass pid as argument.
-> > pidfd would be an overkill in this case.
-> > We usually call "kill -9 pid" from console. Why shouldn't process_madvise()
-> > allow this?
-> > 
-> > I suggent to extend first argument to work with both pid and pidfd.
-> > Look at what we have for waitid(idtype, id_t id, ...) for example:
-> > 
-> >        idtype == P_PID
-> >               Wait for the child whose process ID matches id.
-> > 
-> >        idtype == P_PIDFD (since Linux 5.4)
-> >               Wait for the child referred to by the PID file descriptor specified in id.  (See pidfd_open(2) for  further  information  on
-> >               PID file descriptors.)
-> > 
-> > We may use @flags argument for this.
+On 12/17/19 3:16 PM, Mina Almasry wrote:
+> These counters will track hugetlb reservations rather than hugetlb
+> memory faulted in. This patch only adds the counter, following patches
+> add the charging and uncharging of the counter.
 > 
-> Sorry for chiming in just a comment. Overall, I don't particularly care
-> how or if you integrate pidfd here. One thing I would like to point out
-> is that we're working on a patch to place new features under pidfd
-> specific flags. This e.g. means a pidfd would be only be able to be used
-> for madvise operations (or getfd operations) if it was created with that
-> specific flag set making it easier to share them with other processes.
-> So if you integrate them here I would be quite thankful if you target
-> the patchset for the v5.7 merge window, not for v5.6.
+> This is patch 1 of an 8 patch series.
+> 
+> Problem:
+> Currently tasks attempting to allocate more hugetlb memory than is available get
+> a failure at mmap/shmget time. This is thanks to Hugetlbfs Reservations [1].
+> However, if a task attempts to allocate hugetlb memory only more than its
+> hugetlb_cgroup limit allows, the kernel will allow the mmap/shmget call,
+> but will SIGBUS the task when it attempts to fault the memory in.
+> 
+> We have developers interested in using hugetlb_cgroups, and they have expressed
+> dissatisfaction regarding this behavior. We'd like to improve this
+> behavior such that tasks violating the hugetlb_cgroup limits get an error on
+> mmap/shmget time, rather than getting SIGBUS'd when they try to fault
+> the excess memory in.
+> 
+> The underlying problem is that today's hugetlb_cgroup accounting happens
+> at hugetlb memory *fault* time, rather than at *reservation* time.
+> Thus, enforcing the hugetlb_cgroup limit only happens at fault time, and
+> the offending task gets SIGBUS'd.
+> 
+> Proposed Solution:
+> A new page counter named hugetlb.xMB.reservation_[limit|usage]_in_bytes. This
+> counter has slightly different semantics than
+> hugetlb.xMB.[limit|usage]_in_bytes:
+> 
+> - While usage_in_bytes tracks all *faulted* hugetlb memory,
+> reservation_usage_in_bytes tracks all *reserved* hugetlb memory and
+> hugetlb memory faulted in without a prior reservation.
 
-Hi Christian,
-Sorry but I couldn't understand your point.
-Could you clarify what you meant?
+To me, this implies that 'faults without reservations' could cause
+reservation usage to exceed reservation limit?  Or, does the faulting
+process get a SIGBUS because of the reservation limit even though it
+is not using reservations?
 
-Thanks.
+We shall see in subsequent patches.
+
+> 
+> - If a task attempts to reserve more memory than limit_in_bytes allows,
+> the kernel will allow it to do so. But if a task attempts to reserve
+> more memory than reservation_limit_in_bytes, the kernel will fail this
+> reservation.
+> 
+> This proposal is implemented in this patch series, with tests to verify
+> functionality and show the usage. We also added cgroup-v2 support to
+> hugetlb_cgroup so that the new use cases can be extended to v2.
+
+As previously discussed, cgroup-v2 support for hugetlb_cgroup will exist
+before this patch series.
+
+> 
+> Alternatives considered:
+> 1. A new cgroup, instead of only a new page_counter attached to
+>    the existing hugetlb_cgroup. Adding a new cgroup seemed like a lot of code
+>    duplication with hugetlb_cgroup. Keeping hugetlb related page counters under
+>    hugetlb_cgroup seemed cleaner as well.
+> 
+> 2. Instead of adding a new counter, we considered adding a sysctl that modifies
+>    the behavior of hugetlb.xMB.[limit|usage]_in_bytes, to do accounting at
+>    reservation time rather than fault time. Adding a new page_counter seems
+>    better as userspace could, if it wants, choose to enforce different cgroups
+>    differently: one via limit_in_bytes, and another via
+>    reservation_limit_in_bytes. This could be very useful if you're
+>    transitioning how hugetlb memory is partitioned on your system one
+>    cgroup at a time, for example. Also, someone may find usage for both
+>    limit_in_bytes and reservation_limit_in_bytes concurrently, and this
+>    approach gives them the option to do so.
+> 
+> Testing:
+> - Added tests passing.
+> - Used libhugetlbfs for regression testing.
+> 
+> [1]: https://www.kernel.org/doc/html/latest/vm/hugetlbfs_reserv.html
+> 
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
+> Acked-by: Hillf Danton <hdanton@sina.com>
+
+I think the ACK by Hillf happened some time back.  You may want to check
+to see if it still applies.
+
+> 
+> ---
+>  include/linux/hugetlb.h |   4 +-
+>  mm/hugetlb_cgroup.c     | 116 +++++++++++++++++++++++++++++++++++-----
+>  2 files changed, 106 insertions(+), 14 deletions(-)
+
+Only one minor nit in the code.
+
+You made this cleanup,
+@@ -472,7 +519,7 @@ static void __init __hugetlb_cgroup_file_dfl_init(int idx)
+        struct hstate *h = &hstates[idx];
+
+        /* format the size */
+-       mem_fmt(buf, 32, huge_page_size(h));
++       mem_fmt(buf, sizeof(buf), huge_page_size(h));
+
+        /* Add the limit file */
+        cft = &h->cgroup_files_dfl[0];
+
+But did not make the same cleanup in __hugetlb_cgroup_file_legacy_init()
+-- 
+Mike Kravetz
