@@ -2,106 +2,63 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F008EC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 01:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAF76C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 01:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD11C21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 01:32:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bavqG7Bb"
+	by mail.kernel.org (Postfix) with ESMTP id BD16F21556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 01:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732849AbgAMBcS (ORCPT
+        id S1732869AbgAMBek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 20:32:18 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:43839 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727222AbgAMBcS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 20:32:18 -0500
-Received: by mail-oi1-f195.google.com with SMTP id p125so6821638oif.10;
-        Sun, 12 Jan 2020 17:32:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MMBytJUvPgAu+zMfgqDgk/AfX9Yfe5/T6E8UlbQLhRg=;
-        b=bavqG7BbIXENsNo9UOozQb1Br1Q21nNEU7hk7Iyb1e5fPuCq659TKTxQcBnyLyK8iN
-         VnFlSKggY1A4gcBuyqEQf1AsRpw9Z6DefQnra9k9TSquQQLmdnFuz3SYnA5sqq7kiJC9
-         rIfAZQXUmG3LNRog65z5m1zZyAjNyuD3ccecWyRVh7XWsCyeU0S0gH6c5CFkrn3citxc
-         VjfBCYx2f1Bb9sSqaUQwSnmCEg+9dhle+WZAiHosYYH/E7g7wvT8BvwDURbEAEcusB4u
-         E/SXBAGwI+00vIHETPisSrbgOqpxvmIUiUo2pL1R4A8lykgG64v0wXEPiR0yCdrBQTmZ
-         JXnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MMBytJUvPgAu+zMfgqDgk/AfX9Yfe5/T6E8UlbQLhRg=;
-        b=T3vYBf4dqyhd7l8zEfKqY9RFEYjuWfQFSDKu3XjqPSQBDa5bg6c8Ziq/+WFqEdgZLg
-         bmlYJeS90Vc/kPFFCQeGRhfxU705NuOg0H/6jWjzPxLNeiLl7Kjif3T2mOZcdvLlm+pi
-         kLttqLQ6u2TLzApuHKydJJEdkUWXg9BrJe7qp8ocjGXRX930dTfqdHe2fVbOfwyo2oQg
-         rA2N7JCYv8SrQR7sWVGQZ/8hx9WeNfbJVLR4CE2UvqmG0PQ4BiOHLXZiaw6FXHjpjeoW
-         pUSJqXuJBIQq9Ik/l2h9U2qj45fSrCNegyHCGL6/eKZdRsgMt4cRUFg5SLwGOEaD20R+
-         z2Xg==
-X-Gm-Message-State: APjAAAW2KmImYKQFI7Pn/y5WjZvD6gUUKMKVA49hfWirt50q32iaJSYd
-        X/cp+F+NOn/iLNCpEgMf//JKvsuxS9Bd7hqCI6k=
-X-Google-Smtp-Source: APXvYqwCPuqbYAG95luf4ZYYWjcaCVybJvsz8csO3YSbyw59b9EkPjN9oGmKDDBpKx1Q1quoOXGu4QhIj6WTgo+7q7g=
-X-Received: by 2002:aca:8d5:: with SMTP id 204mr10286701oii.141.1578879137785;
- Sun, 12 Jan 2020 17:32:17 -0800 (PST)
+        Sun, 12 Jan 2020 20:34:40 -0500
+Received: from gentwo.org ([3.19.106.255]:55568 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730100AbgAMBej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 20:34:39 -0500
+Received: by gentwo.org (Postfix, from userid 1002)
+        id EEB3C3ED6B; Mon, 13 Jan 2020 01:34:38 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id ED43E3ED4F;
+        Mon, 13 Jan 2020 01:34:38 +0000 (UTC)
+Date:   Mon, 13 Jan 2020 01:34:38 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+cc:     Vlastimil Babka <vbabka@suse.cz>, Yu Zhao <yuzhao@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [FIX] slub: Remove kmalloc under list_lock from list_slab_objects()
+ V2
+In-Reply-To: <e0ed44ae-8dae-e8db-9d14-2b09b239af8e@i-love.sakura.ne.jp>
+Message-ID: <alpine.DEB.2.21.2001130132580.1578@www.lameter.com>
+References: <20191108193958.205102-1-yuzhao@google.com> <20191108193958.205102-2-yuzhao@google.com> <alpine.DEB.2.21.1911092024560.9034@www.lameter.com> <20191109230147.GA75074@google.com> <alpine.DEB.2.21.1911092313460.32415@www.lameter.com>
+ <20191110184721.GA171640@google.com> <alpine.DEB.2.21.1911111543420.10669@www.lameter.com> <alpine.DEB.2.21.1911111553020.15366@www.lameter.com> <20191130150908.06b2646edfa7bdc12a943c25@linux-foundation.org> <alpine.DEB.2.21.1912021511250.15780@www.lameter.com>
+ <20191207220320.GA67512@google.com> <e9f26cbd-593b-116e-2e4a-f8e0e16c23fc@suse.cz> <e0ed44ae-8dae-e8db-9d14-2b09b239af8e@i-love.sakura.ne.jp>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <CANRm+Cw1eTNgB1r79J7U__ynio7pMSR4Xa35XuQuj-JKAQGxmg@mail.gmail.com>
- <87a76v8knv.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87a76v8knv.fsf@nanos.tec.linutronix.de>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 13 Jan 2020 09:32:06 +0800
-Message-ID: <CANRm+CyGWvY767ER14EqWAZakZu3S0KL=X5PT7Pyu=ezVZZoag@mail.gmail.com>
-Subject: Re: [PATCH v2] sched/nohz: Optimize get_nohz_timer_target()
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, kvm <kvm@vger.kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 at 22:12, Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Wanpeng,
->
-> Wanpeng Li <kernellwp@gmail.com> writes:
->
-> > Hi Thomas,
-> > On Wed, 23 Oct 2019 at 16:29, Thomas Gleixner <tglx@linutronix.de> wrote:
-> >>
-> >> On Wed, 23 Oct 2019, Wanpeng Li wrote:
-> >> > I didn't see your refactor to get_nohz_timer_target() which you
-> >> > mentioned in IRC after four months, I can observe cyclictest drop from
-> >> > 4~5us to 8us in kvm guest(we offload the lapic timer emulation to
-> >> > housekeeping cpu to avoid timer fire external interrupt on the pCPU
-> >> > which vCPU resident incur a vCPU vmexit) w/o this patch in the case of
-> >> > there is no busy housekeeping cpu. The score can be recovered after I
-> >> > give stress to create a busy housekeeping cpu.
-> >> >
-> >> > Could you consider applying this patch for temporary since I'm not
-> >> > sure when the refactor can be ready.
-> >>
-> >> Yeah. It's delayed (again).... Will pick that up.
-> >
-> > I didn't find WIP tag for this work after ~half year since v4 was
-> > posted https://lkml.org/lkml/2019/6/28/231 Could you apply this patch
-> > for temporary because the completion time of refactor is not
-> > deterministic.
->
-> Could you please repost it?
+On Sun, 12 Jan 2020, Tetsuo Handa wrote:
 
-Just repost, thanks Thomas.
+> On 2020/01/10 23:11, Vlastimil Babka wrote:
+> Hmm, this one? Even non-ML destinations are sometimes rejected (e.g.
+>   554 5.7.1 Service unavailable; Client host [202.181.97.72] blocked using b.barracudacentral.org; http://www.barracudanetworks.com/reputation/?pr=1&ip=202.181.97.72
+> ). Anyway, I just worried whether it is really safe to do memory allocation
+> which might involve memory reclaim. You MM guys know better...
 
-    Wanpeng
+We are talking about a call to destroy the kmem_cache. This is not done
+under any lock. The lock was taken inside that function before the call to
+list_slab_objects. That can be avoided.
