@@ -2,146 +2,104 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B171FC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:20:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D945C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 873F7207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:20:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FB28206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:23:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="fTKl6SlK";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ivuoZhBs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C9QgZEWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733259AbgAMDUn (ORCPT
+        id S1733196AbgAMDXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 22:20:43 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:42865 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1733020AbgAMDUf (ORCPT
+        Sun, 12 Jan 2020 22:23:19 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36822 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733020AbgAMDXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 22:20:35 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0A9F6220E1;
-        Sun, 12 Jan 2020 22:20:34 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sun, 12 Jan 2020 22:20:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:mime-version
-        :content-transfer-encoding; s=fm1; bh=ayrlkXHGm5lt6lLJAPNWvVy/hi
-        Q1duOWAQwfasBu6FY=; b=fTKl6SlKcwHTYRxceYjcmQA61y8VvSiLy9Hr1QbYB/
-        p6581XesWJ7WbUoUAOL50AVG/lPP58AS12R4HOgOwzinc6husDGEKcfgeDuPlvur
-        LW8J+U60+7IfkJOtKiffQIQxSUsffwPoaTFD8Xjy6cB0QkUrhRYEfSztoMD3dFpf
-        vZ6zzlui0I9189MKJlJjQGsJ526+IaC9Eo+EvPdIh1r4dRxVc/QVODua/zN9I8BX
-        s5qv3BTJEB8eGDME366oqLSrCtkbguMSleG0sNp5bgLBI32jO+jO+k1Q4lG0ysF4
-        m9xWuzQ7ih9m0KgePgG5JLkq4bQESj304HzOXEb1f+vA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=ayrlkXHGm5lt6lLJA
-        PNWvVy/hiQ1duOWAQwfasBu6FY=; b=ivuoZhBspxctCYYxWJW37iFqveK8zdUgL
-        zeVq/XzjCU94qeYtiqrhF+o5f0K5vEJQRTktDthQQyuOzljZJVmXAgYyrMGlD3GP
-        ss0mifrki86dukgnXg59+9ZtEMiLygnckmCNl/vk2VMv+t7um9sBzRgVOOMOxq2/
-        j45UM6PKZ2IsXe1vjv354PTM89afrchN42kJQqyF97E+XlZ72tSXZx5c8tb4MpmZ
-        +npsjlyOoBIjU6WvPVzggJZxoc016AKMACmxc5WYPQU0LFRrYoFW8TzFKb6RP4FP
-        8B+++tJY60I16ctOQiBHeqk0ra0RySou05QqsyOd9EcnvDbZzpB6w==
-X-ME-Sender: <xms:AeIbXp2k1gbGUhg6BafMwW_6KY8ZG7OeEQ8EtDzgS2ahcEHaBAAurA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeiledgheelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffoggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgvlhcu
-    jfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkphepje
-    dtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghmuhgv
-    lhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:AeIbXkUaKkkL_Qi7-_gfz5xfdIPGR3yyao4Vvk-sdp3X_p4u42-BTw>
-    <xmx:AeIbXk4azsmlfRGUiaMeRadAzJWtTyRlo92lFMdNk8eo0DBMYTbbpA>
-    <xmx:AeIbXrJQSgsMJG7r9-yGeiloFfQ-ICqyPBthQCvC4nFRPMox-TU13A>
-    <xmx:AuIbXkNLubhc2LuzG0tD7xQ9nFhw1LHM078rOJ-X_Q2p1W984HjH5g>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 17B718005B;
-        Sun, 12 Jan 2020 22:20:33 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 1/3] Input: axp20x-pek - Remove unique wakeup event handling
-Date:   Sun, 12 Jan 2020 21:20:30 -0600
-Message-Id: <20200113032032.38709-1-samuel@sholland.org>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 12 Jan 2020 22:23:19 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n59so3650540pjb.1
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 19:23:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=tuL/sUzlzZyNW35DUcDDiOxQ2sElchyKRZIw9ifc/VM=;
+        b=C9QgZEWvcMn2jqlpJ+FWjpvALoeVJL2WLA7ZhF22RqsitJeARvwXpUNPpqx9Utbo2F
+         +PLqRD+rxDA1j815sPkf+cG7P0QCpjx0Qiy1SCBfiRK+7wlo/1ULx3foHquOLXUgEnC9
+         67yxkR7lNRtKUAJa6ELpGTR1vI04Ba/Kdcwt9QTP2B3V/fN7hgiMy6v+S+Tts7vmwXih
+         GShCaADo+QLDcyyiHo4M8++zKlO/6MlpAVWWzYJN43Mg8Q4tB4YJT1i3tUliQ3pUyZnE
+         jz/jRa9PN7wPy23RtDPrBauxe3uUp8FxmTwVUm5St1KhqolJLsquh98yBO3Gkaaibl9H
+         8zlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tuL/sUzlzZyNW35DUcDDiOxQ2sElchyKRZIw9ifc/VM=;
+        b=lnMVKzTNS0eEbcZD94/bZrS4lwyb2R0Wm1gb0H4/g8kqmcfVeJp9vFQYkK6y3fTuXQ
+         Yo4WliQnGfYUvV7sLvxiEMeeqAJ0tNpPHXJNJuVEpLrwASYDZEa8TT/prPkB3kgFXcJm
+         67Fwlyb5UGca18ngA/WxXTszsct677cGUHv1Sxski53mQ90rti/6zuOez1HRcIiABJrU
+         KW4q0gl9k0favIA2qSeS7B+FH514zRsnc1PKQZIp1A3KX+gZ8dG1bELkgp16XlWOiY0k
+         Eh80frQXYcpmysmNscHOdlgQFt1iClYQaVhy1XI+RjZaXzlvv5l+7ec6SEsPMXhq7TPW
+         fdRA==
+X-Gm-Message-State: APjAAAVm+fiQwL6RDto6DL7voobOD1vAcb8R25gS+lQxn3LIZdU6T3C5
+        U7eFrw85Bve9zOYPc2hx6JVus1kx788=
+X-Google-Smtp-Source: APXvYqxNwAQaG6At2rkySC52oLtC5VBQCeBbKacI3QcfkT37afSx+1J+ZsJbnaepWABFXrTfvZogvw==
+X-Received: by 2002:a17:902:26a:: with SMTP id 97mr11701262plc.74.1578885798230;
+        Sun, 12 Jan 2020 19:23:18 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id s131sm12638203pfs.135.2020.01.12.19.23.17
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Sun, 12 Jan 2020 19:23:17 -0800 (PST)
+From:   qiwuchen55@gmail.com
+To:     christian.brauner@ubuntu.com, peterz@infradead.org,
+        mingo@kernel.org, tglx@linutronix.de, oleg@redhat.com,
+        elena.reshetova@intel.com, jgg@ziepe.ca, christian@kellner.me,
+        aarcange@redhat.com, viro@zeniv.linux.org.uk, cyphar@cyphar.com,
+        ldv@altlinux.org
+Cc:     linux-kernel@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>
+Subject: [PATCH] kernel/fork: put some fork variables into read-mostly section
+Date:   Mon, 13 Jan 2020 11:23:13 +0800
+Message-Id: <1578885793-24095-1-git-send-email-qiwuchen55@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver attempts to avoid reporting wakeup events to userspace by
-clearing a possible pending IRQ before IRQs are enabled during resume.
-The assumption seems to be that userspace cannot cope with a KEY_POWER
-press during resume. However, no other input driver does this, so it
-would be a bug that such events are missing with this driver.
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-Furthermore, for PMICs connected via I2C or RSB, it is not possible to
-update the regmap during the noirq resume phase, because the bus
-controller drivers require IRQs to perform bus transactions. And the
-resume hook cannot move to a later phase, because then it would race
-with the power key IRQ handler.
+Since total_forks/nr_threads/max_threads global variables are
+frequently used for process fork, putting these variables into
+read_mostly section can avoid unnecessary cache line bouncing.
 
-So the best solution seems to be simply removing the hook.
-
-Signed-off-by: Samuel Holland <samuel@sholland.org>
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
 ---
- drivers/input/misc/axp20x-pek.c | 25 -------------------------
- 1 file changed, 25 deletions(-)
+ kernel/fork.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
-index 17c1cca74498..7d0ee5bececb 100644
---- a/drivers/input/misc/axp20x-pek.c
-+++ b/drivers/input/misc/axp20x-pek.c
-@@ -352,30 +352,6 @@ static int axp20x_pek_probe(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 0808095..163e152 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -120,10 +120,10 @@
+ /*
+  * Protected counters by write_lock_irq(&tasklist_lock)
+  */
+-unsigned long total_forks;	/* Handle normal Linux uptimes. */
+-int nr_threads;			/* The idle threads do not count.. */
++unsigned long total_forks __read_mostly; /* Handle normal Linux uptimes. */
++int nr_threads __read_mostly;  /* The idle threads do not count.. */
  
--static int __maybe_unused axp20x_pek_resume_noirq(struct device *dev)
--{
--	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
--
--	if (axp20x_pek->axp20x->variant != AXP288_ID)
--		return 0;
--
--	/*
--	 * Clear interrupts from button presses during suspend, to avoid
--	 * a wakeup power-button press getting reported to userspace.
--	 */
--	regmap_write(axp20x_pek->axp20x->regmap,
--		     AXP20X_IRQ1_STATE + AXP288_IRQ_POKN / 8,
--		     BIT(AXP288_IRQ_POKN % 8));
--
--	return 0;
--}
--
--static const struct dev_pm_ops axp20x_pek_pm_ops = {
--#ifdef CONFIG_PM_SLEEP
--	.resume_noirq = axp20x_pek_resume_noirq,
--#endif
--};
--
- static const struct platform_device_id axp_pek_id_match[] = {
- 	{
- 		.name = "axp20x-pek",
-@@ -394,7 +370,6 @@ static struct platform_driver axp20x_pek_driver = {
- 	.id_table	= axp_pek_id_match,
- 	.driver		= {
- 		.name		= "axp20x-pek",
--		.pm		= &axp20x_pek_pm_ops,
- 		.dev_groups	= axp20x_groups,
- 	},
- };
+-static int max_threads;		/* tunable limit on nr_threads */
++static int max_threads __read_mostly; /* tunable limit on nr_threads */
+ 
+ #define NAMED_ARRAY_INDEX(x)	[x] = __stringify(x)
+ 
 -- 
-2.23.0
+1.9.1
 
