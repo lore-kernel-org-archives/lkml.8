@@ -2,161 +2,118 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09657C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16880C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFB78207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:40:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UGFGR/d2"
+	by mail.kernel.org (Postfix) with ESMTP id E0FC520678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:41:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578926466;
+	bh=6xfD5sUwzZ86TIOTCcD12Ul0sGUGHJc94opSV7Kui+U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZewVeRKd3vnOPlUbS7Rlp4LNjXRJYmTJLHQJX3iW71HaFHyMG71pFPdpb+FDuXOAi
+	 KrU59PLwsc78YAF0AOGC2s/ig7Fwo1OnyCfhLFO42+BJDyZsXNdeW9edSKHIbZKkK+
+	 ClnSPNNPGXBA4PuHFl0GNVNVaw2HYbkKBPBJ4eq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgAMOkv (ORCPT
+        id S1728959AbgAMOlF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:40:51 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45853 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728643AbgAMOkt (ORCPT
+        Mon, 13 Jan 2020 09:41:05 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37740 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728643AbgAMOlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:40:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578926449;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nkiqYNaUf9QZxMjcOapYuuaCZwyteQKyk2Vp/EqR3qw=;
-        b=UGFGR/d2A4vTugUUoboksK6rA9cSFx26whDahKZSKfmoEuCAd6cxXbp6RSMFnNBj/bNFrr
-        udeO4QwLzqHK/KobgXmwOdCFxqHhM5bMNnzVHIII81WS4BSv4JbSKjlG9D93OiOut0WgkQ
-        tW+AGO+AgdieqTL9gJzpTI3ZaAQ/e5I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-335-L5vepq2aMjiP8_ggSb84Lw-1; Mon, 13 Jan 2020 09:40:46 -0500
-X-MC-Unique: L5vepq2aMjiP8_ggSb84Lw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8D81C1005516;
-        Mon, 13 Jan 2020 14:40:44 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-117-201.ams2.redhat.com [10.36.117.201])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 129AB19756;
-        Mon, 13 Jan 2020 14:40:42 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>
-Subject: [PATCH v1 2/2] mm: factor out next_present_section_nr()
-Date:   Mon, 13 Jan 2020 15:40:35 +0100
-Message-Id: <20200113144035.10848-3-david@redhat.com>
-In-Reply-To: <20200113144035.10848-1-david@redhat.com>
-References: <20200113144035.10848-1-david@redhat.com>
+        Mon, 13 Jan 2020 09:41:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cmw7dFl1Y7sQ8UiRxp2eW384vYAmiwDtFE09krfcKmk=; b=QmXXoIoXXOYZRdaMuzCjDqOVB
+        vdU4T/efZPGe8aN+PFuYBZGSQL21ap1tA/7zfIPRDtxe2cRe6WczzbJJd1xeSI2A2M3V2tg614f/e
+        9wM4DGc4nDaSPcYbqH1+MGKv9kdb8EaPS48iKjbnvq5f67DFmAC/07lBiKWeXFLP5hzlA=;
+Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1ir0tp-0002tS-PJ; Mon, 13 Jan 2020 14:41:01 +0000
+Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
+        id 70D6DD01965; Mon, 13 Jan 2020 14:41:01 +0000 (GMT)
+Date:   Mon, 13 Jan 2020 14:41:01 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Robert Marko <robert.marko@sartura.hr>
+Cc:     lgirdwood@gmail.com, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/3] dt-bindings: vqmmc-ipq4019-regulator: add binding
+ document
+Message-ID: <20200113144101.GM3897@sirena.org.uk>
+References: <20200112113003.11110-1-robert.marko@sartura.hr>
+ <20200112113003.11110-2-robert.marko@sartura.hr>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="YIleam+9adpUeYf+"
+Content-Disposition: inline
+In-Reply-To: <20200112113003.11110-2-robert.marko@sartura.hr>
+X-Cookie: Programming is an unnatural act.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's move it to the header and use the shorter variant from
-mm/page_alloc.c (the original one will also check
-"__highest_present_section_nr + 1", which is not necessary). While at it,
-make the section_nr in next_pfn() const.
 
-In next_pfn(), we now return section_nr_to_pfn(-1) instead of -1 once
-we exceed __highest_present_section_nr, which doesn't make a difference i=
-n
-the caller as it is big enough (>=3D all sane end_pfn).
+--YIleam+9adpUeYf+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- include/linux/mmzone.h | 10 ++++++++++
- mm/page_alloc.c        | 11 ++---------
- mm/sparse.c            | 10 ----------
- 3 files changed, 12 insertions(+), 19 deletions(-)
+On Sun, Jan 12, 2020 at 12:30:02PM +0100, Robert Marko wrote:
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index c2bc309d1634..462f6873905a 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1379,6 +1379,16 @@ static inline int pfn_present(unsigned long pfn)
- 	return present_section(__nr_to_section(pfn_to_section_nr(pfn)));
- }
-=20
-+static inline unsigned long next_present_section_nr(unsigned long sectio=
-n_nr)
-+{
-+	while (++section_nr <=3D __highest_present_section_nr) {
-+		if (present_section_nr(section_nr))
-+			return section_nr;
-+	}
-+
-+	return -1;
-+}
-+
- /*
-  * These are _only_ used during initialisation, therefore they
-  * can use __initdata ...  They could have names to indicate
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index a92791512077..26e8044e9848 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5852,18 +5852,11 @@ overlap_memmap_init(unsigned long zone, unsigned =
-long *pfn)
- /* Skip PFNs that belong to non-present sections */
- static inline __meminit unsigned long next_pfn(unsigned long pfn)
- {
--	unsigned long section_nr;
-+	const unsigned long section_nr =3D pfn_to_section_nr(++pfn);
-=20
--	section_nr =3D pfn_to_section_nr(++pfn);
- 	if (present_section_nr(section_nr))
- 		return pfn;
--
--	while (++section_nr <=3D __highest_present_section_nr) {
--		if (present_section_nr(section_nr))
--			return section_nr_to_pfn(section_nr);
--	}
--
--	return -1;
-+	return section_nr_to_pfn(next_present_section_nr(section_nr));
- }
- #else
- static inline __meminit unsigned long next_pfn(unsigned long pfn)
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 3822ecbd8a1f..ac4a2bfae514 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -198,16 +198,6 @@ static void section_mark_present(struct mem_section =
-*ms)
- 	ms->section_mem_map |=3D SECTION_MARKED_PRESENT;
- }
-=20
--static inline unsigned long next_present_section_nr(unsigned long sectio=
-n_nr)
--{
--	do {
--		section_nr++;
--		if (present_section_nr(section_nr))
--			return section_nr;
--	} while ((section_nr <=3D __highest_present_section_nr));
--
--	return -1;
--}
- #define for_each_present_section_nr(start, section_nr)		\
- 	for (section_nr =3D next_present_section_nr(start-1);	\
- 	     ((section_nr !=3D -1) &&				\
---=20
-2.24.1
+> +  regulator-min-microvolt:
+> +    description: smallest voltage consumers may set
+> +
+> +  regulator-max-microvolt:
+> +    description: largest voltage consumers may set
 
+Why are these explicitly specified in this binding?
+
+> +  regulator-always-on:
+> +    description: boolean, regulator should never be disabled
+> +    type: boolean
+
+If it's not physically possible to disable the regulator then
+specifying this property is redundant so...
+
+> +required:
+> +  - compatible
+> +  - reg
+> +  - regulator-name
+> +  - regulator-min-microvolt
+> +  - regulator-max-microvolt
+> +  - regulator-always-on
+
+...requiring it doesn't seem useful.  All the other
+regulator-specific properties shouldn't be required either,
+unless the user specifies a voltage range we won't allow changes
+at all which should be safe and the name is purely cosmetic.
+
+--YIleam+9adpUeYf+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4cgXwACgkQJNaLcl1U
+h9AGOAf/XoQqm2m+apQzBOVYMiwDsu0nOFhxV8XaJBiWBGzU0AawlSf5QbCGmAW6
+ttTl87Wm4eih/gQDT1WwKmNtgEggitznUEP37aeokmebJnpQVoypuCjHmBhvhAr/
+QqqZg4U2cNTWUZSiq5GMJZVr0kobt8vKd8APtYPufQWs1sE2txUkSyCemxt8cMSu
+4dXf+oxe1V5BwwY8dLAjuEQ1Yfi7WerN67LdwhaOrBDNZrMFydu68oyHU1GAX1qf
+Cid0TccaEHF6bZv0uc/XF6RgzHstqmYo/QG5KVwTw+lcHk3BTBZ5imWoOVrpS7lx
+DBvbEUuLAZ3I1H1vZyTVsA3snTtHBA==
+=5bSM
+-----END PGP SIGNATURE-----
+
+--YIleam+9adpUeYf+--
