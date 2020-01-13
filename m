@@ -2,119 +2,131 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89697C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4CABC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A122075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE9D207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:20:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20150623.gappssmtp.com header.i=@daynix-com.20150623.gappssmtp.com header.b="xnIE4e4r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fpUiy3Xg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgAMIRq (ORCPT
+        id S1728795AbgAMIUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 03:17:46 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40724 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728789AbgAMIRq (ORCPT
+        Mon, 13 Jan 2020 03:20:37 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:47019 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728682AbgAMIUg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 03:17:46 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c14so7511006wrn.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 00:17:44 -0800 (PST)
+        Mon, 13 Jan 2020 03:20:36 -0500
+Received: by mail-pl1-f195.google.com with SMTP id y8so3522755pll.13
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 00:20:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=0zANXS8TKEoJJ1M/Ul1KQmGBcWvlQfYmWq/kiBRyKvE=;
-        b=xnIE4e4rPMU7OcSUOkAKlSrl9l0EdteOqeunkUgKv3arlLdDevR5M5UkbX+CciM44M
-         mWZouqu8AcjErkPZBBVSPB2ulJ0+cd5V/Cuud7lgm6/FdhPntluM5DU/c/JTFyuYLAKW
-         djGwT/u2QtBSq19YSbgEgsVJs08zFbxJAoxrDDPnYcfTuKFdXE1QPp1Hv7dtZbp/qsVB
-         9kL9iu9sjaz0qgZE/AETM+jugg22uE6vU59YWmjzcvPZrR4z0pkpd7GZAdWHofocrrrZ
-         /c/7XPoOUhDE8q2coVq/408tcWpqI+4/vP9URmPtAePlqwjxht3/dMQbTfAOTMuKd+8k
-         4lzw==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=bMqucdvwW4DxJLa5hqSQSlZ+HKdfxlLmr5IwDINyABs=;
+        b=fpUiy3Xg2sDv9bf5OvF1hAah/1QRfWGgnppILok/K04EQDtG9R8vzvFWp4cJJKwGLz
+         NAKUewD9PkneM7K0lq/XVUrVVe2YZj3FXxwyi2gJMFc/Tu1EctP5uhoFSWDxgoxt/awA
+         mtI01TvYQOh3VqyTmS7ku9hk1TVXft8kUl1Fg48XO4QTe5wThfSIPsKwX17AlW9qmKSC
+         e4FKuRVBJFjWZKAvtU/pe3rGvgIarYB8fz0A/Z+k8gy9XjZO+lg0VM56D2D21k+fiq7+
+         kpeBO8Hg2XKDGFX82AXVVoq58alG+dpAO45W2ZKvWvKM8jWCDWB5ujkDx1ThFoiiQjdW
+         hYOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0zANXS8TKEoJJ1M/Ul1KQmGBcWvlQfYmWq/kiBRyKvE=;
-        b=lt+5ciBS119ZR1X7PNdbyktm9Iq/w9hbFedyNQ/BGw0D26LSfu7BjCpyKUhfAqoKh5
-         DJZVoUrs+SK3UbqfqVLAoYo73VxrGa+RoX+spm46MLJsSdMVj9eDu6ox3QlZdB7FgZAm
-         3oi0Dxfif0ul3yJK/GUJ88D0WOGi6N6zCyG7lg9EEpBdzVL1qS9LKcdsycL2PP4RGDX4
-         z+nGOTwmbJyY4LKxBwTxSig64jtkXKqUA8/YxY8Ei2rIdp4UTI9Q8dMcuHfr1oQLSWrx
-         +jylfrNvJnuDc+Dqfl9sRSNYfkqy2XLus3LF5dNjb9VhiXPRri4UeErcvmyCfDDrBxiA
-         kKuA==
-X-Gm-Message-State: APjAAAWHBYDYl6Ego0lifExGZQK1bBrh6vAdKgfh1kH5pfkcOJRDSWry
-        JBCqrbJiQzSca46kjt389avypg==
-X-Google-Smtp-Source: APXvYqzANWNHrC26zw2epeZgu5xcQ1xAM/Ml24jTOdkZMXBwIIusDkz1CKMmA1wx3gHpSAxsNFQepQ==
-X-Received: by 2002:a5d:4d8d:: with SMTP id b13mr17827382wru.6.1578903463793;
-        Mon, 13 Jan 2020 00:17:43 -0800 (PST)
-Received: from f2.redhat.com (bzq-79-177-42-131.red.bezeqint.net. [79.177.42.131])
-        by smtp.gmail.com with ESMTPSA id v14sm13949234wrm.28.2020.01.13.00.17.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 Jan 2020 00:17:43 -0800 (PST)
-From:   Yuri Benditovich <yuri.benditovich@daynix.com>
-To:     mst@redhat.com, jasowang@redhat.com,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     yan@daynix.com
-Subject: [PATCH v2] virtio-net: Introduce extended RSC feature
-Date:   Mon, 13 Jan 2020 10:17:36 +0200
-Message-Id: <20200113081736.2340-1-yuri.benditovich@daynix.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=bMqucdvwW4DxJLa5hqSQSlZ+HKdfxlLmr5IwDINyABs=;
+        b=gtPaoftDvcGapUwBEtC6MJinLAJC5qRyGr0KxMW+UcKbdrG5zFZUlU11V4MMvd6W8u
+         +9lQi8/ng0kj8uA9eraZJZoEgtI9j7st6NhUyPdI7WyabMyOIuzJjQYDPpqB7kQqP5fI
+         IYHosOdb9ExArwAeITzJHwDpmp4dbBMUZ0dfmdJ8FqeOSbhwdIj3vdp1R9txSmqmD319
+         EscFopNCCapID6Cfm1p43lBEJ3Pwn515QI1zSAoWLe9hYG246KJg1/mx+HPlzycze4X/
+         5ztN8lRJr77w/lLK4hB0jMLelOyRAiRF0/nbo1atrrKIRJEvChvZzEZXyD2ZKSD8tTjN
+         2L7A==
+X-Gm-Message-State: APjAAAV9V1zHYQn3sMIROs7DMex4IqWOxeVSpOjAqUGzLkBLMvXBauVF
+        aS0JtQvdCT+FzfjfmrVzhs/extEe
+X-Google-Smtp-Source: APXvYqzq8v/enDDBDTkt0OxdeBhm2NzezTQsHz2JVtReupHvyt0kSjM1nkMx9CUwKaZZe9bfqalBTQ==
+X-Received: by 2002:a17:902:694c:: with SMTP id k12mr12673527plt.329.1578903635888;
+        Mon, 13 Jan 2020 00:20:35 -0800 (PST)
+Received: from ?IPv6:2402:f000:1:1501:200:5efe:166.111.139.115? ([2402:f000:1:1501:200:5efe:a66f:8b73])
+        by smtp.gmail.com with ESMTPSA id c22sm12668511pfo.50.2020.01.13.00.20.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 00:20:35 -0800 (PST)
+Subject: Re: [PATCH] ALSA: cmipci: Fix possible a data race in
+ snd_cmipci_interrupt()
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     perex@perex.cz, tiwai@suse.com, rfontana@redhat.com,
+        tglx@linutronix.de, allison@lohutok.net,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20200111163027.27135-1-baijiaju1990@gmail.com>
+ <s5h5zhhkrwe.wl-tiwai@suse.de>
+From:   Jia-Ju Bai <baijiaju1990@gmail.com>
+Message-ID: <de859611-4bd0-647f-61e9-7138425ed736@gmail.com>
+Date:   Mon, 13 Jan 2020 16:20:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <s5h5zhhkrwe.wl-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VIRTIO_NET_F_RSC_EXT feature bit indicates that the device
-is able to provide extended RSC information. When the feature
-is negotiatede and 'gso_type' field in received packet is not
-GSO_NONE, the device reports number of coalesced packets in
-'csum_start' field and number of duplicated acks in 'csum_offset'
-field and sets VIRTIO_NET_HDR_F_RSC_INFO in 'flags' field.
 
-Signed-off-by: Yuri Benditovich <yuri.benditovich@daynix.com>
----
- include/uapi/linux/virtio_net.h | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
-index a3715a3224c1..2bdd26f8a4ed 100644
---- a/include/uapi/linux/virtio_net.h
-+++ b/include/uapi/linux/virtio_net.h
-@@ -56,7 +56,7 @@
- #define VIRTIO_NET_F_MQ	22	/* Device supports Receive Flow
- 					 * Steering */
- #define VIRTIO_NET_F_CTRL_MAC_ADDR 23	/* Set MAC address */
--
-+#define VIRTIO_NET_F_RSC_EXT	  61	/* Provides extended RSC info */
- #define VIRTIO_NET_F_STANDBY	  62	/* Act as standby for another device
- 					 * with the same MAC.
- 					 */
-@@ -104,6 +104,7 @@ struct virtio_net_config {
- struct virtio_net_hdr_v1 {
- #define VIRTIO_NET_HDR_F_NEEDS_CSUM	1	/* Use csum_start, csum_offset */
- #define VIRTIO_NET_HDR_F_DATA_VALID	2	/* Csum is valid */
-+#define VIRTIO_NET_HDR_F_RSC_INFO	4	/* rsc_ext data in csum_ fields */
- 	__u8 flags;
- #define VIRTIO_NET_HDR_GSO_NONE		0	/* Not a GSO frame */
- #define VIRTIO_NET_HDR_GSO_TCPV4	1	/* GSO frame, IPv4 TCP (TSO) */
-@@ -118,6 +119,13 @@ struct virtio_net_hdr_v1 {
- 	__virtio16 num_buffers;	/* Number of merged rx buffers */
- };
- 
-+/*
-+ * if VIRTIO_NET_F_RSC_EXT feature has been negotiated and
-+ * VIRTIO_NET_HDR_F_RSC_INFO is set in RX packet
-+ */
-+#define virtio_net_rsc_ext_num_packets	csum_start
-+#define virtio_net_rsc_ext_num_dupacks	csum_offset
-+
- #ifndef VIRTIO_NET_NO_LEGACY
- /* This header comes first in the scatter-gather list.
-  * For legacy virtio, if VIRTIO_F_ANY_LAYOUT is not negotiated, it must
--- 
-2.17.1
+On 2020/1/12 16:20, Takashi Iwai wrote:
+> On Sat, 11 Jan 2020 17:30:27 +0100,
+> Jia-Ju Bai wrote:
+>> The functions snd_cmipci_interrupt() and snd_cmipci_capture_trigger()
+>> may be concurrently executed.
+>>
+>> The function snd_cmipci_capture_trigger() calls
+>> snd_cmipci_pcm_trigger(). In snd_cmipci_pcm_trigger(), the variable
+>> rec->running is written with holding a spinlock cm->reg_lock. But in
+>> snd_cmipci_interrupt(), the identical variable cm->channel[0].running
+>> or cm->channel[1].running is read without holding this spinlock. Thus,
+>> a possible data race may occur.
+>>
+>> To fix this data race, in snd_cmipci_interrupt(), the variables
+>> cm->channel[0].running and cm->channel[1].running are read with holding
+>> the spinlock cm->reg_lock.
+>>
+>> This data race is found by the runtime testing of our tool DILP-2.
+>>
+>> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> Thanks for the patch.
+>
+> That's indeed a kind of race, but this change won't fix anything in
+> practice, though.  The inconsistent running flag between those places,
+> there are two cases:
+>
+> - running became 0 to 1; this cannot happen, as the irq isn't issued
+>    before the stream gets started
+>
+> - running became 1 to 0; this means that the stream gets stopped
+>    between two points, and it's not better to call
+>    snd_pcm_period_elapsed() for an already stopped stream.
 
+Thanks for the reply :)
+
+I am not sure to understand your words.
+
+Do you mean that this code should be also protected by the spinlock?
+     if (cm->pcm) {
+         if ((status & CM_CHINT0) && cm->channel[0].running)
+             snd_pcm_period_elapsed(cm->channel[0].substream);
+         if ((status & CM_CHINT1) && cm->channel[1].running)
+             snd_pcm_period_elapsed(cm->channel[1].substream);
+     }
+
+
+Best wishes,
+Jia-Ju Bai
