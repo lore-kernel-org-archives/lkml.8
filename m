@@ -2,99 +2,148 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F21C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 272FCC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A58C21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8DDD21744
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:29:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="EQ//Ej4C"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="HZHC5UAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387525AbgAMG2b (ORCPT
+        id S2387590AbgAMG3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 01:28:31 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43667 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730659AbgAMG2a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 01:28:30 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x6so4358043pfo.10
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:28:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=I5C3nwrlmpAyk+QkEXs7euA2p6whJngz7gNkLGAB+Ws=;
-        b=EQ//Ej4CuJIOHENKsDe7JOHI8zjDbtFhhHsj5YCGU3PB1YX04S4W8Bw2pFN6S9QmmZ
-         QLXumgM5mJyIFQdCT1oxH5p4P7SbWmgmYf1P9QHzPDiMmWLNII38CmGqffYb3QhkrZvW
-         Lil4iTXVDD/Ux4IJJIRGvNag3acWc0Ta6cMZlfG/NkPVZnRHz2BLhfDS3iTuK7H8k7nx
-         4wrxfJiHYssbimlmf2G7cqAbjsF4zpo15Y2FGFD7A3v/I8e7QOMduSabuVjXegZWmKyh
-         fD64SbbGcM8ScqwhOGEJbtBg6tCk9OL8IiGZd2kNqRGDNarP+mp3T1RTEddLDgxVFrue
-         d2Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=I5C3nwrlmpAyk+QkEXs7euA2p6whJngz7gNkLGAB+Ws=;
-        b=RDa0rM4sxXLLw42Radacidrq9+wP3+AS4Tx/T+dCoz+N4DPFSJqY9cE88I2KTNuFXt
-         e6AAQawJ34wrDPESwcSWuVF1vvggQ2BTkSkA+CyM/4wtCY7kUUtLqFD5et+xhmr5Ozb+
-         w7pYLgHAB/REEW87fivPnBX3dNTszlVq/7jlXuyVA7To8nSmKkVymfj3Z/UVWAGrft+d
-         2FKuspGIlJ+b64VeYzmj92wrEvbH2jV9smEIyFxtCwn4kQJsTr3YY6zmgIezxDw2G0I4
-         doP1ClokDaMREmzpjHOrboDFcdbKjjfkhwimeX0fOxOHGDGd10r2/ngVDggKuwG6M9SZ
-         nRuw==
-X-Gm-Message-State: APjAAAUAs8lqg6g7RvAytfjp+Sh01KT/iSGSTJdfi+tgKXFE/tV1MsB6
-        Oiq3NEdIKerHWrZygmvD+z4/Ng==
-X-Google-Smtp-Source: APXvYqwu4X6ngOi3zIhRdvZ4Miog4ASVHjmWUWWXs8oWzKVUD+5CfBDHp8WBVT0IF5H4FzeXFlcpIw==
-X-Received: by 2002:a62:ab0d:: with SMTP id p13mr17955039pff.135.1578896909830;
-        Sun, 12 Jan 2020 22:28:29 -0800 (PST)
-Received: from debian ([122.164.106.111])
-        by smtp.gmail.com with ESMTPSA id q10sm12867346pfn.5.2020.01.12.22.28.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 22:28:29 -0800 (PST)
-Date:   Mon, 13 Jan 2020 11:58:22 +0530
-From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        jeffrin@rajagiritech.edu.in
-Subject: Re: [PATCH 5.4 000/165] 5.4.11-stable review
-Message-ID: <20200113062822.GA2706@debian>
-References: <20200111094921.347491861@linuxfoundation.org>
+        Mon, 13 Jan 2020 01:29:21 -0500
+Received: from mail-eopbgr1300099.outbound.protection.outlook.com ([40.107.130.99]:42720
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730659AbgAMG3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 01:29:20 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NW23kI7/SpzBBFO3bo8HEg2rJp9bUkiOYjVR+m8fz876Rff3rH5GVP1TQSItBbLwu4D668wtQPWg2YS5D5wXD65xV8t2B7O6pY5ftfGoOPCs1ieQ355mM4PZ809im4LN/WF85L91EbsdDOYzc+g+xosu5sAduHOdYNs+HHEUwloCBr6fG2j7r7+W+7bnYi1Alqo2/54ig8ocatpr98Qd9EwNv2Zdj8S1TzcBsf5Arxw9buuVehbNCQ2in8mVObk8S+5rVaGOI1DxVfHGyWtRmqsc5GgJopzmnow5fMT2pVA1XEeKtnPmMqww5wRSEjvkp64THtbgDEJPh4lXgk6s+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d4YvIUwKojbdBAXmYyO9nnS7OqjAieXi5eKK6PYhiTU=;
+ b=IeKf7qK47jQgio1UgbyOfa4yf7vNf4pTBHFwdxdKoqCOeb5yRKlPRzqw6EUe/RYHWDkWR2VZiEpkCSz1QV/S7knvw51zgs9Zw6sLW1I2D6FqrmlWZNhLaHG8XrJKONoFHv9OpL2tps9jXBiYAM1+korJ2DLFiWo7dd1o8A1iPcyeCPkpHkPw/OuQENjrQidSuYHnf84EW2/7FddARNKmqevPpOZFs2qZWsNJSrAmXTJ6v2dXfi50XYc9UX4kMtwHuw393xyGo8GqDeuDyGajJ+4Er+0r8nqD6qwlAIryJCaMjHJmSMEfKOHGH+ooaKGBWgQdmfBdv7yKXJZraXfM3g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=d4YvIUwKojbdBAXmYyO9nnS7OqjAieXi5eKK6PYhiTU=;
+ b=HZHC5UAOrYBsX9cuIq3EEkw+ff6oycjxKUEdaXKjC5AVcJVrkRcLEAHzomYzZFYmxM7D4A648pFAX+mBUcALPfC5rveKTUbLee++Lifq8PRSXTjp6mNbtBxicnn/Zx4OnkvQwx3GMFYt5aMWhyKXb0GI26je3MEkVbdUDwnOLrQ=
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
+ HK0P153MB0324.APCP153.PROD.OUTLOOK.COM (52.132.237.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2644.2; Mon, 13 Jan 2020 06:29:14 +0000
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::15e7:8155:31bc:d4e7]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::15e7:8155:31bc:d4e7%7]) with mapi id 15.20.2644.014; Mon, 13 Jan 2020
+ 06:29:14 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 0/4] hv_utils: Add the support of hibernation
+Thread-Topic: [PATCH v2 0/4] hv_utils: Add the support of hibernation
+Thread-Index: AdXJ2sJyDrPgyG+3TJyc2gafIqgsoA==
+Date:   Mon, 13 Jan 2020 06:29:13 +0000
+Message-ID: <HK0P153MB0148968D9EFBFAE1E881674CBF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T06:29:11.3769804Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7131548d-9dec-47e9-bdec-19b34d517361;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:a:fa69:ae29:32b9:aa46]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a3de91cc-1894-4c30-1a1f-08d797f1e8bc
+x-ms-traffictypediagnostic: HK0P153MB0324:|HK0P153MB0324:|HK0P153MB0324:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <HK0P153MB0324A24AFA10C2F2374A9F55BF350@HK0P153MB0324.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(396003)(376002)(366004)(136003)(346002)(189003)(199004)(966005)(5660300002)(10290500003)(33656002)(186003)(7696005)(86362001)(2906002)(6506007)(52536014)(478600001)(81166006)(81156014)(110136005)(316002)(76116006)(8936002)(9686003)(64756008)(55016002)(8990500004)(66556008)(66476007)(66946007)(66446008)(8676002)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0324;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CHQ6v036j1JVOXeXkMDi8wUh7ZKXO0ElkUfqapK9MH7g6HlJkNNLZBaLgF+UsNbbpaw5gc518dun0vkETw1KeQM29dIKo7FYxHKYas5Uzvuf1AUSswLpSNWd1l5C4c4R6f67Si7B4rnckKRemnYHsy0lGHlMmQnapHwLT28pXastFc1BU9zrA7mH+s/9f76bmkRQ+U7RgUglUlzgXWcPLtTyt050Zl4efhWqGso5fA1yZ6UcKFAsr0VG36jKdtdpQOxaK1gULqK52xnv+LKoDIDq0ADACQzeqN9CACds/TCL4ylH7ZeIz974aGaxYyoPmKhFgJCJD4ZmnIKBocXNoScuoJVHwI+PYUoOSnO4HydNToHzrWpcLtbh7mFdKjeXQO6t8z3wbJJbyO1cTS/a17yAy42Gpq+jVynEmCza1S7jk8pkl+FrjwBkvzLzyT66OIAhlIxd8WNB0e868FeLN4RLKFPrDIAorfdfqRQ08TU=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3de91cc-1894-4c30-1a1f-08d797f1e8bc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 06:29:13.9371
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gEIz12xJG2n6wv/sR9bPElY1mXN0luQiz0XwYfquKB9Z9RQacPMtMLzqxCfpboYX0gFdC7jFVQKQ+ULgqhf3kQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0324
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 10:48:39AM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.11 release.
-> There are 165 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Mon, 13 Jan 2020 09:46:17 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.11-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
+Hi,
+This is an updated version of the v1 patchset:
+https://lkml.org/lkml/2019/9/11/861
 
-compiled and booted 5.4.11-rc1+ . no regression according to "sudo dmesg -l err"
+Patch #1 is a new patch that makes the daemons more robust.
 
+Patch #2 is the same as v1.
 
---
-software engineer
-rajagiri school of engineering and technology
+Patch #3 sends the host-initiated hibernation request to the user space via=
+ udev.
+(v1 used call_usermodehelper() and "/sbin/hyperv-hibernate".)
+
+Patch #4 handles fcopy/vss specially to avoid possible inconsistent states.
+
+Please review.
+
+Thanks!
+
+Dexuan Cui (4):
+  Patch #1: Tools: hv: Reopen the devices if read() or write() returns erro=
+rs
+  Patch #2: hv_utils: Support host-initiated restart request
+  Patch #3: hv_utils: Support host-initiated hibernation request
+  Patch #4: hv_utils: Add the support of hibernation
+
+ drivers/hv/hv_fcopy.c      |  58 +++++++++++++++-
+ drivers/hv/hv_kvp.c        |  44 +++++++++++-
+ drivers/hv/hv_snapshot.c   |  60 ++++++++++++++++-
+ drivers/hv/hv_util.c       | 133 ++++++++++++++++++++++++++++++++++++-
+ drivers/hv/hyperv_vmbus.h  |   6 ++
+ include/linux/hyperv.h     |   2 +
+ tools/hv/hv_fcopy_daemon.c |  19 ++++--
+ tools/hv/hv_kvp_daemon.c   |  25 ++++---
+ tools/hv/hv_vss_daemon.c   |  25 +++++--
+ 9 files changed, 344 insertions(+), 28 deletions(-)
+
+--=20
+2.19.1
 
