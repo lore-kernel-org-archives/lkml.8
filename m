@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A051BC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE276C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E27F207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EFF5207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbgAMN51 (ORCPT
+        id S1729165AbgAMN53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:57:27 -0500
-Received: from mga18.intel.com ([134.134.136.126]:28807 "EHLO mga18.intel.com"
+        Mon, 13 Jan 2020 08:57:29 -0500
+Received: from mga07.intel.com ([134.134.136.100]:48397 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728945AbgAMN4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728943AbgAMN4j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Jan 2020 08:56:39 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:56:38 -0800
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:56:38 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
-   d="scan'208";a="424314231"
+   d="scan'208";a="224903912"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 13 Jan 2020 05:56:34 -0800
+  by orsmga003.jf.intel.com with ESMTP; 13 Jan 2020 05:56:34 -0800
 Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 89E3F9D4; Mon, 13 Jan 2020 15:56:25 +0200 (EET)
+        id F31B17A7; Mon, 13 Jan 2020 15:56:24 +0200 (EET)
 From:   Mika Westerberg <mika.westerberg@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Darren Hart <dvhart@infradead.org>,
@@ -45,9 +45,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 34/36] platform/x86: intel_pmc_ipc: Switch to use driver->dev_groups
-Date:   Mon, 13 Jan 2020 16:56:21 +0300
-Message-Id: <20200113135623.56286-35-mika.westerberg@linux.intel.com>
+Subject: [PATCH v3 22/36] platform/x86: intel_pmc_ipc: Drop ipc_data_readb()
+Date:   Mon, 13 Jan 2020 16:56:09 +0300
+Message-Id: <20200113135623.56286-23-mika.westerberg@linux.intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
 References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
@@ -58,70 +58,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver core provides support for adding additional attributes for
-devices via new ->dev_groups member of struct device_driver. Convert the
-driver to use that instead of adding the attributes manually.
+This function is not used anywhere so drop it completely.
 
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/platform/x86/intel_pmc_ipc.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/platform/x86/intel_pmc_ipc.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
 diff --git a/drivers/platform/x86/intel_pmc_ipc.c b/drivers/platform/x86/intel_pmc_ipc.c
-index ae614dbe5083..9dcfa03744a1 100644
+index 677ed470e14e..83b106f66fa6 100644
 --- a/drivers/platform/x86/intel_pmc_ipc.c
 +++ b/drivers/platform/x86/intel_pmc_ipc.c
-@@ -252,6 +252,11 @@ static const struct attribute_group intel_ipc_group = {
- 	.attrs = intel_ipc_attrs,
- };
+@@ -184,11 +184,6 @@ static inline void ipc_data_writel(u32 data, u32 offset)
+ 	writel(data, ipcdev.ipc_base + IPC_WRITE_BUFFER + offset);
+ }
  
-+static const struct attribute_group *intel_ipc_groups[] = {
-+	&intel_ipc_group,
-+	NULL
-+};
-+
- static struct resource punit_res_array[] = {
- 	/* Punit BIOS */
- 	{
-@@ -593,20 +598,12 @@ static int ipc_plat_probe(struct platform_device *pdev)
- 		goto err_ipc;
- 	}
- 
--	ret = sysfs_create_group(&pdev->dev.kobj, &intel_ipc_group);
--	if (ret) {
--		dev_err(&pdev->dev, "Failed to create sysfs group %d\n",
--			ret);
--		goto err_devs;
--	}
+-static inline u8 __maybe_unused ipc_data_readb(u32 offset)
+-{
+-	return readb(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
+-}
 -
- 	ipcdev.has_gcr_regs = true;
- 
- 	return 0;
- 
- err_ipc:
- 	intel_scu_ipc_remove(scu);
--err_devs:
- 	platform_device_unregister(ipcdev.tco_dev);
- 	platform_device_unregister(ipcdev.punit_dev);
- 	platform_device_unregister(ipcdev.telemetry_dev);
-@@ -616,7 +613,6 @@ static int ipc_plat_probe(struct platform_device *pdev)
- 
- static int ipc_plat_remove(struct platform_device *pdev)
+ static inline u32 ipc_data_readl(u32 offset)
  {
--	sysfs_remove_group(&pdev->dev.kobj, &intel_ipc_group);
- 	platform_device_unregister(ipcdev.tco_dev);
- 	platform_device_unregister(ipcdev.punit_dev);
- 	platform_device_unregister(ipcdev.telemetry_dev);
-@@ -631,6 +627,7 @@ static struct platform_driver ipc_plat_driver = {
- 	.driver = {
- 		.name = "pmc-ipc-plat",
- 		.acpi_match_table = ACPI_PTR(ipc_acpi_ids),
-+		.dev_groups = intel_ipc_groups,
- 	},
- };
- 
+ 	return readl(ipcdev.ipc_base + IPC_READ_BUFFER + offset);
 -- 
 2.24.1
 
