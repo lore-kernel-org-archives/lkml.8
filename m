@@ -2,86 +2,88 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83EBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A71EDC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:33:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F65C24655
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:30:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DDF021569
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:33:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nL46GAVt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zpU8piGP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728664AbgAMUaQ (ORCPT
+        id S1728641AbgAMUdF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 15:30:16 -0500
-Received: from mail-ed1-f53.google.com ([209.85.208.53]:33982 "EHLO
-        mail-ed1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgAMUaQ (ORCPT
+        Mon, 13 Jan 2020 15:33:05 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37065 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgAMUdE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 15:30:16 -0500
-Received: by mail-ed1-f53.google.com with SMTP id l8so9778444edw.1;
-        Mon, 13 Jan 2020 12:30:15 -0800 (PST)
+        Mon, 13 Jan 2020 15:33:04 -0500
+Received: by mail-lj1-f194.google.com with SMTP id o13so11646994ljg.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 12:33:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=y4sfoniwMt9T4FiSeYM4bsL8cfJwjPsCGqccD51JtpA=;
-        b=nL46GAVtjSmtZ8xePpnFZINToDH3tlVTOwHkrcGWgriTapFPkhnQMabvHVXJcu4/i+
-         chH95kEmxhKOfaOk0IGYO/YCLAIND8B/PnNg/N5NIHCFYE8oRvan1DTXcyv7pHoVWbMt
-         JnG04h9ZWrjms73Mx+qj2OqlteR39jku+QyJ9XlyAHLTxAYxuwF07ebIb1fWvCadgcLt
-         PcKDndpdg0xPyhmGI5GhSlPHwpVBmwElJfFr34byiLrv5aOMMyurpzNkxuNQK6OsaZ6O
-         OGdQZrec+OJFUdKw7iTrOHrW32AgEfOrSECccPhEzgZFfsy3dm6u8N07J2FlmG11i5ba
-         frfw==
+        bh=GuTGLwwi85unK1r2EuOVeR1TE8PIkAuBbjrUABOzDgw=;
+        b=zpU8piGPL9mpHkrJtOvWOmAmPCUN6/daRz0ojUt9E6UCmugQuBrK0cZ3BJlV+fRdsa
+         SNBPWQlE4286crRo0WryamW09tOCSpLdrkTBOEVU0x+HhGeAIOIbqSxzogTawgl/YxZJ
+         qb1WS1KFweRqYBo/grYoBBXGbxLaPDTc634U25aUFyJ6NqbH0YIpt81h0IZnUdhHN42+
+         L6prwrZyvZNu131oOSNpsMe9phKAoHzWW2Cxqv38p91FaZeYzeVNfho1XhQXp7NKtURq
+         YljLikhpZ41BvBqLmw9RwGzZJTgySKbDfm2AKWeETyC2vXRzUxagRWS/v3vS/ipvaWFw
+         RXdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=y4sfoniwMt9T4FiSeYM4bsL8cfJwjPsCGqccD51JtpA=;
-        b=OKv7ghtIAZikVVvF/6KZc1Te1WC2Yz2kkSL9FXADeFVrJAhsQhOtLSdNnlwK6H1DfM
-         6ldTeIRSf6uX4nvgZgL6rZEzhgYg1V7Jkvoe5rz8MwT19LVNlkRmJO3PXHhamggLi9B4
-         5sWdahlIGtEvqUM4uB8NPPJvYVWEGMiDlI07VdDY7fA59BAFRQdh+ICybKGFRa32tSxW
-         6MJI4LJcooyAmtT+a/WLFsfMMlzlwnwLizCRoaxpkyjaRwLbzfWDNYeFFP/53EYNbrEz
-         XyadUnEka11VHNKmTdF8aZj/Pdk9gkm9wsO56y70bPTBzz68dODR4JoGrMiiTVUjlydW
-         rPdA==
-X-Gm-Message-State: APjAAAVtdCePZ1lmEifA9iBrv7iJQhT+ojnTe0tj/NafEO4800M0aV52
-        R/xDznFrdpl5VeG/RDcp0Ohs13K34a3VDP4gTG8=
-X-Google-Smtp-Source: APXvYqz9/JaxDYLS7qf9ai/vBBO77c5WjJfn1LFXo5DOAhceZ8y1KH6605evQXQgZCq8BjUSknUEMAmHEEL95mYNIBs=
-X-Received: by 2002:a50:d69a:: with SMTP id r26mr19358575edi.148.1578947414160;
- Mon, 13 Jan 2020 12:30:14 -0800 (PST)
+        bh=GuTGLwwi85unK1r2EuOVeR1TE8PIkAuBbjrUABOzDgw=;
+        b=RvWTsuJ7SHQAkqDyZnMZ61jNYP1OM6wHP38m8Nd6CH/arkAaWDDa7XhJV56d9L1JRX
+         j2nlo+zTICL+oNWoHWZEXQJCEBqYOW9hd410/j5BctR659luf2QAhO8tGf306F3dM9Td
+         FENYvV3IgAk2hqEpFRb/ICKXC2TnUttfDpiGSyovhzd2NeXftRdlI2BNHaZQTJfwkP63
+         aavUnk17I2C12gNSCzIEWyTU4JooWaMoxbfq/LfVUT3VeXnAwogT1ngpd+AuQlU1HLfe
+         +2dPrKlzS1WARtYyYQxoLnZu0J0dPDTgK3wtrfo6hBuZAE75oUq+VtKwAsT7XyH/iVCb
+         v8sQ==
+X-Gm-Message-State: APjAAAXzS0rslLFO3rZ7HoJ2IjL7sOOZyp/l6yxL4XLGOOfELxoALOuH
+        H5FLSDz+71aQdLwFQGQlGVrA5R+JW27gHV0JMnhVfg==
+X-Google-Smtp-Source: APXvYqxQgFN4EyvNsq/0cxCAmW7rkasdy2yT7fyEAdqz9b7VC2A3LZlCQUy4eUJQrf+iApcFUDBNEQ5YZAPoK1mi1Ds=
+X-Received: by 2002:a05:651c:111c:: with SMTP id d28mr12487289ljo.32.1578947582550;
+ Mon, 13 Jan 2020 12:33:02 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a05:6402:1c11:0:0:0:0 with HTTP; Mon, 13 Jan 2020 12:30:13
- -0800 (PST)
-In-Reply-To: <20200113200832.GR13310@zn.tnic>
-References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
- <20200113154739.GB11244@42.do-not-panic.com> <CACMCwJL8tu+GHPeRADR_12xhcYSiDv+Yxdy=yLqMxEsn=P9zFA@mail.gmail.com>
- <20200113200832.GR13310@zn.tnic>
-From:   Jari Ruusu <jari.ruusu@gmail.com>
-Date:   Mon, 13 Jan 2020 22:30:13 +0200
-Message-ID: <CACMCwJLsj6D884Sxy82VbpKkip=ja2ymHKvQ78c=-ftx-zmV_Q@mail.gmail.com>
-Subject: Re: Fix built-in early-load Intel microcode alignment
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        johannes.berg@intel.com, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
+References: <20200107130844.20763-1-srinivas.kandagatla@linaro.org> <20200107130844.20763-2-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20200107130844.20763-2-srinivas.kandagatla@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 13 Jan 2020 21:32:50 +0100
+Message-ID: <CACRpkdY-4zfVa0xmeN1tZ_quDM9kSWgXw4RzEyU0WUZor1oR=A@mail.gmail.com>
+Subject: Re: [PATCH v7 1/2] dt-bindings: gpio: wcd934x: Add bindings for gpio
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        spapothi@codeaurora.org, bgoswami@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/13/20, Borislav Petkov <bp@alien8.de> wrote:
-> Btw, just out of curiosity: why are you using built-in microcode and not
-> the initrd method?
+On Tue, Jan 7, 2020 at 2:09 PM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
 
-Initrd method is better when it is a kernel intended to be booted
-on many different computers. Built-in microcode method kernel is
-tuned for one computer only. It is less hassle that way.
+> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
+> gpio controller to control 5 gpios on the chip. This patch adds
+> required device tree bindings for it.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
--- 
-Jari Ruusu  4096R/8132F189 12D6 4C3A DCDA 0AA4 27BD  ACDF F073 3C80 8132 F189
+Patch applied to the GPIO tree. This should unbreak dt_bindings_check
+according to Rob, so pushing out ASAP.
+
+Yours,
+Linus Walleij
