@@ -2,128 +2,91 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC1C7C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECA6C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C001D207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:06:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578924411;
-	bh=6KFeNs3JL0rvY1BgoRK7VKDE3sUTxPx6uvM/wOGZ2Y0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cSYKikfdiDeDZxWUj4FFrIHLdpQL0Y2vR8bxL4+051TEmyr+VNhVOOcYVY3bUE/az
-	 lDA0/7TdwuNf4WCJE5EXTAzmzwrDK2Mxkv/sl3PkP4xi19mt7QhVFOPrTC8KPzFowR
-	 8qhpiEsQXDL6aEYWVwrGi6NlI53h9sRBWAjzTyOs=
+	by mail.kernel.org (Postfix) with ESMTP id 8DC91207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbgAMOGu (ORCPT
+        id S1728873AbgAMOHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:06:50 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36606 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgAMOGu (ORCPT
+        Mon, 13 Jan 2020 09:07:09 -0500
+Received: from mout.kundenserver.de ([212.227.126.135]:35129 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgAMOHJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:06:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6KFeNs3JL0rvY1BgoRK7VKDE3sUTxPx6uvM/wOGZ2Y0=; b=A99ZYAhVVv9OhsChQogilnnY1
-        GbC0wKY23VKU5dwFKYEIDClgwCt54tcvUMG0Qmlr5TMmRDMEFxwFk/ZmiDmY2J1VbMkoM2cA9wopW
-        LKoaehJEc8bw0RTIo1du7yTNdniOz3M9nVwYS/BMT8FnYWAqNL0Y6MS0BySIA/wESMKMY=;
-Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ir0MO-0002fp-0G; Mon, 13 Jan 2020 14:06:28 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 9D2A6D01965; Mon, 13 Jan 2020 14:06:27 +0000 (GMT)
-Date:   Mon, 13 Jan 2020 14:06:27 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        tudor.ambarus@microchip.com, linux-kernel@vger.kernel.org,
-        chenxiang66@hisilicon.com, linuxarm@huawei.com,
-        linux-spi@vger.kernel.org, marek.vasut@gmail.com,
-        linux-mtd@lists.infradead.org, xuejiancheng@hisilicon.com,
-        fengsheng5@huawei.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        wanghuiqiang <wanghuiqiang@huawei.com>, liusimin4@huawei.com
-Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
- driver
-Message-ID: <20200113140627.GJ3897@sirena.org.uk>
-References: <1575900490-74467-3-git-send-email-john.garry@huawei.com>
- <0dc5cb2e-b765-9e13-b05e-9e3c835c5985@huawei.com>
- <20200109212842.GK3702@sirena.org.uk>
- <df67b562-7d82-19f6-7581-680190a7772d@huawei.com>
- <20200110140726.GB5889@sirena.org.uk>
- <6db83881-927c-d11c-9c77-23a45892ddab@huawei.com>
- <20200110193119.GI32742@smile.fi.intel.com>
- <612a3c5d-69a4-af6b-5c79-c3fb853193ab@huawei.com>
- <20200113114256.GH3897@sirena.org.uk>
- <6dd45da9-9ccf-45f7-ed12-8f1406a0a56b@huawei.com>
+        Mon, 13 Jan 2020 09:07:09 -0500
+Received: from mail-qk1-f179.google.com ([209.85.222.179]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N0X4e-1jcMEZ463Y-00wWND; Mon, 13 Jan 2020 15:07:08 +0100
+Received: by mail-qk1-f179.google.com with SMTP id k6so8532932qki.5;
+        Mon, 13 Jan 2020 06:07:07 -0800 (PST)
+X-Gm-Message-State: APjAAAVrp3DPzmx5zotCL57FzjiGgwLVKfosWMbGTu+Fq01mxp6keCTm
+        n67IGLrF0P2SoDXICI3fzx3FNez/SLiMo73BD6s=
+X-Google-Smtp-Source: APXvYqy4pDVP1tTP4+KiIyv9AaHZPjEdv86Ykem+8ug+bu8k+5zBm8SYa1YYYY2i0Ku4ZH0NQ653JbuPCdT85EHvOpM=
+X-Received: by 2002:a05:620a:a5b:: with SMTP id j27mr16336077qka.286.1578924426747;
+ Mon, 13 Jan 2020 06:07:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="cN519qCC4CN1mUcX"
-Content-Disposition: inline
-In-Reply-To: <6dd45da9-9ccf-45f7-ed12-8f1406a0a56b@huawei.com>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200109141459.21808-1-vincenzo.frascino@arm.com>
+ <c43539f2-aa9b-4afa-985c-c438099732ff@sandeen.net> <1a540ee4-6597-c79e-1bce-6592cb2f3eae@arm.com>
+ <20200109165048.GB8247@magnolia> <435bcb71-9126-b1f1-3803-4977754b36ff@arm.com>
+ <CAK8P3a0eY6Vm5PNdzR8Min9MrwAqH8vnMZ3C+pxTQhiFVNPyWA@mail.gmail.com> <20200113135800.GA8635@lst.de>
+In-Reply-To: <20200113135800.GA8635@lst.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 13 Jan 2020 15:06:50 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0MZdDhY1DmdxjCSMXFqyu0G1ijsQdo7fmN9Ebxgr9cNw@mail.gmail.com>
+Message-ID: <CAK8P3a0MZdDhY1DmdxjCSMXFqyu0G1ijsQdo7fmN9Ebxgr9cNw@mail.gmail.com>
+Subject: Re: [PATCH] xfs: Fix xfs_dir2_sf_entry_t size check
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Eric Sandeen <sandeen@sandeen.net>,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:MDZdv87PspSiRCBd2OKASowIhCrd3dbWlOcvIGcE4pC5YSIymsm
+ MO01UcVXmYr8ss0o1h/WxxRng+weIrxLMTAJJdDQFRwySLSD1VgGoP7TaZSpnqxeG8puca9
+ 9+wvyBDqop/oJq+I3W5KrP6HJxGjVJafHl/18hYekvaNq8RdqFGqLLqd3RKll2PMK9RHpmV
+ Az8owFv9K5utX8C7+EFJQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qwqY+JrhnYA=:hjm96v+cRRK4dY23FrlCUn
+ dwM83iaWQRnryuKoZhozWKOQoGDbWIJUljZkVFBW1g4bieNr6OWMcKWfcIw17mqNH6xSLlKE5
+ wD9DLp82qu4x3KAwEIGVUX0xvz9jOs2gd2UU4ji8yVqnnwCslNYzOzTtWhsarLOaEnw6I/viz
+ zIPNlw631HW4VvqjjfnwoH4lKJsWLKUCSRmZdbzkkFXA4YZs+7g331c1ESlRls2sZqb/3FtUc
+ wd1GT5TbNqCcKreDQ3IRMidefZsxQLkc7H7KMa2W4YzIYmt1V9vYpiRXfHW+BTijgYKQJ8bs/
+ Gy0/DH9iO3SryT1C6SO92Upi7PsFT+VDhy/vSE1xR2SIkA0FzvrnSFETdH2jKIJcydUyCin/s
+ sSrTR5JEZUqHK7SZbAj2BISB8rL0X0mAhdpGhv0ZF2+AHYvGjCVRqPrHEA/WBNKFa5RommC9L
+ n4Cex7qRFSIc9Us7my6aJJ97kYFgfWqZyTqwTJYlYdUtE4rlYi/ftVHcSBtGqpn4E7I+fhy9H
+ 0pyymeYgeHCA70Wvpe7ptl5hExfOVyMR+fLLeCC599ATOSxP5QkmnMA6x9hq9KQmv2HXu+Z8S
+ PR0G0o7jIG/tq9C59gaEraYhHwerrRp0vIo6M3F3/qVQzeLzapjAZVG2+O4+4rtIOgmqn5VHP
+ lJfoAi5Sk4wBn+jA/gGDBnnzlTR8fMHc7hS+lgBYEJfwwYeb/h+kxgk7vHMjLxygdhXf32t/8
+ wcJ2iXc6sgqow6Nkcr++5q1/u67sY628zxyOW9ypbU5oz0e6wpisH+xcqOu5pIbRzgYv3zO9b
+ WT9Uz5aGz5sOFyewSuP+CnaunQZMm6E6eMmEx3ka94J23Py/ZLYG23gAd1HaDlU4c7luxcRJb
+ 2ZlpZMLWejRj/LrHVv8A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jan 13, 2020 at 2:58 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Mon, Jan 13, 2020 at 02:55:15PM +0100, Arnd Bergmann wrote:
+> > With ARM OABI (which you get when EABI is disabled), structures are padded
+> > to multiples of 32 bits. See commits 8353a649f577 ("xfs: kill
+> > xfs_dir2_sf_off_t")
+> > and aa2dd0ad4d6d ("xfs: remove __arch_pack"). Those could be partially
+> > reverted to fix it again, but it doesn't seem worth it as there is
+> > probably nobody
+> > running XFS on OABI machines (actually with the build failure we can
+> > be fairly sure there isn't ;-).
+>
+> Or just try adding a __packed to the xfs_dir2_sf_entry definition?
 
---cN519qCC4CN1mUcX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, that should be correct on all architectures, and I just noticed
+that this is what we already have on xfs_dir2_sf_hdr_t directly
+above it for the same reason.
 
-On Mon, Jan 13, 2020 at 01:01:06PM +0000, John Garry wrote:
-> On 13/01/2020 11:42, Mark Brown wrote:
-
-> > The idiomatic approach appears to be for individual board vendors
-> > to allocate IDs, you do end up with multiple IDs from multiple
-> > vendors for the same thing.
-
-> But I am not sure how appropriate that same approach would be for some 3rd
-> party memory part which we're simply wiring up on our board. Maybe it is.
-
-It seems to be quite common for Intel reference designs to assign
-Intel IDs to non-Intel parts on the board (which is where I
-became aware of this practice). =20
-
-> > In general there's not really much standardizaiton for devices,
-> > the bindings that do exist aren't really centrally documented and
-> > the Windows standard is just to have the basic device
-> > registration in the firmware and do all properties based on
-> > quirking based on DMI information.
-
-> OK, so there is always DMI. I hoped to avoid this sort of thing in the li=
-nux
-> driver :)
-
-Yes, there are some merits to an approach like that.
-
---cN519qCC4CN1mUcX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4ceWIACgkQJNaLcl1U
-h9BaSQgAhHJyOShaR9eNX0h/1w/gPwom3WJq37NV0iDGPxwM7bufN6CmYlEn2VT5
-14DC0ypUzhgmLxSy/+4YjpVoqHfK24ubjJmdQOaYHBDXtUv7C/R+Yg5Rs+SVwwNb
-dAL9mO11neDUCRVlJP4Lw3tx8feN0SZeUjX6P0pdx3NQSa/pQSww3ZSwG+PoBgWF
-cdwu0JWwvx5k2X5O27NehGYxWXo+alYY3AcVcEsEStyhwpQHYcy8jmE6tP14UI/P
-26/o3Nmt4G8zM605sRu9AIJb5eFWtIPOzrisnK0KLkxtbHJfrd/cRrJ2ANSCjVAX
-L7YeVR4vNDZ98Wz0z/eg21M6wsb8Vg==
-=Mq70
------END PGP SIGNATURE-----
-
---cN519qCC4CN1mUcX--
+       Arnd
