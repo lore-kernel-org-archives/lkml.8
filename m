@@ -2,303 +2,291 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C8AC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025E6C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:55:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7DB207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA5F521734
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:55:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rriXji1x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbgAMNy6 (ORCPT
+        id S1728851AbgAMNzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:54:58 -0500
-Received: from mga03.intel.com ([134.134.136.65]:23348 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbgAMNy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:54:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:54:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
-   d="scan'208";a="218670957"
-Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Jan 2020 05:54:53 -0800
-From:   roman.sudarikov@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
-        gregkh@linuxfoundation.org
-Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
-Subject: [PATCH v3 2/2] =?UTF-8?q?perf=20x86:=20Exposing=20an=20Uncore=20u?= =?UTF-8?q?nit=20to=20PMON=20for=20Intel=20Xeon=C2=AE=20server=20platform?=
-Date:   Mon, 13 Jan 2020 16:54:44 +0300
-Message-Id: <20200113135444.12027-3-roman.sudarikov@linux.intel.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200113135444.12027-1-roman.sudarikov@linux.intel.com>
-References: <20200113135444.12027-1-roman.sudarikov@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 13 Jan 2020 08:55:09 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:34058 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbgAMNzI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:55:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Mime-Version:Content-Type:References:
+        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=B90YWSuUmpkmdDMGQ6VIr0rhcvubWhxOgT8OmcIVuHo=; b=rriXji1xxKYMsC9NV/pIawaMO
+        aSHsILYHBNMwlSyp7dOXJFZ62bA9olBAeMStzbqUjsh3x+ZSwoWZJ7xc2n0zZ/5SBddb7Lomgy+Lo
+        Zs0B9mPKl9j2iX4LMUZzQ+BuWy62ERd4jR3x6mxlyUSF2SSn/e0+GP5mINfqLL9A+pue4RFIcflTd
+        tlYKl45G3mpCJWteJJrM22/6Fq7/oECSrllTAic42HxGu6oL0lyKyN5ja0dw7ASvwx9M+FQiX/WMo
+        VpiI3s+p6iLsZcWF6Ja8d1NBrX0dOeqRMiG78c4hWPzi8ZV9vslDdofCoStYcszcTbuWiupF3jjkx
+        lnJL/n8wg==;
+Received: from [54.239.6.186] (helo=u3832b3a9db3152.ant.amazon.com)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ir0Al-0005wz-26; Mon, 13 Jan 2020 13:54:27 +0000
+Message-ID: <35d8dd071d535e8ad564bbae9eb44e3c2b64deeb.camel@infradead.org>
+Subject: Re: [Xen-devel] [RFC PATCH V2 11/11] x86: tsc: avoid system
+ instability in hibernation
+From:   David Woodhouse <dwmw2@infradead.org>
+To:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "Valentin, Eduardo" <eduval@amazon.com>
+Cc:     "konrad.wilk@oracle.co" <konrad.wilk@oracle.co>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>, "hpa@zytor.com" <hpa@zytor.com>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "fllinden@amaozn.com" <fllinden@amaozn.com>,
+        "Kamata, Munehisa" <kamatam@amazon.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "Agarwal, Anchal" <anchalag@amazon.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com" 
+        <Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "roger.pau@citrix.com" <roger.pau@citrix.com>
+Date:   Mon, 13 Jan 2020 14:54:20 +0100
+In-Reply-To: <7bb967ca-2a91-6397-9c0a-6eafd43c83ed@citrix.com>
+References: <20200107234526.GA19034@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+         <20200108105011.GY2827@hirez.programming.kicks-ass.net>
+         <20200110153520.GC8214@u40b0340c692b58f6553c.ant.amazon.com>
+         <20200113101609.GT2844@hirez.programming.kicks-ass.net>
+         <857b42b2e86b2ae09a23f488daada3b1b2836116.camel@amazon.com>
+         <7bb967ca-2a91-6397-9c0a-6eafd43c83ed@citrix.com>
+Content-Type: multipart/signed; micalg="sha-256";
+        protocol="application/x-pkcs7-signature";
+        boundary="=-ee630dIOu9VKbwik7F08"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by merlin.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
 
-Current version supports a server line starting Intel® Xeon® Processor
-Scalable Family and introduces mapping for IIO Uncore units only.
-Other units can be added on demand.
+--=-ee630dIOu9VKbwik7F08
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-IIO stack to PMON mapping is exposed through:
-    /sys/devices/uncore_iio_<pmu_idx>/platform_mapping
-    in the following format: domain:bus
+On Mon, 2020-01-13 at 13:01 +0000, Andrew Cooper wrote:
+> On 13/01/2020 11:43, Singh, Balbir wrote:
+> > On Mon, 2020-01-13 at 11:16 +0100, Peter Zijlstra wrote:
+> > > On Fri, Jan 10, 2020 at 07:35:20AM -0800, Eduardo Valentin wrote:
+> > > > Hey Peter,
+> > > >=20
+> > > > On Wed, Jan 08, 2020 at 11:50:11AM +0100, Peter Zijlstra wrote:
+> > > > > On Tue, Jan 07, 2020 at 11:45:26PM +0000, Anchal Agarwal wrote:
+> > > > > > From: Eduardo Valentin <eduval@amazon.com>
+> > > > > >=20
+> > > > > > System instability are seen during resume from hibernation when=
+ system
+> > > > > > is under heavy CPU load. This is due to the lack of update of s=
+ched
+> > > > > > clock data, and the scheduler would then think that heavy CPU h=
+og
+> > > > > > tasks need more time in CPU, causing the system to freeze
+> > > > > > during the unfreezing of tasks. For example, threaded irqs,
+> > > > > > and kernel processes servicing network interface may be delayed
+> > > > > > for several tens of seconds, causing the system to be unreachab=
+le.
+> > > > > > The fix for this situation is to mark the sched clock as unstab=
+le
+> > > > > > as early as possible in the resume path, leaving it unstable
+> > > > > > for the duration of the resume process. This will force the
+> > > > > > scheduler to attempt to align the sched clock across CPUs using
+> > > > > > the delta with time of day, updating sched clock data. In a pos=
+t
+> > > > > > hibernation event, we can then mark the sched clock as stable
+> > > > > > again, avoiding unnecessary syncs with time of day on systems
+> > > > > > in which TSC is reliable.
+> > > > >=20
+> > > > > This makes no frigging sense what so bloody ever. If the clock is
+> > > > > stable, we don't care about sched_clock_data. When it is stable y=
+ou get
+> > > > > a linear function of the TSC without complicated bits on.
+> > > > >=20
+> > > > > When it is unstable, only then do we care about the sched_clock_d=
+ata.
+> > > > >=20
+> > > >=20
+> > > > Yeah, maybe what is not clear here is that we covering for situatio=
+n
+> > > > where clock stability changes over time, e.g. at regular boot clock=
+ is
+> > > > stable, hibernation happens, then restore happens in a non-stable c=
+lock.
+> > >=20
+> > > Still confused, who marks the thing unstable? The patch seems to sugg=
+est
+> > > you do yourself, but it is not at all clear why.
+> > >=20
+> > > If TSC really is unstable, then it needs to remain unstable. If the T=
+SC
+> > > really is stable then there is no point in marking is unstable.
+> > >=20
+> > > Either way something is off, and you're not telling me what.
+> > >=20
+> >=20
+> > Hi, Peter
+> >=20
+> > For your original comment, just wanted to clarify the following:
+> >=20
+> > 1. After hibernation, the machine can be resumed on a different but com=
+patible
+> > host (these are VM images hibernated)
+> > 2. This means the clock between host1 and host2 can/will be different
+>=20
+> The guests TSC value is part of all save/migrate/resume state.  Given
+> this bug, I presume you've actually discarded all register state on
+> hibernate, and the TSC is starting again from 0?
 
-For example, on a 4-die Intel Xeon® server platform:
-    $ cat /sys/devices/uncore_iio_0/platform_mapping
-    0000:00,0000:40,0000:80,0000:c0
+Right. This is a guest-driven suspend to disk, followed by starting up
+later on a different =E2=80=94 but identical =E2=80=94 host. There is no gu=
+est state
+being saved as part of a Xen save/restore.
 
-Which means:
-IIO PMON block 0 on die 0 belongs to IIO stack on bus 0x00, domain 0x0000
-IIO PMON block 0 on die 1 belongs to IIO stack on bus 0x40, domain 0x0000
-IIO PMON block 0 on die 2 belongs to IIO stack on bus 0x80, domain 0x0000
-IIO PMON block 0 on die 3 belongs to IIO stack on bus 0xc0, domain 0x0000
+> The frequency of the new TSC might very likely be different, but the
+> scale/offset in the paravirtual clock information should let Linux's
+> view of time stay consistent.
 
-Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
-Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
----
- arch/x86/events/intel/uncore.c       |   2 +-
- arch/x86/events/intel/uncore.h       |   1 +
- arch/x86/events/intel/uncore_snbep.c | 162 +++++++++++++++++++++++++++
- 3 files changed, 164 insertions(+), 1 deletion(-)
+The frequency as seen by the guest really needs to be the same. That
+hibernated instance may only be booted again on a host which would have
+been suitable for live migration. That's either because the TSC
+frequency *is* the same, or with TSC scaling to make it appear that
+way.
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 2c53ad44b51f..c0d86bc8e786 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -16,7 +16,7 @@ struct pci_driver *uncore_pci_driver;
- DEFINE_RAW_SPINLOCK(pci2phy_map_lock);
- struct list_head pci2phy_map_head = LIST_HEAD_INIT(pci2phy_map_head);
- struct pci_extra_dev *uncore_extra_pci_dev;
--static int max_dies;
-+int max_dies;
- 
- /* mask of cpus that collect uncore events */
- static cpumask_t uncore_cpu_mask;
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index f52dd3f112a7..94eacca6f485 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -523,6 +523,7 @@ extern raw_spinlock_t pci2phy_map_lock;
- extern struct list_head pci2phy_map_head;
- extern struct pci_extra_dev *uncore_extra_pci_dev;
- extern struct event_constraint uncore_constraint_empty;
-+extern int max_dies;
- 
- /* uncore_snb.c */
- int snb_uncore_pci_init(void);
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index b10a5ec79e48..2562fde2e5b8 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -273,6 +273,30 @@
- #define SKX_CPUNODEID			0xc0
- #define SKX_GIDNIDMAP			0xd4
- 
-+/*
-+ * The CPU_BUS_NUMBER MSR returns the values of the respective CPUBUSNO CSR
-+ * that BIOS programmed. MSR has package scope.
-+ * |  Bit  |  Default  |  Description
-+ * | [63]  |    00h    | VALID - When set, indicates the CPU bus
-+ *                       numbers have been initialized. (RO)
-+ * |[62:48]|    ---    | Reserved
-+ * |[47:40]|    00h    | BUS_NUM_5 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(5). (RO)
-+ * |[39:32]|    00h    | BUS_NUM_4 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(4). (RO)
-+ * |[31:24]|    00h    | BUS_NUM_3 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(3). (RO)
-+ * |[23:16]|    00h    | BUS_NUM_2 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(2). (RO)
-+ * |[15:8] |    00h    | BUS_NUM_1 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(1). (RO)
-+ * | [7:0] |    00h    | BUS_NUM_0 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(0). (RO)
-+ */
-+#define SKX_MSR_CPU_BUS_NUMBER		0x300
-+#define SKX_MSR_CPU_BUS_VALID_BIT	(1ULL << 63)
-+#define BUS_NUM_STRIDE			8
-+
- /* SKX CHA */
- #define SKX_CHA_MSR_PMON_BOX_FILTER_TID		(0x1ffULL << 0)
- #define SKX_CHA_MSR_PMON_BOX_FILTER_LINK	(0xfULL << 9)
-@@ -3580,6 +3604,9 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
- 	.read_counter		= uncore_msr_read_counter,
- };
- 
-+static int skx_iio_get_topology(struct intel_uncore_type *type);
-+static int skx_iio_set_mapping(struct intel_uncore_type *type);
-+
- static struct intel_uncore_type skx_uncore_iio = {
- 	.name			= "iio",
- 	.num_counters		= 4,
-@@ -3594,6 +3621,8 @@ static struct intel_uncore_type skx_uncore_iio = {
- 	.constraints		= skx_uncore_iio_constraints,
- 	.ops			= &skx_uncore_iio_ops,
- 	.format_group		= &skx_uncore_iio_format_group,
-+	.get_topology		= skx_iio_get_topology,
-+	.set_mapping		= skx_iio_set_mapping,
- };
- 
- enum perf_uncore_iio_freerunning_type_id {
-@@ -3780,6 +3809,139 @@ static int skx_count_chabox(void)
- 	return hweight32(val);
- }
- 
-+static inline int skx_msr_cpu_bus_read(int cpu, u64 *topology)
-+{
-+	u64 msr_value;
-+
-+	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
-+			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
-+		return -1;
-+
-+	*topology = msr_value;
-+
-+	return 0;
-+}
-+
-+static int skx_iio_get_topology(struct intel_uncore_type *type)
-+{
-+	int ret, cpu, die, current_die;
-+	struct pci_bus *bus = NULL;
-+
-+	/*
-+	 * Verified single-segment environments only; disabled for multiple
-+	 * segment topologies for now.
-+	 */
-+	while ((bus = pci_find_next_bus(bus)) && !pci_domain_nr(bus))
-+		;
-+	if (bus) {
-+		pr_info("I/O stack mapping is not supported for multi-seg\n");
-+		return -1;
-+	}
-+
-+	type->topology = kzalloc(max_dies * sizeof(u64), GFP_KERNEL);
-+	if (!type->topology)
-+		return -ENOMEM;
-+
-+	/*
-+	 * Using cpus_read_lock() to ensure cpu is not going down between
-+	 * looking at cpu_online_mask.
-+	 */
-+	cpus_read_lock();
-+	/* Invalid value to start loop.*/
-+	current_die = -1;
-+	for_each_online_cpu(cpu) {
-+		die = topology_logical_die_id(cpu);
-+		if (current_die == die)
-+			continue;
-+		ret = skx_msr_cpu_bus_read(cpu, &type->topology[die]);
-+		if (ret) {
-+			kfree(type->topology);
-+			break;
-+		}
-+		current_die = die;
-+	}
-+	cpus_read_unlock();
-+
-+	return ret;
-+}
-+
-+static inline u8 skx_iio_stack_bus(struct intel_uncore_pmu *pmu, int die)
-+{
-+	return pmu->type->topology[die] >> (pmu->pmu_idx * BUS_NUM_STRIDE);
-+}
-+
-+static int skx_iio_set_box_mapping(struct intel_uncore_pmu *pmu)
-+{
-+	char *buf;
-+	int die = 0;
-+	/* Length of template "%04x:%02x," without null character. */
-+	const int template_len = 8;
-+
-+	/*
-+	 * Root bus 0x00 is valid only for die 0 AND pmu_idx = 0.
-+	 * Set "0" platform mapping for PMUs which have zero stack bus and
-+	 * non-zero index.
-+	 */
-+	if (!skx_iio_stack_bus(pmu, die) && pmu->pmu_idx) {
-+		pmu->mapping = kzalloc(2, GFP_KERNEL);
-+		if (!pmu->mapping)
-+			return -ENOMEM;
-+		sprintf(pmu->mapping, "0");
-+		return 0;
-+	}
-+
-+	pmu->mapping = kzalloc(max_dies * template_len + 1, GFP_KERNEL);
-+	if (!pmu->mapping)
-+		return -ENOMEM;
-+
-+	buf = pmu->mapping;
-+	for (; die < max_dies; die++) {
-+		buf += snprintf(buf, template_len + 1, "%04x:%02x,", 0,
-+				skx_iio_stack_bus(pmu, die));
-+	}
-+
-+	*(--buf) = '\0';
-+
-+	return 0;
-+}
-+
-+static int skx_iio_set_mapping(struct intel_uncore_type *type)
-+{
-+	/*
-+	 * Each IIO stack (PCIe root port) has its own IIO PMON block, so each
-+	 * platform_mapping holds bus number(s) of PCIe root port(s), which can
-+	 * be monitored by that IIO PMON block.
-+	 *
-+	 * For example, on 4-die Xeon platform with up to 6 IIO stacks per die
-+	 * and, therefore, 6 IIO PMON blocks per die, the platform_mapping
-+	 * of IIO PMON block 0 holds "0000:00,0000:40,0000:80,0000:c0":
-+	 *
-+	 * $ cat /sys/devices/uncore_iio_0/platform_mapping
-+	 * 0000:00,0000:40,0000:80,0000:c0
-+	 *
-+	 * Which means:
-+	 * IIO PMON 0 on die 0 belongs to PCIe RP on bus 0x00, domain 0x0000
-+	 * IIO PMON 0 on die 1 belongs to PCIe RP on bus 0x40, domain 0x0000
-+	 * IIO PMON 0 on die 2 belongs to PCIe RP on bus 0x80, domain 0x0000
-+	 * IIO PMON 0 on die 3 belongs to PCIe RP on bus 0xc0, domain 0x0000
-+	 */
-+
-+	int ret;
-+	struct intel_uncore_pmu *pmu = type->pmus;
-+
-+	for (; pmu - type->pmus < type->num_boxes; pmu++) {
-+		ret = skx_iio_set_box_mapping(pmu);
-+		if (ret) {
-+			for (; pmu->pmu_idx > 0; --pmu)
-+				kfree(pmu->mapping);
-+			break;
-+		}
-+	}
-+
-+	kfree(type->topology);
-+	return ret;
-+}
-+
- void skx_uncore_cpu_init(void)
- {
- 	skx_uncore_chabox.num_boxes = skx_count_chabox();
--- 
-2.19.1
+If the environment doesn't provide that then all bets are off and we
+shouldn't be trying to hack around it in the guest kernel.
+
+Across the hibernation we do expect a single step change in the TSC
+value, just as on real hardware. Like Peter, I assume that the resume
+code does cope with that but haven't checked precisely how/where it
+does so.
+
+
+--=-ee630dIOu9VKbwik7F08
+Content-Type: application/x-pkcs7-signature; name="smime.p7s"
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
+ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
+OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
+AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
+RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
+cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
+uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
+Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
+Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
+xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
+BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
+dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
+LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
+Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
+Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
+KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
+YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
+nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
+PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
+7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
+Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
+MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
+NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
+/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
+0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
+vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
+ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
+ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
+CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
+BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
+aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
+bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
+bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
+LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
+CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
+cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
+W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
+vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
+gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
+RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
+jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
+b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
+AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
+BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
+aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
+AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
++bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
+WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
+aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
+CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
+u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
+DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
+RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
+QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
+b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
+cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
+SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
+0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
+KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
+E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
+M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
+jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
+yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
+gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
+R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
+BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
+BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
+ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
+ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjAw
+MTEzMTM1NDIwWjAvBgkqhkiG9w0BCQQxIgQgHLM8uwnkpOCqujtlAWN6v78D70+1ji/KgvjwJllw
+2fYwgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
+TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
+PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
+aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
+BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
+A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
+bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
+DQEBAQUABIIBAGpnw9SbwfuNaEY/Qgv4KtKivN4+Q/ITmwWpEajbcLHamhiv61oTCozGcO0j2Qwu
+PqCIGtp0Pw4HkNFxm7k0N8HArmz4AEOwDah6p+81H901zAey6dkXzXtG7S3Daf+2sxZlnG269O1t
+GPjrcCJ+Axm4ujjH+pvVfV20LlUhCI9TLWlTBq/bF3Up455YRlei4tl0VpKNKvrxVleL81r04Blv
+BXYjwryRDS86DM8jYUKye6jaQMu6jJfovBxo39SNR57m0+h6TpYAxYjgXBX0/33YMbHWh023o+tf
+GGLzFX2SwSxFJyO6+Lu5biqrV85rZ+WK9d7iSUwLx64XY9eBMH8AAAAAAAA=
+
+
+--=-ee630dIOu9VKbwik7F08--
 
