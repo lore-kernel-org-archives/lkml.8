@@ -2,97 +2,135 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F0EC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72965C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3E1214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:43:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dRQxNzgo"
+	by mail.kernel.org (Postfix) with ESMTP id 4989C214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:44:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578941054;
+	bh=Jt+HCvjoUehH1ULTVi1If77nC6jENatri0t+e+EqeU0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0WgG+h7dH59gFS4m2ozJE3yhcuFdoUp08WJeBwxvekDHejyHwQDoQmh7/gBc8BT/E
+	 AF/8lcJoflNSa+Aj5OMg/B5ZrN9MVz/xPl7LltN0YHHXWPcHEvtSfBNj6gP1LiDu3G
+	 D3XLhmdmnWsYPSIcb8fW8wGB4gO7wBTmArvIl1/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728826AbgAMSns (ORCPT
+        id S1728829AbgAMSoN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:43:48 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:45032 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727726AbgAMSnp (ORCPT
+        Mon, 13 Jan 2020 13:44:13 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40351 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728664AbgAMSoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:43:45 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578941024; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=n++fX84s76rSeZguThu1VU/fYy13LRbB/w5RZWTUErQ=;
- b=dRQxNzgovuVLrk9Fa6O9mMLlVvE8/Mv3yAIFXUlZSrb47xVTryOCIsxValgMnoftlKbo2qEy
- igyEZ+OwRoxmYthSqcZH1eZhkOFA9DB8e8/HikEflBk8tX5A/3kOKAA1l5PW+V0b7ZnIob1k
- jPbdZpfTjp/x19Jk9iVaXzJdISw=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1cba5d.7f6eb1a466c0-smtp-out-n01;
- Mon, 13 Jan 2020 18:43:41 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id EB415C447A6; Mon, 13 Jan 2020 18:43:40 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1868EC43383;
-        Mon, 13 Jan 2020 18:43:40 +0000 (UTC)
+        Mon, 13 Jan 2020 13:44:12 -0500
+Received: by mail-pg1-f196.google.com with SMTP id k25so5112837pgt.7;
+        Mon, 13 Jan 2020 10:44:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XCFW0Yfpgoj7tyuIPW7yq6i9Mkax8uk0L6HzdUrT4A0=;
+        b=UmiF87Pmy7EMCj5XCheHSLZsszlG5ZSZMFIh7wiSNffTKrTM5HIFOk5tBwvl4jcvhV
+         MCMl1R1gjAmNlaPSREuj0dM3j5ZCV+zPUSGJ01CAu5cDgZY5wrLKXX6tQF9HjnOPVeG4
+         HVsd2tUXtKOOMu3JMD+63nTXdMheehqDAdP6SHAPVg5EL6yJzMyxhWUrwRpPur6OORsF
+         t0zFoA7NHCANedW4Ksf5Rje8n8dhVSNb1rhp8ENxsfstADzq4tydyeyqOCyChA1tEO2Q
+         mZDSO0H3AmCQRYCR3WpE82jA2FusRTPPMlHy3HYsT/+d8xQTOFYYeqkH7AgG+WipvJ9G
+         ophg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XCFW0Yfpgoj7tyuIPW7yq6i9Mkax8uk0L6HzdUrT4A0=;
+        b=KJekepyI153Ti0ayNG6ESLtPw6QXhZ2Db0eLxcd8q9JWzCW2TusaRHEb3b7p9TErCn
+         xK14+g5es/mHY22T/KFxJGOW+zfnUveybkAagidA3WhYWcdEMK+m0Tzl9fBYOzqVTFsb
+         /91Xbp4f9SvJd1bT52Tkn1ocTBlzMMo0nyEbftFGf4sWihd++ua56f0VStQgAhr+HOqa
+         48X+OTnDKpJM1oBycNnfkkHEqmvY1EjVExCENpyjodx+n++XF5eQGJcyBYvrNQqC7Dym
+         5IaUiGNU8v8dMPFb35OR3Fa2MMvwCz8ftXv9DqqB4Wqed+VcvgJ+LKh+LLtZjV8fMBEq
+         eF6g==
+X-Gm-Message-State: APjAAAW1KK0/mE0Y0SdG71bP5i4pXPf0ocoqfsswVK+6UstFOZidVZhV
+        +8YocLDHjVN7sgnAO8PWJoU=
+X-Google-Smtp-Source: APXvYqwqaUyEulapjBKHUnWFZXcRt0mFnT42KUI+pS33SC0ueuwKMg1+GGSrydffaYzLBb4Y/EMrDg==
+X-Received: by 2002:a63:a357:: with SMTP id v23mr22421783pgn.223.1578941051972;
+        Mon, 13 Jan 2020 10:44:11 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id a16sm14152648pgb.5.2020.01.13.10.44.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 10:44:10 -0800 (PST)
+Date:   Mon, 13 Jan 2020 10:44:08 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>
+Subject: Re: [PATCH 2/4] mm: introduce external memory hinting API
+Message-ID: <20200113184408.GD110363@google.com>
+References: <20200110213433.94739-1-minchan@kernel.org>
+ <20200110213433.94739-3-minchan@kernel.org>
+ <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
+ <20200113104256.5ujbplyec2sk4onn@wittgenstein>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 13 Jan 2020 10:43:40 -0800
-From:   asutoshd@codeaurora.org
-To:     Bean Huo <huobean@gmail.com>
-Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi-owner@vger.kernel.org
-Subject: Re: [PATCH 1/3] scsi: ufs: add max_lu_supported in struct
- ufs_dev_info
-In-Reply-To: <20200110183606.10102-2-huobean@gmail.com>
-References: <20200110183606.10102-1-huobean@gmail.com>
- <20200110183606.10102-2-huobean@gmail.com>
-Message-ID: <268bea279e84715f2a3d39ab1edb406d@codeaurora.org>
-X-Sender: asutoshd@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113104256.5ujbplyec2sk4onn@wittgenstein>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-10 10:36, Bean Huo wrote:
-> From: Bean Huo <beanhuo@micron.com>
-> 
-> Add one new parameter max_lu_supported in struct ufs_dev_info,
-> which will be used to express exactly how many general LUs being
-> supported by UFS device.
-> 
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-> ---
->  drivers/scsi/ufs/ufs.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-> index c89f21698629..5ca7ea4f223e 100644
-> --- a/drivers/scsi/ufs/ufs.h
-> +++ b/drivers/scsi/ufs/ufs.h
-> @@ -530,6 +530,8 @@ struct ufs_dev_info {
->  	bool f_power_on_wp_en;
->  	/* Keeps information if any of the LU is power on write protected */
->  	bool is_lu_power_on_wp;
-> +	/* Maximum number of general LU supported by the UFS device */
-> +	u8 max_lu_supported;
->  };
-> 
->  #define MAX_MODEL_LEN 16
+On Mon, Jan 13, 2020 at 11:42:57AM +0100, Christian Brauner wrote:
+> On Mon, Jan 13, 2020 at 11:47:11AM +0300, Kirill Tkhai wrote:
 
-Looks good to me.
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+< snip >
+
+> > > +SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
+> > > +		size_t, len_in, int, behavior, unsigned long, flags)
+> > 
+> > I don't like the interface. The fact we have pidfd does not mean,
+> > we have to use it for new syscalls always. A user may want to set
+> > madvise for specific pid from console and pass pid as argument.
+> > pidfd would be an overkill in this case.
+> > We usually call "kill -9 pid" from console. Why shouldn't process_madvise()
+> > allow this?
+> > 
+> > I suggent to extend first argument to work with both pid and pidfd.
+> > Look at what we have for waitid(idtype, id_t id, ...) for example:
+> > 
+> >        idtype == P_PID
+> >               Wait for the child whose process ID matches id.
+> > 
+> >        idtype == P_PIDFD (since Linux 5.4)
+> >               Wait for the child referred to by the PID file descriptor specified in id.  (See pidfd_open(2) for  further  information  on
+> >               PID file descriptors.)
+> > 
+> > We may use @flags argument for this.
+> 
+> Sorry for chiming in just a comment. Overall, I don't particularly care
+> how or if you integrate pidfd here. One thing I would like to point out
+> is that we're working on a patch to place new features under pidfd
+> specific flags. This e.g. means a pidfd would be only be able to be used
+> for madvise operations (or getfd operations) if it was created with that
+> specific flag set making it easier to share them with other processes.
+> So if you integrate them here I would be quite thankful if you target
+> the patchset for the v5.7 merge window, not for v5.6.
+
+Hi Christian,
+Sorry but I couldn't understand your point.
+Could you clarify what you meant?
+
+Thanks.
