@@ -2,339 +2,101 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2D7C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE709C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2506621569
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F1B214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:43:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpBu1MKs"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KjQcFdqe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbgAMNnC (ORCPT
+        id S1728828AbgAMNnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:43:02 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33239 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgAMNm5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:42:57 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 6so4749786pgk.0;
-        Mon, 13 Jan 2020 05:42:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=whYuuyKP7cM54m2BHiaOqZnRmLdECXVM77M1Nve7Ffc=;
-        b=BpBu1MKso0rl5yqFzVvoG+42t1/WiLxg452cMSkz5JIP6pdNF84C8ImAhLacQb8hpE
-         wrO+C9PizuH/G7n54SGH1J+efVOgRy61RsZ8hXfYMItaNaQmiEC50GqsTJ7N64UlZD9O
-         LeTfb56GeeK2RBvGKnOp2B+SaMW37ktA+1AH6OqhotZdLLublMQ6PkqeR0BfvGA9KG+V
-         8m1E6re0psxTVrBNox9DOcsNRInLzMx+222WfyrppqUU+AcxBx7gD/wnejdICsysN2+d
-         d1Fghpo5Y4Jl5N7ty/vrPI8s6aGEpKUZVCcDOd5zN6oxesk1zTIYd1+YUdF/pH/xhOT+
-         uUzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=whYuuyKP7cM54m2BHiaOqZnRmLdECXVM77M1Nve7Ffc=;
-        b=Dm/+ri4Co5cfnkXxZxTTdKVoZYJg8xjs75qJebZtT+V9uqybUpIg1kWqguQYzyK5tP
-         2SGCRvGOls/MKxdTdwQ+rL0JwOnZnpbEJ6TE4uJ8V+aZ85BNH4dmUiSiAOImSPa30lbP
-         Hvx1+3eN+sJRLkDJ+3FOPVn3xKjzWWVszIaDdMNFxFmHLorDEWB1WgnLo1N9bZSnFM7o
-         ppkdxdaq3vZQrloKi6NSZs5moNU/1zXJ6fULzyRKfYNVSQCium2ODnXk/S1stUup8MpG
-         ut5Z5boofqYH11Ppp4G9Lcjgz3b9c+6LZ8bI3PFZxCkuRU6myuDnc51Joz0/nm3rVlw9
-         jPFg==
-X-Gm-Message-State: APjAAAXwiA0U2XUYE2gOreEQUrpZQ1M6S0IO0ozl5shSStgI8sbbPyn0
-        4WmqUAOvg+F1fMgqrw9EphuHPFDc0QzgLySWGfrkFwp6h6M=
-X-Google-Smtp-Source: APXvYqxf6ye7tv+WsLah0hWVoa8RQA0tzFyu/ew79zuYgii1HftfpvsqkAaYYHP4cjua4I+c3QcgTwcUHn5nw1BwR3o=
-X-Received: by 2002:a63:941:: with SMTP id 62mr21498457pgj.203.1578922976770;
- Mon, 13 Jan 2020 05:42:56 -0800 (PST)
+        Mon, 13 Jan 2020 08:43:16 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:39280 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbgAMNnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:43:16 -0500
+Received: from zn.tnic (p200300EC2F05D3007144E525CFA9AFEA.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:d300:7144:e525:cfa9:afea])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 056271EC0273;
+        Mon, 13 Jan 2020 14:43:13 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578922994;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=m8/BsA7p571dMLjHMqqm9mlcA20gY/0wO94EJdWdxx0=;
+        b=KjQcFdqeFpRAT4SVTi4d1mVgS2uZyxYAI7Wu2XOwncMfrVFqUzFVxArY3EOCFl9HPqb6ll
+        RfAl9igokR6xwB41N582lnDSpZBX5aCf6osSx4/sWAnW719RPWBXnXSx7z/hiq7Y7EfAL1
+        K2/LvEuhRjUlwLwJoEaBgDitPFo5tQQ=
+Date:   Mon, 13 Jan 2020 14:43:06 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] x86/tools/relocs: Add _etext and __end_of_kernel_reserve
+ to S_REL
+Message-ID: <20200113134306.GF13310@zn.tnic>
+References: <20200110202349.1881840-1-nivedita@alum.mit.edu>
+ <20200110203828.GK19453@zn.tnic>
+ <20200110205028.GA2012059@rani.riverdale.lan>
+ <20200111130243.GA23583@zn.tnic>
+ <20200111172047.GA2688392@rani.riverdale.lan>
 MIME-Version: 1.0
-References: <4953fc69a26bee930bccdeb612f1ce740a4294df.1578921062.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <4953fc69a26bee930bccdeb612f1ce740a4294df.1578921062.git.Jose.Abreu@synopsys.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 13 Jan 2020 15:42:47 +0200
-Message-ID: <CAHp75VeOefY_BK7MitFtdb7enrh5TOOwZ8kDJfVxvW28gejUbg@mail.gmail.com>
-Subject: Re: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
- using a PHY driver
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200111172047.GA2688392@rani.riverdale.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 3:13 PM Jose Abreu <Jose.Abreu@synopsys.com> wrote:
->
-> Adds the basic support for XPCS including support for USXGMII.
+On Sat, Jan 11, 2020 at 12:20:48PM -0500, Arvind Sankar wrote:
+> I'm not sure if that's the same issue. The root cause for the one I
+> reported is described in more detail in [1], and the change that makes
+> these symbols no longer absolute is commit d2667025dd30 in binutils-gdb
+> (sourceware.org seems to be taking too long to respond from here so I
+> don't have the web link).
 
-...
+My binutils guy says that the proper fix should be to make those two
+symbols section-relative, i.e., move _etext at the end of the .text
+section and so on.
 
-> +#define SYNOPSYS_XPHY_ID               0x7996ced0
-> +#define SYNOPSYS_XPHY_MASK             0xffffffff
+Please check whether this fixes the build issue too because if it does,
+it would be The RightThing(tm).
 
-GENMASK() ?
-(It seems bits.h is missed in the headers block)
+> I'm running gentoo, but building the kernel using binutils-2.21.1
+> compiled from the GNU source tarball, and gcc-4.6.4 again compiled from
+> source. (It's not something I normally need but I was investigating
+> something else to see what exactly happens with older toolchains.)
+> 
+> I used the below to compile the kernel (I added in
+> readelf/objdump/objcopy just now, and it does build until the relocs
+> error). The config is x86-64 defconfig with CONFIG_RETPOLINE overridden
+> to n (since gcc 4.6.4 doesn't support retpoline).
+> 
+> make O=~/kernel64 -j LD=~/old/bin/ld AS=~/old/bin/as READELF=~/old/bin/readelf \
+> 	OBJDUMP=~/old/bin/objdump OBJCOPY=~/old/bin/objcopy GCC=~/old/bin/gcc
 
-...
+Make this all part of your commit message because it explains in detail
+how exactly you've triggered it so that anyone else reading this can
+reproduce her/himself.
 
-> +#define DW_USXGMII_2500                        (BIT(5))
-> +#define DW_USXGMII_1000                        (BIT(6))
-> +#define DW_USXGMII_100                 (BIT(13))
-> +#define DW_USXGMII_10                  (0)
-
-Useless parentheses.
-
-...
-
-> +static int dw_poll_reset(struct phy_device *phydev, int dev)
-> +{
-> +       /* Poll until the reset bit clears (50ms per retry == 0.6 sec) */
-> +       unsigned int retries = 12;
-> +       int ret;
-> +
-> +       do {
-
-> +               msleep(50);
-
-It's a bit unusual to have timeout loop to be started with sleep.
-Imagine the case when between writing a reset bit and actual checking
-the scheduling happens and reset has been done You add here
-unnecessary 50 ms of waiting.
-
-> +               ret = phy_read_mmd(phydev, dev, MDIO_CTRL1);
-> +               if (ret < 0)
-> +                       return ret;
-> +       } while (ret & MDIO_CTRL1_RESET && --retries);
-> +       if (ret & MDIO_CTRL1_RESET)
-> +               return -ETIMEDOUT;
-> +
-> +       return 0;
-> +}
-> +
-> +static int __dw_soft_reset(struct phy_device *phydev, int dev, int reg)
-> +{
-> +       int val;
-
-val?! Perhaps ret is better name?
-Applicable to the rest of functions.
-
-> +
-> +       val = phy_write_mmd(phydev, dev, reg, MDIO_CTRL1_RESET);
-> +       if (val < 0)
-> +               return val;
-> +
-
-> +       val = dw_poll_reset(phydev, dev);
-> +       if (val < 0)
-> +               return val;
-> +
-> +       return 0;
-
-return dw_poll_reset(...);
-
-> +}
-> +
-> +static int dw_soft_reset(struct phy_device *phydev, u32 mmd_mask)
-> +{
-> +       int val, devad;
-> +
-> +       while (mmd_mask) {
-> +               devad = __ffs(mmd_mask);
-> +               mmd_mask &= ~BIT(devad);
-
-for_each_set_bit()
-
-> +
-> +               val = __dw_soft_reset(phydev, devad, MDIO_CTRL1);
-> +               if (val < 0)
-> +                       return val;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int dw_read_link(struct phy_device *phydev, u32 mmd_mask)
-> +{
-> +       bool link = true;
-> +       int val, devad;
-> +
-> +       while (mmd_mask) {
-> +               devad = __ffs(mmd_mask);
-> +               mmd_mask &= ~BIT(devad);
-
-Ditto.
-
-> +
-> +               val = phy_read_mmd(phydev, devad, MDIO_STAT1);
-> +               if (val < 0)
-> +                       return val;
-> +
-> +               if (!(val & MDIO_STAT1_LSTATUS))
-> +                       link = false;
-> +       }
-> +
-> +       return link;
-> +}
-
-> +#define dw_warn(__phy, __args...) \
-
-dw_warn() -> dw_warn_if_phy_link()
-
-> +({ \
-> +       if ((__phy)->link) \
-> +               dev_warn(&(__phy)->mdio.dev, ##__args); \
-> +})
-
-...
-
-> +       int val, speed_sel = 0x0;
-
-Redundant assignment.
-
-> +       switch (phydev->speed) {
-> +       case SPEED_10:
-> +               speed_sel = DW_USXGMII_10;
-> +               break;
-> +       case SPEED_100:
-> +               speed_sel = DW_USXGMII_100;
-> +               break;
-> +       case SPEED_1000:
-> +               speed_sel = DW_USXGMII_1000;
-> +               break;
-> +       case SPEED_2500:
-> +               speed_sel = DW_USXGMII_2500;
-> +               break;
-> +       case SPEED_5000:
-> +               speed_sel = DW_USXGMII_5000;
-> +               break;
-> +       case SPEED_10000:
-> +               speed_sel = DW_USXGMII_10000;
-> +               break;
-> +       default:
-> +               /* Nothing to do here */
-> +               return 0;
-> +       }
-
-...
-
-> +static int dw_config_aneg_c73(struct phy_device *phydev)
-> +{
-> +       u32 adv = 0;
-
-Redundant assignment.
-
-> +       int ret;
-> +
-> +       /* SR_AN_ADV3 */
-> +       adv = phy_read_mmd(phydev, MDIO_MMD_AN, DW_SR_AN_ADV3);
-> +       if (adv < 0)
-> +               return adv;
-
-> +}
-
-...
-
-> +       do {
-> +               msleep(50);
-
-Same as above about timeout loops.
-
-> +               val = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_CTRL1);
-> +               if (val < 0)
-> +                       return val;
-> +       } while (val & MDIO_AN_CTRL1_RESTART && --retries);
-
-...
-
-> +static int dw_aneg_done(struct phy_device *phydev)
-> +{
-> +       int val;
-> +
-> +       val = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_STAT1);
-> +       if (val < 0)
-> +               return val;
-> +
-> +       if (val & MDIO_AN_STAT1_COMPLETE) {
-> +               val = phy_read_mmd(phydev, MDIO_MMD_AN, DW_SR_AN_LP_ABL1);
-> +               if (val < 0)
-> +                       return val;
-> +
-> +               /* Check if Aneg outcome is valid */
-> +               if (!(val & 0x1))
-> +                       goto fault;
-> +
-
-> +               return 1;
-
-1?! What does it mean?
-
-> +       }
-> +
-> +       if (val & MDIO_AN_STAT1_RFAULT)
-> +               goto fault;
-> +
-> +       return 0;
-> +fault:
-> +       dev_err(&phydev->mdio.dev, "Invalid Autoneg result!\n");
-> +       dev_err(&phydev->mdio.dev, "CTRL1=0x%x, STAT1=0x%x\n",
-> +               phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_CTRL1),
-> +               phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_STAT1));
-> +       dev_err(&phydev->mdio.dev, "ADV1=0x%x, ADV2=0x%x, ADV3=0x%x\n",
-> +               phy_read_mmd(phydev, MDIO_MMD_AN, DW_SR_AN_ADV1),
-> +               phy_read_mmd(phydev, MDIO_MMD_AN, DW_SR_AN_ADV2),
-> +               phy_read_mmd(phydev, MDIO_MMD_AN, DW_SR_AN_ADV3));
-> +       dev_err(&phydev->mdio.dev, "LP_ADV1=0x%x, LP_ADV2=0x%x, LP_ADV3=0x%x\n",
-> +               phy_read_mmd(phydev, MDIO_MMD_AN, DW_SR_AN_LP_ABL1),
-> +               phy_read_mmd(phydev, MDIO_MMD_AN, DW_SR_AN_LP_ABL2),
-> +               phy_read_mmd(phydev, MDIO_MMD_AN, DW_SR_AN_LP_ABL3));
-> +
-> +       val = dw_soft_reset(phydev, MDIO_DEVS_PCS);
-> +       if (val < 0)
-> +               return val;
-> +
-> +       return dw_config_aneg(phydev);
-> +}
-
-...
-
-> +       phydev->pause = val & DW_C73_PAUSE ? 1 : 0;
-> +       phydev->asym_pause = val & DW_C73_ASYM_PAUSE ? 1 : 0;
-
-!!(x) should work as well. But I think compiler optimizes that ternary well.
-
-...
-
-> +               val = dw_aneg_done(phydev);
-> +               if (val <= 0) {
-
-This <= 0 should be explained. Why we set link when it's < 0 or
-otherwise why we return 0 when link is set to false.
-
-> +                       phydev->link = false;
-> +                       return val;
-> +               }
-
-...
-
-> +static struct mdio_device_id __maybe_unused dw_tbl[] = {
-> +       { SYNOPSYS_XPHY_ID, SYNOPSYS_XPHY_MASK },
-> +       { },
-
-Comma is not needed.
-
-> +};
+Thx.
 
 -- 
-With Best Regards,
-Andy Shevchenko
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
