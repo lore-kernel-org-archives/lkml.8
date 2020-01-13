@@ -2,219 +2,153 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF1EC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD44AC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A0320CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:27:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578950860;
-	bh=FA28n6ktJxQUYxR/tTujAqhPiQ18OaQ/XL1refTxLls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Qf8JTcSHEqjM72WBnKgFHb4bozgrAQg4MyAdDEM//1vpnvvFEYx9LOloa8eE1TCJk
-	 +xY9LjIJ3jFKva6Tzr0pTrBuNju8qFhm7ziSHLiFwo1kB8w9yKDSXGJYrg539l8yZ2
-	 E+rLiLCTUjJgM7WiEgNxC5vFsRZnXjNHRd8h592o=
+	by mail.kernel.org (Postfix) with ESMTP id 914F92084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:28:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Lcox1vkA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgAMV1j (ORCPT
+        id S1728791AbgAMV25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 16:27:39 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:42004 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726778AbgAMV1j (ORCPT
+        Mon, 13 Jan 2020 16:28:57 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:49144 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbgAMV24 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 16:27:39 -0500
-Received: by mail-oi1-f196.google.com with SMTP id 18so9752021oin.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 13:27:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wpi+Y6/xhviC2Sqtl/ej/5/Y4u+j7SMkoib6d0WEkK8=;
-        b=mofWf/PB+no1AkzZcWE3gAqXitqyJ04Aqy3bmZ0s8kJUiaVfuMlmbIEwd2Ludt3iL9
-         LRWUyejsDZN/5xDpMkvqx4W5J7os6ztdxy52jIre/IWo99IhxX8gYWBhc5nPbpPxQ7ym
-         Sz5WkotvHouxXMtYTDfOW4zrfxJWRCWHL9zky6HOHd+ic1bSMAnNWhTrau16DyK39c/K
-         yrMGdDwmkwWVWAtjZkNXKORzXdzszaQ69KvW+HRb7gAZKVRH15x5019iTRJ0Wmz5CtGW
-         qgJSrMgW3LuTCvAkX+VJ2NTd4Sz5cViWjQaQOjGCwGFAEA//ejfQoJaNX0+XKiySxDIX
-         VrjQ==
-X-Gm-Message-State: APjAAAXscq8oOnlER9FzR+WE0kqEgntKioCR/rfdptmS0mqdNt6cTssD
-        MBxjea3TLErYx5N4kJl5QZj8XMs=
-X-Google-Smtp-Source: APXvYqwmMYaEoaBaT9zXn8lKWm6MZEkD7rGQscNSMrolzV3JrpMwtSTvR5VHyTB2X4UsCNjqkPI1Tw==
-X-Received: by 2002:aca:815:: with SMTP id 21mr14632823oii.52.1578950858086;
-        Mon, 13 Jan 2020 13:27:38 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f142sm3915050oig.48.2020.01.13.13.27.36
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 13:27:36 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 220b00
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Mon, 13 Jan 2020 15:27:35 -0600
-Date:   Mon, 13 Jan 2020 15:27:35 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 1/3] dt-bindings: clock: Convert i.MX8MQ to json-schema
-Message-ID: <20200113212735.GA9275@bogus>
-References: <1578642914-838-1-git-send-email-Anson.Huang@nxp.com>
+        Mon, 13 Jan 2020 16:28:56 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DLShVu153496;
+        Mon, 13 Jan 2020 21:28:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=kOS3eT26FYkCs3ZW6Ea57yVyzp/mMYsR+c//v2A9eQg=;
+ b=Lcox1vkA3UX4fQQOQPCy3lyBWF3NxLYb+0J8QrBIfy+dZ0GixOYTczwifI6n+sqHhf9q
+ 4dVED11/MOv2fHFLLyr3htzinWFlsqkapYAWQ/1oCm5CGPgDEOsHOnCxlz2K593bXFZ3
+ 4eVSmHyrcK1mGRSb+otBWBuwdskwOMR7oA1+pGn82VX62YpPa4t+OVR9tCTNh6gEAGBb
+ Ls3gh6pXfC7iPX1Lh/jcgH8HNV/X64Ct5jn/znTcf4jfMjAgTt8HE+Zh22JkJukMfYM7
+ qCVcxPETOTEwYGvBfCutwZ9vHnuA/06Z+PHprWxx9NMVAt6EmiJIbMrp8dxgYpxwoHkB Qw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xf74s1r2p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 21:28:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DLF6fc061634;
+        Mon, 13 Jan 2020 21:28:42 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2xfqvtbxpe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 21:28:42 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00DLSepq008043;
+        Mon, 13 Jan 2020 21:28:41 GMT
+Received: from [10.209.227.41] (/10.209.227.41)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jan 2020 13:28:40 -0800
+Subject: Re: [PATCH v8 02/18] soc: ti: k3: add navss ringacc driver
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, vkoul@kernel.org,
+        robh+dt@kernel.org, nm@ti.com, ssantosh@kernel.org
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com, vigneshr@ti.com, frowand.list@gmail.com
+References: <20191223110458.30766-1-peter.ujfalusi@ti.com>
+ <20191223110458.30766-3-peter.ujfalusi@ti.com>
+ <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
+From:   santosh.shilimkar@oracle.com
+Organization: Oracle Corporation
+Message-ID: <900c2f21-22bf-47f9-5c3c-0a3d95a5d645@oracle.com>
+Date:   Mon, 13 Jan 2020 13:28:39 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1578642914-838-1-git-send-email-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6d70686b-a94e-18d1-7b33-ff9df7176089@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001130173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001130175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 03:55:12PM +0800, Anson Huang wrote:
-> Convert the i.MX8MQ clock binding to DT schema format using json-schema
+
+
+On 12/23/19 3:38 AM, Peter Ujfalusi wrote:
+> Hi Santosh,
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  .../devicetree/bindings/clock/imx8mq-clock.txt     | 20 ------
->  .../devicetree/bindings/clock/imx8mq-clock.yaml    | 72 ++++++++++++++++++++++
->  2 files changed, 72 insertions(+), 20 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.yaml
-
-Fails 'make dt_binding_check':
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8mn-clock.example.dt.yaml: 
-clock-controller@30380000: clock-names:0: 'ckil' was expected
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8mn-clock.example.dt.yaml: 
-clock-controller@30380000: clock-names:1: 'osc_25m' was expected
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8mn-clock.example.dt.yaml: 
-clock-controller@30380000: clock-names:2: 'osc_27m' was expected
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8mn-clock.example.dt.yaml: 
-clock-controller@30380000: clock-names:3: 'clk_ext1' was expected
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8mn-clock.example.dt.yaml: 
-clock-controller@30380000: clock-names:4: 'clk_ext2' was expected
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8mn-clock.example.dt.yaml: 
-clock-controller@30380000: clock-names:5: 'clk_ext3' was expected
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8mn-clock.example.dt.yaml: 
-clock-controller@30380000: clock-names: ['osc_32k', 'osc_24m', 'clk_ext1', 'clk_ext2', 'clk_ext3', 'clk_ext4'] is too short
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/clock/imx8mn-clock.example.dt.yaml: 
-clock-controller@30380000: clocks: [[1], [2], [3], [4], [5], [6]] is too short
-
+> On 23/12/2019 13.04, Peter Ujfalusi wrote:
+>> From: Grygorii Strashko <grygorii.strashko@ti.com>
+>>
+>> The Ring Accelerator (RINGACC or RA) provides hardware acceleration to
+>> enable straightforward passing of work between a producer and a consumer.
+>> There is one RINGACC module per NAVSS on TI AM65x SoCs.
+>>
+>> The RINGACC converts constant-address read and write accesses to equivalent
+>> read or write accesses to a circular data structure in memory. The RINGACC
+>> eliminates the need for each DMA controller which needs to access ring
+>> elements from having to know the current state of the ring (base address,
+>> current offset). The DMA controller performs a read or write access to a
+>> specific address range (which maps to the source interface on the RINGACC)
+>> and the RINGACC replaces the address for the transaction with a new address
+>> which corresponds to the head or tail element of the ring (head for reads,
+>> tail for writes). Since the RINGACC maintains the state, multiple DMA
+>> controllers or channels are allowed to coherently share the same rings as
+>> applicable. The RINGACC is able to place data which is destined towards
+>> software into cached memory directly.
+>>
+>> Supported ring modes:
+>> - Ring Mode
+>> - Messaging Mode
+>> - Credentials Mode
+>> - Queue Manager Mode
+>>
+>> TI-SCI integration:
+>>
+>> Texas Instrument's System Control Interface (TI-SCI) Message Protocol now
+>> has control over Ringacc module resources management (RM) and Rings
+>> configuration.
+>>
+>> The corresponding support of TI-SCI Ringacc module RM protocol
+>> introduced as option through DT parameters:
+>> - ti,sci: phandle on TI-SCI firmware controller DT node
+>> - ti,sci-dev-id: TI-SCI device identifier as per TI-SCI firmware spec
+>>
+>> if both parameters present - Ringacc driver will configure/free/reset Rings
+>> using TI-SCI Message Ringacc RM Protocol.
+>>
+>> The Ringacc driver manages Rings allocation by itself now and requests
+>> TI-SCI firmware to allocate and configure specific Rings only. It's done
+>> this way because, Linux driver implements two stage Rings allocation and
+>> configuration (allocate ring and configure ring) while TI-SCI Message
+>> Protocol supports only one combined operation (allocate+configure).
+>>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> Reviewed-by: Tero Kristo <t-kristo@ti.com>
+>> Tested-by: Keerthy <j-keerthy@ti.com>
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/imx8mq-clock.txt b/Documentation/devicetree/bindings/clock/imx8mq-clock.txt
-> deleted file mode 100644
-> index 52de826..0000000
-> --- a/Documentation/devicetree/bindings/clock/imx8mq-clock.txt
-> +++ /dev/null
-> @@ -1,20 +0,0 @@
-> -* Clock bindings for NXP i.MX8M Quad
-> -
-> -Required properties:
-> -- compatible: Should be "fsl,imx8mq-ccm"
-> -- reg: Address and length of the register set
-> -- #clock-cells: Should be <1>
-> -- clocks: list of clock specifiers, must contain an entry for each required
-> -          entry in clock-names
-> -- clock-names: should include the following entries:
-> -    - "ckil"
-> -    - "osc_25m"
-> -    - "osc_27m"
-> -    - "clk_ext1"
-> -    - "clk_ext2"
-> -    - "clk_ext3"
-> -    - "clk_ext4"
-> -
-> -The clock consumer should specify the desired clock by having the clock
-> -ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx8mq-clock.h
-> -for the full list of i.MX8M Quad clock IDs.
-> diff --git a/Documentation/devicetree/bindings/clock/imx8mq-clock.yaml b/Documentation/devicetree/bindings/clock/imx8mq-clock.yaml
-> new file mode 100644
-> index 0000000..881c01c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/imx8mq-clock.yaml
-> @@ -0,0 +1,72 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/imx8mq-clock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP i.MX8M Quad Clock Control Module Binding
-> +
-> +maintainers:
-> +  - Anson Huang <Anson.Huang@nxp.com>
-> +
-> +description: |
-> +  NXP i.MX8M Quad clock control module is an integrated clock controller, which
-> +  generates and supplies to all modules.
-> +
-> +properties:
-> +  compatible:
-> +    const: fsl,imx8mn-ccm
-
-Wrong compatible...
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: 32k osc
-> +      - description: 25m osc
-> +      - description: 27m osc
-> +      - description: ext1 clock input
-> +      - description: ext2 clock input
-> +      - description: ext3 clock input
-> +      - description: ext4 clock input
-> +
-> +  clock-names:
-> +    items:
-> +      - const: ckil
-> +      - const: osc_25m
-> +      - const: osc_27m
-> +      - const: clk_ext1
-> +      - const: clk_ext2
-> +      - const: clk_ext3
-> +      - const: clk_ext4
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +    description:
-> +      The clock consumer should specify the desired clock by having the clock
-> +      ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx8mq-clock.h
-> +      for the full list of i.MX8M Quad clock IDs.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - '#clock-cells'
-> +
-> +examples:
-> +  # Clock Control Module node:
-> +  - |
-> +    clk: clock-controller@30380000 {
-> +        compatible = "fsl,imx8mq-ccm";
-> +        reg = <0x30380000 0x10000>;
-> +        #clock-cells = <1>;
-> +        clocks = <&ckil>, <&osc_25m>, <&osc_27m>,
-> +                 <&clk_ext1>, <&clk_ext2>,
-> +                 <&clk_ext3>, <&clk_ext4>;
-> +        clock-names = "ckil", "osc_25m", "osc_27m",
-> +                      "clk_ext1", "clk_ext2",
-> +                      "clk_ext3", "clk_ext4";
-> +    };
-> +
-> +...
-> -- 
-> 2.7.4
+> Can you please giver your Acked-by for the ringacc patches if they are
+> still OK from your point of view as you had offered to take them before
+> I got comments from Lokesh.
 > 
+Sure. But you really need to split the series so that dma engine and
+soc driver patches can be applied independently. Can you please do that?
