@@ -2,315 +2,283 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0FD0C33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A48C33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:57:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 844B220678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A896D214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:57:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rYZZxqHU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PBYeuidB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728927AbgAMI5G (ORCPT
+        id S1728942AbgAMI5Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 03:57:06 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:35516 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727325AbgAMI5F (ORCPT
+        Mon, 13 Jan 2020 03:57:16 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45997 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727325AbgAMI5Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 03:57:05 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00D8uPmw052759;
-        Mon, 13 Jan 2020 02:56:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578905785;
-        bh=qiluW+qBpvQyARnjqX2JEhlxa6K7JfbnE7vKlMFGKsQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=rYZZxqHUR9N6nLKtsz38/NT5IEKxu8f9c1YxZL9P8v4I0w5+jmY2yA0ez7Q6zyJKp
-         pyNkqSeWVw4w1aHLDlCFPt7dNX3XcYKPred2L+ha0F+yxZi3sGUARnEdBOpBD7GgGE
-         Y58DBXtybW3uCVrjHg/Cy0PdnHf5Uyuk0E9rsh7U=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00D8uPvS120096;
-        Mon, 13 Jan 2020 02:56:25 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 13
- Jan 2020 02:56:24 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 13 Jan 2020 02:56:24 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00D8uGnf076383;
-        Mon, 13 Jan 2020 02:56:17 -0600
-Subject: Re: [v3 3/6] PCI: endpoint: Add support to handle multiple base for
- mapping outbound memory
-To:     "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Simon Horman <horms@verge.net.au>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20200108162211.22358-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200108162211.22358-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <53d74632-34ee-f7f7-656f-a93a6c10e7ba@ti.com>
- <CA+V-a8tHkqkxE_5DMtt6PbJyGz1vfKZUezE5nOFmJXarJAugkw@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <2b4dd351-76ee-60bd-bd91-20d5f1ac4e79@ti.com>
-Date:   Mon, 13 Jan 2020 14:28:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <CA+V-a8tHkqkxE_5DMtt6PbJyGz1vfKZUezE5nOFmJXarJAugkw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Mon, 13 Jan 2020 03:57:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578905834;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/8jjd0naK5yUfMwY72nPxcwXV/oe8/+GoHM6O1vObkI=;
+        b=PBYeuidBoLr1BbFJXdNrqoM3UtKB+8vEAHxyAtnIgKDzLdI0ZG5T4FRGgDKiVwe6umE2F0
+        PpMy0kwzvon5xmoD1P5w92dqBeimAbKo04ABjtublE/6PrnPlMyz8Bb+XSaSo+899Qk5NA
+        590/K/V04R9JGXbzOLFP60XMKbeWTsU=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-394-LNDL1G75NsCN5XlaS-uVfA-1; Mon, 13 Jan 2020 03:57:13 -0500
+X-MC-Unique: LNDL1G75NsCN5XlaS-uVfA-1
+Received: by mail-wr1-f71.google.com with SMTP id c17so4663616wrp.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 00:57:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=/8jjd0naK5yUfMwY72nPxcwXV/oe8/+GoHM6O1vObkI=;
+        b=lK7VguusL9zyd/Lo6uDwUSg4kh2xjkIsbcCk8Hnf2cXaBFrW3vGeS7dNuLGYm9V+qr
+         vAKYl7Du0u3kpzug0Go59zjTe6sBarwL2e7u44a6okOvbln5cKk0WZgQffUlYwwnlc21
+         3CtqNoi2o+AsL2fgBTU/1CwTdUBmbvSPOgqyAqFRpVJS8ASJyPsLOGDj9aN1FRQCVVNb
+         QUnQfnLLeKdFGPcFYMwJFDaLve1lDdyl8RqT5noY/N9KQNRZqY7af+KXOsnImx47KuyL
+         XaOPAjP4FNPrugDcg4jjfnv1y0Y3zYq3ih72zKiCZ9rN6Pi4ABNI7x8FlUOmf2Hw5Fz0
+         Qnhw==
+X-Gm-Message-State: APjAAAVIwY9WRZZw6dzio0zy3O8etLnYrlO5V1lkh0EpiKiaA9oCK8ah
+        OHI2RmsQBP7hspnlvDoDu44Nh3+FB2fMG3tAwOeksiuTBXOF1yRilqvb5sHcZe9cbfPD0qMSk5N
+        Xn/qaLdPf2Be30FAsclpK1HKA
+X-Received: by 2002:adf:e6d2:: with SMTP id y18mr17811297wrm.262.1578905831872;
+        Mon, 13 Jan 2020 00:57:11 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwF0kUnrNLDD5EzuOc11BAoE/EIsGFlPEyEanuIV9dNnJKSOmjB0O8bGGRRL5aTmJgHXY6KaQ==
+X-Received: by 2002:adf:e6d2:: with SMTP id y18mr17811261wrm.262.1578905831571;
+        Mon, 13 Jan 2020 00:57:11 -0800 (PST)
+Received: from ?IPv6:2a01:598:a803:c918:91cf:ba30:dbb0:f19? ([2a01:598:a803:c918:91cf:ba30:dbb0:f19])
+        by smtp.gmail.com with ESMTPSA id b18sm14133777wru.50.2020.01.13.00.57.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 00:57:11 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH V11 2/5] mm/memblock: Introduce MEMBLOCK_BOOT flag
+Date:   Mon, 13 Jan 2020 09:57:09 +0100
+Message-Id: <12BCAD36-D99C-4AC0-B466-06E1A02DDD72@redhat.com>
+References: <08a2f82a-3201-055a-316a-a2f11c7ff7a5@arm.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>, mark.rutland@arm.com,
+        david@redhat.com, catalin.marinas@arm.com, linux-mm@kvack.org,
+        arunks@codeaurora.org, cpandya@codeaurora.org, will@kernel.org,
+        ira.weiny@intel.com, steven.price@arm.com,
+        valentin.schneider@arm.com, suzuki.poulose@arm.com,
+        robin.murphy@arm.com, broonie@kernel.org, cai@lca.pw,
+        ard.biesheuvel@arm.com, dan.j.williams@intel.com,
+        linux-arm-kernel@lists.infradead.org, osalvador@suse.de,
+        steve.capper@arm.com, logang@deltatee.com,
+        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net
+In-Reply-To: <08a2f82a-3201-055a-316a-a2f11c7ff7a5@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prabhakar,
 
-On 10/01/20 11:38 PM, Lad, Prabhakar wrote:
-> Hi Kishon,
-> 
-> Thank you for the review.
-> 
-> On Thu, Jan 9, 2020 at 6:25 AM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->> Hi Prabhakar,
->>
->> On 08/01/20 9:52 PM, Lad Prabhakar wrote:
->>> R-Car PCIe controller has support to map multiple memory regions for
->>> mapping the outbound memory in local system also the controller limits
->>> single allocation for each region (that is, once a chunk is used from the
->>> region it cannot be used to allocate a new one). This features inspires to
->>> add support for handling multiple memory bases in endpoint framework.
->>>
->>> With this patch pci_epc_mem_init() now accepts multiple regions, also
->>> page_size for each memory region is passed during initialization so as
->>> to handle single allocation for each region by setting the page_size to
->>> window_size.
->>>
->>> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+
+> Am 13.01.2020 um 09:41 schrieb Anshuman Khandual <anshuman.khandual@arm.co=
+m>:
+>=20
+> =EF=BB=BF
+>=20
+>> On 01/13/2020 01:07 PM, Mike Rapoport wrote:
+>>> On Fri, Jan 10, 2020 at 08:39:12AM +0530, Anshuman Khandual wrote:
+>>> On arm64 platform boot memory should never be hot removed due to certain=
+
+>>> platform specific constraints. Hence the platform would like to override=
+
+>>> earlier added arch call back arch_memory_removable() for this purpose. I=
+n
+>>> order to reject boot memory hot removal request, it needs to first track=
+
+>>> them at runtime. In the future, there might be other platforms requiring=
+
+>>> runtime boot memory enumeration. Hence lets expand the existing generic
+>>> memblock framework for this purpose rather then creating one just for
+>>> arm64 platforms.
+>>>=20
+>>> This introduces a new memblock flag MEMBLOCK_BOOT along with helpers whi=
+ch
+>>> can be marked by given platform on all memory regions discovered during
+>>> boot.
+>>=20
+>> We already have MEMBLOCK_HOTPLUG to mark hotpluggable region. Can't we us=
+e
+>> it for your use-case?
+>=20
+> At present MEMBLOCK_HOTPLUG flag helps in identifying parts of boot memory=
+
+> as hotpluggable as indicated by the firmware. This information is then use=
+d
+> to avoid those regions during standard memblock_alloc_*() API requests and=
+
+> later marking them as ZONE_MOVABLE when buddy gets initialized.
+>=20
+> Memory hot remove does not check for MEMBLOCK_HOTPLUG flag as a requiremen=
+t
+> before initiating the process. We could probably use this flag if generic
+> hot remove can be changed to check for MEMBLOCK_HOTPLUG as a prerequisite
+> which will require changes to memblock handling (boot and runtime) on all
+> existing platforms currently supporting hot remove. But what about handlin=
+g
+> the movable boot memory created with movablecore/kernelcore command line,
+> should generic MM update their memblock regions with MEMBLOCK_HOTPLUG ?
+
+As I said in my other mail, just disallow offlining of the affected (boot) m=
+emory blocks using a memory notifier and you should be good to go. No change=
+s in memory unplug code required.
+
+>=20
+>>=20
+>>> Cc: Mike Rapoport <rppt@linux.ibm.com>
+>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 >>> ---
->>>  .../pci/controller/cadence/pcie-cadence-ep.c  |  12 +-
->>>  .../pci/controller/dwc/pcie-designware-ep.c   |  31 ++-
->>>  drivers/pci/controller/pcie-rockchip-ep.c     |  14 +-
->>>  drivers/pci/endpoint/functions/pci-epf-test.c |  29 +--
->>>  drivers/pci/endpoint/pci-epc-core.c           |   7 +-
->>>  drivers/pci/endpoint/pci-epc-mem.c            | 199 ++++++++++++++----
->>>  include/linux/pci-epc.h                       |  46 ++--
->>>  7 files changed, 245 insertions(+), 93 deletions(-)
->>>
->> .
->> .
->> <snip>
->> .
->> .
->>> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
->>> index 2091508c1620..289c266c2d90 100644
->>> --- a/drivers/pci/endpoint/pci-epc-core.c
->>> +++ b/drivers/pci/endpoint/pci-epc-core.c
->>> @@ -358,13 +358,15 @@ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
->>>   * @epc: the EPC device on which address is allocated
->>>   * @func_no: the endpoint function number in the EPC device
->>>   * @phys_addr: physical address of the local system
->>> + * @window: index to the window region where PCI address will be mapped
->>>   * @pci_addr: PCI address to which the physical address should be mapped
->>>   * @size: the size of the allocation
->>>   *
->>>   * Invoke to map CPU address with PCI address.
->>>   */
->>>  int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
->>> -                  phys_addr_t phys_addr, u64 pci_addr, size_t size)
->>> +                  phys_addr_t phys_addr, int window,
->>> +                  u64 pci_addr, size_t size)
->>>  {
->>>       int ret;
->>>       unsigned long flags;
->>> @@ -376,7 +378,8 @@ int pci_epc_map_addr(struct pci_epc *epc, u8 func_no,
->>>               return 0;
->>>
->>>       spin_lock_irqsave(&epc->lock, flags);
->>> -     ret = epc->ops->map_addr(epc, func_no, phys_addr, pci_addr, size);
->>> +     ret = epc->ops->map_addr(epc, func_no, phys_addr,
->>> +                              window, pci_addr, size);
->>>       spin_unlock_irqrestore(&epc->lock, flags);
->>>
->>>       return ret;
->>> diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
->>> index d2b174ce15de..f205f7819292 100644
->>> --- a/drivers/pci/endpoint/pci-epc-mem.c
->>> +++ b/drivers/pci/endpoint/pci-epc-mem.c
->>> @@ -38,57 +38,77 @@ static int pci_epc_mem_get_order(struct pci_epc_mem *mem, size_t size)
->>>  /**
->>>   * __pci_epc_mem_init() - initialize the pci_epc_mem structure
->>>   * @epc: the EPC device that invoked pci_epc_mem_init
->>> - * @phys_base: the physical address of the base
->>> - * @size: the size of the address space
->>> - * @page_size: size of each page
->>> + * @windows: pointer to windows supported by the device
->>> + * @num_windows: number of windows device supports
->>>   *
->>>   * Invoke to initialize the pci_epc_mem structure used by the
->>>   * endpoint functions to allocate mapped PCI address.
->>>   */
->>> -int __pci_epc_mem_init(struct pci_epc *epc, phys_addr_t phys_base, size_t size,
->>> -                    size_t page_size)
->>> +int __pci_epc_mem_init(struct pci_epc *epc, struct pci_epc_mem_window *windows,
->>> +                    int num_windows)
->>>  {
->>> -     int ret;
->>> -     struct pci_epc_mem *mem;
->>> -     unsigned long *bitmap;
->>> +     struct pci_epc_mem *mem = NULL;
->>> +     unsigned long *bitmap = NULL;
->>>       unsigned int page_shift;
->>> -     int pages;
->>> +     size_t page_size;
->>>       int bitmap_size;
->>> +     int pages;
->>> +     int ret;
->>> +     int i;
->>>
->>> -     if (page_size < PAGE_SIZE)
->>> -             page_size = PAGE_SIZE;
->>> +     epc->mem_windows = 0;
->>>
->>> -     page_shift = ilog2(page_size);
->>> -     pages = size >> page_shift;
->>> -     bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
->>> +     if (!windows)
->>> +             return -EINVAL;
->>>
->>> -     mem = kzalloc(sizeof(*mem), GFP_KERNEL);
->>> -     if (!mem) {
->>> -             ret = -ENOMEM;
->>> -             goto err;
->>> -     }
->>> +     if (num_windows <= 0)
->>> +             return -EINVAL;
->>>
->>> -     bitmap = kzalloc(bitmap_size, GFP_KERNEL);
->>> -     if (!bitmap) {
->>> -             ret = -ENOMEM;
->>> -             goto err_mem;
->>> -     }
->>> +     epc->mem = kcalloc(num_windows, sizeof(*mem), GFP_KERNEL);
->>> +     if (!epc->mem)
->>> +             return -EINVAL;
+>>> include/linux/memblock.h | 10 ++++++++++
+>>> mm/memblock.c            | 37 +++++++++++++++++++++++++++++++++++++
+>>> 2 files changed, 47 insertions(+)
+>>>=20
+>>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>>> index b38bbef..fb04c87 100644
+>>> --- a/include/linux/memblock.h
+>>> +++ b/include/linux/memblock.h
+>>> @@ -31,12 +31,14 @@ extern unsigned long long max_possible_pfn;
+>>>  * @MEMBLOCK_HOTPLUG: hotpluggable region
+>>>  * @MEMBLOCK_MIRROR: mirrored region
+>>>  * @MEMBLOCK_NOMAP: don't add to kernel direct mapping
+>>> + * @MEMBLOCK_BOOT: memory received from firmware during boot
+>>>  */
+>>> enum memblock_flags {
+>>>    MEMBLOCK_NONE        =3D 0x0,    /* No special request */
+>>>    MEMBLOCK_HOTPLUG    =3D 0x1,    /* hotpluggable region */
+>>>    MEMBLOCK_MIRROR        =3D 0x2,    /* mirrored region */
+>>>    MEMBLOCK_NOMAP        =3D 0x4,    /* don't add to kernel direct mappi=
+ng */
+>>> +    MEMBLOCK_BOOT        =3D 0x8,    /* memory received from firmware d=
+uring boot */
+>>> };
+>>>=20
+>>> /**
+>>> @@ -116,6 +118,8 @@ int memblock_reserve(phys_addr_t base, phys_addr_t s=
+ize);
+>>> void memblock_trim_memory(phys_addr_t align);
+>>> bool memblock_overlaps_region(struct memblock_type *type,
+>>>                  phys_addr_t base, phys_addr_t size);
+>>> +int memblock_mark_boot(phys_addr_t base, phys_addr_t size);
+>>> +int memblock_clear_boot(phys_addr_t base, phys_addr_t size);
+>>> int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
+>>> int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
+>>> int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
+>>> @@ -216,6 +220,11 @@ static inline bool memblock_is_nomap(struct membloc=
+k_region *m)
+>>>    return m->flags & MEMBLOCK_NOMAP;
+>>> }
+>>>=20
+>>> +static inline bool memblock_is_boot(struct memblock_region *m)
+>>> +{
+>>> +    return m->flags & MEMBLOCK_BOOT;
+>>> +}
 >>> +
->>> +     for (i = 0; i < num_windows; i++) {
->>> +             page_size = windows[i].page_size;
->>> +             if (page_size < PAGE_SIZE)
->>> +                     page_size = PAGE_SIZE;
->>> +             page_shift = ilog2(page_size);
->>> +             pages = windows[i].size >> page_shift;
->>> +             bitmap_size = BITS_TO_LONGS(pages) * sizeof(long);
+>>> #ifdef CONFIG_HAVE_MEMBLOCK_NODE_MAP
+>>> int memblock_search_pfn_nid(unsigned long pfn, unsigned long *start_pfn,=
+
+>>>                unsigned long  *end_pfn);
+>>> @@ -449,6 +458,7 @@ void memblock_cap_memory_range(phys_addr_t base, phy=
+s_addr_t size);
+>>> void memblock_mem_limit_remove_map(phys_addr_t limit);
+>>> bool memblock_is_memory(phys_addr_t addr);
+>>> bool memblock_is_map_memory(phys_addr_t addr);
+>>> +bool memblock_is_boot_memory(phys_addr_t addr);
+>>> bool memblock_is_region_memory(phys_addr_t base, phys_addr_t size);
+>>> bool memblock_is_reserved(phys_addr_t addr);
+>>> bool memblock_is_region_reserved(phys_addr_t base, phys_addr_t size);
+>>> diff --git a/mm/memblock.c b/mm/memblock.c
+>>> index 4bc2c7d..e10207f 100644
+>>> --- a/mm/memblock.c
+>>> +++ b/mm/memblock.c
+>>> @@ -865,6 +865,30 @@ static int __init_memblock memblock_setclr_flag(phy=
+s_addr_t base,
+>>> }
+>>>=20
+>>> /**
+>>> + * memblock_mark_bootmem - Mark boot memory with flag MEMBLOCK_BOOT.
+>>> + * @base: the base phys addr of the region
+>>> + * @size: the size of the region
+>>> + *
+>>> + * Return: 0 on success, -errno on failure.
+>>> + */
+>>> +int __init_memblock memblock_mark_boot(phys_addr_t base, phys_addr_t si=
+ze)
+>>> +{
+>>> +    return memblock_setclr_flag(base, size, 1, MEMBLOCK_BOOT);
+>>> +}
 >>> +
->>> +             mem = kzalloc(sizeof(*mem), GFP_KERNEL);
->>> +             if (!mem) {
->>> +                     ret = -ENOMEM;
->>> +                     goto err_mem;
->>> +             }
->>>
->>> -     mem->bitmap = bitmap;
->>> -     mem->phys_base = phys_base;
->>> -     mem->page_size = page_size;
->>> -     mem->pages = pages;
->>> -     mem->size = size;
->>> +             bitmap = kzalloc(bitmap_size, GFP_KERNEL);
->>> +             if (!bitmap) {
->>> +                     ret = -ENOMEM;
->>> +                     goto err_mem;
->>> +             }
->>>
->>> -     epc->mem = mem;
->>> +             mem->bitmap = bitmap;
->>> +             mem->window.phys_base = windows[i].phys_base;
->>> +             mem->page_size = page_size;
->>> +             mem->pages = pages;
->>> +             mem->window.size = windows[i].size;
->>> +             mem->window.map_size = 0;
+>>> +/**
+>>> + * memblock_clear_bootmem - Clear flag MEMBLOCK_BOOT for a specified re=
+gion.
+>>> + * @base: the base phys addr of the region
+>>> + * @size: the size of the region
+>>> + *
+>>> + * Return: 0 on success, -errno on failure.
+>>> + */
+>>> +int __init_memblock memblock_clear_boot(phys_addr_t base, phys_addr_t s=
+ize)
+>>> +{
+>>> +    return memblock_setclr_flag(base, size, 0, MEMBLOCK_BOOT);
+>>> +}
 >>> +
->>> +             epc->mem[i] = mem;
->>> +     }
->>> +     epc->mem_windows = num_windows;
->>>
->>>       return 0;
->>>
->>>  err_mem:
->>> -     kfree(mem);
->>> +     for (; i >= 0; i--) {
->>
->> mem has to be reinitialized for every iteration of the loop.
-> not sure what exactly you mean here, could you please elaborate.
-
-You are invoking "kfree(mem->bitmap);" in a loop without re-initializing
-mem. Refer pci_epc_mem_exit() where you are doing the free properly.
-
-> 
->>> +             kfree(mem->bitmap);
->>> +             kfree(epc->mem[i]);
->>> +     }
->>> +     kfree(epc->mem);
->>>
->>> -err:
->>> -return ret;
->>> +     return ret;
->>>  }
->>>  EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
->>>
->>> @@ -101,48 +121,127 @@ EXPORT_SYMBOL_GPL(__pci_epc_mem_init);
->>>   */
->>>  void pci_epc_mem_exit(struct pci_epc *epc)
->>>  {
->>> -     struct pci_epc_mem *mem = epc->mem;
->>> +     struct pci_epc_mem *mem;
->>> +     int i;
+>>> +/**
+>>>  * memblock_mark_hotplug - Mark hotpluggable memory with flag MEMBLOCK_H=
+OTPLUG.
+>>>  * @base: the base phys addr of the region
+>>>  * @size: the size of the region
+>>> @@ -974,6 +998,10 @@ static bool should_skip_region(struct memblock_regi=
+on *m, int nid, int flags)
+>>>    if ((flags & MEMBLOCK_MIRROR) && !memblock_is_mirror(m))
+>>>        return true;
+>>>=20
+>>> +    /* if we want boot memory skip non-boot memory regions */
+>>> +    if ((flags & MEMBLOCK_BOOT) && !memblock_is_boot(m))
+>>> +        return true;
 >>> +
->>> +     if (!epc->mem_windows)
->>> +             return;
+>>>    /* skip nomap memory unless we were asked for it explicitly */
+>>>    if (!(flags & MEMBLOCK_NOMAP) && memblock_is_nomap(m))
+>>>        return true;
+>>> @@ -1785,6 +1813,15 @@ bool __init_memblock memblock_is_map_memory(phys_=
+addr_t addr)
+>>>    return !memblock_is_nomap(&memblock.memory.regions[i]);
+>>> }
+>>>=20
+>>> +bool __init_memblock memblock_is_boot_memory(phys_addr_t addr)
+>>> +{
+>>> +    int i =3D memblock_search(&memblock.memory, addr);
 >>> +
->>> +     for (i = 0; i <= epc->mem_windows; i++) {
->>> +             mem = epc->mem[i];
+>>> +    if (i =3D=3D -1)
+>>> +        return false;
+>>> +    return memblock_is_boot(&memblock.memory.regions[i]);
+>>> +}
+>>> +
+>>> #ifdef CONFIG_HAVE_MEMBLOCK_NODE_MAP
+>>> int __init_memblock memblock_search_pfn_nid(unsigned long pfn,
+>>>             unsigned long *start_pfn, unsigned long *end_pfn)
+>>> --=20
+>>> 2.7.4
+>>>=20
+>>=20
+>=20
 
-Missing the above line in the error handling above.
-
-
->>> +             kfree(mem->bitmap);
->>> +             kfree(epc->mem[i]);
->>> +     }
-
-Thanks
-Kishon
