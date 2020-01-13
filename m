@@ -2,155 +2,213 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20BDC33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16575C33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E8402075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:49:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="FA596WLw"
+	by mail.kernel.org (Postfix) with ESMTP id DEA0F2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgAMJtI (ORCPT
+        id S1728767AbgAMJtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:49:08 -0500
-Received: from esa3.microchip.iphmx.com ([68.232.153.233]:13387 "EHLO
-        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgAMJtI (ORCPT
+        Mon, 13 Jan 2020 04:49:13 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55920 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725992AbgAMJtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:49:08 -0500
-Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
-  Eugen.Hristev@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="Eugen.Hristev@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa3.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
-  envelope-from="Eugen.Hristev@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: WZfm4VPgYw30718tk1myBad2JtNcpmSphshxqVNwQklg+iN26xbAD0jtK1MFw9fKrtwsJHtQcX
- RicJsuZIdzzEHLJvEbbX7iLhngVKblsz+7oKNthn5vnOZuOMHcJJs12Pd6vrcIAG/uMnqe8u29
- vpaF6GsrvMKrdS06/hh8DQ4dSq2F/wjZ2QBYnP/EuIs8kGdjy6A3GomfC6m77TiA9l/lovB/bD
- 70fjORmLuU+gGszeaC0yJPzau9pZwbnDa8BesVY5LWMy+tLWIM6MU4RowdzqsZVWpG/8jjmsvN
- Q88=
-X-IronPort-AV: E=Sophos;i="5.69,428,1571727600"; 
-   d="scan'208";a="63046749"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Jan 2020 02:49:06 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 13 Jan 2020 02:48:56 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 13 Jan 2020 02:48:56 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VQTIPULAvJFvaS32NR0YAYqH72MmdsDByumB4H9uyiwiU3zjFQSuqAC38XUZrU8m9hYlKC5Yl95AB8YWQOx/zoGWVSmtrpgT1n8A6ziAmNkkemTVrzCGLJ28dGnl4GmuJ2EbjVK5rClVQ2ZcvczN+XiiqqSKhQmANUmFcILctZBlt4AS+5CFt6BHtMDxLTZXqYPxCfHZB4i2HUlvsyIxqGCo1jykSqTy6+prkpm/YLfDkaJ4Gv3BwKccCMyyYfi2dHlVeQKArZEabUdwUQ8nPNaVNWhQ5CcigeyMf1uI7weT8xtffGB42lRKNZKtoCCZAOlbNlhJH73Mz1LJtAJagg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R0VtgJ6oP6Rd7O7iq/lcEbiNlHxtSMJk3Jevmx8d3Io=;
- b=n9+EUCKqNpLGoTYyDapQEgbHeZy2vp9uo5W/WITjHbZRYV8KuH1z3nlnyZVdnZxvKC99DmdsVgBHk8IobHVxBKziNnhTAUVICt3dm+dW8VgQ6jpeQvqfzj8MOnV+cDBGzcVQLN4NGVKfBWRgZME4f+oJti1uSFUquVNl5ysixBaM4eEnH6tIPRrHNZbfrTSOYMT9OoIdAXmRdAXm1KY5FGjE1LJKU1lXWi/VpSesOSj24Z3OXvF6lLxlZP0zKPg5Y6pO23/O9gidm6kp3C91RoXyug7gQaBIv3cijRJa/kV9Q/6/kxjA0+OCd9Zwko9GBGUV+LBO+f6hvfdvxIIHww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=R0VtgJ6oP6Rd7O7iq/lcEbiNlHxtSMJk3Jevmx8d3Io=;
- b=FA596WLwZSNtjHItLfhw9xIn5+JgSHBNfngrcOaDwbDC/X17XYzP+Ajd/7LczwgIWE2SxGBj++v1ooUPHLzkoaX8+9elfc2+oULoodO8eRKa76h0rgtdMN79T3TCRH77c6t0EH2dB7/Xsrn9ngbdJmLPqQ6re8FE69OrUmMdhYY=
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
- DM5PR11MB0009.namprd11.prod.outlook.com (10.164.154.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.10; Mon, 13 Jan 2020 09:48:55 +0000
-Received: from DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::e5f6:d07d:d7de:ce79]) by DM5PR11MB1242.namprd11.prod.outlook.com
- ([fe80::e5f6:d07d:d7de:ce79%6]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
- 09:48:55 +0000
-From:   <Eugen.Hristev@microchip.com>
-To:     <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <Eugen.Hristev@microchip.com>
-Subject: [PATCH v4 2/2] MAINTAINERS: add atmel-isc-media.h file to ATMEL ISC
- driver
-Thread-Topic: [PATCH v4 2/2] MAINTAINERS: add atmel-isc-media.h file to ATMEL
- ISC driver
-Thread-Index: AQHVyfaqcQKf8ucWokmtF3E5mN58sQ==
-Date:   Mon, 13 Jan 2020 09:48:54 +0000
-Message-ID: <1578908877-14575-2-git-send-email-eugen.hristev@microchip.com>
-References: <1578908877-14575-1-git-send-email-eugen.hristev@microchip.com>
-In-Reply-To: <1578908877-14575-1-git-send-email-eugen.hristev@microchip.com>
-Accept-Language: en-US, ro-RO
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: git-send-email 2.7.4
-x-originating-ip: [94.177.32.156]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bf92e889-e13c-4275-13a5-08d7980dcdef
-x-ms-traffictypediagnostic: DM5PR11MB0009:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR11MB00092295C9E5D2E9DFF7D7E2E8350@DM5PR11MB0009.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:361;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(136003)(39860400002)(376002)(346002)(189003)(199004)(54906003)(110136005)(4744005)(6512007)(5660300002)(26005)(8936002)(71200400001)(316002)(186003)(4326008)(86362001)(81166006)(6486002)(8676002)(2906002)(2616005)(6506007)(81156014)(107886003)(478600001)(64756008)(66556008)(66446008)(66476007)(66946007)(76116006)(36756003)(91956017);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB0009;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VDNU+Pw/148G1ecCW+4l8AS9oODbt3CJGaNfJrRriXn6OICKRjltwt3EAq47mLsH9gJFUCZpMWh695RR05oxTfC5W/uaH1Z7GiRp1ouEg76bN8eMykwuk5vCAVulaYpLk7TA4WeW+1C02TtZYt2lX774yca64HRuc1P2IpVWaW951Gv2yzXyEWTHPLJhc0ZG82daZXSG7JNEuQNIToi3Y0Hugswb8jK+bjYBmYImE1XD5mWO/EUMIbJV+rrvZrBPlXouuxtbqZHA0dYpd7tkABL2YEwRCFm0a4behOYgvdTjeeae1XANYz0pEmU+W92HTfq+PBb9PQbnP1tyM9BpH3BqW4Om2CXQqjeC+eY0jc8bUvV+aQEQfRXlceWEdYF78yiYNQ+2QzFV+SKWZK3F24DQccq7qwiUKVsfNFxu3G5tq8eTrAd/hZGEO6mx+H8/
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 Jan 2020 04:49:12 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00D9cP4Z181078
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:49:10 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfa253u49-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:49:10 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
+        Mon, 13 Jan 2020 09:49:09 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 13 Jan 2020 09:49:06 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00D9n5Yf48169160
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 09:49:05 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F21C84204B;
+        Mon, 13 Jan 2020 09:49:04 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B16F42041;
+        Mon, 13 Jan 2020 09:49:03 +0000 (GMT)
+Received: from [9.124.31.88] (unknown [9.124.31.88])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 13 Jan 2020 09:49:03 +0000 (GMT)
+Subject: Re: [RESEND PATCH v2 1/3] powerpc/powernv: Interface to define
+ support and preference for a SPR
+To:     Ram Pai <linuxram@us.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
+        pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
+References: <cover.1578886602.git.psampat@linux.ibm.com>
+ <926baad3fd0bf0b01b0adf83c71f2f4f6e9cf1e7.1578886602.git.psampat@linux.ibm.com>
+ <20200113074440.GC5419@oc0525413822.ibm.com>
+From:   Pratik Sampat <psampat@linux.ibm.com>
+Date:   Mon, 13 Jan 2020 15:19:02 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bf92e889-e13c-4275-13a5-08d7980dcdef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 09:48:54.5462
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uAqVGH7Cf5VvptFbICjNrLa+ZORDdTosENnBKPFurs1R/DoZcMHeE+XcFfcgS7nLNmkyxHnfH6Bvf3Uo9AGiIjtiBZOnONIUKv3ES/V7u6s=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0009
+In-Reply-To: <20200113074440.GC5419@oc0525413822.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 20011309-4275-0000-0000-00000397124B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011309-4276-0000-0000-000038AB07AA
+Message-Id: <f3452bd6-4555-0fe1-f3d0-da3f7397012b@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-13_02:2020-01-13,2020-01-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
+ adultscore=0 priorityscore=1501 bulkscore=0 phishscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001130082
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+Thanks for the review.
+The support just signifies what is default. Self restore is known to be
+supported by legacy systems.
 
-Add new file include/linux/atmel-isc-media.h to ATMEL ISC entry.
+I'll mention a comment saying that this can change when the system is
+initialized.
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 983d3c9..b69ce6e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10825,6 +10825,7 @@ F:	drivers/media/platform/atmel/atmel-isc.h
- F:	drivers/media/platform/atmel/atmel-isc-base.c
- F:	drivers/media/platform/atmel/atmel-isc-regs.h
- F:	Documentation/devicetree/bindings/media/atmel-isc.txt
-+F:	include/linux/atmel-isc-media.h
-=20
- MICROCHIP ISI DRIVER
- M:	Eugen Hristev <eugen.hristev@microchip.com>
---=20
-2.7.4
+On 13/01/20 1:14 pm, Ram Pai wrote:
+> On Mon, Jan 13, 2020 at 09:15:07AM +0530, Pratik Rajesh Sampat wrote:
+>> Define a bitmask interface to determine support for the Self Restore,
+>> Self Save or both.
+>>
+>> Also define an interface to determine the preference of that SPR to
+>> be strictly saved or restored or encapsulated with an order of preference.
+>>
+>> The preference bitmask is shown as below:
+>> ----------------------------
+>> |... | 2nd pref | 1st pref |
+>> ----------------------------
+>> MSB			  LSB
+>>
+>> The preference from higher to lower is from LSB to MSB with a shift of 8
+>> bits.
+>> Example:
+>> Prefer self save first, if not available then prefer self
+>> restore
+>> The preference mask for this scenario will be seen as below.
+>> ((SELF_RESTORE_STRICT << PREFERENCE_SHIFT) | SELF_SAVE_STRICT)
+>> ---------------------------------
+>> |... | Self restore | Self save |
+>> ---------------------------------
+>> MSB			        LSB
+>>
+>> Finally, declare a list of preferred SPRs which encapsulate the bitmaks
+>> for preferred and supported with defaults of both being set to support
+>> legacy firmware.
+>>
+>> This commit also implements using the above interface and retains the
+>> legacy functionality of self restore.
+>>
+>> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+>> ---
+>>   arch/powerpc/platforms/powernv/idle.c | 327 +++++++++++++++++++++-----
+>>   1 file changed, 271 insertions(+), 56 deletions(-)
+>>
+>> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+>> index 78599bca66c2..2f328403b0dc 100644
+>> --- a/arch/powerpc/platforms/powernv/idle.c
+>> +++ b/arch/powerpc/platforms/powernv/idle.c
+>> @@ -32,9 +32,106 @@
+>>   #define P9_STOP_SPR_MSR 2000
+>>   #define P9_STOP_SPR_PSSCR      855
+>>
+>> +/* Interface for the stop state supported and preference */
+>> +#define SELF_RESTORE_TYPE    0
+>> +#define SELF_SAVE_TYPE       1
+>> +
+>> +#define NR_PREFERENCES    2
+>> +#define PREFERENCE_SHIFT  4
+>> +#define PREFERENCE_MASK   0xf
+>> +
+>> +#define UNSUPPORTED         0x0
+>> +#define SELF_RESTORE_STRICT 0x1
+>> +#define SELF_SAVE_STRICT    0x2
+>> +
+>> +/*
+>> + * Bitmask defining the kind of preferences available.
+>> + * Note : The higher to lower preference is from LSB to MSB, with a shift of
+>> + * 4 bits.
+>> + * ----------------------------
+>> + * |    | 2nd pref | 1st pref |
+>> + * ----------------------------
+>> + * MSB			      LSB
+>> + */
+>> +/* Prefer Restore if available, otherwise unsupported */
+>> +#define PREFER_SELF_RESTORE_ONLY	SELF_RESTORE_STRICT
+>> +/* Prefer Save if available, otherwise unsupported */
+>> +#define PREFER_SELF_SAVE_ONLY		SELF_SAVE_STRICT
+>> +/* Prefer Restore when available, otherwise prefer Save */
+>> +#define PREFER_RESTORE_SAVE		((SELF_SAVE_STRICT << \
+>> +					  PREFERENCE_SHIFT)\
+>> +					  | SELF_RESTORE_STRICT)
+>> +/* Prefer Save when available, otherwise prefer Restore*/
+>> +#define PREFER_SAVE_RESTORE		((SELF_RESTORE_STRICT <<\
+>> +					  PREFERENCE_SHIFT)\
+>> +					  | SELF_SAVE_STRICT)
+>>   static u32 supported_cpuidle_states;
+>>   struct pnv_idle_states_t *pnv_idle_states;
+>>   int nr_pnv_idle_states;
+>> +/* Caching the lpcr & ptcr support to use later */
+>> +static bool is_lpcr_self_save;
+>> +static bool is_ptcr_self_save;
+>> +
+>> +struct preferred_sprs {
+>> +	u64 spr;
+>> +	u32 preferred_mode;
+>> +	u32 supported_mode;
+>> +};
+>> +
+>> +struct preferred_sprs preferred_sprs[] = {
+>> +	{
+>> +		.spr = SPRN_HSPRG0,
+>> +		.preferred_mode = PREFER_RESTORE_SAVE,
+>> +		.supported_mode = SELF_RESTORE_STRICT,
+>> +	},
+>> +	{
+>> +		.spr = SPRN_LPCR,
+>> +		.preferred_mode = PREFER_RESTORE_SAVE,
+>> +		.supported_mode = SELF_RESTORE_STRICT,
+>> +	},
+>> +	{
+>> +		.spr = SPRN_PTCR,
+>> +		.preferred_mode = PREFER_SAVE_RESTORE,
+>> +		.supported_mode = SELF_RESTORE_STRICT,
+>> +	},
+> This confuses me.  It says SAVE takes precedence over RESTORE.
+> and than it says it is strictly 'RESTORE' only.
+>
+> Maybe you should not initialize the 'supported_mode' ?
+> or put a comment somewhere here, saying this value will be overwritten
+> during system initialization?
+>
+>
+> Otherwise the code looks correct.
+>
+> Reviewed-by: Ram Pai <linuxram@us.ibm.com>
+> RP
+
