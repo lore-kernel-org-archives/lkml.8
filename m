@@ -2,201 +2,167 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69041C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777DEC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39516214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4781A214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:45:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m+SbGLEh"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IhzqKftg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbgAMSpQ (ORCPT
+        id S1728804AbgAMSpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:45:16 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44058 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728516AbgAMSpQ (ORCPT
+        Mon, 13 Jan 2020 13:45:35 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:39048 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728664AbgAMSpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:45:16 -0500
-Received: by mail-pl1-f195.google.com with SMTP id az3so4141419plb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 10:45:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Ma2e5QYJYr2+A6y40/wWxo50e76HZ6NsW8KSbxEHjSo=;
-        b=m+SbGLEhSGBwvvFJbDSHlMmJomNfrgDq8qjOcFCm8B7zoxv7EKK1gzWUONFYo8OX/W
-         08rMpkBfroMiE4JGp9r/tJZFHnsARi8orZHss/E1RhdsKBycHTuxlVFZjDan7xfObqNU
-         x3nw0x7PXDL2gS+qxOh2stpOLg5RJxAOIEQa+j4asWIm2VI/vkd/WW3hpIHNTP6twJPu
-         iqL+bZ5fdfvoSfWJBQGGsSs+seYjYOJjA48qEmIrkeqXerbaevThP4alSG+cZroztMw6
-         NwQ9ugcyRVRGvERYR+wgH7wLrrmUuJynpXa55IfKW93CwvPd5DlLIPw7B6vM6VpNlZIt
-         IoyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Ma2e5QYJYr2+A6y40/wWxo50e76HZ6NsW8KSbxEHjSo=;
-        b=JfLBjeOXc/zHf1nNQCN3oknTPeUEWZQLGgCn6ueXn4CT6hZ20IQh6MS9Z29pfVIZw7
-         +DTBvDa/AXIN5iVnLVA/S9LsNWGDk6EHpKYcXM/fdBP5ACfVuUClIuyOhUfGcj3uwOlM
-         6CbyNxgpL0ldm3vCforH9m8NhVq6VxZ1Arw4iTPgidYjHO4D4iiSVG2Eu9tpRPZZ29Z/
-         nQg6f7gL375v84Ksbs266AbEWqEdnxpL2fW3HvRdIcktQA05h5PX0/NJ0RwKTzury9ei
-         yt+1blcqiFXsFHZja4tw7T555OHVV88Di4MiRh8JuD+y0GnIr3I0Trg6Tdgn7/kU/G0U
-         uD+g==
-X-Gm-Message-State: APjAAAXYTK+HLBpMeefuPIRvXSX6/L9YPICwDAWoWK9UFPbNi5N2ri1E
-        06OTTEGnb1LxOuPQ5oE0uwlXRA==
-X-Google-Smtp-Source: APXvYqzHz76NihH7xSMfwYbiUU9+Ra4XYRiSYA8sn78I7UDiQzEwqFB/ZeMZpOI8LWIDNUUolUUMNw==
-X-Received: by 2002:a17:90b:8ce:: with SMTP id ds14mr14763316pjb.57.1578941114957;
-        Mon, 13 Jan 2020 10:45:14 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u18sm14254825pgn.9.2020.01.13.10.45.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 10:45:14 -0800 (PST)
-Date:   Mon, 13 Jan 2020 10:45:11 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        linux-arm-msm@vger.kernel.org,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/4] arm64: dts: sdm845: move gpu zap nodes to
- per-device dts
-Message-ID: <20200113184511.GB1511@yoga>
-References: <20200112195405.1132288-1-robdclark@gmail.com>
- <20200112195405.1132288-5-robdclark@gmail.com>
+        Mon, 13 Jan 2020 13:45:35 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578941134; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=BE7Ii/+ZSj3amZRXFjwOsrUKK4ov1l85oSUE5ZJn4jU=;
+ b=IhzqKftglfyFwbRsyWAJomJC0KroiV7xkRrzHyHFRHdS6YBSQ3OHHDhbmuz/kqBE7S0ZwU+x
+ JtY5DOiRt0OkCzHL1R1/lqvPtCEd0PoCbJlV2/YhPLiQsYEVOsgTEFwVp/OMZgcj5eXpg9QZ
+ MsnZFLRCJsHAOgN26rvx6XScB3I=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1cbaca.7fc7eb66f2d0-smtp-out-n01;
+ Mon, 13 Jan 2020 18:45:30 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C44C9C447A1; Mon, 13 Jan 2020 18:45:29 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 93683C43383;
+        Mon, 13 Jan 2020 18:45:28 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200112195405.1132288-5-robdclark@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 13 Jan 2020 10:45:28 -0800
+From:   asutoshd@codeaurora.org
+To:     Bean Huo <huobean@gmail.com>
+Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-scsi-owner@vger.kernel.org
+Subject: Re: [PATCH 3/3] scsi: ufs: use UFS device indicated maximum LU number
+In-Reply-To: <20200110183606.10102-4-huobean@gmail.com>
+References: <20200110183606.10102-1-huobean@gmail.com>
+ <20200110183606.10102-4-huobean@gmail.com>
+Message-ID: <3c6080a44d2943f86d6991d48cd2dd28@codeaurora.org>
+X-Sender: asutoshd@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 12 Jan 11:54 PST 2020, Rob Clark wrote:
-
-> From: Rob Clark <robdclark@chromium.org>
+On 2020-01-10 10:36, Bean Huo wrote:
+> From: Bean Huo <beanhuo@micron.com>
 > 
-> We want to specify per-device firmware-name, so move the zap node into
-> the .dts file for individual boards/devices.  This lets us get rid of
-> the /delete-node/ for cheza, which does not use zap.
+> According to Jedec standard UFS 3.0 and UFS 2.1 Spec, Maximum number of 
+> logical
+> units supported by the UFS device is indicated by parameter 
+> bMaxNumberLU in
+> Geometry Descriptor. This patch is to delete current hard code macro 
+> definition
+> of UFS_UPIU_MAX_GENERAL_LUN, and switch to use device indicated number 
+> instead.
 > 
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Signed-off-by: Bean Huo <beanhuo@micron.com>
 > ---
-> v2: use 'sdm845' for subdir for devices that use test-key signed fw
+>  drivers/scsi/ufs/ufs-sysfs.c |  2 +-
+>  drivers/scsi/ufs/ufs.h       | 12 +++++++++---
+>  drivers/scsi/ufs/ufshcd.c    |  4 ++--
+>  3 files changed, 12 insertions(+), 6 deletions(-)
 > 
->  arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi           | 1 -
->  arch/arm64/boot/dts/qcom/sdm845-db845c.dts           | 7 +++++++
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts              | 7 +++++++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi                 | 6 +-----
->  arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts | 7 +++++++
->  5 files changed, 22 insertions(+), 6 deletions(-)
+> diff --git a/drivers/scsi/ufs/ufs-sysfs.c 
+> b/drivers/scsi/ufs/ufs-sysfs.c
+> index 720be3f64be7..dbdf8b01abed 100644
+> --- a/drivers/scsi/ufs/ufs-sysfs.c
+> +++ b/drivers/scsi/ufs/ufs-sysfs.c
+> @@ -713,7 +713,7 @@ static ssize_t _pname##_show(struct device 
+> *dev,			\
+>  	struct scsi_device *sdev = to_scsi_device(dev);			\
+>  	struct ufs_hba *hba = shost_priv(sdev->host);			\
+>  	u8 lun = ufshcd_scsi_to_upiu_lun(sdev->lun);			\
+> -	if (!ufs_is_valid_unit_desc_lun(lun))				\
+> +	if (!ufs_is_valid_unit_desc_lun(&hba->dev_info, lun))		\
+>  		return -EINVAL;						\
+>  	return ufs_sysfs_read_desc_param(hba, QUERY_DESC_IDN_##_duname,	\
+>  		lun, _duname##_DESC_PARAM##_puname, buf, _size);	\
+> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
+> index 5ca7ea4f223e..810eeca0de63 100644
+> --- a/drivers/scsi/ufs/ufs.h
+> +++ b/drivers/scsi/ufs/ufs.h
+> @@ -63,7 +63,6 @@
+>  #define UFS_UPIU_MAX_UNIT_NUM_ID	0x7F
+>  #define UFS_MAX_LUNS		(SCSI_W_LUN_BASE + UFS_UPIU_MAX_UNIT_NUM_ID)
+>  #define UFS_UPIU_WLUN_ID	(1 << 7)
+> -#define UFS_UPIU_MAX_GENERAL_LUN	8
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> index 9a4ff57fc877..2db79c1ecdac 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> @@ -165,7 +165,6 @@ panel_in_edp: endpoint {
->  /delete-node/ &venus_mem;
->  /delete-node/ &cdsp_mem;
->  /delete-node/ &cdsp_pas;
-> -/delete-node/ &zap_shader;
->  /delete-node/ &gpu_mem;
->  
->  /* Increase the size from 120 MB to 128 MB */
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> index d100f46791a6..6cd9201ffbbd 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> @@ -352,6 +352,13 @@ &gcc {
->  			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
->  };
->  
-> +&gpu {
-> +	zap-shader {
-> +		memory-region = <&gpu_mem>;
-> +		firmware-name = "qcom/sdm845/a630_zap.mbn";
-> +	};
-> +};
-> +
->  &pm8998_gpio {
->  	vol_up_pin_a: vol-up-active {
->  		pins = "gpio6";
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index c57548b7b250..09ad37b0dd71 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -360,6 +360,13 @@ &gcc {
->  			   <GCC_LPASS_SWAY_CLK>;
->  };
->  
-> +&gpu {
-> +	zap-shader {
-> +		memory-region = <&gpu_mem>;
-> +		firmware-name = "qcom/sdm845/a630_zap.mbn";
-> +	};
-> +};
-> +
->  &i2c10 {
->  	status = "okay";
->  	clock-frequency = <400000>;
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index ddb1f23c936f..601c57cc9b6d 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -2804,7 +2804,7 @@ dsi1_phy: dsi-phy@ae96400 {
->  			};
->  		};
->  
-> -		gpu@5000000 {
-> +		gpu: gpu@5000000 {
->  			compatible = "qcom,adreno-630.2", "qcom,adreno";
->  			#stream-id-cells = <16>;
->  
-> @@ -2824,10 +2824,6 @@ gpu@5000000 {
->  
->  			qcom,gmu = <&gmu>;
->  
-> -			zap_shader: zap-shader {
-> -				memory-region = <&gpu_mem>;
-> -			};
-> -
->  			gpu_opp_table: opp-table {
->  				compatible = "operating-points-v2";
->  
-> diff --git a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> index 13dc619687f3..b255be3a4a0a 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm850-lenovo-yoga-c630.dts
-> @@ -245,6 +245,13 @@ &gcc {
->  			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
->  };
->  
-> +&gpu {
-> +	zap-shader {
-> +		memory-region = <&gpu_mem>;
-> +		firmware-name = "qcom/LENOVO/81JL/qcdxkmsuc850.mbn";
-> +	};
-> +};
-> +
->  &i2c1 {
->  	status = "okay";
->  	clock-frequency = <400000>;
-> -- 
-> 2.24.1
+>  /* Well known logical unit id in LUN field of UPIU */
+>  enum {
+> @@ -548,12 +547,19 @@ struct ufs_dev_desc {
 > 
+>  /**
+>   * ufs_is_valid_unit_desc_lun - checks if the given LUN has a unit 
+> descriptor
+> + * @dev_info: pointer of instance of struct ufs_dev_info
+>   * @lun: LU number to check
+>   * @return: true if the lun has a matching unit descriptor, false 
+> otherwise
+>   */
+> -static inline bool ufs_is_valid_unit_desc_lun(u8 lun)
+> +static inline bool ufs_is_valid_unit_desc_lun(struct ufs_dev_info 
+> *dev_info,
+> +		u8 lun)
+>  {
+> -	return lun == UFS_UPIU_RPMB_WLUN || (lun < UFS_UPIU_MAX_GENERAL_LUN);
+> +	if (!dev_info || !dev_info->max_lu_supported) {
+> +		pr_err("Max General LU supported by UFS isn't initilized\n");
+> +		return false;
+> +	}
+> +
+> +	return lun == UFS_UPIU_RPMB_WLUN || (lun < 
+> dev_info->max_lu_supported);
+>  }
+> 
+>  #endif /* End of Header */
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index a297fe55e36a..c6ea5d88222d 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -3286,7 +3286,7 @@ static inline int
+> ufshcd_read_unit_desc_param(struct ufs_hba *hba,
+>  	 * Unit descriptors are only available for general purpose LUs (LUN 
+> id
+>  	 * from 0 to 7) and RPMB Well known LU.
+>  	 */
+> -	if (!ufs_is_valid_unit_desc_lun(lun))
+> +	if (!ufs_is_valid_unit_desc_lun(&hba->dev_info, lun))
+>  		return -EOPNOTSUPP;
+> 
+>  	return ufshcd_read_desc_param(hba, QUERY_DESC_IDN_UNIT, lun,
+> @@ -4540,7 +4540,7 @@ static int ufshcd_get_lu_wp(struct ufs_hba *hba,
+>  	 * protected so skip reading bLUWriteProtect parameter for
+>  	 * it. For other W-LUs, UNIT DESCRIPTOR is not available.
+>  	 */
+> -	else if (lun >= UFS_UPIU_MAX_GENERAL_LUN)
+> +	else if (lun >= hba->dev_info.max_lu_supported)
+>  		ret = -ENOTSUPP;
+>  	else
+>  		ret = ufshcd_read_unit_desc_param(hba,
+
+Looks good to me.
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
