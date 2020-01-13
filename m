@@ -2,140 +2,266 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9741C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71280C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A29D21739
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DCF92080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:22:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="br/eDHQd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgAMNWJ (ORCPT
+        id S1728789AbgAMNWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 13 Jan 2020 08:22:11 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42933 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728765AbgAMNWJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Jan 2020 08:22:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58026 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbgAMNWG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:22:06 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 19701AFA8;
-        Mon, 13 Jan 2020 13:22:05 +0000 (UTC)
-Subject: Re: [PATCH] mm/gup.c: use is_vm_hugetlb_page() to check whether to
- follow huge
-To:     Wei Yang <richardw.yang@linux.intel.com>, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20200113070322.26627-1-richardw.yang@linux.intel.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <396ba7b6-15e7-998d-6c64-59519882e211@suse.cz>
-Date:   Mon, 13 Jan 2020 14:22:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+Received: by mail-wr1-f67.google.com with SMTP id q6so8502957wro.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 05:22:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=D/zgSAoCVsSdiweHMVDrK8nA0R60nkQkJQGcdVDh1og=;
+        b=br/eDHQd0x8llbigzrXZRlqJaZX4duJUbmWjYqwd6ceNQXZqaYjEKm1XaVvs2g21F8
+         WGS6IDf2LUG3cUeTFs5gqTZJu7My373rI4HdsE8Tw8w+ok9gqdYL7plKzMDSEc8tfI0b
+         j0VD3yzShNdDf5sdoGjSVMTWgT+9VXXybvYtqtwSghYdxtkeMiKsEMDNztVhmHDRft3w
+         zBx1zXcFCjgcqSOC5aoAaGBkbfOQhRtDKKVM/D4x8tQFS3TtOTSeUwrt/I/WyKl7cDN6
+         BgtKLNrfxZR+r5YhKHPIyzzQTyBCWNiEi0i9lQLio+4FSr3qcEnuH6Cx/n7rO8ElSGCe
+         FRZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=D/zgSAoCVsSdiweHMVDrK8nA0R60nkQkJQGcdVDh1og=;
+        b=d3QWOIjrm/0D850bsn+AZr1HXk+D7FGeVFxkBXtFTC1pHJ46bNyEme9x6e1FkZN8M1
+         gvrMc1roVNktIvMCxYzYWdhKwTAK22d9jj/sw6Tyo3pmO3+nPe8I46sAw0nSG3r+enmM
+         kBD0VdVMdN1X9WZssqGASOYAln8kESs3jsT4ZadAA81CcAoUlMfWBd0JRwCjMhwEUZ4m
+         Ioy03R/BCL4DWL4xR8eeuvS88MzoYu8aFyz1gLpnAl2/RS612ek5z+6VMTpyf/AQq8+g
+         X7C12+PwbBWu+/Z+Epn1ZYHUjVsM05NhFQC+JJFO7x/LlVUIuqFvPWs3mvfstiv/jsRl
+         BKpA==
+X-Gm-Message-State: APjAAAXoh/SV0fHgjKdyAHYpW59/WNfKZhrafOjz0+bG1xnzEDQEpBkU
+        rW8ksjVkxfWW7OMd+HkeEQfAsw==
+X-Google-Smtp-Source: APXvYqzyzFsiGyOdKPbaEpxrkE10+1dd2DXNa3Y7sYoWXOI+M+TDGld2VQUrm5tt76IELexF439+dQ==
+X-Received: by 2002:a5d:4692:: with SMTP id u18mr18989285wrq.206.1578921726858;
+        Mon, 13 Jan 2020 05:22:06 -0800 (PST)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id u18sm14692987wrt.26.2020.01.13.05.22.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 05:22:06 -0800 (PST)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     vkoul@kernel.org
+Cc:     robh@kernel.org, bgoswami@codeaurora.org, broonie@kernel.org,
+        pierre-louis.bossart@linux.intel.com, lgirdwood@gmail.com,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        spapothi@codeaurora.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v6 1/2] dt-bindings: soundwire: add bindings for Qcom controller
+Date:   Mon, 13 Jan 2020 13:21:52 +0000
+Message-Id: <20200113132153.27239-2-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200113132153.27239-1-srinivas.kandagatla@linaro.org>
+References: <20200113132153.27239-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200113070322.26627-1-richardw.yang@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/13/20 8:03 AM, Wei Yang wrote:
-> No functional change, just leverage the helper function to improve
-> readability as others.
-> 
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+This patch adds bindings for Qualcomm soundwire controller.
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Qualcomm SoundWire Master controller is present in most Qualcomm SoCs
+either integrated as part of WCD audio codecs via slimbus or
+as part of SOC I/O.
 
-> ---
->  mm/gup.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 7646bf993b25..7705929cc920 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -323,7 +323,7 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
->  	pmdval = READ_ONCE(*pmd);
->  	if (pmd_none(pmdval))
->  		return no_page_table(vma, flags);
-> -	if (pmd_huge(pmdval) && vma->vm_flags & VM_HUGETLB) {
-> +	if (pmd_huge(pmdval) && is_vm_hugetlb_page(vma)) {
->  		page = follow_huge_pmd(mm, address, pmd, flags);
->  		if (page)
->  			return page;
-> @@ -433,7 +433,7 @@ static struct page *follow_pud_mask(struct vm_area_struct *vma,
->  	pud = pud_offset(p4dp, address);
->  	if (pud_none(*pud))
->  		return no_page_table(vma, flags);
-> -	if (pud_huge(*pud) && vma->vm_flags & VM_HUGETLB) {
-> +	if (pud_huge(*pud) && is_vm_hugetlb_page(vma)) {
->  		page = follow_huge_pud(mm, address, pud, flags);
->  		if (page)
->  			return page;
-> 
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/soundwire/qcom,sdw.txt           | 167 ++++++++++++++++++
+ 1 file changed, 167 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+
+diff --git a/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+new file mode 100644
+index 000000000000..436547f3b155
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soundwire/qcom,sdw.txt
+@@ -0,0 +1,167 @@
++Qualcomm SoundWire Controller Bindings
++
++
++This binding describes the Qualcomm SoundWire Controller along with its
++board specific bus parameters.
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be "qcom,soundwire-v<MAJOR>.<MINOR>.<STEP>",
++		    Example:
++			"qcom,soundwire-v1.3.0"
++			"qcom,soundwire-v1.5.0"
++			"qcom,soundwire-v1.6.0"
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: the base address and size of SoundWire controller
++		    address space.
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the SoundWire Controller IRQ
++
++- clock-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: should be "iface" for SoundWire Controller interface clock
++
++- clocks:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the SoundWire Controller interface clock
++
++- #sound-dai-cells:
++	Usage: required
++	Value type: <u32>
++	Definition: must be 1 for digital audio interfaces on the controller.
++
++- qcom,dout-ports:
++	Usage: required
++	Value type: <u32>
++	Definition: must be count of data out ports
++
++- qcom,din-ports:
++	Usage: required
++	Value type: <u32>
++	Definition: must be count of data in ports
++
++- qcom,ports-offset1:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify payload transport window offset1 of each
++		    data port. Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-offset2:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify payload transport window offset2 of each
++		    data port. Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-sinterval-low:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should be sample interval low of each data port.
++		    Out ports followed by In ports. Used for Sample Interval
++		    calculation.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-word-length:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be size of payload channel sample.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-block-pack-mode:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be 0 or 1 to indicate the block packing mode.
++		    0 to indicate Blocks are per Channel
++		    1 to indicate Blocks are per Port.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-block-group-count:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be in range 1 to 4 to indicate how many sample
++		    intervals are combined into a payload.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-lane-control:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be in range 0 to 7 to identify which	data lane
++		    the data port uses.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-hstart:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be number identifying lowerst numbered coloum in
++		    SoundWire Frame, i.e. left edge of the Transport sub-frame
++		    for each port. Values between 0 and 15 are valid.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,ports-hstop:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be number identifying highest numbered coloum in
++		    SoundWire Frame, i.e. the right edge of the Transport
++		    sub-frame for each port. Values between 0 and 15 are valid.
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++- qcom,dports-type:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: should be one of the following types
++		    0 for reduced port
++		    1 for simple ports
++		    2 for full port
++		    Out ports followed by In ports.
++		    More info in MIPI Alliance SoundWire 1.0 Specifications.
++
++Note:
++	More Information on detail of encoding of these fields can be
++found in MIPI Alliance SoundWire 1.0 Specifications.
++
++= SoundWire devices
++Each subnode of the bus represents SoundWire device attached to it.
++The properties of these nodes are defined by the individual bindings.
++
++= EXAMPLE
++The following example represents a SoundWire controller on DB845c board
++which has controller integrated inside WCD934x codec on SDM845 SoC.
++
++soundwire: soundwire@c85 {
++	compatible = "qcom,soundwire-v1.3.0";
++	reg = <0xc85 0x20>;
++	interrupts = <20 IRQ_TYPE_EDGE_RISING>;
++	clocks = <&wcc>;
++	clock-names = "iface";
++	#sound-dai-cells = <1>;
++	qcom,dports-type = <0>;
++	qcom,dout-ports	= <6>;
++	qcom,din-ports	= <2>;
++	qcom,ports-sinterval-low = /bits/ 8  <0x07 0x1F 0x3F 0x7 0x1F 0x3F 0x0F 0x0F>;
++	qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0C 0x6 0x12 0x0D 0x07 0x0A >;
++	qcom,ports-offset2 = /bits/ 8 <0x00 0x00 0x1F 0x00 0x00 0x1F 0x00 0x00>;
++
++	/* Left Speaker */
++	left{
++		....
++	};
++
++	/* Right Speaker */
++	right{
++		....
++	};
++};
+-- 
+2.21.0
 
