@@ -2,139 +2,89 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9599C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC42C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C324207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 804142081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:37:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="BjSBuIz0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iYOxHFSU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728903AbgAMOe4 (ORCPT
+        id S1728689AbgAMOhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:34:56 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43296 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbgAMOe4 (ORCPT
+        Mon, 13 Jan 2020 09:37:50 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:40855 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726505AbgAMOht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:34:56 -0500
-Received: by mail-wr1-f66.google.com with SMTP id d16so8798353wre.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 06:34:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OmcWfIBXkgyvN2cgft6r1ms+tR1sv2tTxJ3TL0EKA+g=;
-        b=BjSBuIz0rqihO1u6oVG994zIp4LszvgfRyi3TQIDE9elXW2RNLXBA9Qa9hSk9WYUHp
-         4evf6MYWH1Uk3c/DnxD20kDx5llyTzfvKjoYm575UEKChy+28T2/c/S2YoxHsMjFpemo
-         zfyIuvsQ4up1UMLF2NkbUJWPej4HkVaUmNxpsQBBauf+TO0NA9FNfWzogkLx/Hfm142N
-         L5pP4sAxO+x4dkQwdEgFDOngz+NMzpvqYmnc6FW9v/jp/bqgYAMAfATqx/VgozdgbTte
-         4C/x5MLMYcsIojpEux8gaPd5/Yk2TLwM8fRV/J+4nbX//exFdx4bbwLzZx1m+YlxHAJE
-         sQ+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OmcWfIBXkgyvN2cgft6r1ms+tR1sv2tTxJ3TL0EKA+g=;
-        b=NRt2NtiLv0a0aj9LGey4v9IoEsM9CLWTn0MictvdpZlv/nGhWP5Vy2A28LNup636c0
-         G0bIqC+QPTB+ID7gqD7ReeBCJnhPqLRy+5jZrvM9pszMw1qvjlw3FwzGqa7nKRMESPBM
-         P7PFoiVBJ0dXJCQVxAfsuya4ia/Y25EztVGoIqpYjSNXcn81tr7t1Eh5i9P24Dq/lTZt
-         iJqkH4fJQJ0X3mseX9AHAOGsf1ERbcpsnJqqCKcSBE5tp7gz7uC2aHZ+rxaplpxm13TE
-         nJv6nsIw+9Z8XbNxG46/bwvZJhv8FAhzkUfOGDraBo2IVus7XJ4/eCwqhKjiR7B9vGzu
-         pikg==
-X-Gm-Message-State: APjAAAXE1fitt+s/u7cYQ8/DFdwkf3YOWql1xuLNmrnEJjhediXNfSRG
-        eXSygPH0s4tGmYTbjzncPrfb9A==
-X-Google-Smtp-Source: APXvYqzs5RfhHexyHDgfnn5rf2OytVWc6odXONn7jRukll8feWi5Dn5ZVX6pU3hEsY5aT/Q+0PfQmw==
-X-Received: by 2002:a5d:66c3:: with SMTP id k3mr17870446wrw.370.1578926094258;
-        Mon, 13 Jan 2020 06:34:54 -0800 (PST)
-Received: from localhost (ip-78-102-249-43.net.upcbroadband.cz. [78.102.249.43])
-        by smtp.gmail.com with ESMTPSA id l19sm14443297wmj.12.2020.01.13.06.34.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 06:34:53 -0800 (PST)
-Date:   Mon, 13 Jan 2020 15:34:52 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        camelia.groza@nxp.com, Simon.Edelhaus@aquantia.com,
-        Igor.Russkikh@aquantia.com, jakub.kicinski@netronome.com
-Subject: Re: [PATCH net-next v5 05/15] net: macsec: hardware offloading
- infrastructure
-Message-ID: <20200113143452.GA2131@nanopsycho>
-References: <20200110162010.338611-1-antoine.tenart@bootlin.com>
- <20200110162010.338611-6-antoine.tenart@bootlin.com>
+        Mon, 13 Jan 2020 09:37:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578926268;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bS5GWahrJ1O+34i2WctYNhu18hENHqUcaYD0bIdK6TY=;
+        b=iYOxHFSUubtq6GKvdn0gcAOOoeX6oooFliUaKY9TI1op/eSPlaBqXAVa0x1Xo1coieZdCm
+        H4Vnqj1WztRoTxsIR1nDRK4su4Y1cnLD1wp141sZ+Fbtwh5+xTirWF0BS0vu+wuyx3oD4X
+        yAoCMsoRhY0nYnRlMhhl09yCcuqPCcM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-81-THJL3bLzOKGSiCPXQe6hug-1; Mon, 13 Jan 2020 09:37:45 -0500
+X-MC-Unique: THJL3bLzOKGSiCPXQe6hug-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35F6718FF660;
+        Mon, 13 Jan 2020 14:37:44 +0000 (UTC)
+Received: from [10.18.17.119] (dhcp-17-119.bos.redhat.com [10.18.17.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6AFA45C21B;
+        Mon, 13 Jan 2020 14:37:43 +0000 (UTC)
+Subject: Re: [PATCH 0/2] selftests/livepatch: Trivial cleanups
+To:     Miroslav Benes <mbenes@suse.cz>, jpoimboe@redhat.com,
+        jikos@kernel.org, pmladek@suse.com, shuah@kernel.org
+Cc:     live-patching@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200113124907.11086-1-mbenes@suse.cz>
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+Message-ID: <9cb551f6-1480-328e-9e4a-ac31fcd56a97@redhat.com>
+Date:   Mon, 13 Jan 2020 09:37:42 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110162010.338611-6-antoine.tenart@bootlin.com>
+In-Reply-To: <20200113124907.11086-1-mbenes@suse.cz>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fri, Jan 10, 2020 at 05:20:00PM CET, antoine.tenart@bootlin.com wrote:
+On 1/13/20 7:49 AM, Miroslav Benes wrote:
+> Two trivial cleanups after recent changes in selftests/livepatch. Based
+> on "next" branch of Shuah's kselftest tree.
+> 
+> Miroslav Benes (2):
+>    selftests/livepatch: Replace set_dynamic_debug() with setup_config()
+>      in README
+>    selftests/livepatch: Remove unused local variable in
+>      set_ftrace_enabled()
+> 
+>   tools/testing/selftests/livepatch/README       | 2 +-
+>   tools/testing/selftests/livepatch/functions.sh | 1 -
+>   2 files changed, 1 insertion(+), 2 deletions(-)
+> 
 
-Couple nitpicks I randomly spotted:
+For the series:
 
-[...]
+Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
 
+-- Joe
 
->+static bool macsec_is_offloaded(struct macsec_dev *macsec)
->+{
->+	if (macsec->offload == MACSEC_OFFLOAD_PHY)
->+		return true;
->+
->+	return false;
-
-Just:
-	return macsec->offload == MACSEC_OFFLOAD_PHY;
-
-
->+}
->+
->+/* Checks if underlying layers implement MACsec offloading functions. */
->+static bool macsec_check_offload(enum macsec_offload offload,
->+				 struct macsec_dev *macsec)
->+{
->+	if (!macsec || !macsec->real_dev)
->+		return false;
->+
->+	if (offload == MACSEC_OFFLOAD_PHY)
-
-You have a helper for this already - macsec_is_offloaded(). No need for
-"offload" arg then.
-
-
->+		return macsec->real_dev->phydev &&
->+		       macsec->real_dev->phydev->macsec_ops;
->+
->+	return false;
->+}
->+
->+static const struct macsec_ops *__macsec_get_ops(enum macsec_offload offload,
->+						 struct macsec_dev *macsec,
->+						 struct macsec_context *ctx)
->+{
->+	if (ctx) {
->+		memset(ctx, 0, sizeof(*ctx));
->+		ctx->offload = offload;
->+
->+		if (offload == MACSEC_OFFLOAD_PHY)
-
-Same here.
-
-
->+			ctx->phydev = macsec->real_dev->phydev;
->+	}
->+
->+	return macsec->real_dev->phydev->macsec_ops;
->+}
->+
-
-[...]
