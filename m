@@ -2,177 +2,168 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E255FC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8285FC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACDD421569
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:45:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044CA214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:45:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OyvIPxXK"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nUG955hD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728512AbgAMGo3 (ORCPT
+        id S1728687AbgAMGpj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 01:44:29 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:42722 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726055AbgAMGoT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 01:44:19 -0500
-Received: by mail-qk1-f194.google.com with SMTP id z14so7553315qkg.9
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:44:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BNID1+xlk/LusKrfyvTRadaTjl4JTdHdZqFClmlrkE8=;
-        b=OyvIPxXK+9gRKfh1j2g/pw9Okrn9nsbKhZjAf9nvWrFWTasOHoycaN/UYYMfhcIC19
-         q7V2LwdxqeCs4zYNYujxCALeZwUnxdGHWOyse3uCMcKGt+LjGnSL1M0bpUfxgD4n2fec
-         c1TWiw/luhrhXoyB6w/D1tFMJi+V+IvKJEasQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BNID1+xlk/LusKrfyvTRadaTjl4JTdHdZqFClmlrkE8=;
-        b=cHlZ2aSUBS/mqaxOaCnFKdWFR3u0XI9fAUewFQax4qe234KPPl2CBWlca1b9D4VmFD
-         WEe8+ns2CJxRZwMFaqs71QXdNnX9DvxoDqWa/xAVxNFnYPs7V1xXci0vBq97eAZFFcbd
-         izIrrqXCcqOxWs93J+5gnmPMzcq2RWij72eIQLP+4AEWeLqtww+Lt/+5Fy98t2VGmvUl
-         SpB1vNQ3qDBLiIQm+XepmCJeTItZrepcyM5Q8a4bbJXVAbJ8jtbRlyv+fdoiwNgIFb38
-         XXYBqKCyfdddfaPstqy9A464syxphQk4C8D9TkHMPcZ4ZznyErgNkZfC9EV3vr+6Bxbm
-         jWTg==
-X-Gm-Message-State: APjAAAXRjRS0T+YfegjIITziFaqenX316ahePm0vAcDOHcnadRjv3B6E
-        TNMNMYzXPgtGbwpiUb3ffRlwRs5A3RmJHMgNR0warQ==
-X-Google-Smtp-Source: APXvYqzL5B5r73soR628uc2jDkq8fU1OUh+0wVt0KMcWK9cN8MbW5ohquaKM4R+Ks/ACv40A/WWnmnHJYeJHxhoohe8=
-X-Received: by 2002:a05:620a:6d7:: with SMTP id 23mr14117387qky.299.1578897858106;
- Sun, 12 Jan 2020 22:44:18 -0800 (PST)
+        Mon, 13 Jan 2020 01:45:39 -0500
+Received: from mail-eopbgr80043.outbound.protection.outlook.com ([40.107.8.43]:35715
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726399AbgAMGpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 01:45:38 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RXT3NxssAkyOQauTEZknust8+ISQIoCkcTLTnPm5lgJI7TSWyvnlP+44TjGqAUZCUhQ3GSwMB3RZ6qjtbzdlH0QjOckXql6pARWJ/9T+vLJwVofLwpW5nLFyk2V2wwCfG99MtFdkjE5wPI7+UhWoDOBNHaYzfhWbLRhn38nsqfYNi8cP5lBrZMbpozke5Oar52k4EbAaZ+Du6wHJo4GDfB/lFr2jM+vXMMPHCe3aFzhXuwoSstFXeWWfL/WlOahUlVaCGkKmaaN+y66M3R2NDDpfgzxGFI2uAmIjeq5MBXJAPckAwKx/M+mmacrwc1VucqqQn74kxR7D3QJNFAIEUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0AqYxbeUjev659w2GF9CDhC1hBk4wSIEV3nAm3LD1e8=;
+ b=UjZy6Coo38kp+KywMFravV2eYxvm9AL6b5kjFjsaPaZuS3NCbFKCAmH8sdk3wQIamRxpV/M5rk8v4Q2r2foSLZC2IKsf1qegkZ7NiLaTbqkcZhDZQMgl8VFGlDM/6I1LNZ0oNbLV0K5fQkMYR4zN4tK4GrYoCstXJw3zV27wRukj6NZ5lETR4/tD+F+5eHsGjcl0Z/iB5MzhtEP/dZBdoIKjCkgOvVdOiFnCor1DiYxThVShQ4kpcmImuhR6Zu9PM2eRfj/BLhKEwhUpyiA0CRoDwP87DwzFdHjKseu4KwNHWS1K/hlj65D9mWjfpBG3F+FFtloLGIJmZl3eUgOvsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0AqYxbeUjev659w2GF9CDhC1hBk4wSIEV3nAm3LD1e8=;
+ b=nUG955hDbmcAWlTxnW92AI+CD7MXizVJdL5e8mzJavKiJrHrwmh03LiB+VaxvRU/XiudFK6WMcsE0i18e/fk9rySovwiT2OWtTY8uARXXC+BXEU/uRvzPblIDJS4jzkrctbplFxMYeH7RYI4rv471HnScqaEcrbpAWMmX49hGuI=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4498.eurprd04.prod.outlook.com (52.135.148.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Mon, 13 Jan 2020 06:45:35 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
+ 06:45:35 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH] firmware: arm_scmi: Make scmi core independent of
+ transport type
+Thread-Topic: [PATCH] firmware: arm_scmi: Make scmi core independent of
+ transport type
+Thread-Index: AQHVppfygI23RUpETUWFTxolQ+nTs6fiPXoAgAAVYACAAcKWgIAEV0ng
+Date:   Mon, 13 Jan 2020 06:45:34 +0000
+Message-ID: <AM0PR04MB448197C42958AE684D021FE288350@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <5c545c2866ba075ddb44907940a1dae1d823b8a1.1575019719.git.viresh.kumar@linaro.org>
+ <CAK8P3a3=q2zX9xQo7eZKp7e70rAeNB8VoSjg2aE06QJuSw8y3Q@mail.gmail.com>
+ <20200109093442.4jt44eu2zlmjaq3f@vireshk-i7> <20200110122725.GB45077@bogus>
+In-Reply-To: <20200110122725.GB45077@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c2d4186f-beee-4089-8480-08d797f4313b
+x-ms-traffictypediagnostic: AM0PR04MB4498:
+x-microsoft-antispam-prvs: <AM0PR04MB4498BA22702923F212DFC4A888350@AM0PR04MB4498.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(346002)(376002)(396003)(199004)(189003)(8936002)(8676002)(86362001)(9686003)(26005)(186003)(55016002)(44832011)(81156014)(81166006)(5660300002)(53546011)(7696005)(6506007)(52536014)(4326008)(54906003)(71200400001)(66446008)(76116006)(33656002)(110136005)(316002)(2906002)(478600001)(66946007)(66476007)(66556008)(64756008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4498;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gd2ItDIT2UUcY4WTxKUfUEWTTf8FiQhWhuD6levtnaizW9oPTAT9HAMpb50f7ESAhno5bsEpRTiQ/CdCmewnbWmaLBZ1ylOP0T5gLoCzhq+dTO0IDRIsqWk2GcwO8XtNck/CVkNzuQ0h+QhE9RYzpGA5dTsECgDtZFyX3c94mg7h2lqC/8x+78yqkLsbjZgH6PtWZjHHPcMRGJt+Cj+NexOjMZLiixAorqG1su3Nl2nke4ZJ5uephAkQ7FXFZwWx9jYRsZe0aZ+Ht9iAbuUqjVooYRujqgDiATd+WTpGifvGsU6Ku5ajv9CoX/H0ZZjFSXadYkddli/pEc7T4sU0kUBVeu3kt1fqQCiynCstO4XWnREF5V7J+khW9bPCa6M5kqCP2GX1cdoJtpHBsxLwpxvnxPgaTY+Njz27URhkkCnun1jaZMR0DnjOpZTeZGWx
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200107070154.1574-1-roger.lu@mediatek.com> <20200107070154.1574-2-roger.lu@mediatek.com>
- <20200108203829.GA18987@bogus>
-In-Reply-To: <20200108203829.GA18987@bogus>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Mon, 13 Jan 2020 14:44:07 +0800
-Message-ID: <CANMq1KBu-gFy701BgFcjEwyhV9GgCCU2mkT9c8LviOJKBF30UA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: soc: add mtk svs dt-bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Roger Lu <roger.lu@mediatek.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Fan Chen <fan.chen@mediatek.com>,
-        HenryC Chen <HenryC.Chen@mediatek.com>,
-        YT Lee <yt.lee@mediatek.com>,
-        Xiaoqing Liu <Xiaoqing.Liu@mediatek.com>,
-        Charles Yang <Charles.Yang@mediatek.com>,
-        Angus Lin <Angus.Lin@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nishanth Menon <nm@ti.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2d4186f-beee-4089-8480-08d797f4313b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 06:45:34.9193
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VDW2P+WcDxt0tuD/d82bvnw9DX8ZJHoHFIDO8rlCsjlFKK4/YzdbtUXB+w5ilGNrCFEepvnCWIK+6W/0lR0GZw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4498
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 4:38 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Jan 07, 2020 at 03:01:52PM +0800, Roger Lu wrote:
-> > Document the binding for enabling mtk svs on MediaTek SoC.
+Hi Sudeep,
+
+> Subject: Re: [PATCH] firmware: arm_scmi: Make scmi core independent of
+> transport type
+>=20
+> On Thu, Jan 09, 2020 at 03:04:42PM +0530, Viresh Kumar wrote:
+> > On 09-01-20, 09:18, Arnd Bergmann wrote:
+> > > On Fri, Nov 29, 2019 at 10:32 AM Viresh Kumar <viresh.kumar@linaro.or=
+g>
+> wrote:
+> > > >
+> > > > The SCMI specification is fairly independent of the transport
+> > > > protocol, which can be a simple mailbox (already implemented) or
+> anything else.
+> > > > The current Linux implementation however is very much dependent of
+> > > > the mailbox transport layer.
+> > > >
+> > > > This patch makes the SCMI core code (driver.c) independent of the
+> > > > mailbox transport layer and moves all mailbox related code to a
+> > > > new
+> > > > file: mailbox.c.
+> > > >
+> > > > We can now implement more transport protocols to transport SCMI
+> > > > messages.
+> > > >
+> > > > The transport protocols just need to provide struct
+> > > > scmi_transport_ops, with its version of the callbacks to enable exc=
+hange
+> of SCMI messages.
+> > > >
+> > > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > >
+> > > Conceptually I think this is fine, but as others have said, it would
+> > > be better to have another transport implementation posted along with
+> > > this to see if the interfaces actually work out.
 > >
-> > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/power/mtk-svs.txt     | 76 +++++++++++++++++++
-> >  1 file changed, 76 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
+> > @Sudeep/Vincent: Do you think we can add another transport
+> > implementation something right away for it ?
 > >
-> > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
-> > new file mode 100644
-> > index 000000000000..9a3e81b9e1d2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
-> > @@ -0,0 +1,76 @@
-> > +* Mediatek Smart Voltage Scaling (MTK SVS)
-> > +
-> > +This describes the device tree binding for the MTK SVS controller (bank)
-> > +which helps provide the optimized CPU/GPU/CCI voltages. This device also
-> > +needs thermal data to calculate thermal slope for accurately compensate
-> > +the voltages when temperature change.
-> > +
-> > +Required properties:
-> > +- compatible:
-> > +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
-> > +- reg: Address range of the MTK SVS controller.
-> > +- interrupts: IRQ for the MTK SVS controller.
-> > +- clocks, clock-names: Clocks needed for the svs hardware. required
-> > +                       clocks are:
-> > +                    "main": Main clock for svs controller to work.
-> > +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
-> > +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
-> > +
-> > +Subnodes:
-> > +- svs-cpu-little: SVS bank device node of little CPU
-> > +  compatible: "mediatek,mt8183-svs-cpu-little"
-> > +  operating-points-v2: OPP table hooked by SVS little CPU bank.
-> > +                    SVS will optimze this OPP table voltage part.
-> > +  vcpu-little-supply: PMIC buck of little CPU
-> > +- svs-cpu-big: SVS bank device node of big CPU
-> > +  compatible: "mediatek,mt8183-svs-cpu-big"
-> > +  operating-points-v2: OPP table hooked by SVS big CPU bank.
-> > +                    SVS will optimze this OPP table voltage part.
-> > +  vcpu-big-supply: PMIC buck of big CPU
-> > +- svs-cci: SVS bank device node of CCI
-> > +  compatible: "mediatek,mt8183-svs-cci"
-> > +  operating-points-v2: OPP table hooked by SVS CCI bank.
-> > +                    SVS will optimze this OPP table voltage part.
-> > +  vcci-supply: PMIC buck of CCI
-> > +- svs-gpu: SVS bank device node of GPU
-> > +  compatible: "mediatek,mt8183-svs-gpu"
-> > +  operating-points-v2: OPP table hooked by SVS GPU bank.
-> > +                    SVS will optimze this OPP table voltage part.
-> > +  vgpu-supply: PMIC buck of GPU
-> > +
-> > +Example:
-> > +
-> > +     svs: svs@1100b000 {
-> > +             compatible = "mediatek,mt8183-svs";
-> > +             reg = <0 0x1100b000 0 0x1000>;
-> > +             interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
-> > +             clocks = <&infracfg CLK_INFRA_THERM>;
-> > +             clock-names = "main_clk";
-> > +             nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
-> > +             nvmem-cell-names = "svs-calibration-data", "calibration-data";
-> > +
-> > +             svs_cpu_little: svs-cpu-little {
-> > +                     compatible = "mediatek,mt8183-svs-cpu-little";
-> > +                     operating-points-v2 = <&cluster0_opp>;
-> > +                     vcpu-little-supply = <&mt6358_vproc12_reg>;
-> > +             };
->
-> I don't think this is a good binding. This information already exists
-> elsewhere in the DT, so your driver should just look in those nodes.
-> For example the regulator can be in the cpu nodes or the OPP table
-> itself.
+>=20
+> Even if we don't add new transport right away, I would like to see if the
+> requirements are met. I will take a look at you v2 with that in mind anyw=
+ays.
+> We need not wait, we I want to see people think it meets their requiremen=
+t. I
+> will also add couple of guys working on virtio transport for SCMI when I
+> respond to your v2. Thanks for posting it.
+>=20
+> > @Peng ?
+> >
+> Peng, Did you get a chance to try this with SMC ? If SCMI was the only
+> usecase, you can try this approach instead of mailbox, now that no one ha=
+s
+> any objects to this approach conceptually. Please use v2 as base and upda=
+te
+> us.
 
-Roger, if that helps, without changing any other binding, on 8183,
-basically you could have:
- - svs-cpu-little: Add a handle to &cpu0 and get the regulator/opp
-table from it.
- - svs-cpu-big: Handle to &cpu4
- - svs-cci: Handle to &cci
- - svs-gpu: Handle to &gpu (BTW, it is expected that SVS would only
-apply to vgpu/mali regulator, and not vsram regulator?)
+I will try that, but might be a bit later.
 
-I'm not too sure how we'd fetch the right regulator name, however (for
-the first 3 the name is "proc", for the last one it's "mali"), maybe
-add a regulator-name list in the DT?
+Thanks,
+Peng.
 
->
-> Rob
+>=20
+> --
+> Regards,
+> Sudeep
