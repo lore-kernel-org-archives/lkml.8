@@ -2,147 +2,105 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C6CC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE96C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A888D214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:42:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 406D121744
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:42:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b8+l/1SJ"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="EQGgZDAU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="fznaOysy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387579AbgAMGmC (ORCPT
+        id S2387649AbgAMGmK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 01:42:02 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42062 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732311AbgAMGmC (ORCPT
+        Mon, 13 Jan 2020 01:42:10 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:42383 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732311AbgAMGmJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 01:42:02 -0500
-Received: by mail-pg1-f196.google.com with SMTP id s64so4209293pgb.9
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:42:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BpLUIBBpeUpV1O+9thahetvf61yecpH01T0vJhinKFM=;
-        b=b8+l/1SJZQ3yqeJbUvB2xZMyvwiAY6T5D/jZU1adrI6P5kstOLvvZxqhCmkqIwuMep
-         sYKEoCzAVeb9IMtcgLMsRlZGj/Njlq+d8Reds/98X5aiMgm3JbziB4SEIwRTkn0+NR9m
-         g0KXWevccqv+j1L3ZxtD9evMLz1YZLLTdTSKLRv0pvzSjgHwIL9RmOYo3q/zJDPB0H9S
-         xJ7tNU7F6sI2NVOnd606kh9pY3OCZHfIt0oXCLajWOGjWkZp5gqJsLC/fp2f7iHSMkkz
-         E2NrmdpyzOj05r/NtlH0SGWLXV4Gzs7spPbOr4zoKiylBRyVGa+XozPgSQKxpvzQ8KdT
-         T1UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BpLUIBBpeUpV1O+9thahetvf61yecpH01T0vJhinKFM=;
-        b=R7+EoTk+fy3Hg3js60++DYMS2ZaN9R4JYH5Q5HBCRMzBYIoDrAsJREC4lMJbtgu90q
-         F7JAi+bldJU/dBv3wiHW1IkfgVdHKMJS7kt3t5ygawqpEDZrrwcjl59DaWVcn8a/goxK
-         ZdQiuR3mfnNVyiXBCeQWFMIUdZX7cC2fDYaI8346HAcOYEPkem50YoyQ6uE1U9wPen6j
-         4l5qCmbSJWoLdyhuNOvaYtST5Lnu5pbcJzF6FzOWO158o5CSnpEp01WWI64RyVaPMxuD
-         C1WkqzinqrQ/T8/8XKQuf/TE+/vCr0Lds60oQoVAo81kSl3qBhznZDdjIih6MSvjxwvD
-         TWQg==
-X-Gm-Message-State: APjAAAWqHEP8VKDB2XM59lqu2BysU1CWfJR0oPu02JbIqeZdGgwVZ3VN
-        h0HH/qLO55XMnLKChDTVHact5A==
-X-Google-Smtp-Source: APXvYqwOSzh97zQUsBMR/x95EQQ3mxh4f6F/syhe9m9gMY6RlQr3rBc1Dwifd8mJceoMuBatWTlEIw==
-X-Received: by 2002:a63:f70b:: with SMTP id x11mr19369380pgh.80.1578897721592;
-        Sun, 12 Jan 2020 22:42:01 -0800 (PST)
-Received: from localhost ([122.172.140.51])
-        by smtp.gmail.com with ESMTPSA id d3sm12151329pfn.113.2020.01.12.22.41.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 12 Jan 2020 22:42:00 -0800 (PST)
-Date:   Mon, 13 Jan 2020 12:11:56 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        cristian.marussi@arm.com, peng.fan@nxp.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH V2] firmware: arm_scmi: Make scmi core independent of
- transport type
-Message-ID: <20200113064156.lt3xxpzygattz3he@vireshk-i7>
-References: <3f5567ec928e20963d729350e6d674c4acb0c7a0.1578648530.git.viresh.kumar@linaro.org>
- <CAK8P3a1MLyP4ooyEDiBF1fE0BJGocgDmO1f5Qrvn_W5eqahz8g@mail.gmail.com>
+        Mon, 13 Jan 2020 01:42:09 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id CB58A21C0F;
+        Mon, 13 Jan 2020 01:42:08 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 13 Jan 2020 01:42:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=Iim1hqy2gLAV6qBNMC/wiQymePB
+        2a+9/hrJaoZPoT4Q=; b=EQGgZDAU1SupW7pcMsCZc44qBpVLZwtjXMTJUjAR2ZQ
+        waWWcbr3IO3juosPSMIIA+5S7gKLzAXXffgAUxIK7/97YHGggescxFKaG1MyYzIT
+        29hiPb/iCw3pQkrDwAmtn6mru+Bc20ivQ2rkV2s2bm+GL1pT48cyBU0qvQTpMYx2
+        1Ps3j2bd7tBJslIFOkk+gFIRn4/cRGdFPgLLDmMzGAcoyd8S68hC/G6JeCSX6sDc
+        nW2CAdWWouTklF/Jr59DLahu5faYpFOEF0a8ZJCIPZqxeDNQQY34MI5K2UyYkSqz
+        jiOhTnoOpzHGB4QAcwtZT1VUDCWMFdluWxrauT/lvyg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Iim1hq
+        y2gLAV6qBNMC/wiQymePB2a+9/hrJaoZPoT4Q=; b=fznaOysydYEyp1y041eE7U
+        uP8VyyoT/BUfdQOyd2Fa6/SgvHhAZpIuL1zOTatRRedLXWOlEsSJpFRAbfNJtd3s
+        o/ki2kXkAY6UzDy2qfVzxhkpviw5kyJwMdS1X/9GQ+Tq8iEltF7QJc463cmfuaoc
+        7KSqXs9dCxejhp6/1rJGLhCQR8CZqUENW5sypdPthreAtIaz6ZWeGQRhWEdrA7UK
+        yueYr/Sd66CtSv8OTaPhyp2u4BzmNyKzq5Ve8ZVGhPSS3kpZwIWppTG3Ywsm/7bM
+        gBdn1xjYBjzaW12xS5tGpij97yO0cEv6HPAqj0SUeFZ+v+iaiJCaTwHOUSGvuWXA
+        ==
+X-ME-Sender: <xms:QBEcXsiO_fpI5r27BLoWEA_BxVXlBG-45XZeseLsxaPuimPTA1kC4Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeiledgleelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvghlrd
+    horhhgnecukfhppeekfedrkeeirdekledruddtjeenucfrrghrrghmpehmrghilhhfrhho
+    mhepghhrvghgsehkrhhorghhrdgtohhmnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:QBEcXkbS0X09AhzihgXzhGqeY2TjOvo90nBa4nw4GJRw4yDVTzAjfg>
+    <xmx:QBEcXmrYomN4cmhRRv1W0dt6DbStNSDQZ9eIHqXL9HyjK1sgT-Qg2A>
+    <xmx:QBEcXucl3VQbz3aL2MqL4qkS9gAXQnfBAUS3xa_a_geJaaRi7qNMHQ>
+    <xmx:QBEcXvc_fdVQpVfRpGFiadogAnh9m1Td0G-FLtNx2LIWZPnXHNPbUQ>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 03E0030602DB;
+        Mon, 13 Jan 2020 01:42:07 -0500 (EST)
+Date:   Mon, 13 Jan 2020 07:42:02 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Jari Ruusu <jari.ruusu@gmail.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Fenghua Yu <fenghua.yu@intel.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: Fix built-in early-load Intel microcode alignment
+Message-ID: <20200113064202.GA1976120@kroah.com>
+References: <CACMCwJK-2DHZDA_F5Z3wsEUEKJSc3uOwwPD4HRoYGW7A+kA75w@mail.gmail.com>
+ <CACMCwJ+FE8yD10VF07ci6tTqiBA8aBejKQT0EwyayQQOrLGUKQ@mail.gmail.com>
+ <20200112140218.GA902610@kroah.com>
+ <CACMCwJL7uqMtp7Jg8GdrRpJkk7jeMrxksr4EXQq86Agw9Zme+A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a1MLyP4ooyEDiBF1fE0BJGocgDmO1f5Qrvn_W5eqahz8g@mail.gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <CACMCwJL7uqMtp7Jg8GdrRpJkk7jeMrxksr4EXQq86Agw9Zme+A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10-01-20, 12:15, Arnd Bergmann wrote:
-> On Fri, Jan 10, 2020 at 10:43 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+On Mon, Jan 13, 2020 at 08:30:27AM +0200, Jari Ruusu wrote:
+> On 1/12/20, Greg KH <greg@kroah.com> wrote:
+> > On Sun, Jan 12, 2020 at 03:03:44PM +0200, Jari Ruusu wrote:
+> >> Backport of "Fix built-in early-load Intel microcode alignment"
+> >> for linux-4.19 and older stable kernels.
 > >
-> > The SCMI specification is fairly independent of the transport protocol,
-> > which can be a simple mailbox (already implemented) or anything else.
-> > The current Linux implementation however is very much dependent of the
-> > mailbox transport layer.
-> >
-> > This patch makes the SCMI core code (driver.c) independent of the
-> > mailbox transport layer and moves all mailbox related code to a new
-> > file: mailbox.c.
-> >
-> > We can now implement more transport protocols to transport SCMI
-> > messages, some of the transport protocols getting discussed currently
-> > are SMC/HVC, SPCI (built on top of SMC/HVC), OPTEE based mailbox
-> > (similar to SPCI), and vitio based transport as alternative to mailbox.
-> >
-> > The transport protocols just need to provide struct scmi_desc, which
-> > also implements the struct scmi_transport_ops.
-> >
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> > V2:
-> > - Dropped __iomem from payload data.
+> > Any hint as to what that git commit id is?
 > 
-> Simply dropping the __iomem isn't much better, now you get other
-> type mismatches.
+> It is not in mainline yet.
+> You have far better chances of pushing it to mainline than I do.
 
-Right. So what exactly do you suggest I should do now? Drop __iomem
-from the structure's payload field but keep all local variables and
-function arguments with __iomem ?
+<formletter>
 
-> > - Moved transport ops to scmi_desc, and that has a per transport
-> >   instance now which is differentiated using the compatible string.
-> > - Converted IS_ERR_OR_NULL to IS_ERR.
-> 
-> These look good to me.
-> 
-> > + * @payload: Transmit/Receive payload area
-> > + * @dev: Reference to device in the SCMI hierarchy corresponding to this
-> > + *      channel
-> > + * @handle: Pointer to SCMI entity handle
-> > + * @transport_info: Transport layer related information
-> > + */
-> > +struct scmi_chan_info {
-> > +       void *payload;
-> > +       struct device *dev;
-> > +       struct scmi_handle *handle;
-> > +       void *transport_info;
-> > +};
-> 
-> Maybe you can wrap the scmi_chan_info inside of another
-> structure that contains  the payload pointer, and use container_of
-> to convert between them?
+This is not the correct way to submit patches for inclusion in the
+stable kernel tree.  Please read:
+    https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+for how to do this properly.
 
-We don't need to convert between the two of them, isn't it ? Are you
-referring some other field here ?
-
-> It's not obvious which parts of the structure should be shared and
-> which are transport specific.
-
-All transport specific information is kept in the transport specific
-structure which is saved here in the transport_info field. Is there
-something else that isn't clear ?
-
--- 
-viresh
+</formletter>
