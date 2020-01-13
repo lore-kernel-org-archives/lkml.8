@@ -2,126 +2,153 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 600D4C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67050C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4195620661
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E92C20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:22:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="nW0sK/df"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgAMLWG (ORCPT
+        id S1728346AbgAMLWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:22:06 -0500
-Received: from foss.arm.com ([217.140.110.172]:38004 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgAMLWF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:22:05 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C31E013D5;
-        Mon, 13 Jan 2020 03:22:04 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0499C3F6C4;
-        Mon, 13 Jan 2020 03:22:04 -0800 (PST)
-Date:   Mon, 13 Jan 2020 11:22:02 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv9 06/12] PCI: mobiveil: Add callback function for link up
- check
-Message-ID: <20200113112201.GL42593@e119886-lin.cambridge.arm.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <20191120034451.30102-7-Zhiqiang.Hou@nxp.com>
+        Mon, 13 Jan 2020 06:22:55 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:56655 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgAMLWy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 06:22:54 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200113112252euoutp016ed758ce864e919298b4f2bee715bd8a~pbnBLMVGi2105721057euoutp01x
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 11:22:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200113112252euoutp016ed758ce864e919298b4f2bee715bd8a~pbnBLMVGi2105721057euoutp01x
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578914572;
+        bh=ix1rkgGPZPzm5yktB53W1Jh9DT6iYWfQ3B5imBJCsTk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=nW0sK/dfnu24LUjnFte6y9Dj1OmIsjLm9+q9xF0lbCdcBX1NCfw9NCF89obsj3jjo
+         ud2NeFzzo19V3qTRPvxPRC6PNi1z5tueRl9OXfElIQ3nH9kzZKrhAwJzCgw4qszIiW
+         608LXzqQCZcS57PuTKohVPqlScBnxFH3Gzs8NNNk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200113112252eucas1p2fcc58a5aaaf50459127b3714d800d57f~pbnBDUxV30288202882eucas1p2i;
+        Mon, 13 Jan 2020 11:22:52 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 8A.3A.60698.C035C1E5; Mon, 13
+        Jan 2020 11:22:52 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200113112252eucas1p2bcaff3d6a3c671947b2764cec908c7e5~pbnAxbo100310003100eucas1p2E;
+        Mon, 13 Jan 2020 11:22:52 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200113112252eusmtrp1bd5eba4d02a0ca424cf74fbd80cddfc3~pbnAw4r8X1393613936eusmtrp1Z;
+        Mon, 13 Jan 2020 11:22:52 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-18-5e1c530cd3ff
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 29.DC.08375.C035C1E5; Mon, 13
+        Jan 2020 11:22:52 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200113112251eusmtip1e14c64b3e722415f5ddfeeaf4d30c16d~pbnAIb70H1545715457eusmtip1v;
+        Mon, 13 Jan 2020 11:22:51 +0000 (GMT)
+Subject: Re: [PATCH] ata: pxa: Use dma_request_chan() instead
+ dma_request_slave_channel()
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     axboe@kernel.dk, vkoul@kernel.org, linux-ide@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <4b9f3d2b-e1e4-48a4-c0e2-624bac77dba9@samsung.com>
+Date:   Mon, 13 Jan 2020 12:22:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120034451.30102-7-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+In-Reply-To: <20191217074033.21831-1-peter.ujfalusi@ti.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJKsWRmVeSWpSXmKPExsWy7djP87o8wTJxBm3LdS1W3+1nszi24xGT
+        xeVdc9gsZn38wWqx884JZgdWj8tnSz02repk8zh+YzuTx+dNcgEsUVw2Kak5mWWpRfp2CVwZ
+        n64+Yi/4x1nRcnA2WwPjXI4uRk4OCQETiaP9O1m7GLk4hARWMEpMu/meCcL5wiixu+UFM4Tz
+        mVHi/Ow3TDAtqx7OYgWxhQSWM0q82yICYb9llPh1tBjEFhaIlvi9ey8LiC0ioCVx69pNRhCb
+        WSBB4vryNjCbTcBKYmL7KjCbV8BO4ubpx+wgNouAqsTPG8fB4qICERKfHhxmhagRlDg58wnY
+        TE4Ba4n3Z+ZCzRSXuPVkPhOELS+x/e0csKMlBKazS5xv+soMcbSLxML9kxkhbGGJV8e3sEPY
+        MhKnJ/ewQDSsY5T42/ECqns7o8Tyyf/YIKqsJe6c+wVkcwCt0JRYv0sfxJQQcJT4uLMcwuST
+        uPFWEOIGPolJ26YzQ4R5JTrahCBmqElsWLaBDWZr186VzBMYlWYh+WwWkm9mIflmFsLaBYws
+        qxjFU0uLc9NTi43zUsv1ihNzi0vz0vWS83M3MQITzOl/x7/uYNz3J+kQowAHoxIPr0StdJwQ
+        a2JZcWXuIUYJDmYlEd5N56TihHhTEiurUovy44tKc1KLDzFKc7AoifMaL3oZKySQnliSmp2a
+        WpBaBJNl4uCUamCcI+6bVcsY9ySQd/UW8W2BVn86/01fanj2wd03Avo3JCd+PHEwvD/23oOA
+        rcnmBu5Blw28O/alSyatLY03CfJMt72UnX7xqPZK802mLQIB9exdlhfPxzHpOAgr1brbP90s
+        HLZ92e3ww3rTyu/MNlixap7fCkHnffcZbXa9/fVH1vGb3Ot9uqeVWIozEg21mIuKEwEHwOtW
+        LAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLIsWRmVeSWpSXmKPExsVy+t/xu7o8wTJxBj/3SlisvtvPZnFsxyMm
+        i8u75rBZzPr4g9Vi550TzA6sHpfPlnpsWtXJ5nH8xnYmj8+b5AJYovRsivJLS1IVMvKLS2yV
+        og0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQyPl19xF7wj7Oi5eBstgbGuRxd
+        jJwcEgImEqsezmLtYuTiEBJYyihx89k+li5GDqCEjMTx9WUQNcISf651sUHUvGaU+LL6ASNI
+        QlggWuL37r0sILaIgJbErWs3weLMAgkS9zZeZ4Ro6GOUeLz4HztIgk3ASmJi+yqwIl4BO4mb
+        px+DxVkEVCV+3jgOFhcViJA4vGMWVI2gxMmZT8AWcApYS7w/MxdqgbrEn3mXmCFscYlbT+Yz
+        QdjyEtvfzmGewCg0C0n7LCQts5C0zELSsoCRZRWjSGppcW56brGhXnFibnFpXrpecn7uJkZg
+        VG079nPzDsZLG4MPMQpwMCrx8B6oko4TYk0sK67MPcQowcGsJMK76ZxUnBBvSmJlVWpRfnxR
+        aU5q8SFGU6DnJjJLiSbnAyM+ryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQQHpiSWp2ampBahFM
+        HxMHp1QDY4EA2/OemRt9FTyuCuXpidW9djzLfSaNT2vHquQwv2nNj++v1Wg5M9H000KbdLFF
+        /IE32u1kb/xS4OucIq/quWb1YlUO5quH3Wp6Jxw6ff5aRafoxcXbnVfIP5jrYbgspmDVNG2N
+        h9wKU59ovLZrdsoR+D1TlX3Olrfpwf+fzPe/xXw9S2ahuhJLcUaioRZzUXEiAJ+5GQjAAgAA
+X-CMS-MailID: 20200113112252eucas1p2bcaff3d6a3c671947b2764cec908c7e5
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191217074028eucas1p1eeef714e4d8c2cff2c133ffd239d7468
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191217074028eucas1p1eeef714e4d8c2cff2c133ffd239d7468
+References: <CGME20191217074028eucas1p1eeef714e4d8c2cff2c133ffd239d7468@eucas1p1.samsung.com>
+        <20191217074033.21831-1-peter.ujfalusi@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 03:45:57AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+
+On 12/17/19 8:40 AM, Peter Ujfalusi wrote:
+> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
+> eating up the error code.
 > 
-> The platforms, in which the Mobiveil GPEX is integrated,
-> may have their specific mechanism to check link up status.
-> This patch is to enable these platforms to implement theirs.
+> By using dma_request_chan() directly the driver can support deferred
+> probing against DMA.
 > 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
 > ---
-> V9:
->  - New patch splited from the #1 of V8 patches to make it easy to review.
+>  drivers/ata/pata_pxa.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 > 
->  drivers/pci/controller/mobiveil/pcie-mobiveil.c | 3 +++
->  drivers/pci/controller/mobiveil/pcie-mobiveil.h | 5 +++++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.c b/drivers/pci/controller/mobiveil/pcie-mobiveil.c
-> index 2773f823c9ea..b9ed2d95641c 100644
-> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.c
-> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.c
-> @@ -125,6 +125,9 @@ void mobiveil_csr_write(struct mobiveil_pcie *pcie, u32 val, u32 off,
->  
->  bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)
->  {
-> +	if (pcie->ops->link_up)
-> +		return pcie->ops->link_up(pcie);
-> +
->  	return (mobiveil_csr_readl(pcie, LTSSM_STATUS) &
->  		LTSSM_STATUS_L0_MASK) == LTSSM_STATUS_L0;
-
-On the previous patch I suggested that we don't mix up the link_up logic
-with the logic that decides which function to call. In this case the link_up
-logic is trivial. So this is probably OK.
-
-Reviewed-by: Andrew Murray <andrew.murray@arm.com>
-
->  }
-> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> index 18d85806a7fc..95d2e7c809b8 100644
-> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> @@ -148,6 +148,10 @@ struct root_port {
->  	struct pci_host_bridge *bridge;
->  };
->  
-> +struct mobiveil_pab_ops {
-> +	int (*link_up)(struct mobiveil_pcie *pcie);
-> +};
-> +
->  struct mobiveil_pcie {
->  	struct platform_device *pdev;
->  	void __iomem *csr_axi_slave_base;	/* root port config base */
-> @@ -157,6 +161,7 @@ struct mobiveil_pcie {
->  	int ppio_wins;
->  	int ob_wins_configured;		/* configured outbound windows */
->  	int ib_wins_configured;		/* configured inbound windows */
-> +	const struct mobiveil_pab_ops *ops;
->  	struct root_port rp;
->  };
->  
-> -- 
-> 2.17.1
+> diff --git a/drivers/ata/pata_pxa.c b/drivers/ata/pata_pxa.c
+> index 41430f79663c..71678bed04b0 100644
+> --- a/drivers/ata/pata_pxa.c
+> +++ b/drivers/ata/pata_pxa.c
+> @@ -274,10 +274,9 @@ static int pxa_ata_probe(struct platform_device *pdev)
+>  	/*
+>  	 * Request the DMA channel
+>  	 */
+> -	data->dma_chan =
+> -		dma_request_slave_channel(&pdev->dev, "data");
+> -	if (!data->dma_chan)
+> -		return -EBUSY;
+> +	data->dma_chan = dma_request_chan(&pdev->dev, "data");
+> +	if (IS_ERR(data->dma_chan))
+> +		return PTR_ERR(data->dma_chan);
+>  	ret = dmaengine_slave_config(data->dma_chan, &config);
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "dma configuration failed: %d\n", ret);
 > 
