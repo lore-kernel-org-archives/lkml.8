@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD06C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE5AC33CB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE6AA21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AFD224680
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbgAMTJ7 (ORCPT
+        id S1729110AbgAMTJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:09:59 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40011 "EHLO
+        Mon, 13 Jan 2020 14:09:58 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40007 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgAMTJ4 (ORCPT
+        with ESMTP id S1729026AbgAMTJy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:09:56 -0500
+        Mon, 13 Jan 2020 14:09:54 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ir55z-0001Dh-JN; Mon, 13 Jan 2020 20:09:51 +0100
+        id 1ir55y-0001CH-9h; Mon, 13 Jan 2020 20:09:50 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 351E01C18F4;
-        Mon, 13 Jan 2020 20:09:34 +0100 (CET)
-Date:   Mon, 13 Jan 2020 19:09:34 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6915A1C18E2;
+        Mon, 13 Jan 2020 20:09:33 +0100 (CET)
+Date:   Mon, 13 Jan 2020 19:09:33 -0000
 From:   "tip-bot2 for Vincenzo Frascino" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] arm64: compat: vdso: Expose BUILD_VDSO32
+Subject: [tip: timers/core] lib/vdso: Remove checks on return value for 32 bit vDSO
 Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20190830135902.20861-2-vincenzo.frascino@arm.com>
-References: <20190830135902.20861-2-vincenzo.frascino@arm.com>
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20190830135902.20861-6-vincenzo.frascino@arm.com>
+References: <20190830135902.20861-6-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Message-ID: <157894257404.19145.1701846128821842403.tip-bot2@tip-bot2>
+Message-ID: <157894257327.19145.11373398074511205232.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,39 +56,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     4845c25326cf1db48e010a0fb162da4dfb07665a
-Gitweb:        https://git.kernel.org/tip/4845c25326cf1db48e010a0fb162da4dfb07665a
+Commit-ID:     9dd92f63f94fab4c04a5880a839abe1f74ee906c
+Gitweb:        https://git.kernel.org/tip/9dd92f63f94fab4c04a5880a839abe1f74ee906c
 Author:        Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate:    Fri, 30 Aug 2019 14:58:55 +01:00
+AuthorDate:    Fri, 30 Aug 2019 14:58:59 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 10 Jan 2020 21:14:04 +01:00
+CommitterDate: Fri, 10 Jan 2020 21:14:05 +01:00
 
-arm64: compat: vdso: Expose BUILD_VDSO32
+lib/vdso: Remove checks on return value for 32 bit vDSO
 
-clock_gettime32 and clock_getres_time32 should be compiled only with the
-32 bit vdso library.
+Since all the architectures that support the generic vDSO library have
+been converted to support the 32 bit fallbacks it is not required
+anymore to check the return value of __cvdso_clock_get*time32_common()
+before updating the old_timespec fields.
 
-Expose BUILD_VDSO32 when arm64 compat is compiled, to provide an
-indication to the generic library to include these symbols.
+Remove the related checks from the generic vdso library.
 
+References: c60a32ea4f45 ("lib/vdso/32: Provide legacy syscall fallbacks")
 Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Link: https://lore.kernel.org/r/20190830135902.20861-2-vincenzo.frascino@arm.com
+Link: https://lore.kernel.org/r/20190830135902.20861-6-vincenzo.frascino@arm.com
 
 ---
- arch/arm64/include/asm/vdso/compat_gettimeofday.h | 1 +
- 1 file changed, 1 insertion(+)
+ lib/vdso/gettimeofday.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/include/asm/vdso/compat_gettimeofday.h b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-index c50ee1b..fe7afe0 100644
---- a/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/compat_gettimeofday.h
-@@ -17,6 +17,7 @@
- #define VDSO_HAS_CLOCK_GETRES		1
+diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
+index cd3aacf..b676a98 100644
+--- a/lib/vdso/gettimeofday.c
++++ b/lib/vdso/gettimeofday.c
+@@ -129,10 +129,10 @@ __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
+ 	if (unlikely(ret))
+ 		return clock_gettime32_fallback(clock, res);
  
- #define VDSO_HAS_32BIT_FALLBACK		1
-+#define BUILD_VDSO32			1
+-	if (likely(!ret)) {
+-		res->tv_sec = ts.tv_sec;
+-		res->tv_nsec = ts.tv_nsec;
+-	}
++	/* For ret == 0 */
++	res->tv_sec = ts.tv_sec;
++	res->tv_nsec = ts.tv_nsec;
++
+ 	return ret;
+ }
+ #endif /* BUILD_VDSO32 */
+@@ -240,7 +240,7 @@ __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
+ 	if (unlikely(ret))
+ 		return clock_getres32_fallback(clock, res);
  
- static __always_inline
- int gettimeofday_fallback(struct __kernel_old_timeval *_tv,
+-	if (likely(!ret && res)) {
++	if (likely(res)) {
+ 		res->tv_sec = ts.tv_sec;
+ 		res->tv_nsec = ts.tv_nsec;
+ 	}
