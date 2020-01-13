@@ -2,107 +2,113 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DFDC33CB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D5BC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFA42187F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578892950;
-	bh=pQmyxSK2rYvZKhrIwLap9VHfSzCEWZiVvINtuLhYf+8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S1FFJ/mN1vmggjicys+0qZcRSdXbHMxZS9yqVfB57oBF/A1hnAryULFExLEawKRYV
-	 3isJo2XvwuY1WM92bXKLjJPtaTPraT4eYKV1ZGyRRvtT9lKilaWEiyD7L9ovVgxFlr
-	 mJ2+yk8jL4Xd0Hl3bpDQWPRp+1K49jtCQFMeB1B0=
+	by mail.kernel.org (Postfix) with ESMTP id A5D1021556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:27:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r390DZmP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbgAMFW3 (ORCPT
+        id S1726236AbgAMF1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 00:22:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgAMFW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 00:22:29 -0500
-Received: from localhost (unknown [106.200.247.255])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A93121556;
-        Mon, 13 Jan 2020 05:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578892948;
-        bh=pQmyxSK2rYvZKhrIwLap9VHfSzCEWZiVvINtuLhYf+8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sXsnWQlS74pdFu0UVzYxpNsBcF1pjQrjT5BtFxF/taQ3HDzM842jYOvVocHdIWHG9
-         J+i7dHx1rmbqKaLZExA0iZN52nxNbefaz3lsNVHM25Wj2b8b0dwwoSCDmehmjB0IRc
-         dXZyIv9yOCMRN0Vz0016AX+lCzyP+cCrTUAuhMIM=
-Date:   Mon, 13 Jan 2020 10:52:24 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, Jonathan Corbet <corbet@lwn.net>,
-        tiwai@suse.de, gregkh@linuxfoundation.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        broonie@kernel.org, srinivas.kandagatla@linaro.org,
-        jank@cadence.com, slawomir.blauciak@intel.com,
-        Sanyog Kale <sanyog.r.kale@intel.com>,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-Subject: Re: [alsa-devel] [PATCH 2/6] soundwire: stream: update state machine
- and add state checks
-Message-ID: <20200113052224.GQ2818@vkoul-mobl>
-References: <20200108175438.13121-1-pierre-louis.bossart@linux.intel.com>
- <20200108175438.13121-3-pierre-louis.bossart@linux.intel.com>
- <20200110064838.GY2818@vkoul-mobl>
- <a18c668f-4628-0fb9-ffa0-b24cdad1cc8b@linux.intel.com>
- <69ad48b0-fa3c-904a-4106-5cd9bd18de5c@linux.intel.com>
+        Mon, 13 Jan 2020 00:27:43 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33016 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbgAMF1n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 00:27:43 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b18so7895406otp.0;
+        Sun, 12 Jan 2020 21:27:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=diOYoooyO02fNaO2OaL6vZp60t8FYNXFCI94ed/4bvk=;
+        b=r390DZmPSSjsz6uojt5vgUS6gXu6Gf+fYt5SWxucCUedRnTQGqaPtCa0lwYrI/9cXd
+         hYmjiOIEbkgCjFVCK8g48YWIQ7KNXR7S+gYgv2jKNtNCcRAZfNo/pptKUDb6rlG+0bzh
+         YFXwXSTsnoGOSMiMQdCLKFzXy03UJLk9y3qA5zNzImYRTcL3yYnixHQ5zCPBZMBxkhKu
+         zNj+SEtgGH5qhDZQeEuAnnYU15bBqL7kLbzXQaLABlDQbXjjH90nbYsS6CfODW5zTysf
+         iTQFU1QMUnt+CuMjheWZh9pMs7zENgQK5SibI+qPTZsjbMGGZ1RCyXTJb+MLDnX/U867
+         Kgog==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=diOYoooyO02fNaO2OaL6vZp60t8FYNXFCI94ed/4bvk=;
+        b=VdeLkOad6q7flt9JHrjZ0o9mQUyXFkz1LzDMZXkaLL3dKOimsA08vfhR/N0HqrQZ2c
+         GQDtS+rZdt+E9jW8gZV+k2rzaVBFqCN7qkqr+5f9krljb+fQ8YahUK6vQGYUt9IsADMc
+         V2BoNhU3NM9gEOlQ6+6qzjxE9C08g4P4RoTqUeHi9CSMpcv/MF530fDeeMTYe1j4Ny70
+         8LEAJRZo9sfHQeUtsZYXpOpimAFLzEw1+sr73x4GjetssLaeQxqvBuDKU6IjMlmXY7jO
+         JuNbAKiwXd/R5H0tHeDL4SvZqEAghVde0jUaB9zhZxwOK7WbhTlvwmfVP0+XzN3p5KQs
+         z+mw==
+X-Gm-Message-State: APjAAAXKthDNaSzhsj6AwoyNzibhUIKc/xchpTKzo4Y2dFasI0lMiOso
+        VkZfOOq4BmPWjNJtlYSVVbjLkkKkHukYTPFe4yg=
+X-Google-Smtp-Source: APXvYqxQ/QEMuRoeX0bGQQKxIQplQ4G0Acb+7lOL4RO8pfBHlU0rTshFrHbkTraDtgF2hpik2dSJr+Ao8uMc+r1s1mM=
+X-Received: by 2002:a9d:7f11:: with SMTP id j17mr12412497otq.281.1578893262556;
+ Sun, 12 Jan 2020 21:27:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <69ad48b0-fa3c-904a-4106-5cd9bd18de5c@linux.intel.com>
+References: <20191112012724.250792-1-dima@arista.com> <20191112012724.250792-3-dima@arista.com>
+ <ed2e65ae-75b0-ed79-0a95-90be6b82e6be@arm.com> <878smfa66i.fsf@nanos.tec.linutronix.de>
+ <e74a63cb-5248-4473-81a7-d1b2f959ec7a@arm.com> <875zhja59q.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <875zhja59q.fsf@nanos.tec.linutronix.de>
+From:   Andrei Vagin <avagin@gmail.com>
+Date:   Sun, 12 Jan 2020 21:27:31 -0800
+Message-ID: <CANaxB-zrnHjmJ-7xeagiiZve69o_scPQXmZ+Y03omtk-1cqrhg@mail.gmail.com>
+Subject: Re: [PATCHv8 02/34] lib/vdso: make do_hres and do_coarse as __always_inline
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Dmitry Safonov <dima@arista.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        crml <criu@openvz.org>, Linux API <linux-api@vger.kernel.org>,
+        X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11-01-20, 05:30, Pierre-Louis Bossart wrote:
-> 
-> 
-> On 1/10/20 10:30 AM, Pierre-Louis Bossart wrote:
-> > 
-> > > > -  int sdw_prepare_stream(struct sdw_stream_runtime * stream);
-> > > > +  int sdw_prepare_stream(struct sdw_stream_runtime * stream,
-> > > > bool resume);
-> > > 
-> > > so what does the additional argument of resume do..?
-> > > 
-> > > > diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-> > > > index 178ae92b8cc1..6aa0b5d370c0 100644
-> > > > --- a/drivers/soundwire/stream.c
-> > > > +++ b/drivers/soundwire/stream.c
-> > > > @@ -1553,8 +1553,18 @@ int sdw_prepare_stream(struct
-> > > > sdw_stream_runtime *stream)
-> > > 
-> > > and it is not modified here, so is the doc correct or this..?
-> > 
-> > the doc is correct and the code is updated in
-> > 
-> > [PATCH 4/6] soundwire: stream: do not update parameters during
-> > DISABLED-PREPARED transition
-> 
-> Sorry, wrong answer, my bad. The code block in the documentation is
-> incorrect.
-> 
-> The Patch 4/6 implements the transition mentioned in the documentation, but
-> the extra parameter is a left-over from an earlier version. This case is now
-> handled internally. We did revert to the initial prototype after finding out
-> that dealing with transitions in the caller is error-prone.
+On Fri, Jan 10, 2020 at 4:02 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Vincenzo Frascino <vincenzo.frascino@arm.com> writes:
+> > On 1/10/20 11:42 AM, Thomas Gleixner wrote:
+> >>>> +=C2=BB =C2=BB /*=C2=B7goto=C2=B7allows=C2=B7to=C2=B7avoid=C2=B7extr=
+a=C2=B7inlining=C2=B7of=C2=B7do_hres.=C2=B7*/
+> >>>> +=C2=BB =C2=BB goto=C2=B7out_hres;
+> >>>
+> >>> What is the performance impact of "goto out_hres"?
+> >>
+> >> On x86 it's invisible at least in my limited testing.
+> >
+> > On arm64 as well based on mine as well. Shall we keep the code more rea=
+dable
+> > here (without goto)?
+>
+> The delta patch below makes it readable again and also avoids the double
+> inlining. Quick testing shows no difference.
 
-Glad that you agree with me on something!
+My tests show no difference too and the code looks more readable. Thanks!
 
--- 
-~Vinod
+>
+> Thanks,
+>
+>         tglx
