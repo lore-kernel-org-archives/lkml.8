@@ -2,92 +2,120 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A19C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D42C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 334F621569
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CAC32187F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:58:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578952704;
+	bh=dMiza/iFXEPvYxpswfqKt8lrTVj6PkpTWxCzuISkOes=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=L6JQaWf8sPY0hy0j+kkmn6pLelkGHavSmMRI+8/DOMaVwwvecUqdIzeTlMmsQALVM
+	 6O0Gt2zVFoAkIcHVAXApGtm82HMzba19ab95KY0hFicqXascGAhPVyZX/JLnao1Hwq
+	 wCEhpBf/D7YFCFMKM9dESyf2nFbJy5lBuBqU/NMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgAMVxo (ORCPT
+        id S1728915AbgAMV6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 16:53:44 -0500
-Received: from sauhun.de ([88.99.104.3]:42866 "EHLO pokefinder.org"
+        Mon, 13 Jan 2020 16:58:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55284 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728802AbgAMVxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 16:53:43 -0500
-Received: from localhost (p54B332D5.dip0.t-ipconnect.de [84.179.50.213])
-        by pokefinder.org (Postfix) with ESMTPSA id B54BC2C06DA;
-        Mon, 13 Jan 2020 22:53:41 +0100 (CET)
-Date:   Mon, 13 Jan 2020 22:53:41 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/8] NVIDIA Tegra I2C driver fixes and improvements
-Message-ID: <20200113215341.GA2689@ninjato>
-References: <20200112171430.27219-1-digetx@gmail.com>
+        id S1728733AbgAMV6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 16:58:22 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2CE921569;
+        Mon, 13 Jan 2020 21:58:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578952701;
+        bh=dMiza/iFXEPvYxpswfqKt8lrTVj6PkpTWxCzuISkOes=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=AIPV9ksy5zQIiyHAZyc6EUHspEbXIRjdyjILtjsn1YOGmbdnDfMxXxu9dMGqQ9l45
+         L6b8PKp3loQkEysjwa2DkPFbyJ2fN31SVRulXCynXkhsZriKKrtMRuVrnFIUVmTI0y
+         1lJcQEeZNqXqeCzhYTAgUf1h7NNdcyBgUDnMk5oE=
+Date:   Mon, 13 Jan 2020 21:58:16 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Olivier MOYSAN <olivier.moysan@st.com>
+Cc:     "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Subject: Re: [PATCH v2] iio: adc: stm32-dfsdm: fix single conversion
+Message-ID: <20200113215816.753310aa@archlinux>
+In-Reply-To: <1a4261a5-1835-a248-9094-c4e7236e7254@st.com>
+References: <20191127130729.18511-1-olivier.moysan@st.com>
+        <1a4261a5-1835-a248-9094-c4e7236e7254@st.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
-Content-Disposition: inline
-In-Reply-To: <20200112171430.27219-1-digetx@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 10 Jan 2020 10:05:47 +0000
+Olivier MOYSAN <olivier.moysan@st.com> wrote:
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Hi Jonathan, all,
+> 
+> Kind reminder on this patch.
 
-On Sun, Jan 12, 2020 at 08:14:22PM +0300, Dmitry Osipenko wrote:
-> Hello,
->=20
-> This patchset adds support for atomic transfers which are required for
-> shutting down machine properly. Secondly, a (not)suspending I2C and some
-> other things are fixed/improved by this small series as well. Please revi=
-ew
-> and apply, thanks in advance!
->=20
-> Changelog:
->=20
-> v4: Removed the "clk: tegra: Fix double-free in tegra_clk_init()" patch
->     from this series, which was added by accident in v3.
->=20
->     Added Thierry's tested-by to the patches.
+Gah. Sorry .I marked it to reply then forgot to actually come back and do so.
 
-Looks good to me. I think all these patches should go to v5.6, let me
-know if patches 1 and/or 2 should go to v5.5?
+Thanks for the reminder.  Given timing I'll apply this to the togreg branch
+of iio.git and get it lined up for the merge window.  Marked it for stable
+so it should quickly get applied to stable as appropriate after that.
 
+Sorry for the delay.
 
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
+Jonathan
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4c5uEACgkQFA3kzBSg
-KbaNOg/8Djo9bVYyGrlZcv32vzUo/Ey82Z5EzFt9OvJt3HJZjk9P0968XqubSUDM
-avR6DhJR9xaVLfgqJRmQvxA3nnNm4N1k4ezckknwoDeiWdUNqt4MWWFxJuc7ropM
-ehzoaGRgp+Q8ERRHdo/dJtJcrvl/IkanWZWik9VbhrtsTexKXwpGV0hx8KvkqOhP
-HU3bO/WJR1s7bfrxPHvMmp0GYcqEsqiZ1R910oYka0QDo4cAc3HjLllN5IpnfKo7
-azK1cd70TjVzYoFXHX+wrU0n+8XqoRLRjZxVEoLAMt+UpS+LBXNI+29xB0jkx2+m
-/EFg2yaS65zltyvhnR/eMiFj2qrVZ+Rx8oz8ZJOYVlw5pZkWN1SbbBZg+s7G/NCq
-TDFzkCtyprj9KDDdH9Vu+ahChiEm9X2+LkG0jKAo/c/GGXgyRjv6DqIJshPD+T7z
-h1+IuakJCUd2HAVcL5hjKLfg4QpbKGn2DJhV3AnjbLTIhTrVujv/8KWtgNj+c7JQ
-UoEPA1g5j6CXe5jxWNV7eO9hlkaZSekZ17kQ3y5/3hf0ZbqVU95ffiWHAv/KFMC+
-zlLSXD6iZznJUX44mBoLaRltNJn6KFAhL1kU7q8lePCbRbSIcdaVkofJ16Kbr/tv
-ExY+wXPXhu39HstjFveuKcC0L9zm5bTBBu3zw12zE9uxfXUHRjI=
-=qKVs
------END PGP SIGNATURE-----
+> Regards
+> Olivier
+> 
+> On 11/27/19 2:07 PM, Olivier Moysan wrote:
+> > Apply data formatting to single conversion,
+> > as this is already done in continuous and trigger modes.
+> >
+> > Fixes: 102afde62937 ("iio: adc: stm32-dfsdm: manage data resolution in trigger mode")
+> >
+> > Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+> > ---
+> > changes in version 2:
+> > - correct title
+> > ---
+> >   drivers/iio/adc/stm32-dfsdm-adc.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
+> > index e493242c266e..0339ecdd06bd 100644
+> > --- a/drivers/iio/adc/stm32-dfsdm-adc.c
+> > +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
+> > @@ -1204,6 +1204,8 @@ static int stm32_dfsdm_single_conv(struct iio_dev *indio_dev,
+> >   
+> >   	stm32_dfsdm_stop_conv(adc);
+> >   
+> > +	stm32_dfsdm_process_data(adc, res);
+> > +
+> >   stop_dfsdm:
+> >   	stm32_dfsdm_stop_dfsdm(adc->dfsdm);
+> >     
 
---wRRV7LY7NUeQGEoC--
