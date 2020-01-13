@@ -2,91 +2,168 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9236FC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6D4C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F15921569
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F653214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:44:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vXO5uVrf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbgAMSos (ORCPT
+        id S1728872AbgAMSo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:44:48 -0500
-Received: from muru.com ([72.249.23.125]:50794 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgAMSos (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:44:48 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 2101B8047;
-        Mon, 13 Jan 2020 18:45:29 +0000 (UTC)
-Date:   Mon, 13 Jan 2020 10:44:44 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Faiz Abbas <faiz_abbas@ti.com>, Keerthy <j-keerthy@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org,
-        mark.rutland@arm.com, robh+dt@kernel.org, bcousson@baylibre.com,
-        kishon@ti.com
-Subject: Re: [PATCH] arm: dts: Move am33xx and am43xx mmc nodes to sdhci-omap
- driver
-Message-ID: <20200113184444.GO5885@atomide.com>
-References: <20200106111517.15158-1-faiz_abbas@ti.com>
- <ab908007-fd7d-9dd5-c822-f4058c793d7d@ti.com>
+        Mon, 13 Jan 2020 13:44:56 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:39048 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728665AbgAMSo4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 13:44:56 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578941095; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=Fcxr2EqIF+3kq4AymzEPIs0358emuS7iPrdMMRaAXqE=;
+ b=vXO5uVrfk1ELbVUFdSuPc0tPC2APxnpV+d865A4zVcQZiIX6Zp4SfK/GellAo3afn6cnigPG
+ TQhLRf+RuglkPRJrDTR7u8Ra0gNtf05WLhyrjDOsnPRnHREAGkOkUMC1m3Ed6aDGE+28Wodo
+ 3NbFyD+F4DWQYi3gCqXJ3QryRec=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1cbaa6.7f226737ced8-smtp-out-n03;
+ Mon, 13 Jan 2020 18:44:54 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6A617C447A6; Mon, 13 Jan 2020 18:44:54 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 56B9AC43383;
+        Mon, 13 Jan 2020 18:44:53 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ab908007-fd7d-9dd5-c822-f4058c793d7d@ti.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 13 Jan 2020 10:44:53 -0800
+From:   asutoshd@codeaurora.org
+To:     Bean Huo <huobean@gmail.com>
+Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com,
+        pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, stanley.chu@mediatek.com,
+        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
+        cang@codeaurora.org, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-scsi-owner@vger.kernel.org
+Subject: Re: [PATCH 2/3] scsi: ufs: initialize max_lu_supported while booting
+In-Reply-To: <20200110183606.10102-3-huobean@gmail.com>
+References: <20200110183606.10102-1-huobean@gmail.com>
+ <20200110183606.10102-3-huobean@gmail.com>
+Message-ID: <90ba2b1a99e3934beea7516302cc2c2f@codeaurora.org>
+X-Sender: asutoshd@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-* Faiz Abbas <faiz_abbas@ti.com> [200109 13:57]:
-> Hi,
+On 2020-01-10 10:36, Bean Huo wrote:
+> From: Bean Huo <beanhuo@micron.com>
 > 
-> On 06/01/20 4:45 pm, Faiz Abbas wrote:
-> > Move mmc nodes to be compatible with the sdhci-omap driver. The following
-> > modifications are required for omap_hsmmc specific properties:
-> > 
-> > ti,non-removable: convert to the generic mmc non-removable
-> > ti,needs-special-reset:  co-opted into the sdhci-omap driver
-> > ti,dual-volt: removed. Legacy property not used in am335x or am43xx
-> > ti,needs-special-hs-handling: removed. Legacy property not used in am335x or am43xx
-> > 
-> > Also since the sdhci-omap driver does not support runtime PM, explicitly
-> > disable the mmc3 instance in the dtsi.
-> > 
-> > Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> > ---
-> > 
-> > Driver modifications have been posted separately:
-> > https://patchwork.kernel.org/project/linux-mmc/list/?series=224053
-> > 
-> > Tested on: am335x-evm, am335x-boneblack, am335x-sk, am335x-bone, am437x-idk,
-> > am43xx-gp-evm, am43xx-epos-evm.
-> > 
-> > I need some help with testing all other am335x variants and SDIO cards.
-> > 
-> > Here's a branch for testing: https://github.com/faizinator/linux/tree/sdhci-omap_v4_2
-> > 
+> This patch is to add a new function ufshcd_init_device_param() for
+> initialization of  UFS device related parameters which are used by
+> driver. In this version patch, there is only dev_info.max_lu_supported
+> being initialized.
 > 
-> Tony, can you help test some of these boards?
+> Signed-off-by: Bean Huo <beanhuo@micron.com>
+> ---
+>  drivers/scsi/ufs/ufshcd.c | 47 ++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 46 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index 1b97f2dc0b63..a297fe55e36a 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -3158,6 +3158,11 @@ static int ufshcd_read_device_desc(struct
+> ufs_hba *hba, u8 *buf, u32 size)
+>  	return ufshcd_read_desc(hba, QUERY_DESC_IDN_DEVICE, 0, buf, size);
+>  }
+> 
+> +static int ufshcd_read_geometry_desc(struct ufs_hba *hba, u8 *buf, u32 
+> size)
+> +{
+> +	return ufshcd_read_desc(hba, QUERY_DESC_IDN_GEOMETRY, 0, buf, size);
+> +}
+> +
+>  /**
+>   * struct uc_string_id - unicode string
+>   *
+> @@ -6827,6 +6832,37 @@ static void ufshcd_clear_dbg_ufs_stats(struct
+> ufs_hba *hba)
+>  	hba->req_abort_count = 0;
+>  }
+> 
+> +static int ufshcd_init_device_param(struct ufs_hba *hba)
+> +{
+> +	int err;
+> +	size_t buff_len;
+> +	u8 *desc_buf;
+> +
+> +	buff_len = QUERY_DESC_MAX_SIZE;
+> +	desc_buf = kmalloc(buff_len, GFP_KERNEL);
+> +	if (!desc_buf) {
+> +		err = -ENOMEM;
+> +		goto out;
+> +	}
+> +
+> +	err = ufshcd_read_geometry_desc(hba, desc_buf,
+> +			hba->desc_size.geom_desc);
+> +	if (err) {
+> +		dev_err(hba->dev, "%s: Failed reading Geometry Desc. err = %d\n",
+> +			__func__, err);
+> +		goto out;
+> +	}
+> +
+> +	if (desc_buf[GEOMETRY_DESC_PARAM_MAX_NUM_LUN] == 1)
+> +		hba->dev_info.max_lu_supported = 32;
+> +	else if (desc_buf[GEOMETRY_DESC_PARAM_MAX_NUM_LUN] == 0)
+> +		hba->dev_info.max_lu_supported = 8;
+> +
+> +out:
+> +	kfree(desc_buf);
+> +	return err;
+> +}
+> +
+>  static void ufshcd_init_desc_sizes(struct ufs_hba *hba)
+>  {
+>  	int err;
+> @@ -7016,13 +7052,22 @@ static int ufshcd_probe_hba(struct ufs_hba 
+> *hba)
+> 
+>  	/*
+>  	 * If we are in error handling context or in power management 
+> callbacks
+> -	 * context, no need to scan the host
+> +	 * context, no need to scan the host and to reinitialize the 
+> parameters
+>  	 */
+>  	if (!ufshcd_eh_in_progress(hba) && !hba->pm_op_in_progress) {
+>  		bool flag;
+> 
+>  		/* clear any previous UFS device information */
+>  		memset(&hba->dev_info, 0, sizeof(hba->dev_info));
+> +		/* Init parameters according to UFS relevant descriptors */
+> +		ret = ufshcd_init_device_param(hba);
+> +		if (ret) {
+> +			dev_err(hba->dev,
+> +				"%s: Init of device param failed. err = %d\n",
+> +				__func__, ret);
+> +			goto out;
+> +		}
+> +
+>  		if (!ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_READ_FLAG,
+>  				QUERY_FLAG_IDN_PWR_ON_WPE, &flag))
+>  			hba->dev_info.f_power_on_wp_en = flag;
 
-I have your branch above a quick boot test on bbb and am437x-idk and both
-detected MMC just fine :)
-
-I guess up to Dave and Keerthy to check if this conversion can be done
-without missing runtime PM support, any comments?
-
-I guess it should not be hard implement runtime PM support for
-autosuspend in sdhci-omap.c?
-
-Regards,
-
-Tony
-
+Looks good to me.
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
