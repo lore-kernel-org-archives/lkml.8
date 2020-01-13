@@ -2,108 +2,89 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2B2C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C139C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0E992084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578953726;
-	bh=IM/N4j7+xe7IxMun527SYXMDUncwj/0c2VWaIWkvdzw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SMAVeLo4jnuPOfFV2LEWoQKfiCCqRTV9sMpEf7BppraP2axVgK50W+I0qkIpAQ0uL
-	 lk+Xg5N7kosCtXoEiJ3KnCJmFIv8NBD2AaPMqinmgimLzpfPwQcOAbjDz0PsgE5iCC
-	 vpnL4uLFnbHmniVTjS5VkkV9RnUVn3dlKSLnPUX0=
+	by mail.kernel.org (Postfix) with ESMTP id D956F21556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:15:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728942AbgAMWPZ (ORCPT
+        id S1728965AbgAMWPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:15:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52228 "EHLO mail.kernel.org"
+        Mon, 13 Jan 2020 17:15:36 -0500
+Received: from sauhun.de ([88.99.104.3]:43198 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbgAMWPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:15:25 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 181452072B;
-        Mon, 13 Jan 2020 22:15:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578953724;
-        bh=IM/N4j7+xe7IxMun527SYXMDUncwj/0c2VWaIWkvdzw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ecp1/MC7WbjOeY9jr9s1wNHC5S0032h4boKsI/olcYk7Ao3ycqJ2J6imsxh+kFq8S
-         OcVdM4NnD1grSdHgOj7fne6cwEpg3Z+Xm0eJKp1FkYXyO+WfMQNs6FjXvAd5omMmTp
-         DZYU11T2nJ7D0whLfuAO4a9B3iOI2JV+D8X4geMg=
-Date:   Mon, 13 Jan 2020 22:15:19 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iio: imu/mpu6050: support dual-edge IRQ
-Message-ID: <20200113221519.51557378@archlinux>
-In-Reply-To: <20200111150735.GA16291@qmqm.qmqm.pl>
-References: <MN2PR12MB33737F067F25B2F7477C4FE5C43C0@MN2PR12MB3373.namprd12.prod.outlook.com>
-        <e5b39c16dc6dcb25324f6e8389cc0d0f895c1cbd.1578309319.git.mirq-linux@rere.qmqm.pl>
-        <20200111121047.79e16365@archlinux>
-        <20200111150735.GA16291@qmqm.qmqm.pl>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728943AbgAMWPf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 17:15:35 -0500
+Received: from localhost (p54B332D5.dip0.t-ipconnect.de [84.179.50.213])
+        by pokefinder.org (Postfix) with ESMTPSA id 2B8B32C06DA;
+        Mon, 13 Jan 2020 23:15:33 +0100 (CET)
+Date:   Mon, 13 Jan 2020 23:15:32 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-i2c@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        khilman@baylibre.com, narmstrong@baylibre.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        b.galvani@gmail.com, jian.hu@amlogic.com
+Subject: Re: [PATCH] i2c: meson: implement the master_xfer_atomic callback
+Message-ID: <20200113221532.GC2689@ninjato>
+References: <20200107232901.891177-1-martin.blumenstingl@googlemail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+xNpyl7Qekk2NvDX"
+Content-Disposition: inline
+In-Reply-To: <20200107232901.891177-1-martin.blumenstingl@googlemail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Jan 2020 16:07:35 +0100
-Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl> wrote:
 
-> On Sat, Jan 11, 2020 at 12:10:47PM +0000, Jonathan Cameron wrote:
-> > On Mon, 06 Jan 2020 12:17:54 +0100
-> > Micha=C5=82 Miros=C5=82aw <mirq-linux@rere.qmqm.pl> wrote:
-> >  =20
-> > > Make mpu6050 usable on platforms which provide only any-edge interrup=
-ts.
-> > > This also covers shared interrupt case. =20
-> >=20
-> > So this had me confused for a bit because I assumed we were trying to m=
-ake
-> > a level interrupt providing device work with edge interrupts.  Seems
-> > device supports a pulsed  mode and the driver supports this.
-> >=20
-> > Why do we want to detect on both edges?  Do you have a crazy board
-> > with this shared and some devices using the rising edge and some the fa=
-lling one?
-> >=20
-> > For shared case it should return that it did not handle the interrupt
-> > to allow spurious interrupt detection to work... =20
+--+xNpyl7Qekk2NvDX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jan 08, 2020 at 12:29:01AM +0100, Martin Blumenstingl wrote:
+> Boards with some of the 32-bit SoCs (mostly Meson8 and Meson8m2) use a
+> Ricoh RN5T618 PMU which acts as system power controller. The driver for
+> the system power controller may need to the I2C bus just before shutting
+> down or rebooting the system. At this stage the interrupts may be
+> disabled already.
 >=20
-> Hmm. The shared interrupt is a red herring. I'll remove the sentence
-> from commitmsg as it looks like the driver needs a few more fixups
-> to be able to share the interrupt line.
+> Implement the master_xfer_atomic callback so the driver for the RN5T618
+> PMU can communicate properly with the PMU when shutting down or
+> rebooting the board. The CTRL register has a status bit which can be
+> polled to determine when processing has completed. According to the
+> public S805 datasheet the value 0 means "idle" and 1 means "running".
 >=20
-> The patch is required on platforms that support only dual-edge
-> interrupts, like eg. AT91SAM9G45-based one I have.
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Yikes. That's a new one to me.  You have my sympathies.
-Hmm. Normally I'd just call that a broken platform and ignore
-it but I suppose this change isn't too harmful.
+Applied to for-next, thanks!
 
-I'll aim to pick up v2, with the adjusted message.  If you haven't
-done it yet, state the example platform as well.
 
-Thanks,
+--+xNpyl7Qekk2NvDX
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Jonathan
+-----BEGIN PGP SIGNATURE-----
 
->=20
-> Best Regards,
-> Micha=C5=82 Miros=C5=82aw
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4c7AQACgkQFA3kzBSg
+KbbuRRAAnOvYecXtAAQlFI9kpCVUGmLW8USmChX+JFEbpguc3uyPI0jnz7hPjLsx
+664PGVOPwfaMIfcClLCVM8abtgjyUpbX4AmLrM0mGq5xgYATUCnV85hjcqXIvEKM
+ecfAR522mRm3ZVSUEJO5UPzwjDY1QxON7BEgY6iRa9F4wLEAXdV3MYXBLkMKK7YR
+IvX92X/SX30jqLIYfihH1T/5Livk08f3M70GQH8Ngcr1HMK5clSyrVxp2mT4L4o+
+Y9RoB7hdhEv96O+oaEfXmeGowe5co+d2JGTbCPT9/Fuo0Curv+ScNbKMrf8dMqW2
++/Qz1EQDsIGd4uh1w/DMmFHslQcVYX3lfKLZASk0rcPs1ofoja5uXEzKvTTCrsgI
+GImOvyV9hxSFEbpL5ZUY8PHIplRsqpRnMOpeXiK6xmPTQPAE1Tk2eng2uCuvJk1V
+0EhFNVHR3pNMw966d+kw+oFOC3hFSR+s4rw7CiOpOI/Cgl6AhLCvrqpqWRF4asfX
+DvuqSGCH2Z5Li9xuFJHU5kLR8MLX5Y6yeVOPMFCgqhBr22cV5JInznSODpg56WjH
+V7kmPJOm3HIwgk93ZySC7g5eCOX/h14xK7EWRM42cxv8otcmJfJ85YRxSKAfKjYV
+ptAxuxClf+v9HsFRGD4ZSMb00igmwTiW9y/E0TiMw4Q01tUtYWY=
+=pX3/
+-----END PGP SIGNATURE-----
 
+--+xNpyl7Qekk2NvDX--
