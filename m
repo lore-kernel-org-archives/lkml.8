@@ -2,131 +2,109 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E579CC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932E0C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3972081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:34:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N1FX73XP"
+	by mail.kernel.org (Postfix) with ESMTP id 6FF152081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:36:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbgAMLeR (ORCPT
+        id S1727494AbgAMLgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:34:17 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40638 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726976AbgAMLeO (ORCPT
+        Mon, 13 Jan 2020 06:36:37 -0500
+Received: from mout.kundenserver.de ([212.227.126.134]:52849 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgAMLgh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:34:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578915253;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kyGfBKPVwrfDGFfgsI1JO/W6pedXQ+uX9GngeESCU9E=;
-        b=N1FX73XPCTjXlk186FqnzfEx1GnDsfs5YqszwX/iLbHkmIB3IPgBkdrFgFnkUXQ8ano2ZF
-        SfYI06eTasROxqBUx7AIyLa/JW3OdTCoB/KMF6sRrYuuiXTqGjDZ71+VDXfaEsMxeWSAro
-        X/KYe9kmogClpG2JNfWhEq4rh+TPbo0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-417-kx3i3PFMM_q8K1ChXbtEPQ-1; Mon, 13 Jan 2020 06:34:10 -0500
-X-MC-Unique: kx3i3PFMM_q8K1ChXbtEPQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5E648DBED;
-        Mon, 13 Jan 2020 11:34:08 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-117-201.ams2.redhat.com [10.36.117.201])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F5C47C468;
-        Mon, 13 Jan 2020 11:34:02 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v1 2/2] drivers/base/memory.c: get rid of find_memory_block()
-Date:   Mon, 13 Jan 2020 12:33:54 +0100
-Message-Id: <20200113113354.6341-3-david@redhat.com>
-In-Reply-To: <20200113113354.6341-1-david@redhat.com>
-References: <20200113113354.6341-1-david@redhat.com>
+        Mon, 13 Jan 2020 06:36:37 -0500
+Received: from mail-qt1-f179.google.com ([209.85.160.179]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mw9Dg-1jgjEF2pOu-00s7De for <linux-kernel@vger.kernel.org>; Mon, 13 Jan
+ 2020 12:36:35 +0100
+Received: by mail-qt1-f179.google.com with SMTP id k40so8754287qtk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 03:36:35 -0800 (PST)
+X-Gm-Message-State: APjAAAUrWY4/wV9ALI1uGKEO7lxyZqON3rmMTmBAfW9JU6eBaBYglyhj
+        2GhZa9mgTZOsIG9PDVAqZz7ZsCJOjFhiucLqbFI=
+X-Google-Smtp-Source: APXvYqy4d5Y865StavZXLM6RVQnqg1jOobhsOc+SKK7Ta7Xbx6KIewCh7Nm3l9DGq6gktI9KWSqh+RU8fwyhDyVDD2g=
+X-Received: by 2002:ac8:47d3:: with SMTP id d19mr13346118qtr.142.1578915394643;
+ Mon, 13 Jan 2020 03:36:34 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+References: <3f5567ec928e20963d729350e6d674c4acb0c7a0.1578648530.git.viresh.kumar@linaro.org>
+ <CAK8P3a1MLyP4ooyEDiBF1fE0BJGocgDmO1f5Qrvn_W5eqahz8g@mail.gmail.com> <20200113064156.lt3xxpzygattz3he@vireshk-i7>
+In-Reply-To: <20200113064156.lt3xxpzygattz3he@vireshk-i7>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 13 Jan 2020 12:36:18 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a2u6s4MAM_9bOqSt5NwVc4XrXs9W36tp-7rWWTXx0+pRg@mail.gmail.com>
+Message-ID: <CAK8P3a2u6s4MAM_9bOqSt5NwVc4XrXs9W36tp-7rWWTXx0+pRg@mail.gmail.com>
+Subject: Re: [PATCH V2] firmware: arm_scmi: Make scmi core independent of
+ transport type
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        cristian.marussi@arm.com, peng.fan@nxp.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:54glluQQTkTOIsQx4a7n9JsFZHg6zm9do6lRDjJ+aNvqLmyCHTM
+ LXgAVAwmRFI26WQ9Kc7CgPf3HoSV4YvZo8KBSfY34AMopGj7Ihd9hYCE1rxmYcRF/RNR9T8
+ LLC0wcLAdUj6QqQugIkLj+7FeXZp1/Diiob6taOeNvr09EgBqeQ/XZ8XhWDjDTjE80FXqqf
+ r7+RGSY4vv3vW/L33ErVA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Ggsgkg2KW70=:VgdU6afpn/WyxUF6a65ePA
+ AnooQS6jIoyNIz6pVnNkTKiKyW90koF/6/2tbYMotbpoWuu12tU11WZgYTKVRAs/7u86IwNlK
+ 3d3C3o1nT9yv1MgoxdTvBXjrb6GjktbQy0nHpO6H5yy8jHsak/Ld7pCMKw6bNiBu9dL0WwQnY
+ vDUtuFapBJM855TkzKUsw08u7egYM+87Iyg6eWhFO4D7UUTXq6LlI9CH5ClaQOrKSHfauw7XI
+ 9rg2nbGJQHLfx0QuE4uyzb8KkWBEikX+Kk2ZGB6NlBSw0HGRp5T8bYtTty9Xl7cI0LaUhdH7y
+ 3KF40dilZgZjnQLlAbi24JV9Bv2rH9u0b6s3S0S6SBcqxQI3IPTbmpxUooLJk1q7RnUa4d/XJ
+ pPuFn/qtov6xZXUfErhKG2GdfI8ASdbPzDhMLG197WNzpBl+2mCFXxq8LQj5yJq2DLgENWpBg
+ hbBcUzfiHSb7xDDLYbXf+xNUH0/nVQFGasKXZlxq4TYXkX3DoSt58A9jw23r5/15lXuBFHEll
+ dSXjPgiUwzE+yy0d1icbJHj2u34D6TYsw+UW6eLrHTHMnw7OW+oQO83NrdGZgcw1nR+rZQSOq
+ 1tfBUenae40phnMyoO6a90a3Gr92QxeJ0IM3NBJfe858I883KfQwi9t2MRe9ApKFRJ/B7TCzw
+ gjZFwyVy51NRZyZA96Q1hBA+m8Mbto5Lv+9XXs/v8QPKPAOtLNyrWHbYf36rO2A88bwUfu9Ym
+ lKnHYVl75S1tsbNeFgIQoqDhnCAkhhKI8r3bE/OBjnKSoq0WYTzAaWuTYb+pwXGcWJGYev71M
+ 4/Z/Y74TuyNLIN1+1Uq23NN/WBFxtuXith2nBtO04NtDYLvLTEr0Q/L0h/HEWN+SsxAh8WD1S
+ hVXxcSJSvj4f3mkfhY0w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No longer needed, remove it.
+On Mon, Jan 13, 2020 at 7:42 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 10-01-20, 12:15, Arnd Bergmann wrote:
+> > On Fri, Jan 10, 2020 at 10:43 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > Simply dropping the __iomem isn't much better, now you get other
+> > type mismatches.
+>
+> Right. So what exactly do you suggest I should do now? Drop __iomem
+> from the structure's payload field but keep all local variables and
+> function arguments with __iomem ?
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/base/memory.c  | 9 +--------
- include/linux/memory.h | 1 -
- 2 files changed, 1 insertion(+), 9 deletions(-)
+> > > +struct scmi_chan_info {
+> > > +       void *payload;
+> > > +       struct device *dev;
+> > > +       struct scmi_handle *handle;
+> > > +       void *transport_info;
+> > > +};
+> >
+> > Maybe you can wrap the scmi_chan_info inside of another
+> > structure that contains  the payload pointer, and use container_of
+> > to convert between them?
+>
+> We don't need to convert between the two of them, isn't it ? Are you
+> referring some other field here ?
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 2cf3542b04d0..8b3ab910b812 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -590,13 +590,6 @@ static struct memory_block *find_memory_block_by_id(=
-unsigned long block_id)
- 	return mem;
- }
-=20
--struct memory_block *find_memory_block(struct mem_section *section)
--{
--	unsigned long block_id =3D base_memory_block_id(__section_nr(section));
--
--	return find_memory_block_by_id(block_id);
--}
--
- static struct attribute *memory_memblk_attrs[] =3D {
- 	&dev_attr_phys_index.attr,
- 	&dev_attr_state.attr,
-@@ -700,7 +693,7 @@ static void unregister_memory(struct memory_block *me=
-mory)
-=20
- 	WARN_ON(radix_tree_delete(&memory_blocks, memory->dev.id) =3D=3D NULL);
-=20
--	/* drop the ref. we got via find_memory_block() */
-+	/* drop the ref. we got via find_memory_block_by_id() */
- 	put_device(&memory->dev);
- 	device_unregister(&memory->dev);
- }
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index 3ab4aa2d67ae..0b0732a94972 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -113,7 +113,6 @@ void remove_memory_block_devices(unsigned long start,=
- unsigned long size);
- extern void memory_dev_init(void);
- extern int memory_notify(unsigned long val, void *v);
- extern int memory_isolate_notify(unsigned long val, void *v);
--extern struct memory_block *find_memory_block(struct mem_section *);
- typedef int (*walk_memory_blocks_func_t)(struct memory_block *, void *);
- extern int walk_memory_blocks(unsigned long start, unsigned long size,
- 			      void *arg, walk_memory_blocks_func_t func);
---=20
-2.24.1
+> > It's not obvious which parts of the structure should be shared and
+> > which are transport specific.
+>
+> All transport specific information is kept in the transport specific
+> structure which is saved here in the transport_info field. Is there
+> something else that isn't clear ?
 
+To answer all three, what I meant is that the payload pointer appears
+to be transport specific and should not be part of the common
+structure if there is generic way to access it.
+
+      Arnd
