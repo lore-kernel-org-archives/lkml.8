@@ -2,112 +2,100 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE7BC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B894DC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650C42081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:43:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fcyw21hM"
+	by mail.kernel.org (Postfix) with ESMTP id 821AC21556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:45:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578919501;
+	bh=h2vZy2bWnuOeobfvrsF7bMbPSggmUgSHrXcLvhHe7Mg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TyJEzemcwLyOsBJFurRH/w5cX2G+cyk9osF0UcUAXInNeVNwunqPFjQQ51xUeRoSO
+	 5AQXrLvYoz8X/zNd8KsH5d5PlnWcTLoK9eZHUVqBu3SXXTC8jGwT9QKVUlEdaFFVq3
+	 e6PZSEnrAQgOKpKEyy5Qc1zt4NT+06A3oRHcJWVU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgAMMnt (ORCPT
+        id S1727494AbgAMMpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:43:49 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:33168 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgAMMnt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:43:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Cl+a0Ksq5P2uxep+vtJZs+gr7i53uKQU6pt50ip33jo=; b=fcyw21hMSWLKxkn0vyj9yS8LY
-        wTdB37m/bjABnGDJO3uV2yMcbzG0G9laSW8+lt2vO7890PInmOvbiEQOdxO9qLd5WROVTvEIH8bLg
-        EANxWyZetCLm5G8Ikg53/8ubDWoDT1G2/VqkzbZJcE/TZjPcxXLers49AKrdse34lF5o4YG16a+0A
-        C6dKSoxpr0MbLEWEW7aMfP90uKKBo1LNmKIJpJ1BeqRR6GdzFNSbxD4jJUn/mYqv6RkmQyX3XI/sB
-        jZO1ErhSAKvhw+JvB/Paj64HFq+2BVsRVpS1ImhPasWC+CTBvY2Yf/ll0Ewpk4tuJWoeHvEJfTnoC
-        OBKuZRRag==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iqz3S-0004AK-FT; Mon, 13 Jan 2020 12:42:50 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 56D1D304121;
-        Mon, 13 Jan 2020 13:41:12 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id AD5752B6B2F94; Mon, 13 Jan 2020 13:42:47 +0100 (CET)
-Date:   Mon, 13 Jan 2020 13:42:47 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Singh, Balbir" <sblbir@amazon.com>
-Cc:     "Valentin, Eduardo" <eduval@amazon.com>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Agarwal, Anchal" <anchalag@amazon.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com" 
-        <Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "jgross@suse.com" <jgross@suse.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "konrad.wilk@oracle.co" <konrad.wilk@oracle.co>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "fllinden@amaozn.com" <fllinden@amaozn.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Subject: Re: [RFC PATCH V2 11/11] x86: tsc: avoid system instability in
- hibernation
-Message-ID: <20200113124247.GG2827@hirez.programming.kicks-ass.net>
-References: <20200107234526.GA19034@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200108105011.GY2827@hirez.programming.kicks-ass.net>
- <20200110153520.GC8214@u40b0340c692b58f6553c.ant.amazon.com>
- <20200113101609.GT2844@hirez.programming.kicks-ass.net>
- <857b42b2e86b2ae09a23f488daada3b1b2836116.camel@amazon.com>
+        Mon, 13 Jan 2020 07:45:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725832AbgAMMpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 07:45:00 -0500
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C7EC21569;
+        Mon, 13 Jan 2020 12:44:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578919499;
+        bh=h2vZy2bWnuOeobfvrsF7bMbPSggmUgSHrXcLvhHe7Mg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=N3RX1Ypcowo3Mn9FIQ+pzjVoLwvqsf9arFl1qUMAXxaaBcdYTG68XQGB5xsWms88l
+         bbK2vvlRiC2cj4PSYMtcFYZFLLZl55attJdMpDDR0EjvKPv/16uh+PlyAF8EJGi1Bw
+         L89YXJbkwfb6hNJvw5cvHzigaJ0zTf/7EMSoS/pc=
+Received: by mail-lj1-f175.google.com with SMTP id u1so9872057ljk.7;
+        Mon, 13 Jan 2020 04:44:59 -0800 (PST)
+X-Gm-Message-State: APjAAAUjIAvw/7sMthibg/MwBf5oaGi/+h2PrRK/FH54gpd1PF7WybUn
+        Y2wZeUZaDxS21hHOK3aVtVP9XiCEP2UlvWAMP9o=
+X-Google-Smtp-Source: APXvYqwKz1lxjQq9n3Z7zbCk525GAplUZqZxAGOd/qz1ruUmT+zfym4LTKRN/pHQEyDCiubOy3VWR5NbxzECZmZ9BrA=
+X-Received: by 2002:a2e:8e22:: with SMTP id r2mr9922935ljk.51.1578919497737;
+ Mon, 13 Jan 2020 04:44:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <857b42b2e86b2ae09a23f488daada3b1b2836116.camel@amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200104152107.11407-1-krzk@kernel.org> <20200104152107.11407-17-krzk@kernel.org>
+ <20200113122902.GA15939@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20200113122902.GA15939@e121166-lin.cambridge.arm.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 13 Jan 2020 13:44:45 +0100
+X-Gmail-Original-Message-ID: <CAJKOXPcNJ5QCabPUh4kcOj_9Gj2SF8+JGtSJu8cLEp0Ciqy96g@mail.gmail.com>
+Message-ID: <CAJKOXPcNJ5QCabPUh4kcOj_9Gj2SF8+JGtSJu8cLEp0Ciqy96g@mail.gmail.com>
+Subject: Re: [PATCH v2 16/20] pci: exynos: Rename Exynos to lowercase
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 11:43:18AM +0000, Singh, Balbir wrote:
-> For your original comment, just wanted to clarify the following:
-> 
-> 1. After hibernation, the machine can be resumed on a different but compatible
-> host (these are VM images hibernated)
-> 2. This means the clock between host1 and host2 can/will be different
-> 
-> In your comments are you making the assumption that the host(s) is/are the
-> same? Just checking the assumptions being made and being on the same page with
-> them.
+On Mon, 13 Jan 2020 at 13:29, Lorenzo Pieralisi
+<lorenzo.pieralisi@arm.com> wrote:
+>
+> On Sat, Jan 04, 2020 at 04:21:03PM +0100, Krzysztof Kozlowski wrote:
+> > Fix up inconsistent usage of upper and lowercase letters in "Exynos"
+> > name.
+> >
+> > "EXYNOS" is not an abbreviation but a regular trademarked name.
+> > Therefore it should be written with lowercase letters starting with
+> > capital letter.
+> >
+> > The lowercase "Exynos" name is promoted by its manufacturer Samsung
+> > Electronics Co., Ltd., in advertisement materials and on website.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  drivers/pci/controller/dwc/pci-exynos.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+>
+> Should I pick it up or you are sending the series via another tree ?
+>
+> If so (if it is not queued already):
+>
+> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-I would expect this to be the same problem we have as regular suspend,
-after power off the TSC will have been reset, so resume will have to
-somehow bridge that gap. I've no idea if/how it does that.
+Please pick it up.
 
-I remember some BIOSes had crazy TSC ideas for suspend2ram, and we grew
-tsc_restore_sched_clock_state() for it.
-
-Playing crazy games like what you're doing just isn't it though.
+Best regards,
+Krzysztof
