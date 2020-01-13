@@ -2,81 +2,175 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A904C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FE6C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:29:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A749222D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB19D2187F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:29:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="X3aEggLr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387548AbgAMEJH (ORCPT
+        id S2387552AbgAME3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 23:09:07 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46637 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387460AbgAMEJH (ORCPT
+        Sun, 12 Jan 2020 23:29:50 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:18396 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387460AbgAME3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 23:09:07 -0500
-Received: by mail-ed1-f66.google.com with SMTP id m8so7231776edi.13;
-        Sun, 12 Jan 2020 20:09:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VRG/asPsXrvPYXyKX7n6EnWclC+DWZV9ykIQcZ3tJv4=;
-        b=VhUwBl1qnUjF1F1gbW0UVlJYWJSPyIjfWGV3wss5dciLYCid7AwMe0lsV0drxzKEbm
-         82fJaRsY1WXo7ngzevxrSeT6Cbce4kKRnlyaUjGOD+lK4B9odwBZaQ0E5DGWWRbsXo2A
-         5twNEOFRDnx5IHGLPxbTrbcQtkqkWRjWWf7wwb8Ktosi0esees0S+uAjwfuTzagsiaru
-         98Apwa0CoJqYbjkXNZHfV5uy0UnbwA/CzLTfC2HrPCwOWS0km7+hUzCdh0DGf+gyu+Fh
-         CvkFvTqwAZS5xO6NrwiRmWsm9nLjaOhP9rd6Kn9R4pJHu+s1BMbRNZtYUoNKjkGPTvDg
-         Mkzg==
-X-Gm-Message-State: APjAAAVbO20jjBSur9c7UQ1uDO5Ur6F8pkjNTOTQlZOfkhPLnEI3QmGS
-        6xPY/E3MbJB8mKDmUQP6dKeDobJtOOk=
-X-Google-Smtp-Source: APXvYqyUQTRpFfPw5Is4YosB12w+ZFPt6H8v/vbdeXiOFPH03T1/LJ1n7fmS39fyRxchvleBh/+rrw==
-X-Received: by 2002:a17:906:3591:: with SMTP id o17mr14882175ejb.209.1578888544938;
-        Sun, 12 Jan 2020 20:09:04 -0800 (PST)
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com. [209.85.128.42])
-        by smtp.gmail.com with ESMTPSA id w10sm424722eds.69.2020.01.12.20.09.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 12 Jan 2020 20:09:04 -0800 (PST)
-Received: by mail-wm1-f42.google.com with SMTP id w5so8837613wmi.1;
-        Sun, 12 Jan 2020 20:09:04 -0800 (PST)
-X-Received: by 2002:a7b:cf12:: with SMTP id l18mr18568407wmg.66.1578888544372;
- Sun, 12 Jan 2020 20:09:04 -0800 (PST)
-MIME-Version: 1.0
-References: <20200113035310.18950-1-samuel@sholland.org> <20200113035310.18950-6-samuel@sholland.org>
-In-Reply-To: <20200113035310.18950-6-samuel@sholland.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 13 Jan 2020 12:08:55 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66FsV9Gdm0Osgg5=Ebeh8-q4dVcWo1QoB8J9Ehag4XjkQ@mail.gmail.com>
-Message-ID: <CAGb2v66FsV9Gdm0Osgg5=Ebeh8-q4dVcWo1QoB8J9Ehag4XjkQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/8] power: supply: axp20x_usb_power: Use a match structure
-To:     Samuel Holland <samuel@sholland.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Oskari Lemmela <oskari@lemmela.net>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 12 Jan 2020 23:29:50 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578889789; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=cWEUzZGYbROCAjIVpa+ULP0drB/k6gLA3a8jSSU7w/8=; b=X3aEggLrMRqLqfjW8xVusvvCh/sFQ3TcQbXX5+s9C74ebx+Zxmv/yxJfvyWJr8SIihNnG3aH
+ wG+LtNyZWh8BpaHMu8rb5I5x/jUs/CLasBLJ0PUnYP++tTjn88eXMymTlIcZqsL5kAw5OJYp
+ KVgJ/yx285NNE3gQe3ElV+QmxsY=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1bf23c.7f2abf7afc00-smtp-out-n01;
+ Mon, 13 Jan 2020 04:29:48 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 683C9C4479C; Mon, 13 Jan 2020 04:29:48 +0000 (UTC)
+Received: from rocky-Inspiron-7590.qca.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 01E33C433CB;
+        Mon, 13 Jan 2020 04:29:45 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 01E33C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Rocky Liao <rjliao@codeaurora.org>
+Subject: [PATCH v4] Bluetooth: hci_qca: Add qca_power_on() API to support both wcn399x and Rome power up
+Date:   Mon, 13 Jan 2020 12:29:42 +0800
+Message-Id: <20200113042942.9526-1-rjliao@codeaurora.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200107052601.32216-1-rjliao@codeaurora.org>
+References: <20200107052601.32216-1-rjliao@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 11:53 AM Samuel Holland <samuel@sholland.org> wrote:
->
-> Instead of ad-hoc variant ID checks throughout the code, let's start
-> moving the variant-specific details to a match structure. This allows
-> for future flexibility, and it better matches the other axp20x power
-> supply drivers.
->
-> This commit removes most variant checks from axp20x_usb_power_probe().
-> Other parts of the driver still do ID matching; they are left unchanged
-> for now.
->
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+This patch adds a unified API qca_power_on() to support both wcn399x and
+Rome power on. For wcn399x it calls the qca_wcn3990_init() to init the
+regulators, and for Rome it pulls up the bt_en GPIO to power up the btsoc.
+It also moves all the power up operation from hdev->open() to
+hdev->setup().
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
+
+Changes in v2: None
+Changes in v3:
+  -moved all the power up operation from open() to setup()
+  -updated the commit message
+Changes in v4:
+  -made a single call to qca_power_on() in setup()
+
+
+ drivers/bluetooth/hci_qca.c | 48 +++++++++++++++++++++++--------------
+ 1 file changed, 30 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 82e4cd4b6663..6a67e5489b16 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -541,7 +541,6 @@ static int qca_open(struct hci_uart *hu)
+ {
+ 	struct qca_serdev *qcadev;
+ 	struct qca_data *qca;
+-	int ret;
+ 
+ 	BT_DBG("hu %p qca_open", hu);
+ 
+@@ -582,23 +581,10 @@ static int qca_open(struct hci_uart *hu)
+ 	hu->priv = qca;
+ 
+ 	if (hu->serdev) {
+-
+ 		qcadev = serdev_device_get_drvdata(hu->serdev);
+-		if (!qca_is_wcn399x(qcadev->btsoc_type)) {
+-			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+-			/* Controller needs time to bootup. */
+-			msleep(150);
+-		} else {
++		if (qca_is_wcn399x(qcadev->btsoc_type)) {
+ 			hu->init_speed = qcadev->init_speed;
+ 			hu->oper_speed = qcadev->oper_speed;
+-			ret = qca_regulator_enable(qcadev);
+-			if (ret) {
+-				destroy_workqueue(qca->workqueue);
+-				kfree_skb(qca->rx_skb);
+-				hu->priv = NULL;
+-				kfree(qca);
+-				return ret;
+-			}
+ 		}
+ 	}
+ 
+@@ -1531,6 +1517,31 @@ static int qca_wcn3990_init(struct hci_uart *hu)
+ 	return 0;
+ }
+ 
++static int qca_power_on(struct hci_dev *hdev)
++{
++	struct hci_uart *hu = hci_get_drvdata(hdev);
++	enum qca_btsoc_type soc_type = qca_soc_type(hu);
++	struct qca_serdev *qcadev;
++	int ret = 0;
++
++	/* Non-serdev device usually is powered by external power
++	 * and don't need additional action in driver for power on
++	 */
++	if (!hu->serdev)
++		return 0;
++
++	if (qca_is_wcn399x(soc_type)) {
++		ret = qca_wcn3990_init(hu);
++	} else {
++		qcadev = serdev_device_get_drvdata(hu->serdev);
++		gpiod_set_value_cansleep(qcadev->bt_en, 1);
++		/* Controller needs time to bootup. */
++		msleep(150);
++	}
++
++	return ret;
++}
++
+ static int qca_setup(struct hci_uart *hu)
+ {
+ 	struct hci_dev *hdev = hu->hdev;
+@@ -1553,6 +1564,10 @@ static int qca_setup(struct hci_uart *hu)
+ 	 */
+ 	set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+ 
++	ret = qca_power_on(hdev);
++	if (ret)
++		return ret;
++
+ 	if (qca_is_wcn399x(soc_type)) {
+ 		bt_dev_info(hdev, "setting up wcn3990");
+ 
+@@ -1562,9 +1577,6 @@ static int qca_setup(struct hci_uart *hu)
+ 		set_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks);
+ 		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
+ 		hu->hdev->shutdown = qca_power_off;
+-		ret = qca_wcn3990_init(hu);
+-		if (ret)
+-			return ret;
+ 
+ 		ret = qca_read_soc_version(hdev, &soc_ver, soc_type);
+ 		if (ret)
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
