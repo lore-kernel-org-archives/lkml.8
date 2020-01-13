@@ -2,161 +2,218 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E501C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45122C33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C9E207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A65FF2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:21:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dga3vaeq"
+	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="BhC9j6l0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgAMJVc (ORCPT
+        id S1728679AbgAMJVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 13 Jan 2020 04:21:36 -0500
+Received: from fd.dlink.ru ([178.170.168.18]:50534 "EHLO fd.dlink.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgAMJVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Jan 2020 04:21:32 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:15136 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726336AbgAMJVc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:21:32 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578907291; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=wxayuM7YhfwYilxsAE0qeMuwKkzeNtCmh0wiR65083c=; b=dga3vaeqHZgNLB0D98JNB4E2pkSdRffgL1i+gs+/9yBaV0T+McyzJWv8RhUbq3xfiOHLuYkp
- TlhDTNeeNkfI9AsD2I3anhZbjWvX+XIIDTEME8eMFeVAcHPGh5ki0kLiMNgwFeM6jgicE0qx
- Vo9UywJYYINUVq98Eza5B7VqsCI=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1c3699.7f2d367b7ce0-smtp-out-n03;
- Mon, 13 Jan 2020 09:21:29 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DD089C433CB; Mon, 13 Jan 2020 09:21:28 +0000 (UTC)
-Received: from sthella-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sthella)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C16D9C43383;
-        Mon, 13 Jan 2020 09:21:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C16D9C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sthella@codeaurora.org
-From:   Shyam Kumar Thella <sthella@codeaurora.org>
-To:     agross@kernel.org, srinivas.kandagatla@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     Shyam Kumar Thella <sthella@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3] dt-bindings: nvmem: add binding for QTI SPMI SDAM
-Date:   Mon, 13 Jan 2020 14:51:11 +0530
-Message-Id: <1578907271-2576-1-git-send-email-sthella@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+Received: by fd.dlink.ru (Postfix, from userid 5000)
+        id C45651B21576; Mon, 13 Jan 2020 12:21:27 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru C45651B21576
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
+        t=1578907287; bh=awOlvhtlkFxUadttzRRBmg6cBvcEOkaMn5I2RIuDKkk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References;
+        b=BhC9j6l0IwSouM7LnOZlNxVvH0HFaP76STmf6vmWG6UWjJLt1/xg4JMW5JxlnIPkf
+         5+riVBws3ayChuXWPRhmlESsvxxVYUp8sPt1gsj5BXzdmU1F/QXgNmVNXUupfc/NR/
+         yhZwDrd4EG14tZ5fPSU3VciNc9am5I22yhN7LfIc=
+Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
+        by fd.dlink.ru (Postfix) with ESMTP id B0E611B201E9;
+        Mon, 13 Jan 2020 12:21:14 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru B0E611B201E9
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTP id E6CE71B2613D;
+        Mon, 13 Jan 2020 12:21:13 +0300 (MSK)
+Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
+        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
+        Mon, 13 Jan 2020 12:21:13 +0300 (MSK)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Mon, 13 Jan 2020 12:21:13 +0300
+From:   Alexander Lobakin <alobakin@dlink.ru>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Edward Cree <ecree@solarflare.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Hauke Mehrtens <hauke@hauke-m.de>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Taehee Yoo <ap420073@gmail.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Song Liu <songliubraving@fb.com>,
+        Matteo Croce <mcroce@redhat.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH RFC net-next 05/19] net: dsa: tag_ar9331: add GRO
+ callbacks
+In-Reply-To: <ee6f83fd-edf4-5a98-9868-4cbe9e226b9b@gmail.com>
+References: <20191230143028.27313-1-alobakin@dlink.ru>
+ <20191230143028.27313-6-alobakin@dlink.ru>
+ <ee6f83fd-edf4-5a98-9868-4cbe9e226b9b@gmail.com>
+User-Agent: Roundcube Webmail/1.4.0
+Message-ID: <ed0ad0246c95a9ee87352d8ddbf0d4a1@dlink.ru>
+X-Sender: alobakin@dlink.ru
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QTI SDAM allows PMIC peripherals to access the shared memory that is
-available on QTI PMICs. Add documentation for it.
+Florian Fainelli wrote 30.12.2019 21:20:
+> On 12/30/19 6:30 AM, Alexander Lobakin wrote:
+>> Add GRO callbacks to the AR9331 tagger so GRO layer can now process
+>> such frames.
+>> 
+>> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+> 
+> This is a good example and we should probably build a tagger 
+> abstraction
+> that is much simpler to fill in callbacks for (although indirect
+> function calls may end-up killing performance with retpoline and
+> friends), but let's consider this idea.
 
-Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
----
- .../devicetree/bindings/nvmem/qcom,spmi-sdam.yaml  | 83 ++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+Hey al,
+Sorry for late replies, was in a big trip.
 
-diff --git a/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-new file mode 100644
-index 0000000..f2e640f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/nvmem/qcom,spmi-sdam.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Technologies, Inc. SPMI SDAM DT bindings
-+
-+maintainers:
-+  - Shyam Kumar Thella <sthella@codeaurora.org>
-+
-+description: |
-+  The SDAM provides scratch register space for the PMIC clients. This
-+  memory can be used by software to store information or communicate
-+  to/from the PBUS.
-+
-+allOf:
-+  - $ref: "nvmem.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - qcom,spmi-sdam
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+  ranges: true
-+
-+required:
-+  - compatible
-+  - reg
-+
-+patternProperties:
-+  "^.*@[0-9a-f]+$":
-+    type: object
-+
-+    properties:
-+      reg:
-+        maxItems: 1
-+        description:
-+          Offset and size in bytes within the storage device.
-+
-+      bits:
-+        $ref: /schemas/types.yaml#/definitions/uint32-array
-+        maxItems: 1
-+        items:
-+          items:
-+            - minimum: 0
-+              description:
-+                Offset in bit within the address range specified by reg.
-+            - minimum: 1
-+              description:
-+                Size in bit within the address range specified by reg.
-+
-+    required:
-+      - reg
-+      - ranges
-+
-+    additionalProperties: false
-+
-+examples:
-+  - |
-+      sdam_1: nvram@b000 {
-+         #address-cells = <1>;
-+         #size-cells = <1>;
-+         compatible = "qcom,spmi-sdam";
-+          reg = <0xb000 0x100>;
-+          ranges = <0 0xb000 0x100>;
-+
-+          /* Data cells */
-+          restart_reason: restart@50 {
-+              reg = <0x50 0x1>;
-+              bits = <6 2>;
-+          };
-+      };
-+...
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
- a Linux Foundation Collaborative Project
+The performance issue was the main reason why I chose to write full
+.gro_receive() for every single tagger instead of providing a bunch
+of abstraction callbacks. It really isn't a problem for MIPS, on
+which I'm working on this stuff, but can kill any advantages that we
+could get from GRO support on e.g. x86.
+
+>> ---
+>>  net/dsa/tag_ar9331.c | 77 
+>> ++++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 77 insertions(+)
+>> 
+>> diff --git a/net/dsa/tag_ar9331.c b/net/dsa/tag_ar9331.c
+>> index c22c1b515e02..99cc7fd92d8e 100644
+>> --- a/net/dsa/tag_ar9331.c
+>> +++ b/net/dsa/tag_ar9331.c
+>> @@ -100,12 +100,89 @@ static void ar9331_tag_flow_dissect(const struct 
+>> sk_buff *skb, __be16 *proto,
+>>  	*proto = ar9331_tag_encap_proto(skb->data);
+>>  }
+>> 
+>> +static struct sk_buff *ar9331_tag_gro_receive(struct list_head *head,
+>> +					      struct sk_buff *skb)
+>> +{
+>> +	const struct packet_offload *ptype;
+>> +	struct sk_buff *p, *pp = NULL;
+>> +	u32 data_off, data_end;
+>> +	const u8 *data;
+>> +	int flush = 1;
+>> +
+>> +	data_off = skb_gro_offset(skb);
+>> +	data_end = data_off + AR9331_HDR_LEN;
+> 
+> AR9331_HDR_LEN is a parameter here which is incidentally
+> dsa_device_ops::overhead.
+
+Or we can split .overhead to .rx_len and .tx_len and use the first
+to help GRO layer and flow dissector and the second to determine
+total overhead to correct MTU value. Smth like:
+
+mtu = max(tag_ops->rx_len, tag_ops->tx_len);
+
+>> +
+>> +	data = skb_gro_header_fast(skb, data_off);
+>> +	if (skb_gro_header_hard(skb, data_end)) {
+>> +		data = skb_gro_header_slow(skb, data_end, data_off);
+>> +		if (unlikely(!data))
+>> +			goto out;
+>> +	}
+>> +
+>> +	/* Data that is to the left from the current position is already
+>> +	 * pulled to the head
+>> +	 */
+>> +	if (unlikely(!ar9331_tag_sanity_check(skb->data + data_off)))
+>> +		goto out;
+> 
+> This is applicable to all taggers, they need to verify the sanity of 
+> the
+> header they are being handed.
+> 
+>> +
+>> +	rcu_read_lock();
+>> +
+>> +	ptype = gro_find_receive_by_type(ar9331_tag_encap_proto(data));
+> 
+> If there is no encapsulation a tagger can return the frame's protocol
+> directly, so similarly the tagger can be interrogated for returning 
+> that.
+> 
+>> +	if (!ptype)
+>> +		goto out_unlock;
+>> +
+>> +	flush = 0;
+>> +
+>> +	list_for_each_entry(p, head, list) {
+>> +		if (!NAPI_GRO_CB(p)->same_flow)
+>> +			continue;
+>> +
+>> +		if (ar9331_tag_source_port(skb->data + data_off) ^
+>> +		    ar9331_tag_source_port(p->data + data_off))
+> 
+> Similarly here, the tagger could provide a function whose job is to
+> return the port number from within its own tag.
+> 
+> So with that being said, what do you think about building a tagger
+> abstraction which is comprised of:
+> 
+> - header length which is dsa_device_ops::overhead
+> - validate_tag()
+> - get_tag_encap_proto()
+> - get_port_number()
+> 
+> and the rest is just wrapping the general GRO list manipulation?
+
+get_tag_encap_proto() and get_port_number() would be called more
+than once in that case for every single frame. Not sure if it is
+a good idea regarding to mentioned retpoline issues.
+
+> Also, I am wondering should we somehow expose the DSA master
+> net_device's napi_struct such that we could have the DSA slave
+> net_devices call napi_gro_receive() themselves directly such that they
+> could also perform additional GRO on top of Ethernet frames?
+
+There's no reason to pass frames to GRO layer more than once.
+
+The most correct way to handle frames is to pass them to networking
+stack only after DSA tag extraction and removal. That's kinda how
+mac80211 infra works. But this is rather problematic for DSA as it
+keeps Ethernet controller drivers and taggers completely independent
+from each others.
+
+I also had an idea to use net_device::rx_handler for tag processing
+instead of dsa_pack_type. CPU ports can't be bridged anyway, so this
+should not be a problem an the first look.
+
+Regards,
+ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
