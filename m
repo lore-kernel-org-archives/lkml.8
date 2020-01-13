@@ -2,117 +2,297 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 845F0C33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:05:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F100CC33C9A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59EA320661
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B690B2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="QNy8tJQU"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="jxINMd2p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbgAMKFo (ORCPT
+        id S1726480AbgAMKHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:05:44 -0500
-Received: from mail-bn7nam10on2076.outbound.protection.outlook.com ([40.107.92.76]:6153
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725978AbgAMKFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:05:44 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zxd7HXxP7nSlakC/UDzkBuHn2cCvM0WHzbd54/FMobu048xPsqw6INDGBF5XKUJ+F2mfX9mnxCJe9Pf2YGFkLCvT5gpxrdc8YjQr7tE/ubduGyL3HRT+LmMnl+oHVP0RTglvXPz+a9JNy4t003MYvft9sctQNYsS4LNp9Lch/nzdfFSBuktOPKTnnoXgdZxSBu52Wt9W671v+jlm9CssONv3pB01pWc+jjbCvlMfldhabRfVIK+eV2aidW1RIVlTRTlFBnEkVrSUkO0gK+fgvh0gIqlN5ec15D0wrWNzU6iXToJrNNuvgwTqtCSXeBmVJbB5xxQibkXhIVP0v4mnDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y1Ebke6eveyxao7m6TM2J+k5u29xj8tTIql2r8ll4bY=;
- b=WTmfrLy16QlG3eWEryMR4RVvqhsW+PSZ3oTZBpPG1k0L0JhFLSiPVwrmkE+jfS6LESPsdNi/c/agjeSeLimXOPAldOywzLzORsfFqgkXTvocndglk4D/sgVc6P3KNcNB1c6GqGk83M+1CmofwloRpm12rVddFouBIXNVNBcUbJIv5c9tbEx7qimx3bGBl3IivgMy/gGBSnY3vNkT0+bca0mQFTYj1LfXKmatBO5ebjZS96qjIMyulWproBJpMXwguIdaensXJDJCaIe+lvGeYLPENTIXC+LQEjqZlehE2J4nFzSd6XrN+SDeyXsmq6wIyTnHLmKebnxsSPXmPA30gw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
- dkim=pass header.d=micron.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y1Ebke6eveyxao7m6TM2J+k5u29xj8tTIql2r8ll4bY=;
- b=QNy8tJQU9UmXqIMlca4hV9kgbgY1zkL51cnZDiuMPL2/QW8GLG5sqT/XQmvnBqbQ95XxHQFLZRQxyrlqVyc9ul2mgLZA3syl913Lp3sTUpDhSy8G1KBcNBzGAiEWRo7qkSb0f5Ed8fkFe099zXM/ACnpCzulqieCjrbq1aDINWo=
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
- BN7PR08MB3987.namprd08.prod.outlook.com (52.132.219.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Mon, 13 Jan 2020 10:05:42 +0000
-Received: from BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::981f:90d7:d45f:fd11]) by BN7PR08MB5684.namprd08.prod.outlook.com
- ([fe80::981f:90d7:d45f:fd11%7]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
- 10:05:42 +0000
-From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
-To:     Stanley Chu <stanley.chu@mediatek.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>
-CC:     "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
-        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
-        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
-        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
-Subject: RE: [EXT] [PATCH v1 3/3] scsi: ufs: remove "errors" word in
- ufshcd_print_err_hist()
-Thread-Topic: [EXT] [PATCH v1 3/3] scsi: ufs: remove "errors" word in
- ufshcd_print_err_hist()
-Thread-Index: AQHVwwrtV1OULJKwiEi+1cpvXR6BU6foa4ZQ
-Date:   Mon, 13 Jan 2020 10:05:42 +0000
-Message-ID: <BN7PR08MB5684F59B198544C9A470A96DDB350@BN7PR08MB5684.namprd08.prod.outlook.com>
-References: <1578147968-30938-1-git-send-email-stanley.chu@mediatek.com>
- <1578147968-30938-4-git-send-email-stanley.chu@mediatek.com>
-In-Reply-To: <1578147968-30938-4-git-send-email-stanley.chu@mediatek.com>
-Accept-Language: en-150, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLTNmNWQ3MDU5LTM1ZWMtMTFlYS04Yjg4LWRjNzE5NjFmOWRkM1xhbWUtdGVzdFwzZjVkNzA1Yi0zNWVjLTExZWEtOGI4OC1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjIxNCIgdD0iMTMyMjMzODM1MzkwMDIwNTUwIiBoPSJQSGkrc2lPMWJOQWIyQkhyZlNwVUhWc0Q2QnM9IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
-x-dg-rorf: true
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=beanhuo@micron.com; 
-x-originating-ip: [195.89.176.137]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 533dce1e-65aa-433a-18b8-08d798102650
-x-ms-traffictypediagnostic: BN7PR08MB3987:|BN7PR08MB3987:|BN7PR08MB3987:
-x-microsoft-antispam-prvs: <BN7PR08MB3987F31F81FE0A46075A5335DB350@BN7PR08MB3987.namprd08.prod.outlook.com>
-x-ms-exchange-transport-forked: True
-x-ms-oob-tlc-oobclassifiers: OLM:400;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(366004)(376002)(136003)(189003)(199004)(81166006)(8676002)(54906003)(316002)(66446008)(64756008)(66556008)(66476007)(9686003)(81156014)(86362001)(2906002)(66946007)(478600001)(110136005)(8936002)(55016002)(76116006)(33656002)(26005)(186003)(5660300002)(7696005)(7416002)(6506007)(52536014)(4326008)(558084003)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB3987;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: micron.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jESaNOGIXWyRXRT1VnG//c/2lG4fE9kKVhXNjHPmtVUaSQIETTA4sVs3AgZkBDzv3/Mt2/wLza0OaDfksek40mVEbUy1Gc0lulQfzruEf/iGd7cn0oztGarniHlDzi9JYmJ0kLUJQVt0bvAsJVXqWbZAv0+nSoJf0T60yZVFl6rve4eAfoRggEuglOYa1QJkQA1MtfrIPxDMdYOnhUMXsdjC5L/thkm7OAHYyifiPXolICvnGyyLXh+hVymR/yC2ZPEpifWf1L71DjIu44Su1aFEuUAdKYxTyTk/YlfFTT8ICs4ZbCUlmVQm5putc2WW+UHV9CDmc7ZgzDNrU34u7mZZXw1vLMlT8ugfZASCtfUgh8nwcvvashItp8qeHTYIB79VQIOidsz9Gh6Wg0h/Jb+w9zKelJ9JxNrSjXsp+crKbth+L3xGVT5M3wnBRd6d
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 Jan 2020 05:07:42 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:44037 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725978AbgAMKHm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 05:07:42 -0500
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 9882822FE4;
+        Mon, 13 Jan 2020 11:07:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1578910059;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xEkS0LWcI4tJwU+s+4VJpzUfEiZFuLEe8r7ewTMtCKE=;
+        b=jxINMd2pY60jpL/BmHks3d9VhIoMfVF8fpCONuWYcCBwBINF8KhrnV0sXF6BPYbq+dKQAt
+        I4n0ca30DmHCz52w3/E/Len4FXo/8rimFeQ7l+Tusp1Lq8kjX6Lthvpr6+HCx3cszrcaA0
+        u8XZCCssqfCazx/8b+3fWr4O9ZRT6bk=
 MIME-Version: 1.0
-X-OriginatorOrg: micron.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 533dce1e-65aa-433a-18b8-08d798102650
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 10:05:42.4354
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 85YbZ5ks6XsxvyHABZcaJilnOrhncsfmYYog76WgLeAm3GfWdHK21uqhTqHNFIA0jsh4PSKh+6GZciCjVuta1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB3987
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 13 Jan 2020 11:07:39 +0100
+From:   Michael Walle <michael@walle.cc>
+To:     Tudor.Ambarus@microchip.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        richard@nod.at, vigneshr@ti.com, miquel.raynal@bootlin.com
+Subject: Re: [PATCH] mtd: spi-nor: Add support for w25qNNjwim
+In-Reply-To: <4050087.dyKUiXJtgz@localhost.localdomain>
+References: <20200103223423.14025-1-michael@walle.cc>
+ <12341010.b9DRC5f9X7@192.168.0.113>
+ <9d39be0f45f4c8e087b269f0c802ed6b@walle.cc>
+ <4050087.dyKUiXJtgz@localhost.localdomain>
+Message-ID: <2dffc658f21da502dff8c5721ec1b0a7@walle.cc>
+X-Sender: michael@walle.cc
+User-Agent: Roundcube Webmail/1.3.8
+X-Spamd-Bar: /
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 9882822FE4
+X-Spamd-Result: default: False [-0.10 / 15.00];
+         ARC_NA(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         TO_DN_NONE(0.00)[];
+         RCPT_COUNT_FIVE(0.00)[6];
+         DKIM_SIGNED(0.00)[];
+         NEURAL_HAM(-0.00)[-0.783];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         MID_RHS_MATCH_FROM(0.00)[]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
+Hi Tudor,
+
+Am 2020-01-13 10:06, schrieb Tudor.Ambarus@microchip.com:
+> Hi, Michael,
+> 
+> On Sunday, January 12, 2020 1:16:12 AM EET Michael Walle wrote:
+>> EXTERNAL EMAIL: Do not click links or open attachments unless you know 
+>> the
+>> content is safe
+>> 
+>> Hi Tudor,
+>> 
+>> Am 2020-01-11 15:19, schrieb Tudor.Ambarus@microchip.com:
+>> > Hi, Michael,
+>> >
+>> > On Saturday, January 4, 2020 12:34:23 AM EET Michael Walle wrote:
+>> >> Add support for the Winbond W25QnnJW-IM flashes. These have a
+>> >> programmable QE bit. There are also the W25QnnJW-IQ variant which
+>> >> shares
+>> >> the ID with the W25QnnFW parts. These have the QE bit hard strapped to
+>> >> 1, thus don't support hardware write protection.
+>> >
+>> > There are few flavors of hw write protection supported by this flash,
+>> > the Q
+>> > version does not disable them all. How about saying just that the /HOLD
+>> > function is disabled?
+>> 
+>> I don't get your point here ;) My understanding is that HOLD# and WP#
+>> will
+>> be disabled. Thus there is no "hardware write protection". What other 
+>> hw
+>> write protection do you have in mind?
+> 
+> Time delay write disable after Power-up for example.
+
+That is the usual "write enable" mechanism. while marketing may seem to 
+see
+that as write protection, I do not, esp. not hardware write protection.
+
+What about changing it to the following?
+"These have the QE bit hard strapped to 1, thus don't the /HOLD and /WP
+pins".
+
+>> 
+>> > When we receive new flash id patches, we ask the contributors to
+>> > specify if
+>> > they test the flash, in which modes (single, quad), and with which
+>> > controller.
+>> > Ideally all the flash's flags should be tested, but there are cases in
+>> > which
+>> > the controllers do not support quad read for example, and we accept the
+>> > patches even if tested in single read mode. SPI_NOR_HAS_LOCK and
+>> > SPI_NOR_HAS_TB must be tested as well.
+>> >
+>> > Even if the patches are rather simple, we ask for this to be sure that
+>> > we
+>> > don't add a flash that is broken from day one. So, would you please
+>> > tell us
+>> > what flashes did you test, what flags, and with which controller?
+>> 
+>> Ok will add that to the commit message. Just to make sure. I've only
+>> tested the
+>> 32mbit part. So is it still ok to include all other flashes of this
+>> family?
+> 
+> No, just the ones that you can test please.
+
+ok
+
+>> For now. tested with the NXP FlexSPI, single and dual (no quad since 
+>> we
+>> are
+>> using the write protection feature and IO2 and IO3 are not connected 
+>> to
+>> the
+>> CPU). So write protection is also tested. I will retest the TB bit.
+> 
+> Great, thanks.
+> 
+>> >> Signed-off-by: Michael Walle <michael@walle.cc>
+>> >> ---
+>> >>
+>> >>  drivers/mtd/spi-nor/spi-nor.c | 22 ++++++++++++++++++++++
+>> >>  1 file changed, 22 insertions(+)
+>> >>
+>> >> diff --git a/drivers/mtd/spi-nor/spi-nor.c
+>> >> b/drivers/mtd/spi-nor/spi-nor.c
+>> >> index addb6319fcbb..3fa8a81bdab0 100644
+>> >> --- a/drivers/mtd/spi-nor/spi-nor.c
+>> >> +++ b/drivers/mtd/spi-nor/spi-nor.c
+>> >> @@ -2627,6 +2627,11 @@ static const struct flash_info spi_nor_ids[] =
+>> >> {
+>> >>
+>> >>                      SECT_4K | SPI_NOR_DUAL_READ |
+>> >
+>> > SPI_NOR_QUAD_READ |
+>> >
+>> >>                      SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB)
+>> >>
+>> >>      },
+>> >>
+>> >> +    {
+>> >> +            "w25q16jwim", INFO(0xef8015, 0, 64 * 1024,  32,
+>> >
+>> > "i" is for the temperature range, which is not a fixed characteristic.
+>> > Usually
+>> > there are flashes with the same jedec-id, but with different
+>> > temperature
+>> > ranges. Let's drop the "i" and rename it to "w25q16jwm"
+>> 
+>> Only that there is no flash with that part name :( according to the
+>> datasheet
+> 
+> The datasheet describes the W25Q32JW flash (check the first page of the
+> datasheet). There are two flavors of this flash, each with its own 
+> jedec-id: Q
+> version uses 156016h, M 158016h. We should name this flashes as 
+> "w25q32jwq"
+> and "w25q32jwm".
+
+You mean ef6016 and ef8016, yes that is correct. My point was there is 
+no
+"w25q15jwm": If linux kernel messages write "detected w25q32jwm" nobody 
+will
+know what that part is, because there is no such part. There is a 
+w25q32jwim
+or maybe w25q32jwXm but no w25q32jwm.
+
+And naming the Q version w25q32jwq is not possible, because the id is 
+shared
+with the w25q32dw, which is already in spi-nor.c.
+
+> Please notice that I skipped intentionally the "i"  that
+> stands for temperature range. Manufacturers can provide better 
+> temperature
+> ranges for the same flash without changing the jedec-id. See this 
+> datasheet:
+
+I know that and get your point. But I fear that this will confuse 
+others.
+
+> 
+> https://ro.mouser.com/datasheet/2/949/w25q128jv_revf_03272018_plus-1489608.pdf
+> 
+>> there is only this one temp range available. From what I've seen for 
+>> now
+>> (esp
+>> looking at the macronix parts) it seems to first come first serve ;)
+>> That being said, I don't insist on keeping that name, I'm fine with 
+>> any
+>> name,
+> 
+> you should be fine just with the name that best describes the flash :)
+> 
+>> since I've learned you cannot rely on it in any way. Eg. the 
+>> w25q32jwiq
+>> will
+>> be discovered as w25q32dw. Or some Macronix flashes will be discovered
+>> as
+>> ancient ones.
+> 
+> Would you please study what's wrong with these names and provide a 
+> patch to
+> fix them?
+
+Well, I've did that last week. But TBH I don't know if I want to go down 
+that
+road. Its not only the names, its also the flags. There is a mix of old 
+and
+new flashes in spi-nor.c; for example the newer ones supports dual and 
+quad
+mode. But the crux is, Macronix shares the same id over different 
+generations
+of the flash chip. For example look at the MX25L8005 (as it is supported 
+in
+the kernel) [1]. It doesn't support dual I/O mode. But the newer 
+generation
+MX25L8006E, which has the same id, supports it. So even I could come up 
+with
+something to fix it, I doubt it will be accepted without testing.
+
+
+>> 
+>> Btw. is renaming the flashes also considered a backwards incomaptible
+>> change?
+> 
+> No, we can fix the names.
+> 
+>> And can there be two flashes with the same name? Because IMHO it would
+>> be
+> 
+> I would prefer that we don't. Why would you have two different 
+> jedec-ids with
+> the same name?
+
+Because as pointed out in the Winbond example you cannot distiguish 
+between
+W25Q32DW and W25Q32JWIQ; and in the Macronix example between MX25L8005 
+and
+MX25L8006E. Thus my reasoning was to show only the common part, ie 
+W25Q32
+or MX25L80 which should be the same for this particular ID. Like I said, 
+I'd
+prefer showing an ambiguous name instead of a wrong one. But then you 
+may
+have different IDs with the same ambiguous name.
+
+>> better to just have the name "w25q16" regardless whether its an 
+>> FW/JW/JV
+>> etc.
+>> It's better to show an ambiguous name than a wrong name.
+>> 
+>> -michael
+
+-michael
+
+[1] 
+http://web.archive.org/web/20180712194807/https://www.mct.net/download/macronix/mx25l8005.pdf
+
