@@ -2,149 +2,212 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAFDAC33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EABC33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A610020678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:40:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578904848;
-	bh=jZl8xgRoQpS61f5V158YZ1RZcDbf9UZ3oLAOvnSRF0I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xJ3kDijTick3q6KENdwSHRj5cf8W7Io/zpzeInu75ye5lCnbceSH+KAIvvPyDOXRF
-	 A339VCky2zdDljHpXHcM03DU3rprs99ClnI1DZqqQs7efAfSSONVSQ5cWdBYqpwGtT
-	 hPcfBh0DvVt0GG1wTwp06Z5FLU9nI/xhTAjV4C8g=
+	by mail.kernel.org (Postfix) with ESMTP id D5DF8207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729010AbgAMIks (ORCPT
+        id S1728869AbgAMIly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 03:40:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43612 "EHLO mail.kernel.org"
+        Mon, 13 Jan 2020 03:41:54 -0500
+Received: from foss.arm.com ([217.140.110.172]:35758 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728950AbgAMIkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 03:40:41 -0500
-Received: from localhost.localdomain (unknown [106.200.247.255])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2670D207FF;
-        Mon, 13 Jan 2020 08:40:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578904841;
-        bh=jZl8xgRoQpS61f5V158YZ1RZcDbf9UZ3oLAOvnSRF0I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gx4q8ig5vDM0d2EF5D4raTi+e0zPRc+aeDbhl6v7pXyWEqquX6d1RVp4/MQYWUC2r
-         DppAPBRU2dwTWPuHq01nEJ3cxIeKoZFsqvxJEuXOyt2If8+HbgPIEaY5nuUhqn7Cir
-         A69ZYUI/MpQQoTmwhoGNIGTK7Rnbc1ctBrJq8Yus=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 5/5] usb: xhci: provide a debugfs hook for erasing rom
-Date:   Mon, 13 Jan 2020 14:10:05 +0530
-Message-Id: <20200113084005.849071-6-vkoul@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200113084005.849071-1-vkoul@kernel.org>
-References: <20200113084005.849071-1-vkoul@kernel.org>
+        id S1728780AbgAMIlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 03:41:53 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 61C13DA7;
+        Mon, 13 Jan 2020 00:41:48 -0800 (PST)
+Received: from [10.162.43.142] (p8cg001049571a15.blr.arm.com [10.162.43.142])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 851303F534;
+        Mon, 13 Jan 2020 00:41:42 -0800 (PST)
+Subject: Re: [PATCH V11 2/5] mm/memblock: Introduce MEMBLOCK_BOOT flag
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     mark.rutland@arm.com, david@redhat.com, catalin.marinas@arm.com,
+        linux-mm@kvack.org, arunks@codeaurora.org, cpandya@codeaurora.org,
+        will@kernel.org, ira.weiny@intel.com, steven.price@arm.com,
+        valentin.schneider@arm.com, suzuki.poulose@arm.com,
+        Robin.Murphy@arm.com, broonie@kernel.org, cai@lca.pw,
+        ard.biesheuvel@arm.com, dan.j.williams@intel.com,
+        linux-arm-kernel@lists.infradead.org, osalvador@suse.de,
+        steve.capper@arm.com, logang@deltatee.com,
+        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net
+References: <1578625755-11792-1-git-send-email-anshuman.khandual@arm.com>
+ <1578625755-11792-3-git-send-email-anshuman.khandual@arm.com>
+ <20200113073711.GA4214@linux.ibm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <08a2f82a-3201-055a-316a-a2f11c7ff7a5@arm.com>
+Date:   Mon, 13 Jan 2020 14:13:00 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200113073711.GA4214@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-run "echo 1 > /sys/kernel/debug/renesas-usb/rom_erase" to erase firmware
-when driver is loaded.
 
-Subsequent init of driver shall reload the firmware
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/usb/host/xhci-pci-renesas.c | 35 +++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+On 01/13/2020 01:07 PM, Mike Rapoport wrote:
+> On Fri, Jan 10, 2020 at 08:39:12AM +0530, Anshuman Khandual wrote:
+>> On arm64 platform boot memory should never be hot removed due to certain
+>> platform specific constraints. Hence the platform would like to override
+>> earlier added arch call back arch_memory_removable() for this purpose. In
+>> order to reject boot memory hot removal request, it needs to first track
+>> them at runtime. In the future, there might be other platforms requiring
+>> runtime boot memory enumeration. Hence lets expand the existing generic
+>> memblock framework for this purpose rather then creating one just for
+>> arm64 platforms.
+>>
+>> This introduces a new memblock flag MEMBLOCK_BOOT along with helpers which
+>> can be marked by given platform on all memory regions discovered during
+>> boot.
+>  
+> We already have MEMBLOCK_HOTPLUG to mark hotpluggable region. Can't we use
+> it for your use-case?
 
-diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
-index fe95487ca888..be2e7eff492f 100644
---- a/drivers/usb/host/xhci-pci-renesas.c
-+++ b/drivers/usb/host/xhci-pci-renesas.c
-@@ -2,6 +2,7 @@
- /* Copyright (C) 2019-2020 Linaro Limited */
- 
- #include <linux/acpi.h>
-+#include <linux/debugfs.h>
- #include <linux/firmware.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-@@ -229,6 +230,9 @@ static int renesas_fw_verify(struct pci_dev *dev,
- 
- 	return 0;
- }
-+
-+static void debugfs_init(struct pci_dev *pdev);
-+
- static int renesas_check_rom_state(struct pci_dev *pdev)
- {
- 	const struct renesas_fw_entry *entry;
-@@ -252,6 +256,7 @@ static int renesas_check_rom_state(struct pci_dev *pdev)
- 		if (version == entry->expected_version) {
- 			dev_dbg(&pdev->dev, "Detected valid ROM version..\n");
- 			valid_version = true;
-+			debugfs_init(pdev);
- 		}
- 	}
- 	if (valid_version == false)
-@@ -536,6 +541,34 @@ static void renesas_rom_erase(struct pci_dev *pdev)
- 	dev_dbg(&pdev->dev, "ROM Erase... Done success\n");
- }
- 
-+static int debugfs_rom_erase(void *data, u64 value)
-+{
-+	struct pci_dev *pdev = data;
-+
-+	if (value == 1) {
-+		dev_dbg(&pdev->dev, "Userspace requested ROM erase\n");
-+		renesas_rom_erase(pdev);
-+		return 0;
-+	}
-+	return -EINVAL;
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(rom_erase_ops, NULL, debugfs_rom_erase, "%llu\n");
-+
-+static struct dentry *debugfs_root;
-+
-+static void debugfs_init(struct pci_dev *pdev)
-+{
-+	debugfs_root = debugfs_create_dir("renesas-usb", NULL);
-+
-+	debugfs_create_file("rom_erase", 0200, debugfs_root,
-+			    pdev, &rom_erase_ops);
-+}
-+
-+static void debugfs_exit(void)
-+{
-+	debugfs_remove_recursive(debugfs_root);
-+}
-+
- static bool renesas_download_rom(struct pci_dev *pdev,
- 				 const u32 *fw, size_t step)
- {
-@@ -889,6 +922,8 @@ static int renesas_xhci_pci_probe(struct pci_dev *dev,
- 
- static void renesas_xhci_pci_remove(struct pci_dev *dev)
- {
-+	debugfs_exit();
-+
- 	if (renesas_fw_alive_check(dev)) {
- 		/*
- 		 * bail out early, if this was a renesas device w/o FW.
--- 
-2.24.1
+At present MEMBLOCK_HOTPLUG flag helps in identifying parts of boot memory
+as hotpluggable as indicated by the firmware. This information is then used
+to avoid those regions during standard memblock_alloc_*() API requests and
+later marking them as ZONE_MOVABLE when buddy gets initialized.
 
+Memory hot remove does not check for MEMBLOCK_HOTPLUG flag as a requirement
+before initiating the process. We could probably use this flag if generic
+hot remove can be changed to check for MEMBLOCK_HOTPLUG as a prerequisite
+which will require changes to memblock handling (boot and runtime) on all
+existing platforms currently supporting hot remove. But what about handling
+the movable boot memory created with movablecore/kernelcore command line,
+should generic MM update their memblock regions with MEMBLOCK_HOTPLUG ?
+
+> 
+>> Cc: Mike Rapoport <rppt@linux.ibm.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  include/linux/memblock.h | 10 ++++++++++
+>>  mm/memblock.c            | 37 +++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 47 insertions(+)
+>>
+>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>> index b38bbef..fb04c87 100644
+>> --- a/include/linux/memblock.h
+>> +++ b/include/linux/memblock.h
+>> @@ -31,12 +31,14 @@ extern unsigned long long max_possible_pfn;
+>>   * @MEMBLOCK_HOTPLUG: hotpluggable region
+>>   * @MEMBLOCK_MIRROR: mirrored region
+>>   * @MEMBLOCK_NOMAP: don't add to kernel direct mapping
+>> + * @MEMBLOCK_BOOT: memory received from firmware during boot
+>>   */
+>>  enum memblock_flags {
+>>  	MEMBLOCK_NONE		= 0x0,	/* No special request */
+>>  	MEMBLOCK_HOTPLUG	= 0x1,	/* hotpluggable region */
+>>  	MEMBLOCK_MIRROR		= 0x2,	/* mirrored region */
+>>  	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
+>> +	MEMBLOCK_BOOT		= 0x8,	/* memory received from firmware during boot */
+>>  };
+>>  
+>>  /**
+>> @@ -116,6 +118,8 @@ int memblock_reserve(phys_addr_t base, phys_addr_t size);
+>>  void memblock_trim_memory(phys_addr_t align);
+>>  bool memblock_overlaps_region(struct memblock_type *type,
+>>  			      phys_addr_t base, phys_addr_t size);
+>> +int memblock_mark_boot(phys_addr_t base, phys_addr_t size);
+>> +int memblock_clear_boot(phys_addr_t base, phys_addr_t size);
+>>  int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
+>>  int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
+>>  int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
+>> @@ -216,6 +220,11 @@ static inline bool memblock_is_nomap(struct memblock_region *m)
+>>  	return m->flags & MEMBLOCK_NOMAP;
+>>  }
+>>  
+>> +static inline bool memblock_is_boot(struct memblock_region *m)
+>> +{
+>> +	return m->flags & MEMBLOCK_BOOT;
+>> +}
+>> +
+>>  #ifdef CONFIG_HAVE_MEMBLOCK_NODE_MAP
+>>  int memblock_search_pfn_nid(unsigned long pfn, unsigned long *start_pfn,
+>>  			    unsigned long  *end_pfn);
+>> @@ -449,6 +458,7 @@ void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
+>>  void memblock_mem_limit_remove_map(phys_addr_t limit);
+>>  bool memblock_is_memory(phys_addr_t addr);
+>>  bool memblock_is_map_memory(phys_addr_t addr);
+>> +bool memblock_is_boot_memory(phys_addr_t addr);
+>>  bool memblock_is_region_memory(phys_addr_t base, phys_addr_t size);
+>>  bool memblock_is_reserved(phys_addr_t addr);
+>>  bool memblock_is_region_reserved(phys_addr_t base, phys_addr_t size);
+>> diff --git a/mm/memblock.c b/mm/memblock.c
+>> index 4bc2c7d..e10207f 100644
+>> --- a/mm/memblock.c
+>> +++ b/mm/memblock.c
+>> @@ -865,6 +865,30 @@ static int __init_memblock memblock_setclr_flag(phys_addr_t base,
+>>  }
+>>  
+>>  /**
+>> + * memblock_mark_bootmem - Mark boot memory with flag MEMBLOCK_BOOT.
+>> + * @base: the base phys addr of the region
+>> + * @size: the size of the region
+>> + *
+>> + * Return: 0 on success, -errno on failure.
+>> + */
+>> +int __init_memblock memblock_mark_boot(phys_addr_t base, phys_addr_t size)
+>> +{
+>> +	return memblock_setclr_flag(base, size, 1, MEMBLOCK_BOOT);
+>> +}
+>> +
+>> +/**
+>> + * memblock_clear_bootmem - Clear flag MEMBLOCK_BOOT for a specified region.
+>> + * @base: the base phys addr of the region
+>> + * @size: the size of the region
+>> + *
+>> + * Return: 0 on success, -errno on failure.
+>> + */
+>> +int __init_memblock memblock_clear_boot(phys_addr_t base, phys_addr_t size)
+>> +{
+>> +	return memblock_setclr_flag(base, size, 0, MEMBLOCK_BOOT);
+>> +}
+>> +
+>> +/**
+>>   * memblock_mark_hotplug - Mark hotpluggable memory with flag MEMBLOCK_HOTPLUG.
+>>   * @base: the base phys addr of the region
+>>   * @size: the size of the region
+>> @@ -974,6 +998,10 @@ static bool should_skip_region(struct memblock_region *m, int nid, int flags)
+>>  	if ((flags & MEMBLOCK_MIRROR) && !memblock_is_mirror(m))
+>>  		return true;
+>>  
+>> +	/* if we want boot memory skip non-boot memory regions */
+>> +	if ((flags & MEMBLOCK_BOOT) && !memblock_is_boot(m))
+>> +		return true;
+>> +
+>>  	/* skip nomap memory unless we were asked for it explicitly */
+>>  	if (!(flags & MEMBLOCK_NOMAP) && memblock_is_nomap(m))
+>>  		return true;
+>> @@ -1785,6 +1813,15 @@ bool __init_memblock memblock_is_map_memory(phys_addr_t addr)
+>>  	return !memblock_is_nomap(&memblock.memory.regions[i]);
+>>  }
+>>  
+>> +bool __init_memblock memblock_is_boot_memory(phys_addr_t addr)
+>> +{
+>> +	int i = memblock_search(&memblock.memory, addr);
+>> +
+>> +	if (i == -1)
+>> +		return false;
+>> +	return memblock_is_boot(&memblock.memory.regions[i]);
+>> +}
+>> +
+>>  #ifdef CONFIG_HAVE_MEMBLOCK_NODE_MAP
+>>  int __init_memblock memblock_search_pfn_nid(unsigned long pfn,
+>>  			 unsigned long *start_pfn, unsigned long *end_pfn)
+>> -- 
+>> 2.7.4
+>>
+> 
