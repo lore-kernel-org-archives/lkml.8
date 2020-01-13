@@ -2,118 +2,142 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1803CC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E45C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2DE3207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:27:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="e0HEAgvS"
+	by mail.kernel.org (Postfix) with ESMTP id 944172081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:27:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578925648;
+	bh=lDi3yhRp4PbF/E8j+iB9FGNiI7wABd2r9c3DUhzLcZ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gNrN8P4MhnQVw3M4GhtS78dD9KM0JSdFcIV23wUqdoPekeCul7jFG2zk4rNUF6YuE
+	 WpS8G9iuQ3vjPrp1ZJ48ZBIpqiUXdAyV9MlHk+b5PRDy28l4vf2ucxpKVTFDRT9uw/
+	 COw1LViCys54s2s+ks8OXJaUtySepV+7LN7LbHQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgAMO1V (ORCPT
+        id S1728819AbgAMO11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:27:21 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44528 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgAMO1U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:27:20 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00DERFVc028525;
-        Mon, 13 Jan 2020 08:27:15 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578925635;
-        bh=0LfeQ9z3KBGEFTKm99Ac47ugA4guzHZ+rkdS+dKsngA=;
-        h=From:To:CC:Subject:Date;
-        b=e0HEAgvSpHId2kyYjIb1VKj52KVXGNsNSM/3bFLTlOahm0fJMPekr0RbmFSJ9Te31
-         GXsvQZQ8/ABiIh4gJp3yLAK86a0cCfKW8iiuvqpddxoV0lvCZNM4R411aGLpqJje4+
-         rlfRBxFbVdAnZvij2nCR+tVgl9890zA2FMwnmlho=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00DERE1w049457
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jan 2020 08:27:15 -0600
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 13
- Jan 2020 08:27:14 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 13 Jan 2020 08:27:13 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00DERBHt123819;
-        Mon, 13 Jan 2020 08:27:12 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vireshk@kernel.org>, <b.zolnierkie@samsung.com>, <axboe@kernel.dk>
-CC:     <vkoul@kernel.org>, <linux-ide@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] ata: pata_arasan_cf: Use dma_request_chan() instead dma_request_slave_channel()
-Date:   Mon, 13 Jan 2020 16:27:47 +0200
-Message-ID: <20200113142747.15240-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 13 Jan 2020 09:27:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53916 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbgAMO11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 09:27:27 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CFC72073D;
+        Mon, 13 Jan 2020 14:27:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578925646;
+        bh=lDi3yhRp4PbF/E8j+iB9FGNiI7wABd2r9c3DUhzLcZ0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Wkc4M0JI8URUydIBo+uimk/TWQjQKQTf3136LlrNh1UnY0vMI6s8zMP/j7qyJZvwV
+         CiX/MHjFZUUbeBIKbAgwCQnjiZWJpqEADJkoam5OX2jj/y8hm8cPhTLlfxc8loY6eN
+         a784eL6XoIt/Z4piiOxqlwe9TJPqDCZYsgSknflA=
+Date:   Mon, 13 Jan 2020 14:27:20 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        masahiroy@kernel.org
+Subject: Re: [RFC PATCH 1/8] compiler/gcc: Emit build-time warning for GCC
+ prior to version 4.8
+Message-ID: <20200113142720.GA4458@willie-the-truck>
+References: <20200110165636.28035-1-will@kernel.org>
+ <20200110165636.28035-2-will@kernel.org>
+ <CAK8P3a3ueJ_rQc-1JTg=3N0JSuY9BduJ6FrrPFG1K2FWVzJdfA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a3ueJ_rQc-1JTg=3N0JSuY9BduJ6FrrPFG1K2FWVzJdfA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_request_slave_channel() is a wrapper on top of dma_request_chan()
-eating up the error code.
+[+Masahiro]
 
-The dma_request_chan() is the standard API to request slave channel,
-clients should be moved away from the legacy API to allow us to retire
-them.
+On Fri, Jan 10, 2020 at 06:35:02PM +0100, Arnd Bergmann wrote:
+> On Fri, Jan 10, 2020 at 5:56 PM Will Deacon <will@kernel.org> wrote:
+> >
+> > Prior to version 4.8, GCC may miscompile READ_ONCE() by erroneously
+> > discarding the 'volatile' qualifier:
+> >
+> > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
+> >
+> > We've been working around this using some nasty hacks which make
+> > READ_ONCE() both horribly complicated and also prevent us from enforcing
+> > that it is only used on scalar types. Since GCC 4.8 is pretty old for
+> > kernel builds now, emit a warning if we detect it during the build.
+> 
+> No objection to recommending gcc-4.8, but I think this should either
+> just warn once during the kernel build instead of for every file, or
+> it should become a hard requirement.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
-Hi,
+Oops, yes, good point. I blindly followed the '< 4.6' check, but that's
+actually a '#error' so it doesn't have the issue you mention. I've had a
+crack at moving the check into kbuild -- see below.
 
-Changes since v1:
-- Fixed type in subject
-- Removed reference to deferred probing in commit message
+Will
 
-Regards,
-Peter
+--->8
 
- drivers/ata/pata_arasan_cf.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/ata/pata_arasan_cf.c b/drivers/ata/pata_arasan_cf.c
-index 391dff0f25a2..e9cf31f38450 100644
---- a/drivers/ata/pata_arasan_cf.c
-+++ b/drivers/ata/pata_arasan_cf.c
-@@ -526,9 +526,10 @@ static void data_xfer(struct work_struct *work)
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index 62afe874073e..d7ee4c6bad48 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -14,10 +14,6 @@
+ # error Sorry, your compiler is too old - please upgrade it.
+ #endif
  
- 	/* request dma channels */
- 	/* dma_request_channel may sleep, so calling from process context */
--	acdev->dma_chan = dma_request_slave_channel(acdev->host->dev, "data");
--	if (!acdev->dma_chan) {
-+	acdev->dma_chan = dma_request_chan(acdev->host->dev, "data");
-+	if (IS_ERR(acdev->dma_chan)) {
- 		dev_err(acdev->host->dev, "Unable to get dma_chan\n");
-+		acdev->dma_chan = NULL;
- 		goto chan_request_fail;
- 	}
+-#if GCC_VERSION < 40800
+-# warning Your compiler is old and may miscompile the kernel due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145 - please upgrade it.
+-#endif
+-
+ /* Optimization barrier */
  
-@@ -539,6 +540,7 @@ static void data_xfer(struct work_struct *work)
- 	}
+ /* The "volatile" is due to gcc bugs */
+diff --git a/init/Kconfig b/init/Kconfig
+index a34064a031a5..bdc2f1b1667b 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -10,11 +10,11 @@ config DEFCONFIG_LIST
+ 	default "arch/$(ARCH)/defconfig"
  
- 	dma_release_channel(acdev->dma_chan);
-+	acdev->dma_chan = NULL;
+ config CC_IS_GCC
+-	def_bool $(success,$(CC) --version | head -n 1 | grep -q gcc)
++	def_bool $(cc-is-gcc)
  
- 	/* data xferred successfully */
- 	if (!ret) {
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+ config GCC_VERSION
+ 	int
+-	default $(shell,$(srctree)/scripts/gcc-version.sh $(CC)) if CC_IS_GCC
++	default $(gcc-version) if CC_IS_GCC
+ 	default 0
+ 
+ config CC_IS_CLANG
+diff --git a/scripts/Kconfig.include b/scripts/Kconfig.include
+index d4adfbe42690..4e645a798b56 100644
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -40,3 +40,9 @@ $(error-if,$(success, $(LD) -v | grep -q gold), gold linker '$(LD)' not supporte
+ 
+ # gcc version including patch level
+ gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
++
++# Return y if the compiler is GCC, n otherwise
++cc-is-gcc := $(success,$(CC) --version | head -n 1 | grep -q gcc)
++
++# Warn if the compiler is GCC prior to 4.8
++$(warning-if,$(if-success,[ $(gcc-version) -lt 40800 ],$(cc-is-gcc),n),"Your compiler is old and may miscompile the kernel due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145 - please upgrade it.")
