@@ -2,101 +2,110 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358D0C33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900C6C33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:39:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 136B72082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6386B2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:39:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbgAMJer (ORCPT
+        id S1726985AbgAMJjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:34:47 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37909 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgAMJer (ORCPT
+        Mon, 13 Jan 2020 04:39:03 -0500
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:45295 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgAMJjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:34:47 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z9so6214664oth.5;
-        Mon, 13 Jan 2020 01:34:46 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kaKlC3q9CExkHbPXpr2oF1/dYZAiBMn8Z2AGW1rcAsk=;
-        b=U+UnG8+kveOJszb2mdYO/8HBc69kSeEYbfcAIDCCeJqlDZolNVcxDbDZ6jYPmqqpv0
-         Zt5dwjsc9lnjLhUccp0UWyRgA2YHXYFwbkNznCIE3G2FbHyZJ7kehgf/tRd4lOMp/TWE
-         KpU6+uUAKlKgniUzVPcDEvBK9FjFMfYdoJKDkDvYl0O6DQNU/YdqC3YoODPw54a5ucVE
-         x25A5ptSBGQdyRRFslCNb1RV5GKKaPID0B1Imrt66vy2LTkBmS0nXD0Gtf72W3wyM/yb
-         nb+B5QGA62Dk8Dkhe5zqgDPKPGR7J2sgl2nIunKYIIzmcUqAnXBsV1pLUHhDx7+uAYUD
-         nu+w==
-X-Gm-Message-State: APjAAAVH/6QrV3tU4ki8yeGQX29YdDNV2jjMNVZXCx8cY46Ha+eZwBfw
-        ApuFV0KWjJEYxuFbV5ljj5fspRYO7kwCORFC5wo=
-X-Google-Smtp-Source: APXvYqyMuO4xkb3y3TDOh/yl+LjOIvbKWyuAhhxj9i1Hnmo5upqZoILZH3EXejAkFBwjlJ2NisHfRQ5YiP1UyPacKbk=
-X-Received: by 2002:a05:6830:18c6:: with SMTP id v6mr7537190ote.145.1578908086649;
- Mon, 13 Jan 2020 01:34:46 -0800 (PST)
+        Mon, 13 Jan 2020 04:39:02 -0500
+X-Originating-IP: 90.76.211.102
+Received: from localhost (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 2E4F9FF803;
+        Mon, 13 Jan 2020 09:38:58 +0000 (UTC)
+Date:   Mon, 13 Jan 2020 10:38:58 +0100
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     antoine.tenart@bootlin.com, sd@queasysnail.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
+        camelia.groza@nxp.com, Simon.Edelhaus@aquantia.com,
+        Igor.Russkikh@aquantia.com, jakub.kicinski@netronome.com
+Subject: Re: [PATCH net-next v5 00/15] net: macsec: initial support for
+ hardware offloading
+Message-ID: <20200113093858.GA3078@kwain>
+References: <20200110162010.338611-1-antoine.tenart@bootlin.com>
+ <20200111.150807.963654509739345915.davem@davemloft.net>
+ <20200111.151030.80812382992588994.davem@davemloft.net>
 MIME-Version: 1.0
-References: <20191124195225.31230-1-jongk@linux-m68k.org> <CAMuHMdXQAbw_Skj99q_PWXKn77bzVbJf60n38Etmq-zhOoHsHQ@mail.gmail.com>
- <CAMuHMdU9hu+EAAnBD5dH3+LS5pNi9fOjFNesv3eFSCoqbW3CCA@mail.gmail.com> <20200113091813.zkye72cubpfhemww@wittgenstein>
-In-Reply-To: <20200113091813.zkye72cubpfhemww@wittgenstein>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 13 Jan 2020 10:34:35 +0100
-Message-ID: <CAMuHMdXTqjPQN4UbH5a1BGjFTNLRrwDu97B=JxDii2VCoRjorA@mail.gmail.com>
-Subject: Re: [PATCH] m68k: Wire up clone3() syscall
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Kars de Jong <jongk@linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        "Amanieu d'Antras" <amanieu@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200111.151030.80812382992588994.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
+Hello David,
 
-On Mon, Jan 13, 2020 at 10:18 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
-> On Mon, Jan 13, 2020 at 10:10:26AM +0100, Geert Uytterhoeven wrote:
-> > On Sun, Jan 12, 2020 at 5:06 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Sun, Nov 24, 2019 at 8:52 PM Kars de Jong <jongk@linux-m68k.org> wrote:
-> > > > Wire up the clone3() syscall for m68k. The special entry point is done in
-> > > > assembler as was done for clone() as well. This is needed because all
-> > > > registers need to be saved. The C wrapper then calls the generic
-> > > > sys_clone3() with the correct arguments.
-> > > >
-> > > > Tested on A1200 using the simple test program from:
-> > > >
-> > > >   https://lore.kernel.org/lkml/20190716130631.tohj4ub54md25dys@brauner.io/
-> > > >
-> > > > Cc: linux-m68k@vger.kernel.org
-> > > > Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
-> > >
-> > > Thanks, applied and queued for v5.6.
-> >
-> > Which is now broken because of commit dd499f7a7e342702 ("clone3: ensure
-> > copy_thread_tls is implemented") in v5.5-rc6 :-(
->
-> Sorry, just for clarification what and how is it broken by
-> dd499f7a7e342702 ("clone3: ensure > copy_thread_tls is implemented")
-> ?
+On Sat, Jan 11, 2020 at 03:10:30PM -0800, David Miller wrote:
+> From: David Miller <davem@davemloft.net>
+> Date: Sat, 11 Jan 2020 15:08:07 -0800 (PST)
+> 
+> > From: Antoine Tenart <antoine.tenart@bootlin.com>
+> > Date: Fri, 10 Jan 2020 17:19:55 +0100
+> > 
+> >> td;dr: When applying this series, do not apply patches 12 to 14.
+> >> 
+> >> This series intends to add support for offloading MACsec transformations
+> >> to hardware enabled devices. The series adds the necessary
+> >> infrastructure for offloading MACsec configurations to hardware drivers,
+> >> in patches 1 to 6; then introduces MACsec offloading support in the
+> >> Microsemi MSCC PHY driver, in patches 7 to 11.
+> >> 
+> >> The remaining 4 patches, 12 to 14, are *not* part of the series but
+> >> provide the mandatory changes needed to support offloading MACsec
+> >> operations to a MAC driver. Those patches are provided for anyone
+> >> willing to add support for offloading MACsec operations to a MAC, and
+> >> should be part of the first series adding a MAC as a MACsec offloading
+> >> provider.
+> > 
+> > You say four 4 patches, but 12 to 14 is 3.  I think you meant 12 to 15
+> > because 15 depends upon stuff added in 12 :-)
+> > 
+> > I applied everything except patch #7, which had the unnecessary phy
+> > exports, and also elided 12 to 15.
+> 
+> Actually I had to revert.
+> 
+> You are including net/macsec.h from a UAPI header, and that does not
+> work once userlance tries to use things.  And this even makes the
+> kernel build fail:
+> 
+> [davem@localhost net-next]$ make -s -j14
+> In file included from <command-line>:32:
+> ./usr/include/linux/if_macsec.h:17:10: fatal error: net/macsec.h: No such file or directory
+>  #include <net/macsec.h>
+>           ^~~~~~~~~~~~~~
+> compilation terminated.
+> make[2]: *** [usr/include/Makefile:104: usr/include/linux/if_macsec.hdrtest] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> make[1]: *** [scripts/Makefile.build:503: usr/include] Error 2
+> make: *** [Makefile:1693: usr] Error 2
+> 
+> Please fix this and respin.  And honestly just leave 12-15 out of the v6
+> submission, thanks.
 
-Because m68k does not implement copy_thread_tls() yet, and doesn't
-select HAVE_COPY_THREAD_TLS yet.
+Sorry for this, I'll fix the build issue and respin.
 
-Looking into fixing that...
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Thanks!
+Antoine
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
