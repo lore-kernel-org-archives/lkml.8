@@ -2,124 +2,157 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC2DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7015CC33CB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B8F206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43678214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HdKE8mzB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgAMRdY (ORCPT
+        id S1728816AbgAMRd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:33:24 -0500
-Received: from asavdk3.altibox.net ([109.247.116.14]:44132 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726985AbgAMRdY (ORCPT
+        Mon, 13 Jan 2020 12:33:58 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:33615 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726985AbgAMRd5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:33:24 -0500
-Received: from ravnborg.org (unknown [158.248.194.18])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 13 Jan 2020 12:33:57 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578936836; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=w+XPcExk+Qre2Gbc4AQCx9OnrvzBE4v0GR5D1rNcKaY=; b=HdKE8mzByxUvHiC+DakLFJbjMycuch37G80X64asynXtGBlr7iSU5YuVzeQKJbEzohiGKjRW
+ 3MDN5/ONSxBkVTXMGvA4xagrSW6uXI3RoG7jSq/UcMxeZ4UAB9eReB0YPONF2idK91AvQyvR
+ Wg7m7a3OrRWDDpe9p72eBOzsOn8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1caa02.7f418c44d7a0-smtp-out-n02;
+ Mon, 13 Jan 2020 17:33:54 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 14070C43383; Mon, 13 Jan 2020 17:33:54 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by asavdk3.altibox.net (Postfix) with ESMTPS id EBA112009B;
-        Mon, 13 Jan 2020 18:33:21 +0100 (CET)
-Date:   Mon, 13 Jan 2020 18:33:20 +0100
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] drm/panel: simple: Add support for the Frida
- FRD350H54004 panel
-Message-ID: <20200113173320.GC20743@ravnborg.org>
-References: <20200113161741.32061-1-paul@crapouillou.net>
- <20200113161741.32061-3-paul@crapouillou.net>
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BE2EFC433CB;
+        Mon, 13 Jan 2020 17:33:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BE2EFC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 13 Jan 2020 10:33:50 -0700
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 2/4] drm/msm: allow zapfw to not be specified in
+ gpulist
+Message-ID: <20200113173349.GB26711@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-arm-msm@vger.kernel.org,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Clark <robdclark@chromium.org>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Brian Masney <masneyb@onstation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200112195405.1132288-1-robdclark@gmail.com>
+ <20200112195405.1132288-3-robdclark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200113161741.32061-3-paul@crapouillou.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=eMA9ckh1 c=1 sm=1 tr=0
-        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
-        a=wIhPoiQn7kzPM9fWes8A:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
-        a=pHzHmUro8NiASowvMSCR:22 a=6VlIyEUom7LUIeUMNQJH:22
+In-Reply-To: <20200112195405.1132288-3-robdclark@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul.
-
-On Mon, Jan 13, 2020 at 01:17:41PM -0300, Paul Cercueil wrote:
-> The FRD350H54004 is a simple 3.5" 320x240 24-bit TFT panel, found for
-> instance inside the Anbernic RG-350 handheld gaming console.
+On Sun, Jan 12, 2020 at 11:53:58AM -0800, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
 > 
-> v2: Order alphabetically
-> v3: Add connector_type, and update timings according to the constraints
->     listed in the datasheet
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> For newer devices we want to require the path to come from the
+> firmware-name property in the zap-shader dt node.
 
-Thanks, applied to drm-misc-next.
+Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 
-	Sam
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 > ---
->  drivers/gpu/drm/panel/panel-simple.c | 30 ++++++++++++++++++++++++++++
->  1 file changed, 30 insertions(+)
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 22 +++++++++++++---------
+>  1 file changed, 13 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index e14c14ac62b5..d6f77bc494c7 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -1440,6 +1440,33 @@ static const struct panel_desc foxlink_fl500wvr00_a0t = {
->  	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
->  };
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> index 456bb5af1717..c146c3b8f52b 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -79,9 +79,21 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+>  		ret = request_firmware_direct(&fw, fwname, gpu->dev->dev);
+>  		if (ret)
+>  			fw = ERR_PTR(ret);
+> -	} else {
+> +	} else if (fwname) {
+>  		/* Request the MDT file from the default location: */
+>  		fw = adreno_request_fw(to_adreno_gpu(gpu), fwname);
+> +	} else {
+> +		/*
+> +		 * For new targets, we require the firmware-name property,
+> +		 * if a zap-shader is required, rather than falling back
+> +		 * to a firmware name specified in gpulist.
+> +		 *
+> +		 * Because the firmware is signed with a (potentially)
+> +		 * device specific key, having the name come from gpulist
+> +		 * was a bad idea, and is only provided for backwards
+> +		 * compatibility for older targets.
+> +		 */
+> +		return -ENODEV;
+>  	}
+
+A possible future optimization would be to move a lot of this to the target
+specific code but we can do that once we're sure that all the rest of the
+fallout has bee militated.
+
 >  
-> +static const struct drm_display_mode frida_frd350h54004_mode = {
-> +	.clock = 6000,
-> +	.hdisplay = 320,
-> +	.hsync_start = 320 + 44,
-> +	.hsync_end = 320 + 44 + 16,
-> +	.htotal = 320 + 44 + 16 + 20,
-> +	.vdisplay = 240,
-> +	.vsync_start = 240 + 2,
-> +	.vsync_end = 240 + 2 + 6,
-> +	.vtotal = 240 + 2 + 6 + 2,
-> +	.vrefresh = 60,
-> +	.flags = DRM_MODE_FLAG_PHSYNC | DRM_MODE_FLAG_PVSYNC,
-> +};
-> +
-> +static const struct panel_desc frida_frd350h54004 = {
-> +	.modes = &frida_frd350h54004_mode,
-> +	.num_modes = 1,
-> +	.bpc = 8,
-> +	.size = {
-> +		.width = 77,
-> +		.height = 64,
-> +	},
-> +	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
-> +	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_POSEDGE,
-> +	.connector_type = DRM_MODE_CONNECTOR_DPI,
-> +};
-> +
->  static const struct drm_display_mode friendlyarm_hd702e_mode = {
->  	.clock		= 67185,
->  	.hdisplay	= 800,
-> @@ -3309,6 +3336,9 @@ static const struct of_device_id platform_of_match[] = {
->  	}, {
->  		.compatible = "foxlink,fl500wvr00-a0t",
->  		.data = &foxlink_fl500wvr00_a0t,
-> +	}, {
-> +		.compatible = "frida,frd350h54004",
-> +		.data = &frida_frd350h54004,
->  	}, {
->  		.compatible = "friendlyarm,hd702e",
->  		.data = &friendlyarm_hd702e,
+>  	if (IS_ERR(fw)) {
+> @@ -170,14 +182,6 @@ int adreno_zap_shader_load(struct msm_gpu *gpu, u32 pasid)
+>  		return -EPROBE_DEFER;
+>  	}
+>  
+> -	/* Each GPU has a target specific zap shader firmware name to use */
+> -	if (!adreno_gpu->info->zapfw) {
+> -		zap_available = false;
+> -		DRM_DEV_ERROR(&pdev->dev,
+> -			"Zap shader firmware file not specified for this target\n");
+> -		return -ENODEV;
+> -	}
+> -
+>  	return zap_shader_load_mdt(gpu, adreno_gpu->info->zapfw, pasid);
+>  }
+>  
 > -- 
 > 2.24.1
+> 
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
