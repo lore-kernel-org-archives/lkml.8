@@ -2,218 +2,160 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45122C33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C224BC33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65FF2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95759207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:22:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dlink.ru header.i=@dlink.ru header.b="BhC9j6l0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YL1zGWcN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgAMJVg (ORCPT
+        id S1726804AbgAMJWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:21:36 -0500
-Received: from fd.dlink.ru ([178.170.168.18]:50534 "EHLO fd.dlink.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgAMJVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:21:32 -0500
-Received: by fd.dlink.ru (Postfix, from userid 5000)
-        id C45651B21576; Mon, 13 Jan 2020 12:21:27 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru C45651B21576
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dlink.ru; s=mail;
-        t=1578907287; bh=awOlvhtlkFxUadttzRRBmg6cBvcEOkaMn5I2RIuDKkk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=BhC9j6l0IwSouM7LnOZlNxVvH0HFaP76STmf6vmWG6UWjJLt1/xg4JMW5JxlnIPkf
-         5+riVBws3ayChuXWPRhmlESsvxxVYUp8sPt1gsj5BXzdmU1F/QXgNmVNXUupfc/NR/
-         yhZwDrd4EG14tZ5fPSU3VciNc9am5I22yhN7LfIc=
-Received: from mail.rzn.dlink.ru (mail.rzn.dlink.ru [178.170.168.13])
-        by fd.dlink.ru (Postfix) with ESMTP id B0E611B201E9;
-        Mon, 13 Jan 2020 12:21:14 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fd.dlink.ru B0E611B201E9
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTP id E6CE71B2613D;
-        Mon, 13 Jan 2020 12:21:13 +0300 (MSK)
-Received: from mail.rzn.dlink.ru (localhost [127.0.0.1])
-        by mail.rzn.dlink.ru (Postfix) with ESMTPA;
-        Mon, 13 Jan 2020 12:21:13 +0300 (MSK)
+        Mon, 13 Jan 2020 04:22:37 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32057 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725992AbgAMJWh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 04:22:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578907355;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=vDjgYq7ZyN6ANmr5w8dkEbzgzAr+C/qYxfFwrZDrR80=;
+        b=YL1zGWcNZiSehlNRqZqRXZxNVZ8I3N5hhk5wFGDRB7HSfL9SUnR+T/I1d/AOhMVdwhtC1W
+        QD1Bn6fIlwFYXUFxbvEvDJX3ll8cPQFtJ611YuGpgEgt5HNADBwhxgFeEiUiDXpC9NboDd
+        EVJQvaCt4Be6ej091JZc/hnZjbBnML4=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-110-X4clIU2uPca0kufNyl8HTA-1; Mon, 13 Jan 2020 04:22:21 -0500
+X-MC-Unique: X4clIU2uPca0kufNyl8HTA-1
+Received: by mail-wr1-f70.google.com with SMTP id i9so4734278wru.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 01:22:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vDjgYq7ZyN6ANmr5w8dkEbzgzAr+C/qYxfFwrZDrR80=;
+        b=YSpyfO9Okss8Ek/v3OkwxsoKAq6Pjn2rv7qPqKk4MG6h38/cnFmCDi+UdbZtahPXDb
+         sfppUAcKyChBc5DBu+jZ5VY2uSXXeTeST2TTf71arPtxmcjqogxPVlnNhE/iI7StPjoC
+         7ULZh0z85S4YRTEPJVPPg3qZkZaBraLJG8tOKEihLlgPuYby3C7u7jrSOyBUAfsdkHjH
+         yZO3Ul1mEWHxIVfV2TudsW6uhtHUCjWmlgCZdwC+xWH8RPG4KAfWMYkxY31/6tNM09mH
+         yMiRJYahUEI96Q8RjSxTrWiA0k3MKycGm148QF7f19bz/u1oly/kZa1PSBTZ8FMKgx1j
+         +dLg==
+X-Gm-Message-State: APjAAAV5misCKXGuFd0gVw0nIdpvC61uf5rPofgXhyM7J9V+i/tdp+Il
+        751mKnHe+M/0u+YR9lvltz6JrnHUYGRVtXIQUeodTtlDPH0FAYBZXiRW3HQCS+D936XW3HJZDNf
+        lYgJ1pypqVJtCesj81ZChLuwT
+X-Received: by 2002:a5d:6901:: with SMTP id t1mr16295619wru.94.1578907340044;
+        Mon, 13 Jan 2020 01:22:20 -0800 (PST)
+X-Google-Smtp-Source: APXvYqywO43FDSzRFVJXhpE0bMQK15xlBUilu3eCq1gBFqg2KfJ8N1IebpL4B3GFI3sZeXORGEfoWw==
+X-Received: by 2002:a5d:6901:: with SMTP id t1mr16295592wru.94.1578907339673;
+        Mon, 13 Jan 2020 01:22:19 -0800 (PST)
+Received: from localhost.localdomain ([151.29.30.195])
+        by smtp.gmail.com with ESMTPSA id a1sm14250274wrr.80.2020.01.13.01.22.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 Jan 2020 01:22:18 -0800 (PST)
+Date:   Mon, 13 Jan 2020 10:22:16 +0100
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Philipp Stanner <stanner@posteo.de>
+Cc:     linux-kernel@vger.kernel.org, Hagen Pfeifer <hagen@jauu.net>,
+        mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de
+Subject: Re: SCHED_DEADLINE with CPU affinity
+Message-ID: <20200113092216.GA14325@localhost.localdomain>
+References: <1574202052.1931.17.camel@posteo.de>
+ <20191120085024.GB23227@localhost.localdomain>
+ <1a322df842e0dc5646ef1198ea0bbe668d94646e.camel@posteo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 13 Jan 2020 12:21:13 +0300
-From:   Alexander Lobakin <alobakin@dlink.ru>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Edward Cree <ecree@solarflare.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Hauke Mehrtens <hauke@hauke-m.de>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Taehee Yoo <ap420073@gmail.com>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Song Liu <songliubraving@fb.com>,
-        Matteo Croce <mcroce@redhat.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH RFC net-next 05/19] net: dsa: tag_ar9331: add GRO
- callbacks
-In-Reply-To: <ee6f83fd-edf4-5a98-9868-4cbe9e226b9b@gmail.com>
-References: <20191230143028.27313-1-alobakin@dlink.ru>
- <20191230143028.27313-6-alobakin@dlink.ru>
- <ee6f83fd-edf4-5a98-9868-4cbe9e226b9b@gmail.com>
-User-Agent: Roundcube Webmail/1.4.0
-Message-ID: <ed0ad0246c95a9ee87352d8ddbf0d4a1@dlink.ru>
-X-Sender: alobakin@dlink.ru
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1a322df842e0dc5646ef1198ea0bbe668d94646e.camel@posteo.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Florian Fainelli wrote 30.12.2019 21:20:
-> On 12/30/19 6:30 AM, Alexander Lobakin wrote:
->> Add GRO callbacks to the AR9331 tagger so GRO layer can now process
->> such frames.
->> 
->> Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+Hi,
+
+Sorry for the delay in repling (Xmas + catching-up w/ emails).
+
+On 24/12/19 11:03, Philipp Stanner wrote:
+> On Wed, 20.11.2019, 09:50 +0100 Juri Lelli wrote:
+> > Hi Philipp,
 > 
-> This is a good example and we should probably build a tagger 
-> abstraction
-> that is much simpler to fill in callbacks for (although indirect
-> function calls may end-up killing performance with retpoline and
-> friends), but let's consider this idea.
-
-Hey al,
-Sorry for late replies, was in a big trip.
-
-The performance issue was the main reason why I chose to write full
-.gro_receive() for every single tagger instead of providing a bunch
-of abstraction callbacks. It really isn't a problem for MIPS, on
-which I'm working on this stuff, but can kill any advantages that we
-could get from GRO support on e.g. x86.
-
->> ---
->>  net/dsa/tag_ar9331.c | 77 
->> ++++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 77 insertions(+)
->> 
->> diff --git a/net/dsa/tag_ar9331.c b/net/dsa/tag_ar9331.c
->> index c22c1b515e02..99cc7fd92d8e 100644
->> --- a/net/dsa/tag_ar9331.c
->> +++ b/net/dsa/tag_ar9331.c
->> @@ -100,12 +100,89 @@ static void ar9331_tag_flow_dissect(const struct 
->> sk_buff *skb, __be16 *proto,
->>  	*proto = ar9331_tag_encap_proto(skb->data);
->>  }
->> 
->> +static struct sk_buff *ar9331_tag_gro_receive(struct list_head *head,
->> +					      struct sk_buff *skb)
->> +{
->> +	const struct packet_offload *ptype;
->> +	struct sk_buff *p, *pp = NULL;
->> +	u32 data_off, data_end;
->> +	const u8 *data;
->> +	int flush = 1;
->> +
->> +	data_off = skb_gro_offset(skb);
->> +	data_end = data_off + AR9331_HDR_LEN;
+> Hey Juri,
 > 
-> AR9331_HDR_LEN is a parameter here which is incidentally
-> dsa_device_ops::overhead.
+> thanks so far; we indeed could make it work with exclusive CPU-sets.
 
-Or we can split .overhead to .rx_len and .tx_len and use the first
-to help GRO layer and flow dissector and the second to determine
-total overhead to correct MTU value. Smth like:
+Good. :-)
 
-mtu = max(tag_ops->rx_len, tag_ops->tx_len);
-
->> +
->> +	data = skb_gro_header_fast(skb, data_off);
->> +	if (skb_gro_header_hard(skb, data_end)) {
->> +		data = skb_gro_header_slow(skb, data_end, data_off);
->> +		if (unlikely(!data))
->> +			goto out;
->> +	}
->> +
->> +	/* Data that is to the left from the current position is already
->> +	 * pulled to the head
->> +	 */
->> +	if (unlikely(!ar9331_tag_sanity_check(skb->data + data_off)))
->> +		goto out;
+> On 19/11/19 23:20, Philipp Stanner wrote:
+> > 
+> > > from implementing our intended architecture.
+> > > 
+> > > Now, the questions we're having are:
+> > > 
+> > >    1. Why does the kernel do this, what is the problem with
+> > > scheduling with
+> > >       SCHED_DEADLINE on a certain core? In contrast, how is it
+> > > handled when
+> > >       you have single core systems etc.? Why this artificial
+> > > limitation?
+> > 
+> > Please have also a look (you only mentioned manpage so, in case you
+> > missed it) at
+> > 
+> > https://elixir.bootlin.com/linux/latest/source/Documentation/scheduler/sched-deadline.rst#L667
+> > 
+> > and the document in general should hopefully give you the answer
+> > about
+> > why we need admission control and current limitations regarding
+> > affinities.
+> > 
+> > >    2. How can we possibly implement this? We don't want to use
+> > > SCHED_FIFO,
+> > >       because out-of-control tasks would freeze the entire
+> > > container.
+> > 
+> > I experimented myself a bit with this kind of setup in the past and I
+> > think I made it work by pre-configuring exclusive cpusets (similarly
+> > as
+> > what detailed in the doc above) and then starting containers inside
+> > such
+> > exclusive sets with podman run --cgroup-parent option.
+> > 
+> > I don't have proper instructions yet for how to do this (plan to put
+> > them together soon-ish), but please see if you can make it work with
+> > this hint.
 > 
-> This is applicable to all taggers, they need to verify the sanity of 
-> the
-> header they are being handed.
+> I fear I have not understood quite well yet why this
+> "workaround" leads to (presumably) the same results as set_affinity
+> would. From what I have read, I understand it as follows: For
+> sched_dead, admission control tries to guarantee that the requested
+> policy can be executed. To do so, it analyzes the current workload
+> situation, taking especially the number of cores into account.
 > 
->> +
->> +	rcu_read_lock();
->> +
->> +	ptype = gro_find_receive_by_type(ar9331_tag_encap_proto(data));
-> 
-> If there is no encapsulation a tagger can return the frame's protocol
-> directly, so similarly the tagger can be interrogated for returning 
-> that.
-> 
->> +	if (!ptype)
->> +		goto out_unlock;
->> +
->> +	flush = 0;
->> +
->> +	list_for_each_entry(p, head, list) {
->> +		if (!NAPI_GRO_CB(p)->same_flow)
->> +			continue;
->> +
->> +		if (ar9331_tag_source_port(skb->data + data_off) ^
->> +		    ar9331_tag_source_port(p->data + data_off))
-> 
-> Similarly here, the tagger could provide a function whose job is to
-> return the port number from within its own tag.
-> 
-> So with that being said, what do you think about building a tagger
-> abstraction which is comprised of:
-> 
-> - header length which is dsa_device_ops::overhead
-> - validate_tag()
-> - get_tag_encap_proto()
-> - get_port_number()
-> 
-> and the rest is just wrapping the general GRO list manipulation?
+> Now, with a pre-configured set, the kernel knows which tasks will run
+> on which core, therefore it's able to judge wether a process can be
+> deadline scheduled or not. But when using the default way, you could
+> start your processes as SCHED_OTHER, set SCHED_DEADLINE as policy and
+> later many of them could suddenly call set_affinity, desiring to run on
+> the same core, therefore provoking collisions.
 
-get_tag_encap_proto() and get_port_number() would be called more
-than once in that case for every single frame. Not sure if it is
-a good idea regarding to mentioned retpoline issues.
+But setting affinity would still have to pass admission control, and
+should fail in the case you are describing (IIUC).
 
-> Also, I am wondering should we somehow expose the DSA master
-> net_device's napi_struct such that we could have the DSA slave
-> net_devices call napi_gro_receive() themselves directly such that they
-> could also perform additional GRO on top of Ethernet frames?
+https://elixir.bootlin.com/linux/latest/source/kernel/sched/core.c#L5433
 
-There's no reason to pass frames to GRO layer more than once.
+Best,
 
-The most correct way to handle frames is to pass them to networking
-stack only after DSA tag extraction and removal. That's kinda how
-mac80211 infra works. But this is rather problematic for DSA as it
-keeps Ethernet controller drivers and taggers completely independent
-from each others.
+Juri
 
-I also had an idea to use net_device::rx_handler for tag processing
-instead of dsa_pack_type. CPU ports can't be bridged anyway, so this
-should not be a problem an the first look.
-
-Regards,
-ᚷ ᛖ ᚢ ᚦ ᚠ ᚱ
