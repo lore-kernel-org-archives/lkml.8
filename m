@@ -2,138 +2,169 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1F3C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3591C33CB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29CBC21569
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9E24207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:52:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NVd27d+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgAMGvV (ORCPT
+        id S1728714AbgAMGwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 01:51:21 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2986 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725954AbgAMGvV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 01:51:21 -0500
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 03C7E55F30D6426FC107;
-        Mon, 13 Jan 2020 14:51:18 +0800 (CST)
-Received: from DGGEMM506-MBX.china.huawei.com ([169.254.3.174]) by
- DGGEMM405-HUB.china.huawei.com ([10.3.20.213]) with mapi id 14.03.0439.000;
- Mon, 13 Jan 2020 14:51:11 +0800
-From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>
-CC:     Sudeep Holla <sudeep.holla@arm.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] cpu-topology: warn if NUMA configurations conflicts
- with lower layer
-Thread-Topic: [PATCH] cpu-topology: warn if NUMA configurations conflicts
- with lower layer
-Thread-Index: AQHVuWnsK0zwK8RxTkqe/SNAoYeaUKfT+S+AgALBI6CAAAyngIAAlqWw//+IwoCAAXt3QP//+lWAgASRonCABMxoAIAAodIAgAMuNwCAArymoA==
-Date:   Mon, 13 Jan 2020 06:51:10 +0000
-Message-ID: <678F3D1BB717D949B966B68EAEB446ED340E2592@DGGEMM506-MBX.china.huawei.com>
-References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
- <20191231164051.GA4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
- <20200102112955.GC4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
- <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340AFCA0@dggemm526-mbx.china.huawei.com>
- <20200103114011.GB19390@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340B31E9@dggemm526-mbx.china.huawei.com>
- <20200109104306.GA10914@e105550-lin.cambridge.arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340BEDD6@dggemm526-mbx.china.huawei.com>
- <1a8f7963-97e9-62cc-12d2-39f816dfaf67@arm.com>
-In-Reply-To: <1a8f7963-97e9-62cc-12d2-39f816dfaf67@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.74.221.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 13 Jan 2020 01:52:35 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:47241 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725954AbgAMGwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 01:52:35 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47x45m5vGSz9ttgG;
+        Mon, 13 Jan 2020 07:52:28 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=NVd27d+g; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 1iwCVC8X-I0R; Mon, 13 Jan 2020 07:52:28 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47x45m4fd0z9ttgD;
+        Mon, 13 Jan 2020 07:52:28 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1578898348; bh=BEG+waaqceEGqvmTkmRPJ8Qzyso8PEjwXnIakVOqtZc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=NVd27d+gFiIyUuKl/HLoK+La1AiiYRZnEQtAMYVLE60YGvnlTuLzA+Zj2M0GA+Ket
+         FpVfMNKOrYwhgR+zTPLHtu0BWa6zZ6Ph7297vQIxUho+xhYLUTI/NMu1Gj3zsDCx0k
+         Uvvo9nAJ3jOmw8RlqvoHHkfMpgYirFnUFWki46WU=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 30D588B79C;
+        Mon, 13 Jan 2020 07:52:33 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id gGYtxlUDGq_J; Mon, 13 Jan 2020 07:52:33 +0100 (CET)
+Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AD2CA8B752;
+        Mon, 13 Jan 2020 07:52:32 +0100 (CET)
+Subject: Re: [RFC PATCH v2 07/10] lib: vdso: don't use READ_ONCE() in
+ __c_kernel_time()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, arnd@arndb.de,
+        vincenzo.frascino@arm.com, luto@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        x86@kernel.org
+References: <cover.1577111363.git.christophe.leroy@c-s.fr>
+ <fc1ff722c7cbe63a63ae02ade3a714d2049d54a5.1577111367.git.christophe.leroy@c-s.fr>
+ <87lfqfrp7d.fsf@nanos.tec.linutronix.de>
+ <a995445f-9b00-ca13-d23a-1aea3b345718@c-s.fr>
+ <878smes13d.fsf@nanos.tec.linutronix.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <dfd30b00-5d5c-29c3-6b91-aac0533635ca@c-s.fr>
+Date:   Mon, 13 Jan 2020 07:52:31 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <878smes13d.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWYWxlbnRpbiBTY2huZWlkZXIg
-W21haWx0bzp2YWxlbnRpbi5zY2huZWlkZXJAYXJtLmNvbV0NCj4gU2VudDogU3VuZGF5LCBKYW51
-YXJ5IDEyLCAyMDIwIDQ6NTYgQU0NCj4gVG86IFplbmd0YW8gKEIpOyBNb3J0ZW4gUmFzbXVzc2Vu
-DQo+IENjOiBTdWRlZXAgSG9sbGE7IExpbnV4YXJtOyBHcmVnIEtyb2FoLUhhcnRtYW47IFJhZmFl
-bCBKLiBXeXNvY2tpOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0hdIGNwdS10b3BvbG9neTogd2FybiBpZiBOVU1BIGNvbmZpZ3VyYXRpb25zIGNv
-bmZsaWN0cw0KPiB3aXRoIGxvd2VyIGxheWVyDQo+IA0KPiBPbiAwOS8wMS8yMDIwIDEyOjU4LCBa
-ZW5ndGFvIChCKSB3cm90ZToNCj4gPj4gSUlVQywgdGhlIHByb2JsZW0gaXMgdGhhdCB2aXJ0IGNh
-biBzZXQgdXAgYSBicm9rZW4gdG9wb2xvZ3kgaW4gc29tZQ0KPiA+PiBjYXNlcyB3aGVyZSBNUElE
-UiBkb2Vzbid0IGxpbmUgdXAgY29ycmVjdGx5IHdpdGggdGhlIGRlZmluZWQgTlVNQQ0KPiA+PiBu
-b2Rlcy4NCj4gPj4NCj4gPj4gV2UgY291bGQgYXJndWUgdGhhdCBpdCBpcyBhIHFlbXUvdmlydCBw
-cm9ibGVtLCBidXQgaXQgd291bGQgYmUgbmljZSBpZg0KPiA+PiB3ZSBjb3VsZCBhdCBsZWFzdCBk
-ZXRlY3QgaXQuIFRoZSBwcm9wb3NlZCBwYXRjaCBpc24ndCByZWFsbHkgdGhlIHJpZ2h0DQo+ID4+
-IHNvbHV0aW9uIGFzIGl0IHdhcm5zIG9uIHNvbWUgdmFsaWQgdG9wb2xvZ2llcyBhcyBTdWRlZXAg
-YWxyZWFkeSBwb2ludGVkDQo+ID4+IG91dC4NCj4gPj4NCj4gPj4gSXQgc291bmRzIG1vcmUgbGlr
-ZSB3ZSBuZWVkIGEgbWFzayBzdWJzZXQgY2hlY2sgaW4gdGhlIHNjaGVkX2RvbWFpbg0KPiA+PiBi
-dWlsZGluZyBjb2RlLCBpZiB0aGVyZSBpc24ndCBhbHJlYWR5IG9uZT8NCj4gPg0KPiA+IEN1cnJl
-bnRseSBubywgaXQncyBhIGJpdCBjb21wbGV4IHRvIGRvIHRoZSBjaGVjayBpbiB0aGUgc2NoZWRf
-ZG9tYWluDQo+IGJ1aWxkaW5nIGNvZGUsDQo+ID4gSSBuZWVkIHRvIHRha2UgYSB0aGluayBvZiB0
-aGF0Lg0KPiA+IFN1Z2dlc3Rpb24gd2VsY29tZWQuDQo+ID4NCj4gDQo+IERvaW5nIGEgc2VhcmNo
-IG9uIHRoZSBzY2hlZF9kb21haW4gc3BhbnMgdGhlbXNlbHZlcyBzaG91bGQgbG9vaw0KPiBzb21l
-dGhpbmcgbGlrZQ0KPiB0aGUgY29tcGxldGVseSB1bnRlc3RlZDoNCj4gDQo+IC0tLTg8LS0tDQo+
-IGRpZmYgLS1naXQgYS9rZXJuZWwvc2NoZWQvdG9wb2xvZ3kuYyBiL2tlcm5lbC9zY2hlZC90b3Bv
-bG9neS5jDQo+IGluZGV4IDZlYzFlNTk1YjFkNC4uOTYxMjhkMTJlYzIzIDEwMDY0NA0KPiAtLS0g
-YS9rZXJuZWwvc2NoZWQvdG9wb2xvZ3kuYw0KPiArKysgYi9rZXJuZWwvc2NoZWQvdG9wb2xvZ3ku
-Yw0KPiBAQCAtMTg3OSw2ICsxODc5LDQzIEBAIHN0YXRpYyBzdHJ1Y3Qgc2NoZWRfZG9tYWluDQo+
-ICpidWlsZF9zY2hlZF9kb21haW4oc3RydWN0IHNjaGVkX2RvbWFpbl90b3BvbG9neV9sZXZlDQo+
-ICAJcmV0dXJuIHNkOw0KPiAgfQ0KPiANCj4gKy8qIEVuc3VyZSB0b3BvbG9neSBtYXNrcyBhcmUg
-c2FuZTsgbm9uLU5VTUEgc3BhbnMgc2hvdWxkbid0IG92ZXJsYXAgKi8NCj4gK3N0YXRpYyBpbnQg
-dmFsaWRhdGVfdG9wb2xvZ3lfc3BhbnMoY29uc3Qgc3RydWN0IGNwdW1hc2sgKmNwdV9tYXApDQo+
-ICt7DQo+ICsJc3RydWN0IHNjaGVkX2RvbWFpbl90b3BvbG9neV9sZXZlbCAqdGw7DQo+ICsJaW50
-IGksIGo7DQo+ICsNCj4gKwlmb3JfZWFjaF9zZF90b3BvbG9neSh0bCkgew0KPiArCQkvKiBOVU1B
-IGxldmVscyBhcmUgYWxsb3dlZCB0byBvdmVybGFwICovDQo+ICsJCWlmICh0bC0+ZmxhZ3MgJiBT
-RFRMX09WRVJMQVApDQo+ICsJCQlicmVhazsNCj4gKw0KPiArCQkvKg0KPiArCQkgKiBOb24tTlVN
-QSBsZXZlbHMgY2Fubm90IHBhcnRpYWxseSBvdmVybGFwIC0gdGhleSBtdXN0IGJlDQo+ICsJCSAq
-IGVpdGhlciBlcXVhbCBvciB3aG9sbHkgZGlzam9pbnQuIE90aGVyd2lzZSB3ZSBjYW4gZW5kIHVw
-DQo+ICsJCSAqIGJyZWFraW5nIHRoZSBzY2hlZF9ncm91cCBsaXN0cyAtIGkuZS4gYSBsYXRlciBn
-ZXRfZ3JvdXAoKQ0KPiArCQkgKiBwYXNzIGJyZWFrcyB0aGUgbGlua2luZyBkb25lIGZvciBhbiBl
-YXJsaWVyIHNwYW4uDQo+ICsJCSAqLw0KPiArCQlmb3JfZWFjaF9jcHUoaSwgY3B1X21hcCkgew0K
-PiArCQkJZm9yX2VhY2hfY3B1KGosIGNwdV9tYXApIHsNCj4gKwkJCQlpZiAoaSA9PSBqKQ0KPiAr
-CQkJCQljb250aW51ZTsNCj4gKwkJCQkvKg0KPiArCQkJCSAqIFdlIHNob3VsZCAnYW5kJyBhbGwg
-dGhvc2UgbWFza3Mgd2l0aCAnY3B1X21hcCcNCj4gKwkJCQkgKiB0byBleGFjdGx5IG1hdGNoIHRo
-ZSB0b3BvbG9neSB3ZSdyZSBhYm91dCB0bw0KPiArCQkJCSAqIGJ1aWxkLCBidXQgdGhhdCBjYW4g
-b25seSByZW1vdmUgQ1BVcywgd2hpY2gNCj4gKwkJCQkgKiBvbmx5IGxlc3NlbnMgb3VyIGFiaWxp
-dHkgdG8gZGV0ZWN0IG92ZXJsYXBzDQo+ICsJCQkJICovDQo+ICsJCQkJaWYgKCFjcHVtYXNrX2Vx
-dWFsKHRsLT5tYXNrKGkpLCB0bC0+bWFzayhqKSkgJiYNCj4gKwkJCQkgICAgY3B1bWFza19pbnRl
-cnNlY3RzKHRsLT5tYXNrKGkpLCB0bC0+bWFzayhqKSkpDQo+ICsJCQkJCXJldHVybiAtMTsNCj4g
-KwkJCX0NCj4gKwkJfQ0KPiArCX0NCj4gKw0KPiArCXJldHVybiAwOw0KPiArfQ0KPiArDQo+ICAv
-Kg0KPiAgICogRmluZCB0aGUgc2NoZWRfZG9tYWluX3RvcG9sb2d5X2xldmVsIHdoZXJlIGFsbCBD
-UFUgY2FwYWNpdGllcyBhcmUNCj4gdmlzaWJsZQ0KPiAgICogZm9yIGFsbCBDUFVzLg0KPiBAQCAt
-MTk1Myw3ICsxOTkwLDggQEAgYnVpbGRfc2NoZWRfZG9tYWlucyhjb25zdCBzdHJ1Y3QgY3B1bWFz
-aw0KPiAqY3B1X21hcCwgc3RydWN0IHNjaGVkX2RvbWFpbl9hdHRyICphdHQNCj4gIAlzdHJ1Y3Qg
-c2NoZWRfZG9tYWluX3RvcG9sb2d5X2xldmVsICp0bF9hc3ltOw0KPiAgCWJvb2wgaGFzX2FzeW0g
-PSBmYWxzZTsNCj4gDQo+IC0JaWYgKFdBUk5fT04oY3B1bWFza19lbXB0eShjcHVfbWFwKSkpDQo+
-ICsJaWYgKFdBUk5fT04oY3B1bWFza19lbXB0eShjcHVfbWFwKSkgfHwNCj4gKwkgICAgV0FSTl9P
-Tih2YWxpZGF0ZV90b3BvbG9neV9zcGFucyhjcHVfbWFwKSkpDQo+ICAJCWdvdG8gZXJyb3I7DQo+
-IA0KPiAgCWFsbG9jX3N0YXRlID0gX192aXNpdF9kb21haW5fYWxsb2NhdGlvbl9oZWxsKCZkLCBj
-cHVfbWFwKTsNCj4gLS0tPjgtLS0NCj4gDQo+IEFsdGVybmF0aXZlbHkgdGhlIGFzc2VydGlvbiBv
-biB0aGUgc2NoZWRfZ3JvdXAgbGlua2luZyBJIHN1Z2dlc3RlZCBlYXJsaWVyDQo+IGluIHRoZSB0
-aHJlYWQgc2hvdWxkIHN1ZmZpY2UsIHNpbmNlIHRoaXMgc2hvdWxkIHRyaWdnZXIgd2hlbmV2ZXIg
-d2UgaGF2ZQ0KPiBvdmVybGFwcGluZyBub24tTlVNQSBzY2hlZCBkb21haW5zLg0KPiANCj4gU2lu
-Y2UgeW91IGhhdmUgYSBzZXR1cCB3aGVyZSB5b3UgY2FuIHJlcHJvZHVjZSB0aGUgaXNzdWUsIGNv
-dWxkIHBsZWFzZQ0KPiBnaXZlDQo+IGVpdGhlciAoaWRlYWxseSBib3RoISkgYSB0cnk/IFRoYW5r
-cy4NCg0KDQpJIGhhdmUgdHJpZWQgYm90aCwgdGhpcyBwcmV2aW91cyBvbmUgZG9uJ3Qgd29yay4g
-QnV0IHRoaXMgb25lIHNlZW1zIHdvcmsNCmNvcnJlY3RseSB3aXRoIHRoZSB3YXJuaW5nIG1lc3Nh
-Z2UgcHJpbnRvdXQgYXMgZXhwZWN0ZWQuDQoNClRoaXMgcGF0Y2ggaXMgYmFzZWQgb24gdGhlIGZh
-Y3QgIiBub24tTlVNQSBzcGFucyBzaG91bGRuJ3Qgb3ZlcmxhcCAiLCBJIGFtDQpub3QgcXVpdGUg
-c3VyZSBpZiB0aGlzIGlzIGFsd2F5cyB0cnVlPyANCg0KQW55d2F5LCBDb3VsZCB5b3UgaGVscCB0
-byByYWlzZSB0aGUgbmV3IHBhdGNoPw0KDQpUaGFua3MNClplbmd0YW8NCg0KPiANCj4gPiBUaGFu
-a3MNCj4gPiBaZW5ndGFvDQo+ID4NCj4gPj4NCj4gPj4gTW9ydGVuDQo=
+
+
+Le 11/01/2020 à 12:07, Thomas Gleixner a écrit :
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>>
+>> With READ_ONCE() the 64 bits are being read:
+>>
+>> Without the READ_ONCE() only 32 bits are read. That's the most optimal.
+>>
+>> Without READ_ONCE() but with a barrier() after the read, we should get
+>> the same result but GCC (GCC 8.1) does less good:
+>>
+>> Assuming both part of the 64 bits data will fall into a single
+>> cacheline, the second read is in the noise.
+> 
+> They definitely are in the same cacheline.
+> 
+>> So agreed to drop this change.
+> 
+> We could be smart about this and force the compiler to issue a 32bit
+> read for 32bit builds. See below. Not sure whether it's worth it, but
+> OTOH it will take quite a while until the 32bit time interfaces die
+> completely.
+
+I don't think it is worth something so big to just save 1 or 2 cycles in 
+time() function. Lets keep it as it is.
+
+Thanks,
+Christophe
+
+> 
+> Thanks,
+> 
+>          tglx
+> 
+> 8<------------
+> --- a/include/vdso/datapage.h
+> +++ b/include/vdso/datapage.h
+> @@ -21,6 +21,18 @@
+>   #define CS_RAW		1
+>   #define CS_BASES	(CS_RAW + 1)
+>   
+> +#ifdef __LITTLE_ENDIAN
+> +struct sec_hl {
+> +	u32	sec_l;
+> +	u32	sec_h;
+> +};
+> +#else
+> +struct sec_hl {
+> +	u32	sec_h;
+> +	u32	sec_l;
+> +};
+> +#endif
+> +
+>   /**
+>    * struct vdso_timestamp - basetime per clock_id
+>    * @sec:	seconds
+> @@ -35,7 +47,10 @@
+>    * vdso_data.cs[x].shift.
+>    */
+>   struct vdso_timestamp {
+> -	u64	sec;
+> +	union {
+> +		u64		sec;
+> +		struct sec_hl	sec_hl;
+> +	};
+>   	u64	nsec;
+>   };
+>   
+> --- a/lib/vdso/gettimeofday.c
+> +++ b/lib/vdso/gettimeofday.c
+> @@ -165,8 +165,13 @@ static __maybe_unused int
+>   static __maybe_unused __kernel_old_time_t __cvdso_time(__kernel_old_time_t *time)
+>   {
+>   	const struct vdso_data *vd = __arch_get_vdso_data();
+> -	__kernel_old_time_t t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
+> +	__kernel_old_time_t t;
+>   
+> +#if BITS_PER_LONG == 32
+> +	t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec_hl.sec_l);
+> +#else
+> +	t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
+> +#endif
+>   	if (time)
+>   		*time = t;
+>   
+> 
