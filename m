@@ -2,217 +2,152 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F60C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F21BBC33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F35C2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:50:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Jkmp4Ubf"
+	by mail.kernel.org (Postfix) with ESMTP id CD5D52081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:51:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbgAMJuV (ORCPT
+        id S1726878AbgAMJvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:50:21 -0500
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:7301 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725992AbgAMJuV (ORCPT
+        Mon, 13 Jan 2020 04:51:47 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6082 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725992AbgAMJvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:50:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1578909020; x=1610445020;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   in-reply-to:content-transfer-encoding;
-  bh=PX1ZrZhA4CFfySGOi+tectq1AtVISPobj3q9mu2po2A=;
-  b=Jkmp4Ubfn4RWKqT1+45vPVd296IKOSShWLxagHEoflHm9yXpRVwkdzQP
-   0pWu0WonTsnlJOmOHWvSGdDwUUHy+Lrj4e75lI5o/0TOFH5cP+/hUImxZ
-   FwhdTtAGCrhodnLVVaTB7AdbVPMXctAEZVjZP7YuGUjkiP6l960d8k/tY
-   k=;
-IronPort-SDR: SVAJwSqTvIC1cetRulnIw53zATgp+qtYMK4EOT5etiQow4u9t9ZNP8jyw4WBe0jb4aiDkBN7PC
- R+Cf6N16IMRA==
-X-IronPort-AV: E=Sophos;i="5.69,428,1571702400"; 
-   d="scan'208";a="12077553"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 13 Jan 2020 09:50:19 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id DFF64A2B27;
-        Mon, 13 Jan 2020 09:50:16 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Mon, 13 Jan 2020 09:50:16 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.92) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 13 Jan 2020 09:50:11 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     SeongJae Park <sjpark@amazon.com>
-CC:     <jgross@suse.com>, <axboe@kernel.dk>, <konrad.wilk@oracle.com>,
-        <roger.pau@citrix.com>, <linux-block@vger.kernel.org>,
-        <pdurrant@amazon.com>, <linux-kernel@vger.kernel.org>,
-        <sj38.park@gmail.com>, <xen-devel@lists.xenproject.org>
-Subject: Re: [Xen-devel] [PATCH v13 0/5] xenbus/backend: Add memory pressure handler callback
-Date:   Mon, 13 Jan 2020 10:49:52 +0100
-Message-ID: <20200113094952.30727-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Jan 2020 04:51:47 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00D9oOUU161827
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:51:46 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfavxk8n6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:51:45 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
+        Mon, 13 Jan 2020 09:51:42 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 13 Jan 2020 09:51:41 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00D9pdVw52232414
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 09:51:39 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B013A42041;
+        Mon, 13 Jan 2020 09:51:39 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6492542045;
+        Mon, 13 Jan 2020 09:51:38 +0000 (GMT)
+Received: from [9.124.31.88] (unknown [9.124.31.88])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 13 Jan 2020 09:51:38 +0000 (GMT)
+Subject: Re: [RESEND PATCH v2 2/3] powerpc/powernv: Introduce Self save
+ support
+To:     Ram Pai <linuxram@us.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
+        pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
+References: <cover.1578886602.git.psampat@linux.ibm.com>
+ <9cade84b37a910c96ec3d0a6b39b00e5082d59ab.1578886602.git.psampat@linux.ibm.com>
+ <20200113075133.GD5419@oc0525413822.ibm.com>
+From:   Pratik Sampat <psampat@linux.ibm.com>
+Date:   Mon, 13 Jan 2020 15:21:37 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20191218183718.31719-1-sjpark@amazon.com> (raw)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.43.160.92]
-X-ClientProxiedBy: EX13D27UWA001.ant.amazon.com (10.43.160.19) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <20200113075133.GD5419@oc0525413822.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 20011309-0020-0000-0000-000003A02F4A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011309-0021-0000-0000-000021F79DA4
+Message-Id: <dc58e7b4-e07d-523a-f6f5-3e8c62eb48db@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-13_02:2020-01-13,2020-01-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001130083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Every patch of this patchset got at least one 'Reviewed-by' or 'Acked-by' from
-appropriate maintainers by last Wednesday, and after that, got no comment yet.
-May I ask some more comments?
+I made a mistake while arranging the patches in the series. I'll re-arrange it
+correctly now. Sorry about that.
 
+On 13/01/20 1:21 pm, Ram Pai wrote:
+> On Mon, Jan 13, 2020 at 09:15:08AM +0530, Pratik Rajesh Sampat wrote:
+>> This commit introduces and leverages the Self save API which OPAL now
+>> supports.
+>>
+>> Add the new Self Save OPAL API call in the list of OPAL calls.
+>> Implement the self saving of the SPRs based on the support populated
+>> while respecting it's preferences.
+>>
+>> This implementation allows mixing of support for the SPRs, which
+>> means that a SPR can be self restored while another SPR be self saved if
+>> they support and prefer it to be so.
+>>
+>> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+>> ---
+>>   arch/powerpc/include/asm/opal-api.h        | 3 ++-
+>>   arch/powerpc/include/asm/opal.h            | 1 +
+>>   arch/powerpc/platforms/powernv/idle.c      | 2 ++
+>>   arch/powerpc/platforms/powernv/opal-call.c | 1 +
+>>   4 files changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
+>> index c1f25a760eb1..1b6e1a68d431 100644
+>> --- a/arch/powerpc/include/asm/opal-api.h
+>> +++ b/arch/powerpc/include/asm/opal-api.h
+>> @@ -214,7 +214,8 @@
+>>   #define OPAL_SECVAR_GET				176
+>>   #define OPAL_SECVAR_GET_NEXT			177
+>>   #define OPAL_SECVAR_ENQUEUE_UPDATE		178
+>> -#define OPAL_LAST				178
+>> +#define OPAL_SLW_SELF_SAVE_REG			181
+>> +#define OPAL_LAST				181
+>>
+>>   #define QUIESCE_HOLD			1 /* Spin all calls at entry */
+>>   #define QUIESCE_REJECT			2 /* Fail all calls with OPAL_BUSY */
+>> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
+>> index 9986ac34b8e2..389a85b63805 100644
+>> --- a/arch/powerpc/include/asm/opal.h
+>> +++ b/arch/powerpc/include/asm/opal.h
+>> @@ -203,6 +203,7 @@ int64_t opal_handle_hmi(void);
+>>   int64_t opal_handle_hmi2(__be64 *out_flags);
+>>   int64_t opal_register_dump_region(uint32_t id, uint64_t start, uint64_t end);
+>>   int64_t opal_unregister_dump_region(uint32_t id);
+>> +int64_t opal_slw_self_save_reg(uint64_t cpu_pir, uint64_t sprn);
+>>   int64_t opal_slw_set_reg(uint64_t cpu_pir, uint64_t sprn, uint64_t val);
+>>   int64_t opal_config_cpu_idle_state(uint64_t state, uint64_t flag);
+>>   int64_t opal_pci_set_phb_cxl_mode(uint64_t phb_id, uint64_t mode, uint64_t pe_number);
+>> diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+>> index 2f328403b0dc..d67d4d0b169b 100644
+>> --- a/arch/powerpc/platforms/powernv/idle.c
+>> +++ b/arch/powerpc/platforms/powernv/idle.c
+>> @@ -1172,6 +1172,8 @@ void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
+>>   		if (!is_lpcr_self_save)
+>>   			opal_slw_set_reg(pir, SPRN_LPCR,
+>>   					 lpcr_val);
+>> +		else
+>> +			opal_slw_self_save_reg(pir, SPRN_LPCR);
+> opal_slw_self_save_reg() was used in the prior patch too. How did it
+> compile, if the definition is in this patch?
+>
+>
+> Reviewed-by: Ram Pai <linuxram@us.ibm.com>
+>
+> RP
 
-Thanks,
-SeongJae Park
-
-On Wed, 18 Dec 2019 19:37:13 +0100 SeongJae Park <sjpark@amazon.com> wrote:
-
-> Granting pages consumes backend system memory.  In systems configured
-> with insufficient spare memory for those pages, it can cause a memory
-> pressure situation.  However, finding the optimal amount of the spare
-> memory is challenging for large systems having dynamic resource
-> utilization patterns.  Also, such a static configuration might lack
-> flexibility.
-> 
-> To mitigate such problems, this patchset adds a memory reclaim callback
-> to 'xenbus_driver' (patch 1) and then introduce a lock for race
-> condition avoidance (patch 2).  After that, patch 3 applies the callback
-> mechanism to mitigate the problem in 'xen-blkback'.  The fourth and
-> fifth patches are trivial cleanups; those fix nits we found during the
-> development of this patchset.
-> 
-> Note that patches 1, 4, and 5 are not changed since v9.
-> 
-> 
-> Base Version
-> ------------
-> 
-> This patch is based on v5.4.  A complete tree is also available at my
-> public git repo:
-> https://github.com/sjp38/linux/tree/patches/blkback/buffer_squeeze/v13
-> 
-> 
-> Patch History
-> -------------
-> 
-> Changes from v12
-> (https://lore.kernel.org/xen-devel/20191218104232.9606-1-sjpark@amazon.com/)
->  - Do not unnecessarily disable interrupts (suggested by Juergen)
->  - Hold lock from xenbus side (suggested by Juergen)
-> 
-> Changes from v11
-> (https://lore.kernel.org/xen-devel/20191217160748.693-2-sjpark@amazon.com/)
->  - Fix wrong trylock use (reported by Juergen)
->  - Merge patch 3 and 4 (suggested by Juergen)
->  - Update test result
-> 
-> Changes from v10
-> (https://lore.kernel.org/xen-devel/20191216124527.30306-1-sjpark@amazon.com/)
->  - Fix race condition (reported by SeongJae, suggested by Juergen)
-> 
-> Changes from v9
-> (https://lore.kernel.org/xen-devel/20191213153546.17425-1-sjpark@amazon.de/)
->  - Add 'Reviewed-by' and 'Acked-by' from Roger Pau Monné
->  - Update the commit message for overhead test of the 2nd path
-> 
-> Changes from v8
-> (https://lore.kernel.org/xen-devel/20191213130211.24011-1-sjpark@amazon.de/)
->  - Drop 'Reviewed-by: Juergen' from the second patch
->    (suggested by Roger Pau Monné)
->  - Update contact of the new module param to SeongJae Park
->    <sjpark@amazon.de>
->    (suggested by Roger Pau Monné)
->  - Wordsmith the description of the parameter
->    (suggested by Roger Pau Monné)
->  - Fix dumb bugs
->    (suggested by Roger Pau Monné)
->  - Move module param definition to xenbus.c and reduce the number of
->    lines for this change
->    (suggested by Roger Pau Monné)
->  - Add a comment for the new callback, reclaim_memory, as other
->    callbacks also have
->  - Add another trivial cleanup of xenbus.c file (4th patch)
-> 
-> Changes from v7
-> (https://lore.kernel.org/xen-devel/20191211181016.14366-1-sjpark@amazon.de/)
->  - Update sysfs-driver-xen-blkback for new parameter
->    (suggested by Roger Pau Monné)
->  - Use per-xen_blkif buffer_squeeze_end instead of global variable
->    (suggested by Roger Pau Monné)
-> 
-> Changes from v6
-> (https://lore.kernel.org/linux-block/20191211042428.5961-1-sjpark@amazon.de/)
->  - Remove more unnecessary prefixes (suggested by Roger Pau Monné)
->  - Constify a variable (suggested by Roger Pau Monné)
->  - Rename 'reclaim' into 'reclaim_memory' (suggested by Roger Pau Monné)
->  - More wordsmith of the commit message (suggested by Roger Pau Monné)
-> 
-> Changes from v5
-> (https://lore.kernel.org/linux-block/20191210080628.5264-1-sjpark@amazon.de/)
->  - Wordsmith the commit messages (suggested by Roger Pau Monné)
->  - Change the reclaim callback return type (suggested by Roger Pau
->    Monné)
->  - Change the type of the blkback squeeze duration variable
->    (suggested by Roger Pau Monné)
->  - Add a patch for removal of unnecessary static variable name prefixes
->    (suggested by Roger Pau Monné)
->  - Fix checkpatch.pl warnings
-> 
-> Changes from v4
-> (https://lore.kernel.org/xen-devel/20191209194305.20828-1-sjpark@amazon.com/)
->  - Remove domain id parameter from the callback (suggested by Juergen
->    Gross)
->  - Rename xen-blkback module parameter (suggested by Stefan Nuernburger)
-> 
-> Changes from v3
-> (https://lore.kernel.org/xen-devel/20191209085839.21215-1-sjpark@amazon.com/)
->  - Add general callback in xen_driver and use it (suggested by Juergen
->    Gross)
-> 
-> Changes from v2
-> (https://lore.kernel.org/linux-block/af195033-23d5-38ed-b73b-f6e2e3b34541@amazon.com)
->  - Rename the module parameter and variables for brevity
->    (aggressive shrinking -> squeezing)
-> 
-> Changes from v1
-> (https://lore.kernel.org/xen-devel/20191204113419.2298-1-sjpark@amazon.com/)
->  - Adjust the description to not use the term, `arbitrarily`
->    (suggested by Paul Durrant)
->  - Specify time unit of the duration in the parameter description,
->    (suggested by Maximilian Heyne)
->  - Change default aggressive shrinking duration from 1ms to 10ms
->  - Merge two patches into one single patch
-> 
-> 
-> SeongJae Park (5):
->   xenbus/backend: Add memory pressure handler callback
->   xenbus/backend: Protect xenbus callback with lock
->   xen/blkback: Squeeze page pools if a memory pressure is detected
->   xen/blkback: Remove unnecessary static variable name prefixes
->   xen/blkback: Consistently insert one empty line between functions
-> 
->  .../ABI/testing/sysfs-driver-xen-blkback      | 10 +++++
->  drivers/block/xen-blkback/blkback.c           | 42 +++++++++----------
->  drivers/block/xen-blkback/common.h            |  1 +
->  drivers/block/xen-blkback/xenbus.c            | 28 ++++++++++---
->  drivers/xen/xenbus/xenbus_probe.c             |  8 +++-
->  drivers/xen/xenbus/xenbus_probe_backend.c     | 38 +++++++++++++++++
->  include/xen/xenbus.h                          |  3 ++
->  7 files changed, 103 insertions(+), 27 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
