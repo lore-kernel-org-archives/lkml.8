@@ -2,94 +2,135 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0261C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9EAC33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:00:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B74BA2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655792081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:00:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="gMACNyW5"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="imzMbAJn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgAMJ76 (ORCPT
+        id S1728670AbgAMKA4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:59:58 -0500
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:8550 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgAMJ76 (ORCPT
+        Mon, 13 Jan 2020 05:00:56 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:36791 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726133AbgAMKA4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:59:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1578909597; x=1610445597;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   in-reply-to:content-transfer-encoding;
-  bh=NLk0Q2nA10kWUDxhQp+mKV/5Lh/SEbObpJbRFWy+cF4=;
-  b=gMACNyW5g21a/wSmZ3cQwlWkbqfn5wHAd2O1kWZCcuEDLRF4NdUuR24f
-   eky5j1d5DdkJrwBLN9qdx89luO3lvXfwxcnTLGexjeporrspRiwGjfVNJ
-   vrRckUyOQAUuUeu3Vn/qfR0Ddb26KVkoR6YUkG9yiUYPnvGy+emZXdwGw
-   M=;
-IronPort-SDR: 7UWxbXmeu6JLqhKd8TBlEtlwkYdPo3Dw/eqPtp8mbwamMLLQ+nGXJQbjrWOVHH98mInXf1z9Mv
- v1hiiYT81YKg==
-X-IronPort-AV: E=Sophos;i="5.69,428,1571702400"; 
-   d="scan'208";a="12078578"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-9ec21598.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 13 Jan 2020 09:59:57 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1d-9ec21598.us-east-1.amazon.com (Postfix) with ESMTPS id E0229A20D0;
-        Mon, 13 Jan 2020 09:59:54 +0000 (UTC)
-Received: from EX13D31EUA001.ant.amazon.com (10.43.165.15) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1236.3; Mon, 13 Jan 2020 09:59:54 +0000
-Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.92) by
- EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 13 Jan 2020 09:59:49 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.com>
-CC:     SeongJae Park <sjpark@amazon.com>, <jgross@suse.com>,
-        <axboe@kernel.dk>, <konrad.wilk@oracle.com>, <pdurrant@amazon.com>,
-        <sj38.park@gmail.com>, <linux-kernel@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <xen-devel@lists.xenproject.org>
-Subject: Re: Re: [Xen-devel] [PATCH v13 0/5] xenbus/backend: Add memory pressure handler callback
-Date:   Mon, 13 Jan 2020 10:59:32 +0100
-Message-ID: <20200113095932.602-1-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Jan 2020 05:00:56 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578909655; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=RPURW72SFQ891pWyYWf7dVfpvaaTXLcXOdIIKMpcbVc=; b=imzMbAJnG734QE5G6laKfKVbdC3NZs4aB9GP7pTTGVViPwePjDnXwQT2+db1IucjdLOYi6Ov
+ 47Y6tolbI3BRrvN9JNBsVb5ANfyTfJqCY7oy+AQvCWtoUzYPvGfNmCchJwpiuqgs4KBX8eAT
+ oWL+XU17SIAg3kbiY3TwBw5D51o=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1c3fd6.7f0c8ce037a0-smtp-out-n01;
+ Mon, 13 Jan 2020 10:00:54 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DAE42C433A2; Mon, 13 Jan 2020 10:00:54 +0000 (UTC)
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2B3E7C43383;
+        Mon, 13 Jan 2020 10:00:49 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2B3E7C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+To:     Rob Herring <robh@kernel.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+References: <1577421760-1174-1-git-send-email-tdas@codeaurora.org>
+ <1577421760-1174-2-git-send-email-tdas@codeaurora.org>
+ <20200104213645.GA25711@bogus>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <2d4a70f0-c882-a15b-cfa8-7fefef59f45b@codeaurora.org>
+Date:   Mon, 13 Jan 2020 15:30:47 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200113095507.GE11756@Air-de-Roger> (raw)
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.43.160.92]
-X-ClientProxiedBy: EX13D32UWA001.ant.amazon.com (10.43.160.4) To
- EX13D31EUA001.ant.amazon.com (10.43.165.15)
+In-Reply-To: <20200104213645.GA25711@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jan 2020 10:55:07 +0100 "Roger Pau Monné" <roger.pau@citrix.com> wrote:
+Hi Rob,
 
-> On Mon, Jan 13, 2020 at 10:49:52AM +0100, SeongJae Park wrote:
-> > Every patch of this patchset got at least one 'Reviewed-by' or 'Acked-by' from
-> > appropriate maintainers by last Wednesday, and after that, got no comment yet.
-> > May I ask some more comments?
+Thanks for your review.
+
+On 1/5/2020 3:06 AM, Rob Herring wrote:
+
+>> +description: |
+>> +  Qualcomm modem clock control module which supports the clocks.
+>> +
+>> +properties:
+>> +  compatible :
 > 
-> I'm not sure why more comments are needed, patches have all the
-> relevant Acks and will be pushed in due time unless someone has
-> objections.
+> drop space     ^
 > 
-> Please be patient and wait at least until the next merge window, this
-> patches are not bug fixes so pushing them now would be wrong.
 
-Ok, I will.  Thank you for your quick and nice reply.
+Will take care in the next patch.
 
-
-Thanks,
-SeongJae Park
-
+>> +    enum:
+>> +       - qcom,sc7180-mss
+>> +
+>> +  '#clock-cells':
+>> +    const: 1
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  additionalItems: false
 > 
-> Roger.
+> With the indentation here, you are defining a property. Should be no
+> indent.
 > 
+
+I tried removing the indent too, but I keep getting this error.
+  Additional properties are not allowed ('additionalItems' was unexpected)
+
+Please let me know if I am missing something?
+
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - '#clock-cells'
+>> +
+>> +examples:
+>> +  # Example of MSS with clock nodes properties for SC7180:
+>> +  - |
+>> +    clock-controller@41aa000 {
+>> +      compatible = "qcom,sc7180-mss";
+>> +      reg = <0x041aa000 0x100>;
+>> +      #clock-cells = <1>;
+>> +    };
+>> +...
+>> --
+>> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+>> of the Code Aurora Forum, hosted by the  Linux Foundation.
+>>
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
+
+--
