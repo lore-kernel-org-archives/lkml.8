@@ -2,270 +2,199 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73549C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 02:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 049EBC33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 02:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F762187F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 02:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5598222D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 02:43:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fvY0DzsK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esi7Itj4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733103AbgAMCPU (ORCPT
+        id S1733085AbgAMCn3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 21:15:20 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11469 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732487AbgAMCPU (ORCPT
+        Sun, 12 Jan 2020 21:43:29 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46683 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732487AbgAMCn3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 21:15:20 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1bd2a20000>; Sun, 12 Jan 2020 18:14:58 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sun, 12 Jan 2020 18:15:17 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sun, 12 Jan 2020 18:15:17 -0800
-Received: from [10.19.108.118] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jan
- 2020 02:15:15 +0000
-Subject: Re: [PATCH v5 3/5] dt-bindings: phy: tegra: Add Tegra194 support
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     Rob Herring <robh@kernel.org>, <gregkh@linuxfoundation.org>,
-        <jonathanh@nvidia.com>, <kishon@ti.com>,
-        <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <nkristam@nvidia.com>
-References: <20200103081814.9848-1-jckuo@nvidia.com>
- <20200103081814.9848-4-jckuo@nvidia.com> <20200103223940.GA9205@bogus>
- <baa9b5f4-74be-0ab4-0b24-bf926cf3207c@nvidia.com>
- <4c3f3776-65e2-aafd-7bb9-fa69df301cb6@nvidia.com>
- <20200110112650.GB2233456@ulmo>
-X-Nvconfidentiality: public
-From:   JC Kuo <jckuo@nvidia.com>
-Message-ID: <dc6853d2-2178-b781-6bc6-23e4ed38ccb2@nvidia.com>
-Date:   Mon, 13 Jan 2020 10:15:09 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Sun, 12 Jan 2020 21:43:29 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m26so8263111ljc.13
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 18:43:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=24/I1qlMqBFXawGKcZCUrgzix2NHvFXwEaDn4ik+j2U=;
+        b=esi7Itj4DmpSDioUwVhXYRkKxTZ0cZfRIRPkUwYLO6thkX04T7cQnJprHW+yehrMPI
+         wEdujDl/DavLJPfpBbCV4OmeO1qNENQVjk3gnTub6I+dlUOdQJ5R+oZAzgXpb8IkQKhV
+         oPliJ8aBmRFWcPN9bIoV/OG4OUihmzuSBUX7WI9bq0KkuNyXR3QUrlB80N+hHrNpIBfb
+         9JrawK4EVmXXtRqOLaVQG5gB4m0byjm575jEt58Yt70femg2S37y3tCUqTSlbnQjAsL5
+         rKqNDq/7croKGCQgyVEaQozc5gaGSO+y7NUNq4JsimHFNk0vQ7WcPLYsqKPFrjgykumn
+         ipdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=24/I1qlMqBFXawGKcZCUrgzix2NHvFXwEaDn4ik+j2U=;
+        b=rW/R/qEogdbBPbyRfrFFxEpUozEH7YCJRY9JgCK0G6N4D9Kegje5Kdes6WawPusY1k
+         OPnPjoW3XIeVa+TaPuzDpLO/J1hsfERJBwa0DnqHNgxnlDugUZbGoAYIJNXGyt2JskDD
+         8aSdRd5Ok9JKse/ziTCZ/L+PDdj8GpiNUYM55rL7VHxa31Q7qiyZUViPe5CBt16v93Jn
+         SGPNLrln2RHTuBPq6o+dsVL2svdf0XQnpP8/Mz2OWv3xnRIeBs2rs8AYZyzL68AdA3Io
+         Wwpx/6BmAK1ILqBUhgzqZaYwmgd3roOlfRuWSMrL5XAbnr6PFDFzg3Rr8Xx+Du8CVQKD
+         rIFw==
+X-Gm-Message-State: APjAAAVvOufzkFIHleCl52T3y/evBRpnWSTaRlS54Y5YhnmtU/tWiQho
+        ZTgKLjfp7PdZPeu/CsjSUi3eg0Zu4MRodj2oAnI=
+X-Google-Smtp-Source: APXvYqwXwacTiGL5FRpSFPYXYEHd2JzH7vmXzdU55onIT3/3yV9zHmg0Isx13uMvMznby+Jefub+1OThEiblDPLXpVs=
+X-Received: by 2002:a2e:9a01:: with SMTP id o1mr9309832lji.247.1578883406468;
+ Sun, 12 Jan 2020 18:43:26 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200110112650.GB2233456@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578881698; bh=VfhchbKgOZx7krVcK3EI9o3Udj7ufQOUyty7hnxpDjw=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=fvY0DzsKMOOEqRT5BycfN+QfhdLFNzZrPo4ySYR0Dbnu4h80Tb01qr+tiBDRMalQi
-         8+5CTyvq2vvpIUb7a7vwsIfIDe9ceONUS7pE1eUr37N6pgggRi9rptcealfIXEs+RG
-         HmPwIbNGtECrVx8GxcsdXRAm9TIpa7p/xVIq0j6H/4jySFoHoM7XjJ2x51zKgTRuxk
-         KvU2SOtZLPEvUPC+VE4cMZ6OoaGsSb4hW6YkX9Vsrktgr6rw6w/+aJhdhAt93r4UVY
-         9dFI3aHZX9gLn+yZVqVJ6dzLMm1GP5OiTdXRbBvzECRKf7Au8PlpwGmrq9ou+4wNwC
-         HUj16VGTgMNJA==
+References: <20200103033929.4956-1-zhenzhong.duan@gmail.com>
+ <20200109184055.GI5603@zn.tnic> <20200109204638.GA523773@rani.riverdale.lan>
+ <CAFH1YnNA9qfM4tPzKKDaQD6DPxnE=tJsB7AUZQBohDTW3zm=Xg@mail.gmail.com> <20200110090032.GB19453@zn.tnic>
+In-Reply-To: <20200110090032.GB19453@zn.tnic>
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+Date:   Mon, 13 Jan 2020 10:43:14 +0800
+Message-ID: <CAFH1YnN8v+8UH3RvaeT7TJEdtEyxhoBA-ZEMk-mRFWNad8e9Jw@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/boot/KASLR: Fix unused variable warning
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/10/20 7:26 PM, Thierry Reding wrote:
-> On Thu, Jan 09, 2020 at 09:31:27AM +0800, JC Kuo wrote:
->> Hi Rob,
->> For now we have two options.
->> 1. reusing the existing "maximum-speed" which is documented in usb/generic.txt
->> Pro: no need to add new property
->> Con: only "super-speed" and "super-speed-plus" are valid for Tegra XUSB PADCTL,
->> therefore extra code/document change is required.
->>
->> +	if (device_property_present(&port->dev, "maximum-speed")) {
->> +		maximum_speed =  usb_get_maximum_speed(&port->dev);
->> +		if (maximum_speed == USB_SPEED_SUPER)
->> +			usb3->disable_gen2 = true;
->> +		else if (maximum_speed == USB_SPEED_SUPER_PLUS)
->> +			usb3->disable_gen2 = false;
->> +		else
->> +			return -EINVAL;
->> +	}
->>
->> 2. introducing a new proprietary "nvidia,disable-gen2" property
->> Pro: its logic perfectly matches the need, and code change is minimum
->>
->> +        usb3->disable_gen2 = of_property_read_bool(np, "nvidia,disable-gen2");
->>
->> Con: it's a new and proprietary property.
->>
->> Please let me know which one do you prefer or there is something else
->> works better.
-> 
-> I think the first version is much clearer. maximum-speed = "super-speed"
-> is very clear and explicit. nvidia,disable-gen2 is less so. While it may
-> be true in this case what "disable-gen2" does, using the generic
-> bindings has the advantage that it'll be more familiar to people already
-> familiar with other USB device tree bindings.
-> 
-> Also, the nvidia,disable-gen2 property only perfectly matches the need
-> because it reflects the name of the variable. If you rewrote the code to
-> do something like this:
-> 
-> 	if (port->maximum_speed <= USB_SPEED_SUPER) {
-> 		/* disable gen2 */
-> 		...
-> 	}
+On Fri, Jan 10, 2020 at 5:00 PM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Fri, Jan 10, 2020 at 10:27:02AM +0800, Zhenzhong Duan wrote:
+> > Yes. Will you send this formally?
+>
+> And then a flood of fix-this-trivial-warning patches ensues?
+>
+> You should know that they have the lowest prio when it comes to looking
+> at them.
+I see.
+Just tried Arvind's patch, result is not that bad. Below are all
+warnings during build:
+In fact, only gop.c and kaslr.c have compile warning.
 
-"low-speed/full-speed/high-speed/wireless" options are invalid to a usb3 port
-because a usb3 port is not capable of operating at
-low-/full-/high-speed/wireless protocols. Therefore,
-maximum-speed="low-/full-/high-speed/wireless" is something more like completely
-disabling the usb3 port than just disabling super-speed-plus.
+/root/kernel/drivers/firmware/efi/libstub/gop.c: In function =E2=80=98efi_s=
+etup_gop=E2=80=99:
+/root/kernel/drivers/firmware/efi/libstub/gop.c:174:18: warning:
+=E2=80=98pixel_format=E2=80=99 may be used uninitialized in this function
+[-Wmaybe-uninitialized]
+  setup_pixel_info(si, pixels_per_scan_line, pixel_info, pixel_format);
+                  ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:97:6: note:
+=E2=80=98pixel_format=E2=80=99 was declared here
+  int pixel_format;
+      ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:166:45: warning:
+=E2=80=98fb_base=E2=80=99 may be used uninitialized in this function
+[-Wmaybe-uninitialized]
+  ext_lfb_base =3D (u64)(unsigned long)fb_base >> 32;
+                                             ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:95:6: note: =E2=80=98fb_bas=
+e=E2=80=99
+was declared here
+  u64 fb_base;
+      ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:174:18: warning:
+=E2=80=98pixels_per_scan_line=E2=80=99 may be used uninitialized in this fu=
+nction
+[-Wmaybe-uninitialized]
+  setup_pixel_info(si, pixels_per_scan_line, pixel_info, pixel_format);
+                  ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:93:6: note:
+=E2=80=98pixels_per_scan_line=E2=80=99 was declared here
+  u32 pixels_per_scan_line;
+      ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:163:17: warning:
+=E2=80=98height=E2=80=99 may be used uninitialized in this function
+[-Wmaybe-uninitialized]
+  si->lfb_height =3D height;
+                 ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:92:13: note: =E2=80=98heigh=
+t=E2=80=99
+was declared here
+  u16 width, height;
+             ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:162:16: warning:
+=E2=80=98width=E2=80=99 may be used uninitialized in this function
+[-Wmaybe-uninitialized]
+  si->lfb_width =3D width;
+                ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:92:6: note: =E2=80=98width=
+=E2=80=99
+was declared here
+  u16 width, height;
+      ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:271:18: warning:
+=E2=80=98pixel_format=E2=80=99 may be used uninitialized in this function
+[-Wmaybe-uninitialized]
+  setup_pixel_info(si, pixels_per_scan_line, pixel_info, pixel_format);
+                  ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:194:6: note:
+=E2=80=98pixel_format=E2=80=99 was declared here
+  int pixel_format;
+      ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:263:45: warning:
+=E2=80=98fb_base=E2=80=99 may be used uninitialized in this function
+[-Wmaybe-uninitialized]
+  ext_lfb_base =3D (u64)(unsigned long)fb_base >> 32;
+                                             ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:192:6: note: =E2=80=98fb_ba=
+se=E2=80=99
+was declared here
+  u64 fb_base;
+      ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:271:18: warning:
+=E2=80=98pixels_per_scan_line=E2=80=99 may be used uninitialized in this fu=
+nction
+[-Wmaybe-uninitialized]
+  setup_pixel_info(si, pixels_per_scan_line, pixel_info, pixel_format);
+                  ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:190:6: note:
+=E2=80=98pixels_per_scan_line=E2=80=99 was declared here
+  u32 pixels_per_scan_line;
+      ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:260:17: warning:
+=E2=80=98height=E2=80=99 may be used uninitialized in this function
+[-Wmaybe-uninitialized]
+  si->lfb_height =3D height;
+                 ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:189:13: note: =E2=80=98heig=
+ht=E2=80=99
+was declared here
+  u16 width, height;
+             ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:259:16: warning:
+=E2=80=98width=E2=80=99 may be used uninitialized in this function
+[-Wmaybe-uninitialized]
+  si->lfb_width =3D width;
+                ^
+/root/kernel/drivers/firmware/efi/libstub/gop.c:189:6: note: =E2=80=98width=
+=E2=80=99
+was declared here
+  u16 width, height;
 
-I see using an existing "maximum-speed" is preferred. Please review code change
-in v5 and let me know if anything could be improved further.
+/root/kernel/arch/x86/boot/compressed/kaslr.c: In function =E2=80=98process=
+_mem_region=E2=80=99:
+/root/kernel/arch/x86/boot/compressed/kaslr.c:698:6: warning: unused
+variable =E2=80=98i=E2=80=99 [-Wunused-variable]
+  int i;
 
-> 
-> Then all of a sudden the "maximum-speed" property is a perfect match. In
-> general, bindings should be natural to the domain of the bus or device
-> that they describe rather than a reflection of how the driver programs
-> the device's registers.
-> 
-> On a side-note: we should also update the usb/generic.txt binding to
-> describe the "super-speed-plus" value for the maximum-speed property.
-Yes, I feel the same. I will send a patch for it.
-
-Thanks,
-JC
-
-> 
-> Thierry
-> 
->> Thanks,
->> JC
->>
->>
->> On 1/6/20 3:10 PM, JC Kuo wrote:
->>> On 1/4/20 6:39 AM, Rob Herring wrote:
->>>> On Fri, Jan 03, 2020 at 04:18:12PM +0800, JC Kuo wrote:
->>>>> Extend the bindings to cover the set of features found in Tegra194.
->>>>> Note that, technically, there are four more supplies connected to the
->>>>> XUSB pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL)
->>>>> , but the power sequencing requirements of Tegra194 require these to be
->>>>> under the control of the PMIC.
->>>>>
->>>>> Tegra194 XUSB PADCTL supports up to USB 3.1 Gen 2 speed, however, it
->>>>> is possible for some platforms have long signal trace that could not
->>>>> provide sufficient electrical environment for Gen 2 speed. This patch
->>>>> adds a "maximum-speed" property to usb3 ports which can be used to
->>>>> specify the maximum supported speed for any particular USB 3.1 port.
->>>>> For a port that is not capable of SuperSpeedPlus, "maximum-speed"
->>>>> property should carry "super-speed".
->>>>>
->>>>> Signed-off-by: JC Kuo <jckuo@nvidia.com>
->>>>> ---
->>>>> Changes in v5:
->>>>> - re-use "maximum-speed" instead of adding "nvidia,disable-gen2"
->>>>> Changes in v4: none
->>>>> Changes in v3: none
->>>>> Changes in v2:
->>>>> - fix a typo
->>>>>
->>>>>  .../phy/nvidia,tegra124-xusb-padctl.txt        | 18 ++++++++++++++++++
->>>>>  1 file changed, 18 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
->>>>> index 9fb682e47c29..7d0089006e67 100644
->>>>> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
->>>>> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
->>>>> @@ -37,6 +37,7 @@ Required properties:
->>>>>    - Tegra132: "nvidia,tegra132-xusb-padctl", "nvidia,tegra124-xusb-padctl"
->>>>>    - Tegra210: "nvidia,tegra210-xusb-padctl"
->>>>>    - Tegra186: "nvidia,tegra186-xusb-padctl"
->>>>> +  - Tegra194: "nvidia,tegra194-xusb-padctl"
->>>>>  - reg: Physical base address and length of the controller's registers.
->>>>>  - resets: Must contain an entry for each entry in reset-names.
->>>>>  - reset-names: Must include the following entries:
->>>>> @@ -62,6 +63,10 @@ For Tegra186:
->>>>>  - vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
->>>>>  - vddio-hsic-supply: HSIC PHY power supply. Must supply 1.2 V.
->>>>>  
->>>>> +For Tegra194:
->>>>> +- avdd-usb-supply: USB I/Os, VBUS, ID, REXT, D+/D- power supply. Must supply
->>>>> +  3.3 V.
->>>>> +- vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
->>>>>  
->>>>>  Pad nodes:
->>>>>  ==========
->>>>> @@ -154,6 +159,11 @@ For Tegra210, the list of valid PHY nodes is given below:
->>>>>  - sata: sata-0
->>>>>    - functions: "usb3-ss", "sata"
->>>>>  
->>>>> +For Tegra194, the list of valid PHY nodes is given below:
->>>>> +- usb2: usb2-0, usb2-1, usb2-2, usb2-3
->>>>> +  - functions: "xusb"
->>>>> +- usb3: usb3-0, usb3-1, usb3-2, usb3-3
->>>>> +  - functions: "xusb"
->>>>>  
->>>>>  Port nodes:
->>>>>  ===========
->>>>> @@ -221,6 +231,11 @@ Optional properties:
->>>>>    is internal. In the absence of this property the port is considered to be
->>>>>    external.
->>>>>  
->>>>> +- maximum-speed: Only for Tegra194. A string property that specifies maximum
->>>>> +  supported speed of a usb3 port. Valid values are:
->>>>> +  - "super-speed-plus": default, the usb3 port supports USB 3.1 Gen 2 speed.
->>>>
->>>> Not defined as a valid value in usb/generic.txt. '-gen2' instead of 
->>>> '-plus' would be clearer IMO. However, is there any need to define the 
->>>> maximum speed possible? The purpose of this property is to limit the 
->>>> speed below the max.
->>>>
->>> usb_get_maximum_speed(), which parses "maximum-speed" property, indeed handles
->>> string "super-speed-plus". Should "super-speed-plus" be documented in
->>> usb/generic.txt"?
->>>
->>> static const char *const speed_names[] = {
->>> 	[USB_SPEED_UNKNOWN] = "UNKNOWN",
->>> 	[USB_SPEED_LOW] = "low-speed",
->>> 	[USB_SPEED_FULL] = "full-speed",
->>> 	[USB_SPEED_HIGH] = "high-speed",
->>> 	[USB_SPEED_WIRELESS] = "wireless",
->>> 	[USB_SPEED_SUPER] = "super-speed",
->>> 	[USB_SPEED_SUPER_PLUS] = "super-speed-plus",
->>> };
->>>
->>> A proprietary "nvidia,disable-gen2" property was proposed in earlier revision to
->>> "limit the speed below the max". I like it because it fit our needs better and
->>> requires only one line of code change.
->>>
->>>    usb3->disable_gen2 = of_property_read_bool(np, "nvidia,disable-gen2");
->>>
->>> Should I fallback to that approach?
->>>
->>> Thanks,
->>> JC
->>>
->>>>> +  - "super-speed": the usb3 port supports USB 3.1 Gen 1 speed only.
->>>>> +
->>>>>  For Tegra124 and Tegra132, the XUSB pad controller exposes the following
->>>>>  ports:
->>>>>  - 3x USB2: usb2-0, usb2-1, usb2-2
->>>>> @@ -233,6 +248,9 @@ For Tegra210, the XUSB pad controller exposes the following ports:
->>>>>  - 2x HSIC: hsic-0, hsic-1
->>>>>  - 4x super-speed USB: usb3-0, usb3-1, usb3-2, usb3-3
->>>>>  
->>>>> +For Tegra194, the XUSB pad controller exposes the following ports:
->>>>> +- 4x USB2: usb2-0, usb2-1, usb2-2, usb2-3
->>>>> +- 4x super-speed USB: usb3-0, usb3-1, usb3-2, usb3-3
->>>>>  
->>>>>  Examples:
->>>>>  =========
->>>>> -- 
->>>>> 2.17.1
->>>>>
+Regards
+Zhenzhong
