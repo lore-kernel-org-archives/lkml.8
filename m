@@ -2,219 +2,136 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41E3C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:40:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A5FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D2D22314
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:40:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5904B24654
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:43:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="nrfqXjiN"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="mFXgxB+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387459AbgAMDks (ORCPT
+        id S2387460AbgAMDnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 22:40:48 -0500
-Received: from forward102p.mail.yandex.net ([77.88.28.102]:34717 "EHLO
-        forward102p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387408AbgAMDkr (ORCPT
+        Sun, 12 Jan 2020 22:43:43 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47890 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387415AbgAMDnn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 22:40:47 -0500
-Received: from forward103q.mail.yandex.net (forward103q.mail.yandex.net [IPv6:2a02:6b8:c0e:50:0:640:b21c:d009])
-        by forward102p.mail.yandex.net (Yandex) with ESMTP id 2DE241D41191;
-        Mon, 13 Jan 2020 06:40:44 +0300 (MSK)
-Received: from mxback7q.mail.yandex.net (mxback7q.mail.yandex.net [IPv6:2a02:6b8:c0e:41:0:640:cbbf:d618])
-        by forward103q.mail.yandex.net (Yandex) with ESMTP id 27C3761E0004;
-        Mon, 13 Jan 2020 06:40:44 +0300 (MSK)
-Received: from vla5-47b3f4751bc4.qloud-c.yandex.net (vla5-47b3f4751bc4.qloud-c.yandex.net [2a02:6b8:c18:3508:0:640:47b3:f475])
-        by mxback7q.mail.yandex.net (mxback/Yandex) with ESMTP id eBxis5ah4J-ehSefItE;
-        Mon, 13 Jan 2020 06:40:44 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1578886844;
-        bh=44qXZE00bfOAzHr6HCwPSflD+ETsMCf5II/h32qV0Sk=;
-        h=From:To:Subject:CC:References:Date:In-Reply-To:Message-ID;
-        b=nrfqXjiNXbRxFy7Y6/zPEhLUliTZFCcy6UTt621r/9R+OggBduSG5ugUiQbWL4L58
-         2lrT10tXEh1of6yOa1srtrXu5n27OG1xFYbToc5kQGFas9wNHbH8m43HK2CHc6FodI
-         uHiYM7pwPn+lj3NkCq4McHXi/rz64l43VCcIrEoM=
-Authentication-Results: mxback7q.mail.yandex.net; dkim=pass header.i=@flygoat.com
-Received: by vla5-47b3f4751bc4.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id RSwfDGmNtE-efZavaIZ;
-        Mon, 13 Jan 2020 06:40:41 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Date:   Mon, 13 Jan 2020 11:40:30 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAAhV-H5QpJcC-iwjmY0Xgdeugsf8FK+ZxgpU=TkcJttW30=mew@mail.gmail.com>
-References: <20200112081416.722218-1-jiaxun.yang@flygoat.com> <20200112081416.722218-4-jiaxun.yang@flygoat.com> <CAAhV-H5QpJcC-iwjmY0Xgdeugsf8FK+ZxgpU=TkcJttW30=mew@mail.gmail.com>
+        Sun, 12 Jan 2020 22:43:43 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 23264891A9;
+        Mon, 13 Jan 2020 16:43:40 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1578887020;
+        bh=X/M2+RzoFycgvyO5lRFPYkxDZJIZQYY3IChNbm5C1GA=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=mFXgxB+ugBRNsghk17G/IJJ6SH7Iy7hQ4mPES031jovVAn7TFNlFxjvCI96x4O7Nm
+         9ryrnxUiXQPQuwgRfy+6rdBH/px0mJYuRCjjxnQyLDxTWVye/p6D+0BA/tb9KDVuNh
+         8QhCQlgVHTyPYEUUn1r/L/pKAskXRQBB3YVJB0yWw6kZer0/ahh+JlXpETkWV6G4DC
+         G4M50IvtmPy8Y26bSbJj9EKnzIAOAH8tTCtHMc5nlOPO/PMv0IqxCiM/xToU3j48Qr
+         yciHsbCXyNqZJNfKruNhvW+kZsSqDrI1ZZglZzPCJcXo+Hk6sM11jfoAnck+1OZhc8
+         mbZlwhXle0Tew==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e1be76a0001>; Mon, 13 Jan 2020 16:43:38 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1473.3; Mon, 13 Jan 2020 16:43:40 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1473.005; Mon, 13 Jan 2020 16:43:40 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "robh@kernel.org" <robh@kernel.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "anthony.derosa@syscall7.com" <anthony.derosa@syscall7.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: spi: Add spi-mux-gpio
+Thread-Topic: [PATCH 1/3] dt-bindings: spi: Add spi-mux-gpio
+Thread-Index: AQHU8OzvVDg4ZBlx30mrcO3i41SCvqZS/IYAgZXO+oA=
+Date:   Mon, 13 Jan 2020 03:43:39 +0000
+Message-ID: <58e3dcf5cf69fa5fda6f887dc442fec4d9901ffd.camel@alliedtelesis.co.nz>
+References: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
+         <20190412050213.17698-2-chris.packham@alliedtelesis.co.nz>
+         <20190429213740.GA29098@bogus>
+In-Reply-To: <20190429213740.GA29098@bogus>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:d1a1:ea74:6baa:5aa3]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C8595220A5D21948B7B8DF3BEB85C8AB@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 03/10] dt-bindings: interrupt-controller: Add Loongson IOINTC
-To:     Huacai Chen <chenhc@lemote.com>
-CC:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.co>, devicetree@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <516A456F-29BA-4DA2-B22B-574AC4044249@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-=E4=BA=8E 2020=E5=B9=B41=E6=9C=8813=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
-1:44:10, Huacai Chen <chenhc@lemote=2Ecom> =E5=86=99=E5=88=B0:
->Hi, Jiaxun,
->
->On Sun, Jan 12, 2020 at 4:21 PM Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->wrote:
->>
->> Document Loongson I/O Interrupt controller=2E
->>
->> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->> Reviewed-by: Rob Herring <robh@kernel=2Eorg>
->> ---
->>  =2E=2E=2E/interrupt-controller/loongson,iointc=2Eyaml | 92
->+++++++++++++++++++
->>  1 file changed, 92 insertions(+)
->>  create mode 100644
->Documentation/devicetree/bindings/interrupt-controller/loongson,iointc=2E=
-yaml
->>
->> diff --git
->a/Documentation/devicetree/bindings/interrupt-controller/loongson,iointc=
-=2Eyaml
->b/Documentation/devicetree/bindings/interrupt-controller/loongson,iointc=
-=2Eyaml
->> new file mode 100644
->> index 000000000000=2E=2Eb0fe6c551362
->> --- /dev/null
->> +++
->b/Documentation/devicetree/bindings/interrupt-controller/loongson,iointc=
-=2Eyaml
->> @@ -0,0 +1,92 @@
->> +# SPDX-License-Identifier: (GPL-2=2E0-only OR BSD-2-Clause)
->> +%YAML 1=2E2
->> +---
->> +$id:
->"http://devicetree=2Eorg/schemas/interrupt-controller/loongson,iointc=2Ey=
-aml#"
->> +$schema: "http://devicetree=2Eorg/meta-schemas/core=2Eyaml#"
->> +
->> +title: Loongson I/O Interrupt Controller
->> +
->> +maintainers:
->> +  - Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->> +
->> +description: |
->> +  This interrupt controller is found in the Loongson-3 family of
->chips as the primary
->> +  package interrupt source which can route interrupt to interrupt
->line of cores=2E
->> +
->> +allOf:
->> +  - $ref: /schemas/interrupt-controller=2Eyaml#
->> +
->> +properties:
->> +  compatible:
->> +    oneOf:
->> +      - const: loongson,iointc-1=2E0
->> +      - const: loongson,iointc-1=2E0a
->As our early discussion, we should use liointc for the legacy Loongson
->irq-controller ans use eiointc for the new irq-controller in
-
-Will do, thanks=2E
-
->Loongson-3A4000=2E Moreover, could you please describe the difference
->between 1=2E0 and 1=2E0a?
-
-1=2E0a appears in Loongson-3A4000 doesn't have LPC spurious interrupt issu=
-e=2E
-
->
->Huacai
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  interrupt-controller: true
->> +
->> +  interrupts:
->> +    description:
->> +      Interrupt source of the CPU interrupts=2E
->> +    minItems: 1
->> +    maxItems: 4
->> +
->> +  interrupt-names:
->> +    description: List of names for the parent interrupts=2E
->> +    oneOf:
->> +      - items:
->> +          - const: int0
->> +          - const: int1
->> +          - const: int2
->> +          - const: int3
->> +    minItems: 1
->> +    maxItems: 4
->> +
->> +  '#interrupt-cells':
->> +    const: 2
->> +
->> +  'loongson,parent_int_map':
->> +    description: |
->> +      This property points the accept range of children interrupts
->> +      that parents will recieve=2E Each cell refers to a parent
->interrupt line
->> +      and each bit in the cell refers to a children interrupt=2E If a
->parent
->> +      did not connected, than keep it's cell with zero=2E
->> +    allOf:
->> +      - $ref: /schemas/types=2Eyaml#/definitions/uint32-array
->> +      - items:
->> +          minItems: 4
->> +          maxItems: 4
->> +
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
->> +  - interrupt-controller
->> +  - '#interrupt-cells'
->> +  - 'loongson,parent_int_map'
->> +
->> +
->> +examples:
->> +  - |
->> +    iointc: interrupt-controller@3ff01400 {
->> +      compatible =3D "loongson,iointc-1=2E0";
->> +      reg =3D <0 0x3ff01400 0x64>;
->> +
->> +      interrupt-controller;
->> +      #interrupt-cells =3D <2>;
->> +
->> +      interrupt-parent =3D <&cpuintc>;
->> +      interrupts =3D <2>, <3>;
->> +      interrupt-names =3D "int0", "int1";
->> +
->> +      loongson,parent_int_map =3D <0xf0ffffff>, /* int0 */
->> +                                <0x0f000000>, /* int1 */
->> +                                <0x00000000>, /* int2 */
->> +                                <0x00000000>; /* int3 */
->> +
->> +    };
->> +
->> +=2E=2E=2E
->> --
->> 2=2E24=2E1
->>
-
---=20
-Jiaxun Yang
+SGkgUm9iLA0KDQpPbiBNb24sIDIwMTktMDQtMjkgYXQgMTY6MzcgLTA1MDAsIFJvYiBIZXJyaW5n
+IHdyb3RlOg0KPiBPbiBGcmksIEFwciAxMiwgMjAxOSBhdCAwNTowMjoxMVBNICsxMjAwLCBDaHJp
+cyBQYWNraGFtIHdyb3RlOg0KPiA+IEFkZCBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIHNwaS1t
+dXgtZ3BpbyB3aGljaCBpcyBhIHNsaWdodGx5IG1vcmUNCj4gPiBjb21wbGljYXRlZCBoYXJkd2Fy
+ZSBpbXBsZW1lbnRhdGlvbiBvZiB1c2luZyBncGlvcyB0byBzdGVlciBTUEkgY2hpcA0KPiA+IHNl
+bGVjdHMuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFj
+a2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy9zcGkvc3BpLW11eC1ncGlvLnR4dCAgfCA0NSArKysrKysrKysrKysrKysrKysrDQo+
+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1tdXgtZ3Bpby50
+eHQNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3NwaS9zcGktbXV4LWdwaW8udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3NwaS9zcGktbXV4LWdwaW8udHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBp
+bmRleCAwMDAwMDAwMDAwMDAuLmEzMmYyNTMyMWQzNw0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1tdXgtZ3Bpby50
+eHQNCj4gPiBAQCAtMCwwICsxLDQ1IEBADQo+ID4gK1NQSSBidXMgZ3BpbyBtdWx0aXBsZXhlcg0K
+PiA+ICsNCj4gPiArVGhlIFNQSSBidXMgZ3BpbyBtdWx0aXBsZXhlciBjYW4gYmUgdXNlZCB0byBp
+bXBsZW1lbnQgbW9yZSBjb21wbGljYXRlZCBhY2Nlc3MNCj4gPiArbG9naWMgdGhhbiBjYW4gYmUg
+c3VwcG9ydGVkIHdpdGggdGhlIGNzLWdwaW9zIHByb3BlcnR5IG9mIGEgU1BJIGJ1cy4NCj4gPiAr
+DQo+ID4gK0luIHRoZSBleGFtcGxlIGJlbG93IHdlIGhhdmUgYSBTb0Mgd2l0aCBhIHNpbmdsZSBT
+UEkgQ1MgdGhhdCBpcyBnYXRlZCBieSB0aGUNCj4gPiArc3RhdGUgb2YgYSBncGlvIHRvIHNlbGVj
+dCB0aGUgZGVzaXJlZCBTUEkgZGV2aWNlLg0KPiA+ICsNCj4gPiArICAgICArLS0tLS0tLS0tLSsg
+IENTICAgICstLS0tLSsgQ1MwICArLS0tLSsNCj4gPiArICAgICB8ICAgICAgICAgIHwtLS0tLS0t
+LXwgICAgIHwtLS0tLS18ICAgIHwNCj4gPiArICAgICB8ICAgICAgICAgIHwgICAgICAgIHwgXCAv
+IHwgICAgICArLS0tLSsNCj4gPiArICAgICB8ICAgU29DICAgIHwgICAgICAgIHwgICsgIHwNCj4g
+PiArICAgICB8ICAgICAgICAgIHwgIEdQSU8gIHwgLyBcIHwgQ1MxICArLS0tLSsNCj4gPiArICAg
+ICB8ICAgICAgICAgIHwtLS0tLS0tLXwgICAgIHwtLS0tLS18ICAgIHwNCj4gPiArICAgICArLS0t
+LS0tLS0tLSsgICAgICAgICstLS0tLSsgICAgICArLS0tLSsNCj4gPiArDQo+ID4gK1JlcXVpcmVk
+IHByb3BlcnRpZXM6DQo+ID4gKy0gY29tcGF0aWJsZQktIG11c3QgYmUgInNwaS1tdXgtZ3BpbyIN
+Cj4gPiArLSBncGlvcwkJLSBncGlvcyB1c2VkIHRvIGltcGxlbWVudCB0aGUgbXVsdGlwbGV4aW5n
+IGxvZ2ljDQo+ID4gKy0gc3BpLXBhcmVudC1idXMgLSBwYXJlbnQgc3BpIGJ1cyB0byB1c2UNCj4g
+PiArDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gKy0gc3BpLXBhcmVudC1jcyAtIGNo
+aXAgc2VsZWN0IG9uIHBhcmVudCBidXMgdG8gdXNlLiBEZWZhdWx0cyB0byAwIGlmIG5vdA0KPiA+
+ICsgICAgICAgICAgICAgICAgICBzcGVjaWZpZWQuDQo+ID4gKw0KPiA+ICtFeGFtcGxlIGZvciBh
+IG11bHRpcGxleGVyIHdpdGggYSBzaW5nbGUgZ3BpbzoNCj4gPiArDQo+ID4gKwlzcGktbXV4IHsN
+Cj4gPiArCQljb21wYXRpYmxlID0gInNwaS1tdXgtZ3BpbyI7DQo+ID4gKwkJI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47DQo+ID4gKwkJI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKwkJZ3Bpb3MgPSA8Jmdw
+aW8wIDEgMD47DQo+ID4gKwkJc3BpLXBhcmVudC1idXMgPSA8JnNwaTA+Ow0KPiA+ICsJCXNwaS1w
+YXJlbnQtY3MgPSA8MD47DQo+IA0KPiBXaHkgaXMgdGhpcyBvdXQgb2YgYmFuZD8gV2UgY2FuIGRv
+IHNvbWV0aGluZyBzaW1pbGFyIHRvIEkyQyBhbmQgdXNlIHRoZSANCj4gbXV4LWNvbnRyb2wgYmlu
+ZGluZzoNCj4gDQo+IHNwaSB7DQo+IAltdXhAMCB7DQo+IAkJY29tcGF0aWJsZSA9ICJzcGktbXV4
+IjsNCj4gCQlyZWcgIjAiOyANCj4gCQltdXgtY29udHJvbHMgPSAuLi47DQo+IA0KPiAJCXNwaS1k
+ZXZAMCB7fTsNCj4gCQlzcGktZGV2QDEge307DQo+IAl9Ow0KPiANCj4gCXNwaS1kZXZAMSB7fTsN
+Cj4gDQo+IH07DQoNCkkndmUgYmVlbiByZS12aXNpdGluZyB0aGlzIHRocmVhZCBhbmQgYW4gb2xk
+ZXIgb25lWzFdIHdpdGggYW4gZXllIG9uDQppbXBsZW1lbnRpbmcgYSBzb2x1dGlvbiB3aXRoIG11
+eC1jb250cm9scy4NCg0KT25lIHRoaW5nIEknbSBjb25mdXNlZCBhYm91dCBpcyB5b3VyIGNvbW1l
+bnQgdGhhdCB0aGUgbXV4IHNob3VsZCBiZSBpbi0NCmJhbmQgbGlrZSBpMmMuIExvb2tpbmcgYXQg
+dGhlIG9uZSB1c2VyIG9mIGkyYy1tdXggKGF0OTEtbmF0dGUuZHRzaSkgaXQNCmFsc28gYXBwZWFy
+cyBvdXQgb2YgYmFuZCBhbmQgZGV0ZXJtaW5lIHRoZSBwYXJlbnQgYnVzIHdpdGggYSBpMmMtcGFy
+ZW50IA0KcHJvcGVydHkgKHNpbWlsYXIgdG8gaG93IEkgZGlkIGl0IGluIG15IG9yaWdpbmFsIHN1
+Ym1pc3Npb24pLiBJIGFsc28NCmNhbid0IHNlZSBob3cgdGhlIG11eCB3b3VsZCB3b3JrIGluLWJh
+bmQgc2luY2UgaXQgbGFja3MgdGhlIGNvcnJlY3QNCiNhZGRyZXNzLWNlbGxzIGV0YyBmb3IgYSBz
+cGkgZGV2aWNlLg0KDQpJJ20gd29uZGVyaW5nIGlmIEkndmUgbWlzc2VkIHNvbWV0aGluZyBvYnZp
+b3VzLg0KDQotLQ0KWzFdIC0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8yNzA2
+MTUxLw0K
