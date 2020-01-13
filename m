@@ -2,136 +2,168 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A5FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D659C32771
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5904B24654
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:43:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="mFXgxB+u"
+	by mail.kernel.org (Postfix) with ESMTP id 6E73A21744
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387460AbgAMDnn (ORCPT
+        id S2387444AbgAMDpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 22:43:43 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47890 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387415AbgAMDnn (ORCPT
+        Sun, 12 Jan 2020 22:45:19 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20402 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387400AbgAMDpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 22:43:43 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 23264891A9;
-        Mon, 13 Jan 2020 16:43:40 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1578887020;
-        bh=X/M2+RzoFycgvyO5lRFPYkxDZJIZQYY3IChNbm5C1GA=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=mFXgxB+ugBRNsghk17G/IJJ6SH7Iy7hQ4mPES031jovVAn7TFNlFxjvCI96x4O7Nm
-         9ryrnxUiXQPQuwgRfy+6rdBH/px0mJYuRCjjxnQyLDxTWVye/p6D+0BA/tb9KDVuNh
-         8QhCQlgVHTyPYEUUn1r/L/pKAskXRQBB3YVJB0yWw6kZer0/ahh+JlXpETkWV6G4DC
-         G4M50IvtmPy8Y26bSbJj9EKnzIAOAH8tTCtHMc5nlOPO/PMv0IqxCiM/xToU3j48Qr
-         yciHsbCXyNqZJNfKruNhvW+kZsSqDrI1ZZglZzPCJcXo+Hk6sM11jfoAnck+1OZhc8
-         mbZlwhXle0Tew==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e1be76a0001>; Mon, 13 Jan 2020 16:43:38 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1473.3; Mon, 13 Jan 2020 16:43:40 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1473.005; Mon, 13 Jan 2020 16:43:40 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "robh@kernel.org" <robh@kernel.org>
-CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "anthony.derosa@syscall7.com" <anthony.derosa@syscall7.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: spi: Add spi-mux-gpio
-Thread-Topic: [PATCH 1/3] dt-bindings: spi: Add spi-mux-gpio
-Thread-Index: AQHU8OzvVDg4ZBlx30mrcO3i41SCvqZS/IYAgZXO+oA=
-Date:   Mon, 13 Jan 2020 03:43:39 +0000
-Message-ID: <58e3dcf5cf69fa5fda6f887dc442fec4d9901ffd.camel@alliedtelesis.co.nz>
-References: <20190412050213.17698-1-chris.packham@alliedtelesis.co.nz>
-         <20190412050213.17698-2-chris.packham@alliedtelesis.co.nz>
-         <20190429213740.GA29098@bogus>
-In-Reply-To: <20190429213740.GA29098@bogus>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:d1a1:ea74:6baa:5aa3]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C8595220A5D21948B7B8DF3BEB85C8AB@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Sun, 12 Jan 2020 22:45:19 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00D3gilx041857
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:45:18 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfvaxp1g7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:45:17 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
+        Mon, 13 Jan 2020 03:45:15 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 13 Jan 2020 03:45:13 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00D3jCaL53280818
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 03:45:12 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A0D042041;
+        Mon, 13 Jan 2020 03:45:12 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 75FE14203F;
+        Mon, 13 Jan 2020 03:45:10 +0000 (GMT)
+Received: from pratiks-thinkpad.in.ibm.com (unknown [9.124.31.88])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 13 Jan 2020 03:45:10 +0000 (GMT)
+From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
+        linuxram@us.ibm.com, psampat@linux.ibm.com,
+        pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
+Subject: [RESEND PATCH v2 0/3] Introduce Self-Save API for deep stop states
+Date:   Mon, 13 Jan 2020 09:15:06 +0530
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20011303-0008-0000-0000-00000348CE40
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011303-0009-0000-0000-00004A691C00
+Message-Id: <cover.1578886602.git.psampat@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-12_11:2020-01-10,2020-01-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=927
+ phishscore=0 adultscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001130028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiBNb24sIDIwMTktMDQtMjkgYXQgMTY6MzcgLTA1MDAsIFJvYiBIZXJyaW5n
-IHdyb3RlOg0KPiBPbiBGcmksIEFwciAxMiwgMjAxOSBhdCAwNTowMjoxMVBNICsxMjAwLCBDaHJp
-cyBQYWNraGFtIHdyb3RlOg0KPiA+IEFkZCBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIHNwaS1t
-dXgtZ3BpbyB3aGljaCBpcyBhIHNsaWdodGx5IG1vcmUNCj4gPiBjb21wbGljYXRlZCBoYXJkd2Fy
-ZSBpbXBsZW1lbnRhdGlvbiBvZiB1c2luZyBncGlvcyB0byBzdGVlciBTUEkgY2hpcA0KPiA+IHNl
-bGVjdHMuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFj
-a2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56Pg0KPiA+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9i
-aW5kaW5ncy9zcGkvc3BpLW11eC1ncGlvLnR4dCAgfCA0NSArKysrKysrKysrKysrKysrKysrDQo+
-ID4gIDEgZmlsZSBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCspDQo+ID4gIGNyZWF0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1tdXgtZ3Bpby50
-eHQNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3NwaS9zcGktbXV4LWdwaW8udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3NwaS9zcGktbXV4LWdwaW8udHh0DQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBp
-bmRleCAwMDAwMDAwMDAwMDAuLmEzMmYyNTMyMWQzNw0KPiA+IC0tLSAvZGV2L251bGwNCj4gPiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc3BpL3NwaS1tdXgtZ3Bpby50
-eHQNCj4gPiBAQCAtMCwwICsxLDQ1IEBADQo+ID4gK1NQSSBidXMgZ3BpbyBtdWx0aXBsZXhlcg0K
-PiA+ICsNCj4gPiArVGhlIFNQSSBidXMgZ3BpbyBtdWx0aXBsZXhlciBjYW4gYmUgdXNlZCB0byBp
-bXBsZW1lbnQgbW9yZSBjb21wbGljYXRlZCBhY2Nlc3MNCj4gPiArbG9naWMgdGhhbiBjYW4gYmUg
-c3VwcG9ydGVkIHdpdGggdGhlIGNzLWdwaW9zIHByb3BlcnR5IG9mIGEgU1BJIGJ1cy4NCj4gPiAr
-DQo+ID4gK0luIHRoZSBleGFtcGxlIGJlbG93IHdlIGhhdmUgYSBTb0Mgd2l0aCBhIHNpbmdsZSBT
-UEkgQ1MgdGhhdCBpcyBnYXRlZCBieSB0aGUNCj4gPiArc3RhdGUgb2YgYSBncGlvIHRvIHNlbGVj
-dCB0aGUgZGVzaXJlZCBTUEkgZGV2aWNlLg0KPiA+ICsNCj4gPiArICAgICArLS0tLS0tLS0tLSsg
-IENTICAgICstLS0tLSsgQ1MwICArLS0tLSsNCj4gPiArICAgICB8ICAgICAgICAgIHwtLS0tLS0t
-LXwgICAgIHwtLS0tLS18ICAgIHwNCj4gPiArICAgICB8ICAgICAgICAgIHwgICAgICAgIHwgXCAv
-IHwgICAgICArLS0tLSsNCj4gPiArICAgICB8ICAgU29DICAgIHwgICAgICAgIHwgICsgIHwNCj4g
-PiArICAgICB8ICAgICAgICAgIHwgIEdQSU8gIHwgLyBcIHwgQ1MxICArLS0tLSsNCj4gPiArICAg
-ICB8ICAgICAgICAgIHwtLS0tLS0tLXwgICAgIHwtLS0tLS18ICAgIHwNCj4gPiArICAgICArLS0t
-LS0tLS0tLSsgICAgICAgICstLS0tLSsgICAgICArLS0tLSsNCj4gPiArDQo+ID4gK1JlcXVpcmVk
-IHByb3BlcnRpZXM6DQo+ID4gKy0gY29tcGF0aWJsZQktIG11c3QgYmUgInNwaS1tdXgtZ3BpbyIN
-Cj4gPiArLSBncGlvcwkJLSBncGlvcyB1c2VkIHRvIGltcGxlbWVudCB0aGUgbXVsdGlwbGV4aW5n
-IGxvZ2ljDQo+ID4gKy0gc3BpLXBhcmVudC1idXMgLSBwYXJlbnQgc3BpIGJ1cyB0byB1c2UNCj4g
-PiArDQo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gKy0gc3BpLXBhcmVudC1jcyAtIGNo
-aXAgc2VsZWN0IG9uIHBhcmVudCBidXMgdG8gdXNlLiBEZWZhdWx0cyB0byAwIGlmIG5vdA0KPiA+
-ICsgICAgICAgICAgICAgICAgICBzcGVjaWZpZWQuDQo+ID4gKw0KPiA+ICtFeGFtcGxlIGZvciBh
-IG11bHRpcGxleGVyIHdpdGggYSBzaW5nbGUgZ3BpbzoNCj4gPiArDQo+ID4gKwlzcGktbXV4IHsN
-Cj4gPiArCQljb21wYXRpYmxlID0gInNwaS1tdXgtZ3BpbyI7DQo+ID4gKwkJI2FkZHJlc3MtY2Vs
-bHMgPSA8MT47DQo+ID4gKwkJI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gKwkJZ3Bpb3MgPSA8Jmdw
-aW8wIDEgMD47DQo+ID4gKwkJc3BpLXBhcmVudC1idXMgPSA8JnNwaTA+Ow0KPiA+ICsJCXNwaS1w
-YXJlbnQtY3MgPSA8MD47DQo+IA0KPiBXaHkgaXMgdGhpcyBvdXQgb2YgYmFuZD8gV2UgY2FuIGRv
-IHNvbWV0aGluZyBzaW1pbGFyIHRvIEkyQyBhbmQgdXNlIHRoZSANCj4gbXV4LWNvbnRyb2wgYmlu
-ZGluZzoNCj4gDQo+IHNwaSB7DQo+IAltdXhAMCB7DQo+IAkJY29tcGF0aWJsZSA9ICJzcGktbXV4
-IjsNCj4gCQlyZWcgIjAiOyANCj4gCQltdXgtY29udHJvbHMgPSAuLi47DQo+IA0KPiAJCXNwaS1k
-ZXZAMCB7fTsNCj4gCQlzcGktZGV2QDEge307DQo+IAl9Ow0KPiANCj4gCXNwaS1kZXZAMSB7fTsN
-Cj4gDQo+IH07DQoNCkkndmUgYmVlbiByZS12aXNpdGluZyB0aGlzIHRocmVhZCBhbmQgYW4gb2xk
-ZXIgb25lWzFdIHdpdGggYW4gZXllIG9uDQppbXBsZW1lbnRpbmcgYSBzb2x1dGlvbiB3aXRoIG11
-eC1jb250cm9scy4NCg0KT25lIHRoaW5nIEknbSBjb25mdXNlZCBhYm91dCBpcyB5b3VyIGNvbW1l
-bnQgdGhhdCB0aGUgbXV4IHNob3VsZCBiZSBpbi0NCmJhbmQgbGlrZSBpMmMuIExvb2tpbmcgYXQg
-dGhlIG9uZSB1c2VyIG9mIGkyYy1tdXggKGF0OTEtbmF0dGUuZHRzaSkgaXQNCmFsc28gYXBwZWFy
-cyBvdXQgb2YgYmFuZCBhbmQgZGV0ZXJtaW5lIHRoZSBwYXJlbnQgYnVzIHdpdGggYSBpMmMtcGFy
-ZW50IA0KcHJvcGVydHkgKHNpbWlsYXIgdG8gaG93IEkgZGlkIGl0IGluIG15IG9yaWdpbmFsIHN1
-Ym1pc3Npb24pLiBJIGFsc28NCmNhbid0IHNlZSBob3cgdGhlIG11eCB3b3VsZCB3b3JrIGluLWJh
-bmQgc2luY2UgaXQgbGFja3MgdGhlIGNvcnJlY3QNCiNhZGRyZXNzLWNlbGxzIGV0YyBmb3IgYSBz
-cGkgZGV2aWNlLg0KDQpJJ20gd29uZGVyaW5nIGlmIEkndmUgbWlzc2VkIHNvbWV0aGluZyBvYnZp
-b3VzLg0KDQotLQ0KWzFdIC0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8yNzA2
-MTUxLw0K
+RESEND Changes:
+1. Updated OPAL API numbering for consistency
+
+Skiboot patches: https://patchwork.ozlabs.org/patch/1221011/
+RFC v1 patches: https://lkml.org/lkml/2019/12/4/193
+Changelog
+RFC v1 --> v2
+1. Optimized preference bitmask
+2. Addressed comments from Ram Pai
+
+Currently the stop-API supports a mechanism called as self-restore
+which allows us to restore the values of certain SPRs on wakeup from a
+deep-stop state to a desired value. To use this, the Kernel makes an
+OPAL call passing the PIR of the CPU, the SPR number and the value to
+which the SPR should be restored when that CPU wakes up from a deep
+stop state.
+
+Recently, a new feature, named self-save has been enabled in the
+stop-api, which is an alternative mechanism to do the same, except
+that self-save will save the current content of the SPR before
+entering a deep stop state and also restore the content back on
+waking up from a deep stop state.
+
+This patch series aims at introducing and leveraging the self-save feature in
+the kernel.
+
+Now, as the kernel has a choice to prefer one mode over the other and
+there can be registers in both the save/restore SPR list which are sent
+from the device tree, a new interface has been defined for the seamless
+handing of the modes for each SPR.
+
+A list of preferred SPRs are maintained in the kernel which contains two
+properties:
+1. supported_mode: Helps in identifying if it strictly supports self
+                   save or restore or both.
+                   Initialized using the information from device tree.
+2. preferred_mode: Calls out what mode is preferred for each SPR. It
+                   could be strictly self save or restore, or it can also
+                   determine the preference of  mode over the other if both
+                   are present by encapsulating the other in bitmask from
+                   LSB to MSB.
+                   Initialized statically.
+
+Below is a table to show the Scenario::Consequence when the self save and
+self restore modes are available or disabled in different combinations as
+perceived from the device tree thus giving complete backwards compatibly
+regardless of an older firmware running a newer kernel or vise-versa.
+Support for self save or self-restore is embedded in the device tree,
+along with the set of registers it supports.
+
+SR = Self restore; SS = Self save
+
+.-----------------------------------.----------------------------------------.
+|             Scenario              |                Consequence             |
+:-----------------------------------+----------------------------------------:
+| Legacy Firmware. No SS or SR node | Self restore is called for all         |
+|                                   | supported SPRs                         |
+:-----------------------------------+----------------------------------------:
+| SR: !active SS: !active           | Deep stop states disabled              |
+:-----------------------------------+----------------------------------------:
+| SR: active SS: !active            | Self restore is called for all         |
+|                                   | supported SPRs                         |
+:-----------------------------------+----------------------------------------:
+| SR: active SS: active             | Goes through the preferences for each  |
+|                                   | SPR and executes of the modes          |
+|                                   | accordingly. Currently, Self restore is|
+|                                   | called for all the SPRs except PSSCR   |
+|                                   | which is self saved                    |
+:-----------------------------------+----------------------------------------:
+| SR: active(only HID0) SS: active  | Self save called for all supported     |
+|                                   | registers expect HID0 (as HID0 cannot  |
+|                                   | be self saved currently)               |
+:-----------------------------------+----------------------------------------:
+| SR: !active SS: active            | currently will disable deep states as  |
+|                                   | HID0 is needed to be self restored and |
+|                                   | cannot be self saved                   |
+'-----------------------------------'----------------------------------------'
+
+Pratik Rajesh Sampat (3):
+  powerpc/powernv: Interface to define support and preference for a SPR
+  powerpc/powernv: Introduce Self save support
+  powerpc/powernv: Parse device tree, population of SPR support
+
+ arch/powerpc/include/asm/opal-api.h        |   3 +-
+ arch/powerpc/include/asm/opal.h            |   1 +
+ arch/powerpc/platforms/powernv/idle.c      | 433 ++++++++++++++++++---
+ arch/powerpc/platforms/powernv/opal-call.c |   1 +
+ 4 files changed, 381 insertions(+), 57 deletions(-)
+
+-- 
+2.24.1
+
