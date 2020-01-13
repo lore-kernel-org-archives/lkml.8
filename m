@@ -2,169 +2,130 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3591C33CB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:52:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D39C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9E24207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:52:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C2B921569
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:52:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="NVd27d+g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWDnx4s6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgAMGwf (ORCPT
+        id S1728780AbgAMGwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 01:52:35 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:47241 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725954AbgAMGwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 01:52:35 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 47x45m5vGSz9ttgG;
-        Mon, 13 Jan 2020 07:52:28 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=NVd27d+g; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id 1iwCVC8X-I0R; Mon, 13 Jan 2020 07:52:28 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47x45m4fd0z9ttgD;
-        Mon, 13 Jan 2020 07:52:28 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1578898348; bh=BEG+waaqceEGqvmTkmRPJ8Qzyso8PEjwXnIakVOqtZc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NVd27d+gFiIyUuKl/HLoK+La1AiiYRZnEQtAMYVLE60YGvnlTuLzA+Zj2M0GA+Ket
-         FpVfMNKOrYwhgR+zTPLHtu0BWa6zZ6Ph7297vQIxUho+xhYLUTI/NMu1Gj3zsDCx0k
-         Uvvo9nAJ3jOmw8RlqvoHHkfMpgYirFnUFWki46WU=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 30D588B79C;
-        Mon, 13 Jan 2020 07:52:33 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id gGYtxlUDGq_J; Mon, 13 Jan 2020 07:52:33 +0100 (CET)
-Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AD2CA8B752;
-        Mon, 13 Jan 2020 07:52:32 +0100 (CET)
-Subject: Re: [RFC PATCH v2 07/10] lib: vdso: don't use READ_ONCE() in
- __c_kernel_time()
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, arnd@arndb.de,
-        vincenzo.frascino@arm.com, luto@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        x86@kernel.org
-References: <cover.1577111363.git.christophe.leroy@c-s.fr>
- <fc1ff722c7cbe63a63ae02ade3a714d2049d54a5.1577111367.git.christophe.leroy@c-s.fr>
- <87lfqfrp7d.fsf@nanos.tec.linutronix.de>
- <a995445f-9b00-ca13-d23a-1aea3b345718@c-s.fr>
- <878smes13d.fsf@nanos.tec.linutronix.de>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <dfd30b00-5d5c-29c3-6b91-aac0533635ca@c-s.fr>
-Date:   Mon, 13 Jan 2020 07:52:31 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
-MIME-Version: 1.0
-In-Reply-To: <878smes13d.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        Mon, 13 Jan 2020 01:52:42 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46586 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725954AbgAMGwl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 01:52:41 -0500
+Received: by mail-pg1-f196.google.com with SMTP id z124so4207642pgb.13
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:52:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=ixWmZZn5cz1mbd7yW9N78OzPov834nZ+OiSf3qX3/Iw=;
+        b=MWDnx4s6w/tmBrNVbFIQ1vEX6qQvpKt44HmfIThiV/xaQluAyx9nzyLcL1Yscq+xBf
+         85JkyYzx/i3b13pq2yZWeuEiFyErVuSGRIvzYKg2iEQ28m/8Emq3+YX7/q0T0WBZFIMf
+         oTC6CpQifBvzkwRzR4sdi24ce49Jp8JxpA6AuQFHTZyKoAiT0ivYXwf4aytyqc13wQ3a
+         1Lga1hYL7mosq+M9NPIETKtjn0RmIMrRa/6veh8h7PHZwLsJx+2JYtc3LfBUGPv8OyWz
+         CqkgN1sVbjpQlCZH9/lo7vnLK3UHfaqTWUezZWHxQ7oaQ0lMi2fEOtSkA7s27R2x/y3B
+         U54Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ixWmZZn5cz1mbd7yW9N78OzPov834nZ+OiSf3qX3/Iw=;
+        b=asNcPiVtPOxehJnyn+OXXhIh/vXtU0NB+onOX6RbQDRVjlp44UxaDwIzoHsWc9aStG
+         RknCdicFWpkV9GVXr4VtLVD5r6wc93coEFXCfzYujRFEfQtAcTJu8k2k1Lk8mePMZ0wy
+         oDi3e0nvzDBVveL6SCn0ixQoc0vrgVm/tDtK2ilyS4A7zxOxwDJuolTkWZ+TZoYenBmZ
+         bMtHO0/i6oaKGrLJ6SaL0qORtPyVTQzWAp+Ff4jnMfxX74RqHwYv1jMCaYAPckRDphAJ
+         /eNxGa+554VXhZYbJ46abuowTrbruKcXfJL1TrtaJ5I6fYbyDqwItwdmuYLnw4K+5j+O
+         H7eQ==
+X-Gm-Message-State: APjAAAWzGXvGsmoc2fLu3dvdHC7DweyWN7DIkall4eauuVxr9mAv6Jdu
+        JnLlh1vZPAh2rPVDTGVIf7/6CKMSMmM=
+X-Google-Smtp-Source: APXvYqz8DDYgtxILjbT8NXNXztKpdNhF11x4wKO5q4NOEFrzD3WC1my7gwV5KogGtPbc3vnQZWJIiw==
+X-Received: by 2002:a05:6a00:90:: with SMTP id c16mr17661377pfj.230.1578898361059;
+        Sun, 12 Jan 2020 22:52:41 -0800 (PST)
+Received: from xp-OptiPlex-7050.mioffice.cn ([43.224.245.180])
+        by smtp.gmail.com with ESMTPSA id p21sm12338217pfn.103.2020.01.12.22.52.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 12 Jan 2020 22:52:40 -0800 (PST)
+From:   ping xiong <xp1982.06.06@gmail.com>
+To:     yuchao0@huawei.com
+Cc:     jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, xiongping1 <xiongping1@xiaomi.com>
+Subject: [f2fs-dev][PATCH V2] resize.f2fs: add option for large_nat_bitmap feature
+Date:   Mon, 13 Jan 2020 14:52:30 +0800
+Message-Id: <1578898350-29607-1-git-send-email-xp1982.06.06@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: xiongping1 <xiongping1@xiaomi.com>
 
+resize.f2fs has already supported large_nat_bitmap feature, but has no
+option to turn on it.
 
-Le 11/01/2020 à 12:07, Thomas Gleixner a écrit :
-> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->>
->> With READ_ONCE() the 64 bits are being read:
->>
->> Without the READ_ONCE() only 32 bits are read. That's the most optimal.
->>
->> Without READ_ONCE() but with a barrier() after the read, we should get
->> the same result but GCC (GCC 8.1) does less good:
->>
->> Assuming both part of the 64 bits data will fall into a single
->> cacheline, the second read is in the noise.
-> 
-> They definitely are in the same cacheline.
-> 
->> So agreed to drop this change.
-> 
-> We could be smart about this and force the compiler to issue a 32bit
-> read for 32bit builds. See below. Not sure whether it's worth it, but
-> OTOH it will take quite a while until the 32bit time interfaces die
-> completely.
+This change add a new '-i' option to control turning on it.
 
-I don't think it is worth something so big to just save 1 or 2 cycles in 
-time() function. Lets keep it as it is.
+Signed-off-by: xiongping1 <xiongping1@xiaomi.com>
+---
+ fsck/main.c   | 6 +++++-
+ fsck/resize.c | 3 +++
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-Thanks,
-Christophe
+diff --git a/fsck/main.c b/fsck/main.c
+index 9a7d499..e7e3dfc 100644
+--- a/fsck/main.c
++++ b/fsck/main.c
+@@ -104,6 +104,7 @@ void resize_usage()
+ 	MSG(0, "\nUsage: resize.f2fs [options] device\n");
+ 	MSG(0, "[options]:\n");
+ 	MSG(0, "  -d debug level [default:0]\n");
++	MSG(0, "  -i extended node bitmap, node ratio is 20%% by default\n");
+ 	MSG(0, "  -s safe resize (Does not resize metadata)");
+ 	MSG(0, "  -t target sectors [default: device size]\n");
+ 	MSG(0, "  -V print the version number and exit\n");
+@@ -449,7 +450,7 @@ void f2fs_parse_options(int argc, char *argv[])
+ 				break;
+ 		}
+ 	} else if (!strcmp("resize.f2fs", prog)) {
+-		const char *option_string = "d:st:V";
++		const char *option_string = "d:st:iV";
+ 
+ 		c.func = RESIZE;
+ 		while ((option = getopt(argc, argv, option_string)) != EOF) {
+@@ -476,6 +477,9 @@ void f2fs_parse_options(int argc, char *argv[])
+ 					ret = sscanf(optarg, "%"PRIx64"",
+ 							&c.target_sectors);
+ 				break;
++			case 'i':
++				c.large_nat_bitmap = 1;
++				break;
+ 			case 'V':
+ 				show_version(prog);
+ 				exit(0);
+diff --git a/fsck/resize.c b/fsck/resize.c
+index fc563f2..46b1cfb 100644
+--- a/fsck/resize.c
++++ b/fsck/resize.c
+@@ -512,6 +512,9 @@ static void rebuild_checkpoint(struct f2fs_sb_info *sbi,
+ 
+ 	/* update nat_bits flag */
+ 	flags = update_nat_bits_flags(new_sb, cp, get_cp(ckpt_flags));
++	if (c.large_nat_bitmap)
++		flags |= CP_LARGE_NAT_BITMAP_FLAG;
++
+ 	if (flags & CP_COMPACT_SUM_FLAG)
+ 		flags &= ~CP_COMPACT_SUM_FLAG;
+ 	if (flags & CP_LARGE_NAT_BITMAP_FLAG)
+-- 
+2.7.4
 
-> 
-> Thanks,
-> 
->          tglx
-> 
-> 8<------------
-> --- a/include/vdso/datapage.h
-> +++ b/include/vdso/datapage.h
-> @@ -21,6 +21,18 @@
->   #define CS_RAW		1
->   #define CS_BASES	(CS_RAW + 1)
->   
-> +#ifdef __LITTLE_ENDIAN
-> +struct sec_hl {
-> +	u32	sec_l;
-> +	u32	sec_h;
-> +};
-> +#else
-> +struct sec_hl {
-> +	u32	sec_h;
-> +	u32	sec_l;
-> +};
-> +#endif
-> +
->   /**
->    * struct vdso_timestamp - basetime per clock_id
->    * @sec:	seconds
-> @@ -35,7 +47,10 @@
->    * vdso_data.cs[x].shift.
->    */
->   struct vdso_timestamp {
-> -	u64	sec;
-> +	union {
-> +		u64		sec;
-> +		struct sec_hl	sec_hl;
-> +	};
->   	u64	nsec;
->   };
->   
-> --- a/lib/vdso/gettimeofday.c
-> +++ b/lib/vdso/gettimeofday.c
-> @@ -165,8 +165,13 @@ static __maybe_unused int
->   static __maybe_unused __kernel_old_time_t __cvdso_time(__kernel_old_time_t *time)
->   {
->   	const struct vdso_data *vd = __arch_get_vdso_data();
-> -	__kernel_old_time_t t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
-> +	__kernel_old_time_t t;
->   
-> +#if BITS_PER_LONG == 32
-> +	t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec_hl.sec_l);
-> +#else
-> +	t = READ_ONCE(vd[CS_HRES_COARSE].basetime[CLOCK_REALTIME].sec);
-> +#endif
->   	if (time)
->   		*time = t;
->   
-> 
