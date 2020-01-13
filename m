@@ -2,145 +2,150 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 652E0C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3445CC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20E8E2073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:01:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578924073;
-	bh=O6TQL2QzAOXFPK73vqFNPKhfYizcHxHXXrkQGm94qc0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Dk/FW7ABsL/zleudP3wyhafFYgcNrpMu6lb2soNVpsy52OvjZf/VKR9gu/FWfUtHY
-	 bc21tfwBEMUpq4ojfg4/0UgHQU6Qbx20PLgUm064RqZx/4y7jsgt5MmTBUsnJ6f4jP
-	 N4HC31m3gR6LYk6QyRZVsujpxvPsMhs58M/WGXWw=
+	by mail.kernel.org (Postfix) with ESMTP id 0243D20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:02:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tzgXTIJI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgAMOBM (ORCPT
+        id S1728899AbgAMOCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:01:12 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55380 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728810AbgAMOBM (ORCPT
+        Mon, 13 Jan 2020 09:02:08 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:56742 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbgAMOCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:01:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=MBncayY8JFbtWZipBvPDMpyU9p9lUG4BGjNxMb/pcj4=; b=L8AzG+iRGAic/smvC6OcGFDiI
-        wf4bKJgdZRGQY0F0T1pYeEmOyUHR0QsUFTyTn4T0MZXTqNHgTXuCpQzeaOl5f3X/oKB55S80PtuWq
-        idAwjgI4bRtlFV0S8Usye1ny16RDeXmKz2NFF1Q2sTC9LT74MHp+y+npRu/duB3bba5X4=;
-Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ir0Gy-0002c0-UE; Mon, 13 Jan 2020 14:00:52 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 16F67D01965; Mon, 13 Jan 2020 14:00:52 +0000 (GMT)
-Date:   Mon, 13 Jan 2020 14:00:51 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Will Deacon <will@kernel.org>, Paul Elliott <paul.elliott@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Amit Kachhap <amit.kachhap@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Andrew Jones <drjones@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Kristina =?utf-8?Q?Mart=C5=A1enko?= <kristina.martsenko@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Sudakshina Das <sudi.das@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>
-Subject: Re: [PATCH v4 04/12] arm64: Basic Branch Target Identification
- support
-Message-ID: <20200113140051.GI3897@sirena.org.uk>
-References: <20191211154206.46260-1-broonie@kernel.org>
- <20191211154206.46260-5-broonie@kernel.org>
- <20200110182800.GI8786@arrakis.emea.arm.com>
+        Mon, 13 Jan 2020 09:02:07 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200113140206euoutp02a261fb9260842716be398186f2f5f8f1~pdyCM63lb0696206962euoutp02t
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 14:02:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200113140206euoutp02a261fb9260842716be398186f2f5f8f1~pdyCM63lb0696206962euoutp02t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1578924126;
+        bh=Q76juxHEkfagvYhP5sjzFgIpF/yAGbHi9ChyXpJi2so=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=tzgXTIJIXYsaKO8a/feX4dBTzL+c1/1loNAr/bV2wOz+0Ymw1Q0fCAUUCcAxHlSuc
+         ve0fqYTunXK0+fsUmtWze8gaSyQRlUx1kEgvq+dWiSgaUNgeLkb6NsSzkBSGUVNarG
+         QglwRu9wXh1qO8evSNJZh78l+eU2ED4JtD821I8Y=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200113140205eucas1p1a4f06b8a8c8249831a4b33c7bb01dbf8~pdyCBMxS-0437304373eucas1p1P;
+        Mon, 13 Jan 2020 14:02:05 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 5E.04.61286.D587C1E5; Mon, 13
+        Jan 2020 14:02:05 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200113140205eucas1p1ad988fd90cc2c9bf0efc28269a374bd0~pdyBozjN70437104371eucas1p1u;
+        Mon, 13 Jan 2020 14:02:05 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200113140205eusmtrp2e51b92d9c8eda43b736af98ed1a3916b~pdyBoPk-f1632916329eusmtrp29;
+        Mon, 13 Jan 2020 14:02:05 +0000 (GMT)
+X-AuditID: cbfec7f2-f0bff7000001ef66-95-5e1c785d3bb4
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id B7.F3.07950.D587C1E5; Mon, 13
+        Jan 2020 14:02:05 +0000 (GMT)
+Received: from [106.120.51.15] (unknown [106.120.51.15]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200113140205eusmtip1fdc55511c22a6ebde4c2b8fb548c6de7~pdyBRd_oU1947319473eusmtip1L;
+        Mon, 13 Jan 2020 14:02:05 +0000 (GMT)
+Subject: Re: [PATCH RESEND] phy: exynos5-usbdrd: Calibrating makes sense
+ only for USB2.0 PHY
+To:     linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <1c5da6e3-d62e-9aa9-8c0c-e028c2c8c444@samsung.com>
+Date:   Mon, 13 Jan 2020 15:02:04 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="h22Fi9ANawrtbNPX"
-Content-Disposition: inline
-In-Reply-To: <20200110182800.GI8786@arrakis.emea.arm.com>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191213083157.9220-1-m.szyprowski@samsung.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrIKsWRmVeSWpSXmKPExsWy7djP87qxFTJxBpNW6ltsnLGe1eLC0x42
+        i/PnN7BbXN41h81ixvl9TBaLlrUyO7B5bFrVyebRt2UVo8fxG9uZPD5vkgtgieKySUnNySxL
+        LdK3S+DK2PZjNnPBa86Ku0e3MzcwLuLoYuTkkBAwkTj8v4+1i5GLQ0hgBaPE9l1f2CGcL4wS
+        VxpXQWU+M0q8WfydFaZl4YEDUFXLGSV27rgOVfWWUeLtx43sIFXCAnES299sYwOxRQQcJJYs
+        vQNmMwusZJR4/9wdxGYTMJToetsFFucVsJPoO3IAbAOLgKrE696nLCC2qECsxP3VUxkhagQl
+        Ts58AhbnFLCVaHj+mhFiprzE9rdzmCFscYlbT+YzgRwkIbCMXWLZvgdQZ7tITJo3mRnCFpZ4
+        dXwLO4QtI/F/J0xDM6PEw3Nr2SGcHkaJy00zGCGqrCXunPsFdCoH0ApNifW79EFMCQFHid1f
+        XCBMPokbbwUhbuCTmLRtOjNEmFeio00IYoaaxKzj6+C2HrxwiXkCo9IsJJ/NQvLNLCTfzEJY
+        u4CRZRWjeGppcW56arFhXmq5XnFibnFpXrpecn7uJkZgwjn97/inHYxfLyUdYhTgYFTi4W3I
+        k4kTYk0sK67MPcQowcGsJMK76ZxUnBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXFe40UvY4UE0hNL
+        UrNTUwtSi2CyTBycUg2MHK5BetGneE2PmqoxSfVMs+Zc8zjmpItTzE1T6y7bzmIp5QvStxr7
+        v2x4kW8e9aIhx6GX9f1j06BHvwqnT9Nd47TDu5PV8dNf4+oY71TDB6d5Tygprpg3bcLXkrgL
+        Hu/Vw+t+p7Akr3I89+qXOZuivHWQxv5iDjOR1IvTyn31wxbULDsXWKDEUpyRaKjFXFScCAAj
+        D3WTNAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrCIsWRmVeSWpSXmKPExsVy+t/xu7qxFTJxBifWS1hsnLGe1eLC0x42
+        i/PnN7BbXN41h81ixvl9TBaLlrUyO7B5bFrVyebRt2UVo8fxG9uZPD5vkgtgidKzKcovLUlV
+        yMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DL2PZjNnPBa86Ku0e3
+        MzcwLuLoYuTkkBAwkVh44AB7FyMXh5DAUkaJpyf/MEMkZCROTmtghbCFJf5c62IDsYUEXjNK
+        vJpkCmILC8RJnDndxwhiiwg4SCxZeocNZBCzwEpGiZ4JJ5kgpk5glJhypwNsEpuAoUTXW4hJ
+        vAJ2En1HDoDFWQRUJV73PmUBsUUFYiX+n7kGVSMocXLmE7A4p4CtRMPz12DbmAXMJOZtfsgM
+        YctLbH87B8oWl7j1ZD7TBEahWUjaZyFpmYWkZRaSlgWMLKsYRVJLi3PTc4uN9IoTc4tL89L1
+        kvNzNzECY2zbsZ9bdjB2vQs+xCjAwajEw6uRIxMnxJpYVlyZe4hRgoNZSYR30zmpOCHelMTK
+        qtSi/Pii0pzU4kOMpkDPTWSWEk3OB8Z/Xkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTEktTs
+        1NSC1CKYPiYOTqkGRt67p1T7eRe83euxv2Gj3PsrHjffadhc3noxjjUm6+82ryOLVr6y+1Wn
+        Ij8/febbM3dn3WVre7Xi3P4ztrcOaoYbFCUoxYW5z/w4+7pOis2fnKcRfpLB+5d2p0u7X9Zj
+        0nyac+bclfue3j1V69SC39baMSouerZxdo62qt3ZXZG7vrvnP177ZbsSS3FGoqEWc1FxIgDF
+        u2YtxwIAAA==
+X-CMS-MailID: 20200113140205eucas1p1ad988fd90cc2c9bf0efc28269a374bd0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20191213083209eucas1p1459831639297fc7c37089c8fef4e0248
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20191213083209eucas1p1459831639297fc7c37089c8fef4e0248
+References: <CGME20191213083209eucas1p1459831639297fc7c37089c8fef4e0248@eucas1p1.samsung.com>
+        <20191213083157.9220-1-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---h22Fi9ANawrtbNPX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 13.12.2019 09:31, Marek Szyprowski wrote:
+> PHY calibration is needed only for USB2.0 (UTMI) PHY, so skip calling
+> calibration code when phy_calibrate() is called for USB3.0 (PIPE3) PHY.
+>
+> Fixes: d8c80bb3b55b ("phy: exynos5-usbdrd: Calibrate LOS levels for exynos5420/5800")
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-On Fri, Jan 10, 2020 at 06:28:00PM +0000, Catalin Marinas wrote:
-> On Wed, Dec 11, 2019 at 03:41:58PM +0000, Mark Brown wrote:
+gentle ping
 
-> >  /* Additional SPSR bits not exposed in the UABI */
-> > +#define PSR_BTYPE_SHIFT		10
-> > +
-> >  #define PSR_IL_BIT		(1 << 20)
-> > =20
-> > +/* Convenience names for the values of PSTATE.BTYPE */
-> > +#define PSR_BTYPE_NONE		(0b00 << PSR_BTYPE_SHIFT)
-> > +#define PSR_BTYPE_JC		(0b01 << PSR_BTYPE_SHIFT)
-> > +#define PSR_BTYPE_C		(0b10 << PSR_BTYPE_SHIFT)
-> > +#define PSR_BTYPE_J		(0b11 << PSR_BTYPE_SHIFT)
+> ---
+>   drivers/phy/samsung/phy-exynos5-usbdrd.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> index 646259bee909..f07edd80d2f3 100644
+> --- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> +++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
+> @@ -714,7 +714,9 @@ static int exynos5_usbdrd_phy_calibrate(struct phy *phy)
+>   	struct phy_usb_instance *inst = phy_get_drvdata(phy);
+>   	struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+>   
+> -	return exynos5420_usbdrd_phy_calibrate(phy_drd);
+> +	if (inst->phy_cfg->id == EXYNOS5_DRDPHY_UTMI)
+> +		return exynos5420_usbdrd_phy_calibrate(phy_drd);
+> +	return 0;
+>   }
+>   
+>   static const struct phy_ops exynos5_usbdrd_phy_ops = {
 
-> Would these be better placed in the uapi/ptrace.h?
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-Seems reasonable, they might be useful to virt stuff and they're
-part of the architecture so it's not like we might change them.
-
-> > +	/*
-> > +	 * BTI note:
-> > +	 * The architecture does not guarantee that SPSR.BTYPE is zero
-> > +	 * on taking an SVC, so we could return to userspace with a
-> > +	 * non-zero BTYPE after the syscall.
-
-> On page 2580 of the ARM ARM there is a statement that "any instruction
-> other than BR, ..." sets BTYPE to 0. Wouldn't SVC fall into the same
-> category?
-
-I think what Dave was referring to there is that (unless I'm
-misreading things) that section of the ARM says that BTYPE is set
-at the end of the execution of the instruction but since SVC is
-specified as generating an exception that means that when we
-enter the kernel the instruction won't have ended yet and we
-still have the BTYPE from the previous instruction.
-
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-
-Thanks.
-
---h22Fi9ANawrtbNPX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4ceBAACgkQJNaLcl1U
-h9DLSQf6Apx/rsxXW/+0SHiXPGDJpdzgdlaKg/WkwvZD5tKjvP5SnU3YQ8L96jEk
-YLvo3VX4o6G174B4i7eQvKINZJOQXPzcgYtwV8LjZIxfg7qSygSFOlfxqXPxYoh1
-M3UeD4sFYwQcvvuisyxxehY7F2Qpy7r2AGPcEz/lIgJBK/afVqze34aedkAc8USs
-RiEH1OneNIi0iiKiqrJTEjTNNH4eXokXteOoWKCQONDeMkBQUyGSJB09LKZibH/+
-n1bqPuST5v4Qtag8JcHi9/z/xytJf6oO1QLWnXTqpUR3IUem+LucwksP8+xXIlXC
-vchzbBePuEZheDLobl52IOjKdmX2Vg==
-=X4rD
------END PGP SIGNATURE-----
-
---h22Fi9ANawrtbNPX--
