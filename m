@@ -7,40 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338AEC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39868C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EB95222C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138AA20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgAMTJl (ORCPT
+        id S1729393AbgAMTLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:09:41 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39869 "EHLO
+        Mon, 13 Jan 2020 14:11:38 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39910 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728836AbgAMTJf (ORCPT
+        with ESMTP id S1728885AbgAMTJk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:09:35 -0500
+        Mon, 13 Jan 2020 14:09:40 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ir55f-0000xD-Sg; Mon, 13 Jan 2020 20:09:32 +0100
+        id 1ir55l-00015E-Im; Mon, 13 Jan 2020 20:09:37 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8EA941C18DC;
-        Mon, 13 Jan 2020 20:09:26 +0100 (CET)
-Date:   Mon, 13 Jan 2020 19:09:26 -0000
-From:   "tip-bot2 for Dmitry Safonov" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id DA7881C18DF;
+        Mon, 13 Jan 2020 20:09:29 +0100 (CET)
+Date:   Mon, 13 Jan 2020 19:09:29 -0000
+From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] x86/vdso: Handle faults on timens page
-Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+Subject: [tip: timers/core] posix-timers: Use clock_get_ktime() in common_timer_get()
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andrei Vagin <avagin@gmail.com>,
+        Dmitry Safonov <dima@arista.com>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191112012724.250792-25-dima@arista.com>
-References: <20191112012724.250792-25-dima@arista.com>
+In-Reply-To: <20191112012724.250792-11-dima@arista.com>
+References: <20191112012724.250792-11-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <157894256643.19145.12197846390131767365.tip-bot2@tip-bot2>
+Message-ID: <157894256975.19145.6262285925712082005.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,135 +57,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     ad22c315d67e713e4e107f9db2b7c27e2a245377
-Gitweb:        https://git.kernel.org/tip/ad22c315d67e713e4e107f9db2b7c27e2a245377
-Author:        Dmitry Safonov <dima@arista.com>
-AuthorDate:    Tue, 12 Nov 2019 01:27:13 
+Commit-ID:     fe45ad37b4ae70db3923263d0b67313b7e1d746a
+Gitweb:        https://git.kernel.org/tip/fe45ad37b4ae70db3923263d0b67313b7e1d746a
+Author:        Andrei Vagin <avagin@gmail.com>
+AuthorDate:    Tue, 12 Nov 2019 01:26:59 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 13 Jan 2020 08:10:56 +01:00
+CommitterDate: Mon, 13 Jan 2020 08:10:50 +01:00
 
-x86/vdso: Handle faults on timens page
+posix-timers: Use clock_get_ktime() in common_timer_get()
 
-If a task belongs to a time namespace then the VVAR page which contains
-the system wide VDSO data is replaced with a namespace specific page
-which has the same layout as the VVAR page.
+Now, when the clock_get_ktime() callback exists, the suboptimal
+timespec64-based conversion can be removed from common_timer_get().
 
-Co-developed-by: Andrei Vagin <avagin@gmail.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Andrei Vagin <avagin@gmail.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191112012724.250792-25-dima@arista.com
+Link: https://lore.kernel.org/r/20191112012724.250792-11-dima@arista.com
 
 ---
- arch/x86/entry/vdso/vma.c | 54 ++++++++++++++++++++++++++++++++++++--
- mm/mmap.c                 |  2 +-
- 2 files changed, 54 insertions(+), 2 deletions(-)
+ kernel/time/posix-timers.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
-index 04e3498..e5f3361 100644
---- a/arch/x86/entry/vdso/vma.c
-+++ b/arch/x86/entry/vdso/vma.c
-@@ -14,11 +14,14 @@
- #include <linux/elf.h>
- #include <linux/cpu.h>
- #include <linux/ptrace.h>
-+#include <linux/time_namespace.h>
-+
- #include <asm/pvclock.h>
- #include <asm/vgtod.h>
- #include <asm/proto.h>
- #include <asm/vdso.h>
- #include <asm/vvar.h>
-+#include <asm/tlb.h>
- #include <asm/page.h>
- #include <asm/desc.h>
- #include <asm/cpufeature.h>
-@@ -107,10 +110,36 @@ static int vvar_mremap(const struct vm_special_mapping *sm,
- 	return 0;
- }
- 
-+#ifdef CONFIG_TIME_NS
-+static struct page *find_timens_vvar_page(struct vm_area_struct *vma)
-+{
-+	if (likely(vma->vm_mm == current->mm))
-+		return current->nsproxy->time_ns->vvar_page;
-+
-+	/*
-+	 * VM_PFNMAP | VM_IO protect .fault() handler from being called
-+	 * through interfaces like /proc/$pid/mem or
-+	 * process_vm_{readv,writev}() as long as there's no .access()
-+	 * in special_mapping_vmops().
-+	 * For more details check_vma_flags() and __access_remote_vm()
-+	 */
-+
-+	WARN(1, "vvar_page accessed remotely");
-+
-+	return NULL;
-+}
-+#else
-+static inline struct page *find_timens_vvar_page(struct vm_area_struct *vma)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
- 		      struct vm_area_struct *vma, struct vm_fault *vmf)
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index a1f6b96..fe1de4f 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -665,7 +665,6 @@ void common_timer_get(struct k_itimer *timr, struct itimerspec64 *cur_setting)
  {
- 	const struct vdso_image *image = vma->vm_mm->context.vdso_image;
-+	unsigned long pfn;
- 	long sym_offset;
+ 	const struct k_clock *kc = timr->kclock;
+ 	ktime_t now, remaining, iv;
+-	struct timespec64 ts64;
+ 	bool sig_none;
  
- 	if (!image)
-@@ -130,8 +159,21 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
- 		return VM_FAULT_SIGBUS;
- 
- 	if (sym_offset == image->sym_vvar_page) {
--		return vmf_insert_pfn(vma, vmf->address,
--				__pa_symbol(&__vvar_page) >> PAGE_SHIFT);
-+		struct page *timens_page = find_timens_vvar_page(vma);
-+
-+		pfn = __pa_symbol(&__vvar_page) >> PAGE_SHIFT;
-+
-+		/*
-+		 * If a task belongs to a time namespace then a namespace
-+		 * specific VVAR is mapped with the sym_vvar_page offset and
-+		 * the real VVAR page is mapped with the sym_timens_page
-+		 * offset.
-+		 * See also the comment near timens_setup_vdso_data().
-+		 */
-+		if (timens_page)
-+			pfn = page_to_pfn(timens_page);
-+
-+		return vmf_insert_pfn(vma, vmf->address, pfn);
- 	} else if (sym_offset == image->sym_pvclock_page) {
- 		struct pvclock_vsyscall_time_info *pvti =
- 			pvclock_get_pvti_cpu0_va();
-@@ -146,6 +188,14 @@ static vm_fault_t vvar_fault(const struct vm_special_mapping *sm,
- 		if (tsc_pg && vclock_was_used(VCLOCK_HVCLOCK))
- 			return vmf_insert_pfn(vma, vmf->address,
- 					virt_to_phys(tsc_pg) >> PAGE_SHIFT);
-+	} else if (sym_offset == image->sym_timens_page) {
-+		struct page *timens_page = find_timens_vvar_page(vma);
-+
-+		if (!timens_page)
-+			return VM_FAULT_SIGBUS;
-+
-+		pfn = __pa_symbol(&__vvar_page) >> PAGE_SHIFT;
-+		return vmf_insert_pfn(vma, vmf->address, pfn);
+ 	sig_none = timr->it_sigev_notify == SIGEV_NONE;
+@@ -683,12 +682,7 @@ void common_timer_get(struct k_itimer *timr, struct itimerspec64 *cur_setting)
+ 			return;
  	}
  
- 	return VM_FAULT_SIGBUS;
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 9c64852..60c17d3 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -3342,6 +3342,8 @@ static const struct vm_operations_struct special_mapping_vmops = {
- 	.fault = special_mapping_fault,
- 	.mremap = special_mapping_mremap,
- 	.name = special_mapping_name,
-+	/* vDSO code relies that VVAR can't be accessed remotely */
-+	.access = NULL,
- };
+-	/*
+-	 * The timespec64 based conversion is suboptimal, but it's not
+-	 * worth to implement yet another callback.
+-	 */
+-	kc->clock_get_timespec(timr->it_clock, &ts64);
+-	now = timespec64_to_ktime(ts64);
++	now = kc->clock_get_ktime(timr->it_clock);
  
- static const struct vm_operations_struct legacy_special_mapping_vmops = {
+ 	/*
+ 	 * When a requeue is pending or this is a SIGEV_NONE timer move the
