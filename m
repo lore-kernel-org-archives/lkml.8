@@ -2,341 +2,243 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8DAC33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB4BC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342522082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0920B2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgAMIFV (ORCPT
+        id S1728809AbgAMIGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 03:05:21 -0500
-Received: from mx2.suse.de ([195.135.220.15]:56864 "EHLO mx2.suse.de"
+        Mon, 13 Jan 2020 03:06:33 -0500
+Received: from mga17.intel.com ([192.55.52.151]:63779 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbgAMIFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 03:05:20 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 06C16AD07;
-        Mon, 13 Jan 2020 08:05:15 +0000 (UTC)
-Subject: Re: Warnings in DRM code when removing/unbinding a driver
-To:     John Garry <john.garry@huawei.com>,
-        "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>,
-        "Chenfeng (puck)" <puck.chen@hisilicon.com>,
-        "airlied@linux.ie" <airlied@linux.ie>, daniel@ffwll.ch
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
- <381e28c2-f3e4-6f75-c632-96dd8a980c87@suse.de>
- <38ce1d99-e803-3693-adff-106dc438c973@huawei.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <a5ad7291-c369-fadb-a085-b5a6465024be@suse.de>
-Date:   Mon, 13 Jan 2020 09:05:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1728682AbgAMIGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 03:06:32 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 00:06:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,428,1571727600"; 
+   d="scan'208";a="224905087"
+Received: from unknown (HELO localhost) ([10.239.159.128])
+  by orsmga006.jf.intel.com with ESMTP; 13 Jan 2020 00:06:29 -0800
+Date:   Mon, 13 Jan 2020 16:10:50 +0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
+        jmattson@google.com, yu.c.zhang@linux.intel.com,
+        alazar@bitdefender.com, edwin.zhai@intel.com
+Subject: Re: [RESEND PATCH v10 06/10] vmx: spp: Set up SPP paging table at
+ vmentry/vmexit
+Message-ID: <20200113081050.GF12253@local-michael-cet-test.sh.intel.com>
+References: <20200102061319.10077-1-weijiang.yang@intel.com>
+ <20200102061319.10077-7-weijiang.yang@intel.com>
+ <20200110180458.GG21485@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <38ce1d99-e803-3693-adff-106dc438c973@huawei.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="dVciguu1FChPYLvY7s88zG41BmBe4opAY"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110180458.GG21485@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---dVciguu1FChPYLvY7s88zG41BmBe4opAY
-Content-Type: multipart/mixed; boundary="U5doxGrPoTQDGAKQ4eASe1cI9wDjEVZ1c";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: John Garry <john.garry@huawei.com>,
- "kongxinwei (A)" <kong.kongxinwei@hisilicon.com>,
- "Chenfeng (puck)" <puck.chen@hisilicon.com>,
- "airlied@linux.ie" <airlied@linux.ie>, daniel@ffwll.ch
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-Message-ID: <a5ad7291-c369-fadb-a085-b5a6465024be@suse.de>
-Subject: Re: Warnings in DRM code when removing/unbinding a driver
-References: <07899bd5-e9a5-cff0-395f-b4fb3f0f7f6c@huawei.com>
- <381e28c2-f3e4-6f75-c632-96dd8a980c87@suse.de>
- <38ce1d99-e803-3693-adff-106dc438c973@huawei.com>
-In-Reply-To: <38ce1d99-e803-3693-adff-106dc438c973@huawei.com>
+On Fri, Jan 10, 2020 at 10:04:59AM -0800, Sean Christopherson wrote:
+> On Thu, Jan 02, 2020 at 02:13:15PM +0800, Yang Weijiang wrote:
+> > @@ -3585,7 +3602,30 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gva_t gva, int level,
+> >  		if ((error_code & PFERR_WRITE_MASK) &&
+> >  		    spte_can_locklessly_be_made_writable(spte))
+> >  		{
+> > -			new_spte |= PT_WRITABLE_MASK;
+> > +			/*
+> > +			 * Record write protect fault caused by
+> > +			 * Sub-page Protection, let VMI decide
+> > +			 * the next step.
+> > +			 */
+> > +			if (spte & PT_SPP_MASK) {
+> > +				int len = kvm_x86_ops->get_inst_len(vcpu);
+> 
+> There's got to be a better way to handle SPP exits than adding a helper
+> to retrieve the instruction length.
+>
+The fault instruction was skipped by kvm_skip_emulated_instruction()
+before, but Paolo suggested leave the re-do or skip option to user-space
+to make it flexible for write protection or write tracking, so return
+length to user-space.
 
---U5doxGrPoTQDGAKQ4eASe1cI9wDjEVZ1c
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+> > +
+> > +				fault_handled = true;
+> > +				vcpu->run->exit_reason = KVM_EXIT_SPP;
+> > +				vcpu->run->spp.addr = gva;
+> > +				vcpu->run->spp.ins_len = len;
+> 
+> s/ins_len/insn_len to be consistent with other KVM nomenclature.
+> 
+OK.
 
-Hi John
+> > +				trace_kvm_spp_induced_page_fault(vcpu,
+> > +								 gva,
+> > +								 len);
+> > +				break;
+> > +			}
+> > +
+> > +			if (was_spp_armed(new_spte)) {
+> > +				restore_spp_bit(&new_spte);
+> > +				spp_protected = true;
+> > +			} else {
+> > +				new_spte |= PT_WRITABLE_MASK;
+> > +			}
+> >  
+> >  			/*
+> >  			 * Do not fix write-permission on the large spte.  Since
+> 
+> ...
+> 
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index 24e4e1c47f42..97d862c79124 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -200,7 +200,6 @@ static const struct {
+> >  	[VMENTER_L1D_FLUSH_EPT_DISABLED] = {"EPT disabled", false},
+> >  	[VMENTER_L1D_FLUSH_NOT_REQUIRED] = {"not required", false},
+> >  };
+> > -
+> 
+> Spurious whitepsace.
+>
+OK.
 
-Am 10.01.20 um 13:54 schrieb John Garry:
->=20
->=20
-> Hi Thomas,
->=20
->> drm-tip now contains
->=20
-> I have tested today's linux-next, which includes this:
->=20
->>
->> commit a88248506a2bcfeaef6837a53cde19fe11970e6c
->> Author: Thomas Zimmermann <tzimmermann@suse.de>
->> Date:=C2=A0=C2=A0 Tue Dec 3 09:38:15 2019 +0100
->>
->> =C2=A0=C2=A0=C2=A0=C2=A0 drm/hisilicon/hibmc: Switch to generic fbdev =
-emulation
->>
->> which removes this entire code and switches hibmc to generic fbdev
->> emulation. Does that fix the problem?
->>
->=20
-> And I see no warn, here's a dmesg snippet:
+> >  #define L1D_CACHE_ORDER 4
+> >  static void *vmx_l1d_flush_pages;
+> >  
+> > @@ -2999,6 +2998,7 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
+> >  	bool update_guest_cr3 = true;
+> >  	unsigned long guest_cr3;
+> >  	u64 eptp;
+> > +	u64 spptp;
+> >  
+> >  	guest_cr3 = cr3;
+> >  	if (enable_ept) {
+> > @@ -3027,6 +3027,12 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
+> >  
+> >  	if (update_guest_cr3)
+> >  		vmcs_writel(GUEST_CR3, guest_cr3);
+> > +
+> > +	if (kvm->arch.spp_active && VALID_PAGE(vcpu->kvm->arch.sppt_root)) {
+> > +		spptp = construct_spptp(vcpu->kvm->arch.sppt_root);
+> > +		vmcs_write64(SPPT_POINTER, spptp);
+> > +		vmx_flush_tlb(vcpu, true);
+> 
+> Why is SPP so special that it gets to force TLB flushes?
+I double checked the code, there's a call to vmx_flush_tlb() in
+mmu_load(), so it's unnecessary here, thank you!
 
-Great. So I'll consider this fixed. Thanks for reporting ad testing.
+> > +	}
+> >  }
+> >  
+> >  int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+> > @@ -5361,6 +5367,74 @@ static int handle_monitor_trap(struct kvm_vcpu *vcpu)
+> >  	return 1;
+> >  }
+> >  
+> > +int handle_spp(struct kvm_vcpu *vcpu)
+> 
+> Can be static.
+>
+Thanks!
 
-Best regards
-Thomas
+> > +{
+> > +	unsigned long exit_qualification;
+> > +	struct kvm_memory_slot *slot;
+> > +	gpa_t gpa;
+> > +	gfn_t gfn;
+> > +
+> > +	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+> > +
+> > +	/*
+> > +	 * SPP VM exit happened while executing iret from NMI,
+> > +	 * "blocked by NMI" bit has to be set before next VM entry.
+> > +	 * There are errata that may cause this bit to not be set:
+> > +	 * AAK134, BY25.
+> > +	 */
+> > +	if (!(to_vmx(vcpu)->idt_vectoring_info & VECTORING_INFO_VALID_MASK) &&
+> > +	    (exit_qualification & SPPT_INTR_INFO_UNBLOCK_NMI))
+> > +		vmcs_set_bits(GUEST_INTERRUPTIBILITY_INFO,
+> > +			      GUEST_INTR_STATE_NMI);
+> > +
+> > +	vcpu->arch.exit_qualification = exit_qualification;
+> 
+> 	if (WARN_ON(!(exit_qualification & SPPT_INDUCED_EXIT_TYPE)))
+> 		goto out_err;
+> 
+> 	<handle spp exit>
+> 
+> 	return 1;
+> 
+> out_err:
+> 	vcpu->run->exit_reason = KVM_EXIT_UNKNOWN;
+> 	vcpu->run->hw.hardware_exit_reason = EXIT_REASON_SPP;
+> 	return 0;
+>
+Sure, will change it.
 
->=20
-> [=C2=A0=C2=A0 20.672787] pci 0007:90:00.0: can't derive routing for PCI=
- INT A
-> [=C2=A0=C2=A0 20.678831] hibmc-drm 0007:91:00.0: PCI INT A: no GSI
-> [=C2=A0=C2=A0 20.686536] pci_bus 0007:90: 2-byte config write to 0007:9=
-0:00.0
-> offset 0x4 may corrupt adjacent RW1C bits
-> [=C2=A0=C2=A0 20.696888] [TTM] Zone=C2=A0 kernel: Available graphics me=
-mory: 57359458 KiB
-> [=C2=A0=C2=A0 20.703545] [TTM] Zone=C2=A0=C2=A0 dma32: Available graphi=
-cs memory: 2097152 KiB
-> [=C2=A0=C2=A0 20.710108] [TTM] Initializing pool allocator
-> [=C2=A0=C2=A0 20.714561] [TTM] Initializing DMA pool allocator
-> [=C2=A0=C2=A0 20.720212] [drm] Supports vblank timestamp caching Rev 2 =
-(21.10.2013).
-> [=C2=A0=C2=A0 20.726863] [drm] No driver support for vblank timestamp q=
-uery.
-> [=C2=A0=C2=A0 20.754777] Console: switching to colour frame buffer devi=
-ce 100x37
-> [=C2=A0=C2=A0 20.778180] hibmc-drm 0007:91:00.0: fb0: hibmcdrmfb frame =
-buffer device
-> [=C2=A0=C2=A0 20.786447] [drm] Initialized hibmc 1.0.0 20160828 for 000=
-7:91:00.0
-> on minor 0
-> [=C2=A0=C2=A0 20.794346] Console: switching to colour dummy device 80x2=
-5
-> [=C2=A0=C2=A0 20.801884] pci 0007:90:00.0: can't derive routing for PCI=
- INT A
-> [=C2=A0=C2=A0 20.807963] hibmc-drm 0007:91:00.0: PCI INT A: no GSI
-> [=C2=A0=C2=A0 20.813656] [TTM] Finalizing pool allocator
-> [=C2=A0=C2=A0 20.817905] [TTM] Finalizing DMA pool allocator
-> [=C2=A0=C2=A0 20.822576] [TTM] Zone=C2=A0 kernel: Used memory at exit: =
-0 KiB
-> [=C2=A0=C2=A0 20.828760] [TTM] Zone=C2=A0=C2=A0 dma32: Used memory at e=
-xit: 0 KiB
-> [=C2=A0=C2=A0 20.834978] pci 0007:90:00.0: can't derive routing for PCI=
- INT A
-> [=C2=A0=C2=A0 20.841021] hibmc-drm 0007:91:00.0: PCI INT A: no GSI
-> [=C2=A0=C2=A0 20.848858] [TTM] Zone=C2=A0 kernel: Available graphics me=
-mory: 57359458 KiB
-> [=C2=A0=C2=A0 20.855516] [TTM] Zone=C2=A0=C2=A0 dma32: Available graphi=
-cs memory: 2097152 KiB
-> [=C2=A0=C2=A0 20.862079] [TTM] Initializing pool allocator
-> [=C2=A0=C2=A0 20.866525] [TTM] Initializing DMA pool allocator
-> [=C2=A0=C2=A0 20.872064] [drm] Supports vblank timestamp caching Rev 2 =
-(21.10.2013).
-> [=C2=A0=C2=A0 20.878716] [drm] No driver support for vblank timestamp q=
-uery.
-> [=C2=A0=C2=A0 20.905996] Console: switching to colour frame buffer devi=
-ce 100x37
-> [=C2=A0=C2=A0 20.929385] hibmc-drm 0007:91:00.0: fb0: hibmcdrmfb frame =
-buffer device
-> [=C2=A0=C2=A0 20.937241] [drm] Initialized hibmc 1.0.0 20160828 for 000=
-7:91:00.0
-> on minor 0
-> [=C2=A0=C2=A0 21.171906] loop: module loaded
->=20
-> Thanks,
-> John
->=20
->> Best regards
->> Thomas
->>
->>> [=C2=A0=C2=A0 27.965802]=C2=A0 hibmc_unload+0x2c/0xd0
->>> [=C2=A0=C2=A0 27.969281]=C2=A0 hibmc_pci_remove+0x2c/0x40
->>> [=C2=A0=C2=A0 27.973109]=C2=A0 pci_device_remove+0x6c/0x140
->>> [=C2=A0=C2=A0 27.977110]=C2=A0 really_probe+0x174/0x548
->>> [=C2=A0=C2=A0 27.980763]=C2=A0 driver_probe_device+0x7c/0x148
->>> [=C2=A0=C2=A0 27.984936]=C2=A0 device_driver_attach+0x94/0xa0
->>> [=C2=A0=C2=A0 27.989109]=C2=A0 __driver_attach+0xa8/0x110
->>> [=C2=A0=C2=A0 27.992935]=C2=A0 bus_for_each_dev+0xe8/0x158
->>> [=C2=A0=C2=A0 27.996849]=C2=A0 driver_attach+0x30/0x40
->>> [=C2=A0=C2=A0 28.000415]=C2=A0 bus_add_driver+0x234/0x2f0
->>> [=C2=A0=C2=A0 28.004241]=C2=A0 driver_register+0xbc/0x1d0
->>> [=C2=A0=C2=A0 28.008067]=C2=A0 __pci_register_driver+0xbc/0xd0
->>> [=C2=A0=C2=A0 28.012329]=C2=A0 hibmc_pci_driver_init+0x20/0x28
->>> [=C2=A0=C2=A0 28.016590]=C2=A0 do_one_initcall+0xb4/0x254
->>> [=C2=A0=C2=A0 28.020417]=C2=A0 kernel_init_freeable+0x27c/0x328
->>> [=C2=A0=C2=A0 28.024765]=C2=A0 kernel_init+0x10/0x118
->>> [=C2=A0=C2=A0 28.028245]=C2=A0 ret_from_fork+0x10/0x18
->>> [=C2=A0=C2=A0 28.031813] ---[ end trace 35a83b71b657878d ]---
->>> [=C2=A0=C2=A0 28.036503] ------------[ cut here ]------------
->>> [=C2=A0=C2=A0 28.041115] WARNING: CPU: 24 PID: 1 at
->>> drivers/gpu/drm/drm_gem_vram_helper.c:40
->>> ttm_buffer_object_destroy+0x4c/0x80
->>> [=C2=A0=C2=A0 28.051537] Modules linked in:
->>> [=C2=A0=C2=A0 28.054585] CPU: 24 PID: 1 Comm: swapper/0 Tainted: G=C2=
-=A0=C2=A0=C2=A0 B=C2=A0=C2=A0 W
->>> =C2=A0=C2=A05.5.0-rc1-dirty #565
->>> [=C2=A0=C2=A0 28.062924] Hardware name: Huawei D06 /D06, BIOS Hisilic=
-on D06 UEFI
->>> RC0 - V1.16.01 03/15/2019
->>>
->>> [snip]
->>>
->>> Indeed, simply unbinding the device from the driver causes the same s=
-ort
->>> of issue:
->>>
->>> root@(none)$ cd ./bus/pci/drivers/hibmc-drm/
->>> root@(none)$ ls
->>> 0000:05:00.0=C2=A0 bind=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 new_id=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 remove_id=C2=A0=C2=
-=A0=C2=A0=C2=A0 uevent
->>> unbind
->>> root@(none)$ echo 0000\:05\:00.0 > unbind
->>> [=C2=A0 116.074352] ------------[ cut here ]------------
->>> [=C2=A0 116.078978] WARNING: CPU: 17 PID: 1178 at
->>> drivers/gpu/drm/drm_gem_vram_helper.c:40
->>> ttm_buffer_object_destroy+0x4c/0x80
->>> [=C2=A0 116.089661] Modules linked in:
->>> [=C2=A0 116.092711] CPU: 17 PID: 1178 Comm: sh Tainted: G=C2=A0=C2=A0=
-=C2=A0 B=C2=A0=C2=A0 W
->>> 5.5.0-rc1-dirty #565
->>> [=C2=A0 116.100704] Hardware name: Huawei D06 /D06, BIOS Hisilicon D0=
-6 UEFI
->>> RC0 - V1.16.01 03/15/2019
->>> [=C2=A0 116.109218] pstate: 20400009 (nzCv daif +PAN -UAO)
->>> [=C2=A0 116.114001] pc : ttm_buffer_object_destroy+0x4c/0x80
->>> [=C2=A0 116.118956] lr : ttm_buffer_object_destroy+0x18/0x80
->>> [=C2=A0 116.123910] sp : ffff0022e6cef8e0
->>> [=C2=A0 116.127215] x29: ffff0022e6cef8e0 x28: ffff00231b1fb000
->>> [=C2=A0 116.132519] x27: 0000000000000000 x26: ffff00231b1fb000
->>> [=C2=A0 116.137821] x25: ffff0022e6cefdc0 x24: 0000000000002480
->>> [=C2=A0 116.143124] x23: ffff0023682b6ab0 x22: ffff0023682b6800
->>> [=C2=A0 116.148427] x21: ffff0023682b6800 x20: 0000000000000000
->>> [=C2=A0 116.153730] x19: ffff0023682b6800 x18: 0000000000000000
->>> [=C2=A0 116.159032] x17: 000000000000000000000000001
->>> [=C2=A0 116.185545] x7 : ffff0023682b6b07 x6 : ffff80046d056d61
->>> [=C2=A0 116.190848] x5 : ffff80046d056d61 x4 : ffff0023682b6ba0
->>> [=C2=A0 116.196151] x3 : ffffa00010197338 x2 : dfffa00000000000
->>> [=C2=A0 116.201453] x1 : 0000000000000003 x0 : 0000000000000001
->>> [=C2=A0 116.206756] Call trace:
->>> [=C2=A0 116.209195]=C2=A0 ttm_buffer_object_destroy+0x4c/0x80
->>> [=C2=A0 116.213803]=C2=A0 ttm_bo_release_list+0x184/0x220
->>> [=C2=A0 116.218064]=C2=A0 ttm_bo_put+0x410/0x5d0
->>> [=C2=A0 116.221544]=C2=A0 drm_gem_vram_object_free+0xc/0x18
->>> [=C2=A0 116.225979]=C2=A0 drm_gem_object_free+0x34/0xd0
->>> [=C2=A0 116.230066]=C2=A0 drm_gem_object_put_unlocked+0xc8/0xf0
->>> [=C2=A0 116.234848]=C2=A0 hibmc_user_framebuffer_destroy+0x20/0x40
->>> [=C2=A0 116.239890]=C2=A0 drm_framebuffer_free+0x48/0x58
->>> [=C2=A0 116.244064]=C2=A0 drm_mode_object_put.part.1+0x90/0xe8
->>> [=C2=A0 116.248759]=C2=A0 drm_mode_object_put+0x28/0x38
->>> [=C2=A0 116.252846]=C2=A0 hibmc_fbdev_fini+0x54/0x78
->>> [=C2=A0 116.256672]=C2=A0 hibmc_unload+0x2c/0xd0
->>> [=C2=A0 116.260151]=C2=A0 hibmc_pci_remove+0x2c/0x40
->>> [=C2=A0 116.263979]=C2=A0 pci_device_remove+0x6c/0x140
->>> [=C2=A0 116.267980]=C2=A0 device_release_driver_internal+0x134/0x250
->>> [=C2=A0 116.273196]=C2=A0 device_driver_detach+0x28/0x38
->>> [=C2=A0 116.277369]=C2=A0 unbind_store+0xfc/0x150
->>> [=C2=A0 116.280934]=C2=A0 drv_attr_store+0x48/0x60
->>> [=C2=A0 116.284589]=C2=A0 sysfs_kf_write+0x80/0xb0
->>> [=C2=A0 116.288241]=C2=A0 kernfs_fop_write+0x1d4/0x320
->>> [=C2=A0 116.292243]=C2=A0 __vfs_write+0x54/0x98
->>> [=C2=A0 116.295635]=C2=A0 vfs_write+0xe8/0x270
->>> [=C2=A0 116.298940]=C2=A0 ksys_write+0xc8/0x180
->>> [=C2=A0 116.302333]=C2=A0 __arm64_sys_write+0x40/0x50
->>> [=C2=A0 116.306248]=C2=A0 el0_svc_common.constprop.0+0xa4/0x1f8
->>> [=C2=A0 116.311029]=C2=A0 el0_svc_handler+0x34/0xb0
->>> [=C2=A0 116.314770]=C2=A0 el0_sync_handler+0x10c/0x1c8
->>> [=C2=A0 116.318769]=C2=A0 el0_sync+0x140/0x180
->>> [=C2=A0 116.322074] ---[ end trace e60e43d0e316b5c8 ]---
->>> [=C2=A0 116.326868] ------------[ cut here ]------------
->>>
->>>
->>> dmesg and .config is here:
->>> https://pastebin.com/4P5yaZBS
->>>
->>> I'm not sure if this is a HIBMC driver issue or issue with the
->>> framework.
->>>
->>> john
->>>
->>>
->>> _______________________________________________
->>> dri-devel mailing list
->>> dri-devel@lists.freedesktop.org
->>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->>
->=20
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > +	if (exit_qualification & SPPT_INDUCED_EXIT_TYPE) {
+> > +		int page_num = KVM_PAGES_PER_HPAGE(PT_DIRECTORY_LEVEL);
+> 
+> The compiler is probably clever enough to make these constants, but if
+> this logic is a fundamental property of SPP then it should be defined as
+> a macro somewhere.
+>
+OK, will change it.
 
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+> > +		u32 *access;
+> > +		gfn_t gfn_max;
+> > +
+> > +		/*
+> > +		 * SPPT missing
+> > +		 * We don't set SPP write access for the corresponding
+> > +		 * GPA, if we haven't setup, we need to construct
+> > +		 * SPP table here.
+> > +		 */
+> > +		gpa = vmcs_read64(GUEST_PHYSICAL_ADDRESS);
+> > +		gfn = gpa >> PAGE_SHIFT;
+> 
+> gpa_to_gfn()
+>
+OK.
 
+> > +		trace_kvm_spp_induced_exit(vcpu, gpa, exit_qualification);
+> > +		/*
+> > +		 * In level 1 of SPPT, there's no PRESENT bit, all data is
+> > +		 * regarded as permission vector, so need to check from
+> > +		 * level 2 to set up the vector if target page is protected.
+> > +		 */
+> > +		spin_lock(&vcpu->kvm->mmu_lock);
+> > +		gfn &= ~(page_num - 1);
+> 
+> 
+> 
+> > +		gfn_max = gfn + page_num - 1;
+> 
+> s/gfn_max/gfn_end
+OK.
 
---U5doxGrPoTQDGAKQ4eASe1cI9wDjEVZ1c--
+> 
+> > +		for (; gfn <= gfn_max; gfn++) {
+> 
+> My preference would be to do:
+> 		gfn_end = gfn + page_num;
+> 
+> 		for ( ; gfn < gfn_end; gfn++)
+>
+Thank you!
+> > +			slot = gfn_to_memslot(vcpu->kvm, gfn);
 
---dVciguu1FChPYLvY7s88zG41BmBe4opAY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl4cJLoACgkQaA3BHVML
-eiOzbwf/cxN8G+eXYNP1H73zzZkYqYm64JXQieQ4R2MQXAWC87oerf0AZyQ96hZ1
-VwC01p5rK/23y8wfMQc9U1YUu1FCSF/b8etcixy5zKPwoXzC+L1vUa6fFcDB69AB
-t3/Gf0/vNoptMTObF4AO2lAb2WOhovpsW5gOZ2IaYWYe3CgTPT9EQ7ClRrvsaIG2
-tjivfiFqD5QcS+sOBYgNqE+RiQA0mMReJgleO9LCwtM7bym7CNo5EmxZ4d8LlDdJ
-FFjIWIihpTS2AyUSkWyf9NrUNE0Gn/QZvtvLYhcuWQWLQv5u6rMICItLBi7UFNzo
-YQWGtb7DsvOnefImm7d5fWnzen4H7A==
-=4tjJ
------END PGP SIGNATURE-----
-
---dVciguu1FChPYLvY7s88zG41BmBe4opAY--
