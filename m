@@ -6,124 +6,128 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1B7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D069C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2072187F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="fNayqSGT"
+	by mail.kernel.org (Postfix) with ESMTP id F2DDA2187F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578943939;
+	bh=Qa9wK6QQilr8ok6T3WZf5PfBmbljZ9QyuEtJpUpiFxg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KpLGSUBiJHP8jhn8G1lixYqv9eKci0/JJGx8LZWedQZB395P1jBiXDfmBqciWgihq
+	 eFUCT2wk1AWNZ1mvRuGvrxcnQSUbfayKsb8VteoavgaKx+aNwllWu3RZnMsWqJZth2
+	 /Q3HIjTN6L8lVE+I5NUXlIsE9QHD+nrowC4NPEhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728767AbgAMTag (ORCPT
+        id S1728748AbgAMTcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:30:36 -0500
-Received: from mail-eopbgr760098.outbound.protection.outlook.com ([40.107.76.98]:23156
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726435AbgAMTag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:30:36 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QFJWhhKAj4FaegYk3tcaAI7POLSqwyQCV6pY8Hv4mun10im9SAjMlkdi/Pz51DIjTmZ7eFIM7/quNZs95liLQlZjRrEnZZIPPyHPQQUJHuLdxT/CSNgdBUmFQbQ73evrnINpt+sudeeGEKQX6BFt32tHRWm+nvi+ZI/uWMZ7FK03x1dkKdpTQqdlC/2KV++d19UF8Vzm70b9WpAG8+Rhfmv4nTF3EL7fNZjiLdNlofau5JZBpSiGoTIvgJWC8k8PyVdEAEGXqysQmx15ReWxeLKN+NOoVsy23/UDSVEhlJBXVFBgwiDf1NT/UCu+laRaoXsBd4eez21yb8I8glnrWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zSB5ZxMBQMtYpxQNGiXy4d/0mhJpMuhHxCmJstq1Xzc=;
- b=LFQcGi2WjU1q3PHxNfi/cWw0zvOhg0oEkmC/YC9AKFuol+dU+FoQgkNPtU/mE3i1XwmS25EeVWfAEE95kFKmDymCrdd/7b7DBKAeOyY3ylZwVyJKONJb6fnO0j0C3uIdm1rS7yaFP6529V3T4Z84sgo50gBTdhsM9Hfb9QwGLYCyfJFg35CmYzMexejj0XcBkDNbswdUiBbPG1ywxhGu/zy4m0AD5AaGReg8FNhOP8qQI1NGqF0E7H18nJwflJoS/bKh4BIWDFE07e+6WDhNCBYZuTP3IRltq6ZszDWs3Vd3kJFnmAVG1QiSNnQaboufbOLeJSo+w0XsN+7xecG3iQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zSB5ZxMBQMtYpxQNGiXy4d/0mhJpMuhHxCmJstq1Xzc=;
- b=fNayqSGTi1mxyfAw3Sm4GTywOdPTSCH2aDXCXsLu7Iyn0TaE9GNbkZP7ui0aGL/7+bV8ET64WERTNQY7Ui9PsJZm42ujMd2n2VmelWDs4ByRNuxMzA/LTdK75cRL1AehoXDS6xFakp0dHwFXGna3OZoWawD+FNdxY8w3fSzEMUw=
-Received: from BL0PR2101MB1123.namprd21.prod.outlook.com (52.132.20.151) by
- BL0PR2101MB0996.namprd21.prod.outlook.com (52.132.23.158) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2644.6; Mon, 13 Jan 2020 19:30:33 +0000
-Received: from BL0PR2101MB1123.namprd21.prod.outlook.com
- ([fe80::d1de:7b03:3f66:19fb]) by BL0PR2101MB1123.namprd21.prod.outlook.com
- ([fe80::d1de:7b03:3f66:19fb%6]) with mapi id 15.20.2644.015; Mon, 13 Jan 2020
- 19:30:33 +0000
-From:   Long Li <longli@microsoft.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "longli@linuxonhyperv.com" <longli@linuxonhyperv.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Patch v3 1/2] PCI: hv: Decouple the func definition in
- hv_dr_state from VSP message
-Thread-Topic: [Patch v3 1/2] PCI: hv: Decouple the func definition in
- hv_dr_state from VSP message
-Thread-Index: AQHVvCRkF/InBl2gY02lH0V30pa41qflORQggACewYCAAz9xEA==
-Date:   Mon, 13 Jan 2020 19:30:33 +0000
-Message-ID: <BL0PR2101MB1123E4716CFCB1990968D4FACE350@BL0PR2101MB1123.namprd21.prod.outlook.com>
-References: <BL0PR2101MB1123229A668A200C34A2888ECE3B0@BL0PR2101MB1123.namprd21.prod.outlook.com>
- <20200111175341.GA238104@google.com>
-In-Reply-To: <20200111175341.GA238104@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a279fdf0-03b7-4921-8d88-000080fcd1fe;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T19:29:32Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=longli@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:2:edec:db5c:c6fe:798]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 00d59c32-ba87-4e9a-1992-08d7985f0eef
-x-ms-traffictypediagnostic: BL0PR2101MB0996:|BL0PR2101MB0996:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BL0PR2101MB09962DBFDF2DF63388B327CECE350@BL0PR2101MB0996.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(136003)(376002)(396003)(346002)(366004)(199004)(189003)(478600001)(66946007)(66476007)(66556008)(54906003)(66446008)(76116006)(6506007)(7696005)(15650500001)(6916009)(33656002)(10290500003)(64756008)(8936002)(5660300002)(186003)(52536014)(316002)(8990500004)(4326008)(8676002)(86362001)(81156014)(81166006)(2906002)(55016002)(9686003)(71200400001)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB0996;H:BL0PR2101MB1123.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MiYDH5EhqGyHtgAhTe7t3dUcC/n3oMOrPYbFkigl+44BbEceK2j4UXfuaLwnMPivdnUkgR12FimNQDX3tY4fymeKFwR1W8b7DsCFeygfMPCd+apebySndwX86bacoXT1lylyj+yddEc55oh16VQCbwZ5hJQ896MEjGid8URHpTqcdCjoATeUwhu3Q5DdKL+CkyvQrnzqLXf9Rbl9YfI+2uWarPBLu+e5WInkmeCSp/VywOAXHcqjwNgZVwSCRyrG8OQN+Ppz2NCdSzWxnyhWIX9iQreM5ZdWj+Q8D7LHef5UasQFcPxL/pZJwvXA11MNKdiC/72U7Y5wVyFRfHLZoxDBnXM8tVLULkULFh6jXnEZ/+O/2GK8FnMF+5cE17QYVY9YTgx7rCISSdM2h8ERs3T6LNtvnWVzZw++r1Pt+oMd7mCJDlu9IMdKY8cquSsP
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 Jan 2020 14:32:18 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44111 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728641AbgAMTcR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 14:32:17 -0500
+Received: by mail-lf1-f65.google.com with SMTP id v201so7766859lfa.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 11:32:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ae/+DIZn8QK4Eu0S9kiQGO5TqvMJzTIQ/bcHyd6r6aQ=;
+        b=dsTuRrPnmRxjK6yre9iMf8gYcDE0hjJkuaJ2eT9ghACf2vMogI+i+ZMgu9tiR3PjxB
+         uzQhEdyjiSlebYb6SLrus5AR2u6J5fDcOnswpR5Vfnatgy1xjOGHGAsOhngu0riP6Xcw
+         2ZfyA9EtBicLF7bVKr8HK+hd9gJ6oiCIwVO50=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ae/+DIZn8QK4Eu0S9kiQGO5TqvMJzTIQ/bcHyd6r6aQ=;
+        b=AZNSENZIzBX4/sFzdHTeSGRYwYQo6SkPyJ+5mbkAEuwGkBeWz/25LRY5UYQtrWqI5+
+         cS3nA9/4egu1p0TxLQ2mrTDWVkW1lZgnWxr+vNDQbsm0T7KXqOEqX7kG30heZCFjaiVi
+         zq2UW+CljqYI8HPONfqPKhbh2YCfC13xRlEtv74oCXHt/Fb5rwA7ab1b3alQe0b8XLXi
+         tIdg4I5JW6pk7A2swCsuora/3rrfrOwYVsF+AW2pLp8613q4eLSg9Tv7S+BBvH1Id7iz
+         VgDei+ctZdA1WiXbTXhXjgwlx5TT2Ku0XpIUFz5djog1tvau7/ZJLCG/SDeHjPjjp+aX
+         PTlA==
+X-Gm-Message-State: APjAAAXUkzUOI+sfS/GaOKQz/F4M8BJRvuk/JlX1hoCxen/LMXPpX2Ad
+        vkJUDVFn3bu0Sv+qG/hmua3bZHZoWgc=
+X-Google-Smtp-Source: APXvYqzfB3VRtVorvgZjo88OmPxOf1e2TIYrzS02KglPjSFgNWv+Ze7IFsV3COG54Wx/auM0Z2e5GA==
+X-Received: by 2002:a19:c205:: with SMTP id l5mr9770364lfc.159.1578943934607;
+        Mon, 13 Jan 2020 11:32:14 -0800 (PST)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
+        by smtp.gmail.com with ESMTPSA id x23sm6110478lff.24.2020.01.13.11.32.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 11:32:13 -0800 (PST)
+Received: by mail-lj1-f170.google.com with SMTP id w1so11461323ljh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 11:32:13 -0800 (PST)
+X-Received: by 2002:a05:651c:282:: with SMTP id b2mr12034973ljo.41.1578943932792;
+ Mon, 13 Jan 2020 11:32:12 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00d59c32-ba87-4e9a-1992-08d7985f0eef
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 19:30:33.5070
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: r6qQqugHrpX7qHJki3v2FlRJyRj9Qo1HdJjyOROaNxGzC4oMzlK6MTru9FpWhHHtit/UWHOaHNQY9YZTfX0g+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB0996
+References: <20200110165636.28035-1-will@kernel.org> <20200110165636.28035-7-will@kernel.org>
+ <CAHk-=wia5ppBsfHLMx648utCjO01JAZiME0K0eSHmhWuRyL+6w@mail.gmail.com> <20200113145954.GB4458@willie-the-truck>
+In-Reply-To: <20200113145954.GB4458@willie-the-truck>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 13 Jan 2020 11:31:56 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wirAWFOrfD4us1FepP0vWkZMpnqXusJyKHCqwBVsR43CA@mail.gmail.com>
+Message-ID: <CAHk-=wirAWFOrfD4us1FepP0vWkZMpnqXusJyKHCqwBVsR43CA@mail.gmail.com>
+Subject: Re: [RFC PATCH 6/8] READ_ONCE: Drop pointer qualifiers when reading
+ from scalar types
+To:     Will Deacon <will@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->Subject: Re: [Patch v3 1/2] PCI: hv: Decouple the func definition in hv_dr=
-_state
->from VSP message
+On Mon, Jan 13, 2020 at 7:00 AM Will Deacon <will@kernel.org> wrote:
 >
->On Sat, Jan 11, 2020 at 08:27:25AM +0000, Long Li wrote:
->> Hi Bjorn,
->>
->> I have addressed all the prior comments in this v3 patch. Please take a =
-look.
+> I can't disagree with that, but the only option we've come up with so far
+> that solves this in the READ_ONCE() macro itself is the thing from PeterZ:
 >
->Lorenzo normally merges hv updates, so I'm sure this is on his list to tak=
-e a look.
->I pointed out a few spelling and similar nits, but I didn't review the act=
-ual
->substance of v3.
->
->Bjorn
+> // Insert big fat comment here
+> #define unqual_typeof(x)    typeof(({_Atomic typeof(x) ___x __maybe_unused; ___x; }))
 
-Thanks, I will address your comments and send v4.
+I'm with Luc on this - that not only looks gcc-specific, it looks
+fragile too, in that it's not obvious that "_Atomic typeof(x)" really
+is guaranteed to do what we want.
 
-Long
+> So I suppose my question is: how ill does this code really make you feel?
+
+I wish the code was more obvious.
+
+One way to do that might be to do your approach, but just write it as
+a series of macros that makes it a bit more understandable what it
+does.
+
+Maybe it's just because of a "pee in the snow" effect, but I think
+this is easier to explain:
+
+  #define __pick_scalar_type(x,type,otherwise)          \
+        __builtin_choose_expr(__same_type(x,type), (type)0, otherwise)
+
+  #define __pick_integer_type(x, type, otherwise)       \
+        __pick_scalar_type(x, unsigned type,            \
+          __pick_scalar_type(x, signed type, otherwise))
+
+  #define __unqual_scalar_typeof(x) typeof(             \
+        __pick_integer_type(x, char,                    \
+          __pick_integer_type(x, short,                 \
+            __pick_integer_type(x, int,                 \
+              __pick_integer_type(x, long,              \
+                __pick_integer_type(x, long long, x))))))
+
+just because you there's less repeated noise, and the repetition there
+is is simpler.
+
+So still "Eww", but maybe not quite _as_ "Eww".
+
+             Linus
