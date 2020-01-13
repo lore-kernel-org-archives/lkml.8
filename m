@@ -2,111 +2,123 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59254C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267B0C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F362920661
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:18:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TXMWxcn0"
+	by mail.kernel.org (Postfix) with ESMTP id F383D20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:19:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbgAMOS2 (ORCPT
+        id S1728767AbgAMOT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:18:28 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:33560 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726399AbgAMOS1 (ORCPT
+        Mon, 13 Jan 2020 09:19:29 -0500
+Received: from mout.kundenserver.de ([212.227.17.10]:53485 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbgAMOT2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:18:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1JaluUo2JMQHJEK4hMt/lTHqq99YJUSuwhQgO7c6ABc=; b=TXMWxcn0Z+5mlJfWL/HJnzpNY
-        SlcyIvUI8KhnXpC+Ko+zHOsKfyCASQ+iuNkFvBH+naC25/fZT2SIvvHUYbNAw+nHti4KXegdwHlyo
-        0Vjc9L/5dcd853Cq/ReCu8wTvPMiBA/YoiJ+NPbEXK8e1qXGqDRkQxve0vJ18n0wGYqzf+BMf9x5n
-        jV+AS2ZCJ0PDysFX6buTXeBFJmgqkvYZ3eZlspE4Kae2rVBZSHNrbIvo6QiWKnqOkoN1ofLMr5yne
-        AQ74g0kpTKwT7kMe9QXn+Y4y7Dd0+i+m/tcBCwQRRCHGRo6WfI38RKg/GNW/St/WzCDDnItwU5x2o
-        A2e8vzduw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:33708)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1ir0Xs-0004mt-Ip; Mon, 13 Jan 2020 14:18:20 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1ir0Xp-0004VV-Fx; Mon, 13 Jan 2020 14:18:17 +0000
-Date:   Mon, 13 Jan 2020 14:18:17 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
- using a PHY driver
-Message-ID: <20200113141817.GN25745@shell.armlinux.org.uk>
-References: <4953fc69a26bee930bccdeb612f1ce740a4294df.1578921062.git.Jose.Abreu@synopsys.com>
- <20200113133845.GD11788@lunn.ch>
- <BN8PR12MB32666F34D45D7881BDD4CAB3D3350@BN8PR12MB3266.namprd12.prod.outlook.com>
+        Mon, 13 Jan 2020 09:19:28 -0500
+Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1MGz5h-1iwBUR0EjL-00E8lZ; Mon, 13 Jan 2020 15:19:20 +0100
+Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
+        by mail.cetitecgmbh.com (Postfix) with ESMTP id 0C80B64F293;
+        Mon, 13 Jan 2020 14:19:19 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at cetitec.com
+Received: from mail.cetitecgmbh.com ([127.0.0.1])
+        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0lxoVKmw2u_b; Mon, 13 Jan 2020 15:19:18 +0100 (CET)
+Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
+        by mail.cetitecgmbh.com (Postfix) with ESMTPS id B6DD064E2F2;
+        Mon, 13 Jan 2020 15:19:18 +0100 (CET)
+Received: from pflmari.corp.cetitec.com (10.10.2.141) by
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
+ id 15.0.1320.4; Mon, 13 Jan 2020 15:19:18 +0100
+Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
+        id 5F3B8804EB; Mon, 13 Jan 2020 15:19:18 +0100 (CET)
+Date:   Mon, 13 Jan 2020 15:19:18 +0100
+From:   Alex Riesen <alexander.riesen@cetitec.com>
+To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>
+Subject: [PATCH 0/8] media: i2c: adv748x: add support for HDMI audio
+Message-ID: <cover.1578924232.git.alexander.riesen@cetitec.com>
+Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <BN8PR12MB32666F34D45D7881BDD4CAB3D3350@BN8PR12MB3266.namprd12.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Originating-IP: [10.10.2.141]
+X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
+ PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29536F936F657D64
+X-Provags-ID: V03:K1:GZirzY4gCBAvcVAoboEzo8PAmOSS+Q2zeRvV3WJSr+8Is0fiFOf
+ V9gcwiqbgtsVSnjFWBiLabOkfnkWR7gy1HiJkuENofkVBr5+8eqdUAyPHMbLhyweLTDtkvN
+ 4HPZKfE3Vln6hG3a3jSe0K6jqYPkkgSMLB1Apuz+dNjUgxJHPtaYinkiCIvS4wYQ9Wa8oLn
+ ZqEA35/Tx8CR0TM6+izZg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:fWB6pESOSF4=:y8cNkKykP3gqRTEv6W0UET
+ GUMXMJ75JAc/8AwPMMclUVBYsauxy25hiLgFMgscBOU5TkGFUVeG+f8xyrrSHb0dFCj9cwffo
+ nRRUAHhvboHn5mMndRTuo71215yyeyMdvlxzUqY5NqdMJNa+snEDL8NpXkQrpWdZlsiEdZBHt
+ Qns1MqurZ3hC1ApJYwATy1vXaHxV1znpUpfzfYSQKT7C096rSyO7lJPAKwS2dAEQflS+pdAwj
+ dwssB0OdZWK1i6S0r/QgJ4sodnV9W+m/tJ0/lpkB5MpSsvuhRhULGg0W81bRfagep9eJRVsli
+ KGku7+YGq02QFmSIH/s5sUKrp43UXAd78qXSl9thUIwzn2QJwnr3eBVA5HK0AFx64Wbeo5GTe
+ YEWR7yFM35JJuzeCqeZ59ZVKdvUfNIJ7dE9DgnOKYx1jdjNS/QR5LnEA9xJf8m1jnBcJnetA2
+ Ld7Uhf26/oFEJ4ePPdxq5jrJ2CaLqL2Yk9ERUlXtm3dYXljr2UpOkOtaxG99jaZ99Alx9cjd+
+ PfksO+PD965OcJsVpxNftS5jGmBdICRwQdiaLZ+NcSr4I0FpoENDNd1lVPCfBfjijKoCMgN6q
+ UZNSy41xogpLBW8TsDP0anQgMbo6wZ0Z8FTAisitr4Hc3y+QXttZGf+MoUkr3JzWLvAR4j6ms
+ o5eXxL4hCefQubfgk7Z6U2o5UfSLjA+097K1yF9c+yeQYIas8e0c/z3ele+d7Fh8LZcImBSKA
+ Cfd+lWG2FoxI2tYWGhcKUSp84IQbcuBIzM90AuF4OVdBzRPO+BGZyNPo2igPhxxaAMmLoRix0
+ XTBn/NQ4D4uqe6mZkQkTMRRi6fFSUoxTTpIXx+k14kiTA0mYNVG7t3e4wm+jJfurpyWJehs6V
+ sW6ZlLheEMzl4PR9Iil3SwKex3yhgePu0ci5wvjLs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 01:54:28PM +0000, Jose Abreu wrote:
-> From: Andrew Lunn <andrew@lunn.ch>
-> Date: Jan/13/2020, 13:38:45 (UTC+00:00)
-> 
-> > On Mon, Jan 13, 2020 at 02:11:08PM +0100, Jose Abreu wrote:
-> > > Adds the basic support for XPCS including support for USXGMII.
-> > 
-> > Hi Jose
-> > 
-> > Please could you describe the 'big picture'. What comes after the
-> > XPCS? An SFP? A copper PHY? How in Linux do you combine this PHY and
-> > whatever comes next using PHYLINK?
-> > 
-> > Or do only support backplane with this, and the next thing in the line
-> > is the peers XPCS?
-> 
-> My current setup is this:
-> 
-> Host PC x86 -> PCI -> XGMAC -> XPCS -> SERDES 10G-BASE-R -> QSFP+
-> 
-> The only piece that needs configuration besides XGMAC is the XPCS hereby 
-> I "called" it a PHY ... Anyway, this is an RFC because I'm not entirely 
-> sure about the approach. Hmm ?
+This adds minimal support for controlling the audio output I2S port available
+on ADV7481 and ADV7482 HDMI decoder devices by ADI. The port carries audio
+signal from the decoded HDMI stream.
 
-I don't seem to have been copied on the original mail, so I'm jumping
-in blind here.
+An ADV7482 on the Renesas Salvator-X ES1.1 was used during development of this
+code.
 
-In phylink, the mac_pcs_get_state() method is supposed to read from
-the PCS - in your case, the XPCS.  This wasn't obvious when phylink
-was first submitted, especially as mvneta and mvpp2 don't offer
-802.3 MDIO compliant PCS interfaces.  Hence the recent change in
-naming of that method.
+Alex Riesen (8):
+  media: adv748x: add a device-specific wrapper for register block read
+  media: adv748x: add audio mute control and output selection ioctls
+  media: adv748x: add log_status ioctl
+  media: adv748x: reserve space for the audio (I2S) port in the driver
+    structures
+  media: adv748x: add an ASoC DAI definition to the driver
+  media: adv748x: reduce amount of code for bitwise modification of
+    device registers
+  dt-bindings: adv748x: add information about serial audio interface
+    (I2S/TDM)
+  arm64: dts: renesas: salvator: add a connection from adv748x codec
+    (HDMI input) to the R-Car SoC
 
-I've recently suggested a patch to phylink to add a generic helper to
-read the state from a generic 802.3 clause 37 PCS, but I guess that
-won't be sufficient for an XPCS.  However, it should give some clues
-if you're intending to use phylink.
+ .../devicetree/bindings/media/i2c/adv748x.txt |  13 +-
+ .../dts/renesas/r8a7795-es1-salvator-x.dts    |  24 +-
+ .../boot/dts/renesas/salvator-common.dtsi     |  35 +-
+ drivers/media/i2c/adv748x/adv748x-core.c      |  54 +++
+ drivers/media/i2c/adv748x/adv748x-hdmi.c      | 355 ++++++++++++++++++
+ drivers/media/i2c/adv748x/adv748x.h           |  53 ++-
+ 6 files changed, 523 insertions(+), 11 deletions(-)
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+2.24.1.508.g91d2dafee0
