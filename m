@@ -2,116 +2,137 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6835C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA98C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A87E21569
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578930825;
-	bh=gSSUGb6E72HohSMVqvfUArksaBKB+PGK4wGO9njgLZY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QUcT37Kh2ws1uwANDAKiudEcdCCxaPcBC5lB17xo/BynanOHmWewxzOwf3hrD0/Mz
-	 gUkvxycAHfG1FzRi4UKQVDqVYYgVaIBUYyOWrIBmavanJNhYkE790I0Z4D7GwUnzmb
-	 UpYwIMIn/MbI8COqKd+OHmp3dFKnRuXKPSsVX4RE=
+	by mail.kernel.org (Postfix) with ESMTP id 8831D21556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728864AbgAMPxo (ORCPT
+        id S1728778AbgAMPy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 10:53:44 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47148 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728801AbgAMPxo (ORCPT
+        Mon, 13 Jan 2020 10:54:27 -0500
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:36421 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727286AbgAMPy0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 10:53:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aEQXcauEtwtBTMlxbZX7udfUWpI37znKKr88yDEAqxQ=; b=YHz+pZ1lLirdpU1tTN1eAEZ2r
-        IKMucJkzS5KpRS42TeZub17Go3/m4+Xkn5fk9nhWtKp4qqjQyjd1r3LaIiKeX6KJXflCOXbC1xFzR
-        tmuyU8lo7BM7sfjZHKTJFEx0qmxLii1sMLT3GN3YFn9kxPMQCfVmki8F+sTgc5FHcSKYk=;
-Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1ir221-0003bw-8n; Mon, 13 Jan 2020 15:53:33 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id A2941D01965; Mon, 13 Jan 2020 15:53:32 +0000 (GMT)
-Date:   Mon, 13 Jan 2020 15:53:32 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Jeff Chang <richtek.jeff.chang@gmail.com>
-Cc:     lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        matthias.bgg@gmail.com, alsa-devel@alsa-project.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jeff_chang@richtek.com
-Subject: Re: [PATCH v5] ASoC: Add MediaTek MT6660 Speaker Amp Driver
-Message-ID: <20200113155332.GO3897@sirena.org.uk>
-References: <1578644496-16575-1-git-send-email-richtek.jeff.chang@gmail.com>
+        Mon, 13 Jan 2020 10:54:26 -0500
+X-Originating-IP: 90.65.102.129
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 05650E000B;
+        Mon, 13 Jan 2020 15:54:23 +0000 (UTC)
+Date:   Mon, 13 Jan 2020 16:54:23 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
+        arm@kernel.org, soc@kernel.org
+Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] ARM: at91: DT for 5.6 #1
+Message-ID: <20200113155423.GA1357189@piout.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/TUrtqMIkCP4YtJm"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1578644496-16575-1-git-send-email-richtek.jeff.chang@gmail.com>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Arnd, Olof,
 
---/TUrtqMIkCP4YtJm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Here is the first AT91 DT pull request for 5.6. A few new boards and not
+so urgent fixes this cycle. I may have a second pull request by then end
+of the week with the sam9x60 device tree.
 
-On Fri, Jan 10, 2020 at 04:21:36PM +0800, Jeff Chang wrote:
+The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
 
-> +	- rt,init_setting_num : The initial register setting element number.
-> +
-> +	- rt,init_setting_addr : the addreses array for INIT Setting table.
-> +
-> +	- rt,init_setting_mask : the mask array for INIT Setting table.
-> +
-> +	- rt,init_setting_val : the value array for INIT Setting table.
+  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
 
-I'm not 100% clear what this is indended to be used for but given
-that it's just raw register writes it's hard to see how it can be
-used well in a general driver - it basically means we have no
-idea how the chip might be configured in any given system which
-*might* be fine but it could break some assumption the driver
-makes about the state of the system on some particular OS or
-version.  If there are some system specific tuning parameters
-that need to be set as raw values it would be safer to do that by
-just including the data in DT (eg, "X bytes of data to be written
-starting at register Y to tune component Z" type stuff) or by
-exposing individual parameters for things that are documentable.
-Allowing a completely unconstrained sequence of register writes
-doesn't seem like a good idea.
+are available in the Git repository at:
 
-If possible it might be best to send a version of the driver that
-doesn't let this stuff be configured at all then a patch on top
-of that which configures all this stuff, the rest of the driver
-looks good now.
+  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.6-dt-1
 
---/TUrtqMIkCP4YtJm
-Content-Type: application/pgp-signature; name="signature.asc"
+for you to fetch changes up to a7e0f3fc01df4b1b7077df777c37feae8c9e8b6d:
 
------BEGIN PGP SIGNATURE-----
+  ARM: dts: at91: sama5d3: define clock rate range for tcb1 (2020-01-10 18:25:14 +0100)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4cknsACgkQJNaLcl1U
-h9BTeAf8C55cmcfxY+HHqvC1iVVcYfUzf1wTdh3zed7cpd624wm6yrjvr2UzzcR4
-t/LEvnTIeZTPFvorQNMaZLDM5KWU8YWrll6SM6deiXo2dv5uAFzs2XGY+eRvTnN3
-HjcX+dnQlvd7ZCekd/b7M03IhNGIx5VY3QDDhbDTDrHA26wpil5GT3seJhV0yXsM
-w1+ITl4WshJ1kDwE8+jIBG5j7FfR/4ig3ZDb2iP2frIKn7r12AJDlQXfM/pf3vpm
-IXFs+JX8tyuHEU35AyG1vMOoReF0/UDGvgKI0m0hiV7E9W37FHfB+bJS64sSmnTv
-4EUo2bTKPCiJv7BxPJVngMSK1D+qeA==
-=xYed
------END PGP SIGNATURE-----
+----------------------------------------------------------------
+AT91 DT for 5.6
 
---/TUrtqMIkCP4YtJm--
+ - Fix sama5d3 peripheral clock rate range
+ - New boards: Overkiz Smartikz and Kizbox Mini, Microchip SAMA5D27
+   wlsom1-ek
+ - sama5d2 sdmcc fixes
+
+----------------------------------------------------------------
+Alexandre Belloni (3):
+      ARM: dts: at91: nattis 2: remove unnecessary include
+      ARM: dts: at91: sama5d3: fix maximum peripheral clock rates
+      ARM: dts: at91: sama5d3: define clock rate range for tcb1
+
+Andrei Stefanescu (1):
+      ARM: dts: at91: sama5d2: mark secumod as a GPIO controller
+
+Eugen Hristev (3):
+      dt-bindings: ARM: at91: Document SAMA5D27 WLSOM1 and Evaluation Kit
+      ARM: dts: at91: sama5d27_wlsom1: add SAMA5D27 wlsom1 and wlsom1-ek
+      ARM: dts: at91: sama5d27_som1_ek: add i2c filters properties
+
+Ingo van Lil (1):
+      ARM: dts: at91: Reenable UART TX pull-ups
+
+Kamel Bouhara (3):
+      ARM: dts: at91: rearrange kizbox dts using aliases nodes
+      dt-bindings: arm: at91: Document Kizboxmini and Smartkiz boards binding
+      ARM: dts: at91: add smartkiz support and a common kizboxmini dtsi file
+
+Ludovic Desroches (1):
+      ARM: dts: at91: sama5d2: set the sdmmc gclk frequency
+
+Nicolas Ferre (1):
+      ARM: dts: at91: sama5d27_som1_ek: add the microchip,sdcal-inverted on sdmmc0
+
+Razvan Stefanescu (1):
+      ARM: dts: at91: sama5d2: disable pwm0 by default
+
+ .../devicetree/bindings/arm/atmel-at91.yaml        |  25 ++
+ arch/arm/boot/dts/Makefile                         |   6 +-
+ arch/arm/boot/dts/at91-kizbox.dts                  | 172 ++++++------
+ arch/arm/boot/dts/at91-kizboxmini-base.dts         |  24 ++
+ ...-kizboxmini.dts => at91-kizboxmini-common.dtsi} | 163 ++++++-----
+ arch/arm/boot/dts/at91-kizboxmini-mb.dts           |  26 ++
+ arch/arm/boot/dts/at91-kizboxmini-rd.dts           |  49 ++++
+ arch/arm/boot/dts/at91-nattis-2-natte-2.dts        |   1 -
+ arch/arm/boot/dts/at91-sama5d27_som1.dtsi          |   4 +
+ arch/arm/boot/dts/at91-sama5d27_som1_ek.dts        |   6 +
+ arch/arm/boot/dts/at91-sama5d27_wlsom1.dtsi        | 304 +++++++++++++++++++++
+ arch/arm/boot/dts/at91-sama5d27_wlsom1_ek.dts      | 270 ++++++++++++++++++
+ arch/arm/boot/dts/at91-smartkiz.dts                | 109 ++++++++
+ arch/arm/boot/dts/at91sam9260.dtsi                 |  16 +-
+ arch/arm/boot/dts/at91sam9261.dtsi                 |   6 +-
+ arch/arm/boot/dts/at91sam9263.dtsi                 |   6 +-
+ arch/arm/boot/dts/at91sam9g45.dtsi                 |   8 +-
+ arch/arm/boot/dts/at91sam9rl.dtsi                  |   8 +-
+ arch/arm/boot/dts/sama5d2.dtsi                     |  10 +-
+ arch/arm/boot/dts/sama5d3.dtsi                     |  28 +-
+ arch/arm/boot/dts/sama5d3_can.dtsi                 |   4 +-
+ arch/arm/boot/dts/sama5d3_tcb1.dtsi                |   1 +
+ arch/arm/boot/dts/sama5d3_uart.dtsi                |   4 +-
+ 23 files changed, 1037 insertions(+), 213 deletions(-)
+ create mode 100644 arch/arm/boot/dts/at91-kizboxmini-base.dts
+ rename arch/arm/boot/dts/{at91-kizboxmini.dts => at91-kizboxmini-common.dtsi} (51%)
+ create mode 100644 arch/arm/boot/dts/at91-kizboxmini-mb.dts
+ create mode 100644 arch/arm/boot/dts/at91-kizboxmini-rd.dts
+ create mode 100644 arch/arm/boot/dts/at91-sama5d27_wlsom1.dtsi
+ create mode 100644 arch/arm/boot/dts/at91-sama5d27_wlsom1_ek.dts
+ create mode 100644 arch/arm/boot/dts/at91-smartkiz.dts
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
