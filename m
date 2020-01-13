@@ -2,156 +2,151 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED792C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 00:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE53C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 00:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE68721556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 00:50:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FvpbKlBl"
+	by mail.kernel.org (Postfix) with ESMTP id 581612187F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 00:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387569AbgAMAuh (ORCPT
+        id S2387575AbgAMAyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 19:50:37 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46624 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387502AbgAMAuh (ORCPT
+        Sun, 12 Jan 2020 19:54:06 -0500
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:23108 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387502AbgAMAyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 19:50:37 -0500
-Received: by mail-pg1-f196.google.com with SMTP id z124so3853852pgb.13
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 16:50:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=1d6gYwX2CdMLtlcwRbkHiQqjyQbyQkRRWcGMa9V4gMo=;
-        b=FvpbKlBlI0y5bFj4dzSMmDjZWg9wuldaBATMFCcG4oZMaxpm6sXwOOBwSXdwUNKe5U
-         Z6w+KEStZCPaspc8Gq+kaidZO/xx1+iapdd15Q79MNqAJQ1C7SUHoV5PyJP+sG0lS4Pv
-         nGQ1asK/RF0+LfmMYmCKV17hwPylQ0snpsIJrTCy9jTtY0GMH4GrSqTXgax+r0jEuB1A
-         QqGEd7ZXPMrwkGiQC9FHtsmxtVR49qslkqH9kSdoYMupxxkfXi5u1A8iJWrg41g34Did
-         p6syfEaORSwxUHxxJQudn7h87V0CY8W9JIs5qGLBH5AqG/rH3yHY10RkSll2b0aIxwei
-         e0EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=1d6gYwX2CdMLtlcwRbkHiQqjyQbyQkRRWcGMa9V4gMo=;
-        b=sDG4GxzqFcFtw+5lAFCf9rXrttCUDqsSESPRlU9A3bKGNTo7hox5UIINnWptUp7Eip
-         uA0Z7Crr5JaZdqrynYprrr/a1WEj8j9bZi8lEo3WjWGzX9afEd7KnrO2/bzRoN5FRNn8
-         sVaK85KgMkqXE7i/v4kpZakyXwtncaJdcuCKS1iff3X855xnyu3DqnFQV/+gCRkEMQEv
-         hGnKogwbgQRcTZgEtepWK9j1ehg8JL/EujF//TJmsCyme+YuQ0c60v7WK+bEaahMX4BA
-         S0L/Y8RE3hVaGytJRBwd3chAUzhYlXkQ34DwreJbMY7pI0wvyOyKMIkaTWXdPzEi8+YV
-         oHRg==
-X-Gm-Message-State: APjAAAWlu57rk0n2hFkgqO58YvY7QnT5Co7c9xJKZt1JZn94fG07znBw
-        TPd7X5/vw9qk4k9ethUb2Xeu6GjB
-X-Google-Smtp-Source: APXvYqwHP1iB+VAqLX8nd1B2wzjjX5fXpMz7xuuM/XGMPkmhCiSMDP9/3xG5J9XrHO3jVc1D+euw+Q==
-X-Received: by 2002:a62:7c58:: with SMTP id x85mr17098642pfc.76.1578876636707;
-        Sun, 12 Jan 2020 16:50:36 -0800 (PST)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id w11sm10575336pgs.60.2020.01.12.16.50.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 12 Jan 2020 16:50:36 -0800 (PST)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH RESEND v2] sched/nohz: Optimize get_nohz_timer_target()
-Date:   Mon, 13 Jan 2020 08:50:27 +0800
-Message-Id: <1578876627-11938-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Sun, 12 Jan 2020 19:54:05 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04423;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TnVzo8d_1578876843;
+Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TnVzo8d_1578876843)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 13 Jan 2020 08:54:03 +0800
+Subject: Re: [PATCH RESEND] mm: fix tick_sched timer blocked by
+ pgdat_resize_lock
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20200110082510.172517-2-shile.zhang@linux.alibaba.com>
+ <20200110093053.34777-1-shile.zhang@linux.alibaba.com>
+ <1ee6088c-9e72-8824-3a9a-fc099d196faf@virtuozzo.com>
+From:   Shile Zhang <shile.zhang@linux.alibaba.com>
+Message-ID: <c7ac0338-78a6-2ae3-465c-2d6371d96a72@linux.alibaba.com>
+Date:   Mon, 13 Jan 2020 08:54:03 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.1
+MIME-Version: 1.0
+In-Reply-To: <1ee6088c-9e72-8824-3a9a-fc099d196faf@virtuozzo.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
 
-On a machine, cpu 0 is used for housekeeping, the other 39 cpus in the 
-same socket are in nohz_full mode. We can observe huge time burn in the 
-loop for seaching nearest busy housekeeper cpu by ftrace.
 
-  2)               |                        get_nohz_timer_target() {
-  2)   0.240 us    |                          housekeeping_test_cpu();
-  2)   0.458 us    |                          housekeeping_test_cpu();
+On 2020/1/10 19:42, Kirill Tkhai wrote:
+> On 10.01.2020 12:30, Shile Zhang wrote:
+>> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdat_resize_lock'
+>> will be called inside 'pgdatinit' kthread to initialise the deferred
+>> pages with local interrupts disabled. Which is introduced by
+>> commit 3a2d7fa8a3d5 ("mm: disable interrupts while initializing deferred
+>> pages").
+>>
+>> But 'pgdatinit' kthread is possible be pined on the boot CPU (CPU#0 by
+>> default), especially in small system with NRCPUS <= 2. In this case, the
+>> interrupts are disabled on boot CPU during memory initialising, which
+>> caused the tick_sched timer be blocked, leading to wall clock stuck.
+>>
+>> Fixes: commit 3a2d7fa8a3d5 ("mm: disable interrupts while initializing
+>> deferred pages")
+>>
+>> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+>> ---
+>>   include/linux/memory_hotplug.h | 16 ++++++++++++++--
+>>   1 file changed, 14 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+>> index ba0dca6aac6e..be69a6dc4fee 100644
+>> --- a/include/linux/memory_hotplug.h
+>> +++ b/include/linux/memory_hotplug.h
+>> @@ -6,6 +6,8 @@
+>>   #include <linux/spinlock.h>
+>>   #include <linux/notifier.h>
+>>   #include <linux/bug.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/smp.h>
+>>   
+>>   struct page;
+>>   struct zone;
+>> @@ -282,12 +284,22 @@ static inline bool movable_node_is_enabled(void)
+>>   static inline
+>>   void pgdat_resize_lock(struct pglist_data *pgdat, unsigned long *flags)
+>>   {
+>> -	spin_lock_irqsave(&pgdat->node_size_lock, *flags);
+>> +	/*
+>> +	 * Disable local interrupts on boot CPU will stop the tick_sched
+>> +	 * timer, which will block jiffies(wall clock) update.
+>> +	 */
+>> +	if (current->cpu != get_boot_cpu_id())
+>> +		spin_lock_irqsave(&pgdat->node_size_lock, *flags);
+>> +	else
+>> +		spin_lock(&pgdat->node_size_lock);
+>>   }
+>>   static inline
+>>   void pgdat_resize_unlock(struct pglist_data *pgdat, unsigned long *flags)
+>>   {
+>> -	spin_unlock_irqrestore(&pgdat->node_size_lock, *flags);
+>> +	if (current->cpu != get_boot_cpu_id())
+>> +		spin_unlock_irqrestore(&pgdat->node_size_lock, *flags);
+>> +	else
+>> +		spin_unlock(&pgdat->node_size_lock);
+>>   }
+>>   static inline
+>>   void pgdat_resize_init(struct pglist_data *pgdat)
+> 1)Linux kernel is *preemptible*. Kernel with CONFIG_PREEMPT_RT option even may preempt
+> *kernel* code in the middle of function. When you are executing a code containing
+> pgdat_resize_lock() and pgdat_resize_unlock(), the process may migrate to another cpu
+> between them.
+>
+> bool cpu               another cpu
+> ----------------------------------
+> pgdat_resize_lock()
+>    spin_lock()
+>    --> migrate to another cpu
+>                        pgdat_resize_unlock()
+>                        spin_unlock_irqrestore(<uninitialized flags>)
+>
+> (Yes, in case of CONFIG_PREEMPT_RT, process is preemptible even after spin_lock() call).
+>
+> This looks like a bad helpers, and we should not introduce such the design.
 
-  ...
+Hi Kirill,
 
-  2)   0.292 us    |                          housekeeping_test_cpu();
-  2)   0.240 us    |                          housekeeping_test_cpu();
-  2)   0.227 us    |                          housekeeping_any_cpu();
-  2) + 43.460 us   |                        }
-  
-This patch optimizes the searching logic by finding a nearest housekeeper
-cpu in the housekeeping cpumask, it can minimize the worst searching time 
-from ~44us to < 10us in my testing. In addition, the last iterated busy 
-housekeeper can become a random candidate while current CPU is a better 
-fallback if it is a housekeeper.
+Thanks for your comments!
+Sorry for I'm not very clear about this lock/unlock, but I encountered 
+this issue
+with "CONFIG_PREEMPT is not set".
+> 2)I think there is no the problem this patch solves. Do we really this statistics?
+> Can't we simple remove print message from deferred_init_memmap() and solve this?
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com> 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
-v1 -> v2:
- * current CPU is a better fallback if it is a housekeeper
-
- kernel/sched/core.c | 19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 102dfcf..04a0f6a 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -539,27 +539,32 @@ void resched_cpu(int cpu)
-  */
- int get_nohz_timer_target(void)
- {
--	int i, cpu = smp_processor_id();
-+	int i, cpu = smp_processor_id(), default_cpu = -1;
- 	struct sched_domain *sd;
- 
--	if (!idle_cpu(cpu) && housekeeping_cpu(cpu, HK_FLAG_TIMER))
--		return cpu;
-+	if (housekeeping_cpu(cpu, HK_FLAG_TIMER)) {
-+		if (!idle_cpu(cpu))
-+			return cpu;
-+		default_cpu = cpu;
-+	}
- 
- 	rcu_read_lock();
- 	for_each_domain(cpu, sd) {
--		for_each_cpu(i, sched_domain_span(sd)) {
-+		for_each_cpu_and(i, sched_domain_span(sd),
-+			housekeeping_cpumask(HK_FLAG_TIMER)) {
- 			if (cpu == i)
- 				continue;
- 
--			if (!idle_cpu(i) && housekeeping_cpu(i, HK_FLAG_TIMER)) {
-+			if (!idle_cpu(i)) {
- 				cpu = i;
- 				goto unlock;
- 			}
- 		}
- 	}
- 
--	if (!housekeeping_cpu(cpu, HK_FLAG_TIMER))
--		cpu = housekeeping_any_cpu(HK_FLAG_TIMER);
-+	if (default_cpu == -1)
-+		default_cpu = housekeeping_any_cpu(HK_FLAG_TIMER);
-+	cpu = default_cpu;
- unlock:
- 	rcu_read_unlock();
- 	return cpu;
--- 
-1.8.3.1
+Sorry for I've not put this issue very clearly. It's *not* just one 
+statistics log
+with wrong time calculate, but the wall clock is stuck.
+So the 'systemd-analyze' command also give a wrong time as I mentioned 
+in the cover
+letter. I don't think is OK just remove the log, it cannot solve the 
+wall clock latency.
+> Also, you may try to check that sched_clock() gives better results with interrupts
+> disabled (on x86 it uses rdtsc, when it's possible. But it also may fallback to
+> jiffies-based clock in some hardware cases, and they also won't go with interrupts
+> disabled).
+>
+> Kirill
 
