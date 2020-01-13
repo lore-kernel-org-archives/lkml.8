@@ -2,43 +2,45 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A78EC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:03:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B13EC33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:03:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E06A21734
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:03:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 407592187F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="O3I2EJKx"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="acBTZXU1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728843AbgAMNCy (ORCPT
+        id S1728811AbgAMNCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 13 Jan 2020 08:02:54 -0500
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:56840 "EHLO
+Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:56766 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727465AbgAMNCx (ORCPT
+        by vger.kernel.org with ESMTP id S1726505AbgAMNCx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Jan 2020 08:02:53 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 903F5C05C3;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C5545C05D0;
         Mon, 13 Jan 2020 13:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1578920572; bh=zKs/zoX9SDuQlYKJwNzslfhtAuZSfAwnQ4w1YbbcszA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=O3I2EJKxhODJf3stOIYZ85/9R21fxpB1RDXAK3J35wiDwCF3xD31Jr/JN5G3f4rfM
-         oNiieVLJr7KfC4e0E3PfLnRxds2DQvQjlrJmf8sxZw5XVT1ABJjHmGArm/D2whRyUE
-         Ng+z0ei1RXRRBq7fODTtFXwchxCp5QW/K3afmDcm9L51n6WM6owwgMQjGqhfjjvMhd
-         hMkMcq7JzWRDShcydMof2AFfn3zML6dpWOq3+q9cr9WI4wC+MQHUClq4d1FrR+TcBK
-         mrRulZpSo6Ctoj9OmzqbxmVz8RTR8npaiF8fzZ/DY0uyT4HYWMKL5jldFz9J4rhWKk
-         /BXTW4jI1Risw==
+        t=1578920572; bh=bjsugJXpoh9gzcAjdUQ3cVUezQOFhoojeDQOsagF9zw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=acBTZXU1AEDhKGfH3xSIjJ854J5wmdNoXDmQxDMuWCI8sUbVsC+dQYVa3m90CJsxZ
+         RRIxIxwYiHoJWjntzzK3kQgGJqUeNFi+WsCYO+rg5uKvF2pn5xF5m0HjayL44/HAkH
+         13YWKcghHtt8isMR+g+0NhpPIsUxjkpZCzbha1VgOUrZLlKXAyH4b0DjJzMuks/JU7
+         qFJVnlFnvHif9c6lEnQlVn0NCDX9CRAPnwx9aTxpnE+PFvyWaQP5OTm02AzkLUW7M9
+         tNzBgG3YPMC+PQEagD30xU9jQ3yL1drcRXgZ6b37pVMXcsMZ9S2vJkEGSLqFeNJDPU
+         GmGPKLCPFLtsQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 67301A005B;
-        Mon, 13 Jan 2020 13:02:44 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 8B15DA007E;
+        Mon, 13 Jan 2020 13:02:50 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -50,34 +52,24 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 0/8] net: stmmac: ETF support
-Date:   Mon, 13 Jan 2020 14:02:35 +0100
-Message-Id: <cover.1578920366.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net-next v2 8/8] net: stmmac: selftests: Add a test for TBS feature
+Date:   Mon, 13 Jan 2020 14:02:43 +0100
+Message-Id: <1b6c8e386ac74978c18201b9a11f4ed10ecfc89a.1578920367.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1578920366.git.Jose.Abreu@synopsys.com>
+References: <cover.1578920366.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1578920366.git.Jose.Abreu@synopsys.com>
+References: <cover.1578920366.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds the support for ETF scheduler in stmmac.
+Add a new test for TBS feature which is used in ETF scheduler. In this
+test, we send a packet with a launch time specified as now + 500ms and
+check if the packet was transmitted on that time frame.
 
-1) Starts adding the support by implementing Enhanced Descriptors in stmmac
-main core. This is needed for ETF feature in XGMAC and QoS cores.
-
-2) Integrates the ETF logic into stmmac TC core.
-
-3) and 4) adds the HW specific support for ETF in XGMAC and QoS cores. The
-IP feature is called TBS (Time Based Scheduling).
-
-5) Enables ETF in GMAC5 IPK PCI entry for all Queues except Queue 0.
-
-6) Adds the new TBS feature and even more information into the debugFS
-HW features file.
-
-7) Switches the selftests mechanism to use dev_direct_xmit() so that we can
-send packets on specific Queues.
-
-8) Adds a new test for TBS feature.
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -90,36 +82,121 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
+ .../net/ethernet/stmicro/stmmac/stmmac_selftests.c | 73 ++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
-Jose Abreu (8):
-  net: stmmac: Initial support for TBS
-  net: stmmac: tc: Add support for ETF Scheduler using TBS
-  net: stmmac: xgmac: Add TBS support
-  net: stmmac: gmac4+: Add TBS support
-  net: stmmac: pci: Enable TBS on GMAC5 IPK PCI entry
-  net: stmmac: Add missing information in DebugFS capabilities file
-  net: stmmac: selftests: Switch to dev_direct_xmit()
-  net: stmmac: selftests: Add a test for TBS feature
-
- drivers/net/ethernet/stmicro/stmmac/common.h       |   1 +
- drivers/net/ethernet/stmicro/stmmac/descs.h        |   9 ++
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h       |   1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c |  10 ++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.h |   7 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c   |  21 +++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.h   |   7 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  13 ++
- .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   |   9 ++
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  24 ++++
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |  12 ++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |   3 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 149 ++++++++++++++++-----
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   |   2 +
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c |  98 +++++++++++---
- drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c    |  18 +++
- include/linux/stmmac.h                             |   1 +
- 17 files changed, 334 insertions(+), 51 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+index d50ae59fe3d8..7cc59e66e42a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_selftests.c
+@@ -14,6 +14,7 @@
+ #include <linux/phy.h>
+ #include <linux/udp.h>
+ #include <net/pkt_cls.h>
++#include <net/pkt_sched.h>
+ #include <net/tcp.h>
+ #include <net/udp.h>
+ #include <net/tc_act/tc_gact.h>
+@@ -50,6 +51,7 @@ struct stmmac_packet_attrs {
+ 	u8 id;
+ 	int sarc;
+ 	u16 queue_mapping;
++	u64 timestamp;
+ };
+ 
+ static u8 stmmac_test_next_id;
+@@ -208,6 +210,9 @@ static struct sk_buff *stmmac_test_get_udp_skb(struct stmmac_priv *priv,
+ 	skb->pkt_type = PACKET_HOST;
+ 	skb->dev = priv->dev;
+ 
++	if (attr->timestamp)
++		skb->tstamp = ns_to_ktime(attr->timestamp);
++
+ 	return skb;
+ }
+ 
+@@ -1723,6 +1728,70 @@ static int stmmac_test_sph(struct stmmac_priv *priv)
+ 	return 0;
+ }
+ 
++static int stmmac_test_tbs(struct stmmac_priv *priv)
++{
++#define STMMAC_TBS_LT_OFFSET		(500 * 1000 * 1000) /* 500 ms*/
++	struct stmmac_packet_attrs attr = { };
++	struct tc_etf_qopt_offload qopt;
++	u64 start_time, curr_time = 0;
++	unsigned long flags;
++	int ret, i;
++
++	if (!priv->hwts_tx_en)
++		return -EOPNOTSUPP;
++
++	/* Find first TBS enabled Queue, if any */
++	for (i = 0; i < priv->plat->tx_queues_to_use; i++)
++		if (priv->tx_queue[i].tbs_avail)
++			break;
++
++	if (i >= priv->plat->tx_queues_to_use || !priv->tx_queue[i].tbs_avail)
++		return -EOPNOTSUPP;
++
++	qopt.enable = true;
++	qopt.queue = i;
++
++	ret = stmmac_tc_setup_etf(priv, priv, &qopt);
++	if (ret)
++		return ret;
++
++	spin_lock_irqsave(&priv->ptp_lock, flags);
++	stmmac_get_systime(priv, priv->ptpaddr, &curr_time);
++	spin_unlock_irqrestore(&priv->ptp_lock, flags);
++
++	if (!curr_time) {
++		ret = -EOPNOTSUPP;
++		goto fail_disable;
++	}
++
++	start_time = curr_time;
++	curr_time += STMMAC_TBS_LT_OFFSET;
++
++	attr.dst = priv->dev->dev_addr;
++	attr.timestamp = curr_time;
++	attr.timeout = nsecs_to_jiffies(2 * STMMAC_TBS_LT_OFFSET);
++	attr.queue_mapping = i;
++
++	pr_info("%s: start_time=0x%lld\n", __func__, start_time);
++	ret = __stmmac_test_loopback(priv, &attr);
++	if (ret)
++		goto fail_disable;
++
++	/* Check if expected time has elapsed */
++	spin_lock_irqsave(&priv->ptp_lock, flags);
++	stmmac_get_systime(priv, priv->ptpaddr, &curr_time);
++	spin_unlock_irqrestore(&priv->ptp_lock, flags);
++
++	pr_info("%s: curr_time=0x%lld\n", __func__, curr_time);
++	if ((curr_time - start_time) < STMMAC_TBS_LT_OFFSET)
++		ret = -EINVAL;
++
++fail_disable:
++	qopt.enable = false;
++	stmmac_tc_setup_etf(priv, priv, &qopt);
++	return ret;
++}
++
+ #define STMMAC_LOOPBACK_NONE	0
+ #define STMMAC_LOOPBACK_MAC	1
+ #define STMMAC_LOOPBACK_PHY	2
+@@ -1856,6 +1925,10 @@ static const struct stmmac_test {
+ 		.name = "Split Header               ",
+ 		.lb = STMMAC_LOOPBACK_PHY,
+ 		.fn = stmmac_test_sph,
++	}, {
++		.name = "TBS (ETF Scheduler)        ",
++		.lb = STMMAC_LOOPBACK_PHY,
++		.fn = stmmac_test_tbs,
+ 	},
+ };
+ 
 -- 
 2.7.4
 
