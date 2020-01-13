@@ -4,66 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017CDC33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE3EC33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC41E21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8ED22082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="HxsCuqVI";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="GIb4SqWz"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="H4U1i2ZQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="suCHuiSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387658AbgAMEtv (ORCPT
+        id S2387617AbgAMEtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 23:49:51 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60843 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387622AbgAMEtn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 12 Jan 2020 23:49:43 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:43033 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733103AbgAMEtk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 23:49:40 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 360C1634D;
-        Sun, 12 Jan 2020 23:49:43 -0500 (EST)
+        by mailnew.nyi.internal (Postfix) with ESMTP id EB0AB6126;
+        Sun, 12 Jan 2020 23:49:38 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Sun, 12 Jan 2020 23:49:43 -0500
+  by compute5.internal (MEProxy); Sun, 12 Jan 2020 23:49:38 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=dURdrtn452X6F
-        w0Ia0mRb8PvrJx/GMnv+qVHdfETAAU=; b=HxsCuqVIaoBM5XwmjaMSxKwK/lEiJ
-        1m+31P/cV1B+KhwQwSAPSkv30oh8Cmyc5qLjUmSadEY4LsiFhyXkhcX6DziEus8B
-        uGbyrt6/zoyAlyr6FdVCGuqjx8sCqcvQac2xZNj6PYHEnEQMZHLYv/SFxXShsaxZ
-        YdX1jSQ0K6d/aJniLWKwX62FjiWRQPS1qnj/pPHzvdsNtLdITc56UHNAqPbZ6qVu
-        t5XcZEGJhhH2PNbgolNoIGloGKr/0G87yptdttqzmPH/3FYoZsIFCxoRO7U1zN4b
-        ZvxWwCWRjVvdb+Y5Aef3vVIkWQCP/FWiS4ipf7UST6GmSBayPzYYIo1SA==
+        :mime-version:content-transfer-encoding; s=fm1; bh=reXcLSbb+prTw
+        I8AliRHNqGV5b9kALgHS1AE29T8AYU=; b=H4U1i2ZQj1rYKQQzTkEtBJnqb6xbM
+        Phiq+UP9EMm+BWiL4BjDtXfMY7v5LIA6f+h3m10scf6jaH8bXdheafC2ueYogxRU
+        5MQ66O6OP6l/XSoz5O2YVo4kgHEDI+QiIKpWoi5GNWJs9KAlG593RREQ2WQrixz9
+        XX50/Wnzanm5W98IwMeTj4Roafbzsr6J5MNZrxqGD+A8k35Rrxgbnqyrf8GX702f
+        CQaO+bhgsp2CmR1cYkaU5r9HY5r7P71qLIG9Ss2WHFCRiQia9WRPWDI10SLc/N3p
+        s+EIGf6v15/7H1fXhsdfvM+X+7Z6QvRszpzx7K6MsjV46Cag90pvGJp1g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=dURdrtn452X6Fw0Ia0mRb8PvrJx/GMnv+qVHdfETAAU=; b=GIb4SqWz
-        86IvFzw0ouaCtPMknPovJhMWHSwJ5RGojxrmKtZ6ZZloIuUNZcS2ik8tOIFn/3lE
-        UA9Yuc0JS9v2TcXodjtBQt2cBsrEpASeRpo8Le/1q9gOruwKomr0sezIjA20XzcT
-        3CujphF15JknX8DsQpghNOQ2j6K2zSv3nhLL3QJ41e/nJ5kiuF0lTDtHM5sY/l8H
-        wvEQ2Lnkv2tUkuYCstLsfFZZHwpp9jcC9I0GqRhAJSN6L6M37xzw6Pd4mK7OvV8V
-        dOhYMeW+DVPUWjkXfYEN9t5i8A2ygSLtzSj37BTDPG/5iD3NqLWoK3sD3Zi8aUUt
-        Ju07Lk3dOXlGgA==
-X-ME-Sender: <xms:5_YbXtJvoXkW1YbvmDqkp4RYYfmvn_2QArteWRXux01CwsUQKgHaaw>
+        fm1; bh=reXcLSbb+prTwI8AliRHNqGV5b9kALgHS1AE29T8AYU=; b=suCHuiSv
+        dgYZl1S5aUrQvib47ij59kfAFjwWGbgddDTSpnlvVTUB7q5ywK2hyb14Qx1zfb/4
+        uUc3/YxYyOnqc/XOp7swbCzwoUDh5WiU15UykHynx/vNCuvzWO5qI6RQz7+eig4k
+        KT3TFWSmeZrC6TLTcwpahzfC0a44tH3hI+ipj59kN9kArE3Rng03UE+TRTNGKm9A
+        2qQ11mU+hw8T5xmDpbpoecf+CT5n6ny8kVD1kHYZk9z5LYLwDuVoSfLkza+qtEc/
+        sBSJII4HJ0qc9lnhrUB4Lyr/bkoxiiCuirS5KabpWLNJCtZB4pfE4vIMPPGg8c7R
+        vhsGmDbvM7cleA==
+X-ME-Sender: <xms:4vYbXiSXlyqL0twguZloHZTmDwsoj5XmtYPtZWcmHSU9guT_-3pkkQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeiledgjeekucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
     lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
     epjedtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghm
-    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgepje
-X-ME-Proxy: <xmx:5_YbXg7Mle6q50yMXuA7SQfvLGpgv-adJo_EuWuoUtiBeq9XEmODDA>
-    <xmx:5_YbXozxZdbMPGzwp1u3dHscQw-gjlGm0D3Ysku6TNEmWe6jfmFP5Q>
-    <xmx:5_YbXsYhDQCFKgPMxc33HTWq0dHWrKlh4-DloudvkbBVs2HZVCHT7w>
-    <xmx:5_YbXsYzxB5ZId-EAqOAgJh-Ylqesaae7FILT3EBL921F2A6rbUP-Q>
+    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:4vYbXo1pNsmj1-IFkLAfvsx3EpDRLRIR34drhDj7nMsv0wKyLSXY-w>
+    <xmx:4vYbXix0g1k4fg1sctfBk7_PYkdcjYjrue-lMeNmJajaOmLdcE-YeA>
+    <xmx:4vYbXrtEwspzYo-6poOAysiOWa3zdNFAdhKNJ5ZOvFU-sYck_XHAzA>
+    <xmx:4vYbXiLOf9kEezbv0VoBrwp4vIPJCs8sxTNKg-0AKdAmXsLc7Riw8w>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 7582630607B0;
-        Sun, 12 Jan 2020 23:49:42 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2F96030602DB;
+        Sun, 12 Jan 2020 23:49:38 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -78,9 +78,9 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
         Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 9/9] arm64: dts: allwinner: Move wakeup-capable IRQs to r_intc
-Date:   Sun, 12 Jan 2020 22:49:36 -0600
-Message-Id: <20200113044936.26038-10-samuel@sholland.org>
+Subject: [PATCH 2/9] irqchip/sun6i-r: Add wakeup support
+Date:   Sun, 12 Jan 2020 22:49:29 -0600
+Message-Id: <20200113044936.26038-3-samuel@sholland.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200113044936.26038-1-samuel@sholland.org>
 References: <20200113044936.26038-1-samuel@sholland.org>
@@ -91,54 +91,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All IRQs that can be used to wake up the system must be routed through
-r_intc, so they are visible to firmware while the system is suspended.
+We maintain a mask of wake-enabled IRQs, and enable them in hardware
+during the syscore phase of suspend (once IRQs are globally turned off).
+We restore the original mask (either nothing or NMI only) during resume.
 
-r_intc IRQ numbers are offset by 96 from the GIC IRQ numbers.
+This serves two purposes. First, it lets power management firmware
+running on the ARISC coprocessor know which wakeup sources Linux wants
+to have enabled. That way, it can avoid turning them off when it shuts
+down the remainder of the clock tree. Second, it preconfigures the
+ARISC coprocessor's interrupt controller, so the firmware's wakeup logic
+is as simple as waiting for an interrupt to arrive.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/irqchip/irq-sun6i-r.c | 53 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index f597f3fe06c1..6285354e83a6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -708,8 +708,9 @@
- 		rtc: rtc@7000000 {
- 			compatible = "allwinner,sun50i-h6-rtc";
- 			reg = <0x07000000 0x400>;
--			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-parent = <&r_intc>;
-+			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>,
-+				     <6 IRQ_TYPE_LEVEL_HIGH>;
- 			clock-output-names = "osc32k", "osc32k-out", "iosc";
- 			clocks = <&ext_osc32k>;
- 			#clock-cells = <1>;
-@@ -745,8 +746,9 @@
- 		r_pio: pinctrl@7022000 {
- 			compatible = "allwinner,sun50i-h6-r-pinctrl";
- 			reg = <0x07022000 0x400>;
--			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-parent = <&r_intc>;
-+			interrupts = < 9 IRQ_TYPE_LEVEL_HIGH>,
-+				     <15 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&r_ccu CLK_R_APB1>, <&osc24M>, <&rtc 0>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
-@@ -769,7 +771,8 @@
- 			compatible = "allwinner,sun50i-h6-ir",
- 				     "allwinner,sun6i-a31-ir";
- 			reg = <0x07040000 0x400>;
--			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-parent = <&r_intc>;
-+			interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&r_ccu CLK_R_APB1_IR>,
- 				 <&r_ccu CLK_IR>;
- 			clock-names = "apb", "ir";
+diff --git a/drivers/irqchip/irq-sun6i-r.c b/drivers/irqchip/irq-sun6i-r.c
+index 37b6e9c60bf8..f4a4e335061b 100644
+--- a/drivers/irqchip/irq-sun6i-r.c
++++ b/drivers/irqchip/irq-sun6i-r.c
+@@ -3,12 +3,14 @@
+ // Allwinner A31 and newer SoCs R_INTC driver
+ //
+ 
++#include <linux/atomic.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip.h>
+ #include <linux/irqdomain.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
++#include <linux/syscore_ops.h>
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+@@ -31,6 +33,9 @@ enum {
+ static void __iomem *base;
+ static irq_hw_number_t parent_offset;
+ static u32 parent_type;
++#ifdef CONFIG_PM_SLEEP
++static atomic_t wake_mask;
++#endif
+ 
+ static void sun6i_r_intc_irq_enable(struct irq_data *data)
+ {
+@@ -108,6 +113,21 @@ static int sun6i_r_intc_irq_set_type(struct irq_data *data, unsigned int type)
+ 	return irq_chip_set_type_parent(data, type);
+ }
+ 
++#ifdef CONFIG_PM_SLEEP
++static int sun6i_r_intc_irq_set_wake(struct irq_data *data, unsigned int on)
++{
++	if (on)
++		atomic_or(BIT(data->hwirq), &wake_mask);
++	else
++		atomic_andnot(BIT(data->hwirq), &wake_mask);
++
++	/* GIC cannot wake, so there is no need to call the parent hook. */
++	return 0;
++}
++#else
++#define sun6i_r_intc_irq_set_wake NULL
++#endif
++
+ static struct irq_chip sun6i_r_intc_chip = {
+ 	.name			= "sun6i-r-intc",
+ 	.irq_enable		= sun6i_r_intc_irq_enable,
+@@ -118,6 +138,7 @@ static struct irq_chip sun6i_r_intc_chip = {
+ 	.irq_set_affinity	= irq_chip_set_affinity_parent,
+ 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
+ 	.irq_set_type		= sun6i_r_intc_irq_set_type,
++	.irq_set_wake		= sun6i_r_intc_irq_set_wake,
+ 	.irq_set_vcpu_affinity	= irq_chip_set_vcpu_affinity_parent,
+ };
+ 
+@@ -171,6 +192,36 @@ static const struct irq_domain_ops sun6i_r_intc_domain_ops = {
+ 	.free		= irq_domain_free_irqs_common,
+ };
+ 
++#ifdef CONFIG_PM_SLEEP
++static int sun6i_r_intc_suspend(void)
++{
++	/* All wake IRQs are enabled during suspend. */
++	writel(atomic_read(&wake_mask), base + SUN6I_R_INTC_ENABLE);
++
++	return 0;
++}
++
++static void sun6i_r_intc_resume(void)
++{
++	u32 mask = atomic_read(&wake_mask) & BIT(NMI_HWIRQ);
++
++	/* Only the NMI is relevant during normal operation. */
++	writel(mask, base + SUN6I_R_INTC_ENABLE);
++}
++
++static struct syscore_ops sun6i_r_intc_syscore_ops = {
++	.suspend	= sun6i_r_intc_suspend,
++	.resume		= sun6i_r_intc_resume,
++};
++
++static void sun6i_r_intc_syscore_init(void)
++{
++	register_syscore_ops(&sun6i_r_intc_syscore_ops);
++}
++#else
++static inline void sun6i_r_intc_syscore_init(void) {}
++#endif
++
+ static int __init sun6i_r_intc_init(struct device_node *node,
+ 				    struct device_node *parent)
+ {
+@@ -215,6 +266,8 @@ static int __init sun6i_r_intc_init(struct device_node *node,
+ 	/* Clear any pending interrupts. */
+ 	writel(~0, base + SUN6I_R_INTC_PENDING);
+ 
++	sun6i_r_intc_syscore_init();
++
+ 	return 0;
+ }
+ IRQCHIP_DECLARE(sun6i_r_intc, "allwinner,sun6i-a31-r-intc", sun6i_r_intc_init);
 -- 
 2.23.0
 
