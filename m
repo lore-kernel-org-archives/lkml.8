@@ -2,146 +2,148 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92801C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 899BEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A055214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:55:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iHUNqDUg"
+	by mail.kernel.org (Postfix) with ESMTP id 60A99214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:56:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578938169;
+	bh=SU/yL4pLyTd6FCTcX3VLWcdVv5nD03+4yH4Gn1K77mU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=1zzLuCt9mYN4OsyP3Wk6+OB7c73Yxei8Ty34CqR6N+a+Z7/XrcQXktxtKbprPq7Me
+	 h5cH1vz1R4MbNIWYtDnjD2JKz7AQYq6qxmVXOcdKzwAwO8ZRFfJNbBUIOqdbDBN0Pk
+	 9lfSgWybpG7Yp4JAus35MNVut1pwsYT3KoNtgkMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgAMRz1 (ORCPT
+        id S1728769AbgAMR4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:55:27 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:44091 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726878AbgAMRz1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:55:27 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578938126; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=hhV7louupacu1XrOTKOPtlsP0IGei6JTdzbFTbyzEUI=; b=iHUNqDUg3EfjGP6GZCgVS5lSankoeBxxYM49PipPfpO7MV6/DJd1pCI6ELCNaTK3vNIn2wvN
- lg3VSDZaOtAZf9ZSPcz1lVmGWrdBdX6MrVIaydXE+8y6Z52IgSygQ8cCsx2ldLbWPENYcak/
- lof6FvhUqm99dPiwTBCWLOAYkWY=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1caf0d.7f7049bdf308-smtp-out-n02;
- Mon, 13 Jan 2020 17:55:25 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AE89AC433CB; Mon, 13 Jan 2020 17:55:25 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        Mon, 13 Jan 2020 12:56:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46752 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726878AbgAMR4I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 12:56:08 -0500
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1DE4FC447A2;
-        Mon, 13 Jan 2020 17:55:24 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1DE4FC447A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 13 Jan 2020 10:55:22 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Brian Ho <brian@brkho.com>
-Cc:     freedreno@lists.freedesktop.org, robdclark@chromium.org,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>, hoegsberg@chromium.org,
-        Sean Paul <sean@poorly.run>
-Subject: Re: [Freedreno] [PATCH 1/2] drm/msm: Add a GPU-wide wait queue
-Message-ID: <20200113175522.GD26711@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Brian Ho <brian@brkho.com>,
-        freedreno@lists.freedesktop.org, robdclark@chromium.org,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
-        Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        hoegsberg@chromium.org, Sean Paul <sean@poorly.run>
-References: <20200113153605.52350-1-brian@brkho.com>
- <20200113153605.52350-2-brian@brkho.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 27D9A21569;
+        Mon, 13 Jan 2020 17:56:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578938167;
+        bh=SU/yL4pLyTd6FCTcX3VLWcdVv5nD03+4yH4Gn1K77mU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PLYde4y2bGJJJSqjSp28CMxyE/62HH00mNmDovWYE373wikXmIJVqh12xb6obQTH/
+         ojUTkMpUiXFF89UhRuhBGFgXfZI/FEnH/wUlUc5JS7b7EO4hzvBYWXpKxdcrfCmAcb
+         bM3SMx4S7p/IqMXNipF93P56YUqiLtBDdVi1YwbI=
+Received: by mail-qk1-f179.google.com with SMTP id c16so9318685qko.6;
+        Mon, 13 Jan 2020 09:56:07 -0800 (PST)
+X-Gm-Message-State: APjAAAXsZVFnyofhlo/LS8Y24SefdJHRoZkagvbhbx8XgmigbxeL0yki
+        ArKt93kYZZcg2FEw3lxW8J7N8JqCcc9JEtVoKA==
+X-Google-Smtp-Source: APXvYqxNb5K7LuU7cH7NsCfttliz8NZ07o3Ct6sem/fsX8V10HnCDnkMKpaC5zN8jUGtNlhbmoY0kqFe6vT0xkFRNFM=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr15965219qkl.119.1578938166297;
+ Mon, 13 Jan 2020 09:56:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113153605.52350-2-brian@brkho.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20191217015658.23017-1-vadivel.muruganx.ramuthevar@linux.intel.com>
+ <20191217015658.23017-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+In-Reply-To: <20191217015658.23017-2-vadivel.muruganx.ramuthevar@linux.intel.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 13 Jan 2020 11:55:55 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+qcR=3y1TQ+qrbfNW=_3kJ92eZP5eYvGYgteYWHyDVPw@mail.gmail.com>
+Message-ID: <CAL_Jsq+qcR=3y1TQ+qrbfNW=_3kJ92eZP5eYvGYgteYWHyDVPw@mail.gmail.com>
+Subject: Re: [PATCH v10 1/2] dt-bindings: phy: intel-emmc-phy: Add YAML schema
+ for LGM eMMC PHY
+To:     "Ramuthevar,Vadivel MuruganX" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
+        peter.harliman.liem@intel.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 10:36:04AM -0500, Brian Ho wrote:
-> This wait queue is signaled on all IRQs for a given GPU and will be
-> used as part of the new MSM_WAIT_IOVA ioctl so userspace can sleep
-> until the value at a given iova reaches a certain condition.
-> 
-> Signed-off-by: Brian Ho <brian@brkho.com>
+On Mon, Dec 16, 2019 at 7:57 PM Ramuthevar,Vadivel MuruganX
+<vadivel.muruganx.ramuthevar@linux.intel.com> wrote:
+>
+> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
+>
+> Add a YAML schema to use the host controller driver with the
+> eMMC PHY on Intel's Lightning Mountain SoC.
+>
+> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > ---
->  drivers/gpu/drm/msm/msm_gpu.c | 4 ++++
->  drivers/gpu/drm/msm/msm_gpu.h | 3 +++
->  2 files changed, 7 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-> index a052364a5d74..d7310c1336e5 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.c
-> +++ b/drivers/gpu/drm/msm/msm_gpu.c
-> @@ -779,6 +779,8 @@ void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
->  static irqreturn_t irq_handler(int irq, void *data)
->  {
->  	struct msm_gpu *gpu = data;
-> +	wake_up_all(&gpu->event);
+>  .../bindings/phy/intel,lgm-emmc-phy.yaml           | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+> new file mode 100644
+> index 000000000000..ff7959c21af0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.yaml
+> @@ -0,0 +1,56 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/phy/intel,lgm-emmc-phy.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-
-I suppose it is intentional to have this happen on *all* interrupts because you
-might be using the CP interrupts for fun and profit and you don't want to plumb
-in callbacks?  I suppose it is okay to do this for all interrupts (including
-errors) but if we're spending a lot of time here we might want to only trigger
-on certain IRQs.
-
-
->  	return gpu->funcs->irq(gpu);
->  }
->  
-> @@ -871,6 +873,8 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->  
->  	spin_lock_init(&gpu->perf_lock);
->  
-> +	init_waitqueue_head(&gpu->event);
+> +title: Intel Lightning Mountain(LGM) eMMC PHY Device Tree Bindings
 > +
->  
->  	/* Map registers: */
->  	gpu->mmio = msm_ioremap(pdev, config->ioname, name);
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-> index ab8f0f9c9dc8..60562f065dbc 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.h
-> +++ b/drivers/gpu/drm/msm/msm_gpu.h
-> @@ -104,6 +104,9 @@ struct msm_gpu {
->  
->  	struct msm_gem_address_space *aspace;
->  
-> +	/* GPU-wide wait queue that is signaled on all IRQs */
-> +	wait_queue_head_t event;
+> +maintainers:
+> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
 > +
->  	/* Power Control: */
->  	struct regulator *gpu_reg, *gpu_cx;
->  	struct clk_bulk_data *grp_clks;
-> -- 
-> 2.25.0.rc1.283.g88dfdc4193-goog
-> 
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+> +description: |+
+> +  Bindings for eMMC PHY on Intel's Lightning Mountain SoC, syscon
+> +  node is used to reference the base address of eMMC phy registers.
+> +
+> +  The eMMC PHY node should be the child of a syscon node with the
+> +  required property:
+> +
+> +  - compatible:         Should be one of the following:
+> +                        "intel,lgm-syscon", "syscon"
+> +  - reg:
+> +      maxItems: 1
+> +
+> +properties:
+> +  compatible:
+> +      const: intel,lgm-emmc-phy
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+> +  - "#phy-cells"
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +examples:
+> +  - |
+> +    sysconf: chiptop@e0200000 {
+> +      compatible = "intel,lgm-syscon", "syscon";
+> +      reg = <0xe0200000 0x100>;
+> +
+> +      emmc-phy: emmc-phy@a8 {
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+This fails in linux-next. Please run 'make dt_binding_check' and fix:
+
+Error: Documentation/devicetree/bindings/phy/intel,lgm-emmc-phy.example.dts:21.19-20
+syntax error
+FATAL ERROR: Unable to parse input tree
+
+The problem is labels can't have '-'.
+
+Rob
