@@ -2,124 +2,193 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D063C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC779C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:31:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B768207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:30:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S+Mf/nwH"
+	by mail.kernel.org (Postfix) with ESMTP id 975602084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:31:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgAMWaJ (ORCPT
+        id S1728966AbgAMWb6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:30:09 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:34194 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgAMWaI (ORCPT
+        Mon, 13 Jan 2020 17:31:58 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:54541 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728746AbgAMWb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:30:08 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DMNcxl171558;
-        Mon, 13 Jan 2020 22:29:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=25CiF6daHnR1vOGlT2zLjWwy8YF2rNmqXCEwgry4lk8=;
- b=S+Mf/nwHGiaPDLETKmXJ+EqUwgRjBYiFnW8IKm2zpK6zuLjWXHNyoce9ehuoWiwlZ8wt
- LPGGpJI9L272Ri0RxbyCChNdoKvDgmY+U7TaveS3PbeVOAucz5QYuhPa6UyC2Ez0blPB
- ZC5OdTwunYEs3tlS1UD5zW9S0H+qM3IYzMW7JNpChHE4NuYShHdrOfrc0FFv4p3ESHWY
- KjffP5uk8wFbHVHdbhFwyqaSTV9th1MtHKaQJWHQxSAqxX1wkFmSplDLrUleWfvuOlL1
- bq3E4ImY+rW6gX4SynK2zzeVGSAAabh+5ekjxuFe0hXp2kgGuKYZ7oaUlgCneZdHOgRk 8A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2xf73ya024-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 22:29:58 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DMOXRB016713;
-        Mon, 13 Jan 2020 22:27:57 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2xfqvtma79-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 22:27:57 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00DMRvAH013676;
-        Mon, 13 Jan 2020 22:27:57 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 14:27:56 -0800
-Date:   Mon, 13 Jan 2020 14:27:55 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH V2 10/12] fs/xfs: Fix truncate up
-Message-ID: <20200113222755.GP8247@magnolia>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-11-ira.weiny@intel.com>
+        Mon, 13 Jan 2020 17:31:58 -0500
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id C4E2D1BF203;
+        Mon, 13 Jan 2020 22:31:54 +0000 (UTC)
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
+        f.fainelli@gmail.com, hkallweit1@gmail.com
+Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
+        allan.nielsen@microchip.com, camelia.groza@nxp.com,
+        Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
+        jakub.kicinski@netronome.com
+Subject: [PATCH net-next v6 00/10] net: macsec: initial support for hardware offloading
+Date:   Mon, 13 Jan 2020 23:31:38 +0100
+Message-Id: <20200113223148.746096-1-antoine.tenart@bootlin.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110192942.25021-11-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=895
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001130183
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=955 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001130183
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 11:29:40AM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> When zeroing the end of a file we must account for bytes contained in
-> the final page which are past EOF.
-> 
-> Extend the range passed to iomap_zero_range() to reach LLONG_MAX which
-> will include all bytes of the final page.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  fs/xfs/xfs_iops.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index a2f2604c3187..a34b04e8ac9c 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -910,7 +910,7 @@ xfs_setattr_size(
->  	 */
->  	if (newsize > oldsize) {
->  		trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
-> -		error = iomap_zero_range(inode, oldsize, newsize - oldsize,
-> +		error = iomap_zero_range(inode, oldsize, LLONG_MAX - oldsize,
+Hello,
 
-Huh?  Won't this cause the file size to be set to LLONG_MAX?
+This series intends to add support for offloading MACsec transformations
+to hardware enabled devices. The series adds the necessary
+infrastructure for offloading MACsec configurations to hardware drivers,
+in patches 1 to 5; then introduces MACsec offloading support in the
+Microsemi MSCC PHY driver, in patches 6 to 10.
 
---D
+The series can also be found at:
+https://github.com/atenart/linux/tree/net-next/macsec
 
->  				&did_zeroing, &xfs_buffered_write_iomap_ops);
->  	} else {
->  		error = iomap_truncate_page(inode, newsize, &did_zeroing,
-> -- 
-> 2.21.0
-> 
+IProute2 modifications can be found at:
+https://github.com/atenart/iproute2/tree/macsec
+
+MACsec hardware offloading infrastructure
+-----------------------------------------
+
+Linux has a software implementation of the MACsec standard. There are
+hardware engines supporting MACsec operations, such as the Intel ixgbe
+NIC and some Microsemi PHYs (the one we use in this series). This means
+the MACsec offloading infrastructure should support networking PHY and
+MAC drivers. Note that MAC driver preliminary support is part of this
+series, but should not be merged before we actually have a provider for
+this.
+
+We do intend in this series to re-use the logic, netlink API and data
+structures of the existing MACsec software implementation. This allows
+not to duplicate definitions and structure storing the same information;
+as well as using the same userspace tools to configure both software or
+hardware offloaded MACsec flows (with `ip macsec`).
+
+When adding a new MACsec virtual interface the existing logic is kept:
+offloading is disabled by default. A user driven configuration choice is
+needed to switch to offloading mode (a patch in iproute2 is needed for
+this). A single MACsec interface can be offloaded for now, and some
+limitations are there: no flow can be moved from one implementation to
+the other so the decision needs to be done before configuring the
+interface.
+
+MACsec offloading ops are called in 2 steps: a preparation one, and a
+commit one. The first step is allowed to fail and should be used to
+check if a provided configuration is compatible with a given MACsec
+capable hardware. The second step is not allowed to fail and should
+only be used to enable a given MACsec configuration.
+
+A limitation as of now is the counters and statistics are not reported
+back from the hardware to the software MACsec implementation. This
+isn't an issue when using offloaded MACsec transformations, but it
+should be added in the future so that the MACsec state can be reported
+to the user (which would also improve the debug).
+
+Microsemi PHY MACsec support
+----------------------------
+
+In order to add support for the MACsec offloading feature in the
+Microsemi MSCC PHY driver, the __phy_read_page and __phy_write_page
+helpers had to be exported. This is because the initialization of the
+PHY is done while holding the MDIO bus lock, and we need to change the
+page to configure the MACsec block.
+
+The support itself is then added in three patches. The first one adds
+support for configuring the MACsec block within the PHY, so that it is
+up, running and available for future configuration, but is not doing any
+modification on the traffic passing through the PHY. The second patch
+implements the phy_device MACsec ops in the Microsemi MSCC PHY driver,
+and introduce helpers to configure MACsec transformations and flows to
+match specific packets. The last one adds support for PN rollover.
+
+Thanks!
+Antoine
+
+Since v5:
+  - Fixed a compilation issue due to an inclusion from an UAPI header.
+  - Added an EXPORT_SYMBOL_GPL for the PN rollover helper, to fix module
+    compilation issues.
+  - Added a dependency for the MSCC driver on MACSEC || MACSEC=n.
+  - Removed the patches including the MAC offloading support as they are
+    not to be applied for now.
+
+Since v4:
+  - Reworked the MACsec read and write functions in the MSCC PHY driver
+    to remove the conditional locking.
+
+Since v3:
+  - Fixed a check when enabling offloading that was too restrictive.
+  - Fixed the propagation of the changelink event to the underlying
+    device drivers.
+
+Since v2:
+  - Allow selection the offloading from userspace, defaulting to the
+    software implementation when adding a new MACsec interface. The
+    offloading mode is now also reported through netlink.
+  - Added support for letting MKA packets in and out when using MACsec
+    (there are rules to let them bypass the MACsec h/w engine within the
+    PHY).
+  - Added support for PN rollover (following what's currently done in
+    the software implementation: the flow is disabled).
+  - Split patches to remove MAC offloading support for now, as there are
+    no current provider for this (patches are still included).
+  - Improved a few parts of the MACsec support within the MSCC PHY
+    driver (e.g. default rules now block non-MACsec traffic, depending
+    on the configuration).
+  - Many cosmetic fixes & small improvements.
+
+Since v1:
+  - Reworked the MACsec offloading API, moving from a single helper
+    called for all MACsec configuration operations, to a per-operation
+    function that is provided by the underlying hardware drivers.
+  - Those functions now contain a verb to describe the configuration
+    action they're offloading.
+  - Improved the error handling in the MACsec genl helpers to revert
+    the configuration to its previous state when the offloading call
+    failed.
+  - Reworked the file inclusions.
+
+Antoine Tenart (10):
+  net: macsec: move some definitions in a dedicated header
+  net: macsec: introduce the macsec_context structure
+  net: macsec: introduce MACsec ops
+  net: phy: add MACsec ops in phy_device
+  net: macsec: hardware offloading infrastructure
+  net: macsec: add nla support for changing the offloading selection
+  net: phy: mscc: macsec initialization
+  net: phy: mscc: macsec support
+  net: macsec: PN wrap callback
+  net: phy: mscc: PN rollover support
+
+ drivers/net/macsec.c               |  787 ++++++++++++++-----
+ drivers/net/phy/Kconfig            |    3 +
+ drivers/net/phy/mscc.c             | 1133 +++++++++++++++++++++++++++-
+ drivers/net/phy/mscc_fc_buffer.h   |   64 ++
+ drivers/net/phy/mscc_mac.h         |  159 ++++
+ drivers/net/phy/mscc_macsec.h      |  266 +++++++
+ include/linux/phy.h                |    9 +
+ include/net/macsec.h               |  224 ++++++
+ include/uapi/linux/if_link.h       |    7 +
+ include/uapi/linux/if_macsec.h     |   11 +
+ tools/include/uapi/linux/if_link.h |    7 +
+ 11 files changed, 2485 insertions(+), 185 deletions(-)
+ create mode 100644 drivers/net/phy/mscc_fc_buffer.h
+ create mode 100644 drivers/net/phy/mscc_mac.h
+ create mode 100644 drivers/net/phy/mscc_macsec.h
+ create mode 100644 include/net/macsec.h
+
+-- 
+2.24.1
+
