@@ -2,86 +2,95 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6362C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2F95C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938AF214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:27:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578918437;
-	bh=MFEPfdA+QsEVeUYS3nDx77LbmgiN2tk3SkvZyVQ4qII=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=OohoIjA8o7d9MJHS0X7jv7p97CpNFiLfYQKW/t3pdNLeynmaijyxqs4svncxyPUGj
-	 yvt7bgWkY7luBORHM96jrsQSefE1SCoFY9/Ui1xlBP13MlysosBderb86nzx5mvHoK
-	 pNfiwYKj41YUaS7qgaBjRWzW19oqneUhqeKzPpRs=
+	by mail.kernel.org (Postfix) with ESMTP id B877A2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:27:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgAMM1Q (ORCPT
+        id S1728643AbgAMM1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:27:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43868 "EHLO mail.kernel.org"
+        Mon, 13 Jan 2020 07:27:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:38796 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbgAMM1Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:27:16 -0500
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D58002084D;
-        Mon, 13 Jan 2020 12:27:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578918435;
-        bh=MFEPfdA+QsEVeUYS3nDx77LbmgiN2tk3SkvZyVQ4qII=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=hcvfvV+T3tJ4URMj1PE3ed49mkd7Sg3fyhShjEZFDPfg6xwZpkA/XL9vZq5Koyz3p
-         ezaDqG+/zlwhK+mgp7LD+ZVohdP+Q6d+ijrGgyWn9SiFy++P5nzHg0j+jD5u1Zm2n/
-         JC/9epXhXbvmNBYZxQc89MqeA/9OLoqcf38otedQ=
-Date:   Mon, 13 Jan 2020 13:27:12 +0100 (CET)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] HID: logitech-hidpp: avoid duplicate error handling code
- in 'hidpp_probe()'
-In-Reply-To: <20191226145435.8262-1-christophe.jaillet@wanadoo.fr>
-Message-ID: <nycvar.YFH.7.76.2001131327020.31058@cbobk.fhfr.pm>
-References: <20191226145435.8262-1-christophe.jaillet@wanadoo.fr>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1726399AbgAMM1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 07:27:42 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5595913D5;
+        Mon, 13 Jan 2020 04:27:41 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 92EBD3F68E;
+        Mon, 13 Jan 2020 04:27:39 -0800 (PST)
+Subject: Re: [PATCH] perf tools: Fix bug when recording SPE and non SPE events
+To:     Leo Yan <leo.yan@linaro.org>, James Clark <james.clark@arm.com>
+Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        nd@arm.com, Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Igor Lubashev <ilubashe@akamai.com>
+References: <20191220110525.30131-1-james.clark@arm.com>
+ <20191223034852.GB3981@leoy-ThinkPad-X240s>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <fd4f4278-fa43-86dc-1f2f-3439f19fea9e@arm.com>
+Date:   Mon, 13 Jan 2020 12:27:38 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191223034852.GB3981@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Dec 2019, Christophe JAILLET wrote:
+Hi Leo,
 
-> 'hid_hw_stop()' is already in the error handling path when branching to
-> the 'hid_hw_open_fail' label.
-> There is no point in calling it twice, so remove one.
+On 23/12/2019 03:48, Leo Yan wrote:
+> Hi James,
 > 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
->  drivers/hid/hid-logitech-hidpp.c | 1 -
->  1 file changed, 1 deletion(-)
+> On Fri, Dec 20, 2019 at 11:05:25AM +0000, James Clark wrote:
+>> This patch fixes an issue when non Arm SPE events are specified after an
+>> Arm SPE event. In that case, perf will exit with an error code and not
+>> produce a record file. This is because a loop index is used to store the
+>> location of the relevant Arm SPE PMU, but if non SPE PMUs follow, that
+>> index will be overwritten. Fix this issue by saving the PMU into a
+>> variable instead of using the index, and also add an error message.
+>>
+>> Before the fix:
+>>      ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
+>>      237
+>>
+>> After the fix:
+>>      ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
+>>      ...
+>>      0
 > 
-> diff --git a/drivers/hid/hid-logitech-hidpp.c b/drivers/hid/hid-logitech-hidpp.c
-> index bb063e7d48df..70e1cb928bf0 100644
-> --- a/drivers/hid/hid-logitech-hidpp.c
-> +++ b/drivers/hid/hid-logitech-hidpp.c
-> @@ -3817,7 +3817,6 @@ static int hidpp_probe(struct hid_device *hdev, const struct hid_device_id *id)
->  	if (ret < 0) {
->  		dev_err(&hdev->dev, "%s:hid_hw_open returned error:%d\n",
->  			__func__, ret);
-> -		hid_hw_stop(hdev);
->  		goto hid_hw_open_fail;
+> Just bring up a question related with PMU event registration.  Let's
+> see the DT binding in arch/arm64/boot/dts/arm/fvp-base-revc.dts:
+> 
+>           spe-pmu {
+>                   compatible = "arm,statistical-profiling-extension-v1";
+>                   interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_HIGH>;
+>           };
+> 
+> 
+> Now SPE registers PMU event for every CPU; seem to me, though SPE is an
 
-Thanks for catching this. Applied now.
+Do you mean "SPE PMU" here ? SPE is different from ETM, where the trace
+data is micro-architecture dependent. And thus you cannot mix the trace
+on different CPUs with different micro-archs.
 
--- 
-Jiri Kosina
-SUSE Labs
+As such I don't see any issue with this patch.
 
+Suzuki
