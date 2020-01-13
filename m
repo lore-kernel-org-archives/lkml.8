@@ -2,127 +2,381 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3196C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54199C33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F5F21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:52:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0944921556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:54:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nJa1RC4I"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k3rG7Lqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387611AbgAMEwR (ORCPT
+        id S2387614AbgAMEyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 23:52:17 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:35230 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387582AbgAMEwR (ORCPT
+        Sun, 12 Jan 2020 23:54:16 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:35789 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387525AbgAMEyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 23:52:17 -0500
-Received: by mail-qk1-f193.google.com with SMTP id z76so7443981qka.2
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 20:52:16 -0800 (PST)
+        Sun, 12 Jan 2020 23:54:15 -0500
+Received: by mail-pj1-f66.google.com with SMTP id s7so3735250pjc.0;
+        Sun, 12 Jan 2020 20:54:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e91pGy24VVvYbYr4rZmi8ICedLezu/8qcs1+qti5PJ0=;
-        b=nJa1RC4Is4dH0rAe9i+D5MWd8LXDimOk6ZHr02eCBlWBA8xjfA1YwLeH281ThOQo26
-         3n0FogtRyfXpjYPLqCmbEwWd6PleQsb+MViHIIAEWMv1TouAMJ/z0HNp/N2WOxWDQey8
-         01RkACdWQwDmWqyqttBUE7JWHXXbHLKWKmir0=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jX6qkWmYXUSx+80QFz0j0DhZg4Qpek+NelAh9fppjdQ=;
+        b=k3rG7LqnPF2FTFtwNb23rU9ImcmkpyUGYNl2N6+NgpWw7BLCFCt5N5XOguel+QfCnT
+         Pu2ygmiFciJFAnMwLnJgFP5UmYr2QINIiUe2ajpKtq86l9lSym16rsoYWoBiLR51Vii7
+         dQTdcR1IuiYpDerYrfDwCMpv9YpQg6UyEOQhrcDMzcH42f5EzfsSH2GvbNEvjqka9rwt
+         3HPwkQVRZ6udFeJ+1KfnQUmWkfFq7gv2tmsiMRtTjcmchC9UiJ24uwno7blwVEL+RJfN
+         gdT84Ss3aIymehIm5s21IAbpjJssdnEDjJA93xmi5O8MnOjqLWWWjYnq9lZJJ6gW1w+H
+         owqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e91pGy24VVvYbYr4rZmi8ICedLezu/8qcs1+qti5PJ0=;
-        b=cNyQIbl5kQP3gsvq2vjlU8fmOB1EuOi2EZ4inwQwgMP9xqcLzjTWy7sOLQtOGGrAES
-         JeDWHc+YsIus4cz+EIIdZ4w3Z2AuUJBfiO3yQFMPeQ1Milh73JAYBRAgv5hzN6yVbmjq
-         ZbrvPa6dUWRe5q/1xft1HHaQUkUTJ/noPWL3LTxtX4UsKCeLYtbn72mryYwH6Dzq4X/p
-         hSIIbm3bEGGTImwLucYUaJmbfY3wihCoTsey0TEXkLZH3q64v+D/78aAwGTW9itJ7dTg
-         8LYvYNwKcJkLv+p8JaiYfM2y1IGP2ATvCVBEiXe/Qs3yofCLBLgVdIYrsBB6Gt/cOJXj
-         eA/g==
-X-Gm-Message-State: APjAAAXRLsiEy7eqGXm2+5Jw4VLRCMCxx1pFXgIXvAGVfb1cXtNcf5QI
-        bNsU3mWK/KLp3HpnesVF5cRfnD34TmhS7XdLwm5ySw==
-X-Google-Smtp-Source: APXvYqxQiKAiE5eUtsTQf70lo04q3M2951zkP4HBkJ3NdNMiSbRwCRCDOu23qOqzzIb3z7Vd3CR6g4sfwUCYbV478kw=
-X-Received: by 2002:ae9:f003:: with SMTP id l3mr9903798qkg.457.1578891136362;
- Sun, 12 Jan 2020 20:52:16 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jX6qkWmYXUSx+80QFz0j0DhZg4Qpek+NelAh9fppjdQ=;
+        b=gi/LECLA/j5a1eBpl+3ckkZ46KiWR6p4L7fx1o4WRV67su4flqBS8OSHGlsdur3mPW
+         rBHvUZBwiN7qi31K73XH1yuGh65wX6gf44jBMXtlXcb3T38edeS7sM7PYOtEKN6vKyOb
+         mlzmFQDuY51HRuC2KOFKmE5gNeNA+Nxj152Ai5ALhAlyGCQLA/yZ/r7nw+bSTmtVH8cZ
+         P6AvVjJzvNzd0QmoaXA595TnSzBKQ679vOMi7AkH2wBCJGF9CtkHgQQ3im30w92Q38C4
+         Osse3LEk72nwiWU3evLV5cHa6ooVUoIkEpgKgPlTFqFHEPEnv2tX+IOKec7JYeDD8i/J
+         mHtA==
+X-Gm-Message-State: APjAAAWYCnG4VsytSeXfO1BNN1wJ6ZFa8Q9UGP0jig+cH3BzALx0AiTO
+        +F3Z0SNZZcM6u/9HzY/IPdIk4rf+
+X-Google-Smtp-Source: APXvYqwtknO3kxI7C9uPremhfdNnAfkBAYhIa82+deb2Gh5ilyF0a59T2PPmW/2VtZ25g63FZgqORA==
+X-Received: by 2002:a17:902:9b94:: with SMTP id y20mr5684488plp.291.1578891254243;
+        Sun, 12 Jan 2020 20:54:14 -0800 (PST)
+Received: from localhost.localdomain (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id j8sm11723787pfe.182.2020.01.12.20.54.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2020 20:54:13 -0800 (PST)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     cphealy@gmail.com, rmk+kernel@armlinux.org.uk, kuba@kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH net-next] net: phy: Maintain MDIO device and bus statistics
+Date:   Sun, 12 Jan 2020 20:53:19 -0800
+Message-Id: <20200113045325.13470-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-References: <20191226093930.22413-1-yong.liang@mediatek.com>
- <20191226093930.22413-2-yong.liang@mediatek.com> <675aa211-eba5-e44c-0931-32c1b6d5ca8b@gmail.com>
-In-Reply-To: <675aa211-eba5-e44c-0931-32c1b6d5ca8b@gmail.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Mon, 13 Jan 2020 12:52:05 +0800
-Message-ID: <CANMq1KDAsgxaxU+GTuDMLbQ-MSQHsk+iQCNDSRJ+SPRODyebDw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] amr64: dts: modify mt8183.dtsi
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Yong Liang <yong.liang@mediatek.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 8, 2020 at 10:05 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
->
->
->
-> On 26/12/2019 10:39, Yong Liang wrote:
-> > From: "yong.liang" <yong.liang@mediatek.com>
-> >
-> > Include mt8183-reset.h and add reset-cells in infracfg
-> > in dtsi file
-> >
-> > Signed-off-by: yong.liang <yong.liang@mediatek.com>
->
-> applied with fixed subject line to v5.5-next/dts64
+Maintain per MDIO device and MDIO bus statistics comprised of the number
+of transfers/operations, reads and writes and errors. This is useful for
+tracking the per-device and global MDIO bus bandwidth and doing
+optimizations as necessary.
 
-Well the subject line here still says amr64 ,-P
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ Documentation/ABI/testing/sysfs-bus-mdio |  34 +++++++
+ drivers/net/phy/mdio_bus.c               | 116 +++++++++++++++++++++++
+ drivers/net/phy/mdio_device.c            |   1 +
+ include/linux/mdio.h                     |  10 ++
+ include/linux/phy.h                      |   2 +
+ 5 files changed, 163 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-mdio
 
-https://git.kernel.org/pub/scm/linux/kernel/git/matthias.bgg/linux.git/commit/?h=v5.5-next/dts64&id=42f8e5356122feb2003d7696c83cfec46daa8d44
+diff --git a/Documentation/ABI/testing/sysfs-bus-mdio b/Documentation/ABI/testing/sysfs-bus-mdio
+new file mode 100644
+index 000000000000..a552d92890f1
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-bus-mdio
+@@ -0,0 +1,34 @@
++What:          /sys/bus/mdio_bus/devices/.../statistics/
++Date:          January 2020
++KernelVersion: 5.6
++Contact:       netdev@vger.kernel.org
++Description:
++		This folder contains statistics about MDIO bus transactions.
++
++What:          /sys/bus/mdio_bus/devices/.../statistics/transfers
++Date:          January 2020
++KernelVersion: 5.6
++Contact:       netdev@vger.kernel.org
++Description:
++		Total number of transfers for this MDIO bus.
++
++What:          /sys/bus/mdio_bus/devices/.../statistics/errors
++Date:          January 2020
++KernelVersion: 5.6
++Contact:       netdev@vger.kernel.org
++Description:
++		Total number of transfer errors for this MDIO bus.
++
++What:          /sys/bus/mdio_bus/devices/.../statistics/writes
++Date:          January 2020
++KernelVersion: 5.6
++Contact:       netdev@vger.kernel.org
++Description:
++		Total number of write transactions for this MDIO bus.
++
++What:          /sys/bus/mdio_bus/devices/.../statistics/reads
++Date:          January 2020
++KernelVersion: 5.6
++Contact:       netdev@vger.kernel.org
++Description:
++		Total number of read transactions for this MDIO bus.
+diff --git a/drivers/net/phy/mdio_bus.c b/drivers/net/phy/mdio_bus.c
+index 229e480179ff..805bc2e3b139 100644
+--- a/drivers/net/phy/mdio_bus.c
++++ b/drivers/net/phy/mdio_bus.c
+@@ -168,6 +168,9 @@ struct mii_bus *mdiobus_alloc_size(size_t size)
+ 	for (i = 0; i < PHY_MAX_ADDR; i++)
+ 		bus->irq[i] = PHY_POLL;
+ 
++	/* Initialize 64-bit seqcounts */
++	u64_stats_init(&bus->stats.syncp);
++
+ 	return bus;
+ }
+ EXPORT_SYMBOL(mdiobus_alloc_size);
+@@ -255,9 +258,77 @@ static void mdiobus_release(struct device *d)
+ 	kfree(bus);
+ }
+ 
++#define MDIO_BUS_STATS_ATTR(field, file)				\
++static ssize_t mdio_bus_##field##_show(struct device *dev,		\
++				       struct device_attribute *attr,	\
++				       char *buf)			\
++{									\
++	struct mii_bus *bus = to_mii_bus(dev);				\
++	return mdio_bus_stats_##field##_show(&bus->stats, buf);		\
++}									\
++static struct device_attribute dev_attr_mdio_bus_##field = {		\
++	.attr = { .name = file, .mode = 0444 },				\
++	.show = mdio_bus_##field##_show,				\
++};									\
++static ssize_t mdio_bus_device_##field##_show(struct device *dev,	\
++					      struct device_attribute *attr,\
++					      char *buf)		\
++{									\
++	struct mdio_device *mdiodev = to_mdio_device(dev);		\
++	return mdio_bus_stats_##field##_show(&mdiodev->stats, buf);	\
++}									\
++static struct device_attribute dev_attr_mdio_bus_device_##field = {	\
++	.attr = { .name = file, .mode = 0444 },				\
++	.show = mdio_bus_device_##field##_show,				\
++}
++
++#define MDIO_BUS_STATS_SHOW_NAME(name, file, field, format_string)	\
++static ssize_t mdio_bus_stats_##name##_show(struct mdio_bus_stats *s,	\
++					    char *buf)			\
++{									\
++	unsigned int start;						\
++	ssize_t len;							\
++	u64 tmp;							\
++	do {								\
++		start = u64_stats_fetch_begin(&s->syncp);		\
++		tmp = u64_stats_read(&s->field);			\
++	} while (u64_stats_fetch_retry(&s->syncp, start));		\
++	len = sprintf(buf, format_string ## "\n", tmp);			\
++	return len;							\
++}									\
++MDIO_BUS_STATS_ATTR(name, file)
++
++#define MDIO_BUS_STATS_SHOW(field, format_string)			\
++	MDIO_BUS_STATS_SHOW_NAME(field, __stringify(field),		\
++				      field, format_string)
++
++MDIO_BUS_STATS_SHOW(transfers, "%llu");
++MDIO_BUS_STATS_SHOW(errors, "%llu");
++MDIO_BUS_STATS_SHOW(writes, "%llu");
++MDIO_BUS_STATS_SHOW(reads, "%llu");
++
++static struct attribute *mdio_bus_statistics_attrs[] = {
++	&dev_attr_mdio_bus_transfers.attr,
++	&dev_attr_mdio_bus_errors.attr,
++	&dev_attr_mdio_bus_writes.attr,
++	&dev_attr_mdio_bus_reads.attr,
++	NULL,
++};
++
++static const struct attribute_group mdio_bus_statistics_group = {
++	.name	= "statistics",
++	.attrs	= mdio_bus_statistics_attrs,
++};
++
++static const struct attribute_group *mdio_bus_groups[] = {
++	&mdio_bus_statistics_group,
++	NULL,
++};
++
+ static struct class mdio_bus_class = {
+ 	.name		= "mdio_bus",
+ 	.dev_release	= mdiobus_release,
++	.dev_groups	= mdio_bus_groups,
+ };
+ 
+ #if IS_ENABLED(CONFIG_OF_MDIO)
+@@ -536,6 +607,24 @@ struct phy_device *mdiobus_scan(struct mii_bus *bus, int addr)
+ }
+ EXPORT_SYMBOL(mdiobus_scan);
+ 
++static void mdiobus_stats_acct(struct mdio_bus_stats *stats, bool op, int ret)
++{
++	u64_stats_update_begin(&stats->syncp);
++
++	u64_stats_inc(&stats->transfers);
++	if (ret < 0) {
++		u64_stats_inc(&stats->errors);
++		goto out;
++	}
++
++	if (op)
++		u64_stats_inc(&stats->reads);
++	else
++		u64_stats_inc(&stats->writes);
++out:
++	u64_stats_update_end(&stats->syncp);
++}
++
+ /**
+  * __mdiobus_read - Unlocked version of the mdiobus_read function
+  * @bus: the mii_bus struct
+@@ -548,6 +637,7 @@ EXPORT_SYMBOL(mdiobus_scan);
+  */
+ int __mdiobus_read(struct mii_bus *bus, int addr, u32 regnum)
+ {
++	struct mdio_device *mdiodev = bus->mdio_map[addr];
+ 	int retval;
+ 
+ 	WARN_ON_ONCE(!mutex_is_locked(&bus->mdio_lock));
+@@ -555,6 +645,9 @@ int __mdiobus_read(struct mii_bus *bus, int addr, u32 regnum)
+ 	retval = bus->read(bus, addr, regnum);
+ 
+ 	trace_mdio_access(bus, 1, addr, regnum, retval, retval);
++	mdiobus_stats_acct(&bus->stats, true, retval);
++	if (mdiodev)
++		mdiobus_stats_acct(&mdiodev->stats, true, retval);
+ 
+ 	return retval;
+ }
+@@ -573,6 +666,7 @@ EXPORT_SYMBOL(__mdiobus_read);
+  */
+ int __mdiobus_write(struct mii_bus *bus, int addr, u32 regnum, u16 val)
+ {
++	struct mdio_device *mdiodev = bus->mdio_map[addr];
+ 	int err;
+ 
+ 	WARN_ON_ONCE(!mutex_is_locked(&bus->mdio_lock));
+@@ -580,6 +674,9 @@ int __mdiobus_write(struct mii_bus *bus, int addr, u32 regnum, u16 val)
+ 	err = bus->write(bus, addr, regnum, val);
+ 
+ 	trace_mdio_access(bus, 0, addr, regnum, val, err);
++	mdiobus_stats_acct(&bus->stats, false, err);
++	if (mdiodev)
++		mdiobus_stats_acct(&mdiodev->stats, false, err);
+ 
+ 	return err;
+ }
+@@ -725,8 +822,27 @@ static int mdio_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 	return 0;
+ }
+ 
++static struct attribute *mdio_bus_device_statistics_attrs[] = {
++	&dev_attr_mdio_bus_device_transfers.attr,
++	&dev_attr_mdio_bus_device_errors.attr,
++	&dev_attr_mdio_bus_device_writes.attr,
++	&dev_attr_mdio_bus_device_reads.attr,
++	NULL,
++};
++
++static const struct attribute_group mdio_bus_device_statistics_group = {
++	.name	= "statistics",
++	.attrs	= mdio_bus_device_statistics_attrs,
++};
++
++static const struct attribute_group *mdio_bus_dev_groups[] = {
++	&mdio_bus_device_statistics_group,
++	NULL,
++};
++
+ struct bus_type mdio_bus_type = {
+ 	.name		= "mdio_bus",
++	.dev_groups	= mdio_bus_dev_groups,
+ 	.match		= mdio_bus_match,
+ 	.uevent		= mdio_uevent,
+ };
+diff --git a/drivers/net/phy/mdio_device.c b/drivers/net/phy/mdio_device.c
+index c1d345c3cab3..e89ed990de7d 100644
+--- a/drivers/net/phy/mdio_device.c
++++ b/drivers/net/phy/mdio_device.c
+@@ -53,6 +53,7 @@ struct mdio_device *mdio_device_create(struct mii_bus *bus, int addr)
+ 	if (!mdiodev)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	u64_stats_init(&mdiodev->stats.syncp);
+ 	mdiodev->dev.release = mdio_device_release;
+ 	mdiodev->dev.parent = &bus->dev;
+ 	mdiodev->dev.bus = &mdio_bus_type;
+diff --git a/include/linux/mdio.h b/include/linux/mdio.h
+index a7604248777b..d6035d973a0d 100644
+--- a/include/linux/mdio.h
++++ b/include/linux/mdio.h
+@@ -8,6 +8,7 @@
+ 
+ #include <uapi/linux/mdio.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/u64_stats_sync.h>
+ 
+ struct gpio_desc;
+ struct mii_bus;
+@@ -23,11 +24,20 @@ enum mdio_mutex_lock_class {
+ 	MDIO_MUTEX_NESTED,
+ };
+ 
++struct mdio_bus_stats {
++	struct u64_stats_sync syncp;
++	u64_stats_t transfers;
++	u64_stats_t errors;
++	u64_stats_t writes;
++	u64_stats_t reads;
++};
++
+ struct mdio_device {
+ 	struct device dev;
+ 
+ 	struct mii_bus *bus;
+ 	char modalias[MDIO_NAME_SIZE];
++	struct mdio_bus_stats stats;
+ 
+ 	int (*bus_match)(struct device *dev, struct device_driver *drv);
+ 	void (*device_free)(struct mdio_device *mdiodev);
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 5932bb8e9c35..8d3ac1ebfef2 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -22,6 +22,7 @@
+ #include <linux/timer.h>
+ #include <linux/workqueue.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/u64_stats_sync.h>
+ 
+ #include <linux/atomic.h>
+ 
+@@ -224,6 +225,7 @@ struct mii_bus {
+ 	int (*read)(struct mii_bus *bus, int addr, int regnum);
+ 	int (*write)(struct mii_bus *bus, int addr, int regnum, u16 val);
+ 	int (*reset)(struct mii_bus *bus);
++	struct mdio_bus_stats stats;
+ 
+ 	/*
+ 	 * A lock to ensure that only one thing can read/write
+-- 
+2.19.1
 
-I guess you can still fix this up as the branch has nothing else on it
-and we shoudn't care about stability.
-
->
-> Thanks
->
-> > ---
-> >  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > index 10b32471bc7b..76bfcbdf097a 100644
-> > --- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > +++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-> > @@ -8,6 +8,7 @@
-> >  #include <dt-bindings/clock/mt8183-clk.h>
-> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >  #include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/reset-controller/mt8183-resets.h>
-> >  #include "mt8183-pinfunc.h"
-> >
-> >  / {
-> > @@ -227,6 +228,7 @@
-> >                       compatible = "mediatek,mt8183-infracfg", "syscon";
-> >                       reg = <0 0x10001000 0 0x1000>;
-> >                       #clock-cells = <1>;
-> > +                     #reset-cells = <1>;
-> >               };
-> >
-> >               pio: pinctrl@10005000 {
-> >
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
