@@ -2,79 +2,108 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7961DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:21:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C090C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E91A207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:21:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D01207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:24:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="FOT706iI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgAMQVz (ORCPT
+        id S1729083AbgAMQYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:21:55 -0500
-Received: from mga14.intel.com ([192.55.52.115]:2775 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726567AbgAMQVy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:21:54 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 08:21:53 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
-   d="scan'208";a="244739383"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 13 Jan 2020 08:21:51 -0800
-Received: by lahna (sSMTP sendmail emulation); Mon, 13 Jan 2020 18:21:50 +0200
-Date:   Mon, 13 Jan 2020 18:21:50 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [PATCH v1 4/4] PCI: Allow extend_bridge_window() to shrink
- resource if necessary
-Message-ID: <20200113162150.GO2838@lahna.fi.intel.com>
-References: <PSXP216MB0438D3E2CFE64EBAA32AF691803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20200107203435.GA137091@google.com>
- <PSXP216MB043869924730BFD3AA97B0A0803E0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PSXP216MB043869924730BFD3AA97B0A0803E0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+        Mon, 13 Jan 2020 11:24:23 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:37152 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728838AbgAMQYW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 11:24:22 -0500
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D730AC05E0;
+        Mon, 13 Jan 2020 16:24:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1578932661; bh=KfUuj7FkYk8P0Zny6DjZbC4vjoy9xayAvDkveS1KNOQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=FOT706iIpRhlE72P2lXrfvKsHj0TCPxOaLl0XvoqfuZC8M6rM7QgWwhjl7rZ1gIiR
+         39CBhuOCRCeQ+P7jDvHT1krqSxRo33bxC60r+qmHOocAHcwX5urv/H2K2KAQjPVPcq
+         3gVzfDRQCkNgklbWpJCz7WXuyrBneYNS2y+XngbDWy4arR1/g/oOywloXh4G7o09n6
+         x7iQyVfOeRBpqi15w5Q9/d/1UlQNiZlGgg9cegMKoLUDhEw6G4swp/e9nbqyqYRPWy
+         lgP/Ucg1yzP794xrcWSFyoeh5+GqOfaFOQelL+KhIvlg2/mnmy9/ZxrJaMREg97DKT
+         jyFdrL2pRGqbQ==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 9A9BAA0073;
+        Mon, 13 Jan 2020 16:24:19 +0000 (UTC)
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     netdev@vger.kernel.org
+Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v3 6/8] net: stmmac: Add missing information in DebugFS capabilities file
+Date:   Mon, 13 Jan 2020 17:24:14 +0100
+Message-Id: <091120c35e058e48868dc81ef80ea0f3b0fac99c.1578932287.git.Jose.Abreu@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1578932287.git.Jose.Abreu@synopsys.com>
+References: <cover.1578932287.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1578932287.git.Jose.Abreu@synopsys.com>
+References: <cover.1578932287.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 01:36:04AM +0000, Nicholas Johnson wrote:
-> > Where's the patch that changes the caller so "new_size" may be smaller
-> > than "size"?  I guess it must be "[3/3] PCI: Consider alignment of
-> > hot-added bridges ..." because that's the only one that makes a
-> > non-trivial change, right?
-> 
-> As above, there was always a possibility of the new_size being smaller. 
-> For some reason, 1M is assigned to bridges, even if nothing is below 
-> them (for example, unused non hotplug bridges in a Thunderbolt dock). It 
-> may be an edge case if we are low on space, but theoretically it can 
-> happen.
-> 
-> Also, when writing this, Mika was not interested in using hpmemsize, 
-> which, when used, will cause new_size to be smaller than the current 
-> size (actual size and add_size combined).
+Adds more information regarding HW Capabilities in the corresponding
+DebugFS file.
 
-Just a small correction here about my motivation. So I'm testing on a
-hardware where the BIOS assigns initial resources to the root/downstream
-ports which is the majority of Thunderbolt capable PC systems nowadays.
-Therefore the user does not need to pass any additional command line
-parameters to get the ports working properly.
+Changes from v2:
+- Remove the TX/RX queues in use (Jakub)
 
-However, I'm of course interested in getting Linux PCI resource
-management as good as possible regardless whether the firmware/BIOS
-assigns them or not ;-)
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+
+---
+Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Jose Abreu <joabreu@synopsys.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: netdev@vger.kernel.org
+Cc: linux-stm32@st-md-mailman.stormreply.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 43af4fc5ab8f..2738d97495e6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4365,6 +4365,12 @@ static int stmmac_dma_cap_show(struct seq_file *seq, void *v)
+ 		   priv->dma_cap.l3l4fnum);
+ 	seq_printf(seq, "\tARP Offloading: %s\n",
+ 		   priv->dma_cap.arpoffsel ? "Y" : "N");
++	seq_printf(seq, "\tEnhancements to Scheduled Traffic (EST): %s\n",
++		   priv->dma_cap.estsel ? "Y" : "N");
++	seq_printf(seq, "\tFrame Preemption (FPE): %s\n",
++		   priv->dma_cap.fpesel ? "Y" : "N");
++	seq_printf(seq, "\tTime-Based Scheduling (TBS): %s\n",
++		   priv->dma_cap.tbssel ? "Y" : "N");
+ 	return 0;
+ }
+ DEFINE_SHOW_ATTRIBUTE(stmmac_dma_cap);
+-- 
+2.7.4
+
