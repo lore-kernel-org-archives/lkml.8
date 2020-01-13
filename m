@@ -2,108 +2,224 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E80A0C33CAA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E39BC33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8D532082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEAAB2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:48:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="OUlKM8ns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbgAMJrZ (ORCPT
+        id S1728641AbgAMJsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:47:25 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:35470 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725992AbgAMJrX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:47:23 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R661e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0TncLfyC_1578908838;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TncLfyC_1578908838)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 13 Jan 2020 17:47:19 +0800
-Subject: Re: [PATCH v7 02/10] mm/memcg: fold lru_lock in lock_page_lru
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, shakeelb@google.com, hannes@cmpxchg.org
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
- <1577264666-246071-3-git-send-email-alex.shi@linux.alibaba.com>
- <36d7e390-a3d1-908c-d181-4a9e9c8d3d98@yandex-team.ru>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <952d02c2-8aa5-40bb-88bb-c43dee65c8bc@linux.alibaba.com>
-Date:   Mon, 13 Jan 2020 17:45:51 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.3.1
+        Mon, 13 Jan 2020 04:48:16 -0500
+Received: from mail-eopbgr60086.outbound.protection.outlook.com ([40.107.6.86]:9127
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726133AbgAMJsP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 04:48:15 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lvnBGQuy5M6jT6sK/OJi5LNsNi9ImR9VepO6Rd1/bhuCEdpckjNy8GYindT1zbmxki44+n7d+u6pbAo5F0pc5b0ngsxzyqKmvNOdYMwxlWb6aV49hYsQO96I5JGeedEpGS8ylre95Jx7bIsEfD1GeTIHWMXo08FPRgZbtZk7dKTA5LQbLeu9+UeyjYyB1dJOXgFnNCZm5Qi1z6AEFK9f3BWmqBBY4TKlATSpRLCijSCbcNiGES2JV970+IeFObbBfiHL7X6E1DhmHmn69H9FFqCZu71jKojJ3Z8mQIITnlo5qoc77KoXTZ6GyscdpUCqzF5lkpvmrnSFVQyZQigosA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X+4XjqEErXiPa8CUhqEeWXWeV27ntMqeYON1iquokMk=;
+ b=nEP38vQ8pTvNZnfZ7PKETTRiJ8irYL9Pmdgyz7XeNRRusZWCS8gKuMbdb2yyIMCw1+2nv60KpEez+rDygWsCyfPhxwPr15E7YQGOfXw8LbWcLAX8GAWfSzXHPXgagwMA7Hr7qwBP24MqJf4csfJbkqrOA4GM6xSTWPC5u+PImrGdHpf2eBDSqwqqck1Ao3167O5wPbg3iv8g1NJSkBum3T7sqZ5Aht2y5/Gc/OvUyOcwJup1bzHQ6HRZbIdmoghb50TRcPSOcdUHgnIoBYKWzQfafSA6GpC7ulnJEbqd/Gb8oK5qrJZq0CAeGLeVBn5N8immk1k896wtNlPm8CB0bg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X+4XjqEErXiPa8CUhqEeWXWeV27ntMqeYON1iquokMk=;
+ b=OUlKM8ns6NWvngB+pmyb7HE3xkZEHGlVuqm1BBduETbInU/WuOQeUTdZfzyAFAuXLnVQI26F71Auj8OLF+nrU3Nz7jgNcha9E2pFZUON6jPg1FcHx97y9Mk2U1gDVmsPOfp5F43jwkT6HTMrN6ymm3qHLzQ/ZoZiZqKHi1pweJ4=
+Received: from VI1PR04MB4445.eurprd04.prod.outlook.com (20.177.55.161) by
+ VI1PR04MB4431.eurprd04.prod.outlook.com (20.177.55.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.9; Mon, 13 Jan 2020 09:48:11 +0000
+Received: from VI1PR04MB4445.eurprd04.prod.outlook.com
+ ([fe80::304d:b7d8:1233:2ae0]) by VI1PR04MB4445.eurprd04.prod.outlook.com
+ ([fe80::304d:b7d8:1233:2ae0%6]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
+ 09:48:11 +0000
+From:   Iuliana Prodan <iuliana.prodan@nxp.com>
+To:     Horia Geanta <horia.geanta@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>
+CC:     "David S. Miller" <davem@davemloft.net>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v2 09/10] crypto: caam - add crypto_engine support for RSA
+ algorithms
+Thread-Topic: [PATCH v2 09/10] crypto: caam - add crypto_engine support for
+ RSA algorithms
+Thread-Index: AQHVwdGq8oNojU3+Pkqj8F8q9Ip8Bw==
+Date:   Mon, 13 Jan 2020 09:48:11 +0000
+Message-ID: <VI1PR04MB44452FF06F35075413CF87F88C350@VI1PR04MB4445.eurprd04.prod.outlook.com>
+References: <1578013373-1956-1-git-send-email-iuliana.prodan@nxp.com>
+ <1578013373-1956-10-git-send-email-iuliana.prodan@nxp.com>
+ <VI1PR0402MB3485162217C242B16CF1371B98380@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=iuliana.prodan@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 15eb61f2-b022-4454-693e-08d7980db3c8
+x-ms-traffictypediagnostic: VI1PR04MB4431:|VI1PR04MB4431:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR04MB44314EA7439BD4E94B826A978C350@VI1PR04MB4431.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(39860400002)(376002)(136003)(346002)(189003)(199004)(55016002)(53546011)(6506007)(8936002)(86362001)(5660300002)(9686003)(4326008)(6636002)(81156014)(81166006)(8676002)(7696005)(2906002)(186003)(316002)(52536014)(71200400001)(478600001)(33656002)(66946007)(64756008)(54906003)(66476007)(66556008)(44832011)(66446008)(91956017)(110136005)(26005)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR04MB4431;H:VI1PR04MB4445.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 7AIU79BNg1Zcot9JcZiTLdbeieOK7b25pmmAtuKwAgPPw0vbRhY0U/iUY9x4FcbmUPjEukYJZJCbPJa5ku88NvR3pwRB38gYc4kyTTmLWGtLC729iN0S5HgVM7TMmzTuuHhOKKYR2dCD0jBkcyERU/WBZ2hZEjMuA2vfoI3QzFSHhYoDvywnnfdcnF3GOE6br/snEgt4wP8sKRWpdp+yT38jjYudInLjVq7e5T0myCM2LWjng8liLQro82aUaQgOb0FMwENq6RuteOL5FgU5gs0ATI4SJYzXUnbzTj+Lzw0RSkuONKLTkntlzuFaMw7zjPrYtL0YhKjLfnKq5OTDRzp4ShjQJV1hbSWtbnlAEv80KjI4Supk3N3zbE5v0bbSUfepH82tOT00fZ9it2mv3RkET7zXtWsKJFkIz4DYNvk2JGhhVHrmQ0O1Z1f7GU1e
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <36d7e390-a3d1-908c-d181-4a9e9c8d3d98@yandex-team.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15eb61f2-b022-4454-693e-08d7980db3c8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 09:48:11.2957
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BZMmehiujCUgEgRkKuYb/udvxXa3E0pXTK/J/q5ubbdV0oB71HFseoMfe0Pulj4BfGu0LDGv/yRVmrrpkkcyuQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB4431
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/1/10 下午4:49, Konstantin Khlebnikov 写道:
-> On 25/12/2019 12.04, Alex Shi wrote:
->>  From the commit_charge's explanations and mem_cgroup_commit_charge
->> comments, as well as call path when lrucare is ture, The lru_lock is
->> just to guard the task migration(which would be lead to move_account)
->> So it isn't needed when !PageLRU, and better be fold into PageLRU to
->> reduce lock contentions.
->>
->> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
->> Cc: Johannes Weiner <hannes@cmpxchg.org>
->> Cc: Michal Hocko <mhocko@kernel.org>
->> Cc: Matthew Wilcox <willy@infradead.org>
->> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: cgroups@vger.kernel.org
->> Cc: linux-mm@kvack.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>   mm/memcontrol.c | 9 ++++-----
->>   1 file changed, 4 insertions(+), 5 deletions(-)
->>
->> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> index c5b5f74cfd4d..0ad10caabc3d 100644
->> --- a/mm/memcontrol.c
->> +++ b/mm/memcontrol.c
->> @@ -2572,12 +2572,11 @@ static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_pages)
->>     static void lock_page_lru(struct page *page, int *isolated)
->>   {
->> -    pg_data_t *pgdat = page_pgdat(page);
->> -
->> -    spin_lock_irq(&pgdat->lru_lock);
->>       if (PageLRU(page)) {
->> +        pg_data_t *pgdat = page_pgdat(page);
->>           struct lruvec *lruvec;
->>   +        spin_lock_irq(&pgdat->lru_lock);
-> 
-> That's wrong. Here PageLRU must be checked again under lru_lock.
-Hi, Konstantin,
-
-For logical remain, we can get the lock and then release for !PageLRU. 
-but I still can figure out the problem scenario. Would like to give more hints?
-
-
-> 
-> 
-> Also I don't like these functions:
-> - called lock/unlock but actually also isolates
-> - used just once
-> - pgdat evaluated twice
-
-That's right. I will fold these functions into commit_charge.
-
-Thanks
-Alex
+On 1/10/2020 10:46 AM, Horia Geanta wrote:=0A=
+> On 1/3/2020 3:03 AM, Iuliana Prodan wrote:=0A=
+>> +static int akcipher_enqueue_req(struct device *jrdev, u32 *desc,=0A=
+>> +				void (*cbk)(struct device *jrdev, u32 *desc,=0A=
+>> +					    u32 err, void *context),=0A=
+>> +				struct akcipher_request *req,=0A=
+>> +				struct rsa_edesc *edesc)=0A=
+>> +{=0A=
+>> +	struct caam_drv_private_jr *jrpriv =3D dev_get_drvdata(jrdev);=0A=
+>> +	struct crypto_akcipher *tfm =3D crypto_akcipher_reqtfm(req);=0A=
+>> +	struct caam_rsa_ctx *ctx =3D akcipher_tfm_ctx(tfm);=0A=
+>> +	struct caam_rsa_key *key =3D &ctx->key;=0A=
+>> +	int ret;=0A=
+>> +=0A=
+>> +	if (req->base.flags & CRYPTO_TFM_REQ_MAY_BACKLOG)=0A=
+>> +		return crypto_transfer_akcipher_request_to_engine(jrpriv->engine,=0A=
+>> +								  req);=0A=
+> Resource leak in case transfer fails.=0A=
+> =0A=
+>> +	else=0A=
+>> +		ret =3D caam_jr_enqueue(jrdev, desc, cbk, &edesc->jrentry);=0A=
+> What's the problem with transferring all requests to crypto engine?=0A=
+> =0A=
+I'll address all your comments in v3.=0A=
+=0A=
+Regarding the transfer request to crypto-engine: if sending all requests =
+=0A=
+to crypto-engine, multibuffer tests, for non-backlogging requests fail =0A=
+after only 10 requests, since crypto-engine queue has 10 entries.=0A=
+Here's an example:=0A=
+root@imx6qpdlsolox:~# insmod tcrypt.ko mode=3D422 num_mb=3D1024=0A=
+insmod: ERROR: could not insert module tcrypt.ko: Resource temporarily =0A=
+unavailable=0A=
+root@imx6qpdlsolox:~#=0A=
+root@imx6qpdlsolox:~# dmesg=0A=
+...=0A=
+testing speed of multibuffer sha1 (sha1-caam)=0A=
+tcrypt: test  0 (   16 byte blocks,   16 bytes per update,   1 updates):=0A=
+tcrypt: concurrent request 11 error -28=0A=
+tcrypt: concurrent request 13 error -28=0A=
+tcrypt: concurrent request 14 error -28=0A=
+tcrypt: concurrent request 16 error -28=0A=
+tcrypt: concurrent request 18 error -28=0A=
+tcrypt: concurrent request 20 error -28=0A=
+tcrypt: concurrent request 22 error -28=0A=
+tcrypt: concurrent request 24 error -28=0A=
+tcrypt: concurrent request 26 error -28=0A=
+tcrypt: concurrent request 28 error -28=0A=
+tcrypt: concurrent request 30 error -28=0A=
+tcrypt: concurrent request 32 error -28=0A=
+tcrypt: concurrent request 34 error -28=0A=
+=0A=
+tcrypt: concurrent request 1020 error -28=0A=
+tcrypt: concurrent request 1022 error -28=0A=
+tcrypt: At least one hashing failed ret=3D-28=0A=
+root@imx6qpdlsolox:~#=0A=
+=0A=
+If sending just the backlog request to crypto-engine, and non-blocking =0A=
+directly to CAAM, these tests have a better chance to pass since JR has =0A=
+1024 entries.=0A=
+=0A=
+Will need to work/update crypto-engine: set queue length when initialize =
+=0A=
+crypto-engine, and remove serialization of requests in crypto-engine. =0A=
+But, until then, I would like to have a backlogging solution in CAAM driver=
+.=0A=
+=0A=
+Iulia=0A=
+=0A=
+>> +=0A=
+>> +	if (ret !=3D -EINPROGRESS) {=0A=
+>> +		switch (key->priv_form) {=0A=
+>> +		case FORM1:=0A=
+>> +			rsa_priv_f1_unmap(jrdev, edesc, req);=0A=
+>> +			break;=0A=
+>> +		case FORM2:=0A=
+>> +			rsa_priv_f2_unmap(jrdev, edesc, req);=0A=
+>> +			break;=0A=
+>> +		case FORM3:=0A=
+>> +			rsa_priv_f3_unmap(jrdev, edesc, req);=0A=
+>> +			break;=0A=
+>> +		default:=0A=
+>> +			rsa_pub_unmap(jrdev, edesc, req);=0A=
+>> +		}=0A=
+>> +		rsa_io_unmap(jrdev, edesc, req);=0A=
+>> +		kfree(edesc);=0A=
+>> +	}=0A=
+>> +=0A=
+>> +	return ret;=0A=
+>> +}=0A=
+>> +=0A=
+>>   static int caam_rsa_enc(struct akcipher_request *req)=0A=
+>>   {=0A=
+>>   	struct crypto_akcipher *tfm =3D crypto_akcipher_reqtfm(req);=0A=
+>>   	struct caam_rsa_ctx *ctx =3D akcipher_tfm_ctx(tfm);=0A=
+>> +	struct caam_rsa_req_ctx *req_ctx =3D akcipher_request_ctx(req);=0A=
+>>   	struct caam_rsa_key *key =3D &ctx->key;=0A=
+>>   	struct device *jrdev =3D ctx->dev;=0A=
+>>   	struct rsa_edesc *edesc;=0A=
+>> @@ -637,13 +726,9 @@ static int caam_rsa_enc(struct akcipher_request *re=
+q)=0A=
+>>   	/* Initialize Job Descriptor */=0A=
+>>   	init_rsa_pub_desc(edesc->hw_desc, &edesc->pdb.pub);=0A=
+>>   =0A=
+>> -	ret =3D caam_jr_enqueue(jrdev, edesc->hw_desc, rsa_pub_done,=0A=
+>> -			      &edesc->jrentry);=0A=
+>> -	if (ret =3D=3D -EINPROGRESS)=0A=
+>> -		return ret;=0A=
+>> -=0A=
+>> -	rsa_pub_unmap(jrdev, edesc, req);=0A=
+>> -=0A=
+>> +	req_ctx->akcipher_op_done =3D rsa_pub_done;=0A=
+> This initialization could be moved into akcipher_enqueue_req().=0A=
+> =0A=
+>> +	return akcipher_enqueue_req(jrdev, edesc->hw_desc, rsa_pub_done,=0A=
+>> +				    req, edesc);=0A=
+> edesc, edesc->hw_desc parameters not needed - can be deduced internally=
+=0A=
+> via req -> req_ctx -> edesc- > hw_desc.=0A=
+> =0A=
+> Horia=0A=
+> =0A=
+=0A=
