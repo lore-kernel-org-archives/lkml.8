@@ -2,144 +2,164 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABE8C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 999A9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CBEE206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:24:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fIDSBdAg"
+	by mail.kernel.org (Postfix) with ESMTP id 7AC68206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgAMRY6 (ORCPT
+        id S1728809AbgAMRZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:24:58 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:41735 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728641AbgAMRY5 (ORCPT
+        Mon, 13 Jan 2020 12:25:33 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:53833 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728621AbgAMRZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:24:57 -0500
-Received: by mail-pf1-f195.google.com with SMTP id w62so5176348pfw.8
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 09:24:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=U2PWwEEnO5+ksSRfTkvVAkgMJvekPPQPvk+J1MXkAKA=;
-        b=fIDSBdAgWDIiMm+DJrGSk8SNVlkqqoJ/XOYER2KVMmFc85XBWE4fErM4MFi85PEx2h
-         2Igm5N9Sw8crh8PmobTPG1r0fpWIz9heb2tmNk/Svm2Hxp7Nb47ZngRKZ0JeD+DCJpYe
-         WIFC61PxN+EIo3zyUbdFykkit80459ecCP/nPUpBTdSqPxMwyduO8/ncgNndqrYsbPC1
-         NoLgWSqo7mDBTDKENNorvGv4h6vVDgJzKAoIMXvIQgn83zmsnj5pMW78uCuKA/TW3tI6
-         vhcDzEa+PHR4GKZ+CfD6TDAsfauhcAox/mVJ9fH0mfHAYHRllagoSZJb+h8uqcj5WtVS
-         7f6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=U2PWwEEnO5+ksSRfTkvVAkgMJvekPPQPvk+J1MXkAKA=;
-        b=igyO0lEJkqi+T+06RswtsPnNk50lwLEFhzdSRxN2Rh4c+9IVgFHpqJw7C1IoqWsfWg
-         9J6HqRPmFm0i2zT9GgHdOlsbQrq81AEoTy+YHOuXXY2P9eA+LG7avi6pjZhutYWthMxL
-         cMeMZLl5s6vFeTJlh8ib7nqREOoUj4NMgPs6vRRjo3PKo5SimCiOrlVzi3GCtGY0IEGy
-         v+ncR88nIdIESm+5K0jhN+Bnz6ILW/CBgpWR7VzVqrDmwBrBZZtnLYJBquRU4gLn4JmG
-         1WMEZinI/VX2zR8+V0N8sFoZhtSQ3Ncs7telf2A2mpPGQEwUzgrKa5NVhrbeWTgOhPC5
-         T6mw==
-X-Gm-Message-State: APjAAAWyi5XZLBZZdYG7K1rRr+tJKaR60ZGOnosSM8tEXuGyB/KDypB9
-        FixMyyrkX/fEqaEZ2wkrYJOslg==
-X-Google-Smtp-Source: APXvYqw80f6wRiRP9Dwvx/NTeGY9Bf9oleVCbpo6cpd3kqWBdbqpjm+tTzcPB06sPHd1+r+7vplIzg==
-X-Received: by 2002:aa7:8b17:: with SMTP id f23mr20824919pfd.197.1578936297041;
-        Mon, 13 Jan 2020 09:24:57 -0800 (PST)
-Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id d26sm13917312pgv.66.2020.01.13.09.24.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 09:24:56 -0800 (PST)
-Date:   Mon, 13 Jan 2020 09:24:53 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-kernel@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2] rpmsg: core: add API to get MTU
-Message-ID: <20200113172453.GQ738324@yoga>
-References: <20191113172249.32412-1-arnaud.pouliquen@st.com>
+        Mon, 13 Jan 2020 12:25:33 -0500
+Received: from webmail.gandi.net (webmail23.sd4.0x35.net [10.200.201.23])
+        (Authenticated sender: cengiz@kernel.wtf)
+        by relay12.mail.gandi.net (Postfix) with ESMTPA id D6B36200008;
+        Mon, 13 Jan 2020 17:25:29 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191113172249.32412-1-arnaud.pouliquen@st.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 13 Jan 2020 20:25:29 +0300
+From:   Cengiz Can <cengiz@kernel.wtf>
+To:     Alex Vesker <valex@mellanox.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Yevgeny Kliteynik <kliteyn@mellanox.com>,
+        Erez Shitrit <erezsh@mellanox.com>,
+        Tariq Toukan <tariqt@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: mellanox: prevent resource leak on htbl
+In-Reply-To: <HE1PR0501MB22490CD10A5A258E8C08DE86C3350@HE1PR0501MB2249.eurprd05.prod.outlook.com>
+References: <20200113134415.86110-1-cengiz@kernel.wtf>
+ <HE1PR0501MB22490CD10A5A258E8C08DE86C3350@HE1PR0501MB2249.eurprd05.prod.outlook.com>
+Message-ID: <69daf825678a38b676602933303190c9@kernel.wtf>
+X-Sender: cengiz@kernel.wtf
+User-Agent: Roundcube Webmail/1.3.8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 13 Nov 09:22 PST 2019, Arnaud Pouliquen wrote:
+On 2020-01-13 17:49, Alex Vesker wrote:
+> On 1/13/2020 3:46 PM, Cengiz Can wrote:
+>> According to a Coverity static analysis tool,
+>> `drivers/net/mellanox/mlx5/core/steering/dr_rule.c#63` leaks a
+>> `struct mlx5dr_ste_htbl *` named `new_htbl` while returning from
+>> `dr_rule_create_collision_htbl` function.
+>> 
+>> A annotated snippet of the possible resource leak follows:
+>> 
+>> ```
+>> static struct mlx5dr_ste *
+>> dr_rule_create_collision_htbl(struct mlx5dr_matcher *matcher,
+>>                               struct mlx5dr_matcher_rx_tx 
+>> *nic_matcher,
+>>                               u8 *hw_ste)
+>>    /* ... */
+>>    /* ... */
+>> 
+>>    /* Storage is returned from allocation function 
+>> mlx5dr_ste_htbl_alloc. */
+>>    /* Assigning: new_htbl = storage returned from 
+>> mlx5dr_ste_htbl_alloc(..) */
+>>         new_htbl = mlx5dr_ste_htbl_alloc(dmn->ste_icm_pool,
+>>                                          DR_CHUNK_SIZE_1,
+>>                                          MLX5DR_STE_LU_TYPE_DONT_CARE,
+>>                                          0);
+>>    /* Condition !new_htbl, taking false branch. */
+>>         if (!new_htbl) {
+>>                 mlx5dr_dbg(dmn, "Failed allocating collision 
+>> table\n");
+>>                 return NULL;
+>>         }
+>> 
+>>         /* One and only entry, never grows */
+>>         ste = new_htbl->ste_arr;
+>>         mlx5dr_ste_set_miss_addr(hw_ste, 
+>> nic_matcher->e_anchor->chunk->icm_addr);
+>>    /* Resource new_htbl is not freed or pointed-to in mlx5dr_htbl_get 
+>> */
+>>         mlx5dr_htbl_get(new_htbl);
+>> 
+>>    /* Variable new_htbl going out of scope leaks the storage it points 
+>> to. */
+>>         return ste;
+>> ```
+>> 
+>> There's a caller of this function which does refcounting and free'ing 
+>> by
+>> itself but that function also skips free'ing `new_htbl` due to missing
+>> jump to error label. (referring to `dr_rule_create_collision_entry 
+>> lines
+>> 75-77. They don't jump to `free_tbl`)
+>> 
+>> Added a `kfree(new_htbl)` just before returning `ste` pointer to fix 
+>> the
+>> leak.
+>> 
+>> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+>> ---
+>> 
+>> This might be totally breaking the refcounting logic in the file so
+>> please provide any feedback so I can evolve this into something more
+>> suitable.
+>> 
+>> For the record, Coverity scan id is CID 1457773.
+>> 
+>>  drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>> 
+>> diff --git 
+>> a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c 
+>> b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c
+>> index e4cff7abb348..047b403c61db 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c
+>> @@ -60,6 +60,8 @@ dr_rule_create_collision_htbl(struct mlx5dr_matcher 
+>> *matcher,
+>>  	mlx5dr_ste_set_miss_addr(hw_ste, 
+>> nic_matcher->e_anchor->chunk->icm_addr);
+>>  	mlx5dr_htbl_get(new_htbl);
+>> 
+>> +	kfree(new_htbl);
+>> +
+>>  	return ste;
+>>  }
+>> 
+>> --
+>> 2.24.1
+>> 
+>> 
+> The fix looks incorrect to me.
+> The table is pointed by each ste in the ste_arr, ste->new_htbl and 
+> being
+> freed on mlx5dr_htbl_put.
+> We tested kmemleak a few days ago and came clean.
+> usually coverity is not wrong, but in this case I don't see the bug...
 
-> Return the rpmsg buffer MTU for sending message, so rpmsg users
-> can split a long message in several sub rpmsg buffers.
-> 
+Hello Alex,
 
-I won't merge this new api without a client, and I'm still concerned
-about the details.
+To my experience, the refcounting logic is complex and spread out to 
+multiple files.
 
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> ---
->  V1 to V2
-> 
->   V1 patch:https://lore.kernel.org/patchwork/patch/1124684/
->   - Change patch title,
->   - as not solution today to support MTU on GLINK make ops optional,
->     RPMsg client API returns -ENOTSUPP in this case,
->   - suppress smd and glink patches.
+It might be a false positive on Coverity's side.
 
-That's ok.
+If it certainly sounds wrong, we can ignore this.
 
-> ---
->  drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
->  drivers/rpmsg/rpmsg_internal.h   |  2 ++
->  drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
->  include/linux/rpmsg.h            | 10 ++++++++++
->  4 files changed, 43 insertions(+)
-> 
-> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-> index e330ec4dfc33..a6ef54c4779a 100644
-> --- a/drivers/rpmsg/rpmsg_core.c
-> +++ b/drivers/rpmsg/rpmsg_core.c
-> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
->  }
->  EXPORT_SYMBOL(rpmsg_trysend_offchannel);
->  
-> +/**
-> + * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
-> + * @ept: the rpmsg endpoint
-> + *
-> + * This function returns maximum buffer size available for a single message.
-> + *
-> + * Return: the maximum transmission size on success and an appropriate error
-> + * value on failure.
+Thanks
 
-Is the expectation that a call to rpmsg_send() with this size will
-eventually succeed?
-
-> + */
-[..]
-> +static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept)
-> +{
-> +	struct rpmsg_device *rpdev = ept->rpdev;
-> +	struct virtio_rpmsg_channel *vch = to_virtio_rpmsg_channel(rpdev);
-> +
-> +	return vch->vrp->buf_size - sizeof(struct rpmsg_hdr);
-
-I'm still under the impression that the rpmsg protocol doesn't have to
-operate on fixed size messages. Would this then return vrp->num_bufs *
-vrp->buf_size / 2 - sizeof(rpmsg_hdr)?
-
-> +}
-> +
-
-Regards,
-Bjorn
+-- 
+Cengiz Can
+@cengiz_io
