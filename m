@@ -2,162 +2,91 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68681C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:02:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2649C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AE912075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:02:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578952937;
-	bh=OgKDay9p8f2ObZyGcicQ+gy/7tCHu46EYwzbBIFy4Bw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=0r244LcMbDDox5ZXXtwmtYuD04NnAlfwofmDFsV9qVP9MRHmoleh5LPpt79ftg03h
-	 K5/sspXrIv2xc/7p/N244tLsXkaB4fPv9Rdaw6fL6VGgLfFGJuZ/rW5ZhtDdPTmvf3
-	 ekjLng2rswjXH4l11zLE1Dh//a+d7Myq3VmNZ99Y=
+	by mail.kernel.org (Postfix) with ESMTP id CB5972072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbgAMWCQ (ORCPT
+        id S1728946AbgAMWDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:02:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34970 "EHLO mail.kernel.org"
+        Mon, 13 Jan 2020 17:03:19 -0500
+Received: from sauhun.de ([88.99.104.3]:43048 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728769AbgAMWCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:02:15 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D42022072B;
-        Mon, 13 Jan 2020 22:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578952934;
-        bh=OgKDay9p8f2ObZyGcicQ+gy/7tCHu46EYwzbBIFy4Bw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pHT5bBh0iez8IKcr+GlyuKn5q/SAP7pNTjWGjKMvkbXrd1UI/wSmspGEACN7yYH+I
-         /1/yBtWWtpU2t/cc18f2m4bbAs+Isbe3BZKwPYV8SnxhrkdWXoRJX+Oftin0kAmLtO
-         +Wkfw8ev1pXrvi9Or7YvB4Zb1BizyIiaKPqXo3EY=
-Date:   Mon, 13 Jan 2020 22:02:08 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Olivier MOYSAN <olivier.moysan@st.com>
-Cc:     "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Fabrice GASNIER <fabrice.gasnier@st.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Subject: Re: [PATCH v2] iio: adc: stm32-dfsdm: adapt sampling rate to
- oversampling ratio
-Message-ID: <20200113220208.6471ba42@archlinux>
-In-Reply-To: <9b7e2161-1a31-8d69-52f9-ae9dedc902e3@st.com>
-References: <20191127131008.18896-1-olivier.moysan@st.com>
-        <9b7e2161-1a31-8d69-52f9-ae9dedc902e3@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1728769AbgAMWDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 17:03:18 -0500
+Received: from localhost (p54B332D5.dip0.t-ipconnect.de [84.179.50.213])
+        by pokefinder.org (Postfix) with ESMTPSA id 02A7E2C06DA;
+        Mon, 13 Jan 2020 23:03:15 +0100 (CET)
+Date:   Mon, 13 Jan 2020 23:03:15 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 4/8] i2c: tegra: Support atomic transfers
+Message-ID: <20200113220315.GB2689@ninjato>
+References: <20200112171430.27219-1-digetx@gmail.com>
+ <20200112171430.27219-5-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mxv5cy4qt+RJ9ypb"
+Content-Disposition: inline
+In-Reply-To: <20200112171430.27219-5-digetx@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 10:06:13 +0000
-Olivier MOYSAN <olivier.moysan@st.com> wrote:
 
-> Hi Jonathan, all,
-> 
-> Kind reminder on this patch.
-Thanks!
+--mxv5cy4qt+RJ9ypb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Applied to the togreg branch of iio.git and pushed out of testing
-to give the build bots a brief period to poke at it.
+On Sun, Jan 12, 2020 at 08:14:26PM +0300, Dmitry Osipenko wrote:
+> System shutdown may happen with interrupts being disabled and in this case
+> I2C core rejects transfers if atomic transfer isn't supported by driver.
 
-Sorry again for the delay
+Well, not quite. The core complains about it nowadays, but does not
+reject messages. It will try the same behaviour as before. It will just
+inform the user that somethings is tried which may not work. I probably
+should update the error message printed saying that the transfer is
+still tried.
 
-Thanks,
+> There were several occurrences where I found my Nexus 7 completely
+> discharged despite of being turned off and then one day I spotted this in
+> the log:
 
-Jonathan
+Given my reasoning above, that should have happened before the warning
+was printed as well? Because same behaviour. I'd be surprised if there
+was a change...
 
 
-> Regards
-> Olivier
-> 
-> On 11/27/19 2:10 PM, Olivier Moysan wrote:
-> > Update sampling rate when oversampling ratio is changed
-> > through the IIO ABI.
-> >
-> > Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-> > ---
-> > changes in version 2:
-> > - correct title
-> > ---
-> >   drivers/iio/adc/stm32-dfsdm-adc.c | 32 ++++++++++++++++++-------------
-> >   1 file changed, 19 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> > index 0339ecdd06bd..87a842507509 100644
-> > --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> > +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> > @@ -1221,14 +1221,32 @@ static int stm32_dfsdm_write_raw(struct iio_dev *indio_dev,
-> >   	unsigned int spi_freq;
-> >   	int ret = -EINVAL;
-> >   
-> > +	switch (ch->src) {
-> > +	case DFSDM_CHANNEL_SPI_CLOCK_INTERNAL:
-> > +		spi_freq = adc->dfsdm->spi_master_freq;
-> > +		break;
-> > +	case DFSDM_CHANNEL_SPI_CLOCK_INTERNAL_DIV2_FALLING:
-> > +	case DFSDM_CHANNEL_SPI_CLOCK_INTERNAL_DIV2_RISING:
-> > +		spi_freq = adc->dfsdm->spi_master_freq / 2;
-> > +		break;
-> > +	default:
-> > +		spi_freq = adc->spi_freq;
-> > +	}
-> > +
-> >   	switch (mask) {
-> >   	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> >   		ret = iio_device_claim_direct_mode(indio_dev);
-> >   		if (ret)
-> >   			return ret;
-> > +
-> >   		ret = stm32_dfsdm_compute_all_osrs(indio_dev, val);
-> > -		if (!ret)
-> > +		if (!ret) {
-> > +			dev_dbg(&indio_dev->dev,
-> > +				"Sampling rate changed from (%u) to (%u)\n",
-> > +				adc->sample_freq, spi_freq / val);
-> >   			adc->oversamp = val;
-> > +			adc->sample_freq = spi_freq / val;
-> > +		}
-> >   		iio_device_release_direct_mode(indio_dev);
-> >   		return ret;
-> >   
-> > @@ -1240,18 +1258,6 @@ static int stm32_dfsdm_write_raw(struct iio_dev *indio_dev,
-> >   		if (ret)
-> >   			return ret;
-> >   
-> > -		switch (ch->src) {
-> > -		case DFSDM_CHANNEL_SPI_CLOCK_INTERNAL:
-> > -			spi_freq = adc->dfsdm->spi_master_freq;
-> > -			break;
-> > -		case DFSDM_CHANNEL_SPI_CLOCK_INTERNAL_DIV2_FALLING:
-> > -		case DFSDM_CHANNEL_SPI_CLOCK_INTERNAL_DIV2_RISING:
-> > -			spi_freq = adc->dfsdm->spi_master_freq / 2;
-> > -			break;
-> > -		default:
-> > -			spi_freq = adc->spi_freq;
-> > -		}
-> > -
-> >   		ret = dfsdm_adc_set_samp_freq(indio_dev, val, spi_freq);
-> >   		iio_device_release_direct_mode(indio_dev);
-> >   		return ret;  
+--mxv5cy4qt+RJ9ypb
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl4c6SMACgkQFA3kzBSg
+KbYdthAAktOJQ5liEIA8J0/p6JdKT4r55B/YAQUW+Vd92Za2knjAl4G08A+jI5m9
+yY+R3VsS8liSafqyrpYJayW3MjBr609srwUidjT466OnnbrlHNUWP++bMwc2bd4r
+D5GJnDeVtjroIHk5pFj4558MS/a4sNkw91dxl/17f4/pyUQknD3mECg9riV+fTx/
+jCMJC75pbI/fc8kbfE67kNUUs9sXZqgfvnJkwtAQ9fwv1k00qD9WH9Hh5dhI2Hra
+H6FInqMrsW+bGYXIK4L9WlNejumo7nPjP1sv3pbq7pjt+EXzHwRO4oNwHWGm41jL
+7nZg42H5wRYislDFUdxjQgTnwHa6zUdhQONt6i7ZPYoTOSh9nm/jWpLJBvKki9BI
+sdslfOHTvrIKcWtDwb77Afv57//ZRX1nMUk0+qun7oIGORjFtCT4QyB1gAWdehTw
+Wh4hiTLQrAmUj7l8XeVjiKjtcqHxJn2rG8MK/mQgjskdpH9wrb1l7n2Ckyyk8K0y
+y59nhZkDlEdamuwYcmQKrmw8UJGWASoG45ULHkwKKb+I90Jp47H9ShlB13Lja0a6
+/+/FWKMEXNR9bRQ3NStOswfPMPJM2gzgm2YEbXLkaBCmz6i6zztuBzX8WIHPhmwx
+4OtSMUKr51lY88iBWl2XtTr819iMR8C+ewU1I2R309Q7W5Wr18Q=
+=ZZXy
+-----END PGP SIGNATURE-----
+
+--mxv5cy4qt+RJ9ypb--
