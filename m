@@ -2,77 +2,125 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C364C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A92C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7024520678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:30:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OvKpla9O"
+	by mail.kernel.org (Postfix) with ESMTP id 2FF7F20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:30:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgAMXaV (ORCPT
+        id S1729325AbgAMXau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 18:30:21 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:35538 "EHLO vps0.lunn.ch"
+        Mon, 13 Jan 2020 18:30:50 -0500
+Received: from foss.arm.com ([217.140.110.172]:45614 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727282AbgAMXaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 18:30:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=QwAoXOqjyyg/vJ5GZRN0tl9HB/BzOvUwdKHRpL6PwmI=; b=OvKpla9ORTpemj4RUAFr9Do/Ej
-        d5IvnR79Rtu/GSeeBW7wb0+8Te29GyWtZruIrafjHVaz7flLIPYt/Z6Y9Yws0FHohEyeDONTTV/6q
-        9DEyMxjGCmEaRFB9inmS+f/SSN+37wW0i66XpBaMOSSqtrIwJVnXEan9IFrMDtzspMsw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ir99v-0008CN-Sw; Tue, 14 Jan 2020 00:30:11 +0100
-Date:   Tue, 14 Jan 2020 00:30:11 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Horatiu Vultur <horatiu.vultur@microchip.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bridge@lists.linux-foundation.org, davem@davemloft.net,
-        roopa@cumulusnetworks.com, nikolay@cumulusnetworks.com,
-        jakub.kicinski@netronome.com, vivien.didelot@gmail.com,
-        olteanv@gmail.com, anirudh.venkataramanan@intel.com,
-        dsahern@gmail.com, jiri@resnulli.us, ivecera@redhat.com,
-        UNGLinuxDriver@microchip.com
-Subject: Re: [RFC net-next Patch v2 4/4] net: bridge: mrp: switchdev: Add HW
- offload
-Message-ID: <20200113233011.GF11788@lunn.ch>
-References: <20200113124620.18657-1-horatiu.vultur@microchip.com>
- <20200113124620.18657-5-horatiu.vultur@microchip.com>
- <20200113140053.GE11788@lunn.ch>
- <20200113225751.jkkio4rztyuff4xj@soft-dev3.microsemi.net>
+        id S1727282AbgAMXat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 18:30:49 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D562711B3;
+        Mon, 13 Jan 2020 15:30:48 -0800 (PST)
+Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BA11C3F68E;
+        Mon, 13 Jan 2020 15:30:47 -0800 (PST)
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, will@kernel.org, maz@kernel.org,
+        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
+        mark.rutland@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH v3 0/7] arm64: Fix support for no FP/SIMD
+Date:   Mon, 13 Jan 2020 23:30:16 +0000
+Message-Id: <20200113233023.928028-1-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113225751.jkkio4rztyuff4xj@soft-dev3.microsemi.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Horatiu
+This series fixes the support for systems without FP/SIMD unit.
 
-It has been said a few times what the basic state machine should be in
-user space. A pure software solution can use raw sockets to send and
-receive MRP_Test test frames. When considering hardware acceleration,
-the switchdev API you have proposed here seems quite simple. It should
-not be too hard to map it to a set of netlink messages from userspace.
+We detect the absence of FP/SIMD after the SMP cpus are brought
+online (i.e, SYSTEM scope). This means, we allow a hotplugged
+CPU to boot successfully even if it doesn't have the FP/SIMD
+when we have decided otherwise at boot and have now advertised
+the ELF HWCAP for the userspace. Fix this by turning this to a
+BOOT_RESTRICTED_CPU_LOCAL feature to allow the detection of the
+feature the very moment a CPU turns up without FP/SIMD and also
+prevent a conflict after SMP boot.
 
-Yet your argument for kernel, not user space, is you are worried about
-the parameters which need to be passed to the hardware offload engine.
-In order to win the argument for a kernel solution, we are going to
-need a better idea what you think this problem is. The MRP_Test is TLV
-based. Are there other things which could be in this message? Is that
-what you are worried about?
+The COMPAT ELF_HWCAPs were statically set to indicate the
+availability of VFP. Make it dynamic to set the appropriate
+bits.
 
-Thanks
-     Andrew
+Also, some of the early kernel threads (including init) could run
+with their TIF_FOREIGN_FPSTATE flag set which might be inherited
+by applications forked by them (e.g, modprobe from initramfs).
+Now, if we detect the absence of FP/SIMD we stop clearing the
+TIF flag in fpsimd_restore_current_state(). This could cause
+the applications stuck in do_notify_resume() looping forever
+to clear the flag. Fix this by clearing the TIF flag in
+fpsimd_restore_current_state() for the tasks that may
+have it set.
+
+This series also categorises the functions dealing with fpsimd
+into two :
+
+ - Call permitted with missing FP/SIMD support. But we bail
+   out early in the function. This is for functions exposed
+   to the generic kernel code.
+
+ - Calls not permitted with missing FP/SIMD support. These
+   are functions which deal with the CPU/Task FP/SIMD registers
+   and/or meta-data. The callers must check for the support
+   before invoking them.
+
+See the last patch in the series for details. 
+
+Also make sure that the SVE is initialised where supported,
+before the FP/SIMD is used by the kernel.
+
+Tested with debian armel initramfs and rootfs. The arm64 doesn't
+have a soft-float ABI, thus haven't tested it with 64bit userspace.
+
+Applies on linux-aarch64 for-next/core
+
+Changes since v2:
+ - Rebase on to for-next/core, resolved conflict with the E0PD
+   handling changes
+ - Address comments from Catalin
+     - Remove warnings from static functions
+     - Add WARN_ON in may_use_simd() if called before initializing
+       capabilities.
+ - Add "active" hook for FP regset
+ - Remove dangerous WARN_ON from KVM, replaced with an additional
+   check to make sure that the FP/SIMD is always trapped.
+ - Added tags from Catalin, Marc
+
+Suzuki K Poulose (7):
+  arm64: Introduce system_capabilities_finalized() marker
+  arm64: fpsimd: Make sure SVE setup is complete before SIMD is used
+  arm64: cpufeature: Fix the type of no FP/SIMD capability
+  arm64: cpufeature: Set the FP/SIMD compat HWCAP bits properly
+  arm64: ptrace: nofpsimd: Fail FP/SIMD regset operations
+  arm64: signal: nofpsimd: Handle fp/simd context for signal frames
+  arm64: nofpsmid: Handle TIF_FOREIGN_FPSTATE flag cleanly
+
+ arch/arm64/include/asm/cpufeature.h |  5 +++
+ arch/arm64/include/asm/kvm_host.h   |  2 +-
+ arch/arm64/include/asm/simd.h       |  8 +++-
+ arch/arm64/kernel/cpufeature.c      | 67 +++++++++++++++++++----------
+ arch/arm64/kernel/fpsimd.c          | 30 +++++++++++--
+ arch/arm64/kernel/process.c         |  2 +-
+ arch/arm64/kernel/ptrace.c          | 21 +++++++++
+ arch/arm64/kernel/signal.c          |  6 ++-
+ arch/arm64/kernel/signal32.c        |  4 +-
+ arch/arm64/kvm/hyp/switch.c         | 10 ++++-
+ 10 files changed, 121 insertions(+), 34 deletions(-)
+
+-- 
+2.24.1
+
