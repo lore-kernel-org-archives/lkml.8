@@ -2,99 +2,145 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A009AC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23D2C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:32:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72B85207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77DCA21556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:32:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="fPEt1IBW"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VyN/ooBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgAMS3N (ORCPT
+        id S1728800AbgAMScj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:29:13 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:35076 "EHLO vps0.lunn.ch"
+        Mon, 13 Jan 2020 13:32:39 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:55866 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728516AbgAMS3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:29:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=k0IAJpagMBUGdKxmx+KUKE83rGMLlu0VL7Kzi8GGMgI=; b=fPEt1IBW3wyg39jdDUMctfq575
-        wkW5rzJLEqWNQ6bmJ/X+IoY47PG7NUxR9NJq55xweYwPPY3PTa0N33HRvX2BtJbkXRIlr8P6hX8Ew
-        +M3b+edWLo0OzrS+IwAfCEGC6B6rhKJm4Oq4I3C7akx4xSavYPo/TsAIJtwZ5rFnoByg=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1ir4SX-00078j-Cr; Mon, 13 Jan 2020 19:29:05 +0100
-Date:   Mon, 13 Jan 2020 19:29:05 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     netdev@vger.kernel.org, cphealy@gmail.com,
-        rmk+kernel@armlinux.org.uk, kuba@kernel.org,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] net: phy: Maintain MDIO device and bus
- statistics
-Message-ID: <20200113182905.GB26448@lunn.ch>
-References: <20200113045325.13470-1-f.fainelli@gmail.com>
- <20200113132152.GB11788@lunn.ch>
- <ebeb2bb2-c816-6cb8-acaa-cfd86878678d@gmail.com>
+        id S1728516AbgAMScj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 13:32:39 -0500
+Received: from zn.tnic (p200300EC2F05D30049A87F91DFBF49F4.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:d300:49a8:7f91:dfbf:49f4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 63B0C1EC0CD0;
+        Mon, 13 Jan 2020 19:32:36 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578940356;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=RBW1TCM6YPQlrLEyu7NFV1MDLei+4JpYY2ymbBbRI68=;
+        b=VyN/ooBc5iiyPlTUlqldiBTCt29HwDoTiD6Ey/I6uzPt3mCbCr8TL2UUjlo4TUJ5+pJweE
+        AyoXTnRkd/eVyf9RHRFAZ4Ccl+P9GC0chkkXxYIZELQ+MiVviifPcx7HOFq0CoovzMgFdB
+        G8y+SSry8iOc4sNMcE6Ds+Vtkn0YQNM=
+Date:   Mon, 13 Jan 2020 19:32:28 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v5 17/19] KVM: VMX: Use VMX_FEATURE_* flags to define
+ VMCS control bits
+Message-ID: <20200113183228.GO13310@zn.tnic>
+References: <20191221044513.21680-1-sean.j.christopherson@intel.com>
+ <20191221044513.21680-18-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ebeb2bb2-c816-6cb8-acaa-cfd86878678d@gmail.com>
+In-Reply-To: <20191221044513.21680-18-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> For MDIO switches you would usually have the mdio_device claim the
-> pseudo PHY address and all other MDIO addresses should correspond to
-> built-in PHYs, for which we also have mdio_device instances, is there a
-> case that I am missing?
-
-Marvell switches don't work like this. It varies from family to
-family. The 6390 family for example has address 0x0-0xa representing
-registers for ports 0 to 10, 32 registers per port. address 0x1b and
-0x1c contain registers for global configuration. 0x1e is used to
-communication with the internal MCU, and 0x1f is the TCAM. The
-internal PHYs are not in this MDIO address space at all, there is
-another MDIO bus, implemented by a couple of the global registers.
-
-The 6352 has a different layout. 0x0-0x4 represent the internal
-PHYs. 0xf is the SERDES for SGMII, 0x10-x016 are the port registers,
-0x1b 0x1c are global.
-
-There is one family, i don't remember which, which uses 16
-addresses. And you can put two of them on one MDIO bus.
-
-In each of these cases, we have one mdiodev, per switch, claiming a
-single address, generally 0.
-
-Other vendors switches are similar, using multiple addresses on one
-bus.
-
-> If the answer to my question above is that we still have reads to
-> addresses for which we do not have mdio_device (which we might very well
-> have), then we could either:
+On Fri, Dec 20, 2019 at 08:45:11PM -0800, Sean Christopherson wrote:
+> Define the VMCS execution control flags (consumed by KVM) using their
+> associated VMX_FEATURE_* to provide a strong hint that new VMX features
+> are expected to be added to VMX_FEATURE and considered for reporting via
+> /proc/cpuinfo.
 > 
-> - create <mdio_bus>:<address>/statistics/ folders even for non-existent
-> devices, but just to track the per-address statistics
-> - create <mdio_bus>/<address>/statistics and when a mdio_device instance
-> exists we symbolic link <mdio_bus>:<address>/statistics ->
-> ../<mdio_bus>/<addr>/statistics
+> No functional change intended.
 > 
-> Would that work?
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/include/asm/vmx.h | 105 +++++++++++++++++++------------------
+>  1 file changed, 55 insertions(+), 50 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+> index 1835767aa335..9fbba31be825 100644
+> --- a/arch/x86/include/asm/vmx.h
+> +++ b/arch/x86/include/asm/vmx.h
+> @@ -15,67 +15,70 @@
+>  #include <linux/bitops.h>
+>  #include <linux/types.h>
+>  #include <uapi/asm/vmx.h>
+> +#include <asm/vmxfeatures.h>
+> +
+> +#define VMCS_CONTROL_BIT(x)	BIT(VMX_FEATURE_##x & 0x1f)
+>  
+>  /*
+>   * Definitions of Primary Processor-Based VM-Execution Controls.
+>   */
+> -#define CPU_BASED_VIRTUAL_INTR_PENDING          0x00000004
+> -#define CPU_BASED_USE_TSC_OFFSETING             0x00000008
+> -#define CPU_BASED_HLT_EXITING                   0x00000080
+> -#define CPU_BASED_INVLPG_EXITING                0x00000200
+> -#define CPU_BASED_MWAIT_EXITING                 0x00000400
+> -#define CPU_BASED_RDPMC_EXITING                 0x00000800
+> -#define CPU_BASED_RDTSC_EXITING                 0x00001000
+> -#define CPU_BASED_CR3_LOAD_EXITING		0x00008000
+> -#define CPU_BASED_CR3_STORE_EXITING		0x00010000
+> -#define CPU_BASED_CR8_LOAD_EXITING              0x00080000
+> -#define CPU_BASED_CR8_STORE_EXITING             0x00100000
+> -#define CPU_BASED_TPR_SHADOW                    0x00200000
+> -#define CPU_BASED_VIRTUAL_NMI_PENDING		0x00400000
+> -#define CPU_BASED_MOV_DR_EXITING                0x00800000
+> -#define CPU_BASED_UNCOND_IO_EXITING             0x01000000
+> -#define CPU_BASED_USE_IO_BITMAPS                0x02000000
+> -#define CPU_BASED_MONITOR_TRAP_FLAG             0x08000000
+> -#define CPU_BASED_USE_MSR_BITMAPS               0x10000000
+> -#define CPU_BASED_MONITOR_EXITING               0x20000000
+> -#define CPU_BASED_PAUSE_EXITING                 0x40000000
+> -#define CPU_BASED_ACTIVATE_SECONDARY_CONTROLS   0x80000000
+> +#define CPU_BASED_VIRTUAL_INTR_PENDING          VMCS_CONTROL_BIT(VIRTUAL_INTR_PENDING)
+> +#define CPU_BASED_USE_TSC_OFFSETING             VMCS_CONTROL_BIT(TSC_OFFSETTING)
 
-Keeping the statistics for all 32 addresses in the struct mii_bus
-would be good. Then directories 0-31. And symlinks. Yes, that is good.
+checkpatch correctly complains here:
 
-      Andrew
+WARNING: 'OFFSETING' may be misspelled - perhaps 'OFFSETTING'?
+#80: FILE: arch/x86/include/asm/vmx.h:26:
++#define CPU_BASED_USE_TSC_OFFSETING             VMCS_CONTROL_BIT(TSC_OFFSETTING)
+
+and VMX_FEATURE_TSC_OFFSETTING is correct.
+
+Should I fix it up to CPU_BASED_USE_TSC_OFFSETTING while applying?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
