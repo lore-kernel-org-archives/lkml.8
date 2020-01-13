@@ -2,97 +2,170 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB605C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:06:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7420C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC8F207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:06:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kSa0JUdd"
+	by mail.kernel.org (Postfix) with ESMTP id 83D7F20CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbgAMMGJ (ORCPT
+        id S1728775AbgAMMGY convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:06:09 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40261 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgAMMGJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:06:09 -0500
-Received: by mail-io1-f67.google.com with SMTP id x1so9488566iop.7
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:06:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=CZK7dKMZNH+opiefMkjMH6OKZgUdNCuAi9u4ncS4wdg=;
-        b=kSa0JUdd3YnKxBRGqACx+Ne5dK/rMCJJkhZf559JIGUykLgOXhxeAww20f30yj00Bn
-         aaCPzWBAaATN96iT3JLBrb8Q8+wA4cuzEY752aDWIytReQhqduCxfgLL3VAs1+690vzV
-         v3jTZZBJerV+wMtuWDit2M8Oiy2RXQwgZTMdAE+TzwGdKynmfmeZaEURJK4y/RCfZfhy
-         TFM+OwRecfareeXROEWfq1q0F7cs/L7lGW6/p1bTcdObTHB6Fvn0FjrHzr0euJwZ/arJ
-         +rl5bOvHrMYriqBi4kmvdcn7nmJVmL0smYFQlMZ3P6z714BgO5wPlVS48N3mzgok5/Mi
-         HuXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=CZK7dKMZNH+opiefMkjMH6OKZgUdNCuAi9u4ncS4wdg=;
-        b=CZTSA2EEEwujjqd6PAVACKFfA8b9k8c4RqQIRF32scoF7hMKBaVCc4XXbf+riYLqbs
-         KGbTQqd7GYxBB9JaSTKTar/6Q7zxDbZ4ZF5UKPwBvxBNqQur0Ekvle/jrW/1d2UdoV7q
-         W44ZbUk8OSoc4r8CIrAPvn7ufJjkg1/shbDwPzO2/YN5aLprRtVaodg8tLC3zfYe+OmZ
-         pYsYIORkNjXXrZj49BknNmrUKKjAe29rZhpfDUbdwAfuOQbO+I9HXgfnUOnb3RTBTMui
-         J2VuxNPSkJFzGnlMXxn1EsPpvxQwchkSlbsw6yVGjqYUha0Q/Z3+pqtGYcsfRG1LG3zN
-         xsgw==
-X-Gm-Message-State: APjAAAXfM5YfXLsiLusH0CVDw722fwpJ3K7+7T0MdAgm5ZMojdW46+Ff
-        Sw7Qm633ZkqnDxHvM/nLbAr3HFEUHQvslChLptd6MA==
-X-Google-Smtp-Source: APXvYqyv0BV7Oc5zyIS8CA5WnrzdTPGhbYbpOIMjm/w4RLq5BoeVmpILQ0dErwSOcrPrx8FusRqpyrwOSancPdZoveA=
-X-Received: by 2002:a6b:700e:: with SMTP id l14mr12995432ioc.170.1578917168494;
- Mon, 13 Jan 2020 04:06:08 -0800 (PST)
+        Mon, 13 Jan 2020 07:06:24 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2987 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728755AbgAMMGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 07:06:24 -0500
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 5E17B8A45B5013B38E2E;
+        Mon, 13 Jan 2020 20:06:22 +0800 (CST)
+Received: from DGGEMM506-MBX.china.huawei.com ([169.254.3.174]) by
+ DGGEMM403-HUB.china.huawei.com ([10.3.20.211]) with mapi id 14.03.0439.000;
+ Mon, 13 Jan 2020 20:06:12 +0800
+From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+CC:     Linuxarm <linuxarm@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] cpu-topology: Skip the exist but not possible cpu
+ nodes
+Thread-Topic: [PATCH v2] cpu-topology: Skip the exist but not possible cpu
+ nodes
+Thread-Index: AQHVyExqmWOdrHr7k0CDA2xXZLn68Kfn3yMAgAChbkA=
+Date:   Mon, 13 Jan 2020 12:06:11 +0000
+Message-ID: <678F3D1BB717D949B966B68EAEB446ED340E41D1@DGGEMM506-MBX.china.huawei.com>
+References: <1578725620-39677-1-git-send-email-prime.zeng@hisilicon.com>
+ <20200113101922.GE52694@bogus>
+In-Reply-To: <20200113101922.GE52694@bogus>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.74.221.187]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <CAFZWReakYoDcSgEXw-d-SPAzum=fw=uLo7sh8OMqZV6FjP1ymA@mail.gmail.com>
-In-Reply-To: <CAFZWReakYoDcSgEXw-d-SPAzum=fw=uLo7sh8OMqZV6FjP1ymA@mail.gmail.com>
-From:   Uday R <opensource.linuz@gmail.com>
-Date:   Mon, 13 Jan 2020 17:35:56 +0530
-Message-ID: <CAFZWReYF83JPvnqqVPgw88UBwQwJkeDk0wMTAeOdWDe-xoYtzA@mail.gmail.com>
-Subject: Re: Issue with Kexec memory allocation
-To:     linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Any help ?
+> -----Original Message-----
+> From: Sudeep Holla [mailto:sudeep.holla@arm.com]
+> Sent: Monday, January 13, 2020 6:19 PM
+> To: Zengtao (B)
+> Cc: Linuxarm; Greg Kroah-Hartman; Rafael J. Wysocki; Sudeep Holla;
+> linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH v2] cpu-topology: Skip the exist but not possible cpu
+> nodes
+> 
+> On Sat, Jan 11, 2020 at 02:53:40PM +0800, Zeng Tao wrote:
+> > When CONFIG_NR_CPUS is smaller than the cpu nodes defined in the
+> device
+> > tree, all the cpu nodes parsing will fail.
+> > And this is not reasonable for a legal device tree configs.
+> > In this patch, skip such cpu nodes rather than return an error.
+> > With CONFIG_NR_CPUS = 128 and cpus nodes num in device tree is
+> 130,
+> > The following warning messages will be print during boot:
+> > CPU node for /cpus/cpu@128 exist but the possible cpu range
+> is :0-127
+> > CPU node for /cpus/cpu@129 exist but the possible cpu range
+> is :0-127
+> > CPU node for /cpus/cpu@130 exist but the possible cpu range
+> is :0-127
+> >
+> > Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+> > ---
+> > Changelog:
+> > v1->v2:
+> >  -Remove redundant -ENODEV assignment in get_cpu_for_node
+> >  -Add comment to describe the get_cpu_for_node return values
+> >  -Add skip process for cpu threads
+> >  -Update the commit log with more detail
+> > ---
+> >  drivers/base/arch_topology.c | 37
+> +++++++++++++++++++++++++++++--------
+> >  1 file changed, 29 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/base/arch_topology.c
+> b/drivers/base/arch_topology.c
+> > index 5fe44b3..01f0e21 100644
+> > --- a/drivers/base/arch_topology.c
+> > +++ b/drivers/base/arch_topology.c
+> > @@ -248,22 +248,44 @@ core_initcall(free_raw_capacity);
+> >  #endif
+> >
+> >  #if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
+> > +/*
+> > + * This function returns the logic cpu number of the node.
+> > + * There are totally three kinds of return values:
+> > + * (1) logic cpu number which is > 0.
+> > + * (2) -ENDEV when the node is valid one which can be found in the
+> device tree
+> > + * but there is no possible cpu nodes to match, when the
+> CONFIG_NR_CPUS is
+> > + * smaller than cpus node numbers in device tree, this will happen.
+> It's
+> > + * suggested to just ignore this case.
+> 
+> s/ENDEV/ENODEV/
+Good catch, thanks.
 
-Thanks,
-RK
+> 
+> Also as I mentioned earlier, I prefer not to add any extra logic here
+> other than the above comment to make it explicit. This triggers
+> unnecessary
+> warnings when someone boots with limited CPUs for valid reasons.
+> 
 
-On Mon, Jan 6, 2020 at 12:43 PM Uday R <opensource.linuz@gmail.com> wrote:
->
-> Hello folks,
->
-> I am using kexec to load into the new kernel from the existing kernel.
-> My vmlinuz image size is 6.6MB, initrd size is 18MB, and the root file
-> system size is 715MB.  I use kexec command to load the new kernel into
-> memory. I observed that before calling kexec if the available memory
-> is less than 1.33GB then kexec lands into an out of memory issue
-> effectively kexec being killed by OOM-KILLER.  I dont get into out of
-> memory issue if i have memory >=1.33GB.
->
-> My question is why kexec tries to over allocate memory when the
-> available memory is less than 1.33GB and gets the available memory to
-> ZERO.
-> In case if the available memory is >= 1.33GB before calling kexec,
-> After kexec load, i see the memory consumed by kexec load is
-> approximately equal to size of "linux+initrd+root file system".
->
-> Is there a bug in the 'Kexec' code and had been fixed ?
->
-> Note: i am using the kernel from a vendor, Just wanted to know if
-> there is no such issue in mainstream code.
->
-> Thanks in Advance,
-> Uday
+So , what 's your suggestion here? Just keep the comments but remove
+ the warning message print? 
+> 
+> > + * (3) -EINVAL when other errors occur.
+> > + */
+> >  static int __init get_cpu_for_node(struct device_node *node)
+> >  {
+> > -	struct device_node *cpu_node;
+> > +	struct device_node *cpu_node, *t;
+> >  	int cpu;
+> > +	bool found = false;
+> >
+> >  	cpu_node = of_parse_phandle(node, "cpu", 0);
+> >  	if (!cpu_node)
+> > -		return -1;
+> > +		return -EINVAL;
+> > +
+> > +	for_each_of_cpu_node(t)
+> > +		if (t == cpu_node) {
+> > +			found = true;
+> > +			break;
+> > +		}
+> > +
+> > +	if (!found) {
+> > +		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
+> > +		return -EINVAL;
+> > +	}
+> >
+> >  	cpu = of_cpu_node_to_id(cpu_node);
+> >  	if (cpu >= 0)
+> >  		topology_parse_cpu_capacity(cpu_node, cpu);
+> >  	else
+> > -		pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
+> > +		pr_warn("CPU node for %pOF exist but the possible cpu range
+> is :%*pbl\n",
+> > +			cpu_node, cpumask_pr_args(cpu_possible_mask));
+> >
+> > -	of_node_put(cpu_node);
+> 
+> Why is this dropped ?
+
+It's unnecessary here since no one get the node ref.
+
+Regards
+Zengtao 
