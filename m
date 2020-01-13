@@ -2,110 +2,154 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF401C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB282C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 973362084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A105F2081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:15:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="HM65lqkX"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="h/SuUs9Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbgAMKON (ORCPT
+        id S1726934AbgAMKPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:14:13 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:36366 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726133AbgAMKON (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:14:13 -0500
-Received: from zn.tnic (p200300EC2F05D30079493D5CC5A0A656.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:d300:7949:3d5c:c5a0:a656])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C93B61EC0CBF;
-        Mon, 13 Jan 2020 11:14:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1578910451;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=uyzwFFgXjMyE/RLASJQrmO0cgJJvf3zehRKlqFezuOI=;
-        b=HM65lqkXVXxmqN2uYJ5CfMDjkPeZpYqMkntGHVO8IzhYu54898W9e5mhlmyqtL2gGDdWCa
-        Iwe/Kfh4DKbNvSUmTN8SByJy82eXK9nFC5BpARLpkh/4iKlyD9NSum4q1a7uHLTo/DC2CD
-        Tjd0kXRfMGkUsf7ql1D5Y3+h7Fa8aJ4=
-Date:   Mon, 13 Jan 2020 11:14:03 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Jiang <dave.jiang@intel.com>
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        vkoul@kernel.org, dan.j.williams@intel.com, tony.luck@intel.com,
-        jing.lin@intel.com, ashok.raj@intel.com, sanjay.k.kumar@intel.com,
-        megha.dey@intel.com, jacob.jun.pan@intel.com, yi.l.liu@intel.com,
-        tglx@linutronix.de, mingo@redhat.com, fenghua.yu@intel.com,
-        hpa@zytor.com
-Subject: Re: [PATCH v4 1/9] x86/asm: add iosubmit_cmds512() based on
- MOVDIR64B CPU instruction
-Message-ID: <20200113101403.GD13310@zn.tnic>
-References: <157842940405.27241.1146722525082010210.stgit@djiang5-desk3.ch.intel.com>
- <157842965854.27241.2519525691634439881.stgit@djiang5-desk3.ch.intel.com>
+        Mon, 13 Jan 2020 05:15:24 -0500
+Received: from forward105p.mail.yandex.net ([77.88.28.108]:56124 "EHLO
+        forward105p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725992AbgAMKPY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 05:15:24 -0500
+Received: from mxback6j.mail.yandex.net (mxback6j.mail.yandex.net [IPv6:2a02:6b8:0:1619::10f])
+        by forward105p.mail.yandex.net (Yandex) with ESMTP id 0AE774D41389;
+        Mon, 13 Jan 2020 13:15:21 +0300 (MSK)
+Received: from myt4-ee976ce519ac.qloud-c.yandex.net (myt4-ee976ce519ac.qloud-c.yandex.net [2a02:6b8:c00:1da4:0:640:ee97:6ce5])
+        by mxback6j.mail.yandex.net (mxback/Yandex) with ESMTP id sDXEVUDOTj-FK50ht9Q;
+        Mon, 13 Jan 2020 13:15:21 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1578910521;
+        bh=SmZj3mYxPN02iCgwmcokvO3bplgROVcs4GPwKV2RwOE=;
+        h=Subject:To:From:Cc:Date:Message-Id;
+        b=h/SuUs9YevoVdhD5o6oTtoRlH9z9DsNQqIbJp9u+S0MYcq8QoDGW90dbl5QRnxdPY
+         29r+GjuQkFw/SbXGMY5QdKCuXnIVDOORfnYl5MMgej/YFy7V1zf85FJCZN3VxeO5WO
+         3+kSF6p31dCUEud3B+0aVxFGAPmSsNXLVsLwNtPo=
+Authentication-Results: mxback6j.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by myt4-ee976ce519ac.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 2dzM4Y3ZVr-FGWK30Uk;
+        Mon, 13 Jan 2020 13:15:19 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     chenhc@lemote.com, paul.burton@mips.com,
+        linux-kernel@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH 1/3] MIPS: Make DIEI support as a config option
+Date:   Mon, 13 Jan 2020 18:14:59 +0800
+Message-Id: <20200113101501.37985-1-jiaxun.yang@flygoat.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <157842965854.27241.2519525691634439881.stgit@djiang5-desk3.ch.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 07, 2020 at 01:40:58PM -0700, Dave Jiang wrote:
-> With the introduction of MOVDIR64B instruction, there is now an instruction
-> that can write 64 bytes of data atomically.
-> 
-> Quoting from Intel SDM:
-> "There is no atomicity guarantee provided for the 64-byte load operation
-> from source address, and processor implementations may use multiple
-> load operations to read the 64-bytes. The 64-byte direct-store issued
-> by MOVDIR64B guarantees 64-byte write-completion atomicity. This means
-> that the data arrives at the destination in a single undivided 64-byte
-> write transaction."
-> 
-> We have identified at least 3 different use cases for this instruction in
-> the format of func(dst, src, count):
-> 1) Clear poison / Initialize MKTME memory
->    @dst is normal memory.
->    @src in normal memory. Does not increment. (Copy same line to all
->    targets)
->    @count (to clear/init multiple lines)
-> 2) Submit command(s) to new devices
->    @dst is a special MMIO region for a device. Does not increment.
->    @src is normal memory. Increments.
->    @count usually is 1, but can be multiple.
-> 3) Copy to iomem in big chunks
->    @dst is iomem and increments
->    @src in normal memory and increments
->    @count is number of chunks to copy
-> 
-> Add support for case #2 to support device that will accept commands via
-> this instruction. We provide a @count in order to submit a batch of
-> preprogrammed descriptors in virtually contiguous memory. This
-> allows the caller to submit multiple descriptors to a devices with a single
+DI(Disable Interrupt) and EI(Enable Interrupt) instructions is required by
+MIPSR2/MIPSR6, however, it appears to be buggy on some processors such as
+Loongson-3A1000. Thus we make it as a config option to allow disable it at
+compile time with CPU_MIPSR2 selected.
 
-						  "to a device"
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ arch/mips/Kconfig                | 9 +++++++++
+ arch/mips/include/asm/irqflags.h | 6 +++---
+ arch/mips/lib/mips-atomic.c      | 4 ++--
+ 3 files changed, 14 insertions(+), 5 deletions(-)
 
-> submission. The special device requires the entire 64bytes descriptor to
-> be written atomically and will accept MOVDIR64B instruction.
-> 
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
-
-but the above can be fixed by whoever applies this.
-
-Acked-by: Borislav Petkov <bp@suse.de>
-
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 4b83507499f4..c3103f4eeafa 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -2111,12 +2111,14 @@ config CPU_MIPSR2
+ 	bool
+ 	default y if CPU_MIPS32_R2 || CPU_MIPS64_R2 || CPU_CAVIUM_OCTEON
+ 	select CPU_HAS_RIXI
++	select CPU_HAS_DIEI if !CPU_DIEI_BROKEN
+ 	select MIPS_SPRAM
+ 
+ config CPU_MIPSR6
+ 	bool
+ 	default y if CPU_MIPS32_R6 || CPU_MIPS64_R6
+ 	select CPU_HAS_RIXI
++	select CPU_HAS_DIEI if !CPU_DIEI_BROKEN
+ 	select HAVE_ARCH_BITREVERSE
+ 	select MIPS_ASID_BITS_VARIABLE
+ 	select MIPS_CRC_SUPPORT
+@@ -2579,6 +2581,13 @@ config XKS01
+ config CPU_HAS_RIXI
+ 	bool
+ 
++config CPU_HAS_DIEI
++	depends on !CPU_DIEI_BROKEN
++	bool
++
++config CPU_DIEI_BROKEN
++	bool
++
+ config CPU_HAS_LOAD_STORE_LR
+ 	bool
+ 	help
+diff --git a/arch/mips/include/asm/irqflags.h b/arch/mips/include/asm/irqflags.h
+index c4728bbdf15b..47a8ffc0b413 100644
+--- a/arch/mips/include/asm/irqflags.h
++++ b/arch/mips/include/asm/irqflags.h
+@@ -18,7 +18,7 @@
+ #include <asm/compiler.h>
+ #include <asm/hazards.h>
+ 
+-#if defined(CONFIG_CPU_MIPSR2) || defined (CONFIG_CPU_MIPSR6)
++#if defined(CONFIG_CPU_HAS_DIEI)
+ 
+ static inline void arch_local_irq_disable(void)
+ {
+@@ -94,7 +94,7 @@ static inline void arch_local_irq_restore(unsigned long flags)
+ void arch_local_irq_disable(void);
+ unsigned long arch_local_irq_save(void);
+ void arch_local_irq_restore(unsigned long flags);
+-#endif /* CONFIG_CPU_MIPSR2 || CONFIG_CPU_MIPSR6 */
++#endif /* CONFIG_CPU_HAS_DIEI */
+ 
+ static inline void arch_local_irq_enable(void)
+ {
+@@ -102,7 +102,7 @@ static inline void arch_local_irq_enable(void)
+ 	"	.set	push						\n"
+ 	"	.set	reorder						\n"
+ 	"	.set	noat						\n"
+-#if   defined(CONFIG_CPU_MIPSR2) || defined(CONFIG_CPU_MIPSR6)
++#if defined(CONFIG_CPU_HAS_DIEI)
+ 	"	ei							\n"
+ #else
+ 	"	mfc0	$1,$12						\n"
+diff --git a/arch/mips/lib/mips-atomic.c b/arch/mips/lib/mips-atomic.c
+index 5530070e0d05..de03838b343b 100644
+--- a/arch/mips/lib/mips-atomic.c
++++ b/arch/mips/lib/mips-atomic.c
+@@ -15,7 +15,7 @@
+ #include <linux/export.h>
+ #include <linux/stringify.h>
+ 
+-#if !defined(CONFIG_CPU_MIPSR2) && !defined(CONFIG_CPU_MIPSR6)
++#if !defined(CONFIG_CPU_HAS_DIEI)
+ 
+ /*
+  * For cli() we have to insert nops to make sure that the new value
+@@ -110,4 +110,4 @@ notrace void arch_local_irq_restore(unsigned long flags)
+ }
+ EXPORT_SYMBOL(arch_local_irq_restore);
+ 
+-#endif /* !CONFIG_CPU_MIPSR2 && !CONFIG_CPU_MIPSR6 */
++#endif /* !CONFIG_CPU_HAS_DIEI */
 -- 
-Regards/Gruss,
-    Boris.
+2.24.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
