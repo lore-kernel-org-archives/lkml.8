@@ -2,305 +2,234 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211D0C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A9DAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:27:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC34A207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF46121569
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:27:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="SzWq72pN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbgAMKWy (ORCPT
+        id S1726946AbgAMK1O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:22:54 -0500
-Received: from krieglstein.org ([188.68.35.71]:34666 "EHLO krieglstein.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgAMKWw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:22:52 -0500
-Received: from dabox.localnet (gateway.hbm.com [213.157.30.2])
-        by krieglstein.org (Postfix) with ESMTPSA id D8BB64009B;
-        Mon, 13 Jan 2020 11:22:49 +0100 (CET)
-From:   Tim Sander <tim@krieglstein.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: mtd raw nand denali.c broken for Intel/Altera Cyclone V
-Date:   Mon, 13 Jan 2020 11:22:49 +0100
-Message-ID: <78949108.45GFLefr32@dabox>
-Organization: Sander and Lightning
-In-Reply-To: <CAK7LNASZMH34QcQij8CuGnOkC1_g6UShiHw3+_QBLddzf6W4XA@mail.gmail.com>
-References: <5143724.5TqzkYX0oI@dabox> <2585494.6OhLyxUeiZ@hydra> <CAK7LNASZMH34QcQij8CuGnOkC1_g6UShiHw3+_QBLddzf6W4XA@mail.gmail.com>
+        Mon, 13 Jan 2020 05:27:14 -0500
+Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:6782 "EHLO
+        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725992AbgAMK1N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 05:27:13 -0500
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00DAQSYM020399;
+        Mon, 13 Jan 2020 05:27:10 -0500
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2103.outbound.protection.outlook.com [104.47.70.103])
+        by mx0b-00128a01.pphosted.com with ESMTP id 2xfbvb3wge-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jan 2020 05:27:10 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ra6XfwsBOpnb/ZGO29rHh8fpv4rZdvP9MU1gasQGQNyWT0W0aRcSCPAFGzVi7FKOReB+ACfYxZQJkD1i556VGt1ixSeAFKBREuwwhX25Wy7gEz8nJNs6ILe94xpmNyi69mF2mtLMEOohZXplC4ezBqY/DAWSXA7jgTleZFeNbr/7QRW6pMZ3RPZa4sDa/RaSBUZlc14XqLbsJmIKFSUUfpSnvPINi5YoLRIKo9wvbriR4Ssaif+eTCuTyBQhtrMUwH7Zr3ij56/vI6eUb16FdXesXstDsx3pc9+X75Q/gwBmmAmsI4urgxxoXO59IRKS1GRuzpt460aJIjQ+ksad4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4fE4O465sY9HuVKZnTH5q56uk3MuYQmm5UaJncAT8u4=;
+ b=gV76Idd14T4huPOC0TUhaPR/dPDNXAQHnTo8VRBsm8hR5rEt03iid8YYPsXoWehKswh+RDHzqLFSfkXNaj+9rzpd4Dlu/EJghUC4+nmmSGw0ngn03VWsZSxjn6xLMXqbMXV2W2Gdo4IrwnrDQOvZkI696g7xy5TLI/MiZYhMkT5nTFD1cjZOTdVT5FpPqE6ozuV3DAD0czGL4E4Cs/NGwFVVHDadYKIzc6Vdb2Y2AXd3q6+MEDW9128kZJ3bizILvX9E7mAqlSfZ+AjSTLcV1NCx7n8H4XcGbdqHVXRN9JTcBeGTa8FjswDmH7x52gGurHHxiSNIt9njLOW+vQ7xQw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 137.71.25.57) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=analog.com;
+ dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4fE4O465sY9HuVKZnTH5q56uk3MuYQmm5UaJncAT8u4=;
+ b=SzWq72pNusUoiCIRp/CsKdikVKch7gfF2hdeBch0rnBJ2CCn7Bh2eapm+EewBOZlFA9LHl1m7uFF99kerjR+rdN/41IZnb+LIMrYHvCJuEMPlu1vtBIDQ6vIVMEavGt/lYh2mUHRVyI8FvtB6BDB8ITppeJYa1Ehwi7AmWWOesI=
+Received: from CH2PR03CA0013.namprd03.prod.outlook.com (2603:10b6:610:59::23)
+ by DM6PR03MB3802.namprd03.prod.outlook.com (2603:10b6:5:50::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9; Mon, 13 Jan
+ 2020 10:27:09 +0000
+Received: from SN1NAM02FT016.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::200) by CH2PR03CA0013.outlook.office365.com
+ (2603:10b6:610:59::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2623.9 via Frontend
+ Transport; Mon, 13 Jan 2020 10:27:09 +0000
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ SN1NAM02FT016.mail.protection.outlook.com (10.152.72.113) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2623.9
+ via Frontend Transport; Mon, 13 Jan 2020 10:27:08 +0000
+Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id 00DAR8K9008732
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Mon, 13 Jan 2020 02:27:08 -0800
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 13 Jan
+ 2020 05:27:06 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 13 Jan 2020 05:27:06 -0500
+Received: from tachici-Precision-5530.ad.analog.com ([10.48.65.175])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 00DAR3HQ000879;
+        Mon, 13 Jan 2020 05:27:04 -0500
+From:   Alexandru Tachici <alexandru.tachici@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH 1/2 V3] iio: adc: ad-sigma-delta: Allow custom IRQ flags
+Date:   Mon, 13 Jan 2020 12:26:52 +0200
+Message-ID: <20200113102653.20900-2-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200113102653.20900-1-alexandru.tachici@analog.com>
+References: <20200111112317.1cf2d878@archlinux>
+ <20200113102653.20900-1-alexandru.tachici@analog.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(376002)(346002)(136003)(396003)(189003)(199004)(5660300002)(7636002)(2906002)(8676002)(246002)(86362001)(478600001)(70586007)(70206006)(4326008)(336012)(426003)(110136005)(2616005)(107886003)(1076003)(36756003)(44832011)(8936002)(356004)(316002)(186003)(26005)(54906003)(6666004)(7696005);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB3802;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 162ec58d-3022-4b5c-afd1-08d7981324f4
+X-MS-TrafficTypeDiagnostic: DM6PR03MB3802:
+X-Microsoft-Antispam-PRVS: <DM6PR03MB38021528F7D953825E2FDF0F90350@DM6PR03MB3802.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 028166BF91
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: pl8GBnhjVEM5lUJjX6A20fUQb26rUuceGzk6hrAOcDUniFU1r/95wKYdGqS3VefNTR0OlBfwIjysyRE9o2cbuiKbwOusRfab3GZQ+pADoL5420cuVRSy3tvep0QzNtcKN/ymOKraePa6NA2N+n3OuSFbDNxZOPIDnLJOyA8csQBn/R/Qq/fDepwAEc7eNYoYARcRuZ+j5cFi5xvvUw1Ifgmj/W5kEyDNvxEMok/zUjLeJ85qEAdDVyFxzJriMamLKplER6w8WxtZC2tCUkm8do1qR5efsFtKbufOQ6TrwBYGByjT8MJ00ZZ+IQnkAKF60malHD8UuAy1/EDVlLv/7x6vv2gBs4ZNuQ9gtVtpc/2klO/0tlVFFlhZ4g1eXjKE8L5dnKazuos+sEDvjfz6niD4JqMW3Bxv5jzOFGb5vLDUaB4Rb8aNAV09ss2cjLND
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jan 2020 10:27:08.6929
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 162ec58d-3022-4b5c-afd1-08d7981324f4
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3802
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-13_02:2020-01-13,2020-01-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
+ adultscore=0 spamscore=0 phishscore=0 suspectscore=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001130089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Samstag, 11. Januar 2020, 03:38:35 CET schrieb Masahiro Yamada:
-> On Sat, Jan 11, 2020 at 7:38 AM Tim Sander <tim@krieglstein.org> wrote:
-> > Hi
-> > 
-> > Am Freitag, 10. Januar 2020, 20:05:20 CET schrieb Masahiro Yamada:
-> > > On Sat, Jan 11, 2020 at 1:47 AM Tim Sander <tim@krieglstein.org> wrote:
-> > > > Hi Masahiro Yamada
-> > > > 
-> > > > Sorry for the large delay. I have seen the patches at
-> > > > https://lists.infradead.org/pipermail/linux-mtd/2019-December/092852.h
-> > > > tml
-> > > > Seem to resolve the question about the spare_area_skip_bytes register.
-> > > > 
-> > > > I have now set the register to 2 which seems to be the right choice on
-> > > > an
-> > > > Intel SocFPGA. But still i am out of luck trying to boot 5.4.5-rt3 or
-> > > > 5.5-rc5. I get the following messages during bootup booting:
-> > > > [    1.825590] denali-nand-dt ff900000.nand: timeout while waiting for
-> > > > irq
-> > > > 0x1000 [    1.832936] denali-nand-dt: probe of ff900000.nand failed
-> > > > with
-> > > > error -5
-> > > > 
-> > > > But the commit c19e31d0a32dd 2017-06-13 22:45:38 predates the 4.19
-> > > > kernel
-> > > > release (Mon Oct 22 07:37:37 2018). So it seems there is not an
-> > > > obvious
-> > > > commit which is causing the problem. Looking at the changes it might
-> > > > be
-> > > > that the timing calculations in the driver changed which might also
-> > > > lead
-> > > > to a similar error.
-> > > > 
-> > > > I am booting via NFS the bootloader is placed in NOR flash.  The
-> > > > corresponding>
-> > > > 
-> > > > nand dts entry is updated to the new format and looks like this:
-> > > >                 nand@ff900000 {
-> > > >                 
-> > > >                         #address-cells = <0x1>;
-> > > >                         #size-cells = <0x0>;
-> > > >                         compatible = "altr,socfpga-denali-nand";
-> > > >                         reg = <0xff900000 0x100000 0xffb80000
-> > > >                         0x10000>;
-> > > >                         reg-names = "nand_data", "denali_reg";
-> > > >                         interrupts = <0x0 0x90 0x4>;
-> > > >                         clocks = <0x2d 0x1e 0x2e>;
-> > > >                         clock-names = "nand", "nand_x", "ecc";
-> > > >                         resets = <0x6 0x24>;
-> > > >                         status = "okay";
-> > > >                         nand@0 {
-> > > >                         
-> > > >                                 reg = <0x0>;
-> > > >                                 #address-cells = <0x1>;
-> > > >                                 #size-cells = <0x1>;
-> > > >                                 partition@0 {
-> > > >                                 
-> > > >                                         label = "work";
-> > > >                                         reg = <0x0 0x10000000>;
-> > > >                                 
-> > > >                                 };
-> > > >                         
-> > > >                         };
-> > > >                 
-> > > >                 };
-> > > > 
-> > > > The last kernel i am able to boot is 4.19.10. I have tried booting:
-> > > > 5.1.21, 5.2.9, 5.3-rc8, 5.4.5-rt3 and 5.5-rc5. They all failed.
-> > > > Unfortunately the range is quite large for bisecting the problem. It
-> > > > also
-> > > > occurred to me that all the platforms with Intel Cyclone V in mainline
-> > > > are development boards which boot from SD-card not exhibiting this
-> > > > problem on their default boot path.
-> > > 
-> > > What will happen if you apply all of these:
-> > > 
-> > > http://patchwork.ozlabs.org/project/linux-mtd/list/?series=149821
-> > 
-> > I have applied this patch set but it does not help completely.
-> 
-> OK, I just wanted to eliminate any other possibility, just in case.
-As far as i remember i also need the linked patchset but it does not help completely.
-As far is i remember overwriting the timings didn't help because that's the first thing
-i tried without the other patches.
+Before this patch the ad_sigma_delta implementation hardcoded
+the irq trigger type to low, assuming that all Sigma-Delta ADCs
+have the same interrupt-type.
 
-> > The timings are
-> > wrong. I don't have access to the hardware now but one thing i tested
-> > before i left (the HW) was to write the NAND timings from the bootloader
-> > into the denali controller after the driver configured the timings in
-> > denali_init. After that the driver worked again for me.
-> > 
-> > > on top of the mainline kernel,
-> > > and then, hack denali->clk_rate and denali->clk_x_rate as follows?
-> > > 
-> > > 
-> > > -       denali->clk_rate = clk_get_rate(dt->clk);
-> > > -       denali->clk_x_rate = clk_get_rate(dt->clk_x);
-> > > +       denali->clk_rate = 50000000;
-> > > +       denali->clk_x_rate = 200000000;
-> > > 
-> > > If it still fails, what about this?
-> > > 
-> > >        denali->clk_rate = 0;
-> > >        denali->clk_x_rate = 0;
-I have not tried this yet because i have written out the values calculated by the driver.
-My hope is that the error made in the timings can be deduced from the values below.
+This patch allows all drivers using the ad_sigma_delta layer to set the
+irq trigger type to the one specified in the datasheet.
 
- As assumed the timings are not correct. But there is one more thing, the timing calculation is being called twice!
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+---
+ drivers/iio/adc/ad7124.c               | 2 ++
+ drivers/iio/adc/ad7780.c               | 1 +
+ drivers/iio/adc/ad7791.c               | 1 +
+ drivers/iio/adc/ad7793.c               | 1 +
+ drivers/iio/adc/ad_sigma_delta.c       | 2 +-
+ include/linux/iio/adc/ad_sigma_delta.h | 2 ++
+ 6 files changed, 8 insertions(+), 1 deletion(-)
 
-[    0.336216] 001: ffc03000.serial1: ttyS1 at MMIO 0xffc03000 (irq = 41, base_baud = 6250000) is a 16550A
-[    0.338882] 001: previous settings: acc_clks 1
-[    0.338882] 001: re_2_re: 3
-[    0.338882] 001: re_2_we: 3
-[    0.338882] 001: tcwaw_and_addr_2_data: 5
-[    0.338882] 001: hwhr2_and_we2_re: 63
-[    0.338882] 001: rdwr_en_hi_cnt: 1
-[    0.338882] 001: rdwr_en_lo_cnt: 3
-[    0.338882] 001: rdwr_en_lo_cnt: 1
-[    0.338882] 001: cs_setup_cnt: -2125159496
-[    0.338882] 001:  
-[    0.340720] 001: nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xda
-[    0.340729] 001: nand: Micron MT29F2G08ABAEAWP
-[    0.340734] 001: nand: 256 MiB, SLC, erase size: 128 KiB, page size: 2048, OOB size: 64
-[    0.341084] 001: previous settings: acc_clks 1
-[    0.341084] 001: re_2_re: 2
-[    0.341084] 001: re_2_we: 2
-[    0.341084] 001: tcwaw_and_addr_2_data: 5
-[    0.341084] 001: hwhr2_and_we2_re: 2
-[    0.341084] 001: rdwr_en_hi_cnt: 1
-[    0.341084] 001: rdwr_en_lo_cnt: 3
-[    0.341084] 001: rdwr_en_lo_cnt: 0
-[    0.341084] 001: cs_setup_cnt: 1
-[    0.341084] 001:  
-
-<- here the values are beeing overwritten with the values from the patch below!
-
-[    0.342438] 001: Bad block table found at page 131008, version 0x01
-[    0.343671] 001: Bad block table found at page 130944, version 0x01
-[    0.345267] 001: 1 fixed-partitions partitions found on MTD device denali-nand
-[    0.345275] 001: Creating 1 MTD partitions on "denali-nand":
-[    0.345284] 001: 0x000000000000-0x000010000000 : "work"
-[    0.351416] 000: libphy: Fixed MDIO Bus: probed
-
-The following hack has been used to create the output and get the system booting by overriding the 
-computed timing values:
- drivers/mtd/nand/raw/denali.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/drivers/mtd/nand/raw/denali.c b/drivers/mtd/nand/raw/denali.c
-index fafd0a0aa8e2..5c8a92d4896f 100644
---- a/drivers/mtd/nand/raw/denali.c
-+++ b/drivers/mtd/nand/raw/denali.c
-@@ -886,6 +886,17 @@ static int denali_setup_data_interface(struct nand_chip *chip, int chipnr,
-        tmp |= FIELD_PREP(CS_SETUP_CNT__VALUE, cs_setup);
-        sel->cs_setup_cnt = tmp;
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index edc6f1cc90b2..9531d8a6cb27 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -9,6 +9,7 @@
+ #include <linux/delay.h>
+ #include <linux/device.h>
+ #include <linux/err.h>
++#include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/regulator/consumer.h>
+@@ -222,6 +223,7 @@ static const struct ad_sigma_delta_info ad7124_sigma_delta_info = {
+ 	.addr_shift = 0,
+ 	.read_mask = BIT(6),
+ 	.data_reg = AD7124_DATA,
++	.irq_flags = IRQF_TRIGGER_LOW,
+ };
  
-+       printk("previous settings: acc_clks %i\nre_2_re: %i\nre_2_we: %i\ntcwaw_and_addr_2_data: %i\nhwhr2_and_we2_re: %i\nrdwr_en_hi_cnt: %i\nrdwr_en_lo_cnt: %i\nrdwr_en_lo_cnt: %i\ncs_setup_cnt: %i\n ",sel->acc_clks, sel->re_2_re, sel->re_2_we, sel->tcwaw_and_addr_2_data, sel->hwhr2_and_we_2_re, sel->rdwr_en_hi_cnt, sel->rdwr_en_lo_cnt, sel->cs_setup_cnt);
-+
-+       sel->acc_clks = 0x4;
-+       sel->re_2_re = 0x14;
-+       sel->re_2_we = 0x14;
-+       sel->tcwaw_and_addr_2_data = 0x3f;
-+       sel->hwhr2_and_we_2_re = 0x14;
-+       sel->rdwr_en_hi_cnt = 2;
-+       sel->rdwr_en_lo_cnt = 4;
-+       sel->cs_setup_cnt = 1;
-+
-        return 0;
- }
+ static int ad7124_set_channel_odr(struct ad7124_state *st,
+diff --git a/drivers/iio/adc/ad7780.c b/drivers/iio/adc/ad7780.c
+index 217a5a5c3c6d..291c1a898129 100644
+--- a/drivers/iio/adc/ad7780.c
++++ b/drivers/iio/adc/ad7780.c
+@@ -203,6 +203,7 @@ static const struct ad_sigma_delta_info ad7780_sigma_delta_info = {
+ 	.set_mode = ad7780_set_mode,
+ 	.postprocess_sample = ad7780_postprocess_sample,
+ 	.has_registers = false,
++	.irq_flags = IRQF_TRIGGER_LOW,
+ };
  
+ #define AD7780_CHANNEL(bits, wordsize) \
+diff --git a/drivers/iio/adc/ad7791.c b/drivers/iio/adc/ad7791.c
+index 54025ea10239..abb239392631 100644
+--- a/drivers/iio/adc/ad7791.c
++++ b/drivers/iio/adc/ad7791.c
+@@ -205,6 +205,7 @@ static const struct ad_sigma_delta_info ad7791_sigma_delta_info = {
+ 	.has_registers = true,
+ 	.addr_shift = 4,
+ 	.read_mask = BIT(3),
++	.irq_flags = IRQF_TRIGGER_LOW,
+ };
+ 
+ static int ad7791_read_raw(struct iio_dev *indio_dev,
+diff --git a/drivers/iio/adc/ad7793.c b/drivers/iio/adc/ad7793.c
+index bbc41ecf0d2f..b747db97f78a 100644
+--- a/drivers/iio/adc/ad7793.c
++++ b/drivers/iio/adc/ad7793.c
+@@ -206,6 +206,7 @@ static const struct ad_sigma_delta_info ad7793_sigma_delta_info = {
+ 	.has_registers = true,
+ 	.addr_shift = 3,
+ 	.read_mask = BIT(6),
++	.irq_flags = IRQF_TRIGGER_LOW,
+ };
+ 
+ static const struct ad_sd_calib_data ad7793_calib_arr[6] = {
+diff --git a/drivers/iio/adc/ad_sigma_delta.c b/drivers/iio/adc/ad_sigma_delta.c
+index 8ba90486c787..8115b6de1d6c 100644
+--- a/drivers/iio/adc/ad_sigma_delta.c
++++ b/drivers/iio/adc/ad_sigma_delta.c
+@@ -500,7 +500,7 @@ static int ad_sd_probe_trigger(struct iio_dev *indio_dev)
+ 
+ 	ret = request_irq(sigma_delta->spi->irq,
+ 			  ad_sd_data_rdy_trig_poll,
+-			  IRQF_TRIGGER_LOW,
++			  sigma_delta->info->irq_flags,
+ 			  indio_dev->name,
+ 			  sigma_delta);
+ 	if (ret)
+diff --git a/include/linux/iio/adc/ad_sigma_delta.h b/include/linux/iio/adc/ad_sigma_delta.h
+index 8a4e25a7080c..5a127c0ed200 100644
+--- a/include/linux/iio/adc/ad_sigma_delta.h
++++ b/include/linux/iio/adc/ad_sigma_delta.h
+@@ -40,6 +40,7 @@ struct iio_dev;
+  * @read_mask: Mask for the communications register having the read bit set.
+  * @data_reg: Address of the data register, if 0 the default address of 0x3 will
+  *   be used.
++ * @irq_flags: flags for the interrupt used by the triggered buffer
+  */
+ struct ad_sigma_delta_info {
+ 	int (*set_channel)(struct ad_sigma_delta *, unsigned int channel);
+@@ -49,6 +50,7 @@ struct ad_sigma_delta_info {
+ 	unsigned int addr_shift;
+ 	unsigned int read_mask;
+ 	unsigned int data_reg;
++	unsigned long irq_flags;
+ };
+ 
+ /**
 -- 
 2.20.1
-
-> > Will try the above next week. Skimming over the socfpga.dtsi it seems as
-> > if
-> > on the Intel SocFPGA the OSC1 has a value of 25000000 set in
-> > socfpga_cyclone5.dtsi (I am currently not sure about the clock tree with
-> > all the plls and i am missing the value of osc2?). Also right now it
-> > seems i am to tired to parse denali_setup_data_interface...
-> 
-> You do not need to parse denali_setup_data_interface().
-> 
-> 
-> There are good hints.
-> 
-> You said:
-> "The last kernel i am able to boot is 4.19.10. I have tried booting:
-> 5.1.21, 5.2.9, 5.3-rc8, 5.4.5-rt3 and 5.5-rc5. They all failed."
-> 
-> There is no commit between 4.19.10 and 5.1.21
-> that changes denali_setup_data_interface().
-> 
-> So, denali_setup_data_interface() is not the
-> root cause.
-> 
-> >From the information you provided,
-> 
-> I suspect some clock settings are wrong.
-This guess we agree that this is no suspicion any more...
-
-> > > > PS: Here is some snippet from an older mail i didn't sent to the list
-> > > > yet
-> > > > which might be superseded by now:
-> > > > To get into this matter i started reading the "Intel Cyclone V HPS
-> > > > TRM"
-> > > > Section 13-20 Preserving Bad Block Markers:
-> > > > "You can configure the NAND flash controller to skip over a specified
-> > > > number of bytes when it writes the last sector in a page to the spare
-> > > > area. This option write the desired offset to the
-> > > > spare_area_skip_bytes
-> > > > register in the config group. For example, if the device page size is
-> > > > 2
-> > > > KB, and the device area, set the spare_area_skip_bytes register to 2.
-> > > > When the flash controller writes the last sector of the page that
-> > > > overlaps with the spare area, it spare_area_skip_bytes must be an even
-> > > > number. For example, if the bad block marker is a single byte, set
-> > > > spare_area_skip_bytes to 2."
-> > > 
-> > > I did not know this documentation.
-> > > 
-> > > It says "For example" (twice),
-> > > it sounds uncertain to me, though.
-> > > 
-> > > Anyway, an intel engineer checked the boot ROM code.
-> > > SPARE_AREA_SKIP_BYTES=2 is correct, he said.
-> > 
-> > As far as i understand the documentation it must be a multiple of 2. The
-> > most nand flashes i know need one byte for bad block marking so 2 seems
-> > to be a pretty sane value.
-> 
-> Most of NAND flashes, but not all.
-> 
-> See the "Bad Block Location" in this page:
-> 
-> http://www.linux-mtd.infradead.org/nand-data/nanddata.html
-> 
-> 
-> 
-> Many of devices have BBM at 1st byte/word,
-> but there are devices that have it at 6th byte.
-> 
-> SPARE_AREA_SKIP_BYTES=2 for SOCFPGA
-> corrupts the BBM at offset 6.
-> So, probably such a device is not used
-> on SOCFPGA boards.
-> 
-> I am guessing that is why the UniPhier platform
-> adopted SPARE_AREA_SKIP_BYTES=8.
-> 
-> > The explanation why default value of
-> > spare_area_skip_bytes=0 of the boot rom is a little unfortunate is also in
-> > the documentation: The fact that the ECC values might spill into the
-> > spare area where the bad block marker of the nand is located.
-
-
-
 
