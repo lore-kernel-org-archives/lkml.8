@@ -2,217 +2,349 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3089C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A56C8C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B368B206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF002072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:20:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578950455;
+	bh=cNuwSX6Tq6Xza4J+uNzGgshgLrwQpNsZgM0BcS4sN7Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dOl05HzpbX7AFeDQECzcdGQwAshN3HAJwaLkTSuXoUG8aE5eeFdO0WNwUij/fj0ZE
+	 JtndQ+nkpSjwVRXA6nVGmVdFX+4TGRCpmJ6ExBnC2LuHU7DPUwc1wA5jrE8K4iQRd8
+	 ot4+LyjA1vCaQHXzBfHo1d+k47VTDi1wE9m1VWWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgAMVMR (ORCPT
+        id S1728633AbgAMVUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 16:12:17 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3076 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726587AbgAMVMQ (ORCPT
+        Mon, 13 Jan 2020 16:20:54 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:34102 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726488AbgAMVUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 16:12:16 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00DKwmwd107690;
-        Mon, 13 Jan 2020 16:11:51 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfvqmkjng-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jan 2020 16:11:51 -0500
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 00DKwnvY107786;
-        Mon, 13 Jan 2020 16:11:51 -0500
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfvqmkjmx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jan 2020 16:11:51 -0500
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00DL95qS004178;
-        Mon, 13 Jan 2020 21:11:49 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma05wdc.us.ibm.com with ESMTP id 2xf755de28-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jan 2020 21:11:49 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00DLBncG38601168
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 21:11:49 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 474CFAC059;
-        Mon, 13 Jan 2020 21:11:49 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 04584AC05E;
-        Mon, 13 Jan 2020 21:11:46 +0000 (GMT)
-Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.18.235.137])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 13 Jan 2020 21:11:46 +0000 (GMT)
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qian Cai <cai@lca.pw>, Reza Arbab <arbab@linux.ibm.com>,
-        Leonardo Bras <leonardo@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Mike Rapoport <rppt@linux.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 1/1] powerpc/pgtable: Skip serialize_against_pte_lookup() when unmapping
-Date:   Mon, 13 Jan 2020 18:11:26 -0300
-Message-Id: <20200113211126.39270-1-leonardo@linux.ibm.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 13 Jan 2020 16:20:54 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l136so9779649oig.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 13:20:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UkcwH+aLJlMDz8EGk6FkQZlCk8V9rUaFgodvX0X0qKI=;
+        b=KPQp1blhirwa3KQL+Oe0vfRiXioRoUuPyIjMufcunXNCIrzkTxpYzT2FU1xAWgSSD2
+         gxWvutdZ0yPugNAnMpW5XQ+7ALvS4tmc/+URynA36eLHBgs1kRKfI2tP3UwRFFC17nDg
+         e1ogpdC81dceyg4DD9Zg6f/bzq7aW5l7vzyCuYGLlBU1fPmyu5t7+1tVBHTkG6amuav+
+         TOn1ywJC17TGB42SlNVuklLtbq34VhPqZVPk2ogO28AXDk9cy2rmqMFycqvQyQwoBTZT
+         tIiEgw55Ae+oXfO7EzU5pMx/DcPYZ6CpSpHeZy5lgbDyUoGKydZpSMVYIv2RVj7rhZ7A
+         Ltzw==
+X-Gm-Message-State: APjAAAVZy/Hwmjh0WHiirYPnP4xQgypV3ToA7XS7ivqCTKRMKS2c+Vwn
+        7g6WT3TICdpoBBKblgP6mfEMi/s=
+X-Google-Smtp-Source: APXvYqy7tqOQEFGolVBa0XQ3HCQ0cCv2mJshVKDMkc0UXEG1WejtZCJDGrB3f1uk1g537n4whaYj9Q==
+X-Received: by 2002:aca:52cd:: with SMTP id g196mr14522166oib.18.1578950452391;
+        Mon, 13 Jan 2020 13:20:52 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id j5sm4538571otl.71.2020.01.13.13.20.50
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 13:20:51 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 221998
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Mon, 13 Jan 2020 15:20:50 -0600
+Date:   Mon, 13 Jan 2020 15:20:50 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy
+ bindings to yaml
+Message-ID: <20200113212050.GA21793@bogus>
+References: <1578658699-30458-1-git-send-email-sanm@codeaurora.org>
+ <1578658699-30458-3-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-13_07:2020-01-13,2020-01-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 malwarescore=0
- lowpriorityscore=0 spamscore=0 clxscore=1011 mlxlogscore=999
- impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001130169
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578658699-30458-3-git-send-email-sanm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a process (qemu) with a lot of CPUs (128) try to munmap() a large
-chunk of memory (496GB) mapped with THP, it takes an average of 275
-seconds, which can cause a lot of problems to the load (in qemu case,
-the guest will lock for this time).
+On Fri, Jan 10, 2020 at 05:48:16PM +0530, Sandeep Maheswaram wrote:
+> Convert QUSB2 phy  bindings to DT schema format using json-schema.
+> 
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 152 +++++++++++++++++++++
+>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  68 ---------
+>  2 files changed, 152 insertions(+), 68 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
 
-Trying to find the source of this bug, I found out most of this time is
-spent on serialize_against_pte_lookup(). This function will take a lot
-of time in smp_call_function_many() if there is more than a couple CPUs
-running the user process. Since it has to happen to all THP mapped, it
-will take a very long time for large amounts of memory.
+Fails 'make dt_binding_check':
 
-By the docs, serialize_against_pte_lookup() is needed in order to avoid
-pmd_t to pte_t casting inside find_current_mm_pte(), or any lockless
-pagetable walk, to happen concurrently with THP splitting/collapsing.
+builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.example.dt.yaml: 
+phy@88e2000: 'vdda-pll-supply' is a required property
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.example.dt.yaml: 
+phy@88e2000: 'vdda-phy-dpdm-supply' is a required property
 
-In this case, as the page is being munmapped, there is no need to call
-serialize_against_pte_lookup(), given it will not be used after or
-during munmap.
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> new file mode 100644
+> index 0000000..83cd01d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/qcom,qusb2-phy.yaml
+> @@ -0,0 +1,152 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/phy/qcom,qusb2-phy.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Qualcomm QUSB2 phy controller
+> +
+> +maintainers:
+> +  - Manu Gautam <mgautam@codeaurora.org>
+> +
+> +description:
+> +  QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+> +
+> +properties:
+> +  compatible:
+> +    anyOf:
 
-This patch does so by adding option to skip serializing on
-radix__pmdp_huge_get_and_clear(). This option is used by the proxy
-__pmdp_huge_get_and_clear(), that is called with 'unmap == true' on
-an (new) arch version of pmdp_huge_get_and_clear_full(), and with
-'unmap == false' on pmdp_huge_get_and_clear(), that is used on
-generic code.
+anyOf is usually wrong. Use 'oneOf'.
 
-pmdp_huge_get_and_clear_full() is only called in zap_huge_pmd(), so
-it's safe to assume it will always be called on memory that will be
-unmapped.
+> +      - items:
+> +        - const: qcom,msm8996-qusb2-phy
+> +      - items:
+> +        - const: qcom,msm8998-qusb2-phy
+> +      - items:
+> +        - const: qcom,sc7180-qusb2-phy
+> +      - items:
+> +        - const: qcom,sdm845-qusb2-phy
 
-On my workload (qemu: 128vcpus + 500GB), I could see munmap's time
-reduction from 275 seconds to 39ms.
+These 4 can be a single enum. However, you should drop sc7180 and 
+sdm845. Those should match below. (Or drop the below. Just pick which 
+way and fixup any dts files that don't conform.)
 
-Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
----
- arch/powerpc/include/asm/book3s/64/pgtable.h | 25 +++++++++++++++++---
- arch/powerpc/include/asm/book3s/64/radix.h   |  3 ++-
- arch/powerpc/mm/book3s64/radix_pgtable.c     |  6 +++--
- 3 files changed, 28 insertions(+), 6 deletions(-)
+> +      - items:
+> +        - enum:
+> +          - qcom,sc7180-qusb2-phy
+> +          - qcom,sdm845-qusb2-phy
+> +        - const: qcom,qusb2-v2-phy
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#phy-cells":
+> +    const: 0
+> +
+> +  clocks:
+> +    minItems: 2
+> +    items:
+> +      - description: phy config clock
+> +      - description: 19.2 MHz ref clk
+> +      - description: phy interface clock (Optional)
+> +
+> +  clock-names:
+> +    minItems: 2
+> +    items:
+> +      - const: cfg_ahb
+> +      - const: ref
+> +      - const: iface
+> +
+> +  vdda-pll-supply:
+> +     description:
+> +       Phandle to 1.8V regulator supply to PHY refclk pll block.
+> +
+> +  vdda-phy-dpdm-supply:
+> +     description:
+> +       Phandle to 3.1V regulator supply to Dp/Dm port signals.
+> +
+> +  resets:
+> +    maxItems: 1
+> +
+> +  nvmem-cells:
+> +    maxItems: 1
+> +    description:
+> +        Phandle to nvmem cell that contains 'HS Tx trim'
+> +        tuning parameter value for qusb2 phy.
+> +
+> +  qcom,tcsr-syscon:
+> +    description:
+> +        Phandle to TCSR syscon register region.
+> +    $ref: /schemas/types.yaml#/definitions/cell
 
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index b01624e5c467..5e3e7c48624a 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -1243,14 +1243,21 @@ extern int pmdp_test_and_clear_young(struct vm_area_struct *vma,
- 				     unsigned long address, pmd_t *pmdp);
- 
- #define __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR
--static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
--					    unsigned long addr, pmd_t *pmdp)
-+static inline pmd_t __pmdp_huge_get_and_clear(struct mm_struct *mm,
-+					      unsigned long addr, pmd_t *pmdp,
-+					      bool unmap)
- {
- 	if (radix_enabled())
--		return radix__pmdp_huge_get_and_clear(mm, addr, pmdp);
-+		return radix__pmdp_huge_get_and_clear(mm, addr, pmdp, !unmap);
- 	return hash__pmdp_huge_get_and_clear(mm, addr, pmdp);
- }
- 
-+static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
-+					    unsigned long addr, pmd_t *pmdp)
-+{
-+	return __pmdp_huge_get_and_clear(mm, addr, pmdp, false);
-+}
-+
- static inline pmd_t pmdp_collapse_flush(struct vm_area_struct *vma,
- 					unsigned long address, pmd_t *pmdp)
- {
-@@ -1337,6 +1344,18 @@ pte_t ptep_modify_prot_start(struct vm_area_struct *, unsigned long, pte_t *);
- void ptep_modify_prot_commit(struct vm_area_struct *, unsigned long,
- 			     pte_t *, pte_t, pte_t);
- 
-+#define __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR_FULL
-+static inline pmd_t pmdp_huge_get_and_clear_full(struct mm_struct *mm,
-+						 unsigned long address,
-+						 pmd_t *pmdp,
-+						 int full)
-+{
-+	/*
-+	 * Called only on unmapping
-+	 */
-+	return __pmdp_huge_get_and_clear(mm, address, pmdp, true);
-+}
-+
- /*
-  * Returns true for a R -> RW upgrade of pte
-  */
-diff --git a/arch/powerpc/include/asm/book3s/64/radix.h b/arch/powerpc/include/asm/book3s/64/radix.h
-index d97db3ad9aae..148874aa5260 100644
---- a/arch/powerpc/include/asm/book3s/64/radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/radix.h
-@@ -253,7 +253,8 @@ extern void radix__pgtable_trans_huge_deposit(struct mm_struct *mm, pmd_t *pmdp,
- 					pgtable_t pgtable);
- extern pgtable_t radix__pgtable_trans_huge_withdraw(struct mm_struct *mm, pmd_t *pmdp);
- extern pmd_t radix__pmdp_huge_get_and_clear(struct mm_struct *mm,
--				      unsigned long addr, pmd_t *pmdp);
-+					    unsigned long addr, pmd_t *pmdp,
-+					    bool serialize);
- static inline int radix__has_transparent_hugepage(void)
- {
- 	/* For radix 2M at PMD level means thp */
-diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-index 974109bb85db..eac8409cd316 100644
---- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-@@ -1007,7 +1007,8 @@ pgtable_t radix__pgtable_trans_huge_withdraw(struct mm_struct *mm, pmd_t *pmdp)
- }
- 
- pmd_t radix__pmdp_huge_get_and_clear(struct mm_struct *mm,
--				     unsigned long addr, pmd_t *pmdp)
-+				     unsigned long addr, pmd_t *pmdp,
-+				     bool serialize)
- {
- 	pmd_t old_pmd;
- 	unsigned long old;
-@@ -1024,7 +1025,8 @@ pmd_t radix__pmdp_huge_get_and_clear(struct mm_struct *mm,
- 	 * different code paths. So make sure we wait for the parallel
- 	 * find_current_mm_pte to finish.
- 	 */
--	serialize_against_pte_lookup(mm);
-+	if (serialize)
-+		serialize_against_pte_lookup(mm);
- 	return old_pmd;
- }
- 
--- 
-2.24.1
+s/cell/phandle/
 
+> +
+> +  qcom,imp-res-offset-value:
+> +    description:
+> +        It is a 6 bit value that specifies offset to be
+> +        added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
+> +        tuning parameter that may vary for different boards of same SOC.
+> +        This property is applicable to only QUSB2 v2 PHY.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 63
+> +        default: 0
+> +
+> +  qcom,hstx-trim-value:
+> +    description:
+> +        It is a 4 bit value that specifies tuning for HSTX
+> +        output current.
+> +        Possible range is - 15mA to 24mA (stepsize of 600 uA).
+> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+> +        This property is applicable to only QUSB2 v2 PHY.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 15
+> +        default: 3
+> +
+> +  qcom,preemphasis-level:
+> +    description:
+> +        It is a 2 bit value that specifies pre-emphasis level.
+> +        Possible range is 0 to 15% (stepsize of 5%).
+> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+> +        This property is applicable to only QUSB2 v2 PHY.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 3
+> +        default: 2
+> +
+> +  qcom,preemphasis-width:
+> +    description:
+> +        It is a 1 bit value that specifies how long the HSTX
+> +        pre-emphasis (specified using qcom,preemphasis-level) must be in
+> +        effect. Duration could be half-bit of full-bit.
+> +        See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+> +        This property is applicable to only QUSB2 v2 PHY.
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +      - minimum: 0
+> +        maximum: 1
+> +        default: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - "#phy-cells"
+> +  - clocks
+> +  - clock-names
+> +  - vdda-pll-supply
+> +  - vdda-phy-dpdm-supply
+> +  - resets
+> +
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> +    #include <dt-bindings/clock/qcom,rpmh.h>
+> +    usb_1_hsphy: phy@88e2000 {
+> +        compatible = "qcom,sdm845-qusb2-phy";
+> +        reg = <0 0x088e2000 0 0x400>;
+> +        #phy-cells = <0>;
+> +
+> +        clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+> +                 <&rpmhcc RPMH_CXO_CLK>;
+> +        clock-names = "cfg_ahb", "ref";
+> +
+> +        resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
+> +
+> +        nvmem-cells = <&qusb2p_hstx_trim>;
+> +    };
+> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> deleted file mode 100644
+> index fe29f9e..0000000
+> --- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> +++ /dev/null
+> @@ -1,68 +0,0 @@
+> -Qualcomm QUSB2 phy controller
+> -=============================
+> -
+> -QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+> -
+> -Required properties:
+> - - compatible: compatible list, contains
+> -	       "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
+> -	       "qcom,msm8998-qusb2-phy" for 10nm PHY on msm8998,
+> -	       "qcom,sdm845-qusb2-phy" for 10nm PHY on sdm845.
+> -
+> - - reg: offset and length of the PHY register set.
+> - - #phy-cells: must be 0.
+> -
+> - - clocks: a list of phandles and clock-specifier pairs,
+> -	   one for each entry in clock-names.
+> - - clock-names: must be "cfg_ahb" for phy config clock,
+> -			"ref" for 19.2 MHz ref clk,
+> -			"iface" for phy interface clock (Optional).
+> -
+> - - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
+> - - vdda-phy-dpdm-supply: Phandle to 3.1V regulator supply to Dp/Dm port signals.
+> -
+> - - resets: Phandle to reset to phy block.
+> -
+> -Optional properties:
+> - - nvmem-cells: Phandle to nvmem cell that contains 'HS Tx trim'
+> -		tuning parameter value for qusb2 phy.
+> -
+> - - qcom,tcsr-syscon: Phandle to TCSR syscon register region.
+> - - qcom,imp-res-offset-value: It is a 6 bit value that specifies offset to be
+> -		added to PHY refgen RESCODE via IMP_CTRL1 register. It is a PHY
+> -		tuning parameter that may vary for different boards of same SOC.
+> -		This property is applicable to only QUSB2 v2 PHY (sdm845).
+> - - qcom,hstx-trim-value: It is a 4 bit value that specifies tuning for HSTX
+> -		output current.
+> -		Possible range is - 15mA to 24mA (stepsize of 600 uA).
+> -		See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+> -		This property is applicable to only QUSB2 v2 PHY (sdm845).
+> -		Default value is 22.2mA for sdm845.
+> - - qcom,preemphasis-level: It is a 2 bit value that specifies pre-emphasis level.
+> -		Possible range is 0 to 15% (stepsize of 5%).
+> -		See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+> -		This property is applicable to only QUSB2 v2 PHY (sdm845).
+> -		Default value is 10% for sdm845.
+> -- qcom,preemphasis-width: It is a 1 bit value that specifies how long the HSTX
+> -		pre-emphasis (specified using qcom,preemphasis-level) must be in
+> -		effect. Duration could be half-bit of full-bit.
+> -		See dt-bindings/phy/phy-qcom-qusb2.h for applicable values.
+> -		This property is applicable to only QUSB2 v2 PHY (sdm845).
+> -		Default value is full-bit width for sdm845.
+> -
+> -Example:
+> -	hsusb_phy: phy@7411000 {
+> -		compatible = "qcom,msm8996-qusb2-phy";
+> -		reg = <0x7411000 0x180>;
+> -		#phy-cells = <0>;
+> -
+> -		clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
+> -			<&gcc GCC_RX1_USB2_CLKREF_CLK>,
+> -		clock-names = "cfg_ahb", "ref";
+> -
+> -		vdda-pll-supply = <&pm8994_l12>;
+> -		vdda-phy-dpdm-supply = <&pm8994_l24>;
+> -
+> -		resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
+> -		nvmem-cells = <&qusb2p_hstx_trim>;
+> -        };
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
