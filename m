@@ -2,95 +2,120 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E712C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF12C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A7E12081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F0B6206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:34:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bHUxH4h7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728848AbgAMReC (ORCPT
+        id S1728851AbgAMRej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:34:02 -0500
-Received: from mga06.intel.com ([134.134.136.31]:21119 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728827AbgAMRd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:33:59 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 09:33:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
-   d="scan'208";a="217471468"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga008.jf.intel.com with ESMTP; 13 Jan 2020 09:33:58 -0800
-Date:   Mon, 13 Jan 2020 09:33:58 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
-        edwin.zhai@intel.com
-Subject: Re: [RESEND PATCH v10 06/10] vmx: spp: Set up SPP paging table at
- vmentry/vmexit
-Message-ID: <20200113173358.GC1175@linux.intel.com>
-References: <20200102061319.10077-1-weijiang.yang@intel.com>
- <20200102061319.10077-7-weijiang.yang@intel.com>
- <20200110180458.GG21485@linux.intel.com>
- <20200113081050.GF12253@local-michael-cet-test.sh.intel.com>
+        Mon, 13 Jan 2020 12:34:39 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45569 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728664AbgAMRej (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 12:34:39 -0500
+Received: by mail-pl1-f195.google.com with SMTP id b22so4067892pls.12
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 09:34:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1PJ13D+KFCkNQkN2EIudaVpEqGNZODR++Sj1BPuo/ZE=;
+        b=bHUxH4h7szTdb1IgkxMSHl1LpvDPXrw+WDyMWAPf7c3MB7w02xunVZWtUZCdADY4Hj
+         d4D1Pu0lWUi+wPPmAy3uzD0euIaNsbCAPIz8+Cagp4fmYrOq0UhEk87VexH5DYwPKmAw
+         /Pjdwsn1VaK9QJNhO0HysvG3+1jGwUqp8hNiu+oHH+A/Yx4ohJ/GUdBmu+TzZ8LH4ggx
+         tUUbFCBVCMQPhKtP2uMS/a/VSRMvzKpB7bHmBGAj1zq3ru2OFCsSfI2MhGcHDlpOeQ25
+         j5RTtLChMAGY9IKx/APGv0aBRW+NqAclwtjgFbkPAyYnEmHvjmSZG2qkQsndOH+MLqeC
+         XYaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1PJ13D+KFCkNQkN2EIudaVpEqGNZODR++Sj1BPuo/ZE=;
+        b=ALgOExJtZ4bABsd1+tFe91q3H5bR5Qn4eXWe6/48GhnG1el0X9MCuWtyRZCl5Kkx1Y
+         IWOoLDw0b8L+ZyiTq5HedrhOrAjT29oFdLSrfTq2AIyEbt6YGh5XmHLWX+Pw4v+CmFvv
+         mL6UcRR31hl2bY8RrNhwrM1SQdBZ8jxRILbZlYmy54ETOE+wqJE4rohlgTfqzKMIujs1
+         7ceftT6d8Kuar/WmmsS1vkFSI/BM0G1+szfCR1+La2SXrGVUSEAtMT+9WrkpqHK7IGNy
+         MoGbSntmD42UQh1juYxhRqXR1U4EWm8ya++kaVGo796wVJzs0zDELfaR7iWw02mCS1hR
+         ffzg==
+X-Gm-Message-State: APjAAAXM8jO4QLSqEbjpnWfJSLQwrH+XxHg//+dMNN8sZomhGM1FO9fm
+        QWSPEaRhGtl4UVrJo1iZ1cv85eCPLtZ2soL2XhlBJA==
+X-Google-Smtp-Source: APXvYqzhSw66ss9J19Bjac2oaOFq/pDddpDORRAOnLXq4ahSX0R0wKp+qgDirMl7EaPEK0XTjarlevURK39Dyda2jqo=
+X-Received: by 2002:a17:902:9889:: with SMTP id s9mr7931281plp.252.1578936878099;
+ Mon, 13 Jan 2020 09:34:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113081050.GF12253@local-michael-cet-test.sh.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <CAAeHK+z2+_UHNp4_D2iL9FzPtDoU1YBohCaDJG8sAy12uc_-ew@mail.gmail.com>
+ <Pine.LNX.4.44L0.2001131049090.1502-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.2001131049090.1502-100000@iolanthe.rowland.org>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 13 Jan 2020 18:34:27 +0100
+Message-ID: <CAAeHK+x9Gk3cD77MA9jkhpwO8S62i6KT7PP3NZ6QTZ2qk2FB6w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] usb: gadget: add raw-gadget interface
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 04:10:50PM +0800, Yang Weijiang wrote:
-> On Fri, Jan 10, 2020 at 10:04:59AM -0800, Sean Christopherson wrote:
-> > On Thu, Jan 02, 2020 at 02:13:15PM +0800, Yang Weijiang wrote:
-> > > @@ -3585,7 +3602,30 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gva_t gva, int level,
-> > >  		if ((error_code & PFERR_WRITE_MASK) &&
-> > >  		    spte_can_locklessly_be_made_writable(spte))
-> > >  		{
-> > > -			new_spte |= PT_WRITABLE_MASK;
-> > > +			/*
-> > > +			 * Record write protect fault caused by
-> > > +			 * Sub-page Protection, let VMI decide
-> > > +			 * the next step.
-> > > +			 */
-> > > +			if (spte & PT_SPP_MASK) {
-> > > +				int len = kvm_x86_ops->get_inst_len(vcpu);
-> > 
-> > There's got to be a better way to handle SPP exits than adding a helper
-> > to retrieve the instruction length.
+On Mon, Jan 13, 2020 at 5:50 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+>
+> On Mon, 13 Jan 2020, Andrey Konovalov wrote:
+>
+> > I've also found an issue, but I'm not sure if that is the bug in Raw
+> > Gadget, or in the gadget layer (in the former case I'll add this fix
+> > to v5 as well). What I believe I'm seeing is
+> > __fput()->usb_gadget_unregister_driver()->usb_gadget_remove_driver()->gadget_unbind()
+> > racing with dummy_timer()->gadget_setup(). In my case it results in
+> > gadget_unbind() doing set_gadget_data(gadget, NULL), and then
+> > gadget_setup() dereferencing get_gadget_data(gadget).
 > >
-> The fault instruction was skipped by kvm_skip_emulated_instruction()
-> before, but Paolo suggested leave the re-do or skip option to user-space
-> to make it flexible for write protection or write tracking, so return
-> length to user-space.
+> > Alan, does it look possible for those two functions to race? Should
+> > this be prevented by the gadget layer, or should I use some kind of
+> > locking in my gadget driver to prevent this?
+>
+> In your situation this race shouldn't happen, because before
+> udc->driver->unbind() is invoked we call usb_gadget_disconnect().  If
+> that routine succeeds -- which it always does under dummy-hcd -- then
+> there can't be any more setup callbacks, because find_endpoint() will
+> always return NULL (the is_active() test fails; see the various
+> set_link_state* routines).  So I don't see how you could have ended up
+> with the race you describe.
 
-Sorry, my comment was unclear.  I have no objection to punting the fault
-to userspace, it's the mechanics of how it's done that I dislike.
+I've managed to reproduce the race by adding an mdelay() into the
+beginning of the setup() callback. AFAIU what happens is setup() gets
+called (and waits on the mdelay()), then unbind() comes in and does
+set_gadget_data(NULL), and then setup() proceeds, gets NULL through
+get_gadget_data() and crashes on null-ptr-deref. I've got the same
+crash a few times after many days of fuzzing, so I assume it can
+happen without the mdelay() as well.
 
-Specifically, (a) using run->exit_reason to propagate the SPP exit up the
-stack, e.g. instead of modifying affected call stacks to play nice with
-any exit to userspace, (b) assuming ->get_insn_len() will always be
-accurate, e.g. see the various caveats in skip_emulated_instruction() for
-both VMX and SVM, and (c) duplicating the state capture code in every
-location that can encounter a SPP fault.
-
-What I'm hoping is that it's possible to modify the call stacks to
-explicitly propagate an exit to userspace and/or SPP fault, and shove all
-the state capture into a common location, e.g. handle_ept_violation().
-
-Side topic, assuming the userspace VMI is going to be instrospecting the
-faulting instruction, won't it decode the instruction?  I.e. calculate
-the instruction length anyways?
+> However, a real UDC might not be able to perform a disconnect under
+> software control.  In that case usb_gadget_disconnect() would not
+> change the pullup state, and there would be a real possibility of a
+> setup callback racing with an unbind callback.  This seems like a
+> genuine problem and I can't think of a solution offhand.
+>
+> What we would need is a way to tell the UDC driver to stop invoking
+> gadget callbacks, _before_ the UDC driver's stop callback gets called.
+> Maybe this should be merged into the pullup callback somehow.
+>
+> Alan Stern
+>
