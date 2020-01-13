@@ -2,142 +2,162 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84413C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F64C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4464E20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:49:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KbodioWC";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="oGe+xPsu"
+	by mail.kernel.org (Postfix) with ESMTP id D047420678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgAMQt3 (ORCPT
+        id S1728769AbgAMQtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:49:29 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:38404 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726567AbgAMQt2 (ORCPT
+        Mon, 13 Jan 2020 11:49:49 -0500
+Received: from pindarots.xs4all.nl ([82.161.210.87]:45462 "EHLO
+        pindarots.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgAMQts (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:49:28 -0500
-Received: from mailhost.synopsys.com (badc-mailhost1.synopsys.com [10.192.0.17])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D98C8C05DB;
-        Mon, 13 Jan 2020 16:49:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1578934167; bh=pBPYSXlrkAVnXnpSQyiUHIINTZnIlRFr/ju+i939ZuY=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=KbodioWC06QeM3ZIGGO7/oj/3k9h1zByGDEbR3ON0NTaJnaxD/Q9yXayG3e+g8jTM
-         xRWtYqVvWqvSe7Ycx6/Mf7OKr51lRmnJpzT3Ys+KO7a+9A2OXvffb+9jeuBqUa3wAz
-         57tSUm7UNvYdQ0Aon1zXXSgG9qs9HguwbhJ4B3r7arZz36nwfjqCAYuewIqBzL4hke
-         Dw+BrSxHw8+KIPMf6KtHX9rOCx9ZbOF2jpCOoDrFeGqALC1Nyl2orWAfKrjF3BX7zM
-         N+B/ll13d0S1scDZGqltK1Xp2MGmLQ143qwt0jXIPbp+31iUlLv8nSssb8QiHSAAos
-         n8aV8CthAHq9Q==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 86DBBA0083;
-        Mon, 13 Jan 2020 16:49:27 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 13 Jan 2020 08:49:27 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 13 Jan 2020 08:49:26 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fOsRu7fG2Lc/1mOX4BJ184j0fLlI9/73433qnFqjXTZgmC9aq0OcYQPJlFBMIySl+z6Q4r5Zpf92clRjQxZqNDlUNz6AR34Tu0NN0l57dl5cYpzPcA21f+LkwBdAVgPfYIMyORqY+njpCheVXijsWu4KuhWsfq5nTunTxLT6QhhzhP9ImlpuG7EmsWgGvwz29Oy52U/0+5pd46wGaabhi+cKQT+wnQ7/LWyhGmkuNxUjdUWaVuVw1vvNRV3dgy+4SmV0eSUQ9JCZHVYSz+QHLDrCEHdHRG4Uhi7E0VTsR2im/8fsv0uoOThOz9cPK903oaOkxopRkRHpeE6UGCFovQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pBPYSXlrkAVnXnpSQyiUHIINTZnIlRFr/ju+i939ZuY=;
- b=AeFuIGWMmw78DCyiAVzs6cx4U1+A/27FlK/i0zLHy+lBTFsQcz54kGclIakVUffAbdxOGTTj6WsCdPrYOE7gkRDjrBHhd5xR8bW6jIJiAVBbo67Bsg/jE+BvOX2hlR71vbcnVkoNTjPRBTPRzlA4cw/M0Z07a1UW0jOiVals9ZlWWnEI0rmLJX4orOrzXPVLd30FlhiuNlTD6iLNOObwahEQErmsiG2mmpO8+PJEltoEkU7oRQGn+ibaba/CJ1dmFEQRu7Izs2T/EQ3lnx3gXd+2NO82y+tPvQ8ZyoJbjP6CmcYIDztvz37rFzYJHkqebRglHihxtRiqdOuHtD+Z3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pBPYSXlrkAVnXnpSQyiUHIINTZnIlRFr/ju+i939ZuY=;
- b=oGe+xPsuf7V4gxotNrnDH02WY0dCfIQ8A0Ceo8F+2SV4aKT+bUJgVEhSvNOvdWph42QauvBUNb/YeINHDyChu+g3VeEvKYWyF5bU0JjV9c89+dxo1SBDMVWum4BASYPucb2JYiWCgQYTsUTOAwKtByIEw0A0ZndWHb1DGzIpvPE=
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com (20.178.54.89) by
- BYAPR12MB3573.namprd12.prod.outlook.com (20.178.55.74) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2602.12; Mon, 13 Jan 2020 16:49:24 +0000
-Received: from BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::39a1:22ee:7030:8333]) by BYAPR12MB3592.namprd12.prod.outlook.com
- ([fe80::39a1:22ee:7030:8333%6]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
- 16:49:24 +0000
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
-Subject: Re: [PATCH 3/5] ARC: handle DSP presence in HW
-Thread-Topic: [PATCH 3/5] ARC: handle DSP presence in HW
-Thread-Index: AQHVvOAPR1zSenMpqUm+DVM4mBlrGafecrQAgAWfTYCABNcRgA==
-Date:   Mon, 13 Jan 2020 16:49:24 +0000
-Message-ID: <1a0b853a-32f4-09eb-2aeb-acf63a092f02@synopsys.com>
-References: <20191227180347.3579-1-Eugeniy.Paltsev@synopsys.com>
- <20191227180347.3579-4-Eugeniy.Paltsev@synopsys.com>
- <6b80df9d-d0f2-d1e1-8e4b-b65531b938d9@synopsys.com>
- <BY5PR12MB403418CCC56FE9E2EA3232D2DE380@BY5PR12MB4034.namprd12.prod.outlook.com>
-In-Reply-To: <BY5PR12MB403418CCC56FE9E2EA3232D2DE380@BY5PR12MB4034.namprd12.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=vgupta@synopsys.com; 
-x-originating-ip: [149.117.75.11]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e7ef147a-c987-4c42-5898-08d798488bcf
-x-ms-traffictypediagnostic: BYAPR12MB3573:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB3573E86B5E8D1E7FC5177B2FB6350@BYAPR12MB3573.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39850400004)(396003)(346002)(376002)(136003)(366004)(189003)(199004)(478600001)(110136005)(76116006)(66556008)(66446008)(64756008)(66476007)(4744005)(5660300002)(71200400001)(54906003)(36756003)(316002)(66946007)(2906002)(31686004)(8936002)(6512007)(6506007)(4326008)(31696002)(86362001)(6486002)(81166006)(81156014)(8676002)(186003)(26005)(107886003)(2616005)(53546011);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB3573;H:BYAPR12MB3592.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: tsk2DCKidyOLvVcHCmViUlDs1IDOoN/sYob17UnOqpgNCtgQ/Qv4B+q930fHlfStm5mzLJbgwK7PzJbd1z6rZ1Kq1itNSuKv0a1lZ+cp0nozBLSOaJQtlFmV9/ac4FoK3VXyEXFXrBU/Q6JsMIs6z0g4kXlDNfKTqRJtPIE7naIq0OXRiR387sxBldhafDmOcryTZHAteL5D0FXQ9UwFSjTjfOC43hXWxzL3bQyYE0XfRZClSja/T9y4OfJllxe7GpDZlbpm0+qUxZBRXI3WOxYkO9hyrbtsY9OUbKlsh9HPh1Y3liau+kWGXe7rt8EEI3OPV8K48REnA7L1miYjNLQZ5NXhWpiotMeOeZyHWFk7Mksz9u1qg4DbMFIo96pLikErwxY/rGxelUIlBBdF40oZJONlVBSPrIkUZ5QBoUornonrpNPMd2aUFTYvHJxV
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <406820F04E3033419A91B2D4273C2199@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 13 Jan 2020 11:49:48 -0500
+Received: from surfplank2.hierzo (localhost.localdomain [127.0.0.1])
+        by pindarots.xs4all.nl (8.15.2/8.14.5) with ESMTPS id 00DGnjCM006153
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 17:49:45 +0100
+Subject: Re: 5.4.7: WARNING: CPU: 4 PID: 30 at kernel/rcu/tree.c:2211
+ rcu_core+0x3f7/0x450
+From:   Udo van den Heuvel <udovdh@xs4all.nl>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <3d77ca55-9da5-6cfe-ba88-f76e10213e62@xs4all.nl>
+ <1c1fe83d-4173-f4a0-71d2-8b07a718f5f6@xs4all.nl>
+Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
+ 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
+ JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
+Organization: hierzo
+Message-ID: <f07c2c73-2e28-2fa7-5faf-f3dbe9916bdf@xs4all.nl>
+Date:   Mon, 13 Jan 2020 17:49:45 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: e7ef147a-c987-4c42-5898-08d798488bcf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 16:49:24.2146
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: d244OmiIjcrM8g+V484Uw92atqVfZY9iWE/A2GVi8vyPVjAC3OtRRVTJr5zcBRhzxwwLgAGXR69ZxQKUtgsp9w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3573
-X-OriginatorOrg: synopsys.com
+In-Reply-To: <1c1fe83d-4173-f4a0-71d2-8b07a718f5f6@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMS8xMC8yMCA2OjU0IEFNLCBFdWdlbml5IFBhbHRzZXYgd3JvdGU6DQo+DQo+Pj4gKyAgICAg
-ICAgICAgICBDSEtfT1BUX1NUUklDVChDT05GSUdfQVJDX0RTUF9LRVJORUwsIHByZXNlbnQpOw0K
-Pj4+ICAgICAgIH0NCj4gTXkgaWRlYSBoZXJlIGlzIHRvIGVuY2Fwc3VsYXRlIGltcGxlbWVudGF0
-aW9uIG9mIGV2ZXJ5dGhpbmcgZHNwLXJlbGF0ZWQgaW4gdGhlDQo+IGZpbGUgd2l0aCBkc3AgY29k
-ZS4gU28gSSdtIGV2ZW4gdGhpbmtpbmcgYWJvdXQgbW92aW5nIHRoZSBjb25maWcgY2hlY2sgaXRz
-ZWxmDQo+IHRvIHNvbWUgZnVuY3Rpb24gbGlrZQ0KPiAnYXJjX2Noa19kc3BfY29uZmlnJyB3aGlj
-aCB3aWxsIGJlIGxvY2F0ZWQgaW4gZHNwLnggZmlsZQ0KPiBhbmQgY2FsbCBpdCBmcm9tIGFyY19j
-aGtfY29yZV9jb25maWcgaW4gc2V0dXAuYw0KPg0KPiBUaGlzIHJlcXVpcmVzIHRvIG1vdmUgY29u
-ZmlnIGNoZWNrIGhlbHBlcnMgdG8gc2VwYXJhdGUgZmlsZS9oZWFkZXIgZnJvbSB0aGUgc2V0dXAu
-Yw0KPiBIb3dldmVyIHRoaXMgYWxsb3dzIGVuY2Fwc3VsYXRlIGFsbCBEU1AgY29kZSAoYW5kIHNv
-bWUgbmV3IHN1YnN5c3RlbXMgY29kZSBsYXRlciBvbikgaW4gaXRzIGZpbGVzIGluc3RlYWQgb2Yg
-c3ByZWFkIGl0IGFjcm9zcyB0aGUgYXJjIGNvZGUuDQo+DQo+IFdoYXQgZG8geW91IHRoaW5rIGFi
-b3V0IGl0PyBJZiB5b3UgcmVhbGx5IGRpc2xpa2UgdGhpcyBpZGVhIEkgY2FuIGRyb3AgaXQuDQoN
-Ck9rIG1ha2VzIHNlbnNlIHRoZW4gIQ0KDQotVmluZWV0DQo=
+Hello,
+
+I opened bug https://bugzilla.kernel.org/show_bug.cgi?id=206191 for this
+issue as it also appears to crash the system multiple times per day on
+5.4.x.
+
+
+Kind regards,
+Udo
+
+On 04-01-2020 16:02, Udo van den Heuvel wrote:
+> On 02-01-2020 18:01, Udo van den Heuvel wrote:
+> (...)
+>>
+>> What happend here?
+>> Is it a bug?
+> 
+> It appears to happen more than once:
+> 
+> [  246.911694] ------------[ cut here ]------------
+> [  246.911705] WARNING: CPU: 3 PID: 25 at kernel/rcu/tree.c:2211
+> rcu_core+0x3f7/0x450
+> [  246.911706] Modules linked in: fuse mq_deadline ip6t_REJECT
+> nf_reject_ipv6 xt_state ip6table_filter ip6_tables
+> nf_conntrack_netbios_ns nf_conntrack_broadcast xt_MASQUERADE iptable_nat
+> nf_nat ipt_REJECT nf_reject_ipv4 xt_u32 xt_multiport xt_tcpudp
+> xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 msr it87
+> hwmon_vid iptable_filter uvcvideo videobuf2_vmalloc snd_usb_audio
+> videobuf2_memops videobuf2_v4l2 snd_hwdep videodev snd_usbmidi_lib
+> videobuf2_common snd_rawmidi cdc_acm snd_hda_codec_realtek
+> snd_hda_codec_generic snd_hda_intel snd_intel_nhlt snd_hda_codec
+> snd_hda_core snd_seq k10temp snd_seq_device snd_pcm i2c_piix4 snd_timer
+> snd bfq evdev acpi_cpufreq binfmt_misc ip_tables x_tables hid_generic
+> sr_mod cdrom usbhid aesni_intel amdgpu gpu_sched ttm i2c_dev autofs4
+> [  246.911746] CPU: 3 PID: 25 Comm: ksoftirqd/3 Tainted: G        W
+>     5.4.7 #9
+> [  246.911748] Hardware name: Gigabyte Technology Co., Ltd. X570 AORUS
+> PRO/X570 AORUS PRO, BIOS F11 12/06/2019
+> [  246.911750] RIP: 0010:rcu_core+0x3f7/0x450
+> [  246.911754] Code: fd ff ff 48 2b 15 49 13 f6 00 48 39 c2 7e 07 48 89
+> 83 b0 00 00 00 48 8b 43 50 48 85 c0 75 c7 0f 0b eb c3 0f 0b e9 59 fc ff
+> ff <0f> 0b eb b8 48 8b 15 26 13 f6 00 48 89 93 c0 00 00 00 e9 72 ff ff
+> [  246.911756] RSP: 0018:ffff9df7801d7e18 EFLAGS: 00010006
+> [  246.911758] RAX: 000000397e6650ca RBX: ffff8ba4df0dee80 RCX:
+> ffff8ba4a056d590
+> [  246.911759] RDX: 0000000000000000 RSI: ffff9df7801d7e18 RDI:
+> ffff8ba4df0deed0
+> [  246.911761] RBP: ffff8ba4df0deed0 R08: 0000000000000000 R09:
+> 0000000000000100
+> [  246.911762] R10: 0000000000000002 R11: 0000000000000000 R12:
+> 0000000000000246
+> [  246.911763] R13: ffff8ba4ddf410c0 R14: 0000000000000000 R15:
+> 0000000000000000
+> [  246.911765] FS:  0000000000000000(0000) GS:ffff8ba4df0c0000(0000)
+> knlGS:0000000000000000
+> [  246.911766] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  246.911768] CR2: 00007ff60f06ffe0 CR3: 00000003d179c000 CR4:
+> 00000000003406e0
+> [  246.911769] Call Trace:
+> [  246.911777]  __do_softirq+0xfc/0x247
+> [  246.911783]  run_ksoftirqd+0x21/0x30
+> [  246.911787]  smpboot_thread_fn+0x195/0x230
+> [  246.911789]  ? sort_range+0x20/0x20
+> [  246.911792]  kthread+0x118/0x130
+> [  246.911795]  ? kthread_create_worker_on_cpu+0x60/0x60
+> [  246.911797]  ret_from_fork+0x22/0x40
+> [  246.911800] ---[ end trace 6f223c45fc8e7e99 ]---
+> 
+> Kind regards,
+> Udo
+> 
+
