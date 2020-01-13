@@ -2,117 +2,150 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDFBC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434DBC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:37:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF2C52081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:35:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="r1H9ZG5D"
+	by mail.kernel.org (Postfix) with ESMTP id 195BE2073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:37:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbgAMSf0 (ORCPT
+        id S1728833AbgAMShI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:35:26 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:40108 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728516AbgAMSf0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:35:26 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DIXPOM176061;
-        Mon, 13 Jan 2020 18:35:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=HXDDGSzgg1+VLbzPleiazKwhjMHpugozxt4GTzIIub4=;
- b=r1H9ZG5Dmf5kb31eZYUtsWOTu8ez10SPC+g6EvFgeC6ySZIZvx2pQxla7rVH8rwP8NRL
- 3DlVPHzDonOsuE1wJxpxY3cFoThAVogkPPw03dja54AKkbtl556BmB4vR50MieErtHjq
- r8DY75tT+DpOPkfOLOhldRsHggren3gojmramg1NqWAMzbndgPY14FYfk7zcmh2wp9iz
- XtE6raIX6xdR7ZIn8ry0ko7Ng6yVgCO0BFn67yBx2P8zzhbgCyXlD6CXTYj3vnl4vblJ
- +gAmjHA9YOJuwXNUj22Ecuh51nCGrfwLXDANAqBY7cTtjPQlrCW7zrLfnCVmLkxakW3J 0w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2xf73y8sss-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 18:35:17 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DIYNUY171694;
-        Mon, 13 Jan 2020 18:35:17 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2xfrgj5yh9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 18:35:17 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00DIZG5P005040;
-        Mon, 13 Jan 2020 18:35:16 GMT
-Received: from [10.159.240.107] (/10.159.240.107)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 10:35:16 -0800
-Subject: Re: [PATCH v2 1/2] Introduce maximum WQE size to check limits
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
-        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1574106879-19211-1-git-send-email-rao.shoaib@oracle.com>
- <1574106879-19211-2-git-send-email-rao.shoaib@oracle.com>
- <20191119203138.GA13145@ziepe.ca>
- <44d1242a-fc32-9918-dd53-cd27ebf61811@oracle.com>
- <20191119231334.GO4991@ziepe.ca>
- <dff3da9b-06a3-3904-e9eb-7feaa1ae9e01@oracle.com>
- <20191120000840.GQ4991@ziepe.ca>
- <ccceac68-db4f-77a3-500d-12f60a8a1354@oracle.com>
- <20191219182511.GI17227@ziepe.ca>
-From:   Rao Shoaib <rao.shoaib@oracle.com>
-Message-ID: <6da00014-0fd2-c7fc-93ab-7653b23aeb1e@oracle.com>
-Date:   Mon, 13 Jan 2020 10:35:14 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 13 Jan 2020 13:37:08 -0500
+Received: from mga18.intel.com ([134.134.136.126]:48391 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726878AbgAMShH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 13:37:07 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 10:37:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
+   d="scan'208";a="424396844"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 13 Jan 2020 10:37:05 -0800
+Date:   Mon, 13 Jan 2020 10:37:05 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Subject: Re: [PATCH v5 17/19] KVM: VMX: Use VMX_FEATURE_* flags to define
+ VMCS control bits
+Message-ID: <20200113183705.GL1175@linux.intel.com>
+References: <20191221044513.21680-1-sean.j.christopherson@intel.com>
+ <20191221044513.21680-18-sean.j.christopherson@intel.com>
+ <20200113183228.GO13310@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <20191219182511.GI17227@ziepe.ca>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=763
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001130150
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=824 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001130150
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113183228.GO13310@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jan 13, 2020 at 07:32:28PM +0100, Borislav Petkov wrote:
+> On Fri, Dec 20, 2019 at 08:45:11PM -0800, Sean Christopherson wrote:
+> > Define the VMCS execution control flags (consumed by KVM) using their
+> > associated VMX_FEATURE_* to provide a strong hint that new VMX features
+> > are expected to be added to VMX_FEATURE and considered for reporting via
+> > /proc/cpuinfo.
+> > 
+> > No functional change intended.
+> > 
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  arch/x86/include/asm/vmx.h | 105 +++++++++++++++++++------------------
+> >  1 file changed, 55 insertions(+), 50 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+> > index 1835767aa335..9fbba31be825 100644
+> > --- a/arch/x86/include/asm/vmx.h
+> > +++ b/arch/x86/include/asm/vmx.h
+> > @@ -15,67 +15,70 @@
+> >  #include <linux/bitops.h>
+> >  #include <linux/types.h>
+> >  #include <uapi/asm/vmx.h>
+> > +#include <asm/vmxfeatures.h>
+> > +
+> > +#define VMCS_CONTROL_BIT(x)	BIT(VMX_FEATURE_##x & 0x1f)
+> >  
+> >  /*
+> >   * Definitions of Primary Processor-Based VM-Execution Controls.
+> >   */
+> > -#define CPU_BASED_VIRTUAL_INTR_PENDING          0x00000004
+> > -#define CPU_BASED_USE_TSC_OFFSETING             0x00000008
+> > -#define CPU_BASED_HLT_EXITING                   0x00000080
+> > -#define CPU_BASED_INVLPG_EXITING                0x00000200
+> > -#define CPU_BASED_MWAIT_EXITING                 0x00000400
+> > -#define CPU_BASED_RDPMC_EXITING                 0x00000800
+> > -#define CPU_BASED_RDTSC_EXITING                 0x00001000
+> > -#define CPU_BASED_CR3_LOAD_EXITING		0x00008000
+> > -#define CPU_BASED_CR3_STORE_EXITING		0x00010000
+> > -#define CPU_BASED_CR8_LOAD_EXITING              0x00080000
+> > -#define CPU_BASED_CR8_STORE_EXITING             0x00100000
+> > -#define CPU_BASED_TPR_SHADOW                    0x00200000
+> > -#define CPU_BASED_VIRTUAL_NMI_PENDING		0x00400000
+> > -#define CPU_BASED_MOV_DR_EXITING                0x00800000
+> > -#define CPU_BASED_UNCOND_IO_EXITING             0x01000000
+> > -#define CPU_BASED_USE_IO_BITMAPS                0x02000000
+> > -#define CPU_BASED_MONITOR_TRAP_FLAG             0x08000000
+> > -#define CPU_BASED_USE_MSR_BITMAPS               0x10000000
+> > -#define CPU_BASED_MONITOR_EXITING               0x20000000
+> > -#define CPU_BASED_PAUSE_EXITING                 0x40000000
+> > -#define CPU_BASED_ACTIVATE_SECONDARY_CONTROLS   0x80000000
+> > +#define CPU_BASED_VIRTUAL_INTR_PENDING          VMCS_CONTROL_BIT(VIRTUAL_INTR_PENDING)
+> > +#define CPU_BASED_USE_TSC_OFFSETING             VMCS_CONTROL_BIT(TSC_OFFSETTING)
+> 
+> checkpatch correctly complains here:
+> 
+> WARNING: 'OFFSETING' may be misspelled - perhaps 'OFFSETTING'?
+> #80: FILE: arch/x86/include/asm/vmx.h:26:
+> +#define CPU_BASED_USE_TSC_OFFSETING             VMCS_CONTROL_BIT(TSC_OFFSETTING)
+> 
+> and VMX_FEATURE_TSC_OFFSETTING is correct.
+> 
+> Should I fix it up to CPU_BASED_USE_TSC_OFFSETTING while applying?
 
-On 12/19/19 10:25 AM, Jason Gunthorpe wrote:
-> On Tue, Dec 17, 2019 at 11:38:52AM -0800, Rao Shoaib wrote:
->> Any update on my patch?
->>
->> If there is some change needed please let me know.
-> You need to repost it with the comments addressed
->
-> https://patchwork.kernel.org/patch/11250179/
->
-> Jason
->
-Jason,
+No, the CPU_BASED_* defines are used by existing KVM code, i.e. you'd
+also have to touch a bunch of KVM code.
 
-Following is a pointer to the patch that I posted in response to your 
-comments
 
-https://www.spinics.net/lists/linux-rdma/msg86241.html
-
-I posted this on Nov 18. Can you please take a look and let me know what 
-else has to be done.
-
-Shoaib
-
+$ git grep CPU_BASED_USE_TSC_OFFSETING
+arch/x86/include/asm/vmx.h:#define CPU_BASED_USE_TSC_OFFSETING             0x00000008
+arch/x86/kvm/vmx/nested.c:      if (vmcs12->cpu_based_vm_exec_control & CPU_BASED_USE_TSC_OFFSETING)
+arch/x86/kvm/vmx/nested.c:      if (vmcs12->cpu_based_vm_exec_control & CPU_BASED_USE_TSC_OFFSETING)
+arch/x86/kvm/vmx/nested.c:      if (vmcs12->cpu_based_vm_exec_control & CPU_BASED_USE_TSC_OFFSETING)
+arch/x86/kvm/vmx/nested.c:              CPU_BASED_VIRTUAL_NMI_PENDING | CPU_BASED_USE_TSC_OFFSETING |
+arch/x86/kvm/vmx/vmx.c:     (vmcs12->cpu_based_vm_exec_control & CPU_BASED_USE_TSC_OFFSETING))
+arch/x86/kvm/vmx/vmx.c:     (vmcs12->cpu_based_vm_exec_control & CPU_BASED_USE_TSC_OFFSETING))
+arch/x86/kvm/vmx/vmx.c:       CPU_BASED_USE_TSC_OFFSETING |
+tools/testing/selftests/kvm/include/x86_64/vmx.h:#define CPU_BASED_USE_TSC_OFFSETING            0x00000008
+tools/testing/selftests/kvm/x86_64/vmx_tsc_adjust_test.c:       control |= CPU_BASED_USE_MSR_BITMAPS | CPU_BASED_USE_TSC_OFFSETING;
