@@ -2,96 +2,146 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B4BC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92801C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98B72075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A055214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:55:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="MfRDokUB"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iHUNqDUg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbgAMRw1 (ORCPT
+        id S1728731AbgAMRz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:52:27 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:37276 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726985AbgAMRw0 (ORCPT
+        Mon, 13 Jan 2020 12:55:27 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:44091 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726878AbgAMRz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:52:26 -0500
-Received: by mail-il1-f196.google.com with SMTP id t8so8937004iln.4
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 09:52:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tR/PVmec9Acg9lLoWkjAACYeH6TaFlhfszmRPXAXo1I=;
-        b=MfRDokUBQY6p/kpal7XLw/g38Gh/IYdjm7i351TEXrATsDe15BahgFzUxUw2OmWv3l
-         PYV4Mv2Il9WIz8LTiICJ1SBtYdi5VjGf38h8gB80wwGQAUlIlbhv7UhJhatiNCgeoZqk
-         JM+eizhJUClZ7yCT3TMjSjHSi++Sn0aZWVSBOv53ifvZlTrnUsu+yNtpcbvb46ywW/TC
-         Sb536csF4MpO14QhxwoKAlHNmxLu++s2/9SMwgGmd+4wnm1E+JUuxkJZSlGgL9zxpGzD
-         3Zelh6J1MpWq1zuisaeDHXlCuztNvunhxSLppqDpUE8fmnD09ZPY7oFLG0MX/nyceWlV
-         3umg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tR/PVmec9Acg9lLoWkjAACYeH6TaFlhfszmRPXAXo1I=;
-        b=Els7Rrp2docqYP7PIf3z3ZBUHx/hSd4kUPnzeWWU2wjWueO5cSzWH1QRgIphtcmG6v
-         8XL8u8IY78ndi4qbRY7sSpl3CzqfOxysMflJ0vU0flPgh92zZGoEgSzt5E8DqGVR8X2D
-         Q75yacQvkJiItcIhAs2p1Guv0PC/06Uvs6+d2p4RD7ia89h/eUgl6OZnY8IhTWd4aSZz
-         uOdNErwe66q6nF7rrLzrIkEsORhGIk5m2+iiLbwq11dI4YKbx+jtftYso7tWRjgmfNCc
-         LYMOoF/8OWfJwbLFGNTN7Ewoii5BvbTaZyry32nct0NsNa9LeA+oQlZD/KTfF5s3NdbW
-         xWVA==
-X-Gm-Message-State: APjAAAWK0VF8Ax97CWtceKpqIq71GBIgoB0i8zrKpDWuqgqU7YWhV1zP
-        CDRntloFVXRA8u8Lfsck1YslfmXYkGM8lFQJx46YvA==
-X-Google-Smtp-Source: APXvYqwmifsPMIM7NR3deurhYvdhd2YslDh3Tb150YC7L/n4Un9cMt8a1ojcsrjY1X3Jknn0LNc6fVsXk09C2r1UTTE=
-X-Received: by 2002:a92:db49:: with SMTP id w9mr14818680ilq.277.1578937945418;
- Mon, 13 Jan 2020 09:52:25 -0800 (PST)
+        Mon, 13 Jan 2020 12:55:27 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578938126; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=hhV7louupacu1XrOTKOPtlsP0IGei6JTdzbFTbyzEUI=; b=iHUNqDUg3EfjGP6GZCgVS5lSankoeBxxYM49PipPfpO7MV6/DJd1pCI6ELCNaTK3vNIn2wvN
+ lg3VSDZaOtAZf9ZSPcz1lVmGWrdBdX6MrVIaydXE+8y6Z52IgSygQ8cCsx2ldLbWPENYcak/
+ lof6FvhUqm99dPiwTBCWLOAYkWY=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1caf0d.7f7049bdf308-smtp-out-n02;
+ Mon, 13 Jan 2020 17:55:25 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id AE89AC433CB; Mon, 13 Jan 2020 17:55:25 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1DE4FC447A2;
+        Mon, 13 Jan 2020 17:55:24 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1DE4FC447A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 13 Jan 2020 10:55:22 -0700
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Brian Ho <brian@brkho.com>
+Cc:     freedreno@lists.freedesktop.org, robdclark@chromium.org,
+        David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, hoegsberg@chromium.org,
+        Sean Paul <sean@poorly.run>
+Subject: Re: [Freedreno] [PATCH 1/2] drm/msm: Add a GPU-wide wait queue
+Message-ID: <20200113175522.GD26711@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Brian Ho <brian@brkho.com>,
+        freedreno@lists.freedesktop.org, robdclark@chromium.org,
+        David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        hoegsberg@chromium.org, Sean Paul <sean@poorly.run>
+References: <20200113153605.52350-1-brian@brkho.com>
+ <20200113153605.52350-2-brian@brkho.com>
 MIME-Version: 1.0
-References: <20200113065808.25f28c40@canb.auug.org.au> <CAOesGMifHn6DbNgYm6YUbdKjSL5rNgdWrq+HX9dEusrOr9xX2A@mail.gmail.com>
- <20200113113837.130c3936@canb.auug.org.au> <caeb1af8-4aa2-71dc-0a70-127c0b474f93@st.com>
- <20200113224620.5d33fa63@canb.auug.org.au>
-In-Reply-To: <20200113224620.5d33fa63@canb.auug.org.au>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Mon, 13 Jan 2020 09:52:13 -0800
-Message-ID: <CAOesGMh0yfq_0RPzASjNPUgff4P+PMdo2fEB3BFO++Y6zz1n0g@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the arm-soc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ludovic Barre <ludovic.barre@st.com>,
-        Yann Gautier <yann.gautier@st.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113153605.52350-2-brian@brkho.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 3:46 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->
-> Hi Alexandre,
->
-> On Mon, 13 Jan 2020 09:17:08 +0100 Alexandre Torgue <alexandre.torgue@st.com> wrote:
-> >
-> > Sorry for this oversight. DO I have something to do ? (except to not
-> > forget to check my signed-off next time).
->
-> That is up to the arm-soc tree maintainers.
+On Mon, Jan 13, 2020 at 10:36:04AM -0500, Brian Ho wrote:
+> This wait queue is signaled on all IRQs for a given GPU and will be
+> used as part of the new MSM_WAIT_IOVA ioctl so userspace can sleep
+> until the value at a given iova reaches a certain condition.
+> 
+> Signed-off-by: Brian Ho <brian@brkho.com>
+> ---
+>  drivers/gpu/drm/msm/msm_gpu.c | 4 ++++
+>  drivers/gpu/drm/msm/msm_gpu.h | 3 +++
+>  2 files changed, 7 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+> index a052364a5d74..d7310c1336e5 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.c
+> +++ b/drivers/gpu/drm/msm/msm_gpu.c
+> @@ -779,6 +779,8 @@ void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
+>  static irqreturn_t irq_handler(int irq, void *data)
+>  {
+>  	struct msm_gpu *gpu = data;
+> +	wake_up_all(&gpu->event);
+> +
 
-Nothing needed at this time.
+I suppose it is intentional to have this happen on *all* interrupts because you
+might be using the CP interrupts for fun and profit and you don't want to plumb
+in callbacks?  I suppose it is okay to do this for all interrupts (including
+errors) but if we're spending a lot of time here we might want to only trigger
+on certain IRQs.
 
-The point of making sure maintainers sign off on patches is to track
-their path into the tree. In this case we still know it comes in via
-you. But make sure you're diligent on this for future patches.
 
+>  	return gpu->funcs->irq(gpu);
+>  }
+>  
+> @@ -871,6 +873,8 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>  
+>  	spin_lock_init(&gpu->perf_lock);
+>  
+> +	init_waitqueue_head(&gpu->event);
+> +
+>  
+>  	/* Map registers: */
+>  	gpu->mmio = msm_ioremap(pdev, config->ioname, name);
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+> index ab8f0f9c9dc8..60562f065dbc 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.h
+> +++ b/drivers/gpu/drm/msm/msm_gpu.h
+> @@ -104,6 +104,9 @@ struct msm_gpu {
+>  
+>  	struct msm_gem_address_space *aspace;
+>  
+> +	/* GPU-wide wait queue that is signaled on all IRQs */
+> +	wait_queue_head_t event;
+> +
+>  	/* Power Control: */
+>  	struct regulator *gpu_reg, *gpu_cx;
+>  	struct clk_bulk_data *grp_clks;
+> -- 
+> 2.25.0.rc1.283.g88dfdc4193-goog
+> 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
 
-Thanks!
-
--Olof
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
