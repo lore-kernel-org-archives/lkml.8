@@ -2,115 +2,181 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6367C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADB2C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 989C6207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:52:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pD54b2vF"
+	by mail.kernel.org (Postfix) with ESMTP id 5121920661
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578927213;
+	bh=rZWQYQyfBlipVYy4GIJ55Kh+O3OpzoJxfTreDe4rCuU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fbIKmcYX8tqUXRFQ4J5rAt2+i2tsjU8rCluUsDzyrgMmU1shC6CcXHvf6JSEKxl4Y
+	 lJyniLm4PfrzqawPZhttDJQtzXFFIkZqc1T9wIOduptn9msfWvKbI/pUcEei/9h85b
+	 f9KQZMQilbRXXW3O33NzffFxJcR6jnD9tBMdpIUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgAMOwE (ORCPT
+        id S1728835AbgAMOxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:52:04 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35268 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgAMOwE (ORCPT
+        Mon, 13 Jan 2020 09:53:32 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:35918 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726943AbgAMOxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:52:04 -0500
-Received: by mail-il1-f195.google.com with SMTP id g12so8390530ild.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 06:52:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YX2j6/aVYY0oyXSlbbCOKmU+Ff+R7PXUUFucGLtqEZc=;
-        b=pD54b2vF0OL3APyGS2FYWquHYvbSHt2+mDz0qqZYJVJKS4xrJEU3kGi9UQAQui03aP
-         oPxoThY+/eB3UiBL63ipXM0eyzZW8Yg0WvXiVe14BeqC2dBJOMA1D13T+viEgaShwfCC
-         3+jdDcJxFZ9PUdbfKr5VlpJoAwdcMnZ8RbUGYKR8e8sAW6tmzASNLJWHVEsPQXp7FuSM
-         gr4Emm85qKxkNitHkdeoE4GZSIEw92HAjxpXIDhle9/Mu6BEsx/pllKJnyvmPECsU9/K
-         v654FIVxSz5HuaQOfKF55qNMUIQyTqQ6Sm0Sg4m+MEW4COFiwkyeZoTAYhDgwE7NjKT2
-         LXCw==
+        Mon, 13 Jan 2020 09:53:31 -0500
+Received: by mail-yw1-f68.google.com with SMTP id n184so6207779ywc.3;
+        Mon, 13 Jan 2020 06:53:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YX2j6/aVYY0oyXSlbbCOKmU+Ff+R7PXUUFucGLtqEZc=;
-        b=Vq7jVDWjFZZMOBnjv+4VyEETmNqkkJk2/E3blcmbOEl81CD2XxUWhpTo1veIHH5nGd
-         KO9qHmvnvaVIMVCsnISfBjVtoZLuJ0j7WXPB4TZWPkv98tLkHrwcN63BOKBp6DAvcX8z
-         5PWfMYnzrcyGd0VON7f8u4sR0jOjoy6DZ6cD7/tTsnBoaxnpJUTQOAOU9wfUmcXz0KK3
-         t8r4nJ2uTd13qiDl7T+fp35iINOCul2NU1+vWM+lu/0PxHwmig66CvGa4d1cA88oZ9HM
-         xeZJy7Ux3gVAcQypjX0+S7+R3bmJ10GSfb7sSKTJBn44ZH8hk4Hk1Z0Z++FZKscZJs5N
-         aZtw==
-X-Gm-Message-State: APjAAAV+NiWZc7avxvHJb1fp19XiUfQs21Hw9jYnsezJb1MtmB8Hcyhh
-        oVYcM7FOB+iFsJztueN+nNp8LL6CJIIp2A8Mtw1uinFw
-X-Google-Smtp-Source: APXvYqyt+vEO+HWXZFJbDJmsViNsAKH88qGkQ/e/5oAuQgR33TSr56D6tCedpeUHpa+P2JqBu9+hmpBQr0J05fwog3s=
-X-Received: by 2002:a92:390c:: with SMTP id g12mr14496630ila.246.1578927123873;
- Mon, 13 Jan 2020 06:52:03 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qWmNQjvuX9zJ6z0ZcNWGk9QjxjID7F47ltFXDEuoyJw=;
+        b=KuISl8anpqsedhLi4oTf62YMROo851MNeTMEzY2Q8zpix+hmYoBl8kJrFC92nvz9qM
+         i8Qdxqh9Evv649mi6nlWZdSdasSoLaZpsvSGZ4IXhigwARdQTvS1rVzrKdECuJd6GPoC
+         pD0Md9tuJ8KOnKeiugprI33ENVopxEn1i+If2wr7TjHietKC+lsCCXuaVfKp8w1Gq5Sg
+         f5DkqjUybaXYGM09jZWQP8YDVaJ5pQPgrwm4dPKxCrrQVRnzQAdU/9MmojetjkogG+MN
+         kmNsDUxL51yzYalDqXMAXhomHRZ8Hh++if1RK9ORpAR0vcQHvM0OfVRlw/q/1fA75d62
+         gV9A==
+X-Gm-Message-State: APjAAAWKuMdilVO1RY4KUxxE5SaX6oHOUgZvCNT6AJ2hfMZ2d4sAkK/J
+        IYQ0xV8QHir2djDqZGqwQ4w=
+X-Google-Smtp-Source: APXvYqzIKDnngH4Et6AZ6y2I+FvMl/cZfena1h9B3Jr7aE7gC3QwWC04QUyGSx/Gqnnuyrmf8U3Trg==
+X-Received: by 2002:a25:24f:: with SMTP id 76mr13616157ybc.330.1578927210604;
+        Mon, 13 Jan 2020 06:53:30 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id i84sm5189537ywc.43.2020.01.13.06.53.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 06:53:29 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 1BDDE4018C; Mon, 13 Jan 2020 14:53:28 +0000 (UTC)
+Date:   Mon, 13 Jan 2020 14:53:28 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v11 05/10] test_firmware: add support for
+ firmware_request_platform
+Message-ID: <20200113145328.GA11244@42.do-not-panic.com>
+References: <20200111145703.533809-1-hdegoede@redhat.com>
+ <20200111145703.533809-6-hdegoede@redhat.com>
 MIME-Version: 1.0
-References: <cover.1578789410.git.robin.murphy@arm.com>
-In-Reply-To: <cover.1578789410.git.robin.murphy@arm.com>
-From:   Anand Moon <linux.amoon@gmail.com>
-Date:   Mon, 13 Jan 2020 20:21:53 +0530
-Message-ID: <CANAwSgTTx3TvtxWgp1E3LW15ejc06v7jiKg7xg_95GwuuVtb+w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] mfd: RK8xx tidyup
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        linux-rockchip@lists.infradead.org, Soeren Moch <smoch@web.de>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200111145703.533809-6-hdegoede@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+On Sat, Jan 11, 2020 at 03:56:58PM +0100, Hans de Goede wrote:
+> Add support for testing firmware_request_platform through a new
+> trigger_request_platform trigger.
+> 
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> ---
+> Changes in v11:
+> - Drop a few empty lines which were accidentally introduced
 
-On Sun, 12 Jan 2020 at 07:25, Robin Murphy <robin.murphy@arm.com> wrote:
->
-> Hi all,
->
-> Here's a second crack at my RK805-inspired cleanup. There was a bit
-> of debate around v1[1], but it seems like we're now all happy that this
-> is a reasonable way to go. For clarity I decided to include Soeren's
-> patch as #1/5, but since I've rewritten most of my patches I've not
-> included the tested-by tags.
->
-> Robin.
->
-> [1] https://lore.kernel.org/lkml/cover.1575932654.git.robin.murphy@arm.com/
->
+But you didn't address my other feedback.
 
-Despite the i2c warning message  it performs clean shutdown. So Please add my
+> --- a/lib/test_firmware.c
+> +++ b/lib/test_firmware.c
+> @@ -507,6 +508,61 @@ static ssize_t trigger_request_store(struct device *dev,
+>  }
+>  static DEVICE_ATTR_WO(trigger_request);
+>  
+> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+> +static ssize_t trigger_request_platform_store(struct device *dev,
+> +					      struct device_attribute *attr,
+> +					      const char *buf, size_t count)
+> +{
+> +	static const u8 test_data[] = {
+> +		0x55, 0xaa, 0x55, 0xaa, 0x01, 0x02, 0x03, 0x04,
+> +		0x55, 0xaa, 0x55, 0xaa, 0x05, 0x06, 0x07, 0x08,
+> +		0x55, 0xaa, 0x55, 0xaa, 0x10, 0x20, 0x30, 0x40,
+> +		0x55, 0xaa, 0x55, 0xaa, 0x50, 0x60, 0x70, 0x80
+> +	};
+> +	struct efi_embedded_fw fw;
+> +	int rc;
+> +	char *name;
+> +
+> +	name = kstrndup(buf, count, GFP_KERNEL);
+> +	if (!name)
+> +		return -ENOSPC;
+> +
+> +	pr_info("inserting test platform fw '%s'\n", name);
+> +	fw.name = name;
+> +	fw.data = (void *)test_data;
+> +	fw.length = sizeof(test_data);
+> +	list_add(&fw.list, &efi_embedded_fw_list);
+> +
+> +	pr_info("loading '%s'\n", name);
+> +
 
-Tested-by: Anand Moon <linux.amoon@gmail.com>
+I mentioned this in my last review, and it seems you forgot to address
+this. But now some more feedback:
 
--Anand
+These two:
 
-> Robin Murphy (4):
->   mfd: rk808: Ensure suspend/resume hooks always work
->   mfd: rk808: Stop using syscore ops
->   mfd: rk808: Reduce shutdown duplication
->   mfd: rk808: Convert RK805 to shutdown/suspend hooks
->
-> Soeren Moch (1):
->   mfd: rk808: Always use poweroff when requested
->
->  drivers/mfd/rk808.c       | 139 +++++++++++++-------------------------
->  include/linux/mfd/rk808.h |   2 -
->  2 files changed, 48 insertions(+), 93 deletions(-)
->
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> +	mutex_lock(&test_fw_mutex);
+> +	release_firmware(test_firmware);
+
+You are doing this because this is a test, but a typical driver will
+do this after, and we don't loose anything in doing this after. Can you
+move the mutex lock and assign the pointer to a temporary used pointer
+for the call, *after* your call.
+
+But since your test is not using any interfaces to query information
+about the firmware, and you are just doing the test in C code right
+away, instead of say, using a trigger for later use in userspace,
+you can just do away with the mutex lock and make the call use its
+own pointer:
+
+	rc = firmware_request_platform(&tmp_test_firmware, name, dev);
+	if (rc) {
+		...
+	}
+	/* Your test branch code goes here */
+
+I see no reason why you use the test_firmware pointer.
+
+> +	test_firmware = NULL;
+> +	rc = firmware_request_platform(&test_firmware, name, dev);
+> +	if (rc) {
+> +		pr_info("load of '%s' failed: %d\n", name, rc);
+> +		goto out;
+> +	}
+> +	if (test_firmware->size != sizeof(test_data) ||
+> +	    memcmp(test_firmware->data, test_data, sizeof(test_data)) != 0) {
+> +		pr_info("firmware contents mismatch for '%s'\n", name);
+> +		rc = -EINVAL;
+> +		goto out;
+> +	}
+> +	pr_info("loaded: %zu\n", test_firmware->size);
+> +	rc = count;
+> +
+> +out:
+> +	mutex_unlock(&test_fw_mutex);
+> +
+> +	list_del(&fw.list);
+> +	kfree(name);
+> +
+> +	return rc;
+> +}
