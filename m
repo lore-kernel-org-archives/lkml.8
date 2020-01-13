@@ -2,224 +2,391 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B7FC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 473C9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04EC2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:41:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Duu+bGkV"
+	by mail.kernel.org (Postfix) with ESMTP id 1461B2081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:43:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgAMKl4 (ORCPT
+        id S1728676AbgAMKnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:41:56 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50378 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728512AbgAMKlz (ORCPT
+        Mon, 13 Jan 2020 05:43:06 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:37145 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgAMKnG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:41:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578912112;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GJEbtVcYCYsYzHFQQH8H+wrqKP98/+Ixpvz8Qz58wLw=;
-        b=Duu+bGkVNcPVz2Y4skNbrZWAGrdnCmj7P4rXMhBRqlzBjlO5z6rPKnutfrzUz0K3VFHbkc
-        KYGwYLbKrnvH80yrTzJup55VLnMC3C2jBxPbtsthYBnGqyZOSFNQxsgtkOgPKc9yO0Xv24
-        XlNiOwXJ8VUKAGRz7iZtZ8lbIZeuLhI=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-UmV_porwNY6DNXWvZKlrow-1; Mon, 13 Jan 2020 05:41:51 -0500
-X-MC-Unique: UmV_porwNY6DNXWvZKlrow-1
-Received: by mail-wr1-f71.google.com with SMTP id k18so4835715wrw.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:41:51 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GJEbtVcYCYsYzHFQQH8H+wrqKP98/+Ixpvz8Qz58wLw=;
-        b=Xmw5RoUQo6Cno6b+IPVW5xGnVb33vmlfpF5op2UVChSjl02PGCn6gstTd42bQOUa0/
-         4il571oNvKLhoQqyr27K0zPu0+hfufRLtWZtQkaZ7Q2YubZHVxwy2J5qh0qFnRhwmziT
-         fQ98I1R8pU/BvTaVZeC0K1d3zfWEFJbS/6UQqr+YIONZBBU5V1h6lmwzdtmGyd+V8Djp
-         bdZ5WblX1gBZ10t8wggtI1Q4NWoq7ku36v1J3HlYfOlBEk+olX/8TjHSsfDxuBdG6tsA
-         RPJW5Whdy/5jC812hG+SoRw+goVEN1bf5FJZxQ7ToOTc0Fe35SJ1DPIh49re7hpvNodn
-         KRMQ==
-X-Gm-Message-State: APjAAAWBEGHz5v5sIVRyI3l41nXuhCR2g5LG2fONu1RsQjKSYE1YzVdn
-        aMP8xQ8SpbT1uo6lphTVo9mwvcFwZRxEeot74CBhYdt8DB664iLpYePjmP1yjWY7yUyuo3pzzAn
-        +Hw5ZNRzuOHxyObHiP39xiau9
-X-Received: by 2002:adf:f5cf:: with SMTP id k15mr18185425wrp.182.1578912110688;
-        Mon, 13 Jan 2020 02:41:50 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwTaRrUorrV25kUMcn86Ibeg1yxvRIfWO4wbNVDFWXR6W47GP/TaN/2ZA8nilR0VNOisMdSgA==
-X-Received: by 2002:adf:f5cf:: with SMTP id k15mr18185402wrp.182.1578912110433;
-        Mon, 13 Jan 2020 02:41:50 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id t5sm14405988wrr.35.2020.01.13.02.41.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 02:41:49 -0800 (PST)
-Subject: Re: [PATCH 1/3] Input: axp20x-pek - Remove unique wakeup event
- handling
-To:     Samuel Holland <samuel@sholland.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20200113032032.38709-1-samuel@sholland.org>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <6c876812-6ec1-cf28-8ce4-7732c5cf67da@redhat.com>
-Date:   Mon, 13 Jan 2020 11:41:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 13 Jan 2020 05:43:06 -0500
+Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iqxBS-0002Af-5v; Mon, 13 Jan 2020 10:42:58 +0000
+Date:   Mon, 13 Jan 2020 11:42:57 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>
+Subject: Re: [PATCH 2/4] mm: introduce external memory hinting API
+Message-ID: <20200113104256.5ujbplyec2sk4onn@wittgenstein>
+References: <20200110213433.94739-1-minchan@kernel.org>
+ <20200110213433.94739-3-minchan@kernel.org>
+ <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
 MIME-Version: 1.0
-In-Reply-To: <20200113032032.38709-1-samuel@sholland.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 13-01-2020 04:20, Samuel Holland wrote:
-> This driver attempts to avoid reporting wakeup events to userspace by
-> clearing a possible pending IRQ before IRQs are enabled during resume.
-> The assumption seems to be that userspace cannot cope with a KEY_POWER
-> press during resume. However, no other input driver does this, so it
-> would be a bug that such events are missing with this driver.
+On Mon, Jan 13, 2020 at 11:47:11AM +0300, Kirill Tkhai wrote:
+> On 11.01.2020 00:34, Minchan Kim wrote:
+> > There are usecases that System Management Software(SMS) want to give
+> > a memory hint to other processes because it's not known to the
+> > application. In the case of Android, ActivityManagerService daemon
+> > manges app's life cycle and that daemon must be able to initiate
+> > reclaim on its own without any app involvement.
+> > 
+> > To solve the issue, this patch introduces new syscall process_madvise(2).
+> > It uses pidfd of an external processs to give the hint.
+> > 
+> >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> > 			unsigned long flag);
+> > 
+> > Since it could affect other process's address range, only privileged
+> > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> > gives it the right to ptrace the process could use it successfully.
+> > The flag argument is reserved for future use if we need to extend the
+> > API.
+> > 
+> > Supporting all hints madvise has/will supported/support to process_madvise
+> > is rather risky. Because we are not sure all hints make sense from external
+> > process and implementation for the hint may rely on the caller being
+> > in the current context so it could be error-prone. Thus, I just limited
+> > hints as MADV_[COLD|PAGEOUT] in this patch.
+> > 
+> > If someone want to add other hints, we could hear hear the usecase and
+> > review it for each hint. It's more safe for maintainace rather than
+> > introducing a buggy syscall but hard to fix it later.
+> > 
+> > Signed-off-by: Minchan Kim <minchan@kernel.org>
+> > ---
+> >  arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
+> >  arch/arm/tools/syscall.tbl                  |  1 +
+> >  arch/arm64/include/asm/unistd.h             |  2 +-
+> >  arch/arm64/include/asm/unistd32.h           |  2 +
+> >  arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
+> >  arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
+> >  arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
+> >  arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
+> >  arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
+> >  arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
+> >  arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
+> >  arch/s390/kernel/syscalls/syscall.tbl       |  1 +
+> >  arch/sh/kernel/syscalls/syscall.tbl         |  1 +
+> >  arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
+> >  arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
+> >  arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
+> >  arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
+> >  include/linux/syscalls.h                    |  2 +
+> >  include/uapi/asm-generic/unistd.h           |  5 +-
+> >  kernel/sys_ni.c                             |  1 +
+> >  mm/madvise.c                                | 64 +++++++++++++++++++++
+> >  21 files changed, 89 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
+> > index e56950f23b49..776c61803315 100644
+> > --- a/arch/alpha/kernel/syscalls/syscall.tbl
+> > +++ b/arch/alpha/kernel/syscalls/syscall.tbl
+> > @@ -477,3 +477,4 @@
+> >  # 545 reserved for clone3
+> >  546	common	watch_devices			sys_watch_devices
+> >  547	common	openat2				sys_openat2
+> > +548	common	process_madvise			sys_process_madvise
+> > diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+> > index 7fb2f4d59210..a43381542276 100644
+> > --- a/arch/arm/tools/syscall.tbl
+> > +++ b/arch/arm/tools/syscall.tbl
+> > @@ -451,3 +451,4 @@
+> >  435	common	clone3				sys_clone3
+> >  436	common	watch_devices			sys_watch_devices
+> >  437	common	openat2				sys_openat2
+> > +438	common	process_madvise			sys_process_madvise
+> > diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+> > index 8aa00ccb0b96..b722e47377a5 100644
+> > --- a/arch/arm64/include/asm/unistd.h
+> > +++ b/arch/arm64/include/asm/unistd.h
+> > @@ -38,7 +38,7 @@
+> >  #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
+> >  #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
+> >  
+> > -#define __NR_compat_syscalls		438
+> > +#define __NR_compat_syscalls		439
+> >  #endif
+> >  
+> >  #define __ARCH_WANT_SYS_CLONE
+> > diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
+> > index 31f0ce25719e..5c82557d408f 100644
+> > --- a/arch/arm64/include/asm/unistd32.h
+> > +++ b/arch/arm64/include/asm/unistd32.h
+> > @@ -883,6 +883,8 @@ __SYSCALL(__NR_clone3, sys_clone3)
+> >  __SYSCALL(__NR_watch_devices, sys_watch_devices)
+> >  #define __NR_openat2 437
+> >  __SYSCALL(__NR_openat2, sys_openat2)
+> > +#define __NR_openat2 438
+> > +__SYSCALL(__NR_process_madvise, process_madvise)
+> >  
+> >  /*
+> >   * Please add new compat syscalls above this comment and update
+> > diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
+> > index b9aa59931905..c156abc9a298 100644
+> > --- a/arch/ia64/kernel/syscalls/syscall.tbl
+> > +++ b/arch/ia64/kernel/syscalls/syscall.tbl
+> > @@ -358,3 +358,4 @@
+> >  # 435 reserved for clone3
+> >  436	common	watch_devices			sys_watch_devices
+> >  437	common	openat2				sys_openat2
+> > +438	common	process_madvise			sys_process_madvise
+> > diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
+> > index 868c1ef89d35..5b6034b6650f 100644
+> > --- a/arch/m68k/kernel/syscalls/syscall.tbl
+> > +++ b/arch/m68k/kernel/syscalls/syscall.tbl
+> > @@ -437,3 +437,4 @@
+> >  # 435 reserved for clone3
+> >  436	common	watch_devices			sys_watch_devices
+> >  437	common	openat2				sys_openat2
+> > +438	common	process_madvise			sys_process_madvise
+> > diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
+> > index 544b4cef18b3..4bef584af09c 100644
+> > --- a/arch/microblaze/kernel/syscalls/syscall.tbl
+> > +++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+> > @@ -443,3 +443,4 @@
+> >  435	common	clone3				sys_clone3
+> >  436	common	watch_devices			sys_watch_devices
+> >  437	common	openat2				sys_openat2
+> > +438	common	process_madvise			sys_process_madvise
+> > diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
+> > index 05e8aee5dae7..94fbd0fcccce 100644
+> > --- a/arch/mips/kernel/syscalls/syscall_n32.tbl
+> > +++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+> > @@ -376,3 +376,4 @@
+> >  435	n32	clone3				__sys_clone3
+> >  436	n32	watch_devices			sys_watch_devices
+> >  437	n32	openat2				sys_openat2
+> > +437	n32	process_madivse			sys_process_madvise
 > 
-> Furthermore, for PMICs connected via I2C or RSB, it is not possible to
-> update the regmap during the noirq resume phase, because the bus
-> controller drivers require IRQs to perform bus transactions. And the
-> resume hook cannot move to a later phase, because then it would race
-> with the power key IRQ handler.
+> 438. And several places below has the same mistake.
 > 
-> So the best solution seems to be simply removing the hook.
-
-Hmm, I'm not sure this is a good idea, let me give you some background
-info on this:
-
-This hook was handled because on X86 systems/laptops when waking
-them up typically the power-button does not send a KEY_POWER press event
-when the system was woken up through the power-button.
-
-So normal (e.g. Debian, Fedora) userspace does not expect this event
-and will directly go to sleep again because that is the default behavior
-on a KEY_POWER event.
-
-On x86 axp20x-pek is only used for the power-button on Bay Trail devices
-with a AXP288 PMIC. On Cherry Trail devices with an AXP288 PMIC the
-power-button is also connected directly to a GPIO on the SoC and that
-is used (also see the axp20x_pek_should_register_input function).
-
-So after writing this patch, when doing hw-enablement for the power-button
-on the Cherry Trail devices I learned that the gpio_keys driver does
-send userspace a KEY_POWER event when woken up with the power-button.
-
-I wrote a patch for gpio-keys to not do this, as that is what normal
-Linux userspace expects, but that was nacked, because under e.g.
-Android the KEY_POWER event is actually desirable / necessary to avoid
-Android immediately re-suspending the system again. Since my "fix" to
-the gpio-keys devices was nacked I have instead wroked around this in
-userspace, but *only* for the GNOME3 desktop environment, by teaching
-GNOME3 to ignore KEY_POWER events for the first couple of seconds after
-a resume.
-
-So your suggested change, which will cause KEY_POWER to be send on
-Bay Trail devices after a wake-up by the power button, should be
-fine for recent GNOME3 versions, but for other desktop environments
-this may cause a regression where they respond to the new KEY_POWER
-event by immediately going back to sleep again.
-
-As for this not working with the i2c bus, it does on X86 because
-the PMIC is also directly accessed by the power-management HW of
-the SoC and to make this work the i2c-controller is never suspended
-and its irq is marked IRQF_NO_SUSPEND. But this is X86 special
-sauce.
-
-Summarizing:
-
-I'm personally fine with remove the magic I added to suppress
-the KEY_POWER press reporting as in hindsight given the gpio-keys
-story I should have never added it. But I'm worried about this
-causing regressions for some Bay Trail users. OTOH making this
-change would be good for Android X86 users.
-
-Another IMHO better fix would be to drop the __maybe_unused and
-instead wrap both the axp20x_pek_resume_noirq function and the
-init of the  .resume_noirq struct member with:
-
-#if defined X86 && defined CONFIG_PM_SLEEP
-
-This keeps the current behavior on Bay Trail machines, while
-I assume it should also fix the issues this was causing for
-your setup.
-
-Regards,
-
-Hans
-
-
-
-
-
-
-
-
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
-> ---
->   drivers/input/misc/axp20x-pek.c | 25 -------------------------
->   1 file changed, 25 deletions(-)
+> > diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
+> > index 24d6c01328fb..4e6982c429d5 100644
+> > --- a/arch/mips/kernel/syscalls/syscall_n64.tbl
+> > +++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+> > @@ -352,3 +352,4 @@
+> >  435	n64	clone3				__sys_clone3
+> >  436	n64	watch_devices			sys_watch_devices
+> >  437	n64	openat2				sys_openat2
+> > +437	n64	process_madvise			sys_process_madvise
+> > diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
+> > index 4b5f77a4e1a2..3aa990caf9dc 100644
+> > --- a/arch/parisc/kernel/syscalls/syscall.tbl
+> > +++ b/arch/parisc/kernel/syscalls/syscall.tbl
+> > @@ -435,3 +435,4 @@
+> >  435	common	clone3				sys_clone3_wrapper
+> >  436	common	watch_devices			sys_watch_devices
+> >  437	common	openat2				sys_openat2
+> > +437	common	process_madvise			sys_process_madvise
+> > diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
+> > index 9716dc85a517..30e727a23f33 100644
+> > --- a/arch/powerpc/kernel/syscalls/syscall.tbl
+> > +++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+> > @@ -519,3 +519,4 @@
+> >  435	nospu	clone3				ppc_clone3
+> >  436	common	watch_devices			sys_watch_devices
+> >  437	common	openat2				sys_openat2
+> > +437	common	process_madvise			sys_process_madvise
+> > diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
+> > index 7da330f8b03e..75722e5ff496 100644
+> > --- a/arch/s390/kernel/syscalls/syscall.tbl
+> > +++ b/arch/s390/kernel/syscalls/syscall.tbl
+> > @@ -440,3 +440,4 @@
+> >  435  common	clone3			sys_clone3			sys_clone3
+> >  436  common	watch_devices		sys_watch_devices		sys_watch_devices
+> >  437  common	openat2			sys_openat2			sys_openat2
+> > +437  common	process_madvise		sys_process_madvise		sys_process_madvise
+> > diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
+> > index bb7e68e25337..7d7bc7befad3 100644
+> > --- a/arch/sh/kernel/syscalls/syscall.tbl
+> > +++ b/arch/sh/kernel/syscalls/syscall.tbl
+> > @@ -440,3 +440,4 @@
+> >  # 435 reserved for clone3
+> >  436	common	watch_devices			sys_watch_devices
+> >  437	common	openat2				sys_openat2
+> > +437	common	process_madvise			sys_process_madvise
+> > diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
+> > index 646a1fad7218..581d331ff62f 100644
+> > --- a/arch/sparc/kernel/syscalls/syscall.tbl
+> > +++ b/arch/sparc/kernel/syscalls/syscall.tbl
+> > @@ -483,3 +483,4 @@
+> >  # 435 reserved for clone3
+> >  436	common	watch_devices			sys_watch_devices
+> >  437	common	openat2			sys_openat2
+> > +437	common	process_madvise		sys_process_madvise
+> > diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+> > index 57c53acee290..76a2c266fe7e 100644
+> > --- a/arch/x86/entry/syscalls/syscall_32.tbl
+> > +++ b/arch/x86/entry/syscalls/syscall_32.tbl
+> > @@ -442,3 +442,4 @@
+> >  435	i386	clone3			sys_clone3			__ia32_sys_clone3
+> >  436	i386	watch_devices		sys_watch_devices		__ia32_sys_watch_devices
+> >  437	i386	openat2			sys_openat2			__ia32_sys_openat2
+> > +438	i386	process_madvise		sys_process_madvise		__ia32_sys_process_madvise
+> > diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+> > index 1dd8d21f6500..b697cd8620cb 100644
+> > --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> > +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> > @@ -359,6 +359,7 @@
+> >  435	common	clone3			__x64_sys_clone3/ptregs
+> >  436	common	watch_devices		__x64_sys_watch_devices
+> >  437	common	openat2			__x64_sys_openat2
+> > +438	common	process_madvise		__x64_sys_process_madvise
+> >  
+> >  #
+> >  # x32-specific system call numbers start at 512 to avoid cache impact
+> > diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
+> > index 0f48ab7bd75b..2e9813ecfd7d 100644
+> > --- a/arch/xtensa/kernel/syscalls/syscall.tbl
+> > +++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+> > @@ -408,3 +408,4 @@
+> >  435	common	clone3				sys_clone3
+> >  436	common	watch_devices			sys_watch_devices
+> >  437	common	openat2				sys_openat2
+> > +438	common	process_madvise			sys_process_madvise
+> > diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> > index 433c8c85636e..1b58a11ff49f 100644
+> > --- a/include/linux/syscalls.h
+> > +++ b/include/linux/syscalls.h
+> > @@ -877,6 +877,8 @@ asmlinkage long sys_munlockall(void);
+> >  asmlinkage long sys_mincore(unsigned long start, size_t len,
+> >  				unsigned char __user * vec);
+> >  asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
+> > +asmlinkage long sys_process_madvise(int pidfd, unsigned long start,
+> > +			size_t len, int behavior, unsigned long flags);
+> >  asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
+> >  			unsigned long prot, unsigned long pgoff,
+> >  			unsigned long flags);
+> > diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+> > index 33f3856a9c3c..4bcd8d366f38 100644
+> > --- a/include/uapi/asm-generic/unistd.h
+> > +++ b/include/uapi/asm-generic/unistd.h
+> > @@ -856,8 +856,11 @@ __SYSCALL(__NR_watch_devices, sys_watch_devices)
+> >  #define __NR_openat2 437
+> >  __SYSCALL(__NR_openat2, sys_openat2)
+> >  
+> > +#define __NR_openat2 438
+> > +__SYSCALL(__NR_process_madvise, sys_process_madvise)
+> > +
+> >  #undef __NR_syscalls
+> > -#define __NR_syscalls 438
+> > +#define __NR_syscalls 439
+> >  
+> >  /*
+> >   * 32 bit systems traditionally used different
+> > diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+> > index 0e9b275260f8..10ce5eac8b4b 100644
+> > --- a/kernel/sys_ni.c
+> > +++ b/kernel/sys_ni.c
+> > @@ -281,6 +281,7 @@ COND_SYSCALL(mlockall);
+> >  COND_SYSCALL(munlockall);
+> >  COND_SYSCALL(mincore);
+> >  COND_SYSCALL(madvise);
+> > +COND_SYSCALL(process_madvise);
+> >  COND_SYSCALL(remap_file_pages);
+> >  COND_SYSCALL(mbind);
+> >  COND_SYSCALL_COMPAT(mbind);
+> > diff --git a/mm/madvise.c b/mm/madvise.c
+> > index 0c901de531e4..e15dfb4df7bf 100644
+> > --- a/mm/madvise.c
+> > +++ b/mm/madvise.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/falloc.h>
+> >  #include <linux/fadvise.h>
+> >  #include <linux/sched.h>
+> > +#include <linux/sched/mm.h>
+> >  #include <linux/ksm.h>
+> >  #include <linux/fs.h>
+> >  #include <linux/file.h>
+> > @@ -993,6 +994,18 @@ madvise_behavior_valid(int behavior)
+> >  	}
+> >  }
+> >  
+> > +static bool
+> > +process_madvise_behavior_valid(int behavior)
+> > +{
+> > +	switch (behavior) {
+> > +	case MADV_COLD:
+> > +	case MADV_PAGEOUT:
+> > +		return true;
+> > +	default:
+> > +		return false;
+> > +	}
+> > +}
+> > +
+> >  /*
+> >   * madvise_common - request behavior hint to address range of the target process
+> >   *
+> > @@ -1169,3 +1182,54 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+> >  {
+> >  	return madvise_common(current, current->mm, start, len_in, behavior);
+> >  }
+> > +
+> > +SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
+> > +		size_t, len_in, int, behavior, unsigned long, flags)
 > 
-> diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
-> index 17c1cca74498..7d0ee5bececb 100644
-> --- a/drivers/input/misc/axp20x-pek.c
-> +++ b/drivers/input/misc/axp20x-pek.c
-> @@ -352,30 +352,6 @@ static int axp20x_pek_probe(struct platform_device *pdev)
->   	return 0;
->   }
->   
-> -static int __maybe_unused axp20x_pek_resume_noirq(struct device *dev)
-> -{
-> -	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
-> -
-> -	if (axp20x_pek->axp20x->variant != AXP288_ID)
-> -		return 0;
-> -
-> -	/*
-> -	 * Clear interrupts from button presses during suspend, to avoid
-> -	 * a wakeup power-button press getting reported to userspace.
-> -	 */
-> -	regmap_write(axp20x_pek->axp20x->regmap,
-> -		     AXP20X_IRQ1_STATE + AXP288_IRQ_POKN / 8,
-> -		     BIT(AXP288_IRQ_POKN % 8));
-> -
-> -	return 0;
-> -}
-> -
-> -static const struct dev_pm_ops axp20x_pek_pm_ops = {
-> -#ifdef CONFIG_PM_SLEEP
-> -	.resume_noirq = axp20x_pek_resume_noirq,
-> -#endif
-> -};
-> -
->   static const struct platform_device_id axp_pek_id_match[] = {
->   	{
->   		.name = "axp20x-pek",
-> @@ -394,7 +370,6 @@ static struct platform_driver axp20x_pek_driver = {
->   	.id_table	= axp_pek_id_match,
->   	.driver		= {
->   		.name		= "axp20x-pek",
-> -		.pm		= &axp20x_pek_pm_ops,
->   		.dev_groups	= axp20x_groups,
->   	},
->   };
+> I don't like the interface. The fact we have pidfd does not mean,
+> we have to use it for new syscalls always. A user may want to set
+> madvise for specific pid from console and pass pid as argument.
+> pidfd would be an overkill in this case.
+> We usually call "kill -9 pid" from console. Why shouldn't process_madvise()
+> allow this?
 > 
+> I suggent to extend first argument to work with both pid and pidfd.
+> Look at what we have for waitid(idtype, id_t id, ...) for example:
+> 
+>        idtype == P_PID
+>               Wait for the child whose process ID matches id.
+> 
+>        idtype == P_PIDFD (since Linux 5.4)
+>               Wait for the child referred to by the PID file descriptor specified in id.  (See pidfd_open(2) for  further  information  on
+>               PID file descriptors.)
+> 
+> We may use @flags argument for this.
 
+Sorry for chiming in just a comment. Overall, I don't particularly care
+how or if you integrate pidfd here. One thing I would like to point out
+is that we're working on a patch to place new features under pidfd
+specific flags. This e.g. means a pidfd would be only be able to be used
+for madvise operations (or getfd operations) if it was created with that
+specific flag set making it easier to share them with other processes.
+So if you integrate them here I would be quite thankful if you target
+the patchset for the v5.7 merge window, not for v5.6.
+
+Thanks!
+Christian
