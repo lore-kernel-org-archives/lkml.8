@@ -4,79 +4,180 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF39C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E372C33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:53:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1259C24649
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53B22222D9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:53:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="errFA5cA"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="AatXWb4i";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gflvmVMs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387492AbgAMDw3 (ORCPT
+        id S2387540AbgAMDxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 22:52:29 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:23713 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387415AbgAMDw2 (ORCPT
+        Sun, 12 Jan 2020 22:53:13 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:53451 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387494AbgAMDxN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 22:52:28 -0500
-X-UUID: 755dcea4cc3b43c48f8b3cab63487c60-20200113
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=GEn5TTMvrgKaWqCbybjZ0pxAsz0JFNP9RC57YNtlclc=;
-        b=errFA5cA0MqrasLeU2c7EgGO/8aV41Ke1aMqrEVxSbItW5deywTZf6OhH7Aj6Vpbf4oyN0XR1MwIXCiq4eCtIrzRWcMAWL/5QChr8p24FK2uV+ENWfkVi8pPoEMTf2+Zfw5rrq5ughg55vaIJ5TzKdmP2teiU2RokAsHpboH7Yk=;
-X-UUID: 755dcea4cc3b43c48f8b3cab63487c60-20200113
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <maoguang.meng@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1495602143; Mon, 13 Jan 2020 11:52:21 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 13 Jan 2020 11:51:06 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 13 Jan 2020 11:52:35 +0800
-From:   <maoguang.meng@mediatek.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Tiffany Lin <tiffany.lin@mediatek.com>
-CC:     Yong Wu <yong.wu@mediatek.com>, Xia Jiang <xia.jiang@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Maoguang Meng <maoguang.meng@mediatek.com>
-Subject: [PATCH 1/1] media: platform: VIDEO_MEDIATEK_JPEG can also depend on MTK_IOMMU
-Date:   Mon, 13 Jan 2020 11:52:02 +0800
-Message-ID: <20200113035202.7797-1-maoguang.meng@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Sun, 12 Jan 2020 22:53:13 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 418C421C1E;
+        Sun, 12 Jan 2020 22:53:12 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Sun, 12 Jan 2020 22:53:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=m4PaaL1uSYSw4
+        MJXUFb/Hne13RaJ0dX5yeTCgehScLE=; b=AatXWb4iAOlWuYpCHWxYKhzBu031b
+        a3UcZsvV9x/Qh/JxeSMG4YcukEpYcWMP9o8L5LhENM1ajFowudpTQrQB8qdVvq5j
+        TVFKgky1ZUOcWvNphMTbNRvAFyFXI37X2fxCx2GX5iyY15TOG1DO6NXxTFyPVGzF
+        04Y7srUIuVFMvsU6zJlPxeVuQc70cUeyKYAjeYDnUdTCUSpQb0PnzvCalAK/I4FM
+        awjWbalm6FqfXdSPs88lKvBX2hSWYwoo9U2Rch2N8K++rlRQlzbGUJ5wd1nMM6WY
+        nxMnRs2iDm6eEfUMiC0lsxB+mTaIi9PWkdM42Nm9l+pGelh3ufOHWXjoA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; bh=m4PaaL1uSYSw4MJXUFb/Hne13RaJ0dX5yeTCgehScLE=; b=gflvmVMs
+        2HLOEIj0Fbr+WRqUsM39j/MKmq/8SjUkxlOjZSQNdYCUHH8Bp2YA+AJY6fUCRs6q
+        7RP50/tWf4HO7yyhQVk6cOv1uAdt8CEd9Nh79BKzkrqzpQJqAIJcV/WWifN3zLuy
+        xGOJYLKGivuJfBButcVpiLvofNzWdLqJdiI3a2eDAcGW9C2wwKtjvOdoQDGaeaDb
+        oAgaSX25Vu8OjoYsxOkkZphl33WjKzvtFI5qCU3LDIk0hHU3m3qlFGvYIzPkL5Ff
+        eMGcbXf9DABRoPDjuDIeRkY2Sn9otlCXmKD0U7onCj+vKKzH/c7QTMwKowk2JjlW
+        pavBcnAFJGxC7Q==
+X-ME-Sender: <xms:qOkbXrrCkR29pmi6t3HcTNX-cznYZm7CqFVQTfSev7STqhlh7hzikQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeiledgieeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
+    epjedtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghm
+    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:qOkbXtUdbMJsqq-W__VU_izvYsEbnIahqnxuMt9W0Grgjb_8KXwNeQ>
+    <xmx:qOkbXib-RB1VKU1s_kdEZl8vGjlHYewnkjIV3nzybAjE07Y_0OxT2g>
+    <xmx:qOkbXuFdSeTkFzSAAbuQlxOxigCGfc_sxntXYuoroV1tPSqJhBLwXQ>
+    <xmx:qOkbXqetzqGkmg42jdwM8jE3fmCiN5IrkwWFR33NaWBSgalU5heQpA>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A3A0580062;
+        Sun, 12 Jan 2020 22:53:11 -0500 (EST)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>,
+        Oskari Lemmela <oskari@lemmela.net>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>,
+        stable@vger.kernel.org
+Subject: [PATCH v3 1/8] power: supply: axp20x_ac_power: Fix reporting online status
+Date:   Sun, 12 Jan 2020 21:53:03 -0600
+Message-Id: <20200113035310.18950-2-samuel@sholland.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200113035310.18950-1-samuel@sholland.org>
+References: <20200113035310.18950-1-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 6669261D4D362FA0B90A9D2C43FB1733D5513E1AEFCDD470B21449EB489B41AA2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTWFvZ3VhbmcgTWVuZyA8bWFvZ3VhbmcubWVuZ0BtZWRpYXRlay5jb20+DQoNCm1lZGlh
-dGVrIGpwZWcgY29kZWMgZHJpdmVyIGNhbiBkZXBlbmQgb24gTVRLX0lPTU1VIG9yIE1US19JT01N
-VV9WMQ0KDQpDaGFuZ2UtSWQ6IEk3ODk3OWFmOTI0ZDRmZDUyYTM2NDFlZmYxNDYzYTEwZDZlMWQ0
-NjVmDQpTaWduZWQtb2ZmLWJ5OiBNYW9ndWFuZyBNZW5nIDxtYW9ndWFuZy5tZW5nQG1lZGlhdGVr
-LmNvbT4NCi0tLQ0KIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vS2NvbmZpZyB8IDIgKy0NCiAxIGZp
-bGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCg0KZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vS2NvbmZpZyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
-S2NvbmZpZw0KaW5kZXggZTg0ZjM1ZDNhNjhlLi44NTM3N2M4OGU5MWEgMTAwNjQ0DQotLS0gYS9k
-cml2ZXJzL21lZGlhL3BsYXRmb3JtL0tjb25maWcNCisrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZv
-cm0vS2NvbmZpZw0KQEAgLTIwMCw3ICsyMDAsNyBAQCBjb25maWcgVklERU9fSU1YX1BYUA0KIA0K
-IGNvbmZpZyBWSURFT19NRURJQVRFS19KUEVHDQogCXRyaXN0YXRlICJNZWRpYXRlayBKUEVHIENv
-ZGVjIGRyaXZlciINCi0JZGVwZW5kcyBvbiBNVEtfSU9NTVVfVjEgfHwgQ09NUElMRV9URVNUDQor
-CWRlcGVuZHMgb24gTVRLX0lPTU1VX1YxIHx8IE1US19JT01NVSB8fCBDT01QSUxFX1RFU1QNCiAJ
-ZGVwZW5kcyBvbiBWSURFT19ERVYgJiYgVklERU9fVjRMMg0KIAlkZXBlbmRzIG9uIEFSQ0hfTUVE
-SUFURUsgfHwgQ09NUElMRV9URVNUDQogCXNlbGVjdCBWSURFT0JVRjJfRE1BX0NPTlRJRw0KLS0g
-DQoyLjE4LjANCg==
+AXP803/AXP813 have a flag that enables/disables the AC power supply
+input. This flag does not affect the status bits in PWR_INPUT_STATUS.
+Its effect can be verified by checking the battery charge/discharge
+state (bit 2 of PWR_INPUT_STATUS), or by examining the current draw on
+the AC input.
+
+Take this flag into account when getting the ONLINE property of the AC
+input, on PMICs where this flag is present.
+
+Fixes: 7693b5643fd2 ("power: supply: add AC power supply driver for AXP813")
+Cc: stable@vger.kernel.org
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
+ drivers/power/supply/axp20x_ac_power.c | 31 +++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/power/supply/axp20x_ac_power.c b/drivers/power/supply/axp20x_ac_power.c
+index 0d34a932b6d5..f74b0556bb6b 100644
+--- a/drivers/power/supply/axp20x_ac_power.c
++++ b/drivers/power/supply/axp20x_ac_power.c
+@@ -23,6 +23,8 @@
+ #define AXP20X_PWR_STATUS_ACIN_PRESENT	BIT(7)
+ #define AXP20X_PWR_STATUS_ACIN_AVAIL	BIT(6)
+ 
++#define AXP813_ACIN_PATH_SEL		BIT(7)
++
+ #define AXP813_VHOLD_MASK		GENMASK(5, 3)
+ #define AXP813_VHOLD_UV_TO_BIT(x)	((((x) / 100000) - 40) << 3)
+ #define AXP813_VHOLD_REG_TO_UV(x)	\
+@@ -40,6 +42,7 @@ struct axp20x_ac_power {
+ 	struct power_supply *supply;
+ 	struct iio_channel *acin_v;
+ 	struct iio_channel *acin_i;
++	bool has_acin_path_sel;
+ };
+ 
+ static irqreturn_t axp20x_ac_power_irq(int irq, void *devid)
+@@ -86,6 +89,17 @@ static int axp20x_ac_power_get_property(struct power_supply *psy,
+ 			return ret;
+ 
+ 		val->intval = !!(reg & AXP20X_PWR_STATUS_ACIN_AVAIL);
++
++		/* ACIN_PATH_SEL disables ACIN even if ACIN_AVAIL is set. */
++		if (val->intval && power->has_acin_path_sel) {
++			ret = regmap_read(power->regmap, AXP813_ACIN_PATH_CTRL,
++					  &reg);
++			if (ret)
++				return ret;
++
++			val->intval = !!(reg & AXP813_ACIN_PATH_SEL);
++		}
++
+ 		return 0;
+ 
+ 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+@@ -224,21 +238,25 @@ static const struct power_supply_desc axp813_ac_power_desc = {
+ struct axp_data {
+ 	const struct power_supply_desc	*power_desc;
+ 	bool				acin_adc;
++	bool				acin_path_sel;
+ };
+ 
+ static const struct axp_data axp20x_data = {
+-	.power_desc = &axp20x_ac_power_desc,
+-	.acin_adc = true,
++	.power_desc	= &axp20x_ac_power_desc,
++	.acin_adc	= true,
++	.acin_path_sel	= false,
+ };
+ 
+ static const struct axp_data axp22x_data = {
+-	.power_desc = &axp22x_ac_power_desc,
+-	.acin_adc = false,
++	.power_desc	= &axp22x_ac_power_desc,
++	.acin_adc	= false,
++	.acin_path_sel	= false,
+ };
+ 
+ static const struct axp_data axp813_data = {
+-	.power_desc = &axp813_ac_power_desc,
+-	.acin_adc = false,
++	.power_desc	= &axp813_ac_power_desc,
++	.acin_adc	= false,
++	.acin_path_sel	= true,
+ };
+ 
+ static int axp20x_ac_power_probe(struct platform_device *pdev)
+@@ -282,6 +300,7 @@ static int axp20x_ac_power_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	power->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	power->has_acin_path_sel = axp_data->acin_path_sel;
+ 
+ 	platform_set_drvdata(pdev, power);
+ 
+-- 
+2.23.0
 
