@@ -2,105 +2,120 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91038C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC06C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BDBF207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F062073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:29:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bD+O85KG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbgAMHZt (ORCPT
+        id S1728773AbgAMH3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 02:25:49 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37920 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727555AbgAMHZs (ORCPT
+        Mon, 13 Jan 2020 02:29:23 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34813 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728687AbgAMH3W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 02:25:48 -0500
-Received: by mail-ot1-f67.google.com with SMTP id z9so5943959oth.5;
-        Sun, 12 Jan 2020 23:25:48 -0800 (PST)
+        Mon, 13 Jan 2020 02:29:22 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t2so7423009wrr.1
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 23:29:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Whdn2m/U1+HR1RNQq+8AxWESiMgdzhNcD7fmHq1i6N8=;
+        b=bD+O85KGDadiliWt3Ps6YuhsgSPwXU8EYhpSch8p+13GrX2HlxbLekt0Q7m5w43NTc
+         KU72X99cw/UqTi2iXQzYiev8cXt8UvHfsC5iEU0o9JjBYfQP4IGFo4loiZSrQcHaj+ph
+         qfEe8OckgtbZyNM4ZcfXyT0L+HB9TdxF/T8EfwYEQX9bQV905u7RP61+cj0ZsXOaJUQ2
+         BnT4z6Rmzco6HRo3UCQx9fBV4dSbRjp4OJtXJ7PFXsBGmP14XS+uTFBR4wQ1FXrYw7sz
+         mimNnG+o78KhowrJbnHEPPTi3dlIhRe1x9ud8xc0psJ0tCP9dCDq30klcJVBSSjsPXOk
+         Mdiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=eyihv1VUwTMBsf8Vdp+9W+NVjjmwvawqQpBne2QlYnM=;
-        b=Kqp/4dpxAjj2w91RsWLg1cJuuC6W9XVQcsy7bUjFQqIK5Ja8h8gurovv/KCibSsb1W
-         YperoAf/UJO9EGb8SyxUwUDa2Sjh6tXUaEXTOMgZpQ6oK0/h05oMrdkHeMnLyyEVJPMO
-         MprsgdvcUyKLQFd/gOWNG5H4mMsUPABx5aM+uDyW7tFrtWtJZM4TcABRUxAMufEYD7d2
-         yJd+WTXbeNBaJ4lMtp+qFqXNIYV0Y4DaW3POEO34pCQlm5As+UMvjyJJDDpBHcxhjQF7
-         kxU1svIxtTwqvylg/PG+XH1Mg4rXNV0+ghTRvIgTOAHj6fXZ71j9hvh24jhr2LW4RcJf
-         dvLA==
-X-Gm-Message-State: APjAAAVOhZHBOzBzE+kiqaxmdoPM8npA+X/pRzdrwb0TIvnA5kMi2JpI
-        /PDX9lUqpohBfjdFfX8/0CUycsYHAcMn0deNraM=
-X-Google-Smtp-Source: APXvYqxVzBCz2z5lqzdxpNmw8G28OvwDLnSjW/jq4i9r6CTFqX3Rh2cIc7OoM7I6Ne/jzVD78lZQVrIa5iSUffAmF6U=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr12522971otm.297.1578900348041;
- Sun, 12 Jan 2020 23:25:48 -0800 (PST)
+        bh=Whdn2m/U1+HR1RNQq+8AxWESiMgdzhNcD7fmHq1i6N8=;
+        b=I3qpIzEOyM9I8W3WjCdG7HZnSimwF/SL4uCYCIG5OI5KjvB8bJMYb3OIwAxWOv4hCv
+         dCp7UZujEa8S1eq70z88lTfaafJF+1WJrqft56OzVSPR8nJlFAEphjiiQp9qXem8ebOL
+         9D14zQOT0OlxS9P55PoblUWGcKG+BfWYBCo5D1dP0Maata+zF/T208ewRMc5n7LMWXay
+         WVowHmxftv9ra+WQ8FbB/kcZWO0KcoSxzLEe+RPkF/9y+X2p3S8Jvo3aVJLSnubC7eyv
+         8i0LLUQk+8h1tzhoB8SRnbXqEHSyV++tZ0HHxvdE3ueoY6sENzOjn8fBAR8OsRPa1em+
+         7LxQ==
+X-Gm-Message-State: APjAAAWo6XcZQVGuYlvFoIi3Ar1sWSAEo73893seAgenzYPJ/fAXfmdU
+        wrKVbyLCcnZN5pGHURipj0LX58KM53Uxd3JX/t8erw==
+X-Google-Smtp-Source: APXvYqybS5eWEDwKlCVck9fBn8ODoIWsy3woTpWRduDt3Jqrcph4In1sPlEdRF1YEQxWKwUulSCwOK9Iz13o914Trto=
+X-Received: by 2002:a5d:6652:: with SMTP id f18mr17078276wrw.246.1578900560096;
+ Sun, 12 Jan 2020 23:29:20 -0800 (PST)
 MIME-Version: 1.0
-References: <20200112171349.22268-1-geert@linux-m68k.org> <9286d81a883f4795176182fdb9e69bc19a8232c7.camel@perches.com>
-In-Reply-To: <9286d81a883f4795176182fdb9e69bc19a8232c7.camel@perches.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 13 Jan 2020 08:25:36 +0100
-Message-ID: <CAMuHMdXRpKJNm6tFjccO67dQr=_Hc4rD1NmJzzrHPDEyja0R5w@mail.gmail.com>
-Subject: Re: [PATCH] rtc: i2c/spi: Avoid inclusion of REGMAP support when not needed
-To:     Joe Perches <joe@perches.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        linux-rtc@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200103113953.9571-1-ardb@kernel.org> <CAKv+Gu8pzDSs6G5k9JfX77NB4q2kerxSuprnzFzeGBPd2kPd5g@mail.gmail.com>
+ <20200110181312.GB83292@gmail.com>
+In-Reply-To: <20200110181312.GB83292@gmail.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 13 Jan 2020 08:29:09 +0100
+Message-ID: <CAKv+Gu_4GNdu+72iGN5wnzfDx3iQ0uM2x9wC6pOBPvqAvJu8dA@mail.gmail.com>
+Subject: Re: [GIT PULL 00/20] More EFI updates for v5.6
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Matthew Garrett <mjg59@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joe,
-
-On Mon, Jan 13, 2020 at 7:36 AM Joe Perches <joe@perches.com> wrote:
-> On Sun, 2020-01-12 at 18:13 +0100, Geert Uytterhoeven wrote:
-> > Merely enabling I2C and RTC selects REGMAP_I2C and REGMAP_SPI, even when
-> > no driver needs it.  While the former can be moduler, the latter cannot,
-> > and thus becomes built-in.
-> >
-> > Fix this by moving the select statements for REGMAP_I2C and REGMAP_SPI
-> > from the RTC_I2C_AND_SPI helper to the individual drivers that depend on
-> > it.
-> >
-> > Note that the comment for RTC_I2C_AND_SPI refers to SND_SOC_I2C_AND_SPI
-> > for more information, but the latter does not select REGMAP_{I2C,SPI}
-> > itself, and defers that to the individual drivers, too.
-> >
-> > Fixes: 080481f54ef62121 ("rtc: merge ds3232 and ds3234")
-> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > ---
-> > Joe: When merging addresses, scripts/get_maintainer.pl replaces
-> >      Alexandre's authoritative email address from MAINTAINERS by the
-> >      obsolete address in the SoB-line of the commit referred to by the
-> >      Fixes-line.
+On Fri, 10 Jan 2020 at 19:13, Ingo Molnar <mingo@kernel.org> wrote:
 >
-> Hi Geert
 >
-> What are you doing to get this changed output?
+> * Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>
+> > On Fri, 3 Jan 2020 at 12:40, Ard Biesheuvel <ardb@kernel.org> wrote:
+> > >
+> > > Ingo, Thomas,
+> > >
+> > > This is the second batch of EFI updates for v5.6. Two things are still
+> > > under discussion, so I'll probably have a few more changes for this
+> > > cycle in a week or so.
+> > >
+> > > The following changes since commit 0679715e714345d273c0e1eb78078535ffc4b2a1:
+> > >
+> > >   efi/libstub/x86: Avoid globals to store context during mixed mode calls (2019-12-25 10:49:26 +0100)
+> > >
+> > > are available in the Git repository at:
+> > >
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-next
+> > >
+> > > for you to fetch changes up to d95e4feae5368a91775c4597a8f298ba84f31535:
+> > >
+> > >   efi/x86: avoid RWX mappings for all of DRAM (2020-01-03 11:46:15 +0100)
+> > >
+> >
+> > Ingo, Thomas,
+> >
+> > I'll be submitting another PR later today or tomorrow that goes on top
+> > of these changes. Please let me know if you would like a v2 of this PR
+> > with the new content included, or rather keep them separate.
+>
+> So there's one complication I noticed, there's conflicts with ongoing
+> x86/mm work. I've merged x86/mm into efi/core (and will send the branches
+> in that order in the merge window), and the final three patches conflict.
+>
+> Mind sending those three patches and your other patches on top of the
+> latest efi/core (4444f8541dad)?
+>
 
-scripts/get_maintainer.pl
-0001-rtc-i2c-spi-Avoid-inclusion-of-REGMAP-support-when-n.patch
+No problem. I'll rebase and retest, and send out the result end of
+today or tomorrow.
 
-> I get the same get_maintainer address output either way
-> with only with the 'blamed_fixes:' content added.
-
-Thanks, I can confirm it's fixed in next-20200110.
-With v5.5-rc6, it still gives the old addresss.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks,
+Ard.
