@@ -2,156 +2,109 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EADC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C4B4C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:44:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880F72084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6BD20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:44:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oNReL/5f"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GeMpERhk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728778AbgAMKn1 (ORCPT
+        id S1728783AbgAMKoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:43:27 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:49794 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgAMKn1 (ORCPT
+        Mon, 13 Jan 2020 05:44:08 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51814 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgAMKoH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:43:27 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4Ui4G/63QoKUZjvMxF9EJYkI/mkrELqU9EkyXbiVp7c=; b=oNReL/5fHv4q5CIDS90mS2PoL
-        0peoh4gfvE2E6UFhJWpnJdDF3Vt1cz25k7qtz8pUHE8r70A45XrE+w7jNrpZyTmfKWEAzkYJq8LLT
-        yzgXw7VvGVN1NUR2VVJgXBCA/EzUgS3Q1sNbfHBevMhzU0kspAsYAPOoTvkY7wWtBq3wpCq7wtAXy
-        InyWVplaJrC935gDK0uDpIUcyZhD/VBnEKtMc06L1Mb4MQV4RyJLSgPZxHA9XWs5nP8TQAiiKY4Jo
-        s0X1mpV/D/j8uMbwIFx6zwtgEChqtGkvOA5n2+JFV2n99HK+UDN2HfOLjljAxmUc52MXKUwv4CD0p
-        S57qSrajg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iqxBm-0008LU-0A; Mon, 13 Jan 2020 10:43:18 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A50DB304123;
-        Mon, 13 Jan 2020 11:41:39 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E4E3C2B66D538; Mon, 13 Jan 2020 11:43:14 +0100 (CET)
-Date:   Mon, 13 Jan 2020 11:43:14 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        KarimAllah <karahmed@amazon.de>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ankur Arora <ankur.a.arora@oracle.com>,
-        christopher.s.hall@intel.com, hubert.chrzaniuk@intel.com,
-        len.brown@intel.com, thomas.lendacky@amd.com, rjw@rjwysocki.net
-Subject: Re: [PATCH RFC] sched/fair: Penalty the cfs task which executes
- mwait/hlt
-Message-ID: <20200113104314.GU2844@hirez.programming.kicks-ass.net>
-References: <1578448201-28218-1-git-send-email-wanpengli@tencent.com>
- <20200108155040.GB2827@hirez.programming.kicks-ass.net>
- <00d884a7-d463-74b4-82cf-9deb0aa70971@redhat.com>
- <CANRm+Cx0LMK1b2mJiU7edCDoRfPfGLzY1Zqr5paBEPcWFFALhQ@mail.gmail.com>
+        Mon, 13 Jan 2020 05:44:07 -0500
+Received: by mail-wm1-f67.google.com with SMTP id d73so9062535wmd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:44:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=nd9zBOJ7DFj/Dtbz3rp6d+0XndVo+gDlgYvFDKYp8+s=;
+        b=GeMpERhkvEG3M47S31KSbXI+27ByB7S40b72fz7RfsAQuOTyuaw8yr431i6iJs18ke
+         zZgsLTRC1v0aVjdcrATovJ6LKokk/zpnR8gp9B2JZThmh0N6EpPp4mQkvJwyXB50jeey
+         ECP4IdxzksWrRVvCHMd3qSCPdRafW0JeyzwDQRFAQ2sPFcdjKkiX7IfPv/Pt9O2U/BGO
+         eGQRyEWTqQ6K6eDSFPCYkM5jfVinjqehiEtGXmQAPNDzh090InO0frjvAjZlRkGK4DbW
+         /TcreEygUmGt7Ld2aGov6sV/ctIrGXEPvYjRxMA0n/3ppu7jjWIBgqpFLAPV8sXmhemv
+         LnXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=nd9zBOJ7DFj/Dtbz3rp6d+0XndVo+gDlgYvFDKYp8+s=;
+        b=fPtyfeiQnBigljaYMEa2+26bgN956XDyX4EHfEB8i1vSYaPQUU++eaSKl/QggtKzJs
+         lqU98HdffkG0KgUruakJiV+ShGpqzGUDydhUz5zL8ZiMh68vjMB7/04s1xASTLQFUJTV
+         gXkyCK0JNnO6hoh6EsM8J/SRfBlqvoC7AWfeOjHNl0cHqmm5Hn6Qq21z+iVGByr/hLI4
+         bxQyj0/wsHPe6lIZFZV4G2B3p6LsfYa7XvF6RyKDUbAf0ThKFlCdA589+k0Uot7Xec6r
+         EtC6YvmJemX0ZuHvqGdWEnpkIhDjjzCRzkMhF7lcHPs+719kfuOWTvfIlm4ln89xwM3z
+         t04w==
+X-Gm-Message-State: APjAAAXraoYcHERxYp0I9qG/pWFUcwAq1SGE/1llncnAWcIJDy0jRiUv
+        bMLaef/E7Pl0y8zNA2SBTnXLmw==
+X-Google-Smtp-Source: APXvYqzbSS4ol43wiLTvRNFz/aOQQaGCIVNj4PCQ/JFvnFJbo3oKqASF6jPc7L7yw7tahunzIRdGwQ==
+X-Received: by 2002:a7b:c4c5:: with SMTP id g5mr19554043wmk.85.1578912245829;
+        Mon, 13 Jan 2020 02:44:05 -0800 (PST)
+Received: from dell ([95.147.198.95])
+        by smtp.gmail.com with ESMTPSA id 124sm14411631wmc.29.2020.01.13.02.44.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 02:44:05 -0800 (PST)
+Date:   Mon, 13 Jan 2020 10:44:25 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Subject: Re: [PATCH 2/2] mfd: madera: Wait for boot done before accessing any
+ other registers
+Message-ID: <20200113104425.GD5414@dell>
+References: <20200106102834.31301-1-ckeepax@opensource.cirrus.com>
+ <20200106102834.31301-2-ckeepax@opensource.cirrus.com>
+ <20200107142942.GO14821@dell>
+ <20200108084220.GH10451@ediswmail.ad.cirrus.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CANRm+Cx0LMK1b2mJiU7edCDoRfPfGLzY1Zqr5paBEPcWFFALhQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200108084220.GH10451@ediswmail.ad.cirrus.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 08 Jan 2020, Charles Keepax wrote:
 
-Preserved most (+- edits) for the people added to Cc.
+> On Tue, Jan 07, 2020 at 02:29:42PM +0000, Lee Jones wrote:
+> > On Mon, 06 Jan 2020, Charles Keepax wrote:
+> > 
+> > > It is advised to wait for the boot done bit to be set before reading
+> > > any other register, update the driver to respect this.
+> > > 
+> > > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > > ---
+> > >  drivers/mfd/madera-core.c | 17 +++++++++++++++--
+> > >  1 file changed, 15 insertions(+), 2 deletions(-)
+> > 
+> > I'm assuming this patch is orthogonal to the last?
+> > 
+> > Can I take it on its own?
+> > 
+> 
+> Yeah these can be taken separately to the other series we are
+> waiting on Mark to review.
 
-On Thu, Jan 09, 2020 at 07:53:51PM +0800, Wanpeng Li wrote:
-> On Thu, 9 Jan 2020 at 01:15, Paolo Bonzini <pbonzini@redhat.com> wrote:
-> > On 08/01/20 16:50, Peter Zijlstra wrote:
-> > > On Wed, Jan 08, 2020 at 09:50:01AM +0800, Wanpeng Li wrote:
-> > >> From: Wanpeng Li <wanpengli@tencent.com>
-> > >>
-> > >> To deliver all of the resources of a server to instances in cloud, there are no
-> > >> housekeeping cpus reserved. libvirtd, qemu main loop, kthreads, and other agent/tools
-> > >> etc which can't be offloaded to other hardware like smart nic, these stuff will
-> > >> contend with vCPUs even if MWAIT/HLT instructions executed in the guest.
-> >
-> > ^^ this is the problem statement:
-> >
-> > He has VCPU threads which are being pinned 1:1 to physical CPUs.  He
-> > needs to have various housekeeping threads preempting those vCPU
-> > threads, but he'd rather preempt vCPU threads that are doing HLT/MWAIT
-> > than those that are keeping the CPU busy.
-> >
-> > >> The is no trap and yield the pCPU after we expose mwait/hlt to the guest [1][2],
-> > >> the top command on host still observe 100% cpu utilization since qemu process is
-> > >> running even though guest who has the power management capability executes mwait.
-> > >> Actually we can observe the physical cpu has already enter deeper cstate by
-> > >> powertop on host.
-> > >>
-> > >> For virtualization, there is a HLT activity state in CPU VMCS field which indicates
-> > >> the logical processor is inactive because it executed the HLT instruction, but
-> > >> SDM 24.4.2 mentioned that execution of the MWAIT instruction may put a logical
-> > >> processor into an inactive state, however, this VMCS field never reflects this
-> > >> state.
-> > >
-> > > So far I think I can follow, however it does not explain who consumes
-> > > this VMCS state if it is set and how that helps. Also, this:
-> >
-> > I think what Wanpeng was saying is: "KVM could gather this information
-> > using the activity state field in the VMCS.  However, when the guest
-> > does MWAIT the processor can go into an inactive state without updating
-> > the VMCS."  Hence looking at the APERFMPERF ratio.
-> >
-> > >> This patch avoids fine granularity intercept and reschedule vCPU if MWAIT/HLT
-> > >> instructions executed, because it can worse the message-passing workloads which
-> > >> will switch between idle and running frequently in the guest. Lets penalty the
-> > >> vCPU which is long idle through tick-based sampling and preemption.
-> > >
-> > > is just complete gibberish. And I have no idea what problem you're
-> > > trying to solve how.
-> >
-> > This is just explaining why MWAIT and HLT is not being trapped in his
-> > setup.  (Because vmexit on HLT or MWAIT is awfully expensive).
-> >
-> > > Also, I don't think the TSC/MPERF ratio is architected, we can't assume
-> > > this is true for everything that has APERFMPERF.
-> >
-> > Right, you have to look at APERF/MPERF, not TSC/MPERF.
+I mean the patch.  Can I take 2/2 without 1/2?
 
-> Peterz, do you have nicer solution for this?
-
-So as you might've seen, we're going to go read the APERF/MPERF thingies
-in the tick anyway:
-
-  https://lkml.kernel.org/r/20191002122926.385-1-ggherdovich@suse.cz
-
-(your proposed patch even copied some naming off of that, so I'm
-assuming you've actually seen that)
-
-So the very first thing we need to get sorted is that MPERF/TSC ratio
-thing. TurboStat does it, but has 'funny' hacks on like:
-
-  b2b34dfe4d9a ("tools/power turbostat: KNL workaround for %Busy and Avg_MHz")
-
-and I imagine that there's going to be more exceptions there. You're
-basically going to have to get both Intel and AMD to commit to this.
-
-IFF we can get concensus on MPERF/TSC, then yes, that is a reasonable
-way to detect a VCPU being idle I suppose. I've added a bunch of people
-who seem to know about this.
-
-Anyone, what will it take to get MPERF/TSC 'working' ?
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
