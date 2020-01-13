@@ -2,148 +2,131 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8735C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F11ACC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DF9207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC3962080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:57:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OZDoe8kH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbgAMW45 (ORCPT
+        id S1729126AbgAMW5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:56:57 -0500
-Received: from mga03.intel.com ([134.134.136.65]:59925 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728833AbgAMW45 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:56:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 14:56:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,430,1571727600"; 
-   d="scan'208";a="304974676"
-Received: from pboliset-mobl.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.251.152.72])
-  by orsmga001.jf.intel.com with ESMTP; 13 Jan 2020 14:56:55 -0800
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH] soundwire: bus: fix device number leak on errors
-Date:   Mon, 13 Jan 2020 16:56:37 -0600
-Message-Id: <20200113225637.17313-1-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 13 Jan 2020 17:57:19 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:21945 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728833AbgAMW5T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 17:57:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578956237;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IQCOGbh+bMqXrPS+qToZ71MmwbqD2csN/FzB8tydSE4=;
+        b=OZDoe8kHDTFBLgq/XL48nEaCm45BxCsJ1oDwdkY28RPi48dSADNhBONBixnWHpriZUoUT/
+        qApREG/8XX/apOQkSY4ScQKEp1OpAHPvD20QgyAW6aSb3Nk3RPxLnREMS3maLEFzp9Xln5
+        O4UPpr+G7+C6rKRR8Ge9c2MmyDLo6FA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-364-cG5FGFRxN6uisPMJ3xaI_g-1; Mon, 13 Jan 2020 17:57:14 -0500
+X-MC-Unique: cG5FGFRxN6uisPMJ3xaI_g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C50518024D3;
+        Mon, 13 Jan 2020 22:57:12 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AAEEB811E0;
+        Mon, 13 Jan 2020 22:57:12 +0000 (UTC)
+Received: from zmail19.collab.prod.int.phx2.redhat.com (zmail19.collab.prod.int.phx2.redhat.com [10.5.83.22])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 814B4503DA;
+        Mon, 13 Jan 2020 22:57:12 +0000 (UTC)
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: base64
+From:   David Hildenbrand <dhildenb@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v1 2/2] mm: factor out next_present_section_nr()
+Date:   Mon, 13 Jan 2020 17:57:12 -0500 (EST)
+Message-Id: <0B77E39C-BD38-4A61-AB28-3578B519952F@redhat.com>
+References: <20200113224155.efoekgw4hyey2by2@box>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Oscar Salvador <osalvador@suse.de>
+In-Reply-To: <20200113224155.efoekgw4hyey2by2@box>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Thread-Topic: factor out next_present_section_nr()
+Thread-Index: KOJuedPw6AHzUiVonlt4OpFWR8o9Jw==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the programming of the dev_number fails due to an IO error, a new
-device_number will be assigned, resulting in a leak.
-
-Make sure we only assign a device_number once per Slave device.
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- drivers/soundwire/bus.c       | 37 ++++++++++++++++++++++-------------
- include/linux/soundwire/sdw.h |  4 +++-
- 2 files changed, 26 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index be5d437058ed..8f973e70e6f7 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -456,26 +456,35 @@ static int sdw_get_device_num(struct sdw_slave *slave)
- static int sdw_assign_device_num(struct sdw_slave *slave)
- {
- 	int ret, dev_num;
-+	bool new_device = false;
- 
- 	/* check first if device number is assigned, if so reuse that */
- 	if (!slave->dev_num) {
--		mutex_lock(&slave->bus->bus_lock);
--		dev_num = sdw_get_device_num(slave);
--		mutex_unlock(&slave->bus->bus_lock);
--		if (dev_num < 0) {
--			dev_err(slave->bus->dev, "Get dev_num failed: %d\n",
--				dev_num);
--			return dev_num;
-+		if (!slave->dev_num_sticky) {
-+			mutex_lock(&slave->bus->bus_lock);
-+			dev_num = sdw_get_device_num(slave);
-+			mutex_unlock(&slave->bus->bus_lock);
-+			if (dev_num < 0) {
-+				dev_err(slave->bus->dev, "Get dev_num failed: %d\n",
-+					dev_num);
-+				return dev_num;
-+			}
-+			slave->dev_num = dev_num;
-+			slave->dev_num_sticky = dev_num;
-+			new_device = true;
-+		} else {
-+			slave->dev_num = slave->dev_num_sticky;
- 		}
--	} else {
-+	}
-+
-+	if (!new_device)
- 		dev_info(slave->bus->dev,
--			 "Slave already registered dev_num:%d\n",
-+			 "Slave already registered, reusing dev_num:%d\n",
- 			 slave->dev_num);
- 
--		/* Clear the slave->dev_num to transfer message on device 0 */
--		dev_num = slave->dev_num;
--		slave->dev_num = 0;
--	}
-+	/* Clear the slave->dev_num to transfer message on device 0 */
-+	dev_num = slave->dev_num;
-+	slave->dev_num = 0;
- 
- 	ret = sdw_write(slave, SDW_SCP_DEVNUMBER, dev_num);
- 	if (ret < 0) {
-@@ -485,7 +494,7 @@ static int sdw_assign_device_num(struct sdw_slave *slave)
- 	}
- 
- 	/* After xfer of msg, restore dev_num */
--	slave->dev_num = dev_num;
-+	slave->dev_num = slave->dev_num_sticky;
- 
- 	return 0;
- }
-diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-index b7c9eca4332a..b451bb622335 100644
---- a/include/linux/soundwire/sdw.h
-+++ b/include/linux/soundwire/sdw.h
-@@ -546,7 +546,8 @@ struct sdw_slave_ops {
-  * @debugfs: Slave debugfs
-  * @node: node for bus list
-  * @port_ready: Port ready completion flag for each Slave port
-- * @dev_num: Device Number assigned by Bus
-+ * @dev_num: Current Device Number, values can be 0 or dev_num_sticky
-+ * @dev_num_sticky: one-time static Device Number assigned by Bus
-  * @probed: boolean tracking driver state
-  * @probe_complete: completion utility to control potential races
-  * on startup between driver probe/initialization and SoundWire
-@@ -575,6 +576,7 @@ struct sdw_slave {
- 	struct list_head node;
- 	struct completion *port_ready;
- 	u16 dev_num;
-+	u16 dev_num_sticky;
- 	bool probed;
- 	struct completion probe_complete;
- 	struct completion enumeration_complete;
--- 
-2.20.1
+DQoNCj4gQW0gMTMuMDEuMjAyMCB1bSAyMzo0MSBzY2hyaWViIEtpcmlsbCBBLiBTaHV0ZW1vdiA8
+a2lyaWxsQHNodXRlbW92Lm5hbWU+Og0KPiANCj4g77u/T24gTW9uLCBKYW4gMTMsIDIwMjAgYXQg
+MDM6NDA6MzVQTSArMDEwMCwgRGF2aWQgSGlsZGVuYnJhbmQgd3JvdGU6DQo+PiBMZXQncyBtb3Zl
+IGl0IHRvIHRoZSBoZWFkZXIgYW5kIHVzZSB0aGUgc2hvcnRlciB2YXJpYW50IGZyb20NCj4+IG1t
+L3BhZ2VfYWxsb2MuYyAodGhlIG9yaWdpbmFsIG9uZSB3aWxsIGFsc28gY2hlY2sNCj4+ICJfX2hp
+Z2hlc3RfcHJlc2VudF9zZWN0aW9uX25yICsgMSIsIHdoaWNoIGlzIG5vdCBuZWNlc3NhcnkpLiBX
+aGlsZSBhdCBpdCwNCj4+IG1ha2UgdGhlIHNlY3Rpb25fbnIgaW4gbmV4dF9wZm4oKSBjb25zdC4N
+Cj4+IA0KPj4gSW4gbmV4dF9wZm4oKSwgd2Ugbm93IHJldHVybiBzZWN0aW9uX25yX3RvX3Bmbigt
+MSkgaW5zdGVhZCBvZiAtMSBvbmNlDQo+PiB3ZSBleGNlZWQgX19oaWdoZXN0X3ByZXNlbnRfc2Vj
+dGlvbl9uciwgd2hpY2ggZG9lc24ndCBtYWtlIGEgZGlmZmVyZW5jZSBpbg0KPj4gdGhlIGNhbGxl
+ciBhcyBpdCBpcyBiaWcgZW5vdWdoICg+PSBhbGwgc2FuZSBlbmRfcGZuKS4NCj4+IA0KPj4gQ2M6
+IEFuZHJldyBNb3J0b24gPGFrcG1AbGludXgtZm91bmRhdGlvbi5vcmc+DQo+PiBDYzogTWljaGFs
+IEhvY2tvIDxtaG9ja29Aa2VybmVsLm9yZz4NCj4+IENjOiBPc2NhciBTYWx2YWRvciA8b3NhbHZh
+ZG9yQHN1c2UuZGU+DQo+PiBDYzogS2lyaWxsIEEuIFNodXRlbW92IDxraXJpbGxAc2h1dGVtb3Yu
+bmFtZT4NCj4+IFNpZ25lZC1vZmYtYnk6IERhdmlkIEhpbGRlbmJyYW5kIDxkYXZpZEByZWRoYXQu
+Y29tPg0KPj4gLS0tDQo+PiBpbmNsdWRlL2xpbnV4L21tem9uZS5oIHwgMTAgKysrKysrKysrKw0K
+Pj4gbW0vcGFnZV9hbGxvYy5jICAgICAgICB8IDExICsrLS0tLS0tLS0tDQo+PiBtbS9zcGFyc2Uu
+YyAgICAgICAgICAgIHwgMTAgLS0tLS0tLS0tLQ0KPj4gMyBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNl
+cnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkNCj4+IA0KPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUv
+bGludXgvbW16b25lLmggYi9pbmNsdWRlL2xpbnV4L21tem9uZS5oDQo+PiBpbmRleCBjMmJjMzA5
+ZDE2MzQuLjQ2MmY2ODczOTA1YSAxMDA2NDQNCj4+IC0tLSBhL2luY2x1ZGUvbGludXgvbW16b25l
+LmgNCj4+ICsrKyBiL2luY2x1ZGUvbGludXgvbW16b25lLmgNCj4+IEBAIC0xMzc5LDYgKzEzNzks
+MTYgQEAgc3RhdGljIGlubGluZSBpbnQgcGZuX3ByZXNlbnQodW5zaWduZWQgbG9uZyBwZm4pDQo+
+PiAgICByZXR1cm4gcHJlc2VudF9zZWN0aW9uKF9fbnJfdG9fc2VjdGlvbihwZm5fdG9fc2VjdGlv
+bl9ucihwZm4pKSk7DQo+PiB9DQo+PiANCj4+ICtzdGF0aWMgaW5saW5lIHVuc2lnbmVkIGxvbmcg
+bmV4dF9wcmVzZW50X3NlY3Rpb25fbnIodW5zaWduZWQgbG9uZyBzZWN0aW9uX25yKQ0KPj4gK3sN
+Cj4+ICsgICAgd2hpbGUgKCsrc2VjdGlvbl9uciA8PSBfX2hpZ2hlc3RfcHJlc2VudF9zZWN0aW9u
+X25yKSB7DQo+PiArICAgICAgICBpZiAocHJlc2VudF9zZWN0aW9uX25yKHNlY3Rpb25fbnIpKQ0K
+Pj4gKyAgICAgICAgICAgIHJldHVybiBzZWN0aW9uX25yOw0KPj4gKyAgICB9DQo+PiArDQo+PiAr
+ICAgIHJldHVybiAtMTsNCj4+ICt9DQo+PiArDQo+PiAvKg0KPj4gICogVGhlc2UgYXJlIF9vbmx5
+XyB1c2VkIGR1cmluZyBpbml0aWFsaXNhdGlvbiwgdGhlcmVmb3JlIHRoZXkNCj4+ICAqIGNhbiB1
+c2UgX19pbml0ZGF0YSAuLi4gIFRoZXkgY291bGQgaGF2ZSBuYW1lcyB0byBpbmRpY2F0ZQ0KPj4g
+ZGlmZiAtLWdpdCBhL21tL3BhZ2VfYWxsb2MuYyBiL21tL3BhZ2VfYWxsb2MuYw0KPj4gaW5kZXgg
+YTkyNzkxNTEyMDc3Li4yNmU4MDQ0ZTk4NDggMTAwNjQ0DQo+PiAtLS0gYS9tbS9wYWdlX2FsbG9j
+LmMNCj4+ICsrKyBiL21tL3BhZ2VfYWxsb2MuYw0KPj4gQEAgLTU4NTIsMTggKzU4NTIsMTEgQEAg
+b3ZlcmxhcF9tZW1tYXBfaW5pdCh1bnNpZ25lZCBsb25nIHpvbmUsIHVuc2lnbmVkIGxvbmcgKnBm
+bikNCj4+IC8qIFNraXAgUEZOcyB0aGF0IGJlbG9uZyB0byBub24tcHJlc2VudCBzZWN0aW9ucyAq
+Lw0KPj4gc3RhdGljIGlubGluZSBfX21lbWluaXQgdW5zaWduZWQgbG9uZyBuZXh0X3Bmbih1bnNp
+Z25lZCBsb25nIHBmbikNCj4+IHsNCj4+IC0gICAgdW5zaWduZWQgbG9uZyBzZWN0aW9uX25yOw0K
+Pj4gKyAgICBjb25zdCB1bnNpZ25lZCBsb25nIHNlY3Rpb25fbnIgPSBwZm5fdG9fc2VjdGlvbl9u
+cigrK3Bmbik7DQo+PiANCj4+IC0gICAgc2VjdGlvbl9uciA9IHBmbl90b19zZWN0aW9uX25yKCsr
+cGZuKTsNCj4+ICAgIGlmIChwcmVzZW50X3NlY3Rpb25fbnIoc2VjdGlvbl9ucikpDQo+PiAgICAg
+ICAgcmV0dXJuIHBmbjsNCj4+IC0NCj4+IC0gICAgd2hpbGUgKCsrc2VjdGlvbl9uciA8PSBfX2hp
+Z2hlc3RfcHJlc2VudF9zZWN0aW9uX25yKSB7DQo+PiAtICAgICAgICBpZiAocHJlc2VudF9zZWN0
+aW9uX25yKHNlY3Rpb25fbnIpKQ0KPj4gLSAgICAgICAgICAgIHJldHVybiBzZWN0aW9uX25yX3Rv
+X3BmbihzZWN0aW9uX25yKTsNCj4+IC0gICAgfQ0KPj4gLQ0KPj4gLSAgICByZXR1cm4gLTE7DQo+
+PiArICAgIHJldHVybiBzZWN0aW9uX25yX3RvX3BmbihuZXh0X3ByZXNlbnRfc2VjdGlvbl9ucihz
+ZWN0aW9uX25yKSk7DQo+IA0KPiBUaGlzIGNoYW5nZXMgYmVoYXZpb3VyIGluIHRoZSBjb3JuZXIg
+Y2FzZTogaWYgbmV4dF9wcmVzZW50X3NlY3Rpb25fbnIoKQ0KPiByZXR1cm5zIC0xLCB3ZSBjYWxs
+IHNlY3Rpb25fbnJfdG9fcGZuKCkgZm9yIGl0LiBJdCdzIHVubGlrZWx5IHdvdWxkIGdpdmUNCj4g
+YW55IHZhbGlkIHBmbiwgYnV0IEkgY2FuJ3Qgc2F5IGZvciBzdXJlIGZvciBhbGwgYXJjaHMuIEkg
+Z3Vlc3MgdGhlIHdvcnN0DQo+IGNhc2Ugc2NlbnJpbyB3b3VsZCBiZSBlbmRsZXNzIGxvb3Agb3Zl
+ciB0aGUgc2FtZSBzZWNpdG9ucy9wZm5zLg0KPiANCj4gSGF2ZSB5b3UgY29uc2lkZXJlZCB0aGUg
+Y2FzZT8NCg0KWWVzLCBzZWUgdGhlIHBhdGNoIGRlc2NyaXB0aW9uLiBXZSByZXR1cm4gLTEgPDwg
+UEZOX1NFQ1RJT05fU0hJRlQsIHNvIGEgbnVtYmVyIGNsb3NlIHRvIHRoZSBlbmQgb2YgdGhlIGFk
+ZHJlc3Mgc3BhY2UgKDB4ZmZmLi4uMDAwKS4gKFdpbGwgZG91YmxlIGNoZWNrIHRvbW9ycm93IGlm
+IGFueSAzMmJpdCBhcmNoIGNvdWxkIGJlIHByb2JsZW1hdGljIGhlcmUpDQoNClRoYW5rcyENCg0K
+PiANCj4gLS0gDQo+IEtpcmlsbCBBLiBTaHV0ZW1vdg0KPiANCg==
 
