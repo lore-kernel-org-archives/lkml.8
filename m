@@ -2,564 +2,277 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02E5C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03B9C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B05214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84F5D214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:00:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ze34RjtY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728803AbgAMSAV (ORCPT
+        id S1728841AbgAMSA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:00:21 -0500
-Received: from mga14.intel.com ([192.55.52.115]:10778 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726934AbgAMSAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:00:19 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 10:00:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
-   d="scan'208";a="304903948"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
-  by orsmga001.jf.intel.com with ESMTP; 13 Jan 2020 10:00:17 -0800
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     yu.chen.surf@gmail.com, andy@infradead.org, dvhart@infradead.org,
-        andy@kernel.org, lenb@kernel.org
-Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH v3 1/2] platform/x86: Add support for Uncore frequency control
-Date:   Mon, 13 Jan 2020 10:00:14 -0800
-Message-Id: <20200113180015.503314-2-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200113180015.503314-1-srinivas.pandruvada@linux.intel.com>
-References: <20200113180015.503314-1-srinivas.pandruvada@linux.intel.com>
+        Mon, 13 Jan 2020 13:00:28 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:56234 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728656AbgAMSA0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 13:00:26 -0500
+Received: by mail-pj1-f67.google.com with SMTP id d5so4471785pjz.5;
+        Mon, 13 Jan 2020 10:00:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yCp4vxbbK01gP2xT8FvEO0yKlVhO6YKgXdnC6X6xpIo=;
+        b=Ze34RjtYhml3EApPG8NHt7yLS1Q7mFLYrJWTnUGdStT0U8LsKBnnM9JoPLrMZge/aX
+         He3lZUWqYykNpTJpWcMaeEzHSM/BewEifnMHDUKxta5a1cTXP0rmwMzaIekRgFxdpBc+
+         kTgNinfVyq3Uvb7gMfLDYrtJjIqF3s3dAnTC52trvT7Dder57EYX+TI/aYdraj2gu946
+         HNALx0Ir4K6EOmDJLr2r8iQn3a79I3XuS/TdJ49NbCTNVp+GkqP0g21zEK9HrUucgL51
+         BVGaN5Zv534n2NcfNalsKB3UsE9EWWXgCmEqLTHWlX22Nvm6vpR5Qtnp/n3yPuI7w5lk
+         fLZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=yCp4vxbbK01gP2xT8FvEO0yKlVhO6YKgXdnC6X6xpIo=;
+        b=V+TP0U+0p5mBDKXJ2V6nA6MhRnQW85oZkuVKN4ofBvj24+Ipgf446AsojU5PxUefNM
+         xrDysD2gJsIADvAceDKMeqDWwG0TnQTeD4prwb56VJ3igvEjAHTnJ+dwf1PXNKn0vqbu
+         w7WqkzbOWh4XSTbdW3EyHBZNKkDk03zvEyDNl/Gg0YMMu0lLamG+or+NwYpuAQdEhFA+
+         BqV2U9Nm+fnG3xaCfEtp3OPe+e+5lyNYJhSzH7OEeRQSr7YecERomesppDTS6tumelCq
+         SsjN45H29bBh5uyBvQ3hR9VcnvidqdTV1Y4ljAoX+DUpzT2YqrnmmAk3QtNdHQpViark
+         eodw==
+X-Gm-Message-State: APjAAAWJMH0vZwSqzUUWiJDaVukHYm6od02QgzHu0D0BjiLKllpzRpw8
+        SzNRT+s/25O4AN++ng9uIpmQuWAb
+X-Google-Smtp-Source: APXvYqx0ilb1HbdpABCCDkDFnhSvNm3O9GjCUKFojhjmHpkO7VZcMK0ZV0VREOiObyYR95cqHpth8g==
+X-Received: by 2002:a17:902:740c:: with SMTP id g12mr15871413pll.166.1578938425545;
+        Mon, 13 Jan 2020 10:00:25 -0800 (PST)
+Received: from [10.67.50.41] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id x7sm15359248pfp.93.2020.01.13.10.00.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 10:00:25 -0800 (PST)
+Subject: Re: [PATCH net-next] net: phy: Maintain MDIO device and bus
+ statistics
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     netdev@vger.kernel.org, cphealy@gmail.com,
+        rmk+kernel@armlinux.org.uk, kuba@kernel.org,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200113045325.13470-1-f.fainelli@gmail.com>
+ <20200113132152.GB11788@lunn.ch>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
+Message-ID: <ebeb2bb2-c816-6cb8-acaa-cfd86878678d@gmail.com>
+Date:   Mon, 13 Jan 2020 10:00:23 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
+In-Reply-To: <20200113132152.GB11788@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some server users set limits on the uncore frequency using MSR 620H, while
-running latency sensitive workloads. Here uncore frequency controls
-RING/LLC(last-level cache) clocks.
+Hi Andrew,
 
-But MSR control is not always possible from the user space, so this driver
-provides a sysfs interface to set max and min frequency limits. This MSR
-620H is a die scoped in multi-die system or package scoped in non multi-die
-systems.
+On 1/13/20 5:21 AM, Andrew Lunn wrote:
+> On Sun, Jan 12, 2020 at 08:53:19PM -0800, Florian Fainelli wrote:
+>> Maintain per MDIO device and MDIO bus statistics comprised of the number
+>> of transfers/operations, reads and writes and errors. This is useful for
+>> tracking the per-device and global MDIO bus bandwidth and doing
+>> optimizations as necessary.
+> 
+> Hi Florian
+> 
+> One point for discussion is, is sysfs the right way to do this?
+> Should we be using ethtool and exporting the statistics like other
+> statistics?
+> 
+> The argument against it, is we have devices which are not related to a
+> network interfaces on MDIO busses. For a PHY we could plumb the per
+> PHY mdio device statistics into the exiting PHY statistics. But we
+> also have Ethernet switches on MDIO devices, which don't have an
+> association to a netdev interface. Broadcom also have some generic PHY
+> device on MDIO busses, for USB, SATA, etc. And whole bus statistics
+> don't fit the netdev model at all.
 
-When this driver is loaded, a new directory is created under
- /sys/devices/system/cpu.
+Correct, that was the reasoning, which I should probably put in the
+commit message.
 
-For example on a two package Skylake server:
-$cd /sys/devices/system/cpu/intel_uncore_frequency
+> 
+> So sysfs does make sense. But i would also suggest we do plumb per PHY
+> MDIO device statistics into the exiting ethtool call.
 
-$ls
-package_00_die_00 package_01_die_00
+It looks like replicating statistics that are already available via
+another mechanism is kind of frowned upon, see this for an example:
 
-$ls package_00_die_00
-max_freq_khz  min_freq_khz  initial_max_freq_khz
-initial_min_freq_khz
 
-$grep . *
-    max_freq_khz:2400000
-    min_freq_khz:1200000
-    initial_max_freq_khz:2400000
-    initial_min_freq_khz:1200000
 
-Here, initial_max_freq_khz and initial_min_freq_khz are read only
-attributes to show power up or initial values of max and min frequencies
-respectively. Other attributes are read-write, so that users can modify.
+> 
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>  Documentation/ABI/testing/sysfs-bus-mdio |  34 +++++++
+>>  drivers/net/phy/mdio_bus.c               | 116 +++++++++++++++++++++++
+>>  drivers/net/phy/mdio_device.c            |   1 +
+>>  include/linux/mdio.h                     |  10 ++
+>>  include/linux/phy.h                      |   2 +
+>>  5 files changed, 163 insertions(+)
+>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-mdio
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-mdio b/Documentation/ABI/testing/sysfs-bus-mdio
+>> new file mode 100644
+>> index 000000000000..a552d92890f1
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-bus-mdio
+>> @@ -0,0 +1,34 @@
+>> +What:          /sys/bus/mdio_bus/devices/.../statistics/
+>> +Date:          January 2020
+>> +KernelVersion: 5.6
+>> +Contact:       netdev@vger.kernel.org
+>> +Description:
+>> +		This folder contains statistics about MDIO bus transactions.
+>> +
+>> +What:          /sys/bus/mdio_bus/devices/.../statistics/transfers
+>> +Date:          January 2020
+>> +KernelVersion: 5.6
+>> +Contact:       netdev@vger.kernel.org
+>> +Description:
+>> +		Total number of transfers for this MDIO bus.
+>> +
+>> +What:          /sys/bus/mdio_bus/devices/.../statistics/errors
+>> +Date:          January 2020
+>> +KernelVersion: 5.6
+>> +Contact:       netdev@vger.kernel.org
+>> +Description:
+>> +		Total number of transfer errors for this MDIO bus.
+>> +
+>> +What:          /sys/bus/mdio_bus/devices/.../statistics/writes
+>> +Date:          January 2020
+>> +KernelVersion: 5.6
+>> +Contact:       netdev@vger.kernel.org
+>> +Description:
+>> +		Total number of write transactions for this MDIO bus.
+>> +
+>> +What:          /sys/bus/mdio_bus/devices/.../statistics/reads
+>> +Date:          January 2020
+>> +KernelVersion: 5.6
+>> +Contact:       netdev@vger.kernel.org
+>> +Description:
+>> +		Total number of read transactions for this MDIO bus.
+> 
+> Looking at this description, it is not clear we have whole bus and per
+> device statistics. 
+> 
+>>  int __mdiobus_read(struct mii_bus *bus, int addr, u32 regnum)
+>>  {
+>> +	struct mdio_device *mdiodev = bus->mdio_map[addr];
+>>  	int retval;
+>>  
+>>  	WARN_ON_ONCE(!mutex_is_locked(&bus->mdio_lock));
+>> @@ -555,6 +645,9 @@ int __mdiobus_read(struct mii_bus *bus, int addr, u32 regnum)
+>>  	retval = bus->read(bus, addr, regnum);
+>>  
+>>  	trace_mdio_access(bus, 1, addr, regnum, retval, retval);
+>> +	mdiobus_stats_acct(&bus->stats, true, retval);
+>> +	if (mdiodev)
+>> +		mdiobus_stats_acct(&mdiodev->stats, true, retval);
+>>  
+>>  	return retval;
+> 
+> I think for most Ethernet switches, these per device counters are
+> going to be misleading. The switch often takes up multiple addresses
+> on the bus, but the switch is represented as a single mdiodev with one
+> address.
 
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- drivers/platform/x86/Kconfig                  |  11 +
- drivers/platform/x86/Makefile                 |   1 +
- drivers/platform/x86/intel-uncore-frequency.c | 437 ++++++++++++++++++
- 3 files changed, 449 insertions(+)
- create mode 100644 drivers/platform/x86/intel-uncore-frequency.c
+For MDIO switches you would usually have the mdio_device claim the
+pseudo PHY address and all other MDIO addresses should correspond to
+built-in PHYs, for which we also have mdio_device instances, is there a
+case that I am missing?
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 27d5b40fb717..6013c3b96cfd 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1337,6 +1337,17 @@ config PCENGINES_APU2
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pcengines-apuv2.
- 
-+config INTEL_UNCORE_FREQ_CONTROL
-+	tristate "Intel Uncore frequency control driver"
-+	depends on X86_64
-+	help
-+	  This driver allows control of uncore frequency limits on
-+	  supported server platforms.
-+	  Uncore frequency controls RING/LLC (last-level cache) clocks.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called intel-uncore-frequency.
-+
- source "drivers/platform/x86/intel_speed_select_if/Kconfig"
- 
- config SYSTEM76_ACPI
-diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makefile
-index 42d85a00be4e..3747b1f07cf1 100644
---- a/drivers/platform/x86/Makefile
-+++ b/drivers/platform/x86/Makefile
-@@ -105,3 +105,4 @@ obj-$(CONFIG_INTEL_ATOMISP2_PM)	+= intel_atomisp2_pm.o
- obj-$(CONFIG_PCENGINES_APU2)	+= pcengines-apuv2.o
- obj-$(CONFIG_INTEL_SPEED_SELECT_INTERFACE) += intel_speed_select_if/
- obj-$(CONFIG_SYSTEM76_ACPI)	+= system76_acpi.o
-+obj-$(CONFIG_INTEL_UNCORE_FREQ_CONTROL)	+= intel-uncore-frequency.o
-diff --git a/drivers/platform/x86/intel-uncore-frequency.c b/drivers/platform/x86/intel-uncore-frequency.c
-new file mode 100644
-index 000000000000..2b1a0734c3f8
---- /dev/null
-+++ b/drivers/platform/x86/intel-uncore-frequency.c
-@@ -0,0 +1,437 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Intel Uncore Frequency Setting
-+ * Copyright (c) 2019, Intel Corporation.
-+ * All rights reserved.
-+ *
-+ * Provide interface to set MSR 620 at a granularity of per die. On CPU online,
-+ * one control CPU is identified per die to read/write limit. This control CPU
-+ * is changed, if the CPU state is changed to offline. When the last CPU is
-+ * offline in a die then remove the sysfs object for that die.
-+ * The majority of actual code is related to sysfs create and read/write
-+ * attributes.
-+ *
-+ * Author: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/suspend.h>
-+#include <asm/cpu_device_id.h>
-+#include <asm/intel-family.h>
-+
-+#define MSR_UNCORE_RATIO_LIMIT			0x620
-+#define UNCORE_FREQ_KHZ_MULTIPLIER		100000
-+
-+/**
-+ * struct uncore_data -	Encapsulate all uncore data
-+ * @stored_uncore_data:	Last user changed MSR 620 value, which will be restored
-+ *			on system resume.
-+ * @initial_min_freq_khz: Sampled minimum uncore frequency at driver init
-+ * @initial_max_freq_khz: Sampled maximum uncore frequency at driver init
-+ * @control_cpu:	Designated CPU for a die to read/write
-+ * @valid:		Mark the data valid/invalid
-+ *
-+ * This structure is used to encapsulate all data related to uncore sysfs
-+ * settings for a die/package.
-+ */
-+struct uncore_data {
-+	struct kobject kobj;
-+	u64 stored_uncore_data;
-+	u32 initial_min_freq_khz;
-+	u32 initial_max_freq_khz;
-+	int control_cpu;
-+	bool valid;
-+};
-+
-+#define to_uncore_data(a) container_of(a, struct uncore_data, kobj)
-+
-+/* Max instances for uncore data, one for each die */
-+static int uncore_max_entries __read_mostly;
-+/* Storage for uncore data for all instances */
-+static struct uncore_data *uncore_instances;
-+/* Root of the all uncore sysfs kobjs */
-+struct kobject uncore_root_kobj;
-+/* Stores the CPU mask of the target CPUs to use during uncore read/write */
-+static cpumask_t uncore_cpu_mask;
-+/* CPU online callback register instance */
-+static enum cpuhp_state uncore_hp_state __read_mostly;
-+/* Mutex to control all mutual exclusions */
-+static DEFINE_MUTEX(uncore_lock);
-+
-+struct uncore_attr {
-+	struct attribute attr;
-+	ssize_t (*show)(struct kobject *kobj,
-+			struct attribute *attr, char *buf);
-+	ssize_t (*store)(struct kobject *kobj,
-+			 struct attribute *attr, const char *c, ssize_t count);
-+};
-+
-+#define define_one_uncore_ro(_name) \
-+static struct uncore_attr _name = \
-+__ATTR(_name, 0444, show_##_name, NULL)
-+
-+#define define_one_uncore_rw(_name) \
-+static struct uncore_attr _name = \
-+__ATTR(_name, 0644, show_##_name, store_##_name)
-+
-+#define show_uncore_data(member_name)					\
-+	static ssize_t show_##member_name(struct kobject *kobj,         \
-+					  struct attribute *attr,	\
-+					  char *buf)			\
-+	{                                                               \
-+		struct uncore_data *data = to_uncore_data(kobj);	\
-+		return scnprintf(buf, PAGE_SIZE, "%u\n",		\
-+				 data->member_name);			\
-+	}								\
-+	define_one_uncore_ro(member_name)
-+
-+show_uncore_data(initial_min_freq_khz);
-+show_uncore_data(initial_max_freq_khz);
-+
-+/* Common function to read MSR 0x620 and read min/max */
-+static int uncore_read_ratio(struct uncore_data *data, unsigned int *min,
-+			     unsigned int *max)
-+{
-+	u64 cap;
-+	int ret;
-+
-+	ret = rdmsrl_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT, &cap);
-+	if (ret)
-+		return ret;
-+
-+	*max = (cap & 0x7F) * UNCORE_FREQ_KHZ_MULTIPLIER;
-+	*min = ((cap & GENMASK(14, 8)) >> 8) * UNCORE_FREQ_KHZ_MULTIPLIER;
-+
-+	return 0;
-+}
-+
-+/* Common function to set min/max ratios to be used by sysfs callbacks */
-+static int uncore_write_ratio(struct uncore_data *data, unsigned int input,
-+			      int set_max)
-+{
-+	int ret;
-+	u64 cap;
-+
-+	mutex_lock(&uncore_lock);
-+
-+	input /= UNCORE_FREQ_KHZ_MULTIPLIER;
-+	if (!input || input > 0x7F) {
-+		ret = -EINVAL;
-+		goto finish_write;
-+	}
-+
-+	ret = rdmsrl_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT, &cap);
-+	if (ret)
-+		goto finish_write;
-+
-+	if (set_max) {
-+		cap &= ~0x7F;
-+		cap |= input;
-+	} else  {
-+		cap &= ~GENMASK(14, 8);
-+		cap |= (input << 8);
-+	}
-+
-+	ret = wrmsrl_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT, cap);
-+	if (ret)
-+		goto finish_write;
-+
-+	data->stored_uncore_data = cap;
-+
-+finish_write:
-+	mutex_unlock(&uncore_lock);
-+
-+	return ret;
-+}
-+
-+static ssize_t store_min_max_freq_khz(struct kobject *kobj,
-+				      struct attribute *attr,
-+				      const char *buf, ssize_t count,
-+				      int min_max)
-+{
-+	struct uncore_data *data = to_uncore_data(kobj);
-+	unsigned int input;
-+
-+	if (kstrtouint(buf, 10, &input))
-+		return -EINVAL;
-+
-+	uncore_write_ratio(data, input, min_max);
-+
-+	return count;
-+}
-+
-+static ssize_t show_min_max_freq_khz(struct kobject *kobj,
-+				     struct attribute *attr,
-+				     char *buf, int min_max)
-+{
-+	struct uncore_data *data = to_uncore_data(kobj);
-+	unsigned int min, max;
-+	int ret;
-+
-+	mutex_lock(&uncore_lock);
-+	ret = uncore_read_ratio(data, &min, &max);
-+	mutex_unlock(&uncore_lock);
-+	if (ret)
-+		return ret;
-+
-+	if (min_max)
-+		return sprintf(buf, "%u\n", max);
-+
-+	return sprintf(buf, "%u\n", min);
-+}
-+
-+#define store_uncore_min_max(name, min_max)				\
-+	static ssize_t store_##name(struct kobject *kobj,		\
-+				    struct attribute *attr,		\
-+				    const char *buf, ssize_t count)	\
-+	{                                                               \
-+									\
-+		return store_min_max_freq_khz(kobj, attr, buf, count,	\
-+					      min_max);			\
-+	}
-+
-+#define show_uncore_min_max(name, min_max)				\
-+	static ssize_t show_##name(struct kobject *kobj,		\
-+				   struct attribute *attr, char *buf)	\
-+	{                                                               \
-+									\
-+		return show_min_max_freq_khz(kobj, attr, buf, min_max); \
-+	}
-+
-+store_uncore_min_max(min_freq_khz, 0);
-+store_uncore_min_max(max_freq_khz, 1);
-+
-+show_uncore_min_max(min_freq_khz, 0);
-+show_uncore_min_max(max_freq_khz, 1);
-+
-+define_one_uncore_rw(min_freq_khz);
-+define_one_uncore_rw(max_freq_khz);
-+
-+static struct attribute *uncore_attrs[] = {
-+	&initial_min_freq_khz.attr,
-+	&initial_max_freq_khz.attr,
-+	&max_freq_khz.attr,
-+	&min_freq_khz.attr,
-+	NULL
-+};
-+
-+static struct kobj_type uncore_ktype = {
-+	.sysfs_ops = &kobj_sysfs_ops,
-+	.default_attrs = uncore_attrs,
-+};
-+
-+static struct kobj_type uncore_root_ktype = {
-+	.sysfs_ops = &kobj_sysfs_ops,
-+};
-+
-+/* Caller provides protection */
-+static struct uncore_data *uncore_get_instance(unsigned int cpu)
-+{
-+	int id = topology_logical_die_id(cpu);
-+
-+	if (id >= 0 && id < uncore_max_entries)
-+		return &uncore_instances[id];
-+
-+	return NULL;
-+}
-+
-+static void uncore_add_die_entry(int cpu)
-+{
-+	struct uncore_data *data;
-+
-+	mutex_lock(&uncore_lock);
-+	data = uncore_get_instance(cpu);
-+	if (!data) {
-+		mutex_unlock(&uncore_lock);
-+		return;
-+	}
-+
-+	if (data->valid) {
-+		/* control cpu changed */
-+		data->control_cpu = cpu;
-+	} else {
-+		char str[64];
-+		int ret;
-+
-+		memset(data, 0, sizeof(*data));
-+		sprintf(str, "package_%02d_die_%02d",
-+			topology_physical_package_id(cpu),
-+			topology_die_id(cpu));
-+
-+		uncore_read_ratio(data, &data->initial_min_freq_khz,
-+				  &data->initial_max_freq_khz);
-+
-+		ret = kobject_init_and_add(&data->kobj, &uncore_ktype,
-+					   &uncore_root_kobj, str);
-+		if (!ret) {
-+			data->control_cpu = cpu;
-+			data->valid = true;
-+		}
-+	}
-+	mutex_unlock(&uncore_lock);
-+}
-+
-+/* Last CPU in this die is offline, so remove sysfs entries */
-+static void uncore_remove_die_entry(int cpu)
-+{
-+	struct uncore_data *data;
-+
-+	mutex_lock(&uncore_lock);
-+	data = uncore_get_instance(cpu);
-+	if (data) {
-+		kobject_put(&data->kobj);
-+		data->control_cpu = -1;
-+		data->valid = false;
-+	}
-+	mutex_unlock(&uncore_lock);
-+}
-+
-+static int uncore_event_cpu_online(unsigned int cpu)
-+{
-+	int target;
-+
-+	/* Check if there is an online cpu in the package for uncore MSR */
-+	target = cpumask_any_and(&uncore_cpu_mask, topology_die_cpumask(cpu));
-+	if (target < nr_cpu_ids)
-+		return 0;
-+
-+	/* Use this CPU on this die as a control CPU */
-+	cpumask_set_cpu(cpu, &uncore_cpu_mask);
-+	uncore_add_die_entry(cpu);
-+
-+	return 0;
-+}
-+
-+static int uncore_event_cpu_offline(unsigned int cpu)
-+{
-+	int target;
-+
-+	/* Check if existing cpu is used for uncore MSRs */
-+	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
-+		return 0;
-+
-+	/* Find a new cpu to set uncore MSR */
-+	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
-+
-+	if (target < nr_cpu_ids) {
-+		cpumask_set_cpu(target, &uncore_cpu_mask);
-+		uncore_add_die_entry(target);
-+	} else {
-+		uncore_remove_die_entry(cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+static int uncore_pm_notify(struct notifier_block *nb, unsigned long mode,
-+			    void *_unused)
-+{
-+	int cpu;
-+
-+	switch (mode) {
-+	case PM_POST_HIBERNATION:
-+	case PM_POST_RESTORE:
-+	case PM_POST_SUSPEND:
-+		for_each_cpu(cpu, &uncore_cpu_mask) {
-+			struct uncore_data *data;
-+			int ret;
-+
-+			data = uncore_get_instance(cpu);
-+			if (!data || !data->valid || !data->stored_uncore_data)
-+				continue;
-+
-+			ret = wrmsrl_on_cpu(cpu, MSR_UNCORE_RATIO_LIMIT,
-+					    data->stored_uncore_data);
-+			if (ret)
-+				return ret;
-+		}
-+		break;
-+	default:
-+		break;
-+	}
-+	return 0;
-+}
-+
-+static struct notifier_block uncore_pm_nb = {
-+	.notifier_call = uncore_pm_notify,
-+};
-+
-+#define ICPU(model)     { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
-+
-+static const struct x86_cpu_id intel_uncore_cpu_ids[] = {
-+	ICPU(INTEL_FAM6_BROADWELL_G),
-+	ICPU(INTEL_FAM6_BROADWELL_X),
-+	ICPU(INTEL_FAM6_BROADWELL_D),
-+	ICPU(INTEL_FAM6_SKYLAKE_X),
-+	ICPU(INTEL_FAM6_ICELAKE_X),
-+	ICPU(INTEL_FAM6_ICELAKE_D),
-+	{}
-+};
-+
-+static int __init intel_uncore_init(void)
-+{
-+	const struct x86_cpu_id *id;
-+	int ret;
-+
-+	id = x86_match_cpu(intel_uncore_cpu_ids);
-+	if (!id)
-+		return -ENODEV;
-+
-+	uncore_max_entries = topology_max_packages() *
-+					topology_max_die_per_package();
-+	uncore_instances = kcalloc(uncore_max_entries,
-+				   sizeof(*uncore_instances), GFP_KERNEL);
-+	if (!uncore_instances)
-+		return -ENOMEM;
-+
-+	ret = kobject_init_and_add(&uncore_root_kobj, &uncore_root_ktype,
-+				   &cpu_subsys.dev_root->kobj,
-+				   "intel_uncore_frequency");
-+	if (ret)
-+		goto err_free;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN,
-+				"platform/x86/uncore-freq:online",
-+				uncore_event_cpu_online,
-+				uncore_event_cpu_offline);
-+	if (ret < 0)
-+		goto err_rem_kobj;
-+
-+	uncore_hp_state = ret;
-+
-+	ret = register_pm_notifier(&uncore_pm_nb);
-+	if (ret)
-+		goto err_rem_state;
-+
-+	return 0;
-+
-+err_rem_state:
-+	cpuhp_remove_state(uncore_hp_state);
-+err_rem_kobj:
-+	kobject_put(&uncore_root_kobj);
-+err_free:
-+	kfree(uncore_instances);
-+
-+	return ret;
-+}
-+module_init(intel_uncore_init)
-+
-+static void __exit intel_uncore_exit(void)
-+{
-+	int i;
-+
-+	unregister_pm_notifier(&uncore_pm_nb);
-+	cpuhp_remove_state(uncore_hp_state);
-+	for (i = 0; i < uncore_max_entries; ++i) {
-+		if (uncore_instances[i].valid)
-+			kobject_put(&uncore_instances[i].kobj);
-+	}
-+	kobject_put(&uncore_root_kobj);
-+	kfree(uncore_instances);
-+}
-+module_exit(intel_uncore_exit)
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Intel Uncore Frequency Limits Driver");
+> So the counters will reflect the transfers on that one
+> address, not the whole switch. The device tree binding does not have
+> enough information for us to associated one mdiodev to multiple
+> addresses. And for some of the Marvell switches, it is a sparse address
+> map, and i have seen PHY devices in the holes. So in the sysfs
+> documentation, we should probably add a warning that when used with an
+> Ethernet switch, the counters are unlikely to be accurate, and should
+> be interpreted with care.
+
+If the answer to my question above is that we still have reads to
+addresses for which we do not have mdio_device (which we might very well
+have), then we could either:
+
+- create <mdio_bus>:<address>/statistics/ folders even for non-existent
+devices, but just to track the per-address statistics
+- create <mdio_bus>/<address>/statistics and when a mdio_device instance
+exists we symbolic link <mdio_bus>:<address>/statistics ->
+../<mdio_bus>/<addr>/statistics
+
+Would that work?
 -- 
-2.24.1
-
+Florian
