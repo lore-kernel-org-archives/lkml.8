@@ -2,194 +2,149 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B92AC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB21C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:08:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BB8221744
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:07:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B07792084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:08:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RBov/H/j"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="VCsSI0Ym"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgAMRHZ (ORCPT
+        id S1728738AbgAMRIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:07:25 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27679 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727331AbgAMRHZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:07:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578935242;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gx9m20Qk3Xew8B11Dz3yhd4x1rylP5kEcfScufxzD+g=;
-        b=RBov/H/jkFNElYMRA2J0DXi/GnGTyFNjWKK4KfeRwphylq6jkbWQ02SfKaHU2ZHDrn8roY
-        zAU53vWK5aI/nd2UL84cPghnBDrD4jnNsi5oEAYIHdSrRpdyAPQCH8wD/yMJF/9XLAp04Z
-        FtevAy7PT0IW9IKoIUhokJFRtrwxzuY=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-VxsBXtw7OSOTi4Tv4t57Kw-1; Mon, 13 Jan 2020 12:07:21 -0500
-X-MC-Unique: VxsBXtw7OSOTi4Tv4t57Kw-1
-Received: by mail-io1-f72.google.com with SMTP id u6so6158892iog.21
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 09:07:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gx9m20Qk3Xew8B11Dz3yhd4x1rylP5kEcfScufxzD+g=;
-        b=J/cefjMMQhk3hdmOss208YSbJU3+L9udFqWbDXPIVihzR4kAceMI4sSlIJIzTSG3Ff
-         NeFEghj3wj3zOaM86l9sricDXvnSRs/QTIxGBhcVuRgLd8tx5qDndGIYoYQASl67NO1u
-         DvCl6MGxegi8sebFsckEVrytVDLInAOUAsyftNsowF1ioRsYtm+A/Ldl3ziqGvYvRZ3Q
-         Jix2iOzM118+mJaBKlFhWatd9PHet0nVk008Jt1upizRAPdbzFPJYItUGforLeYzqeQF
-         EoWJ5s+yuNgPT5KrAzT5O0QoNIS9//QAorYbtdwAKUioaDSYGL7bp+varSPwdq2YQw44
-         hvAQ==
-X-Gm-Message-State: APjAAAX9P3c/ZmTdRTNPwyrqswMCuDHgHZQCmWm+/qQIe55M3goXWPG7
-        +Bq6zZU90dGGhLbmX52JguwK1+pwBQ3uCJ2CHKSFxeBoBp13A3R6KAB9vGMujj56T3vbermnU/H
-        E+uobwWIVT0Yy0XIDZikI5i6aNUhaou2fuL9WddAU
-X-Received: by 2002:a92:3a95:: with SMTP id i21mr15325106ilf.249.1578935241109;
-        Mon, 13 Jan 2020 09:07:21 -0800 (PST)
-X-Google-Smtp-Source: APXvYqybkxs75cXBlQl+HLFb+zkWG3jPuMlMG/HxwG716bsD3R5CD/DpAv8WBPsaL2BcMPN9Ehf3LemhyTAMNhuZ8cM=
-X-Received: by 2002:a92:3a95:: with SMTP id i21mr15325082ilf.249.1578935240847;
- Mon, 13 Jan 2020 09:07:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20200110214217.GA88274@google.com> <e0194581-4cdd-3629-d9fe-10a1cfd29d03@gonehiking.org>
- <20200110230003.GB1875851@anatevka.americas.hpqcorp.net> <d2715683-f171-a825-3c0b-678b6c5c1a79@gonehiking.org>
- <20200111005041.GB19291@MiWiFi-R3L-srv> <dc46c904-1652-09b3-f351-6b3a3e761d74@gonehiking.org>
- <CACPcB9c0-nRjM3DSN8wzZBTPsJKWjZ9d_aNTq5zUj4k4egb32Q@mail.gmail.com> <CABeXuvqquCU+1G=5onk9owASorhpcYWeWBge9U35BrorABcsuw@mail.gmail.com>
-In-Reply-To: <CABeXuvqquCU+1G=5onk9owASorhpcYWeWBge9U35BrorABcsuw@mail.gmail.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Tue, 14 Jan 2020 01:07:09 +0800
-Message-ID: <CACPcB9cQY9Vu3wG-QYZS6W6T_PZxnJ1ABNUUAF_qvk-VSxbpTA@mail.gmail.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-To:     Deepa Dinamani <deepa.kernel@gmail.com>
-Cc:     Khalid Aziz <khalid@gonehiking.org>, Baoquan He <bhe@redhat.com>,
-        Jerry Hoemann <Jerry.Hoemann@hpe.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        kexec@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Randy Wright <rwright@hpe.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 13 Jan 2020 12:08:41 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:2142 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727323AbgAMRIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 12:08:41 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47xKmf0c4xz9txyr;
+        Mon, 13 Jan 2020 18:08:34 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=VCsSI0Ym; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id YpE9yvHpzNph; Mon, 13 Jan 2020 18:08:34 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47xKmd6Vt6z9txyq;
+        Mon, 13 Jan 2020 18:08:33 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1578935313; bh=HWz0NtVtGF6JzuFvn1IEu26bS25Q46p2uQtnUn88eHs=;
+        h=From:Subject:To:Cc:Date:From;
+        b=VCsSI0YmRfqt3jhfrCAg6RSUj1sPG5J+ypYkfjIgakQ3Ukz7AtoB6jArFcyzqYdsZ
+         GlhNVPJmOaYwxRRlvFQOZdIwpAANt/SritBFT2Q6XoBOZFXYKGIL0rKzuczCydlRP5
+         jjqR1csQiqmNFtLuAyN1E7m3v17abUHCf230875A=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3C3628B7C9;
+        Mon, 13 Jan 2020 18:08:39 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 8wXE7irLHIRC; Mon, 13 Jan 2020 18:08:39 +0100 (CET)
+Received: from po14934vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id ECB1A8B7BE;
+        Mon, 13 Jan 2020 18:08:38 +0100 (CET)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 8DBC464A1D; Mon, 13 Jan 2020 17:08:38 +0000 (UTC)
+Message-Id: <cover.1578934751.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH v3 00/12] powerpc: switch VDSO to C implementation.
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, arnd@arndb.de,
+        tglx@linutronix.de, vincenzo.frascino@arm.com, luto@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        x86@kernel.org
+Date:   Mon, 13 Jan 2020 17:08:38 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 2:33 AM Deepa Dinamani <deepa.kernel@gmail.com> wrote:
->
-> > Hi, there are some previous works about this issue, reset PCI devices
-> > in kdump kernel to stop ongoing DMA:
-> >
-> > [v7,0/5] Reset PCIe devices to address DMA problem on kdump with iommu
-> > https://lore.kernel.org/patchwork/cover/343767/
-> >
-> > [v2] PCI: Reset PCIe devices to stop ongoing DMA
-> > https://lore.kernel.org/patchwork/patch/379191/
-> >
-> > And didn't get merged, that patch are trying to fix some DMAR error
-> > problem, but resetting devices is a bit too destructive, and the
-> > problem is later fixed in IOMMU side. And in most case the DMA seems
-> > harmless, as they targets first kernel's memory and kdump kernel only
-> > live in crash memory.
->
-> I was going to ask the same. If the kdump kernel had IOMMU on, would
-> that still be a problem?
+This is a third tentative to switch powerpc VDSO to generic C implementation.
 
-It will still fail, doing DMA is not a problem, it only go wrong when
-a device's upstream bridge is mistakenly shutdown before the device
-shutdown.
+This version should work on PPC64 (untested). VDSO32 for PPC64 is
+impossible to build and has been de-activated, because the powerpc
+ASM header files for C are not prepared to build 32 bits code with CONFIG_PPC64.
 
->
-> > Also, by the time kdump kernel is able to scan and reset devices,
-> > there are already a very large time window where things could go
-> > wrong.
-> >
-> > The currently problem observed only happens upon kdump kernel
-> > shutdown, as the upper bridge is disabled before the device is
-> > disabledm so DMA will raise error. It's more like a problem of wrong
-> > device shutting down order.
->
-> The way it was described earlier "During this time, the SUT sometimes
-> gets a PCI error that raises an NMI." suggests that it isn't really
-> restricted to kexec/kdump.
-> Any attached device without an active driver might attempt spurious or
-> malicious DMA and trigger the same during normal operation.
-> Do you have available some more reporting of what happens during the
-> PCIe error handling?
+powerpc is a bit special for VDSO as well as system calls in the
+way that it requires setting CR SO bit which cannot be done in C.
+Therefore, entry/exit and fallback need to be performed in ASM.
 
-Let me add more info about this:
+On a powerpc8xx, with current powerpc/32 ASM VDSO:
 
-On the machine where I can reproduce this issue, the first kernel
-always runs fine, and kdump kernel works fine during dumping the
-vmcore, even if I keep the kdump kernel running for hours, nothing
-goes wrong. If there are DMA during normal operation that will cause
-problem, this should have exposed it.
+gettimeofday:    vdso: 737 nsec/call
+clock-getres-realtime:    vdso: 475 nsec/call
+clock-gettime-realtime:    vdso: 892 nsec/call
 
-The problem only occur when kdump kernel try to reboot, no matter how
-long the kdump kernel have been running (few minutes or hours). The
-machine is dead after printing:
-[  101.438300] reboot: Restarting system^M
-[  101.455360] reboot: machine restart^M
+The first patch adds VDSO generic C support without any changes to common code.
+Performance is as follows:
 
-And I can find following logs happend just at that time, in the
-"Integrated Management Log" from the iLO web interface:
-1254 OS 12/25/2019 09:08 12/25/2019 09:08 1 User Remotely Initiated NMI Switch
-1253 System Error 12/25/2019 09:08 12/25/2019 09:08 1 An Unrecoverable
-System Error (NMI) has occurred (Service Information: 0x00000000,
-0x00000000)
-1252 PCI Bus 12/25/2019 09:07 12/25/2019 09:07 1 Uncorrectable PCI
-Express Error (Embedded device, Bus 0, Device 2, Function 2, Error
-status 0x00100000)
-1251 System Error 12/25/2019 09:07 12/25/2019 09:07 1 Unrecoverable
-System Error (NMI) has occurred.  System Firmware will log additional
-details in a separate IML entry if possible
-1250 PCI Bus 12/25/2019 09:07 12/25/2019 09:07 1 PCI Bus Error (Slot
-0, Bus 0, Device 2, Function 2)
+gettimeofday:    vdso: 1379 nsec/call
+clock-getres-realtime-coarse:    vdso: 984 nsec/call
+clock-gettime-realtime-coarse:    vdso: 868 nsec/call
+clock-getres-realtime:    vdso: 922 nsec/call
+clock-gettime-realtime:    vdso: 1511 nsec/call
+clock-getres-monotonic-raw:    vdso: 968 nsec/call
+clock-gettime-monotonic-raw:    vdso: 1576 nsec/call
 
-And the topology is:
-[0000:00]-+-00.0  Intel Corporation Xeon E7 v3/Xeon E5 v3/Core i7 DMI2
-          +-01.0-[02]--
-          +-01.1-[05]--
-          +-02.0-[06]--+-00.0  Emulex Corporation OneConnect NIC (Skyhawk)
-          |            +-00.1  Emulex Corporation OneConnect NIC (Skyhawk)
-          |            +-00.2  Emulex Corporation OneConnect NIC (Skyhawk)
-          |            +-00.3  Emulex Corporation OneConnect NIC (Skyhawk)
-          |            +-00.4  Emulex Corporation OneConnect NIC (Skyhawk)
-          |            +-00.5  Emulex Corporation OneConnect NIC (Skyhawk)
-          |            +-00.6  Emulex Corporation OneConnect NIC (Skyhawk)
-          |            \-00.7  Emulex Corporation OneConnect NIC (Skyhawk)
-          +-02.1-[0f]--
-          +-02.2-[07]----00.0  Hewlett-Packard Company Smart Array
-Gen9 Controllers
+Then a few changes in the common code have allowed performance improvement. At
+the end of the series we have:
 
-It's a bridge reporting the error. It should be an unsupported request
-error, bacause downstream device is still alive and sending request,
-but the port have bus mastering off. If I manually shutdown the "Smart
-Array" (HPSA) device before kdump reboot, it will always reboot just
-fine.
+gettimeofday:    vdso: 899 nsec/call
+clock-getres-realtime-coarse:    vdso: 546 nsec/call
+clock-gettime-realtime-coarse:    vdso: 615 nsec/call
+clock-getres-realtime:    vdso: 545 nsec/call
+clock-gettime-realtime:    vdso: 1064 nsec/call
+clock-getres-monotonic-raw:    vdso: 546 nsec/call
+clock-gettime-monotonic-raw:    vdso: 1125 nsec/call
 
-And as the patch descriptions said, the HPSA is used in first kernel,
-but didn't get reset in kdump kernel because driver is not loaded.
-When shutting down a bridge, kernel should shutdown downstream device
-first, and then shutdown and clear bus master bit of the bridge. But
-in kdump case, kernel skipped some device shutdown due to driver not
-loaded issue, and kernel don't know they are enabled.
+Christophe Leroy (12):
+  powerpc/64: Don't provide time functions in compat VDSO32
+  powerpc/vdso: Switch VDSO to generic C implementation.
+  lib: vdso: mark __cvdso_clock_getres() as static
+  lib: vdso: inline do_hres() and do_coarse()
+  lib: vdso: Avoid duplication in __cvdso_clock_getres()
+  lib: vdso: __iter_div_u64_rem() is suboptimal for 32 bit time
+  powerpc/vdso: simplify __get_datapage()
+  lib: vdso: allow arches to provide vdso data pointer
+  powerpc/vdso: provide inline alternative to __get_datapage()
+  powerpc/vdso: provide vdso data pointer from the ASM caller.
+  lib: vdso: split clock verification out of __arch_get_hw_counter()
+  powerpc/vdso: provide __arch_is_hw_counter_valid()
 
-This problem is not limited to HPSA, the NIC listed in above topology
-maybe also make the bridge error out, if HPSA get loaded in kdump
-kernel and NIC get ignored.
+ arch/powerpc/Kconfig                         |   2 +
+ arch/powerpc/include/asm/vdso/gettimeofday.h | 104 +++++++++++
+ arch/powerpc/include/asm/vdso/vsyscall.h     |  25 +++
+ arch/powerpc/include/asm/vdso_datapage.h     |  52 +++---
+ arch/powerpc/kernel/asm-offsets.c            |  46 +----
+ arch/powerpc/kernel/time.c                   |  90 ----------
+ arch/powerpc/kernel/vdso.c                   |  58 ++----
+ arch/powerpc/kernel/vdso32/Makefile          |  30 +++-
+ arch/powerpc/kernel/vdso32/datapage.S        |  10 +-
+ arch/powerpc/kernel/vdso32/gettimeofday.S    | 258 ++++-----------------------
+ arch/powerpc/kernel/vdso32/vdso32.lds.S      |   9 +-
+ arch/powerpc/kernel/vdso32/vgettimeofday.c   |  29 +++
+ arch/powerpc/kernel/vdso64/Makefile          |  23 ++-
+ arch/powerpc/kernel/vdso64/datapage.S        |  13 +-
+ arch/powerpc/kernel/vdso64/gettimeofday.S    | 257 ++++----------------------
+ arch/powerpc/kernel/vdso64/vdso64.lds.S      |   7 +-
+ arch/powerpc/kernel/vdso64/vgettimeofday.c   |  29 +++
+ lib/vdso/gettimeofday.c                      | 130 +++++++++++---
+ 18 files changed, 457 insertions(+), 715 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/vdso/gettimeofday.h
+ create mode 100644 arch/powerpc/include/asm/vdso/vsyscall.h
+ create mode 100644 arch/powerpc/kernel/vdso32/vgettimeofday.c
+ create mode 100644 arch/powerpc/kernel/vdso64/vgettimeofday.c
 
->
-> "The reaction to the NMI that the kdump kernel takes is problematic."
-> Or the NMI should not have been triggered to begin with? Where does that happen?
-
-The NMI is triggered by firmware upon the bridge error mentioned
-above, it should have triggered a kernel panic, but on the test
-system, it just hanged and no longer give any output, so I can't post
-any log about it.
+-- 
+2.13.3
 
