@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CA8C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E166C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:49:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6B7A214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21551214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:49:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578898181;
-	bh=/UIoclWQpF1hPzC0wn783AoXihHvUweJtKLiMAnNF0w=;
+	s=default; t=1578898186;
+	bh=sBkJQpHg73khztR6uTTT4C3eIu1cIMwtWT9hcMdZUd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Etd4MBwDWLgBgSQD7atF3PvazJ8heSbbEj5z+ZAEtsYjw9LKJ+ZRGu+9YB7jp4T+P
-	 CYVgtk/UV2uG6OWtEIKcpX0IX8nyFq0CgcqSIlO7mQZqzb+7/nEOrcgJkzxBXE9zvG
-	 5kogU5UneE/QgKxm7kB2LJSlLifwgsT5TXPizPBk=
+	b=VenrLIj1EgxZMCN4lyG89/Uo6L5qzJ/VcCpw32bjrA+Cj+9nB/1JOP2ixwyFodbdr
+	 r5VLk2V8G5cSoDrRfET9UJPnsPbePazphN6Br7KWMij7NwmGrwnTfAhnrmMluvGrrw
+	 +jgSDQ9Y4Uj5dJ6+3Af88iOjpD0uWUccOLJyoGHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgAMGtk (ORCPT
+        id S1728687AbgAMGtp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 01:49:40 -0500
-Received: from conuserg-11.nifty.com ([210.131.2.78]:50761 "EHLO
+        Mon, 13 Jan 2020 01:49:45 -0500
+Received: from conuserg-11.nifty.com ([210.131.2.78]:50772 "EHLO
         conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgAMGtk (ORCPT
+        with ESMTP id S1726202AbgAMGtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 01:49:40 -0500
+        Mon, 13 Jan 2020 01:49:41 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 00D6mj50028522;
-        Mon, 13 Jan 2020 15:48:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 00D6mj50028522
+        by conuserg-11.nifty.com with ESMTP id 00D6mj4v028522;
+        Mon, 13 Jan 2020 15:48:46 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 00D6mj4v028522
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578898129;
-        bh=H7O98kstoP0UqA5tGgs5uc8MGRr0zv+QxBTEbQCMTck=;
+        s=dec2015msa; t=1578898127;
+        bh=chiuS9+WebBejR+cotF9BxmICGPbZmTDz5VP5WMGOxg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=myU4wCONaxkLVjBNxdq1pD9Udh/niRsklQtDSBsxvGH8JDy9Le/KaqLBCIzoWLXR1
-         9S3uR/DQQ6xFdl5w8TnIMlgKM59jZof3f1cSYgMNFFPizjh/pRLpsrxKRjIoQ2X2pd
-         G68ZcRvqjY1mxYQepbIcAs2xiSX5HHKGJ3VL4i+ZSr7/LakLE6JZmb2nhCXSqV7pVX
-         iMorq81mV6R0bcqZ/vJAqKAohIvH54b9t8/gtTxm5ZLGx/RcLSAy0kibug9aeBXV/0
-         bChQn3VWoWPuSaVGhfot7mXNiMq+it4eXznKwSSyefX6XIfBIFkg/ymXmcedfxy9HV
-         OO5ecDS9JwfyA==
+        b=Iq+vTDEYkzJ/OjIWKEWkbTaSBiwcuPGm+nBuZOUCmdJCiu0khxk3qy4rGCaikQSI2
+         hqqTddu8XNLKsicm0j5QR7/zFUOBfuEqjxO4d8AMR38z8gjriHUIE85hf54dSOicuf
+         cdRxpwuaWAGt7nbAkb1dMy5U5fKZ3NY/1vIhyVVDbisWImWQGNOH8rjzi4sEa5Hjl1
+         vj2GNald9MniXcxjB0ycopsjx0jd/WjBtYkKp+IyLS/MPByvPpcG9J1z6IPgLIR+py
+         MtANIg9dUe116HSp9fuwHGAyOWxDRsR0ctXjZP784BdeFqoIAidU+lakN0wiigQ6FP
+         Y0yQyaLr7oWsA==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -50,9 +50,9 @@ Cc:     Ben Hutchings <ben@decadent.org.uk>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 5/7] builddeb: remove redundant make for ARCH=um
-Date:   Mon, 13 Jan 2020 15:48:39 +0900
-Message-Id: <20200113064841.3946-5-masahiroy@kernel.org>
+Subject: [PATCH 2/7] builddeb: match temporary directory name to the package name
+Date:   Mon, 13 Jan 2020 15:48:36 +0900
+Message-Id: <20200113064841.3946-2-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200113064841.3946-1-masahiroy@kernel.org>
 References: <20200113064841.3946-1-masahiroy@kernel.org>
@@ -61,30 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel build has already been done before builddeb is invoked.
+The temporary directory names, debian/hdrtmp (linux-headers package)
+and debian/headertmp (linux-libc-dev package) are confusing.
+
+Matching the directory name to the package name is clearer, IMHO.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/package/builddeb | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ scripts/package/builddeb | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-index 7c561ffe1de0..5efb6155ac0a 100755
+index eb067d6f1370..0a0a7c1447f4 100755
 --- a/scripts/package/builddeb
 +++ b/scripts/package/builddeb
-@@ -82,10 +82,9 @@ mkdir -m 755 -p "$tmpdir/DEBIAN"
- mkdir -p "$tmpdir/lib" "$tmpdir/boot"
- mkdir -p "$kernel_headers_dir/lib/modules/$version/"
+@@ -47,10 +47,10 @@ create_package() {
+ }
  
--# Build and install the kernel
-+# Install the kernel
- if [ "$ARCH" = "um" ] ; then
- 	mkdir -p "$tmpdir/usr/lib/uml/modules/$version" "$tmpdir/usr/bin" "$tmpdir/usr/share/doc/$packagename"
--	$MAKE linux
- 	cp System.map "$tmpdir/usr/lib/uml/modules/$version/System.map"
- 	cp $KCONFIG_CONFIG "$tmpdir/usr/share/doc/$packagename/config"
- 	gzip "$tmpdir/usr/share/doc/$packagename/config"
+ version=$KERNELRELEASE
+-tmpdir="$objtree/debian/tmp"
+-kernel_headers_dir="$objtree/debian/hdrtmp"
+-libc_headers_dir="$objtree/debian/headertmp"
+-dbg_dir="$objtree/debian/dbgtmp"
++tmpdir="$objtree/debian/linux-image"
++kernel_headers_dir="$objtree/debian/linux-headers"
++libc_headers_dir="$objtree/debian/linux-libc-dev"
++dbg_dir="$objtree/debian/linux-image-dbg"
+ packagename=linux-image-$version
+ kernel_headers_packagename=linux-headers-$version
+ libc_headers_packagename=linux-libc-dev
 -- 
 2.17.1
 
