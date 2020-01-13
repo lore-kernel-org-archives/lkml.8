@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE03C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4A7C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CFFB206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1048C206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:23:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578936207;
-	bh=MVe9e5VC7SvtShd7dyIhPx2HpG1JLgDlBrxjy8ZUlSk=;
+	s=default; t=1578936210;
+	bh=niQyp4EepwCvKwoSufe5yiv+s5x2vxpqwbY5ju16TJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=te6FuLOHIaJYaA5bYHaIXMHjxr188YsJ6jxRa/GT6g1QkCb94B+E33GHmUhhocgPd
-	 58qUXw9o2Wyo4TKzXPfJvDK37UHgSS44kwjaAWSyTvdyvk3kVfKjSP8kRSGaOwibQ8
-	 00ZAhq/3UBa/TxmTBaQfTxqo4B78zo3LR53SQ+uI=
+	b=W51DKHsTvbIwrF9u+1y7IBUH4J6W3Ch5pLeAiByRAXADIaZ+Ngi8hw5MOFzbHRzIH
+	 1rdOBkTbDTsWqxlW+kb7ziNpDM1gFHRPaYgtlCv1MLHdKWg9Enq/1yBQM6OA13UY6+
+	 N4doGNB8ChI4So4bdwaUHT08fMFtMHrkbcf3DsKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgAMRX0 (ORCPT
+        id S1728922AbgAMRX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:23:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41888 "EHLO mail.kernel.org"
+        Mon, 13 Jan 2020 12:23:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728873AbgAMRXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:23:20 -0500
+        id S1728896AbgAMRX0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 12:23:26 -0500
 Received: from dogfood.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C959214AF;
-        Mon, 13 Jan 2020 17:23:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A7362081E;
+        Mon, 13 Jan 2020 17:23:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578936200;
-        bh=MVe9e5VC7SvtShd7dyIhPx2HpG1JLgDlBrxjy8ZUlSk=;
+        s=default; t=1578936204;
+        bh=niQyp4EepwCvKwoSufe5yiv+s5x2vxpqwbY5ju16TJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ac1KvcWjdAcdmg5YbZ+vsNC+isxtg0/6KrqTVTKwCbz+P6pIJNBWaKnGtOzgA3qR4
-         p9fKwtbtdeNgghon2V3vV0t0zqgPwXm39AC2QjadIAE4RF7DrlYjDdupxMz1W+Hjz6
-         HHc+PvxprBSZ1piJ+w7HLeCFrI03Y1JudFJdg+HY=
+        b=ihGdTwRnrXKCjNJa1vpmzhFgqBGE410liZy96yELhFVNl0SAKU6zFIe1QYJqOQ4wK
+         0TCrsVYbBNzL+1l6TiNvNzZ7TJcR16b71tZAxIF8UPqHANh/haWrC9XvhjkTQWSpsf
+         ayz1+HQb5xlpGf0n47ba7hhNHb1I8HQAd+g3EXoA=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
         Dan Williams <dan.j.williams@intel.com>,
         Dave Young <dyoung@redhat.com>,
         Saravana Kannan <saravanak@google.com>
-Subject: [PATCH 06/13] efi/x86: avoid RWX mappings for all of DRAM
-Date:   Mon, 13 Jan 2020 18:22:38 +0100
-Message-Id: <20200113172245.27925-7-ardb@kernel.org>
+Subject: [PATCH 08/13] efi/arm: defer probe of PCIe backed efifb on DT systems
+Date:   Mon, 13 Jan 2020 18:22:40 +0100
+Message-Id: <20200113172245.27925-9-ardb@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200113172245.27925-1-ardb@kernel.org>
 References: <20200113172245.27925-1-ardb@kernel.org>
@@ -61,61 +61,158 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The EFI code creates RWX mappings for all memory regions that are
-occupied after the stub completes, and in the mixed mode case, it
-even creates RWX mappings for all of the remaining DRAM as well.
+The new of_devlink support breaks PCIe probing on ARM platforms booting
+via UEFI if the firmware exposes a EFI framebuffer that is backed by a
+PCI device. The reason is that the probing order gets reversed,
+resulting in a resource conflict on the framebuffer memory window when
+the PCIe probes last, causing it to give up entirely.
 
-Let's try to avoid this, by setting the NX bit for all memory
-regions except the ones that are marked as EFI runtime services
-code [which means text+rodata+data in practice, so we cannot mark
-them read-only right away]. For cases of buggy firmware where boot
-services code is called during SetVirtualAddressMap(), map those
-regions with exec permissions as well - they will be unmapped in
-efi_free_boot_services().
+Given that we rely on PCI quirks to deal with EFI framebuffers that get
+moved around in memory, we cannot simply drop the memory reservation, so
+instead, let's use the device link infrastructure to register this
+dependency, and force the probing to occur in the expected order.
 
+Co-developed-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: Saravana Kannan <saravanak@google.com>
 Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 ---
- arch/x86/platform/efi/efi_64.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ drivers/firmware/efi/arm-init.c | 107 ++++++++++++++++++++++++++++++--
+ 1 file changed, 103 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index 6ec58ff60b56..3eb23966e30a 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -365,10 +365,6 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
- 	 * as trim_bios_range() will reserve the first page and isolate it away
- 	 * from memory allocators anyway.
- 	 */
--	pf = _PAGE_RW;
--	if (sev_active())
--		pf |= _PAGE_ENC;
--
- 	if (kernel_map_pages_in_pgd(pgd, 0x0, 0x0, 1, pf)) {
- 		pr_err("Failed to create 1:1 mapping for the first page!\n");
- 		return 1;
-@@ -410,6 +406,22 @@ static void __init __map_region(efi_memory_desc_t *md, u64 va)
- 	unsigned long pfn;
- 	pgd_t *pgd = efi_mm.pgd;
+diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
+index 904fa09e6a6b..d99f5b0c8a09 100644
+--- a/drivers/firmware/efi/arm-init.c
++++ b/drivers/firmware/efi/arm-init.c
+@@ -10,10 +10,12 @@
+ #define pr_fmt(fmt)	"efi: " fmt
  
-+	/*
-+	 * EFI_RUNTIME_SERVICES_CODE regions typically cover PE/COFF
-+	 * executable images in memory that consist of both R-X and
-+	 * RW- sections, so we cannot apply read-only or non-exec
-+	 * permissions just yet. However, modern EFI systems provide
-+	 * a memory attributes table that describes those sections
-+	 * with the appropriate restricted permissions, which are
-+	 * applied in efi_runtime_update_mappings() below. All other
-+	 * regions can be mapped non-executable at this point, with
-+	 * the exception of boot services code regions, but those will
-+	 * be unmapped again entirely in efi_free_boot_services().
-+	 */
-+	if (md->type != EFI_BOOT_SERVICES_CODE &&
-+	    md->type != EFI_RUNTIME_SERVICES_CODE)
-+		flags |= _PAGE_NX;
+ #include <linux/efi.h>
++#include <linux/fwnode.h>
+ #include <linux/init.h>
+ #include <linux/memblock.h>
+ #include <linux/mm_types.h>
+ #include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/of_fdt.h>
+ #include <linux/platform_device.h>
+ #include <linux/screen_info.h>
+@@ -276,15 +278,112 @@ void __init efi_init(void)
+ 		efi_memmap_unmap();
+ }
+ 
++static bool efifb_overlaps_pci_range(const struct of_pci_range *range)
++{
++	u64 fb_base = screen_info.lfb_base;
 +
- 	if (!(md->attribute & EFI_MEMORY_WB))
- 		flags |= _PAGE_PCD;
++	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
++		fb_base |= (u64)(unsigned long)screen_info.ext_lfb_base << 32;
++
++	return fb_base >= range->cpu_addr &&
++	       fb_base < (range->cpu_addr + range->size);
++}
++
++static struct device_node *find_pci_overlap_node(void)
++{
++	struct device_node *np;
++
++	for_each_node_by_type(np, "pci") {
++		struct of_pci_range_parser parser;
++		struct of_pci_range range;
++		int err;
++
++		err = of_pci_range_parser_init(&parser, np);
++		if (err) {
++			pr_warn("of_pci_range_parser_init() failed: %d\n", err);
++			continue;
++		}
++
++		for_each_of_pci_range(&parser, &range)
++			if (efifb_overlaps_pci_range(&range))
++				return np;
++	}
++	return NULL;
++}
++
++/*
++ * If the efifb framebuffer is backed by a PCI graphics controller, we have
++ * to ensure that this relation is expressed using a device link when
++ * running in DT mode, or the probe order may be reversed, resulting in a
++ * resource reservation conflict on the memory window that the efifb
++ * framebuffer steals from the PCIe host bridge.
++ */
++static int efifb_add_links(const struct fwnode_handle *fwnode,
++			   struct device *dev)
++{
++	struct device_node *sup_np;
++	struct device *sup_dev;
++
++	sup_np = find_pci_overlap_node();
++
++	/*
++	 * If there's no PCI graphics controller backing the efifb, we are
++	 * done here.
++	 */
++	if (!sup_np)
++		return 0;
++
++	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
++	of_node_put(sup_np);
++
++	/*
++	 * Return -ENODEV if the PCI graphics controller device hasn't been
++	 * registered yet.  This ensures that efifb isn't allowed to probe
++	 * and this function is retried again when new devices are
++	 * registered.
++	 */
++	if (!sup_dev)
++		return -ENODEV;
++
++	/*
++	 * If this fails, retrying this function at a later point won't
++	 * change anything. So, don't return an error after this.
++	 */
++	if (!device_link_add(dev, sup_dev, 0))
++		dev_warn(dev, "device_link_add() failed\n");
++
++	put_device(sup_dev);
++
++	return 0;
++}
++
++static const struct fwnode_operations efifb_fwnode_ops = {
++	.add_links = efifb_add_links,
++};
++
++static struct fwnode_handle efifb_fwnode = {
++	.ops = &efifb_fwnode_ops,
++};
++
+ static int __init register_gop_device(void)
+ {
+-	void *pd;
++	struct platform_device *pd;
++	int err;
  
+ 	if (screen_info.orig_video_isVGA != VIDEO_TYPE_EFI)
+ 		return 0;
+ 
+-	pd = platform_device_register_data(NULL, "efi-framebuffer", 0,
+-					   &screen_info, sizeof(screen_info));
+-	return PTR_ERR_OR_ZERO(pd);
++	pd = platform_device_alloc("efi-framebuffer", 0);
++	if (!pd)
++		return -ENOMEM;
++
++	if (IS_ENABLED(CONFIG_PCI))
++		pd->dev.fwnode = &efifb_fwnode;
++
++	err = platform_device_add_data(pd, &screen_info, sizeof(screen_info));
++	if (err)
++		return err;
++
++	return platform_device_add(pd);
+ }
+ subsys_initcall(register_gop_device);
 -- 
 2.20.1
 
