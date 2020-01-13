@@ -2,147 +2,136 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB549C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE7FC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B102084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578916101;
-	bh=LxnhZqYlYpH5Vy9lVIo6OhZ32kMjzMITo+VXkeln1fw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=s7oKElx5IWZx9CvT+eCB0JmGS5Gqj921PusffA8neuLLtLL19EfftDT2YPBx2lUr5
-	 B+XtC1fPMmhvgWCaR595/uGukDhk2U3ZaetKxg6r+vi8X+OVuDTygNPGlVM1I06Srx
-	 1YJYqo9GEI4up17Zp9HDJALaIn/n44fyH+URUa5M=
+	by mail.kernel.org (Postfix) with ESMTP id A52DD2081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:49:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgAMLsU (ORCPT
+        id S1728699AbgAMLtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:48:20 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42546 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbgAMLsU (ORCPT
+        Mon, 13 Jan 2020 06:49:43 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:62732 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgAMLtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:48:20 -0500
-Received: by mail-ot1-f67.google.com with SMTP id 66so8635587otd.9;
-        Mon, 13 Jan 2020 03:48:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LxnhZqYlYpH5Vy9lVIo6OhZ32kMjzMITo+VXkeln1fw=;
-        b=pgtg9JnHLBwCYyAZ5RFYQGgsl66M/mj7yM4MaFDspS6YKEdB6ROJMmAjIIAEXYkksF
-         KzKUHo82O4P/9hmKRMftjCb4Bg13udYWoRS5mI7ymCEb0qYb2lsDeBQ9aJ8c03P6YYu3
-         RpWLNKYlDqjUndZh+iMRoeNY3reI9vvAUIlyGZWXv2/dZ88XegVLV2+nIr7XuhSrBLiF
-         ATtFSmI6LuVhD2SVTvG9pcezEIeyuJj62e0CIabQLIBbsHYv0TvFCPjTS+bcTY3OqRt5
-         zu2UluqGJWQF1SD/cHUMRL91/W2L5V5U0lQnKwRg4sqLYLXhn6jHzMlRP5NmGkJWY3B5
-         GQTg==
-X-Gm-Message-State: APjAAAUxBfUnWj5LxEpGzaWPJZmSoYX9m1hVevSpYeSTEhxL4qZfH0ho
-        tN+Wn8dJGaZVxT2lIoutfhcA2CamCqh4dboRlVE=
-X-Google-Smtp-Source: APXvYqw3Qgw3VCVDMPHWyRb4A+fn8GcFRFWgD+RozWxW13+tMz8RTbaH9oz22LVJAtTKMJUr2mfSKOEXlhCa9eU2PHs=
-X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr13198440otd.266.1578916099461;
- Mon, 13 Jan 2020 03:48:19 -0800 (PST)
-MIME-Version: 1.0
-References: <20200107234526.GA19034@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200108105011.GY2827@hirez.programming.kicks-ass.net> <20200110153520.GC8214@u40b0340c692b58f6553c.ant.amazon.com>
- <20200113101609.GT2844@hirez.programming.kicks-ass.net> <857b42b2e86b2ae09a23f488daada3b1b2836116.camel@amazon.com>
-In-Reply-To: <857b42b2e86b2ae09a23f488daada3b1b2836116.camel@amazon.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 13 Jan 2020 12:48:08 +0100
-Message-ID: <CAJZ5v0jkaw1jJVahWbvcqcYhcwWLqajm7gchn4L4WOngHJcbUA@mail.gmail.com>
-Subject: Re: [RFC PATCH V2 11/11] x86: tsc: avoid system instability in hibernation
-To:     "Singh, Balbir" <sblbir@amazon.com>
-Cc:     "peterz@infradead.org" <peterz@infradead.org>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        Mon, 13 Jan 2020 06:49:43 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-ba-5e1c595373c1
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 16.5F.08102.3595C1E5; Mon, 13 Jan 2020 12:49:39 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Mon, 13 Jan 2020 12:49:27 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
+CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Agarwal, Anchal" <anchalag@amazon.com>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com" 
-        <Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "jgross@suse.com" <jgross@suse.com>, "pavel@ucw.cz" <pavel@ucw.cz>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "roger.pau@citrix.com" <roger.pau@citrix.com>,
-        "hpa@zytor.com" <hpa@zytor.com>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "konrad.wilk@oracle.co" <konrad.wilk@oracle.co>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "fllinden@amaozn.com" <fllinden@amaozn.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>
-Content-Type: text/plain; charset="UTF-8"
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
+ bd718x7 specific parts
+Thread-Topic: [PATCH v8 08/12] regulator: bd718x7: Split driver to common
+ and bd718x7 specific parts
+Thread-Index: AQHVvvUCH6xbXbWt3UKhkzpPOHFEqKffIN0AgAFNNwCACAJ9gIAAD8yA
+Date:   Mon, 13 Jan 2020 11:49:26 +0000
+Message-ID: <ab72ce13d008a0d5e9cd753b87fe397953210f70.camel@fi.rohmeurope.com>
+References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+         <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200107124124.GI14821@dell>
+         <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
+         <20200113105301.GF5414@dell>
+In-Reply-To: <20200113105301.GF5414@dell>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <558A385D28CECC4E84770D5C5B7DB969@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUwTSRjHM7vb7VBdXSvItKLGPY0viS8kGsYc5/FFXGNiVCLnaQRXWWgV
+        WrJtDWjuwkU5oWiCr2gjVUkRgpxIhaAG1FTQWowGabGKqMSXqJhyFz2NuR6666LwZeaZ+c/v
+        +f8/PANJ/QBthGaLXZQsQi5H66hrtf81zkv7NSFj4d6WH7GnK6TFeyNntPh9ZYDCR/qf0/hk
+        +x0NLuts0uDe5vMUfvJvB8AfgiUEPhytIfA/+x5r8IWTUYC7L5+gcfPbcwDfOBukcfX9LgKf
+        qPZTuCuwDPcFOmhc3NauxUM9jVRKHF/vrgf8YLhYy7vrd/GXXH1a3ltXSvOPelpp/ma4heAr
+        3J8IvvbsRy3/zjt1tW7DmOQtgn1HmjnHsmDp5jGmob/va/MjhgLXwSVF4JjBCWIgYhehe6Fz
+        GifQQT0bAuhVZ9nwwQ9QSThIOwGENJuMnA+0ChDLJiKP/wWl1CTrgaj5j23Kk4msiHo/ZKtP
+        slFJ5Cqt1qmobXf715piZ6KmaPBrG4ZdhW7/v59UreoI5Pf1AUWIYeeglkAFodSAnYJKiyKE
+        6hWPvC8/atTQLPK03iXVOg69fjY0fM+htk/9lJKHlPs0XF6goinoyJ/u4cjT0eGy/uEME9Ct
+        48+pcjDJNcrBNUK7RtGuUbRrFH0KaOoAyhPMuTmCXUycL4mO+ZLVlCdvW615XqAOzPuL4LNv
+        hQ8QEPiAARJcHNOzbnKGftwWa1ahSbCZMiVHrmjzAQRJLpbx3jFm6JksoXCnKFm/SZMhxcUz
+        s/oPbNKzitd2UcwXpW9qAoQcYgZ+ScjQT5DEHLEg25xrH5EJGKM01xljbaIlS5QEh92UqUxH
+        pk0eD0UaK/u+XC/jjC1fyJNvVTQAkmD568oqEl7qcMvrrTqPvLZXVleRespitYjGeOZuuoyx
+        CmZyWL6bvgHxEHATmdlKprHyD/re841sR8h2um6DYmcXRiRjERAetEz7yWH/a62w9uGTow3p
+        L7rO3DiwcuPq07Rw2otaHaHOigZz0wrNHsn1w3iLYOr2NQ4M9nqjS2rvpf4Wty/VyS186pkG
+        3pH+YEgTuR4GNcYavjCltWTTMcPu6OJxVxwMLF5z6NRgUkHlLgBnEOW/b+eelS7fmZT8c/pK
+        W5ijbCYhcS4p2YQvO4W4lP4DAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 12:43 PM Singh, Balbir <sblbir@amazon.com> wrote:
->
-> On Mon, 2020-01-13 at 11:16 +0100, Peter Zijlstra wrote:
-> > On Fri, Jan 10, 2020 at 07:35:20AM -0800, Eduardo Valentin wrote:
-> > > Hey Peter,
-> > >
-> > > On Wed, Jan 08, 2020 at 11:50:11AM +0100, Peter Zijlstra wrote:
-> > > > On Tue, Jan 07, 2020 at 11:45:26PM +0000, Anchal Agarwal wrote:
-> > > > > From: Eduardo Valentin <eduval@amazon.com>
-> > > > >
-> > > > > System instability are seen during resume from hibernation when system
-> > > > > is under heavy CPU load. This is due to the lack of update of sched
-> > > > > clock data, and the scheduler would then think that heavy CPU hog
-> > > > > tasks need more time in CPU, causing the system to freeze
-> > > > > during the unfreezing of tasks. For example, threaded irqs,
-> > > > > and kernel processes servicing network interface may be delayed
-> > > > > for several tens of seconds, causing the system to be unreachable.
-> > > > > The fix for this situation is to mark the sched clock as unstable
-> > > > > as early as possible in the resume path, leaving it unstable
-> > > > > for the duration of the resume process. This will force the
-> > > > > scheduler to attempt to align the sched clock across CPUs using
-> > > > > the delta with time of day, updating sched clock data. In a post
-> > > > > hibernation event, we can then mark the sched clock as stable
-> > > > > again, avoiding unnecessary syncs with time of day on systems
-> > > > > in which TSC is reliable.
-> > > >
-> > > > This makes no frigging sense what so bloody ever. If the clock is
-> > > > stable, we don't care about sched_clock_data. When it is stable you get
-> > > > a linear function of the TSC without complicated bits on.
-> > > >
-> > > > When it is unstable, only then do we care about the sched_clock_data.
-> > > >
-> > >
-> > > Yeah, maybe what is not clear here is that we covering for situation
-> > > where clock stability changes over time, e.g. at regular boot clock is
-> > > stable, hibernation happens, then restore happens in a non-stable clock.
-> >
-> > Still confused, who marks the thing unstable? The patch seems to suggest
-> > you do yourself, but it is not at all clear why.
-> >
-> > If TSC really is unstable, then it needs to remain unstable. If the TSC
-> > really is stable then there is no point in marking is unstable.
-> >
-> > Either way something is off, and you're not telling me what.
-> >
->
-> Hi, Peter
->
-> For your original comment, just wanted to clarify the following:
->
-> 1. After hibernation, the machine can be resumed on a different but compatible
-> host (these are VM images hibernated)
-> 2. This means the clock between host1 and host2 can/will be different
-
-So the problem is specific to this particular use case.
-
-I'm not sure why to impose this hack on hibernation in all cases.
+SGVsbG8gTGVlLA0KDQpPbiBNb24sIDIwMjAtMDEtMTMgYXQgMTA6NTMgKzAwMDAsIExlZSBKb25l
+cyB3cm90ZToNCj4gT24gV2VkLCAwOCBKYW4gMjAyMCwgVmFpdHRpbmVuLCBNYXR0aSB3cm90ZToN
+Cj4gDQo+ID4gSGVsbG8gTGVlLA0KPiA+IA0KPiA+IE9uIFR1ZSwgMjAyMC0wMS0wNyBhdCAxMjo0
+MSArMDAwMCwgTGVlIEpvbmVzIHdyb3RlOg0KPiA+ID4gT24gTW9uLCAzMCBEZWMgMjAxOSwgTWF0
+dGkgVmFpdHRpbmVuIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+IEZldyBST0hNIFBNSUNzIGFsbG93
+IHNldHRpbmcgdGhlIHZvbHRhZ2Ugc3RhdGVzIGZvciBkaWZmZXJlbnQNCj4gPiA+ID4gc3lzdGVt
+IHN0YXRlcw0KPiA+ID4gPiBsaWtlIFJVTiwgSURMRSwgU1VTUEVORCBhbmQgTFBTUi4gU3RhdGVz
+IGFyZSB0aGVuIGNoYW5nZWQgdmlhDQo+ID4gPiA+IFNvQw0KPiA+ID4gPiBzcGVjaWZpYw0KPiA+
+ID4gPiBtZWNoYW5pc21zLiBiZDcxOHg3IGRyaXZlciBpbXBsZW1lbnRlZCBkZXZpY2UtdHJlZSBw
+YXJzaW5nDQo+ID4gPiA+IGZ1bmN0aW9ucyBmb3INCj4gPiA+ID4gdGhlc2Ugc3RhdGUgc3BlY2lm
+aWMgdm9sdGFnZXMuIFRoZSBwYXJzaW5nIGZ1bmN0aW9ucyBjYW4gYmUgcmUtDQo+ID4gPiA+IHVz
+ZWQgDQo+ID4gPiA+IGJ5DQo+ID4gPiA+IG90aGVyIFJPSE0gY2hpcCBkcml2ZXJzIGxpa2UgYmQ3
+MTgyOC4gU3BsaXQgdGhlIGdlbmVyaWMNCj4gPiA+ID4gZnVuY3Rpb25zDQo+ID4gPiA+IGZyb20N
+Cj4gPiA+ID4gYmQ3MTh4Ny1yZWd1bGF0b3IuYyB0byByb2htLXJlZ3VsYXRvci5jIGFuZCBleHBv
+cnQgdGhlbSBmb3INCj4gPiA+ID4gb3RoZXINCj4gPiA+ID4gbW9kdWxlcw0KPiA+ID4gPiB0byB1
+c2UuDQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPA0K
+PiA+ID4gPiBtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQo+ID4gPiA+IEFja2Vk
+LWJ5OiBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+DQo+ID4gPiA+IC0tLQ0KPiANCj4g
+Wy4uLl0NCj4gDQo+ID4gPiA+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfUkVHVUxBVE9SX1JPSE0p
+DQo+ID4gPiA+ICtpbnQgcm9obV9yZWd1bGF0b3Jfc2V0X2R2c19sZXZlbHMoY29uc3Qgc3RydWN0
+IHJvaG1fZHZzX2NvbmZpZw0KPiA+ID4gPiAqZHZzLA0KPiA+ID4gPiArCQkJCSAgc3RydWN0IGRl
+dmljZV9ub2RlICpucCwNCj4gPiA+ID4gKwkJCQkgIGNvbnN0IHN0cnVjdCByZWd1bGF0b3JfZGVz
+Yw0KPiA+ID4gPiAqZGVzYywNCj4gPiA+ID4gKwkJCQkgIHN0cnVjdCByZWdtYXAgKnJlZ21hcCk7
+DQo+ID4gPiANCj4gPiA+IERvZXMgdGhlc2UgcmVhbGx5IG5lZWQgdG8gbGl2ZSBpbiB0aGUgcGFy
+ZW50J3MgaGVhZGVyIGZpbGU/DQo+ID4gDQo+ID4gSSBkb24ndCBrbm93IHdoYXQgd291bGQgYmUg
+YSBiZXR0ZXIgcGxhY2U/DQo+IA0KPiBZb3UgZG9uJ3QgaGF2ZSBhIHJlZ3VsYXRvciBoZWFkZXIg
+ZmlsZT8NCj4gDQo+IEl0IHNlZW1zIG92ZXIta2lsbCB0byBjcmVhdGUgb25lIGZvciB0aGlzLCBz
+byBsZWF2ZSBpdCBhcyBpcy4NCj4gDQo+ID4gPiBXaGF0IG90aGVyIGNhbGwtc2l0ZXMgYXJlIHRo
+ZXJlPw0KPiA+IA0KPiA+IEFmdGVyIHRoaXMgc2VyaWVzIHRoZSBiZDcxOHg3LXJlZ3VsYXRvci5j
+IGFuZCBiZDcxODI4LXJlZ3VsYXRvci5jDQo+ID4gYXJlDQo+ID4gdGhlIGluLXRyZWUgZHJpdmVy
+cyB1c2luZyB0aGVzZS4gcm9obS1yZWd1bGF0b3IuYyBpcyBpbXBsZW1lbnRpbmcNCj4gPiB0aGVt
+Lg0KPiA+IEFuZCBJIGhvcGUgd2Ugc2VlIHlldCBhbm90aGVyIGRyaXZlciBsYW5kaW5nIGluIGxh
+dGVyIHRoaXMgeWVhci4gDQo+ID4gDQo+ID4gQW55d2F5cywgSSB3aWxsIGludmVzdGlnYXRlIGlm
+IEkgY2FuIHN3aXRjaCB0aGlzIHRvIHNvbWUgY29tbW9uDQo+ID4gKG5vdA0KPiA+IHJvaG0gc3Bl
+Y2lmaWMpIERUIGJpbmRpbmdzIGF0IHNvbWUgcG9pbnQgKEkndmUgc2NoZWR1bGVkIHRoaXMgc3R1
+ZHkNCj4gPiB0bw0KPiA+IE1hcmNoKSAtIElmIEkgY2FuIHRoZW4gdGhleSBzaG91bGQgbGl2ZSBp
+biByZWd1bGF0b3IgY29yZSBoZWFkZXJzLg0KPiA+IA0KPiA+IEJ1dCBjaGFuZ2luZyB0aGUgZXhp
+c3RpbmcgcHJvcGVydGllcyBzaG91bGQgYWdhaW4gYmUgb3duIHNldCBvZg0KPiA+IHBhdGNoZXMN
+Cj4gPiBhbmQgSSdkIHByZWZlciBkb2luZyB0aGF0IHdvcmsgaW5kZXBlbmRlbnRseSBvZiB0aGlz
+IHNlcmllcyBhbmQgbm90DQo+ID4gZGVsYXlpbmcgdGhlIEJENzE4MjggZHVlIHRvIG5vdC15ZXQt
+ZXZhbHVhdGVkIGJkNzE4eDcgcHJvcGVydHkNCj4gPiBjaGFuZ2VzLg0KPiANCj4gVGhhdCdzIGZp
+bmUuDQoNCg0KR2xhZCB0byBoZWFyIDopIEJ5IHRoZSB3YXksIEkgYWxyZWFkeSBzZW50IHRoZSB2
+OSA7KQ0KDQpCciwNCglNYXR0aQ0KDQo=
