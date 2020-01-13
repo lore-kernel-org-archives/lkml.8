@@ -2,220 +2,119 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408F2C33CB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481ADC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA3D21744
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17D22207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PfcFbwBs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wkPnfeVg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbgAMPWo (ORCPT
+        id S1729153AbgAMPXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 10:22:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27121 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728843AbgAMPWn (ORCPT
+        Mon, 13 Jan 2020 10:23:12 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45293 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbgAMPXL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 10:22:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578928961;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VOTGMvgDQlL7dRbs3ZO0Cylb6qsjQ7963pN+mQ0JZwc=;
-        b=PfcFbwBseCR56yGf3vMdHiX/Xs05gX37iVXiXndqnFiL4Jv5XugqskjnzPfzZu+ltc9QGH
-        z6rOpinEmysQLnHsRzKmvw1nQ4Y/N5Pwt3X9sPL4XEuCKcf68dp8Qifc4C2gbJ1f+P3Ink
-        +u0DPhjBc5WE0qBbuH9eP3h6vOSzs68=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-32-Zp6_lPgHPfmOaQ5pUpe7Jg-1; Mon, 13 Jan 2020 10:22:40 -0500
-X-MC-Unique: Zp6_lPgHPfmOaQ5pUpe7Jg-1
-Received: by mail-wr1-f69.google.com with SMTP id c17so5090401wrp.10
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 07:22:39 -0800 (PST)
+        Mon, 13 Jan 2020 10:23:11 -0500
+Received: by mail-pl1-f195.google.com with SMTP id b22so3930086pls.12
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 07:23:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=P5Fr7LX8SyGjfIYpXVgAHCXpeiamvTYOg9P0ZgSQ/fA=;
+        b=wkPnfeVgMtuBv2icEDFQ9boOu3Dyeg4c36Gok3ASUmMFIlaqOiUsxaKd+nbDDgdHgB
+         rJbJhRj0zhfQ/kLnXvQAaysOxwd7l2cKa9v+KIrDskDBMdTMLg2naGKhCwfhjTEjsRMW
+         xnb2dQ8S1jiM/bEEsiw1tBZ1/KbmafhDH3/GAdJlUWDUq111+5/eG6b/WKyQPUGaiSYC
+         1gSanHXp+/Qi+SKhY4kRYyUlRoCUYiBqLls4c0pWlXO5dnKMR4wPu8d+9Bd480R7yfDS
+         bc1V2De00kB9a9qw7liS48SdBOXgoorg5q2tu0WyGdsO1dpBY4T1wVEGr3Rt3ze1dce3
+         uhqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VOTGMvgDQlL7dRbs3ZO0Cylb6qsjQ7963pN+mQ0JZwc=;
-        b=onXg3OitEvg71QF3KkSYRbQQme36CFLZwptkQvaV6Ijft+o0kOqn3IeEo6F4YZYMWX
-         InvbMrwWCCoM+UEoFdmihzhFEK8T141w+JNYBnhvZzRI0wp/H6ZQchUpl4+ZfuCbhsC2
-         UKAS5BSiNK3f+9uyF4LYYx10VvGXJAzyvRR744ltCVFUY3L3G0ptCb81aC79XNSUsqpm
-         OzVHFlZOdAkflOxFzaQLOe0yrOSOnHHZQHG5Fo47AD8Uii+VBLhYLTEsfi+d7UYXt5yR
-         K+LciXNSb5Z9rMJb6gOQGWIhVzooMfCcedo5GeKQBUYiiPHDn//ivv4y9dGlO68KZWGj
-         4Fpw==
-X-Gm-Message-State: APjAAAV93rPy7Er9R4BA7g30tx6ZQM9kiopqXv+zBlNYIbn0w2N5Wmzq
-        w+NUHg3jYhZ5qSI2L/izeXaBtz4F1bpOmio0F71pcYSN12jUSjYq2F8BZt7ul0SE1qkHqFSp+pR
-        /SKjJANqvw6UFUuW+pN9P0zz1
-X-Received: by 2002:a1c:a406:: with SMTP id n6mr20939385wme.40.1578928958680;
-        Mon, 13 Jan 2020 07:22:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyUmkECQJyn5SeeaSEv+fAyzoafrVckwo+t9N110O05ZIO2UB7J1Jik4S2xxmzSNHA+roPuQw==
-X-Received: by 2002:a1c:a406:: with SMTP id n6mr20939363wme.40.1578928958439;
-        Mon, 13 Jan 2020 07:22:38 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id j12sm16877545wrw.54.2020.01.13.07.22.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 07:22:37 -0800 (PST)
-Subject: Re: [PATCH v11 05/10] test_firmware: add support for
- firmware_request_platform
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=P5Fr7LX8SyGjfIYpXVgAHCXpeiamvTYOg9P0ZgSQ/fA=;
+        b=hKgGDXXq3kIL/8psa1JpugjLOBOd46B40Dw7/534vd7VUEWKXRj45xD4vDfk/JxlrD
+         QjGvA6QbpLr8qy+7uB4QZXH7qzos7/fp8oMJsVURe+9Y1PbNEQNg25iC2MR0CwtIAP7v
+         GXEW3R8OQvqOcbxBpheorKwgnNUz2mrgsS37Lq6IFf/HrLZfLQ4Xff2K0zgsZ+f7yGqr
+         POdIET4heJdHOYWBaUSi0wcl5yO9TxAc6MXexdzzqrIDewhA3PY3z4Gy5HUyfIf9Kq1i
+         bc34wHaJaNQOwlMeyajs//tzWzLiWN2TH3xhYHCX2Pok+ct5XMZESDcTiWGwFQ4mjqkX
+         1DJg==
+X-Gm-Message-State: APjAAAWcd6B9UmXmVX6E5/AZNpceAConmVklryx+KTcpCbOwObN8fZEc
+        nA7IJSkzjHTyiYVn4UMsOFldzw==
+X-Google-Smtp-Source: APXvYqyoZxD3ZhwhXAePP17c+P28G/HRivKern1yZbJF0kFmt9zZKnhCqnFNhZU2yiwviUn4RKBr+Q==
+X-Received: by 2002:a17:90a:b311:: with SMTP id d17mr23213686pjr.17.1578928991071;
+        Mon, 13 Jan 2020 07:23:11 -0800 (PST)
+Received: from leoy-ThinkPad-X240s (li519-153.members.linode.com. [66.175.222.153])
+        by smtp.gmail.com with ESMTPSA id a1sm14299950pfo.68.2020.01.13.07.23.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 Jan 2020 07:23:10 -0800 (PST)
+Date:   Mon, 13 Jan 2020 23:22:59 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Peter Jones <pjones@redhat.com>,
-        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-input@vger.kernel.org
-References: <20200111145703.533809-1-hdegoede@redhat.com>
- <20200111145703.533809-6-hdegoede@redhat.com>
- <20200113145328.GA11244@42.do-not-panic.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <54f70265-265b-ad23-7d2d-af0b27ab1475@redhat.com>
-Date:   Mon, 13 Jan 2020 16:22:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Andi Kleen <ak@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Leach <mike.leach@linaro.org>
+Subject: Re: [PATCH v4 1/2] perf parse: Refactor struct perf_evsel_config_term
+Message-ID: <20200113152259.GD10620@leoy-ThinkPad-X240s>
+References: <20200108142010.11269-1-leo.yan@linaro.org>
+ <20200110150422.GH82989@krava>
 MIME-Version: 1.0
-In-Reply-To: <20200113145328.GA11244@42.do-not-panic.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200110150422.GH82989@krava>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Jan 10, 2020 at 04:04:22PM +0100, Jiri Olsa wrote:
+> On Wed, Jan 08, 2020 at 10:20:09PM +0800, Leo Yan wrote:
+> > The struct perf_evsel_config_term::val is a union which contains
+> > multiple variables for corresponding types.  This leads the union to
+> > be complex and also causes complex code logic.
+> > 
+> > This patch refactors the structure to use two general variables in the
+> > 'val' union: one is 'num' for unsigned 64-bit integer and another is
+> > 'str' for string variable.  This can simplify the data structure and
+> > the related code, this also can benefit for possibly extension.
+> > 
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> 
+> there's some arch code that needs to be changed.. please
+> change other archs as well
+> 
+> 
+>   CC       arch/x86/util/intel-pt.o
+> arch/x86/util/intel-pt.c: In function ‘intel_pt_config_sample_mode’:
+> arch/x86/util/intel-pt.c:563:24: error: ‘union <anonymous>’ has no member named ‘cfg_chg’
+>   563 |   user_bits = term->val.cfg_chg;
 
-On 13-01-2020 15:53, Luis Chamberlain wrote:
-> On Sat, Jan 11, 2020 at 03:56:58PM +0100, Hans de Goede wrote:
->> Add support for testing firmware_request_platform through a new
->> trigger_request_platform trigger.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->> Changes in v11:
->> - Drop a few empty lines which were accidentally introduced
-> 
-> But you didn't address my other feedback.
-> 
->> --- a/lib/test_firmware.c
->> +++ b/lib/test_firmware.c
->> @@ -507,6 +508,61 @@ static ssize_t trigger_request_store(struct device *dev,
->>   }
->>   static DEVICE_ATTR_WO(trigger_request);
->>   
->> +#ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
->> +static ssize_t trigger_request_platform_store(struct device *dev,
->> +					      struct device_attribute *attr,
->> +					      const char *buf, size_t count)
->> +{
->> +	static const u8 test_data[] = {
->> +		0x55, 0xaa, 0x55, 0xaa, 0x01, 0x02, 0x03, 0x04,
->> +		0x55, 0xaa, 0x55, 0xaa, 0x05, 0x06, 0x07, 0x08,
->> +		0x55, 0xaa, 0x55, 0xaa, 0x10, 0x20, 0x30, 0x40,
->> +		0x55, 0xaa, 0x55, 0xaa, 0x50, 0x60, 0x70, 0x80
->> +	};
->> +	struct efi_embedded_fw fw;
->> +	int rc;
->> +	char *name;
->> +
->> +	name = kstrndup(buf, count, GFP_KERNEL);
->> +	if (!name)
->> +		return -ENOSPC;
->> +
->> +	pr_info("inserting test platform fw '%s'\n", name);
->> +	fw.name = name;
->> +	fw.data = (void *)test_data;
->> +	fw.length = sizeof(test_data);
->> +	list_add(&fw.list, &efi_embedded_fw_list);
->> +
->> +	pr_info("loading '%s'\n", name);
->> +
-> 
-> I mentioned this in my last review, and it seems you forgot to address
-> this.
+This compiling error will be dismissed in patch v5, since val.cfg_chg
+is kept in the structure.
 
-I did address this in my reply to your review, as explained there,
-the check + free on test_firmware before calling firmware_request_platform()
-is necessary because test_firmware may be non NULL when entering
-the function (continued below) ...
-
-> But now some more feedback:
-> 
-> These two:
-> 
->> +	mutex_lock(&test_fw_mutex);
->> +	release_firmware(test_firmware);
-> 
-> You are doing this because this is a test, but a typical driver will
-> do this after, and we don't loose anything in doing this after. Can you
-> move the mutex lock and assign the pointer to a temporary used pointer
-> for the call, *after* your call.
-> 
-> But since your test is not using any interfaces to query information
-> about the firmware, and you are just doing the test in C code right
-> away, instead of say, using a trigger for later use in userspace,
-> you can just do away with the mutex lock and make the call use its
-> own pointer:
-> 
-> 	rc = firmware_request_platform(&tmp_test_firmware, name, dev);
-> 	if (rc) {
-> 		...
-> 	}
-> 	/* Your test branch code goes here */
-> 
-> I see no reason why you use the test_firmware pointer.
-
-I agree that using a private/local firmware pointer instead of
-test_firmware and dropping the mutex calls is better. I will make
-this change for v12 of this series.
-
-I'll send out a v12 once the remarks from Andy Lutomirski's
-have also been discussed.
-
-Regards,
-
-Hans
-
-
-> 
->> +	test_firmware = NULL;
->> +	rc = firmware_request_platform(&test_firmware, name, dev);
->> +	if (rc) {
->> +		pr_info("load of '%s' failed: %d\n", name, rc);
->> +		goto out;
->> +	}
->> +	if (test_firmware->size != sizeof(test_data) ||
->> +	    memcmp(test_firmware->data, test_data, sizeof(test_data)) != 0) {
->> +		pr_info("firmware contents mismatch for '%s'\n", name);
->> +		rc = -EINVAL;
->> +		goto out;
->> +	}
->> +	pr_info("loaded: %zu\n", test_firmware->size);
->> +	rc = count;
->> +
->> +out:
->> +	mutex_unlock(&test_fw_mutex);
->> +
->> +	list_del(&fw.list);
->> +	kfree(name);
->> +
->> +	return rc;
->> +}
-> 
-
+Thanks,
+Leo
