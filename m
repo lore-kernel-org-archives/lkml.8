@@ -2,154 +2,195 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024CDC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 267FEC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA1FE21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0664214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:42:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ucEiag0O"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KMPbZcnz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbgAMNke (ORCPT
+        id S1728689AbgAMNm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:40:34 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:37971 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbgAMNkd (ORCPT
+        Mon, 13 Jan 2020 08:42:56 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51286 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbgAMNmz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:40:33 -0500
-Received: by mail-pj1-f65.google.com with SMTP id l35so4306040pje.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 05:40:33 -0800 (PST)
+        Mon, 13 Jan 2020 08:42:55 -0500
+Received: by mail-wm1-f65.google.com with SMTP id d73so9711083wmd.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 05:42:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ejCMkWWKwAoPI8u4KcGTMFwvY/YANPU/hMabfiSeUWY=;
-        b=ucEiag0OE86mT0+xHRiS4rf3+pJ8ZcTZjYKFIUZq1UogkOZ9pyd8qUlITMHqvfyYz3
-         gCZJiqd2ZRmknv8B10q0Nu2YZw249kz3EmPExGBVGZPpYLlSs2M79K9ATENcScWlgzC7
-         zIER/DZY9r2fndqCL3vWq/5gemEga2FeqcgSZhNNfhGGFawR5kvwTBCvndHxv41v1aX6
-         5KhqIPLElw1QigUzSWr0E5bWH3sL1qOMO1mX2PUGVOeRJDbNFS/6kP3rh7bD+gCCwSP6
-         c6S3xUbhl9bRDg401XWpz/45GH+zglbzTY9djLULueyAnK6XebPE0kjSdZ5axv3uBy/u
-         haJQ==
+         :cc:content-transfer-encoding;
+        bh=zJrfuhvY4deSpuDK2tf/dm3JvOsouNbsqMAp9wxIM1M=;
+        b=KMPbZcnz9vukXKprPKOdWKj37bmBltDFfwldexD0qpEQ7goAhIIQLRSymM8xmxNip3
+         dlpK6Uu4TK8esQQhi5jfSu1zr0yBb4Q2J+VhHQqhShG0JRmoG+6E/7MRv9djJ+GAFRXb
+         4wNbWtTS6UxvCoN7xW0q3U49nwTr+EZKxhenreWS/3IaZMmfVyya2WQw/IjMSCHk87sa
+         JLMKiVYgeLMr3nBgKzFAz7z1irK1f/IgVpMehvGqJfgzaf7LLQFGEJkcUpqMBzKyypIA
+         YMPe66tjv7UByVF4UpCM/XX64cJ492jgO/qbwHGqpTe2Ymqgnu+UWda7NJyrAIglW49y
+         Iftg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ejCMkWWKwAoPI8u4KcGTMFwvY/YANPU/hMabfiSeUWY=;
-        b=GeIFNOmgvHkRi2SxUL1KTgW+yuPbfTzD5FB7ynxbGziElEq6Hwy42PtSqlnRqWZL+4
-         jm56OGQVqMMppN4UnS2c7v5Kdl5K32xp1eyTaBSTd0yDNuB07eRGb0n+BDUK8mBY5YrS
-         Ec1rU8lHQJbdkPTjXexNycIBIdQHeRewrEZNnoQh7U9rhXM4gXNud8UuAEogLv0LmXcn
-         8ciFBJ9SteJ9ZagpE6OrSenIffQaFqY2VPDsLyZfeOitxDL0R/MC6t86ipT+9e+cYQPS
-         HUnGz9x1oEKmndvYIT+g4JR60HaF1WKrUQjD+QuAh8ENNOuvpXkh6fGLBD8Bt/Enkcde
-         UDYg==
-X-Gm-Message-State: APjAAAWnIIEgfRam27P+5ohkISmPwGKvN/EMCViRQfQHfcDTqcGmDZ3u
-        /r+NlbQuZndHzpPJaOQrBf2QSGkQ+HOMoYWbj8lTnA==
-X-Google-Smtp-Source: APXvYqwpVDtR7a+YeUtFgWE31wFU/5VDAT2mqpXM1oQMEgw6UQkfLNMA8pNEyGKxEhTdX/pSnyP8ALm+BgkUQ/hgJpE=
-X-Received: by 2002:a17:902:704b:: with SMTP id h11mr5765181plt.147.1578922832774;
- Mon, 13 Jan 2020 05:40:32 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zJrfuhvY4deSpuDK2tf/dm3JvOsouNbsqMAp9wxIM1M=;
+        b=YCVNBEue40n/HuFtN7nXe+yHnZnztB1wx9Tvz2WwbI1+QCdQOinUVFg1J+jef6p4u1
+         9GBW7ptY9L/1GpQnWiyR8S9ZGLNxC16sfK4DbWByXC5fN6qCeKfpdV8yaTBaQfwQX3zR
+         BSqDVV83LwePT0Ep4Jdz2G1mz3A/QGPDTTISdlT2LfDj13awqW5f78tYT63OMZ9iNww5
+         LiuOKhbiG/God8h8313Yfx3vcBQQn7Pw9/6LD+lmmRmP+qrkUdPjKxKdFN80pO2JMMfx
+         a/qQ+FXyA+VOQpy5SAS7pF7kAgMTMVrofu2CtJBREn1V5yKqriytbPrEeb68PyPHlbuj
+         zLDw==
+X-Gm-Message-State: APjAAAWR46j4oQxvRnkuILnhXIKfxzy4D0lCjrqAw1g9ERGugohgS1ep
+        nP2rchL2B4N0LDCcr2MKSry2/G0/3608XySnvC+5P7trgdU=
+X-Google-Smtp-Source: APXvYqwRZG5006daKrcHDqU3irnIL6xTWPGqAzROYb6FqiJu3vuxf/DZg7ciW9xTIR2Aj4VCatLdKHWL5NFMYx4ApfU=
+X-Received: by 2002:a7b:c3d8:: with SMTP id t24mr19619056wmj.175.1578922973019;
+ Mon, 13 Jan 2020 05:42:53 -0800 (PST)
 MIME-Version: 1.0
-References: <cover.1576697098.git.andreyknvl@google.com> <6cd46f8512dc12e20667c2b02d487591868cb20f.1576697098.git.andreyknvl@google.com>
- <20200111193156.GC435222@kroah.com>
-In-Reply-To: <20200111193156.GC435222@kroah.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Mon, 13 Jan 2020 14:40:21 +0100
-Message-ID: <CAAeHK+z2+_UHNp4_D2iL9FzPtDoU1YBohCaDJG8sAy12uc_-ew@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] usb: gadget: add raw-gadget interface
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-Cc:     USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Alexander Potapenko <glider@google.com>,
-        Marco Elver <elver@google.com>
+References: <20191223211309.GA4609@sig21.net> <20200113092604.GA26365@sig21.net>
+ <2661668.lOhekKA4Va@kreacher>
+In-Reply-To: <2661668.lOhekKA4Va@kreacher>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Mon, 13 Jan 2020 14:42:41 +0100
+Message-ID: <CAG_fn=WZTyaeG=Vy3XqX84gMOob3KKVWHM6G9=mEGe3XA7sfKA@mail.gmail.com>
+Subject: Re: init_on_free breaks hibernate
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Johannes Stezenbach <js@sig21.net>,
+        "Acked-by: Kees Cook" <keescook@chromium.org>,
+        "Acked-by: Michal Hocko" <mhocko@suse.cz>,
+        linux-pm@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 9:02 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Mon, Jan 13, 2020 at 12:07 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrot=
+e:
 >
-> On Wed, Dec 18, 2019 at 08:26:57PM +0100, Andrey Konovalov wrote:
-> > USB Raw Gadget is a kernel module that provides a userspace interface for
-> > the USB Gadget subsystem. Essentially it allows to emulate USB devices
-> > from userspace. Enabled with CONFIG_USB_RAW_GADGET. Raw Gadget is
-> > currently a strictly debugging feature and shouldn't be used in
-> > production.
+> On Monday, January 13, 2020 10:26:04 AM CET Johannes Stezenbach wrote:
+> > Hi,
 > >
-> > Raw Gadget is similar to GadgetFS, but provides a more low-level and
-> > direct access to the USB Gadget layer for the userspace. The key
-> > differences are:
+> > On Mon, Dec 23, 2019 at 10:13:09PM +0100, Johannes Stezenbach wrote:
+> > > I upgraded the kernel on one of my machines to 5.3.18 (from 5.2.x)
+> > > and found it failed after resume from hibernate due to what seemed
+> > > to be memory corruption. I had a hunch it could be related to
+> > > CONFIG_INIT_ON_ALLOC_DEFAULT_ON or CONFIG_INIT_ON_FREE_DEFAULT_ON,
+> > > and a quick web search found this which seems to confirm:
+> > > https://bbs.archlinux.org/viewtopic.php?pid=3D1877845#p1877845
+> > >
+> > > I rebuilt the kernel with CONFIG_INIT_ON_FREE_DEFAULT_ON disabled,
+> > > and hibernate works again.  I'm fine with this workaround and
+> > > just wanted to share this information.
+> > >
+> > > The commit that introduces CONFIG_INIT_ON_FREE_DEFAULT_ON:
+> > > 6471384af2a6 mm: security: introduce init_on_alloc=3D1 and init_on_fr=
+ee=3D1 boot options
 > >
-> > 1. Every USB request is passed to the userspace to get a response, while
-> >    GadgetFS responds to some USB requests internally based on the provided
-> >    descriptors. However note, that the UDC driver might respond to some
-> >    requests on its own and never forward them to the Gadget layer.
-> >
-> > 2. GadgetFS performs some sanity checks on the provided USB descriptors,
-> >    while Raw Gadget allows you to provide arbitrary data as responses to
-> >    USB requests.
-> >
-> > 3. Raw Gadget provides a way to select a UDC device/driver to bind to,
-> >    while GadgetFS currently binds to the first available UDC.
-> >
-> > 4. Raw Gadget uses predictable endpoint names (handles) across different
-> >    UDCs (as long as UDCs have enough endpoints of each required transfer
-> >    type).
-> >
-> > 5. Raw Gadget has ioctl-based interface instead of a filesystem-based one.
-> >
-> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> > I tested 5.4.11 and current git master (b07f636fca1c8)
+> > in Qemu and was able to reproduce the issue in both.
 >
-> This looks good to me, with the one minor problem below that you can fix
-> with a follow-on patch.
-
-Great, thanks! I'd prefer to send out v5 to keep this a single patch
-if that's OK.
-
-I've also found an issue, but I'm not sure if that is the bug in Raw
-Gadget, or in the gadget layer (in the former case I'll add this fix
-to v5 as well). What I believe I'm seeing is
-__fput()->usb_gadget_unregister_driver()->usb_gadget_remove_driver()->gadget_unbind()
-racing with dummy_timer()->gadget_setup(). In my case it results in
-gadget_unbind() doing set_gadget_data(gadget, NULL), and then
-gadget_setup() dereferencing get_gadget_data(gadget).
-
-Alan, does it look possible for those two functions to race? Should
-this be prevented by the gadget layer, or should I use some kind of
-locking in my gadget driver to prevent this?
-
-> This should probably go through Felipe's tree
-> though, so I'll wait for him to review the gadget side and then queue it
-> up in his tree:
-
-OK, looking forward to Felipe's review.
-
-> > +/* The type of event fetched with the USB_RAW_IOCTL_EVENT_FETCH ioctl. */
-> > +enum usb_raw_event_type {
-> > +     USB_RAW_EVENT_INVALID,
-> > +
-> > +     /* This event is queued when the driver has bound to a UDC. */
-> > +     USB_RAW_EVENT_CONNECT,
-> > +
-> > +     /* This event is queued when a new control request arrived to ep0. */
-> > +     USB_RAW_EVENT_CONTROL,
-> > +
-> > +     /* The list might grow in the future. */
-> > +};
+> Let's add more people and the LKML to the CC.
 >
-> You have to manually specify the enum values in the .h file for all
-> entries in order to assure that both userspace and the kernel will be in
-> sync with the same values.  I think that's documented in the "how to
-> write an ioctl interface" document that is somewhere in
-> Documentation/...
+> Alex, Kees, Michal, any comments?
+Hm, I cannot think of a reason for initialization to break hibernate
+off the top of my head.
+Maybe after hibernation certain pages land in the page freelist
+without being wiped?
+I'll try to reproduce this problem locally.
 
-Will fix in v5, thanks!
+> > Basically I followed the description here
+> > http://ncmiller.github.io/2016/05/14/linux-and-qemu.html
+> > to build a minimal image using busybox (I'm using
+> > the binary from Debian's busybox-static package),
+> > then added s swap image (-drive file=3Ddisk.img,if=3Dvirtio),
+> > do "mkswap /dev/vda" the first time.
+> >
+> > hibernate: swapon /dev/vda; echo disk >/sys/power/state
+> > resume: echo 254:0 >/sys/power/resume
+> >
+> > Since busybox is very light on memory usage it doesn't
+> > trigger immediately, but these commands seem to do it
+> > reliably:
+> >
+> >   dmesg | gzip >/dev/null
+> >   find /sys | bzip2 | sha512sum
+> >
+> >
+> > my initramfs:
+> >   6012997      4 drwxr-xr-x   4 js       js           4096 Jan  8 21:25=
+ initramfs
+> >   6022584      4 drwxr-xr-x   2 js       js           4096 Jan  8 21:21=
+ initramfs/dev
+> >   5909013      4 -rwxr-xr-x   1 js       js            514 Jan  8 21:25=
+ initramfs/init
+> >   6012998      4 drwxr-xr-x   2 js       js           4096 Jan  8 20:41=
+ initramfs/bin
+> >   5909011   1904 -rwxr-xr-x   1 js       js        1945856 Apr  1  2019=
+ initramfs/bin/busybox
+> >   5909012      0 lrwxrwxrwx   1 js       js              7 Feb 14  2018=
+ initramfs/bin/sh -> busybox
+> >
+> > my /init:
+> > #!/bin/sh
+> >
+> > PATH=3D/bin
+> > export PATH
+> >
+> > # Create dirs
+> > /bin/busybox mkdir -p /proc /sys /etc /tmp /usr
+> > /bin/busybox ln -s /bin /sbin
+> > /bin/busybox ln -s /bin /usr/bin
+> > /bin/busybox ln -s /bin /usr/sbin
+> > # Create all the symlinks to busybox
+> > /bin/busybox --install -s
+> >
+> > mount -t proc proc /proc
+> > mount -t sysfs sysfs /sys
+> > mount -t devtmpfs devtmpfs /dev
+> >
+> > echo -e "\nBoot took $(cut -d' ' -f1 /proc/uptime) seconds\n"
+> >
+> > # shell where ^C works
+> > setsid busybox cttyhack sh
+> > # avoid "PID 1 exited" oops
+> > poweroff -f
+> > ---------
+> >
+> >
+> > qemu-system-x86_64 -m 128 -enable-kvm \
+> >   -kernel ../linux/arch/x86/boot/bzImage \
+> >   -initrd initramfs.cpio \
+> >   -drive file=3Ddisk.img,if=3Dvirtio \
+> >   -nographic -append "console=3DttyS0 init_on_alloc=3D1 init_on_free=3D=
+1"
+> >
+> >
+> > Johannes
+> >
+>
+>
+>
+>
+
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
