@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55300C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295E1C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2598D21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047BC21556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgAMTJk (ORCPT
+        id S1728882AbgAMTJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:09:40 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39842 "EHLO
+        Mon, 13 Jan 2020 14:09:38 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39830 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726878AbgAMTJa (ORCPT
+        with ESMTP id S1727726AbgAMTJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Jan 2020 14:09:30 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ir55b-0000xh-HD; Mon, 13 Jan 2020 20:09:27 +0100
+        id 1ir55Z-0000vf-RE; Mon, 13 Jan 2020 20:09:26 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C78EA1C18DE;
-        Mon, 13 Jan 2020 20:09:26 +0100 (CET)
-Date:   Mon, 13 Jan 2020 19:09:26 -0000
-From:   "tip-bot2 for Dmitry Safonov" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4F3001C18DB;
+        Mon, 13 Jan 2020 20:09:25 +0100 (CET)
+Date:   Mon, 13 Jan 2020 19:09:25 -0000
+From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] time: Allocate per-timens vvar page
-Cc:     Andy Lutomirski <luto@kernel.org>, Andrei Vagin <avagin@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
+Subject: [tip: timers/core] selftests/timens: Add a test for timerfd
+Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191112012724.250792-24-dima@arista.com>
-References: <20191112012724.250792-24-dima@arista.com>
+In-Reply-To: <20191112012724.250792-30-dima@arista.com>
+References: <20191112012724.250792-30-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <157894256665.19145.16443168224508835625.tip-bot2@tip-bot2>
+Message-ID: <157894256511.19145.13095414759650638633.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,221 +56,200 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     bb6e82c9b3d6d2cf03d145e175afb42f1f75ef86
-Gitweb:        https://git.kernel.org/tip/bb6e82c9b3d6d2cf03d145e175afb42f1f75ef86
-Author:        Dmitry Safonov <dima@arista.com>
-AuthorDate:    Tue, 12 Nov 2019 01:27:12 
+Commit-ID:     6024b1e796435154034cf11d5e250fd716394ca8
+Gitweb:        https://git.kernel.org/tip/6024b1e796435154034cf11d5e250fd716394ca8
+Author:        Andrei Vagin <avagin@gmail.com>
+AuthorDate:    Tue, 12 Nov 2019 01:27:18 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 13 Jan 2020 08:10:56 +01:00
+CommitterDate: Mon, 13 Jan 2020 08:10:58 +01:00
 
-time: Allocate per-timens vvar page
+selftests/timens: Add a test for timerfd
 
-VDSO support for Time namespace needs to set up a page with the same
-layout as VVAR. That timens page will be placed on position of VVAR page
-inside namespace. That page contains time namespace clock offsets and it
-has vdso_data->seq set to 1 to enforce the slow path and
-vdso_data->clock_mode set to VCLOCK_TIMENS to enforce the time namespace
-handling path.
+Check that timerfd_create() takes into account clock offsets.
 
-Allocate the timens page during namespace creation. Setup the offsets
-when the first task enters the ns and freeze them to guarantee the pace
-of monotonic/boottime clocks and to avoid breakage of applications.
+Output on success:
+ 1..3
+ ok 1 clockid=7
+ ok 2 clockid=1
+ ok 3 clockid=9
+ # Pass 3 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
 
-The design decision is to have a global offset_lock which is used during
-namespace offsets setup and to freeze offsets when the first task joins the
-new time namespace. That is better in terms of memory usage compared to
-having a per namespace mutex that's used only during the setup period.
+Output on failure:
+ 1..3
+ not ok 1 clockid: 7 elapsed: 0
+ not ok 2 clockid: 1 elapsed: 0
+ not ok 3 clockid: 9 elapsed: 0
+ Bail out!
 
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Based-on-work-by: Thomas Gleixner <tglx@linutronix.de>
-Co-developed-by: Andrei Vagin <avagin@gmail.com>
+Output with lack of permissions:
+ 1..3
+ not ok 1 # SKIP need to run as root
+
+Output without support of time namespaces:
+ 1..3
+ not ok 1 # SKIP Time namespaces are not supported
+
+Co-developed-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Andrei Vagin <avagin@gmail.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191112012724.250792-24-dima@arista.com
+Link: https://lore.kernel.org/r/20191112012724.250792-30-dima@arista.com
 
 ---
- include/linux/time_namespace.h |   3 +-
- kernel/time/namespace.c        | 104 +++++++++++++++++++++++++++++++-
- 2 files changed, 106 insertions(+), 1 deletion(-)
+ tools/testing/selftests/timens/.gitignore |   1 +-
+ tools/testing/selftests/timens/Makefile   |   2 +-
+ tools/testing/selftests/timens/timerfd.c  | 128 +++++++++++++++++++++-
+ 3 files changed, 130 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/timens/timerfd.c
 
-diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-index 063a343..6b7767f 100644
---- a/include/linux/time_namespace.h
-+++ b/include/linux/time_namespace.h
-@@ -23,6 +23,9 @@ struct time_namespace {
- 	struct ucounts		*ucounts;
- 	struct ns_common	ns;
- 	struct timens_offsets	offsets;
-+	struct page		*vvar_page;
-+	/* If set prevents changing offsets after any task joined namespace. */
-+	bool			frozen_offsets;
- } __randomize_layout;
+diff --git a/tools/testing/selftests/timens/.gitignore b/tools/testing/selftests/timens/.gitignore
+index 27a6932..b609f6e 100644
+--- a/tools/testing/selftests/timens/.gitignore
++++ b/tools/testing/selftests/timens/.gitignore
+@@ -1 +1,2 @@
+ timens
++timerfd
+diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/selftests/timens/Makefile
+index 49a9dcc..293aed6 100644
+--- a/tools/testing/selftests/timens/Makefile
++++ b/tools/testing/selftests/timens/Makefile
+@@ -1,4 +1,4 @@
+-TEST_GEN_PROGS := timens
++TEST_GEN_PROGS := timens timerfd
  
- extern struct time_namespace init_time_ns;
-diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
-index 1a0fbaa..d705c15 100644
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -16,6 +16,8 @@
- #include <linux/err.h>
- #include <linux/mm.h>
- 
-+#include <vdso/datapage.h>
+ CFLAGS := -Wall -Werror
+ LDFLAGS := -lrt
+diff --git a/tools/testing/selftests/timens/timerfd.c b/tools/testing/selftests/timens/timerfd.c
+new file mode 100644
+index 0000000..eff1ec5
+--- /dev/null
++++ b/tools/testing/selftests/timens/timerfd.c
+@@ -0,0 +1,128 @@
++// SPDX-License-Identifier: GPL-2.0
++#define _GNU_SOURCE
++#include <sched.h>
 +
- ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
- 				struct timens_offsets *ns_offsets)
- {
-@@ -90,16 +92,23 @@ static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
- 
- 	kref_init(&ns->kref);
- 
-+	ns->vvar_page = alloc_page(GFP_KERNEL | __GFP_ZERO);
-+	if (!ns->vvar_page)
-+		goto fail_free;
++#include <sys/timerfd.h>
++#include <sys/syscall.h>
++#include <sys/types.h>
++#include <sys/wait.h>
++#include <time.h>
++#include <unistd.h>
++#include <stdlib.h>
++#include <stdio.h>
++#include <stdint.h>
 +
- 	err = ns_alloc_inum(&ns->ns);
- 	if (err)
--		goto fail_free;
-+		goto fail_free_page;
- 
- 	ns->ucounts = ucounts;
- 	ns->ns.ops = &timens_operations;
- 	ns->user_ns = get_user_ns(user_ns);
- 	ns->offsets = old_ns->offsets;
-+	ns->frozen_offsets = false;
- 	return ns;
- 
-+fail_free_page:
-+	__free_page(ns->vvar_page);
- fail_free:
- 	kfree(ns);
- fail_dec:
-@@ -128,6 +137,93 @@ struct time_namespace *copy_time_ns(unsigned long flags,
- 	return clone_time_ns(user_ns, old_ns);
- }
- 
-+static struct timens_offset offset_from_ts(struct timespec64 off)
++#include "log.h"
++#include "timens.h"
++
++static int tclock_gettime(clock_t clockid, struct timespec *now)
 +{
-+	struct timens_offset ret;
-+
-+	ret.sec = off.tv_sec;
-+	ret.nsec = off.tv_nsec;
-+
-+	return ret;
++	if (clockid == CLOCK_BOOTTIME_ALARM)
++		clockid = CLOCK_BOOTTIME;
++	return clock_gettime(clockid, now);
 +}
 +
-+/*
-+ * A time namespace VVAR page has the same layout as the VVAR page which
-+ * contains the system wide VDSO data.
-+ *
-+ * For a normal task the VVAR pages are installed in the normal ordering:
-+ *     VVAR
-+ *     PVCLOCK
-+ *     HVCLOCK
-+ *     TIMENS   <- Not really required
-+ *
-+ * Now for a timens task the pages are installed in the following order:
-+ *     TIMENS
-+ *     PVCLOCK
-+ *     HVCLOCK
-+ *     VVAR
-+ *
-+ * The check for vdso_data->clock_mode is in the unlikely path of
-+ * the seq begin magic. So for the non-timens case most of the time
-+ * 'seq' is even, so the branch is not taken.
-+ *
-+ * If 'seq' is odd, i.e. a concurrent update is in progress, the extra check
-+ * for vdso_data->clock_mode is a non-issue. The task is spin waiting for the
-+ * update to finish and for 'seq' to become even anyway.
-+ *
-+ * Timens page has vdso_data->clock_mode set to VCLOCK_TIMENS which enforces
-+ * the time namespace handling path.
-+ */
-+static void timens_setup_vdso_data(struct vdso_data *vdata,
-+				   struct time_namespace *ns)
++int run_test(int clockid, struct timespec now)
 +{
-+	struct timens_offset *offset = vdata->offset;
-+	struct timens_offset monotonic = offset_from_ts(ns->offsets.monotonic);
-+	struct timens_offset boottime = offset_from_ts(ns->offsets.boottime);
++	struct itimerspec new_value;
++	long long elapsed;
++	int fd, i;
 +
-+	vdata->seq			= 1;
-+	vdata->clock_mode		= VCLOCK_TIMENS;
-+	offset[CLOCK_MONOTONIC]		= monotonic;
-+	offset[CLOCK_MONOTONIC_RAW]	= monotonic;
-+	offset[CLOCK_MONOTONIC_COARSE]	= monotonic;
-+	offset[CLOCK_BOOTTIME]		= boottime;
-+	offset[CLOCK_BOOTTIME_ALARM]	= boottime;
++	if (tclock_gettime(clockid, &now))
++		return pr_perror("clock_gettime(%d)", clockid);
++
++	for (i = 0; i < 2; i++) {
++		int flags = 0;
++
++		new_value.it_value.tv_sec = 3600;
++		new_value.it_value.tv_nsec = 0;
++		new_value.it_interval.tv_sec = 1;
++		new_value.it_interval.tv_nsec = 0;
++
++		if (i == 1) {
++			new_value.it_value.tv_sec += now.tv_sec;
++			new_value.it_value.tv_nsec += now.tv_nsec;
++		}
++
++		fd = timerfd_create(clockid, 0);
++		if (fd == -1)
++			return pr_perror("timerfd_create(%d)", clockid);
++
++		if (i == 1)
++			flags |= TFD_TIMER_ABSTIME;
++
++		if (timerfd_settime(fd, flags, &new_value, NULL))
++			return pr_perror("timerfd_settime(%d)", clockid);
++
++		if (timerfd_gettime(fd, &new_value))
++			return pr_perror("timerfd_gettime(%d)", clockid);
++
++		elapsed = new_value.it_value.tv_sec;
++		if (abs(elapsed - 3600) > 60) {
++			ksft_test_result_fail("clockid: %d elapsed: %lld\n",
++					      clockid, elapsed);
++			return 1;
++		}
++
++		close(fd);
++	}
++
++	ksft_test_result_pass("clockid=%d\n", clockid);
++
++	return 0;
 +}
 +
-+/*
-+ * Protects possibly multiple offsets writers racing each other
-+ * and tasks entering the namespace.
-+ */
-+static DEFINE_MUTEX(offset_lock);
-+
-+static void timens_set_vvar_page(struct task_struct *task,
-+				struct time_namespace *ns)
++int main(int argc, char *argv[])
 +{
-+	struct vdso_data *vdata;
-+	unsigned int i;
++	int ret, status, len, fd;
++	char buf[4096];
++	pid_t pid;
++	struct timespec btime_now, mtime_now;
 +
-+	if (ns == &init_time_ns)
-+		return;
++	nscheck();
 +
-+	/* Fast-path, taken by every task in namespace except the first. */
-+	if (likely(ns->frozen_offsets))
-+		return;
++	ksft_set_plan(3);
 +
-+	mutex_lock(&offset_lock);
-+	/* Nothing to-do: vvar_page has been already initialized. */
-+	if (ns->frozen_offsets)
-+		goto out;
++	clock_gettime(CLOCK_MONOTONIC, &mtime_now);
++	clock_gettime(CLOCK_BOOTTIME, &btime_now);
 +
-+	ns->frozen_offsets = true;
-+	vdata = arch_get_vdso_data(page_address(ns->vvar_page));
++	if (unshare_timens())
++		return 1;
 +
-+	for (i = 0; i < CS_BASES; i++)
-+		timens_setup_vdso_data(&vdata[i], ns);
++	len = snprintf(buf, sizeof(buf), "%d %d 0\n%d %d 0",
++			CLOCK_MONOTONIC, 70 * 24 * 3600,
++			CLOCK_BOOTTIME, 9 * 24 * 3600);
++	fd = open("/proc/self/timens_offsets", O_WRONLY);
++	if (fd < 0)
++		return pr_perror("/proc/self/timens_offsets");
 +
-+out:
-+	mutex_unlock(&offset_lock);
++	if (write(fd, buf, len) != len)
++		return pr_perror("/proc/self/timens_offsets");
++
++	close(fd);
++	mtime_now.tv_sec += 70 * 24 * 3600;
++	btime_now.tv_sec += 9 * 24 * 3600;
++
++	pid = fork();
++	if (pid < 0)
++		return pr_perror("Unable to fork");
++	if (pid == 0) {
++		ret = 0;
++		ret |= run_test(CLOCK_BOOTTIME, btime_now);
++		ret |= run_test(CLOCK_MONOTONIC, mtime_now);
++		ret |= run_test(CLOCK_BOOTTIME_ALARM, btime_now);
++
++		if (ret)
++			ksft_exit_fail();
++		ksft_exit_pass();
++		return ret;
++	}
++
++	if (waitpid(pid, &status, 0) != pid)
++		return pr_perror("Unable to wait the child process");
++
++	if (WIFEXITED(status))
++		return WEXITSTATUS(status);
++
++	return 1;
 +}
-+
- void free_time_ns(struct kref *kref)
- {
- 	struct time_namespace *ns;
-@@ -136,6 +232,7 @@ void free_time_ns(struct kref *kref)
- 	dec_time_namespaces(ns->ucounts);
- 	put_user_ns(ns->user_ns);
- 	ns_free_inum(&ns->ns);
-+	__free_page(ns->vvar_page);
- 	kfree(ns);
- }
- 
-@@ -192,6 +289,8 @@ static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
- 	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
- 		return -EPERM;
- 
-+	timens_set_vvar_page(current, ns);
-+
- 	get_time_ns(ns);
- 	put_time_ns(nsproxy->time_ns);
- 	nsproxy->time_ns = ns;
-@@ -211,6 +310,8 @@ int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
- 	if (nsproxy->time_ns == nsproxy->time_ns_for_children)
- 		return 0;
- 
-+	timens_set_vvar_page(tsk, ns);
-+
- 	get_time_ns(ns);
- 	put_time_ns(nsproxy->time_ns);
- 	nsproxy->time_ns = ns;
-@@ -246,6 +347,7 @@ struct time_namespace init_time_ns = {
- 	.user_ns	= &init_user_ns,
- 	.ns.inum	= PROC_TIME_INIT_INO,
- 	.ns.ops		= &timens_operations,
-+	.frozen_offsets	= true,
- };
- 
- static int __init time_ns_init(void)
