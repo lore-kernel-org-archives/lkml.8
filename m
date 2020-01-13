@@ -2,105 +2,69 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8926C33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87560C33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D742080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68BC22081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:16:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgAMJPg (ORCPT
+        id S1727222AbgAMJQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:15:36 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:51241 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbgAMJPg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:15:36 -0500
-Received: from dude02.hi.pengutronix.de ([2001:67c:670:100:1d::28] helo=dude02.lab.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iqvop-0000XT-6m; Mon, 13 Jan 2020 10:15:31 +0100
-Received: from mfe by dude02.lab.pengutronix.de with local (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1iqvoo-0001dm-4X; Mon, 13 Jan 2020 10:15:30 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     support.opensource@diasemi.com, linux@roeck-us.net,
-        contact@stefanchrist.eu, Adam.Thomson.Opensource@diasemi.com
-Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: [PATCH] watchdog: da9062: make restart handler atomic safe
-Date:   Mon, 13 Jan 2020 10:15:21 +0100
-Message-Id: <20200113091521.5754-1-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
+        Mon, 13 Jan 2020 04:16:02 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:53052 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725878AbgAMJQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 04:16:02 -0500
+Received: from wf0253.dip.tu-dresden.de ([141.76.180.253] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iqvpF-0001xO-Fh; Mon, 13 Jan 2020 10:15:57 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Johan Jonker <jbx6244@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: fix dwmmc clock name for px30 and rk3308
+Date:   Mon, 13 Jan 2020 10:15:56 +0100
+Message-ID: <3203839.F8si9oFvou@phil>
+In-Reply-To: <20200110161200.22755-1-jbx6244@gmail.com>
+References: <20200110161200.22755-1-jbx6244@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::28
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The restart handler is executed during the shutdown phase which is
-atomic/irq-less. The i2c framework supports atomic transfers since
-commit 63b96983a5dd ("i2c: core: introduce callbacks for atomic
-transfers") but unfortunately the regmap framework doesn't support it
-yet. Hard coding the i2c stuff can be done without worries since the
-DA9062 is an i2c-only device.
+Hi Johan,
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
-Hi,
+Am Freitag, 10. Januar 2020, 17:12:00 CET schrieb Johan Jonker:
+> An experimental test with the command below gives this error:
+> px30-evb.dt.yaml: dwmmc@ff390000: clock-names:2:
+> 'ciu-drive' was expected
+> rk3308-evb.dt.yaml: dwmmc@ff480000: clock-names:2:
+> 'ciu-drive' was expected
+> 
+> 'ciu-drv' is not a valid dwmmc clock name,
+> so fix this by changing it to 'ciu-drive'.
+> 
+> make ARCH=arm64 dtbs_check
+> DT_SCHEMA_FILES=Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.yaml
+> 
+> Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 
-This patch is based on Stefan Lengfeld's RFC Patch [1].
+thanks for this fix, I've split it into two patches (px30 and rk3308) and
+applied for 5.6
 
-[1] https://patchwork.ozlabs.org/patch/1085942/
----
- drivers/watchdog/da9062_wdt.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+Thanks
+Heiko
 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index c9b9d6394525..84c5a0a455b2 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -11,6 +11,7 @@
- #include <linux/platform_device.h>
- #include <linux/uaccess.h>
- #include <linux/slab.h>
-+#include <linux/i2c.h>
- #include <linux/delay.h>
- #include <linux/jiffies.h>
- #include <linux/mfd/da9062/registers.h>
-@@ -149,12 +150,18 @@ static int da9062_wdt_restart(struct watchdog_device *wdd, unsigned long action,
- 			      void *data)
- {
- 	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
-+	struct i2c_client *client = to_i2c_client(wdt->hw->dev);
-+	u8 buf[] = {DA9062AA_CONTROL_F, DA9062AA_SHUTDOWN_MASK};
-+	struct i2c_msg msg = {
-+		.addr = client->addr,
-+		.flags = 0,
-+		.len = sizeof(buf),
-+		.buf = buf,
-+	};
- 	int ret;
- 
--	ret = regmap_write(wdt->hw->regmap,
--			   DA9062AA_CONTROL_F,
--			   DA9062AA_SHUTDOWN_MASK);
--	if (ret)
-+	ret = i2c_transfer(client->adapter, &msg, 1);
-+	if (ret < 0)
- 		dev_alert(wdt->hw->dev, "Failed to shutdown (err = %d)\n",
- 			  ret);
- 
--- 
-2.20.1
+
 
