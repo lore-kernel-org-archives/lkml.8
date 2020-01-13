@@ -2,118 +2,104 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A27BEC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7316C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:47:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DB9C20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B531720CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578952061;
+	bh=4bLAkwPUPzdXlAHdorU0yNPmSzIzFNXzZyF9iMgLKIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VSbT50ImOCTAQ/ZFJRpHU/j5gip/12GK8F5Fe5d6pTD/le86UPlZ249laB74I4PFa
+	 p3sSPmOxlkVIaeYX6ExDV2ylWE6W1RcZPocMyl1RFDySUjuRvvzW789xOWFXZi0p3W
+	 VbNup6iGRB1Drpikru9O6IoDIy+7jKlakznvqUQQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgAMVrO (ORCPT
+        id S1728855AbgAMVrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 16:47:14 -0500
-Received: from mga14.intel.com ([192.55.52.115]:27903 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726488AbgAMVrO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 16:47:14 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 13:47:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,430,1571727600"; 
-   d="scan'208";a="217534645"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga008.jf.intel.com with ESMTP; 13 Jan 2020 13:47:13 -0800
-Date:   Mon, 13 Jan 2020 13:47:13 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Adalbert =?utf-8?B?TGF6xINy?= <alazar@bitdefender.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com,
-        edwin.zhai@intel.com, tamas@tklengyel.com,
-        mathieu.tarral@protonmail.com
-Subject: Re: [RESEND PATCH v10 06/10] vmx: spp: Set up SPP paging table at
- vmentry/vmexit
-Message-ID: <20200113214713.GG2322@linux.intel.com>
-References: <20200102061319.10077-1-weijiang.yang@intel.com>
- <20200102061319.10077-7-weijiang.yang@intel.com>
- <20200110180458.GG21485@linux.intel.com>
- <20200113081050.GF12253@local-michael-cet-test.sh.intel.com>
- <20200113173358.GC1175@linux.intel.com>
- <15789417460.A97E650.22893@host>
+        Mon, 13 Jan 2020 16:47:40 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39116 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727053AbgAMVrk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 16:47:40 -0500
+Received: by mail-oi1-f194.google.com with SMTP id a67so9829942oib.6
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 13:47:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pxveT8kmVAy+6NNs/m6VYBrLz6raLXBMbZxaVD7AKwA=;
+        b=IQvJdPDCCOYBm013GL31PHaWvukIg6QH7iLUM/GRP7TZfnjIY7IJHh20yM0vDPkBax
+         Ej4Fg8J+36mXbNcME7vSnfd3fns2lT07nWftlRKqHHidPn8tKkixVJ6NzFhSp2h56LSb
+         UeFk54e1pvvIlwwtbrFwbisXJG7QS6YK1Bs7+QyV1fUPCAVE/OL/pTGJ3ZyJ4KoAfdUW
+         Ult4fGENSd9Hw/fJYdz47IuNoQAj4yGpAZlt2sloZIht3GcqqtynWYxhZUkPAM/UXVnA
+         QUzRa6Js99+E0zDEUw8sSgyNGyAcVad/1KbKAVm4GO+Yi/GSKMHHvtrEDzlMPCtSUDZP
+         xIBQ==
+X-Gm-Message-State: APjAAAUFTthsByauvOMGAV9gQxQtW7cRx2DhMibTXsNsWAkWf1FwzGXq
+        0gSgS1P+D3Bo07pm8+5Jiy3hXrg=
+X-Google-Smtp-Source: APXvYqxZC6jBFjKDA1Tl85THJrKxgNRmIv503x8VS6PqrGv/Tp2V0HsF7LHIfHF9bDdHAPKxTlbX0g==
+X-Received: by 2002:aca:ac0c:: with SMTP id v12mr13413024oie.123.1578952058676;
+        Mon, 13 Jan 2020 13:47:38 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d11sm4582135otl.20.2020.01.13.13.47.37
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 13:47:37 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 22198d
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Mon, 13 Jan 2020 15:47:36 -0600
+Date:   Mon, 13 Jan 2020 15:47:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, vkoul@kernel.org,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, ulf.hansson@linaro.org,
+        srinivas.kandagatla@linaro.org, broonie@kernel.org,
+        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
+        rjones@gateworks.com, marcel.ziswiler@toradex.com,
+        sebastien.szymanski@armadeus.com, aisheng.dong@nxp.com,
+        richard.hu@technexion.com, angus@akkea.ca, cosmin.stoica@nxp.com,
+        l.stach@pengutronix.de, rabeeh@solid-run.com,
+        leonard.crestez@nxp.com, daniel.baluta@nxp.com, jun.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-spi@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH V2 7/7] dt-bindings: arm: imx: Add the i.MX8MP EVK board
+Message-ID: <20200113214736.GA12301@bogus>
+References: <1578893602-14395-1-git-send-email-Anson.Huang@nxp.com>
+ <1578893602-14395-7-git-send-email-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <15789417460.A97E650.22893@host>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1578893602-14395-7-git-send-email-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 08:55:46PM +0200, Adalbert Lazăr wrote:
-> On Mon, 13 Jan 2020 09:33:58 -0800, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> > On Mon, Jan 13, 2020 at 04:10:50PM +0800, Yang Weijiang wrote:
-> > > On Fri, Jan 10, 2020 at 10:04:59AM -0800, Sean Christopherson wrote:
-> > > > On Thu, Jan 02, 2020 at 02:13:15PM +0800, Yang Weijiang wrote:
-> > > > > @@ -3585,7 +3602,30 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gva_t gva, int level,
-> > > > >  		if ((error_code & PFERR_WRITE_MASK) &&
-> > > > >  		    spte_can_locklessly_be_made_writable(spte))
-> > > > >  		{
-> > > > > -			new_spte |= PT_WRITABLE_MASK;
-> > > > > +			/*
-> > > > > +			 * Record write protect fault caused by
-> > > > > +			 * Sub-page Protection, let VMI decide
-> > > > > +			 * the next step.
-> > > > > +			 */
-> > > > > +			if (spte & PT_SPP_MASK) {
-> > > > > +				int len = kvm_x86_ops->get_inst_len(vcpu);
-> > > > 
-> > > > There's got to be a better way to handle SPP exits than adding a helper
-> > > > to retrieve the instruction length.
-> > > >
-> > > The fault instruction was skipped by kvm_skip_emulated_instruction()
-> > > before, but Paolo suggested leave the re-do or skip option to user-space
-> > > to make it flexible for write protection or write tracking, so return
-> > > length to user-space.
-> > 
-> > Sorry, my comment was unclear.  I have no objection to punting the fault
-> > to userspace, it's the mechanics of how it's done that I dislike.
-> > 
-> > Specifically, (a) using run->exit_reason to propagate the SPP exit up the
-> > stack, e.g. instead of modifying affected call stacks to play nice with
-> > any exit to userspace, (b) assuming ->get_insn_len() will always be
-> > accurate, e.g. see the various caveats in skip_emulated_instruction() for
-> > both VMX and SVM, and (c) duplicating the state capture code in every
-> > location that can encounter a SPP fault.
-> > 
-> > What I'm hoping is that it's possible to modify the call stacks to
-> > explicitly propagate an exit to userspace and/or SPP fault, and shove all
-> > the state capture into a common location, e.g. handle_ept_violation().
-> > 
-> > Side topic, assuming the userspace VMI is going to be instrospecting the
-> > faulting instruction, won't it decode the instruction?  I.e. calculate
-> > the instruction length anyways?
+On Mon, 13 Jan 2020 13:33:22 +0800, Anson Huang wrote:
+> Add board binding for i.MX8MP EVK board.
 > 
-> Indeed, we decode the instruction from userspace. I don't know if the
-> instruction length helps other projects. Added Tamas and Mathieu.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No change.
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> In our last VMI API proposal, the breakpoint event had the instruction
-> length sent to userspace, but I can't remember why.
 
-INT3 is trap-like, i.e. the VM-Exit occurs after the instruction retires.
-It's impossible for software to know how far to unwind RIP without the
-instruction length being provided by hardware/KVM, e.g. if the guest is
-being silly and prepends ignored prefixes on the INT3.
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-Self-aware software has a priori knowledge of what's being patched in,
-and practically speaking I don't any well-behaved sane software uses
-prefixes with INT3, but from a VMM's perspective it's legal and possible.
-
-> 
-> https://lore.kernel.org/kvm/20190809160047.8319-62-alazar@bitdefender.com/
+If a tag was not added on purpose, please state why and what changed.
