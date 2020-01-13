@@ -2,57 +2,57 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6F8C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A28C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:02:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD4C207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:02:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB353207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:02:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KcWq76Vl"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ihs+I0Do"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgAMMCS (ORCPT
+        id S1728750AbgAMMCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:02:18 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33717 "EHLO
+        Mon, 13 Jan 2020 07:02:22 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42092 "EHLO
         mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726127AbgAMMCS (ORCPT
+        with ESMTP id S1726127AbgAMMCW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:02:18 -0500
-Received: by mail-pl1-f194.google.com with SMTP id ay11so3762531plb.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:02:18 -0800 (PST)
+        Mon, 13 Jan 2020 07:02:22 -0500
+Received: by mail-pl1-f194.google.com with SMTP id p9so3746100plk.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:02:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1DYs+syI7/SggFEh/rAHZyuN4ISx5HPKZ5OTLtFoRYs=;
-        b=KcWq76VlIz07Cnlns+46LgH7VBnlI1yDBotQcnPtxI1GBCjIocVo25k4wWZGx2EzLa
-         YMvTvvTlRwWjpekoek5PXcC98/cCZ8ouBGninGg6KsT3/PCFpY7fhIdD3wGPJnTurSlc
-         4eaMK0rZPGeZxSlq7eENPexztJaQjvg75QR6k=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Brn/blormLMYfyweaOtw1e9dY3O44xYZohHiyY5zVcw=;
+        b=ihs+I0DoZfUhnE+RxtXdP2ZiM2ecide11T2L4eZD455WFhMjAre+5W9PyNsrndtJBf
+         QdlkZSFtYTRy+nw84RFlxMyWf+WNEuVxOooGk55Ry7Hr3JdaTJfe00rkQL1yZXbtMvws
+         1qSqOz4owjq3l1hLQ3jZMp2FJqrzvCJ1L/KhE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1DYs+syI7/SggFEh/rAHZyuN4ISx5HPKZ5OTLtFoRYs=;
-        b=d6Gb+Xq5qjrsawnyZXm2YYxx1xr7UZy1W+2fRmMS0VVmPcPwzVqnECbPftu81KpdYS
-         ZnZ7TQ0OO0mnS0pyfChzAblGxCH1RE1L1P743QkLv7szcmBQu7EL6EpDo/bOJAM8Su4e
-         VDovQ/DhHJVHQl1jf1/KKNQlBkTHq2cTWn8CMKoJuq/aH66uPzxDoHwIFkodtEECe3g+
-         3fOs93dQ7dwH4VnROoDZ3denHwNIizad2mr8V4jgaxk6j1hnG3ACZGdeccz+zI/AoKPc
-         O5oUPoaNjwUBSV+MpiCv5y6GdKunFFjw/jLw9wQs2luu/DI6ti380MPZAamfA4mcclBG
-         eA7g==
-X-Gm-Message-State: APjAAAWbnZLS5Fl1rjQRc3Vv32MwHMu5W1QPf9H0BHRn2c9EI+Th1zDk
-        rb7ODztlEWlxn31cGAhfkKLHSg==
-X-Google-Smtp-Source: APXvYqy7pmry9RsP8XAqY5kEvYUHMGwzm4kIyR45xsEkgvdDZY8HBJYpRBum/S5Wc0HRKCvcN5i5vA==
-X-Received: by 2002:a17:90a:ba91:: with SMTP id t17mr22276280pjr.74.1578916937710;
-        Mon, 13 Jan 2020 04:02:17 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Brn/blormLMYfyweaOtw1e9dY3O44xYZohHiyY5zVcw=;
+        b=AIpmhR5/DZZnRoSdVt8zZpDcnvPBJ6VVg91SKN9ibtq9WzEiWXID93I6hzUKcANYZB
+         ZHBuyzK1p93YX4YAdMsQSn6xlXy04zm1NjM906/7+soZYFTHUrjF+CLI9XRscyZ2Eaid
+         I2UNUbdEoeQDnz1XYXN08zjnBKA4gczOlfHxgJ2dOxHoz+LucEOSxp5fFk8c68HpM2sa
+         7E7ZkzelcuZW/GOa4LL8f1ZgjfdQteArhLD9f40F6U8OYgCJq5zoI5qSUH6fO4O3oo2U
+         FqNvt727KdM+WEUyaZAc1mZB8Az2aD42td8a6cYehseg3EJDQcCmq/2/4y7xK+AjebQz
+         RCyg==
+X-Gm-Message-State: APjAAAVdB6RgFRW7k7X2o6wwqNJGArvN/Be9wteOAPa5NE6iELf/dsFB
+        CfLrJEROFHEDNqaL9eg5G0V8FA==
+X-Google-Smtp-Source: APXvYqyCA7s6sAFyxPrLzf8/Mc4OzJnOETBju4Kl4rw16lnsugojoL4qEabm4CXVze0xslj6hwr2tw==
+X-Received: by 2002:a17:90b:3109:: with SMTP id gc9mr21951650pjb.30.1578916941206;
+        Mon, 13 Jan 2020 04:02:21 -0800 (PST)
 Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id z64sm14435324pfz.23.2020.01.13.04.02.15
+        by smtp.gmail.com with ESMTPSA id z64sm14435324pfz.23.2020.01.13.04.02.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 04:02:17 -0800 (PST)
+        Mon, 13 Jan 2020 04:02:20 -0800 (PST)
 From:   Hsin-Yi Wang <hsinyi@chromium.org>
 To:     Thomas Gleixner <tglx@linutronix.de>
 Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -67,10 +67,12 @@ Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Guenter Roeck <groeck@chromium.org>,
         Stephen Boyd <swboyd@chromium.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH RFC v3 0/3] support hotplug CPUs before reboot
-Date:   Mon, 13 Jan 2020 20:01:54 +0800
-Message-Id: <20200113120157.85798-1-hsinyi@chromium.org>
+Subject: [PATCH RFC v3 1/3] reboot: support hotplug CPUs before reboot
+Date:   Mon, 13 Jan 2020 20:01:55 +0800
+Message-Id: <20200113120157.85798-2-hsinyi@chromium.org>
 X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
+In-Reply-To: <20200113120157.85798-1-hsinyi@chromium.org>
+References: <20200113120157.85798-1-hsinyi@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,32 +80,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds a config REBOOT_HOTPLUG_CPU which would hotplug CPUs
-before reboot. Architecture code (smp_send_stop) currently would loop
-through online secondary CPUs and some may call ipi functions to them.
-With this config enabled, ideally we don't need smp_send_stop. But we
-keep the code for those don't enable this config and as a backup if
-some CPU fails to go offline before reboot.
+Currently system reboots uses architecture specific codes (smp_send_stop)
+to offline non reboot CPUs. Most architecture's implementation is looping
+through all non reboot online CPUs and call ipi function to each of them. Some
+architecture like arm64, arm, and x86... would set offline masks to cpu without
+really offline them. This causes some race condition and kernel warning comes
+out sometimes when system reboots.
 
-Also enable this config for arm64 and x86 defconfig as an example.
+This patch adds a config REBOOT_HOTPLUG_CPU, which would hotplug cpus in
+migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
+checking online cpus would be an empty loop. If architecture don't enable this
+config, or some cpus somehow fails to offline, it would fallback to ipi
+function.
 
-Change from v2:
-* Add another config instead of configed by CONFIG_HOTPLUG_CPU
+Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+---
+ arch/Kconfig        |  6 ++++++
+ include/linux/cpu.h |  3 +++
+ kernel/cpu.c        | 19 +++++++++++++++++++
+ kernel/reboot.c     |  8 ++++++++
+ 4 files changed, 36 insertions(+)
 
-Hsin-Yi Wang (3):
-  reboot: support hotplug CPUs before reboot
-  arm64: defconfig: enable REBOOT_HOTPLUG_CPU
-  x86: defconfig: enable REBOOT_HOTPLUG_CPU
-
- arch/Kconfig                      |  6 ++++++
- arch/arm64/configs/defconfig      |  1 +
- arch/x86/configs/i386_defconfig   |  1 +
- arch/x86/configs/x86_64_defconfig |  1 +
- include/linux/cpu.h               |  3 +++
- kernel/cpu.c                      | 19 +++++++++++++++++++
- kernel/reboot.c                   |  8 ++++++++
- 7 files changed, 39 insertions(+)
-
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 48b5e103bdb0..a043b9be1499 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -52,6 +52,12 @@ config OPROFILE_EVENT_MULTIPLEX
+ 
+ 	  If unsure, say N.
+ 
++config REBOOT_HOTPLUG_CPU
++	bool "Support for hotplug CPUs before reboot"
++	depends on HOTPLUG_CPU
++	help
++	  Say Y to do a full hotplug on secondary CPUs before reboot.
++
+ config HAVE_OPROFILE
+ 	bool
+ 
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 1ca2baf817ed..3bf5ab289954 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -118,6 +118,9 @@ extern void cpu_hotplug_disable(void);
+ extern void cpu_hotplug_enable(void);
+ void clear_tasks_mm_cpumask(int cpu);
+ int cpu_down(unsigned int cpu);
++#if IS_ENABLED(CONFIG_REBOOT_HOTPLUG_CPU)
++extern void offline_secondary_cpus(int primary);
++#endif
+ 
+ #else /* CONFIG_HOTPLUG_CPU */
+ 
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 9c706af713fb..52afc47dd56a 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1057,6 +1057,25 @@ int cpu_down(unsigned int cpu)
+ }
+ EXPORT_SYMBOL(cpu_down);
+ 
++#if IS_ENABLED(CONFIG_REBOOT_HOTPLUG_CPU)
++void offline_secondary_cpus(int primary)
++{
++	int i, err;
++
++	cpu_maps_update_begin();
++
++	for_each_online_cpu(i) {
++		if (i == primary)
++			continue;
++		err = _cpu_down(i, 0, CPUHP_OFFLINE);
++		if (err)
++			pr_warn("Failed to offline cpu %d\n", i);
++	}
++	cpu_hotplug_disabled++;
++
++	cpu_maps_update_done();
++}
++#endif
+ #else
+ #define takedown_cpu		NULL
+ #endif /*CONFIG_HOTPLUG_CPU*/
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index c4d472b7f1b4..fda84794ce46 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -7,6 +7,7 @@
+ 
+ #define pr_fmt(fmt)	"reboot: " fmt
+ 
++#include <linux/cpu.h>
+ #include <linux/ctype.h>
+ #include <linux/export.h>
+ #include <linux/kexec.h>
+@@ -220,7 +221,9 @@ void migrate_to_reboot_cpu(void)
+ 	/* The boot cpu is always logical cpu 0 */
+ 	int cpu = reboot_cpu;
+ 
++#if !IS_ENABLED(CONFIG_REBOOT_HOTPLUG_CPU)
+ 	cpu_hotplug_disable();
++#endif
+ 
+ 	/* Make certain the cpu I'm about to reboot on is online */
+ 	if (!cpu_online(cpu))
+@@ -231,6 +234,11 @@ void migrate_to_reboot_cpu(void)
+ 
+ 	/* Make certain I only run on the appropriate processor */
+ 	set_cpus_allowed_ptr(current, cpumask_of(cpu));
++
++	/* Hotplug other cpus if possible */
++#if IS_ENABLED(CONFIG_REBOOT_HOTPLUG_CPU)
++	offline_secondary_cpus(cpu);
++#endif
+ }
+ 
+ /**
 -- 
 2.25.0.rc1.283.g88dfdc4193-goog
 
