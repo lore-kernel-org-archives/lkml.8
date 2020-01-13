@@ -2,170 +2,508 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3E0C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9534DC33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 346C1207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:32:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hq/oCqka"
+	by mail.kernel.org (Postfix) with ESMTP id 5CD01207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgAMLcB (ORCPT
+        id S1727494AbgAMLdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:32:01 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:55436 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgAMLcA (ORCPT
+        Mon, 13 Jan 2020 06:33:33 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48072 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725992AbgAMLdd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:32:00 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200113113158euoutp02b88d085d3ed1c1949ee11af4a9fabffc~pbu9nhQzj0505605056euoutp02f
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 11:31:58 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200113113158euoutp02b88d085d3ed1c1949ee11af4a9fabffc~pbu9nhQzj0505605056euoutp02f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578915118;
-        bh=exgPqVTwXgFdwKUjR2Can4eR2gu2HfhSQsazOhSA6R4=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=hq/oCqkaE8LDSQnoXKTVEnvRJMqlmJR8BnPxXMHcVd9dMUIf5I0eE8SJ4LMwgZJuw
-         2ya4VkU/m7pCxcoKL8YJVzh3l2YDWxZrqBzvUDgv8Fy5mZJ4EBdUNGEJr3Zs5qPxRB
-         QBDfwcrR67znKdFoWuDRwkkqEF4e+UIdK1gTZ7+A=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200113113158eucas1p1818c5a9befeb0f2ab1436902635a7540~pbu9Z3YIR2462524625eucas1p13;
-        Mon, 13 Jan 2020 11:31:58 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 4B.94.60679.E255C1E5; Mon, 13
-        Jan 2020 11:31:58 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200113113158eucas1p137efd45f6aa77d8509e2389c23e0a8e7~pbu9Es8A50246402464eucas1p1n;
-        Mon, 13 Jan 2020 11:31:58 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200113113158eusmtrp1ce5186092b2a23d2a4542ed1ef04ee90~pbu9EFbmh2049020490eusmtrp1G;
-        Mon, 13 Jan 2020 11:31:58 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-a5-5e1c552e7aad
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id A0.5D.07950.E255C1E5; Mon, 13
-        Jan 2020 11:31:58 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200113113157eusmtip29dcc79ff0aa535ed43386cae0054529d~pbu8RIhNj1745017450eusmtip2W;
-        Mon, 13 Jan 2020 11:31:57 +0000 (GMT)
-Subject: Re: [PATCH] ata: pata_arasam_cf: Use dma_request_chan() instead
- dma_request_slave_channel()
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, vireshk@kernel.org,
-        axboe@kernel.dk, vkoul@kernel.org, linux-ide@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <b171c3c0-d924-e2e6-0c4d-196c7e6c2325@samsung.com>
-Date:   Mon, 13 Jan 2020 12:31:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Mon, 13 Jan 2020 06:33:33 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00DBWGQe194307
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 06:33:31 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfavxp5ky-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 06:33:31 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
+        Mon, 13 Jan 2020 11:33:28 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 13 Jan 2020 11:33:26 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00DBXOcI61866208
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 11:33:25 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CEBFE5204E;
+        Mon, 13 Jan 2020 11:33:24 +0000 (GMT)
+Received: from pratiks-thinkpad.in.ibm.com (unknown [9.124.31.88])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4400F5204F;
+        Mon, 13 Jan 2020 11:33:23 +0000 (GMT)
+From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
+        linuxram@us.ibm.com, psampat@linux.ibm.com,
+        pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
+Subject: [PATCH v3 1/3] powerpc/powernv: Interface to define support and preference for a SPR
+Date:   Mon, 13 Jan 2020 17:03:18 +0530
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.1578914462.git.psampat@linux.ibm.com>
+References: <cover.1578914462.git.psampat@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20191217111950.vzuww3ov4ub45ros@vireshk-i7>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTcRTG+e/e3d3NNq7T8KBmMGqg5LQUmq8lWIygiCywyNnK6wu6TTbn
-        1ChEw9TMVn4oh8wI0pykNkXnKrAtpmVpoYjawiUWJRiZZi+m5naV/PZ7zgvPeeCQmNDMDiRz
-        VAW0RqXIExE8vNv5eyhccipYHtn+TSxtfX+DkDqt0yzpiK2BkBrnf7Glj37IpJ1uJyHtdQ1g
-        Bzmykdc6mcVcRchcY08IWf94D0u2YAk5zj7Di8+g83IKaU1E4jlednmZC8+vFxQ1tvSxStFb
-        n2rEJYGKBnvDGrsa8Ugh9QDBS8erDbGIwOWaxhixgKDsw1dic2XZZEJMoxnB1BU3wYg5BH3D
-        Y5hnyo/KBPcgw/5UGEyOTXg3MMqEoLZy1tsgqFi4edWMPMynEmHG7fZa4NRucAx3eXk7lQrf
-        3Q42M+MLL+pncA9zqRhYqVjmeBijAmByppHF8E7omWvAmFMtHFjuDmE4Ge70vkEM+8FsfxeH
-        4WAYrKvBPccB1YZgpfIzxogeBM11qxuh48A19GedyXWHUGi3RTDlJHh3v5ztKQMlgPE5X+YG
-        Adzqvo0xZT5UVgiZaTF0NHUQm7bVvS2YAYmMW5IZt6Qxbklj/O97F+FmFEDrtMosWrtPResl
-        WoVSq1NlSS6olRa0/kGDq/2LVmT7e96OKBKJtvH7SoLkQraiUFustCMgMZE/3zIUKBfyMxTF
-        JbRGna7R5dFaOwoicVEAP+relzQhlaUooHNpOp/WbHZZJDewFInvCg9ltD5LlhnicB+HjzM0
-        6ScdfQ2LtNrcz/cc23+4MyF1eHL+aP0OddHTk8HptVKDzTGqFti5SvGoQE+cTtDzlw60jeUS
-        a/HzS/pww9m6iY+77J9S5LFHMvll6VPWtDZJ3sWalEvBJ1ZjqvAoMuR6rGiyyVSYVPyQejxw
-        WYRrsxV7wzCNVvEP+9LwmD0DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsVy+t/xe7p6oTJxBjde81usvtvPZnFsxyMm
-        i8u75rBZzPr4g9Vi41cPi80PjrFZ7LxzgtmB3ePy2VKPTas62TzuXNvD5nH8xnYmj8+b5AJY
-        o/RsivJLS1IVMvKLS2yVog0tjPQMLS30jEws9QyNzWOtjEyV9O1sUlJzMstSi/TtEvQympvu
-        sBTM5KuYv/IAUwPjRe4uRk4OCQETid/z5jF2MXJxCAksZZTo27mKqYuRAyghI3F8fRlEjbDE
-        n2tdbCC2kMBrRomzM4VBbGGBNIkHp68xg9giAloSt67dZASxmQXmMUq8+aEEMXMvo8T6h6/B
-        itgErCQmtq8CK+IVsJN48uAB2FAWAVWJw+e3gNmiAhESh3fMgqoRlDg58wkLiM0pYCnxt+03
-        O8QCdYk/8y4xQ9jiEreezGeCsOUltr+dwzyBUWgWkvZZSFpmIWmZhaRlASPLKkaR1NLi3PTc
-        YiO94sTc4tK8dL3k/NxNjMB423bs55YdjF3vgg8xCnAwKvHwHqiSjhNiTSwrrsw9xCjBwawk
-        wrvpnFScEG9KYmVValF+fFFpTmrxIUZToOcmMkuJJucDU0FeSbyhqaG5haWhubG5sZmFkjhv
-        h8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbG85OYeOs1uPNPs/TI75/67nCb+CKPR9f+ik7pnntJ
-        9oO8jcmRhb4V63kt2FRKv3uuyQn7FC24SGRxxtIQk+8vHr7uTriuWdtx3L3i4ZLJDDeuxvzi
-        Kd3su/rQ0rTYTVKn59pumH769sGgKH0rTbkDnVlvphcELM3bss1l1zOx1pBz75v9epcHKbEU
-        ZyQaajEXFScCAPw6lZLNAgAA
-X-CMS-MailID: 20200113113158eucas1p137efd45f6aa77d8509e2389c23e0a8e7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20191217111956epcas5p36d2e10fa2ba3c2e8dd0cc661c8de7dd0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20191217111956epcas5p36d2e10fa2ba3c2e8dd0cc661c8de7dd0
-References: <20191217105048.25327-1-peter.ujfalusi@ti.com>
-        <CGME20191217111956epcas5p36d2e10fa2ba3c2e8dd0cc661c8de7dd0@epcas5p3.samsung.com>
-        <20191217111950.vzuww3ov4ub45ros@vireshk-i7>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20011311-0016-0000-0000-000002DCE2C5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011311-0017-0000-0000-0000333F6C70
+Message-Id: <c509211bb5df662ac6fd9731ac21e952882d3985.1578914462.git.psampat@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-13_03:2020-01-13,2020-01-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001130097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Define a bitmask interface to determine support for the Self Restore,
+Self Save or both.
 
-On 12/17/19 12:19 PM, Viresh Kumar wrote:
-> On 17-12-19, 12:50, Peter Ujfalusi wrote:
->> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
->> eating up the error code.
->>
->> By using dma_request_chan() directly the driver can support deferred
->> probing against DMA.
+Also define an interface to determine the preference of that SPR to
+be strictly saved or restored or encapsulated with an order of preference.
 
-It doesn't seem to be the case as DMA channel is requested at the start
-of the data transfer (which happens after the driver has been successfully
-probed).
+The preference bitmask is shown as below:
+----------------------------
+|... | 2nd pref | 1st pref |
+----------------------------
+MSB			  LSB
 
-PS there is a typo in the patch summary (it should "pata_arasan_cf").
+The preference from higher to lower is from LSB to MSB with a shift of 8
+bits.
+Example:
+Prefer self save first, if not available then prefer self
+restore
+The preference mask for this scenario will be seen as below.
+((SELF_RESTORE_STRICT << PREFERENCE_SHIFT) | SELF_SAVE_STRICT)
+---------------------------------
+|... | Self restore | Self save |
+---------------------------------
+MSB			        LSB
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Finally, declare a list of preferred SPRs which encapsulate the bitmaks
+for preferred and supported with defaults of both being set to support
+legacy firmware.
 
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  drivers/ata/pata_arasan_cf.c | 6 ++++--
->>  1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/ata/pata_arasan_cf.c b/drivers/ata/pata_arasan_cf.c
->> index 135173c8d138..69b555d83f68 100644
->> --- a/drivers/ata/pata_arasan_cf.c
->> +++ b/drivers/ata/pata_arasan_cf.c
->> @@ -526,9 +526,10 @@ static void data_xfer(struct work_struct *work)
->>  
->>  	/* request dma channels */
->>  	/* dma_request_channel may sleep, so calling from process context */
->> -	acdev->dma_chan = dma_request_slave_channel(acdev->host->dev, "data");
->> -	if (!acdev->dma_chan) {
->> +	acdev->dma_chan = dma_request_chan(acdev->host->dev, "data");
->> +	if (IS_ERR(acdev->dma_chan)) {
->>  		dev_err(acdev->host->dev, "Unable to get dma_chan\n");
->> +		acdev->dma_chan = NULL;
->>  		goto chan_request_fail;
->>  	}
->>  
->> @@ -539,6 +540,7 @@ static void data_xfer(struct work_struct *work)
->>  	}
->>  
->>  	dma_release_channel(acdev->dma_chan);
->> +	acdev->dma_chan = NULL;
->>  
->>  	/* data xferred successfully */
->>  	if (!ret) {
-> 
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> 
+This commit also implements using the above interface and retains the
+legacy functionality of self restore.
+
+Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+Reviewed-by: Ram Pai <linuxram@us.ibm.com>
+---
+ arch/powerpc/platforms/powernv/idle.c | 316 +++++++++++++++++++++-----
+ 1 file changed, 259 insertions(+), 57 deletions(-)
+
+diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+index 78599bca66c2..03fe835aadd1 100644
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -32,9 +32,112 @@
+ #define P9_STOP_SPR_MSR 2000
+ #define P9_STOP_SPR_PSSCR      855
+ 
++/* Interface for the stop state supported and preference */
++#define SELF_RESTORE_TYPE    0
++#define SELF_SAVE_TYPE       1
++
++#define NR_PREFERENCES    2
++#define PREFERENCE_SHIFT  4
++#define PREFERENCE_MASK   0xf
++
++#define UNSUPPORTED         0x0
++#define SELF_RESTORE_STRICT 0x1
++#define SELF_SAVE_STRICT    0x2
++
++/*
++ * Bitmask defining the kind of preferences available.
++ * Note : The higher to lower preference is from LSB to MSB, with a shift of
++ * 4 bits.
++ * ----------------------------
++ * |    | 2nd pref | 1st pref |
++ * ----------------------------
++ * MSB			      LSB
++ */
++/* Prefer Restore if available, otherwise unsupported */
++#define PREFER_SELF_RESTORE_ONLY	SELF_RESTORE_STRICT
++/* Prefer Save if available, otherwise unsupported */
++#define PREFER_SELF_SAVE_ONLY		SELF_SAVE_STRICT
++/* Prefer Restore when available, otherwise prefer Save */
++#define PREFER_RESTORE_SAVE		((SELF_SAVE_STRICT << \
++					  PREFERENCE_SHIFT)\
++					  | SELF_RESTORE_STRICT)
++/* Prefer Save when available, otherwise prefer Restore*/
++#define PREFER_SAVE_RESTORE		((SELF_RESTORE_STRICT <<\
++					  PREFERENCE_SHIFT)\
++					  | SELF_SAVE_STRICT)
+ static u32 supported_cpuidle_states;
+ struct pnv_idle_states_t *pnv_idle_states;
+ int nr_pnv_idle_states;
++/* Caching the lpcr & ptcr support to use later */
++static bool is_lpcr_self_save;
++static bool is_ptcr_self_save;
++
++struct preferred_sprs {
++	u64 spr;
++	u32 preferred_mode;
++	u32 supported_mode;
++};
++
++/*
++ * Preferred mode: Order of precedence when both self-save and self-restore
++ *		   supported
++ * Supported mode: Default support. Can be overwritten during system
++ *		   initialization
++ */
++struct preferred_sprs preferred_sprs[] = {
++	{
++		.spr = SPRN_HSPRG0,
++		.preferred_mode = PREFER_RESTORE_SAVE,
++		.supported_mode = SELF_RESTORE_STRICT,
++	},
++	{
++		.spr = SPRN_LPCR,
++		.preferred_mode = PREFER_RESTORE_SAVE,
++		.supported_mode = SELF_RESTORE_STRICT,
++	},
++	{
++		.spr = SPRN_PTCR,
++		.preferred_mode = PREFER_SAVE_RESTORE,
++		.supported_mode = SELF_RESTORE_STRICT,
++	},
++	{
++		.spr = SPRN_HMEER,
++		.preferred_mode = PREFER_RESTORE_SAVE,
++		.supported_mode = SELF_RESTORE_STRICT,
++	},
++	{
++		.spr = SPRN_HID0,
++		.preferred_mode = PREFER_RESTORE_SAVE,
++		.supported_mode = SELF_RESTORE_STRICT,
++	},
++	{
++		.spr = P9_STOP_SPR_MSR,
++		.preferred_mode = PREFER_RESTORE_SAVE,
++		.supported_mode = SELF_RESTORE_STRICT,
++	},
++	{
++		.spr = P9_STOP_SPR_PSSCR,
++		.preferred_mode = PREFER_SAVE_RESTORE,
++		.supported_mode = SELF_RESTORE_STRICT,
++	},
++	{
++		.spr = SPRN_HID1,
++		.preferred_mode = PREFER_RESTORE_SAVE,
++		.supported_mode = SELF_RESTORE_STRICT,
++	},
++	{
++		.spr = SPRN_HID4,
++		.preferred_mode = PREFER_RESTORE_SAVE,
++		.supported_mode = SELF_RESTORE_STRICT,
++	},
++	{
++		.spr = SPRN_HID5,
++		.preferred_mode = PREFER_RESTORE_SAVE,
++		.supported_mode = SELF_RESTORE_STRICT,
++	}
++};
++
++const int nr_preferred_sprs = ARRAY_SIZE(preferred_sprs);
+ 
+ /*
+  * The default stop state that will be used by ppc_md.power_save
+@@ -61,78 +164,170 @@ static bool deepest_stop_found;
+ 
+ static unsigned long power7_offline_type;
+ 
+-static int pnv_save_sprs_for_deep_states(void)
++static int pnv_self_restore_sprs(u64 pir, int cpu, u64 spr)
+ {
+-	int cpu;
++	u64 reg_val;
+ 	int rc;
+ 
+-	/*
+-	 * hid0, hid1, hid4, hid5, hmeer and lpcr values are symmetric across
+-	 * all cpus at boot. Get these reg values of current cpu and use the
+-	 * same across all cpus.
+-	 */
+-	uint64_t lpcr_val	= mfspr(SPRN_LPCR);
+-	uint64_t hid0_val	= mfspr(SPRN_HID0);
+-	uint64_t hid1_val	= mfspr(SPRN_HID1);
+-	uint64_t hid4_val	= mfspr(SPRN_HID4);
+-	uint64_t hid5_val	= mfspr(SPRN_HID5);
+-	uint64_t hmeer_val	= mfspr(SPRN_HMEER);
+-	uint64_t msr_val = MSR_IDLE;
+-	uint64_t psscr_val = pnv_deepest_stop_psscr_val;
+-
+-	for_each_present_cpu(cpu) {
+-		uint64_t pir = get_hard_smp_processor_id(cpu);
+-		uint64_t hsprg0_val = (uint64_t)paca_ptrs[cpu];
+-
+-		rc = opal_slw_set_reg(pir, SPRN_HSPRG0, hsprg0_val);
++	switch (spr) {
++	case SPRN_HSPRG0:
++		reg_val = (uint64_t)paca_ptrs[cpu];
++		rc = opal_slw_set_reg(pir, SPRN_HSPRG0, reg_val);
+ 		if (rc != 0)
+ 			return rc;
+-
+-		rc = opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
++		break;
++	case SPRN_LPCR:
++		reg_val = mfspr(SPRN_LPCR);
++		rc = opal_slw_set_reg(pir, SPRN_LPCR, reg_val);
+ 		if (rc != 0)
+ 			return rc;
+-
++		break;
++	case P9_STOP_SPR_MSR:
++		reg_val = MSR_IDLE;
+ 		if (cpu_has_feature(CPU_FTR_ARCH_300)) {
+-			rc = opal_slw_set_reg(pir, P9_STOP_SPR_MSR, msr_val);
++			rc = opal_slw_set_reg(pir, P9_STOP_SPR_MSR, reg_val);
+ 			if (rc)
+ 				return rc;
+-
+-			rc = opal_slw_set_reg(pir,
+-					      P9_STOP_SPR_PSSCR, psscr_val);
+-
++		}
++		break;
++	case P9_STOP_SPR_PSSCR:
++		reg_val = pnv_deepest_stop_psscr_val;
++		if (cpu_has_feature(CPU_FTR_ARCH_300)) {
++			rc = opal_slw_set_reg(pir, P9_STOP_SPR_PSSCR, reg_val);
+ 			if (rc)
+ 				return rc;
+ 		}
+-
+-		/* HIDs are per core registers */
++		break;
++	case SPRN_HMEER:
++		reg_val = mfspr(SPRN_HMEER);
+ 		if (cpu_thread_in_core(cpu) == 0) {
+-
+-			rc = opal_slw_set_reg(pir, SPRN_HMEER, hmeer_val);
+-			if (rc != 0)
++			rc = opal_slw_set_reg(pir, SPRN_HMEER, reg_val);
++			if (rc)
+ 				return rc;
+-
+-			rc = opal_slw_set_reg(pir, SPRN_HID0, hid0_val);
+-			if (rc != 0)
++		}
++		break;
++	case SPRN_HID0:
++		reg_val = mfspr(SPRN_HID0);
++		if (cpu_thread_in_core(cpu) == 0) {
++			rc = opal_slw_set_reg(pir, SPRN_HID0, reg_val);
++			if (rc)
+ 				return rc;
++		}
++		break;
++	case SPRN_HID1:
++		reg_val = mfspr(SPRN_HID1);
++		if (cpu_thread_in_core(cpu) == 0 &&
++		    !cpu_has_feature(CPU_FTR_ARCH_300)) {
++			rc = opal_slw_set_reg(pir, SPRN_HID1, reg_val);
++			if (rc)
++				return rc;
++		}
++		break;
++	case SPRN_HID4:
++		reg_val = mfspr(SPRN_HID4);
++		if (cpu_thread_in_core(cpu) == 0 &&
++		    !cpu_has_feature(CPU_FTR_ARCH_300)) {
++			rc = opal_slw_set_reg(pir, SPRN_HID4, reg_val);
++			if (rc)
++				return rc;
++		}
++		break;
++	case SPRN_HID5:
++		reg_val = mfspr(SPRN_HID5);
++		if (cpu_thread_in_core(cpu) == 0 &&
++		    !cpu_has_feature(CPU_FTR_ARCH_300)) {
++			rc = opal_slw_set_reg(pir, SPRN_HID5, reg_val);
++			if (rc)
++				return rc;
++		}
++		break;
++	case SPRN_PTCR:
++		break;
++	default:
++		return -EINVAL;
++	}
++	return 0;
++}
+ 
+-			/* Only p8 needs to set extra HID regiters */
+-			if (!cpu_has_feature(CPU_FTR_ARCH_300)) {
+-
+-				rc = opal_slw_set_reg(pir, SPRN_HID1, hid1_val);
+-				if (rc != 0)
+-					return rc;
+-
+-				rc = opal_slw_set_reg(pir, SPRN_HID4, hid4_val);
+-				if (rc != 0)
+-					return rc;
+-
+-				rc = opal_slw_set_reg(pir, SPRN_HID5, hid5_val);
+-				if (rc != 0)
+-					return rc;
++static int pnv_self_save_restore_sprs(void)
++{
++	int rc, index, cpu, k;
++	u64 pir;
++	struct preferred_sprs curr_spr;
++	bool is_initialized;
++	u32 preferred;
++
++	is_lpcr_self_save = false;
++	is_ptcr_self_save = false;
++	for_each_present_cpu(cpu) {
++		pir = get_hard_smp_processor_id(cpu);
++		for (index = 0; index < nr_preferred_sprs; index++) {
++			curr_spr = preferred_sprs[index];
++			is_initialized = false;
++			/*
++			 * Go through each of the preferences
++			 * Check if it is preferred as well as supported
++			 */
++			for (k = 0; k < NR_PREFERENCES; k++) {
++				preferred = curr_spr.preferred_mode
++						& PREFERENCE_MASK;
++				if (preferred & curr_spr.supported_mode
++				    & SELF_RESTORE_STRICT) {
++					is_initialized = true;
++					rc = pnv_self_restore_sprs(pir, cpu,
++								curr_spr.spr);
++					if (rc != 0)
++						return rc;
++					break;
++				}
++				preferred_sprs[index].preferred_mode =
++					preferred_sprs[index].preferred_mode >>
++					PREFERENCE_SHIFT;
++				curr_spr = preferred_sprs[index];
++			}
++			if (!is_initialized) {
++				if (preferred_sprs[index].spr == SPRN_PTCR ||
++				    (cpu_has_feature(CPU_FTR_ARCH_300) &&
++				    (preferred_sprs[index].spr == SPRN_HID1 ||
++				     preferred_sprs[index].spr == SPRN_HID4 ||
++				     preferred_sprs[index].spr == SPRN_HID5)))
++					continue;
++				return OPAL_UNSUPPORTED;
+ 			}
+ 		}
+ 	}
++	return 0;
++}
+ 
++static int pnv_save_sprs_for_deep_states(void)
++{
++	int rc;
++	int index;
++
++	/*
++	 * Iterate over the preffered SPRs and if even one of them is
++	 * still unsupported We cut support for deep stop states
++	 */
++	for (index = 0; index < nr_preferred_sprs; index++) {
++		if (preferred_sprs[index].supported_mode == UNSUPPORTED) {
++			if (preferred_sprs[index].spr == SPRN_PTCR ||
++			    (cpu_has_feature(CPU_FTR_ARCH_300) &&
++			    (preferred_sprs[index].spr == SPRN_HID1 ||
++			     preferred_sprs[index].spr == SPRN_HID4 ||
++			     preferred_sprs[index].spr == SPRN_HID5)))
++				continue;
++			return OPAL_UNSUPPORTED;
++		}
++	}
++	/*
++	 * Try to self-restore the registers that can be self restored if self
++	 * restore is active, try the same for the registers that
++	 * can be self saved too.
++	 * Note : If both are supported, self restore is given more priority
++	 */
++	rc = pnv_self_save_restore_sprs();
++	if (rc != 0)
++		return rc;
+ 	return 0;
+ }
+ 
+@@ -658,7 +853,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+ 		mmcr0		= mfspr(SPRN_MMCR0);
+ 	}
+ 	if ((psscr & PSSCR_RL_MASK) >= pnv_first_spr_loss_level) {
+-		sprs.lpcr	= mfspr(SPRN_LPCR);
++		if (!is_lpcr_self_save)
++			sprs.lpcr	= mfspr(SPRN_LPCR);
+ 		sprs.hfscr	= mfspr(SPRN_HFSCR);
+ 		sprs.fscr	= mfspr(SPRN_FSCR);
+ 		sprs.pid	= mfspr(SPRN_PID);
+@@ -672,7 +868,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+ 		sprs.mmcr1	= mfspr(SPRN_MMCR1);
+ 		sprs.mmcr2	= mfspr(SPRN_MMCR2);
+ 
+-		sprs.ptcr	= mfspr(SPRN_PTCR);
++		if (!is_ptcr_self_save)
++			sprs.ptcr	= mfspr(SPRN_PTCR);
+ 		sprs.rpr	= mfspr(SPRN_RPR);
+ 		sprs.tscr	= mfspr(SPRN_TSCR);
+ 		if (!firmware_has_feature(FW_FEATURE_ULTRAVISOR))
+@@ -756,7 +953,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+ 		goto core_woken;
+ 
+ 	/* Per-core SPRs */
+-	mtspr(SPRN_PTCR,	sprs.ptcr);
++	if (!is_ptcr_self_save)
++		mtspr(SPRN_PTCR,	sprs.ptcr);
+ 	mtspr(SPRN_RPR,		sprs.rpr);
+ 	mtspr(SPRN_TSCR,	sprs.tscr);
+ 
+@@ -777,7 +975,8 @@ static unsigned long power9_idle_stop(unsigned long psscr, bool mmu_on)
+ 	atomic_unlock_and_stop_thread_idle();
+ 
+ 	/* Per-thread SPRs */
+-	mtspr(SPRN_LPCR,	sprs.lpcr);
++	if (!is_lpcr_self_save)
++		mtspr(SPRN_LPCR,	sprs.lpcr);
+ 	mtspr(SPRN_HFSCR,	sprs.hfscr);
+ 	mtspr(SPRN_FSCR,	sprs.fscr);
+ 	mtspr(SPRN_PID,		sprs.pid);
+@@ -956,8 +1155,11 @@ void pnv_program_cpu_hotplug_lpcr(unsigned int cpu, u64 lpcr_val)
+ 	 * Program the LPCR via stop-api only if the deepest stop state
+ 	 * can lose hypervisor context.
+ 	 */
+-	if (supported_cpuidle_states & OPAL_PM_LOSE_FULL_CONTEXT)
+-		opal_slw_set_reg(pir, SPRN_LPCR, lpcr_val);
++	if (supported_cpuidle_states & OPAL_PM_LOSE_FULL_CONTEXT) {
++		if (!is_lpcr_self_save)
++			opal_slw_set_reg(pir, SPRN_LPCR,
++					 lpcr_val);
++	}
+ }
+ 
+ /*
+-- 
+2.24.1
 
