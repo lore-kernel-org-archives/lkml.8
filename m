@@ -2,97 +2,100 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB5FC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9A9C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2C8C206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:23:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96FFD206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578936242;
+	bh=f7ymohb97S6b58KJNRXy0ZTCMS6AMDRFCM6vKzcZbSc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Y1d6l36n+JUPZzS9PmGk6MfoFSoRI35IpzHOJrOCYZ/DEZooy1Ir4g110AdcPEMKD
+	 v4xoy5lLugeD5QABipQqXeOIEKAnJYiVmApP2BpouPLRltMp4m38sPic95h83Un4v0
+	 KgujezWsZJOwLne/f/cyzV6nEs6L3ZcR+CzNQM88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgAMRX5 (ORCPT
+        id S1729037AbgAMRYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:23:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:42310 "EHLO foss.arm.com"
+        Mon, 13 Jan 2020 12:24:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729009AbgAMRXz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:23:55 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B7DFA11B3;
-        Mon, 13 Jan 2020 09:23:54 -0800 (PST)
-Received: from [10.37.12.172] (unknown [10.37.12.172])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D94313F534;
-        Mon, 13 Jan 2020 09:23:51 -0800 (PST)
-Subject: Re: [PATCH] xfs: Fix xfs_dir2_sf_entry_t size check
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Christoph Hellwig <hch@lst.de>, Eric Sandeen <sandeen@sandeen.net>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20200109141459.21808-1-vincenzo.frascino@arm.com>
- <c43539f2-aa9b-4afa-985c-c438099732ff@sandeen.net>
- <1a540ee4-6597-c79e-1bce-6592cb2f3eae@arm.com>
- <20200109165048.GB8247@magnolia>
- <435bcb71-9126-b1f1-3803-4977754b36ff@arm.com>
- <CAK8P3a0eY6Vm5PNdzR8Min9MrwAqH8vnMZ3C+pxTQhiFVNPyWA@mail.gmail.com>
- <20200113135800.GA8635@lst.de>
- <CAK8P3a0MZdDhY1DmdxjCSMXFqyu0G1ijsQdo7fmN9Ebxgr9cNw@mail.gmail.com>
- <20200113170105.GF8247@magnolia>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <8e2d0812-c76d-b0fd-3f4f-129c46ae60c5@arm.com>
-Date:   Mon, 13 Jan 2020 17:26:49 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728850AbgAMRXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 12:23:18 -0500
+Received: from dogfood.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10C43206DA;
+        Mon, 13 Jan 2020 17:23:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578936197;
+        bh=f7ymohb97S6b58KJNRXy0ZTCMS6AMDRFCM6vKzcZbSc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=z2fLnfDjeLLXm+R00A0QgLFKw1e9CTcm2vmKN1TxwkXfNKHwDPibnlyE1BTgJF1rm
+         IPl0O6ezRM94ccQvwNGFbeO6CcVDzVea5DCRo9a2RWXrjSNMDKh8NFWx26iCweqxm/
+         3WZFHeKW88kbnS2nKpTEc7N8hseF+VEHS+UA0EOk=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Saravana Kannan <saravanak@google.com>
+Subject: [PATCH 05/13] efi/x86: don't map the entire kernel text RW for mixed mode
+Date:   Mon, 13 Jan 2020 18:22:37 +0100
+Message-Id: <20200113172245.27925-6-ardb@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200113172245.27925-1-ardb@kernel.org>
+References: <20200113172245.27925-1-ardb@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200113170105.GF8247@magnolia>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Darrick,
+The mixed mode thunking routine requires a part of it to be
+mapped 1:1, and for this reason, we currently map the entire
+kernel .text read/write in the EFI page tables, which is bad.
 
-On 1/13/20 5:01 PM, Darrick J. Wong wrote:
-> On Mon, Jan 13, 2020 at 03:06:50PM +0100, Arnd Bergmann wrote:
->> On Mon, Jan 13, 2020 at 2:58 PM Christoph Hellwig <hch@lst.de> wrote:
->>>
->>> On Mon, Jan 13, 2020 at 02:55:15PM +0100, Arnd Bergmann wrote:
->>>> With ARM OABI (which you get when EABI is disabled), structures are padded
->>>> to multiples of 32 bits. See commits 8353a649f577 ("xfs: kill
->>>> xfs_dir2_sf_off_t")
->>>> and aa2dd0ad4d6d ("xfs: remove __arch_pack"). Those could be partially
->>>> reverted to fix it again, but it doesn't seem worth it as there is
->>>> probably nobody
->>>> running XFS on OABI machines (actually with the build failure we can
->>>> be fairly sure there isn't ;-).
->>>
->>> Or just try adding a __packed to the xfs_dir2_sf_entry definition?
->>
->> Yes, that should be correct on all architectures, and I just noticed
->> that this is what we already have on xfs_dir2_sf_hdr_t directly
->> above it for the same reason.
-> 
-> Yeah, that sounds like a reasonable way forward, short of cleaning out
-> all the array[0] cr^Hode... ;)
-> 
-> To the original submitter: can you add __packed to the structure
-> definition and (assuming it passes oabi compilation) send that to the
-> list, please?
-> 
+In fact, the kernel_map_pages_in_pgd() invocation that installs
+this mapping is entirely redundant, since all of DRAM is already
+1:1 mapped read/write in the EFI page tables when we reach this
+point, which means that .rodata is mapped read-write as well.
 
-I will test it tomorrow morning as first thing and will send a patch out.
-Thank you all for your help!
+So let's remap both .text and .rodata read-only in the EFI
+page tables.
 
-> --D
-> 
->>
->>        Arnd
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ arch/x86/platform/efi/efi_64.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index c13fa2150976..6ec58ff60b56 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -391,11 +391,11 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 
+ 	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
+ 
+-	npages = (_etext - _text) >> PAGE_SHIFT;
++	npages = (__end_rodata_aligned - _text) >> PAGE_SHIFT;
+ 	text = __pa(_text);
+ 	pfn = text >> PAGE_SHIFT;
+ 
+-	pf = _PAGE_RW | _PAGE_ENC;
++	pf = _PAGE_ENC;
+ 	if (kernel_map_pages_in_pgd(pgd, pfn, text, npages, pf)) {
+ 		pr_err("Failed to map kernel text 1:1\n");
+ 		return 1;
 -- 
-Regards,
-Vincenzo
+2.20.1
+
