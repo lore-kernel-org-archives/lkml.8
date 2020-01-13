@@ -2,91 +2,150 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18601C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4B6C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8AAC20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:51:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578955894;
-	bh=kMxppQ8YsqJJUlYe1VlyCBuZnq/uMJx+8ulQVbeug+w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KrrRpYs2Lr0Lu5Pz66UCTGlwka8N28f4OsMtiDfWAsqnweI+rWKhHKm+zoI51gnj4
-	 2Adc1YqovQ3OFPgg9RBoVlkYRGxo88VbT8FUhQpURtG8rl+PD1rI3KgSPgwh3CS2ak
-	 fF/szrQdAeOlATGJ1PxcxTXANBdKw26UL0eUR4nQ=
+	by mail.kernel.org (Postfix) with ESMTP id BA5B2207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:52:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="U3tK/bta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729080AbgAMWvd (ORCPT
+        id S1729126AbgAMWwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:51:33 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33016 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728904AbgAMWvc (ORCPT
+        Mon, 13 Jan 2020 17:52:53 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:38142 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729015AbgAMWwx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:51:32 -0500
-Received: by mail-ot1-f67.google.com with SMTP id b18so10687882otp.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 14:51:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kHrOCgkkdDXDANIjbqsuSi8zgIrP7fM6uexZoRu9ItQ=;
-        b=lRdynINsUGevfqEJ71gwd2/ZQCunfQh0i1YhZTu8FhSVcYkhFEXsHG2YLjBNvFSkzK
-         azMR6CIozj6M/3g3Soo+pBaHpdRDDAgtehNLB7Nat/XEnpJTybRoGA0nRimBjK3qw8lX
-         kbGQXkmSNkKR2+1TdiCLcBZ3/OghKRJ/sPofirs7fnfx3Jh66A5BWZK3Lwm1EiswZOaJ
-         yhO+5uTiX1cykK1tI2tSbwOpVAzoKo81ov5FWHax/IXR0Bx71u3GMuXCAw6uL9SMVl/D
-         gd959XxnOvKMGj+Hc5dTkoSOVrZB4jtt15h9PBGT1jXObAqZJH8B2bDtFuI6TgYbCFUH
-         OifA==
-X-Gm-Message-State: APjAAAVivYpREonl6qrwbptPcsmkzOPY6e0MBORlbSRvWmaU17fpEAEk
-        tAt+3rRoFsIDrfKPvDiBhER9fL4=
-X-Google-Smtp-Source: APXvYqywDyVSGDzYD7bmdDxa5/6T7LVnfnjyjzLPqQbyEu55lmaV2vjyd4Dv0buk4ml/6HCKTpHg1w==
-X-Received: by 2002:a05:6830:151a:: with SMTP id k26mr15607183otp.74.1578955891828;
-        Mon, 13 Jan 2020 14:51:31 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id v25sm4612772otk.51.2020.01.13.14.51.30
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 14:51:30 -0800 (PST)
-Received: from rob (uid 1000)
-        (envelope-from rob@rob-hp-laptop)
-        id 2219cf
-        by rob-hp-laptop (DragonFly Mail Agent v0.11);
-        Mon, 13 Jan 2020 16:51:29 -0600
-Date:   Mon, 13 Jan 2020 16:51:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     robh+dt@kernel.org, georgi.djakov@linaro.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org, agross@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, mark.rutland@arm.com,
-        daidavid1@codeaurora.org, saravanak@google.com,
-        viresh.kumar@linaro.org, Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: interconnect: Add OSM L3 DT binding
- on SC7180
-Message-ID: <20200113225129.GA16336@bogus>
-References: <20200109211215.18930-1-sibis@codeaurora.org>
- <20200109211215.18930-4-sibis@codeaurora.org>
+        Mon, 13 Jan 2020 17:52:53 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DMmDv3020106;
+        Mon, 13 Jan 2020 22:52:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=yvB3s31LE8gCjb6DwYDy/tH4bEukxhOtXvizX8X9rTQ=;
+ b=U3tK/btaClL7YMesFwtEFnM4ZXNyPCv+lWwEpa1w48fljaumueznaXy1vRpxW8J1xpdX
+ 8co9tKgiz4qSKiK1AILiKR1D2p7GCV5s26Xll7ivzZETiVeqaq/BuBsYNXd9ERlZ5xYm
+ tgiMkMLtC2NZ4GtBpYPcXuVdKJfWMmf4BGbB8Bxe7snVUmnQn8KYACugy10UEPp+1PvQ
+ de11EdHUkBa49xbm1IW50i0aFE7CmUNTeUyMWEc7IfqSzKaNUirTaWZg3CPyFNxO8SQI
+ bgGW0+7eKRj3V4ECQtM3xpkFDOMHgRMTmqVvAXdH9lKpYPw/HAYlRAgwkuJSify/ap5D GA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2xf74s23r3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 22:52:49 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DMmvQ5176859;
+        Mon, 13 Jan 2020 22:52:48 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2xfrh6u0ge-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 22:52:48 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00DMqlFh025571;
+        Mon, 13 Jan 2020 22:52:47 GMT
+Received: from localhost.localdomain (/98.229.125.203)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jan 2020 14:52:47 -0800
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] workqueue: add worker function to workqueue_execute_end tracepoint
+Date:   Mon, 13 Jan 2020 17:52:39 -0500
+Message-Id: <20200113225240.116671-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200109211215.18930-4-sibis@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001130185
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001130185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 10 Jan 2020 02:42:14 +0530, Sibi Sankar wrote:
-> Add OSM L3 interconnect provider binding on SC7180 SoCs.
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/interconnect/qcom,osm-l3.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
+It's surprising that workqueue_execute_end includes only the work when
+its counterpart workqueue_execute_start has both the work and the worker
+function.
 
-Acked-by: Rob Herring <robh@kernel.org>
+You can't set a tracing filter or trigger based on the function, and
+postprocessing scripts interested in specific functions are harder to
+write since they have to remember the work from _start and match it up
+with the same field in _end.
+
+Add the function name, taking care to use the copy stashed in the
+worker since the work is no longer safe to touch.
+
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: linux-kernel@vger.kernel.org
+---
+ include/trace/events/workqueue.h | 19 ++++++++++++++++---
+ kernel/workqueue.c               |  2 +-
+ 2 files changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/include/trace/events/workqueue.h b/include/trace/events/workqueue.h
+index e172549283be..bdfc53e7f82f 100644
+--- a/include/trace/events/workqueue.h
++++ b/include/trace/events/workqueue.h
+@@ -108,14 +108,27 @@ TRACE_EVENT(workqueue_execute_start,
+ /**
+  * workqueue_execute_end - called immediately after the workqueue callback
+  * @work:	pointer to struct work_struct
++ * @function:   pointer to worker function
+  *
+  * Allows to track workqueue execution.
+  */
+-DEFINE_EVENT(workqueue_work, workqueue_execute_end,
++TRACE_EVENT(workqueue_execute_end,
+ 
+-	TP_PROTO(struct work_struct *work),
++	TP_PROTO(struct work_struct *work, work_func_t function),
+ 
+-	TP_ARGS(work)
++	TP_ARGS(work, function),
++
++	TP_STRUCT__entry(
++		__field( void *,	work	)
++		__field( void *,	function)
++	),
++
++	TP_fast_assign(
++		__entry->work		= work;
++		__entry->function	= function;
++	),
++
++	TP_printk("work struct %p: function %ps", __entry->work, __entry->function)
+ );
+ 
+ #endif /*  _TRACE_WORKQUEUE_H */
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index cfc923558e04..4bdfa270a37b 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -2266,7 +2266,7 @@ __acquires(&pool->lock)
+ 	 * While we must be careful to not use "work" after this, the trace
+ 	 * point will only record its address.
+ 	 */
+-	trace_workqueue_execute_end(work);
++	trace_workqueue_execute_end(work, worker->current_func);
+ 	lock_map_release(&lockdep_map);
+ 	lock_map_release(&pwq->wq->lockdep_map);
+ 
+-- 
+2.24.1
+
