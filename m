@@ -2,162 +2,88 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,PDS_BTC_ID,PDS_BTC_MSGID,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7611FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3815CC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C932207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:17:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578928657;
-	bh=pBqkF+2clNHgXHi5BBUJRdT/rE3DzQ/PC+llPRp2Xrg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QUCDX3UzJUryDHbESxQlWJ/Uu57dTCXXk/i/LEJACS87dupHaF9zXKo6B5ruNcs3e
-	 Ue5sGhHeXff/0IkIG1Cuue8AIu4Rxp/i6Zif21CItd8NiO8bb3y3Ni+B9xY3qbQhpD
-	 6EfPeoCjtvrvjI/wvzUrANPAmP7luvi6wA7gi3pQ=
+	by mail.kernel.org (Postfix) with ESMTP id 0A3C3207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:18:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="am8mcinX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgAMPRg (ORCPT
+        id S1729031AbgAMPSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 10:17:36 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41167 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgAMPRg (ORCPT
+        Mon, 13 Jan 2020 10:18:11 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43128 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgAMPSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 10:17:36 -0500
-Received: by mail-lj1-f194.google.com with SMTP id h23so10500895ljc.8;
-        Mon, 13 Jan 2020 07:17:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=Jfe3t4kuIi+AgOuIFUoAfUNjc8/xGignIjZ7I0BmXV4=;
-        b=B8b+8x6GSg6o+hWEXoStPFoV1PhVCwORKl3GtKrB6p+5cYtkclh90PRu0dKxYFDr1O
-         oAfNaUaAW8dUa7ciKxYIJ9JfdxE88IL6z/daCT95lhd3zOgmJyRD+svxCKaPuFWVCF1q
-         1Ld9X5M58pf+rI2Hv7vm7Cbrb64y0hHk/3MvF+cj1XlLNnkGgve3c8pj47Ja9KKqf76U
-         3hLCJGaT3lVHrA554CW+xAKZOWPpFM0wc67CHWK2b6e1Kl5q4Rwqn9qkIv8tdPHw1NXx
-         SnuKowPBThWDatNqXqi3cf0gn3V7pljzC7GdOo3HMimeNpGxhTWKhcfxHveIg/YKg2HD
-         6x/g==
-X-Gm-Message-State: APjAAAVpz1af5T89mFgdkVRxAVnu/+N6tSGOaVa3k+P2bxy8p2pvUI67
-        oLJoaT/OOGrHgeo6RhOzcMk=
-X-Google-Smtp-Source: APXvYqwBW142k8JnhwdWEPoZeKHxchCJiMWzJnPw3teNWcK8Rne1NsOLqcNwiGz9R4yRFANTTf7AWA==
-X-Received: by 2002:a2e:7a07:: with SMTP id v7mr9077591ljc.271.1578928654031;
-        Mon, 13 Jan 2020 07:17:34 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id g15sm6065992ljl.10.2020.01.13.07.17.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 07:17:32 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1ir1TA-0005lY-KP; Mon, 13 Jan 2020 16:17:32 +0100
-Date:   Mon, 13 Jan 2020 16:17:32 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Cc:     Johan Hovold <johan@kernel.org>, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        peter_hong@fintek.com.tw,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-Subject: Re: [PATCH V2 5/7] USB: serial: f81232: Set F81534A serial port with
- RS232 mode
-Message-ID: <20200113151732.GC2301@localhost>
-References: <20190923022449.10952-1-hpeter+linux_kernel@gmail.com>
- <20190923022449.10952-6-hpeter+linux_kernel@gmail.com>
- <20191023115300.GU24768@localhost>
- <f3a8b0bd-79f7-3bef-4d07-69774c87873a@gmail.com>
- <20200108143502.GJ30908@localhost>
- <3c79f786-de34-550e-3964-d7fb334f6d56@gmail.com>
+        Mon, 13 Jan 2020 10:18:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=RXrt3Kd23IFzHWsq5upqeoyGKMQUPdEAUxUoERZtuVo=; b=am8mcinXx2Zu+yhOYPVhO1Lw7
+        6LCKFCG8HUhAfNBVLc9m1WjHZ9+SkzKsubejSpWwi1OUVDTEHHwS3jq8/ZV3BrHURlwuDusUvJo+9
+        9Jiv0cEJ7xbnTK/qnFfgQieU27UsvcjeSLm6UPOSIJzsqIYgF2V6HfaScHHcnx05KojOs+Jy/7VpW
+        Q1ofALeUGf3FV9ZDShzrDZZObyoands5qQAdBuFYiG1uCuV+bAnpXyBUw0Rw8aT57wNOPSBGSi0ec
+        GnCR9G6EDG+To6fyxOhBOzmMLCrd+1DYTla2hebRPniyYcOworREP5O+zl2/FTGmLNpM6XJKaWT+6
+        EPzrNjNMg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ir1Tk-0005sX-PG; Mon, 13 Jan 2020 15:18:08 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 50DB8304121;
+        Mon, 13 Jan 2020 16:16:31 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B1A242B6AFBAA; Mon, 13 Jan 2020 16:18:06 +0100 (CET)
+Date:   Mon, 13 Jan 2020 16:18:06 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH v2 2/6] locking/lockdep: Throw away all lock chains with
+ zapped class
+Message-ID: <20200113151806.GW2844@hirez.programming.kicks-ass.net>
+References: <20191216151517.7060-1-longman@redhat.com>
+ <20191216151517.7060-3-longman@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3c79f786-de34-550e-3964-d7fb334f6d56@gmail.com>
+In-Reply-To: <20191216151517.7060-3-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 10:37:09AM +0800, Ji-Ze Hong (Peter Hong) wrote:
-> Hi Johan,
-> 
-> Johan Hovold 於 2020/1/8 下午 10:35 寫道:
-> >> Yes, when 1 F81534A connect to Host, it'll report device as following.
-> >> 	virtual HUB
-> >> 		GPIO Device.
-> >> 		serial port 1
-> >> 		...
-> >> 		serial port n
-> > 
-> > Could you post lsusb -v output for this with a couple of UARTs enabled?
-> 
-> The following lsusb log is F81536 informations
-> 2c42:1608 => HUB
-> 2c42:16f8 => GPIO device
-> 2c42:163x => UART (need driver enable)
+On Mon, Dec 16, 2019 at 10:15:13AM -0500, Waiman Long wrote:
+> If a lock chain contains a class that is zapped, the whole lock chain is
+> now invalid.
 
-> *after insmod driver and wait for complete
+Possibly. But I'm thinking that argument can/should be made mode elaborate.
 
-> Bus 001 Device 053: ID 2c42:1636
-> Bus 001 Device 044: ID 2c42:16f8
-> Bus 001 Device 043: ID 2c42:1608
+Suppose we have A->B->C, and we're about to remove B.
 
-Can you post verbose ("lsusb -v") output for the three device types for
-completeness?
+Now, I suppose the trivial argument goes that if we remove the text that
+causes A->B, then so B->C will no longer happen. However, that doesn't
+mean A->C won't still occur.
 
-> >> The link are F81534A pin-out:
-> >> 	https://imgur.com/a/AZHqQ1N
-> > 
-> > Do you have a datasheet for the device?
-> > 
-> > I think I'm starting to get an idea of how this work, but I really don't
-> > like having to spend this much time on detective work just to understand
-> > how the hw works.
-> 
-> The following link is F81536 spec:
-> https://drive.google.com/drive/folders/1oA8DvpevFXoTLCDfPZHzaBWKr32ch5xc?usp=sharing
+OTOH, we might already have A->C and so our resulting chain would be a
+duplicate. Conversely, if we didn't already have A->C and it does indeed
+still occur (say it was omitted due to the redundant logic), then we
+will create this dependency the next time we'll encounter it.
 
-Thanks!
+Bart, do you see a problem with this reasoning?
 
-> >> So we can control F81534A series all GPIO pins via GPIO Device.
-> >> Serial ports are also control MODE0_x,  MODE1_x,  MODE2_x
-> >> (e.g. UART1 MODE0_1,  MODE1_1,  MODE2_1), but when Serial ports
-> >> is h/w disabled (DTR pull low), the mode pin will change to GPIO pin.
-> > 
-> > So you tie a ports DTR pin, even though it's normally an output, and use
-> > that at boot to determine whether the UART should be enabled or not?
-> > 
-> > And the GPIO device can only control a pin if the corresponding port is
-> > disabled?
-> > 
-> > Can you read back the enable state of each port?
-> 
-> DTR pin of the F81534A series are strap pin on power on, when IC detect
-> it pulled to low, the UART device can't enable and DTR change to input
-> mode.
+In short, yes, I think you're right and we can remove the whole thing.
+But please, expand the Changelog a bit, possibly add some of this
+reasoning into a comment.
 
-Can you read back the state of the DTR pin when pulled low? So that you
-can determine which UARTs have been disabled in hardware?
-
-> I can read the UART enable state from GPIO Device, so I can do when the
-> GPIO is associated with UART enabled, change it as output only otherwise
-> can be set to input/output. Is this OK ??
-
-I'm leaning more towards not exporting this as a gpio device at all.
-It's clear from the datasheet (and your implementation) that these pins
-are supposed to be used with your own tranceivers. You can start with
-only supporting RS232, and then we can discuss an interface for
-switching modes later.
-
-> > What about devices using a different tranceiver? Should the state of the
-> > mode pins ultimately be tied to VID/PID (can your customers change
-> > VID/PID)?
-> > 
-> 
-> Our device VID/PID is changeable, but we assume don't change it.
-
-Ok, then I guess we must assume that the MODE pins are only connected to
-your tranceivers and hardcoding the various configurations is fine.
-
-Johan
