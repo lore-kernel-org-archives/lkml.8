@@ -7,69 +7,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17241C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CB3C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAE5420678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E4E82469A
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578942654;
-	bh=ydXCvJJqUI2mPGsyzAz39IOL1oZeDpbDw4CepgczzdI=;
+	s=default; t=1578942662;
+	bh=UrHc2M1jkZdkQHuuKZmAiayiZtSlyIMpQeIcsDBShLg=;
 	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
 	 From;
-	b=tuyNLdgd5xG+9mDYhLqeUp2ZYbM1scYRQNPJQ97ZlrphqE7xZctBplMu3CF4OlkzE
-	 wZ+6+jvknJPm9prveqN/LUW0H387/X5af9/7RolFU0vuEeju530RMSCfD4o/8FOFBb
-	 2QBzBTEMvhe8urpQlVzaLB76I10XUCxZlRqp6WNY=
+	b=bpXN8Ye4rJbusXoHBTXnKl9kQJj5RNNfc0xDd67Td2UorT4likEPXGOiD8vuE33oa
+	 KENyoQkR8V6rzoJpmgg4ZAf6KvWZuozGGQURzQFxuYEq7v4vqhFAJ3sFweIhhnCGx3
+	 AZybqbiObn7X0aZVFVXRWCFZSlOsFos6XmRGzAeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbgAMTKx (ORCPT
+        id S1728983AbgAMTLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:10:53 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33576 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729288AbgAMTKt (ORCPT
+        Mon, 13 Jan 2020 14:11:00 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34135 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729347AbgAMTK5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:10:49 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so5168586pgk.0;
-        Mon, 13 Jan 2020 11:10:49 -0800 (PST)
+        Mon, 13 Jan 2020 14:10:57 -0500
+Received: by mail-pf1-f194.google.com with SMTP id i6so5321394pfc.1;
+        Mon, 13 Jan 2020 11:10:56 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
          :references:in-reply-to;
-        bh=TKkoejQV2c6zTi0Lk84zRP/sLh+dHPb6nJ3LQs91rO0=;
-        b=XQ5xJi8Gx6ysA2olw0EfSqn/dUSmhoexAm31/j56/8sFKStEsg95i3Q9lgqXqW3CHu
-         Jm5hxz8p/slk5A4JdIIICmFq7chJzuyXXALzxOWyFWwg5YLbE5oZe/b9HtnFz0nCbt9w
-         o46QjuWk/dJXDBtOygWVsNGNsIFsQyK9ZVI//kv3+/SIwK0uP8BUR9UHOfOtZdsA6bf+
-         bC7JRLvroUhQXmGHBkKmzeOJofzXr4k0KjNgoizaKJsaV9SmnVy78OzvTIpZFAWIV6Ob
-         RxHUH1YIZk0nXVgkMT93+Gps8r4HKfQoGrYMWcuu0WXPKJO/WW27L8VDDU1IGxdu0I8R
-         nnRA==
-X-Gm-Message-State: APjAAAV1EviHH5S1UnxywmvanpiAkA02FSNYbsyYn3agCIzd6wh8RzAo
-        6xK/rAxUkaZ4bNG2JZ6LXTo=
-X-Google-Smtp-Source: APXvYqxpcMDnuAK6LNWLusoFsllAJWymSw/KyOmcfqBZ+FKSDh+VYiY8UaD3R5kny7v3CzIXMzUf6w==
-X-Received: by 2002:a63:6b07:: with SMTP id g7mr21929891pgc.243.1578942648698;
-        Mon, 13 Jan 2020 11:10:48 -0800 (PST)
+        bh=jTHJmlgWlvAPFQCB9Io3MPGggb4HLJiN3T7qmewcyc4=;
+        b=g3WWCowZqfd9Cq1tSFDglxWkM3AEBIigWG0c5WkB4eFxinTwC8B5q4w63woyc8Ynhd
+         u+/0D7ggtCuqzw9pxMKr9WL67FiATYDAo+RWoSz4YYP18oeE1GiybgJvzD7ipmMom1nE
+         21vGMsBy4dJSbn05c4FaA+7o6btToqihJcDq3prWsMdhpDF7rcG2DIOKcNgpFgqYHs+R
+         Y6jpDug+b956lRdUYXcnWk9OjrsR6yc0MwWJY+A9e9/n0TkEDRFJZI3Ptc1oA9FJNoqS
+         bFDDPpHIKjYlpRYaHVg4rbbPDcRQPW4DnvmZ7tYynjSyRTr/QD7vnDVPcSdCKom8C3Eo
+         q1ow==
+X-Gm-Message-State: APjAAAXFvAzcppmRxm3ByPTGic/FOGJQovMg57ATdrVtx+1+DVUWj6PG
+        CbvDBtwz5T2L/fk/pl1nTa8=
+X-Google-Smtp-Source: APXvYqyz3nXvBn+dYOeugnrUILRd9W3o5j47cX3X77TgWPnRTx2NKlIix87cMbioUxbaly8p+7BtMQ==
+X-Received: by 2002:a63:4b50:: with SMTP id k16mr22588647pgl.386.1578942656431;
+        Mon, 13 Jan 2020 11:10:56 -0800 (PST)
 Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
-        by smtp.gmail.com with ESMTPSA id y6sm14563154pgc.10.2020.01.13.11.10.47
+        by smtp.gmail.com with ESMTPSA id x197sm15590626pfc.1.2020.01.13.11.10.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 11:10:47 -0800 (PST)
-Message-ID: <5e1cc0b7.1c69fb81.c151b.187c@mx.google.com>
-Date:   Mon, 13 Jan 2020 11:10:47 -0800
+        Mon, 13 Jan 2020 11:10:55 -0800 (PST)
+Message-ID: <5e1cc0bf.1c69fb81.65bf6.48ee@mx.google.com>
+Date:   Mon, 13 Jan 2020 11:10:55 -0800
 From:   Paul Burton <paulburton@kernel.org>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-CC:     khilman@baylibre.com, leoyang.li@nxp.com, khalasa@piap.pl,
-        john@phrozen.org, matthias.bgg@gmail.com, agross@kernel.org,
-        bjorn.andersson@linaro.org, kgene@kernel.org, krzk@kernel.org,
-        mripard@kernel.org, wens@csie.org, ssantosh@kernel.org,
-        jun.nie@linaro.org, shawnguo@kernel.org
-CC:     linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org,
-        Yangtao Li <tiny.windzz@gmail.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+CC:     "Maciej W . Rozycki" <macro@linux-mips.org>,
+        Ralf Baechle <ralf@linux-mips.org>
+CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
 CC:     linux-mips@vger.kernel.org
-Subject: Re: [PATCH 08/10] soc: lantiq: convert to devm_platform_ioremap_resource
-References:  <20191214175447.25482-8-tiny.windzz@gmail.com>
-In-Reply-To:  <20191214175447.25482-8-tiny.windzz@gmail.com>
+Subject: Re: [PATCH] tc: Make tc_match_device() static
+References:  <20200112165229.20567-1-geert@linux-m68k.org>
+In-Reply-To:  <20200112165229.20567-1-geert@linux-m68k.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -77,15 +70,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hello,
 
-Yangtao Li wrote:
-> Use devm_platform_ioremap_resource() to simplify code.
+Geert Uytterhoeven wrote:
+> Unlike its PCI counterpart, tc_match_device() was never used outside
+> the TURBOchannel bus code.
 
 Applied to mips-next.
 
-> commit 23c25c732530
-> https://git.kernel.org/mips/c/23c25c732530
+> commit 3d9f44ef7553
+> https://git.kernel.org/mips/c/3d9f44ef7553
 > 
-> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 > Signed-off-by: Paul Burton <paulburton@kernel.org>
 
 Thanks,
