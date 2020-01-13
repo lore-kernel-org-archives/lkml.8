@@ -2,132 +2,181 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C867C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F2FEC33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52E8F207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:27:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=inango-systems.com header.i=@inango-systems.com header.b="bF5v9klE"
+	by mail.kernel.org (Postfix) with ESMTP id 0BC60207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:28:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgAMK1d (ORCPT
+        id S1728800AbgAMK2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:27:33 -0500
-Received: from mail.inango-systems.com ([178.238.230.57]:50846 "EHLO
-        mail.inango-sw.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727014AbgAMK1d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:27:33 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.inango-sw.com (Postfix) with ESMTP id 54C431080786;
-        Mon, 13 Jan 2020 12:27:30 +0200 (IST)
-Received: from mail.inango-sw.com ([127.0.0.1])
-        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 6RZ3lKHhyPMI; Mon, 13 Jan 2020 12:27:29 +0200 (IST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.inango-sw.com (Postfix) with ESMTP id E19E71080790;
-        Mon, 13 Jan 2020 12:27:28 +0200 (IST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.inango-sw.com E19E71080790
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=inango-systems.com;
-        s=45A440E0-D841-11E8-B985-5FCC721607E0; t=1578911248;
-        bh=THTE1okMxz8IYZP5XaSN31O51fGXzRMX71TEetGqCAs=;
-        h=From:To:Date:Message-Id;
-        b=bF5v9klEHwgnw8MspBJCle0YY3J0qXaa+Uw1ccqeMsegQTqxIrEN6YgRnDreCXzK2
-         RQIjyN2ZlnlV4+tZDVBw4N8Q00i7dsi+24aciLaRHIar/70CNiNUD8gkMvpvaMqJTO
-         uUC1mczcRg0Bvc/1PKWw47hu76o3Sq/rDHPUWJQNSPD5w2vB8WQOEyblhIoH2SIm3S
-         EeDTo3iQAaC9mfx2VOotVJ7HUsa1Vo7g/hbXdFEvVlWmna4Q9prXXeEBZk60iwz55e
-         GkI4a4CcVe7srrFo5+9zOt36fKbsEEZo4DEscGnPUcETd38Pr4d80D2vmLkmD+EcmC
-         FyxH55K3mikjA==
-X-Virus-Scanned: amavisd-new at inango-sw.com
-Received: from mail.inango-sw.com ([127.0.0.1])
-        by localhost (mail.inango-sw.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id kQ81MXoXyOqu; Mon, 13 Jan 2020 12:27:28 +0200 (IST)
-Received: from nmerinov.inango.loc (unknown [194.60.247.123])
-        by mail.inango-sw.com (Postfix) with ESMTPSA id E1E281080782;
-        Mon, 13 Jan 2020 12:27:27 +0200 (IST)
-From:   Nikolai Merinov <n.merinov@inango-systems.com>
-To:     hch@infradead.org, Davidlohr Bueso <dave@stgolabs.net>,
-        Jens Axboe <axboe@kernel.dk>, Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Nikolai Merinov <n.merinov@inango-systems.com>
-Subject: [PATCH v3] partitions/efi: Fix partition name parsing in GUID partition entry
-Date:   Mon, 13 Jan 2020 15:27:23 +0500
-Message-Id: <26f7bd89f212f68b03a4b207e96d8702c9049015.1578910723.git.n.merinov@inango-systems.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200108133926.GC4455@infradead.org>
-References: <20181124162123.21300-1-n.merinov@inango-systems.com> <20191224092119.4581-1-n.merinov@inango-systems.com> <20200108133926.GC4455@infradead.org>
+        Mon, 13 Jan 2020 05:28:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:37224 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726001AbgAMK2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 05:28:11 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1988313D5;
+        Mon, 13 Jan 2020 02:28:11 -0800 (PST)
+Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D69B43F534;
+        Mon, 13 Jan 2020 02:28:09 -0800 (PST)
+Subject: Re: [PATCH v2 7/7] arm64: nofpsmid: Handle TIF_FOREIGN_FPSTATE flag
+ cleanly
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, mark.rutland@arm.com, dave.martin@arm.com,
+        catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
+        christoffer.dall@arm.com, Marc Zyngier <marc.zyngier@arm.com>
+References: <20191217183402.2259904-1-suzuki.poulose@arm.com>
+ <20191217183402.2259904-8-suzuki.poulose@arm.com>
+ <94c0bdd9f26c3262ff8a885d13a64d22@www.loen.fr>
+ <9e491901-b589-b486-1cad-1bd92a35da95@arm.com>
+ <3b30d44c34bc265ce4122396077a1670@www.loen.fr>
+ <d5e27bf5-3cc9-c8bd-5699-71658983054e@arm.com>
+ <e1ba712b42886594fe1095019f2c5813@kernel.org>
+From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
+Message-ID: <ea8f50f9-66fa-1cf5-1292-a205993258fa@arm.com>
+Date:   Mon, 13 Jan 2020 10:28:08 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <e1ba712b42886594fe1095019f2c5813@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GUID partition entry defined to have a partition name as 36 UTF-16LE
-code units. This means that on big-endian platforms ASCII symbols
-would be read with 0xXX00 efi_char16_t character code. In order to
-correctly extract ASCII characters from a partition name field we
-should be converted from 16LE to CPU architecture.
+On 10/01/2020 15:21, Marc Zyngier wrote:
+> On 2019-12-18 12:00, Suzuki Kuruppassery Poulose wrote:
+>> On 18/12/2019 11:56, Marc Zyngier wrote:
+>>> On 2019-12-18 11:42, Suzuki Kuruppassery Poulose wrote:
+>>>> Hi Marc,
+>>>>
+>>>> On 17/12/2019 19:05, Marc Zyngier wrote:
 
-The problem exists on all big endian platforms.
 
-Signed-off-by: Nikolai Merinov <n.merinov@inango-systems.com>
----
- block/partitions/efi.c | 3 ++-
- block/partitions/efi.h | 2 +-
- include/linux/efi.h    | 5 +++++
- 3 files changed, 8 insertions(+), 2 deletions(-)
+>>>>>> KVM also uses the TIF_FOREIGN_FPSTATE flag to manage the FP/SIMD 
+>>>>>> state
+>>>>>> on the CPU. However, without FP/SIMD support we trap all accesses and
+>>>>>> inject undefined instruction. Thus we should never "load" guest 
+>>>>>> state.
+>>>>>> Add a sanity check to make sure this is valid.
+>>>>> Yes, but no, see below.
+>>>>>
+>>>>>>
+>>>>>> Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
+>>>>>> Cc: Will Deacon <will@kernel.org>
+>>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>>>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>>>>> No idea who that guy is. It's a fake! ;-)
+>>>>
+>>>> Sorry about that, will fix it.
+>>>>
+>>>>>
+>>>>>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>>>>> ---
+>>>>>>  arch/arm64/kernel/fpsimd.c  | 31 +++++++++++++++++++++++++++----
+>>>>>>  arch/arm64/kvm/hyp/switch.c |  9 +++++++++
+>>>>>>  2 files changed, 36 insertions(+), 4 deletions(-)
+>>>>>>
+>>>>> [...]
+>>>>>
+>>>>>> diff --git a/arch/arm64/kvm/hyp/switch.c 
+>>>>>> b/arch/arm64/kvm/hyp/switch.c
+>>>>>> index 72fbbd86eb5e..9696ebb5c13a 100644
+>>>>>> --- a/arch/arm64/kvm/hyp/switch.c
+>>>>>> +++ b/arch/arm64/kvm/hyp/switch.c
+>>>>>> @@ -28,10 +28,19 @@
+>>>>>>  /* Check whether the FP regs were dirtied while in the host-side run
+>>>>>> loop: */
+>>>>>>  static bool __hyp_text update_fp_enabled(struct kvm_vcpu *vcpu)
+>>>>>>  {
+>>>>>> +    /*
+>>>>>> +     * When the system doesn't support FP/SIMD, we cannot rely on
+>>>>>> +     * the state of _TIF_FOREIGN_FPSTATE. However, we will never
+>>>>>> +     * set the KVM_ARM64_FP_ENABLED, as the FP/SIMD accesses always
+>>>>>> +     * inject an abort into the guest. Thus we always trap the
+>>>>>> +     * accesses.
+>>>>>> +     */
+>>>>>>      if (vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
+>>>>>>          vcpu->arch.flags &= ~(KVM_ARM64_FP_ENABLED |
+>>>>>>                        KVM_ARM64_FP_HOST);
+>>>>>>
+>>>>>> +    WARN_ON(!system_supports_fpsimd() &&
+>>>>>> +        (vcpu->arch.flags & KVM_ARM64_FP_ENABLED));
+>>>>> Careful, this will panic the host if it happens on a !VHE host
+>>>>> (calling non-inline stuff from a __hyp_text function is usually
+>>>>> not a good idea).
+>>>>
+>>>> Ouch! Sorry about that WARN_ON()! I could drop the warning and
+>>>> make this :
+>>>>
+>>>> if (!system_supports_fpsimd() ||
+>>>>     (vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE))
+>>>>     vcpu->arch.flags &= ~(KVM_ARM64_FP_ENABLED |
+>>>>                   KVM_ARM64_FP_HOST);
+>>>>
+>>>> to make sure we never say fp is enabled.
+>>>>
+>>>> What do you think ?
+>>>
+>>> Sure, that would work. I can't really see how KVM_ARM64_FP_ENABLED
+>>
+>> Thanks I have fixed this locally now.
+>>
+>>> would get set though. But it probably doesn't matter (WTF is going
+>>
+>> Right. That cannot be set to begin with, as the first access to FP/SIMD
+>> injects an abort back to the guest, which is why I added a WARN() to
+>> begin with.
+>>
+>> Just wanted to be extra safe.
+>>
+>>> to run KVM with such broken HW?), and better safe than sorry.
+>>
+>> Right, with no COMPAT KVM support it is really hard to get this far.
+> 
+> So with the above fix:
+> 
+> Acked-by: Marc Zyngier <maz@kernel.org>
+> 
+>          M.
 
-diff --git a/block/partitions/efi.c b/block/partitions/efi.c
-index db2fef7dfc47..f1d0820de844 100644
---- a/block/partitions/efi.c
-+++ b/block/partitions/efi.c
-@@ -715,7 +715,8 @@ int efi_partition(struct parsed_partitions *state)
- 				ARRAY_SIZE(ptes[i].partition_name));
- 		info->volname[label_max] = 0;
- 		while (label_count < label_max) {
--			u8 c = ptes[i].partition_name[label_count] & 0xff;
-+			u8 c = 0xff & efi_char16le_to_cpu(
-+					ptes[i].partition_name[label_count]);
- 			if (c && !isprint(c))
- 				c = '!';
- 			info->volname[label_count] = c;
-diff --git a/block/partitions/efi.h b/block/partitions/efi.h
-index 3e8576157575..4d4cae0bb79e 100644
---- a/block/partitions/efi.h
-+++ b/block/partitions/efi.h
-@@ -88,7 +88,7 @@ typedef struct _gpt_entry {
- 	__le64 starting_lba;
- 	__le64 ending_lba;
- 	gpt_entry_attributes attributes;
--	efi_char16_t partition_name[72 / sizeof (efi_char16_t)];
-+	efi_char16le_t partition_name[72 / sizeof(efi_char16le_t)];
- } __packed gpt_entry;
- 
- typedef struct _gpt_mbr_record {
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index aa54586db7a5..47882f2d45db 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -45,9 +45,14 @@
- typedef unsigned long efi_status_t;
- typedef u8 efi_bool_t;
- typedef u16 efi_char16_t;		/* UNICODE character */
-+typedef __le16 efi_char16le_t;		/* UTF16-LE */
-+typedef __be16 efi_char16be_t;		/* UTF16-BE */
- typedef u64 efi_physical_addr_t;
- typedef void *efi_handle_t;
- 
-+#define efi_char16le_to_cpu le16_to_cpu
-+#define efi_char16be_to_cpu be16_to_cpu
-+
- /*
-  * The UEFI spec and EDK2 reference implementation both define EFI_GUID as
-  * struct { u32 a; u16; b; u16 c; u8 d[8]; }; and so the implied alignment
--- 
-2.17.1
+Thanks, I have changed the KVM hunk to :
+
+
+diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
+index 72fbbd86eb5e..e5816d885761 100644
+--- a/arch/arm64/kvm/hyp/switch.c
++++ b/arch/arm64/kvm/hyp/switch.c
+@@ -28,7 +28,15 @@
+  /* Check whether the FP regs were dirtied while in the host-side run 
+loop: */
+  static bool __hyp_text update_fp_enabled(struct kvm_vcpu *vcpu)
+  {
+-	if (vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
++	/*
++	 * When the system doesn't support FP/SIMD, we cannot rely on
++	 * the _TIF_FOREIGN_FPSTATE flag. However, we always inject an
++	 * abort on the very first access to FP and thus we should never
++	 * see KVM_ARM64_FP_ENABLED. For added safety, make sure we always
++	 * trap the accesses.
++	 */
++	if (!system_supports_fpsimd() ||
++	    vcpu->arch.host_thread_info->flags & _TIF_FOREIGN_FPSTATE)
+  		vcpu->arch.flags &= ~(KVM_ARM64_FP_ENABLED |
+  				      KVM_ARM64_FP_HOST);
+
+
+Suzuki
+
 
