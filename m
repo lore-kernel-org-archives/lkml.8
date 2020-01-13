@@ -2,212 +2,91 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC14DC32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196AFC33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B560206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF830206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:47:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="RNzqCJVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387527AbgAMDp1 (ORCPT
+        id S2387464AbgAMDri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 22:45:27 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42174 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387469AbgAMDpZ (ORCPT
+        Sun, 12 Jan 2020 22:47:38 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39596 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387415AbgAMDrh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 22:45:25 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00D3gjIi084364
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:45:24 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfvpndfx6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:45:24 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Mon, 13 Jan 2020 03:45:22 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 13 Jan 2020 03:45:19 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00D3iTXw40960326
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 03:44:29 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF12F4204C;
-        Mon, 13 Jan 2020 03:45:17 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A91742047;
-        Mon, 13 Jan 2020 03:45:16 +0000 (GMT)
-Received: from pratiks-thinkpad.in.ibm.com (unknown [9.124.31.88])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 13 Jan 2020 03:45:15 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
-        linuxram@us.ibm.com, psampat@linux.ibm.com,
-        pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
-Subject: [RESEND PATCH v2 3/3] powerpc/powernv: Parse device tree, population of SPR support
-Date:   Mon, 13 Jan 2020 09:15:09 +0530
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1578886602.git.psampat@linux.ibm.com>
-References: <cover.1578886602.git.psampat@linux.ibm.com>
+        Sun, 12 Jan 2020 22:47:37 -0500
+Received: by mail-qk1-f193.google.com with SMTP id c16so7335141qko.6
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 19:47:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PExcPvgc6/JC2Ar9r1T4zc/h/pcxxQjdKuFy6nmEZXA=;
+        b=RNzqCJVXNNXnDMN6b2ESf+l0CbgcBiNVVqy/jcbHWp4q7ss6+YegoHwonWgZVonmJE
+         xfxi80gDEphZex+Be31dwvw7XppRkdyV0BKleW0GJzFQwurx7CvVMjjGPuUF1nVebsA9
+         NO1g94A6EmTb49KTIKSsx5OlZxw+D6aGe+fNUy9UhbWMx+SROFAHh/SfuVdZnPQ4u+QK
+         op2q97Tv3KwEkrQ37cyrMWJupZvcD672iBNR8voCr6PmOOLuu2G2nUU2Zd3zDumFHzpA
+         CbLlMm0BljoC+VQ0S9Ts+N1TNp0UEsWRWatnQmg7qHO4GyoffUjVD4H8BPVps1y7wAqA
+         GhwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PExcPvgc6/JC2Ar9r1T4zc/h/pcxxQjdKuFy6nmEZXA=;
+        b=Kr+WoI46bkkfE0+3JD5iXYR6xJln7su7Yc7uIyRTHt/YILNncLEzxkhi8x5coRbiJm
+         +W5q0ZSFQZUg5t63OtE/5BYHPjOdndZ1IiJcxvIKL1LwvBOq/V4ZZPXpe3dwhfc6kOH4
+         c0T0byW0Oyu0rvdwy6Ji/T900RRYzNMTcn9Y0LcCL6NTE0CtMKOAvWNIe7AE7VcUc26p
+         Q2NXWpHNeQESFRQYVLQEIFWI7RvKmoB/Pd96/Rktn3iJCcAFIBmHYosrd45RVbXnPDr4
+         Svg2RkxzKQmy8Xtly5RbiWf8pwxbxlfBs9PmH/+lLKWRMLerlACowJYIU88IujiZBAmO
+         IFeg==
+X-Gm-Message-State: APjAAAWtV+EfP0Gfby4vMSwbYWpaTwQX+1CaAriBjUVjThaEgP4MUnpQ
+        aIjpqFE0n5vYgFbp8BcgHo9mE/y+ciY83z8ipCKn2w==
+X-Google-Smtp-Source: APXvYqwxW6CiHtKx7wgAErCRRHPqiIgBTAMd69XAKg2ZAirZnO7V/RhS3zO7gBXaEoC5wEj5wU+tEYpD5aTQgQa0ASs=
+X-Received: by 2002:a37:9ec2:: with SMTP id h185mr14185032qke.14.1578887256821;
+ Sun, 12 Jan 2020 19:47:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20011303-0012-0000-0000-0000037CC820
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20011303-0013-0000-0000-000021B8F07C
-Message-Id: <26adc23c6e82d981c6a28470ec84f74443ee3221.1578886602.git.psampat@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-12_11:2020-01-10,2020-01-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- mlxscore=0 bulkscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
- spamscore=0 clxscore=1015 suspectscore=0 adultscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-2001130028
+References: <20191230083044.11582-1-jian-hong@endlessm.com> <CAD8Lp45Le=s=1Q9oi0JCJTPepNmX002hK7W6UwKztTq09QBUgw@mail.gmail.com>
+In-Reply-To: <CAD8Lp45Le=s=1Q9oi0JCJTPepNmX002hK7W6UwKztTq09QBUgw@mail.gmail.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Mon, 13 Jan 2020 11:47:25 +0800
+Message-ID: <CAD8Lp44Vd6Moi+UmbdZDsQx-e_CHoHbgtZHpf8sV_yuHwzRrBA@mail.gmail.com>
+Subject: Re: [PATCH] platform/x86: asus-wmi: Fix keyboard brightness cannot be
+ set to 0
+To:     Jian-Hong Pan <jian-hong@endlessm.com>
+Cc:     Corentin Chary <corentin.chary@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        nweibley@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Parse the device tree for nodes self-save, self-restore and populate
-support for the preferred SPRs based what was advertised by the device
-tree.
+On Tue, Dec 31, 2019 at 2:53 PM Daniel Drake <drake@endlessm.com> wrote:
+> Here, writing 0x80 to turn off the keyboard LED will result in an
+> additional WRAM(0x9f0, 0) call that was not there before. I think we
+> should double check this detail.
+>
+> Let's see if we can borrow one of the affected models and double check
+> this patch there before proceeding. I'll follow up internally.
 
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
----
- arch/powerpc/platforms/powernv/idle.c | 104 ++++++++++++++++++++++++++
- 1 file changed, 104 insertions(+)
+Asus were unable to find a product sample with the affected behaviour.
+They did provide us with one from the list I had made, but with a
+newer BIOS version where that behaviour has been eliminated. They also
+advised that always setting bit 7 is the way they do it on Windows. So
+I don't think we have the opportunity for extra verification, but it
+should be safe.
 
-diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
-index d67d4d0b169b..e910ff40b7e6 100644
---- a/arch/powerpc/platforms/powernv/idle.c
-+++ b/arch/powerpc/platforms/powernv/idle.c
-@@ -1429,6 +1429,107 @@ static void __init pnv_probe_idle_states(void)
- 		supported_cpuidle_states |= pnv_idle_states[i].flags;
- }
- 
-+/*
-+ * Extracts and populates the self save or restore capabilities
-+ * passed from the device tree node
-+ */
-+static int extract_save_restore_state_dt(struct device_node *np, int type)
-+{
-+	int nr_sprns = 0, i, bitmask_index;
-+	int rc = 0;
-+	u64 *temp_u64;
-+	const char *state_prop;
-+	u64 bit_pos;
-+
-+	state_prop = of_get_property(np, "status", NULL);
-+	if (!state_prop) {
-+		pr_warn("opal: failed to find the active value for self save/restore node");
-+		return -EINVAL;
-+	}
-+	if (strncmp(state_prop, "disabled", 8) == 0) {
-+		/*
-+		 * if the feature is not active, strip the preferred_sprs from
-+		 * that capability.
-+		 */
-+		if (type == SELF_RESTORE_TYPE) {
-+			for (i = 0; i < nr_preferred_sprs; i++) {
-+				preferred_sprs[i].supported_mode &=
-+					~SELF_RESTORE_STRICT;
-+			}
-+		} else {
-+			for (i = 0; i < nr_preferred_sprs; i++) {
-+				preferred_sprs[i].supported_mode &=
-+					~SELF_SAVE_STRICT;
-+			}
-+		}
-+		return 0;
-+	}
-+	nr_sprns = of_property_count_u64_elems(np, "sprn-bitmask");
-+	if (nr_sprns <= 0)
-+		return rc;
-+	temp_u64 = kcalloc(nr_sprns, sizeof(u64), GFP_KERNEL);
-+	if (of_property_read_u64_array(np, "sprn-bitmask",
-+				       temp_u64, nr_sprns)) {
-+		pr_warn("cpuidle-powernv: failed to find registers in DT\n");
-+		kfree(temp_u64);
-+		return -EINVAL;
-+	}
-+	/*
-+	 * Populate acknowledgment of support for the sprs in the global vector
-+	 * gotten by the registers supplied by the firmware.
-+	 * The registers are in a bitmask, bit index within
-+	 * that specifies the SPR
-+	 */
-+	for (i = 0; i < nr_preferred_sprs; i++) {
-+		bitmask_index = preferred_sprs[i].spr / 64;
-+		bit_pos = preferred_sprs[i].spr % 64;
-+		if ((temp_u64[bitmask_index] & (1UL << bit_pos)) == 0) {
-+			if (type == SELF_RESTORE_TYPE)
-+				preferred_sprs[i].supported_mode &=
-+					~SELF_RESTORE_STRICT;
-+			else
-+				preferred_sprs[i].supported_mode &=
-+					~SELF_SAVE_STRICT;
-+			continue;
-+		}
-+		if (type == SELF_RESTORE_TYPE) {
-+			preferred_sprs[i].supported_mode |=
-+				SELF_RESTORE_STRICT;
-+		} else {
-+			preferred_sprs[i].supported_mode |=
-+				SELF_SAVE_STRICT;
-+		}
-+	}
-+
-+	kfree(temp_u64);
-+	return rc;
-+}
-+
-+static int pnv_parse_deepstate_dt(void)
-+{
-+	struct device_node *np, *np1;
-+	int rc = 0;
-+
-+	/* Self restore register population */
-+	np = of_find_node_by_path("/ibm,opal/power-mgt/self-restore");
-+	if (!np) {
-+		pr_warn("opal: self restore Node not found");
-+	} else {
-+		rc = extract_save_restore_state_dt(np, SELF_RESTORE_TYPE);
-+		if (rc != 0)
-+			return rc;
-+	}
-+	/* Self save register population */
-+	np1 = of_find_node_by_path("/ibm,opal/power-mgt/self-save");
-+	if (!np1) {
-+		pr_warn("opal: self save Node not found");
-+		pr_warn("Legacy firmware. Assuming default self-restore support");
-+	} else {
-+		rc = extract_save_restore_state_dt(np1, SELF_SAVE_TYPE);
-+	}
-+	return rc;
-+}
-+
- /*
-  * This function parses device-tree and populates all the information
-  * into pnv_idle_states structure. It also sets up nr_pnv_idle_states
-@@ -1577,6 +1678,9 @@ static int __init pnv_init_idle_states(void)
- 		return rc;
- 	pnv_probe_idle_states();
- 
-+	rc = pnv_parse_deepstate_dt();
-+	if (rc)
-+		return rc;
- 	if (!cpu_has_feature(CPU_FTR_ARCH_300)) {
- 		if (!(supported_cpuidle_states & OPAL_PM_SLEEP_ENABLED_ER1)) {
- 			power7_fastsleep_workaround_entry = false;
--- 
-2.24.1
-
+Reviewed-by: Daniel Drake <drake@endlessm.com>
