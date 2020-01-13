@@ -2,131 +2,113 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5087C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D57C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:40:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1F2207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:40:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="xbCeYNeY"
+	by mail.kernel.org (Postfix) with ESMTP id C3A84207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:40:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728828AbgAMOkB (ORCPT
+        id S1728885AbgAMOkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:40:01 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38888 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgAMOkA (ORCPT
+        Mon, 13 Jan 2020 09:40:05 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:38769 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbgAMOkD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:40:00 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so8843679wrh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 06:39:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Y1L1lZjbFBN4CXswUQ+h7dh7/TRqWSLx3YSeYJ+MJZg=;
-        b=xbCeYNeYVF4J3flLSfo0iblGnbGQoStjm2tacm8nZiSkPXJsCinCqMpYCo/sqpAsr8
-         gpNRTU1UqVRZk0Gl2RkW8myV18RsNDY+YeMUuBan2pYd8V5HvSBBhiIlCcXej2LOMNUS
-         vmothpRpGbH0f9KStvWbBmW9p+BRl7mjWwr9ir0PWSUQHsd4QWnFKzQRiKyrESc321UB
-         B6d8edUa0cBkmIKdi1UOgPNkDQ14iJCEWuK+hzbUzIvHxRoExPJH23hy1DeSqCrmyUEu
-         /UeAeRm4I0D58ffPAUeM7qyl+BIhtdovSSsT1kB2z5UIrm72I/s7bqKEriLhnZotGDPJ
-         NFRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Y1L1lZjbFBN4CXswUQ+h7dh7/TRqWSLx3YSeYJ+MJZg=;
-        b=L2NBvpH7aVMm+pGAlrtUSRryLIbOX0x6a4Xe5Pv1OmjwjvIUpKv044i+fxPxk8W6bY
-         RZIH5E5aD5PM5fuuOrv9+m/Q1oEEvOZqJ82peGZxn37Sv3SllXa+gyY/cPUP9eHOilUC
-         CnFxhoCTQs87AHvzpSpkQsL0A5mt6VLD5yCFr0uf9mqvajvi910732Ija5R+QGgieSo+
-         8aOVcS4ioSgpaQdW640SciknwBIF2AFczFjbwXBIpARlHhtjR2JkDhyrYcXQNv4z1NW4
-         qUs9zDf4HV5tdZM71M5pCFxXchW2+eRc8bLebHBuodr9OUQfXUlwSX2RJfYeGKL/ESKD
-         TE7g==
-X-Gm-Message-State: APjAAAUnDhD0JevvdIIIVz58ufW6+OqSQffh5Ue9zFGW/8oCIcLRIWK1
-        wHsqza9VSV7OEgKf8XiKBWAX4Q==
-X-Google-Smtp-Source: APXvYqwmeDehO+UYAhxmj707LmVry5pgexW1xkdCcqcV4cnA2dzWSO+e9m4Kfgr4L/nJpY4L0CwEJA==
-X-Received: by 2002:a5d:4e90:: with SMTP id e16mr19561911wru.318.1578926398566;
-        Mon, 13 Jan 2020 06:39:58 -0800 (PST)
-Received: from localhost (ip-78-102-249-43.net.upcbroadband.cz. [78.102.249.43])
-        by smtp.gmail.com with ESMTPSA id k8sm15224959wrl.3.2020.01.13.06.39.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 06:39:58 -0800 (PST)
-Date:   Mon, 13 Jan 2020 15:39:56 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Antoine Tenart <antoine.tenart@bootlin.com>
-Cc:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        camelia.groza@nxp.com, Simon.Edelhaus@aquantia.com,
-        Igor.Russkikh@aquantia.com, jakub.kicinski@netronome.com
-Subject: Re: [PATCH net-next v5 02/15] net: macsec: introduce the
- macsec_context structure
-Message-ID: <20200113143956.GB2131@nanopsycho>
-References: <20200110162010.338611-1-antoine.tenart@bootlin.com>
- <20200110162010.338611-3-antoine.tenart@bootlin.com>
+        Mon, 13 Jan 2020 09:40:03 -0500
+Received: from mail-lj1-f173.google.com ([209.85.208.173]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Ml6i4-1jVcZa0wRw-00lTV4; Mon, 13 Jan 2020 15:40:02 +0100
+Received: by mail-lj1-f173.google.com with SMTP id w1so10347745ljh.5;
+        Mon, 13 Jan 2020 06:40:02 -0800 (PST)
+X-Gm-Message-State: APjAAAWzD2ul6sj5rXLMJh6USlbl9+jEM5edJO9fuOZ9NHXkwo5abrxC
+        W9AznZbF3fycNJtTX4qhfE1io+6S2xrYEV9GMOk=
+X-Google-Smtp-Source: APXvYqyG+qKmdLtlyo+saYSnu5MHSGySW3aSQW9RS5F+YJRsHBRHifqWafDZ2kjCxII1OEgtsIpm5t4+I0vXZQXNo/k=
+X-Received: by 2002:a2e:b5d5:: with SMTP id g21mr11036798ljn.89.1578926401740;
+ Mon, 13 Jan 2020 06:40:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110162010.338611-3-antoine.tenart@bootlin.com>
+References: <20200110165636.28035-1-will@kernel.org> <20200110165636.28035-2-will@kernel.org>
+ <CAK8P3a3ueJ_rQc-1JTg=3N0JSuY9BduJ6FrrPFG1K2FWVzJdfA@mail.gmail.com> <8fe4f81699517758b44afbe0e1a53bc080f64a62.camel@perches.com>
+In-Reply-To: <8fe4f81699517758b44afbe0e1a53bc080f64a62.camel@perches.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 13 Jan 2020 15:39:45 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1t9757M5CRKNX_X+T9VuLX+5=z5_845rLJGTG50RogXA@mail.gmail.com>
+Message-ID: <CAK8P3a1t9757M5CRKNX_X+T9VuLX+5=z5_845rLJGTG50RogXA@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/8] compiler/gcc: Emit build-time warning for GCC
+ prior to version 4.8
+To:     Joe Perches <joe@perches.com>
+Cc:     Will Deacon <will@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:3fb8OaF47jNPkU9w7BdKJ+Mbx9CBT63TVUqOnD2X2APo3pepp1j
+ qfqBVCjdOzuMymbGtjeyRYNBSSF1KFj/FsIxDZwGLKcKShfe4SGA079YWcijY4TK/Hzams7
+ tacw5suIT4/Vw556Bb3qHPbwM1G7c4dq/FuSJVA8saQ7au8gbjzDqWx6o2Td9JWr5mo1CM4
+ J/GDtkQLC4qa8zyFtExCA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0hMiuvmEWa4=:IEnRoS5lIk4tJZDzirdCkJ
+ MLLloKSgGBLBT2SB8S34L9+190u4DKsvRZvDwYYJixcEwNNvs6rqbxe++a4Qjs5oho/10zKgx
+ r7JYCPRlPgjTc/LOJgWeFiQNRX5mP/xVIyrg9GvV5X3tOyMYukV/GGnf1iNwJVgnMRDK4NrFv
+ RwwEW83bO3oVHsyHGNLfRCyD1hoYeKE2h7BjJWNHiRAPBECRF6rPPDY6utyOXVWkJWCDsJOQX
+ b19pjMPGFWl02fo9N9OeCAdF+2ftPBcGQofTubclZ76/a+Avp7gKPuXQI86C8fuOBc5OM3Dd5
+ w8uZmSXHwPI4c5rPo/MxiM7LuObG56HuWQ/SIXyQsgmbzBWKgkFFkD7tIjOI5yWTcOUaZRIbm
+ 52P3ZGDCOyOrBZtLETMqdAs0quYCP1/hZqLAJ7XC1gqTTT0e0KB4kwFjzewODMXzb5h90ayD4
+ I3ZEJEyJOq7CNnaX5mOTX1wj5fm1Nh3JMsXWEy2vmqKC1jwoe/0HW/bGoejTRCMIcIKmh3QIj
+ 4pfwuV3AqRx2KayTn17MfDABC8SIUNuwxByLF7B6MZILP4OCmqUzCblAmmCtfOGahC5sZKaR7
+ rYX5BDzZolZN09PnmYmyoFiJ7SWr+eSV6FuMJs73w9kxuqHFIQE9HheP4rOL98sQoD9xh7US3
+ aqNviaxiq4EWXFjjYilnaKsPSsxYnBZdh8Syxyi3MmLyNdEAQAMBBBcM1JFPpTon6+oGhRRwG
+ QmRlxtX87M/XKREA+/1BuLh/1+6vnno6R/J3QI+CfoiTRN4iiy94ibzUf7Yxqz+6iSR/Rg0f3
+ ziUbHmJ/a3BW0XByP86Z0pEw2Or8WFH+eF1AjFh2FV+wR4IfhZr40HYfwofgWjFngnJai2A/C
+ KoIpEidkRLoHYroi5Dtg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fri, Jan 10, 2020 at 05:19:57PM CET, antoine.tenart@bootlin.com wrote:
-
-[...]
-
-
->diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
->index 1d69f637c5d6..024af2d1d0af 100644
->--- a/include/uapi/linux/if_link.h
->+++ b/include/uapi/linux/if_link.h
->@@ -486,6 +486,13 @@ enum macsec_validation_type {
-> 	MACSEC_VALIDATE_MAX = __MACSEC_VALIDATE_END - 1,
-> };
-> 
->+enum macsec_offload {
->+	MACSEC_OFFLOAD_OFF = 0,
->+	MACSEC_OFFLOAD_PHY = 1,
-
-No need to assign 0, 1 here. That is given.
-
-
->+	__MACSEC_OFFLOAD_END,
->+	MACSEC_OFFLOAD_MAX = __MACSEC_OFFLOAD_END - 1,
->+};
->+
-> /* IPVLAN section */
-> enum {
-> 	IFLA_IPVLAN_UNSPEC,
->diff --git a/tools/include/uapi/linux/if_link.h b/tools/include/uapi/linux/if_link.h
->index 8aec8769d944..42efdb84d189 100644
->--- a/tools/include/uapi/linux/if_link.h
->+++ b/tools/include/uapi/linux/if_link.h
-
-Why you are adding to this header?
-
-
->@@ -485,6 +485,13 @@ enum macsec_validation_type {
-> 	MACSEC_VALIDATE_MAX = __MACSEC_VALIDATE_END - 1,
-> };
-> 
->+enum macsec_offload {
->+	MACSEC_OFFLOAD_OFF = 0,
->+	MACSEC_OFFLOAD_PHY = 1,
->+	__MACSEC_OFFLOAD_END,
->+	MACSEC_OFFLOAD_MAX = __MACSEC_OFFLOAD_END - 1,
->+};
->+
-> /* IPVLAN section */
-> enum {
-> 	IFLA_IPVLAN_UNSPEC,
->-- 
->2.24.1
+On Fri, Jan 10, 2020 at 6:54 PM Joe Perches <joe@perches.com> wrote:
 >
+> On Fri, 2020-01-10 at 18:35 +0100, Arnd Bergmann wrote:
+> > On Fri, Jan 10, 2020 at 5:56 PM Will Deacon <will@kernel.org> wrote:
+> > > Prior to version 4.8, GCC may miscompile READ_ONCE() by erroneously
+> > > discarding the 'volatile' qualifier:
+> > >
+> > > https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145
+> > >
+> > > We've been working around this using some nasty hacks which make
+> > > READ_ONCE() both horribly complicated and also prevent us from enforcing
+> > > that it is only used on scalar types. Since GCC 4.8 is pretty old for
+> > > kernel builds now, emit a warning if we detect it during the build.
+> >
+> > No objection to recommending gcc-4.8, but I think this should either
+> > just warn once during the kernel build instead of for every file, or
+> > it should become a hard requirement.
+>
+> It might as well be a hard requirement as
+> gcc 4.8.0 is already nearly 7 years old.
+>
+> gcc 4.6.0 released 2011-03-25
+> gcc 4.8.0 released 2013-03-22
+>
+> Perhaps there are exceedingly few to zero new
+> instances using gcc compiler versions < 4.8
+
+The last time we had this discussion, the result was that gcc-4.8 is
+probably ok as a minimum version, but moving to 5.1+ (from 2015)
+was not an obvious choice:
+
+https://www.spinics.net/lists/linux-kbuild/msg23648.html
+
+If nobody complains about the move to 4.8, we can try moving to
+gcc-5.1 and GNU99/GNU11 next year  ;-)
+
+       Arnd
