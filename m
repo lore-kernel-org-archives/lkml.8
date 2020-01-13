@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2415C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9857BC33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF57214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CFB2187F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578898198;
-	bh=S1rP/fSqLEVdd3DZvFaqmO2ofd1WGEE6ZtTsPYB1sNk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=O52M2Jnx+wOV6n+TwdqJpreRRsGlZQ5djh4q+2xNkbN2Ok3SX8YWMkIEtdt8/bJDI
-	 obsm6xtk34i/Q+w5pf5NfjyH/pYAQ7oxoaiOxS4Xtb4rvfw3mEKI+QULBWGv9MmVvt
-	 eBX8QEdS9gF9QHV+QFqhWlfHTe+g3MRo3QrQHwDE=
+	s=default; t=1578898201;
+	bh=TaXhX8+J1wx2yod+j4KKmv2spmNvjWYZP1LXzXFYWD8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2r6pLhCJV+SKT8SYVV3Fc+kcFcutazbW+ej2tpZBi4Au0Mt5O5406YQ6Tp4hOck3p
+	 A94HTbEoVcC6vy8ZSH0t8aBWMFg1xjXqFvj46wEoD7BOoLS9EUw1dPI5Fif71793ug
+	 HcVjPrnFqsMRv6wDR+zX+O01gLnLdQndqiH3U8iA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728775AbgAMGt5 (ORCPT
+        id S1728791AbgAMGuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 01:49:57 -0500
-Received: from conuserg-11.nifty.com ([210.131.2.78]:50763 "EHLO
+        Mon, 13 Jan 2020 01:50:00 -0500
+Received: from conuserg-11.nifty.com ([210.131.2.78]:50773 "EHLO
         conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbgAMGtl (ORCPT
+        with ESMTP id S1726399AbgAMGtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Jan 2020 01:49:41 -0500
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 00D6mj4u028522;
-        Mon, 13 Jan 2020 15:48:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 00D6mj4u028522
+        by conuserg-11.nifty.com with ESMTP id 00D6mj4x028522;
+        Mon, 13 Jan 2020 15:48:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 00D6mj4x028522
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1578898126;
-        bh=b8gZiq2rbuCPPL1xVJ64NVCWfd5GpK5K9t6n1UkThYY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eoA6hhtQEJuHtfOqT5m9i7y3uM7sKEU+0toXw2yyqq0yW/wl484bTflmOnsikLRhI
-         LlJYWI+CGVsXbde67SkeSGldNHUHEydWldLTuqnLzJ4EVnYjqayNeZlsT3W3t0BHm8
-         xocWNayYum5F7VQLkte7XaRlEVmZlgh/PR4DjdVYMH+Rq+fQw6RqAeJx/r8zM98z9y
-         dD37+f06thKqQPrcNxwwcV8byUAIoi8C3fItPVMnD0nrWc20vgAPLa22Y42YKRf6GQ
-         dkqgngRCNceKDo9E54wPFnjtXm9oAXrDDr00FrzFm+s9J0HkpJANO1Yq5Vl6FAe2pw
-         /e525U9l4L9dg==
+        s=dec2015msa; t=1578898128;
+        bh=3vKkMfH6IZbwuOFVg8bd3vT4wQP2/cg7kIoSzEpmW/0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zH9qTxEWOz+pio6P7TFFGxyY1waIjuHVHnxCsZq7KqLKVnYMm5+SZpnjO9XqoddbK
+         Qv9gnDudNQ0BXKhsnGGXlV6UdTvCFUenKJo2j3Pzoffd+95nn/LGd35DilLVsyrgPX
+         /tfGFhMQxshPwBuN7eGZb26e4FVyw5V0MY5bl5O9jWLNZqut6cKhq3kVhBhhOnmnc7
+         R2GPRCQ1uwu4DJSECkFrISqD9eaQy7JvjEipjM1JP3chLfEFrAyjZ1rZzQd4AF7aW2
+         udh0LkfRiuYfV9YwJBTQctuwuCWa6489+qusNHUYxFj17DV/ZPGsGYj+vYU/4CqDvl
+         jp8ZrPs3M6n1w==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -50,46 +50,82 @@ Cc:     Ben Hutchings <ben@decadent.org.uk>,
         Masahiro Yamada <masahiroy@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/7] builddeb: remove unneeded files in hdrobjfiles for headers package
-Date:   Mon, 13 Jan 2020 15:48:35 +0900
-Message-Id: <20200113064841.3946-1-masahiroy@kernel.org>
+Subject: [PATCH 4/7] builddeb: avoid invoking sub-shells where possible
+Date:   Mon, 13 Jan 2020 15:48:38 +0900
+Message-Id: <20200113064841.3946-4-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200113064841.3946-1-masahiroy@kernel.org>
+References: <20200113064841.3946-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- - We do not need tools/objtool/fixdep or tools/objtool/sync-check.sh
-   for building external modules. Including tools/objtool/objtool is
-   enough.
+The commands surrounded by ( ... ) is run in a sub-shell, but you do
+not have to invoke it for every single line.
 
- - gcc-common.h is a check-in file. I do not see any point to search
-   for it in objtree.
+Use just one ( ... ) for creating debian/hdrsrcfiles.
+
+For tar, use -C option instead.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- scripts/package/builddeb | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ scripts/package/builddeb | 39 ++++++++++++++++++++++++++-------------
+ 1 file changed, 26 insertions(+), 13 deletions(-)
 
 diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-index b60388051c7f..eb067d6f1370 100755
+index 9b92745bf13a..7c561ffe1de0 100755
 --- a/scripts/package/builddeb
 +++ b/scripts/package/builddeb
-@@ -170,11 +170,11 @@ done
- (cd $srctree; find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform) >> "$objtree/debian/hdrsrcfiles"
- (cd $srctree; find $(find arch/$SRCARCH -name include -o -name scripts -type d) -type f) >> "$objtree/debian/hdrsrcfiles"
- if is_enabled CONFIG_STACK_VALIDATION; then
--	(cd $objtree; find tools/objtool -type f -executable) >> "$objtree/debian/hdrobjfiles"
-+	echo tools/objtool/objtool >> "$objtree/debian/hdrobjfiles"
- fi
- (cd $objtree; find arch/$SRCARCH/include Module.symvers include scripts -type f) >> "$objtree/debian/hdrobjfiles"
- if is_enabled CONFIG_GCC_PLUGINS; then
--	(cd $objtree; find scripts/gcc-plugins -name \*.so -o -name gcc-common.h) >> "$objtree/debian/hdrobjfiles"
-+	(cd $objtree; find scripts/gcc-plugins -name \*.so) >> "$objtree/debian/hdrobjfiles"
- fi
+@@ -165,21 +165,34 @@ EOF
+ done
+ 
+ # Build kernel header package
+-(cd $srctree; find . arch/$SRCARCH -maxdepth 1 -name Makefile\*) > debian/hdrsrcfiles
+-(cd $srctree; find include scripts -type f -o -type l) >> debian/hdrsrcfiles
+-(cd $srctree; find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform) >> debian/hdrsrcfiles
+-(cd $srctree; find $(find arch/$SRCARCH -name include -o -name scripts -type d) -type f) >> debian/hdrsrcfiles
+-if is_enabled CONFIG_STACK_VALIDATION; then
+-	echo tools/objtool/objtool >> debian/hdrobjfiles
+-fi
+-find arch/$SRCARCH/include Module.symvers include scripts -type f >> debian/hdrobjfiles
+-if is_enabled CONFIG_GCC_PLUGINS; then
+-	find scripts/gcc-plugins -name \*.so >> debian/hdrobjfiles
+-fi
++(
++	cd $srctree
++	find . arch/$SRCARCH -maxdepth 1 -name Makefile\*
++	find include scripts -type f -o -type l
++	find arch/$SRCARCH -name module.lds -o -name Kbuild.platforms -o -name Platform
++	find arch/$SRCARCH -name include -type f
++
++	if [ -d arch/$SRCARCH/scripts ]; then
++		find arch/$SRCARCH/scripts -type f
++	fi
++) > debian/hdrsrcfiles
++
++{
++	if is_enabled CONFIG_STACK_VALIDATION; then
++		find tools/objtool -type f -executable
++	fi
++
++	find arch/$SRCARCH/include Module.symvers include scripts -type f
++
++	if is_enabled CONFIG_GCC_PLUGINS; then
++		find scripts/gcc-plugins -name \*.so -o -name gcc-common.h
++	fi
++} > debian/hdrobjfiles
++
  destdir=$kernel_headers_dir/usr/src/linux-headers-$version
  mkdir -p "$destdir"
+-(cd $srctree; tar -c -f - -T -) < debian/hdrsrcfiles | (cd $destdir; tar -xf -)
+-tar -c -f - -T - < debian/hdrobjfiles | (cd $destdir; tar -xf -)
++tar -c -f - -C $srctree -T debian/hdrsrcfiles | tar -xf - -C $destdir
++tar -c -f - -T debian/hdrobjfiles | tar -xf - -C $destdir
+ cp $KCONFIG_CONFIG $destdir/.config # copy .config manually to be where it's expected to be
+ ln -sf "/usr/src/linux-headers-$version" "$kernel_headers_dir/lib/modules/$version/build"
+ rm -f debian/hdrsrcfiles debian/hdrobjfiles
 -- 
 2.17.1
 
