@@ -2,151 +2,129 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6230C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF8CC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8840E2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C0C32084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:29:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgAML1A (ORCPT
+        id S1727014AbgAML3h convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:27:00 -0500
-Received: from foss.arm.com ([217.140.110.172]:38050 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgAML1A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:27:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65CB213D5;
-        Mon, 13 Jan 2020 03:26:59 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0A263F6C4;
-        Mon, 13 Jan 2020 03:26:58 -0800 (PST)
-Date:   Mon, 13 Jan 2020 11:26:57 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv9 07/12] PCI: mobiveil: Make mobiveil_host_init() can be
- used to re-init host
-Message-ID: <20200113112655.GM42593@e119886-lin.cambridge.arm.com>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <20191120034451.30102-8-Zhiqiang.Hou@nxp.com>
+        Mon, 13 Jan 2020 06:29:37 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:56307 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgAML3h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 06:29:37 -0500
+Received: from 79.184.255.90.ipv4.supernova.orange.pl (79.184.255.90) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id 9ab51728271c6d21; Mon, 13 Jan 2020 12:29:34 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PM-runtime: add tracepoints for usage_count changes
+Date:   Mon, 13 Jan 2020 12:29:33 +0100
+Message-ID: <12840272.KYWuQ3LjJR@kreacher>
+In-Reply-To: <20200106100004.GA10946@qmqm.qmqm.pl>
+References: <cb199a03895f8a11d9039209e6ac1cd92b1d1fb9.1578155207.git.mirq-linux@rere.qmqm.pl> <20200104182123.GA1485543@kroah.com> <20200106100004.GA10946@qmqm.qmqm.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191120034451.30102-8-Zhiqiang.Hou@nxp.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 20, 2019 at 03:46:03AM +0000, Z.q. Hou wrote:
-> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+On Monday, January 6, 2020 11:00:04 AM CET Michał Mirosław wrote:
+> On Sat, Jan 04, 2020 at 07:21:23PM +0100, Greg Kroah-Hartman wrote:
+> > On Sat, Jan 04, 2020 at 05:27:57PM +0100, Michał Mirosław wrote:
+> > > Add tracepoints to remaining places where device's power.usage_count
+> > > is changed. This helps debugging where and why autosuspend is prevented.
+> > > 
+> > > Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+> > > ---
+> > >  drivers/base/power/runtime.c | 13 +++++++++++--
+> > >  include/trace/events/rpm.h   |  6 ++++++
+> > >  2 files changed, 17 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/base/power/runtime.c b/drivers/base/power/runtime.c
+> > > index 48616f358854..16134a69bf6f 100644
+> > > --- a/drivers/base/power/runtime.c
+> > > +++ b/drivers/base/power/runtime.c
+> > > @@ -1006,8 +1006,10 @@ int __pm_runtime_idle(struct device *dev, int rpmflags)
+> > >  	int retval;
+> > >  
+> > >  	if (rpmflags & RPM_GET_PUT) {
+> > > -		if (!atomic_dec_and_test(&dev->power.usage_count))
+> > > +		if (!atomic_dec_and_test(&dev->power.usage_count)) {
+> > > +			trace_rpm_usage_rcuidle(dev, rpmflags);
+> > 
+> > Who and what is really going to use these tracepoints?
+> > 
+> > And putting them in these if statements seems odd, are you sure that's
+> > the correct place?  What do these show to userspace?
+> > 
+> > >  			return 0;
+> > > +		}
+> > >  	}
+> > >  
+> > >  	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
+> > > @@ -1038,8 +1040,10 @@ int __pm_runtime_suspend(struct device *dev, int rpmflags)
+> > >  	int retval;
+> > >  
+> > >  	if (rpmflags & RPM_GET_PUT) {
+> > > -		if (!atomic_dec_and_test(&dev->power.usage_count))
+> > > +		if (!atomic_dec_and_test(&dev->power.usage_count)) {
+> > > +			trace_rpm_usage_rcuidle(dev, rpmflags);
+> > >  			return 0;
+> > > +		}
+> > >  	}
+> > >  
+> > >  	might_sleep_if(!(rpmflags & RPM_ASYNC) && !dev->power.irq_safe);
+> > > @@ -1101,6 +1105,7 @@ int pm_runtime_get_if_in_use(struct device *dev)
+> > >  	retval = dev->power.disable_depth > 0 ? -EINVAL :
+> > >  		dev->power.runtime_status == RPM_ACTIVE
+> > >  			&& atomic_inc_not_zero(&dev->power.usage_count);
+> > > +	trace_rpm_usage_rcuidle(dev, 0);
+> > 
+> > Why this one?
+> > 
+> > 
+> > >  	spin_unlock_irqrestore(&dev->power.lock, flags);
+> > >  	return retval;
+> > >  }
+> > > @@ -1434,6 +1439,8 @@ void pm_runtime_allow(struct device *dev)
+> > >  	dev->power.runtime_auto = true;
+> > >  	if (atomic_dec_and_test(&dev->power.usage_count))
+> > >  		rpm_idle(dev, RPM_AUTO | RPM_ASYNC);
+> > > +	else
+> > > +		trace_rpm_usage_rcuidle(dev, RPM_AUTO | RPM_ASYNC);
+> > 
+> > Are you sure this is correct?
+> > 
+> > These feel odd...
 > 
-> Make the mobiveil_host_init() function can be used to re-init
-
-Perhaps reword to "Allow the mobiveil_host_init() function to be
-used to ...
-
-> host controller's PAB and GPEX CSR register block, as NXP
-> integrated Mobiveil IP has to reset and then re-init the PAB
-> and GPEX CSR registers upon hot-reset.
+> This covers all places where power.usage_count might have changed.
+> If atomic_dec_and_test() decrements usage_count but not to zero,
+> the new value will be traced in rpm_idle(). But if the value drops to
+> zero, then we need to trace it explicitly to be able to have all changes
+> accounted for in the trace.
 > 
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> ---
-> V9:
->  - No change
-> 
->  .../controller/mobiveil/pcie-mobiveil-host.c  | 19 ++++++++++++-------
->  .../pci/controller/mobiveil/pcie-mobiveil.h   |  1 +
->  2 files changed, 13 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-> index 3cd93df6fe6e..9bc3da036720 100644
-> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil-host.c
-> @@ -221,18 +221,23 @@ static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)
->  	writel_relaxed(1, pcie->apb_csr_base + MSI_ENABLE_OFFSET);
->  }
->  
-> -static int mobiveil_host_init(struct mobiveil_pcie *pcie)
-> +int mobiveil_host_init(struct mobiveil_pcie *pcie, bool reinit)
->  {
->  	struct root_port *rp = &pcie->rp;
->  	struct pci_host_bridge *bridge = rp->bridge;
->  	u32 value, pab_ctrl, type;
->  	struct resource_entry *win;
->  
-> -	/* setup bus numbers */
-> -	value = mobiveil_csr_readl(pcie, PCI_PRIMARY_BUS);
-> -	value &= 0xff000000;
-> -	value |= 0x00ff0100;
-> -	mobiveil_csr_writel(pcie, value, PCI_PRIMARY_BUS);
-> +	pcie->ib_wins_configured = 0;
-> +	pcie->ob_wins_configured = 0;
+> I actually used this patch to track down why USB storage device was
+> not autosuspending correctly.
 
-This works so long as the number of bridge->windows never reduces. I
-think this assumption holds true.
+Fair enough, and the patch makes sense to me, so I'm queuing it up as 5.6
+material.
 
-Thanks,
+Thanks!
 
-Andrew Murray
 
-> +
-> +	if (!reinit) {
-> +		/* setup bus numbers */
-> +		value = mobiveil_csr_readl(pcie, PCI_PRIMARY_BUS);
-> +		value &= 0xff000000;
-> +		value |= 0x00ff0100;
-> +		mobiveil_csr_writel(pcie, value, PCI_PRIMARY_BUS);
-> +	}
->  
->  	/*
->  	 * program Bus Master Enable Bit in Command Register in PAB Config
-> @@ -569,7 +574,7 @@ int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie)
->  	 * configure all inbound and outbound windows and prepare the RC for
->  	 * config access
->  	 */
-> -	ret = mobiveil_host_init(pcie);
-> +	ret = mobiveil_host_init(pcie, false);
->  	if (ret) {
->  		dev_err(dev, "Failed to initialize host\n");
->  		return ret;
-> diff --git a/drivers/pci/controller/mobiveil/pcie-mobiveil.h b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> index 95d2e7c809b8..37116c2a19fe 100644
-> --- a/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> +++ b/drivers/pci/controller/mobiveil/pcie-mobiveil.h
-> @@ -166,6 +166,7 @@ struct mobiveil_pcie {
->  };
->  
->  int mobiveil_pcie_host_probe(struct mobiveil_pcie *pcie);
-> +int mobiveil_host_init(struct mobiveil_pcie *pcie, bool reinit);
->  bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie);
->  int mobiveil_bringup_link(struct mobiveil_pcie *pcie);
->  void program_ob_windows(struct mobiveil_pcie *pcie, int win_num, u64 cpu_addr,
-> -- 
-> 2.17.1
-> 
+
