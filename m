@@ -2,175 +2,108 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B89C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6F8C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1470D207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD4C207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:02:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KcWq76Vl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgAMMAx (ORCPT
+        id S1728679AbgAMMCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:00:53 -0500
-Received: from mx2.suse.de ([195.135.220.15]:50112 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgAMMAw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:00:52 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 3EC30AE17;
-        Mon, 13 Jan 2020 12:00:50 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id D25031E0D0E; Mon, 13 Jan 2020 13:00:49 +0100 (CET)
-Date:   Mon, 13 Jan 2020 13:00:49 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [WIP PATCH 1/4] udf: Do not access LVIDIU revision members when
- they are not filled
-Message-ID: <20200113120049.GF23642@quack2.suse.cz>
-References: <20200112175933.5259-1-pali.rohar@gmail.com>
- <20200112175933.5259-2-pali.rohar@gmail.com>
+        Mon, 13 Jan 2020 07:02:18 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33717 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgAMMCS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 07:02:18 -0500
+Received: by mail-pl1-f194.google.com with SMTP id ay11so3762531plb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:02:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1DYs+syI7/SggFEh/rAHZyuN4ISx5HPKZ5OTLtFoRYs=;
+        b=KcWq76VlIz07Cnlns+46LgH7VBnlI1yDBotQcnPtxI1GBCjIocVo25k4wWZGx2EzLa
+         YMvTvvTlRwWjpekoek5PXcC98/cCZ8ouBGninGg6KsT3/PCFpY7fhIdD3wGPJnTurSlc
+         4eaMK0rZPGeZxSlq7eENPexztJaQjvg75QR6k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1DYs+syI7/SggFEh/rAHZyuN4ISx5HPKZ5OTLtFoRYs=;
+        b=d6Gb+Xq5qjrsawnyZXm2YYxx1xr7UZy1W+2fRmMS0VVmPcPwzVqnECbPftu81KpdYS
+         ZnZ7TQ0OO0mnS0pyfChzAblGxCH1RE1L1P743QkLv7szcmBQu7EL6EpDo/bOJAM8Su4e
+         VDovQ/DhHJVHQl1jf1/KKNQlBkTHq2cTWn8CMKoJuq/aH66uPzxDoHwIFkodtEECe3g+
+         3fOs93dQ7dwH4VnROoDZ3denHwNIizad2mr8V4jgaxk6j1hnG3ACZGdeccz+zI/AoKPc
+         O5oUPoaNjwUBSV+MpiCv5y6GdKunFFjw/jLw9wQs2luu/DI6ti380MPZAamfA4mcclBG
+         eA7g==
+X-Gm-Message-State: APjAAAWbnZLS5Fl1rjQRc3Vv32MwHMu5W1QPf9H0BHRn2c9EI+Th1zDk
+        rb7ODztlEWlxn31cGAhfkKLHSg==
+X-Google-Smtp-Source: APXvYqy7pmry9RsP8XAqY5kEvYUHMGwzm4kIyR45xsEkgvdDZY8HBJYpRBum/S5Wc0HRKCvcN5i5vA==
+X-Received: by 2002:a17:90a:ba91:: with SMTP id t17mr22276280pjr.74.1578916937710;
+        Mon, 13 Jan 2020 04:02:17 -0800 (PST)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id z64sm14435324pfz.23.2020.01.13.04.02.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 04:02:17 -0800 (PST)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH RFC v3 0/3] support hotplug CPUs before reboot
+Date:   Mon, 13 Jan 2020 20:01:54 +0800
+Message-Id: <20200113120157.85798-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200112175933.5259-2-pali.rohar@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 12-01-20 18:59:30, Pali Rohár wrote:
-> minUDFReadRev, minUDFWriteRev and maxUDFWriteRev members were introduced in
-> UDF 1.02. Previous UDF revisions used that area for implementation specific
-> data. So in this case do not touch these members.
-> 
-> To check if LVIDIU contain revisions members, first read UDF revision from
-> LVD. If revision is at least 1.02 LVIDIU should contain revision members.
-> 
-> This change should fix mounting UDF 1.01 images in R/W mode. Kernel would
-> not touch, read overwrite implementation specific area of LVIDIU.
-> 
-> Signed-off-by: Pali Rohár <pali.rohar@gmail.com>
+This series adds a config REBOOT_HOTPLUG_CPU which would hotplug CPUs
+before reboot. Architecture code (smp_send_stop) currently would loop
+through online secondary CPUs and some may call ipi functions to them.
+With this config enabled, ideally we don't need smp_send_stop. But we
+keep the code for those don't enable this config and as a backup if
+some CPU fails to go offline before reboot.
 
-Maybe we could store the fs revision in the superblock as well to avoid
-passing the udf_rev parameter?
+Also enable this config for arm64 and x86 defconfig as an example.
 
-Also this patch contains several lines over 80 columns.
+Change from v2:
+* Add another config instead of configed by CONFIG_HOTPLUG_CPU
 
-									Honza
+Hsin-Yi Wang (3):
+  reboot: support hotplug CPUs before reboot
+  arm64: defconfig: enable REBOOT_HOTPLUG_CPU
+  x86: defconfig: enable REBOOT_HOTPLUG_CPU
 
-> ---
->  fs/udf/super.c  | 37 ++++++++++++++++++++++++++-----------
->  fs/udf/udf_sb.h |  3 +++
->  2 files changed, 29 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/udf/super.c b/fs/udf/super.c
-> index 2d0b90800..8df6e9962 100644
-> --- a/fs/udf/super.c
-> +++ b/fs/udf/super.c
-> @@ -765,7 +765,7 @@ static int udf_check_vsd(struct super_block *sb)
->  }
->  
->  static int udf_verify_domain_identifier(struct super_block *sb,
-> -					struct regid *ident, char *dname)
-> +					struct regid *ident, char *dname, u16 *udf_rev)
->  {
->  	struct domainIdentSuffix *suffix;
->  
-> @@ -779,6 +779,8 @@ static int udf_verify_domain_identifier(struct super_block *sb,
->  		goto force_ro;
->  	}
->  	suffix = (struct domainIdentSuffix *)ident->identSuffix;
-> +	if (udf_rev)
-> +		*udf_rev = le16_to_cpu(suffix->UDFRevision);
->  	if ((suffix->domainFlags & DOMAIN_FLAGS_HARD_WRITE_PROTECT) ||
->  	    (suffix->domainFlags & DOMAIN_FLAGS_SOFT_WRITE_PROTECT)) {
->  		if (!sb_rdonly(sb)) {
-> @@ -801,7 +803,7 @@ static int udf_load_fileset(struct super_block *sb, struct fileSetDesc *fset,
->  {
->  	int ret;
->  
-> -	ret = udf_verify_domain_identifier(sb, &fset->domainIdent, "file set");
-> +	ret = udf_verify_domain_identifier(sb, &fset->domainIdent, "file set", NULL);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -1404,7 +1406,7 @@ static int udf_load_logicalvol(struct super_block *sb, sector_t block,
->  	}
->  
->  	ret = udf_verify_domain_identifier(sb, &lvd->domainIdent,
-> -					   "logical volume");
-> +					   "logical volume", &sbi->s_lvd_udfrev);
->  	if (ret)
->  		goto out_bh;
->  	ret = udf_sb_alloc_partition_maps(sb, le32_to_cpu(lvd->numPartitionMaps));
-> @@ -2055,12 +2057,19 @@ static void udf_close_lvid(struct super_block *sb)
->  	mutex_lock(&sbi->s_alloc_mutex);
->  	lvidiu->impIdent.identSuffix[0] = UDF_OS_CLASS_UNIX;
->  	lvidiu->impIdent.identSuffix[1] = UDF_OS_ID_LINUX;
-> -	if (UDF_MAX_WRITE_VERSION > le16_to_cpu(lvidiu->maxUDFWriteRev))
-> -		lvidiu->maxUDFWriteRev = cpu_to_le16(UDF_MAX_WRITE_VERSION);
-> -	if (sbi->s_udfrev > le16_to_cpu(lvidiu->minUDFReadRev))
-> -		lvidiu->minUDFReadRev = cpu_to_le16(sbi->s_udfrev);
-> -	if (sbi->s_udfrev > le16_to_cpu(lvidiu->minUDFWriteRev))
-> -		lvidiu->minUDFWriteRev = cpu_to_le16(sbi->s_udfrev);
-> +
-> +	/* minUDFReadRev, minUDFWriteRev and maxUDFWriteRev members were
-> +	 * introduced in UDF 1.02. Previous UDF revisions used that area for
-> +	 * implementation specific data. So in this case do not touch it. */
-> +	if (sbi->s_lvd_udfrev >= 0x0102) {
-> +		if (UDF_MAX_WRITE_VERSION > le16_to_cpu(lvidiu->maxUDFWriteRev))
-> +			lvidiu->maxUDFWriteRev = cpu_to_le16(UDF_MAX_WRITE_VERSION);
-> +		if (sbi->s_udfrev > le16_to_cpu(lvidiu->minUDFReadRev))
-> +			lvidiu->minUDFReadRev = cpu_to_le16(sbi->s_udfrev);
-> +		if (sbi->s_udfrev > le16_to_cpu(lvidiu->minUDFWriteRev))
-> +			lvidiu->minUDFWriteRev = cpu_to_le16(sbi->s_udfrev);
-> +	}
-> +
->  	if (!UDF_QUERY_FLAG(sb, UDF_FLAG_INCONSISTENT))
->  		lvid->integrityType = cpu_to_le32(LVID_INTEGRITY_TYPE_CLOSE);
->  
-> @@ -2220,8 +2229,14 @@ static int udf_fill_super(struct super_block *sb, void *options, int silent)
->  			ret = -EINVAL;
->  			goto error_out;
->  		}
-> -		minUDFReadRev = le16_to_cpu(lvidiu->minUDFReadRev);
-> -		minUDFWriteRev = le16_to_cpu(lvidiu->minUDFWriteRev);
-> +
-> +		if (sbi->s_lvd_udfrev >= 0x0102) { /* minUDFReadRev and minUDFWriteRev were introduced in UDF 1.02 */
-> +			minUDFReadRev = le16_to_cpu(lvidiu->minUDFReadRev);
-> +			minUDFWriteRev = le16_to_cpu(lvidiu->minUDFWriteRev);
-> +		} else {
-> +			minUDFReadRev = minUDFWriteRev = sbi->s_lvd_udfrev;
-> +		}
-> +
->  		if (minUDFReadRev > UDF_MAX_READ_VERSION) {
->  			udf_err(sb, "minUDFReadRev=%x (max is %x)\n",
->  				minUDFReadRev,
-> diff --git a/fs/udf/udf_sb.h b/fs/udf/udf_sb.h
-> index 3d83be54c..6bd0d4430 100644
-> --- a/fs/udf/udf_sb.h
-> +++ b/fs/udf/udf_sb.h
-> @@ -137,6 +137,9 @@ struct udf_sb_info {
->  	/* Fileset Info */
->  	__u16			s_serial_number;
->  
-> +	/* LVD UDF revision filled to media at format time */
-> +	__u16			s_lvd_udfrev;
-> +
->  	/* highest UDF revision we have recorded to this media */
->  	__u16			s_udfrev;
->  
-> -- 
-> 2.20.1
-> 
+ arch/Kconfig                      |  6 ++++++
+ arch/arm64/configs/defconfig      |  1 +
+ arch/x86/configs/i386_defconfig   |  1 +
+ arch/x86/configs/x86_64_defconfig |  1 +
+ include/linux/cpu.h               |  3 +++
+ kernel/cpu.c                      | 19 +++++++++++++++++++
+ kernel/reboot.c                   |  8 ++++++++
+ 7 files changed, 39 insertions(+)
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.25.0.rc1.283.g88dfdc4193-goog
+
