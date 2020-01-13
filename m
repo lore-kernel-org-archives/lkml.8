@@ -2,101 +2,92 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7952C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDD4C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C15B3207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3D72187F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:56:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbgAMNze (ORCPT
+        id S1728879AbgAMN4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:55:34 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:60239 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgAMNzd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:55:33 -0500
-Received: from mail-qk1-f173.google.com ([209.85.222.173]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MILnm-1iuFJg0qpA-00ELhD; Mon, 13 Jan 2020 14:55:32 +0100
-Received: by mail-qk1-f173.google.com with SMTP id x1so8443156qkl.12;
-        Mon, 13 Jan 2020 05:55:31 -0800 (PST)
-X-Gm-Message-State: APjAAAUoMeyZ4851b0bykETfwKLaoIzyy6SM0hdtkFvYJOuLM5VtjeM9
-        Z9G3LYyYUr0bF8rll+dwXq31DFKHay2Vrrc1pyU=
-X-Google-Smtp-Source: APXvYqzpZZVph0MjS+DlAaNeNouGEph6LrCzFGzHPEREhJcSiguG2Kb7QdWG7PA/XqIeqnlNXrQCWCx4VeBRIPwRa9c=
-X-Received: by 2002:a37:2f02:: with SMTP id v2mr15882483qkh.3.1578923731021;
- Mon, 13 Jan 2020 05:55:31 -0800 (PST)
+        Mon, 13 Jan 2020 08:56:30 -0500
+Received: from mga05.intel.com ([192.55.52.43]:12769 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbgAMN43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:56:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:56:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
+   d="scan'208";a="244272622"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 13 Jan 2020 05:56:24 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 0E49AE1; Mon, 13 Jan 2020 15:56:24 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 01/36] platform/x86: intel_mid_powerbtn: Take a copy of ddata
+Date:   Mon, 13 Jan 2020 16:55:48 +0300
+Message-Id: <20200113135623.56286-2-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
+References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
-References: <20200109141459.21808-1-vincenzo.frascino@arm.com>
- <c43539f2-aa9b-4afa-985c-c438099732ff@sandeen.net> <1a540ee4-6597-c79e-1bce-6592cb2f3eae@arm.com>
- <20200109165048.GB8247@magnolia> <435bcb71-9126-b1f1-3803-4977754b36ff@arm.com>
-In-Reply-To: <435bcb71-9126-b1f1-3803-4977754b36ff@arm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 13 Jan 2020 14:55:15 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0eY6Vm5PNdzR8Min9MrwAqH8vnMZ3C+pxTQhiFVNPyWA@mail.gmail.com>
-Message-ID: <CAK8P3a0eY6Vm5PNdzR8Min9MrwAqH8vnMZ3C+pxTQhiFVNPyWA@mail.gmail.com>
-Subject: Re: [PATCH] xfs: Fix xfs_dir2_sf_entry_t size check
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Eric Sandeen <sandeen@sandeen.net>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:vvFFm/UvIgiFyFiiE52HR/hez2RRMgZKYxLJN87Nv1zqozfLmW7
- Qz/5bISlCaBpSGGJh4Fe6ChfER/cS1ffNk+JFmFQLTRwOCIMgb3yNSrdnAQ4Z4ymtNBwSqG
- X7rISgiNgrE/JTc6pgaLnIxTtgaGGfdX3c0PVQtNdm9NmCKGJO8Y5E2K1Xbmei0/oi9A8+E
- 2uVNhuRNsV2x/W5KzV/rQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:/Mx5sHqj+xM=:dvR//8icbbKtjoXiS1bzCm
- zl2h3P69PLOjYZfiCUN/Fkeh5R1BZaebon5dKZZVSoFpNNHZVhSAP9sDts9zeywRMJHZBHtMk
- XkZwOH+Lb1/EQu5DR92jP6pTlaLXEfOl7kzPDaCAnt8wy7/OlxMKvLtLzOg1bv6sFQ5duI0OR
- Ksb7QZIpFaE9GUYzgQ+VJJv9ZOaKVHasKakYYEm0dB5i7v/oRzZuts/rjO1VMXwrs09m4IGpn
- p2bw/2bpGKXV6P2X+adfGbNo/AkIzghfMOmKSCnXzR8VeSbDFca3d2MNVYRogjU3yPD0ML08Y
- BOe1cpdZd9JjwZ9kOU5O4JXd9RhCw8fnLlD0P9uafGDefoJn0yYTsCaZlHihDGCIzZpbDvX4n
- WQrAILlgUFTeeYWZ52MLrMy1+W0qYDGyDAgdAYRHLZTv7B4tlQ2hAXkM6A5RXb7Gc1w0BP4Wh
- HcwBtIrqMZGSNaq+3tc+hqIEURgi/UvZmds7j1bFpGXseKdEEe5nwF82PcJsHoD3+angPW1K2
- G+XwhZbhfGtJUrQL9xv1UhfTRXAiDPfhZuJ/OHG7O+vKv0F3MscYycoxk+wS5H9xp6U2gJ74Q
- D6WeTt16CMXXE9mdhnGYsE1ITjJTDKpDTNGuvPyb3tZiUTynwYwM3VaAdmNAXBq+cZ/AZlAta
- 6zIJ+7kK+vLCIiAv5gX2NVpSq6pjyrpfIi9kCGNTD84kJlzezddpgUWPLxXqccWClT7Zh7/8R
- A5oEcYuzOj6wG7dLj+trdedibEk1CVfv1X7uoKzA5v6HAHA8GhEBhj2mzB+6hV2KzPb9MjvBa
- dxek3wzbHCLVZxmDsDS2WbgKz9mxkGXnGEwdP90UcyObN66wushQQpHfAlUo9vep8iYu4WRhF
- lD6KtAHrNfmKOGh6QR/w==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 9, 2020 at 10:01 PM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
->
-> Hi Darrick,
->
-> On 09/01/2020 16:50, Darrick J. Wong wrote:
-> > This sounds like gcc getting confused by the zero length array.  Though
-> > it's odd that randconfig breaks, but defconfig doesn't?  This sounds
-> > like one of the kernel gcc options causing problems.
-> >
->
-> This is what I started suspecting as well.
+The driver gets driver_data from memory that is marked as const (which
+is probably put to read-only memory) and it then modifies it. This
+likely causes some sort of fault to happen.
 
-The important bit into the configuration is
+Fix this by taking a copy of the structure.
 
-# CONFIG_AEABI is not set
+Fixes: c94a8ff14de3 ("platform/x86: intel_mid_powerbtn: make mid_pb_ddata const")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/intel_mid_powerbtn.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-With ARM OABI (which you get when EABI is disabled), structures are padded
-to multiples of 32 bits. See commits 8353a649f577 ("xfs: kill
-xfs_dir2_sf_off_t")
-and aa2dd0ad4d6d ("xfs: remove __arch_pack"). Those could be partially
-reverted to fix it again, but it doesn't seem worth it as there is
-probably nobody
-running XFS on OABI machines (actually with the build failure we can
-be fairly sure there isn't ;-).
+diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
+index 292bace83f1e..6f436836fe50 100644
+--- a/drivers/platform/x86/intel_mid_powerbtn.c
++++ b/drivers/platform/x86/intel_mid_powerbtn.c
+@@ -146,9 +146,10 @@ static int mid_pb_probe(struct platform_device *pdev)
+ 
+ 	input_set_capability(input, EV_KEY, KEY_POWER);
+ 
+-	ddata = (struct mid_pb_ddata *)id->driver_data;
++	ddata = devm_kmemdup(&pdev->dev, (void *)id->driver_data,
++			     sizeof(*ddata), GFP_KERNEL);
+ 	if (!ddata)
+-		return -ENODATA;
++		return -ENOMEM;
+ 
+ 	ddata->dev = &pdev->dev;
+ 	ddata->irq = irq;
+-- 
+2.24.1
 
-I am testing randconfig builds with OABI and a few other things like ARCH_RPC
-disabled because of random issues like this.
-
-      Arnd
