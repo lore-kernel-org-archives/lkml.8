@@ -2,110 +2,92 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 219F5C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19696C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDAD82081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578927250;
-	bh=+tBhl1sLCJP/p0MoLb8K4ZlbC7vCLCmh0VyIotWkp3U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=TqBeKq4cnnH59J+vSk6rAXaheobhMsD4pp4qGW97GoqOnShjlIA+r40LXNDPTF1hy
-	 u0lwlWCmDyhKqI90VoGnsb7O0fBsYnMg31rbat/TeKCd52gYb/9rFNBWV5cYBgOc9g
-	 B1eX2FT0jNYMLrJAYJ+jDZcigPJNz/ad5sxcbf7Q=
+	by mail.kernel.org (Postfix) with ESMTP id D8B6C20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:54:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jeR/VQc0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728900AbgAMOyJ (ORCPT
+        id S1728920AbgAMOyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:54:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49958 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726567AbgAMOyI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:54:08 -0500
-Received: from cakuba (c-73-93-4-247.hsd1.ca.comcast.net [73.93.4.247])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72A4C20661;
-        Mon, 13 Jan 2020 14:54:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578927247;
-        bh=+tBhl1sLCJP/p0MoLb8K4ZlbC7vCLCmh0VyIotWkp3U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WRIzdv/Dl2lNzNKusUFmrd+8Xdbd63fCKtbgASuIZNtRMvEQOcDutfNEM0lmCBuZu
-         lg0LvogSkI8beX9SKvJYbiPjfdMjyGy+9eL7me5jL6j6JdWSWFq4hzI7+rF/q5nlF8
-         StJLauWncJk2m+xvT+qcvjseBPj6q6hAooY/qju8=
-Date:   Mon, 13 Jan 2020 06:54:06 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     netdev@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v2 1/8] net: stmmac: Initial support for TBS
-Message-ID: <20200113065406.54bb324b@cakuba>
-In-Reply-To: <d72e539523e063a391391d447ece658524bb8d57.1578920366.git.Jose.Abreu@synopsys.com>
-References: <cover.1578920366.git.Jose.Abreu@synopsys.com>
-        <d72e539523e063a391391d447ece658524bb8d57.1578920366.git.Jose.Abreu@synopsys.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 13 Jan 2020 09:54:55 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38233 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728689AbgAMOyy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 09:54:54 -0500
+Received: by mail-lf1-f66.google.com with SMTP id r14so7083865lfm.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 06:54:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=/4VDJozUtUDRjtxB/kp8itvm7M638W5AdxJEFSJoD5Y=;
+        b=jeR/VQc0PulVYOUfup/ulU2nIDU3eIPyVE1weFWd76SjMLSZRil90wY2EOshZQzElQ
+         nkdh6c/fMQ38jXiVKrtgxkYluellmr2kx98HQExcEtz4VSZLtdTjRNlW30Cu/iMQ7X8k
+         xRYnX5Vji9x/H58DTFq/VVsQkZB6hvVj8yBwTEj/klOgcOawK1ufqLcZmT3nPsub+4ZH
+         gLg3/9zmkHJ+o/dVlWO6M6RNSxonmkF/GNAZb2o3/8NXXkgz6ZXp8YEvOCEVL3ifEYM4
+         qjpsGeguLTyPjw/iY/1lz0BXq9nyWnboyFX0eNafZyNNNcWd/wG2EnUDK+LPz1r1GoSc
+         L3cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=/4VDJozUtUDRjtxB/kp8itvm7M638W5AdxJEFSJoD5Y=;
+        b=EoZSc45dPcPs1QP63QzhhDeVJeAue7BhkA3f+XeTkMC5miV9YMZ7cl15QwbyN08rsr
+         NleMrbCm9jjZpIZgqh9ZY6DI25bax0j9Ad4RE4WC17tc3RPCf8aobfjzIWq4paOxtWCE
+         +YFzIwLXNB1+ZmBbAsIdSkvbjE4+BEmpSTJU8jSpPuYBQieZ2ablbaER+bQ5aEHrG/jV
+         YJXqCxBWE7OjU+3sHYyq54DswAt7u032SvQX8CX2kVnHz4lHa7zB5kqLs9E1hcW6YZ6C
+         9EAO2tG+UeSQ6RjOjX4pcUJP1USp+VkJvp6dL1PSYnpOZQVqJ2lJgCB0sRXIPPpKnndu
+         8x6g==
+X-Gm-Message-State: APjAAAV8VLtJIqas+Tz+Jin9WBY060GtjDRLeWdWABlzSjhucIP0EGlu
+        AXXzXSA5bxtZB3aZWuZgOCKzpzq66FI=
+X-Google-Smtp-Source: APXvYqxXGFZweM5WZczXbpuahrbpAK1LP3x1QwThF2hCHZ3knvtCEIHnQooimEJkoHWuXmCGMGXEXg==
+X-Received: by 2002:a19:4849:: with SMTP id v70mr9680953lfa.30.1578927291997;
+        Mon, 13 Jan 2020 06:54:51 -0800 (PST)
+Received: from localhost.localdomain ([37.157.136.193])
+        by smtp.gmail.com with ESMTPSA id w71sm6822281lff.0.2020.01.13.06.54.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 06:54:51 -0800 (PST)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH] MAINTAINERS: Add dt-binding files for Venus
+Date:   Mon, 13 Jan 2020 16:54:24 +0200
+Message-Id: <20200113145424.4867-1-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jan 2020 14:02:36 +0100, Jose Abreu wrote:
-> Adds the initial hooks for TBS support. This needs a 32 byte descriptor
-> in order for it to work with current HW. Adds all the logic for Enhanced
-> Descriptors in main core but no HW related logic for now.
-> 
-> Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Adds a path to devicetree dt-binding files.
 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-> index f98c5eefb382..dceaeb72a414 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-> @@ -42,10 +42,13 @@ struct stmmac_tx_info {
->  /* Frequently used values are kept adjacent for cache effect */
->  struct stmmac_tx_queue {
->  	u32 tx_count_frames;
-> +	int tbs_avail;
-> +	int tbs_en;
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-These could be bool or a bitfield?
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 983d3c97edd1..8c97d1e7ea50 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13732,6 +13732,7 @@ L:	linux-arm-msm@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ S:	Maintained
+ F:	drivers/media/platform/qcom/venus/
++F:	Documentation/devicetree/bindings/media/*venus*
+ 
+ QUALCOMM WCN36XX WIRELESS DRIVER
+ M:	Kalle Valo <kvalo@codeaurora.org>
+-- 
+2.17.1
 
->  	struct timer_list txtimer;
->  	u32 queue_index;
->  	struct stmmac_priv *priv_data;
->  	struct dma_extended_desc *dma_etx ____cacheline_aligned_in_smp;
-> +	struct dma_edesc *dma_entx ____cacheline_aligned_in_smp;
-
-Won't this create a cache line-sized hole? Is the structure member
-supposed to be aligned or the data its pointing to?
-
->  	struct dma_desc *dma_tx;
->  	struct sk_buff **tx_skbuff;
->  	struct stmmac_tx_info *tx_skbuff_dma;
-
-> diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-> index 0531afa9b21e..19190c609282 100644
-> --- a/include/linux/stmmac.h
-> +++ b/include/linux/stmmac.h
-> @@ -139,6 +139,7 @@ struct stmmac_txq_cfg {
->  	u32 low_credit;
->  	bool use_prio;
->  	u32 prio;
-> +	int tbs_en;
-
-also bool?
-
->  };
->  
->  struct plat_stmmacenet_data {
