@@ -2,171 +2,218 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C77C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CB5C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:10:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CCE824658
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:08:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFNRMkJo"
+	by mail.kernel.org (Postfix) with ESMTP id 3567720CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:10:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578949824;
+	bh=+f5qL836/JPP3ORqY8xkX7xhHl+dfga58+SLP9NnIPE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=V3N0HAes01VY0tTddXR/ZerpteEkw22+78qMF7AxI3UCQumO2jQOP3358X7x/Jhc0
+	 r50j9Qxk0qbIrhFrpAEED8xsuhYPmAIOmkdwy0n/gFMtRnqxXxPkpIDVNyA/Q0mdT5
+	 l+VDbIPA56dQGAnkOXqaVqjd3ukzN6/NcKctUPzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbgAMVIH (ORCPT
+        id S1728682AbgAMVKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 16:08:07 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:50840 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728864AbgAMVIE (ORCPT
+        Mon, 13 Jan 2020 16:10:23 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38582 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbgAMVKX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 16:08:04 -0500
-Received: by mail-pj1-f67.google.com with SMTP id r67so4693292pjb.0;
-        Mon, 13 Jan 2020 13:08:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=rOhBlNJi9zrxB4FIvl/Mh1uvf9WxyGooJc5KOiTW4C4=;
-        b=fFNRMkJo4sm00mqmdW9+R0XDO7L77nGlx3ahfBF3j67d6gXqpk6gikR9CCTtDn8DKC
-         u+4mWuM8BvBCwk8nZOT3HUpw1hg+i6B5j7DtR+3IU1TPGLEUEuC0SMCF6FAYq9ppauwe
-         AT9LyA1CG/JU8Q7UvNneRngS6XaoHMtuq8V4qddt9jTwiPsD2h7MxKLKWlGdLBUoDzw7
-         gZ+EXEtiYsZeylhK4wtG94imkgkclc8m090Xm5VT2fcgw0hrk1xk0QypqPqyeJ0Oqggn
-         53D7Y4fkr1rLJ8rHeUFWaSyDEeY3Heks0+zOS3qgOkjLem+G2NkAbRHnzFjrcBJpr8SY
-         gcaA==
+        Mon, 13 Jan 2020 16:10:23 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l9so9705557oii.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 13:10:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=rOhBlNJi9zrxB4FIvl/Mh1uvf9WxyGooJc5KOiTW4C4=;
-        b=CHxVPrzrcY3ikCRxfGT5ntCLMvkUk4AuCvhMeDyr9ps97b5twKT+30/tWfkyB1cVNL
-         F/RROk4gWBuueZ5ZO//ukcX6eZfWU6PtsmTqQx770BzIRF/cA/RsZCNoG5SG9k2k4Ka0
-         I/LYkjs8IuxcKojRkUC5FKBk7ejlRh/9wXWauad+xAxycCxpIMZGgbD5p1bWf/jmkrZN
-         KFpiYVMXS3L4mpriJ+KPZojV0SB2zyWTjFzYGI6A8EbptCjOKk3ClgHUZudJIJinkJ9V
-         CFlp0bX9I0162liJOgesDNvGChA4LrKvLW5X4uvwFtZ8MWvgWCeq6X+/bbNNYswiEuId
-         LWjg==
-X-Gm-Message-State: APjAAAVKfvym83fDWNj1tfpHTxjQYHfQ5RijROyJe/tMb8IgyHQWXdqh
-        0vGj/UQM2tnyoCiPpUcUQ5qEXOgSYtLlWg==
-X-Google-Smtp-Source: APXvYqx2patM7VBVBxwBeswjSO473DoUGIG2YsvJzVZ/PsXS9f3/IqWQa1b6UA762LZuyPV50J8bxw==
-X-Received: by 2002:a17:90a:30a4:: with SMTP id h33mr24508794pjb.50.1578949683175;
-        Mon, 13 Jan 2020 13:08:03 -0800 (PST)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id s1sm14195827pgv.87.2020.01.13.13.08.00
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MBFiDoGwJ4OcLk5EAnsqRbkOjyupomEYDWpcUs8IlxQ=;
+        b=sWYQz1aVXayGvEf+W/waM5XRP5BfA8i6hYDln+TXbE0q86oKiEx5XNEAX4Wm/wEF++
+         q5zo2b2GgknnyxZ2iG+hG0fvbn8948YurXtw1s5dKrNnFqT89ItuqWJYYCY2gZp3yvK6
+         zzEDED5jEzAU7UOxIWPH6YvBoeEX+fi7K1vh5k3Xgtplv7uOcJ82ARuw3Q4xIcpf2xV5
+         BXXEFVD1lOKFGrjWC9ZjdtHFrDPj+xAH1bGCdnGLDr4uq9wIabbT98kkWBNpRmqml2HE
+         g4lhVrfv99lGVKgI2BjnJdCdEk+Y1a9p1n7FUTSLnhTV7IeGSsYPU1KjsacMUsgQcU3V
+         1fww==
+X-Gm-Message-State: APjAAAUo9EVQUBsJ6t2czN6UowfyIIEOfV0UpkbuWoqswerOdN2fqrIe
+        A+vwYEzLMGUjQwgWkyxebjgEm0w=
+X-Google-Smtp-Source: APXvYqxff9jVdulUwxunvyj0FWdh9ACQC/2wRhV/dZHYMgffFfVOS0ZYJv41FLYPzJyVlHw1KDdQtw==
+X-Received: by 2002:aca:b1d5:: with SMTP id a204mr13865533oif.82.1578949821691;
+        Mon, 13 Jan 2020 13:10:21 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id w201sm3907202oif.29.2020.01.13.13.10.20
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 13:08:02 -0800 (PST)
-From:   Al Cooper <alcooperx@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Al Cooper <alcooperx@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org,
-        "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Takao Orito <orito.takao@socionext.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH 6/6] mmc: sdhci-brcmstb: Fix incorrect switch to HS mode
-Date:   Mon, 13 Jan 2020 16:07:06 -0500
-Message-Id: <20200113210706.11972-7-alcooperx@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200113210706.11972-1-alcooperx@gmail.com>
-References: <20200113210706.11972-1-alcooperx@gmail.com>
+        Mon, 13 Jan 2020 13:10:20 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 220d32
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Mon, 13 Jan 2020 15:10:20 -0600
+Date:   Mon, 13 Jan 2020 15:10:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-mmc@vger.kernel.org, ulf.hansson@linaro.org,
+        jianxin.pan@amlogic.com, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        lnykww@gmail.com, yinxin_1989@aliyun.com
+Subject: Re: [PATCH v4 1/3] dt-bindings: mmc: Document the Amlogic Meson SDHC
+ MMC host controller
+Message-ID: <20200113211020.GA12476@bogus>
+References: <20200112002459.2124850-1-martin.blumenstingl@googlemail.com>
+ <20200112002459.2124850-2-martin.blumenstingl@googlemail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200112002459.2124850-2-martin.blumenstingl@googlemail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When switching from any MMC speed mode that requires 1.8v
-(HS200, HS400 and HS400ES) to High Speed (HS) mode, the system
-ends up configured for SDR12 with a 50MHz clock which is an illegal
-mode.
+On Sun, Jan 12, 2020 at 01:24:57AM +0100, Martin Blumenstingl wrote:
+> This documents the devicetree bindings for the SDHC MMC host controller
+> found in Meson6, Meson8, Meson8b and Meson8m2 SoCs. It can use a
+> bus-width of 1/4/8-bit and it supports eMMC spec 4.4x/4.5x including
+> HS200 mode (up to 100MHz clock). It embeds an internal clock controller
+> which outputs four clocks (mod_clk, sd_clk, tx_clk and rx_clk) and is
+> fed by four external input clocks (clkin[0-3]). "pclk" is the module
+> register clock, it has to be enabled to access the registers.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> ---
+>  .../bindings/mmc/amlogic,meson-mx-sdhc.yaml   | 83 +++++++++++++++++++
+>  .../dt-bindings/clock/meson-mx-sdhc-clkc.h    |  8 ++
+>  2 files changed, 91 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
+>  create mode 100644 include/dt-bindings/clock/meson-mx-sdhc-clkc.h
 
-This happens because the SDHCI_CTRL_VDD_180 bit in the
-SDHCI_HOST_CONTROL2 register is left set and when this bit is
-set, the speed mode is controlled by the SDHCI_CTRL_UHS field
-in the SDHCI_HOST_CONTROL2 register. The SDHCI_CTRL_UHS field
-will end up being set to 0 (SDR12) by sdhci_set_uhs_signaling()
-because there is no UHS mode being set.
+Fails 'make dt_binding_check':
 
-The fix is to change sdhci_set_uhs_signaling() to set the
-SDHCI_CTRL_UHS field to SDR25 (which is the same as HS) for
-any switch to HS mode.
+Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.example.dts:17:53: 
+warning: extra tokens at end of #include directive
+ #include <dt-bindings/clock/meson-mx-sdhc-clkc.yaml>;
+                                                     ^
+Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.example.dts:17:10: 
+fatal error: dt-bindings/clock/meson-mx-sdhc-clkc.yaml: No such file or directory
+ #include <dt-bindings/clock/meson-mx-sdhc-clkc.yaml>;
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This was found on a new eMMC controller that does strict checking
-of the speed mode and the corresponding clock rate. It caused the
-switch to HS400 mode to fail because part of the sequence to switch
-to HS400 requires a switch from HS200 to HS before going to HS400.
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
+> new file mode 100644
+> index 000000000000..74632692ce26
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/amlogic,meson-mx-sdhc.yaml
+> @@ -0,0 +1,83 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/mmc/amlogic,meson-mx-sdhc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Amlogic Meson SDHC controller Device Tree Bindings
+> +
+> +allOf:
+> +  - $ref: "mmc-controller.yaml"
+> +
+> +maintainers:
+> +  - Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> +
+> +description: |
+> +  The SDHC MMC host controller on Amlogic SoCs provides an eMMC and MMC
+> +  card interface with 1/4/8-bit bus width.
+> +  It supports eMMC spec 4.4x/4.5x including HS200 (up to 100MHz clock).
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - amlogic,meson8-sdhc
+> +        - amlogic,meson8b-sdhc
+> +        - amlogic,meson8m2-sdhc
+> +      - const: amlogic,meson-mx-sdhc
+> +
+> +  reg:
+> +    minItems: 1
+> +
+> +  interrupts:
+> +    minItems: 1
+> +
+> +  "#clock-cells":
+> +    const: 1
+> +
+> +  clocks:
+> +    minItems: 9
+> +
+> +  clock-names:
+> +    items:
+> +      - const: pclk
+> +      - const: mod_clk
+> +      - const: sd_clk
+> +      - const: rx_clk
+> +      - const: tx_clk
+> +      - const: clkin0
+> +      - const: clkin1
+> +      - const: clkin2
+> +      - const: clkin3
 
-This issue was previously fixed by commit c894e33ddc191 ("mmc: sdhci:
-Fix incorrect switch to HS mode") and later removed by commit
-07bcc411567c ("Revert \"mmc: sdhci: Fix incorrect switch to HS mode\"")
-because it caused failures with some SD cards on AM65X systems. The
-fix will now be done in a platform specific callback instead of
-common sdhci code.
+Kind of odd to put the output clocks in the middle of the list.
 
-Signed-off-by: Al Cooper <alcooperx@gmail.com>
-Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
----
- drivers/mmc/host/sdhci-brcmstb.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/sdhci-brcmstb.c b/drivers/mmc/host/sdhci-brcmstb.c
-index 2c4b6e7e3d9a..ad01f6451a95 100644
---- a/drivers/mmc/host/sdhci-brcmstb.c
-+++ b/drivers/mmc/host/sdhci-brcmstb.c
-@@ -65,6 +65,35 @@ static void sdhci_brcmstb_set_clock(struct sdhci_host *host, unsigned int clock)
- 	sdhci_enable_clk(host, clk);
- }
- 
-+static void sdhci_brcmstb_set_uhs_signaling(struct sdhci_host *host,
-+					    unsigned int timing)
-+{
-+	u16 ctrl_2;
-+
-+	dev_dbg(mmc_dev(host->mmc), "%s: Setting UHS signaling for %d timing\n",
-+		__func__, timing);
-+	ctrl_2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
-+	/* Select Bus Speed Mode for host */
-+	ctrl_2 &= ~SDHCI_CTRL_UHS_MASK;
-+	if ((timing == MMC_TIMING_MMC_HS200) ||
-+	    (timing == MMC_TIMING_UHS_SDR104))
-+		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
-+	else if (timing == MMC_TIMING_UHS_SDR12)
-+		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
-+	else if (timing == MMC_TIMING_SD_HS ||
-+		 timing == MMC_TIMING_MMC_HS ||
-+		 timing == MMC_TIMING_UHS_SDR25)
-+		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
-+	else if (timing == MMC_TIMING_UHS_SDR50)
-+		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
-+	else if ((timing == MMC_TIMING_UHS_DDR50) ||
-+		 (timing == MMC_TIMING_MMC_DDR52))
-+		ctrl_2 |= SDHCI_CTRL_UHS_DDR50;
-+	else if (timing == MMC_TIMING_MMC_HS400)
-+		ctrl_2 |= SDHCI_CTRL_HS400; /* Non-standard */
-+	sdhci_writew(host, ctrl_2, SDHCI_HOST_CONTROL2);
-+}
-+
- static void sdhci_brcmstb_dumpregs(struct mmc_host *mmc)
- {
- 	sdhci_dumpregs(mmc_priv(mmc));
-@@ -101,7 +130,7 @@ static struct sdhci_ops sdhci_brcmstb_ops_7216 = {
- 	.set_clock = sdhci_brcmstb_set_clock,
- 	.set_bus_width = sdhci_set_bus_width,
- 	.reset = sdhci_reset,
--	.set_uhs_signaling = sdhci_set_uhs_signaling,
-+	.set_uhs_signaling = sdhci_brcmstb_set_uhs_signaling,
- };
- 
- static struct brcmstb_match_priv match_priv_7425 = {
--- 
-2.17.1
-
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - "#clock-cells"
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/meson-mx-sdhc-clkc.yaml>;
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +    sdhc: mmc@8e00 {
+> +      compatible = "amlogic,meson8-sdhc", "amlogic,meson-mx-sdhc";
+> +      reg = <0x8e00 0x42>;
+> +      interrupts = <GIC_SPI 78 IRQ_TYPE_EDGE_RISING>;
+> +      #clock-cells = <1>;
+> +      clocks = <&sdhc_pclk>,
+> +               <&sdhc SDHC_CLKID_MOD_CLK>,
+> +               <&sdhc SDHC_CLKID_SD_CLK>,
+> +               <&sdhc SDHC_CLKID_TX_CLK>,
+> +               <&sdhc SDHC_CLKID_RX_CLK>,
+> +               <&xtal>,
+> +               <&fclk_div4>,
+> +               <&fclk_div3>,
+> +               <&fclk_div5>;
+> +      clock-names = "pclk", "mod_clk", "sd_clk", "tx_clk", "rx_clk",
+> +                    "clkin0", "clkin1", "clkin2", "clkin3";
+> +    };
+> diff --git a/include/dt-bindings/clock/meson-mx-sdhc-clkc.h b/include/dt-bindings/clock/meson-mx-sdhc-clkc.h
+> new file mode 100644
+> index 000000000000..ad9f6e4dc426
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/meson-mx-sdhc-clkc.h
+> @@ -0,0 +1,8 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#define SDHC_CLKID_SRC_SEL	0
+> +#define SDHC_CLKID_DIV		1
+> +#define SDHC_CLKID_MOD_CLK	2
+> +#define SDHC_CLKID_SD_CLK	3
+> +#define SDHC_CLKID_TX_CLK	4
+> +#define SDHC_CLKID_RX_CLK	5
+> -- 
+> 2.24.1
+> 
