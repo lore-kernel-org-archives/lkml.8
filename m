@@ -2,168 +2,154 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897CFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B21BC33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E9BF207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD07207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:54:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="q8c51IZP"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WbSBasEF";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="gtWCIm2l"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgAMNx2 (ORCPT
+        id S1728699AbgAMNye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:53:28 -0500
-Received: from mx3.wp.pl ([212.77.101.9]:18422 "EHLO mx3.wp.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726943AbgAMNx1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:53:27 -0500
-Received: (wp-smtpd smtp.wp.pl 26100 invoked from network); 13 Jan 2020 14:53:24 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1578923604; bh=D+Hgq/s6Ot0ztZc9fTkrNulqhubSjDPAvP1YplGYveA=;
-          h=From:To:Cc:Subject;
-          b=q8c51IZPr/MmEP6BcVjKGA5iyCHHrdYufwYEb6jLpK2kXp5/Q7u9N3jUufHcICDlN
-           roorAwhdu4R3SfmNMEo/rAXcBEZH8VNPip28d7mWJ9id9flVq/apW6hG4XALhMNJhk
-           5TiSn1ljpbDiOZRTkErWFDV0P7yl8fDrh3n/K6Sk=
-Received: from c-73-93-4-247.hsd1.ca.comcast.net (HELO cakuba) (kubakici@wp.pl@[73.93.4.247])
-          (envelope-sender <kubakici@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <ms@dev.tdt.de>; 13 Jan 2020 14:53:24 +0100
-Date:   Mon, 13 Jan 2020 05:53:16 -0800
-From:   Jakub Kicinski <kubakici@wp.pl>
-To:     Martin Schiller <ms@dev.tdt.de>
-Cc:     khc@pm.waw.pl, davem@davemloft.net, linux-x25@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] wan/hdlc_x25: make lapb params configurable
-Message-ID: <20200113055316.4e811276@cakuba>
-In-Reply-To: <20200113124551.2570-1-ms@dev.tdt.de>
-References: <20200113124551.2570-1-ms@dev.tdt.de>
+        Mon, 13 Jan 2020 08:54:34 -0500
+Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:37106 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726074AbgAMNye (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:54:34 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2A9CA406A9;
+        Mon, 13 Jan 2020 13:54:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1578923673; bh=lxAOT2BkI85HKicR5fTKEbv9fn1ERxxwMdp9KHxtB8I=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=WbSBasEFSkKDfQSAz0/TS0BmQIHMNX8kj9tOe4otpgl4DZzKF9IwbdnXGgcDipFUY
+         S6WCRLDd+Kv5oQ3b+oT6+SkRy8byaWhtj6SYrnpL1HLPyZP7PoYE6kRRb8a8gaJBgF
+         KdvmR3/1K2k1s66uvMwMSuNH09rXLgpaIi0sRkr4/incOo5+gel9nGfUl2k8eFRuXa
+         lmMB1mBo1nYEWc6P2i0GojksVsdhjnPqG3Sb+Q7EuQTZ8yNyvgt1nxlxA9xvijEcz2
+         KOfMOdfXOB/FqNqnGW5pmD4o355R8d/Aj7kZuRfZO2BluvJOYMdY0uRWHSo+yOJaMv
+         BgRYcSvxsrukQ==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id E2B48A0067;
+        Mon, 13 Jan 2020 13:54:30 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 13 Jan 2020 05:54:30 -0800
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 13 Jan 2020 05:54:29 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q8N7BcyhIHgeKPUaWfiBpAzll0evjbxFm8NuHTnZRP2iNbnKrEmTDAtmtlf3DUmr/0sldOd1Xv1rXtOAlFpn8xiB0LJ4+isuNoP1NhPGHXwBnNBIxbzwGkDpEdte79C92pfwP/caDh0s3bPh/AFxoBcgiV/cl3wmk76vfQWHA+vaWXM9pyHG4co6j7gnXIATg98T3IOGlQU7lqLeslm2KLiQG7FLOwmLt5XdmVm21oRyA4yqx91U8vXw3wSyL5a0AjLto6jh7oQeaJ3RTv4k7HlMgksj6pLP292OKNWQf87vK3K13ICtSdbHzbOVVLTcjSzUqvTuR4Hs/nLutXFxSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lxAOT2BkI85HKicR5fTKEbv9fn1ERxxwMdp9KHxtB8I=;
+ b=EX/TiiUW/h++MfQtwmbm/4E0ZFW4LAuEi+iCxHCJwcpy3QD45mzOgu7pytZg1H9HUlsbzsPQcHZYx9C29pTZDLoeuuwMTPQ/XqO6st+KqTmxxjpNQ9YO66MLsyD3KbmYvsEbVevgYw++nt4BdConltHi/IZojL5+XxBYOaqqI42L/UeF0uJkb4nV+OkGuJLYbIDxSTBzYkUQP47RtH1eDlcS1VN5MJI6HY8Q9hr2Qd40wePf8OLNTak6sjGYOobgqiNpmQaEIwqQd9NVYrYHuaPdEqIuFuevwsGfYBWlDg0uuNbqod1qNgI6TDcs5MJUTRN/A0fzBDPVZ4no5wYJCw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lxAOT2BkI85HKicR5fTKEbv9fn1ERxxwMdp9KHxtB8I=;
+ b=gtWCIm2lN4MLPLmwUKju++4IYlk6qnJhLsqLnxKCPDtWV67dgWsZYrTb8fEBIw0YDUZcw6GuY6MJC808822pXXC98i1tTzEW1odkbF4E2phPGT0pC33ao7iKOOFuVp36x25vtdhpSfzadZ1iC0A0lIUx0hHFGHVeeFHS5fPUIPo=
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
+ BN8PR12MB3331.namprd12.prod.outlook.com (20.178.211.81) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.10; Mon, 13 Jan 2020 13:54:29 +0000
+Received: from BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
+ ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
+ 13:54:28 +0000
+From:   Jose Abreu <Jose.Abreu@synopsys.com>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "Heiner Kallweit" <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: RE: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
+ using a PHY driver
+Thread-Topic: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
+ using a PHY driver
+Thread-Index: AQHVyhMHPh1TkUf6pU+JUVzLFdFzk6fomWeAgAAAjSA=
+Date:   Mon, 13 Jan 2020 13:54:28 +0000
+Message-ID: <BN8PR12MB32666F34D45D7881BDD4CAB3D3350@BN8PR12MB3266.namprd12.prod.outlook.com>
+References: <4953fc69a26bee930bccdeb612f1ce740a4294df.1578921062.git.Jose.Abreu@synopsys.com>
+ <20200113133845.GD11788@lunn.ch>
+In-Reply-To: <20200113133845.GD11788@lunn.ch>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=joabreu@synopsys.com; 
+x-originating-ip: [83.174.63.141]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ee5c9f17-6dfe-4b66-6ea6-08d798301bde
+x-ms-traffictypediagnostic: BN8PR12MB3331:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BN8PR12MB3331CD6367F4303DF7A4CF7BD3350@BN8PR12MB3331.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(136003)(366004)(39860400002)(189003)(199004)(86362001)(6916009)(54906003)(5660300002)(4744005)(316002)(52536014)(4326008)(478600001)(9686003)(33656002)(55016002)(26005)(2906002)(186003)(6506007)(66446008)(81166006)(81156014)(66556008)(8676002)(8936002)(66946007)(76116006)(66476007)(64756008)(7696005)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3331;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6T6zlvk1ghHDBR+q+6LH5k5uD/p3tNeoQO4dGvuuZiRZZb1nUGhv7DIEwN7iPWtFPpmFnkmV/fi0IMc4F9YuOUhdUIR7B9IE4lMz/LsAybGkgU55pqJci71qadUfPlUMAo3TuxxwVundYHXCCY7GJvZ4mq2o/O3Eo1sxoBaS4a3YOJ4tCjGIvnw6SPssIi6fDaOSWJsKqXxpz3kKGkDojs3U0PtdNNZ/sbNyqXsOatbLHyHfGjpIpJLu+TFwjYi9Q8ARahC8XmO6iiZq76MGl5hPSOFM8IZNov/xWX9IpVIALBcOPwwya63mmv2ENXeKRw4sIR5baojprPUvuBLFI8z3UPJ+Pwr/VasEux0XFZCffapGZWnEPJTZCn9VhJKKPWY4lm2Qqdtje485YmCjDsI4vPDTUUofeOTzJFA3Be8K0kFwHH0o5rCA7Lry5qhb
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-WP-MailID: ac9b6b2acbd10ea4613bdbefdb62daf2
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 000000A [UfOk]                               
+X-MS-Exchange-CrossTenant-Network-Message-Id: ee5c9f17-6dfe-4b66-6ea6-08d798301bde
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 13:54:28.7390
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8RqNWv1qmvNsYvDR6mNGS4iNglYpyuYYXahNpFeWVWgdBTV0raaB3+EW8MPO87w7m9c3lnR6awTZPgZGz/HU2w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3331
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jan 2020 13:45:50 +0100, Martin Schiller wrote:
-> This enables you to configure mode (DTE/DCE), Modulo, Window, T1, T2, N2 via
-> sethdlc (which needs to be patched as well).
-> 
-> Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+From: Andrew Lunn <andrew@lunn.ch>
+Date: Jan/13/2020, 13:38:45 (UTC+00:00)
 
-> diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
-> index 5643675ff724..b28051eba736 100644
-> --- a/drivers/net/wan/hdlc_x25.c
-> +++ b/drivers/net/wan/hdlc_x25.c
-> @@ -21,8 +21,17 @@
->  #include <linux/skbuff.h>
->  #include <net/x25device.h>
->  
-> +struct x25_state {
-> +	x25_hdlc_proto settings;
-> +};
-> +
->  static int x25_ioctl(struct net_device *dev, struct ifreq *ifr);
->  
-> +static inline struct x25_state* state(hdlc_device *hdlc)
+> On Mon, Jan 13, 2020 at 02:11:08PM +0100, Jose Abreu wrote:
+> > Adds the basic support for XPCS including support for USXGMII.
+>=20
+> Hi Jose
+>=20
+> Please could you describe the 'big picture'. What comes after the
+> XPCS? An SFP? A copper PHY? How in Linux do you combine this PHY and
+> whatever comes next using PHYLINK?
+>=20
+> Or do only support backplane with this, and the next thing in the line
+> is the peers XPCS?
 
-Please no more static inlines in source files. Compiler will know what
-to do.
+My current setup is this:
 
-> +{
-> +	return (struct x25_state *)hdlc->state;
-> +}
-> +
->  /* These functions are callbacks called by LAPB layer */
->  
->  static void x25_connect_disconnect(struct net_device *dev, int reason, int code)
+Host PC x86 -> PCI -> XGMAC -> XPCS -> SERDES 10G-BASE-R -> QSFP+
 
-> @@ -186,6 +217,9 @@ static struct hdlc_proto proto = {
->  
->  static int x25_ioctl(struct net_device *dev, struct ifreq *ifr)
->  {
-> +	x25_hdlc_proto __user *x25_s = ifr->ifr_settings.ifs_ifsu.x25;
-> +	const size_t size = sizeof(x25_hdlc_proto);
-> +	x25_hdlc_proto new_settings;
->  	hdlc_device *hdlc = dev_to_hdlc(dev);
->  	int result;
->  
-> @@ -194,7 +228,13 @@ static int x25_ioctl(struct net_device *dev, struct ifreq *ifr)
->  		if (dev_to_hdlc(dev)->proto != &proto)
->  			return -EINVAL;
->  		ifr->ifr_settings.type = IF_PROTO_X25;
-> -		return 0; /* return protocol only, no settable parameters */
-> +		if (ifr->ifr_settings.size < size) {
-> +			ifr->ifr_settings.size = size; /* data size wanted */
-> +			return -ENOBUFS;
-> +		}
-> +		if (copy_to_user(x25_s, &state(hdlc)->settings, size))
-> +			return -EFAULT;
-> +		return 0;
->  
->  	case IF_PROTO_X25:
->  		if (!capable(CAP_NET_ADMIN))
-> @@ -203,12 +243,35 @@ static int x25_ioctl(struct net_device *dev, struct ifreq *ifr)
->  		if (dev->flags & IFF_UP)
->  			return -EBUSY;
->  
-> +		if (copy_from_user(&new_settings, x25_s, size))
-> +			return -EFAULT;
-> +
-> +		if ((new_settings.dce != 0 &&
-> +		     new_settings.dce != 1) ||
-> +		    (new_settings.modulo != 8 &&
-> +		     new_settings.modulo != 128) ||
-> +		    new_settings.window < 1 ||
-> +		    (new_settings.modulo == 8 &&
-> +		     new_settings.window > 7) ||
-> +		    (new_settings.modulo == 128 &&
-> +		     new_settings.window > 127) ||
-> +		    new_settings.t1 < 1 ||
-> +		    new_settings.t1 > 255 ||
-> +		    new_settings.t2 < 1 ||
-> +		    new_settings.t2 > 255 ||
-> +		    new_settings.n2 < 1 ||
-> +		    new_settings.n2 > 255)
-> +			return -EINVAL;
-> +
->  		result=hdlc->attach(dev, ENCODING_NRZ,PARITY_CRC16_PR1_CCITT);
->  		if (result)
->  			return result;
->  
-> -		if ((result = attach_hdlc_protocol(dev, &proto, 0)))
-> +		if ((result = attach_hdlc_protocol(dev, &proto,
-> +						   sizeof(struct x25_state))))
->  			return result;
-> +
-> +		memcpy(&state(hdlc)->settings, &new_settings, size);
->  		dev->type = ARPHRD_X25;
->  		call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE, dev);
->  		netif_dormant_off(dev);
-> diff --git a/include/uapi/linux/hdlc/ioctl.h b/include/uapi/linux/hdlc/ioctl.h
-> index 0fe4238e8246..3656ce8b8af0 100644
-> --- a/include/uapi/linux/hdlc/ioctl.h
-> +++ b/include/uapi/linux/hdlc/ioctl.h
-> @@ -3,7 +3,7 @@
->  #define __HDLC_IOCTL_H__
->  
->  
-> -#define GENERIC_HDLC_VERSION 4	/* For synchronization with sethdlc utility */
-> +#define GENERIC_HDLC_VERSION 5	/* For synchronization with sethdlc utility */
+The only piece that needs configuration besides XGMAC is the XPCS hereby=20
+I "called" it a PHY ... Anyway, this is an RFC because I'm not entirely=20
+sure about the approach. Hmm ?
 
-What's the backward compatibility story in this code?
-
-The IOCTL handling at least looks like it may start returning errors
-to existing user space which could have expected the parameters to
-IF_PROTO_X25 (other than just ifr_settings.type) to be ignored.
-
->  #define CLOCK_DEFAULT   0	/* Default setting */
->  #define CLOCK_EXT	1	/* External TX and RX clock - DTE */
+---
+Thanks,
+Jose Miguel Abreu
