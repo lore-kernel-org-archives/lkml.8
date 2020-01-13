@@ -2,277 +2,1398 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03B9C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5887AC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F5D214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C930214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:02:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ze34RjtY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="naPLXrvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728841AbgAMSA2 (ORCPT
+        id S1728760AbgAMSCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:00:28 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:56234 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728656AbgAMSA0 (ORCPT
+        Mon, 13 Jan 2020 13:02:22 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34487 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgAMSCV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:00:26 -0500
-Received: by mail-pj1-f67.google.com with SMTP id d5so4471785pjz.5;
-        Mon, 13 Jan 2020 10:00:26 -0800 (PST)
+        Mon, 13 Jan 2020 13:02:21 -0500
+Received: by mail-io1-f66.google.com with SMTP id z193so10802395iof.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 10:02:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yCp4vxbbK01gP2xT8FvEO0yKlVhO6YKgXdnC6X6xpIo=;
-        b=Ze34RjtYhml3EApPG8NHt7yLS1Q7mFLYrJWTnUGdStT0U8LsKBnnM9JoPLrMZge/aX
-         He3lZUWqYykNpTJpWcMaeEzHSM/BewEifnMHDUKxta5a1cTXP0rmwMzaIekRgFxdpBc+
-         kTgNinfVyq3Uvb7gMfLDYrtJjIqF3s3dAnTC52trvT7Dder57EYX+TI/aYdraj2gu946
-         HNALx0Ir4K6EOmDJLr2r8iQn3a79I3XuS/TdJ49NbCTNVp+GkqP0g21zEK9HrUucgL51
-         BVGaN5Zv534n2NcfNalsKB3UsE9EWWXgCmEqLTHWlX22Nvm6vpR5Qtnp/n3yPuI7w5lk
-         fLZw==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0cUjYWPK/DPkCeYS+uJXbIac+NfbPHnRXh0ni/TTZJE=;
+        b=naPLXrvtR2ekWcSiUnCcNXOToagoDYmlTtehvmDaLlIzlMpaIoEhxgdJdJr7V2gkgO
+         6GCHOWCF00drlAlNRwPXClQ96fTt/FL11SKlKkYdM6jn3GMMU5MCC40dVgVahqGRioyk
+         HTeDOh9ZoumO1RrtNW4gXPXohVPLgnsZ6ceP4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=yCp4vxbbK01gP2xT8FvEO0yKlVhO6YKgXdnC6X6xpIo=;
-        b=V+TP0U+0p5mBDKXJ2V6nA6MhRnQW85oZkuVKN4ofBvj24+Ipgf446AsojU5PxUefNM
-         xrDysD2gJsIADvAceDKMeqDWwG0TnQTeD4prwb56VJ3igvEjAHTnJ+dwf1PXNKn0vqbu
-         w7WqkzbOWh4XSTbdW3EyHBZNKkDk03zvEyDNl/Gg0YMMu0lLamG+or+NwYpuAQdEhFA+
-         BqV2U9Nm+fnG3xaCfEtp3OPe+e+5lyNYJhSzH7OEeRQSr7YecERomesppDTS6tumelCq
-         SsjN45H29bBh5uyBvQ3hR9VcnvidqdTV1Y4ljAoX+DUpzT2YqrnmmAk3QtNdHQpViark
-         eodw==
-X-Gm-Message-State: APjAAAWJMH0vZwSqzUUWiJDaVukHYm6od02QgzHu0D0BjiLKllpzRpw8
-        SzNRT+s/25O4AN++ng9uIpmQuWAb
-X-Google-Smtp-Source: APXvYqx0ilb1HbdpABCCDkDFnhSvNm3O9GjCUKFojhjmHpkO7VZcMK0ZV0VREOiObyYR95cqHpth8g==
-X-Received: by 2002:a17:902:740c:: with SMTP id g12mr15871413pll.166.1578938425545;
-        Mon, 13 Jan 2020 10:00:25 -0800 (PST)
-Received: from [10.67.50.41] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id x7sm15359248pfp.93.2020.01.13.10.00.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 10:00:25 -0800 (PST)
-Subject: Re: [PATCH net-next] net: phy: Maintain MDIO device and bus
- statistics
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     netdev@vger.kernel.org, cphealy@gmail.com,
-        rmk+kernel@armlinux.org.uk, kuba@kernel.org,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200113045325.13470-1-f.fainelli@gmail.com>
- <20200113132152.GB11788@lunn.ch>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- xsDiBEjPuBIRBACW9MxSJU9fvEOCTnRNqG/13rAGsj+vJqontvoDSNxRgmafP8d3nesnqPyR
- xGlkaOSDuu09rxuW+69Y2f1TzjFuGpBk4ysWOR85O2Nx8AJ6fYGCoeTbovrNlGT1M9obSFGQ
- X3IzRnWoqlfudjTO5TKoqkbOgpYqIo5n1QbEjCCwCwCg3DOH/4ug2AUUlcIT9/l3pGvoRJ0E
- AICDzi3l7pmC5IWn2n1mvP5247urtHFs/uusE827DDj3K8Upn2vYiOFMBhGsxAk6YKV6IP0d
- ZdWX6fqkJJlu9cSDvWtO1hXeHIfQIE/xcqvlRH783KrihLcsmnBqOiS6rJDO2x1eAgC8meAX
- SAgsrBhcgGl2Rl5gh/jkeA5ykwbxA/9u1eEuL70Qzt5APJmqVXR+kWvrqdBVPoUNy/tQ8mYc
- nzJJ63ng3tHhnwHXZOu8hL4nqwlYHRa9eeglXYhBqja4ZvIvCEqSmEukfivk+DlIgVoOAJbh
- qIWgvr3SIEuR6ayY3f5j0f2ejUMYlYYnKdiHXFlF9uXm1ELrb0YX4GMHz80nRmxvcmlhbiBG
- YWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+wmYEExECACYCGyMGCwkIBwMCBBUCCAME
- FgIDAQIeAQIXgAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2DvCVAJ4u4/bPF4P3jxb4qEY8I2gS
- 6hG0gACffNWlqJ2T4wSSn+3o7CCZNd7SLSDOwU0EVxvH8AEQAOqv6agYuT4x3DgFIJNv9i0e
- S443rCudGwmg+CbjXGA4RUe1bNdPHYgbbIaN8PFkXfb4jqg64SyU66FXJJJO+DmPK/t7dRNA
- 3eMB1h0GbAHlLzsAzD0DKk1ARbjIusnc02aRQNsAUfceqH5fAMfs2hgXBa0ZUJ4bLly5zNbr
- r0t/fqZsyI2rGQT9h1D5OYn4oF3KXpSpo+orJD93PEDeseho1EpmMfsVH7PxjVUlNVzmZ+tc
- IDw24CDSXf0xxnaojoicQi7kzKpUrJodfhNXUnX2JAm/d0f9GR7zClpQMezJ2hYAX7BvBajb
- Wbtzwi34s8lWGI121VjtQNt64mSqsK0iQAE6OYk0uuQbmMaxbBTT63+04rTPBO+gRAWZNDmQ
- b2cTLjrOmdaiPGClSlKx1RhatzW7j1gnUbpfUl91Xzrp6/Rr9BgAZydBE/iu57KWsdMaqu84
- JzO9UBGomh9eyBWBkrBt+Fe1qN78kM7JO6i3/QI56NA4SflV+N4PPgI8TjDVaxgrfUTV0gVa
- cr9gDE5VgnSeSiOleChM1jOByZu0JTShOkT6AcSVW0kCz3fUrd4e5sS3J3uJezSvXjYDZ53k
- +0GS/Hy//7PSvDbNVretLkDWL24Sgxu/v8i3JiYIxe+F5Br8QpkwNa1tm7FK4jOd95xvYADl
- BUI1EZMCPI7zABEBAAHCwagEGBECAAkFAlcbx/ACGwICKQkQYVeZFbVjdg7BXSAEGQECAAYF
- Alcbx/AACgkQh9CWnEQHBwSJBw//Z5n6IO19mVzMy/ZLU/vu8flv0Aa0kwk5qvDyvuvfiDTd
- WQzq2PLs+obX0y1ffntluhvP+8yLzg7h5O6/skOfOV26ZYD9FeV3PIgR3QYF26p2Ocwa3B/k
- P6ENkk2pRL2hh6jaA1Bsi0P34iqC2UzzLq+exctXPa07ioknTIJ09BT31lQ36Udg7NIKalnj
- 5UbkRjqApZ+Rp0RAP9jFtq1n/gjvZGyEfuuo/G+EVCaiCt3Vp/cWxDYf2qsX6JxkwmUNswuL
- C3duQ0AOMNYrT6Pn+Vf0kMboZ5UJEzgnSe2/5m8v6TUc9ZbC5I517niyC4+4DY8E2m2V2LS9
- es9uKpA0yNcd4PfEf8bp29/30MEfBWOf80b1yaubrP5y7yLzplcGRZMF3PgBfi0iGo6kM/V2
- 13iD/wQ45QTV0WTXaHVbklOdRDXDHIpT69hFJ6hAKnnM7AhqZ70Qi31UHkma9i/TeLLzYYXz
- zhLHGIYaR04dFT8sSKTwTSqvm8rmDzMpN54/NeDSoSJitDuIE8givW/oGQFb0HGAF70qLgp0
- 2XiUazRyRU4E4LuhNHGsUxoHOc80B3l+u3jM6xqJht2ZyMZndbAG4LyVA2g9hq2JbpX8BlsF
- skzW1kbzIoIVXT5EhelxYEGqLFsZFdDhCy8tjePOWK069lKuuFSssaZ3C4edHtkZ8gCfWWtA
- 8dMsqeOIg9Trx7ZBCDOZGNAAnjYQmSb2eYOAti3PX3Ex7vI8ZhJCzsNNBEjPuBIQEAC/6NPW
- 6EfQ91ZNU7e/oKWK91kOoYGFTjfdOatp3RKANidHUMSTUcN7J2mxww80AQHKjr3Yu2InXwVX
- SotMMR4UrkQX7jqabqXV5G+88bj0Lkr3gi6qmVkUPgnNkIBe0gaoM523ujYKLreal2OQ3GoJ
- PS6hTRoSUM1BhwLCLIWqdX9AdT6FMlDXhCJ1ffA/F3f3nTN5oTvZ0aVF0SvQb7eIhGVFxrlb
- WS0+dpyulr9hGdU4kzoqmZX9T/r8WCwcfXipmmz3Zt8o2pYWPMq9Utby9IEgPwultaP06MHY
- nhda1jfzGB5ZKco/XEaXNvNYADtAD91dRtNGMwRHWMotIGiWwhEJ6vFc9bw1xcR88oYBs+7p
- gbFSpmMGYAPA66wdDKGj9+cLhkd0SXGht9AJyaRA5AWB85yNmqcXXLkzzh2chIpSEawRsw8B
- rQIZXc5QaAcBN2dzGN9UzqQArtWaTTjMrGesYhN+aVpMHNCmJuISQORhX5lkjeg54oplt6Zn
- QyIsOCH3MfG95ha0TgWwyFtdxOdY/UY2zv5wGivZ3WeS0TtQf/BcGre2y85rAohFziWOzTaS
- BKZKDaBFHwnGcJi61Pnjkz82hena8OmsnsBIucsz4N0wE+hVd6AbDYN8ZcFNIDyt7+oGD1+c
- PfqLz2df6qjXzq27BBUboklbGUObNwADBQ//V45Z51Q4fRl/6/+oY5q+FPbRLDPlUF2lV6mb
- hymkpqIzi1Aj/2FUKOyImGjbLAkuBQj3uMqy+BSSXyQLG3sg8pDDe8AJwXDpG2fQTyTzQm6l
- OnaMCzosvALk2EOPJryMkOCI52+hk67cSFA0HjgTbkAv4Mssd52y/5VZR28a+LW+mJIZDurI
- Y14UIe50G99xYxjuD1lNdTa/Yv6qFfEAqNdjEBKNuOEUQOlTLndOsvxOOPa1mRUk8Bqm9BUt
- LHk3GDb8bfDwdos1/h2QPEi+eI+O/bm8YX7qE7uZ13bRWBY+S4+cd+Cyj8ezKYAJo9B+0g4a
- RVhdhc3AtW44lvZo1h2iml9twMLfewKkGV3oG35CcF9mOd7n6vDad3teeNpYd/5qYhkopQrG
- k2oRBqxyvpSLrJepsyaIpfrt5NNaH7yTCtGXcxlGf2jzGdei6H4xQPjDcVq2Ra5GJohnb/ix
- uOc0pWciL80ohtpSspLlWoPiIowiKJu/D/Y0bQdatUOZcGadkywCZc/dg5hcAYNYchc8AwA4
- 2dp6w8SlIsm1yIGafWlNnfvqbRBglSTnxFuKqVggiz2zk+1wa/oP+B96lm7N4/3Aw6uy7lWC
- HvsHIcv4lxCWkFXkwsuWqzEKK6kxVpRDoEQPDj+Oy/ZJ5fYuMbkdHrlegwoQ64LrqdmiVVPC
- TwQYEQIADwIbDAUCVF/S8QUJHlwd3wAKCRBhV5kVtWN2Do+FAJ956xSz2XpDHql+Wg/2qv3b
- G10n8gCguORqNGMsVRxrlLs7/himep7MrCc=
-Message-ID: <ebeb2bb2-c816-6cb8-acaa-cfd86878678d@gmail.com>
-Date:   Mon, 13 Jan 2020 10:00:23 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0cUjYWPK/DPkCeYS+uJXbIac+NfbPHnRXh0ni/TTZJE=;
+        b=kHfAb1C1PXopc9zIwI3DeczmB8SDYTYDJD4/ujzolH4bB/nSX+yLreElcsSg330oFw
+         PvA1iFu35F3fzFe3K7XUP2K+cVBwLTEaZE2nxcRR8rTQh/8P4e6L7N/kQyqkM0KxbiF5
+         h1pCa/vaZNBlXAZwnPxL14qKbvI/ADlDo/E82lM2fa7Rh0Tlxuz53dI7tVFKIBelY2vu
+         kbDiMR3QJ7/4DM9/JrE+ewzpBofoJNX+5bhOxmx0+FFmukb0Y68ZlGFq22OoGcNgUGGt
+         mSHytg9Nil/oBz541bPjTaYhFj0EAAn2CMTLloh1EJO8mIgCab92UTQPqRl6w66wG8HH
+         vGJg==
+X-Gm-Message-State: APjAAAWm7WQaYjyBIgxgkTgv59VffHQHFiHqdrV4Xp2EfSz91IoiYjpT
+        GITwx2jc7IFuXYHPrVtkvZoowSYL4s7PKlrHp+LkOw==
+X-Google-Smtp-Source: APXvYqzg77SKNxwwnXkxs8Qrhig8TsbBwpqZ1vpzVyyFuxrkWMnGI5XthpmZRubzqfbfTboUMNtgGkeajJo8FZ24Kao=
+X-Received: by 2002:a5d:9c10:: with SMTP id 16mr13061528ioe.150.1578938539664;
+ Mon, 13 Jan 2020 10:02:19 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200113132152.GB11788@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200110073730.213789-1-hsinyi@chromium.org> <20200110073730.213789-3-hsinyi@chromium.org>
+ <7d137ab6-d57b-8471-bb6a-37556e5e2a01@gmail.com>
+In-Reply-To: <7d137ab6-d57b-8471-bb6a-37556e5e2a01@gmail.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Tue, 14 Jan 2020 02:01:53 +0800
+Message-ID: <CAJMQK-j1CfXKDCpyycp5F7pbuESGgbzb=8h-adGrjw1oZcCBnw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: mediatek: add mt8173 elm and hana board
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-mediatek@lists.infradead.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Kurtz <djkurtz@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+On Fri, Jan 10, 2020 at 9:42 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
+>
+>
+Thanks, I will address the comments and send next version
+>
+> On 10/01/2020 08:37, Hsin-Yi Wang wrote:
+> > Elm is Acer Chromebook R13. Hana is Lenovo Chromebook. Both uses mt8173
+> > SoC.
+> >
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > ---
+> > Changes in v2:
+> > - remove downstream nodes and unused nodes
+> > - use GPIO_ACTIVE_LOW for ps8640 gpios
+> > - move trackpad to hana
+> > ---
+> >  arch/arm64/boot/dts/mediatek/Makefile         |    3 +
+> >  .../dts/mediatek/mt8173-elm-hana-rev7.dts     |   27 +
+> >  .../boot/dts/mediatek/mt8173-elm-hana.dts     |   16 +
+> >  .../boot/dts/mediatek/mt8173-elm-hana.dtsi    |   60 +
+> >  arch/arm64/boot/dts/mediatek/mt8173-elm.dts   |   15 +
+> >  arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi  | 1040 +++++++++++++++++
+> >  6 files changed, 1161 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dts
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtsi
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dts
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+> >
+> > diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> > index 458bbc422a94..b45a45a565a1 100644
+> > --- a/arch/arm64/boot/dts/mediatek/Makefile
+> > +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> > @@ -6,5 +6,8 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-x20-dev.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-bananapi-bpi-r64.dtb
+> > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-elm.dtb
+> > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-elm-hana.dtb
+> > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-elm-hana-rev7.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8183-evb.dtb
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dts b/arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dts
+> > new file mode 100644
+> > index 000000000000..a3616bc3d859
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dts
+> > @@ -0,0 +1,27 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright 2019 MediaTek Inc.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "mt8173-elm-hana.dtsi"
+> > +
+> > +/ {
+> > +     model = "Mediatek Hana rev7 board";
+> > +     compatible = "google,hana-rev7", "mediatek,mt8173";
+> > +};
+> > +
+> > +&cpu_thermal {
+> > +     trips {
+> > +             cpu_crit: cpu_crit@0 {
+> > +                     temperature = <100000>;
+> > +                     type = "critical";
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&gpio_keys {
+> > +     /delete-node/tablet_mode;
+> > +     /delete-node/volume_down;
+> > +     /delete-node/volume_up;
+> > +};
+> > \ No newline at end of file
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts b/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
+> > new file mode 100644
+> > index 000000000000..8cbcc75192e3
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
+> > @@ -0,0 +1,16 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright 2016 MediaTek Inc.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "mt8173-elm-hana.dtsi"
+> > +
+> > +/ {
+> > +     model = "Mediatek Hana rev0 board";
+> > +     compatible = "google,hana-rev6",
+> > +                     "google,hana-rev5", "google,hana-rev4",
+> > +                     "google,hana-rev3", "google,hana-rev2",
+> > +                     "google,hana-rev1", "google,hana-rev0",
+> > +                     "google,hana", "mediatek,mt8173";
+> > +};
+>
+> I'm a bit confused about all this versions. Do you want to keep them for
+> internal use, as I suppose only rev6 is available to the general public,
+> correct? I'm fine with keeping the old revisions if that's of use for you,
+> otherwise I'd prefer to delete them.
+According to internal feedback system, at least rev3, rev6, rev7 are
+in general public. I can delete rev0~rev2, since they are earlier
+version device.
+>
+> Model name could be more verbose.
+>
+> > \ No newline at end of file
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtsi
+> > new file mode 100644
+> > index 000000000000..35e12b290947
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtsi
+> > @@ -0,0 +1,60 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright 2016 MediaTek Inc.
+> > + */
+> > +
+> > +#include "mt8173-elm.dtsi"
+> > +
+> > +&i2c0 {
+> > +     clock-frequency = <200000>;
+> > +};
+> > +
+> > +&i2c3 {
+> > +     touchscreen2: touchscreen@34 {
+> > +             compatible = "melfas,mip4_ts";
+> > +             reg = <0x34>;
+> > +             interrupt-parent = <&pio>;
+> > +             interrupts = <88 IRQ_TYPE_LEVEL_LOW>;
+> > +     };
+> > +
+> > +     touchscreen3: touchscreen@20 {
+> > +             compatible = "hid-over-i2c";
+> > +             reg = <0x20>;
+> > +             hid-descr-addr = <0x0020>;
+> > +             interrupt-parent = <&pio>;
+> > +             interrupts = <88 IRQ_TYPE_LEVEL_LOW>;
+> > +     };
+>
+> In v1 you mentioned:
+> "Partners wants to increase touchpad and touchscreen source (they choose
+> synaptics) for hana 300e, and synaptics uses hid-over-i2c driver."
+>
+> So the partner uses the same compatible (google,hana-rev6?) for both devices?
+>
+Confirmed with others, second source devices share same compatible.
+> > +};
+> > +
+> > +&i2c4 {
+> > +     trackpad2: trackpad@2c {
+> > +             compatible = "hid-over-i2c";
+> > +             interrupt-parent = <&pio>;
+> > +             interrupts = <117 IRQ_TYPE_LEVEL_LOW>;
+> > +             reg = <0x2c>;
+> > +             hid-descr-addr = <0x0020>;
+> > +             wakeup-source;
+> > +     };
+> > +};
+> > +
+> > +&mmc1 {
+> > +     wp-gpios = <&pio 42 GPIO_ACTIVE_HIGH>;
+> > +};
+> > +
+> > +&pio {
+> > +     hdmi_mux_pins: hdmi_mux_pins {
+> > +             pins2 {
+> > +                     pinmux = <MT8173_PIN_98_URTS1__FUNC_GPIO98>;
+> > +                     bias-pull-up;
+> > +                     output-high;
+> > +             };
+> > +     };
+> > +
+> > +     mmc1_pins_default: mmc1default {
+> > +             pins_wp {
+> > +                     pinmux = <MT8173_PIN_42_DSI_TE__FUNC_GPIO42>;
+> > +                     input-enable;
+> > +                     bias-pull-up;
+> > +             };
+> > +     };
+> > +};
+> > \ No newline at end of file
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dts b/arch/arm64/boot/dts/mediatek/mt8173-elm.dts
+> > new file mode 100644
+> > index 000000000000..e5da2355760e
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dts
+> > @@ -0,0 +1,15 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright 2016 MediaTek Inc.
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "mt8173-elm.dtsi"
+> > +
+> > +/ {
+> > +     model = "Mediatek Elm board";
+> > +     compatible = "google,elm-rev8", "google,elm-rev7", "google,elm-rev6",
+> > +                     "google,elm-rev5", "google,elm-rev4", "google,elm-rev3",
+> > +                     "google,elm-rev2", "google,elm-rev1",
+> > +                     "google,elm", "mediatek,mt8173";
+> > +};
+> > \ No newline at end of file
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+> > new file mode 100644
+> > index 000000000000..2ac738bebe04
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+> > @@ -0,0 +1,1040 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright 2016 MediaTek Inc.
+> > + */
+> > +
+> > +#include <dt-bindings/input/input.h>
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include "mt8173.dtsi"
+> > +
+> > +/ {
+> > +     aliases {
+> > +             serial0 = &uart0;
+> > +             serial1 = &uart1;
+> > +             serial2 = &uart2;
+> > +             serial3 = &uart3;
+> > +     };
+> > +
+> > +     memory@40000000 {
+> > +             device_type = "memory";
+> > +             reg = <0 0x40000000 0 0x80000000>;
+> > +     };
+> > +
+> > +     backlight_lcd: backlight_lcd {
+> > +             compatible = "pwm-backlight";
+> > +             pwms = <&pwm0 0 1000000>;
+> > +             brightness-levels = <
+> > +                       0  16  32  48  64  80  96 112
+> > +                     128 144 160 176 192 208 224 240
+> > +                     255
+> > +             >;
+> > +             default-brightness-level = <9>;
+> > +             power-supply = <&bl_fixed_reg>;
+> > +             enable-gpios = <&pio 95 GPIO_ACTIVE_HIGH>;
+> > +
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&disp_pwm0_pins>;
+> > +             status = "okay";
+> > +     };
+> > +
+> > +     bl_fixed_reg: fixedregulator@2 {
+> > +             compatible = "regulator-fixed";
+> > +             regulator-name = "bl_fixed";
+> > +             regulator-min-microvolt = <1800000>;
+> > +             regulator-max-microvolt = <1800000>;
+> > +             startup-delay-us = <1000>;
+> > +             enable-active-high;
+> > +             gpio = <&pio 32 GPIO_ACTIVE_HIGH>;
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&bl_fixed_pins>;
+> > +     };
+> > +
+> > +     chosen {
+> > +             stdout-path = &uart0;
+> > +     };
+> > +
+> > +     gpio_keys: gpio-keys {
+> > +             compatible = "gpio-keys";
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&gpio_keys_pins>;
+> > +
+> > +             lid {
+> > +                     label = "Lid";
+> > +                     gpios = <&pio 69 GPIO_ACTIVE_LOW>;
+> > +                     linux,code = <0>; /* SW_LID */
+> > +                     linux,input-type = <5>; /* EV_SW */
+> > +                     gpio-key,wakeup;
+> > +             };
+> > +
+> > +             power {
+> > +                     label = "Power";
+> > +                     gpios = <&pio 14 GPIO_ACTIVE_HIGH>;
+> > +                     linux,code = <KEY_POWER>;
+> > +                     debounce-interval = <30>;
+> > +                     gpio-key,wakeup;
+> > +             };
+> > +
+> > +             tablet_mode {
+> > +                     label = "Tablet_mode";
+> > +                     gpios = <&pio 121 GPIO_ACTIVE_HIGH>;
+> > +                     linux,code = <1>; /* SW_TABLET_MODE */
+>
+> can't we use SW_TABLET_MODE fomr linux-event-codes.h?
+>
+Will fix this.
+> > +                     linux,input-type = <5>; /* EV_SW */
+>
+> same here.
+>
+> > +                     gpio-key,wakeup;
+> > +             };
+> > +
+> > +             volume_down {
+> > +                     label = "Volume_down";
+> > +                     gpios = <&pio 123 GPIO_ACTIVE_LOW>;
+> > +                     linux,code = <KEY_VOLUMEDOWN>;
+> > +             };
+> > +
+> > +             volume_up {
+> > +                     label = "Volume_up";
+> > +                     gpios = <&pio 124 GPIO_ACTIVE_LOW>;
+> > +                     linux,code = <KEY_VOLUMEUP>;
+> > +             };
+> > +     };
+> > +
+> > +     panel: panel {
+> > +             compatible = "lg,lp120up1";
+> > +             power-supply = <&panel_fixed_3v3>;
+> > +             ddc-i2c-bus = <&i2c0>;
+> > +             backlight = <&backlight_lcd>;
+> > +
+> > +             port {
+> > +                     panel_in: endpoint {
+> > +                             remote-endpoint = <&ps8640_out>;
+> > +                     };
+> > +             };
+> > +     };
+> > +
+> > +     panel_fixed_3v3: regulator@1 {
+> > +             compatible = "regulator-fixed";
+> > +             regulator-name = "PANEL_3V3";
+> > +             regulator-min-microvolt = <3300000>;
+> > +             regulator-max-microvolt = <3300000>;
+> > +             enable-active-high;
+> > +             gpio = <&pio 41 GPIO_ACTIVE_HIGH>;
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&panel_fixed_pins>;
+> > +     };
+> > +
+> > +     ps8640_fixed_1v2: regulator@2 {
+> > +             compatible = "regulator-fixed";
+> > +             regulator-name = "PS8640_1V2";
+> > +             regulator-min-microvolt = <1200000>;
+> > +             regulator-max-microvolt = <1200000>;
+> > +             regulator-enable-ramp-delay = <2000>;
+> > +             enable-active-high;
+> > +             regulator-boot-on;
+> > +             gpio = <&pio 30 GPIO_ACTIVE_HIGH>;
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&ps8640_fixed_pins>;
+> > +     };
+> > +
+> > +     sdio_fixed_3v3: fixedregulator@0 {
+> > +             compatible = "regulator-fixed";
+> > +             regulator-name = "3V3";
+> > +             regulator-min-microvolt = <3300000>;
+> > +             regulator-max-microvolt = <3300000>;
+> > +             gpio = <&pio 85 GPIO_ACTIVE_HIGH>;
+>
+> we don't need to set the pincontroller mux here?
+>
+Will double check on schematic and add it.
+> > +     };
+> > +
+> > +     sound: sound {
+> > +             compatible = "mediatek,mt8173-rt5650";
+> > +             mediatek,audio-codec = <&rt5650 &hdmi0>;
+> > +             mediatek,platform = <&afe>;
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&aud_i2s2>;
+> > +
+> > +             mediatek,mclk = <1>;
+> > +             codec-capture {
+> > +                     sound-dai = <&rt5650 1>;
+> > +             };
+> > +     };
+> > +
+> > +     hdmicon: connector {
+> > +             compatible = "hdmi-connector";
+> > +             label = "hdmi";
+> > +             type = "a";
+> > +             ddc-i2c-bus = <&hdmiddc0>;
+> > +
+> > +             port {
+> > +                     hdmi_connector_in: endpoint {
+> > +                             remote-endpoint = <&hdmi0_out>;
+> > +                     };
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&cec {
+> > +     status = "okay";
+> > +};
+> > +
+> > +&cpu0 {
+> > +     proc-supply = <&mt6397_vpca15_reg>;
+> > +};
+> > +
+> > +&cpu1 {
+> > +     proc-supply = <&mt6397_vpca15_reg>;
+> > +};
+> > +
+> > +&cpu2 {
+> > +     proc-supply = <&da9211_vcpu_reg>;
+> > +     sram-supply = <&mt6397_vsramca7_reg>;
+> > +};
+> > +
+> > +&cpu3 {
+> > +     proc-supply = <&da9211_vcpu_reg>;
+> > +     sram-supply = <&mt6397_vsramca7_reg>;
+> > +};
+> > +
+> > +&cpu_thermal {
+> > +     sustainable-power = <4500>; /* milliwatts */
+> > +     trips {
+> > +             threshold: trip-point@0 {
+> > +                     temperature = <60000>;
+> > +             };
+> > +
+> > +             target: trip-point@1 {
+> > +                     temperature = <65000>;
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&dsi0 {
+> > +     status = "okay";
+> > +     ports {
+> > +             #address-cells = <1>;
+> > +             #size-cells = <0>;
+> > +
+> > +             port@1 {
+> > +                     dsi0_out: endpoint {
+> > +                             remote-endpoint = <&ps8640_in>;
+> > +                     };
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&dpi0 {
+> > +     status = "okay";
+> > +};
+> > +
+> > +&hdmi0 {
+> > +     status = "okay";
+> > +     ports {
+> > +             port@1 {
+> > +                     reg = <1>;
+> > +
+> > +                     hdmi0_out: endpoint {
+> > +                             remote-endpoint = <&hdmi_connector_in>;
+> > +                     };
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&hdmi_phy {
+> > +     status = "okay";
+> > +     mediatek,ibias = <0xc>;
+> > +};
+> > +
+> > +&i2c0 {
+> > +     status = "okay";
+> > +
+> > +     rt5650: audio-codec@1a {
+> > +             compatible = "realtek,rt5650";
+> > +             reg = <0x1a>;
+> > +             avdd-supply = <&mt6397_vgp1_reg>;
+> > +             cpvdd-supply = <&mt6397_vcama_reg>;
+>
+> Hm, only defined for "realtek,rt5663", I suppose that's an inconsistency in the
+> binding documentation. Can you please double check?
+>
+This one? https://github.com/torvalds/linux/blob/master/sound/soc/codecs/rt5645.c#L3582
 
-On 1/13/20 5:21 AM, Andrew Lunn wrote:
-> On Sun, Jan 12, 2020 at 08:53:19PM -0800, Florian Fainelli wrote:
->> Maintain per MDIO device and MDIO bus statistics comprised of the number
->> of transfers/operations, reads and writes and errors. This is useful for
->> tracking the per-device and global MDIO bus bandwidth and doing
->> optimizations as necessary.
-> 
-> Hi Florian
-> 
-> One point for discussion is, is sysfs the right way to do this?
-> Should we be using ethtool and exporting the statistics like other
-> statistics?
-> 
-> The argument against it, is we have devices which are not related to a
-> network interfaces on MDIO busses. For a PHY we could plumb the per
-> PHY mdio device statistics into the exiting PHY statistics. But we
-> also have Ethernet switches on MDIO devices, which don't have an
-> association to a netdev interface. Broadcom also have some generic PHY
-> device on MDIO busses, for USB, SATA, etc. And whole bus statistics
-> don't fit the netdev model at all.
+> > +             interrupt-parent = <&pio>;
+> > +             interrupts = <3 IRQ_TYPE_EDGE_BOTH>;
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&rt5650_irq>;
+> > +             #sound-dai-cells = <1>;
+> > +             realtek,dmic1-data-pin = <2>;
+> > +             realtek,jd-mode = <2>;
+> > +     };
+> > +
+> > +     ps8640: edp-bridge@8 {
+> > +             compatible = "parade,ps8640";
+> > +             reg = <0x8>;
+> > +             powerdown-gpios = <&pio 127 GPIO_ACTIVE_LOW>;
+> > +             reset-gpios = <&pio 115 GPIO_ACTIVE_LOW>;
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&ps8640_pins>;
+> > +             vdd12-supply = <&ps8640_fixed_1v2>;
+> > +             vdd33-supply = <&mt6397_vgp2_reg>;
+> > +
+> > +             ports {
+> > +                     #address-cells = <1>;
+> > +                     #size-cells = <0>;
+> > +
+> > +                     port@0 {
+> > +                             reg = <0>;
+> > +
+> > +                             ps8640_in: endpoint {
+> > +                                     remote-endpoint = <&dsi0_out>;
+> > +                             };
+> > +                     };
+> > +
+> > +                     port@1 {
+> > +                             reg = <1>;
+> > +
+> > +                             ps8640_out: endpoint {
+> > +                                     remote-endpoint = <&panel_in>;
+> > +                             };
+> > +                     };
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&i2c1 {
+> > +     clock-frequency = <1500000>;
+> > +     status = "okay";
+> > +
+> > +     da9211: da9211@68 {
+> > +             compatible = "dlg,da9211";
+> > +             reg = <0x68>;
+> > +
+>
+> no interrupts? binding description have this stated as required. what happens
+> when the device raises an interrupt?
+Will double check on schematic and add it.
+>
+> > +             regulators {
+> > +                     da9211_vcpu_reg: BUCKA {
+> > +                             regulator-name = "VBUCKA";
+> > +                             regulator-min-microvolt = < 700000>;
+> > +                             regulator-max-microvolt = <1310000>;
+> > +                             regulator-min-microamp  = <2000000>;
+> > +                             regulator-max-microamp  = <4400000>;
+> > +                             regulator-ramp-delay = <10000>;
+> > +                             regulator-always-on;
+> > +                             regulator-allowed-modes = <0 1>;
+> > +                     };
+> > +
+> > +                     da9211_vgpu_reg: BUCKB {
+> > +                             regulator-name = "VBUCKB";
+> > +                             regulator-min-microvolt = < 700000>;
+> > +                             regulator-max-microvolt = <1310000>;
+> > +                             regulator-min-microamp  = <2000000>;
+> > +                             regulator-max-microamp  = <3000000>;
+> > +                             regulator-ramp-delay = <10000>;
+> > +                     };
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&i2c2 {
+> > +     status = "okay";
+> > +
+> > +     tpm: tpm@20 {
+> > +             compatible = "infineon,slb9645tt";
+> > +             reg = <0x20>;
+> > +             powered-while-suspended;
+> > +     };
+> > +};
+> > +
+> > +&i2c3 {
+> > +     clock-frequency = <400000>;
+> > +     status = "okay";
+> > +
+> > +     touchscreen: touchscreen@10 {
+> > +             compatible = "elan,ekth3500";
+> > +             reg = <0x10>;
+> > +             interrupt-parent = <&pio>;
+> > +             interrupts = <88 IRQ_TYPE_LEVEL_LOW>;
+> > +     };
+> > +};
+> > +
+> > +&i2c4 {
+> > +     clock-frequency = <400000>;
+> > +     status = "okay";
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&trackpad_irq>;
+>
+> Why not move the pinctrl properties into the trackpad node?
+>
+As second source trackpad device and original device shares same
+compatible string (rev id), we need to add 2nd trackpad node here.
+According to previous log (since I don't have a second source trackpad
+device to test), adding pinctrl in each trackpad node, there would be
+error:
+ [    0.643501] mediatek-mt8173-pinctrl 1000b000.pinctrl: pin URXD3
+already requested by 7-0015; cannot claim for 7-002c
+ [    0.643525] mediatek-mt8173-pinctrl 1000b000.pinctrl: pin-117
+(7-002c) status -22
+ [    0.643548] mediatek-mt8173-pinctrl 1000b000.pinctrl: could not
+request pin 117 (URXD3) from group URXD3  on device 1000b000.pinctrl
+ [    0.643568] i2c_hid 7-002c: Error applying setting, reverse things back
+ [    0.643867] i2c 7-002c: Driver i2c_hid requests probe deferral
 
-Correct, that was the reasoning, which I should probably put in the
-commit message.
 
-> 
-> So sysfs does make sense. But i would also suggest we do plumb per PHY
-> MDIO device statistics into the exiting ethtool call.
-
-It looks like replicating statistics that are already available via
-another mechanism is kind of frowned upon, see this for an example:
-
-
-
-> 
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>  Documentation/ABI/testing/sysfs-bus-mdio |  34 +++++++
->>  drivers/net/phy/mdio_bus.c               | 116 +++++++++++++++++++++++
->>  drivers/net/phy/mdio_device.c            |   1 +
->>  include/linux/mdio.h                     |  10 ++
->>  include/linux/phy.h                      |   2 +
->>  5 files changed, 163 insertions(+)
->>  create mode 100644 Documentation/ABI/testing/sysfs-bus-mdio
->>
->> diff --git a/Documentation/ABI/testing/sysfs-bus-mdio b/Documentation/ABI/testing/sysfs-bus-mdio
->> new file mode 100644
->> index 000000000000..a552d92890f1
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-bus-mdio
->> @@ -0,0 +1,34 @@
->> +What:          /sys/bus/mdio_bus/devices/.../statistics/
->> +Date:          January 2020
->> +KernelVersion: 5.6
->> +Contact:       netdev@vger.kernel.org
->> +Description:
->> +		This folder contains statistics about MDIO bus transactions.
->> +
->> +What:          /sys/bus/mdio_bus/devices/.../statistics/transfers
->> +Date:          January 2020
->> +KernelVersion: 5.6
->> +Contact:       netdev@vger.kernel.org
->> +Description:
->> +		Total number of transfers for this MDIO bus.
->> +
->> +What:          /sys/bus/mdio_bus/devices/.../statistics/errors
->> +Date:          January 2020
->> +KernelVersion: 5.6
->> +Contact:       netdev@vger.kernel.org
->> +Description:
->> +		Total number of transfer errors for this MDIO bus.
->> +
->> +What:          /sys/bus/mdio_bus/devices/.../statistics/writes
->> +Date:          January 2020
->> +KernelVersion: 5.6
->> +Contact:       netdev@vger.kernel.org
->> +Description:
->> +		Total number of write transactions for this MDIO bus.
->> +
->> +What:          /sys/bus/mdio_bus/devices/.../statistics/reads
->> +Date:          January 2020
->> +KernelVersion: 5.6
->> +Contact:       netdev@vger.kernel.org
->> +Description:
->> +		Total number of read transactions for this MDIO bus.
-> 
-> Looking at this description, it is not clear we have whole bus and per
-> device statistics. 
-> 
->>  int __mdiobus_read(struct mii_bus *bus, int addr, u32 regnum)
->>  {
->> +	struct mdio_device *mdiodev = bus->mdio_map[addr];
->>  	int retval;
->>  
->>  	WARN_ON_ONCE(!mutex_is_locked(&bus->mdio_lock));
->> @@ -555,6 +645,9 @@ int __mdiobus_read(struct mii_bus *bus, int addr, u32 regnum)
->>  	retval = bus->read(bus, addr, regnum);
->>  
->>  	trace_mdio_access(bus, 1, addr, regnum, retval, retval);
->> +	mdiobus_stats_acct(&bus->stats, true, retval);
->> +	if (mdiodev)
->> +		mdiobus_stats_acct(&mdiodev->stats, true, retval);
->>  
->>  	return retval;
-> 
-> I think for most Ethernet switches, these per device counters are
-> going to be misleading. The switch often takes up multiple addresses
-> on the bus, but the switch is represented as a single mdiodev with one
-> address.
-
-For MDIO switches you would usually have the mdio_device claim the
-pseudo PHY address and all other MDIO addresses should correspond to
-built-in PHYs, for which we also have mdio_device instances, is there a
-case that I am missing?
-
-> So the counters will reflect the transfers on that one
-> address, not the whole switch. The device tree binding does not have
-> enough information for us to associated one mdiodev to multiple
-> addresses. And for some of the Marvell switches, it is a sparse address
-> map, and i have seen PHY devices in the holes. So in the sysfs
-> documentation, we should probably add a warning that when used with an
-> Ethernet switch, the counters are unlikely to be accurate, and should
-> be interpreted with care.
-
-If the answer to my question above is that we still have reads to
-addresses for which we do not have mdio_device (which we might very well
-have), then we could either:
-
-- create <mdio_bus>:<address>/statistics/ folders even for non-existent
-devices, but just to track the per-address statistics
-- create <mdio_bus>/<address>/statistics and when a mdio_device instance
-exists we symbolic link <mdio_bus>:<address>/statistics ->
-../<mdio_bus>/<addr>/statistics
-
-Would that work?
--- 
-Florian
+> > +
+> > +     trackpad: trackpad@15 {
+> > +             compatible = "elan,ekth3000";
+> > +             interrupt-parent = <&pio>;
+> > +             interrupts = <117 IRQ_TYPE_LEVEL_LOW>;
+> > +             reg = <0x15>;
+> > +             vcc-supply = <&mt6397_vgp6_reg>;
+> > +             wakeup-source;
+> > +     };
+> > +};
+> > +
+> > +&mipi_tx0 {
+> > +     status = "okay";
+> > +};
+> > +
+> > +&mmc0 {
+> > +     status = "okay";
+> > +     pinctrl-names = "default", "state_uhs";
+> > +     pinctrl-0 = <&mmc0_pins_default>;
+> > +     pinctrl-1 = <&mmc0_pins_uhs>;
+> > +     bus-width = <8>;
+> > +     max-frequency = <200000000>;
+> > +     cap-mmc-highspeed;
+> > +     mmc-hs200-1_8v;
+> > +     mmc-hs400-1_8v;
+> > +     cap-mmc-hw-reset;
+> > +     hs400-ds-delay = <0x14015>;
+> > +     mediatek,hs200-cmd-int-delay=<30>;
+> > +     mediatek,hs400-cmd-int-delay=<14>;
+> > +     mediatek,hs400-cmd-resp-sel-rising;
+> > +     vmmc-supply = <&mt6397_vemc_3v3_reg>;
+> > +     vqmmc-supply = <&mt6397_vio18_reg>;
+> > +     assigned-clocks = <&topckgen CLK_TOP_MSDC50_0_SEL>;
+> > +     assigned-clock-parents = <&topckgen CLK_TOP_MSDCPLL_D2>;
+> > +     non-removable;
+> > +};
+> > +
+> > +&mmc1 {
+> > +     status = "okay";
+> > +     pinctrl-names = "default", "state_uhs";
+> > +     pinctrl-0 = <&mmc1_pins_default>;
+> > +     pinctrl-1 = <&mmc1_pins_uhs>;
+> > +     bus-width = <4>;
+> > +     max-frequency = <200000000>;
+> > +     cap-sd-highspeed;
+> > +     sd-uhs-sdr50;
+> > +     sd-uhs-sdr104;
+> > +     cd-gpios = <&pio 1 GPIO_ACTIVE_HIGH>;
+> > +     vmmc-supply = <&mt6397_vmch_reg>;
+> > +     vqmmc-supply = <&mt6397_vmc_reg>;
+> > +};
+> > +
+> > +&mmc3 {
+> > +     status = "okay";
+> > +     pinctrl-names = "default", "state_uhs";
+> > +     pinctrl-0 = <&mmc3_pins_default>;
+> > +     pinctrl-1 = <&mmc3_pins_uhs>;
+> > +     bus-width = <4>;
+> > +     max-frequency = <200000000>;
+> > +     cap-sd-highspeed;
+> > +     sd-uhs-sdr50;
+> > +     sd-uhs-sdr104;
+> > +     sdr104-clk-delay = <5>;
+>
+> Not an upstream property, please delete it.
+>
+> > +     keep-power-in-suspend;
+> > +     enable-sdio-wakeup;
+> > +     cap-sdio-irq;
+> > +     vmmc-supply = <&sdio_fixed_3v3>;
+> > +     vqmmc-supply = <&mt6397_vgp3_reg>;
+> > +     non-removable;
+> > +     cap-power-off-card;
+> > +
+> > +     #address-cells = <1>;
+> > +     #size-cells = <0>;
+> > +
+> > +     btmrvl: btmrvl@2 {
+> > +             compatible = "marvell,sd8897-bt";
+> > +             reg = <2>;
+> > +             interrupt-parent = <&pio>;
+> > +             interrupts = <119 IRQ_TYPE_LEVEL_LOW>;
+> > +             marvell,wakeup-pin = /bits/ 16 <0x0d>;
+> > +             marvell,wakeup-gap-ms = /bits/ 16 <0x64>;
+> > +     };
+> > +
+> > +     mwifiex: mwifiex@1 {
+> > +             compatible = "marvell,sd8897";
+> > +             reg = <1>;
+> > +             interrupt-parent = <&pio>;
+> > +             interrupts = <38 IRQ_TYPE_LEVEL_LOW>;
+> > +             marvell,wakeup-pin = <3>;
+> > +             marvell,caldata_ed_mac = /bits/ 8 <
+> > +0x01 0x00 0x07 0x00 0x14 0x00 0x01 0x00 0x00 0x00 0x12 0x00 0x02 0x00 0x01 0x00
+> > +0x01 0x00 0x00 0x00 0x12 0x00 0x02 0x00 0x01 0x00
+> > +             >;
+>
+> Not an upstream property, please delete.
+>
+> > +     };
+> > +};
+> > +
+> > +&nor_flash {
+> > +     status = "okay";
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&nor_gpio1_pins>;
+> > +     bus-width = <8>;
+> > +     max-frequency = <50000000>;
+> > +     non-removable;
+> > +     flash@0 {
+> > +             compatible = "jedec,spi-nor";
+> > +             reg = <0>;
+> > +     };
+> > +};
+> > +
+> > +&pio {
+> > +     aud_i2s2: aud_i2s2 {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_128_I2S0_LRCK__FUNC_I2S1_WS>,
+> > +                              <MT8173_PIN_129_I2S0_BCK__FUNC_I2S1_BCK>,
+> > +                              <MT8173_PIN_130_I2S0_MCK__FUNC_I2S1_MCK>,
+> > +                              <MT8173_PIN_131_I2S0_DATA0__FUNC_I2S1_DO_1>,
+> > +                              <MT8173_PIN_12_EINT12__FUNC_I2S2_WS>,
+> > +                              <MT8173_PIN_13_EINT13__FUNC_I2S2_BCK>,
+> > +                              <MT8173_PIN_132_I2S0_DATA1__FUNC_I2S2_DI_2>;
+> > +                     bias-pull-down;
+> > +             };
+> > +     };
+> > +
+> > +     bl_fixed_pins: bl_fixed_pins {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_32_UTXD2__FUNC_GPIO32>;
+> > +                     output-low;
+> > +             };
+> > +     };
+> > +
+> > +     bt_wake_pins: bt_wake_pins {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_119_KPROW0__FUNC_GPIO119>;
+> > +                     bias-pull-up;
+> > +             };
+> > +     };
+> > +
+> > +     disp_pwm0_pins: disp_pwm0_pins {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_87_DISP_PWM0__FUNC_DISP_PWM0>;
+> > +                     output-low;
+> > +             };
+> > +     };
+> > +
+> > +     gpio_keys_pins: gpio_keys_pins {
+> > +             volume_pins {
+> > +                     pinmux = <MT8173_PIN_123_KPCOL1__FUNC_GPIO123>,
+> > +                              <MT8173_PIN_124_KPCOL2__FUNC_GPIO124>;
+> > +                     bias-pull-up;
+> > +             };
+> > +
+> > +             tablet_mode_pins {
+> > +                     pinmux = <MT8173_PIN_121_KPROW2__FUNC_GPIO121>;
+> > +                     bias-pull-up;
+> > +             };
+> > +     };
+> > +
+> > +     hdmi_mux_pins: hdmi_mux_pins {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_36_DAISYNC__FUNC_GPIO36>;
+> > +             };
+> > +     };
+> > +
+> > +     mmc0_pins_default: mmc0default {
+> > +             pins_cmd_dat {
+> > +                     pinmux = <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
+> > +                              <MT8173_PIN_58_MSDC0_DAT1__FUNC_MSDC0_DAT1>,
+> > +                              <MT8173_PIN_59_MSDC0_DAT2__FUNC_MSDC0_DAT2>,
+> > +                              <MT8173_PIN_60_MSDC0_DAT3__FUNC_MSDC0_DAT3>,
+> > +                              <MT8173_PIN_61_MSDC0_DAT4__FUNC_MSDC0_DAT4>,
+> > +                              <MT8173_PIN_62_MSDC0_DAT5__FUNC_MSDC0_DAT5>,
+> > +                              <MT8173_PIN_63_MSDC0_DAT6__FUNC_MSDC0_DAT6>,
+> > +                              <MT8173_PIN_64_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
+> > +                              <MT8173_PIN_66_MSDC0_CMD__FUNC_MSDC0_CMD>;
+> > +                             bias-pull-up;
+> > +             };
+> > +
+> > +             pins_clk {
+> > +                     pinmux = <MT8173_PIN_65_MSDC0_CLK__FUNC_MSDC0_CLK>;
+> > +                             bias-pull-down;
+>
+> identation.
+>
+> > +             };
+> > +
+> > +             pins_rst {
+> > +                     pinmux = <MT8173_PIN_68_MSDC0_RST___FUNC_MSDC0_RSTB>;
+> > +                     bias-pull-up;
+> > +             };
+> > +     };
+> > +
+> > +     mmc1_pins_default: mmc1default {
+> > +             pins_cmd_dat {
+> > +                     pinmux = <MT8173_PIN_73_MSDC1_DAT0__FUNC_MSDC1_DAT0>,
+> > +                              <MT8173_PIN_74_MSDC1_DAT1__FUNC_MSDC1_DAT1>,
+> > +                              <MT8173_PIN_75_MSDC1_DAT2__FUNC_MSDC1_DAT2>,
+> > +                              <MT8173_PIN_76_MSDC1_DAT3__FUNC_MSDC1_DAT3>,
+> > +                              <MT8173_PIN_78_MSDC1_CMD__FUNC_MSDC1_CMD>;
+> > +                     input-enable;
+> > +                     drive-strength = <MTK_DRIVE_4mA>;
+> > +                     bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+> > +             };
+> > +
+> > +             pins_clk {
+> > +                     pinmux = <MT8173_PIN_77_MSDC1_CLK__FUNC_MSDC1_CLK>;
+> > +                     bias-pull-down;
+> > +                     drive-strength = <MTK_DRIVE_4mA>;
+> > +             };
+> > +
+> > +             pins_insert {
+> > +                     pinmux = <MT8173_PIN_1_EINT1__FUNC_GPIO1>;
+> > +                     bias-pull-up;
+> > +             };
+> > +     };
+> > +
+> > +     mmc3_pins_default: mmc3default {
+> > +             pins_dat {
+> > +                     pinmux = <MT8173_PIN_22_MSDC3_DAT0__FUNC_MSDC3_DAT0>,
+> > +                              <MT8173_PIN_23_MSDC3_DAT1__FUNC_MSDC3_DAT1>,
+> > +                              <MT8173_PIN_24_MSDC3_DAT2__FUNC_MSDC3_DAT2>,
+> > +                              <MT8173_PIN_25_MSDC3_DAT3__FUNC_MSDC3_DAT3>;
+> > +                     input-enable;
+> > +                     drive-strength = <MTK_DRIVE_8mA>;
+> > +                     bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+> > +             };
+> > +
+> > +             pins_cmd {
+> > +                     pinmux = <MT8173_PIN_27_MSDC3_CMD__FUNC_MSDC3_CMD>;
+> > +                     input-enable;
+> > +                     drive-strength = <MTK_DRIVE_8mA>;
+> > +                     bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+> > +             };
+> > +
+> > +             pins_clk {
+> > +                     pinmux = <MT8173_PIN_26_MSDC3_CLK__FUNC_MSDC3_CLK>;
+> > +                     bias-pull-down;
+> > +                     drive-strength = <MTK_DRIVE_8mA>;
+> > +             };
+> > +
+> > +             pins_pdn {
+> > +                     pinmux = <MT8173_PIN_85_AUD_DAT_MOSI__FUNC_GPIO85>;
+> > +                     output-low;
+> > +             };
+> > +     };
+> > +
+> > +     mmc0_pins_uhs: mmc0 {
+> > +             pins_cmd_dat {
+> > +                     pinmux = <MT8173_PIN_57_MSDC0_DAT0__FUNC_MSDC0_DAT0>,
+> > +                              <MT8173_PIN_58_MSDC0_DAT1__FUNC_MSDC0_DAT1>,
+> > +                              <MT8173_PIN_59_MSDC0_DAT2__FUNC_MSDC0_DAT2>,
+> > +                              <MT8173_PIN_60_MSDC0_DAT3__FUNC_MSDC0_DAT3>,
+> > +                              <MT8173_PIN_61_MSDC0_DAT4__FUNC_MSDC0_DAT4>,
+> > +                              <MT8173_PIN_62_MSDC0_DAT5__FUNC_MSDC0_DAT5>,
+> > +                              <MT8173_PIN_63_MSDC0_DAT6__FUNC_MSDC0_DAT6>,
+> > +                              <MT8173_PIN_64_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
+> > +                              <MT8173_PIN_66_MSDC0_CMD__FUNC_MSDC0_CMD>;
+> > +                     input-enable;
+> > +                     drive-strength = <MTK_DRIVE_6mA>;
+> > +                     bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
+> > +             };
+> > +
+> > +             pins_clk {
+> > +                     pinmux = <MT8173_PIN_65_MSDC0_CLK__FUNC_MSDC0_CLK>;
+> > +                     drive-strength = <MTK_DRIVE_6mA>;
+> > +                     bias-pull-down = <MTK_PUPD_SET_R1R0_01>;
+> > +             };
+> > +
+> > +             pins_ds {
+> > +                     pinmux = <MT8173_PIN_67_MSDC0_DSL__FUNC_MSDC0_DSL>;
+> > +                     drive-strength = <MTK_DRIVE_10mA>;
+> > +                     bias-pull-down = <MTK_PUPD_SET_R1R0_01>;
+> > +             };
+> > +
+> > +             pins_rst {
+> > +                     pinmux = <MT8173_PIN_68_MSDC0_RST___FUNC_MSDC0_RSTB>;
+> > +                     bias-pull-up;
+> > +             };
+> > +     };
+> > +
+> > +     mmc1_pins_uhs: mmc1 {
+> > +             pins_cmd_dat {
+> > +                     pinmux = <MT8173_PIN_73_MSDC1_DAT0__FUNC_MSDC1_DAT0>,
+> > +                              <MT8173_PIN_74_MSDC1_DAT1__FUNC_MSDC1_DAT1>,
+> > +                              <MT8173_PIN_75_MSDC1_DAT2__FUNC_MSDC1_DAT2>,
+> > +                              <MT8173_PIN_76_MSDC1_DAT3__FUNC_MSDC1_DAT3>,
+> > +                              <MT8173_PIN_78_MSDC1_CMD__FUNC_MSDC1_CMD>;
+> > +                     input-enable;
+> > +                     drive-strength = <MTK_DRIVE_6mA>;
+> > +                     bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+> > +             };
+> > +
+> > +             pins_clk {
+> > +                     pinmux = <MT8173_PIN_77_MSDC1_CLK__FUNC_MSDC1_CLK>;
+> > +                     drive-strength = <MTK_DRIVE_8mA>;
+> > +                     bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+> > +             };
+> > +     };
+> > +
+> > +     mmc3_pins_uhs: mmc3 {
+> > +             pins_dat {
+> > +                     pinmux = <MT8173_PIN_22_MSDC3_DAT0__FUNC_MSDC3_DAT0>,
+> > +                              <MT8173_PIN_23_MSDC3_DAT1__FUNC_MSDC3_DAT1>,
+> > +                              <MT8173_PIN_24_MSDC3_DAT2__FUNC_MSDC3_DAT2>,
+> > +                              <MT8173_PIN_25_MSDC3_DAT3__FUNC_MSDC3_DAT3>;
+> > +                     input-enable;
+> > +                     drive-strength = <MTK_DRIVE_8mA>;
+> > +                     bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+> > +             };
+> > +
+> > +             pins_cmd {
+> > +                     pinmux = <MT8173_PIN_27_MSDC3_CMD__FUNC_MSDC3_CMD>;
+> > +                     input-enable;
+> > +                     drive-strength = <MTK_DRIVE_8mA>;
+> > +                     bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
+> > +             };
+> > +
+> > +             pins_clk {
+> > +                     pinmux = <MT8173_PIN_26_MSDC3_CLK__FUNC_MSDC3_CLK>;
+> > +                     drive-strength = <MTK_DRIVE_8mA>;
+> > +                     bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+> > +             };
+> > +     };
+> > +
+> > +     nor_gpio1_pins: nor {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_6_EINT6__FUNC_SFCS0>,
+> > +                              <MT8173_PIN_7_EINT7__FUNC_SFHOLD>,
+> > +                              <MT8173_PIN_8_EINT8__FUNC_SFIN>;
+> > +                     input-enable;
+> > +                     drive-strength = <MTK_DRIVE_4mA>;
+> > +                     bias-pull-up;
+> > +             };
+> > +
+> > +             pins2 {
+> > +                     pinmux = <MT8173_PIN_5_EINT5__FUNC_SFOUT>;
+> > +                     drive-strength = <MTK_DRIVE_4mA>;
+> > +                     bias-pull-up;
+> > +             };
+> > +
+> > +             pins_clk {
+> > +                     pinmux = <MT8173_PIN_9_EINT9__FUNC_SFCK>;
+> > +                     input-enable;
+> > +                     drive-strength = <MTK_DRIVE_4mA>;
+> > +                     bias-pull-up;
+> > +             };
+> > +     };
+> > +
+> > +     panel_fixed_pins: panel_fixed_pins {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_41_CMMCLK__FUNC_GPIO41>;
+> > +             };
+> > +     };
+> > +
+> > +     ps8640_pins: ps8640_pins {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_92_PCM_CLK__FUNC_GPIO92>,
+> > +                              <MT8173_PIN_115_URTS0__FUNC_GPIO115>,
+> > +                              <MT8173_PIN_127_LCM_RST__FUNC_GPIO127>;
+> > +             };
+> > +     };
+> > +
+> > +     ps8640_fixed_pins: ps8640_fixed_pins {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_30_URTS2__FUNC_GPIO30>;
+> > +             };
+> > +     };
+> > +
+> > +     rt5650_irq: rt5650_irq {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_3_EINT3__FUNC_GPIO3>;
+> > +                     bias-pull-down;
+> > +             };
+> > +     };
+> > +
+> > +     spi_pins_a: spi1 {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_0_EINT0__FUNC_GPIO0>;
+> > +                     bias-pull-up;
+> > +             };
+> > +
+> > +             pins_spi {
+> > +                     pinmux = <MT8173_PIN_102_MSDC2_DAT2__FUNC_SPI_CK_1_>,
+> > +                              <MT8173_PIN_103_MSDC2_DAT3__FUNC_SPI_MI_1_>,
+> > +                              <MT8173_PIN_104_MSDC2_CLK__FUNC_SPI_MO_1_>,
+> > +                              <MT8173_PIN_105_MSDC2_CMD__FUNC_SPI_CS_1_>;
+> > +                     bias-disable;
+> > +             };
+> > +     };
+> > +
+> > +     trackpad_irq: trackpad_irq {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_117_URXD3__FUNC_GPIO117>;
+> > +                     input-enable;
+> > +                     bias-pull-up;
+> > +             };
+> > +     };
+> > +
+> > +     usb_pins: usb@0 {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_101_MSDC2_DAT1__FUNC_GPIO101>;
+> > +                     output-high;
+> > +                     bias-disable;
+> > +             };
+> > +     };
+> > +
+> > +     wifi_wake_pins: wifi_wake_pins {
+> > +             pins1 {
+> > +                     pinmux = <MT8173_PIN_38_CONN_RST__FUNC_GPIO38>;
+> > +                     bias-pull-up;
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&pwm0 {
+> > +     status = "okay";
+> > +};
+> > +
+> > +&pwrap {
+> > +     pmic: mt6397 {
+> > +             compatible = "mediatek,mt6397";
+> > +             #address-cells = <1>;
+> > +             #size-cells = <1>;
+> > +             interrupt-parent = <&pio>;
+> > +             interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
+> > +             interrupt-controller;
+> > +             #interrupt-cells = <2>;
+> > +
+> > +             mt6397rtc: mt6397rtc {
+>
+> AFAIK this should be
+> rtc: mt6397rtc {
+>
+> Please fix that for all subnodes.
+>
+Will fix in next version
+> > +                     compatible = "mediatek,mt6397-rtc";
+> > +             };
+> > +
+> > +             syscfg_pctl_pmic: syscfg_pctl_pmic@c000 {
+> > +                     compatible = "mediatek,mt6397-pctl-pmic-syscfg",
+> > +                                  "syscon";
+> > +                     reg = <0 0x0000c000 0 0x0108>;
+>
+> not an upstream compatible, please delete the node.
+>
+> > +             };
+> > +
+> > +             pio6397: pinctrl@c000 {
+> > +                     compatible = "mediatek,mt6397-pinctrl";
+> > +                     pins-are-numbered;
+> > +                     gpio-controller;
+> > +                     #gpio-cells = <2>;
+> > +             };
+> > +
+> > +             mt6397clock: mt6397clock {
+> > +                     compatible = "mediatek,mt6397-clk";
+> > +                     #clock-cells = <1>;
+> > +             };
+> > +
+> > +             mt6397regulator: mt6397regulator {
+> > +                     compatible = "mediatek,mt6397-regulator";
+> > +
+> > +                     mt6397_vpca15_reg: buck_vpca15 {
+> > +                             regulator-compatible = "buck_vpca15";
+> > +                             regulator-name = "vpca15";
+> > +                             regulator-min-microvolt = < 700000>;
+> > +                             regulator-max-microvolt = <1350000>;
+> > +                             regulator-ramp-delay = <12500>;
+> > +                             regulator-always-on;
+> > +                             regulator-allowed-modes = <0 1>;
+> > +                     };
+> > +
+> > +                     mt6397_vpca7_reg: buck_vpca7 {
+> > +                             regulator-compatible = "buck_vpca7";
+> > +                             regulator-name = "vpca7";
+> > +                             regulator-min-microvolt = < 700000>;
+> > +                             regulator-max-microvolt = <1350000>;
+> > +                             regulator-ramp-delay = <12500>;
+> > +                             regulator-enable-ramp-delay = <115>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     mt6397_vsramca15_reg: buck_vsramca15 {
+> > +                             regulator-compatible = "buck_vsramca15";
+> > +                             regulator-name = "vsramca15";
+> > +                             regulator-min-microvolt = < 700000>;
+> > +                             regulator-max-microvolt = <1350000>;
+> > +                             regulator-ramp-delay = <12500>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     mt6397_vsramca7_reg: buck_vsramca7 {
+> > +                             regulator-compatible = "buck_vsramca7";
+> > +                             regulator-name = "vsramca7";
+> > +                             regulator-min-microvolt = < 700000>;
+> > +                             regulator-max-microvolt = <1350000>;
+> > +                             regulator-ramp-delay = <12500>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     mt6397_vcore_reg: buck_vcore {
+> > +                             regulator-compatible = "buck_vcore";
+> > +                             regulator-name = "vcore";
+> > +                             regulator-min-microvolt = < 700000>;
+> > +                             regulator-max-microvolt = <1350000>;
+> > +                             regulator-ramp-delay = <12500>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     mt6397_vgpu_reg: buck_vgpu {
+> > +                             regulator-compatible = "buck_vgpu";
+> > +                             regulator-name = "vgpu";
+> > +                             regulator-min-microvolt = < 700000>;
+> > +                             regulator-max-microvolt = <1350000>;
+> > +                             regulator-ramp-delay = <12500>;
+> > +                             regulator-enable-ramp-delay = <115>;
+> > +                     };
+> > +
+> > +                     mt6397_vdrm_reg: buck_vdrm {
+> > +                             regulator-compatible = "buck_vdrm";
+> > +                             regulator-name = "vdrm";
+> > +                             regulator-min-microvolt = <1200000>;
+> > +                             regulator-max-microvolt = <1400000>;
+> > +                             regulator-ramp-delay = <12500>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     mt6397_vio18_reg: buck_vio18 {
+> > +                             regulator-compatible = "buck_vio18";
+> > +                             regulator-name = "vio18";
+> > +                             regulator-min-microvolt = <1620000>;
+> > +                             regulator-max-microvolt = <1980000>;
+> > +                             regulator-ramp-delay = <12500>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     mt6397_vtcxo_reg: ldo_vtcxo {
+> > +                             regulator-compatible = "ldo_vtcxo";
+> > +                             regulator-name = "vtcxo";
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     mt6397_va28_reg: ldo_va28 {
+> > +                             regulator-compatible = "ldo_va28";
+> > +                             regulator-name = "va28";
+> > +                     };
+> > +
+> > +                     mt6397_vcama_reg: ldo_vcama {
+> > +                             regulator-compatible = "ldo_vcama";
+> > +                             regulator-name = "vcama";
+> > +                             regulator-min-microvolt = <1800000>;
+> > +                             regulator-max-microvolt = <1800000>;
+> > +                             regulator-enable-ramp-delay = <218>;
+> > +                     };
+> > +
+> > +                     mt6397_vio28_reg: ldo_vio28 {
+> > +                             regulator-compatible = "ldo_vio28";
+> > +                             regulator-name = "vio28";
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     mt6397_vusb_reg: ldo_vusb {
+> > +                             regulator-compatible = "ldo_vusb";
+> > +                             regulator-name = "vusb";
+> > +                     };
+> > +
+> > +                     mt6397_vmc_reg: ldo_vmc {
+> > +                             regulator-compatible = "ldo_vmc";
+> > +                             regulator-name = "vmc";
+> > +                             regulator-min-microvolt = <1800000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-enable-ramp-delay = <218>;
+> > +                     };
+> > +
+> > +                     mt6397_vmch_reg: ldo_vmch {
+> > +                             regulator-compatible = "ldo_vmch";
+> > +                             regulator-name = "vmch";
+> > +                             regulator-min-microvolt = <3000000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-enable-ramp-delay = <218>;
+> > +                     };
+> > +
+> > +                     mt6397_vemc_3v3_reg: ldo_vemc3v3 {
+> > +                             regulator-compatible = "ldo_vemc3v3";
+> > +                             regulator-name = "vemc_3v3";
+> > +                             regulator-min-microvolt = <3000000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-enable-ramp-delay = <218>;
+> > +                     };
+> > +
+> > +                     mt6397_vgp1_reg: ldo_vgp1 {
+> > +                             regulator-compatible = "ldo_vgp1";
+> > +                             regulator-name = "vcamd";
+> > +                             regulator-min-microvolt = <1800000>;
+> > +                             regulator-max-microvolt = <1800000>;
+> > +                             regulator-enable-ramp-delay = <240>;
+> > +                     };
+> > +
+> > +                     mt6397_vgp2_reg: ldo_vgp2 {
+> > +                             regulator-compatible = "ldo_vgp2";
+> > +                             regulator-name = "vcamio";
+> > +                             regulator-min-microvolt = <3300000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-enable-ramp-delay = <218>;
+> > +                     };
+> > +
+> > +                     mt6397_vgp3_reg: ldo_vgp3 {
+> > +                             regulator-compatible = "ldo_vgp3";
+> > +                             regulator-name = "vcamaf";
+> > +                             regulator-min-microvolt = <1800000>;
+> > +                             regulator-max-microvolt = <1800000>;
+> > +                             regulator-enable-ramp-delay = <218>;
+> > +                     };
+> > +
+> > +                     mt6397_vgp4_reg: ldo_vgp4 {
+> > +                             regulator-compatible = "ldo_vgp4";
+> > +                             regulator-name = "vgp4";
+> > +                             regulator-min-microvolt = <1200000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-enable-ramp-delay = <218>;
+> > +                     };
+> > +
+> > +                     mt6397_vgp5_reg: ldo_vgp5 {
+> > +                             regulator-compatible = "ldo_vgp5";
+> > +                             regulator-name = "vgp5";
+> > +                             regulator-min-microvolt = <1200000>;
+> > +                             regulator-max-microvolt = <3000000>;
+> > +                             regulator-enable-ramp-delay = <218>;
+> > +                     };
+> > +
+> > +                     mt6397_vgp6_reg: ldo_vgp6 {
+> > +                             regulator-compatible = "ldo_vgp6";
+> > +                             regulator-name = "vgp6";
+> > +                             regulator-min-microvolt = <3300000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-enable-ramp-delay = <218>;
+> > +                             regulator-always-on;
+> > +                     };
+> > +
+> > +                     mt6397_vibr_reg: ldo_vibr {
+> > +                             regulator-compatible = "ldo_vibr";
+> > +                             regulator-name = "vibr";
+> > +                             regulator-min-microvolt = <1300000>;
+> > +                             regulator-max-microvolt = <3300000>;
+> > +                             regulator-enable-ramp-delay = <218>;
+> > +                     };
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&spi {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&spi_pins_a>;
+> > +     mediatek,pad-select = <1>;
+> > +     status = "okay";
+> > +     /* clients */
+> > +     cros_ec: ec@0 {
+> > +             compatible = "google,cros-ec-spi";
+> > +             reg = <0x0>;
+> > +             spi-max-frequency = <12000000>;
+> > +             interrupt-parent = <&pio>;
+> > +             interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> > +             google,cros-ec-spi-msg-delay = <500>;
+> > +
+> > +             i2c_tunnel: i2c-tunnel@0 {
+> > +                     compatible = "google,cros-ec-i2c-tunnel";
+> > +                     google,remote-bus = <0>;
+> > +                     #address-cells = <1>;
+> > +                     #size-cells = <0>;
+> > +
+> > +                     battery: sbs-battery@b {
+> > +                             compatible = "sbs,sbs-battery";
+> > +                             reg = <0xb>;
+> > +                             sbs,i2c-retry-count = <2>;
+> > +                             sbs,poll-retry-count = <1>;
+> > +                     };
+> > +             };
+> > +     };
+> > +};
+> > +
+> > +&thermal {
+> > +     bank0-supply = <&mt6397_vpca15_reg>;
+> > +     bank1-supply = <&da9211_vcpu_reg>;
+> > +};
+> > +
+> > +&uart0 {
+> > +     status = "okay";
+> > +};
+> > +
+> > +&ssusb {
+> > +     dr_mode = "host";
+> > +     wakeup-source;
+> > +     vusb33-supply = <&mt6397_vusb_reg>;
+> > +     status = "okay";
+> > +};
+> > +
+> > +&usb_host {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&usb_pins>;
+> > +     vusb33-supply = <&mt6397_vusb_reg>;
+> > +     status = "okay";
+> > +};
+> > +
+> > +#include "../../../../arm/boot/dts/cros-ec-keyboard.dtsi"
+> Why don't we use
+> #include <arm/cros-ec-keyboard.dtsi> ?
+>
+Will fix in next version
+> > \ No newline at end of file
+> >
+>
+> As Yingjoe already mentioned, please add a newline :)
+>
+> Regards,
+> Matthias
