@@ -2,179 +2,105 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DECBCC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE375C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E482072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:04:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578953053;
-	bh=eVSiDXH34AHp/qaoNToMAiWkYfhmwvXPgMqymdVD9Gw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=viXekHcR0nws6f/0+m27dKasMhrXW9UWtIBMSZHwyj9ZTvJLSwr1GJhXtbZIoeaYO
-	 iFCEYodY0ZXnjm9iAnofsHlKhA1TfTVC2NVJ9T7RXZAdbcv8UC+C61ZMtSRhloytKR
-	 kG5VN1soyYjUStBpXKl6wAyRlgeqGk7U34ff0SKY=
+	by mail.kernel.org (Postfix) with ESMTP id C25F02072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:05:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="COPCLdzL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbgAMWEM (ORCPT
+        id S1728981AbgAMWFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:04:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728641AbgAMWEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:04:12 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 658A42072B;
-        Mon, 13 Jan 2020 22:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578953051;
-        bh=eVSiDXH34AHp/qaoNToMAiWkYfhmwvXPgMqymdVD9Gw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Navce5AJQowEtwXrMVJx6JeK29AmN0rJ5LbNT5wEsfhEmzUW+vI0rxaCoO83eij4D
-         ykF8bxxMuAuYawRwyEm9M4YJ/lCla3aCz8/6RSJq6LtbTy2HGYXngESlCwOAgS5IVn
-         jtignMOKSJk3BEa5jH0/jMwjYBc4FtUvoPlsmMgQ=
-Date:   Mon, 13 Jan 2020 22:04:07 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] iio: imu: adis: use new `delay` structure for SPI
- transfer delays
-Message-ID: <20200113220407.62d47084@archlinux>
-In-Reply-To: <20191210140755.14305-1-alexandru.ardelean@analog.com>
-References: <20191204080904.2557-1-alexandru.ardelean@analog.com>
-        <20191210140755.14305-1-alexandru.ardelean@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 13 Jan 2020 17:05:09 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42885 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728641AbgAMWFI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 17:05:08 -0500
+Received: by mail-pl1-f196.google.com with SMTP id p9so4355309plk.9
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 14:05:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zd/53b/YzvxFSSJluHpg2s36yjG1ma0E/zaQrjFe9bI=;
+        b=COPCLdzLquZ+pTd+qUGkNUztKc9ghw2B0XavyRbkLgcM3Elx5pxsZzkioDeo5ITOFL
+         VGVFmmv/j0NnW8j/7RWd/2S05ILFq+ZdcFS5DzhnkEwCUtnEGMTWz6KQB0UkJDZB3DgO
+         nUcESk3UDAcutgobfQAP0KuOYM3n+b0NpLSNc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zd/53b/YzvxFSSJluHpg2s36yjG1ma0E/zaQrjFe9bI=;
+        b=G0kH9SIgkorrnowUTS1BvZcFLPUz16tKFydbtu9PtSYTYTjU6fKRoRhkKtnrbZEmnc
+         jo6e8YCsr3BwH8lK1mKcm5NrX/ivbOf7Pa4djQ+ztDx0d3Uy8ngSgxngnwYvW3MrG3o1
+         zswDVBeku9hYmJSHCJmzRndKtm8bssEPmWxBWLyUKs88yGY4I7OQsVv6HSonyzkQXGim
+         LoYoFLDGItMJGwA8G34lVrlpymlGDgTlniA3o+jnmVfEMdD7lvh3w3FdGRIt2Y5rRh8t
+         7z38BH3JjmF3hQJ7IdYAQrbkWC50dIJT6Jj/Bz6/2GhEZwkwJYwdO7FvS7oG1wtJO6kK
+         LL0g==
+X-Gm-Message-State: APjAAAUwkOI+cQjWh/pzNX0BTBJLchVBjCAnhTO7aSdeC3fd19Pytnxj
+        JOWCunO1wMAu4vY9+dTyjb8osg==
+X-Google-Smtp-Source: APXvYqwSgta6aJy/jOmbS+805x0Xsc71s56AGXM8UF7sEDgc66R/QG09EQD8z34BuJIgVvxxx8lXQw==
+X-Received: by 2002:a17:90a:2351:: with SMTP id f75mr24735687pje.133.1578953107752;
+        Mon, 13 Jan 2020 14:05:07 -0800 (PST)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id v9sm14682621pja.26.2020.01.13.14.05.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 14:05:07 -0800 (PST)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Rob Clark <robdclark@chromium.org>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sean Paul <sean@poorly.run>, linux-arm-msm@vger.kernel.org,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Brian Masney <masneyb@onstation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH] drm/msm: Fix error about comments within a comment block
+Date:   Mon, 13 Jan 2020 14:04:46 -0800
+Message-Id: <20200113140427.1.I5e35e29bebe575e091177c4f82606c15370b71d7@changeid>
+X-Mailer: git-send-email 2.25.0.rc1.283.g88dfdc4193-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 10 Dec 2019 16:07:55 +0200
-Alexandru Ardelean <alexandru.ardelean@analog.com> wrote:
+My compiler yells:
+  .../drivers/gpu/drm/msm/adreno/adreno_gpu.c:69:27:
+  error: '/*' within block comment [-Werror,-Wcomment]
 
-> In a recent change to the SPI subsystem [1], a new `delay` struct was added
-> to replace the `delay_usecs`. This change replaces the current `delay_usecs`
-> with `delay` for this driver.
-> 
-> The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-> that both `delay_usecs` & `delay` are used (in this order to preserve
-> backwards compatibility).
-> 
-> [1] commit bebcfd272df6485 ("spi: introduce `delay` field for
-> `spi_transfer` + spi_transfer_delay_exec()")
-> 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Applied to the togreg branch of iio.git and pushed out as testing
-for all the normal reasons.
+Let's fix.
 
-Thanks,
+Fixes: 6a0dea02c2c4 ("drm/msm: support firmware-name for zap fw (v2)")
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-Jonathan
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
-> 
-> Changelog v1 -> v2:
-> * fixed typo in commit desc `delay_secs` ->  `delay_usecs`
-> 
->  drivers/iio/imu/adis.c | 27 ++++++++++++++++++---------
->  1 file changed, 18 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/iio/imu/adis.c b/drivers/iio/imu/adis.c
-> index e14c8536fd09..3cc57ef22b2e 100644
-> --- a/drivers/iio/imu/adis.c
-> +++ b/drivers/iio/imu/adis.c
-> @@ -38,7 +38,8 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
-> -			.delay_usecs = adis->data->write_delay,
-> +			.delay.value = adis->data->write_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  			.cs_change_delay.value = adis->data->cs_change_delay,
->  			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
-> @@ -46,7 +47,8 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
-> -			.delay_usecs = adis->data->write_delay,
-> +			.delay.value = adis->data->write_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  			.cs_change_delay.value = adis->data->cs_change_delay,
->  			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
-> @@ -54,19 +56,22 @@ int adis_write_reg(struct adis *adis, unsigned int reg,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
-> -			.delay_usecs = adis->data->write_delay,
-> +			.delay.value = adis->data->write_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  			.cs_change_delay.value = adis->data->cs_change_delay,
->  			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
->  			.tx_buf = adis->tx + 6,
->  			.bits_per_word = 8,
->  			.len = 2,
-> -			.delay_usecs = adis->data->write_delay,
-> +			.delay.value = adis->data->write_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
->  			.tx_buf = adis->tx + 8,
->  			.bits_per_word = 8,
->  			.len = 2,
-> -			.delay_usecs = adis->data->write_delay,
-> +			.delay.value = adis->data->write_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  		},
->  	};
->  
-> @@ -138,7 +143,8 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
-> -			.delay_usecs = adis->data->write_delay,
-> +			.delay.value = adis->data->write_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  			.cs_change_delay.value = adis->data->cs_change_delay,
->  			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
-> @@ -146,7 +152,8 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
-> -			.delay_usecs = adis->data->read_delay,
-> +			.delay.value = adis->data->read_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  			.cs_change_delay.value = adis->data->cs_change_delay,
->  			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
-> @@ -155,14 +162,16 @@ int adis_read_reg(struct adis *adis, unsigned int reg,
->  			.bits_per_word = 8,
->  			.len = 2,
->  			.cs_change = 1,
-> -			.delay_usecs = adis->data->read_delay,
-> +			.delay.value = adis->data->read_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  			.cs_change_delay.value = adis->data->cs_change_delay,
->  			.cs_change_delay.unit = SPI_DELAY_UNIT_USECS,
->  		}, {
->  			.rx_buf = adis->rx + 2,
->  			.bits_per_word = 8,
->  			.len = 2,
-> -			.delay_usecs = adis->data->read_delay,
-> +			.delay.value = adis->data->read_delay,
-> +			.delay.unit = SPI_DELAY_UNIT_USECS,
->  		},
->  	};
->  
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+index c146c3b8f52b..7fd29829b2fa 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+@@ -67,7 +67,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+ 	 *
+ 	 * If the firmware-name property is found, we bypass the
+ 	 * adreno_request_fw() mechanism, because we don't need to handle
+-	 * the /lib/firmware/qcom/* vs /lib/firmware/* case.
++	 * the /lib/firmware/qcom/... vs /lib/firmware/... case.
+ 	 *
+ 	 * If the firmware-name property is not found, for backwards
+ 	 * compatibility we fall back to the fwname from the gpulist
+-- 
+2.25.0.rc1.283.g88dfdc4193-goog
 
