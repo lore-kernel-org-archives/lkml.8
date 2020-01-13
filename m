@@ -2,140 +2,111 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313E8C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492BCC33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3CFE207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:16:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578914190;
-	bh=oQgIRZE3Ca1zvjHWdut6CuVqEaxiZSV5sbQvWLbrvag=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aieZM34GqKrSSsUZ0eL1BRB7e8svarNieM5KVNpbgzgiQ6PpBNMUj2yvd2RtTVthg
-	 nRI/fNAmiEH2dcAkpss0ZwYEg7QBkvpskfnWfT4lyA3WishrWe/PQHmP5p0EDPdj7p
-	 qE/w8fG5jtWeZXT+gcPy3oW1rbZtqZqb2SOD9jQw=
+	by mail.kernel.org (Postfix) with ESMTP id 14F13207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:16:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgAMLQ3 (ORCPT
+        id S1728695AbgAMLQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:16:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39780 "EHLO mail.kernel.org"
+        Mon, 13 Jan 2020 06:16:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:37900 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726163AbgAMLQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:16:28 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E34BD207E0;
-        Mon, 13 Jan 2020 11:16:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578914188;
-        bh=oQgIRZE3Ca1zvjHWdut6CuVqEaxiZSV5sbQvWLbrvag=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=e3TcvGj31AwlkiLT/c2UDThap+MfQ1EwwdLbheey2cC7to/q4SOcYLDkg406rEFf0
-         LXe9K5ORlRbmcMY05oDtY9CrSsLFr2i4qGS1k3/8tFudNQUDC1T087p4NcCBMYiguz
-         L0ETEtO7VrTs+z8DDuIoxk2Czw4BqJLM9CJopX2A=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1iqxhq-0002vN-8G; Mon, 13 Jan 2020 11:16:26 +0000
+        id S1726163AbgAMLQs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 06:16:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2FCCB13D5;
+        Mon, 13 Jan 2020 03:16:48 -0800 (PST)
+Received: from [10.1.194.46] (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4755C3F6C4;
+        Mon, 13 Jan 2020 03:16:47 -0800 (PST)
+Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts with
+ lower layer
+To:     "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
+ <20191231164051.GA4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
+ <20200102112955.GC4864@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
+ <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
+ <678F3D1BB717D949B966B68EAEB446ED340AFCA0@dggemm526-mbx.china.huawei.com>
+ <20200103114011.GB19390@bogus>
+ <678F3D1BB717D949B966B68EAEB446ED340B31E9@dggemm526-mbx.china.huawei.com>
+ <20200109104306.GA10914@e105550-lin.cambridge.arm.com>
+ <678F3D1BB717D949B966B68EAEB446ED340BEDD6@dggemm526-mbx.china.huawei.com>
+ <1a8f7963-97e9-62cc-12d2-39f816dfaf67@arm.com>
+ <678F3D1BB717D949B966B68EAEB446ED340E2592@DGGEMM506-MBX.china.huawei.com>
+From:   Valentin Schneider <valentin.schneider@arm.com>
+Message-ID: <15050bf2-99ec-e604-ab95-827ce86fd693@arm.com>
+Date:   Mon, 13 Jan 2020 11:16:46 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <678F3D1BB717D949B966B68EAEB446ED340E2592@DGGEMM506-MBX.china.huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 13 Jan 2020 11:16:26 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jianyong Wu <Jianyong.Wu@arm.com>
-Cc:     netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org,
-        tglx@linutronix.de, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, richardcochran@gmail.com,
-        Mark Rutland <Mark.Rutland@arm.com>, will@kernel.org,
-        Suzuki Poulose <Suzuki.Poulose@arm.com>,
-        Steven Price <Steven.Price@arm.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        Steve Capper <Steve.Capper@arm.com>,
-        Kaly Xin <Kaly.Xin@arm.com>, Justin He <Justin.He@arm.com>,
-        nd <nd@arm.com>
-Subject: Re: [RFC PATCH v9 6/8] psci: Add hvc call service for ptp_kvm.
-In-Reply-To: <HE1PR0801MB167693BFB769ACEEA8A6B007F4350@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-References: <20191210034026.45229-1-jianyong.wu@arm.com>
- <20191210034026.45229-7-jianyong.wu@arm.com>
- <7383dc06897bba253f174cd21a19b5c0@kernel.org>
- <HE1PR0801MB1676AB738138AB24E2158AD4F4390@HE1PR0801MB1676.eurprd08.prod.outlook.com>
- <099a26ffef5d554b88a5e33d7f2a6e3a@kernel.org>
- <HE1PR0801MB16765B507D9B5A1A7827078BF4380@HE1PR0801MB1676.eurprd08.prod.outlook.com>
- <ca80d88f5e00937fca7ee80be8f5c962@kernel.org>
- <HE1PR0801MB167693BFB769ACEEA8A6B007F4350@HE1PR0801MB1676.eurprd08.prod.outlook.com>
-Message-ID: <22ba1283a7b82f018c1fdf85414e5bfe@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: Jianyong.Wu@arm.com, netdev@vger.kernel.org, yangbo.lu@nxp.com, john.stultz@linaro.org, tglx@linutronix.de, pbonzini@redhat.com, sean.j.christopherson@intel.com, richardcochran@gmail.com, Mark.Rutland@arm.com, will@kernel.org, Suzuki.Poulose@arm.com, Steven.Price@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, Steve.Capper@arm.com, Kaly.Xin@arm.com, Justin.He@arm.com, nd@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jianyong,
-
-On 2020-01-13 10:30, Jianyong Wu wrote:
-> Hi Marc,
+On 13/01/2020 06:51, Zengtao (B) wrote:
+> I have tried both, this previous one don't work. But this one seems work
+> correctly with the warning message printout as expected.
 > 
->> -----Original Message-----
->> From: Marc Zyngier <maz@kernel.org>
->> Sent: Friday, January 10, 2020 6:56 PM
->> NV breaks that assumtion, because the guest hypervisor is using the 
->> physical
->> counter. Also, let's not forget that the hypercall isn't Linux 
->> specific.
->> I can write my own non-Linux guest and still use this hypercall. 
->> Nothing in
->> there says that I can't use the physical counter if I want to.
->> 
->> So somehow, you need to convey the the hypervisor the notion of 
->> *which*
->> counter the guest uses.
->> 
->> Does it make sense? Or am I missing something?
->> 
-> I know what you say. Let me try to solve this problem.
-> 	Step 0, summary out all the conditions we should process, which will
-> sever as branch condition.(now only normal virt and nested virt, I
-> think)
 
-No. You shouldn't think of the various use cases, but of which time
-references a guest can use. You don't need nested virt to use the 
-physical
-counter, for example.
+Thanks for trying it out.
 
-> 	Step 1, figure out the set of reference counter value used by guest
-> in all condition.
+> This patch is based on the fact " non-NUMA spans shouldn't overlap ", I am
+> not quite sure if this is always true? 
+> 
 
-That should be for the guest to tell you when it calls into the PV 
-service.
+I think this is required for get_group() to work properly. Otherwise,
+successive get_group() calls may override (and break) the sd->groups
+linking as you initially reported.
 
-> 	Step 2, determine which reference counter value will be used by guest
-> in a certain condition in hypercall.
-> In step 1, can we give the set only 2 elements that one is physical
-> counter the other is virtual counter?
+In your example, for MC level we have
 
-I don't think returning the two values is useful. Just return what the
-guest asks for.
+  tl->mask(3) == 3-7
+  tl->mask(4) == 4-7
 
-> For step 2, I have no idea for that now. can you give me some hint 
-> about it?
+Which partially overlaps, causing the relinking of '7->3' to '7->4'. Valid
+configurations would be
 
-Just expand your SMC call to take a parameter indicating the reference
-counter, and return the sampled (or computed) value corresponding to
-that counter.
+  wholly disjoint:
+  tl->mask(3) == 0-3
+  tl->maks(4) == 4-7
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+  equal:
+  tl->mask(3) == 3-7
+  tl->mask(4) == 3-7
+
+> Anyway, Could you help to raise the new patch?
+> 
+
+Ideally I'd like to be able to reproduce this locally first (TBH I'd like
+to get my first suggestion to work since it's less intrusive). Could you
+share how you were able to trigger this? Dietmar's been trying to reproduce
+this with qemu but I don't think he's there just yet.
+
+> Thanks
+> Zengtao
+> 
+>>
+>>> Thanks
+>>> Zengtao
+>>>
+>>>>
+>>>> Morten
