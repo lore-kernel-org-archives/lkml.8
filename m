@@ -2,57 +2,117 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 437D7C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FD4C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2289A207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4DC207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgAMSPr (ORCPT
+        id S1728859AbgAMSQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:15:47 -0500
-Received: from muru.com ([72.249.23.125]:50776 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728680AbgAMSPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:15:46 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 08BD58047;
-        Mon, 13 Jan 2020 18:16:26 +0000 (UTC)
-Date:   Mon, 13 Jan 2020 10:15:42 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     =?utf-8?B?QW5kcsOp?= Hentschel <nerv@dawncrow.de>
-Cc:     linux@arm.linux.org.uk, robh+dt@kernel.org, mark.rutland@arm.com,
-        bcousson@baylibre.com, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] ARM: dts: Add omap3-echo
-Message-ID: <20200113181542.GN5885@atomide.com>
-References: <20200102214304.8225-1-nerv@dawncrow.de>
- <20200102214304.8225-2-nerv@dawncrow.de>
+        Mon, 13 Jan 2020 13:16:05 -0500
+Received: from [167.172.186.51] ([167.172.186.51]:33636 "EHLO shell.v3.sk"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726934AbgAMSQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 13:16:04 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 37BFEDFE00;
+        Mon, 13 Jan 2020 18:16:06 +0000 (UTC)
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id GQk6v_fn2iS5; Mon, 13 Jan 2020 18:16:05 +0000 (UTC)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by zimbra.v3.sk (Postfix) with ESMTP id 8F5BBDF241;
+        Mon, 13 Jan 2020 18:16:05 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at zimbra.v3.sk
+Received: from shell.v3.sk ([127.0.0.1])
+        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 3XGmZ5XrTaCr; Mon, 13 Jan 2020 18:16:05 +0000 (UTC)
+Received: from nedofet.lan (unknown [109.183.109.54])
+        by zimbra.v3.sk (Postfix) with ESMTPSA id 282ECDFE19;
+        Mon, 13 Jan 2020 18:16:05 +0000 (UTC)
+Message-ID: <d292dfbb9b10129c76f7a282c5a1015b04b775dd.camel@v3.sk>
+Subject: Re: [PATCH] media: usbtv: fix control-message timeouts
+From:   Lubomir Rintel <lkundrak@v3.sk>
+To:     Johan Hovold <johan@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>
+Date:   Mon, 13 Jan 2020 19:15:56 +0100
+In-Reply-To: <20200113171818.30715-1-johan@kernel.org>
+References: <20200113171818.30715-1-johan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200102214304.8225-2-nerv@dawncrow.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* André Hentschel <nerv@dawncrow.de> [200102 21:44]:
-> This is the first generation Amazon Echo from 2016.
-> Audio support is not yet implemented.
+On Mon, 2020-01-13 at 18:18 +0100, Johan Hovold wrote:
+> The driver was issuing synchronous uninterruptible control requests
+> without using a timeout. This could lead to the driver hanging on
+> various user requests due to a malfunctioning (or malicious) device
+> until the device is physically disconnected.
 > 
-> Signed-off-by: André Hentschel <nerv@dawncrow.de>
+> The USB upper limit of five seconds per request should be more than
+> enough.
+> 
+> Fixes: f3d27f34fdd7 ("[media] usbtv: Add driver for Fushicai USBTV007 video frame grabber")
+> Fixes: c53a846c48f2 ("[media] usbtv: add video controls")
+> Cc: stable <stable@vger.kernel.org>     # 3.11
+> Cc: Lubomir Rintel <lkundrak@v3.sk>
+> Signed-off-by: Johan Hovold <johan@kernel.org>
+
+Acked-by: Lubomir Rintel <lkundrak@v3.sk>
+
+Thank you,
+Lubo
+
 > ---
+>  drivers/media/usb/usbtv/usbtv-core.c  | 2 +-
+>  drivers/media/usb/usbtv/usbtv-video.c | 5 +++--
+>  2 files changed, 4 insertions(+), 3 deletions(-)
 > 
-> v2: Don't disable sgx, as the previous patch changes dtsi files accordingly
-> v3: Include dm3725.dtsi
+> diff --git a/drivers/media/usb/usbtv/usbtv-core.c b/drivers/media/usb/usbtv/usbtv-core.c
+> index 5095c380b2c1..ee9c656d121f 100644
+> --- a/drivers/media/usb/usbtv/usbtv-core.c
+> +++ b/drivers/media/usb/usbtv/usbtv-core.c
+> @@ -56,7 +56,7 @@ int usbtv_set_regs(struct usbtv *usbtv, const u16 regs[][2], int size)
+>  
+>  		ret = usb_control_msg(usbtv->udev, pipe, USBTV_REQUEST_REG,
+>  			USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+> -			value, index, NULL, 0, 0);
+> +			value, index, NULL, 0, USB_CTRL_GET_TIMEOUT);
+>  		if (ret < 0)
+>  			return ret;
+>  	}
+> diff --git a/drivers/media/usb/usbtv/usbtv-video.c b/drivers/media/usb/usbtv/usbtv-video.c
+> index 3d9284a09ee5..b249f037900c 100644
+> --- a/drivers/media/usb/usbtv/usbtv-video.c
+> +++ b/drivers/media/usb/usbtv/usbtv-video.c
+> @@ -800,7 +800,8 @@ static int usbtv_s_ctrl(struct v4l2_ctrl *ctrl)
+>  		ret = usb_control_msg(usbtv->udev,
+>  			usb_rcvctrlpipe(usbtv->udev, 0), USBTV_CONTROL_REG,
+>  			USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+> -			0, USBTV_BASE + 0x0244, (void *)data, 3, 0);
+> +			0, USBTV_BASE + 0x0244, (void *)data, 3,
+> +			USB_CTRL_GET_TIMEOUT);
+>  		if (ret < 0)
+>  			goto error;
+>  	}
+> @@ -851,7 +852,7 @@ static int usbtv_s_ctrl(struct v4l2_ctrl *ctrl)
+>  	ret = usb_control_msg(usbtv->udev, usb_sndctrlpipe(usbtv->udev, 0),
+>  			USBTV_CONTROL_REG,
+>  			USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_DEVICE,
+> -			0, index, (void *)data, size, 0);
+> +			0, index, (void *)data, size, USB_CTRL_SET_TIMEOUT);
+>  
+>  error:
+>  	if (ret < 0)
 
-Thanks applying both into omap-for-v5.6/dt.
-
-Tony
