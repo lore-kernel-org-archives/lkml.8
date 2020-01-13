@@ -2,81 +2,153 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B32C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:42:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F9CC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48BB62084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2324520678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgAMQmD (ORCPT
+        id S1728765AbgAMQnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:42:03 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:55130 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728734AbgAMQmC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:42:02 -0500
-Received: by mail-il1-f197.google.com with SMTP id t4so8208283ili.21
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 08:42:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=UggXgyDMOpX5GHDFThGPB3yVNMKWrTSHTCaDTJ6McXo=;
-        b=WWNcSHcm3IqNckhB3KfP3VHQh+K0OMdM12xS+eFinxefvCITb200qsS/5c4/gbZ5pM
-         y/9gh5dY2tXNl3JXRJhXlvVGiwX99zx1PTWJNJu2iUHCxI+X42kaY2+PPinx6AZEopv9
-         HefQqVLxeic20ahyhhc8/7nQPKZ5do3dWd9gfdjNc/7PtQCJIxSl5/jPXO9Ui9tW3ym0
-         TziT/7pcTVA9boiW9GUy63bKs78x3gan35IfeTk8Z0NolLM01aaYjWgTIE1arolxidNk
-         ukJy+X6QABDXN+w50TKebxsnAB+G7tddf214A33ZHsZAtJtjUdYoUgUdGuAx20vAiscH
-         H5cQ==
-X-Gm-Message-State: APjAAAVHfAS2EqB71wtyrJ4963abc+7qbZIV7c297Z3hHlAJrGBUn/Wh
-        OE11zZatx/to6wQppvA/wRcuUEEPkokctsp+XHrYDtR0bDJJ
-X-Google-Smtp-Source: APXvYqy9CaTqUtRxm4JcRDeD0S3bogD6d4mwoiAZp6aBCI1DHZPoiOj+/Q+WaCE26zNZRvjut3aai5qER8Zl/wD9tSgZi30iB5tl
+        Mon, 13 Jan 2020 11:43:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:41634 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726567AbgAMQnQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 11:43:16 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D85CE11B3;
+        Mon, 13 Jan 2020 08:43:15 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE16C3F85E;
+        Mon, 13 Jan 2020 08:43:14 -0800 (PST)
+Date:   Mon, 13 Jan 2020 16:43:07 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Andrew Murray <andrew.murray@arm.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: uniphier: remove module code from built-in driver
+Message-ID: <20200113164307.GA24639@e121166-lin.cambridge.arm.com>
+References: <20191215223937.19619-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5e:8516:: with SMTP id i22mr13810044ioj.130.1578933722080;
- Mon, 13 Jan 2020 08:42:02 -0800 (PST)
-Date:   Mon, 13 Jan 2020 08:42:02 -0800
-In-Reply-To: <0000000000005ed7710596937e86@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000a0ef18059c082789@google.com>
-Subject: Re: KASAN: use-after-free Read in j1939_xtp_rx_abort_one
-From:   syzbot <syzbot+db4869ba599c0de9b13e@syzkaller.appspotmail.com>
-To:     bst@pengutronix.de, davem@davemloft.net,
-        dev.kurt@vandijck-laurijssen.be, ecathinds@gmail.com,
-        kernel@pengutronix.de, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@rempel-privat.de,
-        lkp@intel.com, maxime.jayat@mobile-devices.fr, mkl@pengutronix.de,
-        netdev@vger.kernel.org, o.rempel@pengutronix.de, robin@protonic.nl,
-        socketcan@hartkopp.net, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191215223937.19619-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+On Mon, Dec 16, 2019 at 07:39:37AM +0900, Masahiro Yamada wrote:
+> builtin_platform_driver() and MODULE_* are always odd combination.
+> 
+> This file is not compiled as a module by anyone because
+> CONFIG_PCIE_UNIPHIER is a bool option.
+> 
+> Let's remove the modular code that is essentially orphaned, so that
+> when reading the driver there is no doubt it is builtin-only.
+> 
+> We explicitly disallow a driver unbind, since that doesn't have a
+> sensible use case anyway, and it allows us to drop the ".remove" code.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+> Changes in v2:
+>   - update commit description
+>   - remove Reviewed-by
+> 
+>  drivers/pci/controller/dwc/pcie-uniphier.c | 31 +---------------------
+>  1 file changed, 1 insertion(+), 30 deletions(-)
 
-commit ddeeb7d4822ed06d79fc15e822b70dce3fa77e39
-Author: Oleksij Rempel <o.rempel@pengutronix.de>
-Date:   Sat Nov 9 15:11:18 2019 +0000
+Applied to pci/uniphier, thanks.
 
-     can: j1939: j1939_can_recv(): add priv refcounting
+Lorenzo
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15a7ec76e00000
-start commit:   de620fb9 Merge branch 'for-5.4-fixes' of git://git.kernel...
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f9ff8f11e66c1fb1
-dashboard link: https://syzkaller.appspot.com/bug?extid=db4869ba599c0de9b13e
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=113e0d72e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=136aa6e8e00000
-
-If the result looks correct, please mark the bug fixed by replying with:
-
-#syz fix: can: j1939: j1939_can_recv(): add priv refcounting
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+> index 8fd7badd59c2..a5401a0b1e58 100644
+> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> @@ -9,11 +9,11 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/clk.h>
+>  #include <linux/delay.h>
+> +#include <linux/init.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/irqchip/chained_irq.h>
+>  #include <linux/irqdomain.h>
+> -#include <linux/module.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/pci.h>
+>  #include <linux/phy/phy.h>
+> @@ -171,12 +171,6 @@ static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>  	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>  }
+>  
+> -static void uniphier_pcie_irq_disable(struct uniphier_pcie_priv *priv)
+> -{
+> -	writel(0, priv->base + PCL_RCV_INT);
+> -	writel(0, priv->base + PCL_RCV_INTX);
+> -}
+> -
+>  static void uniphier_pcie_irq_ack(struct irq_data *d)
+>  {
+>  	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
+> @@ -397,14 +391,6 @@ static int uniphier_pcie_host_enable(struct uniphier_pcie_priv *priv)
+>  	return ret;
+>  }
+>  
+> -static void uniphier_pcie_host_disable(struct uniphier_pcie_priv *priv)
+> -{
+> -	uniphier_pcie_irq_disable(priv);
+> -	phy_exit(priv->phy);
+> -	reset_control_assert(priv->rst);
+> -	clk_disable_unprepare(priv->clk);
+> -}
+> -
+>  static const struct dw_pcie_ops dw_pcie_ops = {
+>  	.start_link = uniphier_pcie_establish_link,
+>  	.stop_link = uniphier_pcie_stop_link,
+> @@ -456,31 +442,16 @@ static int uniphier_pcie_probe(struct platform_device *pdev)
+>  	return uniphier_add_pcie_port(priv, pdev);
+>  }
+>  
+> -static int uniphier_pcie_remove(struct platform_device *pdev)
+> -{
+> -	struct uniphier_pcie_priv *priv = platform_get_drvdata(pdev);
+> -
+> -	uniphier_pcie_host_disable(priv);
+> -
+> -	return 0;
+> -}
+> -
+>  static const struct of_device_id uniphier_pcie_match[] = {
+>  	{ .compatible = "socionext,uniphier-pcie", },
+>  	{ /* sentinel */ },
+>  };
+> -MODULE_DEVICE_TABLE(of, uniphier_pcie_match);
+>  
+>  static struct platform_driver uniphier_pcie_driver = {
+>  	.probe  = uniphier_pcie_probe,
+> -	.remove = uniphier_pcie_remove,
+>  	.driver = {
+>  		.name = "uniphier-pcie",
+>  		.of_match_table = uniphier_pcie_match,
+>  	},
+>  };
+>  builtin_platform_driver(uniphier_pcie_driver);
+> -
+> -MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
+> -MODULE_DESCRIPTION("UniPhier PCIe host controller driver");
+> -MODULE_LICENSE("GPL v2");
+> -- 
+> 2.17.1
+> 
