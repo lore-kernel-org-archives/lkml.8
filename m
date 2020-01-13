@@ -2,115 +2,80 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D18F5C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B111FC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A554820678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:50:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="a8Qpy0NX"
+	by mail.kernel.org (Postfix) with ESMTP id 8104720678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgAMQue (ORCPT
+        id S1728792AbgAMQuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:50:34 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45354 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgAMQud (ORCPT
+        Mon, 13 Jan 2020 11:50:54 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:56352 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726567AbgAMQuy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:50:33 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00DGoSjN038467;
-        Mon, 13 Jan 2020 10:50:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578934228;
-        bh=XK6+NRwFhrVriY+slNkZ6meisOxrLFFEaA/1jaSkTlU=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=a8Qpy0NXBTmG5OseZxRsDIfrLlcAdLoh4eTBP2GKa31gW5oXPoAJ4G/CYHdPX0Bpi
-         5Fwi2xOpqOaoNuaQXLkkLLnQ75HH5iOo+wsuPdyUUY4Y2kYyOILEpnM9oPpD5np5wB
-         gXmAQQXomVXp+aXU1qHua1gPTJVl2Kg14pH9H1oo=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00DGoSa9123735
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jan 2020 10:50:28 -0600
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 13
- Jan 2020 10:50:28 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 13 Jan 2020 10:50:28 -0600
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with SMTP id 00DGoS1g130674;
-        Mon, 13 Jan 2020 10:50:28 -0600
-Date:   Mon, 13 Jan 2020 10:54:14 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Tero Kristo <t-kristo@ti.com>, <linux-omap@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [Patch v3 0/3] ARM: dts: am43x-vpfe/ov2659.patch
-Message-ID: <20200113165413.i6nbi2i7xyue4fti@ti.com>
-References: <20191211140720.10539-1-bparrot@ti.com>
- <20191212174123.GF35479@atomide.com>
- <c4ae58dc-3c81-f493-a665-6926baa0f04c@ti.com>
- <20191213152938.GK35479@atomide.com>
+        Mon, 13 Jan 2020 11:50:54 -0500
+Received: (qmail 2814 invoked by uid 2102); 13 Jan 2020 11:50:53 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 13 Jan 2020 11:50:53 -0500
+Date:   Mon, 13 Jan 2020 11:50:53 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Andrey Konovalov <andreyknvl@google.com>
+cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Subject: Re: [PATCH v4 1/1] usb: gadget: add raw-gadget interface
+In-Reply-To: <CAAeHK+z2+_UHNp4_D2iL9FzPtDoU1YBohCaDJG8sAy12uc_-ew@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2001131049090.1502-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20191213152938.GK35479@atomide.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tony Lindgren <tony@atomide.com> wrote on Fri [2019-Dec-13 07:29:38 -0800]:
-> * Tero Kristo <t-kristo@ti.com> [191213 07:43]:
-> > On 12/12/2019 19:41, Tony Lindgren wrote:
-> > > * Benoit Parrot <bparrot@ti.com> [191211 06:04]:
-> > > > This patch series adds the missing camera endpoint (ov2659) as well as
-> > > > the required source clocks nodes for the sensor.
-> > > > 
-> > > > On the am437x-sk-evm the camera sensor is sourced from clkout1 but that
-> > > > clock nodes/tree was removed as it was unsed at the time, we are
-> > > > re-adding the needed clock nodes here.
-> > > 
-> > > Tero, it seems I can already pick this series?
-> > 
-> > I believe it is ready if you approve the clkout1 clock patch.
-> 
-> OK yeah looks fine.
-> 
-> > > Or ou want to queue the changes to am43xx-clocks.dtsi along with all
-> > > your other clock patches?
-> > 
-> > Well, I have actually never queued any omap2+ dts patches myself, and I
-> > don't think there would be too many of those coming for next merge either.
-> 
-> OK will queue this series then. For the other ones from Benoit
-> looks like we need an immutable clock branch before I can apply
-> anything.
+On Mon, 13 Jan 2020, Andrey Konovalov wrote:
 
-Tony, Tero,
-
-Are these merged anyware now?
-I still don't see any of these on linux-next?
-
-And by "these" I mean this one and both
- ARM: dts: dra7: add vpe nodes
- ARM: dts: dra7: add cal nodes
-
-Regards,
-Benoit
-
+> I've also found an issue, but I'm not sure if that is the bug in Raw
+> Gadget, or in the gadget layer (in the former case I'll add this fix
+> to v5 as well). What I believe I'm seeing is
+> __fput()->usb_gadget_unregister_driver()->usb_gadget_remove_driver()->gadget_unbind()
+> racing with dummy_timer()->gadget_setup(). In my case it results in
+> gadget_unbind() doing set_gadget_data(gadget, NULL), and then
+> gadget_setup() dereferencing get_gadget_data(gadget).
 > 
-> Regards,
-> 
-> Tony
+> Alan, does it look possible for those two functions to race? Should
+> this be prevented by the gadget layer, or should I use some kind of
+> locking in my gadget driver to prevent this?
+
+In your situation this race shouldn't happen, because before
+udc->driver->unbind() is invoked we call usb_gadget_disconnect().  If
+that routine succeeds -- which it always does under dummy-hcd -- then
+there can't be any more setup callbacks, because find_endpoint() will
+always return NULL (the is_active() test fails; see the various
+set_link_state* routines).  So I don't see how you could have ended up
+with the race you describe.
+
+However, a real UDC might not be able to perform a disconnect under
+software control.  In that case usb_gadget_disconnect() would not
+change the pullup state, and there would be a real possibility of a
+setup callback racing with an unbind callback.  This seems like a 
+genuine problem and I can't think of a solution offhand.
+
+What we would need is a way to tell the UDC driver to stop invoking
+gadget callbacks, _before_ the UDC driver's stop callback gets called.
+Maybe this should be merged into the pullup callback somehow.
+
+Alan Stern
+
