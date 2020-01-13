@@ -2,95 +2,151 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA996C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:31:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CE3C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D2424670
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:31:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348E4207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:32:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ooaz6XlF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbgAMPbx (ORCPT
+        id S1728767AbgAMPcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 10:31:53 -0500
-Received: from orion.archlinux.org ([88.198.91.70]:48790 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgAMPbx (ORCPT
+        Mon, 13 Jan 2020 10:32:45 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59670 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727222AbgAMPco (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 10:31:53 -0500
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id D530818170BB4C;
-        Mon, 13 Jan 2020 15:31:50 +0000 (UTC)
-Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Mon, 13 Jan 2020 15:31:50 +0000 (UTC)
-Message-ID: <7d49a8444ea1740444d1e9133104530731bfb30a.camel@archlinux.org>
-Subject: Re: [PATCH] HID: logitech-hidpp: add support for the Powerplay
- mat/receiver
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200112205021.3004703-1-lains@archlinux.org>
-References: <20200112205021.3004703-1-lains@archlinux.org>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-SqfsoRYx0FWj0PIgDlOr"
-Date:   Mon, 13 Jan 2020 15:31:49 +0000
+        Mon, 13 Jan 2020 10:32:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578929563;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ElsdEkFyMX9PyqBKUyWZEu82iD4Q0YddLseGJka/eAI=;
+        b=Ooaz6XlFmNrVJKmco00BzFbmOs7B+48bssYuHOkNAAc1PzDKN0hdLlgJvgLnBUc/n1xz/M
+        X3Jd4I/iD9dQvNez1/gNr12YOpMEuhCeozBKDOTQUgMZO0e5vbYWqxsSrIh6mdfWt1wNtM
+        KKArvcBTW+5ngXyzgAwsDm+UXV30GfM=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-166-PlcLqXMtPVCMZaGERpaRRw-1; Mon, 13 Jan 2020 10:32:40 -0500
+X-MC-Unique: PlcLqXMtPVCMZaGERpaRRw-1
+Received: by mail-qt1-f197.google.com with SMTP id m30so6768583qtb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 07:32:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ElsdEkFyMX9PyqBKUyWZEu82iD4Q0YddLseGJka/eAI=;
+        b=IYm+OyL17B/+2r7oH8DBoeXhGSql/Nmr/33PZYjsT1i1UpuJsxf6ZjWfJy/zRg8wzm
+         21TUjpkOtAZokPIm1TDjN9pycXlac7JV8p9LTwNcKMO6OZfpAY4Ac0M4bTKxDuxloIT+
+         CGntPB8uFibJG/0VGapiZZW4KNfUq2JacQbDjFinKZl8pcXhF5jAbFFKcQ6N29+pJkRD
+         jdclfQo2ILeUH0YrOJRX/N/l01bsdUlzW9X/8l6pygKIH9Serx1/Tj+Rn678yowmsT2S
+         C5219WDGLfRGyVqeF0wMOtq/25wYKs8rkszZI+PUeMbPdRtU4lfn9iHl4M2uZfiEg6q2
+         6ihg==
+X-Gm-Message-State: APjAAAUyAkayUnzdhGDJtsnXGgKNFf/HQxHYi8SNjg+5Au7hWQXTjtn/
+        aiAIQllLvY2KJZNbhlkd0lbiie1yUPyfG+JjhEEFdZACmsauo+UpbAoaYf4/0VOXVCweYsGsBZj
+        Y4s9qjcZV/pChLzhrPcBwx64DZ4vppYuHeUMDfXOG
+X-Received: by 2002:a37:9245:: with SMTP id u66mr12325311qkd.102.1578929560037;
+        Mon, 13 Jan 2020 07:32:40 -0800 (PST)
+X-Google-Smtp-Source: APXvYqytL56xMC0vF1glxTM38WsY2Ix40Z1naBdqh2T+YigaQEOs8RJRhNMIOMubvldRvknv5G4xQqo3cppMYY9Rex0=
+X-Received: by 2002:a37:9245:: with SMTP id u66mr12325263qkd.102.1578929559700;
+ Mon, 13 Jan 2020 07:32:39 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Evolution 3.34.3 
+References: <CACO55ttTPi2XpRRM_NYJU5c5=OvG0=-YngFy1BiR8WpHkavwXw@mail.gmail.com>
+ <CAJZ5v0h=7zu3A+ojgUSmwTH0KeXmYP5OKDL__rwkkWaWqcJcWQ@mail.gmail.com>
+ <20191121112821.GU11621@lahna.fi.intel.com> <CAJZ5v0hQhj5Wf+piU11abC4pF26yM=XHGHAcDv8Jsgdx04aN-w@mail.gmail.com>
+ <20191121114610.GW11621@lahna.fi.intel.com> <CACO55ttXJgXG32HzYP_uJDfQ6T-d8zQaGjXK_AZD3kF0Rmft4g@mail.gmail.com>
+ <CAJZ5v0ibzcLEm44udUxW2uVgaF9NapdNBF8Ag+RE++u7gi2yNA@mail.gmail.com>
+ <CACO55ttBkZD9dm0Y_jT931NnzHHtDFyLz28aoo+ZG0pnLzPgbA@mail.gmail.com>
+ <CAJZ5v0jbh7jz+YQcw-gC5ztmMOc4E9+KFBCy4VGRsRFxBw-gnw@mail.gmail.com>
+ <e0eeddf4214f54dfac08e428dfb30cbd39f20680.camel@redhat.com>
+ <20191127114856.GZ11621@lahna.fi.intel.com> <CACO55tt5SAf24vk0XrKguhh2J=WuKirDsdY7T+u7PsGFCpnFxg@mail.gmail.com>
+ <e7aec10d789b322ca98f4b250923b0f14f2b8226.camel@redhat.com>
+ <CACO55tu+hT1WGbBn_nxLR=A-X6YWmeuz-UztJKw0QAFQDDV_xg@mail.gmail.com>
+ <CAJZ5v0hcONxiWD+jpBe62H1SZ-84iNxT+QCn8mcesB1C7SVWjw@mail.gmail.com>
+ <CAPM=9txefUg9_EO82an3b313mZz7J7-ydTuJtWD-hOQwE4QXkQ@mail.gmail.com> <CACO55tvhSM0aATBOK05-05aOc6LeN67=US2zO2jqXKWGTpUZFw@mail.gmail.com>
+In-Reply-To: <CACO55tvhSM0aATBOK05-05aOc6LeN67=US2zO2jqXKWGTpUZFw@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Mon, 13 Jan 2020 16:31:50 +0100
+Message-ID: <CACO55tsCRzSOz4GcLuuvGP3hfbz8gYtYXqtYHy5XCpCi3tmPeA@mail.gmail.com>
+Subject: Re: [PATCH v4] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Dave Airlie <airlied@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Lyude Paul <lyude@redhat.com>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Mario Limonciello <Mario.Limonciello@dell.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+okay.. so checking whatever is the difference with _REV being 5
+(meaning the firmware uses the legacy paths) doesn't help in any way.
+It's using a different method to turn the link of and the other ACPI
+variables touched either point to undocumented registers on the PCI
+bridge or internal ACPI memory...
 
---=-SqfsoRYx0FWj0PIgDlOr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+so, anybody with any other ideas? I really wished the nvidia driver
+would enable runpm on pre turing GPUs, but that's sadly not the case
+and on Turing things seem to be totally different, so it wouldn't help
+to check there as well... *sigh*
 
-On Sun, 2020-01-12 at 20:50 +0000, Filipe La=C3=ADns wrote:
-> I also marked all lightspeed devices as HID++ compatible. As the
-> internal powerplay device does not have REPORT_TYPE_KEYBOARD or
-> REPORT_TYPE_KEYBOARD it was not being marked as HID++ compatible in
-> logi_hidpp_dev_conn_notif_equad.
+On Tue, Dec 10, 2019 at 9:49 PM Karol Herbst <kherbst@redhat.com> wrote:
+>
+> On Tue, Dec 10, 2019 at 8:58 PM Dave Airlie <airlied@gmail.com> wrote:
+> >
+> > On Mon, 9 Dec 2019 at 21:39, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > On Mon, Dec 9, 2019 at 12:17 PM Karol Herbst <kherbst@redhat.com> wrote:
+> > > >
+> > > > anybody any other ideas?
+> > >
+> > > Not yet, but I'm trying to collect some more information.
+> > >
+> > > > It seems that both patches don't really fix
+> > > > the issue and I have no idea left on my side to try out. The only
+> > > > thing left I could do to further investigate would be to reverse
+> > > > engineer the Nvidia driver as they support runpm on Turing+ GPUs now,
+> > > > but I've heard users having similar issues to the one Lyude told us
+> > > > about... and I couldn't verify that the patches help there either in a
+> > > > reliable way.
+> > >
+> > > It looks like the newer (8+) versions of Windows expect the GPU driver
+> > > to prepare the GPU for power removal in some specific way and the
+> > > latter fails if the GPU has not been prepared as expected.
+> > >
+> > > Because testing indicates that the Windows 7 path in the platform
+> > > firmware works, it may be worth trying to do what it does to the PCIe
+> > > link before invoking the _OFF method for the power resource
+> > > controlling the GPU power.
+> > >
+> >
+> > Remember the pre Win8 path required calling a DSM method to actually
+> > power the card down, I think by the time we reach these methods in
+> > those cases the card is already gone.
+> >
+> > Dave.
+> >
+>
+> The point was that the firmware seems to do more in the legacy paths
+> and maybe we just have to do those things inside the driver instead
+> when using the new method. Also the _DSM call just wraps around the
+> interfaces on newer firmware anyway. The OS check is usually what
+> makes the difference. I might be wrong about the _DSM call just
+> wrapping though, but I think I saw it at least in some firmware at
+> some point.
 
-Actually I had another look at the code and I don't understand why we
-are manually setting |=3D HIDPP in
-logi_hidpp_dev_conn_notif_equad/logi_hidpp_dev_conn_notif_27mhz. We
-should set it in logi_dj_hidpp_event as it is triggered by receiving a
-HID++ packet.
-
-What do you think Benjamin?
-
---
-Filipe La=C3=ADns
-
---=-SqfsoRYx0FWj0PIgDlOr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl4cjVoACgkQ+JPGdIFq
-qV19XBAAh7RH19Z4xTovja5qdXkfK4GPahfaPvuXcFgD/B3HPUbugTHUVqqUkkDY
-yJloDjloPk4Ug4jEO2p3fG+iZlWrM/sSoz8YDhpabMHuabV0ON2EDM0cxUY4o6iT
-Hx/kQdxGm9OuU4ZwPgQUTUcWQqCzFY3QPFE7vBnlpF0vVgjYhlzFvlv+gqdvzVlf
-1TlWyT+HYmz70w7Sk0Fo4ao2aDKbQbd+hMpwPXNVzsXE8sD2Kp3LjzycDwWp27vN
-4TGod0hZQN8VDBS2VUd4X8jsdYERkXuVrQph8Hb7Xn5k1GuGhszkJXOz1ZY27aNX
-PevlfCzs7aJfIKj5kBysdVJef0r/CwEASI+xzRS8+zLKoxvXKSIOWkke6n1FBxQm
-py2x3j3PPiYL+3HGHDWMQP2MpYk9hTGb2GLo+VsiWZuqTffcH+xMCCXCgU2E05Jr
-Y6w9HY9e5Alib5scgpJ52Lkt1GTx5xxnl7FP3LMjr9qf1lQNlFrUTimcgZ6vAJhL
-OE3ND+iZQnz32/fAPQ1Jt8mSJEMzDyGS5gMwm0bXYfxRLE3A3c/FgtXo5IOG0dsG
-19GDejciXw0f3nSL9O1yurcyYNKYp46l1JzdGUiX6yilI9uJZOpqcVDtzCmtPbEp
-XCfqHGvPbE86eSkmbtnyQrmlCsyzc39KxKoFD1CzPdd9RJ5aZhM=
-=vhH9
------END PGP SIGNATURE-----
-
---=-SqfsoRYx0FWj0PIgDlOr--
