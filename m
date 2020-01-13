@@ -2,141 +2,99 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEFFC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57F21C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9410821744
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A58C21744
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:28:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BesEvaNj"
+	dkim=pass (2048-bit key) header.d=rajagiritech-edu-in.20150623.gappssmtp.com header.i=@rajagiritech-edu-in.20150623.gappssmtp.com header.b="EQ//Ej4C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733248AbgAMG1j (ORCPT
+        id S2387525AbgAMG2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 01:27:39 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40280 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730659AbgAMG1i (ORCPT
+        Mon, 13 Jan 2020 01:28:31 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43667 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730659AbgAMG2a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 01:27:38 -0500
-Received: by mail-qk1-f195.google.com with SMTP id c17so7538608qkg.7
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:27:38 -0800 (PST)
+        Mon, 13 Jan 2020 01:28:30 -0500
+Received: by mail-pf1-f194.google.com with SMTP id x6so4358043pfo.10
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:28:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qqU50tJXg4btjktw2VvbKv0T9TvXNsl1InIj+ksOmtQ=;
-        b=BesEvaNjkjkIaEKU8s1yXxtetLayewpTzSIxgPAnNIWav0rTK98k3PPyGaPY2ooOev
-         PIM5l4QCvCTOXJN9/lV28q95hAXAwCBK0NsqjUnuTxlcAFy50WZaCvEZUAtRr7ZYVZUl
-         GjvY+SmcmMu/fBk4T4iGDv10EKa6Rk0lxaUB4=
+        d=rajagiritech-edu-in.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=I5C3nwrlmpAyk+QkEXs7euA2p6whJngz7gNkLGAB+Ws=;
+        b=EQ//Ej4CuJIOHENKsDe7JOHI8zjDbtFhhHsj5YCGU3PB1YX04S4W8Bw2pFN6S9QmmZ
+         QLXumgM5mJyIFQdCT1oxH5p4P7SbWmgmYf1P9QHzPDiMmWLNII38CmGqffYb3QhkrZvW
+         Lil4iTXVDD/Ux4IJJIRGvNag3acWc0Ta6cMZlfG/NkPVZnRHz2BLhfDS3iTuK7H8k7nx
+         4wrxfJiHYssbimlmf2G7cqAbjsF4zpo15Y2FGFD7A3v/I8e7QOMduSabuVjXegZWmKyh
+         fD64SbbGcM8ScqwhOGEJbtBg6tCk9OL8IiGZd2kNqRGDNarP+mp3T1RTEddLDgxVFrue
+         d2Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qqU50tJXg4btjktw2VvbKv0T9TvXNsl1InIj+ksOmtQ=;
-        b=plPnmEUv5SWiTKIc4XShlUv+kduG71vV7FCmzEl7TrC8qYUVIiWI2QrSiWHi5dRnGS
-         iUG94h/NtkpxGTWwLNUdlbC+j46uuQVYOhqNgeA7mGMbmTQZIWf+6Td7569JNUwKjxey
-         YuNlmDUf9mpiR+ofU0zOe3G8QsBkhvOekwP0EzYG7QuIMYHGrhbt81OuksDgF8XrqS/P
-         5o39FCvgnj/bCzppdlTJy9hPXELKg+ll0g410O50VaXjxywPPb2xabisrDT5/0ycli4E
-         v7mDMX5EohFqT7S7t9JkfO7ydn5wAXXGgAPqRPPPgv17++HS3GAZL6GbYGeZDEKP+l5M
-         +qgg==
-X-Gm-Message-State: APjAAAVdVArgbO7nwp7ZHhCW+EFXj55ZHW0olCVZe2foJsn5Yk0jloaO
-        Wf92EkNQrg3rrj5zD4hU/sa7vD68NV12u4KE9uXL7g==
-X-Google-Smtp-Source: APXvYqzP2GQhgfRONDK0y5ZOBxgMhbBnqFh8jwEdZzw+mIw4d1s/lLCcUIgYHMP8DEVTe7wIzDfiU37pKS7LntYC0ao=
-X-Received: by 2002:a37:6551:: with SMTP id z78mr15363934qkb.144.1578896857929;
- Sun, 12 Jan 2020 22:27:37 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=I5C3nwrlmpAyk+QkEXs7euA2p6whJngz7gNkLGAB+Ws=;
+        b=RDa0rM4sxXLLw42Radacidrq9+wP3+AS4Tx/T+dCoz+N4DPFSJqY9cE88I2KTNuFXt
+         e6AAQawJ34wrDPESwcSWuVF1vvggQ2BTkSkA+CyM/4wtCY7kUUtLqFD5et+xhmr5Ozb+
+         w7pYLgHAB/REEW87fivPnBX3dNTszlVq/7jlXuyVA7To8nSmKkVymfj3Z/UVWAGrft+d
+         2FKuspGIlJ+b64VeYzmj92wrEvbH2jV9smEIyFxtCwn4kQJsTr3YY6zmgIezxDw2G0I4
+         doP1ClokDaMREmzpjHOrboDFcdbKjjfkhwimeX0fOxOHGDGd10r2/ngVDggKuwG6M9SZ
+         nRuw==
+X-Gm-Message-State: APjAAAUAs8lqg6g7RvAytfjp+Sh01KT/iSGSTJdfi+tgKXFE/tV1MsB6
+        Oiq3NEdIKerHWrZygmvD+z4/Ng==
+X-Google-Smtp-Source: APXvYqwu4X6ngOi3zIhRdvZ4Miog4ASVHjmWUWWXs8oWzKVUD+5CfBDHp8WBVT0IF5H4FzeXFlcpIw==
+X-Received: by 2002:a62:ab0d:: with SMTP id p13mr17955039pff.135.1578896909830;
+        Sun, 12 Jan 2020 22:28:29 -0800 (PST)
+Received: from debian ([122.164.106.111])
+        by smtp.gmail.com with ESMTPSA id q10sm12867346pfn.5.2020.01.12.22.28.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Jan 2020 22:28:29 -0800 (PST)
+Date:   Mon, 13 Jan 2020 11:58:22 +0530
+From:   Jeffrin Jose <jeffrin@rajagiritech.edu.in>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
+        jeffrin@rajagiritech.edu.in
+Subject: Re: [PATCH 5.4 000/165] 5.4.11-stable review
+Message-ID: <20200113062822.GA2706@debian>
+References: <20200111094921.347491861@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20191227141405.3396-1-yong.liang@mediatek.com>
- <20191227141405.3396-2-yong.liang@mediatek.com> <CANMq1KD=jAPn4Y7zQZrsg9FB7Cq6tNX0R8OF4qX21Sjy2=0Naw@mail.gmail.com>
- <CANMq1KB4PzAUdp03go0Ur_khi2bM3+oNUhHtMK=--V6DmGXiDA@mail.gmail.com>
- <2bbd8f47-fe68-574c-cbe9-bcc680dd4c84@gmail.com> <CANMq1KCXMUP=5ijqLsZ67MvO2ROFkG0vSX64KqmWtYKm7w8f2g@mail.gmail.com>
-In-Reply-To: <CANMq1KCXMUP=5ijqLsZ67MvO2ROFkG0vSX64KqmWtYKm7w8f2g@mail.gmail.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Mon, 13 Jan 2020 14:27:27 +0800
-Message-ID: <CANMq1KCLGx2K5qSVJLFkFqYjghVk40HaZcBeUmSxpBSJQAMOzg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] amr64: dts: modify mt8183.dtsi
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-Cc:     Yong Liang <yong.liang@mediatek.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, wim@linux-watchdog.org,
-        linux@roeck-us.net, linux-watchdog@vger.kernel.org,
-        Jiaxin Yu <jiaxin.yu@mediatek.com>,
-        Sj Huang <sj.huang@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Jiaxin +Sj Huang
+On Sat, Jan 11, 2020 at 10:48:39AM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.11 release.
+> There are 165 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Mon, 13 Jan 2020 09:46:17 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.11-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
 
-On Mon, Jan 13, 2020 at 12:44 PM Nicolas Boichat <drinkcat@chromium.org> wrote:
->
-> On Fri, Jan 10, 2020 at 6:09 PM Matthias Brugger <matthias.bgg@gmail.com> wrote:
-> > [snip]
-> > That's all a bit confusing, I thought we are fine to add the reset cells to
-> > infracfg as we have the resets defined in
-> > 64ebb57a3df6 ("clk: reset: Modify reset-controller driver")
->
-> You're right, we're fine. But at least in theory, we should still have
-> the binding documentation that I linked above.
->
-> I will try to pick up all the required patches, split them across
-> 8183/2712 and resend as one series.
-
-Okay, summary of the patches, there are 2 series:
-
-https://patchwork.kernel.org/patch/11311237/
-[1.1] [v3,1/2] amr64: dts: modify mt8183.dtsi
-  => Partially applied to Matthias' v5.5-next/dts64
-  => Other part depend on [1.2], needs to be applied
-https://patchwork.kernel.org/patch/11311241/
-[1.2] [v3,2/2] dt-bindings: mt8183: Add watchdog dt-binding
-  => Pending Guenter/Wim
-
-https://patchwork.kernel.org/cover/11326757/
-[2.0] [PATCH v11 0/3] ASoC: mt8183: fix audio playback slowly after playback
-[2.1] [PATCH v11 1/3] dt-bindings: mediatek: mt8183: Add #reset-cells
-  => IMHO adding mt2712 compatible should be another patch
-  => Depends on [1.2]
-  => Tags should be all dropped
-[2.2] [PATCH v11 2/3] watchdog: mtk_wdt: mt8183: Add reset controller
-  => Issues about tags
-[2.3] [PATCH v11 3/3] watchdog: mtk_wdt: mt2712: Add reset controller
-  => Issues about tags
-
-Jiaxin/Yong Liang/Matthias: Please let me know, I'm happy to pick up
-the patches, clean them up and resend them, if you think that helps.
+compiled and booted 5.4.11-rc1+ . no regression according to "sudo dmesg -l err"
 
 
-> > That's why I took this part from:
-> > https://lore.kernel.org/linux-mediatek/20191226093930.22413-1-yong.liang@mediatek.com/
-> >
-> > Please let me know if I'm wrong and I'll drop it.
-> >
-> > Regards,
-> > Matthias
-> >
-> > >>> 2. Add watchdog device node
-> > >
-> > > Can we have a patch with just this change instead, since you're
-> > > sending the binding with it.
-> > >
-> > >>>
-> > >>> Signed-off-by: yong.liang <yong.liang@mediatek.com>
-> > >>
-> > >> Tested-by: Nicolas Boichat <drinkcat@chromium.org>
-> > >>
-> > >>> ---
-> > >>>  arch/arm64/boot/dts/mediatek/mt8183.dtsi | 8 ++++++++
-> > >>>  1 file changed, 8 insertions(+)
-> > >>> [snip]
+--
+software engineer
+rajagiri school of engineering and technology
+
