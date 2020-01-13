@@ -4,144 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AE7C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8390EC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7402081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F76C2081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:44:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sE8GHT2S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bfiUEyQf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728795AbgAMPnA (ORCPT
+        id S1728688AbgAMPom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 10:43:00 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:41358 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727286AbgAMPm7 (ORCPT
+        Mon, 13 Jan 2020 10:44:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52233 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726943AbgAMPom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 10:42:59 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DFcw7o009205;
-        Mon, 13 Jan 2020 15:41:24 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=DaiMzq10P7q2znpRBBajknZMYi+ZtWubzic8NGU8mfo=;
- b=sE8GHT2SDtHhjkzDOynzxChoJhv6zkVeBzHBdfCaY7p+DOvJXh69L7uo8fa07mQ/fMVr
- /miOInt1cI3EVZvZEziLjpafJrDa2xOrvUs5t+gLqTsIJ/PZVC+wb8Ip7ZV/BSb+Pzkv
- Uoihwv3ROB3y2pgzcZVXOkFpfMHJ+RfiWkfHV09AMKe45a4Wj26LQBsMJ3lY/WposRWF
- c16UC4OfUtsOIFzL4tJTnx3qBOzbirK88CUCIS6IPj2eZyUIxcuqcliUl0pg/cw8z703
- 7dCQsJ9IzjpzUWP04nR9rty4p7SVtX3wqO7FXMuHQiF8WrJKW2vIgmBjte4zpRaZdNzJ 9A== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2xf73tfr9h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 15:41:24 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DFdOHu063080;
-        Mon, 13 Jan 2020 15:41:23 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2xfrghx04f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 15:41:23 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00DFf9gR030155;
-        Mon, 13 Jan 2020 15:41:09 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 07:41:08 -0800
-Date:   Mon, 13 Jan 2020 10:41:16 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, hannes@cmpxchg.org,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Roman Gushchin <guro@fb.com>,
-        Chris Down <chris@chrisdown.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Qian Cai <cai@lca.pw>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Rientjes <rientjes@google.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        swkhack <swkhack@gmail.com>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Colin Ian King <colin.king@canonical.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Peng Fan <peng.fan@nxp.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: Re: [PATCH v7 03/10] mm/lru: replace pgdat lru_lock with lruvec lock
-Message-ID: <20200113154116.mwly5hl5yfvjkzl2@ca-dmjordan1.us.oracle.com>
-References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
- <1577264666-246071-4-git-send-email-alex.shi@linux.alibaba.com>
+        Mon, 13 Jan 2020 10:44:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578930280;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=baGQEJFe1m8uz44ROty+5bEDcZTrF/M70P1MM+fc8Tk=;
+        b=bfiUEyQfTAy6VDAmrhPbCQjh97mwehBTxiEZSYsiAz90+iXoxKOxd/7PO7OguEmYKFkpZi
+        Hi50e14eAYzjtujbrvokcF8+ycX6r0t8c3nd3cS/sD7zKiTRzFYx5+KvHHWfI3y0V3y9tD
+        LVwZULKIBvHp80JMeBJMR+6QaKefBQI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-288-aKv1uNXONtiWhRNB4C5uNw-1; Mon, 13 Jan 2020 10:44:39 -0500
+X-MC-Unique: aKv1uNXONtiWhRNB4C5uNw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3BBAD19586C4;
+        Mon, 13 Jan 2020 15:44:38 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9F6F55C1B0;
+        Mon, 13 Jan 2020 15:44:37 +0000 (UTC)
+Subject: Re: [PATCH v2 2/6] locking/lockdep: Throw away all lock chains with
+ zapped class
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+References: <20191216151517.7060-1-longman@redhat.com>
+ <20191216151517.7060-3-longman@redhat.com>
+ <20200113151806.GW2844@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <2c742217-fa18-bf87-2c0d-2c7f95887646@redhat.com>
+Date:   Mon, 13 Jan 2020 10:44:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1577264666-246071-4-git-send-email-alex.shi@linux.alibaba.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9498 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=629
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001130130
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9498 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=696 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001130130
+In-Reply-To: <20200113151806.GW2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On 1/13/20 10:18 AM, Peter Zijlstra wrote:
+> On Mon, Dec 16, 2019 at 10:15:13AM -0500, Waiman Long wrote:
+>> If a lock chain contains a class that is zapped, the whole lock chain is
+>> now invalid.
+> Possibly. But I'm thinking that argument can/should be made mode elaborate.
+>
+> Suppose we have A->B->C, and we're about to remove B.
+>
+> Now, I suppose the trivial argument goes that if we remove the text that
+> causes A->B, then so B->C will no longer happen. However, that doesn't
+> mean A->C won't still occur.
+>
+> OTOH, we might already have A->C and so our resulting chain would be a
+> duplicate. Conversely, if we didn't already have A->C and it does indeed
+> still occur (say it was omitted due to the redundant logic), then we
+> will create this dependency the next time we'll encounter it.
+I will prefer having it only when it actually happens rather than
+leaving a partial chain behind assuming that it may happen.
+>
+> Bart, do you see a problem with this reasoning?
+>
+> In short, yes, I think you're right and we can remove the whole thing.
+> But please, expand the Changelog a bit, possibly add some of this
+> reasoning into a comment.
+>
+Yes, I will elaborate more in the changelog.
 
-On Wed, Dec 25, 2019 at 05:04:19PM +0800, Alex Shi wrote:
-> @@ -900,6 +904,29 @@ static inline struct lruvec *mem_cgroup_page_lruvec(struct page *page,
->  {
->  	return &pgdat->__lruvec;
->  }
-> +#define lock_page_lruvec_irq(page)			\
-> +({							\
-> +	struct pglist_data *pgdat = page_pgdat(page);	\
-> +	spin_lock_irq(&pgdat->__lruvec.lru_lock);	\
-> +	&pgdat->__lruvec;				\
-> +})
-> +
-> +#define lock_page_lruvec_irqsave(page, flagsp)			\
-> +({								\
-> +	struct pglist_data *pgdat = page_pgdat(page);		\
-> +	spin_lock_irqsave(&pgdat->__lruvec.lru_lock, *flagsp);	\
-> +	&pgdat->__lruvec;					\
-> +})
-> +
-> +#define unlock_page_lruvec_irq(lruvec)			\
-> +({							\
-> +	spin_unlock_irq(&lruvec->lru_lock);		\
-> +})
-> +
-> +#define unlock_page_lruvec_irqrestore(lruvec, flags)		\
-> +({								\
-> +	spin_unlock_irqrestore(&lruvec->lru_lock, flags);	\
-> +})
+Cheers,
+Longman
 
-Noticed this while testing your series.  These are safe as inline functions, so
-I think you may have gotten the wrong impression when Johannes made this point:
-
-https://lore.kernel.org/linux-mm/20191119164448.GA396644@cmpxchg.org/
