@@ -2,116 +2,102 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 034B5C33CB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546ABC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB71320661
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:46:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578901597;
-	bh=krPn9+Yz3BGizB05V7pAVesjTH5/X9HVzlmktZdWQd8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hOxWcbOVDZPhELsmWgVlzLzw004R2WGI8huXTDZ1DvnhH/+jMgfbrhNebpMQuSWrf
-	 q6kd+SW9SOy3rrAj7LI5q+5vCFTemdXdQTT2yM4Xraz1V8rnRvflum/YNODrJDPVFh
-	 E7NKorlkzAQ5SmqXgCt8sO21em/xNF6nZQXm9KoE=
+	by mail.kernel.org (Postfix) with ESMTP id 30DE12073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgAMHqh (ORCPT
+        id S1728739AbgAMHtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 02:46:37 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33837 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727021AbgAMHqh (ORCPT
+        Mon, 13 Jan 2020 02:49:10 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:35391 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727021AbgAMHtJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 02:46:37 -0500
-Received: by mail-ed1-f68.google.com with SMTP id l8so7617811edw.1;
-        Sun, 12 Jan 2020 23:46:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9+NYHUXqWb5LThglCHJH2RV2/Z3BgkHI4Ngou8ygTeM=;
-        b=kOam0NbcyKwGIva9cZkCOy0xKIIhe7/hBsO9MzRHTtWbaJ8esZSxvMO5b/xtRZlXek
-         Vx0K6EFCwFlaTUaE7ED1P46cIN28t9I8TBw13EAO7/ae8obq//hJfev6gvDmhU+cHlJW
-         4nlJbfL0rez7cNBR1RXOdYPvN/NTqMuJrllIwfAgyFZsSmUQpvdn5zyRzosAlyxt9JI4
-         /vp9V3sTspNv228344hgwaGgoSLV5uJ8idYQpkyxU9+g0H9MW2Zqn1NQa9kxOUcUkIih
-         egPN4/Ue42B8QfOV48u7X486Gn08WRh2wNzO68hYxOAiWyc60/dtG/yfoWlGatSQ+Eoc
-         4gOA==
-X-Gm-Message-State: APjAAAVIsZf5lfezYcUT9D2wiq/Yg/ftaOSG7HGtaaSy9Kc9TMS4ZuOJ
-        j2UgRzob9gwMZ57JR3sGhFo=
-X-Google-Smtp-Source: APXvYqzi2butQD8WUbdthxqJ+MEw6KBLKjtLWPlvu/eksm5HSQg2bqJpNmL4e5nbvOjMdE7ge3nd1Q==
-X-Received: by 2002:a17:906:948e:: with SMTP id t14mr15643734ejx.123.1578901595055;
-        Sun, 12 Jan 2020 23:46:35 -0800 (PST)
-Received: from pi3 ([194.230.155.229])
-        by smtp.googlemail.com with ESMTPSA id n14sm400975ejs.40.2020.01.12.23.46.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Jan 2020 23:46:34 -0800 (PST)
-Date:   Mon, 13 Jan 2020 08:46:32 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 3/3] mtd: onenand: Enable compile testing of OMAP and
- Samsung drivers
-Message-ID: <20200113074632.GA1187@pi3>
-References: <20191229183612.22133-3-krzk@kernel.org>
- <201912310904.9iM6MaFr%lkp@intel.com>
- <20191231073339.GA6747@pi3>
- <20200109161826.7fda02a4@xps13>
+        Mon, 13 Jan 2020 02:49:09 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 00D7n6s9025323, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCAS12.realtek.com.tw[172.21.6.16])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 00D7n6s9025323
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Jan 2020 15:49:06 +0800
+Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
+ RTITCAS12.realtek.com.tw (172.21.6.16) with Microsoft SMTP Server (TLS) id
+ 14.3.468.0; Mon, 13 Jan 2020 15:49:06 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 13 Jan 2020 15:49:05 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
+ RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
+ 15.01.1779.005; Mon, 13 Jan 2020 15:49:05 +0800
+From:   Tony Chuang <yhchuang@realtek.com>
+To:     Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>,
+        Linux List Kernel Mailing <linux-wireless@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: RE: [rtw88] purge skb(s) not reported by firmware
+Thread-Topic: [rtw88] purge skb(s) not reported by firmware
+Thread-Index: AQHVxgumpbelFNHZSEWWibZh50EtlafoNYPw
+Date:   Mon, 13 Jan 2020 07:49:05 +0000
+Message-ID: <fe3cd3c3d4364ef4bfb14b5ac3fcee1d@realtek.com>
+References: <CABXGCsNu+nih5nZkuavoYot0eo5pF7quD4JviN+vWctPdmbu=A@mail.gmail.com>
+In-Reply-To: <CABXGCsNu+nih5nZkuavoYot0eo5pF7quD4JviN+vWctPdmbu=A@mail.gmail.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.68.183]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200109161826.7fda02a4@xps13>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 04:18:26PM +0100, Miquel Raynal wrote:
-> Hi Krzysztof,
-> 
-> Krzysztof Kozlowski <krzk@kernel.org> wrote on Tue, 31 Dec 2019
-> 08:33:39 +0100:
-> 
-> > On Tue, Dec 31, 2019 at 10:00:48AM +0800, kbuild test robot wrote:
-> > > Hi Krzysztof,
-> > > 
-> > > I love your patch! Perhaps something to improve:
-> > > 
-> > > [auto build test WARNING on linus/master]
-> > > [also build test WARNING on v5.5-rc4 next-20191220]
-> > > [if your patch is applied to the wrong git tree, please drop us a note to help
-> > > improve the system. BTW, we also suggest to use '--base' option to specify the
-> > > base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> > > 
-> > > url:    https://github.com/0day-ci/linux/commits/Krzysztof-Kozlowski/mtd-onenand-samsung-Fix-pointer-cast-Wpointer-to-int-cast-warnings-on-64-bit/20191230-030838
-> > > base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git bf8d1cd4386535004c4afe7f03d37f9864c9940e
-> > > reproduce:
-> > >         # apt-get install sparse
-> > >         # sparse version: v0.6.1-129-g341daf20-dirty
-> > >         make ARCH=x86_64 allmodconfig
-> > >         make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-> > > 
-> > > If you fix the issue, kindly add following tag
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > >   
-> > 
-> > It is not related to my patch. I'll fix it up soon.
-> 
-> I would like this to be fixed before enabling compile testing, is your
-> fix read?
-
-Yes, you picked up the fix here:
-https://lore.kernel.org/lkml/20200103164158.4265-1-krzk@kernel.org/
-
-Best regards,
-Krzysztof
-
+PiBTdWJqZWN0OiBbcnR3ODhdIHB1cmdlIHNrYihzKSBub3QgcmVwb3J0ZWQgYnkgZmlybXdhcmUN
+Cj4gDQo+IEhpIGZvbGtzLg0KPiBJIHJlY2VudGx5IGpvaW5lZCB0ZXN0aW5nIHRoZSBydHc4OCBk
+cml2ZXIuDQo+IEluIGp1c3QgYSBmZXcgZGF5cywgSSBhbHJlYWR5IGNhdGNoZXMgc3VjaCBXQVJO
+SU5HIHR3aWNlIHRpbWVzOg0KPiANCj4gDQo+IFsgNDg5OS42MDE2NTZdIHJ0d19wY2kgMDAwMDow
+NTowMC4wOiBmYWlsZWQgdG8gc2VuZCBoMmMgY29tbWFuZA0KPiBbIDkwODQuNjYxMzgyXSBydHdf
+cGNpIDAwMDA6MDU6MDAuMDogZmlybXdhcmUgZmFpbGVkIHRvIHJlc3RvcmUgaGFyZHdhcmUNCj4g
+c2V0dGluZw0KPiBbIDkwODUuMTY3MzY0XSAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0t
+LS0tLS0NCj4gWyA5MDg1LjE2NzM3MF0gcHVyZ2Ugc2tiKHMpIG5vdCByZXBvcnRlZCBieSBmaXJt
+d2FyZQ0KPiBbIDkwODUuMTY3NDE3XSBXQVJOSU5HOiBDUFU6IDkgUElEOiAwIGF0DQo+IGRyaXZl
+cnMvbmV0L3dpcmVsZXNzL3JlYWx0ZWsvcnR3ODgvdHguYzoxNTUNCj4gcnR3X3R4X3JlcG9ydF9w
+dXJnZV90aW1lcisweDIwLzB4NTAgW3J0dzg4XQ0KPiBbIDkwODUuMTY3NDE5XSBNb2R1bGVzIGxp
+bmtlZCBpbjogdWlucHV0IHJmY29tbSB4dF9DSEVDS1NVTQ0KPiB4dF9NQVNRVUVSQURFIHh0X2Nv
+bm50cmFjayBpcHRfUkVKRUNUIG5mX25hdF90ZnRwIG5mX2Nvbm50cmFja190ZnRwDQoNCi4uLg0K
+DQo+IFsgOTA4NS4xNjc1OTZdICBkb19pZGxlKzB4MWU0LzB4MjgwDQo+IFsgOTA4NS4xNjc1OTld
+ICBjcHVfc3RhcnR1cF9lbnRyeSsweDE5LzB4MjANCj4gWyA5MDg1LjE2NzYwM10gIHN0YXJ0X3Nl
+Y29uZGFyeSsweDE2Mi8weDFiMA0KPiBbIDkwODUuMTY3NjA2XSAgc2Vjb25kYXJ5X3N0YXJ0dXBf
+NjQrMHhiNi8weGMwDQo+IFsgOTA4NS4xNjc2MTBdIC0tLVsgZW5kIHRyYWNlIGY3MzRmMmIxYmM0
+MGViZGIgXS0tLQ0KPiBbMTIxMTEuNTA1OTAxXSBydHdfcGNpIDAwMDA6MDU6MDAuMDogZmFpbGVk
+IHRvIHNlbmQgaDJjIGNvbW1hbmQNCj4gWzEyMTExLjUwNTk1Nl0gcnR3X3BjaSAwMDAwOjA1OjAw
+LjA6IGZhaWxlZCB0byBzZW5kIGgyYyBjb21tYW5kDQo+IA0KPiANCj4gWWVzLCBpdCBzZWVtcyBs
+aWtlIG5vdGhpbmcgYmFkIGhhcHBlbmVkLCBleGNlcHQgZnJlcXVlbnQgbmV0d29yayBkaXNjb25u
+ZWN0Lg0KPiBVbmZvcnR1bmF0ZWx5IEkgZG9uJ3Qga25vdyBob3cgZXhhY3RseSByZXByb2R1Y2Ug
+aXQuDQo+IEJ1dCBJIHRoaW5rIGlmIHNvbWVvbmUgcHJvcG9zZSBwYXRjaCBhbmQgdGhpcyBXQVJO
+SU5HIGFmdGVyIGFwcGx5aW5nDQo+IGRpZG4ndCBhcHBlYXJzIGFnYWlubiBhdCBsZWFzdCBhIHdl
+ZWsgdGhlbiB3ZSBjYW4gYXNzdW1lIHRoYXQgdGhlDQo+IHByb2JsZW0gaXMgZml4ZWQuDQo+IA0K
+DQpJdCBzZWVtcyBsaWtlIHRoZSBmaXJtd2FyZSBpcyBub3QgcmVzcG9uc2l2ZSwgYW5kIGlzIG5v
+dCByZXBvcnRpbmcgVFgNCnN0YXR1cyBvciBjb25zdW1pbmcgSDJDIGNvbW1hbmRzLg0KVGhlIGZp
+cnN0IHRyYWNlIGR1bXAgInB1cmdlIHNrYihzKSBub3QgcmVwb3J0ZWQgYnkgZmlybXdhcmUiIHdp
+bGwgYmUNCnByaW50ZWQgd2hlbiBkcml2ZXIgdGltZWQtb3V0IGZvciBUWCBzdGF0dXMgcmVwb3J0
+LiBJdCBjb3VsZCBoYXBwZW4NCnNvbWV0aW1lcyB3aGVuIGRyaXZlciB0dXJucyBwb3dlciBvZmYg
+dG9vIHF1aWNrbHkgYWZ0ZXIgZGUtYXV0aCBzZW50Lg0KT3IgZmlybXdhcmUganVzdCBtaXNzZWQg
+aXQuIE9yaWdpbmFsbHkgSSB3YXMgdGhpbmtpbmcgdGhhdCB0aGUgVFggc3RhdHVzDQptaXNzaW5n
+IG1lYW5zIHRoYXQgdGhlIGZpcm13YXJlIGlzIG5vdCB3b3JraW5nLCBidXQgc2VlbXMgaXQncyBu
+b3QNCnRydWUuIFNvIEkgdGhpbmsgSSBtaWdodCBsb3dlciB0aGUgcHJpbnQgbGV2ZWwgKFdBUk4o
+KSAtPiBydHdfd2FybigpKS4NCg0KQnV0IGZyb20geW91ciBrZXJuZWwgbG9nIEkgY2FuIHNlZSB0
+aGF0IHRoZSBoMmMgY29tbWFuZHMgZmFpbGVkIHRvDQpiZSBzZW50IHRvIGZpcm13YXJlLCB3aGlj
+aCBtZWFucyB0aGVyZSdzIGFub3RoZXIgdGhpbmdzIHRoYXQgY2F1c2UNCmZpcm13YXJlIHRvIHN0
+YWxsLiBJdCB3aWxsIGJlIGJldHRlciBpZiB5b3UgY2FuIHR1cm4gdGhlIGRlYnVnIG1hc2tzIG9u
+LA0KYW5kIHJlcHJvZHVjZSBpdCwgdG8gaGVscCBtZSBzbyBzZWUgd2hhdCBoYXBwZW5lZC4NClRv
+IHR1cm4gdGhlIGRlYnVnIG1hc2tzIG9uOg0KJCBlY2hvIDB4ZmZmZmZmZmYgPiAvc3lzL21vZHVs
+ZS9ydHc4OC9wYXJhbWV0ZXJzL2RlYnVnX21hc2sNCg0KWWFuLUhzdWFuDQo=
