@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAB0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C06FC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EFF624694
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFBE24655
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbgAMTJx (ORCPT
+        id S1729253AbgAMTKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:09:53 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39958 "EHLO
+        Mon, 13 Jan 2020 14:10:41 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39985 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728978AbgAMTJs (ORCPT
+        with ESMTP id S1729009AbgAMTJx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:09:48 -0500
+        Mon, 13 Jan 2020 14:09:53 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ir55t-00018t-0u; Mon, 13 Jan 2020 20:09:45 +0100
+        id 1ir55s-00018B-Tp; Mon, 13 Jan 2020 20:09:45 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D8B541C18DD;
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5CBFF1C18ED;
         Mon, 13 Jan 2020 20:09:31 +0100 (CET)
 Date:   Mon, 13 Jan 2020 19:09:31 -0000
 From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] lib/vdso: Mark do_hres() and do_coarse() as
- __always_inline
-Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
+Subject: [tip: timers/core] time: Add timens_offsets to be used for tasks in
+ time namespace
+Cc:     Andrei Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191112012724.250792-3-dima@arista.com>
-References: <20191112012724.250792-3-dima@arista.com>
+In-Reply-To: <20191112012724.250792-5-dima@arista.com>
+References: <20191112012724.250792-5-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <157894257170.19145.3085263448023270279.tip-bot2@tip-bot2>
+Message-ID: <157894257123.19145.5195489599326442618.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,85 +57,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     9d66475e9b680afb70a49a531287513f1307e623
-Gitweb:        https://git.kernel.org/tip/9d66475e9b680afb70a49a531287513f1307e623
-Author:        Andrei Vagin <avagin@gmail.com>
-AuthorDate:    Tue, 12 Nov 2019 01:26:51 
+Commit-ID:     cad1baec2018c6c0776c4b6a49532b9e44dc3f14
+Gitweb:        https://git.kernel.org/tip/cad1baec2018c6c0776c4b6a49532b9e44dc3f14
+Author:        Andrei Vagin <avagin@openvz.org>
+AuthorDate:    Tue, 12 Nov 2019 01:26:53 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 13 Jan 2020 08:10:47 +01:00
+CommitterDate: Mon, 13 Jan 2020 08:10:48 +01:00
 
-lib/vdso: Mark do_hres() and do_coarse() as __always_inline
+time: Add timens_offsets to be used for tasks in time namespace
 
-Performance numbers for Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
-(more clock_gettime() cycles - the better):
+Introduce offsets for time namespace. They will contain an adjustment
+needed to convert clocks to/from host's.
 
-clock            | before     | after      | diff
-----------------------------------------------------------
-monotonic        |  153222105 |  166775025 | 8.8%
-monotonic-coarse |  671557054 |  691513017 | 3.0%
-monotonic-raw    |  147116067 |  161057395 | 9.5%
-boottime         |  153446224 |  166962668 | 9.1%
+A new namespace is created with the same offsets as the time namespace
+of the current process.
 
-The improvement for arm64 for monotonic and boottime is around 3.5%.
-
-clock            | before     | after      | diff
-==================================================
-monotonic          17326692     17951770     3.6%
-monotonic-coarse   43624027     44215292     1.3%
-monotonic-raw      17541809     17554932     0.1%
-boottime           17334982     17954361     3.5%
-
-[ tglx: Avoid the goto ]
-
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Co-developed-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191112012724.250792-3-dima@arista.com
+Link: https://lore.kernel.org/r/20191112012724.250792-5-dima@arista.com
 
 ---
- lib/vdso/gettimeofday.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ include/linux/time_namespace.h | 22 ++++++++++++++++++++++
+ kernel/time/namespace.c        |  2 ++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index fac9e86..b453d24 100644
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -38,7 +38,7 @@ u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
- }
- #endif
+diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
+index 8c74cc1..d7e3b49 100644
+--- a/include/linux/time_namespace.h
++++ b/include/linux/time_namespace.h
+@@ -12,11 +12,17 @@
+ struct user_namespace;
+ extern struct user_namespace init_user_ns;
  
--static int do_hres(const struct vdso_data *vd, clockid_t clk,
-+static __always_inline int do_hres(const struct vdso_data *vd, clockid_t clk,
- 		   struct __kernel_timespec *ts)
++struct timens_offsets {
++	struct timespec64 monotonic;
++	struct timespec64 boottime;
++};
++
+ struct time_namespace {
+ 	struct kref		kref;
+ 	struct user_namespace	*user_ns;
+ 	struct ucounts		*ucounts;
+ 	struct ns_common	ns;
++	struct timens_offsets	offsets;
+ } __randomize_layout;
+ 
+ extern struct time_namespace init_time_ns;
+@@ -39,6 +45,20 @@ static inline void put_time_ns(struct time_namespace *ns)
+ 	kref_put(&ns->kref, free_time_ns);
+ }
+ 
++static inline void timens_add_monotonic(struct timespec64 *ts)
++{
++	struct timens_offsets *ns_offsets = &current->nsproxy->time_ns->offsets;
++
++	*ts = timespec64_add(*ts, ns_offsets->monotonic);
++}
++
++static inline void timens_add_boottime(struct timespec64 *ts)
++{
++	struct timens_offsets *ns_offsets = &current->nsproxy->time_ns->offsets;
++
++	*ts = timespec64_add(*ts, ns_offsets->boottime);
++}
++
+ #else
+ static inline struct time_namespace *get_time_ns(struct time_namespace *ns)
  {
- 	const struct vdso_timestamp *vdso_ts = &vd->basetime[clk];
-@@ -68,8 +68,8 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
+@@ -66,6 +86,8 @@ static inline int timens_on_fork(struct nsproxy *nsproxy,
  	return 0;
  }
  
--static int do_coarse(const struct vdso_data *vd, clockid_t clk,
--		      struct __kernel_timespec *ts)
-+static __always_inline int do_coarse(const struct vdso_data *vd, clockid_t clk,
-+				     struct __kernel_timespec *ts)
++static inline void timens_add_monotonic(struct timespec64 *ts) { }
++static inline void timens_add_boottime(struct timespec64 *ts) { }
+ #endif
+ 
+ #endif /* _LINUX_TIMENS_H */
+diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
+index 2662a69..c2a58e4 100644
+--- a/kernel/time/namespace.c
++++ b/kernel/time/namespace.c
+@@ -14,6 +14,7 @@
+ #include <linux/slab.h>
+ #include <linux/cred.h>
+ #include <linux/err.h>
++#include <linux/mm.h>
+ 
+ static struct ucounts *inc_time_namespaces(struct user_namespace *ns)
  {
- 	const struct vdso_timestamp *vdso_ts = &vd->basetime[clk];
- 	u32 seq;
-@@ -99,13 +99,15 @@ __cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
- 	 */
- 	msk = 1U << clock;
- 	if (likely(msk & VDSO_HRES))
--		return do_hres(&vd[CS_HRES_COARSE], clock, ts);
-+		vd = &vd[CS_HRES_COARSE];
- 	else if (msk & VDSO_COARSE)
- 		return do_coarse(&vd[CS_HRES_COARSE], clock, ts);
- 	else if (msk & VDSO_RAW)
--		return do_hres(&vd[CS_RAW], clock, ts);
-+		vd = &vd[CS_RAW];
-+	else
-+		return -1;
+@@ -60,6 +61,7 @@ static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
+ 	ns->ucounts = ucounts;
+ 	ns->ns.ops = &timens_operations;
+ 	ns->user_ns = get_user_ns(user_ns);
++	ns->offsets = old_ns->offsets;
+ 	return ns;
  
--	return -1;
-+	return do_hres(vd, clock, ts);
- }
- 
- static __maybe_unused int
+ fail_free:
