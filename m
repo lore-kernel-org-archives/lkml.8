@@ -2,187 +2,168 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076C7C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02766C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1E11214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE440214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:33:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LbplYLXK"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="OxFJ5+uP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387620AbgAMEcV (ORCPT
+        id S2387626AbgAMEdv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 23:32:21 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:64495 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387607AbgAMEcU (ORCPT
+        Sun, 12 Jan 2020 23:33:51 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33584 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387540AbgAMEdv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 23:32:20 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578889939; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=l7XrpfhhxOyRvikqVWgTDSMGNKmcEQJIF/TbImSjqFM=; b=LbplYLXKsW4bhkzO3PoyBLOIQo5opK0qBj0tu5/Y42YZgikJwxOQbPIIvjimfASPAMOOWzyb
- dXLUdGucnx0MsSvQpSMjCeoxiTqchGe6HjJTNfSBYOwXhCPrtR0JezMGUA6w7z8cK7LKnRK0
- WaYJC/LhzAPiWFkYrLsBQFN6jek=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1bf2cd.7f61a5cfe378-smtp-out-n02;
- Mon, 13 Jan 2020 04:32:13 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E28BAC433A2; Mon, 13 Jan 2020 04:32:12 +0000 (UTC)
-Received: from rocky-Inspiron-7590.qca.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rjliao)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D52DAC433CB;
-        Mon, 13 Jan 2020 04:32:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D52DAC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
-From:   Rocky Liao <rjliao@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Rocky Liao <rjliao@codeaurora.org>
-Subject: [PATCH v5] Bluetooth: hci_qca: Add qca_power_on() API to support both wcn399x and Rome power up
-Date:   Mon, 13 Jan 2020 12:30:20 +0800
-Message-Id: <20200113043020.9663-1-rjliao@codeaurora.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200107052601.32216-1-rjliao@codeaurora.org>
-References: <20200107052601.32216-1-rjliao@codeaurora.org>
+        Sun, 12 Jan 2020 23:33:51 -0500
+Received: by mail-ot1-f65.google.com with SMTP id b18so7816419otp.0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 20:33:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0SADaU9gu70a2Bm0Kanw0/QkZVrOHiIb+3LRKLBcUWk=;
+        b=OxFJ5+uPpMQkwvT9Qje5xmITqR1pEl3memtQG8Of66iLLXIir/M+praEuySJUPpWqx
+         B7k8EbjZfdkqQtjY7IOgRq/+bLOoJw0+Spj1+UCP9x0BoGO+r6hPIyQ9fl/tDsd1miBa
+         RD7OyyUJkbYPcTYY11AR32jO97qb5LBnOc6cysWfFY761YIxTiErD/jyiKNnNneKy8Ek
+         VJ8n3eNNluAdNyiiQrPSN050ayi1RvZbWNM07Dwfo+GwlQrh4LBz2p+loFt7Ezh9PzS5
+         hRO1OvgiH8Xrlt5JLkPpxi2yPu9JEOjmeygncihU08HnpWE6Bz4mej+gZFrOGt7W+9CS
+         eUqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0SADaU9gu70a2Bm0Kanw0/QkZVrOHiIb+3LRKLBcUWk=;
+        b=dZ3hqufn/hUBOuAMi/2vlpM2A7trHZEdHvzMOPPPDbpVGmOjEmOGp1/Vkf2eZgbd0f
+         TegEmRDVMYTYKpz6F7K6FU4nsqGltctdjglVZYXGAOFbGy9rZaM8Jrf2BxBwZTSdzvP4
+         UsFXbtpfeTYiJ9bG+jaD6PSCy5/NHeSIu0ThbvIizMRiwqdlRUgqh2i+tBUCvsBIvr2j
+         Gx22o+KZcp6XrJxoQV5h8diQUk63cpNAxHH4oYF939l55bTu/yg4Ot/Ta2lOQE1fBx2f
+         u0VnHowgD4z4PZRl+D7daDitHLgVQbbJVM1eE3MXQ95B2uFNyXop2maMb7rtp9Y0YlDu
+         bPzQ==
+X-Gm-Message-State: APjAAAWJen2/FMIvgI9RiqQj74wHjWWpTMXHZrJbaKvKmtLb+2vkA/Zf
+        yhbqgW+u5/N8HIb6U/FwsrNNhN3wBch1gLZRtgiioeGmU18=
+X-Google-Smtp-Source: APXvYqzKKJLKVTUSZcp0sj2AT+aiCvmTg5KUl6YAuMPe9/ClQhmL25Wu+pX1UtlR8rzIUjHdZZAxcUMMWVH9uWU1+Sw=
+X-Received: by 2002:a9d:2c68:: with SMTP id f95mr12075160otb.33.1578890030841;
+ Sun, 12 Jan 2020 20:33:50 -0800 (PST)
+MIME-Version: 1.0
+References: <a367af4d-7267-2e94-74dc-2a2aac204080@ghiti.fr>
+ <20191018105657.4584ec67@canb.auug.org.au> <20191028110257.6d6dba6e@canb.auug.org.au>
+ <mhng-0daa1a90-2bed-4b2e-833e-02cd9c0aa73f@palmerdabbelt-glaptop> <d5d59f54-e391-3659-d4c0-eada50f88187@ghiti.fr>
+In-Reply-To: <d5d59f54-e391-3659-d4c0-eada50f88187@ghiti.fr>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Mon, 13 Jan 2020 12:33:40 +0800
+Message-ID: <CANXhq0pn+Nq6T5dNyJiB6xvmqTnPSzo8sVfqHhGyWUURY+1ydg@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the bpf-next tree
+To:     Alexandre Ghiti <alexandre@ghiti.fr>
+Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>, daniel@iogearbox.net,
+        ast@kernel.org, netdev@vger.kernel.org, linux-next@vger.kernel.org,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a unified API qca_power_on() to support both wcn399x and
-Rome power on. For wcn399x it calls the qca_wcn3990_init() to init the
-regulators, and for Rome it pulls up the bt_en GPIO to power up the btsoc.
-It also moves all the power up operation from hdev->open() to
-hdev->setup().
+On Sat, Jan 11, 2020 at 10:31 PM Alexandre Ghiti <alexandre@ghiti.fr> wrote:
+>
+>
+> On 1/10/20 7:20 PM, Palmer Dabbelt wrote:
+> > On Fri, 10 Jan 2020 14:28:17 PST (-0800), alexandre@ghiti.fr wrote:
+> >> Hi guys,
+> >>
+> >> On 10/27/19 8:02 PM, Stephen Rothwell wrote:
+> >>> Hi all,
+> >>>
+> >>> On Fri, 18 Oct 2019 10:56:57 +1100 Stephen Rothwell
+> >>> <sfr@canb.auug.org.au> wrote:
+> >>>> Hi all,
+> >>>>
+> >>>> After merging the bpf-next tree, today's linux-next build (powerpc
+> >>>> ppc64_defconfig) produced this warning:
+> >>>>
+> >>>> WARNING: 2 bad relocations
+> >>>> c000000001998a48 R_PPC64_ADDR64 _binary__btf_vmlinux_bin_start
+> >>>> c000000001998a50 R_PPC64_ADDR64 _binary__btf_vmlinux_bin_end
+> >>>>
+> >>>> Introduced by commit
+> >>>>
+> >>>>    8580ac9404f6 ("bpf: Process in-kernel BTF")
+> >>> This warning now appears in the net-next tree build.
+> >>>
+> >>>
+> >> I bump that thread up because Zong also noticed that 2 new
+> >> relocations for
+> >> those symbols appeared in my riscv relocatable kernel branch following
+> >> that commit.
+> >>
+> >> I also noticed 2 new relocations R_AARCH64_ABS64 appearing in arm64
+> >> kernel.
+> >>
+> >> Those 2 weak undefined symbols have existed since commit
+> >> 341dfcf8d78e ("btf: expose BTF info through sysfs") but this is the fact
+> >> to declare those symbols into btf.c that produced those relocations.
+> >>
+> >> I'm not sure what this all means, but this is not something I expected
+> >> for riscv for
+> >> a kernel linked with -shared/-fpie. Maybe should we just leave them to
+> >> zero ?
+> >>
+> >> I think that deserves a deeper look if someone understands all this
+> >> better than I do.
+> >
+> > Can you give me a pointer to your tree and how to build a relocatable
+> > kernel?
+> > Weak undefined symbols have the absolute value 0,
+>
+>
+> So according to you the 2 new relocations R_RISCV_64 are normal and
+> should not
+> be modified at runtime right ?
+>
+>
+> > but the kernel is linked at
+> > an address such that 0 can't be reached by normal means.  When I added
+> > support
+> > to binutils for this I did it in a way that required almost no code --
+> > essetially I just stopped dissallowing x0 as a possible base register
+> > for PCREL
+> > relocations, which results in 0 always being accessible.  I just
+> > wanted to get
+> > the kernel to build again, so I didn't worry about chasing around all the
+> > addressing modes.  The PIC/PIE support generates different relocations
+> > and I
+> > wouldn't be surprised if I just missed one (or more likely all) of them.
+> >
+> > It's probably a simple fix, though I feel like every time I say that
+> > about the
+> > linker I end up spending a month in there...
+>
+> You can find it here:
+>
+> https://github.com/AlexGhiti/riscv-linux/tree/int/alex/riscv_relocatable_v1
+>
+> Zong fixed the bug introduced by those 2 new relocations and everything
+> works
+> like a charm, so I'm not sure you have to dig in the linker :)
+>
 
-Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
----
+I'm not quite familiar with btf, so I have no idea why there are two
+weak symbols be added in 8580ac9404f6 ("bpf: Process in-kernel BTF")
+as well, According on relocation mechanism, maybe it is unnecessary to
+handle weak undefined symbol at this time, because there is no
+substantive help to relocate the absolute value 0. I just simply
+ignore the non-relative relocation types to make processing can go
+forward, and it works for me based on v5.5-rc5.
 
-Changes in v2: None
-Changes in v3:
-  -moved all the power up operation from open() to setup()
-  -updated the commit message
-Changes in v4:
-  -made a single call to qca_power_on() in setup()
-Changes in v5:
-  -modified the debug log location
-
- drivers/bluetooth/hci_qca.c | 54 ++++++++++++++++++++++---------------
- 1 file changed, 33 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 82e4cd4b6663..992622dc1263 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -541,7 +541,6 @@ static int qca_open(struct hci_uart *hu)
- {
- 	struct qca_serdev *qcadev;
- 	struct qca_data *qca;
--	int ret;
- 
- 	BT_DBG("hu %p qca_open", hu);
- 
-@@ -582,23 +581,10 @@ static int qca_open(struct hci_uart *hu)
- 	hu->priv = qca;
- 
- 	if (hu->serdev) {
--
- 		qcadev = serdev_device_get_drvdata(hu->serdev);
--		if (!qca_is_wcn399x(qcadev->btsoc_type)) {
--			gpiod_set_value_cansleep(qcadev->bt_en, 1);
--			/* Controller needs time to bootup. */
--			msleep(150);
--		} else {
-+		if (qca_is_wcn399x(qcadev->btsoc_type)) {
- 			hu->init_speed = qcadev->init_speed;
- 			hu->oper_speed = qcadev->oper_speed;
--			ret = qca_regulator_enable(qcadev);
--			if (ret) {
--				destroy_workqueue(qca->workqueue);
--				kfree_skb(qca->rx_skb);
--				hu->priv = NULL;
--				kfree(qca);
--				return ret;
--			}
- 		}
- 	}
- 
-@@ -1531,6 +1517,31 @@ static int qca_wcn3990_init(struct hci_uart *hu)
- 	return 0;
- }
- 
-+static int qca_power_on(struct hci_dev *hdev)
-+{
-+	struct hci_uart *hu = hci_get_drvdata(hdev);
-+	enum qca_btsoc_type soc_type = qca_soc_type(hu);
-+	struct qca_serdev *qcadev;
-+	int ret = 0;
-+
-+	/* Non-serdev device usually is powered by external power
-+	 * and don't need additional action in driver for power on
-+	 */
-+	if (!hu->serdev)
-+		return 0;
-+
-+	if (qca_is_wcn399x(soc_type)) {
-+		ret = qca_wcn3990_init(hu);
-+	} else {
-+		qcadev = serdev_device_get_drvdata(hu->serdev);
-+		gpiod_set_value_cansleep(qcadev->bt_en, 1);
-+		/* Controller needs time to bootup. */
-+		msleep(150);
-+	}
-+
-+	return ret;
-+}
-+
- static int qca_setup(struct hci_uart *hu)
- {
- 	struct hci_dev *hdev = hu->hdev;
-@@ -1553,24 +1564,25 @@ static int qca_setup(struct hci_uart *hu)
- 	 */
- 	set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
- 
--	if (qca_is_wcn399x(soc_type)) {
--		bt_dev_info(hdev, "setting up wcn3990");
-+	bt_dev_info(hdev, "setting up %s",
-+		qca_is_wcn399x(soc_type) ? "wcn399x" : "ROME");
- 
-+	ret = qca_power_on(hdev);
-+	if (ret)
-+		return ret;
-+
-+	if (qca_is_wcn399x(soc_type)) {
- 		/* Enable NON_PERSISTENT_SETUP QUIRK to ensure to execute
- 		 * setup for every hci up.
- 		 */
- 		set_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks);
- 		set_bit(HCI_QUIRK_USE_BDADDR_PROPERTY, &hdev->quirks);
- 		hu->hdev->shutdown = qca_power_off;
--		ret = qca_wcn3990_init(hu);
--		if (ret)
--			return ret;
- 
- 		ret = qca_read_soc_version(hdev, &soc_ver, soc_type);
- 		if (ret)
- 			return ret;
- 	} else {
--		bt_dev_info(hdev, "ROME setup");
- 		qca_set_speed(hu, QCA_INIT_SPEED);
- 	}
- 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+> Alex
+>
