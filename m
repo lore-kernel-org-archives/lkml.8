@@ -2,295 +2,94 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDE5C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0263C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6365021556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B937321556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578954782;
+	bh=qkihO5UblxyVXs4iUDvJZHK6ncEi1amhW/NsbryE1m0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=BHIskX8cgVXL44b0If7NGSKFHqyUwf34iiNk57UgKSTQkoC5rhQEH6FvSHsxTuBnd
+	 FdUJxwboL363ffJgOOmeyCRwm5jZCS30xgDeMaFyox3myQmER/r1JasOJ5zcq1tYep
+	 1f/mfobmbTvJn5BJ3yVNNLNvgITld8Sdj7hR1XEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729187AbgAMWcy (ORCPT
+        id S1729197AbgAMWdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:32:54 -0500
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:40629 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729009AbgAMWcE (ORCPT
+        Mon, 13 Jan 2020 17:33:01 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35992 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729158AbgAMWct (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:32:04 -0500
-X-Originating-IP: 90.76.143.236
-Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id CAAC040006;
-        Mon, 13 Jan 2020 22:32:01 +0000 (UTC)
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     davem@davemloft.net, sd@queasysnail.net, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thomas.petazzoni@bootlin.com, alexandre.belloni@bootlin.com,
-        allan.nielsen@microchip.com, camelia.groza@nxp.com,
-        Simon.Edelhaus@aquantia.com, Igor.Russkikh@aquantia.com,
-        jakub.kicinski@netronome.com
-Subject: [PATCH net-next v6 06/10] net: macsec: add nla support for changing the offloading selection
-Date:   Mon, 13 Jan 2020 23:31:44 +0100
-Message-Id: <20200113223148.746096-7-antoine.tenart@bootlin.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200113223148.746096-1-antoine.tenart@bootlin.com>
-References: <20200113223148.746096-1-antoine.tenart@bootlin.com>
+        Mon, 13 Jan 2020 17:32:49 -0500
+Received: by mail-oi1-f193.google.com with SMTP id c16so9954038oic.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 14:32:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8OSe8nCMD8zFTJxmKCShhLga5sECo0uXyDP7h9INGG4=;
+        b=V152pUneh6bpZfLuJTAKo8HUA57Ur3x1TLHyZsxyIXnqyQDsdUN1D6hJaTuPkHpdWQ
+         d2M/DY0PqdK7qKNvhs9fs4r5coooVPY6Sayy5CLlIQf7yZbtMBHjaigvw+btXNk8VTlW
+         ZZQYsk+q2Hn4Ic5+RpmiNk/ApY/uLYm+9yHrIZICAVADeIKD1JAywFr//fvu56cFDd/2
+         p+hKjXgD/nlY3jH9QO7kB9x73PFkYvXFCWJPQ5gEx5XWia//RTj4XKkp8JAnX8aZ8CJz
+         qqc0qvbBxS4pUFVcqGW+CtDjQ+TyjWCK5/cL3a3VELEBS8/T/E7FAa0XRaMgeftcsPSa
+         izAg==
+X-Gm-Message-State: APjAAAUkYjVY6uPukt++mysDOLZL4KdIB2EcHCEElTZc/KUJsLOORxkV
+        5sHMRcq3eUwdG2FJbYixi6Tbvig=
+X-Google-Smtp-Source: APXvYqy2AhNDCBlrks/I5FYCK6wL1qxoCmgPt9wDTx13g2sBimdp2qVBa/vrCN5pv7clnImKTV221w==
+X-Received: by 2002:a05:6808:181:: with SMTP id w1mr14929528oic.176.1578954768313;
+        Mon, 13 Jan 2020 14:32:48 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id d7sm3969420oic.46.2020.01.13.14.32.46
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 14:32:47 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 2219d1
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Mon, 13 Jan 2020 16:32:46 -0600
+Date:   Mon, 13 Jan 2020 16:32:46 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Alex Riesen <alexander.riesen@cetitec.com>
+Cc:     Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH 7/8] dt-bindings: adv748x: add information about serial
+ audio  interface (I2S/TDM)
+Message-ID: <20200113223246.GA22019@bogus>
+References: <cover.1578924232.git.alexander.riesen@cetitec.com>
+ <20200113141550.GH3606@pflmari>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113141550.GH3606@pflmari>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MACsec offloading to underlying hardware devices is disabled by default
-(the software implementation is used). This patch adds support for
-changing this setting through the MACsec netlink interface. Many checks
-are done when enabling offloading on a given MACsec interface as there
-are limitations (it must be supported by the hardware, only a single
-interface can be offloaded on a given physical device at a time, rules
-can't be moved for now).
+On Mon, 13 Jan 2020 15:15:50 +0100, Alex Riesen wrote:
+> As the driver has some support for the audio interface of the device,
+> the bindings file should mention it.
+> 
+> Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+> ---
+>  .../devicetree/bindings/media/i2c/adv748x.txt       | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
 
-Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
----
- drivers/net/macsec.c           | 145 ++++++++++++++++++++++++++++++++-
- include/uapi/linux/if_macsec.h |  11 +++
- 2 files changed, 153 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/macsec.c b/drivers/net/macsec.c
-index 36b0416381bf..e515919e8687 100644
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@ -1484,6 +1484,7 @@ static const struct nla_policy macsec_genl_policy[NUM_MACSEC_ATTR] = {
- 	[MACSEC_ATTR_IFINDEX] = { .type = NLA_U32 },
- 	[MACSEC_ATTR_RXSC_CONFIG] = { .type = NLA_NESTED },
- 	[MACSEC_ATTR_SA_CONFIG] = { .type = NLA_NESTED },
-+	[MACSEC_ATTR_OFFLOAD] = { .type = NLA_NESTED },
- };
- 
- static const struct nla_policy macsec_genl_rxsc_policy[NUM_MACSEC_RXSC_ATTR] = {
-@@ -1501,6 +1502,10 @@ static const struct nla_policy macsec_genl_sa_policy[NUM_MACSEC_SA_ATTR] = {
- 				 .len = MACSEC_MAX_KEY_LEN, },
- };
- 
-+static const struct nla_policy macsec_genl_offload_policy[NUM_MACSEC_OFFLOAD_ATTR] = {
-+	[MACSEC_OFFLOAD_ATTR_TYPE] = { .type = NLA_U8 },
-+};
-+
- /* Offloads an operation to a device driver */
- static int macsec_offload(int (* const func)(struct macsec_context *),
- 			  struct macsec_context *ctx)
-@@ -2329,6 +2334,126 @@ static int macsec_upd_rxsc(struct sk_buff *skb, struct genl_info *info)
- 	return ret;
- }
- 
-+static bool macsec_is_configured(struct macsec_dev *macsec)
-+{
-+	struct macsec_secy *secy = &macsec->secy;
-+	struct macsec_tx_sc *tx_sc = &secy->tx_sc;
-+	int i;
-+
-+	if (secy->n_rx_sc > 0)
-+		return true;
-+
-+	for (i = 0; i < MACSEC_NUM_AN; i++)
-+		if (tx_sc->sa[i])
-+			return true;
-+
-+	return false;
-+}
-+
-+static int macsec_upd_offload(struct sk_buff *skb, struct genl_info *info)
-+{
-+	struct nlattr *tb_offload[MACSEC_OFFLOAD_ATTR_MAX + 1];
-+	enum macsec_offload offload, prev_offload;
-+	int (*func)(struct macsec_context *ctx);
-+	struct nlattr **attrs = info->attrs;
-+	struct net_device *dev, *loop_dev;
-+	const struct macsec_ops *ops;
-+	struct macsec_context ctx;
-+	struct macsec_dev *macsec;
-+	struct net *loop_net;
-+	int ret;
-+
-+	if (!attrs[MACSEC_ATTR_IFINDEX])
-+		return -EINVAL;
-+
-+	if (!attrs[MACSEC_ATTR_OFFLOAD])
-+		return -EINVAL;
-+
-+	if (nla_parse_nested_deprecated(tb_offload, MACSEC_OFFLOAD_ATTR_MAX,
-+					attrs[MACSEC_ATTR_OFFLOAD],
-+					macsec_genl_offload_policy, NULL))
-+		return -EINVAL;
-+
-+	dev = get_dev_from_nl(genl_info_net(info), attrs);
-+	if (IS_ERR(dev))
-+		return PTR_ERR(dev);
-+	macsec = macsec_priv(dev);
-+
-+	offload = nla_get_u8(tb_offload[MACSEC_OFFLOAD_ATTR_TYPE]);
-+	if (macsec->offload == offload)
-+		return 0;
-+
-+	/* Check if the offloading mode is supported by the underlying layers */
-+	if (offload != MACSEC_OFFLOAD_OFF &&
-+	    !macsec_check_offload(offload, macsec))
-+		return -EOPNOTSUPP;
-+
-+	if (offload == MACSEC_OFFLOAD_OFF)
-+		goto skip_limitation;
-+
-+	/* Check the physical interface isn't offloading another interface
-+	 * first.
-+	 */
-+	for_each_net(loop_net) {
-+		for_each_netdev(loop_net, loop_dev) {
-+			struct macsec_dev *priv;
-+
-+			if (!netif_is_macsec(loop_dev))
-+				continue;
-+
-+			priv = macsec_priv(loop_dev);
-+
-+			if (priv->real_dev == macsec->real_dev &&
-+			    priv->offload != MACSEC_OFFLOAD_OFF)
-+				return -EBUSY;
-+		}
-+	}
-+
-+skip_limitation:
-+	/* Check if the net device is busy. */
-+	if (netif_running(dev))
-+		return -EBUSY;
-+
-+	rtnl_lock();
-+
-+	prev_offload = macsec->offload;
-+	macsec->offload = offload;
-+
-+	/* Check if the device already has rules configured: we do not support
-+	 * rules migration.
-+	 */
-+	if (macsec_is_configured(macsec)) {
-+		ret = -EBUSY;
-+		goto rollback;
-+	}
-+
-+	ops = __macsec_get_ops(offload == MACSEC_OFFLOAD_OFF ? prev_offload : offload,
-+			       macsec, &ctx);
-+	if (!ops) {
-+		ret = -EOPNOTSUPP;
-+		goto rollback;
-+	}
-+
-+	if (prev_offload == MACSEC_OFFLOAD_OFF)
-+		func = ops->mdo_add_secy;
-+	else
-+		func = ops->mdo_del_secy;
-+
-+	ctx.secy = &macsec->secy;
-+	ret = macsec_offload(func, &ctx);
-+	if (ret)
-+		goto rollback;
-+
-+	rtnl_unlock();
-+	return 0;
-+
-+rollback:
-+	macsec->offload = prev_offload;
-+
-+	rtnl_unlock();
-+	return ret;
-+}
-+
- static int copy_tx_sa_stats(struct sk_buff *skb,
- 			    struct macsec_tx_sa_stats __percpu *pstats)
- {
-@@ -2590,12 +2715,13 @@ static noinline_for_stack int
- dump_secy(struct macsec_secy *secy, struct net_device *dev,
- 	  struct sk_buff *skb, struct netlink_callback *cb)
- {
--	struct macsec_rx_sc *rx_sc;
-+	struct macsec_dev *macsec = netdev_priv(dev);
- 	struct macsec_tx_sc *tx_sc = &secy->tx_sc;
- 	struct nlattr *txsa_list, *rxsc_list;
--	int i, j;
--	void *hdr;
-+	struct macsec_rx_sc *rx_sc;
- 	struct nlattr *attr;
-+	void *hdr;
-+	int i, j;
- 
- 	hdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq,
- 			  &macsec_fam, NLM_F_MULTI, MACSEC_CMD_GET_TXSC);
-@@ -2607,6 +2733,13 @@ dump_secy(struct macsec_secy *secy, struct net_device *dev,
- 	if (nla_put_u32(skb, MACSEC_ATTR_IFINDEX, dev->ifindex))
- 		goto nla_put_failure;
- 
-+	attr = nla_nest_start_noflag(skb, MACSEC_ATTR_OFFLOAD);
-+	if (!attr)
-+		goto nla_put_failure;
-+	if (nla_put_u8(skb, MACSEC_OFFLOAD_ATTR_TYPE, macsec->offload))
-+		goto nla_put_failure;
-+	nla_nest_end(skb, attr);
-+
- 	if (nla_put_secy(secy, skb))
- 		goto nla_put_failure;
- 
-@@ -2872,6 +3005,12 @@ static const struct genl_ops macsec_genl_ops[] = {
- 		.doit = macsec_upd_rxsa,
- 		.flags = GENL_ADMIN_PERM,
- 	},
-+	{
-+		.cmd = MACSEC_CMD_UPD_OFFLOAD,
-+		.validate = GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
-+		.doit = macsec_upd_offload,
-+		.flags = GENL_ADMIN_PERM,
-+	},
- };
- 
- static struct genl_family macsec_fam __ro_after_init = {
-diff --git a/include/uapi/linux/if_macsec.h b/include/uapi/linux/if_macsec.h
-index 98e4d5d7c45c..1d63c43c38cc 100644
---- a/include/uapi/linux/if_macsec.h
-+++ b/include/uapi/linux/if_macsec.h
-@@ -45,6 +45,7 @@ enum macsec_attrs {
- 	MACSEC_ATTR_RXSC_LIST,   /* dump, nested, macsec_rxsc_attrs for each RXSC */
- 	MACSEC_ATTR_TXSC_STATS,  /* dump, nested, macsec_txsc_stats_attr */
- 	MACSEC_ATTR_SECY_STATS,  /* dump, nested, macsec_secy_stats_attr */
-+	MACSEC_ATTR_OFFLOAD,     /* config, nested, macsec_offload_attrs */
- 	__MACSEC_ATTR_END,
- 	NUM_MACSEC_ATTR = __MACSEC_ATTR_END,
- 	MACSEC_ATTR_MAX = __MACSEC_ATTR_END - 1,
-@@ -97,6 +98,15 @@ enum macsec_sa_attrs {
- 	MACSEC_SA_ATTR_MAX = __MACSEC_SA_ATTR_END - 1,
- };
- 
-+enum macsec_offload_attrs {
-+	MACSEC_OFFLOAD_ATTR_UNSPEC,
-+	MACSEC_OFFLOAD_ATTR_TYPE, /* config/dump, u8 0..2 */
-+	MACSEC_OFFLOAD_ATTR_PAD,
-+	__MACSEC_OFFLOAD_ATTR_END,
-+	NUM_MACSEC_OFFLOAD_ATTR = __MACSEC_OFFLOAD_ATTR_END,
-+	MACSEC_OFFLOAD_ATTR_MAX = __MACSEC_OFFLOAD_ATTR_END - 1,
-+};
-+
- enum macsec_nl_commands {
- 	MACSEC_CMD_GET_TXSC,
- 	MACSEC_CMD_ADD_RXSC,
-@@ -108,6 +118,7 @@ enum macsec_nl_commands {
- 	MACSEC_CMD_ADD_RXSA,
- 	MACSEC_CMD_DEL_RXSA,
- 	MACSEC_CMD_UPD_RXSA,
-+	MACSEC_CMD_UPD_OFFLOAD,
- };
- 
- /* u64 per-RXSC stats */
--- 
-2.24.1
-
+Reviewed-by: Rob Herring <robh@kernel.org>
