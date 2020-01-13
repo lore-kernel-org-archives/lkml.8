@@ -2,164 +2,90 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C158C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76F7C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:42:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D2424655
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:41:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578948094;
-	bh=5+/QttMFBTDDwggNuisVLgzB3SWlxubJiVA9nfjskkM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pqJZ3Wn0RqpjC9b2IFkcyoo9yro4qFnIG1840vPW+YpiQavFncEHxfU6b/nvHsd25
-	 RNVfOaSaFj8LRDdCCALSZ/zywpGy0RyWmbI2omorSWKFzUjNp6Q19azI1A2ddJ35+R
-	 PvJY3eJ8ICELyFnqOX7s90wVNORhW3XWyfjvVCgI=
+	by mail.kernel.org (Postfix) with ESMTP id A47FB24686
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 20:42:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgAMUld (ORCPT
+        id S1728733AbgAMUmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 15:41:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726494AbgAMUld (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 15:41:33 -0500
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF5A224655;
-        Mon, 13 Jan 2020 20:41:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578948092;
-        bh=5+/QttMFBTDDwggNuisVLgzB3SWlxubJiVA9nfjskkM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cpfntGbdsRS2I6uTn4k8+dkBla5PNezHWPeFDOuKQVaes84OAnAi/zMEP3l2JbRry
-         y2R4sAn45tbCim9mZFk8Ua8iiVdppbOwa46dE566UK71NPZYMhC5iwXzfdw5dRZmsU
-         trCWiLWeEOJzNRlIhLpnYiIQEZ+M1oPJ77apu46M=
-Received: by mail-qv1-f46.google.com with SMTP id n8so4648981qvg.11;
-        Mon, 13 Jan 2020 12:41:31 -0800 (PST)
-X-Gm-Message-State: APjAAAVHOVCyb2/bRHnSWuQm6aFDE/6EWLTQSYs0Ra0MWME4WRbMbxIy
-        6D1/UyPAXEDu0rnkjpadKNlrUnbllbp3+wFzFw==
-X-Google-Smtp-Source: APXvYqwBh8rgbcv6WzjXYOWH4WoTlhfdYVgJpvcmQqGHfiRse1JHvRooPMQAyv3dmdw8NTILDX0JlPQ8wyDZJVjozMc=
-X-Received: by 2002:a0c:f68f:: with SMTP id p15mr12930551qvn.79.1578948091025;
- Mon, 13 Jan 2020 12:41:31 -0800 (PST)
+        Mon, 13 Jan 2020 15:42:44 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:52283 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726086AbgAMUmo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 15:42:44 -0500
+Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1ir6Xm-0004SH-UB; Mon, 13 Jan 2020 20:42:39 +0000
+Date:   Mon, 13 Jan 2020 21:42:37 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Minchan Kim <minchan@kernel.org>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>
+Subject: Re: [PATCH 2/4] mm: introduce external memory hinting API
+Message-ID: <20200113204237.ew6nn4ohxu7auw3u@wittgenstein>
+References: <20200110213433.94739-1-minchan@kernel.org>
+ <20200110213433.94739-3-minchan@kernel.org>
+ <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
+ <20200113104256.5ujbplyec2sk4onn@wittgenstein>
+ <20200113184408.GD110363@google.com>
+ <20200113191046.2tidyvc544zvchek@wittgenstein>
+ <CAKOZuev5k3EquMd-6VbvruahjjtxQzRhUVo2ttgVyk+yYz9aOA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200113141555.16117-1-beniamin.bia@analog.com> <20200113141555.16117-2-beniamin.bia@analog.com>
-In-Reply-To: <20200113141555.16117-2-beniamin.bia@analog.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 13 Jan 2020 14:41:19 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKX5X6X72Rq7wY7=RRLnUST+eKTPyEbuXKbFJB0_n5QXQ@mail.gmail.com>
-Message-ID: <CAL_JsqKX5X6X72Rq7wY7=RRLnUST+eKTPyEbuXKbFJB0_n5QXQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] dt-bindings: iio: amplifiers: Add docs for HMC425A
- Step Attenuator
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Peter Meerwald <pmeerw@pmeerw.net>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        biabeniamin@outlook.com, Hartmut Knaack <knaack.h@gmx.de>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKOZuev5k3EquMd-6VbvruahjjtxQzRhUVo2ttgVyk+yYz9aOA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 8:14 AM Beniamin Bia <beniamin.bia@analog.com> wrote:
->
-> From: Michael Hennerich <michael.hennerich@analog.com>
->
-> Document support for Analog Devices MC425A Step Attenuator.
->
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
-> ---
->  .../bindings/iio/amplifiers/adi,hmc425a.yaml  | 55 +++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
+On Mon, Jan 13, 2020 at 11:27:03AM -0800, Daniel Colascione wrote:
+> On Mon, Jan 13, 2020 at 11:10 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> > This does not
+> > affect the permission checking you're performing here.
+> 
+> Pidfds-as-capabilities sounds like a good change. Can you clarify what
+> you mean here though? Do you mean that in order to perform some
+> process-directed operation X on process Y, the pidfd passed to X must
+> have been opened with PIDFD_CAP_X *and* the process *using* the pidfds
+> must be able to perform operation X on process Y? Or do pidfds in this
+> model "carry" permissions in the same way that an ordinary file
+> descriptor "carries" the ability to write to a file if it was opened
+> with O_WRONLY even if the FD is passed to a process that couldn't
+> otherwise write to that file? Right now, pidfds are identity-only and
+> always rely on the caller's permissions. I like the capability bit
+> model because it makes pidfds more consistent with other file
+> descriptors and enabled delegation of capabilities across the system.
 
-Check your bindings with 'make dt_binding_check'. It fails:
+I'm going back and forth on this. My initial implementation has it that
+you'd need both, PIDFD_FLAG/CAP_X and the process using the pidfd must
+be able to perform the operation X on process Y. The alternative becomes
+tricky for e.g. anything that requires ptrace_may_access() permissions
+such as getting an fd out from another task based on its pidfd and so
+on.
 
-Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml:
-while scanning a simple key
-  in "<unicode string>", line 24, column 5
-could not find expected ':'
-  in "<unicode string>", line 25, column 5
-
->
-> diff --git a/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-> new file mode 100644
-> index 000000000000..6f4a292395e4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/amplifiers/adi,hmc425a.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/amplifiers/adi,hmc425a.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: HMC425A 6-bit Digital Step Attenuator
-> +
-> +maintainers:
-> +- Michael Hennerich <michael.hennerich@analog.com>
-> +
-> +description: |
-> +  Digital Step Attenuator IIO device with gpio interface.
-> +  HMC425A 0.5 dB LSB GaAs MMIC 6-BIT DIGITAL POSITIVE CONTROL ATTENUATOR, 2.2 - 8.0 GHz
-> +  https://www.analog.com/media/en/technical-documentation/data-sheets/hmc425A.pdf
-> +
-> +properties:
-> +compatible:
-> +    enum:
-> +    - adi,hmc425a
-
-nit: this should be indented 2 more spaces.
-
-Or use 'const' instead if there's not more similar parts.
-
-> +
-> +vcc-supply:
-> +    description:
-> +    digital voltage regulator (see regulator/regulator.txt)
-
-Text must be indented under the key.
-
-> +    maxItems: 1
-> +
-> +ctrl-gpios:
-> +    description:
-> +    Must contain an array of 6 GPIO specifiers, referring to the GPIO pins
-> +    connected to the control pins V1-V6.
-> +    maxItems: 6
-> +
-> +required:
-> +- compatible
-> +- ctrl-gpios
-> +
-> +examples:
-> +- |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    &gpio {
-> +    #address-cells = <1>;
-> +    #size-cells = <0>;
-> +      gpio_hmc425a: hmc425a {
-> +        compatible = "adi,hmc425a";
-> +        ctrl-gpios = <&gpio 40 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 39 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 38 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 37 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 36 GPIO_ACTIVE_HIGH>,
-> +          <&gpio 35 GPIO_ACTIVE_HIGH>;
-> +
-> +        vcc-supply = <&foo>;
-> +      };
-> +    }
-> --
-> 2.17.1
->
+Christian
