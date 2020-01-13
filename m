@@ -2,158 +2,109 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD86C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1E8C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE2A52081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCA242081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:36:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20150623.gappssmtp.com header.i=@daynix-com.20150623.gappssmtp.com header.b="Xy+xBFB7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gGBpvza+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgAMMck (ORCPT
+        id S1727222AbgAMMgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:32:40 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46592 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgAMMck (ORCPT
+        Mon, 13 Jan 2020 07:36:31 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:33104 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726074AbgAMMga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:32:40 -0500
-Received: by mail-io1-f65.google.com with SMTP id t26so9568832ioi.13
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:32:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Km5amB7u+f2nJJaDa/p5PTnfI/jbVGIB1ALdNIZW0xI=;
-        b=Xy+xBFB7LHF28j088RfzKlJh4WkEdFUmbBLN907YVDC2kYf3tVqlMwHQyv5InTMDv6
-         l0ztlM5MCIhcZzh7wf4s48pSf6T+NAi6RgU8d7gCpe2pqhyTwtBjCX5ek+Co8kHrhbbc
-         EtXHLuQr2H813FqGLUaJdFKqls54BHqd23nEb6zXDsZta6GT6MrpSLYJ8PIPcP9oAtcZ
-         5RveoHzs3P58Admqbjwc93cAZbzsrsLlxT2uISDkU8Jsz7sCCapaJDirePGjmnBra61C
-         5GXovGTwVVTowwUTsYx2iUGYGMvqaUcykr4M2XfZgKowK6bYWpeKP93WNpMXrbtDiGIy
-         5oOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Km5amB7u+f2nJJaDa/p5PTnfI/jbVGIB1ALdNIZW0xI=;
-        b=TZN5NQdHWu/p4CE0TRD0E7w/+Weock0HRAnYrHO4mCWYc1B5ubtXZ9kVLJGMypymgd
-         A4/Z3yh9ehUxAX54MI/xpmAY45lAW+h+hMqBSAaFevqrBWIcIkTln3jQKBKQdt731MkL
-         QCvGPQYGvbKUnwgSHSu5zj/KwEWgusAjj/5wn0lhHEwcsXj96DZKWGsmR8otFU2B36sn
-         BfFYpfnDfnxQTA1rLGmELIrJaVkes15T88ly6TEv8CuP+B/tjgix1E9TpJTX/a3HwmDJ
-         P5Y6m3crJynLzoi4xGSPcWrgdAnI76CaC8RQ/eBpfQfdpZ+t9d99YiAhFeHsfByknNkx
-         ptsg==
-X-Gm-Message-State: APjAAAUkLxX3deqxMwRd6KALbhFF55ozKT4Qwo3HEbEMZSPgZo/sI5GY
-        YlG/PdTXMysNzX56hHhTtbHeVvLApNViU0GE0Luez9xS
-X-Google-Smtp-Source: APXvYqzWyOXnjsum8RIdEHYuGqw6fldwu80yL6GUjd12dqkgOxz5rn2euW860M61KP60nEmySnc98iWxnmG9VyTJT4o=
-X-Received: by 2002:a02:620c:: with SMTP id d12mr14136503jac.116.1578918759468;
- Mon, 13 Jan 2020 04:32:39 -0800 (PST)
+        Mon, 13 Jan 2020 07:36:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pJ1ajlLalSb1lnSWYzrZ3l95cR2DmPwww/lMVi/JmI8=; b=gGBpvza+J9GkHFPjo1zmKUMn+
+        anND46i/9BDOMeU7JceBSIFp5gTujs10uCYe3iG/R06NirqZMIRQDsVgmLY2AHkc4afOCqFnSh4vB
+        0Rpdp5jF4TQjAY021SKBbvURAawSBKXRrk0+vrq88VzjFhIWcD2ijHHnRFrBBhG6zQu+8QY9P/0cD
+        tx8mZDbwkRuXktfh0FpKRJAGinJoDNMkFKXUk6klwdBLzi1iLUAVIe8i6LIQOHt7ivCNipOmVLubG
+        OaTHrpXuli4LcHWKpVtzItd3N2qmBqGtCms5UVV3StB6soEF9YE8JpmYyQztuMnhUDEDIEZ74VRGX
+        iEUqhlGmw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iqyws-000416-I6; Mon, 13 Jan 2020 12:36:02 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 33C63304121;
+        Mon, 13 Jan 2020 13:34:23 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8A4392B6B2F93; Mon, 13 Jan 2020 13:35:58 +0100 (CET)
+Date:   Mon, 13 Jan 2020 13:35:58 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Wanpeng Li <kernellwp@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        KarimAllah <karahmed@amazon.de>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Ankur Arora <ankur.a.arora@oracle.com>,
+        christopher.s.hall@intel.com, hubert.chrzaniuk@intel.com,
+        len.brown@intel.com, thomas.lendacky@amd.com, rjw@rjwysocki.net
+Subject: Re: [PATCH RFC] sched/fair: Penalty the cfs task which executes
+ mwait/hlt
+Message-ID: <20200113123558.GF2827@hirez.programming.kicks-ass.net>
+References: <1578448201-28218-1-git-send-email-wanpengli@tencent.com>
+ <20200108155040.GB2827@hirez.programming.kicks-ass.net>
+ <00d884a7-d463-74b4-82cf-9deb0aa70971@redhat.com>
+ <CANRm+Cx0LMK1b2mJiU7edCDoRfPfGLzY1Zqr5paBEPcWFFALhQ@mail.gmail.com>
+ <20200113104314.GU2844@hirez.programming.kicks-ass.net>
+ <ee2b6da2-be8c-2540-29e9-ffbb9fdfd3fc@redhat.com>
 MIME-Version: 1.0
-References: <20200113081736.2340-1-yuri.benditovich@daynix.com> <bdc6cb05-30d1-b4fd-512e-740b2550c14e@redhat.com>
-In-Reply-To: <bdc6cb05-30d1-b4fd-512e-740b2550c14e@redhat.com>
-From:   Yuri Benditovich <yuri.benditovich@daynix.com>
-Date:   Mon, 13 Jan 2020 14:32:25 +0200
-Message-ID: <CAOEp5OfgSwsa63kgAUJW9E2C7FiWt7AFdPupQCaMb4CLgi4YXg@mail.gmail.com>
-Subject: Re: [PATCH v2] virtio-net: Introduce extended RSC feature
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Yan Vugenfirer <yan@daynix.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ee2b6da2-be8c-2540-29e9-ffbb9fdfd3fc@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 1:08 PM Jason Wang <jasowang@redhat.com> wrote:
->
->
-> On 2020/1/13 =E4=B8=8B=E5=8D=884:17, Yuri Benditovich wrote:
-> > VIRTIO_NET_F_RSC_EXT feature bit indicates that the device
-> > is able to provide extended RSC information. When the feature
-> > is negotiatede and 'gso_type' field in received packet is not
-> > GSO_NONE, the device reports number of coalesced packets in
-> > 'csum_start' field and number of duplicated acks in 'csum_offset'
-> > field and sets VIRTIO_NET_HDR_F_RSC_INFO in 'flags' field.
-> >
-> > Signed-off-by: Yuri Benditovich <yuri.benditovich@daynix.com>
->
->
-> Hi Yuri:
->
-> Is the feature used by Linux? If yes, it's better to include the real use=
-r.
->
+On Mon, Jan 13, 2020 at 12:52:20PM +0100, Paolo Bonzini wrote:
+> On 13/01/20 11:43, Peter Zijlstra wrote:
+> > So the very first thing we need to get sorted is that MPERF/TSC ratio
+> > thing. TurboStat does it, but has 'funny' hacks on like:
+> > 
+> >   b2b34dfe4d9a ("tools/power turbostat: KNL workaround for %Busy and Avg_MHz")
+> > 
+> > and I imagine that there's going to be more exceptions there. You're
+> > basically going to have to get both Intel and AMD to commit to this.
+> > 
+> > IFF we can get concensus on MPERF/TSC, then yes, that is a reasonable
+> > way to detect a VCPU being idle I suppose. I've added a bunch of people
+> > who seem to know about this.
+> > 
+> > Anyone, what will it take to get MPERF/TSC 'working' ?
+> 
+> Do we really need MPERF/TSC for this use case, or can we just track
+> APERF as well and do MPERF/APERF to compute the "non-idle" time?
 
-It is not used by Linux. Mainly needed for certification under Windows.
+So MPERF runs at fixed frequency (when !IDLE and typically the same
+frequency as TSC), APERF runs at variable frequency (when !IDLE)
+depending on DVFS state.
 
->
-> > ---
-> >   include/uapi/linux/virtio_net.h | 10 +++++++++-
-> >   1 file changed, 9 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virti=
-o_net.h
-> > index a3715a3224c1..2bdd26f8a4ed 100644
-> > --- a/include/uapi/linux/virtio_net.h
-> > +++ b/include/uapi/linux/virtio_net.h
-> > @@ -56,7 +56,7 @@
-> >   #define VIRTIO_NET_F_MQ     22      /* Device supports Receive Flow
-> >                                        * Steering */
-> >   #define VIRTIO_NET_F_CTRL_MAC_ADDR 23       /* Set MAC address */
-> > -
-> > +#define VIRTIO_NET_F_RSC_EXT   61    /* Provides extended RSC info */
->
->
-> Is this better to keep the newline around?
+So APERF/MPERF gives the effective frequency of the core, but since both
+stop during IDLE, it will not be a good indication of IDLE.
 
-No problem, let's wait until the rest is accepted.
+Otoh, TSC doesn't stop in idle (.oO this depends on
+X86_FEATURE_CONSTANT_TSC) and therefore the MPERF/TSC ratio gives how
+much !idle time there was between readings.
 
->
->
-> >   #define VIRTIO_NET_F_STANDBY          62    /* Act as standby for ano=
-ther device
-> >                                        * with the same MAC.
-> >                                        */
-> > @@ -104,6 +104,7 @@ struct virtio_net_config {
-> >   struct virtio_net_hdr_v1 {
-> >   #define VIRTIO_NET_HDR_F_NEEDS_CSUM 1       /* Use csum_start, csum_o=
-ffset */
-> >   #define VIRTIO_NET_HDR_F_DATA_VALID 2       /* Csum is valid */
-> > +#define VIRTIO_NET_HDR_F_RSC_INFO    4       /* rsc_ext data in csum_ =
-fields */
-> >       __u8 flags;
-> >   #define VIRTIO_NET_HDR_GSO_NONE             0       /* Not a GSO fram=
-e */
-> >   #define VIRTIO_NET_HDR_GSO_TCPV4    1       /* GSO frame, IPv4 TCP (T=
-SO) */
-> > @@ -118,6 +119,13 @@ struct virtio_net_hdr_v1 {
-> >       __virtio16 num_buffers; /* Number of merged rx buffers */
-> >   };
-> >
-> > +/*
-> > + * if VIRTIO_NET_F_RSC_EXT feature has been negotiated and
-> > + * VIRTIO_NET_HDR_F_RSC_INFO is set in RX packet
-> > + */
-> > +#define virtio_net_rsc_ext_num_packets       csum_start
-> > +#define virtio_net_rsc_ext_num_dupacks       csum_offset
->
->
-> This looks sub-optimal, it looks to me union is better?
 
-This was discussed in v1, MST decided the define is better.
-
->
-> Thanks
->
->
-> > +
-> >   #ifndef VIRTIO_NET_NO_LEGACY
-> >   /* This header comes first in the scatter-gather list.
-> >    * For legacy virtio, if VIRTIO_F_ANY_LAYOUT is not negotiated, it mu=
-st
->
