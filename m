@@ -7,40 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003C2C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55300C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFEF521556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2598D21556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729402AbgAMTLj (ORCPT
+        id S1728901AbgAMTJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:11:39 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39904 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728880AbgAMTJk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Jan 2020 14:09:40 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39842 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726878AbgAMTJa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 14:09:30 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ir55k-00014L-Pl; Mon, 13 Jan 2020 20:09:36 +0100
+        id 1ir55b-0000xh-HD; Mon, 13 Jan 2020 20:09:27 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id A36F81C18E8;
-        Mon, 13 Jan 2020 20:09:29 +0100 (CET)
-Date:   Mon, 13 Jan 2020 19:09:29 -0000
-From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C78EA1C18DE;
+        Mon, 13 Jan 2020 20:09:26 +0100 (CET)
+Date:   Mon, 13 Jan 2020 19:09:26 -0000
+From:   "tip-bot2 for Dmitry Safonov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-clocks: Wire up clock_gettime() with timens offsets
-Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
+Subject: [tip: timers/core] time: Allocate per-timens vvar page
+Cc:     Andy Lutomirski <luto@kernel.org>, Andrei Vagin <avagin@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191112012724.250792-12-dima@arista.com>
-References: <20191112012724.250792-12-dima@arista.com>
+In-Reply-To: <20191112012724.250792-24-dima@arista.com>
+References: <20191112012724.250792-24-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <157894256948.19145.4271984133241700853.tip-bot2@tip-bot2>
+Message-ID: <157894256665.19145.16443168224508835625.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,134 +57,221 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     22b16bfa948bca922614699c717aea055d759d82
-Gitweb:        https://git.kernel.org/tip/22b16bfa948bca922614699c717aea055d759d82
-Author:        Andrei Vagin <avagin@openvz.org>
-AuthorDate:    Tue, 12 Nov 2019 01:27:00 
+Commit-ID:     bb6e82c9b3d6d2cf03d145e175afb42f1f75ef86
+Gitweb:        https://git.kernel.org/tip/bb6e82c9b3d6d2cf03d145e175afb42f1f75ef86
+Author:        Dmitry Safonov <dima@arista.com>
+AuthorDate:    Tue, 12 Nov 2019 01:27:12 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 13 Jan 2020 08:10:50 +01:00
+CommitterDate: Mon, 13 Jan 2020 08:10:56 +01:00
 
-posix-clocks: Wire up clock_gettime() with timens offsets
+time: Allocate per-timens vvar page
 
-Adjust monotonic and boottime clocks with per-timens offsets.  As the
-result a process inside time namespace will see timers and clocks corrected
-to offsets that were set when the namespace was created
+VDSO support for Time namespace needs to set up a page with the same
+layout as VVAR. That timens page will be placed on position of VVAR page
+inside namespace. That page contains time namespace clock offsets and it
+has vdso_data->seq set to 1 to enforce the slow path and
+vdso_data->clock_mode set to VCLOCK_TIMENS to enforce the time namespace
+handling path.
 
-Note that applications usually go through vDSO to get time, which is not
-yet adjusted. Further changes will complete time namespace virtualisation
-with vDSO support.
+Allocate the timens page during namespace creation. Setup the offsets
+when the first task enters the ns and freeze them to guarantee the pace
+of monotonic/boottime clocks and to avoid breakage of applications.
 
-Co-developed-by: Dmitry Safonov <dima@arista.com>
+The design decision is to have a global offset_lock which is used during
+namespace offsets setup and to freeze offsets when the first task joins the
+new time namespace. That is better in terms of memory usage compared to
+having a per namespace mutex that's used only during the setup period.
+
+Suggested-by: Andy Lutomirski <luto@kernel.org>
+Based-on-work-by: Thomas Gleixner <tglx@linutronix.de>
+Co-developed-by: Andrei Vagin <avagin@gmail.com>
 Signed-off-by: Andrei Vagin <avagin@gmail.com>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191112012724.250792-12-dima@arista.com
+Link: https://lore.kernel.org/r/20191112012724.250792-24-dima@arista.com
 
 ---
- kernel/time/alarmtimer.c   |  9 ++++++++-
- kernel/time/posix-stubs.c  |  3 +++
- kernel/time/posix-timers.c |  5 +++++
- 3 files changed, 16 insertions(+), 1 deletion(-)
+ include/linux/time_namespace.h |   3 +-
+ kernel/time/namespace.c        | 104 +++++++++++++++++++++++++++++++-
+ 2 files changed, 106 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 4d8c905..9a8e81b 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -26,6 +26,7 @@
- #include <linux/freezer.h>
- #include <linux/compat.h>
- #include <linux/module.h>
-+#include <linux/time_namespace.h>
+diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
+index 063a343..6b7767f 100644
+--- a/include/linux/time_namespace.h
++++ b/include/linux/time_namespace.h
+@@ -23,6 +23,9 @@ struct time_namespace {
+ 	struct ucounts		*ucounts;
+ 	struct ns_common	ns;
+ 	struct timens_offsets	offsets;
++	struct page		*vvar_page;
++	/* If set prevents changing offsets after any task joined namespace. */
++	bool			frozen_offsets;
+ } __randomize_layout;
  
- #include "posix-timers.h"
+ extern struct time_namespace init_time_ns;
+diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
+index 1a0fbaa..d705c15 100644
+--- a/kernel/time/namespace.c
++++ b/kernel/time/namespace.c
+@@ -16,6 +16,8 @@
+ #include <linux/err.h>
+ #include <linux/mm.h>
  
-@@ -886,6 +887,12 @@ static struct platform_driver alarmtimer_driver = {
- 	}
- };
++#include <vdso/datapage.h>
++
+ ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
+ 				struct timens_offsets *ns_offsets)
+ {
+@@ -90,16 +92,23 @@ static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
  
-+static void get_boottime_timespec(struct timespec64 *tp)
+ 	kref_init(&ns->kref);
+ 
++	ns->vvar_page = alloc_page(GFP_KERNEL | __GFP_ZERO);
++	if (!ns->vvar_page)
++		goto fail_free;
++
+ 	err = ns_alloc_inum(&ns->ns);
+ 	if (err)
+-		goto fail_free;
++		goto fail_free_page;
+ 
+ 	ns->ucounts = ucounts;
+ 	ns->ns.ops = &timens_operations;
+ 	ns->user_ns = get_user_ns(user_ns);
+ 	ns->offsets = old_ns->offsets;
++	ns->frozen_offsets = false;
+ 	return ns;
+ 
++fail_free_page:
++	__free_page(ns->vvar_page);
+ fail_free:
+ 	kfree(ns);
+ fail_dec:
+@@ -128,6 +137,93 @@ struct time_namespace *copy_time_ns(unsigned long flags,
+ 	return clone_time_ns(user_ns, old_ns);
+ }
+ 
++static struct timens_offset offset_from_ts(struct timespec64 off)
 +{
-+	ktime_get_boottime_ts64(tp);
-+	timens_add_boottime(tp);
++	struct timens_offset ret;
++
++	ret.sec = off.tv_sec;
++	ret.nsec = off.tv_nsec;
++
++	return ret;
 +}
 +
- /**
-  * alarmtimer_init - Initialize alarm timer code
-  *
-@@ -906,7 +913,7 @@ static int __init alarmtimer_init(void)
- 	alarm_bases[ALARM_REALTIME].get_timespec = ktime_get_real_ts64,
- 	alarm_bases[ALARM_BOOTTIME].base_clockid = CLOCK_BOOTTIME;
- 	alarm_bases[ALARM_BOOTTIME].get_ktime = &ktime_get_boottime;
--	alarm_bases[ALARM_BOOTTIME].get_timespec = ktime_get_boottime_ts64;
-+	alarm_bases[ALARM_BOOTTIME].get_timespec = get_boottime_timespec;
- 	for (i = 0; i < ALARM_NUMTYPE; i++) {
- 		timerqueue_init_head(&alarm_bases[i].timerqueue);
- 		spin_lock_init(&alarm_bases[i].lock);
-diff --git a/kernel/time/posix-stubs.c b/kernel/time/posix-stubs.c
-index 20c65a7..bcbaa20 100644
---- a/kernel/time/posix-stubs.c
-+++ b/kernel/time/posix-stubs.c
-@@ -14,6 +14,7 @@
- #include <linux/ktime.h>
- #include <linux/timekeeping.h>
- #include <linux/posix-timers.h>
-+#include <linux/time_namespace.h>
- #include <linux/compat.h>
- 
- #ifdef CONFIG_ARCH_HAS_SYSCALL_WRAPPER
-@@ -77,9 +78,11 @@ int do_clock_gettime(clockid_t which_clock, struct timespec64 *tp)
- 		break;
- 	case CLOCK_MONOTONIC:
- 		ktime_get_ts64(tp);
-+		timens_add_monotonic(tp);
- 		break;
- 	case CLOCK_BOOTTIME:
- 		ktime_get_boottime_ts64(tp);
-+		timens_add_boottime(tp);
- 		break;
- 	default:
- 		return -EINVAL;
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index fe1de4f..d26b915 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -30,6 +30,7 @@
- #include <linux/hashtable.h>
- #include <linux/compat.h>
- #include <linux/nospec.h>
-+#include <linux/time_namespace.h>
- 
- #include "timekeeping.h"
- #include "posix-timers.h"
-@@ -195,6 +196,7 @@ static int posix_clock_realtime_adj(const clockid_t which_clock,
- static int posix_get_monotonic_timespec(clockid_t which_clock, struct timespec64 *tp)
++/*
++ * A time namespace VVAR page has the same layout as the VVAR page which
++ * contains the system wide VDSO data.
++ *
++ * For a normal task the VVAR pages are installed in the normal ordering:
++ *     VVAR
++ *     PVCLOCK
++ *     HVCLOCK
++ *     TIMENS   <- Not really required
++ *
++ * Now for a timens task the pages are installed in the following order:
++ *     TIMENS
++ *     PVCLOCK
++ *     HVCLOCK
++ *     VVAR
++ *
++ * The check for vdso_data->clock_mode is in the unlikely path of
++ * the seq begin magic. So for the non-timens case most of the time
++ * 'seq' is even, so the branch is not taken.
++ *
++ * If 'seq' is odd, i.e. a concurrent update is in progress, the extra check
++ * for vdso_data->clock_mode is a non-issue. The task is spin waiting for the
++ * update to finish and for 'seq' to become even anyway.
++ *
++ * Timens page has vdso_data->clock_mode set to VCLOCK_TIMENS which enforces
++ * the time namespace handling path.
++ */
++static void timens_setup_vdso_data(struct vdso_data *vdata,
++				   struct time_namespace *ns)
++{
++	struct timens_offset *offset = vdata->offset;
++	struct timens_offset monotonic = offset_from_ts(ns->offsets.monotonic);
++	struct timens_offset boottime = offset_from_ts(ns->offsets.boottime);
++
++	vdata->seq			= 1;
++	vdata->clock_mode		= VCLOCK_TIMENS;
++	offset[CLOCK_MONOTONIC]		= monotonic;
++	offset[CLOCK_MONOTONIC_RAW]	= monotonic;
++	offset[CLOCK_MONOTONIC_COARSE]	= monotonic;
++	offset[CLOCK_BOOTTIME]		= boottime;
++	offset[CLOCK_BOOTTIME_ALARM]	= boottime;
++}
++
++/*
++ * Protects possibly multiple offsets writers racing each other
++ * and tasks entering the namespace.
++ */
++static DEFINE_MUTEX(offset_lock);
++
++static void timens_set_vvar_page(struct task_struct *task,
++				struct time_namespace *ns)
++{
++	struct vdso_data *vdata;
++	unsigned int i;
++
++	if (ns == &init_time_ns)
++		return;
++
++	/* Fast-path, taken by every task in namespace except the first. */
++	if (likely(ns->frozen_offsets))
++		return;
++
++	mutex_lock(&offset_lock);
++	/* Nothing to-do: vvar_page has been already initialized. */
++	if (ns->frozen_offsets)
++		goto out;
++
++	ns->frozen_offsets = true;
++	vdata = arch_get_vdso_data(page_address(ns->vvar_page));
++
++	for (i = 0; i < CS_BASES; i++)
++		timens_setup_vdso_data(&vdata[i], ns);
++
++out:
++	mutex_unlock(&offset_lock);
++}
++
+ void free_time_ns(struct kref *kref)
  {
- 	ktime_get_ts64(tp);
-+	timens_add_monotonic(tp);
- 	return 0;
+ 	struct time_namespace *ns;
+@@ -136,6 +232,7 @@ void free_time_ns(struct kref *kref)
+ 	dec_time_namespaces(ns->ucounts);
+ 	put_user_ns(ns->user_ns);
+ 	ns_free_inum(&ns->ns);
++	__free_page(ns->vvar_page);
+ 	kfree(ns);
  }
  
-@@ -209,6 +211,7 @@ static ktime_t posix_get_monotonic_ktime(clockid_t which_clock)
- static int posix_get_monotonic_raw(clockid_t which_clock, struct timespec64 *tp)
- {
- 	ktime_get_raw_ts64(tp);
-+	timens_add_monotonic(tp);
- 	return 0;
- }
+@@ -192,6 +289,8 @@ static int timens_install(struct nsproxy *nsproxy, struct ns_common *new)
+ 	    !ns_capable(current_user_ns(), CAP_SYS_ADMIN))
+ 		return -EPERM;
  
-@@ -223,6 +226,7 @@ static int posix_get_monotonic_coarse(clockid_t which_clock,
- 						struct timespec64 *tp)
- {
- 	ktime_get_coarse_ts64(tp);
-+	timens_add_monotonic(tp);
- 	return 0;
- }
++	timens_set_vvar_page(current, ns);
++
+ 	get_time_ns(ns);
+ 	put_time_ns(nsproxy->time_ns);
+ 	nsproxy->time_ns = ns;
+@@ -211,6 +310,8 @@ int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk)
+ 	if (nsproxy->time_ns == nsproxy->time_ns_for_children)
+ 		return 0;
  
-@@ -235,6 +239,7 @@ static int posix_get_coarse_res(const clockid_t which_clock, struct timespec64 *
- static int posix_get_boottime_timespec(const clockid_t which_clock, struct timespec64 *tp)
- {
- 	ktime_get_boottime_ts64(tp);
-+	timens_add_boottime(tp);
- 	return 0;
- }
++	timens_set_vvar_page(tsk, ns);
++
+ 	get_time_ns(ns);
+ 	put_time_ns(nsproxy->time_ns);
+ 	nsproxy->time_ns = ns;
+@@ -246,6 +347,7 @@ struct time_namespace init_time_ns = {
+ 	.user_ns	= &init_user_ns,
+ 	.ns.inum	= PROC_TIME_INIT_INO,
+ 	.ns.ops		= &timens_operations,
++	.frozen_offsets	= true,
+ };
  
+ static int __init time_ns_init(void)
