@@ -2,109 +2,98 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539E9C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1790C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25D2D214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:33:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2EAA207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:35:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="VY8usctL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XlRk9bRC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgAMQdr (ORCPT
+        id S1729022AbgAMQfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:33:47 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:53490 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728873AbgAMQdq (ORCPT
+        Mon, 13 Jan 2020 11:35:00 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33280 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726943AbgAMQe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:33:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1578933220; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UCCNUg/hYOZ2GevfOy70EMdcJBLEX9zMTL09kz3du0A=;
-        b=VY8usctL5Na9LW5iq15oeb1NIUwcwGcaERMaKEbK3OUTTChLrHwFhmy3fSY65LyxzNZL0G
-        Y/14RycD0A1V49W4njuz5rQNpI9f+SB1pcFBVnkvoiAnfvGTSzzooKwQEnCREKgQ/NO4a/
-        w1Gjjoj+uU63+H3nJZPbyVhnUdmJx3o=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Cc:     od@zcrc.me, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0?= <zhouyanjie@wanyeetech.com>
-Subject: [PATCH v2] irqchip: ingenic: Get rid of the legacy IRQ domain
-Date:   Mon, 13 Jan 2020 13:33:29 -0300
-Message-Id: <20200113163329.34282-2-paul@crapouillou.net>
-In-Reply-To: <20200113163329.34282-1-paul@crapouillou.net>
-References: <20200113163329.34282-1-paul@crapouillou.net>
+        Mon, 13 Jan 2020 11:34:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=OyWI+2CxCOjVFobV/HzUixcC6m6SP/UUicEvP6oEb8U=; b=XlRk9bRCU394R+rkkl6rrGt/r6
+        Qqn9DBhqjxKtJUEgSFbDy5JQNJbJrSLegPLKMIFaGZJU18NogpLUuIVMtSW9KicfpHxIQHnBO/ocW
+        i6b7r6Sypq7BF6c/ab4JiZ9/G5L1ZIk9k7+CCRNARPqSaAzbPWx9fppVhgFp9uixD9X1Ccq6Wkp3i
+        qaaCOJ0wKe++RohEAsXFx/2Fd4hbRAGlSezRtNA9jQ80y1+7E21HirlBOjtVUEsSogU7s6DPjzYcu
+        hkcFwwu2lw67HcSA5E7Nk/AqE+ag7qc1Laiq0dLRZsn/4YzeVcznnqauAkfvMcLgbfs3C3d5NsjI/
+        kYfSRGdQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1ir2g4-0005KO-K2; Mon, 13 Jan 2020 16:34:56 +0000
+Date:   Mon, 13 Jan 2020 08:34:56 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        shakeelb@google.com, hannes@cmpxchg.org,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: Re: [PATCH v7 02/10] mm/memcg: fold lru_lock in lock_page_lru
+Message-ID: <20200113163456.GA332@bombadil.infradead.org>
+References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1577264666-246071-3-git-send-email-alex.shi@linux.alibaba.com>
+ <36d7e390-a3d1-908c-d181-4a9e9c8d3d98@yandex-team.ru>
+ <952d02c2-8aa5-40bb-88bb-c43dee65c8bc@linux.alibaba.com>
+ <2ba8a04e-d8e0-1d50-addc-dbe1b4d8e0f1@yandex-team.ru>
+ <a095d80d-8e34-c84f-e4be-085a5aae1929@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <a095d80d-8e34-c84f-e4be-085a5aae1929@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Get rid of the legacy IRQ domain and hardcoded IRQ base, since all the
-Ingenic drivers and platform code have been updated to use devicetree.
+On Mon, Jan 13, 2020 at 08:47:25PM +0800, Alex Shi wrote:
+> 在 2020/1/13 下午5:55, Konstantin Khlebnikov 写道:
+> >>> That's wrong. Here PageLRU must be checked again under lru_lock.
+> >> Hi, Konstantin,
+> >>
+> >> For logical remain, we can get the lock and then release for !PageLRU.
+> >> but I still can figure out the problem scenario. Would like to give more hints?
+> > 
+> > That's trivial race: page could be isolated from lru between
+> > 
+> > if (PageLRU(page))
+> > and
+> > spin_lock_irq(&pgdat->lru_lock);
+> 
+> yes, it could be a problem. guess the following change could helpful:
+> I will update it in new version.
 
-This also fixes the kernel being flooded with messages like:
-[    0.000000] irq: :interrupt-controller@10001000 didn't like
-hwirq-0x0 to VIRQ8 mapping (rc=-19)
+> +       if (lrucare) {
+> +               lruvec = lock_page_lruvec_irq(page);
+> +               if (likely(PageLRU(page))) {
+> +                       ClearPageLRU(page);
+> +                       del_page_from_lru_list(page, lruvec, page_lru(page));
+> +               } else {
+> +                       unlock_page_lruvec_irq(lruvec);
+> +                       lruvec = NULL;
+> +               }
 
-Fixes: 8bc7464b5140 ("irqchip: ingenic: Alloc generic chips from IRQ
-domain").
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Tested-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
-
-Notes:
-    v2: Update commit message to explain the reason of the fix
-
- drivers/irqchip/irq-ingenic.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index 01d18b39069e..c5589ee0dfb3 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -17,7 +17,6 @@
- #include <linux/delay.h>
- 
- #include <asm/io.h>
--#include <asm/mach-jz4740/irq.h>
- 
- struct ingenic_intc_data {
- 	void __iomem *base;
-@@ -50,7 +49,7 @@ static irqreturn_t intc_cascade(int irq, void *data)
- 		while (pending) {
- 			int bit = __fls(pending);
- 
--			irq = irq_find_mapping(domain, bit + (i * 32));
-+			irq = irq_linear_revmap(domain, bit + (i * 32));
- 			generic_handle_irq(irq);
- 			pending &= ~BIT(bit);
- 		}
-@@ -97,8 +96,7 @@ static int __init ingenic_intc_of_init(struct device_node *node,
- 		goto out_unmap_irq;
- 	}
- 
--	domain = irq_domain_add_legacy(node, num_chips * 32,
--				       JZ4740_IRQ_BASE, 0,
-+	domain = irq_domain_add_linear(node, num_chips * 32,
- 				       &irq_generic_chip_ops, NULL);
- 	if (!domain) {
- 		err = -ENOMEM;
--- 
-2.24.1
-
+What about a harder race to hit like a page being on LRU list A when you
+look up the lruvec, then it's removed and added to LRU list B by the
+time you get the lock?  At that point, you are holding a lock on the
+wrong LRU list.  I think you need to check not just that the page
+is still PageLRU but also still on the same LRU list.
