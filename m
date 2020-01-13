@@ -2,84 +2,88 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6111AC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D348C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35BBB2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73A172084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728695AbgAMM2P (ORCPT
+        id S1728516AbgAMM3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:28:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:38818 "EHLO foss.arm.com"
+        Mon, 13 Jan 2020 07:29:10 -0500
+Received: from foss.arm.com ([217.140.110.172]:38838 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726985AbgAMM2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:28:15 -0500
+        id S1726277AbgAMM3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 07:29:09 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 727B413D5;
-        Mon, 13 Jan 2020 04:28:14 -0800 (PST)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E15A53F68E;
-        Mon, 13 Jan 2020 04:28:12 -0800 (PST)
-Subject: Re: [PATCH] perf tools: Fix bug when recording SPE and non SPE events
-To:     James Clark <james.clark@arm.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     nd@arm.com, Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Igor Lubashev <ilubashe@akamai.com>
-References: <20191220110525.30131-1-james.clark@arm.com>
-From:   Suzuki Kuruppassery Poulose <suzuki.poulose@arm.com>
-Message-ID: <14418955-57a8-5e1d-5a42-2d9923b813b6@arm.com>
-Date:   Mon, 13 Jan 2020 12:28:11 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3926913D5;
+        Mon, 13 Jan 2020 04:29:09 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0542E3F68E;
+        Mon, 13 Jan 2020 04:29:07 -0800 (PST)
+Date:   Mon, 13 Jan 2020 12:29:02 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v2 16/20] pci: exynos: Rename Exynos to lowercase
+Message-ID: <20200113122902.GA15939@e121166-lin.cambridge.arm.com>
+References: <20200104152107.11407-1-krzk@kernel.org>
+ <20200104152107.11407-17-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191220110525.30131-1-james.clark@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200104152107.11407-17-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/12/2019 11:05, James Clark wrote:
-> This patch fixes an issue when non Arm SPE events are specified after an
-> Arm SPE event. In that case, perf will exit with an error code and not
-> produce a record file. This is because a loop index is used to store the
-> location of the relevant Arm SPE PMU, but if non SPE PMUs follow, that
-> index will be overwritten. Fix this issue by saving the PMU into a
-> variable instead of using the index, and also add an error message.
+On Sat, Jan 04, 2020 at 04:21:03PM +0100, Krzysztof Kozlowski wrote:
+> Fix up inconsistent usage of upper and lowercase letters in "Exynos"
+> name.
 > 
-> Before the fix:
->      ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
->      237
+> "EXYNOS" is not an abbreviation but a regular trademarked name.
+> Therefore it should be written with lowercase letters starting with
+> capital letter.
 > 
-> After the fix:
->      ./perf record -e arm_spe/ts_enable=1/ -e branch-misses ls; echo $?
->      ...
->      0
+> The lowercase "Exynos" name is promoted by its manufacturer Samsung
+> Electronics Co., Ltd., in advertisement materials and on website.
 > 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Igor Lubashev <ilubashe@akamai.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/pci/controller/dwc/pci-exynos.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+
+Should I pick it up or you are sending the series via another tree ?
+
+If so (if it is not queued already):
+
+Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-exynos.c b/drivers/pci/controller/dwc/pci-exynos.c
+> index 14a6ba4067fb..c5043d951e80 100644
+> --- a/drivers/pci/controller/dwc/pci-exynos.c
+> +++ b/drivers/pci/controller/dwc/pci-exynos.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /*
+> - * PCIe host controller driver for Samsung EXYNOS SoCs
+> + * PCIe host controller driver for Samsung Exynos SoCs
+>   *
+>   * Copyright (C) 2013 Samsung Electronics Co., Ltd.
+>   *		http://www.samsung.com
+> -- 
+> 2.17.1
+> 
