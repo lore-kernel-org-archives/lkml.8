@@ -2,154 +2,179 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8A3C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:41:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20686C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D7CA20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:41:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93B0206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:44:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="hdpFHpri"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nCIqkg8K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728883AbgAMWlz (ORCPT
+        id S1728964AbgAMWo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:41:55 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42514 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgAMWly (ORCPT
+        Mon, 13 Jan 2020 17:44:57 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:8219 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728733AbgAMWo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:41:54 -0500
-Received: by mail-lj1-f195.google.com with SMTP id y4so11997713ljj.9
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 14:41:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qHYh9j36ArO/eqx7TqOqNjk3A/xrwDgvNGjQPzs8xj0=;
-        b=hdpFHprijpWg7DyZBvcIOtbN2/3VYCwH51GiDFMYEerwnS1a9VLZQuARItAcv5M3ZH
-         KDhPbZQqK569Xp7Inonuv1b3B8ie56ADZ20LljZfDqLsKHudNw8D0L8On93YNyR83ncX
-         2y1lO2o4N2HfLDsijX6joDqf4y8V1pIDitcQuM2hWkDBB9q7CBWo+tTNpQs/l3uqPymB
-         FBHFA5mG28M1OKIZjhjgB7YbqmgTwmXRg9h6cgv782B9zV5cJyQViHhET+007eRk/mbP
-         nupDrBxPYvMXDgYMI7e4myHN4xk6Zd5mC9tTrwfPlrozXf/Z5SJ1apIBPK7Sk0mhxDXs
-         WtMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qHYh9j36ArO/eqx7TqOqNjk3A/xrwDgvNGjQPzs8xj0=;
-        b=no0g2NNXe84sjU0Or/+ckbMRafiNaEkprogAdLo4h2smgKPZigdw5weB2ztUtQnTrl
-         z175pg7qYOQk7TifbwA65WykbJ6X3IE06K1xqCnH+puFnpoNApn9p5evAjnyF30A1PZ9
-         AXe29edqfmPX0Rxo7SJBvKBCBQPiq2hoVHm22MYW16cfcJzgTFTGCG96jdFnVEXYhLg1
-         +Csb7SO7IBPPdx6BXpv54PTJ+shM68jo9uDeadWbLC8p7oxP1fhYKuur6xZ0FzQnB6H0
-         HyK5qMR7XMgOBdh2lRQHwotc+W0FOTIHrhmFOuQhNaCv+OE2d0WVLrCcRtbQ3p7tkXzb
-         d2EQ==
-X-Gm-Message-State: APjAAAUAD0JKW/UgBXnBlM0pLmHLHNRiG9e900sDmNH1n83/fHB6EM5z
-        PGzOvCzcxBrTfI90S+j+haNYzvH5YF0=
-X-Google-Smtp-Source: APXvYqyM6bVdRXM1Np0RA/KS4RuUn2PTWXgwaePejNo3d9j2PZ1Bth/CLngpBGsJCATkuKxmJUpENQ==
-X-Received: by 2002:a2e:9744:: with SMTP id f4mr12863750ljj.120.1578955312988;
-        Mon, 13 Jan 2020 14:41:52 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id h24sm6581565ljc.84.2020.01.13.14.41.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 14:41:52 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 9A28910052D; Tue, 14 Jan 2020 01:41:55 +0300 (+03)
-Date:   Tue, 14 Jan 2020 01:41:55 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Mon, 13 Jan 2020 17:44:57 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1cf2d40000>; Mon, 13 Jan 2020 14:44:36 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 13 Jan 2020 14:44:56 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 13 Jan 2020 14:44:56 -0800
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jan
+ 2020 22:44:52 +0000
+Subject: Re: [PATCH v5 1/2] mm/mmu_notifier: make interval notifier updates
+ safe
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1 2/2] mm: factor out next_present_section_nr()
-Message-ID: <20200113224155.efoekgw4hyey2by2@box>
-References: <20200113144035.10848-1-david@redhat.com>
- <20200113144035.10848-3-david@redhat.com>
+        Shuah Khan <shuah@kernel.org>
+References: <20191216195733.28353-1-rcampbell@nvidia.com>
+ <20191216195733.28353-2-rcampbell@nvidia.com>
+ <20200109194805.GK20978@mellanox.com>
+ <73225ded-c22d-33f2-ebcb-b9e9aa95266b@nvidia.com>
+ <20200109232548.GO20978@mellanox.com>
+From:   Ralph Campbell <rcampbell@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <633a3dda-d4d7-1233-b290-53d36fb8fda1@nvidia.com>
+Date:   Mon, 13 Jan 2020 14:44:52 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113144035.10848-3-david@redhat.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200109232548.GO20978@mellanox.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1578955476; bh=7TMyQAyBFp1DtzmW42ZsabWDd5djN+Ro8smtOwxU9Io=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=nCIqkg8KqZuotUvu9Aohq0Eqq1R11k/IujyaARjsUtTmEQ+oJFnZSznlQL3rSn3cc
+         ck/eSXnhIskrTlONTXLdl+xOh/MrdimK0KW7NfqJda9zFw6QDqXrZfnU2TSO+vkd05
+         az4WyUQFkBEUE44bnRtJVpDnV8GrLIyOp/suwFfQy4twnc6wDIuKmfKFU0Q/SPVtqi
+         IePaGmTg5Qa14Uzyt0sHQ/ALx1JrlbL3PFBrZ4fornOqXG58M3PWtnvlwNHb4Jr4Bf
+         2wnuwAFo2iHk3P8Pgq2ZVriDZI9aYnXIBzWYLd9cdKi4OvDPvlU7q+kxacwLHv8AoM
+         VQhn5irDhqygA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 03:40:35PM +0100, David Hildenbrand wrote:
-> Let's move it to the header and use the shorter variant from
-> mm/page_alloc.c (the original one will also check
-> "__highest_present_section_nr + 1", which is not necessary). While at it,
-> make the section_nr in next_pfn() const.
-> 
-> In next_pfn(), we now return section_nr_to_pfn(-1) instead of -1 once
-> we exceed __highest_present_section_nr, which doesn't make a difference in
-> the caller as it is big enough (>= all sane end_pfn).
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@kernel.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
->  include/linux/mmzone.h | 10 ++++++++++
->  mm/page_alloc.c        | 11 ++---------
->  mm/sparse.c            | 10 ----------
->  3 files changed, 12 insertions(+), 19 deletions(-)
-> 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index c2bc309d1634..462f6873905a 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -1379,6 +1379,16 @@ static inline int pfn_present(unsigned long pfn)
->  	return present_section(__nr_to_section(pfn_to_section_nr(pfn)));
->  }
->  
-> +static inline unsigned long next_present_section_nr(unsigned long section_nr)
-> +{
-> +	while (++section_nr <= __highest_present_section_nr) {
-> +		if (present_section_nr(section_nr))
-> +			return section_nr;
-> +	}
-> +
-> +	return -1;
-> +}
-> +
->  /*
->   * These are _only_ used during initialisation, therefore they
->   * can use __initdata ...  They could have names to indicate
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index a92791512077..26e8044e9848 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5852,18 +5852,11 @@ overlap_memmap_init(unsigned long zone, unsigned long *pfn)
->  /* Skip PFNs that belong to non-present sections */
->  static inline __meminit unsigned long next_pfn(unsigned long pfn)
->  {
-> -	unsigned long section_nr;
-> +	const unsigned long section_nr = pfn_to_section_nr(++pfn);
->  
-> -	section_nr = pfn_to_section_nr(++pfn);
->  	if (present_section_nr(section_nr))
->  		return pfn;
-> -
-> -	while (++section_nr <= __highest_present_section_nr) {
-> -		if (present_section_nr(section_nr))
-> -			return section_nr_to_pfn(section_nr);
-> -	}
-> -
-> -	return -1;
-> +	return section_nr_to_pfn(next_present_section_nr(section_nr));
 
-This changes behaviour in the corner case: if next_present_section_nr()
-returns -1, we call section_nr_to_pfn() for it. It's unlikely would give
-any valid pfn, but I can't say for sure for all archs. I guess the worst
-case scenrio would be endless loop over the same secitons/pfns.
-
-Have you considered the case?
-
--- 
- Kirill A. Shutemov
+On 1/9/20 3:25 PM, Jason Gunthorpe wrote:
+> On Thu, Jan 09, 2020 at 02:01:21PM -0800, Ralph Campbell wrote:
+> 
+>>> I'd write it more like
+>>>
+>>> if (mni->updated_start == mni->updated_end)
+>>>       insert
+>>> else
+>>>       remove
+>>
+>> OK, but I'm using updated_end == 0, not updated_start, and the end can't be zero.
+> 
+> Tricky..
+>   
+>>> ie an empty interval can't get a notification so it should be removed
+>>> from the tree.
+>>>
+>>> I also like the name 'updated' better than deferred, it is a bit
+>>> clearer..
+>>
+>> OK.
+>>
+>>> Adding release should it's own patch.
+>>
+>> The release callback is associated with mmu_interval_notifier_put()
+>> (i.e., async remove). Otherwise, there is no way to know when the
+>> interval can be freed.
+> 
+> Okay, but this patch is just trying to add update?
+> 
+>>> So why do we need this? You can't call hmm_range_fault from a
+>>> notifier. You just can't.
+>>>
+>>> So there should be no reason to create an interval from the notifier,
+>>> do it from where you call hmm_range_fault, and it must be safe to
+>>> obtain the mmap_sem from that thread.
+>>
+>> I was thinking of the case where munmap() creates a hole in the interval.
+>> The invalidate callback would need to update the interval to cover the
+>> left side of the remaining interval and an insert to cover the right
+>> side. Otherwise, the HW invalidation has to be extended to cover the
+>> right side and rely on a fault to re-establish the right side interval.
+> 
+> This is very tricky because this algorithm can only work correctly if
+> done atomically as a batch entirely under the spinlock. Forcing it
+> into the defered list while holding the lock is the only way to do
+> something like that sensibly..
+> 
+> So 'update' is not some generic API you can call, it can only be done
+> while the interval tree is locked for reading. Thus 'safe' is probably
+> the wrong name, it is actually 'interval tree locked for read'
+> 
+> At the minimum this needs to be comprehensively documented and we need
+> a lockdep style assertion that we are locked when doing it..
+> 
+> And if we are defining things like that then it might as well be
+> expressed as a remove/insert/insert batch operation rather than
+> a somewhat confusing update.
+> 
+>> Now the plan for v6 is to leave mmu_interval_notifier_remove() unchanged,
+>> add mmu_interval_notifier_put() for async/safe removal and make 'update'
+>> be asynchronous only and, as you say, rely on mmu_interval_read_begin()
+>> to be sure all delayed add/remove/updates are complete.
+> 
+> Hm, we can see what injecting reference counts would look like.
+> 
+>> I'm also planning to add a mmu_interval_notifier_find() so that nouveau
+>> and the self tests don't need to create a duplicate interval range tree
+>> to track the intervals that they have registered. There isn't an existing
+>> structure that the struct mmu_interval_notifier can just be added to so
+>> it ends up being a separately allocated structure and would need to be
+>> stored in some sort of table so I thought why not just use the itree.
+> 
+> Okay, but for locking reasons find is also a little tricky. I suppose
+> find can obtain the read side lock on the interval tree and then the
+> caller would have to find_unlock once it has refcounted or finished
+> accessing the object. Much like how the invalidate callback is locked.
+> 
+>> This is all useful feedback. I am working on v6 which addresses your concerns
+>> and updates nouveau to use the new API. I'm somewhat sidetracked by the lockdep
+>> issue I posted about nouveau calling kmalloc(GFP_KERNEL) from the invalidation
+>> callback so it may take me awhile to sort that out.
+>> Since we are at -rc5, I'm guessing this won't have enough soak time to make 5.6.
+> 
+> Yes, sorry for the delay, lots of travel and a mountain of emails. I
+> am almost caught up now. But you can post it at least.
+> 
+> Jason
+> 
+I'm using the device driver lock to serialize find/insert/update/remove
+changes to the interval tree. The important thing is to have a registered
+interval covering any shadow PTEs in the hardware and the driver lock that
+protects the updates to the HW and sequence number also protects updates
+to the registered intervals.
+Hopefully, this will be easier to understand with v6 which I'm posting
+for review.
