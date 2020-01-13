@@ -2,107 +2,119 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D752BC33CB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89697C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE023207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A122075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:17:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="qPoyNKH8"
+	dkim=pass (2048-bit key) header.d=daynix-com.20150623.gappssmtp.com header.i=@daynix-com.20150623.gappssmtp.com header.b="xnIE4e4r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728834AbgAMIR1 (ORCPT
+        id S1728848AbgAMIRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 03:17:27 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:48894 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728789AbgAMIR1 (ORCPT
+        Mon, 13 Jan 2020 03:17:46 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40724 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728789AbgAMIRq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 03:17:27 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00D8ENoO003461;
-        Mon, 13 Jan 2020 09:17:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=BNM4YoMzz8mNUvF1txkbtT7/0heb6WHqiZtZ1ldOKhw=;
- b=qPoyNKH8jTIWXU82omvks7gDUV71lAKVshmwiphNM1ReCj6JiZZ6bPp3/pgnAekSihDC
- RUUhnOVJZirq6ZdKAGWeK0u23lxjzSMd452NLEb9EM7UXaZHjMuTLgfE7736DbUlBozb
- KhPWBtL9oh3yzDeLfTqrQYYxvTxwARKDMF90tv/HaOZ1FmVGN5Oh+MiZ+tqIhGD5WCGs
- /9q0HeU+/bOI6bhou9rrmZlNSTHHoIw/8SRr0Y4eccYqZgsBF4Zn5+p89Gda5sDFC6Gl
- Xa9fmHlvLuLrLEENXSjKC0e68J9Fm4MT5tTIMk2bFE5utK+fkJCzF43b66PSCj9ZRzys bw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xf7jp6whm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Jan 2020 09:17:11 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CFEC210003A;
-        Mon, 13 Jan 2020 09:17:09 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B4A912A4D88;
-        Mon, 13 Jan 2020 09:17:09 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.49) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 13 Jan
- 2020 09:17:09 +0100
-Subject: Re: linux-next: Signed-off-by missing for commit in the arm-soc tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Olof Johansson <olof@lixom.net>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ludovic Barre <ludovic.barre@st.com>,
-        Yann Gautier <yann.gautier@st.com>
-References: <20200113065808.25f28c40@canb.auug.org.au>
- <CAOesGMifHn6DbNgYm6YUbdKjSL5rNgdWrq+HX9dEusrOr9xX2A@mail.gmail.com>
- <20200113113837.130c3936@canb.auug.org.au>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <caeb1af8-4aa2-71dc-0a70-127c0b474f93@st.com>
-Date:   Mon, 13 Jan 2020 09:17:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200113113837.130c3936@canb.auug.org.au>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-13_02:2020-01-13,2020-01-13 signatures=0
+        Mon, 13 Jan 2020 03:17:46 -0500
+Received: by mail-wr1-f67.google.com with SMTP id c14so7511006wrn.7
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 00:17:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=0zANXS8TKEoJJ1M/Ul1KQmGBcWvlQfYmWq/kiBRyKvE=;
+        b=xnIE4e4rPMU7OcSUOkAKlSrl9l0EdteOqeunkUgKv3arlLdDevR5M5UkbX+CciM44M
+         mWZouqu8AcjErkPZBBVSPB2ulJ0+cd5V/Cuud7lgm6/FdhPntluM5DU/c/JTFyuYLAKW
+         djGwT/u2QtBSq19YSbgEgsVJs08zFbxJAoxrDDPnYcfTuKFdXE1QPp1Hv7dtZbp/qsVB
+         9kL9iu9sjaz0qgZE/AETM+jugg22uE6vU59YWmjzcvPZrR4z0pkpd7GZAdWHofocrrrZ
+         /c/7XPoOUhDE8q2coVq/408tcWpqI+4/vP9URmPtAePlqwjxht3/dMQbTfAOTMuKd+8k
+         4lzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=0zANXS8TKEoJJ1M/Ul1KQmGBcWvlQfYmWq/kiBRyKvE=;
+        b=lt+5ciBS119ZR1X7PNdbyktm9Iq/w9hbFedyNQ/BGw0D26LSfu7BjCpyKUhfAqoKh5
+         DJZVoUrs+SK3UbqfqVLAoYo73VxrGa+RoX+spm46MLJsSdMVj9eDu6ox3QlZdB7FgZAm
+         3oi0Dxfif0ul3yJK/GUJ88D0WOGi6N6zCyG7lg9EEpBdzVL1qS9LKcdsycL2PP4RGDX4
+         z+nGOTwmbJyY4LKxBwTxSig64jtkXKqUA8/YxY8Ei2rIdp4UTI9Q8dMcuHfr1oQLSWrx
+         +jylfrNvJnuDc+Dqfl9sRSNYfkqy2XLus3LF5dNjb9VhiXPRri4UeErcvmyCfDDrBxiA
+         kKuA==
+X-Gm-Message-State: APjAAAWHBYDYl6Ego0lifExGZQK1bBrh6vAdKgfh1kH5pfkcOJRDSWry
+        JBCqrbJiQzSca46kjt389avypg==
+X-Google-Smtp-Source: APXvYqzANWNHrC26zw2epeZgu5xcQ1xAM/Ml24jTOdkZMXBwIIusDkz1CKMmA1wx3gHpSAxsNFQepQ==
+X-Received: by 2002:a5d:4d8d:: with SMTP id b13mr17827382wru.6.1578903463793;
+        Mon, 13 Jan 2020 00:17:43 -0800 (PST)
+Received: from f2.redhat.com (bzq-79-177-42-131.red.bezeqint.net. [79.177.42.131])
+        by smtp.gmail.com with ESMTPSA id v14sm13949234wrm.28.2020.01.13.00.17.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 13 Jan 2020 00:17:43 -0800 (PST)
+From:   Yuri Benditovich <yuri.benditovich@daynix.com>
+To:     mst@redhat.com, jasowang@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     yan@daynix.com
+Subject: [PATCH v2] virtio-net: Introduce extended RSC feature
+Date:   Mon, 13 Jan 2020 10:17:36 +0200
+Message-Id: <20200113081736.2340-1-yuri.benditovich@daynix.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi guys
+VIRTIO_NET_F_RSC_EXT feature bit indicates that the device
+is able to provide extended RSC information. When the feature
+is negotiatede and 'gso_type' field in received packet is not
+GSO_NONE, the device reports number of coalesced packets in
+'csum_start' field and number of duplicated acks in 'csum_offset'
+field and sets VIRTIO_NET_HDR_F_RSC_INFO in 'flags' field.
 
-On 1/13/20 1:38 AM, Stephen Rothwell wrote:
-> Hi Olof,
-> 
-> On Sun, 12 Jan 2020 11:59:58 -0800 Olof Johansson <olof@lixom.net> wrote:
->>
->> Thanks for the report. Time to automate this at our end, we've had a
->> few too many of these slip through all the way to you lately.
->>
->> Where do you keep your scripts that you catch these things with? Do
->> you have a writeup of the checks you do? I should add it to my
->> automation once and for all.
-> 
-> I should export my linux-next scripts as a git repo, but I haven't (yet) :-(
-> 
-> Attached pleas find check_commits which I run after fetching each tree
-> and pass the changed commit range.  This, in turn, runs check_fixes
-> (also attached).
-> 
+Signed-off-by: Yuri Benditovich <yuri.benditovich@daynix.com>
+---
+ include/uapi/linux/virtio_net.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
+diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virtio_net.h
+index a3715a3224c1..2bdd26f8a4ed 100644
+--- a/include/uapi/linux/virtio_net.h
++++ b/include/uapi/linux/virtio_net.h
+@@ -56,7 +56,7 @@
+ #define VIRTIO_NET_F_MQ	22	/* Device supports Receive Flow
+ 					 * Steering */
+ #define VIRTIO_NET_F_CTRL_MAC_ADDR 23	/* Set MAC address */
+-
++#define VIRTIO_NET_F_RSC_EXT	  61	/* Provides extended RSC info */
+ #define VIRTIO_NET_F_STANDBY	  62	/* Act as standby for another device
+ 					 * with the same MAC.
+ 					 */
+@@ -104,6 +104,7 @@ struct virtio_net_config {
+ struct virtio_net_hdr_v1 {
+ #define VIRTIO_NET_HDR_F_NEEDS_CSUM	1	/* Use csum_start, csum_offset */
+ #define VIRTIO_NET_HDR_F_DATA_VALID	2	/* Csum is valid */
++#define VIRTIO_NET_HDR_F_RSC_INFO	4	/* rsc_ext data in csum_ fields */
+ 	__u8 flags;
+ #define VIRTIO_NET_HDR_GSO_NONE		0	/* Not a GSO frame */
+ #define VIRTIO_NET_HDR_GSO_TCPV4	1	/* GSO frame, IPv4 TCP (TSO) */
+@@ -118,6 +119,13 @@ struct virtio_net_hdr_v1 {
+ 	__virtio16 num_buffers;	/* Number of merged rx buffers */
+ };
+ 
++/*
++ * if VIRTIO_NET_F_RSC_EXT feature has been negotiated and
++ * VIRTIO_NET_HDR_F_RSC_INFO is set in RX packet
++ */
++#define virtio_net_rsc_ext_num_packets	csum_start
++#define virtio_net_rsc_ext_num_dupacks	csum_offset
++
+ #ifndef VIRTIO_NET_NO_LEGACY
+ /* This header comes first in the scatter-gather list.
+  * For legacy virtio, if VIRTIO_F_ANY_LAYOUT is not negotiated, it must
+-- 
+2.17.1
 
-Sorry for this oversight. DO I have something to do ? (except to not 
-forget to check my signed-off next time).
-
-Regards
-Alex
