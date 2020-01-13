@@ -6,73 +6,73 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6362C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87040C33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A283C207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F6A321569
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:23:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbgAMIVG (ORCPT
+        id S1728808AbgAMIXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 03:21:06 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:50458 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728682AbgAMIVG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 03:21:06 -0500
-Received: from fsav401.sakura.ne.jp (fsav401.sakura.ne.jp [133.242.250.100])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 00D8L3x4061832;
-        Mon, 13 Jan 2020 17:21:03 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav401.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp);
- Mon, 13 Jan 2020 17:21:03 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav401.sakura.ne.jp)
-Received: from [192.168.1.9] (softbank126040062084.bbtec.net [126.40.62.84])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 00D8KvJP061816
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Mon, 13 Jan 2020 17:21:03 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH] sched/core: fix illegal RCU from offline CPUs
-To:     Qian Cai <cai@lca.pw>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        bsegall@google.com, mgorman@suse.de, paulmck@kernel.org,
-        tglx@linutronix.de, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20200112161752.10492-1-cai@lca.pw>
- <3ffaaf32-88b6-fdf1-c7c7-ab56292c047f@I-love.SAKURA.ne.jp>
- <7168A4A4-E735-4809-B80A-389990603EB8@lca.pw>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <66e33eb5-e958-6dc8-2327-4168afdd9e1e@i-love.sakura.ne.jp>
-Date:   Mon, 13 Jan 2020 17:20:57 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 13 Jan 2020 03:23:18 -0500
+Received: from mga06.intel.com ([134.134.136.31]:18442 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728738AbgAMIXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 03:23:18 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 00:23:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,428,1571727600"; 
+   d="scan'208";a="422737910"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga005.fm.intel.com with ESMTP; 13 Jan 2020 00:23:15 -0800
+Date:   Mon, 13 Jan 2020 16:23:08 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
+        alexander.duyck@gmail.com, rientjes@google.com
+Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer list
+Message-ID: <20200113082308.GB27972@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200109143054.13203-1-richardw.yang@linux.intel.com>
+ <20200111000352.efy6krudecpshezh@box>
+ <20200112022858.GA17733@richard>
+ <20200112225718.5vqzezfclacujyx3@box>
+ <20200113004457.GA27762@richard>
+ <20200113073614.jo2txcmazwlesl7b@box.shutemov.name>
 MIME-Version: 1.0
-In-Reply-To: <7168A4A4-E735-4809-B80A-389990603EB8@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113073614.jo2txcmazwlesl7b@box.shutemov.name>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/01/13 15:30, Qian Cai wrote:
->>> -	mmdrop(mm);
->>> +	smp_call_function_single(cpumask_first(cpu_online_mask),
->>> +				(void (*)(void *))mmdrop, mm, 0);
->>
->> mmdrop() might sleep, but
-> 
-> If that is the case, and then the commit e78a7614f387 (“idle: Prevent
-> late-arriving interrupts from disrupting offline”) is incorrect because it
-> will disable local irq before calling mmdrop() which will trigger
-> the might_sleep() warning. Can you prove it?
+On Mon, Jan 13, 2020 at 10:36:14AM +0300, Kirill A. Shutemov wrote:
+>On Mon, Jan 13, 2020 at 08:44:57AM +0800, Wei Yang wrote:
+>> >> It is possible two page in the same pgdate or memcg grab page lock
+>> >> respectively and then access the same defer queue concurrently.
+>> 
+>> If my understanding is correct, you agree with my statement?
+>
+>Which one? If the one above then no. list_empty only accesses list_head
+>for the struct page, not the queue.
+>
 
-Is commit 7283094ec3db318e ("kernel, oom: fix potential pgd_lock deadlock from
-__mmdrop") about only softirq? Is it guaranteed that smp_call_function_single()
-does not hit such race? Then just my overcareful...
+Ah, I get your point.
+
+>-- 
+> Kirill A. Shutemov
+
+-- 
+Wei Yang
+Help you, Help me
