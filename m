@@ -2,136 +2,142 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0304DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBA5C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D738C20CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1417207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:08:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ABcJ4iWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728738AbgAMLHo (ORCPT
+        id S1728750AbgAMLIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:07:44 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:49513 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgAMLHn (ORCPT
+        Mon, 13 Jan 2020 06:08:09 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59374 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726193AbgAMLIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:07:43 -0500
-Received: from 79.184.255.90.ipv4.supernova.orange.pl (79.184.255.90) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
- id c7ad015d3098e161; Mon, 13 Jan 2020 12:07:40 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Johannes Stezenbach <js@sig21.net>,
-        Alexander Potapenko <glider@google.com>,
-        "Acked-by: Kees Cook" <keescook@chromium.org>,
-        "Acked-by: Michal Hocko" <mhocko@suse.cz>
-Cc:     linux-pm@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: init_on_free breaks hibernate
-Date:   Mon, 13 Jan 2020 12:07:40 +0100
-Message-ID: <2661668.lOhekKA4Va@kreacher>
-In-Reply-To: <20200113092604.GA26365@sig21.net>
-References: <20191223211309.GA4609@sig21.net> <20200113092604.GA26365@sig21.net>
+        Mon, 13 Jan 2020 06:08:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578913687;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FHUwvC4V45pQBl3YOQgs1FSsgQ9Xms/WHSg7K9Kokh4=;
+        b=ABcJ4iWv56tFlpv15B1BaU+J1SrHOArf94yDpihdmzIQP7b7U2Z0hPMDOnqe+B1UFCzzPK
+        +WME1A02BN60UM2tjG3RKp0d7OzVxOyT5VsZywfaf6A+rdfPEJP+aEWZijkXT5sJikEs8H
+        kAm+P6NUAQN/bqCqAfNfAFQijvikKvk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-114-HyVeANQYPxm5Op4tY6G7AQ-1; Mon, 13 Jan 2020 06:08:06 -0500
+X-MC-Unique: HyVeANQYPxm5Op4tY6G7AQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6B7BB1005514;
+        Mon, 13 Jan 2020 11:08:05 +0000 (UTC)
+Received: from [10.72.12.51] (ovpn-12-51.pek2.redhat.com [10.72.12.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 209CE5C1BB;
+        Mon, 13 Jan 2020 11:07:57 +0000 (UTC)
+Subject: Re: [PATCH v2] virtio-net: Introduce extended RSC feature
+To:     Yuri Benditovich <yuri.benditovich@daynix.com>, mst@redhat.com,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     yan@daynix.com
+References: <20200113081736.2340-1-yuri.benditovich@daynix.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <bdc6cb05-30d1-b4fd-512e-740b2550c14e@redhat.com>
+Date:   Mon, 13 Jan 2020 19:07:52 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <20200113081736.2340-1-yuri.benditovich@daynix.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, January 13, 2020 10:26:04 AM CET Johannes Stezenbach wrote:
-> Hi,
-> 
-> On Mon, Dec 23, 2019 at 10:13:09PM +0100, Johannes Stezenbach wrote:
-> > I upgraded the kernel on one of my machines to 5.3.18 (from 5.2.x)
-> > and found it failed after resume from hibernate due to what seemed
-> > to be memory corruption. I had a hunch it could be related to
-> > CONFIG_INIT_ON_ALLOC_DEFAULT_ON or CONFIG_INIT_ON_FREE_DEFAULT_ON,
-> > and a quick web search found this which seems to confirm:
-> > https://bbs.archlinux.org/viewtopic.php?pid=1877845#p1877845
-> > 
-> > I rebuilt the kernel with CONFIG_INIT_ON_FREE_DEFAULT_ON disabled,
-> > and hibernate works again.  I'm fine with this workaround and
-> > just wanted to share this information.
-> > 
-> > The commit that introduces CONFIG_INIT_ON_FREE_DEFAULT_ON:
-> > 6471384af2a6 mm: security: introduce init_on_alloc=1 and init_on_free=1 boot options
-> 
-> I tested 5.4.11 and current git master (b07f636fca1c8)
-> in Qemu and was able to reproduce the issue in both.
 
-Let's add more people and the LKML to the CC.
-
-Alex, Kees, Michal, any comments?
-
-> Basically I followed the description here
-> http://ncmiller.github.io/2016/05/14/linux-and-qemu.html
-> to build a minimal image using busybox (I'm using
-> the binary from Debian's busybox-static package),
-> then added s swap image (-drive file=disk.img,if=virtio),
-> do "mkswap /dev/vda" the first time.
-> 
-> hibernate: swapon /dev/vda; echo disk >/sys/power/state
-> resume: echo 254:0 >/sys/power/resume
-> 
-> Since busybox is very light on memory usage it doesn't
-> trigger immediately, but these commands seem to do it
-> reliably:
-> 
->   dmesg | gzip >/dev/null
->   find /sys | bzip2 | sha512sum
-> 
-> 
-> my initramfs:
->   6012997      4 drwxr-xr-x   4 js       js           4096 Jan  8 21:25 initramfs
->   6022584      4 drwxr-xr-x   2 js       js           4096 Jan  8 21:21 initramfs/dev
->   5909013      4 -rwxr-xr-x   1 js       js            514 Jan  8 21:25 initramfs/init
->   6012998      4 drwxr-xr-x   2 js       js           4096 Jan  8 20:41 initramfs/bin
->   5909011   1904 -rwxr-xr-x   1 js       js        1945856 Apr  1  2019 initramfs/bin/busybox
->   5909012      0 lrwxrwxrwx   1 js       js              7 Feb 14  2018 initramfs/bin/sh -> busybox
-> 
-> my /init:
-> #!/bin/sh
-> 
-> PATH=/bin
-> export PATH
-> 
-> # Create dirs
-> /bin/busybox mkdir -p /proc /sys /etc /tmp /usr
-> /bin/busybox ln -s /bin /sbin
-> /bin/busybox ln -s /bin /usr/bin
-> /bin/busybox ln -s /bin /usr/sbin
-> # Create all the symlinks to busybox
-> /bin/busybox --install -s
-> 
-> mount -t proc proc /proc
-> mount -t sysfs sysfs /sys
-> mount -t devtmpfs devtmpfs /dev
-> 
-> echo -e "\nBoot took $(cut -d' ' -f1 /proc/uptime) seconds\n"
-> 
-> # shell where ^C works
-> setsid busybox cttyhack sh
-> # avoid "PID 1 exited" oops
-> poweroff -f
-> ---------
-> 
-> 
-> qemu-system-x86_64 -m 128 -enable-kvm \
->   -kernel ../linux/arch/x86/boot/bzImage \
->   -initrd initramfs.cpio \
->   -drive file=disk.img,if=virtio \
->   -nographic -append "console=ttyS0 init_on_alloc=1 init_on_free=1"
-> 
-> 
-> Johannes
-> 
+On 2020/1/13 =E4=B8=8B=E5=8D=884:17, Yuri Benditovich wrote:
+> VIRTIO_NET_F_RSC_EXT feature bit indicates that the device
+> is able to provide extended RSC information. When the feature
+> is negotiatede and 'gso_type' field in received packet is not
+> GSO_NONE, the device reports number of coalesced packets in
+> 'csum_start' field and number of duplicated acks in 'csum_offset'
+> field and sets VIRTIO_NET_HDR_F_RSC_INFO in 'flags' field.
+>
+> Signed-off-by: Yuri Benditovich <yuri.benditovich@daynix.com>
 
 
+Hi Yuri:
 
+Is the feature used by Linux? If yes, it's better to include the real use=
+r.
+
+
+> ---
+>   include/uapi/linux/virtio_net.h | 10 +++++++++-
+>   1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/uapi/linux/virtio_net.h b/include/uapi/linux/virti=
+o_net.h
+> index a3715a3224c1..2bdd26f8a4ed 100644
+> --- a/include/uapi/linux/virtio_net.h
+> +++ b/include/uapi/linux/virtio_net.h
+> @@ -56,7 +56,7 @@
+>   #define VIRTIO_NET_F_MQ	22	/* Device supports Receive Flow
+>   					 * Steering */
+>   #define VIRTIO_NET_F_CTRL_MAC_ADDR 23	/* Set MAC address */
+> -
+> +#define VIRTIO_NET_F_RSC_EXT	  61	/* Provides extended RSC info */
+
+
+Is this better to keep the newline around?
+
+
+>   #define VIRTIO_NET_F_STANDBY	  62	/* Act as standby for another devic=
+e
+>   					 * with the same MAC.
+>   					 */
+> @@ -104,6 +104,7 @@ struct virtio_net_config {
+>   struct virtio_net_hdr_v1 {
+>   #define VIRTIO_NET_HDR_F_NEEDS_CSUM	1	/* Use csum_start, csum_offset =
+*/
+>   #define VIRTIO_NET_HDR_F_DATA_VALID	2	/* Csum is valid */
+> +#define VIRTIO_NET_HDR_F_RSC_INFO	4	/* rsc_ext data in csum_ fields */
+>   	__u8 flags;
+>   #define VIRTIO_NET_HDR_GSO_NONE		0	/* Not a GSO frame */
+>   #define VIRTIO_NET_HDR_GSO_TCPV4	1	/* GSO frame, IPv4 TCP (TSO) */
+> @@ -118,6 +119,13 @@ struct virtio_net_hdr_v1 {
+>   	__virtio16 num_buffers;	/* Number of merged rx buffers */
+>   };
+>  =20
+> +/*
+> + * if VIRTIO_NET_F_RSC_EXT feature has been negotiated and
+> + * VIRTIO_NET_HDR_F_RSC_INFO is set in RX packet
+> + */
+> +#define virtio_net_rsc_ext_num_packets	csum_start
+> +#define virtio_net_rsc_ext_num_dupacks	csum_offset
+
+
+This looks sub-optimal, it looks to me union is better?
+
+Thanks
+
+
+> +
+>   #ifndef VIRTIO_NET_NO_LEGACY
+>   /* This header comes first in the scatter-gather list.
+>    * For legacy virtio, if VIRTIO_F_ANY_LAYOUT is not negotiated, it mu=
+st
 
