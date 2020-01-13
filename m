@@ -2,111 +2,102 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 716C8C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44764C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E8C0207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:49:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kUpnWNzd"
+	by mail.kernel.org (Postfix) with ESMTP id 1965B207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:50:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578930610;
+	bh=frgfejC4oQgem8zcK/51ieHqwWzLYAGllVuLGW/ZL5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VHh276hyvuQLtJpmKQfbacdx89OakhZzd58PQMzrx7ZYLWC5764efqvt8cI+XTtPZ
+	 QNvJXIFJ6/RBHcsIQL5vv/G/e9Xi7K/8DV+aTGEjkZuXZUqZpdCUbYMo6AqHf/JzgE
+	 mz13KfQQrEuAOFxmTvOB1N4dijYdpTT8XVq8AG9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728819AbgAMPtH (ORCPT
+        id S1728792AbgAMPuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 10:49:07 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:14902 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727323AbgAMPtH (ORCPT
+        Mon, 13 Jan 2020 10:50:09 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:36476 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727222AbgAMPuJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 10:49:07 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1c915e0001>; Mon, 13 Jan 2020 07:48:46 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 13 Jan 2020 07:49:06 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 13 Jan 2020 07:49:06 -0800
-Received: from [10.26.11.97] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jan
- 2020 15:49:03 +0000
-Subject: Re: [PATCH 5.4 000/165] 5.4.11-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200111094921.347491861@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <ace61a61-9241-5734-aeea-86de9e9e608a@nvidia.com>
-Date:   Mon, 13 Jan 2020 15:49:01 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 13 Jan 2020 10:50:09 -0500
+Received: by mail-yw1-f67.google.com with SMTP id n184so6374978ywc.3;
+        Mon, 13 Jan 2020 07:50:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=P7zkiitkCWsuSRKPmAwAK7CcYVjDngYZSCq21E01NRk=;
+        b=rmvepy1x5AqgPVLurPEniloBeaJ0Q1QKeRGpndF2ifpZQ73OV3EUZb0epbw0BBJ0zD
+         6VYKXQLrmKZYG2hvhBAnCXwpeh0ACOS6xMK1CBrrM0vMNmCjUNPYMXKm1KCnNpcws1NQ
+         KvEXhdUJiaUaV4f5m+k9ItmFETt0cyh6Luk62RVyjB/kFubHj4PW4yVn4vcwWIa4PbiS
+         pLbeB+OzgVXUfDJXXoU3sDG2p0fo4FiVQWhK2bemBaAiRaJcNqBUjQ6gePRAz6Z+gI1p
+         KKJd+59/7v9VNyqb7r3Bx6irnyvx2fwkvGq1I6NafL4DrFuw5t8C/D9frxzpWklGoUhW
+         RvHQ==
+X-Gm-Message-State: APjAAAVjB+okExrPtoMz3lKoGEK9TnSwHkWOOWW9ZMUVu/8iSH9yspYl
+        tMzH7D24xuif6c0J9ejzUrA=
+X-Google-Smtp-Source: APXvYqwysToLWulQEKKQYs42+APLU16g4SfL5vezVQaE09a4FXcdkrOwmGA1950TxEodJ/XryowyeA==
+X-Received: by 2002:a0d:e697:: with SMTP id p145mr13360006ywe.199.1578930607860;
+        Mon, 13 Jan 2020 07:50:07 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id 144sm5172420ywy.20.2020.01.13.07.50.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 07:50:07 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 1E9EB4018C; Mon, 13 Jan 2020 15:50:06 +0000 (UTC)
+Date:   Mon, 13 Jan 2020 15:50:06 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Dave Olsthoorn <dave@bewaar.me>, x86@kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v11 05/10] test_firmware: add support for
+ firmware_request_platform
+Message-ID: <20200113155006.GC11244@42.do-not-panic.com>
+References: <20200111145703.533809-1-hdegoede@redhat.com>
+ <20200111145703.533809-6-hdegoede@redhat.com>
+ <20200113145328.GA11244@42.do-not-panic.com>
+ <54f70265-265b-ad23-7d2d-af0b27ab1475@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200111094921.347491861@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578930526; bh=si2NM5sTArPrKtvvSzoF0ob++Q0lYByp7aSFZDFvr5Y=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=kUpnWNzdnRNF3urAb8ERueqcc9KAltGfKqvvmuu1FsQk5OoVUwMsfAHJ4Pr0OhP9N
-         fcu5YGGfmhla08veM6K/tlWY5ODgZHdRS1myKzEIwuaBcC7VL5ILWSdJjQ8XQyUmeJ
-         iuhkIeroZUokhL1zJ3UY1Gqer9zG+JDdDcCTmQ4V1MXH8pqbVwZG45PQrhEyLVzfve
-         bi7nAncGQO9mmE0TxSoNFKc2DJ7OjBP51qMCBq1aaA2eZHMHVLFuBOzUzp7xV3z0XS
-         HLI4uoD3WDWwjXCYIocfC2OcHIWkbH8V0y0W49Yh2RUswa/zMX2mtQBfdYypZA19mG
-         dpzkOVmT/vLNw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <54f70265-265b-ad23-7d2d-af0b27ab1475@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 11/01/2020 09:48, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.11 release.
-> There are 165 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Mon, Jan 13, 2020 at 04:22:36PM +0100, Hans de Goede wrote:
 > 
-> Responses should be made by Mon, 13 Jan 2020 09:46:17 +0000.
-> Anything received after that time might be too late.
+> test_firmware and dropping the mutex calls is better. I will make
+> this change for v12 of this series.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.11-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
+> I'll send out a v12 once the remarks from Andy Lutomirski's
+> have also been discussed.
 
-All tests are passing for Tegra ...
+Sure, just think twice about loosing the ability to access the
+test_firmware pointer from userspace. If you can find value
+in extending your tests then keep it, otherwise if its just
+to do the actual test in C in the call itself, it makes sense
+to avoid it for that test case.
 
-Test results for stable-v5.4:
-    13 builds:	13 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
-
-Linux version:	5.4.11-g9d61432efb21
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+  Luis
