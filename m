@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B8FC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDB6C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01B0F20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A660620678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:31:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgAMXb3 (ORCPT
+        id S1729399AbgAMXbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 18:31:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:45698 "EHLO foss.arm.com"
+        Mon, 13 Jan 2020 18:31:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:45708 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727282AbgAMXb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 18:31:26 -0500
+        id S1729366AbgAMXb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 18:31:27 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC5C511B3;
-        Mon, 13 Jan 2020 15:31:25 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04E6F142F;
+        Mon, 13 Jan 2020 15:31:27 -0800 (PST)
 Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 92F703F68E;
-        Mon, 13 Jan 2020 15:31:24 -0800 (PST)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DF5863F68E;
+        Mon, 13 Jan 2020 15:31:25 -0800 (PST)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, will@kernel.org, maz@kernel.org,
         catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
         mark.rutland@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v3 5/7] arm64: ptrace: nofpsimd: Fail FP/SIMD regset operations
-Date:   Mon, 13 Jan 2020 23:30:21 +0000
-Message-Id: <20200113233023.928028-6-suzuki.poulose@arm.com>
+Subject: [PATCH v3 6/7] arm64: signal: nofpsimd: Handle fp/simd context for signal frames
+Date:   Mon, 13 Jan 2020 23:30:22 +0000
+Message-Id: <20200113233023.928028-7-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200113233023.928028-1-suzuki.poulose@arm.com>
 References: <20200113233023.928028-1-suzuki.poulose@arm.com>
@@ -43,95 +43,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When fp/simd is not supported on the system, fail the operations
-of FP/SIMD regsets.
+Make sure we try to save/restore the vfp/fpsimd context for signal
+handling only when the fp/simd support is available. Otherwise, skip
+the frames.
 
-Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
 Cc: Will Deacon <will@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
 Changes since v2:
-  - Add active hook for fpsimd(AArch64)/vfp(AArch32) regsets
+  - Remove WARN_ON() from static functions already checked for
+    the presence of fpsmid.
 ---
- arch/arm64/kernel/ptrace.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ arch/arm64/kernel/signal.c   | 6 ++++--
+ arch/arm64/kernel/signal32.c | 4 ++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index 6771c399d40c..cd6e5fa48b9c 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -615,6 +615,13 @@ static int gpr_set(struct task_struct *target, const struct user_regset *regset,
- 	return 0;
- }
+diff --git a/arch/arm64/kernel/signal.c b/arch/arm64/kernel/signal.c
+index dd2cdc0d5be2..339882db5a91 100644
+--- a/arch/arm64/kernel/signal.c
++++ b/arch/arm64/kernel/signal.c
+@@ -371,6 +371,8 @@ static int parse_user_sigframe(struct user_ctxs *user,
+ 			goto done;
  
-+static int fpr_active(struct task_struct *target, const struct user_regset *regset)
-+{
-+	if (!system_supports_fpsimd())
-+		return -ENODEV;
-+	return regset->n;
-+}
-+
- /*
-  * TODO: update fp accessors for lazy context switching (sync/flush hwstate)
-  */
-@@ -637,6 +644,9 @@ static int fpr_get(struct task_struct *target, const struct user_regset *regset,
- 		   unsigned int pos, unsigned int count,
- 		   void *kbuf, void __user *ubuf)
- {
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	if (target == current)
- 		fpsimd_preserve_current_state();
+ 		case FPSIMD_MAGIC:
++			if (!system_supports_fpsimd())
++				goto invalid;
+ 			if (user->fpsimd)
+ 				goto invalid;
  
-@@ -676,6 +686,9 @@ static int fpr_set(struct task_struct *target, const struct user_regset *regset,
- {
- 	int ret;
+@@ -506,7 +508,7 @@ static int restore_sigframe(struct pt_regs *regs,
+ 	if (err == 0)
+ 		err = parse_user_sigframe(&user, sf);
  
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	ret = __fpr_set(target, regset, pos, count, kbuf, ubuf, 0);
- 	if (ret)
- 		return ret;
-@@ -1134,6 +1147,7 @@ static const struct user_regset aarch64_regsets[] = {
- 		 */
- 		.size = sizeof(u32),
- 		.align = sizeof(u32),
-+		.active = fpr_active,
- 		.get = fpr_get,
- 		.set = fpr_set
- 	},
-@@ -1348,6 +1362,9 @@ static int compat_vfp_get(struct task_struct *target,
- 	compat_ulong_t fpscr;
- 	int ret, vregs_end_pos;
+-	if (err == 0) {
++	if (err == 0 && system_supports_fpsimd()) {
+ 		if (!user.fpsimd)
+ 			return -EINVAL;
  
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	uregs = &target->thread.uw.fpsimd_state;
+@@ -623,7 +625,7 @@ static int setup_sigframe(struct rt_sigframe_user_layout *user,
  
- 	if (target == current)
-@@ -1381,6 +1398,9 @@ static int compat_vfp_set(struct task_struct *target,
- 	compat_ulong_t fpscr;
- 	int ret, vregs_end_pos;
+ 	err |= __copy_to_user(&sf->uc.uc_sigmask, set, sizeof(*set));
  
-+	if (!system_supports_fpsimd())
-+		return -EINVAL;
-+
- 	uregs = &target->thread.uw.fpsimd_state;
+-	if (err == 0) {
++	if (err == 0 && system_supports_fpsimd()) {
+ 		struct fpsimd_context __user *fpsimd_ctx =
+ 			apply_user_offset(user, user->fpsimd_offset);
+ 		err |= preserve_fpsimd_context(fpsimd_ctx);
+diff --git a/arch/arm64/kernel/signal32.c b/arch/arm64/kernel/signal32.c
+index 12a585386c2f..82feca6f7052 100644
+--- a/arch/arm64/kernel/signal32.c
++++ b/arch/arm64/kernel/signal32.c
+@@ -223,7 +223,7 @@ static int compat_restore_sigframe(struct pt_regs *regs,
+ 	err |= !valid_user_regs(&regs->user_regs, current);
  
- 	vregs_end_pos = VFP_STATE_SIZE - sizeof(compat_ulong_t);
-@@ -1438,6 +1458,7 @@ static const struct user_regset aarch32_regsets[] = {
- 		.n = VFP_STATE_SIZE / sizeof(compat_ulong_t),
- 		.size = sizeof(compat_ulong_t),
- 		.align = sizeof(compat_ulong_t),
-+		.active = fpr_active,
- 		.get = compat_vfp_get,
- 		.set = compat_vfp_set
- 	},
+ 	aux = (struct compat_aux_sigframe __user *) sf->uc.uc_regspace;
+-	if (err == 0)
++	if (err == 0 && system_supports_fpsimd())
+ 		err |= compat_restore_vfp_context(&aux->vfp);
+ 
+ 	return err;
+@@ -419,7 +419,7 @@ static int compat_setup_sigframe(struct compat_sigframe __user *sf,
+ 
+ 	aux = (struct compat_aux_sigframe __user *) sf->uc.uc_regspace;
+ 
+-	if (err == 0)
++	if (err == 0 && system_supports_fpsimd())
+ 		err |= compat_preserve_vfp_context(&aux->vfp);
+ 	__put_user_error(0, &aux->end_magic, err);
+ 
 -- 
 2.24.1
 
