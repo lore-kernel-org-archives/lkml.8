@@ -2,147 +2,108 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6342CC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3ABC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39669207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2307B207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:53:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="I1OQAp6U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/RnX/Ww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbgAMWwx (ORCPT
+        id S1729151AbgAMWxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:52:53 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:38138 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728986AbgAMWwx (ORCPT
+        Mon, 13 Jan 2020 17:53:16 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44224 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728994AbgAMWxQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:52:53 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DMnAUm020570;
-        Mon, 13 Jan 2020 22:52:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2019-08-05;
- bh=XRyrRpiArmfGZDdTSM1qurigf4c1+HwEG68J/F/iDCs=;
- b=I1OQAp6UApGuFSzI/nOR9eQa4whDMZPmMSMyJe5WPSP5DklSmPhyTws8LO0AHD1qIWMa
- R7ZE42R2/y64F2SfkRHq4m3sMGTbtH0DMSBtxjYzFGs7qf82XkVenEsFAfI6yPhpo19d
- rwBpdOV/Z0ijUwV9bmyJ5IcPkG6BmefQgZPIgJhZ2DUV9ooQnOi5yFBRNZUrGAyoVPQq
- E6mlWieL7j/Gi/kxdmwHvfEUU1yI5Ykzrf1cfZYEIoEwpjrSCAsVHBE0QIAkW6WJS8xY
- wyEUyekZ6HcBv825sHlH9BtSRe/DIcaAf38MfNHSg64vAnC0zjE/fy1bbf58HGKZxGAR vQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2xf74s23r2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 22:52:49 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DMnexk064633;
-        Mon, 13 Jan 2020 22:52:48 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2xfqvtr59x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 22:52:48 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00DMqmAS029497;
-        Mon, 13 Jan 2020 22:52:48 GMT
-Received: from localhost.localdomain (/98.229.125.203)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 14:52:47 -0800
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] workqueue: remove workqueue_work event class
-Date:   Mon, 13 Jan 2020 17:52:40 -0500
-Message-Id: <20200113225240.116671-2-daniel.m.jordan@oracle.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200113225240.116671-1-daniel.m.jordan@oracle.com>
-References: <20200113225240.116671-1-daniel.m.jordan@oracle.com>
+        Mon, 13 Jan 2020 17:53:16 -0500
+Received: by mail-lf1-f68.google.com with SMTP id v201so8189140lfa.11;
+        Mon, 13 Jan 2020 14:53:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KHnvnN3lDGWBZcYdcw5+iDp4bDu9HTX8MqfJ39n2Djc=;
+        b=E/RnX/WwjoDdRucl6paIhf7V9plcSdleOLDtSCkrLO/sG+CWbZ2rRcd8NuNHB89Gl2
+         8BNfTk0sg1Z7EjdSGM1bIozklLZ1+275JkAuY23pweKGUDEP/mmQnYMtZLa33WuJ8l5W
+         LwjXkhl7bYwuPBfKE/zara6FU1ywyhWNca3MsnfbRnSyXJ1JeMwbFV2CVXyd15i/UM9u
+         8nyMLhpIijjdQKw2I3TMLeUrqph7jMOnKsnw8IBB04A4ww1ADFt2U0+2ZA6s6XP3vieq
+         swmWUH9kKogMqMb14mKpRy+LQMlCxgZCxN6i58PcCYxoJHYFIwr29mevkUB+0N27O3CO
+         FAbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KHnvnN3lDGWBZcYdcw5+iDp4bDu9HTX8MqfJ39n2Djc=;
+        b=rbJW0yQ5p++cEHiwRzStwW4zhSKtyYSw49rX0wYm1JBPui3iilAvMM69EqSl2XuFk/
+         Jz8fa7cn7M854lkiDKmSyZyXO2KTQ08yrG2fGk2yu1kAcPSMJThmX9E3UPGVK4W4IvPB
+         Rxams2mYNyYqZc+m4+HK0yhwq7CO2t63rC3traGbfpLVl+Rbc6Ppl0CV5J8OxfjTo14/
+         y/6MZJ8G7LWydLhAeXXt1DRlUMMfGgT8O7Yxe2PtFiHZOebXYlEE/uUXY806jnlkAf0c
+         6j7iqfeuPJ+kOOtoRfjATHzECazU8Qm6bv0yY5xl/LvNzYRsAUgTMYwyPvWw3hl7MVk/
+         Q9fQ==
+X-Gm-Message-State: APjAAAWcvA7ojMkXFaaZX8iIfj3UmdJDQsR/m/dWKavML7KeRKiECJO9
+        RsyRvSKeBWrVerEv8o2wX7uDitO9
+X-Google-Smtp-Source: APXvYqy4Do5VeXsler/DZNP25OPRLnqyCIEysnUx0sbRh/uorSV5SSKA83a/95ykKdoNelYIBLUkOw==
+X-Received: by 2002:ac2:5605:: with SMTP id v5mr10926099lfd.136.1578955993516;
+        Mon, 13 Jan 2020 14:53:13 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id q186sm6602481ljq.14.2020.01.13.14.53.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 14:53:12 -0800 (PST)
+Subject: Re: [PATCH v4 4/8] i2c: tegra: Support atomic transfers
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Mikko Perttunen <cyndis@kapsi.fi>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200112171430.27219-1-digetx@gmail.com>
+ <20200112171430.27219-5-digetx@gmail.com> <20200113220315.GB2689@ninjato>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <86f71bfe-7d17-0bf4-edda-13c84301a598@gmail.com>
+Date:   Tue, 14 Jan 2020 01:52:12 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
+In-Reply-To: <20200113220315.GB2689@ninjato>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001130185
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001130185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The trace event class workqueue_work now has only one consumer, so get
-rid of it.  No functional change.
+14.01.2020 01:03, Wolfram Sang пишет:
+> On Sun, Jan 12, 2020 at 08:14:26PM +0300, Dmitry Osipenko wrote:
+>> System shutdown may happen with interrupts being disabled and in this case
+>> I2C core rejects transfers if atomic transfer isn't supported by driver.
+> 
+> Well, not quite. The core complains about it nowadays, but does not
+> reject messages. It will try the same behaviour as before. It will just
+> inform the user that somethings is tried which may not work. I probably
+> should update the error message printed saying that the transfer is
+> still tried.
 
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: linux-kernel@vger.kernel.org
----
- include/trace/events/workqueue.h | 31 ++++++++++++-------------------
- 1 file changed, 12 insertions(+), 19 deletions(-)
+Indeed, now I'm recalling noticing that the transfer actually should
+happen despite of the error message, but then completely forgot to
+update the commit's message. I can update the message and send out v5,
+if you're thinking that it's worthwhile to do.
 
-diff --git a/include/trace/events/workqueue.h b/include/trace/events/workqueue.h
-index bdfc53e7f82f..9b8ae961acc5 100644
---- a/include/trace/events/workqueue.h
-+++ b/include/trace/events/workqueue.h
-@@ -8,23 +8,6 @@
- #include <linux/tracepoint.h>
- #include <linux/workqueue.h>
- 
--DECLARE_EVENT_CLASS(workqueue_work,
--
--	TP_PROTO(struct work_struct *work),
--
--	TP_ARGS(work),
--
--	TP_STRUCT__entry(
--		__field( void *,	work	)
--	),
--
--	TP_fast_assign(
--		__entry->work		= work;
--	),
--
--	TP_printk("work struct %p", __entry->work)
--);
--
- struct pool_workqueue;
- 
- /**
-@@ -73,11 +56,21 @@ TRACE_EVENT(workqueue_queue_work,
-  * which happens immediately after queueing unless @max_active limit
-  * is reached.
-  */
--DEFINE_EVENT(workqueue_work, workqueue_activate_work,
-+TRACE_EVENT(workqueue_activate_work,
- 
- 	TP_PROTO(struct work_struct *work),
- 
--	TP_ARGS(work)
-+	TP_ARGS(work),
-+
-+	TP_STRUCT__entry(
-+		__field( void *,	work	)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->work		= work;
-+	),
-+
-+	TP_printk("work struct %p", __entry->work)
- );
- 
- /**
--- 
-2.24.1
+>> There were several occurrences where I found my Nexus 7 completely
+>> discharged despite of being turned off and then one day I spotted this in
+>> the log:
+> 
+> Given my reasoning above, that should have happened before the warning
+> was printed as well? Because same behaviour. I'd be surprised if there
+> was a change...
 
+Pretty sure that it was happening before, but I wasn't paying much
+attention back then.
