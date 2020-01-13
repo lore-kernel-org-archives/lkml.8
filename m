@@ -2,162 +2,122 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9987AC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CEAC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7EB214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:12:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="rOewxgNJ"
+	by mail.kernel.org (Postfix) with ESMTP id 4D2F220678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733277AbgAMGMQ (ORCPT
+        id S1732888AbgAMGS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 01:12:16 -0500
-Received: from mail-bn8nam12on2074.outbound.protection.outlook.com ([40.107.237.74]:55264
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        Mon, 13 Jan 2020 01:18:28 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:47172 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726480AbgAMGMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 01:12:16 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hgpfADQ+/wH241dxTjK/KfEsCyuENM5EAZzc1OBu2OVTzCUqCRFeagUCqwT2GuJVXMGGJQIHt+jnLzoNFs0GeKWOj+1MFEeTdFFv3NU6VGSAIqxqEm626AiBjwZB9WMY0OIu0cC/rWvX2jFwaSKb8s4ddNAfKrAcVG0i99NIDQVa6/Szpx31v/UQicHNvXhuGm6LeMJOnuvCTtG5KaI+j6ZQkJVPK2ZorefwQS0PIQSLYhzOg+HHCV7yKUyPLhdLa72FEtGNWvLrHYgE3QIAQCIw8dzelZ1YGKyK9k2EPSs/oH03CFL8PFZDeMuvdztQ/EF//RUvbRGRYBYmjEw9iQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KeLb/RbhQZSDQoQJ/eWbzkLqeR8+z7ElgOb5/VTxEy4=;
- b=SazQKbSjnRxB1l0+IhrBd/Glu3Kn4g8C2Y0MwSS/xF4TbkX+QnW0Tzn10FNnQ4zMh7H9OEBVEDML7hMLqaYtASW06fkSomZeIbscZqkrnHi6MxN2V7nFzgO2SfNG32SPK0AsygGcCCTjzx8FIQNdQ3OsAAKz3mMLyXHwbjNp3me3v/BHZNziXORaJrx4Uv5eq8OVjza6kd5kvpZ0I6DFcY40MRWt9mVu8q0BZ6mSAtknxUKNyTXyZ32wLKsS8SIDINC7sBMOhAIRDQxeTMEgeCm/BEhaV2WnUWM5THFvWQ11Qk3HDxPzenHYxuZVxGuo5mwKjFV7vou/DPlzCge0EA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KeLb/RbhQZSDQoQJ/eWbzkLqeR8+z7ElgOb5/VTxEy4=;
- b=rOewxgNJBGSrO4m/zZCEDpQohiIBCtYRL8iDhw/MmSN5qMsDq/DWNU6doUcNTR6tF2n0/YWHkqHvqeoO9AGgwGSVUMlpWLNBwNb8/9u3e19YuOLBGWY/myscifw1YlxnSPPxL8N2nBG3VOc4BdTVzu052mVpADBLojc3HHkB5Co=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6632.namprd02.prod.outlook.com (10.141.156.71) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.9; Mon, 13 Jan 2020 06:12:11 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
- 06:12:10 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Andre Przywara <andre.przywara@arm.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     Michal Simek <michals@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 09/14] net: axienet: Add mii-tool support
-Thread-Topic: [PATCH 09/14] net: axienet: Add mii-tool support
-Thread-Index: AQHVx6y7unY7S2F2T0yZeT1nU7iHwafoHtrA
-Date:   Mon, 13 Jan 2020 06:12:10 +0000
-Message-ID: <CH2PR02MB700089E502A8C146D71C67C8C7350@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
- <20200110115415.75683-10-andre.przywara@arm.com>
-In-Reply-To: <20200110115415.75683-10-andre.przywara@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 632de85d-79bf-45d1-7c2e-08d797ef86b9
-x-ms-traffictypediagnostic: CH2PR02MB6632:|CH2PR02MB6632:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB6632377B72E13B34F18E0567C7350@CH2PR02MB6632.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39850400004)(396003)(366004)(346002)(136003)(189003)(199004)(66476007)(66446008)(2906002)(6506007)(53546011)(26005)(71200400001)(66556008)(64756008)(66946007)(76116006)(33656002)(186003)(7696005)(86362001)(52536014)(5660300002)(8936002)(4326008)(81166006)(316002)(9686003)(478600001)(8676002)(55016002)(81156014)(110136005)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6632;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mY8ne1LYocl0i01S7yPGT+XqI79esG6e25g21897Yq/JGrLZ+wVgzB0deudikyWvPpifw18t/xHnktc5IZe01fyLLCtyIomyr2yDm8+ju/EK+IvGxRZxLRukQ1BzVJPSfM0bZST2KjwLgZgv9DgRSOKE91/xspXGRkXue2Zmwi4xfHtgHBtl+xN50+x2XOWsboDaUicofSqPPVNVCM7/zFZ99Dsc4UiSTDWDP9AiEAY45AfbqLj5+6h2tBrBZfwd12wdXrX8U5xD/bVBrqJeFGmnTCMHAlbMgOQeOieYgCbBEdGOmdRfocyy/69QBYgQ55eTmJI9AkSeZRE2egiDXGvJGQLjsb8Ru51OEGkdcfBTVaJx63+pl+EjOM4ODJ5hdv1flEs8RAYLKFAtFC5Ap4slXJMNaoyg7o//Nqodhz2Md2FBcTjVxQW2Q5BhEeWG
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1725909AbgAMGS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 01:18:28 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id AABD8CDEBF98212D63B5;
+        Mon, 13 Jan 2020 14:18:25 +0800 (CST)
+Received: from [127.0.0.1] (10.133.217.236) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 13 Jan 2020
+ 14:18:15 +0800
+Subject: Re: [RFC PATCH] arm64/ftrace: support dynamically allocated
+ trampolines
+To:     Mark Rutland <mark.rutland@arm.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <xiexiuqi@huawei.com>,
+        <huawei.libin@huawei.com>, <bobo.shaobowang@huawei.com>,
+        <catalin.marinas@arm.com>, <duwe@lst.de>
+References: <20200109142736.1122-1-cj.chengjian@huawei.com>
+ <20200109164858.GH3112@lakrids.cambridge.arm.com>
+ <b0457ef0-f1b2-e258-b59d-aa9af8e48c5d@huawei.com>
+ <20200110121234.GA31707@lakrids.cambridge.arm.com>
+From:   "chengjian (D)" <cj.chengjian@huawei.com>
+Message-ID: <5fd602dd-a909-5209-56b6-39c7a34dfcff@huawei.com>
+Date:   Mon, 13 Jan 2020 14:18:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 632de85d-79bf-45d1-7c2e-08d797ef86b9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 06:12:10.6558
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4Q8RWQR1U/j7avijrcT4EYIpX3ydu0hQIE/3PBCVWxsRVxLg0E2Gb95//5EvwQDus8P3Zn0mqG4rwJ9iNREjsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6632
+In-Reply-To: <20200110121234.GA31707@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.133.217.236]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Andre Przywara <andre.przywara@arm.com>
-> Sent: Friday, January 10, 2020 5:24 PM
-> To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
-> <radheys@xilinx.com>
-> Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
-> <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH 09/14] net: axienet: Add mii-tool support
->=20
-> mii-tool is useful for debugging, and all it requires to work is to wire
-> up the ioctl ops function pointer.
-> Add this to the axienet driver to enable mii-tool.
->=20
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> index 7a747345e98e..64f799f3d248 100644
-> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> @@ -1152,6 +1152,16 @@ static void axienet_poll_controller(struct net_dev=
-ice
-> *ndev)
->  }
->  #endif
->=20
-> +static int axienet_ioctl(struct net_device *dev, struct ifreq *rq, int c=
-md)
-> +{
-> +	struct axienet_local *lp =3D netdev_priv(dev);
-> +
-> +	if (!netif_running(dev))
-> +		return -EINVAL;
+On 2020/1/10 20:12, Mark Rutland wrote:
+> On Fri, Jan 10, 2020 at 07:28:17PM +0800, chengjian (D) wrote:
+>> On 2020/1/10 0:48, Mark Rutland wrote:
+>>> On Thu, Jan 09, 2020 at 02:27:36PM +0000, Cheng Jian wrote:
+>>>> +	/*
+>>>> +	 * Update the trampoline ops REF
+>>>> +	 *
+>>>> +	 * OLD INSNS : ldr_l x2, function_trace_op
+>>>> +	 *	adrp	x2, sym
+>>>> +	 *	ldr	x2, [x2, :lo12:\sym]
+>>>> +	 *
+>>>> +	 * NEW INSNS:
+>>>> +	 *	nop
+>>>> +	 *	ldr x2, <ftrace_ops>
+>>>> +	 */
+>>>> +	op_offset -= start_offset_common;
+>>>> +	ip = (unsigned long)trampoline + caller_size + op_offset;
+>>>> +	nop = aarch64_insn_gen_nop();
+>>>> +	memcpy((void *)ip, &nop, AARCH64_INSN_SIZE);
+>>>> +
+>>>> +	op_offset += AARCH64_INSN_SIZE;
+>>>> +	ip = (unsigned long)trampoline + caller_size + op_offset;
+>>>> +	offset = (unsigned long)ptr - ip;
+>>>> +	if (WARN_ON(offset % AARCH64_INSN_SIZE != 0))
+>>>> +		goto free;
+>>>> +	offset = offset / AARCH64_INSN_SIZE;
+>>>> +	pc_ldr |= (offset & mask) << shift;
+>>>> +	memcpy((void *)ip, &pc_ldr, AARCH64_INSN_SIZE);
+>>> I think it would be much better to have a separate template for the
+>>> trampoline which we don't have to patch in this way. It can even be
+>>> placed into a non-executable RO section, since the template shouldn't be
+>>> executed directly.
+>> A separate template !
+>>
+>> This may be a good way, and I think the patching here is very HACK too(Not
+>> very friendly).
+>>
+>> I had thought of other ways before, similar to the method on X86_64,
+>> remove the ftrace_common(), directly modifying
+>> ftrace_caller/ftrace_reg_caller, We will only need to copy the code
+>> once in this way, and these is no need to modify call ftrace_common to
+>> NOP.
+>>
+>> Using a trampoline template sounds great. but this also means that we
+>> need to aintain a template(or maybe two templates: one for caller,
+>> another for regs_caller).
+>>
+>> Hi, Mark, what do you think about it ?
+> I think that having two templates is fine. We can factor
+> ftrace_common_return into a macro mirroring ftrace_regs_entry, and I
+> suspect we can probably figure out some way to factor the common
+> portion.
+>
+> Thanks,
+> Mark.
+>
+> .
 
-I think phy ioctl should be allowed even if the device is not up.=20
-Or is there any specific reason for keeping it?
 
-> +
-> +	return phylink_mii_ioctl(lp->phylink, rq, cmd);
-> +}
-> +
->  static const struct net_device_ops axienet_netdev_ops =3D {
->  	.ndo_open =3D axienet_open,
->  	.ndo_stop =3D axienet_stop,
-> @@ -1159,6 +1169,7 @@ static const struct net_device_ops
-> axienet_netdev_ops =3D {
->  	.ndo_change_mtu	=3D axienet_change_mtu,
->  	.ndo_set_mac_address =3D netdev_set_mac_address,
->  	.ndo_validate_addr =3D eth_validate_addr,
-> +	.ndo_do_ioctl =3D axienet_ioctl,
->  	.ndo_set_rx_mode =3D axienet_set_multicast_list,
->  #ifdef CONFIG_NET_POLL_CONTROLLER
->  	.ndo_poll_controller =3D axienet_poll_controller,
-> --
-> 2.17.1
+OK, I will do it.
+
+Thank you, Mark.
+
+
+
+   --Cheng Jian
+
 
