@@ -2,531 +2,281 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81794C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A060C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:49:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E7F7206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:47:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZaoVRx4y"
+	by mail.kernel.org (Postfix) with ESMTP id 1F22A20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:49:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578955776;
+	bh=3l72ChDpEUxRkpLpEGu4kbRU7tq3QVAYqmrQPaUB1YA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x2iTxMYtD4KoRVnLiHp4xba8VdKIs2c9Y0b9xS3SD3aIihcvWQ/KD/WyoY3dRi0QS
+	 sWpb8kCIMUJtIVSXDLYK8mX5q9ADFBJqHf4CCz3lEzsmbqliDFy8qGR1n+EvfMKQMk
+	 FQk3UHwiJvc6h96CsRMFEmf73Ov3mMkH+gEwlB44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgAMWre (ORCPT
+        id S1728998AbgAMWtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:47:34 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16396 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729080AbgAMWrT (ORCPT
+        Mon, 13 Jan 2020 17:49:35 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44404 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbgAMWtf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:47:19 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1cf3400001>; Mon, 13 Jan 2020 14:46:24 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 13 Jan 2020 14:47:17 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 13 Jan 2020 14:47:17 -0800
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jan
- 2020 22:47:12 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 13 Jan 2020 22:47:12 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e1cf3700000>; Mon, 13 Jan 2020 14:47:12 -0800
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
-        <linux-kselftest@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "Shuah Khan" <shuah@kernel.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH v6 5/6] nouveau: use new mmu interval notifiers
-Date:   Mon, 13 Jan 2020 14:47:02 -0800
-Message-ID: <20200113224703.5917-6-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200113224703.5917-1-rcampbell@nvidia.com>
-References: <20200113224703.5917-1-rcampbell@nvidia.com>
+        Mon, 13 Jan 2020 17:49:35 -0500
+Received: by mail-ot1-f65.google.com with SMTP id h9so10604877otj.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 14:49:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=d92edK8gFTbOFbSb35yOpvJiXQiIjLwjdCA40NY3Mdo=;
+        b=Aag6FdRSONnUA+KsqCPL0vgBretwsm9c5WodP8Ie5yC9y+IrgHCcHFLe+aFXPrzYKl
+         4arkYo2oSqm0LULCOn3Xqy/2aoIs+zhcjQbqTeYO4Qoc7q7abn3IVnXscykih5ipfiOO
+         wiQXRNzENAruYgl3XBNyfypmfLPtNOBHHRBUyqC4k8gF3BMfDEcXbP5FEvPvR3FGSgIj
+         O1Taj/0kIMDJXTbLJnuD414sIvx+Y7Oaos/J5XRQYk2xTztUrGjAkAQs1c3Vk913vuku
+         GGY+neF4PNqH5OvpzROG7S2iAeN6w/fz1Di1qMQcNoakNXX1Dd1sK9usOmp0XWKqvXaz
+         Wwuw==
+X-Gm-Message-State: APjAAAWHDsUvYgbGKYNm/vpBn50vOef+jV8JbHXJ6TKt7xQhuoJNtyFx
+        L+s6VWWLTf1HkW3Q7Hzi9dsdqMM=
+X-Google-Smtp-Source: APXvYqy6XkkH4SSgUyD4Lli3YJwO8/e0yOz9pH4Fkc44wYmtcuFW64m+SaB9X4I+F7W/mwGEvZ7U5w==
+X-Received: by 2002:a05:6830:1442:: with SMTP id w2mr15372837otp.143.1578955773636;
+        Mon, 13 Jan 2020 14:49:33 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 4sm4723395otu.0.2020.01.13.14.49.31
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 14:49:32 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 22198d
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Mon, 13 Jan 2020 16:49:31 -0600
+Date:   Mon, 13 Jan 2020 16:49:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sricharan R <sricharan@codeaurora.org>
+Cc:     agross@kernel.org, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org,
+        sivaprak@codeaurora.org,
+        Rajkumar Ayyasamy <arajkuma@codeaurora.org>,
+        Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+Subject: Re: [PATCH V4 1/5] dt-bindings: pinctrl: qcom: Add ipq6018 pinctrl
+ bindings
+Message-ID: <20200113224931.GA1297@bogus>
+References: <1578561543-23132-1-git-send-email-sricharan@codeaurora.org>
+ <1578561543-23132-2-git-send-email-sricharan@codeaurora.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578955584; bh=fgEYXPzUbpQqXndlAQC6x4Ciedwx9mrvQo4YxSIRLpA=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=ZaoVRx4y5nqZZ9eUTs9lSH9d2P9jYrT5bwsMssBu4x8u4vD9F507xqjKYgyHSMgLa
-         5T54QS7ZwvVZqT5PU/ZYDaVpHrB2UnaTikZ4jxniU+7bfyST862S6Sz97nVKYHN6Ti
-         1p1j9qZWpu2dVzr0DuC0WrtRAPkFK+bYz9TEqXcEhqrPiBw5hx0XXF8gsUHWca3nmi
-         mbuyAgfkv7RxtHzIEBDHnHXZzVsqOW9r/nyhRdtwHlBwX0YnikLsGO8TVTwNisz0u1
-         bQZcF2OWWPugtNb/84JjUlAGGty201aAun1/EK0ZAyPanV1+ehz89fEijsIAd0Xm8Y
-         jg7rh+bV1dhTQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578561543-23132-2-git-send-email-sricharan@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update nouveau to only use the mmu interval notifiers.
+On Thu, Jan 09, 2020 at 02:48:59PM +0530, Sricharan R wrote:
+> Add device tree binding Documentation details for ipq6018
+> pinctrl driver.
+> 
+> Co-developed-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Signed-off-by: Rajkumar Ayyasamy <arajkuma@codeaurora.org>
+> Co-developed-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Signed-off-by: Selvam Sathappan Periakaruppan <speriaka@codeaurora.org>
+> Co-developed-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Sivaprakash Murugesan <sivaprak@codeaurora.org>
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> ---
+> [V4]
+>   * cleaned-up schema as per Rob's comments.
+>   * Ran make dt_binding_check and no issues.
+> 
+>  .../bindings/pinctrl/qcom,ipq6018-pinctrl.yaml     | 140 +++++++++++++++++++++
+>  1 file changed, 140 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+> new file mode 100644
+> index 0000000..68c3c8c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq6018-pinctrl.yaml
+> @@ -0,0 +1,140 @@
+> +# SPDX-License-Identifier: GPL-2.0-or-later
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
----
- drivers/gpu/drm/nouveau/nouveau_svm.c | 313 +++++++++++++++++---------
- 1 file changed, 201 insertions(+), 112 deletions(-)
+Dual license please.
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.c
-index df9bf1fd1bc0..0343e48d41d7 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -88,7 +88,7 @@ nouveau_ivmm_find(struct nouveau_svm *svm, u64 inst)
- }
-=20
- struct nouveau_svmm {
--	struct mmu_notifier notifier;
-+	struct mm_struct *mm;
- 	struct nouveau_vmm *vmm;
- 	struct {
- 		unsigned long start;
-@@ -98,6 +98,13 @@ struct nouveau_svmm {
- 	struct mutex mutex;
- };
-=20
-+struct svmm_interval {
-+	struct mmu_interval_notifier notifier;
-+	struct nouveau_svmm *svmm;
-+};
-+
-+static const struct mmu_interval_notifier_ops nouveau_svm_mni_ops;
-+
- #define SVMM_DBG(s,f,a...)                                                =
-     \
- 	NV_DEBUG((s)->vmm->cli->drm, "svm-%p: "f"\n", (s), ##a)
- #define SVMM_ERR(s,f,a...)                                                =
-     \
-@@ -236,6 +243,8 @@ nouveau_svmm_join(struct nouveau_svmm *svmm, u64 inst)
- static void
- nouveau_svmm_invalidate(struct nouveau_svmm *svmm, u64 start, u64 limit)
- {
-+	SVMM_DBG(svmm, "invalidate %016llx-%016llx", start, limit);
-+
- 	if (limit > start) {
- 		bool super =3D svmm->vmm->vmm.object.client->super;
- 		svmm->vmm->vmm.object.client->super =3D true;
-@@ -248,58 +257,25 @@ nouveau_svmm_invalidate(struct nouveau_svmm *svmm, u6=
-4 start, u64 limit)
- 	}
- }
-=20
--static int
--nouveau_svmm_invalidate_range_start(struct mmu_notifier *mn,
--				    const struct mmu_notifier_range *update)
--{
--	struct nouveau_svmm *svmm =3D
--		container_of(mn, struct nouveau_svmm, notifier);
--	unsigned long start =3D update->start;
--	unsigned long limit =3D update->end;
--
--	if (!mmu_notifier_range_blockable(update))
--		return -EAGAIN;
--
--	SVMM_DBG(svmm, "invalidate %016lx-%016lx", start, limit);
--
--	mutex_lock(&svmm->mutex);
--	if (unlikely(!svmm->vmm))
--		goto out;
--
--	if (limit > svmm->unmanaged.start && start < svmm->unmanaged.limit) {
--		if (start < svmm->unmanaged.start) {
--			nouveau_svmm_invalidate(svmm, start,
--						svmm->unmanaged.limit);
--		}
--		start =3D svmm->unmanaged.limit;
--	}
--
--	nouveau_svmm_invalidate(svmm, start, limit);
--
--out:
--	mutex_unlock(&svmm->mutex);
--	return 0;
--}
--
--static void nouveau_svmm_free_notifier(struct mmu_notifier *mn)
--{
--	kfree(container_of(mn, struct nouveau_svmm, notifier));
--}
--
--static const struct mmu_notifier_ops nouveau_mn_ops =3D {
--	.invalidate_range_start =3D nouveau_svmm_invalidate_range_start,
--	.free_notifier =3D nouveau_svmm_free_notifier,
--};
--
- void
- nouveau_svmm_fini(struct nouveau_svmm **psvmm)
- {
- 	struct nouveau_svmm *svmm =3D *psvmm;
-+	struct mmu_interval_notifier *mni;
-+
- 	if (svmm) {
- 		mutex_lock(&svmm->mutex);
-+		while (true) {
-+			mni =3D mmu_interval_notifier_find(svmm->mm,
-+					&nouveau_svm_mni_ops, 0UL, ~0UL);
-+			if (!mni)
-+				break;
-+			mmu_interval_notifier_put(mni);
-+		}
- 		svmm->vmm =3D NULL;
- 		mutex_unlock(&svmm->mutex);
--		mmu_notifier_put(&svmm->notifier);
-+		mmdrop(svmm->mm);
-+		kfree(svmm);
- 		*psvmm =3D NULL;
- 	}
- }
-@@ -343,11 +319,12 @@ nouveau_svmm_init(struct drm_device *dev, void *data,
- 		goto out_free;
-=20
- 	down_write(&current->mm->mmap_sem);
--	svmm->notifier.ops =3D &nouveau_mn_ops;
--	ret =3D __mmu_notifier_register(&svmm->notifier, current->mm);
-+	ret =3D __mmu_notifier_register(NULL, current->mm);
- 	if (ret)
- 		goto out_mm_unlock;
--	/* Note, ownership of svmm transfers to mmu_notifier */
-+
-+	mmgrab(current->mm);
-+	svmm->mm =3D current->mm;
-=20
- 	cli->svm.svmm =3D svmm;
- 	cli->svm.cli =3D cli;
-@@ -482,65 +459,212 @@ nouveau_svm_fault_cache(struct nouveau_svm *svm,
- 		fault->inst, fault->addr, fault->access);
- }
-=20
--struct svm_notifier {
--	struct mmu_interval_notifier notifier;
--	struct nouveau_svmm *svmm;
--};
-+static struct svmm_interval *nouveau_svmm_new_interval(
-+					struct nouveau_svmm *svmm,
-+					unsigned long start,
-+					unsigned long last)
-+{
-+	struct svmm_interval *smi;
-+	int ret;
-+
-+	smi =3D kmalloc(sizeof(*smi), GFP_ATOMIC);
-+	if (!smi)
-+		return NULL;
-+
-+	smi->svmm =3D svmm;
-+
-+	ret =3D mmu_interval_notifier_insert_safe(&smi->notifier, svmm->mm,
-+				start, last - start + 1, &nouveau_svm_mni_ops);
-+	if (ret) {
-+		kfree(smi);
-+		return NULL;
-+	}
-+
-+	return smi;
-+}
-+
-+static void nouveau_svmm_do_unmap(struct mmu_interval_notifier *mni,
-+				 const struct mmu_notifier_range *range)
-+{
-+	struct svmm_interval *smi =3D
-+		container_of(mni, struct svmm_interval, notifier);
-+	struct nouveau_svmm *svmm =3D smi->svmm;
-+	unsigned long start =3D mmu_interval_notifier_start(mni);
-+	unsigned long last =3D mmu_interval_notifier_last(mni);
-+
-+	if (start >=3D range->start) {
-+		/* Remove the whole interval or keep the right-hand part. */
-+		if (last <=3D range->end)
-+			mmu_interval_notifier_put(mni);
-+		else
-+			mmu_interval_notifier_update(mni, range->end, last);
-+		return;
-+	}
-+
-+	/* Keep the left-hand part of the interval. */
-+	mmu_interval_notifier_update(mni, start, range->start - 1);
-+
-+	/* If a hole is created, create an interval for the right-hand part. */
-+	if (last >=3D range->end) {
-+		smi =3D nouveau_svmm_new_interval(svmm, range->end, last);
-+		/*
-+		 * If we can't allocate an interval, we won't get invalidation
-+		 * callbacks so clear the mapping and rely on faults to reload
-+		 * the mappings if needed.
-+		 */
-+		if (!smi)
-+			nouveau_svmm_invalidate(svmm, range->end, last + 1);
-+	}
-+}
-=20
--static bool nouveau_svm_range_invalidate(struct mmu_interval_notifier *mni=
-,
--					 const struct mmu_notifier_range *range,
--					 unsigned long cur_seq)
-+static bool nouveau_svmm_interval_invalidate(struct mmu_interval_notifier =
-*mni,
-+				const struct mmu_notifier_range *range,
-+				unsigned long cur_seq)
- {
--	struct svm_notifier *sn =3D
--		container_of(mni, struct svm_notifier, notifier);
-+	struct svmm_interval *smi =3D
-+		container_of(mni, struct svmm_interval, notifier);
-+	struct nouveau_svmm *svmm =3D smi->svmm;
-=20
- 	/*
--	 * serializes the update to mni->invalidate_seq done by caller and
-+	 * Serializes the update to mni->invalidate_seq done by the caller and
- 	 * prevents invalidation of the PTE from progressing while HW is being
--	 * programmed. This is very hacky and only works because the normal
--	 * notifier that does invalidation is always called after the range
--	 * notifier.
-+	 * programmed.
- 	 */
- 	if (mmu_notifier_range_blockable(range))
--		mutex_lock(&sn->svmm->mutex);
--	else if (!mutex_trylock(&sn->svmm->mutex))
-+		mutex_lock(&svmm->mutex);
-+	else if (!mutex_trylock(&svmm->mutex))
- 		return false;
-+
- 	mmu_interval_set_seq(mni, cur_seq);
--	mutex_unlock(&sn->svmm->mutex);
-+	nouveau_svmm_invalidate(svmm, range->start, range->end);
-+
-+	/* Stop tracking the range if it is an unmap. */
-+	if (range->event =3D=3D MMU_NOTIFY_UNMAP)
-+		nouveau_svmm_do_unmap(mni, range);
-+
-+	mutex_unlock(&svmm->mutex);
- 	return true;
- }
-=20
-+static void nouveau_svmm_interval_release(struct mmu_interval_notifier *mn=
-i)
-+{
-+	struct svmm_interval *smi =3D
-+		container_of(mni, struct svmm_interval, notifier);
-+
-+	kfree(smi);
-+}
-+
- static const struct mmu_interval_notifier_ops nouveau_svm_mni_ops =3D {
--	.invalidate =3D nouveau_svm_range_invalidate,
-+	.invalidate =3D nouveau_svmm_interval_invalidate,
-+	.release =3D nouveau_svmm_interval_release,
- };
-=20
-+/*
-+ * Find or create a mmu_interval_notifier for the given range.
-+ * Although mmu_interval_notifier_insert_safe() can handle overlapping
-+ * intervals, we only create non-overlapping intervals, shrinking the hmm_=
-range
-+ * if it spans more than one svmm_interval.
-+ */
-+static int nouveau_svmm_interval_find(struct nouveau_svmm *svmm,
-+				 struct hmm_range *range)
-+{
-+	struct mmu_interval_notifier *mni;
-+	struct svmm_interval *smi;
-+	struct vm_area_struct *vma;
-+	unsigned long start =3D range->start;
-+	unsigned long last =3D range->end - 1;
-+	int ret;
-+
-+	mutex_lock(&svmm->mutex);
-+	mni =3D mmu_interval_notifier_find(svmm->mm, &nouveau_svm_mni_ops, start,
-+					 last);
-+	if (mni) {
-+		if (start >=3D mmu_interval_notifier_start(mni)) {
-+			smi =3D container_of(mni, struct svmm_interval, notifier);
-+			if (last > mmu_interval_notifier_last(mni))
-+				range->end =3D
-+					mmu_interval_notifier_last(mni) + 1;
-+			goto found;
-+		}
-+		WARN_ON(last <=3D mmu_interval_notifier_start(mni));
-+		range->end =3D mmu_interval_notifier_start(mni);
-+		last =3D range->end - 1;
-+	}
-+	/*
-+	 * Might as well create an interval covering the underlying VMA to
-+	 * avoid having to create a bunch of small intervals.
-+	 */
-+	vma =3D find_vma(svmm->mm, range->start);
-+	if (!vma || start < vma->vm_start) {
-+		ret =3D -ENOENT;
-+		goto err;
-+	}
-+	if (range->end > vma->vm_end) {
-+		range->end =3D vma->vm_end;
-+		last =3D range->end - 1;
-+	} else if (!mni) {
-+		/* Anything registered on the right part of the vma? */
-+		mni =3D mmu_interval_notifier_find(svmm->mm, &nouveau_svm_mni_ops,
-+						 range->end, vma->vm_end - 1);
-+		if (mni)
-+			last =3D mmu_interval_notifier_start(mni) - 1;
-+		else
-+			last =3D vma->vm_end - 1;
-+	}
-+	/* Anything registered on the left part of the vma? */
-+	mni =3D mmu_interval_notifier_find(svmm->mm, &nouveau_svm_mni_ops,
-+					 vma->vm_start, start - 1);
-+	if (mni)
-+		start =3D mmu_interval_notifier_last(mni) + 1;
-+	else
-+		start =3D vma->vm_start;
-+	smi =3D nouveau_svmm_new_interval(svmm, start, last);
-+	if (!smi) {
-+		ret =3D -ENOMEM;
-+		goto err;
-+	}
-+
-+found:
-+	range->notifier =3D &smi->notifier;
-+	mutex_unlock(&svmm->mutex);
-+	return 0;
-+
-+err:
-+	mutex_unlock(&svmm->mutex);
-+	return ret;
-+}
-+
- static int nouveau_range_fault(struct nouveau_svmm *svmm,
- 			       struct nouveau_drm *drm, void *data, u32 size,
--			       u64 *pfns, struct svm_notifier *notifier)
-+			       u64 *pfns, u64 start, u64 end)
- {
- 	unsigned long timeout =3D
- 		jiffies + msecs_to_jiffies(HMM_RANGE_DEFAULT_TIMEOUT);
- 	/* Have HMM fault pages within the fault window to the GPU. */
- 	struct hmm_range range =3D {
--		.notifier =3D &notifier->notifier,
--		.start =3D notifier->notifier.interval_tree.start,
--		.end =3D notifier->notifier.interval_tree.last + 1,
-+		.start =3D start,
-+		.end =3D end,
- 		.pfns =3D pfns,
- 		.flags =3D nouveau_svm_pfn_flags,
- 		.values =3D nouveau_svm_pfn_values,
-+		.default_flags =3D 0,
-+		.pfn_flags_mask =3D ~0UL,
- 		.pfn_shift =3D NVIF_VMM_PFNMAP_V0_ADDR_SHIFT,
- 	};
--	struct mm_struct *mm =3D notifier->notifier.mm;
-+	struct mm_struct *mm =3D svmm->mm;
- 	long ret;
-=20
- 	while (true) {
- 		if (time_after(jiffies, timeout))
- 			return -EBUSY;
-=20
--		range.notifier_seq =3D mmu_interval_read_begin(range.notifier);
--		range.default_flags =3D 0;
--		range.pfn_flags_mask =3D -1UL;
- 		down_read(&mm->mmap_sem);
-+		ret =3D nouveau_svmm_interval_find(svmm, &range);
-+		if (ret) {
-+			up_read(&mm->mmap_sem);
-+			return ret;
-+		}
-+		range.notifier_seq =3D mmu_interval_read_begin(range.notifier);
- 		ret =3D hmm_range_fault(&range, 0);
- 		up_read(&mm->mmap_sem);
- 		if (ret <=3D 0) {
-@@ -585,7 +709,6 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 		} i;
- 		u64 phys[16];
- 	} args;
--	struct vm_area_struct *vma;
- 	u64 inst, start, limit;
- 	int fi, fn, pi, fill;
- 	int replay =3D 0, ret;
-@@ -640,7 +763,6 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 	args.i.p.version =3D 0;
-=20
- 	for (fi =3D 0; fn =3D fi + 1, fi < buffer->fault_nr; fi =3D fn) {
--		struct svm_notifier notifier;
- 		struct mm_struct *mm;
-=20
- 		/* Cancel any faults from non-SVM channels. */
-@@ -662,36 +784,12 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 			start =3D max_t(u64, start, svmm->unmanaged.limit);
- 		SVMM_DBG(svmm, "wndw %016llx-%016llx", start, limit);
-=20
--		mm =3D svmm->notifier.mm;
-+		mm =3D svmm->mm;
- 		if (!mmget_not_zero(mm)) {
- 			nouveau_svm_fault_cancel_fault(svm, buffer->fault[fi]);
- 			continue;
- 		}
-=20
--		/* Intersect fault window with the CPU VMA, cancelling
--		 * the fault if the address is invalid.
--		 */
--		down_read(&mm->mmap_sem);
--		vma =3D find_vma_intersection(mm, start, limit);
--		if (!vma) {
--			SVMM_ERR(svmm, "wndw %016llx-%016llx", start, limit);
--			up_read(&mm->mmap_sem);
--			mmput(mm);
--			nouveau_svm_fault_cancel_fault(svm, buffer->fault[fi]);
--			continue;
--		}
--		start =3D max_t(u64, start, vma->vm_start);
--		limit =3D min_t(u64, limit, vma->vm_end);
--		up_read(&mm->mmap_sem);
--		SVMM_DBG(svmm, "wndw %016llx-%016llx", start, limit);
--
--		if (buffer->fault[fi]->addr !=3D start) {
--			SVMM_ERR(svmm, "addr %016llx", buffer->fault[fi]->addr);
--			mmput(mm);
--			nouveau_svm_fault_cancel_fault(svm, buffer->fault[fi]);
--			continue;
--		}
--
- 		/* Prepare the GPU-side update of all pages within the
- 		 * fault window, determining required pages and access
- 		 * permissions based on pending faults.
-@@ -743,18 +841,9 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 			 args.i.p.addr,
- 			 args.i.p.addr + args.i.p.size, fn - fi);
-=20
--		notifier.svmm =3D svmm;
--		ret =3D mmu_interval_notifier_insert(&notifier.notifier,
--						   svmm->notifier.mm,
--						   args.i.p.addr, args.i.p.size,
--						   &nouveau_svm_mni_ops);
--		if (!ret) {
--			ret =3D nouveau_range_fault(
--				svmm, svm->drm, &args,
--				sizeof(args.i) + pi * sizeof(args.phys[0]),
--				args.phys, &notifier);
--			mmu_interval_notifier_remove(&notifier.notifier);
--		}
-+		ret =3D nouveau_range_fault(svmm, svm->drm, &args,
-+			sizeof(args.i) + pi * sizeof(args.phys[0]), args.phys,
-+			start, start + args.i.p.size);
- 		mmput(mm);
-=20
- 		/* Cancel any faults in the window whose pages didn't manage
---=20
-2.20.1
+(GPL-2.0-only or BSD-2-Clause)
 
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/qcom,ipq6018-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm Technologies, Inc. IPQ6018 TLMM block
+> +
+> +maintainers:
+> +  - Sricharan R <sricharan@codeaurora.org>
+> +
+> +description: |
+> +  This binding describes the Top Level Mode Multiplexer block found in the
+> +  IPQ6018 platform.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq6018-pinctrl
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: Specifies the TLMM summary IRQ
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    description:
+> +      Specifies the PIN numbers and Flags, as defined in defined in
+> +      include/dt-bindings/interrupt-controller/irq.h
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    description: Specifying the pin number and flags, as defined in
+> +      include/dt-bindings/gpio/gpio.h
+> +    const: 2
+> +
+> +  gpio-ranges:
+> +    description: Documentation/devicetree/bindings/gpio/gpio.txt
+> +    maxItems: 1
+> +
+> +#PIN CONFIGURATION NODES
+> +patternProperties:
+> +  '-pins$':
+> +    type: object
+> +    description:
+> +      Pinctrl node's client devices use subnodes for desired pin configuration.
+> +      Client device subnodes use below standard properties.
+> +    allOf:
+> +      - $ref: "/schemas/pinctrl/pincfg-node.yaml"
+> +
+> +    properties:
+> +      pins:
+> +        description:
+> +          List of gpio pins affected by the properties specified in this
+> +          subnode.
+> +        allOf:
+> +          - $ref: "/schemas/types.yaml#/definitions/string"
+
+No need for type ref as the common binding does this.
+
+> +          - enum: ['gpio$', sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd,
+> +            sdc2_data, qdsd_cmd, qdsd_data0, qdsd_data1, qdsd_data2,
+> +            qdsd_data3]
+> +
+> +      function:
+> +        description:
+> +          Specify the alternative function to be configured for the specified
+> +          pins.
+> +        allOf:
+> +          - $ref: "/schemas/types.yaml#/definitions/string"
+
+Same here.
+
+> +          - enum: [ adsp_ext, alsp_int, atest_bbrx0, atest_bbrx1, atest_char,
+> +            atest_char0, atest_char1, atest_char2, atest_char3, atest_combodac,
+> +            atest_gpsadc0, atest_gpsadc1, atest_tsens, atest_wlan0,
+> +            atest_wlan1, backlight_en, bimc_dte0, bimc_dte1, blsp_i2c1,
+> +            blsp_i2c2, blsp_i2c3, blsp_i2c4, blsp_i2c5, blsp_i2c6,  blsp_spi1,
+> +            blsp_spi1_cs1, blsp_spi1_cs2, blsp_spi1_cs3, blsp_spi2,
+> +            blsp_spi2_cs1, blsp_spi2_cs2, blsp_spi2_cs3, blsp_spi3,
+> +            blsp_spi3_cs1, blsp_spi3_cs2, blsp_spi3_cs3, blsp_spi4, blsp_spi5,
+> +            blsp_spi6, blsp_uart1, blsp_uart2, blsp_uim1, blsp_uim2, cam1_rst,
+> +            cam1_standby, cam_mclk0, cam_mclk1, cci_async, cci_i2c, cci_timer0,
+> +            cci_timer1, cci_timer2, cdc_pdm0, codec_mad, dbg_out, display_5v,
+> +            dmic0_clk, dmic0_data, dsi_rst, ebi0_wrcdc, euro_us, ext_lpass,
+> +            flash_strobe, gcc_gp1_clk_a, gcc_gp1_clk_b, gcc_gp2_clk_a,
+> +            gcc_gp2_clk_b, gcc_gp3_clk_a, gcc_gp3_clk_b, gpio, gsm0_tx0,
+> +            gsm0_tx1, gsm1_tx0, gsm1_tx1, gyro_accl, kpsns0, kpsns1, kpsns2,
+> +            ldo_en, ldo_update, mag_int, mdp_vsync, modem_tsync, m_voc,
+> +            nav_pps, nav_tsync, pa_indicator, pbs0, pbs1, pbs2, pri_mi2s,
+> +            pri_mi2s_ws, prng_rosc, pwr_crypto_enabled_a, pwr_crypto_enabled_b,
+> +            pwr_modem_enabled_a,  pwr_modem_enabled_b, pwr_nav_enabled_a,
+> +            pwr_nav_enabled_b, qdss_ctitrig_in_a0, qdss_ctitrig_in_a1,
+> +            qdss_ctitrig_in_b0, qdss_ctitrig_in_b1, qdss_ctitrig_out_a0,
+> +            qdss_ctitrig_out_a1, qdss_ctitrig_out_b0, qdss_ctitrig_out_b1,
+> +            qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a, qdss_tracectl_b,
+> +            qdss_tracedata_a, qdss_tracedata_b, reset_n, sd_card, sd_write,
+> +            sec_mi2s, smb_int, ssbi_wtr0, ssbi_wtr1, uim1, uim2, uim3,
+> +            uim_batt, wcss_bt, wcss_fm, wcss_wlan, webcam1_rst ]
+> +
+> +      drive-strength:
+> +        allOf:
+> +          - $ref: "/schemas/types.yaml#/definitions/uint32"
+
+Same here.
+
+> +          - enum: [2, 4, 6, 8, 10, 12, 14, 16]
+
+default?
+
+> +        description:
+> +          Selects the drive strength for the specified pins, in mA.
+
+> +
+> +    required:
+> +      - pins
+> +      - function
+
+       additionalProperties: false
+
+You'll need to list any other properties you use. Based 
+on the example, you'll need 'bias-pull-down: true'.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +  - gpio-ranges
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +        #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +        tlmm: pinctrl@1000000 {
+> +              compatible = "qcom,ipq6018-pinctrl";
+> +              reg = <0x01000000 0x300000>;
+> +              interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +              gpio-controller;
+> +              #gpio-cells = <2>;
+> +              gpio-ranges = <&tlmm 0 80>;
+> +              interrupt-controller;
+> +              #interrupt-cells = <2>;
+> +
+> +              serial3-pinmux {
+
+Doesn't match the schema.
+
+> +                      pins = "gpio44", "gpio45";
+> +                      function = "blsp2_uart";
+> +                      drive-strength = <8>;
+> +                      bias-pull-down;
+> +              };
+> +        };
+> -- 
+> 2.7.4
+> 
