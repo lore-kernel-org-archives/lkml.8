@@ -2,167 +2,122 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 777DEC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBB7C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4781A214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:45:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IhzqKftg"
+	by mail.kernel.org (Postfix) with ESMTP id 68A92214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:45:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgAMSpf (ORCPT
+        id S1728896AbgAMSpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:45:35 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:39048 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728664AbgAMSpf (ORCPT
+        Mon, 13 Jan 2020 13:45:38 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:56806 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727726AbgAMSph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:45:35 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578941134; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=BE7Ii/+ZSj3amZRXFjwOsrUKK4ov1l85oSUE5ZJn4jU=;
- b=IhzqKftglfyFwbRsyWAJomJC0KroiV7xkRrzHyHFRHdS6YBSQ3OHHDhbmuz/kqBE7S0ZwU+x
- JtY5DOiRt0OkCzHL1R1/lqvPtCEd0PoCbJlV2/YhPLiQsYEVOsgTEFwVp/OMZgcj5eXpg9QZ
- MsnZFLRCJsHAOgN26rvx6XScB3I=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1cbaca.7fc7eb66f2d0-smtp-out-n01;
- Mon, 13 Jan 2020 18:45:30 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C44C9C447A1; Mon, 13 Jan 2020 18:45:29 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 93683C43383;
-        Mon, 13 Jan 2020 18:45:28 +0000 (UTC)
+        Mon, 13 Jan 2020 13:45:37 -0500
+Received: (qmail 4729 invoked by uid 2102); 13 Jan 2020 13:45:35 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 13 Jan 2020 13:45:35 -0500
+Date:   Mon, 13 Jan 2020 13:45:35 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        Felipe Balbi <balbi@kernel.org>
+cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Subject: Re: [PATCH v4 1/1] usb: gadget: add raw-gadget interface
+In-Reply-To: <CAAeHK+zKAHGAgYKxMNJEiaBhreGB0MgWNsEUFCO8Sxiqvcq57Q@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2001131319490.1502-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 13 Jan 2020 10:45:28 -0800
-From:   asutoshd@codeaurora.org
-To:     Bean Huo <huobean@gmail.com>
-Cc:     alim.akhtar@samsung.com, avri.altman@wdc.com,
-        pedrom.sousa@synopsys.com, jejb@linux.ibm.com,
-        martin.petersen@oracle.com, stanley.chu@mediatek.com,
-        beanhuo@micron.com, bvanassche@acm.org, tomas.winkler@intel.com,
-        cang@codeaurora.org, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-scsi-owner@vger.kernel.org
-Subject: Re: [PATCH 3/3] scsi: ufs: use UFS device indicated maximum LU number
-In-Reply-To: <20200110183606.10102-4-huobean@gmail.com>
-References: <20200110183606.10102-1-huobean@gmail.com>
- <20200110183606.10102-4-huobean@gmail.com>
-Message-ID: <3c6080a44d2943f86d6991d48cd2dd28@codeaurora.org>
-X-Sender: asutoshd@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-01-10 10:36, Bean Huo wrote:
-> From: Bean Huo <beanhuo@micron.com>
-> 
-> According to Jedec standard UFS 3.0 and UFS 2.1 Spec, Maximum number of 
-> logical
-> units supported by the UFS device is indicated by parameter 
-> bMaxNumberLU in
-> Geometry Descriptor. This patch is to delete current hard code macro 
-> definition
-> of UFS_UPIU_MAX_GENERAL_LUN, and switch to use device indicated number 
-> instead.
-> 
-> Signed-off-by: Bean Huo <beanhuo@micron.com>
-> ---
->  drivers/scsi/ufs/ufs-sysfs.c |  2 +-
->  drivers/scsi/ufs/ufs.h       | 12 +++++++++---
->  drivers/scsi/ufs/ufshcd.c    |  4 ++--
->  3 files changed, 12 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufs-sysfs.c 
-> b/drivers/scsi/ufs/ufs-sysfs.c
-> index 720be3f64be7..dbdf8b01abed 100644
-> --- a/drivers/scsi/ufs/ufs-sysfs.c
-> +++ b/drivers/scsi/ufs/ufs-sysfs.c
-> @@ -713,7 +713,7 @@ static ssize_t _pname##_show(struct device 
-> *dev,			\
->  	struct scsi_device *sdev = to_scsi_device(dev);			\
->  	struct ufs_hba *hba = shost_priv(sdev->host);			\
->  	u8 lun = ufshcd_scsi_to_upiu_lun(sdev->lun);			\
-> -	if (!ufs_is_valid_unit_desc_lun(lun))				\
-> +	if (!ufs_is_valid_unit_desc_lun(&hba->dev_info, lun))		\
->  		return -EINVAL;						\
->  	return ufs_sysfs_read_desc_param(hba, QUERY_DESC_IDN_##_duname,	\
->  		lun, _duname##_DESC_PARAM##_puname, buf, _size);	\
-> diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-> index 5ca7ea4f223e..810eeca0de63 100644
-> --- a/drivers/scsi/ufs/ufs.h
-> +++ b/drivers/scsi/ufs/ufs.h
-> @@ -63,7 +63,6 @@
->  #define UFS_UPIU_MAX_UNIT_NUM_ID	0x7F
->  #define UFS_MAX_LUNS		(SCSI_W_LUN_BASE + UFS_UPIU_MAX_UNIT_NUM_ID)
->  #define UFS_UPIU_WLUN_ID	(1 << 7)
-> -#define UFS_UPIU_MAX_GENERAL_LUN	8
-> 
->  /* Well known logical unit id in LUN field of UPIU */
->  enum {
-> @@ -548,12 +547,19 @@ struct ufs_dev_desc {
-> 
->  /**
->   * ufs_is_valid_unit_desc_lun - checks if the given LUN has a unit 
-> descriptor
-> + * @dev_info: pointer of instance of struct ufs_dev_info
->   * @lun: LU number to check
->   * @return: true if the lun has a matching unit descriptor, false 
-> otherwise
->   */
-> -static inline bool ufs_is_valid_unit_desc_lun(u8 lun)
-> +static inline bool ufs_is_valid_unit_desc_lun(struct ufs_dev_info 
-> *dev_info,
-> +		u8 lun)
->  {
-> -	return lun == UFS_UPIU_RPMB_WLUN || (lun < UFS_UPIU_MAX_GENERAL_LUN);
-> +	if (!dev_info || !dev_info->max_lu_supported) {
-> +		pr_err("Max General LU supported by UFS isn't initilized\n");
-> +		return false;
-> +	}
-> +
-> +	return lun == UFS_UPIU_RPMB_WLUN || (lun < 
-> dev_info->max_lu_supported);
->  }
-> 
->  #endif /* End of Header */
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index a297fe55e36a..c6ea5d88222d 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -3286,7 +3286,7 @@ static inline int
-> ufshcd_read_unit_desc_param(struct ufs_hba *hba,
->  	 * Unit descriptors are only available for general purpose LUs (LUN 
-> id
->  	 * from 0 to 7) and RPMB Well known LU.
->  	 */
-> -	if (!ufs_is_valid_unit_desc_lun(lun))
-> +	if (!ufs_is_valid_unit_desc_lun(&hba->dev_info, lun))
->  		return -EOPNOTSUPP;
-> 
->  	return ufshcd_read_desc_param(hba, QUERY_DESC_IDN_UNIT, lun,
-> @@ -4540,7 +4540,7 @@ static int ufshcd_get_lu_wp(struct ufs_hba *hba,
->  	 * protected so skip reading bLUWriteProtect parameter for
->  	 * it. For other W-LUs, UNIT DESCRIPTOR is not available.
->  	 */
-> -	else if (lun >= UFS_UPIU_MAX_GENERAL_LUN)
-> +	else if (lun >= hba->dev_info.max_lu_supported)
->  		ret = -ENOTSUPP;
->  	else
->  		ret = ufshcd_read_unit_desc_param(hba,
+On Mon, 13 Jan 2020, Andrey Konovalov wrote:
 
-Looks good to me.
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+> On Mon, Jan 13, 2020 at 6:34 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+> >
+> > On Mon, Jan 13, 2020 at 5:50 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > >
+> > > On Mon, 13 Jan 2020, Andrey Konovalov wrote:
+> > >
+> > > > I've also found an issue, but I'm not sure if that is the bug in Raw
+> > > > Gadget, or in the gadget layer (in the former case I'll add this fix
+> > > > to v5 as well). What I believe I'm seeing is
+> > > > __fput()->usb_gadget_unregister_driver()->usb_gadget_remove_driver()->gadget_unbind()
+> > > > racing with dummy_timer()->gadget_setup(). In my case it results in
+> > > > gadget_unbind() doing set_gadget_data(gadget, NULL), and then
+> > > > gadget_setup() dereferencing get_gadget_data(gadget).
+> > > >
+> > > > Alan, does it look possible for those two functions to race? Should
+> > > > this be prevented by the gadget layer, or should I use some kind of
+> > > > locking in my gadget driver to prevent this?
+> > >
+> > > In your situation this race shouldn't happen, because before
+> > > udc->driver->unbind() is invoked we call usb_gadget_disconnect().  If
+> > > that routine succeeds -- which it always does under dummy-hcd -- then
+> > > there can't be any more setup callbacks, because find_endpoint() will
+> > > always return NULL (the is_active() test fails; see the various
+> > > set_link_state* routines).  So I don't see how you could have ended up
+> > > with the race you describe.
+> >
+> > I've managed to reproduce the race by adding an mdelay() into the
+> > beginning of the setup() callback. AFAIU what happens is setup() gets
+> > called (and waits on the mdelay()), then unbind() comes in and does
+> > set_gadget_data(NULL), and then setup() proceeds, gets NULL through
+> > get_gadget_data() and crashes on null-ptr-deref. I've got the same
+> > crash a few times after many days of fuzzing, so I assume it can
+> > happen without the mdelay() as well.
+> >
+> > > However, a real UDC might not be able to perform a disconnect under
+> > > software control.  In that case usb_gadget_disconnect() would not
+> > > change the pullup state, and there would be a real possibility of a
+> > > setup callback racing with an unbind callback.  This seems like a
+> > > genuine problem and I can't think of a solution offhand.
+> > >
+> > > What we would need is a way to tell the UDC driver to stop invoking
+> > > gadget callbacks, _before_ the UDC driver's stop callback gets called.
+> > > Maybe this should be merged into the pullup callback somehow.
+> 
+> Perhaps for the dummy driver we need to wait for setup() to finish if
+> it's being executed and then stop the dummy timer in dummy_pullup()?
+
+Yes, we need to wait for a setup callback to finish.  But dummy_timer 
+should not be stopped; otherwise URBs that have already been submitted 
+would never be given back.
+
+The big problem is that usb_gadget_disconnect() can be called in
+interrupt context.  In general, a UDC driver will need to call
+synchronize_irq() to make sure there aren't any callbacks still
+running, and that can be done only in process context.  dummy-hcd is
+slightly different since it doesn't manage actual hardware; it calls
+usleep_range() instead of synchronize_irq() -- but that also requires
+process context.
+
+We could change the gadget API to require that usb_gadget_disconnect()  
+and related routines always be called in process context.  I don't know
+if that's such a good idea though.  A gadget driver might want to
+disconnect from within its setup handler or a completion routine, for
+example.
+
+A better approach would be to add a new synchronize_callbacks()  
+pointer in the usb_gadget_ops structure.  But to work properly it 
+would have to be mandatory for every UDC driver, and that's not so easy 
+to accomplish.
+
+Suggestions?
+
+Alan Stern
+
