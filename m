@@ -2,286 +2,369 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0C6C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 683F2C33CB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6916621556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A71E2187F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KpXIvRuQ"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QlhxIU17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387639AbgAME4Q (ORCPT
+        id S1726055AbgAMFDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 23:56:16 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:19960 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387585AbgAME4Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 23:56:16 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200113045613epoutp012570cf1916bd4ef6d3e137ea723ae008~pWVaw6S5_0078200782epoutp01s
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:56:13 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200113045613epoutp012570cf1916bd4ef6d3e137ea723ae008~pWVaw6S5_0078200782epoutp01s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1578891373;
-        bh=pxZIRVpnO9rN9HNWuzJ/hSvTrJnW0S+n8j9Jh+yER2Y=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=KpXIvRuQ5dQmSZ4E0DZXB8vXNKzhwcPV/1YHoRpIeeiDEwe1RvRCz5pjXdmfN1pB3
-         8mGJdOuVzotZmyFvpbbAXYlZ4tPw0vqSrAFYEaAxSIVZy/WyP577vYl1OfANsNW0pe
-         Vnjfo3bs0UQBLbv3+JVv7T/O+oqjpZHGGNRJAxdU=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200113045612epcas1p27862547ab25e0f115c6d0b4b91395991~pWVaTQX0w0403604036epcas1p2p;
-        Mon, 13 Jan 2020 04:56:12 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 47x1WZ1wKZzMqYkp; Mon, 13 Jan
-        2020 04:56:10 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AB.7B.52419.A68FB1E5; Mon, 13 Jan 2020 13:56:10 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200113045609epcas1p1188f24c37f8ba230a0e3856aeb0e4d8e~pWVXKTjtK0801808018epcas1p1j;
-        Mon, 13 Jan 2020 04:56:09 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200113045609epsmtrp127e0a3040dc538249d4f38cb66dbb083~pWVXJeGYm0546405464epsmtrp1z;
-        Mon, 13 Jan 2020 04:56:09 +0000 (GMT)
-X-AuditID: b6c32a37-5b7ff7000001ccc3-48-5e1bf86aebf1
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        89.EF.06569.968FB1E5; Mon, 13 Jan 2020 13:56:09 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200113045609epsmtip203cc4e245377ab8881ee7eec780dc30c~pWVW38A_b2910829108epsmtip2v;
-        Mon, 13 Jan 2020 04:56:09 +0000 (GMT)
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     leonard.crestez@nxp.com, lukasz.luba@arm.com, a.swigon@samsung.com,
-        m.szyprowski@samsung.com, enric.balletbo@collabora.com,
-        hl@rock-chips.com, digetx@gmail.com, bjorn.andersson@linaro.org,
-        jcrouse@codeaurora.org, cw00.choi@samsung.com, chanwoo@kernel.org,
-        myungjoo.ham@samsung.com, kyungmin.park@samsung.com
-Subject: [PATCH v2] PM / devfreq: Add debugfs support with devfreq_summary
- file
-Date:   Mon, 13 Jan 2020 14:03:24 +0900
-Message-Id: <20200113050324.26232-1-cw00.choi@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se1BMURzHnb27916x3Nk8jjXINWbU6HFbW8eOjDwvMpPBHwytO9vVpn3Z
-        uyX8gUZJlGJGWiTv1WPUWioymzaDmsLkNbI04/3KICbTkLvdDP99f7/f93N+v/M7h8RUx3A1
-        mWpx8HYLZ6LxIPllX2hk+Mbe8UlR1z0j0PPSbIBavd1yVPT4vhw96nmjQBVfXgBU2dkEUG91
-        C4ZqytJQW9ZHArn8XxSo48pRHH3LbwboRNYuAlU1+wnUudOFzxnJVpZWArajIF/G1vlPA7be
-        6SdYd/kenH36sAFna7rrZOwvp1fOFnjKAfvNPTExaE3aLCPPJfP2EN5isCanWlLi6KUr9PP0
-        2pgoJpyZiWLpEAtn5uPo+QmJ4QtTTeI16JAMzpQuphI5QaAjZ8+yW9MdfIjRKjjiaN6WbLLN
-        tEUInFlIt6REGKxmHRMVFa0VjevTjL72vZhtV2zmg8IyYgfwTcsDQ0lIzYDn+14pAlpF1QF4
-        qWBTHggS9VcAW/OyCSn4AWD/1xvYX8L1uwaXCtdEV1e+Qgp6RLz0BxFw4VQY9L59jAf0KEoH
-        W/tzsYAJo7wyWPjz08BRwdRy+LvxpQiQpJyaCn+VrQyklaL/lb8El7pNghXVjQMspD7g8HhH
-        rUIqzIfV7meDIwXD9zc9hKTV8N3+nEG9DZ6/3YxLcC6AHu/dQVgDvWcOygKNMSoUXrgSKaUn
-        w/q+YyCgMWoE7P6+TxGwQEoJc3NUkmUK7OjyyyQ9Dp7avWdwThaW3LkFpD2ugw3OKqwQTHD+
-        a1AGQDkYw9sEcwovMDbN/6/kBgNfMyy2DlS3JzQBigT0cGXj1vFJKgWXIWwxNwFIYvQopbtd
-        naRSJnNbtvJ2q96ebuKFJqAVl1eEqUcbrOJHtzj0jDZao9GgGUyMlmHosUqy9946FZXCOfg0
-        nrfx9r+cjByq3gEiEqgqg/5w/QHcpHuGJ6pPXjXP1U1PGFKi2rs5/qROtyqjIX575rLTkzLP
-        EZZa1Ye+BRG+xWuvZZ59/tK4+/N2m6G2GH0aNtkbfeRcsGJ1TNyS92dvdbqGf3w95NClnvhF
-        D9o35XyOcd7ozy6+2OKZuvZe8JQsyhXta37SJnvTVbThHS0XjBwThtkF7g+mdusgsAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrNLMWRmVeSWpSXmKPExsWy7bCSvG7mD+k4g/7vfBb357UyWpze/47F
-        YuKNKywW1788Z7VY/fExo8Wa24cYLX5sOMVssXFBtsXZpjfsFivufmS1uLxrDpvF594jjBYL
-        m1rYLdYeuctucbtxBZsDv8eaeWsYPS739TJ57Li7hNFj56y77B6bVnWyedy5tofNY+O7HUwe
-        f2ftZ/Ho27KK0ePzJrkArigum5TUnMyy1CJ9uwSujMPnupkLWswrrk5YwN7AeFiji5GTQ0LA
-        RGLFv41sXYxcHEICuxklZly/zwaRkJSYdvEocxcjB5AtLHH4cDFEzSdGiVW/FzKB1LAJaEns
-        f3EDrF5EwEbi7uJrLCBFzALnmSTal09lBEkIC/hLbNr5ghVkEIuAqsTfBSEgYV4BK4mnd2dC
-        7ZKXWL3hAPMERp4FjAyrGCVTC4pz03OLDQuM8lLL9YoTc4tL89L1kvNzNzGCg1hLawfjiRPx
-        hxgFOBiVeHgPVEnHCbEmlhVX5h5ilOBgVhLh3XROKk6INyWxsiq1KD++qDQntfgQozQHi5I4
-        r3z+sUghgfTEktTs1NSC1CKYLBMHp1QD40oTK7n3U7nLZQN3bLqwT2bF8ZazO54U6V+Z815L
-        nb/jtv8DyQenOF92T/fLXaGUUjmxeWOpe9mZnwGXy04cz992/NTsKYtFC6c+DIhKXaDs+upe
-        6EnxRfseLog7nx8mUDBlyzTbe8U7X85/y2k8yzHgSnTqdlsnrvsulx6u0Xa7ElVwoy5R95gS
-        S3FGoqEWc1FxIgBrXftZXgIAAA==
-X-CMS-MailID: 20200113045609epcas1p1188f24c37f8ba230a0e3856aeb0e4d8e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200113045609epcas1p1188f24c37f8ba230a0e3856aeb0e4d8e
-References: <CGME20200113045609epcas1p1188f24c37f8ba230a0e3856aeb0e4d8e@epcas1p1.samsung.com>
+        Mon, 13 Jan 2020 00:03:03 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33115 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725263AbgAMFDC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 00:03:02 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47x1gQ63hwz9sP6;
+        Mon, 13 Jan 2020 16:02:58 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578891779;
+        bh=KfV8PnwbCpXJ1YJLrzQAWbPYiu8XsdiL3qsRE4uT2/k=;
+        h=Date:From:To:Cc:Subject:From;
+        b=QlhxIU17tFmYdSBRDH7Uy4z5FHogu3NMfyzLxGwZxh4vP+0Jp9roPHbylXoxg3zRS
+         lCPkTSaKvr053SUwLa9L/EPUir2czHOP/K86rwyIXKv6mQI9YBYEpjqTwDL8MYu1L4
+         yKOLvR0/jBIJJhGOozGwkjEGImq0/D1gBrbOQ45diZ9x7R+fNszFN5Pr77PlBwdAom
+         LBrTHq0X9vDLDtH92i2K9pXu8A+aQP8jenjJIcjXldB3Rc3SPELL7sytXFOeIlDkZq
+         EJOuTGPwQvaDF5ec3yxyqCW37xfnPfcwKFdHj0cA8YDUAaZaNzMvCkQGVlVV1nKuPB
+         ITYwPMvNeLqmw==
+Date:   Mon, 13 Jan 2020 16:02:52 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christian Brauner <christian@brauner.io>,
+        Al Viro <viro@ZenIV.linux.org.uk>,
+        David Howells <dhowells@redhat.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Kars de Jong <jongk@linux-m68k.org>
+Subject: linux-next: manual merge of the pidfd tree with the m68k, vfs and
+ keys trees
+Message-ID: <20200113160252.7003c102@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/C3mY7wIq26haiVzoL+kT5wi";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add debugfs interface to provide debugging information of devfreq device.
-It contains 'devfreq_summary' entry to show the summary of registered
-devfreq devices as following and the additional debugfs file will be added.
-- /sys/kernel/debug/devfreq/devfreq_summary
+--Sig_/C3mY7wIq26haiVzoL+kT5wi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[Detailed description of each field of 'devfreq_summary' debugfs file]
-- dev_name	: Device name of h/w.
-- dev		: Device name made by devfreq core.
-- parent_dev	: If devfreq device uses the passive governor,
-		  show parent devfreq device name.
-- governor	: Devfreq governor.
-- polling_ms	: If devfreq device uses the simple_ondemand governor,
-		  polling_ms is necessary for the period. (unit: millisecond)
-- cur_freq_Hz	: Current Frequency (unit: Hz)
-- old_freq_Hz	: Frequency before changing. (unit: Hz)
-- new_freq_Hz	: Frequency after changed. (unit: Hz)
+Hi all,
 
-[For example on Exynos5422-based Odroid-XU3 board]
-$ cat /sys/kernel/debug/devfreq/devfreq_summary
-dev_name                       dev        parent_dev governor        polling_ms  cur_freq_Hz  min_freq_Hz  max_freq_Hz
------------------------------- ---------- ---------- --------------- ---------- ------------ ------------ ------------
-10c20000.memory-controller     devfreq0              simple_ondemand          0    165000000    165000000    825000000
-soc:bus_wcore                  devfreq1              simple_ondemand         50    532000000     88700000    532000000
-soc:bus_noc                    devfreq2   devfreq1   passive                  0    111000000     66600000    111000000
-soc:bus_fsys_apb               devfreq3   devfreq1   passive                  0    222000000    111000000    222000000
-soc:bus_fsys                   devfreq4   devfreq1   passive                  0    200000000     75000000    200000000
-soc:bus_fsys2                  devfreq5   devfreq1   passive                  0    200000000     75000000    200000000
-soc:bus_mfc                    devfreq6   devfreq1   passive                  0    333000000     83250000    333000000
-soc:bus_gen                    devfreq7   devfreq1   passive                  0    266000000     88700000    266000000
-soc:bus_peri                   devfreq8   devfreq1   passive                  0     66600000     66600000     66600000
-soc:bus_g2d                    devfreq9   devfreq1   passive                  0    333000000     83250000    333000000
-soc:bus_g2d_acp                devfreq10  devfreq1   passive                  0    266000000     66500000    266000000
-soc:bus_jpeg                   devfreq11  devfreq1   passive                  0    300000000     75000000    300000000
-soc:bus_jpeg_apb               devfreq12  devfreq1   passive                  0    166500000     83250000    166500000
-soc:bus_disp1_fimd             devfreq13  devfreq1   passive                  0    200000000    120000000    200000000
-soc:bus_disp1                  devfreq14  devfreq1   passive                  0    300000000    120000000    300000000
-soc:bus_gscl_scaler            devfreq15  devfreq1   passive                  0    300000000    150000000    300000000
-soc:bus_mscl                   devfreq16  devfreq1   passive                  0    666000000     84000000    666000000
+Today's linux-next merge of the pidfd tree got conflicts in:
 
-[lkp: Reported the build error]
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-Changes from v1:
-- Drop the patch about 'devfreq_transitions' debugfs file
-- Modify from 'hz' to 'Hz'
-- Edit the indentation of 'devfreq_summary' when show summary
-- Exchange sequence between PTR_ERR and IS_ERR when debugfs_create_dir
+  arch/alpha/kernel/syscalls/syscall.tbl
+  arch/arm/tools/syscall.tbl
+  arch/arm64/include/asm/unistd.h
+  arch/arm64/include/asm/unistd32.h
+  arch/ia64/kernel/syscalls/syscall.tbl
+  arch/m68k/kernel/syscalls/syscall.tbl
+  arch/microblaze/kernel/syscalls/syscall.tbl
+  arch/mips/kernel/syscalls/syscall_n32.tbl
+  arch/mips/kernel/syscalls/syscall_n64.tbl
+  arch/mips/kernel/syscalls/syscall_o32.tbl
+  arch/parisc/kernel/syscalls/syscall.tbl
+  arch/powerpc/kernel/syscalls/syscall.tbl
+  arch/s390/kernel/syscalls/syscall.tbl
+  arch/sh/kernel/syscalls/syscall.tbl
+  arch/sparc/kernel/syscalls/syscall.tbl
+  arch/x86/entry/syscalls/syscall_32.tbl
+  arch/x86/entry/syscalls/syscall_64.tbl
+  arch/xtensa/kernel/syscalls/syscall.tbl
+  include/linux/syscalls.h
+  include/uapi/asm-generic/unistd.h
 
- drivers/devfreq/devfreq.c | 84 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+between commits:
 
-diff --git a/drivers/devfreq/devfreq.c b/drivers/devfreq/devfreq.c
-index 89260b17598f..c2ebed42704b 100644
---- a/drivers/devfreq/devfreq.c
-+++ b/drivers/devfreq/devfreq.c
-@@ -10,6 +10,7 @@
- #include <linux/kernel.h>
- #include <linux/kmod.h>
- #include <linux/sched.h>
-+#include <linux/debugfs.h>
- #include <linux/errno.h>
- #include <linux/err.h>
- #include <linux/init.h>
-@@ -33,6 +34,7 @@
- #define HZ_PER_KHZ	1000
- 
- static struct class *devfreq_class;
-+static struct dentry *devfreq_debugfs;
- 
- /*
-  * devfreq core provides delayed work based load monitoring helper
-@@ -1643,6 +1645,79 @@ static struct attribute *devfreq_attrs[] = {
- };
- ATTRIBUTE_GROUPS(devfreq);
- 
-+/**
-+ * devfreq_summary_show() - Show the summary of the devfreq devices
-+ * @s:		seq_file instance to show the summary of devfreq devices
-+ * @data:	not used
-+ *
-+ * Show the summary of the devfreq devices via 'devfreq_summary' debugfs file.
-+ * It helps that user can know the detailed information of the devfreq devices.
-+ *
-+ * Return 0 always because it shows the information without any data change.
-+ */
-+static int devfreq_summary_show(struct seq_file *s, void *data)
-+{
-+	struct devfreq *devfreq;
-+	struct devfreq *p_devfreq = NULL;
-+	unsigned long cur_freq, min_freq, max_freq;
-+	unsigned int polling_ms;
-+
-+	seq_printf(s, "%-30s %-10s %-10s %-15s %10s %12s %12s %12s\n",
-+			"dev_name",
-+			"dev",
-+			"parent_dev",
-+			"governor",
-+			"polling_ms",
-+			"cur_freq_Hz",
-+			"min_freq_Hz",
-+			"max_freq_Hz");
-+	seq_printf(s, "%30s %10s %10s %15s %10s %12s %12s %12s\n",
-+			"------------------------------",
-+			"----------",
-+			"----------",
-+			"---------------",
-+			"----------",
-+			"------------",
-+			"------------",
-+			"------------");
-+
-+	mutex_lock(&devfreq_list_lock);
-+
-+	list_for_each_entry_reverse(devfreq, &devfreq_list, node) {
-+		if (!strncmp(devfreq->governor_name, DEVFREQ_GOV_PASSIVE,
-+							DEVFREQ_NAME_LEN)) {
-+			struct devfreq_passive_data *data = devfreq->data;
-+
-+			if (data)
-+				p_devfreq = data->parent;
-+		} else {
-+			p_devfreq = NULL;
-+		}
-+
-+		mutex_lock(&devfreq->lock);
-+		cur_freq = devfreq->previous_freq,
-+		get_freq_range(devfreq, &min_freq, &max_freq);
-+		polling_ms = devfreq->profile->polling_ms,
-+		mutex_unlock(&devfreq->lock);
-+
-+		seq_printf(s,
-+			"%-30s %-10s %-10s %-15s %10d %12ld %12ld %12ld\n",
-+			dev_name(devfreq->dev.parent),
-+			dev_name(&devfreq->dev),
-+			p_devfreq ? dev_name(&p_devfreq->dev) : "",
-+			devfreq->governor_name,
-+			polling_ms,
-+			cur_freq,
-+			min_freq,
-+			max_freq);
-+	}
-+
-+	mutex_unlock(&devfreq_list_lock);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(devfreq_summary);
-+
- static int __init devfreq_init(void)
- {
- 	devfreq_class = class_create(THIS_MODULE, "devfreq");
-@@ -1659,6 +1734,15 @@ static int __init devfreq_init(void)
- 	}
- 	devfreq_class->dev_groups = devfreq_groups;
- 
-+	devfreq_debugfs = debugfs_create_dir("devfreq", NULL);
-+	if (IS_ERR(devfreq_debugfs) && PTR_ERR(devfreq_debugfs) != -ENODEV) {
-+		pr_warn("%s: couldn't create debugfs dir\n", __FILE__);
-+	} else {
-+		debugfs_create_file("devfreq_summary", 0444,
-+				devfreq_debugfs, NULL,
-+				&devfreq_summary_fops);
-+	}
-+
- 	return 0;
- }
- subsys_initcall(devfreq_init);
--- 
-2.17.1
+  e8bb2a2a1d51 ("m68k: Wire up clone3() syscall")
+  0a51692d49ec ("open: introduce openat2(2) syscall")
+  3a92c6e49c47 ("Add a general, global device notification watch list")
 
+from the m68k, vfs and keys trees and commit:
+
+  27063d9f5fbf ("arch: wire up pidfd_getfd syscall")
+
+from the pidfd tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/alpha/kernel/syscalls/syscall.tbl
+index e56950f23b49,82301080f5e7..000000000000
+--- a/arch/alpha/kernel/syscalls/syscall.tbl
++++ b/arch/alpha/kernel/syscalls/syscall.tbl
+@@@ -475,5 -475,4 +475,6 @@@
+  543	common	fspick				sys_fspick
+  544	common	pidfd_open			sys_pidfd_open
+  # 545 reserved for clone3
+ +546	common	watch_devices			sys_watch_devices
+ +547	common	openat2				sys_openat2
++ 548	common	pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/arm/tools/syscall.tbl
+index 7fb2f4d59210,ba045e2f3a60..000000000000
+--- a/arch/arm/tools/syscall.tbl
++++ b/arch/arm/tools/syscall.tbl
+@@@ -449,5 -449,4 +449,6 @@@
+  433	common	fspick				sys_fspick
+  434	common	pidfd_open			sys_pidfd_open
+  435	common	clone3				sys_clone3
+ +436	common	watch_devices			sys_watch_devices
+ +437	common	openat2				sys_openat2
++ 438	common	pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/arm64/include/asm/unistd.h
+index 0f255a23733d,b722e47377a5..000000000000
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+diff --cc arch/arm64/include/asm/unistd32.h
+index 31f0ce25719e,a8da97a2de41..000000000000
+--- a/arch/arm64/include/asm/unistd32.h
++++ b/arch/arm64/include/asm/unistd32.h
+@@@ -879,10 -879,8 +879,12 @@@ __SYSCALL(__NR_fspick, sys_fspick
+  __SYSCALL(__NR_pidfd_open, sys_pidfd_open)
+  #define __NR_clone3 435
+  __SYSCALL(__NR_clone3, sys_clone3)
+ +#define __NR_watch_devices 436
+ +__SYSCALL(__NR_watch_devices, sys_watch_devices)
+ +#define __NR_openat2 437
+ +__SYSCALL(__NR_openat2, sys_openat2)
++ #define __NR_pidfd_getfd 438
++ __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
+ =20
+  /*
+   * Please add new compat syscalls above this comment and update
+diff --cc arch/ia64/kernel/syscalls/syscall.tbl
+index b9aa59931905,2b11adfc860c..000000000000
+--- a/arch/ia64/kernel/syscalls/syscall.tbl
++++ b/arch/ia64/kernel/syscalls/syscall.tbl
+@@@ -356,5 -356,4 +356,6 @@@
+  433	common	fspick				sys_fspick
+  434	common	pidfd_open			sys_pidfd_open
+  # 435 reserved for clone3
+ +436	common	watch_devices			sys_watch_devices
+ +437	common	openat2				sys_openat2
++ 438	common	pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/m68k/kernel/syscalls/syscall.tbl
+index 7e6fd536e1ae,44e879e98459..000000000000
+--- a/arch/m68k/kernel/syscalls/syscall.tbl
++++ b/arch/m68k/kernel/syscalls/syscall.tbl
+@@@ -434,6 -434,5 +434,7 @@@
+  432	common	fsmount				sys_fsmount
+  433	common	fspick				sys_fspick
+  434	common	pidfd_open			sys_pidfd_open
+ -# 435 reserved for clone3
+ +435	common	clone3				__sys_clone3
+ +436	common	watch_devices			sys_watch_devices
+ +437	common	openat2				sys_openat2
++ 438	common	pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/microblaze/kernel/syscalls/syscall.tbl
+index 544b4cef18b3,7afa00125cc4..000000000000
+--- a/arch/microblaze/kernel/syscalls/syscall.tbl
++++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+@@@ -441,5 -441,4 +441,6 @@@
+  433	common	fspick				sys_fspick
+  434	common	pidfd_open			sys_pidfd_open
+  435	common	clone3				sys_clone3
+ +436	common	watch_devices			sys_watch_devices
+ +437	common	openat2				sys_openat2
++ 438	common	pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/mips/kernel/syscalls/syscall_n32.tbl
+index 05e8aee5dae7,856d5ba34461..000000000000
+--- a/arch/mips/kernel/syscalls/syscall_n32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
+@@@ -374,5 -374,4 +374,6 @@@
+  433	n32	fspick				sys_fspick
+  434	n32	pidfd_open			sys_pidfd_open
+  435	n32	clone3				__sys_clone3
+ +436	n32	watch_devices			sys_watch_devices
+ +437	n32	openat2				sys_openat2
++ 438	n32	pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/mips/kernel/syscalls/syscall_n64.tbl
+index 24d6c01328fb,2db6075352f3..000000000000
+--- a/arch/mips/kernel/syscalls/syscall_n64.tbl
++++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
+@@@ -350,5 -350,4 +350,6 @@@
+  433	n64	fspick				sys_fspick
+  434	n64	pidfd_open			sys_pidfd_open
+  435	n64	clone3				__sys_clone3
+ +436	n64	watch_devices			sys_watch_devices
+ +437	n64	openat2				sys_openat2
++ 438	n64	pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/mips/kernel/syscalls/syscall_o32.tbl
+index 05579c1a9bec,e9f9d4a9b105..000000000000
+--- a/arch/mips/kernel/syscalls/syscall_o32.tbl
++++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
+@@@ -423,5 -423,4 +423,6 @@@
+  433	o32	fspick				sys_fspick
+  434	o32	pidfd_open			sys_pidfd_open
+  435	o32	clone3				__sys_clone3
+ +436	o32	watch_devices			sys_watch_devices
+ +437	o32	openat2				sys_openat2
++ 438	o32	pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/parisc/kernel/syscalls/syscall.tbl
+index 4b5f77a4e1a2,c58c7eb144ca..000000000000
+--- a/arch/parisc/kernel/syscalls/syscall.tbl
++++ b/arch/parisc/kernel/syscalls/syscall.tbl
+@@@ -433,5 -433,4 +433,6 @@@
+  433	common	fspick				sys_fspick
+  434	common	pidfd_open			sys_pidfd_open
+  435	common	clone3				sys_clone3_wrapper
+ +436	common	watch_devices			sys_watch_devices
+ +437	common	openat2				sys_openat2
++ 438	common	pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/powerpc/kernel/syscalls/syscall.tbl
+index 9716dc85a517,707609bfe3ea..000000000000
+--- a/arch/powerpc/kernel/syscalls/syscall.tbl
++++ b/arch/powerpc/kernel/syscalls/syscall.tbl
+@@@ -517,5 -517,4 +517,6 @@@
+  433	common	fspick				sys_fspick
+  434	common	pidfd_open			sys_pidfd_open
+  435	nospu	clone3				ppc_clone3
+ +436	common	watch_devices			sys_watch_devices
+ +437	common	openat2				sys_openat2
++ 438	common	pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/s390/kernel/syscalls/syscall.tbl
+index 7da330f8b03e,185cd624face..000000000000
+--- a/arch/s390/kernel/syscalls/syscall.tbl
++++ b/arch/s390/kernel/syscalls/syscall.tbl
+@@@ -438,5 -438,4 +438,6 @@@
+  433  common	fspick			sys_fspick			sys_fspick
+  434  common	pidfd_open		sys_pidfd_open			sys_pidfd_open
+  435  common	clone3			sys_clone3			sys_clone3
+ +436  common	watch_devices		sys_watch_devices		sys_watch_devices
+ +437  common	openat2			sys_openat2			sys_openat2
++ 438  common	pidfd_getfd		sys_pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/sh/kernel/syscalls/syscall.tbl
+index bb7e68e25337,88f90895aad8..000000000000
+--- a/arch/sh/kernel/syscalls/syscall.tbl
++++ b/arch/sh/kernel/syscalls/syscall.tbl
+@@@ -438,5 -438,4 +438,6 @@@
+  433	common	fspick				sys_fspick
+  434	common	pidfd_open			sys_pidfd_open
+  # 435 reserved for clone3
+ +436	common	watch_devices			sys_watch_devices
+ +437	common	openat2				sys_openat2
++ 438	common	pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/sparc/kernel/syscalls/syscall.tbl
+index 646a1fad7218,218df6a2326e..000000000000
+--- a/arch/sparc/kernel/syscalls/syscall.tbl
++++ b/arch/sparc/kernel/syscalls/syscall.tbl
+@@@ -481,5 -481,4 +481,6 @@@
+  433	common	fspick				sys_fspick
+  434	common	pidfd_open			sys_pidfd_open
+  # 435 reserved for clone3
+ +436	common	watch_devices			sys_watch_devices
+ +437	common	openat2			sys_openat2
++ 438	common	pidfd_getfd			sys_pidfd_getfd
+diff --cc arch/x86/entry/syscalls/syscall_32.tbl
+index 57c53acee290,9c3101b65e0f..000000000000
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@@ -440,5 -440,4 +440,6 @@@
+  433	i386	fspick			sys_fspick			__ia32_sys_fspick
+  434	i386	pidfd_open		sys_pidfd_open			__ia32_sys_pidfd_open
+  435	i386	clone3			sys_clone3			__ia32_sys_clone3
+ +436	i386	watch_devices		sys_watch_devices		__ia32_sys_watch_devices
+ +437	i386	openat2			sys_openat2			__ia32_sys_openat2
++ 438	i386	pidfd_getfd		sys_pidfd_getfd			__ia32_sys_pidfd_getfd
+diff --cc arch/x86/entry/syscalls/syscall_64.tbl
+index 1dd8d21f6500,cef85db75a62..000000000000
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@@ -357,8 -357,7 +357,9 @@@
+  433	common	fspick			__x64_sys_fspick
+  434	common	pidfd_open		__x64_sys_pidfd_open
+  435	common	clone3			__x64_sys_clone3/ptregs
+ +436	common	watch_devices		__x64_sys_watch_devices
+ +437	common	openat2			__x64_sys_openat2
++ 438	common	pidfd_getfd		__x64_sys_pidfd_getfd
+ =20
+  #
+  # x32-specific system call numbers start at 512 to avoid cache impact
+diff --cc arch/xtensa/kernel/syscalls/syscall.tbl
+index 0f48ab7bd75b,ae15183def12..000000000000
+--- a/arch/xtensa/kernel/syscalls/syscall.tbl
++++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+@@@ -406,5 -406,4 +406,6 @@@
+  433	common	fspick				sys_fspick
+  434	common	pidfd_open			sys_pidfd_open
+  435	common	clone3				sys_clone3
+ +436	common	watch_devices			sys_watch_devices
+ +437	common	openat2				sys_openat2
++ 438	common	pidfd_getfd			sys_pidfd_getfd
+diff --cc include/linux/syscalls.h
+index ce992e3d7378,8640af30c506..000000000000
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@@ -1002,7 -1000,7 +1002,8 @@@ asmlinkage long sys_fspick(int dfd, con
+  asmlinkage long sys_pidfd_send_signal(int pidfd, int sig,
+  				       siginfo_t __user *info,
+  				       unsigned int flags);
+ +asmlinkage long sys_watch_devices(int watch_fd, int watch_id, unsigned in=
+t flags);
++ asmlinkage long sys_pidfd_getfd(int pidfd, int fd, unsigned int flags);
+ =20
+  /*
+   * Architecture-specific system calls
+diff --cc include/uapi/asm-generic/unistd.h
+index 33f3856a9c3c,d36ec3d645bd..000000000000
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@@ -850,14 -850,11 +850,17 @@@ __SYSCALL(__NR_pidfd_open, sys_pidfd_op
+  #define __NR_clone3 435
+  __SYSCALL(__NR_clone3, sys_clone3)
+  #endif
+ +#define __NR_watch_devices 436
+ +__SYSCALL(__NR_watch_devices, sys_watch_devices)
+ +
+ +#define __NR_openat2 437
+ +__SYSCALL(__NR_openat2, sys_openat2)
+ +
++ #define __NR_pidfd_getfd 438
++ __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
++=20
+  #undef __NR_syscalls
+- #define __NR_syscalls 438
++ #define __NR_syscalls 439
+ =20
+  /*
+   * 32 bit systems traditionally used different
+
+--Sig_/C3mY7wIq26haiVzoL+kT5wi
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4b+fwACgkQAVBC80lX
+0GxqSwf/VFIEV6MIqtBbYkI8KJgzaCafK0fSkre0EfKOxupYY/iW6egEorzX04N1
+hQ2PzK7bw8C2ctmUr2GvFph2cUAs3i9ah9qIY9rA4bmrEnW8K3nMAavT6VzZ5veE
+0wgu+sttuZfEUxn+zfhW+aso8iIW0gqRmpCUgHQoOIlrJ+rj6ZdgUMFoDiiATCHU
+X/Q11r4tRJnHbJOShYrfC/BXalyXbTh+pZpgePrlX79YLkTpGbbOP5SV2N0Hslru
+KnkpLk+20WQw1XYOtyMA0LIZy3AP2iIROF6lKVxncACKK0qqZbix2cWda8eak67T
+MVMvdBiEmr/vUgj2WilayRTRq5HPDw==
+=aTDf
+-----END PGP SIGNATURE-----
+
+--Sig_/C3mY7wIq26haiVzoL+kT5wi--
