@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295E1C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBF3C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 047BC21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C24021556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728882AbgAMTJi (ORCPT
+        id S1729425AbgAMTLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:09:38 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39830 "EHLO
+        Mon, 13 Jan 2020 14:11:51 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39880 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727726AbgAMTJa (ORCPT
+        with ESMTP id S1728853AbgAMTJg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:09:30 -0500
+        Mon, 13 Jan 2020 14:09:36 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ir55Z-0000vf-RE; Mon, 13 Jan 2020 20:09:26 +0100
+        id 1ir55g-0000zo-Rj; Mon, 13 Jan 2020 20:09:33 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4F3001C18DB;
-        Mon, 13 Jan 2020 20:09:25 +0100 (CET)
-Date:   Mon, 13 Jan 2020 19:09:25 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 3C1C11C18E2;
+        Mon, 13 Jan 2020 20:09:28 +0100 (CET)
+Date:   Mon, 13 Jan 2020 19:09:28 -0000
 From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] selftests/timens: Add a test for timerfd
-Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
+Subject: [tip: timers/core] posix-timers: Make clock_nanosleep() time namespace aware
+Cc:     Andrei Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191112012724.250792-30-dima@arista.com>
-References: <20191112012724.250792-30-dima@arista.com>
+In-Reply-To: <20191112012724.250792-18-dima@arista.com>
+References: <20191112012724.250792-18-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <157894256511.19145.13095414759650638633.tip-bot2@tip-bot2>
+Message-ID: <157894256810.19145.4297643692484674678.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,200 +56,113 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     6024b1e796435154034cf11d5e250fd716394ca8
-Gitweb:        https://git.kernel.org/tip/6024b1e796435154034cf11d5e250fd716394ca8
-Author:        Andrei Vagin <avagin@gmail.com>
-AuthorDate:    Tue, 12 Nov 2019 01:27:18 
+Commit-ID:     1088a867c70919d99d513ff00cd622d2988b8114
+Gitweb:        https://git.kernel.org/tip/1088a867c70919d99d513ff00cd622d2988b8114
+Author:        Andrei Vagin <avagin@openvz.org>
+AuthorDate:    Tue, 12 Nov 2019 01:27:06 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 13 Jan 2020 08:10:58 +01:00
+CommitterDate: Mon, 13 Jan 2020 08:10:53 +01:00
 
-selftests/timens: Add a test for timerfd
+posix-timers: Make clock_nanosleep() time namespace aware
 
-Check that timerfd_create() takes into account clock offsets.
-
-Output on success:
- 1..3
- ok 1 clockid=7
- ok 2 clockid=1
- ok 3 clockid=9
- # Pass 3 Fail 0 Xfail 0 Xpass 0 Skip 0 Error 0
-
-Output on failure:
- 1..3
- not ok 1 clockid: 7 elapsed: 0
- not ok 2 clockid: 1 elapsed: 0
- not ok 3 clockid: 9 elapsed: 0
- Bail out!
-
-Output with lack of permissions:
- 1..3
- not ok 1 # SKIP need to run as root
-
-Output without support of time namespaces:
- 1..3
- not ok 1 # SKIP Time namespaces are not supported
+clock_nanosleep() accepts absolute values of expiration time, if the
+TIMER_ABSTIME flag is set. This value is in the tasks time namespace,
+which has to be converted to the host time namespace.
 
 Co-developed-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191112012724.250792-30-dima@arista.com
+Link: https://lore.kernel.org/r/20191112012724.250792-18-dima@arista.com
 
 ---
- tools/testing/selftests/timens/.gitignore |   1 +-
- tools/testing/selftests/timens/Makefile   |   2 +-
- tools/testing/selftests/timens/timerfd.c  | 128 +++++++++++++++++++++-
- 3 files changed, 130 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/timens/timerfd.c
+ kernel/time/posix-stubs.c  | 12 ++++++++++--
+ kernel/time/posix-timers.c | 17 +++++++++++++++--
+ 2 files changed, 25 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/timens/.gitignore b/tools/testing/selftests/timens/.gitignore
-index 27a6932..b609f6e 100644
---- a/tools/testing/selftests/timens/.gitignore
-+++ b/tools/testing/selftests/timens/.gitignore
-@@ -1 +1,2 @@
- timens
-+timerfd
-diff --git a/tools/testing/selftests/timens/Makefile b/tools/testing/selftests/timens/Makefile
-index 49a9dcc..293aed6 100644
---- a/tools/testing/selftests/timens/Makefile
-+++ b/tools/testing/selftests/timens/Makefile
-@@ -1,4 +1,4 @@
--TEST_GEN_PROGS := timens
-+TEST_GEN_PROGS := timens timerfd
+diff --git a/kernel/time/posix-stubs.c b/kernel/time/posix-stubs.c
+index 5745a13..fcb3b21 100644
+--- a/kernel/time/posix-stubs.c
++++ b/kernel/time/posix-stubs.c
+@@ -129,6 +129,7 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
+ 		struct __kernel_timespec __user *, rmtp)
+ {
+ 	struct timespec64 t;
++	ktime_t texp;
  
- CFLAGS := -Wall -Werror
- LDFLAGS := -lrt
-diff --git a/tools/testing/selftests/timens/timerfd.c b/tools/testing/selftests/timens/timerfd.c
-new file mode 100644
-index 0000000..eff1ec5
---- /dev/null
-+++ b/tools/testing/selftests/timens/timerfd.c
-@@ -0,0 +1,128 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#define _GNU_SOURCE
-+#include <sched.h>
-+
-+#include <sys/timerfd.h>
-+#include <sys/syscall.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <time.h>
-+#include <unistd.h>
-+#include <stdlib.h>
-+#include <stdio.h>
-+#include <stdint.h>
-+
-+#include "log.h"
-+#include "timens.h"
-+
-+static int tclock_gettime(clock_t clockid, struct timespec *now)
+ 	switch (which_clock) {
+ 	case CLOCK_REALTIME:
+@@ -147,7 +148,10 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
+ 		rmtp = NULL;
+ 	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
+ 	current->restart_block.nanosleep.rmtp = rmtp;
+-	return hrtimer_nanosleep(timespec64_to_ktime(t), flags & TIMER_ABSTIME ?
++	texp = timespec64_to_ktime(t);
++	if (flags & TIMER_ABSTIME)
++		texp = timens_ktime_to_host(which_clock, texp);
++	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
+ 				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
+ 				 which_clock);
+ }
+@@ -218,6 +222,7 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
+ 		struct old_timespec32 __user *, rmtp)
+ {
+ 	struct timespec64 t;
++	ktime_t texp;
+ 
+ 	switch (which_clock) {
+ 	case CLOCK_REALTIME:
+@@ -236,7 +241,10 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
+ 		rmtp = NULL;
+ 	current->restart_block.nanosleep.type = rmtp ? TT_COMPAT : TT_NONE;
+ 	current->restart_block.nanosleep.compat_rmtp = rmtp;
+-	return hrtimer_nanosleep(timespec64_to_ktime(t), flags & TIMER_ABSTIME ?
++	texp = timespec64_to_ktime(t);
++	if (flags & TIMER_ABSTIME)
++		texp = timens_ktime_to_host(which_clock, texp);
++	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
+ 				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
+ 				 which_clock);
+ }
+diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
+index 75fee6e..ff0eb30 100644
+--- a/kernel/time/posix-timers.c
++++ b/kernel/time/posix-timers.c
+@@ -1228,6 +1228,19 @@ static int common_nsleep(const clockid_t which_clock, int flags,
+ 				 which_clock);
+ }
+ 
++static int common_nsleep_timens(const clockid_t which_clock, int flags,
++			 const struct timespec64 *rqtp)
 +{
-+	if (clockid == CLOCK_BOOTTIME_ALARM)
-+		clockid = CLOCK_BOOTTIME;
-+	return clock_gettime(clockid, now);
++	ktime_t texp = timespec64_to_ktime(*rqtp);
++
++	if (flags & TIMER_ABSTIME)
++		texp = timens_ktime_to_host(which_clock, texp);
++
++	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
++				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
++				 which_clock);
 +}
 +
-+int run_test(int clockid, struct timespec now)
-+{
-+	struct itimerspec new_value;
-+	long long elapsed;
-+	int fd, i;
-+
-+	if (tclock_gettime(clockid, &now))
-+		return pr_perror("clock_gettime(%d)", clockid);
-+
-+	for (i = 0; i < 2; i++) {
-+		int flags = 0;
-+
-+		new_value.it_value.tv_sec = 3600;
-+		new_value.it_value.tv_nsec = 0;
-+		new_value.it_interval.tv_sec = 1;
-+		new_value.it_interval.tv_nsec = 0;
-+
-+		if (i == 1) {
-+			new_value.it_value.tv_sec += now.tv_sec;
-+			new_value.it_value.tv_nsec += now.tv_nsec;
-+		}
-+
-+		fd = timerfd_create(clockid, 0);
-+		if (fd == -1)
-+			return pr_perror("timerfd_create(%d)", clockid);
-+
-+		if (i == 1)
-+			flags |= TFD_TIMER_ABSTIME;
-+
-+		if (timerfd_settime(fd, flags, &new_value, NULL))
-+			return pr_perror("timerfd_settime(%d)", clockid);
-+
-+		if (timerfd_gettime(fd, &new_value))
-+			return pr_perror("timerfd_gettime(%d)", clockid);
-+
-+		elapsed = new_value.it_value.tv_sec;
-+		if (abs(elapsed - 3600) > 60) {
-+			ksft_test_result_fail("clockid: %d elapsed: %lld\n",
-+					      clockid, elapsed);
-+			return 1;
-+		}
-+
-+		close(fd);
-+	}
-+
-+	ksft_test_result_pass("clockid=%d\n", clockid);
-+
-+	return 0;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int ret, status, len, fd;
-+	char buf[4096];
-+	pid_t pid;
-+	struct timespec btime_now, mtime_now;
-+
-+	nscheck();
-+
-+	ksft_set_plan(3);
-+
-+	clock_gettime(CLOCK_MONOTONIC, &mtime_now);
-+	clock_gettime(CLOCK_BOOTTIME, &btime_now);
-+
-+	if (unshare_timens())
-+		return 1;
-+
-+	len = snprintf(buf, sizeof(buf), "%d %d 0\n%d %d 0",
-+			CLOCK_MONOTONIC, 70 * 24 * 3600,
-+			CLOCK_BOOTTIME, 9 * 24 * 3600);
-+	fd = open("/proc/self/timens_offsets", O_WRONLY);
-+	if (fd < 0)
-+		return pr_perror("/proc/self/timens_offsets");
-+
-+	if (write(fd, buf, len) != len)
-+		return pr_perror("/proc/self/timens_offsets");
-+
-+	close(fd);
-+	mtime_now.tv_sec += 70 * 24 * 3600;
-+	btime_now.tv_sec += 9 * 24 * 3600;
-+
-+	pid = fork();
-+	if (pid < 0)
-+		return pr_perror("Unable to fork");
-+	if (pid == 0) {
-+		ret = 0;
-+		ret |= run_test(CLOCK_BOOTTIME, btime_now);
-+		ret |= run_test(CLOCK_MONOTONIC, mtime_now);
-+		ret |= run_test(CLOCK_BOOTTIME_ALARM, btime_now);
-+
-+		if (ret)
-+			ksft_exit_fail();
-+		ksft_exit_pass();
-+		return ret;
-+	}
-+
-+	if (waitpid(pid, &status, 0) != pid)
-+		return pr_perror("Unable to wait the child process");
-+
-+	if (WIFEXITED(status))
-+		return WEXITSTATUS(status);
-+
-+	return 1;
-+}
+ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
+ 		const struct __kernel_timespec __user *, rqtp,
+ 		struct __kernel_timespec __user *, rmtp)
+@@ -1305,7 +1318,7 @@ static const struct k_clock clock_monotonic = {
+ 	.clock_getres		= posix_get_hrtimer_res,
+ 	.clock_get_timespec	= posix_get_monotonic_timespec,
+ 	.clock_get_ktime	= posix_get_monotonic_ktime,
+-	.nsleep			= common_nsleep,
++	.nsleep			= common_nsleep_timens,
+ 	.timer_create		= common_timer_create,
+ 	.timer_set		= common_timer_set,
+ 	.timer_get		= common_timer_get,
+@@ -1354,7 +1367,7 @@ static const struct k_clock clock_boottime = {
+ 	.clock_getres		= posix_get_hrtimer_res,
+ 	.clock_get_ktime	= posix_get_boottime_ktime,
+ 	.clock_get_timespec	= posix_get_boottime_timespec,
+-	.nsleep			= common_nsleep,
++	.nsleep			= common_nsleep_timens,
+ 	.timer_create		= common_timer_create,
+ 	.timer_set		= common_timer_set,
+ 	.timer_get		= common_timer_get,
