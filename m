@@ -2,136 +2,117 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE7FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF70FC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A52DD2081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B36722084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:51:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgAMLtn (ORCPT
+        id S1728641AbgAMLvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:49:43 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:62732 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbgAMLtn (ORCPT
+        Mon, 13 Jan 2020 06:51:15 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:58142 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726127AbgAMLvO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:49:43 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-ba-5e1c595373c1
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 16.5F.08102.3595C1E5; Mon, 13 Jan 2020 12:49:39 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Mon, 13 Jan 2020 12:49:27 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "lee.jones@linaro.org" <lee.jones@linaro.org>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>
-Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
- bd718x7 specific parts
-Thread-Topic: [PATCH v8 08/12] regulator: bd718x7: Split driver to common
- and bd718x7 specific parts
-Thread-Index: AQHVvvUCH6xbXbWt3UKhkzpPOHFEqKffIN0AgAFNNwCACAJ9gIAAD8yA
-Date:   Mon, 13 Jan 2020 11:49:26 +0000
-Message-ID: <ab72ce13d008a0d5e9cd753b87fe397953210f70.camel@fi.rohmeurope.com>
-References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
-         <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200107124124.GI14821@dell>
-         <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
-         <20200113105301.GF5414@dell>
-In-Reply-To: <20200113105301.GF5414@dell>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <558A385D28CECC4E84770D5C5B7DB969@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Mon, 13 Jan 2020 06:51:14 -0500
+Received: from 79.184.255.90.ipv4.supernova.orange.pl (79.184.255.90) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.320)
+ id e837cbaf30ffdffb; Mon, 13 Jan 2020 12:51:12 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH] cpuidle: arm: Enable compile testing for some of drivers
+Date:   Mon, 13 Jan 2020 12:51:12 +0100
+Message-ID: <112783298.KOQPr5xTch@kreacher>
+In-Reply-To: <20191229180912.17100-2-krzk@kernel.org>
+References: <20191229180912.17100-1-krzk@kernel.org> <20191229180912.17100-2-krzk@kernel.org>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02TbUwTSRjHM7vb7VBdXSvItKLGPY0viS8kGsYc5/FFXGNiVCLnaQRXWWgV
-        WrJtDWjuwkU5oWiCr2gjVUkRgpxIhaAG1FTQWowGabGKqMSXqJhyFz2NuR6666LwZeaZ+c/v
-        +f8/PANJ/QBthGaLXZQsQi5H66hrtf81zkv7NSFj4d6WH7GnK6TFeyNntPh9ZYDCR/qf0/hk
-        +x0NLuts0uDe5vMUfvJvB8AfgiUEPhytIfA/+x5r8IWTUYC7L5+gcfPbcwDfOBukcfX9LgKf
-        qPZTuCuwDPcFOmhc3NauxUM9jVRKHF/vrgf8YLhYy7vrd/GXXH1a3ltXSvOPelpp/ma4heAr
-        3J8IvvbsRy3/zjt1tW7DmOQtgn1HmjnHsmDp5jGmob/va/MjhgLXwSVF4JjBCWIgYhehe6Fz
-        GifQQT0bAuhVZ9nwwQ9QSThIOwGENJuMnA+0ChDLJiKP/wWl1CTrgaj5j23Kk4msiHo/ZKtP
-        slFJ5Cqt1qmobXf715piZ6KmaPBrG4ZdhW7/v59UreoI5Pf1AUWIYeeglkAFodSAnYJKiyKE
-        6hWPvC8/atTQLPK03iXVOg69fjY0fM+htk/9lJKHlPs0XF6goinoyJ/u4cjT0eGy/uEME9Ct
-        48+pcjDJNcrBNUK7RtGuUbRrFH0KaOoAyhPMuTmCXUycL4mO+ZLVlCdvW615XqAOzPuL4LNv
-        hQ8QEPiAARJcHNOzbnKGftwWa1ahSbCZMiVHrmjzAQRJLpbx3jFm6JksoXCnKFm/SZMhxcUz
-        s/oPbNKzitd2UcwXpW9qAoQcYgZ+ScjQT5DEHLEg25xrH5EJGKM01xljbaIlS5QEh92UqUxH
-        pk0eD0UaK/u+XC/jjC1fyJNvVTQAkmD568oqEl7qcMvrrTqPvLZXVleRespitYjGeOZuuoyx
-        CmZyWL6bvgHxEHATmdlKprHyD/re841sR8h2um6DYmcXRiRjERAetEz7yWH/a62w9uGTow3p
-        L7rO3DiwcuPq07Rw2otaHaHOigZz0wrNHsn1w3iLYOr2NQ4M9nqjS2rvpf4Wty/VyS186pkG
-        3pH+YEgTuR4GNcYavjCltWTTMcPu6OJxVxwMLF5z6NRgUkHlLgBnEOW/b+eelS7fmZT8c/pK
-        W5ijbCYhcS4p2YQvO4W4lP4DAAA=
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gTGVlLA0KDQpPbiBNb24sIDIwMjAtMDEtMTMgYXQgMTA6NTMgKzAwMDAsIExlZSBKb25l
-cyB3cm90ZToNCj4gT24gV2VkLCAwOCBKYW4gMjAyMCwgVmFpdHRpbmVuLCBNYXR0aSB3cm90ZToN
-Cj4gDQo+ID4gSGVsbG8gTGVlLA0KPiA+IA0KPiA+IE9uIFR1ZSwgMjAyMC0wMS0wNyBhdCAxMjo0
-MSArMDAwMCwgTGVlIEpvbmVzIHdyb3RlOg0KPiA+ID4gT24gTW9uLCAzMCBEZWMgMjAxOSwgTWF0
-dGkgVmFpdHRpbmVuIHdyb3RlOg0KPiA+ID4gDQo+ID4gPiA+IEZldyBST0hNIFBNSUNzIGFsbG93
-IHNldHRpbmcgdGhlIHZvbHRhZ2Ugc3RhdGVzIGZvciBkaWZmZXJlbnQNCj4gPiA+ID4gc3lzdGVt
-IHN0YXRlcw0KPiA+ID4gPiBsaWtlIFJVTiwgSURMRSwgU1VTUEVORCBhbmQgTFBTUi4gU3RhdGVz
-IGFyZSB0aGVuIGNoYW5nZWQgdmlhDQo+ID4gPiA+IFNvQw0KPiA+ID4gPiBzcGVjaWZpYw0KPiA+
-ID4gPiBtZWNoYW5pc21zLiBiZDcxOHg3IGRyaXZlciBpbXBsZW1lbnRlZCBkZXZpY2UtdHJlZSBw
-YXJzaW5nDQo+ID4gPiA+IGZ1bmN0aW9ucyBmb3INCj4gPiA+ID4gdGhlc2Ugc3RhdGUgc3BlY2lm
-aWMgdm9sdGFnZXMuIFRoZSBwYXJzaW5nIGZ1bmN0aW9ucyBjYW4gYmUgcmUtDQo+ID4gPiA+IHVz
-ZWQgDQo+ID4gPiA+IGJ5DQo+ID4gPiA+IG90aGVyIFJPSE0gY2hpcCBkcml2ZXJzIGxpa2UgYmQ3
-MTgyOC4gU3BsaXQgdGhlIGdlbmVyaWMNCj4gPiA+ID4gZnVuY3Rpb25zDQo+ID4gPiA+IGZyb20N
-Cj4gPiA+ID4gYmQ3MTh4Ny1yZWd1bGF0b3IuYyB0byByb2htLXJlZ3VsYXRvci5jIGFuZCBleHBv
-cnQgdGhlbSBmb3INCj4gPiA+ID4gb3RoZXINCj4gPiA+ID4gbW9kdWxlcw0KPiA+ID4gPiB0byB1
-c2UuDQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPA0K
-PiA+ID4gPiBtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQo+ID4gPiA+IEFja2Vk
-LWJ5OiBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+DQo+ID4gPiA+IC0tLQ0KPiANCj4g
-Wy4uLl0NCj4gDQo+ID4gPiA+ICsjaWYgSVNfRU5BQkxFRChDT05GSUdfUkVHVUxBVE9SX1JPSE0p
-DQo+ID4gPiA+ICtpbnQgcm9obV9yZWd1bGF0b3Jfc2V0X2R2c19sZXZlbHMoY29uc3Qgc3RydWN0
-IHJvaG1fZHZzX2NvbmZpZw0KPiA+ID4gPiAqZHZzLA0KPiA+ID4gPiArCQkJCSAgc3RydWN0IGRl
-dmljZV9ub2RlICpucCwNCj4gPiA+ID4gKwkJCQkgIGNvbnN0IHN0cnVjdCByZWd1bGF0b3JfZGVz
-Yw0KPiA+ID4gPiAqZGVzYywNCj4gPiA+ID4gKwkJCQkgIHN0cnVjdCByZWdtYXAgKnJlZ21hcCk7
-DQo+ID4gPiANCj4gPiA+IERvZXMgdGhlc2UgcmVhbGx5IG5lZWQgdG8gbGl2ZSBpbiB0aGUgcGFy
-ZW50J3MgaGVhZGVyIGZpbGU/DQo+ID4gDQo+ID4gSSBkb24ndCBrbm93IHdoYXQgd291bGQgYmUg
-YSBiZXR0ZXIgcGxhY2U/DQo+IA0KPiBZb3UgZG9uJ3QgaGF2ZSBhIHJlZ3VsYXRvciBoZWFkZXIg
-ZmlsZT8NCj4gDQo+IEl0IHNlZW1zIG92ZXIta2lsbCB0byBjcmVhdGUgb25lIGZvciB0aGlzLCBz
-byBsZWF2ZSBpdCBhcyBpcy4NCj4gDQo+ID4gPiBXaGF0IG90aGVyIGNhbGwtc2l0ZXMgYXJlIHRo
-ZXJlPw0KPiA+IA0KPiA+IEFmdGVyIHRoaXMgc2VyaWVzIHRoZSBiZDcxOHg3LXJlZ3VsYXRvci5j
-IGFuZCBiZDcxODI4LXJlZ3VsYXRvci5jDQo+ID4gYXJlDQo+ID4gdGhlIGluLXRyZWUgZHJpdmVy
-cyB1c2luZyB0aGVzZS4gcm9obS1yZWd1bGF0b3IuYyBpcyBpbXBsZW1lbnRpbmcNCj4gPiB0aGVt
-Lg0KPiA+IEFuZCBJIGhvcGUgd2Ugc2VlIHlldCBhbm90aGVyIGRyaXZlciBsYW5kaW5nIGluIGxh
-dGVyIHRoaXMgeWVhci4gDQo+ID4gDQo+ID4gQW55d2F5cywgSSB3aWxsIGludmVzdGlnYXRlIGlm
-IEkgY2FuIHN3aXRjaCB0aGlzIHRvIHNvbWUgY29tbW9uDQo+ID4gKG5vdA0KPiA+IHJvaG0gc3Bl
-Y2lmaWMpIERUIGJpbmRpbmdzIGF0IHNvbWUgcG9pbnQgKEkndmUgc2NoZWR1bGVkIHRoaXMgc3R1
-ZHkNCj4gPiB0bw0KPiA+IE1hcmNoKSAtIElmIEkgY2FuIHRoZW4gdGhleSBzaG91bGQgbGl2ZSBp
-biByZWd1bGF0b3IgY29yZSBoZWFkZXJzLg0KPiA+IA0KPiA+IEJ1dCBjaGFuZ2luZyB0aGUgZXhp
-c3RpbmcgcHJvcGVydGllcyBzaG91bGQgYWdhaW4gYmUgb3duIHNldCBvZg0KPiA+IHBhdGNoZXMN
-Cj4gPiBhbmQgSSdkIHByZWZlciBkb2luZyB0aGF0IHdvcmsgaW5kZXBlbmRlbnRseSBvZiB0aGlz
-IHNlcmllcyBhbmQgbm90DQo+ID4gZGVsYXlpbmcgdGhlIEJENzE4MjggZHVlIHRvIG5vdC15ZXQt
-ZXZhbHVhdGVkIGJkNzE4eDcgcHJvcGVydHkNCj4gPiBjaGFuZ2VzLg0KPiANCj4gVGhhdCdzIGZp
-bmUuDQoNCg0KR2xhZCB0byBoZWFyIDopIEJ5IHRoZSB3YXksIEkgYWxyZWFkeSBzZW50IHRoZSB2
-OSA7KQ0KDQpCciwNCglNYXR0aQ0KDQo=
+On Sunday, December 29, 2019 7:09:12 PM CET Krzysztof Kozlowski wrote:
+> Some of cpuidle drivers for ARMv7 can be compile tested on this
+> architecture because they do not depend on mach-specific bits.  Enable
+> compile testing for big.LITTLE, Kirkwood, Zynq, AT91, Exynos and mvebu
+> cpuidle drivers.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/cpuidle/Kconfig.arm | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
+> index a224d33dda7f..62272ecfa771 100644
+> --- a/drivers/cpuidle/Kconfig.arm
+> +++ b/drivers/cpuidle/Kconfig.arm
+> @@ -25,7 +25,7 @@ config ARM_PSCI_CPUIDLE
+>  
+>  config ARM_BIG_LITTLE_CPUIDLE
+>  	bool "Support for ARM big.LITTLE processors"
+> -	depends on ARCH_VEXPRESS_TC2_PM || ARCH_EXYNOS
+> +	depends on ARCH_VEXPRESS_TC2_PM || ARCH_EXYNOS || COMPILE_TEST
+>  	depends on MCPM && !ARM64
+>  	select ARM_CPU_SUSPEND
+>  	select CPU_IDLE_MULTIPLE_DRIVERS
+> @@ -51,13 +51,13 @@ config ARM_HIGHBANK_CPUIDLE
+>  
+>  config ARM_KIRKWOOD_CPUIDLE
+>  	bool "CPU Idle Driver for Marvell Kirkwood SoCs"
+> -	depends on MACH_KIRKWOOD && !ARM64
+> +	depends on (MACH_KIRKWOOD || COMPILE_TEST) && !ARM64
+>  	help
+>  	  This adds the CPU Idle driver for Marvell Kirkwood SoCs.
+>  
+>  config ARM_ZYNQ_CPUIDLE
+>  	bool "CPU Idle Driver for Xilinx Zynq processors"
+> -	depends on ARCH_ZYNQ && !ARM64
+> +	depends on (ARCH_ZYNQ || COMPILE_TEST) && !ARM64
+>  	help
+>  	  Select this to enable cpuidle on Xilinx Zynq processors.
+>  
+> @@ -70,19 +70,19 @@ config ARM_U8500_CPUIDLE
+>  config ARM_AT91_CPUIDLE
+>  	bool "Cpu Idle Driver for the AT91 processors"
+>  	default y
+> -	depends on ARCH_AT91 && !ARM64
+> +	depends on (ARCH_AT91 || COMPILE_TEST) && !ARM64
+>  	help
+>  	  Select this to enable cpuidle for AT91 processors.
+>  
+>  config ARM_EXYNOS_CPUIDLE
+>  	bool "Cpu Idle Driver for the Exynos processors"
+> -	depends on ARCH_EXYNOS && !ARM64
+> +	depends on (ARCH_EXYNOS || COMPILE_TEST) && !ARM64
+>  	select ARCH_NEEDS_CPU_IDLE_COUPLED if SMP
+>  	help
+>  	  Select this to enable cpuidle for Exynos processors.
+>  
+>  config ARM_MVEBU_V7_CPUIDLE
+>  	bool "CPU Idle Driver for mvebu v7 family processors"
+> -	depends on ARCH_MVEBU && !ARM64
+> +	depends on (ARCH_MVEBU || COMPILE_TEST) && !ARM64
+>  	help
+>  	  Select this to enable cpuidle on Armada 370, 38x and XP processors.
+> 
+
+Daniel, any concerns regarding this one?
+
+
+
