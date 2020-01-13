@@ -2,103 +2,144 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106B0C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABE8C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D168D206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:24:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578936252;
-	bh=Vrh46dOWw9BYEu8vGpaGylnACcsRePCg5uU3EjPK5Tk=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=h5subNCZHaN1HJTINpcfcmNuIYuhBZfGd8JzA+cv1zsaLchYzNVf8JndgEwQutu2N
-	 mSbnyepNtdcyIm+1ySibnllIE2nXZx94LNJEeKk5f++fEyjhGwGPWc84TqiaIjJyPA
-	 gVeIOIkn/xD658DBUwIV6BaoMgF2aDPH3tbKZ3wY=
+	by mail.kernel.org (Postfix) with ESMTP id 1CBEE206DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:24:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fIDSBdAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgAMRYM (ORCPT
+        id S1728778AbgAMRY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:24:12 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34834 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728775AbgAMRYL (ORCPT
+        Mon, 13 Jan 2020 12:24:58 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41735 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728641AbgAMRY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:24:11 -0500
-Received: by mail-lj1-f194.google.com with SMTP id j1so11012892lja.2;
-        Mon, 13 Jan 2020 09:24:09 -0800 (PST)
+        Mon, 13 Jan 2020 12:24:57 -0500
+Received: by mail-pf1-f195.google.com with SMTP id w62so5176348pfw.8
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 09:24:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=U2PWwEEnO5+ksSRfTkvVAkgMJvekPPQPvk+J1MXkAKA=;
+        b=fIDSBdAgWDIiMm+DJrGSk8SNVlkqqoJ/XOYER2KVMmFc85XBWE4fErM4MFi85PEx2h
+         2Igm5N9Sw8crh8PmobTPG1r0fpWIz9heb2tmNk/Svm2Hxp7Nb47ZngRKZ0JeD+DCJpYe
+         WIFC61PxN+EIo3zyUbdFykkit80459ecCP/nPUpBTdSqPxMwyduO8/ncgNndqrYsbPC1
+         NoLgWSqo7mDBTDKENNorvGv4h6vVDgJzKAoIMXvIQgn83zmsnj5pMW78uCuKA/TW3tI6
+         vhcDzEa+PHR4GKZ+CfD6TDAsfauhcAox/mVJ9fH0mfHAYHRllagoSZJb+h8uqcj5WtVS
+         7f6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QlfFAdFScE9eazBxy44sDKtFGtk3es9wEFbHmp3zDH8=;
-        b=Dwi2MzSf3x75Cm3NUReGz4TmJIv3IL8zxYwqhwh7l+atsApn4JQMxRsmOKI+bbmzdu
-         vx3oQz4JCRQzXeBDnRiJFTNqi420EohDflU5e7g/gqFexFG3KwZZnDIcSFlSEtdQF/JD
-         eAqmnw8hFaU3o/3JPmK01bNhFinkwiltDQR5EJVU0B9C9m80K9kmIo1X06mzTBg0yUyp
-         QAGS+TKhdNWCvSc2+T/4zOVgVtq2+VlJz1wyUKXUo/n5hqyikTk5pFDhzGl6Ciy4Yfum
-         g78pchG55OOYohherHGgVQ+6sPbVpapPrVDe62ofAALWrkuLdjmcrFSvJoM/CgFqMSn5
-         uSiQ==
-X-Gm-Message-State: APjAAAU1PPxCLgv8a9uW9XgIoIu8IvN8ZDLmRGprVlgXqSU2tWnQy0K4
-        54vOqI7yZlhoy9a1TXh4fKm6juZB
-X-Google-Smtp-Source: APXvYqzJvte/a6SWB5ZAj9L2MQ7QjnxsCkcIXmQtT/nS+1XGi9SQt7q7KO1lF5rx8+2E6/c+2EldWA==
-X-Received: by 2002:a2e:3619:: with SMTP id d25mr11668282lja.231.1578936248566;
-        Mon, 13 Jan 2020 09:24:08 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id 144sm6083349lfi.67.2020.01.13.09.24.07
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=U2PWwEEnO5+ksSRfTkvVAkgMJvekPPQPvk+J1MXkAKA=;
+        b=igyO0lEJkqi+T+06RswtsPnNk50lwLEFhzdSRxN2Rh4c+9IVgFHpqJw7C1IoqWsfWg
+         9J6HqRPmFm0i2zT9GgHdOlsbQrq81AEoTy+YHOuXXY2P9eA+LG7avi6pjZhutYWthMxL
+         cMeMZLl5s6vFeTJlh8ib7nqREOoUj4NMgPs6vRRjo3PKo5SimCiOrlVzi3GCtGY0IEGy
+         v+ncR88nIdIESm+5K0jhN+Bnz6ILW/CBgpWR7VzVqrDmwBrBZZtnLYJBquRU4gLn4JmG
+         1WMEZinI/VX2zR8+V0N8sFoZhtSQ3Ncs7telf2A2mpPGQEwUzgrKa5NVhrbeWTgOhPC5
+         T6mw==
+X-Gm-Message-State: APjAAAWyi5XZLBZZdYG7K1rRr+tJKaR60ZGOnosSM8tEXuGyB/KDypB9
+        FixMyyrkX/fEqaEZ2wkrYJOslg==
+X-Google-Smtp-Source: APXvYqw80f6wRiRP9Dwvx/NTeGY9Bf9oleVCbpo6cpd3kqWBdbqpjm+tTzcPB06sPHd1+r+7vplIzg==
+X-Received: by 2002:aa7:8b17:: with SMTP id f23mr20824919pfd.197.1578936297041;
+        Mon, 13 Jan 2020 09:24:57 -0800 (PST)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id d26sm13917312pgv.66.2020.01.13.09.24.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 09:24:07 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1ir3Rf-00084L-UG; Mon, 13 Jan 2020 18:24:07 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     netdev@vger.kernel.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] NFC: pn533: fix bulk-message timeout
-Date:   Mon, 13 Jan 2020 18:23:58 +0100
-Message-Id: <20200113172358.30973-1-johan@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Mon, 13 Jan 2020 09:24:56 -0800 (PST)
+Date:   Mon, 13 Jan 2020 09:24:53 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [PATCH v2] rpmsg: core: add API to get MTU
+Message-ID: <20200113172453.GQ738324@yoga>
+References: <20191113172249.32412-1-arnaud.pouliquen@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191113172249.32412-1-arnaud.pouliquen@st.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver was doing a synchronous uninterruptible bulk-transfer without
-using a timeout. This could lead to the driver hanging on probe due to a
-malfunctioning (or malicious) device until the device is physically
-disconnected. While sleeping in probe the driver prevents other devices
-connected to the same hub from being added to (or removed from) the bus.
+On Wed 13 Nov 09:22 PST 2019, Arnaud Pouliquen wrote:
 
-An arbitrary limit of five seconds should be more than enough.
+> Return the rpmsg buffer MTU for sending message, so rpmsg users
+> can split a long message in several sub rpmsg buffers.
+> 
 
-Fixes: dbafc28955fa ("NFC: pn533: don't send USB data off of the stack")
-Cc: stable <stable@vger.kernel.org>     # 4.18
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
- drivers/nfc/pn533/usb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I won't merge this new api without a client, and I'm still concerned
+about the details.
 
-diff --git a/drivers/nfc/pn533/usb.c b/drivers/nfc/pn533/usb.c
-index 4590fbf82dc2..f5bb7ace2ff5 100644
---- a/drivers/nfc/pn533/usb.c
-+++ b/drivers/nfc/pn533/usb.c
-@@ -391,7 +391,7 @@ static int pn533_acr122_poweron_rdr(struct pn533_usb_phy *phy)
- 		       cmd, sizeof(cmd), false);
- 
- 	rc = usb_bulk_msg(phy->udev, phy->out_urb->pipe, buffer, sizeof(cmd),
--			  &transferred, 0);
-+			  &transferred, 5000);
- 	kfree(buffer);
- 	if (rc || (transferred != sizeof(cmd))) {
- 		nfc_err(&phy->udev->dev,
--- 
-2.24.1
+> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> ---
+>  V1 to V2
+> 
+>   V1 patch:https://lore.kernel.org/patchwork/patch/1124684/
+>   - Change patch title,
+>   - as not solution today to support MTU on GLINK make ops optional,
+>     RPMsg client API returns -ENOTSUPP in this case,
+>   - suppress smd and glink patches.
 
+That's ok.
+
+> ---
+>  drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
+>  drivers/rpmsg/rpmsg_internal.h   |  2 ++
+>  drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
+>  include/linux/rpmsg.h            | 10 ++++++++++
+>  4 files changed, 43 insertions(+)
+> 
+> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+> index e330ec4dfc33..a6ef54c4779a 100644
+> --- a/drivers/rpmsg/rpmsg_core.c
+> +++ b/drivers/rpmsg/rpmsg_core.c
+> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+>  }
+>  EXPORT_SYMBOL(rpmsg_trysend_offchannel);
+>  
+> +/**
+> + * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
+> + * @ept: the rpmsg endpoint
+> + *
+> + * This function returns maximum buffer size available for a single message.
+> + *
+> + * Return: the maximum transmission size on success and an appropriate error
+> + * value on failure.
+
+Is the expectation that a call to rpmsg_send() with this size will
+eventually succeed?
+
+> + */
+[..]
+> +static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept)
+> +{
+> +	struct rpmsg_device *rpdev = ept->rpdev;
+> +	struct virtio_rpmsg_channel *vch = to_virtio_rpmsg_channel(rpdev);
+> +
+> +	return vch->vrp->buf_size - sizeof(struct rpmsg_hdr);
+
+I'm still under the impression that the rpmsg protocol doesn't have to
+operate on fixed size messages. Would this then return vrp->num_bufs *
+vrp->buf_size / 2 - sizeof(rpmsg_hdr)?
+
+> +}
+> +
+
+Regards,
+Bjorn
