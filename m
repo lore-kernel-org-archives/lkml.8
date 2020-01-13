@@ -2,138 +2,91 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47512C33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F08C33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22DD5206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D70212073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:10:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgAMJKS (ORCPT
+        id S1727076AbgAMJK6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:10:18 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:34768 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725268AbgAMJKR (ORCPT
+        Mon, 13 Jan 2020 04:10:58 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41072 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgAMJK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:10:17 -0500
-Received: from mail-oi1-f200.google.com ([209.85.167.200])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iqvji-0000pc-LQ
-        for linux-kernel@vger.kernel.org; Mon, 13 Jan 2020 09:10:14 +0000
-Received: by mail-oi1-f200.google.com with SMTP id u125so2880433oia.20
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 01:10:14 -0800 (PST)
+        Mon, 13 Jan 2020 04:10:58 -0500
+Received: by mail-oi1-f194.google.com with SMTP id i1so7557554oie.8;
+        Mon, 13 Jan 2020 01:10:57 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=mEdQLRNNr60Uq1X2SB+y192Ftk0ynyhp3ZNDXSiOKAQ=;
-        b=ZDuUtxXP8lCfFmmKbHgRHfnbN1ufYkqKPzLomRLXV3ddQ4mcuLFIWqAfgSmTY/x8UF
-         +fk+Dl9PF3Uh52mfnv8uUiBHrQWWJFLVZeh671dAlwSZP4l+Q0aMHW80FdnJZVMt3p2e
-         OSuWdDG7Otlx9GCzBeaiCaxzR0zD+b8JQaeEHUGYTlpxU9Aihiq6J6uDDp6+gGvZDLs5
-         Y/kgJ7dKaHwfLl3+wPTdlkFmTthPigr1HUjlYQvKxTrdJLa4W9ThcDdEa+pozOjdWNJc
-         cl/1q28bju4LsXKhKDHGf0OgDko74N+hX2CUr6RFBOBhxCSqTdcOqRSneawc/VarsO3c
-         ms8w==
-X-Gm-Message-State: APjAAAVKywk5wTEZbGO4GXxgIbNC+HDDDN4qW2qipNCKkNO3USe518hB
-        9Tl8JnVDkQ2Egi9OWADpu1/a3qnEKGyfZOK1NEDJo9s6K7wXy2X0Ev9TTHLtIqrLOFUgPs2xovU
-        ubaiU5TIdhzufgGnm3k8CElXBH/v7pqhFG69sjik1qQRqVXV1gQIqAnlAkQ==
-X-Received: by 2002:a05:6830:2116:: with SMTP id i22mr12892759otc.0.1578906613629;
-        Mon, 13 Jan 2020 01:10:13 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzbkSKjuRTgR1fq86s85YJnJMUaFmgpHoY0wic8O0U5gnrpy6eHqN8bmmjRA09V5O4NRND1ZioaeJVWGm5KziM=
-X-Received: by 2002:a05:6830:2116:: with SMTP id i22mr12892740otc.0.1578906613363;
- Mon, 13 Jan 2020 01:10:13 -0800 (PST)
+        bh=j6gZhw224Esa/F9sYWDsm6MZRd7GWVp77Xi2oOVzj7I=;
+        b=V7wnikmOZLN603li5YBHQakodO0LzwZktqTdHO95ymRSP5Waavyv0rP2z8fCLsECfY
+         UEMExC/6/WuaW977AI66Et8vDSYzw/3TSdiL7gR7PczdgFp4q/G+1/x0M3zRvQElCSQC
+         3NqFzDR6mqKoFMlh5wRr4WAA02z9sau4Lt1J7BVFn67biQeHUTNJ+H6OdtLSBfGFni4g
+         wkcLXna5yUe1h0Vvbxsc0PoTkyojhWXEPsaoFQzBMzUvFLimPqcqBA6m7QxDqKGXvFUW
+         Aj2IQxrRx2AmMq0BXSBInF1msExPPQ14GsurT9+9VKzH+zmIKXp0hnlJcUm9ZpPWDamz
+         XmnA==
+X-Gm-Message-State: APjAAAVBkKUnr2qqC0Rtof6hqAmNUgr2Mr0OjEmf8niiyJRdw0WQrcJ/
+        cVsARoLBhbSv+d96ZbCjpzfQ7i0hig5ypPykou0=
+X-Google-Smtp-Source: APXvYqwxP5TUTn30AonNUa0Qc77P4zv+kJkUuwsv4y7LcQg2Yk9B+2R4a6oHO1XnIuST8PjVuXdYuOG9TUI9CaDqClk=
+X-Received: by 2002:a05:6808:292:: with SMTP id z18mr11350725oic.131.1578906657627;
+ Mon, 13 Jan 2020 01:10:57 -0800 (PST)
 MIME-Version: 1.0
-References: <20200103084008.3579-1-kai.heng.feng@canonical.com> <607e395f-21ce-3c9f-eff7-2fa6aaa74595@linux.intel.com>
-In-Reply-To: <607e395f-21ce-3c9f-eff7-2fa6aaa74595@linux.intel.com>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Mon, 13 Jan 2020 17:10:02 +0800
-Message-ID: <CAAd53p5a2RFpZuHGvuNO_9kgv4dGhHCYU0jeq44FtKJv0Ky8uA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] xhci: Ensure link state is U3 after setting USB_SS_PORT_LS_U3
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        AceLan Kao <acelan.kao@canonical.com>,
-        USB list <linux-usb@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20191124195225.31230-1-jongk@linux-m68k.org> <CAMuHMdXQAbw_Skj99q_PWXKn77bzVbJf60n38Etmq-zhOoHsHQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdXQAbw_Skj99q_PWXKn77bzVbJf60n38Etmq-zhOoHsHQ@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 13 Jan 2020 10:10:26 +0100
+Message-ID: <CAMuHMdU9hu+EAAnBD5dH3+LS5pNi9fOjFNesv3eFSCoqbW3CCA@mail.gmail.com>
+Subject: Re: [PATCH] m68k: Wire up clone3() syscall
+To:     Kars de Jong <jongk@linux-m68k.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Linux/m68k" <linux-m68k@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        "Amanieu d'Antras" <amanieu@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 5:33 PM Mathias Nyman
-<mathias.nyman@linux.intel.com> wrote:
->
-> On 3.1.2020 10.40, Kai-Heng Feng wrote:
-> > The xHCI spec doesn't specify the upper bound of U3 transition time. For
-> > some devices 20ms is not enough, so we need to make sure the link state
-> > is in U3 before further actions.
->
-> Looking at the USB 3.2 spec (7.2.4.2 Link Power management and Flow) it seems
-> most timers related to U3 entry are a lot less than a millisecond (4-16us)
-> If port is in U1/U2,  Ux_EXIT_TIMER is 6ms which seems to be the longest timeout.
->
-> If we anyway are polling for the U3 state we could shorten the initial 20ms sleep
-> down to 10ms. I think many devices, especially if they are already in U0
-> could manage this.
-
-Ok.
-
->
-> are >
-> > I've tried to use U3 Entry Capability by setting U3 Entry Enable in
-> > config register, however the port change event for U3 transition
-> > interrupts the system suspend process.
+On Sun, Jan 12, 2020 at 5:06 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Sun, Nov 24, 2019 at 8:52 PM Kars de Jong <jongk@linux-m68k.org> wrote:
+> > Wire up the clone3() syscall for m68k. The special entry point is done in
+> > assembler as was done for clone() as well. This is needed because all
+> > registers need to be saved. The C wrapper then calls the generic
+> > sys_clone3() with the correct arguments.
 > >
-> > For now let's use the less ideal method by polling PLS.
+> > Tested on A1200 using the simple test program from:
 > >
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> >   drivers/usb/host/xhci-hub.c | 13 +++++++++++--
-> >   1 file changed, 11 insertions(+), 2 deletions(-)
+> >   https://lore.kernel.org/lkml/20190716130631.tohj4ub54md25dys@brauner.io/
 > >
-> > diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-> > index 7a3a29e5e9d2..2b2e9d004dbf 100644
-> > --- a/drivers/usb/host/xhci-hub.c
-> > +++ b/drivers/usb/host/xhci-hub.c
-> > @@ -1228,6 +1228,7 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
-> >                       break;
-> >               case USB_PORT_FEAT_LINK_STATE:
-> >                       temp = readl(ports[wIndex]->addr);
-> > +                     xhci_dbg(xhci, "before setting link state, actual port %d-%d status = 0x%0x\n", hcd->self.busnum, wIndex + 1, temp);
+> > Cc: linux-m68k@vger.kernel.org
+> > Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
 >
-> xhci_set_link_state() already shows similar debugging,
+> Thanks, applied and queued for v5.6.
 
-Ok, will remove it.
+Which is now broken because of commit dd499f7a7e342702 ("clone3: ensure
+copy_thread_tls is implemented") in v5.5-rc6 :-(
 
->
-> >                       /* Disable port */
-> >                       if (link_state == USB_SS_PORT_LS_SS_DISABLED) {
-> >                               xhci_dbg(xhci, "Disable port %d\n", wIndex);
-> > @@ -1316,9 +1317,17 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
-> >                       msleep(20); /* wait device to enter */
-> >                       spin_lock_irqsave(&xhci->lock, flags);
-> >
-> > -                     temp = readl(ports[wIndex]->addr);
-> > -                     if (link_state == USB_SS_PORT_LS_U3)
-> > +                     if (link_state == USB_SS_PORT_LS_U3) {
-> > +                             retval = xhci_handshake(ports[wIndex]->addr, PORT_PLS_MASK, XDEV_U3, 80 * 1000);
-> > +                             if (retval)
-> > +                                     xhci_dbg(xhci, "polling XDEV_U3 on port %d-%d timeout\n", hcd->self.busnum, wIndex + 1);
->
-> In worst case we are busylooping for 80ms here, keeping the cpu busy.
-> It should be ok to sleep here, so how about just reading the register
-> every 10ms max 10 times, sleeping in between.
+BTW, was this the reason for the failures at the end of
+https://lore.kernel.org/lkml/CACz-3rhmUfxbfhznvA6NOF69SR49NDZwnkZ=Bmhw_cf4SkiadQ@mail.gmail.com/?
 
-Ok. Is the polling safe outside of spin_lock_irqsave()?
+Thanks!
 
-Kai-Heng
+Gr{oetje,eeting}s,
 
->
-> -Mathias
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
