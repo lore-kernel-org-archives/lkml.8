@@ -2,130 +2,72 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32118C33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAB8C33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D7621744
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:53:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="FfgUDyjz";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="D7DL0JW6"
+	by mail.kernel.org (Postfix) with ESMTP id 113E02082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:54:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387656AbgAMDxq (ORCPT
+        id S2387596AbgAMDyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 22:53:46 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:58049 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387498AbgAMDxN (ORCPT
+        Sun, 12 Jan 2020 22:54:24 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:44262 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387417AbgAMDyY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 22:53:13 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id A07A621C7A;
-        Sun, 12 Jan 2020 22:53:12 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Sun, 12 Jan 2020 22:53:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=RHYQj/FernzCJ
-        VEio9TnwHcA6uvjDWGqaN7zZ1DFVIc=; b=FfgUDyjzi8fSdgJm28w8tDjs2rOeS
-        ukQnOGsSuoIWRHfVyGN0rpWuw7AoQtVvO5ZskTBhFp4rNgmuitaQYMxpsmpTKnIB
-        nuRQbJwL1kTHXHPoaH1nDR91xBq31sSi5iIlS2RLQWyTG+2jko69g/BF9U1JcE6j
-        TNtKsc5wAdGIF656KnOj39OowbF6OfwQgefjpATDOvQyJclHe5Wlf2n5At1MvSPG
-        6MMRIbBurqbZtXUsdBkk0519dDqlcTo075nAiIPd5qzRTry6YXd1ife0YJyRb18N
-        mntQNpAZrwc0Q45jUj+CDbQpTcx/wrlvv4zlbA3bqAs3bPZ2zE28DsTmg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=RHYQj/FernzCJVEio9TnwHcA6uvjDWGqaN7zZ1DFVIc=; b=D7DL0JW6
-        jdOL2jQVH5/t7mreumcfxDvr8syK18bse+gd0NxnGIO8PD0suPPu3+bBThdwdrTt
-        nR2UBUylZoo9ksj60S5OuMaYAATQPwviBK1sZN4W9V09FkMVQLmTFhrWpcsYm3WU
-        AuGVhl993Pja1PrkgzGXMRdVb+Egf78IkBu/XBoMkwfk2sADi+5qhQlBDmBitxG4
-        f7nffWOVm5qeOJmnMnxicQjTDaA3ckKSx9n5b2emgrA4SrxMoqnYwaKV9ZsTpH8a
-        6TgJgEAGYKEr779gtlZaWmyRwHPW4SrH+VE8/NEDHV55RVqV8gHPR25VkJey1Nsw
-        DTW6fgICDe0Ifw==
-X-ME-Sender: <xms:qOkbXsWmffLPJ_RQJrcCXpVnn77jcFL4f_kkHd9T0zyMvjkp3lIspw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeiledgieeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
-    epjedtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghm
-    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:qOkbXqTifZTi5pJSYhst-uDQgvdK4qFgTux2V1FcnuK6y5S7t6Qb0g>
-    <xmx:qOkbXvsYynl53cOlA0YPsFbIsPjqy8NOgeHtb_8Hv80QbT4aGQ7btg>
-    <xmx:qOkbXjZD4y76l_9EcUKCBagETWU7INMFfo3tQRINbofyjT8-5naiug>
-    <xmx:qOkbXqfSeggiHg9B3czeDp_UhVa4Puk-N4dAMN-pZyHdZAZ-S4Afeg>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 15BE280063;
-        Sun, 12 Jan 2020 22:53:12 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Chen-Yu Tsai <wens@csie.org>, Sebastian Reichel <sre@kernel.org>,
-        Oskari Lemmela <oskari@lemmela.net>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v3 2/8] power: supply: axp20x_ac_power: Allow offlining
-Date:   Sun, 12 Jan 2020 21:53:04 -0600
-Message-Id: <20200113035310.18950-3-samuel@sholland.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200113035310.18950-1-samuel@sholland.org>
-References: <20200113035310.18950-1-samuel@sholland.org>
+        Sun, 12 Jan 2020 22:54:24 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iqqnn-0071ej-1H; Mon, 13 Jan 2020 03:54:07 +0000
+Date:   Mon, 13 Jan 2020 03:54:07 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Ian Kent <raven@themaw.net>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
+ symlinks
+Message-ID: <20200113035407.GQ8904@ZenIV.linux.org.uk>
+References: <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
+ <20200101004324.GA11269@ZenIV.linux.org.uk>
+ <20200101005446.GH4203@ZenIV.linux.org.uk>
+ <20200101030815.GA17593@ZenIV.linux.org.uk>
+ <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
+ <20200101234009.GB8904@ZenIV.linux.org.uk>
+ <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
+ <20200103014901.GC8904@ZenIV.linux.org.uk>
+ <20200110231945.GL8904@ZenIV.linux.org.uk>
+ <aea0bc800b6a1e547ca1944738ff9db4379098ba.camel@themaw.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aea0bc800b6a1e547ca1944738ff9db4379098ba.camel@themaw.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AXP803/AXP813 have a flag that enables/disables the AC power supply
-input. Allow control of this flag via the ONLINE property on those
-variants.
+On Mon, Jan 13, 2020 at 09:48:23AM +0800, Ian Kent wrote:
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
- drivers/power/supply/axp20x_ac_power.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+> I did try this patch and I was trying to work out why it didn't
+> work. But thought I'd let you know what I saw.
+> 
+> Applying it to current Linus tree systemd stops at switch root.
+> 
+> Not sure what causes that, I couldn't see any reason for it.
 
-diff --git a/drivers/power/supply/axp20x_ac_power.c b/drivers/power/supply/axp20x_ac_power.c
-index f74b0556bb6b..3ba38f2f281c 100644
---- a/drivers/power/supply/axp20x_ac_power.c
-+++ b/drivers/power/supply/axp20x_ac_power.c
-@@ -24,6 +24,7 @@
- #define AXP20X_PWR_STATUS_ACIN_AVAIL	BIT(6)
- 
- #define AXP813_ACIN_PATH_SEL		BIT(7)
-+#define AXP813_ACIN_PATH_SEL_TO_BIT(x)	(!!(x) << 7)
- 
- #define AXP813_VHOLD_MASK		GENMASK(5, 3)
- #define AXP813_VHOLD_UV_TO_BIT(x)	((((x) / 100000) - 40) << 3)
-@@ -157,6 +158,11 @@ static int axp813_ac_power_set_property(struct power_supply *psy,
- 	struct axp20x_ac_power *power = power_supply_get_drvdata(psy);
- 
- 	switch (psp) {
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		return regmap_update_bits(power->regmap, AXP813_ACIN_PATH_CTRL,
-+					  AXP813_ACIN_PATH_SEL,
-+					  AXP813_ACIN_PATH_SEL_TO_BIT(val->intval));
-+
- 	case POWER_SUPPLY_PROP_VOLTAGE_MIN:
- 		if (val->intval < 4000000 || val->intval > 4700000)
- 			return -EINVAL;
-@@ -183,7 +189,8 @@ static int axp813_ac_power_set_property(struct power_supply *psy,
- static int axp813_ac_power_prop_writeable(struct power_supply *psy,
- 					  enum power_supply_property psp)
- {
--	return psp == POWER_SUPPLY_PROP_VOLTAGE_MIN ||
-+	return psp == POWER_SUPPLY_PROP_ONLINE ||
-+	       psp == POWER_SUPPLY_PROP_VOLTAGE_MIN ||
- 	       psp == POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT;
- }
- 
--- 
-2.23.0
+Wait a minute...  So you are seeing problems early in the boot,
+before any autofs ioctls might come into play?
 
+Sigh...  Guess I'll have to dig that Fedora KVM image out and
+try to see what it's about... ;-/  Here comes a couple of hours
+of build...
