@@ -2,78 +2,83 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895B4C33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55CF4C33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8BA20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A1E220678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:05:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="iHyodrnj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbgAMJAy (ORCPT
+        id S1726134AbgAMJFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:00:54 -0500
-Received: from smtp25.cstnet.cn ([159.226.251.25]:60406 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725268AbgAMJAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:00:54 -0500
-Received: from localhost.localdomain (unknown [159.226.5.100])
-        by APP-05 (Coremail) with SMTP id zQCowACHeIm1MRxe8EVkCQ--.28S3;
-        Mon, 13 Jan 2020 17:00:37 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        steffen.klassert@secunet.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] xfrm: interface: do not confirm neighbor when do pmtu update
-Date:   Mon, 13 Jan 2020 09:00:36 +0000
-Message-Id: <1578906036-20623-1-git-send-email-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: zQCowACHeIm1MRxe8EVkCQ--.28S3
-X-Coremail-Antispam: 1UD129KBjvdXoWrZFyDZFyDKrWUKFWUCr18Grg_yoW3Cwc_Wr
-        1xur4UW3srKF9xC345Ar4xZr1DX34ku3s7ua97Kryjqa40qFZ3AasFqr1xGr47GrWDur1U
-        JF1qqrs8Aw45AjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb7kYjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
-        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMc
-        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_GFWl42xK82IY
-        c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
-        0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-        vE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-        aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUct8nUUUUU
-X-Originating-IP: [159.226.5.100]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiDAIOA1z4isI6AAAAsV
+        Mon, 13 Jan 2020 04:05:19 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:53300 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgAMJFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 04:05:19 -0500
+Received: from zn.tnic (p200300EC2F05D300845C97C8540218FC.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:d300:845c:97c8:5402:18fc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id BB8791EC0CBD;
+        Mon, 13 Jan 2020 10:05:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1578906317;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=dKbaCfSlA3zMZXVOUhal7rgsI6faHR3J0+QS6uAvZG8=;
+        b=iHyodrnjURcmi71GzArtn72rgcjvUjXpWX9f6ImlJyI/v0HOpoKpyqLGOy2KcFDL71+AxE
+        p56+jVTXYz8LjKpndchdbjkyzTJVsrD+cGnh2Eh72F5KcQ3LNyWjSCnrfiWA86qrjV6xKI
+        ZUCIY5t4ejxDMe5uPAU/ZY1E0bOdnls=
+Date:   Mon, 13 Jan 2020 10:05:09 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Chuansheng Liu <chuansheng.liu@intel.com>,
+        linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        hpa@zytor.com
+Subject: Re: [PATCH v2] x86/mce/therm_throt: Fix the access of uninitialized
+ therm_work
+Message-ID: <20200113090509.GC13310@zn.tnic>
+References: <20200107004116.59353-1-chuansheng.liu@intel.com>
+ <20200110182929.GA20511@agluck-desk2.amr.corp.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200110182929.GA20511@agluck-desk2.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When do IPv6 tunnel PMTU update and calls __ip6_rt_update_pmtu() in the end,
-we should not call dst_confirm_neigh() as there is no two-way communication.
+On Fri, Jan 10, 2020 at 10:29:29AM -0800, Luck, Tony wrote:
+> On Tue, Jan 07, 2020 at 12:41:16AM +0000, Chuansheng Liu wrote:
+> > In my ICL platform, it can be reproduced in several times
+> > of reboot stress. With this fix, the system keeps alive
+> > for more than 200 times of reboot stress.
+> > 
+> > V2: Boris shares a good suggestion that we can moving the
+> > interrupt unmasking at the end of therm_work initialization.
+> > 
+> > Signed-off-by: Chuansheng Liu <chuansheng.liu@intel.com>
+> 
+> Looks good to me:
+> 
+> Acked-by: Tony Luck <tony.luck@intel.com>
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- net/xfrm/xfrm_interface.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thx.
 
-diff --git a/net/xfrm/xfrm_interface.c b/net/xfrm/xfrm_interface.c
-index 7ac1542..e732637 100644
---- a/net/xfrm/xfrm_interface.c
-+++ b/net/xfrm/xfrm_interface.c
-@@ -297,7 +297,7 @@ xfrmi_xmit2(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
- 
- 	mtu = dst_mtu(dst);
- 	if (!skb->ignore_df && skb->len > mtu) {
--		skb_dst_update_pmtu(skb, mtu);
-+		skb_dst_update_pmtu_no_confirm(skb, mtu);
- 
- 		if (skb->protocol == htons(ETH_P_IPV6)) {
- 			if (mtu < IPV6_MIN_MTU)
+This "ICL platform" - whatever that is - is this shipping already so
+that this qualifies for stable@ or can it go the normal path?
+
 -- 
-2.7.4
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
