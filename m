@@ -2,370 +2,233 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 749AEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:03:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 665FDC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:03:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3294221569
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:03:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578942199;
-	bh=KzR0if8pQbJrsKZp4NuguFr5sKacnM3wgwFWApT5Xnk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=A0ie1Kut/AcH1mQYrqYrza78GeYMr8b74WXQoVG8xevBJdux/1Fs/vFFxDXRXoP5F
-	 OlGZkxFepVBkOzEdTTX8BFGJHOxOu5AItNAdRPsK3w0bUh9sfGqLKZLBtER9QglCFe
-	 GLj4+ghaN2OvOicxc1DkJ85fAo9ytLZ5Te0Gh2f0=
+	by mail.kernel.org (Postfix) with ESMTP id 3150C214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:03:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="j2LjWR32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728680AbgAMTDS (ORCPT
+        id S1728757AbgAMTD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:03:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgAMTDR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:03:17 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3362214AF;
-        Mon, 13 Jan 2020 19:03:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578942196;
-        bh=KzR0if8pQbJrsKZp4NuguFr5sKacnM3wgwFWApT5Xnk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=y/MuDFueTzMEPEHzUwYR+VrcOW4tQK+kCF6nrg4sVfixS01bAxdNAOwwxFjfc8PCM
-         VxuAobxoFjgyqokQwWdR5L52b0NRV/eZCvc8SiIA2jCPw1RI8wjNnX5EQVX3vAcLX3
-         8mN5ssi1au1yh5IhYQcp5Y7w3jyWLiVyGrSk7dXs=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id AB43A3522798; Mon, 13 Jan 2020 11:03:15 -0800 (PST)
-Date:   Mon, 13 Jan 2020 11:03:15 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        RCU <rcu@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>
-Subject: Re: [PATCH 1/1] rcu/tree: support kfree_bulk() interface in
- kfree_rcu()
-Message-ID: <20200113190315.GA12543@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191231122241.5702-1-urezki@gmail.com>
+        Mon, 13 Jan 2020 14:03:57 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:37770 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726435AbgAMTD4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 14:03:56 -0500
+Received: by mail-qt1-f193.google.com with SMTP id w47so10075424qtk.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 11:03:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+inUt/WmmI597eh2nymbH3BOL/mA5fX+C9DAAZpCYV0=;
+        b=j2LjWR32DU63CHYJd7xM+PPZB4i/BwEVYEHuSXMkO+GgS2Lyc4ydxUahqYnOQMsosc
+         sfY/fzh8rDlPyRr8mwo3MTMeVEHYAQA7stHRIPsf0odNoeJf4V62f1ny3QdwgblF8BVJ
+         gnksW2k1X05Kfg2jI8ME2pYxAzy5peK6/mibDSz2z9AWG5s6JoRlkNsrCD2LUa5RDBM0
+         fUxCv/3kV96gIBgq63UomvYpMCWqcLY0rLq844aGwvpGAtWbSXqqGtKHSfrIKftbjAiX
+         jMODc8sYxImHQIiFOxpCgrYI64VqMArYGRR8lCVtPX8GfkFgs5/2UZOsS2pkzh09onhY
+         86Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+inUt/WmmI597eh2nymbH3BOL/mA5fX+C9DAAZpCYV0=;
+        b=lKhVY2rAiln9+7pXkYwHcB3dVUS/lbAYPFA+oH7uzdO10wbCGIKOucl3k9Byq08FnE
+         MvW2MumgJZXeU5XxGWFmyj1u0IUAI0P1JPJf2WsGY5bjv4qa/r8OFRFJkCkR9ixFTiC1
+         bhWqnQ10UgHGuMwmTzMRTi3/aXZYqzg5vS2+yoKQBNSqClEdc8YUvF52GfNHyz9lY6C+
+         ZnlaYlK5t1ohfj6rGgb2fPHuUAeg+HBy6NB8wMRIzn95bh55cdWVCTnQzTHjud33qlDb
+         9NAL23hSFOxHY/lChpD6Smrp0Njbhluh/qHt4GpWUtLfahmiKEXl8GUGm37i//j08KOS
+         7dtQ==
+X-Gm-Message-State: APjAAAUkW3gWGycYH++fZxRMXN2WM5Bv/NmRdZs2TMxKJlFBkPnyVqy6
+        YL+Y1kynxJW3AsSoTMaRrZc11w==
+X-Google-Smtp-Source: APXvYqwzD68MzhfhsQmDyZdGGp10+0UPGB9aBZJ/wmrWgpbT9FsQopUFCl5/KI/PyEG/m6MUOVdvig==
+X-Received: by 2002:ac8:1730:: with SMTP id w45mr9073qtj.297.1578942235143;
+        Mon, 13 Jan 2020 11:03:55 -0800 (PST)
+Received: from ovpn-120-31.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id k29sm6154149qtu.54.2020.01.13.11.03.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Jan 2020 11:03:54 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     peterz@infradead.org, mingo@redhat.com
+Cc:     juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com,
+        mgorman@suse.de, paulmck@kernel.org, tglx@linutronix.de,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] sched/core: fix illegal RCU from offline CPUs
+Date:   Mon, 13 Jan 2020 14:03:31 -0500
+Message-Id: <20200113190331.12788-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191231122241.5702-1-urezki@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Dec 31, 2019 at 01:22:41PM +0100, Uladzislau Rezki (Sony) wrote:
-> kfree_rcu() logic can be improved further by using kfree_bulk()
-> interface along with "basic batching support" introduced earlier.
-> 
-> The are at least two advantages of using "bulk" interface:
-> - in case of large number of kfree_rcu() requests kfree_bulk()
->   reduces the per-object overhead caused by calling kfree()
->   per-object.
-> 
-> - reduces the number of cache-misses due to "pointer chasing"
->   between objects which can be far spread between each other.
-> 
-> This approach defines a new kfree_rcu_bulk_data structure that
-> stores pointers in an array with a specific size. Number of entries
-> in that array depends on PAGE_SIZE making kfree_rcu_bulk_data
-> structure to be exactly one page.
-> 
-> Since it deals with "block-chain" technique there is an extra
-> need in dynamic allocation when a new block is required. Memory
-> is allocated with GFP_NOWAIT | __GFP_NOWARN flags, i.e. that
-> allows to skip direct reclaim under low memory condition to
-> prevent stalling and fails silently under high memory pressure.
-> 
-> The "emergency path" gets maintained when a system is run out
-> of memory. In that case objects are linked into regular list
-> and that is it.
-> 
-> In order to evaluate it, the "rcuperf" was run to analyze how
-> much memory is consumed and what is kfree_bulk() throughput.
-> 
-> Testing on the HiKey-960, arm64, 8xCPUs with below parameters:
-> 
-> CONFIG_SLAB=y
-> kfree_loops=200000 kfree_alloc_num=1000 kfree_rcu_test=1
-> 
-> 102898760401 ns, loops: 200000, batches: 5822, memory footprint: 158MB
-> 89947009882  ns, loops: 200000, batches: 6715, memory footprint: 115MB
-> 
-> rcuperf shows approximately ~12% better throughput(Total time)
-> in case of using "bulk" interface. The "drain logic" or its RCU
-> callback does the work faster that leads to better throughput.
+In the CPU-offline process, it calls mmdrop() after idle entry and the
+subsequent call to cpuhp_report_idle_dead(). Once execution passes the
+call to rcu_report_dead(), RCU is ignoring the CPU, which results in
+lockdep complaints when mmdrop() uses RCU from either memcg or
+debugobjects, so it by scheduling mmdrop() on another online CPU.
 
-Nice improvement!
+According to the commit a79e53d85683 ("x86/mm: Fix pgd_lock deadlock"),
+mmdrop() is not interrupt-safe, and called from
+smp_call_function_single() could end up running mmdrop() from the IPI
+interrupt handler.
 
-But rcuperf uses a single block size, which turns into kfree_bulk() using
-a single slab, which results in good locality of reference.  So I have to
-ask...  Is this performance result representative of production workloads?
+ Call Trace:
+  mmdrop+0x58/0x80
+  flush_smp_call_function_queue+0x128/0x2e0
+  smp_ipi_demux_relaxed+0x84/0xf0
+  doorbell_exception+0x118/0x588
+  h_doorbell_common+0x124/0x130
+  --- interrupt: e81 at replay_interrupt_return+0x0/0x4
+      LR = arch_local_irq_restore.part.8+0x78/0x90
+  arch_local_irq_restore.part.8+0x34/0x90 (unreliable)
+  _raw_spin_unlock_irq+0x50/0x80
+  finish_task_switch+0xd8/0x340
+  __schedule+0x4bc/0xba0
+  schedule_idle+0x38/0x70
+  do_idle+0x2a4/0x470
+  cpu_startup_entry+0x3c/0x40
+  start_secondary+0x7a8/0xa80
+  start_secondary_resume+0x10/0x14
 
-							Thanx, Paul
+Therefore, use mmdrop_async() instead to run mmdrop() from a process
+context similar to the commit 7283094ec3db ("kernel, oom: fix potential
+pgd_lock deadlock from __mmdrop").
 
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> ---
->  kernel/rcu/tree.c | 154 ++++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 130 insertions(+), 24 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> index 48fba2257748..4ee5c737558b 100644
-> --- a/kernel/rcu/tree.c
-> +++ b/kernel/rcu/tree.c
-> @@ -2754,22 +2754,45 @@ EXPORT_SYMBOL_GPL(call_rcu);
->  #define KFREE_DRAIN_JIFFIES (HZ / 50)
->  #define KFREE_N_BATCHES 2
->  
-> +/*
-> + * This macro defines how many entries the "records" array
-> + * will contain. It is based on the fact that the size of
-> + * kfree_rcu_bulk_data structure becomes exactly one page.
-> + */
-> +#define KFREE_BULK_MAX_ENTR ((PAGE_SIZE / sizeof(void *)) - 2)
-> +
-> +/**
-> + * struct kfree_rcu_bulk_data - single block to store kfree_rcu() pointers
-> + * @nr_records: Number of active pointers in the array
-> + * @records: Array of the kfree_rcu() pointers
-> + * @next: Next bulk object in the block chain
-> + */
-> +struct kfree_rcu_bulk_data {
-> +	unsigned long nr_records;
-> +	void *records[KFREE_BULK_MAX_ENTR];
-> +	struct kfree_rcu_bulk_data *next;
-> +};
-> +
->  /**
->   * struct kfree_rcu_cpu_work - single batch of kfree_rcu() requests
->   * @rcu_work: Let queue_rcu_work() invoke workqueue handler after grace period
->   * @head_free: List of kfree_rcu() objects waiting for a grace period
-> + * @bhead_free: Bulk-List of kfree_rcu() objects waiting for a grace period
->   * @krcp: Pointer to @kfree_rcu_cpu structure
->   */
->  
->  struct kfree_rcu_cpu_work {
->  	struct rcu_work rcu_work;
->  	struct rcu_head *head_free;
-> +	struct kfree_rcu_bulk_data *bhead_free;
->  	struct kfree_rcu_cpu *krcp;
->  };
->  
->  /**
->   * struct kfree_rcu_cpu - batch up kfree_rcu() requests for RCU grace period
->   * @head: List of kfree_rcu() objects not yet waiting for a grace period
-> + * @bhead: Bulk-List of kfree_rcu() objects not yet waiting for a grace period
-> + * @bcached: Keeps at most one object for later reuse when build chain blocks
->   * @krw_arr: Array of batches of kfree_rcu() objects waiting for a grace period
->   * @lock: Synchronize access to this structure
->   * @monitor_work: Promote @head to @head_free after KFREE_DRAIN_JIFFIES
-> @@ -2783,6 +2806,8 @@ struct kfree_rcu_cpu_work {
->   */
->  struct kfree_rcu_cpu {
->  	struct rcu_head *head;
-> +	struct kfree_rcu_bulk_data *bhead;
-> +	struct kfree_rcu_bulk_data *bcached;
->  	struct kfree_rcu_cpu_work krw_arr[KFREE_N_BATCHES];
->  	spinlock_t lock;
->  	struct delayed_work monitor_work;
-> @@ -2800,6 +2825,7 @@ static void kfree_rcu_work(struct work_struct *work)
->  {
->  	unsigned long flags;
->  	struct rcu_head *head, *next;
-> +	struct kfree_rcu_bulk_data *bhead, *bnext;
->  	struct kfree_rcu_cpu *krcp;
->  	struct kfree_rcu_cpu_work *krwp;
->  
-> @@ -2809,22 +2835,39 @@ static void kfree_rcu_work(struct work_struct *work)
->  	spin_lock_irqsave(&krcp->lock, flags);
->  	head = krwp->head_free;
->  	krwp->head_free = NULL;
-> +	bhead = krwp->bhead_free;
-> +	krwp->bhead_free = NULL;
->  	spin_unlock_irqrestore(&krcp->lock, flags);
->  
-> -	// List "head" is now private, so traverse locklessly.
-> +	/* List "bhead" is now private, so traverse locklessly. */
-> +	for (; bhead; bhead = bnext) {
-> +		bnext = bhead->next;
-> +
-> +		rcu_lock_acquire(&rcu_callback_map);
-> +		kfree_bulk(bhead->nr_records, bhead->records);
-> +		rcu_lock_release(&rcu_callback_map);
-> +
-> +		if (cmpxchg(&krcp->bcached, NULL, bhead))
-> +			free_page((unsigned long) bhead);
-> +
-> +		cond_resched_tasks_rcu_qs();
-> +	}
-> +
-> +	/*
-> +	 * Emergency case only. It can happen under low memory
-> +	 * condition when an allocation gets failed, so the "bulk"
-> +	 * path can not be temporary maintained.
-> +	 */
->  	for (; head; head = next) {
->  		unsigned long offset = (unsigned long)head->func;
->  
->  		next = head->next;
-> -		// Potentially optimize with kfree_bulk in future.
->  		debug_rcu_head_unqueue(head);
->  		rcu_lock_acquire(&rcu_callback_map);
->  		trace_rcu_invoke_kfree_callback(rcu_state.name, head, offset);
->  
-> -		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset))) {
-> -			/* Could be optimized with kfree_bulk() in future. */
-> +		if (!WARN_ON_ONCE(!__is_kfree_rcu_offset(offset)))
->  			kfree((void *)head - offset);
-> -		}
->  
->  		rcu_lock_release(&rcu_callback_map);
->  		cond_resched_tasks_rcu_qs();
-> @@ -2839,26 +2882,45 @@ static void kfree_rcu_work(struct work_struct *work)
->   */
->  static inline bool queue_kfree_rcu_work(struct kfree_rcu_cpu *krcp)
->  {
-> +	struct kfree_rcu_cpu_work *krwp;
-> +	bool queued = false;
->  	int i;
-> -	struct kfree_rcu_cpu_work *krwp = NULL;
->  
->  	lockdep_assert_held(&krcp->lock);
-> -	for (i = 0; i < KFREE_N_BATCHES; i++)
-> -		if (!krcp->krw_arr[i].head_free) {
-> -			krwp = &(krcp->krw_arr[i]);
-> -			break;
-> -		}
->  
-> -	// If a previous RCU batch is in progress, we cannot immediately
-> -	// queue another one, so return false to tell caller to retry.
-> -	if (!krwp)
-> -		return false;
-> +	for (i = 0; i < KFREE_N_BATCHES; i++) {
-> +		krwp = &(krcp->krw_arr[i]);
->  
-> -	krwp->head_free = krcp->head;
-> -	krcp->head = NULL;
-> -	INIT_RCU_WORK(&krwp->rcu_work, kfree_rcu_work);
-> -	queue_rcu_work(system_wq, &krwp->rcu_work);
-> -	return true;
-> +		/*
-> +		 * Try to detach bhead or head and attach it over any
-> +		 * available corresponding free channel. It can be that
-> +		 * a previous RCU batch is in progress, it means that
-> +		 * immediately to queue another one is not possible so
-> +		 * return false to tell caller to retry.
-> +		 */
-> +		if ((krcp->bhead && !krwp->bhead_free) ||
-> +				(krcp->head && !krwp->head_free)) {
-> +			if (!krwp->bhead_free) {
-> +				krwp->bhead_free = krcp->bhead;
-> +				krcp->bhead = NULL;
-> +			}
-> +
-> +			if (!krwp->head_free) {
-> +				krwp->head_free = krcp->head;
-> +				krcp->head = NULL;
-> +			}
-> +
-> +			/*
-> +			 * The work can already be queued. If so, it means that
-> +			 * within a short time, second, either head or bhead has
-> +			 * been detached as well.
-> +			 */
-> +			queue_rcu_work(system_wq, &krwp->rcu_work);
-> +			queued = true;
-> +		}
-> +	}
-> +
-> +	return queued;
->  }
->  
->  static inline void kfree_rcu_drain_unlock(struct kfree_rcu_cpu *krcp,
-> @@ -2895,6 +2957,39 @@ static void kfree_rcu_monitor(struct work_struct *work)
->  		spin_unlock_irqrestore(&krcp->lock, flags);
->  }
->  
-> +static inline bool
-> +kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp, void *ptr)
-> +{
-> +	struct kfree_rcu_bulk_data *bnode;
-> +
-> +	if (unlikely(!krcp->initialized))
-> +		return false;
-> +
-> +	lockdep_assert_held(&krcp->lock);
-> +
-> +	/* Check if a new block is required. */
-> +	if (!krcp->bhead ||
-> +			krcp->bhead->nr_records == KFREE_BULK_MAX_ENTR) {
-> +		bnode = xchg(&krcp->bcached, NULL);
-> +		if (!bnode)
-> +			bnode = (struct kfree_rcu_bulk_data *)
-> +				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-> +
-> +		/* No cache or an allocation got failed. */
-> +		if (unlikely(!bnode))
-> +			return false;
-> +
-> +		/* Initialize the new block. */
-> +		bnode->nr_records = 0;
-> +		bnode->next = krcp->bhead;
-> +		krcp->bhead = bnode;
-> +	}
-> +
-> +	/* Finally insert. */
-> +	krcp->bhead->records[krcp->bhead->nr_records++] = ptr;
-> +	return true;
-> +}
-> +
->  /*
->   * Queue a request for lazy invocation of kfree() after a grace period.
->   *
-> @@ -2926,9 +3021,17 @@ void kfree_call_rcu(struct rcu_head *head, rcu_callback_t func)
->  			  __func__, head);
->  		goto unlock_return;
->  	}
-> -	head->func = func;
-> -	head->next = krcp->head;
-> -	krcp->head = head;
-> +
-> +	/*
-> +	 * Under high memory pressure GFP_NOWAIT can fail,
-> +	 * in that case the emergency path is maintained.
-> +	 */
-> +	if (unlikely(!kfree_call_rcu_add_ptr_to_bulk(krcp,
-> +			(void *) head - (unsigned long) func))) {
-> +		head->func = func;
-> +		head->next = krcp->head;
-> +		krcp->head = head;
-> +	}
->  
->  	// Set timer to drain after KFREE_DRAIN_JIFFIES.
->  	if (rcu_scheduler_active == RCU_SCHEDULER_RUNNING &&
-> @@ -3834,8 +3937,11 @@ static void __init kfree_rcu_batch_init(void)
->  		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
->  
->  		spin_lock_init(&krcp->lock);
-> -		for (i = 0; i < KFREE_N_BATCHES; i++)
-> +		for (i = 0; i < KFREE_N_BATCHES; i++) {
-> +			INIT_RCU_WORK(&krcp->krw_arr[i].rcu_work, kfree_rcu_work);
->  			krcp->krw_arr[i].krcp = krcp;
-> +		}
-> +
->  		INIT_DELAYED_WORK(&krcp->monitor_work, kfree_rcu_monitor);
->  		krcp->initialized = true;
->  	}
-> -- 
-> 2.20.1
-> 
+=============================
+ WARNING: suspicious RCU usage
+ -----------------------------
+ kernel/workqueue.c:710 RCU or wq_pool_mutex should be held!
+
+ other info that might help us debug this:
+
+ RCU used illegally from offline CPU!
+ rcu_scheduler_active = 2, debug_locks = 1
+ 2 locks held by swapper/37/0:
+  #0: c0000000010af608 (rcu_read_lock){....}, at:
+      percpu_ref_put_many+0x8/0x230
+  #1: c0000000010af608 (rcu_read_lock){....}, at:
+      __queue_work+0x7c/0xca0
+
+ stack backtrace:
+ Call Trace:
+  dump_stack+0xf4/0x164 (unreliable)
+  lockdep_rcu_suspicious+0x140/0x164
+  get_work_pool+0x110/0x150
+  __queue_work+0x1bc/0xca0
+  queue_work_on+0x114/0x120
+  css_release+0x9c/0xc0
+  percpu_ref_put_many+0x204/0x230
+  free_pcp_prepare+0x264/0x570
+  free_unref_page+0x38/0xf0
+  __mmdrop+0x21c/0x2c0
+  idle_task_exit+0x170/0x1b0
+  pnv_smp_cpu_kill_self+0x38/0x2e0
+  cpu_die+0x48/0x64
+  arch_cpu_idle_dead+0x30/0x50
+  do_idle+0x2f4/0x470
+  cpu_startup_entry+0x38/0x40
+  start_secondary+0x7a8/0xa80
+  start_secondary_resume+0x10/0x14
+
+ =============================
+ WARNING: suspicious RCU usage
+ -----------------------------
+ kernel/sched/core.c:562 suspicious rcu_dereference_check() usage!
+
+ other info that might help us debug this:
+
+ RCU used illegally from offline CPU!
+ rcu_scheduler_active = 2, debug_locks = 1
+ 2 locks held by swapper/94/0:
+  #0: c000201cc77dc118 (&base->lock){-.-.}, at:
+      lock_timer_base+0x114/0x1f0
+  #1: c0000000010af608 (rcu_read_lock){....}, at:
+      get_nohz_timer_target+0x3c/0x2d0
+
+ stack backtrace:
+ Call Trace:
+  dump_stack+0xf4/0x164 (unreliable)
+  lockdep_rcu_suspicious+0x140/0x164
+  get_nohz_timer_target+0x248/0x2d0
+  add_timer+0x24c/0x470
+  __queue_delayed_work+0x8c/0x110
+  queue_delayed_work_on+0x128/0x130
+  __debug_check_no_obj_freed+0x2ec/0x320
+  free_pcp_prepare+0x1b4/0x570
+  free_unref_page+0x38/0xf0
+  __mmdrop+0x21c/0x2c0
+  idle_task_exit+0x170/0x1b0
+  pnv_smp_cpu_kill_self+0x38/0x2e0
+  cpu_die+0x48/0x64
+  arch_cpu_idle_dead+0x30/0x50
+  do_idle+0x2f4/0x470
+  cpu_startup_entry+0x38/0x40
+  start_secondary+0x7a8/0xa80
+  start_secondary_prolog+0x10/0x14
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+
+v2: use mmdrop_async() thanks to Tetsuo.
+
+ include/linux/sched/mm.h | 2 ++
+ kernel/fork.c            | 2 +-
+ kernel/sched/core.c      | 3 ++-
+ 3 files changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+index c49257a3b510..205de134348c 100644
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -49,6 +49,8 @@ static inline void mmdrop(struct mm_struct *mm)
+ 		__mmdrop(mm);
+ }
+ 
++extern void mmdrop_async(struct mm_struct *mm);
++
+ /*
+  * This has to be called after a get_task_mm()/mmget_not_zero()
+  * followed by taking the mmap_sem for writing before modifying the
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 080809560072..9a823a955b7c 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -707,7 +707,7 @@ static void mmdrop_async_fn(struct work_struct *work)
+ 	__mmdrop(mm);
+ }
+ 
+-static void mmdrop_async(struct mm_struct *mm)
++void mmdrop_async(struct mm_struct *mm)
+ {
+ 	if (unlikely(atomic_dec_and_test(&mm->mm_count))) {
+ 		INIT_WORK(&mm->async_put_work, mmdrop_async_fn);
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 90e4b00ace89..1863a6fc4d82 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -6194,7 +6194,8 @@ void idle_task_exit(void)
+ 		current->active_mm = &init_mm;
+ 		finish_arch_post_lock_switch();
+ 	}
+-	mmdrop(mm);
++	smp_call_function_single(cpumask_first(cpu_online_mask),
++				 (void (*)(void *))mmdrop_async, mm, 0);
+ }
+ 
+ /*
+-- 
+2.21.0 (Apple Git-122.2)
+
