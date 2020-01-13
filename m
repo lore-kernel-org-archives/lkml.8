@@ -2,134 +2,78 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4C7C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5CEC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EBD924655
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:16:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578932217;
-	bh=AeGdxtFYv6B45SjFDAyM4c28mlz6pcoolDL44HF+hDM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=S9g33IEXLAC9pvu7/a+4ehMii2qKgP/Wk1GzsezVmq0X8EgQL92/FPpJpW3WtQG2v
-	 0w+ATUVO0B3dHUUPgfMCWqR44cvapd5IfkF66hmFRfI6eKw7QvQ55eI7RYFmZ5K1aZ
-	 AHlBj64Liff5KcHh90fbhYigoBOWwdNAsNLRetVw=
+	by mail.kernel.org (Postfix) with ESMTP id 85BBB2080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:17:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="lh05AnIj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728896AbgAMQQ4 (ORCPT
+        id S1728904AbgAMQRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:16:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52678 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726943AbgAMQQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:16:56 -0500
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1980F21739;
-        Mon, 13 Jan 2020 16:16:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578932215;
-        bh=AeGdxtFYv6B45SjFDAyM4c28mlz6pcoolDL44HF+hDM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1nPZwM1JD9cJhZmfTEm7I3y9KfKMRejD2Cl7ChyeNRkVLW9ULezoEJ2wLgpe2wq4j
-         9rKeRhFGLi0aos3ofCEpqA9Gy3TP0Vee9NmwORwYEleD9UcDixoUSMitsnIcgeQ5Dc
-         1SwvwVFk1pZLSjCt0eeycaZwpSAUDo1C47hH/UXU=
-Received: by mail-qk1-f182.google.com with SMTP id z14so8971771qkg.9;
-        Mon, 13 Jan 2020 08:16:55 -0800 (PST)
-X-Gm-Message-State: APjAAAWVCK8mHGGgYEvCcxWwZLApKBGS8i0dvrTkUClTzDrDkf4n5NSB
-        agkKsoUuHyKGHtkHmW7yTmMVvbtJaEQcRhJggw==
-X-Google-Smtp-Source: APXvYqzt1b0Fu7JzU4XE0WbY6F3nq42qgTHD8h4dI4vWSjWclkB5P1MZophjyrXiyLG+1Hvm4ULiDbZeKA51r0PL+bg=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr17017668qkg.152.1578932214227;
- Mon, 13 Jan 2020 08:16:54 -0800 (PST)
+        Mon, 13 Jan 2020 11:17:55 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:50200 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728842AbgAMQRz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 11:17:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1578932272; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=cZANvumXw1YT4vM678LgsjuFp42QFxALr28U8EYagH8=;
+        b=lh05AnIjWW42LDs3svB2tecp31KTGyzzZ1BA4UG9jfRRj1rq7XjL1Zx1IjS+tSoMN3a/FO
+        JzMKgVgQPWK4FGErORtOOT3dxW+eDtMvFLh/MVvKeaxQCG9YphR+Sq5rYZQfeomObhmgVg
+        lf8ocXtIzkiEBj//6iN1CO6RShrLb4A=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Sam Ravnborg <sam@ravnborg.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     od@zcrc.me, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v3 1/3] dt-bindings: vendor-prefixes: Add Shenzhen Frida LCD Co., Ltd.
+Date:   Mon, 13 Jan 2020 13:17:39 -0300
+Message-Id: <20200113161741.32061-1-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20191219221932.15930-1-daniel.lezcano@linaro.org>
- <20200108140333.GA12276@bogus> <3b94b423-ca26-b96f-90fa-2662dbc523d8@linaro.org>
-In-Reply-To: <3b94b423-ca26-b96f-90fa-2662dbc523d8@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 13 Jan 2020 10:16:42 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK8gu-Ts_aMpcXgtvqW=gWGLTrUvNWDm+8fB7--62FmnQ@mail.gmail.com>
-Message-ID: <CAL_JsqK8gu-Ts_aMpcXgtvqW=gWGLTrUvNWDm+8fB7--62FmnQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] DT: bindings: Add cooling cells for idle states
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 11, 2020 at 11:32 AM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> Hi Rob,
->
->
-> On Wed, 8 Jan 2020 at 15:03, Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Thu, Dec 19, 2019 at 11:19:27PM +0100, Daniel Lezcano wrote:
-> > > Add DT documentation to add an idle state as a cooling device. The CPU
-> > > is actually the cooling device but the definition is already used by
-> > > frequency capping. As we need to make cpufreq capping and idle
-> > > injection to co-exist together on the system in order to mitigate at
-> > > different trip points, the CPU can not be used as the cooling device
-> > > for idle injection. The idle state can be seen as an hardware feature
-> > > and therefore as a component for the passive mitigation.
-> > >
-> > > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/idle-states.txt | 11 +++++++++++
-> > >  1 file changed, 11 insertions(+)
-> >
-> > This is now a schema in my tree. Can you rebase on that and I'll pick up
-> > the binding change.
->
-> Mmh, I'm now having some doubts about this binding because it will
-> restrict any improvement of the cooling device for the future.
->
-> It looks like adding a node to the CPU for the cooling device is more
-> adequate.
-> eg:
-> CPU0: cpu@300 {
->    device_type = "cpu";
->    compatible = "arm,cortex-a9";
->    reg = <0x300>;
->    /* cpufreq controls */
->    operating-points = <998400 0
->           800000 0
->           400000 0
->           200000 0>;
->    clocks = <&prcmu_clk PRCMU_ARMSS>;
->    clock-names = "cpu";
->    clock-latency = <20000>;
->    #cooling-cells = <2>;
->    thermal-idle {
->       #cooling-cells = <2>;
->    };
-> };
->
-> [ ... ]
->
-> cooling-device = <&{/cpus/cpu@300/thermal-idle}
->                         THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->
-> A quick test with different configurations combination shows it is much
-> more flexible and it is open for future changes.
->
-> What do you think?
+Add an entry for Shenzhen Frida LCD Co., Ltd.
 
-Why do you need #cooling-cells in both cpu node and a child node? It's
-really only 1 device.
+v2: No change
+v3: No change
 
-Maybe you could add another cell to contain an idle state node if that helps?
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 835579edc971..76069bb51ea4 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -337,6 +337,8 @@ patternProperties:
+     description: Firefly
+   "^focaltech,.*":
+     description: FocalTech Systems Co.,Ltd
++  "^frida,.*":
++    description: Shenzhen Frida LCD Co., Ltd.
+   "^friendlyarm,.*":
+     description: Guangzhou FriendlyARM Computer Tech Co., Ltd
+   "^fsl,.*":
+-- 
+2.24.1
+
