@@ -2,186 +2,242 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3157EC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 589EAC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB0E121739
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EDB3207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="jo5rAFMt"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Mv+nXZxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729195AbgAMQZE (ORCPT
+        id S1729078AbgAMQZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:25:04 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:37178 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728851AbgAMQYW (ORCPT
+        Mon, 13 Jan 2020 11:25:34 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:44315 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728945AbgAMQZd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:24:22 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BF727C05DC;
-        Mon, 13 Jan 2020 16:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1578932661; bh=QFbAowEgES03c5XYlcvZ5klAPG5SDoJ9C9pBH1nnTfI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=jo5rAFMt1qGcknTDOEZyL4jidlTULM8iivZaO6vPh6Ofnv8I0xw5sXsBLIKyK5KSS
-         8WrpV8FCrW7TtbVE8nJafDNNiCZBbeXEmoj36VeYhtm0+9mda6S/1x7ACfZ5flD3ch
-         R9O/qrtjFuYoSPVc0V5ju4lSkgEH0qcyeFTMRzZxN4BZ1WOgH1HpYeA/zvLGukf35g
-         3ClgAkzO0fqQryMNzQaevJzyoS5OdhsYU1WmOU8OxHCrVqORbQF2b+d+4gUhfl0Vqi
-         YjVnhF8mx5y5fOx1yo57iINyJqd/m5Fwzie2AofyqqT4+Sw6fd5N0ShciJr9KQcHgT
-         9i7vkpdeigDSg==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 6797BA0062;
-        Mon, 13 Jan 2020 16:24:19 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 2/8] net: stmmac: tc: Add support for ETF Scheduler using TBS
-Date:   Mon, 13 Jan 2020 17:24:10 +0100
-Message-Id: <eabd50e0464d13911b5512c9f2e0ed0f3dc7e6ef.1578932287.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1578932287.git.Jose.Abreu@synopsys.com>
-References: <cover.1578932287.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1578932287.git.Jose.Abreu@synopsys.com>
-References: <cover.1578932287.git.Jose.Abreu@synopsys.com>
+        Mon, 13 Jan 2020 11:25:33 -0500
+Received: by mail-io1-f65.google.com with SMTP id b10so10394586iof.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 08:25:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3UKPRjuLVC7RO4AknJBGHEyZav1jTqAsHZbWbB3QaM8=;
+        b=Mv+nXZxf2F7xE+wuPTov+5KoY4ixZ6no2YUOcBoz/RDoP7uuU4g041P+xKxpcK2T2b
+         mqWwneKicqkxX2VDYaNE1lawqVrL8YFzifprEFFHEhlJnUWQI+5VPqx+BFPRF/IALbS7
+         AmcNEYJwh05KKFtlPP8r1AHvUcD7O0fld9+4k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3UKPRjuLVC7RO4AknJBGHEyZav1jTqAsHZbWbB3QaM8=;
+        b=IKzVLcQxiSi9fMNeVMlyB9tSE9LBNwrarL7S5EEManQYTff/Mx1rdzTjPN9emKVQBJ
+         Hi592r3RXQnd7/S1z0lqmQuQCjPQAXnhcT3cpIrY+jFUBH5Lsg5aznwZT7yJhCFdVVK+
+         eIrH2WPUCPqvd1c6Sn/hXZzH2t+A06VVhHRBD0cQ2r/9mHu1W91I6riV3NoA8RuMwgpB
+         b54zwloGWPNd+49Tb5oOnck9eHmBsXL2eg+Feb2L9jA2QnYnrLzp6uCf06sOTAKnlxSd
+         pOOhT/af3pH0nkcBhQkXxvq1Xm2xnHalQ0TTY/ecu9HsSgwRlfw4OMdz/KYHwGhYoaIg
+         1K0Q==
+X-Gm-Message-State: APjAAAWpAvNzh3Kg0nx9rZdHnXxHm2aPXzYiK3Gk7+gtU5ALTCQRAZG2
+        zK+C1WAWoT96Umb1rygvVkUAAMTOKSS2h+HNxC9uNg==
+X-Google-Smtp-Source: APXvYqyLDLAoShN0kNLQeelFvPXh19MZYXF+kvpTMezYlJSyzsMMSzCxmmBx48UJ+c45QjVTifzbEDrRErpdc9L7aRA=
+X-Received: by 2002:a05:6638:5b6:: with SMTP id b22mr15275153jar.6.1578932732634;
+ Mon, 13 Jan 2020 08:25:32 -0800 (PST)
+MIME-Version: 1.0
+References: <20200113153605.52350-1-brian@brkho.com> <20200113153605.52350-3-brian@brkho.com>
+In-Reply-To: <20200113153605.52350-3-brian@brkho.com>
+From:   Rob Clark <robdclark@chromium.org>
+Date:   Mon, 13 Jan 2020 08:25:21 -0800
+Message-ID: <CAJs_Fx48B-C8GEeAmPaqGAqAOTR2dT0csg8W=TRyULOfy=1=VQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/msm: Add MSM_WAIT_IOVA ioctl
+To:     Brian Ho <brian@brkho.com>
+Cc:     freedreno <freedreno@lists.freedesktop.org>,
+        hoegsberg@chromium.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds the support for ETF scheduler using TBS feature which is available
-in XGMAC and QoS IPs.
+On Mon, Jan 13, 2020 at 7:37 AM Brian Ho <brian@brkho.com> wrote:
+>
+> Implements an ioctl to wait until a value at a given iova is greater
+> than or equal to a supplied value.
+>
+> This will initially be used by turnip (open-source Vulkan driver for
+> QC in mesa) for occlusion queries where the userspace driver can
+> block on a query becoming available before continuing via
+> vkGetQueryPoolResults.
+>
+> Signed-off-by: Brian Ho <brian@brkho.com>
+> ---
+>  drivers/gpu/drm/msm/msm_drv.c | 63 +++++++++++++++++++++++++++++++++--
+>  include/uapi/drm/msm_drm.h    | 13 ++++++++
+>  2 files changed, 74 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index c84f0a8b3f2c..dcc46874a5a2 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -36,10 +36,11 @@
+>   *           MSM_GEM_INFO ioctl.
+>   * - 1.4.0 - softpin, MSM_RELOC_BO_DUMP, and GEM_INFO support to set/get
+>   *           GEM object's debug name
+> - * - 1.5.0 - Add SUBMITQUERY_QUERY ioctl
+> + * - 1.5.0 - Add SUBMITQUEUE_QUERY ioctl
+> + * - 1.6.0 - Add WAIT_IOVA ioctl
+>   */
+>  #define MSM_VERSION_MAJOR      1
+> -#define MSM_VERSION_MINOR      5
+> +#define MSM_VERSION_MINOR      6
+>  #define MSM_VERSION_PATCHLEVEL 0
+>
+>  static const struct drm_mode_config_funcs mode_config_funcs = {
+> @@ -952,6 +953,63 @@ static int msm_ioctl_submitqueue_close(struct drm_device *dev, void *data,
+>         return msm_submitqueue_remove(file->driver_priv, id);
+>  }
+>
+> +static int msm_ioctl_wait_iova(struct drm_device *dev, void *data,
+> +               struct drm_file *file)
+> +{
+> +       struct msm_drm_private *priv = dev->dev_private;
+> +       struct drm_gem_object *obj;
+> +       struct drm_msm_wait_iova *args = data;
+> +       ktime_t timeout = to_ktime(args->timeout);
+> +       unsigned long remaining_jiffies = timeout_to_jiffies(&timeout);
+> +       struct msm_gpu *gpu = priv->gpu;
+> +       void *base_vaddr;
+> +       uint64_t *vaddr;
+> +       int ret;
+> +
+> +       if (args->pad)
+> +               return -EINVAL;
+> +
+> +       if (!gpu)
+> +               return 0;
 
-Changes from v2:
-- Fix checkpatch issues (Jakub)
-- Use the TBS bitfield
+hmm, I'm not sure we should return zero in this case.. maybe -ENODEV?
 
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+> +
+> +       obj = drm_gem_object_lookup(file, args->handle);
+> +       if (!obj)
+> +               return -ENOENT;
+> +
+> +       base_vaddr = msm_gem_get_vaddr(obj);
+> +       if (IS_ERR(base_vaddr)) {
+> +               ret = PTR_ERR(base_vaddr);
+> +               goto err_put_gem_object;
+> +       }
+> +       if (args->offset + sizeof(*vaddr) > obj->size) {
+> +               ret = -EINVAL;
+> +               goto err_put_vaddr;
+> +       }
+> +
+> +       vaddr = base_vaddr + args->offset;
+> +
+> +       /* Assumes WC mapping */
+> +       ret = wait_event_interruptible_timeout(
+> +                       gpu->event, *vaddr >= args->value, remaining_jiffies);
+> +
+> +       if (ret == 0) {
+> +               ret = -ETIMEDOUT;
+> +               goto err_put_vaddr;
+> +       } else if (ret == -ERESTARTSYS) {
+> +               goto err_put_vaddr;
+> +       }
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/common.h      |  1 +
- drivers/net/ethernet/stmicro/stmmac/hwif.h        |  5 +++++
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |  2 ++
- drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c   | 21 +++++++++++++++++++++
- 4 files changed, 29 insertions(+)
+maybe:
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
-index 31003b67d24f..487099092693 100644
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -368,6 +368,7 @@ struct dma_features {
- 	unsigned int estdep;
- 	unsigned int estsel;
- 	unsigned int fpesel;
-+	unsigned int tbssel;
- };
- 
- /* RX Buffer size must be multiple of 4/8/16 bytes */
-diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-index 71c23cbd7af8..df63b0367aff 100644
---- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
-@@ -533,6 +533,7 @@ struct tc_cls_u32_offload;
- struct tc_cbs_qopt_offload;
- struct flow_cls_offload;
- struct tc_taprio_qopt_offload;
-+struct tc_etf_qopt_offload;
- 
- struct stmmac_tc_ops {
- 	int (*init)(struct stmmac_priv *priv);
-@@ -544,6 +545,8 @@ struct stmmac_tc_ops {
- 			 struct flow_cls_offload *cls);
- 	int (*setup_taprio)(struct stmmac_priv *priv,
- 			    struct tc_taprio_qopt_offload *qopt);
-+	int (*setup_etf)(struct stmmac_priv *priv,
-+			 struct tc_etf_qopt_offload *qopt);
- };
- 
- #define stmmac_tc_init(__priv, __args...) \
-@@ -556,6 +559,8 @@ struct stmmac_tc_ops {
- 	stmmac_do_callback(__priv, tc, setup_cls, __args)
- #define stmmac_tc_setup_taprio(__priv, __args...) \
- 	stmmac_do_callback(__priv, tc, setup_taprio, __args)
-+#define stmmac_tc_setup_etf(__priv, __args...) \
-+	stmmac_do_callback(__priv, tc, setup_etf, __args)
- 
- struct stmmac_counters;
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index baffb4e8d99a..43af4fc5ab8f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4159,6 +4159,8 @@ static int stmmac_setup_tc(struct net_device *ndev, enum tc_setup_type type,
- 		return stmmac_tc_setup_cbs(priv, priv, type_data);
- 	case TC_SETUP_QDISC_TAPRIO:
- 		return stmmac_tc_setup_taprio(priv, priv, type_data);
-+	case TC_SETUP_QDISC_ETF:
-+		return stmmac_tc_setup_etf(priv, priv, type_data);
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-index 6c4686b77516..a4ce165af36b 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
-@@ -727,10 +727,31 @@ static int tc_setup_taprio(struct stmmac_priv *priv,
- 	return ret;
+ } else {
+   ret = 0;
  }
- 
-+static int tc_setup_etf(struct stmmac_priv *priv,
-+			struct tc_etf_qopt_offload *qopt)
-+{
-+	if (!priv->dma_cap.tbssel)
-+		return -EOPNOTSUPP;
-+	if (qopt->queue >= priv->plat->tx_queues_to_use)
-+		return -EINVAL;
-+	if (!(priv->tx_queue[qopt->queue].tbs & STMMAC_TBS_AVAIL))
-+		return -EINVAL;
-+
-+	if (qopt->enable)
-+		priv->tx_queue[qopt->queue].tbs |= STMMAC_TBS_EN;
-+	else
-+		priv->tx_queue[qopt->queue].tbs &= ~STMMAC_TBS_EN;
-+
-+	netdev_info(priv->dev, "%s ETF for Queue %d\n",
-+		    qopt->enable ? "enabled" : "disabled", qopt->queue);
-+	return 0;
-+}
-+
- const struct stmmac_tc_ops dwmac510_tc_ops = {
- 	.init = tc_init,
- 	.setup_cls_u32 = tc_setup_cls_u32,
- 	.setup_cbs = tc_setup_cbs,
- 	.setup_cls = tc_setup_cls,
- 	.setup_taprio = tc_setup_taprio,
-+	.setup_etf = tc_setup_etf,
- };
--- 
-2.7.4
 
+and then drop the next three lines?
+
+> +
+> +       msm_gem_put_vaddr(obj);
+> +       drm_gem_object_put_unlocked(obj);
+> +       return 0;
+> +
+> +err_put_vaddr:
+> +       msm_gem_put_vaddr(obj);
+> +err_put_gem_object:
+> +       drm_gem_object_put_unlocked(obj);
+> +       return ret;
+> +}
+> +
+>  static const struct drm_ioctl_desc msm_ioctls[] = {
+>         DRM_IOCTL_DEF_DRV(MSM_GET_PARAM,    msm_ioctl_get_param,    DRM_RENDER_ALLOW),
+>         DRM_IOCTL_DEF_DRV(MSM_GEM_NEW,      msm_ioctl_gem_new,      DRM_RENDER_ALLOW),
+> @@ -964,6 +1022,7 @@ static const struct drm_ioctl_desc msm_ioctls[] = {
+>         DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_NEW,   msm_ioctl_submitqueue_new,   DRM_RENDER_ALLOW),
+>         DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_CLOSE, msm_ioctl_submitqueue_close, DRM_RENDER_ALLOW),
+>         DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_QUERY, msm_ioctl_submitqueue_query, DRM_RENDER_ALLOW),
+> +       DRM_IOCTL_DEF_DRV(MSM_WAIT_IOVA, msm_ioctl_wait_iova, DRM_RENDER_ALLOW),
+>  };
+>
+>  static const struct vm_operations_struct vm_ops = {
+> diff --git a/include/uapi/drm/msm_drm.h b/include/uapi/drm/msm_drm.h
+> index 0b85ed6a3710..8477f28a4ee1 100644
+> --- a/include/uapi/drm/msm_drm.h
+> +++ b/include/uapi/drm/msm_drm.h
+> @@ -298,6 +298,17 @@ struct drm_msm_submitqueue_query {
+>         __u32 pad;
+>  };
+>
+> +/* This ioctl blocks until the u64 value at bo + offset is greater than or
+> + * equal to the reference value.
+> + */
+> +struct drm_msm_wait_iova {
+> +       __u32 handle;          /* in, GEM handle */
+> +       __u32 pad;
+> +       struct drm_msm_timespec timeout;   /* in */
+> +       __u64 offset;          /* offset into bo */
+> +       __u64 value;           /* reference value */
+
+Maybe we should go ahead and add a __u64 mask;
+
+that would let us wait for 32b values as well, and wait for bits in a bitmask
+
+Other than those minor comments, it looks pretty good to me
+
+BR,
+-R
+
+> +};
+> +
+>  #define DRM_MSM_GET_PARAM              0x00
+>  /* placeholder:
+>  #define DRM_MSM_SET_PARAM              0x01
+> @@ -315,6 +326,7 @@ struct drm_msm_submitqueue_query {
+>  #define DRM_MSM_SUBMITQUEUE_NEW        0x0A
+>  #define DRM_MSM_SUBMITQUEUE_CLOSE      0x0B
+>  #define DRM_MSM_SUBMITQUEUE_QUERY      0x0C
+> +#define DRM_MSM_WAIT_IOVA      0x0D
+>
+>  #define DRM_IOCTL_MSM_GET_PARAM        DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_GET_PARAM, struct drm_msm_param)
+>  #define DRM_IOCTL_MSM_GEM_NEW          DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_GEM_NEW, struct drm_msm_gem_new)
+> @@ -327,6 +339,7 @@ struct drm_msm_submitqueue_query {
+>  #define DRM_IOCTL_MSM_SUBMITQUEUE_NEW    DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_NEW, struct drm_msm_submitqueue)
+>  #define DRM_IOCTL_MSM_SUBMITQUEUE_CLOSE  DRM_IOW (DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_CLOSE, __u32)
+>  #define DRM_IOCTL_MSM_SUBMITQUEUE_QUERY  DRM_IOW (DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_QUERY, struct drm_msm_submitqueue_query)
+> +#define DRM_IOCTL_MSM_WAIT_IOVA        DRM_IOW (DRM_COMMAND_BASE + DRM_MSM_WAIT_IOVA, struct drm_msm_wait_iova)
+>
+>  #if defined(__cplusplus)
+>  }
+> --
+> 2.25.0.rc1.283.g88dfdc4193-goog
+>
