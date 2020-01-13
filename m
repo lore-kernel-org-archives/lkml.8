@@ -2,97 +2,102 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A02EAC33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:00:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CA7C33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CA812082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:00:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DEA2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387559AbgAMEAS (ORCPT
+        id S2387519AbgAMEBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 23:00:18 -0500
-Received: from regular1.263xmail.com ([211.150.70.200]:55596 "EHLO
-        regular1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387415AbgAMEAR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 23:00:17 -0500
-Received: from localhost (unknown [192.168.167.16])
-        by regular1.263xmail.com (Postfix) with ESMTP id C461E327;
-        Mon, 13 Jan 2020 12:00:09 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-SKE-CHECKED: 1
-X-ABS-CHECKED: 1
-Received: from [172.16.22.134] (unknown [103.29.142.67])
-        by smtp.263.net (postfix) whith ESMTP id P18165T140049830598400S1578887992586893_;
-        Mon, 13 Jan 2020 12:00:09 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <9eb7b5f055a92b996cd0284f5589556f>
-X-RL-SENDER: jeffy.chen@rock-chips.com
-X-SENDER: cjf@rock-chips.com
-X-LOGIN-NAME: jeffy.chen@rock-chips.com
-X-FST-TO: robin.murphy@arm.com
-X-SENDER-IP: 103.29.142.67
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Message-ID: <5E1BEB37.2010904@rock-chips.com>
-Date:   Mon, 13 Jan 2020 11:59:51 +0800
-From:   JeffyChen <jeffy.chen@rock-chips.com>
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:19.0) Gecko/20130126 Thunderbird/19.0
+        Sun, 12 Jan 2020 23:01:48 -0500
+Received: from mga07.intel.com ([134.134.136.100]:29568 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387415AbgAMEBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 23:01:47 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jan 2020 20:01:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,427,1571727600"; 
+   d="scan'208";a="424184843"
+Received: from spandruv-mobl3.jf.intel.com ([10.251.135.218])
+  by fmsmga006.fm.intel.com with ESMTP; 12 Jan 2020 20:01:45 -0800
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     andy@infradead.org, dvhart@infradead.org, lenb@kernel.org,
+        andy@kernel.org, corbet@lwn.net
+Cc:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Subject: [PATCH v2] admin guide/pm: Admin guide for Intel Uncore Frequency limits
+Date:   Sun, 12 Jan 2020 20:01:43 -0800
+Message-Id: <20200113040143.1419770-1-srinivas.pandruvada@linux.intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-CC:     linux-kernel@vger.kernel.org,
-        Brian Norris <briannorris@chromium.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v1] arch_topology: Adjust initial CPU capacities with
- current freq
-References: <20200109075214.31943-1-jeffy.chen@rock-chips.com> <20200110113711.GB39451@bogus> <5475692c-e72b-74c1-bd6e-95278703249b@arm.com> <15ab46e5-a2b4-eb96-1217-2b2ef8827f64@arm.com> <5E193828.1070000@rock-chips.com> <5fa797f8-3ba5-7e18-4eed-2d39904b2f72@arm.com>
-In-Reply-To: <5fa797f8-3ba5-7e18-4eed-2d39904b2f72@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
+Added documentation for the attributes to control uncore frequency
+selection.
 
-On 01/11/2020 11:12 PM, Robin Murphy wrote:
->>
->
-> Actually, last time I looked both the BSP U-Boot and mainline do contain
-> equivalent code to initialise both PLLs to (IIRC) 600MHz and apparently
-> adjust a couple of other things set by the maskrom. The trap is that
-> mainline does it in the SPL - thus the unfortunately common combination
-> of using the upstream main stage with the miniloader ends up missing out
-> that step entirely. In comparison, I'm now using the full upstream
-> TPL/SPL flow on my RK3399 board (NanoPC-T4) and even a full generic
-> distro kernel is acceptably quick:
->
-> [    2.315378] Trying to unpack rootfs image as initramfs...
-> [    2.781747] Freeing initrd memory: 7316K
-> ...
-> [    4.239990] Freeing unused kernel memory: 1984K
-> [    4.247829] Run /init as init process
+Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+---
+v2:
+ - Split the documentation patch to another patch to merge via different
+    tree
 
-Oops, sorry for the noise, i've checked in the wrong u-boot code base...
+ Documentation/admin-guide/pm/intel_uncore.rst | 23 +++++++++++++++++++
+ .../admin-guide/pm/working-state.rst          |  1 +
+ 2 files changed, 24 insertions(+)
+ create mode 100644 Documentation/admin-guide/pm/intel_uncore.rst
 
-Will ask miniloader team to check that, thanks :)
-
->
-> Robin.
-
-
+diff --git a/Documentation/admin-guide/pm/intel_uncore.rst b/Documentation/admin-guide/pm/intel_uncore.rst
+new file mode 100644
+index 000000000000..d75be65fb16a
+--- /dev/null
++++ b/Documentation/admin-guide/pm/intel_uncore.rst
+@@ -0,0 +1,23 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=========================================================
++Intel® Uncore Frequency Selection
++=========================================================
++
++The uncore frequency in the Intel(R) hardware is selected based on internal heuristics, which uses the current selected performance state and various system power constraints. In majority of the cases this selection is the most optimal, so there is no need for placing external constraints from the Operating System.
++
++But there are some customers who wants less jitters from dynamic uncore frequency selection. For them, power saving is much lower priority than consistent performance. Currently these customers uses MSR 0x620, to place hard limits on the maximum and the minimum uncore frequency. They can now use Linux sysfs to place these limits and also have additional capability to place hard limits under power constraint scenario.
++
++The Uncore frequency section attributes are present under "/sys/devices/system/cpu/intel_uncore_frequency".
++The scope of these attributes is per die in multi-die systems or package wide in non multi-die systems. There is a unique folder for each die or package. For example:
++"package_00_die_00" for package 0 and die 0.
++
++Attributes:
++
++initial_max_freq_khz (READ ONLY): This is the power up value of the maximum uncore frequency in KHz. This is sampled during the driver initialization time. This is not the absolute maximum uncore frequency as there is no capability for the Operating System to read that. This can be used as a reference to roll back settings once user changed this limit.
++
++initial_min_freq_khz (READ ONLY): This is the power up value of the minimum uncore frequency in KHz. This is sampled during the driver initialization time. This is not the absolute minimum uncore frequency. This can be used as a reference to roll back settings once user changed this limit.
++
++max_freq_khz (READ, WRITE): This presents current maximum uncore frequency. User can modify this attribute to change to a new maximum uncore frequency in KHz.
++
++min_freq_khz (READ, WRITE): This presents current minimum uncore frequency. User can modify this attribute to change to a new minimum uncore frequency in KHz.
+diff --git a/Documentation/admin-guide/pm/working-state.rst b/Documentation/admin-guide/pm/working-state.rst
+index fc298eb1234b..15094cf0a234 100644
+--- a/Documentation/admin-guide/pm/working-state.rst
++++ b/Documentation/admin-guide/pm/working-state.rst
+@@ -11,3 +11,4 @@ Working-State Power Management
+    cpufreq
+    intel_pstate
+    intel_epb
++   intel_uncore
+-- 
+2.24.1
 
