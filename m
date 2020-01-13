@@ -2,76 +2,62 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF077C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E8BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA240214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F5A3206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728838AbgAMQKf (ORCPT
+        id S1728868AbgAMQKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:10:35 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:47431 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726943AbgAMQKf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 11:10:35 -0500
-Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 70DB9200019;
-        Mon, 13 Jan 2020 16:10:33 +0000 (UTC)
-Date:   Mon, 13 Jan 2020 17:10:33 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        arm@kernel.org, soc@kernel.org
-Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] ARM: at91: defconfig for 5.6
-Message-ID: <20200113161033.GA1358651@piout.net>
+        Mon, 13 Jan 2020 11:10:50 -0500
+Received: from mga05.intel.com ([192.55.52.43]:22281 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726943AbgAMQKt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 11:10:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 08:10:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
+   d="scan'208";a="244683404"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 13 Jan 2020 08:10:46 -0800
+Received: by lahna (sSMTP sendmail emulation); Mon, 13 Jan 2020 18:10:46 +0200
+Date:   Mon, 13 Jan 2020 18:10:46 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [PATCH v1 2/4] PCI: Rename extend_bridge_window() to
+ adjust_bridge_window()
+Message-ID: <20200113161046.GM2838@lahna.fi.intel.com>
+References: <PSXP216MB0438C47B3473D0C9DE531F18803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <PSXP216MB0438C47B3473D0C9DE531F18803C0@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnd, Olof,
+On Mon, Jan 06, 2020 at 03:47:26PM +0000, Nicholas Johnson wrote:
+> Rename extend_bridge_window() to adjust_bridge_window() to prepare for
+> the fact that the window will be able to shrink.
+> 
+> No functional changes.
+> 
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 
-A simple update to at91_dt_defconfig adding sam9x60 support.
-
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
-
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/at91/linux tags/at91-5.6-defconfig
-
-for you to fetch changes up to f013dbe4e7205b44ce057ef6aab8853d1c63513d:
-
-  ARM: configs: at91: enable config flags for sam9x60 SoC (2020-01-10 23:40:03 +0100)
-
-----------------------------------------------------------------
-AT91 defconfig for 5.6
-
- - Add sam9x60 to at91_dt_defconfig
-
-----------------------------------------------------------------
-Claudiu Beznea (2):
-      ARM: configs: at91: use savedefconfig
-      ARM: configs: at91: enable config flags for sam9x60 SoC
-
- arch/arm/configs/at91_dt_defconfig | 55 ++++++++++++++++++--------------------
- 1 file changed, 26 insertions(+), 29 deletions(-)
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
