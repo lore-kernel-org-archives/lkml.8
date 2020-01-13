@@ -2,133 +2,281 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F41C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA2BC33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D95721739
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA24320661
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:17:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729121AbgAMOP4 (ORCPT
+        id S1728777AbgAMORf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:15:56 -0500
-Received: from mout.kundenserver.de ([212.227.126.135]:42957 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgAMOPy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:15:54 -0500
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1Mq1GE-1jVEoL1Rkg-00nAr8; Mon, 13 Jan 2020 15:15:47 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 09B8564F293;
-        Mon, 13 Jan 2020 14:15:47 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MpW3x8_PgRq7; Mon, 13 Jan 2020 15:15:46 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 3D7C264D641;
-        Mon, 13 Jan 2020 15:15:46 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.10.2.141) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1320.4; Mon, 13 Jan 2020 15:15:46 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id E583A804E9; Mon, 13 Jan 2020 15:15:45 +0100 (CET)
-Date:   Mon, 13 Jan 2020 15:15:45 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH 6/8] media: adv748x: reduce amount of code for bitwise
- modification of device registers
-Message-ID: <20200113141545.GG3606@pflmari>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devel@driverdev.osuosl.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-References: <cover.1578924232.git.alexander.riesen@cetitec.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1578924232.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.10.2.141]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A29536F936F657D64
-X-Provags-ID: V03:K1:/85G/aaVRJTZkr6Gku52togdEm1yvKqdKcF2c6D9t/wZUMxfwf+
- ueDyXqBfeWDjMif7FvC+VnxwEbJgUx3FyGyTzatFR1guD9V4uw2RNoDaNeH/Nwnp0pV4896
- DESxa+kfbQ+uqth3DkTy9kl+NvJsPVifiYh/OpUX30+bAkg2vu/QBJ2kTzX9Sh27m1aE5S2
- 7B6hcDjYeJBDE0WrhNmsg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5ZCwtVUm3R0=:K645eVt6J/mrOudtoJiooK
- MPK+yBSC1zEBtHzDuRiCAkKjRzkLtFB/2lbGxuSo0GCiyy9DW+wXlseZtCOrTysV6rqRf3MyO
- GqBQB6wkHW8p5v9EqUmhjB69ORSUKpfCbRubBOLlt9jrLLU7w9p541cFihbJAwV352Yq4J4fO
- wtQgyYQ1AkLsT8BEGVN9se34GMoFJkgOiT9sm7B29S2KMGSR/jB9wnjOfN6XSLO87zKEXks4Z
- 0PABl0gPXRX48X1/QBzZSDIixRtl7AepMJrAP3h1XG+K+Lx/SP0QuJi0dGNLC4Nalb4WasJ5i
- Db2+LbvTCVGnK5AvN4zy9y4SLk2amVboFL9pxZu+POZ2jBoOK08/GxZlwY946RWJq1J8LZKaW
- PLGCUbugnrqGUIeDOJLo1dGuFSZJHKv/d9HJmigyn/7PurV3QNSWm7NXYCZ+7R3kYFTlcv7Qv
- PdM1Sqwsn7uajbaFsMXJVhV73Jbj3MuJKv+zEI1iiCThlTfrN9wAnExMejo84kZiQT631gkbr
- +U8YEdD2m+qTfhcpAkXTK3F96AtdlCju6Mw2QVStUyPWb3v2K+enLPzgTq7hGmnkX4VUfG0Xu
- XqouWEOvbUpskEB6jRu2H+NXzDDulYJECfp/tsNNj5DLx2Qo+ciOVvhI7GIkP48ratxCYT6R5
- D4pdQaMn3lMFltGT7bC3KEFJrOSnesRzVH8M3rr0hkFTWlADfLgBBB+7Qoi9pozCDE0OPzOe3
- 209hNcGsA281A51sfZouewsrkFIJRzBOeZH8XdeWtDZkOILvOhNWzzzXvkAqmTLyHU9mDwV9/
- /ep+nApMI4YLZHFd8PSC6H4g5im4Jnd7SPlBVQljCHj0QVUTD9Itk673MCpCqeRZ9cMFwRNo7
- EhhtCJD6UniZOJIJiXpTnaKy2vdPmzspAc8d0Q758=
+        Mon, 13 Jan 2020 09:17:35 -0500
+Received: from mx2.suse.de ([195.135.220.15]:38240 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726505AbgAMORe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 09:17:34 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id BAC86B1B9;
+        Mon, 13 Jan 2020 14:17:31 +0000 (UTC)
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Ben Skeggs <bskeggs@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
+        Lyude Paul <lyude@redhat.com>
+Subject: [PATCH RESEND] drm/nouveau: Add HD-audio component notifier support
+Date:   Mon, 13 Jan 2020 15:17:21 +0100
+Message-Id: <20200113141721.16123-1-tiwai@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The regmap provides corresponding routine (regmap_update_bits) already
-wrapped for this device earlier.
+This patch adds the support for the notification of HD-audio hotplug
+via the already existing drm_audio_component framework.  This allows
+us more reliable hotplug notification and ELD transfer without
+accessing HD-audio bus; it's more efficient, and more importantly, it
+works without waking up the runtime PM.
 
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
+The implementation is rather simplistic: nouveau driver provides the
+get_eld ops for HD-audio, and it notifies the audio hotplug via
+pin_eld_notify callback upon each nv50_audio_enable() and _disable()
+call.  As the HD-audio pin assignment seems corresponding to the CRTC,
+the crtc->index number is passed directly as the zero-based port
+number.
+
+The bind and unbind callbacks handle the device-link so that it
+assures the PM call order.
+
+Link: https://lore.kernel.org/r/20190722143815.7339-3-tiwai@suse.de
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Cc: Jaroslav Kysela <perex@perex.cz>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 ---
- drivers/media/i2c/adv748x/adv748x.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
-index 5db06410f102..ab3f754542fe 100644
---- a/drivers/media/i2c/adv748x/adv748x.h
-+++ b/drivers/media/i2c/adv748x/adv748x.h
-@@ -432,7 +432,7 @@ int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg,
+This is a re-submission of the same patch in the last year, applied on
+top of the current linux-next.
+
+Without this audio component support, the HD-audio HDMI codec won't
+recognize the display hotplug at all due to the recent runtime PM
+change.  So, please review and merge if it's OK.  Thanks.
+
+
+ drivers/gpu/drm/nouveau/Kconfig         |   1 +
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 111 ++++++++++++++++++++++++++++++++
+ drivers/gpu/drm/nouveau/nouveau_drv.h   |   7 ++
+ 3 files changed, 119 insertions(+)
+
+diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
+index 9c990266e876..7b5c4121374a 100644
+--- a/drivers/gpu/drm/nouveau/Kconfig
++++ b/drivers/gpu/drm/nouveau/Kconfig
+@@ -16,6 +16,7 @@ config DRM_NOUVEAU
+ 	select INPUT if ACPI && X86
+ 	select THERMAL if ACPI && X86
+ 	select ACPI_VIDEO if ACPI && X86
++	select SND_HDA_COMPONENT if SND_HDA_CORE
+ 	help
+ 	  Choose this option for open-source NVIDIA support.
  
- #define io_read(s, r) adv748x_read(s, ADV748X_PAGE_IO, r)
- #define io_write(s, r, v) adv748x_write(s, ADV748X_PAGE_IO, r, v)
--#define io_clrset(s, r, m, v) io_write(s, r, (io_read(s, r) & ~m) | v)
-+#define io_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_IO, r, m, v)
- #define io_update(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_IO, r, m, v)
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index fd31bff0c920..368749a883a1 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -29,6 +29,7 @@
  
- #define hdmi_read(s, r) adv748x_read(s, ADV748X_PAGE_HDMI, r)
-@@ -450,11 +450,11 @@ int adv748x_update_bits(struct adv748x_state *state, u8 page, u8 reg,
+ #include <linux/dma-mapping.h>
+ #include <linux/hdmi.h>
++#include <linux/component.h>
  
- #define sdp_read(s, r) adv748x_read(s, ADV748X_PAGE_SDP, r)
- #define sdp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_SDP, r, v)
--#define sdp_clrset(s, r, m, v) sdp_write(s, r, (sdp_read(s, r) & ~m) | v)
-+#define sdp_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_SDP, r, m, v)
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_dp_helper.h>
+@@ -476,12 +477,113 @@ nv50_dac_create(struct drm_connector *connector, struct dcb_output *dcbe)
+ 	return 0;
+ }
  
- #define cp_read(s, r) adv748x_read(s, ADV748X_PAGE_CP, r)
- #define cp_write(s, r, v) adv748x_write(s, ADV748X_PAGE_CP, r, v)
--#define cp_clrset(s, r, m, v) cp_write(s, r, (cp_read(s, r) & ~m) | v)
-+#define cp_clrset(s, r, m, v) adv748x_update_bits(s, ADV748X_PAGE_CP, r, m, v)
++/*
++ * audio component binding for ELD notification
++ */
++static void
++nv50_audio_component_eld_notify(struct drm_audio_component *acomp, int port)
++{
++	if (acomp && acomp->audio_ops && acomp->audio_ops->pin_eld_notify)
++		acomp->audio_ops->pin_eld_notify(acomp->audio_ops->audio_ptr,
++						 port, -1);
++}
++
++static int
++nv50_audio_component_get_eld(struct device *kdev, int port, int pipe,
++			     bool *enabled, unsigned char *buf, int max_bytes)
++{
++	struct drm_device *drm_dev = dev_get_drvdata(kdev);
++	struct nouveau_drm *drm = nouveau_drm(drm_dev);
++	struct drm_encoder *encoder;
++	struct nouveau_encoder *nv_encoder;
++	struct nouveau_connector *nv_connector;
++	struct nouveau_crtc *nv_crtc;
++	int ret = 0;
++
++	*enabled = false;
++	drm_for_each_encoder(encoder, drm->dev) {
++		nv_encoder = nouveau_encoder(encoder);
++		nv_connector = nouveau_encoder_connector_get(nv_encoder);
++		nv_crtc = nouveau_crtc(encoder->crtc);
++		if (!nv_connector || !nv_crtc || nv_crtc->index != port)
++			continue;
++		*enabled = drm_detect_monitor_audio(nv_connector->edid);
++		if (*enabled) {
++			ret = drm_eld_size(nv_connector->base.eld);
++			memcpy(buf, nv_connector->base.eld,
++			       min(max_bytes, ret));
++		}
++		break;
++	}
++	return ret;
++}
++
++static const struct drm_audio_component_ops nv50_audio_component_ops = {
++	.get_eld = nv50_audio_component_get_eld,
++};
++
++static int
++nv50_audio_component_bind(struct device *kdev, struct device *hda_kdev,
++			  void *data)
++{
++	struct drm_device *drm_dev = dev_get_drvdata(kdev);
++	struct nouveau_drm *drm = nouveau_drm(drm_dev);
++	struct drm_audio_component *acomp = data;
++
++	if (WARN_ON(!device_link_add(hda_kdev, kdev, DL_FLAG_STATELESS)))
++		return -ENOMEM;
++
++	drm_modeset_lock_all(drm_dev);
++	acomp->ops = &nv50_audio_component_ops;
++	acomp->dev = kdev;
++	drm->audio.component = acomp;
++	drm_modeset_unlock_all(drm_dev);
++	return 0;
++}
++
++static void
++nv50_audio_component_unbind(struct device *kdev, struct device *hda_kdev,
++			    void *data)
++{
++	struct drm_device *drm_dev = dev_get_drvdata(kdev);
++	struct nouveau_drm *drm = nouveau_drm(drm_dev);
++	struct drm_audio_component *acomp = data;
++
++	drm_modeset_lock_all(drm_dev);
++	drm->audio.component = NULL;
++	acomp->ops = NULL;
++	acomp->dev = NULL;
++	drm_modeset_unlock_all(drm_dev);
++}
++
++static const struct component_ops nv50_audio_component_bind_ops = {
++	.bind   = nv50_audio_component_bind,
++	.unbind = nv50_audio_component_unbind,
++};
++
++static void
++nv50_audio_component_init(struct nouveau_drm *drm)
++{
++	if (!component_add(drm->dev->dev, &nv50_audio_component_bind_ops))
++		drm->audio.component_registered = true;
++}
++
++static void
++nv50_audio_component_fini(struct nouveau_drm *drm)
++{
++	if (drm->audio.component_registered) {
++		component_del(drm->dev->dev, &nv50_audio_component_bind_ops);
++		drm->audio.component_registered = false;
++	}
++}
++
+ /******************************************************************************
+  * Audio
+  *****************************************************************************/
+ static void
+ nv50_audio_disable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc)
+ {
++	struct nouveau_drm *drm = nouveau_drm(encoder->dev);
+ 	struct nouveau_encoder *nv_encoder = nouveau_encoder(encoder);
+ 	struct nv50_disp *disp = nv50_disp(encoder->dev);
+ 	struct {
+@@ -496,11 +598,14 @@ nv50_audio_disable(struct drm_encoder *encoder, struct nouveau_crtc *nv_crtc)
+ 	};
  
- #define tx_read(t, r) adv748x_read(t->state, t->page, r)
- #define tx_write(t, r, v) adv748x_write(t->state, t->page, r, v)
+ 	nvif_mthd(&disp->disp->object, 0, &args, sizeof(args));
++
++	nv50_audio_component_eld_notify(drm->audio.component, nv_crtc->index);
+ }
+ 
+ static void
+ nv50_audio_enable(struct drm_encoder *encoder, struct drm_display_mode *mode)
+ {
++	struct nouveau_drm *drm = nouveau_drm(encoder->dev);
+ 	struct nouveau_encoder *nv_encoder = nouveau_encoder(encoder);
+ 	struct nouveau_crtc *nv_crtc = nouveau_crtc(encoder->crtc);
+ 	struct nouveau_connector *nv_connector;
+@@ -527,6 +632,8 @@ nv50_audio_enable(struct drm_encoder *encoder, struct drm_display_mode *mode)
+ 
+ 	nvif_mthd(&disp->disp->object, 0, &args,
+ 		  sizeof(args.base) + drm_eld_size(args.data));
++
++	nv50_audio_component_eld_notify(drm->audio.component, nv_crtc->index);
+ }
+ 
+ /******************************************************************************
+@@ -2302,6 +2409,8 @@ nv50_display_destroy(struct drm_device *dev)
+ {
+ 	struct nv50_disp *disp = nv50_disp(dev);
+ 
++	nv50_audio_component_fini(nouveau_drm(dev));
++
+ 	nv50_core_del(&disp->core);
+ 
+ 	nouveau_bo_unmap(disp->sync);
+@@ -2423,6 +2532,8 @@ nv50_display_create(struct drm_device *dev)
+ 	/* Disable vblank irqs aggressively for power-saving, safe on nv50+ */
+ 	dev->vblank_disable_immediate = true;
+ 
++	nv50_audio_component_init(drm);
++
+ out:
+ 	if (ret)
+ 		nv50_display_destroy(dev);
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouveau/nouveau_drv.h
+index da8c46e09943..c2c332fbde97 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drv.h
++++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
+@@ -58,6 +58,8 @@
+ #include <drm/ttm/ttm_module.h>
+ #include <drm/ttm/ttm_page_alloc.h>
+ 
++#include <drm/drm_audio_component.h>
++
+ #include "uapi/drm/nouveau_drm.h"
+ 
+ struct nouveau_channel;
+@@ -211,6 +213,11 @@ struct nouveau_drm {
+ 	struct nouveau_svm *svm;
+ 
+ 	struct nouveau_dmem *dmem;
++
++	struct {
++		struct drm_audio_component *component;
++		bool component_registered;
++	} audio;
+ };
+ 
+ static inline struct nouveau_drm *
 -- 
-2.24.1.508.g91d2dafee0
+2.16.4
 
