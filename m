@@ -2,81 +2,74 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EDDC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 429B8C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C29D214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD8D207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:29:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xR4qc2Na"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728842AbgAMNWW (ORCPT
+        id S1728650AbgAMN27 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:22:22 -0500
-Received: from foss.arm.com ([217.140.110.172]:39426 "EHLO foss.arm.com"
+        Mon, 13 Jan 2020 08:28:59 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:34464 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728646AbgAMNWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:22:18 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 979E713D5;
-        Mon, 13 Jan 2020 05:22:17 -0800 (PST)
-Received: from e105550-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 96D1E3F68E;
-        Mon, 13 Jan 2020 05:22:16 -0800 (PST)
-Date:   Mon, 13 Jan 2020 13:22:14 +0000
-From:   Morten Rasmussen <morten.rasmussen@arm.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cpu-topology: warn if NUMA configurations conflicts with
- lower layer
-Message-ID: <20200113132214.GD10914@e105550-lin.cambridge.arm.com>
-References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
- <20191231164051.GA4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
- <20200102112955.GC4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
- <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
- <20200109105228.GB10914@e105550-lin.cambridge.arm.com>
- <f973e77b-9c0a-6506-da97-f7a0ea1829fd@arm.com>
+        id S1726277AbgAMN27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:28:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=FpkFxp1qPW3+9QSftzRJBfOZwYtUKjyOro9/uICM4TU=; b=xR4qc2NafemcdaBW43Lk3uKOJX
+        NYHT2l9SoSz77eDcruXc1TKSgKMFLgPXvi4br3v8B4oZOoxuuzgDuFIBc/7dD4BLOOo1+Ln13+3J/
+        PdY/nYb1cRZ1S908oN8pU6M0FQCEm5ZjPiItq51vHU7GNKh6BivSSYTbYa+iN0AJQGsI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iqzlz-0003sw-QO; Mon, 13 Jan 2020 14:28:51 +0100
+Date:   Mon, 13 Jan 2020 14:28:51 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        David Bauer <mail@david-bauer.net>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Philipp Zabel <p.zabel@pengutronix.de>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mdio_bus: Simplify reset handling and extend to non-DT
+ systems
+Message-ID: <20200113132851.GC11788@lunn.ch>
+References: <20200113130529.15372-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f973e77b-9c0a-6506-da97-f7a0ea1829fd@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200113130529.15372-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 01:22:02PM +0000, Valentin Schneider wrote:
-> On 09/01/2020 10:52, Morten Rasmussen wrote:
-> >> AFAIA what matters here is memory controllers, less so LLCs. Cores within
-> >> a single die could have private LLCs and separate memory controllers, or
-> >> shared LLC and separate memory controllers.
-> > 
-> > Don't confuse cache boundaries, packages and nodes :-)
-> > 
-> > core_siblings are cpus in the same package and doesn't say anything
-> > about cache boundaries. It is not given that there is sched_domain that
-> > matches the core_sibling span.
-> > 
-> > The MC sched_domain is supposed to match the LLC span which might
-> > different for core_siblings. So the about example should be valid for a
-> > NUMA-in-package system with one package containing two nodes.
-> > 
+On Mon, Jan 13, 2020 at 02:05:29PM +0100, Geert Uytterhoeven wrote:
+> Convert mdiobus_register_reset() from open-coded DT-only optional reset
+> handling to reset_control_get_optional_exclusive().  This not only
+> simplifies the code, but also adds support for lookup-based resets on
+> non-DT systems.
 > 
-> Right, the point I was trying to make is that node boundaries can be pretty
-> much anything, so nodes can span over LLCs, or LLCs can span over nodes,
-> which is why we need checks such as the one in arch_topology() that lets us
-> build up a usable domain hierarchy (which cares about LLCs, at least at some
-> level).
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Only tested on systems without PHY resets, with and without
+> CONFIG_RESET_CONTROLLER=y.
 
-Indeed. The topology masks can't always be used as is to define the
-sched_domain hierarchy.
+David, please could you test this.
+
+But it Looks O.K. to me.
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
