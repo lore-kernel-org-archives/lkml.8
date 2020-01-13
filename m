@@ -2,142 +2,67 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85114C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E84C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:59:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61458207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AABD207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:59:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbgAMN7F (ORCPT
+        id S1728935AbgAMN7i convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:59:05 -0500
-Received: from mga02.intel.com ([134.134.136.20]:28162 "EHLO mga02.intel.com"
+        Mon, 13 Jan 2020 08:59:38 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:55032 "EHLO gloria.sntech.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbgAMN43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:56:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:56:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
-   d="scan'208";a="304843797"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 13 Jan 2020 05:56:24 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 2A0823F3; Mon, 13 Jan 2020 15:56:24 +0200 (EET)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 03/36] platform/x86: intel_scu_ipc: Add constants for register offsets
-Date:   Mon, 13 Jan 2020 16:55:50 +0300
-Message-Id: <20200113135623.56286-4-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
-References: <20200113135623.56286-1-mika.westerberg@linux.intel.com>
+        id S1726074AbgAMN7h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:59:37 -0500
+Received: from wf0253.dip.tu-dresden.de ([141.76.180.253] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1ir0Fd-0003DP-Se; Mon, 13 Jan 2020 14:59:29 +0100
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Sandy Huang <hjc@rock-chips.com>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Eric Auger <eric.auger@redhat.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH] drm/rockchip: Add missing vmalloc header
+Date:   Mon, 13 Jan 2020 14:59:29 +0100
+Message-ID: <1782062.vAMIso9ooe@phil>
+In-Reply-To: <1577779956-7612-1-git-send-email-krzk@kernel.org>
+References: <1577779956-7612-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This makes the code more readable. These are taken from intel_pmc_ipc.c
-which implements the same thing.
+Am Dienstag, 31. Dezember 2019, 09:12:36 CET schrieb Krzysztof Kozlowski:
+> The Rockship DRM GEM code uses vmap()/vunmap() so vmalloc header must be
+> included to avoid warnings like (on IA64, compile tested):
+> 
+>     drivers/gpu/drm/rockchip/rockchip_drm_gem.c: In function ‘rockchip_gem_alloc_iommu’:
+>     drivers/gpu/drm/rockchip/rockchip_drm_gem.c:134:20: error:
+>         implicit declaration of function ‘vmap’ [-Werror=implicit-function-declaration]
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel_scu_ipc.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+applied to drm-misc-next
 
-diff --git a/drivers/platform/x86/intel_scu_ipc.c b/drivers/platform/x86/intel_scu_ipc.c
-index cdab916fbf92..a8be5bcb9832 100644
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -99,11 +99,15 @@ struct intel_scu_ipc_dev {
- 
- static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
- 
-+#define IPC_STATUS		0x04
-+#define IPC_STATUS_ERR		BIT(1)
-+#define IPC_STATUS_BUSY		BIT(0)
-+
- /*
-- * IPC Read Buffer (Read Only):
-- * 16 byte buffer for receiving data from SCU, if IPC command
-- * processing results in response data
-+ * IPC Write/Read Buffers:
-+ * 16 byte buffer for sending and receiving data to and from SCU.
-  */
-+#define IPC_WRITE_BUFFER	0x80
- #define IPC_READ_BUFFER		0x90
- 
- #define IPC_I2C_CNTRL_ADDR	0
-@@ -135,7 +139,7 @@ static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
-  */
- static inline void ipc_data_writel(struct intel_scu_ipc_dev *scu, u32 data, u32 offset)
- {
--	writel(data, scu->ipc_base + 0x80 + offset);
-+	writel(data, scu->ipc_base + IPC_WRITE_BUFFER + offset);
- }
- 
- /*
-@@ -147,7 +151,7 @@ static inline void ipc_data_writel(struct intel_scu_ipc_dev *scu, u32 data, u32
-  */
- static inline u8 ipc_read_status(struct intel_scu_ipc_dev *scu)
- {
--	return __raw_readl(scu->ipc_base + 0x04);
-+	return __raw_readl(scu->ipc_base + IPC_STATUS);
- }
- 
- /* Read ipc byte data */
-@@ -169,17 +173,17 @@ static inline int busy_loop(struct intel_scu_ipc_dev *scu)
- 	u32 loop_count = 100000;
- 
- 	/* break if scu doesn't reset busy bit after huge retry */
--	while ((status & BIT(0)) && --loop_count) {
-+	while ((status & IPC_STATUS_BUSY) && --loop_count) {
- 		udelay(1); /* scu processing time is in few u secods */
- 		status = ipc_read_status(scu);
- 	}
- 
--	if (status & BIT(0)) {
-+	if (status & IPC_STATUS_BUSY) {
- 		dev_err(scu->dev, "IPC timed out");
- 		return -ETIMEDOUT;
- 	}
- 
--	if (status & BIT(1))
-+	if (status & IPC_STATUS_ERR)
- 		return -EIO;
- 
- 	return 0;
-@@ -196,7 +200,7 @@ static inline int ipc_wait_for_interrupt(struct intel_scu_ipc_dev *scu)
- 	}
- 
- 	status = ipc_read_status(scu);
--	if (status & BIT(1))
-+	if (status & IPC_STATUS_ERR)
- 		return -EIO;
- 
- 	return 0;
--- 
-2.24.1
+Thanks
+Heiko
+
 
