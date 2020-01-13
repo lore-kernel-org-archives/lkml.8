@@ -2,154 +2,173 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B21BC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B507C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:54:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAD07207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:54:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WbSBasEF";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="gtWCIm2l"
+	by mail.kernel.org (Postfix) with ESMTP id 01BF3207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgAMNye (ORCPT
+        id S1728755AbgAMNyu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:54:34 -0500
-Received: from sv2-smtprelay2.synopsys.com ([149.117.73.133]:37106 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726074AbgAMNye (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:54:34 -0500
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2A9CA406A9;
-        Mon, 13 Jan 2020 13:54:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1578923673; bh=lxAOT2BkI85HKicR5fTKEbv9fn1ERxxwMdp9KHxtB8I=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=WbSBasEFSkKDfQSAz0/TS0BmQIHMNX8kj9tOe4otpgl4DZzKF9IwbdnXGgcDipFUY
-         S6WCRLDd+Kv5oQ3b+oT6+SkRy8byaWhtj6SYrnpL1HLPyZP7PoYE6kRRb8a8gaJBgF
-         KdvmR3/1K2k1s66uvMwMSuNH09rXLgpaIi0sRkr4/incOo5+gel9nGfUl2k8eFRuXa
-         lmMB1mBo1nYEWc6P2i0GojksVsdhjnPqG3Sb+Q7EuQTZ8yNyvgt1nxlxA9xvijEcz2
-         KOfMOdfXOB/FqNqnGW5pmD4o355R8d/Aj7kZuRfZO2BluvJOYMdY0uRWHSo+yOJaMv
-         BgRYcSvxsrukQ==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id E2B48A0067;
-        Mon, 13 Jan 2020 13:54:30 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 13 Jan 2020 05:54:30 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 13 Jan 2020 05:54:29 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q8N7BcyhIHgeKPUaWfiBpAzll0evjbxFm8NuHTnZRP2iNbnKrEmTDAtmtlf3DUmr/0sldOd1Xv1rXtOAlFpn8xiB0LJ4+isuNoP1NhPGHXwBnNBIxbzwGkDpEdte79C92pfwP/caDh0s3bPh/AFxoBcgiV/cl3wmk76vfQWHA+vaWXM9pyHG4co6j7gnXIATg98T3IOGlQU7lqLeslm2KLiQG7FLOwmLt5XdmVm21oRyA4yqx91U8vXw3wSyL5a0AjLto6jh7oQeaJ3RTv4k7HlMgksj6pLP292OKNWQf87vK3K13ICtSdbHzbOVVLTcjSzUqvTuR4Hs/nLutXFxSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lxAOT2BkI85HKicR5fTKEbv9fn1ERxxwMdp9KHxtB8I=;
- b=EX/TiiUW/h++MfQtwmbm/4E0ZFW4LAuEi+iCxHCJwcpy3QD45mzOgu7pytZg1H9HUlsbzsPQcHZYx9C29pTZDLoeuuwMTPQ/XqO6st+KqTmxxjpNQ9YO66MLsyD3KbmYvsEbVevgYw++nt4BdConltHi/IZojL5+XxBYOaqqI42L/UeF0uJkb4nV+OkGuJLYbIDxSTBzYkUQP47RtH1eDlcS1VN5MJI6HY8Q9hr2Qd40wePf8OLNTak6sjGYOobgqiNpmQaEIwqQd9NVYrYHuaPdEqIuFuevwsGfYBWlDg0uuNbqod1qNgI6TDcs5MJUTRN/A0fzBDPVZ4no5wYJCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lxAOT2BkI85HKicR5fTKEbv9fn1ERxxwMdp9KHxtB8I=;
- b=gtWCIm2lN4MLPLmwUKju++4IYlk6qnJhLsqLnxKCPDtWV67dgWsZYrTb8fEBIw0YDUZcw6GuY6MJC808822pXXC98i1tTzEW1odkbF4E2phPGT0pC33ao7iKOOFuVp36x25vtdhpSfzadZ1iC0A0lIUx0hHFGHVeeFHS5fPUIPo=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
- BN8PR12MB3331.namprd12.prod.outlook.com (20.178.211.81) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.10; Mon, 13 Jan 2020 13:54:29 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
- 13:54:28 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "Heiner Kallweit" <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: RE: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
- using a PHY driver
-Thread-Topic: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
- using a PHY driver
-Thread-Index: AQHVyhMHPh1TkUf6pU+JUVzLFdFzk6fomWeAgAAAjSA=
-Date:   Mon, 13 Jan 2020 13:54:28 +0000
-Message-ID: <BN8PR12MB32666F34D45D7881BDD4CAB3D3350@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <4953fc69a26bee930bccdeb612f1ce740a4294df.1578921062.git.Jose.Abreu@synopsys.com>
- <20200113133845.GD11788@lunn.ch>
-In-Reply-To: <20200113133845.GD11788@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ee5c9f17-6dfe-4b66-6ea6-08d798301bde
-x-ms-traffictypediagnostic: BN8PR12MB3331:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR12MB3331CD6367F4303DF7A4CF7BD3350@BN8PR12MB3331.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(396003)(136003)(366004)(39860400002)(189003)(199004)(86362001)(6916009)(54906003)(5660300002)(4744005)(316002)(52536014)(4326008)(478600001)(9686003)(33656002)(55016002)(26005)(2906002)(186003)(6506007)(66446008)(81166006)(81156014)(66556008)(8676002)(8936002)(66946007)(76116006)(66476007)(64756008)(7696005)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3331;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 6T6zlvk1ghHDBR+q+6LH5k5uD/p3tNeoQO4dGvuuZiRZZb1nUGhv7DIEwN7iPWtFPpmFnkmV/fi0IMc4F9YuOUhdUIR7B9IE4lMz/LsAybGkgU55pqJci71qadUfPlUMAo3TuxxwVundYHXCCY7GJvZ4mq2o/O3Eo1sxoBaS4a3YOJ4tCjGIvnw6SPssIi6fDaOSWJsKqXxpz3kKGkDojs3U0PtdNNZ/sbNyqXsOatbLHyHfGjpIpJLu+TFwjYi9Q8ARahC8XmO6iiZq76MGl5hPSOFM8IZNov/xWX9IpVIALBcOPwwya63mmv2ENXeKRw4sIR5baojprPUvuBLFI8z3UPJ+Pwr/VasEux0XFZCffapGZWnEPJTZCn9VhJKKPWY4lm2Qqdtje485YmCjDsI4vPDTUUofeOTzJFA3Be8K0kFwHH0o5rCA7Lry5qhb
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 Jan 2020 08:54:50 -0500
+Received: from mga03.intel.com ([134.134.136.65]:23348 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbgAMNyt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:54:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 05:54:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
+   d="scan'208";a="218670943"
+Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
+  by fmsmga007.fm.intel.com with ESMTP; 13 Jan 2020 05:54:45 -0800
+From:   roman.sudarikov@linux.intel.com
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, eranian@google.com,
+        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com,
+        gregkh@linuxfoundation.org
+Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
+Subject: [PATCH v3 0/2][RESEND] perf x86: Exposing IO stack to IO PMON mapping through sysfs
+Date:   Mon, 13 Jan 2020 16:54:42 +0300
+Message-Id: <20200113135444.12027-1-roman.sudarikov@linux.intel.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee5c9f17-6dfe-4b66-6ea6-08d798301bde
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 13:54:28.7390
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8RqNWv1qmvNsYvDR6mNGS4iNglYpyuYYXahNpFeWVWgdBTV0raaB3+EW8MPO87w7m9c3lnR6awTZPgZGz/HU2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3331
-X-OriginatorOrg: synopsys.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrew Lunn <andrew@lunn.ch>
-Date: Jan/13/2020, 13:38:45 (UTC+00:00)
+From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
 
-> On Mon, Jan 13, 2020 at 02:11:08PM +0100, Jose Abreu wrote:
-> > Adds the basic support for XPCS including support for USXGMII.
->=20
-> Hi Jose
->=20
-> Please could you describe the 'big picture'. What comes after the
-> XPCS? An SFP? A copper PHY? How in Linux do you combine this PHY and
-> whatever comes next using PHYLINK?
->=20
-> Or do only support backplane with this, and the next thing in the line
-> is the peers XPCS?
+The previous version can be found at:
+v2: https://lkml.kernel.org/r/20191210091451.6054-1-roman.sudarikov@linux.intel.com
 
-My current setup is this:
+Changes in this revision are:
+v2 -> v3:
+- Addressed comments from Peter and Kan
 
-Host PC x86 -> PCI -> XGMAC -> XPCS -> SERDES 10G-BASE-R -> QSFP+
+The previous version can be found at:
+v1: https://lkml.kernel.org/r/20191126163630.17300-1-roman.sudarikov@linux.intel.com
 
-The only piece that needs configuration besides XGMAC is the XPCS hereby=20
-I "called" it a PHY ... Anyway, this is an RFC because I'm not entirely=20
-sure about the approach. Hmm ?
+Changes in this revision are:
+v1 -> v2:
+- Fixed process related issues;
+- This patch set includes kernel support for IIO stack to PMON mapping;
+- Stephane raised concerns regarding output format which may require
+code changes in the user space part of the feature only. We will continue 
+output format discussion in the context of user space update.
 
----
-Thanks,
-Jose Miguel Abreu
+Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
+significant changes in the integrated I/O (IIO) architecture. The new
+solution introduces IIO stacks which are responsible for managing traffic
+between the PCIe domain and the Mesh domain. Each IIO stack has its own
+PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
+or various built-in accelerators. IIO PMON blocks allow concurrent
+monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
+
+Software is supposed to program required perf counters within each IIO
+stack and gather performance data. The tricky thing here is that IIO PMON
+reports data per IIO stack but users have no idea what IIO stacks are -
+they only know devices which are connected to the platform.
+
+Understanding IIO stack concept to find which IIO stack that particular
+IO device is connected to, or to identify an IIO PMON block to program
+for monitoring specific IIO stack assumes a lot of implicit knowledge
+about given Intel server platform architecture.
+
+This patch set introduces:
+1. An infrastructure for exposing an Uncore unit to Uncore PMON mapping
+   through sysfs-backend;
+2. A new --iiostat mode in perf stat to provide I/O performance metrics
+   per I/O device.
+
+Usage examples:
+
+1. List all devices below IIO stacks
+  ./perf stat --iiostat=show
+
+Sample output w/o libpci:
+
+    S0-RootPort0-uncore_iio_0<00:00.0>
+    S1-RootPort0-uncore_iio_0<81:00.0>
+    S0-RootPort1-uncore_iio_1<18:00.0>
+    S1-RootPort1-uncore_iio_1<86:00.0>
+    S1-RootPort1-uncore_iio_1<88:00.0>
+    S0-RootPort2-uncore_iio_2<3d:00.0>
+    S1-RootPort2-uncore_iio_2<af:00.0>
+    S1-RootPort3-uncore_iio_3<da:00.0>
+
+Sample output with libpci:
+
+    S0-RootPort0-uncore_iio_0<00:00.0 Sky Lake-E DMI3 Registers>
+    S1-RootPort0-uncore_iio_0<81:00.0 Ethernet Controller X710 for 10GbE SFP+>
+    S0-RootPort1-uncore_iio_1<18:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
+    S1-RootPort1-uncore_iio_1<86:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
+    S1-RootPort1-uncore_iio_1<88:00.0 Ethernet Controller XL710 for 40GbE QSFP+>
+    S0-RootPort2-uncore_iio_2<3d:00.0 Ethernet Connection X722 for 10GBASE-T>
+    S1-RootPort2-uncore_iio_2<af:00.0 Omni-Path HFI Silicon 100 Series [discrete]>
+    S1-RootPort3-uncore_iio_3<da:00.0 NVMe Datacenter SSD [Optane]>
+
+2. Collect metrics for all I/O devices below IIO stack
+
+  ./perf stat --iiostat -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
+    357708+0 records in
+    357707+0 records out
+    375083606016 bytes (375 GB, 349 GiB) copied, 215.381 s, 1.7 GB/s
+
+  Performance counter stats for 'system wide':
+
+     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+    00:00.0                    0                    0                    0                    0
+    81:00.0                    0                    0                    0                    0
+    18:00.0                    0                    0                    0                    0
+    86:00.0                    0                    0                    0                    0
+    88:00.0                    0                    0                    0                    0
+    3b:00.0                    3                    0                    0                    0
+    3c:03.0                    3                    0                    0                    0
+    3d:00.0                    3                    0                    0                    0
+    af:00.0                    0                    0                    0                    0
+    da:00.0               358559                   44                    0                   22
+
+    215.383783574 seconds time elapsed
+
+
+3. Collect metrics for comma separted list of I/O devices 
+
+  ./perf stat --iiostat=da:00.0 -- dd if=/dev/zero of=/dev/nvme0n1 bs=1M oflag=direct
+    381555+0 records in
+    381554+0 records out
+    400088457216 bytes (400 GB, 373 GiB) copied, 374.044 s, 1.1 GB/s
+
+  Performance counter stats for 'system wide':
+
+     device             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+    da:00.0               382462                   47                    0                   23
+
+    374.045775505 seconds time elapsed
+
+Roman Sudarikov (2):
+  perf x86: Infrastructure for exposing an Uncore unit to PMON mapping
+  perf x86: Exposing an Uncore unit to PMON for Intel Xeon® server
+    platform
+
+ arch/x86/events/intel/uncore.c       |  39 ++++++-
+ arch/x86/events/intel/uncore.h       |  10 +-
+ arch/x86/events/intel/uncore_snbep.c | 162 +++++++++++++++++++++++++++
+ 3 files changed, 208 insertions(+), 3 deletions(-)
+
+
+base-commit: 219d54332a09e8d8741c1e1982f5eae56099de85
+-- 
+2.19.1
+
