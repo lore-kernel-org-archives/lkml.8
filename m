@@ -2,150 +2,138 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 459ECC33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C850C33CB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B088214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320AC22314
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:06:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="akSfqgaw"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="ZZUKSO/e";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PKtgL8O9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733187AbgAMGCM (ORCPT
+        id S1733187AbgAMGF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 01:02:12 -0500
-Received: from mail-eopbgr770050.outbound.protection.outlook.com ([40.107.77.50]:12634
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726475AbgAMGCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 01:02:11 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MOQ+ietlEQwLfDu997h0pyyiFuXocLgVTVD7PzyhS0say4PWLOF1UZ3dUqPW2Cq/8+gkxgvCUfgTNmW4WIn0E/+7xmArNfvS2m4X+H2YFdHJu5ICn5jxR5PkZWJ5qDNlr0+01vxmlhyVe/kG4ZNntL4mdegUmVK13KdmtD7qkyq/ki4uJOPgctZIFARBkQtJ5zDMEBpqG3mZK/aQwmbDpRxkoshzseKOecihPwZ2fWZkX3fjnidQlQfPuZhwnzKIVCw9w6ogdbeqorHiIkQ0Iab2l06p9P+TvtWVN6n77vcEbdR7K9LoPU9cN9pBKrFi5GY4F5/apynqXUNEKzBm7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AFdO11OKxeoVt4iOmV+DEvFLiaBH7k429f1RnfyonLE=;
- b=k4P8kyzgW3o5JhudB1hcrkzZdhJGuV5rxvt5mLs7Z4nBl8qLFp8HQ7FiuyaP7VTD4NEZkaCxUDczNNlVtbgv7lSRIJ8UbjhybhrEV02W571X3R7MCLiuwfceMHMCXUniplJgGOMxtIW9V4h5iqZIuhYV8KBFZOr1tJfzaWbAGyATHLPzzVIbetSKDSthDAsNHLWGMzYTuUhu4NEeqst3zNZO2yHhL+QB4UM1sxdL7UljJMIyPzE2GyJfqC/krYXr2513b4Kz7CK+zeGMJ6t0WZfoz9nm3bcsoD/8z+q6EvGBu8KZb8DDjaPIPdNKEt1NLew61ofRrj7JqNY3wqhfhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AFdO11OKxeoVt4iOmV+DEvFLiaBH7k429f1RnfyonLE=;
- b=akSfqgawdKoh3uVNEqPhKcv3e8LbJTtB2UppNnx7KqJBoDUhIQqL/UFh7FwTy58zthAuAV0h94bsmn6Ze6OGHiq3hTQ0ooii+U28ZNZfJCYrIbfhCsPCMWZ7GhbeD0sWIX+mPPvnbRlGxYIgCbMR8ey4iQ/Z+LBdcObV0g4lJUU=
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com (20.180.9.216) by
- CH2PR02MB6151.namprd02.prod.outlook.com (52.132.230.92) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.13; Mon, 13 Jan 2020 06:02:06 +0000
-Received: from CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899]) by CH2PR02MB7000.namprd02.prod.outlook.com
- ([fe80::969:436f:b4b8:4899%7]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
- 06:02:06 +0000
-From:   Radhey Shyam Pandey <radheys@xilinx.com>
-To:     Andre Przywara <andre.przywara@arm.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     Michal Simek <michals@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 08/14] net: axienet: Drop MDIO interrupt registers from
- ethtools dump
-Thread-Topic: [PATCH 08/14] net: axienet: Drop MDIO interrupt registers from
- ethtools dump
-Thread-Index: AQHVx6y7Cl3Mr7YIzE6y4oKaxbl9yafoHX0A
-Date:   Mon, 13 Jan 2020 06:02:06 +0000
-Message-ID: <CH2PR02MB7000F73F928C719596BF3611C7350@CH2PR02MB7000.namprd02.prod.outlook.com>
-References: <20200110115415.75683-1-andre.przywara@arm.com>
- <20200110115415.75683-9-andre.przywara@arm.com>
-In-Reply-To: <20200110115415.75683-9-andre.przywara@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=radheys@xilinx.com; 
-x-originating-ip: [149.199.50.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e0d130ff-50ad-4d42-726a-08d797ee1e93
-x-ms-traffictypediagnostic: CH2PR02MB6151:|CH2PR02MB6151:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CH2PR02MB6151CC6117C68EEAD868DF25C7350@CH2PR02MB6151.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:513;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(396003)(346002)(366004)(189003)(199004)(4326008)(54906003)(6506007)(7696005)(316002)(53546011)(110136005)(8936002)(64756008)(66476007)(66946007)(71200400001)(86362001)(76116006)(66556008)(66446008)(2906002)(81156014)(81166006)(186003)(52536014)(478600001)(8676002)(26005)(55016002)(9686003)(5660300002)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6151;H:CH2PR02MB7000.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: xilinx.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 1ZrD/D383Ufh18YMHlLbLIasokfXGZL2UE7M6Y4mCO40MUfo1LV9c4lKj+9ESk0Xp2XCR8YF2znQHbp4FFPq590JNZealkyZ6vNDrO3AmLhWm5AshWnoWYcwgueKumRuFWgY/dBnApiXTUVjEKkoks51iXyaFvZahzf9mKQGBNtpAB5rxokkwJr6dvujhMeQIK8oefzJx1lmBZb87vKr0SxD8LzW/RN0sMY6acZ+1Cs/1bofMCRj1Iympf88/L9USoxka+Mj2BVLVGzDngTa8gTy15vmF2qP6jdoEFAKWD/HCLqH4PEWnZgR+baxDFR+m6Fff7T4XwDhTls0Y5smVX+PnX6WB+At0FpI8GLstWnI4mIowJiPs9tyV+S/EdaZsFKWIwacLKhu+MxJhlLqRb3RZ36P1pkWCMYn1iAG67NPrOC52+gts89yHbGXL+GG
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 13 Jan 2020 01:05:59 -0500
+Received: from wnew4-smtp.messagingengine.com ([64.147.123.18]:52561 "EHLO
+        wnew4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725909AbgAMGF6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 01:05:58 -0500
+X-Greylist: delayed 320 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Jan 2020 01:05:58 EST
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.west.internal (Postfix) with ESMTP id 7D7396A6;
+        Mon, 13 Jan 2020 01:00:37 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute1.internal (MEProxy); Mon, 13 Jan 2020 01:00:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        P8DhK8ltRJH7uYyzmEkUgfSyp/2vnpQjSfGyqb1nic0=; b=ZZUKSO/eTQMdBTbp
+        HwxYMmt5tQQXo9lQ68s/ozcY3kw2lmk0BK8HuO8G28NY5us6DWQrzZrdKrrYSKEZ
+        raViLEKQ+wuKAHbVdEA7pe8mSeQricDisxvaq0vr4ZdY4vBgAQuvxus7Xj2v1icm
+        qmZ1Gfu5HPGU0/ZEAvB1wN8tQe4tDHms6lZrWSz9LlPOYgI76UhtHt1faOQ7JOLu
+        nZYieX/RBOpmrAo7w7jJd9UBZTRpORyMXmuR32Buo1RhOuRJjqhjTv8l1BeKQtEX
+        JtHpRz+h13YCmoFaKivCVk2xVN2w9Gl23M4wxIEy8AurSOCsI4QF8IFhTUGRQQPl
+        bT28CQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=P8DhK8ltRJH7uYyzmEkUgfSyp/2vnpQjSfGyqb1ni
+        c0=; b=PKtgL8O965o7BZB7yToXfSyN/QrXVnmtMhuDAckJbnw2QLJ1781zumeoS
+        Kg19K4ra6jcO3vYE71aH+AMsGiOizSK29/sAOX5eVugJLDf+JgHESEmayhVovMKK
+        oTocikkRAaEuEo5Kp9KyPaBppHBBsiJ3zI/baro9dFWr/CI7Ze60zESzYs61djLI
+        R4qeND0+/h0TP87tYSSU2LF3EA33xMr0j8GSADl+NLgYxDXNU7Lyxp0R5Y1XOXPx
+        pdMMERFQ9vD81VIbvmXAkshoPQpXAViz8hiStMVZO45OPjMHYnqk7DMLAbfW4ELs
+        RLWwC7HXldqNyfo7k1e2jRINGJPxQ==
+X-ME-Sender: <xms:hAccXtQe9N0U2D21iCeMFUPr552x_0IruXA1oAo-qyMjpWTzn28xOQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeiledgleduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucffohhmrghinhepghhith
+    hhuhgsrdgtohhmnecukfhppeduudekrddvtdelrddujeehrddvheenucfrrghrrghmpehm
+    rghilhhfrhhomheprhgrvhgvnhesthhhvghmrgifrdhnvghtnecuvehluhhsthgvrhfuih
+    iivgeptd
+X-ME-Proxy: <xmx:hAccXvDikIat0APaVAnruEZ5hJJ4LeAt_mTc1PmEW6-K7XJJpcE4Rg>
+    <xmx:hAccXouQscriB9WR8k4h8-wYSx7VDpMV5kgaM8GMcWwqpiI1n_8X9A>
+    <xmx:hAccXmuJ9Rq8dqE8EEt9jcXP2bApKhO1FL_S3JqK8HS6RIoQOn_j4A>
+    <xmx:hQccXlBL9iw23cs5OVqLct57YHOCh1SqXFT1kFEthWob7JJcH05RLmMyQY0>
+Received: from mickey.themaw.net (unknown [118.209.175.25])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AC6AA8005A;
+        Mon, 13 Jan 2020 01:00:31 -0500 (EST)
+Message-ID: <41c535d689530f3715f21cd25074eb61e825a5f6.camel@themaw.net>
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
+ symlinks
+From:   Ian Kent <raven@themaw.net>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 13 Jan 2020 14:00:28 +0800
+In-Reply-To: <20200113035407.GQ8904@ZenIV.linux.org.uk>
+References: <20191230072959.62kcojxpthhdwmfa@yavin.dot.cyphar.com>
+         <20200101004324.GA11269@ZenIV.linux.org.uk>
+         <20200101005446.GH4203@ZenIV.linux.org.uk>
+         <20200101030815.GA17593@ZenIV.linux.org.uk>
+         <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
+         <20200101234009.GB8904@ZenIV.linux.org.uk>
+         <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
+         <20200103014901.GC8904@ZenIV.linux.org.uk>
+         <20200110231945.GL8904@ZenIV.linux.org.uk>
+         <aea0bc800b6a1e547ca1944738ff9db4379098ba.camel@themaw.net>
+         <20200113035407.GQ8904@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0d130ff-50ad-4d42-726a-08d797ee1e93
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 06:02:06.5472
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Wl2DZcKfWSYLjtZYQ2XCaOPVX5NZEOLnDIRXyofENuncxC57l30QEm4WZ5gmmYftMipq6zJN8tJFvI5YL/fF1A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6151
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Andre Przywara <andre.przywara@arm.com>
-> Sent: Friday, January 10, 2020 5:24 PM
-> To: David S . Miller <davem@davemloft.net>; Radhey Shyam Pandey
-> <radheys@xilinx.com>
-> Cc: Michal Simek <michals@xilinx.com>; Robert Hancock
-> <hancock@sedsystems.ca>; netdev@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: [PATCH 08/14] net: axienet: Drop MDIO interrupt registers from
-> ethtools dump
->=20
-> Newer revisions of the IP don't have these registers. Since we don't
-> really use them, just drop them from the ethtools dump.
->=20
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 4 ----
->  1 file changed, 4 deletions(-)
->=20
-> diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> index e83c7b005f50..7a747345e98e 100644
-> --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-> @@ -1239,10 +1239,6 @@ static void axienet_ethtools_get_regs(struct
-> net_device *ndev,
->  	data[20] =3D axienet_ior(lp, XAE_MDIO_MCR_OFFSET);
->  	data[21] =3D axienet_ior(lp, XAE_MDIO_MWD_OFFSET);
->  	data[22] =3D axienet_ior(lp, XAE_MDIO_MRD_OFFSET);
-> -	data[23] =3D axienet_ior(lp, XAE_MDIO_MIS_OFFSET);
-> -	data[24] =3D axienet_ior(lp, XAE_MDIO_MIP_OFFSET);
-> -	data[25] =3D axienet_ior(lp, XAE_MDIO_MIE_OFFSET);
-> -	data[26] =3D axienet_ior(lp, XAE_MDIO_MIC_OFFSET);
+On Mon, 2020-01-13 at 03:54 +0000, Al Viro wrote:
+> On Mon, Jan 13, 2020 at 09:48:23AM +0800, Ian Kent wrote:
+> 
+> > I did try this patch and I was trying to work out why it didn't
+> > work. But thought I'd let you know what I saw.
+> > 
+> > Applying it to current Linus tree systemd stops at switch root.
+> > 
+> > Not sure what causes that, I couldn't see any reason for it.
+> 
+> Wait a minute...  So you are seeing problems early in the boot,
+> before any autofs ioctls might come into play?
 
-We can also remove these #defines from the header.
-Alternatively, we can cherry-pick commit f5b9e58 " net: xilinx: axiethernet=
-:
-Fix axiethernet register description" from xilinx tree and include it in th=
-is
-series.
->  	data[27] =3D axienet_ior(lp, XAE_UAW0_OFFSET);
->  	data[28] =3D axienet_ior(lp, XAE_UAW1_OFFSET);
->  	data[29] =3D axienet_ior(lp, XAE_FMI_OFFSET);
-> --
-> 2.17.1
+I did, then I checked it booted without the patch, then tried
+building from scratch with the patch twice and same thing
+happened each time.
+
+Looked like this, such as it is:
+[ OK ] Reached target Switch Root.
+[ OK ] Started Plymouth switch root service.
+       Starting Switch Root...
+
+I don't have any evidence but thought it might be this:
+https://github.com/karelzak/util-linux/blob/master/sys-utils/switch_root.c
+
+Mind you, that's not the actual systemd repo. either I probably
+need to look a lot deeper (and at the actual systemd repo) to
+work out what's actually being called.
+
+> 
+> Sigh...  Guess I'll have to dig that Fedora KVM image out and
+> try to see what it's about... ;-/  Here comes a couple of hours
+> of build...
 
