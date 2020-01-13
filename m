@@ -2,104 +2,186 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94195C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55201C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EF3C207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBB7207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:10:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gUIejq+F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgAMMI7 (ORCPT
+        id S1726804AbgAMMKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:08:59 -0500
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2988 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726480AbgAMMI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:08:59 -0500
-Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id 80E868F53AB1E9ABC85A;
-        Mon, 13 Jan 2020 20:08:56 +0800 (CST)
-Received: from DGGEMM424-HUB.china.huawei.com (10.1.198.41) by
- DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 13 Jan 2020 20:08:56 +0800
-Received: from DGGEMM506-MBX.china.huawei.com ([169.254.3.174]) by
- dggemm424-hub.china.huawei.com ([10.1.198.41]) with mapi id 14.03.0439.000;
- Mon, 13 Jan 2020 20:08:48 +0800
-From:   "Zengtao (B)" <prime.zeng@hisilicon.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>
-CC:     Sudeep Holla <sudeep.holla@arm.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] cpu-topology: warn if NUMA configurations conflicts
- with lower layer
-Thread-Topic: [PATCH] cpu-topology: warn if NUMA configurations conflicts
- with lower layer
-Thread-Index: AQHVuWnsK0zwK8RxTkqe/SNAoYeaUKfT+S+AgALBI6CAAAyngIAAlqWw//+IwoCAAXt3QP//+lWAgASRonCABMxoAIAAodIAgAMuNwCAArymoP//xgwAABH8jyA=
-Date:   Mon, 13 Jan 2020 12:08:47 +0000
-Message-ID: <678F3D1BB717D949B966B68EAEB446ED340E420D@DGGEMM506-MBX.china.huawei.com>
-References: <1577088979-8545-1-git-send-email-prime.zeng@hisilicon.com>
- <20191231164051.GA4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AE1D3@dggemm526-mbx.china.huawei.com>
- <20200102112955.GC4864@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340AEB67@dggemm526-mbx.china.huawei.com>
- <c43342d0-7e4d-3be0-0fe1-8d802b0d7065@arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340AFCA0@dggemm526-mbx.china.huawei.com>
- <20200103114011.GB19390@bogus>
- <678F3D1BB717D949B966B68EAEB446ED340B31E9@dggemm526-mbx.china.huawei.com>
- <20200109104306.GA10914@e105550-lin.cambridge.arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340BEDD6@dggemm526-mbx.china.huawei.com>
- <1a8f7963-97e9-62cc-12d2-39f816dfaf67@arm.com>
- <678F3D1BB717D949B966B68EAEB446ED340E2592@DGGEMM506-MBX.china.huawei.com>
- <15050bf2-99ec-e604-ab95-827ce86fd693@arm.com>
-In-Reply-To: <15050bf2-99ec-e604-ab95-827ce86fd693@arm.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.74.221.187]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 13 Jan 2020 07:10:53 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38562 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbgAMMKw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 07:10:52 -0500
+Received: by mail-wr1-f67.google.com with SMTP id y17so8313730wrh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:10:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=WBfLyLnxB/57Tfgm5ZKZyPtCmfHaakxN3M7SxJ598pA=;
+        b=gUIejq+FCx8Kd6HvjLMU8Nn1XtbcJ8M/jb0ryLOxB4/zVBuKYX4Af8SLra9eJs4rcB
+         mghg3QF8PPQNWvjwOAiVdwcSKLrvUlD57Ufq0i7SOK/qR+0UNHRDR60OFB5lvntqzNTu
+         cu/o0c5QoHplbht9CBc/FT8dE/Qs9MJ/hHR+zNX6ciZxIM+gEzATdOQ6DekDQYvxm+Hq
+         coYzl5K4gougiM/zugUm0SpSjhtHCDP5PDewrpJ7SkFqDI7kQoZhX7RBBi+Kp8J/QRj8
+         b9h5efbNYhOIsDtIFMb0+S+PQKoOuQsMHi34A9odAr2wmItf2LEGgYfuYCF0f/xhMBSL
+         mEyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=WBfLyLnxB/57Tfgm5ZKZyPtCmfHaakxN3M7SxJ598pA=;
+        b=J7l5uvV9o8BUMM3TQYHsaMemZ8iSfvY0zTWTBSMyvxhmPajQ98/9k6MFjJNva/+51h
+         KkA31suJHxFdBffPqsABDepxtfqagDOlVeTV/ODsHQ31sRAqWzJeWDREr8MhAVVJsh4d
+         2alar9MBKUDE6jK0O4P5r2tLV0K8xlfvNAH3MlHrNf0LHbfNRMZNmPemuEzUMHDmpsx2
+         yoYtQepFh3P/I22mh+HsGIiJceNBmTc5kxB7Dn6AhPl0Y2a51gAwQxOhvdErfXWZaZ6P
+         d1GGP4p2JzSgxwHLUvBhE1txB8jf+2qhbZaq2peqZjT75UCFsr4Sg0F4t0jFmCa3Twow
+         0CYQ==
+X-Gm-Message-State: APjAAAWZfL21FO53UysZvWcH3itru9K1m5Nl9nnZZyTmusu7+axlPcGc
+        fY/at9/cP+1IpqYNRCiFa8vPlg==
+X-Google-Smtp-Source: APXvYqwEQVVqvqvjsj+6jgiSXpHXeqdDkCbyvYTNsbrb9Hsh7vYWqFLAsxhpBg00+gIiid7GIRicMQ==
+X-Received: by 2002:adf:edd0:: with SMTP id v16mr18025079wro.310.1578917449742;
+        Mon, 13 Jan 2020 04:10:49 -0800 (PST)
+Received: from dell ([95.147.198.95])
+        by smtp.gmail.com with ESMTPSA id s3sm14052259wmh.25.2020.01.13.04.10.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 04:10:49 -0800 (PST)
+Date:   Mon, 13 Jan 2020 12:11:09 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>
+Subject: Re: [PATCH v8 08/12] regulator: bd718x7: Split driver to common and
+ bd718x7 specific parts
+Message-ID: <20200113121109.GG5414@dell>
+References: <cover.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+ <d247d71e183b388dd7f211aee1235965cff979b4.1577694311.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200107124124.GI14821@dell>
+ <32f8fa4201ae99df64e7a39c6a69be2bef179f7b.camel@fi.rohmeurope.com>
+ <20200113105301.GF5414@dell>
+ <ab72ce13d008a0d5e9cd753b87fe397953210f70.camel@fi.rohmeurope.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ab72ce13d008a0d5e9cd753b87fe397953210f70.camel@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBWYWxlbnRpbiBTY2huZWlkZXIg
-W21haWx0bzp2YWxlbnRpbi5zY2huZWlkZXJAYXJtLmNvbV0NCj4gU2VudDogTW9uZGF5LCBKYW51
-YXJ5IDEzLCAyMDIwIDc6MTcgUE0NCj4gVG86IFplbmd0YW8gKEIpOyBNb3J0ZW4gUmFzbXVzc2Vu
-DQo+IENjOiBTdWRlZXAgSG9sbGE7IExpbnV4YXJtOyBHcmVnIEtyb2FoLUhhcnRtYW47IFJhZmFl
-bCBKLiBXeXNvY2tpOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0hdIGNwdS10b3BvbG9neTogd2FybiBpZiBOVU1BIGNvbmZpZ3VyYXRpb25zDQo+
-IGNvbmZsaWN0cyB3aXRoIGxvd2VyIGxheWVyDQo+IA0KPiBPbiAxMy8wMS8yMDIwIDA2OjUxLCBa
-ZW5ndGFvIChCKSB3cm90ZToNCj4gPiBJIGhhdmUgdHJpZWQgYm90aCwgdGhpcyBwcmV2aW91cyBv
-bmUgZG9uJ3Qgd29yay4gQnV0IHRoaXMgb25lIHNlZW1zDQo+IHdvcmsNCj4gPiBjb3JyZWN0bHkg
-d2l0aCB0aGUgd2FybmluZyBtZXNzYWdlIHByaW50b3V0IGFzIGV4cGVjdGVkLg0KPiA+DQo+IA0K
-PiBUaGFua3MgZm9yIHRyeWluZyBpdCBvdXQuDQo+IA0KPiA+IFRoaXMgcGF0Y2ggaXMgYmFzZWQg
-b24gdGhlIGZhY3QgIiBub24tTlVNQSBzcGFucyBzaG91bGRuJ3Qgb3ZlcmxhcCAiLA0KPiBJIGFt
-DQo+ID4gbm90IHF1aXRlIHN1cmUgaWYgdGhpcyBpcyBhbHdheXMgdHJ1ZT8NCj4gPg0KPiANCj4g
-SSB0aGluayB0aGlzIGlzIHJlcXVpcmVkIGZvciBnZXRfZ3JvdXAoKSB0byB3b3JrIHByb3Blcmx5
-LiBPdGhlcndpc2UsDQo+IHN1Y2Nlc3NpdmUgZ2V0X2dyb3VwKCkgY2FsbHMgbWF5IG92ZXJyaWRl
-IChhbmQgYnJlYWspIHRoZSBzZC0+Z3JvdXBzDQo+IGxpbmtpbmcgYXMgeW91IGluaXRpYWxseSBy
-ZXBvcnRlZC4NCj4gDQo+IEluIHlvdXIgZXhhbXBsZSwgZm9yIE1DIGxldmVsIHdlIGhhdmUNCj4g
-DQo+ICAgdGwtPm1hc2soMykgPT0gMy03DQo+ICAgdGwtPm1hc2soNCkgPT0gNC03DQo+IA0KPiBX
-aGljaCBwYXJ0aWFsbHkgb3ZlcmxhcHMsIGNhdXNpbmcgdGhlIHJlbGlua2luZyBvZiAnNy0+Mycg
-dG8gJzctPjQnLiBWYWxpZA0KPiBjb25maWd1cmF0aW9ucyB3b3VsZCBiZQ0KPiANCj4gICB3aG9s
-bHkgZGlzam9pbnQ6DQo+ICAgdGwtPm1hc2soMykgPT0gMC0zDQo+ICAgdGwtPm1ha3MoNCkgPT0g
-NC03DQo+IA0KPiAgIGVxdWFsOg0KPiAgIHRsLT5tYXNrKDMpID09IDMtNw0KPiAgIHRsLT5tYXNr
-KDQpID09IDMtNw0KPiANCj4gPiBBbnl3YXksIENvdWxkIHlvdSBoZWxwIHRvIHJhaXNlIHRoZSBu
-ZXcgcGF0Y2g/DQo+ID4NCj4gDQo+IElkZWFsbHkgSSdkIGxpa2UgdG8gYmUgYWJsZSB0byByZXBy
-b2R1Y2UgdGhpcyBsb2NhbGx5IGZpcnN0IChUQkggSSdkIGxpa2UNCj4gdG8gZ2V0IG15IGZpcnN0
-IHN1Z2dlc3Rpb24gdG8gd29yayBzaW5jZSBpdCdzIGxlc3MgaW50cnVzaXZlKS4gQ291bGQgeW91
-DQo+IHNoYXJlIGhvdyB5b3Ugd2VyZSBhYmxlIHRvIHRyaWdnZXIgdGhpcz8gRGlldG1hcidzIGJl
-ZW4gdHJ5aW5nIHRvDQo+IHJlcHJvZHVjZQ0KPiB0aGlzIHdpdGggcWVtdSBidXQgSSBkb24ndCB0
-aGluayBoZSdzIHRoZXJlIGp1c3QgeWV0Lg0KDQpEbyB5b3UgaGF2ZSBnb3QgYSBoYXJkd2FyZSBw
-bGF0Zm9ybSB3aXRoIGNsdXN0ZXJzP3doYXQncyB0aGUgaGFyZHdhcmUNCkNwdSB0b3BvbG9neT8N
-Cg0KUmVnYXJkcw0KWmVuZ3RhbyANCg==
+On Mon, 13 Jan 2020, Vaittinen, Matti wrote:
+
+> Hello Lee,
+> 
+> On Mon, 2020-01-13 at 10:53 +0000, Lee Jones wrote:
+> > On Wed, 08 Jan 2020, Vaittinen, Matti wrote:
+> > 
+> > > Hello Lee,
+> > > 
+> > > On Tue, 2020-01-07 at 12:41 +0000, Lee Jones wrote:
+> > > > On Mon, 30 Dec 2019, Matti Vaittinen wrote:
+> > > > 
+> > > > > Few ROHM PMICs allow setting the voltage states for different
+> > > > > system states
+> > > > > like RUN, IDLE, SUSPEND and LPSR. States are then changed via
+> > > > > SoC
+> > > > > specific
+> > > > > mechanisms. bd718x7 driver implemented device-tree parsing
+> > > > > functions for
+> > > > > these state specific voltages. The parsing functions can be re-
+> > > > > used 
+> > > > > by
+> > > > > other ROHM chip drivers like bd71828. Split the generic
+> > > > > functions
+> > > > > from
+> > > > > bd718x7-regulator.c to rohm-regulator.c and export them for
+> > > > > other
+> > > > > modules
+> > > > > to use.
+> > > > > 
+> > > > > Signed-off-by: Matti Vaittinen <
+> > > > > matti.vaittinen@fi.rohmeurope.com>
+> > > > > Acked-by: Mark Brown <broonie@kernel.org>
+> > > > > ---
+> > 
+> > [...]
+> > 
+> > > > > +#if IS_ENABLED(CONFIG_REGULATOR_ROHM)
+> > > > > +int rohm_regulator_set_dvs_levels(const struct rohm_dvs_config
+> > > > > *dvs,
+> > > > > +				  struct device_node *np,
+> > > > > +				  const struct regulator_desc
+> > > > > *desc,
+> > > > > +				  struct regmap *regmap);
+> > > > 
+> > > > Does these really need to live in the parent's header file?
+> > > 
+> > > I don't know what would be a better place?
+> > 
+> > You don't have a regulator header file?
+> > 
+> > It seems over-kill to create one for this, so leave it as is.
+> > 
+> > > > What other call-sites are there?
+> > > 
+> > > After this series the bd718x7-regulator.c and bd71828-regulator.c
+> > > are
+> > > the in-tree drivers using these. rohm-regulator.c is implementing
+> > > them.
+> > > And I hope we see yet another driver landing in later this year. 
+> > > 
+> > > Anyways, I will investigate if I can switch this to some common
+> > > (not
+> > > rohm specific) DT bindings at some point (I've scheduled this study
+> > > to
+> > > March) - If I can then they should live in regulator core headers.
+> > > 
+> > > But changing the existing properties should again be own set of
+> > > patches
+> > > and I'd prefer doing that work independently of this series and not
+> > > delaying the BD71828 due to not-yet-evaluated bd718x7 property
+> > > changes.
+> > 
+> > That's fine.
+> 
+> Glad to hear :) By the way, I already sent the v9 ;)
+
+It's in my queue.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
