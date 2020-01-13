@@ -2,66 +2,56 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF2DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC29DC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31975206DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:22:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A027B214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:23:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578936150;
-	bh=9WHbh29wBhdUptqcUQAudp/k0/ZH8JBbCqlAlqjeNMg=;
+	s=default; t=1578936188;
+	bh=Mc+JBGwCS17q1ERYia2qc0tuxix0IR/XU/AuycW3Tak=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=UkqtH2sGyt31vXC9Bs3SNMHVnsIjSbXZjq6XX1MvMN9xHsAAIJ+5SkNwFEGP/uSlK
-	 8pvHbSm0kfH4lJNuM5nyZniAl8b3YMmKW2VTqBluujKulAqlOtFlKjdHPSmQoruPMk
-	 hlPCFH7gC97uve7tILLm9sDSl9jg3nA0lUg4hN9o=
+	b=UNVfb5u35rKACR/2D67QCKAkKfRkeErEkkeCAdh8yY/+ihPnQCFtp9Cig1PzUWkvk
+	 tgo48R1EnFHMs7UUmfVfZAM5X/clyRu2FnXycO1AK/UZM8/LjuLHcqRA82rl8OWjAI
+	 +5K9ZAeBns69+QQ70iTDnSzw5n7gg26ANDFdKl+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgAMRW3 (ORCPT
+        id S1728803AbgAMRXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:22:29 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41056 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727331AbgAMRW3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:22:29 -0500
-Received: by mail-lf1-f65.google.com with SMTP id m30so7447583lfp.8;
-        Mon, 13 Jan 2020 09:22:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5zVt0sRFRdUX8z6vKZQ0/vfkRSe85i7P2h2dcN4rYpE=;
-        b=EV4aS1Q8dRF0j7DibbCEL0gw9HNtAKvE9WFZ4nsPOmMJsUqWMnZ6BEicjUP/ImW451
-         N++8Cxq/mg7x8hCZVCeDsYobpxCXTp3mHFPl7lX2O9uPAdJ3/OzdXtECn3M9I/S+8Awl
-         05TTFfvarChOgP4KGaArnnZEZxs71glH58hTHvUu5FSbo8Hp96Q5ObzmY3582MU6sfX5
-         H5GzoxHpQJ3+24c2gccnD/czMNDCivYp8UbiKPibBCZ8WwyiTbnFXSixgro4cdatIyjt
-         3j9vJhalGd2nU/+pnxp8382FXRv2xH/C2SGIv2Qxh7eaGdCzkZd8lFEHsprBoyhQSmo/
-         20gg==
-X-Gm-Message-State: APjAAAX1zaTmaf0qfcG3zGA+ziDvdVK/I3PeeXmvKIMc81vXE2wYDP4e
-        1x9F48zoiE6r2JpFngMsgpQ=
-X-Google-Smtp-Source: APXvYqzk5Ev0WmtdV66O19LVc+hQg/udQ4dagQdxMNaWaUXOHFci9mTchJqUzGcwZylCMVN8e4BjnA==
-X-Received: by 2002:a19:cc49:: with SMTP id c70mr10453747lfg.73.1578936146650;
-        Mon, 13 Jan 2020 09:22:26 -0800 (PST)
-Received: from xi.terra (c-14b8e655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.184.20])
-        by smtp.gmail.com with ESMTPSA id n1sm5936296lfq.16.2020.01.13.09.22.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 09:22:26 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1ir3Q2-00082e-3j; Mon, 13 Jan 2020 18:22:26 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable <stable@vger.kernel.org>,
-        Martin Jansen <martin.jansen@opticon.com>
-Subject: [PATCH] USB: serial: opticon: fix control-message timeouts
-Date:   Mon, 13 Jan 2020 18:22:13 +0100
-Message-Id: <20200113172213.30869-1-johan@kernel.org>
-X-Mailer: git-send-email 2.24.1
+        Mon, 13 Jan 2020 12:23:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728512AbgAMRXH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 12:23:07 -0500
+Received: from dogfood.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 720DF206DA;
+        Mon, 13 Jan 2020 17:23:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578936186;
+        bh=Mc+JBGwCS17q1ERYia2qc0tuxix0IR/XU/AuycW3Tak=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YiulQq2q+pCvuCIE7mZCgZhC+xq2YI2nRT+26mWV01zvZ9nKQPV6tlg1R8I1BxxUo
+         ocluvZmD/lYvCX+QAwp5T56O5Mr3Mm7cgOXmiugSrInz8mNwzjWZJbILANJLX+JRpR
+         h3XacNENLDSi/oAFeNw4QyKu7GYRG6MBv5vVabUs=
+From:   Ard Biesheuvel <ardb@kernel.org>
+To:     linux-efi@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Young <dyoung@redhat.com>,
+        Saravana Kannan <saravanak@google.com>
+Subject: [GIT PULL 00/13] More EFI updates for v5.6
+Date:   Mon, 13 Jan 2020 18:22:32 +0100
+Message-Id: <20200113172245.27925-1-ardb@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,43 +59,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The driver was issuing synchronous uninterruptible control requests
-without using a timeout. This could lead to the driver hanging
-on open() or tiocmset() due to a malfunctioning (or malicious) device
-until the device is physically disconnected.
+The following changes since commit 4444f8541dad16fefd9b8807ad1451e806ef1d94:
 
-The USB upper limit of five seconds per request should be more than
-enough.
+  efi: Allow disabling PCI busmastering on bridges during boot (2020-01-10 18:55:04 +0100)
 
-Fixes: 309a057932ab ("USB: opticon: add rts and cts support")
-Cc: stable <stable@vger.kernel.org>     # 2.6.39
-Cc: Martin Jansen <martin.jansen@opticon.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
----
+are available in the Git repository at:
 
-This was reported to me off-list to be an issue with some opticon
-devices. Let's address the obvious bug while waiting for a bug report
-to be sent to the list.
+  git://git.kernel.org/pub/scm/linux/kernel/git/efi/efi.git tags/efi-next
 
-Johan
+for you to fetch changes up to 743c5dd59f7e4b9e7a28be6a8f0e8d03271a98ab:
 
+  efi: Fix handling of multiple efi_fake_mem= entries (2020-01-13 10:41:53 +0100)
 
- drivers/usb/serial/opticon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+----------------------------------------------------------------
+Third and final batch of EFI updates for v5.6:
+- A few touchups for the x86 libstub changes that have already been queued
+  up.
+- Fix memory leaks and crash bugs in the EFI fake_mem driver, which may be
+  used more heavily in the future for device-dax soft reservation (Dan)
+- Avoid RWX mappings in the EFI page tables when possible.
+- Avoid PCIe probing failures if the EFI framebuffer is probed first when
+  the new of_devlink feature is active.
+- Move the support code for the old EFI memory mapping style into its only
+  user, the SGI UV1+ support code.
 
-diff --git a/drivers/usb/serial/opticon.c b/drivers/usb/serial/opticon.c
-index cb7aac9cd9e7..ed2b4e6dca38 100644
---- a/drivers/usb/serial/opticon.c
-+++ b/drivers/usb/serial/opticon.c
-@@ -113,7 +113,7 @@ static int send_control_msg(struct usb_serial_port *port, u8 requesttype,
- 	retval = usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
- 				requesttype,
- 				USB_DIR_OUT|USB_TYPE_VENDOR|USB_RECIP_INTERFACE,
--				0, 0, buffer, 1, 0);
-+				0, 0, buffer, 1, USB_CTRL_SET_TIMEOUT);
- 	kfree(buffer);
- 
- 	if (retval < 0)
--- 
-2.24.1
+----------------------------------------------------------------
+Anshuman Khandual (1):
+      efi: Fix comment for efi_mem_type() wrt absent physical addresses
 
+Ard Biesheuvel (7):
+      efi/libstub/x86: use const attribute for efi_is_64bit()
+      efi/libstub/x86: use mandatory 16-byte stack alignment in mixed mode
+      x86/mm: fix NX bit clearing issue in kernel_map_pages_in_pgd
+      efi/x86: don't map the entire kernel text RW for mixed mode
+      efi/x86: avoid RWX mappings for all of DRAM
+      efi/x86: limit EFI old memory map to SGI UV machines
+      efi/arm: defer probe of PCIe backed efifb on DT systems
+
+Arnd Bergmann (1):
+      efi/libstub/x86: fix unused-variable warning
+
+Dan Williams (4):
+      efi: Add a flags parameter to efi_memory_map
+      efi: Add tracking for dynamically allocated memmaps
+      efi: Fix efi_memmap_alloc() leaks
+      efi: Fix handling of multiple efi_fake_mem= entries
+
+ Documentation/admin-guide/kernel-parameters.txt |   3 +-
+ arch/x86/boot/compressed/eboot.c                |  16 +-
+ arch/x86/boot/compressed/efi_thunk_64.S         |  46 ++----
+ arch/x86/boot/compressed/head_64.S              |   7 +-
+ arch/x86/include/asm/efi.h                      |  28 ++--
+ arch/x86/kernel/kexec-bzimage64.c               |   2 +-
+ arch/x86/mm/pat/set_memory.c                    |   8 +-
+ arch/x86/platform/efi/efi.c                     |  40 +++--
+ arch/x86/platform/efi/efi_64.c                  | 190 ++++--------------------
+ arch/x86/platform/efi/quirks.c                  |  44 +++---
+ arch/x86/platform/uv/bios_uv.c                  | 164 +++++++++++++++++++-
+ drivers/firmware/efi/arm-init.c                 | 107 ++++++++++++-
+ drivers/firmware/efi/efi.c                      |   2 +-
+ drivers/firmware/efi/fake_mem.c                 |  43 +++---
+ drivers/firmware/efi/memmap.c                   |  95 ++++++++----
+ include/linux/efi.h                             |  17 ++-
+ 16 files changed, 471 insertions(+), 341 deletions(-)
