@@ -2,135 +2,123 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9EAC33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53FCFC33C9C
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655792081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:00:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="imzMbAJn"
+	by mail.kernel.org (Postfix) with ESMTP id 233E12081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:01:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578909701;
+	bh=NK0UGTfPKqpkCkm221GzQdzg8zupU25GsEb0NnPTvUc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wz3kzGMJYYwCU0BYm8iuKppLEEpAqtnJ8yczBfLwZPQXYhSF9LU/YNnQ0wE9phTfC
+	 AZ2AbMQOLSf902AOmbImtnadLJcNpNetpU3LG/2F6TTofBgN6x5If/su41N6fyamIe
+	 mou70KINbrbNig/383qiZmL6mbK6k54JxM1N+sTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgAMKA4 (ORCPT
+        id S1728674AbgAMKBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:00:56 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:36791 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726133AbgAMKA4 (ORCPT
+        Mon, 13 Jan 2020 05:01:40 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43806 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbgAMKBk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:00:56 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1578909655; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=RPURW72SFQ891pWyYWf7dVfpvaaTXLcXOdIIKMpcbVc=; b=imzMbAJnG734QE5G6laKfKVbdC3NZs4aB9GP7pTTGVViPwePjDnXwQT2+db1IucjdLOYi6Ov
- 47Y6tolbI3BRrvN9JNBsVb5ANfyTfJqCY7oy+AQvCWtoUzYPvGfNmCchJwpiuqgs4KBX8eAT
- oWL+XU17SIAg3kbiY3TwBw5D51o=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1c3fd6.7f0c8ce037a0-smtp-out-n01;
- Mon, 13 Jan 2020 10:00:54 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DAE42C433A2; Mon, 13 Jan 2020 10:00:54 +0000 (UTC)
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2B3E7C43383;
-        Mon, 13 Jan 2020 10:00:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2B3E7C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-To:     Rob Herring <robh@kernel.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
-References: <1577421760-1174-1-git-send-email-tdas@codeaurora.org>
- <1577421760-1174-2-git-send-email-tdas@codeaurora.org>
- <20200104213645.GA25711@bogus>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <2d4a70f0-c882-a15b-cfa8-7fefef59f45b@codeaurora.org>
-Date:   Mon, 13 Jan 2020 15:30:47 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Mon, 13 Jan 2020 05:01:40 -0500
+Received: by mail-oi1-f195.google.com with SMTP id p125so7654060oif.10;
+        Mon, 13 Jan 2020 02:01:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZxfV/19Ef7tFibMeoIeo9F/UijjdOkO2LaetF4dIIo0=;
+        b=qrJ8ErRecFBrZNDQt5zpAywuMnx+r7RwWrdrZYIB3gd7nXLRmVhPXrlxUGAVg8MRpn
+         KsV2vgwV9cBjl+Zblx01A2ks7My5BeEj45MgCC70gAIhTxoNgdjmZp3pj8dbRT2dlNSW
+         h5UL0SFg1dxjgE2+8fkCOp/7je/A4Y1ghuoa7+QJYZ7Q+o6Ii9KtFG9tJsTl0kEfY6Sx
+         QQC6Dp9PeMnUnsXdEK5PHz7uaupbM9VBoeR5UbPWSn3INkBL4cKq+MRmKondEDcck9U8
+         /qwuUC1KO5OIzdjBj+aE4CFw6wJW8GkszZ3Ng6POI6BRGnhzhKIArZzkSK5s0jqevFXO
+         AMvg==
+X-Gm-Message-State: APjAAAWxs2IDVChzDNR9UCkgVVKCvpqOYdvv5DYixXJ9HlUlGI1MM8qM
+        3go6VyYA+aYCzpZGjrNUT8zV0jsrRXtE9LakRD3eOw==
+X-Google-Smtp-Source: APXvYqx5ZelIAVdutcTucnolspYO4WcppcqO3Ff2Re+R9IogvrNCiCfqsVFFkZKXph7HvHLiXpiXTkCA3XZ1IZ51i2A=
+X-Received: by 2002:a54:4e96:: with SMTP id c22mr12444869oiy.110.1578909699188;
+ Mon, 13 Jan 2020 02:01:39 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200104213645.GA25711@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200113060724.19571-1-yu.c.chen@intel.com>
+In-Reply-To: <20200113060724.19571-1-yu.c.chen@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 13 Jan 2020 11:01:28 +0100
+Message-ID: <CAJZ5v0jgdfAG_BDefdSQFV9hM61o68Aj31PxShNxxcpsYFpxgw@mail.gmail.com>
+Subject: Re: [PATCH] PCI/PM: Print the pci config space of devices before suspend
+To:     Chen Yu <yu.c.chen@intel.com>
+Cc:     Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Mon, Jan 13, 2020 at 7:08 AM Chen Yu <yu.c.chen@intel.com> wrote:
+>
+> The pci config space was found to be insane during resume
 
-Thanks for your review.
+I wouldn't call it "insane".
 
-On 1/5/2020 3:06 AM, Rob Herring wrote:
+It probably means that the device was not present or not accessible
+during hibernation and now it appears to be present (maybe the restore
+kernel found it and configured it).
 
->> +description: |
->> +  Qualcomm modem clock control module which supports the clocks.
->> +
->> +properties:
->> +  compatible :
-> 
-> drop space     ^
-> 
+> from hibernation(S4, or suspend to disk) on a VM:
+>
+>  serial 0000:00:16.3: restoring config space at offset 0x14
+>  (was 0x9104e000, writing 0xffffffff)
+>
+> Either the snapshot on the disk has been scribbled or the pci
+> config space becomes invalid before suspend.
 
-Will take care in the next patch.
+Or, most likely, the above.
 
->> +    enum:
->> +       - qcom,sc7180-mss
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  additionalItems: false
-> 
-> With the indentation here, you are defining a property. Should be no
-> indent.
-> 
+> To narrow down and benefit future debugging, print the pci config space
+> being saved before suspend, which is symmetric to the log
+> in pci_restore_config_dword().
 
-I tried removing the indent too, but I keep getting this error.
-  Additional properties are not allowed ('additionalItems' was unexpected)
+But the code change makes sense to me.
 
-Please let me know if I am missing something?
-
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - '#clock-cells'
->> +
->> +examples:
->> +  # Example of MSS with clock nodes properties for SC7180:
->> +  - |
->> +    clock-controller@41aa000 {
->> +      compatible = "qcom,sc7180-mss";
->> +      reg = <0x041aa000 0x100>;
->> +      #clock-cells = <1>;
->> +    };
->> +...
->> --
->> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
->> of the Code Aurora Forum, hosted by the  Linux Foundation.
->>
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Len Brown <lenb@kernel.org>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> ---
+>  drivers/pci/pci.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e87196cc1a7f..34cde70440c3 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1372,8 +1372,11 @@ int pci_save_state(struct pci_dev *dev)
+>  {
+>         int i;
+>         /* XXX: 100% dword access ok here? */
+> -       for (i = 0; i < 16; i++)
+> +       for (i = 0; i < 16; i++) {
+>                 pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
+> +               pci_dbg(dev, "saving config space at offset %#x (reading %#x)\n",
+> +                       i * 4, dev->saved_config_space[i]);
+> +       }
+>         dev->state_saved = true;
+>
+>         i = pci_save_pcie_state(dev);
+> --
+> 2.17.1
+>
