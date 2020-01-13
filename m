@@ -2,137 +2,100 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D465C33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F374C33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A5321744
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162492081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:56:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="XmwXyts9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dYNPjK0c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbgAMJ4F (ORCPT
+        id S1728712AbgAMJ4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:56:05 -0500
-Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:38272 "EHLO
-        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725992AbgAMJ4E (ORCPT
+        Mon, 13 Jan 2020 04:56:22 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:12168 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726435AbgAMJ4V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:56:04 -0500
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 76AB82E0B1E;
-        Mon, 13 Jan 2020 12:56:01 +0300 (MSK)
-Received: from vla5-58875c36c028.qloud-c.yandex.net (vla5-58875c36c028.qloud-c.yandex.net [2a02:6b8:c18:340b:0:640:5887:5c36])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id 2kBEcgvne1-u0Luud4o;
-        Mon, 13 Jan 2020 12:56:01 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1578909361; bh=tfWEf85Tg93V8jfj/kRU8NVn5c39kp85P+atbWGt+tM=;
-        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
-        b=XmwXyts9sUV12nUE4N1YSxf4tvNZDuR2Ax8TvGvRhsh26jDwzbTHtJ99/Mlp6VqtB
-         /AYBkrEzUXcCxSzePb6NELBf292iLyFGmNdmZlMZGMCS1/0JVKkw2VGFtnDeFj+HEA
-         Vxi2Izzl7c6DKKT3UT00eui5YKjhKoMkMkTm2wwY=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8448:fbcc:1dac:c863])
-        by vla5-58875c36c028.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 6iOpZA3Dpj-txX0Y9uN;
-        Mon, 13 Jan 2020 12:56:00 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-Subject: Re: [PATCH v7 02/10] mm/memcg: fold lru_lock in lock_page_lru
-To:     Alex Shi <alex.shi@linux.alibaba.com>, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        shakeelb@google.com, hannes@cmpxchg.org
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
- <1577264666-246071-3-git-send-email-alex.shi@linux.alibaba.com>
- <36d7e390-a3d1-908c-d181-4a9e9c8d3d98@yandex-team.ru>
- <952d02c2-8aa5-40bb-88bb-c43dee65c8bc@linux.alibaba.com>
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Message-ID: <2ba8a04e-d8e0-1d50-addc-dbe1b4d8e0f1@yandex-team.ru>
-Date:   Mon, 13 Jan 2020 12:55:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 13 Jan 2020 04:56:21 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578909380; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Q/2ImYuKYZGan94DZJlYZatYbdTBLNMNXpcAS+vGAww=; b=dYNPjK0csn1Nk1nvIwljabkz6Ndk/wne6Uxj6REQpr1BjSw7gbiMadge9AbvvWKda1W5hSsk
+ /DfAZh+0K2Gb801lsOx/9Z7qXGmPkiBIzo5htWDnQp1ehrS9vGdFgcv529LFnL1rwiOHS83v
+ lSmA4R7MHotkRLLRqwj+LsboWJc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1c3ec3.7f2ac18796c0-smtp-out-n01;
+ Mon, 13 Jan 2020 09:56:19 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 70B34C433CB; Mon, 13 Jan 2020 09:56:19 +0000 (UTC)
+Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7CB59C4479C;
+        Mon, 13 Jan 2020 09:56:14 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7CB59C4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
+ MSS clock bindings
+To:     Sibi Sankar <sibis@codeaurora.org>, bjorn.andersson@linaro.org
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        linux-arm-msm-owner@vger.kernel.org
+References: <1577421760-1174-1-git-send-email-tdas@codeaurora.org>
+ <1577421760-1174-2-git-send-email-tdas@codeaurora.org>
+ <5b16d051146224c1efad40c4548dd0c4@codeaurora.org>
+From:   Taniya Das <tdas@codeaurora.org>
+Message-ID: <d4793817-d6bd-b0ab-2b59-2c27c9edbdbe@codeaurora.org>
+Date:   Mon, 13 Jan 2020 15:26:11 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <952d02c2-8aa5-40bb-88bb-c43dee65c8bc@linux.alibaba.com>
+In-Reply-To: <5b16d051146224c1efad40c4548dd0c4@codeaurora.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks Sibi, will take care of mapping the entire region.
 
++      reg = <0x041aa000 0x100>;
+> 
+> Bjorn/me had a discussion about the size
+> a while back, we should use the entire
+> reg space instead of fragmenting it.
+> 
+> reg = <0x041a8000 0x8000>;
+> 
+> We should just use ^^ instead.
+> 
+>> +      #clock-cells = <1>;
+>> +    };
+>> +...
+>> -- 
+>> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+>> of the Code Aurora Forum, hosted by the  Linux Foundation.
+> 
 
-On 13/01/2020 12.45, Alex Shi wrote:
-> 
-> 
-> 在 2020/1/10 下午4:49, Konstantin Khlebnikov 写道:
->> On 25/12/2019 12.04, Alex Shi wrote:
->>>   From the commit_charge's explanations and mem_cgroup_commit_charge
->>> comments, as well as call path when lrucare is ture, The lru_lock is
->>> just to guard the task migration(which would be lead to move_account)
->>> So it isn't needed when !PageLRU, and better be fold into PageLRU to
->>> reduce lock contentions.
->>>
->>> Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
->>> Cc: Johannes Weiner <hannes@cmpxchg.org>
->>> Cc: Michal Hocko <mhocko@kernel.org>
->>> Cc: Matthew Wilcox <willy@infradead.org>
->>> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
->>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>> Cc: cgroups@vger.kernel.org
->>> Cc: linux-mm@kvack.org
->>> Cc: linux-kernel@vger.kernel.org
->>> ---
->>>    mm/memcontrol.c | 9 ++++-----
->>>    1 file changed, 4 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->>> index c5b5f74cfd4d..0ad10caabc3d 100644
->>> --- a/mm/memcontrol.c
->>> +++ b/mm/memcontrol.c
->>> @@ -2572,12 +2572,11 @@ static void cancel_charge(struct mem_cgroup *memcg, unsigned int nr_pages)
->>>      static void lock_page_lru(struct page *page, int *isolated)
->>>    {
->>> -    pg_data_t *pgdat = page_pgdat(page);
->>> -
->>> -    spin_lock_irq(&pgdat->lru_lock);
->>>        if (PageLRU(page)) {
->>> +        pg_data_t *pgdat = page_pgdat(page);
->>>            struct lruvec *lruvec;
->>>    +        spin_lock_irq(&pgdat->lru_lock);
->>
->> That's wrong. Here PageLRU must be checked again under lru_lock.
-> Hi, Konstantin,
-> 
-> For logical remain, we can get the lock and then release for !PageLRU.
-> but I still can figure out the problem scenario. Would like to give more hints?
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
-That's trivial race: page could be isolated from lru between
-
-if (PageLRU(page))
-and
-spin_lock_irq(&pgdat->lru_lock);
-
-> 
-> 
->>
->>
->> Also I don't like these functions:
->> - called lock/unlock but actually also isolates
->> - used just once
->> - pgdat evaluated twice
-> 
-> That's right. I will fold these functions into commit_charge.
-> 
-> Thanks
-> Alex
-> 
+--
