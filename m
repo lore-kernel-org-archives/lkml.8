@@ -2,130 +2,147 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D39C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A0EC33CB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2B921569
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:52:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWDnx4s6"
+	by mail.kernel.org (Postfix) with ESMTP id 1E3A821569
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:56:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgAMGwm (ORCPT
+        id S1728598AbgAMG4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 01:52:42 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46586 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgAMGwl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 01:52:41 -0500
-Received: by mail-pg1-f196.google.com with SMTP id z124so4207642pgb.13
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:52:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=ixWmZZn5cz1mbd7yW9N78OzPov834nZ+OiSf3qX3/Iw=;
-        b=MWDnx4s6w/tmBrNVbFIQ1vEX6qQvpKt44HmfIThiV/xaQluAyx9nzyLcL1Yscq+xBf
-         85JkyYzx/i3b13pq2yZWeuEiFyErVuSGRIvzYKg2iEQ28m/8Emq3+YX7/q0T0WBZFIMf
-         oTC6CpQifBvzkwRzR4sdi24ce49Jp8JxpA6AuQFHTZyKoAiT0ivYXwf4aytyqc13wQ3a
-         1Lga1hYL7mosq+M9NPIETKtjn0RmIMrRa/6veh8h7PHZwLsJx+2JYtc3LfBUGPv8OyWz
-         CqkgN1sVbjpQlCZH9/lo7vnLK3UHfaqTWUezZWHxQ7oaQ0lMi2fEOtSkA7s27R2x/y3B
-         U54Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ixWmZZn5cz1mbd7yW9N78OzPov834nZ+OiSf3qX3/Iw=;
-        b=asNcPiVtPOxehJnyn+OXXhIh/vXtU0NB+onOX6RbQDRVjlp44UxaDwIzoHsWc9aStG
-         RknCdicFWpkV9GVXr4VtLVD5r6wc93coEFXCfzYujRFEfQtAcTJu8k2k1Lk8mePMZ0wy
-         oDi3e0nvzDBVveL6SCn0ixQoc0vrgVm/tDtK2ilyS4A7zxOxwDJuolTkWZ+TZoYenBmZ
-         bMtHO0/i6oaKGrLJ6SaL0qORtPyVTQzWAp+Ff4jnMfxX74RqHwYv1jMCaYAPckRDphAJ
-         /eNxGa+554VXhZYbJ46abuowTrbruKcXfJL1TrtaJ5I6fYbyDqwItwdmuYLnw4K+5j+O
-         H7eQ==
-X-Gm-Message-State: APjAAAWzGXvGsmoc2fLu3dvdHC7DweyWN7DIkall4eauuVxr9mAv6Jdu
-        JnLlh1vZPAh2rPVDTGVIf7/6CKMSMmM=
-X-Google-Smtp-Source: APXvYqz8DDYgtxILjbT8NXNXztKpdNhF11x4wKO5q4NOEFrzD3WC1my7gwV5KogGtPbc3vnQZWJIiw==
-X-Received: by 2002:a05:6a00:90:: with SMTP id c16mr17661377pfj.230.1578898361059;
-        Sun, 12 Jan 2020 22:52:41 -0800 (PST)
-Received: from xp-OptiPlex-7050.mioffice.cn ([43.224.245.180])
-        by smtp.gmail.com with ESMTPSA id p21sm12338217pfn.103.2020.01.12.22.52.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 12 Jan 2020 22:52:40 -0800 (PST)
-From:   ping xiong <xp1982.06.06@gmail.com>
-To:     yuchao0@huawei.com
-Cc:     jaegeuk@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, xiongping1 <xiongping1@xiaomi.com>
-Subject: [f2fs-dev][PATCH V2] resize.f2fs: add option for large_nat_bitmap feature
-Date:   Mon, 13 Jan 2020 14:52:30 +0800
-Message-Id: <1578898350-29607-1-git-send-email-xp1982.06.06@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 13 Jan 2020 01:56:07 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:8703 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725954AbgAMG4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 01:56:06 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D7879CAE519F964D4FCA;
+        Mon, 13 Jan 2020 14:56:04 +0800 (CST)
+Received: from linux-ibm.site (10.175.102.37) by
+ DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 13 Jan 2020 14:55:55 +0800
+From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
+To:     <bhelgaas@google.com>, <lukas@wunner.de>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <guohanjun@huawei.com>, <huawei.libin@huawei.com>,
+        <lvying6@huawei.com>, <wangxiongfeng2@huawei.com>
+Subject: [PATCH] PCI: get 'pci_ops' from the host bridge when we alloc new bus
+Date:   Mon, 13 Jan 2020 14:51:11 +0800
+Message-ID: <1578898271-46060-1-git-send-email-wangxiongfeng2@huawei.com>
+X-Mailer: git-send-email 1.7.12.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.102.37]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: xiongping1 <xiongping1@xiaomi.com>
+When I test 'aer-inject' with the following procedures:
+1. inject a fatal error into a upstream PCI bridge
+2. remove the upstream bridge by sysfs
+3. rescan the PCI tree by 'echo 1 > /sys/bus/pci/rescan'
+4. execute command 'rmmod aer-inject'
+5. remove the upstream bridge by sysfs again
 
-resize.f2fs has already supported large_nat_bitmap feature, but has no
-option to turn on it.
+I came across the following Oops.
 
-This change add a new '-i' option to control turning on it.
+[  799.713238] Internal error: Oops: 96000007 [#1] SMP
+[  799.718099] Process bash (pid: 10683, stack limit = 0x00000000125a3b1b)
+[  799.724686] CPU: 108 PID: 10683 Comm: bash Kdump: loaded Not tainted 4.19.36 #2
+[  799.731962] Hardware name: Huawei TaiShan 2280 V2/BC82AMDD, BIOS 1.05 09/18/2019
+[  799.739325] pstate: 40400009 (nZcv daif +PAN -UAO)
+[  799.744104] pc : pci_remove_bus+0xc0/0x1c0
+[  799.748182] lr : pci_remove_bus+0x94/0x1c0
+[  799.752260] sp : ffffa02e335df940
+[  799.755560] x29: ffffa02e335df940 x28: ffff2000088216a8
+[  799.760849] x27: 1ffff405c66bbfbc x26: ffff20000a9518c0
+[  799.766139] x25: ffffa02dea6ec418 x24: 1ffff405bd4dd883
+[  799.771427] x23: ffffa02e72576628 x22: 1ffff405ce4aecc0
+[  799.776715] x21: ffffa02e72576608 x20: ffff200002e75080
+[  799.782003] x19: ffffa02e72576600 x18: 0000000000000000
+[  799.787291] x17: 0000000000000000 x16: 0000000000000000
+[  799.792578] x15: 0000000000000001 x14: dfff200000000000
+[  799.797866] x13: ffff20000a6dfaf0 x12: 0000000000000000
+[  799.803154] x11: 1fffe4000159b217 x10: ffff04000159b217
+[  799.808442] x9 : dfff200000000000 x8 : ffff20000acd90bf
+[  799.813730] x7 : 0000000000000000 x6 : 0000000000000000
+[  799.819017] x5 : 0000000000000001 x4 : 0000000000000000
+[  799.824306] x3 : 1ffff405dbe62603 x2 : 1fffe400005cea11
+[  799.829593] x1 : dfff200000000000 x0 : ffff200002e75088
+[  799.834882] Call trace:
+[  799.837323]  pci_remove_bus+0xc0/0x1c0
+[  799.841056]  pci_remove_bus_device+0xd0/0x2f0
+[  799.845392]  pci_stop_and_remove_bus_device_locked+0x2c/0x40
+[  799.851028]  remove_store+0x1b8/0x1d0
+[  799.854679]  dev_attr_store+0x60/0x80
+[  799.858330]  sysfs_kf_write+0x104/0x170
+[  799.862149]  kernfs_fop_write+0x23c/0x430
+[  799.866143]  __vfs_write+0xec/0x4e0
+[  799.869615]  vfs_write+0x12c/0x3d0
+[  799.873001]  ksys_write+0xd0/0x190
+[  799.876389]  __arm64_sys_write+0x70/0xa0
+[  799.880298]  el0_svc_common+0xfc/0x278
+[  799.884030]  el0_svc_handler+0x50/0xc0
+[  799.887764]  el0_svc+0x8/0xc
+[  799.890634] Code: d2c40001 f2fbffe1 91002280 d343fc02 (38e16841)
+[  799.896700] kernel fault(0x1) notification starting on CPU 108
 
-Signed-off-by: xiongping1 <xiongping1@xiaomi.com>
+It is because when we alloc a new bus in rescanning process, the
+'pci_ops' of the newly allocced 'pci_bus' is inherited from its parent
+pci bus. Whereas, the 'pci_ops' of the parent bus may be changed to
+'aer_inj_pci_ops' in 'aer_inject()'. When we unload the module
+'aer_inject', we only restore the 'pci_ops' for the pci bus of the
+error-injected device and the root port in 'aer_inject_exit'. After we
+have unloaded the module, the 'pci_ops' of the newly allocced pci bus is
+still 'aer_inj_pci_ops'. When we access it, an Oops happened.
+
+This patch modify the code to get the 'pci_ops' from the host bridge
+rather than the parent pci bus when we alloc a new pci bus.
+
+Signed-off-by: Xiongfeng Wang <wangxiongfeng2@huawei.com>
 ---
- fsck/main.c   | 6 +++++-
- fsck/resize.c | 3 +++
- 2 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/pci/probe.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/fsck/main.c b/fsck/main.c
-index 9a7d499..e7e3dfc 100644
---- a/fsck/main.c
-+++ b/fsck/main.c
-@@ -104,6 +104,7 @@ void resize_usage()
- 	MSG(0, "\nUsage: resize.f2fs [options] device\n");
- 	MSG(0, "[options]:\n");
- 	MSG(0, "  -d debug level [default:0]\n");
-+	MSG(0, "  -i extended node bitmap, node ratio is 20%% by default\n");
- 	MSG(0, "  -s safe resize (Does not resize metadata)");
- 	MSG(0, "  -t target sectors [default: device size]\n");
- 	MSG(0, "  -V print the version number and exit\n");
-@@ -449,7 +450,7 @@ void f2fs_parse_options(int argc, char *argv[])
- 				break;
- 		}
- 	} else if (!strcmp("resize.f2fs", prog)) {
--		const char *option_string = "d:st:V";
-+		const char *option_string = "d:st:iV";
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 512cb43..b0021f9 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -985,7 +985,8 @@ static bool pci_bridge_child_ext_cfg_accessible(struct pci_dev *bridge)
+ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ 					   struct pci_dev *bridge, int busnr)
+ {
+-	struct pci_bus *child;
++	struct pci_bus *child, *root_bus;
++	struct pci_host_bridge *host_bridge;
+ 	int i;
+ 	int ret;
  
- 		c.func = RESIZE;
- 		while ((option = getopt(argc, argv, option_string)) != EOF) {
-@@ -476,6 +477,9 @@ void f2fs_parse_options(int argc, char *argv[])
- 					ret = sscanf(optarg, "%"PRIx64"",
- 							&c.target_sectors);
- 				break;
-+			case 'i':
-+				c.large_nat_bitmap = 1;
-+				break;
- 			case 'V':
- 				show_version(prog);
- 				exit(0);
-diff --git a/fsck/resize.c b/fsck/resize.c
-index fc563f2..46b1cfb 100644
---- a/fsck/resize.c
-+++ b/fsck/resize.c
-@@ -512,6 +512,9 @@ static void rebuild_checkpoint(struct f2fs_sb_info *sbi,
+@@ -994,8 +995,17 @@ static struct pci_bus *pci_alloc_child_bus(struct pci_bus *parent,
+ 	if (!child)
+ 		return NULL;
  
- 	/* update nat_bits flag */
- 	flags = update_nat_bits_flags(new_sb, cp, get_cp(ckpt_flags));
-+	if (c.large_nat_bitmap)
-+		flags |= CP_LARGE_NAT_BITMAP_FLAG;
++	/*
++	 * get 'pci_ops' from the host bridge, because 'parent->ops' may be
++	 * modified in 'aer_inject'.
++	 */
++	root_bus = parent;
++	while (root_bus->parent)
++		root_bus = root_bus->parent;
++	host_bridge = to_pci_host_bridge(root_bus->bridge);
++	child->ops = host_bridge->ops;
 +
- 	if (flags & CP_COMPACT_SUM_FLAG)
- 		flags &= ~CP_COMPACT_SUM_FLAG;
- 	if (flags & CP_LARGE_NAT_BITMAP_FLAG)
+ 	child->parent = parent;
+-	child->ops = parent->ops;
+ 	child->msi = parent->msi;
+ 	child->sysdata = parent->sysdata;
+ 	child->bus_flags = parent->bus_flags;
 -- 
-2.7.4
+1.7.12.4
 
