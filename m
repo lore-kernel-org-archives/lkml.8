@@ -2,157 +2,112 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F487C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E81C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6653C207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:12:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PSCLmfCP"
+	by mail.kernel.org (Postfix) with ESMTP id 9E6D521569
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:13:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578914012;
+	bh=2dNo0A03VcIFSZvSVz5n249R91p3bkLWCwPae+CNXW0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QUYSw1zJCUmu8iDar7QBgZsWt3LHjFBfxNAs+6+irJ4WdAiCaokgW5CLabRAkoTBM
+	 2kprb+mM9HbGZaUy/1cozy7qkm/IRy2KWx7xCYZLJaztbQha5gBvBi5U5meN0cY5ZW
+	 4LxjqByb0X7+22ZFShAU1I/3hl0LoxhZKZjMG4EU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgAMLM2 (ORCPT
+        id S1728646AbgAMLNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:12:28 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3407 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726193AbgAMLM1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 06:12:27 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1c50870000>; Mon, 13 Jan 2020 03:12:07 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 13 Jan 2020 03:12:27 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 13 Jan 2020 03:12:27 -0800
-Received: from [10.26.11.97] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jan
- 2020 11:12:25 +0000
-Subject: Re: [PATCH] of: Rework and simplify phandle cache to use a fixed size
-To:     Rob Herring <robh@kernel.org>
-CC:     <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191211232345.24810-1-robh@kernel.org>
- <5386e959-f9c4-2748-ed08-34ab361aee2c@nvidia.com>
- <CAL_JsqLmth0bYcG2VnxU-jk_VoC4TgvWD8_e6r1_8WqVwYGq0g@mail.gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <93314ff5-aa89-cd99-393c-f75f31d9d6e5@nvidia.com>
-Date:   Mon, 13 Jan 2020 11:12:23 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 13 Jan 2020 06:13:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33366 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725992AbgAMLNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 06:13:31 -0500
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27F4B207E0;
+        Mon, 13 Jan 2020 11:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578914010;
+        bh=2dNo0A03VcIFSZvSVz5n249R91p3bkLWCwPae+CNXW0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IX+5b6/zaFTN4DBWq29kUL2XqxChB0YlXW59APXI9VbSvWpxMI2golVWfmN/xTNmw
+         Gkv83m0zbhQ9eU2BPnGjQS2cDCExIFz4OeE/q2lCt70MQii1SemUn7XwSlV3Rr6HSs
+         gJ1ol+7k77BtPl5GR2FLBxueLQnjS+tB6XbfrcLg=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>, kvmarm@lists.cs.columbia.edu,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v2 0/1] arm/arm64: add support for folded p4d page tables
+Date:   Mon, 13 Jan 2020 13:13:22 +0200
+Message-Id: <20200113111323.10463-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLmth0bYcG2VnxU-jk_VoC4TgvWD8_e6r1_8WqVwYGq0g@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578913927; bh=ji2JNZVzbXl/fKM0ACHFHTh75D5B2o0L/LkVlqflfOY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=PSCLmfCP+JV56rCtTwEI6JWqK73RnS9EbhMpLwmrpCy+FPIZg3SKsG/LlC5z2/s9e
-         hrO/p7XKrUxWKrLh9c4mZ3sfDrEAaDrYmx++x6KbRphBBhdzGyyXamLr7/VACBzI5J
-         3HhmcEEl43CWjsu9+Xrpe8ho51hprfKzW6jTfLkzgh93fTqOFJnZWzG7fUTnaZthgr
-         4fm8vu33Rm00+aESbri9MLrBHL8tUMTG6qhnNfKR3XCan6SixyGLDhz/iTOyHodmUu
-         CTW2u/ac2zSbYwSEbfP8OYF2VI6LIdF7psxkcbjcz7mMfJhdy0uY5TokmR5Pk7yUwV
-         m24y77lNLuspQ==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-On 10/01/2020 23:50, Rob Herring wrote:
-> On Tue, Jan 7, 2020 at 4:22 AM Jon Hunter <jonathanh@nvidia.com> wrote:
->>
->> Hi Rob,
->>
->> On 11/12/2019 23:23, Rob Herring wrote:
->>> The phandle cache was added to speed up of_find_node_by_phandle() by
->>> avoiding walking the whole DT to find a matching phandle. The
->>> implementation has several shortcomings:
->>>
->>>   - The cache is designed to work on a linear set of phandle values.
->>>     This is true for dtc generated DTs, but not for other cases such as
->>>     Power.
->>>   - The cache isn't enabled until of_core_init() and a typical system
->>>     may see hundreds of calls to of_find_node_by_phandle() before that
->>>     point.
->>>   - The cache is freed and re-allocated when the number of phandles
->>>     changes.
->>>   - It takes a raw spinlock around a memory allocation which breaks on
->>>     RT.
->>>
->>> Change the implementation to a fixed size and use hash_32() as the
->>> cache index. This greatly simplifies the implementation. It avoids
->>> the need for any re-alloc of the cache and taking a reference on nodes
->>> in the cache. We only have a single source of removing cache entries
->>> which is of_detach_node().
->>>
->>> Using hash_32() removes any assumption on phandle values improving
->>> the hit rate for non-linear phandle values. The effect on linear values
->>> using hash_32() is about a 10% collision. The chances of thrashing on
->>> colliding values seems to be low.
->>>
->>> To compare performance, I used a RK3399 board which is a pretty typical
->>> system. I found that just measuring boot time as done previously is
->>> noisy and may be impacted by other things. Also bringing up secondary
->>> cores causes some issues with measuring, so I booted with 'nr_cpus=1'.
->>> With no caching, calls to of_find_node_by_phandle() take about 20124 us
->>> for 1248 calls. There's an additional 288 calls before time keeping is
->>> up. Using the average time per hit/miss with the cache, we can calculate
->>> these calls to take 690 us (277 hit / 11 miss) with a 128 entry cache
->>> and 13319 us with no cache or an uninitialized cache.
->>>
->>> Comparing the 3 implementations the time spent in
->>> of_find_node_by_phandle() is:
->>>
->>> no cache:        20124 us (+ 13319 us)
->>> 128 entry cache:  5134 us (+ 690 us)
->>> current cache:     819 us (+ 13319 us)
->>>
->>> We could move the allocation of the cache earlier to improve the
->>> current cache, but that just further complicates the situation as it
->>> needs to be after slab is up, so we can't do it when unflattening (which
->>> uses memblock).
->>>
->>> Reported-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->>> Cc: Michael Ellerman <mpe@ellerman.id.au>
->>> Cc: Segher Boessenkool <segher@kernel.crashing.org>
->>> Cc: Frank Rowand <frowand.list@gmail.com>
->>> Signed-off-by: Rob Herring <robh@kernel.org>
->>
->> With next-20200106 I have noticed a regression on Tegra210 where it
->> appears that only one of the eMMC devices is being registered. Bisect is
->> pointing to this patch and reverting on top of next fixes the problem.
->> That is as far as I have got so far, so if you have any ideas, please
->> let me know. Unfortunately, there do not appear to be any obvious errors
->> from the bootlog.
-> 
-> I guess that's tegra210-p2371-2180.dts because none of the others have
-> 2 SD hosts enabled. I don't see anything obvious though. Are you doing
-> any runtime mods to the DT?
+Hi,
 
-I have noticed that the bootloader is doing some runtime mods and so
-checking if this is the cause. I will let you know, but most likely,
-seeing as I cannot find anything wrong with this change itself.
+This is a part of clean up of the page table manipulation code that aims to
+remove asm-generic/5level-fixup.h and asm-generic/pgtable-nop4d-hack.h
 
-Cheers
-Jon
+There is a single patch for both arm and arm64 because doing the conversion
+separately would mean breaking the shared mmu bits in virt/kvm/arm.
+
+v2:
+* fix build error for arch/arm64/mm/dump.c
+* simplify p4d unfolding in arch/arm64/mm/kasan_init.c
+
+Mike Rapoport (1):
+  arm/arm64: add support for folded p4d page tables
+
+ arch/arm/include/asm/kvm_mmu.h          |   5 +-
+ arch/arm/include/asm/pgtable.h          |   1 -
+ arch/arm/include/asm/stage2_pgtable.h   |  15 +-
+ arch/arm/lib/uaccess_with_memcpy.c      |   9 +-
+ arch/arm/mach-sa1100/assabet.c          |   2 +-
+ arch/arm/mm/dump.c                      |  29 +++-
+ arch/arm/mm/fault-armv.c                |   7 +-
+ arch/arm/mm/fault.c                     |  28 +++-
+ arch/arm/mm/idmap.c                     |   3 +-
+ arch/arm/mm/init.c                      |   2 +-
+ arch/arm/mm/ioremap.c                   |  12 +-
+ arch/arm/mm/mm.h                        |   2 +-
+ arch/arm/mm/mmu.c                       |  35 +++-
+ arch/arm/mm/pgd.c                       |  40 ++++-
+ arch/arm64/include/asm/kvm_mmu.h        |  10 +-
+ arch/arm64/include/asm/pgalloc.h        |  10 +-
+ arch/arm64/include/asm/pgtable-types.h  |   5 +-
+ arch/arm64/include/asm/pgtable.h        |  37 +++--
+ arch/arm64/include/asm/stage2_pgtable.h |  48 ++++--
+ arch/arm64/kernel/hibernate.c           |  46 +++++-
+ arch/arm64/mm/dump.c                    |  29 +++-
+ arch/arm64/mm/fault.c                   |   9 +-
+ arch/arm64/mm/hugetlbpage.c             |  15 +-
+ arch/arm64/mm/kasan_init.c              |  26 ++-
+ arch/arm64/mm/mmu.c                     |  52 ++++--
+ arch/arm64/mm/pageattr.c                |   7 +-
+ virt/kvm/arm/mmu.c                      | 209 ++++++++++++++++++++----
+ 27 files changed, 550 insertions(+), 143 deletions(-)
 
 -- 
-nvpublic
+2.24.0
+
