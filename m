@@ -7,40 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBD3C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAB0C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2B524686
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EFF624694
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbgAMTKb (ORCPT
+        id S1729030AbgAMTJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:10:31 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40008 "EHLO
+        Mon, 13 Jan 2020 14:09:53 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39958 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729027AbgAMTJy (ORCPT
+        with ESMTP id S1728978AbgAMTJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:09:54 -0500
+        Mon, 13 Jan 2020 14:09:48 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ir55y-0001Cr-My; Mon, 13 Jan 2020 20:09:50 +0100
+        id 1ir55t-00018t-0u; Mon, 13 Jan 2020 20:09:45 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B109B1C18F2;
-        Mon, 13 Jan 2020 20:09:33 +0100 (CET)
-Date:   Mon, 13 Jan 2020 19:09:33 -0000
-From:   "tip-bot2 for Vincenzo Frascino" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D8B541C18DD;
+        Mon, 13 Jan 2020 20:09:31 +0100 (CET)
+Date:   Mon, 13 Jan 2020 19:09:31 -0000
+From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] lib/vdso: Remove VDSO_HAS_32BIT_FALLBACK
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+Subject: [tip: timers/core] lib/vdso: Mark do_hres() and do_coarse() as
+ __always_inline
+Cc:     Andrei Vagin <avagin@gmail.com>, Dmitry Safonov <dima@arista.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20190830135902.20861-5-vincenzo.frascino@arm.com>
-References: <20190830135902.20861-5-vincenzo.frascino@arm.com>
+In-Reply-To: <20191112012724.250792-3-dima@arista.com>
+References: <20191112012724.250792-3-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <157894257349.19145.11717813977643248791.tip-bot2@tip-bot2>
+Message-ID: <157894257170.19145.3085263448023270279.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,65 +57,85 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     746bc1f8e7efa210881405c52ee3729406fa4e95
-Gitweb:        https://git.kernel.org/tip/746bc1f8e7efa210881405c52ee3729406fa4e95
-Author:        Vincenzo Frascino <vincenzo.frascino@arm.com>
-AuthorDate:    Fri, 30 Aug 2019 14:58:58 +01:00
+Commit-ID:     9d66475e9b680afb70a49a531287513f1307e623
+Gitweb:        https://git.kernel.org/tip/9d66475e9b680afb70a49a531287513f1307e623
+Author:        Andrei Vagin <avagin@gmail.com>
+AuthorDate:    Tue, 12 Nov 2019 01:26:51 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Fri, 10 Jan 2020 21:14:05 +01:00
+CommitterDate: Mon, 13 Jan 2020 08:10:47 +01:00
 
-lib/vdso: Remove VDSO_HAS_32BIT_FALLBACK
+lib/vdso: Mark do_hres() and do_coarse() as __always_inline
 
-VDSO_HAS_32BIT_FALLBACK was introduced to address a regression which
-caused seccomp to deny access to the applications to clock_gettime64()
-and clock_getres64() because they are not enabled in the existing
-filters.
+Performance numbers for Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
+(more clock_gettime() cycles - the better):
 
-The purpose of VDSO_HAS_32BIT_FALLBACK was to simplify the conditional
-implementation of __cvdso_clock_get*time32() variants.
+clock            | before     | after      | diff
+----------------------------------------------------------
+monotonic        |  153222105 |  166775025 | 8.8%
+monotonic-coarse |  671557054 |  691513017 | 3.0%
+monotonic-raw    |  147116067 |  161057395 | 9.5%
+boottime         |  153446224 |  166962668 | 9.1%
 
-Now that all the architectures that support the generic vDSO library
-have been converted to support the 32 bit fallbacks the conditional
-can be removed.
+The improvement for arm64 for monotonic and boottime is around 3.5%.
 
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+clock            | before     | after      | diff
+==================================================
+monotonic          17326692     17951770     3.6%
+monotonic-coarse   43624027     44215292     1.3%
+monotonic-raw      17541809     17554932     0.1%
+boottime           17334982     17954361     3.5%
+
+[ tglx: Avoid the goto ]
+
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20190830135902.20861-5-vincenzo.frascino@arm.com
+Link: https://lore.kernel.org/r/20191112012724.250792-3-dima@arista.com
 
-References: c60a32ea4f45 ("lib/vdso/32: Provide legacy syscall fallbacks")
 ---
- lib/vdso/gettimeofday.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ lib/vdso/gettimeofday.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/lib/vdso/gettimeofday.c b/lib/vdso/gettimeofday.c
-index 8e77071..cd3aacf 100644
+index fac9e86..b453d24 100644
 --- a/lib/vdso/gettimeofday.c
 +++ b/lib/vdso/gettimeofday.c
-@@ -126,13 +126,8 @@ __cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
+@@ -38,7 +38,7 @@ u64 vdso_calc_delta(u64 cycles, u64 last, u64 mask, u32 mult)
+ }
+ #endif
  
- 	ret = __cvdso_clock_gettime_common(clock, &ts);
+-static int do_hres(const struct vdso_data *vd, clockid_t clk,
++static __always_inline int do_hres(const struct vdso_data *vd, clockid_t clk,
+ 		   struct __kernel_timespec *ts)
+ {
+ 	const struct vdso_timestamp *vdso_ts = &vd->basetime[clk];
+@@ -68,8 +68,8 @@ static int do_hres(const struct vdso_data *vd, clockid_t clk,
+ 	return 0;
+ }
  
--#ifdef VDSO_HAS_32BIT_FALLBACK
- 	if (unlikely(ret))
- 		return clock_gettime32_fallback(clock, res);
--#else
--	if (unlikely(ret))
--		ret = clock_gettime_fallback(clock, &ts);
--#endif
+-static int do_coarse(const struct vdso_data *vd, clockid_t clk,
+-		      struct __kernel_timespec *ts)
++static __always_inline int do_coarse(const struct vdso_data *vd, clockid_t clk,
++				     struct __kernel_timespec *ts)
+ {
+ 	const struct vdso_timestamp *vdso_ts = &vd->basetime[clk];
+ 	u32 seq;
+@@ -99,13 +99,15 @@ __cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
+ 	 */
+ 	msk = 1U << clock;
+ 	if (likely(msk & VDSO_HRES))
+-		return do_hres(&vd[CS_HRES_COARSE], clock, ts);
++		vd = &vd[CS_HRES_COARSE];
+ 	else if (msk & VDSO_COARSE)
+ 		return do_coarse(&vd[CS_HRES_COARSE], clock, ts);
+ 	else if (msk & VDSO_RAW)
+-		return do_hres(&vd[CS_RAW], clock, ts);
++		vd = &vd[CS_RAW];
++	else
++		return -1;
  
- 	if (likely(!ret)) {
- 		res->tv_sec = ts.tv_sec;
-@@ -242,13 +237,8 @@ __cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
+-	return -1;
++	return do_hres(vd, clock, ts);
+ }
  
- 	ret = __cvdso_clock_getres_common(clock, &ts);
- 
--#ifdef VDSO_HAS_32BIT_FALLBACK
- 	if (unlikely(ret))
- 		return clock_getres32_fallback(clock, res);
--#else
--	if (unlikely(ret))
--		ret = clock_getres_fallback(clock, &ts);
--#endif
- 
- 	if (likely(!ret && res)) {
- 		res->tv_sec = ts.tv_sec;
+ static __maybe_unused int
