@@ -2,89 +2,122 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56F9C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:39:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4225C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:40:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B05C9207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:39:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B230E207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:40:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PbUozQIi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgAMRjj (ORCPT
+        id S1728755AbgAMRko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:39:39 -0500
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:50629 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726109AbgAMRjj (ORCPT
+        Mon, 13 Jan 2020 12:40:44 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44172 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgAMRkn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:39:39 -0500
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-87-OVcAHFbZNfGd3NpnjlTZng-1; Mon, 13 Jan 2020 17:39:36 +0000
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 13 Jan 2020 17:39:35 +0000
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 13 Jan 2020 17:39:35 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "'maarten.lankhorst@linux.intel.com'" 
-        <maarten.lankhorst@linux.intel.com>,
-        "'mripard@kernel.org'" <mripard@kernel.org>,
-        "'sean@poorly.run'" <sean@poorly.run>,
-        "'airlied@linux.ie'" <airlied@linux.ie>,
-        "'daniel@ffwll.ch'" <daniel@ffwll.ch>,
-        "'dri-devel@lists.freedesktop.org'" <dri-devel@lists.freedesktop.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Subject: RE: drm_cflush_sg() loops for over 3ms - scheduler not running tasks.
-Thread-Topic: drm_cflush_sg() loops for over 3ms - scheduler not running
- tasks.
-Thread-Index: AdXKOCs2ei3pAorRT3aL4kNbmbVxww==
-Date:   Mon, 13 Jan 2020 17:39:35 +0000
-Message-ID: <9451c48fd66b4df0a5ede5391c4e64ef@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 13 Jan 2020 12:40:43 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 195so5183825pfw.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 09:40:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BVAS/5gDM35E+vwqcWj4iTNingff3wxRTXoRrLJ2q00=;
+        b=PbUozQIiNWcYiivH2d8I/Q2/mmC03ElGYL8BeMeEiv7rT62VOBMRJhYp6DUZdsTLzB
+         i2aruOVld4neB7dXlGb+PPyKcrcD2QBO7p1lE3z6d08KbBBzfy/of7wNgpej6eO2NiRH
+         qyJAc0F8pnU6MMVWkY81NPm7xe2OA+QsZbE4LIIRcqIBn0OPKdrPC1Q8XPCsPpyspboN
+         sUr3+8leOwyY89F/oSFv3cGrNSHmUlynYX2bOUbH+MV0uOTI5ztlTTSvZTB7f47EB940
+         9BYe61kQnH0QOdtBTCSmRfuc3h358BlzcWmxeCAZgWOqtNXs9cMTpai7VPRj19osxYe3
+         hHUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BVAS/5gDM35E+vwqcWj4iTNingff3wxRTXoRrLJ2q00=;
+        b=Vd7Ih9nz5QfrdOIM/GMAE91/MY7CqJwzgnuBKxtDLP+jYdEY/53EWdQjUk+M8bOieK
+         lUqJ7pu7GfonjsPcnDIUSns7a9F4ppP6klxj8SBJ9FGe7Bs+TvJ1/pfJcJ29fCZVZELM
+         hWzexLbSBLdU+TrVOnD2qA5kA+93qATzOZCBiSijZwqKHztn+CFkLfcWhIzGgpblpsDx
+         vGQNKFcfmbtkw+4ZaX3T7/QnJS+J9pgjoxjWo6QjOZINUt/FkVT7kZ18Wl7RXaLohbFH
+         OKS0epg3vVA8EdwIP+0vxqvhLLWXrLfJmdPCi8Eb3KHQVIyrDerqJBTCfqDIunnb2N9V
+         jU8A==
+X-Gm-Message-State: APjAAAV9GcGdCOs3iRYR1sCnfrwgymWfEkIJY9Mh73dtniPIVhUipIie
+        enBdkmsFiSKtwsJdo3gY3ujq8SZgPoYZnepkDGhrQQ==
+X-Google-Smtp-Source: APXvYqwZIQ4UdM7SZQDr51CoDArHUpzRGAe6Q8bNEvEr3P+INcGbapfQuu3m6Q3BghOv0Yv945p4cNNPuIJi/eX8d7k=
+X-Received: by 2002:a63:d906:: with SMTP id r6mr22112095pgg.440.1578937242731;
+ Mon, 13 Jan 2020 09:40:42 -0800 (PST)
 MIME-Version: 1.0
-X-MC-Unique: OVcAHFbZNfGd3NpnjlTZng-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <CAAeHK+z2+_UHNp4_D2iL9FzPtDoU1YBohCaDJG8sAy12uc_-ew@mail.gmail.com>
+ <Pine.LNX.4.44L0.2001131049090.1502-100000@iolanthe.rowland.org> <CAAeHK+x9Gk3cD77MA9jkhpwO8S62i6KT7PP3NZ6QTZ2qk2FB6w@mail.gmail.com>
+In-Reply-To: <CAAeHK+x9Gk3cD77MA9jkhpwO8S62i6KT7PP3NZ6QTZ2qk2FB6w@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 13 Jan 2020 18:40:31 +0100
+Message-ID: <CAAeHK+zKAHGAgYKxMNJEiaBhreGB0MgWNsEUFCO8Sxiqvcq57Q@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] usb: gadget: add raw-gadget interface
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGF2aWQgTGFpZ2h0DQo+IFNlbnQ6IDEzIEphbnVhcnkgMjAyMCAxNDozNQ0KPiANCj4g
-SSd2ZSBiZWVuIGxvb2tpbmcgYXQgd2h5IHNvbWUgUlQgcHJvY2Vzc2VzIGRvbid0IGdldCBzY2hl
-ZHVsZWQgcHJvbXB0bHkuDQo+IEluIG15IHRlc3QgdGhlIFJUIHByb2Nlc3MncyBhZmZpbml0eSB0
-aWVzIGl0IHRvIGEgc2luZ2xlIGNwdSAodGhpcyBtYXkgbm90IGJlIHN1Y2gNCj4gYSBnb29kIGlk
-ZWEgYXMgaXQgc2VlbXMpLg0KPiANCj4gV2hhdCBJJ3ZlIGZvdW5kIGlzIHRoYXQgdGhlIEludGVs
-IGk5MTUgZ3JhcGhpY3MgZHJpdmVyIHVzZXMgdGhlICdldmVudHNfdW5ib3VuZCcNCj4ga2VybmVs
-IHdvcmtlciB0aHJlYWQgdG8gcGVyaW9kaWNhbGx5IGV4ZWN1dGUgZHJtX2NmbHVzaF9zZygpLg0K
-PiAoc2VlIGh0dHBzOi8vZ2l0aHViLmNvbS90b3J2YWxkcy9saW51eC9ibG9iL21hc3Rlci9kcml2
-ZXJzL2dwdS9kcm0vZHJtX2NhY2hlLmMpDQouLi4NCj4gVGhpcyBsb29wIHRha2VzIGFib3V0IDF1
-cyBwZXIgaXRlcmF0aW9uIHNwbGl0IGZhaXJseSBldmVubHkgYmV0d2VlbiB3aGF0ZXZlciBpcyBp
-bg0KPiBmb3JfZWFjaF9zZ19wYWdlKCkgYW5kIGRybV9jZmx1c2hfcGFnZSgpLg0KPiBXaXRoIGEg
-MjU2MHgxNDQwIGRpc3BsYXkgdGhlIGxvb3AgY291bnQgaXMgMzYwMCAoNCBieXRlcy9waXhlbCkg
-YW5kIHRoZSB3aG9sZQ0KPiBmdW5jdGlvbiB0YWtlcyBhcm91bmQgMy4zbXMuDQoNCkFjdHVhbGx5
-IG5vdCBzZXR0aW5nIHRoZSBjcHUgYWZmaW5pdHkgbWFrZXMgbm8gZGlmZmVyZW5jZS4NClRoZSBw
-cm9jZXNzIGlzIHdva2VuIHVwIG9uIHRoZSBjcHUgaXQgbGFzdCByYW4gb24gYW5kIHNpdHMgJ3dh
-aXRpbmcnIHVudGlsDQpkcm1fY2ZsdXNoX3NnKCkgZmluaXNoZXMgLSBldmVuIHRob3VnaCB0aGUg
-b3RoZXIgY3B1IGJlY29tZSBpZGxlLg0KTm8gc2lnbiBvZiBzY2hlZF9taWdyYXRlX3Rhc2sgZXZl
-bnQgJ3N0ZWFsaW5nJyB0aGUgcHJvY2Vzcy4NCg0KRXZlbiB3b3JzZSwgYmVjYXVzZSAndGlja2V0
-IGxvY2tzJyBhcmUgdXNlZCBubyBvdGhlciB1c2VyIHByb2Nlc3NlcyBjYW4NCmFjcXVpcmUgdGhl
-IHNhbWUgKHVzZXIpIG11dGV4IG9yIGJlIHdva2VuIGZyb20gY3Zfd2FpdCgpIHVudGlsIHRoZQ0K
-cHJvY2VzcyBhY3R1YWxseSBydW5zLg0KDQpUaGlzIGlzIGEgNS40LjAtcmM3IGtlcm5lbC4NCkkg
-dGhpbmsgSSBzYXcgc29tZSByZWNlbnQgc2NoZWR1bGVyIHBhdGNoZXMsIEkgY2FuIHRyeSB0aGVt
-IHVudGlsIEkgY2FuJ3QgYnVpbGQNCndpdGggZ2NjIDQuNy4zIDotKQ0KDQoJRGF2aWQNCg0KLQ0K
-UmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1p
-bHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVz
-KQ0K
+On Mon, Jan 13, 2020 at 6:34 PM Andrey Konovalov <andreyknvl@google.com> wrote:
+>
+> On Mon, Jan 13, 2020 at 5:50 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Mon, 13 Jan 2020, Andrey Konovalov wrote:
+> >
+> > > I've also found an issue, but I'm not sure if that is the bug in Raw
+> > > Gadget, or in the gadget layer (in the former case I'll add this fix
+> > > to v5 as well). What I believe I'm seeing is
+> > > __fput()->usb_gadget_unregister_driver()->usb_gadget_remove_driver()->gadget_unbind()
+> > > racing with dummy_timer()->gadget_setup(). In my case it results in
+> > > gadget_unbind() doing set_gadget_data(gadget, NULL), and then
+> > > gadget_setup() dereferencing get_gadget_data(gadget).
+> > >
+> > > Alan, does it look possible for those two functions to race? Should
+> > > this be prevented by the gadget layer, or should I use some kind of
+> > > locking in my gadget driver to prevent this?
+> >
+> > In your situation this race shouldn't happen, because before
+> > udc->driver->unbind() is invoked we call usb_gadget_disconnect().  If
+> > that routine succeeds -- which it always does under dummy-hcd -- then
+> > there can't be any more setup callbacks, because find_endpoint() will
+> > always return NULL (the is_active() test fails; see the various
+> > set_link_state* routines).  So I don't see how you could have ended up
+> > with the race you describe.
+>
+> I've managed to reproduce the race by adding an mdelay() into the
+> beginning of the setup() callback. AFAIU what happens is setup() gets
+> called (and waits on the mdelay()), then unbind() comes in and does
+> set_gadget_data(NULL), and then setup() proceeds, gets NULL through
+> get_gadget_data() and crashes on null-ptr-deref. I've got the same
+> crash a few times after many days of fuzzing, so I assume it can
+> happen without the mdelay() as well.
+>
+> > However, a real UDC might not be able to perform a disconnect under
+> > software control.  In that case usb_gadget_disconnect() would not
+> > change the pullup state, and there would be a real possibility of a
+> > setup callback racing with an unbind callback.  This seems like a
+> > genuine problem and I can't think of a solution offhand.
+> >
+> > What we would need is a way to tell the UDC driver to stop invoking
+> > gadget callbacks, _before_ the UDC driver's stop callback gets called.
+> > Maybe this should be merged into the pullup callback somehow.
 
+Perhaps for the dummy driver we need to wait for setup() to finish if
+it's being executed and then stop the dummy timer in dummy_pullup()?
