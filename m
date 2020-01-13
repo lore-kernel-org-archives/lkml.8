@@ -2,139 +2,122 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580EAC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AD7C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24FE520CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:30:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6809220CC7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 21:39:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8ohPrA3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVyvFOsL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbgAMVaL (ORCPT
+        id S1728829AbgAMVi7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 16:30:11 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:33293 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726488AbgAMVaK (ORCPT
+        Mon, 13 Jan 2020 16:38:59 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42494 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726778AbgAMVi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 16:30:10 -0500
-Received: by mail-wm1-f66.google.com with SMTP id d139so805717wmd.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 13:30:09 -0800 (PST)
+        Mon, 13 Jan 2020 16:38:59 -0500
+Received: by mail-pl1-f193.google.com with SMTP id p9so4329791plk.9;
+        Mon, 13 Jan 2020 13:38:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=x5+ov4CaVNZaEBNcRsthINHg4Fcgw3j3by4jIhHXUPE=;
-        b=T8ohPrA3ZboIa5u4Nl/BlJpMST1God0vPv3q/UzL9Y6wKj/33IyZPOop9L0A0oDIvb
-         IzdK0SJGCm8NU5qxlmNTN3JK1Y0Q92UYM7Aqh54HLZYXSU/d4/rFyNhlMinaMBwYHjrt
-         EUq/nukFxoCV6lMuwC9GU6ByCLvtdAuxeEVItUEkn9+4HUH98qvZrboQtgDVZX263Wiw
-         HJhiWcqTJHSuG7luBi8FJjUeQPTEKqrpFVsJj0/UL0GcfDq//FVwm8A3PZIZ80+kc1kL
-         0IZOEDYLrhmWH0phkfDyJ+vyuAzJ09JC3trT1CCg0iCaFhbahmFKNZ8bH+F5HjBGYTmp
-         j+fg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PNCK//uPfDCqysTs22q4VYtyuju/MqjD28uUh4zcIbE=;
+        b=mVyvFOsLFaJ19vdKZqZvc8NcQlbNpM6sJESgAYciCSefTKQyE9eGYgyAPXr6tD8RQ5
+         tuv2Z6u4Y7+5yWculISPTejy+vLL1os75RJnc18A1MXANaMahOnW/6K1axy925ysX7T1
+         w6jWUGUcH/tOhOGZuaXbHANZCCaBT0Cnp/zziJBkVm3b5nlFhwkR0y4Glx27t32aDjg0
+         sZ9CyX4qLR4G+oPEKCB2AYTrcVsveBxoF0+UB8d18k1rcgj6wd1twD7O3K1D/ZnIfV5Z
+         jwrBTSOM7GbgNAgJT+1qKF00WoRRUBDPgu9XmuqPxUWf3P2WU93r+UNBzg7zSBWQ81TH
+         wYvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=x5+ov4CaVNZaEBNcRsthINHg4Fcgw3j3by4jIhHXUPE=;
-        b=DfXQNqOm0vvcdU1D8ApLeREdBBf0bvHIv1SzpbKZfp2yJsNhDTS704WaAgrhW+7/D5
-         K1KpPJETokhq86zudbH8UrPpF23a+g/eL8mE51snYLPG3687MMbD0dzdaCWA8lbCOFWA
-         hs+HZNB8xddgDMeZRNc8v5wbbxozpDm2TVOxe/x+7zva/dlDN6x0Q/QTUhddbeMcZvRN
-         VRXnYbik1Gq+GCklxpCw7ckoT4/eohmzGNclXb2Vg9E+kC7lBgqzQUJh2fZqJx4myT75
-         HNRu5EdVkGwSK4FSz71fqMNTPkJoemEftaxsemRF5qGHUcUQ7RAZZyyJ5iT/yxx/FsnC
-         5VZg==
-X-Gm-Message-State: APjAAAUim7RFuPV+hQyFOGw7maNaPlp+ielagTXpzCp1UYvjQxBHVUBq
-        vfHLShcpje05xJ/lcaqYak4=
-X-Google-Smtp-Source: APXvYqzysidmxeF3t6al9a/pvcMTwMeqSyDBI10V1/2DEDyws6CBSFoyFe9KpxqsxxlKDAO68qvIpw==
-X-Received: by 2002:a1c:6485:: with SMTP id y127mr23185458wmb.11.1578951008958;
-        Mon, 13 Jan 2020 13:30:08 -0800 (PST)
-Received: from localhost.localdomain (dslb-088-070-028-164.088.070.pools.vodafone-ip.de. [88.70.28.164])
-        by smtp.gmail.com with ESMTPSA id z187sm16403823wme.16.2020.01.13.13.30.07
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PNCK//uPfDCqysTs22q4VYtyuju/MqjD28uUh4zcIbE=;
+        b=YXY96w15yfXL1y5g8W0R/OexiOyHp3EnFAxpdSnXBhqj3HR9+zZ6vvUCdR62/fKefC
+         pVEgZF1q9c6We0x+PL3jxxHDAYc/eORHX4zAQReSXF0Vcnrnib9h7EifKeCls5j0MQLL
+         qL7COIDZkSSARSIbV8i3ljqCgmVzflvGoQq3RxOJut8UOA6BoLUuU43lSiNcftUhSJAm
+         Hu4s6K4/bPzv6Sb7znhhLZ5sNQk9UqCjz/jC2EsULqE536ZxlkiAE3G4XtTdgP74aXDD
+         Ti+NArWvEpjxWMg0jUNHZztpBvPNfSPesmGJKbT8f1ewzXdJpPx6xuNfq43eG1VH03EX
+         CgOA==
+X-Gm-Message-State: APjAAAUEz0H+mxAv+kjTJg9nI+BJocz81kxMtkPZahWqe2CRLe7C+tqJ
+        NmkfTM5sNqCj8Ti4ztfGuCY=
+X-Google-Smtp-Source: APXvYqxc3g8yOEfefbauBlQM3MSFeixa+bS/nqKS9+h5QFHVkGJBHxwZCS+UtBDL7iak8ru/DYy20g==
+X-Received: by 2002:a17:902:9889:: with SMTP id s9mr8898358plp.252.1578951538343;
+        Mon, 13 Jan 2020 13:38:58 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id r8sm13903696pjo.22.2020.01.13.13.38.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 13:30:08 -0800 (PST)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH] staging: rtl8188eu: remove unused parameters from rtw_check_network_type
-Date:   Mon, 13 Jan 2020 22:29:39 +0100
-Message-Id: <20200113212939.9738-1-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Mon, 13 Jan 2020 13:38:57 -0800 (PST)
+Date:   Mon, 13 Jan 2020 13:38:55 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 2/3] Input: axp20x-pek - Respect userspace wakeup
+ configuration
+Message-ID: <20200113213855.GB47797@dtor-ws>
+References: <20200113032032.38709-1-samuel@sholland.org>
+ <20200113032032.38709-2-samuel@sholland.org>
+ <84e9f44e-81e1-ab3d-3dd0-08388951b074@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <84e9f44e-81e1-ab3d-3dd0-08388951b074@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Parameters 'ratelen' and 'channel' of function rtw_check_network_type are
-unused, remove them. Reduces object file size by 62 bytes.
+On Mon, Jan 13, 2020 at 11:48:35AM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 13-01-2020 04:20, Samuel Holland wrote:
+> > Unlike most other power button drivers, this driver unconditionally
+> > enables its wakeup IRQ. It should be using device_may_wakeup() to
+> > respect the userspace configuration of wakeup sources.
+> > 
+> > Because the AXP20x MFD device uses regmap-irq, the AXP20x PEK IRQs are
+> > nested off of regmap-irq's threaded interrupt handler. The device core
+> > ignores such interrupts, so to actually disable wakeup, we must
+> > explicitly disable all non-wakeup interrupts during suspend.
+> > 
+> > Signed-off-by: Samuel Holland <samuel@sholland.org>
+> > ---
+> >   drivers/input/misc/axp20x-pek.c | 42 ++++++++++++++++++++++++++++++++-
+> >   1 file changed, 41 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
+> > index 7d0ee5bececb..38cd4a4aeb65 100644
+> > --- a/drivers/input/misc/axp20x-pek.c
+> > +++ b/drivers/input/misc/axp20x-pek.c
+> > @@ -280,7 +280,7 @@ static int axp20x_pek_probe_input_device(struct axp20x_pek *axp20x_pek,
+> >   	}
+> >   	if (axp20x_pek->axp20x->variant == AXP288_ID)
+> > -		enable_irq_wake(axp20x_pek->irq_dbr);
+> > +		device_init_wakeup(&pdev->dev, true);
+> >   	return 0;
+> >   }
+> > @@ -352,6 +352,45 @@ static int axp20x_pek_probe(struct platform_device *pdev)
+> >   	return 0;
+> >   }
+> > +#if CONFIG_PM_SLEEP
+> 
+> As the kbuild test robot pointed out, you need to use #ifdef here.
 
-  text    data     bss     dec     hex filename
-398525   12896    4688  416109   6596d drivers/staging/rtl8188eu/r8188eu.o
-398463   12896    4688  416047   6592f drivers/staging/rtl8188eu/r8188eu.o
+I prefer __maybe_unused as this gives more compile coverage.
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8188eu/core/rtw_ap.c        | 4 ++--
- drivers/staging/rtl8188eu/core/rtw_ieee80211.c | 2 +-
- drivers/staging/rtl8188eu/include/ieee80211.h  | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+Thanks.
 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_ap.c b/drivers/staging/rtl8188eu/core/rtw_ap.c
-index 88e42cc1d837..93283c7deec4 100644
---- a/drivers/staging/rtl8188eu/core/rtw_ap.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_ap.c
-@@ -429,7 +429,7 @@ static void update_bmc_sta(struct adapter *padapter)
- 
- 		/* prepare for add_RATid */
- 		supportRateNum = rtw_get_rateset_len((u8 *)&pcur_network->SupportedRates);
--		network_type = rtw_check_network_type((u8 *)&pcur_network->SupportedRates, supportRateNum, 1);
-+		network_type = rtw_check_network_type((u8 *)&pcur_network->SupportedRates);
- 
- 		memcpy(psta->bssrateset, &pcur_network->SupportedRates, supportRateNum);
- 		psta->bssratelen = supportRateNum;
-@@ -802,7 +802,7 @@ int rtw_check_beacon_data(struct adapter *padapter, u8 *pbuf,  int len)
- 		supportRateNum += ie_len;
- 	}
- 
--	network_type = rtw_check_network_type(supportRate, supportRateNum, channel);
-+	network_type = rtw_check_network_type(supportRate);
- 
- 	rtw_set_supported_rate(pbss_network->SupportedRates, network_type);
- 
-diff --git a/drivers/staging/rtl8188eu/core/rtw_ieee80211.c b/drivers/staging/rtl8188eu/core/rtw_ieee80211.c
-index cc1b5438c04c..1344d369e05d 100644
---- a/drivers/staging/rtl8188eu/core/rtw_ieee80211.c
-+++ b/drivers/staging/rtl8188eu/core/rtw_ieee80211.c
-@@ -98,7 +98,7 @@ bool rtw_is_cckratesonly_included(u8 *rate)
- 	return true;
- }
- 
--int rtw_check_network_type(unsigned char *rate, int ratelen, int channel)
-+int rtw_check_network_type(unsigned char *rate)
- {
- 	/*  could be pure B, pure G, or B/G */
- 	if (rtw_is_cckratesonly_included(rate))
-diff --git a/drivers/staging/rtl8188eu/include/ieee80211.h b/drivers/staging/rtl8188eu/include/ieee80211.h
-index d569fe5ed8e6..75f0ebe0faf5 100644
---- a/drivers/staging/rtl8188eu/include/ieee80211.h
-+++ b/drivers/staging/rtl8188eu/include/ieee80211.h
-@@ -765,7 +765,7 @@ bool rtw_is_cckrates_included(u8 *rate);
- 
- bool rtw_is_cckratesonly_included(u8 *rate);
- 
--int rtw_check_network_type(unsigned char *rate, int ratelen, int channel);
-+int rtw_check_network_type(unsigned char *rate);
- 
- void rtw_get_bcn_info(struct wlan_network *pnetwork);
- 
 -- 
-2.24.1
-
+Dmitry
