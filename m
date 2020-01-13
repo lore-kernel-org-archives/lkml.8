@@ -2,243 +2,112 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB4BC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4329EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0920B2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B532084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:07:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RG0Wi7LX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbgAMIGd (ORCPT
+        id S1728811AbgAMIHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 03:06:33 -0500
-Received: from mga17.intel.com ([192.55.52.151]:63779 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbgAMIGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 03:06:32 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 00:06:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,428,1571727600"; 
-   d="scan'208";a="224905087"
-Received: from unknown (HELO localhost) ([10.239.159.128])
-  by orsmga006.jf.intel.com with ESMTP; 13 Jan 2020 00:06:29 -0800
-Date:   Mon, 13 Jan 2020 16:10:50 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com,
-        alazar@bitdefender.com, edwin.zhai@intel.com
-Subject: Re: [RESEND PATCH v10 06/10] vmx: spp: Set up SPP paging table at
- vmentry/vmexit
-Message-ID: <20200113081050.GF12253@local-michael-cet-test.sh.intel.com>
-References: <20200102061319.10077-1-weijiang.yang@intel.com>
- <20200102061319.10077-7-weijiang.yang@intel.com>
- <20200110180458.GG21485@linux.intel.com>
+        Mon, 13 Jan 2020 03:07:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32388 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728682AbgAMIHx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 03:07:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578902872;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/erZ8RnYKJRFY+c1GhVERMG1XNVgTxXo2w1hrK27Sb8=;
+        b=RG0Wi7LXMbHj7Ex9SwF8FPhXKYwM7Dh8Ssy9aSU0pv1nt6CVLHtz6bFtEz9mZO5TblqtX+
+        LsODUHyc0gKIUvby7awqIcd4jzVDc6J9hQ+x/SQZMluYgawD/NgIWhD1HcTYvBzFU7yB8z
+        8yxYh0vdXa+z7U/elJi1ByQVWPuAAQE=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-25-ftrnvkduPZq4PTnTyEwokg-1; Mon, 13 Jan 2020 03:07:48 -0500
+X-MC-Unique: ftrnvkduPZq4PTnTyEwokg-1
+Received: by mail-wr1-f72.google.com with SMTP id u18so4629196wrn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 00:07:48 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=/erZ8RnYKJRFY+c1GhVERMG1XNVgTxXo2w1hrK27Sb8=;
+        b=kcYPUEbBvVQ7Sj5IylNot44NIO/s2Wm3RVTHTc0kDIOIhmamlcS96sSc3jvDDzyo87
+         iQlPcP/wR2Re0gPNefbCZPDwBl/XU9MA4mqXsgwQHc/QwwqmphqdzgoiatQpXk5STJGk
+         P/PtruNKuHDLSusRNJ+6oNBRW7pHG0Hm1LQRRv9N0oHGNEmAJcWjYUK/hBxpKEHxmvTL
+         751Ocow5/wO91wcFfFLzmdh9pn0ABdmwz5rUkvw0lJNkAKBWSQ/2YEJq5RnznGm7NPXz
+         Gyn2o9D478CAsc8rcWxDRsxThfq2wFb3O73eb8umf6vr9bzCq8If1gln4kQcz/Eu7sSQ
+         v44g==
+X-Gm-Message-State: APjAAAXao6GtaQGA/lolLhLYvfxsqAxSkXWwcnYmBHqpVMlGDNHItdef
+        Zl6Hb1adln88RlO/SHcJF5TWMVYTVgf7a0TY9hVTrW6nc6a7yR41NdWGXACFgzhSayH3I12KGpK
+        JBHt7Vw4PcQ8B7EXJj8nDQGrf
+X-Received: by 2002:a5d:6748:: with SMTP id l8mr1396184wrw.188.1578902867670;
+        Mon, 13 Jan 2020 00:07:47 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy0QAjNUB/O8hGuT0Ik18PvHdQ1W7LOxSNRFjlfRDriRbr61B/AAKzt1NZh7J71GOTzCEVtdA==
+X-Received: by 2002:a5d:6748:: with SMTP id l8mr1396158wrw.188.1578902867410;
+        Mon, 13 Jan 2020 00:07:47 -0800 (PST)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id u7sm13323951wmj.3.2020.01.13.00.07.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 00:07:46 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        Chen Zhou <chenzhou10@huawei.com>
+Cc:     "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "chenzhou10\@huawei.com" <chenzhou10@huawei.com>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "mingo\@redhat.com" <mingo@redhat.com>
+Subject: RE: [PATCH] x86/hyper-v: remove unnecessary conversions to bool
+In-Reply-To: <MW2PR2101MB1052B01B542F0C0A576928CBD73A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200110072047.85398-1-chenzhou10@huawei.com> <875zhjr074.fsf@vitty.brq.redhat.com> <MW2PR2101MB1052B01B542F0C0A576928CBD73A0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+Date:   Mon, 13 Jan 2020 09:07:45 +0100
+Message-ID: <87tv4zpyni.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110180458.GG21485@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 10:04:59AM -0800, Sean Christopherson wrote:
-> On Thu, Jan 02, 2020 at 02:13:15PM +0800, Yang Weijiang wrote:
-> > @@ -3585,7 +3602,30 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gva_t gva, int level,
-> >  		if ((error_code & PFERR_WRITE_MASK) &&
-> >  		    spte_can_locklessly_be_made_writable(spte))
-> >  		{
-> > -			new_spte |= PT_WRITABLE_MASK;
-> > +			/*
-> > +			 * Record write protect fault caused by
-> > +			 * Sub-page Protection, let VMI decide
-> > +			 * the next step.
-> > +			 */
-> > +			if (spte & PT_SPP_MASK) {
-> > +				int len = kvm_x86_ops->get_inst_len(vcpu);
-> 
-> There's got to be a better way to handle SPP exits than adding a helper
-> to retrieve the instruction length.
+Michael Kelley <mikelley@microsoft.com> writes:
+
+> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Friday, January 10, 2020 4:00 AM
+>> 
+>> 
+>> I'd suggest we get rid of bool functions completely instead, something
+>> like (untested):
 >
-The fault instruction was skipped by kvm_skip_emulated_instruction()
-before, but Paolo suggested leave the re-do or skip option to user-space
-to make it flexible for write protection or write tracking, so return
-length to user-space.
+> Just curious:  Why prefer returning a u16 instead of a bool?  To avoid
+> having to test 'ret' for zero in the return statements, or is there some
+> broader reason?
 
-> > +
-> > +				fault_handled = true;
-> > +				vcpu->run->exit_reason = KVM_EXIT_SPP;
-> > +				vcpu->run->spp.addr = gva;
-> > +				vcpu->run->spp.ins_len = len;
-> 
-> s/ins_len/insn_len to be consistent with other KVM nomenclature.
-> 
-OK.
+Basically to preserve hypercall failure code and not hide it under 'false'.
 
-> > +				trace_kvm_spp_induced_page_fault(vcpu,
-> > +								 gva,
-> > +								 len);
-> > +				break;
-> > +			}
-> > +
-> > +			if (was_spp_armed(new_spte)) {
-> > +				restore_spp_bit(&new_spte);
-> > +				spp_protected = true;
-> > +			} else {
-> > +				new_spte |= PT_WRITABLE_MASK;
-> > +			}
-> >  
-> >  			/*
-> >  			 * Do not fix write-permission on the large spte.  Since
-> 
-> ...
-> 
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 24e4e1c47f42..97d862c79124 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -200,7 +200,6 @@ static const struct {
-> >  	[VMENTER_L1D_FLUSH_EPT_DISABLED] = {"EPT disabled", false},
-> >  	[VMENTER_L1D_FLUSH_NOT_REQUIRED] = {"not required", false},
-> >  };
-> > -
-> 
-> Spurious whitepsace.
+>> -				     ipi_arg.cpu_mask);
+>> -	return ((ret == 0) ? true : false);
+>> +	return (u16)hv_do_fast_hypercall16(HVCALL_SEND_IPI, ipi_arg.vector,
+>> +					   ipi_arg.cpu_mask);
 >
-OK.
+> The cast to u16 seems a bit dangerous. The hypercall status code is indeed
+> returned in the low 16 bits of the hypercall result value, so it works, and
+> maybe that is why you suggested u16 as the function return value.  But it
+> is a non-obvious assumption.  
 
-> >  #define L1D_CACHE_ORDER 4
-> >  static void *vmx_l1d_flush_pages;
-> >  
-> > @@ -2999,6 +2998,7 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
-> >  	bool update_guest_cr3 = true;
-> >  	unsigned long guest_cr3;
-> >  	u64 eptp;
-> > +	u64 spptp;
-> >  
-> >  	guest_cr3 = cr3;
-> >  	if (enable_ept) {
-> > @@ -3027,6 +3027,12 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
-> >  
-> >  	if (update_guest_cr3)
-> >  		vmcs_writel(GUEST_CR3, guest_cr3);
-> > +
-> > +	if (kvm->arch.spp_active && VALID_PAGE(vcpu->kvm->arch.sppt_root)) {
-> > +		spptp = construct_spptp(vcpu->kvm->arch.sppt_root);
-> > +		vmcs_write64(SPPT_POINTER, spptp);
-> > +		vmx_flush_tlb(vcpu, true);
-> 
-> Why is SPP so special that it gets to force TLB flushes?
-I double checked the code, there's a call to vmx_flush_tlb() in
-mmu_load(), so it's unnecessary here, thank you!
+This is not obvious, I agree, and we can create a wrapper for it but we
+more or less must convert it to 'u16': uppper bits don't indicate a
+failure (e.g. 'reps complete').
 
-> > +	}
-> >  }
-> >  
-> >  int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-> > @@ -5361,6 +5367,74 @@ static int handle_monitor_trap(struct kvm_vcpu *vcpu)
-> >  	return 1;
-> >  }
-> >  
-> > +int handle_spp(struct kvm_vcpu *vcpu)
-> 
-> Can be static.
->
-Thanks!
-
-> > +{
-> > +	unsigned long exit_qualification;
-> > +	struct kvm_memory_slot *slot;
-> > +	gpa_t gpa;
-> > +	gfn_t gfn;
-> > +
-> > +	exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
-> > +
-> > +	/*
-> > +	 * SPP VM exit happened while executing iret from NMI,
-> > +	 * "blocked by NMI" bit has to be set before next VM entry.
-> > +	 * There are errata that may cause this bit to not be set:
-> > +	 * AAK134, BY25.
-> > +	 */
-> > +	if (!(to_vmx(vcpu)->idt_vectoring_info & VECTORING_INFO_VALID_MASK) &&
-> > +	    (exit_qualification & SPPT_INTR_INFO_UNBLOCK_NMI))
-> > +		vmcs_set_bits(GUEST_INTERRUPTIBILITY_INFO,
-> > +			      GUEST_INTR_STATE_NMI);
-> > +
-> > +	vcpu->arch.exit_qualification = exit_qualification;
-> 
-> 	if (WARN_ON(!(exit_qualification & SPPT_INDUCED_EXIT_TYPE)))
-> 		goto out_err;
-> 
-> 	<handle spp exit>
-> 
-> 	return 1;
-> 
-> out_err:
-> 	vcpu->run->exit_reason = KVM_EXIT_UNKNOWN;
-> 	vcpu->run->hw.hardware_exit_reason = EXIT_REASON_SPP;
-> 	return 0;
->
-Sure, will change it.
-
-> > +	if (exit_qualification & SPPT_INDUCED_EXIT_TYPE) {
-> > +		int page_num = KVM_PAGES_PER_HPAGE(PT_DIRECTORY_LEVEL);
-> 
-> The compiler is probably clever enough to make these constants, but if
-> this logic is a fundamental property of SPP then it should be defined as
-> a macro somewhere.
->
-OK, will change it.
-
-> > +		u32 *access;
-> > +		gfn_t gfn_max;
-> > +
-> > +		/*
-> > +		 * SPPT missing
-> > +		 * We don't set SPP write access for the corresponding
-> > +		 * GPA, if we haven't setup, we need to construct
-> > +		 * SPP table here.
-> > +		 */
-> > +		gpa = vmcs_read64(GUEST_PHYSICAL_ADDRESS);
-> > +		gfn = gpa >> PAGE_SHIFT;
-> 
-> gpa_to_gfn()
->
-OK.
-
-> > +		trace_kvm_spp_induced_exit(vcpu, gpa, exit_qualification);
-> > +		/*
-> > +		 * In level 1 of SPPT, there's no PRESENT bit, all data is
-> > +		 * regarded as permission vector, so need to check from
-> > +		 * level 2 to set up the vector if target page is protected.
-> > +		 */
-> > +		spin_lock(&vcpu->kvm->mmu_lock);
-> > +		gfn &= ~(page_num - 1);
-> 
-> 
-> 
-> > +		gfn_max = gfn + page_num - 1;
-> 
-> s/gfn_max/gfn_end
-OK.
-
-> 
-> > +		for (; gfn <= gfn_max; gfn++) {
-> 
-> My preference would be to do:
-> 		gfn_end = gfn + page_num;
-> 
-> 		for ( ; gfn < gfn_end; gfn++)
->
-Thank you!
-> > +			slot = gfn_to_memslot(vcpu->kvm, gfn);
+-- 
+Vitaly
 
