@@ -2,60 +2,74 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A030DC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E453C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B7F2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C1FB2081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbgAMNgu (ORCPT
+        id S1728688AbgAMNhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:36:50 -0500
-Received: from gloria.sntech.de ([185.11.138.130]:54840 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbgAMNgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:36:50 -0500
-Received: from wf0253.dip.tu-dresden.de ([141.76.180.253] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1iqztb-00037T-18; Mon, 13 Jan 2020 14:36:43 +0100
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     Tobias Schramm <t.schramm@manjaro.org>
-Cc:     Sandy Huang <hjc@rock-chips.com>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] drm/rockchip: fix integer type used for storing dp data rate
-Date:   Mon, 13 Jan 2020 14:36:42 +0100
-Message-ID: <4097172.Yl1PJM63nH@phil>
-In-Reply-To: <20200109073129.378507-2-t.schramm@manjaro.org>
-References: <20200109073129.378507-1-t.schramm@manjaro.org> <20200109073129.378507-2-t.schramm@manjaro.org>
+        Mon, 13 Jan 2020 08:37:19 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37712 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728346AbgAMNhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 08:37:19 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D703BC1F72A7DF8864C3;
+        Mon, 13 Jan 2020 21:37:16 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 13 Jan 2020 21:37:08 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>
+CC:     <linux-kernel@vger.kernel.org>, <chenzhou10@huawei.com>
+Subject: [PATCH next] ASoC: atmel: fix build error with CONFIG_SND_ATMEL_SOC_DMA=m
+Date:   Mon, 13 Jan 2020 21:32:42 +0800
+Message-ID: <20200113133242.144550-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Donnerstag, 9. Januar 2020, 08:31:29 CET schrieb Tobias Schramm:
-> commmit 2589c4025f13 ("drm/rockchip: Avoid drm_dp_link helpers") changes
-> the type of variables used to store the display port data rate and
-> number of lanes to u8. However u8 is not sufficient to store the link
-> data rate of the display port.
-> This commit reverts the type of data rate to unsigned int.
-> 
-> Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+If CONFIG_SND_ATMEL_SOC_DMA=m, build error:
 
-applied to drm-misc-fixes
+sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
+(.text+0x7cd): undefined reference to `atmel_pcm_dma_platform_register'
 
-Thanks
-Heiko
+Function atmel_pcm_dma_platform_register is defined under
+CONFIG SND_ATMEL_SOC_DMA, so select SND_ATMEL_SOC_DMA in
+CONFIG SND_ATMEL_SOC_SSC, same to CONFIG_SND_ATMEL_SOC_PDC.
 
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ sound/soc/atmel/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+index f118c22..d1dc8e6 100644
+--- a/sound/soc/atmel/Kconfig
++++ b/sound/soc/atmel/Kconfig
+@@ -19,6 +19,8 @@ config SND_ATMEL_SOC_DMA
+ 
+ config SND_ATMEL_SOC_SSC
+ 	tristate
++	select SND_ATMEL_SOC_DMA
++	select SND_ATMEL_SOC_PDC
+ 
+ config SND_ATMEL_SOC_SSC_PDC
+ 	tristate "SoC PCM DAI support for AT91 SSC controller using PDC"
+-- 
+2.7.4
 
