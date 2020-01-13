@@ -2,113 +2,90 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5854DC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC19C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38BA820678
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86089222C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578942669;
+	bh=hEzo/l7izo07RBBo1LJlfSNEocdLq/ykhdkNJPTcTyQ=;
+	h=Date:From:To:CC:CC:CC:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=vf/FoGGRNZZYS2XK57myS+PdXVNtmboqB1Uab8oprb2u6cFqeBFttaZdo33sQDqTu
+	 +sSlqq8wpJkF7A/EFu2sLd9x+bwoW88aNcTrbfRzjd1tLROkjQ9PUO2hj1TmTE0T8P
+	 PFMdtkAMFfg+psc8p9qIZEtMIwYNRFjWeQ9Q+WYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbgAMTK4 (ORCPT
+        id S1729016AbgAMTLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:10:56 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:50693 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729300AbgAMTKy (ORCPT
+        Mon, 13 Jan 2020 14:11:08 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43504 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729307AbgAMTKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:10:54 -0500
-Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1ir56u-0004P1-FF; Mon, 13 Jan 2020 19:10:48 +0000
-Date:   Mon, 13 Jan 2020 20:10:47 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>
-Subject: Re: [PATCH 2/4] mm: introduce external memory hinting API
-Message-ID: <20200113191046.2tidyvc544zvchek@wittgenstein>
-References: <20200110213433.94739-1-minchan@kernel.org>
- <20200110213433.94739-3-minchan@kernel.org>
- <56ea0927-ad2e-3fbd-3366-3813330f6cec@virtuozzo.com>
- <20200113104256.5ujbplyec2sk4onn@wittgenstein>
- <20200113184408.GD110363@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200113184408.GD110363@google.com>
-User-Agent: NeoMutt/20180716
+        Mon, 13 Jan 2020 14:10:52 -0500
+Received: by mail-pg1-f193.google.com with SMTP id k197so5143601pga.10;
+        Mon, 13 Jan 2020 11:10:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:from:to:cc:cc:cc:subject
+         :references:in-reply-to;
+        bh=yx6apWvkE7do4qCaKbCQiOQiIYnQT2mV1VkM+epSUiQ=;
+        b=tShKaH5ZEx2zQfNn9EzMVEIhjPg9HM3+1cwbL1O4edUAJAAmXhginLCOX+mOvlzw+L
+         giVKFRy5T2/0hHtiLCVWWdryTD0ciwaDZGtWQE5qpPsz0l1JDljJoP7MECFI9HXSfc/x
+         snZjC3nLgq89Aqlf+H4ojpCbgnmgilxPYcxGbtv6AOcWvD7ZA7onzDguuD83pMjmOH2U
+         AgFtygAgPWWZQnyh0sP47X6lzYl1m0ZF1y4kRxQPwNgt2ZfVtOGfxufp6WimjUBDTV6H
+         pDoIHgqpJls5LF61S9KqRPaWCNA1nKG2AW4Wms/Pv6jtp+WJhP1Cmi48n9XXAO7Vdu10
+         nJXw==
+X-Gm-Message-State: APjAAAV8yAkkt2Pw0xgi3YZcM6QLgjWu9OqsXkz/6xEqJYZU5PtthCe3
+        uaEgvM3+ap2e6rCa1qnDHlunVEqxVnv6/Q==
+X-Google-Smtp-Source: APXvYqxhzgJBFTP7LtKH7tWm2L6UENW9XL2x2W3wBdOUSHpRnD8VSi03LXc+BajdOSay1mwNYNMR7w==
+X-Received: by 2002:a62:1d52:: with SMTP id d79mr20975261pfd.144.1578942651214;
+        Mon, 13 Jan 2020 11:10:51 -0800 (PST)
+Received: from localhost (MIPS-TECHNO.ear1.SanJose1.Level3.net. [4.15.122.74])
+        by smtp.gmail.com with ESMTPSA id q11sm15000623pff.111.2020.01.13.11.10.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 11:10:50 -0800 (PST)
+Message-ID: <5e1cc0ba.1c69fb81.41d49.31bf@mx.google.com>
+Date:   Mon, 13 Jan 2020 11:10:50 -0800
+From:   Paul Burton <paulburton@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+CC:     Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+CC:     linux-mips@vger.kernel.org
+Subject: Re: [PATCH] MIPS: Loongson: Fix potential NULL dereference in  loongson3_platform_init()
+References:  <1578619842-926-1-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To:  <1578619842-926-1-git-send-email-yangtiezhu@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 10:44:08AM -0800, Minchan Kim wrote:
-> On Mon, Jan 13, 2020 at 11:42:57AM +0100, Christian Brauner wrote:
-> > On Mon, Jan 13, 2020 at 11:47:11AM +0300, Kirill Tkhai wrote:
-> 
-> < snip >
-> 
-> > > > +SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
-> > > > +		size_t, len_in, int, behavior, unsigned long, flags)
-> > > 
-> > > I don't like the interface. The fact we have pidfd does not mean,
-> > > we have to use it for new syscalls always. A user may want to set
-> > > madvise for specific pid from console and pass pid as argument.
-> > > pidfd would be an overkill in this case.
-> > > We usually call "kill -9 pid" from console. Why shouldn't process_madvise()
-> > > allow this?
-> > > 
-> > > I suggent to extend first argument to work with both pid and pidfd.
-> > > Look at what we have for waitid(idtype, id_t id, ...) for example:
-> > > 
-> > >        idtype == P_PID
-> > >               Wait for the child whose process ID matches id.
-> > > 
-> > >        idtype == P_PIDFD (since Linux 5.4)
-> > >               Wait for the child referred to by the PID file descriptor specified in id.  (See pidfd_open(2) for  further  information  on
-> > >               PID file descriptors.)
-> > > 
-> > > We may use @flags argument for this.
-> > 
-> > Sorry for chiming in just a comment. Overall, I don't particularly care
-> > how or if you integrate pidfd here. One thing I would like to point out
-> > is that we're working on a patch to place new features under pidfd
-> > specific flags. This e.g. means a pidfd would be only be able to be used
-> > for madvise operations (or getfd operations) if it was created with that
-> > specific flag set making it easier to share them with other processes.
-> > So if you integrate them here I would be quite thankful if you target
-> > the patchset for the v5.7 merge window, not for v5.6.
-> 
-> Hi Christian,
-> Sorry but I couldn't understand your point.
-> Could you clarify what you meant?
+Hello,
 
-Hi Minchan,
+Tiezhu Yang wrote:
+> If kzalloc fails, it should return -ENOMEM, otherwise may trigger a NULL
+> pointer dereference.
 
-Sure. When you create a pidfd, e.g. with clone3() and you'd wanted to
-use it for madvise you'd need to set a flag like pidfd_cap_madvise or
-pidfd_feature_madvise when you create the pidfd. Only if the pidfd was
-created with that flag set could you use it with madvise (This does not
-affect the permission checking you're performing here.). This has come
-up a couple of times and becomes more relevant now that people keep
-adding new features on top of pidfd and is similar to what we are now
-doing with openat2().
+Applied to mips-next.
 
-Christian
+> commit 72d052e28d1d
+> https://git.kernel.org/mips/c/72d052e28d1d
+> 
+> Fixes: 3adeb2566b9b ("MIPS: Loongson: Improve LEFI firmware interface")
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Signed-off-by: Paul Burton <paulburton@kernel.org>
+
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paulburton@kernel.org to report it. ]
