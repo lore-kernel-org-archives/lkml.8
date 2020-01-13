@@ -2,43 +2,45 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BC1C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3157EC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B452214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB0E121739
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 16:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="WP9flV1d"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="jo5rAFMt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbgAMQYW (ORCPT
+        id S1729195AbgAMQZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 11:24:22 -0500
-Received: from us03-smtprelay2.synopsys.com ([149.117.87.133]:37118 "EHLO
+        Mon, 13 Jan 2020 11:25:04 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:37178 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728828AbgAMQYW (ORCPT
+        by vger.kernel.org with ESMTP id S1728851AbgAMQYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Jan 2020 11:24:22 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C2582C05DD;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id BF727C05DC;
         Mon, 13 Jan 2020 16:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1578932661; bh=U5PGyuzYKgsTK65LxsaS/H5tZz4kpujdOpV377i/AMQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WP9flV1dSaev/vGxFPdJQ9kxfEJeOnkuyupAbk4CrBR6orqeeYf/lHO04DTTVShME
-         AtsqnZN8otFL039ZkSmPr5d1iqXKiLNpZmOQ1dfKg79ixLs4S1uqf5sC7h+GwJLHTZ
-         2oYmYjkLmUbajAt+pmO28E7FTn/eaGu4QrQhdXFddMajiipaAFABLX0DUrXyG5vY8r
-         DvWc3KFz2LLs9JQHNO56uAasEAyJbui1xDn2Ts+ooYYrSkSstr/H6ZOrv91373lvQr
-         1aMZZqZLVBILfIvdkgvbTCchXXGHuImn7dote85pB9EgPOCrV5wB4CR6g3IZg2FrMj
-         9oZ2WAn4Bqa5A==
+        t=1578932661; bh=QFbAowEgES03c5XYlcvZ5klAPG5SDoJ9C9pBH1nnTfI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=jo5rAFMt1qGcknTDOEZyL4jidlTULM8iivZaO6vPh6Ofnv8I0xw5sXsBLIKyK5KSS
+         8WrpV8FCrW7TtbVE8nJafDNNiCZBbeXEmoj36VeYhtm0+9mda6S/1x7ACfZ5flD3ch
+         R9O/qrtjFuYoSPVc0V5ju4lSkgEH0qcyeFTMRzZxN4BZ1WOgH1HpYeA/zvLGukf35g
+         3ClgAkzO0fqQryMNzQaevJzyoS5OdhsYU1WmOU8OxHCrVqORbQF2b+d+4gUhfl0Vqi
+         YjVnhF8mx5y5fOx1yo57iINyJqd/m5Fwzie2AofyqqT4+Sw6fd5N0ShciJr9KQcHgT
+         9i7vkpdeigDSg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 829CAA005B;
-        Mon, 13 Jan 2020 16:24:18 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 6797BA0062;
+        Mon, 13 Jan 2020 16:24:19 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -50,34 +52,27 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v3 0/8] net: stmmac: ETF support
-Date:   Mon, 13 Jan 2020 17:24:08 +0100
-Message-Id: <cover.1578932287.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net-next v3 2/8] net: stmmac: tc: Add support for ETF Scheduler using TBS
+Date:   Mon, 13 Jan 2020 17:24:10 +0100
+Message-Id: <eabd50e0464d13911b5512c9f2e0ed0f3dc7e6ef.1578932287.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1578932287.git.Jose.Abreu@synopsys.com>
+References: <cover.1578932287.git.Jose.Abreu@synopsys.com>
+In-Reply-To: <cover.1578932287.git.Jose.Abreu@synopsys.com>
+References: <cover.1578932287.git.Jose.Abreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds the support for ETF scheduler in stmmac.
+Adds the support for ETF scheduler using TBS feature which is available
+in XGMAC and QoS IPs.
 
-1) Starts adding the support by implementing Enhanced Descriptors in stmmac
-main core. This is needed for ETF feature in XGMAC and QoS cores.
+Changes from v2:
+- Fix checkpatch issues (Jakub)
+- Use the TBS bitfield
 
-2) Integrates the ETF logic into stmmac TC core.
-
-3) and 4) adds the HW specific support for ETF in XGMAC and QoS cores. The
-IP feature is called TBS (Time Based Scheduling).
-
-5) Enables ETF in GMAC5 IPK PCI entry for all Queues except Queue 0.
-
-6) Adds the new TBS feature and even more information into the debugFS
-HW features file.
-
-7) Switches the selftests mechanism to use dev_direct_xmit() so that we can
-send packets on specific Queues.
-
-8) Adds a new test for TBS feature.
+Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
@@ -90,36 +85,103 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
+ drivers/net/ethernet/stmicro/stmmac/common.h      |  1 +
+ drivers/net/ethernet/stmicro/stmmac/hwif.h        |  5 +++++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |  2 ++
+ drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c   | 21 +++++++++++++++++++++
+ 4 files changed, 29 insertions(+)
 
-Jose Abreu (8):
-  net: stmmac: Initial support for TBS
-  net: stmmac: tc: Add support for ETF Scheduler using TBS
-  net: stmmac: xgmac: Add TBS support
-  net: stmmac: gmac4+: Add TBS support
-  net: stmmac: pci: Enable TBS on GMAC5 IPK PCI entry
-  net: stmmac: Add missing information in DebugFS capabilities file
-  net: stmmac: selftests: Switch to dev_direct_xmit()
-  net: stmmac: selftests: Add a test for TBS feature
-
- drivers/net/ethernet/stmicro/stmmac/common.h       |   1 +
- drivers/net/ethernet/stmicro/stmmac/descs.h        |   9 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4.h       |   1 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.c |  10 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4_descs.h |   7 +
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.c   |  21 +++
- drivers/net/ethernet/stmicro/stmmac/dwmac4_dma.h   |   7 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  13 ++
- .../net/ethernet/stmicro/stmmac/dwxgmac2_descs.c   |   9 +
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c |  24 +++
- drivers/net/ethernet/stmicro/stmmac/hwif.h         |  12 ++
- drivers/net/ethernet/stmicro/stmmac/stmmac.h       |   5 +
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  | 207 ++++++++++++++-------
- drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   |   2 +
- .../net/ethernet/stmicro/stmmac/stmmac_selftests.c |  96 ++++++++--
- drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c    |  21 +++
- include/linux/stmmac.h                             |   1 +
- 17 files changed, 362 insertions(+), 84 deletions(-)
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/common.h b/drivers/net/ethernet/stmicro/stmmac/common.h
+index 31003b67d24f..487099092693 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/common.h
++++ b/drivers/net/ethernet/stmicro/stmmac/common.h
+@@ -368,6 +368,7 @@ struct dma_features {
+ 	unsigned int estdep;
+ 	unsigned int estsel;
+ 	unsigned int fpesel;
++	unsigned int tbssel;
+ };
+ 
+ /* RX Buffer size must be multiple of 4/8/16 bytes */
+diff --git a/drivers/net/ethernet/stmicro/stmmac/hwif.h b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+index 71c23cbd7af8..df63b0367aff 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/hwif.h
++++ b/drivers/net/ethernet/stmicro/stmmac/hwif.h
+@@ -533,6 +533,7 @@ struct tc_cls_u32_offload;
+ struct tc_cbs_qopt_offload;
+ struct flow_cls_offload;
+ struct tc_taprio_qopt_offload;
++struct tc_etf_qopt_offload;
+ 
+ struct stmmac_tc_ops {
+ 	int (*init)(struct stmmac_priv *priv);
+@@ -544,6 +545,8 @@ struct stmmac_tc_ops {
+ 			 struct flow_cls_offload *cls);
+ 	int (*setup_taprio)(struct stmmac_priv *priv,
+ 			    struct tc_taprio_qopt_offload *qopt);
++	int (*setup_etf)(struct stmmac_priv *priv,
++			 struct tc_etf_qopt_offload *qopt);
+ };
+ 
+ #define stmmac_tc_init(__priv, __args...) \
+@@ -556,6 +559,8 @@ struct stmmac_tc_ops {
+ 	stmmac_do_callback(__priv, tc, setup_cls, __args)
+ #define stmmac_tc_setup_taprio(__priv, __args...) \
+ 	stmmac_do_callback(__priv, tc, setup_taprio, __args)
++#define stmmac_tc_setup_etf(__priv, __args...) \
++	stmmac_do_callback(__priv, tc, setup_etf, __args)
+ 
+ struct stmmac_counters;
+ 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index baffb4e8d99a..43af4fc5ab8f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4159,6 +4159,8 @@ static int stmmac_setup_tc(struct net_device *ndev, enum tc_setup_type type,
+ 		return stmmac_tc_setup_cbs(priv, priv, type_data);
+ 	case TC_SETUP_QDISC_TAPRIO:
+ 		return stmmac_tc_setup_taprio(priv, priv, type_data);
++	case TC_SETUP_QDISC_ETF:
++		return stmmac_tc_setup_etf(priv, priv, type_data);
+ 	default:
+ 		return -EOPNOTSUPP;
+ 	}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+index 6c4686b77516..a4ce165af36b 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_tc.c
+@@ -727,10 +727,31 @@ static int tc_setup_taprio(struct stmmac_priv *priv,
+ 	return ret;
+ }
+ 
++static int tc_setup_etf(struct stmmac_priv *priv,
++			struct tc_etf_qopt_offload *qopt)
++{
++	if (!priv->dma_cap.tbssel)
++		return -EOPNOTSUPP;
++	if (qopt->queue >= priv->plat->tx_queues_to_use)
++		return -EINVAL;
++	if (!(priv->tx_queue[qopt->queue].tbs & STMMAC_TBS_AVAIL))
++		return -EINVAL;
++
++	if (qopt->enable)
++		priv->tx_queue[qopt->queue].tbs |= STMMAC_TBS_EN;
++	else
++		priv->tx_queue[qopt->queue].tbs &= ~STMMAC_TBS_EN;
++
++	netdev_info(priv->dev, "%s ETF for Queue %d\n",
++		    qopt->enable ? "enabled" : "disabled", qopt->queue);
++	return 0;
++}
++
+ const struct stmmac_tc_ops dwmac510_tc_ops = {
+ 	.init = tc_init,
+ 	.setup_cls_u32 = tc_setup_cls_u32,
+ 	.setup_cbs = tc_setup_cbs,
+ 	.setup_cls = tc_setup_cls,
+ 	.setup_taprio = tc_setup_taprio,
++	.setup_etf = tc_setup_etf,
+ };
 -- 
 2.7.4
 
