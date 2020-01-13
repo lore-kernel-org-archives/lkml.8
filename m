@@ -2,105 +2,117 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E64CEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDFBC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBCB32081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF2C52081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:35:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mXHlDgiS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="r1H9ZG5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbgAMSdy (ORCPT
+        id S1728797AbgAMSf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:33:54 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37353 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728516AbgAMSdy (ORCPT
+        Mon, 13 Jan 2020 13:35:26 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:40108 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728516AbgAMSf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:33:54 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f129so10835961wmf.2;
-        Mon, 13 Jan 2020 10:33:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZXLr4jt3Z0ly6bJlY2S1K+QAkB0UsTXiQL9zQoG2s4c=;
-        b=mXHlDgiSO7p/uX3R9XNTgDdGIu/YGZA6qA1uL9FgkaEBt6vhBsjXg3YO9i7CMOhB3j
-         MuaaxXJs/7qCYAEOy2rl0yDccD8H+XsP1E4tFJlOvdnNzUnD0BS58a3jfG/MalY4chV0
-         dOr1o8A8uUET4aVYVcbOfbaTOTLCHvjclGvrZHrFOgqByKRWF+qdD17NoRYOZLFIxhHw
-         dVpVKw9JiDqQN8uveu+hdDr0HHc1vnPKJI8ooC9hXAW2MKWtxD6feQNOS4M+xLC11235
-         ln/lgNKbndSLF+653ME1m/3cWrD6ygFqw8OM/mUwQF8A2ApvzcXk4Bt4GOH+ySRbDtCN
-         hmlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZXLr4jt3Z0ly6bJlY2S1K+QAkB0UsTXiQL9zQoG2s4c=;
-        b=ateiwigVuuCKHyvddOUuh6Z7ttbpm67aH4q+aGn/+IV9P4X0jtoWesMK0SKJ73q+g9
-         e0c6n/7Uc8aNsHfUVccNpLNBrB5OT1Rl3Tcf7i3XbsK+o6ueZ0FkQX8nBrvqUfCDGWY7
-         c5mvtVdcd5jZTMv5Mlh7p+GGwvLI8esyupMRyeeq8WZnRzEbPIdiMhjidpwBJ+tTyAA0
-         X0vYfiOm+ZWYcIbIhBQh126z/yugWbyBkFkjWKPOxjurkhZiCMo8h2X1VO7fIW8aPEk6
-         TGmWy+Z2qpjF01Q8lvKUAH6MDJQRWdgLJvSwSIc0B0datf1SQIW/DwT9ids0b2VldaSj
-         /3Hw==
-X-Gm-Message-State: APjAAAUms9voyA1oSVlF1P0BKEwyrMH9lEXgRLvdzkVBG+f+vf08/E0M
-        x35BXs0JRBEF/aPJ9cIdUm/EDdSD
-X-Google-Smtp-Source: APXvYqyGePBR9ORItEnsI4A/VolH7tK5HABxUgERqXN9F5gLMCg+0OuRxmIZVKfdKncZ1preY0W6VA==
-X-Received: by 2002:a7b:c5cd:: with SMTP id n13mr21557885wmk.172.1578940433124;
-        Mon, 13 Jan 2020 10:33:53 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id n1sm15518360wrw.52.2020.01.13.10.33.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 10:33:52 -0800 (PST)
-Subject: =?UTF-8?Q?Re=3a_=5bRFC_PATCH_v1_00/10=5d_Enable_RK3066_NANDC_for_MK?=
- =?UTF-8?B?ODA444CQ6K+35rOo5oSP77yM6YKu5Lu255SxbGludXgtcm9ja2NoaXAtYm91bmNl?=
- =?UTF-8?Q?s+shawn=2elin=3drock-chips=2ecom=40lists=2einfradead=2eorg?=
- =?UTF-8?B?5Luj5Y+R44CR?=
-To:     Shawn Lin <shawn.lin@rock-chips.com>, miquel.raynal@bootlin.com
-Cc:     mark.rutland@arm.com, devicetree@vger.kernel.org, vigneshr@ti.com,
-        richard@nod.at, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, robh+dt@kernel.org,
-        linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, heiko@sntech.de,
-        =?UTF-8?B?6LW15Luq5bOw?= <yifeng.zhao@rock-chips.com>
-References: <20200108205338.11369-1-jbx6244@gmail.com>
- <aad92eb5-00ed-5071-c206-491eff243537@rock-chips.com>
-From:   Johan Jonker <jbx6244@gmail.com>
-Message-ID: <73cb4b1a-aad3-c613-a642-1887905e3932@gmail.com>
-Date:   Mon, 13 Jan 2020 19:33:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 13 Jan 2020 13:35:26 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DIXPOM176061;
+        Mon, 13 Jan 2020 18:35:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=HXDDGSzgg1+VLbzPleiazKwhjMHpugozxt4GTzIIub4=;
+ b=r1H9ZG5Dmf5kb31eZYUtsWOTu8ez10SPC+g6EvFgeC6ySZIZvx2pQxla7rVH8rwP8NRL
+ 3DlVPHzDonOsuE1wJxpxY3cFoThAVogkPPw03dja54AKkbtl556BmB4vR50MieErtHjq
+ r8DY75tT+DpOPkfOLOhldRsHggren3gojmramg1NqWAMzbndgPY14FYfk7zcmh2wp9iz
+ XtE6raIX6xdR7ZIn8ry0ko7Ng6yVgCO0BFn67yBx2P8zzhbgCyXlD6CXTYj3vnl4vblJ
+ +gAmjHA9YOJuwXNUj22Ecuh51nCGrfwLXDANAqBY7cTtjPQlrCW7zrLfnCVmLkxakW3J 0w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2xf73y8sss-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 18:35:17 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DIYNUY171694;
+        Mon, 13 Jan 2020 18:35:17 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2xfrgj5yh9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 18:35:17 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00DIZG5P005040;
+        Mon, 13 Jan 2020 18:35:16 GMT
+Received: from [10.159.240.107] (/10.159.240.107)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jan 2020 10:35:16 -0800
+Subject: Re: [PATCH v2 1/2] Introduce maximum WQE size to check limits
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     monis@mellanox.com, dledford@redhat.com, sean.hefty@intel.com,
+        hal.rosenstock@gmail.com, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1574106879-19211-1-git-send-email-rao.shoaib@oracle.com>
+ <1574106879-19211-2-git-send-email-rao.shoaib@oracle.com>
+ <20191119203138.GA13145@ziepe.ca>
+ <44d1242a-fc32-9918-dd53-cd27ebf61811@oracle.com>
+ <20191119231334.GO4991@ziepe.ca>
+ <dff3da9b-06a3-3904-e9eb-7feaa1ae9e01@oracle.com>
+ <20191120000840.GQ4991@ziepe.ca>
+ <ccceac68-db4f-77a3-500d-12f60a8a1354@oracle.com>
+ <20191219182511.GI17227@ziepe.ca>
+From:   Rao Shoaib <rao.shoaib@oracle.com>
+Message-ID: <6da00014-0fd2-c7fc-93ab-7653b23aeb1e@oracle.com>
+Date:   Mon, 13 Jan 2020 10:35:14 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <aad92eb5-00ed-5071-c206-491eff243537@rock-chips.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
+In-Reply-To: <20191219182511.GI17227@ziepe.ca>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=763
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001130150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=824 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001130150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shawn,
 
-Thank you for your notice.
-In that case I think that I produce a version 2 "light",
-where I address only a small amount of the TODO's and leave all other
-things up to you, so that you can do what suits you best.
-Hope that RK3066 support for MTD can be included.(Linux and Uboot)
+On 12/19/19 10:25 AM, Jason Gunthorpe wrote:
+> On Tue, Dec 17, 2019 at 11:38:52AM -0800, Rao Shoaib wrote:
+>> Any update on my patch?
+>>
+>> If there is some change needed please let me know.
+> You need to repost it with the comments addressed
+>
+> https://patchwork.kernel.org/patch/11250179/
+>
+> Jason
+>
+Jason,
 
-Thanks
+Following is a pointer to the patch that I posted in response to your 
+comments
 
-On 1/13/20 2:55 AM, Shawn Lin wrote:
+https://www.spinics.net/lists/linux-rdma/msg86241.html
 
-> 
-> Hi Johan,
-> 
-> I loop in the author of the original NANDC driver who is now gonna to
-> develop a new version of NANDC driver in near future that supports more
-> features like bad block supoort. Maybe he could share his TODO.
-> 
+I posted this on Nov 18. Can you please take a look and let me know what 
+else has to be done.
+
+Shoaib
+
