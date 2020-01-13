@@ -2,102 +2,101 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65377C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E78C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:04:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36ABD207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5EB8207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:04:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cVuC+W4k"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="RYPWm/IX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728640AbgAMMDw (ORCPT
+        id S1728721AbgAMMET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:03:52 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34450 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgAMMDw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:03:52 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00DC2xCT066475;
-        Mon, 13 Jan 2020 06:02:59 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578916979;
-        bh=rCDlfrd8km2xUmG6bzFw3i5aptxyHAA7AlJkzYZgtyQ=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=cVuC+W4kzuwU4qxTixwv/TGhE6fRZz/ARLeW8MJZAtDXQPZb4HXWQPyB4Nyd+6V6q
-         7SELq/VFOVplT8d3W53dtCWrJ8wfaMZBkz19lA4npqPLJ7idhj+U4nFvkH0g5V06Ii
-         SC5cgrYR4BPSeeu4khDvOCA79SAKKuoccTORr71Y=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00DC2xu1105405
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jan 2020 06:02:59 -0600
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 13
- Jan 2020 06:02:59 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 13 Jan 2020 06:02:59 -0600
-Received: from [172.24.145.246] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00DC2tJF015538;
-        Mon, 13 Jan 2020 06:02:57 -0600
-Subject: Re: [PATCH] ARM: davinci: select CONFIG_RESET_CONTROLLER
-From:   Sekhar Nori <nsekhar@ti.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     <stable@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Lechner <david@lechnology.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191210195202.622734-1-arnd@arndb.de>
- <ba94531d-1f16-b985-5638-c226bab28d5b@ti.com>
-Message-ID: <1513bfee-6623-47fa-1eef-6074ba9ab3b8@ti.com>
-Date:   Mon, 13 Jan 2020 17:32:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 13 Jan 2020 07:04:19 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:9166 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728641AbgAMMES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 07:04:18 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 47xC1R5FbGz9txxD;
+        Mon, 13 Jan 2020 13:04:11 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=RYPWm/IX; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id Hval_bWc400h; Mon, 13 Jan 2020 13:04:11 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47xC1R4CpHz9txxC;
+        Mon, 13 Jan 2020 13:04:11 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1578917051; bh=MvSTc3YCiZWGwG0qnYB8ibq5lqkALByXbfzJloZm6VI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=RYPWm/IXQ/KxMHRniZs4sJA0UPIhBFyVBryEW3BKqF+e4rY1+/0Wr9KTb1Oy2Acmm
+         QrU95xCviWgxho42vEOCHJ/Ec2LbEtDqIZJ4fGcLpTEgDDzqFJ3q5Tte95EDnP9ZWN
+         /49rH0RisWsJHOGyX6JNukoKDcuHt44/tBSegBbY=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 82B088B7B7;
+        Mon, 13 Jan 2020 13:04:16 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 5C6xgoSYmG2P; Mon, 13 Jan 2020 13:04:16 +0100 (CET)
+Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 47C788B79F;
+        Mon, 13 Jan 2020 13:04:16 +0100 (CET)
+Subject: Re: [PATCH] lib: vdso: mark __cvdso_clock_getres() as static
+To:     Thomas Gleixner <tglx@linutronix.de>, arnd@arndb.de,
+        vincenzo.frascino@arm.com, luto@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        x86@kernel.org
+References: <e7becc50bee355e3872b84d91cc68ae8d7776bb9.1578764712.git.christophe.leroy@c-s.fr>
+ <875zhhsr0h.fsf@nanos.tec.linutronix.de>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <658045cd-3f97-946d-6920-bea772e9be24@c-s.fr>
+Date:   Mon, 13 Jan 2020 13:04:14 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <ba94531d-1f16-b985-5638-c226bab28d5b@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <875zhhsr0h.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
 
-On 11/12/19 3:42 PM, Sekhar Nori wrote:
-> Hi Arnd,
-> 
-> On 11/12/19 1:21 AM, Arnd Bergmann wrote:
->> Selecting RESET_CONTROLLER is actually required, otherwise we
->> can get a link failure in the clock driver:
+
+Le 11/01/2020 à 20:59, Thomas Gleixner a écrit :
+> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>> When __cvdso_clock_getres() became __cvdso_clock_getres_common()
+>> and a new __cvdso_clock_getres() was added, static qualifier was
+>> forgotten.
 >>
->> drivers/clk/davinci/psc.o: In function `__davinci_psc_register_clocks':
->> psc.c:(.text+0x9a0): undefined reference to `devm_reset_controller_register'
->> drivers/clk/davinci/psc-da850.o: In function `da850_psc0_init':
->> psc-da850.c:(.text+0x24): undefined reference to `reset_controller_add_lookup'
->>
->> Fixes: f962396ce292 ("ARM: davinci: support multiplatform build for ARM v5")
->> Cc: <stable@vger.kernel.org> # v5.4
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>> Fixes: 502a590a170b ("lib/vdso: Move fallback invocation to the callers")
+>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > 
-> Assuming you are going to apply directly to ARM-SoC,
+> I've already queued:
 > 
-> Acked-by: Sekhar Nori <nsekhar@ti.com>
+>       https://lore.kernel.org/r/20191128111719.8282-1-vincenzo.frascino@arm.com
+> 
+> but thanks for caring!
+> 
 
-This is not yet in Linus's master. Let me know if I should collect it
-and send a pull request.
 
-Thanks,
-Sekhar
+Is there a git tree with the latest VDSO status ?
+
+https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git?h=timers%2Fvdso 
+is 6 monthes old.
+
+Christophe
