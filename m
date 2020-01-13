@@ -2,77 +2,115 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87040C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 354A8C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F6A321569
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99F4207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:27:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="tKzaUnt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgAMIXS (ORCPT
+        id S1728800AbgAMI1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 03:23:18 -0500
-Received: from mga06.intel.com ([134.134.136.31]:18442 "EHLO mga06.intel.com"
+        Mon, 13 Jan 2020 03:27:06 -0500
+Received: from nbd.name ([46.4.11.11]:57666 "EHLO nbd.name"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728738AbgAMIXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 03:23:18 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 00:23:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,428,1571727600"; 
-   d="scan'208";a="422737910"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga005.fm.intel.com with ESMTP; 13 Jan 2020 00:23:15 -0800
-Date:   Mon, 13 Jan 2020 16:23:08 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
-        alexander.duyck@gmail.com, rientjes@google.com
-Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer list
-Message-ID: <20200113082308.GB27972@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200109143054.13203-1-richardw.yang@linux.intel.com>
- <20200111000352.efy6krudecpshezh@box>
- <20200112022858.GA17733@richard>
- <20200112225718.5vqzezfclacujyx3@box>
- <20200113004457.GA27762@richard>
- <20200113073614.jo2txcmazwlesl7b@box.shutemov.name>
+        id S1728680AbgAMI1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 03:27:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+         s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/NHwwQnGBAa85zcV4M8gNdsSSkTKTe3Kl6d6gN17ino=; b=tKzaUnt5QT42dRYU/FjhfrfmXF
+        liDld7MJepEdNDuZpRoJSCDIIssSb89CrgCkjhONFiFWr7YWBQIH2phOTbzAnEcQjVLTL2+1CG6U7
+        4RX7rRAIuuzvovpbMQ6U6FmI9hBwv00Plhb3hqh5d01LR7iDoXC2kTx9s03RqGfl5X3U=;
+Received: from [80.255.7.117] (helo=nf.local)
+        by ds12 with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <nbd@nbd.name>)
+        id 1iqv3u-0007t4-C7; Mon, 13 Jan 2020 09:27:02 +0100
+Subject: Re: [PATCH] ath9k: Fix possible data races in ath_set_channel()
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>, ath9k-devel@qca.qualcomm.com,
+        kvalo@codeaurora.org, davem@davemloft.net
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200111171528.7053-1-baijiaju1990@gmail.com>
+From:   Felix Fietkau <nbd@nbd.name>
+Autocrypt: addr=nbd@nbd.name; prefer-encrypt=mutual; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCfTKx80VvCR/PvsUlrvdOLsIgeRGAAn1ee
+ RjMaxwtSdaCKMw3j33ZbsWS4
+Message-ID: <67d7a9f7-546b-3dc9-07b2-846e390c1c5e@nbd.name>
+Date:   Mon, 13 Jan 2020 09:27:01 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113073614.jo2txcmazwlesl7b@box.shutemov.name>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200111171528.7053-1-baijiaju1990@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 10:36:14AM +0300, Kirill A. Shutemov wrote:
->On Mon, Jan 13, 2020 at 08:44:57AM +0800, Wei Yang wrote:
->> >> It is possible two page in the same pgdate or memcg grab page lock
->> >> respectively and then access the same defer queue concurrently.
->> 
->> If my understanding is correct, you agree with my statement?
->
->Which one? If the one above then no. list_empty only accesses list_head
->for the struct page, not the queue.
->
+On 2020-01-11 18:15, Jia-Ju Bai wrote:
+> The functions ath9k_config() and ath_ani_calibrate() may be concurrently
+> executed.
+> 
+> A variable survey->filled is accessed with holding a spinlock
+> common->cc_lock, through:
+> ath_ani_calibrate()
+>     spin_lock_irqsave(&common->cc_lock, flags);
+>     ath_update_survey_stats()
+>         ath_update_survey_nf()
+>             survey->filled |= SURVEY_INFO_NOISE_DBM;
+> 
+> The identical variables sc->cur_survey->filled and 
+> sc->survey[pos].filled is accessed without holding this lock, through:
+> ath9k_config()
+>     ath_chanctx_set_channel()
+>         ath_set_channel()
+>             sc->cur_survey->filled &= ~SURVEY_INFO_IN_USE;
+>             sc->cur_survey->filled |= SURVEY_INFO_IN_USE;
+>             else if (!(sc->survey[pos].filled & SURVEY_INFO_IN_USE))
+>             ath_update_survey_nf
+>                 survey->filled |= SURVEY_INFO_NOISE_DBM;
+> 
+> Thus, possible data races may occur.
+> 
+> To fix these data races, in ath_set_channel(), these variables are
+> accessed with holding the spinlock common->cc_lock.
+> 
+> These data races are found by the runtime testing of our tool DILP-2.
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+I think a much better solution would be to stop common->ani.timer
+earlier in ath_set_channel to prevent this race from occurring.
 
-Ah, I get your point.
-
->-- 
-> Kirill A. Shutemov
-
--- 
-Wei Yang
-Help you, Help me
+- Felix
