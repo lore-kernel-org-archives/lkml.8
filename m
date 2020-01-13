@@ -2,111 +2,195 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257B4C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49576C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E92D121734
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:42:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZYhi/3+P"
+	by mail.kernel.org (Postfix) with ESMTP id 09E0824655
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:42:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578930158;
+	bh=RVsyyyEak92HbEk5ozmzJ7WvLdzHYvkt6miQWJICS50=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=cxHoMV4grn5iwypysTzQSlb1FBK3YDr65ADCM4TEfNFr6Oben/UMIGsj4Rlf1AgG3
+	 nwuCrvQJkxEW1LFx7K7bP8TJrP70a7Lp3ztfF2Q7jPW3DiyNFExrvefrXr/XSZ67ry
+	 Kh4UCkpxPkK91pXKAqnCqsWyrRzokEVlO344U3MM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgAMPmG (ORCPT
+        id S1728765AbgAMPmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 10:42:06 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9550 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgAMPmF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 10:42:05 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e1c8f970000>; Mon, 13 Jan 2020 07:41:11 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 13 Jan 2020 07:42:04 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 13 Jan 2020 07:42:04 -0800
-Received: from [10.26.11.97] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 13 Jan
- 2020 15:41:59 +0000
-Subject: Re: [PATCH 4.4 00/59] 4.4.209-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20200111094835.417654274@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <fd992536-19c4-12ab-166e-2dd76a190c70@nvidia.com>
-Date:   Mon, 13 Jan 2020 15:41:57 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 13 Jan 2020 10:42:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727286AbgAMPmg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 10:42:36 -0500
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E45A21739;
+        Mon, 13 Jan 2020 15:42:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578930155;
+        bh=RVsyyyEak92HbEk5ozmzJ7WvLdzHYvkt6miQWJICS50=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zsMXx19K/zG854+NtB/NSsH0j0812u2mBkgKLZHL36fLhfQBHrThEZkuTyd99dmPY
+         rmgmR7O0wWFyxqDN1663OT1yr9EMHeTgq0S8YqbPQjjnWSnUyQpgjxAHP5MF8E+Qsy
+         PgeAOpFuIKlp0GsxxajNArfw9mrxd+/ArZxe+g1Y=
+Received: by mail-qk1-f176.google.com with SMTP id x129so8842308qke.8;
+        Mon, 13 Jan 2020 07:42:35 -0800 (PST)
+X-Gm-Message-State: APjAAAUB75kPCkO9P+Z3R9Fm5hpA5I5Sk5KA8v1vdX/Bp4CVVGcYF5Wg
+        BzTH8SPrj5xZ3omss6RCArmJ09jTkAfj7jg2Kg==
+X-Google-Smtp-Source: APXvYqzd0iEA7ClpG/m//hBuec06RmDCtwQlY/Y+ZnupRPmSRvxene/XYpn3ed7tl82meicsVhfecOBtCK0sGE5Gue4=
+X-Received: by 2002:a05:620a:135b:: with SMTP id c27mr15396199qkl.119.1578930154331;
+ Mon, 13 Jan 2020 07:42:34 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200111094835.417654274@linuxfoundation.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1578930071; bh=/cb+LW5V4BGKSwoExv9t+5tgaDgUsBAGjR+JC3FTmmY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ZYhi/3+PS8paf9U1TB7vfVeJfHJfZK4Exd4UKcR1cGCRWpk32RCFt0aIwsLABGnmX
-         wBo3kstghazrCE2u0yak41EAdAAs35nduhf0vhUi7mYGIYw6aW+C/jxRAtu7RooV3l
-         rZ3PNr8XV/AvgSPJ4Wd9KS8n9+xLJd4YZ/OPjNxkFINhiPxMfpwGAmw2PV6x8Lx/YT
-         6KcBtUtx1P20NjdV9mM7vXWcf0v7Goxo+pLiY9TZkRxpxD/hhfAr8pNiCNkfu8HroX
-         xcD1Q8nUTZqDQqAwxNASiLMPAY3qhLG77r5sLC6xfgjQIZAucLv6htPNZAfaFeFhXL
-         TQq57fbxQxWdA==
+References: <1577165532-28772-1-git-send-email-sthella@codeaurora.org>
+ <20200108163943.GA26863@bogus> <8aeb91730552357db340f8bfb21e6d15@codeaurora.org>
+ <CAL_JsqL5Gh2A3KfCgRFv+B50Y4PPF1b+qq8vY6yKhbea6KPAkw@mail.gmail.com> <b4f2fcc0d0a6724d77947f917f114d80@codeaurora.org>
+In-Reply-To: <b4f2fcc0d0a6724d77947f917f114d80@codeaurora.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 13 Jan 2020 09:42:22 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLZN9F9=1sqFkoaWpwNKDOUAgOMrc9cqk-iohMxkeM-8A@mail.gmail.com>
+Message-ID: <CAL_JsqLZN9F9=1sqFkoaWpwNKDOUAgOMrc9cqk-iohMxkeM-8A@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: nvmem: add binding for QTI SPMI SDAM
+To:     Shyam Kumar Thella <sthella@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 10, 2020 at 2:54 AM <sthella@codeaurora.org> wrote:
+>
+> On 2020-01-09 21:01, Rob Herring wrote:
+> > On Thu, Jan 9, 2020 at 4:57 AM <sthella@codeaurora.org> wrote:
+> >>
+> >> On 2020-01-08 22:09, Rob Herring wrote:
+> >> > On Tue, Dec 24, 2019 at 11:02:12AM +0530, Shyam Kumar Thella wrote:
+> >> >> QTI SDAM allows PMIC peripherals to access the shared memory that is
+> >> >> available on QTI PMICs. Add documentation for it.
+> >> >>
+> >> >> Signed-off-by: Shyam Kumar Thella <sthella@codeaurora.org>
+> >> >> ---
+> >> >>  .../devicetree/bindings/nvmem/qcom,spmi-sdam.yaml  | 79
+> >> >> ++++++++++++++++++++++
+> >> >>  1 file changed, 79 insertions(+)
+> >> >>  create mode 100644
+> >> >> Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+> >> >>
+> >> >> diff --git
+> >> >> a/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+> >> >> b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+> >> >> new file mode 100644
+> >> >> index 0000000..8961a99
+> >> >> --- /dev/null
+> >> >> +++ b/Documentation/devicetree/bindings/nvmem/qcom,spmi-sdam.yaml
+> >> >> @@ -0,0 +1,79 @@
+> >> >> +# SPDX-License-Identifier: GPL-2.0
+> >> >
+> >> > Dual license new bindings:
+> >> >
+> >> > (GPL-2.0-only OR BSD-2-Clause)
+> >> >
+> >> > Please spread the word in QCom.
+> >> Sure. I will add Dual license in next patchset.
+> >> >
+> >> >> +%YAML 1.2
+> >> >> +---
+> >> >> +$id: http://devicetree.org/schemas/nvmem/qcom,spmi-sdam.yaml#
+> >> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> >> +
+> >> >> +title: Qualcomm Technologies, Inc. SPMI SDAM DT bindings
+> >> >> +
+> >> >> +maintainers:
+> >> >> +  - Shyam Kumar Thella <sthella@codeaurora.org>
+> >> >> +
+> >> >> +description: |
+> >> >> +  The SDAM provides scratch register space for the PMIC clients. This
+> >> >> +  memory can be used by software to store information or communicate
+> >> >> +  to/from the PBUS.
+> >> >> +
+> >> >> +allOf:
+> >> >> +  - $ref: "nvmem.yaml#"
+> >> >> +
+> >> >> +properties:
+> >> >> +  compatible:
+> >> >> +    enum:
+> >> >> +      - qcom,spmi-sdam
+> >> >> +
+> >> >> +  reg:
+> >> >> +    maxItems: 1
+> >> >> +
+> >> >> +  "#address-cells":
+> >> >> +    const: 1
+> >> >> +
+> >> >> +  "#size-cells":
+> >> >> +    const: 1
+> >> >
+> >> > ranges? The child addresses should be translateable I assume.
+> >> The addresses are not memory mapped on the CPU's address domain. They
+> >> are the SPMI addresses which can be accessed over SPMI controller.
+> >
+> > Doesn't have to be a CPU address. Are the child offsets within the
+> > range defined in the parent 'reg'? If so, then it should have
+> > 'ranges'.
+> Yes the child offsets fall within parent reg's address space.
+> I will add ranges in the next patch set.
+> >
+> >> >
+> >> >> +
+> >> >> +required:
+> >> >> +  - compatible
+> >> >> +  - reg
+> >> >> +
+> >> >> +patternProperties:
+> >> >> +  "^.*@[0-9a-f]+$":
+> >> >> +    type: object
+> >> >> +
+> >> >> +    properties:
+> >> >> +      reg:
+> >> >> +        maxItems: 1
+> >> >> +        description:
+> >> >> +          Offset and size in bytes within the storage device.
+> >> >> +
+> >> >> +      bits:
+> >> >
+> >> > Needs a type reference.
+> >> Yes. I will add a reference in the next patch set.
+> >> >
+> >> >> +        maxItems: 1
+> >> >> +        items:
+> >> >> +          items:
+> >> >> +            - minimum: 0
+> >> >> +              maximum: 7
+> >> >> +              description:
+> >> >> +                Offset in bit within the address range specified by
+> >> >> reg.
+> >> >> +            - minimum: 1
+> >> >
+> >> > max is 7?
+> >> I don't think it is limited to 7 as it is the size within the address
+> >> range specified by reg. If the address range is more than a byte size
+> >> can be more.
+> >
+> > Then why is the maximum offset 7?
+> I see. Offset can be more than 7 within the address range specified in
+> case
+> of data cells with more than a byte. I will remove maximum in the next
+> patch set.
 
-On 11/01/2020 09:49, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.4.209 release.
-> There are 59 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Mon, 13 Jan 2020 09:46:17 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.209-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
+That's the wrong thing to do though. If the offset is more than 7, you
+should just increase 'reg' value. IOW, 'bits' should only be used to
+express bit position up to the minimum alignment of 'reg'. I guess you
+could have an unaligned multi-byte field, so I guess this is fine
+as-is.
 
-
-All tests are passing for Tegra ...
-
-Test results for stable-v4.4:
-    6 builds:	6 pass, 0 fail
-    12 boots:	12 pass, 0 fail
-    16 tests:	16 pass, 0 fail
-
-Linux version:	4.4.209-rc1-gce8c9a6be3d9
-Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
-                tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+Rob
