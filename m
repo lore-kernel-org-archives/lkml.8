@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C06FC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50739C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CFBE24655
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D69820678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbgAMTKl (ORCPT
+        id S1728833AbgAMTKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:10:41 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39985 "EHLO
+        Mon, 13 Jan 2020 14:10:47 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39973 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729009AbgAMTJx (ORCPT
+        with ESMTP id S1728994AbgAMTJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:09:53 -0500
+        Mon, 13 Jan 2020 14:09:50 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ir55s-00018B-Tp; Mon, 13 Jan 2020 20:09:45 +0100
+        id 1ir55u-0001Ap-Vm; Mon, 13 Jan 2020 20:09:47 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5CBFF1C18ED;
-        Mon, 13 Jan 2020 20:09:31 +0100 (CET)
-Date:   Mon, 13 Jan 2020 19:09:31 -0000
-From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B810B1C18E1;
+        Mon, 13 Jan 2020 20:09:32 +0100 (CET)
+Date:   Mon, 13 Jan 2020 19:09:32 -0000
+From:   "tip-bot2 for Vincenzo Frascino" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] time: Add timens_offsets to be used for tasks in
- time namespace
-Cc:     Andrei Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>,
+Subject: [tip: timers/core] x86/vdso: Remove unused VDSO_HAS_32BIT_FALLBACK
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191112012724.250792-5-dima@arista.com>
-References: <20191112012724.250792-5-dima@arista.com>
+In-Reply-To: <20190830135902.20861-9-vincenzo.frascino@arm.com>
+References: <20190830135902.20861-9-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Message-ID: <157894257123.19145.5195489599326442618.tip-bot2@tip-bot2>
+Message-ID: <157894257262.19145.17524089334624432015.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,101 +56,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     cad1baec2018c6c0776c4b6a49532b9e44dc3f14
-Gitweb:        https://git.kernel.org/tip/cad1baec2018c6c0776c4b6a49532b9e44dc3f14
-Author:        Andrei Vagin <avagin@openvz.org>
-AuthorDate:    Tue, 12 Nov 2019 01:26:53 
+Commit-ID:     3dc69d086be439c143adbfc6ff62704f1be21039
+Gitweb:        https://git.kernel.org/tip/3dc69d086be439c143adbfc6ff62704f1be21039
+Author:        Vincenzo Frascino <vincenzo.frascino@arm.com>
+AuthorDate:    Fri, 30 Aug 2019 14:59:02 +01:00
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 13 Jan 2020 08:10:48 +01:00
+CommitterDate: Fri, 10 Jan 2020 21:14:06 +01:00
 
-time: Add timens_offsets to be used for tasks in time namespace
+x86/vdso: Remove unused VDSO_HAS_32BIT_FALLBACK
 
-Introduce offsets for time namespace. They will contain an adjustment
-needed to convert clocks to/from host's.
+VDSO_HAS_32BIT_FALLBACK has been removed from the core since
+the architectures that support the generic vDSO library have
+been converted to support the 32 bit fallbacks.
 
-A new namespace is created with the same offsets as the time namespace
-of the current process.
+Remove unused VDSO_HAS_32BIT_FALLBACK from x86 vdso.
 
-Co-developed-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Andrei Vagin <avagin@openvz.org>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191112012724.250792-5-dima@arista.com
+Link: https://lore.kernel.org/r/20190830135902.20861-9-vincenzo.frascino@arm.com
 
 ---
- include/linux/time_namespace.h | 22 ++++++++++++++++++++++
- kernel/time/namespace.c        |  2 ++
- 2 files changed, 24 insertions(+)
+ arch/x86/include/asm/vdso/gettimeofday.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
-index 8c74cc1..d7e3b49 100644
---- a/include/linux/time_namespace.h
-+++ b/include/linux/time_namespace.h
-@@ -12,11 +12,17 @@
- struct user_namespace;
- extern struct user_namespace init_user_ns;
+diff --git a/arch/x86/include/asm/vdso/gettimeofday.h b/arch/x86/include/asm/vdso/gettimeofday.h
+index e9ee139..52c3bcd 100644
+--- a/arch/x86/include/asm/vdso/gettimeofday.h
++++ b/arch/x86/include/asm/vdso/gettimeofday.h
+@@ -96,8 +96,6 @@ long clock_getres_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
  
-+struct timens_offsets {
-+	struct timespec64 monotonic;
-+	struct timespec64 boottime;
-+};
-+
- struct time_namespace {
- 	struct kref		kref;
- 	struct user_namespace	*user_ns;
- 	struct ucounts		*ucounts;
- 	struct ns_common	ns;
-+	struct timens_offsets	offsets;
- } __randomize_layout;
- 
- extern struct time_namespace init_time_ns;
-@@ -39,6 +45,20 @@ static inline void put_time_ns(struct time_namespace *ns)
- 	kref_put(&ns->kref, free_time_ns);
- }
- 
-+static inline void timens_add_monotonic(struct timespec64 *ts)
-+{
-+	struct timens_offsets *ns_offsets = &current->nsproxy->time_ns->offsets;
-+
-+	*ts = timespec64_add(*ts, ns_offsets->monotonic);
-+}
-+
-+static inline void timens_add_boottime(struct timespec64 *ts)
-+{
-+	struct timens_offsets *ns_offsets = &current->nsproxy->time_ns->offsets;
-+
-+	*ts = timespec64_add(*ts, ns_offsets->boottime);
-+}
-+
  #else
- static inline struct time_namespace *get_time_ns(struct time_namespace *ns)
+ 
+-#define VDSO_HAS_32BIT_FALLBACK	1
+-
+ static __always_inline
+ long clock_gettime_fallback(clockid_t _clkid, struct __kernel_timespec *_ts)
  {
-@@ -66,6 +86,8 @@ static inline int timens_on_fork(struct nsproxy *nsproxy,
- 	return 0;
- }
- 
-+static inline void timens_add_monotonic(struct timespec64 *ts) { }
-+static inline void timens_add_boottime(struct timespec64 *ts) { }
- #endif
- 
- #endif /* _LINUX_TIMENS_H */
-diff --git a/kernel/time/namespace.c b/kernel/time/namespace.c
-index 2662a69..c2a58e4 100644
---- a/kernel/time/namespace.c
-+++ b/kernel/time/namespace.c
-@@ -14,6 +14,7 @@
- #include <linux/slab.h>
- #include <linux/cred.h>
- #include <linux/err.h>
-+#include <linux/mm.h>
- 
- static struct ucounts *inc_time_namespaces(struct user_namespace *ns)
- {
-@@ -60,6 +61,7 @@ static struct time_namespace *clone_time_ns(struct user_namespace *user_ns,
- 	ns->ucounts = ucounts;
- 	ns->ns.ops = &timens_operations;
- 	ns->user_ns = get_user_ns(user_ns);
-+	ns->offsets = old_ns->offsets;
- 	return ns;
- 
- fail_free:
