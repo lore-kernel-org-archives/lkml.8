@@ -2,76 +2,281 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1076C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 716CEC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:51:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBAF6207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399BC2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 17:51:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="UhHb59JJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgAMRul (ORCPT
+        id S1728801AbgAMRv6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 12:50:41 -0500
-Received: from muru.com ([72.249.23.125]:50750 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgAMRuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 12:50:40 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id B3D868047;
-        Mon, 13 Jan 2020 17:51:21 +0000 (UTC)
-Date:   Mon, 13 Jan 2020 09:50:36 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Robert Nelson <robertcnelson@gmail.com>
-Cc:     "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
-        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm: dts: am335x-boneblack-common: fix memory size
-Message-ID: <20200113175036.GL5885@atomide.com>
-References: <20200106130909.7697-1-matwey@sai.msu.ru>
- <CAOCHtYgyN+qXXX1YeEcO+nvRFrAL1HAVVMvjfeJ5nvxVjtFKtg@mail.gmail.com>
- <CAJs94EbUL6o9sM+pwxwpqHVDkFqy7wFRirET-Vq3SNVd3grUsA@mail.gmail.com>
- <20200106210509.GF5885@atomide.com>
- <CAOCHtYhKUyUwunnWDT1CuRTpzS78d7xKq3qB3Phys7RgUZnM3w@mail.gmail.com>
+        Mon, 13 Jan 2020 12:51:58 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:52459 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728641AbgAMRv5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 12:51:57 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1578937916; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=ombH+SYwC37lMpgEuedoKs2/ILJEt2p/GnXt9vDnvJA=; b=UhHb59JJcKnloXP0un9oeVSB/xnlaPA2OuQRttmZvF3/PINBKZpf1fNO1RdWcqHFvwTIYQn+
+ q+1undZK9A4VtpGJQaQKbUpka2DFbtbedg0pWQi96oreaJrsLKVUXb2/ilkhsVfEqbgyiYOb
+ qK2G2Jd/OzDJyanOtg7JdbTHOFg=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e1cae39.7f4196409378-smtp-out-n02;
+ Mon, 13 Jan 2020 17:51:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CD064C433A2; Mon, 13 Jan 2020 17:51:52 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E3E8AC433CB;
+        Mon, 13 Jan 2020 17:51:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E3E8AC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 13 Jan 2020 10:51:49 -0700
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Brian Ho <brian@brkho.com>
+Cc:     freedreno@lists.freedesktop.org, robdclark@chromium.org,
+        David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>, hoegsberg@chromium.org,
+        Sean Paul <sean@poorly.run>
+Subject: Re: [Freedreno] [PATCH 2/2] drm/msm: Add MSM_WAIT_IOVA ioctl
+Message-ID: <20200113175148.GC26711@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Brian Ho <brian@brkho.com>,
+        freedreno@lists.freedesktop.org, robdclark@chromium.org,
+        David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+        hoegsberg@chromium.org, Sean Paul <sean@poorly.run>
+References: <20200113153605.52350-1-brian@brkho.com>
+ <20200113153605.52350-3-brian@brkho.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOCHtYhKUyUwunnWDT1CuRTpzS78d7xKq3qB3Phys7RgUZnM3w@mail.gmail.com>
+In-Reply-To: <20200113153605.52350-3-brian@brkho.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Robert Nelson <robertcnelson@gmail.com> [200107 18:33]:
-> On Mon, Jan 6, 2020 at 3:05 PM Tony Lindgren <tony@atomide.com> wrote:
-> >
-> > * Matwey V. Kornilov <matwey@sai.msu.ru> [200106 20:48]:
-> > > пн, 6 янв. 2020 г. в 23:44, Robert Nelson <robertcnelson@gmail.com>:
-> > > >
-> > > > On Mon, Jan 6, 2020 at 7:10 AM Matwey V. Kornilov <matwey@sai.msu.ru> wrote:
-> > > > >
-> > > > > BeagleBone Black series is equipped with 512MB RAM
-> > > > > whereas only 256MB is included from am335x-bone-common.dtsi
-> > > >
-> > > > FYI: While all versions from the factory are 512MB, some 3rd parties
-> > > > offered 1GB reballing upgrades..
-> >
-> > So what's the conclusion, is it safe to bump the default size to
-> > 512MB then?
-> >
-> > The custom ones could use their own dts file if bootloader is not
-> > setting the RAM.
+On Mon, Jan 13, 2020 at 10:36:05AM -0500, Brian Ho wrote:
+> Implements an ioctl to wait until a value at a given iova is greater
+> than or equal to a supplied value.
 > 
-> Yeah this is safe for factory devices. Classic u-boot will update
-> these for modified boards.
+> This will initially be used by turnip (open-source Vulkan driver for
+> QC in mesa) for occlusion queries where the userspace driver can
+> block on a query becoming available before continuing via
+> vkGetQueryPoolResults.
+> 
+> Signed-off-by: Brian Ho <brian@brkho.com>
+> ---
+>  drivers/gpu/drm/msm/msm_drv.c | 63 +++++++++++++++++++++++++++++++++--
+>  include/uapi/drm/msm_drm.h    | 13 ++++++++
+>  2 files changed, 74 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index c84f0a8b3f2c..dcc46874a5a2 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -36,10 +36,11 @@
+>   *           MSM_GEM_INFO ioctl.
+>   * - 1.4.0 - softpin, MSM_RELOC_BO_DUMP, and GEM_INFO support to set/get
+>   *           GEM object's debug name
+> - * - 1.5.0 - Add SUBMITQUERY_QUERY ioctl
+> + * - 1.5.0 - Add SUBMITQUEUE_QUERY ioctl
+> + * - 1.6.0 - Add WAIT_IOVA ioctl
+>   */
+>  #define MSM_VERSION_MAJOR	1
+> -#define MSM_VERSION_MINOR	5
+> +#define MSM_VERSION_MINOR	6
+>  #define MSM_VERSION_PATCHLEVEL	0
+>  
+>  static const struct drm_mode_config_funcs mode_config_funcs = {
+> @@ -952,6 +953,63 @@ static int msm_ioctl_submitqueue_close(struct drm_device *dev, void *data,
+>  	return msm_submitqueue_remove(file->driver_priv, id);
+>  }
+>  
+> +static int msm_ioctl_wait_iova(struct drm_device *dev, void *data,
+> +		struct drm_file *file)
+> +{
+> +	struct msm_drm_private *priv = dev->dev_private;
+> +	struct drm_gem_object *obj;
+> +	struct drm_msm_wait_iova *args = data;
+> +	ktime_t timeout = to_ktime(args->timeout);
+> +	unsigned long remaining_jiffies = timeout_to_jiffies(&timeout);
+> +	struct msm_gpu *gpu = priv->gpu;
+> +	void *base_vaddr;
+> +	uint64_t *vaddr;
+> +	int ret;
+> +
+> +	if (args->pad)
+> +		return -EINVAL;
+> +
+> +	if (!gpu)
+> +		return 0;
 
-OK applying into fixes thanks.
+If the GPU isn't up, it should be an error since this macro is specifically
+designed for just the GPU (though, I suppose the display *COULD* use it to watch
+a memory mapped register or something).
 
-Tony
+> +
+> +	obj = drm_gem_object_lookup(file, args->handle);
+> +	if (!obj)
+> +		return -ENOENT;
+> +
+> +	base_vaddr = msm_gem_get_vaddr(obj);
+> +	if (IS_ERR(base_vaddr)) {
+> +		ret = PTR_ERR(base_vaddr);
+> +		goto err_put_gem_object;
+> +	}
+> +	if (args->offset + sizeof(*vaddr) > obj->size) {
+
+There is a chance to trigger a u64 overflow here resulting in an arbitrary (ish)
+vaddr two lines below.
+
+
+> +		ret = -EINVAL;
+> +		goto err_put_vaddr;
+> +	}
+
+You can check this before getting the vaddr which would save you a clean up
+step.
+
+> +
+> +	vaddr = base_vaddr + args->offset;
+> +
+> +	/* Assumes WC mapping */
+> +	ret = wait_event_interruptible_timeout(
+> +			gpu->event, *vaddr >= args->value, remaining_jiffies);
+
+I feel like a barrier might be needed before checking *vaddr just in case you
+get the interrupt and wake up the queue before the write posts from the
+hardware.
+
+> +
+
+> +	if (ret == 0) {
+> +		ret = -ETIMEDOUT;
+> +		goto err_put_vaddr;
+> +	} else if (ret == -ERESTARTSYS) {
+> +		goto err_put_vaddr;
+> +	}
+
+You don't need either goto here because both paths execute the following cleanup
+steps. I'm also not sure you need to worry about explicitly checking the
+ERESTARTSYS value, I think that this would be sufficient:
+
+ if (ret == 0)
+     ret = -ETIMEDOUT;
+ else if (ret > 0)
+     ret = 0;
+
+> +
+
+Put your err_put_vaddr: label here, but looking up, if you move the bounds check
+before the msm_gem_get_vaddr, I don't think you need a label.
+
+> +	msm_gem_put_vaddr(obj);
+
+Put the err_put_gem_object: label here.
+
+> +	drm_gem_object_put_unlocked(obj);
+> +	return 0;
+
+return ret;
+
+> +
+> +err_put_vaddr:
+> +	msm_gem_put_vaddr(obj);
+> +err_put_gem_object:
+> +	drm_gem_object_put_unlocked(obj);
+> +	return ret;
+> +}
+
+And then these guys aren't needed.
+
+> +
+>  static const struct drm_ioctl_desc msm_ioctls[] = {
+>  	DRM_IOCTL_DEF_DRV(MSM_GET_PARAM,    msm_ioctl_get_param,    DRM_RENDER_ALLOW),
+>  	DRM_IOCTL_DEF_DRV(MSM_GEM_NEW,      msm_ioctl_gem_new,      DRM_RENDER_ALLOW),
+> @@ -964,6 +1022,7 @@ static const struct drm_ioctl_desc msm_ioctls[] = {
+>  	DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_NEW,   msm_ioctl_submitqueue_new,   DRM_RENDER_ALLOW),
+>  	DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_CLOSE, msm_ioctl_submitqueue_close, DRM_RENDER_ALLOW),
+>  	DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_QUERY, msm_ioctl_submitqueue_query, DRM_RENDER_ALLOW),
+> +	DRM_IOCTL_DEF_DRV(MSM_WAIT_IOVA, msm_ioctl_wait_iova, DRM_RENDER_ALLOW),
+>  };
+>  
+>  static const struct vm_operations_struct vm_ops = {
+> diff --git a/include/uapi/drm/msm_drm.h b/include/uapi/drm/msm_drm.h
+> index 0b85ed6a3710..8477f28a4ee1 100644
+> --- a/include/uapi/drm/msm_drm.h
+> +++ b/include/uapi/drm/msm_drm.h
+> @@ -298,6 +298,17 @@ struct drm_msm_submitqueue_query {
+>  	__u32 pad;
+>  };
+>  
+> +/* This ioctl blocks until the u64 value at bo + offset is greater than or
+> + * equal to the reference value.
+> + */
+> +struct drm_msm_wait_iova {
+> +	__u32 handle;          /* in, GEM handle */
+> +	__u32 pad;
+> +	struct drm_msm_timespec timeout;   /* in */
+> +	__u64 offset;          /* offset into bo */
+> +	__u64 value;           /* reference value */
+
+Any specific reason why we wouldn't just put the offset and value first and save
+ourselves the padding?
+
+> +};
+> +
+>  #define DRM_MSM_GET_PARAM              0x00
+>  /* placeholder:
+>  #define DRM_MSM_SET_PARAM              0x01
+> @@ -315,6 +326,7 @@ struct drm_msm_submitqueue_query {
+>  #define DRM_MSM_SUBMITQUEUE_NEW        0x0A
+>  #define DRM_MSM_SUBMITQUEUE_CLOSE      0x0B
+>  #define DRM_MSM_SUBMITQUEUE_QUERY      0x0C
+> +#define DRM_MSM_WAIT_IOVA      0x0D
+>  
+>  #define DRM_IOCTL_MSM_GET_PARAM        DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_GET_PARAM, struct drm_msm_param)
+>  #define DRM_IOCTL_MSM_GEM_NEW          DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_GEM_NEW, struct drm_msm_gem_new)
+> @@ -327,6 +339,7 @@ struct drm_msm_submitqueue_query {
+>  #define DRM_IOCTL_MSM_SUBMITQUEUE_NEW    DRM_IOWR(DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_NEW, struct drm_msm_submitqueue)
+>  #define DRM_IOCTL_MSM_SUBMITQUEUE_CLOSE  DRM_IOW (DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_CLOSE, __u32)
+>  #define DRM_IOCTL_MSM_SUBMITQUEUE_QUERY  DRM_IOW (DRM_COMMAND_BASE + DRM_MSM_SUBMITQUEUE_QUERY, struct drm_msm_submitqueue_query)
+> +#define DRM_IOCTL_MSM_WAIT_IOVA        DRM_IOW (DRM_COMMAND_BASE + DRM_MSM_WAIT_IOVA, struct drm_msm_wait_iova)
+>  
+>  #if defined(__cplusplus)
+>  }
+> -- 
+> 2.25.0.rc1.283.g88dfdc4193-goog
+> 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
