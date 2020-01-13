@@ -2,96 +2,154 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD302C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:12:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD44C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BADE9214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A0A214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:12:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gYw0raqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729075AbgAMPMe (ORCPT
+        id S1729099AbgAMPMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 10:12:34 -0500
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:40047 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726567AbgAMPMe (ORCPT
+        Mon, 13 Jan 2020 10:12:40 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:43357 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbgAMPMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 10:12:34 -0500
-X-Originating-IP: 90.76.211.102
-Received: from localhost (lfbn-tou-1-1151-102.w90-76.abo.wanadoo.fr [90.76.211.102])
-        (Authenticated sender: antoine.tenart@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id C550C1BF213;
-        Mon, 13 Jan 2020 15:12:31 +0000 (UTC)
-Date:   Mon, 13 Jan 2020 16:12:31 +0100
-From:   Antoine Tenart <antoine.tenart@bootlin.com>
-To:     Jiri Pirko <jiri@resnulli.us>
-Cc:     Antoine Tenart <antoine.tenart@bootlin.com>, davem@davemloft.net,
-        sd@queasysnail.net, andrew@lunn.ch, f.fainelli@gmail.com,
-        hkallweit1@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
-        alexandre.belloni@bootlin.com, allan.nielsen@microchip.com,
-        camelia.groza@nxp.com, Simon.Edelhaus@aquantia.com,
-        Igor.Russkikh@aquantia.com, jakub.kicinski@netronome.com
-Subject: Re: [PATCH net-next v5 02/15] net: macsec: introduce the
- macsec_context structure
-Message-ID: <20200113151231.GD3078@kwain>
-References: <20200110162010.338611-1-antoine.tenart@bootlin.com>
- <20200110162010.338611-3-antoine.tenart@bootlin.com>
- <20200113143956.GB2131@nanopsycho>
+        Mon, 13 Jan 2020 10:12:36 -0500
+Received: by mail-io1-f68.google.com with SMTP id n21so10119200ioo.10
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 07:12:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2SUlfi3/GqfXao1oO/G6psqHGfJrcihbQOVmO4DOC/g=;
+        b=gYw0raqMhmBOlRGv/rmFVRsYYW2DhYVb3tV8Cv8TSaZMSueSL8UFYYeYqXUEhaGLax
+         oaZ5FwnvAGaUvR9MHuqU7/TSwaIG/Vi5D/3I/N9YlRFGphV5xaB0VUQIUXf+JiY+QaIy
+         54BlHNEwBSuInbPeSeS142k1Q9r7CA2JSWRQs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2SUlfi3/GqfXao1oO/G6psqHGfJrcihbQOVmO4DOC/g=;
+        b=ixD/mHKWerfNIq5Hjprmd37ZRHCf88RkWl/KUsXLUyH2CJUOUzm0/UaBJLh+PefAih
+         8Fpo40uKV3h/TWSZc9f6lX7IfbF6K0eC6eohWa3lR6pVUWwTNWaaOq+JHwcA6EXCq8Ed
+         ohseeu9isHVghpcYYOk2iwc8zyDOL6EOwDuyHTgww9NeQJqa8Xo5erJxSFC8u2XOch1o
+         14ZPluhveIZnmOyEGQCOzvbcvt+Myr8PjNn0FF2ww0ynYSNfnlI58Xo2PA7LKKz31bbM
+         ys/HAcIku56eYgVTATENG2EfjxqhQDWwZHn6g7M9CnxnBGXW5qN47VtMELYXJLT+GEWN
+         WMIg==
+X-Gm-Message-State: APjAAAUV+p+Z6Gds2WHkvTFNwMiiRLSO26jMSWiL2klD82DHntIbWTvP
+        ZlY4pV3jgyqv/VvRxhciuckEmctiWOvLAmfKYsC6Og==
+X-Google-Smtp-Source: APXvYqzFJOiKRHYMf0ckRaIKnY2QZ2S3371VLktefyf0rROyHqbhr3XyFFGDSdtF4JKWrEQX7WoPWn2K7HNlPFTYZb4=
+X-Received: by 2002:a6b:3845:: with SMTP id f66mr13666899ioa.102.1578928355244;
+ Mon, 13 Jan 2020 07:12:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200113143956.GB2131@nanopsycho>
+References: <20200113120157.85798-1-hsinyi@chromium.org> <20200113120157.85798-2-hsinyi@chromium.org>
+ <87r203plr7.fsf@vitty.brq.redhat.com>
+In-Reply-To: <87r203plr7.fsf@vitty.brq.redhat.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Mon, 13 Jan 2020 23:12:09 +0800
+Message-ID: <CAJMQK-gXbs+B8HCdKHvgDf3NpP_YfkheMXzzWHMcoTzZuP-9hw@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 1/3] reboot: support hotplug CPUs before reboot
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 03:39:56PM +0100, Jiri Pirko wrote:
-> Fri, Jan 10, 2020 at 05:19:57PM CET, antoine.tenart@bootlin.com wrote:
-> 
-> >diff --git a/include/uapi/linux/if_link.h b/include/uapi/linux/if_link.h
-> >index 1d69f637c5d6..024af2d1d0af 100644
-> >--- a/include/uapi/linux/if_link.h
-> >+++ b/include/uapi/linux/if_link.h
-> >@@ -486,6 +486,13 @@ enum macsec_validation_type {
-> > 	MACSEC_VALIDATE_MAX = __MACSEC_VALIDATE_END - 1,
-> > };
-> > 
-> >+enum macsec_offload {
-> >+	MACSEC_OFFLOAD_OFF = 0,
-> >+	MACSEC_OFFLOAD_PHY = 1,
-> 
-> No need to assign 0, 1 here. That is given.
+On Mon, Jan 13, 2020 at 8:46 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
 
-Right, however MACSEC_VALIDATE_ uses the same notation. I think it's
-nice to be consistent, but of course of patch can be sent to convert
-both of those enums.
+Thanks for your comments.
 
-> >+	__MACSEC_OFFLOAD_END,
-> >+	MACSEC_OFFLOAD_MAX = __MACSEC_OFFLOAD_END - 1,
-> >+};
-> >+
-> > /* IPVLAN section */
-> > enum {
-> > 	IFLA_IPVLAN_UNSPEC,
-> >diff --git a/tools/include/uapi/linux/if_link.h b/tools/include/uapi/linux/if_link.h
-> >index 8aec8769d944..42efdb84d189 100644
-> >--- a/tools/include/uapi/linux/if_link.h
-> >+++ b/tools/include/uapi/linux/if_link.h
-> 
-> Why you are adding to this header?
-
-Because the two headers are synced.
-
-Thanks,
-Antoine
-
--- 
-Antoine Ténart, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> > +config REBOOT_HOTPLUG_CPU
+> > +     bool "Support for hotplug CPUs before reboot"
+> > +     depends on HOTPLUG_CPU
+> > +     help
+> > +       Say Y to do a full hotplug on secondary CPUs before reboot.
+>
+> I'm not sure this should be a configurable option, e.g. in case this is
+> a good approach in general, why not just use CONFIG_HOTPLUG_CPU in the
+> code?
+>
+In v2 it uses CONFIG_HOTPLUG_CPU, but I think adding another config is
+more flexible. Maybe there are some architecture that supports
+HOTPLUG_CPU but doesn't want to do full cpu hotplug before reboot.
+(Eg. doing cpu hotplug would make reboot process slower.)
+> > +
+> >  config HAVE_OPROFILE
+> >       bool
+> >
+> > diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+> > index 1ca2baf817ed..3bf5ab289954 100644
+> > --- a/include/linux/cpu.h
+> > +++ b/include/linux/cpu.h
+> > @@ -118,6 +118,9 @@ extern void cpu_hotplug_disable(void);
+> >  extern void cpu_hotplug_enable(void);
+> >  void clear_tasks_mm_cpumask(int cpu);
+> >  int cpu_down(unsigned int cpu);
+> > +#if IS_ENABLED(CONFIG_REBOOT_HOTPLUG_CPU)
+> > +extern void offline_secondary_cpus(int primary);
+> > +#endif
+> >
+> >  #else /* CONFIG_HOTPLUG_CPU */
+> >
+> > diff --git a/kernel/cpu.c b/kernel/cpu.c
+> > index 9c706af713fb..52afc47dd56a 100644
+> > --- a/kernel/cpu.c
+> > +++ b/kernel/cpu.c
+> > @@ -1057,6 +1057,25 @@ int cpu_down(unsigned int cpu)
+> >  }
+> >  EXPORT_SYMBOL(cpu_down);
+> >
+> > +#if IS_ENABLED(CONFIG_REBOOT_HOTPLUG_CPU)
+> > +void offline_secondary_cpus(int primary)
+> > +{
+> > +     int i, err;
+> > +
+> > +     cpu_maps_update_begin();
+> > +
+> > +     for_each_online_cpu(i) {
+> > +             if (i == primary)
+> > +                     continue;
+> > +             err = _cpu_down(i, 0, CPUHP_OFFLINE);
+> > +             if (err)
+> > +                     pr_warn("Failed to offline cpu %d\n", i);
+> > +     }
+> > +     cpu_hotplug_disabled++;
+> > +
+> > +     cpu_maps_update_done();
+> > +}
+> > +#endif
+>
+> This looks like a simplified version of freeze_secondary_cpus(), can
+> they be merged?
+>
+Comparing to freeze_secondary_cpus(),  I think it's not necessary to
+check pm_wakeup_pending() before _cpu_down() here. Thus it doesn't
+need to depend on CONFIG_PM_SLEEP_SMP.
+Also I think it could continue to offline other CPUs even one fails,
+while freeze_secondary_cpus() would stop once it fails on offlining
+one CPU.
+Based on these differences, I didn't use freeze_secondary_cpus() here.
+As for merging the common part, it might need additional flags to
+handle the difference, which might lower the readability.
+>
