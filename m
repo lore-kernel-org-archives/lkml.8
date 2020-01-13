@@ -7,41 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB76CC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFFAC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDFE21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B02E21556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgAMTKp (ORCPT
+        id S1728803AbgAMTLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:10:45 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39968 "EHLO
+        Mon, 13 Jan 2020 14:11:19 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39948 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbgAMTJu (ORCPT
+        with ESMTP id S1728965AbgAMTJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:09:50 -0500
+        Mon, 13 Jan 2020 14:09:47 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1ir55p-00015i-2X; Mon, 13 Jan 2020 20:09:44 +0100
+        id 1ir55f-0000yX-2s; Mon, 13 Jan 2020 20:09:31 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2BEE11C18DB;
-        Mon, 13 Jan 2020 20:09:30 +0100 (CET)
-Date:   Mon, 13 Jan 2020 19:09:29 -0000
-From:   "tip-bot2 for Andrei Vagin" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5B68F1C18DA;
+        Mon, 13 Jan 2020 20:09:27 +0100 (CET)
+Date:   Mon, 13 Jan 2020 19:09:27 -0000
+From:   "tip-bot2 for Dmitry Safonov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-clocks: Introduce clock_get_ktime() callback
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Andrei Vagin <avagin@gmail.com>,
-        Dmitry Safonov <dima@arista.com>, x86 <x86@kernel.org>,
+Subject: [tip: timers/core] x86/vdso: Provide vdso_data offset on vvar_page
+Cc:     Andrei Vagin <avagin@openvz.org>, Dmitry Safonov <dima@arista.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191112012724.250792-10-dima@arista.com>
-References: <20191112012724.250792-10-dima@arista.com>
+In-Reply-To: <20191112012724.250792-22-dima@arista.com>
+References: <20191112012724.250792-22-dima@arista.com>
 MIME-Version: 1.0
-Message-ID: <157894256996.19145.2801588874406888499.tip-bot2@tip-bot2>
+Message-ID: <157894256719.19145.16909720920023468772.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,193 +56,121 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     8bebca2b1379c749b3f98e2678861f546225e75b
-Gitweb:        https://git.kernel.org/tip/8bebca2b1379c749b3f98e2678861f546225e75b
-Author:        Andrei Vagin <avagin@gmail.com>
-AuthorDate:    Tue, 12 Nov 2019 01:26:58 
+Commit-ID:     9bec781deb4d5f23ee6346873805058bd0f6c88b
+Gitweb:        https://git.kernel.org/tip/9bec781deb4d5f23ee6346873805058bd0f6c88b
+Author:        Dmitry Safonov <dima@arista.com>
+AuthorDate:    Tue, 12 Nov 2019 01:27:10 
 Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Mon, 13 Jan 2020 08:10:50 +01:00
+CommitterDate: Mon, 13 Jan 2020 08:10:55 +01:00
 
-posix-clocks: Introduce clock_get_ktime() callback
+x86/vdso: Provide vdso_data offset on vvar_page
 
-The callsite in common_timer_get() has already a comment:
-    /*
-     * The timespec64 based conversion is suboptimal, but it's not
-     * worth to implement yet another callback.
-     */
-    kc->clock_get(timr->it_clock, &ts64);
-    now = timespec64_to_ktime(ts64);
+VDSO support for time namespaces needs to set up a page with the same
+layout as VVAR. That timens page will be placed on position of VVAR page
+inside namespace. That page has vdso_data->seq set to 1 to enforce
+the slow path and vdso_data->clock_mode set to VCLOCK_TIMENS to enforce
+the time namespace handling path.
 
-The upcoming support for time namespaces requires to have access to:
+To prepare the time namespace page the kernel needs to know the vdso_data
+offset.  Provide arch_get_vdso_data() helper for locating vdso_data on VVAR
+page.
 
- - The time in a task's time namespace for sys_clock_gettime()
- - The time in the root name space for common_timer_get()
-
-That adds a valid reason to finally implement a separate callback which
-returns the time in ktime_t format.
-
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Co-developed-by: Dmitry Safonov <dima@arista.com>
-Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Co-developed-by: Andrei Vagin <avagin@openvz.org>
+Signed-off-by: Andrei Vagin <avagin@openvz.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20191112012724.250792-10-dima@arista.com
+Link: https://lore.kernel.org/r/20191112012724.250792-22-dima@arista.com
 
 ---
- kernel/time/alarmtimer.c   | 19 ++++++++++++++++++-
- kernel/time/posix-timers.c | 26 +++++++++++++++++++++++++-
- kernel/time/posix-timers.h |  3 +++
- 3 files changed, 46 insertions(+), 2 deletions(-)
+ arch/x86/entry/vdso/vdso-layout.lds.S |  2 --
+ arch/x86/entry/vdso/vma.c             | 11 +++++++++++
+ arch/x86/include/asm/vvar.h           |  8 ++++----
+ arch/x86/kernel/vmlinux.lds.S         |  4 +---
+ include/linux/time_namespace.h        |  1 +
+ 5 files changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 357be1f..4d8c905 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -663,7 +663,7 @@ static int alarm_clock_getres(const clockid_t which_clock, struct timespec64 *tp
-  * @which_clock: clockid
-  * @tp: timespec to fill.
-  *
-- * Provides the underlying alarm base time.
-+ * Provides the underlying alarm base time in a tasks time namespace.
+diff --git a/arch/x86/entry/vdso/vdso-layout.lds.S b/arch/x86/entry/vdso/vdso-layout.lds.S
+index 93c6dc7..2330daa 100644
+--- a/arch/x86/entry/vdso/vdso-layout.lds.S
++++ b/arch/x86/entry/vdso/vdso-layout.lds.S
+@@ -21,9 +21,7 @@ SECTIONS
+ 
+ 	/* Place all vvars at the offsets in asm/vvar.h. */
+ #define EMIT_VVAR(name, offset) vvar_ ## name = vvar_page + offset;
+-#define __VVAR_KERNEL_LDS
+ #include <asm/vvar.h>
+-#undef __VVAR_KERNEL_LDS
+ #undef EMIT_VVAR
+ 
+ 	pvclock_page = vvar_start + PAGE_SIZE;
+diff --git a/arch/x86/entry/vdso/vma.c b/arch/x86/entry/vdso/vma.c
+index 76cbe54..04e3498 100644
+--- a/arch/x86/entry/vdso/vma.c
++++ b/arch/x86/entry/vdso/vma.c
+@@ -24,6 +24,17 @@
+ #include <asm/cpufeature.h>
+ #include <clocksource/hyperv_timer.h>
+ 
++#undef _ASM_X86_VVAR_H
++#define EMIT_VVAR(name, offset)	\
++	const size_t name ## _offset = offset;
++#include <asm/vvar.h>
++
++struct vdso_data *arch_get_vdso_data(void *vvar_page)
++{
++	return (struct vdso_data *)(vvar_page + _vdso_data_offset);
++}
++#undef EMIT_VVAR
++
+ #if defined(CONFIG_X86_64)
+ unsigned int __read_mostly vdso64_enabled = 1;
+ #endif
+diff --git a/arch/x86/include/asm/vvar.h b/arch/x86/include/asm/vvar.h
+index 32f5d9a..ff2de30 100644
+--- a/arch/x86/include/asm/vvar.h
++++ b/arch/x86/include/asm/vvar.h
+@@ -19,10 +19,10 @@
+ #ifndef _ASM_X86_VVAR_H
+ #define _ASM_X86_VVAR_H
+ 
+-#if defined(__VVAR_KERNEL_LDS)
+-
+-/* The kernel linker script defines its own magic to put vvars in the
+- * right place.
++#ifdef EMIT_VVAR
++/*
++ * EMIT_VVAR() is used by the kernel linker script to put vvars in the
++ * right place. Also, it's used by kernel code to import offsets values.
   */
- static int alarm_clock_get_timespec(clockid_t which_clock, struct timespec64 *tp)
+ #define DECLARE_VVAR(offset, type, name) \
+ 	EMIT_VVAR(name, offset)
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 3a1a819..e3296aa 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -193,12 +193,10 @@ SECTIONS
+ 		__vvar_beginning_hack = .;
+ 
+ 		/* Place all vvars at the offsets in asm/vvar.h. */
+-#define EMIT_VVAR(name, offset) 			\
++#define EMIT_VVAR(name, offset)				\
+ 		. = __vvar_beginning_hack + offset;	\
+ 		*(.vvar_ ## name)
+-#define __VVAR_KERNEL_LDS
+ #include <asm/vvar.h>
+-#undef __VVAR_KERNEL_LDS
+ #undef EMIT_VVAR
+ 
+ 		/*
+diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
+index 34ee110..063a343 100644
+--- a/include/linux/time_namespace.h
++++ b/include/linux/time_namespace.h
+@@ -39,6 +39,7 @@ struct time_namespace *copy_time_ns(unsigned long flags,
+ 				    struct time_namespace *old_ns);
+ void free_time_ns(struct kref *kref);
+ int timens_on_fork(struct nsproxy *nsproxy, struct task_struct *tsk);
++struct vdso_data *arch_get_vdso_data(void *vvar_page);
+ 
+ static inline void put_time_ns(struct time_namespace *ns)
  {
-@@ -678,6 +678,22 @@ static int alarm_clock_get_timespec(clockid_t which_clock, struct timespec64 *tp
- }
- 
- /**
-+ * alarm_clock_get_ktime - posix clock_get_ktime interface
-+ * @which_clock: clockid
-+ *
-+ * Provides the underlying alarm base time in the root namespace.
-+ */
-+static ktime_t alarm_clock_get_ktime(clockid_t which_clock)
-+{
-+	struct alarm_base *base = &alarm_bases[clock2alarm(which_clock)];
-+
-+	if (!alarmtimer_get_rtcdev())
-+		return -EINVAL;
-+
-+	return base->get_ktime();
-+}
-+
-+/**
-  * alarm_timer_create - posix timer_create interface
-  * @new_timer: k_itimer pointer to manage
-  *
-@@ -840,6 +856,7 @@ static int alarm_timer_nsleep(const clockid_t which_clock, int flags,
- 
- const struct k_clock alarm_clock = {
- 	.clock_getres		= alarm_clock_getres,
-+	.clock_get_ktime	= alarm_clock_get_ktime,
- 	.clock_get_timespec	= alarm_clock_get_timespec,
- 	.timer_create		= alarm_timer_create,
- 	.timer_set		= common_timer_set,
-diff --git a/kernel/time/posix-timers.c b/kernel/time/posix-timers.c
-index 68d4690..a1f6b96 100644
---- a/kernel/time/posix-timers.c
-+++ b/kernel/time/posix-timers.c
-@@ -171,6 +171,11 @@ static int posix_get_realtime_timespec(clockid_t which_clock, struct timespec64 
- 	return 0;
- }
- 
-+static ktime_t posix_get_realtime_ktime(clockid_t which_clock)
-+{
-+	return ktime_get_real();
-+}
-+
- /* Set clock_realtime */
- static int posix_clock_realtime_set(const clockid_t which_clock,
- 				    const struct timespec64 *tp)
-@@ -193,6 +198,11 @@ static int posix_get_monotonic_timespec(clockid_t which_clock, struct timespec64
- 	return 0;
- }
- 
-+static ktime_t posix_get_monotonic_ktime(clockid_t which_clock)
-+{
-+	return ktime_get();
-+}
-+
- /*
-  * Get monotonic-raw time for posix timers
-  */
-@@ -228,12 +238,22 @@ static int posix_get_boottime_timespec(const clockid_t which_clock, struct times
- 	return 0;
- }
- 
-+static ktime_t posix_get_boottime_ktime(const clockid_t which_clock)
-+{
-+	return ktime_get_boottime();
-+}
-+
- static int posix_get_tai_timespec(clockid_t which_clock, struct timespec64 *tp)
- {
- 	ktime_get_clocktai_ts64(tp);
- 	return 0;
- }
- 
-+static ktime_t posix_get_tai_ktime(clockid_t which_clock)
-+{
-+	return ktime_get_clocktai();
-+}
-+
- static int posix_get_hrtimer_res(clockid_t which_clock, struct timespec64 *tp)
- {
- 	tp->tv_sec = 0;
-@@ -781,7 +801,7 @@ static void common_hrtimer_arm(struct k_itimer *timr, ktime_t expires,
- 	 * Posix magic: Relative CLOCK_REALTIME timers are not affected by
- 	 * clock modifications, so they become CLOCK_MONOTONIC based under the
- 	 * hood. See hrtimer_init(). Update timr->kclock, so the generic
--	 * functions which use timr->kclock->clock_get_timespec() work.
-+	 * functions which use timr->kclock->clock_get_*() work.
- 	 *
- 	 * Note: it_clock stays unmodified, because the next timer_set() might
- 	 * use ABSTIME, so it needs to switch back.
-@@ -1262,6 +1282,7 @@ SYSCALL_DEFINE4(clock_nanosleep_time32, clockid_t, which_clock, int, flags,
- static const struct k_clock clock_realtime = {
- 	.clock_getres		= posix_get_hrtimer_res,
- 	.clock_get_timespec	= posix_get_realtime_timespec,
-+	.clock_get_ktime	= posix_get_realtime_ktime,
- 	.clock_set		= posix_clock_realtime_set,
- 	.clock_adj		= posix_clock_realtime_adj,
- 	.nsleep			= common_nsleep,
-@@ -1280,6 +1301,7 @@ static const struct k_clock clock_realtime = {
- static const struct k_clock clock_monotonic = {
- 	.clock_getres		= posix_get_hrtimer_res,
- 	.clock_get_timespec	= posix_get_monotonic_timespec,
-+	.clock_get_ktime	= posix_get_monotonic_ktime,
- 	.nsleep			= common_nsleep,
- 	.timer_create		= common_timer_create,
- 	.timer_set		= common_timer_set,
-@@ -1310,6 +1332,7 @@ static const struct k_clock clock_monotonic_coarse = {
- 
- static const struct k_clock clock_tai = {
- 	.clock_getres		= posix_get_hrtimer_res,
-+	.clock_get_ktime	= posix_get_tai_ktime,
- 	.clock_get_timespec	= posix_get_tai_timespec,
- 	.nsleep			= common_nsleep,
- 	.timer_create		= common_timer_create,
-@@ -1326,6 +1349,7 @@ static const struct k_clock clock_tai = {
- 
- static const struct k_clock clock_boottime = {
- 	.clock_getres		= posix_get_hrtimer_res,
-+	.clock_get_ktime	= posix_get_boottime_ktime,
- 	.clock_get_timespec	= posix_get_boottime_timespec,
- 	.nsleep			= common_nsleep,
- 	.timer_create		= common_timer_create,
-diff --git a/kernel/time/posix-timers.h b/kernel/time/posix-timers.h
-index 070611b..f32a2eb 100644
---- a/kernel/time/posix-timers.h
-+++ b/kernel/time/posix-timers.h
-@@ -6,8 +6,11 @@ struct k_clock {
- 				struct timespec64 *tp);
- 	int	(*clock_set)(const clockid_t which_clock,
- 			     const struct timespec64 *tp);
-+	/* Returns the clock value in the current time namespace. */
- 	int	(*clock_get_timespec)(const clockid_t which_clock,
- 				      struct timespec64 *tp);
-+	/* Returns the clock value in the root time namespace. */
-+	ktime_t	(*clock_get_ktime)(const clockid_t which_clock);
- 	int	(*clock_adj)(const clockid_t which_clock, struct __kernel_timex *tx);
- 	int	(*timer_create)(struct k_itimer *timer);
- 	int	(*nsleep)(const clockid_t which_clock, int flags,
