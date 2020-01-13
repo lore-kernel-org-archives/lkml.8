@@ -2,219 +2,181 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9418C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7147EC33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:46:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A264D207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WC9na/wG"
+	by mail.kernel.org (Postfix) with ESMTP id 42DE3207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:46:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728750AbgAMMq2 (ORCPT
+        id S1728767AbgAMMq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:46:28 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31441 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725832AbgAMMq2 (ORCPT
+        Mon, 13 Jan 2020 07:46:57 -0500
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:37633 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725832AbgAMMq5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:46:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578919586;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=CbMAfem5Ss8Ci2UJmhbyTfN/uSIHjLn3PvTSYxt9p8M=;
-        b=WC9na/wGz+KRR3/aEh41yJ60ejB/Ha/8Hr6cCvLkMubM6fmHrPXAXOU6Kgm6JPkvopY9tm
-        hpnbEX8QN9vzRacBt8FCUj+T0rLkRMXXQc23Mo+9IPt1w3UkN3OnP0iRxfV6ZErfxqMjbG
-        Wil68z9CsRRF1c9RSZjnc9yCCfQ6rSU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-42-GKV-WnExPyyLax3jtjzkVw-1; Mon, 13 Jan 2020 07:46:23 -0500
-X-MC-Unique: GKV-WnExPyyLax3jtjzkVw-1
-Received: by mail-wm1-f69.google.com with SMTP id w205so2481842wmb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 04:46:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=CbMAfem5Ss8Ci2UJmhbyTfN/uSIHjLn3PvTSYxt9p8M=;
-        b=G9g9ExJ28ylJal4o3PodU9y/6dv+3H/soT+YAXSU5KQzaIyee1YwlwqGEFKxhEAO3/
-         yiLqe+bHX1VhN240m1sHx6Qr6Sf0UAt0NNet25UKWT+r+Sr+dwa1uVPEQY2YaFHWjkpZ
-         pdiBpT+Pl4RwOiWB+FnbETL//qwx87qLazhnmm79p8u1tD8YZJHLXraTIVM1uUWZCVmE
-         X/CtMd3r3030II/3wm8o9GGvwjwB7kIj0/1Uc8AkyLgJ1Eq+8OfpQGAPISGjM9AyNufG
-         uOi7Gn18oT29LtkaeS68kgIF7EupOfY8yPKEAih81l6mLNkp3Ez+JHdoW7IzNc/15boq
-         IrIg==
-X-Gm-Message-State: APjAAAXmnh/T7+i2bkFa9crWq0qsQwH5JLVaBd2Oqg2XNP0U2abxawkV
-        haX0GBuD1tAU22YkzWPDlJEk85CjWO2rJ1VuAISykSa2r3Xif4CGruMdPY72/Pp5R7QhFka20Ol
-        /jou/NpuzENgQHWfKO8gmQ6v5
-X-Received: by 2002:a1c:3c89:: with SMTP id j131mr19975934wma.34.1578919582630;
-        Mon, 13 Jan 2020 04:46:22 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwNqm8aT82U7lmbH3xT2luKza3YJZmmwPAiDVQcaPLgZNf+kTaP2+9Df1eeBgiv6wnoD25UFg==
-X-Received: by 2002:a1c:3c89:: with SMTP id j131mr19975910wma.34.1578919582399;
-        Mon, 13 Jan 2020 04:46:22 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id t190sm14016652wmt.44.2020.01.13.04.46.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 04:46:21 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH RFC v3 1/3] reboot: support hotplug CPUs before reboot
-In-Reply-To: <20200113120157.85798-2-hsinyi@chromium.org>
-References: <20200113120157.85798-1-hsinyi@chromium.org> <20200113120157.85798-2-hsinyi@chromium.org>
-Date:   Mon, 13 Jan 2020 13:46:20 +0100
-Message-ID: <87r203plr7.fsf@vitty.brq.redhat.com>
+        Mon, 13 Jan 2020 07:46:57 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0TndsAqh_1578919612;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TndsAqh_1578919612)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 13 Jan 2020 20:46:52 +0800
+Subject: Re: [PATCH v7 00/10] per lruvec lru_lock for memcg
+To:     Hugh Dickins <hughd@google.com>
+Cc:     hannes@cmpxchg.org, Andrew Morton <akpm@linux-foundation.org>,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, mgorman@techsingularity.net, tj@kernel.org,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        shakeelb@google.com
+References: <1577264666-246071-1-git-send-email-alex.shi@linux.alibaba.com>
+ <20191231150514.61c2b8c8354320f09b09f377@linux-foundation.org>
+ <944f0f6a-466a-7ce3-524c-f6db86fd0891@linux.alibaba.com>
+ <d2efad94-750b-3298-8859-84bccc6ecf06@linux.alibaba.com>
+ <alpine.LSU.2.11.2001130032170.1103@eggly.anvils>
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+Message-ID: <24d671ac-36ef-8883-ad94-1bd497d46783@linux.alibaba.com>
+Date:   Mon, 13 Jan 2020 20:45:25 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <alpine.LSU.2.11.2001130032170.1103@eggly.anvils>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hsin-Yi Wang <hsinyi@chromium.org> writes:
-
-> Currently system reboots uses architecture specific codes (smp_send_stop)
-> to offline non reboot CPUs. Most architecture's implementation is looping
-> through all non reboot online CPUs and call ipi function to each of them. Some
-> architecture like arm64, arm, and x86... would set offline masks to cpu without
-> really offline them. This causes some race condition and kernel warning comes
-> out sometimes when system reboots.
->
-> This patch adds a config REBOOT_HOTPLUG_CPU, which would hotplug cpus in
-> migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
-> checking online cpus would be an empty loop. If architecture don't enable this
-> config, or some cpus somehow fails to offline, it would fallback to ipi
-> function.
->
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
->  arch/Kconfig        |  6 ++++++
->  include/linux/cpu.h |  3 +++
->  kernel/cpu.c        | 19 +++++++++++++++++++
->  kernel/reboot.c     |  8 ++++++++
->  4 files changed, 36 insertions(+)
->
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 48b5e103bdb0..a043b9be1499 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -52,6 +52,12 @@ config OPROFILE_EVENT_MULTIPLEX
->  
->  	  If unsure, say N.
->  
-> +config REBOOT_HOTPLUG_CPU
-> +	bool "Support for hotplug CPUs before reboot"
-> +	depends on HOTPLUG_CPU
-> +	help
-> +	  Say Y to do a full hotplug on secondary CPUs before reboot.
-
-I'm not sure this should be a configurable option, e.g. in case this is
-a good approach in general, why not just use CONFIG_HOTPLUG_CPU in the
-code? 
-
-> +
->  config HAVE_OPROFILE
->  	bool
->  
-> diff --git a/include/linux/cpu.h b/include/linux/cpu.h
-> index 1ca2baf817ed..3bf5ab289954 100644
-> --- a/include/linux/cpu.h
-> +++ b/include/linux/cpu.h
-> @@ -118,6 +118,9 @@ extern void cpu_hotplug_disable(void);
->  extern void cpu_hotplug_enable(void);
->  void clear_tasks_mm_cpumask(int cpu);
->  int cpu_down(unsigned int cpu);
-> +#if IS_ENABLED(CONFIG_REBOOT_HOTPLUG_CPU)
-> +extern void offline_secondary_cpus(int primary);
-> +#endif
->  
->  #else /* CONFIG_HOTPLUG_CPU */
->  
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 9c706af713fb..52afc47dd56a 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -1057,6 +1057,25 @@ int cpu_down(unsigned int cpu)
->  }
->  EXPORT_SYMBOL(cpu_down);
->  
-> +#if IS_ENABLED(CONFIG_REBOOT_HOTPLUG_CPU)
-> +void offline_secondary_cpus(int primary)
-> +{
-> +	int i, err;
-> +
-> +	cpu_maps_update_begin();
-> +
-> +	for_each_online_cpu(i) {
-> +		if (i == primary)
-> +			continue;
-> +		err = _cpu_down(i, 0, CPUHP_OFFLINE);
-> +		if (err)
-> +			pr_warn("Failed to offline cpu %d\n", i);
-> +	}
-> +	cpu_hotplug_disabled++;
-> +
-> +	cpu_maps_update_done();
-> +}
-> +#endif
-
-This looks like a simplified version of freeze_secondary_cpus(), can
-they be merged?
 
 
->  #else
->  #define takedown_cpu		NULL
->  #endif /*CONFIG_HOTPLUG_CPU*/
-> diff --git a/kernel/reboot.c b/kernel/reboot.c
-> index c4d472b7f1b4..fda84794ce46 100644
-> --- a/kernel/reboot.c
-> +++ b/kernel/reboot.c
-> @@ -7,6 +7,7 @@
->  
->  #define pr_fmt(fmt)	"reboot: " fmt
->  
-> +#include <linux/cpu.h>
->  #include <linux/ctype.h>
->  #include <linux/export.h>
->  #include <linux/kexec.h>
-> @@ -220,7 +221,9 @@ void migrate_to_reboot_cpu(void)
->  	/* The boot cpu is always logical cpu 0 */
->  	int cpu = reboot_cpu;
->  
-> +#if !IS_ENABLED(CONFIG_REBOOT_HOTPLUG_CPU)
->  	cpu_hotplug_disable();
-> +#endif
->  
->  	/* Make certain the cpu I'm about to reboot on is online */
->  	if (!cpu_online(cpu))
-> @@ -231,6 +234,11 @@ void migrate_to_reboot_cpu(void)
->  
->  	/* Make certain I only run on the appropriate processor */
->  	set_cpus_allowed_ptr(current, cpumask_of(cpu));
-> +
-> +	/* Hotplug other cpus if possible */
-> +#if IS_ENABLED(CONFIG_REBOOT_HOTPLUG_CPU)
-> +	offline_secondary_cpus(cpu);
-> +#endif
->  }
->  
->  /**
+在 2020/1/13 下午4:48, Hugh Dickins 写道:
+> On Fri, 10 Jan 2020, Alex Shi wrote:
+>> 在 2020/1/2 下午6:21, Alex Shi 写道:
+>>> 在 2020/1/1 上午7:05, Andrew Morton 写道:
+>>>> On Wed, 25 Dec 2019 17:04:16 +0800 Alex Shi <alex.shi@linux.alibaba.com> wrote:
+>>>>
+>>>>> This patchset move lru_lock into lruvec, give a lru_lock for each of
+>>>>> lruvec, thus bring a lru_lock for each of memcg per node.
+>>>>
+>>>> I see that there has been plenty of feedback on previous versions, but
+>>>> no acked/reviewed tags as yet.
+>>>>
+>>>> I think I'll take a pass for now, see what the audience feedback looks
+>>>> like ;)
+>>>>
+>>>
+>>
+>> Hi Johannes,
+>>
+>> Any comments of this version? :)
+> 
+> I (Hugh) tried to test it on v5.5-rc5, but did not get very far at all -
+> perhaps because my particular interest tends towards tmpfs and swap,
+> and swap always made trouble for lruvec lock - one of the reasons why
+> our patches were more complicated than you thought necessary.
+> 
+> Booted a smallish kernel in mem=700M with 1.5G of swap, with intention
+> of running small kernel builds in tmpfs and in ext4-on-loop-on-tmpfs
+> (losetup was the last command started but I doubt it played much part):
+> 
+> mount -t tmpfs -o size=470M tmpfs /tst
+> cp /dev/zero /tst
+> losetup /dev/loop0 /tst/zero
 
--- 
-Vitaly
+Hi Hugh,
 
+Many thanks for the testing!
+
+I am trying to reproduce your testing, do above 3 steps, then build kernel with 'make -j 8' on my qemu. but cannot reproduce the problem with this v7 version or with v8 version, https://github.com/alexshi/linux/tree/lru-next, which fixed the bug KK mentioned, like the following. 
+my qemu vmm like this:
+
+[root@debug010000002015 ~]# mount -t tmpfs -o size=470M tmpfs /tst
+[root@debug010000002015 ~]# cp /dev/zero /tst
+cp: error writing ‘/tst/zero’: No space left on device
+cp: failed to extend ‘/tst/zero’: No space left on device
+[root@debug010000002015 ~]# losetup /dev/loop0 /tst/zero
+[root@debug010000002015 ~]# cat /proc/cmdline
+earlyprintk=ttyS0 root=/dev/sda1 console=ttyS0 debug crashkernel=128M printk.devkmsg=on
+
+my kernel configed with MEMCG/MEMCG_SWAP with xfs rootimage, and compiling kernel under ext4. Could you like to share your kernel config and detailed reproduce steps with me? And would you like to try my new version from above github link in your convenient?
+
+Thanks a lot!
+Alex 
+
+ static void commit_charge(struct page *page, struct mem_cgroup *memcg,
+                          bool lrucare)
+ {
+-       int isolated;
++       struct lruvec *lruvec = NULL;
+
+        VM_BUG_ON_PAGE(page->mem_cgroup, page);
+
+@@ -2612,8 +2617,16 @@ static void commit_charge(struct page *page, struct mem_cgroup *memcg,
+         * In some cases, SwapCache and FUSE(splice_buf->radixtree), the page
+         * may already be on some other mem_cgroup's LRU.  Take care of it.
+         */
+-       if (lrucare)
+-               lock_page_lru(page, &isolated);
++       if (lrucare) {
++               lruvec = lock_page_lruvec_irq(page);
++               if (likely(PageLRU(page))) {
++                       ClearPageLRU(page);
++                       del_page_from_lru_list(page, lruvec, page_lru(page));
++               } else {
++                       unlock_page_lruvec_irq(lruvec);
++                       lruvec = NULL;
++               }
++       }
+
+        /*
+         * Nobody should be changing or seriously looking at
+@@ -2631,8 +2644,15 @@ static void commit_charge(struct page *page, struct mem_cgroup *memcg,
+         */
+        page->mem_cgroup = memcg;
+
+-       if (lrucare)
+-               unlock_page_lru(page, isolated);
++       if (lrucare && lruvec) {
++               unlock_page_lruvec_irq(lruvec);
++               lruvec = lock_page_lruvec_irq(page);
++
++               VM_BUG_ON_PAGE(PageLRU(page), page);
++               SetPageLRU(page);
++               add_page_to_lru_list(page, lruvec, page_lru(page));
++               unlock_page_lruvec_irq(lruvec);
++       }
+ }
+> 
+> and kernel crashed on the
+> 
+> VM_BUG_ON_PAGE(lruvec_memcg(lruvec) != page->mem_cgroup, page);
+> kernel BUG at mm/memcontrol.c:1268!
+> lock_page_lruvec_irqsave
+> relock_page_lruvec_irqsave
+> pagevec_lru_move_fn
+> __pagevec_lru_add
+> lru_add_drain_cpu
+> lru_add_drain
+> swap_cluster_readahead
+> shmem_swapin
+> shmem_swapin_page
+> shmem_getpage_gfp
+> shmem_getpage
+> shmem_write_begin
+> generic_perform_write
+> __generic_file_write_iter
+> generic_file_write_iter
+> new_sync_write
+> __vfs_write
+> vfs_write
+> ksys_write
+> __x86_sys_write
+> do_syscall_64
+> 
+> Hugh
+> 
