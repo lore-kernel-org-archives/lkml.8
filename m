@@ -2,123 +2,138 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21444C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47512C33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01836206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22DD5206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbgAMJKP (ORCPT
+        id S1726523AbgAMJKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:10:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:35952 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725268AbgAMJKO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:10:14 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A23501063;
-        Mon, 13 Jan 2020 01:10:11 -0800 (PST)
-Received: from [10.162.43.142] (p8cg001049571a15.blr.arm.com [10.162.43.142])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E7B9A3F534;
-        Mon, 13 Jan 2020 01:10:05 -0800 (PST)
-Subject: Re: [PATCH V11 1/5] mm/hotplug: Introduce arch callback validating
- the hot remove range
-To:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        akpm@linux-foundation.org, catalin.marinas@arm.com, will@kernel.org
-Cc:     mark.rutland@arm.com, cai@lca.pw, logang@deltatee.com,
-        cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
-        broonie@kernel.org, valentin.schneider@arm.com,
-        Robin.Murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com,
-        ira.weiny@intel.com
-References: <1578625755-11792-1-git-send-email-anshuman.khandual@arm.com>
- <1578625755-11792-2-git-send-email-anshuman.khandual@arm.com>
- <80ab5f55-77ef-4719-52fc-2b23c0ecb866@redhat.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <6f0efddc-f124-58ca-28b6-4632469cf992@arm.com>
-Date:   Mon, 13 Jan 2020 14:41:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 13 Jan 2020 04:10:18 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:34768 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725268AbgAMJKR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 04:10:17 -0500
+Received: from mail-oi1-f200.google.com ([209.85.167.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iqvji-0000pc-LQ
+        for linux-kernel@vger.kernel.org; Mon, 13 Jan 2020 09:10:14 +0000
+Received: by mail-oi1-f200.google.com with SMTP id u125so2880433oia.20
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 01:10:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mEdQLRNNr60Uq1X2SB+y192Ftk0ynyhp3ZNDXSiOKAQ=;
+        b=ZDuUtxXP8lCfFmmKbHgRHfnbN1ufYkqKPzLomRLXV3ddQ4mcuLFIWqAfgSmTY/x8UF
+         +fk+Dl9PF3Uh52mfnv8uUiBHrQWWJFLVZeh671dAlwSZP4l+Q0aMHW80FdnJZVMt3p2e
+         OSuWdDG7Otlx9GCzBeaiCaxzR0zD+b8JQaeEHUGYTlpxU9Aihiq6J6uDDp6+gGvZDLs5
+         Y/kgJ7dKaHwfLl3+wPTdlkFmTthPigr1HUjlYQvKxTrdJLa4W9ThcDdEa+pozOjdWNJc
+         cl/1q28bju4LsXKhKDHGf0OgDko74N+hX2CUr6RFBOBhxCSqTdcOqRSneawc/VarsO3c
+         ms8w==
+X-Gm-Message-State: APjAAAVKywk5wTEZbGO4GXxgIbNC+HDDDN4qW2qipNCKkNO3USe518hB
+        9Tl8JnVDkQ2Egi9OWADpu1/a3qnEKGyfZOK1NEDJo9s6K7wXy2X0Ev9TTHLtIqrLOFUgPs2xovU
+        ubaiU5TIdhzufgGnm3k8CElXBH/v7pqhFG69sjik1qQRqVXV1gQIqAnlAkQ==
+X-Received: by 2002:a05:6830:2116:: with SMTP id i22mr12892759otc.0.1578906613629;
+        Mon, 13 Jan 2020 01:10:13 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzbkSKjuRTgR1fq86s85YJnJMUaFmgpHoY0wic8O0U5gnrpy6eHqN8bmmjRA09V5O4NRND1ZioaeJVWGm5KziM=
+X-Received: by 2002:a05:6830:2116:: with SMTP id i22mr12892740otc.0.1578906613363;
+ Mon, 13 Jan 2020 01:10:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <80ab5f55-77ef-4719-52fc-2b23c0ecb866@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200103084008.3579-1-kai.heng.feng@canonical.com> <607e395f-21ce-3c9f-eff7-2fa6aaa74595@linux.intel.com>
+In-Reply-To: <607e395f-21ce-3c9f-eff7-2fa6aaa74595@linux.intel.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Mon, 13 Jan 2020 17:10:02 +0800
+Message-ID: <CAAd53p5a2RFpZuHGvuNO_9kgv4dGhHCYU0jeq44FtKJv0Ky8uA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] xhci: Ensure link state is U3 after setting USB_SS_PORT_LS_U3
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        AceLan Kao <acelan.kao@canonical.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jan 10, 2020 at 5:33 PM Mathias Nyman
+<mathias.nyman@linux.intel.com> wrote:
+>
+> On 3.1.2020 10.40, Kai-Heng Feng wrote:
+> > The xHCI spec doesn't specify the upper bound of U3 transition time. For
+> > some devices 20ms is not enough, so we need to make sure the link state
+> > is in U3 before further actions.
+>
+> Looking at the USB 3.2 spec (7.2.4.2 Link Power management and Flow) it seems
+> most timers related to U3 entry are a lot less than a millisecond (4-16us)
+> If port is in U1/U2,  Ux_EXIT_TIMER is 6ms which seems to be the longest timeout.
+>
+> If we anyway are polling for the U3 state we could shorten the initial 20ms sleep
+> down to 10ms. I think many devices, especially if they are already in U0
+> could manage this.
 
+Ok.
 
-On 01/10/2020 02:12 PM, David Hildenbrand wrote:
-> On 10.01.20 04:09, Anshuman Khandual wrote:
->> Currently there are two interfaces to initiate memory range hot removal i.e
->> remove_memory() and __remove_memory() which then calls try_remove_memory().
->> Platform gets called with arch_remove_memory() to tear down required kernel
->> page tables and other arch specific procedures. But there are platforms
->> like arm64 which might want to prevent removal of certain specific memory
->> ranges irrespective of their present usage or movability properties.
-> 
-> Why? Is this only relevant for boot memory? I hope so, otherwise the
-> arch code needs fixing IMHO.
+>
+> are >
+> > I've tried to use U3 Entry Capability by setting U3 Entry Enable in
+> > config register, however the port change event for U3 transition
+> > interrupts the system suspend process.
+> >
+> > For now let's use the less ideal method by polling PLS.
+> >
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+> >   drivers/usb/host/xhci-hub.c | 13 +++++++++++--
+> >   1 file changed, 11 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
+> > index 7a3a29e5e9d2..2b2e9d004dbf 100644
+> > --- a/drivers/usb/host/xhci-hub.c
+> > +++ b/drivers/usb/host/xhci-hub.c
+> > @@ -1228,6 +1228,7 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+> >                       break;
+> >               case USB_PORT_FEAT_LINK_STATE:
+> >                       temp = readl(ports[wIndex]->addr);
+> > +                     xhci_dbg(xhci, "before setting link state, actual port %d-%d status = 0x%0x\n", hcd->self.busnum, wIndex + 1, temp);
+>
+> xhci_set_link_state() already shows similar debugging,
 
-Right, it is relevant only for the boot memory on arm64 platform. But this
-new arch callback makes it flexible to reject any given memory range.
+Ok, will remove it.
 
-> 
-> If it's only boot memory, we should disallow offlining instead via a
-> memory notifier - much cleaner.
+>
+> >                       /* Disable port */
+> >                       if (link_state == USB_SS_PORT_LS_SS_DISABLED) {
+> >                               xhci_dbg(xhci, "Disable port %d\n", wIndex);
+> > @@ -1316,9 +1317,17 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
+> >                       msleep(20); /* wait device to enter */
+> >                       spin_lock_irqsave(&xhci->lock, flags);
+> >
+> > -                     temp = readl(ports[wIndex]->addr);
+> > -                     if (link_state == USB_SS_PORT_LS_U3)
+> > +                     if (link_state == USB_SS_PORT_LS_U3) {
+> > +                             retval = xhci_handshake(ports[wIndex]->addr, PORT_PLS_MASK, XDEV_U3, 80 * 1000);
+> > +                             if (retval)
+> > +                                     xhci_dbg(xhci, "polling XDEV_U3 on port %d-%d timeout\n", hcd->self.busnum, wIndex + 1);
+>
+> In worst case we are busylooping for 80ms here, keeping the cpu busy.
+> It should be ok to sleep here, so how about just reading the register
+> every 10ms max 10 times, sleeping in between.
 
-Dont have much detail understanding of MMU notifier mechanism but from some
-initial reading, it seems like we need to have a mm_struct for a notifier
-to monitor various events on the page table. Just wondering how a physical
-memory range like boot memory can be monitored because it can be used both
-for for kernel (init_mm) or user space process at same time. Is there some
-mechanism we could do this ?
+Ok. Is the polling safe outside of spin_lock_irqsave()?
 
-> 
->>
->> Current arch call back arch_remove_memory() is too late in the process to
->> abort memory hot removal as memory block devices and firmware memory map
->> entries would have already been removed. Platforms should be able to abort
->> the process before taking the mem_hotplug_lock with mem_hotplug_begin().
->> This essentially requires a new arch callback for memory range validation.
-> 
-> I somewhat dislike this very much. Memory removal should never fail if
-> used sanely. See e.g., __remove_memory(), it will BUG() whenever
-> something like that would strike.
-> 
->>
->> This differentiates memory range validation between memory hot add and hot
->> remove paths before carving out a new helper check_hotremove_memory_range()
->> which incorporates a new arch callback. This call back provides platforms
->> an opportunity to refuse memory removal at the very onset. In future the
->> same principle can be extended for memory hot add path if required.
->>
->> Platforms can choose to override this callback in order to reject specific
->> memory ranges from removal or can just fallback to a default implementation
->> which allows removal of all memory ranges.
-> 
-> I suspect we want really want to disallow offlining instead. E.g., I
+Kai-Heng
 
-If boot memory pages can be prevented from being offlined for sure, then it
-would indirectly definitely prevent hot remove process as well.
-
-> remember s390x does that with certain areas needed for dumping/kexec.
-
-Could not find any references to mmu_notifier in arch/s390 or any other arch
-for that matter apart from KVM (which has an user space component), could you
-please give some pointers ?
-
-> 
-> Somebody who added memory via add_memory() should always be able to
-> remove the memory via remove_memory() again. Only boot memory can be
-> treated in a special way, but boot memory is initially always online.
-> 
+>
+> -Mathias
