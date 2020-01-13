@@ -5,290 +5,178 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA27C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B75D7C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65BF32080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8572072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:05:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O5asr7il"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zoo2zPQU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgAMK6t (ORCPT
+        id S1727494AbgAMLFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:58:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57842 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725992AbgAMK6t (ORCPT
+        Mon, 13 Jan 2020 06:05:04 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43982 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726878AbgAMLFE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:58:49 -0500
+        Mon, 13 Jan 2020 06:05:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578913127;
+        s=mimecast20190719; t=1578913502;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MAIEx8cHnHOVRlTiWsQtbwI/8/to6aYjrn2aGGLywaU=;
-        b=O5asr7ilB+nzkEeDKcpd2Y5KJwdIlRB2xFjXN+xUcfZdYX5zMOuTrq2i8PZ1fxOzod0VSO
-        nPwGsALdx3mX9RIxXXeKp0hrzq3lgn9G1Eme3/DhJZBnKxsqWPtE2pZyqLjIqOEygEZre9
-        7/p47FxTQsJ+zrS6gb0lyxeYs1ffitM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-w6u5EupMOUOV-0T5fN4k_Q-1; Mon, 13 Jan 2020 05:58:44 -0500
-X-MC-Unique: w6u5EupMOUOV-0T5fN4k_Q-1
-Received: by mail-wr1-f72.google.com with SMTP id f15so4885559wrr.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:58:44 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MAIEx8cHnHOVRlTiWsQtbwI/8/to6aYjrn2aGGLywaU=;
-        b=dFX/lwF0NzTffJBV4HtojrIEawBFpxaYhJo1m4gAPaXFgAgkNyGWzQd4Fc8Pn09bH8
-         H4cXCNsp9WjIz6qONC9M6khX27MmXnZLsxyy7eot3E+8kp7endiAV0hPGp2pbGQuNH+8
-         5TRZJ532LAVTIqm5+a+W3931UF0MKfxaUHCEQ09BGQoqplBF/Ghs/rP8hOvbMekUmhwl
-         cqN7TchYQoKXqCVjLnXK/biLlkbZxeKcqLh03fzI/LH/i5I0rC5OzLNDxhj+bTNlBL4n
-         6xp9WS65l3L/gzgx395tUf85i8f3MOCo36SXGa4Vld/LHvRalKdTFU6WLaSfkBTiCIYL
-         c0sg==
-X-Gm-Message-State: APjAAAXY+s39aP2L+zItyrUV8cPodeXtICFrTCsQW/g+rh4spk/Utlh/
-        NvJ2GEZiRCbHujuLxmlmeLLUyAU20KPvYu9yj3sUt24CYB2b62KcK3VzT/rrC1DOLcUnKCNbyVr
-        tLUxBjD822O718PUV+RvFbGaw
-X-Received: by 2002:adf:fe0e:: with SMTP id n14mr17776287wrr.116.1578913123559;
-        Mon, 13 Jan 2020 02:58:43 -0800 (PST)
-X-Google-Smtp-Source: APXvYqy0X+GCNnIYMa9/uyFL3BntxkkCxwnCzMMKnBBjLzSQeAoUow1Y6WTCKG6G63ALbSxLbBAaQQ==
-X-Received: by 2002:adf:fe0e:: with SMTP id n14mr17776251wrr.116.1578913123227;
-        Mon, 13 Jan 2020 02:58:43 -0800 (PST)
-Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
-        by smtp.gmail.com with ESMTPSA id x11sm14953648wre.68.2020.01.13.02.58.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 02:58:41 -0800 (PST)
-Subject: Re: [PATCH 1/3] Input: axp20x-pek - Remove unique wakeup event
- handling
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Samuel Holland <samuel@sholland.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-References: <20200113032032.38709-1-samuel@sholland.org>
- <6c876812-6ec1-cf28-8ce4-7732c5cf67da@redhat.com>
-Message-ID: <22828711-7e60-a0cb-4ac9-e7c6d6aff080@redhat.com>
-Date:   Mon, 13 Jan 2020 11:58:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        bh=LEHXgkhJ8pPH8e10XArdPGNvW/iZvMmKPNjc2LR34xs=;
+        b=Zoo2zPQUsvv6+28mp0cF09NQVS0GKgpbKw+BUZSmVjLqpLlAkUwbKtvbDHNEyHp1mVn8XB
+        MUlk3usvLHe+zbt0cSBw7RXKVTejWBFiw17y/dlFVzp1x0rkVXvNDBqpSFgz8wy1rXjGs4
+        SZUl8Vc+T5ZT4vOPRKV2kL3ZeuvO/LE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-250-OiiZe9bONmGbjzi_qzWBYA-1; Mon, 13 Jan 2020 06:04:59 -0500
+X-MC-Unique: OiiZe9bONmGbjzi_qzWBYA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 042271B18BDE;
+        Mon, 13 Jan 2020 11:04:58 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-29.pek2.redhat.com [10.72.8.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0CBB95C1BB;
+        Mon, 13 Jan 2020 11:04:50 +0000 (UTC)
+Date:   Mon, 13 Jan 2020 19:04:46 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        npiggin@suse.de, Mingfangsen <mingfangsen@huawei.com>,
+        Guiyao <guiyao@huawei.com>, zhangsaisai <zhangsaisai@huawei.com>,
+        "wubo (T)" <wubo40@huawei.com>
+Subject: Re: [PATCH] brd: check parameter validation before register_blkdev
+ func
+Message-ID: <20200113110003.GA13011@ming.t460p>
+References: <342ee238-0e7c-c213-eecc-7062f24985cc@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <6c876812-6ec1-cf28-8ce4-7732c5cf67da@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <342ee238-0e7c-c213-eecc-7062f24985cc@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13-01-2020 11:41, Hans de Goede wrote:
-> Hi,
+On Fri, Jan 10, 2020 at 01:10:20PM +0800, Zhiqiang Liu wrote:
 > 
-> On 13-01-2020 04:20, Samuel Holland wrote:
->> This driver attempts to avoid reporting wakeup events to userspace by
->> clearing a possible pending IRQ before IRQs are enabled during resume.
->> The assumption seems to be that userspace cannot cope with a KEY_POWER
->> press during resume. However, no other input driver does this, so it
->> would be a bug that such events are missing with this driver.
->>
->> Furthermore, for PMICs connected via I2C or RSB, it is not possible to
->> update the regmap during the noirq resume phase, because the bus
->> controller drivers require IRQs to perform bus transactions. And the
->> resume hook cannot move to a later phase, because then it would race
->> with the power key IRQ handler.
->>
->> So the best solution seems to be simply removing the hook.
+> In brd_init func, rd_nr num of brd_device are firstly allocated
+> and add in brd_devices, then brd_devices are traversed to add each
+> brd_device by calling add_disk func. When allocating brd_device,
+> the disk->first_minor is set to i * max_part, if rd_nr * max_part
+> is larger than MINORMASK, two different brd_device may have the same
+> devt, then only one of them can be successfully added.
+> when rmmod brd.ko, it will cause oops when calling brd_exit.
 > 
-> Hmm, I'm not sure this is a good idea, let me give you some background
-> info on this:
+> Follow those steps:
+>   # modprobe brd rd_nr=3 rd_size=102400 max_part=1048576
+>   # rmmod brd
+> then, the oops will appear.
 > 
-> This hook was handled because on X86 systems/laptops when waking
-> them up typically the power-button does not send a KEY_POWER press event
-> when the system was woken up through the power-button.
+> Oops log:
+> [  726.613722] Call trace:
+> [  726.614175]  kernfs_find_ns+0x24/0x130
+> [  726.614852]  kernfs_find_and_get_ns+0x44/0x68
+> [  726.615749]  sysfs_remove_group+0x38/0xb0
+> [  726.616520]  blk_trace_remove_sysfs+0x1c/0x28
+> [  726.617320]  blk_unregister_queue+0x98/0x100
+> [  726.618105]  del_gendisk+0x144/0x2b8
+> [  726.618759]  brd_exit+0x68/0x560 [brd]
+> [  726.619501]  __arm64_sys_delete_module+0x19c/0x2a0
+> [  726.620384]  el0_svc_common+0x78/0x130
+> [  726.621057]  el0_svc_handler+0x38/0x78
+> [  726.621738]  el0_svc+0x8/0xc
+> [  726.622259] Code: aa0203f6 aa0103f7 aa1e03e0 d503201f (7940e260)
 > 
-> So normal (e.g. Debian, Fedora) userspace does not expect this event
-> and will directly go to sleep again because that is the default behavior
-> on a KEY_POWER event.
+> Here, we add brd_check_par_valid func to check parameter
+> validation before register_blkdev func.
+> 
+> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+> ---
+>  drivers/block/brd.c | 33 ++++++++++++++++++++++++++-------
+>  1 file changed, 26 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/block/brd.c b/drivers/block/brd.c
+> index df8103dd40ac..3a4510b2c24f 100644
+> --- a/drivers/block/brd.c
+> +++ b/drivers/block/brd.c
+> @@ -330,16 +330,16 @@ static const struct block_device_operations brd_fops = {
+>  /*
+>   * And now the modules code and kernel interface.
+>   */
+> -static int rd_nr = CONFIG_BLK_DEV_RAM_COUNT;
+> -module_param(rd_nr, int, 0444);
+> +static unsigned int rd_nr = CONFIG_BLK_DEV_RAM_COUNT;
+> +module_param(rd_nr, uint, 0444);
+>  MODULE_PARM_DESC(rd_nr, "Maximum number of brd devices");
+> 
+>  unsigned long rd_size = CONFIG_BLK_DEV_RAM_SIZE;
+>  module_param(rd_size, ulong, 0444);
+>  MODULE_PARM_DESC(rd_size, "Size of each RAM disk in kbytes.");
+> 
+> -static int max_part = 1;
+> -module_param(max_part, int, 0444);
+> +static unsigned int max_part = 1;
+> +module_param(max_part, uint, 0444);
+>  MODULE_PARM_DESC(max_part, "Num Minors to reserve between devices");
+> 
+>  MODULE_LICENSE("GPL");
+> @@ -468,10 +468,25 @@ static struct kobject *brd_probe(dev_t dev, int *part, void *data)
+>  	return kobj;
+>  }
+> 
+> +static inline int brd_check_par_valid(void)
+> +{
+> +	if (unlikely(!rd_nr))
+> +		rd_nr = 1;
+> +
+> +	if (unlikely(!max_part))
+> +		max_part = 1;
+> +
+> +	if (rd_nr * max_part > MINORMASK)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +
+> +}
+> +
+>  static int __init brd_init(void)
+>  {
+>  	struct brd_device *brd, *next;
+> -	int i;
+> +	int i, ret;
+> 
+>  	/*
+>  	 * brd module now has a feature to instantiate underlying device
+> @@ -488,11 +503,15 @@ static int __init brd_init(void)
+>  	 *	dynamically.
+>  	 */
+> 
+> +	ret = brd_check_par_valid();
+> +	if (ret) {
+> +		pr_info("brd: invalid parameter setting!!!\n");
+> +		return ret;
+> +	}
+> +
 
-p.s.
+The max supported partition number is 256, see __alloc_disk_node().
+So even though one bigger number is passed to alloc_disk(), at most
+256 partitions are allowed on that disk. Maybe you can apply the
+following way to avoid the issue:
 
-The main reason why typical userspace does not expect the KEY_POWER
-event is because most of the devices which run mainline and have
-suspend/resume working and are using the ACPI button driver for
-the power-button: drivers/acpi/button.c, which has:
+	disk->first_minor       = i * disk->minors;
 
-                         acpi_pm_wakeup_event(&device->dev);
-                         if (button->suspended)
-                                 break;
+However, looks 'rd_nr' still needs to be validated(rd_nr < 2 ^ 23).
 
-                         keycode = test_bit(KEY_SLEEP, input->keybit) ?
-                                                 KEY_SLEEP : KEY_POWER;
-                         input_report_key(input, keycode, 1);
-                         input_sync(input);
-                         input_report_key(input, keycode, 0);
-                         input_sync(input);
-
-And:
-
-static int acpi_button_suspend(struct device *dev)
-{
-         struct acpi_device *device = to_acpi_device(dev);
-         struct acpi_button *button = acpi_driver_data(device);
-
-         button->suspended = true;
-         return 0;
-}
-
-static int acpi_button_resume(struct device *dev)
-{
-         struct acpi_device *device = to_acpi_device(dev);
-         struct acpi_button *button = acpi_driver_data(device);
-
-         button->suspended = false;
-         return 0;
-}
-
-So when the ACPI notify for the button runs on resume, suspended is
-still true; and no KEY_POWER event is send...
-
-Arguably to be consistent we should fix drivers/acpi/button.c to
-send KEY_POWER on wakeup too, but that will break things for many
-users with a likelyhood of breakage approaching 100%.
-
-Note I'm not telling this to argue against your change, just as
-background for why I added this behavior to the axp20x-pek code.
-
-Oh and taking a second look, I see that the hook is already
-written so as to only execute on the AXP288 PMIC, which means
-it should effectively already only influence X86 machines.
-
-So are you trying to get the KEY_POWER event after wakeup
-by power-button to work on a X86 device ?  In that case please
-be aware of the drivers/acpi/button.c issue...
-
-I have the feeling that we may need a Kconfig option to configure
-whether or not to send KEY_POWER on wakeup by power-button, because
-as discussed in my previous mail Android wants this, KDE/MATE/GNOME
-not so much...
-
-Regards,
-
-Hans
-
-
-
-> 
-> On x86 axp20x-pek is only used for the power-button on Bay Trail devices
-> with a AXP288 PMIC. On Cherry Trail devices with an AXP288 PMIC the
-> power-button is also connected directly to a GPIO on the SoC and that
-> is used (also see the axp20x_pek_should_register_input function).
-> 
-> So after writing this patch, when doing hw-enablement for the power-button
-> on the Cherry Trail devices I learned that the gpio_keys driver does
-> send userspace a KEY_POWER event when woken up with the power-button.
-> 
-> I wrote a patch for gpio-keys to not do this, as that is what normal
-> Linux userspace expects, but that was nacked, because under e.g.
-> Android the KEY_POWER event is actually desirable / necessary to avoid
-> Android immediately re-suspending the system again. Since my "fix" to
-> the gpio-keys devices was nacked I have instead wroked around this in
-> userspace, but *only* for the GNOME3 desktop environment, by teaching
-> GNOME3 to ignore KEY_POWER events for the first couple of seconds after
-> a resume.
-> 
-> So your suggested change, which will cause KEY_POWER to be send on
-> Bay Trail devices after a wake-up by the power button, should be
-> fine for recent GNOME3 versions, but for other desktop environments
-> this may cause a regression where they respond to the new KEY_POWER
-> event by immediately going back to sleep again.
-> 
-> As for this not working with the i2c bus, it does on X86 because
-> the PMIC is also directly accessed by the power-management HW of
-> the SoC and to make this work the i2c-controller is never suspended
-> and its irq is marked IRQF_NO_SUSPEND. But this is X86 special
-> sauce.
-> 
-> Summarizing:
-> 
-> I'm personally fine with remove the magic I added to suppress
-> the KEY_POWER press reporting as in hindsight given the gpio-keys
-> story I should have never added it. But I'm worried about this
-> causing regressions for some Bay Trail users. OTOH making this
-> change would be good for Android X86 users.
-> 
-> Another IMHO better fix would be to drop the __maybe_unused and
-> instead wrap both the axp20x_pek_resume_noirq function and the
-> init of the  .resume_noirq struct member with:
-> 
-> #if defined X86 && defined CONFIG_PM_SLEEP
-> 
-> This keeps the current behavior on Bay Trail machines, while
-> I assume it should also fix the issues this was causing for
-> your setup.
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
->> Signed-off-by: Samuel Holland <samuel@sholland.org>
->> ---
->>   drivers/input/misc/axp20x-pek.c | 25 -------------------------
->>   1 file changed, 25 deletions(-)
->>
->> diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
->> index 17c1cca74498..7d0ee5bececb 100644
->> --- a/drivers/input/misc/axp20x-pek.c
->> +++ b/drivers/input/misc/axp20x-pek.c
->> @@ -352,30 +352,6 @@ static int axp20x_pek_probe(struct platform_device *pdev)
->>       return 0;
->>   }
->> -static int __maybe_unused axp20x_pek_resume_noirq(struct device *dev)
->> -{
->> -    struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
->> -
->> -    if (axp20x_pek->axp20x->variant != AXP288_ID)
->> -        return 0;
->> -
->> -    /*
->> -     * Clear interrupts from button presses during suspend, to avoid
->> -     * a wakeup power-button press getting reported to userspace.
->> -     */
->> -    regmap_write(axp20x_pek->axp20x->regmap,
->> -             AXP20X_IRQ1_STATE + AXP288_IRQ_POKN / 8,
->> -             BIT(AXP288_IRQ_POKN % 8));
->> -
->> -    return 0;
->> -}
->> -
->> -static const struct dev_pm_ops axp20x_pek_pm_ops = {
->> -#ifdef CONFIG_PM_SLEEP
->> -    .resume_noirq = axp20x_pek_resume_noirq,
->> -#endif
->> -};
->> -
->>   static const struct platform_device_id axp_pek_id_match[] = {
->>       {
->>           .name = "axp20x-pek",
->> @@ -394,7 +370,6 @@ static struct platform_driver axp20x_pek_driver = {
->>       .id_table    = axp_pek_id_match,
->>       .driver        = {
->>           .name        = "axp20x-pek",
->> -        .pm        = &axp20x_pek_pm_ops,
->>           .dev_groups    = axp20x_groups,
->>       },
->>   };
->>
+Thanks,
+Ming
 
