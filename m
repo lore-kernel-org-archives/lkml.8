@@ -2,145 +2,92 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBEDC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:17:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD0DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65292084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:17:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="m9fa8+qy"
+	by mail.kernel.org (Postfix) with ESMTP id AE7962080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728773AbgAMKQ7 (ORCPT
+        id S1728796AbgAMKRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:16:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51688 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgAMKQ7 (ORCPT
+        Mon, 13 Jan 2020 05:17:18 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:36615 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbgAMKRS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:16:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TC8ktWymGRn+4RZ97AzmjSGIJ8ZQa/9bHdinVyx7ycg=; b=m9fa8+qyDpqOPF1lzJst9rx9Z
-        tLwFtzUYhZGUGuR8ylDqhtV0deAG3/4U4pZ4AgRJFA6lwRXtlybu3cu/hdvzKNW/ASZqVK5bjR9d2
-        dB7XKvGOnyW9pv/Y67GknqAc/nAWs4VILGEjXA7jXTMncEPOiTq6TypYHXj0QgKaIqi5fgFex9yJZ
-        IvASIqOaazC2uF2dvArIiRK7ES6Kl+7TVLWEUsK0tXjYges7EwbOU342OUtpqfS9A/c/m7rVWvxz4
-        eRT8VrqFpVq1r16TFS5UDVLUq8CAImRAiIt3vS+XPW6sqx8WuRLBIaIAqn0xz+Gg717mt5YWuj7XU
-        NlJYa7ilg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iqwlY-0002xH-Vd; Mon, 13 Jan 2020 10:16:13 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0C901304121;
-        Mon, 13 Jan 2020 11:14:34 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4D3C02B616422; Mon, 13 Jan 2020 11:16:09 +0100 (CET)
-Date:   Mon, 13 Jan 2020 11:16:09 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Eduardo Valentin <eduval@amazon.com>
-Cc:     Anchal Agarwal <anchalag@amazon.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com, x86@kernel.org,
-        boris.ostrovsky@oracle.com, jgross@suse.com,
-        linux-pm@vger.kernel.org, linux-mm@kvack.org, kamatam@amazon.com,
-        sstabellini@kernel.org, konrad.wilk@oracle.co,
-        roger.pau@citrix.com, axboe@kernel.dk, davem@davemloft.net,
-        rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        sblbir@amazon.com, xen-devel@lists.xenproject.org,
-        vkuznets@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Woodhouse@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com,
-        dwmw@amazon.co.uk, fllinden@amaozn.com
-Subject: Re: [RFC PATCH V2 11/11] x86: tsc: avoid system instability in
- hibernation
-Message-ID: <20200113101609.GT2844@hirez.programming.kicks-ass.net>
-References: <20200107234526.GA19034@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200108105011.GY2827@hirez.programming.kicks-ass.net>
- <20200110153520.GC8214@u40b0340c692b58f6553c.ant.amazon.com>
+        Mon, 13 Jan 2020 05:17:18 -0500
+Received: from ip5f5bd663.dynamic.kabel-deutschland.de ([95.91.214.99] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iqwmZ-0006e1-T4; Mon, 13 Jan 2020 10:17:16 +0000
+Date:   Mon, 13 Jan 2020 11:17:15 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Kars de Jong <jongk@linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux/m68k <linux-m68k@vger.kernel.org>,
+        Amanieu d'Antras <amanieu@gmail.com>
+Subject: Re: [PATCH] m68k: Wire up clone3() syscall
+Message-ID: <20200113101714.75v5gmg3rb5tlhze@wittgenstein>
+References: <20191124195225.31230-1-jongk@linux-m68k.org>
+ <CAMuHMdXQAbw_Skj99q_PWXKn77bzVbJf60n38Etmq-zhOoHsHQ@mail.gmail.com>
+ <CAMuHMdU9hu+EAAnBD5dH3+LS5pNi9fOjFNesv3eFSCoqbW3CCA@mail.gmail.com>
+ <20200113091813.zkye72cubpfhemww@wittgenstein>
+ <CAMuHMdXTqjPQN4UbH5a1BGjFTNLRrwDu97B=JxDii2VCoRjorA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200110153520.GC8214@u40b0340c692b58f6553c.ant.amazon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAMuHMdXTqjPQN4UbH5a1BGjFTNLRrwDu97B=JxDii2VCoRjorA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 07:35:20AM -0800, Eduardo Valentin wrote:
-> Hey Peter,
+On Mon, Jan 13, 2020 at 10:34:35AM +0100, Geert Uytterhoeven wrote:
+> Hi Christian,
 > 
-> On Wed, Jan 08, 2020 at 11:50:11AM +0100, Peter Zijlstra wrote:
-> > On Tue, Jan 07, 2020 at 11:45:26PM +0000, Anchal Agarwal wrote:
-> > > From: Eduardo Valentin <eduval@amazon.com>
-> > > 
-> > > System instability are seen during resume from hibernation when system
-> > > is under heavy CPU load. This is due to the lack of update of sched
-> > > clock data, and the scheduler would then think that heavy CPU hog
-> > > tasks need more time in CPU, causing the system to freeze
-> > > during the unfreezing of tasks. For example, threaded irqs,
-> > > and kernel processes servicing network interface may be delayed
-> > > for several tens of seconds, causing the system to be unreachable.
-> > 
-> > > The fix for this situation is to mark the sched clock as unstable
-> > > as early as possible in the resume path, leaving it unstable
-> > > for the duration of the resume process. This will force the
-> > > scheduler to attempt to align the sched clock across CPUs using
-> > > the delta with time of day, updating sched clock data. In a post
-> > > hibernation event, we can then mark the sched clock as stable
-> > > again, avoiding unnecessary syncs with time of day on systems
-> > > in which TSC is reliable.
-> > 
-> > This makes no frigging sense what so bloody ever. If the clock is
-> > stable, we don't care about sched_clock_data. When it is stable you get
-> > a linear function of the TSC without complicated bits on.
-> > 
-> > When it is unstable, only then do we care about the sched_clock_data.
-> > 
+> On Mon, Jan 13, 2020 at 10:18 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> > On Mon, Jan 13, 2020 at 10:10:26AM +0100, Geert Uytterhoeven wrote:
+> > > On Sun, Jan 12, 2020 at 5:06 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > On Sun, Nov 24, 2019 at 8:52 PM Kars de Jong <jongk@linux-m68k.org> wrote:
+> > > > > Wire up the clone3() syscall for m68k. The special entry point is done in
+> > > > > assembler as was done for clone() as well. This is needed because all
+> > > > > registers need to be saved. The C wrapper then calls the generic
+> > > > > sys_clone3() with the correct arguments.
+> > > > >
+> > > > > Tested on A1200 using the simple test program from:
+> > > > >
+> > > > >   https://lore.kernel.org/lkml/20190716130631.tohj4ub54md25dys@brauner.io/
+> > > > >
+> > > > > Cc: linux-m68k@vger.kernel.org
+> > > > > Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
+> > > >
+> > > > Thanks, applied and queued for v5.6.
+> > >
+> > > Which is now broken because of commit dd499f7a7e342702 ("clone3: ensure
+> > > copy_thread_tls is implemented") in v5.5-rc6 :-(
+> >
+> > Sorry, just for clarification what and how is it broken by
+> > dd499f7a7e342702 ("clone3: ensure > copy_thread_tls is implemented")
+> > ?
 > 
-> Yeah, maybe what is not clear here is that we covering for situation
-> where clock stability changes over time, e.g. at regular boot clock is
-> stable, hibernation happens, then restore happens in a non-stable clock.
+> Because m68k does not implement copy_thread_tls() yet, and doesn't
+> select HAVE_COPY_THREAD_TLS yet.
 
-Still confused, who marks the thing unstable? The patch seems to suggest
-you do yourself, but it is not at all clear why.
+Oh right, sorry. I forgot that m68k has a patchset to enable clone3() up
+for merging. I should've remembered that and warned you that we will
+have to require copy_thread_tls() going forward. I hope the merge is
+explanatory enough why we're doing it this way.
 
-If TSC really is unstable, then it needs to remain unstable. If the TSC
-really is stable then there is no point in marking is unstable.
-
-Either way something is off, and you're not telling me what.
-
-> > > Reviewed-by: Erik Quanstrom <quanstro@amazon.com>
-> > > Reviewed-by: Frank van der Linden <fllinden@amazon.com>
-> > > Reviewed-by: Balbir Singh <sblbir@amazon.com>
-> > > Reviewed-by: Munehisa Kamata <kamatam@amazon.com>
-> > > Tested-by: Anchal Agarwal <anchalag@amazon.com>
-> > > Signed-off-by: Eduardo Valentin <eduval@amazon.com>
-> > > ---
-> > 
-> > NAK, the code very much relies on never getting marked stable again
-> > after it gets set to unstable.
-> > 
 > 
-> Well actually, at the PM_POST_HIBERNATION, we do the check and set stable if
-> known to be stable.
-> 
-> The issue only really happens during the restoration path under scheduling pressure,
-> which takes forever to finish, as described in the commit.
-> 
-> Do you see a better solution for this issue?
+> Looking into fixing that...
 
-I still have no clue what your actual problem is. You say scheduling
-goes wobbly because sched_clock_data is stale, but when stable that
-doesn't matter.
-
-So what is the actual problem?
+Thank you! Much appreciated!
+Christian
