@@ -2,87 +2,195 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94710C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E217C33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:10:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEE024649
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:08:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B242253D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 06:10:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qatwxt+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733212AbgAMGIk (ORCPT
+        id S1733212AbgAMGKj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 01:08:40 -0500
-Received: from mga05.intel.com ([192.55.52.43]:47086 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725909AbgAMGIk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 01:08:40 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jan 2020 22:08:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,427,1571727600"; 
-   d="scan'208";a="304750793"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by orsmga001.jf.intel.com with ESMTP; 12 Jan 2020 22:08:38 -0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     linux-pci@vger.kernel.org
-Cc:     Chen Yu <yu.c.chen@intel.com>, Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI/PM: Print the pci config space of devices before suspend
-Date:   Mon, 13 Jan 2020 14:07:24 +0800
-Message-Id: <20200113060724.19571-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Jan 2020 01:10:39 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:44897 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730659AbgAMGKj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 01:10:39 -0500
+Received: by mail-qv1-f65.google.com with SMTP id n8so3526226qvg.11
+        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 22:10:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7DfRwJTOPvTtWVkT74WE0+0Wv9fnsKAGouTb1Izq89A=;
+        b=Qatwxt+OoQ71OqIjEakHG18BOGUTpja+9P/RSKDnHwYK9mlMKhnsjaJ4Qe78pwcKjA
+         EUHvEFOX4TtEYQGZXQ0Nrtq2IaqhIOos4xgXVC9FNe4Vmd1R/eL/TNIr1ZBdkzqw+QC4
+         hkfY5cWW6CUPnnIq7Y57SsJYESMlI6UHhEQ5Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7DfRwJTOPvTtWVkT74WE0+0Wv9fnsKAGouTb1Izq89A=;
+        b=DA31lNfoYxtrnS+0kbrxn7eGzwSRplUubpRHfKJ8KCadO3n+7FCp6kcv6TFYxui0It
+         AcPpwpoWLLPXb3tat6uSFwuAy+pxx0XHu7YXLXXjK1v24D1UBGlaRSL5nz+MxnVJ74A+
+         ntLppdto+DcThITaAX5coapOWv0d6UT6s5ZD66NNABuYQzBs2q+ew7J/RZbzP1YRvMbA
+         1FKCXrqWdnh8apQYvA3ZVsRi3oFo2d4K1IsuCiyN/4AzaG3TBj5ZbtYc5AxRWywP9mIN
+         iFffRv7QOyKAnmm2A2Pjpy7CZjSkkwbQVINc1FE1yqWoZPuP+M856isvDYVeH7eDSi0r
+         NJOA==
+X-Gm-Message-State: APjAAAVuGIYAGn08teVMSZYMLXZSYI5XPomxGgNyw0X3+oQpnkA098OQ
+        F5BOuyEdNTCBgoc/8dJUorRMZlYt2vkdp4Xn3+SOZw==
+X-Google-Smtp-Source: APXvYqzNnf0+5zf15VXfHELZbqC0F4Qy+EwQSLKu7IESG3soghZ70PDiWBmTa+q/Q8H2Xj5h4riou90hhvsdIXG1nTo=
+X-Received: by 2002:a0c:f703:: with SMTP id w3mr14287635qvn.6.1578895837978;
+ Sun, 12 Jan 2020 22:10:37 -0800 (PST)
+MIME-Version: 1.0
+References: <1578639862-14480-1-git-send-email-jiaxin.yu@mediatek.com> <1578639862-14480-2-git-send-email-jiaxin.yu@mediatek.com>
+In-Reply-To: <1578639862-14480-2-git-send-email-jiaxin.yu@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Mon, 13 Jan 2020 14:10:27 +0800
+Message-ID: <CANMq1KBNuJDEn57d0ysc2XG0ezWEvJ2Pm88YihDiSZJ=-E=W9g@mail.gmail.com>
+Subject: Re: [PATCH v11 1/3] dt-bindings: mediatek: mt8183: Add #reset-cells
+To:     Jiaxin Yu <jiaxin.yu@mediatek.com>
+Cc:     Yong Liang <yong.liang@mediatek.com>, wim@linux-watchdog.org,
+        linux@roeck-us.net, Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-watchdog@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        chang-an.chen@mediatek.com, freddy.hsin@mediatek.com,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pci config space was found to be insane during resume
-from hibernation(S4, or suspend to disk) on a VM:
+Jiaxin,
 
- serial 0000:00:16.3: restoring config space at offset 0x14
- (was 0x9104e000, writing 0xffffffff)
+On Fri, Jan 10, 2020 at 3:04 PM Jiaxin Yu <jiaxin.yu@mediatek.com> wrote:
+>
+> Add #reset-cells property and update example
+>
+> Signed-off-by: yong.liang <yong.liang@mediatek.com>
+> Signed-off-by: Jiaxin Yu <jiaxin.yu@mediatek.com>
+> Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Guenter Roeck <groeck7@gmail.com>
 
-Either the snapshot on the disk has been scribbled or the pci
-config space becomes invalid before suspend. To narrow down
-and benefit future debugging, print the pci config space
-being saved before suspend, which is symmetric to the log
-in pci_restore_config_dword().
+From previous feedback
+(https://patchwork.kernel.org/patch/11318687/#23086211), it seems like
+we lost track of which exact version had the Reviewed-By, so I'd just
+drop all those tags and let people review again.
 
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Len Brown <lenb@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
----
- drivers/pci/pci.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+> ---
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index e87196cc1a7f..34cde70440c3 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1372,8 +1372,11 @@ int pci_save_state(struct pci_dev *dev)
- {
- 	int i;
- 	/* XXX: 100% dword access ok here? */
--	for (i = 0; i < 16; i++)
-+	for (i = 0; i < 16; i++) {
- 		pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
-+		pci_dbg(dev, "saving config space at offset %#x (reading %#x)\n",
-+			i * 4, dev->saved_config_space[i]);
-+	}
- 	dev->state_saved = true;
- 
- 	i = pci_save_pcie_state(dev);
--- 
-2.17.1
+It would have been nice to mention that this patch depends on
+https://patchwork.kernel.org/patch/11311241/ (as your example makes
+use of it below).
 
+>  .../devicetree/bindings/watchdog/mtk-wdt.txt  | 10 ++++++---
+>  .../reset-controller/mt2712-resets.h          | 22 +++++++++++++++++++
+>  .../reset-controller/mt8183-resets.h          | 17 ++++++++++++++
+>  3 files changed, 46 insertions(+), 3 deletions(-)
+>  create mode 100644 include/dt-bindings/reset-controller/mt2712-resets.h
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> index 92181b648f52..5a76ac262f8d 100644
+> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> @@ -4,6 +4,7 @@ Required properties:
+>
+>  - compatible should contain:
+>         "mediatek,mt2701-wdt", "mediatek,mt6589-wdt": for MT2701
+> +       "mediatek,mt2712-wdt", "mediatek,mt6589-wdt": for MT2712
+
+Please separate this as another patch.
+
+>         "mediatek,mt6589-wdt": for MT6589
+>         "mediatek,mt6797-wdt", "mediatek,mt6589-wdt": for MT6797
+>         "mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
+> @@ -14,11 +15,14 @@ Required properties:
+>
+>  Optional properties:
+>  - timeout-sec: contains the watchdog timeout in seconds.
+> +- #reset-cells: Should be 1.
+>
+>  Example:
+>
+> -wdt: watchdog@10000000 {
+> -       compatible = "mediatek,mt6589-wdt";
+> -       reg = <0x10000000 0x18>;
+> +watchdog: watchdog@10007000 {
+> +       compatible = "mediatek,mt8183-wdt",
+> +                    "mediatek,mt6589-wdt";
+> +       reg = <0 0x10007000 0 0x100>;
+>         timeout-sec = <10>;
+> +       #reset-cells = <1>;
+>  };
+> diff --git a/include/dt-bindings/reset-controller/mt2712-resets.h b/include/dt-bindings/reset-controller/mt2712-resets.h
+> new file mode 100644
+> index 000000000000..9e7ee762f076
+> --- /dev/null
+> +++ b/include/dt-bindings/reset-controller/mt2712-resets.h
+> @@ -0,0 +1,22 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2019 MediaTek Inc.
+> + * Author: Yong Liang <yong.liang@mediatek.com>
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT2712
+> +#define _DT_BINDINGS_RESET_CONTROLLER_MT2712
+> +
+> +#define MT2712_TOPRGU_INFRA_SW_RST                             0
+> +#define MT2712_TOPRGU_MM_SW_RST                                        1
+> +#define MT2712_TOPRGU_MFG_SW_RST                               2
+> +#define MT2712_TOPRGU_VENC_SW_RST                              3
+> +#define MT2712_TOPRGU_VDEC_SW_RST                              4
+> +#define MT2712_TOPRGU_IMG_SW_RST                               5
+> +#define MT2712_TOPRGU_INFRA_AO_SW_RST                          8
+> +#define MT2712_TOPRGU_USB_SW_RST                               9
+> +#define MT2712_TOPRGU_APMIXED_SW_RST                           10
+> +
+> +#define MT2712_TOPRGU_SW_RST_NUM                               11
+> +
+> +#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT2712 */
+> diff --git a/include/dt-bindings/reset-controller/mt8183-resets.h b/include/dt-bindings/reset-controller/mt8183-resets.h
+> index 8804e34ebdd4..a1bbd41e0d12 100644
+> --- a/include/dt-bindings/reset-controller/mt8183-resets.h
+> +++ b/include/dt-bindings/reset-controller/mt8183-resets.h
+> @@ -78,4 +78,21 @@
+>  #define MT8183_INFRACFG_AO_I2C7_SW_RST                         126
+>  #define MT8183_INFRACFG_AO_I2C8_SW_RST                         127
+>
+> +#define MT8183_INFRACFG_SW_RST_NUM                             128
+> +
+> +#define MT8183_TOPRGU_MM_SW_RST                                        1
+> +#define MT8183_TOPRGU_MFG_SW_RST                               2
+> +#define MT8183_TOPRGU_VENC_SW_RST                              3
+> +#define MT8183_TOPRGU_VDEC_SW_RST                              4
+> +#define MT8183_TOPRGU_IMG_SW_RST                               5
+> +#define MT8183_TOPRGU_MD_SW_RST                                        7
+> +#define MT8183_TOPRGU_CONN_SW_RST                              9
+> +#define MT8183_TOPRGU_CONN_MCU_SW_RST                          12
+> +#define MT8183_TOPRGU_IPU0_SW_RST                              14
+> +#define MT8183_TOPRGU_IPU1_SW_RST                              15
+> +#define MT8183_TOPRGU_AUDIO_SW_RST                             17
+> +#define MT8183_TOPRGU_CAMSYS_SW_RST                            18
+> +
+> +#define MT8183_TOPRGU_SW_RST_NUM                               19
+> +
+>  #endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT8183 */
+> --
+> 2.18.0
