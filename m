@@ -2,142 +2,148 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB59C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE84BC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:38:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0316F2080D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5032080D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:38:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="b/ab/jdX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aeXyjC0I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729061AbgAMXhE (ORCPT
+        id S1729085AbgAMXid (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 18:37:04 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:38575 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728769AbgAMXhE (ORCPT
+        Mon, 13 Jan 2020 18:38:33 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:40086 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728769AbgAMXid (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 18:37:04 -0500
-Received: by mail-pj1-f65.google.com with SMTP id l35so4975832pje.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 15:37:03 -0800 (PST)
+        Mon, 13 Jan 2020 18:38:33 -0500
+Received: by mail-qv1-f68.google.com with SMTP id dp13so4861683qvb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 15:38:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=URU0nYVVIvG9fQe+g2UcCIBs+6Op8N6XSVfeKx2sX+I=;
-        b=b/ab/jdXLWIU3ED09YHc4yD7PEZYMen7BL6s7F1/kjYZZ83fH7thRSgRFb4nvmHi9+
-         I8uOh4axY1udmFUQ9CRB6Ak22NsM0Q5kOUrMSui9gEu5AZwkkiQGPJxHY4Ek0jT/BU7x
-         dN3GGRtSBhufBlwxACNUPr6YqSRNplN/UB1VyIzSrV23VJ/BxtF8x8jOUP/NEUxtfkff
-         VucOsF7idPxxRbVhU5/fTAEEDTXLWM6GxHyPAO3/NDMx+eTcgWfIn5rfkPyTksPsZSjP
-         e4eZNbaY5gv76V7loiTc0SQ3nvjtNOKckOayZ/Icwb44Nfq+t/qB4ZXVB/jumkX3KfWa
-         mBoA==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SvvC5/J9xQahIMTC+riQHl1QpQjv6jCMZ1dJFy4P8xc=;
+        b=aeXyjC0ISSVaDLyhH85V9ZPYGGZPEqTz8eY1Dz43DjlN87H8nj0a4L5BNcgHVv/heK
+         Wg2N5oQdR33gnkKZ6e6Vfh4XN3oWcWqkOdHY3/B6m7FGU3XrhuXI1WSRLT+vskX1pt1M
+         ozCoPlqlfLpENW0sgK+T96RNUAjr3xw6g2YvagIonnj5ATDumoxXQD57mF40wC1mRfQm
+         Vb7Lm/DTILuCHjShFl4S1bkcpwmkt+1qguCJJpIYF8ZdEDWeQQbHWTkJKnvnUD0G3/ha
+         eSJgRHitVq46jhXbjhXDE0rgY8zn3NvMlfw8KKfroBHp21NiudWdq6JuearcbfQH8WM6
+         3hKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=URU0nYVVIvG9fQe+g2UcCIBs+6Op8N6XSVfeKx2sX+I=;
-        b=IMyl5cTkmtBPJnGxuu6VpAmVH/xyqqhcFVetW4+WS0BwdGmtsfnrQcGwUp1/biVlOa
-         4v+DHD2NGybLsL5Wzjgylqnbk4vShP5argr4J8ybizJBMwMMoNYh8dpe3srWYv6lXWeT
-         2qneyCoFcAdRoNImTpCaginGeRSyDwuW3ona//wR4J9T74TzPQAcSZETUnE78YVHWgJa
-         j42Vaq9ZzJLc/F6/xhYPMhYaAMakqwUs+Q1OyEiCQGBgWlk1qzjMaCeJ8BZf18VLF/BZ
-         jzid0uQMYFiJyKoHnGqbELH5e86BRvCPO0mC3KKjT9AQqYTepXOwCd8ifjATaPBZo+Se
-         RRzQ==
-X-Gm-Message-State: APjAAAWP2T+kR0zjNNry6NBJn2NDxYDkYEcaOIJcKULsSh460PjHO3L6
-        OdTXrYuw5cLlvwQ5xSg44L264A==
-X-Google-Smtp-Source: APXvYqzCuoCV4QA2/uQQXAdoLv7iqVZ5/gY2tfSqNNG6zeLXktzaA9OsR+piF0ld/u9H+WkLG6qR5Q==
-X-Received: by 2002:a17:902:bf0a:: with SMTP id bi10mr17117837plb.324.1578958623194;
-        Mon, 13 Jan 2020 15:37:03 -0800 (PST)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.gmail.com with ESMTPSA id q15sm14613132pgi.55.2020.01.13.15.37.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 13 Jan 2020 15:37:02 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        linux-amlogic@lists.infradead.org
-Cc:     Jianxin Pan <jianxin.pan@amlogic.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        Jian Hu <jian.hu@amlogic.com>,
-        Hanjie Lin <hanjie.lin@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Xingyu Chen <xingyu.chen@amlogic.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: power: add Amlogic secure power domains bindings
-In-Reply-To: <1573532930-39505-2-git-send-email-jianxin.pan@amlogic.com>
-References: <1573532930-39505-1-git-send-email-jianxin.pan@amlogic.com> <1573532930-39505-2-git-send-email-jianxin.pan@amlogic.com>
-Date:   Mon, 13 Jan 2020 15:37:02 -0800
-Message-ID: <7ha76rdj35.fsf@baylibre.com>
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SvvC5/J9xQahIMTC+riQHl1QpQjv6jCMZ1dJFy4P8xc=;
+        b=fCLsAn05jDAyZyrVqsJFLHkLW4r3lt927NODB2m+Le8DKOwxoPFm2UOhcqKJO4beYK
+         CQwbRAqMmnjKe5j7FpTB1NQvtDjSMPWmtz/8mm7qZAy+ezGwS3U0POf1dstBhja2yiqH
+         JZ4rsroBlajwfWETwg+JuJFf5I1K61tc4cjKNxCwkTBqQlalbNWI3Rzg33x1E+0HX4i3
+         lRO8IYE54nljRTgXBtrHdAb6rECnVXqLLHJleke2JFR32Ua7JbLNgQNYABf4ov0PqSde
+         vdOPm0n03gH2sxirR7b0Ls2wF3LaJPRfRPlYO93q6WK2BFRFY/Fu7j8DE0LVaypog5xK
+         Q4mA==
+X-Gm-Message-State: APjAAAWoXJiBGg+Ot+l7zKf9elVmVtflcNZOeHjiyEQujK3DSfZnKn/3
+        6nKUIy4wHq0Q61uSUG6d5U0=
+X-Google-Smtp-Source: APXvYqyT23I9GBW3yOrOJKDsclepwXNGXPMNRq+cujYGQz62QAyr3kFRutpp+AMF0kyc+U8MMr3SWQ==
+X-Received: by 2002:a05:6214:3e7:: with SMTP id cf7mr13990133qvb.129.1578958712235;
+        Mon, 13 Jan 2020 15:38:32 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id k22sm5828768qkg.80.2020.01.13.15.38.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 15:38:32 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 13 Jan 2020 18:38:29 -0500
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH] x86/tools/relocs: Add _etext and __end_of_kernel_reserve
+ to S_REL
+Message-ID: <20200113233829.GB2000869@rani.riverdale.lan>
+References: <20200110202349.1881840-1-nivedita@alum.mit.edu>
+ <20200110203828.GK19453@zn.tnic>
+ <20200110205028.GA2012059@rani.riverdale.lan>
+ <20200111130243.GA23583@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200111130243.GA23583@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jianxin Pan <jianxin.pan@amlogic.com> writes:
+On Sat, Jan 11, 2020 at 02:02:43PM +0100, Borislav Petkov wrote:
+> On Fri, Jan 10, 2020 at 03:50:29PM -0500, Arvind Sankar wrote:
+> > On Fri, Jan 10, 2020 at 09:38:28PM +0100, Borislav Petkov wrote:
+> > > On Fri, Jan 10, 2020 at 03:23:49PM -0500, Arvind Sankar wrote:
+> > > > Pre-2.23 binutils makes symbols defined outside sections absolute, so
+> > > > these two symbols break the build on old linkers.
+> > > 
+> > > -ENOTENOUGHINFO
+> > > 
+> > > Which old linkers, how exactly do they break the build, etc etc?
+> > > 
+> > > Please give exact reproduction steps.
+> > > 
+> > > Thx.
+> > > 
+> > 
+> > binutils-2.21 and -2.22. An x86-64 defconfig will fail with
+> > 	Invalid absolute R_X86_64_32S relocation: _etext
+> > and after fixing that one, with
+> > 	Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
+> 
+> I'm still not clear as to why this happens. I tried reproducing on
+> openSUSE 12.1 which has
+> 
+> Repository: openSUSE-12.1-Oss
+> Name: binutils
+> Version: 2.21.1-12.1.4
+> 
+> and the build there fails with:
+> 
+> objdump: arch/x86/lib/clear_page_64.o: File format not recognized
+> objdump: arch/x86/lib/cmdline.o: File format not recognized
+> objdump: arch/x86/lib/cmpxchg16b_emu.o: File format not recognized
+> objdump: arch/x86/lib/copy_page_64.o: File format not recognized
+> objdump: arch/x86/lib/copy_user_64.o: File format not recognized
+> objdump: arch/x86/lib/cpu.o: File format not recognized
+> ...
+> 
+> and objdump is part of binutils.
+> 
+> Now, this looks like another symptom of what you're reporting but what
+> we're missing is the rootcause about *why* this happens.
 
-> Add the bindings for the Amlogic Secure power domains, controlling the
-> secure power domains.
->
-> The bindings targets the Amlogic A1 and C1 compatible SoCs, in which the
-> power domain registers are in secure world.
->
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-> ---
->  .../bindings/power/amlogic,meson-sec-pwrc.yaml     | 37 ++++++++++++++++++++++
->  include/dt-bindings/power/meson-a1-power.h         | 32 +++++++++++++++++++
->  2 files changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
->  create mode 100644 include/dt-bindings/power/meson-a1-power.h
->
-> diff --git a/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> new file mode 100644
-> index 00000000..2ed269f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/amlogic,meson-sec-pwrc.yaml
-> @@ -0,0 +1,37 @@
-> +# SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +# Copyright (c) 2019 Amlogic, Inc
-> +# Author: Jianxin Pan <jianxin.pan@amlogic.com>
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/power/amlogic,meson-sec-pwrc.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Amlogic Meson Secure Power Domains
-> +
-> +maintainers:
-> +  - Jianxin Pan <jianxin.pan@amlogic.com>
-> +
-> +description: |+
-> +  Meson Secure Power Domains used in A1/C1 SoCs.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - amlogic,meson-a1-pwrc
-> +
-> +  "#power-domain-cells":
-> +    const: 1
-> +
-> +required:
-> +  - compatible
-> +  - "#power-domain-cells"
-> +
-> +examples:
-> +  - |
-> +    pwrc: power-controller {
-> +          compatible = "amlogic,meson-a1-pwrc";
-> +          #power-domain-cells = <1>;
-> +          secure-monitor = <&sm>;
+I tried out OpenSUSE 12.1 in a VM, and this one seems to be related to
+something that changes in the build when libelf-devel is installed.
+Deleting that package and switching UNWINDER_ORC (which says it requires
+libelf-devel) to UNWINDER_FRAME_POINTER builds without the file format
+errors.
 
-As requested by Rob, please put this under the secure-monitor node.
-
-Kevin
+> 
+> Because if the issue is hard to fix or similar, then we probably should
+> raise the minimum supported binutils version from 2.21 to something
+> newer and not do this fix.
+> 
+> But before we do that, we need a proper analysis as to why it happens.
+> 
+> Also, what distro are you using to reproduce it on?
+> 
+> Thx.
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
