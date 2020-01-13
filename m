@@ -2,147 +2,194 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF6FC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785EAC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB5820CC7
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CC1C20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qogD2atn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oKkpYKtv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbgAMKtJ (ORCPT
+        id S1727286AbgAMKvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:49:09 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:35956 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbgAMKtI (ORCPT
+        Mon, 13 Jan 2020 05:51:05 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34980 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgAMKvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:49:08 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z3so8037121wru.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:49:06 -0800 (PST)
+        Mon, 13 Jan 2020 05:51:04 -0500
+Received: by mail-wr1-f68.google.com with SMTP id g17so8038110wro.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:51:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=dJIJ8TE4q3821mbA7gJOKY19l0UD3HWAsSMco9Ho4C4=;
-        b=qogD2atniaYCyI+/ifYIEcWu0V0PymnKN5/DklSu2Q4CvaU6deYGL7xeYrU+1J1fQU
-         Rmv2wQhpmhJ+Y0ILck2SjdXhNBseiONexmAAbjKPytHvfsdhT420A3BcAZHBIDnVQLCL
-         FMOQpm4+eFMt5GjRyinK4Zd+33Un3U1F7pkaankp0GfRewgn3jSFcm6Fv6CN/eYaft8J
-         oBRPRxTWKkOT//lmiXWR7rRIyi8MEEeZ0NyQQfeMAsjRVvOO4jKZmiDlobBWRsFpZNgr
-         GDvbnwjdx+np/tTfKXodm7ZhiFBssr+weWL+G4dSA7XVxgkVbK83X1B9lg5a4MGRRezG
-         i27g==
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rX6hYkQTcPkxFSQTp22iI/GTbRzDTSn2mT2N78MPltg=;
+        b=oKkpYKtvG22DswPrnQPe4mDphOZzPeWS9Fm/gBtPFXIi/eh1IzHY8X22AlrD5VKaYE
+         s+qOTZJe21UPh7e2M2/VVXjI1lW86ypWRIgklVRlnZXV2m3TNbBYjdeCk1bOikndC3V+
+         aTL2Zqv9kyPeC8epB3SLemTlwjlE2X2XmGN7A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=dJIJ8TE4q3821mbA7gJOKY19l0UD3HWAsSMco9Ho4C4=;
-        b=G5PbX6Ea/EKpVlZXs9y5rN52nQ0DnhDDjyPNxDWsKwnxMR+NSOqGofGapPSlRR6fTy
-         UNpLV8cjxNYNtju/S5wExqz0/pcTohOogvVQlKWXu7f7wXH+aKfH2GZ8Rhx7Sg5+Q7Ut
-         HRSYdWjvYFIhz6EQ307n1udGhLxk3vBPIEdl84fL7ndebhbul2bea0paVCV+UtTJLFzm
-         IGwIvNOHAEPJcn0HDIUlRcX/8p0hc2S/Ii48xJBB3SdvFgNmep34Bnkv6xWaFVpgeQD4
-         7NCP5auWPOMCDlwB4ht8w/JB/qGaK3U1R3vD023Z3w1IGKh9rZ9kWeMOBMG/3+bAPAcK
-         xCxA==
-X-Gm-Message-State: APjAAAX7X/oXHP3XD8YTltq1HeBEdazZVSGy1dK7fQ+HTt/WjMaRchY1
-        ka61GRRd2PznSGFINztjOusjnw==
-X-Google-Smtp-Source: APXvYqy01VtgOwE8RelnBXw+DBfdhJ79MbFiqHSSGoaBGghKby8swpt+ETldAaRCE1dZVQMt3+xneQ==
-X-Received: by 2002:a5d:488c:: with SMTP id g12mr17615554wrq.67.1578912546094;
-        Mon, 13 Jan 2020 02:49:06 -0800 (PST)
-Received: from dell ([95.147.198.95])
-        by smtp.gmail.com with ESMTPSA id e8sm14583552wrt.7.2020.01.13.02.49.05
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rX6hYkQTcPkxFSQTp22iI/GTbRzDTSn2mT2N78MPltg=;
+        b=lNocnEXp6Q3E9QAsmhk+MF5EuzZGOvP5MhyUXwSJrrQ5vnY6Mm0BlRfWz47puiKnpu
+         tTYizR3z0UGU+BNaqrxNdyosfL9b1wy92P2ECKM+KZpihnyG0mG5yr6I5NrIQrQoXMP3
+         iEKNg61y3PUS6UjkkRepqC7U8C+FpDx6RlNLS31NGBGXpUGMPl9HLKKwku4ODXf1k4KH
+         h8HHt99AdjLI9UN5HA0cpiEH03RZ7BG0IuNwXH/DNjdRrV9EeqL/8FJZLlachLO+tAS3
+         4JGtKlWAc0CfbqNkv/UyhrTzUCLMjdd6uM3/FaJjHMIez91Gjma8s6rIe4iBpDJO5TEK
+         XeRg==
+X-Gm-Message-State: APjAAAWJIS9IeAMU0Vu5ELiKaCwl7AP/QIY9K+J+2u1mE2LLmLLlRuuG
+        pKzcoxQqwjjVOjISpjC0ab8yyQ==
+X-Google-Smtp-Source: APXvYqzk/HkmF6+cavSIKEIJ+Fq8mnrnSFzOKUU4OvMZdAPLWjQsZPS2kwS1LaOaiSPQQo0ar0Br5A==
+X-Received: by 2002:adf:ef8b:: with SMTP id d11mr12548851wro.45.1578912662627;
+        Mon, 13 Jan 2020 02:51:02 -0800 (PST)
+Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
+        by smtp.gmail.com with ESMTPSA id s3sm13791867wmh.25.2020.01.13.02.51.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 02:49:05 -0800 (PST)
-Date:   Mon, 13 Jan 2020 10:49:26 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: bd718x7: Yamlify and add BD71850
-Message-ID: <20200113104926.GE5414@dell>
-References: <20191227111235.GA3370@localhost.localdomain>
- <20200107130155.GK14821@dell>
- <CAL_JsqJzaS1G-ODb4A5QGdhhJ+SXXYPY0nXvKfJnZKoRP+WmAA@mail.gmail.com>
- <821646c01d3efbba1eaabc7f5da8048fe4f25bbd.camel@fi.rohmeurope.com>
+        Mon, 13 Jan 2020 02:51:02 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Mon, 13 Jan 2020 11:51:00 +0100
+To:     Florent Revest <revest@chromium.org>
+Cc:     linux-integrity@vger.kernel.org, kpsingh@chromium.org,
+        mjg59@google.com, zohar@linux.ibm.com, nramas@linux.microsoft.com,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Florent Revest <revest@google.com>
+Subject: Re: [PATCH v3] ima: add the ability to query the cached hash of a
+ given file
+Message-ID: <20200113105100.GA31000@google.com>
+References: <20200113094244.26678-1-revest@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <821646c01d3efbba1eaabc7f5da8048fe4f25bbd.camel@fi.rohmeurope.com>
+In-Reply-To: <20200113094244.26678-1-revest@chromium.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 08 Jan 2020, Vaittinen, Matti wrote:
-
-> Hi de Ho Peeps,
+On 13-Jan 10:42, Florent Revest wrote:
+> From: Florent Revest <revest@google.com>
 > 
-> On Tue, 2020-01-07 at 09:37 -0600, Rob Herring wrote:
-> > On Tue, Jan 7, 2020 at 7:01 AM Lee Jones <lee.jones@linaro.org>
-> > wrote:
-> > > On Fri, 27 Dec 2019, Matti Vaittinen wrote:
-> > > 
-> > > > Convert ROHM bd71837 and bd71847 PMIC binding text docs to yaml.
-> > > > Split
-> > > > the binding document to two separate documents (own documents for
-> > > > BD71837
-> > > > and BD71847) as they have different amount of regulators. This
-> > > > way we can
-> > > > better enforce the node name check for regulators. ROHM is also
-> > > > providing
-> > > > BD71850 - which is almost identical to BD71847 - main difference
-> > > > is some
-> > > > initial regulator states. The BD71850 can be driven by same
-> > > > driver and it
-> > > > has same buck/LDO setup as BD71847 - add it to BD71847 binding
-> > > > document and
-> > > > introduce compatible for it.
-> > > > 
-> > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com
-> > > > >
-> > > > ---
-> > > > 
-> > > > changes since v1:
-> > > > - constrains to short and long presses.
-> > > > - reworded commit message to shorten a line exceeding 75 chars
-> > > > - added 'additionalProperties: false'
-> > > > - removed 'clock-names' from example node
-> > > > 
-> > > >  .../bindings/mfd/rohm,bd71837-pmic.txt        |  90 -------
-> > > >  .../bindings/mfd/rohm,bd71837-pmic.yaml       | 236
-> > > > ++++++++++++++++++
-> > > >  .../bindings/mfd/rohm,bd71847-pmic.yaml       | 222
-> > > > ++++++++++++++++
-> > > >  .../regulator/rohm,bd71837-regulator.txt      | 162 ------------
-> > > >  .../regulator/rohm,bd71837-regulator.yaml     | 103 ++++++++
-> > > >  .../regulator/rohm,bd71847-regulator.yaml     |  97 +++++++
-> > > 
-> > > Can you split these out per-subsystem, so that I can apply the MFD
-> > > changes please?
-> > 
-> > That's not going to work any more. The MFD binding references the
-> > child bindings and the complete example(s) resides in the MFD
-> > binding.
+> This allows other parts of the kernel (perhaps a stacked LSM allowing
+> system monitoring, eg. the proposed KRSI LSM [1]) to retrieve the hash
+> of a given file from IMA if it's present in the iint cache.
 > 
-> So is it Ok to take all of these in MFD tree - or how should this be
-> done? Can Rob get them in after acks from Lee/Mark?
+> It's true that the existence of the hash means that it's also in the
+> audit logs or in /sys/kernel/security/ima/ascii_runtime_measurements,
+> but it can be difficult to pull that information out for every
+> subsequent exec. This is especially true if a given host has been up
+> for a long time and the file was first measured a long time ago.
+> 
+> It should be kept in mind that this function gives access to cached
+> entries which can be removed, for instance on security_inode_free().
+> 
+> This is based on Peter Moody's patch:
+>  https://sourceforge.net/p/linux-ima/mailman/message/33036180/
+> 
+> [1] https://lkml.org/lkml/2019/9/10/393
+> 
+> Signed-off-by: Florent Revest <revest@google.com>
 
-I'm happy to take all of them, but will need Mark's Ack.
+Reviewed-by: KP Singh <kpsingh@chromium.org>
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> ---
+>  include/linux/ima.h               |  6 ++++
+>  security/integrity/ima/ima_main.c | 49 +++++++++++++++++++++++++++++++
+>  2 files changed, 55 insertions(+)
+> 
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index f4644c54f648..1659217e9b60 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -23,6 +23,7 @@ extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
+>  extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>  			      enum kernel_read_file_id id);
+>  extern void ima_post_path_mknod(struct dentry *dentry);
+> +extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
+>  extern void ima_kexec_cmdline(const void *buf, int size);
+>  
+>  #ifdef CONFIG_IMA_KEXEC
+> @@ -91,6 +92,11 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
+>  	return;
+>  }
+>  
+> +static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
+> +{
+> +	return -EOPNOTSUPP;
+> +}
+> +
+>  static inline void ima_kexec_cmdline(const void *buf, int size) {}
+>  #endif /* CONFIG_IMA */
+>  
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 2272c3255c7d..9fe949c6a530 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -445,6 +445,55 @@ int ima_file_check(struct file *file, int mask)
+>  }
+>  EXPORT_SYMBOL_GPL(ima_file_check);
+>  
+> +/**
+> + * ima_file_hash - return the stored measurement if a file has been hashed and
+> + * is in the iint cache.
+> + * @file: pointer to the file
+> + * @buf: buffer in which to store the hash
+> + * @buf_size: length of the buffer
+> + *
+> + * On success, return the hash algorithm (as defined in the enum hash_algo).
+> + * If buf is not NULL, this function also outputs the hash into buf.
+> + * If the hash is larger than buf_size, then only buf_size bytes will be copied.
+> + * It generally just makes sense to pass a buffer capable of holding the largest
+> + * possible hash: IMA_MAX_DIGEST_SIZE.
+> + * The file hash returned is based on the entire file, including the appended
+> + * signature.
+> + *
+> + * If IMA is disabled or if no measurement is available, return -EOPNOTSUPP.
+> + * If the parameters are incorrect, return -EINVAL.
+> + */
+> +int ima_file_hash(struct file *file, char *buf, size_t buf_size)
+> +{
+> +	struct inode *inode;
+> +	struct integrity_iint_cache *iint;
+> +	int hash_algo;
+> +
+> +	if (!file)
+> +		return -EINVAL;
+> +
+> +	if (!ima_policy_flag)
+> +		return -EOPNOTSUPP;
+> +
+> +	inode = file_inode(file);
+> +	iint = integrity_iint_find(inode);
+> +	if (!iint)
+> +		return -EOPNOTSUPP;
+> +
+> +	mutex_lock(&iint->mutex);
+> +	if (buf) {
+> +		size_t copied_size;
+> +
+> +		copied_size = min_t(size_t, iint->ima_hash->length, buf_size);
+> +		memcpy(buf, iint->ima_hash->digest, copied_size);
+> +	}
+> +	hash_algo = iint->ima_hash->algo;
+> +	mutex_unlock(&iint->mutex);
+> +
+> +	return hash_algo;
+> +}
+> +EXPORT_SYMBOL_GPL(ima_file_hash);
+> +
+>  /**
+>   * ima_post_create_tmpfile - mark newly created tmpfile as new
+>   * @file : newly created tmpfile
+> -- 
+> 2.25.0.rc1.283.g88dfdc4193-goog
+> 
