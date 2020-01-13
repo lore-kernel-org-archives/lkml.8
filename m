@@ -2,91 +2,124 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32BF3C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D063C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06F50207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B768207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:30:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S+Mf/nwH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbgAMW2m convert rfc822-to-8bit (ORCPT
+        id S1728883AbgAMWaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:28:42 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40483 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728819AbgAMW2l (ORCPT
+        Mon, 13 Jan 2020 17:30:09 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:34194 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbgAMWaI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:28:41 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1ir8CG-0004Yk-9j; Mon, 13 Jan 2020 23:28:32 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 40F6F105BE6; Mon, 13 Jan 2020 23:28:31 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, paul.burton@mips.com,
-        salyzyn@android.com, 0x7f454c46@gmail.com, luto@kernel.org
-Subject: Re: [PATCH v2 2/8] lib: vdso: Build 32 bit specific functions in the right context
-In-Reply-To: <20190830135902.20861-3-vincenzo.frascino@arm.com>
-References: <20190830135902.20861-1-vincenzo.frascino@arm.com> <20190830135902.20861-3-vincenzo.frascino@arm.com>
-Date:   Mon, 13 Jan 2020 23:28:31 +0100
-Message-ID: <87tv4zq9dc.fsf@nanos.tec.linutronix.de>
+        Mon, 13 Jan 2020 17:30:08 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DMNcxl171558;
+        Mon, 13 Jan 2020 22:29:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=25CiF6daHnR1vOGlT2zLjWwy8YF2rNmqXCEwgry4lk8=;
+ b=S+Mf/nwHGiaPDLETKmXJ+EqUwgRjBYiFnW8IKm2zpK6zuLjWXHNyoce9ehuoWiwlZ8wt
+ LPGGpJI9L272Ri0RxbyCChNdoKvDgmY+U7TaveS3PbeVOAucz5QYuhPa6UyC2Ez0blPB
+ ZC5OdTwunYEs3tlS1UD5zW9S0H+qM3IYzMW7JNpChHE4NuYShHdrOfrc0FFv4p3ESHWY
+ KjffP5uk8wFbHVHdbhFwyqaSTV9th1MtHKaQJWHQxSAqxX1wkFmSplDLrUleWfvuOlL1
+ bq3E4ImY+rW6gX4SynK2zzeVGSAAabh+5ekjxuFe0hXp2kgGuKYZ7oaUlgCneZdHOgRk 8A== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2xf73ya024-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 22:29:58 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DMOXRB016713;
+        Mon, 13 Jan 2020 22:27:57 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2xfqvtma79-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 22:27:57 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00DMRvAH013676;
+        Mon, 13 Jan 2020 22:27:57 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jan 2020 14:27:56 -0800
+Date:   Mon, 13 Jan 2020 14:27:55 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 10/12] fs/xfs: Fix truncate up
+Message-ID: <20200113222755.GP8247@magnolia>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-11-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110192942.25021-11-ira.weiny@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=895
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001130183
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=955 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001130183
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vincenzo Frascino <vincenzo.frascino@arm.com> writes:
+On Fri, Jan 10, 2020 at 11:29:40AM -0800, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> When zeroing the end of a file we must account for bytes contained in
+> the final page which are past EOF.
+> 
+> Extend the range passed to iomap_zero_range() to reach LLONG_MAX which
+> will include all bytes of the final page.
+> 
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  fs/xfs/xfs_iops.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index a2f2604c3187..a34b04e8ac9c 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -910,7 +910,7 @@ xfs_setattr_size(
+>  	 */
+>  	if (newsize > oldsize) {
+>  		trace_xfs_zero_eof(ip, oldsize, newsize - oldsize);
+> -		error = iomap_zero_range(inode, oldsize, newsize - oldsize,
+> +		error = iomap_zero_range(inode, oldsize, LLONG_MAX - oldsize,
 
-> clock_gettime32 and clock_getres_time32 should be compiled only with a
-> 32 bit vdso library.
->
-> Exclude these symbols when BUILD_VDSO32 is not defined.
+Huh?  Won't this cause the file size to be set to LLONG_MAX?
 
-This breaks the ARM build with:
+--D
 
-arch/arm/vdso/vgettimeofday.c: In function ‘__vdso_clock_gettime’:
-arch/arm/vdso/vgettimeofday.c:15:9: error: implicit declaration of function ‘__cvdso_clock_gettime32’; did you mean ‘__cvdso_clock_gettime’? [-Werror=implicit-function-declaration]
-  return __cvdso_clock_gettime32(clock, ts);
-         ^~~~~~~~~~~~~~~~~~~~~~~
-         __cvdso_clock_gettime
-arch/arm/vdso/vgettimeofday.c: In function ‘__vdso_clock_getres’:
-arch/arm/vdso/vgettimeofday.c:33:9: error: implicit declaration of function ‘__cvdso_clock_getres_time32’; did you mean ‘__cvdso_clock_getres_common’? [-Werror=implicit-function-declaration]
-  return __cvdso_clock_getres_time32(clock_id, res);
-         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-         __cvdso_clock_getres_common
-cc1: some warnings being treated as errors
-
-The patch below 'fixes' at least the build. Can someone please confirm
-the correctness?
-
-Thanks,
-
-        tglx
-
-8<----------------
---- a/arch/arm/vdso/Makefile
-+++ b/arch/arm/vdso/Makefile
-@@ -14,7 +14,7 @@ targets := $(obj-vdso) vdso.so vdso.so.d
- obj-vdso := $(addprefix $(obj)/, $(obj-vdso))
- 
- ccflags-y := -fPIC -fno-common -fno-builtin -fno-stack-protector
--ccflags-y += -DDISABLE_BRANCH_PROFILING
-+ccflags-y += -DDISABLE_BRANCH_PROFILING -DBUILD_VDSO32
- 
- ldflags-$(CONFIG_CPU_ENDIAN_BE8) := --be8
- ldflags-y := -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
+>  				&did_zeroing, &xfs_buffered_write_iomap_ops);
+>  	} else {
+>  		error = iomap_truncate_page(inode, newsize, &did_zeroing,
+> -- 
+> 2.21.0
+> 
