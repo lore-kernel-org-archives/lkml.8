@@ -2,121 +2,168 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65190C32771
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20567C33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C3421556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:16:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578885406;
-	bh=3zYO/LV7CNbRZmQEB1qLQGLItuEsGDzoXBLkzEVNe2c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mdJbYFnJlRCAsaZWAG1QwJx7nHZnzXFtpV5bOI4lWnqmNVMVfH9TqLZheLorWwohE
-	 vC0RbTFzPYACqCnqDl37gDEPHUWVFLMXFoc/ox0Pvx6j91FO0tCBtIoNDE4VlBgCCo
-	 lnrC5KsMUCmg6oO80LsaOCSu2RYhMGdiVSnPrxso=
+	by mail.kernel.org (Postfix) with ESMTP id E815121744
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 03:20:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="EuHre93g";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mZguVctx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733142AbgAMDQp (ORCPT
+        id S1733171AbgAMDUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 22:16:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732961AbgAMDQp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 22:16:45 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B025721556;
-        Mon, 13 Jan 2020 03:16:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578885404;
-        bh=3zYO/LV7CNbRZmQEB1qLQGLItuEsGDzoXBLkzEVNe2c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RCdMxJUOUJEUP6ZUIV4gkd0trBnyqFBTGpbWavtcwtLwkOB8MXaEFeJ3rAwHW6SAh
-         BVmV/1FnfE9vhJDJtPEo1A9BwKoH+PYD0Ob2nYi3IxYH3Er8nN1pKfhOde6flu8GYe
-         dY1HHkqDJzlAqqI0qXTA6vhjyBUAPpyuDy0P0A/Q=
-Date:   Mon, 13 Jan 2020 12:16:40 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -tip V2 0/2] kprobes: Fix RCU warning and cleanup
-Message-Id: <20200113121640.bfab48c105dae9b1918c2d82@kernel.org>
-In-Reply-To: <20200112020537.GJ128013@google.com>
-References: <157535316659.16485.11817291759382261088.stgit@devnote2>
-        <20191221035541.69fc05613351b8dabd6e1a44@kernel.org>
-        <20200107211535.233e7ff396f867ee1348178b@kernel.org>
-        <20200110211438.GE128013@google.com>
-        <20200111083507.c32b85b1d47aa69928de530b@kernel.org>
-        <20200112020537.GJ128013@google.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 12 Jan 2020 22:20:35 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:35133 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732961AbgAMDUf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 22:20:35 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 12AFF220E2;
+        Sun, 12 Jan 2020 22:20:34 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Sun, 12 Jan 2020 22:20:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=d9ywLl/DDZFlz
+        Uz3mT7RYsQEEe5B8fjqhKvK92riuO8=; b=EuHre93g1A3yk7B/WLKbPBbsdK5k1
+        H+1oQ47b5B9HXiJN2oI3BCyb08N6w++X7rnQIMOL3y6Sn/ZzWP1Wo7KwDTdLccwc
+        LRKYlHWjzlucB0dCdsoHwSXToBKzMOWqJ1CDWC4FVPFEKqLvrsesT1d4XIhe+Cec
+        4L1q4U01R0qJd+fDuOD9sna7MZKKti270hs61NVZfbIDKT++Ruzv7fUFPnmbkDdn
+        kwFSh+pvG4wcGmLk38HoBo+gPlbtgr1n3yaPL4JoeNaAhu7rypGSZmn5CSbcgD9G
+        K5RDGk8Rz+hh/XxEnsilRmmUYcSvYj04t4AgmINzF4y8bjErhtcTsBqQg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; bh=d9ywLl/DDZFlzUz3mT7RYsQEEe5B8fjqhKvK92riuO8=; b=mZguVctx
+        Rl/yMHWSjH0bkJtDJVrwLIcnVIf9WbZ+IkNBkJ21pulmGSGQTGWheXwGf4nr0WoA
+        WSiEAXKGjHETnmNMv1btfP45DMKRPMTJ8ke/8/PmOqAO0Cjx+TsxOCHClhiWTtXs
+        NBaQiiqQ4pyfer4ybHpcWi82IwzlQ+64hQsiqZB8pyAlQ94WGuXe/lRWOW98Y2zM
+        8Ara5oKtlfXytiIrtS0+G9/tOibkVY3JlwTKpqURMAFtyw96WkZX9UMfJx+GOIZK
+        E8MIoVW4EUJ6X2J9htY7DMcKTeBpqowncTpvxJ7+F6vUL2XmFqXGbUuf9I10/n0q
+        f3rYuEEAfSL6zg==
+X-ME-Sender: <xms:AeIbXrfPtcMjCBESsZX4uG117AxImR100d8F8q-lt1hMWo375hRu5Q>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeiledgheelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
+    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
+    epjedtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghm
+    uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+X-ME-Proxy: <xmx:AeIbXlfQ4HxeWNQCOykMzJU-ttve1UE-JvsMz9wkVdLhL4Our8Kq7w>
+    <xmx:AeIbXvjLxWpqy0dOZDOP8cQ8pjGuaqq_vFA-z1UPhS35UbSDq9wuYA>
+    <xmx:AeIbXhSyF1N4Ykmz_GoHx3T3783U22ut3YT_TG2d1z629P9bTKaVwA>
+    <xmx:AuIbXrXEkNZSoeMbK4Q1EqFd3C2nsRglXWrPfOlHIxMp_93kHyJHlw>
+Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 7A3CC80059;
+        Sun, 12 Jan 2020 22:20:33 -0500 (EST)
+From:   Samuel Holland <samuel@sholland.org>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Samuel Holland <samuel@sholland.org>
+Subject: [PATCH 2/3] Input: axp20x-pek - Respect userspace wakeup configuration
+Date:   Sun, 12 Jan 2020 21:20:31 -0600
+Message-Id: <20200113032032.38709-2-samuel@sholland.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200113032032.38709-1-samuel@sholland.org>
+References: <20200113032032.38709-1-samuel@sholland.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 11 Jan 2020 21:05:37 -0500
-Joel Fernandes <joel@joelfernandes.org> wrote:
+Unlike most other power button drivers, this driver unconditionally
+enables its wakeup IRQ. It should be using device_may_wakeup() to
+respect the userspace configuration of wakeup sources.
 
-> On Sat, Jan 11, 2020 at 08:35:07AM +0900, Masami Hiramatsu wrote:
-> > Hi Joel and Paul,
-> > 
-> > On Fri, 10 Jan 2020 16:14:38 -0500
-> > Joel Fernandes <joel@joelfernandes.org> wrote:
-> > 
-> > > On Tue, Jan 07, 2020 at 09:15:35PM +0900, Masami Hiramatsu wrote:
-> > > > Hello,
-> > > > 
-> > > > Anyone have any comment on this series?
-> > > > Without this series, I still see the suspicious RCU warning for kprobe on -tip tree.
-> > > 
-> > > +Paul since RCU.
-> > > 
-> > > Hi Masami,
-> > > 
-> > > I believe I had commented before that I don't agree with this patch:
-> > > https://lore.kernel.org/lkml/157535318870.16485.6366477974356032624.stgit@devnote2/
-> > > 
-> > > The rationale you used is to replace RCU-api with non-RCU api just to avoid
-> > > warnings. I think a better approach is to use RCU api and pass the optional
-> > > expression to silence the false-positive warnings by informing the RCU API
-> > > about the fact that locks are held (similar to what we do for
-> > > rcu_dereference_protected()). The RCU API will do additional checking
-> > > (such as making sure preemption is disabled for safe RCU usage etc) as well.
-> > 
-> > Yes, that is what I did in [1/2] for get_kprobe().
-> > Let me clarify the RCU list usage in [2/2].
-> > 
-> > With the careful check, other list traversals never be done in non-sleepable
-> > context, those are always runs with kprobe_mutex held.
-> > If I correctly understand the Documentation/RCU/listRCU.rst, we should/can use
-> > non-RCU api for those cases, or do I miss something?
-> 
-> Yes, that is fine. However personally I prefer not to mix usage of
-> list_for_each_entry_rcu() and list_for_each_entry() on the same pointer
-> (kprobe_table). I think it is more confusing and error prone. Just use
-> list_for_each_entry_rcu() everywhere and pass the appropriate lockdep
-> expression, instead of calling lockdep_assert_held() independently. Is this
-> not doable?
+Because the AXP20x MFD device uses regmap-irq, the AXP20x PEK IRQs are
+nested off of regmap-irq's threaded interrupt handler. The device core
+ignores such interrupts, so to actually disable wakeup, we must
+explicitly disable all non-wakeup interrupts during suspend.
 
-Hmm, but isn't it more confusing that user just take a mutex but
-no rcu_read_lock() with list_for_each_entry_rcu()? In that case,
-sometimes it might sleep inside list_for_each_entry_rcu(), I thought
-that might be more confusing mind model for users...
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+---
+ drivers/input/misc/axp20x-pek.c | 42 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+), 1 deletion(-)
 
-Anyway, if so, please update Documentation/RCU/listRCU.rst too.
-
-Thank you,
-
+diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
+index 7d0ee5bececb..38cd4a4aeb65 100644
+--- a/drivers/input/misc/axp20x-pek.c
++++ b/drivers/input/misc/axp20x-pek.c
+@@ -280,7 +280,7 @@ static int axp20x_pek_probe_input_device(struct axp20x_pek *axp20x_pek,
+ 	}
+ 
+ 	if (axp20x_pek->axp20x->variant == AXP288_ID)
+-		enable_irq_wake(axp20x_pek->irq_dbr);
++		device_init_wakeup(&pdev->dev, true);
+ 
+ 	return 0;
+ }
+@@ -352,6 +352,45 @@ static int axp20x_pek_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#if CONFIG_PM_SLEEP
++static int axp20x_pek_suspend(struct device *dev)
++{
++	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
++
++	/*
++	 * Nested threaded interrupts are not automatically
++	 * disabled, so we must do it explicitly.
++	 */
++	if (device_may_wakeup(dev)) {
++		enable_irq_wake(axp20x_pek->irq_dbf);
++		enable_irq_wake(axp20x_pek->irq_dbr);
++	} else {
++		disable_irq(axp20x_pek->irq_dbf);
++		disable_irq(axp20x_pek->irq_dbr);
++	}
++
++	return 0;
++}
++
++static int axp20x_pek_resume(struct device *dev)
++{
++	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
++
++	if (device_may_wakeup(dev)) {
++		disable_irq_wake(axp20x_pek->irq_dbf);
++		disable_irq_wake(axp20x_pek->irq_dbr);
++	} else {
++		enable_irq(axp20x_pek->irq_dbf);
++		enable_irq(axp20x_pek->irq_dbr);
++	}
++
++	return 0;
++}
++#endif
++
++static SIMPLE_DEV_PM_OPS(axp20x_pek_pm_ops, axp20x_pek_suspend,
++					    axp20x_pek_resume);
++
+ static const struct platform_device_id axp_pek_id_match[] = {
+ 	{
+ 		.name = "axp20x-pek",
+@@ -371,6 +410,7 @@ static struct platform_driver axp20x_pek_driver = {
+ 	.driver		= {
+ 		.name		= "axp20x-pek",
+ 		.dev_groups	= axp20x_groups,
++		.pm		= &axp20x_pek_pm_ops,
+ 	},
+ };
+ module_platform_driver(axp20x_pek_driver);
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.23.0
+
