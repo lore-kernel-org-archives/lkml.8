@@ -2,157 +2,104 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05DCC33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80276C33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3541207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578904842;
-	bh=1qv/uiqU+lvGy4vNbaTZDSE+L9LCBmyo2jSjlXzCaFY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V7h9eVESEpgQbxIVg1NRHSzzm1VG+W6GLTNo1yvVsSUiCSPZcGoclrX7gR5byE4F2
-	 ljoQ/H5zztSlhIwuZIpr/qIEhy0i/6eHcJZ1ew23+SeuY2CwW3iQcl0kSw25Wu3D8T
-	 wE7NyuH8JDi96kRqtO+0MXmOCr2fTS7QmKgyCW/U=
+	by mail.kernel.org (Postfix) with ESMTP id 5B2D820678
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 08:40:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728925AbgAMIkl (ORCPT
+        id S1728978AbgAMIko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 03:40:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43482 "EHLO mail.kernel.org"
+        Mon, 13 Jan 2020 03:40:44 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42054 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727231AbgAMIki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 03:40:38 -0500
-Received: from localhost.localdomain (unknown [106.200.247.255])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4C5D207E0;
-        Mon, 13 Jan 2020 08:40:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578904837;
-        bh=1qv/uiqU+lvGy4vNbaTZDSE+L9LCBmyo2jSjlXzCaFY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LE2FTxi8KP8KWNCs7FOLql20SYThhwNY5bp18tlM/U2vFrjt3J882AzBQsZdewcQK
-         GF7hDywxp2IdeiIK8yO1BgSwVCSJ8FV7uyFGkurQ52xbxrdZsY1h9ac5BEYfXAhSV/
-         N3XywRwbmQ64mcf2vuAXcRfJ9viEPIEI8zd1GYNY=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v6 4/5] usb: renesas-xhci: allow multiple firmware versions
-Date:   Mon, 13 Jan 2020 14:10:04 +0530
-Message-Id: <20200113084005.849071-5-vkoul@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200113084005.849071-1-vkoul@kernel.org>
-References: <20200113084005.849071-1-vkoul@kernel.org>
-MIME-Version: 1.0
+        id S1728946AbgAMIkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 03:40:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0F65AAEBA;
+        Mon, 13 Jan 2020 08:40:39 +0000 (UTC)
+Date:   Mon, 13 Jan 2020 09:40:38 +0100
+Message-ID: <s5htv4zkaux.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Jia-Ju Bai <baijiaju1990@gmail.com>
+Cc:     perex@perex.cz, tiwai@suse.com, rfontana@redhat.com,
+        tglx@linutronix.de, allison@lohutok.net,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: cmipci: Fix possible a data race in snd_cmipci_interrupt()
+In-Reply-To: <de859611-4bd0-647f-61e9-7138425ed736@gmail.com>
+References: <20200111163027.27135-1-baijiaju1990@gmail.com>
+        <s5h5zhhkrwe.wl-tiwai@suse.de>
+        <de859611-4bd0-647f-61e9-7138425ed736@gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow multiple firmware file versions in table and load them in
-increasing order as we find them in the file system.
+On Mon, 13 Jan 2020 09:20:37 +0100,
+Jia-Ju Bai wrote:
+> 
+> 
+> 
+> On 2020/1/12 16:20, Takashi Iwai wrote:
+> > On Sat, 11 Jan 2020 17:30:27 +0100,
+> > Jia-Ju Bai wrote:
+> >> The functions snd_cmipci_interrupt() and snd_cmipci_capture_trigger()
+> >> may be concurrently executed.
+> >>
+> >> The function snd_cmipci_capture_trigger() calls
+> >> snd_cmipci_pcm_trigger(). In snd_cmipci_pcm_trigger(), the variable
+> >> rec->running is written with holding a spinlock cm->reg_lock. But in
+> >> snd_cmipci_interrupt(), the identical variable cm->channel[0].running
+> >> or cm->channel[1].running is read without holding this spinlock. Thus,
+> >> a possible data race may occur.
+> >>
+> >> To fix this data race, in snd_cmipci_interrupt(), the variables
+> >> cm->channel[0].running and cm->channel[1].running are read with holding
+> >> the spinlock cm->reg_lock.
+> >>
+> >> This data race is found by the runtime testing of our tool DILP-2.
+> >>
+> >> Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+> > Thanks for the patch.
+> >
+> > That's indeed a kind of race, but this change won't fix anything in
+> > practice, though.  The inconsistent running flag between those places,
+> > there are two cases:
+> >
+> > - running became 0 to 1; this cannot happen, as the irq isn't issued
+> >    before the stream gets started
+> >
+> > - running became 1 to 0; this means that the stream gets stopped
+> >    between two points, and it's not better to call
+> >    snd_pcm_period_elapsed() for an already stopped stream.
+> 
+> Thanks for the reply :)
+> 
+> I am not sure to understand your words.
+> 
+> Do you mean that this code should be also protected by the spinlock?
+>     if (cm->pcm) {
+>         if ((status & CM_CHINT0) && cm->channel[0].running)
+>             snd_pcm_period_elapsed(cm->channel[0].substream);
+>         if ((status & CM_CHINT1) && cm->channel[1].running)
+>             snd_pcm_period_elapsed(cm->channel[1].substream);
+>     }
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Christian Lamparter <chunkeey@googlemail.com>
----
- drivers/usb/host/xhci-pci-renesas.c | 45 +++++++++++++++++++++++++++--
- 1 file changed, 43 insertions(+), 2 deletions(-)
+No, it can't be protected as it would lead to ABBA deadlock.
+That said, it's rather safe to leave the code as is.
 
-diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
-index 1d073c5637c4..fe95487ca888 100644
---- a/drivers/usb/host/xhci-pci-renesas.c
-+++ b/drivers/usb/host/xhci-pci-renesas.c
-@@ -73,13 +73,20 @@ static const struct renesas_fw_entry {
- 	 *  - uPD720201 ES 2.0 sample whose revision ID is 2.
- 	 *  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
- 	 *  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
-+	 *
-+	 *  Entry expected_version should be kept in decreasing order for a
-+	 *  chip, so that driver will pick latest version and if that fails
-+	 *  then next one will be picked
- 	 */
- 	{ "K2013080.mem", 0x0014, 0x02, 0x2013 },
-+	{ "K2026090.mem", 0x0014, 0x03, 0x2026 },
- 	{ "K2013080.mem", 0x0014, 0x03, 0x2013 },
-+	{ "K2026090.mem", 0x0015, 0x02, 0x2026 },
- 	{ "K2013080.mem", 0x0015, 0x02, 0x2013 },
- };
- 
- MODULE_FIRMWARE("K2013080.mem");
-+MODULE_FIRMWARE("K2026090.mem");
- 
- static const struct renesas_fw_entry *renesas_needs_fw_dl(struct pci_dev *dev)
- {
-@@ -100,6 +107,24 @@ static const struct renesas_fw_entry *renesas_needs_fw_dl(struct pci_dev *dev)
- 	return NULL;
- }
- 
-+static const struct
-+renesas_fw_entry *renesas_get_next_entry(struct pci_dev *dev,
-+					 const struct renesas_fw_entry *entry)
-+{
-+	const struct renesas_fw_entry *next_entry;
-+	size_t i;
-+
-+	for (i = 0; i < ARRAY_SIZE(renesas_fw_table); i++) {
-+		next_entry = &renesas_fw_table[i];
-+		if (next_entry->device == dev->device &&
-+		    next_entry->revision == dev->revision &&
-+		    next_entry->expected_version < entry->expected_version)
-+			return next_entry;
-+	}
-+
-+	return NULL;
-+}
-+
- static int renesas_fw_download_image(struct pci_dev *dev,
- 				     const u32 *fw,
- 				     size_t step)
-@@ -700,13 +725,29 @@ static void renesas_fw_callback(const struct firmware *fw,
- 	struct renesas_fw_ctx *ctx = context;
- 	struct pci_dev *pdev = ctx->pdev;
- 	struct device *parent = pdev->dev.parent;
-+	const struct renesas_fw_entry *next_entry;
- 	bool rom;
- 	int err;
- 
- 	if (!fw) {
- 		dev_err(&pdev->dev, "firmware failed to load\n");
--
--		goto cleanup;
-+		/*
-+		 * we didn't find firmware, check if we have another
-+		 * entry for this device
-+		 */
-+		next_entry = renesas_get_next_entry(ctx->pdev, ctx->entry);
-+		if (next_entry) {
-+			ctx->entry = next_entry;
-+			dev_dbg(&pdev->dev, "Found next entry, requesting: %s\n",
-+				next_entry->firmware_name);
-+			request_firmware_nowait(THIS_MODULE, 1,
-+						next_entry->firmware_name,
-+						&pdev->dev, GFP_KERNEL,
-+						ctx, renesas_fw_callback);
-+			return;
-+		} else {
-+			goto cleanup;
-+		}
- 	}
- 
- 	err = renesas_fw_verify(pdev, fw->data, fw->size);
--- 
-2.24.1
 
+thanks,
+
+Takashi
