@@ -2,97 +2,84 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9A5C33CA8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE41FC33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD092187F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DF6621744
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:06:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387571AbgAMEFI (ORCPT
+        id S2387581AbgAMEGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 23:05:08 -0500
-Received: from foss.arm.com ([217.140.110.172]:34008 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387415AbgAMEFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 23:05:08 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B992F30E;
-        Sun, 12 Jan 2020 20:05:07 -0800 (PST)
-Received: from [10.162.43.142] (p8cg001049571a15.blr.arm.com [10.162.43.142])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E2A33F6C4;
-        Sun, 12 Jan 2020 20:04:59 -0800 (PST)
-Subject: Re: [PATCH V11 1/5] mm/hotplug: Introduce arch callback validating
- the hot remove range
-To:     kbuild test robot <lkp@intel.com>
-Cc:     mark.rutland@arm.com, david@redhat.com, catalin.marinas@arm.com,
-        linux-mm@kvack.org, arunks@codeaurora.org, cpandya@codeaurora.org,
-        will@kernel.org, ira.weiny@intel.com, steven.price@arm.com,
-        valentin.schneider@arm.com, suzuki.poulose@arm.com,
-        Robin.Murphy@arm.com, broonie@kernel.org, cai@lca.pw,
-        ard.biesheuvel@arm.com, dan.j.williams@intel.com,
-        linux-arm-kernel@lists.infradead.org, osalvador@suse.de,
-        kbuild-all@lists.01.org, steve.capper@arm.com, logang@deltatee.com,
-        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net
-References: <1578625755-11792-2-git-send-email-anshuman.khandual@arm.com>
- <202001112247.k6CzgJBj%lkp@intel.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <bf4362af-2ba0-9099-985a-7b32fdbc6871@arm.com>
-Date:   Mon, 13 Jan 2020 09:36:17 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 12 Jan 2020 23:06:02 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35471 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387415AbgAMEGB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 23:06:01 -0500
+Received: by mail-ed1-f66.google.com with SMTP id f8so7259706edv.2;
+        Sun, 12 Jan 2020 20:06:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2XoQxnxnbf89i87hmMyaS+hS25moXF0WF8eizgFC4Nw=;
+        b=Vw3abKezw0SGONxn7qnSSx+GxsNKaFXprbwllqpPSaA7fnS6QAYeCyDG+9yT/BwaVw
+         EAs87soF1wv8TaPdLHRwp3qq3p+SrS/7drrVTnom2+j0OYD0yixycrOwFXntiBwltkix
+         Vy2LOem4E+al6sKfk7gObC7Yv84bVStISVXqyekSJwvvq3WNWnjHYpS1p9tIjoAPKln1
+         pIDKYnpl/d2yBGpRA2TlaNxBxjmCeJlQwi69buz6uZh+EvVrcgfHNSHS6Fd8JOaEMunV
+         mut4YwmxgrzwBjPUUZJrkcLV6gBvkGz4uWRtnAoF1E0gz/7SR3M1p2I9+Bzj5jJTcf6R
+         IObA==
+X-Gm-Message-State: APjAAAVnJOZ23m4BKE/LtwotKg7GjGcop/j+O++tCV2hTYghgMzbTHOg
+        MZVMzewhEPtXhKNUW1wEzNNvDqwyebw=
+X-Google-Smtp-Source: APXvYqw0G/JED1DUbNrhmqls8VbqlRD8Bl8VhXxbWlNWrsyNoQCaZXJtWRIpdIuSCBgXuHSiMbnvCg==
+X-Received: by 2002:a17:907:43c1:: with SMTP id i1mr14475961ejs.138.1578888359060;
+        Sun, 12 Jan 2020 20:05:59 -0800 (PST)
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com. [209.85.128.41])
+        by smtp.gmail.com with ESMTPSA id j21sm415191eds.8.2020.01.12.20.05.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 12 Jan 2020 20:05:58 -0800 (PST)
+Received: by mail-wm1-f41.google.com with SMTP id u2so8047020wmc.3;
+        Sun, 12 Jan 2020 20:05:58 -0800 (PST)
+X-Received: by 2002:a05:600c:2409:: with SMTP id 9mr16419248wmp.109.1578888358440;
+ Sun, 12 Jan 2020 20:05:58 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <202001112247.k6CzgJBj%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200113035310.18950-1-samuel@sholland.org> <20200113035310.18950-7-samuel@sholland.org>
+In-Reply-To: <20200113035310.18950-7-samuel@sholland.org>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Mon, 13 Jan 2020 12:05:49 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65v40RDWz3V4Fu=MfU4K+MUXxmj5_LB7wFt2Qtxw9RMzQ@mail.gmail.com>
+Message-ID: <CAGb2v65v40RDWz3V4Fu=MfU4K+MUXxmj5_LB7wFt2Qtxw9RMzQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v3 6/8] power: supply: axp20x_usb_power:
+ Allow offlining
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Oskari Lemmela <oskari@lemmela.net>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jan 13, 2020 at 11:53 AM Samuel Holland <samuel@sholland.org> wrote:
+>
+> AXP803/AXP813 have a flag that enables/disables the USB power supply
+> input. Allow control of this flag via the ONLINE property on those
+> variants.
+>
+> It may be necessary to offline the USB power supply input when using
+> the USB port in OTG mode, or to allow userspace to disable charging.
+>
+> When the USB VBUS input is disabled via the PATH_SEL bit, the VBUS_USED
+> bit in PWR_INPUT_STATUS is cleared, so there is no change needed when
+> getting the property.
+>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-
-On 01/11/2020 07:41 PM, kbuild test robot wrote:
->    mm/memory_hotplug.c: In function 'check_hotremove_memory_range':
->>> mm/memory_hotplug.c:1027:7: error: implicit declaration of function 'arch_memory_removable'; did you mean 'add_memory_resource'? [-Werror=implicit-function-declaration]
->      rc = arch_memory_removable(start, size);
->           ^~~~~~~~~~~~~~~~~~~~~
->           add_memory_resource
->    At top level:
->    mm/memory_hotplug.c:1017:12: warning: 'check_hotremove_memory_range' defined but not used [-Wunused-function]
->     static int check_hotremove_memory_range(u64 start, u64 size)
->                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
->    cc1: some warnings being treated as errors
-> 
-> vim +1027 mm/memory_hotplug.c
-> 
->   1016	
->   1017	static int check_hotremove_memory_range(u64 start, u64 size)
->   1018	{
->   1019		int rc;
->   1020	
->   1021		BUG_ON(check_hotplug_memory_range(start, size));
->   1022	
->   1023		/*
->   1024		 * First check if the platform is willing to have this
->   1025		 * memory range removed else just abort.
->   1026		 */
->> 1027		rc = arch_memory_removable(start, size);
->   1028		if (!rc)
->   1029			return -EINVAL;
->   1030	
->   1031		return 0;
->   1032	}
->   1033	
-
-
-Both the build failures reported here could be solved by moving
-check_hotremove_memory_range() inside CONFIG_MEMORY_HOTREMOVE
-wrappers, will fix it.
-
-- Anshuman
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
