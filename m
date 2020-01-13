@@ -2,188 +2,107 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C541C33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:19:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DFDC33CB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6676214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:19:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="TX1kx6z3";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="cUZbY8fd"
+	by mail.kernel.org (Postfix) with ESMTP id 7FFA42187F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578892950;
+	bh=pQmyxSK2rYvZKhrIwLap9VHfSzCEWZiVvINtuLhYf+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S1FFJ/mN1vmggjicys+0qZcRSdXbHMxZS9yqVfB57oBF/A1hnAryULFExLEawKRYV
+	 3isJo2XvwuY1WM92bXKLjJPtaTPraT4eYKV1ZGyRRvtT9lKilaWEiyD7L9ovVgxFlr
+	 mJ2+yk8jL4Xd0Hl3bpDQWPRp+1K49jtCQFMeB1B0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387628AbgAMFTT (ORCPT
+        id S1726127AbgAMFW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 00:19:19 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:51725 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726127AbgAMFS6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 00:18:58 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 5962A61D0;
-        Mon, 13 Jan 2020 00:18:57 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 13 Jan 2020 00:18:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=EmmLtCjrK7RsX
-        RRqPJrB9bPRF/NolERlt2uFv3dLhTc=; b=TX1kx6z3NpofCraAdgp9otpxgSE5p
-        vKMli4ZP6LFzdCfz/wuNh5f3kK7OSnU7/n6eHsEwNN4zVDku2kbfimmTk6kCGJeK
-        NOPdQyvWx4gc3FOacM8VBuTWV2IoB6qL5cZHQt+7C/j1EZFPUMGcIlSosbInMDu0
-        VkNVxn5RAghoQbuZSa/YtTpVZThIVLS6mexZiuhgcdzbAjevQbV4RM7mYtxVcz/W
-        KyEpMH2XDNEmsj9Fe5+roV2oBMjIwHUFUQHAEiMKiHA9dBdRZfxTetr6ljft39nH
-        my/JmcQ9C6yAg2r9s5A9FTADe/v6JJmTQIlFTIw3X4L5ljVMCcczbKXWg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=EmmLtCjrK7RsXRRqPJrB9bPRF/NolERlt2uFv3dLhTc=; b=cUZbY8fd
-        yrvLF71QKUy/fHI6c9irvJyq3GPDGdKFV9mnM7thfkY2753qAIqFfNVr+9eM+G9U
-        B++rODEtF6E5XhpMcrVkab0/ik+ENvYpnt9/FwNnzx7TCbMe4uNn4sTmEwLG6xak
-        7YmupRYr/XONe/1PTIPIZAmrUMbNW4Fk7YvXYW6FaE4CRqlkMGFvaSLu/kYkVz54
-        8rtiE+F3paOXMOSksJzBX20MXlJpDaRZXhkd/t2hRLyDXmp/Nlp4pJpfLB702bv+
-        B77WU2IeYP46BtkatUmprDZu799bXStluiXgbsXGkDvDv1Ui88qp88fPe5ScrTaD
-        cW4gFjLt8Cpp/g==
-X-ME-Sender: <xms:vf0bXktms61j_Pnj0J_f7WUeqObswn1CKYGII5tFqeCZoCyVGfE4iA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeiledgkeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefurghmuhgv
-    lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucffoh
-    hmrghinhepuggvvhhitggvthhrvggvrdhorhhgnecukfhppeejtddrudefhedrudegkedr
-    udehudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghnug
-    drohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:vf0bXsX5QOgUAs85nzMPcubWRq9kYP3sOffYRsuhBhbfpuEVSCfJ5w>
-    <xmx:vf0bXnkX3L7Tyd-Rxb9mhlBL7BcOtuLHLKpBd-wNZmr3SigyaG_k2Q>
-    <xmx:vf0bXlbCQgBDv4roZVvAulJKFeq5VPYSK0pU_dSzo4XiOS4gKlabNQ>
-    <xmx:wf0bXjVABqRYl4XUHO3vwy_oyon7YhLg3SxS5fuEHPsFnpcMXGrlEw>
-Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 0239330602DB;
-        Mon, 13 Jan 2020 00:18:52 -0500 (EST)
-From:   Samuel Holland <samuel@sholland.org>
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Ondrej Jirman <megous@megous.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
-        Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v6 1/6] dt-bindings: mailbox: Add a sun6i message box binding
-Date:   Sun, 12 Jan 2020 23:18:47 -0600
-Message-Id: <20200113051852.15996-2-samuel@sholland.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200113051852.15996-1-samuel@sholland.org>
-References: <20200113051852.15996-1-samuel@sholland.org>
+        Mon, 13 Jan 2020 00:22:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725268AbgAMFW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 00:22:29 -0500
+Received: from localhost (unknown [106.200.247.255])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A93121556;
+        Mon, 13 Jan 2020 05:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578892948;
+        bh=pQmyxSK2rYvZKhrIwLap9VHfSzCEWZiVvINtuLhYf+8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sXsnWQlS74pdFu0UVzYxpNsBcF1pjQrjT5BtFxF/taQ3HDzM842jYOvVocHdIWHG9
+         J+i7dHx1rmbqKaLZExA0iZN52nxNbefaz3lsNVHM25Wj2b8b0dwwoSCDmehmjB0IRc
+         dXZyIv9yOCMRN0Vz0016AX+lCzyP+cCrTUAuhMIM=
+Date:   Mon, 13 Jan 2020 10:52:24 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, Jonathan Corbet <corbet@lwn.net>,
+        tiwai@suse.de, gregkh@linuxfoundation.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, slawomir.blauciak@intel.com,
+        Sanyog Kale <sanyog.r.kale@intel.com>,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+Subject: Re: [alsa-devel] [PATCH 2/6] soundwire: stream: update state machine
+ and add state checks
+Message-ID: <20200113052224.GQ2818@vkoul-mobl>
+References: <20200108175438.13121-1-pierre-louis.bossart@linux.intel.com>
+ <20200108175438.13121-3-pierre-louis.bossart@linux.intel.com>
+ <20200110064838.GY2818@vkoul-mobl>
+ <a18c668f-4628-0fb9-ffa0-b24cdad1cc8b@linux.intel.com>
+ <69ad48b0-fa3c-904a-4106-5cd9bd18de5c@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <69ad48b0-fa3c-904a-4106-5cd9bd18de5c@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This mailbox hardware is present in Allwinner sun6i, sun8i, sun9i, and
-sun50i SoCs. Add a device tree binding for it.
+On 11-01-20, 05:30, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 1/10/20 10:30 AM, Pierre-Louis Bossart wrote:
+> > 
+> > > > -  int sdw_prepare_stream(struct sdw_stream_runtime * stream);
+> > > > +  int sdw_prepare_stream(struct sdw_stream_runtime * stream,
+> > > > bool resume);
+> > > 
+> > > so what does the additional argument of resume do..?
+> > > 
+> > > > diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
+> > > > index 178ae92b8cc1..6aa0b5d370c0 100644
+> > > > --- a/drivers/soundwire/stream.c
+> > > > +++ b/drivers/soundwire/stream.c
+> > > > @@ -1553,8 +1553,18 @@ int sdw_prepare_stream(struct
+> > > > sdw_stream_runtime *stream)
+> > > 
+> > > and it is not modified here, so is the doc correct or this..?
+> > 
+> > the doc is correct and the code is updated in
+> > 
+> > [PATCH 4/6] soundwire: stream: do not update parameters during
+> > DISABLED-PREPARED transition
+> 
+> Sorry, wrong answer, my bad. The code block in the documentation is
+> incorrect.
+> 
+> The Patch 4/6 implements the transition mentioned in the documentation, but
+> the extra parameter is a left-over from an earlier version. This case is now
+> handled internally. We did revert to the initial prototype after finding out
+> that dealing with transitions in the caller is error-prone.
 
-Signed-off-by: Samuel Holland <samuel@sholland.org>
----
- .../mailbox/allwinner,sun6i-a31-msgbox.yaml   | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
+Glad that you agree with me on something!
 
-diff --git a/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml b/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
-new file mode 100644
-index 000000000000..75d5d97305e1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/allwinner,sun6i-a31-msgbox.yaml
-@@ -0,0 +1,80 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mailbox/allwinner,sun6i-a31-msgbox.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner sunxi Message Box
-+
-+maintainers:
-+  - Samuel Holland <samuel@sholland.org>
-+
-+description: |
-+  The hardware message box on sun6i, sun8i, sun9i, and sun50i SoCs is a
-+  two-user mailbox controller containing 8 unidirectional FIFOs. An interrupt
-+  is raised for received messages, but software must poll to know when a
-+  transmitted message has been acknowledged by the remote user. Each FIFO can
-+  hold four 32-bit messages; when a FIFO is full, clients must wait before
-+  attempting more transmissions.
-+
-+  Refer to ./mailbox.txt for generic information about mailbox device-tree
-+  bindings.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - allwinner,sun8i-a83t-msgbox
-+              - allwinner,sun8i-h3-msgbox
-+              - allwinner,sun9i-a80-msgbox
-+              - allwinner,sun50i-a64-msgbox
-+              - allwinner,sun50i-h6-msgbox
-+          - const: allwinner,sun6i-a31-msgbox
-+      - const: allwinner,sun6i-a31-msgbox
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description: bus clock
-+
-+  resets:
-+    maxItems: 1
-+    description: bus reset
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  '#mbox-cells':
-+    const: 1
-+    description: first cell is the channel number (0-7)
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - resets
-+  - interrupts
-+  - '#mbox-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/sun8i-h3-ccu.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/reset/sun8i-h3-ccu.h>
-+
-+    msgbox: mailbox@1c17000 {
-+            compatible = "allwinner,sun8i-h3-msgbox",
-+                         "allwinner,sun6i-a31-msgbox";
-+            reg = <0x01c17000 0x1000>;
-+            clocks = <&ccu CLK_BUS_MSGBOX>;
-+            resets = <&ccu RST_BUS_MSGBOX>;
-+            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+            #mbox-cells = <1>;
-+    };
-+
-+...
 -- 
-2.23.0
-
+~Vinod
