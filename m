@@ -2,360 +2,102 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47ADDC33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 00:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865BCC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 00:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090D224658
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 00:38:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nftgDKy9"
+	by mail.kernel.org (Postfix) with ESMTP id 55D9921556
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 00:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387561AbgAMAio (ORCPT
+        id S2387568AbgAMApG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 19:38:44 -0500
-Received: from ozlabs.org ([203.11.71.1]:35789 "EHLO ozlabs.org"
+        Sun, 12 Jan 2020 19:45:06 -0500
+Received: from mga03.intel.com ([134.134.136.65]:32857 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387514AbgAMAin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 19:38:43 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47wvpQ1gFRz9s4Y;
-        Mon, 13 Jan 2020 11:38:38 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1578875920;
-        bh=FiURUh2mFc4HQ9UIrHK3z5QteD9cXjaRsSTkvfSMqS4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nftgDKy9fUhMmB6/q4cJKojIqxs+rH/9eR3ioOlXA9ePTCDmEF5LSWZPTzAhk3wXc
-         tadLKyrW/gPpiJAbE4mOtovKzJ4FOgdh/MgPoZKX8mMytekOCcbONLOmWcBKKdfTfV
-         imhy93aE5YP37Ldgxa2scX+50EAvFiEv89bmLq/eyOup2sYtO85qR/DnBjd37hoMD9
-         toOHvAghnFAGBDxFitczXdgTPcR09ndHGmfQOj/WsSWyq7dTiu8dB3KTqVeOitB/zb
-         4baRVFsYZCKW0XopahaEtTjNAlVz6mUU4RpRgmBgEM9Ir1n3J33GbbCl6SKR4q2Ttv
-         bYJz+0SbYeIAQ==
-Date:   Mon, 13 Jan 2020 11:38:37 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ludovic Barre <ludovic.barre@st.com>,
-        Yann Gautier <yann.gautier@st.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the arm-soc
- tree
-Message-ID: <20200113113837.130c3936@canb.auug.org.au>
-In-Reply-To: <CAOesGMifHn6DbNgYm6YUbdKjSL5rNgdWrq+HX9dEusrOr9xX2A@mail.gmail.com>
-References: <20200113065808.25f28c40@canb.auug.org.au>
-        <CAOesGMifHn6DbNgYm6YUbdKjSL5rNgdWrq+HX9dEusrOr9xX2A@mail.gmail.com>
+        id S2387539AbgAMApG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 19:45:06 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jan 2020 16:45:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,427,1571727600"; 
+   d="scan'208";a="247559206"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Jan 2020 16:45:03 -0800
+Date:   Mon, 13 Jan 2020 08:44:57 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, cgroups@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        kirill.shutemov@linux.intel.com, yang.shi@linux.alibaba.com,
+        alexander.duyck@gmail.com, rientjes@google.com
+Subject: Re: [Patch v2] mm: thp: grab the lock before manipulation defer list
+Message-ID: <20200113004457.GA27762@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200109143054.13203-1-richardw.yang@linux.intel.com>
+ <20200111000352.efy6krudecpshezh@box>
+ <20200112022858.GA17733@richard>
+ <20200112225718.5vqzezfclacujyx3@box>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/xAPHW8WNd+cjuv+kKEVsi=t";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200112225718.5vqzezfclacujyx3@box>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/xAPHW8WNd+cjuv+kKEVsi=t
-Content-Type: multipart/mixed; boundary="MP_/1UReg_GeVyG6XiAZZeEqkIT"
-
---MP_/1UReg_GeVyG6XiAZZeEqkIT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-
-Hi Olof,
-
-On Sun, 12 Jan 2020 11:59:58 -0800 Olof Johansson <olof@lixom.net> wrote:
+On Mon, Jan 13, 2020 at 01:57:18AM +0300, Kirill A. Shutemov wrote:
+>On Sun, Jan 12, 2020 at 10:28:58AM +0800, Wei Yang wrote:
+>> On Sat, Jan 11, 2020 at 03:03:52AM +0300, Kirill A. Shutemov wrote:
+>> >On Thu, Jan 09, 2020 at 10:30:54PM +0800, Wei Yang wrote:
+>> >> As all the other places, we grab the lock before manipulate the defer list.
+>> >> Current implementation may face a race condition.
+>> >> 
+>> >> For example, the potential race would be:
+>> >> 
+>> >>     CPU1                      CPU2
+>> >>     mem_cgroup_move_account   split_huge_page_to_list
+>> >>       !list_empty
+>> >>                                 lock
+>> >>                                 !list_empty
+>> >>                                 list_del
+>> >>                                 unlock
+>> >>       lock
+>> >>       # !list_empty might not hold anymore
+>> >>       list_del_init
+>> >>       unlock
+>> >
+>> >I don't think this particular race is possible. Both parties take page
+>> >lock before messing with deferred queue, but anytway:
+>> 
+>> I am afraid not. Page lock is per page, while defer queue is per pgdate or
+>> memcg.
+>> 
+>> It is possible two page in the same pgdate or memcg grab page lock
+>> respectively and then access the same defer queue concurrently.
 >
-> Thanks for the report. Time to automate this at our end, we've had a
-> few too many of these slip through all the way to you lately.
->=20
-> Where do you keep your scripts that you catch these things with? Do
-> you have a writeup of the checks you do? I should add it to my
-> automation once and for all.
+>Look closer on the list_empty() argument. It's list_head local to the
+>page. Too different pages can be handled in parallel without any problem
+>in this particular scenario. As long as we as we modify it under the lock.
+>
+>Said that, page lock here was somewhat accidential and I still belive we
+>need to move the check under the lock anyway.
+>
 
-I should export my linux-next scripts as a git repo, but I haven't (yet) :-(
+If my understanding is correct, you agree with my statement?
 
-Attached pleas find check_commits which I run after fetching each tree
-and pass the changed commit range.  This, in turn, runs check_fixes
-(also attached).
+>-- 
+> Kirill A. Shutemov
 
---=20
-Cheers,
-Stephen Rothwell
-
---MP_/1UReg_GeVyG6XiAZZeEqkIT
-Content-Type: application/x-shellscript
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment; filename=check_commits
-
-#!/bin/bash
-
-if [ "$#" -lt 1 ]; then
-	printf 'Usage: %s <commit range>\n' "$0" 1>&2
-	exit 1
-fi
-
-commits=3D$(git rev-list --no-merges "$@")
-if [ -z "$commits" ]; then
-	printf 'No commits\n'
-	exit 0
-fi
-
-"$(realpath "$(dirname "$0")")/check_fixes" "$@"
-
-declare -a author_missing committer_missing
-
-print_commits()
-{
-	if [ "$#" -eq 1 ]; then
-		return
-	fi
-
-	local t=3D"$1"
-
-	shift
-
-	s=3D
-	is=3D'is'
-	its=3D'its'
-	if [ "$#" -gt 1 ]; then
-		s=3D's'
-		is=3D'are'
-		its=3D'their'
-	fi
-	printf 'Commit%s\n\n' "$s"
-	git log --no-walk --pretty=3D'format:  %h ("%s")' "$@"
-	printf '\n%s missing a Signed-off-by from %s %s%s.\n\n' \
-		"$is" "$its" "$t" "$s"
-}
-
-check_unexpected_files()
-{
-	local files
-
-	readarray files < <(git diff-tree -r --diff-filter=3DA --name-only --no-co=
-mmit-id "$1" '*.rej' '*.orig')
-	if [ "${#files[@]}" -eq 0 ]; then
-		return
-	fi
-
-	s=3D
-	this=3D'this'
-	if [ "${#files[@]}" -gt 1 ]; then
-		s=3D's'
-		this=3D'these'
-	fi
-
-	printf 'Commit\n\n'
-	git log --no-walk --pretty=3D'format:  %h ("%s")' "$1"
-	printf '\nadded %s unexpected file%s:\n\n' "$this" "$s"
-	printf '  %s\n' "${files[@]}"
-}
-
-for c in $commits; do
-	ae=3D$(git log -1 --format=3D'<%ae>%n<%aE>%n %an %n %aN ' "$c" | sort -u)
-	ce=3D$(git log -1 --format=3D'<%ce>%n<%cE>%n %cn %n %cN ' "$c" | sort -u)
-	sob=3D$(git log -1 --format=3D'%b' "$c" |
-		sed -En 's/^\s*Signed-off-by:?\s*/ /ip')
-
-	if ! grep -i -F -q "$ae" <<<"$sob"; then
-		author_missing+=3D("$c")
-	fi
-	if ! grep -i -F -q "$ce" <<<"$sob"; then
-		committer_missing+=3D("$c")
-	fi
-
-	check_unexpected_files "$c"
-done
-
-print_commits 'author' "${author_missing[@]}"
-print_commits 'committer' "${committer_missing[@]}"
-
-exec gitk "$@"
-
---MP_/1UReg_GeVyG6XiAZZeEqkIT
-Content-Type: application/x-shellscript
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: attachment; filename=check_fixes
-
-#!/bin/bash
-
-if [ "$#" -lt 1 ]; then
-        printf 'Usage: %s <commit range>\n', "$0" 1>&2
-        exit 1
-fi
-
-commits=3D$(git rev-list --no-merges -i --grep=3D'^[[:space:]]*Fixes:' "$@")
-if [ -z "$commits" ]; then
-        exit 0
-fi
-
-# This should be a git tree that contains *only* Linus' tree
-Linus_tree=3D"${HOME}/kernels/linus.git"
-
-split_re=3D'^([Cc][Oo][Mm][Mm][Ii][Tt])?[[:space:]]*([[:xdigit:]]{5,})([[:s=
-pace:]]*)(.*)$'
-nl=3D$'\n'
-tab=3D$'\t'
-
-# Strip the leading and training spaces from a string
-strip_spaces()
-{
-	[[ "$1" =3D~ ^[[:space:]]*(.*[^[:space:]])[[:space:]]*$ ]]
-	echo "${BASH_REMATCH[1]}"
-}
-
-for c in $commits; do
-
-	commit_log=3D$(git log -1 --format=3D'%h ("%s")' "$c")
-	commit_msg=3D"In commit
-
-  $commit_log
-
-"
-
-	fixes_lines=3D$(git log -1 --format=3D'%B' "$c" |
-			grep -i '^[[:space:]]*Fixes:')
-
-	while read -r fline; do
-		[[ "$fline" =3D~ ^[[:space:]]*[Ff][Ii][Xx][Ee][Ss]:[[:space:]]*(.*)$ ]]
-		f=3D"${BASH_REMATCH[1]}"
-		fixes_msg=3D"Fixes tag
-
-  $fline
-
-has these problem(s):
-
-"
-		sha=3D
-		subject=3D
-		msg=3D
-		if [[ "$f" =3D~ $split_re ]]; then
-			first=3D"${BASH_REMATCH[1]}"
-			sha=3D"${BASH_REMATCH[2]}"
-			spaces=3D"${BASH_REMATCH[3]}"
-			subject=3D"${BASH_REMATCH[4]}"
-			if [ "$first" ]; then
-				msg=3D"${msg:+${msg}${nl}}  - leading word '$first' unexpected"
-			fi
-			if [ -z "$subject" ]; then
-				msg=3D"${msg:+${msg}${nl}}  - missing subject"
-			elif [ -z "$spaces" ]; then
-				msg=3D"${msg:+${msg}${nl}}  - missing space between the SHA1 and the su=
-bject"
-			fi
-		else
-			printf '%s%s  - %s\n' "$commit_msg" "$fixes_msg" 'No SHA1 recognised'
-			commit_msg=3D''
-			continue
-		fi
-		if ! git rev-parse -q --verify "$sha" >/dev/null; then
-			printf '%s%s  - %s\n' "$commit_msg" "$fixes_msg" 'Target SHA1 does not e=
-xist'
-			commit_msg=3D''
-			continue
-		fi
-
-		if [ "${#sha}" -lt 12 ]; then
-			msg=3D"${msg:+${msg}${nl}}  - SHA1 should be at least 12 digits long${nl=
-}    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11$=
-{nl}    or later) just making sure it is not set (or set to \"auto\")."
-		fi
-		# reduce the subject to the part between () if there
-		if [[ "$subject" =3D~ ^\((.*)\) ]]; then
-			subject=3D"${BASH_REMATCH[1]}"
-		elif [[ "$subject" =3D~ ^\((.*) ]]; then
-			subject=3D"${BASH_REMATCH[1]}"
-			msg=3D"${msg:+${msg}${nl}}  - Subject has leading but no trailing parent=
-heses"
-		fi
-
-		# strip matching quotes at the start and end of the subject
-		# the unicode characters in the classes are
-		# U+201C LEFT DOUBLE QUOTATION MARK
-		# U+201D RIGHT DOUBLE QUOTATION MARK
-		# U+2018 LEFT SINGLE QUOTATION MARK
-		# U+2019 RIGHT SINGLE QUOTATION MARK
-		re1=3D$'^[\"\u201C](.*)[\"\u201D]$'
-		re2=3D$'^[\'\u2018](.*)[\'\u2019]$'
-		re3=3D$'^[\"\'\u201C\u2018](.*)$'
-		if [[ "$subject" =3D~ $re1 ]]; then
-			subject=3D"${BASH_REMATCH[1]}"
-		elif [[ "$subject" =3D~ $re2 ]]; then
-			subject=3D"${BASH_REMATCH[1]}"
-		elif [[ "$subject" =3D~ $re3 ]]; then
-			subject=3D"${BASH_REMATCH[1]}"
-			msg=3D"${msg:+${msg}${nl}}  - Subject has leading but no trailing quotes"
-		fi
-
-		subject=3D$(strip_spaces "$subject")
-
-		target_subject=3D$(git log -1 --format=3D'%s' "$sha")
-		target_subject=3D$(strip_spaces "$target_subject")
-
-		# match with ellipses
-		case "$subject" in
-		*...)	subject=3D"${subject%...}"
-			target_subject=3D"${target_subject:0:${#subject}}"
-			;;
-		...*)	subject=3D"${subject#...}"
-			target_subject=3D"${target_subject: -${#subject}}"
-			;;
-		*\ ...\ *)
-			s1=3D"${subject% ... *}"
-			s2=3D"${subject#* ... }"
-			subject=3D"$s1 $s2"
-			t1=3D"${target_subject:0:${#s1}}"
-			t2=3D"${target_subject: -${#s2}}"
-			target_subject=3D"$t1 $t2"
-			;;
-		esac
-		subject=3D$(strip_spaces "$subject")
-		target_subject=3D$(strip_spaces "$target_subject")
-
-		if [ "$subject" !=3D "${target_subject:0:${#subject}}" ]; then
-			msg=3D"${msg:+${msg}${nl}}  - Subject does not match target commit subje=
-ct${nl}    Just use${nl}${tab}git log -1 --format=3D'Fixes: %h (\"%s\")'"
-		fi
-		lsha=3D$(cd "$Linus_tree" && git rev-parse -q --verify "$sha")
-		if [ -z "$lsha" ]; then
-			count=3D$(git rev-list --count "$sha".."$c")
-			if [ "$count" -eq 0 ]; then
-				msg=3D"${msg:+${msg}${nl}}  - Target is not an ancestor of this commit"
-			fi
-		fi
-		if [ "$msg" ]; then
-			printf '%s%s%s\n' "$commit_msg" "$fixes_msg" "$msg"
-			commit_msg=3D''
-		fi
-	done <<< "$fixes_lines"
-done
-
-exit 0
-
---MP_/1UReg_GeVyG6XiAZZeEqkIT--
-
---Sig_/xAPHW8WNd+cjuv+kKEVsi=t
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4bvA0ACgkQAVBC80lX
-0Gzf7Af/cFeKP+OQREG73VGV/1X4bi2vfJDJ5fOetieSVjY3vmvkj4fywwWRhUO8
-DKE8cOABxHKa6OaDHXJfrpqk8m5s5CV9beleBqXCHPK0OtMzkb7vfTE5aecPaojy
-AQVx5dK9nBkO2BsTaPRjpyHeuxvfPUpVti5myBAqPcyYLBy1YMmPhQAH5J4OVCss
-wkEZVJ0hFr9DkXGN8k2IOnCKsyvkWzvdLQL8tiTCoHGxWe1oCSK3RVmLI6v1QQQ3
-iDuiFPvUoLfLgm6VJqIT4MJrYx3Bcbk+eyzAFA/BBnBtqO1Rmo3uUQhLh3RF0GJj
-sHvTY7g8JmVLuCKxHUyXKuJZJPut/Q==
-=jQDi
------END PGP SIGNATURE-----
-
---Sig_/xAPHW8WNd+cjuv+kKEVsi=t--
+-- 
+Wei Yang
+Help you, Help me
