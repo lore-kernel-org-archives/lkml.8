@@ -2,104 +2,98 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A04D8C33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:05:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8252BC33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7280021556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:05:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58D8A214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 19:05:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="G7wNaU9m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgAMTFg (ORCPT
+        id S1728800AbgAMTFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 14:05:36 -0500
-Received: from mx01.bbu.dsd.mx.bitdefender.com ([91.199.104.161]:35650 "EHLO
-        mx01.bbu.dsd.mx.bitdefender.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726435AbgAMTFg (ORCPT
+        Mon, 13 Jan 2020 14:05:53 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:44706 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728774AbgAMTFw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 14:05:36 -0500
-X-Greylist: delayed 614 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Jan 2020 14:05:34 EST
-Received: from smtp.bitdefender.com (smtp02.buh.bitdefender.net [10.17.80.76])
-        by mx01.bbu.dsd.mx.bitdefender.com (Postfix) with ESMTPS id 9B93A30747C7;
-        Mon, 13 Jan 2020 20:55:19 +0200 (EET)
-Received: from localhost (unknown [195.210.5.22])
-        by smtp.bitdefender.com (Postfix) with ESMTPSA id 8A256301B92B;
-        Mon, 13 Jan 2020 20:55:19 +0200 (EET)
-From:   Adalbert =?iso-8859-2?b?TGF643I=?= <alazar@bitdefender.com>
-Subject: Re: [RESEND PATCH v10 06/10] vmx: spp: Set up SPP paging table at
- vmentry/vmexit
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com, edwin.zhai@intel.com,
-        tamas@tklengyel.com, mathieu.tarral@protonmail.com
-In-Reply-To: <20200113173358.GC1175@linux.intel.com>
-References: <20200102061319.10077-1-weijiang.yang@intel.com>
-        <20200102061319.10077-7-weijiang.yang@intel.com>
-        <20200110180458.GG21485@linux.intel.com>
-        <20200113081050.GF12253@local-michael-cet-test.sh.intel.com>
-        <20200113173358.GC1175@linux.intel.com>
-Date:   Mon, 13 Jan 2020 20:55:46 +0200
-Message-ID: <15789417460.A97E650.22893@host>
-User-agent: void
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 13 Jan 2020 14:05:52 -0500
+Received: by mail-qk1-f195.google.com with SMTP id w127so9540302qkb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 11:05:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=05/r1uoo6hivI2yxFGMarKb30fMqhSdQqFht9r494DU=;
+        b=G7wNaU9m/AMUsbs+yr9TA4nTqsnTHbAZf2P0+HMpnBYhT/1vFUBRdrku0imAk+yvuC
+         JpDH+udqg7CQtOnxuYDTbo7CiIRqsIm9mUJxcAT9vA9Qi/plCBXhPsoyTk3SgaUPhY0o
+         l8fsKDsdkSk3AIlfxfAd3Anxg1Q/T7XP7lLvg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=05/r1uoo6hivI2yxFGMarKb30fMqhSdQqFht9r494DU=;
+        b=p2RHjbnEE2XeIB/qcmJre6mxALDuMdd1Mrv5XGgc8AV+a9KlNa0rmWjelajkJcm2us
+         gLWdd+7vTvUf6LwvsCXJ2En9ak1nV4RelT3AQzH3S4XTXXtG/h7vuwxMK8j7cvAuKy3k
+         F/Hy98d4SXvFzwS4hH85FFlQ1nDmLYHFIxV86sulDJ0l501lCWuZOk3RpyReH2ZnyOcR
+         zl22HS8zI/uWSAqX/4iJQK+GtWf63Jw0baKepiWNlcWkej9eu+y2mZvbM06Vvq4HWylJ
+         +jmb+FHycXPLNpUdyFsNCClOXhvVRvkr8AiSoxaWC4JCc4olrH4WJISPtkgbNIHEXpyz
+         jf7w==
+X-Gm-Message-State: APjAAAWZ0SopUMOoPGuUhfSdSMrBoEzOE1alyEDoGUODKjqivKZXlOEw
+        kfka1zNi5JkRSq4ZXyEcaX8AVmncQD4=
+X-Google-Smtp-Source: APXvYqxPaYBDJWyklr6LtqN3Tc5Za9EkWg/5gNMw4ZMejB9FqUjQ1M4MTj9WyocJ/3SvO2Nal9qsmA==
+X-Received: by 2002:a37:ad0e:: with SMTP id f14mr17575446qkm.213.1578942351023;
+        Mon, 13 Jan 2020 11:05:51 -0800 (PST)
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com. [209.85.222.169])
+        by smtp.gmail.com with ESMTPSA id b191sm5457990qkg.43.2020.01.13.11.05.48
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 11:05:48 -0800 (PST)
+Received: by mail-qk1-f169.google.com with SMTP id z76so9598650qka.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 11:05:48 -0800 (PST)
+X-Received: by 2002:a05:620a:2043:: with SMTP id d3mr13205757qka.279.1578942347632;
+ Mon, 13 Jan 2020 11:05:47 -0800 (PST)
 MIME-Version: 1.0
+References: <20191206194535.150179-1-briannorris@chromium.org> <0101016eea4fa7f5-e04b23cd-17a0-4306-8100-7761f1161da3-000000@us-west-2.amazonses.com>
+In-Reply-To: <0101016eea4fa7f5-e04b23cd-17a0-4306-8100-7761f1161da3-000000@us-west-2.amazonses.com>
+From:   Brian Norris <briannorris@chromium.org>
+Date:   Mon, 13 Jan 2020 11:05:36 -0800
+X-Gmail-Original-Message-ID: <CA+ASDXNCzyRfZs0D6_+j0Tyqai4PaFk50HpF_LqC-GuOTYJCmA@mail.gmail.com>
+Message-ID: <CA+ASDXNCzyRfZs0D6_+j0Tyqai4PaFk50HpF_LqC-GuOTYJCmA@mail.gmail.com>
+Subject: Re: [PATCH] mwifiex: drop most magic numbers from mwifiex_process_tdls_action_frame()
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless <linux-wireless@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Solar Designer <solar@openwall.com>,
+        qize wang <wangqize888888888@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jan 2020 09:33:58 -0800, Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> On Mon, Jan 13, 2020 at 04:10:50PM +0800, Yang Weijiang wrote:
-> > On Fri, Jan 10, 2020 at 10:04:59AM -0800, Sean Christopherson wrote:
-> > > On Thu, Jan 02, 2020 at 02:13:15PM +0800, Yang Weijiang wrote:
-> > > > @@ -3585,7 +3602,30 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gva_t gva, int level,
-> > > >  		if ((error_code & PFERR_WRITE_MASK) &&
-> > > >  		    spte_can_locklessly_be_made_writable(spte))
-> > > >  		{
-> > > > -			new_spte |= PT_WRITABLE_MASK;
-> > > > +			/*
-> > > > +			 * Record write protect fault caused by
-> > > > +			 * Sub-page Protection, let VMI decide
-> > > > +			 * the next step.
-> > > > +			 */
-> > > > +			if (spte & PT_SPP_MASK) {
-> > > > +				int len = kvm_x86_ops->get_inst_len(vcpu);
-> > > 
-> > > There's got to be a better way to handle SPP exits than adding a helper
-> > > to retrieve the instruction length.
-> > >
-> > The fault instruction was skipped by kvm_skip_emulated_instruction()
-> > before, but Paolo suggested leave the re-do or skip option to user-space
-> > to make it flexible for write protection or write tracking, so return
-> > length to user-space.
-> 
-> Sorry, my comment was unclear.  I have no objection to punting the fault
-> to userspace, it's the mechanics of how it's done that I dislike.
-> 
-> Specifically, (a) using run->exit_reason to propagate the SPP exit up the
-> stack, e.g. instead of modifying affected call stacks to play nice with
-> any exit to userspace, (b) assuming ->get_insn_len() will always be
-> accurate, e.g. see the various caveats in skip_emulated_instruction() for
-> both VMX and SVM, and (c) duplicating the state capture code in every
-> location that can encounter a SPP fault.
-> 
-> What I'm hoping is that it's possible to modify the call stacks to
-> explicitly propagate an exit to userspace and/or SPP fault, and shove all
-> the state capture into a common location, e.g. handle_ept_violation().
-> 
-> Side topic, assuming the userspace VMI is going to be instrospecting the
-> faulting instruction, won't it decode the instruction?  I.e. calculate
-> the instruction length anyways?
+On Mon, Dec 9, 2019 at 2:58 AM Kalle Valo <kvalo@codeaurora.org> wrote:
+>
+> Brian Norris <briannorris@chromium.org> writes:
+>
+> > AFAICT, the existing commit (1e58252e334d) isn't wrong, per se -- just
+> > very poorly styled -- so this probably doesn't need to go to -stable.
+> > Not sure if it's a candidate for wireless-drivers (where the original
+> > commit currently sites) vs. wireless-drivers-next.
+>
+> I'll try to do so that I'll put this patch to "Awaiting Upstream" state
+> and apply it to w-d-next once 1e58252e334d is merged to w-d-next. Feel
+> free to remind me then that happens :)
 
-Indeed, we decode the instruction from userspace. I don't know if the
-instruction length helps other projects. Added Tamas and Mathieu.
+It's that time!
 
-In our last VMI API proposal, the breakpoint event had the instruction
-length sent to userspace, but I can't remember why.
-
-https://lore.kernel.org/kvm/20190809160047.8319-62-alazar@bitdefender.com/
+Brian
