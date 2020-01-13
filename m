@@ -2,121 +2,88 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5338CC33CB0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0730C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33A972082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B89321744
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:39:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733228AbgAMEjX (ORCPT
+        id S2387592AbgAMEjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 23:39:23 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:54802 "EHLO loongson.cn"
+        Sun, 12 Jan 2020 23:39:24 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:54800 "EHLO loongson.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733020AbgAMEjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 23:39:22 -0500
+        id S1733091AbgAMEjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 12 Jan 2020 23:39:23 -0500
 Received: from localhost.localdomain.localdomain (unknown [222.209.11.32])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD91s9BteOV0EAA--.4S4;
-        Mon, 13 Jan 2020 12:39:10 +0800 (CST)
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD91s9BteOV0EAA--.4S2;
+        Mon, 13 Jan 2020 12:39:09 +0800 (CST)
 From:   Xing Li <lixing@loongson.cn>
 To:     Ralf Baechle <ralf@linux-mips.org>,
         Paul Burton <paulburton@kernel.org>,
         James Hogan <jhogan@kernel.org>
 Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] KVM: MIPS: Support kvm modules autoprobed when startup system
-Date:   Mon, 13 Jan 2020 12:39:08 +0800
-Message-Id: <1578890348-2734-3-git-send-email-lixing@loongson.cn>
+Subject: [PATCH v2 1/3] KVM: MIPS: Change KVM_ENTRYHI_ASID to cpu_asid_mask(&current_cpu_data)
+Date:   Mon, 13 Jan 2020 12:39:06 +0800
+Message-Id: <1578890348-2734-1-git-send-email-lixing@loongson.cn>
 X-Mailer: git-send-email 2.1.0
-In-Reply-To: <1578890348-2734-1-git-send-email-lixing@loongson.cn>
-References: <1578890348-2734-1-git-send-email-lixing@loongson.cn>
-X-CM-TRANSID: AQAAf9DxD91s9BteOV0EAA--.4S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cr1xCFy7uF1UKFWkuw4rKrg_yoW8Zr1rpF
-        4DAa93Cr45uryDJFWfZFnFgrW3Ja1DG3yj9ayjgryjv3ZYqFs8Jws2kwnxKr1DXFsIq3WF
-        gas3Xr1jka92vw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUB2b7Iv0xC_tr1lb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I2
-        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI
-        8067AKxVWUXwA2048vs2IY020Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK0II2c7xJM28CjxkF
-        64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcV
-        CY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv
-        6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4
-        CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvj
-        eVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_Gryl42xK82IYc2
-        Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s02
-        6x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0x
-        vE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE
-        42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6x
-        kF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxNeoUUUUU
+X-CM-TRANSID: AQAAf9DxD91s9BteOV0EAA--.4S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrtFWktw1rWw47uFW3tFWDJwb_yoWkWrc_Z3
+        W7Zws7ur4fCrZFy39Iywn3WFWFgw1UWF929r9IgFyq9asFyry5Wa9xJr9rAwsxur4qyF4r
+        W34DJ34rZrnrCjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb2kYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I
+        8E87Iv6xkF7I0E14v26r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F
+        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE14v_Gryl42xK
+        82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
+        C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48J
+        MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
+        IF0xvE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2
+        z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU04UDJUUUUU==
 X-CM-SenderInfo: pol0x03j6o00pqjv00gofq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the module_init of kvm_mips_init cannot force the kvm
-modules insmod when startup system.
+The code in decode_config4 of arch/mips/kernel/cpu-probe.c
 
-Add new feature CPU_MIPS_VZ in elf_hwcap to support KVM auto probe
-when hardware virtualization supported.
+        asid_mask = MIPS_ENTRYHI_ASID;
+        if (config4 & MIPS_CONF4_AE)
+                asid_mask |= MIPS_ENTRYHI_ASIDX;
+        set_cpu_asid_mask(c, asid_mask);
+
+set asid_mask to cpuinfo->asid_mask
+
+So KVM_ENTRYHI_ASID should change to cpu_asid_mask(&current_cpu_data)
+for support 10bits ASID_MASK
 
 Signed-off-by: Xing Li <lixing@loongson.cn>
 ---
- arch/mips/include/uapi/asm/hwcap.h | 1 +
- arch/mips/kernel/cpu-probe.c       | 4 +++-
- arch/mips/kvm/mips.c               | 3 ++-
- 3 files changed, 6 insertions(+), 2 deletions(-)
+ arch/mips/include/asm/kvm_host.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/mips/include/uapi/asm/hwcap.h b/arch/mips/include/uapi/asm/hwcap.h
-index 1ade1da..9e66509 100644
---- a/arch/mips/include/uapi/asm/hwcap.h
-+++ b/arch/mips/include/uapi/asm/hwcap.h
-@@ -17,5 +17,6 @@
- #define HWCAP_LOONGSON_MMI  (1 << 11)
- #define HWCAP_LOONGSON_EXT  (1 << 12)
- #define HWCAP_LOONGSON_EXT2 (1 << 13)
-+#define HWCAP_MIPS_VZ       (1 << 14)
+diff --git a/arch/mips/include/asm/kvm_host.h b/arch/mips/include/asm/kvm_host.h
+index 41204a4..6be70d5 100644
+--- a/arch/mips/include/asm/kvm_host.h
++++ b/arch/mips/include/asm/kvm_host.h
+@@ -275,7 +275,7 @@ enum emulation_result {
+ #define MIPS3_PG_FRAME		0x3fffffc0
  
- #endif /* _UAPI_ASM_HWCAP_H */
-diff --git a/arch/mips/kernel/cpu-probe.c b/arch/mips/kernel/cpu-probe.c
-index c543326..b305269 100644
---- a/arch/mips/kernel/cpu-probe.c
-+++ b/arch/mips/kernel/cpu-probe.c
-@@ -2242,8 +2242,10 @@ void cpu_probe(void)
- 	if (cpu_has_loongson_ext2)
- 		elf_hwcap |= HWCAP_LOONGSON_EXT2;
- 
--	if (cpu_has_vz)
-+	if (cpu_has_vz) {
- 		cpu_probe_vz(c);
-+		elf_hwcap |= HWCAP_MIPS_VZ;
-+	}
- 
- 	cpu_probe_vmbits(c);
- 
-diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
-index 1109924..1da5df3 100644
---- a/arch/mips/kvm/mips.c
-+++ b/arch/mips/kvm/mips.c
-@@ -19,6 +19,7 @@
- #include <linux/sched/signal.h>
- #include <linux/fs.h>
- #include <linux/memblock.h>
-+#include <linux/cpufeature.h>
- 
- #include <asm/fpu.h>
- #include <asm/page.h>
-@@ -1742,7 +1743,7 @@ static void __exit kvm_mips_exit(void)
- 	unregister_die_notifier(&kvm_mips_csr_die_notifier);
- }
- 
--module_init(kvm_mips_init);
-+module_cpu_feature_match(MIPS_VZ, kvm_mips_init);
- module_exit(kvm_mips_exit);
- 
- EXPORT_TRACEPOINT_SYMBOL(kvm_exit);
+ #define VPN2_MASK		0xffffe000
+-#define KVM_ENTRYHI_ASID	MIPS_ENTRYHI_ASID
++#define KVM_ENTRYHI_ASID	cpu_asid_mask(&current_cpu_data)
+ #define TLB_IS_GLOBAL(x)	((x).tlb_lo[0] & (x).tlb_lo[1] & ENTRYLO_G)
+ #define TLB_VPN2(x)		((x).tlb_hi & VPN2_MASK)
+ #define TLB_ASID(x)		((x).tlb_hi & KVM_ENTRYHI_ASID)
 -- 
 2.1.0
 
