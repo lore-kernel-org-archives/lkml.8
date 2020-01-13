@@ -2,195 +2,92 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267FEC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C486FC33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:43:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0664214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:42:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BFAB214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 13:43:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KMPbZcnz"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fdmxS0wB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728689AbgAMNm4 (ORCPT
+        id S1728787AbgAMNm7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 08:42:56 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51286 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgAMNmz (ORCPT
+        Mon, 13 Jan 2020 08:42:59 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34759 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728709AbgAMNm6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 08:42:55 -0500
-Received: by mail-wm1-f65.google.com with SMTP id d73so9711083wmd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 05:42:54 -0800 (PST)
+        Mon, 13 Jan 2020 08:42:58 -0500
+Received: by mail-qk1-f196.google.com with SMTP id j9so8481111qkk.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 05:42:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zJrfuhvY4deSpuDK2tf/dm3JvOsouNbsqMAp9wxIM1M=;
-        b=KMPbZcnz9vukXKprPKOdWKj37bmBltDFfwldexD0qpEQ7goAhIIQLRSymM8xmxNip3
-         dlpK6Uu4TK8esQQhi5jfSu1zr0yBb4Q2J+VhHQqhShG0JRmoG+6E/7MRv9djJ+GAFRXb
-         4wNbWtTS6UxvCoN7xW0q3U49nwTr+EZKxhenreWS/3IaZMmfVyya2WQw/IjMSCHk87sa
-         JLMKiVYgeLMr3nBgKzFAz7z1irK1f/IgVpMehvGqJfgzaf7LLQFGEJkcUpqMBzKyypIA
-         YMPe66tjv7UByVF4UpCM/XX64cJ492jgO/qbwHGqpTe2Ymqgnu+UWda7NJyrAIglW49y
-         Iftg==
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=ebRaEiWNJZRuQS+8brgIpZYm9LtU6d1+T5t6VKydh3Y=;
+        b=fdmxS0wBohTq1pkWCQ2CTXeIMIJK31O1w7Yl3V7lHtFcr5Jc/P79yG2XOflZEJqP2Z
+         jx6swCuexKcrh3nwOPmWyyiQ4QIv6+RcMxnNoTnjyaIh96G+IkNao2hBRtPex9qFjidg
+         irOHyWXcynFHq7Gy0RB7PiopY3XQQ4OS2ZAUqSwNDxfvvq8jsE51dcg9cHtHE65xLqCQ
+         9BQ/jBBLbQ5JRgv0g+2H6Jvzjlv9+TAM48jPtJVzkrBmGWrnbm/Y52lcM9K1zx/zjpg1
+         twvDDkgpSwiqlatkh0Z/q7ozT3Z/HFQQ+8oOQ48ZGO3E/VGnhn+WYltpsmRyS5arIlUH
+         +34w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zJrfuhvY4deSpuDK2tf/dm3JvOsouNbsqMAp9wxIM1M=;
-        b=YCVNBEue40n/HuFtN7nXe+yHnZnztB1wx9Tvz2WwbI1+QCdQOinUVFg1J+jef6p4u1
-         9GBW7ptY9L/1GpQnWiyR8S9ZGLNxC16sfK4DbWByXC5fN6qCeKfpdV8yaTBaQfwQX3zR
-         BSqDVV83LwePT0Ep4Jdz2G1mz3A/QGPDTTISdlT2LfDj13awqW5f78tYT63OMZ9iNww5
-         LiuOKhbiG/God8h8313Yfx3vcBQQn7Pw9/6LD+lmmRmP+qrkUdPjKxKdFN80pO2JMMfx
-         a/qQ+FXyA+VOQpy5SAS7pF7kAgMTMVrofu2CtJBREn1V5yKqriytbPrEeb68PyPHlbuj
-         zLDw==
-X-Gm-Message-State: APjAAAWR46j4oQxvRnkuILnhXIKfxzy4D0lCjrqAw1g9ERGugohgS1ep
-        nP2rchL2B4N0LDCcr2MKSry2/G0/3608XySnvC+5P7trgdU=
-X-Google-Smtp-Source: APXvYqwRZG5006daKrcHDqU3irnIL6xTWPGqAzROYb6FqiJu3vuxf/DZg7ciW9xTIR2Aj4VCatLdKHWL5NFMYx4ApfU=
-X-Received: by 2002:a7b:c3d8:: with SMTP id t24mr19619056wmj.175.1578922973019;
- Mon, 13 Jan 2020 05:42:53 -0800 (PST)
-MIME-Version: 1.0
-References: <20191223211309.GA4609@sig21.net> <20200113092604.GA26365@sig21.net>
- <2661668.lOhekKA4Va@kreacher>
-In-Reply-To: <2661668.lOhekKA4Va@kreacher>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Mon, 13 Jan 2020 14:42:41 +0100
-Message-ID: <CAG_fn=WZTyaeG=Vy3XqX84gMOob3KKVWHM6G9=mEGe3XA7sfKA@mail.gmail.com>
-Subject: Re: init_on_free breaks hibernate
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Johannes Stezenbach <js@sig21.net>,
-        "Acked-by: Kees Cook" <keescook@chromium.org>,
-        "Acked-by: Michal Hocko" <mhocko@suse.cz>,
-        linux-pm@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=ebRaEiWNJZRuQS+8brgIpZYm9LtU6d1+T5t6VKydh3Y=;
+        b=cmDLYZH28th2lBFZxapc+7kNbDe4yEuH7AqOrSIttTeUhEvlihIbWJgLQCLYp3+2Ti
+         5oyEETeIHu/fl0PhAJTlHIC1af9sDVYneUOD902B6CGUfBSJ1EkR85URESdyc2WgUWz4
+         2jsHC38tygXoPKXUQB2RgBtM/9WpGn0fAcxIBArkSKLELvsI7arKFnT8M2qioPsDV+xC
+         ekBgEmciX0+P5CP93dbi5UqYeXRgNZYoWrDPCkxon5Xyvu6qbmXQUU1QX8yC5x9yKSLp
+         qklFPJi59WnlqLsbDpyCHVePN6RWmP5cVWshq8jAk7pvsbQMdtyEzBXDMtj/NYpxZFGJ
+         oUog==
+X-Gm-Message-State: APjAAAV58EKnjPGrAMWznAIzWrj4sBTnf2OIO4p5+x7NUHbLDEWB7fLw
+        gjYxMA+kErIUCqjG4iXllNlgCg==
+X-Google-Smtp-Source: APXvYqxmgg8rongh+Fmg8bcqWMngfdaSMvVUMmgcVPb1BwUNwM+7gM7MxoqyAmyGpFu6zcA/gGsywg==
+X-Received: by 2002:a05:620a:16c6:: with SMTP id a6mr16368641qkn.140.1578922976659;
+        Mon, 13 Jan 2020 05:42:56 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id s27sm4943171qkm.97.2020.01.13.05.42.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 05:42:56 -0800 (PST)
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] sched/core: fix illegal RCU from offline CPUs
+Date:   Mon, 13 Jan 2020 08:42:55 -0500
+Message-Id: <58C3C45A-1C05-4900-B82D-5AAF7538B9C8@lca.pw>
+References: <66e33eb5-e958-6dc8-2327-4168afdd9e1e@i-love.sakura.ne.jp>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        bsegall@google.com, mgorman@suse.de, paulmck@kernel.org,
+        tglx@linutronix.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <66e33eb5-e958-6dc8-2327-4168afdd9e1e@i-love.sakura.ne.jp>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 12:07 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrot=
-e:
->
-> On Monday, January 13, 2020 10:26:04 AM CET Johannes Stezenbach wrote:
-> > Hi,
-> >
-> > On Mon, Dec 23, 2019 at 10:13:09PM +0100, Johannes Stezenbach wrote:
-> > > I upgraded the kernel on one of my machines to 5.3.18 (from 5.2.x)
-> > > and found it failed after resume from hibernate due to what seemed
-> > > to be memory corruption. I had a hunch it could be related to
-> > > CONFIG_INIT_ON_ALLOC_DEFAULT_ON or CONFIG_INIT_ON_FREE_DEFAULT_ON,
-> > > and a quick web search found this which seems to confirm:
-> > > https://bbs.archlinux.org/viewtopic.php?pid=3D1877845#p1877845
-> > >
-> > > I rebuilt the kernel with CONFIG_INIT_ON_FREE_DEFAULT_ON disabled,
-> > > and hibernate works again.  I'm fine with this workaround and
-> > > just wanted to share this information.
-> > >
-> > > The commit that introduces CONFIG_INIT_ON_FREE_DEFAULT_ON:
-> > > 6471384af2a6 mm: security: introduce init_on_alloc=3D1 and init_on_fr=
-ee=3D1 boot options
-> >
-> > I tested 5.4.11 and current git master (b07f636fca1c8)
-> > in Qemu and was able to reproduce the issue in both.
->
-> Let's add more people and the LKML to the CC.
->
-> Alex, Kees, Michal, any comments?
-Hm, I cannot think of a reason for initialization to break hibernate
-off the top of my head.
-Maybe after hibernation certain pages land in the page freelist
-without being wiped?
-I'll try to reproduce this problem locally.
-
-> > Basically I followed the description here
-> > http://ncmiller.github.io/2016/05/14/linux-and-qemu.html
-> > to build a minimal image using busybox (I'm using
-> > the binary from Debian's busybox-static package),
-> > then added s swap image (-drive file=3Ddisk.img,if=3Dvirtio),
-> > do "mkswap /dev/vda" the first time.
-> >
-> > hibernate: swapon /dev/vda; echo disk >/sys/power/state
-> > resume: echo 254:0 >/sys/power/resume
-> >
-> > Since busybox is very light on memory usage it doesn't
-> > trigger immediately, but these commands seem to do it
-> > reliably:
-> >
-> >   dmesg | gzip >/dev/null
-> >   find /sys | bzip2 | sha512sum
-> >
-> >
-> > my initramfs:
-> >   6012997      4 drwxr-xr-x   4 js       js           4096 Jan  8 21:25=
- initramfs
-> >   6022584      4 drwxr-xr-x   2 js       js           4096 Jan  8 21:21=
- initramfs/dev
-> >   5909013      4 -rwxr-xr-x   1 js       js            514 Jan  8 21:25=
- initramfs/init
-> >   6012998      4 drwxr-xr-x   2 js       js           4096 Jan  8 20:41=
- initramfs/bin
-> >   5909011   1904 -rwxr-xr-x   1 js       js        1945856 Apr  1  2019=
- initramfs/bin/busybox
-> >   5909012      0 lrwxrwxrwx   1 js       js              7 Feb 14  2018=
- initramfs/bin/sh -> busybox
-> >
-> > my /init:
-> > #!/bin/sh
-> >
-> > PATH=3D/bin
-> > export PATH
-> >
-> > # Create dirs
-> > /bin/busybox mkdir -p /proc /sys /etc /tmp /usr
-> > /bin/busybox ln -s /bin /sbin
-> > /bin/busybox ln -s /bin /usr/bin
-> > /bin/busybox ln -s /bin /usr/sbin
-> > # Create all the symlinks to busybox
-> > /bin/busybox --install -s
-> >
-> > mount -t proc proc /proc
-> > mount -t sysfs sysfs /sys
-> > mount -t devtmpfs devtmpfs /dev
-> >
-> > echo -e "\nBoot took $(cut -d' ' -f1 /proc/uptime) seconds\n"
-> >
-> > # shell where ^C works
-> > setsid busybox cttyhack sh
-> > # avoid "PID 1 exited" oops
-> > poweroff -f
-> > ---------
-> >
-> >
-> > qemu-system-x86_64 -m 128 -enable-kvm \
-> >   -kernel ../linux/arch/x86/boot/bzImage \
-> >   -initrd initramfs.cpio \
-> >   -drive file=3Ddisk.img,if=3Dvirtio \
-> >   -nographic -append "console=3DttyS0 init_on_alloc=3D1 init_on_free=3D=
-1"
-> >
-> >
-> > Johannes
-> >
->
->
->
->
 
 
---=20
-Alexander Potapenko
-Software Engineer
+> On Jan 13, 2020, at 3:22 AM, Tetsuo Handa <penguin-kernel@i-love.sakura.ne=
+.jp> wrote:
+>=20
+> Is commit 7283094ec3db318e ("kernel, oom: fix potential pgd_lock deadlock f=
+rom
+> __mmdrop") about only softirq? Is it guaranteed that smp_call_function_sin=
+gle()
+> does not hit such race? Then just my overcareful...
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
-
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+That commit looks like a different issue. We are not call mmdrop() from soft=
+irq here.=
