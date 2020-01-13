@@ -2,82 +2,83 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25BEFC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A1F3C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1695214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:42:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7AA821569
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 18:43:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578941002;
+	bh=2Pma3/cx78GLTAW61r1F5Jwdm6NzhJEJcPWrFF9uls8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0rDQHAvKzbhDzsaWeIt70c47Aq30g9quGORjPL4nUPKneJXgh7taYATs4lQoEVvsq
+	 yeY1iTz3oyrzqgb3+YI6HAgk5ghZgP7iZlw6PHz5vrtzhjQCC5KszEInOjBjFsupOa
+	 31mTtZw+O/qwwovFU7WXZjB0p8tYwj39hHdmwloQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728799AbgAMSmT (ORCPT
+        id S1728738AbgAMSnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 13:42:19 -0500
-Received: from mga18.intel.com ([134.134.136.126]:48779 "EHLO mga18.intel.com"
+        Mon, 13 Jan 2020 13:43:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47230 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726435AbgAMSmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 13:42:18 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 10:42:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
-   d="scan'208";a="372343816"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga004.jf.intel.com with ESMTP; 13 Jan 2020 10:42:17 -0800
-Date:   Mon, 13 Jan 2020 10:42:17 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH v5 17/19] KVM: VMX: Use VMX_FEATURE_* flags to define
- VMCS control bits
-Message-ID: <20200113184217.GA2216@linux.intel.com>
-References: <20191221044513.21680-1-sean.j.christopherson@intel.com>
- <20191221044513.21680-18-sean.j.christopherson@intel.com>
- <20200113183228.GO13310@zn.tnic>
- <20200113183705.GL1175@linux.intel.com>
- <20200113183823.GP13310@zn.tnic>
+        id S1726435AbgAMSnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 13:43:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8704020CC7;
+        Mon, 13 Jan 2020 18:43:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578941001;
+        bh=2Pma3/cx78GLTAW61r1F5Jwdm6NzhJEJcPWrFF9uls8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IEeJ0bbGhTdr5RPtnE4bMgC1gdBDUCHLpuTR3u08lPJ2TLhJcuKN0+X5S8ktNGBSH
+         GU8UIy+xN+9GwQNdpewuD4ZlaGboTBZ+vxzjedoPqkYuHZTm3FK7AYhLSHwj3Lzgty
+         Ua9Jd3LYKp8MhT6a9j3vQe/sn90R4L0q1L0w4nz8=
+Date:   Mon, 13 Jan 2020 19:43:18 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+Cc:     mchehab@kernel.org, sean@mess.org, tglx@linutronix.de,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH v2] media: dvb_dummy_tuner: implement driver skeleton
+Message-ID: <20200113184318.GB431441@kroah.com>
+References: <20200109233757.734008-1-dwlsalmeida@gmail.com>
+ <20200110073024.GA156006@kroah.com>
+ <d6d119cf-7447-31ce-37db-25503cf2f9bc@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200113183823.GP13310@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <d6d119cf-7447-31ce-37db-25503cf2f9bc@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 07:38:23PM +0100, Borislav Petkov wrote:
-> On Mon, Jan 13, 2020 at 10:37:05AM -0800, Sean Christopherson wrote:
-> > No, the CPU_BASED_* defines are used by existing KVM code, i.e. you'd
-> > also have to touch a bunch of KVM code.
+On Mon, Jan 13, 2020 at 03:23:02PM -0300, Daniel W. S. Almeida wrote:
+> Hi Greg,
 > 
-> Doesn't bother me, I could do it in a patch ontop. But your call.
+> I am working on v3. Would you mind clarifying this?
+> 
+> 
+> > > + *
+> > > + * The virtual DVB test driver serves as a reference DVB driver and helps
+> > > + * validate the existing APIs in the media subsystem. It can also aid developers
+> > > + * working on userspace applications.
+> > > + *
+> > > + * This dummy tuner should support common TV standards such as DVB-T/T2/S/S2,
+> > > + * ISDB-T and ATSC when completed.
+> > > + *
+> > > + * Copyright (c) 2020 Daniel W. S. Almeida <dwlsalmeida@gmail.com>
+> > Normally this is the first comment line above in this block.
+> > 
+> 
+> Just so we're clear, do you mean this? e.g.:
+> 
+> + * Copyright (c) 2020 Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 
-No objection here.
+Yes.
