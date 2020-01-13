@@ -2,199 +2,372 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049EBC33CAB
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 02:43:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A61EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 02:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5598222D9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 02:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4637621744
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 02:59:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esi7Itj4"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="Chdyz1ap";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mlXiWZX+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733085AbgAMCn3 (ORCPT
+        id S1733136AbgAMC7r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 21:43:29 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46683 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732487AbgAMCn3 (ORCPT
+        Sun, 12 Jan 2020 21:59:47 -0500
+Received: from new3-smtp.messagingengine.com ([66.111.4.229]:54045 "EHLO
+        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732866AbgAMC7q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 21:43:29 -0500
-Received: by mail-lj1-f196.google.com with SMTP id m26so8263111ljc.13
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 18:43:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=24/I1qlMqBFXawGKcZCUrgzix2NHvFXwEaDn4ik+j2U=;
-        b=esi7Itj4DmpSDioUwVhXYRkKxTZ0cZfRIRPkUwYLO6thkX04T7cQnJprHW+yehrMPI
-         wEdujDl/DavLJPfpBbCV4OmeO1qNENQVjk3gnTub6I+dlUOdQJ5R+oZAzgXpb8IkQKhV
-         oPliJ8aBmRFWcPN9bIoV/OG4OUihmzuSBUX7WI9bq0KkuNyXR3QUrlB80N+hHrNpIBfb
-         9JrawK4EVmXXtRqOLaVQG5gB4m0byjm575jEt58Yt70femg2S37y3tCUqTSlbnQjAsL5
-         rKqNDq/7croKGCQgyVEaQozc5gaGSO+y7NUNq4JsimHFNk0vQ7WcPLYsqKPFrjgykumn
-         ipdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=24/I1qlMqBFXawGKcZCUrgzix2NHvFXwEaDn4ik+j2U=;
-        b=rW/R/qEogdbBPbyRfrFFxEpUozEH7YCJRY9JgCK0G6N4D9Kegje5Kdes6WawPusY1k
-         OPnPjoW3XIeVa+TaPuzDpLO/J1hsfERJBwa0DnqHNgxnlDugUZbGoAYIJNXGyt2JskDD
-         8aSdRd5Ok9JKse/ziTCZ/L+PDdj8GpiNUYM55rL7VHxa31Q7qiyZUViPe5CBt16v93Jn
-         SGPNLrln2RHTuBPq6o+dsVL2svdf0XQnpP8/Mz2OWv3xnRIeBs2rs8AYZyzL68AdA3Io
-         Wwpx/6BmAK1ILqBUhgzqZaYwmgd3roOlfRuWSMrL5XAbnr6PFDFzg3Rr8Xx+Du8CVQKD
-         rIFw==
-X-Gm-Message-State: APjAAAVvOufzkFIHleCl52T3y/evBRpnWSTaRlS54Y5YhnmtU/tWiQho
-        ZTgKLjfp7PdZPeu/CsjSUi3eg0Zu4MRodj2oAnI=
-X-Google-Smtp-Source: APXvYqwXwacTiGL5FRpSFPYXYEHd2JzH7vmXzdU55onIT3/3yV9zHmg0Isx13uMvMznby+Jefub+1OThEiblDPLXpVs=
-X-Received: by 2002:a2e:9a01:: with SMTP id o1mr9309832lji.247.1578883406468;
- Sun, 12 Jan 2020 18:43:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20200103033929.4956-1-zhenzhong.duan@gmail.com>
- <20200109184055.GI5603@zn.tnic> <20200109204638.GA523773@rani.riverdale.lan>
- <CAFH1YnNA9qfM4tPzKKDaQD6DPxnE=tJsB7AUZQBohDTW3zm=Xg@mail.gmail.com> <20200110090032.GB19453@zn.tnic>
-In-Reply-To: <20200110090032.GB19453@zn.tnic>
-From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Date:   Mon, 13 Jan 2020 10:43:14 +0800
-Message-ID: <CAFH1YnN8v+8UH3RvaeT7TJEdtEyxhoBA-ZEMk-mRFWNad8e9Jw@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/boot/KASLR: Fix unused variable warning
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+        Sun, 12 Jan 2020 21:59:46 -0500
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 31E9661D0;
+        Sun, 12 Jan 2020 21:59:45 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Sun, 12 Jan 2020 21:59:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
+        message-id:subject:from:to:cc:date:in-reply-to:references
+        :content-type:mime-version:content-transfer-encoding; s=fm2; bh=
+        1bZIV+rpNOzTMwIXXxXsvQ8lODr3Ka/3YHY8+jRb82M=; b=Chdyz1apP3+e+cvC
+        12aEBQuzaBuUsr490yXbRKDwuJQqpmiucNgh7JAC3pjt6pSnzzTqHjKEBTyB3pMK
+        Uyubl9r3in8KUqB8e/QscLtof+F27nwjv3CkZiWxou0C3eKddaUcHDNyoCdF+ANJ
+        BcnATrLPwsqbyX5HUep542iVEjUzjWuIhEtcr0tPe1SwXb0bExZAU+pgkT2RbDbj
+        biKg7v5uuWYwcEZT2Lm6jGSWau/nQAXXLz0wEigo+tbUUMpS8hULCvM4MNdqhZIn
+        AFpJtcipI8lLJAm26CIrSAW+FgyoeyXaAmQOoDUXkjkuNjZZfnL4zec+Co/9k9oS
+        +cnbOQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; bh=1bZIV+rpNOzTMwIXXxXsvQ8lODr3Ka/3YHY8+jRb8
+        2M=; b=mlXiWZX+hzo6o3irGpo+NQ+g8lfrJ7Ti9i1bbhCxhI0PTKCrJCt1O9AJ+
+        Dcob9Ryi56n1/foM3JDt0GksH9zLbF2nrE797jbRBUv3lNfgSk4h38wMoNxOL+L7
+        om/b1QmonhbTHAqjhqnh27skjmfOkb+4zxD4wHh2YHm3fyT1J/bGaICzNP3aXAsN
+        4bO0mjTLOSu9h3pv/dYIOMEHiLeEE2xjWduaBNSE1RpP02YaY879RmAZ6mak6Clz
+        nARboLl4YPJVKG6A+LQqjGal8mc14SF/F8uftv/UU0H7Ut98S0smKb5dAIcLR4ie
+        0bCejvZLzV+CascUJKgH4fZV9b/FQ==
+X-ME-Sender: <xms:IN0bXqpJZMdycaxtq8DflaUIlVAcdgY8qii7_bEkMLTyWW-vkPu3GQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeiledgheehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkffuhffvffgjfhgtfggggfesthejredttderjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucfkphepuddukedrvddtle
+    drudejhedrvdehnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgr
+    fidrnhgvthenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:IN0bXpYiDZYm43p1cZ9X963meTdsWuboqzvZqQXeeOYEX4fxGA9Nkw>
+    <xmx:IN0bXoGtt9SOYbvyGZZrtTABWy9PH0ynRCUoujPEnvcqfZRXfN19hQ>
+    <xmx:IN0bXhxcoa5ThcqQk8WSAE3wTYg7XVsgfLQUO7JYFysZUh6CrjnoIg>
+    <xmx:Id0bXqSuGLGpBQhL54tMHL4QgVWrj3dmeqqwdWwYWNFL_evTzS6ORg>
+Received: from mickey.themaw.net (unknown [118.209.175.25])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E44DA30600A8;
+        Sun, 12 Jan 2020 21:59:39 -0500 (EST)
+Message-ID: <800d36a0dccd43f1b61cab6332a6252ab9aab73c.camel@themaw.net>
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
+ symlinks
+From:   Ian Kent <raven@themaw.net>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        stable <stable@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 13 Jan 2020 10:59:36 +0800
+In-Reply-To: <20200112213352.GP8904@ZenIV.linux.org.uk>
+References: <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
+         <20200101234009.GB8904@ZenIV.linux.org.uk>
+         <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
+         <20200103014901.GC8904@ZenIV.linux.org.uk>
+         <20200108031314.GE8904@ZenIV.linux.org.uk>
+         <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
+         <20200108213444.GF8904@ZenIV.linux.org.uk>
+         <CAHk-=wiq11+thoe60qhsSHk_nbRF2TRL1Wnf6eHcYObjhJmsww@mail.gmail.com>
+         <20200110041523.GK8904@ZenIV.linux.org.uk>
+         <979cf680b0fbdce515293a3449d564690cde6a3f.camel@themaw.net>
+         <20200112213352.GP8904@ZenIV.linux.org.uk>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 5:00 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Fri, Jan 10, 2020 at 10:27:02AM +0800, Zhenzhong Duan wrote:
-> > Yes. Will you send this formally?
->
-> And then a flood of fix-this-trivial-warning patches ensues?
->
-> You should know that they have the lowest prio when it comes to looking
-> at them.
-I see.
-Just tried Arvind's patch, result is not that bad. Below are all
-warnings during build:
-In fact, only gop.c and kaslr.c have compile warning.
+On Sun, 2020-01-12 at 21:33 +0000, Al Viro wrote:
+> On Fri, Jan 10, 2020 at 02:20:55PM +0800, Ian Kent wrote:
+> 
+> > Yeah, autofs ->d_automount() doesn't return -EISDIR, by the time
+> > we get there it's not relevant any more, so that check looks
+> > redundant. I'm not aware of any other fs automount implementation
+> > that needs that EISDIR pass-thru function.
+> > 
+> > I didn't notice it at the time of the merge, sorry about that.
+> > 
+> > While we're at it that:
+> >    if (!path->dentry->d_op || !path->dentry->d_op->d_automount)
+> >        return -EREMOTE;
+> > 
+> > at the top of follow_automount() isn't going to be be relevant
+> > for autofs because ->d_automount() really must always be defined
+> > for it.
+> > 
+> > But, at the time of the merge, I didn't object to it because
+> > there were (are) other file systems that use the VFS automount
+> > function which may accidentally not define the method.
+> 
+> OK...
+> 
+> > > Unfortunately, there are other interesting questions related to
+> > > autofs-specific bits (->d_manage()) and the timezone-related fun
+> > > is, of course, still there.  I hope to sort that out today or
+> > > tomorrow, at least enough to do a reasonable set of backportable
+> > > fixes to put in front of follow_managed()/step_into() queue.
+> > > Oh, well...
+> > 
+> > Yeah, I know it slows you down but I kink-off like having a chance
+> 
+> Nice typo, that ;-)
+> 
+> > to look at what's going and think about your questions before
+> > trying
+> > to answer them, rather than replying prematurely, as I usually do
+> > ...
+> > 
+> > It's been a bit of a busy day so far but I'm getting to look into
+> > the questions you've asked.
+> 
+> Here's a bit more of those (I might've missed some of your replies on
+> IRC; my apologies if that's the case):
+> 
+> 1) AFAICS, -EISDIR from ->d_manage() actually means "don't even try
+> ->d_automount() here".  If its effect can be delayed until the
+> decision
+> to call ->d_automount(), the things seem to get simpler.  Is it ever
+> returned in situation when the sucker _is_ overmounted?
 
-/root/kernel/drivers/firmware/efi/libstub/gop.c: In function =E2=80=98efi_s=
-etup_gop=E2=80=99:
-/root/kernel/drivers/firmware/efi/libstub/gop.c:174:18: warning:
-=E2=80=98pixel_format=E2=80=99 may be used uninitialized in this function
-[-Wmaybe-uninitialized]
-  setup_pixel_info(si, pixels_per_scan_line, pixel_info, pixel_format);
-                  ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:97:6: note:
-=E2=80=98pixel_format=E2=80=99 was declared here
-  int pixel_format;
-      ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:166:45: warning:
-=E2=80=98fb_base=E2=80=99 may be used uninitialized in this function
-[-Wmaybe-uninitialized]
-  ext_lfb_base =3D (u64)(unsigned long)fb_base >> 32;
-                                             ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:95:6: note: =E2=80=98fb_bas=
-e=E2=80=99
-was declared here
-  u64 fb_base;
-      ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:174:18: warning:
-=E2=80=98pixels_per_scan_line=E2=80=99 may be used uninitialized in this fu=
-nction
-[-Wmaybe-uninitialized]
-  setup_pixel_info(si, pixels_per_scan_line, pixel_info, pixel_format);
-                  ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:93:6: note:
-=E2=80=98pixels_per_scan_line=E2=80=99 was declared here
-  u32 pixels_per_scan_line;
-      ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:163:17: warning:
-=E2=80=98height=E2=80=99 may be used uninitialized in this function
-[-Wmaybe-uninitialized]
-  si->lfb_height =3D height;
-                 ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:92:13: note: =E2=80=98heigh=
-t=E2=80=99
-was declared here
-  u16 width, height;
-             ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:162:16: warning:
-=E2=80=98width=E2=80=99 may be used uninitialized in this function
-[-Wmaybe-uninitialized]
-  si->lfb_width =3D width;
-                ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:92:6: note: =E2=80=98width=
-=E2=80=99
-was declared here
-  u16 width, height;
-      ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:271:18: warning:
-=E2=80=98pixel_format=E2=80=99 may be used uninitialized in this function
-[-Wmaybe-uninitialized]
-  setup_pixel_info(si, pixels_per_scan_line, pixel_info, pixel_format);
-                  ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:194:6: note:
-=E2=80=98pixel_format=E2=80=99 was declared here
-  int pixel_format;
-      ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:263:45: warning:
-=E2=80=98fb_base=E2=80=99 may be used uninitialized in this function
-[-Wmaybe-uninitialized]
-  ext_lfb_base =3D (u64)(unsigned long)fb_base >> 32;
-                                             ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:192:6: note: =E2=80=98fb_ba=
-se=E2=80=99
-was declared here
-  u64 fb_base;
-      ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:271:18: warning:
-=E2=80=98pixels_per_scan_line=E2=80=99 may be used uninitialized in this fu=
-nction
-[-Wmaybe-uninitialized]
-  setup_pixel_info(si, pixels_per_scan_line, pixel_info, pixel_format);
-                  ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:190:6: note:
-=E2=80=98pixels_per_scan_line=E2=80=99 was declared here
-  u32 pixels_per_scan_line;
-      ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:260:17: warning:
-=E2=80=98height=E2=80=99 may be used uninitialized in this function
-[-Wmaybe-uninitialized]
-  si->lfb_height =3D height;
-                 ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:189:13: note: =E2=80=98heig=
-ht=E2=80=99
-was declared here
-  u16 width, height;
-             ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:259:16: warning:
-=E2=80=98width=E2=80=99 may be used uninitialized in this function
-[-Wmaybe-uninitialized]
-  si->lfb_width =3D width;
-                ^
-/root/kernel/drivers/firmware/efi/libstub/gop.c:189:6: note: =E2=80=98width=
-=E2=80=99
-was declared here
-  u16 width, height;
+In theory it shouldn't need to be returned when there is an
+actual mount there.
 
-/root/kernel/arch/x86/boot/compressed/kaslr.c: In function =E2=80=98process=
-_mem_region=E2=80=99:
-/root/kernel/arch/x86/boot/compressed/kaslr.c:698:6: warning: unused
-variable =E2=80=98i=E2=80=99 [-Wunused-variable]
-  int i;
+If there is a real mount at this point that should be enough to
+prevent walks into that mount until it's mount is complete.
 
-Regards
-Zhenzhong
+The whole idea of -EISDIR is to prevent processes from walking
+into a directory tree that "doesn't have a real mount at its
+base" (the so called multi-mount map construct).
+
+> 
+> 2) can autofs_d_automount() ever be called for a daemon?  Looks like
+> it
+> shouldn't be...
+
+Can't do that, it will lead to deadlock very quickly.
+
+> 
+> 3) is _anything_ besides root directory ever created in direct autofs
+> superblocks by anyone?  If not, why does autofs_lookup() even bother
+> to
+> do anything there?  IOW, why not have it return ERR_PTR(-ENOENT)
+> immediately
+> for direct ones?  Or am I missing something and it is, in fact,
+> possible
+> to have the daemon create something in those?
+
+Short answer is no, longer answer is directories "shouldn't" ever
+be created inside direct mount points.
+
+The thing is that the multi-mount map construct can be used with
+direct mounts too, but they must always have a real mount at the
+base because they are direct mounts. So processes should not be
+able to walk into them while they are being mounted (constructed).
+
+But I'm pretty sure it's rare (maybe not done at all) that this
+map construct is used with direct mounts.
+
+> 
+> 4) Symlinks look like they should qualify for parent being non-empty;
+> at least autofs_d_manage() seems to think so (simple_empty() use).
+> So shouldn't we remove the trap from its parent on symlink/restore on
+> unlink if parent gets empty?  For version 4 or earlier, that is.  Or
+> is
+> it simply that daemon only creates symlinks in root directory?
+
+Yes, they have to be empty.
+
+If a symlink is to be used (based on autofs config or map option)
+and the "browse" option is used for the indirect mount (browse
+only makes sense for indirect autofs managed mounts) then the
+mount point directory has to be removed and a symlink created
+so it must be empty to for this to make sense.
+
+If it's a "nobrowse" autofs mount then nothing should already
+exist, it just gets created.
+
+The catch is that a map entry for which a symlink is to be used
+instead of a mount can't be a multi-mount. I'm pretty sure I don't
+have sufficient error checking for that in the daemon but I also
+haven't had reports of problems with it either.
+
+For a very long time the use of symlinks was not common but when
+the amd format map parser was added it made sense to use symlinks
+in some cases for those. That was partly to reduce the number of
+mounts needed and because I deliberately don't support amd map
+entries that provide the multi-mount construct. The way amd did
+this looked ugly to me, very much a hack to add a Sun format
+mount feature.
+
+As far as keeping the trap flags up to date, I don't.
+
+It seemed so much simpler to just leave the flags in place but,
+at that time, symlinks were not used (although it was possible to
+do so), now that's changed fiddling with the flags might now make
+sense.
+
+As I said on IRC:
+"DCACHE_NEED_AUTOMOUNT is set on symlink dentries because, when
+->lookup() is called the dentry may trigger a callback to the
+daemon that will either create a directory (since, in this case,
+one does not already exist) and attempt to mount on it or create
+a symlink if the autofs config/map requires it.
+
+I didn't think there would be potential simplification by setting
+and clearing the DCACHE_NEED_AUTOMOUNT flag based on it being a
+directory (mountpoint) or a symlink so the flag is always left set.
+Although, as you point out, symlinks won't actually trigger mounts
+so the flag being left set when the dentry is a symlink is due to
+lazyness, since there's nothing to gain. If you can see potential
+simplification in the VFS code by managing this flag better then
+that would be worth while."
+
+> 
+> 
+> Anyway, intermediate state of the series is in #work.namei right now,
+> and some _very_ interesting possibilities open up.  It definitely
+> needs more massage around __follow_mount_rcu() (as it is, the
+> fastpath in there is still too twisted).  Said that
+> 	* call graph is less convoluted
+> 	* follow_managed() calls are folded into
+> step_into().  Interface:
+> int step_into(nd, flags, dentry, inode, seq), with inode/seq used
+> only
+> if we are in RCU mode.
+> 	* ".." still doesn't use that; it probably ought to.
+> 	* lookup_fast() doesn't take path - nd, &inode, &seq and
+> returns dentry
+> 	* lookup_open() and fs/namei.c:atomic_open() get similar
+> treatment
+> - don't take path, return dentry.
+> 	* calls of follow_managed()/step_into() combination returning 1
+> are always followed by get_link(), and very shortly, at that.  So
+> much
+> that we can realistically merge pick_link() (in the end of
+> step_into()) with get_link().  That merge is NOT done in this branch
+> yet.
+> 
+> The last one promises to get rid of a rather unpleasant group of
+> calling
+> conventions.  Right now we have several functions (step_into()/
+> walk_component()/lookup_last()/do_last()) with the following calling
+> conventions:
+> 	-E...	=> error
+> 	0	=> non-symlink or symlink not followed; nd->path points to it
+> 	1	=> picked a symlink to follow; its mount/dentry/seq has been
+> pushed on nd->stack[]; its inode is stashed into nd->link_inode for
+> subsequent get_link() to pick.  nd->path is left unchanged.
+> 
+> That way all of those become
+> 	ERR_PTR(-E...)	=> error
+> 	NULL		=> non-symlink, symlink not followed or a
+> pure
+> jump (bare "/" or procfs ones); nd->path points to where we end up
+>         string		=> symlink being followed; the sucker's
+> pushed
+> to stack, initial jump (if any) has been handled and the string
+> returned
+> is what we need to traverse.
+> 
+> IMO it's less arbitrary that way.  More importantly, the separation
+> between
+> step_into() committing to symlink traversal and (inevitably
+> following)
+> get_link() is gone - it's one operation after that change.  No nd-
+> >link_inode
+> either - it's only needed to carry the information from pick_link()
+> to the
+> next get_link().
+> 
+> Loops turn into
+> 	while (!(err = link_path_walk(nd, s)) &&
+> 	       (s = lookup_last(nd)) != NULL)
+> 		;
+> and
+> 	while (!(err = link_path_walk(nd, s)) &&
+> 	       (s = do_last(nd, file, op)) != NULL)
+> 		;
+> 
+> trailing_symlink() goes away (folded into pick_link()/get_link()
+> combo,
+> conditional upon nd->depth at the entry).  And in link_path_walk()
+> we'll
+> have
+>                 if (unlikely(!*name)) {
+>                         /* pathname body, done */
+>                         if (!nd->depth)
+>                                 return 0;
+>                         name = nd->stack[nd->depth - 1].name;
+>                         /* trailing symlink, done */
+>                         if (!name)
+>                                 return 0;
+>                         /* last component of nested symlink */
+>                         s = walk_component(nd, WALK_FOLLOW);
+>                 } else {
+>                         /* not the last component */
+>                         s = walk_component(nd, WALK_FOLLOW |
+> WALK_MORE);
+>                 }
+>                 if (s) {
+>                         if (IS_ERR(s))
+>                                 return PTR_ERR(s);
+> 			/* a symlink to follow */
+> 			nd->stack[nd->depth - 1].name = name;
+>                         name = s;
+>                         continue;
+>                 }
+> 
+> Anyway, before I try that one I'm going to fold path_openat2() into
+> that series - that step is definitely going to require some massage
+> there; it's too close to get_link() changes done in Aleksa's series.
+> 
+> If we do that, we get a single primitive for "here's the result of
+> lookup; traverse mounts and either move into the result or, if
+> it's a symlink that needs to be traversed, start the symlink
+> traversal - jump into the base position for it (if needed) and
+> return the pathname that needs to be handled".  As it is, mainline
+> has that logics spread over about a dozen locations...
+> 
+> Diffstat at the moment:
+>  fs/autofs/dev-ioctl.c |   6 +-
+>  fs/internal.h         |   1 -
+>  fs/namei.c            | 460 ++++++++++++++------------------------
+> ------------
+>  fs/namespace.c        |  97 +++++++----
+>  fs/nfs/nfstrace.h     |   2 -
+>  fs/open.c             |   4 +-
+>  include/linux/namei.h |   3 +-
+>  7 files changed, 197 insertions(+), 376 deletions(-)
+> 
+> In the current form the sucker appears to work (so far - about 30%
+> into the usual xfstests run) without visible slowdowns...
+
+Ok, I'll have a look at that branch, ;)
+
+Ian
+
