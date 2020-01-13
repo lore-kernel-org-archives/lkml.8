@@ -2,145 +2,199 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F23FBC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E3EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFB682081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E177207E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 15:07:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="T/AlMzOA";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="iKVPU3hH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fH8PxRJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbgAMPFv (ORCPT
+        id S1728975AbgAMPHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 10:05:51 -0500
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:33600 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726399AbgAMPFu (ORCPT
+        Mon, 13 Jan 2020 10:07:01 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35827 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726399AbgAMPHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 10:05:50 -0500
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2A468C05D4;
-        Mon, 13 Jan 2020 15:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1578927949; bh=EXRTjK2fkDHTZIWU02AU+myEJpSP+8P8fNFbCIfAr0M=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=T/AlMzOAYnqv8A9/k0geKwRvR/ojAxN9qxbA1w9+saGHtf90vtXjtRDBYUgJ0AgR6
-         zhjZyWcDebk3lDve2Dxos4zy16MiQ3/Vdyn06SLpwMddpB5883A6rqGxWzRg0E/NeX
-         +NA/2VzOGT4xM6tdBvC/hFfe9+ksjCXBfolVqJezdGIW8LyeGQpYj9tKX7ipURr5i4
-         KTaCa+ScSH2d8WMhHjhiGbiysdCaqbrqA0kvAQhpOF5DSCaVUUeQkPF7amFZUe465C
-         IdyqFD7jAPI3lSbvUunlOCjAVyn/vodNFJjJGdKUWX6s9kt92rK6+7CeL6bY9+igGn
-         LehWSQqyOArAg==
-Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 4F160A0069;
-        Mon, 13 Jan 2020 15:05:48 +0000 (UTC)
-Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
- US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 13 Jan 2020 07:05:48 -0800
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.202.3.67) by
- mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Mon, 13 Jan 2020 07:05:47 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eaPsFTya9RQvacqtksWv14uPX8dYT8bFc8BWRhofYeuDmOdRkXUKgVdh0Sm5sWSj3fqw/wPlHPBEdrftE1w3Z2B603uWDbVBIQG/tmsiFZX9YsbrhSxYZn2xlsxbojUYTkXbkuB5ExK8JYjEBXTIu2WctRZdGeSXsa1cp2dKrEO5b/LXsTnOuOi4Npm61PQ/X6LJ6Q0lU/1ZX3+j88ImL4Exc022TslU22pQn+HKBQCjTA8QB8K5TyZ9t/Dy2CvlsraCyGuAj4NJrXMW3fdRTPQ99BKAzuU67X1PkjYYt3mBe54zXKDLGc8lo534BfCqysrlIOW+j+XeWESpl32Y8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EXRTjK2fkDHTZIWU02AU+myEJpSP+8P8fNFbCIfAr0M=;
- b=dKUWVrdB+gRQeUqbaW2KwMq5CL6bJr2053Sis/XsPxpWVxPczEBeQtzkzcOBGStdiCZipVjYYhJA8NQlJYs66vl0Lvt4IyDkZQIYtmYFLCCp+tPUuym63RUWd3+Xl+IPdzbRaxpdU0zkRIwNrjsnpIQp2OkD2UY9IMa63ziGq2xf5jEut8aQOLM+QF+k8YedClmtzZ0GWePMdeukn199+ZGku1DpIb55Xbb8DV4u9byyocJj1ZchE0NYgogz31sat9MITsdqPTCNDxPM+4vEutA9VIbTwxmdMEAGpkV0/zR4CmBcsMMy/CuOcfZxtGi5gm90dloS0+IgpamKWCG7pw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
+        Mon, 13 Jan 2020 10:07:00 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p17so10053981wmb.0;
+        Mon, 13 Jan 2020 07:06:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EXRTjK2fkDHTZIWU02AU+myEJpSP+8P8fNFbCIfAr0M=;
- b=iKVPU3hHAR96Su+6N+5SpbSPnSRv854pAtQsTB9qDTWZSuTmeoc4DxogRnogLl3KGSFRViD1uwSH2eUe4PoXwaehyYVD4tPTKwd7tghngQOrK91c9FNCwvUV43A6Zvx26XaJKhe4oZQpTNJh+h0CK2KjuIt/jIiRt1aKTjh01R0=
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com (20.179.67.145) by
- BN8PR12MB3233.namprd12.prod.outlook.com (20.179.65.211) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.11; Mon, 13 Jan 2020 15:05:46 +0000
-Received: from BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2]) by BN8PR12MB3266.namprd12.prod.outlook.com
- ([fe80::c62:b247:6963:9da2%6]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
- 15:05:46 +0000
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "Joao Pinto" <Joao.Pinto@synopsys.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
- using a PHY driver
-Thread-Topic: [RFC net-next] net: phy: Add basic support for Synopsys XPCS
- using a PHY driver
-Thread-Index: AQHVyhMHPh1TkUf6pU+JUVzLFdFzk6fomWeAgAAAjSCAAAp/gIAAAN2wgAAJooCAAAH8EA==
-Date:   Mon, 13 Jan 2020 15:05:46 +0000
-Message-ID: <BN8PR12MB32660970D0294CCEE7B16B53D3350@BN8PR12MB3266.namprd12.prod.outlook.com>
-References: <4953fc69a26bee930bccdeb612f1ce740a4294df.1578921062.git.Jose.Abreu@synopsys.com>
- <20200113133845.GD11788@lunn.ch>
- <BN8PR12MB32666F34D45D7881BDD4CAB3D3350@BN8PR12MB3266.namprd12.prod.outlook.com>
- <20200113141817.GN25745@shell.armlinux.org.uk>
- <BN8PR12MB326690820A7619664F7CC257D3350@BN8PR12MB3266.namprd12.prod.outlook.com>
- <CA+h21hpsauapCGEHqVqHpEU2K-VsAh3vKBRJ_N8iq2i35SedOw@mail.gmail.com>
-In-Reply-To: <CA+h21hpsauapCGEHqVqHpEU2K-VsAh3vKBRJ_N8iq2i35SedOw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=joabreu@synopsys.com; 
-x-originating-ip: [83.174.63.141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bd657282-1061-4c10-7d1f-08d7983a119b
-x-ms-traffictypediagnostic: BN8PR12MB3233:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN8PR12MB3233D90D5FA442E251F1842FD3350@BN8PR12MB3233.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(396003)(366004)(346002)(376002)(39860400002)(189003)(199004)(52536014)(81166006)(6916009)(4326008)(66446008)(4744005)(66556008)(64756008)(66476007)(66946007)(71200400001)(76116006)(81156014)(55016002)(9686003)(2906002)(26005)(54906003)(6506007)(8936002)(186003)(7696005)(478600001)(86362001)(8676002)(5660300002)(316002)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN8PR12MB3233;H:BN8PR12MB3266.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: synopsys.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: bFmS9rZ7H+r2U7OnGzJe8L9dl+nTePZWiAj0IDqzI/ChXOl6X35VFEm612S5X0SIKIoXctt5q/Et2fizfvnEMkDp5P7qEX+RL52kATlWkDXj+Axj0hAYig4dxUqTtC3HUn2+83lGg1vSc7e42SyY90SQ2jermzwzxxS/gPspFV/+8zmKtYKwJhfSXQWSu/C1STk0GxwUV8HNsy8s+h0a9UloAKWAMApDCm4+iRiOqu8VsnO7HS3u5CuDFjLztlMJ8TCkPgdWmR7lcq+MIt6LMNoIgqZMDjfP03++dd2inGqLjKbrEUJKATuhL+3uod+NPaWpI6bZjc8yaiKNcvPhhJxIxSfnrjZFZOcl0apzZolwadjycVebcAK9zgfFoj4/QPa4DYymhzdzCFVajvdvhzb5Fu19dq329sEXPIMeO7WuAx78EnMvUOnCiPrOAy/w
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AwN2IRmBbgF51wtzzucPKwlBt/f3JlaSzZFnNgcNVdw=;
+        b=fH8PxRJ8A4LPfKZfoSVUvflX4RSFeMP6AICq5d2z4yNRj4uL571tI1AZ/I+FlV/CZ6
+         uwrtr0sciAXwcNn8aohd8HXqL9Hirqa1ySpmYDtpuEAr0I4OmOLDO2YWm7q6cD4pA7hL
+         D/mqFN9Wvtba8rfvAT+2Cew4TzFwGfR7yFiQMdCs0k2b/zflOBFjyAVl91lB3yynYQlb
+         oXt7NL6VU61o2Qj2FGu/57l3KqawZCvg8UZLGkbwIOVdGYVqe+XekEzYT87LIWUHjv2R
+         hLmI29JQokzMVbsXw7f1bjUN4pRL9CfmVyByK9yaAp5xk2AVIJ593wsf+Mc6T+GY4UQc
+         5RnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AwN2IRmBbgF51wtzzucPKwlBt/f3JlaSzZFnNgcNVdw=;
+        b=dx4d3FuIFPxPq6EhefjmGULPtjjwlpnLzkdM04j9dP6s9Bh3RqQzS6kEIg3UwmWiDN
+         sVvgfdTCPaO6rUEpEXeniPcNOGUHu7qj4yUxCm8hb9aE6haCB16LJ5jkQgacC5urU+Cu
+         9D5yFPfXLihwAdqNlTw/yZZab8y/6IsH7CGmCqqPugI2KgILido5O5xiOQOu7YEiDoWQ
+         k2XO24I9I1O9ytPa+RtL+7qSGLHBjwTKxJpXJHqQ6oLYmFuK6X/5Y6FgeOPMg319afWt
+         Dpaao0TvVrPd7pMRs3BBQQsJjHuv3AtZhS3JlbtVVD+tvJ6w5flf0Ga0Mwf8z/27Behx
+         umSA==
+X-Gm-Message-State: APjAAAU17Wk0em0iTOAckhmAOft04Vbuoii9p3D42lBp0O1lVv5FKSo/
+        zCcJHRHi834IvnigtStCb+4=
+X-Google-Smtp-Source: APXvYqxc+/c9wA/gbPWZ+Ltiu+ig50WRaCqSeSAy/w1p+OZq6Zsre8YPC0LCBl2zKbLeMPViJmOKfw==
+X-Received: by 2002:a05:600c:251:: with SMTP id 17mr19923698wmj.88.1578928018314;
+        Mon, 13 Jan 2020 07:06:58 -0800 (PST)
+Received: from localhost (p2E5BEF3F.dip0.t-ipconnect.de. [46.91.239.63])
+        by smtp.gmail.com with ESMTPSA id r68sm14640221wmr.43.2020.01.13.07.06.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 07:06:56 -0800 (PST)
+Date:   Mon, 13 Jan 2020 16:06:56 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     JC Kuo <jckuo@nvidia.com>, balbi@kernel.org,
+        gregkh@linuxfoundation.org, jonathanh@nvidia.com,
+        mark.rutland@arm.com, robh+dt@kernel.org, kishon@ti.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [Patch V2 01/18] dt-bindings: phy: tegra-xusb: Add
+ usb-role-switch
+Message-ID: <20200113150656.GB2436168@ulmo>
+References: <1576660591-10383-1-git-send-email-nkristam@nvidia.com>
+ <1576660591-10383-2-git-send-email-nkristam@nvidia.com>
+ <20191219130503.GG1440537@ulmo>
+ <fe47fd52-efd0-4f84-d1e4-4bce5571e425@nvidia.com>
+ <20200110111633.GA2233456@ulmo>
+ <6eb31a50-472f-439c-3bc7-bcad1c0c9ff4@nvidia.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: bd657282-1061-4c10-7d1f-08d7983a119b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 15:05:46.5763
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Qmh9+kJIlMx6cK0usXoThzv1c5c3Hd0OBLuC/CpqqR0MjOo5QUlgO5wiTGCudsPfiyE9JRgJtHTS8Lzt1CaCEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3233
-X-OriginatorOrg: synopsys.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hQiwHBbRI9kgIhsi"
+Content-Disposition: inline
+In-Reply-To: <6eb31a50-472f-439c-3bc7-bcad1c0c9ff4@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogVmxhZGltaXIgT2x0ZWFuIDxvbHRlYW52QGdtYWlsLmNvbT4NCkRhdGU6IEphbi8xMy8y
-MDIwLCAxNDo1NTo1MSAoVVRDKzAwOjAwKQ0KDQo+IENsYXVzZXMgNzIgYW5kIDczIGRlc2NyaWJl
-IHNvbWUgUE1EIGxpbmsgdHJhaW5pbmcgcHJvY2VkdXJlIHRvbywgYXMNCj4gcGFydCBvZiBhdXRv
-LW5lZ290aWF0aW9uIGZvciAxMEdCYXNlLUtSLiBEb2VzIHRoZSBYR1BDUyBkbyBhbnkgb2YNCj4g
-dGhhdD8gSXMgdGhpcyBzZXJpZXMgc3VmZmljaWVudCBmb3IgbGluayB0cmFpbmluZyB0byB3b3Jr
-IHdoZW4gaW4gdGhlDQo+IDEwR0Jhc2UtS1IgY29wcGVyIGJhY2twbGFuZSBsaW5rIG1vZGU/DQoN
-ClllcywgaXRzIHN1cHBvcnRlZCBieSB0aGUgSVAgYnV0IG5vdCBpbiB0aGUgcGF0Y2guIEl0J3Mg
-d29ya2luZyBmaW5lIA0Kd2l0aG91dCB0aGUgbGluayB0cmFpbmluZyBwcm9jZWR1cmUuIEFjdHVh
-bGx5LCBDbGF1c2UgNzIgTGluayB0cmFpbmluZyBpcyANCm9wdGlvbmFsIGluIHRoZSBJUCwgYW5k
-IGluIHRoZSBjb25maWd1cmF0aW9uIEkgaGF2ZSBub3cgaXQncyBub3QgZW5hYmxlZCANCnNvIGV2
-ZW4gaWYgSSBpbXBsZW1lbnRlZCBpdCBJIHdvdWxkIG5lZWQgYSBuZXcgSFcgdG8gdGVzdCBpdC4N
-Cg0KLS0tDQpUaGFua3MsDQpKb3NlIE1pZ3VlbCBBYnJldQ0K
+
+--hQiwHBbRI9kgIhsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jan 13, 2020 at 10:07:08AM +0530, Nagarjuna Kristam wrote:
+>=20
+> On 10-01-2020 16:46, Thierry Reding wrote:
+> > On Fri, Dec 20, 2019 at 04:08:30PM +0800, JC Kuo wrote:
+> > > On 12/19/19 9:05 PM, Thierry Reding wrote:
+> > > > On Wed, Dec 18, 2019 at 02:46:14PM +0530, Nagarjuna Kristam wrote:
+> > > > > Add usb-role-switch property for Tegra210 and Tegra186 platforms.=
+ This
+> > > > > entry is used by XUSB pad controller driver to register for role =
+changes
+> > > > > for OTG/Peripheral capable USB 2 ports.
+> > > > >=20
+> > > > > Signed-off-by: Nagarjuna Kristam<nkristam@nvidia.com>
+> > > > > ---
+> > > > > V2:
+> > > > >   - Moved usb-role-switch to seperate Required section as suggest=
+ed by Thierry.
+> > > > >   - Added reference to usb/usb-conn-gpio.txt for connector subnod=
+e.
+> > > > > ---
+> > > > >   .../devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt    =
+     | 6 ++++++
+> > > > >   1 file changed, 6 insertions(+)
+> > > > >=20
+> > > > > diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra12=
+4-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-x=
+usb-padctl.txt
+> > > > > index 9fb682e..23bf354 100644
+> > > > > --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-=
+padctl.txt
+> > > > > +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-=
+padctl.txt
+> > > > > @@ -174,6 +174,12 @@ Required properties:
+> > > > >     - "device": for USB device mode
+> > > > >     - "otg": for USB OTG mode
+> > > > > +Required properties for OTG/Peripheral capable USB2 ports:
+> > > > > +- usb-role-switch: Boolean property to indicate that the port su=
+pport OTG or
+> > > > "supports", and also, why if it supports OTG*or*  peripheral? Doesn=
+'t
+> > > > OTG imply peripheral? OTG means it can be either peripheral or host,
+> > > > right? So I think the end of that sentence can be just:
+> > > >=20
+> > > > 	"... the port supports OTG."
+> > > An USB OTG port is capable of both USB host and peripheral operations=
+=2E An USB
+> > > peripheral port can only act as an USB peripheral.
+> > >=20
+> > > The micro USB ports found on Jetson TX1/TX2 platforms are micro-AB po=
+rts which
+> > > should implement both host and peripheral capabilities. We say such p=
+orts
+> > > support OTG. The micro USB port found on Jetson Nano is a micro-B por=
+t which
+> > > should implement peripheral capability only. We say such ports support
+> > > peripheral, rather than OTG.
+> > I the port supports only peripheral mode, why do we need to have a
+> > usb-role-switch property? Shouldn't we in that case have a mode property
+> > with value "device"?
+> >=20
+> > usb-mode-switch is only needed if mode =3D "otg", isn't it? In all other
+> > cases the functionality is fixed (either host or peripheral) and the
+> > mode cannot be switched.
+> >=20
+> > Thierry
+>=20
+> usb-role-switch is needed when mode =3D=3D "otg" or "peripheral".
+>=20
+> Device mode is detected via vbus GPIO irrespective of mode being peripher=
+al
+> only or OTG.
+> Host mode is detected via id-gpio, in OTG case.
+>=20
+> When mode is peripheral, role changes happens between USB_ROLE_DEVICE and
+> USB_ROLE_NONE, which are generally based on Vbus GPIO(hot plug) detection.
+>=20
+> When mode is otg, role changes happens between USB_ROLE_HOST,
+> USB_ROLE_DEVICE and USB_ROLE_NONE, which are detected via id-gpio, vbus-g=
+pio
+> and no detection respectively.
+
+Right, that makes perfect sense. Thanks for putting it so clearly. With
+the "support" -> "supports" typo fixed, this patch:
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--hQiwHBbRI9kgIhsi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl4ch40ACgkQ3SOs138+
+s6EXWxAAhA3qkr4dwr/BpJvUBpto03CcTHQ3yV4woWvaZxHs63oSXPuCwPH7i/xS
+e65s0sn9EV9QKBqxv6SehSlutGOnY108jbFEee9rHs0kidOEqJ9KXHCpXcEb6aX7
+LqRNHrJbZAqJaxE8ESl3L07qDGl8SaAtdfZEIB0taqON2jvg2nALXU3QeCMG9WRZ
+0TXhUqQdBIGopsh5rAo68YnYR9M72x/IRoE1Qa4t0o/FlnkuL3yA/3YwLP5epT/4
+tSThMSmuVCh9vF5TqbnRkXBzKCbAGBJt91odL1WkCJpVKM7VaNcRAJJY8p4/Qwlo
+m52OPNzfNPTtPbs+DbO+1PvDSJ3KR5yZbt42eIUtBVOt+R1P+EbDvKAwz1pAxvyO
+dT3++fDIuRnnNCKt4n76tpEg5j8jN0ll3MDlo21iSjTuIt3tgIXiRggsc9Oc5ZQ7
+FFhfX6hRZ62KTw5ivbmstgQTxeFecvN7JE7e14SBgkg4i7UakcVcxUDJDuS6A+IL
+psXp1i7TURnb61hlKmSry91JagO0edTxEoxKGgL5dgCe/SmyLFmI6W3T8PtaW+L9
+td4eKAhi3AP3Y8tUVXJykCy06nD57vna1GJ/ku/PbYNiV5ge2amZMECdz0kKaGQP
+PvTUxuCaCeFfvHRU4fGuTn/D7XfHD95gr9e8TQFddsQWwt8Xmzs=
+=/QZt
+-----END PGP SIGNATURE-----
+
+--hQiwHBbRI9kgIhsi--
