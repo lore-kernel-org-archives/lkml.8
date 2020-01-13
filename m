@@ -2,108 +2,310 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3ABC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B74C33CA9
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2307B207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:53:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8E9207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:55:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/RnX/Ww"
+	dkim=pass (2048-bit key) header.d=brkho-com.20150623.gappssmtp.com header.i=@brkho-com.20150623.gappssmtp.com header.b="uZoTcXNA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbgAMWxQ (ORCPT
+        id S1729033AbgAMWzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:53:16 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44224 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728994AbgAMWxQ (ORCPT
+        Mon, 13 Jan 2020 17:55:36 -0500
+Received: from mail-ua1-f97.google.com ([209.85.222.97]:34086 "EHLO
+        mail-ua1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728904AbgAMWzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:53:16 -0500
-Received: by mail-lf1-f68.google.com with SMTP id v201so8189140lfa.11;
-        Mon, 13 Jan 2020 14:53:14 -0800 (PST)
+        Mon, 13 Jan 2020 17:55:35 -0500
+Received: by mail-ua1-f97.google.com with SMTP id 1so4053626uao.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 14:55:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KHnvnN3lDGWBZcYdcw5+iDp4bDu9HTX8MqfJ39n2Djc=;
-        b=E/RnX/WwjoDdRucl6paIhf7V9plcSdleOLDtSCkrLO/sG+CWbZ2rRcd8NuNHB89Gl2
-         8BNfTk0sg1Z7EjdSGM1bIozklLZ1+275JkAuY23pweKGUDEP/mmQnYMtZLa33WuJ8l5W
-         LwjXkhl7bYwuPBfKE/zara6FU1ywyhWNca3MsnfbRnSyXJ1JeMwbFV2CVXyd15i/UM9u
-         8nyMLhpIijjdQKw2I3TMLeUrqph7jMOnKsnw8IBB04A4ww1ADFt2U0+2ZA6s6XP3vieq
-         swmWUH9kKogMqMb14mKpRy+LQMlCxgZCxN6i58PcCYxoJHYFIwr29mevkUB+0N27O3CO
-         FAbA==
+        d=brkho-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=g7dOkwXJYiQUdnpC2HuSkz7V4G5v0hEXZF+cQ5fngFo=;
+        b=uZoTcXNATiNl3vC+Ll2Vg9zacWgDe7+i84o033DFeQ0gaJnuhXnPSGWn8XdLY2tzDS
+         A2p7Bd5mU69VKtY8fNjg6jT0Y6CPv690Gx4tNSXDj/fjXhwNpobsUVk3Vye43dJeFjNo
+         WaD7G3Q+DDXykKtDebqRwttGnLBxI4q5MrNWAhcrRLpax2VR07NeXuzspP44P/+Dpr85
+         mTYIFmsHrXIGRijsNWzxG4IN0LSXCG9v2hyqxanNkF8wt/wz7uezwLVcGrv3MdCqmDDT
+         G8P+GqTRMEVg48OoAJ8qDHrUqvI44Ff8+8kTlLqSYxY3TTg8SFSX6tVS5DYbb6Q8z7zE
+         VFGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KHnvnN3lDGWBZcYdcw5+iDp4bDu9HTX8MqfJ39n2Djc=;
-        b=rbJW0yQ5p++cEHiwRzStwW4zhSKtyYSw49rX0wYm1JBPui3iilAvMM69EqSl2XuFk/
-         Jz8fa7cn7M854lkiDKmSyZyXO2KTQ08yrG2fGk2yu1kAcPSMJThmX9E3UPGVK4W4IvPB
-         Rxams2mYNyYqZc+m4+HK0yhwq7CO2t63rC3traGbfpLVl+Rbc6Ppl0CV5J8OxfjTo14/
-         y/6MZJ8G7LWydLhAeXXt1DRlUMMfGgT8O7Yxe2PtFiHZOebXYlEE/uUXY806jnlkAf0c
-         6j7iqfeuPJ+kOOtoRfjATHzECazU8Qm6bv0yY5xl/LvNzYRsAUgTMYwyPvWw3hl7MVk/
-         Q9fQ==
-X-Gm-Message-State: APjAAAWcvA7ojMkXFaaZX8iIfj3UmdJDQsR/m/dWKavML7KeRKiECJO9
-        RsyRvSKeBWrVerEv8o2wX7uDitO9
-X-Google-Smtp-Source: APXvYqy4Do5VeXsler/DZNP25OPRLnqyCIEysnUx0sbRh/uorSV5SSKA83a/95ykKdoNelYIBLUkOw==
-X-Received: by 2002:ac2:5605:: with SMTP id v5mr10926099lfd.136.1578955993516;
-        Mon, 13 Jan 2020 14:53:13 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id q186sm6602481ljq.14.2020.01.13.14.53.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 14:53:12 -0800 (PST)
-Subject: Re: [PATCH v4 4/8] i2c: tegra: Support atomic transfers
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200112171430.27219-1-digetx@gmail.com>
- <20200112171430.27219-5-digetx@gmail.com> <20200113220315.GB2689@ninjato>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <86f71bfe-7d17-0bf4-edda-13c84301a598@gmail.com>
-Date:   Tue, 14 Jan 2020 01:52:12 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g7dOkwXJYiQUdnpC2HuSkz7V4G5v0hEXZF+cQ5fngFo=;
+        b=lPwTnffamGHdipv6s9nxSetgJ7tnkv7nJDogb+gqmJJzRB7vzGpLCAUBwI1nij585A
+         F/aCYByvozsNKvKcGIOR4fWlt6xglKINlGf69cAw+HiKJe8tJKikgH0DOyOlHeaCP3ho
+         10H0nVaTEM0O1zu0eDs2eosZDyT30Szz6jSZEq/bb86gaQuTmm3vLI9VInu6ad0Rvgz2
+         TkX3LAdIrFXGRln8MvdrNX43J4QAS8q9eAs9mBF/X4rtHcWfWGqoshh5SbRupA6dxH2y
+         LN5D9dKyY773vxGYgui87Mo0Lw0vx1Q9ms+ZaIw8Neazgz95eOZaVNf5psQO4jblYyOG
+         HBQw==
+X-Gm-Message-State: APjAAAWCXZGVUUIE58UIaEPbb5mrRurDJpebEdYRu1B0vfLc1QHvqY/D
+        H2JtreCrv9TGSfFwcB4l1O7oLCvf31schNgipwUXy/513RBtow==
+X-Google-Smtp-Source: APXvYqyRUPdh2abELUHZ9er58ZCf8PytVC2W6+5/xgEXfLBLijGcMQ/n2XemQ5khHOL7V3Q5okGb0ZYb3sH+
+X-Received: by 2002:ab0:7719:: with SMTP id z25mr8873495uaq.115.1578956134219;
+        Mon, 13 Jan 2020 14:55:34 -0800 (PST)
+Received: from google.com ([100.118.32.120])
+        by smtp-relay.gmail.com with ESMTPS id q184sm1338129vkh.9.2020.01.13.14.55.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 14:55:34 -0800 (PST)
+X-Relaying-Domain: brkho.com
+Date:   Mon, 13 Jan 2020 17:55:17 -0500
+From:   Brian Ho <brian@brkho.com>
+To:     Kristian Kristensen <hoegsberg@google.com>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        hoegsberg <hoegsberg@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <linux-arm-msm@vger.kernel.org>,
+        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
+        <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] drm/msm: Add MSM_WAIT_IOVA ioctl
+Message-ID: <20200113225516.GA157345@google.com>
+References: <20200113153605.52350-1-brian@brkho.com>
+ <20200113153605.52350-3-brian@brkho.com>
+ <CAJs_Fx48B-C8GEeAmPaqGAqAOTR2dT0csg8W=TRyULOfy=1=VQ@mail.gmail.com>
+ <CAOPc6Tn8CWVzcLoJOGmn3CW6B9FMKf_-NzE8TpwDHsPfoQDaQQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200113220315.GB2689@ninjato>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOPc6Tn8CWVzcLoJOGmn3CW6B9FMKf_-NzE8TpwDHsPfoQDaQQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.01.2020 01:03, Wolfram Sang пишет:
-> On Sun, Jan 12, 2020 at 08:14:26PM +0300, Dmitry Osipenko wrote:
->> System shutdown may happen with interrupts being disabled and in this case
->> I2C core rejects transfers if atomic transfer isn't supported by driver.
+On Mon, Jan 13, 2020 at 09:57:43AM -0800, Kristian Kristensen wrote:
+> On Mon, Jan 13, 2020 at 8:25 AM Rob Clark <robdclark@chromium.org> wrote:
 > 
-> Well, not quite. The core complains about it nowadays, but does not
-> reject messages. It will try the same behaviour as before. It will just
-> inform the user that somethings is tried which may not work. I probably
-> should update the error message printed saying that the transfer is
-> still tried.
-
-Indeed, now I'm recalling noticing that the transfer actually should
-happen despite of the error message, but then completely forgot to
-update the commit's message. I can update the message and send out v5,
-if you're thinking that it's worthwhile to do.
-
->> There were several occurrences where I found my Nexus 7 completely
->> discharged despite of being turned off and then one day I spotted this in
->> the log:
+> > On Mon, Jan 13, 2020 at 7:37 AM Brian Ho <brian@brkho.com> wrote:
+> > >
+> > > Implements an ioctl to wait until a value at a given iova is greater
+> > > than or equal to a supplied value.
+> > >
+> > > This will initially be used by turnip (open-source Vulkan driver for
+> > > QC in mesa) for occlusion queries where the userspace driver can
+> > > block on a query becoming available before continuing via
+> > > vkGetQueryPoolResults.
+> > >
+> > > Signed-off-by: Brian Ho <brian@brkho.com>
+> > > ---
+> > >  drivers/gpu/drm/msm/msm_drv.c | 63 +++++++++++++++++++++++++++++++++--
+> > >  include/uapi/drm/msm_drm.h    | 13 ++++++++
+> > >  2 files changed, 74 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/msm/msm_drv.c
+> > b/drivers/gpu/drm/msm/msm_drv.c
+> > > index c84f0a8b3f2c..dcc46874a5a2 100644
+> > > --- a/drivers/gpu/drm/msm/msm_drv.c
+> > > +++ b/drivers/gpu/drm/msm/msm_drv.c
+> > > @@ -36,10 +36,11 @@
+> > >   *           MSM_GEM_INFO ioctl.
+> > >   * - 1.4.0 - softpin, MSM_RELOC_BO_DUMP, and GEM_INFO support to set/get
+> > >   *           GEM object's debug name
+> > > - * - 1.5.0 - Add SUBMITQUERY_QUERY ioctl
+> > > + * - 1.5.0 - Add SUBMITQUEUE_QUERY ioctl
+> > > + * - 1.6.0 - Add WAIT_IOVA ioctl
+> > >   */
+> > >  #define MSM_VERSION_MAJOR      1
+> > > -#define MSM_VERSION_MINOR      5
+> > > +#define MSM_VERSION_MINOR      6
+> > >  #define MSM_VERSION_PATCHLEVEL 0
+> > >
+> > >  static const struct drm_mode_config_funcs mode_config_funcs = {
+> > > @@ -952,6 +953,63 @@ static int msm_ioctl_submitqueue_close(struct
+> > drm_device *dev, void *data,
+> > >         return msm_submitqueue_remove(file->driver_priv, id);
+> > >  }
+> > >
+> > > +static int msm_ioctl_wait_iova(struct drm_device *dev, void *data,
+> > > +               struct drm_file *file)
+> > > +{
+> > > +       struct msm_drm_private *priv = dev->dev_private;
+> > > +       struct drm_gem_object *obj;
+> > > +       struct drm_msm_wait_iova *args = data;
+> > > +       ktime_t timeout = to_ktime(args->timeout);
+> > > +       unsigned long remaining_jiffies = timeout_to_jiffies(&timeout);
+> > > +       struct msm_gpu *gpu = priv->gpu;
+> > > +       void *base_vaddr;
+> > > +       uint64_t *vaddr;
+> > > +       int ret;
+> > > +
+> > > +       if (args->pad)
+> > > +               return -EINVAL;
+> > > +
+> > > +       if (!gpu)
+> > > +               return 0;
+> >
+> > hmm, I'm not sure we should return zero in this case.. maybe -ENODEV?
+> >
+> > > +
+> > > +       obj = drm_gem_object_lookup(file, args->handle);
+> > > +       if (!obj)
+> > > +               return -ENOENT;
+> > > +
+> > > +       base_vaddr = msm_gem_get_vaddr(obj);
+> > > +       if (IS_ERR(base_vaddr)) {
+> > > +               ret = PTR_ERR(base_vaddr);
+> > > +               goto err_put_gem_object;
+> > > +       }
+> > > +       if (args->offset + sizeof(*vaddr) > obj->size) {
+> > > +               ret = -EINVAL;
+> > > +               goto err_put_vaddr;
+> > > +       }
+> > > +
+> > > +       vaddr = base_vaddr + args->offset;
+> > > +
+> > > +       /* Assumes WC mapping */
+> > > +       ret = wait_event_interruptible_timeout(
+> > > +                       gpu->event, *vaddr >= args->value,
+> > remaining_jiffies);
+> >
 > 
-> Given my reasoning above, that should have happened before the warning
-> was printed as well? Because same behaviour. I'd be surprised if there
-> was a change...
+> This needs to do the awkward looking
+> 
+>   (int64_t)(*data - value) >= 0
+> 
+> to properly handle the wraparound case.
+>
 
-Pretty sure that it was happening before, but I wasn't paying much
-attention back then.
+I think this comparison will run into issues if we allow for 64-bit
+reference values. For example, if value is ULLONG_MAX, and *data
+starts at 0 on the first comparison, we'll immediately return.
+
+It's not too much of an issue in fence_completed (msm_fence.c), but
+in this ioctl, *data can grow at an arbitrary rate. Are we concerned
+about this?
+
+> > +
+> > > +       if (ret == 0) {
+> > > +               ret = -ETIMEDOUT;
+> > > +               goto err_put_vaddr;
+> > > +       } else if (ret == -ERESTARTSYS) {
+> > > +               goto err_put_vaddr;
+> > > +       }
+> >
+> > maybe:
+> >
+> >  } else {
+> >    ret = 0;
+> >  }
+> >
+> > and then drop the next three lines?
+> >
+> > > +
+> > > +       msm_gem_put_vaddr(obj);
+> > > +       drm_gem_object_put_unlocked(obj);
+> > > +       return 0;
+> > > +
+> > > +err_put_vaddr:
+> > > +       msm_gem_put_vaddr(obj);
+> > > +err_put_gem_object:
+> > > +       drm_gem_object_put_unlocked(obj);
+> > > +       return ret;
+> > > +}
+> > > +
+> > >  static const struct drm_ioctl_desc msm_ioctls[] = {
+> > >         DRM_IOCTL_DEF_DRV(MSM_GET_PARAM,    msm_ioctl_get_param,
+> > DRM_RENDER_ALLOW),
+> > >         DRM_IOCTL_DEF_DRV(MSM_GEM_NEW,      msm_ioctl_gem_new,
+> > DRM_RENDER_ALLOW),
+> > > @@ -964,6 +1022,7 @@ static const struct drm_ioctl_desc msm_ioctls[] = {
+> > >         DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_NEW,
+> >  msm_ioctl_submitqueue_new,   DRM_RENDER_ALLOW),
+> > >         DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_CLOSE,
+> > msm_ioctl_submitqueue_close, DRM_RENDER_ALLOW),
+> > >         DRM_IOCTL_DEF_DRV(MSM_SUBMITQUEUE_QUERY,
+> > msm_ioctl_submitqueue_query, DRM_RENDER_ALLOW),
+> > > +       DRM_IOCTL_DEF_DRV(MSM_WAIT_IOVA, msm_ioctl_wait_iova,
+> > DRM_RENDER_ALLOW),
+> > >  };
+> > >
+> > >  static const struct vm_operations_struct vm_ops = {
+> > > diff --git a/include/uapi/drm/msm_drm.h b/include/uapi/drm/msm_drm.h
+> > > index 0b85ed6a3710..8477f28a4ee1 100644
+> > > --- a/include/uapi/drm/msm_drm.h
+> > > +++ b/include/uapi/drm/msm_drm.h
+> > > @@ -298,6 +298,17 @@ struct drm_msm_submitqueue_query {
+> > >         __u32 pad;
+> > >  };
+> > >
+> > > +/* This ioctl blocks until the u64 value at bo + offset is greater than
+> > or
+> > > + * equal to the reference value.
+> > > + */
+> > > +struct drm_msm_wait_iova {
+> > > +       __u32 handle;          /* in, GEM handle */
+> > > +       __u32 pad;
+> > > +       struct drm_msm_timespec timeout;   /* in */
+> > > +       __u64 offset;          /* offset into bo */
+> > > +       __u64 value;           /* reference value */
+> >
+> > Maybe we should go ahead and add a __u64 mask;
+> >
+> > that would let us wait for 32b values as well, and wait for bits in a
+> > bitmask
+> >
+> 
+> I think we'd be OK to just default to 32 bit values instead, since most of
+> the CP commands that this is intended to work with (CP_EVENT_WRITE,
+> CP_WAIT_MEM_GTE etc) operate on 32 bit values. We could move 'value' to the
+> slot right after 'handle' but then we'd not have any pad/reserved fields.
+> Maybe we keep 'value' 64 bit but restrict it to 32 bits, with an option to
+> add a 64 bit flag in 'pad' later on?
+> 
+
+FWIW, the current usage of this in my mesa MR uses a 64 bit value.
+There's no super great reason that the available bit is 64 bits and
+not 32 bits (I think it made the addressing math a bit simpler), but
+I'm fine with whatever you all decide on here.
+
+> >
+> > Other than those minor comments, it looks pretty good to me
+> >
+> > BR,
+> > -R
+> >
+> > > +};
+> > > +
+> > >  #define DRM_MSM_GET_PARAM              0x00
+> > >  /* placeholder:
+> > >  #define DRM_MSM_SET_PARAM              0x01
+> > > @@ -315,6 +326,7 @@ struct drm_msm_submitqueue_query {
+> > >  #define DRM_MSM_SUBMITQUEUE_NEW        0x0A
+> > >  #define DRM_MSM_SUBMITQUEUE_CLOSE      0x0B
+> > >  #define DRM_MSM_SUBMITQUEUE_QUERY      0x0C
+> > > +#define DRM_MSM_WAIT_IOVA      0x0D
+> > >
+> > >  #define DRM_IOCTL_MSM_GET_PARAM        DRM_IOWR(DRM_COMMAND_BASE +
+> > DRM_MSM_GET_PARAM, struct drm_msm_param)
+> > >  #define DRM_IOCTL_MSM_GEM_NEW          DRM_IOWR(DRM_COMMAND_BASE +
+> > DRM_MSM_GEM_NEW, struct drm_msm_gem_new)
+> > > @@ -327,6 +339,7 @@ struct drm_msm_submitqueue_query {
+> > >  #define DRM_IOCTL_MSM_SUBMITQUEUE_NEW    DRM_IOWR(DRM_COMMAND_BASE +
+> > DRM_MSM_SUBMITQUEUE_NEW, struct drm_msm_submitqueue)
+> > >  #define DRM_IOCTL_MSM_SUBMITQUEUE_CLOSE  DRM_IOW (DRM_COMMAND_BASE +
+> > DRM_MSM_SUBMITQUEUE_CLOSE, __u32)
+> > >  #define DRM_IOCTL_MSM_SUBMITQUEUE_QUERY  DRM_IOW (DRM_COMMAND_BASE +
+> > DRM_MSM_SUBMITQUEUE_QUERY, struct drm_msm_submitqueue_query)
+> > > +#define DRM_IOCTL_MSM_WAIT_IOVA        DRM_IOW (DRM_COMMAND_BASE +
+> > DRM_MSM_WAIT_IOVA, struct drm_msm_wait_iova)
+> > >
+> > >  #if defined(__cplusplus)
+> > >  }
+> > > --
+> > > 2.25.0.rc1.283.g88dfdc4193-goog
+> > >
+> >
