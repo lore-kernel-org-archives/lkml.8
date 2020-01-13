@@ -2,100 +2,214 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B894DC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFBDC33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821AC21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:45:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578919501;
-	bh=h2vZy2bWnuOeobfvrsF7bMbPSggmUgSHrXcLvhHe7Mg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TyJEzemcwLyOsBJFurRH/w5cX2G+cyk9osF0UcUAXInNeVNwunqPFjQQ51xUeRoSO
-	 5AQXrLvYoz8X/zNd8KsH5d5PlnWcTLoK9eZHUVqBu3SXXTC8jGwT9QKVUlEdaFFVq3
-	 e6PZSEnrAQgOKpKEyy5Qc1zt4NT+06A3oRHcJWVU=
+	by mail.kernel.org (Postfix) with ESMTP id 5579D207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 12:46:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbgAMMpA (ORCPT
+        id S1728670AbgAMMqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 07:45:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47976 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbgAMMpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 07:45:00 -0500
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C7EC21569;
-        Mon, 13 Jan 2020 12:44:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578919499;
-        bh=h2vZy2bWnuOeobfvrsF7bMbPSggmUgSHrXcLvhHe7Mg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=N3RX1Ypcowo3Mn9FIQ+pzjVoLwvqsf9arFl1qUMAXxaaBcdYTG68XQGB5xsWms88l
-         bbK2vvlRiC2cj4PSYMtcFYZFLLZl55attJdMpDDR0EjvKPv/16uh+PlyAF8EJGi1Bw
-         L89YXJbkwfb6hNJvw5cvHzigaJ0zTf/7EMSoS/pc=
-Received: by mail-lj1-f175.google.com with SMTP id u1so9872057ljk.7;
-        Mon, 13 Jan 2020 04:44:59 -0800 (PST)
-X-Gm-Message-State: APjAAAUjIAvw/7sMthibg/MwBf5oaGi/+h2PrRK/FH54gpd1PF7WybUn
-        Y2wZeUZaDxS21hHOK3aVtVP9XiCEP2UlvWAMP9o=
-X-Google-Smtp-Source: APXvYqwKz1lxjQq9n3Z7zbCk525GAplUZqZxAGOd/qz1ruUmT+zfym4LTKRN/pHQEyDCiubOy3VWR5NbxzECZmZ9BrA=
-X-Received: by 2002:a2e:8e22:: with SMTP id r2mr9922935ljk.51.1578919497737;
- Mon, 13 Jan 2020 04:44:57 -0800 (PST)
+        Mon, 13 Jan 2020 07:46:00 -0500
+Received: from host-88-217-225-28.customer.m-online.net ([88.217.225.28]:42809
+        "EHLO mail.dev.tdt.de" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725832AbgAMMqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 07:46:00 -0500
+Received: from mschiller01.dev.tdt.de (unknown [10.2.3.20])
+        by mail.dev.tdt.de (Postfix) with ESMTPSA id 7B5A520498;
+        Mon, 13 Jan 2020 12:45:55 +0000 (UTC)
+From:   Martin Schiller <ms@dev.tdt.de>
+To:     khc@pm.waw.pl, davem@davemloft.net
+Cc:     linux-x25@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Martin Schiller <ms@dev.tdt.de>
+Subject: [PATCH 1/2] wan/hdlc_x25: make lapb params configurable
+Date:   Mon, 13 Jan 2020 13:45:50 +0100
+Message-Id: <20200113124551.2570-1-ms@dev.tdt.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20200104152107.11407-1-krzk@kernel.org> <20200104152107.11407-17-krzk@kernel.org>
- <20200113122902.GA15939@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20200113122902.GA15939@e121166-lin.cambridge.arm.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 13 Jan 2020 13:44:45 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPcNJ5QCabPUh4kcOj_9Gj2SF8+JGtSJu8cLEp0Ciqy96g@mail.gmail.com>
-Message-ID: <CAJKOXPcNJ5QCabPUh4kcOj_9Gj2SF8+JGtSJu8cLEp0Ciqy96g@mail.gmail.com>
-Subject: Re: [PATCH v2 16/20] pci: exynos: Rename Exynos to lowercase
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 13 Jan 2020 at 13:29, Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Sat, Jan 04, 2020 at 04:21:03PM +0100, Krzysztof Kozlowski wrote:
-> > Fix up inconsistent usage of upper and lowercase letters in "Exynos"
-> > name.
-> >
-> > "EXYNOS" is not an abbreviation but a regular trademarked name.
-> > Therefore it should be written with lowercase letters starting with
-> > capital letter.
-> >
-> > The lowercase "Exynos" name is promoted by its manufacturer Samsung
-> > Electronics Co., Ltd., in advertisement materials and on website.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  drivers/pci/controller/dwc/pci-exynos.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
->
->
-> Should I pick it up or you are sending the series via another tree ?
->
-> If so (if it is not queued already):
->
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+This enables you to configure mode (DTE/DCE), Modulo, Window, T1, T2, N2 via
+sethdlc (which needs to be patched as well).
 
-Please pick it up.
+Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+---
+ drivers/net/wan/hdlc_x25.c      | 67 ++++++++++++++++++++++++++++++++-
+ include/uapi/linux/hdlc/ioctl.h | 11 +++++-
+ include/uapi/linux/if.h         |  1 +
+ 3 files changed, 76 insertions(+), 3 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/net/wan/hdlc_x25.c b/drivers/net/wan/hdlc_x25.c
+index 5643675ff724..b28051eba736 100644
+--- a/drivers/net/wan/hdlc_x25.c
++++ b/drivers/net/wan/hdlc_x25.c
+@@ -21,8 +21,17 @@
+ #include <linux/skbuff.h>
+ #include <net/x25device.h>
+ 
++struct x25_state {
++	x25_hdlc_proto settings;
++};
++
+ static int x25_ioctl(struct net_device *dev, struct ifreq *ifr);
+ 
++static inline struct x25_state* state(hdlc_device *hdlc)
++{
++	return (struct x25_state *)hdlc->state;
++}
++
+ /* These functions are callbacks called by LAPB layer */
+ 
+ static void x25_connect_disconnect(struct net_device *dev, int reason, int code)
+@@ -132,6 +141,8 @@ static netdev_tx_t x25_xmit(struct sk_buff *skb, struct net_device *dev)
+ static int x25_open(struct net_device *dev)
+ {
+ 	int result;
++	hdlc_device *hdlc = dev_to_hdlc(dev);
++	struct lapb_parms_struct params;
+ 	static const struct lapb_register_struct cb = {
+ 		.connect_confirmation = x25_connected,
+ 		.connect_indication = x25_connected,
+@@ -144,6 +155,26 @@ static int x25_open(struct net_device *dev)
+ 	result = lapb_register(dev, &cb);
+ 	if (result != LAPB_OK)
+ 		return result;
++
++	result = lapb_getparms(dev, &params);
++	if (result != LAPB_OK)
++		return result;
++
++	if (state(hdlc)->settings.dce)
++		params.mode = params.mode | LAPB_DCE;
++
++	if (state(hdlc)->settings.modulo == 128)
++		params.mode = params.mode | LAPB_EXTENDED;
++
++	params.window = state(hdlc)->settings.window;
++	params.t1 = state(hdlc)->settings.t1;
++	params.t2 = state(hdlc)->settings.t2;
++	params.n2 = state(hdlc)->settings.n2;
++
++	result = lapb_setparms(dev, &params);
++	if (result != LAPB_OK)
++		return result;
++
+ 	return 0;
+ }
+ 
+@@ -186,6 +217,9 @@ static struct hdlc_proto proto = {
+ 
+ static int x25_ioctl(struct net_device *dev, struct ifreq *ifr)
+ {
++	x25_hdlc_proto __user *x25_s = ifr->ifr_settings.ifs_ifsu.x25;
++	const size_t size = sizeof(x25_hdlc_proto);
++	x25_hdlc_proto new_settings;
+ 	hdlc_device *hdlc = dev_to_hdlc(dev);
+ 	int result;
+ 
+@@ -194,7 +228,13 @@ static int x25_ioctl(struct net_device *dev, struct ifreq *ifr)
+ 		if (dev_to_hdlc(dev)->proto != &proto)
+ 			return -EINVAL;
+ 		ifr->ifr_settings.type = IF_PROTO_X25;
+-		return 0; /* return protocol only, no settable parameters */
++		if (ifr->ifr_settings.size < size) {
++			ifr->ifr_settings.size = size; /* data size wanted */
++			return -ENOBUFS;
++		}
++		if (copy_to_user(x25_s, &state(hdlc)->settings, size))
++			return -EFAULT;
++		return 0;
+ 
+ 	case IF_PROTO_X25:
+ 		if (!capable(CAP_NET_ADMIN))
+@@ -203,12 +243,35 @@ static int x25_ioctl(struct net_device *dev, struct ifreq *ifr)
+ 		if (dev->flags & IFF_UP)
+ 			return -EBUSY;
+ 
++		if (copy_from_user(&new_settings, x25_s, size))
++			return -EFAULT;
++
++		if ((new_settings.dce != 0 &&
++		     new_settings.dce != 1) ||
++		    (new_settings.modulo != 8 &&
++		     new_settings.modulo != 128) ||
++		    new_settings.window < 1 ||
++		    (new_settings.modulo == 8 &&
++		     new_settings.window > 7) ||
++		    (new_settings.modulo == 128 &&
++		     new_settings.window > 127) ||
++		    new_settings.t1 < 1 ||
++		    new_settings.t1 > 255 ||
++		    new_settings.t2 < 1 ||
++		    new_settings.t2 > 255 ||
++		    new_settings.n2 < 1 ||
++		    new_settings.n2 > 255)
++			return -EINVAL;
++
+ 		result=hdlc->attach(dev, ENCODING_NRZ,PARITY_CRC16_PR1_CCITT);
+ 		if (result)
+ 			return result;
+ 
+-		if ((result = attach_hdlc_protocol(dev, &proto, 0)))
++		if ((result = attach_hdlc_protocol(dev, &proto,
++						   sizeof(struct x25_state))))
+ 			return result;
++
++		memcpy(&state(hdlc)->settings, &new_settings, size);
+ 		dev->type = ARPHRD_X25;
+ 		call_netdevice_notifiers(NETDEV_POST_TYPE_CHANGE, dev);
+ 		netif_dormant_off(dev);
+diff --git a/include/uapi/linux/hdlc/ioctl.h b/include/uapi/linux/hdlc/ioctl.h
+index 0fe4238e8246..3656ce8b8af0 100644
+--- a/include/uapi/linux/hdlc/ioctl.h
++++ b/include/uapi/linux/hdlc/ioctl.h
+@@ -3,7 +3,7 @@
+ #define __HDLC_IOCTL_H__
+ 
+ 
+-#define GENERIC_HDLC_VERSION 4	/* For synchronization with sethdlc utility */
++#define GENERIC_HDLC_VERSION 5	/* For synchronization with sethdlc utility */
+ 
+ #define CLOCK_DEFAULT   0	/* Default setting */
+ #define CLOCK_EXT	1	/* External TX and RX clock - DTE */
+@@ -79,6 +79,15 @@ typedef struct {
+     unsigned int timeout;
+ } cisco_proto;
+ 
++typedef struct {
++	unsigned short dce; /* 1 for DCE (network side) operation */
++	unsigned int modulo; /* modulo (8 = basic / 128 = extended) */
++	unsigned int window; /* frame window size */
++	unsigned int t1; /* timeout t1 */
++	unsigned int t2; /* timeout t2 */
++	unsigned int n2; /* frame retry counter */
++} x25_hdlc_proto;
++
+ /* PPP doesn't need any info now - supply length = 0 to ioctl */
+ 
+ #endif /* __ASSEMBLY__ */
+diff --git a/include/uapi/linux/if.h b/include/uapi/linux/if.h
+index 4bf33344aab1..be714cd8c826 100644
+--- a/include/uapi/linux/if.h
++++ b/include/uapi/linux/if.h
+@@ -213,6 +213,7 @@ struct if_settings {
+ 		fr_proto		__user *fr;
+ 		fr_proto_pvc		__user *fr_pvc;
+ 		fr_proto_pvc_info	__user *fr_pvc_info;
++		x25_hdlc_proto		__user *x25;
+ 
+ 		/* interface settings */
+ 		sync_serial_settings	__user *sync;
+-- 
+2.20.1
+
