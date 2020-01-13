@@ -2,195 +2,183 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB27DC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5A1C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8409C207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:49:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AE47207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="Ek4459e5"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="cBWJlJ7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbgAMOtu (ORCPT
+        id S1728911AbgAMOt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:49:50 -0500
-Received: from mail-db8eur05on2041.outbound.protection.outlook.com ([40.107.20.41]:18657
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        Mon, 13 Jan 2020 09:49:57 -0500
+Received: from mail-eopbgr1300102.outbound.protection.outlook.com ([40.107.130.102]:30216
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726943AbgAMOtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726505AbgAMOtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Jan 2020 09:49:50 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M07o4/DXcxhBi3un8YXzB4JS6MWtLuw6gkKKl3ku/+e74NdB+Usu4X8QV678jQkMOYhzb7WpVVFV3Osq3/BNpz0t+vcgAL8tAcs2geXsrkVB9hMnRa6IoxGC7FEkoDZ3O806UkyB5TDVYFknLAtmH5yFRBxmWC4eylisMd7E7r/jaQk+SnUeBvLdazDt3Ojyd+lUm9jIu35p8Ysk339jbf/tCFY+x+vN+wpWB/LtOXxqulDTe9Cqy2rVwp9z+lWiXbZVp2mZ2Tx9Zt6sZL6MRRZay8Loy9cZA4+3SaZnN3meuxFsif1zvfmmlWiiOmV0MCt8+aKMagqB4W4Ik9MrHg==
+ b=lG4wSDopWDVUqUd49a2vQDljBFzPYYQ4BfdllJxVgfgSCjopZhZj5TSVLWW5VgW480fRh9rmwkU+X6j4HthxD3gEnUndBDu5nu39jd83aObJAHC/cMsVc9CceHi/qMmMDjJD1jXOcpIWWJuINDtEiiqeLS+XkTP7qULyFmZt7491daFuNDb9k/50B9QPy7nV4+Q2E3mN6fAb4RIdKdgHafE41WCJkEJbZpwvFzFOThANzwuIpNTKHgw565+5cr/skohIuZwMFMl6p9lw7aGJrOQbpZcB+1q0h4hlpa+E7u1IM/q81KxdYLbctbc7Y9rA6yzlSnikyeoek1N93PVLDQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4cZpObHY6B0VESApGlV4qduJ3OM5B2Aips0Q5xpDqE0=;
- b=EGAr3e5LL8aoWUa3JJUQ6XbUFVMJ7k40QmqPuiEtiIXuGQ9CQt4YO/r+m489d4KpAkWYVORwoA1Y5/y2GL3/sm+G7Dj4H4G15LcX/+ib18X0pUsLCupDYuhrqSzl2hn+tyeuIW3jk/ZI14bQENbzvKm0dLs4Diw+URDdRgrzo8fBcIhZWnng3NyGXHauSCWbA0jbO565cg8l2HA978M0h2tpO/J3d5vYapdF1GWLmOrv5B11iNcIltvT+SEp6HSXnLy9T13V7AvL4XC7UiiAr35VapVQT2TZ0BAoeofU/tbUywkTtNVg2TpKbyu1NHMWloYca1r+pvv3CPA2kiFvag==
+ bh=sYK0mntyGytJIB1/2aqSA4dPqXfPMRI76GIkg/pDN2c=;
+ b=by3NeSdYhQDZcBldN4c79DEGVsK0B/oUM+SZ2nKS4KrOTXWntZhO6nSsbvv5PM10DMHkfDOLx1TSTedUDYdT50zrNeaINOnUWaqDu4RS7FaeHiP+yZ3rFLFngd+Psfqkmfbwj9SBLM6AGmGsPlRXayeerPPp/rhfJxzBC8a4slDHa5suCjnU6B5SP0cn8wnbQyUUQ2ck5t3Llq7VBqWQBNNd2upZZSJ+Hurxjg6c4QhtIbYDIpvge7Hqi43Xo1rF4+MAJ8F/txwMmb896rXAIcXfUttquGchAig9eISFaRqWhmqic67cL2U0PIxj5uSSoDAWVQLj2sZfV7I1DfQsqA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4cZpObHY6B0VESApGlV4qduJ3OM5B2Aips0Q5xpDqE0=;
- b=Ek4459e5DmGxvGqP6PW7wdvE8SOZIvNBeijx+nSqsFFVLB+nu5DuNIZvmnse3XX8UIde5hrTklctj5IPtZ5wV+uOiIHTyDXEl1C2rwkWe6mvaR1Xku8hSu8zMcucCxfzp8jaHgnHaAh2C/HmwxORGVzzCLEW/S3eZC5DHL4nvxc=
-Received: from HE1PR0501MB2249.eurprd05.prod.outlook.com (10.168.34.19) by
- HE1PR0501MB2220.eurprd05.prod.outlook.com (10.168.36.7) with Microsoft SMTP
+ bh=sYK0mntyGytJIB1/2aqSA4dPqXfPMRI76GIkg/pDN2c=;
+ b=cBWJlJ7Dfp+NdK4fL2PUbV9binH8NYwHtB14IOi0y1FimPodAjJC+juFnETr2jcOWXtR69LED8R1UIWx9X7yJea/yPkIZmtWKUnotTUvRZbQE7Vbsw1yTfZWmhIDE/gjlHfK7K9yahBhGIVgRmISow7GVQw66BpQZcsWFsAnVaU=
+Received: from SG2P153MB0349.APCP153.PROD.OUTLOOK.COM (52.132.233.84) by
+ SG2P153MB0350.APCP153.PROD.OUTLOOK.COM (52.132.233.85) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2623.16; Mon, 13 Jan 2020 14:49:46 +0000
-Received: from HE1PR0501MB2249.eurprd05.prod.outlook.com
- ([fe80::75b5:4765:e4d5:8501]) by HE1PR0501MB2249.eurprd05.prod.outlook.com
- ([fe80::75b5:4765:e4d5:8501%6]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
- 14:49:45 +0000
-From:   Alex Vesker <valex@mellanox.com>
-To:     Cengiz Can <cengiz@kernel.wtf>, Leon Romanovsky <leon@kernel.org>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Yevgeny Kliteynik <kliteyn@mellanox.com>,
-        Erez Shitrit <erezsh@mellanox.com>,
-        Tariq Toukan <tariqt@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] net: mellanox: prevent resource leak on htbl
-Thread-Topic: [PATCH] net: mellanox: prevent resource leak on htbl
-Thread-Index: AQHVyhfXnbgha6qN0UO7Z+hw8A09HA==
-Date:   Mon, 13 Jan 2020 14:49:45 +0000
-Message-ID: <HE1PR0501MB22490CD10A5A258E8C08DE86C3350@HE1PR0501MB2249.eurprd05.prod.outlook.com>
-References: <20200113134415.86110-1-cengiz@kernel.wtf>
+ 15.20.2644.1; Mon, 13 Jan 2020 14:49:39 +0000
+Received: from SG2P153MB0349.APCP153.PROD.OUTLOOK.COM
+ ([fe80::cce1:5261:6c2:51a9]) by SG2P153MB0349.APCP153.PROD.OUTLOOK.COM
+ ([fe80::cce1:5261:6c2:51a9%8]) with mapi id 15.20.2644.015; Mon, 13 Jan 2020
+ 14:49:39 +0000
+From:   Tianyu Lan <Tianyu.Lan@microsoft.com>
+To:     David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "lantianyu1986@gmail.com" <lantianyu1986@gmail.com>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "eric.devolder@oracle.com" <eric.devolder@oracle.com>,
+        "vbabka@suse.cz" <vbabka@suse.cz>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        Pasha Tatashin <Pavel.Tatashin@microsoft.com>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>
+Subject: RE: [EXTERNAL] Re: [RFC PATCH V2 2/10] mm: expose
+ is_mem_section_removable() symbol
+Thread-Topic: [EXTERNAL] Re: [RFC PATCH V2 2/10] mm: expose
+ is_mem_section_removable() symbol
+Thread-Index: AQHVxV94OmmoHHYtiky82H1ysWWO7qfj7JsAgAS1vtA=
+Date:   Mon, 13 Jan 2020 14:49:38 +0000
+Message-ID: <SG2P153MB0349F85FB0C1C02F55391F6D92350@SG2P153MB0349.APCP153.PROD.OUTLOOK.COM>
+References: <20200107130950.2983-1-Tianyu.Lan@microsoft.com>
+ <20200107130950.2983-3-Tianyu.Lan@microsoft.com>
+ <20200107133623.GJ32178@dhcp22.suse.cz>
+ <99a6db0c-6d73-d982-58b3-7a0172748ae4@redhat.com>
+In-Reply-To: <99a6db0c-6d73-d982-58b3-7a0172748ae4@redhat.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=tiala@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T14:49:35.5863663Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=839a5a22-6b22-45c5-8fad-86981e3dc02c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=valex@mellanox.com; 
-x-originating-ip: [193.47.165.251]
+ smtp.mailfrom=Tianyu.Lan@microsoft.com; 
+x-originating-ip: [167.220.255.55]
 x-ms-publictraffictype: Email
 x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 83661a75-57e5-47c9-0b5d-08d79837d4f3
-x-ms-traffictypediagnostic: HE1PR0501MB2220:|HE1PR0501MB2220:
+x-ms-office365-filtering-correlation-id: 9d1eb10e-9d0b-44e0-e59c-08d79837d0e1
+x-ms-traffictypediagnostic: SG2P153MB0350:|SG2P153MB0350:|SG2P153MB0350:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <HE1PR0501MB22200C83049DE30DC349441FC3350@HE1PR0501MB2220.eurprd05.prod.outlook.com>
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <SG2P153MB0350FC0B68AC9CB197DDC87092350@SG2P153MB0350.APCP153.PROD.OUTLOOK.COM>
 x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-forefront-prvs: 028166BF91
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(366004)(39860400002)(136003)(199004)(189003)(7696005)(26005)(91956017)(110136005)(76116006)(66946007)(5660300002)(66556008)(66476007)(186003)(66446008)(64756008)(4326008)(2906002)(54906003)(316002)(478600001)(86362001)(53546011)(55016002)(6506007)(9686003)(52536014)(71200400001)(8676002)(33656002)(8936002)(81156014)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0501MB2220;H:HE1PR0501MB2249.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(189003)(199004)(110136005)(54906003)(8676002)(2906002)(81166006)(8936002)(4326008)(81156014)(8990500004)(86362001)(71200400001)(7416002)(66446008)(5660300002)(66556008)(55016002)(64756008)(66476007)(52536014)(186003)(498600001)(66946007)(9686003)(7696005)(6506007)(76116006)(26005)(53546011)(10290500003)(33656002);DIR:OUT;SFP:1102;SCL:1;SRVR:SG2P153MB0350;H:SG2P153MB0349.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: d9zFE6/1V3vaLfNdvgZCR+bMr6RxOQrWHjRGD3vHq4KdIndNBvL8LhW8Keppz5i1lyQfs3/zobtmcdBJQW+RO+CQZ8r822z01qYLuxST1VqE6wZgce1U5ZO9yuCETmeedc5Ul4EWhvuoAChBXFNfvbnIoPu0aDeCZdUja2Ume/GcohLWSwXGMHiJ9dIo2YlSj8RHr1SnqSc4JTNrEq0X2X6xMLeGG22TWVIxxbIJM5kYYREdoKMFQ7ZOKUah5J8ui6JxwieM0W0DbPelybiUt0Z+LTsPHa/fGwXD5MgH+RamH4AZF8yDzpkgFQiBxxkXe0h+gX2F+lpoVhA5NZgpM0Lkn8JwCtICvEjqnx53xFk6DXt3liNic/zozS5mnnxXg8bTshkH/AAaQVq2MJD5xeFV9H69c70/lSACSqJ3+PU2QEX7FoWwqNsGaXUiMbZc
+x-microsoft-antispam-message-info: UonD3Is0u7MP2s5m/rIYEvRd4KAxY3MSM2X5/KqFBwRxkDALmSkA5qk3RCI4BA20zWUCQkLzMIYwwIXM60cUQYBfOkQRFrKRIA12mI87AFuGrK5Lo7q+7o0Nqw+EfVyNw9AIKf7JH8dO4U+WFFwx9SloXiuYIsKS8ervpNf0x7ICibyNVP6wHJm0wt0wnoGTakpt0Yo9rBXH0ucpHBoGt+84c4MIM8fHXA9jCVdwxh2sWvvF9pfGRp3s2R1yj4NV+UXci18OHImyl2gF2uW6LjWKT1++JD1MDMLTZVoJhX/4ba8W/2Ht1MsxZhSi9nAlOZwrre/sbjfRbJfsWrISyHh1NnZC3k524bz76bUbQiWa+MzVYehqe2TTT2BgweBV1estfNawPXMELP/7dkbrm6xaSkXfZmQhilQ8XoOTbArgVFhxRcZXUDsa8XN1I3Ea
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83661a75-57e5-47c9-0b5d-08d79837d4f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 14:49:45.7336
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d1eb10e-9d0b-44e0-e59c-08d79837d0e1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 14:49:38.6315
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: x940VeNSu89pQS0PwPAs4vDLvoZd3mynoshJ1uPi6rz8SdR7ZwN0yCo4kd46kFLpKNzl9SyDIl4QpvC4x3pV2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0501MB2220
+X-MS-Exchange-CrossTenant-userprincipalname: 0tXfxBuFFz4PzQTIV9etBSoPIYVSMKMyUqfx3KWslqf5+E5lqcUtT+p45MhaoyZhqSuCxFtl1poQKr+rGTY91g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2P153MB0350
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/13/2020 3:46 PM, Cengiz Can wrote:=0A=
-> According to a Coverity static analysis tool,=0A=
-> `drivers/net/mellanox/mlx5/core/steering/dr_rule.c#63` leaks a=0A=
-> `struct mlx5dr_ste_htbl *` named `new_htbl` while returning from=0A=
-> `dr_rule_create_collision_htbl` function.=0A=
->=0A=
-> A annotated snippet of the possible resource leak follows:=0A=
->=0A=
-> ```=0A=
-> static struct mlx5dr_ste *=0A=
-> dr_rule_create_collision_htbl(struct mlx5dr_matcher *matcher,=0A=
->                               struct mlx5dr_matcher_rx_tx *nic_matcher,=
-=0A=
->                               u8 *hw_ste)=0A=
->    /* ... */=0A=
->    /* ... */=0A=
->=0A=
->    /* Storage is returned from allocation function mlx5dr_ste_htbl_alloc.=
- */=0A=
->    /* Assigning: new_htbl =3D storage returned from mlx5dr_ste_htbl_alloc=
-(..) */=0A=
->         new_htbl =3D mlx5dr_ste_htbl_alloc(dmn->ste_icm_pool,=0A=
->                                          DR_CHUNK_SIZE_1,=0A=
->                                          MLX5DR_STE_LU_TYPE_DONT_CARE,=0A=
->                                          0);=0A=
->    /* Condition !new_htbl, taking false branch. */=0A=
->         if (!new_htbl) {=0A=
->                 mlx5dr_dbg(dmn, "Failed allocating collision table\n");=
-=0A=
->                 return NULL;=0A=
->         }=0A=
->=0A=
->         /* One and only entry, never grows */=0A=
->         ste =3D new_htbl->ste_arr;=0A=
->         mlx5dr_ste_set_miss_addr(hw_ste, nic_matcher->e_anchor->chunk->ic=
-m_addr);=0A=
->    /* Resource new_htbl is not freed or pointed-to in mlx5dr_htbl_get */=
-=0A=
->         mlx5dr_htbl_get(new_htbl);=0A=
->=0A=
->    /* Variable new_htbl going out of scope leaks the storage it points to=
-. */=0A=
->         return ste;=0A=
-> ```=0A=
->=0A=
-> There's a caller of this function which does refcounting and free'ing by=
-=0A=
-> itself but that function also skips free'ing `new_htbl` due to missing=0A=
-> jump to error label. (referring to `dr_rule_create_collision_entry lines=
-=0A=
-> 75-77. They don't jump to `free_tbl`)=0A=
->=0A=
-> Added a `kfree(new_htbl)` just before returning `ste` pointer to fix the=
-=0A=
-> leak.=0A=
->=0A=
-> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>=0A=
-> ---=0A=
->=0A=
-> This might be totally breaking the refcounting logic in the file so=0A=
-> please provide any feedback so I can evolve this into something more=0A=
-> suitable.=0A=
->=0A=
-> For the record, Coverity scan id is CID 1457773.=0A=
->=0A=
->  drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c | 2 ++=0A=
->  1 file changed, 2 insertions(+)=0A=
->=0A=
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c b=
-/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c=0A=
-> index e4cff7abb348..047b403c61db 100644=0A=
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c=0A=
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_rule.c=0A=
-> @@ -60,6 +60,8 @@ dr_rule_create_collision_htbl(struct mlx5dr_matcher *ma=
-tcher,=0A=
->  	mlx5dr_ste_set_miss_addr(hw_ste, nic_matcher->e_anchor->chunk->icm_addr=
-);=0A=
->  	mlx5dr_htbl_get(new_htbl);=0A=
->=0A=
-> +	kfree(new_htbl);=0A=
-> +=0A=
->  	return ste;=0A=
->  }=0A=
->=0A=
-> --=0A=
-> 2.24.1=0A=
->=0A=
->=0A=
-The fix looks incorrect to me.=0A=
-The table is pointed by each ste in the ste_arr, ste->new_htbl and being=0A=
-freed on mlx5dr_htbl_put.=0A=
-We tested kmemleak a few days ago and came clean.=0A=
-usually coverity is not wrong, but in this case I don't see the bug...=0A=
-=0A=
+> From: David Hildenbrand <david@redhat.com>
+> Sent: Friday, January 10, 2020 9:42 PM
+> To: Michal Hocko <mhocko@kernel.org>; lantianyu1986@gmail.com
+> Cc: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> sashal@kernel.org; akpm@linux-foundation.org; Michael Kelley
+> <mikelley@microsoft.com>; Tianyu Lan <Tianyu.Lan@microsoft.com>; linux-
+> hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; linux-mm@kvack.org;
+> vkuznets <vkuznets@redhat.com>; eric.devolder@oracle.com; vbabka@suse.cz;
+> osalvador@suse.de; Pasha Tatashin <Pavel.Tatashin@microsoft.com>;
+> rppt@linux.ibm.com
+> Subject: [EXTERNAL] Re: [RFC PATCH V2 2/10] mm: expose
+> is_mem_section_removable() symbol
+>=20
+> On 07.01.20 14:36, Michal Hocko wrote:
+> > On Tue 07-01-20 21:09:42, lantianyu1986@gmail.com wrote:
+> >> From: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> >>
+> >> Hyper-V balloon driver will use is_mem_section_removable() to check
+> >> whether memory block is removable or not when receive memory hot
+> >> remove msg. Expose it.
+> >
+> > I do not think this is a good idea. The check is inherently racy. Why
+> > cannot the balloon driver simply hotremove the region when asked?
+> >
+>=20
+> It's not only racy, it also gives no guarantees. False postives and false=
+ negatives
+> are possible.
+>=20
+> If you want to avoid having to loop forever trying to offline when callin=
+g
+> offline_and_remove_memory(), you could try to
+> alloc_contig_range() the memory first and then play the PG_offline+notifi=
+er
+> game like virtio-mem.
+>=20
+> I don't remember clearly, but I think pinned pages can make offlining loo=
+p for a
+> long time. And I remember there were other scenarios as well (including o=
+ut of
+> memory conditions and similar).
+>=20
+> I sent an RFC [1] for powerpc/memtrace that does the same (just error
+> handling is more complicated as it wants to offline and remove multiple
+> consecutive memory blocks) - if you want to try to go down that path.
+>=20
+Hi David & Michal:
+	Thanks for your review. Some memory blocks are not suitable for hot-plug.
+If not check memory block's removable, offline_pages() will report some fai=
+lure error
+e.g, "failed due to memory holes" and  "failure to isolate range". I think =
+the check maybe
+added into offline_and_remove_memory()? This may help to not create/expose =
+a new
+interface to do such check in module.
+
+
