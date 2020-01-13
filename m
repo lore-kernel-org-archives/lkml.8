@@ -2,161 +2,173 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3322BC33CAD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E93C33CAF
 	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08A62207FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADAB0207FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 11:34:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="clRlbdTU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbgAMLeJ (ORCPT
+        id S1726163AbgAMLeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 06:34:09 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40752 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728769AbgAMLeG (ORCPT
+        Mon, 13 Jan 2020 06:34:11 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29737 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726976AbgAMLeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 13 Jan 2020 06:34:06 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00DBXqKN134190
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 06:34:05 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xfve898mu-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 06:34:05 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Mon, 13 Jan 2020 11:33:27 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 13 Jan 2020 11:33:24 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00DBXNHF50855982
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 11:33:23 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B2A45204F;
-        Mon, 13 Jan 2020 11:33:23 +0000 (GMT)
-Received: from pratiks-thinkpad.in.ibm.com (unknown [9.124.31.88])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 72F355204E;
-        Mon, 13 Jan 2020 11:33:21 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au, svaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
-        linuxram@us.ibm.com, psampat@linux.ibm.com,
-        pratik.sampat@in.ibm.com, pratik.r.sampat@gmail.com
-Subject: [PATCH v3 0/3] Introduce Self-Save API for deep stop states
-Date:   Mon, 13 Jan 2020 17:03:17 +0530
-X-Mailer: git-send-email 2.24.1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578915245;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=guHP6gmPLHnYDv84/p3VqN+5T6PCoPVZ6ZGFO+HTAL8=;
+        b=clRlbdTUIwye99XBQHb3g1fq4X6u6DramGL1Ccxfhx0DneNRD41xDQzsVnJKx7QGpIoR7N
+        fG+IJgwLiZ8oQUxvMLZimd456h1hOY1pInndhrvcLX7quwjBgF/FmqzuU+FgeOtt5mchCs
+        kg6FiyCRfumd2cQyq6UuqAmETfph20E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-409-IqsPQAN5NBCONk0g_mWc3g-1; Mon, 13 Jan 2020 06:34:03 -0500
+X-MC-Unique: IqsPQAN5NBCONk0g_mWc3g-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F1B0800D41;
+        Mon, 13 Jan 2020 11:34:02 +0000 (UTC)
+Received: from t480s.redhat.com (ovpn-117-201.ams2.redhat.com [10.36.117.201])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6AD817C468;
+        Mon, 13 Jan 2020 11:34:00 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v1 1/2] mm/memory_hotplug: pass in nid to online_pages()
+Date:   Mon, 13 Jan 2020 12:33:53 +0100
+Message-Id: <20200113113354.6341-2-david@redhat.com>
+In-Reply-To: <20200113113354.6341-1-david@redhat.com>
+References: <20200113113354.6341-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20011311-0028-0000-0000-000003D0A08C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20011311-0029-0000-0000-00002494BE3A
-Message-Id: <cover.1578914462.git.psampat@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-13_03:2020-01-13,2020-01-13 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 adultscore=0 phishscore=0 impostorscore=0
- malwarescore=0 spamscore=0 bulkscore=0 suspectscore=0 mlxscore=0
- mlxlogscore=792 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001130097
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Skiboot patches: https://patchwork.ozlabs.org/patch/1221011/
-v2 patches: https://lkml.org/lkml/2020/1/12/253
-Changelog
-Patch v2 --> v3
-1. Addressed minor comments from Ram Pai
+No need to lookup the memory block, we can directly pass in the nid.
 
-Currently the stop-API supports a mechanism called as self-restore
-which allows us to restore the values of certain SPRs on wakeup from a
-deep-stop state to a desired value. To use this, the Kernel makes an
-OPAL call passing the PIR of the CPU, the SPR number and the value to
-which the SPR should be restored when that CPU wakes up from a deep
-stop state.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ drivers/base/memory.c          |  6 +++---
+ include/linux/memory_hotplug.h |  3 ++-
+ mm/memory_hotplug.c            | 13 ++-----------
+ 3 files changed, 7 insertions(+), 15 deletions(-)
 
-Recently, a new feature, named self-save has been enabled in the
-stop-api, which is an alternative mechanism to do the same, except
-that self-save will save the current content of the SPR before
-entering a deep stop state and also restore the content back on
-waking up from a deep stop state.
-
-This patch series aims at introducing and leveraging the self-save feature in
-the kernel.
-
-Now, as the kernel has a choice to prefer one mode over the other and
-there can be registers in both the save/restore SPR list which are sent
-from the device tree, a new interface has been defined for the seamless
-handing of the modes for each SPR.
-
-A list of preferred SPRs are maintained in the kernel which contains two
-properties:
-1. supported_mode: Helps in identifying if it strictly supports self
-                   save or restore or both.
-                   Initialized using the information from device tree.
-2. preferred_mode: Calls out what mode is preferred for each SPR. It
-                   could be strictly self save or restore, or it can also
-                   determine the preference of  mode over the other if both
-                   are present by encapsulating the other in bitmask from
-                   LSB to MSB.
-                   Initialized statically.
-
-Below is a table to show the Scenario::Consequence when the self save and
-self restore modes are available or disabled in different combinations as
-perceived from the device tree thus giving complete backwards compatibly
-regardless of an older firmware running a newer kernel or vise-versa.
-Support for self save or self-restore is embedded in the device tree,
-along with the set of registers it supports.
-
-SR = Self restore; SS = Self save
-
-.-----------------------------------.----------------------------------------.
-|             Scenario              |                Consequence             |
-:-----------------------------------+----------------------------------------:
-| Legacy Firmware. No SS or SR node | Self restore is called for all         |
-|                                   | supported SPRs                         |
-:-----------------------------------+----------------------------------------:
-| SR: !active SS: !active           | Deep stop states disabled              |
-:-----------------------------------+----------------------------------------:
-| SR: active SS: !active            | Self restore is called for all         |
-|                                   | supported SPRs                         |
-:-----------------------------------+----------------------------------------:
-| SR: active SS: active             | Goes through the preferences for each  |
-|                                   | SPR and executes of the modes          |
-|                                   | accordingly. Currently, Self restore is|
-|                                   | called for all the SPRs except PSSCR   |
-|                                   | which is self saved                    |
-:-----------------------------------+----------------------------------------:
-| SR: active(only HID0) SS: active  | Self save called for all supported     |
-|                                   | registers expect HID0 (as HID0 cannot  |
-|                                   | be self saved currently)               |
-:-----------------------------------+----------------------------------------:
-| SR: !active SS: active            | currently will disable deep states as  |
-|                                   | HID0 is needed to be self restored and |
-|                                   | cannot be self saved                   |
-'-----------------------------------'----------------------------------------'
-
-Pratik Rajesh Sampat (3):
-  powerpc/powernv: Interface to define support and preference for a SPR
-  powerpc/powernv: Introduce Self save support
-  powerpc/powernv: Parse device tree, population of SPR support
-
- arch/powerpc/include/asm/opal-api.h        |   3 +-
- arch/powerpc/include/asm/opal.h            |   1 +
- arch/powerpc/platforms/powernv/idle.c      | 442 ++++++++++++++++++---
- arch/powerpc/platforms/powernv/opal-call.c |   1 +
- 4 files changed, 389 insertions(+), 58 deletions(-)
-
--- 
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 2604a15c728b..2cf3542b04d0 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -236,7 +236,7 @@ static bool pages_correctly_probed(unsigned long star=
+t_pfn)
+  */
+ static int
+ memory_block_action(unsigned long start_section_nr, unsigned long action=
+,
+-		    int online_type)
++		    int online_type, int nid)
+ {
+ 	unsigned long start_pfn;
+ 	unsigned long nr_pages =3D PAGES_PER_SECTION * sections_per_block;
+@@ -249,7 +249,7 @@ memory_block_action(unsigned long start_section_nr, u=
+nsigned long action,
+ 		if (!pages_correctly_probed(start_pfn))
+ 			return -EBUSY;
+=20
+-		ret =3D online_pages(start_pfn, nr_pages, online_type);
++		ret =3D online_pages(start_pfn, nr_pages, online_type, nid);
+ 		break;
+ 	case MEM_OFFLINE:
+ 		ret =3D offline_pages(start_pfn, nr_pages);
+@@ -275,7 +275,7 @@ static int memory_block_change_state(struct memory_bl=
+ock *mem,
+ 		mem->state =3D MEM_GOING_OFFLINE;
+=20
+ 	ret =3D memory_block_action(mem->start_section_nr, to_state,
+-				mem->online_type);
++				  mem->online_type, mem->nid);
+=20
+ 	mem->state =3D ret ? from_state_req : to_state;
+=20
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplu=
+g.h
+index 820689093894..f4d59155f3d4 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -94,7 +94,8 @@ extern int zone_grow_free_lists(struct zone *zone, unsi=
+gned long new_nr_pages);
+ extern int zone_grow_waitqueues(struct zone *zone, unsigned long nr_page=
+s);
+ extern int add_one_highpage(struct page *page, int pfn, int bad_ppro);
+ /* VM interface that may be used by firmware interface */
+-extern int online_pages(unsigned long, unsigned long, int);
++extern int online_pages(unsigned long pfn, unsigned long nr_pages,
++			int online_type, int nid);
+ extern struct zone *test_pages_in_a_zone(unsigned long start_pfn,
+ 					 unsigned long end_pfn);
+ extern unsigned long __offline_isolated_pages(unsigned long start_pfn,
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 5ee2c6e10934..fb1c878d054d 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -758,27 +758,18 @@ struct zone * zone_for_pfn_range(int online_type, i=
+nt nid, unsigned start_pfn,
+ 	return default_zone_for_pfn(nid, start_pfn, nr_pages);
+ }
+=20
+-int __ref online_pages(unsigned long pfn, unsigned long nr_pages, int on=
+line_type)
++int __ref online_pages(unsigned long pfn, unsigned long nr_pages,
++		       int online_type, int nid)
+ {
+ 	unsigned long flags;
+ 	unsigned long onlined_pages =3D 0;
+ 	struct zone *zone;
+ 	int need_zonelists_rebuild =3D 0;
+-	int nid;
+ 	int ret;
+ 	struct memory_notify arg;
+-	struct memory_block *mem;
+=20
+ 	mem_hotplug_begin();
+=20
+-	/*
+-	 * We can't use pfn_to_nid() because nid might be stored in struct page
+-	 * which is not yet initialized. Instead, we find nid from memory block=
+.
+-	 */
+-	mem =3D find_memory_block(__pfn_to_section(pfn));
+-	nid =3D mem->nid;
+-	put_device(&mem->dev);
+-
+ 	/* associate pfn range with the zone */
+ 	zone =3D zone_for_pfn_range(online_type, nid, pfn, nr_pages);
+ 	move_pfn_range_to_zone(zone, pfn, nr_pages, NULL);
+--=20
 2.24.1
 
