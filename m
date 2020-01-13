@@ -2,117 +2,132 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F67C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724C9C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB79E2081E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:31:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F0B24673
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:33:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="sIQl3gJ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbgAMKbm (ORCPT
+        id S1726985AbgAMKdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:31:42 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37438 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbgAMKbl (ORCPT
+        Mon, 13 Jan 2020 05:33:37 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:41512 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbgAMKdg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:31:41 -0500
-Received: by mail-ot1-f68.google.com with SMTP id k14so8478178otn.4;
-        Mon, 13 Jan 2020 02:31:41 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nwyBnoSEdinELT85igJHsZ1qY8Qx+jTBntFKXstTepA=;
-        b=B7mKVSuMOCBukSilfxNL742xDQ26NZ+obebecp4V/JX9Ohc+62LdRDCjSyYobO5/g2
-         C7pkRv4NhaWccAqa/iPZ0Bw54YE1ZgQTfN7Kfxkw3hdu8yo1PbVq/QtPPaGVEGHEEZRw
-         dBvW7BbOWO3wUDXCTazoae9WDa7L8iLc4GOaDK2YYo53iMbrZEUg2mwW7w0ej14MD9us
-         W/f63WPbIOUOrfqPOi8EAvDd6eaNCvG0AJnk9G6HOQ43R8592h/M/lpb012k/GeeWEzf
-         HXC4K1Xetf/8Pmp0J65RCOl4N0QOq8hvO/cEvuF7m5o45LISK1tC/TvMids0sDa6t9A+
-         ukqw==
-X-Gm-Message-State: APjAAAUd4ufLX/KNbJXcnkbg+KT8Om+KZEZ3zw7bg3c4RG28E+n3SUmt
-        m8vDu1c4CXLLUk7wmIm83BJWkBBKHHYUQpgMLGuUBg==
-X-Google-Smtp-Source: APXvYqzXC+kjI3P9VmAc9lrc8grWeRQCK7wyWr3YakvTRRoWeD/XCowwWztxgieS3MEY9G4HyvWAaeyWr69CLc8Awis=
-X-Received: by 2002:a05:6830:18c6:: with SMTP id v6mr7675555ote.145.1578911500717;
- Mon, 13 Jan 2020 02:31:40 -0800 (PST)
+        Mon, 13 Jan 2020 05:33:36 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DANP9j169492;
+        Mon, 13 Jan 2020 10:33:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2019-08-05; bh=bXiZojaHjBD1dP3hyyEd5RCQpgbq825ponM/lKiehBY=;
+ b=sIQl3gJ8B9H5FSHRq2zEk2h4Vhkt1VfOJRWi3xWeFNkQ9KPk0Nwk71nImscaQ33nFV/2
+ m4opZKugYjpnUWBe0A8wvSGXicnQsZViFLzSLsG0ywrlappX3WtOaKqb9RboVjBGg4K+
+ NvpGFdEcE9ewp+wIESbZt9Lg5k+th3a9x6BOCe/HjRkUGZh7Pd3TamyNygV7a0FtlX6F
+ LBoCKAR5h+HC4iVaTR6ckBHGzgJbzsM5Td3Q+6FZIo6qh9NPaFCLn5IPVsJ5Fzj4ZUeA
+ pYKHQS1KKql0GYfY6HknepiFQSA/A791zN0QHs8oDSf1J6upOceFlvX8SZLLMuWebK9I vg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2xf74rx3k9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 10:33:30 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DAO8Gi119110;
+        Mon, 13 Jan 2020 10:33:29 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2xfqu4anym-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 13 Jan 2020 10:33:29 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00DAXSB1001279;
+        Mon, 13 Jan 2020 10:33:28 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 13 Jan 2020 02:33:27 -0800
+Date:   Mon, 13 Jan 2020 13:33:20 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild@lists.01.org, Dan Murphy <dmurphy@ti.com>
+Cc:     kbuild-all@lists.01.org, sebastian.reichel@collabora.com,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v3 4/4] power: supply: bq2515x: Introduce the bq2515x
+ family
+Message-ID: <20200113103320.GA9488@kadam>
 MIME-Version: 1.0
-References: <20191124195225.31230-1-jongk@linux-m68k.org> <CAMuHMdXQAbw_Skj99q_PWXKn77bzVbJf60n38Etmq-zhOoHsHQ@mail.gmail.com>
- <CAMuHMdU9hu+EAAnBD5dH3+LS5pNi9fOjFNesv3eFSCoqbW3CCA@mail.gmail.com>
- <20200113091813.zkye72cubpfhemww@wittgenstein> <CAMuHMdXTqjPQN4UbH5a1BGjFTNLRrwDu97B=JxDii2VCoRjorA@mail.gmail.com>
- <20200113101714.75v5gmg3rb5tlhze@wittgenstein>
-In-Reply-To: <20200113101714.75v5gmg3rb5tlhze@wittgenstein>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 13 Jan 2020 11:31:29 +0100
-Message-ID: <CAMuHMdUmP4moBKAURp61E=K0-6Jiwi1OFayKS0h-yT17+mKCgQ@mail.gmail.com>
-Subject: Re: [PATCH] m68k: Wire up clone3() syscall
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Kars de Jong <jongk@linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        "Amanieu d'Antras" <amanieu@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108202314.11791-5-dmurphy@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9498 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2001130089
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9498 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2001130089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
+Hi Dan,
 
-On Mon, Jan 13, 2020 at 11:18 AM Christian Brauner
-<christian.brauner@ubuntu.com> wrote:
-> On Mon, Jan 13, 2020 at 10:34:35AM +0100, Geert Uytterhoeven wrote:
-> > On Mon, Jan 13, 2020 at 10:18 AM Christian Brauner
-> > <christian.brauner@ubuntu.com> wrote:
-> > > On Mon, Jan 13, 2020 at 10:10:26AM +0100, Geert Uytterhoeven wrote:
-> > > > On Sun, Jan 12, 2020 at 5:06 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > > On Sun, Nov 24, 2019 at 8:52 PM Kars de Jong <jongk@linux-m68k.org> wrote:
-> > > > > > Wire up the clone3() syscall for m68k. The special entry point is done in
-> > > > > > assembler as was done for clone() as well. This is needed because all
-> > > > > > registers need to be saved. The C wrapper then calls the generic
-> > > > > > sys_clone3() with the correct arguments.
-> > > > > >
-> > > > > > Tested on A1200 using the simple test program from:
-> > > > > >
-> > > > > >   https://lore.kernel.org/lkml/20190716130631.tohj4ub54md25dys@brauner.io/
-> > > > > >
-> > > > > > Cc: linux-m68k@vger.kernel.org
-> > > > > > Signed-off-by: Kars de Jong <jongk@linux-m68k.org>
-> > > > >
-> > > > > Thanks, applied and queued for v5.6.
-> > > >
-> > > > Which is now broken because of commit dd499f7a7e342702 ("clone3: ensure
-> > > > copy_thread_tls is implemented") in v5.5-rc6 :-(
-> > >
-> > > Sorry, just for clarification what and how is it broken by
-> > > dd499f7a7e342702 ("clone3: ensure > copy_thread_tls is implemented")
-> > > ?
-> >
-> > Because m68k does not implement copy_thread_tls() yet, and doesn't
-> > select HAVE_COPY_THREAD_TLS yet.
->
-> Oh right, sorry. I forgot that m68k has a patchset to enable clone3() up
-> for merging. I should've remembered that and warned you that we will
-> have to require copy_thread_tls() going forward. I hope the merge is
-> explanatory enough why we're doing it this way.
+url:    https://github.com/0day-ci/linux/commits/Dan-Murphy/BQ25150-155-Charger/20200110-055201
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
 
-Yeah, an early warning would have been nice...
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-> > Looking into fixing that...
->
-> Thank you! Much appreciated!
+New smatch warnings:
+drivers/power/supply/bq2515x_charger.c:316 bq2515x_set_ilim_lvl() error: buffer overflow 'bq2515x_ilim_lvl_values' 8 <= 8
 
-Patch sent.
+Old smatch warnings:
+drivers/power/supply/bq2515x_charger.c:320 bq2515x_set_ilim_lvl() error: buffer overflow 'bq2515x_ilim_lvl_values' 8 <= 8
+drivers/power/supply/bq2515x_charger.c:322 bq2515x_set_ilim_lvl() error: buffer overflow 'bq2515x_ilim_lvl_values' 8 <= 8
 
-Gr{oetje,eeting}s,
+# https://github.com/0day-ci/linux/commit/f5918978695e4e465d54f5c34f356af86874b051
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout f5918978695e4e465d54f5c34f356af86874b051
+vim +/bq2515x_ilim_lvl_values +316 drivers/power/supply/bq2515x_charger.c
 
-                        Geert
+f5918978695e4e Dan Murphy 2020-01-08  311  static int bq2515x_set_ilim_lvl(struct bq2515x_device *bq2515x, int val)
+f5918978695e4e Dan Murphy 2020-01-08  312  {
+f5918978695e4e Dan Murphy 2020-01-08  313  	int i;
+f5918978695e4e Dan Murphy 2020-01-08  314  
+f5918978695e4e Dan Murphy 2020-01-08  315  	for (i = 0; i <= ARRAY_SIZE(bq2515x_ilim_lvl_values); i++) {
+                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Typo.  This should be < ARRAY_SIZE().
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+f5918978695e4e Dan Murphy 2020-01-08 @316  		if (val == bq2515x_ilim_lvl_values[i])
+f5918978695e4e Dan Murphy 2020-01-08  317  			break;
+f5918978695e4e Dan Murphy 2020-01-08  318  
+f5918978695e4e Dan Murphy 2020-01-08  319  		if (val > bq2515x_ilim_lvl_values[i - 1] &&
+f5918978695e4e Dan Murphy 2020-01-08  320  		    val < bq2515x_ilim_lvl_values[i]) {
+f5918978695e4e Dan Murphy 2020-01-08  321  			if (val - bq2515x_ilim_lvl_values[i - 1] <
+f5918978695e4e Dan Murphy 2020-01-08  322  			    bq2515x_ilim_lvl_values[i] - val) {
+f5918978695e4e Dan Murphy 2020-01-08  323  				i = i - 1;
+f5918978695e4e Dan Murphy 2020-01-08  324  				break;
+f5918978695e4e Dan Murphy 2020-01-08  325  			}
+f5918978695e4e Dan Murphy 2020-01-08  326  		}
+f5918978695e4e Dan Murphy 2020-01-08  327  	}
+f5918978695e4e Dan Murphy 2020-01-08  328  
+f5918978695e4e Dan Murphy 2020-01-08  329  	return regmap_write(bq2515x->regmap, BQ2515X_ILIMCTRL, i);
+f5918978695e4e Dan Murphy 2020-01-08  330  }
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
