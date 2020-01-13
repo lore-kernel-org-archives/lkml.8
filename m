@@ -2,103 +2,95 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE8EC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E307C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF634207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:02:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J70mHToX"
+	by mail.kernel.org (Postfix) with ESMTP id 447F6207FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 23:03:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1578956598;
+	bh=4RQwIyMnmuJ/JMrFu0r2d634j037hKOiaUUG9SfYIfo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=yr9cYmxAsgZNl0HAAK0eQemWWLkyYqfoZBX+1AjbnURpxDxmzseEs45itN1XCXFQt
+	 ZRaB10j0SGQyI5aPFPNhqJlDJj40ZmPFtP/uxRUqExqcPB3B7CTePygeK891trWSkx
+	 fJMiZEGVd09qFsNvejEZ3lNqbN8gcPENK63SkoWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgAMXC7 (ORCPT
+        id S1729195AbgAMXDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 18:02:59 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40572 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728924AbgAMXC6 (ORCPT
+        Mon, 13 Jan 2020 18:03:17 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44897 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728924AbgAMXDR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 18:02:58 -0500
-Received: by mail-lj1-f193.google.com with SMTP id u1so12053665ljk.7;
-        Mon, 13 Jan 2020 15:02:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=p4M64cKVK4meL/7+gbzzavKi5vXxmm/qBtCEuLMydu0=;
-        b=J70mHToXWBwgRVc6BJiIVuYwg7Uwv/4tPuNA92gIT1WBKvtF+5jMcAbEIeXX6xhRv3
-         dcEC30sIGK6RZ7sWUDRuVdXvCEdv4h4jzWu756cBvyXR0V1lacpis88sNCO1jNqBgLIf
-         Q+vin3gpEFtiOPeVJgjOqaodkktQeXgTxIm9c4uZ38Ks/EY18DiJsdrWs8yaChTVswms
-         ohnrzrveRKr7S9AlClA4i8GzTbECK5elJgOElKvzLehKfqM1868TahgDK8JxWU6/+u6k
-         MfkoGZPEzw/5rPDrSHNGJa3x1lWaGi8V1Iy5PiB2R4wglN9wnNHo1E6V8iwe2GuJY08l
-         L1IA==
+        Mon, 13 Jan 2020 18:03:17 -0500
+Received: by mail-oi1-f196.google.com with SMTP id d62so9971732oia.11
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 15:03:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=p4M64cKVK4meL/7+gbzzavKi5vXxmm/qBtCEuLMydu0=;
-        b=KPBTu1wh4TPzkv9bKmpqKeZN0Me0C3PhZKwp/HJPU4cgNvTkDNKeABVdUen8kXyp59
-         kM3yYila//qPfoJVZ1KLWCPolDSVndcc8R4H8CQ9w3Xwc3QZbuExVqo7zFvgZ2q+W/GT
-         X+d/HKsFmsU/FaopbWwABtZ/AdSoH/As64QPFUIfjx4STrd2Jtuq3Eiq9xQ1yFItZhTP
-         ioEX+8DzWBiYnnvvOZydMHerLDS/AEYwPvvYKzKCKz7ihhNgz32kGKxr6WUeQZHY6He8
-         2kkrd8eJoYNi+J+LOlZ92iE9/oSEHpIhMsRzZi5tlzd05+zL5JcCy+oaU3buBbVZ5Odd
-         ByvA==
-X-Gm-Message-State: APjAAAWU/pfFYL3xo+pOIcv4dgEeJJmnG6s98BB3UQe3EL1jM2ttbkOV
-        USSmADnbRfa1ktmSDGAVTAxaGyv6
-X-Google-Smtp-Source: APXvYqyySrulaNXe0BNmEybz+MMb2HeiY++Aw/c4iZK99f7wYJQbsWvsqrH+UeYvhgDYlEQoC6PS2Q==
-X-Received: by 2002:a2e:b4f6:: with SMTP id s22mr12177957ljm.218.1578956576903;
-        Mon, 13 Jan 2020 15:02:56 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id w16sm6373834lfc.1.2020.01.13.15.02.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2020 15:02:56 -0800 (PST)
-Subject: Re: [PATCH v4 0/8] NVIDIA Tegra I2C driver fixes and improvements
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Mikko Perttunen <cyndis@kapsi.fi>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200112171430.27219-1-digetx@gmail.com>
- <20200113215341.GA2689@ninjato>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <15860a85-39ee-3bb9-168c-c5a981ff3720@gmail.com>
-Date:   Tue, 14 Jan 2020 02:01:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ri61tZzvuw9GVovdm8Wr7vnv/tkJpOEIL8vV4DTKISA=;
+        b=oNmd4RRdQzGQE3d056pWfCPgXrwupYdMD0A48X4cnqCo7O67g6QNJXLKkoXCt2dSkl
+         U60CPUIRLEmNRwhc3C5OMMN5II4QrIeqUOuMCbpbgLnzHW6yrtaR+HofQ9Q1QZcHp1rn
+         +uBTczSZTx2IbRtlVZkH+F6IgK7vYEy4Dk1OvVevnMXYgg25trzYMfkzXx64kxKzCOsG
+         VxL7NoHDdgP1SNowCRUbi868CtHRJ6kpuA55u0n31HaHeiE0UwDrd1Qs4aNd7tuLJujp
+         yYma1u4O9+UJ0HcGRxJ636CaB+UzsIY5aykrecqAqpt7MEY2A1znpEk9ZDFCCMHf5zlB
+         NDdg==
+X-Gm-Message-State: APjAAAVsc9ttBcWr8d0bFdF3Jp9NhQiVZPTG4TVFTn7KfANJA7E4DbMY
+        dI420jTKQurUw4ieiJhCkRFYxUo=
+X-Google-Smtp-Source: APXvYqz5Jn1PuVOsPtjYJVAqNUI6FqPPnyTeclTCiW6ld8VMOhYl27E2Ydzfy6PpZpQ7gqCs5+EK6w==
+X-Received: by 2002:aca:f2c5:: with SMTP id q188mr14944634oih.113.1578956595526;
+        Mon, 13 Jan 2020 15:03:15 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id u18sm4678393otq.26.2020.01.13.15.03.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 15:03:14 -0800 (PST)
+Received: from rob (uid 1000)
+        (envelope-from rob@rob-hp-laptop)
+        id 220b00
+        by rob-hp-laptop (DragonFly Mail Agent v0.11);
+        Mon, 13 Jan 2020 17:03:14 -0600
+Date:   Mon, 13 Jan 2020 17:03:14 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Sandeep Maheswaram <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: Re: [PATCH v3 3/5] dt-bindings: phy: qcom-qusb2: Add support for
+ overriding Phy tuning parameters
+Message-ID: <20200113230314.GA1041@bogus>
+References: <1578658699-30458-1-git-send-email-sanm@codeaurora.org>
+ <1578658699-30458-4-git-send-email-sanm@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200113215341.GA2689@ninjato>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578658699-30458-4-git-send-email-sanm@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.01.2020 00:53, Wolfram Sang пишет:
-> On Sun, Jan 12, 2020 at 08:14:22PM +0300, Dmitry Osipenko wrote:
->> Hello,
->>
->> This patchset adds support for atomic transfers which are required for
->> shutting down machine properly. Secondly, a (not)suspending I2C and some
->> other things are fixed/improved by this small series as well. Please review
->> and apply, thanks in advance!
->>
->> Changelog:
->>
->> v4: Removed the "clk: tegra: Fix double-free in tegra_clk_init()" patch
->>     from this series, which was added by accident in v3.
->>
->>     Added Thierry's tested-by to the patches.
+On Fri, 10 Jan 2020 17:48:17 +0530, Sandeep Maheswaram wrote:
+> Add support for overriding QUSB2 V2 phy tuning parameters
+> in device tree bindings.
 > 
-> Looks good to me. I think all these patches should go to v5.6, let me
-> know if patches 1 and/or 2 should go to v5.5?
+> Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> ---
+>  .../devicetree/bindings/phy/qcom,qusb2-phy.yaml    | 33 ++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
 > 
 
-Patches 1 and 2 should go into v5.5, thanks.
+Reviewed-by: Rob Herring <robh@kernel.org>
