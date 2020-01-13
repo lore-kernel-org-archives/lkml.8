@@ -2,346 +2,163 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0536BC33CA9
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D3CC33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:21:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B67C32084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 738C42084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:21:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NKtY4G1Y"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="R7cLjYaR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbgAMWUQ (ORCPT
+        id S1728928AbgAMWV0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:20:16 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:54154 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgAMWUP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:20:15 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DMJhdc168530;
-        Mon, 13 Jan 2020 22:20:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=VZYxsSXDVLldKS6ulHYgDmVwH29KbO41TSGFOenq35A=;
- b=NKtY4G1YUMQ7X+PRtIGB6zQ6iXis6g9CUQp6sEP+ZEyliB/0m3GfPwdBgUOOHOpj0XWY
- YP0D2UQpwI+y3ABGxSdRrPBgKJ76wMRVZ15IYQx+LrI8bUEuZqDB62McZmjPLqQShl/m
- kKYnexVoitnD+qA9h+7sMlBbIuqPW+mRME2dg0gxiLqhVYc5nJFkwt4zcQtw1A8vZF/S
- f1YpXaLfyayBXv7pHcOelZYYHpuoDY/AnAF6eQiPM+xW0RlQfqxJim1uDJnKIttYU0dM
- XQxZEASmSnUdH7dT+lZeORjENGxhyscLurWNx5Y7qvU9HJRaRRYhV4rqLqe8vRDL3lzo Og== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2xf73y9xum-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 22:20:04 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DMJZPE005957;
-        Mon, 13 Jan 2020 22:20:04 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xfqvtkbf1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 22:20:03 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00DMK0N7022050;
-        Mon, 13 Jan 2020 22:20:00 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 14:19:59 -0800
-Date:   Mon, 13 Jan 2020 14:19:57 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH V2 08/12] fs/xfs: Add lock/unlock mode to xfs
-Message-ID: <20200113221957.GN8247@magnolia>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-9-ira.weiny@intel.com>
+        Mon, 13 Jan 2020 17:21:26 -0500
+Received: from mail-eopbgr1310110.outbound.protection.outlook.com ([40.107.131.110]:20928
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728746AbgAMWVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 17:21:25 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YWvKdXhQS+gCrPgGJU4cSF4T9MJVfUnY6iqJUbIvuFwf6XMTYsm3jMuzkmuT54zyHwQho4ON3FtYX7L8BF6ecjALUWVN0xKzP3614uSSFp6pMz7OPHpveUNjB+FlOLf8LMhYjZqYu+aiCunxVEtLXPBIJR77q+vaYQYH+H3MGIYWEQuzPcu/Bf9ba/cNNIUX97mXe/kNtm3cM25tyaHE7W81eqYPklmI/4aWTjb9w0rI4GkUmbiMwxXUuN48HxigFqL869yLO7+f2V8EE4RPX8Ef1RVIZmKwVcsnNx4W72nQoi78sJNsQtzYAe35DRMqUjkgND/baN2mGDxLfx15/Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UWHOMA1VK28NQcDd1c9ecAJ8Lq9KeO3QYZFvjPy0go4=;
+ b=OGvtva27UBxbMvpIaMbzxuNqJq2S8lapdfUjtobitw+OAzZCvq7Jpiap9pbuleVDkvp+qK8Kgpi4TiknFr1a17n+5y6rrFYcr30c16jZ0oTQwS/MM4TWrlc3cWbrIyex1yvAE1zb2BLe7+jlVrlgTKqSI3of/nqyl+2pMCwggERDjGikZZKmwCwOaQgqXrbRyPccamF3YDdjArvgEu0jBmzlx+rQ18U83nmMKtt3JkfuhqVOZ3mViopYZuOPxCR703+wMdA7S6YKWkwp+TLQxVmrfpHxcg0WmT+ADcwjHb77JYymLuhNDmNK0/uxjXKVeVqOAs4m7SUweX3KJ8E8Jg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UWHOMA1VK28NQcDd1c9ecAJ8Lq9KeO3QYZFvjPy0go4=;
+ b=R7cLjYaRDQvNk+ZhGugaYywlCis5ILBsukfxWg657TuxiLq+QWjakMi8rIum5vD3ZcbrqOHCSNLYIzdu8/eIhmcpvvRc4hlrOOjP/QigQpkJZulvn8za9NSZeu8EX8Zn537ud+ZkvOXZf18L2H0p1xQ7xm0p4aaJNUyPxf3uAPU=
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM (52.133.156.139) by
+ HK0P153MB0322.APCP153.PROD.OUTLOOK.COM (52.132.237.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.5; Mon, 13 Jan 2020 22:21:19 +0000
+Received: from HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::15e7:8155:31bc:d4e7]) by HK0P153MB0148.APCP153.PROD.OUTLOOK.COM
+ ([fe80::15e7:8155:31bc:d4e7%7]) with mapi id 15.20.2644.014; Mon, 13 Jan 2020
+ 22:21:18 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 0/4] hv_utils: Add the support of hibernation
+Thread-Topic: [PATCH v2 0/4] hv_utils: Add the support of hibernation
+Thread-Index: AdXJ2sJyDrPgyG+3TJyc2gafIqgsoAAg4Ifw
+Date:   Mon, 13 Jan 2020 22:21:18 +0000
+Message-ID: <HK0P153MB0148F30D914976A906B35427BF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+References: <HK0P153MB0148968D9EFBFAE1E881674CBF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <HK0P153MB0148968D9EFBFAE1E881674CBF350@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-01-13T06:29:11.3769804Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=7131548d-9dec-47e9-bdec-19b34d517361;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:192a:f6df:afac:5af7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6e5e02f0-804b-42e2-9681-08d79876e97e
+x-ms-traffictypediagnostic: HK0P153MB0322:|HK0P153MB0322:|HK0P153MB0322:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <HK0P153MB0322AE79B4D6A7F50936F775BF350@HK0P153MB0322.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(346002)(39860400002)(376002)(396003)(189003)(199004)(86362001)(8936002)(316002)(110136005)(71200400001)(966005)(8676002)(7696005)(6506007)(478600001)(81166006)(10290500003)(81156014)(5660300002)(66946007)(52536014)(66476007)(2940100002)(33656002)(64756008)(55016002)(66446008)(76116006)(66556008)(9686003)(186003)(8990500004)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:HK0P153MB0322;H:HK0P153MB0148.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BoS7NAGV7WmGwKzuv6rcxikcMuqJVUJD07XuOsEIesTzTLYsm0dJWq5FlMaeKtuALYdBexk28OXqSbat2eKZRpZla4uLnNhJTv2rmUHQpyKtsOZiAJS5lBJzxvgjd57V2nr4OoXBTx8+d1TYVLK9F1e9uR6t0IKvgbAKavJOJerH16O9qLjxYD3U4++nFfIbYZE+RGhKWNPdeoTtjlkzPii1eIJBWBc8ZcxEeZoseL89IlZJ31XRysI1F3Dp9ZX7F9roRc8EcabuaBu2OkBdu34vGG3EHRgHaHW5B/fSPQ4KrjdzS2LYUWrc2sHmMSKJfyUqQZEXvoQIR0ffpg2gSNP5UUEoI/F6GYdO6sw7e/qV9dCACcBMU06sleYOgNs6hK+Mz561iYi7QgEBw9oDyE0BgwdsDoeKJZNBw894RboBwUlcxSytuJVcwXCVRlwt3aEWfs8zJxjcsrYRJAnAbFTnrjGI/pBh0x7S5UImgppvdtLDeNfvL3YDOKCZjqfCOdJ0WgG6x9VfaLgh+3BeVw==
+x-ms-exchange-antispam-messagedata: 426NDlxabvohD2ujTkC4SHQqnJQUcVw4S+6Gq3/5lUqDHeNxH89CVpR513x4F/qNToQ5CcWKfT3H2Jd2dlnIpS7eo7un1BQ1iPRze9MGImT3LmKXcCQGrLiBnZad8F+dU/9trl/rn75hH5/IMp6bWQJlhmwaj/nCsFa0CMhvU/kd5zXB41i5VSf/Qu298NmV+1R/V0U7pU+uNbGANMOlYw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110192942.25021-9-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2001130181
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2001130182
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6e5e02f0-804b-42e2-9681-08d79876e97e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 22:21:18.3007
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XxCbsPbyUS6eDb5AfMFprtuWwl4YGZTlDZaGbTJA2CFIdckd8oWhHRp5NjGajUb3d5C6scVeE6o3mU9pySIvaQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0322
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 11:29:38AM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> XFS requires regular files to be locked while changing to/from DAX mode.
-> 
-> Define a new DAX lock type and implement the [un]lock_mode() inode
-> operation callbacks.
-> 
-> We define a new XFS_DAX_* lock type to carry the lock through the
-> transaction because we don't want to use IOLOCK as that would cause
-> performance issues with locking of the inode itself.
-> 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> ---
->  fs/xfs/xfs_icache.c |  2 ++
->  fs/xfs/xfs_inode.c  | 37 +++++++++++++++++++++++++++++++++++--
->  fs/xfs/xfs_inode.h  | 12 ++++++++++--
->  fs/xfs/xfs_iops.c   | 24 +++++++++++++++++++++++-
->  4 files changed, 70 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> index 8dc2e5414276..0288672e8902 100644
-> --- a/fs/xfs/xfs_icache.c
-> +++ b/fs/xfs/xfs_icache.c
-> @@ -74,6 +74,8 @@ xfs_inode_alloc(
->  	INIT_LIST_HEAD(&ip->i_ioend_list);
->  	spin_lock_init(&ip->i_ioend_lock);
->  
-> +	percpu_init_rwsem(&ip->i_dax_sem);
-> +
->  	return ip;
->  }
->  
-> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-> index 401da197f012..e8fd95b75e5b 100644
-> --- a/fs/xfs/xfs_inode.c
-> +++ b/fs/xfs/xfs_inode.c
-> @@ -142,12 +142,12 @@ xfs_ilock_attr_map_shared(
->   *
->   * Basic locking order:
->   *
-> - * i_rwsem -> i_mmap_lock -> page_lock -> i_ilock
-> + * i_rwsem -> i_dax_sem -> i_mmap_lock -> page_lock -> i_ilock
+> From: Dexuan Cui
+> Sent: Sunday, January 12, 2020 10:29 PM
+>=20
+> Hi,
+> This is an updated version of the v1 patchset:
+> https://lkml.org/lkml/2019/9/11/861
+>=20
+> Patch #1 is a new patch that makes the daemons more robust.
+>=20
+> Patch #2 is the same as v1.
+>=20
+> Patch #3 sends the host-initiated hibernation request to the user space v=
+ia
+> udev.
+> (v1 used call_usermodehelper() and "/sbin/hyperv-hibernate".)
+>=20
+> Patch #4 handles fcopy/vss specially to avoid possible inconsistent state=
+s.
+>=20
+> Please review.
+>=20
+> Thanks!
+>=20
+> Dexuan Cui (4):
+>   Patch #1: Tools: hv: Reopen the devices if read() or write() returns er=
+rors
+>   Patch #2: hv_utils: Support host-initiated restart request
+>   Patch #3: hv_utils: Support host-initiated hibernation request
+>   Patch #4: hv_utils: Add the support of hibernation
 
-Mmmmmm, more locks.  Can we skip the extra lock if CONFIG_FSDAX=n or if
-the filesystem devices don't support DAX at all?
+Hi Vitaly,
+I forgot to mention this for patch #4: IMO we don't need to add a new
+HVUTIL_SUSPENDED state to the hvutil state machine, because:
 
-Also, I don't think we're actually following the i_rwsem -> i_daxsem
-order in fallocate, and possibly elsewhere too?
+When we reach util_suspend(), all the userspace processes have been
+frozen: see kernel/power/hibernate.c: hibernate() -> freeze_processes() ->
+try_to_freeze_tasks(true) -> freeze_task() -> fake_signal_wake_up(). When
+try_to_freeze_tasks(true) returns 0, all the user-space processes must be=20
+frozen in do_signal() -> get_signal() -> try_to_freeze() -> ... -> __refrig=
+erator().
 
-Does the vfs have to take the i_dax_sem to do remapping things like
-reflink?  (Pretend that reflink and dax are compatible for the moment)
+hibernate () -> hibernation_snapshot () -> dpm_suspend() -> ... ->=20
+util_suspend() only runs after hibernate() -> freeze_processes(), so I'm
+pretty sure we have no race condition with the user space daemon.
 
->   * mmap_sem locking order:
->   *
->   * i_rwsem -> page lock -> mmap_sem
-> - * mmap_sem -> i_mmap_lock -> page_lock
-> + * mmap_sem -> i_dax_sem -> i_mmap_lock -> page_lock
->   *
->   * The difference in mmap_sem locking order mean that we cannot hold the
->   * i_mmap_lock over syscall based read(2)/write(2) based IO. These IO paths can
-> @@ -181,6 +181,13 @@ xfs_ilock(
->  	ASSERT((lock_flags & (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL)) !=
->  	       (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
->  	ASSERT((lock_flags & ~(XFS_LOCK_MASK | XFS_LOCK_SUBCLASS_MASK)) == 0);
-> +	ASSERT((lock_flags & (XFS_DAX_SHARED | XFS_DAX_EXCL)) !=
-> +	       (XFS_DAX_SHARED | XFS_DAX_EXCL));
-> +
-> +	if (lock_flags & XFS_DAX_EXCL)
-> +		percpu_down_write(&ip->i_dax_sem);
-> +	else if (lock_flags & XFS_DAX_SHARED)
-> +		percpu_down_read(&ip->i_dax_sem);
->  
->  	if (lock_flags & XFS_IOLOCK_EXCL) {
->  		down_write_nested(&VFS_I(ip)->i_rwsem,
-> @@ -224,6 +231,8 @@ xfs_ilock_nowait(
->  	 * You can't set both SHARED and EXCL for the same lock,
->  	 * and only XFS_IOLOCK_SHARED, XFS_IOLOCK_EXCL, XFS_ILOCK_SHARED,
->  	 * and XFS_ILOCK_EXCL are valid values to set in lock_flags.
-> +	 *
-> +	 * XFS_DAX_* is not allowed
->  	 */
->  	ASSERT((lock_flags & (XFS_IOLOCK_SHARED | XFS_IOLOCK_EXCL)) !=
->  	       (XFS_IOLOCK_SHARED | XFS_IOLOCK_EXCL));
-> @@ -232,6 +241,7 @@ xfs_ilock_nowait(
->  	ASSERT((lock_flags & (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL)) !=
->  	       (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
->  	ASSERT((lock_flags & ~(XFS_LOCK_MASK | XFS_LOCK_SUBCLASS_MASK)) == 0);
-> +	ASSERT((lock_flags & (XFS_DAX_SHARED | XFS_DAX_EXCL)) == 0);
->  
->  	if (lock_flags & XFS_IOLOCK_EXCL) {
->  		if (!down_write_trylock(&VFS_I(ip)->i_rwsem))
-> @@ -302,6 +312,8 @@ xfs_iunlock(
->  	       (XFS_ILOCK_SHARED | XFS_ILOCK_EXCL));
->  	ASSERT((lock_flags & ~(XFS_LOCK_MASK | XFS_LOCK_SUBCLASS_MASK)) == 0);
->  	ASSERT(lock_flags != 0);
-> +	ASSERT((lock_flags & (XFS_DAX_SHARED | XFS_DAX_EXCL)) !=
-> +	       (XFS_DAX_SHARED | XFS_DAX_EXCL));
->  
->  	if (lock_flags & XFS_IOLOCK_EXCL)
->  		up_write(&VFS_I(ip)->i_rwsem);
-> @@ -318,6 +330,11 @@ xfs_iunlock(
->  	else if (lock_flags & XFS_ILOCK_SHARED)
->  		mrunlock_shared(&ip->i_lock);
->  
-> +	if (lock_flags & XFS_DAX_EXCL)
-> +		percpu_up_write(&ip->i_dax_sem);
-> +	else if (lock_flags & XFS_DAX_SHARED)
-> +		percpu_up_read(&ip->i_dax_sem);
-> +
->  	trace_xfs_iunlock(ip, lock_flags, _RET_IP_);
->  }
->  
-> @@ -333,6 +350,8 @@ xfs_ilock_demote(
->  	ASSERT(lock_flags & (XFS_IOLOCK_EXCL|XFS_MMAPLOCK_EXCL|XFS_ILOCK_EXCL));
->  	ASSERT((lock_flags &
->  		~(XFS_IOLOCK_EXCL|XFS_MMAPLOCK_EXCL|XFS_ILOCK_EXCL)) == 0);
-> +	/* XFS_DAX_* is not allowed */
-> +	ASSERT((lock_flags & (XFS_DAX_SHARED | XFS_DAX_EXCL)) == 0);
->  
->  	if (lock_flags & XFS_ILOCK_EXCL)
->  		mrdemote(&ip->i_lock);
-> @@ -369,6 +388,13 @@ xfs_isilocked(
->  		return rwsem_is_locked(&VFS_I(ip)->i_rwsem);
->  	}
->  
-> +	if (lock_flags & (XFS_DAX_EXCL|XFS_DAX_SHARED)) {
-> +		if (!(lock_flags & XFS_DAX_SHARED))
-> +			return !debug_locks ||
-> +				percpu_rwsem_is_held(&ip->i_dax_sem, 0);
-> +		return rwsem_is_locked(&ip->i_dax_sem);
-> +	}
-> +
->  	ASSERT(0);
->  	return 0;
->  }
-> @@ -465,6 +491,9 @@ xfs_lock_inodes(
->  	ASSERT(!(lock_mode & XFS_ILOCK_EXCL) ||
->  		inodes <= XFS_ILOCK_MAX_SUBCLASS + 1);
->  
-> +	/* XFS_DAX_* is not allowed */
-> +	ASSERT((lock_mode & (XFS_DAX_SHARED | XFS_DAX_EXCL)) == 0);
-> +
->  	if (lock_mode & XFS_IOLOCK_EXCL) {
->  		ASSERT(!(lock_mode & (XFS_MMAPLOCK_EXCL | XFS_ILOCK_EXCL)));
->  	} else if (lock_mode & XFS_MMAPLOCK_EXCL)
-> @@ -566,6 +595,10 @@ xfs_lock_two_inodes(
->  	ASSERT(!(ip0_mode & (XFS_MMAPLOCK_SHARED|XFS_MMAPLOCK_EXCL)) ||
->  	       !(ip1_mode & (XFS_ILOCK_SHARED|XFS_ILOCK_EXCL)));
->  
-> +	/* XFS_DAX_* is not allowed */
-> +	ASSERT((ip0_mode & (XFS_DAX_SHARED | XFS_DAX_EXCL)) == 0);
-> +	ASSERT((ip1_mode & (XFS_DAX_SHARED | XFS_DAX_EXCL)) == 0);
-> +
->  	ASSERT(ip0->i_ino != ip1->i_ino);
->  
->  	if (ip0->i_ino > ip1->i_ino) {
-> diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-> index 492e53992fa9..693ca66bd89b 100644
-> --- a/fs/xfs/xfs_inode.h
-> +++ b/fs/xfs/xfs_inode.h
-> @@ -67,6 +67,9 @@ typedef struct xfs_inode {
->  	spinlock_t		i_ioend_lock;
->  	struct work_struct	i_ioend_work;
->  	struct list_head	i_ioend_list;
-> +
-> +	/* protect changing the mode to/from DAX */
-> +	struct percpu_rw_semaphore i_dax_sem;
->  } xfs_inode_t;
->  
->  /* Convert from vfs inode to xfs inode */
-> @@ -278,10 +281,13 @@ static inline void xfs_ifunlock(struct xfs_inode *ip)
->  #define	XFS_ILOCK_SHARED	(1<<3)
->  #define	XFS_MMAPLOCK_EXCL	(1<<4)
->  #define	XFS_MMAPLOCK_SHARED	(1<<5)
-> +#define	XFS_DAX_EXCL		(1<<6)
-> +#define	XFS_DAX_SHARED		(1<<7)
->  
->  #define XFS_LOCK_MASK		(XFS_IOLOCK_EXCL | XFS_IOLOCK_SHARED \
->  				| XFS_ILOCK_EXCL | XFS_ILOCK_SHARED \
-> -				| XFS_MMAPLOCK_EXCL | XFS_MMAPLOCK_SHARED)
-> +				| XFS_MMAPLOCK_EXCL | XFS_MMAPLOCK_SHARED \
-> +				| XFS_DAX_EXCL | XFS_DAX_SHARED)
->  
->  #define XFS_LOCK_FLAGS \
->  	{ XFS_IOLOCK_EXCL,	"IOLOCK_EXCL" }, \
-> @@ -289,7 +295,9 @@ static inline void xfs_ifunlock(struct xfs_inode *ip)
->  	{ XFS_ILOCK_EXCL,	"ILOCK_EXCL" }, \
->  	{ XFS_ILOCK_SHARED,	"ILOCK_SHARED" }, \
->  	{ XFS_MMAPLOCK_EXCL,	"MMAPLOCK_EXCL" }, \
-> -	{ XFS_MMAPLOCK_SHARED,	"MMAPLOCK_SHARED" }
-> +	{ XFS_MMAPLOCK_SHARED,	"MMAPLOCK_SHARED" }, \
-> +	{ XFS_DAX_EXCL,   	"DAX_EXCL" }, \
+util_suspend() -> srv->util_pre_suspend() disables the tasklet and cancels =
+any
+pening work items, so there is no race in the kernel space, either.
 
-Whitespace between the comma & string.
-
-> +	{ XFS_DAX_SHARED,	"DAX_SHARED" }
->  
->  
->  /*
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index d6843cdb51d0..a2f2604c3187 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -1158,6 +1158,16 @@ xfs_vn_tmpfile(
->  	return xfs_generic_create(dir, dentry, mode, 0, true);
->  }
->  
-> +static void xfs_lock_mode(struct inode *inode)
-> +{
-> +	xfs_ilock(XFS_I(inode), XFS_DAX_SHARED);
-> +}
-> +
-> +static void xfs_unlock_mode(struct inode *inode)
-> +{
-> +	xfs_iunlock(XFS_I(inode), XFS_DAX_SHARED);
-> +}
-> +
->  static const struct inode_operations xfs_inode_operations = {
->  	.get_acl		= xfs_get_acl,
->  	.set_acl		= xfs_set_acl,
-> @@ -1168,6 +1178,18 @@ static const struct inode_operations xfs_inode_operations = {
->  	.update_time		= xfs_vn_update_time,
->  };
->  
-> +static const struct inode_operations xfs_reg_inode_operations = {
-> +	.get_acl		= xfs_get_acl,
-> +	.set_acl		= xfs_set_acl,
-> +	.getattr		= xfs_vn_getattr,
-> +	.setattr		= xfs_vn_setattr,
-> +	.listxattr		= xfs_vn_listxattr,
-> +	.fiemap			= xfs_vn_fiemap,
-> +	.update_time		= xfs_vn_update_time,
-> +	.lock_mode              = xfs_lock_mode,
-> +	.unlock_mode            = xfs_unlock_mode,
-> +};
-> +
->  static const struct inode_operations xfs_dir_inode_operations = {
->  	.create			= xfs_vn_create,
->  	.lookup			= xfs_vn_lookup,
-> @@ -1372,7 +1394,7 @@ xfs_setup_iops(
->  
->  	switch (inode->i_mode & S_IFMT) {
->  	case S_IFREG:
-> -		inode->i_op = &xfs_inode_operations;
-> +		inode->i_op = &xfs_reg_inode_operations;
-
-xfs_file_inode_operations?
-
---D
-
->  		inode->i_fop = &xfs_file_operations;
->  		if (IS_DAX(inode))
->  			inode->i_mapping->a_ops = &xfs_dax_aops;
-> -- 
-> 2.21.0
-> 
+Thanks,
+-- Dexuan
