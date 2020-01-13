@@ -2,103 +2,109 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94EA3C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 772F7C33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71623207FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 498E32081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:58:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NHEwTrMw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgAMO62 (ORCPT
+        id S1729019AbgAMO6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:58:28 -0500
-Received: from mout.kundenserver.de ([212.227.126.134]:42209 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728843AbgAMO60 (ORCPT
+        Mon, 13 Jan 2020 09:58:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21796 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728843AbgAMO6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:58:26 -0500
-Received: from mail-qk1-f176.google.com ([209.85.222.176]) by
- mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M7sYM-1inBgI1Gmw-004yL9; Mon, 13 Jan 2020 15:58:24 +0100
-Received: by mail-qk1-f176.google.com with SMTP id 21so8725826qky.4;
-        Mon, 13 Jan 2020 06:58:23 -0800 (PST)
-X-Gm-Message-State: APjAAAUbNqze/5WHU/VQKdKP7l15iFx7vqZkQBbUtwrg2rEFOih2nvok
-        8xoTEJSzGEhx8CD9OsYPc0PdMQtCxiZsT8xk8bk=
-X-Google-Smtp-Source: APXvYqzX7zxX9pH9pukwYKAE1ykcYEuCeLn0zthJITtwFy7WB/faO8CKwqctjvI/3df/TsYu7rTH9XkGLixY8gA4z0M=
-X-Received: by 2002:a37:2f02:: with SMTP id v2mr16183662qkh.3.1578927503022;
- Mon, 13 Jan 2020 06:58:23 -0800 (PST)
+        Mon, 13 Jan 2020 09:58:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578927518;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0iWBtjb/6H1xhRa1v3TPsGTDIS/S6k7aw42PEobHbYw=;
+        b=NHEwTrMwfykcAI9PlOKEyLWzwEk2kqwhdHXX0lnKwmpJXJEceD3txx5Ukso34rn0fIUR+r
+        8H02ydPX/eKZ/NS3W4jWmhR/gsW6BU/I4sQ8/zBWIyzfaYVvoqAWA8V6DVKfmgZYsWuufQ
+        eHr0eKVeeYBOX3z+eEbEx1q6mXKH6cs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-195-a5a4ngezNMODdqjQUq1ofA-1; Mon, 13 Jan 2020 09:58:31 -0500
+X-MC-Unique: a5a4ngezNMODdqjQUq1ofA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 522D31856A63;
+        Mon, 13 Jan 2020 14:58:30 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B3F3560BE2;
+        Mon, 13 Jan 2020 14:58:29 +0000 (UTC)
+Subject: Re: [PATCH v2 1/6] locking/lockdep: Track number of zapped classes
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
+References: <20191216151517.7060-1-longman@redhat.com>
+ <20191216151517.7060-2-longman@redhat.com>
+ <20200113145542.GV2844@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <137a3e75-ca3c-2222-d2af-a6b7bb692b66@redhat.com>
+Date:   Mon, 13 Jan 2020 09:58:29 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200107175927.4558-1-sargun@sargun.me> <20200107175927.4558-3-sargun@sargun.me>
-In-Reply-To: <20200107175927.4558-3-sargun@sargun.me>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 13 Jan 2020 15:58:07 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a10iVg6dyvGGLjjdvyUcBQhzC5zmwBzS_Bfpk0FQE4k5Q@mail.gmail.com>
-Message-ID: <CAK8P3a10iVg6dyvGGLjjdvyUcBQhzC5zmwBzS_Bfpk0FQE4k5Q@mail.gmail.com>
-Subject: Re: [PATCH v9 2/4] pid: Implement pidfd_getfd syscall
-To:     Sargun Dhillon <sargun@sargun.me>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Tycho Andersen <tycho@tycho.ws>, Jann Horn <jannh@google.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Gian-Carlo Pascutto <gpascutto@mozilla.com>,
-        =?UTF-8?Q?Emilio_Cobos_=C3=81lvarez?= <ealvarez@mozilla.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        Jed Davis <jld@mozilla.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:RBYwWIZw/kZBa5CmRIX3QhyHidRUSWlKxEfoRbEe6X188nb13TI
- ySzGcm53kIpaOZUKB9bDdys+roSq7c8k7YVLfYmFP5FFVLW+EhPZ2sIwCbKYmBw0hWYgkJa
- 3MfjvuWDcQxCZ7+l50dZmyrGjEiuFbToSvMWHCYVz40cFdUOlzQMQPG9OhO1rx6o3rV+1Dv
- t9qRX/13OM4N20iNpwlBQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:oUvEwSvEgOU=:tr6uYQhYPG+ktVz1ywqzbD
- z7XFXvdLpjTpL+IW5Hgs6hOid8xEcNFxveuNsa4U5LCV5pkln6s4LadDOTwXyaTe4o9ugTKdr
- Ew7djvNdUej9U8y22H7NyTbYruA+KbDK44ZiHa+1ki9Ad8kx2aLvdyzaWiC2qEPxV55hm7m5V
- tW4IdAVLr70EjVxvG53zRFc/bQH5SA+vhX3mS6fZ7X5Wcd3RqycnRjnYj7uqV5v48s1nttWT9
- A62T248O7QV+2aq+2ldP62zLbnWsZsc5dwuLPhHPn+wbYxSV2OZbDLjsZQNZdi1s/gplNlrik
- 5HJSwBqSdaabOzHz+awAxCpKxt5vsFFJfBQH6IRhEf4hxaY4pHUV6pMjPTeo0Mj0LriXJNV1H
- RNopgKp8ZdPqTcV6dwKKp2K7PYTRCP9uA/A+BycVeecvqqL/o8PcuQGRfmZBUM831ceG5ZRnD
- X9xPHx8OrwsNq/T/tY2wCQzcrOpK/olx8z7K+rKLIaeOw+Nqaimc4e/Ld54YWYMnBIrO+i0Kp
- ZP2G8OGrbEFY/w8tw8FUPdSwgtgazxMiyb8PVJ+5l8dmNySuR8rDJeRB+FKNmMmNwHMlzaedl
- qntm6/+a+HZuWgnwKxOGjy5ySBdD5C/tcztQp1X6Q5gP5FBWMzY53xG+pAMitXBjelRLpGw8v
- pupqfzkNXpmV0JtnCzV6TAwmG60htuZS0bSQ5LvCdbfrQ7QAReyauxjbU+91mjy8mi9/splvO
- VplgKmKbw3WqpXvPoyr3RvqB+R68Nfp8ew9hKYUY4LMCggtZYiAZu5NwcVYA8uRiOAE6RlTax
- RxCEkhDNye7XQtX+86wAx4WYsHE1OaEsDQwHQFHPExNAPM0BjK8U3485il7SS+pBNZy3VL0dV
- 3zHsrnI0UrjHkA2fCSHw==
+In-Reply-To: <20200113145542.GV2844@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 7, 2020 at 6:59 PM Sargun Dhillon <sargun@sargun.me> wrote:
-> +/**
-> + * sys_pidfd_getfd() - Get a file descriptor from another process
-> + *
-> + * @pidfd:     the pidfd file descriptor of the process
-> + * @fd:                the file descriptor number to get
-> + * @flags:     flags on how to get the fd (reserved)
-> + *
-> + * This syscall gets a copy of a file descriptor from another process
-> + * based on the pidfd, and file descriptor number. It requires that
-> + * the calling process has the ability to ptrace the process represented
-> + * by the pidfd. The process which is having its file descriptor copied
-> + * is otherwise unaffected.
-> + *
-> + * Return: On success, a cloexec file descriptor is returned.
-> + *         On error, a negative errno number will be returned.
-> + */
-> +SYSCALL_DEFINE3(pidfd_getfd, int, pidfd, int, fd,
-> +               unsigned int, flags)
+On 1/13/20 9:55 AM, Peter Zijlstra wrote:
+> On Mon, Dec 16, 2019 at 10:15:12AM -0500, Waiman Long wrote:
+>> The whole point of the lockdep dynamic key patch is to allow unused
+>> locks to be removed from the lockdep data buffers so that existing
+>> buffer space can be reused. However, there is no way to find out how
+>> many unused locks are zapped and so we don't know if the zapping process
+>> is working properly.
+>>
+>> Add a new nr_zapped_classes variable to track that and show it in
+>> /proc/lockdep_stats if it is non-zero.
+>>
+>> diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+>> index dadb7b7fba37..d98d349bb648 100644
+>> --- a/kernel/locking/lockdep_proc.c
+>> +++ b/kernel/locking/lockdep_proc.c
+>> @@ -336,6 +336,15 @@ static int lockdep_stats_show(struct seq_file *m, void *v)
+>>  	seq_printf(m, " debug_locks:                   %11u\n",
+>>  			debug_locks);
+>>  
+>> +	/*
+>> +	 * Zappped classes and lockdep data buffers reuse statistics.
+>> +	 */
+>> +	if (!nr_zapped_classes)
+>> +		return 0;
+>> +
+>> +	seq_puts(m, "\n");
+>> +	seq_printf(m, " zapped classes:                %11lu\n",
+>> +			nr_zapped_classes);
+>>  	return 0;
+>>  }
+> Why is that conditional?
+>
+Because I thought zapping class doesn't occur that often. Apparently,
+class zapping happens when the system first boots up. I guess that
+conditional check isn't needed. I can remove it in the next version.
 
-This is the most sensible definition I can see. I can not tell
-whether we should or want to have it, but if everyone thinks
-this is a good idea, then this ABI makes sense.
+Cheers,
+Longman
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
