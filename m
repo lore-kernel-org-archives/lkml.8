@@ -2,244 +2,75 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A001C33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55100C33CAE
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA8882187F
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:02:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A/xMlDoR"
+	by mail.kernel.org (Postfix) with ESMTP id 2E5FD2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 07:04:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728687AbgAMHC7 (ORCPT
+        id S1728714AbgAMHD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 02:02:59 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:42907 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725954AbgAMHC6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 02:02:58 -0500
-Received: by mail-qk1-f196.google.com with SMTP id z14so7579497qkg.9
-        for <linux-kernel@vger.kernel.org>; Sun, 12 Jan 2020 23:02:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2K36+LY4tN/Cuk9TuKZ9obMWdWD2cQOBdE1ooq67vcY=;
-        b=A/xMlDoReXGb70l5stlQeC5VS6KsRtK3WJhpU6b+scCfDM3Vf0zDYy+RAF+OIF4lrA
-         fMSXjyto0aKufDajYSWeZzCh/lOr7eBgVuz3C3n1aNEXCmodW5s7FMPq2vhMpGeMawu5
-         dM1ZJv50OY3YhDsvyyQCa9w5fBvuu34+PBwbY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2K36+LY4tN/Cuk9TuKZ9obMWdWD2cQOBdE1ooq67vcY=;
-        b=kr00BFy4jQT61lzQgrlnEQJFHuiXlX3BOX4ULs9RDMTs+xBL9512UE/psyugmxfcI4
-         uiRtm4SeZ9m3Lh7d4KsRMIrXoW1fyMeAPk8IhcLlQAly3Xyz5aeq9vn/oYx5abO2pReB
-         dAhqnanlHQn0mgvPF1hT08Rxbu50NO5hZZxSwbor7aNpBdmzzJGgLz9MhrLQRnAOlfAs
-         j5UtKVcUI8cY1w4icYkI+A2U/qdH8XyJSEG85T9XvXu9hQItKDRjzPnAGjODKffxEJ7r
-         yLKsznWrcvJKK3+45Rj1395Wj5ptVwOvkPhcKdu4Dy9xlKWuNOd8zjZlsZ1v8evhugF1
-         lUzg==
-X-Gm-Message-State: APjAAAV4QN5lYtMu1ZKrmrQRLHkbLaBp9/RDjNUa97RiObkig/vjrHV8
-        VdFEp50QVnD+tSJkIOukYs9USArIPdarHGbmLjCfUh5S
-X-Google-Smtp-Source: APXvYqzyFcsTC6SV/9v+0c2iO5eTJ1fr5S8u1LUXKUfdU24tfRLPsnI2WnOV4KaJ6n0aX7Qh/FjTi4RgwzDmSx7ggc8=
-X-Received: by 2002:a05:620a:6d7:: with SMTP id 23mr14161009qky.299.1578898977343;
- Sun, 12 Jan 2020 23:02:57 -0800 (PST)
-MIME-Version: 1.0
-References: <20190906100514.30803-1-roger.lu@mediatek.com> <20190906100514.30803-2-roger.lu@mediatek.com>
- <20190930133548.GA24574@bogus> <1577429450.10290.47.camel@mtksdaap41>
-In-Reply-To: <1577429450.10290.47.camel@mtksdaap41>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Mon, 13 Jan 2020 15:02:46 +0800
-Message-ID: <CANMq1KDHPA9eOufL5X9OLfQESL=MdHvuQfQkyJ1Q381MeDkSQQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] dt-bindings: soc: add mtk svs dt-bindings
-To:     Roger Lu <roger.lu@mediatek.com>
-Cc:     Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@kernel.org>,
-        Nicolas Boichat <drinkcat@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Fan Chen <fan.chen@mediatek.com>,
-        HenryC Chen <HenryC.Chen@mediatek.com>,
-        YT Lee <yt.lee@mediatek.com>,
-        Angus Lin <Angus.Lin@mediatek.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Nishanth Menon <nm@ti.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        lkml <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 13 Jan 2020 02:03:59 -0500
+Received: from mga07.intel.com ([134.134.136.100]:40143 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725954AbgAMHD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 02:03:59 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 12 Jan 2020 23:03:58 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,428,1571727600"; 
+   d="scan'208";a="247622717"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Jan 2020 23:03:57 -0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: [PATCH] mm/gup.c: use is_vm_hugetlb_page() to check whether to follow huge
+Date:   Mon, 13 Jan 2020 15:03:22 +0800
+Message-Id: <20200113070322.26627-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 2:51 PM Roger Lu <roger.lu@mediatek.com> wrote:
->
-> Dear Rob,
->
-> Sorry for the late reply.
->
-> On Mon, 2019-09-30 at 08:35 -0500, Rob Herring wrote:
-> > On Fri, Sep 06, 2019 at 06:05:13PM +0800, Roger Lu wrote:
-> > > Document the binding for enabling mtk svs on MediaTek SoC.
-> > >
-> > > Signed-off-by: Roger Lu <roger.lu@mediatek.com>
-> > > ---
-> > >  .../devicetree/bindings/power/mtk-svs.txt     | 88 +++++++++++++++++++
-> > >  1 file changed, 88 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/power/mtk-svs.txt b/Documentation/devicetree/bindings/power/mtk-svs.txt
-> > > new file mode 100644
-> > > index 000000000000..6a71992ef162
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/power/mtk-svs.txt
-> > > @@ -0,0 +1,88 @@
-> > > +* Mediatek Smart Voltage Scaling (MTK SVS)
-> > > +
-> > > +This describes the device tree binding for the MTK SVS controller (bank)
-> > > +which helps provide the optimized CPU/GPU/CCI voltages. This device also
-> > > +needs thermal data to calculate thermal slope for accurately compensate
-> > > +the voltages when temperature change.
-> > > +
-> > > +Required properties:
-> > > +- compatible:
-> > > +  - "mediatek,mt8183-svs" : For MT8183 family of SoCs
-> > > +- reg: Address range of the MTK SVS controller.
-> > > +- interrupts: IRQ for the MTK SVS controller.
-> > > +- clocks, clock-names: Clocks needed for the svs controller. required
-> > > +                       clocks are:
-> > > +                  "main_clk": Main clock needed for register access
-> >
-> > '_clk' is redundant.
->
-> Oh Okay. I'll remove _clk. Thanks.
->
-> >
-> > > +- nvmem-cells: Phandle to the calibration data provided by a nvmem device.
-> > > +- nvmem-cell-names: Should be "svs-calibration-data" and "calibration-data"
-> > > +
-> > > +Subnodes:
-> > > +- svs_cpu_little: SVS bank device node of little CPU
-> > > +  compatible: "mediatek,mt8183-svs-cpu-little"
-> > > +  operating-points-v2: OPP table hooked by SVS little CPU bank.
-> > > +                  SVS will optimze this OPP table voltage part.
-> > > +  vcpu-little-supply: PMIC buck of little CPU
-> > > +- svs_cpu_big: SVS bank device node of big CPU
-> > > +  compatible: "mediatek,mt8183-svs-cpu-big"
-> > > +  operating-points-v2: OPP table hooked by SVS big CPU bank.
-> > > +                  SVS will optimze this OPP table voltage part.
-> > > +  vcpu-big-supply: PMIC buck of big CPU
-> > > +- svs_cci: SVS bank device node of CCI
-> > > +  compatible: "mediatek,mt8183-svs-cci"
-> > > +  operating-points-v2: OPP table hooked by SVS CCI bank.
-> > > +                  SVS will optimze this OPP table voltage part.
-> > > +  vcci-supply: PMIC buck of CCI
-> > > +- svs_gpu: SVS bank device node of GPU
-> > > +  compatible: "mediatek,mt8183-svs-gpu"
-> > > +  operating-points-v2: OPP table hooked by SVS GPU bank.
-> > > +                  SVS will optimze this OPP table voltage part.
-> > > +  vgpu-spply: PMIC buck of GPU
-> > > +
-> > > +Example:
-> > > +
-> > > +   svs: svs@1100b000 {
-> > > +           compatible = "mediatek,mt8183-svs";
-> > > +           reg = <0 0x1100b000 0 0x1000>;
-> > > +           interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW 0>;
-> >
-> > GIC interrupts are 3 cells, you have 4.
->
-> Oops, I'll remove the fourth parameter. Thanks a lot.
->
-> >
-> > > +           clocks = <&infracfg CLK_INFRA_THERM>;
-> > > +           clock-names = "main_clk";
-> > > +           nvmem-cells = <&svs_calibration>, <&thermal_calibration>;
-> > > +           nvmem-cell-names = "svs-calibration-data", "calibration-data";
-> > > +
-> > > +           svs_cpu_little: svs_cpu_little {
-> >
-> > Don't use '_' in node names.
->
-> Okay. I'll replace it with '-'. Thanks.
->
-> >
-> > > +                   compatible = "mediatek,mt8183-svs-cpu-little";
-> > > +                   operating-points-v2 = <&cluster0_opp>;
-> > > +           };
-> > > +
-> > > +           svs_cpu_big: svs_cpu_big {
-> > > +                   compatible = "mediatek,mt8183-svs-cpu-big";
-> > > +                   operating-points-v2 = <&cluster1_opp>;
-> > > +           };
-> > > +
-> > > +           svs_cci: svs_cci {
-> > > +                   compatible = "mediatek,mt8183-svs-cci";
-> > > +                   operating-points-v2 = <&cci_opp>;
-> > > +           };
-> > > +
-> > > +           svs_gpu: svs_gpu {
-> > > +                   compatible = "mediatek,mt8183-svs-gpu";
-> > > +                   power-domains = <&scpsys MT8183_POWER_DOMAIN_MFG_2D>;
-> > > +                   operating-points-v2 = <&gpu_opp_table>;
-> > > +           };
-> > > +   };
-> > > +
-> > > +   &svs_cpu_little {
-> > > +           vcpu-little-supply = <&mt6358_vproc12_reg>;
-> >
-> > It's already defined to have OPP and supply in the cpu nodes. Parse them
-> > to get this information rather than duplicating it here.
-> >
-> > The same should apply to the CCI and GPU.
->
-> Please let me explain the reason why I add SVS sub-nodes. I ever try to
-> parse other nodes to get desired power-domains/OPP table. However, it
-> makes SVS driver harder to develop and maintain.
->
-> 1. When a SVS-controller-init wants GPU_CORE0's OPP table in one node
-> but it needs power-domains(GPU_MFG_2D) in another node, it becomes
-> complicated and confusing when SVS sub-node tries to parse many nodes.
-> Therefore, we want SVS sub-node to focus on what SVS bank requires by
-> how we do in this patch.
->
-> 2. In hardware point of view, SVS controller depends on other hardware's
-> power only. All the SVS controller registers are in SVS hardware. So, we
-> think It's good that SVS sub-node describes what SVS controller requires
-> instead of linking other subsys nodes and parse the property that SVS
-> controller needs.
->
-> 3. We want SVS driver to have a generic way to attain subsys device for
-> using "pm_runtime and OPP framework" API. If SVS driver tries to parse
-> CPU(little/big core) and other subsys device node(e.g cci/gpu), it means
-> SVS driver has to maintain different methodologies(cpu-specific?
-> devfreq? others?) in order to get CPU(little/big core) and other subsys
-> device(e.g cci/gpu) for using "pm_runtime and OPP framework" API.
+No functional change, just leverage the helper function to improve
+readability as others.
 
-(Didn't see this more complete reply before replying to v6, I can see
-your argument, but if we wanted to push further to have the sub-device
-node in the DT)
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+---
+ mm/gup.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-From what I see, the SVS driver for node x (cpu/cci/gpu) requires only 3 things:
- - An OPP table => that should always be "operating-points-v2"
-property of the node x.
- - A power domain => that should always be power-domains property of node x.
- - A regulator. That one is a bit tricky as the cpu/cci uses "proc",
-but gpu uses "mali" (at least on 8183). But maybe you can add a
-child-regulator-name property or something to the DT so that the SVS
-driver can find the correct regulator?
+diff --git a/mm/gup.c b/mm/gup.c
+index 7646bf993b25..7705929cc920 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -323,7 +323,7 @@ static struct page *follow_pmd_mask(struct vm_area_struct *vma,
+ 	pmdval = READ_ONCE(*pmd);
+ 	if (pmd_none(pmdval))
+ 		return no_page_table(vma, flags);
+-	if (pmd_huge(pmdval) && vma->vm_flags & VM_HUGETLB) {
++	if (pmd_huge(pmdval) && is_vm_hugetlb_page(vma)) {
+ 		page = follow_huge_pmd(mm, address, pmd, flags);
+ 		if (page)
+ 			return page;
+@@ -433,7 +433,7 @@ static struct page *follow_pud_mask(struct vm_area_struct *vma,
+ 	pud = pud_offset(p4dp, address);
+ 	if (pud_none(*pud))
+ 		return no_page_table(vma, flags);
+-	if (pud_huge(*pud) && vma->vm_flags & VM_HUGETLB) {
++	if (pud_huge(*pud) && is_vm_hugetlb_page(vma)) {
+ 		page = follow_huge_pud(mm, address, pud, flags);
+ 		if (page)
+ 			return page;
+-- 
+2.17.1
 
-Seems like the solution could be quite generic?
-
-> >
-> > Rob
->
-> Sincerely,
-> Roger Lu.
