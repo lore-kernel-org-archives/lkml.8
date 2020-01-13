@@ -7,185 +7,182 @@ X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B3DC33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF56EC33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CD1420661
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CB7A20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 10:48:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dmdaEKfL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pw7hqJKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728688AbgAMKsg (ORCPT
+        id S1728748AbgAMKsl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 05:48:36 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:37051 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728641AbgAMKse (ORCPT
+        Mon, 13 Jan 2020 05:48:41 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24310 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726109AbgAMKsl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 05:48:34 -0500
-Received: by mail-wm1-f66.google.com with SMTP id f129so9063691wmf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:48:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Q72nxyYifHuN/2SoRmUuohcGv85roM34W+YCiMDzhOU=;
-        b=dmdaEKfLffOvuwT8MuhA2MntZz1aFWQRQRH8ewU8dUHRnXYtyeD/Ic2FRFbsUl2JEo
-         wRVAvMLgz56QLfUc9K9i0YKOv53V959l6eJRvB8tkUxsxv8uDfztCiT+ZIA9co3ov44f
-         l0TvwnZi0XDy7U1MIpI2r7RPLoBB5FkY0zCx0=
+        Mon, 13 Jan 2020 05:48:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578912519;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aa4HX84hAhpIknxyck8cItGKlnCo160P9lSeifojd4I=;
+        b=Pw7hqJKxUHHVf1tmILm4pso94Y46UstrHxGeLF5Fwwb0btv+5RRQvozquX6VSRZj1fo1Zb
+        eUHovQ3kly4o0L/1DuB3aWbv/9YtFYCHY976ca8X1xLTZGM/xrjSYu+MCF8HLMACMuW6jP
+        BXNkJSPm2kt+z8GJkOhYalZ3uHooEWg=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-234-TFB8nvnTNcegc9SYAWGbRQ-1; Mon, 13 Jan 2020 05:48:38 -0500
+X-MC-Unique: TFB8nvnTNcegc9SYAWGbRQ-1
+Received: by mail-wm1-f69.google.com with SMTP id w205so2384063wmb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 02:48:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q72nxyYifHuN/2SoRmUuohcGv85roM34W+YCiMDzhOU=;
-        b=KgPlTgP5eIaBVoD9ggCeeVww6I/QziniAWsSFQ9zOMk59GhjEELAUoterGAzWxVpJC
-         uvDWusPUNtOEXvo4MIWfEgWAWalctd0sHVfTZDnC0ukFET953Mhtsn3PLI/RbmBf51SD
-         hwk2Me74A6RHbr6ahyguQOPuHbw5xjpB+9qHcwwa6VuVEalN3BHm5zXMnJDK5o5awdDF
-         Vi4rUvojbtPnRNhud6NtDuXkjvA9v4iONG2g8ewlDhNQbCIYygSxyqu/mNFcHyxY8rIv
-         gCJytM1EdGKu3NxknfHNwltFs402qjj0sO1WN9NvP3WaZaKWYHUKTiXndFTPn15H383+
-         hRPg==
-X-Gm-Message-State: APjAAAX2t8bRoxltd1v/gq0CTjEiLpty6Z/9CiJ6Kny5ujUVSNfzfIWQ
-        sbPPYs+9/v4SygF8uau33rJ8aA==
-X-Google-Smtp-Source: APXvYqxNeOGAz2aOzj9D5YgGs3DM/AjYyoLeykfRXdr8x4952mDTvGKJPdy/xh9j5SZPBakRbNV3TQ==
-X-Received: by 2002:a7b:c38c:: with SMTP id s12mr19266314wmj.96.1578912512152;
-        Mon, 13 Jan 2020 02:48:32 -0800 (PST)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id q14sm14239337wmj.14.2020.01.13.02.48.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 02:48:31 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Mon, 13 Jan 2020 11:48:30 +0100
-To:     Florent Revest <revest@chromium.org>
-Cc:     linux-integrity@vger.kernel.org, kpsingh@chromium.org,
-        mjg59@google.com, zohar@linux.ibm.com, nramas@linux.microsoft.com,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Florent Revest <revest@google.com>
-Subject: Re: [PATCH v2] ima: add the ability to query the hash of a given
- file.
-Message-ID: <20200113104830.GA28588@google.com>
-References: <20200106162524.164650-1-revest@chromium.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=aa4HX84hAhpIknxyck8cItGKlnCo160P9lSeifojd4I=;
+        b=iuhK8ZC0L9IQXFCxu0aXYTkp4XiaqFJV9DboBiGnKYEHB1OXppMc5DkZFjBDUbR+Op
+         TUhfcPbNzDLCP+4JMC6l3/ypODy3bmiZY96LkIN8/aU9UXryLr+dCYtS33D0+3glTjUU
+         HmbB4qKcfoyPzCssvR325S4cejRA4tToYj5V76WCuGM5s/tNtRDoiFWod2KqdH/xf8bd
+         EBdySORl5OESx63HU9VnvBQjy4eA1a9vzRhLM6quBPb3q4f78BQZxvXOq9fDzunEIEIn
+         MI/ieHJn1wtVZqbTPUtacxJ7eivgd8y9VtfV5+t/q0D6s3Waif8sdzd3CkrHy+wCxt8m
+         QcJQ==
+X-Gm-Message-State: APjAAAWlPNQSW6Sl9/bbg1NCOzZA3RzEUnNmRj4dN+J51ENl28GrSa1m
+        ExO8l3KQW7U3BHvlOkcUKX2X5Dgs4HZLI87sdRM6KIeABKV9uWahMONvlWKmwLGE0t0REhui73f
+        T8nkEMcNCV8bJg920A+L2v2as
+X-Received: by 2002:a05:600c:2301:: with SMTP id 1mr20201096wmo.147.1578912517301;
+        Mon, 13 Jan 2020 02:48:37 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwKENwunxCdMWeG76eu+rMyEWGpQTWLzeQekZOw+tDy7yAhORK6tXXWFIWoyp/n8k8zUDPnRA==
+X-Received: by 2002:a05:600c:2301:: with SMTP id 1mr20201081wmo.147.1578912517114;
+        Mon, 13 Jan 2020 02:48:37 -0800 (PST)
+Received: from shalem.localdomain (2001-1c00-0c0c-fe00-7e79-4dac-39d0-9c14.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:7e79:4dac:39d0:9c14])
+        by smtp.gmail.com with ESMTPSA id o129sm13871135wmb.1.2020.01.13.02.48.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jan 2020 02:48:35 -0800 (PST)
+Subject: Re: [PATCH 2/3] Input: axp20x-pek - Respect userspace wakeup
+ configuration
+To:     Samuel Holland <samuel@sholland.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+References: <20200113032032.38709-1-samuel@sholland.org>
+ <20200113032032.38709-2-samuel@sholland.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <84e9f44e-81e1-ab3d-3dd0-08388951b074@redhat.com>
+Date:   Mon, 13 Jan 2020 11:48:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200106162524.164650-1-revest@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200113032032.38709-2-samuel@sholland.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06-Jan 17:25, Florent Revest wrote:
-> From: Florent Revest <revest@google.com>
-> 
-> This allows other parts of the kernel (perhaps a stacked LSM allowing
-> system monitoring, eg. the proposed KRSI LSM [1]) to retrieve the hash
-> of a given file from IMA if it's present in the iint cache.
-> 
-> It's true that the existence of the hash means that it's also in the
-> audit logs or in /sys/kernel/security/ima/ascii_runtime_measurements,
-> but it can be difficult to pull that information out for every
-> subsequent exec.  This is especially true if a given host has been up
-> for a long time and the file was first measured a long time ago.
-> 
-> This is based on Peter Moody's patch:
->  https://sourceforge.net/p/linux-ima/mailman/message/33036180/
-> 
-> [1] https://lkml.org/lkml/2019/9/10/393
-> 
-> Signed-off-by: Florent Revest <revest@google.com>
+Hi,
 
-Thanks for adding this Florent!
-
-Reviewed-by: KP Singh <kpsingh@chromium.org>
-
+On 13-01-2020 04:20, Samuel Holland wrote:
+> Unlike most other power button drivers, this driver unconditionally
+> enables its wakeup IRQ. It should be using device_may_wakeup() to
+> respect the userspace configuration of wakeup sources.
+> 
+> Because the AXP20x MFD device uses regmap-irq, the AXP20x PEK IRQs are
+> nested off of regmap-irq's threaded interrupt handler. The device core
+> ignores such interrupts, so to actually disable wakeup, we must
+> explicitly disable all non-wakeup interrupts during suspend.
+> 
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 > ---
->  include/linux/ima.h               |  6 ++++
->  security/integrity/ima/ima_main.c | 46 +++++++++++++++++++++++++++++++
->  2 files changed, 52 insertions(+)
+>   drivers/input/misc/axp20x-pek.c | 42 ++++++++++++++++++++++++++++++++-
+>   1 file changed, 41 insertions(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index 6d904754d858..d621c65ba9a5 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -23,6 +23,7 @@ extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
->  extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
->  			      enum kernel_read_file_id id);
->  extern void ima_post_path_mknod(struct dentry *dentry);
-> +extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
->  extern void ima_kexec_cmdline(const void *buf, int size);
->  
->  #ifdef CONFIG_IMA_KEXEC
-> @@ -91,6 +92,11 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
->  	return;
->  }
->  
-> +static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
+> diff --git a/drivers/input/misc/axp20x-pek.c b/drivers/input/misc/axp20x-pek.c
+> index 7d0ee5bececb..38cd4a4aeb65 100644
+> --- a/drivers/input/misc/axp20x-pek.c
+> +++ b/drivers/input/misc/axp20x-pek.c
+> @@ -280,7 +280,7 @@ static int axp20x_pek_probe_input_device(struct axp20x_pek *axp20x_pek,
+>   	}
+>   
+>   	if (axp20x_pek->axp20x->variant == AXP288_ID)
+> -		enable_irq_wake(axp20x_pek->irq_dbr);
+> +		device_init_wakeup(&pdev->dev, true);
+>   
+>   	return 0;
+>   }
+> @@ -352,6 +352,45 @@ static int axp20x_pek_probe(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> +#if CONFIG_PM_SLEEP
+
+As the kbuild test robot pointed out, you need to use #ifdef here.
+
+Otherwise this patch looks good to me:
+
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+
+Regards,
+
+Hans
+
+
+
+> +static int axp20x_pek_suspend(struct device *dev)
 > +{
-> +	return -EOPNOTSUPP;
-> +}
+> +	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
 > +
->  static inline void ima_kexec_cmdline(const void *buf, int size) {}
->  #endif /* CONFIG_IMA */
->  
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index d7e987baf127..3799b6c6c3b8 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -445,6 +445,52 @@ int ima_file_check(struct file *file, int mask)
->  }
->  EXPORT_SYMBOL_GPL(ima_file_check);
->  
-> +/**
-> + * ima_file_hash - return the stored measurement if a file has been hashed.
-> + * @file: pointer to the file
-> + * @buf: buffer in which to store the hash
-> + * @buf_size: length of the buffer
-> + *
-> + * On success, return the hash algorithm (as defined in the enum hash_algo).
-> + * If buf is not NULL, this function also outputs the hash into buf.
-> + * If the hash is larger than buf_size, then only buf_size bytes will be copied.
-> + * It generally just makes sense to pass a buffer capable of holding the largest
-> + * possible hash: IMA_MAX_DIGEST_SIZE
-> + *
-> + * If IMA is disabled or if no measurement is available, return -EOPNOTSUPP.
-> + * If the parameters are incorrect, return -EINVAL.
-> + */
-> +int ima_file_hash(struct file *file, char *buf, size_t buf_size)
-> +{
-> +	struct inode *inode;
-> +	struct integrity_iint_cache *iint;
-> +	int hash_algo;
-> +
-> +	if (!file)
-> +		return -EINVAL;
-> +
-> +	if (!ima_policy_flag)
-> +		return -EOPNOTSUPP;
-> +
-> +	inode = file_inode(file);
-> +	iint = integrity_iint_find(inode);
-> +	if (!iint)
-> +		return -EOPNOTSUPP;
-> +
-> +	mutex_lock(&iint->mutex);
-> +	if (buf) {
-> +		size_t copied_size;
-> +
-> +		copied_size = min_t(size_t, iint->ima_hash->length, buf_size);
-> +		memcpy(buf, iint->ima_hash->digest, copied_size);
+> +	/*
+> +	 * Nested threaded interrupts are not automatically
+> +	 * disabled, so we must do it explicitly.
+> +	 */
+> +	if (device_may_wakeup(dev)) {
+> +		enable_irq_wake(axp20x_pek->irq_dbf);
+> +		enable_irq_wake(axp20x_pek->irq_dbr);
+> +	} else {
+> +		disable_irq(axp20x_pek->irq_dbf);
+> +		disable_irq(axp20x_pek->irq_dbr);
 > +	}
-> +	hash_algo = iint->ima_hash->algo;
-> +	mutex_unlock(&iint->mutex);
 > +
-> +	return hash_algo;
+> +	return 0;
 > +}
-> +EXPORT_SYMBOL_GPL(ima_file_hash);
 > +
->  /**
->   * ima_post_create_tmpfile - mark newly created tmpfile as new
->   * @file : newly created tmpfile
-> -- 
-> 2.24.1.735.g03f4e72817-goog
+> +static int axp20x_pek_resume(struct device *dev)
+> +{
+> +	struct axp20x_pek *axp20x_pek = dev_get_drvdata(dev);
+> +
+> +	if (device_may_wakeup(dev)) {
+> +		disable_irq_wake(axp20x_pek->irq_dbf);
+> +		disable_irq_wake(axp20x_pek->irq_dbr);
+> +	} else {
+> +		enable_irq(axp20x_pek->irq_dbf);
+> +		enable_irq(axp20x_pek->irq_dbr);
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(axp20x_pek_pm_ops, axp20x_pek_suspend,
+> +					    axp20x_pek_resume);
+> +
+>   static const struct platform_device_id axp_pek_id_match[] = {
+>   	{
+>   		.name = "axp20x-pek",
+> @@ -371,6 +410,7 @@ static struct platform_driver axp20x_pek_driver = {
+>   	.driver		= {
+>   		.name		= "axp20x-pek",
+>   		.dev_groups	= axp20x_groups,
+> +		.pm		= &axp20x_pek_pm_ops,
+>   	},
+>   };
+>   module_platform_driver(axp20x_pek_driver);
 > 
+
