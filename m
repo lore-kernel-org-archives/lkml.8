@@ -2,135 +2,155 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC2FC33CAC
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20BDC33CA8
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF4AA2082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8402075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 09:49:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="FA596WLw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgAMJtB (ORCPT
+        id S1728750AbgAMJtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 04:49:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:36528 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbgAMJtA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 04:49:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAE42106F;
-        Mon, 13 Jan 2020 01:48:59 -0800 (PST)
-Received: from [10.162.43.142] (p8cg001049571a15.blr.arm.com [10.162.43.142])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 81C9D3F534;
-        Mon, 13 Jan 2020 01:48:52 -0800 (PST)
-Subject: Re: [PATCH V11 1/5] mm/hotplug: Introduce arch callback validating
- the hot remove range
-To:     David Hildenbrand <dhildenb@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        akpm@linux-foundation.org, catalin.marinas@arm.com,
-        will@kernel.org, mark.rutland@arm.com, cai@lca.pw,
-        logang@deltatee.com, cpandya@codeaurora.org, arunks@codeaurora.org,
-        dan.j.williams@intel.com, mgorman@techsingularity.net,
-        osalvador@suse.de, ard.biesheuvel@arm.com, steve.capper@arm.com,
-        broonie@kernel.org, valentin.schneider@arm.com,
-        robin.murphy@arm.com, steven.price@arm.com, suzuki.poulose@arm.com,
-        ira.weiny@intel.com
-References: <6f0efddc-f124-58ca-28b6-4632469cf992@arm.com>
- <3C3BE5FA-0CFC-4C90-8657-63EF5B680B0B@redhat.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <6b8fb779-31e8-1b63-85a8-9f6c93a04494@arm.com>
-Date:   Mon, 13 Jan 2020 15:20:09 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <3C3BE5FA-0CFC-4C90-8657-63EF5B680B0B@redhat.com>
-Content-Type: text/plain; charset=utf-8
+        Mon, 13 Jan 2020 04:49:08 -0500
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:13387 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbgAMJtI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 04:49:08 -0500
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Eugen.Hristev@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="Eugen.Hristev@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Eugen.Hristev@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Eugen.Hristev@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: WZfm4VPgYw30718tk1myBad2JtNcpmSphshxqVNwQklg+iN26xbAD0jtK1MFw9fKrtwsJHtQcX
+ RicJsuZIdzzEHLJvEbbX7iLhngVKblsz+7oKNthn5vnOZuOMHcJJs12Pd6vrcIAG/uMnqe8u29
+ vpaF6GsrvMKrdS06/hh8DQ4dSq2F/wjZ2QBYnP/EuIs8kGdjy6A3GomfC6m77TiA9l/lovB/bD
+ 70fjORmLuU+gGszeaC0yJPzau9pZwbnDa8BesVY5LWMy+tLWIM6MU4RowdzqsZVWpG/8jjmsvN
+ Q88=
+X-IronPort-AV: E=Sophos;i="5.69,428,1571727600"; 
+   d="scan'208";a="63046749"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 13 Jan 2020 02:49:06 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 13 Jan 2020 02:48:56 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 13 Jan 2020 02:48:56 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VQTIPULAvJFvaS32NR0YAYqH72MmdsDByumB4H9uyiwiU3zjFQSuqAC38XUZrU8m9hYlKC5Yl95AB8YWQOx/zoGWVSmtrpgT1n8A6ziAmNkkemTVrzCGLJ28dGnl4GmuJ2EbjVK5rClVQ2ZcvczN+XiiqqSKhQmANUmFcILctZBlt4AS+5CFt6BHtMDxLTZXqYPxCfHZB4i2HUlvsyIxqGCo1jykSqTy6+prkpm/YLfDkaJ4Gv3BwKccCMyyYfi2dHlVeQKArZEabUdwUQ8nPNaVNWhQ5CcigeyMf1uI7weT8xtffGB42lRKNZKtoCCZAOlbNlhJH73Mz1LJtAJagg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R0VtgJ6oP6Rd7O7iq/lcEbiNlHxtSMJk3Jevmx8d3Io=;
+ b=n9+EUCKqNpLGoTYyDapQEgbHeZy2vp9uo5W/WITjHbZRYV8KuH1z3nlnyZVdnZxvKC99DmdsVgBHk8IobHVxBKziNnhTAUVICt3dm+dW8VgQ6jpeQvqfzj8MOnV+cDBGzcVQLN4NGVKfBWRgZME4f+oJti1uSFUquVNl5ysixBaM4eEnH6tIPRrHNZbfrTSOYMT9OoIdAXmRdAXm1KY5FGjE1LJKU1lXWi/VpSesOSj24Z3OXvF6lLxlZP0zKPg5Y6pO23/O9gidm6kp3C91RoXyug7gQaBIv3cijRJa/kV9Q/6/kxjA0+OCd9Zwko9GBGUV+LBO+f6hvfdvxIIHww==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector2-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=R0VtgJ6oP6Rd7O7iq/lcEbiNlHxtSMJk3Jevmx8d3Io=;
+ b=FA596WLwZSNtjHItLfhw9xIn5+JgSHBNfngrcOaDwbDC/X17XYzP+Ajd/7LczwgIWE2SxGBj++v1ooUPHLzkoaX8+9elfc2+oULoodO8eRKa76h0rgtdMN79T3TCRH77c6t0EH2dB7/Xsrn9ngbdJmLPqQ6re8FE69OrUmMdhYY=
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com (10.168.108.8) by
+ DM5PR11MB0009.namprd11.prod.outlook.com (10.164.154.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.10; Mon, 13 Jan 2020 09:48:55 +0000
+Received: from DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::e5f6:d07d:d7de:ce79]) by DM5PR11MB1242.namprd11.prod.outlook.com
+ ([fe80::e5f6:d07d:d7de:ce79%6]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
+ 09:48:55 +0000
+From:   <Eugen.Hristev@microchip.com>
+To:     <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <Eugen.Hristev@microchip.com>
+Subject: [PATCH v4 2/2] MAINTAINERS: add atmel-isc-media.h file to ATMEL ISC
+ driver
+Thread-Topic: [PATCH v4 2/2] MAINTAINERS: add atmel-isc-media.h file to ATMEL
+ ISC driver
+Thread-Index: AQHVyfaqcQKf8ucWokmtF3E5mN58sQ==
+Date:   Mon, 13 Jan 2020 09:48:54 +0000
+Message-ID: <1578908877-14575-2-git-send-email-eugen.hristev@microchip.com>
+References: <1578908877-14575-1-git-send-email-eugen.hristev@microchip.com>
+In-Reply-To: <1578908877-14575-1-git-send-email-eugen.hristev@microchip.com>
+Accept-Language: en-US, ro-RO
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-originating-ip: [94.177.32.156]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bf92e889-e13c-4275-13a5-08d7980dcdef
+x-ms-traffictypediagnostic: DM5PR11MB0009:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR11MB00092295C9E5D2E9DFF7D7E2E8350@DM5PR11MB0009.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:361;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(136003)(39860400002)(376002)(346002)(189003)(199004)(54906003)(110136005)(4744005)(6512007)(5660300002)(26005)(8936002)(71200400001)(316002)(186003)(4326008)(86362001)(81166006)(6486002)(8676002)(2906002)(2616005)(6506007)(81156014)(107886003)(478600001)(64756008)(66556008)(66446008)(66476007)(66946007)(76116006)(36756003)(91956017);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR11MB0009;H:DM5PR11MB1242.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: VDNU+Pw/148G1ecCW+4l8AS9oODbt3CJGaNfJrRriXn6OICKRjltwt3EAq47mLsH9gJFUCZpMWh695RR05oxTfC5W/uaH1Z7GiRp1ouEg76bN8eMykwuk5vCAVulaYpLk7TA4WeW+1C02TtZYt2lX774yca64HRuc1P2IpVWaW951Gv2yzXyEWTHPLJhc0ZG82daZXSG7JNEuQNIToi3Y0Hugswb8jK+bjYBmYImE1XD5mWO/EUMIbJV+rrvZrBPlXouuxtbqZHA0dYpd7tkABL2YEwRCFm0a4behOYgvdTjeeae1XANYz0pEmU+W92HTfq+PBb9PQbnP1tyM9BpH3BqW4Om2CXQqjeC+eY0jc8bUvV+aQEQfRXlceWEdYF78yiYNQ+2QzFV+SKWZK3F24DQccq7qwiUKVsfNFxu3G5tq8eTrAd/hZGEO6mx+H8/
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf92e889-e13c-4275-13a5-08d7980dcdef
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 09:48:54.5462
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uAqVGH7Cf5VvptFbICjNrLa+ZORDdTosENnBKPFurs1R/DoZcMHeE+XcFfcgS7nLNmkyxHnfH6Bvf3Uo9AGiIjtiBZOnONIUKv3ES/V7u6s=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR11MB0009
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
+Add new file include/linux/atmel-isc-media.h to ATMEL ISC entry.
 
-On 01/13/2020 02:44 PM, David Hildenbrand wrote:
-> 
-> 
->> Am 13.01.2020 um 10:10 schrieb Anshuman Khandual <anshuman.khandual@arm.com>:
->>
->> ﻿
->>
->>> On 01/10/2020 02:12 PM, David Hildenbrand wrote:
->>>> On 10.01.20 04:09, Anshuman Khandual wrote:
->>>> Currently there are two interfaces to initiate memory range hot removal i.e
->>>> remove_memory() and __remove_memory() which then calls try_remove_memory().
->>>> Platform gets called with arch_remove_memory() to tear down required kernel
->>>> page tables and other arch specific procedures. But there are platforms
->>>> like arm64 which might want to prevent removal of certain specific memory
->>>> ranges irrespective of their present usage or movability properties.
->>>
->>> Why? Is this only relevant for boot memory? I hope so, otherwise the
->>> arch code needs fixing IMHO.
->>
->> Right, it is relevant only for the boot memory on arm64 platform. But this
->> new arch callback makes it flexible to reject any given memory range.
->>
->>>
->>> If it's only boot memory, we should disallow offlining instead via a
->>> memory notifier - much cleaner.
->>
->> Dont have much detail understanding of MMU notifier mechanism but from some
->> initial reading, it seems like we need to have a mm_struct for a notifier
->> to monitor various events on the page table. Just wondering how a physical
->> memory range like boot memory can be monitored because it can be used both
->> for for kernel (init_mm) or user space process at same time. Is there some
->> mechanism we could do this ?
->>
->>>
->>>>
->>>> Current arch call back arch_remove_memory() is too late in the process to
->>>> abort memory hot removal as memory block devices and firmware memory map
->>>> entries would have already been removed. Platforms should be able to abort
->>>> the process before taking the mem_hotplug_lock with mem_hotplug_begin().
->>>> This essentially requires a new arch callback for memory range validation.
->>>
->>> I somewhat dislike this very much. Memory removal should never fail if
->>> used sanely. See e.g., __remove_memory(), it will BUG() whenever
->>> something like that would strike.
->>>
->>>>
->>>> This differentiates memory range validation between memory hot add and hot
->>>> remove paths before carving out a new helper check_hotremove_memory_range()
->>>> which incorporates a new arch callback. This call back provides platforms
->>>> an opportunity to refuse memory removal at the very onset. In future the
->>>> same principle can be extended for memory hot add path if required.
->>>>
->>>> Platforms can choose to override this callback in order to reject specific
->>>> memory ranges from removal or can just fallback to a default implementation
->>>> which allows removal of all memory ranges.
->>>
->>> I suspect we want really want to disallow offlining instead. E.g., I
->>
->> If boot memory pages can be prevented from being offlined for sure, then it
->> would indirectly definitely prevent hot remove process as well.
->>
->>> remember s390x does that with certain areas needed for dumping/kexec.
->>
->> Could not find any references to mmu_notifier in arch/s390 or any other arch
->> for that matter apart from KVM (which has an user space component), could you
->> please give some pointers ?
-> 
-> Memory (hotplug) notifier, not MMU notifier :)
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-They are so similarly named :)
-
-> 
-> Not on my notebook right now, grep for MEM_GOING_OFFLINE, that should be it.
-> 
-
-Got it, thanks ! But we will still need boot memory enumeration via MEMBLOCK_BOOT
-to reject affected offline requests in the callback.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 983d3c9..b69ce6e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10825,6 +10825,7 @@ F:	drivers/media/platform/atmel/atmel-isc.h
+ F:	drivers/media/platform/atmel/atmel-isc-base.c
+ F:	drivers/media/platform/atmel/atmel-isc-regs.h
+ F:	Documentation/devicetree/bindings/media/atmel-isc.txt
++F:	include/linux/atmel-isc-media.h
+=20
+ MICROCHIP ISI DRIVER
+ M:	Eugen Hristev <eugen.hristev@microchip.com>
+--=20
+2.7.4
