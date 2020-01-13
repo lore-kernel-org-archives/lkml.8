@@ -2,149 +2,105 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758D9C33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A366DC33CAD
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CD232073D
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:32:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GgP1dsRK"
+	by mail.kernel.org (Postfix) with ESMTP id 7E3EF2073D
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728757AbgAMOck (ORCPT
+        id S1728799AbgAMOeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:32:40 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:45144 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgAMOck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:32:40 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00DEWYNO030177;
-        Mon, 13 Jan 2020 08:32:34 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1578925954;
-        bh=PlwkQQKc/7i94fyMo4aS3t567+ZveMCiSE48aEv0T8o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GgP1dsRKb7lSzALt6c1o9j6Z6mBrC2uHpucVt/yj36XKuSL+9XOWptBw+HNbTWQfd
-         qyEn2EGSsk90Z1VRaHYqoJlX64+i6dMK2rOpk2JjakOU7XqhNp7h0PtOV2hYURASsd
-         EqYGyjezVNgD02KmDHNnwkef3Gi0bmJtmUDhdQHE=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00DEWYPi040632
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 13 Jan 2020 08:32:34 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 13
- Jan 2020 08:32:27 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 13 Jan 2020 08:32:26 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00DEWPgn004504;
-        Mon, 13 Jan 2020 08:32:25 -0600
-Subject: Re: [PATCH] ata: pata_arasam_cf: Use dma_request_chan() instead
- dma_request_slave_channel()
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-CC:     Viresh Kumar <viresh.kumar@linaro.org>, <vireshk@kernel.org>,
-        <axboe@kernel.dk>, <vkoul@kernel.org>, <linux-ide@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20191217105048.25327-1-peter.ujfalusi@ti.com>
- <CGME20191217111956epcas5p36d2e10fa2ba3c2e8dd0cc661c8de7dd0@epcas5p3.samsung.com>
- <20191217111950.vzuww3ov4ub45ros@vireshk-i7>
- <b171c3c0-d924-e2e6-0c4d-196c7e6c2325@samsung.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <7cb96956-806e-4120-692c-dfd0afd49738@ti.com>
-Date:   Mon, 13 Jan 2020 16:33:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 13 Jan 2020 09:34:06 -0500
+Received: from mga12.intel.com ([192.55.52.136]:42496 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726074AbgAMOeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 09:34:06 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 06:34:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
+   d="scan'208";a="218679884"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 13 Jan 2020 06:34:02 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andy.shevchenko@gmail.com>)
+        id 1ir0n5-0000dT-J4; Mon, 13 Jan 2020 16:34:03 +0200
+Date:   Mon, 13 Jan 2020 16:34:03 +0200
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     John Garry <john.garry@huawei.com>, tudor.ambarus@microchip.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        chenxiang66@hisilicon.com, Linuxarm <linuxarm@huawei.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>,
+        Jiancheng Xue <xuejiancheng@hisilicon.com>,
+        fengsheng5@huawei.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        wanghuiqiang <wanghuiqiang@huawei.com>, liusimin4@huawei.com
+Subject: Re: [PATCH v2 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
+ driver
+Message-ID: <20200113143403.GQ32742@smile.fi.intel.com>
+References: <df67b562-7d82-19f6-7581-680190a7772d@huawei.com>
+ <20200110140726.GB5889@sirena.org.uk>
+ <6db83881-927c-d11c-9c77-23a45892ddab@huawei.com>
+ <20200110193119.GI32742@smile.fi.intel.com>
+ <612a3c5d-69a4-af6b-5c79-c3fb853193ab@huawei.com>
+ <20200113114256.GH3897@sirena.org.uk>
+ <6dd45da9-9ccf-45f7-ed12-8f1406a0a56b@huawei.com>
+ <20200113140627.GJ3897@sirena.org.uk>
+ <CAHp75VfepiiVFLLmCwdBS0Z6tmR+XKBaOLg1qPPuz1McLjS=4Q@mail.gmail.com>
+ <20200113142754.GL3897@sirena.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <b171c3c0-d924-e2e6-0c4d-196c7e6c2325@samsung.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200113142754.GL3897@sirena.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 13/01/2020 13.31, Bartlomiej Zolnierkiewicz wrote:
+On Mon, Jan 13, 2020 at 02:27:54PM +0000, Mark Brown wrote:
+> On Mon, Jan 13, 2020 at 04:17:32PM +0200, Andy Shevchenko wrote:
+> > On Mon, Jan 13, 2020 at 4:07 PM Mark Brown <broonie@kernel.org> wrote:
+> > > On Mon, Jan 13, 2020 at 01:01:06PM +0000, John Garry wrote:
+> > > > On 13/01/2020 11:42, Mark Brown wrote:
 > 
-> On 12/17/19 12:19 PM, Viresh Kumar wrote:
->> On 17-12-19, 12:50, Peter Ujfalusi wrote:
->>> dma_request_slave_channel() is a wrapper on top of dma_request_chan()
->>> eating up the error code.
->>>
->>> By using dma_request_chan() directly the driver can support deferred
->>> probing against DMA.
+> > > > > The idiomatic approach appears to be for individual board vendors
+> > > > > to allocate IDs, you do end up with multiple IDs from multiple
+> > > > > vendors for the same thing.
 > 
-> It doesn't seem to be the case as DMA channel is requested at the start
-> of the data transfer (which happens after the driver has been successfully
-> probed).
-
-True, I have updated the commit message to remove the reference to
-deferred probing.
-If the DMA is requested upfront (at probe time, device open time?) the
-driver would save quite a bit of time by not allocating and freeing the
-DMA resources repeatedly for each transfer, thus most likely giving a
-boost to throughput...
-
-> PS there is a typo in the patch summary (it should "pata_arasan_cf").
-
-Ah, fixed this as well in v2.
-
-Thanks for catching them,
-- Péter
-
+> > > > But I am not sure how appropriate that same approach would be for some 3rd
+> > > > party memory part which we're simply wiring up on our board. Maybe it is.
 > 
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
+> > > It seems to be quite common for Intel reference designs to assign
+> > > Intel IDs to non-Intel parts on the board (which is where I
+> > > became aware of this practice).
 > 
->>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>> ---
->>>  drivers/ata/pata_arasan_cf.c | 6 ++++--
->>>  1 file changed, 4 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/ata/pata_arasan_cf.c b/drivers/ata/pata_arasan_cf.c
->>> index 135173c8d138..69b555d83f68 100644
->>> --- a/drivers/ata/pata_arasan_cf.c
->>> +++ b/drivers/ata/pata_arasan_cf.c
->>> @@ -526,9 +526,10 @@ static void data_xfer(struct work_struct *work)
->>>  
->>>  	/* request dma channels */
->>>  	/* dma_request_channel may sleep, so calling from process context */
->>> -	acdev->dma_chan = dma_request_slave_channel(acdev->host->dev, "data");
->>> -	if (!acdev->dma_chan) {
->>> +	acdev->dma_chan = dma_request_chan(acdev->host->dev, "data");
->>> +	if (IS_ERR(acdev->dma_chan)) {
->>>  		dev_err(acdev->host->dev, "Unable to get dma_chan\n");
->>> +		acdev->dma_chan = NULL;
->>>  		goto chan_request_fail;
->>>  	}
->>>  
->>> @@ -539,6 +540,7 @@ static void data_xfer(struct work_struct *work)
->>>  	}
->>>  
->>>  	dma_release_channel(acdev->dma_chan);
->>> +	acdev->dma_chan = NULL;
->>>  
->>>  	/* data xferred successfully */
->>>  	if (!ret) {
->>
->> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
->>
+> > Basically vendor of component in question is responsible for ID, but
+> > it seems they simple don't care.
 > 
+> AFAICT a lot of the time it seems to be that whoever is writing
+> the software ends up assigning an ID, that may not be the silicon
+> vendor.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+...which is effectively abusing the ACPI ID allocation procedure.
+
+(And yes, Intel itself did it in the past — see badly created ACPI IDs
+ in the drivers)
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
