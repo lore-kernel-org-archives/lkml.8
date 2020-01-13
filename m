@@ -2,113 +2,137 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D5BC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:27:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FF2C33CB0
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5D1021556
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:27:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C6B521744
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 05:27:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r390DZmP"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="msfHF9Vf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726236AbgAMF1n (ORCPT
+        id S1726946AbgAMF1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 00:27:43 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33016 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbgAMF1n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 00:27:43 -0500
-Received: by mail-ot1-f68.google.com with SMTP id b18so7895406otp.0;
-        Sun, 12 Jan 2020 21:27:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=diOYoooyO02fNaO2OaL6vZp60t8FYNXFCI94ed/4bvk=;
-        b=r390DZmPSSjsz6uojt5vgUS6gXu6Gf+fYt5SWxucCUedRnTQGqaPtCa0lwYrI/9cXd
-         hYmjiOIEbkgCjFVCK8g48YWIQ7KNXR7S+gYgv2jKNtNCcRAZfNo/pptKUDb6rlG+0bzh
-         YFXwXSTsnoGOSMiMQdCLKFzXy03UJLk9y3qA5zNzImYRTcL3yYnixHQ5zCPBZMBxkhKu
-         zNj+SEtgGH5qhDZQeEuAnnYU15bBqL7kLbzXQaLABlDQbXjjH90nbYsS6CfODW5zTysf
-         iTQFU1QMUnt+CuMjheWZh9pMs7zENgQK5SibI+qPTZsjbMGGZ1RCyXTJb+MLDnX/U867
-         Kgog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=diOYoooyO02fNaO2OaL6vZp60t8FYNXFCI94ed/4bvk=;
-        b=VdeLkOad6q7flt9JHrjZ0o9mQUyXFkz1LzDMZXkaLL3dKOimsA08vfhR/N0HqrQZ2c
-         GQDtS+rZdt+E9jW8gZV+k2rzaVBFqCN7qkqr+5f9krljb+fQ8YahUK6vQGYUt9IsADMc
-         V2BoNhU3NM9gEOlQ6+6qzjxE9C08g4P4RoTqUeHi9CSMpcv/MF530fDeeMTYe1j4Ny70
-         8LEAJRZo9sfHQeUtsZYXpOpimAFLzEw1+sr73x4GjetssLaeQxqvBuDKU6IjMlmXY7jO
-         JuNbAKiwXd/R5H0tHeDL4SvZqEAghVde0jUaB9zhZxwOK7WbhTlvwmfVP0+XzN3p5KQs
-         z+mw==
-X-Gm-Message-State: APjAAAXKthDNaSzhsj6AwoyNzibhUIKc/xchpTKzo4Y2dFasI0lMiOso
-        VkZfOOq4BmPWjNJtlYSVVbjLkkKkHukYTPFe4yg=
-X-Google-Smtp-Source: APXvYqxQ/QEMuRoeX0bGQQKxIQplQ4G0Acb+7lOL4RO8pfBHlU0rTshFrHbkTraDtgF2hpik2dSJr+Ao8uMc+r1s1mM=
-X-Received: by 2002:a9d:7f11:: with SMTP id j17mr12412497otq.281.1578893262556;
- Sun, 12 Jan 2020 21:27:42 -0800 (PST)
+        Mon, 13 Jan 2020 00:27:52 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:33827 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725909AbgAMF1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 00:27:52 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47x2D52ZXtz9sP6;
+        Mon, 13 Jan 2020 16:27:49 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1578893269;
+        bh=BcsvV+To6A2l8R3ypdXJiHRPHxco4Uq/c4u4oupv0w4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=msfHF9VfONPB7LoSNPlxY72ic3SvibrdxXAU2i057hI5PzGq/1vWZVyQyWgG4BiAp
+         +MAC+qt8NYk2LLTCtzJqKp63pXwC/tqEPU+BJ3UkvfYoajfpxBLYRD6ao/j6YrGPnZ
+         nLWD3fmdAQwTWXJVCOqSAM+ZgabRjOD6Hmn2N4mL4Ba9awWlkssx3TkEbrzfPzM4nu
+         wuqgNRX2z+rrysmb6Vnmk29pl/6XOSTmi6i2fdfvXchByE2nspbevrXq6B3BFyZAso
+         OYruK204y/mfy5tkLKupzDKIvvDZfkKJxUMs5vGTaD6mlYKSVS0z2hfLrgXWynSpZj
+         1VCzw+BTchryg==
+Date:   Mon, 13 Jan 2020 16:27:48 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Christoph Hellwig <hch@lst.de>, Colin Cross <ccross@android.com>,
+        Olof Johansson <olof@lixom.net>,
+        Thierry Reding <treding@nvidia.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Dmitry Osipenko <digetx@gmail.com>
+Subject: linux-next: manual merge of the generic-ioremap tree with the tegra
+ tree
+Message-ID: <20200113162748.698470fc@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191112012724.250792-1-dima@arista.com> <20191112012724.250792-3-dima@arista.com>
- <ed2e65ae-75b0-ed79-0a95-90be6b82e6be@arm.com> <878smfa66i.fsf@nanos.tec.linutronix.de>
- <e74a63cb-5248-4473-81a7-d1b2f959ec7a@arm.com> <875zhja59q.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <875zhja59q.fsf@nanos.tec.linutronix.de>
-From:   Andrei Vagin <avagin@gmail.com>
-Date:   Sun, 12 Jan 2020 21:27:31 -0800
-Message-ID: <CANaxB-zrnHjmJ-7xeagiiZve69o_scPQXmZ+Y03omtk-1cqrhg@mail.gmail.com>
-Subject: Re: [PATCHv8 02/34] lib/vdso: make do_hres and do_coarse as __always_inline
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Dmitry Safonov <dima@arista.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        crml <criu@openvz.org>, Linux API <linux-api@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/OsDyprzxFqvee1l2Kzr2lqy";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 4:02 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Vincenzo Frascino <vincenzo.frascino@arm.com> writes:
-> > On 1/10/20 11:42 AM, Thomas Gleixner wrote:
-> >>>> +=C2=BB =C2=BB /*=C2=B7goto=C2=B7allows=C2=B7to=C2=B7avoid=C2=B7extr=
-a=C2=B7inlining=C2=B7of=C2=B7do_hres.=C2=B7*/
-> >>>> +=C2=BB =C2=BB goto=C2=B7out_hres;
-> >>>
-> >>> What is the performance impact of "goto out_hres"?
-> >>
-> >> On x86 it's invisible at least in my limited testing.
-> >
-> > On arm64 as well based on mine as well. Shall we keep the code more rea=
-dable
-> > here (without goto)?
->
-> The delta patch below makes it readable again and also avoids the double
-> inlining. Quick testing shows no difference.
+--Sig_/OsDyprzxFqvee1l2Kzr2lqy
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-My tests show no difference too and the code looks more readable. Thanks!
+Hi all,
 
->
-> Thanks,
->
->         tglx
+Today's linux-next merge of the generic-ioremap tree got a conflict in:
+
+  drivers/soc/tegra/fuse/tegra-apbmisc.c
+
+between commit:
+
+  02676345e9b3 ("soc/tegra: fuse: Unmap registers once they are not needed =
+anymore")
+
+from the tegra tree and commit:
+
+  4bdc0d676a64 ("remove ioremap_nocache and devm_ioremap_nocache")
+
+from the generic-ioremap tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/soc/tegra/fuse/tegra-apbmisc.c
+index 4a737f15e401,a2fd6ccd48f9..000000000000
+--- a/drivers/soc/tegra/fuse/tegra-apbmisc.c
++++ b/drivers/soc/tegra/fuse/tegra-apbmisc.c
+@@@ -157,21 -159,13 +157,21 @@@ void __init tegra_init_apbmisc(void
+  		}
+  	}
+ =20
+- 	apbmisc_base =3D ioremap_nocache(apbmisc.start, resource_size(&apbmisc));
++ 	apbmisc_base =3D ioremap(apbmisc.start, resource_size(&apbmisc));
+ -	if (!apbmisc_base)
+ +	if (!apbmisc_base) {
+  		pr_err("failed to map APBMISC registers\n");
+ +	} else {
+ +		chipid =3D readl_relaxed(apbmisc_base + 4);
+ +		iounmap(apbmisc_base);
+ +	}
+ =20
+- 	strapping_base =3D ioremap_nocache(straps.start, resource_size(&straps));
++ 	strapping_base =3D ioremap(straps.start, resource_size(&straps));
+ -	if (!strapping_base)
+ +	if (!strapping_base) {
+  		pr_err("failed to map strapping options registers\n");
+ +	} else {
+ +		strapping =3D readl_relaxed(strapping_base);
+ +		iounmap(strapping_base);
+ +	}
+ =20
+  	long_ram_code =3D of_property_read_bool(np, "nvidia,long-ram-code");
+  }
+
+--Sig_/OsDyprzxFqvee1l2Kzr2lqy
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl4b/9QACgkQAVBC80lX
+0GyeNQf/eBgKU+nbf5MlMdn5g3yhzZ0HY8k2G0RfKreeJQw01IamcJrevPcHrk1a
+omYW7ULCFk/Fll02EsECfMts8B7Stc3nxpnT2x0Qpbmd97iq+zjROYiDyZBTbIHT
+h7M/RIooNM5dWhAjYXDYohbCNLQsP3H58vXXP4Vv2VO1aR5lZat/FUxCKQSQKR1G
+vNs9AQxyHvCf0o0oLfM2xU1yO0NHpM2VvZNHfCiRaEjWdh2y3JSSTCR2oSNl09Co
+mKPkFMIyNHtMjJHFypU3q+IBajTavI+W1e1NIIgM2BnSGLqR5FD15DtRwh4Z1kQf
+cVBF6SaOhqnMkeG8ESS8ZZ18UvyNnw==
+=Xl4I
+-----END PGP SIGNATURE-----
+
+--Sig_/OsDyprzxFqvee1l2Kzr2lqy--
