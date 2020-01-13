@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CDEC33CAF
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16C31C33CAB
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF7622527
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDF172082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 04:49:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="gKiqUekW";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AWfMgKEq"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="hru3Yt7a";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="mGyPVWuH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387645AbgAMEtq (ORCPT
+        id S2387667AbgAMEtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 12 Jan 2020 23:49:46 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:60843 "EHLO
+        Sun, 12 Jan 2020 23:49:52 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:45527 "EHLO
         new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387608AbgAMEtm (ORCPT
+        by vger.kernel.org with ESMTP id S2387613AbgAMEtn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 12 Jan 2020 23:49:42 -0500
+        Sun, 12 Jan 2020 23:49:43 -0500
 Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 5D8B0657B;
+        by mailnew.nyi.internal (Postfix) with ESMTP id F2FE96591;
         Sun, 12 Jan 2020 23:49:41 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
   by compute5.internal (MEProxy); Sun, 12 Jan 2020 23:49:41 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm1; bh=eSYYFPyUyxZ0R
-        tyfs3BMeEOWH0PFF5jUUQ1YKpLnMkI=; b=gKiqUekW1doGrmwCeHQ/gF5R8/otF
-        JIRUpY9sNCDyeGBAXqWIfFcOcoFuFbp8zK2y2C+TVAbXgGo/qs8bnOwKkmPpRXrN
-        LeZFO3593OEaj/F8UUruy75DYIR7OGU22fHz39dMLdse3xm9PY/Ii17i5o/RtEkV
-        t4gIqtacShe4HICfNi8qF+hf77DN+nMsT8TMduCBIXNjmwpzPHDi5mXCbQMrvW4n
-        /o1x3ApI0pT8a75jJyDDWcTXxvCTPKL0zqhtL5MuB4/MNrWrheNmscRiKh6wksNL
-        NVHocz1f+/Ea0Qa0YtiepyLJw1IzxIeFGgAM+TXWPCUD6ffoO3Ij+VByw==
+        :mime-version:content-transfer-encoding; s=fm1; bh=SrzKOkLSwyAw5
+        L9dj6C7jHF7WcI4gH8AwCRGv5SLZvU=; b=hru3Yt7atFl9GBt+GCtCPdBmDUR9R
+        JFsrya4klAomB+LvN5NPEpMSccZh8GRZk8f3xh20zGGhbzVPqqHZKVBfayYNk4y3
+        SW8EUBPQps+TQJnwtmAJJJA36EM1n/9tJItjX96FlaQVdPDujRWhiPp4gY58e4vN
+        W/QXV6/NCu0NWthbHDzRS5eezxwYtOMrtDTOZMUhkE9LqyaYg83o06o3wUilMqK2
+        3U3lAlqO3Mtvjg0deA3y/0mOX6XbNtagd4HaYaAoi3lPcLvFrIl+D8yhjvTHqETH
+        JgZVXM+UOONjbtxSoYMVv/v4mu/SHG5y2Y0af1OUwHPPtlA0/FE7o12Rg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; bh=eSYYFPyUyxZ0Rtyfs3BMeEOWH0PFF5jUUQ1YKpLnMkI=; b=AWfMgKEq
-        3K8H6UJi6eCyJyXxYi9hi2I7N+pRP9yPFpfpvJzhtewZ5VE6O/s7g6hdKbTJlFuX
-        AVGOELV8zNgE5GctgingTVF7Y5AzvDp03zzUXRJ1urDq6D4JJl1x/hTaog6kLWPK
-        zdKIYwN56PRI3loiIw0vOxH/sOrvJ1BeHaqr6hRKGmQmNCj/+Pe+pUesm+fSr3NR
-        fWQY32vTFbN8YHTNmN35fzgH/tEgSiLBd6nMy+4n7D8HMf2DrdtGMU8FHTWV3/gq
-        uUKO2gPeoTtiHjRy+DLV8uE5c9ZFAeI8vY/Gbs4T+305PyG1Rmzd47xGnhKQzC9X
-        Oa68FTTJN8guWg==
-X-ME-Sender: <xms:5fYbXhPOAO-ZGvFWK0Wu1NZapj-ZmLG69e12_zLZkuPnYU0mheXFYA>
+        fm1; bh=SrzKOkLSwyAw5L9dj6C7jHF7WcI4gH8AwCRGv5SLZvU=; b=mGyPVWuH
+        DroLBHr2/I3FUZxIhEsoxeLkyfSZOj5sNrZTA2IzaJjWWyN1JuOAkAx0lkLxAOh0
+        RNykru32xUuhC5DT9504IHKi38fZGJx9w4C2Atlgh+bn30A2ywhqgwADcmQv4Mvl
+        iC0noBfdQdq34LY5skGnmqH40K+YGfKYaPQCQqpb/ridLzj/CaVQuuGkJ2PvQovf
+        Zatll07XFvDdfwwy2QBhZzWh9hKhl56fNKOCYwaGjQ9oEyudF/dxu6uJVCzGFe8+
+        vw6mTSa3hH4lBl0I+6pJ5ZYIg4WizFfI3j9h299I7jULWCjj+f6YCjZphN/BT2Sk
+        Qo28wD5gnkJAAg==
+X-ME-Sender: <xms:5fYbXgQZ54lwgcfP0Mx3-fpGdpmdMxcN4ITSf6zfletW79dRO_DzoA>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeiledgjeekucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -57,13 +57,13 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrvdeiledgjeekucetufdoteggod
     lhcujfholhhlrghnugcuoehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhgqeenucfkph
     epjedtrddufeehrddugeekrdduhedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehsrghm
     uhgvlhesshhhohhllhgrnhgurdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:5fYbXoUJUrhdtRiOhPIeEsfSsTKR8CgYQhdu93L-PMhad9imfg4isQ>
-    <xmx:5fYbXuLIxX4DNToAASAA0zzwG41mo6_S2wSDy8_wCQKJq4cDenz0XQ>
-    <xmx:5fYbXroqlB_SBdQy4IFktX1GWLqxnj-qnCTcYCOMmnYtEtaKV5jQQg>
-    <xmx:5fYbXvsJGkoFyAN6FQ2L1Z--hhvo8z563SQTpEMR3JFktfKJtCXV9Q>
+X-ME-Proxy: <xmx:5fYbXp6JbeoyAnyP_VcuG55H5Vy0CLYw7dfhC9eanTV04jnCLX7_3Q>
+    <xmx:5fYbXnGoRNmMJJ5gb0b9JlYRRRMu99skSrVS4L3JzeyhAr3Gc5TC_Q>
+    <xmx:5fYbXjGjoMuvqs6u2w2fm7hZ1PM9fZCvY_KpaMG1oOrBuKVgkLwqCQ>
+    <xmx:5fYbXp3DnwSLWT5Wok4N1iZc8VswLvYOaJPsy6e1AEXEZlM_CNfXmw>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9DAC130607B0;
-        Sun, 12 Jan 2020 23:49:40 -0500 (EST)
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3EDDE30607B4;
+        Sun, 12 Jan 2020 23:49:41 -0500 (EST)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>,
@@ -78,9 +78,9 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
 Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
         Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 6/9] ARM: dts: sunxi: a83t: Move wakeup-capable IRQs to r_intc
-Date:   Sun, 12 Jan 2020 22:49:33 -0600
-Message-Id: <20200113044936.26038-7-samuel@sholland.org>
+Subject: [PATCH 7/9] arm64: dts: allwinner: a64: Move wakeup-capable IRQs to r_intc
+Date:   Sun, 12 Jan 2020 22:49:34 -0600
+Message-Id: <20200113044936.26038-8-samuel@sholland.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200113044936.26038-1-samuel@sholland.org>
 References: <20200113044936.26038-1-samuel@sholland.org>
@@ -98,42 +98,45 @@ r_intc IRQ numbers are offset by 32 from the GIC IRQ numbers.
 
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- arch/arm/boot/dts/sun8i-a83t.dtsi | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 74bb053cf23c..98513f2af21c 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -1103,7 +1103,8 @@
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 70f4cce6be43..7b2cacc0aecc 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -1044,8 +1044,9 @@
+ 			compatible = "allwinner,sun50i-a64-rtc",
+ 				     "allwinner,sun8i-h3-rtc";
+ 			reg = <0x01f00000 0x400>;
+-			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+-				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-parent = <&r_intc>;
++			interrupts = <8 IRQ_TYPE_LEVEL_HIGH>,
++				     <9 IRQ_TYPE_LEVEL_HIGH>;
+ 			clock-output-names = "osc32k", "osc32k-out", "iosc";
+ 			clocks = <&osc32k>;
+ 			#clock-cells = <1>;
+@@ -1094,7 +1095,8 @@
  			clocks = <&r_ccu CLK_APB0_IR>, <&r_ccu CLK_IR>;
  			clock-names = "apb", "ir";
  			resets = <&r_ccu RST_APB0_IR>;
 -			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-parent = <&r_intc>;
 +			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
- 			reg = <0x01f02000 0x400>;
  			pinctrl-names = "default";
- 			pinctrl-0 = <&r_cir_pin>;
-@@ -1113,14 +1114,16 @@
- 		r_lradc: lradc@1f03c00 {
- 			compatible = "allwinner,sun8i-a83t-r-lradc";
- 			reg = <0x01f03c00 0x100>;
--			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-parent = <&r_intc>;
-+			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
+ 			pinctrl-0 = <&r_ir_rx_pin>;
  			status = "disabled";
- 		};
- 
+@@ -1114,7 +1116,8 @@
  		r_pio: pinctrl@1f02c00 {
- 			compatible = "allwinner,sun8i-a83t-r-pinctrl";
+ 			compatible = "allwinner,sun50i-a64-r-pinctrl";
  			reg = <0x01f02c00 0x400>;
 -			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
 +			interrupt-parent = <&r_intc>;
 +			interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&r_ccu CLK_APB0_PIO>, <&osc24M>,
- 				 <&osc16Md512>;
+ 			clocks = <&r_ccu CLK_APB0_PIO>, <&osc24M>, <&osc32k>;
  			clock-names = "apb", "hosc", "losc";
+ 			gpio-controller;
 -- 
 2.23.0
 
