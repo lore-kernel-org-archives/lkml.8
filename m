@@ -2,136 +2,125 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 056F0C33CAD
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2054C33CAF
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6811207E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983062081E
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 14:10:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="BVjuQ4zs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgAMOKj (ORCPT
+        id S1728808AbgAMOKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 09:10:39 -0500
-Received: from mga01.intel.com ([192.55.52.88]:61824 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726074AbgAMOKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 09:10:38 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jan 2020 06:10:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,429,1571727600"; 
-   d="scan'208";a="242107020"
-Received: from labuser-ice-lake-client-platform.jf.intel.com ([10.54.55.46])
-  by orsmga002.jf.intel.com with ESMTP; 13 Jan 2020 06:10:37 -0800
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, mingo@kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ak@linux.intel.com, like.xu@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH] perf/x86/intel/ds: Fix x86_pmu_stop warning for large PEBS
-Date:   Mon, 13 Jan 2020 06:09:35 -0800
-Message-Id: <20200113140935.3474-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 13 Jan 2020 09:10:54 -0500
+Received: from mail-db8eur05on2060.outbound.protection.outlook.com ([40.107.20.60]:6642
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728734AbgAMOKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 09:10:54 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=brJi9jpCTOsF4GOoTyE/sFgG+qn6QAFDxrGiIeVbVo8Dc7zc5sZxQYFhR7R1Vgw5HCHSFvqqF8SFy6dVhnqqoR5My1H+2OAFe6/fQ63PO9G6nY91M+q6On0arBIQtlNV66txY3SnJXuQuvIVfriLcYRN63NNJ05XgPGsEg5cCqvVXTYFx0h1qVAsQMYsc+vgQM3LCNIL1CE2x5EFmv+F5hEbGzcV3tEOeH/2KxfErcx50mtuz26mxDv5v9nDCuRjYH8r0JYmHz+RxaZBGpCpBfiZ4tE8BlQXCPEqiaBhjoeoSp0AHZw4KlbpeTH62E4GHo1zMWA+EM/TM0/MOFKYDQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D9DMPCovZ+xXPYNT7l96Ad1GW7sy5NoWEhcnlbNAhBE=;
+ b=gIlman79Fy/D267HKTe5ruX7/pjn6MNrnaGJV07hbm70ZEYaxb6xgCWiMEDdRyhaPJls7VWSghfQ9WB/c7FhZqR0TwsW+R4TUQUHsRXGjzYbYj4Ql45wIWSw+ZFyy34AyXogUyP/A9VHDCAOTR/7UZ3hwbM04rOWZJjuIeNnc4fhgqnH636Rw2Tjtf2GvHqC5eToZ52rafWC7OzZpUJeXN/6OKNh/++X3Xi4HCRlY6RD+oEQrtHF2/UN77bZHfp8mRxdaX18pxeqYP8oNAZoUSHRBwJvdnAw+srcGjzruKOfjlCtWUSpYvECi/Gj8WLCZuvcvM6fgzRxRnCNPFg6iA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=D9DMPCovZ+xXPYNT7l96Ad1GW7sy5NoWEhcnlbNAhBE=;
+ b=BVjuQ4zsEmQyvh1/OPZ50/8iR1WraJjOh7uuOI0Ijdhc0s3jlY07WHAEOulgZrDJDgPkJdLnn62J/8mnucD9pWQL6YTV8fRsGa84HcgnqA452O++kiC6JfCNOUuVKDWR6ukkVEePKz+2i32Ka4HJH+P8UbYAwuKAxZEHARGscN4=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3918.eurprd04.prod.outlook.com (52.134.16.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2623.13; Mon, 13 Jan 2020 14:10:51 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2623.015; Mon, 13 Jan 2020
+ 14:10:51 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+CC:     Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v6 7/7] crypto: caam - limit single JD RNG output to
+ maximum of 16 bytes
+Thread-Topic: [PATCH v6 7/7] crypto: caam - limit single JD RNG output to
+ maximum of 16 bytes
+Thread-Index: AQHVxjovOVxhRz2BlkaaDb9wDSI3Mw==
+Date:   Mon, 13 Jan 2020 14:10:51 +0000
+Message-ID: <VI1PR0402MB3485E327703191780AC68BFE98350@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20200108154047.12526-1-andrew.smirnov@gmail.com>
+ <20200108154047.12526-8-andrew.smirnov@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 939ab4a3-7d0e-4645-537f-08d798326555
+x-ms-traffictypediagnostic: VI1PR0402MB3918:|VI1PR0402MB3918:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB3918CDC682C82D71124350E998350@VI1PR0402MB3918.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 028166BF91
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(366004)(346002)(39860400002)(396003)(199004)(189003)(54906003)(44832011)(110136005)(71200400001)(186003)(2906002)(53546011)(8676002)(81156014)(8936002)(33656002)(6506007)(81166006)(966005)(76116006)(66946007)(52536014)(66476007)(316002)(64756008)(55016002)(91956017)(86362001)(45080400002)(478600001)(4326008)(7696005)(26005)(66556008)(5660300002)(9686003)(66446008)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3918;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: t4v/B52QhFFj8FojVD2QwwFwYtgPrZcOqEYTUFNA7Rlt+txDSGUHOrOZbFY+bmJDoOWLDg0WG9ePfXLu81r4gvFyIU45T02hHtZ7RCWRMkETlg8cxHS8CULi37Sa4aLnBp7AXS6JDdNOMzZmORrW3Df8vPJvCFu5ehVT5vSJbEr7f0flWFfmnEwiHqxNWXK/0KUrnS3BuKmFxR5F6KRSQIbueV+qxnM1BcAsaHmdu+w7RkTR1RrxeVvTzdEoa20p5vBwUybq/9f3/AkcNubsLcASXVe5LhCqbVpZSgp0997ZGZQD87Y3OdpUX8wgWBayMc2RbHPRMPQX0/O4S9Q/2bA17F0KvvHyauxP7wysqBKKxv2iKtGoiANHz9x+fQ+MxkDQI/YJEGlbytj5oEzhPSLlcgr4G04ivjrF7dLum4WRX9TBC9rSHRsBbs3liEwY
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 939ab4a3-7d0e-4645-537f-08d798326555
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jan 2020 14:10:51.0402
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DFTuM6SiU06MvKw1zU32GLZdXFtOxBMQRYO5c5kmxB2tWH0vQ96KKpeOxBv1nHjIji2LUrMPbC+XNx2pZlA/JQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3918
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
-
-A warning as below may be triggered when sampling large PEBS.
-
-[  410.411250] perf: interrupt took too long (72145 > 71975), lowering
-kernel.perf_event_max_sample_rate to 2000
-[  410.724923] ------------[ cut here ]------------
-[  410.729822] WARNING: CPU: 0 PID: 16397 at arch/x86/events/core.c:1422
-x86_pmu_stop+0x95/0xa0
-[  410.933811]  x86_pmu_del+0x50/0x150
-[  410.937304]  event_sched_out.isra.0+0xbc/0x210
-[  410.941751]  group_sched_out.part.0+0x53/0xd0
-[  410.946111]  ctx_sched_out+0x193/0x270
-[  410.949862]  __perf_event_task_sched_out+0x32c/0x890
-[  410.954827]  ? set_next_entity+0x98/0x2d0
-[  410.958841]  __schedule+0x592/0x9c0
-[  410.962332]  schedule+0x5f/0xd0
-[  410.965477]  exit_to_usermode_loop+0x73/0x120
-[  410.969837]  prepare_exit_to_usermode+0xcd/0xf0
-[  410.974369]  ret_from_intr+0x2a/0x3a
-[  410.977946] RIP: 0033:0x40123c
-[  411.079661] ---[ end trace bc83adaea7bb664a ]---
-
-For large PEBS, the PEBS buffer can be drained from either NMI handler
-or !NMI e.g. context switch. Current implementation doesn't handle them
-differently. For !nmi, perf also call the generic overflow handler for
-the last PEBS record. That may trigger the interrupt throttle, and stop
-the event. That's wrong.
-
-Here is an example for !NMI scenario, context switch.
-Let's say the max_samples_per_tick is adjusted to 2 for some reason.
-A context switch happens right after a NMI.
-When an old task is scheduled out, it will drain the PEBS buffer, and
-then delete the event.
-When draining the PEBS buffer, perf_event_overflow() will be called for
-the last PEBS record. Since the max_samples_per_tick is only 2, the
-interrupt throttle must be triggered. The event will be stopped.
-After the draining, the scheduler will delete the event, which stops the
-event again. The warning is triggered.
-
-Perf should handle the NMI and !NMI differently for large PEBS.
-For NMI, the generic overflow handler is required for the last PEBS
-record.
-But, for !NMI, there is no overflow. The generic overflow handler should
-not be invoked. Perf should treat the last record exactly the same as
-the rest of PEBS records.
-
-Fixes: 21509084f999 ("perf/x86/intel: Handle multiple records in the PEBS buffer")
-Reported-by: Like Xu <like.xu@linux.intel.com>
-Tested-by: Like Xu <like.xu@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- arch/x86/events/intel/ds.c | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 7c896d7e8b6c..51baff083938 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1780,15 +1780,22 @@ static void __intel_pmu_pebs_event(struct perf_event *event,
- 
- 	setup_sample(event, iregs, at, &data, regs);
- 
--	/*
--	 * All but the last records are processed.
--	 * The last one is left to be able to call the overflow handler.
--	 */
--	if (perf_event_overflow(event, &data, regs)) {
--		x86_pmu_stop(event, 0);
--		return;
-+	if (in_nmi()) {
-+		/*
-+		 * All but the last records are processed.
-+		 * The last one is left to be able to call the overflow handler.
-+		 */
-+		if (perf_event_overflow(event, &data, regs))
-+			x86_pmu_stop(event, 0);
-+	} else {
-+		/*
-+		 * For !NMI, e.g context switch, there is no overflow.
-+		 * The generic overflow handler should not be invoked.
-+		 * Perf should treat the last record exactly the same as the
-+		 * rest of PEBS records.
-+		 */
-+		perf_event_output(event, &data, regs);
- 	}
--
- }
- 
- static void intel_pmu_drain_pebs_core(struct pt_regs *iregs)
--- 
-2.17.1
-
+On 1/8/2020 5:42 PM, Andrey Smirnov wrote:=0A=
+> In order to follow recommendation in SP800-90C (section "9.4 The=0A=
+> Oversampling-NRBG Construction") limit the output of "generate" JD=0A=
+> submitted to CAAM. See=0A=
+> https://lore.kernel.org/linux-crypto/VI1PR0402MB3485EF10976A4A69F90E5B0F9=
+8580@VI1PR0402MB3485.eurprd04.prod.outlook.com/=0A=
+> for more details.=0A=
+> =0A=
+> This change should make CAAM's hwrng driver good enough to have 999=0A=
+> quality rating.=0A=
+> =0A=
+[...]=0A=
+> @@ -241,6 +241,7 @@ int caam_rng_init(struct device *ctrldev)=0A=
+>  	ctx->rng.init    =3D caam_init;=0A=
+>  	ctx->rng.cleanup =3D caam_cleanup;=0A=
+>  	ctx->rng.read    =3D caam_read;=0A=
+> +	ctx->rng.quality =3D 999;=0A=
+>  =0A=
+AFAICS the maximum value of hwrng.quality is 1024.=0A=
+=0A=
+Any reason why it's configured to be lower, now that CAAM RNG-based DRBG=0A=
+is configured to reseed as requested by FIPS spec to behave as a TRNG?=0A=
+=0A=
+Horia=0A=
