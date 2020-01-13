@@ -2,84 +2,84 @@ Return-Path: <SRS0=WByN=3C=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BCCC33CAE
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921ACC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C632072B
-	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D04C2072B
+	for <linux-kernel@archiver.kernel.org>; Mon, 13 Jan 2020 22:15:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bXa5IQRw"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nokqI9a8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbgAMWMi (ORCPT
+        id S1728928AbgAMWPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 17:12:38 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:34188 "EHLO
+        Mon, 13 Jan 2020 17:15:05 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:36680 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbgAMWMh (ORCPT
+        with ESMTP id S1726530AbgAMWPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 17:12:37 -0500
+        Mon, 13 Jan 2020 17:15:05 -0500
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DM8QS5151224;
-        Mon, 13 Jan 2020 22:12:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=jYm0hG/4CxNaYUxyoSQRqrrhnkR+E5T7ZE+foGW58JA=;
- b=bXa5IQRwSO8klbHvsIBLTh2+e3aVuKYA2BtubKoLcpVTUiO65RU6fm6iq7kuRtnxmFhe
- C0kFvVM+KcaLNwjz+0OkFwPaDvQjoBZBOdsRInJYLOegCKuxsXFgWaOi2ax396a142l8
- UDQANYgrb8vsY+kfNQmQu356vmjTbEZQkzeqmbi4jwsu2Z3u9+9MSZMCDN5T+BD7/DN/
- oNi6DVMsBb5VEo8weo+f7giFVBaHwjYzy/AyvI5MjeUMAZ3XAwrAEf82eO+bkZBGW1zB
- xICIl+rIe1tbgIinq+LyGc5gAbXM1I2yGkH5f9EDmi4HVY8gE7ZBNZE/Y6tyFkbzLsBY og== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xf73thxsb-1
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DM8RiX151261;
+        Mon, 13 Jan 2020 22:14:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=e1s+RL7OyB59UZqX24mOy/lEpU3PMDdLREn6RfW9CC4=;
+ b=nokqI9a84k9oPRxro7ZgxDA1mpykFyFsZhD2YZaXE21cADgGqzKC8iG+StifNefDJW4Y
+ TAEloNB+TqI/fEWD/UIwYzp3+vrzYqTGLVxYJ0qslwHoFhESNxefZrm2E4pg2YPB6wxU
+ 3dIjh5vurWEpnya7yaiXSGGCLcyi2hiq7lMY7uTvMEmr6ZtJexdVl2lXz8h3gi0zVubJ
+ Ay0w0h+Z/7MHzO1fOvWFbYjidi0zzcreD6DKZDwaBZJif45Vj5d2Bcp5+0HI+SAM8tur
+ ZFHyeaJtaiLz4XoFdT+gz3uR/MJxhvX7HRCzK1MZOADwF3Sz5YCFW6OXIQb1bzlD6uJE GQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2xf73thyaj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 22:12:25 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DM5oUU171526;
-        Mon, 13 Jan 2020 22:12:24 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2xfqvtjkt1-1
+        Mon, 13 Jan 2020 22:14:54 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 00DM5euh122535;
+        Mon, 13 Jan 2020 22:14:53 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2xfrgjfa4u-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 13 Jan 2020 22:12:24 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 00DMCKi6016457;
-        Mon, 13 Jan 2020 22:12:21 GMT
-Received: from localhost (/67.169.218.210)
+        Mon, 13 Jan 2020 22:14:53 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 00DMEq5E005341;
+        Mon, 13 Jan 2020 22:14:52 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 13 Jan 2020 14:12:20 -0800
-Date:   Mon, 13 Jan 2020 14:12:18 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [RFC PATCH V2 07/12] fs: Add locking for a dynamic inode 'mode'
-Message-ID: <20200113221218.GM8247@magnolia>
-References: <20200110192942.25021-1-ira.weiny@intel.com>
- <20200110192942.25021-8-ira.weiny@intel.com>
+        with ESMTP ; Mon, 13 Jan 2020 14:14:52 -0800
+Subject: Re: [PATCH v9 2/8] hugetlb_cgroup: add interface for charge/uncharge
+ hugetlb reservations
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org,
+        aneesh.kumar@linux.vnet.ibm.com, mkoutny@suse.com
+References: <20191217231615.164161-1-almasrymina@google.com>
+ <20191217231615.164161-2-almasrymina@google.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <0855cae0-872e-0727-aa7c-55051d8f0871@oracle.com>
+Date:   Mon, 13 Jan 2020 14:14:50 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200110192942.25021-8-ira.weiny@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191217231615.164161-2-almasrymina@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.0.1-1911140001 definitions=main-2001130179
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9499 signatures=668685
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
  lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
  definitions=main-2001130181
@@ -88,343 +88,467 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 10, 2020 at 11:29:37AM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
+On 12/17/19 3:16 PM, Mina Almasry wrote:
+> Augments hugetlb_cgroup_charge_cgroup to be able to charge hugetlb
+> usage or hugetlb reservation counter.
 > 
-> DAX requires special address space operations but many other functions
-> check the IS_DAX() mode.
+> Adds a new interface to uncharge a hugetlb_cgroup counter via
+> hugetlb_cgroup_uncharge_counter.
 > 
-> DAX is a property of the inode thus we define an inode mode lock as an
-> inode operation which file systems can optionally define.
+> Integrates the counter with hugetlb_cgroup, via hugetlb_cgroup_init,
+> hugetlb_cgroup_have_usage, and hugetlb_cgroup_css_offline.
 > 
-> This patch defines the core function callbacks as well as puts the
-> locking calls in place.
+> Signed-off-by: Mina Almasry <almasrymina@google.com>
 > 
-> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 > ---
->  Documentation/filesystems/vfs.rst | 30 ++++++++++++++++
->  fs/ioctl.c                        | 23 +++++++++----
->  fs/open.c                         |  4 +++
->  include/linux/fs.h                | 57 +++++++++++++++++++++++++++++--
->  mm/fadvise.c                      | 10 ++++--
->  mm/khugepaged.c                   |  2 ++
->  mm/mmap.c                         |  7 ++++
->  7 files changed, 123 insertions(+), 10 deletions(-)
 > 
-> diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-> index 7d4d09dd5e6d..b945aa95f15a 100644
-> --- a/Documentation/filesystems/vfs.rst
-> +++ b/Documentation/filesystems/vfs.rst
-> @@ -59,6 +59,28 @@ like open(2) the file, or stat(2) it to peek at the inode data.  The
->  stat(2) operation is fairly simple: once the VFS has the dentry, it
->  peeks at the inode data and passes some of it back to userspace.
->  
-> +Changing inode 'modes' dynamically
-> +----------------------------------
-> +
-> +Some file systems may have different modes for their inodes which require
-> +dyanic changing.  A specific example of this is DAX enabled files in XFS and
-> +ext4.  To switch the mode safely we lock the inode mode in all "normal" file
-> +system operations and restrict mode changes to those operations.  The specific
-> +rules are.
-> +
-> +To do this a file system must follow the following rules.
-> +
-> +        1) the direct_IO address_space_operation must be supported in all
-> +           potential a_ops vectors for any mode suported by the inode.
-> +	2) Filesystems must define the lock_mode() and unlock_mode() operations
-> +           in struct inode_operations.  These functions are used by the core
-> +           vfs layers to ensure that the mode is stable before allowing the
-> +           core operations to proceed.
-> +        3) Mode changes shall not be allowed while the file is mmap'ed
-> +        4) While changing modes filesystems should take exclusive locks which
-> +           prevent the core vfs layer from proceeding.
-> +
-> +
->  
->  The File Object
->  ---------------
-> @@ -437,6 +459,8 @@ As of kernel 2.6.22, the following members are defined:
->  		int (*atomic_open)(struct inode *, struct dentry *, struct file *,
->  				   unsigned open_flag, umode_t create_mode);
->  		int (*tmpfile) (struct inode *, struct dentry *, umode_t);
-> +		void (*lock_mode)(struct inode *);
-> +		void (*unlock_mode)(struct inode *);
-
-Yikes.  "mode" has a specific meaning for inodes, and this lock isn't
-related to i_mode.  This lock protects aops from changing while an
-address space operation is in use.
-
->  	};
->  
->  Again, all methods are called without any locks being held, unless
-> @@ -584,6 +608,12 @@ otherwise noted.
->  	atomically creating, opening and unlinking a file in given
->  	directory.
->  
-> +``lock_mode``
-> +	called to prevent operations which depend on the inode's mode from
-> +        proceeding should a mode change be in progress
-
-"Inodes can't change mode, because files do not suddenly become
-directories". ;)
-
-Oh, you meant "lock_XXXX is called to prevent a change in the pagecache
-mode from proceeding while there are address space operations in
-progress".  So these are really more aops get and put functions...
-
-> +``unlock_mode``
-> +	called when critical mode dependent operation is complete
->  
->  The Address Space Object
->  ========================
-> diff --git a/fs/ioctl.c b/fs/ioctl.c
-> index 7c9a5df5a597..ed6ab5303a24 100644
-> --- a/fs/ioctl.c
-> +++ b/fs/ioctl.c
-> @@ -55,18 +55,29 @@ EXPORT_SYMBOL(vfs_ioctl);
->  static int ioctl_fibmap(struct file *filp, int __user *p)
+> Changes in V9:
+> - Fixed HUGETLB_CGROUP_MIN_ORDER.
+> - Minor variable name update.
+> - Moved some init/cleanup code from later patches in the series to this patch.
+> - Updated reparenting of reservation accounting.
+> 
+> ---
+>  include/linux/hugetlb_cgroup.h | 68 ++++++++++++++---------
+>  mm/hugetlb.c                   | 19 ++++---
+>  mm/hugetlb_cgroup.c            | 98 +++++++++++++++++++++++++---------
+>  3 files changed, 127 insertions(+), 58 deletions(-)
+> 
+> diff --git a/include/linux/hugetlb_cgroup.h b/include/linux/hugetlb_cgroup.h
+> index 063962f6dfc6a..eab8a70d5bcb5 100644
+> --- a/include/linux/hugetlb_cgroup.h
+> +++ b/include/linux/hugetlb_cgroup.h
+> @@ -20,29 +20,37 @@
+>  struct hugetlb_cgroup;
+>  /*
+>   * Minimum page order trackable by hugetlb cgroup.
+> - * At least 3 pages are necessary for all the tracking information.
+> + * At least 4 pages are necessary for all the tracking information.
+>   */
+>  #define HUGETLB_CGROUP_MIN_ORDER	2
+> 
+>  #ifdef CONFIG_CGROUP_HUGETLB
+> 
+> -static inline struct hugetlb_cgroup *hugetlb_cgroup_from_page(struct page *page)
+> +static inline struct hugetlb_cgroup *hugetlb_cgroup_from_page(struct page *page,
+> +							      bool reserved)
 >  {
->  	struct address_space *mapping = filp->f_mapping;
-> +	struct inode *inode = filp->f_inode;
->  	int res, block;
->  
-> +	lock_inode_mode(inode);
-> +
->  	/* do we support this mess? */
-> -	if (!mapping->a_ops->bmap)
-> -		return -EINVAL;
-> -	if (!capable(CAP_SYS_RAWIO))
-> -		return -EPERM;
-> +	if (!mapping->a_ops->bmap) {
-> +		res = -EINVAL;
-> +		goto out;
-> +	}
-> +	if (!capable(CAP_SYS_RAWIO)) {
-> +		res = -EPERM;
-> +		goto out;
-
-Why does the order of these checks change here?
-
-> +	}
->  	res = get_user(block, p);
->  	if (res)
-> -		return res;
-> +		goto out;
->  	res = mapping->a_ops->bmap(mapping, block);
-> -	return put_user(res, p);
-> +	res = put_user(res, p);
-> +
-> +out:
-> +	unlock_inode_mode(inode);
-> +	return res;
+>  	VM_BUG_ON_PAGE(!PageHuge(page), page);
+> 
+>  	if (compound_order(page) < HUGETLB_CGROUP_MIN_ORDER)
+>  		return NULL;
+> -	return (struct hugetlb_cgroup *)page[2].private;
+> +	if (reserved)
+> +		return (struct hugetlb_cgroup *)page[3].private;
+> +	else
+> +		return (struct hugetlb_cgroup *)page[2].private;
 >  }
->  
->  /**
-> diff --git a/fs/open.c b/fs/open.c
-> index b0be77ea8f1b..c62428bbc525 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -59,10 +59,12 @@ int do_truncate(struct dentry *dentry, loff_t length, unsigned int time_attrs,
+> 
+> -static inline
+> -int set_hugetlb_cgroup(struct page *page, struct hugetlb_cgroup *h_cg)
+> +static inline int set_hugetlb_cgroup(struct page *page,
+> +				     struct hugetlb_cgroup *h_cg,
+> +				     bool reservation)
+>  {
+>  	VM_BUG_ON_PAGE(!PageHuge(page), page);
+> 
+>  	if (compound_order(page) < HUGETLB_CGROUP_MIN_ORDER)
+>  		return -1;
+> -	page[2].private	= (unsigned long)h_cg;
+> +	if (reservation)
+> +		page[3].private = (unsigned long)h_cg;
+> +	else
+> +		page[2].private = (unsigned long)h_cg;
+>  	return 0;
+>  }
+> 
+> @@ -52,26 +60,34 @@ static inline bool hugetlb_cgroup_disabled(void)
+>  }
+> 
+>  extern int hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
+> -					struct hugetlb_cgroup **ptr);
+> +					struct hugetlb_cgroup **ptr,
+> +					bool reserved);
+>  extern void hugetlb_cgroup_commit_charge(int idx, unsigned long nr_pages,
+>  					 struct hugetlb_cgroup *h_cg,
+> -					 struct page *page);
+> +					 struct page *page, bool reserved);
+>  extern void hugetlb_cgroup_uncharge_page(int idx, unsigned long nr_pages,
+> -					 struct page *page);
+> +					 struct page *page, bool reserved);
+> +
+>  extern void hugetlb_cgroup_uncharge_cgroup(int idx, unsigned long nr_pages,
+> -					   struct hugetlb_cgroup *h_cg);
+> +					   struct hugetlb_cgroup *h_cg,
+> +					   bool reserved);
+> +extern void hugetlb_cgroup_uncharge_counter(struct page_counter *p,
+> +					    unsigned long nr_pages,
+> +					    struct cgroup_subsys_state *css);
+> +
+
+Do we need a corresponding stub for the !CONFIG_CGROUP_HUGETLB case?
+
+>  extern void hugetlb_cgroup_file_init(void) __init;
+>  extern void hugetlb_cgroup_migrate(struct page *oldhpage,
+>  				   struct page *newhpage);
+> 
+>  #else
+> -static inline struct hugetlb_cgroup *hugetlb_cgroup_from_page(struct page *page)
+> +static inline struct hugetlb_cgroup *hugetlb_cgroup_from_page(struct page *page,
+> +							      bool reserved)
+>  {
+>  	return NULL;
+>  }
+> 
+> -static inline
+> -int set_hugetlb_cgroup(struct page *page, struct hugetlb_cgroup *h_cg)
+> +static inline int set_hugetlb_cgroup(struct page *page,
+> +				     struct hugetlb_cgroup *h_cg, bool reserved)
+>  {
+>  	return 0;
+>  }
+> @@ -81,28 +97,30 @@ static inline bool hugetlb_cgroup_disabled(void)
+>  	return true;
+>  }
+> 
+> -static inline int
+> -hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
+> -			     struct hugetlb_cgroup **ptr)
+> +static inline int hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
+> +					       struct hugetlb_cgroup **ptr,
+> +					       bool reserved)
+>  {
+>  	return 0;
+>  }
+> 
+> -static inline void
+> -hugetlb_cgroup_commit_charge(int idx, unsigned long nr_pages,
+> -			     struct hugetlb_cgroup *h_cg,
+> -			     struct page *page)
+> +static inline void hugetlb_cgroup_commit_charge(int idx, unsigned long nr_pages,
+> +						struct hugetlb_cgroup *h_cg,
+> +						struct page *page,
+> +						bool reserved)
+>  {
+>  }
+> 
+> -static inline void
+> -hugetlb_cgroup_uncharge_page(int idx, unsigned long nr_pages, struct page *page)
+> +static inline void hugetlb_cgroup_uncharge_page(int idx, unsigned long nr_pages,
+> +						struct page *page,
+> +						bool reserved)
+>  {
+>  }
+> 
+> -static inline void
+> -hugetlb_cgroup_uncharge_cgroup(int idx, unsigned long nr_pages,
+> -			       struct hugetlb_cgroup *h_cg)
+> +static inline void hugetlb_cgroup_uncharge_cgroup(int idx,
+> +						  unsigned long nr_pages,
+> +						  struct hugetlb_cgroup *h_cg,
+> +						  bool reserved)
+>  {
+>  }
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index ac65bb5e38ac2..e6e8240f1718c 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -1067,7 +1067,8 @@ static void update_and_free_page(struct hstate *h, struct page *page)
+>  				1 << PG_active | 1 << PG_private |
+>  				1 << PG_writeback);
+>  	}
+> -	VM_BUG_ON_PAGE(hugetlb_cgroup_from_page(page), page);
+> +	VM_BUG_ON_PAGE(hugetlb_cgroup_from_page(page, false), page);
+> +	VM_BUG_ON_PAGE(hugetlb_cgroup_from_page(page, true), page);
+>  	set_compound_page_dtor(page, NULL_COMPOUND_DTOR);
+>  	set_page_refcounted(page);
+>  	if (hstate_is_gigantic(h)) {
+> @@ -1177,8 +1178,8 @@ void free_huge_page(struct page *page)
+> 
+>  	spin_lock(&hugetlb_lock);
+>  	clear_page_huge_active(page);
+> -	hugetlb_cgroup_uncharge_page(hstate_index(h),
+> -				     pages_per_huge_page(h), page);
+> +	hugetlb_cgroup_uncharge_page(hstate_index(h), pages_per_huge_page(h),
+> +				     page, false);
+
+hugetlb code has been restructured a bit and this now resides in the
+function __free_huge_page().
+
+>  	if (restore_reserve)
+>  		h->resv_huge_pages++;
+> 
+> @@ -1204,7 +1205,8 @@ static void prep_new_huge_page(struct hstate *h, struct page *page, int nid)
+>  	INIT_LIST_HEAD(&page->lru);
+>  	set_compound_page_dtor(page, HUGETLB_PAGE_DTOR);
+>  	spin_lock(&hugetlb_lock);
+> -	set_hugetlb_cgroup(page, NULL);
+> +	set_hugetlb_cgroup(page, NULL, false);
+> +	set_hugetlb_cgroup(page, NULL, true);
+>  	h->nr_huge_pages++;
+>  	h->nr_huge_pages_node[nid]++;
+>  	spin_unlock(&hugetlb_lock);
+> @@ -1990,7 +1992,8 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+>  			gbl_chg = 1;
+>  	}
+> 
+> -	ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h), &h_cg);
+> +	ret = hugetlb_cgroup_charge_cgroup(idx, pages_per_huge_page(h), &h_cg,
+> +					   false);
 >  	if (ret)
->  		newattrs.ia_valid |= ret | ATTR_FORCE;
->  
-> +	lock_inode_mode(dentry->d_inode);
->  	inode_lock(dentry->d_inode);
->  	/* Note any delegations or leases have already been broken: */
->  	ret = notify_change(dentry, &newattrs, NULL);
->  	inode_unlock(dentry->d_inode);
-> +	unlock_inode_mode(dentry->d_inode);
+>  		goto out_subpool_put;
+> 
+> @@ -2014,7 +2017,8 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+>  		list_move(&page->lru, &h->hugepage_activelist);
+>  		/* Fall through */
+>  	}
+> -	hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg, page);
+> +	hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg, page,
+> +				     false);
+>  	spin_unlock(&hugetlb_lock);
+> 
+>  	set_page_private(page, (unsigned long)spool);
+> @@ -2038,7 +2042,8 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+>  	return page;
+> 
+>  out_uncharge_cgroup:
+> -	hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h), h_cg);
+> +	hugetlb_cgroup_uncharge_cgroup(idx, pages_per_huge_page(h), h_cg,
+> +				       false);
+>  out_subpool_put:
+>  	if (map_chg || avoid_reserve)
+>  		hugepage_subpool_put_pages(spool, 1);
+> diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
+> index 35415af9ed26f..b03270b0d5833 100644
+> --- a/mm/hugetlb_cgroup.c
+> +++ b/mm/hugetlb_cgroup.c
+> @@ -96,8 +96,12 @@ static inline bool hugetlb_cgroup_have_usage(struct hugetlb_cgroup *h_cg)
+>  	int idx;
+> 
+>  	for (idx = 0; idx < hugetlb_max_hstate; idx++) {
+> -		if (page_counter_read(&h_cg->hugepage[idx]))
+> +		if (page_counter_read(
+> +			    hugetlb_cgroup_get_counter(h_cg, idx, true)) ||
+> +		    page_counter_read(
+> +			    hugetlb_cgroup_get_counter(h_cg, idx, false))) {
+>  			return true;
+> +		}
+>  	}
+>  	return false;
+>  }
+> @@ -108,18 +112,32 @@ static void hugetlb_cgroup_init(struct hugetlb_cgroup *h_cgroup,
+>  	int idx;
+> 
+>  	for (idx = 0; idx < HUGE_MAX_HSTATE; idx++) {
+> -		struct page_counter *counter = &h_cgroup->hugepage[idx];
+> -		struct page_counter *parent = NULL;
+> +		struct page_counter *fault_parent = NULL;
+> +		struct page_counter *reserved_parent = NULL;
+>  		unsigned long limit;
+>  		int ret;
+> 
+> -		if (parent_h_cgroup)
+> -			parent = &parent_h_cgroup->hugepage[idx];
+> -		page_counter_init(counter, parent);
+> +		if (parent_h_cgroup) {
+> +			fault_parent = hugetlb_cgroup_get_counter(
+> +				parent_h_cgroup, idx, false);
+> +			reserved_parent = hugetlb_cgroup_get_counter(
+> +				parent_h_cgroup, idx, true);
+> +		}
+> +		page_counter_init(hugetlb_cgroup_get_counter(h_cgroup, idx,
+> +							     false),
+> +				  fault_parent);
+> +		page_counter_init(hugetlb_cgroup_get_counter(h_cgroup, idx,
+> +							     true),
+> +				  reserved_parent);
+> 
+>  		limit = round_down(PAGE_COUNTER_MAX,
+>  				   1 << huge_page_order(&hstates[idx]));
+> -		ret = page_counter_set_max(counter, limit);
+> +
+> +		ret = page_counter_set_max(
+> +			hugetlb_cgroup_get_counter(h_cgroup, idx, false),
+> +			limit);
+> +		ret = page_counter_set_max(
+> +			hugetlb_cgroup_get_counter(h_cgroup, idx, true), limit);
+>  		VM_BUG_ON(ret);
+
+The second page_counter_set_max() call overwrites ret before the check in
+VM_BUG_ON().
+
+>  	}
+>  }
+> @@ -149,7 +167,6 @@ static void hugetlb_cgroup_css_free(struct cgroup_subsys_state *css)
+>  	kfree(h_cgroup);
+>  }
+> 
+> -
+>  /*
+>   * Should be called with hugetlb_lock held.
+>   * Since we are holding hugetlb_lock, pages cannot get moved from
+> @@ -165,7 +182,7 @@ static void hugetlb_cgroup_move_parent(int idx, struct hugetlb_cgroup *h_cg,
+>  	struct hugetlb_cgroup *page_hcg;
+>  	struct hugetlb_cgroup *parent = parent_hugetlb_cgroup(h_cg);
+> 
+> -	page_hcg = hugetlb_cgroup_from_page(page);
+> +	page_hcg = hugetlb_cgroup_from_page(page, false);
+>  	/*
+>  	 * We can have pages in active list without any cgroup
+>  	 * ie, hugepage with less than 3 pages. We can safely
+> @@ -184,7 +201,7 @@ static void hugetlb_cgroup_move_parent(int idx, struct hugetlb_cgroup *h_cg,
+>  	/* Take the pages off the local counter */
+>  	page_counter_cancel(counter, nr_pages);
+> 
+> -	set_hugetlb_cgroup(page, parent);
+> +	set_hugetlb_cgroup(page, parent, false);
+>  out:
+>  	return;
+>  }
+> @@ -227,7 +244,7 @@ static inline void hugetlb_event(struct hugetlb_cgroup *hugetlb, int idx,
+>  }
+> 
+>  int hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
+> -				 struct hugetlb_cgroup **ptr)
+> +				 struct hugetlb_cgroup **ptr, bool reserved)
+>  {
+>  	int ret = 0;
+>  	struct page_counter *counter;
+> @@ -250,13 +267,20 @@ int hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
+>  	}
+>  	rcu_read_unlock();
+> 
+> -	if (!page_counter_try_charge(&h_cg->hugepage[idx], nr_pages,
+> -				     &counter)) {
+> +	if (!page_counter_try_charge(hugetlb_cgroup_get_counter(h_cg, idx,
+> +								reserved),
+> +				     nr_pages, &counter)) {
+>  		ret = -ENOMEM;
+>  		hugetlb_event(hugetlb_cgroup_from_counter(counter, idx), idx,
+>  			      HUGETLB_MAX);
+> +		css_put(&h_cg->css);
+> +		goto done;
+>  	}
+> -	css_put(&h_cg->css);
+> +	/* Reservations take a reference to the css because they do not get
+> +	 * reparented.
+
+I'm hoping someone with more cgroup knowledge can comment on this and any
+consequences of not reparenting reservations.  We previously talked about
+why reparenting would be very difficult/expensive.  I understand why you are
+nopt doing it.  Just do not fully understand what needs to be done from the
+cgroup side.
+
+Several of the following modifications deal with this.
+--
+Mike kravetz
+
+> +	 */
+> +	if (!reserved)
+> +		css_put(&h_cg->css);
+>  done:
+>  	*ptr = h_cg;
 >  	return ret;
+> @@ -265,12 +289,12 @@ int hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
+>  /* Should be called with hugetlb_lock held */
+>  void hugetlb_cgroup_commit_charge(int idx, unsigned long nr_pages,
+>  				  struct hugetlb_cgroup *h_cg,
+> -				  struct page *page)
+> +				  struct page *page, bool reserved)
+>  {
+>  	if (hugetlb_cgroup_disabled() || !h_cg)
+>  		return;
+> 
+> -	set_hugetlb_cgroup(page, h_cg);
+> +	set_hugetlb_cgroup(page, h_cg, reserved);
+>  	return;
 >  }
->  
-> @@ -306,7 +308,9 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
->  		return -EOPNOTSUPP;
->  
->  	file_start_write(file);
-> +	lock_inode_mode(inode);
->  	ret = file->f_op->fallocate(file, mode, offset, len);
-> +	unlock_inode_mode(inode);
->  
->  	/*
->  	 * Create inotify and fanotify events.
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index e11989502eac..631f11d6246e 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -359,6 +359,11 @@ typedef struct {
->  typedef int (*read_actor_t)(read_descriptor_t *, struct page *,
->  		unsigned long, unsigned long);
->  
-> +/**
-> + * NOTE: DO NOT define new functions in address_space_operations without first
-> + * considering how dynamic inode modes can be supported.  See the comment in
-> + * struct inode_operations for the lock_mode() and unlock_mode() callbacks.
-> + */
->  struct address_space_operations {
->  	int (*writepage)(struct page *page, struct writeback_control *wbc);
->  	int (*readpage)(struct file *, struct page *);
-> @@ -1817,6 +1822,11 @@ struct block_device_operations;
->  
->  struct iov_iter;
->  
-> +/**
-> + * NOTE: DO NOT define new functions in file_operations without first
-> + * considering how dynamic inode modes can be supported.  See the comment in
-> + * struct inode_operations for the lock_mode() and unlock_mode() callbacks.
-> + */
->  struct file_operations {
->  	struct module *owner;
->  	loff_t (*llseek) (struct file *, loff_t, int);
-> @@ -1859,6 +1869,20 @@ struct file_operations {
->  	int (*fadvise)(struct file *, loff_t, loff_t, int);
->  } __randomize_layout;
->  
-> +/*
-> + * Filesystems wishing to support dynamic inode modes must do the following.
-> + *
-> + * 1) the direct_IO address_space_operation must be supported in all
-> + *    potential a_ops vectors for any mode suported by the inode.
-> + * 2) Filesystems must define the lock_mode() and unlock_mode() operations
-> + *    in struct inode_operations.  These functions are used by the core
-> + *    vfs layers to ensure that the mode is stable before allowing the
-> + *    core operations to proceed.
-> + * 3) Mode changes shall not be allowed while the file is mmap'ed
-> + * 4) While changing modes filesystems should take exclusive locks which
-> + *    prevent the core vfs layer from proceeding.
-> + *
-> + */
->  struct inode_operations {
->  	struct dentry * (*lookup) (struct inode *,struct dentry *, unsigned int);
->  	const char * (*get_link) (struct dentry *, struct inode *, struct delayed_call *);
-> @@ -1887,18 +1911,47 @@ struct inode_operations {
->  			   umode_t create_mode);
->  	int (*tmpfile) (struct inode *, struct dentry *, umode_t);
->  	int (*set_acl)(struct inode *, struct posix_acl *, int);
-> +	void (*lock_mode)(struct inode*);
-> +	void (*unlock_mode)(struct inode*);
->  } ____cacheline_aligned;
->  
-> +static inline void lock_inode_mode(struct inode *inode)
-
-inode_aops_get()?
-
-> +{
-> +	WARN_ON_ONCE(inode->i_op->lock_mode &&
-> +		     !inode->i_op->unlock_mode);
-> +	if (inode->i_op->lock_mode)
-> +		inode->i_op->lock_mode(inode);
-> +}
-> +static inline void unlock_inode_mode(struct inode *inode)
-> +{
-> +	WARN_ON_ONCE(inode->i_op->unlock_mode &&
-> +		     !inode->i_op->lock_mode);
-> +	if (inode->i_op->unlock_mode)
-> +		inode->i_op->unlock_mode(inode);
+> 
+> @@ -278,23 +302,29 @@ void hugetlb_cgroup_commit_charge(int idx, unsigned long nr_pages,
+>   * Should be called with hugetlb_lock held
+>   */
+>  void hugetlb_cgroup_uncharge_page(int idx, unsigned long nr_pages,
+> -				  struct page *page)
+> +				  struct page *page, bool reserved)
+>  {
+>  	struct hugetlb_cgroup *h_cg;
+> 
+>  	if (hugetlb_cgroup_disabled())
+>  		return;
+>  	lockdep_assert_held(&hugetlb_lock);
+> -	h_cg = hugetlb_cgroup_from_page(page);
+> +	h_cg = hugetlb_cgroup_from_page(page, reserved);
+>  	if (unlikely(!h_cg))
+>  		return;
+> -	set_hugetlb_cgroup(page, NULL);
+> -	page_counter_uncharge(&h_cg->hugepage[idx], nr_pages);
+> +	set_hugetlb_cgroup(page, NULL, reserved);
+> +
+> +	page_counter_uncharge(hugetlb_cgroup_get_counter(h_cg, idx, reserved),
+> +			      nr_pages);
+> +
+> +	if (reserved)
+> +		css_put(&h_cg->css);
+> +
+>  	return;
+>  }
+> 
+>  void hugetlb_cgroup_uncharge_cgroup(int idx, unsigned long nr_pages,
+> -				    struct hugetlb_cgroup *h_cg)
+> +				    struct hugetlb_cgroup *h_cg, bool reserved)
+>  {
+>  	if (hugetlb_cgroup_disabled() || !h_cg)
+>  		return;
+> @@ -302,8 +332,22 @@ void hugetlb_cgroup_uncharge_cgroup(int idx, unsigned long nr_pages,
+>  	if (huge_page_order(&hstates[idx]) < HUGETLB_CGROUP_MIN_ORDER)
+>  		return;
+> 
+> -	page_counter_uncharge(&h_cg->hugepage[idx], nr_pages);
+> -	return;
+> +	page_counter_uncharge(hugetlb_cgroup_get_counter(h_cg, idx, reserved),
+> +			      nr_pages);
+> +
+> +	if (reserved)
+> +		css_put(&h_cg->css);
 > +}
 > +
->  static inline ssize_t call_read_iter(struct file *file, struct kiocb *kio,
->  				     struct iov_iter *iter)
-
-inode_aops_put()?
-
---D
-
+> +void hugetlb_cgroup_uncharge_counter(struct page_counter *p,
+> +				     unsigned long nr_pages,
+> +				     struct cgroup_subsys_state *css)
+> +{
+> +	if (hugetlb_cgroup_disabled() || !p || !css)
+> +		return;
+> +
+> +	page_counter_uncharge(p, nr_pages);
+> +	css_put(css);
+>  }
+> 
+>  enum {
+> @@ -678,6 +722,7 @@ void __init hugetlb_cgroup_file_init(void)
+>  void hugetlb_cgroup_migrate(struct page *oldhpage, struct page *newhpage)
 >  {
-> -	return file->f_op->read_iter(kio, iter);
-> +	struct inode		*inode = file_inode(kio->ki_filp);
-> +	ssize_t ret;
-> +
-> +	lock_inode_mode(inode);
-> +	ret = file->f_op->read_iter(kio, iter);
-> +	unlock_inode_mode(inode);
-> +	return ret;
->  }
->  
->  static inline ssize_t call_write_iter(struct file *file, struct kiocb *kio,
->  				      struct iov_iter *iter)
->  {
-> -	return file->f_op->write_iter(kio, iter);
-> +	struct inode		*inode = file_inode(kio->ki_filp);
-> +	ssize_t ret;
-> +
-> +	lock_inode_mode(inode);
-> +	ret = file->f_op->write_iter(kio, iter);
-> +	unlock_inode_mode(inode);
-> +	return ret;
->  }
->  
->  static inline int call_mmap(struct file *file, struct vm_area_struct *vma)
-> diff --git a/mm/fadvise.c b/mm/fadvise.c
-> index 4f17c83db575..a4095a5deac8 100644
-> --- a/mm/fadvise.c
-> +++ b/mm/fadvise.c
-> @@ -47,7 +47,10 @@ int generic_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
->  
->  	bdi = inode_to_bdi(mapping->host);
->  
-> +	lock_inode_mode(inode);
->  	if (IS_DAX(inode) || (bdi == &noop_backing_dev_info)) {
-> +		int ret = 0;
-> +
->  		switch (advice) {
->  		case POSIX_FADV_NORMAL:
->  		case POSIX_FADV_RANDOM:
-> @@ -58,10 +61,13 @@ int generic_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
->  			/* no bad return value, but ignore advice */
->  			break;
->  		default:
-> -			return -EINVAL;
-> +			ret = -EINVAL;
->  		}
-> -		return 0;
-> +
-> +		unlock_inode_mode(inode);
-> +		return ret;
->  	}
-> +	unlock_inode_mode(inode);
->  
->  	/*
->  	 * Careful about overflows. Len == 0 means "as much as possible".  Use
-> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-> index b679908743cb..ff49da065db0 100644
-> --- a/mm/khugepaged.c
-> +++ b/mm/khugepaged.c
-> @@ -1592,9 +1592,11 @@ static void collapse_file(struct mm_struct *mm,
->  		} else {	/* !is_shmem */
->  			if (!page || xa_is_value(page)) {
->  				xas_unlock_irq(&xas);
-> +				lock_inode_mode(file->f_inode);
->  				page_cache_sync_readahead(mapping, &file->f_ra,
->  							  file, index,
->  							  PAGE_SIZE);
-> +				unlock_inode_mode(file->f_inode);
->  				/* drain pagevecs to help isolate_lru_page() */
->  				lru_add_drain();
->  				page = find_lock_page(mapping, index);
-> diff --git a/mm/mmap.c b/mm/mmap.c
-> index 70f67c4515aa..dfaf1130e706 100644
-> --- a/mm/mmap.c
-> +++ b/mm/mmap.c
-> @@ -1542,11 +1542,18 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
->  			vm_flags |= VM_NORESERVE;
->  	}
->  
-> +	if (file)
-> +		lock_inode_mode(file_inode(file));
-> +
->  	addr = mmap_region(file, addr, len, vm_flags, pgoff, uf);
->  	if (!IS_ERR_VALUE(addr) &&
->  	    ((vm_flags & VM_LOCKED) ||
->  	     (flags & (MAP_POPULATE | MAP_NONBLOCK)) == MAP_POPULATE))
->  		*populate = len;
-> +
-> +	if (file)
-> +		unlock_inode_mode(file_inode(file));
-> +
->  	return addr;
->  }
->  
-> -- 
-> 2.21.0
+>  	struct hugetlb_cgroup *h_cg;
+> +	struct hugetlb_cgroup *h_cg_reservation;
+>  	struct hstate *h = page_hstate(oldhpage);
+> 
+>  	if (hugetlb_cgroup_disabled())
+> @@ -685,11 +730,12 @@ void hugetlb_cgroup_migrate(struct page *oldhpage, struct page *newhpage)
+> 
+>  	VM_BUG_ON_PAGE(!PageHuge(oldhpage), oldhpage);
+>  	spin_lock(&hugetlb_lock);
+> -	h_cg = hugetlb_cgroup_from_page(oldhpage);
+> -	set_hugetlb_cgroup(oldhpage, NULL);
+> +	h_cg = hugetlb_cgroup_from_page(oldhpage, false);
+> +	h_cg_reservation = hugetlb_cgroup_from_page(oldhpage, true);
+> +	set_hugetlb_cgroup(oldhpage, NULL, false);
+> 
+>  	/* move the h_cg details to new cgroup */
+> -	set_hugetlb_cgroup(newhpage, h_cg);
+> +	set_hugetlb_cgroup(newhpage, h_cg_reservation, true);
+>  	list_move(&newhpage->lru, &h->hugepage_activelist);
+>  	spin_unlock(&hugetlb_lock);
+>  	return;
+> --
+> 2.24.1.735.g03f4e72817-goog
 > 
