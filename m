@@ -2,88 +2,227 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64A2C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21475C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0E524686
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE78124694
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996669;
-	bh=E/QgGsKX187fm06fbc72l+VFzYNIk6fBCxejTqhkB1c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xqfsR1wOmgnO1so9ILVKuNSKhGFJns0CHuchgyObt5nz5pXknBcn4zGHARv0E4Wln
-	 SzqxlJEiixSN0HxlM5PksK3Q0apTNsVhjdU+Ytqb207RSYKsDTitMpHiUJNxNb5Hz9
-	 vl3HRY2keKg3RJ9fxS8PNa3wmsG2/yHFm8A/DC4w=
+	s=default; t=1578996673;
+	bh=pNAqwTSpzvtKvbMUwWTpCb+EeL25wu4GCETo00xysXc=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hPB4a97LA8XQ8v7xwGqfssHS1PT28oxjirAC8t/XVO+RY2Gbsiq07iWNRLoBORoAs
+	 Q7hdYpuG6NezffaLPL4Pa/9isuiZ7VB5VOI5CALvbB6R+Gced5htRlfbD9VuQnjfZT
+	 RJhO4rE8J/pzIdUwqj+m0QgWXUrl20n5xhfwce7M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732386AbgANKLI (ORCPT
+        id S1732391AbgANKLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:11:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45800 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:11:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732359AbgANKLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:11:05 -0500
+        id S1729878AbgANKLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:11:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E82E24685;
-        Tue, 14 Jan 2020 10:11:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E96A024676;
+        Tue, 14 Jan 2020 10:11:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996664;
-        bh=E/QgGsKX187fm06fbc72l+VFzYNIk6fBCxejTqhkB1c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IqlISAb3/OCKSciEy6yIGgHHKikISp+RmXWzdC74uLvWMm52aj7zUouvNGy3ADEXt
-         NThgIrbxzao7b6Jnu9z7xdLIgpCpa1L5ek6O+fC0XhLWI29sDrPxsn/dXIb/cMR81J
-         3IxK2EUKH7Fkn1BuqUAO7MKZ0QZtZJW2pmX6fdJE=
+        s=default; t=1578996667;
+        bh=pNAqwTSpzvtKvbMUwWTpCb+EeL25wu4GCETo00xysXc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=abFtCrMeMBEwvw1cfKZfZKPHHT41Cl5xYMVXcCBFLByUfolfrxxRFJraAbLiG+QSE
+         sVUK2Un3uTDN5ImW8i47lB4YlqSg2W6le23FHa+56N18z3kPtovIoeZHfj6NPXEG4d
+         GRTH9UvK22VfZWrFcbPwnxnSwZxwMfiA5r4LPoPk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 04/31] ALSA: usb-audio: Apply the sample rate quirk for Bose Companion 5
-Date:   Tue, 14 Jan 2020 11:01:56 +0100
-Message-Id: <20200114094340.082217722@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.9 00/31] 4.9.210-stable review
+Date:   Tue, 14 Jan 2020 11:01:52 +0100
+Message-Id: <20200114094334.725604663@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
-References: <20200114094334.725604663@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.210-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.210-rc1
+X-KernelTest-Deadline: 2020-01-16T09:43+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+This is the start of the stable review cycle for the 4.9.210 release.
+There are 31 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-commit 51d4efab7865e6ea6a4ebcd25b3f03c019515c4c upstream.
+Responses should be made by Thu, 16 Jan 2020 09:41:58 +0000.
+Anything received after that time might be too late.
 
-Bose Companion 5 (with USB ID 05a7:1020) doesn't seem supporting
-reading back the sample rate, so the existing quirk is needed.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.210-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+and the diffstat can be found below.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206063
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200104110936.14288-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+thanks,
 
----
- sound/usb/quirks.c |    1 +
- 1 file changed, 1 insertion(+)
+greg k-h
 
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1141,6 +1141,7 @@ bool snd_usb_get_sample_rate_quirk(struc
- 	case USB_ID(0x04D8, 0xFEEA): /* Benchmark DAC1 Pre */
- 	case USB_ID(0x0556, 0x0014): /* Phoenix Audio TMX320VC */
- 	case USB_ID(0x05A3, 0x9420): /* ELP HD USB Camera */
-+	case USB_ID(0x05a7, 0x1020): /* Bose Companion 5 */
- 	case USB_ID(0x074D, 0x3553): /* Outlaw RR2150 (Micronas UAC3553B) */
- 	case USB_ID(0x1395, 0x740a): /* Sennheiser DECT */
- 	case USB_ID(0x1901, 0x0191): /* GE B850V3 CP2114 audio interface */
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.9.210-rc1
+
+Florian Westphal <fw@strlen.de>
+    netfilter: ipset: avoid null deref when IPSET_ATTR_LINENO is present
+
+Florian Westphal <fw@strlen.de>
+    netfilter: arp_tables: init netns pointer in xt_tgchk_param struct
+
+Alan Stern <stern@rowland.harvard.edu>
+    USB: Fix: Don't skip endpoint descriptors with maxpacket=0
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    rtl8xxxu: prevent leaking urb
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    scsi: bfa: release allocated memory in case of error
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    mwifiex: pcie: Fix memory leak in mwifiex_pcie_alloc_cmdrsp_buf
+
+Ganapathi Bhat <gbhat@marvell.com>
+    mwifiex: fix possible heap overflow in mwifiex_process_country_ie()
+
+Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+    tty: always relink the port
+
+Sudip Mukherjee <sudipm.mukherjee@gmail.com>
+    tty: link tty and port before configuring it as console
+
+Michael Straube <straube.linux@gmail.com>
+    staging: rtl8188eu: Add device code for TP-Link TL-WN727N v5.21
+
+Ian Abbott <abbotti@mev.co.uk>
+    staging: comedi: adv_pci1710: fix AI channels 16-31 for PCI-1713
+
+Paul Cercueil <paul@crapouillou.net>
+    usb: musb: dma: Correct parameter passed to IRQ handler
+
+Paul Cercueil <paul@crapouillou.net>
+    usb: musb: Disable pullup at init
+
+Tony Lindgren <tony@atomide.com>
+    usb: musb: fix idling for suspend after disconnect interrupt
+
+Daniele Palmas <dnlplm@gmail.com>
+    USB: serial: option: add ZLP support for 0x1bc7/0x9010
+
+Malcolm Priestley <tvboxspy@gmail.com>
+    staging: vt6656: set usb_set_intfdata on driver fail.
+
+Oliver Hartkopp <socketcan@hartkopp.net>
+    can: can_dropped_invalid_skb(): ensure an initialized headroom in outgoing CAN sk_buffs
+
+Florian Faber <faber@faberman.de>
+    can: mscan: mscan_rx_poll(): fix rx path lockup when returning from polling to irq mode
+
+Johan Hovold <johan@kernel.org>
+    can: gs_usb: gs_usb_probe(): use descriptors of current altsetting
+
+Wayne Lin <Wayne.Lin@amd.com>
+    drm/dp_mst: correct the shifting in DP_REMOTE_I2C_READ
+
+Dmitry Torokhov <dmitry.torokhov@gmail.com>
+    Input: add safety guards to input_set_keycode()
+
+Dmitry Torokhov <dmitry.torokhov@gmail.com>
+    HID: hid-input: clear unmapped usages
+
+Marcel Holtmann <marcel@holtmann.org>
+    HID: uhid: Fix returning EPOLLOUT from uhid_char_poll
+
+Alan Stern <stern@rowland.harvard.edu>
+    HID: Fix slab-out-of-bounds read in hid_field_extract
+
+Steven Rostedt (VMware) <rostedt@goodmis.org>
+    tracing: Have stack tracer compile when MCOUNT_INSN_SIZE is not defined
+
+Kaitao Cheng <pilgrimtao@gmail.com>
+    kernel/trace: Fix do not unregister tracepoints when register sched_migrate_task fail
+
+Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+    tcp: minimize false-positives on TCP/GRO check
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: usb-audio: Apply the sample rate quirk for Bose Companion 5
+
+Guenter Roeck <linux@roeck-us.net>
+    usb: chipidea: host: Disable port power only if previously enabled
+
+Will Deacon <will@kernel.org>
+    chardev: Avoid potential use-after-free in 'chrdev_open()'
+
+Jan Kara <jack@suse.cz>
+    kobject: Export kobject_get_unless_zero()
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +--
+ drivers/gpu/drm/drm_dp_mst_topology.c              |  2 +-
+ drivers/hid/hid-core.c                             |  6 ++++
+ drivers/hid/hid-input.c                            | 16 +++++++---
+ drivers/hid/uhid.c                                 |  3 +-
+ drivers/input/input.c                              | 26 ++++++++++-------
+ drivers/net/can/mscan/mscan.c                      | 21 +++++++------
+ drivers/net/can/usb/gs_usb.c                       |  4 +--
+ drivers/net/wireless/marvell/mwifiex/pcie.c        |  4 ++-
+ drivers/net/wireless/marvell/mwifiex/sta_ioctl.c   | 13 +++++++--
+ .../net/wireless/realtek/rtl8xxxu/rtl8xxxu_core.c  |  1 +
+ drivers/scsi/bfa/bfad_attr.c                       |  4 ++-
+ drivers/staging/comedi/drivers/adv_pci1710.c       |  4 +--
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c        |  1 +
+ drivers/staging/vt6656/device.h                    |  1 +
+ drivers/staging/vt6656/main_usb.c                  |  1 +
+ drivers/staging/vt6656/wcmd.c                      |  1 +
+ drivers/tty/serial/serial_core.c                   |  1 +
+ drivers/usb/chipidea/host.c                        |  4 ++-
+ drivers/usb/core/config.c                          | 12 +++++---
+ drivers/usb/musb/musb_core.c                       | 11 +++++++
+ drivers/usb/musb/musbhsdma.c                       |  2 +-
+ drivers/usb/serial/option.c                        |  8 +++++
+ drivers/usb/serial/usb-wwan.h                      |  1 +
+ drivers/usb/serial/usb_wwan.c                      |  4 +++
+ fs/char_dev.c                                      |  2 +-
+ include/linux/can/dev.h                            | 34 ++++++++++++++++++++++
+ include/linux/kobject.h                            |  2 ++
+ kernel/trace/trace_sched_wakeup.c                  |  4 ++-
+ kernel/trace/trace_stack.c                         |  5 ++++
+ lib/kobject.c                                      |  5 +++-
+ net/ipv4/netfilter/arp_tables.c                    | 27 ++++++++++-------
+ net/ipv4/tcp_input.c                               | 14 +++++----
+ net/netfilter/ipset/ip_set_core.c                  |  3 +-
+ sound/usb/quirks.c                                 |  1 +
+ 35 files changed, 189 insertions(+), 63 deletions(-)
 
 
