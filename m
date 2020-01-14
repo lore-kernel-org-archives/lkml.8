@@ -6,83 +6,65 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA37FC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBBC7C33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BADD624670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B21F324670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725956AbgANJur (ORCPT
+        id S1729067AbgANJu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:50:47 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:42528 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725842AbgANJur (ORCPT
+        Tue, 14 Jan 2020 04:50:56 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:44357 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbgANJuz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:50:47 -0500
-Received: by mail-ot1-f68.google.com with SMTP id 66so12015829otd.9;
-        Tue, 14 Jan 2020 01:50:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+6LmuYuMGTmOXwHbUpttOywfmJXsazPd2oXoQf5XGBk=;
-        b=sAkjrObHzFrvBzi9+b+Ji0dFWCxf/PpZ1vjpgxMar39HaDuQlYjcvQbZeQ4yR/OH0H
-         4NgmcKZdAdaspNWSwmhSBIcfYzPZmyxqMKlwfG2Y+vVOVkm/Kna4ohxdFZbd3vHkYytB
-         fQnF+8Gndk5VJaGCaDk8Ux1rv/ZNHALGy0HDiGbwmCCMT6+DMIfuT8DsqrS0TDWdkp5u
-         2t6BDi4CxN+1SnQYYx1n/n17js3KzAGUtxbb20GKdpWOkdftP3F40tqLRJ2XmyrLhWUJ
-         xRJ0kTq+XUUnYuDboQ0jyNjfaKDg9UgZD10KjSF1OebSZCNZwlR0qi/oT9o+Y+Xvucp8
-         Apdw==
-X-Gm-Message-State: APjAAAWdqwU4EKQJGJkH0QyHeJg/8vkwn/rR/c5bZhTgTwli7hUGETIU
-        5GSboSMyEpI78nfvtRCrY9S+2VKMADJ87hpliGSiug==
-X-Google-Smtp-Source: APXvYqxnrI58HGC3YYQXRgw1TBmOivT+m91WMqatQDgHBMmGpJ0SrmHcIqLmIgDHc8Clm56u3EkDP0o5hNDc+VXS4Zs=
-X-Received: by 2002:a9d:7984:: with SMTP id h4mr16859866otm.297.1578995446820;
- Tue, 14 Jan 2020 01:50:46 -0800 (PST)
+        Tue, 14 Jan 2020 04:50:55 -0500
+Received: from localhost (lfbn-lyo-1-1670-129.w90-65.abo.wanadoo.fr [90.65.102.129])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 9CB38240014;
+        Tue, 14 Jan 2020 09:50:49 +0000 (UTC)
+Date:   Tue, 14 Jan 2020 10:50:49 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, ludovic.desroches@microchip.com,
+        vkoul@kernel.org, eugen.hristev@microchip.com, jic23@kernel.org,
+        knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        mchehab@kernel.org, lee.jones@linaro.org,
+        radu_nicolae.pirea@upb.ro, richard.genoud@gmail.com,
+        tudor.ambarus@microchip.com, miquel.raynal@bootlin.com,
+        richard@nod.at, vigneshr@ti.com, wg@grandegger.com,
+        mkl@pengutronix.de, a.zummo@towertech.it,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-iio@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-can@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v2 02/17] dt-bindings: at_xdmac: add microchip,sam9x60-dma
+Message-ID: <20200114095049.GC3137@piout.net>
+References: <1578673089-3484-1-git-send-email-claudiu.beznea@microchip.com>
+ <1578673089-3484-3-git-send-email-claudiu.beznea@microchip.com>
 MIME-Version: 1.0
-References: <20200113103040.23661-1-geert@linux-m68k.org>
-In-Reply-To: <20200113103040.23661-1-geert@linux-m68k.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 14 Jan 2020 10:50:34 +0100
-Message-ID: <CAMuHMdXx8Y2qvqg8tMqrzQJuU9DMgSNryGch3XgrTPyqwrkN=A@mail.gmail.com>
-Subject: Re: [PATCH] m68k: Implement copy_thread_tls()
-To:     Greg Ungerer <gerg@linux-m68k.org>
-Cc:     "Amanieu d'Antras" <amanieu@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        Kars de Jong <jongk@linux-m68k.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Next <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578673089-3484-3-git-send-email-claudiu.beznea@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 11:30 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> This is required for clone3(), which passes the TLS value through a
-> struct rather than a register.
->
-> As do_fork() is only available if CONFIG_HAVE_COPY_THREAD_TLS is set,
-> m68k_clone() must be changed to call _do_fork() directly.
->
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+On 10/01/2020 18:17:54+0200, Claudiu Beznea wrote:
+> Add microchip,sam9x60-dma to DT bindings documentation.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 > ---
-> This is a dependency for the combination of commits
-> e8bb2a2a1d51511e ("m68k: Wire up clone3() syscall") in m68k/for-next,
-> dd499f7a7e342702 ("clone3: ensure copy_thread_tls is implemented") in
-> v5.5-rc6.
-
-Applied and queued for v5.6.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+>  Documentation/devicetree/bindings/dma/atmel-xdma.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+Applied, thanks.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
