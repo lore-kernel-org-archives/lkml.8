@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1329FC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161EFC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD4BC24677
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD9124685
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996467;
-	bh=7nSfkzHlu6vL9griYCjsQC/oYr3HPCCl7oqBuNu1L1M=;
+	s=default; t=1578996469;
+	bh=hp3tyotnzJKkUh2bGZfuSWRRRn68vaaDLm7ShU8eO6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EFJoOM7QeakjkKwG/R3NuAN0n2opDD7mVb3i0OyMfQN8tjZDlvhF4ushMhR2AhJU1
-	 yqZ/GqQ+Z5Gt3TQ/0CMCv4bTNdHko2JnU1aAnjAlLft6PbW7XkFl771Z3Kjb+5KI5x
-	 VY7wGDU4fJh6Fa9RL88M881ZV+guP5RL6b7XQ1Tw=
+	b=vEFs3x1p0FMztyjlOz73BSkImhO72BEryRs5QBBFgW3D85HU0e3ktYcHekA0UZFlq
+	 Pe7QhCzdoinkbhjOoDRALJ4Pg1lxbMgOs1zWEWAnxHJt7dJbCVGxJvUQx4nzhaeDtO
+	 YUAVM3SLC9wJiqSXEtAyThnT+e6/hGQxo64gQ9qo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730751AbgANKHr (ORCPT
+        id S1730775AbgANKHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:07:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38246 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:07:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729224AbgANKHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:07:42 -0500
+        id S1730747AbgANKHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:07:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4FB2C24677;
-        Tue, 14 Jan 2020 10:07:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3B3C207FF;
+        Tue, 14 Jan 2020 10:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996462;
-        bh=7nSfkzHlu6vL9griYCjsQC/oYr3HPCCl7oqBuNu1L1M=;
+        s=default; t=1578996466;
+        bh=hp3tyotnzJKkUh2bGZfuSWRRRn68vaaDLm7ShU8eO6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iMSD7mJYpqJmDp/7VLrD2PNEgoPYBmhM4xsuyEl/xPGkB3j5T+Xa40rVWGuyCF1d0
-         aIoE1aR5uh8j7eCyhnbUez3XWaqUWw98nN7oPc1hk8AvUclq+Y10yQkMZ309VaceSa
-         nnDgCpMmNJpIjPBj2xIZ3+5k6N+cOKnDggogLzlA=
+        b=raeyyHtgsYMxrp/Th60QUBaB5HuPaAMRfT/FvSu66s+nnHYq0wj/jXkfVwkNsYAxC
+         uuJZZe9CFMSHwdEsQlHzQ3V5WRzYfpynKAVGtztFFhvh9sKTg4ugMdXQSmA5n8Yoed
+         rlJ3YSIlJ38MVak47FwuQgsEHFu6DHHSBYt431Ok=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Malcolm Priestley <tvboxspy@gmail.com>
-Subject: [PATCH 4.19 25/46] staging: vt6656: set usb_set_intfdata on driver fail.
-Date:   Tue, 14 Jan 2020 11:01:42 +0100
-Message-Id: <20200114094345.538530223@linuxfoundation.org>
+        stable@vger.kernel.org, Kaitao Cheng <pilgrimtao@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 08/46] kernel/trace: Fix do not unregister tracepoints when register sched_migrate_task fail
+Date:   Tue, 14 Jan 2020 11:01:25 +0100
+Message-Id: <20200114094342.139174139@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -58,55 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Malcolm Priestley <tvboxspy@gmail.com>
+From: Kaitao Cheng <pilgrimtao@gmail.com>
 
-commit c0bcf9f3f5b661d4ace2a64a79ef661edd2a4dc8 upstream.
+commit 50f9ad607ea891a9308e67b81f774c71736d1098 upstream.
 
-intfdata will contain stale pointer when the device is detached after
-failed initialization when referenced in vt6656_disconnect
+In the function, if register_trace_sched_migrate_task() returns error,
+sched_switch/sched_wakeup_new/sched_wakeup won't unregister. That is
+why fail_deprobe_sched_switch was added.
 
-Provide driver access to it here and NULL it.
+Link: http://lkml.kernel.org/r/20191231133530.2794-1-pilgrimtao@gmail.com
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Malcolm Priestley <tvboxspy@gmail.com>
-Link: https://lore.kernel.org/r/6de448d7-d833-ef2e-dd7b-3ef9992fee0e@gmail.com
+Cc: stable@vger.kernel.org
+Fixes: 478142c39c8c2 ("tracing: do not grab lock in wakeup latency function tracing")
+Signed-off-by: Kaitao Cheng <pilgrimtao@gmail.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/vt6656/device.h   |    1 +
- drivers/staging/vt6656/main_usb.c |    1 +
- drivers/staging/vt6656/wcmd.c     |    1 +
- 3 files changed, 3 insertions(+)
+ kernel/trace/trace_sched_wakeup.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/staging/vt6656/device.h
-+++ b/drivers/staging/vt6656/device.h
-@@ -259,6 +259,7 @@ struct vnt_private {
- 	u8 mac_hw;
- 	/* netdev */
- 	struct usb_device *usb;
-+	struct usb_interface *intf;
+--- a/kernel/trace/trace_sched_wakeup.c
++++ b/kernel/trace/trace_sched_wakeup.c
+@@ -640,7 +640,7 @@ static void start_wakeup_tracer(struct t
+ 	if (ret) {
+ 		pr_info("wakeup trace: Couldn't activate tracepoint"
+ 			" probe to kernel_sched_migrate_task\n");
+-		return;
++		goto fail_deprobe_sched_switch;
+ 	}
  
- 	u64 tsf_time;
- 	u8 rx_rate;
---- a/drivers/staging/vt6656/main_usb.c
-+++ b/drivers/staging/vt6656/main_usb.c
-@@ -955,6 +955,7 @@ vt6656_probe(struct usb_interface *intf,
- 	priv = hw->priv;
- 	priv->hw = hw;
- 	priv->usb = udev;
-+	priv->intf = intf;
+ 	wakeup_reset(tr);
+@@ -658,6 +658,8 @@ static void start_wakeup_tracer(struct t
+ 		printk(KERN_ERR "failed to start wakeup tracer\n");
  
- 	vnt_set_options(priv);
- 
---- a/drivers/staging/vt6656/wcmd.c
-+++ b/drivers/staging/vt6656/wcmd.c
-@@ -99,6 +99,7 @@ void vnt_run_command(struct work_struct
- 		if (vnt_init(priv)) {
- 			/* If fail all ends TODO retry */
- 			dev_err(&priv->usb->dev, "failed to start\n");
-+			usb_set_intfdata(priv->intf, NULL);
- 			ieee80211_free_hw(priv->hw);
- 			return;
- 		}
+ 	return;
++fail_deprobe_sched_switch:
++	unregister_trace_sched_switch(probe_wakeup_sched_switch, NULL);
+ fail_deprobe_wake_new:
+ 	unregister_trace_sched_wakeup_new(probe_wakeup, NULL);
+ fail_deprobe:
 
 
