@@ -2,107 +2,100 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D60C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C808DC33CB2
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940FA2187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A94952187F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:48:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728949AbgANNqx (ORCPT
+        id S1728767AbgANNsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:46:53 -0500
-Received: from mga09.intel.com ([134.134.136.24]:27860 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgANNqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:46:52 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 05:46:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.69,432,1571727600"; 
-   d="scan'208";a="225221170"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by orsmga003.jf.intel.com with ESMTP; 14 Jan 2020 05:46:48 -0800
-Subject: Re: [PATCH] perf tools: intel-pt: fix endless record after being
- terminated
-To:     Jiri Olsa <jolsa@redhat.com>, Wei Li <liwei391@huawei.com>
-Cc:     acme@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, huawei.libin@huawei.com
-References: <20200102074211.19901-1-liwei391@huawei.com>
- <20200106120250.GD207350@krava>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <7e01a903-29c3-89c4-360e-bbf4834a3f36@intel.com>
-Date:   Tue, 14 Jan 2020 15:45:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 14 Jan 2020 08:48:51 -0500
+Received: from out28-121.mail.aliyun.com ([115.124.28.121]:44626 "EHLO
+        out28-121.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726133AbgANNsv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 08:48:51 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.4116705|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0462401-0.00185986-0.9519;DS=CONTINUE|ham_enroll_verification|0.0103876-0.00146899-0.988143;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03268;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=25;RT=25;SR=0;TI=SMTPD_---.GbzNf-h_1579009702;
+Received: from 192.168.10.218(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.GbzNf-h_1579009702)
+          by smtp.aliyun-inc.com(10.147.40.7);
+          Tue, 14 Jan 2020 21:48:24 +0800
+Subject: Re: [PATCH 3/6] dt-bindings: MIPS: Document Ingenic SoCs binding.
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+References: <Introduce SMP support for CI20 (based on JZ4780).>
+ <1578933813-80122-1-git-send-email-zhouyanjie@wanyeetech.com>
+ <1578933813-80122-5-git-send-email-zhouyanjie@wanyeetech.com>
+ <30183031578977983@vla1-0bfbe4c1c324.qloud-c.yandex.net>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "paul.burton@mips.com" <paul.burton@mips.com>,
+        "paulburton@kernel.org" <paulburton@kernel.org>,
+        "jhogan@kernel.org" <jhogan@kernel.org>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "syq@debian.org" <syq@debian.org>,
+        "ralf@linux-mips.org" <ralf@linux-mips.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "chenhc@lemote.com" <chenhc@lemote.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "ebiederm@xmission.com" <ebiederm@xmission.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "paul@crapouillou.net" <paul@crapouillou.net>,
+        "prasannatsmkumar@gmail.com" <prasannatsmkumar@gmail.com>,
+        "sernia.zhou@foxmail.com" <sernia.zhou@foxmail.com>,
+        "zhenwenjin@gmail.com" <zhenwenjin@gmail.com>
+From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
+Message-ID: <5E1DC6A7.9070601@wanyeetech.com>
+Date:   Tue, 14 Jan 2020 21:48:23 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+ Thunderbird/38.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200106120250.GD207350@krava>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <30183031578977983@vla1-0bfbe4c1c324.qloud-c.yandex.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/01/20 2:02 pm, Jiri Olsa wrote:
-> On Thu, Jan 02, 2020 at 03:42:11PM +0800, Wei Li wrote:
->> In __cmd_record(), when receiving SIGINT(ctrl + c), a done flag will
->> be set and the event list will be disabled by evlist__disable() once.
->>
->> While in auxtrace_record.read_finish(), the related events will be
->> enabled again, if they are continuous, the recording seems to be endless.
->>
->> If the intel_pt event is disabled, we don't enable it again here.
->>
->> Before the patch:
->> huawei@huawei-2288H-V5:~/linux-5.5-rc4/tools/perf$ ./perf record -e \
->> intel_pt//u -p 46803
->> ^C^C^C^C^C^C
->>
->> After the patch:
->> huawei@huawei-2288H-V5:~/linux-5.5-rc4/tools/perf$ ./perf record -e \
->> intel_pt//u -p 48591
->> ^C[ perf record: Woken up 0 times to write data ]
->> Warning:
->> AUX data lost 504 times out of 4816!
->>
->> [ perf record: Captured and wrote 2024.405 MB perf.data ]
->>
->> Signed-off-by: Wei Li <liwei391@huawei.com>
->> ---
->>  tools/perf/arch/x86/util/intel-pt.c | 10 +++++++---
->>  1 file changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
->> index 20df442fdf36..1e96afcd8646 100644
->> --- a/tools/perf/arch/x86/util/intel-pt.c
->> +++ b/tools/perf/arch/x86/util/intel-pt.c
->> @@ -1173,9 +1173,13 @@ static int intel_pt_read_finish(struct auxtrace_record *itr, int idx)
->>  	struct evsel *evsel;
->>  
->>  	evlist__for_each_entry(ptr->evlist, evsel) {
->> -		if (evsel->core.attr.type == ptr->intel_pt_pmu->type)
->> -			return perf_evlist__enable_event_idx(ptr->evlist, evsel,
->> -							     idx);
->> +		if (evsel->core.attr.type == ptr->intel_pt_pmu->type) {
->> +			if (evsel->disabled)
->> +				return 0;
->> +			else
->> +				return perf_evlist__enable_event_idx(
->> +						ptr->evlist, evsel, idx);
-> 
-> what's the logic behind enabling the event in here?
+Hi Jiaxun,
 
-Tracing stops when the auxtrace buffer is full and won't start again until
-the event is scheduled in (which is never for system-wide events) but
-enabling here will start tracing again immediately if possible.
+On 2020年01月14日 12:59, Jiaxun Yang wrote:
+>
+> 14.01.2020, 00:44, "周琰杰 (Zhou Yanjie)" <zhouyanjie@wanyeetech.com>:
+>> Document the available properties for the SoC root node and the
+>> CPU nodes of the devicetree for the Ingenic XBurst SoCs.
+>>
+>> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+>> ---
+>>   .../bindings/mips/ingenic/ingenic,cpu.txt | 32 ++++++++++++++++++++++
+>>   .../bindings/mips/ingenic/ingenic,soc,txt | 18 ++++++++++++
+>>   2 files changed, 50 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,cpu.txt
+>>   create mode 100644 Documentation/devicetree/bindings/mips/ingenic/ingenic,soc,txt
+>>
+> We'd better use schemas for the document.
+
+I will change it in v2.
+
+Thanks and best regards!
+
+>
+> See[1]
+>
+> Thanks.
+>
+> [1]: https://lwn.net/Articles/771621/
+> --
+> Jiaxun Yang
+
