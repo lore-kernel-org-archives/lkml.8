@@ -2,100 +2,120 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A64C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB614C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF5B2187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5CD72187F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:24:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgANQXH (ORCPT
+        id S1728757AbgANQYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:23:07 -0500
-Received: from mout.kundenserver.de ([217.72.192.73]:40453 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725904AbgANQXH (ORCPT
+        Tue, 14 Jan 2020 11:24:20 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54181 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgANQYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:23:07 -0500
-Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MadGG-1jOni72MkU-00cAgg for <linux-kernel@vger.kernel.org>; Tue, 14 Jan
- 2020 17:23:05 +0100
-Received: by mail-qt1-f177.google.com with SMTP id e25so1616729qtr.13
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 08:23:05 -0800 (PST)
-X-Gm-Message-State: APjAAAWYdj7e+xNIesLXUX4z+qvmTdLeJM+LP16d3X/kogzK/Wnwe98U
-        TcnBSInHoRCwRX1vgYG1HJnYJy53xuyb0VWK0sk=
-X-Google-Smtp-Source: APXvYqyQRl+RS+4lYhvE1+899F0TLsfD48pCLsOVltbaCq1aMotPe+CAUHfgKfZ14B7Ib3sDZnxXOK6/4sE99hB3IPY=
-X-Received: by 2002:ac8:709a:: with SMTP id y26mr4384832qto.304.1579018984475;
- Tue, 14 Jan 2020 08:23:04 -0800 (PST)
+        Tue, 14 Jan 2020 11:24:19 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1irOz2-0004VT-7w; Tue, 14 Jan 2020 17:24:00 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1irOz1-0004qL-Lg; Tue, 14 Jan 2020 17:23:59 +0100
+Date:   Tue, 14 Jan 2020 17:23:59 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Support Opensource <Support.Opensource@diasemi.com>,
+        "linux@roeck-us.net" <linux@roeck-us.net>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        Steve Twiss <stwiss.opensource@diasemi.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>
+Subject: Re: [PATCH 1/3] mfd: da9062: fix watchdog compatible string
+Message-ID: <20200114162359.weoirknje6yhcmds@pengutronix.de>
+References: <20200108095704.23233-1-m.felsch@pengutronix.de>
+ <20200108095704.23233-2-m.felsch@pengutronix.de>
+ <AM6PR10MB2263E53D89F7EC66C5E3779D80340@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 14 Jan 2020 17:22:48 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a3wHmr3hgb5H69V68ZA3KCDSFeOekAKmR80MWxgQ7JK=w@mail.gmail.com>
-Message-ID: <CAK8P3a3wHmr3hgb5H69V68ZA3KCDSFeOekAKmR80MWxgQ7JK=w@mail.gmail.com>
-Subject: asm-generic: fixes for v5.5
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Nick Hu <nickhu@andestech.com>, Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:CnUs0kVGHiAhk0kV3rWyYaSMio9KcVG43K+nMgnM/MoZEVMl9Qg
- H2BmezWgWLKYreseuCTjv2jBV0YE84NVhoGT6YQoHQxTN6vZB1mLXQglivlT9Izb/gZZ1R0
- b9kjxIOmGHFD3FUHhehYzDQdzZ5dthxAxs67dNklHD1+D/s4E1JlK80wAnTQArxaa9ucVZS
- 04W4nhEOnCYtMC6uWHNfw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:+AaxaToq39s=:1uJTeA3AR8guXpZMY293Or
- 250YoYabYahaFo5xKCRfbqqHAoZ+rFRm7FBNNP7tHZq59CZlgRUVHyvYFcgnNz5FPvZgc6sXZ
- i/5Bbb+XVhR76IcB7jCvphYJSLr92V8WPFfWydpXzrOGOrzBXwzjSBANPi0WdcoPavzXKoil8
- Vm5dL2FbEWgFbNJ2pZGHM0HxpYClepmqzVMMQ5hDVmaxHc74SUJWsrXKUfBGNTuPB8jMltiKG
- 1k0YfEMUb9UccCEnvSltGClmzpDjxLFG0uUf9hbCRuHCEG0CwWrKQWc0bAfMPgsRdSApiRnOE
- Q6m4qizUcTtEzvUhsULQUTWX8aECKlJeRYmBoQHOwRe9iOoL0B5eAPLnXNDRUCWy/vgn3oYEQ
- O/rsNwLqa+sPqPyZbnknWELtQFBtphRwwujGoByeW35q4ZfGHABm1dPHxgcml/TaEoE2S4OXS
- WiQpvOQAVMIKpSOkmx6iWXjOHFoyPp0z28i/p3SmspKoBtLKr9HhYhomTbmYHdORDdO4a4P6h
- IAB1iI8uWj0oda2NMGFM36EGC7XOB1Vs3zNaAOAj8HJU6onCob0+sgmzdExZfrbbNRKp5u2nF
- +JJUJp8oW6N+tHQ7b6ny+RVJO4WkO2vzQ3jViCs3sVv5sMPCCvURjoCjLQE9fyaeT5p1jSzj9
- EBDHwfupUEky3H3hdgF2sEl0Re5PMvtaeULsho6va0oX2moPa6w1fpcFnEfaibgAMY7KEBlNW
- qEFqzqwHDw6DHxMXGP7kEd5277OBmmOdWvFLpQh3dRZLQGA9XDp4PibpqefHKXBpT/TPTcQmM
- nrzqZxD0vwxduuDvPL43cMTrqr5ENMbwjDy4Rq85oiEaquMsoZUMzo+wnh6/voGvGTaK+EPHL
- uAIA/BQzG8/Y6hoRf3Jw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM6PR10MB2263E53D89F7EC66C5E3779D80340@AM6PR10MB2263.EURPRD10.PROD.OUTLOOK.COM>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:20:29 up 60 days,  7:39, 57 users,  load average: 0.47, 0.25,
+ 0.09
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit e42617b825f8073569da76dc4510bfa019b1c35a:
+On 20-01-14 16:19, Adam Thomson wrote:
+> On 08 January 2020 09:57, Marco Felsch wrote:
+> 
+> > The watchdog driver compatible is "dlg,da9062-watchdog" and not
+> > "dlg,da9062-wdt". Therefore the mfd-core can't populate the of_node and
+> > fwnode. As result the watchdog driver can't parse the devicetree.
+> > 
+> 
+> I do agree there's a mismatch between the documentation and the MFD code.
+> So in your DT are you specifying 'dlg,da9062-watchdog' and not 'dlg,da9062-wdt'
+> hence the issue? Are there any existing users who are using 'dlg,da9062-wdt' in
+> their DT instead?
 
-  Linux 5.5-rc1 (2019-12-08 14:57:55 -0800)
+Yes the upstream available DT I'm currently using is:
+arch/arm/boot/dts/imx6qdl-phytec-phycore-som.dtsi.
 
-are available in the Git repository at:
+I grep the code and found no _upstream_ user of 'dlg,da9062-wdt' also
+using this compatible would be a missmatch with the binding
+documentation. So those DT's assuming a wrong binding. Therefore I fixed
+it here and not within the watchdog driver.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git
-tags/asm-generic-5.5
+Regards,
+  Marco
 
-for you to fetch changes up to 060dc911501f6ee222569304f50962172a52b1d6:
+> > Fixes: 9b40b030c4ad ("mfd: da9062: Supply core driver")
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > ---
+> >  drivers/mfd/da9062-core.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/mfd/da9062-core.c b/drivers/mfd/da9062-core.c
+> > index e69626867c26..9143de7b77b8 100644
+> > --- a/drivers/mfd/da9062-core.c
+> > +++ b/drivers/mfd/da9062-core.c
+> > @@ -248,7 +248,7 @@ static const struct mfd_cell da9062_devs[] = {
+> >  		.name		= "da9062-watchdog",
+> >  		.num_resources	= ARRAY_SIZE(da9062_wdt_resources),
+> >  		.resources	= da9062_wdt_resources,
+> > -		.of_compatible  = "dlg,da9062-wdt",
+> > +		.of_compatible  = "dlg,da9062-watchdog",
+> >  	},
+> >  	{
+> >  		.name		= "da9062-thermal",
+> > --
+> > 2.20.1
+> 
+> 
 
-  nds32: fix build failure caused by page table folding updates
-(2019-12-30 11:19:05 +0100)
-
-----------------------------------------------------------------
-asm-generic: fixes for v5.5
-
-Here are two bugfixes from Mike Rapoport, both fixing
-compile-time errors on the nds32 architecture that
-were recently introduced.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-
-----------------------------------------------------------------
-Mike Rapoport (2):
-      asm-generic/nds32: don't redefine cacheflush primitives
-      nds32: fix build failure caused by page table folding updates
-
- arch/nds32/include/asm/cacheflush.h | 11 +++++++----
- arch/nds32/include/asm/pgtable.h    |  2 +-
- include/asm-generic/cacheflush.h    | 33 ++++++++++++++++++++++++++++++++-
- 3 files changed, 40 insertions(+), 6 deletions(-)
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
