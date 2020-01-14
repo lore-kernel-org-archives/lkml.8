@@ -2,95 +2,141 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14AC1C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A836C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E1A2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:35:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579016116;
-	bh=TnevzhVUZF4pyGCopDfMXcwhuhw/gLXqKk9L1QZKo8Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BDcRCvKIMQZt9ySp7Uqajpf72u6OBqdhZm5QPfg8RRdGkFOa6WzNLPuowOh1SUC4N
-	 qm0D3Yuv3IVFTAFGJ5mMVftJxQIEs/y+Ey1ER1CWj7FXg0jlXpAFNK75JQU5d9C1La
-	 ucXnHJb+fJm4McEJ5QTA9blnCuAWzB6rtHXGgLGc=
+	by mail.kernel.org (Postfix) with ESMTP id 295CF24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:36:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bCRhGJGp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729026AbgANPfQ (ORCPT
+        id S1729112AbgANPgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:35:16 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36214 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726342AbgANPfP (ORCPT
+        Tue, 14 Jan 2020 10:36:05 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:5190 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725904AbgANPgF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:35:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TnevzhVUZF4pyGCopDfMXcwhuhw/gLXqKk9L1QZKo8Y=; b=OfpfFDbwC+s7nxwz+wOkEdDGR
-        pRZxN38c9nl2FWne4V8pximq6dGeG1L3rFOGWY3bz8QR3EpC7b55OK/qApDpSmeRwglL5ACd/Xjxp
-        DY1Qz6Dbr5/ywscSBhqCrLy7KHZbvbEwBeAoNNiAhQvhUWNXTjzQORNayiNpx+u7N3aWc=;
-Received: from fw-tnat-cam7.arm.com ([217.140.106.55] helo=fitzroy.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1irODk-0000DR-LB; Tue, 14 Jan 2020 15:35:08 +0000
-Received: by fitzroy.sirena.org.uk (Postfix, from userid 1000)
-        id 48FC8D04DF5; Tue, 14 Jan 2020 15:35:08 +0000 (GMT)
-Date:   Tue, 14 Jan 2020 15:35:08 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-spi@vger.kernel.org, devicetree@vger.kernel.org,
-        kbuild test robot <lkp@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 2/2] spi: fsl: simplify error path in
- of_fsl_spi_probe()
-Message-ID: <20200114153508.GY3897@sirena.org.uk>
-References: <1cdd0a26d7e1545f32c8bc4dc7458ebecdd6aaed.1575990944.git.christophe.leroy@c-s.fr>
- <539a3b82463f64e8055f166c915f0e90f752c7b0.1575990944.git.christophe.leroy@c-s.fr>
+        Tue, 14 Jan 2020 10:36:05 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e1ddfd00000>; Tue, 14 Jan 2020 07:35:44 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 14 Jan 2020 07:36:04 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 14 Jan 2020 07:36:04 -0800
+Received: from [10.21.133.51] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 14 Jan
+ 2020 15:36:02 +0000
+Subject: Re: [PATCH v4 04/14] dmaengine: tegra-apb: Clean up tasklet releasing
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200112173006.29863-1-digetx@gmail.com>
+ <20200112173006.29863-5-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <2395e415-c435-0305-b53e-81278ff24d30@nvidia.com>
+Date:   Tue, 14 Jan 2020 15:36:00 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="mlvFMpb4NrD3AMcD"
-Content-Disposition: inline
-In-Reply-To: <539a3b82463f64e8055f166c915f0e90f752c7b0.1575990944.git.christophe.leroy@c-s.fr>
-X-Cookie: Programming is an unnatural act.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200112173006.29863-5-digetx@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1579016144; bh=4nzaSqhuTxBtHcd2ez0EJ4Bfl+5vH4h40EZkwwGBUgA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bCRhGJGpIM4zf0HkZYKQe4MwSUQPwKEpXlAxKLWJPIIp/CT1afIFYr0HYE6BWgEzx
+         m9HFHWr9g41QOPxlyoBFcpZ25fLuDO5vb47QTrFtNFIv15WTgNZbVT2io0IIY4FFAC
+         rChsqV8tzUaIGtJ/mjdd+VqZEnKPFxdkKES013iVV8XCkiQDow4oSA/WOjrfYDn3NX
+         /JHzeNXuidGr7MM2A4oA+Qnh79VfoQDCK50tPbYqZMWPRl+KTAquKDRh1WXaJcvzuF
+         vR4ZdEKaGBcQVhWvLyA0VVyNukqnS8igFknhOuqn91X1vRT4yJ3hB9RTbjQD1a+iWr
+         vENEnpNAnkruw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---mlvFMpb4NrD3AMcD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 12/01/2020 17:29, Dmitry Osipenko wrote:
+> There is no need to kill tasklet when driver's probe fails because tasklet
+> can't be scheduled at this time. It is also cleaner to kill tasklet on
+> channel's freeing rather than to kill it on driver's removal, otherwise
+> tasklet could perform a dummy execution after channel's releasing, which
+> isn't very nice.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/dma/tegra20-apb-dma.c | 6 +-----
+>  1 file changed, 1 insertion(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index 24ad3a5a04e3..1b8a11804962 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -1287,7 +1287,6 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+>  	struct tegra_dma_sg_req *sg_req;
+>  	struct list_head dma_desc_list;
+>  	struct list_head sg_req_list;
+> -	unsigned long flags;
+>  
+>  	INIT_LIST_HEAD(&dma_desc_list);
+>  	INIT_LIST_HEAD(&sg_req_list);
+> @@ -1295,15 +1294,14 @@ static void tegra_dma_free_chan_resources(struct dma_chan *dc)
+>  	dev_dbg(tdc2dev(tdc), "Freeing channel %d\n", tdc->id);
+>  
+>  	tegra_dma_terminate_all(dc);
+> +	tasklet_kill(&tdc->tasklet);
+>  
+> -	spin_lock_irqsave(&tdc->lock, flags);
+>  	list_splice_init(&tdc->pending_sg_req, &sg_req_list);
+>  	list_splice_init(&tdc->free_sg_req, &sg_req_list);
+>  	list_splice_init(&tdc->free_dma_desc, &dma_desc_list);
+>  	INIT_LIST_HEAD(&tdc->cb_desc);
+>  	tdc->config_init = false;
+>  	tdc->isr_handler = NULL;
+> -	spin_unlock_irqrestore(&tdc->lock, flags);
+>  
+>  	while (!list_empty(&dma_desc_list)) {
+>  		dma_desc = list_first_entry(&dma_desc_list,
+> @@ -1542,7 +1540,6 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>  		struct tegra_dma_channel *tdc = &tdma->channels[i];
+>  
+>  		free_irq(tdc->irq, tdc);
+> -		tasklet_kill(&tdc->tasklet);
+>  	}
+>  
+>  	pm_runtime_disable(&pdev->dev);
+> @@ -1562,7 +1559,6 @@ static int tegra_dma_remove(struct platform_device *pdev)
+>  	for (i = 0; i < tdma->chip_data->nr_channels; ++i) {
+>  		tdc = &tdma->channels[i];
+>  		free_irq(tdc->irq, tdc);
+> -		tasklet_kill(&tdc->tasklet);
+>  	}
+>  
+>  	pm_runtime_disable(&pdev->dev);
 
-On Tue, Dec 10, 2019 at 03:17:16PM +0000, Christophe Leroy wrote:
-> No need to 'goto err;' for just doing a return.
-> return directly from where the error happens.
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
-This doesn't apply against current code, please check and resend.
+Cheers
+Jon
 
---mlvFMpb4NrD3AMcD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4d36sACgkQJNaLcl1U
-h9C3zQf/cMvkTc+QF3yMKYXxlmxQDKATcaQNF7uNysSG2s4+eOCqDd8drWV92HRz
-AM7/spEm4cUKbeKJNtl5fXAnxI89PdE/e0bDH316EkA5L7NOJAI2dGjHDVJcgKMu
-azrTo4dbu1+bt2JXOtHrTO9nIU8IRbQL9QcuLG/52cqD0wB3xWb4LE6ToQftfMoC
-+96ALK3iJyYK8dhJI4Ip+oXBQGE2Fu2YU/C1lTvHnsrgqwnolt2u9z+HEXGu8rkE
-DGmxnns+uSmLrCbSETb5ooxW3GVnis5IlROQKGBXZ+LDdTA41owEQLdqXIaeaIDu
-Fiz2D//oT5xGwJgH7rM8LpEcSnodNA==
-=EOzq
------END PGP SIGNATURE-----
-
---mlvFMpb4NrD3AMcD--
+-- 
+nvpublic
