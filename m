@@ -2,68 +2,77 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6B9C33CB6
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5050C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63B392467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C3102072B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:25:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="Qda1g2/v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728904AbgANSZS (ORCPT
+        id S1728901AbgANSZz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:25:18 -0500
-Received: from verein.lst.de ([213.95.11.211]:47259 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728779AbgANSZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:25:17 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 2D94A68AFE; Tue, 14 Jan 2020 19:25:14 +0100 (CET)
-Date:   Tue, 14 Jan 2020 19:25:14 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 02/12] locking/rwsem: Exit early when held by an
- anonymous owner
-Message-ID: <20200114182514.GA9949@lst.de>
-References: <20200114161225.309792-1-hch@lst.de> <20200114161225.309792-3-hch@lst.de> <925d1343-670e-8f92-0e73-6e9cee0d3ffb@redhat.com>
+        Tue, 14 Jan 2020 13:25:55 -0500
+Received: from smtp110.ord1c.emailsrvr.com ([108.166.43.110]:35543 "EHLO
+        smtp110.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726523AbgANSZz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 13:25:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1579026354;
+        bh=mJXDOVmyQnLPIEOfgT1BgAAbTanRahyW+uQTzgnQ2XI=;
+        h=From:To:Subject:Date:From;
+        b=Qda1g2/vhO9vTeB+YWSA0qryHOw0BoQeKf0bJxh6dFEUZO7ImO5B74by9wTMJAaUz
+         Dyd/Sz8rP/H/uKg01Wse2hJj008xw7hmnYIH4/1u+s6ZmNF96Seoam3Yp89ck3qmf2
+         w4B/LlD8QaAZG+xkxg/A8o//t61ZUtGzqvyTp/wI=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp6.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 8A700A0239;
+        Tue, 14 Jan 2020 13:25:53 -0500 (EST)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from ian-deb.inside.mev.co.uk (remote.quintadena.com [81.133.34.160])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-GCM-SHA256)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Tue, 14 Jan 2020 13:25:54 -0500
+From:   Ian Abbott <abbotti@mev.co.uk>
+To:     devel@driverdev.osuosl.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        linux-kernel@vger.kernel.org, Spencer Olson <olsonse@umich.edu>
+Subject: [PATCH 0/2] staging: comedi: ni_routes: fix some regressions
+Date:   Tue, 14 Jan 2020 18:25:30 +0000
+Message-Id: <20200114182532.132058-1-abbotti@mev.co.uk>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <925d1343-670e-8f92-0e73-6e9cee0d3ffb@redhat.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 01:17:45PM -0500, Waiman Long wrote:
-> The owner field is just a pointer to the task structure with the lower 3
-> bits served as flag bits. Setting owner to RWSEM_OWNER_UNKNOWN (-2) will
-> stop optimistic spinning. So under what condition did the crash happen?
+Fix some regressions resulting from the routing functionality
+implemented for the National Instruments comedi drivers in kernel 4.20
+when board-specific routing information is absent.
 
-When running xfstests with all patches in this series except for this
-one, IIRC in generic/114.
+Patch 1 fixes a null pointer dereference, but the set-up of asynchronous
+commands that use external triggers on boards with missing
+board-specific routing information will now fail gracefully with an
+error.
 
-> Anyway, PeterZ is working on revising the percpu-rwsem implementation to
-> more gracefully handle the frozen case. At the end, there will not be a
-> need for the RWSEM_OWNER_UNKNOWN magic and it can be removed.
+Patch 2 allows routing values for the device family to be filled in even
+if the board-specific routing information is missing, which should allow
+asynchronous commands that use external triggers to be used on these
+boards.
 
-Well, this series relies on that value.  And I think it fundamentally
-is the right thing to do for AIO, and potentially other I/O related
-locking where we take a lock to synchronize access to data, then
-do I/O and then eventually get an I/O completion from an interrupt.
-Even thinking from the PREEMP_RT context we want to boost the
-initial thread as long as we can, then do nothing when it is off
-to I/O hardware (except maybe providing good diagnostics that the cause
-for the latency is I/O), and then boost the thread that is handling
-the completion.  Things like the i_dio_count hack can't provide that.
+1) staging: comedi: ni_routes: fix null dereference in ni_find_route_source()
+2) staging: comedi: ni_routes: allow partial routing information
+
+ drivers/staging/comedi/drivers/ni_routes.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+Cc: Spencer Olson <olsonse@umich.edu>
+
