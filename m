@@ -2,318 +2,243 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ABAC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9573C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD71C24658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FFC62075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 23:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ShJCmUzM"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AjVoG7d3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgANXjV (ORCPT
+        id S1728873AbgANXlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 18:39:21 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51182 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728890AbgANXjM (ORCPT
+        Tue, 14 Jan 2020 18:41:02 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:39572 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728650AbgANXlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 18:39:12 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 1F38A891A9;
-        Wed, 15 Jan 2020 12:39:10 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1579045150;
-        bh=2gBER1PvepW7C/LmCCkcdmnlievV9RChs4q6y2glIWI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=ShJCmUzMKbd8oSdsPgEnQ5avBWUFdaVdlM0bBCSYD8lLYOh8r9maUFNpwZptdTGRA
-         TQVKo30T1zJe1QyziXtB1cSFI2DU219HXUlWHe1xxw/O3bMH8A2t49eTpxgnVlMB9T
-         PXNJpm3ssh1xT4JcbIyqNgFPDY14qvm+XQzUwvbeHiFkSSzslJq5fuyQQSGFXGcfX5
-         vA8NpuzlRcoXaiHLepzkDKiC4zDZ5Z06HvasTG1gWShd6Ekku5D+BewIa0K2QQJ3G3
-         v+q3cEVaB4LpNWdrryBqC0imJd1rfAYtcZmNyVCRMdyifBDYjSREUUpOh3+odfZyYH
-         GhhuYtqUP+C7w==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5e1e511d0000>; Wed, 15 Jan 2020 12:39:09 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 73FDB13EF62;
-        Wed, 15 Jan 2020 12:39:08 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id C37E7280071; Wed, 15 Jan 2020 12:39:08 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     anthony.derosa@syscall7.com, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 2/2] spi: Add generic SPI multiplexer
-Date:   Wed, 15 Jan 2020 12:38:56 +1300
-Message-Id: <20200114233857.25933-3-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200114233857.25933-1-chris.packham@alliedtelesis.co.nz>
-References: <20200114233857.25933-1-chris.packham@alliedtelesis.co.nz>
+        Tue, 14 Jan 2020 18:41:02 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 00ENesdv035350;
+        Tue, 14 Jan 2020 17:40:54 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1579045254;
+        bh=ie2Vxrz7QQ+MlmI4XvpTQIVsHcPUy091HFySdvO8gsA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=AjVoG7d3GEoCkbikZNxzCww23Uy9X8v5LtkswhXd9EL4VAoIQKSQT3hk4f6gws5ew
+         JQhKrUU/42asMICpggu1G09crkaZMtjnPQkWOX8aka/6znPEGFFn2qH5e1PH/AjfWz
+         6WvPAvlpUHnZJLjF+TOCpK04bSgjpy3O88t1MXoc=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 00ENesmW051846
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 14 Jan 2020 17:40:54 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 14
+ Jan 2020 17:40:54 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 14 Jan 2020 17:40:54 -0600
+Received: from [128.247.58.153] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 00ENerel111270;
+        Tue, 14 Jan 2020 17:40:54 -0600
+Subject: Re: [PATCH v2] rpmsg: core: add API to get MTU
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+CC:     Fabien DESSENNE <fabien.dessenne@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+References: <20191113172249.32412-1-arnaud.pouliquen@st.com>
+ <f0419672-f1a5-b909-2dff-c611f852919b@st.com>
+From:   Suman Anna <s-anna@ti.com>
+Message-ID: <90bec284-6a99-e75f-1609-de763048a1e2@ti.com>
+Date:   Tue, 14 Jan 2020 17:40:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+In-Reply-To: <f0419672-f1a5-b909-2dff-c611f852919b@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a SPI device driver that sits in-band and provides a SPI controller
-which supports chip selects via a mux-control. This enables extra SPI
-devices to be connected with limited native chip selects.
+Hi Arnaud,
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- drivers/spi/Kconfig   |  12 +++
- drivers/spi/Makefile  |   1 +
- drivers/spi/spi-mux.c | 189 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 202 insertions(+)
- create mode 100644 drivers/spi/spi-mux.c
+On 1/13/20 7:19 AM, Arnaud POULIQUEN wrote:
+> Hi Bjorn, Suman,
+> 
+> Gentleman reminder :)
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 870f7797b56b..90df945490d9 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -880,6 +880,18 @@ config SPI_ZYNQMP_GQSPI
- #
- # Add new SPI master controllers in alphabetical order above this line
- #
-+#
-+
-+comment "SPI Multiplexer support"
-+
-+config SPI_MUX
-+	tristate "SPI multiplexer support"
-+	select MULTIPLEXER
-+	help
-+	  This adds support for SPI multiplexers. Each SPI mux will be
-+	  accessible as a SPI controller, the devices behind the mux will appea=
-r
-+	  to be chip selects on this controller. It is still necessary to
-+	  select one or more specific mux-controller drivers.
-=20
- #
- # There are lots of SPI device types, with sensors and memory
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index bb49c9e6d0a0..5f7593c84210 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_SPI_MASTER)		+=3D spi.o
- obj-$(CONFIG_SPI_MEM)			+=3D spi-mem.o
- obj-$(CONFIG_SPI_SPIDEV)		+=3D spidev.o
- obj-$(CONFIG_SPI_LOOPBACK_TEST)		+=3D spi-loopback-test.o
-+obj-$(CONFIG_SPI_MUX)			+=3D spi-mux.o
-=20
- # SPI master controller drivers (bus)
- obj-$(CONFIG_SPI_ALTERA)		+=3D spi-altera.o
-diff --git a/drivers/spi/spi-mux.c b/drivers/spi/spi-mux.c
-new file mode 100644
-index 000000000000..8481067be5ae
---- /dev/null
-+++ b/drivers/spi/spi-mux.c
-@@ -0,0 +1,189 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * General Purpose SPI multiplexer
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/err.h>
-+#include <linux/slab.h>
-+#include <linux/spi/spi.h>
-+#include <linux/mux/consumer.h>
-+
-+#define SPI_MUX_NO_CS	((unsigned int)-1)
-+
-+/**
-+ * DOC: Driver description
-+ *
-+ * This driver supports a MUX on an SPI bus. This can be useful when you=
- need
-+ * more chip selects than the hardware peripherals support, or than are
-+ * available in a particular board setup.
-+ *
-+ * The driver will create an additional SPI controller. Devices added un=
-der the
-+ * mux will be handled as 'chip selects' on this controller.
-+ */
-+
-+/**
-+ * struct spi_mux_priv - the basic spi_mux structure
-+ * @spi:		pointer to the device struct attached to the parent
-+ *			spi controller
-+ * @current_cs:		The current chip select set in the mux
-+ * @child_mesg_complete: The mux replaces the complete callback in the c=
-hild's
-+ *			message to its own callback; this field is used by the
-+ *			driver to store the child's callback during a transfer
-+ * @child_mesg_context: Used to store the child's context to the callbac=
-k
-+ * @child_mesg_dev:	Used to store the spi_device pointer to the child
-+ * @mux:		mux_control structure used to provide chip selects for
-+ *			downstream spi devices
-+ */
-+struct spi_mux_priv {
-+	struct spi_device	*spi;
-+	unsigned int		current_cs;
-+
-+	void			(*child_mesg_complete)(void *context);
-+	void			*child_mesg_context;
-+	struct spi_device	*child_mesg_dev;
-+	struct mux_control	*mux;
-+};
-+
-+/* should not get called when the parent controller is doing a transfer =
-*/
-+static int spi_mux_select(struct spi_device *spi)
-+{
-+	struct spi_mux_priv *priv =3D spi_controller_get_devdata(spi->controlle=
-r);
-+	int ret =3D 0;
-+
-+	if (priv->current_cs !=3D spi->chip_select) {
-+		dev_dbg(&priv->spi->dev,
-+			"setting up the mux for cs %d\n",
-+			spi->chip_select);
-+
-+		/* copy the child device's settings except for the cs */
-+		priv->spi->max_speed_hz =3D spi->max_speed_hz;
-+		priv->spi->mode =3D spi->mode;
-+		priv->spi->bits_per_word =3D spi->bits_per_word;
-+
-+		ret =3D mux_control_select(priv->mux, spi->chip_select);
-+		if (ret)
-+			return ret;
-+
-+		priv->current_cs =3D spi->chip_select;
-+	}
-+
-+	return ret;
-+}
-+
-+static int spi_mux_setup(struct spi_device *spi)
-+{
-+	struct spi_mux_priv *priv =3D spi_controller_get_devdata(spi->controlle=
-r);
-+
-+	/*
-+	 * can be called multiple times, won't do a valid setup now but we will
-+	 * change the settings when we do a transfer (necessary because we
-+	 * can't predict from which device it will be anyway)
-+	 */
-+	return spi_setup(priv->spi);
-+}
-+
-+static void spi_mux_complete_cb(void *context)
-+{
-+	struct spi_mux_priv *priv =3D (struct spi_mux_priv *)context;
-+	struct spi_controller *ctlr =3D spi_get_drvdata(priv->spi);
-+	struct spi_message *m =3D ctlr->cur_msg;
-+
-+	m->complete =3D priv->child_mesg_complete;
-+	m->context =3D priv->child_mesg_context;
-+	m->spi =3D priv->child_mesg_dev;
-+	spi_finalize_current_message(ctlr);
-+	mux_control_deselect(priv->mux);
-+}
-+
-+static int spi_mux_transfer_one_message(struct spi_controller *ctlr,
-+						struct spi_message *m)
-+{
-+	struct spi_mux_priv *priv =3D spi_controller_get_devdata(ctlr);
-+	struct spi_device *spi =3D m->spi;
-+	int ret;
-+
-+	ret =3D spi_mux_select(spi);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * Replace the complete callback, context and spi_device with our own
-+	 * pointers. Save originals
-+	 */
-+	priv->child_mesg_complete =3D m->complete;
-+	priv->child_mesg_context =3D m->context;
-+	priv->child_mesg_dev =3D m->spi;
-+
-+	m->complete =3D spi_mux_complete_cb;
-+	m->context =3D priv;
-+	m->spi =3D priv->spi;
-+
-+	/* do the transfer */
-+	ret =3D spi_async(priv->spi, m);
-+	return ret;
-+}
-+
-+static int spi_mux_probe(struct spi_device *spi)
-+{
-+	struct spi_controller *ctlr;
-+	struct spi_mux_priv *priv;
-+	int ret;
-+
-+	ctlr =3D spi_alloc_master(&spi->dev, sizeof(*priv));
-+	if (!ctlr)
-+		return -ENOMEM;
-+
-+	spi_set_drvdata(spi, ctlr);
-+	priv =3D spi_controller_get_devdata(ctlr);
-+	priv->spi =3D spi;
-+
-+	priv->mux =3D devm_mux_control_get(&spi->dev, NULL);
-+	ret =3D PTR_ERR_OR_ZERO(priv->mux);
-+	if (ret) {
-+		if (ret !=3D -EPROBE_DEFER)
-+			dev_err(&spi->dev, "failed to get control-mux\n");
-+		goto err_put_ctlr;
-+	}
-+
-+	priv->current_cs =3D SPI_MUX_NO_CS;
-+
-+	/* supported modes are the same as our parent's */
-+	ctlr->mode_bits =3D spi->controller->mode_bits;
-+	ctlr->flags =3D spi->controller->flags;
-+	ctlr->transfer_one_message =3D spi_mux_transfer_one_message;
-+	ctlr->setup =3D spi_mux_setup;
-+	ctlr->num_chipselect =3D mux_control_states(priv->mux);
-+	ctlr->bus_num =3D -1;
-+	ctlr->dev.of_node =3D spi->dev.of_node;
-+
-+	ret =3D devm_spi_register_controller(&spi->dev, ctlr);
-+	if (ret)
-+		goto err_put_ctlr;
-+
-+	return ret;
-+
-+err_put_ctlr:
-+	spi_controller_put(ctlr);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id spi_mux_of_match[] =3D {
-+	{ .compatible =3D "spi-mux" },
-+	{ },
-+};
-+
-+static struct spi_driver spi_mux_driver =3D {
-+	.probe  =3D spi_mux_probe,
-+	.driver =3D {
-+		.name   =3D "spi-mux",
-+		.of_match_table =3D spi_mux_of_match,
-+	},
-+};
-+
-+module_spi_driver(spi_mux_driver);
-+
-+MODULE_DESCRIPTION("SPI multiplexer");
-+MODULE_LICENSE("GPL");
---=20
-2.25.0
+Thanks for the revised version, and very sorry about the delay.  Only
+one minor nit that you missed from my comments the v6 rpmsg-tty series
+[1], otherwise I am good with the changes. See below.
+
+FWIW, I have already been using this patch on our downstream 2020 LTS
+based kernel and eliminate the the need to expose the virtio_rpmsg's
+rpmsg_hdr to rpmsg client drivers :).
+
+> 
+> Thank in advance,
+> 
+> Arnaud
+> 
+> On 11/13/19 6:22 PM, Arnaud Pouliquen wrote:
+>> Return the rpmsg buffer MTU for sending message, so rpmsg users
+>> can split a long message in several sub rpmsg buffers.
+>>
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>> ---
+>>  V1 to V2
+>>
+>>   V1 patch:https://lore.kernel.org/patchwork/patch/1124684/
+>>   - Change patch title,
+>>   - as not solution today to support MTU on GLINK make ops optional,
+>>     RPMsg client API returns -ENOTSUPP in this case,
+>>   - suppress smd and glink patches.
+>> ---
+>>  drivers/rpmsg/rpmsg_core.c       | 21 +++++++++++++++++++++
+>>  drivers/rpmsg/rpmsg_internal.h   |  2 ++
+>>  drivers/rpmsg/virtio_rpmsg_bus.c | 10 ++++++++++
+>>  include/linux/rpmsg.h            | 10 ++++++++++
+>>  4 files changed, 43 insertions(+)
+>>
+>> diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
+>> index e330ec4dfc33..a6ef54c4779a 100644
+>> --- a/drivers/rpmsg/rpmsg_core.c
+>> +++ b/drivers/rpmsg/rpmsg_core.c
+>> @@ -283,6 +283,27 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+>>  }
+>>  EXPORT_SYMBOL(rpmsg_trysend_offchannel);
+>>  
+>> +/**
+>> + * rpmsg_get_mtu() - get maximum transmission buffer size for sending message.
+>> + * @ept: the rpmsg endpoint
+>> + *
+>> + * This function returns maximum buffer size available for a single message.
+>> + *
+>> + * Return: the maximum transmission size on success and an appropriate error
+>> + * value on failure.
+>> + */
+>> +
+>> +ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
+>> +{
+>> +	if (WARN_ON(!ept))
+>> +		return -EINVAL;
+>> +	if (!ept->ops->get_mtu)
+>> +		return -ENOTSUPP;
+>> +
+>> +	return ept->ops->get_mtu(ept);
+>> +}
+>> +EXPORT_SYMBOL(rpmsg_get_mtu);
+>> +
+>>  /*
+>>   * match an rpmsg channel with a channel info struct.
+>>   * this is used to make sure we're not creating rpmsg devices for channels
+>> diff --git a/drivers/rpmsg/rpmsg_internal.h b/drivers/rpmsg/rpmsg_internal.h
+>> index 3fc83cd50e98..0e56e046f5c6 100644
+>> --- a/drivers/rpmsg/rpmsg_internal.h
+>> +++ b/drivers/rpmsg/rpmsg_internal.h
+>> @@ -47,6 +47,7 @@ struct rpmsg_device_ops {
+>>   * @trysendto:		see @rpmsg_trysendto(), optional
+>>   * @trysend_offchannel:	see @rpmsg_trysend_offchannel(), optional
+>>   * @poll:		see @rpmsg_poll(), optional
+>> + * @get_mtu:		see @get_mpu(), optional
+
+In the description for the ops, 'mpu' is a typo. My earlier comment was
+essentially,
+%s/see @get_mpu()/see @rpmsg_get_mtu()/
+
+regards
+Suman
+
+[1] https://patchwork.kernel.org/patch/11130209/
+
+>>   *
+>>   * Indirection table for the operations that a rpmsg backend should implement.
+>>   * In addition to @destroy_ept, the backend must at least implement @send and
+>> @@ -66,6 +67,7 @@ struct rpmsg_endpoint_ops {
+>>  			     void *data, int len);
+>>  	__poll_t (*poll)(struct rpmsg_endpoint *ept, struct file *filp,
+>>  			     poll_table *wait);
+>> +	ssize_t (*get_mtu)(struct rpmsg_endpoint *ept);
+>>  };
+>>  
+>>  int rpmsg_register_device(struct rpmsg_device *rpdev);
+>> diff --git a/drivers/rpmsg/virtio_rpmsg_bus.c b/drivers/rpmsg/virtio_rpmsg_bus.c
+>> index 376ebbf880d6..6e48fdf24555 100644
+>> --- a/drivers/rpmsg/virtio_rpmsg_bus.c
+>> +++ b/drivers/rpmsg/virtio_rpmsg_bus.c
+>> @@ -175,6 +175,7 @@ static int virtio_rpmsg_trysendto(struct rpmsg_endpoint *ept, void *data,
+>>  				  int len, u32 dst);
+>>  static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
+>>  					   u32 dst, void *data, int len);
+>> +static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept);
+>>  
+>>  static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
+>>  	.destroy_ept = virtio_rpmsg_destroy_ept,
+>> @@ -184,6 +185,7 @@ static const struct rpmsg_endpoint_ops virtio_endpoint_ops = {
+>>  	.trysend = virtio_rpmsg_trysend,
+>>  	.trysendto = virtio_rpmsg_trysendto,
+>>  	.trysend_offchannel = virtio_rpmsg_trysend_offchannel,
+>> +	.get_mtu = virtio_rpmsg_get_mtu,
+>>  };
+>>  
+>>  /**
+>> @@ -699,6 +701,14 @@ static int virtio_rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src,
+>>  	return rpmsg_send_offchannel_raw(rpdev, src, dst, data, len, false);
+>>  }
+>>  
+>> +static ssize_t virtio_rpmsg_get_mtu(struct rpmsg_endpoint *ept)
+>> +{
+>> +	struct rpmsg_device *rpdev = ept->rpdev;
+>> +	struct virtio_rpmsg_channel *vch = to_virtio_rpmsg_channel(rpdev);
+>> +
+>> +	return vch->vrp->buf_size - sizeof(struct rpmsg_hdr);
+>> +}
+>> +
+>>  static int rpmsg_recv_single(struct virtproc_info *vrp, struct device *dev,
+>>  			     struct rpmsg_hdr *msg, unsigned int len)
+>>  {
+>> diff --git a/include/linux/rpmsg.h b/include/linux/rpmsg.h
+>> index 9fe156d1c018..88d7892ca93d 100644
+>> --- a/include/linux/rpmsg.h
+>> +++ b/include/linux/rpmsg.h
+>> @@ -135,6 +135,8 @@ int rpmsg_trysend_offchannel(struct rpmsg_endpoint *ept, u32 src, u32 dst,
+>>  __poll_t rpmsg_poll(struct rpmsg_endpoint *ept, struct file *filp,
+>>  			poll_table *wait);
+>>  
+>> +ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept);
+>> +
+>>  #else
+>>  
+>>  static inline int register_rpmsg_device(struct rpmsg_device *dev)
+>> @@ -242,6 +244,14 @@ static inline __poll_t rpmsg_poll(struct rpmsg_endpoint *ept,
+>>  	return 0;
+>>  }
+>>  
+>> +static inline ssize_t rpmsg_get_mtu(struct rpmsg_endpoint *ept)
+>> +{
+>> +	/* This shouldn't be possible */
+>> +	WARN_ON(1);
+>> +
+>> +	return -ENXIO;
+>> +}
+>> +
+>>  #endif /* IS_ENABLED(CONFIG_RPMSG) */
+>>  
+>>  /* use a macro to avoid include chaining to get THIS_MODULE */
+>>
 
