@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EBBC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E122BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E9224679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66CD20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996735;
-	bh=YXZMMqDqclOTNdUyf6eeuJLtN2PLFOwUiLopwVgpreE=;
+	s=default; t=1578996739;
+	bh=UoeNj3LierfqBK3dFQablLeSko3NlsPKQVgd4DF+MxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M1wbumNNunSjJAxSo6rE/CqQFc+W3Lbaj05dEp28Th+SWIFoiN4QiOJkTveMr4TUq
-	 FTJfg+hyLmQ61QWcxOVw/Q8pwuu4/Kup1TtPnZ0fjT/ZSJKoUIO2zc+08M7t7PfcPf
-	 ahv1Iy6VXkda+855kib1oqXfFdh4ISqYdU1lf5Xk=
+	b=Ez4VclKgONEismau/UGddKKeSaFSsRFLyzKUViQgTviCPudutjOhpXxfTVjBJHAGp
+	 G43T4vygKOcwOfaShZi62dccLHruFUvLfnDF0Yt1hVD8yy/sKfSmP19v34Dwz0eChp
+	 BLdbdWNWNe3bYk27UvmiJXgf5tezc+cc5+UpHmwU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732916AbgANKMO (ORCPT
+        id S1730192AbgANKMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:12:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48216 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:12:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732879AbgANKMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:12:10 -0500
+        id S1731515AbgANKMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:12:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F16420678;
-        Tue, 14 Jan 2020 10:12:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF29024677;
+        Tue, 14 Jan 2020 10:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996729;
-        bh=YXZMMqDqclOTNdUyf6eeuJLtN2PLFOwUiLopwVgpreE=;
+        s=default; t=1578996735;
+        bh=UoeNj3LierfqBK3dFQablLeSko3NlsPKQVgd4DF+MxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XWxZLozDAQ1YYcJwgZ6tcNC9tIfLCKJdklLhW1YD//06mx/nDQLHJXMwwWmHhe1oC
-         ttWJKSUsumWMr9mUEecTm+spnrgJ4Ifhjb8g4N/OUgJEoyBJ2eQPsx+1d2pcuXjD3L
-         UJjLPhRKtpG6NPhs0lPKfiMSYW9naNLBadtFFYVE=
+        b=Fa0wulJajRP2mhVKvGnnyKvwJEmJxiEbVmRYCApIBCHjCt6/4EDSw0+iHts/PlyuK
+         ckSZrNfOcr3DqVRG4G+ZG4yWXaZiTp2vBKZdRJdHAlGRITwRYftG+SOB16wWA0IE9T
+         e6jrNt4r/FLq9Ve2h9oddii9vIAoV0j0rLLSyodc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 4.9 13/31] can: gs_usb: gs_usb_probe(): use descriptors of current altsetting
-Date:   Tue, 14 Jan 2020 11:02:05 +0100
-Message-Id: <20200114094342.216137418@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Markus Trippelsdorf <markus@trippelsdorf.de>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Salvatore Bonaccorso <carnil@debian.org>
+Subject: [PATCH 4.9 05/31] tcp: minimize false-positives on TCP/GRO check
+Date:   Tue, 14 Jan 2020 11:01:57 +0100
+Message-Id: <20200114094340.570688818@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
 References: <20200114094334.725604663@linuxfoundation.org>
@@ -59,42 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 
-commit 2f361cd9474ab2c4ab9ac8db20faf81e66c6279b upstream.
+commit 0b9aefea860063bb39e36bd7fe6c7087fed0ba87 upstream.
 
-Make sure to always use the descriptors of the current alternate setting
-to avoid future issues when accessing fields that may differ between
-settings.
+Markus Trippelsdorf reported that after commit dcb17d22e1c2 ("tcp: warn
+on bogus MSS and try to amend it") the kernel started logging the
+warning for a NIC driver that doesn't even support GRO.
 
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Fixes: d08e973a77d1 ("can: gs_usb: Added support for the GS_USB CAN devices")
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+It was diagnosed that it was possibly caused on connections that were
+using TCP Timestamps but some packets lacked the Timestamps option. As
+we reduce rcv_mss when timestamps are used, the lack of them would cause
+the packets to be bigger than expected, although this is a valid case.
+
+As this warning is more as a hint, getting a clean-cut on the
+threshold is probably not worth the execution time spent on it. This
+patch thus alleviates the false-positives with 2 quick checks: by
+accounting for the entire TCP option space and also checking against the
+interface MTU if it's available.
+
+These changes, specially the MTU one, might mask some real positives,
+though if they are really happening, it's possible that sooner or later
+it will be triggered anyway.
+
+Reported-by: Markus Trippelsdorf <markus@trippelsdorf.de>
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Signed-off-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Salvatore Bonaccorso <carnil@debian.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/gs_usb.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/tcp_input.c |   14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
---- a/drivers/net/can/usb/gs_usb.c
-+++ b/drivers/net/can/usb/gs_usb.c
-@@ -927,7 +927,7 @@ static int gs_usb_probe(struct usb_inter
- 			     GS_USB_BREQ_HOST_FORMAT,
- 			     USB_DIR_OUT|USB_TYPE_VENDOR|USB_RECIP_INTERFACE,
- 			     1,
--			     intf->altsetting[0].desc.bInterfaceNumber,
-+			     intf->cur_altsetting->desc.bInterfaceNumber,
- 			     hconf,
- 			     sizeof(*hconf),
- 			     1000);
-@@ -950,7 +950,7 @@ static int gs_usb_probe(struct usb_inter
- 			     GS_USB_BREQ_DEVICE_CONFIG,
- 			     USB_DIR_IN|USB_TYPE_VENDOR|USB_RECIP_INTERFACE,
- 			     1,
--			     intf->altsetting[0].desc.bInterfaceNumber,
-+			     intf->cur_altsetting->desc.bInterfaceNumber,
- 			     dconf,
- 			     sizeof(*dconf),
- 			     1000);
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -129,7 +129,8 @@ int sysctl_tcp_invalid_ratelimit __read_
+ #define REXMIT_LOST	1 /* retransmit packets marked lost */
+ #define REXMIT_NEW	2 /* FRTO-style transmit of unsent/new packets */
+ 
+-static void tcp_gro_dev_warn(struct sock *sk, const struct sk_buff *skb)
++static void tcp_gro_dev_warn(struct sock *sk, const struct sk_buff *skb,
++			     unsigned int len)
+ {
+ 	static bool __once __read_mostly;
+ 
+@@ -140,8 +141,9 @@ static void tcp_gro_dev_warn(struct sock
+ 
+ 		rcu_read_lock();
+ 		dev = dev_get_by_index_rcu(sock_net(sk), skb->skb_iif);
+-		pr_warn("%s: Driver has suspect GRO implementation, TCP performance may be compromised.\n",
+-			dev ? dev->name : "Unknown driver");
++		if (!dev || len >= dev->mtu)
++			pr_warn("%s: Driver has suspect GRO implementation, TCP performance may be compromised.\n",
++				dev ? dev->name : "Unknown driver");
+ 		rcu_read_unlock();
+ 	}
+ }
+@@ -164,8 +166,10 @@ static void tcp_measure_rcv_mss(struct s
+ 	if (len >= icsk->icsk_ack.rcv_mss) {
+ 		icsk->icsk_ack.rcv_mss = min_t(unsigned int, len,
+ 					       tcp_sk(sk)->advmss);
+-		if (unlikely(icsk->icsk_ack.rcv_mss != len))
+-			tcp_gro_dev_warn(sk, skb);
++		/* Account for possibly-removed options */
++		if (unlikely(len > icsk->icsk_ack.rcv_mss +
++				   MAX_TCP_OPTION_SPACE))
++			tcp_gro_dev_warn(sk, skb, len);
+ 	} else {
+ 		/* Otherwise, we make more careful check taking into account,
+ 		 * that SACKs block is variable.
 
 
