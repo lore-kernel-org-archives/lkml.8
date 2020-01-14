@@ -2,95 +2,139 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F17A3C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:52:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEA04C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2CDC214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:52:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82F8F214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:54:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PE93tZWV"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="PhSTT93H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgANQw4 (ORCPT
+        id S1728882AbgANQyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:52:56 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:35257 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728800AbgANQwz (ORCPT
+        Tue, 14 Jan 2020 11:54:16 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:44706 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728688AbgANQyQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:52:55 -0500
-Received: by mail-io1-f66.google.com with SMTP id h8so14613719iob.2
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 08:52:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=tvuqfPAmqeW5h6hFaCyRKpXD9b4Gjd3nwj+gcAvShZ0=;
-        b=PE93tZWV+hg39DY1pUEJSq12EHHeocyMtfjbCr6ey/aNdjanGCOl24Wd3BFEcmEQet
-         x8iyqIov7uNNXR1EI8XKsIR6DC8z8BpZIf2f4x55M6W21g94/Hmp1Hogt7ZOK3GXDqHv
-         09vied9075nNzXfQBJu47599bfeJMHVmsOLbs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=tvuqfPAmqeW5h6hFaCyRKpXD9b4Gjd3nwj+gcAvShZ0=;
-        b=VWOeZnRmH/GSMMxoAxfme9DdTRdbn4UN1q2jxvMd2HEoPTOEHHNx+Un7G0CCHlULQP
-         KaLRD7wmGT23lbFyXgwoZAn62iuU6VOYkAwIOo8+iV/t0xgLalzLpKbv3vyVSs4vO/2d
-         K7sC+YnRgmnJKU9x2T5Vk+Pu3WeIZUkpEv73qyp25+GOWF3d3ipp1TB/PP8MDTPl2bUJ
-         FDEsufdZf3uXZTlCNcTHkq4AW65ZSl1LK+rJqVsS1UNzn+sn5GpPJRqW2WrX7WVqlEvR
-         WCV299GYuaJDnlTs5mCnrWb1Fbu7c0wqEsSrjPt+n7pXASzyz1kRvKLt43bWZsfq1D+r
-         Re1g==
-X-Gm-Message-State: APjAAAVKS1VATMf6C2U39N+uzh4rMjogXvySMqobhfoetQDiWJiKWlZP
-        13wSRkD8tn83eKEcUEbcWt3Y9fQGmbMmXsFfhd8yEg==
-X-Google-Smtp-Source: APXvYqxxSfCxs2zloh33teGyEGvf4zfmbUq0cbRO0d/xAKS5BgM2oPkXId2AZGiWDUDB+p8gcRw82UZWfTwiar2I8kc=
-X-Received: by 2002:a6b:6f06:: with SMTP id k6mr18407733ioc.204.1579020774522;
- Tue, 14 Jan 2020 08:52:54 -0800 (PST)
+        Tue, 14 Jan 2020 11:54:16 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3BAC320B4798;
+        Tue, 14 Jan 2020 08:54:15 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3BAC320B4798
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1579020855;
+        bh=Ucmyx/fCw1Ra6TuNnQWAln3iWLXAArkz0UXjKyjbhHU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=PhSTT93HCojtCk5FZzm1Yc7XHAOgihAHujoeZCsaYCx1X16CwKuWE15Bo0fUYfo8j
+         VnaN0NIcMkJFAXXtMVzGndOX8BDm3aftJvmT05IJbrjT83QmV8dJUwzAk45yi1OQwS
+         imGeSlNiQFKg8kwZJmre3K4C/rXaYjZLiRHth2bo=
+Subject: Re: inconsistent lock state in ima_process_queued_keys
+To:     Dmitry Vyukov <dvyukov@google.com>,
+        Mimi Zohar <zohar@linux.ibm.com>
+Cc:     syzbot <syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <000000000000486474059c19f4d7@google.com>
+ <CACT4Y+av-ipjsdtsXs4d55w=inNHJqho3s3XKfU0Jo7f98yi8w@mail.gmail.com>
+ <1579013812.12230.21.camel@linux.ibm.com>
+ <CACT4Y+bgQVmibpeJgpwb_JTKW6jx3dzv0M-NGVat8qvJTo4X7A@mail.gmail.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <c98a54b7-ffc1-2ea5-5527-b0c7e381b613@linux.microsoft.com>
+Date:   Tue, 14 Jan 2020 08:54:32 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <20200113153605.52350-1-brian@brkho.com> <20200113153605.52350-3-brian@brkho.com>
- <20200113175148.GC26711@jcrouse1-lnx.qualcomm.com>
-In-Reply-To: <20200113175148.GC26711@jcrouse1-lnx.qualcomm.com>
-From:   Rob Clark <robdclark@chromium.org>
-Date:   Tue, 14 Jan 2020 08:52:43 -0800
-Message-ID: <CAJs_Fx6AVwA73eN+Rs=GAvBPD1Leq=WKG9w_2hohpzmecK_C_A@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH 2/2] drm/msm: Add MSM_WAIT_IOVA ioctl
-To:     Brian Ho <brian@brkho.com>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Rob Clark <robdclark@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR MSM ADRENO GPU" 
-        <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Kristian Kristensen <hoegsberg@chromium.org>,
-        Sean Paul <sean@poorly.run>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CACT4Y+bgQVmibpeJgpwb_JTKW6jx3dzv0M-NGVat8qvJTo4X7A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 9:51 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> On Mon, Jan 13, 2020 at 10:36:05AM -0500, Brian Ho wrote:
-> > +
-> > +     vaddr = base_vaddr + args->offset;
-> > +
-> > +     /* Assumes WC mapping */
-> > +     ret = wait_event_interruptible_timeout(
-> > +                     gpu->event, *vaddr >= args->value, remaining_jiffies);
->
-> I feel like a barrier might be needed before checking *vaddr just in case you
-> get the interrupt and wake up the queue before the write posts from the
-> hardware.
->
+I am investigating this.
 
-if the gpu is doing posted (or cached) writes, I don't think there is
-even a CPU side barrier primitive that could wait for that?  I think
-we rely on the GPU not interrupting the CPU until the write is posted
+thanks,
+  -lakshmi
 
-BR,
--R
+On 1/14/2020 7:21 AM, Dmitry Vyukov wrote:
+> On Tue, Jan 14, 2020 at 3:57 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+>>
+>> On Tue, 2020-01-14 at 14:58 +0100, Dmitry Vyukov wrote:
+>>> On Tue, Jan 14, 2020 at 2:56 PM syzbot
+>>> <syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com> wrote:
+>>>>
+>>>> Hello,
+>>>>
+>>>> syzbot found the following crash on:
+>>>>
+>>>> HEAD commit:    1b851f98 Add linux-next specific files for 20200114
+>>>> git tree:       linux-next
+>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=12bcbb25e00000
+>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=3e7d9cf7ebfa08ad
+>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=a4a503d7f37292ae1664
+>>>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>>>>
+>>>> Unfortunately, I don't have any reproducer for this crash yet.
+>>>>
+>>>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>>>> Reported-by: syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com
+>>>
+>>> +Lakshmi, you seem to have submitted a number of changes to this file recently.
+>>>
+>>> This completely breaks linux-next testing for us, every kernel crashes
+>>> a few minutes after boot.
+>>>
+>>> 2020/01/14 14:45:00 vm-26: crash: inconsistent lock state in
+>>> ima_process_queued_keys
+>>
+>> Yikes!  Are you running with an IMA policy?
+> 
+> I don't know.
+> 
+>>   I assume this is being
+>> caused by commit 8f5d2d06f217 ("IMA: Defined timer to free queued
+>> keys".  Does reverting it prevent this from happening?
+> 
+> The following seems to help, but don't know if it's the right fix or not.
+> 
+> diff --git a/security/integrity/ima/ima_asymmetric_keys.c
+> b/security/integrity/ima/ima_asymmetric_keys.c
+> index 61e478f9e8199..49d559501fe62 100644
+> --- a/security/integrity/ima/ima_asymmetric_keys.c
+> +++ b/security/integrity/ima/ima_asymmetric_keys.c
+> @@ -103,17 +103,18 @@ static bool ima_queue_key(struct key *keyring,
+> const void *payload,
+>   {
+>          bool queued = false;
+>          struct ima_key_entry *entry;
+> +       unsigned long flags;
+> 
+>          entry = ima_alloc_key_entry(keyring, payload, payload_len);
+>          if (!entry)
+>                  return false;
+> 
+> -       spin_lock(&ima_keys_lock);
+> +       spin_lock_irqsave(&ima_keys_lock, flags);
+>          if (!ima_process_keys) {
+>                  list_add_tail(&entry->list, &ima_keys);
+>                  queued = true;
+>          }
+> -       spin_unlock(&ima_keys_lock);
+> +       spin_unlock_irqrestore(&ima_keys_lock, flags);
+> 
+>          if (!queued)
+>                  ima_free_key_entry(entry);
+> 
