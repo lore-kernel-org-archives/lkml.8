@@ -2,83 +2,94 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9294CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:43:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127B1C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 675D62187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1B924679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:44:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oXIs0DFP"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="F70YThTI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728810AbgANNnx (ORCPT
+        id S1728848AbgANNoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:43:53 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:36308 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726053AbgANNnw (ORCPT
+        Tue, 14 Jan 2020 08:44:11 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38829 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbgANNoK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:43:52 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579009431; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=grv067apNIcUdGejucgF9bWSVoDiljz0jVxYhGB3g5c=; b=oXIs0DFPTsMV5jM4PNZijRfmGycZb7dz9ht9F9vqLMPy6XQL3UEUsjjLWpzcmMGqg67kjNNU
- mgXYE7azefxSeCYcj7NwDDrWpa9325tNCLoeY1YOPqKHp+ZgMiJWwGh8EdApTGefmXoXSLLV
- 8mCdf1i2qdteC66IF31bWlnEg5k=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1dc593.7fd7a435b500-smtp-out-n02;
- Tue, 14 Jan 2020 13:43:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B23A4C4479C; Tue, 14 Jan 2020 13:43:47 +0000 (UTC)
-Received: from x230.qca.qualcomm.com (85-76-19-103-nat.elisa-mobile.fi [85.76.19.103])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D95ECC43383;
-        Tue, 14 Jan 2020 13:43:44 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D95ECC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Nicolai Stange <nstange@suse.de>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Wen Huang <huangwenabc@gmail.com>,
-        libertas-dev@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.de>, Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [PATCH 1/2] libertas: don't exit from lbs_ibss_join_existing() with RCU read lock held
-References: <87woa04t2v.fsf@suse.de> <20200114103903.2336-1-nstange@suse.de>
-        <20200114103903.2336-2-nstange@suse.de>
-Date:   Tue, 14 Jan 2020 15:43:42 +0200
-In-Reply-To: <20200114103903.2336-2-nstange@suse.de> (Nicolai Stange's message
-        of "Tue, 14 Jan 2020 11:39:02 +0100")
-Message-ID: <87o8v6qhkh.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 14 Jan 2020 08:44:10 -0500
+Received: by mail-wm1-f68.google.com with SMTP id u2so13767918wmc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 05:44:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=sender:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+KDdpEda72c8Z0y+Uj5w7oRFnZJtRQ2x+bj/uoKma6Y=;
+        b=F70YThTIPBalEBh5BaB4WYK/iNuuMLjbLJDtK9u8ERnymTv/m3y7Re0n1+rWrQZdse
+         r7eMfhF8ZvnUCa0Al3k1LX4TB/pTbLTJKcf1mrisc7CdbfM/HB6VZigFvcmCSwT5Cz9r
+         DlR2LOTxSUwDvHEqXqE+9WHog4PHqPKNOH2jj3tpCBoqQtBcAURrIlNEFixlt2C40MxX
+         MbQqWthaVKlKqeGaKphwsJYHqxuN2otetm7rMUa/hKlpV/N622Z+TfWbkvqd2KLNo6rk
+         V0yvs73Dx5RHISY1Fi0vA3O/Quozqv7cLSrWTyhYPOwUMv/BRy7beLR4Wi1riAJ2eJH+
+         gvhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=+KDdpEda72c8Z0y+Uj5w7oRFnZJtRQ2x+bj/uoKma6Y=;
+        b=E7PIskGxZKah0qvDjWgypBBf72pRMUPGS/E1cn2jViNlxI1BieORxEBLzh2NxVDY5D
+         jG72go2lTB64Wd74P0/j402yONxBcrmG5yM7GGYOzZgxzkONOK5xRG78LNcji55p1VCU
+         g6xWcl+k00HM74v4DogDsx4QdjQJ+rXEqMgVqpu7KOMA0Tvbeylg35DdjC6WcPl94hsX
+         6qFdkdyqmh7h+AATcc1wj8Zr0WGFcGRoCDK6/+tyFN2y6kKM4jE6GrE5kNahmPF4p2+F
+         UGQSZrg0kIJL5VqsoxzeTGqYSdK15vHIxHeRMIveqTkx07wP95h0CER4RCX0S08N6cJe
+         exqA==
+X-Gm-Message-State: APjAAAU5i+rAZyQLlJj2NU42vO+8YPe3iqSOEpWs4OE2Riale1diGxe4
+        4io2E7hinVE/txaGahmkSdmmhTAKo1Hp0g==
+X-Google-Smtp-Source: APXvYqz6pQGuJ8RWbU3QjpoUZVeVLsYzd8lQ0OC99bXw2E3+C16tX3Covj6I95Wpi3TV8OXwLOjZQg==
+X-Received: by 2002:a7b:cf2d:: with SMTP id m13mr27350242wmg.163.1579009448141;
+        Tue, 14 Jan 2020 05:44:08 -0800 (PST)
+Received: from localhost (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id d8sm20094697wre.13.2020.01.14.05.44.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 14 Jan 2020 05:44:07 -0800 (PST)
+From:   Michal Simek <michal.simek@xilinx.com>
+To:     linux-kernel@vger.kernel.org, monstr@monstr.eu,
+        michal.simek@xilinx.com, git@xilinx.com
+Subject: [PATCH] microblaze: Add ID for Microblaze v11
+Date:   Tue, 14 Jan 2020 14:44:06 +0100
+Message-Id: <5e56ec0090bceb711dbab145ffffa52f60c23d87.1579009444.git.michal.simek@xilinx.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicolai Stange <nstange@suse.de> writes:
+List Microblaze v11 from PVR.
 
-> Commit e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
-> descriptor") introduced a bounds check on the number of supplied rates to
-> lbs_ibss_join_existing().
->
-> Unfortunately, it introduced a return path from within a RCU read side
-> critical section without a corresponding rcu_read_unlock(). Fix this.
->
-> Fixes: e5e884b42639 ("libertas: Fix two buffer overflows at parsing bss
->                       descriptor")
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-This should be in one line, I'll fix it during commit.
+ arch/microblaze/kernel/cpu/cpuinfo.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/microblaze/kernel/cpu/cpuinfo.c b/arch/microblaze/kernel/cpu/cpuinfo.c
+index ef2f49471a2a..cd9b4450763b 100644
+--- a/arch/microblaze/kernel/cpu/cpuinfo.c
++++ b/arch/microblaze/kernel/cpu/cpuinfo.c
+@@ -51,6 +51,7 @@ const struct cpu_ver_key cpu_ver_lookup[] = {
+ 	{"9.5", 0x22},
+ 	{"9.6", 0x23},
+ 	{"10.0", 0x24},
++	{"11.0", 0x25},
+ 	{NULL, 0},
+ };
+ 
 -- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.24.0
+
