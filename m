@@ -2,162 +2,121 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D96FC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86600C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:08:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0983E24656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A01524658
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:08:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="SjtQKbTn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgANUFD (ORCPT
+        id S1728800AbgANUI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:05:03 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:33604 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728733AbgANUFD (ORCPT
+        Tue, 14 Jan 2020 15:08:57 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.73.133]:53180 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726839AbgANUI4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:05:03 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1irSQv-000376-D1; Tue, 14 Jan 2020 20:05:01 +0000
-Subject: Re: [PATCH] ALSA: hda - fix out of bounds read on spec->smux_paths
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200114154412.365395-1-colin.king@canonical.com>
- <s5ho8v5renx.wl-tiwai@suse.de>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <c826c500-1573-b42b-3c72-5c9f3123d0ed@canonical.com>
-Date:   Tue, 14 Jan 2020 20:05:01 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 14 Jan 2020 15:08:56 -0500
+Received: from mailhost.synopsys.com (sv2-mailhost1.synopsys.com [10.205.2.133])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id D3C6F406F9;
+        Tue, 14 Jan 2020 20:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1579032536; bh=wjCdDOgqMcTow7rOK3qtHSf4KaODrAl2GNRfmy2/+is=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SjtQKbTngrT3ska2dntdhM9s2u0knGXeuUobsuIq+6lVd6q/fNNSeBGZnaH95NTkZ
+         TVq2B2D7Vxhux3LHvio/QJw5MCr/vSc27nNLtbSOtyUYW9R7xAxxZUdTcbgrIBmpTE
+         QQk4osqd6NNEUCaRb1vZFye+nWoktKMOvSTEsiFAmeEKs3JrIVUcShEBAAACL2aDs3
+         dh7vXux/M9re2CDAmuZ0YLMwvsRezR7CG2XymtlWBcd+oOsrYljL/q/ceabsBYnmiK
+         J6aLksgzKT/zpigz9GdmDd4tYcxa3srMKfUPZAmWqML7C9zInWzgOWsvwlxOGcMpkx
+         a82DXgyl2yqFg==
+Received: from vineetg-Latitude-E7450.internal.synopsys.com (vineetg-latitude-e7450.internal.synopsys.com [10.10.161.25])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 51704A0097;
+        Tue, 14 Jan 2020 20:08:55 +0000 (UTC)
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [RFC 1/4] asm-generic/uaccess: don't define inline functions if noinline lib/* in use
+Date:   Tue, 14 Jan 2020 12:08:43 -0800
+Message-Id: <20200114200846.29434-2-vgupta@synopsys.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200114200846.29434-1-vgupta@synopsys.com>
+References: <20200114200846.29434-1-vgupta@synopsys.com>
 MIME-Version: 1.0
-In-Reply-To: <s5ho8v5renx.wl-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/01/2020 20:01, Takashi Iwai wrote:
-> On Tue, 14 Jan 2020 16:44:12 +0100,
-> Colin King wrote:
->>
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> It is possible for the call to snd_hda_get_num_conns to fail and return
->> a negative error code that gets assigned to num_conns. In that specific
->> case, the check of very large values of val against num_conns will not
->> fail the -EINVAL check and later on an out of bounds array read on
->> spec->smux_paths will occur.  Fix this by sanity checking for an error
->> return from the call to snd_hda_get_num_conns.
-> 
-> Thanks for the patch, but this can't happen.
-> The ad1988_auto_smux_enum_put() is used only for IEC958 Playback
-> Source element, and it's added in ad1988_add_spdif_mux_ctl().  And
-> there at the beginning, there is already a check of the value:
-> 
-> 	num_conns = snd_hda_get_num_conns(codec, 0x0b) + 1;
-> 	if (num_conns != 3 && num_conns != 4)
-> 		return 0;
-> 				
-> And the snd_hda_get_num_conns() function returns the cached value,
-> hence it's always same at the second and later calls, so it can't be a
-> negative error.
+There are 2 generic varaints of strncpy_from_user() / strnlen_user()
+ (1). inline version in asm-generic/uaccess.h
+ (2). optimized word-at-a-time version in lib/*
 
-Ah, OK, sorry about the noise.
+This patch disables #1 if #2 selected. This allows arches to continue
+reusing asm-generic/uaccess.h for rest of code
 
-> 
-> That said, I don't think we need to apply the change as is.  But if we
-> were to improve something, we can rather record this number more
-> explicitly e.g. introduce a new field spec->num_spdif_mux_conns and
-> keep there instead of calling snd_hda_get_num_conns() at each place.
+This came up when switching ARC to generic word-at-a-time interface
 
-That would seem more optimal for sure.
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+---
+ include/asm-generic/uaccess.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Colin
-> 
-> 
-> thanks,
-> 
-> Takashi
-> 
->>
->> Addresses-Coverity: ("Out-of-bounds read")
->> Fixes: 272f3ea31776 ("ALSA: hda - Add SPDIF mux control to AD codec auto-parser")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>  sound/pci/hda/patch_analog.c | 6 ++++--
->>  1 file changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/sound/pci/hda/patch_analog.c b/sound/pci/hda/patch_analog.c
->> index 88c46b051d14..399561369495 100644
->> --- a/sound/pci/hda/patch_analog.c
->> +++ b/sound/pci/hda/patch_analog.c
->> @@ -756,9 +756,11 @@ static int ad1988_auto_smux_enum_put(struct snd_kcontrol *kcontrol,
->>  	struct ad198x_spec *spec = codec->spec;
->>  	unsigned int val = ucontrol->value.enumerated.item[0];
->>  	struct nid_path *path;
->> -	int num_conns = snd_hda_get_num_conns(codec, 0x0b) + 1;
->> +	int num_conns = snd_hda_get_num_conns(codec, 0x0b);
->>  
->> -	if (val >= num_conns)
->> +	if (num_conns < 0)
->> +		return num_conns;
->> +	if (val >= num_conns + 1)
->>  		return -EINVAL;
->>  	if (spec->cur_smux == val)
->>  		return 0;
->> -- 
->> 2.24.0
->>
+diff --git a/include/asm-generic/uaccess.h b/include/asm-generic/uaccess.h
+index e935318804f8..74c14211377b 100644
+--- a/include/asm-generic/uaccess.h
++++ b/include/asm-generic/uaccess.h
+@@ -227,6 +227,7 @@ __strncpy_from_user(char *dst, const char __user *src, long count)
+ }
+ #endif
+ 
++#ifndef CONFIG_GENERIC_STRNCPY_FROM_USER
+ static inline long
+ strncpy_from_user(char *dst, const char __user *src, long count)
+ {
+@@ -234,6 +235,7 @@ strncpy_from_user(char *dst, const char __user *src, long count)
+ 		return -EFAULT;
+ 	return __strncpy_from_user(dst, src, count);
+ }
++#endif
+ 
+ /*
+  * Return the size of a string (including the ending 0)
+@@ -244,6 +246,7 @@ strncpy_from_user(char *dst, const char __user *src, long count)
+ #define __strnlen_user(s, n) (strnlen((s), (n)) + 1)
+ #endif
+ 
++#ifndef CONFIG_GENERIC_STRNLEN_USER
+ /*
+  * Unlike strnlen, strnlen_user includes the nul terminator in
+  * its returned count. Callers should check for a returned value
+@@ -255,6 +258,7 @@ static inline long strnlen_user(const char __user *src, long n)
+ 		return 0;
+ 	return __strnlen_user(src, n);
+ }
++#endif
+ 
+ /*
+  * Zero Userspace
+-- 
+2.20.1
 
