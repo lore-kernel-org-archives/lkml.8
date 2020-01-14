@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D34C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2650DC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9291E2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A7B20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996487;
-	bh=QOtqjUFCOKYM8zRv5UdVdn1GxVGQCrtHBIh9QLZ5b9Y=;
+	s=default; t=1578996491;
+	bh=kzrT3qT3qSemd6xAxlmFMym2JQwhldvlctsOG+uH+kQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cwSUBXaBpScgGx9IgMhPhPDmWciAtikzcX4wn1wcQwkuhW18NDVAw2O88XVUKPOvp
-	 geZM92yz0Bk9b5Y3vBXGopK7ZprQ1BlPA2GW+ARQFB0+Hsl4Dh5g9uLOPi0OOMOv/L
-	 3JZKSAxuGdQCxus8pGOJR5TJVn6b03Y+TG3Gy6aM=
+	b=e5+x8NCK873mXeyMNN+Wy7yHvavmYXud95By+rY2h1kVxh/0TMzgBUEUy6LhNTkBg
+	 A8jn1PY4Hi+as0fDFbOqwVy17jUOmbmICYtse8nyCF01A1ZearkODyCBzHA9H+kAy+
+	 rGyRm2GNQbqzyK7BgsMeb3Gr6T7KnpLE8mEm9oi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730868AbgANKIG (ORCPT
+        id S1730900AbgANKIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:08:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38924 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:08:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730407AbgANKIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:08:01 -0500
+        id S1730867AbgANKIG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:08:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45DAD24690;
-        Tue, 14 Jan 2020 10:08:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C628524685;
+        Tue, 14 Jan 2020 10:08:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996480;
-        bh=QOtqjUFCOKYM8zRv5UdVdn1GxVGQCrtHBIh9QLZ5b9Y=;
+        s=default; t=1578996486;
+        bh=kzrT3qT3qSemd6xAxlmFMym2JQwhldvlctsOG+uH+kQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EKG0XEmVhB8L53JuE2+usS/5R9wh9r9vKZqc4ZEIy7l3x//68DcSR44DFA0QTjnak
-         9jZR9tDIGhti5tzTdIAtwPebT51sxPEzuVGiFXAWRc3C99v9niDBYastoIJxG5cAZD
-         WC2b8p154F599YOw/rx/ZvLyZpRtW5rt6E8bfbx8=
+        b=VwWOr04mdm9WXWjrPPTqNetlXfKotysNQ8zllbFiYfzZAEMc+b/LvNFfxYG1E+BDI
+         UblVJMIuKHiSrKSMJkbvPyvgRaJnKCBSPPoeT8podkA4VDIzr8NLnkYhvh1VcD0u2X
+         b7W5r0RfIKyQOPQf1eer5fbsMkLVkX79FYzB1DD8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmytro Fil <monkdaf@gmail.com>,
-        Ian Abbott <abbotti@mev.co.uk>
-Subject: [PATCH 4.19 30/46] staging: comedi: adv_pci1710: fix AI channels 16-31 for PCI-1713
-Date:   Tue, 14 Jan 2020 11:01:47 +0100
-Message-Id: <20200114094346.470710904@linuxfoundation.org>
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 09/46] tracing: Have stack tracer compile when MCOUNT_INSN_SIZE is not defined
+Date:   Tue, 14 Jan 2020 11:01:26 +0100
+Message-Id: <20200114094342.369694851@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -59,41 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Abbott <abbotti@mev.co.uk>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit a9d3a9cedc1330c720e0ddde1978a8e7771da5ab upstream.
+commit b8299d362d0837ae39e87e9019ebe6b736e0f035 upstream.
 
-The Advantech PCI-1713 has 32 analog input channels, but an incorrect
-bit-mask in the definition of the `PCI171X_MUX_CHANH(x)` and
-PCI171X_MUX_CHANL(x)` macros is causing channels 16 to 31 to be aliases
-of channels 0 to 15.  Change the bit-mask value from 0xf to 0xff to fix
-it.  Note that the channel numbers will have been range checked already,
-so the bit-mask isn't really needed.
+On some archs with some configurations, MCOUNT_INSN_SIZE is not defined, and
+this makes the stack tracer fail to compile. Just define it to zero in this
+case.
 
-Fixes: 92c65e5553ed ("staging: comedi: adv_pci1710: define the mux control register bits")
-Reported-by: Dmytro Fil <monkdaf@gmail.com>
-Cc: <stable@vger.kernel.org> # v4.5+
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
-Link: https://lore.kernel.org/r/20191227170054.32051-1-abbotti@mev.co.uk
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/202001020219.zvE3vsty%lkp@intel.com
+
+Cc: stable@vger.kernel.org
+Fixes: 4df297129f622 ("tracing: Remove most or all of stack tracer stack size from stack_max_size")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/comedi/drivers/adv_pci1710.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_stack.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/staging/comedi/drivers/adv_pci1710.c
-+++ b/drivers/staging/comedi/drivers/adv_pci1710.c
-@@ -46,8 +46,8 @@
- #define PCI171X_RANGE_UNI	BIT(4)
- #define PCI171X_RANGE_GAIN(x)	(((x) & 0x7) << 0)
- #define PCI171X_MUX_REG		0x04	/* W:   A/D multiplexor control */
--#define PCI171X_MUX_CHANH(x)	(((x) & 0xf) << 8)
--#define PCI171X_MUX_CHANL(x)	(((x) & 0xf) << 0)
-+#define PCI171X_MUX_CHANH(x)	(((x) & 0xff) << 8)
-+#define PCI171X_MUX_CHANL(x)	(((x) & 0xff) << 0)
- #define PCI171X_MUX_CHAN(x)	(PCI171X_MUX_CHANH(x) | PCI171X_MUX_CHANL(x))
- #define PCI171X_STATUS_REG	0x06	/* R:   status register */
- #define PCI171X_STATUS_IRQ	BIT(11)	/* 1=IRQ occurred */
+--- a/kernel/trace/trace_stack.c
++++ b/kernel/trace/trace_stack.c
+@@ -196,6 +196,11 @@ check_stack(unsigned long ip, unsigned l
+ 	local_irq_restore(flags);
+ }
+ 
++/* Some archs may not define MCOUNT_INSN_SIZE */
++#ifndef MCOUNT_INSN_SIZE
++# define MCOUNT_INSN_SIZE 0
++#endif
++
+ static void
+ stack_trace_call(unsigned long ip, unsigned long parent_ip,
+ 		 struct ftrace_ops *op, struct pt_regs *pt_regs)
 
 
