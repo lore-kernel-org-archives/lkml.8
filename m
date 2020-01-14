@@ -2,53 +2,57 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45728C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247CEC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCB124683
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA8924687
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996661;
-	bh=3m7vJrRJiNVPTW0Tg9aTVd7TV0vHHZB0UqpneiJ7gSg=;
+	s=default; t=1578996665;
+	bh=TZPYNpGpDpaqf2LZU3QqZZ+N5P4+4q0Qp1ecscUJ6W0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cV4rMkrzggKKuAfZzgcjw5L0VekpnlHapU1n+u2YTXbSff1YlnxrUsmHpGZeuYkxL
-	 ghErrs3vnsrCBIEpSTGeqTgPF8fEJbt0vBulRoFpYMrbMeP+8jw/Inv1XeNgJSLCI7
-	 2A7LgohnxYm3FVJC97H8HZpan+VWVnyqlsQtwHqU=
+	b=TxWzbHsj0b3WLQIIrq1Sf9FQV1qBftrAQ8+xjpRY3clz67PRbPUJsfDqERVln4G9r
+	 jk8wBpE4ROltOiAoGtyjv7xnxThr4q9vM9wYlqT6Qt9i9fVzhqdlkUwqXSzIchoWfs
+	 dbcMHUK8wzROWC28y5m+oGA6UwnfpsM0msLAtGgU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732134AbgANKLA (ORCPT
+        id S1728779AbgANKLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:11:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45420 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:11:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730223AbgANKKy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:10:54 -0500
+        id S1732118AbgANKLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:11:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D72C207FF;
-        Tue, 14 Jan 2020 10:10:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62CAA24681;
+        Tue, 14 Jan 2020 10:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996654;
-        bh=3m7vJrRJiNVPTW0Tg9aTVd7TV0vHHZB0UqpneiJ7gSg=;
+        s=default; t=1578996659;
+        bh=TZPYNpGpDpaqf2LZU3QqZZ+N5P4+4q0Qp1ecscUJ6W0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LAPc7f6kXQ37mKYBI7h23X0zX5Q/6KmOMUAtU1hEQ7/ql/PrYu2Sy5TQYn7nHSAHb
-         rprpaFN5lUxZPKszwnsiHxEONpWov83NfncP74FMeOwakXuzEXYRoWRpmFGvqmjdVt
-         6nMbHNiDLM1iYtA3VDCxoy72xd3ZujCdzvPN45x8=
+        b=c/wn49ZU2FGDBViaobJC3jZ30QcXBnmUQrw44YYJymbgtHvFwapwSPl0rSF9RUSbU
+         sW0j6U5YQrkkQ5IpuJ6GxgHBquIuLJRqY39yDBJ4RPbeEn4ITzk1Y4Cxtk9L0HebXf
+         P60nf2+vqVmPvHEim1tVtES3lUikyqFvCaQrRfUs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 4.14 25/39] staging: rtl8188eu: Add device code for TP-Link TL-WN727N v5.21
-Date:   Tue, 14 Jan 2020 11:01:59 +0100
-Message-Id: <20200114094344.485415658@linuxfoundation.org>
+        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.9 02/31] chardev: Avoid potential use-after-free in chrdev_open()
+Date:   Tue, 14 Jan 2020 11:01:54 +0100
+Message-Id: <20200114094336.313352800@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
-References: <20200114094336.210038037@linuxfoundation.org>
+In-Reply-To: <20200114094334.725604663@linuxfoundation.org>
+References: <20200114094334.725604663@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,32 +62,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Straube <straube.linux@gmail.com>
+From: Will Deacon <will@kernel.org>
 
-commit 58dcc5bf4030cab548d5c98cd4cd3632a5444d5a upstream.
+commit 68faa679b8be1a74e6663c21c3a9d25d32f1c079 upstream.
 
-This device was added to the stand-alone driver on github.
-Add it to the staging driver as well.
+'chrdev_open()' calls 'cdev_get()' to obtain a reference to the
+'struct cdev *' stashed in the 'i_cdev' field of the target inode
+structure. If the pointer is NULL, then it is initialised lazily by
+looking up the kobject in the 'cdev_map' and so the whole procedure is
+protected by the 'cdev_lock' spinlock to serialise initialisation of
+the shared pointer.
 
-Link: https://github.com/lwfinger/rtl8188eu/commit/b9b537aa25a8
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
+Unfortunately, it is possible for the initialising thread to fail *after*
+installing the new pointer, for example if the subsequent '->open()' call
+on the file fails. In this case, 'cdev_put()' is called, the reference
+count on the kobject is dropped and, if nobody else has taken a reference,
+the release function is called which finally clears 'inode->i_cdev' from
+'cdev_purge()' before potentially freeing the object. The problem here
+is that a racing thread can happily take the 'cdev_lock' and see the
+non-NULL pointer in the inode, which can result in a refcount increment
+from zero and a warning:
+
+  |  ------------[ cut here ]------------
+  |  refcount_t: addition on 0; use-after-free.
+  |  WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
+  |  Modules linked in:
+  |  CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
+  |  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+  |  RIP: 0010:refcount_warn_saturate+0x6d/0xf0
+  |  Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
+  |  RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
+  |  RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
+  |  RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
+  |  RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
+  |  R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
+  |  R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
+  |  FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
+  |  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  |  CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
+  |  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  |  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  |  Call Trace:
+  |   kobject_get+0x5c/0x60
+  |   cdev_get+0x2b/0x60
+  |   chrdev_open+0x55/0x220
+  |   ? cdev_put.part.3+0x20/0x20
+  |   do_dentry_open+0x13a/0x390
+  |   path_openat+0x2c8/0x1470
+  |   do_filp_open+0x93/0x100
+  |   ? selinux_file_ioctl+0x17f/0x220
+  |   do_sys_open+0x186/0x220
+  |   do_syscall_64+0x48/0x150
+  |   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  |  RIP: 0033:0x7f3b87efcd0e
+  |  Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
+  |  RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+  |  RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
+  |  RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
+  |  RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
+  |  R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
+  |  R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
+  |  ---[ end trace 24f53ca58db8180a ]---
+
+Since 'cdev_get()' can already fail to obtain a reference, simply move
+it over to use 'kobject_get_unless_zero()' instead of 'kobject_get()',
+which will cause the racing thread to return -ENXIO if the initialising
+thread fails unexpectedly.
+
+Cc: Hillf Danton <hdanton@sina.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
+Signed-off-by: Will Deacon <will@kernel.org>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191228143725.24455-1-straube.linux@gmail.com
+Link: https://lore.kernel.org/r/20191219120203.32691-1-will@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/rtl8188eu/os_dep/usb_intf.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/char_dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-+++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
-@@ -45,6 +45,7 @@ static const struct usb_device_id rtw_us
- 	{USB_DEVICE(0x2001, 0x3311)}, /* DLink GO-USB-N150 REV B1 */
- 	{USB_DEVICE(0x2001, 0x331B)}, /* D-Link DWA-121 rev B1 */
- 	{USB_DEVICE(0x2357, 0x010c)}, /* TP-Link TL-WN722N v2 */
-+	{USB_DEVICE(0x2357, 0x0111)}, /* TP-Link TL-WN727N v5.21 */
- 	{USB_DEVICE(0x0df6, 0x0076)}, /* Sitecom N150 v2 */
- 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0xffef)}, /* Rosewill RNX-N150NUB */
- 	{}	/* Terminating entry */
+--- a/fs/char_dev.c
++++ b/fs/char_dev.c
+@@ -336,7 +336,7 @@ static struct kobject *cdev_get(struct c
+ 
+ 	if (owner && !try_module_get(owner))
+ 		return NULL;
+-	kobj = kobject_get(&p->kobj);
++	kobj = kobject_get_unless_zero(&p->kobj);
+ 	if (!kobj)
+ 		module_put(owner);
+ 	return kobj;
 
 
