@@ -2,70 +2,100 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DF4C33CA9
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35871C33CAF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0689A207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A37E2084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 01:22:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pmmufy/r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgANBRv (ORCPT
+        id S1729396AbgANBW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 13 Jan 2020 20:17:51 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40080 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729088AbgANBRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 13 Jan 2020 20:17:51 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D0C395293E302764A76E;
-        Tue, 14 Jan 2020 09:17:48 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 14 Jan 2020 09:17:42 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     Shuming Fan <shumingf@realtek.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-CC:     YueHaibing <yuehaibing@huawei.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] ASoC: rt700: remove unused including <linux/version.h>
-Date:   Tue, 14 Jan 2020 01:13:19 +0000
-Message-ID: <20200114011319.173401-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 13 Jan 2020 20:22:26 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38309 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729334AbgANBWZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 13 Jan 2020 20:22:25 -0500
+Received: by mail-pf1-f193.google.com with SMTP id x185so5750845pfc.5;
+        Mon, 13 Jan 2020 17:22:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oISwi8GU+7YIyrOrSfp4ImJj1Y/DvBujca93dXgVtlA=;
+        b=pmmufy/ruG8Yk3G13Kk0n9FsWP+7iMJUHICK7QN050PdDEd4giLRkBn68WZcc2EV+0
+         9U7cu7H2gOwIcWuz/79yklnSATdq/nwpUeOhBZuKqNWFH3Y7bN/S/DaPqwj/IX4go2vU
+         ULzTZmdp8fgsjcKdy0sRQHww2xsUpeu7kLfrbupH29QNXVlHScgUXEN9nvX2qp+7BfY6
+         fqwZVvdTyHBmLXcMxgHL7RKlq4o8F/wRJi9RNnUAkcExc0SI5RQouFkeidFaBeWNxo41
+         hdBO+d8W5OKRdl8bJ8XKN+6XZtuxc5XmU/PcGfgyLHHQa7nmjB9kaz8aBpU1/MVjykN5
+         r0rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oISwi8GU+7YIyrOrSfp4ImJj1Y/DvBujca93dXgVtlA=;
+        b=e9o3EiEMlyD+dq5LVUxaFznKK3HdaPwyybyyBkdeNk43qxA+fzgV3OwvMFgjdT+F0k
+         OVAQdACdyj4/Ixlp3cIItkGrImbRMQk3FnHfeXFqF2tCS5hEhHmxS45YXoN/6udzkIwe
+         Ujz7ThuXf3uRzemef7MIM0kCngUBa1Q9Xc5QOUDuRjRffx8WSUD5O1Cw4jgeSceRUHJH
+         xyoLNGSjvSZ4E/bF8+muUcrYgwuAzx4H5DSLpAigB9BtYRtBL5iZecGmlI//nhcPyOsf
+         viyB7gAyY4Mm0fSfuwdmq02aKB3aIPKNiRkKIPHQvLhKJ8xijTjJSOluA/La/NOVPJ6q
+         Qn4g==
+X-Gm-Message-State: APjAAAXJBQCGbFqyMDbIfByVV5q+HjXXt1nIo0U24yT+R4xPq2Vl/xr6
+        asFSWmQE1O60TJqJa4hCG7o=
+X-Google-Smtp-Source: APXvYqxWg2ne000PwbmOdByZWSA7GR4T3UfyDJ0wmkkVI3T+MK4h1azrhhO9WUaiajXlX7hD2ww7Tg==
+X-Received: by 2002:a63:7705:: with SMTP id s5mr23498344pgc.379.1578964944815;
+        Mon, 13 Jan 2020 17:22:24 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
+        by smtp.gmail.com with ESMTPSA id fa21sm14526963pjb.17.2020.01.13.17.22.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Jan 2020 17:22:23 -0800 (PST)
+Date:   Tue, 14 Jan 2020 10:22:21 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qian Cai <cai@lca.pw>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the random tree
+Message-ID: <20200114012221.GC202391@google.com>
+References: <20200108113953.1a92a90f@canb.auug.org.au>
+ <20200114001832.GP76141@mit.edu>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114001832.GP76141@mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove including <linux/version.h> that don't need it.
+On (20/01/13 19:18), Theodore Y. Ts'o wrote:
+> On Wed, Jan 08, 2020 at 11:39:53AM +1100, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Commit
+> > 
+> >   1b710b1b10ef ("char/random: silence a lockdep splat with printk()")
+> > 
+> > is missing a Signed-off-by from its author.
+> 
+> Sergey, can you confirm that you intended to add a Signed-off-by: for
+> this patch?
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- sound/soc/codecs/rt700.c | 1 -
- 1 file changed, 1 deletion(-)
+Oh, I didn't realize I was the author. Sorry!
 
-diff --git a/sound/soc/codecs/rt700.c b/sound/soc/codecs/rt700.c
-index b1830c1ebf8a..ff68f0e4f629 100644
---- a/sound/soc/codecs/rt700.c
-+++ b/sound/soc/codecs/rt700.c
-@@ -8,7 +8,6 @@
- 
- #include <linux/module.h>
- #include <linux/moduleparam.h>
--#include <linux/version.h>
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/delay.h>
+Sure, confirmed
 
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
 
-
+	-ss
