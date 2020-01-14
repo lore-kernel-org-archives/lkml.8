@@ -2,96 +2,292 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CD0C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56534C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28E1B2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:19:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Sqtu40xv"
+	by mail.kernel.org (Postfix) with ESMTP id 204A32084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 18:19:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgANST3 (ORCPT
+        id S1728864AbgANSTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 13:19:29 -0500
-Received: from mout.gmx.net ([212.227.17.20]:55767 "EHLO mout.gmx.net"
+        Tue, 14 Jan 2020 13:19:41 -0500
+Received: from foss.arm.com ([217.140.110.172]:56128 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726491AbgANST2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 13:19:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1579025954;
-        bh=tWjpTk+H6GvEnLmuMcHnLvbN3JXd02kL6n72B49k4LA=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject;
-        b=Sqtu40xvQwSLzAtYU07FZV6VJD31l/m0DlK9XtKSk3d8CUa2+gD82gYsmLuwqKbWG
-         bXFabPDy+ciLF1VPqc6BFIKRrT76S4hpfaUlXxSLPJx2Awe5qo+YgcBwwjdfceLN82
-         lnNxr0iAEf2/4tE3Va6p46p5TM6ILuKyt+P115xM=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from ls3530.fritz.box ([92.116.171.104]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MStCY-1jE5KW21Mc-00UGD4; Tue, 14
- Jan 2020 19:19:14 +0100
-Date:   Tue, 14 Jan 2020 19:19:12 +0100
-From:   Helge Deller <deller@gmx.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        John David Anglin <dave.anglin@bell.net>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [GIT PULL] parisc architecture fixes for kernel v5.5
-Message-ID: <20200114181912.GA30159@ls3530.fritz.box>
+        id S1726491AbgANSTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 13:19:40 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE0D51396;
+        Tue, 14 Jan 2020 10:19:39 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FB073F68E;
+        Tue, 14 Jan 2020 10:19:38 -0800 (PST)
+Subject: Re: [PoC] arm: dma-mapping: direct: Apply dma_pfn_offset only when it
+ is valid
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, hch@lst.de
+Cc:     vigneshr@ti.com, konrad.wilk@oracle.com, linux@armlinux.org.uk,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, rogerq@ti.com,
+        robh@kernel.org
+References: <8eb68140-97b2-62ce-3e06-3761984aa5b1@ti.com>
+ <20200114164332.3164-1-peter.ujfalusi@ti.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f8121747-8840-e279-8c7c-75a9d4becce8@arm.com>
+Date:   Tue, 14 Jan 2020 18:19:36 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Provags-ID: V03:K1:7G/1/YYaD1DwN58s7AkOYuj+w6J6OdJEEESB3W6TpmGIPXdijHU
- nhixReZv+SnJprg/Tqd7cBtNt4XvSvCDpFHzHn1DpfDnrIy+/TvDw0xE5XXl7Y+UNnWz5W0
- pHh8wcTmt19ZzYHf2FczC5B+rSprDTp6m4A/81gOBqe19cXiT96/Z0fGDq7sUlhcjk1MSzt
- 95MMfm3IGC1KuWzX73q7g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Qr+4CE9Y65Q=:JqFzIwSzhepUQcHNlNE28i
- dT+Mjzefyo6F7gCaZo9v5hJ0Kk6Gebrq0jV1qkYuneVVqCrzwzcU5kpbQ0i1nR/gIsmfDahFY
- symCXe5bY4Zzo+yldVY3G5GGQEb+SH4CTtREbaHhVq9y2tVgHaBTikyTtiSKsPJmMx8JLqqxs
- hm9MlYvW4KwecoCodZSyJxoFuGadUL2LLn5J2wzpJe5UhMMj7nQIGFbLOWOCDtfcgk8IX7/47
- X7TP6OCjoH+qEhl/0G/LMW1n7kwvgmzhmAPRW0caR5D7vGMy5ZdYHJ83WEsi4471gPQQ5NtuT
- UUAB9i+bkhGw8s5rM/qNChPn7XOzOM4LjziIQaokgQAErL8ocnXjno9JLa6Oy4zSXMYDuOb+x
- kk/ls31KbV6lZtu3tkb8vHjXlkMjdHoYFgQkTB2OejQxj2WT8kRgb7/oY+3nK+zcrCEMbGcqy
- cvNxJXw3G+vRUei66u7rjnhiim4oCiZ9zDaqUadqlh2vBNjCgK9rP5Mjjo/ZLjzxUram3busJ
- jHfkcQT101kmAux0b1iS9oe60K9kTqiCFPavULV/XWlEpKSHafpWHw1xtE1ULRxu6THZ/c+QU
- II/Xvrw39dKoF9MYSE00g/+P6x/NqXv3h5zBqkHu30kj1Rkk1eMKRFE4wC9xWu4lV7o5YDsfx
- ETI21wS6vDcBsLH9K9eA2taq+2/8RD5sQem4sKC5bL61PfmxkRFFxT0DPEjIiIOkI/l1FI6qQ
- 2d7yLB2ajcIr6fRu8ndM54BDOnGKrES/MZyKl3QiiP8IlUf0PlcbM7bvUyQW80HlzockQUpxw
- MfutrjcfS3ZRsvbdZr3A7zuUPYTNZ2gOTMBaVH05CyTLqGPsHHrzMhi7snBRbzq/SwAtzIbAW
- AlYZdfRf68EO2O0HqbPtMoZoMFPLVcSvb7AzV5vshn3uZ+zjSs15/+UisDFBOkAWGc3rLY6UZ
- o7ahqDYEVlwja7FE/L1P3V/+5yRrUxbiQ00FtZoioZGjcjzg3pIb/xG2n6yLLfWQ5v6MPYfMM
- gXhLOnZcoYp3L355OUPSL5jXIvqaeiFADPaPobnEXDJYxUZ5CnDNpkwZMPRwr1CSMG7Ywdtb5
- ukhMNFeCHDmZBMbRMfTD13e9enamoqC/u+Z1N60HxR31VyH6BQpaOsVRghJq8e+ZBR/W7eOuE
- 3pEV3gzUjRpkm1B1X5Qj7r5WNxxTCdzTHyZhnIlfl2xi5ycnE0yoqQIc+u7gAwM1GOr1qFIIK
- PdanWx6tQqvtPataT7CsB0KOIsjMQCUH8Bf2MAQ==
+In-Reply-To: <20200114164332.3164-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 14/01/2020 4:43 pm, Peter Ujfalusi wrote:
+> The dma_pfn_offset should only be applied to an address which is within the
+> dma-ranges range. Any address outside should have offset as 0.
 
-please pull two fixes for the parisc architecture for kernel 5.5-rc7 from:
+No, that's wrong. If a non-empty dma-ranges is present, then addresses 
+which do not fall within any specified range are invalid altogether.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux.git parisc-5.5-3
+The current long-term plan is indeed to try to move to some sort of 
+internal "DMA range descriptor" in order to properly cope with the kind 
+of esoteric integrations which have multiple disjoint windows, 
+potentially even with different offsets, but as you point out there are 
+still many hurdles between now and that becoming reality. So although 
+this patch does represent the "right" thing, it's for entirely the wrong 
+reason. AFAICT for your case it basically just works out as a very 
+baroque way to hack dma_direct_supported() again - we shouldn't need a 
+special case to map a bogus physical address to valid DMA address, we 
+should be fixing the source of the bogus PA in the first place.
 
-A boot crash fix by Mike Rapoport and a printk fix by Krzysztof Kozlowski.
+> This is a proof of concept patch which works on k2g where we have
+> dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
+> for the SoC.
 
-Thanks,
-Helge
+TBH it's probably extra-confusing that you're on Keystone 2, where 
+technically this ends up closer-to-OK than most, since IIRC the 0-2GB 
+MMIO region is the same on all 3(?) interconnect maps. Thus the 100% 
+honest description would really be:
 
-----------------------------------------------------------------
-Krzysztof Kozlowski (1):
-      parisc: Use proper printk format for resource_size_t
+dma-ranges = <0x0 0x0 0x0 0x80000000>,
+	     <0x80000000 0x8 0x00000000 0x80000000>;
 
-Mike Rapoport (1):
-      parisc: fix map_pages() to actually populate upper directory
+but yeah, that would just go horribly wrong with Linux today. The 
+subtelty that dma_map_resource() ignores the pfn_offset happens to be a 
+"feature" in this regard ;)
 
- arch/parisc/kernel/drivers.c | 4 ++--
- arch/parisc/mm/init.c        | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Robin.
+
+> Without this patch everything which tries to set DMA_BIT_MASK(32) or less
+> fails -> DMA and peripherals with built in DMA (SD with ADMA) will not
+> probe or fall back to PIO mode.
+> 
+> With this patch EDMA probes, SD's ADMA is working.
+> Audio and dma-test is working just fine with EDMA, mmc accesses with ADMA
+> also operational.
+> 
+> The patch does not tried to address the incomplete handling of dma-ranges
+> from DT and it is not fixing/updating arch code or drivers which uses
+> dma_pfn_offset.
+> Neither provides fallback support for kernel setting only dma_pfn_offset to
+> arbitrary number without paddr/dma_addr/size.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+> Hi Christoph, Robin,
+> 
+> I know it is a bit more complicated, but with this patch k2g is working fine...
+> 
+> I wanted to test the concept I was describing and a patch speaks better than
+> words.
+> 
+> Kind regards,
+> Peter
+> 
+>   arch/arm/include/asm/dma-mapping.h | 25 ++++++++++++++++++++--
+>   drivers/of/device.c                |  7 ++++++-
+>   include/linux/device.h             |  8 ++++++++
+>   include/linux/dma-direct.h         | 33 ++++++++++++++++++++++++++++--
+>   kernel/dma/coherent.c              |  9 +++++---
+>   5 files changed, 74 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
+> index bdd80ddbca34..9bff6ad2d8c8 100644
+> --- a/arch/arm/include/asm/dma-mapping.h
+> +++ b/arch/arm/include/asm/dma-mapping.h
+> @@ -33,10 +33,31 @@ static inline const struct dma_map_ops *get_arch_dma_ops(struct bus_type *bus)
+>    * addresses. They must not be used by drivers.
+>    */
+>   #ifndef __arch_pfn_to_dma
+> +
+> +static inline unsigned long __phys_to_dma_pfn_offset(struct device *dev,
+> +						     phys_addr_t paddr)
+> +{
+> +	if (paddr >= dev->dma_ranges.paddr &&
+> +	    paddr <= (dev->dma_ranges.paddr + dev->dma_ranges.size))
+> +		return dev->dma_ranges.pfn_offset;
+> +
+> +	return 0;
+> +}
+> +
+> +static inline unsigned long __dma_to_phys_pfn_offset(struct device *dev,
+> +						     dma_addr_t dma_addr)
+> +{
+> +	if (dma_addr >= dev->dma_ranges.dma_addr &&
+> +	    dma_addr <= (dev->dma_ranges.dma_addr + dev->dma_ranges.size))
+> +		return dev->dma_ranges.pfn_offset;
+> +
+> +	return 0;
+> +}
+> +
+>   static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
+>   {
+>   	if (dev)
+> -		pfn -= dev->dma_pfn_offset;
+> +		pfn -= __phys_to_dma_pfn_offset(dev, __pfn_to_phys(pfn));
+>   	return (dma_addr_t)__pfn_to_bus(pfn);
+>   }
+>   
+> @@ -45,7 +66,7 @@ static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+>   	unsigned long pfn = __bus_to_pfn(addr);
+>   
+>   	if (dev)
+> -		pfn += dev->dma_pfn_offset;
+> +		pfn += __dma_to_phys_pfn_offset(dev, addr);
+>   
+>   	return pfn;
+>   }
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 27203bfd0b22..07a8cc1a7d7f 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -105,7 +105,7 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+>   		if (!force_dma)
+>   			return ret == -ENODEV ? 0 : ret;
+>   
+> -		dma_addr = offset = 0;
+> +		dma_addr = offset = paddr = 0;
+>   	} else {
+>   		offset = PFN_DOWN(paddr - dma_addr);
+>   
+> @@ -144,6 +144,11 @@ int of_dma_configure(struct device *dev, struct device_node *np, bool force_dma)
+>   
+>   	dev->dma_pfn_offset = offset;
+>   
+> +	dev->dma_ranges.paddr = paddr;
+> +	dev->dma_ranges.dma_addr = dma_addr;
+> +	dev->dma_ranges.size = size;
+> +	dev->dma_ranges.pfn_offset = offset;
+> +
+>   	/*
+>   	 * Limit coherent and dma mask based on size and default mask
+>   	 * set by the driver.
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index ce6db68c3f29..57006b51a989 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -293,6 +293,13 @@ struct device_dma_parameters {
+>   	unsigned long segment_boundary_mask;
+>   };
+>   
+> +struct dma_ranges {
+> +	u64 paddr;
+> +	u64 dma_addr;
+> +	u64 size;
+> +	unsigned long pfn_offset;
+> +};
+> +
+>   /**
+>    * struct device_connection - Device Connection Descriptor
+>    * @fwnode: The device node of the connected device
+> @@ -581,6 +588,7 @@ struct device {
+>   					     allocations such descriptors. */
+>   	u64		bus_dma_limit;	/* upstream dma constraint */
+>   	unsigned long	dma_pfn_offset;
+> +	struct dma_ranges dma_ranges;
+>   
+>   	struct device_dma_parameters *dma_parms;
+>   
+> diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+> index 24b8684aa21d..4a46a15945ea 100644
+> --- a/include/linux/dma-direct.h
+> +++ b/include/linux/dma-direct.h
+> @@ -11,18 +11,47 @@ extern unsigned int zone_dma_bits;
+>   #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
+>   #include <asm/dma-direct.h>
+>   #else
+> +
+> +static inline unsigned long __phys_to_dma_pfn_offset(struct device *dev,
+> +						     phys_addr_t paddr)
+> +{
+> +	if (!dev)
+> +		return 0;
+> +
+> +	if (paddr >= dev->dma_ranges.paddr &&
+> +	    paddr <= (dev->dma_ranges.paddr + dev->dma_ranges.size))
+> +		return dev->dma_ranges.pfn_offset
+> +
+> +	return 0;
+> +}
+> +
+> +static inline unsigned long __dma_to_phys_pfn_offset(struct device *dev,
+> +						     dma_addr_t dma_addr)
+> +{
+> +	if (!dev)
+> +		return 0;
+> +
+> +	if (dma_addr >= dev->dma_ranges.dma_addr &&
+> +	    dma_addr <= (dev->dma_ranges.dma_addr + dev->dma_ranges.size))
+> +		return dev->dma_ranges.pfn_offset
+> +
+> +	return 0;
+> +}
+> +
+>   static inline dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
+>   {
+>   	dma_addr_t dev_addr = (dma_addr_t)paddr;
+> +	unsigned long offset = __phys_to_dma_pfn_offset(dev, paddr);
+>   
+> -	return dev_addr - ((dma_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
+> +	return dev_addr - ((dma_addr_t)offset << PAGE_SHIFT);
+>   }
+>   
+>   static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dev_addr)
+>   {
+>   	phys_addr_t paddr = (phys_addr_t)dev_addr;
+> +	unsigned long offset = __dma_to_phys_pfn_offset(dev, dev_addr);
+>   
+> -	return paddr + ((phys_addr_t)dev->dma_pfn_offset << PAGE_SHIFT);
+> +	return paddr + ((phys_addr_t)offset << PAGE_SHIFT);
+>   }
+>   #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
+>   
+> diff --git a/kernel/dma/coherent.c b/kernel/dma/coherent.c
+> index 551b0eb7028a..7a68fd09f5d0 100644
+> --- a/kernel/dma/coherent.c
+> +++ b/kernel/dma/coherent.c
+> @@ -31,10 +31,13 @@ static inline struct dma_coherent_mem *dev_get_coherent_memory(struct device *de
+>   static inline dma_addr_t dma_get_device_base(struct device *dev,
+>   					     struct dma_coherent_mem * mem)
+>   {
+> -	if (mem->use_dev_dma_pfn_offset)
+> -		return (mem->pfn_base - dev->dma_pfn_offset) << PAGE_SHIFT;
+> -	else
+> +	if (mem->use_dev_dma_pfn_offset) {
+> +		unsigned long offset = __phys_to_dma_pfn_offset(dev,
+> +						__pfn_to_phys(mem->pfn_base));
+> +		return (mem->pfn_base - offset) << PAGE_SHIFT;
+> +	} else {
+>   		return mem->device_base;
+> +	}
+>   }
+>   
+>   static int dma_init_coherent_memory(phys_addr_t phys_addr,
+> 
