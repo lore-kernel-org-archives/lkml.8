@@ -2,410 +2,125 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8313DC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4271FC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:58:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F9E7207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18AB5222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 07:58:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H7d0Hhqz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nj+SbZ34"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgANH6X (ORCPT
+        id S1729353AbgANH6h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 02:58:23 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:56089 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729127AbgANH5z (ORCPT
+        Tue, 14 Jan 2020 02:58:37 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39355 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729127AbgANH6g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 02:57:55 -0500
-Received: by mail-pj1-f68.google.com with SMTP id d5so5337548pjz.5
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 23:57:55 -0800 (PST)
+        Tue, 14 Jan 2020 02:58:36 -0500
+Received: by mail-wm1-f65.google.com with SMTP id 20so12511053wmj.4
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 23:58:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=BmDxezDl+bcc/vn8zCZPk3UWw3V1frore6GMVRf+Cyc=;
-        b=H7d0Hhqz9zgKRKrClKNStNh28kydx/yi69xtXYE4f8bzWa6C97ISTLHXuC8Oc2/3VC
-         2buEzPgiJTVDxb/0lub4YFXIlBpISYMccEI9pkEUEKk7T7E+sg8WRVf0Qsr+rtmszGQ7
-         T4pDqI4o4ReZxAlM5IMfE/7HQZ+xnMR54+KGRN13P1qzSuqphL50/llQ95YEAAIqoCJZ
-         7ajzitI58HE6xTvxdIv/a0uh6x79IzBx82stQOAAUTpOEZM9uoZEJMsZnmyY8Z28nDUO
-         XzPlZViKukN8iqvzypC2LYvYnFj2mDKFS+kiwMhib5fR61FgVy70knCIb5B5iTmCrKe7
-         5S/Q==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=2tqeA9SVRpbYOWNEv52NfjSgUYnaSyLjZ8VbKBWvkB8=;
+        b=nj+SbZ34MQo3ObpLHJ81f1fsqNyqoIbFh9D59Ut6hwJJqqviusHEBofnbn9WEMHTkH
+         BowT+qANUEoaF7Ya4KZP1bSuMDzr3BrfBc4qXVeGmkv+W2YkD64gZdlGT1o3hIs69C+R
+         Frm7G0TnEgQN+CcgJpGTHzupvS2axENPUO9tDbkad1jsACJb/T7vVOMZjXrau9B0y1xP
+         Nivrll2vslPIaal6ObHQgNrwwh1/ns4IANfiXYseBn8G6sPo2cLt3Q1oVOcocUcMuoWB
+         jAj8yw5pFR5ln7Zr+jVforKxx/vd60vD57WvedRNYlKMdSDCMYBSbGYeBhIY1f5KuAo0
+         4RCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BmDxezDl+bcc/vn8zCZPk3UWw3V1frore6GMVRf+Cyc=;
-        b=EEld9YlXhaQW30/isXr8lWwlY4BALAvPjKfMlulP6L8luETejHiKsYRV9rWgrBFN4a
-         oLj31C8pdPKbIA+OWb2X42KLRfq55nMQF76o4AqQagS6rR9gAsRERO//TT4U67lepxmp
-         gXwuYLuVNBNCjxffzi+ju8dJX/zlWRu2fmVaP/kVB+gzHhZOcUFreBloTD5xFxdAmpTf
-         cb7rl1NUvJ3dfowSXY16P5XCF83K9liD14HYXVfp6Ev2Yh01zsyZ9ZQrE/tGp+RYab/y
-         xXLCbU7lSADgOjsiKNPtudwVQGmVa6LDL/1pI9rTOZ1kwLDv0JNGzDs69OFsB8HaAIA8
-         RF0Q==
-X-Gm-Message-State: APjAAAVOfUcuHTiX4dxd2b7qP/CgbP1K/cxoxq/5IaBUd/juGwI4TEXt
-        /pPOt74TaamUiSNiVkoLIO6sW/hJvVA=
-X-Google-Smtp-Source: APXvYqxhMbw+qhAsaVya8gB/e5hUV42dts+kebeNCEbhDAl2ja9ytSGIuS07lbCFG1rxR3A+nymWdA==
-X-Received: by 2002:a17:90a:3aaf:: with SMTP id b44mr28094131pjc.9.1578988674635;
-        Mon, 13 Jan 2020 23:57:54 -0800 (PST)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id q63sm17349352pfb.149.2020.01.13.23.57.53
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=2tqeA9SVRpbYOWNEv52NfjSgUYnaSyLjZ8VbKBWvkB8=;
+        b=p+q+QXy2VynOplO8S6PgvD83sIvNVW0XEi5NPk7emuXnLva+/X4lMNESCKNqL7y8aO
+         sV+3fP8Zili70gQE8+VH5NtlG59php/dANv/PKeuohzifSeVyklCzzliyhxJQ+Nw7A2+
+         AcRMtN5ZMkPyEuUfKkDaEuyZLUxJhG91j/1uad7q3nOTwJNQx44eQvphBScRKuyp5XPP
+         5aH4fq24kYctvAm8MvsfL0lk045uGjvVD9ReU6pGnGA0WbsBCajfVq7YrG+Atvsk0kCF
+         /osvGaERnCW5IkCso3eR3NZUacwWOTtzdcHZxiTnq0jtURyYfoQqT8f09q5+7kFUYqKD
+         yK7A==
+X-Gm-Message-State: APjAAAVsr0WKndVy8wIrDeffuw7yi5F+UMWfN0F5ALRrsOKw6VHmXrdQ
+        yLS0Ol2yTzW+JdWWxYKsgXWMaw==
+X-Google-Smtp-Source: APXvYqxpPA4KEPMdkCalFXAmGAvGmPtnz+o0nFOyZiKWNQHG3sc/7GlSmvHxayF93Mper9G7Nk467g==
+X-Received: by 2002:a7b:c85a:: with SMTP id c26mr25125804wml.107.1578988714621;
+        Mon, 13 Jan 2020 23:58:34 -0800 (PST)
+Received: from dell ([95.147.198.95])
+        by smtp.gmail.com with ESMTPSA id k16sm18893042wru.0.2020.01.13.23.58.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Jan 2020 23:57:53 -0800 (PST)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Arun Kumar Neelakantam <aneela@codeaurora.org>,
-        Chris Lew <clew@codeaurora.org>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v4 2/5] net: qrtr: Implement outgoing flow control
-Date:   Mon, 13 Jan 2020 23:57:00 -0800
-Message-Id: <20200114075703.2145718-3-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200114075703.2145718-1-bjorn.andersson@linaro.org>
-References: <20200114075703.2145718-1-bjorn.andersson@linaro.org>
+        Mon, 13 Jan 2020 23:58:34 -0800 (PST)
+Date:   Tue, 14 Jan 2020 07:58:55 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Wen Su <Wen.Su@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        wsd_upstream <wsd_upstream@mediatek.com>
+Subject: Re: [PATCH 3/4] regulator: mt6359: Add support for MT6359 regulator
+Message-ID: <20200114075855.GA325@dell>
+References: <1571218786-15073-1-git-send-email-Wen.Su@mediatek.com>
+ <1571218786-15073-4-git-send-email-Wen.Su@mediatek.com>
+ <1578969594.4495.3.camel@mtkswgap22>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1578969594.4495.3.camel@mtkswgap22>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to prevent overconsumption of resources on the remote side QRTR
-implements a flow control mechanism.
+On Tue, 14 Jan 2020, Wen Su wrote:
 
-The mechanism works by the sender keeping track of the number of
-outstanding unconfirmed messages that has been transmitted to a
-particular node/port pair.
+> Dear reviewers, 
+> 
+> 	Gentle ping for this patch set.
 
-Upon count reaching a low watermark (L) the confirm_rx bit is set in the
-outgoing message and when the count reaching a high watermark (H)
-transmission will be blocked upon the reception of a resume_tx message
-from the remote, that resets the counter to 0.
+Not a good idea.
 
-This guarantees that there will be at most 2H - L messages in flight.
-Values chosen for L and H are 5 and 10 respectively.
+If you think a patch has slipped through the net, please apply all
+your received *-by tags and resubmit the set, changing "PATCH" to
+"RESEND" in the subject line.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+> On Wed, 2019-10-16 at 17:39 +0800, Wen Su wrote:
+> > From: "wen.su" <wen.su@mediatek.com>
+> > 
+> > The MT6359 is a regulator found on boards based on MediaTek MT6779 and
+> > probably other SoCs. It is a so called pmic and connects as a slave to
+> > SoC using SPI, wrapped inside the pmic-wrapper.
+> > 
+> > Signed-off-by: wen.su <wen.su@mediatek.com>
+> > ---
+> >  drivers/regulator/Kconfig                  |   9 +
+> >  drivers/regulator/Makefile                 |   1 +
+> >  drivers/regulator/mt6359-regulator.c       | 859 +++++++++++++++++++++++++++++
+> >  include/linux/regulator/mt6359-regulator.h |  58 ++
+> >  4 files changed, 927 insertions(+)
+> >  create mode 100644 drivers/regulator/mt6359-regulator.c
+> >  create mode 100644 include/linux/regulator/mt6359-regulator.h
 
-Changes since v3:
-- Fix the xmas tree
-- Wrap radix_tree_lookup() in rcu_read_lock()
-- Initialize qrtr_tx_lock
+[...]
 
- net/qrtr/qrtr.c | 194 ++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 187 insertions(+), 7 deletions(-)
-
-diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
-index 6c56a8ce83ef..304d536c7353 100644
---- a/net/qrtr/qrtr.c
-+++ b/net/qrtr/qrtr.c
-@@ -8,6 +8,7 @@
- #include <linux/qrtr.h>
- #include <linux/termios.h>	/* For TIOCINQ/OUTQ */
- #include <linux/numa.h>
-+#include <linux/wait.h>
- 
- #include <net/sock.h>
- 
-@@ -113,6 +114,8 @@ static DEFINE_MUTEX(qrtr_port_lock);
-  * @ep: endpoint
-  * @ref: reference count for node
-  * @nid: node id
-+ * @qrtr_tx_flow: tree of qrtr_tx_flow, keyed by node << 32 | port
-+ * @qrtr_tx_lock: lock for qrtr_tx_flow inserts
-  * @rx_queue: receive queue
-  * @work: scheduled work struct for recv work
-  * @item: list item for broadcast list
-@@ -123,11 +126,29 @@ struct qrtr_node {
- 	struct kref ref;
- 	unsigned int nid;
- 
-+	struct radix_tree_root qrtr_tx_flow;
-+	struct mutex qrtr_tx_lock; /* for qrtr_tx_flow */
-+
- 	struct sk_buff_head rx_queue;
- 	struct work_struct work;
- 	struct list_head item;
- };
- 
-+/**
-+ * struct qrtr_tx_flow - tx flow control
-+ * @resume_tx: waiters for a resume tx from the remote
-+ * @pending: number of waiting senders
-+ * @tx_failed: indicates that a message with confirm_rx flag was lost
-+ */
-+struct qrtr_tx_flow {
-+	struct wait_queue_head resume_tx;
-+	int pending;
-+	int tx_failed;
-+};
-+
-+#define QRTR_TX_FLOW_HIGH	10
-+#define QRTR_TX_FLOW_LOW	5
-+
- static int qrtr_local_enqueue(struct qrtr_node *node, struct sk_buff *skb,
- 			      int type, struct sockaddr_qrtr *from,
- 			      struct sockaddr_qrtr *to);
-@@ -143,6 +164,8 @@ static int qrtr_bcast_enqueue(struct qrtr_node *node, struct sk_buff *skb,
- static void __qrtr_node_release(struct kref *kref)
- {
- 	struct qrtr_node *node = container_of(kref, struct qrtr_node, ref);
-+	struct radix_tree_iter iter;
-+	void __rcu **slot;
- 
- 	if (node->nid != QRTR_EP_NID_AUTO)
- 		radix_tree_delete(&qrtr_nodes, node->nid);
-@@ -152,6 +175,12 @@ static void __qrtr_node_release(struct kref *kref)
- 
- 	cancel_work_sync(&node->work);
- 	skb_queue_purge(&node->rx_queue);
-+
-+	/* Free tx flow counters */
-+	radix_tree_for_each_slot(slot, &node->qrtr_tx_flow, &iter, 0) {
-+		radix_tree_iter_delete(&node->qrtr_tx_flow, &iter, slot);
-+		kfree(*slot);
-+	}
- 	kfree(node);
- }
- 
-@@ -171,6 +200,126 @@ static void qrtr_node_release(struct qrtr_node *node)
- 	kref_put_mutex(&node->ref, __qrtr_node_release, &qrtr_node_lock);
- }
- 
-+/**
-+ * qrtr_tx_resume() - reset flow control counter
-+ * @node:	qrtr_node that the QRTR_TYPE_RESUME_TX packet arrived on
-+ * @skb:	resume_tx packet
-+ */
-+static void qrtr_tx_resume(struct qrtr_node *node, struct sk_buff *skb)
-+{
-+	struct qrtr_ctrl_pkt *pkt = (struct qrtr_ctrl_pkt *)skb->data;
-+	u64 remote_node = le32_to_cpu(pkt->client.node);
-+	u32 remote_port = le32_to_cpu(pkt->client.port);
-+	struct qrtr_tx_flow *flow;
-+	unsigned long key;
-+
-+	key = remote_node << 32 | remote_port;
-+
-+	rcu_read_lock();
-+	flow = radix_tree_lookup(&node->qrtr_tx_flow, key);
-+	rcu_read_unlock();
-+	if (flow) {
-+		spin_lock(&flow->resume_tx.lock);
-+		flow->pending = 0;
-+		spin_unlock(&flow->resume_tx.lock);
-+		wake_up_interruptible_all(&flow->resume_tx);
-+	}
-+
-+	consume_skb(skb);
-+}
-+
-+/**
-+ * qrtr_tx_wait() - flow control for outgoing packets
-+ * @node:	qrtr_node that the packet is to be send to
-+ * @dest_node:	node id of the destination
-+ * @dest_port:	port number of the destination
-+ * @type:	type of message
-+ *
-+ * The flow control scheme is based around the low and high "watermarks". When
-+ * the low watermark is passed the confirm_rx flag is set on the outgoing
-+ * message, which will trigger the remote to send a control message of the type
-+ * QRTR_TYPE_RESUME_TX to reset the counter. If the high watermark is hit
-+ * further transmision should be paused.
-+ *
-+ * Return: 1 if confirm_rx should be set, 0 otherwise or errno failure
-+ */
-+static int qrtr_tx_wait(struct qrtr_node *node, int dest_node, int dest_port,
-+			int type)
-+{
-+	unsigned long key = (u64)dest_node << 32 | dest_port;
-+	struct qrtr_tx_flow *flow;
-+	int confirm_rx = 0;
-+	int ret;
-+
-+	/* Never set confirm_rx on non-data packets */
-+	if (type != QRTR_TYPE_DATA)
-+		return 0;
-+
-+	mutex_lock(&node->qrtr_tx_lock);
-+	flow = radix_tree_lookup(&node->qrtr_tx_flow, key);
-+	if (!flow) {
-+		flow = kzalloc(sizeof(*flow), GFP_KERNEL);
-+		if (flow) {
-+			init_waitqueue_head(&flow->resume_tx);
-+			radix_tree_insert(&node->qrtr_tx_flow, key, flow);
-+		}
-+	}
-+	mutex_unlock(&node->qrtr_tx_lock);
-+
-+	/* Set confirm_rx if we where unable to find and allocate a flow */
-+	if (!flow)
-+		return 1;
-+
-+	spin_lock_irq(&flow->resume_tx.lock);
-+	ret = wait_event_interruptible_locked_irq(flow->resume_tx,
-+						  flow->pending < QRTR_TX_FLOW_HIGH ||
-+						  flow->tx_failed ||
-+						  !node->ep);
-+	if (ret < 0) {
-+		confirm_rx = ret;
-+	} else if (!node->ep) {
-+		confirm_rx = -EPIPE;
-+	} else if (flow->tx_failed) {
-+		flow->tx_failed = 0;
-+		confirm_rx = 1;
-+	} else {
-+		flow->pending++;
-+		confirm_rx = flow->pending == QRTR_TX_FLOW_LOW;
-+	}
-+	spin_unlock_irq(&flow->resume_tx.lock);
-+
-+	return confirm_rx;
-+}
-+
-+/**
-+ * qrtr_tx_flow_failed() - flag that tx of confirm_rx flagged messages failed
-+ * @node:	qrtr_node that the packet is to be send to
-+ * @dest_node:	node id of the destination
-+ * @dest_port:	port number of the destination
-+ *
-+ * Signal that the transmission of a message with confirm_rx flag failed. The
-+ * flow's "pending" counter will keep incrementing towards QRTR_TX_FLOW_HIGH,
-+ * at which point transmission would stall forever waiting for the resume TX
-+ * message associated with the dropped confirm_rx message.
-+ * Work around this by marking the flow as having a failed transmission and
-+ * cause the next transmission attempt to be sent with the confirm_rx.
-+ */
-+static void qrtr_tx_flow_failed(struct qrtr_node *node, int dest_node,
-+				int dest_port)
-+{
-+	unsigned long key = (u64)dest_node << 32 | dest_port;
-+	struct qrtr_tx_flow *flow;
-+
-+	rcu_read_lock();
-+	flow = radix_tree_lookup(&node->qrtr_tx_flow, key);
-+	rcu_read_unlock();
-+	if (flow) {
-+		spin_lock_irq(&flow->resume_tx.lock);
-+		flow->tx_failed = 1;
-+		spin_unlock_irq(&flow->resume_tx.lock);
-+	}
-+}
-+
- /* Pass an outgoing packet socket buffer to the endpoint driver. */
- static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
- 			     int type, struct sockaddr_qrtr *from,
-@@ -179,6 +328,13 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
- 	struct qrtr_hdr_v1 *hdr;
- 	size_t len = skb->len;
- 	int rc = -ENODEV;
-+	int confirm_rx;
-+
-+	confirm_rx = qrtr_tx_wait(node, to->sq_node, to->sq_port, type);
-+	if (confirm_rx < 0) {
-+		kfree_skb(skb);
-+		return confirm_rx;
-+	}
- 
- 	hdr = skb_push(skb, sizeof(*hdr));
- 	hdr->version = cpu_to_le32(QRTR_PROTO_VER_1);
-@@ -194,7 +350,7 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
- 	}
- 
- 	hdr->size = cpu_to_le32(len);
--	hdr->confirm_rx = 0;
-+	hdr->confirm_rx = !!confirm_rx;
- 
- 	skb_put_padto(skb, ALIGN(len, 4));
- 
-@@ -205,6 +361,11 @@ static int qrtr_node_enqueue(struct qrtr_node *node, struct sk_buff *skb,
- 		kfree_skb(skb);
- 	mutex_unlock(&node->ep_lock);
- 
-+	/* Need to ensure that a subsequent message carries the otherwise lost
-+	 * confirm_rx flag if we dropped this one */
-+	if (rc && confirm_rx)
-+		qrtr_tx_flow_failed(node, to->sq_node, to->sq_port);
-+
- 	return rc;
- }
- 
-@@ -311,7 +472,8 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len)
- 	if (len != ALIGN(size, 4) + hdrlen)
- 		goto err;
- 
--	if (cb->dst_port != QRTR_PORT_CTRL && cb->type != QRTR_TYPE_DATA)
-+	if (cb->dst_port != QRTR_PORT_CTRL && cb->type != QRTR_TYPE_DATA &&
-+	    cb->type != QRTR_TYPE_RESUME_TX)
- 		goto err;
- 
- 	skb_put_data(skb, data + hdrlen, size);
-@@ -370,14 +532,18 @@ static void qrtr_node_rx_work(struct work_struct *work)
- 
- 		qrtr_node_assign(node, cb->src_node);
- 
--		ipc = qrtr_port_lookup(cb->dst_port);
--		if (!ipc) {
--			kfree_skb(skb);
-+		if (cb->type == QRTR_TYPE_RESUME_TX) {
-+			qrtr_tx_resume(node, skb);
- 		} else {
--			if (sock_queue_rcv_skb(&ipc->sk, skb))
-+			ipc = qrtr_port_lookup(cb->dst_port);
-+			if (!ipc) {
- 				kfree_skb(skb);
-+			} else {
-+				if (sock_queue_rcv_skb(&ipc->sk, skb))
-+					kfree_skb(skb);
- 
--			qrtr_port_put(ipc);
-+				qrtr_port_put(ipc);
-+			}
- 		}
- 	}
- }
-@@ -408,6 +574,9 @@ int qrtr_endpoint_register(struct qrtr_endpoint *ep, unsigned int nid)
- 	node->nid = QRTR_EP_NID_AUTO;
- 	node->ep = ep;
- 
-+	INIT_RADIX_TREE(&node->qrtr_tx_flow, GFP_KERNEL);
-+	mutex_init(&node->qrtr_tx_lock);
-+
- 	qrtr_node_assign(node, nid);
- 
- 	mutex_lock(&qrtr_node_lock);
-@@ -428,8 +597,11 @@ void qrtr_endpoint_unregister(struct qrtr_endpoint *ep)
- 	struct qrtr_node *node = ep->node;
- 	struct sockaddr_qrtr src = {AF_QIPCRTR, node->nid, QRTR_PORT_CTRL};
- 	struct sockaddr_qrtr dst = {AF_QIPCRTR, qrtr_local_nid, QRTR_PORT_CTRL};
-+	struct radix_tree_iter iter;
- 	struct qrtr_ctrl_pkt *pkt;
-+	struct qrtr_tx_flow *flow;
- 	struct sk_buff *skb;
-+	void __rcu **slot;
- 
- 	mutex_lock(&node->ep_lock);
- 	node->ep = NULL;
-@@ -442,6 +614,14 @@ void qrtr_endpoint_unregister(struct qrtr_endpoint *ep)
- 		qrtr_local_enqueue(NULL, skb, QRTR_TYPE_BYE, &src, &dst);
- 	}
- 
-+	/* Wake up any transmitters waiting for resume-tx from the node */
-+	mutex_lock(&node->qrtr_tx_lock);
-+	radix_tree_for_each_slot(slot, &node->qrtr_tx_flow, &iter, 0) {
-+		flow = *slot;
-+		wake_up_interruptible_all(&flow->resume_tx);
-+	}
-+	mutex_unlock(&node->qrtr_tx_lock);
-+
- 	qrtr_node_release(node);
- 	ep->node = NULL;
- }
 -- 
-2.24.0
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
