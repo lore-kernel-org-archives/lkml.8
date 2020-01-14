@@ -2,87 +2,65 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681A6C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AE3C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33A4E24670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:20:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1579033201;
-	bh=DL+90P/EWaKpgjQhzELm1QtcKaipMjhpGWKnAdLZJzw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=rCa4XWOt4BqiAYmKb8I3D6U0XUeAdxalZGu8Jv5t8MYQ7P0RRikOV/viYxfCCHgnb
-	 QFP3lEKplO0aKL7skphJPrpUFV8ohEoUAIMQ4fPORkoKDcDO8ep8wrivbzFJT7Q4Jk
-	 1fC+tAyjfQnHgzBtMtKa6qXSkZOq+pPv5/kGN8KI=
+	by mail.kernel.org (Postfix) with ESMTP id ED4C524670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728761AbgANUUA (ORCPT
+        id S1728824AbgANUUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:20:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39532 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 15:20:10 -0500
+Received: from stcim.de ([78.46.90.227]:46760 "EHLO stcim.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727102AbgANUUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:20:00 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54FDC24658;
-        Tue, 14 Jan 2020 20:19:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579033199;
-        bh=DL+90P/EWaKpgjQhzELm1QtcKaipMjhpGWKnAdLZJzw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=REMMLXfRfstTi3AjDBsMPU9gAQ2pFjtmKTZzTvGeueeO0j2vLt3b091Yw61VbgJeL
-         xM+4SIE94YeSVAFJXk0ELfPhac+pFjjfHMsCQ/VyrnHHw47Da5blCKCE5U700EOZU5
-         O1yWDR9KY3mGdF5Ep0BhSznPx//b++SPnEApkz94=
-Subject: Re: [PATCH 5.4 00/78] 5.4.12-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20200114094352.428808181@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <0c5ca0ba-fac2-03e6-72b8-3d1a4a52f346@kernel.org>
-Date:   Tue, 14 Jan 2020 13:19:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726839AbgANUUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 15:20:09 -0500
+X-Greylist: delayed 1172 seconds by postgrey-1.27 at vger.kernel.org; Tue, 14 Jan 2020 15:20:08 EST
+Received: from [2001:4dd7:c2a1:0:a288:b4ff:fee5:f5cc] (helo=porty)
+        by stcim with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <contact@stefanchrist.eu>)
+        id 1irSMc-0001mT-EC; Tue, 14 Jan 2020 21:00:34 +0100
+Date:   Tue, 14 Jan 2020 21:00:34 +0100
+From:   Stefan Lengfeld <contact@stefanchrist.eu>
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     support.opensource@diasemi.com, linux@roeck-us.net,
+        Adam.Thomson.Opensource@diasemi.com,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@pengutronix.de
+Subject: Re: [PATCH] watchdog: da9062: make restart handler atomic safe
+Message-ID: <20200114200034.nbk6vf77ucngfs6o@porty>
+References: <20200113091521.5754-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200113091521.5754-1-m.felsch@pengutronix.de>
+X-PGP-Key: https://stefanchrist.eu/personal/Stefan_Lengfeld_0xE44A23B289092311.asc
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/14/20 3:00 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.4.12 release.
-> There are 78 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 16 Jan 2020 09:41:58 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.12-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+Hi Marco,
 
-Compiled and booted on my test system. No dmesg regressions.
+On Mon, Jan 13, 2020 at 10:15:21AM +0100, Marco Felsch wrote:
+> The restart handler is executed during the shutdown phase which is
+> atomic/irq-less. The i2c framework supports atomic transfers since
+> commit 63b96983a5dd ("i2c: core: introduce callbacks for atomic
+> transfers") but unfortunately the regmap framework doesn't support it
+> yet. Hard coding the i2c stuff can be done without worries since the
+> DA9062 is an i2c-only device.
+> 
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 
-thanks,
--- Shuah
+Reviewed-by: Stefan Lengfeld <contact@stefanchrist.eu>
+
+Thanks for picking up the patch and submitting it.
+
+Kind regards,
+    Stefan
