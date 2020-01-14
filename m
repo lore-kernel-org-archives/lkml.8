@@ -2,117 +2,142 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FEE8C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDC6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E46222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:00:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E19B222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 16:02:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="loIQ8eWg"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ZY/pYxop"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbgANQAJ (ORCPT
+        id S1728757AbgANQCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 11:00:09 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:14343 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726375AbgANQAI (ORCPT
+        Tue, 14 Jan 2020 11:02:00 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52378 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725904AbgANQCA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:00:08 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1579017608; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=SP7KtqJLhxcHuH5kxq8tGE8k0HxhmfSYXMOApVPO+zk=; b=loIQ8eWgs2QZJZg54tiedGwT7AfcahqqP5ZRgv8U+7GyRaG9PGe1qqGP+miZm+t7xM0Cex2k
- C4N/ndrYhEweDVz0c48RwSUKwK8aAzSJJVIMihct4D/dGPcSzI0RVCiziIxX9WWGdJDhRJFv
- VR6a0xnvtU6WibakvdldTZZDoak=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e1de580.7f3f21883458-smtp-out-n02;
- Tue, 14 Jan 2020 16:00:00 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 48704C4479F; Tue, 14 Jan 2020 15:59:59 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9845FC433CB;
-        Tue, 14 Jan 2020 15:59:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9845FC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Tue, 14 Jan 2020 08:59:55 -0700
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sean Paul <sean@poorly.run>, linux-arm-msm@vger.kernel.org,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Brian Masney <masneyb@onstation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH] drm/msm: Fix error about comments within a comment block
-Message-ID: <20200114155955.GA31665@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Douglas Anderson <dianders@chromium.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sean Paul <sean@poorly.run>, linux-arm-msm@vger.kernel.org,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Brian Masney <masneyb@onstation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>
-References: <20200113140427.1.I5e35e29bebe575e091177c4f82606c15370b71d7@changeid>
+        Tue, 14 Jan 2020 11:02:00 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00EFqmCZ023389;
+        Tue, 14 Jan 2020 17:01:41 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=KeXOO+1WsfSVo0lfgop46WH6FenYc5RdLaETc/7oy0w=;
+ b=ZY/pYxopehsbFtLy9zZF2soSTNe9ZZk4v9ojulZb0OZ5Z8+cHXdwYrLeIt2M8+BWMwFL
+ jqUUL45B5zuREzBCE1fDggznSHgTYheUfuPULOT2pf9V7uGs9+gwNNvvR5HiErFbMENC
+ SAPkWGR+Smizh2j2WOm+2zQOKyrlyDf5DBvSNuUateFgY/AvsGPoIJwxiqgLtLUhWqlO
+ vt0TcM8YSVENgS6rHxVQPNy0+YSnN5JP9txtAY66sw0kRFGnXZvEY0uD3taTGBL9bjes
+ d+otxUxZH7hr+zjEqYrYs1KpMaCZrd57Ixa+U9HEsxqlfLJOIJGM87r6sYCocasoDOlh 4g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xf7jpebc7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Jan 2020 17:01:41 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 34DBA100039;
+        Tue, 14 Jan 2020 17:01:40 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 241252C38AA;
+        Tue, 14 Jan 2020 17:01:40 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 14 Jan 2020 17:01:39
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <airlied@linux.ie>, <daniel@ffwll.ch>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v2] drm: fix parameters documentation style
+Date:   Tue, 14 Jan 2020 17:01:35 +0100
+Message-ID: <20200114160135.14990-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113140427.1.I5e35e29bebe575e091177c4f82606c15370b71d7@changeid>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-14_04:2020-01-14,2020-01-14 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 13, 2020 at 02:04:46PM -0800, Douglas Anderson wrote:
-> My compiler yells:
->   .../drivers/gpu/drm/msm/adreno/adreno_gpu.c:69:27:
->   error: '/*' within block comment [-Werror,-Wcomment]
-> 
-> Let's fix.
+Remove old documentation style and use new one to avoid warnings when
+compiling with W=1
 
-grumble something about the road being paved with good intentions....
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+CC: Randy Dunlap <rdunlap@infradead.org>
+version 2:
+- fix return documentation
 
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
+ drivers/gpu/drm/drm_dma.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-> Fixes: 6a0dea02c2c4 ("drm/msm: support firmware-name for zap fw (v2)")
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> 
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index c146c3b8f52b..7fd29829b2fa 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -67,7 +67,7 @@ static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
->  	 *
->  	 * If the firmware-name property is found, we bypass the
->  	 * adreno_request_fw() mechanism, because we don't need to handle
-> -	 * the /lib/firmware/qcom/* vs /lib/firmware/* case.
-> +	 * the /lib/firmware/qcom/... vs /lib/firmware/... case.
->  	 *
->  	 * If the firmware-name property is not found, for backwards
->  	 * compatibility we fall back to the fwname from the gpulist
-> -- 
-> 2.25.0.rc1.283.g88dfdc4193-goog
-> 
-
+diff --git a/drivers/gpu/drm/drm_dma.c b/drivers/gpu/drm/drm_dma.c
+index e45b07890c5a..a7add55a85b4 100644
+--- a/drivers/gpu/drm/drm_dma.c
++++ b/drivers/gpu/drm/drm_dma.c
+@@ -42,10 +42,10 @@
+ #include "drm_legacy.h"
+ 
+ /**
+- * Initialize the DMA data.
++ * drm_legacy_dma_setup() - Initialize the DMA data.
+  *
+- * \param dev DRM device.
+- * \return zero on success or a negative value on failure.
++ * @dev: DRM device.
++ * Return: zero on success or a negative value on failure.
+  *
+  * Allocate and initialize a drm_device_dma structure.
+  */
+@@ -71,9 +71,9 @@ int drm_legacy_dma_setup(struct drm_device *dev)
+ }
+ 
+ /**
+- * Cleanup the DMA resources.
++ * drm_legacy_dma_takedown() - Cleanup the DMA resources.
+  *
+- * \param dev DRM device.
++ * @dev: DRM device.
+  *
+  * Free all pages associated with DMA buffers, the buffers and pages lists, and
+  * finally the drm_device::dma structure itself.
+@@ -120,10 +120,10 @@ void drm_legacy_dma_takedown(struct drm_device *dev)
+ }
+ 
+ /**
+- * Free a buffer.
++ * drm_legacy_free_buffer() - Free a buffer.
+  *
+- * \param dev DRM device.
+- * \param buf buffer to free.
++ * @dev: DRM device.
++ * @buf: buffer to free.
+  *
+  * Resets the fields of \p buf.
+  */
+@@ -139,9 +139,10 @@ void drm_legacy_free_buffer(struct drm_device *dev, struct drm_buf * buf)
+ }
+ 
+ /**
+- * Reclaim the buffers.
++ * drm_legacy_reclaim_buffers() - Reclaim the buffers.
+  *
+- * \param file_priv DRM file private.
++ * @dev: DRM device.
++ * @file_priv: DRM file private.
+  *
+  * Frees each buffer associated with \p file_priv not already on the hardware.
+  */
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.15.0
+
