@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAC54C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E30EC33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B55C924685
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D916824677
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996463;
-	bh=1b0Luv39zPdutEiUSX0IUUF9+gt/vZ658w3BW9a2FQ8=;
+	s=default; t=1578996465;
+	bh=d74K2DIfr18c3bWonOpJS6cUqnB8pqMipT6c6hyzOBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t4aRH2AwL+L1ykKoS/DAl9sg+CqcwsqejPmsJLm8q5QqLiCvVwRHFXUkwYaNqOWU9
-	 3mBoraUVDkw/pFlEDkXOuVwJliGXbAXKveNuoxeakL//noABmUPdSfaxlS67No9Fv/
-	 6oTjFrhZLVZaxu54fixErDbCBW/6sO+4FQNPoKdk=
+	b=NPFukbRYvP7iuySL3VmbbUeHh6nuv6w/BpwXVlJW/VOcByq2inEATOrRk8hEaoqF5
+	 OkSkqbzbnQHNV3dTIXznUDZRff8sSuqD1sSXtzlITApmfPFGB8BEdWwNtHIP1W5JGu
+	 pGHF4/4dkRc3fHr1nuvx52O6oKtxvqufhUnyIh6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbgANKHm (ORCPT
+        id S1730748AbgANKHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:07:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38058 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:07:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729074AbgANKHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:07:36 -0500
+        id S1729721AbgANKHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:07:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4874724680;
-        Tue, 14 Jan 2020 10:07:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0163F20678;
+        Tue, 14 Jan 2020 10:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996455;
-        bh=1b0Luv39zPdutEiUSX0IUUF9+gt/vZ658w3BW9a2FQ8=;
+        s=default; t=1578996458;
+        bh=d74K2DIfr18c3bWonOpJS6cUqnB8pqMipT6c6hyzOBI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lxs4QmB5dpJikfFFN+hczaIxsb03Em0P7Og4SiEEQxsVXk55zATQvrfb6ghc1am3t
-         ggj3Wcv4zEhZFST9HgVY049ZtrDLdHgavE5+o3O6P8UJ0gCi1DnsGgwXzco1qFf6rR
-         kJyZ6eeVqIvxaRmfHOhBlFGeFo4xuvD48KK3JT3k=
+        b=R271DfdyMcv/MA6/7MU1RG24cxHJAfssGfl40PpmIRfagvDtntqmzikg0e2pY9nqQ
+         76YOeQR79aJdV05Z/uRopXd/RGQoDWCNGo0nF4sEC+CjWbMkUL0241C+evoxeHWhc1
+         31SaXU8rXxFSZ+quTslYR9friZlwz0eqwhklbvaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Hans de Goede <hdegoede@redhat.com>,
         Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 4.19 23/46] gpiolib: acpi: Turn dmi_system_id table into a generic quirk table
-Date:   Tue, 14 Jan 2020 11:01:40 +0100
-Message-Id: <20200114094345.178892638@linuxfoundation.org>
+Subject: [PATCH 4.19 24/46] gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism
+Date:   Tue, 14 Jan 2020 11:01:41 +0100
+Message-Id: <20200114094345.347891623@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
 References: <20200114094339.608068818@linuxfoundation.org>
@@ -64,80 +64,104 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hans de Goede <hdegoede@redhat.com>
 
-commit 1ad1b54099c231aed8f6f257065c1b322583f264 upstream.
+commit aa23ca3d98f756d5b1e503fb140665fb24a41a38 upstream.
 
-Turn the existing run_edge_events_on_boot_blacklist dmi_system_id table
-into a generic quirk table, storing the quirks in the driver_data ptr.
+On some laptops enabling wakeup on the GPIO interrupts used for ACPI _AEI
+event handling causes spurious wakeups.
 
-This is a preparation patch for adding other types of (DMI based) quirks.
+This commit adds a new honor_wakeup option, defaulting to true (our current
+behavior), which can be used to disable wakeup on troublesome hardware
+to avoid these spurious wakeups.
+
+This is a workaround for an architectural problem with s2idle under Linux
+where we do not have any mechanism to immediately go back to sleep after
+wakeup events, other then for embedded-controller events using the standard
+ACPI EC interface, for details see:
+https://lore.kernel.org/linux-acpi/61450f9b-cbc6-0c09-8b3a-aff6bf9a0b3c@redhat.com/
+
+One series of laptops which is not able to suspend without this workaround
+is the HP x2 10 Cherry Trail models, this commit adds a DMI based quirk
+which makes sets honor_wakeup to false on these models.
 
 Cc: stable@vger.kernel.org
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200105160357.97154-2-hdegoede@redhat.com
+Link: https://lore.kernel.org/r/20200105160357.97154-3-hdegoede@redhat.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpio/gpiolib-acpi.c |   19 +++++++++++++++----
- 1 file changed, 15 insertions(+), 4 deletions(-)
+ drivers/gpio/gpiolib-acpi.c |   32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
 --- a/drivers/gpio/gpiolib-acpi.c
 +++ b/drivers/gpio/gpiolib-acpi.c
-@@ -24,6 +24,8 @@
- 
+@@ -25,12 +25,18 @@
  #include "gpiolib.h"
  
-+#define QUIRK_NO_EDGE_EVENTS_ON_BOOT		0x01l
-+
+ #define QUIRK_NO_EDGE_EVENTS_ON_BOOT		0x01l
++#define QUIRK_NO_WAKEUP				0x02l
+ 
  static int run_edge_events_on_boot = -1;
  module_param(run_edge_events_on_boot, int, 0444);
  MODULE_PARM_DESC(run_edge_events_on_boot,
-@@ -1263,7 +1265,7 @@ static int acpi_gpio_handle_deferred_req
- /* We must use _sync so that this runs after the first deferred_probe run */
- late_initcall_sync(acpi_gpio_handle_deferred_request_irqs);
+ 		 "Run edge _AEI event-handlers at boot: 0=no, 1=yes, -1=auto");
  
--static const struct dmi_system_id run_edge_events_on_boot_blacklist[] = {
-+static const struct dmi_system_id gpiolib_acpi_quirks[] = {
- 	{
- 		/*
- 		 * The Minix Neo Z83-4 has a micro-USB-B id-pin handler for
-@@ -1273,7 +1275,8 @@ static const struct dmi_system_id run_ed
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "MINIX"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "Z83-4"),
--		}
-+		},
-+		.driver_data = (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
++static int honor_wakeup = -1;
++module_param(honor_wakeup, int, 0444);
++MODULE_PARM_DESC(honor_wakeup,
++		 "Honor the ACPI wake-capable flag: 0=no, 1=yes, -1=auto");
++
+ /**
+  * struct acpi_gpio_event - ACPI GPIO event handler data
+  *
+@@ -280,7 +286,7 @@ static acpi_status acpi_gpiochip_alloc_e
+ 	event->handle = evt_handle;
+ 	event->handler = handler;
+ 	event->irq = irq;
+-	event->irq_is_wake = agpio->wake_capable == ACPI_WAKE_CAPABLE;
++	event->irq_is_wake = honor_wakeup && agpio->wake_capable == ACPI_WAKE_CAPABLE;
+ 	event->pin = pin;
+ 	event->desc = desc;
+ 
+@@ -1291,6 +1297,23 @@ static const struct dmi_system_id gpioli
+ 		},
+ 		.driver_data = (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
  	},
- 	{
- 		/*
-@@ -1285,15 +1288,23 @@ static const struct dmi_system_id run_ed
- 		.matches = {
- 			DMI_MATCH(DMI_SYS_VENDOR, "Wortmann_AG"),
- 			DMI_MATCH(DMI_PRODUCT_NAME, "TERRA_PAD_1061"),
--		}
++	{
++		/*
++		 * Various HP X2 10 Cherry Trail models use an external
++		 * embedded-controller connected via I2C + an ACPI GPIO
++		 * event handler. The embedded controller generates various
++		 * spurious wakeup events when suspended. So disable wakeup
++		 * for its handler (it uses the only ACPI GPIO event handler).
++		 * This breaks wakeup when opening the lid, the user needs
++		 * to press the power-button to wakeup the system. The
++		 * alternative is suspend simply not working, which is worse.
++		 */
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "HP"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "HP x2 Detachable 10-p0XX"),
 +		},
-+		.driver_data = (void *)QUIRK_NO_EDGE_EVENTS_ON_BOOT,
- 	},
++		.driver_data = (void *)QUIRK_NO_WAKEUP,
++	},
  	{} /* Terminating entry */
  };
  
- static int acpi_gpio_setup_params(void)
- {
-+	const struct dmi_system_id *id;
-+	long quirks = 0;
-+
-+	id = dmi_first_match(gpiolib_acpi_quirks);
-+	if (id)
-+		quirks = (long)id->driver_data;
-+
- 	if (run_edge_events_on_boot < 0) {
--		if (dmi_check_system(run_edge_events_on_boot_blacklist))
-+		if (quirks & QUIRK_NO_EDGE_EVENTS_ON_BOOT)
- 			run_edge_events_on_boot = 0;
- 		else
+@@ -1310,6 +1333,13 @@ static int acpi_gpio_setup_params(void)
  			run_edge_events_on_boot = 1;
+ 	}
+ 
++	if (honor_wakeup < 0) {
++		if (quirks & QUIRK_NO_WAKEUP)
++			honor_wakeup = 0;
++		else
++			honor_wakeup = 1;
++	}
++
+ 	return 0;
+ }
+ 
 
 
