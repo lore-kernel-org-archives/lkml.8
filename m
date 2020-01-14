@@ -4,55 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98DAC33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8072EC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8149A2467D
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5731B24679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996550;
-	bh=Iol7IohHZdICWIhHVeucpDdX7I4/XMk4XVEm9fizVxo=;
+	s=default; t=1578996553;
+	bh=wMVcQRP82232iYT/6w3tIiCe68QFyz0NHLbAdhJripI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qzEHuP7dNQHf9TCZkPCdDLT2lFBiJnGQE7vrg794sx6lfgJZ5slErJJY8pOOu2xtn
-	 iBYBUbr6hpGm8QDTBTZcxhisxD3O+yDx5ubGcXEoMaAom3/3PYDCOYjWcslip92HSd
-	 NqIpM0GVw4THjz4EMNwdS/vAFerMbG5R4HIpO3Xc=
+	b=ZLuFZAfngEO/sCGUXWZC0rm3JW77Dpf70Xpe32AnBZe2gUCHeGs6tFFT+stNbejEq
+	 mHsW21wgLGlkuf1PuDG+r+lji94APJ5mHP0hR7aptDV/Mr3cRnCMoczfcMSK+LQ0rU
+	 UrDtCAhXN0JD4ti/eBUuA+t1MJxZapdH8TqxinHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbgANKJJ (ORCPT
+        id S1731286AbgANKJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:09:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41444 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:09:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729040AbgANKJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:09:08 -0500
+        id S1729040AbgANKJL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:09:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1EC920678;
-        Tue, 14 Jan 2020 10:09:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA6102467A;
+        Tue, 14 Jan 2020 10:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996547;
-        bh=Iol7IohHZdICWIhHVeucpDdX7I4/XMk4XVEm9fizVxo=;
+        s=default; t=1578996550;
+        bh=wMVcQRP82232iYT/6w3tIiCe68QFyz0NHLbAdhJripI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JgWhnz9R1fV2CJmTtQlCOGAGm3c31y4WsXev9QI+D0Ef+RlJD39Xp1F2lSLje8CHm
-         gjhB4u61PoaMfYFMq8WPWhaw2jyld24zz8KhDy7FsfvRO4IdNtoGAVp5QCE1OGoWn2
-         X3IhjRAKgay1aldF+70mMlGyNtwRRLkupYziQDo0=
+        b=PB6smAYxrBZ7/7mitDj1057kuozGIvOfI0VgOx82TCPKjl59GAEIUXDNNUuZW/2yI
+         zZDeHWnqvjWrQIXZ5ryPZfVRDjPI9ksTGEVlv8fHC9MN2Pmc+j2ToyiJns3OAM4ZCb
+         fouJqheCd7B/HbcdWvKw+LbgWgzWaB7qigVdino8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Punit Agrawal <punit1.agrawal@toshiba.co.jp>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>
-Subject: [PATCH 4.19 32/46] serdev: Dont claim unsupported ACPI serial devices
-Date:   Tue, 14 Jan 2020 11:01:49 +0100
-Message-Id: <20200114094346.827991943@linuxfoundation.org>
+        stable@vger.kernel.org, Hillf Danton <hdanton@sina.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 4.14 01/39] chardev: Avoid potential use-after-free in chrdev_open()
+Date:   Tue, 14 Jan 2020 11:01:35 +0100
+Message-Id: <20200114094336.790695214@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200114094339.608068818@linuxfoundation.org>
-References: <20200114094339.608068818@linuxfoundation.org>
+In-Reply-To: <20200114094336.210038037@linuxfoundation.org>
+References: <20200114094336.210038037@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,57 +64,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
+From: Will Deacon <will@kernel.org>
 
-commit c5ee0b3104e0b292d353e63fd31cb8c692645d8c upstream.
+commit 68faa679b8be1a74e6663c21c3a9d25d32f1c079 upstream.
 
-Serdev sub-system claims all ACPI serial devices that are not already
-initialised. As a result, no device node is created for serial ports
-on certain boards such as the Apollo Lake based UP2. This has the
-unintended consequence of not being able to raise the login prompt via
-serial connection.
+'chrdev_open()' calls 'cdev_get()' to obtain a reference to the
+'struct cdev *' stashed in the 'i_cdev' field of the target inode
+structure. If the pointer is NULL, then it is initialised lazily by
+looking up the kobject in the 'cdev_map' and so the whole procedure is
+protected by the 'cdev_lock' spinlock to serialise initialisation of
+the shared pointer.
 
-Introduce a blacklist to reject ACPI serial devices that should not be
-claimed by serdev sub-system. Add the peripheral ids for Intel HS UART
-to the blacklist to bring back serial port on SoCs carrying them.
+Unfortunately, it is possible for the initialising thread to fail *after*
+installing the new pointer, for example if the subsequent '->open()' call
+on the file fails. In this case, 'cdev_put()' is called, the reference
+count on the kobject is dropped and, if nobody else has taken a reference,
+the release function is called which finally clears 'inode->i_cdev' from
+'cdev_purge()' before potentially freeing the object. The problem here
+is that a racing thread can happily take the 'cdev_lock' and see the
+non-NULL pointer in the inode, which can result in a refcount increment
+from zero and a warning:
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Punit Agrawal <punit1.agrawal@toshiba.co.jp>
-Acked-by: Hans de Goede <hdegoede@redhat.com>
-Acked-by: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Link: https://lore.kernel.org/r/20191219100345.911093-1-punit1.agrawal@toshiba.co.jp
+  |  ------------[ cut here ]------------
+  |  refcount_t: addition on 0; use-after-free.
+  |  WARNING: CPU: 2 PID: 6385 at lib/refcount.c:25 refcount_warn_saturate+0x6d/0xf0
+  |  Modules linked in:
+  |  CPU: 2 PID: 6385 Comm: repro Not tainted 5.5.0-rc2+ #22
+  |  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
+  |  RIP: 0010:refcount_warn_saturate+0x6d/0xf0
+  |  Code: 05 55 9a 15 01 01 e8 9d aa c8 ff 0f 0b c3 80 3d 45 9a 15 01 00 75 ce 48 c7 c7 00 9c 62 b3 c6 08
+  |  RSP: 0018:ffffb524c1b9bc70 EFLAGS: 00010282
+  |  RAX: 0000000000000000 RBX: ffff9e9da1f71390 RCX: 0000000000000000
+  |  RDX: ffff9e9dbbd27618 RSI: ffff9e9dbbd18798 RDI: ffff9e9dbbd18798
+  |  RBP: 0000000000000000 R08: 000000000000095f R09: 0000000000000039
+  |  R10: 0000000000000000 R11: ffffb524c1b9bb20 R12: ffff9e9da1e8c700
+  |  R13: ffffffffb25ee8b0 R14: 0000000000000000 R15: ffff9e9da1e8c700
+  |  FS:  00007f3b87d26700(0000) GS:ffff9e9dbbd00000(0000) knlGS:0000000000000000
+  |  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  |  CR2: 00007fc16909c000 CR3: 000000012df9c000 CR4: 00000000000006e0
+  |  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  |  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  |  Call Trace:
+  |   kobject_get+0x5c/0x60
+  |   cdev_get+0x2b/0x60
+  |   chrdev_open+0x55/0x220
+  |   ? cdev_put.part.3+0x20/0x20
+  |   do_dentry_open+0x13a/0x390
+  |   path_openat+0x2c8/0x1470
+  |   do_filp_open+0x93/0x100
+  |   ? selinux_file_ioctl+0x17f/0x220
+  |   do_sys_open+0x186/0x220
+  |   do_syscall_64+0x48/0x150
+  |   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  |  RIP: 0033:0x7f3b87efcd0e
+  |  Code: 89 54 24 08 e8 a3 f4 ff ff 8b 74 24 0c 48 8b 3c 24 41 89 c0 44 8b 54 24 08 b8 01 01 00 00 89 f4
+  |  RSP: 002b:00007f3b87d259f0 EFLAGS: 00000293 ORIG_RAX: 0000000000000101
+  |  RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f3b87efcd0e
+  |  RDX: 0000000000000000 RSI: 00007f3b87d25a80 RDI: 00000000ffffff9c
+  |  RBP: 00007f3b87d25e90 R08: 0000000000000000 R09: 0000000000000000
+  |  R10: 0000000000000000 R11: 0000000000000293 R12: 00007ffe188f504e
+  |  R13: 00007ffe188f504f R14: 00007f3b87d26700 R15: 0000000000000000
+  |  ---[ end trace 24f53ca58db8180a ]---
+
+Since 'cdev_get()' can already fail to obtain a reference, simply move
+it over to use 'kobject_get_unless_zero()' instead of 'kobject_get()',
+which will cause the racing thread to return -ENXIO if the initialising
+thread fails unexpectedly.
+
+Cc: Hillf Danton <hdanton@sina.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Reported-by: syzbot+82defefbbd8527e1c2cb@syzkaller.appspotmail.com
+Signed-off-by: Will Deacon <will@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191219120203.32691-1-will@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serdev/core.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ fs/char_dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serdev/core.c
-+++ b/drivers/tty/serdev/core.c
-@@ -526,6 +526,12 @@ static acpi_status acpi_serdev_register_
- 	return AE_OK;
- }
+--- a/fs/char_dev.c
++++ b/fs/char_dev.c
+@@ -361,7 +361,7 @@ static struct kobject *cdev_get(struct c
  
-+static const struct acpi_device_id serdev_acpi_devices_blacklist[] = {
-+	{ "INT3511", 0 },
-+	{ "INT3512", 0 },
-+	{ },
-+};
-+
- static acpi_status acpi_serdev_add_device(acpi_handle handle, u32 level,
- 				       void *data, void **return_value)
- {
-@@ -535,6 +541,10 @@ static acpi_status acpi_serdev_add_devic
- 	if (acpi_bus_get_device(handle, &adev))
- 		return AE_OK;
- 
-+	/* Skip if black listed */
-+	if (!acpi_match_device_ids(adev, serdev_acpi_devices_blacklist))
-+		return AE_OK;
-+
- 	return acpi_serdev_register_device(ctrl, adev);
- }
- 
+ 	if (owner && !try_module_get(owner))
+ 		return NULL;
+-	kobj = kobject_get(&p->kobj);
++	kobj = kobject_get_unless_zero(&p->kobj);
+ 	if (!kobj)
+ 		module_put(owner);
+ 	return kobj;
 
 
