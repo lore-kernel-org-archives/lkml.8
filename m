@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9B6C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6A4C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF842467C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9544F2467C
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:04:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996254;
-	bh=2m06gkz84QLde4drCqbnIjIW6b8Xjt+SP/Y7t00iEcI=;
+	s=default; t=1578996257;
+	bh=cDMPHelRIw699s8iZylocwWEmrlu9aghmUsMlfUg4AE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PDAJdqy4y9rwgQs2dP2GK76R1JHOlopIzLy6+4pc681Zdr5ucAc6XKgDjNnMfpv6F
-	 Ji44ZuL7GutmqmdgGQcVxPxUcJ0VBGgvm1kHDcKXPHA6N2IBCwAid4Y0ezbXyj+2JX
-	 xH6kE2hnLJQcYl1hgOvZ0M/lzoINKeKN21WbSgdY=
+	b=ILITTXc6E20yz5upxEY6HGnIATct1gx6YhWP+UEsMbjyQgask5e1CYVF35iYwVn/m
+	 OKhEAcoGBEMYbssEPfgBgQBkxryAYWv2XyT09aT+t/kIkWBKUihAMr+kS3m7vDlcXa
+	 Pb8wfnjC/Cz9JVZszcg4PmT7lgluHqChsNEeueWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbgANKEN (ORCPT
+        id S1729837AbgANKEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:04:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59566 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:04:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728944AbgANKEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:04:12 -0500
+        id S1729019AbgANKEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:04:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB0FF2465B;
-        Tue, 14 Jan 2020 10:04:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21D6924676;
+        Tue, 14 Jan 2020 10:04:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996251;
-        bh=2m06gkz84QLde4drCqbnIjIW6b8Xjt+SP/Y7t00iEcI=;
+        s=default; t=1578996254;
+        bh=cDMPHelRIw699s8iZylocwWEmrlu9aghmUsMlfUg4AE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dlSlFQyZwDiu1w42JfEGHm+ShtqLmBJrr/F6PVqTI/OF4pE6vUExO4r0tP4XaJMza
-         w4YJsKPNBy+MRWEFr/E6DzYUBxaketufu15o997rx1MDkHRkQ6KgBgL1MP4ZeUhj5+
-         20Vt4E0K8tSWAiIYsKfpxnUY9+qptqiaRqDaooI4=
+        b=TDip9DvbUelJZ49innsWP9yONYcLDRH/h2kjqCubgnQUSPCiJT/smQ52BB+DAog/k
+         IAb9W2Cv3/q4js5Y72qWSvkNjopNt0nIMNB2P8AEClF1GQJO75pUy0EmbOkGEP7sYl
+         phQaW/7PYcNekVzCJn0Eu7EMxFkaE5C34G1uTYxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jimmy Assarsson <extja@kvaser.com>,
-        Christer Beskow <chbe@kvaser.com>,
-        Nicklas Johansson <extnj@kvaser.com>,
-        Martin Henriksson <mh@kvaser.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>,
         Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: [PATCH 5.4 32/78] can: kvaser_usb: fix interface sanity check
-Date:   Tue, 14 Jan 2020 11:01:06 +0100
-Message-Id: <20200114094357.974017346@linuxfoundation.org>
+Subject: [PATCH 5.4 33/78] can: gs_usb: gs_usb_probe(): use descriptors of current altsetting
+Date:   Tue, 14 Jan 2020 11:01:07 +0100
+Message-Id: <20200114094358.095193284@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -65,50 +61,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Johan Hovold <johan@kernel.org>
 
-commit 5660493c637c9d83786f1c9297f403eae44177b6 upstream.
+commit 2f361cd9474ab2c4ab9ac8db20faf81e66c6279b upstream.
 
-Make sure to use the current alternate setting when verifying the
-interface descriptors to avoid binding to an invalid interface.
+Make sure to always use the descriptors of the current alternate setting
+to avoid future issues when accessing fields that may differ between
+settings.
 
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
-
-Fixes: aec5fb2268b7 ("can: kvaser_usb: Add support for Kvaser USB hydra family")
-Cc: stable <stable@vger.kernel.org>     # 4.19
-Cc: Jimmy Assarsson <extja@kvaser.com>
-Cc: Christer Beskow <chbe@kvaser.com>
-Cc: Nicklas Johansson <extnj@kvaser.com>
-Cc: Martin Henriksson <mh@kvaser.com>
 Signed-off-by: Johan Hovold <johan@kernel.org>
+Fixes: d08e973a77d1 ("can: gs_usb: Added support for the GS_USB CAN devices")
 Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c |    2 +-
- drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c  |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/can/usb/gs_usb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
-+++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_hydra.c
-@@ -1590,7 +1590,7 @@ static int kvaser_usb_hydra_setup_endpoi
- 	struct usb_endpoint_descriptor *ep;
- 	int i;
- 
--	iface_desc = &dev->intf->altsetting[0];
-+	iface_desc = dev->intf->cur_altsetting;
- 
- 	for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
- 		ep = &iface_desc->endpoint[i].desc;
---- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c
-+++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_leaf.c
-@@ -1310,7 +1310,7 @@ static int kvaser_usb_leaf_setup_endpoin
- 	struct usb_endpoint_descriptor *endpoint;
- 	int i;
- 
--	iface_desc = &dev->intf->altsetting[0];
-+	iface_desc = dev->intf->cur_altsetting;
- 
- 	for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
- 		endpoint = &iface_desc->endpoint[i].desc;
+--- a/drivers/net/can/usb/gs_usb.c
++++ b/drivers/net/can/usb/gs_usb.c
+@@ -918,7 +918,7 @@ static int gs_usb_probe(struct usb_inter
+ 			     GS_USB_BREQ_HOST_FORMAT,
+ 			     USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_INTERFACE,
+ 			     1,
+-			     intf->altsetting[0].desc.bInterfaceNumber,
++			     intf->cur_altsetting->desc.bInterfaceNumber,
+ 			     hconf,
+ 			     sizeof(*hconf),
+ 			     1000);
+@@ -941,7 +941,7 @@ static int gs_usb_probe(struct usb_inter
+ 			     GS_USB_BREQ_DEVICE_CONFIG,
+ 			     USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_INTERFACE,
+ 			     1,
+-			     intf->altsetting[0].desc.bInterfaceNumber,
++			     intf->cur_altsetting->desc.bInterfaceNumber,
+ 			     dconf,
+ 			     sizeof(*dconf),
+ 			     1000);
 
 
