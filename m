@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5D8C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF03C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F972468C
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5254824679
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:06:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996374;
-	bh=+PI48K9XTvgjwsMAYb2zfC9iKKt9NZ6/WaU3LZy+OyI=;
+	s=default; t=1578996376;
+	bh=hEYvx7c/QpZ6TklmjJfBcVF6hImmEbnkxqlMHgEV5RA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X8EtUwnj4Is3+K72WJALA74ISOHD9q7nfLOO9wnv/kk+PqNxbJEVPJFcSz6UK90Zt
-	 i2fpl5Wh4GRQ9ct/EQYlXnRhGL9rKrQGGUVP7JQG79OVoBbH/hBoMc1qGdzHuOV5Ij
-	 ICa3mcmvAQV/Vj4rmGnUsTqk+2JIAFny5RQJglSM=
+	b=kjKcPs8ZAvyzVy3qQV1UemnmFW+3FtlNwJAdmk+S0tTugZ6Nxy58LwcHE7Cf1MIQQ
+	 lHdeejSs0+QquHseu4YbXPH/JyxCh5TLCMkQFQ/2HtlxmkdLxSZyJmFVv5eqpnlupD
+	 cx6yG62EM6hfiWmN0iODPI/j4Qr35HSZ7oGPX3Xs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729917AbgANKGN (ORCPT
+        id S1730291AbgANKGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:06:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35002 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:06:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729654AbgANKGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:06:10 -0500
+        id S1730304AbgANKGI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:06:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 257CA2467A;
-        Tue, 14 Jan 2020 10:06:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B18C924683;
+        Tue, 14 Jan 2020 10:06:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996370;
-        bh=+PI48K9XTvgjwsMAYb2zfC9iKKt9NZ6/WaU3LZy+OyI=;
+        s=default; t=1578996367;
+        bh=hEYvx7c/QpZ6TklmjJfBcVF6hImmEbnkxqlMHgEV5RA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S729PkJU6iy3Rqi4jeCXbfDpA53C5GimcIMSf2Ju0iXfFwG3TATHn5AOZbSHJmdRI
-         NvlZa0Jbjdld1BkFEkJFtm373Q7VwBW7/wjJxsxBl7DQDnE5+lqsMbTVgJ2Nl7kNSY
-         RU5SsKVkJa9lqQwBMXQKDRalDXBFHP96e0RIclK4=
+        b=1JpQjQdzzgIFP9zIZsJNSPavb1othtNW7HpTdrWheLO4QyQ4YEAvl/g48DV6m4ogW
+         qEAHmdn0DEi0rlbzNsfopPNVOz1ld0bg+T/bIvom80i+uxINDyl3LDp6hLFs/d4KZa
+         7bGjgFBlqCbqs1IYMBSWklxJunr2oYaySNH0q1/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Roger Whittaker <Roger.Whittaker@suse.com>
-Subject: [PATCH 5.4 73/78] USB: Fix: Dont skip endpoint descriptors with maxpacket=0
-Date:   Tue, 14 Jan 2020 11:01:47 +0100
-Message-Id: <20200114094403.165941697@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 5.4 72/78] HID: hiddev: fix mess in hiddev_open()
+Date:   Tue, 14 Jan 2020 11:01:46 +0100
+Message-Id: <20200114094403.046774857@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -60,63 +60,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-commit 2548288b4fb059b2da9ceada172ef763077e8a59 upstream.
+commit 18a1b06e5b91d47dc86c0a66a762646ea7c5d141 upstream.
 
-It turns out that even though endpoints with a maxpacket length of 0
-aren't useful for data transfer, the descriptors do serve other
-purposes.  In particular, skipping them will also skip over other
-class-specific descriptors for classes such as UVC.  This unexpected
-side effect has caused some UVC cameras to stop working.
+The open method of hiddev handler fails to bring the device out of
+autosuspend state as was promised in 0361a28d3f9a, as it actually has 2
+blocks that try to start the transport (call hid_hw_open()) with both
+being guarded by the "open" counter, so the 2nd block is never executed as
+the first block increments the counter so it is never at 0 when we check
+it for the second block.
 
-In addition, the USB spec requires that when isochronous endpoint
-descriptors are present in an interface's altsetting 0 (which is true
-on some devices), the maxpacket size _must_ be set to 0.  Warning
-about such things seems like a bad idea.
+Additionally hiddev_open() was leaving counter incremented on errors,
+causing the device to never be reopened properly if there was ever an
+error.
 
-This patch updates an earlier commit which would log a warning and
-skip these endpoint descriptors.  Now we only log a warning, and we
-don't even do that for isochronous endpoints in altsetting 0.
+Let's fix all of this by factoring out code that creates client structure
+and powers up the device into a separate function that is being called
+from usbhid_open() with the "existancelock" being held.
 
-We don't need to worry about preventing endpoints with maxpacket = 0
-from ever being used for data transfers; usb_submit_urb() already
-checks for this.
-
-Reported-and-tested-by: Roger Whittaker <Roger.Whittaker@suse.com>
-Fixes: d482c7bb0541 ("USB: Skip endpoints with 0 maxpacket length")
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Link: https://marc.info/?l=linux-usb&m=157790377329882&w=2
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.2001061040270.1514-100000@iolanthe.rowland.org
+Fixes: 0361a28d3f9a ("HID: autosuspend support for USB HID")
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/config.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/hid/usbhid/hiddev.c |   97 +++++++++++++++++++-------------------------
+ 1 file changed, 42 insertions(+), 55 deletions(-)
 
---- a/drivers/usb/core/config.c
-+++ b/drivers/usb/core/config.c
-@@ -392,12 +392,16 @@ static int usb_parse_endpoint(struct dev
- 			endpoint->desc.wMaxPacketSize = cpu_to_le16(8);
- 	}
+--- a/drivers/hid/usbhid/hiddev.c
++++ b/drivers/hid/usbhid/hiddev.c
+@@ -241,12 +241,51 @@ static int hiddev_release(struct inode *
+ 	return 0;
+ }
  
--	/* Validate the wMaxPacketSize field */
-+	/*
-+	 * Validate the wMaxPacketSize field.
-+	 * Some devices have isochronous endpoints in altsetting 0;
-+	 * the USB-2 spec requires such endpoints to have wMaxPacketSize = 0
-+	 * (see the end of section 5.6.3), so don't warn about them.
-+	 */
- 	maxp = usb_endpoint_maxp(&endpoint->desc);
--	if (maxp == 0) {
--		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has wMaxPacketSize 0, skipping\n",
-+	if (maxp == 0 && !(usb_endpoint_xfer_isoc(d) && asnum == 0)) {
-+		dev_warn(ddev, "config %d interface %d altsetting %d endpoint 0x%X has invalid wMaxPacketSize 0\n",
- 		    cfgno, inum, asnum, d->bEndpointAddress);
--		goto skip_to_next_endpoint_or_interface_descriptor;
- 	}
++static int __hiddev_open(struct hiddev *hiddev, struct file *file)
++{
++	struct hiddev_list *list;
++	int error;
++
++	lockdep_assert_held(&hiddev->existancelock);
++
++	list = vzalloc(sizeof(*list));
++	if (!list)
++		return -ENOMEM;
++
++	mutex_init(&list->thread_lock);
++	list->hiddev = hiddev;
++
++	if (!hiddev->open++) {
++		error = hid_hw_power(hiddev->hid, PM_HINT_FULLON);
++		if (error < 0)
++			goto err_drop_count;
++
++		error = hid_hw_open(hiddev->hid);
++		if (error < 0)
++			goto err_normal_power;
++	}
++
++	spin_lock_irq(&hiddev->list_lock);
++	list_add_tail(&list->node, &hiddev->list);
++	spin_unlock_irq(&hiddev->list_lock);
++
++	file->private_data = list;
++
++	return 0;
++
++err_normal_power:
++	hid_hw_power(hiddev->hid, PM_HINT_NORMAL);
++err_drop_count:
++	hiddev->open--;
++	vfree(list);
++	return error;
++}
++
+ /*
+  * open file op
+  */
+ static int hiddev_open(struct inode *inode, struct file *file)
+ {
+-	struct hiddev_list *list;
+ 	struct usb_interface *intf;
+ 	struct hid_device *hid;
+ 	struct hiddev *hiddev;
+@@ -255,66 +294,14 @@ static int hiddev_open(struct inode *ino
+ 	intf = usbhid_find_interface(iminor(inode));
+ 	if (!intf)
+ 		return -ENODEV;
++
+ 	hid = usb_get_intfdata(intf);
+ 	hiddev = hid->hiddev;
  
- 	/* Find the highest legal maxpacket size for this endpoint */
+-	if (!(list = vzalloc(sizeof(struct hiddev_list))))
+-		return -ENOMEM;
+-	mutex_init(&list->thread_lock);
+-	list->hiddev = hiddev;
+-	file->private_data = list;
+-
+-	/*
+-	 * no need for locking because the USB major number
+-	 * is shared which usbcore guards against disconnect
+-	 */
+-	if (list->hiddev->exist) {
+-		if (!list->hiddev->open++) {
+-			res = hid_hw_open(hiddev->hid);
+-			if (res < 0)
+-				goto bail;
+-		}
+-	} else {
+-		res = -ENODEV;
+-		goto bail;
+-	}
+-
+-	spin_lock_irq(&list->hiddev->list_lock);
+-	list_add_tail(&list->node, &hiddev->list);
+-	spin_unlock_irq(&list->hiddev->list_lock);
+-
+ 	mutex_lock(&hiddev->existancelock);
+-	/*
+-	 * recheck exist with existance lock held to
+-	 * avoid opening a disconnected device
+-	 */
+-	if (!list->hiddev->exist) {
+-		res = -ENODEV;
+-		goto bail_unlock;
+-	}
+-	if (!list->hiddev->open++)
+-		if (list->hiddev->exist) {
+-			struct hid_device *hid = hiddev->hid;
+-			res = hid_hw_power(hid, PM_HINT_FULLON);
+-			if (res < 0)
+-				goto bail_unlock;
+-			res = hid_hw_open(hid);
+-			if (res < 0)
+-				goto bail_normal_power;
+-		}
+-	mutex_unlock(&hiddev->existancelock);
+-	return 0;
+-bail_normal_power:
+-	hid_hw_power(hid, PM_HINT_NORMAL);
+-bail_unlock:
++	res = hiddev->exist ? __hiddev_open(hiddev, file) : -ENODEV;
+ 	mutex_unlock(&hiddev->existancelock);
+ 
+-	spin_lock_irq(&list->hiddev->list_lock);
+-	list_del(&list->node);
+-	spin_unlock_irq(&list->hiddev->list_lock);
+-bail:
+-	file->private_data = NULL;
+-	vfree(list);
+ 	return res;
+ }
+ 
 
 
