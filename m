@@ -2,108 +2,74 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DABC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 751DCC33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587E624670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB9824656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbgANTt4 (ORCPT
+        id S1728852AbgANTwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:49:56 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44693 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728863AbgANTtC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:49:02 -0500
-Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1irSBO-0005ZC-VQ; Tue, 14 Jan 2020 20:48:59 +0100
-Message-Id: <20200114185946.656652824@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Tue, 14 Jan 2020 19:52:38 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [patch 01/15] lib/vdso: Make __arch_update_vdso_data() logic understandable
-References: <20200114185237.273005683@linutronix.de>
+        Tue, 14 Jan 2020 14:52:50 -0500
+Received: from mga04.intel.com ([192.55.52.120]:35089 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727102AbgANTwu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 14:52:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 11:52:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,320,1574150400"; 
+   d="scan'208";a="213450054"
+Received: from emkilgox-mobl2.amr.corp.intel.com (HELO [10.251.0.151]) ([10.251.0.151])
+  by orsmga007.jf.intel.com with ESMTP; 14 Jan 2020 11:52:48 -0800
+Subject: Re: [alsa-devel] [PATCH 4/5] soundwire: intel: add sdw_stream_setup
+ helper for .startup callback
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20200110214609.30356-1-pierre-louis.bossart@linux.intel.com>
+ <20200110214609.30356-5-pierre-louis.bossart@linux.intel.com>
+ <20200114061441.GB2818@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <0f9e36f1-2cc7-d9e2-8d35-985b409d9e3a@linux.intel.com>
+Date:   Tue, 14 Jan 2020 12:55:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200114061441.GB2818@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function name suggests that this is a boolean checking whether the
-architecture asks for an update of the VDSO data, but it works the other
-way round. To spare further confusion invert the logic.
 
-Fixes: 44f57d788e7d ("timekeeping: Provide a generic update_vsyscall() implementation")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/arm/include/asm/vdso/vsyscall.h |    4 ++--
- include/asm-generic/vdso/vsyscall.h  |    4 ++--
- kernel/time/vsyscall.c               |    2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
 
---- a/arch/arm/include/asm/vdso/vsyscall.h
-+++ b/arch/arm/include/asm/vdso/vsyscall.h
-@@ -34,9 +34,9 @@ struct vdso_data *__arm_get_k_vdso_data(
- #define __arch_get_k_vdso_data __arm_get_k_vdso_data
- 
- static __always_inline
--int __arm_update_vdso_data(void)
-+bool __arm_update_vdso_data(void)
- {
--	return !cntvct_ok;
-+	return cntvct_ok;
- }
- #define __arch_update_vdso_data __arm_update_vdso_data
- 
---- a/include/asm-generic/vdso/vsyscall.h
-+++ b/include/asm-generic/vdso/vsyscall.h
-@@ -12,9 +12,9 @@ static __always_inline struct vdso_data
- #endif /* __arch_get_k_vdso_data */
- 
- #ifndef __arch_update_vdso_data
--static __always_inline int __arch_update_vdso_data(void)
-+static __always_inline bool __arch_update_vdso_data(void)
- {
--	return 0;
-+	return true;
- }
- #endif /* __arch_update_vdso_data */
- 
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -84,7 +84,7 @@ void update_vsyscall(struct timekeeper *
- 	struct vdso_timestamp *vdso_ts;
- 	u64 nsec;
- 
--	if (__arch_update_vdso_data()) {
-+	if (!__arch_update_vdso_data()) {
- 		/*
- 		 * Some architectures might want to skip the update of the
- 		 * data page.
+>> +	name = kzalloc(32, GFP_KERNEL);
+>> +	if (!name)
+>> +		return -ENOMEM;
+>> +
+>> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+>> +		snprintf(name, 32, "%s-Playback", dai->name);
+>> +	else
+>> +		snprintf(name, 32, "%s-Capture", dai->name);
+> 
+> How about use DAI_SIZE instead of 32 here and above few places? Lets not
+> code number like this please
 
+Yes, thanks for spotting this. kasprintf seems like a better solution I 
+guess, will send a v2.
