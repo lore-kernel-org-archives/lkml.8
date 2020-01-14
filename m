@@ -2,73 +2,58 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3003CC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CECC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1211D24679
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:56:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 302D424672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 11:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbgANL4u (ORCPT
+        id S1729702AbgANL5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 06:56:50 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:9172 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725956AbgANL4u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 06:56:50 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D9E49CC318F77E6BF210;
-        Tue, 14 Jan 2020 19:56:46 +0800 (CST)
-Received: from huawei.com (10.175.107.192) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 Jan 2020
- 19:56:38 +0800
-From:   wanghongzhe <wanghongzhe@huawei.com>
-To:     <peterhuewe@gmx.de>
-CC:     <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <zhangchenfeng1@huawei.com>, <wanghongzhe@huawei.com>
-Subject: [PATCH] tpm: tpm_tis_spi: set cs_change = 0 when timesout
-Date:   Tue, 14 Jan 2020 20:31:59 +0800
-Message-ID: <1579005119-16318-1-git-send-email-wanghongzhe@huawei.com>
-X-Mailer: git-send-email 1.7.12.4
+        Tue, 14 Jan 2020 06:57:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:51344 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725956AbgANL5L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 06:57:11 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 49D921435;
+        Tue, 14 Jan 2020 03:57:11 -0800 (PST)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B4A13F6C4;
+        Tue, 14 Jan 2020 03:57:10 -0800 (PST)
+Date:   Tue, 14 Jan 2020 11:57:07 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        will@kernel.org, maz@kernel.org, ard.biesheuvel@linaro.org,
+        mark.rutland@arm.com
+Subject: Re: [PATCH v3 5/7] arm64: ptrace: nofpsimd: Fail FP/SIMD regset
+ operations
+Message-ID: <20200114115707.GD2289@mbp>
+References: <20200113233023.928028-1-suzuki.poulose@arm.com>
+ <20200113233023.928028-6-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.107.192]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200113233023.928028-6-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-when i reach TPM_RETRY, the cs cannot  change back to 'high'.So the TPM chips thinks this communication is not over. 
-And next times communication cannot be effective because the communications mixed up with the last time.
+On Mon, Jan 13, 2020 at 11:30:21PM +0000, Suzuki K Poulose wrote:
+> When fp/simd is not supported on the system, fail the operations
+> of FP/SIMD regsets.
+> 
+> Fixes: 82e0191a1aa11abf ("arm64: Support systems without FP/ASIMD")
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Signed-off-by: wanghongzhe <wanghongzhe@huawei.com>
----
- drivers/char/tpm/tpm_tis_spi.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
-index d1754fd..a1ae4f6 100644
---- a/drivers/char/tpm/tpm_tis_spi.c
-+++ b/drivers/char/tpm/tpm_tis_spi.c
-@@ -67,7 +67,14 @@ static int tpm_tis_spi_flow_control(struct tpm_tis_spi_phy *phy,
- 		}
- 
- 		if (i == TPM_RETRY)
-+ 		{
-+ 			spi_xfer.cs_change = 0;
-+ 			spi_xfer->len = 1;
-+ 			spi_message_init(&m);
-+ 			spi_message_add_tail(spi_xfer, &m);
-+ 			ret = spi_sync_locked(phy->spi_device, &m);
- 			return -ETIMEDOUT;
-+ 		}
- 	}
- 
- 	return 0;
--- 
-1.7.12.4
-
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
