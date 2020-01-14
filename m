@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A699EC33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3AB2C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:55:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D40E222C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 905D9222C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:55:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbgANPzw (ORCPT
+        id S1729187AbgANPz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:55:52 -0500
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:41674 "EHLO
+        Tue, 14 Jan 2020 10:55:57 -0500
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:41680 "EHLO
         mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727073AbgANPzv (ORCPT
+        with ESMTP id S1726839AbgANPzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:55:51 -0500
+        Tue, 14 Jan 2020 10:55:52 -0500
 Received: from Internal Mail-Server by MTLPINE1 (envelope-from moshe@mellanox.com)
         with ESMTPS (AES256-SHA encrypted); 14 Jan 2020 17:55:45 +0200
 Received: from dev-l-vrt-136.mtl.labs.mlnx (dev-l-vrt-136.mtl.labs.mlnx [10.134.136.1])
-        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 00EFtjvm015200;
+        by labmailer.mlnx (8.13.8/8.13.8) with ESMTP id 00EFtjgr015236;
         Tue, 14 Jan 2020 17:55:45 +0200
 Received: from dev-l-vrt-136.mtl.labs.mlnx (localhost [127.0.0.1])
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 00EFtjh3019700;
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7) with ESMTP id 00EFtjBq019706;
         Tue, 14 Jan 2020 17:55:45 +0200
 Received: (from moshe@localhost)
-        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 00EFtjWo019699;
+        by dev-l-vrt-136.mtl.labs.mlnx (8.14.7/8.14.7/Submit) id 00EFtj8e019703;
         Tue, 14 Jan 2020 17:55:45 +0200
 From:   Moshe Shemesh <moshe@mellanox.com>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Alexander Duyck <alexander.duyck@gmail.com>,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Moshe Shemesh <moshe@mellanox.com>
-Subject: [PATCH net-next RFC 1/3] net/mlx5: Add structure layout and defines for MFRL register
-Date:   Tue, 14 Jan 2020 17:55:26 +0200
-Message-Id: <1579017328-19643-2-git-send-email-moshe@mellanox.com>
+Subject: [PATCH net-next RFC 3/3] net/mlx5: Add FW upgrade reset support
+Date:   Tue, 14 Jan 2020 17:55:28 +0200
+Message-Id: <1579017328-19643-4-git-send-email-moshe@mellanox.com>
 X-Mailer: git-send-email 1.8.4.3
 In-Reply-To: <1579017328-19643-1-git-send-email-moshe@mellanox.com>
 References: <1579017328-19643-1-git-send-email-moshe@mellanox.com>
@@ -48,63 +48,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add needed structure layouts and defines for MFRL (Management Firmware
-Reset Level) register. This structure will be used for the firmware
-upgrade and reset flow in the downstream patches.
+Add support for FW upgrade reset.
+On devlink reload the driver checks if there is a FW stored pending
+upgrade reset. In such case the driver will set the device to FW upgrade
+reset on next PCI link toggle and do link toggle after unload.
+
+To do PCI link toggle, the driver ensures that no other device ID under
+the same bridge by checking that all the PF functions under the same PCI
+bridge have same device ID. If no other device it uses PCI bridge link
+control to turn link down and up.
 
 Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
 ---
- include/linux/mlx5/driver.h   |  1 +
- include/linux/mlx5/mlx5_ifc.h | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
+ drivers/net/ethernet/mellanox/mlx5/core/devlink.c | 81 ++++++++++++++++++++++-
+ 1 file changed, 80 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
-index 583733a..268ecfd 100644
---- a/include/linux/mlx5/driver.h
-+++ b/include/linux/mlx5/driver.h
-@@ -130,6 +130,7 @@ enum {
- 	MLX5_REG_NODE_DESC	 = 0x6001,
- 	MLX5_REG_HOST_ENDIANNESS = 0x7004,
- 	MLX5_REG_MCIA		 = 0x9014,
-+	MLX5_REG_MFRL		 = 0x9028,
- 	MLX5_REG_MLCR		 = 0x902b,
- 	MLX5_REG_MTRC_CAP	 = 0x9040,
- 	MLX5_REG_MTRC_CONF	 = 0x9041,
-diff --git a/include/linux/mlx5/mlx5_ifc.h b/include/linux/mlx5/mlx5_ifc.h
-index 178757c..7684537 100644
---- a/include/linux/mlx5/mlx5_ifc.h
-+++ b/include/linux/mlx5/mlx5_ifc.h
-@@ -9584,6 +9584,22 @@ struct mlx5_ifc_mcda_reg_bits {
- 	u8         data[0][0x20];
- };
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
+index ac108f1..2aa9e99 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
+@@ -85,12 +85,91 @@ static u16 mlx5_fw_ver_subminor(u32 version)
+ 	return 0;
+ }
  
-+enum {
-+	MLX5_MFRL_REG_RESET_LEVEL0  = 0x1,
-+	MLX5_MFRL_REG_RESET_LEVEL3  = 0x8,
-+	MLX5_MFRL_REG_RESET_LEVEL6  = 0x40,
-+};
++static int mlx5_pci_link_toggle(struct mlx5_core_dev *dev)
++{
++	struct pci_bus *bridge_bus = dev->pdev->bus;
++	struct pci_dev *bridge = bridge_bus->self;
++	struct pci_dev *sdev;
++	u16 dev_id, sdev_id;
++	u16 reg16;
++	int cap;
++	int err;
 +
-+struct mlx5_ifc_mfrl_reg_bits {
-+	u8         reserved_at_0[0x20];
++	/* Check that all functions under the pci bridge are VFs and PFs of
++	 * this device otherwise fail this function.
++	 */
++	pci_read_config_word(dev->pdev, PCI_DEVICE_ID, &dev_id);
++	list_for_each_entry(sdev, &bridge_bus->devices, bus_list) {
++		pci_read_config_word(sdev, PCI_DEVICE_ID, &sdev_id);
++		if (sdev_id != 0xFFFF && sdev_id != dev_id)
++			return -EPERM;
++	}
 +
-+	u8         reserved_at_20[0x5];
-+	u8         rst_type_sel[0x3];
-+	u8         reserved_at_28[0x8];
-+	u8         reset_type[0x8];
-+	u8         reset_level[0x8];
-+};
++	cap = pci_find_capability(bridge, PCI_CAP_ID_EXP);
++	if (!cap)
++		return -EOPNOTSUPP;
 +
- struct mlx5_ifc_mirc_reg_bits {
- 	u8         reserved_at_0[0x18];
- 	u8         status_code[0x8];
-@@ -9646,6 +9662,7 @@ struct mlx5_ifc_mirc_reg_bits {
- 	struct mlx5_ifc_mcqi_reg_bits mcqi_reg;
- 	struct mlx5_ifc_mcc_reg_bits mcc_reg;
- 	struct mlx5_ifc_mcda_reg_bits mcda_reg;
-+	struct mlx5_ifc_mfrl_reg_bits mfrl_reg;
- 	struct mlx5_ifc_mirc_reg_bits mirc_reg;
- 	u8         reserved_at_0[0x60e0];
- };
++	list_for_each_entry(sdev, &bridge_bus->devices, bus_list) {
++		pci_save_state(sdev);
++		pci_cfg_access_lock(sdev);
++	}
++	err = pci_read_config_word(bridge, cap + PCI_EXP_LNKCTL, &reg16);
++	if (err)
++		return err;
++	reg16 |= PCI_EXP_LNKCTL_LD;
++	err = pci_write_config_word(bridge, cap + PCI_EXP_LNKCTL, reg16);
++	if (err)
++		return err;
++	msleep(100);
++	reg16 &= ~PCI_EXP_LNKCTL_LD;
++	err = pci_write_config_word(bridge, cap + PCI_EXP_LNKCTL, reg16);
++	if (err)
++		return err;
++	msleep(100);
++	list_for_each_entry(sdev, &bridge_bus->devices, bus_list) {
++		pci_cfg_access_unlock(sdev);
++		pci_restore_state(sdev);
++	}
++
++	return 0;
++}
++
+ static int mlx5_devlink_reload_down(struct devlink *devlink, bool netns_change,
+ 				    struct netlink_ext_ack *extack)
+ {
+ 	struct mlx5_core_dev *dev = devlink_priv(devlink);
++	bool pci_link_toggle_required = false;
++	u32 running_fw, stored_fw;
++	u8 reset_level;
++	int err;
++
++	err = mlx5_fw_version_query(dev, &running_fw, &stored_fw);
++	if (err)
++		return err;
+ 
+-	return mlx5_unload_one(dev, false);
++	if (stored_fw) {
++		err = mlx5_fw_query_reset_level(dev, &reset_level);
++		if (err)
++			return err;
++		if (reset_level & MLX5_MFRL_REG_RESET_LEVEL3) {
++			err = mlx5_fw_set_reset_level(dev,
++						      MLX5_MFRL_REG_RESET_LEVEL3);
++			if (err)
++				return err;
++			pci_link_toggle_required = true;
++		} else {
++			mlx5_core_warn(dev, "FW upgrade requires reboot\n");
++		}
++	}
++
++	err =  mlx5_unload_one(dev, false);
++	if (err)
++		return err;
++
++	if (pci_link_toggle_required)
++		return mlx5_pci_link_toggle(dev);
++
++	return 0;
+ }
+ 
+ static int mlx5_devlink_reload_up(struct devlink *devlink,
 -- 
 1.8.3.1
 
