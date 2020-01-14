@@ -2,112 +2,117 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B792C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74395C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49C4424658
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F7B24672
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:37:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7jAJHf9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="QvmQ4pi7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728862AbgANTbb (ORCPT
+        id S1728847AbgANThu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:31:31 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36537 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbgANTbb (ORCPT
+        Tue, 14 Jan 2020 14:37:50 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36800 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbgANThu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:31:31 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z3so13405162wru.3
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:31:30 -0800 (PST)
+        Tue, 14 Jan 2020 14:37:50 -0500
+Received: by mail-io1-f66.google.com with SMTP id d15so15197242iog.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:37:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XU3df1UrRKDXcpcQHNFwUN0kOKaJVsq9R83HuMFlYmk=;
-        b=N7jAJHf9q7vg451kF3fb+8EhrByNUfz1vq+5OYJjQXQlZhUQGX+LBBKEtVQDNxoGjW
-         isaKMu7LvMS1gD22tNOrzkn9I5Qjq8UU/Tm0JLjwnaru8dLPbhCJ5xQc3h7z4agEyHbD
-         ZOr0xTEMDNDuM7Lgidw8V49AiLykdivK73t3IH2PpljY+rtJDnMQrQPTa95lY2DnkCCT
-         XMNot8jNOMSmh4ZuFpgnXlg5QrY8R5rYVeMjBI6zeFFfKIUa9WG0Cv+8IjK80UUrXQiZ
-         82P1TybaIbA98QKCDMoO0130yg6/O1oJmKr/GMoM3Kv183F86gh5ErLOMqB4dZkzhF64
-         ue6w==
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SqXxc47s2eqIDWJXeQSdbHASZfLKW3be0qmfCzYqSiA=;
+        b=QvmQ4pi7zohC8dpypbLGbuWfIzHW1NNI4Gix0qhMNBlGFZa1EUWwGDQPJuOZITveYd
+         3CL1Y//4O6kZto6iq5F4zVR73MEPbCRUdtlsgzb8nKhHE599imPR190pHbqXTZrnL7aZ
+         adZZrkrhPjMNv8GvdNXpRmi/zcgGysycld0ck=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XU3df1UrRKDXcpcQHNFwUN0kOKaJVsq9R83HuMFlYmk=;
-        b=pi9HFZB01iyk+vYDMKtSra25iuXUtnjqWS43BR8RGZPMaDlnpQGhOPRrA/ulkXTTju
-         xbiVin3l0P+Wk8iVfBgmY6fxOr/ffBJBD88ehhhH+UR+wqIE5KFT1GpbxMtQCwbqCkeT
-         Xr9jEy/cTGgLz+sOryws5cHdokgSMec7U8ZgtYPZ03fMocFVfacK2f2G5gmNM1Vd/+sL
-         sv5LhfeAZSUPUxEm7JmC+QKGNJQ/+bRkErgH35MXgzYlpEvQnPDnlAvDTFJangiRavXv
-         azHnpehb8asy7L5mXm/X7olPr16PryKSMwB7psmgwYhKHIjTQVhanPA+IK+W90UGXAGC
-         u5Mw==
-X-Gm-Message-State: APjAAAVHpEyveLEBZMkvhv2fxXZ/aZpauUhxLiqQGkxLEYlllgv/8sYp
-        1Oynm1nqKEbCov5Y+b8Ah8Fn7LCID+k=
-X-Google-Smtp-Source: APXvYqxrP4DV0i8/Qt7Sw2OrX4i1isPayf/eUqQFjZMhgtzdquHIT1vraTP2u649g15aNLACI2r5hg==
-X-Received: by 2002:a5d:6a88:: with SMTP id s8mr26099761wru.173.1579030289475;
-        Tue, 14 Jan 2020 11:31:29 -0800 (PST)
-Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id e8sm21050418wrt.7.2020.01.14.11.31.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 11:31:28 -0800 (PST)
-From:   Wambui Karuga <wambui.karugax@gmail.com>
-To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch
-Cc:     sean@poorly.run, intel-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/i915/audio: convert to using drm_dbg_kms()
-Date:   Tue, 14 Jan 2020 22:31:23 +0300
-Message-Id: <20200114193123.5314-1-wambui.karugax@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SqXxc47s2eqIDWJXeQSdbHASZfLKW3be0qmfCzYqSiA=;
+        b=M9dEHLL0Mmn1wKUn/j2rVz5KCB33w67/znScDjKIYDpOlwlygT1JVrNgUgxzGlauwm
+         zNVfNebqCRGgT2q3VPDe80DVcBg/g8Ld1VxTIDdWTKLGVA8wkdJf/qhm5eoHBpmUb2mi
+         ocUumGURTdoFoOMhw13tlTn0+o4wNLxhiH2aW671lgpWfJIOQ8Stq4ymxey1EokQHQ9k
+         QWgVrLheq9gJiSVRieNcjidkLxd4rbaZT99xNAyATrIGDd2OpNNhlNc7QREUy2okztO4
+         Cr2zhP6dPO4A7vJOFLb2gB9Fsne318bmPQOMRYDYGAHV2hGRJ6N2w1HolDZoQGqQoKOF
+         LErg==
+X-Gm-Message-State: APjAAAWdn95aUzRm78pou8O7rORmRwJp6BCnErYnd6YwN6Oj6xEB3Hip
+        q4MFzgscSWsrVZHH0eOsBVNBJvgTvXtmvIm6zjoQmQ==
+X-Google-Smtp-Source: APXvYqzPmrKRE/xDnX4YcGTMm6GQ3JwdfynLKAfx+8hSiBBXRyzWP4hxu3Iaox2rKW61vaUcQmkD+tbsIoC7jruNroQ=
+X-Received: by 2002:a6b:4909:: with SMTP id u9mr18019643iob.212.1579030669461;
+ Tue, 14 Jan 2020 11:37:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <3326.1579019665@warthog.procyon.org.uk> <20200114170250.GA8904@ZenIV.linux.org.uk>
+ <9351.1579025170@warthog.procyon.org.uk>
+In-Reply-To: <9351.1579025170@warthog.procyon.org.uk>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 14 Jan 2020 20:37:38 +0100
+Message-ID: <CAJfpegvbGrYb4wGDkuQXaeUGdeAMS0g7n6MezDV0BaLV_Bu1RQ@mail.gmail.com>
+Subject: Re: Making linkat() able to overwrite the target
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-fsdevel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        dsterba@suse.com, linux-ext4@vger.kernel.org,
+        linux-xfs <linux-xfs@vger.kernel.org>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert from the drm_dbg() logging macro to the drm_dbg_kms() macro in
-modesetting code.
+On Tue, Jan 14, 2020 at 7:06 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> > > Would it be possible to make linkat() take a flag, say AT_LINK_REPLACE,
+> > > that causes the target to be replaced and not give EEXIST?  Or make it so
+> > > that rename() can take a tmpfile as the source and replace the target with
+> > > that.  I presume that, either way, this would require journal changes on
+> > > ext4, xfs and btrfs.
+> >
+> > Umm...  I don't like the idea of linkat() doing that - you suddenly get new
+> > fun cases to think about (what should happen when the target is a mountpoint,
+> > for starters?
+>
+> Don't allow it onto directories, S_AUTOMOUNT-marked inodes or anything that's
+> got something mounted on it.
+>
+> > ) _and_ you would have to add a magical flag to vfs_link() so
+> > that it would know which tests to do.
+>
+> Yes, I suggested AT_LINK_REPLACE as said magical flag.
+>
+> > As for rename...
+>
+> Yeah - with further thought, rename() doesn't really work as an interface,
+> particularly if a link has already been made.
+>
+> Do you have an alternative suggestion?  There are two things I want to avoid:
+>
+>  (1) Doing unlink-link or unlink-create as that leaves a window where the
+>      cache file is absent.
+>
+>  (2) Creating replacement files in a temporary directory and renaming from
+>      there over the top of the target file as the temp dir would then be a
+>      bottleneck that spends a lot of time locked for creations and renames.
 
-Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
----
- drivers/gpu/drm/i915/display/intel_audio.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Create multiple sub-temp-dirs and use them alternatively.
 
-diff --git a/drivers/gpu/drm/i915/display/intel_audio.c b/drivers/gpu/drm/i915/display/intel_audio.c
-index 57208440bf6d..771a677c905b 100644
---- a/drivers/gpu/drm/i915/display/intel_audio.c
-+++ b/drivers/gpu/drm/i915/display/intel_audio.c
-@@ -361,7 +361,7 @@ static void g4x_audio_codec_enable(struct intel_encoder *encoder,
- 	I915_WRITE(G4X_AUD_CNTL_ST, tmp);
- 
- 	len = min(drm_eld_size(eld) / 4, len);
--	drm_dbg(&dev_priv->drm, "ELD size %d\n", len);
-+	drm_dbg_kms(&dev_priv->drm, "ELD size %d\n", len);
- 	for (i = 0; i < len; i++)
- 		I915_WRITE(G4X_HDMIW_HDMIEDID, *((const u32 *)eld + i));
- 
-@@ -710,9 +710,10 @@ void intel_audio_codec_enable(struct intel_encoder *encoder,
- 			    "Bogus ELD on [CONNECTOR:%d:%s]\n",
- 			    connector->base.id, connector->name);
- 
--	drm_dbg(&dev_priv->drm, "ELD on [CONNECTOR:%d:%s], [ENCODER:%d:%s]\n",
--		connector->base.id, connector->name,
--		connector->encoder->base.id, connector->encoder->name);
-+	drm_dbg_kms(&dev_priv->drm,
-+		    "ELD on [CONNECTOR:%d:%s], [ENCODER:%d:%s]\n",
-+		    connector->base.id, connector->name,
-+		    connector->encoder->base.id, connector->encoder->name);
- 
- 	connector->eld[6] = drm_av_sync_delay(connector, adjusted_mode) / 2;
- 
--- 
-2.24.1
+I think there was a report for overlayfs with the same bottleneck
+(copy up uses a temp dir, but now only for non-regular).  Hasn't
+gotten around to implementing this idea yet.
 
+Thanks,
+Miklos
