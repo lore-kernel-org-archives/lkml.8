@@ -2,132 +2,125 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CCE9C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75D0C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FAED2072B
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818C32465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:31:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="KmITXcZx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbgANRam (ORCPT
+        id S1728842AbgANRbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:30:42 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:48343 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbgANRam (ORCPT
+        Tue, 14 Jan 2020 12:31:07 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36370 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728689AbgANRbH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:30:42 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1irQ1V-0003a8-1C; Tue, 14 Jan 2020 18:30:37 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1irQ1U-00077d-9M; Tue, 14 Jan 2020 18:30:36 +0100
-Date:   Tue, 14 Jan 2020 18:30:36 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     support.opensource@diasemi.com, contact@stefanchrist.eu,
-        Adam.Thomson.Opensource@diasemi.com,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de
-Subject: Re: [PATCH] watchdog: da9062: make restart handler atomic safe
-Message-ID: <20200114173036.ueepbqf54yzh26lm@pengutronix.de>
-References: <20200113091521.5754-1-m.felsch@pengutronix.de>
- <20200113202809.GA21484@roeck-us.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200113202809.GA21484@roeck-us.net>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 18:16:48 up 60 days,  8:35, 57 users,  load average: 0.02, 0.02,
- 0.01
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 14 Jan 2020 12:31:07 -0500
+Received: by mail-qt1-f196.google.com with SMTP id i13so13164780qtr.3
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 09:31:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=St8u8FHo8VDNQhqovRVh1AEgg+/3cFOh49eIYTEBzOA=;
+        b=KmITXcZxS4p4wtILg0kSu5+Q6s914wx0sh4RpeA8OW+jjWbd4bH7wyOZKSASZOcLcF
+         gHf1IkT8rWqxLcWvZWox26Uh5NPyVZ4YfpNLRbWw2LzvOVgTh7MJ/n41AP/KAz4ZD5Q8
+         BlUTg92fI4wjTjAFbjLHrAlrOjZ45R2mcKQYMp2ddf1z5pNzgdWNbIReGgIADIXojx6y
+         v+NlpEbuipbRZrYrkqN/DHK+W+xKJxaIIkRb2/whNeMQWzak5bsZvb07HPuiWE7M8OB/
+         CaCM65yHWKR4wbwqjTavSnDzl76xVhG8DrKbAuzkZeXD9O+XZ6MmXR9A5wvwwYHQF0qS
+         mQVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=St8u8FHo8VDNQhqovRVh1AEgg+/3cFOh49eIYTEBzOA=;
+        b=fb02FYS+ZXfXFtlwcrzZ7JHo1W9iBzHmVEAB04OpuADsYy+AjLh/Q1P0vEFe1zKRkH
+         C7eTPh22SNy7V5G1TTcoJQjPD3li1ljGY5RsX7eIT1DSjNKJlXM/yZx03YLnqkByIW6D
+         fCwaIF661ss3UzrA0cjYotbHN+n+8iiqWsmYc7t91UZwU6DODFQDstQPGdCMERc+tDcd
+         m0zefNghwZFZG0+82ad+mKCPnpfYkcsXtlvNChaQon8J8OazPHYx2GAnR890SVkOx234
+         qAzKgdkWa0DD0MkBUPtSNF0ghockHGh5q9H7qT3wJg12hkfVRCmQakKGq3ALaRY2rFEe
+         2n+g==
+X-Gm-Message-State: APjAAAUMFTwnfvb1kLXFY0p3KN1WYB6euFpID/59BCGYrtTIF7cHI/CK
+        Tf4QTuEqlbye9Bu8MbOs73W4Og==
+X-Google-Smtp-Source: APXvYqy1//b/irP1NAsyHKlgVn2OQv5aVwXISbM+nbSM7GAcVl3KkEqjAbpA+LmhLCr4ZR199oyePQ==
+X-Received: by 2002:ac8:478a:: with SMTP id k10mr4603821qtq.260.1579023066141;
+        Tue, 14 Jan 2020 09:31:06 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id g18sm8046403qtc.83.2020.01.14.09.31.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 14 Jan 2020 09:31:05 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
+Subject: Re: linux-next: Signed-off-by missing for commit in the random tree
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200114165739.GB140865@mit.edu>
+Date:   Tue, 14 Jan 2020 12:31:04 -0500
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <613F42EB-F993-4F39-AD9B-A86E06A875AA@lca.pw>
+References: <20200108113953.1a92a90f@canb.auug.org.au>
+ <20200114001832.GP76141@mit.edu> <20200114012221.GC202391@google.com>
+ <20200114165739.GB140865@mit.edu>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+X-Mailer: Apple Mail (2.3608.40.2.2.4)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 20-01-13 12:28, Guenter Roeck wrote:
-> On Mon, Jan 13, 2020 at 10:15:21AM +0100, Marco Felsch wrote:
-> > The restart handler is executed during the shutdown phase which is
-> > atomic/irq-less. The i2c framework supports atomic transfers since
-> > commit 63b96983a5dd ("i2c: core: introduce callbacks for atomic
-> > transfers") but unfortunately the regmap framework doesn't support it
-> > yet. Hard coding the i2c stuff can be done without worries since the
-> > DA9062 is an i2c-only device.
-> > 
-> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > ---
-> > Hi,
-> > 
-> > This patch is based on Stefan Lengfeld's RFC Patch [1].
-> > 
-> > [1] https://patchwork.ozlabs.org/patch/1085942/
-> > ---
-> >  drivers/watchdog/da9062_wdt.c | 15 +++++++++++----
-> >  1 file changed, 11 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-> > index c9b9d6394525..84c5a0a455b2 100644
-> > --- a/drivers/watchdog/da9062_wdt.c
-> > +++ b/drivers/watchdog/da9062_wdt.c
-> > @@ -11,6 +11,7 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/uaccess.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/i2c.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/jiffies.h>
-> >  #include <linux/mfd/da9062/registers.h>
-> > @@ -149,12 +150,18 @@ static int da9062_wdt_restart(struct watchdog_device *wdd, unsigned long action,
-> >  			      void *data)
-> >  {
-> >  	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
-> > +	struct i2c_client *client = to_i2c_client(wdt->hw->dev);
-> > +	u8 buf[] = {DA9062AA_CONTROL_F, DA9062AA_SHUTDOWN_MASK};
-> > +	struct i2c_msg msg = {
-> > +		.addr = client->addr,
-> > +		.flags = 0,
-> > +		.len = sizeof(buf),
-> > +		.buf = buf,
-> > +	};
-> >  	int ret;
-> >  
-> > -	ret = regmap_write(wdt->hw->regmap,
-> > -			   DA9062AA_CONTROL_F,
-> > -			   DA9062AA_SHUTDOWN_MASK);
-> > -	if (ret)
-> > +	ret = i2c_transfer(client->adapter, &msg, 1);
-> 
-> Why not i2c_smbus_write_byte_data() ? I don't immediately see the difference.
 
-Because I didn't noticed it, sorry. I changed it and notice no
-differences. Thanks for the review =)
+> On Jan 14, 2020, at 11:57 AM, Theodore Y. Ts'o <tytso@mit.edu> wrote:
+>=20
+> On Tue, Jan 14, 2020 at 10:22:21AM +0900, Sergey Senozhatsky wrote:
+>>=20
+>> Oh, I didn't realize I was the author. Sorry!
+>>=20
+>> Sure, confirmed
+>>=20
+>> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+>>=20
+>=20
+> Hmm... the e-mail in question[1] was sent by Qian Cai, but there was a
+>=20
+>   From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+>=20
+> in the first line of the body which attributed the patch to you.  But
+> then e-mail continues:
+>=20
+>   Sergey didn't like the locking order .... but those code is so old,
+>   and I have no clue how to de-couple it after checking other locks in
+>   the splat. There is an onging effort to make all printk() as =
+deferred,
+>   so until that happens, workaround it for now as a short-term fix.
+>=20
+> So did Qian Cai author the patch, and this should have been
+> "Reported-by Sergey Senozhatsky"?  In which case I need a
+> Signed-off-by from Qian Cai.
+>=20
+> This is a pretty trivial patch, but it would be good to get the
+> attributions and credit correct!
+>=20
+> 						- Ted
+>=20
+> [1] =
+https://lore.kernel.org/linux-arm-kernel/1573679785-21068-1-git-send-email=
+-cai@lca.pw/
 
-Regards,
-  Marco
+It is actually Sergey proposed an informal patch here [1]. I just sent =
+on
+his behave and adding a commit log.
 
-> Guenter
-> 
-> > +	if (ret < 0)
-> >  		dev_alert(wdt->hw->dev, "Failed to shutdown (err = %d)\n",
-> >  			  ret);
-> >  
-> > -- 
-> > 2.20.1
-> > 
+[1] https://lore.kernel.org/linux-mm/20190911011008.GA4420@jagdpanzerIV/=20=
+
+
