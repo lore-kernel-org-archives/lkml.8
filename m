@@ -2,122 +2,145 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AAD1C33C9E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2C6C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43DA724656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF4124670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 19:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hRnFOSqx"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="HX1p1M7M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbgANTRE (ORCPT
+        id S1728787AbgANTRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 14:17:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31858 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726491AbgANTRE (ORCPT
+        Tue, 14 Jan 2020 14:17:36 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:40543 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728721AbgANTRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 14:17:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579029423;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=azbvDxnc2xgDC9U0cn3dkI+d0+KvXPPR9kPql0yzi6E=;
-        b=hRnFOSqxjLnZvo5WK29bYbRzi3YmJ45KmypaNf2X51OoZf52APtqGu+gOhVsdX9FDuYC4M
-        LiDRr3UBJzeDNeUbdW4S1aNrY5M/p+EvCk5h6qSeD4ZMig7qYkI+4YmTPc7PVtl2SDu8cT
-        FhY0PMI5jn6nuFh9wD3AqktPgO1Ea7w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-8IqR9p4SMDejD8I74EWQEA-1; Tue, 14 Jan 2020 14:16:59 -0500
-X-MC-Unique: 8IqR9p4SMDejD8I74EWQEA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7CA5510D08B4;
-        Tue, 14 Jan 2020 19:16:58 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-122-218.rdu2.redhat.com [10.10.122.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CD6B1842B8;
-        Tue, 14 Jan 2020 19:16:57 +0000 (UTC)
-Subject: Re: [PATCH v2 4/6] locking/lockdep: Reuse freed chain_hlocks entries
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>
-References: <20191216151517.7060-1-longman@redhat.com>
- <20191216151517.7060-5-longman@redhat.com>
- <20200113155823.GY2844@hirez.programming.kicks-ass.net>
- <e282e7f3-6010-ef13-bd07-524445049ef8@redhat.com>
- <20200114094656.GA2844@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <b19df484-1d82-1014-1edf-a1294b4dcd09@redhat.com>
-Date:   Tue, 14 Jan 2020 14:16:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 14 Jan 2020 14:17:36 -0500
+Received: by mail-pj1-f67.google.com with SMTP id bg7so6298266pjb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 11:17:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=KKog2MzKI2EmbmFRZbPQAj3SDffD3J1/gHWJI9GN8Ak=;
+        b=HX1p1M7M0qxTTrjPtfNCyMe/XxOTqf3q/mYb+Bs7xX2IsBGHIdUtLmO3lbUJnekqs3
+         zmZx8eaYvmH4+wfQapPvneyFUPr/+naxzGfN2z9odiTcSz9ffOPkHSr8fVCJMQIDdqjd
+         8+zg9cI3eFRQ+yHpgNKile2uqExmKwhkD4jRc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=KKog2MzKI2EmbmFRZbPQAj3SDffD3J1/gHWJI9GN8Ak=;
+        b=Ss7u9BnuyFFngLj27Dv8x5kMd1C/v4tQYlx0xUwLnanPsWi1rO9yD/+CypSfRL6+iB
+         JvOVLK0QYp7A0u9qj4OKtIaCqUlQLyCBPgXsh4T+ghAjY3l13AJEkTofjI1vesfXgaWP
+         6Os5WHkXrBnOACAoVgEGIixMzKYYEZy4eM260cKOf1e+K2GkDVj617dDWG59mzJVxPWP
+         lGQ/T94Fh8pvuOWkgFlgUeBOomvVvUaFs5PDO+sczi1Zeks3dgbd63FIhjP/KcSsn8pw
+         3F1c6Z/jCXOeFJO7IL5GZ3S/aiX8cLDxtNxbodbzVYu9v6GDdTlmBrkgElYKtXsRE3oD
+         W8zA==
+X-Gm-Message-State: APjAAAUDj+4nVqT6s1f442pG9Nt0I9EOW0IKT0K38DUl1F6hyEvCQk10
+        Lv1DP7nDILYSUYC/ejSumJ6aJA==
+X-Google-Smtp-Source: APXvYqz/3Tp3YfGdmLiQ3GBfQqRxYY+gia7aeZJwE4eJzKME0PsjfIh1cEmo6Hcm9w+t3OeBhqLjQg==
+X-Received: by 2002:a17:90a:8a98:: with SMTP id x24mr31844615pjn.113.1579029455327;
+        Tue, 14 Jan 2020 11:17:35 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id b21sm20338404pfp.0.2020.01.14.11.17.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 11:17:34 -0800 (PST)
+Date:   Tue, 14 Jan 2020 14:17:33 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     dennis.dalessandro@intel.com, Jason Gunthorpe <jgg@ziepe.ca>,
+        mike.marciniszyn@intel.com, paulmck@kernel.org,
+        frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        rcu@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] infiniband: hw: hfi1: verbs.c: Use built-in RCU list
+ checking
+Message-ID: <20200114191733.GC103493@google.com>
+References: <20200114162345.19995-1-madhuparnabhowmik04@gmail.com>
+ <20200114165740.GB22037@ziepe.ca>
+ <74adec84-ec5b-ea1b-7adf-3f8608838259@intel.com>
+ <25133367-6544-d0af-ae30-5178909748b1@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200114094656.GA2844@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <25133367-6544-d0af-ae30-5178909748b1@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/14/20 4:46 AM, Peter Zijlstra wrote:
-> On Mon, Jan 13, 2020 at 11:24:37AM -0500, Waiman Long wrote:
->> On 1/13/20 10:58 AM, Peter Zijlstra wrote:
->>> That's _two_ allocators :/ And it can trivially fail, even if there's
->>> plenty space available.
->>>
->>> Consider nr_chain_hlocks is exhaused, and @size is empty, but size+1
->>> still has blocks.
->>>
->>> I'm guessing you didn't make it a single allocator because you didn't
->>> want to implement block splitting? why?
->>>
->> In my testing, most of the lock chains tend to be rather short (within
->> the 2-8 range). I don't see a lot of free blocks left in the system
->> after the test. So I don't see a need to implement block splitting for now.
->>
->> If you think this is a feature that needs to be implemented for the
->> patch to be complete, I can certainly add patch to do that. My initial
->> thought is just to split long blocks in the unsized list for allocation
->> request that is no longer than 8 to make thing easier.
-> From an engineering POV I'd much prefer a single complete allocator over
-> two half ones. We can leave block merger out of the initial allocator I
-> suppose and worry about that if/when fragmentation really shows to be a
-> problem.
->
-> I'm thinking worst-fit might work well for our use-case. Best-fit would
-> result in a heap of tiny fragments and we don't have really large
-> allocations, which is the Achilles-heel of worst-fit.
-I am going to add a patch to split chain block as a last resort in case
-we run out of the main buffer.
->
-> Also, since you put in a minimal allocation size of 2, but did not
-> mandate size is a multiple of 2, there is a weird corner case of size-1
-> fragments. The simplest case is to leak those, but put in a counter so
-> we can see if they're a problem -- there is a fairly trivial way to
-> recover them without going full merge.
+On Wed, Jan 15, 2020 at 12:04:58AM +0530, madhuparnabhowmik04@gmail.com wrote:
+> From: Dennis Dalessandro <dennis.dalessandro@intel.com>
+> 
+> On 1/14/2020 12:00 PM, Dennis Dalessandro wrote:
+> > On 1/14/2020 11:57 AM, Jason Gunthorpe wrote:
+> > > On Tue, Jan 14, 2020 at 09:53:45PM +0530,
+> > > madhuparnabhowmik04@gmail.com wrote:
+> > > > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > > > 
+> > > > list_for_each_entry_rcu has built-in RCU and lock checking.
+> > > > Pass cond argument to list_for_each_entry_rcu.
+> > > > 
+> > > > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > > >   drivers/infiniband/hw/hfi1/verbs.c | 2 +-
+> > > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/infiniband/hw/hfi1/verbs.c
+> > > > b/drivers/infiniband/hw/hfi1/verbs.c
+> > > > index 089e201d7550..22f2d4fd2577 100644
+> > > > +++ b/drivers/infiniband/hw/hfi1/verbs.c
+> > > > @@ -515,7 +515,7 @@ static inline void hfi1_handle_packet(struct
+> > > > hfi1_packet *packet,
+> > > >                          opa_get_lid(packet->dlid, 9B));
+> > > >           if (!mcast)
+> > > >               goto drop;
+> > > > -        list_for_each_entry_rcu(p, &mcast->qp_list, list) {
+> > > > +        list_for_each_entry_rcu(p, &mcast->qp_list, list,
+> > > > lockdep_is_held(&(ibp->rvp.lock))) {
+> > > 
+> > > Okay, this looks reasonable
+> > > 
+> > > Mike, Dennis, is this the right lock to test?
+> > > 
+> > 
+> > I'm looking at that right now actually, I don't think this is correct.
+> > Wanted to talk to Mike before I send a response though.
+> > 
+> > -Denny
+> 
+> That's definitely going to throw a ton of lock dep messages. It's not really
+> the right lock either. Instead what we probably need to do is what we do in
+> the non-multicast part of the code and take the rcu_read_lock().
+> 
+> I'd say hold off on this and we'll fix it right. Same goes for the qib one.
+> 
+> Alright, thank you for reviewing.
+> 
+> The rdmavt one though looks to be OK. I'll give it a test.
 
-There is no size-1 fragment. Are you referring to the those blocks with
-a size of 2, but with only one entry used? There are some wasted space
-there. I can add a counter to track that.
+Madhuparna, there seems to be an issue with your mail client where it is not
+quoting text correctly, either there is a '>' missing or there are too many.
+Can you look into it and figure what's wrong with it?
 
-Cheers,
-Longman
+thanks,
 
->
-> Also, there's a bunch of syzcaller reports of running out of
-> ENTRIES/CHAIN_HLOCKS, perhaps try some of those workloads to better
-> stress the allocator?
->
+ - Joel
 
+> 
+> Thank you,
+> Madhuparna
+> 
+> -Denny
