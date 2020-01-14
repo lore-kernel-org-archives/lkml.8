@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6697C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E60EAC3F68F
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E25524684
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B38C020678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996340;
-	bh=ZgMGAjc1Tj8ADvk10RiUDnwnbLBquCBX3M4ZhVaYJVg=;
+	s=default; t=1578996344;
+	bh=jMKI6v65FTBsSYZvJUeHNjo+HJGBAmYqD6BdTqDO74M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Df0c/AYGxgw2eyvRCklMGTpi1BjRIhYjJm56W7ZiW7B/9/Vcjg0Qd3L1H4IqnMUCc
-	 FzbzniDHkujRmCvz0BJbtaLfd5EIU4GEVn849W6eCyUXTqi1VueYvGzfm/dcHxcioG
-	 cFIVJ2aVrZX4lmbHVhDMkgztS6pdPKX1OQ2Odbio=
+	b=bfpYMKp8enSliA1Xrw36LHh+h+bOLtOGO8tSlLFrOspUaqtqFThLTmuC5K6Ry1v2O
+	 qK4woi4jLhVLYovbGlmOoqcOaJv0c6cS4trHDiXTnfdc4p/HfmoLMzBOXu/xkTnhxT
+	 PsrJM5rqKyUG+hq5bPfzp640nMQBi43LZYQiHo6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729501AbgANKFj (ORCPT
+        id S1730196AbgANKFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:05:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33796 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:05:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729531AbgANKFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:05:36 -0500
+        id S1730154AbgANKFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:05:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 137FD24683;
-        Tue, 14 Jan 2020 10:05:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91BA52467D;
+        Tue, 14 Jan 2020 10:05:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996335;
-        bh=ZgMGAjc1Tj8ADvk10RiUDnwnbLBquCBX3M4ZhVaYJVg=;
+        s=default; t=1578996338;
+        bh=jMKI6v65FTBsSYZvJUeHNjo+HJGBAmYqD6BdTqDO74M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cI2vONeDyfFGleTYjJ4f1jl5Msn10wdq5zpPZwkhlH7+B6UWJuL6FysSZ0xu+YsZa
-         j9OUlRVg2RmT5TkESYz9g/5LXPk+w7LiA9fudLciDmeoi/C3BK1Z0toOq3fCB0Q7KT
-         xK1QH++EwhsjMcAZ4e7kKLOPxjViOkaJxKQ7bZuY=
+        b=rXWK6rTaQm1Lx1OyZOwu1Mvdsig3DkqhYxkVhoGZsgyr7Kcg9tiqQeXTKgss1tgrC
+         mpTP/j3gbV1Gpx2m8uQM6nI0ohRW+vrLEOTodSZwZr7rnFZThiXMr/SiGzSHf91hAq
+         3HezGaDPuSSIvD8hufEt0iWfYcO9V3+WNE0I7TII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Amanieu dAntras <amanieu@gmail.com>,
-        linux-parisc@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 5.4 60/78] parisc: Implement copy_thread_tls
-Date:   Tue, 14 Jan 2020 11:01:34 +0100
-Message-Id: <20200114094401.489409411@linuxfoundation.org>
+Subject: [PATCH 5.4 61/78] riscv: Implement copy_thread_tls
+Date:   Tue, 14 Jan 2020 11:01:35 +0100
+Message-Id: <20200114094401.622410384@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -62,57 +62,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Amanieu d'Antras <amanieu@gmail.com>
 
-commit d2f36c787b2181561d8b95814f8cdad64b348ad7 upstream.
+commit 20bda4ed62f507ed72e30e817b43c65fdba60be7 upstream.
 
 This is required for clone3 which passes the TLS value through a
 struct rather than a register.
 
 Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
-Cc: linux-parisc@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
 Cc: <stable@vger.kernel.org> # 5.3.x
-Link: https://lore.kernel.org/r/20200102172413.654385-5-amanieu@gmail.com
+Link: https://lore.kernel.org/r/20200102172413.654385-6-amanieu@gmail.com
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/Kconfig          |    1 +
- arch/parisc/kernel/process.c |    8 ++++----
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ arch/riscv/Kconfig          |    1 +
+ arch/riscv/kernel/process.c |    6 +++---
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
---- a/arch/parisc/Kconfig
-+++ b/arch/parisc/Kconfig
-@@ -62,6 +62,7 @@ config PARISC
- 	select HAVE_FTRACE_MCOUNT_RECORD if HAVE_DYNAMIC_FTRACE
- 	select HAVE_KPROBES_ON_FTRACE
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -61,6 +61,7 @@ config RISCV
+ 	select SPARSEMEM_STATIC if 32BIT
+ 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+ 	select HAVE_ARCH_MMAP_RND_BITS
 +	select HAVE_COPY_THREAD_TLS
  
- 	help
- 	  The PA-RISC microprocessor is designed by Hewlett-Packard and used
---- a/arch/parisc/kernel/process.c
-+++ b/arch/parisc/kernel/process.c
-@@ -208,8 +208,8 @@ arch_initcall(parisc_idle_init);
-  * Copy architecture-specific thread state
-  */
- int
--copy_thread(unsigned long clone_flags, unsigned long usp,
--	    unsigned long kthread_arg, struct task_struct *p)
-+copy_thread_tls(unsigned long clone_flags, unsigned long usp,
-+	    unsigned long kthread_arg, struct task_struct *p, unsigned long tls)
- {
- 	struct pt_regs *cregs = &(p->thread.regs);
- 	void *stack = task_stack_page(p);
-@@ -254,9 +254,9 @@ copy_thread(unsigned long clone_flags, u
- 		cregs->ksp = (unsigned long)stack + THREAD_SZ_ALGN + FRAME_SIZE;
- 		cregs->kpc = (unsigned long) &child_return;
- 
--		/* Setup thread TLS area from the 4th parameter in clone */
-+		/* Setup thread TLS area */
- 		if (clone_flags & CLONE_SETTLS)
--			cregs->cr27 = cregs->gr[23];
-+			cregs->cr27 = tls;
- 	}
- 
+ config ARCH_MMAP_RND_BITS_MIN
+ 	default 18 if 64BIT
+--- a/arch/riscv/kernel/process.c
++++ b/arch/riscv/kernel/process.c
+@@ -99,8 +99,8 @@ int arch_dup_task_struct(struct task_str
  	return 0;
+ }
+ 
+-int copy_thread(unsigned long clone_flags, unsigned long usp,
+-	unsigned long arg, struct task_struct *p)
++int copy_thread_tls(unsigned long clone_flags, unsigned long usp,
++	unsigned long arg, struct task_struct *p, unsigned long tls)
+ {
+ 	struct pt_regs *childregs = task_pt_regs(p);
+ 
+@@ -120,7 +120,7 @@ int copy_thread(unsigned long clone_flag
+ 		if (usp) /* User fork */
+ 			childregs->sp = usp;
+ 		if (clone_flags & CLONE_SETTLS)
+-			childregs->tp = childregs->a5;
++			childregs->tp = tls;
+ 		childregs->a0 = 0; /* Return value of fork() */
+ 		p->thread.ra = (unsigned long)ret_from_fork;
+ 	}
 
 
