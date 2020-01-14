@@ -2,84 +2,147 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D61C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8D7C33CB3
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1767924656
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:51:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ws8m8W0V"
+	by mail.kernel.org (Postfix) with ESMTP id A840D24656
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgANRvs (ORCPT
+        id S1728767AbgANRx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:51:48 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:32814 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgANRvs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:51:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sc1Nx+HAQZISsrmd3+gnlnxtvqsFDI0QD633bhln+Vw=; b=Ws8m8W0VdPB5r8ceyEL0CggzY
-        pip6/AhQ9Mj/yUu4KR2E5bvi+rhUSqsDYpUZyDsrUpvAT4gBTB09jojYdwktpoQmIBOC3jVgAkiGX
-        p38uVHu1Oxdwds2Thne/H1ZHyWI+1c3rJHThx/j1R+sN68n2qn3bMgCdQzkCvNISRlZwb/+3aqPZf
-        OD+jIzeHMniQjm9uRnuXcxyUpVXfxg6+s038vsuTSawmf42QTeSsouYJZFzj2+Pb5DCWinRfu1Ius
-        LBCdgchHvlDQ70mSpq0QF3c240Z80izr53BpNnYn+nyP47qep5kPb/mgnarDpCwXaXdM4kU2t3Q12
-        lIWW+L0Sg==;
-Received: from [2601:1c0:6280:3f0::ed68]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1irQLz-0000tX-Cs; Tue, 14 Jan 2020 17:51:47 +0000
-Subject: Re: [PATCHv2-next 2/3] serial/sysrq: Add MAGIC_SYSRQ_SERIAL_SEQUENCE
-To:     Dmitry Safonov <dima@arista.com>, linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Jiri Slaby <jslaby@suse.com>, Joe Perches <joe@perches.com>,
-        Vasiliy Khoruzhick <vasilykh@arista.com>,
-        linux-serial@vger.kernel.org
-References: <20200114171912.261787-1-dima@arista.com>
- <20200114171912.261787-3-dima@arista.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <7a1ba665-fc32-8dd9-ffa1-de71209d0153@infradead.org>
-Date:   Tue, 14 Jan 2020 09:51:46 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Tue, 14 Jan 2020 12:53:56 -0500
+Received: from mga12.intel.com ([192.55.52.136]:5109 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726450AbgANRxz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:53:55 -0500
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 09:53:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,319,1574150400"; 
+   d="scan'208";a="225622891"
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga006.jf.intel.com with ESMTP; 14 Jan 2020 09:53:54 -0800
+Date:   Tue, 14 Jan 2020 09:53:54 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [RFC PATCH V2 09/12] fs: Prevent mode change if file is mmap'ed
+Message-ID: <20200114175353.GA7871@iweiny-DESK2.sc.intel.com>
+References: <20200110192942.25021-1-ira.weiny@intel.com>
+ <20200110192942.25021-10-ira.weiny@intel.com>
+ <20200113222212.GO8247@magnolia>
+ <20200114004610.GD29860@iweiny-DESK2.sc.intel.com>
+ <20200114013004.GU8247@magnolia>
 MIME-Version: 1.0
-In-Reply-To: <20200114171912.261787-3-dima@arista.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200114013004.GU8247@magnolia>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/14/20 9:19 AM, Dmitry Safonov wrote:
-> +static bool uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch)
-> +{
-> +	if (ARRAY_SIZE(sysrq_toggle_seq) <= 1)
-> +		return 0;
-> +
-> +	BUILD_BUG_ON(ARRAY_SIZE(sysrq_toggle_seq) >= sizeof(port->sysrq_seq)*U8_MAX);
+On Mon, Jan 13, 2020 at 05:30:04PM -0800, Darrick J. Wong wrote:
+> On Mon, Jan 13, 2020 at 04:46:10PM -0800, Ira Weiny wrote:
+> > On Mon, Jan 13, 2020 at 02:22:12PM -0800, Darrick J. Wong wrote:
+> > > On Fri, Jan 10, 2020 at 11:29:39AM -0800, ira.weiny@intel.com wrote:
+> > > > From: Ira Weiny <ira.weiny@intel.com>
+> > > > 
+> > 
+> > [snip]
+> > 
+> > > >  
+> > > > diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> > > > index bc3654fe3b5d..1ab0906c6c7f 100644
+> > > > --- a/fs/xfs/xfs_ioctl.c
+> > > > +++ b/fs/xfs/xfs_ioctl.c
+> > > > @@ -1200,6 +1200,14 @@ xfs_ioctl_setattr_dax_invalidate(
+> > > >  		goto out_unlock;
+> > > >  	}
+> > > >  
+> > > > +	/*
+> > > > +	 * If there is a mapping in place we must remain in our current mode.
+> > > > +	 */
+> > > > +	if (atomic64_read(&inode->i_mapped)) {
+> > > 
+> > > Urk, should we really be messing around with the address space
+> > > internals?
+> > 
+> > I contemplated a function call instead of checking i_mapped directly?  Is that
+> > what you mean?
+> 
+> Yeah.  Abstracting the details just enough that filesystems don't have
+> to know that i_mapped is atomic64 etc.
 
-That sizeof(...) is confusing (to me).  I would just write:
+Done.
 
-+	BUILD_BUG_ON(ARRAY_SIZE(sysrq_toggle_seq) >= U8_MAX);
+> 
+> > 
+> > > 
+> > > > +		error = -EBUSY;
+> > > > +		goto out_unlock;
+> > > > +	}
+> > > > +
+> > > >  	error = filemap_write_and_wait(inode->i_mapping);
+> > > >  	if (error)
+> > > >  		goto out_unlock;
+> > > > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > > > index 631f11d6246e..6e7dc626b657 100644
+> > > > --- a/include/linux/fs.h
+> > > > +++ b/include/linux/fs.h
+> > > > @@ -740,6 +740,7 @@ struct inode {
+> > > >  #endif
+> > > >  
+> > > >  	void			*i_private; /* fs or device private pointer */
+> > > > +	atomic64_t               i_mapped;
+> > > 
+> > > I would have expected to find this in struct address_space since the
+> > > mapping count is a function of the address space, right?
+> > 
+> > I suppose but the only external call (above) would be passing an inode.  So to
+> > me it seemed better here.
+> 
+> But the number of memory mappings reflects the state of the address
+> space, not the inode.  Or maybe put another way, if I were an mm
+> developer I would not expect to look in struct inode for mm state.
 
-> +	if (sysrq_toggle_seq[port->sysrq_seq] != ch) {
-> +		port->sysrq_seq = 0;
-> +		return 0;
-> +	}
+This is a good point...
 
-cheers.
--- 
-~Randy
+> 
+> static inline bool inode_has_mappings(struct inode *inode)
+> {
+> 	return atomic64_read(&inode->i_mapping->mapcount) > 0;
+> }
+> 
+> OTOH if there exist other mm developers who /do/ find that storing the
+> mmap count in struct inode is more logical, please let me know. :)
 
+...  My thinking was that the number of mappings does not matters to the mm
+system...  However, I'm starting to think you are correct...  ;-)
+
+I've made a note of it and we will see what others think.
+
+Ira
+
+> 
+> --D
+> 
+> > Ira
+> > 
+> > > 
+> > > --D
+> > > 
