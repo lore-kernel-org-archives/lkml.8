@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A25C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 629FCC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:19:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 296BC222C4
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3419424683
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 15:19:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GyBOpb18"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVlh6j/i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbgANPTe (ORCPT
+        id S1729248AbgANPTi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 10:19:34 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:33384 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729169AbgANPTb (ORCPT
+        Tue, 14 Jan 2020 10:19:38 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45467 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729196AbgANPTd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:19:31 -0500
-Received: by mail-pg1-f195.google.com with SMTP id 6so6549898pgk.0;
-        Tue, 14 Jan 2020 07:19:31 -0800 (PST)
+        Tue, 14 Jan 2020 10:19:33 -0500
+Received: by mail-pf1-f196.google.com with SMTP id 2so6714153pfg.12;
+        Tue, 14 Jan 2020 07:19:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2K6rRI7pCn9t5RYAWusq+FmSFOJ0/oBKMxxQl0gpYQY=;
-        b=GyBOpb18t5KUIO1lKiMJ+TY48O4y0uaee+qso1Wsun2HKScGCc2Cj0zq3voSwbeufW
-         edkQTmZ3t5V9bNfanTGFKzp4yOSewQoLShea7EPxSrXe9AHa6vXseo7coz33toBgeIUF
-         MLJXqv6BKVeFn8GXxHtrYdxGB25Xyo/+PD9WuTlEEcuJNejNB2bQVfO88lX+c+j1rPY+
-         Mc3XWfDAbX7G7/L/qTdtedPY5vpF1MnaaiTpYJvvy1XOUF4k2C1bPC5Op3a/+vtXM7t5
-         5cf1rKRYXShhbHWuEAoBhFYIvRH2PHv/jSLjyEGf/X5mfTsopEB+a4tU93WeycZuyqBd
-         5BLQ==
+        bh=ST7QEf8JaPsIhTPBLpP4peL3yXUV3NDdYF9SiuXeCzg=;
+        b=IVlh6j/iSAlzh10qy/FDJ4HvKz7R892wUQuYxOTYHl2N97PS0Wd+wj3Vcue7B+cqjn
+         +GUB4l5bI0/Eq5IssJDljQfcYTJ3oOQj4m33wenYcWvcEGIuzPtWFr+seGkEJtifjYEM
+         OtOSSexK4L4a64yBYbhtlTy6uLShoG5jR7+VC1c4obRovM2+xRUGWGJiw4B/aVCuMioK
+         mNIBgWFyvaKaUu0wWhRdQCyCAl99OH7jU+9lEHb1wEpM2H4qRPUR7G3e13xHve+pUgFB
+         Sr3EsDENkZfV3fAXxfr8EULSslN0/W9x3sjP0V1ghY94OGauXGQdzNXH0qSYZ3oX9qdg
+         SuGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2K6rRI7pCn9t5RYAWusq+FmSFOJ0/oBKMxxQl0gpYQY=;
-        b=Ibc4ApiVMwJa3MYT3yWqHD1YQ21keWEoLUa0bG0YVD4Jb+AorJWfX/aLlhzT1bTPRn
-         FzyfOJXaC+nuib5Ye+w9+bFkN058QoN8cFR+/O631WnASctSD4O/XzsZinN4w3iBzbXs
-         +7chwJSOBUV1Nqngfom/mtakwDkMcIfjwQSi6kz261qmWt7bNAL8NBxQh0gId6NCeKrC
-         4KrX+d4vyEUMSf9Cg42BRjPvkv/eHat9ScdvUDJ33gbPZWkhyhejsbvDOy6lfXkXhORj
-         j6N1US5K8d3tNemjMonir7EJ1y9Koe96jW3lggyvLnGhVZaoGX83B6FD92RpGnZGZjo2
-         uLoA==
-X-Gm-Message-State: APjAAAXQ2sFqiY5gp1SAWDI/mwnwBhT+iedjCBgCWjOafZiN/Cy3blVy
-        B7HSx9rF0KL+dx2Mnyt3ArM=
-X-Google-Smtp-Source: APXvYqwP7gCn/MA7btxDogcApJqTsBrFCttsL+REBZoBUwJzmmo+HFp2fLQRj0phrrY0C9TTdnCAZA==
-X-Received: by 2002:a62:e908:: with SMTP id j8mr25632066pfh.55.1579015171060;
-        Tue, 14 Jan 2020 07:19:31 -0800 (PST)
+        bh=ST7QEf8JaPsIhTPBLpP4peL3yXUV3NDdYF9SiuXeCzg=;
+        b=qKLW8ECzKkm0T5HhzveDbxoxqQapYtT1NroKKsDEy8dr3NtvsorKPe5EX48x/ZUS9h
+         hsNPzPQJ+3UHEsbHL1zFmU82NcSiqVStv2dA65P8VI1wq7X9+BqD5gq6+ZxR1lMu3YLI
+         xlDX25A8tkwHW7SQ4njRtv1xXeO0mgpnnOTZ33abbARS7qJKu6emwma+mqKxe358Bupo
+         E79uj88B4t8P8RKhjlAqukUzkal9MVe8NT89Ypj1P3YeEivZjmlE1C10Y9QmBxk0MJSI
+         feVK/JnP/8KutJVo9DeFaWL+2io7UU6PI9ip3Q9rZN85FSlSO0t1t2Xwn0PHOQauX+YU
+         mBEQ==
+X-Gm-Message-State: APjAAAUQpWjnIAKqPWh+x5CXjlLeboOPA5K+keKeMi3aKYzm8DDSEF/7
+        gZT23zH4vxJxqbhS3MO9EA4=
+X-Google-Smtp-Source: APXvYqwJlfdrCgQOUs+s+KcUfryciwUOYLQN9kEOTk43lgOjAPQX3p1bITQdDG6m0bJ77nBU9isuZw==
+X-Received: by 2002:a65:6914:: with SMTP id s20mr26982174pgq.44.1579015172492;
+        Tue, 14 Jan 2020 07:19:32 -0800 (PST)
 Received: from localhost.localdomain (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
-        by smtp.gmail.com with ESMTPSA id 207sm18834425pfu.88.2020.01.14.07.19.29
+        by smtp.gmail.com with ESMTPSA id 207sm18834425pfu.88.2020.01.14.07.19.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 07:19:30 -0800 (PST)
+        Tue, 14 Jan 2020 07:19:31 -0800 (PST)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -64,9 +64,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Fabio Estevam <festevam@gmail.com>,
         Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/5] ARM: dts: vf610-zii-dev: Add voltage monitor DT node
-Date:   Tue, 14 Jan 2020 07:19:05 -0800
-Message-Id: <20200114151906.25491-5-andrew.smirnov@gmail.com>
+Subject: [PATCH 5/5] ARM: dts: vf610-zii-cfu1: Add voltage monitor DT node
+Date:   Tue, 14 Jan 2020 07:19:06 -0800
+Message-Id: <20200114151906.25491-6-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200114151906.25491-1-andrew.smirnov@gmail.com>
 References: <20200114151906.25491-1-andrew.smirnov@gmail.com>
@@ -88,24 +88,24 @@ Cc: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/vf610-zii-dev.dtsi | 8 ++++++++
+ arch/arm/boot/dts/vf610-zii-cfu1.dts | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/vf610-zii-dev.dtsi b/arch/arm/boot/dts/vf610-zii-dev.dtsi
-index a1b4ccee2a10..95d0060fb56c 100644
---- a/arch/arm/boot/dts/vf610-zii-dev.dtsi
-+++ b/arch/arm/boot/dts/vf610-zii-dev.dtsi
-@@ -84,6 +84,14 @@
- 		regulator-boot-on;
- 		gpio = <&gpio0 6 0>;
+diff --git a/arch/arm/boot/dts/vf610-zii-cfu1.dts b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+index 28732249cfc0..ce1920c052fc 100644
+--- a/arch/arm/boot/dts/vf610-zii-cfu1.dts
++++ b/arch/arm/boot/dts/vf610-zii-cfu1.dts
+@@ -71,6 +71,14 @@
+ 		los-gpio = <&gpio4 4 GPIO_ACTIVE_HIGH>;
+ 		tx-disable-gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
  	};
 +
 +	supply-voltage-monitor {
 +		compatible = "iio-hwmon";
-+		io-channels = <&adc0 8>, /* VCC_1V5 */
-+			      <&adc0 9>, /* VCC_1V8 */
-+			      <&adc1 8>, /* VCC_1V0 */
-+			      <&adc1 9>; /* VCC_1V2 */
++		io-channels = <&adc0 8>, /* 28VDC_IN */
++			      <&adc0 9>, /* +3.3V    */
++			      <&adc1 8>, /* VCC_1V5  */
++			      <&adc1 9>; /* VCC_1V2  */
 +	};
  };
  
