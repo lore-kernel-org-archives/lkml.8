@@ -2,138 +2,147 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC65C33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6950C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0555424670
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:01:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bQgNSKsd"
+	by mail.kernel.org (Postfix) with ESMTP id 8365124676
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 20:02:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728847AbgANUBl (ORCPT
+        id S1728872AbgANUCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 15:01:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37756 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726523AbgANUBk (ORCPT
+        Tue, 14 Jan 2020 15:02:22 -0500
+Received: from mout-p-102.mailbox.org ([80.241.56.152]:60288 "EHLO
+        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbgANUCW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 15:01:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579032099;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=F5YGCCGIX+lIuE1xVDvMmlXX8AVAofNe88Se1/lzptk=;
-        b=bQgNSKsdn/+k6J/0nR5h6y6iw1hQLDxUY8vYTboOpK0Pxb/4uVJculfzo7aHJb+iFGd1eK
-        YByexd5sJkRxg5VbekMN/u0dNF5kSZemEXkOP1FupqINwttYzPZgp4qVAci6It9354PGnE
-        ewkdDlIOFvHXhndegUdZQi9KPzGI73E=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-306-T90WYAvJMPafHPQOx4HfIQ-1; Tue, 14 Jan 2020 15:01:37 -0500
-X-MC-Unique: T90WYAvJMPafHPQOx4HfIQ-1
-Received: by mail-qk1-f197.google.com with SMTP id 194so9122580qkh.18
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 12:01:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=F5YGCCGIX+lIuE1xVDvMmlXX8AVAofNe88Se1/lzptk=;
-        b=lWQTONyqBTJ6k4QH+DWMZymCB7jrWEzICljxTKtiS5ZZZpiQ0BvOtnbehOoyxRd8vS
-         Sm1n19wocJhilj5uNCFHY4x8bnbydryXoQZW3JvR+S3Qu+UwF9+fHTdZ6j2/ojxKk533
-         RnYTMiR++3XSAKVkdeCzsD+YbzILgsG/vbPjw1uZ5Rq7L3QPCP1FNvK6RiabDs5DqO3r
-         4m1r3tfq2cGaJ8BEbuKJdTeBl1DNfCpg23lgvJ6N7bQCEnrYjiGSzleJGHi2pqrFkuGW
-         lfj8xWqCRpfpDl+nJzhO4ZrjN6yL1THaD5+XpWiipG/yycW/gnLCo/vU1lZ+BMOjvaOk
-         FPBQ==
-X-Gm-Message-State: APjAAAVNO+LkSCPluBkt78Ssu2/lQbJSaAbsYqjsk3W/HPCgRVgFbgAd
-        ic/NxZXXkoFhBU1jbf+4q9tZAJHl/Dsz+RuNzJoTTj1xFLAFCebiUzOEZy/ALF30eQpWVKC1mnO
-        CuAY1NuXMUdj/kxgUtI2thEac
-X-Received: by 2002:ad4:51cc:: with SMTP id p12mr22091576qvq.113.1579032097457;
-        Tue, 14 Jan 2020 12:01:37 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxNbvJ19TaniVCvM/mX2nsCuKcnV2VokhOKt9QMPvk/ivDM+6fGWGUc2wdsUeBtEK+BAUVjqA==
-X-Received: by 2002:ad4:51cc:: with SMTP id p12mr22091536qvq.113.1579032097113;
-        Tue, 14 Jan 2020 12:01:37 -0800 (PST)
-Received: from xz-x1 ([104.156.64.74])
-        by smtp.gmail.com with ESMTPSA id m8sm8255953qtk.60.2020.01.14.12.01.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jan 2020 12:01:36 -0800 (PST)
-Date:   Tue, 14 Jan 2020 15:01:34 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christophe de Dinechin <dinechin@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Yan Zhao <yan.y.zhao@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Kevin <kevin.tian@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Lei Cao <lei.cao@stratus.com>,
-        Andrew Jones <drjones@redhat.com>
-Subject: Re: [PATCH v3 12/21] KVM: X86: Implement ring-based dirty memory
- tracking
-Message-ID: <20200114200134.GA233443@xz-x1>
-References: <20200109145729.32898-1-peterx@redhat.com>
- <20200109145729.32898-13-peterx@redhat.com>
- <20200109110110-mutt-send-email-mst@kernel.org>
- <20200109191514.GD36997@xz-x1>
- <20200109141634-mutt-send-email-mst@kernel.org>
+        Tue, 14 Jan 2020 15:02:22 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 47y1Zf2B6hzKmVl;
+        Tue, 14 Jan 2020 21:02:18 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id 8yIjXp1Taw1j; Tue, 14 Jan 2020 21:02:14 +0100 (CET)
+Date:   Wed, 15 Jan 2020 07:01:50 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        stable <stable@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Serge Hallyn <serge@hallyn.com>, dev@opencontainers.org,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ian Kent <raven@themaw.net>
+Subject: Re: [PATCH RFC 0/1] mount: universally disallow mounting over
+ symlinks
+Message-ID: <20200114200150.ryld4npoblns2ybe@yavin>
+References: <20200101005446.GH4203@ZenIV.linux.org.uk>
+ <20200101030815.GA17593@ZenIV.linux.org.uk>
+ <20200101144407.ugjwzk7zxrucaa6a@yavin.dot.cyphar.com>
+ <20200101234009.GB8904@ZenIV.linux.org.uk>
+ <20200102035920.dsycgxnb6ba2jhz2@yavin.dot.cyphar.com>
+ <20200103014901.GC8904@ZenIV.linux.org.uk>
+ <20200108031314.GE8904@ZenIV.linux.org.uk>
+ <CAHk-=wgQ3yOBuK8mxpnntD8cfX-+10ba81f86BYg8MhvwpvOMg@mail.gmail.com>
+ <20200110210719.ktg3l2kwjrdutlh6@yavin>
+ <20200114045733.GW8904@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yw32mmv2xicgi7vl"
 Content-Disposition: inline
-In-Reply-To: <20200109141634-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20200114045733.GW8904@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 09, 2020 at 02:35:46PM -0500, Michael S. Tsirkin wrote:
->   ``void flush_dcache_page(struct page *page)``
-> 
->         Any time the kernel writes to a page cache page, _OR_
->         the kernel is about to read from a page cache page and
->         user space shared/writable mappings of this page potentially
->         exist, this routine is called.
-> 
-> 
-> > Also, I believe this is the similar question that Jason has asked in
-> > V2.  Sorry I should mention this earlier, but I didn't address that in
-> > this series because if we need to do so we probably need to do it
-> > kvm-wise, rather than only in this series.
-> 
-> You need to document these things.
-> 
-> >  I feel like it's missing
-> > probably only because all existing KVM supported archs do not have
-> > virtual-tagged caches as you mentioned.
-> 
-> But is that a fact? ARM has such a variety of CPUs,
-> I can't really tell. Did you research this to make sure?
-> 
-> > If so, I would prefer if you
-> > can allow me to ignore that issue until KVM starts to support such an
-> > arch.
-> 
-> Document limitations pls.  Don't ignore them.
 
-Hi, Michael,
+--yw32mmv2xicgi7vl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I failed to find a good place to document about flush_dcache_page()
-for KVM.  Could you give me a suggestion?
+On 2020-01-14, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Sat, Jan 11, 2020 at 08:07:19AM +1100, Aleksa Sarai wrote:
+>=20
+> > If I'm understanding this proposal correctly, this would be a problem
+> > for the libpathrs use-case -- if this is done then there's no way to
+> > avoid a TOCTOU with someone mounting and the userspace program checking
+> > whether something is a mountpoint (unless you have Linux >5.6 and
+> > RESOLVE_NO_XDEV). Today, you can (in theory) do it with MNT_EXPIRE:
+> >=20
+> >   1. Open the candidate directory.
+> >   2. umount2(MNT_EXPIRE) the fd.
+> >     * -EINVAL means it wasn't a mountpoint when we got the fd, and the
+> > 	  fd is a stable handle to the underlying directory.
+> > 	* -EAGAIN or -EBUSY means that it was a mountpoint or became a
+> > 	  mountpoint after the fd was opened (we don't care about that, but
+> > 	  fail-safe is better here).
+> >   3. Use the fd from (1) for all operations.
+>=20
+> ... except that foo/../bar *WILL* cross into the covering mount, on any
+> kernel that supports ...at(2) at all, so I would be very cautious about
+> any kind "hardening" claims in that case.
 
-And I don't know about whether there's any ARM hosts that requires
-flush_dcache_page().  I think not, because again I didn't see any
-caller of flush_dcache_page() in KVM code yet.  Otherwise I think we
-should at least call it before the kernel reading kvm_run or after
-publishing data to kvm_run.  However I'm also CCing Drew for this.
+In the use-case I have, we would have full control over what the path
+being opened is (and thus you wouldn't open "foo/../bar"). But I agree
+that generally the MNT_EXPIRE solution is really non-ideal anyway.
 
-Thanks,
+Not to mention that we're still screwed when it comes to using
+magic-links (because if someone bind-mounts a magic-link over a
+magic-link there's absolutely no race-free way to be sure that we're
+traversing the right magic-link -- for that we'll need to have a
+different solution).
 
--- 
-Peter Xu
+> I'm not sure about Linus' proposal - it looks rather convoluted and we
+> get a hard to describe twist of semantics in an area (procfs symlinks
+> vs. mount traversal) on top of everything else in there...
 
+Yeah, I agree.
+
+> 1) do you see any problems on your testcases with the current #fixes?
+> That's commit 7a955b7363b8 as branch tip.
+
+I will take a quick look later today, but I'm currently at a conference.
+
+> 2) do you have any updates you would like to fold into stuff in
+> #work.openat2?  Right now I have a local variant of #work.namei (with
+> fairly cosmetical change compared to vfs.git one) that merges clean
+> with #work.openat2; I would like to do any updates/fold-ins/etc.
+> of #work.openat2 *before* doing a merge and continuing to work on
+> top of the merge results...
+
+Yes, there were two patches I sent a while ago[1]. I can re-send them if
+you like. The second patch switches open_how->mode to a u64, but I'm
+still on the fence about whether that makes sense to do...
+
+[1]: https://lore.kernel.org/lkml/20191219105533.12508-1-cyphar@cyphar.com/
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--yw32mmv2xicgi7vl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXh4eKwAKCRCdlLljIbnQ
+EohNAP9bZokE7Mx988k9i8bCb2VifwEsK32qWbBGbd1mfrCgcAD9FPGxR3BU2iR4
+1M+DPlD/ZTxDuzJUo2DWSGfEWzl2hAQ=
+=b/NS
+-----END PGP SIGNATURE-----
+
+--yw32mmv2xicgi7vl--
