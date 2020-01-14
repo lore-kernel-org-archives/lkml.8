@@ -2,110 +2,66 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E106C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E403C33C9E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06B712465A
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 726952465A
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 17:28:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1579022882;
+	bh=zB8Tex21D7G2o4vwjaqh+wZVt5DqD++8sxupU9BOFUw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DT214llOPAi4fr07d9qKDOh5fFppxoMvFu2dMYcvXO9q2kSze+WfNzAhzR24/nHNm
+	 XcIIP2+cK4MEo//TXcJK5Gp1+ROuOPKnLyWZRipuC/9TAkcFx9JFNHB8WbHL69BeE/
+	 y9ha8gXwBDExrDLJKenUYtKwepStvxn4onpMuorA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728777AbgANR1x (ORCPT
+        id S1728803AbgANR2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 12:27:53 -0500
-Received: from mga17.intel.com ([192.55.52.151]:60281 "EHLO mga17.intel.com"
+        Tue, 14 Jan 2020 12:28:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbgANR1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 12:27:53 -0500
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jan 2020 09:27:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,433,1574150400"; 
-   d="scan'208";a="256380937"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 14 Jan 2020 09:27:51 -0800
-Date:   Tue, 14 Jan 2020 09:27:51 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-edac@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: Re: [PATCH] KVM: VMX: Rename define to CPU_BASED_USE_TSC_OFFSETTING
-Message-ID: <20200114172751.GD16784@linux.intel.com>
-References: <20191221044513.21680-1-sean.j.christopherson@intel.com>
- <20191221044513.21680-18-sean.j.christopherson@intel.com>
- <20200113183228.GO13310@zn.tnic>
- <20200113183705.GL1175@linux.intel.com>
- <20200113183823.GP13310@zn.tnic>
- <20200113184217.GA2216@linux.intel.com>
- <20200113185216.GQ13310@zn.tnic>
- <20200113201610.GE2322@linux.intel.com>
- <20200114093138.GB31032@zn.tnic>
+        id S1726270AbgANR2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 12:28:01 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1992F2075B;
+        Tue, 14 Jan 2020 17:27:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579022880;
+        bh=zB8Tex21D7G2o4vwjaqh+wZVt5DqD++8sxupU9BOFUw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CllTOUuTl2XVsEERqQWDQhQ3c0XwQ39nXK1Wru5mIrCrp60MbrXQupMF4leJrLSsZ
+         4oYAci5Udel0Ekr+bF7gWMoDTohKchBGhi4XrY+qLMb1Oztdy05RUhjOsPN5YbKePt
+         rs+oHZNAdJGZTEjNlqSNi9D5yWroegPO7sEGTw8k=
+Date:   Tue, 14 Jan 2020 18:27:56 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] tty: baudrate: Synchronise baud_table[] and
+ baud_bits[]
+Message-ID: <20200114172756.GA2052011@kroah.com>
+References: <20200114170917.36947-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200114093138.GB31032@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200114170917.36947-1-andriy.shevchenko@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jan 14, 2020 at 10:31:38AM +0100, Borislav Petkov wrote:
-> On Mon, Jan 13, 2020 at 12:16:10PM -0800, Sean Christopherson wrote:
-> > On Mon, Jan 13, 2020 at 07:52:16PM +0100, Borislav Petkov wrote:
-> > > On Mon, Jan 13, 2020 at 10:42:17AM -0800, Sean Christopherson wrote:
-> > > > > Doesn't bother me, I could do it in a patch ontop. But your call.
-> > > > 
-> > > > No objection here.
-> > > 
-> > > Something like this:
-> > > 
-> > > ---
-> > > From: Borislav Petkov <bp@suse.de>
-> > > 
-> > > ... so that "offsetting" is spelled the same as the respective VMX feature
-> > > bit VMX_FEATURE_TSC_OFFSETTING.
-> > > 
-> > > No functional changes.
-> > > 
-> > > Signed-off-by: Borislav Petkov <bp@suse.de>
-> > > ---
-> > 
-> > Reviewed-and-tested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> 
-> Yah, so I tried to do a test-merge with linux-next to see what surprises should
-> I be prepared for and there's the first one:
-> 
-> 5e3d394fdd9e ("KVM: VMX: Fix the spelling of CPU_BASED_USE_TSC_OFFSETTING")
-> 
-> which is already in Paolo's tree. Dropping it on my side.
+On Tue, Jan 14, 2020 at 07:09:17PM +0200, Andy Shevchenko wrote:
+> Synchronize baud rate tables for better readability.
 
-Doh, now that you point it out, I remember that patch going by.  Sorry I
-didn't recall it earlier.
+"Synchronize"?  With what?  Why?  I'm all for cleaning up code, but this
+just seems totally gratuitous.
 
-Thanks for your help!
+We have whole serial drivers with _THOUSANDS_ of checkpatch issues, and
+this is bothering you?  :)
+
+greg k-h
