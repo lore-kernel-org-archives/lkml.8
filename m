@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 964F5C33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744C6C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F8B207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F18207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:19:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578997135;
-	bh=I2LKLTtBWS4PoSIgSlNuZBGxHpJKQwjuaBfWGWzmPiE=;
+	s=default; t=1578997143;
+	bh=hzYuebpsFq1xFNMWn96tvRnGDTzteUizVMhWlBa9x8A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bz6bVqzHoY558C+99Hu61Xb5fS1yEtCrMSKpSbcaaGFKraRZonilGU80It6lZEz3Y
-	 f8gh0YIUnc8Lulja7oFrNt3b5qOBxgtNx2RZNLvG573Arw20r4PUECHg/eOSrUtHbP
-	 Aws4RYMw9Gpia8kV+kseJyTkxYTY2ONd/cLo9QqI=
+	b=oUIsX6L5iFBtgdGWQJ5+oJ1SQrEGG0Sf4ZE3S+nGCCNNvLHtB/7hEp2u76OFEFS6e
+	 UgQUAKt5kpAXxdrdoNs+lDl7e5DFGjZgaA95A2zDsqMZdD+gfkbWJoFAx4ZzAIcpYM
+	 PdKZELPtr4IEz/WpIKnrcG8RfdP01lYoKZLk2fI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbgANKGx (ORCPT
+        id S1730373AbgANKG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:06:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36266 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:06:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbgANKGt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:06:49 -0500
+        id S1729963AbgANKG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:06:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E76824681;
-        Tue, 14 Jan 2020 10:06:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D449024677;
+        Tue, 14 Jan 2020 10:06:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996408;
-        bh=I2LKLTtBWS4PoSIgSlNuZBGxHpJKQwjuaBfWGWzmPiE=;
+        s=default; t=1578996386;
+        bh=hzYuebpsFq1xFNMWn96tvRnGDTzteUizVMhWlBa9x8A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JoOHi580/XXtel+8yhK3KsO1arIJ8tPCYcgjyQFz0y3p7ajEb+99vBcZiwct+NF60
-         GKtmo/kV8JDWrlzcKTQkDPHC19mXhX7qcsY6c96GvSW7gdmVF996nw7zOGZclUvydQ
-         qkP6NILdBErQr45V0BbxhCE8pM0B8tbgvh/s7ZP0=
+        b=fYSV9xzodACnoAyBSOQcc6AzHITiLYLzCZtKZj0nSicUqhnMHk/CjkwTxq0C8zPgn
+         gdTEy7Z12wTEFOi2IPGAUvT/jQoB7DRv0Nok6kN1Cd/4UgX6pCRtZ+CLP8p8p/yV7z
+         dNniY6MFZLXdsPwK2e3kwpkwDUCjVBacwc+N3HX8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>
-Subject: [PATCH 5.4 71/78] ath10k: fix memory leak
-Date:   Tue, 14 Jan 2020 11:01:45 +0100
-Message-Id: <20200114094402.874361267@linuxfoundation.org>
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.4 78/78] netfilter: ipset: avoid null deref when IPSET_ATTR_LINENO is present
+Date:   Tue, 14 Jan 2020 11:01:52 +0100
+Message-Id: <20200114094403.749795669@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -61,31 +62,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Florian Westphal <fw@strlen.de>
 
-commit b8d17e7d93d2beb89e4f34c59996376b8b544792 upstream.
+commit 22dad713b8a5ff488e07b821195270672f486eb2 upstream.
 
-In ath10k_usb_hif_tx_sg the allocated urb should be released if
-usb_submit_urb fails.
+The set uadt functions assume lineno is never NULL, but it is in
+case of ip_set_utest().
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Cc: Ben Hutchings <ben.hutchings@codethink.co.uk>
+syzkaller managed to generate a netlink message that calls this with
+LINENO attr present:
+
+general protection fault: 0000 [#1] PREEMPT SMP KASAN
+RIP: 0010:hash_mac4_uadt+0x1bc/0x470 net/netfilter/ipset/ip_set_hash_mac.c:104
+Call Trace:
+ ip_set_utest+0x55b/0x890 net/netfilter/ipset/ip_set_core.c:1867
+ nfnetlink_rcv_msg+0xcf2/0xfb0 net/netfilter/nfnetlink.c:229
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ nfnetlink_rcv+0x1ba/0x460 net/netfilter/nfnetlink.c:563
+
+pass a dummy lineno storage, its easier than patching all set
+implementations.
+
+This seems to be a day-0 bug.
+
+Cc: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Reported-by: syzbot+34bd2369d38707f3f4a7@syzkaller.appspotmail.com
+Fixes: a7b4f989a6294 ("netfilter: ipset: IP set core support")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Acked-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/ath/ath10k/usb.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/ipset/ip_set_core.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/net/wireless/ath/ath10k/usb.c
-+++ b/drivers/net/wireless/ath/ath10k/usb.c
-@@ -443,6 +443,7 @@ static int ath10k_usb_hif_tx_sg(struct a
- 			ath10k_dbg(ar, ATH10K_DBG_USB_BULK,
- 				   "usb bulk transmit failed: %d\n", ret);
- 			usb_unanchor_urb(urb);
-+			usb_free_urb(urb);
- 			ret = -EINVAL;
- 			goto err_free_urb_to_pipe;
- 		}
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -1658,6 +1658,7 @@ static int ip_set_utest(struct net *net,
+ 	struct ip_set *set;
+ 	struct nlattr *tb[IPSET_ATTR_ADT_MAX + 1] = {};
+ 	int ret = 0;
++	u32 lineno;
+ 
+ 	if (unlikely(protocol_min_failed(attr) ||
+ 		     !attr[IPSET_ATTR_SETNAME] ||
+@@ -1674,7 +1675,7 @@ static int ip_set_utest(struct net *net,
+ 		return -IPSET_ERR_PROTOCOL;
+ 
+ 	rcu_read_lock_bh();
+-	ret = set->variant->uadt(set, tb, IPSET_TEST, NULL, 0, 0);
++	ret = set->variant->uadt(set, tb, IPSET_TEST, &lineno, 0, 0);
+ 	rcu_read_unlock_bh();
+ 	/* Userspace can't trigger element to be re-added */
+ 	if (ret == -EAGAIN)
 
 
