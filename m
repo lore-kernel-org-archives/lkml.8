@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DFFC33CB1
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75EF8C33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 815DC2467E
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489712467E
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 10:05:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578996332;
-	bh=0cdLB7wehuBT3ubfoI3yEb17IXH1TWYAp5f76Ckw7m4=;
+	s=default; t=1578996334;
+	bh=6jKw0O+CyPMH+hrct7EUfZqs7cAxZ67cxAcmQxPZ5Qc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zAv7nKFuuG6lqhgEeTuFyyy4Sb+BRKHnOR/MtDcoZ/w/tPRAWg7wM8ay1MFdt244/
-	 1qamV36j2P5AYGG5lgndY5XPIJ8BHio4IxbSV4QzZZTDriBaGhVdZ+r52pPu1BAc3L
-	 5mb8eCpaWXDDPlgOFMboBA+jWY0kl5bkqQk0t/lI=
+	b=fWk3zdVX92msdTKFYomjKM6tZSDYloKujm/vLLPHYXUJnMq3F0sWB8cDyvqJKBVbd
+	 stdOK7u7ydF1JP0wWaM2nwO3Zn8DEG1Gf+p7JMkzs2QMbdtBMCS9PpdApY5WZRBaRR
+	 zb8XdHrlNLoiKbhfKyHQJpKaDqJmPga5fqXcqTu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730138AbgANKFa (ORCPT
+        id S1730150AbgANKFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 05:05:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33524 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 05:05:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729359AbgANKF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 05:05:27 -0500
+        id S1729745AbgANKFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 05:05:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33E0B2467E;
-        Tue, 14 Jan 2020 10:05:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CED124684;
+        Tue, 14 Jan 2020 10:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578996326;
-        bh=0cdLB7wehuBT3ubfoI3yEb17IXH1TWYAp5f76Ckw7m4=;
+        s=default; t=1578996329;
+        bh=6jKw0O+CyPMH+hrct7EUfZqs7cAxZ67cxAcmQxPZ5Qc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=apxZPinOJ4E9dFBnHe/qYu71RzNQ7p9rZY1sOx2plVDx7nh5Dx8TgE9sqtu5cv3ju
-         vIriXsc/+RwVHJDfCjCthAaQ0H7G+2AMkNNl1tf+C/dBTj8NIvrR3LM6JhekCbVqK8
-         BnMtUQ853VF1TAQ1jrGjsQgkVTzhJcCeJLkGzjIo=
+        b=PEcujaff86P/cqKh3kS60WtdPZGId6CJSwj0CKWnhof+t7MlS1/Kz6ekaOX50E/6m
+         y/sg7hY5XsS8SDwJjU+5XGJuweesV83iFbe14jVOV0KlRLnuc9CRKioII59AmdEa88
+         iT+wOSU9GglItY3xBfmI3L+1rzECzpMcTD2kXmiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Amanieu dAntras <amanieu@gmail.com>,
         linux-arm-kernel@lists.infradead.org,
-        Arnd Bergmann <arnd@arndb.de>,
+        Will Deacon <will@kernel.org>,
         Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 5.4 57/78] arm64: Move __ARCH_WANT_SYS_CLONE3 definition to uapi headers
-Date:   Tue, 14 Jan 2020 11:01:31 +0100
-Message-Id: <20200114094401.111792585@linuxfoundation.org>
+Subject: [PATCH 5.4 58/78] arm64: Implement copy_thread_tls
+Date:   Tue, 14 Jan 2020 11:01:32 +0100
+Message-Id: <20200114094401.225685284@linuxfoundation.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200114094352.428808181@linuxfoundation.org>
 References: <20200114094352.428808181@linuxfoundation.org>
@@ -63,42 +63,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Amanieu d'Antras <amanieu@gmail.com>
 
-commit 3e3c8ca5a351350031f0f3d5ecedf7048b1b9008 upstream.
+commit a4376f2fbcc8084832f2f114577c8d68234c7903 upstream.
 
-Previously this was only defined in the internal headers which
-resulted in __NR_clone3 not being defined in the user headers.
+This is required for clone3 which passes the TLS value through a
+struct rather than a register.
 
 Signed-off-by: Amanieu d'Antras <amanieu@gmail.com>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: <stable@vger.kernel.org> # 5.3.x
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Link: https://lore.kernel.org/r/20200102172413.654385-2-amanieu@gmail.com
+Acked-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20200102172413.654385-3-amanieu@gmail.com
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/unistd.h      |    1 -
- arch/arm64/include/uapi/asm/unistd.h |    1 +
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/Kconfig          |    1 +
+ arch/arm64/kernel/process.c |   10 +++++-----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
 
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -42,7 +42,6 @@
- #endif
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -139,6 +139,7 @@ config ARM64
+ 	select HAVE_CMPXCHG_DOUBLE
+ 	select HAVE_CMPXCHG_LOCAL
+ 	select HAVE_CONTEXT_TRACKING
++	select HAVE_COPY_THREAD_TLS
+ 	select HAVE_DEBUG_BUGVERBOSE
+ 	select HAVE_DEBUG_KMEMLEAK
+ 	select HAVE_DMA_CONTIGUOUS
+--- a/arch/arm64/kernel/process.c
++++ b/arch/arm64/kernel/process.c
+@@ -360,8 +360,8 @@ int arch_dup_task_struct(struct task_str
  
- #define __ARCH_WANT_SYS_CLONE
--#define __ARCH_WANT_SYS_CLONE3
+ asmlinkage void ret_from_fork(void) asm("ret_from_fork");
  
- #ifndef __COMPAT_SYSCALL_NR
- #include <uapi/asm/unistd.h>
---- a/arch/arm64/include/uapi/asm/unistd.h
-+++ b/arch/arm64/include/uapi/asm/unistd.h
-@@ -19,5 +19,6 @@
- #define __ARCH_WANT_NEW_STAT
- #define __ARCH_WANT_SET_GET_RLIMIT
- #define __ARCH_WANT_TIME32_SYSCALLS
-+#define __ARCH_WANT_SYS_CLONE3
+-int copy_thread(unsigned long clone_flags, unsigned long stack_start,
+-		unsigned long stk_sz, struct task_struct *p)
++int copy_thread_tls(unsigned long clone_flags, unsigned long stack_start,
++		unsigned long stk_sz, struct task_struct *p, unsigned long tls)
+ {
+ 	struct pt_regs *childregs = task_pt_regs(p);
  
- #include <asm-generic/unistd.h>
+@@ -394,11 +394,11 @@ int copy_thread(unsigned long clone_flag
+ 		}
+ 
+ 		/*
+-		 * If a TLS pointer was passed to clone (4th argument), use it
+-		 * for the new thread.
++		 * If a TLS pointer was passed to clone, use it for the new
++		 * thread.
+ 		 */
+ 		if (clone_flags & CLONE_SETTLS)
+-			p->thread.uw.tp_value = childregs->regs[3];
++			p->thread.uw.tp_value = tls;
+ 	} else {
+ 		memset(childregs, 0, sizeof(struct pt_regs));
+ 		childregs->pstate = PSR_MODE_EL1h;
 
 
