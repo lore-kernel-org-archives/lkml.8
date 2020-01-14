@@ -2,52 +2,56 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7FFFC33CB3
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF8FC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E48424677
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F81B24670
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 09:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1578995164;
-	bh=oXoVf5FYzK2l54ZMTKBmt/diqvZDokYRd/mYU7Iuj7w=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=M6hQCXbT+PDiKDVLggF0PbAlq2Q5lIydUAUIxPKY7eHHZQ/5XHIe0Fv0zurUTXhuk
-	 sMwcTtj1ju01sPu0HBHRPQlJQlSMyoNtY7XhG+FNgNlbFn/ZbvJrVujvVJTdNyuey2
-	 2FVn08+WugqhleXG9p1mtliHyzbLFiGXbdvo0a9U=
+	s=default; t=1578995170;
+	bh=q26RMnhv4e6vnyl7On3dw2ZS7Ofbxt7I4hTv9fYgiXc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=u0LqIVqM1VO/WiVTq6460Qc0exoZcAFzZDPAVC+MZ0XYoOLh210HoDqhdm5Uj6SQz
+	 J5TvoC+79lUrQLkgw78nWln1mSVcXEH4dvAYbqAAHn4Q/h0QkzE6cZ99eAnw3CCUna
+	 P8+6nAU+q0OlJP2KjDCubVEcdZPSVFNGKmcYJvc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbgANJqD (ORCPT
+        id S1729112AbgANJqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 04:46:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41244 "EHLO mail.kernel.org"
+        Tue, 14 Jan 2020 04:46:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725820AbgANJqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 04:46:03 -0500
+        id S1728998AbgANJqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 14 Jan 2020 04:46:05 -0500
 Received: from dogfood.home (amontpellier-657-1-18-247.w109-210.abo.wanadoo.fr [109.210.65.247])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B5FCE24670;
-        Tue, 14 Jan 2020 09:46:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E582124673;
+        Tue, 14 Jan 2020 09:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578995162;
-        bh=oXoVf5FYzK2l54ZMTKBmt/diqvZDokYRd/mYU7Iuj7w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ofFAsr0yMlwqOasIzmRJEYHG7eCD55Tw4XqWV8py/NHRxsNvvsm9h+vw/whb8uWXZ
-         6LhHsk/1b5w3U50AnfJon2zQ7Jyt2wPN4kOL/cG/Zp7TOb3w8YUjBw6r0CpUS/O3kn
-         t7N/DVvu3lAy41/P2bAc+9c+6VSwH5DisAhMffX4=
+        s=default; t=1578995164;
+        bh=q26RMnhv4e6vnyl7On3dw2ZS7Ofbxt7I4hTv9fYgiXc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=XyydpypudDBcz8etUqufb5GnphOu22iRcWN0zlHbwPz1qgMRTO4QEmBwLSmlUsMHV
+         bZ/08I5PIoeMSmQhF2KQBhtfiwa9+uSxaLiBQf3k79JorHQ8QE7jq4xfPsn949mILa
+         Qzv+Yg/4y2fJdcgoxzQveBdcZQn63pqLSHcrRt6E=
 From:   Ard Biesheuvel <ardb@kernel.org>
 To:     jarkko.sakkinen@linux.intel.com
 Cc:     linux-arm-kernel@lists.infradead.org, masahisa.kojima@linaro.org,
         devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
         linux-kernel@vger.kernel.org, peterhuewe@gmx.de, jgg@ziepe.ca,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: [PATCH 0/2] synquacer: add TPM support
-Date:   Tue, 14 Jan 2020 10:45:03 +0100
-Message-Id: <20200114094505.11855-1-ardb@kernel.org>
+        Ard Biesheuvel <ardb@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: tpm-tis-mmio: add compatible string for SynQuacer TPM
+Date:   Tue, 14 Jan 2020 10:45:04 +0100
+Message-Id: <20200114094505.11855-2-ardb@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200114094505.11855-1-ardb@kernel.org>
+References: <20200114094505.11855-1-ardb@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,17 +59,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for driving the TPM on Socionext SynQuacer platforms
-using the existing driver for a memory mapped TIS frame.
+Add a compatible string for the SynQuacer TPM to the binding for a
+TPM exposed via a memory mapped TIS frame. The MMIO window behaves
+slightly differently on this hardware, so it requires its own
+identifier.
 
-Ard Biesheuvel (2):
-  dt-bindings: tpm-tis-mmio: add compatible string for SynQuacer TPM
-  tpm: tis: add support for MMIO TPM on SynQuacer
+Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+---
+ Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt |  1 +
- drivers/char/tpm/tpm_tis.c                                      | 31 ++++++++++++++++++--
- 2 files changed, 30 insertions(+), 2 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+index 7c6304426da1..b604c8688dc8 100644
+--- a/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
++++ b/Documentation/devicetree/bindings/security/tpm/tpm_tis_mmio.txt
+@@ -12,6 +12,7 @@ Required properties:
+ - compatible: should contain a string below for the chip, followed by
+               "tcg,tpm-tis-mmio". Valid chip strings are:
+ 	          * "atmel,at97sc3204"
++		  * "socionext,synquacer-tpm-mmio"
+ - reg: The location of the MMIO registers, should be at least 0x5000 bytes
+ - interrupts: An optional interrupt indicating command completion.
+ 
 -- 
 2.20.1
 
