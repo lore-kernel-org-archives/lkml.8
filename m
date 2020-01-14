@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C55AC33CAE
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B06BCC33CAD
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A73A20678
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:34:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908DC20678
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 06:34:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgANGeL (ORCPT
+        id S1728827AbgANGeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 01:34:11 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:33289 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728780AbgANGeL (ORCPT
+        Tue, 14 Jan 2020 01:34:12 -0500
+Received: from mail-io1-f72.google.com ([209.85.166.72]:55028 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728779AbgANGeL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 14 Jan 2020 01:34:11 -0500
-Received: by mail-il1-f200.google.com with SMTP id s9so9789707ilk.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 22:34:11 -0800 (PST)
+Received: by mail-io1-f72.google.com with SMTP id u6so7382501iog.21
+        for <linux-kernel@vger.kernel.org>; Mon, 13 Jan 2020 22:34:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=AsoDybWiu9oeeZIYozVRkA2K+tw442FbkqUUZ2+BDk4=;
-        b=hXQLZN5e6jdw2uFkaSghlEPwqIak1n49c7dPlJ0VPeOjEQ0wJDEzqxFPqT0Lt7GuOi
-         32w7uBB8h8iLfJhJFQurrU5orbKOGp9uK1dVXRxERu9MP6sCwL+JkFkynEK8K/+M1ypS
-         7FZShQ6sFgyjIciFByiVfCgWdVzy7yDoaHOGKfzud+5jU/GeVKhpN0hzPc0wbQT3yzpA
-         DuI6pOuJHvQzeuQg+H1sn5g6oaLGZ/hgVs0NWgL8r81uw13N5NdNljfc9jcqyBYBw4UI
-         rfcapxbsLb/IdunIsQeBj35BrRNZ1LY12YJ0+7EuAaJoFeilvA45PK1SiYJOgP7PH/FL
-         2MXA==
-X-Gm-Message-State: APjAAAUZUSGoGrKCHOMm1LHo0kfQotD3MEHaopufXlqwe0/c3/TzcGS3
-        OddhjDwh+QiUCtBzdgg4lkUiS6dNUr7M2ewCOISkWmqitu+R
-X-Google-Smtp-Source: APXvYqwgTdOp85AttTjzBrnZD7gxdOtH9RZ0rYYksQSDiYgMzGVwR5CKnEeGUOuZFCV7CKvHoAtRchuXup6x4gmDCairIf8TIA24
+        bh=aUpNlfAfsF8Uq95DOJXq3NqDwhlK0hlzVyA6UdfyE2g=;
+        b=YgbmeWK/LtuEUehZL0VX64bKn3Flizku2WKBKSp5/RnrRd6g0UqvA4daNyTfDetL3o
+         wtXnv7iLM4HD4U6zHxZWJdUw4vyaw3d95SOSuLzGoWq7QPjTTT5NjZ1FpGGgnEbp+s2H
+         kwECpbAh95diS1NqJQHCOJltHF3d6OldWLM72+21WuSbPpJBcPV6aFEWgR/9akn7h6Z4
+         lLN8Qf6tLKzSLTZ8ArsCC+zs9u5AaSbCDZovcXfgwKmN4IwtDo8cwWHwgLX0mJOAI4Y6
+         KMV6r5bPD+/yOjOVG+j/JPa2r6CuhNn9jDKvvyzBbb3UqoMbMw9KKHlJVHcqMAXqd+j+
+         MKKA==
+X-Gm-Message-State: APjAAAWkGv+OtpbfZx47wJFsGuj+Ppjvs4GtPtvpb0O1vx7MhvMjAaat
+        N33Vlz5PtZ5oMZERXECeMP2rmsS4b+Eb3gpW1+0IHQPI6c2j
+X-Google-Smtp-Source: APXvYqxqLG867GWQ2bc8GhQpnCHohKbJS9wa0VKjDStD0xUcyGa/AS2dAtJXr5gFskSYJhvgukGgOgzdznBcKKD8xcI86hCZLlH4
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8a0c:: with SMTP id w12mr15667659iod.194.1578983650674;
+X-Received: by 2002:a02:7086:: with SMTP id f128mr17035393jac.12.1578983650326;
  Mon, 13 Jan 2020 22:34:10 -0800 (PST)
 Date:   Mon, 13 Jan 2020 22:34:10 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009acfef059c13c771@google.com>
-Subject: KASAN: vmalloc-out-of-bounds Read in acpi_nfit_ctl
-From:   syzbot <syzbot+002f559bf34c2c7467d0@syzkaller.appspotmail.com>
-To:     dan.j.williams@intel.com, dave.jiang@intel.com,
-        ira.weiny@intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        rjw@rjwysocki.net, syzkaller-bugs@googlegroups.com,
-        vishal.l.verma@intel.com
+Message-ID: <0000000000009586b2059c13c7e1@google.com>
+Subject: KASAN: vmalloc-out-of-bounds Write in i801_isr
+From:   syzbot <syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com>
+To:     jdelvare@suse.com, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -61,67 +58,89 @@ syzbot found the following crash on:
 
 HEAD commit:    040a3c33 Merge tag 'iommu-fixes-v5.5-rc5' of git://git.ker..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=120a5d8ee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16e675e1e00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=7e89bd00623fe71e
-dashboard link: https://syzkaller.appspot.com/bug?extid=002f559bf34c2c7467d0
+dashboard link: https://syzkaller.appspot.com/bug?extid=ed71512d469895b5b34e
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-userspace arch: i386
 
 Unfortunately, I don't have any reproducer for this crash yet.
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+002f559bf34c2c7467d0@syzkaller.appspotmail.com
+Reported-by: syzbot+ed71512d469895b5b34e@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KASAN: vmalloc-out-of-bounds in test_bit  
-include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
-BUG: KASAN: vmalloc-out-of-bounds in acpi_nfit_ctl+0x47f/0x1840  
-drivers/acpi/nfit/core.c:495
-Read of size 8 at addr ffffc90002ddbbb8 by task syz-executor.1/5941
+BUG: KASAN: vmalloc-out-of-bounds in i801_isr_byte_done  
+drivers/i2c/busses/i2c-i801.c:592 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in i801_isr  
+drivers/i2c/busses/i2c-i801.c:663 [inline]
+BUG: KASAN: vmalloc-out-of-bounds in i801_isr+0xbfd/0xcf0  
+drivers/i2c/busses/i2c-i801.c:644
+Write of size 1 at addr ffffc90002c07bc9 by task syz-executor.3/9465
 
-CPU: 3 PID: 5941 Comm: syz-executor.1 Not tainted 5.5.0-rc5-syzkaller #0
+CPU: 3 PID: 9465 Comm: syz-executor.3 Not tainted 5.5.0-rc5-syzkaller #0
 Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS  
 rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
 Call Trace:
+  <IRQ>
   __dump_stack lib/dump_stack.c:77 [inline]
   dump_stack+0x197/0x210 lib/dump_stack.c:118
   print_address_description.constprop.0.cold+0x5/0x30b mm/kasan/report.c:374
   __kasan_report.cold+0x1b/0x41 mm/kasan/report.c:506
   kasan_report+0x12/0x20 mm/kasan/common.c:639
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x134/0x1a0 mm/kasan/generic.c:192
-  __kasan_check_read+0x11/0x20 mm/kasan/common.c:95
-  test_bit include/asm-generic/bitops/instrumented-non-atomic.h:110 [inline]
-  acpi_nfit_ctl+0x47f/0x1840 drivers/acpi/nfit/core.c:495
-  __nd_ioctl drivers/nvdimm/bus.c:1152 [inline]
-  nd_ioctl.isra.0+0xfe2/0x1580 drivers/nvdimm/bus.c:1230
-  bus_ioctl+0x59/0x70 drivers/nvdimm/bus.c:1242
-  compat_ptr_ioctl+0x6e/0xa0 fs/ioctl.c:788
-  __do_compat_sys_ioctl fs/compat_ioctl.c:214 [inline]
-  __se_compat_sys_ioctl fs/compat_ioctl.c:142 [inline]
-  __ia32_compat_sys_ioctl+0x233/0x610 fs/compat_ioctl.c:142
-  do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
-  do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
-  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
-RIP: 0023:0xf7f37a39
-Code: 00 00 00 89 d3 5b 5e 5f 5d c3 b8 80 96 98 00 eb c4 8b 04 24 c3 8b 1c  
-24 c3 8b 34 24 c3 8b 3c 24 c3 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90  
-90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
-RSP: 002b:00000000f5d330cc EFLAGS: 00000296 ORIG_RAX: 0000000000000036
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000000560a
-RDX: 0000000020000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+  __asan_report_store1_noabort+0x17/0x20 mm/kasan/generic_report.c:137
+  i801_isr_byte_done drivers/i2c/busses/i2c-i801.c:592 [inline]
+  i801_isr drivers/i2c/busses/i2c-i801.c:663 [inline]
+  i801_isr+0xbfd/0xcf0 drivers/i2c/busses/i2c-i801.c:644
+  __handle_irq_event_percpu+0x15d/0x970 kernel/irq/handle.c:149
+  handle_irq_event_percpu+0x74/0x160 kernel/irq/handle.c:189
+  handle_irq_event+0xa7/0x134 kernel/irq/handle.c:206
+  handle_fasteoi_irq+0x281/0x670 kernel/irq/chip.c:725
+  generic_handle_irq_desc include/linux/irqdesc.h:156 [inline]
+  do_IRQ+0xde/0x280 arch/x86/kernel/irq.c:250
+  common_interrupt+0xf/0xf arch/x86/entry/entry_64.S:607
+  </IRQ>
+RIP: 0010:__sanitizer_cov_trace_const_cmp4+0xd/0x20 kernel/kcov.c:274
+Code: d6 0f b7 f7 bf 03 00 00 00 48 89 e5 48 8b 4d 08 e8 d8 fe ff ff 5d c3  
+66 0f 1f 44 00 00 55 89 f2 89 fe bf 05 00 00 00 48 89 e5 <48> 8b 4d 08 e8  
+ba fe ff ff 5d c3 0f 1f 84 00 00 00 00 00 55 48 89
+RSP: 0018:ffffc90001d4f860 EFLAGS: 00000246 ORIG_RAX: ffffffffffffffdc
+RAX: ffff88805df60100 RBX: 000000000000000c RCX: 000000000000000c
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
+RBP: ffffc90001d4f860 R08: ffff88805df60100 R09: fffff520003a9f23
+R10: fffff520003a9f22 R11: 0000000000000000 R12: ffff88802057db00
+R13: 0000000000000030 R14: 00000000000002e6 R15: 0000000000000000
+  tomoyo_domain_quota_is_ok+0x312/0x540 security/tomoyo/util.c:1071
+  tomoyo_supervisor+0x2e8/0xef0 security/tomoyo/common.c:2089
+  tomoyo_audit_path_log security/tomoyo/file.c:168 [inline]
+  tomoyo_path_permission security/tomoyo/file.c:587 [inline]
+  tomoyo_path_permission+0x263/0x360 security/tomoyo/file.c:573
+  tomoyo_path_perm+0x318/0x430 security/tomoyo/file.c:838
+  tomoyo_path_unlink+0x9b/0xe0 security/tomoyo/tomoyo.c:156
+  security_path_unlink+0xfa/0x160 security/security.c:1044
+  do_unlinkat+0x3b7/0x6d0 fs/namei.c:4064
+  __do_sys_unlink fs/namei.c:4114 [inline]
+  __se_sys_unlink fs/namei.c:4112 [inline]
+  __x64_sys_unlink+0x42/0x50 fs/namei.c:4112
+  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45ad27
+Code: 00 66 90 b8 58 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 5d b4 fb ff c3  
+66 2e 0f 1f 84 00 00 00 00 00 66 90 b8 57 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 3d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffebdeee5d8 EFLAGS: 00000206 ORIG_RAX: 0000000000000057
+RAX: ffffffffffffffda RBX: 00007ffebdeee6a0 RCX: 000000000045ad27
+RDX: 00007ffebdeee610 RSI: 00007ffebdeee610 RDI: 00007ffebdeee6a0
+RBP: 0000000000000000 R08: 000000000137b983 R09: 0000000000000011
+R10: ffffffffffffffff R11: 0000000000000206 R12: 00007ffebdeef730
+R13: 000000000137b940 R14: 0000000000390ffe R15: 00000000ffffffff
 
 
 Memory state around the buggy address:
-  ffffc90002ddba80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-  ffffc90002ddbb00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-> ffffc90002ddbb80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-                                         ^
-  ffffc90002ddbc00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-  ffffc90002ddbc80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  ffffc90002c07a80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  ffffc90002c07b00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+> ffffc90002c07b80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+                                               ^
+  ffffc90002c07c00: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
+  ffffc90002c07c80: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
 ==================================================================
 
 
