@@ -2,208 +2,216 @@ Return-Path: <SRS0=z1XV=3D=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 491B4C33CB2
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD3BC33CB1
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212B4214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E5324680
+	for <linux-kernel@archiver.kernel.org>; Tue, 14 Jan 2020 13:56:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="uCm0rVgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbgANN4L (ORCPT
+        id S1728915AbgANN4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 14 Jan 2020 08:56:11 -0500
-Received: from mail-il1-f197.google.com ([209.85.166.197]:52688 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726453AbgANN4K (ORCPT
+        Tue, 14 Jan 2020 08:56:24 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37665 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726453AbgANN4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 14 Jan 2020 08:56:10 -0500
-Received: by mail-il1-f197.google.com with SMTP id n9so10635216ilm.19
-        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 05:56:10 -0800 (PST)
+        Tue, 14 Jan 2020 08:56:24 -0500
+Received: by mail-pl1-f194.google.com with SMTP id c23so5275857plz.4
+        for <linux-kernel@vger.kernel.org>; Tue, 14 Jan 2020 05:56:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DqPI1GLrGJXBj+O6IFIkf5XomA9VNoprsRGLS3MppCU=;
+        b=uCm0rVgZLRB1i5s5loIxhdMgUpCBJ+R/Ry9xBIwxa2MOLxVyZJPOMLlWDJx0Lvl7Wy
+         jDsSZ0smsJVMkI3Sy6l6DVQha3cx/ZzM8yzVfd29zn4pD0I7Eq2bX9W79TFt5yHTE5c6
+         nhz2bse4CtZrPIB0pzQBMn52qlEfIZ+/WV0f8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=beL9fdYD9Zg6YYQLefcIhct373j21vqbmap/vGlLXPc=;
-        b=AkB3pWo62WvBXmwdBfe/e3UiS2WTodXDNYLAOAzE8EozGgtj63/3b8UGbkQlPWge9m
-         gxVnN9QA9lcdGljsq4MD2SP9TaHkqWKMXjgVD4UP1yMSvdmcj3Czr0L22HIn+vZYVOmr
-         xDHECR7DkLi4npQlsMh8myxfYnQxsUKBFXr9qjRCy1hE7BCSiQlAGIXEOijHBuDo4tFM
-         9jpZ9lqvRTSGxQKkbOEqEg0Gybvqof7QHfE6zXrRojkvQvtrDXCYZ4pldwvfAN+3ymyQ
-         c9Q0uld/HMAoE4UF0puz+GMcp8nCAimGXJ7GCOwzyzCU9v7UG/zi1vk4+4oqQpVf4AOJ
-         N/BQ==
-X-Gm-Message-State: APjAAAVeC9ScYhqi/5PtQgAPf9PxgNJ9RpBwg2EZxvveb+DS/OQfzSQX
-        m40ZKCNIxrnonBxPxJVe8q/9YYNgWWjhV+PyX4afTX11AUPZ
-X-Google-Smtp-Source: APXvYqzpuKjXqFEyVifz7gpRst1DXqnvtfQr2kIfCsAY0EDis1kA7k7/3PiDs3VmaenwO56zmDWaVS6m9Y+mpEqGPmsW/tQADyLF
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DqPI1GLrGJXBj+O6IFIkf5XomA9VNoprsRGLS3MppCU=;
+        b=Cuav+x+RTS5jynYovDLKlpPpW47YRV+A+CC+ivIId5oDm/VsrKficZ8CsWpFU/o/6v
+         PPWtbe5Fs844Q2xhxKacFn+6wnafjDfmJ4jOh+Lb9GgXD9jlm6s3lpDKpX4laf/oDnC3
+         N7zbYkXm6uok+w9gXgdy0pgmfuCtm4pKAFLvCxFeKOEMWKR5qzpREHKzPlS56qoaFrMj
+         Rj44SlyzHPINL9dCazKOzhJWIxpMnQrXrcmc3iq+tTiolJB7Z3C11Umla5vgWD2SOT55
+         m7dQ5stbCrQ2Ne4eW0mkLu5OuRksbE88VynU6b4wUqujIUHShBQZRUak0qUx1VtwgQSN
+         j1vg==
+X-Gm-Message-State: APjAAAW33EY+vmYCuLvhR/+IxLukzq6mshfNlBmkw2rP+fwkMYZ/N2FD
+        z0dvrflRxp4sp7xPXr2HqiLKXg==
+X-Google-Smtp-Source: APXvYqzZwbq+6agksox4JTtePeSkSMcxnX4qMmb7s17AoIO+KvYXN/biV+h1flAWmRcpHZ7Vcq+FCw==
+X-Received: by 2002:a17:90a:2ec5:: with SMTP id h5mr10252278pjs.79.1579010183377;
+        Tue, 14 Jan 2020 05:56:23 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id x4sm18184869pff.143.2020.01.14.05.56.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jan 2020 05:56:22 -0800 (PST)
+Date:   Tue, 14 Jan 2020 08:56:21 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, paulmck@kernel.org,
+        Anders Roxell <anders.roxell@linaro.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -tip V2 2/2] kprobes: Use non RCU traversal APIs on
+ kprobe_tables if possible
+Message-ID: <20200114135621.GA103493@google.com>
+References: <157535316659.16485.11817291759382261088.stgit@devnote2>
+ <157535318870.16485.6366477974356032624.stgit@devnote2>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:7703:: with SMTP id n3mr1192699iom.229.1579010170051;
- Tue, 14 Jan 2020 05:56:10 -0800 (PST)
-Date:   Tue, 14 Jan 2020 05:56:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000486474059c19f4d7@google.com>
-Subject: inconsistent lock state in ima_process_queued_keys
-From:   syzbot <syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com>
-To:     dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com, zohar@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157535318870.16485.6366477974356032624.stgit@devnote2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Dec 03, 2019 at 03:06:28PM +0900, Masami Hiramatsu wrote:
+> Current kprobes uses RCU traversal APIs on kprobe_tables
+> even if it is safe because kprobe_mutex is locked.
+> 
+> Make those traversals to non-RCU APIs where the kprobe_mutex
+> is locked.
 
-syzbot found the following crash on:
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-HEAD commit:    1b851f98 Add linux-next specific files for 20200114
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12bcbb25e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3e7d9cf7ebfa08ad
-dashboard link: https://syzkaller.appspot.com/bug?extid=a4a503d7f37292ae1664
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+May be resend both patch with appropriate tags since it has been some time
+since originally posted?
 
-Unfortunately, I don't have any reproducer for this crash yet.
+thanks,
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a4a503d7f37292ae1664@syzkaller.appspotmail.com
-
-================================
-WARNING: inconsistent lock state
-5.5.0-rc6-next-20200114-syzkaller #0 Not tainted
---------------------------------
-inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-syz-executor.5/9563 [HC0[0]:SC1[1]:HE1:SE0] takes:
-ffffffff8a03aa18 (ima_keys_lock){+.?.}, at: spin_lock  
-include/linux/spinlock.h:338 [inline]
-ffffffff8a03aa18 (ima_keys_lock){+.?.}, at:  
-ima_process_queued_keys+0x4f/0x320  
-security/integrity/ima/ima_asymmetric_keys.c:144
-{SOFTIRQ-ON-W} state was registered at:
-   lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-   __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-   _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-   spin_lock include/linux/spinlock.h:338 [inline]
-   ima_queue_key security/integrity/ima/ima_asymmetric_keys.c:111 [inline]
-   ima_post_key_create_or_update+0x234/0x470  
-security/integrity/ima/ima_asymmetric_keys.c:194
-   key_create_or_update+0x6b8/0xcb0 security/keys/key.c:944
-   load_system_certificate_list+0x1ba/0x25e certs/system_keyring.c:161
-   do_one_initcall+0x120/0x820 init/main.c:940
-   do_initcall_level init/main.c:1014 [inline]
-   do_initcalls init/main.c:1022 [inline]
-   do_basic_setup init/main.c:1039 [inline]
-   kernel_init_freeable+0x4ca/0x570 init/main.c:1223
-   kernel_init+0x12/0x1bf init/main.c:1130
-   ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-irq event stamp: 319180
-hardirqs last  enabled at (319180): [<ffffffff87ec3333>]  
-__raw_spin_unlock_irq include/linux/spinlock_api_smp.h:168 [inline]
-hardirqs last  enabled at (319180): [<ffffffff87ec3333>]  
-_raw_spin_unlock_irq+0x23/0x80 kernel/locking/spinlock.c:199
-hardirqs last disabled at (319179): [<ffffffff87ec351a>]  
-__raw_spin_lock_irq include/linux/spinlock_api_smp.h:126 [inline]
-hardirqs last disabled at (319179): [<ffffffff87ec351a>]  
-_raw_spin_lock_irq+0x3a/0x80 kernel/locking/spinlock.c:167
-softirqs last  enabled at (316932): [<ffffffff882006cd>]  
-__do_softirq+0x6cd/0x98c kernel/softirq.c:319
-softirqs last disabled at (319177): [<ffffffff8147800b>] invoke_softirq  
-kernel/softirq.c:373 [inline]
-softirqs last disabled at (319177): [<ffffffff8147800b>]  
-irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-
-other info that might help us debug this:
-  Possible unsafe locking scenario:
-
-        CPU0
-        ----
-   lock(ima_keys_lock);
-   <Interrupt>
-     lock(ima_keys_lock);
-
-  *** DEADLOCK ***
-
-1 lock held by syz-executor.5/9563:
-  #0: ffffc90000007d50 ((&ima_key_queue_timer)){+.-.}, at: lockdep_copy_map  
-include/linux/lockdep.h:172 [inline]
-  #0: ffffc90000007d50 ((&ima_key_queue_timer)){+.-.}, at:  
-call_timer_fn+0xe0/0x780 kernel/time/timer.c:1394
-
-stack backtrace:
-CPU: 0 PID: 9563 Comm: syz-executor.5 Not tainted  
-5.5.0-rc6-next-20200114-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  <IRQ>
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  print_usage_bug.cold+0x327/0x378 kernel/locking/lockdep.c:3100
-  valid_state kernel/locking/lockdep.c:3111 [inline]
-  mark_lock_irq kernel/locking/lockdep.c:3308 [inline]
-  mark_lock+0xbb4/0x1220 kernel/locking/lockdep.c:3665
-  mark_usage kernel/locking/lockdep.c:3565 [inline]
-  __lock_acquire+0x1e8e/0x4a00 kernel/locking/lockdep.c:3908
-  lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  ima_process_queued_keys+0x4f/0x320  
-security/integrity/ima/ima_asymmetric_keys.c:144
-  ima_timer_handler+0x15/0x20 security/integrity/ima/ima_asymmetric_keys.c:46
-  call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
-  expire_timers kernel/time/timer.c:1449 [inline]
-  __run_timers kernel/time/timer.c:1773 [inline]
-  __run_timers kernel/time/timer.c:1740 [inline]
-  run_timer_softirq+0x6c3/0x1790 kernel/time/timer.c:1786
-  __do_softirq+0x262/0x98c kernel/softirq.c:292
-  invoke_softirq kernel/softirq.c:373 [inline]
-  irq_exit+0x19b/0x1e0 kernel/softirq.c:413
-  exiting_irq arch/x86/include/asm/apic.h:536 [inline]
-  smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1137
-  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-  </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:752  
-[inline]
-RIP: 0010:slab_alloc mm/slab.c:3313 [inline]
-RIP: 0010:kmem_cache_alloc+0x283/0x710 mm/slab.c:3484
-Code: 7e 0f 85 dc fe ff ff e8 0c 3f 4d ff e9 d2 fe ff ff e8 31 aa c7 ff 48  
-83 3d 21 84 00 08 00 0f 84 51 03 00 00 48 8b 7d d0 57 9d <0f> 1f 44 00 00  
-e9 68 fe ff ff 31 d2 be 35 02 00 00 48 c7 c7 2e a1
-RSP: 0018:ffffc9000641fd18 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000007 RBX: 0000000000000cc0 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: 0000000000000006 RDI: 0000000000000286
-RBP: ffffc9000641fd80 R08: ffff8880543b22c0 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff8880aa5f8a80
-R13: ffff8880aa5f8a80 R14: 0000000000000cc0 R15: ffff8880a8916600
-  getname_flags fs/namei.c:138 [inline]
-  getname_flags+0xd6/0x5b0 fs/namei.c:128
-  getname fs/namei.c:209 [inline]
-  user_path_mountpoint_at+0x29/0x50 fs/namei.c:2820
-  ksys_umount+0x164/0xef0 fs/namespace.c:1683
-  __do_sys_umount fs/namespace.c:1709 [inline]
-  __se_sys_umount fs/namespace.c:1707 [inline]
-  __x64_sys_umount+0x54/0x80 fs/namespace.c:1707
-  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45d977
-Code: 64 89 04 25 d0 02 00 00 58 5f ff d0 48 89 c7 e8 2f be ff ff 66 2e 0f  
-1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 a6 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 4d 8c fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffeff269038 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
-RAX: ffffffffffffffda RBX: 000000000004d5f3 RCX: 000000000045d977
-RDX: 000000000000000c RSI: 0000000000000002 RDI: 00007ffeff26a170
-RBP: 000000000000003c R08: 0000000000000001 R09: 0000000001dc6940
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007ffeff26a170
-R13: 00007ffeff26a160 R14: 0000000000000000 R15: 00007ffeff26a170
+ - Joel
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  kernel/kprobes.c |   29 ++++++++++++++++++++---------
+>  1 file changed, 20 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index f9ecb6d532fb..4caab01ace30 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -46,6 +46,11 @@
+>  
+>  
+>  static int kprobes_initialized;
+> +/* kprobe_table can be accessed by
+> + * - Normal hlist traversal and RCU add/del under kprobe_mutex is held.
+> + * Or
+> + * - RCU hlist traversal under disabling preempt (breakpoint handlers)
+> + */
+>  static struct hlist_head kprobe_table[KPROBE_TABLE_SIZE];
+>  static struct hlist_head kretprobe_inst_table[KPROBE_TABLE_SIZE];
+>  
+> @@ -829,7 +834,7 @@ static void optimize_all_kprobes(void)
+>  	kprobes_allow_optimization = true;
+>  	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+>  		head = &kprobe_table[i];
+> -		hlist_for_each_entry_rcu(p, head, hlist)
+> +		hlist_for_each_entry(p, head, hlist)
+>  			if (!kprobe_disabled(p))
+>  				optimize_kprobe(p);
+>  	}
+> @@ -856,7 +861,7 @@ static void unoptimize_all_kprobes(void)
+>  	kprobes_allow_optimization = false;
+>  	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+>  		head = &kprobe_table[i];
+> -		hlist_for_each_entry_rcu(p, head, hlist) {
+> +		hlist_for_each_entry(p, head, hlist) {
+>  			if (!kprobe_disabled(p))
+>  				unoptimize_kprobe(p, false);
+>  		}
+> @@ -1479,12 +1484,14 @@ static struct kprobe *__get_valid_kprobe(struct kprobe *p)
+>  {
+>  	struct kprobe *ap, *list_p;
+>  
+> +	lockdep_assert_held(&kprobe_mutex);
+> +
+>  	ap = get_kprobe(p->addr);
+>  	if (unlikely(!ap))
+>  		return NULL;
+>  
+>  	if (p != ap) {
+> -		list_for_each_entry_rcu(list_p, &ap->list, list)
+> +		list_for_each_entry(list_p, &ap->list, list)
+>  			if (list_p == p)
+>  			/* kprobe p is a valid probe */
+>  				goto valid;
+> @@ -1649,7 +1656,9 @@ static int aggr_kprobe_disabled(struct kprobe *ap)
+>  {
+>  	struct kprobe *kp;
+>  
+> -	list_for_each_entry_rcu(kp, &ap->list, list)
+> +	lockdep_assert_held(&kprobe_mutex);
+> +
+> +	list_for_each_entry(kp, &ap->list, list)
+>  		if (!kprobe_disabled(kp))
+>  			/*
+>  			 * There is an active probe on the list.
+> @@ -1728,7 +1737,7 @@ static int __unregister_kprobe_top(struct kprobe *p)
+>  	else {
+>  		/* If disabling probe has special handlers, update aggrprobe */
+>  		if (p->post_handler && !kprobe_gone(p)) {
+> -			list_for_each_entry_rcu(list_p, &ap->list, list) {
+> +			list_for_each_entry(list_p, &ap->list, list) {
+>  				if ((list_p != p) && (list_p->post_handler))
+>  					goto noclean;
+>  			}
+> @@ -2042,13 +2051,15 @@ static void kill_kprobe(struct kprobe *p)
+>  {
+>  	struct kprobe *kp;
+>  
+> +	lockdep_assert_held(&kprobe_mutex);
+> +
+>  	p->flags |= KPROBE_FLAG_GONE;
+>  	if (kprobe_aggrprobe(p)) {
+>  		/*
+>  		 * If this is an aggr_kprobe, we have to list all the
+>  		 * chained probes and mark them GONE.
+>  		 */
+> -		list_for_each_entry_rcu(kp, &p->list, list)
+> +		list_for_each_entry(kp, &p->list, list)
+>  			kp->flags |= KPROBE_FLAG_GONE;
+>  		p->post_handler = NULL;
+>  		kill_optimized_kprobe(p);
+> @@ -2217,7 +2228,7 @@ static int kprobes_module_callback(struct notifier_block *nb,
+>  	mutex_lock(&kprobe_mutex);
+>  	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+>  		head = &kprobe_table[i];
+> -		hlist_for_each_entry_rcu(p, head, hlist)
+> +		hlist_for_each_entry(p, head, hlist)
+>  			if (within_module_init((unsigned long)p->addr, mod) ||
+>  			    (checkcore &&
+>  			     within_module_core((unsigned long)p->addr, mod))) {
+> @@ -2468,7 +2479,7 @@ static int arm_all_kprobes(void)
+>  	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+>  		head = &kprobe_table[i];
+>  		/* Arm all kprobes on a best-effort basis */
+> -		hlist_for_each_entry_rcu(p, head, hlist) {
+> +		hlist_for_each_entry(p, head, hlist) {
+>  			if (!kprobe_disabled(p)) {
+>  				err = arm_kprobe(p);
+>  				if (err)  {
+> @@ -2511,7 +2522,7 @@ static int disarm_all_kprobes(void)
+>  	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+>  		head = &kprobe_table[i];
+>  		/* Disarm all kprobes on a best-effort basis */
+> -		hlist_for_each_entry_rcu(p, head, hlist) {
+> +		hlist_for_each_entry(p, head, hlist) {
+>  			if (!arch_trampoline_kprobe(p) && !kprobe_disabled(p)) {
+>  				err = disarm_kprobe(p, false);
+>  				if (err) {
+> 
